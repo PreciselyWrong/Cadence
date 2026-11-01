@@ -4653,6 +4653,11 @@
     "loadError": "Te naloge ni bilo mogoče naložiti."
   },
   "review": {
+    "later": {
+      "noMatch": "Nothing matches.",
+      "noProject": "No project",
+      "filter": "Filter"
+    },
     "title": "Pregled",
     "attention": "{{count}} za ogled",
     "decidedThisWeek": "{{count}} odločenih ta teden",
@@ -4685,6 +4690,7 @@
       "stale": "Ni starih opravil."
     },
     "actions": {
+      "done": "Done",
       "today": "Naredi danes",
       "shortSession": "Kratka seja danes (25 min)",
       "split": "Razdeli na korake",

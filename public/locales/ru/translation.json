@@ -4653,6 +4653,11 @@
     "loadError": "Не удалось загрузить задачу."
   },
   "review": {
+    "later": {
+      "noMatch": "Nothing matches.",
+      "noProject": "No project",
+      "filter": "Filter"
+    },
     "title": "Обзор",
     "attention": "{{count}} на рассмотрение",
     "decidedThisWeek": "{{count}} решено на этой неделе",
@@ -4685,6 +4690,7 @@
       "stale": "Нет старых задач."
     },
     "actions": {
+      "done": "Done",
       "today": "Сделать сегодня",
       "shortSession": "Короткая сессия сегодня (25 мин)",
       "split": "Разбить на шаги",

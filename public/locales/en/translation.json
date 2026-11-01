@@ -4694,6 +4694,11 @@
     "loadError": "Could not load this task."
   },
   "review": {
+    "later": {
+      "noMatch": "Nothing matches.",
+      "noProject": "No project",
+      "filter": "Filter"
+    },
     "title": "Review",
     "attention": "{{count}} to look at",
     "decidedThisWeek": "{{count}} decided this week",
@@ -4726,6 +4731,7 @@
       "stale": "No old tasks."
     },
     "actions": {
+      "done": "Done",
       "today": "Do today",
       "shortSession": "Short session today (25 min)",
       "split": "Break into steps",

@@ -4633,6 +4633,11 @@
     "loadError": "이 작업을 불러올 수 없습니다."
   },
   "review": {
+    "later": {
+      "noMatch": "Nothing matches.",
+      "noProject": "No project",
+      "filter": "Filter"
+    },
     "title": "검토",
     "attention": "살펴볼 항목 {{count}}개",
     "decidedThisWeek": "이번 주 결정 {{count}}개",
@@ -4665,6 +4670,7 @@
       "stale": "오래된 작업이 없습니다."
     },
     "actions": {
+      "done": "Done",
       "today": "오늘 하기",
       "shortSession": "오늘 짧은 세션 (25분)",
       "split": "단계로 나누기",

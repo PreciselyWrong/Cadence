@@ -4635,6 +4635,11 @@
     "loadError": "Không thể tải công việc này."
   },
   "review": {
+    "later": {
+      "noMatch": "Nothing matches.",
+      "noProject": "No project",
+      "filter": "Filter"
+    },
     "title": "Xem lại",
     "attention": "{{count}} cần xem",
     "decidedThisWeek": "{{count}} đã quyết tuần này",
@@ -4667,6 +4672,7 @@
       "stale": "Không có việc cũ."
     },
     "actions": {
+      "done": "Done",
       "today": "Làm hôm nay",
       "shortSession": "Phiên ngắn hôm nay (25 phút)",
       "split": "Chia thành bước",

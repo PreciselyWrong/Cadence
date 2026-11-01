@@ -4653,6 +4653,11 @@
     "loadError": "Nie udało się wczytać tego zadania."
   },
   "review": {
+    "later": {
+      "noMatch": "Nothing matches.",
+      "noProject": "No project",
+      "filter": "Filter"
+    },
     "title": "Przegląd",
     "attention": "{{count}} do przejrzenia",
     "decidedThisWeek": "{{count}} zdecydowane w tym tygodniu",
@@ -4685,6 +4690,7 @@
       "stale": "Brak starych zadań."
     },
     "actions": {
+      "done": "Done",
       "today": "Zrób dzisiaj",
       "shortSession": "Krótka sesja dzisiaj (25 min)",
       "split": "Podziel na kroki",

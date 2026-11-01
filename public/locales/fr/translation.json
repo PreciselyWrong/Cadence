@@ -4643,6 +4643,11 @@
     "loadError": "Impossible de charger cette tâche."
   },
   "review": {
+    "later": {
+      "noMatch": "Rien ne correspond.",
+      "noProject": "Sans projet",
+      "filter": "Filtrer"
+    },
     "title": "À revoir",
     "attention": "{{count}} à examiner",
     "decidedThisWeek": "{{count}} décidées cette semaine",
@@ -4675,6 +4680,7 @@
       "stale": "Aucune tâche ancienne."
     },
     "actions": {
+      "done": "Terminer",
       "today": "Faire aujourd’hui",
       "shortSession": "Session courte aujourd’hui (25 min)",
       "split": "Découper en étapes",

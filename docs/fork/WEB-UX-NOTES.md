@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-01 — Revue : « Plus tard » groupé, liens en carte
+
+- **Problème** : `/review` montrait l'URL brute d'une tâche ou d'une idée qui n'est qu'un lien, et « Plus tard » était une liste plate de 50 lignes.
+- **Décision** : une ligne dont le titre (ou l'idée) est une adresse montre la carte de son lien enregistré (titre, description, domaine, type, étoiles), sans la note. « Plus tard » charge 200 lignes, groupées par projet, puis domaine, puis « Sans projet », triées par dernière activité, groupes pliables avec leur nombre (au-delà de 20, seul le premier est ouvert), filtre en tête. « Faire aujourd'hui » (la ressort de Plus tard) et « Terminer » rejoignent les choix de Plus tard.
+- **Android** : repris dans la même étape, avec en plus le balayage, les choix d'un toucher et « Trier un par un ».
+
 ### 2026-11-01 — Liste d'envies : « Créer une tâche »
 
 - **Problème** : une envie (Avoir / Être / Faire) restait un rêve sans prochain pas ; aucun geste ne la reliait à une tâche, et rien ne disait si un pas existait déjà.

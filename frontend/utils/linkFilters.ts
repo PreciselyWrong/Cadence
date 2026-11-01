@@ -150,16 +150,18 @@ const comparable = (url: string): string => {
     }
 };
 
-// The saved link of an inbox item: the one found in it, else the same page.
+// The saved link of an inbox item (or of another source type): the one
+// found in it, else the same page.
 export const linkForItem = (
     links: Link[],
     itemUid: string | undefined,
-    content: string
+    content: string,
+    sourceType: Link['source_type'] = 'inbox_item'
 ): Link | null => {
     const url = firstUrl(content);
     if (!url) return null;
     const own = links.find(
-        (l) => l.source_type === 'inbox_item' && l.source_uid === itemUid
+        (l) => l.source_type === sourceType && l.source_uid === itemUid
     );
     if (own) return own;
     const key = comparable(url);

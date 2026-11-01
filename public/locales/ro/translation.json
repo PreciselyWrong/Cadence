@@ -4646,6 +4646,11 @@
     "loadError": "Nu s-a putut încărca această sarcină."
   },
   "review": {
+    "later": {
+      "noMatch": "Nothing matches.",
+      "noProject": "No project",
+      "filter": "Filter"
+    },
     "title": "Revizuire",
     "attention": "{{count}} de examinat",
     "decidedThisWeek": "{{count}} decise săptămâna aceasta",
@@ -4678,6 +4683,7 @@
       "stale": "Nicio sarcină veche."
     },
     "actions": {
+      "done": "Done",
       "today": "Fă azi",
       "shortSession": "Sesiune scurtă azi (25 min)",
       "split": "Împarte în pași",

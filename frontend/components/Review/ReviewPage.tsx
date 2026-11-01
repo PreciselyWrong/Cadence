@@ -31,7 +31,17 @@ import { openTaskPanel } from '../../store/taskPanelStore';
 import { useIsMinimal } from '../../hooks/useUiDensity';
 import DecisionMenu, { DecisionOption } from './DecisionMenu';
 import WeekStep from './WeekStep';
-import { addDaysToToday, formatDay } from './reviewUtils';
+import {
+    addDaysToToday,
+    formatDay,
+    groupLater,
+    LaterGroup,
+    rowLinkText,
+} from './reviewUtils';
+import { Link as SavedLink } from '../../entities/Link';
+import { useLinksStore } from '../../store/linksStore';
+import { firstUrl, linkForItem, residualText } from '../../utils/linkFilters';
+import InboxLinkPreview from '../Links/InboxLinkPreview';
 
 type Step = ReviewCategory | 'week';
 
@@ -49,6 +59,10 @@ const STEPS: Step[] = [
 
 const STEP_KEY = 'review.step';
 const PAGE = 50;
+// Later is read as a grouped backlog: the server maximum in one page.
+const LATER_PAGE = 200;
+// Past this many parked tasks only the first group opens by default.
+const LONG_LATER = 20;
 const SHORT_SESSION_MINUTES = 25;
 
 const readStep = (): Step => {
@@ -100,6 +114,14 @@ const ReviewPage: React.FC = () => {
     // The Friday routine is offered only while none exists.
     const [routineMissing, setRoutineMissing] = useState(false);
     const locale = i18n.language;
+    const links = useLinksStore((state) => state.links);
+    const loadLinks = useLinksStore((state) => state.load);
+    const [laterQuery, setLaterQuery] = useState('');
+    const [openGroups, setOpenGroups] = useState<Set<string> | null>(null);
+
+    useEffect(() => {
+        void loadLinks();
+    }, [loadLinks]);
 
     useEffect(() => {
         let active = true;
@@ -150,7 +172,11 @@ const ReviewPage: React.FC = () => {
             if (step === 'week') return;
             setLoading(true);
             try {
-                const page = await fetchReviewCategory(step, offset, PAGE);
+                const page = await fetchReviewCategory(
+                    step,
+                    offset,
+                    step === 'later' ? LATER_PAGE : PAGE
+                );
                 const next = toRows(step, page.items);
                 setRows((current) =>
                     offset === 0 ? next : [...current, ...next]
@@ -289,6 +315,14 @@ const ReviewPage: React.FC = () => {
         if (step === 'later') {
             return [
                 {
+                    key: 'today',
+                    label: a('today', 'Do today'),
+                    // A parked task leaves Later, or it would never reach Today.
+                    run: () =>
+                        void onTask(row, task, { today: true, later: false }),
+                },
+                thisWeek,
+                {
                     key: 'review30',
                     label: a('reviewIn30', 'Review in 30 days'),
                     run: () =>
@@ -303,11 +337,15 @@ const ReviewPage: React.FC = () => {
                     date: (day) => void onTask(row, task, { review_on: day }),
                 },
                 inView,
-                thisWeek,
                 {
                     key: 'keepLater',
                     label: a('keepLater', 'Keep parked'),
                     run: () => void onTask(row, task, { review_on: null }),
+                },
+                {
+                    key: 'done',
+                    label: a('done', 'Done'),
+                    run: () => void onTask(row, task, { status: 'done' }),
                 },
                 drop,
             ];
@@ -492,6 +530,103 @@ const ReviewPage: React.FC = () => {
               ? inboxOptions(row, row.item)
               : taskOptions(row, row.item.task);
 
+    // The saved link of a row whose title (or Inbox text) is an address, so
+    // the row shows the page instead of a raw URL.
+    const linkOf = (row: Row): { link: SavedLink; text: string } | null => {
+        if (row.kind === 'project') return null;
+        if (row.kind === 'inbox') {
+            const link = linkForItem(links, row.item.uid, row.item.content);
+            return link ? { link, text: row.item.content } : null;
+        }
+        const task = row.item.task;
+        const text = rowLinkText(task.original_name || task.name, task.note);
+        const link = text ? linkForItem(links, task.uid, text, 'task') : null;
+        return link && text ? { link, text } : null;
+    };
+
+    const renderRow = (row: Row) => {
+        const key = rowKey(row);
+        const found = linkOf(row);
+        const around = found
+            ? residualText(found.text, firstUrl(found.text) ?? '')
+            : '';
+        const showTitle =
+            !found || (around !== '' && around !== (found.link.note ?? ''));
+        return (
+            <li key={key} className="py-2.5">
+                <div className="flex items-start gap-3">
+                    <button
+                        type="button"
+                        onClick={() => openRow(row)}
+                        className="min-w-0 flex-1 text-left"
+                    >
+                        {showTitle && (
+                            <span className="block truncate text-sm text-gray-900 dark:text-gray-100">
+                                {title(row)}
+                            </span>
+                        )}
+                        <span className="block truncate text-xs text-gray-600 dark:text-gray-300">
+                            {meta(row)}
+                        </span>
+                    </button>
+                    <DecisionMenu options={options(row)} />
+                </div>
+                {found && (
+                    <InboxLinkPreview link={found.link} withNote={false} />
+                )}
+                {row.kind === 'project' &&
+                    nextTaskFor === row.item.project.uid && (
+                        <input
+                            autoFocus
+                            value={nextTaskName}
+                            onChange={(e) => setNextTaskName(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    addNextTask(row, row.item);
+                                }
+                                if (e.key === 'Escape') {
+                                    setNextTaskFor(null);
+                                }
+                            }}
+                            placeholder={t(
+                                'review.nextTaskPlaceholder',
+                                'Next task…'
+                            )}
+                            className="mt-2 w-full rounded-md border border-gray-200 bg-white px-2 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
+                        />
+                    )}
+            </li>
+        );
+    };
+
+    const laterItems = rows.flatMap((row) =>
+        row.kind === 'task' ? [row.item] : []
+    );
+    const linkTitles: Record<string, string> = {};
+    rows.forEach((row) => {
+        if (row.kind !== 'task' || !row.item.task.uid) return;
+        const found = linkOf(row);
+        if (found) {
+            linkTitles[row.item.task.uid] =
+                found.link.title || found.link.domain || found.link.url;
+        }
+    });
+    const laterGroups: LaterGroup[] =
+        step === 'later' ? groupLater(laterItems, laterQuery, linkTitles) : [];
+    const opened =
+        openGroups ??
+        new Set(
+            laterItems.length > LONG_LATER
+                ? laterGroups.slice(0, 1).map((g) => g.key)
+                : laterGroups.map((g) => g.key)
+        );
+    const toggleGroup = (key: string) => {
+        const next = new Set(opened);
+        if (next.has(key)) next.delete(key);
+        else next.add(key);
+        setOpenGroups(next);
+    };
+
     const stepIndex = STEPS.indexOf(step);
     const nextStep = STEPS[stepIndex + 1];
 
@@ -587,59 +722,86 @@ const ReviewPage: React.FC = () => {
                             {emptyText(step)}
                         </p>
                     )}
-                    <ul className="divide-y divide-gray-100 dark:divide-gray-800">
-                        {rows.map((row) => {
-                            const key = rowKey(row);
-                            return (
-                                <li key={key} className="py-2.5">
-                                    <div className="flex items-start gap-3">
+                    {step === 'later' && rows.length > 0 ? (
+                        <div className="space-y-3">
+                            <input
+                                type="search"
+                                value={laterQuery}
+                                onChange={(e) => setLaterQuery(e.target.value)}
+                                placeholder={t('review.later.filter', 'Filter')}
+                                aria-label={t('review.later.filter', 'Filter')}
+                                className="w-full rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
+                            />
+                            {laterGroups.length === 0 && (
+                                <p className="py-6 text-center text-sm text-gray-600 dark:text-gray-300">
+                                    {t(
+                                        'review.later.noMatch',
+                                        'Nothing matches.'
+                                    )}
+                                </p>
+                            )}
+                            {laterGroups.map((group) => {
+                                const isOpen =
+                                    laterQuery.trim() !== '' ||
+                                    opened.has(group.key);
+                                return (
+                                    <section key={group.key}>
                                         <button
                                             type="button"
-                                            onClick={() => openRow(row)}
-                                            className="min-w-0 flex-1 text-left"
+                                            aria-expanded={isOpen}
+                                            onClick={() =>
+                                                toggleGroup(group.key)
+                                            }
+                                            className="flex w-full items-center gap-2 py-1.5 text-left text-sm font-medium text-gray-800 dark:text-gray-100"
                                         >
-                                            <span className="block truncate text-sm text-gray-900 dark:text-gray-100">
-                                                {title(row)}
+                                            <span
+                                                aria-hidden="true"
+                                                className="h-2 w-2 flex-shrink-0 rounded-full bg-gray-300 dark:bg-gray-600"
+                                                style={
+                                                    group.color
+                                                        ? {
+                                                              backgroundColor:
+                                                                  group.color,
+                                                          }
+                                                        : undefined
+                                                }
+                                            />
+                                            <span className="truncate">
+                                                {group.name ??
+                                                    t(
+                                                        'review.later.noProject',
+                                                        'No project'
+                                                    )}
                                             </span>
-                                            <span className="block truncate text-xs text-gray-600 dark:text-gray-300">
-                                                {meta(row)}
+                                            <span className="text-xs font-normal text-gray-500">
+                                                {group.items.length}
+                                            </span>
+                                            <span
+                                                aria-hidden="true"
+                                                className="ml-auto text-xs text-gray-500"
+                                            >
+                                                {isOpen ? '▾' : '▸'}
                                             </span>
                                         </button>
-                                        <DecisionMenu options={options(row)} />
-                                    </div>
-                                    {row.kind === 'project' &&
-                                        nextTaskFor ===
-                                            row.item.project.uid && (
-                                            <input
-                                                autoFocus
-                                                value={nextTaskName}
-                                                onChange={(e) =>
-                                                    setNextTaskName(
-                                                        e.target.value
-                                                    )
-                                                }
-                                                onKeyDown={(e) => {
-                                                    if (e.key === 'Enter') {
-                                                        addNextTask(
-                                                            row,
-                                                            row.item
-                                                        );
-                                                    }
-                                                    if (e.key === 'Escape') {
-                                                        setNextTaskFor(null);
-                                                    }
-                                                }}
-                                                placeholder={t(
-                                                    'review.nextTaskPlaceholder',
-                                                    'Next task…'
+                                        {isOpen && (
+                                            <ul className="divide-y divide-gray-100 dark:divide-gray-800">
+                                                {group.items.map((item) =>
+                                                    renderRow({
+                                                        kind: 'task',
+                                                        item,
+                                                    })
                                                 )}
-                                                className="mt-2 w-full rounded-md border border-gray-200 bg-white px-2 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
-                                            />
+                                            </ul>
                                         )}
-                                </li>
-                            );
-                        })}
-                    </ul>
+                                    </section>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <ul className="divide-y divide-gray-100 dark:divide-gray-800">
+                            {rows.map(renderRow)}
+                        </ul>
+                    )}
                     {rows.length < total && (
                         <button
                             type="button"

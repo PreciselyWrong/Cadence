@@ -4635,6 +4635,11 @@
     "loadError": "Opgaven kunne ikke indlæses."
   },
   "review": {
+    "later": {
+      "noMatch": "Nothing matches.",
+      "noProject": "No project",
+      "filter": "Filter"
+    },
     "title": "Gennemgang",
     "attention": "{{count}} at se på",
     "decidedThisWeek": "{{count}} besluttet denne uge",
@@ -4667,6 +4672,7 @@
       "stale": "Ingen gamle opgaver."
     },
     "actions": {
+      "done": "Done",
       "today": "Gør i dag",
       "shortSession": "Kort session i dag (25 min)",
       "split": "Del op i trin",

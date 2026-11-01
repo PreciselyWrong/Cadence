@@ -7,8 +7,12 @@ import LinkNote from './LinkNote';
 import { GithubStats, LinkKindBadge } from './LinkCard';
 
 // The link of an inbox item: what the page is (title, one line of
-// description, domain) and the user's note, editable in place.
-const InboxLinkPreview: React.FC<{ link: Link }> = ({ link }) => {
+// description, domain) and the user's note, editable in place. The review
+// lists show the card alone (`withNote` false).
+const InboxLinkPreview: React.FC<{ link: Link; withNote?: boolean }> = ({
+    link,
+    withNote = true,
+}) => {
     const { t } = useTranslation();
     const { showErrorToast } = useToast();
     const save = useLinksStore((s) => s.save);
@@ -59,17 +63,19 @@ const InboxLinkPreview: React.FC<{ link: Link }> = ({ link }) => {
                     />
                 )}
             </a>
-            <LinkNote
-                note={link.note}
-                stopPropagation
-                onSave={(note) =>
-                    save(link.uid, { note }).catch(() =>
-                        showErrorToast(
-                            t('links.saveError', 'Could not save the link.')
+            {withNote && (
+                <LinkNote
+                    note={link.note}
+                    stopPropagation
+                    onSave={(note) =>
+                        save(link.uid, { note }).catch(() =>
+                            showErrorToast(
+                                t('links.saveError', 'Could not save the link.')
+                            )
                         )
-                    )
-                }
-            />
+                    }
+                />
+            )}
         </div>
     );
 };

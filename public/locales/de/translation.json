@@ -4644,6 +4644,11 @@
     "loadError": "Diese Aufgabe konnte nicht geladen werden."
   },
   "review": {
+    "later": {
+      "noMatch": "Nothing matches.",
+      "noProject": "No project",
+      "filter": "Filter"
+    },
     "title": "Überprüfen",
     "attention": "{{count}} anzusehen",
     "decidedThisWeek": "{{count}} diese Woche entschieden",
@@ -4676,6 +4681,7 @@
       "stale": "Keine alten Aufgaben."
     },
     "actions": {
+      "done": "Done",
       "today": "Heute erledigen",
       "shortSession": "Kurze Sitzung heute (25 Min.)",
       "split": "In Schritte aufteilen",

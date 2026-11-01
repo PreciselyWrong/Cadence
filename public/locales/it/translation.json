@@ -4642,6 +4642,11 @@
     "loadError": "Impossibile caricare questa attività."
   },
   "review": {
+    "later": {
+      "noMatch": "Nothing matches.",
+      "noProject": "No project",
+      "filter": "Filter"
+    },
     "title": "Revisione",
     "attention": "{{count}} da esaminare",
     "decidedThisWeek": "{{count}} decise questa settimana",
@@ -4674,6 +4679,7 @@
       "stale": "Nessuna attività vecchia."
     },
     "actions": {
+      "done": "Done",
       "today": "Fai oggi",
       "shortSession": "Sessione breve oggi (25 min)",
       "split": "Dividi in passi",

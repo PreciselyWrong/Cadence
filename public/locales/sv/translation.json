@@ -4635,6 +4635,11 @@
     "loadError": "Den här uppgiften kunde inte laddas."
   },
   "review": {
+    "later": {
+      "noMatch": "Nothing matches.",
+      "noProject": "No project",
+      "filter": "Filter"
+    },
     "title": "Genomgång",
     "attention": "{{count}} att titta på",
     "decidedThisWeek": "{{count}} beslutade denna vecka",
@@ -4667,6 +4672,7 @@
       "stale": "Inga gamla uppgifter."
     },
     "actions": {
+      "done": "Done",
       "today": "Gör i dag",
       "shortSession": "Kort pass i dag (25 min)",
       "split": "Dela upp i steg",

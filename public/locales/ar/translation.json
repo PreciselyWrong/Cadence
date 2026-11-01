@@ -4671,6 +4671,11 @@
     "loadError": "تعذّر تحميل هذه المهمة."
   },
   "review": {
+    "later": {
+      "noMatch": "Nothing matches.",
+      "noProject": "No project",
+      "filter": "Filter"
+    },
     "title": "المراجعة",
     "attention": "{{count}} للنظر فيها",
     "decidedThisWeek": "{{count}} تقرّر هذا الأسبوع",
@@ -4703,6 +4708,7 @@
       "stale": "لا مهام قديمة."
     },
     "actions": {
+      "done": "Done",
       "today": "افعلها اليوم",
       "shortSession": "جلسة قصيرة اليوم (25 دقيقة)",
       "split": "قسّمها إلى خطوات",

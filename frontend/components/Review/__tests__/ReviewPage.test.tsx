@@ -29,6 +29,29 @@ jest.mock('../../../utils/dailyPlanService', () => ({
 jest.mock('../../../utils/projectsService', () => ({
     updateProject: jest.fn(),
 }));
+const mockLinks = {
+    links: [
+        {
+            uid: 'l1',
+            url: 'https://github.com/pbakaus/impeccable',
+            domain: 'github.com',
+            title: 'Impeccable',
+            description: 'Design skills for AI agents',
+            kind: 'repo',
+            github_stars: 1200,
+            github_language: null,
+            image_url: null,
+            note: null,
+            source_type: 'task',
+            source_uid: 'l-task',
+        },
+    ],
+    load: jest.fn(),
+    save: jest.fn(),
+};
+jest.mock('../../../store/linksStore', () => ({
+    useLinksStore: (pick: (s: unknown) => unknown) => pick(mockLinks),
+}));
 const mockToast = { showSuccessToast: jest.fn(), showErrorToast: jest.fn() };
 jest.mock('../../Shared/ToastContext', () => ({
     useToast: () => mockToast,
@@ -243,6 +266,103 @@ describe('ReviewPage', () => {
                 expect(mockToast.showErrorToast).toHaveBeenCalled()
             );
             expect(offer()).toBeInTheDocument();
+        });
+    });
+
+    describe('Later', () => {
+        const parked = (
+            uid: string,
+            name: string,
+            project: string | null,
+            touched: string
+        ) => ({
+            task: {
+                uid,
+                name,
+                status: 'not_started',
+                Project: project ? { uid: project, name: project } : undefined,
+            },
+            review_due: false,
+            last_activity_at: touched,
+        });
+
+        beforeEach(() => {
+            localStorage.setItem('review.step', 'later');
+            mocked.fetchReviewCategory.mockResolvedValue({
+                total: 3,
+                items: [
+                    parked(
+                        'a',
+                        'Fix the gate',
+                        'House',
+                        '2026-09-01T00:00:00Z'
+                    ),
+                    parked(
+                        'l-task',
+                        'https://github.com/pbakaus/impeccable',
+                        null,
+                        '2026-10-30T00:00:00Z'
+                    ),
+                    parked(
+                        'b',
+                        'Paint the shed',
+                        'House',
+                        '2026-10-01T00:00:00Z'
+                    ),
+                ],
+            } as any);
+        });
+
+        it('groups parked tasks by project and shows a link as its page, not its address', async () => {
+            renderPage();
+            expect(
+                await screen.findByRole('button', { name: /House\s*2/ })
+            ).toBeInTheDocument();
+            expect(
+                screen.getByRole('button', { name: /No project\s*1/ })
+            ).toBeInTheDocument();
+            expect(screen.getByText('Impeccable')).toBeInTheDocument();
+            expect(
+                screen.queryByText('https://github.com/pbakaus/impeccable')
+            ).not.toBeInTheDocument();
+            expect(mocked.fetchReviewCategory).toHaveBeenCalledWith(
+                'later',
+                0,
+                200
+            );
+        });
+
+        it('filters the backlog and folds a group', async () => {
+            renderPage();
+            await screen.findByText('Fix the gate');
+            fireEvent.change(screen.getByLabelText('Filter'), {
+                target: { value: 'shed' },
+            });
+            expect(screen.queryByText('Fix the gate')).not.toBeInTheDocument();
+            expect(screen.getByText('Paint the shed')).toBeInTheDocument();
+            fireEvent.change(screen.getByLabelText('Filter'), {
+                target: { value: '' },
+            });
+            fireEvent.click(screen.getByRole('button', { name: /House\s*2/ }));
+            expect(
+                screen.queryByText('Paint the shed')
+            ).not.toBeInTheDocument();
+        });
+
+        it('takes a parked task out of Later when it is done today', async () => {
+            renderPage();
+            await screen.findByText('Fix the gate');
+            fireEvent.click(
+                screen.getAllByRole('button', { name: /Decide/ })[0]
+            );
+            fireEvent.click(screen.getByRole('menuitem', { name: 'Do today' }));
+            await waitFor(() =>
+                expect(mocked.decideTask).toHaveBeenCalledWith('b', {
+                    today: true,
+                    later: false,
+                    reviewed: true,
+                })
+            );
         });
     });
 });

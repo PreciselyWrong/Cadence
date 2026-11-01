@@ -4636,6 +4636,11 @@
     "loadError": "Δεν ήταν δυνατή η φόρτωση αυτής της εργασίας."
   },
   "review": {
+    "later": {
+      "noMatch": "Nothing matches.",
+      "noProject": "No project",
+      "filter": "Filter"
+    },
     "title": "Ανασκόπηση",
     "attention": "{{count}} για εξέταση",
     "decidedThisWeek": "{{count}} αποφασίστηκαν αυτή την εβδομάδα",
@@ -4668,6 +4673,7 @@
       "stale": "Καμία παλιά εργασία."
     },
     "actions": {
+      "done": "Done",
       "today": "Κάνε το σήμερα",
       "shortSession": "Σύντομη συνεδρία σήμερα (25 λεπτά)",
       "split": "Χώρισε σε βήματα",

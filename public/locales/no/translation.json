@@ -4640,6 +4640,11 @@
     "loadError": "Kunne ikke laste denne oppgaven."
   },
   "review": {
+    "later": {
+      "noMatch": "Nothing matches.",
+      "noProject": "No project",
+      "filter": "Filter"
+    },
     "title": "Gjennomgang",
     "attention": "{{count}} å se på",
     "decidedThisWeek": "{{count}} bestemt denne uken",
@@ -4672,6 +4677,7 @@
       "stale": "Ingen gamle oppgaver."
     },
     "actions": {
+      "done": "Done",
       "today": "Gjør i dag",
       "shortSession": "Kort økt i dag (25 min)",
       "split": "Del opp i steg",

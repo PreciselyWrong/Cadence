@@ -4635,6 +4635,11 @@
     "loadError": "Tehtävää ei voitu ladata."
   },
   "review": {
+    "later": {
+      "noMatch": "Nothing matches.",
+      "noProject": "No project",
+      "filter": "Filter"
+    },
     "title": "Katselmointi",
     "attention": "{{count}} katsottavaa",
     "decidedThisWeek": "{{count}} päätetty tällä viikolla",
@@ -4667,6 +4672,7 @@
       "stale": "Ei vanhoja tehtäviä."
     },
     "actions": {
+      "done": "Done",
       "today": "Tee tänään",
       "shortSession": "Lyhyt jakso tänään (25 min)",
       "split": "Jaa vaiheisiin",

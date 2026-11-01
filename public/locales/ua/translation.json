@@ -4653,6 +4653,11 @@
     "loadError": "Не вдалося завантажити це завдання."
   },
   "review": {
+    "later": {
+      "noMatch": "Nothing matches.",
+      "noProject": "No project",
+      "filter": "Filter"
+    },
     "title": "Огляд",
     "attention": "{{count}} до розгляду",
     "decidedThisWeek": "{{count}} вирішено цього тижня",
@@ -4685,6 +4690,7 @@
       "stale": "Немає старих завдань."
     },
     "actions": {
+      "done": "Done",
       "today": "Зробити сьогодні",
       "shortSession": "Коротка сесія сьогодні (25 хв)",
       "split": "Розбити на кроки",

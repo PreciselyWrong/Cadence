@@ -4642,6 +4642,11 @@
     "loadError": "Não foi possível carregar esta tarefa."
   },
   "review": {
+    "later": {
+      "noMatch": "Nothing matches.",
+      "noProject": "No project",
+      "filter": "Filter"
+    },
     "title": "Revisão",
     "attention": "{{count}} para ver",
     "decidedThisWeek": "{{count}} decididas esta semana",
@@ -4674,6 +4679,7 @@
       "stale": "Sem tarefas antigas."
     },
     "actions": {
+      "done": "Done",
       "today": "Fazer hoje",
       "shortSession": "Sessão curta hoje (25 min)",
       "split": "Dividir em passos",

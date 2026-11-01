@@ -4748,6 +4748,11 @@
     "loadError": "Túto úlohu sa nepodarilo načítať."
   },
   "review": {
+    "later": {
+      "noMatch": "Nothing matches.",
+      "noProject": "No project",
+      "filter": "Filter"
+    },
     "title": "Prehľad",
     "attention": "{{count}} na prezretie",
     "decidedThisWeek": "{{count}} rozhodnuté tento týždeň",
@@ -4780,6 +4785,7 @@
       "stale": "Žiadne staré úlohy."
     },
     "actions": {
+      "done": "Done",
       "today": "Urobiť dnes",
       "shortSession": "Krátka relácia dnes (25 min)",
       "split": "Rozdeliť na kroky",

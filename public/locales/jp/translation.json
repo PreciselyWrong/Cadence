@@ -4633,6 +4633,11 @@
     "loadError": "このタスクを読み込めませんでした。"
   },
   "review": {
+    "later": {
+      "noMatch": "Nothing matches.",
+      "noProject": "No project",
+      "filter": "Filter"
+    },
     "title": "見直し",
     "attention": "確認が必要 {{count}} 件",
     "decidedThisWeek": "今週決めたもの {{count}} 件",
@@ -4665,6 +4670,7 @@
       "stale": "古いタスクはありません。"
     },
     "actions": {
+      "done": "Done",
       "today": "今日やる",
       "shortSession": "今日短いセッション (25 分)",
       "split": "ステップに分ける",
