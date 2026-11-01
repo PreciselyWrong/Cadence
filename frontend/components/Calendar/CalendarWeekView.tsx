@@ -26,6 +26,7 @@ import {
 } from './taskEvents';
 import { ResizeHandle, useEventResize } from './useEventResize';
 import AllDayOverflow from './AllDayOverflow';
+import { dropMinuteOfDay, pointerOffsetIn } from './dropTime';
 import { VisibleHours, WHOLE_DAY, countOutside } from './visibleHours';
 import HiddenHoursBar, {
     HIDDEN_HOURS_STRIPES,
@@ -38,7 +39,12 @@ interface CalendarWeekViewProps {
     onDateClick?: (date: Date) => void;
     onEventClick?: (event: CalendarEvent) => void;
     onTimeSlotClick?: (date: Date, hour: number) => void;
-    onEventDrop?: (eventId: string, newDate: Date, newHour?: number) => void;
+    onEventDrop?: (
+        eventId: string,
+        newDate: Date,
+        newHour?: number,
+        newMinute?: number
+    ) => void;
     onEventResize?: (eventId: string, newEnd: Date) => void;
     showWeekends?: boolean;
     // Multi-day view: this many shown days from currentDate instead of the
@@ -155,14 +161,21 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                 event.start.getHours() === hour
         );
 
+    // Where the dragged block was grabbed, so its top lands where it shows.
+    const grabOffset = React.useRef(0);
+
     const handleDragStart = (event: CalendarEvent, e: React.DragEvent) => {
         e.stopPropagation();
+        grabOffset.current = event.allDay ? 0 : pointerOffsetIn(e);
         setDraggedEventId(event.id);
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/plain', event.id);
     };
 
-    const handleDragEnd = () => setDraggedEventId(null);
+    const handleDragEnd = () => {
+        grabOffset.current = 0;
+        setDraggedEventId(null);
+    };
 
     // Whole-day bars, clipped to this week, as grid columns 2..8.
     // Whole-day bars across the shown days, as grid columns 2 and on.
@@ -215,8 +228,20 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
         e.preventDefault();
         e.stopPropagation();
         const eventId = e.dataTransfer.getData('text/plain');
-        if (eventId && onEventDrop) onEventDrop(eventId, day, hour);
-        setDraggedEventId(null);
+        if (eventId && onEventDrop) {
+            if (hour === undefined) {
+                onEventDrop(eventId, day);
+            } else {
+                const minute = dropMinuteOfDay(
+                    hour,
+                    pointerOffsetIn(e),
+                    grabOffset.current,
+                    WEEK_HOUR_HEIGHT
+                );
+                onEventDrop(eventId, day, Math.floor(minute / 60), minute % 60);
+            }
+        }
+        handleDragEnd();
     };
 
     return (
@@ -396,6 +421,7 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                                         e.dataTransfer.dropEffect = 'move';
                                     }}
                                     onDrop={(e) => handleDrop(day, hour, e)}
+                                    data-testid={`week-slot-${format(day, 'yyyy-MM-dd')}-${hour}`}
                                     className={`p-1.5 border-l border-gray-100 dark:border-gray-600 cursor-pointer transition-colors hover:bg-blue-50/30 dark:hover:bg-blue-900/10 relative ${
                                         isToday(day)
                                             ? 'bg-blue-50/10 dark:bg-blue-900/5'

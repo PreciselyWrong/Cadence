@@ -12,6 +12,7 @@ import {
 import { ResizeHandle, useEventResize } from './useEventResize';
 import { DragBlock, DropTarget } from './DndCalendarParts';
 import AllDayOverflow from './AllDayOverflow';
+import { dropMinuteOfDay, pointerOffsetIn } from './dropTime';
 import { VisibleHours, WHOLE_DAY, countOutside } from './visibleHours';
 import HiddenHoursBar, {
     HIDDEN_HOURS_STRIPES,
@@ -23,7 +24,12 @@ interface CalendarDayViewProps {
     events: CalendarEvent[];
     onEventClick?: (event: CalendarEvent) => void;
     onTimeSlotClick?: (date: Date, hour: number) => void;
-    onEventDrop?: (eventId: string, newDate: Date, newHour?: number) => void;
+    onEventDrop?: (
+        eventId: string,
+        newDate: Date,
+        newHour?: number,
+        newMinute?: number
+    ) => void;
     onEventResize?: (eventId: string, newEnd: Date) => void;
     // Hour the time slots start scrolled to, read once on mount.
     scrollToHour?: number;
@@ -120,21 +126,41 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
         };
     };
 
+    // Where the dragged block was grabbed, so its top lands where it shows.
+    const grabOffset = React.useRef(0);
+
     const handleDragStart = (event: CalendarEvent, e: React.DragEvent) => {
         e.stopPropagation();
+        grabOffset.current = event.allDay ? 0 : pointerOffsetIn(e);
         setDraggedEventId(event.id);
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/plain', event.id);
     };
 
-    const handleDragEnd = () => setDraggedEventId(null);
+    const handleDragEnd = () => {
+        grabOffset.current = 0;
+        setDraggedEventId(null);
+    };
 
     const handleDrop = (hour: number, e: React.DragEvent) => {
         e.preventDefault();
         e.stopPropagation();
         const eventId = e.dataTransfer.getData('text/plain');
-        if (eventId && onEventDrop) onEventDrop(eventId, currentDate, hour);
-        setDraggedEventId(null);
+        if (eventId && onEventDrop) {
+            const minute = dropMinuteOfDay(
+                hour,
+                pointerOffsetIn(e),
+                grabOffset.current,
+                HOUR_HEIGHT
+            );
+            onEventDrop(
+                eventId,
+                currentDate,
+                Math.floor(minute / 60),
+                minute % 60
+            );
+        }
+        handleDragEnd();
     };
 
     React.useEffect(() => {
@@ -331,6 +357,7 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                                         e.dataTransfer.dropEffect = 'move';
                                     }}
                                     onDrop={(e) => handleDrop(hour, e)}
+                                    data-testid={`day-slot-${hour}`}
                                     className="flex-1 cursor-pointer hover:bg-blue-50/30 dark:hover:bg-blue-900/10 relative transition-colors"
                                 />
                             )}

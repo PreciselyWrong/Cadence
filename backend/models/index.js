@@ -771,6 +771,15 @@ require('../modules/projects/nextAction').install({ Task, Project });
 // Links in inbox items, tasks and notes become Link rows on every write path.
 require('../modules/links/capture').install({ InboxItem, Task, Note });
 
+// A planned task moved past its planned day leaves that plan on every write
+// path.
+require('../modules/daily-plan/leaveOnMove').install({
+    Task,
+    User,
+    DailyPlan,
+    DailyPlanItem,
+});
+
 module.exports = {
     sequelize,
     User,

@@ -849,7 +849,8 @@ const Calendar: React.FC = () => {
     const handleEventDrop = async (
         eventId: string,
         newDate: Date,
-        newHour?: number
+        newHour?: number,
+        newMinute = 0
     ) => {
         if (eventId.startsWith(ARRANGE_DRAG_PREFIX)) {
             const task = findTask(eventId.slice(ARRANGE_DRAG_PREFIX.length));
@@ -858,7 +859,7 @@ const Calendar: React.FC = () => {
                 due_date: format(newDate, 'yyyy-MM-dd'),
             };
             if (newHour !== undefined) {
-                update.due_time = `${String(newHour).padStart(2, '0')}:00`;
+                update.due_time = `${String(newHour).padStart(2, '0')}:${String(newMinute).padStart(2, '0')}`;
             }
             await saveTaskChange(task, update);
             return;
@@ -871,7 +872,7 @@ const Calendar: React.FC = () => {
             if (!googleEvent.editable) return;
             const newStart = new Date(newDate);
             if (newHour !== undefined && !googleEvent.allDay) {
-                newStart.setHours(newHour, 0, 0, 0);
+                newStart.setHours(newHour, newMinute, 0, 0);
             } else if (googleEvent.allDay) {
                 newStart.setHours(0, 0, 0, 0);
             } else {
@@ -895,7 +896,7 @@ const Calendar: React.FC = () => {
 
         const newStart = new Date(newDate);
         if (newHour !== undefined) {
-            newStart.setHours(newHour, 0, 0, 0);
+            newStart.setHours(newHour, newMinute, 0, 0);
         } else {
             newStart.setHours(
                 event.start.getHours(),

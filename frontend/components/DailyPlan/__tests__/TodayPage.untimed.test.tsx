@@ -255,4 +255,29 @@ describe('TodayPage untimed tasks', () => {
         expect(saveDailyPlanItems).not.toHaveBeenCalled();
         project.remove();
     });
+
+    it('reorders untimed tasks in the Agenda panel and keeps timed ones in place', async () => {
+        window.localStorage.setItem('today.panelMode', 'agenda');
+        const items = [
+            planItem('a', null),
+            planItem('t', 600),
+            planItem('b', null),
+        ];
+        (fetchDailyPlan as jest.Mock).mockResolvedValue({
+            date: TODAY,
+            plan: { uid: 'p', date: TODAY, started_at: null, items },
+        });
+        render(<TodayPage />);
+        expect(await screen.findByTestId('agenda-handle-b')).toHaveAttribute(
+            'aria-roledescription',
+            'sortable'
+        );
+        // Timed rows are not sortable.
+        expect(screen.queryByTestId('agenda-handle-t')).not.toBeInTheDocument();
+
+        dropItemOn(items[2], 'a');
+
+        await waitFor(() => expect(saveDailyPlanItems).toHaveBeenCalled());
+        expect(lastSavedOrder()).toEqual(['b', 't', 'a']);
+    });
 });

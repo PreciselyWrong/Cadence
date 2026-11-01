@@ -221,4 +221,29 @@ describe('TodayPage planned task date changes', () => {
             ])
         );
     });
+
+    it('takes a planned task off today when it is moved to tomorrow from the Agenda panel', async () => {
+        window.localStorage.setItem('today.panelMode', 'agenda');
+        await renderWithPlan();
+
+        fireEvent.click(await screen.findByTestId('agenda-tomorrow-w'));
+
+        await waitFor(() =>
+            expect(updateTask).toHaveBeenCalledWith('w', {
+                due_date: TOMORROW,
+            })
+        );
+        await waitFor(() =>
+            expect(saveDailyPlanItems).toHaveBeenLastCalledWith(TODAY, [
+                expect.objectContaining({ task_uid: 'x' }),
+            ])
+        );
+        expect(
+            screen.queryByTestId('agenda-tomorrow-w')
+        ).not.toBeInTheDocument();
+        expect(mockShowUndoToast).toHaveBeenCalledWith(
+            expect.stringContaining('Write report'),
+            expect.any(Function)
+        );
+    });
 });

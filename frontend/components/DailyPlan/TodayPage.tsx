@@ -464,6 +464,9 @@ const TodayPage: React.FC = () => {
     );
 
     const mode: Mode = narrow ? 'list' : preferredMode;
+    // Untimed plan rows are sorted among themselves in the timeline's tray
+    // and in the Agenda panel; the list view sorts the whole plan.
+    const untimedSortable = mode === 'timeline' || panelMode === 'agenda';
     const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const pending = useRef<DailyPlanItem[] | null>(null);
     const startRequested = useRef(false);
@@ -1594,7 +1597,7 @@ const TodayPage: React.FC = () => {
             setDragLabel(data.task.name);
         } else if (
             data.type === 'item' &&
-            mode === 'timeline' &&
+            untimedSortable &&
             data.item.start_minute === null
         ) {
             setDragLabel(data.item.task.name);
@@ -1669,9 +1672,10 @@ const TodayPage: React.FC = () => {
             return;
         }
 
-        // Timeline tray: untimed rows swap places among the untimed ones.
+        // Timeline tray and Agenda panel: untimed rows swap places among the
+        // untimed ones.
         if (
-            mode === 'timeline' &&
+            untimedSortable &&
             data.type === 'item' &&
             data.item.start_minute === null &&
             overId.startsWith('item:')
@@ -2415,6 +2419,10 @@ const TodayPage: React.FC = () => {
                                         items={items}
                                         events={dayEvents}
                                         now={isToday ? now : null}
+                                        sortable
+                                        onReschedule={(item, when) =>
+                                            handleReschedule(item.task, when)
+                                        }
                                     />
                                 ) : (
                                     <>
