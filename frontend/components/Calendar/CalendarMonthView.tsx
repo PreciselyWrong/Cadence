@@ -144,7 +144,7 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
             {/* Calendar grid */}
             <div
                 style={gridColumns}
-                className="grid flex-1 min-h-0 auto-rows-fr divide-x divide-gray-100 dark:divide-gray-600"
+                className="grid flex-none sm:flex-1 sm:min-h-0 auto-rows-fr divide-x divide-gray-100 dark:divide-gray-600"
             >
                 {days.map((day, index) => {
                     if (!isShown(day.getDay())) return null;
@@ -314,9 +314,10 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                 })}
             </div>
 
-            {/* Phones: the selected day's events */}
+            {/* Phones: the selected day's events. The month keeps its full
+                height; a long day scrolls in the space left below it. */}
             <div
-                className="border-t border-gray-200 p-3 dark:border-gray-600 sm:hidden"
+                className="min-h-0 flex-1 overflow-y-auto border-t border-gray-200 p-3 dark:border-gray-600 sm:hidden"
                 data-testid="calendar-month-day-list"
             >
                 <div className="mb-2 flex items-center justify-between">

@@ -180,9 +180,9 @@ const TaskChipRow: React.FC<TaskChipRowProps> = ({
         : null;
     const deferParts = toDueParts(task.defer_until || '');
     const reminderParts = toDueParts(task.reminder_at || '');
-    // The reminder is rarely needed: it stays behind "More" until it is set.
+    // A simple task stays simple: date, project and tags always show; any
+    // other field shows once it has a value, the rest waits behind "More".
     const [showMore, setShowMore] = useState(false);
-    const reminderVisible = showMore || !!task.reminder_at;
 
     const priorityOptions: PopoverOption<string | null>[] = [
         { value: null, label: t('priority.none', 'None') },
@@ -190,8 +190,14 @@ const TaskChipRow: React.FC<TaskChipRowProps> = ({
         { value: 'medium', label: t('priority.medium', 'Medium') },
         { value: 'high', label: t('priority.high', 'High') },
     ];
+    // The API sends a number (1 medium, 2 high); edits send a name. 0 is
+    // both "low" and the column default, so it reads as no priority.
     const priorityValue =
-        typeof task.priority === 'string' ? task.priority : null;
+        typeof task.priority === 'string'
+            ? task.priority
+            : typeof task.priority === 'number'
+              ? (([null, 'medium', 'high'] as const)[task.priority] ?? null)
+              : null;
     const priorityLabel = priorityOptions.find(
         (o) => o.value === priorityValue
     )?.label;
@@ -265,6 +271,23 @@ const TaskChipRow: React.FC<TaskChipRowProps> = ({
         () => toRecurrenceDraft(task)
     );
 
+    const show = {
+        start: showMore || !!startDate,
+        priority: showMore || !!priorityValue,
+        area: showMore || !!areaName,
+        status: showMore || statusValue !== TASK_STATUS.NOT_STARTED,
+        recurrence: showMore || isRecurring || isInstance,
+        estimate: showMore || !!task.estimated_minutes,
+        defer: showMore || !!task.defer_until,
+        reminder: showMore || !!task.reminder_at,
+        assignee: !!assignee || (showMore && people.length > 0),
+    };
+    const anyHidden =
+        Object.entries(show).some(
+            ([field, visible]) => field !== 'assignee' && !visible
+        ) ||
+        (!show.assignee && people.length > 0);
+
     const commitTags = () => {
         const next = tagsDraft.current;
         if (JSON.stringify(next) === JSON.stringify(tagNames)) return;
@@ -310,57 +333,61 @@ const TaskChipRow: React.FC<TaskChipRowProps> = ({
                     )}
                 />
 
-                <DatePopover
-                    label={t('forms.startDate', 'Start')}
-                    value={{
-                        date: startDate,
-                        time: task.start_time ?? null,
-                    }}
-                    onChange={onStart}
-                    renderTrigger={({ display, ...props }) => (
-                        <Chip
-                            {...props}
-                            icon={<PlayIcon />}
-                            text={
-                                display
-                                    ? `${t('forms.startDate', 'Start')} ${display}`
-                                    : t('forms.startDate', 'Start')
-                            }
-                            filled={!!display}
-                            data-testid="chip-start"
-                        />
-                    )}
-                />
+                {show.start && (
+                    <DatePopover
+                        label={t('forms.startDate', 'Start')}
+                        value={{
+                            date: startDate,
+                            time: task.start_time ?? null,
+                        }}
+                        onChange={onStart}
+                        renderTrigger={({ display, ...props }) => (
+                            <Chip
+                                {...props}
+                                icon={<PlayIcon />}
+                                text={
+                                    display
+                                        ? `${t('forms.startDate', 'Start')} ${display}`
+                                        : t('forms.startDate', 'Start')
+                                }
+                                filled={!!display}
+                                data-testid="chip-start"
+                            />
+                        )}
+                    />
+                )}
 
-                <ChipPopover
-                    label={t('forms.priority', 'Priority')}
-                    widthClass="w-48"
-                    renderTrigger={(props) => (
-                        <Chip
-                            {...props}
-                            icon={<FlagIcon />}
-                            text={
-                                priorityValue
-                                    ? (priorityLabel ?? '')
-                                    : t('forms.priority', 'Priority')
-                            }
-                            filled={!!priorityValue}
-                            data-testid="chip-priority"
-                        />
-                    )}
-                >
-                    {(close) => (
-                        <OptionList
-                            label={t('forms.priority', 'Priority')}
-                            options={priorityOptions}
-                            value={priorityValue}
-                            onSelect={(value) => {
-                                onPriority(value as PriorityType);
-                                close();
-                            }}
-                        />
-                    )}
-                </ChipPopover>
+                {show.priority && (
+                    <ChipPopover
+                        label={t('forms.priority', 'Priority')}
+                        widthClass="w-48"
+                        renderTrigger={(props) => (
+                            <Chip
+                                {...props}
+                                icon={<FlagIcon />}
+                                text={
+                                    priorityValue
+                                        ? (priorityLabel ?? '')
+                                        : t('forms.priority', 'Priority')
+                                }
+                                filled={!!priorityValue}
+                                data-testid="chip-priority"
+                            />
+                        )}
+                    >
+                        {(close) => (
+                            <OptionList
+                                label={t('forms.priority', 'Priority')}
+                                options={priorityOptions}
+                                value={priorityValue}
+                                onSelect={(value) => {
+                                    onPriority(value as PriorityType);
+                                    close();
+                                }}
+                            />
+                        )}
+                    </ChipPopover>
+                )}
 
                 <ChipPopover
                     label={t('taskPanel.project', 'Project')}
@@ -407,41 +434,43 @@ const TaskChipRow: React.FC<TaskChipRowProps> = ({
                     )}
                 </ChipPopover>
 
-                <ChipPopover
-                    label={t('common.area', 'Area')}
-                    renderTrigger={(props) => (
-                        <Chip
-                            {...props}
-                            icon={<MapPinIcon />}
-                            text={areaName ?? t('common.area', 'Area')}
-                            filled={!!areaName}
-                            data-testid="chip-area"
-                        />
-                    )}
-                >
-                    {(close) => (
-                        <OptionList
-                            label={t('common.area', 'Area')}
-                            options={[
-                                {
-                                    value: null,
-                                    label: inherited
-                                        ? `${t('taskPanel.areaInherited', 'Project area')} (${inherited.name})`
-                                        : t('taskPanel.noArea', 'No area'),
-                                },
-                                ...areas.map((a: any) => ({
-                                    value: a.id as number | null,
-                                    label: a.name as string,
-                                })),
-                            ]}
-                            value={task.area_id ?? null}
-                            onSelect={(value) => {
-                                onArea(value);
-                                close();
-                            }}
-                        />
-                    )}
-                </ChipPopover>
+                {show.area && (
+                    <ChipPopover
+                        label={t('common.area', 'Area')}
+                        renderTrigger={(props) => (
+                            <Chip
+                                {...props}
+                                icon={<MapPinIcon />}
+                                text={areaName ?? t('common.area', 'Area')}
+                                filled={!!areaName}
+                                data-testid="chip-area"
+                            />
+                        )}
+                    >
+                        {(close) => (
+                            <OptionList
+                                label={t('common.area', 'Area')}
+                                options={[
+                                    {
+                                        value: null,
+                                        label: inherited
+                                            ? `${t('taskPanel.areaInherited', 'Project area')} (${inherited.name})`
+                                            : t('taskPanel.noArea', 'No area'),
+                                    },
+                                    ...areas.map((a: any) => ({
+                                        value: a.id as number | null,
+                                        label: a.name as string,
+                                    })),
+                                ]}
+                                value={task.area_id ?? null}
+                                onSelect={(value) => {
+                                    onArea(value);
+                                    close();
+                                }}
+                            />
+                        )}
+                    </ChipPopover>
+                )}
 
                 <ChipPopover
                     label={t('forms.tags', 'Tags')}
@@ -484,189 +513,201 @@ const TaskChipRow: React.FC<TaskChipRowProps> = ({
                     )}
                 </ChipPopover>
 
-                <ChipPopover
-                    label={t('common.status', 'Status')}
-                    widthClass="w-52"
-                    renderTrigger={(props) => (
-                        <Chip
-                            {...props}
-                            icon={statusIcon}
-                            text={statusLabel}
-                            filled={statusValue !== TASK_STATUS.NOT_STARTED}
-                            data-testid="chip-status"
-                            data-status={statusValue}
-                        />
-                    )}
-                >
-                    {(close) => (
-                        <OptionList
-                            label={t('common.status', 'Status')}
-                            options={statusOptions}
-                            value={statusValue as number}
-                            onSelect={(value) => {
-                                onStatus(value);
-                                close();
-                            }}
-                        />
-                    )}
-                </ChipPopover>
-
-                {isInstance ? (
-                    <Chip
-                        icon={<ArrowPathIcon />}
-                        text={t('task.instanceOfShort', 'Occurrence')}
-                        filled
-                        title={t(
-                            'task.instanceOf',
-                            'This is an instance of a recurring task'
-                        )}
-                        onClick={() =>
-                            task.recurring_parent_uid &&
-                            onOpenParent?.(task.recurring_parent_uid)
-                        }
-                        data-testid="chip-recurrence"
-                    />
-                ) : (
+                {show.status && (
                     <ChipPopover
-                        label={t('forms.task.recurrence', 'Recurrence')}
-                        widthClass="w-96"
-                        onClose={commitRecurrence}
+                        label={t('common.status', 'Status')}
+                        widthClass="w-52"
                         renderTrigger={(props) => (
                             <Chip
                                 {...props}
-                                onClick={() => {
-                                    setRecurrenceDraft(toRecurrenceDraft(task));
-                                    props.onClick();
-                                }}
-                                icon={<ArrowPathIcon />}
-                                text={
-                                    isRecurring
-                                        ? (recurrenceLabels[recurrenceType] ??
-                                          t(
-                                              'recurrence.recurring',
-                                              'Recurring'
-                                          ))
-                                        : t(
-                                              'forms.task.recurrence',
-                                              'Recurrence'
-                                          )
-                                }
-                                filled={isRecurring}
-                                data-testid="chip-recurrence"
+                                icon={statusIcon}
+                                text={statusLabel}
+                                filled={statusValue !== TASK_STATUS.NOT_STARTED}
+                                data-testid="chip-status"
+                                data-status={statusValue}
                             />
                         )}
                     >
-                        {() => (
-                            <div className="max-h-[60vh] overflow-y-auto p-1">
-                                <TaskRecurrenceSection
-                                    recurrenceType={
-                                        recurrenceDraft.recurrence_type
+                        {(close) => (
+                            <OptionList
+                                label={t('common.status', 'Status')}
+                                options={statusOptions}
+                                value={statusValue as number}
+                                onSelect={(value) => {
+                                    onStatus(value);
+                                    close();
+                                }}
+                            />
+                        )}
+                    </ChipPopover>
+                )}
+
+                {show.recurrence &&
+                    (isInstance ? (
+                        <Chip
+                            icon={<ArrowPathIcon />}
+                            text={t('task.instanceOfShort', 'Occurrence')}
+                            filled
+                            title={t(
+                                'task.instanceOf',
+                                'This is an instance of a recurring task'
+                            )}
+                            onClick={() =>
+                                task.recurring_parent_uid &&
+                                onOpenParent?.(task.recurring_parent_uid)
+                            }
+                            data-testid="chip-recurrence"
+                        />
+                    ) : (
+                        <ChipPopover
+                            label={t('forms.task.recurrence', 'Recurrence')}
+                            widthClass="w-96"
+                            onClose={commitRecurrence}
+                            renderTrigger={(props) => (
+                                <Chip
+                                    {...props}
+                                    onClick={() => {
+                                        setRecurrenceDraft(
+                                            toRecurrenceDraft(task)
+                                        );
+                                        props.onClick();
+                                    }}
+                                    icon={<ArrowPathIcon />}
+                                    text={
+                                        isRecurring
+                                            ? (recurrenceLabels[
+                                                  recurrenceType
+                                              ] ??
+                                              t(
+                                                  'recurrence.recurring',
+                                                  'Recurring'
+                                              ))
+                                            : t(
+                                                  'forms.task.recurrence',
+                                                  'Recurrence'
+                                              )
                                     }
-                                    recurrenceInterval={
-                                        recurrenceDraft.recurrence_interval
-                                    }
-                                    recurrenceEndDate={
-                                        recurrenceDraft.recurrence_end_date ||
-                                        undefined
-                                    }
-                                    recurrenceWeekday={
-                                        recurrenceDraft.recurrence_weekday ??
-                                        undefined
-                                    }
-                                    recurrenceWeekdays={
-                                        recurrenceDraft.recurrence_weekdays
-                                    }
-                                    recurrenceMonthDay={
-                                        recurrenceDraft.recurrence_month_day ??
-                                        undefined
-                                    }
-                                    recurrenceWeekOfMonth={
-                                        recurrenceDraft.recurrence_week_of_month ??
-                                        undefined
-                                    }
-                                    completionBased={
-                                        recurrenceDraft.completion_based
-                                    }
-                                    onChange={(field, value) =>
-                                        setRecurrenceDraft((prev) => {
-                                            const next = {
-                                                ...prev,
-                                                [field]: value,
-                                            };
-                                            if (
-                                                field === 'recurrence_type' &&
-                                                value === 'monthly' &&
-                                                !prev.recurrence_month_day
-                                            ) {
-                                                next.recurrence_month_day =
-                                                    new Date().getDate();
-                                            }
-                                            return next;
-                                        })
-                                    }
+                                    filled={isRecurring}
+                                    data-testid="chip-recurrence"
+                                />
+                            )}
+                        >
+                            {() => (
+                                <div className="max-h-[60vh] overflow-y-auto p-1">
+                                    <TaskRecurrenceSection
+                                        recurrenceType={
+                                            recurrenceDraft.recurrence_type
+                                        }
+                                        recurrenceInterval={
+                                            recurrenceDraft.recurrence_interval
+                                        }
+                                        recurrenceEndDate={
+                                            recurrenceDraft.recurrence_end_date ||
+                                            undefined
+                                        }
+                                        recurrenceWeekday={
+                                            recurrenceDraft.recurrence_weekday ??
+                                            undefined
+                                        }
+                                        recurrenceWeekdays={
+                                            recurrenceDraft.recurrence_weekdays
+                                        }
+                                        recurrenceMonthDay={
+                                            recurrenceDraft.recurrence_month_day ??
+                                            undefined
+                                        }
+                                        recurrenceWeekOfMonth={
+                                            recurrenceDraft.recurrence_week_of_month ??
+                                            undefined
+                                        }
+                                        completionBased={
+                                            recurrenceDraft.completion_based
+                                        }
+                                        onChange={(field, value) =>
+                                            setRecurrenceDraft((prev) => {
+                                                const next = {
+                                                    ...prev,
+                                                    [field]: value,
+                                                };
+                                                if (
+                                                    field ===
+                                                        'recurrence_type' &&
+                                                    value === 'monthly' &&
+                                                    !prev.recurrence_month_day
+                                                ) {
+                                                    next.recurrence_month_day =
+                                                        new Date().getDate();
+                                                }
+                                                return next;
+                                            })
+                                        }
+                                    />
+                                </div>
+                            )}
+                        </ChipPopover>
+                    ))}
+
+                {show.estimate && (
+                    <ChipPopover
+                        label={t('task.estimate', 'Estimate')}
+                        widthClass="w-auto"
+                        renderTrigger={(props) => (
+                            <Chip
+                                {...props}
+                                icon={<ClockIcon />}
+                                text={
+                                    task.estimated_minutes
+                                        ? formatDuration(task.estimated_minutes)
+                                        : t('task.estimate', 'Estimate')
+                                }
+                                filled={!!task.estimated_minutes}
+                                data-testid="chip-estimate"
+                            />
+                        )}
+                    >
+                        {(close) => (
+                            <div className="p-1">
+                                <DurationChips
+                                    value={task.estimated_minutes ?? null}
+                                    size="md"
+                                    onChange={(minutes) => {
+                                        onEstimate(
+                                            minutes === task.estimated_minutes
+                                                ? null
+                                                : minutes
+                                        );
+                                        close();
+                                    }}
                                 />
                             </div>
                         )}
                     </ChipPopover>
                 )}
 
-                <ChipPopover
-                    label={t('task.estimate', 'Estimate')}
-                    widthClass="w-auto"
-                    renderTrigger={(props) => (
-                        <Chip
-                            {...props}
-                            icon={<ClockIcon />}
-                            text={
-                                task.estimated_minutes
-                                    ? formatDuration(task.estimated_minutes)
-                                    : t('task.estimate', 'Estimate')
-                            }
-                            filled={!!task.estimated_minutes}
-                            data-testid="chip-estimate"
-                        />
-                    )}
-                >
-                    {(close) => (
-                        <div className="p-1">
-                            <DurationChips
-                                value={task.estimated_minutes ?? null}
-                                size="md"
-                                onChange={(minutes) => {
-                                    onEstimate(
-                                        minutes === task.estimated_minutes
-                                            ? null
-                                            : minutes
-                                    );
-                                    close();
-                                }}
+                {show.defer && (
+                    <DatePopover
+                        label={t('task.deferUntil', 'Defer Until')}
+                        value={{ date: deferParts.date, time: deferParts.time }}
+                        onChange={({ date, time }) =>
+                            onDefer(date ? fromDueParts(date, time) : null)
+                        }
+                        renderTrigger={({ display, ...props }) => (
+                            <Chip
+                                {...props}
+                                icon={<BellSnoozeIcon />}
+                                text={
+                                    display
+                                        ? `${t('task.deferUntil', 'Defer Until')} ${display}`
+                                        : t('task.deferUntil', 'Defer Until')
+                                }
+                                filled={!!display}
+                                data-testid="chip-defer"
                             />
-                        </div>
-                    )}
-                </ChipPopover>
+                        )}
+                    />
+                )}
 
-                <DatePopover
-                    label={t('task.deferUntil', 'Defer Until')}
-                    value={{ date: deferParts.date, time: deferParts.time }}
-                    onChange={({ date, time }) =>
-                        onDefer(date ? fromDueParts(date, time) : null)
-                    }
-                    renderTrigger={({ display, ...props }) => (
-                        <Chip
-                            {...props}
-                            icon={<BellSnoozeIcon />}
-                            text={
-                                display
-                                    ? `${t('task.deferUntil', 'Defer Until')} ${display}`
-                                    : t('task.deferUntil', 'Defer Until')
-                            }
-                            filled={!!display}
-                            data-testid="chip-defer"
-                        />
-                    )}
-                />
-
-                {reminderVisible && (
+                {show.reminder && (
                     <DatePopover
                         label={t('task.reminder', 'Reminder')}
                         value={{
@@ -692,7 +733,7 @@ const TaskChipRow: React.FC<TaskChipRowProps> = ({
                     />
                 )}
 
-                {!reminderVisible && (
+                {anyHidden && (
                     <Chip
                         icon={<EllipsisHorizontalIcon />}
                         text={t('taskPanel.more', 'More')}
@@ -703,7 +744,7 @@ const TaskChipRow: React.FC<TaskChipRowProps> = ({
                     />
                 )}
 
-                {(people.length > 0 || assignee) && (
+                {show.assignee && (
                     <ChipPopover
                         label={t('tasks.assignedTo', 'Assigned to')}
                         renderTrigger={(props) => (

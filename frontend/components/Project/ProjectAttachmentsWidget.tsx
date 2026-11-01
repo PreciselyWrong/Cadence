@@ -66,7 +66,7 @@ const ProjectAttachmentsWidget: React.FC<ProjectAttachmentsWidgetProps> = ({
                     setFiles(current);
                     showSuccessToast(
                         t(
-                            'task.attachments.uploadSuccess',
+                            'attachments.uploadSuccess',
                             'File uploaded successfully'
                         )
                     );
@@ -74,7 +74,7 @@ const ProjectAttachmentsWidget: React.FC<ProjectAttachmentsWidgetProps> = ({
                     showErrorToast(
                         error?.message ||
                             t(
-                                'task.attachments.uploadError',
+                                'attachments.uploadError',
                                 'Failed to upload file'
                             )
                     );

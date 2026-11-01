@@ -63,7 +63,13 @@
     "showSearch": "إظهار البحث",
     "beta": "تجريبي",
     "comingSoon": "قريبًا",
-    "due": "Due"
+    "due": "Due",
+    "goal": "الهدف",
+    "priority": "الأولوية",
+    "tags": "الوسوم",
+    "goToToday": "الانتقال إلى اليوم",
+    "loadMore": "تحميل المزيد",
+    "showAll": "عرض الكل"
   },
   "sidebar": {
     "dashboard": "لوحة التحكم",
@@ -314,7 +320,8 @@
       "clearDate": "مسح التاريخ",
       "moveToProject": "نقل إلى مشروع"
     },
-    "reorderError": "Failed to save task order"
+    "reorderError": "Failed to save task order",
+    "deleteConfirmTitle": "حذف المهمة"
   },
   "timeline": {
     "activityTimeline": "جدول الأنشطة",
@@ -1092,7 +1099,11 @@
       "message": "هل أنت متأكد من حذف الهدف \"{{title}}\"؟"
     },
     "createGoal": "إنشاء الهدف",
-    "updateGoal": "تحديث الهدف"
+    "updateGoal": "تحديث الهدف",
+    "saveAsTemplate": {
+      "title": "حفظ كقالب",
+      "message": "هل تريد حفظ \"{{name}}\" كقالب؟ سيُنشئ هذا قالبًا قابلًا لإعادة الاستخدام بناءً على هذا المشروع."
+    }
   },
   "forms": {
     "title": "العنوان",
@@ -1236,7 +1247,8 @@
     "priority": "الأولوية",
     "status": "الحالة",
     "created_at": "تاريخ الإنشاء",
-    "custom": "مخصص"
+    "custom": "مخصص",
+    "completed_at": "تاريخ الإنجاز"
   },
   "priority": {
     "low": "منخفض",
@@ -1381,7 +1393,8 @@
     "failedToDeleteNote": "تعذر حذف الملاحظة.",
     "failedToDeleteTag": "تعذر حذف الوسم.",
     "projectStatusUpdateFailed": "فشل تحديث حالة المشروع",
-    "failedToSaveTask": "تعذّر حفظ المهمة."
+    "failedToSaveTask": "تعذّر حفظ المهمة.",
+    "permissionDenied": "تم رفض الإذن"
   },
   "inbox": {
     "title": "صندوق الوارد",
@@ -1685,7 +1698,23 @@
     "reminder": "تذكير",
     "reminderPlaceholder": "اختر تاريخ التذكير ووقته",
     "noReminder": "لا يوجد تذكير",
-    "reminderUpdateError": "تعذر تحديث التذكير"
+    "reminderUpdateError": "تعذر تحديث التذكير",
+    "noArea": "تعيين إلى مجال",
+    "dueDateBeforeDeferError": "لا يمكن أن يكون تاريخ الاستحقاق قبل تاريخ التأجيل",
+    "areaUpdated": "تم تحديث المجال",
+    "areaUpdateError": "تعذّر تحديث المجال",
+    "areaCleared": "تمت إزالة المجال",
+    "areaClearError": "تعذّر إزالة المجال",
+    "goalUpdated": "تم تحديث الهدف",
+    "goalUpdateError": "تعذّر تحديث الهدف",
+    "goalCleared": "تمت إزالة الهدف",
+    "goalClearError": "تعذّر إزالة الهدف",
+    "notFound": "المهمة غير موجودة",
+    "notFoundDescription": "المهمة التي تبحث عنها غير موجودة أو تم حذفها.",
+    "hoursAgo": "منذ {{count}} ساعة",
+    "minutesAgo": "منذ {{count}} دقيقة",
+    "inMinutes": "خلال {{count}} دقيقة",
+    "inHours": "خلال {{count}} ساعة"
   },
   "projects": {
     "parentProject": "المشروع الأب",
@@ -1805,7 +1834,11 @@
     "counts": {
       "active": "{{n}} active",
       "stash": "{{n}} in the stash"
-    }
+    },
+    "savedAsTemplate": "تم حفظ \"{{name}}\" كقالب.",
+    "saveAsTemplateError": "تعذّر حفظ المشروع كقالب.",
+    "sortTasks": "ترتيب المهام",
+    "upcomingProjects": "المشاريع القادمة"
   },
   "projectItem": {
     "edit": "تعديل",
@@ -1826,7 +1859,8 @@
     "moreSharedUsers": "+{{count}} مستخدمين آخرين",
     "saveAsTemplate": "حفظ كقالب",
     "pinToSidebar": "تثبيت في الشريط الجانبي",
-    "unpinFromSidebar": "إلغاء تثبيت من الشريط الجانبي"
+    "unpinFromSidebar": "إلغاء تثبيت من الشريط الجانبي",
+    "changeStatus": "تغيير الحالة"
   },
   "areas": {
     "title": "المناطق",
@@ -1866,7 +1900,27 @@
       "personal": "شخصي",
       "family": "العائلة والمجتمع",
       "logistics": "اللوجستيات"
-    }
+    },
+    "sort": {
+      "nameAsc": "الاسم من A إلى Z",
+      "nameDesc": "الاسم من Z إلى A",
+      "projects": "أكثر المشاريع",
+      "goals": "أكثر الأهداف",
+      "tasks": "أكثر المهام",
+      "custom": "ترتيب مخصص",
+      "label": "ترتيب المجالات"
+    },
+    "reorderError": "تعذّر حفظ ترتيب المجالات",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "tasksInArea": "المهام",
+    "noProjects": "لا توجد مشاريع في هذا المجال.",
+    "noTasks": "لا توجد مهام مباشرة في هذا المجال",
+    "singular": "مجال",
+    "projects": "مشاريع",
+    "goals": "أهداف",
+    "tasks": "مهام",
+    "progressSummary": "تقدم المجال · {{done}} من {{total}} مهام منجزة"
   },
   "notes": {
     "loading": "جارٍ تحميل الملاحظات...",
@@ -1935,7 +1989,9 @@
       "tags": "Tags",
       "noProject": "No project",
       "more": "{{count}} more"
-    }
+    },
+    "edit": "تعديل",
+    "delete": "حذف"
   },
   "tags": {
     "loading": "جاري تحميل العلامات...",
@@ -2014,7 +2070,13 @@
     "weeks": "أسابيع",
     "months": "أشهر",
     "advancedHint": "لأيام الأسبوع المحددة أو تاريخ انتهاء، افتح المهمة الكاملة.",
-    "recurring": "متكررة"
+    "recurring": "متكررة",
+    "everyNDays": "كل {{count}} يوم",
+    "everyNWeeks": "كل {{count}} أسبوع",
+    "everyNMonths": "كل {{count}} شهر",
+    "completionBased": "بعد الإنجاز",
+    "onDay": "في اليوم",
+    "until": "حتى"
   },
   "weekdays": {
     "sunday": "أحد",
@@ -2885,7 +2947,8 @@
     "searching": "جارٍ البحث..."
   },
   "subtasks": {
-    "placeholder": "أضف مهمة فرعية..."
+    "placeholder": "أضف مهمة فرعية...",
+    "title": "المهام الفرعية"
   },
   "backup": {
     "title": "النسخ الاحتياطي والاستعادة",
@@ -2947,7 +3010,8 @@
       "email": "البريد الإلكتروني",
       "push": "إشعارات الدفع",
       "telegram": "تيليجرام",
-      "desktop": "الكمبيوتر"
+      "desktop": "الكمبيوتر",
+      "apprise": "Apprise"
     },
     "types": {
       "dueTasks": "المهام المستحقة",
@@ -3070,7 +3134,31 @@
       "enable": "ساعات الهدوء",
       "from": "من",
       "to": "إلى"
-    }
+    },
+    "apprise": {
+      "saved": "تم حفظ خادم Apprise.",
+      "title": "Apprise",
+      "connected": "الإرسال عبر {{host}}.",
+      "description": "أرسل الإشعارات عبر خادم Apprise الخاص بك إلى Pushover وntfy وDiscord وMatrix وغيرها.",
+      "remove": "إزالة",
+      "serverLabel": "عنوان خادم Apprise",
+      "keyPlaceholder": "مفتاح الإعداد",
+      "keyLabel": "مفتاح الإعداد",
+      "tagsPlaceholder": "الوسوم (اختياري، مثل all)",
+      "tagsLabel": "الوسوم",
+      "help": "أنشئ إعدادًا في خادم Apprise الخاص بك والصق مفتاحه هنا.",
+      "save": "حفظ"
+    },
+    "justNow": "الآن",
+    "minutesAgo": "قبل {{count}} د",
+    "hoursAgo": "قبل {{count}} س",
+    "daysAgo": "قبل {{count}} ي",
+    "title": "الإشعارات",
+    "markAllRead": "تعليم الكل كمقروء",
+    "loading": "جارٍ التحميل...",
+    "noNotifications": "لا توجد إشعارات بعد",
+    "markAsRead": "تعليم كمقروء",
+    "delete": "حذف"
   },
   "projectStatus": {
     "not_started": "لم يبدأ بعد",
@@ -3790,10 +3878,32 @@
     "addTitle": "Add to Inbox, Task, Note or Project",
     "close": "Close",
     "button": "التقاط",
-    "syntaxHint": "#tag  +project  !1 إلى !3 للأولوية  غدًا 3pm للتاريخ"
+    "syntaxHint": "#tag  +project  !1 إلى !3 للأولوية  غدًا 3pm للتاريخ",
+    "slash": {
+      "tag": "وسم",
+      "project": "مشروع",
+      "person": "شخص",
+      "area": "منطقة",
+      "date": "تاريخ الاستحقاق",
+      "repeat": "تكرار",
+      "today": "اليوم",
+      "tomorrow": "غدًا",
+      "nextMonday": "الاثنين القادم",
+      "inAWeek": "في أسبوع",
+      "everyDay": "كل يوم",
+      "everyWeekday": "كل يوم عمل",
+      "everyWeek": "كل أسبوع",
+      "everyMonth": "كل شهر",
+      "create": "إنشاء {{token}}"
+    }
   },
   "area": {
-    "loadError": "تعذر تحميل المناطق"
+    "loadError": "تعذر تحميل المناطق",
+    "viaProject": "عبر المشروع",
+    "viewArea": "الانتقال إلى المجال",
+    "searchAreas": "البحث في المجالات…",
+    "clearArea": "إزالة المجال",
+    "noAreasFound": "لم يتم العثور على مجالات"
   },
   "goals": {
     "newGoal": "هدف جديد",
@@ -3845,7 +3955,21 @@
       "placeholder": "نتيجة رئيسية",
       "progress": "{{done}} من {{total}} منجز"
     },
-    "progressSummary": "تقدم الهدف · {{done}} من {{total}} منجز"
+    "progressSummary": "تقدم الهدف · {{done}} من {{total}} منجز",
+    "sort": {
+      "titleAsc": "العنوان من A إلى Z",
+      "titleDesc": "العنوان من Z إلى A",
+      "status": "الحالة",
+      "horizon": "الأفق",
+      "area": "المجال",
+      "projects": "أكثر المشاريع",
+      "tasks": "أكثر المهام",
+      "custom": "ترتيب مخصص",
+      "label": "ترتيب الأهداف"
+    },
+    "reorderError": "تعذّر حفظ ترتيب الأهداف",
+    "noGoalsInArea": "لا توجد أهداف مرتبطة بهذا المجال.",
+    "maintenance": "الصيانة"
   },
   "templates": {
     "new": "قالب جديد",
@@ -4470,7 +4594,9 @@
   "sortable": {
     "move": "Move",
     "project": "sortable project",
-    "task": "sortable task"
+    "task": "sortable task",
+    "area": "مجال قابل للترتيب",
+    "goal": "هدف قابل للترتيب"
   },
   "groupPage": {
     "title": "Group",
@@ -4507,7 +4633,18 @@
     "previous": "Previous file",
     "next": "Next file",
     "renameError": "Could not save the title",
-    "confirmDelete": "Delete file?"
+    "confirmDelete": "Delete file?",
+    "uploadSuccess": "تم رفع الملف بنجاح",
+    "uploadError": "تعذّر رفع الملف",
+    "deleteSuccess": "تم حذف المرفق بنجاح",
+    "deleteError": "تعذّر حذف الملف",
+    "heading": "المرفقات",
+    "uploading": "جارٍ الرفع...",
+    "clickToUpload": "انقر للرفع",
+    "maxSize": "الحد الأقصى {{size}} م.ب",
+    "anyFormat": "أي نوع ملف",
+    "deleteConfirmTitle": "حذف المرفق",
+    "deleteConfirmMessage": "هل أنت متأكد من حذف هذا المرفق؟ لا يمكن التراجع عن هذا الإجراء."
   },
   "feedback": {
     "title": "Send feedback",
@@ -4988,5 +5125,9 @@
   },
   "sidebarDrop": {
     "failed": "تعذّر تحديث هذا العنصر."
+  },
+  "loading": {
+    "tasks": "جارٍ تحميل المهام…",
+    "subtasks": "جارٍ تحميل المهام الفرعية..."
   }
 }

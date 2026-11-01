@@ -59,7 +59,13 @@
     "showSearch": "Aramayı göster",
     "beta": "beta",
     "comingSoon": "Çok yakında",
-    "due": "Due"
+    "due": "Due",
+    "goal": "Hedef",
+    "priority": "Öncelik",
+    "tags": "Etiketler",
+    "goToToday": "Bugüne git",
+    "loadMore": "Daha fazla yükle",
+    "showAll": "Tümünü göster"
   },
   "sidebar": {
     "dashboard": "Gösterge Paneli",
@@ -310,7 +316,8 @@
       "clearDate": "Tarihi temizle",
       "moveToProject": "Projeye taşı"
     },
-    "reorderError": "Failed to save task order"
+    "reorderError": "Failed to save task order",
+    "deleteConfirmTitle": "Görevi sil"
   },
   "timeline": {
     "activityTimeline": "Etkinlik Zaman Çizelgesi",
@@ -1088,7 +1095,11 @@
       "message": "\"{{title}}\" hedefini silmek istediğinizden emin misiniz?"
     },
     "createGoal": "Hedef oluştur",
-    "updateGoal": "Hedefi güncelle"
+    "updateGoal": "Hedefi güncelle",
+    "saveAsTemplate": {
+      "title": "Şablon olarak kaydet",
+      "message": "\"{{name}}\" şablon olarak kaydedilsin mi? Bu, projeye dayalı yeniden kullanılabilir bir şablon oluşturur."
+    }
   },
   "forms": {
     "title": "Başlık",
@@ -1232,7 +1243,8 @@
     "priority": "Öncelik",
     "status": "Durum",
     "created_at": "Oluşturulma Tarihi",
-    "custom": "Özel"
+    "custom": "Özel",
+    "completed_at": "Tamamlanma zamanı"
   },
   "priority": {
     "low": "Düşük",
@@ -1373,7 +1385,8 @@
     "failedToDeleteNote": "Not silinemedi.",
     "failedToDeleteTag": "Etiket silinemedi.",
     "projectStatusUpdateFailed": "Proje durumu güncellenemedi",
-    "failedToSaveTask": "Görev kaydedilemedi."
+    "failedToSaveTask": "Görev kaydedilemedi.",
+    "permissionDenied": "Erişim reddedildi"
   },
   "inbox": {
     "title": "Gelen Kutusu",
@@ -1677,7 +1690,23 @@
     "reminder": "Hatırlatıcı",
     "reminderPlaceholder": "Hatırlatıcının tarih ve saatini seçin",
     "noReminder": "Hatırlatıcı yok",
-    "reminderUpdateError": "Hatırlatıcı güncellenemedi"
+    "reminderUpdateError": "Hatırlatıcı güncellenemedi",
+    "noArea": "Bir alana ata",
+    "dueDateBeforeDeferError": "Son tarih, erteleme tarihinden önce olamaz",
+    "areaUpdated": "Alan güncellendi",
+    "areaUpdateError": "Alan güncellenemedi",
+    "areaCleared": "Alan temizlendi",
+    "areaClearError": "Alan temizlenemedi",
+    "goalUpdated": "Hedef güncellendi",
+    "goalUpdateError": "Hedef güncellenemedi",
+    "goalCleared": "Hedef temizlendi",
+    "goalClearError": "Hedef temizlenemedi",
+    "notFound": "Görev bulunamadı",
+    "notFoundDescription": "Aradığınız görev yok veya silinmiş.",
+    "hoursAgo": "{{count}} saat önce",
+    "minutesAgo": "{{count}} dakika önce",
+    "inMinutes": "{{count}} dakika içinde",
+    "inHours": "{{count}} saat içinde"
   },
   "projects": {
     "parentProject": "Üst proje",
@@ -1793,7 +1822,11 @@
     "counts": {
       "active": "{{n}} active",
       "stash": "{{n}} in the stash"
-    }
+    },
+    "savedAsTemplate": "\"{{name}}\" şablon olarak kaydedildi.",
+    "saveAsTemplateError": "Proje şablon olarak kaydedilemedi.",
+    "sortTasks": "Görevleri sırala",
+    "upcomingProjects": "Yaklaşan projeler"
   },
   "projectItem": {
     "edit": "Düzenle",
@@ -1814,7 +1847,8 @@
     "moreSharedUsers": "+{{count}} kullanıcı daha",
     "saveAsTemplate": "Şablon Olarak Kaydet",
     "pinToSidebar": "Yan Menüyü Sabitle",
-    "unpinFromSidebar": "Yan Menüden Sıkıştırmayı Kaldır"
+    "unpinFromSidebar": "Yan Menüden Sıkıştırmayı Kaldır",
+    "changeStatus": "Durumu değiştir"
   },
   "areas": {
     "title": "Alanlar",
@@ -1854,7 +1888,27 @@
       "personal": "Kişisel",
       "family": "Aile ve Sosyal",
       "logistics": "Lojistik"
-    }
+    },
+    "sort": {
+      "nameAsc": "Ada göre A'dan Z'ye",
+      "nameDesc": "Ada göre Z'den A'ya",
+      "projects": "En çok proje",
+      "goals": "En çok hedef",
+      "tasks": "En çok görev",
+      "custom": "Özel sıralama",
+      "label": "Alanları sırala"
+    },
+    "reorderError": "Alan sırası kaydedilemedi",
+    "edit": "Düzenle",
+    "delete": "Sil",
+    "tasksInArea": "Görevler",
+    "noProjects": "Bu alanda proje yok.",
+    "noTasks": "Bu alanda doğrudan görev yok",
+    "singular": "Alan",
+    "projects": "proje",
+    "goals": "hedef",
+    "tasks": "görev",
+    "progressSummary": "Alan ilerlemesi · {{total}} görevden {{done}} tanesi tamamlandı"
   },
   "notes": {
     "loading": "Notlar yükleniyor...",
@@ -1923,7 +1977,9 @@
       "tags": "Tags",
       "noProject": "No project",
       "more": "{{count}} more"
-    }
+    },
+    "edit": "Düzenle",
+    "delete": "Sil"
   },
   "tags": {
     "loading": "Etiketler yükleniyor...",
@@ -2002,7 +2058,13 @@
     "weeks": "hafta",
     "months": "ay",
     "advancedHint": "Belirli günler veya bir bitiş tarihi için tam görevi açın.",
-    "recurring": "Tekrarlayan"
+    "recurring": "Tekrarlayan",
+    "everyNDays": "Her {{count}} günde bir",
+    "everyNWeeks": "Her {{count}} haftada bir",
+    "everyNMonths": "Her {{count}} ayda bir",
+    "completionBased": "Tamamlandıktan sonra",
+    "onDay": "Ayın günü",
+    "until": "Bitiş"
   },
   "weekdays": {
     "sunday": "Paz",
@@ -2861,7 +2923,8 @@
     "searching": "Aranıyor..."
   },
   "subtasks": {
-    "placeholder": "Bir alt görev ekle..."
+    "placeholder": "Bir alt görev ekle...",
+    "title": "Alt görevler"
   },
   "backup": {
     "title": "Yedekleme & Geri Yükleme",
@@ -2923,7 +2986,8 @@
       "email": "E-posta",
       "push": "Anlık bildirim",
       "telegram": "Telegram",
-      "desktop": "Bilgisayar"
+      "desktop": "Bilgisayar",
+      "apprise": "Apprise"
     },
     "types": {
       "dueTasks": "Vadesi Gelen Görevler",
@@ -3046,7 +3110,31 @@
       "enable": "Sessiz saatler",
       "from": "Başlangıç",
       "to": "Bitiş"
-    }
+    },
+    "apprise": {
+      "saved": "Apprise sunucusu kaydedildi.",
+      "title": "Apprise",
+      "connected": "{{host}} üzerinden gönderiliyor.",
+      "description": "Bildirimleri kendi Apprise sunucunuz üzerinden Pushover, ntfy, Discord, Matrix ve diğerlerine gönderin.",
+      "remove": "Kaldır",
+      "serverLabel": "Apprise sunucu adresi",
+      "keyPlaceholder": "Yapılandırma anahtarı",
+      "keyLabel": "Yapılandırma anahtarı",
+      "tagsPlaceholder": "Etiketler (isteğe bağlı, ör. all)",
+      "tagsLabel": "Etiketler",
+      "help": "Apprise sunucunuzda bir yapılandırma oluşturun ve anahtarını buraya yapıştırın.",
+      "save": "Kaydet"
+    },
+    "justNow": "Az önce",
+    "minutesAgo": "{{count}} dk önce",
+    "hoursAgo": "{{count}} sa önce",
+    "daysAgo": "{{count}} g önce",
+    "title": "Bildirimler",
+    "markAllRead": "Tümünü okundu olarak işaretle",
+    "loading": "Yükleniyor...",
+    "noNotifications": "Henüz bildirim yok",
+    "markAsRead": "Okundu olarak işaretle",
+    "delete": "Sil"
   },
   "projectStatus": {
     "not_started": "Başlanmadı",
@@ -3758,10 +3846,32 @@
     "addTitle": "Add to Inbox, Task, Note or Project",
     "close": "Close",
     "button": "Yakala",
-    "syntaxHint": "#tag  +project  !1 ile !3 öncelik  yarın 15:00 tarih için"
+    "syntaxHint": "#tag  +project  !1 ile !3 öncelik  yarın 15:00 tarih için",
+    "slash": {
+      "tag": "Etiket",
+      "project": "Proje",
+      "person": "Kişi",
+      "area": "Alan",
+      "date": "Son tarih",
+      "repeat": "Tekrarla",
+      "today": "Bugün",
+      "tomorrow": "Yarın",
+      "nextMonday": "Gelecek pazartesi",
+      "inAWeek": "Bir hafta sonra",
+      "everyDay": "Her gün",
+      "everyWeekday": "Her iş günü",
+      "everyWeek": "Her hafta",
+      "everyMonth": "Her ay",
+      "create": "{{token}} oluştur"
+    }
   },
   "area": {
-    "loadError": "Alanlar yüklenemedi"
+    "loadError": "Alanlar yüklenemedi",
+    "viaProject": "proje üzerinden",
+    "viewArea": "Alana git",
+    "searchAreas": "Alanlarda ara…",
+    "clearArea": "Alanı kaldır",
+    "noAreasFound": "Alan bulunamadı"
   },
   "goals": {
     "newGoal": "Yeni Hedef",
@@ -3813,7 +3923,21 @@
       "placeholder": "Ana sonuç",
       "progress": "{{done}} / {{total}} tamamlandı"
     },
-    "progressSummary": "Hedef ilerlemesi · {{done}} / {{total}} tamamlandı"
+    "progressSummary": "Hedef ilerlemesi · {{done}} / {{total}} tamamlandı",
+    "sort": {
+      "titleAsc": "Başlığa göre A'dan Z'ye",
+      "titleDesc": "Başlığa göre Z'den A'ya",
+      "status": "Durum",
+      "horizon": "Ufuk",
+      "area": "Alan",
+      "projects": "En çok proje",
+      "tasks": "En çok görev",
+      "custom": "Özel sıralama",
+      "label": "Hedefleri sırala"
+    },
+    "reorderError": "Hedef sırası kaydedilemedi",
+    "noGoalsInArea": "Bu alana bağlı hedef yok.",
+    "maintenance": "Bakım"
   },
   "templates": {
     "new": "Yeni Şablon",
@@ -4434,7 +4558,9 @@
   "sortable": {
     "move": "Move",
     "project": "sortable project",
-    "task": "sortable task"
+    "task": "sortable task",
+    "area": "sıralanabilir alan",
+    "goal": "sıralanabilir hedef"
   },
   "groupPage": {
     "title": "Group",
@@ -4471,7 +4597,18 @@
     "previous": "Previous file",
     "next": "Next file",
     "renameError": "Could not save the title",
-    "confirmDelete": "Delete file?"
+    "confirmDelete": "Delete file?",
+    "uploadSuccess": "Dosya başarıyla yüklendi",
+    "uploadError": "Dosya yüklenemedi",
+    "deleteSuccess": "Ek başarıyla silindi",
+    "deleteError": "Dosya silinemedi",
+    "heading": "Ekler",
+    "uploading": "Yükleniyor...",
+    "clickToUpload": "Yüklemek için tıklayın",
+    "maxSize": "En fazla {{size}} MB",
+    "anyFormat": "Her dosya türü",
+    "deleteConfirmTitle": "Eki sil",
+    "deleteConfirmMessage": "Bu eki silmek istediğinizden emin misiniz? Bu işlem geri alınamaz."
   },
   "feedback": {
     "title": "Send feedback",
@@ -4928,5 +5065,9 @@
   },
   "sidebarDrop": {
     "failed": "Bu öğe güncellenemedi."
+  },
+  "loading": {
+    "tasks": "Görevler yükleniyor…",
+    "subtasks": "Alt görevler yükleniyor..."
   }
 }

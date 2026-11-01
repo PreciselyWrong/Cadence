@@ -65,8 +65,8 @@ describe('NotificationsTab', () => {
         const { onChange } = await renderTab();
 
         fireEvent.click(
-            screen.getByRole('button', {
-                name: 'Toggle desktop for Task reminders',
+            screen.getByRole('switch', {
+                name: 'Desktop · Task reminders',
             })
         );
 

@@ -59,7 +59,13 @@
     "showSearch": "Tampilkan pencarian",
     "beta": "beta",
     "comingSoon": "Segera hadir",
-    "due": "Due"
+    "due": "Due",
+    "goal": "Tujuan",
+    "priority": "Prioritas",
+    "tags": "Tag",
+    "goToToday": "Ke Hari Ini",
+    "loadMore": "Muat lebih banyak",
+    "showAll": "Tampilkan semua"
   },
   "sidebar": {
     "dashboard": "Dasbor",
@@ -310,7 +316,8 @@
       "clearDate": "Hapus tanggal",
       "moveToProject": "Pindahkan ke proyek"
     },
-    "reorderError": "Failed to save task order"
+    "reorderError": "Failed to save task order",
+    "deleteConfirmTitle": "Hapus Tugas"
   },
   "timeline": {
     "activityTimeline": "Garis Waktu Aktivitas",
@@ -1088,7 +1095,11 @@
       "message": "Yakin ingin menghapus tujuan \"{{title}}\"?"
     },
     "createGoal": "Buat tujuan",
-    "updateGoal": "Perbarui tujuan"
+    "updateGoal": "Perbarui tujuan",
+    "saveAsTemplate": {
+      "title": "Simpan sebagai templat",
+      "message": "Simpan \"{{name}}\" sebagai templat? Ini akan membuat templat yang dapat digunakan ulang berdasarkan proyek ini."
+    }
   },
   "forms": {
     "title": "Judul",
@@ -1232,7 +1243,8 @@
     "priority": "Prioritas",
     "status": "Status",
     "created_at": "Dibuat Pada",
-    "custom": "Kustom"
+    "custom": "Kustom",
+    "completed_at": "Selesai pada"
   },
   "priority": {
     "low": "Rendah",
@@ -1373,7 +1385,8 @@
     "failedToDeleteNote": "Gagal menghapus catatan.",
     "failedToDeleteTag": "Gagal menghapus tag.",
     "projectStatusUpdateFailed": "Gagal memperbarui status proyek",
-    "failedToSaveTask": "Gagal menyimpan tugas."
+    "failedToSaveTask": "Gagal menyimpan tugas.",
+    "permissionDenied": "Izin ditolak"
   },
   "inbox": {
     "title": "Kotak Masuk",
@@ -1677,7 +1690,23 @@
     "reminder": "Pengingat",
     "reminderPlaceholder": "Pilih tanggal dan waktu pengingat",
     "noReminder": "Tidak ada pengingat",
-    "reminderUpdateError": "Gagal memperbarui pengingat"
+    "reminderUpdateError": "Gagal memperbarui pengingat",
+    "noArea": "Tetapkan ke area",
+    "dueDateBeforeDeferError": "Tanggal jatuh tempo tidak boleh sebelum tanggal penundaan",
+    "areaUpdated": "Area berhasil diperbarui",
+    "areaUpdateError": "Gagal memperbarui area",
+    "areaCleared": "Area berhasil dihapus",
+    "areaClearError": "Gagal menghapus area",
+    "goalUpdated": "Tujuan diperbarui",
+    "goalUpdateError": "Gagal memperbarui tujuan",
+    "goalCleared": "Tujuan dihapus",
+    "goalClearError": "Gagal menghapus tujuan",
+    "notFound": "Tugas tidak ditemukan",
+    "notFoundDescription": "Tugas yang Anda cari tidak ada atau telah dihapus.",
+    "hoursAgo": "{{count}} jam lalu",
+    "minutesAgo": "{{count}} menit lalu",
+    "inMinutes": "dalam {{count}} menit",
+    "inHours": "dalam {{count}} jam"
   },
   "projects": {
     "parentProject": "Proyek induk",
@@ -1793,7 +1822,11 @@
     "counts": {
       "active": "{{n}} active",
       "stash": "{{n}} in the stash"
-    }
+    },
+    "savedAsTemplate": "\"{{name}}\" disimpan sebagai templat.",
+    "saveAsTemplateError": "Gagal menyimpan proyek sebagai templat.",
+    "sortTasks": "Urutkan tugas",
+    "upcomingProjects": "Proyek mendatang"
   },
   "projectItem": {
     "edit": "Sunting",
@@ -1814,7 +1847,8 @@
     "moreSharedUsers": "+{{count}} pengguna lagi",
     "saveAsTemplate": "Simpan sebagai Template",
     "pinToSidebar": "Sematkan ke sidebar",
-    "unpinFromSidebar": "Lepaskan dari sidebar"
+    "unpinFromSidebar": "Lepaskan dari sidebar",
+    "changeStatus": "Ubah status"
   },
   "areas": {
     "title": "Area",
@@ -1854,7 +1888,27 @@
       "personal": "Pribadi",
       "family": "Keluarga & Sosial",
       "logistics": "Logistik"
-    }
+    },
+    "sort": {
+      "nameAsc": "Nama A ke Z",
+      "nameDesc": "Nama Z ke A",
+      "projects": "Proyek terbanyak",
+      "goals": "Tujuan terbanyak",
+      "tasks": "Tugas terbanyak",
+      "custom": "Urutan kustom",
+      "label": "Urutkan area"
+    },
+    "reorderError": "Gagal menyimpan urutan area",
+    "edit": "Edit",
+    "delete": "Hapus",
+    "tasksInArea": "Tugas",
+    "noProjects": "Tidak ada proyek di area ini.",
+    "noTasks": "Tidak ada tugas langsung di area ini",
+    "singular": "Area",
+    "projects": "proyek",
+    "goals": "tujuan",
+    "tasks": "tugas",
+    "progressSummary": "Progres area · {{done}} dari {{total}} tugas selesai"
   },
   "notes": {
     "loading": "Memuat catatan...",
@@ -1923,7 +1977,9 @@
       "tags": "Tags",
       "noProject": "No project",
       "more": "{{count}} more"
-    }
+    },
+    "edit": "Edit",
+    "delete": "Hapus"
   },
   "tags": {
     "loading": "Memuat tag...",
@@ -2002,7 +2058,13 @@
     "weeks": "minggu",
     "months": "bulan",
     "advancedHint": "Untuk hari kerja tertentu atau tanggal akhir, buka tugas lengkap.",
-    "recurring": "Berulang"
+    "recurring": "Berulang",
+    "everyNDays": "Setiap {{count}} hari",
+    "everyNWeeks": "Setiap {{count}} minggu",
+    "everyNMonths": "Setiap {{count}} bulan",
+    "completionBased": "Setelah selesai",
+    "onDay": "Pada tanggal",
+    "until": "Sampai"
   },
   "weekdays": {
     "sunday": "Min",
@@ -2861,7 +2923,8 @@
     "searching": "Mencari..."
   },
   "subtasks": {
-    "placeholder": "Tambahkan subtugas..."
+    "placeholder": "Tambahkan subtugas...",
+    "title": "Subtugas"
   },
   "backup": {
     "title": "Cadangkan & Pulihkan",
@@ -2923,7 +2986,8 @@
       "email": "Email",
       "push": "Push",
       "telegram": "Telegram",
-      "desktop": "Komputer"
+      "desktop": "Komputer",
+      "apprise": "Apprise"
     },
     "types": {
       "dueTasks": "Tugas Jatuh Tempo",
@@ -3046,7 +3110,31 @@
       "enable": "Jam tenang",
       "from": "Dari",
       "to": "Sampai"
-    }
+    },
+    "apprise": {
+      "saved": "Server Apprise disimpan.",
+      "title": "Apprise",
+      "connected": "Mengirim melalui {{host}}.",
+      "description": "Kirim notifikasi melalui server Apprise milik Anda ke Pushover, ntfy, Discord, Matrix, dan lainnya.",
+      "remove": "Hapus",
+      "serverLabel": "Alamat server Apprise",
+      "keyPlaceholder": "Kunci konfigurasi",
+      "keyLabel": "Kunci konfigurasi",
+      "tagsPlaceholder": "Tag (opsional, mis. all)",
+      "tagsLabel": "Tag",
+      "help": "Buat konfigurasi di server Apprise Anda, lalu tempel kuncinya di sini.",
+      "save": "Simpan"
+    },
+    "justNow": "Baru saja",
+    "minutesAgo": "{{count}} menit lalu",
+    "hoursAgo": "{{count}} jam lalu",
+    "daysAgo": "{{count}} hari lalu",
+    "title": "Notifikasi",
+    "markAllRead": "Tandai semua sudah dibaca",
+    "loading": "Memuat...",
+    "noNotifications": "Belum ada notifikasi",
+    "markAsRead": "Tandai sudah dibaca",
+    "delete": "Hapus"
   },
   "projectStatus": {
     "not_started": "Belum Dimulai",
@@ -3758,10 +3846,32 @@
     "close": "Close",
     "filesAttached_one": "1 file attached.",
     "button": "Tangkap",
-    "syntaxHint": "#tag  +project  !1 sampai !3 prioritas  besok jam 3 sore untuk tanggal"
+    "syntaxHint": "#tag  +project  !1 sampai !3 prioritas  besok jam 3 sore untuk tanggal",
+    "slash": {
+      "tag": "Tag",
+      "project": "Proyek",
+      "person": "Orang",
+      "area": "Area",
+      "date": "Tanggal jatuh tempo",
+      "repeat": "Ulangi",
+      "today": "Hari ini",
+      "tomorrow": "Besok",
+      "nextMonday": "Senin depan",
+      "inAWeek": "Seminggu lagi",
+      "everyDay": "Setiap hari",
+      "everyWeekday": "Setiap hari kerja",
+      "everyWeek": "Setiap minggu",
+      "everyMonth": "Setiap bulan",
+      "create": "Buat {{token}}"
+    }
   },
   "area": {
-    "loadError": "Gagal memuat area"
+    "loadError": "Gagal memuat area",
+    "viaProject": "melalui proyek",
+    "viewArea": "Buka area",
+    "searchAreas": "Cari area…",
+    "clearArea": "Hapus area",
+    "noAreasFound": "Area tidak ditemukan"
   },
   "goals": {
     "newGoal": "Tujuan Baru",
@@ -3813,7 +3923,21 @@
       "placeholder": "Hasil utama",
       "progress": "{{done}} dari {{total}} selesai"
     },
-    "progressSummary": "Progres tujuan · {{done}} dari {{total}} selesai"
+    "progressSummary": "Progres tujuan · {{done}} dari {{total}} selesai",
+    "sort": {
+      "titleAsc": "Judul A ke Z",
+      "titleDesc": "Judul Z ke A",
+      "status": "Status",
+      "horizon": "Horizon",
+      "area": "Area",
+      "projects": "Proyek terbanyak",
+      "tasks": "Tugas terbanyak",
+      "custom": "Urutan kustom",
+      "label": "Urutkan tujuan"
+    },
+    "reorderError": "Gagal menyimpan urutan tujuan",
+    "noGoalsInArea": "Tidak ada tujuan yang terkait dengan area ini.",
+    "maintenance": "Pemeliharaan"
   },
   "templates": {
     "new": "Templat Baru",
@@ -4434,7 +4558,9 @@
   "sortable": {
     "move": "Move",
     "project": "sortable project",
-    "task": "sortable task"
+    "task": "sortable task",
+    "area": "area yang dapat diurutkan",
+    "goal": "tujuan yang dapat diurutkan"
   },
   "groupPage": {
     "title": "Group",
@@ -4471,7 +4597,18 @@
     "previous": "Previous file",
     "next": "Next file",
     "renameError": "Could not save the title",
-    "confirmDelete": "Delete file?"
+    "confirmDelete": "Delete file?",
+    "uploadSuccess": "Berkas berhasil diunggah",
+    "uploadError": "Gagal mengunggah berkas",
+    "deleteSuccess": "Lampiran berhasil dihapus",
+    "deleteError": "Gagal menghapus berkas",
+    "heading": "Lampiran",
+    "uploading": "Mengunggah...",
+    "clickToUpload": "Klik untuk mengunggah",
+    "maxSize": "Maks. {{size}} MB",
+    "anyFormat": "Semua jenis berkas",
+    "deleteConfirmTitle": "Hapus lampiran",
+    "deleteConfirmMessage": "Yakin ingin menghapus lampiran ini? Tindakan ini tidak dapat dibatalkan."
   },
   "feedback": {
     "title": "Send feedback",
@@ -4928,5 +5065,9 @@
   },
   "sidebarDrop": {
     "failed": "Item ini tidak dapat diperbarui."
+  },
+  "loading": {
+    "tasks": "Memuat tugas…",
+    "subtasks": "Memuat subtugas..."
   }
 }

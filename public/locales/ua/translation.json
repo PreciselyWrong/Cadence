@@ -61,7 +61,13 @@
     "showSearch": "Показати пошук",
     "beta": "бета",
     "comingSoon": "Незабаром",
-    "due": "Due"
+    "due": "Due",
+    "goal": "Ціль",
+    "priority": "Пріоритет",
+    "tags": "Мітки",
+    "goToToday": "Перейти до сьогодні",
+    "loadMore": "Завантажити ще",
+    "showAll": "Показати все"
   },
   "sidebar": {
     "dashboard": "Дашборд",
@@ -312,7 +318,8 @@
       "clearDate": "Очистити дату",
       "moveToProject": "Перемістити до проєкту"
     },
-    "reorderError": "Failed to save task order"
+    "reorderError": "Failed to save task order",
+    "deleteConfirmTitle": "Видалити завдання"
   },
   "timeline": {
     "activityTimeline": "Хронологія Активності",
@@ -474,7 +481,11 @@
     "counts": {
       "active": "{{n}} active",
       "stash": "{{n}} in the stash"
-    }
+    },
+    "savedAsTemplate": "\"{{name}}\" збережено як шаблон.",
+    "saveAsTemplateError": "Не вдалося зберегти проєкт як шаблон.",
+    "sortTasks": "Сортувати завдання",
+    "upcomingProjects": "Найближчі проєкти"
   },
   "projectItem": {
     "edit": "Редагувати",
@@ -495,7 +506,8 @@
     "moreSharedUsers": "+{{count}} користувачів",
     "saveAsTemplate": "Зберегти як шаблон",
     "pinToSidebar": "Закріпити в бічній панелі",
-    "unpinFromSidebar": "Відкріпити з бічної панелі"
+    "unpinFromSidebar": "Відкріпити з бічної панелі",
+    "changeStatus": "Змінити статус"
   },
   "forms": {
     "noteTitle": "Заголовок нотатки",
@@ -625,7 +637,11 @@
       "message": "Ви справді хочете видалити ціль «{{title}}»?"
     },
     "createGoal": "Створити ціль",
-    "updateGoal": "Оновити ціль"
+    "updateGoal": "Оновити ціль",
+    "saveAsTemplate": {
+      "title": "Зберегти як шаблон",
+      "message": "Зберегти \"{{name}}\" як шаблон? Буде створено шаблон для повторного використання на основі цього проєкту."
+    }
   },
   "errors": {
     "noteTitleRequired": "Заголовок нотатки обов'язковий.",
@@ -665,7 +681,8 @@
     "failedToDeleteNote": "Не вдалося видалити нотатку.",
     "failedToDeleteTag": "Не вдалося видалити тег.",
     "projectStatusUpdateFailed": "Не вдалося оновити статус проєкту",
-    "failedToSaveTask": "Не вдалося зберегти завдання."
+    "failedToSaveTask": "Не вдалося зберегти завдання.",
+    "permissionDenied": "Доступ заборонено"
   },
   "success": {
     "noteUpdated": "Нотатку успішно оновлено!",
@@ -754,7 +771,9 @@
       "tags": "Tags",
       "noProject": "No project",
       "more": "{{count}} more"
-    }
+    },
+    "edit": "Редагувати",
+    "delete": "Видалити"
   },
   "recurrence": {
     "none": "Немає",
@@ -779,7 +798,13 @@
     "weeks": "тижні",
     "months": "місяці",
     "advancedHint": "Для конкретних днів тижня або дати закінчення відкрийте повне завдання.",
-    "recurring": "Повторюване"
+    "recurring": "Повторюване",
+    "everyNDays": "Кожні {{count}} дн.",
+    "everyNWeeks": "Кожні {{count}} тиж.",
+    "everyNMonths": "Кожні {{count}} міс.",
+    "completionBased": "Після виконання",
+    "onDay": "Числа",
+    "until": "До"
   },
   "weekdays": {
     "sunday": "Нд",
@@ -1783,7 +1808,23 @@
     "reminder": "Нагадування",
     "reminderPlaceholder": "Виберіть дату й час нагадування",
     "noReminder": "Немає нагадування",
-    "reminderUpdateError": "Не вдалося оновити нагадування"
+    "reminderUpdateError": "Не вдалося оновити нагадування",
+    "noArea": "Призначити сферу",
+    "dueDateBeforeDeferError": "Термін не може бути раніше дати відкладення",
+    "areaUpdated": "Сферу оновлено",
+    "areaUpdateError": "Не вдалося оновити сферу",
+    "areaCleared": "Сферу прибрано",
+    "areaClearError": "Не вдалося прибрати сферу",
+    "goalUpdated": "Ціль оновлено",
+    "goalUpdateError": "Не вдалося оновити ціль",
+    "goalCleared": "Ціль прибрано",
+    "goalClearError": "Не вдалося прибрати ціль",
+    "notFound": "Завдання не знайдено",
+    "notFoundDescription": "Завдання, яке ви шукаєте, не існує або було видалено.",
+    "hoursAgo": "{{count}} год тому",
+    "minutesAgo": "{{count}} хв тому",
+    "inMinutes": "через {{count}} хв",
+    "inHours": "через {{count}} год"
   },
   "calendar": {
     "focusSession": "Фокус",
@@ -2008,7 +2049,8 @@
     "priority": "Пріоритет",
     "status": "Статус",
     "created_at": "Дата створення",
-    "custom": "Власний"
+    "custom": "Власний",
+    "completed_at": "Виконано"
   },
   "priority": {
     "low": "Низький",
@@ -2096,7 +2138,27 @@
       "personal": "Особисте",
       "family": "Сім'я та спільнота",
       "logistics": "Логістика"
-    }
+    },
+    "sort": {
+      "nameAsc": "За назвою від А до Я",
+      "nameDesc": "За назвою від Я до А",
+      "projects": "Найбільше проєктів",
+      "goals": "Найбільше цілей",
+      "tasks": "Найбільше завдань",
+      "custom": "Власний порядок",
+      "label": "Сортувати сфери"
+    },
+    "reorderError": "Не вдалося зберегти порядок сфер",
+    "edit": "Редагувати",
+    "delete": "Видалити",
+    "tasksInArea": "Завдання",
+    "noProjects": "У цій сфері немає проєктів.",
+    "noTasks": "У цій сфері немає завдань напряму",
+    "singular": "Сфера",
+    "projects": "проєктів",
+    "goals": "цілей",
+    "tasks": "завдань",
+    "progressSummary": "Прогрес сфери · виконано {{done}} з {{total}} завдань"
   },
   "tags": {
     "loading": "Завантаження тегів...",
@@ -2873,7 +2935,8 @@
     "searching": "Пошук..."
   },
   "subtasks": {
-    "placeholder": "Додати підзадачу..."
+    "placeholder": "Додати підзадачу...",
+    "title": "Підзавдання"
   },
   "backup": {
     "title": "Резервне копіювання та відновлення",
@@ -2935,7 +2998,8 @@
       "email": "Електронна пошта",
       "push": "Push",
       "telegram": "Telegram",
-      "desktop": "Комп’ютер"
+      "desktop": "Комп’ютер",
+      "apprise": "Apprise"
     },
     "types": {
       "dueTasks": "Завдання, що підлягають виконанню",
@@ -3058,7 +3122,31 @@
       "enable": "Тихі години",
       "from": "З",
       "to": "До"
-    }
+    },
+    "apprise": {
+      "saved": "Сервер Apprise збережено.",
+      "title": "Apprise",
+      "connected": "Надсилання через {{host}}.",
+      "description": "Надсилайте сповіщення через власний сервер Apprise до Pushover, ntfy, Discord, Matrix та інших.",
+      "remove": "Видалити",
+      "serverLabel": "Адреса сервера Apprise",
+      "keyPlaceholder": "Ключ конфігурації",
+      "keyLabel": "Ключ конфігурації",
+      "tagsPlaceholder": "Мітки (необов'язково, напр. all)",
+      "tagsLabel": "Мітки",
+      "help": "Створіть конфігурацію на своєму сервері Apprise і вставте її ключ сюди.",
+      "save": "Зберегти"
+    },
+    "justNow": "Щойно",
+    "minutesAgo": "{{count}} хв тому",
+    "hoursAgo": "{{count}} год тому",
+    "daysAgo": "{{count}} дн тому",
+    "title": "Сповіщення",
+    "markAllRead": "Позначити всі як прочитані",
+    "loading": "Завантаження...",
+    "noNotifications": "Сповіщень поки немає",
+    "markAsRead": "Позначити як прочитане",
+    "delete": "Видалити"
   },
   "projectStatus": {
     "not_started": "Не розпочато",
@@ -3774,10 +3862,32 @@
     "addTitle": "Add to Inbox, Task, Note or Project",
     "close": "Close",
     "button": "Записати",
-    "syntaxHint": "#tag  +project  !1–!3 пріоритет  завтра о 15:00 для дати"
+    "syntaxHint": "#tag  +project  !1–!3 пріоритет  завтра о 15:00 для дати",
+    "slash": {
+      "tag": "Мітка",
+      "project": "Проєкт",
+      "person": "Людина",
+      "area": "Сфера",
+      "date": "Термін",
+      "repeat": "Повтор",
+      "today": "Сьогодні",
+      "tomorrow": "Завтра",
+      "nextMonday": "Наступного понеділка",
+      "inAWeek": "Через тиждень",
+      "everyDay": "Щодня",
+      "everyWeekday": "Щобудня",
+      "everyWeek": "Щотижня",
+      "everyMonth": "Щомісяця",
+      "create": "Створити {{token}}"
+    }
   },
   "area": {
-    "loadError": "Не вдалося завантажити області"
+    "loadError": "Не вдалося завантажити області",
+    "viaProject": "через проєкт",
+    "viewArea": "Перейти до сфери",
+    "searchAreas": "Пошук сфер…",
+    "clearArea": "Прибрати сферу",
+    "noAreasFound": "Сфер не знайдено"
   },
   "goals": {
     "newGoal": "Нова ціль",
@@ -3829,7 +3939,21 @@
       "placeholder": "Ключовий результат",
       "progress": "{{done}} з {{total}} виконано"
     },
-    "progressSummary": "Прогрес цілі · {{done}} з {{total}} виконано"
+    "progressSummary": "Прогрес цілі · {{done}} з {{total}} виконано",
+    "sort": {
+      "titleAsc": "За назвою від А до Я",
+      "titleDesc": "За назвою від Я до А",
+      "status": "Статус",
+      "horizon": "Горизонт",
+      "area": "Сфера",
+      "projects": "Найбільше проєктів",
+      "tasks": "Найбільше завдань",
+      "custom": "Власний порядок",
+      "label": "Сортувати цілі"
+    },
+    "reorderError": "Не вдалося зберегти порядок цілей",
+    "noGoalsInArea": "До цієї сфери не прив'язано жодної цілі.",
+    "maintenance": "Підтримка"
   },
   "templates": {
     "new": "Новий шаблон",
@@ -4452,7 +4576,9 @@
   "sortable": {
     "move": "Move",
     "project": "sortable project",
-    "task": "sortable task"
+    "task": "sortable task",
+    "area": "сфера для сортування",
+    "goal": "ціль для сортування"
   },
   "groupPage": {
     "title": "Group",
@@ -4489,7 +4615,18 @@
     "previous": "Previous file",
     "next": "Next file",
     "renameError": "Could not save the title",
-    "confirmDelete": "Delete file?"
+    "confirmDelete": "Delete file?",
+    "uploadSuccess": "Файл успішно завантажено",
+    "uploadError": "Не вдалося завантажити файл",
+    "deleteSuccess": "Вкладення успішно видалено",
+    "deleteError": "Не вдалося видалити файл",
+    "heading": "Вкладення",
+    "uploading": "Завантаження...",
+    "clickToUpload": "Натисніть, щоб завантажити",
+    "maxSize": "Максимум {{size}} МБ",
+    "anyFormat": "Будь-який тип файлу",
+    "deleteConfirmTitle": "Видалити вкладення",
+    "deleteConfirmMessage": "Ви впевнені, що хочете видалити це вкладення? Дію не можна скасувати."
   },
   "feedback": {
     "title": "Send feedback",
@@ -4958,5 +5095,9 @@
   },
   "sidebarDrop": {
     "failed": "Не вдалося оновити цей елемент."
+  },
+  "loading": {
+    "tasks": "Завантаження завдань…",
+    "subtasks": "Завантаження підзавдань..."
   }
 }

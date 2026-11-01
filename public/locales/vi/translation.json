@@ -59,7 +59,13 @@
     "showSearch": "Hiện tìm kiếm",
     "beta": "beta",
     "comingSoon": "Sắp ra mắt",
-    "due": "Due"
+    "due": "Due",
+    "goal": "Mục tiêu",
+    "priority": "Ưu tiên",
+    "tags": "Thẻ",
+    "goToToday": "Đi tới Hôm nay",
+    "loadMore": "Tải thêm",
+    "showAll": "Hiện tất cả"
   },
   "sidebar": {
     "dashboard": "Bảng điều khiển",
@@ -310,7 +316,8 @@
       "clearDate": "Xóa ngày",
       "moveToProject": "Chuyển vào dự án"
     },
-    "reorderError": "Failed to save task order"
+    "reorderError": "Failed to save task order",
+    "deleteConfirmTitle": "Xóa việc"
   },
   "timeline": {
     "activityTimeline": "Dòng Thời Gian Hoạt Động",
@@ -1088,7 +1095,11 @@
       "message": "Bạn có chắc muốn xóa mục tiêu \"{{title}}\" không?"
     },
     "createGoal": "Tạo mục tiêu",
-    "updateGoal": "Cập nhật mục tiêu"
+    "updateGoal": "Cập nhật mục tiêu",
+    "saveAsTemplate": {
+      "title": "Lưu làm mẫu",
+      "message": "Lưu \"{{name}}\" làm mẫu? Thao tác này sẽ tạo một mẫu có thể tái sử dụng dựa trên dự án này."
+    }
   },
   "forms": {
     "title": "Tiêu đề",
@@ -1232,7 +1243,8 @@
     "priority": "Độ ưu tiên",
     "status": "Trạng thái",
     "created_at": "Ngày tạo",
-    "custom": "Tùy chỉnh"
+    "custom": "Tùy chỉnh",
+    "completed_at": "Hoàn thành lúc"
   },
   "priority": {
     "low": "Thấp",
@@ -1373,7 +1385,8 @@
     "failedToDeleteNote": "Không thể xóa ghi chú.",
     "failedToDeleteTag": "Không thể xóa thẻ.",
     "projectStatusUpdateFailed": "Không thể cập nhật trạng thái dự án",
-    "failedToSaveTask": "Không thể lưu công việc."
+    "failedToSaveTask": "Không thể lưu công việc.",
+    "permissionDenied": "Không có quyền truy cập"
   },
   "inbox": {
     "title": "Hộp thư đến",
@@ -1677,7 +1690,23 @@
     "reminder": "Nhắc nhở",
     "reminderPlaceholder": "Chọn ngày và giờ nhắc nhở",
     "noReminder": "Không có nhắc nhở",
-    "reminderUpdateError": "Không thể cập nhật nhắc nhở"
+    "reminderUpdateError": "Không thể cập nhật nhắc nhở",
+    "noArea": "Gán vào lĩnh vực",
+    "dueDateBeforeDeferError": "Hạn chót không thể trước ngày hoãn",
+    "areaUpdated": "Đã cập nhật lĩnh vực",
+    "areaUpdateError": "Không thể cập nhật lĩnh vực",
+    "areaCleared": "Đã xóa lĩnh vực",
+    "areaClearError": "Không thể xóa lĩnh vực",
+    "goalUpdated": "Đã cập nhật mục tiêu",
+    "goalUpdateError": "Không thể cập nhật mục tiêu",
+    "goalCleared": "Đã xóa mục tiêu",
+    "goalClearError": "Không thể xóa mục tiêu",
+    "notFound": "Không tìm thấy việc",
+    "notFoundDescription": "Việc bạn tìm không tồn tại hoặc đã bị xóa.",
+    "hoursAgo": "{{count}} giờ trước",
+    "minutesAgo": "{{count}} phút trước",
+    "inMinutes": "sau {{count}} phút",
+    "inHours": "sau {{count}} giờ"
   },
   "projects": {
     "parentProject": "Dự án cha",
@@ -1793,7 +1822,11 @@
     "counts": {
       "active": "{{n}} active",
       "stash": "{{n}} in the stash"
-    }
+    },
+    "savedAsTemplate": "Đã lưu \"{{name}}\" làm mẫu.",
+    "saveAsTemplateError": "Không thể lưu dự án làm mẫu.",
+    "sortTasks": "Sắp xếp việc",
+    "upcomingProjects": "Dự án sắp tới"
   },
   "projectItem": {
     "edit": "Chỉnh sửa",
@@ -1814,7 +1847,8 @@
     "moreSharedUsers": "+{{count}} người dùng khác",
     "saveAsTemplate": "Lưu dưới dạng Mẫu",
     "pinToSidebar": "Ghim vào thanh bên",
-    "unpinFromSidebar": "Bỏ ghim khỏi thanh bên"
+    "unpinFromSidebar": "Bỏ ghim khỏi thanh bên",
+    "changeStatus": "Đổi trạng thái"
   },
   "areas": {
     "title": "Khu vực",
@@ -1854,7 +1888,27 @@
       "personal": "Cá nhân",
       "family": "Gia đình & Xã hội",
       "logistics": "Hậu cần"
-    }
+    },
+    "sort": {
+      "nameAsc": "Tên từ A đến Z",
+      "nameDesc": "Tên từ Z đến A",
+      "projects": "Nhiều dự án nhất",
+      "goals": "Nhiều mục tiêu nhất",
+      "tasks": "Nhiều việc nhất",
+      "custom": "Thứ tự tùy chỉnh",
+      "label": "Sắp xếp lĩnh vực"
+    },
+    "reorderError": "Không thể lưu thứ tự lĩnh vực",
+    "edit": "Sửa",
+    "delete": "Xóa",
+    "tasksInArea": "Việc",
+    "noProjects": "Không có dự án nào trong lĩnh vực này.",
+    "noTasks": "Không có việc nào trực tiếp trong lĩnh vực này",
+    "singular": "Lĩnh vực",
+    "projects": "dự án",
+    "goals": "mục tiêu",
+    "tasks": "việc",
+    "progressSummary": "Tiến độ lĩnh vực · {{done}} / {{total}} việc đã xong"
   },
   "notes": {
     "loading": "Đang tải ghi chú...",
@@ -1923,7 +1977,9 @@
       "tags": "Tags",
       "noProject": "No project",
       "more": "{{count}} more"
-    }
+    },
+    "edit": "Sửa",
+    "delete": "Xóa"
   },
   "tags": {
     "loading": "Đang tải thẻ...",
@@ -2002,7 +2058,13 @@
     "weeks": "tuần",
     "months": "tháng",
     "advancedHint": "Đối với các ngày trong tuần cụ thể hoặc một ngày kết thúc, hãy mở nhiệm vụ đầy đủ.",
-    "recurring": "Lặp lại"
+    "recurring": "Lặp lại",
+    "everyNDays": "Mỗi {{count}} ngày",
+    "everyNWeeks": "Mỗi {{count}} tuần",
+    "everyNMonths": "Mỗi {{count}} tháng",
+    "completionBased": "Sau khi hoàn thành",
+    "onDay": "Vào ngày",
+    "until": "Đến"
   },
   "weekdays": {
     "sunday": "CN",
@@ -2861,7 +2923,8 @@
     "searching": "Đang tìm kiếm..."
   },
   "subtasks": {
-    "placeholder": "Thêm một công việc phụ..."
+    "placeholder": "Thêm một công việc phụ...",
+    "title": "Việc con"
   },
   "backup": {
     "title": "Sao lưu & Khôi phục",
@@ -2923,7 +2986,8 @@
       "email": "Email",
       "push": "Thông Báo Đẩy",
       "telegram": "Telegram",
-      "desktop": "Máy tính"
+      "desktop": "Máy tính",
+      "apprise": "Apprise"
     },
     "types": {
       "dueTasks": "Công Việc Đến Hạn",
@@ -3046,7 +3110,31 @@
       "enable": "Giờ yên tĩnh",
       "from": "Từ",
       "to": "Đến"
-    }
+    },
+    "apprise": {
+      "saved": "Đã lưu máy chủ Apprise.",
+      "title": "Apprise",
+      "connected": "Đang gửi qua {{host}}.",
+      "description": "Gửi thông báo qua máy chủ Apprise của riêng bạn tới Pushover, ntfy, Discord, Matrix và nhiều dịch vụ khác.",
+      "remove": "Xóa",
+      "serverLabel": "Địa chỉ máy chủ Apprise",
+      "keyPlaceholder": "Khóa cấu hình",
+      "keyLabel": "Khóa cấu hình",
+      "tagsPlaceholder": "Thẻ (tùy chọn, ví dụ: all)",
+      "tagsLabel": "Thẻ",
+      "help": "Tạo một cấu hình trên máy chủ Apprise rồi dán khóa của nó vào đây.",
+      "save": "Lưu"
+    },
+    "justNow": "Vừa xong",
+    "minutesAgo": "{{count}} phút trước",
+    "hoursAgo": "{{count}} giờ trước",
+    "daysAgo": "{{count}} ngày trước",
+    "title": "Thông báo",
+    "markAllRead": "Đánh dấu tất cả đã đọc",
+    "loading": "Đang tải...",
+    "noNotifications": "Chưa có thông báo",
+    "markAsRead": "Đánh dấu đã đọc",
+    "delete": "Xóa"
   },
   "projectStatus": {
     "not_started": "Chưa bắt đầu",
@@ -3758,10 +3846,32 @@
     "close": "Close",
     "filesAttached_one": "1 file attached.",
     "button": "Ghi lại",
-    "syntaxHint": "#tag  +project  !1 đến !3 ưu tiên  ngày mai 15:00 để đặt ngày"
+    "syntaxHint": "#tag  +project  !1 đến !3 ưu tiên  ngày mai 15:00 để đặt ngày",
+    "slash": {
+      "tag": "Thẻ",
+      "project": "Dự án",
+      "person": "Người",
+      "area": "Lĩnh vực",
+      "date": "Hạn chót",
+      "repeat": "Lặp lại",
+      "today": "Hôm nay",
+      "tomorrow": "Ngày mai",
+      "nextMonday": "Thứ Hai tới",
+      "inAWeek": "Sau một tuần",
+      "everyDay": "Mỗi ngày",
+      "everyWeekday": "Mỗi ngày làm việc",
+      "everyWeek": "Mỗi tuần",
+      "everyMonth": "Mỗi tháng",
+      "create": "Tạo {{token}}"
+    }
   },
   "area": {
-    "loadError": "Không thể tải khu vực"
+    "loadError": "Không thể tải khu vực",
+    "viaProject": "qua dự án",
+    "viewArea": "Đi tới lĩnh vực",
+    "searchAreas": "Tìm lĩnh vực…",
+    "clearArea": "Xóa lĩnh vực",
+    "noAreasFound": "Không tìm thấy lĩnh vực"
   },
   "goals": {
     "newGoal": "Mục tiêu mới",
@@ -3813,7 +3923,21 @@
       "placeholder": "Kết quả chính",
       "progress": "{{done}} / {{total}} đã xong"
     },
-    "progressSummary": "Tiến độ mục tiêu · {{done}} / {{total}} đã xong"
+    "progressSummary": "Tiến độ mục tiêu · {{done}} / {{total}} đã xong",
+    "sort": {
+      "titleAsc": "Tiêu đề từ A đến Z",
+      "titleDesc": "Tiêu đề từ Z đến A",
+      "status": "Trạng thái",
+      "horizon": "Thời hạn dài",
+      "area": "Lĩnh vực",
+      "projects": "Nhiều dự án nhất",
+      "tasks": "Nhiều việc nhất",
+      "custom": "Thứ tự tùy chỉnh",
+      "label": "Sắp xếp mục tiêu"
+    },
+    "reorderError": "Không thể lưu thứ tự mục tiêu",
+    "noGoalsInArea": "Không có mục tiêu nào liên kết với lĩnh vực này.",
+    "maintenance": "Duy trì"
   },
   "templates": {
     "new": "Mẫu mới",
@@ -4434,7 +4558,9 @@
   "sortable": {
     "move": "Move",
     "project": "sortable project",
-    "task": "sortable task"
+    "task": "sortable task",
+    "area": "lĩnh vực có thể sắp xếp",
+    "goal": "mục tiêu có thể sắp xếp"
   },
   "groupPage": {
     "title": "Group",
@@ -4471,7 +4597,18 @@
     "previous": "Previous file",
     "next": "Next file",
     "renameError": "Could not save the title",
-    "confirmDelete": "Delete file?"
+    "confirmDelete": "Delete file?",
+    "uploadSuccess": "Tải tệp lên thành công",
+    "uploadError": "Không thể tải tệp lên",
+    "deleteSuccess": "Đã xóa tệp đính kèm thành công",
+    "deleteError": "Không thể xóa tệp",
+    "heading": "Tệp đính kèm",
+    "uploading": "Đang tải lên...",
+    "clickToUpload": "Nhấn để tải lên",
+    "maxSize": "Tối đa {{size}} MB",
+    "anyFormat": "Mọi loại tệp",
+    "deleteConfirmTitle": "Xóa tệp đính kèm",
+    "deleteConfirmMessage": "Bạn có chắc muốn xóa tệp đính kèm này không? Hành động này không thể hoàn tác."
   },
   "feedback": {
     "title": "Send feedback",
@@ -4928,5 +5065,9 @@
   },
   "sidebarDrop": {
     "failed": "Không thể cập nhật mục này."
+  },
+  "loading": {
+    "tasks": "Đang tải việc…",
+    "subtasks": "Đang tải việc con..."
   }
 }

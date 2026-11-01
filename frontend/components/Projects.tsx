@@ -853,8 +853,10 @@ const Projects: React.FC = () => {
     return (
         <div className="w-full px-4 sm:px-6 lg:px-8 pt-4 pb-8">
             <div className="w-full max-w-7xl mx-auto">
-                <div className="flex items-center justify-between gap-3 mb-8">
-                    <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                {/* The tools drop to their own line on a phone instead of
+                    squeezing the counts into a column. */}
+                <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
+                    <div className="flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-1">
                         <h2 className="text-2xl font-light">
                             {t('projects.title')}
                         </h2>

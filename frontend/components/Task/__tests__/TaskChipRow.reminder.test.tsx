@@ -64,8 +64,5 @@ describe('TaskChipRow reminder', () => {
         renderRow({ reminder_at: '2030-03-15T08:00:00.000Z' });
 
         expect(screen.getByTestId('chip-reminder')).toBeInTheDocument();
-        expect(
-            screen.queryByRole('button', { name: 'More' })
-        ).not.toBeInTheDocument();
     });
 });

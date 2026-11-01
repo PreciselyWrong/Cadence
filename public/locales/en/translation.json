@@ -59,7 +59,13 @@
     "showSearch": "Show search input",
     "beta": "beta",
     "comingSoon": "Coming Soon",
-    "due": "Due"
+    "due": "Due",
+    "goal": "Goal",
+    "priority": "Priority",
+    "tags": "Tags",
+    "goToToday": "Go to Today",
+    "loadMore": "Load More",
+    "showAll": "Show All"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -309,7 +315,8 @@
       "nextWeek": "Next week",
       "clearDate": "Clear date",
       "moveToProject": "Move to project"
-    }
+    },
+    "deleteConfirmTitle": "Delete Task"
   },
   "comments": {
     "count": "{{count}} comments",
@@ -1107,7 +1114,11 @@
       "message": "Are you sure you want to delete the goal \"{{title}}\"?"
     },
     "createGoal": "Create Goal",
-    "updateGoal": "Update Goal"
+    "updateGoal": "Update Goal",
+    "saveAsTemplate": {
+      "title": "Save as Template",
+      "message": "Save \"{{name}}\" as a template? This will create a reusable template based on this project."
+    }
   },
   "forms": {
     "title": "Title",
@@ -1250,12 +1261,15 @@
     "priority": "Priority",
     "status": "Status",
     "created_at": "Created At",
-    "custom": "Custom"
+    "custom": "Custom",
+    "completed_at": "Completed At"
   },
   "sortable": {
     "move": "Move",
     "project": "sortable project",
-    "task": "sortable task"
+    "task": "sortable task",
+    "area": "sortable area",
+    "goal": "sortable goal"
   },
   "priority": {
     "none": "None",
@@ -1396,7 +1410,8 @@
     "failedToDeleteNote": "Failed to delete note.",
     "failedToDeleteTag": "Failed to delete tag.",
     "projectStatusUpdateFailed": "Failed to update project status",
-    "failedToSaveTask": "Failed to save task."
+    "failedToSaveTask": "Failed to save task.",
+    "permissionDenied": "Permission denied"
   },
   "inbox": {
     "title": "Inbox",
@@ -1696,10 +1711,27 @@
     "reminder": "Reminder",
     "reminderPlaceholder": "Select reminder date and time",
     "noReminder": "No reminder",
-    "reminderUpdateError": "Failed to update reminder"
+    "reminderUpdateError": "Failed to update reminder",
+    "noArea": "Assign to an area",
+    "dueDateBeforeDeferError": "Due date cannot be before the defer until date",
+    "areaUpdated": "Area updated successfully",
+    "areaUpdateError": "Failed to update area",
+    "areaCleared": "Area cleared successfully",
+    "areaClearError": "Failed to clear area",
+    "goalUpdated": "Goal updated",
+    "goalUpdateError": "Failed to update goal",
+    "goalCleared": "Goal cleared",
+    "goalClearError": "Failed to clear goal",
+    "notFound": "Task Not Found",
+    "notFoundDescription": "The task you are looking for does not exist or has been deleted.",
+    "hoursAgo": "{{count}} hours ago",
+    "minutesAgo": "{{count}} minutes ago",
+    "inMinutes": "in {{count}} minutes",
+    "inHours": "in {{count}} hours"
   },
   "subtasks": {
-    "placeholder": "Add a subtask..."
+    "placeholder": "Add a subtask...",
+    "title": "Subtasks"
   },
   "projects": {
     "parentProject": "Parent project",
@@ -1801,7 +1833,11 @@
     "counts": {
       "active": "{{n}} active",
       "stash": "{{n}} in the stash"
-    }
+    },
+    "savedAsTemplate": "\"{{name}}\" saved as template.",
+    "saveAsTemplateError": "Failed to save project as template.",
+    "sortTasks": "Sort tasks",
+    "upcomingProjects": "Upcoming Projects"
   },
   "projectStatus": {
     "not_started": "Not Started",
@@ -1841,7 +1877,8 @@
     "moreSharedUsers": "+{{count}} more users",
     "saveAsTemplate": "Save as Template",
     "pinToSidebar": "Pin to sidebar",
-    "unpinFromSidebar": "Unpin from sidebar"
+    "unpinFromSidebar": "Unpin from sidebar",
+    "changeStatus": "Change status"
   },
   "areas": {
     "title": "Areas",
@@ -1881,7 +1918,27 @@
       "personal": "Personal",
       "family": "Family & Social",
       "logistics": "Logistics"
-    }
+    },
+    "sort": {
+      "nameAsc": "Name A to Z",
+      "nameDesc": "Name Z to A",
+      "projects": "Most projects",
+      "goals": "Most goals",
+      "tasks": "Most tasks",
+      "custom": "Custom order",
+      "label": "Sort areas"
+    },
+    "reorderError": "Failed to save area order",
+    "edit": "Edit",
+    "delete": "Delete",
+    "tasksInArea": "Tasks",
+    "noProjects": "No projects in this area.",
+    "noTasks": "No tasks directly in this area",
+    "singular": "Area",
+    "projects": "projects",
+    "goals": "goals",
+    "tasks": "tasks",
+    "progressSummary": "Area progress · {{done}} of {{total}} tasks done"
   },
   "notes": {
     "addNote": "Add Note",
@@ -1950,7 +2007,9 @@
       "tags": "Tags",
       "noProject": "No project",
       "more": "{{count}} more"
-    }
+    },
+    "edit": "Edit",
+    "delete": "Delete"
   },
   "tags": {
     "addTag": "Add Tag",
@@ -2168,7 +2227,13 @@
     "weeks": "weeks",
     "months": "months",
     "advancedHint": "For specific weekdays or an end date, open the full task.",
-    "recurring": "Recurring"
+    "recurring": "Recurring",
+    "everyNDays": "Every {{count}} days",
+    "everyNWeeks": "Every {{count}} weeks",
+    "everyNMonths": "Every {{count}} months",
+    "completionBased": "After completion",
+    "onDay": "On day",
+    "until": "Until"
   },
   "weekdays": {
     "sunday": "Sun",
@@ -3142,7 +3207,8 @@
       "email": "Email",
       "push": "Push",
       "telegram": "Telegram",
-      "desktop": "Desktop"
+      "desktop": "Desktop",
+      "apprise": "Apprise"
     },
     "types": {
       "dueTasks": "Due Tasks",
@@ -3262,7 +3328,31 @@
       "enable": "Quiet hours",
       "from": "From",
       "to": "To"
-    }
+    },
+    "apprise": {
+      "saved": "Apprise server saved.",
+      "title": "Apprise",
+      "connected": "Sending through {{host}}.",
+      "description": "Send notifications through your own Apprise server to Pushover, ntfy, Discord, Matrix and more.",
+      "remove": "Remove",
+      "serverLabel": "Apprise server address",
+      "keyPlaceholder": "Config key",
+      "keyLabel": "Config key",
+      "tagsPlaceholder": "Tags (optional, e.g. all)",
+      "tagsLabel": "Tags",
+      "help": "Create a configuration in your Apprise server and paste its key here.",
+      "save": "Save"
+    },
+    "justNow": "Just now",
+    "minutesAgo": "{{count}} min ago",
+    "hoursAgo": "{{count}}h ago",
+    "daysAgo": "{{count}}d ago",
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "loading": "Loading...",
+    "noNotifications": "No notifications yet",
+    "markAsRead": "Mark as read",
+    "delete": "Delete"
   },
   "aiAssistant": {
     "title": "AI Daily Brief",
@@ -3787,7 +3877,24 @@
     "filesAttached_one": "1 file attached.",
     "filesAttached_other": "{{count}} files attached.",
     "button": "Capture",
-    "syntaxHint": "#tag  +project  !1 to !3 priority  tomorrow 3pm for a date"
+    "syntaxHint": "#tag  +project  !1 to !3 priority  tomorrow 3pm for a date",
+    "slash": {
+      "tag": "Tag",
+      "project": "Project",
+      "person": "Person",
+      "area": "Area",
+      "date": "Due date",
+      "repeat": "Repeat",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "nextMonday": "Next Monday",
+      "inAWeek": "In a week",
+      "everyDay": "Every day",
+      "everyWeekday": "Every weekday",
+      "everyWeek": "Every week",
+      "everyMonth": "Every month",
+      "create": "Create {{token}}"
+    }
   },
   "attachments": {
     "limitReached": "Maximum 20 attachments allowed",
@@ -3798,10 +3905,26 @@
     "previous": "Previous file",
     "next": "Next file",
     "renameError": "Could not save the title",
-    "confirmDelete": "Delete file?"
+    "confirmDelete": "Delete file?",
+    "uploadSuccess": "File uploaded successfully",
+    "uploadError": "Failed to upload file",
+    "deleteSuccess": "Attachment deleted successfully",
+    "deleteError": "Failed to delete file",
+    "heading": "Attachments",
+    "uploading": "Uploading...",
+    "clickToUpload": "Click to upload",
+    "maxSize": "Max {{size}}MB",
+    "anyFormat": "Any file type",
+    "deleteConfirmTitle": "Delete Attachment",
+    "deleteConfirmMessage": "Are you sure you want to delete this attachment? This action cannot be undone."
   },
   "area": {
-    "loadError": "Failed to load areas"
+    "loadError": "Failed to load areas",
+    "viaProject": "via project",
+    "viewArea": "Go to area",
+    "searchAreas": "Search areas…",
+    "clearArea": "Remove area",
+    "noAreasFound": "No areas found"
   },
   "goals": {
     "newGoal": "New Goal",
@@ -3853,7 +3976,21 @@
       "placeholder": "Key result",
       "progress": "{{done}} of {{total}} done"
     },
-    "progressSummary": "Goal progress · {{done}} of {{total}} done"
+    "progressSummary": "Goal progress · {{done}} of {{total}} done",
+    "sort": {
+      "titleAsc": "Title A to Z",
+      "titleDesc": "Title Z to A",
+      "status": "Status",
+      "horizon": "Horizon",
+      "area": "Area",
+      "projects": "Most projects",
+      "tasks": "Most tasks",
+      "custom": "Custom order",
+      "label": "Sort goals"
+    },
+    "reorderError": "Failed to save goal order",
+    "noGoalsInArea": "No goals linked to this area.",
+    "maintenance": "Maintenance"
   },
   "templates": {
     "new": "New Template",
@@ -4891,5 +5028,9 @@
   },
   "sidebarDrop": {
     "failed": "Could not update this item."
+  },
+  "loading": {
+    "tasks": "Loading tasks…",
+    "subtasks": "Loading subtasks..."
   }
 }

@@ -113,3 +113,25 @@ Interface directe, très claire, sans encombrement. Références de comportement
   - champ **Rappel** : puce « Rappel » du panneau de tâche derrière « Plus » (visible dès qu'un rappel existe), carte « Rappel » sur la page de tâche ; une tâche récurrente décale son rappel avec l'échéance.
 - **Android** : lire `quiet_hours` (profil) pour ne pas sonner dans la plage ; garder les rappels de tâche locaux (le téléphone en est propriétaire) ; recevoir `reminder_at` et `reminder_sent_at` par la synchro ; retirer toute alerte « en retard » et dire « Encore ouvert » avec la date.
 
+
+### 2026-11-01 — Revue UX web : simplicité, débordements, français
+
+- **Problème** (revue complète à 375 et 1440 px, clair et sombre) : sur téléphone, chaque carte d'Aujourd'hui affichait ses durées (15 min, 30 min, 1 h, 2 h) et « Demain / Semaine prochaine / Abandonner », soit des dizaines de boutons ; le panneau d'une tâche simple montrait 12 puces vides et une grande zone d'envoi de fichiers ; le mois du calendrier s'écrasait sur une ligne sous la liste du jour ; la page projet débordait à droite ; la semaine s'ouvrait sur minuit ; la Boîte de réception cachait ses éléments ; les cartes de projet disaient « Pas de date d'échéance » et « En retard de N jours » ; une priorité haute venue de l'API n'apparaissait pas dans le panneau ; textes anglais en français (Apprise, notifications, pièces jointes, tri des zones et objectifs, libellés d'accessibilité) et « Tâches échues » pour des tâches bientôt dues.
+- **Décisions** :
+  - une tâche simple reste simple : le panneau montre échéance, projet et étiquettes, plus tout champ déjà rempli (zone, priorité, statut autre que « non commencé », récurrence, estimation, report, rappel, assignation) ; le reste attend derrière « Plus » ; la priorité 0 (valeur par défaut) compte comme aucune priorité ;
+  - pièces jointes : la zone d'envoi n'apparaît qu'une fois un fichier joint ou après « Joindre des fichiers » ; le panneau ne répète plus « Sous-tâches » sous son titre de section ;
+  - Aujourd'hui sur écran tactile : durées et actions de report s'ouvrent carte par carte avec un chevron ; sur ordinateur, survol ou focus clavier comme avant ; cibles tactiles de 44 px (ajout au plan, chevron, cloche des notifications) ;
+  - calendrier mois sur téléphone : la grille garde sa hauteur, la liste du jour défile dessous ; semaine et 3 jours s'ouvrent sur l'heure du premier élément horaire de la période, sinon 7 h ;
+  - page projet : les onglets de vue défilent dans leur rangée, les actions ne poussent plus la page ; le bouton Aperçus IA n'apparaît que si l'assistant IA est activé ; Projets : les outils passent sous le titre sur téléphone ;
+  - cartes et liste de projets : rien quand il n'y a pas d'échéance ; une échéance passée s'affiche « Échéance 20 sept. », sans rouge ni compte de jours ;
+  - Boîte de réception : la liste « Récemment capturé » est ouverte par défaut (le choix replié reste mémorisé) ;
+  - lignes de tâche Minimal : les puces de droite se tassent sur une ligne étroite (rognées à gauche, l'heure reste lisible), jamais de défilement horizontal ;
+  - textes : 129 chaînes manquantes ajoutées dans les 26 langues (les textes des pièces jointes passent sous `attachments.*`, car `task.attachments` est déjà un libellé) ; « Tâches bientôt dues », « Projets bientôt dus », « Ouvrir la boîte de réception » ; interrupteurs de notifications annoncés « Canal · Type » (rôle switch).
+- **Android à reprendre** :
+  - détail de tâche : mêmes champs toujours visibles (échéance, projet, étiquettes) et mêmes règles « rempli = visible, sinon derrière Plus » ; priorité 0 = aucune ;
+  - pas de zone de pièces jointes vide : une action « Joindre des fichiers » suffit ;
+  - Aujourd'hui : les durées et le report d'une carte s'ouvrent sur demande (chevron ou appui long), jamais sur toutes les cartes ;
+  - agenda semaine : ouvrir sur le premier élément horaire de la semaine, sinon 7 h ;
+  - cartes de projet : aucune mention d'échéance absente, échéance passée en date neutre ;
+  - Boîte : la liste des éléments capturés est visible à l'ouverture ;
+  - libellés : « Tâches bientôt dues » pour les notifications d'échéance proche.

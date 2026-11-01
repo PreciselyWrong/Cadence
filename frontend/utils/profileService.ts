@@ -181,10 +181,11 @@ export const updateUiSettings = async (
 export const getInboxRecentlyCapturedExpanded = async (): Promise<boolean> => {
     try {
         const profile = await fetchProfile();
-        return profile.ui_settings?.inbox?.recentlyCapturedExpanded ?? false;
+        // Open unless the user folded it: the Inbox page shows its items.
+        return profile.ui_settings?.inbox?.recentlyCapturedExpanded ?? true;
     } catch (error) {
         console.error('Error fetching inbox recently captured setting:', error);
-        return false;
+        return true;
     }
 };
 

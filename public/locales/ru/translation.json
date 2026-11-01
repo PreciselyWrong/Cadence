@@ -61,7 +61,13 @@
     "showSearch": "Показать поиск",
     "beta": "бета",
     "comingSoon": "Скоро",
-    "due": "Due"
+    "due": "Due",
+    "goal": "Цель",
+    "priority": "Приоритет",
+    "tags": "Метки",
+    "goToToday": "Перейти к сегодня",
+    "loadMore": "Загрузить ещё",
+    "showAll": "Показать все"
   },
   "sidebar": {
     "dashboard": "Панель управления",
@@ -312,7 +318,8 @@
       "clearDate": "Убрать дату",
       "moveToProject": "Переместить в проект"
     },
-    "reorderError": "Failed to save task order"
+    "reorderError": "Failed to save task order",
+    "deleteConfirmTitle": "Удалить задачу"
   },
   "timeline": {
     "activityTimeline": "Хронология активности",
@@ -1090,7 +1097,11 @@
       "message": "Вы действительно хотите удалить цель «{{title}}»?"
     },
     "createGoal": "Создать цель",
-    "updateGoal": "Обновить цель"
+    "updateGoal": "Обновить цель",
+    "saveAsTemplate": {
+      "title": "Сохранить как шаблон",
+      "message": "Сохранить \"{{name}}\" как шаблон? На основе этого проекта будет создан шаблон для повторного использования."
+    }
   },
   "forms": {
     "title": "Название",
@@ -1234,7 +1245,8 @@
     "priority": "Приоритет",
     "status": "Статус",
     "created_at": "Создано",
-    "custom": "Своя"
+    "custom": "Своя",
+    "completed_at": "Выполнено"
   },
   "priority": {
     "low": "Низкий",
@@ -1377,7 +1389,8 @@
     "failedToDeleteNote": "Не удалось удалить заметку.",
     "failedToDeleteTag": "Не удалось удалить тег.",
     "projectStatusUpdateFailed": "Не удалось обновить статус проекта",
-    "failedToSaveTask": "Не удалось сохранить задачу."
+    "failedToSaveTask": "Не удалось сохранить задачу.",
+    "permissionDenied": "Доступ запрещён"
   },
   "inbox": {
     "title": "Входящие",
@@ -1681,7 +1694,23 @@
     "reminder": "Напоминание",
     "reminderPlaceholder": "Выберите дату и время напоминания",
     "noReminder": "Нет напоминания",
-    "reminderUpdateError": "Не удалось обновить напоминание"
+    "reminderUpdateError": "Не удалось обновить напоминание",
+    "noArea": "Назначить область",
+    "dueDateBeforeDeferError": "Срок не может быть раньше даты отложения",
+    "areaUpdated": "Область обновлена",
+    "areaUpdateError": "Не удалось обновить область",
+    "areaCleared": "Область убрана",
+    "areaClearError": "Не удалось убрать область",
+    "goalUpdated": "Цель обновлена",
+    "goalUpdateError": "Не удалось обновить цель",
+    "goalCleared": "Цель убрана",
+    "goalClearError": "Не удалось убрать цель",
+    "notFound": "Задача не найдена",
+    "notFoundDescription": "Задача, которую вы ищете, не существует или была удалена.",
+    "hoursAgo": "{{count}} ч назад",
+    "minutesAgo": "{{count}} мин назад",
+    "inMinutes": "через {{count}} мин",
+    "inHours": "через {{count}} ч"
   },
   "projects": {
     "parentProject": "Родительский проект",
@@ -1799,7 +1828,11 @@
     "counts": {
       "active": "{{n}} active",
       "stash": "{{n}} in the stash"
-    }
+    },
+    "savedAsTemplate": "\"{{name}}\" сохранён как шаблон.",
+    "saveAsTemplateError": "Не удалось сохранить проект как шаблон.",
+    "sortTasks": "Сортировать задачи",
+    "upcomingProjects": "Предстоящие проекты"
   },
   "projectItem": {
     "edit": "Редактировать",
@@ -1820,7 +1853,8 @@
     "moreSharedUsers": "+{{count}} пользователей",
     "saveAsTemplate": "Сохранить как шаблон",
     "pinToSidebar": "Закрепить в боковой панели",
-    "unpinFromSidebar": "Открепить от боковой панели"
+    "unpinFromSidebar": "Открепить от боковой панели",
+    "changeStatus": "Изменить статус"
   },
   "areas": {
     "title": "Области",
@@ -1860,7 +1894,27 @@
       "personal": "Личное",
       "family": "Семья и общение",
       "logistics": "Логистика"
-    }
+    },
+    "sort": {
+      "nameAsc": "По названию от А до Я",
+      "nameDesc": "По названию от Я до А",
+      "projects": "Больше всего проектов",
+      "goals": "Больше всего целей",
+      "tasks": "Больше всего задач",
+      "custom": "Пользовательский порядок",
+      "label": "Сортировать области"
+    },
+    "reorderError": "Не удалось сохранить порядок областей",
+    "edit": "Изменить",
+    "delete": "Удалить",
+    "tasksInArea": "Задачи",
+    "noProjects": "В этой области нет проектов.",
+    "noTasks": "В этой области нет задач",
+    "singular": "Область",
+    "projects": "проектов",
+    "goals": "целей",
+    "tasks": "задач",
+    "progressSummary": "Прогресс области · выполнено {{done}} из {{total}} задач"
   },
   "notes": {
     "loading": "Загрузка заметок...",
@@ -1929,7 +1983,9 @@
       "tags": "Tags",
       "noProject": "No project",
       "more": "{{count}} more"
-    }
+    },
+    "edit": "Изменить",
+    "delete": "Удалить"
   },
   "tags": {
     "loading": "Загрузка тегов...",
@@ -2008,7 +2064,13 @@
     "weeks": "недели",
     "months": "месяцы",
     "advancedHint": "Для конкретных дней недели или конечной даты откройте полное задание.",
-    "recurring": "Повторяющаяся"
+    "recurring": "Повторяющаяся",
+    "everyNDays": "Каждые {{count}} дн.",
+    "everyNWeeks": "Каждые {{count}} нед.",
+    "everyNMonths": "Каждые {{count}} мес.",
+    "completionBased": "После выполнения",
+    "onDay": "В день",
+    "until": "До"
   },
   "weekdays": {
     "sunday": "Вс",
@@ -2873,7 +2935,8 @@
     "searching": "Поиск..."
   },
   "subtasks": {
-    "placeholder": "Добавить подзадачу..."
+    "placeholder": "Добавить подзадачу...",
+    "title": "Подзадачи"
   },
   "backup": {
     "title": "Резервное копирование и восстановление",
@@ -2935,7 +2998,8 @@
       "email": "Электронная почта",
       "push": "Push",
       "telegram": "Telegram",
-      "desktop": "Компьютер"
+      "desktop": "Компьютер",
+      "apprise": "Apprise"
     },
     "types": {
       "dueTasks": "Сроки задач",
@@ -3058,7 +3122,31 @@
       "enable": "Тихие часы",
       "from": "С",
       "to": "До"
-    }
+    },
+    "apprise": {
+      "saved": "Сервер Apprise сохранён.",
+      "title": "Apprise",
+      "connected": "Отправка через {{host}}.",
+      "description": "Отправляйте уведомления через свой сервер Apprise в Pushover, ntfy, Discord, Matrix и другие сервисы.",
+      "remove": "Удалить",
+      "serverLabel": "Адрес сервера Apprise",
+      "keyPlaceholder": "Ключ конфигурации",
+      "keyLabel": "Ключ конфигурации",
+      "tagsPlaceholder": "Метки (необязательно, например all)",
+      "tagsLabel": "Метки",
+      "help": "Создайте конфигурацию на своём сервере Apprise и вставьте её ключ сюда.",
+      "save": "Сохранить"
+    },
+    "justNow": "Только что",
+    "minutesAgo": "{{count}} мин назад",
+    "hoursAgo": "{{count}} ч назад",
+    "daysAgo": "{{count}} д назад",
+    "title": "Уведомления",
+    "markAllRead": "Отметить все как прочитанные",
+    "loading": "Загрузка...",
+    "noNotifications": "Уведомлений пока нет",
+    "markAsRead": "Отметить как прочитанное",
+    "delete": "Удалить"
   },
   "projectStatus": {
     "not_started": "Не начато",
@@ -3774,10 +3862,32 @@
     "addTitle": "Add to Inbox, Task, Note or Project",
     "close": "Close",
     "button": "Захват",
-    "syntaxHint": "#tag  +project  !1–!3 приоритет  завтра в 15:00 для даты"
+    "syntaxHint": "#tag  +project  !1–!3 приоритет  завтра в 15:00 для даты",
+    "slash": {
+      "tag": "Метка",
+      "project": "Проект",
+      "person": "Человек",
+      "area": "Область",
+      "date": "Срок",
+      "repeat": "Повтор",
+      "today": "Сегодня",
+      "tomorrow": "Завтра",
+      "nextMonday": "В следующий понедельник",
+      "inAWeek": "Через неделю",
+      "everyDay": "Каждый день",
+      "everyWeekday": "Каждый рабочий день",
+      "everyWeek": "Каждую неделю",
+      "everyMonth": "Каждый месяц",
+      "create": "Создать {{token}}"
+    }
   },
   "area": {
-    "loadError": "Не удалось загрузить области"
+    "loadError": "Не удалось загрузить области",
+    "viaProject": "через проект",
+    "viewArea": "Перейти к области",
+    "searchAreas": "Поиск областей…",
+    "clearArea": "Убрать область",
+    "noAreasFound": "Области не найдены"
   },
   "goals": {
     "newGoal": "Новая цель",
@@ -3829,7 +3939,21 @@
       "placeholder": "Ключевой результат",
       "progress": "{{done}} из {{total}} выполнено"
     },
-    "progressSummary": "Прогресс цели · {{done}} из {{total}} выполнено"
+    "progressSummary": "Прогресс цели · {{done}} из {{total}} выполнено",
+    "sort": {
+      "titleAsc": "По названию от А до Я",
+      "titleDesc": "По названию от Я до А",
+      "status": "Статус",
+      "horizon": "Горизонт",
+      "area": "Область",
+      "projects": "Больше всего проектов",
+      "tasks": "Больше всего задач",
+      "custom": "Пользовательский порядок",
+      "label": "Сортировать цели"
+    },
+    "reorderError": "Не удалось сохранить порядок целей",
+    "noGoalsInArea": "С этой областью не связано ни одной цели.",
+    "maintenance": "Поддержка"
   },
   "templates": {
     "new": "Новый шаблон",
@@ -4452,7 +4576,9 @@
   "sortable": {
     "move": "Move",
     "project": "sortable project",
-    "task": "sortable task"
+    "task": "sortable task",
+    "area": "область для сортировки",
+    "goal": "цель для сортировки"
   },
   "groupPage": {
     "title": "Group",
@@ -4489,7 +4615,18 @@
     "previous": "Previous file",
     "next": "Next file",
     "renameError": "Could not save the title",
-    "confirmDelete": "Delete file?"
+    "confirmDelete": "Delete file?",
+    "uploadSuccess": "Файл успешно загружен",
+    "uploadError": "Не удалось загрузить файл",
+    "deleteSuccess": "Вложение успешно удалено",
+    "deleteError": "Не удалось удалить файл",
+    "heading": "Вложения",
+    "uploading": "Загрузка...",
+    "clickToUpload": "Нажмите, чтобы загрузить",
+    "maxSize": "Макс. {{size}} МБ",
+    "anyFormat": "Любой тип файла",
+    "deleteConfirmTitle": "Удалить вложение",
+    "deleteConfirmMessage": "Вы уверены, что хотите удалить это вложение? Действие нельзя отменить."
   },
   "feedback": {
     "title": "Send feedback",
@@ -4958,5 +5095,9 @@
   },
   "sidebarDrop": {
     "failed": "Не удалось обновить этот элемент."
+  },
+  "loading": {
+    "tasks": "Загрузка задач…",
+    "subtasks": "Загрузка подзадач..."
   }
 }

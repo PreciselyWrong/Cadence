@@ -672,10 +672,20 @@ const Tasks: React.FC = () => {
                             aria-expanded={isInfoExpanded}
                             aria-label={
                                 isInfoExpanded
-                                    ? 'Collapse info panel'
-                                    : 'Show tasks information'
+                                    ? t(
+                                          'ariaLabels.collapseInfoPanel',
+                                          'Collapse info panel'
+                                      )
+                                    : t(
+                                          'ariaLabels.showTasksInformation',
+                                          'Show tasks information'
+                                      )
                             }
-                            title={isInfoExpanded ? 'Hide info' : 'About Tasks'}
+                            title={
+                                isInfoExpanded
+                                    ? t('ariaLabels.hideInfo', 'Hide info')
+                                    : t('ariaLabels.aboutTasks', 'About Tasks')
+                            }
                         >
                             <InformationCircleIcon className="h-5 w-5 text-blue-500" />
                             <span className="sr-only">
@@ -693,8 +703,14 @@ const Tasks: React.FC = () => {
                                 aria-expanded={isSearchExpanded}
                                 aria-label={
                                     isSearchExpanded
-                                        ? 'Collapse search panel'
-                                        : 'Show search input'
+                                        ? t(
+                                              'common.hideSearch',
+                                              'Collapse search panel'
+                                          )
+                                        : t(
+                                              'common.showSearch',
+                                              'Show search input'
+                                          )
                                 }
                                 title={
                                     isSearchExpanded

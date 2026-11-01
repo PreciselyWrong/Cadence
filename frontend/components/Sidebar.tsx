@@ -316,7 +316,10 @@ const Sidebar: React.FC<SidebarProps> = ({
                                     type="button"
                                     onClick={() => setIsSidebarOpen(false)}
                                     className="p-2 rounded-lg text-gray-600 hover:text-gray-700 hover:bg-gray-300/50 dark:text-gray-300 dark:hover:text-gray-200 dark:hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-                                    aria-label="Collapse Sidebar"
+                                    aria-label={t(
+                                        'navbar.collapseSidebar',
+                                        'Collapse Sidebar'
+                                    )}
                                     data-testid="sidebar-collapse"
                                 >
                                     <XMarkIcon className="h-6 w-6 sm:hidden" />

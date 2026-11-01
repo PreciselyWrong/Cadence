@@ -59,7 +59,13 @@
     "showSearch": "显示搜索",
     "beta": "测试版",
     "comingSoon": "即将推出",
-    "due": "Due"
+    "due": "Due",
+    "goal": "目标",
+    "priority": "优先级",
+    "tags": "标签",
+    "goToToday": "前往今天",
+    "loadMore": "加载更多",
+    "showAll": "显示全部"
   },
   "sidebar": {
     "dashboard": "仪表板",
@@ -310,7 +316,8 @@
       "clearDate": "清除日期",
       "moveToProject": "移到项目"
     },
-    "reorderError": "Failed to save task order"
+    "reorderError": "Failed to save task order",
+    "deleteConfirmTitle": "删除任务"
   },
   "timeline": {
     "activityTimeline": "活动时间线",
@@ -1088,7 +1095,11 @@
       "message": "确定要删除目标“{{title}}”吗？"
     },
     "createGoal": "创建目标",
-    "updateGoal": "更新目标"
+    "updateGoal": "更新目标",
+    "saveAsTemplate": {
+      "title": "保存为模板",
+      "message": "将 \"{{name}}\" 保存为模板？这将基于此项目创建一个可复用的模板。"
+    }
   },
   "forms": {
     "title": "标题",
@@ -1232,7 +1243,8 @@
     "priority": "优先级",
     "status": "状态",
     "created_at": "创建时间",
-    "custom": "自定义"
+    "custom": "自定义",
+    "completed_at": "完成时间"
   },
   "priority": {
     "low": "低",
@@ -1373,7 +1385,8 @@
     "failedToDeleteNote": "无法删除笔记。",
     "failedToDeleteTag": "无法删除标签。",
     "projectStatusUpdateFailed": "更新项目状态失败",
-    "failedToSaveTask": "保存任务失败。"
+    "failedToSaveTask": "保存任务失败。",
+    "permissionDenied": "权限不足"
   },
   "inbox": {
     "title": "收件箱",
@@ -1677,7 +1690,23 @@
     "reminder": "提醒",
     "reminderPlaceholder": "选择提醒日期和时间",
     "noReminder": "无提醒",
-    "reminderUpdateError": "更新提醒失败"
+    "reminderUpdateError": "更新提醒失败",
+    "noArea": "指定领域",
+    "dueDateBeforeDeferError": "截止日期不能早于推迟日期",
+    "areaUpdated": "领域已更新",
+    "areaUpdateError": "领域更新失败",
+    "areaCleared": "领域已清除",
+    "areaClearError": "领域清除失败",
+    "goalUpdated": "目标已更新",
+    "goalUpdateError": "目标更新失败",
+    "goalCleared": "目标已清除",
+    "goalClearError": "目标清除失败",
+    "notFound": "未找到任务",
+    "notFoundDescription": "你要查找的任务不存在或已被删除。",
+    "hoursAgo": "{{count}} 小时前",
+    "minutesAgo": "{{count}} 分钟前",
+    "inMinutes": "{{count}} 分钟后",
+    "inHours": "{{count}} 小时后"
   },
   "projects": {
     "parentProject": "父项目",
@@ -1793,7 +1822,11 @@
     "counts": {
       "active": "{{n}} active",
       "stash": "{{n}} in the stash"
-    }
+    },
+    "savedAsTemplate": "\"{{name}}\" 已保存为模板。",
+    "saveAsTemplateError": "无法将项目保存为模板。",
+    "sortTasks": "排序任务",
+    "upcomingProjects": "即将到来的项目"
   },
   "projectItem": {
     "edit": "编辑",
@@ -1814,7 +1847,8 @@
     "moreSharedUsers": "+{{count}}个用户",
     "saveAsTemplate": "另存为模板",
     "pinToSidebar": "固定到侧边栏",
-    "unpinFromSidebar": "从侧边栏取消固定"
+    "unpinFromSidebar": "从侧边栏取消固定",
+    "changeStatus": "更改状态"
   },
   "areas": {
     "title": "区域",
@@ -1854,7 +1888,27 @@
       "personal": "个人",
       "family": "家庭与社交",
       "logistics": "物流"
-    }
+    },
+    "sort": {
+      "nameAsc": "名称 A 到 Z",
+      "nameDesc": "名称 Z 到 A",
+      "projects": "项目最多",
+      "goals": "目标最多",
+      "tasks": "任务最多",
+      "custom": "自定义顺序",
+      "label": "排序领域"
+    },
+    "reorderError": "领域顺序保存失败",
+    "edit": "编辑",
+    "delete": "删除",
+    "tasksInArea": "任务",
+    "noProjects": "该领域下没有项目。",
+    "noTasks": "该领域下没有直接任务",
+    "singular": "领域",
+    "projects": "个项目",
+    "goals": "个目标",
+    "tasks": "个任务",
+    "progressSummary": "领域进度 · 已完成 {{done}} / {{total}} 个任务"
   },
   "notes": {
     "loading": "加载笔记...",
@@ -1923,7 +1977,9 @@
       "tags": "Tags",
       "noProject": "No project",
       "more": "{{count}} more"
-    }
+    },
+    "edit": "编辑",
+    "delete": "删除"
   },
   "tags": {
     "loading": "加载标签...",
@@ -2002,7 +2058,13 @@
     "weeks": "周",
     "months": "月",
     "advancedHint": "要指定特定的工作日或结束日期，请打开完整任务。",
-    "recurring": "重复"
+    "recurring": "重复",
+    "everyNDays": "每 {{count}} 天",
+    "everyNWeeks": "每 {{count}} 周",
+    "everyNMonths": "每 {{count}} 个月",
+    "completionBased": "完成后",
+    "onDay": "每月的当天",
+    "until": "截止于"
   },
   "weekdays": {
     "sunday": "星期日",
@@ -2861,7 +2923,8 @@
     "searching": "搜索中..."
   },
   "subtasks": {
-    "placeholder": "添加子任务..."
+    "placeholder": "添加子任务...",
+    "title": "子任务"
   },
   "backup": {
     "title": "备份与恢复",
@@ -2923,7 +2986,8 @@
       "email": "电子邮件",
       "push": "推送",
       "telegram": "Telegram",
-      "desktop": "桌面"
+      "desktop": "桌面",
+      "apprise": "Apprise"
     },
     "types": {
       "dueTasks": "到期任务",
@@ -3046,7 +3110,31 @@
       "enable": "免打扰时段",
       "from": "从",
       "to": "到"
-    }
+    },
+    "apprise": {
+      "saved": "Apprise 服务器已保存。",
+      "title": "Apprise",
+      "connected": "通过 {{host}} 发送。",
+      "description": "通过你自己的 Apprise 服务器，将通知发送到 Pushover、ntfy、Discord、Matrix 等。",
+      "remove": "移除",
+      "serverLabel": "Apprise 服务器地址",
+      "keyPlaceholder": "配置密钥",
+      "keyLabel": "配置密钥",
+      "tagsPlaceholder": "标签（可选，例如 all）",
+      "tagsLabel": "标签",
+      "help": "在你的 Apprise 服务器上创建配置，然后将其密钥粘贴到这里。",
+      "save": "保存"
+    },
+    "justNow": "刚刚",
+    "minutesAgo": "{{count}} 分钟前",
+    "hoursAgo": "{{count}} 小时前",
+    "daysAgo": "{{count}} 天前",
+    "title": "通知",
+    "markAllRead": "全部标为已读",
+    "loading": "加载中...",
+    "noNotifications": "暂无通知",
+    "markAsRead": "标为已读",
+    "delete": "删除"
   },
   "projectStatus": {
     "not_started": "未开始",
@@ -3758,10 +3846,32 @@
     "close": "Close",
     "filesAttached_one": "1 file attached.",
     "button": "捕获",
-    "syntaxHint": "#tag  +project  !1 到 !3 优先级  明天 15:00 设置日期"
+    "syntaxHint": "#tag  +project  !1 到 !3 优先级  明天 15:00 设置日期",
+    "slash": {
+      "tag": "标签",
+      "project": "项目",
+      "person": "人员",
+      "area": "领域",
+      "date": "截止日期",
+      "repeat": "重复",
+      "today": "今天",
+      "tomorrow": "明天",
+      "nextMonday": "下周一",
+      "inAWeek": "一周后",
+      "everyDay": "每天",
+      "everyWeekday": "每个工作日",
+      "everyWeek": "每周",
+      "everyMonth": "每月",
+      "create": "创建 {{token}}"
+    }
   },
   "area": {
-    "loadError": "无法加载区域"
+    "loadError": "无法加载区域",
+    "viaProject": "通过项目",
+    "viewArea": "前往领域",
+    "searchAreas": "搜索领域…",
+    "clearArea": "移除领域",
+    "noAreasFound": "未找到领域"
   },
   "goals": {
     "newGoal": "新建目标",
@@ -3813,7 +3923,21 @@
       "placeholder": "关键结果",
       "progress": "已完成 {{done}} / {{total}}"
     },
-    "progressSummary": "目标进度 · 已完成 {{done}} / {{total}}"
+    "progressSummary": "目标进度 · 已完成 {{done}} / {{total}}",
+    "sort": {
+      "titleAsc": "标题 A 到 Z",
+      "titleDesc": "标题 Z 到 A",
+      "status": "状态",
+      "horizon": "时间范围",
+      "area": "领域",
+      "projects": "项目最多",
+      "tasks": "任务最多",
+      "custom": "自定义顺序",
+      "label": "排序目标"
+    },
+    "reorderError": "目标顺序保存失败",
+    "noGoalsInArea": "没有与该领域关联的目标。",
+    "maintenance": "维护"
   },
   "templates": {
     "new": "新建模板",
@@ -4434,7 +4558,9 @@
   "sortable": {
     "move": "Move",
     "project": "sortable project",
-    "task": "sortable task"
+    "task": "sortable task",
+    "area": "可排序的领域",
+    "goal": "可排序的目标"
   },
   "groupPage": {
     "title": "Group",
@@ -4471,7 +4597,18 @@
     "previous": "Previous file",
     "next": "Next file",
     "renameError": "Could not save the title",
-    "confirmDelete": "Delete file?"
+    "confirmDelete": "Delete file?",
+    "uploadSuccess": "文件上传成功",
+    "uploadError": "文件上传失败",
+    "deleteSuccess": "附件删除成功",
+    "deleteError": "文件删除失败",
+    "heading": "附件",
+    "uploading": "上传中...",
+    "clickToUpload": "点击上传",
+    "maxSize": "最大 {{size}} MB",
+    "anyFormat": "任意文件类型",
+    "deleteConfirmTitle": "删除附件",
+    "deleteConfirmMessage": "确定要删除此附件吗？此操作无法撤销。"
   },
   "feedback": {
     "title": "Send feedback",
@@ -4928,5 +5065,9 @@
   },
   "sidebarDrop": {
     "failed": "无法更新此项目。"
+  },
+  "loading": {
+    "tasks": "正在加载任务…",
+    "subtasks": "正在加载子任务..."
   }
 }

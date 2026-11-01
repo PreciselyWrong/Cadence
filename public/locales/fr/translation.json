@@ -60,7 +60,13 @@
     "showSearch": "Afficher la recherche",
     "beta": "bêta",
     "comingSoon": "Bientôt disponible",
-    "due": "Échéance"
+    "due": "Échéance",
+    "goal": "Objectif",
+    "priority": "Priorité",
+    "tags": "Étiquettes",
+    "goToToday": "Aller à Aujourd'hui",
+    "loadMore": "Charger plus",
+    "showAll": "Tout afficher"
   },
   "sidebar": {
     "dashboard": "Tableau de bord",
@@ -312,7 +318,8 @@
       "clearDate": "Effacer la date",
       "moveToProject": "Déplacer vers un projet"
     },
-    "reorderError": "Échec de l'enregistrement de l'ordre des tâches"
+    "reorderError": "Échec de l'enregistrement de l'ordre des tâches",
+    "deleteConfirmTitle": "Supprimer la tâche"
   },
   "timeline": {
     "activityTimeline": "Chronologie d'Activité",
@@ -1090,7 +1097,11 @@
       "message": "Voulez-vous vraiment supprimer l'objectif « {{title}} » ?"
     },
     "createGoal": "Créer l'objectif",
-    "updateGoal": "Mettre à jour l'objectif"
+    "updateGoal": "Mettre à jour l'objectif",
+    "saveAsTemplate": {
+      "title": "Enregistrer comme modèle",
+      "message": "Enregistrer « {{name}} » comme modèle ? Un modèle réutilisable sera créé à partir de ce projet."
+    }
   },
   "forms": {
     "title": "Titre",
@@ -1234,7 +1245,8 @@
     "priority": "Priorité",
     "status": "Statut",
     "created_at": "Créé le",
-    "custom": "Personnalisé"
+    "custom": "Personnalisé",
+    "completed_at": "Terminée le"
   },
   "priority": {
     "low": "Faible",
@@ -1376,7 +1388,8 @@
     "failedToDeleteNote": "Impossible de supprimer la note.",
     "failedToDeleteTag": "Impossible de supprimer l'étiquette.",
     "projectStatusUpdateFailed": "Échec de la mise à jour du statut du projet",
-    "failedToSaveTask": "Impossible d'enregistrer la tâche."
+    "failedToSaveTask": "Impossible d'enregistrer la tâche.",
+    "permissionDenied": "Accès refusé"
   },
   "inbox": {
     "title": "Boîte de réception",
@@ -1680,7 +1693,23 @@
     "reminder": "Rappel",
     "reminderPlaceholder": "Choisir la date et l'heure du rappel",
     "noReminder": "Aucun rappel",
-    "reminderUpdateError": "Impossible de mettre à jour le rappel"
+    "reminderUpdateError": "Impossible de mettre à jour le rappel",
+    "noArea": "Associer à une zone",
+    "dueDateBeforeDeferError": "L'échéance ne peut pas précéder la date de report",
+    "areaUpdated": "Zone mise à jour",
+    "areaUpdateError": "Impossible de mettre à jour la zone",
+    "areaCleared": "Zone retirée",
+    "areaClearError": "Impossible de retirer la zone",
+    "goalUpdated": "Objectif mis à jour",
+    "goalUpdateError": "Impossible de mettre à jour l'objectif",
+    "goalCleared": "Objectif retiré",
+    "goalClearError": "Impossible de retirer l'objectif",
+    "notFound": "Tâche introuvable",
+    "notFoundDescription": "La tâche cherchée n'existe pas ou a été supprimée.",
+    "hoursAgo": "il y a {{count}} heures",
+    "minutesAgo": "il y a {{count}} minutes",
+    "inMinutes": "dans {{count}} minutes",
+    "inHours": "dans {{count}} heures"
   },
   "projects": {
     "parentProject": "Projet parent",
@@ -1797,7 +1826,11 @@
     "counts": {
       "active": "{{n}} actifs",
       "stash": "{{n}} dans le stash"
-    }
+    },
+    "savedAsTemplate": "« {{name}} » enregistré comme modèle.",
+    "saveAsTemplateError": "Impossible d'enregistrer le projet comme modèle.",
+    "sortTasks": "Trier les tâches",
+    "upcomingProjects": "Projets à venir"
   },
   "projectItem": {
     "edit": "Modifier",
@@ -1818,7 +1851,8 @@
     "moreSharedUsers": "+{{count}} utilisateurs de plus",
     "saveAsTemplate": "Enregistrer comme modèle",
     "pinToSidebar": "Épingler à la barre latérale",
-    "unpinFromSidebar": "Désépingler de la barre latérale"
+    "unpinFromSidebar": "Désépingler de la barre latérale",
+    "changeStatus": "Changer le statut"
   },
   "areas": {
     "title": "Zones",
@@ -1858,7 +1892,27 @@
       "personal": "Perso",
       "family": "Famille et Social",
       "logistics": "Logistique"
-    }
+    },
+    "sort": {
+      "nameAsc": "Nom de A à Z",
+      "nameDesc": "Nom de Z à A",
+      "projects": "Le plus de projets",
+      "goals": "Le plus d'objectifs",
+      "tasks": "Le plus de tâches",
+      "custom": "Ordre personnalisé",
+      "label": "Trier les zones"
+    },
+    "reorderError": "Impossible d'enregistrer l'ordre des zones",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "tasksInArea": "Tâches",
+    "noProjects": "Aucun projet dans cette zone.",
+    "noTasks": "Aucune tâche directement dans cette zone",
+    "singular": "Zone",
+    "projects": "projets",
+    "goals": "objectifs",
+    "tasks": "tâches",
+    "progressSummary": "Progression de la zone · {{done}} tâches sur {{total}} terminées"
   },
   "notes": {
     "loading": "Chargement des notes...",
@@ -1927,7 +1981,9 @@
       "tags": "Étiquettes",
       "noProject": "Aucun projet",
       "more": "{{count}} de plus"
-    }
+    },
+    "edit": "Modifier",
+    "delete": "Supprimer"
   },
   "tags": {
     "loading": "Chargement des étiquettes...",
@@ -2006,7 +2062,13 @@
     "weeks": "semaines",
     "months": "mois",
     "advancedHint": "Pour des jours spécifiques ou une date de fin, ouvrez la tâche complète.",
-    "recurring": "Récurrente"
+    "recurring": "Récurrente",
+    "everyNDays": "Tous les {{count}} jours",
+    "everyNWeeks": "Toutes les {{count}} semaines",
+    "everyNMonths": "Tous les {{count}} mois",
+    "completionBased": "Après achèvement",
+    "onDay": "Le jour",
+    "until": "Jusqu'au"
   },
   "weekdays": {
     "sunday": "Dim",
@@ -2868,7 +2930,8 @@
     "searching": "Recherche..."
   },
   "subtasks": {
-    "placeholder": "Ajouter une sous-tâche..."
+    "placeholder": "Ajouter une sous-tâche...",
+    "title": "Sous-tâches"
   },
   "backup": {
     "title": "Sauvegarde & restauration",
@@ -2930,13 +2993,14 @@
       "email": "E-mail",
       "push": "Push",
       "telegram": "Telegram",
-      "desktop": "Ordinateur"
+      "desktop": "Ordinateur",
+      "apprise": "Apprise"
     },
     "types": {
-      "dueTasks": "Tâches échues",
+      "dueTasks": "Tâches bientôt dues",
       "overdueTasks": "Tâches en retard",
       "deferUntil": "Différer jusqu'à",
-      "dueProjects": "Projets échus",
+      "dueProjects": "Projets bientôt dus",
       "overdueProjects": "Projets en retard",
       "taskAssigned": "Tâche assignée",
       "habitReminders": "Rappels d'habitudes",
@@ -3053,7 +3117,31 @@
       "enable": "Heures calmes",
       "from": "De",
       "to": "À"
-    }
+    },
+    "apprise": {
+      "saved": "Serveur Apprise enregistré.",
+      "title": "Apprise",
+      "connected": "Envoi par {{host}}.",
+      "description": "Envoyez les notifications par votre propre serveur Apprise vers Pushover, ntfy, Discord, Matrix et d'autres.",
+      "remove": "Retirer",
+      "serverLabel": "Adresse du serveur Apprise",
+      "keyPlaceholder": "Clé de configuration",
+      "keyLabel": "Clé de configuration",
+      "tagsPlaceholder": "Étiquettes (facultatif, ex. all)",
+      "tagsLabel": "Étiquettes",
+      "help": "Créez une configuration dans votre serveur Apprise et collez sa clé ici.",
+      "save": "Enregistrer"
+    },
+    "justNow": "À l'instant",
+    "minutesAgo": "il y a {{count}} min",
+    "hoursAgo": "il y a {{count}} h",
+    "daysAgo": "il y a {{count}} j",
+    "title": "Notifications",
+    "markAllRead": "Tout marquer comme lu",
+    "loading": "Chargement…",
+    "noNotifications": "Aucune notification pour l'instant",
+    "markAsRead": "Marquer comme lu",
+    "delete": "Supprimer"
   },
   "projectStatus": {
     "not_started": "Non commencé",
@@ -3765,10 +3853,32 @@
     "addTitle": "Ajouter à la Boîte, une tâche, une note ou un projet",
     "close": "Fermer",
     "button": "Capturer",
-    "syntaxHint": "#étiquette  +projet  !1 à !3 priorité  demain 15h pour une date"
+    "syntaxHint": "#étiquette  +projet  !1 à !3 priorité  demain 15h pour une date",
+    "slash": {
+      "tag": "Étiquette",
+      "project": "Projet",
+      "person": "Personne",
+      "area": "Zone",
+      "date": "Échéance",
+      "repeat": "Répéter",
+      "today": "Aujourd'hui",
+      "tomorrow": "Demain",
+      "nextMonday": "Lundi prochain",
+      "inAWeek": "Dans une semaine",
+      "everyDay": "Tous les jours",
+      "everyWeekday": "Chaque jour de semaine",
+      "everyWeek": "Chaque semaine",
+      "everyMonth": "Chaque mois",
+      "create": "Créer {{token}}"
+    }
   },
   "area": {
-    "loadError": "Impossible de charger les zones"
+    "loadError": "Impossible de charger les zones",
+    "viaProject": "via le projet",
+    "viewArea": "Aller à la zone",
+    "searchAreas": "Chercher une zone…",
+    "clearArea": "Retirer la zone",
+    "noAreasFound": "Aucune zone trouvée"
   },
   "goals": {
     "newGoal": "Nouvel objectif",
@@ -3820,7 +3930,21 @@
       "placeholder": "Résultat clé",
       "progress": "{{done}} sur {{total}} faits"
     },
-    "progressSummary": "Progression de l'objectif · {{done}} sur {{total}} faits"
+    "progressSummary": "Progression de l'objectif · {{done}} sur {{total}} faits",
+    "sort": {
+      "titleAsc": "Titre de A à Z",
+      "titleDesc": "Titre de Z à A",
+      "status": "Statut",
+      "horizon": "Horizon",
+      "area": "Zone",
+      "projects": "Le plus de projets",
+      "tasks": "Le plus de tâches",
+      "custom": "Ordre personnalisé",
+      "label": "Trier les objectifs"
+    },
+    "reorderError": "Impossible d'enregistrer l'ordre des objectifs",
+    "noGoalsInArea": "Aucun objectif lié à cette zone.",
+    "maintenance": "Entretien"
   },
   "templates": {
     "new": "Nouveau modèle",
@@ -4365,7 +4489,7 @@
       "toTask": "En faire une tâche",
       "toLater": "Mettre en sommeil",
       "discard": "Écarter",
-      "openInbox": "Ouvrir l’Inbox",
+      "openInbox": "Ouvrir la boîte de réception",
       "addNext": "Ajouter la prochaine tâche",
       "openProject": "Ouvrir le projet",
       "pauseProject": "Mettre en attente",
@@ -4442,7 +4566,9 @@
   "sortable": {
     "move": "Déplacer",
     "project": "projet à déplacer",
-    "task": "tâche à déplacer"
+    "task": "tâche à déplacer",
+    "area": "zone déplaçable",
+    "goal": "objectif déplaçable"
   },
   "groupPage": {
     "title": "Groupe",
@@ -4479,7 +4605,18 @@
     "previous": "Fichier précédent",
     "next": "Fichier suivant",
     "renameError": "Impossible d'enregistrer le titre",
-    "confirmDelete": "Supprimer le fichier ?"
+    "confirmDelete": "Supprimer le fichier ?",
+    "uploadSuccess": "Fichier envoyé",
+    "uploadError": "Impossible d'envoyer le fichier",
+    "deleteSuccess": "Pièce jointe supprimée",
+    "deleteError": "Impossible de supprimer la pièce jointe",
+    "heading": "Pièces jointes",
+    "uploading": "Envoi…",
+    "clickToUpload": "Cliquer pour envoyer",
+    "maxSize": "{{size}} Mo max.",
+    "anyFormat": "Tout type de fichier",
+    "deleteConfirmTitle": "Supprimer la pièce jointe",
+    "deleteConfirmMessage": "Supprimer cette pièce jointe ? Cette action est définitive."
   },
   "feedback": {
     "title": "Envoyer un retour",
@@ -4942,5 +5079,9 @@
   },
   "sidebarDrop": {
     "failed": "Impossible de mettre à jour cet élément."
+  },
+  "loading": {
+    "tasks": "Chargement des tâches…",
+    "subtasks": "Chargement des sous-tâches…"
   }
 }

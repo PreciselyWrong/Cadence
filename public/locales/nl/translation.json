@@ -59,7 +59,13 @@
     "showSearch": "Zoeken tonen",
     "beta": "bèta",
     "comingSoon": "Binnenkort",
-    "due": "Due"
+    "due": "Due",
+    "goal": "Doel",
+    "priority": "Prioriteit",
+    "tags": "Tags",
+    "goToToday": "Naar vandaag",
+    "loadMore": "Meer laden",
+    "showAll": "Alles tonen"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -310,7 +316,8 @@
       "clearDate": "Datum wissen",
       "moveToProject": "Verplaatsen naar project"
     },
-    "reorderError": "Failed to save task order"
+    "reorderError": "Failed to save task order",
+    "deleteConfirmTitle": "Taak verwijderen"
   },
   "timeline": {
     "activityTimeline": "Activiteit Tijdlijn",
@@ -1088,7 +1095,11 @@
       "message": "Weet je zeker dat je het doel \"{{title}}\" wilt verwijderen?"
     },
     "createGoal": "Doel aanmaken",
-    "updateGoal": "Doel bijwerken"
+    "updateGoal": "Doel bijwerken",
+    "saveAsTemplate": {
+      "title": "Opslaan als sjabloon",
+      "message": "\"{{name}}\" opslaan als sjabloon? Hiermee wordt een herbruikbaar sjabloon gemaakt op basis van dit project."
+    }
   },
   "forms": {
     "title": "Titel",
@@ -1232,7 +1243,8 @@
     "priority": "Prioriteit",
     "status": "Status",
     "created_at": "Aangemaakt Op",
-    "custom": "Aangepast"
+    "custom": "Aangepast",
+    "completed_at": "Voltooid op"
   },
   "priority": {
     "low": "Laag",
@@ -1373,7 +1385,8 @@
     "failedToDeleteNote": "Notitie verwijderen mislukt.",
     "failedToDeleteTag": "Tag verwijderen mislukt.",
     "projectStatusUpdateFailed": "Projectstatus bijwerken mislukt",
-    "failedToSaveTask": "Taak opslaan mislukt."
+    "failedToSaveTask": "Taak opslaan mislukt.",
+    "permissionDenied": "Toegang geweigerd"
   },
   "inbox": {
     "title": "Inbox",
@@ -1677,7 +1690,23 @@
     "reminder": "Herinnering",
     "reminderPlaceholder": "Kies datum en tijd van de herinnering",
     "noReminder": "Geen herinnering",
-    "reminderUpdateError": "Herinnering bijwerken mislukt"
+    "reminderUpdateError": "Herinnering bijwerken mislukt",
+    "noArea": "Toewijzen aan een gebied",
+    "dueDateBeforeDeferError": "De vervaldatum mag niet vóór de datum voor uitstel liggen",
+    "areaUpdated": "Gebied bijgewerkt",
+    "areaUpdateError": "Gebied bijwerken mislukt",
+    "areaCleared": "Gebied gewist",
+    "areaClearError": "Gebied wissen mislukt",
+    "goalUpdated": "Doel bijgewerkt",
+    "goalUpdateError": "Doel bijwerken mislukt",
+    "goalCleared": "Doel gewist",
+    "goalClearError": "Doel wissen mislukt",
+    "notFound": "Taak niet gevonden",
+    "notFoundDescription": "De taak die je zoekt bestaat niet of is verwijderd.",
+    "hoursAgo": "{{count}} uur geleden",
+    "minutesAgo": "{{count}} minuten geleden",
+    "inMinutes": "over {{count}} minuten",
+    "inHours": "over {{count}} uur"
   },
   "projects": {
     "parentProject": "Hoofdproject",
@@ -1793,7 +1822,11 @@
     "counts": {
       "active": "{{n}} active",
       "stash": "{{n}} in the stash"
-    }
+    },
+    "savedAsTemplate": "\"{{name}}\" opgeslagen als sjabloon.",
+    "saveAsTemplateError": "Project opslaan als sjabloon mislukt.",
+    "sortTasks": "Taken sorteren",
+    "upcomingProjects": "Aankomende projecten"
   },
   "projectItem": {
     "edit": "Bewerken",
@@ -1814,7 +1847,8 @@
     "moreSharedUsers": "+{{count}} meer gebruikers",
     "saveAsTemplate": "Opslaan als sjabloon",
     "pinToSidebar": "Vastpinnen aan zijbalk",
-    "unpinFromSidebar": "Losmaken van zijbalk"
+    "unpinFromSidebar": "Losmaken van zijbalk",
+    "changeStatus": "Status wijzigen"
   },
   "areas": {
     "title": "Gebieden",
@@ -1854,7 +1888,27 @@
       "personal": "Persoonlijk",
       "family": "Familie & Sociaal",
       "logistics": "Logistiek"
-    }
+    },
+    "sort": {
+      "nameAsc": "Naam A tot Z",
+      "nameDesc": "Naam Z tot A",
+      "projects": "Meeste projecten",
+      "goals": "Meeste doelen",
+      "tasks": "Meeste taken",
+      "custom": "Aangepaste volgorde",
+      "label": "Gebieden sorteren"
+    },
+    "reorderError": "Volgorde van gebieden opslaan mislukt",
+    "edit": "Bewerken",
+    "delete": "Verwijderen",
+    "tasksInArea": "Taken",
+    "noProjects": "Geen projecten in dit gebied.",
+    "noTasks": "Geen taken direct in dit gebied",
+    "singular": "Gebied",
+    "projects": "projecten",
+    "goals": "doelen",
+    "tasks": "taken",
+    "progressSummary": "Voortgang gebied · {{done}} van {{total}} taken voltooid"
   },
   "notes": {
     "loading": "Bezig met het laden van notities...",
@@ -1923,7 +1977,9 @@
       "tags": "Tags",
       "noProject": "No project",
       "more": "{{count}} more"
-    }
+    },
+    "edit": "Bewerken",
+    "delete": "Verwijderen"
   },
   "tags": {
     "loading": "Tags laden...",
@@ -2002,7 +2058,13 @@
     "weeks": "weken",
     "months": "maanden",
     "advancedHint": "Voor specifieke weekdagen of een einddatum, open de volledige taak.",
-    "recurring": "Herhalend"
+    "recurring": "Herhalend",
+    "everyNDays": "Elke {{count}} dagen",
+    "everyNWeeks": "Elke {{count}} weken",
+    "everyNMonths": "Elke {{count}} maanden",
+    "completionBased": "Na voltooiing",
+    "onDay": "Op dag",
+    "until": "Tot"
   },
   "weekdays": {
     "sunday": "Zo",
@@ -2861,7 +2923,8 @@
     "searching": "Zoeken..."
   },
   "subtasks": {
-    "placeholder": "Voeg een subtaak toe..."
+    "placeholder": "Voeg een subtaak toe...",
+    "title": "Subtaken"
   },
   "backup": {
     "title": "Back-up & Herstellen",
@@ -2923,7 +2986,8 @@
       "email": "E-mail",
       "push": "Push",
       "telegram": "Telegram",
-      "desktop": "Desktop"
+      "desktop": "Desktop",
+      "apprise": "Apprise"
     },
     "types": {
       "dueTasks": "Vervaldagen Taken",
@@ -3046,7 +3110,31 @@
       "enable": "Stille uren",
       "from": "Van",
       "to": "Tot"
-    }
+    },
+    "apprise": {
+      "saved": "Apprise-server opgeslagen.",
+      "title": "Apprise",
+      "connected": "Verzenden via {{host}}.",
+      "description": "Stuur meldingen via je eigen Apprise-server naar Pushover, ntfy, Discord, Matrix en meer.",
+      "remove": "Verwijderen",
+      "serverLabel": "Apprise-serveradres",
+      "keyPlaceholder": "Configuratiesleutel",
+      "keyLabel": "Configuratiesleutel",
+      "tagsPlaceholder": "Tags (optioneel, bijv. all)",
+      "tagsLabel": "Tags",
+      "help": "Maak een configuratie op je Apprise-server en plak de sleutel hier.",
+      "save": "Opslaan"
+    },
+    "justNow": "Zojuist",
+    "minutesAgo": "{{count}} min geleden",
+    "hoursAgo": "{{count}} u geleden",
+    "daysAgo": "{{count}} d geleden",
+    "title": "Meldingen",
+    "markAllRead": "Alles als gelezen markeren",
+    "loading": "Laden...",
+    "noNotifications": "Nog geen meldingen",
+    "markAsRead": "Als gelezen markeren",
+    "delete": "Verwijderen"
   },
   "projectStatus": {
     "not_started": "Niet Begonnen",
@@ -3758,10 +3846,32 @@
     "addTitle": "Add to Inbox, Task, Note or Project",
     "close": "Close",
     "button": "Vastleggen",
-    "syntaxHint": "#tag  +project  !1 t/m !3 prioriteit  morgen 15:00 voor een datum"
+    "syntaxHint": "#tag  +project  !1 t/m !3 prioriteit  morgen 15:00 voor een datum",
+    "slash": {
+      "tag": "Tag",
+      "project": "Project",
+      "person": "Persoon",
+      "area": "Gebied",
+      "date": "Vervaldatum",
+      "repeat": "Herhalen",
+      "today": "Vandaag",
+      "tomorrow": "Morgen",
+      "nextMonday": "Volgende maandag",
+      "inAWeek": "Over een week",
+      "everyDay": "Elke dag",
+      "everyWeekday": "Elke werkdag",
+      "everyWeek": "Elke week",
+      "everyMonth": "Elke maand",
+      "create": "{{token}} aanmaken"
+    }
   },
   "area": {
-    "loadError": "Gebieden konden niet worden geladen"
+    "loadError": "Gebieden konden niet worden geladen",
+    "viaProject": "via project",
+    "viewArea": "Ga naar gebied",
+    "searchAreas": "Gebieden zoeken…",
+    "clearArea": "Gebied verwijderen",
+    "noAreasFound": "Geen gebieden gevonden"
   },
   "goals": {
     "newGoal": "Nieuw doel",
@@ -3813,7 +3923,21 @@
       "placeholder": "Kernresultaat",
       "progress": "{{done}} van {{total}} klaar"
     },
-    "progressSummary": "Doelvoortgang · {{done}} van {{total}} klaar"
+    "progressSummary": "Doelvoortgang · {{done}} van {{total}} klaar",
+    "sort": {
+      "titleAsc": "Titel A tot Z",
+      "titleDesc": "Titel Z tot A",
+      "status": "Status",
+      "horizon": "Horizon",
+      "area": "Gebied",
+      "projects": "Meeste projecten",
+      "tasks": "Meeste taken",
+      "custom": "Aangepaste volgorde",
+      "label": "Doelen sorteren"
+    },
+    "reorderError": "Volgorde van doelen opslaan mislukt",
+    "noGoalsInArea": "Geen doelen gekoppeld aan dit gebied.",
+    "maintenance": "Onderhoud"
   },
   "templates": {
     "new": "Nieuw sjabloon",
@@ -4434,7 +4558,9 @@
   "sortable": {
     "move": "Move",
     "project": "sortable project",
-    "task": "sortable task"
+    "task": "sortable task",
+    "area": "sorteerbaar gebied",
+    "goal": "sorteerbaar doel"
   },
   "groupPage": {
     "title": "Group",
@@ -4471,7 +4597,18 @@
     "previous": "Previous file",
     "next": "Next file",
     "renameError": "Could not save the title",
-    "confirmDelete": "Delete file?"
+    "confirmDelete": "Delete file?",
+    "uploadSuccess": "Bestand succesvol geüpload",
+    "uploadError": "Bestand uploaden mislukt",
+    "deleteSuccess": "Bijlage succesvol verwijderd",
+    "deleteError": "Bestand verwijderen mislukt",
+    "heading": "Bijlagen",
+    "uploading": "Uploaden...",
+    "clickToUpload": "Klik om te uploaden",
+    "maxSize": "Max. {{size}} MB",
+    "anyFormat": "Elk bestandstype",
+    "deleteConfirmTitle": "Bijlage verwijderen",
+    "deleteConfirmMessage": "Weet je zeker dat je deze bijlage wilt verwijderen? Dit kan niet ongedaan worden gemaakt."
   },
   "feedback": {
     "title": "Send feedback",
@@ -4928,5 +5065,9 @@
   },
   "sidebarDrop": {
     "failed": "Dit item kon niet worden bijgewerkt."
+  },
+  "loading": {
+    "tasks": "Taken laden…",
+    "subtasks": "Subtaken laden..."
   }
 }

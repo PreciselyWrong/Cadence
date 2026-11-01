@@ -60,7 +60,13 @@
     "showSearch": "Mostrar la búsqueda",
     "beta": "beta",
     "comingSoon": "Próximamente",
-    "due": "Due"
+    "due": "Due",
+    "goal": "Objetivo",
+    "priority": "Prioridad",
+    "tags": "Etiquetas",
+    "goToToday": "Ir a hoy",
+    "loadMore": "Cargar más",
+    "showAll": "Mostrar todo"
   },
   "sidebar": {
     "dashboard": "Tablero",
@@ -916,7 +922,8 @@
     "failedToDeleteNote": "No se pudo eliminar la nota.",
     "failedToDeleteTag": "No se pudo eliminar la etiqueta.",
     "projectStatusUpdateFailed": "Error al actualizar el estado del proyecto",
-    "failedToSaveTask": "No se pudo guardar la tarea."
+    "failedToSaveTask": "No se pudo guardar la tarea.",
+    "permissionDenied": "Permiso denegado"
   },
   "dropdown": {
     "createNew": "Crear Nuevo",
@@ -1066,7 +1073,8 @@
       "clearDate": "Quitar fecha",
       "moveToProject": "Mover a proyecto"
     },
-    "reorderError": "Failed to save task order"
+    "reorderError": "Failed to save task order",
+    "deleteConfirmTitle": "Eliminar tarea"
   },
   "timeline": {
     "activityTimeline": "Línea de Tiempo de Actividad",
@@ -1213,7 +1221,11 @@
     "counts": {
       "active": "{{n}} active",
       "stash": "{{n}} in the stash"
-    }
+    },
+    "savedAsTemplate": "\"{{name}}\" guardado como plantilla.",
+    "saveAsTemplateError": "No se pudo guardar el proyecto como plantilla.",
+    "sortTasks": "Ordenar tareas",
+    "upcomingProjects": "Próximos proyectos"
   },
   "projectItem": {
     "edit": "Editar",
@@ -1234,7 +1246,8 @@
     "moreSharedUsers": "+{{count}} usuarios más",
     "saveAsTemplate": "Guardar como Plantilla",
     "pinToSidebar": "Fijar en la barra lateral",
-    "unpinFromSidebar": "Desfijar de la barra lateral"
+    "unpinFromSidebar": "Desfijar de la barra lateral",
+    "changeStatus": "Cambiar estado"
   },
   "sort": {
     "due_date": "Fecha de Vencimiento",
@@ -1242,7 +1255,8 @@
     "priority": "Prioridad",
     "status": "Estado",
     "created_at": "Fecha de Creación",
-    "custom": "Personalizado"
+    "custom": "Personalizado",
+    "completed_at": "Completada el"
   },
   "modals": {
     "confirmDelete": "¿Estás seguro que deseas eliminar?",
@@ -1286,7 +1300,11 @@
       "message": "¿Seguro que quieres eliminar la meta «{{title}}»?"
     },
     "createGoal": "Crear meta",
-    "updateGoal": "Actualizar meta"
+    "updateGoal": "Actualizar meta",
+    "saveAsTemplate": {
+      "title": "Guardar como plantilla",
+      "message": "¿Guardar \"{{name}}\" como plantilla? Esto creará una plantilla reutilizable basada en este proyecto."
+    }
   },
   "forms": {
     "title": "Título",
@@ -1655,7 +1673,23 @@
     "reminder": "Recordatorio",
     "reminderPlaceholder": "Elige la fecha y la hora del recordatorio",
     "noReminder": "Sin recordatorio",
-    "reminderUpdateError": "No se pudo actualizar el recordatorio"
+    "reminderUpdateError": "No se pudo actualizar el recordatorio",
+    "noArea": "Asignar a un área",
+    "dueDateBeforeDeferError": "La fecha límite no puede ser anterior a la fecha de aplazamiento",
+    "areaUpdated": "Área actualizada correctamente",
+    "areaUpdateError": "No se pudo actualizar el área",
+    "areaCleared": "Área quitada correctamente",
+    "areaClearError": "No se pudo quitar el área",
+    "goalUpdated": "Objetivo actualizado",
+    "goalUpdateError": "No se pudo actualizar el objetivo",
+    "goalCleared": "Objetivo quitado",
+    "goalClearError": "No se pudo quitar el objetivo",
+    "notFound": "Tarea no encontrada",
+    "notFoundDescription": "La tarea que buscas no existe o se ha eliminado.",
+    "hoursAgo": "hace {{count}} horas",
+    "minutesAgo": "hace {{count}} minutos",
+    "inMinutes": "en {{count}} minutos",
+    "inHours": "en {{count}} horas"
   },
   "dateIndicators": {
     "today": "HOY",
@@ -1790,7 +1824,27 @@
       "personal": "Personal",
       "family": "Familia y Social",
       "logistics": "Logística"
-    }
+    },
+    "sort": {
+      "nameAsc": "Nombre de A a Z",
+      "nameDesc": "Nombre de Z a A",
+      "projects": "Más proyectos",
+      "goals": "Más objetivos",
+      "tasks": "Más tareas",
+      "custom": "Orden personalizado",
+      "label": "Ordenar áreas"
+    },
+    "reorderError": "No se pudo guardar el orden de las áreas",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "tasksInArea": "Tareas",
+    "noProjects": "No hay proyectos en esta área.",
+    "noTasks": "No hay tareas directamente en esta área",
+    "singular": "Área",
+    "projects": "proyectos",
+    "goals": "objetivos",
+    "tasks": "tareas",
+    "progressSummary": "Progreso del área · {{done}} de {{total}} tareas completadas"
   },
   "notes": {
     "loading": "Cargando notas...",
@@ -1859,7 +1913,9 @@
       "tags": "Tags",
       "noProject": "No project",
       "more": "{{count}} more"
-    }
+    },
+    "edit": "Editar",
+    "delete": "Eliminar"
   },
   "tags": {
     "loading": "Cargando etiquetas...",
@@ -1967,7 +2023,13 @@
     "weeks": "semanas",
     "months": "meses",
     "advancedHint": "Para días de la semana específicos o una fecha de finalización, abre la tarea completa.",
-    "recurring": "Recurrente"
+    "recurring": "Recurrente",
+    "everyNDays": "Cada {{count}} días",
+    "everyNWeeks": "Cada {{count}} semanas",
+    "everyNMonths": "Cada {{count}} meses",
+    "completionBased": "Después de completar",
+    "onDay": "El día",
+    "until": "Hasta"
   },
   "weekdays": {
     "monday": "Lun",
@@ -2854,7 +2916,8 @@
     "searching": "Buscando..."
   },
   "subtasks": {
-    "placeholder": "Agregar una subtarea..."
+    "placeholder": "Agregar una subtarea...",
+    "title": "Subtareas"
   },
   "backup": {
     "restore": "Restaurar",
@@ -2916,7 +2979,8 @@
       "email": "Correo Electrónico",
       "push": "Push",
       "telegram": "Telegram",
-      "desktop": "Escritorio"
+      "desktop": "Escritorio",
+      "apprise": "Apprise"
     },
     "types": {
       "dueTasks": "Tareas Vencidas",
@@ -3039,7 +3103,31 @@
       "enable": "Horas de silencio",
       "from": "Desde",
       "to": "Hasta"
-    }
+    },
+    "apprise": {
+      "saved": "Servidor de Apprise guardado.",
+      "title": "Apprise",
+      "connected": "Enviando a través de {{host}}.",
+      "description": "Envía notificaciones a través de tu propio servidor de Apprise a Pushover, ntfy, Discord, Matrix y más.",
+      "remove": "Quitar",
+      "serverLabel": "Dirección del servidor de Apprise",
+      "keyPlaceholder": "Clave de configuración",
+      "keyLabel": "Clave de configuración",
+      "tagsPlaceholder": "Etiquetas (opcional, p. ej. all)",
+      "tagsLabel": "Etiquetas",
+      "help": "Crea una configuración en tu servidor de Apprise y pega aquí su clave.",
+      "save": "Guardar"
+    },
+    "justNow": "Justo ahora",
+    "minutesAgo": "hace {{count}} min",
+    "hoursAgo": "hace {{count}} h",
+    "daysAgo": "hace {{count}} d",
+    "title": "Notificaciones",
+    "markAllRead": "Marcar todo como leído",
+    "loading": "Cargando...",
+    "noNotifications": "Aún no hay notificaciones",
+    "markAsRead": "Marcar como leída",
+    "delete": "Eliminar"
   },
   "projectStatus": {
     "not_started": "No Iniciado",
@@ -3751,10 +3839,32 @@
     "addTitle": "Add to Inbox, Task, Note or Project",
     "close": "Close",
     "button": "Capturar",
-    "syntaxHint": "#tag  +project  !1 a !3 prioridad  mañana 15:00 para una fecha"
+    "syntaxHint": "#tag  +project  !1 a !3 prioridad  mañana 15:00 para una fecha",
+    "slash": {
+      "tag": "Etiqueta",
+      "project": "Proyecto",
+      "person": "Persona",
+      "area": "Área",
+      "date": "Fecha límite",
+      "repeat": "Repetir",
+      "today": "Hoy",
+      "tomorrow": "Mañana",
+      "nextMonday": "Próximo lunes",
+      "inAWeek": "En una semana",
+      "everyDay": "Todos los días",
+      "everyWeekday": "Todos los días laborables",
+      "everyWeek": "Todas las semanas",
+      "everyMonth": "Todos los meses",
+      "create": "Crear {{token}}"
+    }
   },
   "area": {
-    "loadError": "No se pudieron cargar las áreas"
+    "loadError": "No se pudieron cargar las áreas",
+    "viaProject": "vía proyecto",
+    "viewArea": "Ir al área",
+    "searchAreas": "Buscar áreas…",
+    "clearArea": "Quitar área",
+    "noAreasFound": "No se encontraron áreas"
   },
   "goals": {
     "newGoal": "Nueva meta",
@@ -3806,7 +3916,21 @@
       "placeholder": "Resultado clave",
       "progress": "{{done}} de {{total}} hechos"
     },
-    "progressSummary": "Progreso del objetivo · {{done}} de {{total}} hechos"
+    "progressSummary": "Progreso del objetivo · {{done}} de {{total}} hechos",
+    "sort": {
+      "titleAsc": "Título de A a Z",
+      "titleDesc": "Título de Z a A",
+      "status": "Estado",
+      "horizon": "Horizonte",
+      "area": "Área",
+      "projects": "Más proyectos",
+      "tasks": "Más tareas",
+      "custom": "Orden personalizado",
+      "label": "Ordenar objetivos"
+    },
+    "reorderError": "No se pudo guardar el orden de los objetivos",
+    "noGoalsInArea": "No hay objetivos vinculados a esta área.",
+    "maintenance": "Mantenimiento"
   },
   "templates": {
     "new": "Nueva plantilla",
@@ -4428,7 +4552,9 @@
   "sortable": {
     "move": "Move",
     "project": "sortable project",
-    "task": "sortable task"
+    "task": "sortable task",
+    "area": "área ordenable",
+    "goal": "objetivo ordenable"
   },
   "groupPage": {
     "title": "Group",
@@ -4465,7 +4591,18 @@
     "previous": "Previous file",
     "next": "Next file",
     "renameError": "Could not save the title",
-    "confirmDelete": "Delete file?"
+    "confirmDelete": "Delete file?",
+    "uploadSuccess": "Archivo subido correctamente",
+    "uploadError": "No se pudo subir el archivo",
+    "deleteSuccess": "Adjunto eliminado correctamente",
+    "deleteError": "No se pudo eliminar el archivo",
+    "heading": "Adjuntos",
+    "uploading": "Subiendo...",
+    "clickToUpload": "Haz clic para subir",
+    "maxSize": "Máx. {{size}} MB",
+    "anyFormat": "Cualquier tipo de archivo",
+    "deleteConfirmTitle": "Eliminar adjunto",
+    "deleteConfirmMessage": "¿Seguro que quieres eliminar este adjunto? Esta acción no se puede deshacer."
   },
   "feedback": {
     "title": "Send feedback",
@@ -4928,5 +5065,9 @@
   },
   "sidebarDrop": {
     "failed": "No se pudo actualizar este elemento."
+  },
+  "loading": {
+    "tasks": "Cargando tareas…",
+    "subtasks": "Cargando subtareas..."
   }
 }

@@ -199,6 +199,8 @@ describe('TaskModal', () => {
         (updateTask as jest.Mock).mockRejectedValue(new Error('boom'));
         renderPanel();
 
+        // Empty fields wait behind More.
+        fireEvent.click(screen.getByTestId('chip-more'));
         fireEvent.click(screen.getByTestId('chip-priority'));
         fireEvent.click(screen.getByRole('option', { name: 'High' }));
 
@@ -221,6 +223,8 @@ describe('TaskModal', () => {
         });
         renderPanel();
 
+        // Empty fields wait behind More.
+        fireEvent.click(screen.getByTestId('chip-more'));
         fireEvent.click(screen.getByTestId('chip-priority'));
         fireEvent.click(screen.getByRole('option', { name: 'High' }));
 
@@ -246,6 +250,8 @@ describe('TaskModal', () => {
     it('picks a status from its popover', async () => {
         renderPanel();
 
+        // Empty fields wait behind More.
+        fireEvent.click(screen.getByTestId('chip-more'));
         fireEvent.click(screen.getByTestId('chip-status'));
         fireEvent.click(screen.getByRole('option', { name: 'In progress' }));
 
@@ -284,6 +290,8 @@ describe('TaskModal', () => {
             />
         );
 
+        // Empty fields wait behind More.
+        fireEvent.click(screen.getByTestId('chip-more'));
         fireEvent.click(screen.getByTestId('chip-start'));
         fireEvent.click(
             within(screen.getByRole('dialog', { name: 'Start' })).getByRole(
@@ -368,8 +376,14 @@ describe('TaskModal', () => {
     it('shows subtasks, attachments and comments, and adds a subtask straight away', async () => {
         renderPanel();
 
-        expect(screen.getByTestId('task-attachments')).toBeInTheDocument();
         expect(screen.getByTestId('task-comments')).toBeInTheDocument();
+        // No attachment yet: the upload area waits behind a quiet link.
+        expect(
+            screen.getByTestId('task-attachments-section')
+        ).not.toBeVisible();
+        fireEvent.click(screen.getByRole('button', { name: 'Attach files' }));
+        expect(screen.getByTestId('task-attachments-section')).toBeVisible();
+        expect(screen.getByTestId('task-attachments')).toBeInTheDocument();
 
         fireEvent.click(screen.getByTestId('add-subtask'));
         await waitFor(() =>

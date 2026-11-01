@@ -59,7 +59,13 @@
     "showSearch": "Suche anzeigen",
     "beta": "Beta",
     "comingSoon": "Demnächst",
-    "due": "Due"
+    "due": "Due",
+    "goal": "Ziel",
+    "priority": "Priorität",
+    "tags": "Tags",
+    "goToToday": "Zu Heute",
+    "loadMore": "Mehr laden",
+    "showAll": "Alle anzeigen"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -310,7 +316,8 @@
       "clearDate": "Datum entfernen",
       "moveToProject": "In Projekt verschieben"
     },
-    "reorderError": "Failed to save task order"
+    "reorderError": "Failed to save task order",
+    "deleteConfirmTitle": "Aufgabe löschen"
   },
   "timeline": {
     "activityTimeline": "Aktivitätsverlauf",
@@ -484,7 +491,11 @@
       "message": "Möchtest du das Ziel „{{title}}“ wirklich löschen?"
     },
     "createGoal": "Ziel erstellen",
-    "updateGoal": "Ziel aktualisieren"
+    "updateGoal": "Ziel aktualisieren",
+    "saveAsTemplate": {
+      "title": "Als Vorlage speichern",
+      "message": "„{{name}}“ als Vorlage speichern? Dadurch wird eine wiederverwendbare Vorlage auf Basis dieses Projekts erstellt."
+    }
   },
   "errors": {
     "noteTitleRequired": "Notiz-Titel ist erforderlich.",
@@ -524,7 +535,8 @@
     "failedToDeleteNote": "Notiz konnte nicht gelöscht werden.",
     "failedToDeleteTag": "Tag konnte nicht gelöscht werden.",
     "projectStatusUpdateFailed": "Projektstatus konnte nicht aktualisiert werden",
-    "failedToSaveTask": "Aufgabe konnte nicht gespeichert werden."
+    "failedToSaveTask": "Aufgabe konnte nicht gespeichert werden.",
+    "permissionDenied": "Zugriff verweigert"
   },
   "success": {
     "noteUpdated": "Notiz erfolgreich aktualisiert!",
@@ -613,7 +625,9 @@
       "tags": "Tags",
       "noProject": "No project",
       "more": "{{count}} more"
-    }
+    },
+    "edit": "Bearbeiten",
+    "delete": "Löschen"
   },
   "recurrence": {
     "none": "Keine",
@@ -638,7 +652,13 @@
     "weeks": "Wochen",
     "months": "Monate",
     "advancedHint": "Für spezifische Wochentage oder ein Enddatum, öffnen Sie die vollständige Aufgabe.",
-    "recurring": "Wiederkehrend"
+    "recurring": "Wiederkehrend",
+    "everyNDays": "Alle {{count}} Tage",
+    "everyNWeeks": "Alle {{count}} Wochen",
+    "everyNMonths": "Alle {{count}} Monate",
+    "completionBased": "Nach Abschluss",
+    "onDay": "Am Tag",
+    "until": "Bis"
   },
   "weekdays": {
     "sunday": "So",
@@ -1640,7 +1660,23 @@
     "reminder": "Erinnerung",
     "reminderPlaceholder": "Datum und Uhrzeit der Erinnerung wählen",
     "noReminder": "Keine Erinnerung",
-    "reminderUpdateError": "Erinnerung konnte nicht aktualisiert werden"
+    "reminderUpdateError": "Erinnerung konnte nicht aktualisiert werden",
+    "noArea": "Einem Bereich zuweisen",
+    "dueDateBeforeDeferError": "Das Fälligkeitsdatum darf nicht vor dem Aufschiebedatum liegen",
+    "areaUpdated": "Bereich aktualisiert",
+    "areaUpdateError": "Bereich konnte nicht aktualisiert werden",
+    "areaCleared": "Bereich entfernt",
+    "areaClearError": "Bereich konnte nicht entfernt werden",
+    "goalUpdated": "Ziel aktualisiert",
+    "goalUpdateError": "Ziel konnte nicht aktualisiert werden",
+    "goalCleared": "Ziel entfernt",
+    "goalClearError": "Ziel konnte nicht entfernt werden",
+    "notFound": "Aufgabe nicht gefunden",
+    "notFoundDescription": "Die gesuchte Aufgabe existiert nicht oder wurde gelöscht.",
+    "hoursAgo": "vor {{count}} Stunden",
+    "minutesAgo": "vor {{count}} Minuten",
+    "inMinutes": "in {{count}} Minuten",
+    "inHours": "in {{count}} Stunden"
   },
   "calendar": {
     "focusSession": "Fokus",
@@ -1870,7 +1906,8 @@
     "priority": "Priorität",
     "status": "Status",
     "created_at": "Erstellt am",
-    "custom": "Benutzerdefiniert"
+    "custom": "Benutzerdefiniert",
+    "completed_at": "Abgeschlossen am"
   },
   "priority": {
     "low": "Niedrig",
@@ -2034,7 +2071,11 @@
     "counts": {
       "active": "{{n}} active",
       "stash": "{{n}} in the stash"
-    }
+    },
+    "savedAsTemplate": "„{{name}}“ als Vorlage gespeichert.",
+    "saveAsTemplateError": "Projekt konnte nicht als Vorlage gespeichert werden.",
+    "sortTasks": "Aufgaben sortieren",
+    "upcomingProjects": "Anstehende Projekte"
   },
   "projectItem": {
     "edit": "Bearbeiten",
@@ -2055,7 +2096,8 @@
     "moreSharedUsers": "+{{count}} weitere Benutzer",
     "saveAsTemplate": "Als Vorlage speichern",
     "pinToSidebar": "An der Seitenleiste anheften",
-    "unpinFromSidebar": "Von der Seitenleiste lösen"
+    "unpinFromSidebar": "Von der Seitenleiste lösen",
+    "changeStatus": "Status ändern"
   },
   "areas": {
     "title": "Bereiche",
@@ -2095,7 +2137,27 @@
       "personal": "Privat",
       "family": "Familie & Soziales",
       "logistics": "Logistik"
-    }
+    },
+    "sort": {
+      "nameAsc": "Name A bis Z",
+      "nameDesc": "Name Z bis A",
+      "projects": "Meiste Projekte",
+      "goals": "Meiste Ziele",
+      "tasks": "Meiste Aufgaben",
+      "custom": "Benutzerdefinierte Reihenfolge",
+      "label": "Bereiche sortieren"
+    },
+    "reorderError": "Reihenfolge der Bereiche konnte nicht gespeichert werden",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "tasksInArea": "Aufgaben",
+    "noProjects": "Keine Projekte in diesem Bereich.",
+    "noTasks": "Keine Aufgaben direkt in diesem Bereich",
+    "singular": "Bereich",
+    "projects": "Projekte",
+    "goals": "Ziele",
+    "tasks": "Aufgaben",
+    "progressSummary": "Bereichsfortschritt · {{done}} von {{total}} Aufgaben erledigt"
   },
   "tags": {
     "loading": "Tags laden...",
@@ -2870,7 +2932,8 @@
     "searching": "Suche läuft..."
   },
   "subtasks": {
-    "placeholder": "Fügen Sie eine Unteraufgabe hinzu..."
+    "placeholder": "Fügen Sie eine Unteraufgabe hinzu...",
+    "title": "Teilaufgaben"
   },
   "backup": {
     "title": "Sichern & Wiederherstellen",
@@ -2932,7 +2995,8 @@
       "email": "E-Mail",
       "push": "Push",
       "telegram": "Telegram",
-      "desktop": "Desktop"
+      "desktop": "Desktop",
+      "apprise": "Apprise"
     },
     "types": {
       "dueTasks": "Fällige Aufgaben",
@@ -3055,7 +3119,31 @@
       "enable": "Ruhezeiten",
       "from": "Von",
       "to": "Bis"
-    }
+    },
+    "apprise": {
+      "saved": "Apprise-Server gespeichert.",
+      "title": "Apprise",
+      "connected": "Senden über {{host}}.",
+      "description": "Benachrichtigungen über deinen eigenen Apprise-Server an Pushover, ntfy, Discord, Matrix und mehr senden.",
+      "remove": "Entfernen",
+      "serverLabel": "Apprise-Serveradresse",
+      "keyPlaceholder": "Konfigurationsschlüssel",
+      "keyLabel": "Konfigurationsschlüssel",
+      "tagsPlaceholder": "Tags (optional, z. B. all)",
+      "tagsLabel": "Tags",
+      "help": "Lege in deinem Apprise-Server eine Konfiguration an und füge hier ihren Schlüssel ein.",
+      "save": "Speichern"
+    },
+    "justNow": "Gerade eben",
+    "minutesAgo": "vor {{count}} Min.",
+    "hoursAgo": "vor {{count}} Std.",
+    "daysAgo": "vor {{count}} T.",
+    "title": "Benachrichtigungen",
+    "markAllRead": "Alle als gelesen markieren",
+    "loading": "Wird geladen...",
+    "noNotifications": "Noch keine Benachrichtigungen",
+    "markAsRead": "Als gelesen markieren",
+    "delete": "Löschen"
   },
   "projectStatus": {
     "not_started": "Nicht gestartet",
@@ -3767,10 +3855,32 @@
     "addTitle": "Add to Inbox, Task, Note or Project",
     "close": "Close",
     "button": "Erfassen",
-    "syntaxHint": "#tag  +project  !1 bis !3 Priorität  morgen 15 Uhr für ein Datum"
+    "syntaxHint": "#tag  +project  !1 bis !3 Priorität  morgen 15 Uhr für ein Datum",
+    "slash": {
+      "tag": "Tag",
+      "project": "Projekt",
+      "person": "Person",
+      "area": "Bereich",
+      "date": "Fälligkeitsdatum",
+      "repeat": "Wiederholen",
+      "today": "Heute",
+      "tomorrow": "Morgen",
+      "nextMonday": "Nächster Montag",
+      "inAWeek": "In einer Woche",
+      "everyDay": "Jeden Tag",
+      "everyWeekday": "Jeden Werktag",
+      "everyWeek": "Jede Woche",
+      "everyMonth": "Jeden Monat",
+      "create": "{{token}} erstellen"
+    }
   },
   "area": {
-    "loadError": "Bereiche konnten nicht geladen werden"
+    "loadError": "Bereiche konnten nicht geladen werden",
+    "viaProject": "über Projekt",
+    "viewArea": "Zum Bereich",
+    "searchAreas": "Bereiche suchen…",
+    "clearArea": "Bereich entfernen",
+    "noAreasFound": "Keine Bereiche gefunden"
   },
   "goals": {
     "newGoal": "Neues Ziel",
@@ -3822,7 +3932,21 @@
       "placeholder": "Schlüsselergebnis",
       "progress": "{{done}} von {{total}} erledigt"
     },
-    "progressSummary": "Zielfortschritt · {{done}} von {{total}} erledigt"
+    "progressSummary": "Zielfortschritt · {{done}} von {{total}} erledigt",
+    "sort": {
+      "titleAsc": "Titel A bis Z",
+      "titleDesc": "Titel Z bis A",
+      "status": "Status",
+      "horizon": "Zeitraum",
+      "area": "Bereich",
+      "projects": "Meiste Projekte",
+      "tasks": "Meiste Aufgaben",
+      "custom": "Benutzerdefinierte Reihenfolge",
+      "label": "Ziele sortieren"
+    },
+    "reorderError": "Reihenfolge der Ziele konnte nicht gespeichert werden",
+    "noGoalsInArea": "Keine Ziele mit diesem Bereich verknüpft.",
+    "maintenance": "Pflege"
   },
   "templates": {
     "new": "Neue Vorlage",
@@ -4443,7 +4567,9 @@
   "sortable": {
     "move": "Move",
     "project": "sortable project",
-    "task": "sortable task"
+    "task": "sortable task",
+    "area": "sortierbarer Bereich",
+    "goal": "sortierbares Ziel"
   },
   "groupPage": {
     "title": "Group",
@@ -4480,7 +4606,18 @@
     "previous": "Previous file",
     "next": "Next file",
     "renameError": "Could not save the title",
-    "confirmDelete": "Delete file?"
+    "confirmDelete": "Delete file?",
+    "uploadSuccess": "Datei erfolgreich hochgeladen",
+    "uploadError": "Datei konnte nicht hochgeladen werden",
+    "deleteSuccess": "Anhang erfolgreich gelöscht",
+    "deleteError": "Datei konnte nicht gelöscht werden",
+    "heading": "Anhänge",
+    "uploading": "Wird hochgeladen...",
+    "clickToUpload": "Zum Hochladen klicken",
+    "maxSize": "Max. {{size}} MB",
+    "anyFormat": "Beliebiger Dateityp",
+    "deleteConfirmTitle": "Anhang löschen",
+    "deleteConfirmMessage": "Diesen Anhang wirklich löschen? Dies kann nicht rückgängig gemacht werden."
   },
   "feedback": {
     "title": "Send feedback",
@@ -4937,5 +5074,9 @@
   },
   "sidebarDrop": {
     "failed": "Dieses Element konnte nicht aktualisiert werden."
+  },
+  "loading": {
+    "tasks": "Aufgaben werden geladen…",
+    "subtasks": "Teilaufgaben werden geladen..."
   }
 }

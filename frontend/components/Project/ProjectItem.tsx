@@ -11,7 +11,6 @@ import {
     ClockIcon,
     CheckCircleIcon,
     XCircleIcon,
-    ExclamationTriangleIcon,
     FolderIcon,
     PauseCircleIcon,
     ArchiveBoxIcon,
@@ -25,7 +24,8 @@ import EntityCard from '../Shared/EntityCard';
 import { PROJECT_TABLE_GRID } from './projectTableLayout';
 import { getProjectStatusTint } from './projectStatusStyles';
 import { avatarTint } from '../../utils/avatarTint';
-import { differenceInCalendarDays } from 'date-fns';
+import { differenceInCalendarDays, format } from 'date-fns';
+import { getCurrentLocale } from '../../utils/dateUtils';
 import { listShares, ListSharesResponseRow } from '../../utils/sharesService';
 import {
     failedShareCache,
@@ -33,7 +33,6 @@ import {
 } from '../../utils/projectShareCache';
 import { getApiPath } from '../../config/paths';
 import EntityIcon from '../Shared/EntityIcon';
-import { isProjectLive } from '../../utils/projectStatus';
 
 interface ProjectItemProps {
     project: Project;
@@ -255,52 +254,28 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
         };
     }, [project.uid, project.is_shared]);
 
-    const dueInfo = useMemo(() => {
-        if (!project.due_date_at) {
-            return {
-                text: t('projectItem.noDueDate', 'No due date'),
-                isOverdue: false,
-            };
-        }
-        const isFinished = !isProjectLive(project.status);
+    // No date, no line: a card only says what is there. A passed date is
+    // shown as the date, without counting days late.
+    const dueText = useMemo(() => {
+        if (!project.due_date_at) return '';
         const dueDate = new Date(project.due_date_at);
-        if (Number.isNaN(dueDate.getTime())) {
-            return {
-                text: t('projectItem.noDueDate', 'No due date'),
-                isOverdue: false,
-            };
-        }
+        if (Number.isNaN(dueDate.getTime())) return '';
         const diff = differenceInCalendarDays(dueDate, new Date());
-        if (diff === 0) {
-            return {
-                text: t('projectItem.dueToday', 'Due today'),
-                isOverdue: false,
-            };
-        }
-
-        const unit =
-            Math.abs(diff) === 1
-                ? t('projectItem.day', 'day')
-                : t('projectItem.days', 'days');
-
+        if (diff === 0) return t('projectItem.dueToday', 'Due today');
         if (diff > 0) {
-            return {
-                text: t('projectItem.dueIn', 'Due in {{count}} {{unit}}', {
-                    count: diff,
-                    unit,
-                }),
-                isOverdue: false,
-            };
-        }
-
-        return {
-            text: t('projectItem.overdue', 'Overdue {{count}} {{unit}} ago', {
-                count: Math.abs(diff),
+            const unit =
+                diff === 1
+                    ? t('projectItem.day', 'day')
+                    : t('projectItem.days', 'days');
+            return t('projectItem.dueIn', 'Due in {{count}} {{unit}}', {
+                count: diff,
                 unit,
-            }),
-            isOverdue: !isFinished,
-        };
-    }, [project.due_date_at, project.status, t]);
+            });
+        }
+        return t('project.dueOn', 'Due {{date}}', {
+            date: format(dueDate, 'PP', { locale: getCurrentLocale() }),
+        });
+    }, [project.due_date_at, t]);
 
     const shareAvatars = useMemo(() => {
         if (!project.is_shared) {
@@ -554,14 +529,7 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
                 }}
                 details={
                     <>
-                        {dueInfo.isOverdue ? (
-                            <span className="inline-flex min-w-0 items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-[12px] font-semibold text-red-700 dark:bg-red-900/40 dark:text-red-300">
-                                <ExclamationTriangleIcon className="h-3 w-3 flex-shrink-0" />
-                                <span className="truncate">{dueInfo.text}</span>
-                            </span>
-                        ) : (
-                            <span className="truncate">{dueInfo.text}</span>
-                        )}
+                        <span className="truncate">{dueText}</span>
                         {renderStatusPicker(
                             <>
                                 <StatusIcon className="h-3.5 w-3.5" />
@@ -682,14 +650,10 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
             </div>
 
             <div
-                className={`hidden truncate text-xs md:block ${
-                    dueInfo.isOverdue
-                        ? 'font-semibold text-red-600 dark:text-red-400'
-                        : 'text-gray-600 dark:text-gray-300'
-                }`}
-                title={dueInfo.text}
+                className="hidden truncate text-xs text-gray-600 dark:text-gray-300 md:block"
+                title={dueText || undefined}
             >
-                {dueInfo.text}
+                {dueText}
             </div>
 
             <div

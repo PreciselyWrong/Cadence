@@ -61,7 +61,13 @@
         "beta": "beta",
         "comingSoon": "Už čoskoro",
         "moreActions": "More actions",
-        "due": "Due"
+        "due": "Due",
+        "goal": "Cieľ",
+        "priority": "Priorita",
+        "tags": "Štítky",
+        "goToToday": "Prejsť na dnes",
+        "loadMore": "Načítať ďalšie",
+        "showAll": "Zobraziť všetko"
     },
     "sidebar": {
         "dashboard": "Prehľad",
@@ -311,7 +317,8 @@
             "nextWeek": "Budúci týždeň",
             "clearDate": "Vymazať dátum",
             "moveToProject": "Presunúť do projektu"
-        }
+        },
+        "deleteConfirmTitle": "Odstrániť úlohu"
     },
     "comments": {
         "count": "Komentáre: {{count}}",
@@ -1115,7 +1122,11 @@
             "message": "Naozaj chcete odstrániť cieľ „{{title}}“?"
         },
         "createGoal": "Vytvoriť cieľ",
-        "updateGoal": "Aktualizovať cieľ"
+        "updateGoal": "Aktualizovať cieľ",
+        "saveAsTemplate": {
+            "title": "Uložiť ako šablónu",
+            "message": "Uložiť \"{{name}}\" ako šablónu? Vytvorí sa opakovane použiteľná šablóna založená na tomto projekte."
+        }
     },
     "forms": {
         "title": "Názov",
@@ -1258,12 +1269,15 @@
         "priority": "Priorita",
         "status": "Stav",
         "created_at": "Dátum vytvorenia",
-        "custom": "Vlastné"
+        "custom": "Vlastné",
+        "completed_at": "Dokončené"
     },
     "sortable": {
         "move": "Presunúť",
         "project": "zoraditeľný projekt",
-        "task": "zoraditeľná úloha"
+        "task": "zoraditeľná úloha",
+        "area": "zoraditeľná oblasť",
+        "goal": "zoraditeľný cieľ"
     },
     "priority": {
         "none": "Žiadna",
@@ -1406,7 +1420,8 @@
         "failedToDeleteNote": "Poznámku sa nepodarilo odstrániť.",
         "failedToDeleteTag": "Štítok sa nepodarilo odstrániť.",
         "projectStatusUpdateFailed": "Nepodarilo sa aktualizovať stav projektu",
-        "failedToSaveTask": "Úlohu sa nepodarilo uložiť."
+        "failedToSaveTask": "Úlohu sa nepodarilo uložiť.",
+        "permissionDenied": "Prístup bol zamietnutý"
     },
     "inbox": {
         "title": "Schránka",
@@ -1706,10 +1721,27 @@
         "reminder": "Pripomienka",
         "reminderPlaceholder": "Vyberte dátum a čas pripomienky",
         "noReminder": "Žiadna pripomienka",
-        "reminderUpdateError": "Pripomienku sa nepodarilo aktualizovať"
+        "reminderUpdateError": "Pripomienku sa nepodarilo aktualizovať",
+        "noArea": "Priradiť k oblasti",
+        "dueDateBeforeDeferError": "Termín nemôže byť skorší ako dátum odloženia",
+        "areaUpdated": "Oblasť bola úspešne aktualizovaná",
+        "areaUpdateError": "Oblasť sa nepodarilo aktualizovať",
+        "areaCleared": "Oblasť bola úspešne odstránená",
+        "areaClearError": "Oblasť sa nepodarilo odstrániť",
+        "goalUpdated": "Cieľ bol aktualizovaný",
+        "goalUpdateError": "Cieľ sa nepodarilo aktualizovať",
+        "goalCleared": "Cieľ bol odstránený",
+        "goalClearError": "Cieľ sa nepodarilo odstrániť",
+        "notFound": "Úloha sa nenašla",
+        "notFoundDescription": "Úloha, ktorú hľadáte, neexistuje alebo bola odstránená.",
+        "hoursAgo": "pred {{count}} hod.",
+        "minutesAgo": "pred {{count}} min.",
+        "inMinutes": "o {{count}} min.",
+        "inHours": "o {{count}} hod."
     },
     "subtasks": {
-        "placeholder": "Pridajte podúlohu..."
+        "placeholder": "Pridajte podúlohu...",
+        "title": "Podúlohy"
     },
     "projects": {
         "parentProject": "Nadradený projekt",
@@ -1813,7 +1845,11 @@
         "counts": {
             "active": "{{n}} active",
             "stash": "{{n}} in the stash"
-        }
+        },
+        "savedAsTemplate": "\"{{name}}\" bol uložený ako šablóna.",
+        "saveAsTemplateError": "Projekt sa nepodarilo uložiť ako šablónu.",
+        "sortTasks": "Zoradiť úlohy",
+        "upcomingProjects": "Nadchádzajúce projekty"
     },
     "projectStatus": {
         "not_started": "Nezačatý",
@@ -1853,7 +1889,8 @@
         "moreSharedUsers": "+{{count}} ďalších používateľov",
         "saveAsTemplate": "Uložiť ako šablónu",
         "pinToSidebar": "Pripnúť na bočný panel",
-        "unpinFromSidebar": "Odopnúť z bočného panela"
+        "unpinFromSidebar": "Odopnúť z bočného panela",
+        "changeStatus": "Zmeniť stav"
     },
     "areas": {
         "title": "Oblasti",
@@ -1893,7 +1930,27 @@
             "personal": "Osobné",
             "family": "Rodina a spoločnosť",
             "logistics": "Logistika"
-        }
+        },
+        "sort": {
+            "nameAsc": "Názov od A po Z",
+            "nameDesc": "Názov od Z po A",
+            "projects": "Najviac projektov",
+            "goals": "Najviac cieľov",
+            "tasks": "Najviac úloh",
+            "custom": "Vlastné poradie",
+            "label": "Zoradiť oblasti"
+        },
+        "reorderError": "Poradie oblastí sa nepodarilo uložiť",
+        "edit": "Upraviť",
+        "delete": "Odstrániť",
+        "tasksInArea": "Úlohy",
+        "noProjects": "V tejto oblasti nie sú žiadne projekty.",
+        "noTasks": "V tejto oblasti nie sú priamo žiadne úlohy",
+        "singular": "Oblasť",
+        "projects": "projekty",
+        "goals": "ciele",
+        "tasks": "úlohy",
+        "progressSummary": "Pokrok oblasti · dokončené {{done}} z {{total}} úloh"
     },
     "notes": {
         "addNote": "Pridať poznámku",
@@ -1962,7 +2019,9 @@
             "tags": "Tags",
             "noProject": "No project",
             "more": "{{count}} more"
-        }
+        },
+        "edit": "Upraviť",
+        "delete": "Odstrániť"
     },
     "tags": {
         "addTag": "Pridať štítok",
@@ -2180,7 +2239,13 @@
         "weeks": "týždňov",
         "months": "mesiacov",
         "advancedHint": "Pre konkrétne dni v týždni alebo dátum ukončenia otvorte celú úlohu.",
-        "recurring": "Opakujúca sa"
+        "recurring": "Opakujúca sa",
+        "everyNDays": "Každých {{count}} dní",
+        "everyNWeeks": "Každých {{count}} týždňov",
+        "everyNMonths": "Každých {{count}} mesiacov",
+        "completionBased": "Po dokončení",
+        "onDay": "V deň",
+        "until": "Do"
     },
     "weekdays": {
         "sunday": "Ne",
@@ -3162,7 +3227,8 @@
             "email": "E-mail",
             "push": "Push",
             "telegram": "Telegram",
-            "desktop": "Počítač"
+            "desktop": "Počítač",
+            "apprise": "Apprise"
         },
         "types": {
             "dueTasks": "Úlohy s termínom",
@@ -3285,7 +3351,31 @@
             "enable": "Tiché hodiny",
             "from": "Od",
             "to": "Do"
-        }
+        },
+        "apprise": {
+            "saved": "Server Apprise bol uložený.",
+            "title": "Apprise",
+            "connected": "Odosiela sa cez {{host}}.",
+            "description": "Posielajte upozornenia cez svoj server Apprise do služieb Pushover, ntfy, Discord, Matrix a ďalších.",
+            "remove": "Odstrániť",
+            "serverLabel": "Adresa servera Apprise",
+            "keyPlaceholder": "Konfiguračný kľúč",
+            "keyLabel": "Konfiguračný kľúč",
+            "tagsPlaceholder": "Štítky (voliteľné, napr. all)",
+            "tagsLabel": "Štítky",
+            "help": "Vytvorte konfiguráciu na svojom serveri Apprise a vložte sem jej kľúč.",
+            "save": "Uložiť"
+        },
+        "justNow": "Práve teraz",
+        "minutesAgo": "pred {{count}} min",
+        "hoursAgo": "pred {{count}} h",
+        "daysAgo": "pred {{count}} d",
+        "title": "Upozornenia",
+        "markAllRead": "Označiť všetky ako prečítané",
+        "loading": "Načítava sa...",
+        "noNotifications": "Zatiaľ žiadne upozornenia",
+        "markAsRead": "Označiť ako prečítané",
+        "delete": "Odstrániť"
     },
     "aiAssistant": {
         "title": "Denný AI prehľad",
@@ -3811,7 +3901,24 @@
         "filesAttached_many": "Priložených {{count}} súborov.",
         "filesAttached_other": "Priložených {{count}} súborov.",
         "button": "Zachytiť",
-        "syntaxHint": "#tag  +project  !1 až !3 priorita  zajtra o 15:00 pre dátum"
+        "syntaxHint": "#tag  +project  !1 až !3 priorita  zajtra o 15:00 pre dátum",
+        "slash": {
+            "tag": "Štítok",
+            "project": "Projekt",
+            "person": "Osoba",
+            "area": "Oblasť",
+            "date": "Termín",
+            "repeat": "Opakovať",
+            "today": "Dnes",
+            "tomorrow": "Zajtra",
+            "nextMonday": "Budúci pondelok",
+            "inAWeek": "O týždeň",
+            "everyDay": "Každý deň",
+            "everyWeekday": "Každý pracovný deň",
+            "everyWeek": "Každý týždeň",
+            "everyMonth": "Každý mesiac",
+            "create": "Vytvoriť {{token}}"
+        }
     },
     "attachments": {
         "limitReached": "Povolených je najviac 20 príloh",
@@ -3822,10 +3929,26 @@
         "previous": "Previous file",
         "next": "Next file",
         "renameError": "Could not save the title",
-        "confirmDelete": "Delete file?"
+        "confirmDelete": "Delete file?",
+        "uploadSuccess": "Súbor bol úspešne nahraný",
+        "uploadError": "Súbor sa nepodarilo nahrať",
+        "deleteSuccess": "Príloha bola úspešne odstránená",
+        "deleteError": "Súbor sa nepodarilo odstrániť",
+        "heading": "Prílohy",
+        "uploading": "Nahráva sa...",
+        "clickToUpload": "Kliknutím nahráte",
+        "maxSize": "Max. {{size}} MB",
+        "anyFormat": "Ľubovoľný typ súboru",
+        "deleteConfirmTitle": "Odstrániť prílohu",
+        "deleteConfirmMessage": "Naozaj chcete odstrániť túto prílohu? Túto akciu nie je možné vrátiť späť."
     },
     "area": {
-        "loadError": "Nepodarilo sa načítať oblasti"
+        "loadError": "Nepodarilo sa načítať oblasti",
+        "viaProject": "cez projekt",
+        "viewArea": "Prejsť na oblasť",
+        "searchAreas": "Hľadať oblasti…",
+        "clearArea": "Odstrániť oblasť",
+        "noAreasFound": "Nenašli sa žiadne oblasti"
     },
     "goals": {
         "newGoal": "Nový cieľ",
@@ -3877,7 +4000,21 @@
             "placeholder": "Kľúčový výsledok",
             "progress": "{{done}} z {{total}} hotové"
         },
-        "progressSummary": "Pokrok cieľa · {{done}} z {{total}} hotové"
+        "progressSummary": "Pokrok cieľa · {{done}} z {{total}} hotové",
+        "sort": {
+            "titleAsc": "Názov od A po Z",
+            "titleDesc": "Názov od Z po A",
+            "status": "Stav",
+            "horizon": "Horizont",
+            "area": "Oblasť",
+            "projects": "Najviac projektov",
+            "tasks": "Najviac úloh",
+            "custom": "Vlastné poradie",
+            "label": "Zoradiť ciele"
+        },
+        "reorderError": "Poradie cieľov sa nepodarilo uložiť",
+        "noGoalsInArea": "S touto oblasťou nie je prepojený žiadny cieľ.",
+        "maintenance": "Údržba"
     },
     "templates": {
         "new": "Nová šablóna",
@@ -4935,5 +5072,9 @@
     },
     "sidebarDrop": {
         "failed": "Túto položku sa nepodarilo aktualizovať."
+    },
+    "loading": {
+        "tasks": "Načítavajú sa úlohy…",
+        "subtasks": "Načítavajú sa podúlohy..."
     }
 }

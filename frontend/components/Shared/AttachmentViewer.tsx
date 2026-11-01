@@ -105,7 +105,7 @@ const AttachmentViewer: React.FC<AttachmentViewerProps> = ({
         } catch (error: any) {
             showErrorToast(
                 error?.message ||
-                    t('task.attachments.deleteError', 'Failed to delete file')
+                    t('attachments.deleteError', 'Failed to delete file')
             );
         } finally {
             setDeleting(false);

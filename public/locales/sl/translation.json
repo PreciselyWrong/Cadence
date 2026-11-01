@@ -61,7 +61,13 @@
     "showSearch": "Pokaži iskanje",
     "beta": "beta",
     "comingSoon": "Kmalu",
-    "due": "Due"
+    "due": "Due",
+    "goal": "Cilj",
+    "priority": "Prioriteta",
+    "tags": "Oznake",
+    "goToToday": "Pojdi na danes",
+    "loadMore": "Naloži več",
+    "showAll": "Prikaži vse"
   },
   "sidebar": {
     "dashboard": "Nadzorna plošča",
@@ -312,7 +318,8 @@
       "clearDate": "Počisti datum",
       "moveToProject": "Premakni v projekt"
     },
-    "reorderError": "Failed to save task order"
+    "reorderError": "Failed to save task order",
+    "deleteConfirmTitle": "Izbriši nalogo"
   },
   "timeline": {
     "activityTimeline": "Časovnica aktivnosti",
@@ -1090,7 +1097,11 @@
       "message": "Ali res želite izbrisati cilj »{{title}}«?"
     },
     "createGoal": "Ustvari cilj",
-    "updateGoal": "Posodobi cilj"
+    "updateGoal": "Posodobi cilj",
+    "saveAsTemplate": {
+      "title": "Shrani kot predlogo",
+      "message": "Shranim \"{{name}}\" kot predlogo? To bo ustvarilo predlogo za ponovno uporabo na podlagi tega projekta."
+    }
   },
   "forms": {
     "title": "Naslov",
@@ -1234,7 +1245,8 @@
     "priority": "Prioriteta",
     "status": "Status",
     "created_at": "Ustvarjeno",
-    "custom": "Po meri"
+    "custom": "Po meri",
+    "completed_at": "Zaključeno ob"
   },
   "priority": {
     "low": "Nizka",
@@ -1377,7 +1389,8 @@
     "failedToDeleteNote": "Opombe ni bilo mogoče izbrisati.",
     "failedToDeleteTag": "Oznake ni bilo mogoče izbrisati.",
     "projectStatusUpdateFailed": "Stanja projekta ni bilo mogoče posodobiti",
-    "failedToSaveTask": "Nalogo ni bilo mogoče shraniti."
+    "failedToSaveTask": "Nalogo ni bilo mogoče shraniti.",
+    "permissionDenied": "Dostop zavrnjen"
   },
   "inbox": {
     "title": "Prejeto",
@@ -1681,7 +1694,23 @@
     "reminder": "Opomnik",
     "reminderPlaceholder": "Izberite datum in uro opomnika",
     "noReminder": "Brez opomnika",
-    "reminderUpdateError": "Opomnika ni bilo mogoče posodobiti"
+    "reminderUpdateError": "Opomnika ni bilo mogoče posodobiti",
+    "noArea": "Dodeli področju",
+    "dueDateBeforeDeferError": "Rok ne sme biti pred datumom odložitve",
+    "areaUpdated": "Področje je posodobljeno",
+    "areaUpdateError": "Področja ni bilo mogoče posodobiti",
+    "areaCleared": "Področje je odstranjeno",
+    "areaClearError": "Področja ni bilo mogoče odstraniti",
+    "goalUpdated": "Cilj je posodobljen",
+    "goalUpdateError": "Cilja ni bilo mogoče posodobiti",
+    "goalCleared": "Cilj je odstranjen",
+    "goalClearError": "Cilja ni bilo mogoče odstraniti",
+    "notFound": "Naloga ni najdena",
+    "notFoundDescription": "Naloga, ki jo iščete, ne obstaja ali je bila izbrisana.",
+    "hoursAgo": "pred {{count}} urami",
+    "minutesAgo": "pred {{count}} minutami",
+    "inMinutes": "čez {{count}} min",
+    "inHours": "čez {{count}} ur"
   },
   "projects": {
     "parentProject": "Nadrejeni projekt",
@@ -1799,7 +1828,11 @@
     "counts": {
       "active": "{{n}} active",
       "stash": "{{n}} in the stash"
-    }
+    },
+    "savedAsTemplate": "\"{{name}}\" je shranjen kot predloga.",
+    "saveAsTemplateError": "Projekta ni bilo mogoče shraniti kot predlogo.",
+    "sortTasks": "Razvrsti naloge",
+    "upcomingProjects": "Prihajajoči projekti"
   },
   "projectItem": {
     "edit": "Uredi",
@@ -1820,7 +1853,8 @@
     "moreSharedUsers": "+{{count}} več uporabnikov",
     "saveAsTemplate": "Shrani kot predlogo",
     "pinToSidebar": "Pripni na stransko vrstico",
-    "unpinFromSidebar": "Odpripni s stranske vrstice"
+    "unpinFromSidebar": "Odpripni s stranske vrstice",
+    "changeStatus": "Spremeni stanje"
   },
   "areas": {
     "title": "Območja",
@@ -1860,7 +1894,27 @@
       "personal": "Osebno",
       "family": "Družina in družba",
       "logistics": "Logistika"
-    }
+    },
+    "sort": {
+      "nameAsc": "Ime od A do Z",
+      "nameDesc": "Ime od Z do A",
+      "projects": "Največ projektov",
+      "goals": "Največ ciljev",
+      "tasks": "Največ nalog",
+      "custom": "Ročni vrstni red",
+      "label": "Razvrsti področja"
+    },
+    "reorderError": "Vrstnega reda področij ni bilo mogoče shraniti",
+    "edit": "Uredi",
+    "delete": "Izbriši",
+    "tasksInArea": "Naloge",
+    "noProjects": "V tem področju ni projektov.",
+    "noTasks": "V tem področju ni neposrednih nalog",
+    "singular": "Področje",
+    "projects": "projekti",
+    "goals": "cilji",
+    "tasks": "naloge",
+    "progressSummary": "Napredek področja · {{done}} od {{total}} nalog opravljenih"
   },
   "notes": {
     "loading": "Nalaganje opomb...",
@@ -1929,7 +1983,9 @@
       "tags": "Tags",
       "noProject": "No project",
       "more": "{{count}} more"
-    }
+    },
+    "edit": "Uredi",
+    "delete": "Izbriši"
   },
   "tags": {
     "loading": "Nalagam oznake...",
@@ -2008,7 +2064,13 @@
     "weeks": "tedni",
     "months": "mesece",
     "advancedHint": "Za določene dni v tednu ali končni datum odprite celotno nalogo.",
-    "recurring": "Ponavljajoča se"
+    "recurring": "Ponavljajoča se",
+    "everyNDays": "Vsakih {{count}} dni",
+    "everyNWeeks": "Vsakih {{count}} tednov",
+    "everyNMonths": "Vsakih {{count}} mesecev",
+    "completionBased": "Po zaključku",
+    "onDay": "Na dan",
+    "until": "Do"
   },
   "weekdays": {
     "sunday": "Ned",
@@ -2873,7 +2935,8 @@
     "searching": "Iščem..."
   },
   "subtasks": {
-    "placeholder": "Dodaj podnalogo..."
+    "placeholder": "Dodaj podnalogo...",
+    "title": "Podnaloge"
   },
   "backup": {
     "title": "Varnostna kopija in obnova",
@@ -2935,7 +2998,8 @@
       "email": "E-pošta",
       "push": "Push",
       "telegram": "Telegram",
-      "desktop": "Računalnik"
+      "desktop": "Računalnik",
+      "apprise": "Apprise"
     },
     "types": {
       "dueTasks": "Naloge, ki zapadejo",
@@ -3058,7 +3122,31 @@
       "enable": "Tihe ure",
       "from": "Od",
       "to": "Do"
-    }
+    },
+    "apprise": {
+      "saved": "Strežnik Apprise je shranjen.",
+      "title": "Apprise",
+      "connected": "Pošiljanje prek {{host}}.",
+      "description": "Pošiljajte obvestila prek svojega strežnika Apprise v Pushover, ntfy, Discord, Matrix in druge.",
+      "remove": "Odstrani",
+      "serverLabel": "Naslov strežnika Apprise",
+      "keyPlaceholder": "Konfiguracijski ključ",
+      "keyLabel": "Konfiguracijski ključ",
+      "tagsPlaceholder": "Oznake (neobvezno, npr. all)",
+      "tagsLabel": "Oznake",
+      "help": "Ustvarite konfiguracijo na svojem strežniku Apprise in tukaj prilepite njen ključ.",
+      "save": "Shrani"
+    },
+    "justNow": "Pravkar",
+    "minutesAgo": "pred {{count}} min",
+    "hoursAgo": "pred {{count}} h",
+    "daysAgo": "pred {{count}} d",
+    "title": "Obvestila",
+    "markAllRead": "Označi vse kot prebrano",
+    "loading": "Nalaganje...",
+    "noNotifications": "Še ni obvestil",
+    "markAsRead": "Označi kot prebrano",
+    "delete": "Izbriši"
   },
   "projectStatus": {
     "not_started": "Niso začeli",
@@ -3774,10 +3862,32 @@
     "addTitle": "Add to Inbox, Task, Note or Project",
     "close": "Close",
     "button": "Zajem",
-    "syntaxHint": "#tag  +project  !1 do !3 prednost  jutri ob 15:00 za datum"
+    "syntaxHint": "#tag  +project  !1 do !3 prednost  jutri ob 15:00 za datum",
+    "slash": {
+      "tag": "Oznaka",
+      "project": "Projekt",
+      "person": "Oseba",
+      "area": "Področje",
+      "date": "Rok",
+      "repeat": "Ponovi",
+      "today": "Danes",
+      "tomorrow": "Jutri",
+      "nextMonday": "Naslednji ponedeljek",
+      "inAWeek": "Čez teden dni",
+      "everyDay": "Vsak dan",
+      "everyWeekday": "Vsak delovni dan",
+      "everyWeek": "Vsak teden",
+      "everyMonth": "Vsak mesec",
+      "create": "Ustvari {{token}}"
+    }
   },
   "area": {
-    "loadError": "Področij ni bilo mogoče naložiti"
+    "loadError": "Področij ni bilo mogoče naložiti",
+    "viaProject": "prek projekta",
+    "viewArea": "Pojdi na področje",
+    "searchAreas": "Iskanje področij…",
+    "clearArea": "Odstrani področje",
+    "noAreasFound": "Ni najdenih področij"
   },
   "goals": {
     "newGoal": "Nov cilj",
@@ -3829,7 +3939,21 @@
       "placeholder": "Ključni rezultat",
       "progress": "{{done}} od {{total}} opravljenih"
     },
-    "progressSummary": "Napredek cilja · {{done}} od {{total}} opravljenih"
+    "progressSummary": "Napredek cilja · {{done}} od {{total}} opravljenih",
+    "sort": {
+      "titleAsc": "Naslov od A do Z",
+      "titleDesc": "Naslov od Z do A",
+      "status": "Stanje",
+      "horizon": "Obzorje",
+      "area": "Področje",
+      "projects": "Največ projektov",
+      "tasks": "Največ nalog",
+      "custom": "Ročni vrstni red",
+      "label": "Razvrsti cilje"
+    },
+    "reorderError": "Vrstnega reda ciljev ni bilo mogoče shraniti",
+    "noGoalsInArea": "Na to področje ni povezan noben cilj.",
+    "maintenance": "Vzdrževanje"
   },
   "templates": {
     "new": "Nova predloga",
@@ -4452,7 +4576,9 @@
   "sortable": {
     "move": "Move",
     "project": "sortable project",
-    "task": "sortable task"
+    "task": "sortable task",
+    "area": "razvrstljivo področje",
+    "goal": "razvrstljiv cilj"
   },
   "groupPage": {
     "title": "Group",
@@ -4489,7 +4615,18 @@
     "previous": "Previous file",
     "next": "Next file",
     "renameError": "Could not save the title",
-    "confirmDelete": "Delete file?"
+    "confirmDelete": "Delete file?",
+    "uploadSuccess": "Datoteka je uspešno naložena",
+    "uploadError": "Datoteke ni bilo mogoče naložiti",
+    "deleteSuccess": "Priloga je uspešno izbrisana",
+    "deleteError": "Datoteke ni bilo mogoče izbrisati",
+    "heading": "Priloge",
+    "uploading": "Nalaganje...",
+    "clickToUpload": "Kliknite za nalaganje",
+    "maxSize": "Največ {{size}} MB",
+    "anyFormat": "Katera koli vrsta datoteke",
+    "deleteConfirmTitle": "Izbriši prilogo",
+    "deleteConfirmMessage": "Ali ste prepričani, da želite izbrisati to prilogo? Tega dejanja ni mogoče razveljaviti."
   },
   "feedback": {
     "title": "Send feedback",
@@ -4958,5 +5095,9 @@
   },
   "sidebarDrop": {
     "failed": "Tega elementa ni bilo mogoče posodobiti."
+  },
+  "loading": {
+    "tasks": "Nalaganje nalog…",
+    "subtasks": "Nalaganje podnalog..."
   }
 }

@@ -67,8 +67,9 @@ interface CandidateCardProps {
 }
 
 // Calm by default: the name and one grey line. Lengths and the overdue
-// actions open after a short hover or on keyboard focus (always on touch
-// screens). The delay keeps rows still while the mouse passes over them.
+// actions open after a short hover or on keyboard focus; touch screens have
+// no hover, so a chevron opens them for that one card. The delay keeps rows
+// still while the mouse passes over them.
 const CandidateCard: React.FC<CandidateCardProps> = ({
     task,
     group,
@@ -82,6 +83,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
     onDrop,
 }) => {
     const { t, i18n } = useTranslation();
+    const [optionsOpen, setOptionsOpen] = useState(false);
     const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
         id: `candidate:${task.uid}`,
         data: { type: 'candidate', task, duration },
@@ -179,13 +181,30 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
                             name: task.name,
                         }
                     )}
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-gray-600 hover:bg-blue-600 hover:text-white focus-visible:bg-blue-600 focus-visible:text-white dark:text-gray-300"
+                    className="flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-full text-gray-600 hover:bg-blue-600 hover:text-white focus-visible:bg-blue-600 focus-visible:text-white dark:text-gray-300 sm:h-8 sm:w-8"
                     data-testid={`add-${task.uid}`}
                 >
                     <PlusIcon className="h-4 w-4" />
                 </button>
+                <button
+                    type="button"
+                    onClick={() => setOptionsOpen((open) => !open)}
+                    aria-expanded={optionsOpen}
+                    aria-label={t('dailyPlan.more', 'More options')}
+                    className="flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 [@media(hover:hover)]:hidden"
+                >
+                    <ChevronDownIcon
+                        className={`h-4 w-4 transition-transform ${optionsOpen ? 'rotate-180' : ''}`}
+                    />
+                </button>
             </div>
-            <div className="grid grid-rows-[0fr] transition-[grid-template-rows] delay-100 duration-200 ease-out group-focus-within:grid-rows-[1fr] group-focus-within:delay-0 group-hover:grid-rows-[1fr] group-hover:delay-300 [@media(hover:none)]:grid-rows-[1fr]">
+            <div
+                data-testid={`candidate-options-${task.uid}`}
+                data-open={optionsOpen}
+                className={`grid transition-[grid-template-rows] delay-100 duration-200 ease-out [@media(hover:hover)]:group-focus-within:grid-rows-[1fr] [@media(hover:hover)]:group-focus-within:delay-0 [@media(hover:hover)]:group-hover:grid-rows-[1fr] [@media(hover:hover)]:group-hover:delay-300 ${
+                    optionsOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+                }`}
+            >
                 <div className="min-h-0 overflow-hidden">
                     <div className="flex flex-wrap items-center gap-2 pt-2">
                         <DurationChips

@@ -66,7 +66,7 @@ const InboxItems: React.FC = () => {
     const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
     const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
     const [isInfoExpanded, setIsInfoExpanded] = useState(false);
-    const [inboxListExpanded, setInboxListExpanded] = useState(false);
+    const [inboxListExpanded, setInboxListExpanded] = useState(true);
     const [lastAddedUid, setLastAddedUid] = useState<string | null>(null);
     const [openItemUid, setOpenItemUid] = useState<string | null>(null);
 

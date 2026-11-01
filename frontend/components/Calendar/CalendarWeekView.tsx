@@ -1,5 +1,5 @@
 import { getCurrentLocale } from '../../utils/dateUtils';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     format,
     startOfWeek,
@@ -49,6 +49,8 @@ interface CalendarWeekViewProps {
 }
 
 const WEEK_HOUR_HEIGHT = 72;
+// Without a timed item the week opens on the morning, not on midnight.
+const DEFAULT_OPEN_HOUR = 7;
 
 const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
     currentDate,
@@ -120,6 +122,28 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
         countOutside(events, day, visibleHours)
     );
     const anyEarlier = outsideByDay.some((o) => o.before.length > 0);
+
+    // Open on the earliest timed item of the shown days, so the empty night
+    // hours are not what the week shows first. Runs again when the week
+    // changes or its items first arrive, never while the user scrolls.
+    const timeGridRef = useRef<HTMLDivElement>(null);
+    const weekKey = format(weekStart, 'yyyy-MM-dd');
+    const hasEvents = events.length > 0;
+    useEffect(() => {
+        if (!timeGridRef.current) return;
+        const startHours = events
+            .filter(
+                (event) =>
+                    !event.allDay &&
+                    weekDays.some((day) => coversDay(event, day))
+            )
+            .map((event) => event.start.getHours());
+        const target = startHours.length
+            ? Math.min(...startHours)
+            : DEFAULT_OPEN_HOUR;
+        timeGridRef.current.scrollTop =
+            Math.max(0, target - shownHours.start) * WEEK_HOUR_HEIGHT;
+    }, [weekKey, hasEvents]);
     const anyLater = outsideByDay.some((o) => o.after.length > 0);
 
     const getEventsForTimeSlot = (day: Date, hour: number) =>
@@ -335,7 +359,11 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
             )}
 
             {/* Time slots */}
-            <div className="flex-1 overflow-y-auto">
+            <div
+                ref={timeGridRef}
+                className="flex-1 overflow-y-auto"
+                data-testid="week-time-grid"
+            >
                 {hours.map((hour) => (
                     <div
                         key={hour}

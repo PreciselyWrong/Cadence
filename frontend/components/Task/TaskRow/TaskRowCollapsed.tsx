@@ -691,8 +691,11 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                     )}
                 </div>
 
+                {/* The chips may give way on a narrow row: they clip from
+                    the left so the time at the end stays readable, and the
+                    row never grows wider than the list. */}
                 {isMinimal && (
-                    <div className="flex flex-shrink-0 items-center gap-2 whitespace-nowrap text-xs text-gray-600 dark:text-gray-300">
+                    <div className="flex min-w-0 max-w-[60%] shrink justify-end items-center gap-2 overflow-hidden whitespace-nowrap text-xs text-gray-600 dark:text-gray-300 sm:max-w-none">
                         {rowFields
                             .filter((field) => field.visible)
                             .map((field) => (

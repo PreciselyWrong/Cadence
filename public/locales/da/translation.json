@@ -59,7 +59,13 @@
     "showSearch": "Vis søgning",
     "beta": "beta",
     "comingSoon": "Kommer snart",
-    "due": "Due"
+    "due": "Due",
+    "goal": "Mål",
+    "priority": "Prioritet",
+    "tags": "Tags",
+    "goToToday": "Gå til i dag",
+    "loadMore": "Indlæs flere",
+    "showAll": "Vis alle"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -310,7 +316,8 @@
       "clearDate": "Ryd dato",
       "moveToProject": "Flyt til projekt"
     },
-    "reorderError": "Failed to save task order"
+    "reorderError": "Failed to save task order",
+    "deleteConfirmTitle": "Slet opgave"
   },
   "timeline": {
     "activityTimeline": "Aktivitets Tidslinje",
@@ -1088,7 +1095,11 @@
       "message": "Er du sikker på, at du vil slette målet \"{{title}}\"?"
     },
     "createGoal": "Opret mål",
-    "updateGoal": "Opdater mål"
+    "updateGoal": "Opdater mål",
+    "saveAsTemplate": {
+      "title": "Gem som skabelon",
+      "message": "Gem \"{{name}}\" som skabelon? Dette opretter en skabelon til genbrug baseret på dette projekt."
+    }
   },
   "forms": {
     "title": "Titel",
@@ -1232,7 +1243,8 @@
     "priority": "Prioritet",
     "status": "Status",
     "created_at": "Oprettet Den",
-    "custom": "Brugerdefineret"
+    "custom": "Brugerdefineret",
+    "completed_at": "Afsluttet den"
   },
   "priority": {
     "low": "Lav",
@@ -1373,7 +1385,8 @@
     "failedToDeleteNote": "Kunne ikke slette noten.",
     "failedToDeleteTag": "Kunne ikke slette tagget.",
     "projectStatusUpdateFailed": "Kunne ikke opdatere projektstatus",
-    "failedToSaveTask": "Kunne ikke gemme opgaven."
+    "failedToSaveTask": "Kunne ikke gemme opgaven.",
+    "permissionDenied": "Adgang nægtet"
   },
   "inbox": {
     "title": "Indbakke",
@@ -1677,7 +1690,23 @@
     "reminder": "Påmindelse",
     "reminderPlaceholder": "Vælg dato og tidspunkt for påmindelsen",
     "noReminder": "Ingen påmindelse",
-    "reminderUpdateError": "Påmindelsen kunne ikke opdateres"
+    "reminderUpdateError": "Påmindelsen kunne ikke opdateres",
+    "noArea": "Tildel et område",
+    "dueDateBeforeDeferError": "Forfaldsdatoen kan ikke være før udskydelsesdatoen",
+    "areaUpdated": "Området blev opdateret",
+    "areaUpdateError": "Området kunne ikke opdateres",
+    "areaCleared": "Området blev fjernet",
+    "areaClearError": "Området kunne ikke fjernes",
+    "goalUpdated": "Målet blev opdateret",
+    "goalUpdateError": "Målet kunne ikke opdateres",
+    "goalCleared": "Målet blev fjernet",
+    "goalClearError": "Målet kunne ikke fjernes",
+    "notFound": "Opgaven blev ikke fundet",
+    "notFoundDescription": "Opgaven findes ikke, eller den er blevet slettet.",
+    "hoursAgo": "for {{count}} timer siden",
+    "minutesAgo": "for {{count}} minutter siden",
+    "inMinutes": "om {{count}} minutter",
+    "inHours": "om {{count}} timer"
   },
   "projects": {
     "parentProject": "Overordnet projekt",
@@ -1793,7 +1822,11 @@
     "counts": {
       "active": "{{n}} active",
       "stash": "{{n}} in the stash"
-    }
+    },
+    "savedAsTemplate": "\"{{name}}\" blev gemt som skabelon.",
+    "saveAsTemplateError": "Projektet kunne ikke gemmes som skabelon.",
+    "sortTasks": "Sortér opgaver",
+    "upcomingProjects": "Kommende projekter"
   },
   "projectItem": {
     "edit": "Rediger",
@@ -1814,7 +1847,8 @@
     "moreSharedUsers": "+{{count}} flere brugere",
     "saveAsTemplate": "Gem som skabelon",
     "pinToSidebar": "Fastgør til sidepanelet",
-    "unpinFromSidebar": "Fjern fastgørelse fra sidepanelet"
+    "unpinFromSidebar": "Fjern fastgørelse fra sidepanelet",
+    "changeStatus": "Skift status"
   },
   "areas": {
     "title": "Områder",
@@ -1854,7 +1888,27 @@
       "personal": "Privat",
       "family": "Familie & Socialt",
       "logistics": "Logistik"
-    }
+    },
+    "sort": {
+      "nameAsc": "Navn A til Å",
+      "nameDesc": "Navn Å til A",
+      "projects": "Flest projekter",
+      "goals": "Flest mål",
+      "tasks": "Flest opgaver",
+      "custom": "Brugerdefineret rækkefølge",
+      "label": "Sortér områder"
+    },
+    "reorderError": "Rækkefølgen af områder kunne ikke gemmes",
+    "edit": "Rediger",
+    "delete": "Slet",
+    "tasksInArea": "Opgaver",
+    "noProjects": "Ingen projekter i dette område.",
+    "noTasks": "Ingen opgaver direkte i dette område",
+    "singular": "Område",
+    "projects": "projekter",
+    "goals": "mål",
+    "tasks": "opgaver",
+    "progressSummary": "Områdets fremskridt · {{done}} af {{total}} opgaver udført"
   },
   "notes": {
     "loading": "Indlæser noter...",
@@ -1923,7 +1977,9 @@
       "tags": "Tags",
       "noProject": "No project",
       "more": "{{count}} more"
-    }
+    },
+    "edit": "Rediger",
+    "delete": "Slet"
   },
   "tags": {
     "loading": "Indlæser tags...",
@@ -2002,7 +2058,13 @@
     "weeks": "uger",
     "months": "måneder",
     "advancedHint": "For specifikke ugedage eller en slutdato, åbn den fulde opgave.",
-    "recurring": "Gentagende"
+    "recurring": "Gentagende",
+    "everyNDays": "Hver {{count}}. dag",
+    "everyNWeeks": "Hver {{count}}. uge",
+    "everyNMonths": "Hver {{count}}. måned",
+    "completionBased": "Efter afslutning",
+    "onDay": "På dag",
+    "until": "Indtil"
   },
   "weekdays": {
     "sunday": "Søn",
@@ -2861,7 +2923,8 @@
     "searching": "Søger..."
   },
   "subtasks": {
-    "placeholder": "Tilføj en underopgave..."
+    "placeholder": "Tilføj en underopgave...",
+    "title": "Delopgaver"
   },
   "backup": {
     "title": "Backup & Gendan",
@@ -2923,7 +2986,8 @@
       "email": "E-mail",
       "push": "Push",
       "telegram": "Telegram",
-      "desktop": "Computer"
+      "desktop": "Computer",
+      "apprise": "Apprise"
     },
     "types": {
       "dueTasks": "Forfaldne opgaver",
@@ -3046,7 +3110,31 @@
       "enable": "Stille timer",
       "from": "Fra",
       "to": "Til"
-    }
+    },
+    "apprise": {
+      "saved": "Apprise-server gemt.",
+      "title": "Apprise",
+      "connected": "Sender via {{host}}.",
+      "description": "Send notifikationer gennem din egen Apprise-server til Pushover, ntfy, Discord, Matrix og flere.",
+      "remove": "Fjern",
+      "serverLabel": "Apprise-serveradresse",
+      "keyPlaceholder": "Konfigurationsnøgle",
+      "keyLabel": "Konfigurationsnøgle",
+      "tagsPlaceholder": "Tags (valgfri, f.eks. all)",
+      "tagsLabel": "Tags",
+      "help": "Opret en konfiguration på din Apprise-server, og indsæt nøglen her.",
+      "save": "Gem"
+    },
+    "justNow": "Lige nu",
+    "minutesAgo": "for {{count}} min. siden",
+    "hoursAgo": "for {{count}} t. siden",
+    "daysAgo": "for {{count}} d. siden",
+    "title": "Notifikationer",
+    "markAllRead": "Markér alle som læst",
+    "loading": "Indlæser...",
+    "noNotifications": "Ingen notifikationer endnu",
+    "markAsRead": "Markér som læst",
+    "delete": "Slet"
   },
   "projectStatus": {
     "not_started": "Ikke startet",
@@ -3758,10 +3846,32 @@
     "addTitle": "Add to Inbox, Task, Note or Project",
     "close": "Close",
     "button": "Indfang",
-    "syntaxHint": "#tag  +project  !1 til !3 prioritet  i morgen kl. 15 for en dato"
+    "syntaxHint": "#tag  +project  !1 til !3 prioritet  i morgen kl. 15 for en dato",
+    "slash": {
+      "tag": "Tag",
+      "project": "Projekt",
+      "person": "Person",
+      "area": "Område",
+      "date": "Forfaldsdato",
+      "repeat": "Gentag",
+      "today": "I dag",
+      "tomorrow": "I morgen",
+      "nextMonday": "Næste mandag",
+      "inAWeek": "Om en uge",
+      "everyDay": "Hver dag",
+      "everyWeekday": "Hver hverdag",
+      "everyWeek": "Hver uge",
+      "everyMonth": "Hver måned",
+      "create": "Opret {{token}}"
+    }
   },
   "area": {
-    "loadError": "Kunne ikke indlæse områder"
+    "loadError": "Kunne ikke indlæse områder",
+    "viaProject": "via projekt",
+    "viewArea": "Gå til område",
+    "searchAreas": "Søg i områder…",
+    "clearArea": "Fjern område",
+    "noAreasFound": "Ingen områder fundet"
   },
   "goals": {
     "newGoal": "Nyt mål",
@@ -3813,7 +3923,21 @@
       "placeholder": "Nøgleresultat",
       "progress": "{{done}} af {{total}} færdige"
     },
-    "progressSummary": "Målfremskridt · {{done}} af {{total}} færdige"
+    "progressSummary": "Målfremskridt · {{done}} af {{total}} færdige",
+    "sort": {
+      "titleAsc": "Titel A til Å",
+      "titleDesc": "Titel Å til A",
+      "status": "Status",
+      "horizon": "Horisont",
+      "area": "Område",
+      "projects": "Flest projekter",
+      "tasks": "Flest opgaver",
+      "custom": "Brugerdefineret rækkefølge",
+      "label": "Sortér mål"
+    },
+    "reorderError": "Rækkefølgen af mål kunne ikke gemmes",
+    "noGoalsInArea": "Ingen mål er knyttet til dette område.",
+    "maintenance": "Vedligeholdelse"
   },
   "templates": {
     "new": "Ny skabelon",
@@ -4434,7 +4558,9 @@
   "sortable": {
     "move": "Move",
     "project": "sortable project",
-    "task": "sortable task"
+    "task": "sortable task",
+    "area": "sorterbart område",
+    "goal": "sorterbart mål"
   },
   "groupPage": {
     "title": "Group",
@@ -4471,7 +4597,18 @@
     "previous": "Previous file",
     "next": "Next file",
     "renameError": "Could not save the title",
-    "confirmDelete": "Delete file?"
+    "confirmDelete": "Delete file?",
+    "uploadSuccess": "Filen blev uploadet",
+    "uploadError": "Filen kunne ikke uploades",
+    "deleteSuccess": "Vedhæftningen blev slettet",
+    "deleteError": "Filen kunne ikke slettes",
+    "heading": "Vedhæftninger",
+    "uploading": "Uploader...",
+    "clickToUpload": "Klik for at uploade",
+    "maxSize": "Maks. {{size}} MB",
+    "anyFormat": "Alle filtyper",
+    "deleteConfirmTitle": "Slet vedhæftning",
+    "deleteConfirmMessage": "Er du sikker på, at du vil slette denne vedhæftning? Det kan ikke fortrydes."
   },
   "feedback": {
     "title": "Send feedback",
@@ -4928,5 +5065,9 @@
   },
   "sidebarDrop": {
     "failed": "Elementet kunne ikke opdateres."
+  },
+  "loading": {
+    "tasks": "Indlæser opgaver…",
+    "subtasks": "Indlæser delopgaver..."
   }
 }

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     CheckIcon,
     ExclamationTriangleIcon,
+    PaperClipIcon,
 } from '@heroicons/react/24/outline';
 import { Task } from '../../entities/Task';
 import QuickCaptureInput from '../Inbox/QuickCaptureInput';
@@ -76,6 +77,11 @@ export const TaskEditorBody: React.FC<{ ed: TaskEditor }> = ({ ed }) => {
         run,
         runFields,
     } = ed;
+    // The upload area only takes room once the task has a file or the user
+    // asks to attach one; the card stays mounted to learn the count.
+    const [attachmentsCount, setAttachmentsCount] = useState(0);
+    const [attachOpen, setAttachOpen] = useState(false);
+    const showAttachments = attachOpen || attachmentsCount > 0;
 
     return (
         <>
@@ -268,6 +274,7 @@ export const TaskEditorBody: React.FC<{ ed: TaskEditor }> = ({ ed }) => {
                             title={t('task.subtasks', 'Subtasks')}
                         >
                             <TaskSubtasksCard
+                                showTitle={false}
                                 subtasks={subtasks}
                                 projects={projects}
                                 onSubtaskUpdate={handleSubtaskUpdate}
@@ -281,14 +288,30 @@ export const TaskEditorBody: React.FC<{ ed: TaskEditor }> = ({ ed }) => {
                         </SidePanelSection>
                     )}
 
-                    <SidePanelSection
-                        title={t('task.attachments', 'Attachments')}
+                    <div
+                        hidden={!showAttachments}
+                        data-testid="task-attachments-section"
                     >
-                        <TaskAttachmentsCard
-                            taskUid={task.uid}
-                            showTitle={false}
-                        />
-                    </SidePanelSection>
+                        <SidePanelSection
+                            title={t('task.attachments', 'Attachments')}
+                        >
+                            <TaskAttachmentsCard
+                                taskUid={task.uid}
+                                showTitle={false}
+                                onAttachmentsCountChange={setAttachmentsCount}
+                            />
+                        </SidePanelSection>
+                    </div>
+                    {!showAttachments && !readOnly && (
+                        <button
+                            type="button"
+                            onClick={() => setAttachOpen(true)}
+                            className="inline-flex min-h-[40px] items-center gap-1.5 self-start rounded-lg px-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+                        >
+                            <PaperClipIcon className="h-4 w-4" />
+                            {t('capture.attach', 'Attach files')}
+                        </button>
+                    )}
 
                     <SidePanelSection title={t('task.comments', 'Comments')}>
                         <TaskComments task={task} />

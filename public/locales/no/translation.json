@@ -59,7 +59,13 @@
     "showSearch": "Vis søk",
     "beta": "beta",
     "comingSoon": "Kommer snart",
-    "due": "Due"
+    "due": "Due",
+    "goal": "Mål",
+    "priority": "Prioritet",
+    "tags": "Etiketter",
+    "goToToday": "Gå til i dag",
+    "loadMore": "Last inn flere",
+    "showAll": "Vis alle"
   },
   "sidebar": {
     "dashboard": "Dashbord",
@@ -311,7 +317,8 @@
       "clearDate": "Fjern dato",
       "moveToProject": "Flytt til prosjekt"
     },
-    "reorderError": "Failed to save task order"
+    "reorderError": "Failed to save task order",
+    "deleteConfirmTitle": "Slett oppgave"
   },
   "timeline": {
     "activityTimeline": "Aktivitetslinje",
@@ -1089,7 +1096,11 @@
       "message": "Er du sikker på at du vil slette målet «{{title}}»?"
     },
     "createGoal": "Opprett mål",
-    "updateGoal": "Oppdater mål"
+    "updateGoal": "Oppdater mål",
+    "saveAsTemplate": {
+      "title": "Lagre som mal",
+      "message": "Lagre \"{{name}}\" som mal? Dette oppretter en gjenbrukbar mal basert på dette prosjektet."
+    }
   },
   "forms": {
     "title": "Tittel",
@@ -1233,7 +1244,8 @@
     "priority": "Prioritet",
     "status": "Status",
     "created_at": "Opprettet Den",
-    "custom": "Egendefinert"
+    "custom": "Egendefinert",
+    "completed_at": "Fullført"
   },
   "priority": {
     "low": "Lav",
@@ -1374,7 +1386,8 @@
     "failedToDeleteNote": "Kunne ikke slette notatet.",
     "failedToDeleteTag": "Kunne ikke slette merkelappen.",
     "projectStatusUpdateFailed": "Kunne ikke oppdatere prosjektstatus",
-    "failedToSaveTask": "Kunne ikke lagre oppgaven."
+    "failedToSaveTask": "Kunne ikke lagre oppgaven.",
+    "permissionDenied": "Tilgang nektet"
   },
   "inbox": {
     "title": "Innboks",
@@ -1678,7 +1691,23 @@
     "reminder": "Påminnelse",
     "reminderPlaceholder": "Velg dato og tidspunkt for påminnelsen",
     "noReminder": "Ingen påminnelse",
-    "reminderUpdateError": "Kunne ikke oppdatere påminnelsen"
+    "reminderUpdateError": "Kunne ikke oppdatere påminnelsen",
+    "noArea": "Knytt til et område",
+    "dueDateBeforeDeferError": "Forfallsdatoen kan ikke være før utsettelsesdatoen",
+    "areaUpdated": "Området ble oppdatert",
+    "areaUpdateError": "Kunne ikke oppdatere området",
+    "areaCleared": "Området ble fjernet",
+    "areaClearError": "Kunne ikke fjerne området",
+    "goalUpdated": "Målet ble oppdatert",
+    "goalUpdateError": "Kunne ikke oppdatere målet",
+    "goalCleared": "Målet ble fjernet",
+    "goalClearError": "Kunne ikke fjerne målet",
+    "notFound": "Oppgaven ble ikke funnet",
+    "notFoundDescription": "Oppgaven du leter etter finnes ikke, eller er slettet.",
+    "hoursAgo": "for {{count}} timer siden",
+    "minutesAgo": "for {{count}} minutter siden",
+    "inMinutes": "om {{count}} minutter",
+    "inHours": "om {{count}} timer"
   },
   "projects": {
     "parentProject": "Overordnet prosjekt",
@@ -1794,7 +1823,11 @@
     "counts": {
       "active": "{{n}} active",
       "stash": "{{n}} in the stash"
-    }
+    },
+    "savedAsTemplate": "\"{{name}}\" ble lagret som mal.",
+    "saveAsTemplateError": "Kunne ikke lagre prosjektet som mal.",
+    "sortTasks": "Sorter oppgaver",
+    "upcomingProjects": "Kommende prosjekter"
   },
   "projectItem": {
     "edit": "Rediger",
@@ -1815,7 +1848,8 @@
     "moreSharedUsers": "+{{count}} flere brukere",
     "saveAsTemplate": "Lagre som mal",
     "pinToSidebar": "Fest til sidepanelet",
-    "unpinFromSidebar": "Fjern festing fra sidepanelet"
+    "unpinFromSidebar": "Fjern festing fra sidepanelet",
+    "changeStatus": "Endre status"
   },
   "areas": {
     "title": "Områder",
@@ -1855,7 +1889,27 @@
       "personal": "Privat",
       "family": "Familie og sosialt",
       "logistics": "Logistikk"
-    }
+    },
+    "sort": {
+      "nameAsc": "Navn A til Å",
+      "nameDesc": "Navn Å til A",
+      "projects": "Flest prosjekter",
+      "goals": "Flest mål",
+      "tasks": "Flest oppgaver",
+      "custom": "Egendefinert rekkefølge",
+      "label": "Sorter områder"
+    },
+    "reorderError": "Kunne ikke lagre rekkefølgen av områder",
+    "edit": "Rediger",
+    "delete": "Slett",
+    "tasksInArea": "Oppgaver",
+    "noProjects": "Ingen prosjekter i dette området.",
+    "noTasks": "Ingen oppgaver direkte i dette området",
+    "singular": "Område",
+    "projects": "prosjekter",
+    "goals": "mål",
+    "tasks": "oppgaver",
+    "progressSummary": "Fremdrift for området · {{done}} av {{total}} oppgaver fullført"
   },
   "notes": {
     "loading": "Laster notater...",
@@ -1924,7 +1978,9 @@
       "tags": "Tags",
       "noProject": "No project",
       "more": "{{count}} more"
-    }
+    },
+    "edit": "Rediger",
+    "delete": "Slett"
   },
   "tags": {
     "loading": "Laster etiketter...",
@@ -2003,7 +2059,13 @@
     "weeks": "uker",
     "months": "måneder",
     "advancedHint": "For spesifikke ukedager eller en sluttdato, åpne den fullstendige oppgaven.",
-    "recurring": "Gjentakende"
+    "recurring": "Gjentakende",
+    "everyNDays": "Hver {{count}}. dag",
+    "everyNWeeks": "Hver {{count}}. uke",
+    "everyNMonths": "Hver {{count}}. måned",
+    "completionBased": "Etter fullføring",
+    "onDay": "På dag",
+    "until": "Til"
   },
   "weekdays": {
     "sunday": "Søn",
@@ -2862,7 +2924,8 @@
     "searching": "Søker..."
   },
   "subtasks": {
-    "placeholder": "Legg til en underoppgave..."
+    "placeholder": "Legg til en underoppgave...",
+    "title": "Delesoppgaver"
   },
   "backup": {
     "title": "Sikkerhetskopiering og gjenoppretting",
@@ -2924,7 +2987,8 @@
       "email": "E-post",
       "push": "Push",
       "telegram": "Telegram",
-      "desktop": "Datamaskin"
+      "desktop": "Datamaskin",
+      "apprise": "Apprise"
     },
     "types": {
       "dueTasks": "Forfalte oppgaver",
@@ -3047,7 +3111,31 @@
       "enable": "Stille timer",
       "from": "Fra",
       "to": "Til"
-    }
+    },
+    "apprise": {
+      "saved": "Apprise-server lagret.",
+      "title": "Apprise",
+      "connected": "Sender via {{host}}.",
+      "description": "Send varsler gjennom din egen Apprise-server til Pushover, ntfy, Discord, Matrix og mer.",
+      "remove": "Fjern",
+      "serverLabel": "Apprise-serveradresse",
+      "keyPlaceholder": "Konfigurasjonsnøkkel",
+      "keyLabel": "Konfigurasjonsnøkkel",
+      "tagsPlaceholder": "Etiketter (valgfritt, f.eks. all)",
+      "tagsLabel": "Etiketter",
+      "help": "Opprett en konfigurasjon på Apprise-serveren og lim inn nøkkelen her.",
+      "save": "Lagre"
+    },
+    "justNow": "Akkurat nå",
+    "minutesAgo": "for {{count}} min siden",
+    "hoursAgo": "for {{count}} t siden",
+    "daysAgo": "for {{count}} d siden",
+    "title": "Varsler",
+    "markAllRead": "Merk alle som lest",
+    "loading": "Laster...",
+    "noNotifications": "Ingen varsler ennå",
+    "markAsRead": "Merk som lest",
+    "delete": "Slett"
   },
   "projectStatus": {
     "not_started": "Ikke startet",
@@ -3763,10 +3851,32 @@
     "addTitle": "Add to Inbox, Task, Note or Project",
     "close": "Close",
     "button": "Fang",
-    "syntaxHint": "#tag  +project  !1 til !3 prioritet  i morgen kl. 15 for en dato"
+    "syntaxHint": "#tag  +project  !1 til !3 prioritet  i morgen kl. 15 for en dato",
+    "slash": {
+      "tag": "Etikett",
+      "project": "Prosjekt",
+      "person": "Person",
+      "area": "Område",
+      "date": "Forfallsdato",
+      "repeat": "Gjenta",
+      "today": "I dag",
+      "tomorrow": "I morgen",
+      "nextMonday": "Neste mandag",
+      "inAWeek": "Om en uke",
+      "everyDay": "Hver dag",
+      "everyWeekday": "Hver ukedag",
+      "everyWeek": "Hver uke",
+      "everyMonth": "Hver måned",
+      "create": "Opprett {{token}}"
+    }
   },
   "area": {
-    "loadError": "Kunne ikke laste inn områder"
+    "loadError": "Kunne ikke laste inn områder",
+    "viaProject": "via prosjekt",
+    "viewArea": "Gå til område",
+    "searchAreas": "Søk i områder…",
+    "clearArea": "Fjern område",
+    "noAreasFound": "Fant ingen områder"
   },
   "goals": {
     "newGoal": "Nytt mål",
@@ -3818,7 +3928,21 @@
       "placeholder": "Nøkkelresultat",
       "progress": "{{done}} av {{total}} ferdig"
     },
-    "progressSummary": "Måloppnåelse · {{done}} av {{total}} ferdig"
+    "progressSummary": "Måloppnåelse · {{done}} av {{total}} ferdig",
+    "sort": {
+      "titleAsc": "Tittel A til Å",
+      "titleDesc": "Tittel Å til A",
+      "status": "Status",
+      "horizon": "Horisont",
+      "area": "Område",
+      "projects": "Flest prosjekter",
+      "tasks": "Flest oppgaver",
+      "custom": "Egendefinert rekkefølge",
+      "label": "Sorter mål"
+    },
+    "reorderError": "Kunne ikke lagre rekkefølgen av mål",
+    "noGoalsInArea": "Ingen mål er knyttet til dette området.",
+    "maintenance": "Vedlikehold"
   },
   "templates": {
     "new": "Ny mal",
@@ -4439,7 +4563,9 @@
   "sortable": {
     "move": "Move",
     "project": "sortable project",
-    "task": "sortable task"
+    "task": "sortable task",
+    "area": "sorterbart område",
+    "goal": "sorterbart mål"
   },
   "groupPage": {
     "title": "Group",
@@ -4476,7 +4602,18 @@
     "previous": "Previous file",
     "next": "Next file",
     "renameError": "Could not save the title",
-    "confirmDelete": "Delete file?"
+    "confirmDelete": "Delete file?",
+    "uploadSuccess": "Filen ble lastet opp",
+    "uploadError": "Kunne ikke laste opp filen",
+    "deleteSuccess": "Vedlegget ble slettet",
+    "deleteError": "Kunne ikke slette filen",
+    "heading": "Vedlegg",
+    "uploading": "Laster opp...",
+    "clickToUpload": "Klikk for å laste opp",
+    "maxSize": "Maks {{size}} MB",
+    "anyFormat": "Alle filtyper",
+    "deleteConfirmTitle": "Slett vedlegg",
+    "deleteConfirmMessage": "Er du sikker på at du vil slette dette vedlegget? Dette kan ikke angres."
   },
   "feedback": {
     "title": "Send feedback",
@@ -4933,5 +5070,9 @@
   },
   "sidebarDrop": {
     "failed": "Elementet kunne ikke oppdateres."
+  },
+  "loading": {
+    "tasks": "Laster oppgaver…",
+    "subtasks": "Laster deloppgaver..."
   }
 }

@@ -12,6 +12,8 @@ interface TaskSubtasksCardProps {
     onSubtaskUpdate: (updatedSubtask: Task) => Promise<void>;
     onSubtaskDelete: (taskUid: string) => void;
     onQuickAdd: (name: string) => void;
+    // The side panel names the section itself.
+    showTitle?: boolean;
 }
 
 const TaskSubtasksCard: React.FC<TaskSubtasksCardProps> = ({
@@ -20,6 +22,7 @@ const TaskSubtasksCard: React.FC<TaskSubtasksCardProps> = ({
     onSubtaskUpdate,
     onSubtaskDelete,
     onQuickAdd,
+    showTitle = true,
 }) => {
     const [newSubtaskName, setNewSubtaskName] = useState('');
     const { t } = useTranslation();
@@ -34,14 +37,16 @@ const TaskSubtasksCard: React.FC<TaskSubtasksCardProps> = ({
 
     return (
         <div>
-            <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
-                {t('subtasks.title', 'Subtasks')}
-                {subtasks.length > 0 && (
-                    <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
-                        ({subtasks.length})
-                    </span>
-                )}
-            </h3>
+            {showTitle && (
+                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
+                    {t('subtasks.title', 'Subtasks')}
+                    {subtasks.length > 0 && (
+                        <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
+                            ({subtasks.length})
+                        </span>
+                    )}
+                </h3>
+            )}
 
             {subtasks.length > 0 && (
                 <div className={`mb-1 ${TASK_SHEET_CLASS}`}>

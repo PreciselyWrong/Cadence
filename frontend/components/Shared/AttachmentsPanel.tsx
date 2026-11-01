@@ -117,15 +117,12 @@ const AttachmentsPanel: React.FC<AttachmentsPanelProps> = ({
             setAttachments(updatedAttachments);
             onAttachmentsCountChange?.(updatedAttachments.length);
             showSuccessToast(
-                t(
-                    'task.attachments.uploadSuccess',
-                    'File uploaded successfully'
-                )
+                t('attachments.uploadSuccess', 'File uploaded successfully')
             );
         } catch (error: any) {
             showErrorToast(
                 error.message ||
-                    t('task.attachments.uploadError', 'Failed to upload file')
+                    t('attachments.uploadError', 'Failed to upload file')
             );
         } finally {
             setUploading(false);
@@ -152,7 +149,7 @@ const AttachmentsPanel: React.FC<AttachmentsPanelProps> = ({
             onAttachmentsCountChange?.(updatedAttachments.length);
             showSuccessToast(
                 t(
-                    'task.attachments.deleteSuccess',
+                    'attachments.deleteSuccess',
                     'Attachment deleted successfully'
                 )
             );
@@ -162,10 +159,7 @@ const AttachmentsPanel: React.FC<AttachmentsPanelProps> = ({
         } catch (error: any) {
             showErrorToast(
                 error.message ||
-                    t(
-                        'task.attachments.deleteError',
-                        'Failed to delete attachment'
-                    )
+                    t('attachments.deleteError', 'Failed to delete attachment')
             );
         } finally {
             setIsConfirmDialogOpen(false);
@@ -189,7 +183,7 @@ const AttachmentsPanel: React.FC<AttachmentsPanelProps> = ({
                 {showTitle && (
                     <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
                         <PaperClipIcon className="h-4 w-4 mr-2" />
-                        {t('task.attachments.title', 'Attachments')}
+                        {t('attachments.heading', 'Attachments')}
                     </h4>
                 )}
                 <div className="rounded-lg shadow-sm bg-white dark:bg-gray-900 border-2 border-gray-50 dark:border-gray-800 p-6">
@@ -206,7 +200,7 @@ const AttachmentsPanel: React.FC<AttachmentsPanelProps> = ({
             {showTitle && (
                 <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
                     <PaperClipIcon className="h-4 w-4 mr-2" />
-                    {t('task.attachments.title', 'Attachments')} (
+                    {t('attachments.heading', 'Attachments')} (
                     {attachments.length})
                 </h4>
             )}
@@ -237,24 +231,21 @@ const AttachmentsPanel: React.FC<AttachmentsPanelProps> = ({
                         <CloudArrowUpIcon className="h-12 w-12 text-gray-500 dark:text-gray-400 mb-2" />
                         <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
                             {uploading
-                                ? t(
-                                      'task.attachments.uploading',
-                                      'Uploading...'
-                                  )
+                                ? t('attachments.uploading', 'Uploading...')
                                 : t(
-                                      'task.attachments.clickToUpload',
+                                      'attachments.clickToUpload',
                                       'Click to upload'
                                   )}
                         </p>
                     </div>
                     <div className="p-4 flex-1 flex flex-col justify-center">
                         <p className="text-xs text-gray-600 dark:text-gray-300 text-center">
-                            {t('task.attachments.maxSize', 'Max {{size}}MB', {
+                            {t('attachments.maxSize', 'Max {{size}}MB', {
                                 size: maxSizeMB,
                             })}
                         </p>
                         <p className="text-xs text-gray-600 dark:text-gray-300 text-center mt-1">
-                            {t('task.attachments.anyFormat', 'Any file type')}
+                            {t('attachments.anyFormat', 'Any file type')}
                         </p>
                     </div>
                 </div>
@@ -320,11 +311,11 @@ const AttachmentsPanel: React.FC<AttachmentsPanelProps> = ({
             {isConfirmDialogOpen && attachmentToDelete && (
                 <ConfirmDialog
                     title={t(
-                        'task.attachments.deleteConfirmTitle',
+                        'attachments.deleteConfirmTitle',
                         'Delete Attachment'
                     )}
                     message={t(
-                        'task.attachments.deleteConfirmMessage',
+                        'attachments.deleteConfirmMessage',
                         'Are you sure you want to delete this attachment? This action cannot be undone.'
                     )}
                     onConfirm={handleDeleteConfirm}

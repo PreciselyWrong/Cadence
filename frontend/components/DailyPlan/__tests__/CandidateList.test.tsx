@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import CandidateList from '../CandidateList';
@@ -142,5 +142,28 @@ describe('CandidateList', () => {
             screen.getByRole('button', { name: 'Renew insurance' })
         );
         expect(useTaskPanel.getState().uid).toBe('t-late');
+    });
+
+    // Touch screens have no hover: lengths and reschedule actions open on
+    // demand, one card at a time, instead of on every card.
+    it('keeps a card folded until its options are opened', () => {
+        renderList();
+        const card = screen.getByTestId('candidate-t-late');
+        const toggle = within(card).getByRole('button', {
+            name: 'More options',
+        });
+        const options = within(card).getByTestId('candidate-options-t-late');
+
+        expect(toggle).toHaveAttribute('aria-expanded', 'false');
+        expect(options).toHaveAttribute('data-open', 'false');
+
+        fireEvent.click(toggle);
+
+        expect(toggle).toHaveAttribute('aria-expanded', 'true');
+        expect(options).toHaveAttribute('data-open', 'true');
+        expect(screen.getByTestId('candidate-options-t-today')).toHaveAttribute(
+            'data-open',
+            'false'
+        );
     });
 });

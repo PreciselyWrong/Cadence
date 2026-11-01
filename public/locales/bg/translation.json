@@ -59,7 +59,13 @@
     "showSearch": "Покажи търсенето",
     "beta": "бета",
     "comingSoon": "Очаквайте скоро",
-    "due": "Due"
+    "due": "Due",
+    "goal": "Цел",
+    "priority": "Приоритет",
+    "tags": "Етикети",
+    "goToToday": "Към днес",
+    "loadMore": "Зареди още",
+    "showAll": "Покажи всички"
   },
   "sidebar": {
     "dashboard": "Табло",
@@ -310,7 +316,8 @@
       "clearDate": "Изчистване на датата",
       "moveToProject": "Преместване в проект"
     },
-    "reorderError": "Failed to save task order"
+    "reorderError": "Failed to save task order",
+    "deleteConfirmTitle": "Изтрий задача"
   },
   "timeline": {
     "activityTimeline": "Хронология на активността",
@@ -1088,7 +1095,11 @@
       "message": "Сигурни ли сте, че искате да изтриете целта „{{title}}“?"
     },
     "createGoal": "Създай цел",
-    "updateGoal": "Обнови целта"
+    "updateGoal": "Обнови целта",
+    "saveAsTemplate": {
+      "title": "Запази като шаблон",
+      "message": "Да се запази ли \"{{name}}\" като шаблон? Това ще създаде шаблон за многократна употреба на база този проект."
+    }
   },
   "forms": {
     "title": "Заглавие",
@@ -1232,7 +1243,8 @@
     "priority": "Приоритет",
     "status": "Статус",
     "created_at": "Създадено на",
-    "custom": "Персонализиран"
+    "custom": "Персонализиран",
+    "completed_at": "Завършена на"
   },
   "priority": {
     "low": "Нисък",
@@ -1373,7 +1385,8 @@
     "failedToDeleteNote": "Неуспешно изтриване на бележката.",
     "failedToDeleteTag": "Неуспешно изтриване на етикета.",
     "projectStatusUpdateFailed": "Неуспешна промяна на статуса на проекта",
-    "failedToSaveTask": "Задачата не можа да се запази."
+    "failedToSaveTask": "Задачата не можа да се запази.",
+    "permissionDenied": "Достъпът е отказан"
   },
   "inbox": {
     "title": "Входяща поща",
@@ -1677,7 +1690,23 @@
     "reminder": "Напомняне",
     "reminderPlaceholder": "Изберете дата и час на напомнянето",
     "noReminder": "Няма напомняне",
-    "reminderUpdateError": "Напомнянето не можа да се обнови"
+    "reminderUpdateError": "Напомнянето не можа да се обнови",
+    "noArea": "Присвои към област",
+    "dueDateBeforeDeferError": "Крайният срок не може да е преди датата за отлагане",
+    "areaUpdated": "Областта е обновена успешно",
+    "areaUpdateError": "Областта не можа да се обнови",
+    "areaCleared": "Областта е премахната успешно",
+    "areaClearError": "Областта не можа да се премахне",
+    "goalUpdated": "Целта е обновена",
+    "goalUpdateError": "Целта не можа да се обнови",
+    "goalCleared": "Целта е премахната",
+    "goalClearError": "Целта не можа да се премахне",
+    "notFound": "Задачата не е намерена",
+    "notFoundDescription": "Задачата, която търсите, не съществува или е изтрита.",
+    "hoursAgo": "преди {{count}} часа",
+    "minutesAgo": "преди {{count}} минути",
+    "inMinutes": "след {{count}} минути",
+    "inHours": "след {{count}} часа"
   },
   "projects": {
     "parentProject": "Родителски проект",
@@ -1793,7 +1822,11 @@
     "counts": {
       "active": "{{n}} active",
       "stash": "{{n}} in the stash"
-    }
+    },
+    "savedAsTemplate": "\"{{name}}\" е запазен като шаблон.",
+    "saveAsTemplateError": "Проектът не можа да се запази като шаблон.",
+    "sortTasks": "Сортирай задачите",
+    "upcomingProjects": "Предстоящи проекти"
   },
   "projectItem": {
     "edit": "Редактиране",
@@ -1814,7 +1847,8 @@
     "moreSharedUsers": "+{{count}} повече потребители",
     "saveAsTemplate": "Запази като шаблон",
     "pinToSidebar": "Закрепи в страничната лента",
-    "unpinFromSidebar": "Премахни от страничната лента"
+    "unpinFromSidebar": "Премахни от страничната лента",
+    "changeStatus": "Промени статуса"
   },
   "areas": {
     "title": "Области",
@@ -1854,7 +1888,27 @@
       "personal": "Лични",
       "family": "Семейство и общност",
       "logistics": "Логистика"
-    }
+    },
+    "sort": {
+      "nameAsc": "Име от А до Я",
+      "nameDesc": "Име от Я до А",
+      "projects": "Най-много проекти",
+      "goals": "Най-много цели",
+      "tasks": "Най-много задачи",
+      "custom": "Ръчен ред",
+      "label": "Сортирай областите"
+    },
+    "reorderError": "Редът на областите не можа да се запази",
+    "edit": "Редактирай",
+    "delete": "Изтрий",
+    "tasksInArea": "Задачи",
+    "noProjects": "Няма проекти в тази област.",
+    "noTasks": "Няма задачи директно в тази област",
+    "singular": "Област",
+    "projects": "проекта",
+    "goals": "цели",
+    "tasks": "задачи",
+    "progressSummary": "Напредък на областта · {{done}} от {{total}} задачи завършени"
   },
   "notes": {
     "loading": "Зареждане на бележки...",
@@ -1923,7 +1977,9 @@
       "tags": "Tags",
       "noProject": "No project",
       "more": "{{count}} more"
-    }
+    },
+    "edit": "Редактирай",
+    "delete": "Изтрий"
   },
   "tags": {
     "loading": "Зареждане на тагове...",
@@ -2002,7 +2058,13 @@
     "weeks": "седмици",
     "months": "месеци",
     "advancedHint": "За конкретни дни от седмицата или крайна дата, отвори пълната задача.",
-    "recurring": "Повтаряща се"
+    "recurring": "Повтаряща се",
+    "everyNDays": "На всеки {{count}} дни",
+    "everyNWeeks": "На всеки {{count}} седмици",
+    "everyNMonths": "На всеки {{count}} месеца",
+    "completionBased": "След завършване",
+    "onDay": "На ден",
+    "until": "До"
   },
   "weekdays": {
     "sunday": "Нед",
@@ -2861,7 +2923,8 @@
     "searching": "Търсене..."
   },
   "subtasks": {
-    "placeholder": "Добавете подзадача..."
+    "placeholder": "Добавете подзадача...",
+    "title": "Подзадачи"
   },
   "backup": {
     "title": "Резервно копие и възстановяване",
@@ -2923,7 +2986,8 @@
       "email": "Имейл",
       "push": "Push",
       "telegram": "Telegram",
-      "desktop": "Компютър"
+      "desktop": "Компютър",
+      "apprise": "Apprise"
     },
     "types": {
       "dueTasks": "Задължителни задачи",
@@ -3046,7 +3110,31 @@
       "enable": "Тихи часове",
       "from": "От",
       "to": "До"
-    }
+    },
+    "apprise": {
+      "saved": "Сървърът на Apprise е запазен.",
+      "title": "Apprise",
+      "connected": "Изпращане през {{host}}.",
+      "description": "Изпращайте известия през собствен сървър на Apprise към Pushover, ntfy, Discord, Matrix и други.",
+      "remove": "Премахни",
+      "serverLabel": "Адрес на сървъра на Apprise",
+      "keyPlaceholder": "Ключ на конфигурацията",
+      "keyLabel": "Ключ на конфигурацията",
+      "tagsPlaceholder": "Етикети (по избор, напр. all)",
+      "tagsLabel": "Етикети",
+      "help": "Създайте конфигурация във вашия сървър на Apprise и поставете нейния ключ тук.",
+      "save": "Запази"
+    },
+    "justNow": "Точно сега",
+    "minutesAgo": "преди {{count}} мин.",
+    "hoursAgo": "преди {{count}} ч.",
+    "daysAgo": "преди {{count}} д.",
+    "title": "Известия",
+    "markAllRead": "Маркирай всички като прочетени",
+    "loading": "Зареждане...",
+    "noNotifications": "Още няма известия",
+    "markAsRead": "Маркирай като прочетено",
+    "delete": "Изтрий"
   },
   "projectStatus": {
     "not_started": "Не е започнато",
@@ -3758,10 +3846,32 @@
     "addTitle": "Add to Inbox, Task, Note or Project",
     "close": "Close",
     "button": "Запис",
-    "syntaxHint": "#tag  +project  !1 до !3 приоритет  утре 15:00 за дата"
+    "syntaxHint": "#tag  +project  !1 до !3 приоритет  утре 15:00 за дата",
+    "slash": {
+      "tag": "Етикет",
+      "project": "Проект",
+      "person": "Човек",
+      "area": "Област",
+      "date": "Краен срок",
+      "repeat": "Повторение",
+      "today": "Днес",
+      "tomorrow": "Утре",
+      "nextMonday": "Следващият понеделник",
+      "inAWeek": "След седмица",
+      "everyDay": "Всеки ден",
+      "everyWeekday": "Всеки работен ден",
+      "everyWeek": "Всяка седмица",
+      "everyMonth": "Всеки месец",
+      "create": "Създай {{token}}"
+    }
   },
   "area": {
-    "loadError": "Неуспешно зареждане на областите"
+    "loadError": "Неуспешно зареждане на областите",
+    "viaProject": "чрез проект",
+    "viewArea": "Към областта",
+    "searchAreas": "Търси области…",
+    "clearArea": "Премахни областта",
+    "noAreasFound": "Няма намерени области"
   },
   "goals": {
     "newGoal": "Нова цел",
@@ -3813,7 +3923,21 @@
       "placeholder": "Ключов резултат",
       "progress": "{{done}} от {{total}} готови"
     },
-    "progressSummary": "Напредък на целта · {{done}} от {{total}} готови"
+    "progressSummary": "Напредък на целта · {{done}} от {{total}} готови",
+    "sort": {
+      "titleAsc": "Заглавие от А до Я",
+      "titleDesc": "Заглавие от Я до А",
+      "status": "Статус",
+      "horizon": "Хоризонт",
+      "area": "Област",
+      "projects": "Най-много проекти",
+      "tasks": "Най-много задачи",
+      "custom": "Ръчен ред",
+      "label": "Сортирай целите"
+    },
+    "reorderError": "Редът на целите не можа да се запази",
+    "noGoalsInArea": "Няма цели, свързани с тази област.",
+    "maintenance": "Поддържане"
   },
   "templates": {
     "new": "Нов шаблон",
@@ -4434,7 +4558,9 @@
   "sortable": {
     "move": "Move",
     "project": "sortable project",
-    "task": "sortable task"
+    "task": "sortable task",
+    "area": "сортируема област",
+    "goal": "сортируема цел"
   },
   "groupPage": {
     "title": "Group",
@@ -4471,7 +4597,18 @@
     "previous": "Previous file",
     "next": "Next file",
     "renameError": "Could not save the title",
-    "confirmDelete": "Delete file?"
+    "confirmDelete": "Delete file?",
+    "uploadSuccess": "Файлът е качен успешно",
+    "uploadError": "Файлът не можа да се качи",
+    "deleteSuccess": "Прикачването е изтрито успешно",
+    "deleteError": "Файлът не можа да се изтрие",
+    "heading": "Прикачени файлове",
+    "uploading": "Качва се...",
+    "clickToUpload": "Щракнете за качване",
+    "maxSize": "Макс. {{size}} MB",
+    "anyFormat": "Всеки тип файл",
+    "deleteConfirmTitle": "Изтрий прикачения файл",
+    "deleteConfirmMessage": "Сигурни ли сте, че искате да изтриете този прикачен файл? Действието не може да бъде отменено."
   },
   "feedback": {
     "title": "Send feedback",
@@ -4928,5 +5065,9 @@
   },
   "sidebarDrop": {
     "failed": "Неуспешно обновяване на този елемент."
+  },
+  "loading": {
+    "tasks": "Задачите се зареждат…",
+    "subtasks": "Подзадачите се зареждат..."
   }
 }

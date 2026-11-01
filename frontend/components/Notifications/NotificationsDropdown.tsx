@@ -318,12 +318,12 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
         <div className="relative" ref={dropdownRef}>
             <button
                 onClick={handleToggle}
-                className="relative flex items-center "
+                className="relative flex h-[44px] w-[44px] items-center justify-center rounded-full hover:bg-gray-200/60 sm:h-10 sm:w-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:hover:bg-gray-800"
                 aria-label={t('profile.notifications')}
             >
                 <BellIcon className="h-6 w-6 text-gray-700 dark:text-gray-300" />
                 {unreadCount > 0 && (
-                    <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[12px] rounded-full h-4 min-w-4 px-1 flex items-center justify-center font-medium">
+                    <span className="absolute top-0.5 right-0.5 bg-red-500 text-white text-[12px] rounded-full h-4 min-w-4 px-1 flex items-center justify-center font-medium">
                         {unreadCount > 99 ? '99+' : unreadCount}
                     </span>
                 )}

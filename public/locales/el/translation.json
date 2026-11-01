@@ -59,7 +59,13 @@
     "showSearch": "Εμφάνιση αναζήτησης",
     "beta": "beta",
     "comingSoon": "Έρχεται σύντομα",
-    "due": "Due"
+    "due": "Due",
+    "goal": "Στόχος",
+    "priority": "Προτεραιότητα",
+    "tags": "Ετικέτες",
+    "goToToday": "Μετάβαση στη σημερινή",
+    "loadMore": "Φόρτωση περισσότερων",
+    "showAll": "Εμφάνιση όλων"
   },
   "sidebar": {
     "dashboard": "Πίνακας Ελέγχου",
@@ -915,7 +921,8 @@
     "failedToDeleteNote": "Η διαγραφή της σημείωσης απέτυχε.",
     "failedToDeleteTag": "Η διαγραφή της ετικέτας απέτυχε.",
     "projectStatusUpdateFailed": "Αποτυχία ενημέρωσης κατάστασης έργου",
-    "failedToSaveTask": "Αποτυχία αποθήκευσης εργασίας."
+    "failedToSaveTask": "Αποτυχία αποθήκευσης εργασίας.",
+    "permissionDenied": "Δεν επιτρέπεται η πρόσβαση"
   },
   "dropdown": {
     "createNew": "Δημιουργία Νέου",
@@ -1065,7 +1072,8 @@
       "clearDate": "Εκκαθάριση ημερομηνίας",
       "moveToProject": "Μετακίνηση σε έργο"
     },
-    "reorderError": "Failed to save task order"
+    "reorderError": "Failed to save task order",
+    "deleteConfirmTitle": "Διαγραφή εργασίας"
   },
   "timeline": {
     "activityTimeline": "Χρονοδιάγραμμα Δραστηριότητας",
@@ -1225,7 +1233,11 @@
     "counts": {
       "active": "{{n}} active",
       "stash": "{{n}} in the stash"
-    }
+    },
+    "savedAsTemplate": "Το «{{name}}» αποθηκεύτηκε ως πρότυπο.",
+    "saveAsTemplateError": "Αποτυχία αποθήκευσης του έργου ως πρότυπο.",
+    "sortTasks": "Ταξινόμηση εργασιών",
+    "upcomingProjects": "Επερχόμενα έργα"
   },
   "notes": {
     "loading": "Φόρτωση σημειώσεων...",
@@ -1294,7 +1306,9 @@
       "tags": "Tags",
       "noProject": "No project",
       "more": "{{count}} more"
-    }
+    },
+    "edit": "Επεξεργασία",
+    "delete": "Διαγραφή"
   },
   "projectItem": {
     "edit": "Επεξεργασία",
@@ -1315,7 +1329,8 @@
     "moreSharedUsers": "+{{count}} περισσότεροι χρήστες",
     "saveAsTemplate": "Αποθήκευση ως Πρότυπο",
     "pinToSidebar": "Καρφίτσωμα στην πλαϊνή μπάρα",
-    "unpinFromSidebar": "Αφαίρεση από την πλαϊνή μπάρα"
+    "unpinFromSidebar": "Αφαίρεση από την πλαϊνή μπάρα",
+    "changeStatus": "Αλλαγή κατάστασης"
   },
   "sort": {
     "due_date": "Ημερομηνία Λήξης",
@@ -1323,7 +1338,8 @@
     "priority": "Προτεραιότητα",
     "status": "Κατάσταση",
     "created_at": "Ημερομηνία Δημιουργίας",
-    "custom": "Προσαρμοσμένη"
+    "custom": "Προσαρμοσμένη",
+    "completed_at": "Ολοκληρώθηκε στις"
   },
   "productivity": {
     "stalledProjects": "Σταματημένα Έργα",
@@ -1392,7 +1408,11 @@
       "message": "Θέλετε σίγουρα να διαγράψετε τον στόχο «{{title}}»;"
     },
     "createGoal": "Δημιουργία στόχου",
-    "updateGoal": "Ενημέρωση στόχου"
+    "updateGoal": "Ενημέρωση στόχου",
+    "saveAsTemplate": {
+      "title": "Αποθήκευση ως πρότυπο",
+      "message": "Να αποθηκευτεί το «{{name}}» ως πρότυπο; Θα δημιουργηθεί ένα πρότυπο για επαναχρησιμοποίηση βάσει αυτού του έργου."
+    }
   },
   "forms": {
     "title": "Τίτλος",
@@ -1652,7 +1672,23 @@
     "reminder": "Υπενθύμιση",
     "reminderPlaceholder": "Επιλέξτε ημερομηνία και ώρα υπενθύμισης",
     "noReminder": "Καμία υπενθύμιση",
-    "reminderUpdateError": "Αποτυχία ενημέρωσης της υπενθύμισης"
+    "reminderUpdateError": "Αποτυχία ενημέρωσης της υπενθύμισης",
+    "noArea": "Ανάθεση σε τομέα",
+    "dueDateBeforeDeferError": "Η ημερομηνία λήξης δεν μπορεί να είναι πριν από την ημερομηνία αναβολής",
+    "areaUpdated": "Ο τομέας ενημερώθηκε",
+    "areaUpdateError": "Αποτυχία ενημέρωσης τομέα",
+    "areaCleared": "Ο τομέας αφαιρέθηκε",
+    "areaClearError": "Αποτυχία αφαίρεσης τομέα",
+    "goalUpdated": "Ο στόχος ενημερώθηκε",
+    "goalUpdateError": "Αποτυχία ενημέρωσης στόχου",
+    "goalCleared": "Ο στόχος αφαιρέθηκε",
+    "goalClearError": "Αποτυχία αφαίρεσης στόχου",
+    "notFound": "Η εργασία δεν βρέθηκε",
+    "notFoundDescription": "Η εργασία που αναζητάτε δεν υπάρχει ή έχει διαγραφεί.",
+    "hoursAgo": "πριν από {{count}} ώρες",
+    "minutesAgo": "πριν από {{count}} λεπτά",
+    "inMinutes": "σε {{count}} λεπτά",
+    "inHours": "σε {{count}} ώρες"
   },
   "dateFormats": {
     "long": "EEEE, d MMMM yyyy",
@@ -1830,7 +1866,27 @@
       "personal": "Προσωπικά",
       "family": "Οικογένεια & Κοινωνία",
       "logistics": "Εφοδιαστική"
-    }
+    },
+    "sort": {
+      "nameAsc": "Όνομα Α έως Ω",
+      "nameDesc": "Όνομα Ω έως Α",
+      "projects": "Περισσότερα έργα",
+      "goals": "Περισσότεροι στόχοι",
+      "tasks": "Περισσότερες εργασίες",
+      "custom": "Προσαρμοσμένη σειρά",
+      "label": "Ταξινόμηση τομέων"
+    },
+    "reorderError": "Αποτυχία αποθήκευσης της σειράς των τομέων",
+    "edit": "Επεξεργασία",
+    "delete": "Διαγραφή",
+    "tasksInArea": "Εργασίες",
+    "noProjects": "Δεν υπάρχουν έργα σε αυτόν τον τομέα.",
+    "noTasks": "Δεν υπάρχουν εργασίες απευθείας σε αυτόν τον τομέα",
+    "singular": "Τομέας",
+    "projects": "έργα",
+    "goals": "στόχοι",
+    "tasks": "εργασίες",
+    "progressSummary": "Πρόοδος τομέα · {{done}} από {{total}} εργασίες ολοκληρωμένες"
   },
   "tags": {
     "loading": "Φόρτωση ετικετών...",
@@ -1918,7 +1974,13 @@
     "weeks": "εβδομάδες",
     "months": "μήνες",
     "advancedHint": "Για συγκεκριμένες ημέρες της εβδομάδας ή μια ημερομηνία λήξης, άνοιξε την πλήρη εργασία.",
-    "recurring": "Επαναλαμβανόμενη"
+    "recurring": "Επαναλαμβανόμενη",
+    "everyNDays": "Κάθε {{count}} ημέρες",
+    "everyNWeeks": "Κάθε {{count}} εβδομάδες",
+    "everyNMonths": "Κάθε {{count}} μήνες",
+    "completionBased": "Μετά την ολοκλήρωση",
+    "onDay": "Την ημέρα",
+    "until": "Έως"
   },
   "weekdays": {
     "sunday": "Κυρ",
@@ -2862,7 +2924,8 @@
     "searching": "Αναζήτηση..."
   },
   "subtasks": {
-    "placeholder": "Προσθέστε μια υποεργασία..."
+    "placeholder": "Προσθέστε μια υποεργασία...",
+    "title": "Υποεργασίες"
   },
   "backup": {
     "title": "Αντίγραφα ασφαλείας & Επαναφορά",
@@ -2924,7 +2987,8 @@
       "email": "Email",
       "push": "Push",
       "telegram": "Telegram",
-      "desktop": "Υπολογιστής"
+      "desktop": "Υπολογιστής",
+      "apprise": "Apprise"
     },
     "types": {
       "dueTasks": "Εργασίες που λήγουν",
@@ -3047,7 +3111,31 @@
       "enable": "Ώρες ησυχίας",
       "from": "Από",
       "to": "Έως"
-    }
+    },
+    "apprise": {
+      "saved": "Ο διακομιστής Apprise αποθηκεύτηκε.",
+      "title": "Apprise",
+      "connected": "Αποστολή μέσω {{host}}.",
+      "description": "Στείλτε ειδοποιήσεις μέσω του δικού σας διακομιστή Apprise σε Pushover, ntfy, Discord, Matrix και άλλα.",
+      "remove": "Αφαίρεση",
+      "serverLabel": "Διεύθυνση διακομιστή Apprise",
+      "keyPlaceholder": "Κλειδί ρύθμισης",
+      "keyLabel": "Κλειδί ρύθμισης",
+      "tagsPlaceholder": "Ετικέτες (προαιρετικό, π.χ. all)",
+      "tagsLabel": "Ετικέτες",
+      "help": "Δημιουργήστε μια ρύθμιση στον διακομιστή σας Apprise και επικολλήστε εδώ το κλειδί της.",
+      "save": "Αποθήκευση"
+    },
+    "justNow": "Μόλις τώρα",
+    "minutesAgo": "πριν από {{count}} λεπτ.",
+    "hoursAgo": "πριν από {{count}} ώρ.",
+    "daysAgo": "πριν από {{count}} ημ.",
+    "title": "Ειδοποιήσεις",
+    "markAllRead": "Σήμανση όλων ως αναγνωσμένων",
+    "loading": "Φόρτωση...",
+    "noNotifications": "Δεν υπάρχουν ακόμη ειδοποιήσεις",
+    "markAsRead": "Σήμανση ως αναγνωσμένης",
+    "delete": "Διαγραφή"
   },
   "projectStatus": {
     "not_started": "Δεν έχει ξεκινήσει",
@@ -3759,10 +3847,32 @@
     "addTitle": "Add to Inbox, Task, Note or Project",
     "close": "Close",
     "button": "Καταγραφή",
-    "syntaxHint": "#tag  +project  !1 έως !3 προτεραιότητα  αύριο 15:00 για ημερομηνία"
+    "syntaxHint": "#tag  +project  !1 έως !3 προτεραιότητα  αύριο 15:00 για ημερομηνία",
+    "slash": {
+      "tag": "Ετικέτα",
+      "project": "Έργο",
+      "person": "Άτομο",
+      "area": "Τομέας",
+      "date": "Ημερομηνία λήξης",
+      "repeat": "Επανάληψη",
+      "today": "Σήμερα",
+      "tomorrow": "Αύριο",
+      "nextMonday": "Την επόμενη Δευτέρα",
+      "inAWeek": "Σε μία εβδομάδα",
+      "everyDay": "Κάθε μέρα",
+      "everyWeekday": "Κάθε εργάσιμη",
+      "everyWeek": "Κάθε εβδομάδα",
+      "everyMonth": "Κάθε μήνα",
+      "create": "Δημιουργία {{token}}"
+    }
   },
   "area": {
-    "loadError": "Δεν ήταν δυνατή η φόρτωση των περιοχών"
+    "loadError": "Δεν ήταν δυνατή η φόρτωση των περιοχών",
+    "viaProject": "μέσω έργου",
+    "viewArea": "Μετάβαση στον τομέα",
+    "searchAreas": "Αναζήτηση τομέων…",
+    "clearArea": "Αφαίρεση τομέα",
+    "noAreasFound": "Δεν βρέθηκαν τομείς"
   },
   "goals": {
     "newGoal": "Νέος στόχος",
@@ -3814,7 +3924,21 @@
       "placeholder": "Βασικό αποτέλεσμα",
       "progress": "{{done}} από {{total}} ολοκληρωμένα"
     },
-    "progressSummary": "Πρόοδος στόχου · {{done}} από {{total}} ολοκληρωμένα"
+    "progressSummary": "Πρόοδος στόχου · {{done}} από {{total}} ολοκληρωμένα",
+    "sort": {
+      "titleAsc": "Τίτλος Α έως Ω",
+      "titleDesc": "Τίτλος Ω έως Α",
+      "status": "Κατάσταση",
+      "horizon": "Ορίζοντας",
+      "area": "Τομέας",
+      "projects": "Περισσότερα έργα",
+      "tasks": "Περισσότερες εργασίες",
+      "custom": "Προσαρμοσμένη σειρά",
+      "label": "Ταξινόμηση στόχων"
+    },
+    "reorderError": "Αποτυχία αποθήκευσης της σειράς των στόχων",
+    "noGoalsInArea": "Δεν υπάρχουν στόχοι συνδεδεμένοι με αυτόν τον τομέα.",
+    "maintenance": "Συντήρηση"
   },
   "templates": {
     "new": "Νέο πρότυπο",
@@ -4435,7 +4559,9 @@
   "sortable": {
     "move": "Move",
     "project": "sortable project",
-    "task": "sortable task"
+    "task": "sortable task",
+    "area": "τομέας για ταξινόμηση",
+    "goal": "στόχος για ταξινόμηση"
   },
   "groupPage": {
     "title": "Group",
@@ -4472,7 +4598,18 @@
     "previous": "Previous file",
     "next": "Next file",
     "renameError": "Could not save the title",
-    "confirmDelete": "Delete file?"
+    "confirmDelete": "Delete file?",
+    "uploadSuccess": "Το αρχείο ανέβηκε με επιτυχία",
+    "uploadError": "Αποτυχία μεταφόρτωσης αρχείου",
+    "deleteSuccess": "Το συνημμένο διαγράφηκε με επιτυχία",
+    "deleteError": "Αποτυχία διαγραφής αρχείου",
+    "heading": "Συνημμένα",
+    "uploading": "Μεταφόρτωση...",
+    "clickToUpload": "Κάντε κλικ για μεταφόρτωση",
+    "maxSize": "Μέγ. {{size}} MB",
+    "anyFormat": "Οποιοσδήποτε τύπος αρχείου",
+    "deleteConfirmTitle": "Διαγραφή συνημμένου",
+    "deleteConfirmMessage": "Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτό το συνημμένο; Η ενέργεια δεν μπορεί να ακυρωθεί."
   },
   "feedback": {
     "title": "Send feedback",
@@ -4929,5 +5066,9 @@
   },
   "sidebarDrop": {
     "failed": "Δεν ήταν δυνατή η ενημέρωση αυτού του στοιχείου."
+  },
+  "loading": {
+    "tasks": "Φόρτωση εργασιών…",
+    "subtasks": "Φόρτωση υποεργασιών..."
   }
 }

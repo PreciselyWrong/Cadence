@@ -59,7 +59,13 @@
     "showSearch": "Visa sökning",
     "beta": "beta",
     "comingSoon": "Kommer snart",
-    "due": "Due"
+    "due": "Due",
+    "goal": "Mål",
+    "priority": "Prioritet",
+    "tags": "Taggar",
+    "goToToday": "Gå till I dag",
+    "loadMore": "Visa fler",
+    "showAll": "Visa alla"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -310,7 +316,8 @@
       "clearDate": "Rensa datum",
       "moveToProject": "Flytta till projekt"
     },
-    "reorderError": "Failed to save task order"
+    "reorderError": "Failed to save task order",
+    "deleteConfirmTitle": "Ta bort uppgift"
   },
   "timeline": {
     "activityTimeline": "Aktivitetslinje",
@@ -1088,7 +1095,11 @@
       "message": "Vill du verkligen radera målet ”{{title}}”?"
     },
     "createGoal": "Skapa mål",
-    "updateGoal": "Uppdatera mål"
+    "updateGoal": "Uppdatera mål",
+    "saveAsTemplate": {
+      "title": "Spara som mall",
+      "message": "Spara \"{{name}}\" som mall? Det skapar en återanvändbar mall baserad på det här projektet."
+    }
   },
   "forms": {
     "title": "Titel",
@@ -1232,7 +1243,8 @@
     "priority": "Prioritet",
     "status": "Status",
     "created_at": "Skapad",
-    "custom": "Anpassad"
+    "custom": "Anpassad",
+    "completed_at": "Slutförd"
   },
   "priority": {
     "low": "Låg",
@@ -1373,7 +1385,8 @@
     "failedToDeleteNote": "Det gick inte att ta bort anteckningen.",
     "failedToDeleteTag": "Det gick inte att ta bort taggen.",
     "projectStatusUpdateFailed": "Det gick inte att uppdatera projektstatus",
-    "failedToSaveTask": "Kunde inte spara uppgiften."
+    "failedToSaveTask": "Kunde inte spara uppgiften.",
+    "permissionDenied": "Åtkomst nekad"
   },
   "inbox": {
     "title": "Inkorg",
@@ -1677,7 +1690,23 @@
     "reminder": "Påminnelse",
     "reminderPlaceholder": "Välj datum och tid för påminnelsen",
     "noReminder": "Ingen påminnelse",
-    "reminderUpdateError": "Det gick inte att uppdatera påminnelsen"
+    "reminderUpdateError": "Det gick inte att uppdatera påminnelsen",
+    "noArea": "Tilldela ett område",
+    "dueDateBeforeDeferError": "Förfallodatumet kan inte vara före datumet för uppskjutning",
+    "areaUpdated": "Området uppdaterades",
+    "areaUpdateError": "Det gick inte att uppdatera området",
+    "areaCleared": "Området rensades",
+    "areaClearError": "Det gick inte att rensa området",
+    "goalUpdated": "Målet uppdaterades",
+    "goalUpdateError": "Det gick inte att uppdatera målet",
+    "goalCleared": "Målet rensades",
+    "goalClearError": "Det gick inte att rensa målet",
+    "notFound": "Uppgiften hittades inte",
+    "notFoundDescription": "Uppgiften du letar efter finns inte eller har tagits bort.",
+    "hoursAgo": "för {{count}} timmar sedan",
+    "minutesAgo": "för {{count}} minuter sedan",
+    "inMinutes": "om {{count}} minuter",
+    "inHours": "om {{count}} timmar"
   },
   "projects": {
     "parentProject": "Överordnat projekt",
@@ -1793,7 +1822,11 @@
     "counts": {
       "active": "{{n}} active",
       "stash": "{{n}} in the stash"
-    }
+    },
+    "savedAsTemplate": "\"{{name}}\" sparades som mall.",
+    "saveAsTemplateError": "Det gick inte att spara projektet som mall.",
+    "sortTasks": "Sortera uppgifter",
+    "upcomingProjects": "Kommande projekt"
   },
   "projectItem": {
     "edit": "Ändra",
@@ -1814,7 +1847,8 @@
     "moreSharedUsers": "+{{count}} fler användare",
     "saveAsTemplate": "Spara som mall",
     "pinToSidebar": "Fäst i sidofältet",
-    "unpinFromSidebar": "Ta bort från sidofältet"
+    "unpinFromSidebar": "Ta bort från sidofältet",
+    "changeStatus": "Ändra status"
   },
   "areas": {
     "title": "Områden",
@@ -1854,7 +1888,27 @@
       "personal": "Privat",
       "family": "Familj & Socialt",
       "logistics": "Logistik"
-    }
+    },
+    "sort": {
+      "nameAsc": "Namn A till Ö",
+      "nameDesc": "Namn Ö till A",
+      "projects": "Flest projekt",
+      "goals": "Flest mål",
+      "tasks": "Flest uppgifter",
+      "custom": "Egen ordning",
+      "label": "Sortera områden"
+    },
+    "reorderError": "Det gick inte att spara ordningen för områden",
+    "edit": "Redigera",
+    "delete": "Ta bort",
+    "tasksInArea": "Uppgifter",
+    "noProjects": "Inga projekt i det här området.",
+    "noTasks": "Inga uppgifter direkt i det här området",
+    "singular": "Område",
+    "projects": "projekt",
+    "goals": "mål",
+    "tasks": "uppgifter",
+    "progressSummary": "Framsteg för området · {{done}} av {{total}} uppgifter klara"
   },
   "notes": {
     "loading": "Laddar anteckningar...",
@@ -1923,7 +1977,9 @@
       "tags": "Tags",
       "noProject": "No project",
       "more": "{{count}} more"
-    }
+    },
+    "edit": "Redigera",
+    "delete": "Ta bort"
   },
   "tags": {
     "loading": "Laddar taggar...",
@@ -2002,7 +2058,13 @@
     "weeks": "veckor",
     "months": "månader",
     "advancedHint": "För specifika veckodagar eller ett slutdatum, öppna hela uppgiften.",
-    "recurring": "Återkommande"
+    "recurring": "Återkommande",
+    "everyNDays": "Var {{count}}:e dag",
+    "everyNWeeks": "Var {{count}}:e vecka",
+    "everyNMonths": "Var {{count}}:e månad",
+    "completionBased": "Efter slutförande",
+    "onDay": "På dag",
+    "until": "Till"
   },
   "weekdays": {
     "sunday": "Sön",
@@ -2861,7 +2923,8 @@
     "searching": "Söker..."
   },
   "subtasks": {
-    "placeholder": "Lägg till en deluppgift..."
+    "placeholder": "Lägg till en deluppgift...",
+    "title": "Deluppgifter"
   },
   "backup": {
     "title": "Säkerhetskopiera & Återställ",
@@ -2923,7 +2986,8 @@
       "email": "E-post",
       "push": "Push",
       "telegram": "Telegram",
-      "desktop": "Dator"
+      "desktop": "Dator",
+      "apprise": "Apprise"
     },
     "types": {
       "dueTasks": "Förfallna uppgifter",
@@ -3046,7 +3110,31 @@
       "enable": "Tysta timmar",
       "from": "Från",
       "to": "Till"
-    }
+    },
+    "apprise": {
+      "saved": "Apprise-servern sparad.",
+      "title": "Apprise",
+      "connected": "Skickar via {{host}}.",
+      "description": "Skicka aviseringar via din egen Apprise-server till Pushover, ntfy, Discord, Matrix och fler.",
+      "remove": "Ta bort",
+      "serverLabel": "Apprise-serveradress",
+      "keyPlaceholder": "Konfigurationsnyckel",
+      "keyLabel": "Konfigurationsnyckel",
+      "tagsPlaceholder": "Taggar (valfritt, t.ex. all)",
+      "tagsLabel": "Taggar",
+      "help": "Skapa en konfiguration på din Apprise-server och klistra in dess nyckel här.",
+      "save": "Spara"
+    },
+    "justNow": "Just nu",
+    "minutesAgo": "för {{count}} min sedan",
+    "hoursAgo": "för {{count}} tim sedan",
+    "daysAgo": "för {{count}} d sedan",
+    "title": "Aviseringar",
+    "markAllRead": "Markera alla som lästa",
+    "loading": "Laddar...",
+    "noNotifications": "Inga aviseringar än",
+    "markAsRead": "Markera som läst",
+    "delete": "Ta bort"
   },
   "projectStatus": {
     "not_started": "Ej påbörjad",
@@ -3758,10 +3846,32 @@
     "addTitle": "Add to Inbox, Task, Note or Project",
     "close": "Close",
     "button": "Fånga",
-    "syntaxHint": "#tag  +project  !1 till !3 prioritet  imorgon kl. 15 för ett datum"
+    "syntaxHint": "#tag  +project  !1 till !3 prioritet  imorgon kl. 15 för ett datum",
+    "slash": {
+      "tag": "Tagg",
+      "project": "Projekt",
+      "person": "Person",
+      "area": "Område",
+      "date": "Förfallodatum",
+      "repeat": "Upprepa",
+      "today": "I dag",
+      "tomorrow": "I morgon",
+      "nextMonday": "Nästa måndag",
+      "inAWeek": "Om en vecka",
+      "everyDay": "Varje dag",
+      "everyWeekday": "Varje vardag",
+      "everyWeek": "Varje vecka",
+      "everyMonth": "Varje månad",
+      "create": "Skapa {{token}}"
+    }
   },
   "area": {
-    "loadError": "Det gick inte att läsa in områden"
+    "loadError": "Det gick inte att läsa in områden",
+    "viaProject": "via projekt",
+    "viewArea": "Gå till område",
+    "searchAreas": "Sök områden…",
+    "clearArea": "Ta bort område",
+    "noAreasFound": "Inga områden hittades"
   },
   "goals": {
     "newGoal": "Nytt mål",
@@ -3813,7 +3923,21 @@
       "placeholder": "Nyckelresultat",
       "progress": "{{done}} av {{total}} klara"
     },
-    "progressSummary": "Målframsteg · {{done}} av {{total}} klara"
+    "progressSummary": "Målframsteg · {{done}} av {{total}} klara",
+    "sort": {
+      "titleAsc": "Titel A till Ö",
+      "titleDesc": "Titel Ö till A",
+      "status": "Status",
+      "horizon": "Horisont",
+      "area": "Område",
+      "projects": "Flest projekt",
+      "tasks": "Flest uppgifter",
+      "custom": "Egen ordning",
+      "label": "Sortera mål"
+    },
+    "reorderError": "Det gick inte att spara ordningen för mål",
+    "noGoalsInArea": "Inga mål är kopplade till det här området.",
+    "maintenance": "Underhåll"
   },
   "templates": {
     "new": "Ny mall",
@@ -4434,7 +4558,9 @@
   "sortable": {
     "move": "Move",
     "project": "sortable project",
-    "task": "sortable task"
+    "task": "sortable task",
+    "area": "sorterbart område",
+    "goal": "sorterbart mål"
   },
   "groupPage": {
     "title": "Group",
@@ -4471,7 +4597,18 @@
     "previous": "Previous file",
     "next": "Next file",
     "renameError": "Could not save the title",
-    "confirmDelete": "Delete file?"
+    "confirmDelete": "Delete file?",
+    "uploadSuccess": "Filen laddades upp",
+    "uploadError": "Det gick inte att ladda upp filen",
+    "deleteSuccess": "Bilagan togs bort",
+    "deleteError": "Det gick inte att ta bort filen",
+    "heading": "Bilagor",
+    "uploading": "Laddar upp...",
+    "clickToUpload": "Klicka för att ladda upp",
+    "maxSize": "Max {{size}} MB",
+    "anyFormat": "Valfri filtyp",
+    "deleteConfirmTitle": "Ta bort bilaga",
+    "deleteConfirmMessage": "Är du säker på att du vill ta bort den här bilagan? Det går inte att ångra."
   },
   "feedback": {
     "title": "Send feedback",
@@ -4928,5 +5065,9 @@
   },
   "sidebarDrop": {
     "failed": "Objektet kunde inte uppdateras."
+  },
+  "loading": {
+    "tasks": "Laddar uppgifter…",
+    "subtasks": "Laddar deluppgifter..."
   }
 }

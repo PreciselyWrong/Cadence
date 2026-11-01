@@ -59,7 +59,13 @@
     "showSearch": "Näytä haku",
     "beta": "beta",
     "comingSoon": "Tulossa pian",
-    "due": "Due"
+    "due": "Due",
+    "goal": "Tavoite",
+    "priority": "Prioriteetti",
+    "tags": "Tunnisteet",
+    "goToToday": "Siirry tähän päivään",
+    "loadMore": "Lataa lisää",
+    "showAll": "Näytä kaikki"
   },
   "sidebar": {
     "dashboard": "Ohjauspaneeli",
@@ -310,7 +316,8 @@
       "clearDate": "Tyhjennä päivämäärä",
       "moveToProject": "Siirrä projektiin"
     },
-    "reorderError": "Failed to save task order"
+    "reorderError": "Failed to save task order",
+    "deleteConfirmTitle": "Poista tehtävä"
   },
   "timeline": {
     "activityTimeline": "Toiminta-aikajana",
@@ -1088,7 +1095,11 @@
       "message": "Haluatko varmasti poistaa tavoitteen ”{{title}}”?"
     },
     "createGoal": "Luo tavoite",
-    "updateGoal": "Päivitä tavoite"
+    "updateGoal": "Päivitä tavoite",
+    "saveAsTemplate": {
+      "title": "Tallenna mallina",
+      "message": "Tallennetaanko \"{{name}}\" mallina? Tämä luo uudelleenkäytettävän mallin tämän projektin pohjalta."
+    }
   },
   "forms": {
     "title": "Otsikko",
@@ -1232,7 +1243,8 @@
     "priority": "Prioriteetti",
     "status": "Tila",
     "created_at": "Luotu",
-    "custom": "Mukautettu"
+    "custom": "Mukautettu",
+    "completed_at": "Valmistunut"
   },
   "priority": {
     "low": "Matala",
@@ -1373,7 +1385,8 @@
     "failedToDeleteNote": "Muistiinpanon poistaminen epäonnistui.",
     "failedToDeleteTag": "Tunnisteen poistaminen epäonnistui.",
     "projectStatusUpdateFailed": "Projektin tilan päivitys epäonnistui",
-    "failedToSaveTask": "Tehtävän tallennus epäonnistui."
+    "failedToSaveTask": "Tehtävän tallennus epäonnistui.",
+    "permissionDenied": "Käyttöoikeus evätty"
   },
   "inbox": {
     "title": "Saapuneet",
@@ -1677,7 +1690,23 @@
     "reminder": "Muistutus",
     "reminderPlaceholder": "Valitse muistutuksen päivä ja kellonaika",
     "noReminder": "Ei muistutusta",
-    "reminderUpdateError": "Muistutuksen päivitys epäonnistui"
+    "reminderUpdateError": "Muistutuksen päivitys epäonnistui",
+    "noArea": "Määritä alue",
+    "dueDateBeforeDeferError": "Eräpäivä ei voi olla ennen lykkäyspäivää",
+    "areaUpdated": "Alue päivitettiin",
+    "areaUpdateError": "Alueen päivitys epäonnistui",
+    "areaCleared": "Alue tyhjennettiin",
+    "areaClearError": "Alueen tyhjennys epäonnistui",
+    "goalUpdated": "Tavoite päivitettiin",
+    "goalUpdateError": "Tavoitteen päivitys epäonnistui",
+    "goalCleared": "Tavoite tyhjennettiin",
+    "goalClearError": "Tavoitteen tyhjennys epäonnistui",
+    "notFound": "Tehtävää ei löytynyt",
+    "notFoundDescription": "Etsimääsi tehtävää ei ole olemassa tai se on poistettu.",
+    "hoursAgo": "{{count}} tuntia sitten",
+    "minutesAgo": "{{count}} minuuttia sitten",
+    "inMinutes": "{{count}} minuutin kuluttua",
+    "inHours": "{{count}} tunnin kuluttua"
   },
   "projects": {
     "parentProject": "Pääprojekti",
@@ -1793,7 +1822,11 @@
     "counts": {
       "active": "{{n}} active",
       "stash": "{{n}} in the stash"
-    }
+    },
+    "savedAsTemplate": "\"{{name}}\" tallennettiin mallina.",
+    "saveAsTemplateError": "Projektia ei voitu tallentaa mallina.",
+    "sortTasks": "Lajittele tehtävät",
+    "upcomingProjects": "Tulevat projektit"
   },
   "projectItem": {
     "edit": "Muokkaa",
@@ -1814,7 +1847,8 @@
     "moreSharedUsers": "+{{count}} lisää käyttäjää",
     "saveAsTemplate": "Tallenna mallina",
     "pinToSidebar": "Kiinnitä sivupalkkiin",
-    "unpinFromSidebar": "Poista kiinnitys sivupalkista"
+    "unpinFromSidebar": "Poista kiinnitys sivupalkista",
+    "changeStatus": "Vaihda tila"
   },
   "areas": {
     "title": "Alueet",
@@ -1854,7 +1888,27 @@
       "personal": "Henkilökohtainen",
       "family": "Perhe ja sosiaalinen",
       "logistics": "Logistiikka"
-    }
+    },
+    "sort": {
+      "nameAsc": "Nimi A–Ö",
+      "nameDesc": "Nimi Ö–A",
+      "projects": "Eniten projekteja",
+      "goals": "Eniten tavoitteita",
+      "tasks": "Eniten tehtäviä",
+      "custom": "Mukautettu järjestys",
+      "label": "Lajittele alueet"
+    },
+    "reorderError": "Alueiden järjestystä ei voitu tallentaa",
+    "edit": "Muokkaa",
+    "delete": "Poista",
+    "tasksInArea": "Tehtävät",
+    "noProjects": "Tällä alueella ei ole projekteja.",
+    "noTasks": "Tällä alueella ei ole suoraan tehtäviä",
+    "singular": "Alue",
+    "projects": "projektit",
+    "goals": "tavoitteet",
+    "tasks": "tehtävät",
+    "progressSummary": "Alueen edistyminen · {{done}} / {{total}} tehtävää tehty"
   },
   "notes": {
     "loading": "Ladataan muistiinpanoja...",
@@ -1923,7 +1977,9 @@
       "tags": "Tags",
       "noProject": "No project",
       "more": "{{count}} more"
-    }
+    },
+    "edit": "Muokkaa",
+    "delete": "Poista"
   },
   "tags": {
     "loading": "Ladataan tageja...",
@@ -2002,7 +2058,13 @@
     "weeks": "viikkoa",
     "months": "kuukautta",
     "advancedHint": "Tietyille viikonpäiville tai loppupäivämäärälle avaa koko tehtävä.",
-    "recurring": "Toistuva"
+    "recurring": "Toistuva",
+    "everyNDays": "Joka {{count}}. päivä",
+    "everyNWeeks": "Joka {{count}}. viikko",
+    "everyNMonths": "Joka {{count}}. kuukausi",
+    "completionBased": "Suorittamisen jälkeen",
+    "onDay": "Päivänä",
+    "until": "Asti"
   },
   "weekdays": {
     "sunday": "Su",
@@ -2861,7 +2923,8 @@
     "searching": "Haetaan..."
   },
   "subtasks": {
-    "placeholder": "Lisää alitehtävä..."
+    "placeholder": "Lisää alitehtävä...",
+    "title": "Alitehtävät"
   },
   "backup": {
     "title": "Varmuuskopioi & Palauta",
@@ -2923,7 +2986,8 @@
       "email": "Sähköposti",
       "push": "Push",
       "telegram": "Telegram",
-      "desktop": "Tietokone"
+      "desktop": "Tietokone",
+      "apprise": "Apprise"
     },
     "types": {
       "dueTasks": "Erääntyneet tehtävät",
@@ -3046,7 +3110,31 @@
       "enable": "Hiljaiset tunnit",
       "from": "Alkaen",
       "to": "Päättyen"
-    }
+    },
+    "apprise": {
+      "saved": "Apprise-palvelin tallennettu.",
+      "title": "Apprise",
+      "connected": "Lähetetään palvelun {{host}} kautta.",
+      "description": "Lähetä ilmoitukset omalla Apprise-palvelimellasi Pushoverille, ntfy:lle, Discordille, Matrixille ja muualle.",
+      "remove": "Poista",
+      "serverLabel": "Apprise-palvelimen osoite",
+      "keyPlaceholder": "Asetusavain",
+      "keyLabel": "Asetusavain",
+      "tagsPlaceholder": "Tunnisteet (valinnainen, esim. all)",
+      "tagsLabel": "Tunnisteet",
+      "help": "Luo asetus Apprise-palvelimellesi ja liitä sen avain tähän.",
+      "save": "Tallenna"
+    },
+    "justNow": "Juuri nyt",
+    "minutesAgo": "{{count}} min sitten",
+    "hoursAgo": "{{count}} t sitten",
+    "daysAgo": "{{count}} pv sitten",
+    "title": "Ilmoitukset",
+    "markAllRead": "Merkitse kaikki luetuiksi",
+    "loading": "Ladataan...",
+    "noNotifications": "Ei vielä ilmoituksia",
+    "markAsRead": "Merkitse luetuksi",
+    "delete": "Poista"
   },
   "projectStatus": {
     "not_started": "Ei aloitettu",
@@ -3758,10 +3846,32 @@
     "addTitle": "Add to Inbox, Task, Note or Project",
     "close": "Close",
     "button": "Kaappaa",
-    "syntaxHint": "#tag  +project  !1–!3 prioriteetti  huomenna klo 15 päivämäärälle"
+    "syntaxHint": "#tag  +project  !1–!3 prioriteetti  huomenna klo 15 päivämäärälle",
+    "slash": {
+      "tag": "Tunniste",
+      "project": "Projekti",
+      "person": "Henkilö",
+      "area": "Alue",
+      "date": "Eräpäivä",
+      "repeat": "Toistuvuus",
+      "today": "Tänään",
+      "tomorrow": "Huomenna",
+      "nextMonday": "Seuraava maanantai",
+      "inAWeek": "Viikon päästä",
+      "everyDay": "Joka päivä",
+      "everyWeekday": "Joka arkipäivä",
+      "everyWeek": "Joka viikko",
+      "everyMonth": "Joka kuukausi",
+      "create": "Luo {{token}}"
+    }
   },
   "area": {
-    "loadError": "Alueiden lataaminen epäonnistui"
+    "loadError": "Alueiden lataaminen epäonnistui",
+    "viaProject": "projektin kautta",
+    "viewArea": "Siirry alueelle",
+    "searchAreas": "Hae alueita…",
+    "clearArea": "Poista alue",
+    "noAreasFound": "Alueita ei löytynyt"
   },
   "goals": {
     "newGoal": "Uusi tavoite",
@@ -3813,7 +3923,21 @@
       "placeholder": "Tärkein tulos",
       "progress": "{{done}} / {{total}} valmiina"
     },
-    "progressSummary": "Tavoitteen edistyminen · {{done}} / {{total}} valmiina"
+    "progressSummary": "Tavoitteen edistyminen · {{done}} / {{total}} valmiina",
+    "sort": {
+      "titleAsc": "Otsikko A–Ö",
+      "titleDesc": "Otsikko Ö–A",
+      "status": "Tila",
+      "horizon": "Aikaväli",
+      "area": "Alue",
+      "projects": "Eniten projekteja",
+      "tasks": "Eniten tehtäviä",
+      "custom": "Mukautettu järjestys",
+      "label": "Lajittele tavoitteet"
+    },
+    "reorderError": "Tavoitteiden järjestystä ei voitu tallentaa",
+    "noGoalsInArea": "Tähän alueeseen ei ole liitetty tavoitteita.",
+    "maintenance": "Ylläpito"
   },
   "templates": {
     "new": "Uusi malli",
@@ -4434,7 +4558,9 @@
   "sortable": {
     "move": "Move",
     "project": "sortable project",
-    "task": "sortable task"
+    "task": "sortable task",
+    "area": "lajiteltava alue",
+    "goal": "lajiteltava tavoite"
   },
   "groupPage": {
     "title": "Group",
@@ -4471,7 +4597,18 @@
     "previous": "Previous file",
     "next": "Next file",
     "renameError": "Could not save the title",
-    "confirmDelete": "Delete file?"
+    "confirmDelete": "Delete file?",
+    "uploadSuccess": "Tiedosto ladattiin onnistuneesti",
+    "uploadError": "Tiedoston lataaminen epäonnistui",
+    "deleteSuccess": "Liite poistettiin onnistuneesti",
+    "deleteError": "Tiedoston poistaminen epäonnistui",
+    "heading": "Liitteet",
+    "uploading": "Ladataan...",
+    "clickToUpload": "Lataa napsauttamalla",
+    "maxSize": "Enintään {{size}} Mt",
+    "anyFormat": "Mikä tahansa tiedostotyyppi",
+    "deleteConfirmTitle": "Poista liite",
+    "deleteConfirmMessage": "Haluatko varmasti poistaa tämän liitteen? Toimintoa ei voi peruuttaa."
   },
   "feedback": {
     "title": "Send feedback",
@@ -4928,5 +5065,9 @@
   },
   "sidebarDrop": {
     "failed": "Kohdetta ei voitu päivittää."
+  },
+  "loading": {
+    "tasks": "Ladataan tehtäviä…",
+    "subtasks": "Ladataan alitehtäviä..."
   }
 }

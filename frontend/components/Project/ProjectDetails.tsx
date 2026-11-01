@@ -94,6 +94,8 @@ const ProjectDetails: React.FC = () => {
     const { t } = useTranslation();
     const { showSuccessToast, showErrorToast } = useToast();
     const { areasStore, projectsStore, userSettingsStore } = useStore();
+    // The AI button only shows once the user turned the assistant on.
+    const aiAssistantEnabled = !!userSettingsStore.aiAssistantEnabled;
     const areas = areasStore.areas;
     const templatesEnabled = userSettingsStore.templatesEnabled;
     const [allProjects, setAllProjects] = useState<Project[]>([]);
@@ -969,8 +971,11 @@ const ProjectDetails: React.FC = () => {
                 <div className="w-full">
                     <div className="w-full">
                         <div className="mb-4">
-                            <div className="flex items-center justify-between min-h-[2.5rem]">
-                                <div className="flex items-center gap-4 sm:gap-6 self-stretch pl-2 sm:pl-3">
+                            {/* On a phone the view tabs scroll sideways
+                                inside their row, so the actions never push
+                                the page wider than the screen. */}
+                            <div className="flex items-center justify-between gap-2 min-h-[2.5rem]">
+                                <div className="flex min-w-0 items-center gap-4 sm:gap-6 self-stretch overflow-x-auto scrollbar-hide pl-2 sm:pl-3">
                                     {projectViewTabs(isMinimal).map((tab) => (
                                         <button
                                             key={tab}
@@ -1005,7 +1010,7 @@ const ProjectDetails: React.FC = () => {
                                 </div>
 
                                 {
-                                    <div className="flex items-center justify-end gap-2 sm:gap-4">
+                                    <div className="flex shrink-0 items-center justify-end gap-2 sm:gap-4">
                                         <NewItemButton
                                             label={t('capture.add', 'Add')}
                                             onClick={() =>
@@ -1013,33 +1018,35 @@ const ProjectDetails: React.FC = () => {
                                             }
                                             testId="project-add-button"
                                         />
-                                        <button
-                                            onClick={() =>
-                                                aiInsightsRef.current?.activate()
-                                            }
-                                            className={`flex items-center transition-all duration-300 focus:outline-none focus:ring-0 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-inset rounded-lg p-1.5 sm:p-2 ${
-                                                aiInsightsActive
-                                                    ? 'bg-indigo-100 dark:bg-indigo-900/40'
-                                                    : 'bg-gray-100 dark:bg-gray-800 hover:bg-indigo-50 dark:hover:bg-indigo-900/30'
-                                            }`}
-                                            aria-pressed={aiInsightsActive}
-                                            aria-label={t(
-                                                'aiAssistant.projectInsightsTitle',
-                                                'AI Insights'
-                                            )}
-                                            title={t(
-                                                'aiAssistant.projectInsightsTitle',
-                                                'AI Insights'
-                                            )}
-                                        >
-                                            <SparklesIcon
-                                                className={`h-4 w-4 sm:h-5 sm:w-5 ${
+                                        {aiAssistantEnabled && (
+                                            <button
+                                                onClick={() =>
+                                                    aiInsightsRef.current?.activate()
+                                                }
+                                                className={`flex items-center transition-all duration-300 focus:outline-none focus:ring-0 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-inset rounded-lg p-1.5 sm:p-2 ${
                                                     aiInsightsActive
-                                                        ? 'text-indigo-600 dark:text-indigo-300'
-                                                        : 'text-gray-600 dark:text-gray-200'
+                                                        ? 'bg-indigo-100 dark:bg-indigo-900/40'
+                                                        : 'bg-gray-100 dark:bg-gray-800 hover:bg-indigo-50 dark:hover:bg-indigo-900/30'
                                                 }`}
-                                            />
-                                        </button>
+                                                aria-pressed={aiInsightsActive}
+                                                aria-label={t(
+                                                    'aiAssistant.projectInsightsTitle',
+                                                    'AI Insights'
+                                                )}
+                                                title={t(
+                                                    'aiAssistant.projectInsightsTitle',
+                                                    'AI Insights'
+                                                )}
+                                            >
+                                                <SparklesIcon
+                                                    className={`h-4 w-4 sm:h-5 sm:w-5 ${
+                                                        aiInsightsActive
+                                                            ? 'text-indigo-600 dark:text-indigo-300'
+                                                            : 'text-gray-600 dark:text-gray-200'
+                                                    }`}
+                                                />
+                                            </button>
+                                        )}
                                         <button
                                             onClick={() =>
                                                 setIsSearchExpanded((v) => !v)
@@ -1052,8 +1059,14 @@ const ProjectDetails: React.FC = () => {
                                             aria-expanded={isSearchExpanded}
                                             aria-label={
                                                 isSearchExpanded
-                                                    ? 'Collapse search panel'
-                                                    : 'Show search input'
+                                                    ? t(
+                                                          'common.hideSearch',
+                                                          'Collapse search panel'
+                                                      )
+                                                    : t(
+                                                          'common.showSearch',
+                                                          'Show search input'
+                                                      )
                                             }
                                         >
                                             <MagnifyingGlassIcon className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600 dark:text-gray-200" />

@@ -83,6 +83,15 @@ const NotificationTypeRow: React.FC<NotificationTypeRowProps> = ({
     pushAvailable,
     appriseConfigured,
 }) => {
+    const { t } = useTranslation();
+    const channelNames: Record<PrefChannel, string> = {
+        inApp: t('notifications.channels.inApp', 'In-app'),
+        email: t('notifications.channels.email', 'Email'),
+        push: t('notifications.channels.push', 'Push'),
+        telegram: t('notifications.channels.telegram', 'Telegram'),
+        apprise: t('notifications.channels.apprise', 'Apprise'),
+        desktop: t('notifications.channels.desktop', 'Desktop'),
+    };
     const renderToggle = (
         channel: PrefChannel,
         isEnabled: boolean,
@@ -98,7 +107,9 @@ const NotificationTypeRow: React.FC<NotificationTypeRowProps> = ({
                 ${isAvailable ? 'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2' : 'cursor-not-allowed opacity-50'}
                 ${isEnabled && isAvailable ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-600'}
             `}
-            aria-label={`Toggle ${channel} for ${label}`}
+            role="switch"
+            aria-checked={isEnabled && isAvailable}
+            aria-label={`${channelNames[channel]} · ${label}`}
         >
             <span
                 className={`

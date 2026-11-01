@@ -60,7 +60,13 @@
     "showSearch": "Afișează căutarea",
     "beta": "beta",
     "comingSoon": "În curând",
-    "due": "Due"
+    "due": "Due",
+    "goal": "Obiectiv",
+    "priority": "Prioritate",
+    "tags": "Etichete",
+    "goToToday": "Mergi la Azi",
+    "loadMore": "Încarcă mai multe",
+    "showAll": "Afișează tot"
   },
   "sidebar": {
     "dashboard": "Tabloul de bord",
@@ -311,7 +317,8 @@
       "clearDate": "Șterge data",
       "moveToProject": "Mută în proiect"
     },
-    "reorderError": "Failed to save task order"
+    "reorderError": "Failed to save task order",
+    "deleteConfirmTitle": "Șterge sarcina"
   },
   "timeline": {
     "activityTimeline": "Cronologia activităților",
@@ -1091,7 +1098,11 @@
       "message": "Sigur vrei să ștergi obiectivul „{{title}}”?"
     },
     "createGoal": "Creează obiectivul",
-    "updateGoal": "Actualizează obiectivul"
+    "updateGoal": "Actualizează obiectivul",
+    "saveAsTemplate": {
+      "title": "Salvează ca șablon",
+      "message": "Salvezi \"{{name}}\" ca șablon? Se va crea un șablon reutilizabil pe baza acestui proiect."
+    }
   },
   "forms": {
     "title": "Titlu",
@@ -1235,7 +1246,8 @@
     "priority": "Prioritate",
     "status": "Stare",
     "created_at": "Creat La",
-    "custom": "Personalizat"
+    "custom": "Personalizat",
+    "completed_at": "Finalizată la"
   },
   "priority": {
     "low": "Scăzut",
@@ -1377,7 +1389,8 @@
     "failedToDeleteNote": "Nota nu a putut fi ștearsă.",
     "failedToDeleteTag": "Eticheta nu a putut fi ștearsă.",
     "projectStatusUpdateFailed": "Nu s-a putut actualiza starea proiectului",
-    "failedToSaveTask": "Nu s-a putut salva sarcina."
+    "failedToSaveTask": "Nu s-a putut salva sarcina.",
+    "permissionDenied": "Acces refuzat"
   },
   "inbox": {
     "title": "Căsuța de primire",
@@ -1681,7 +1694,23 @@
     "reminder": "Memento",
     "reminderPlaceholder": "Alege data și ora mementoului",
     "noReminder": "Niciun memento",
-    "reminderUpdateError": "Mementoul nu a putut fi actualizat"
+    "reminderUpdateError": "Mementoul nu a putut fi actualizat",
+    "noArea": "Atribuie unei zone",
+    "dueDateBeforeDeferError": "Data scadentă nu poate fi înainte de data de amânare",
+    "areaUpdated": "Zona a fost actualizată cu succes",
+    "areaUpdateError": "Nu s-a putut actualiza zona",
+    "areaCleared": "Zona a fost eliminată cu succes",
+    "areaClearError": "Nu s-a putut elimina zona",
+    "goalUpdated": "Obiectivul a fost actualizat",
+    "goalUpdateError": "Nu s-a putut actualiza obiectivul",
+    "goalCleared": "Obiectivul a fost eliminat",
+    "goalClearError": "Nu s-a putut elimina obiectivul",
+    "notFound": "Sarcina nu a fost găsită",
+    "notFoundDescription": "Sarcina pe care o cauți nu există sau a fost ștearsă.",
+    "hoursAgo": "acum {{count}} ore",
+    "minutesAgo": "acum {{count}} minute",
+    "inMinutes": "în {{count}} minute",
+    "inHours": "în {{count}} ore"
   },
   "projects": {
     "parentProject": "Proiect părinte",
@@ -1798,7 +1827,11 @@
     "counts": {
       "active": "{{n}} active",
       "stash": "{{n}} in the stash"
-    }
+    },
+    "savedAsTemplate": "\"{{name}}\" a fost salvat ca șablon.",
+    "saveAsTemplateError": "Nu s-a putut salva proiectul ca șablon.",
+    "sortTasks": "Sortează sarcinile",
+    "upcomingProjects": "Proiecte viitoare"
   },
   "projectItem": {
     "edit": "Editează",
@@ -1819,7 +1852,8 @@
     "moreSharedUsers": "+{{count}} utilizatori în plus",
     "saveAsTemplate": "Salvează ca Șablon",
     "pinToSidebar": "Fixează în bara laterală",
-    "unpinFromSidebar": "Dezfixează din bara laterală"
+    "unpinFromSidebar": "Dezfixează din bara laterală",
+    "changeStatus": "Schimbă starea"
   },
   "areas": {
     "title": "Arii",
@@ -1859,7 +1893,27 @@
       "personal": "Personal",
       "family": "Familie și social",
       "logistics": "Logistică"
-    }
+    },
+    "sort": {
+      "nameAsc": "Nume de la A la Z",
+      "nameDesc": "Nume de la Z la A",
+      "projects": "Cele mai multe proiecte",
+      "goals": "Cele mai multe obiective",
+      "tasks": "Cele mai multe sarcini",
+      "custom": "Ordine personalizată",
+      "label": "Sortează zonele"
+    },
+    "reorderError": "Nu s-a putut salva ordinea zonelor",
+    "edit": "Editează",
+    "delete": "Șterge",
+    "tasksInArea": "Sarcini",
+    "noProjects": "Nu există proiecte în această zonă.",
+    "noTasks": "Nicio sarcină direct în această zonă",
+    "singular": "Zonă",
+    "projects": "proiecte",
+    "goals": "obiective",
+    "tasks": "sarcini",
+    "progressSummary": "Progresul zonei · {{done}} din {{total}} sarcini finalizate"
   },
   "notes": {
     "loading": "Se încarcă notițele...",
@@ -1928,7 +1982,9 @@
       "tags": "Tags",
       "noProject": "No project",
       "more": "{{count}} more"
-    }
+    },
+    "edit": "Editează",
+    "delete": "Șterge"
   },
   "tags": {
     "loading": "Se încarcă etichetele...",
@@ -2007,7 +2063,13 @@
     "weeks": "săptămâni",
     "months": "luni",
     "advancedHint": "Pentru zile specifice ale săptămânii sau o dată de finalizare, deschideți sarcina completă.",
-    "recurring": "Recurentă"
+    "recurring": "Recurentă",
+    "everyNDays": "La fiecare {{count}} zile",
+    "everyNWeeks": "La fiecare {{count}} săptămâni",
+    "everyNMonths": "La fiecare {{count}} luni",
+    "completionBased": "După finalizare",
+    "onDay": "În ziua",
+    "until": "Până la"
   },
   "weekdays": {
     "sunday": "Dum",
@@ -2869,7 +2931,8 @@
     "searching": "Se caută..."
   },
   "subtasks": {
-    "placeholder": "Adaugă o subtask..."
+    "placeholder": "Adaugă o subtask...",
+    "title": "Subsarcini"
   },
   "backup": {
     "title": "Backup și Restaurare",
@@ -2931,7 +2994,8 @@
       "email": "E-mail",
       "push": "Push",
       "telegram": "Telegram",
-      "desktop": "Calculator"
+      "desktop": "Calculator",
+      "apprise": "Apprise"
     },
     "types": {
       "dueTasks": "Sarcini Scadente",
@@ -3054,7 +3118,31 @@
       "enable": "Ore de liniște",
       "from": "De la",
       "to": "Până la"
-    }
+    },
+    "apprise": {
+      "saved": "Serverul Apprise a fost salvat.",
+      "title": "Apprise",
+      "connected": "Se trimite prin {{host}}.",
+      "description": "Trimite notificări prin propriul server Apprise către Pushover, ntfy, Discord, Matrix și altele.",
+      "remove": "Elimină",
+      "serverLabel": "Adresa serverului Apprise",
+      "keyPlaceholder": "Cheie de configurare",
+      "keyLabel": "Cheie de configurare",
+      "tagsPlaceholder": "Etichete (opțional, ex. all)",
+      "tagsLabel": "Etichete",
+      "help": "Creează o configurație pe serverul tău Apprise și lipește aici cheia ei.",
+      "save": "Salvează"
+    },
+    "justNow": "Chiar acum",
+    "minutesAgo": "acum {{count}} min",
+    "hoursAgo": "acum {{count}} h",
+    "daysAgo": "acum {{count}} z",
+    "title": "Notificări",
+    "markAllRead": "Marchează toate ca citite",
+    "loading": "Se încarcă...",
+    "noNotifications": "Nicio notificare încă",
+    "markAsRead": "Marchează ca citită",
+    "delete": "Șterge"
   },
   "projectStatus": {
     "not_started": "Nefăcut",
@@ -3768,10 +3856,32 @@
     "addTitle": "Add to Inbox, Task, Note or Project",
     "close": "Close",
     "button": "Captură",
-    "syntaxHint": "#tag  +project  !1 până la !3 prioritate  mâine la 15:00 pentru o dată"
+    "syntaxHint": "#tag  +project  !1 până la !3 prioritate  mâine la 15:00 pentru o dată",
+    "slash": {
+      "tag": "Etichetă",
+      "project": "Proiect",
+      "person": "Persoană",
+      "area": "Zonă",
+      "date": "Data scadentă",
+      "repeat": "Repetă",
+      "today": "Azi",
+      "tomorrow": "Mâine",
+      "nextMonday": "Luni viitoare",
+      "inAWeek": "Peste o săptămână",
+      "everyDay": "În fiecare zi",
+      "everyWeekday": "În fiecare zi lucrătoare",
+      "everyWeek": "În fiecare săptămână",
+      "everyMonth": "În fiecare lună",
+      "create": "Creează {{token}}"
+    }
   },
   "area": {
-    "loadError": "Ariile nu au putut fi încărcate"
+    "loadError": "Ariile nu au putut fi încărcate",
+    "viaProject": "prin proiect",
+    "viewArea": "Mergi la zonă",
+    "searchAreas": "Caută zone…",
+    "clearArea": "Elimină zona",
+    "noAreasFound": "Nu s-au găsit zone"
   },
   "goals": {
     "newGoal": "Obiectiv nou",
@@ -3823,7 +3933,21 @@
       "placeholder": "Rezultat cheie",
       "progress": "{{done}} din {{total}} finalizate"
     },
-    "progressSummary": "Progres obiectiv · {{done}} din {{total}} finalizate"
+    "progressSummary": "Progres obiectiv · {{done}} din {{total}} finalizate",
+    "sort": {
+      "titleAsc": "Titlu de la A la Z",
+      "titleDesc": "Titlu de la Z la A",
+      "status": "Stare",
+      "horizon": "Orizont",
+      "area": "Zonă",
+      "projects": "Cele mai multe proiecte",
+      "tasks": "Cele mai multe sarcini",
+      "custom": "Ordine personalizată",
+      "label": "Sortează obiectivele"
+    },
+    "reorderError": "Nu s-a putut salva ordinea obiectivelor",
+    "noGoalsInArea": "Niciun obiectiv nu este legat de această zonă.",
+    "maintenance": "Întreținere"
   },
   "templates": {
     "new": "Șablon nou",
@@ -4445,7 +4569,9 @@
   "sortable": {
     "move": "Move",
     "project": "sortable project",
-    "task": "sortable task"
+    "task": "sortable task",
+    "area": "zonă sortabilă",
+    "goal": "obiectiv sortabil"
   },
   "groupPage": {
     "title": "Group",
@@ -4482,7 +4608,18 @@
     "previous": "Previous file",
     "next": "Next file",
     "renameError": "Could not save the title",
-    "confirmDelete": "Delete file?"
+    "confirmDelete": "Delete file?",
+    "uploadSuccess": "Fișierul a fost încărcat cu succes",
+    "uploadError": "Nu s-a putut încărca fișierul",
+    "deleteSuccess": "Atașamentul a fost șters cu succes",
+    "deleteError": "Nu s-a putut șterge fișierul",
+    "heading": "Atașamente",
+    "uploading": "Se încarcă...",
+    "clickToUpload": "Apasă pentru a încărca",
+    "maxSize": "Max. {{size}} MB",
+    "anyFormat": "Orice tip de fișier",
+    "deleteConfirmTitle": "Șterge atașamentul",
+    "deleteConfirmMessage": "Sigur vrei să ștergi acest atașament? Acțiunea nu poate fi anulată."
   },
   "feedback": {
     "title": "Send feedback",
@@ -4945,5 +5082,9 @@
   },
   "sidebarDrop": {
     "failed": "Acest element nu a putut fi actualizat."
+  },
+  "loading": {
+    "tasks": "Se încarcă sarcinile…",
+    "subtasks": "Se încarcă subsarcinile..."
   }
 }

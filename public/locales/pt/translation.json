@@ -60,7 +60,13 @@
     "showSearch": "Mostrar a pesquisa",
     "beta": "beta",
     "comingSoon": "Em breve",
-    "due": "Due"
+    "due": "Due",
+    "goal": "Meta",
+    "priority": "Prioridade",
+    "tags": "Tags",
+    "goToToday": "Ir para Hoje",
+    "loadMore": "Carregar mais",
+    "showAll": "Mostrar tudo"
   },
   "sidebar": {
     "dashboard": "Painel",
@@ -311,7 +317,8 @@
       "clearDate": "Limpar data",
       "moveToProject": "Mover para projeto"
     },
-    "reorderError": "Failed to save task order"
+    "reorderError": "Failed to save task order",
+    "deleteConfirmTitle": "Excluir tarefa"
   },
   "timeline": {
     "activityTimeline": "Linha do Tempo de Atividades",
@@ -1089,7 +1096,11 @@
       "message": "Tem certeza de que deseja excluir a meta \"{{title}}\"?"
     },
     "createGoal": "Criar meta",
-    "updateGoal": "Atualizar meta"
+    "updateGoal": "Atualizar meta",
+    "saveAsTemplate": {
+      "title": "Salvar como modelo",
+      "message": "Salvar \"{{name}}\" como modelo? Isso criará um modelo reutilizável com base neste projeto."
+    }
   },
   "forms": {
     "title": "Título",
@@ -1233,7 +1244,8 @@
     "priority": "Prioridade",
     "status": "Status",
     "created_at": "Criado Em",
-    "custom": "Personalizado"
+    "custom": "Personalizado",
+    "completed_at": "Concluída em"
   },
   "priority": {
     "low": "Baixa",
@@ -1375,7 +1387,8 @@
     "failedToDeleteNote": "Não foi possível excluir a nota.",
     "failedToDeleteTag": "Não foi possível excluir a tag.",
     "projectStatusUpdateFailed": "Falha ao atualizar o estado do projeto",
-    "failedToSaveTask": "Não foi possível salvar a tarefa."
+    "failedToSaveTask": "Não foi possível salvar a tarefa.",
+    "permissionDenied": "Permissão negada"
   },
   "inbox": {
     "title": "Caixa de Entrada",
@@ -1679,7 +1692,23 @@
     "reminder": "Lembrete",
     "reminderPlaceholder": "Escolha a data e a hora do lembrete",
     "noReminder": "Sem lembrete",
-    "reminderUpdateError": "Não foi possível atualizar o lembrete"
+    "reminderUpdateError": "Não foi possível atualizar o lembrete",
+    "noArea": "Atribuir a uma área",
+    "dueDateBeforeDeferError": "A data de vencimento não pode ser anterior à data de adiamento",
+    "areaUpdated": "Área atualizada com sucesso",
+    "areaUpdateError": "Falha ao atualizar a área",
+    "areaCleared": "Área removida com sucesso",
+    "areaClearError": "Falha ao remover a área",
+    "goalUpdated": "Meta atualizada",
+    "goalUpdateError": "Falha ao atualizar a meta",
+    "goalCleared": "Meta removida",
+    "goalClearError": "Falha ao remover a meta",
+    "notFound": "Tarefa não encontrada",
+    "notFoundDescription": "A tarefa que você procura não existe ou foi excluída.",
+    "hoursAgo": "há {{count}} horas",
+    "minutesAgo": "há {{count}} minutos",
+    "inMinutes": "em {{count}} minutos",
+    "inHours": "em {{count}} horas"
   },
   "projects": {
     "parentProject": "Projeto pai",
@@ -1796,7 +1825,11 @@
     "counts": {
       "active": "{{n}} active",
       "stash": "{{n}} in the stash"
-    }
+    },
+    "savedAsTemplate": "\"{{name}}\" salvo como modelo.",
+    "saveAsTemplateError": "Falha ao salvar o projeto como modelo.",
+    "sortTasks": "Ordenar tarefas",
+    "upcomingProjects": "Próximos projetos"
   },
   "projectItem": {
     "edit": "Editar",
@@ -1817,7 +1850,8 @@
     "moreSharedUsers": "+{{count}} usuários a mais",
     "saveAsTemplate": "Salvar como Modelo",
     "pinToSidebar": "Fixar na barra lateral",
-    "unpinFromSidebar": "Desafixar da barra lateral"
+    "unpinFromSidebar": "Desafixar da barra lateral",
+    "changeStatus": "Alterar status"
   },
   "areas": {
     "title": "Áreas",
@@ -1857,7 +1891,27 @@
       "personal": "Pessoal",
       "family": "Família e Social",
       "logistics": "Logística"
-    }
+    },
+    "sort": {
+      "nameAsc": "Nome de A a Z",
+      "nameDesc": "Nome de Z a A",
+      "projects": "Mais projetos",
+      "goals": "Mais metas",
+      "tasks": "Mais tarefas",
+      "custom": "Ordem personalizada",
+      "label": "Ordenar áreas"
+    },
+    "reorderError": "Falha ao salvar a ordem das áreas",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "tasksInArea": "Tarefas",
+    "noProjects": "Nenhum projeto nesta área.",
+    "noTasks": "Nenhuma tarefa diretamente nesta área",
+    "singular": "Área",
+    "projects": "projetos",
+    "goals": "metas",
+    "tasks": "tarefas",
+    "progressSummary": "Progresso da área · {{done}} de {{total}} tarefas concluídas"
   },
   "notes": {
     "loading": "Carregando notas...",
@@ -1926,7 +1980,9 @@
       "tags": "Tags",
       "noProject": "No project",
       "more": "{{count}} more"
-    }
+    },
+    "edit": "Editar",
+    "delete": "Excluir"
   },
   "tags": {
     "loading": "Carregando tags...",
@@ -2005,7 +2061,13 @@
     "weeks": "semanas",
     "months": "meses",
     "advancedHint": "Para dias da semana específicos ou uma data final, abra a tarefa completa.",
-    "recurring": "Recorrente"
+    "recurring": "Recorrente",
+    "everyNDays": "A cada {{count}} dias",
+    "everyNWeeks": "A cada {{count}} semanas",
+    "everyNMonths": "A cada {{count}} meses",
+    "completionBased": "Após a conclusão",
+    "onDay": "No dia",
+    "until": "Até"
   },
   "weekdays": {
     "sunday": "Dom",
@@ -2867,7 +2929,8 @@
     "searching": "Pesquisando..."
   },
   "subtasks": {
-    "placeholder": "Adicionar uma subtarefa..."
+    "placeholder": "Adicionar uma subtarefa...",
+    "title": "Subtarefas"
   },
   "backup": {
     "title": "Backup e Restauração",
@@ -2929,7 +2992,8 @@
       "email": "Email",
       "push": "Push",
       "telegram": "Telegram",
-      "desktop": "Computador"
+      "desktop": "Computador",
+      "apprise": "Apprise"
     },
     "types": {
       "dueTasks": "Tarefas Pendentes",
@@ -3052,7 +3116,31 @@
       "enable": "Horas de silêncio",
       "from": "De",
       "to": "Até"
-    }
+    },
+    "apprise": {
+      "saved": "Servidor Apprise salvo.",
+      "title": "Apprise",
+      "connected": "Enviando por {{host}}.",
+      "description": "Envie notificações pelo seu próprio servidor Apprise para Pushover, ntfy, Discord, Matrix e outros.",
+      "remove": "Remover",
+      "serverLabel": "Endereço do servidor Apprise",
+      "keyPlaceholder": "Chave de configuração",
+      "keyLabel": "Chave de configuração",
+      "tagsPlaceholder": "Tags (opcional, ex.: all)",
+      "tagsLabel": "Tags",
+      "help": "Crie uma configuração no seu servidor Apprise e cole a chave aqui.",
+      "save": "Salvar"
+    },
+    "justNow": "Agora mesmo",
+    "minutesAgo": "há {{count}} min",
+    "hoursAgo": "há {{count}} h",
+    "daysAgo": "há {{count}} d",
+    "title": "Notificações",
+    "markAllRead": "Marcar todas como lidas",
+    "loading": "Carregando...",
+    "noNotifications": "Nenhuma notificação ainda",
+    "markAsRead": "Marcar como lida",
+    "delete": "Excluir"
   },
   "projectStatus": {
     "not_started": "Não Iniciado",
@@ -3764,10 +3852,32 @@
     "addTitle": "Add to Inbox, Task, Note or Project",
     "close": "Close",
     "button": "Capturar",
-    "syntaxHint": "#tag  +project  !1 a !3 prioridade  amanhã às 15h para uma data"
+    "syntaxHint": "#tag  +project  !1 a !3 prioridade  amanhã às 15h para uma data",
+    "slash": {
+      "tag": "Tag",
+      "project": "Projeto",
+      "person": "Pessoa",
+      "area": "Área",
+      "date": "Data de vencimento",
+      "repeat": "Repetir",
+      "today": "Hoje",
+      "tomorrow": "Amanhã",
+      "nextMonday": "Próxima segunda",
+      "inAWeek": "Em uma semana",
+      "everyDay": "Todos os dias",
+      "everyWeekday": "Todos os dias úteis",
+      "everyWeek": "Toda semana",
+      "everyMonth": "Todo mês",
+      "create": "Criar {{token}}"
+    }
   },
   "area": {
-    "loadError": "Não foi possível carregar as áreas"
+    "loadError": "Não foi possível carregar as áreas",
+    "viaProject": "via projeto",
+    "viewArea": "Ir para a área",
+    "searchAreas": "Pesquisar áreas…",
+    "clearArea": "Remover área",
+    "noAreasFound": "Nenhuma área encontrada"
   },
   "goals": {
     "newGoal": "Nova meta",
@@ -3819,7 +3929,21 @@
       "placeholder": "Resultado-chave",
       "progress": "{{done}} de {{total}} concluídos"
     },
-    "progressSummary": "Progresso da meta · {{done}} de {{total}} concluídos"
+    "progressSummary": "Progresso da meta · {{done}} de {{total}} concluídos",
+    "sort": {
+      "titleAsc": "Título de A a Z",
+      "titleDesc": "Título de Z a A",
+      "status": "Status",
+      "horizon": "Horizonte",
+      "area": "Área",
+      "projects": "Mais projetos",
+      "tasks": "Mais tarefas",
+      "custom": "Ordem personalizada",
+      "label": "Ordenar metas"
+    },
+    "reorderError": "Falha ao salvar a ordem das metas",
+    "noGoalsInArea": "Nenhuma meta vinculada a esta área.",
+    "maintenance": "Manutenção"
   },
   "templates": {
     "new": "Novo modelo",
@@ -4441,7 +4565,9 @@
   "sortable": {
     "move": "Move",
     "project": "sortable project",
-    "task": "sortable task"
+    "task": "sortable task",
+    "area": "área ordenável",
+    "goal": "meta ordenável"
   },
   "groupPage": {
     "title": "Group",
@@ -4478,7 +4604,18 @@
     "previous": "Previous file",
     "next": "Next file",
     "renameError": "Could not save the title",
-    "confirmDelete": "Delete file?"
+    "confirmDelete": "Delete file?",
+    "uploadSuccess": "Arquivo enviado com sucesso",
+    "uploadError": "Falha ao enviar o arquivo",
+    "deleteSuccess": "Anexo excluído com sucesso",
+    "deleteError": "Falha ao excluir o arquivo",
+    "heading": "Anexos",
+    "uploading": "Enviando...",
+    "clickToUpload": "Clique para enviar",
+    "maxSize": "Máx. {{size}} MB",
+    "anyFormat": "Qualquer tipo de arquivo",
+    "deleteConfirmTitle": "Excluir anexo",
+    "deleteConfirmMessage": "Tem certeza de que deseja excluir este anexo? Esta ação não pode ser desfeita."
   },
   "feedback": {
     "title": "Send feedback",
@@ -4941,5 +5078,9 @@
   },
   "sidebarDrop": {
     "failed": "Não foi possível atualizar este item."
+  },
+  "loading": {
+    "tasks": "Carregando tarefas…",
+    "subtasks": "Carregando subtarefas..."
   }
 }

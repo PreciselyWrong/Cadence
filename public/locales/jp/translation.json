@@ -59,7 +59,13 @@
     "showSearch": "検索を表示",
     "beta": "ベータ",
     "comingSoon": "近日公開",
-    "due": "Due"
+    "due": "Due",
+    "goal": "目標",
+    "priority": "優先度",
+    "tags": "タグ",
+    "goToToday": "今日へ移動",
+    "loadMore": "さらに読み込む",
+    "showAll": "すべて表示"
   },
   "sidebar": {
     "dashboard": "ダッシュボード",
@@ -310,7 +316,8 @@
       "clearDate": "日付をクリア",
       "moveToProject": "プロジェクトに移動"
     },
-    "reorderError": "Failed to save task order"
+    "reorderError": "Failed to save task order",
+    "deleteConfirmTitle": "タスクを削除"
   },
   "timeline": {
     "activityTimeline": "アクティビティタイムライン",
@@ -1063,7 +1070,11 @@
       "message": "目標「{{title}}」を削除してもよろしいですか？"
     },
     "createGoal": "目標を作成",
-    "updateGoal": "目標を更新"
+    "updateGoal": "目標を更新",
+    "saveAsTemplate": {
+      "title": "テンプレートとして保存",
+      "message": "「{{name}}」をテンプレートとして保存しますか？このプロジェクトを基にした再利用可能なテンプレートが作成されます。"
+    }
   },
   "forms": {
     "title": "タイトル",
@@ -1207,7 +1218,8 @@
     "priority": "優先度",
     "status": "状態",
     "created_at": "作成日時",
-    "custom": "カスタム"
+    "custom": "カスタム",
+    "completed_at": "完了日時"
   },
   "errors": {
     "required": "この項目は必須です",
@@ -1247,7 +1259,8 @@
     "failedToDeleteNote": "ノートを削除できませんでした。",
     "failedToDeleteTag": "タグを削除できませんでした。",
     "projectStatusUpdateFailed": "プロジェクトのステータスを更新できませんでした",
-    "failedToSaveTask": "タスクを保存できませんでした。"
+    "failedToSaveTask": "タスクを保存できませんでした。",
+    "permissionDenied": "アクセスが拒否されました"
   },
   "success": {
     "noteUpdated": "ノートが正常に更新されました！",
@@ -1406,7 +1419,11 @@
     "counts": {
       "active": "{{n}} active",
       "stash": "{{n}} in the stash"
-    }
+    },
+    "savedAsTemplate": "「{{name}}」をテンプレートとして保存しました。",
+    "saveAsTemplateError": "プロジェクトをテンプレートとして保存できませんでした。",
+    "sortTasks": "タスクを並べ替え",
+    "upcomingProjects": "今後のプロジェクト"
   },
   "projectItem": {
     "edit": "編集",
@@ -1427,7 +1444,8 @@
     "moreSharedUsers": "+{{count}}人のユーザー",
     "saveAsTemplate": "テンプレートとして保存",
     "pinToSidebar": "サイドバーにピン留め",
-    "unpinFromSidebar": "サイドバーからピン留め解除"
+    "unpinFromSidebar": "サイドバーからピン留め解除",
+    "changeStatus": "ステータスを変更"
   },
   "areas": {
     "title": "エリア",
@@ -1467,7 +1485,27 @@
       "personal": "個人",
       "family": "家族と社会",
       "logistics": "ロジスティクス"
-    }
+    },
+    "sort": {
+      "nameAsc": "名前 A→Z",
+      "nameDesc": "名前 Z→A",
+      "projects": "プロジェクト数順",
+      "goals": "目標数順",
+      "tasks": "タスク数順",
+      "custom": "カスタム順",
+      "label": "エリアを並べ替え"
+    },
+    "reorderError": "エリアの順序を保存できませんでした",
+    "edit": "編集",
+    "delete": "削除",
+    "tasksInArea": "タスク",
+    "noProjects": "このエリアにプロジェクトはありません。",
+    "noTasks": "このエリアに直接のタスクはありません",
+    "singular": "エリア",
+    "projects": "プロジェクト",
+    "goals": "目標",
+    "tasks": "タスク",
+    "progressSummary": "エリアの進捗 · {{total}} 件中 {{done}} 件完了"
   },
   "notes": {
     "loading": "ノートを読み込み中...",
@@ -1536,7 +1574,9 @@
       "tags": "Tags",
       "noProject": "No project",
       "more": "{{count}} more"
-    }
+    },
+    "edit": "編集",
+    "delete": "削除"
   },
   "tags": {
     "loading": "タグを読み込み中...",
@@ -1615,7 +1655,13 @@
     "weeks": "週間",
     "months": "月",
     "advancedHint": "特定の曜日や終了日については、タスクの詳細を開いてください。",
-    "recurring": "繰り返し"
+    "recurring": "繰り返し",
+    "everyNDays": "{{count}} 日ごと",
+    "everyNWeeks": "{{count}} 週間ごと",
+    "everyNMonths": "{{count}} か月ごと",
+    "completionBased": "完了後",
+    "onDay": "毎月の日付",
+    "until": "終了日"
   },
   "weekdays": {
     "monday": "月",
@@ -1952,7 +1998,23 @@
     "reminder": "リマインダー",
     "reminderPlaceholder": "リマインダーの日時を選択",
     "noReminder": "リマインダーなし",
-    "reminderUpdateError": "リマインダーを更新できませんでした"
+    "reminderUpdateError": "リマインダーを更新できませんでした",
+    "noArea": "エリアに割り当て",
+    "dueDateBeforeDeferError": "期限日は延期日より前にできません",
+    "areaUpdated": "エリアを更新しました",
+    "areaUpdateError": "エリアの更新に失敗しました",
+    "areaCleared": "エリアを解除しました",
+    "areaClearError": "エリアの解除に失敗しました",
+    "goalUpdated": "目標を更新しました",
+    "goalUpdateError": "目標の更新に失敗しました",
+    "goalCleared": "目標を解除しました",
+    "goalClearError": "目標の解除に失敗しました",
+    "notFound": "タスクが見つかりません",
+    "notFoundDescription": "お探しのタスクは存在しないか、削除されています。",
+    "hoursAgo": "{{count}} 時間前",
+    "minutesAgo": "{{count}} 分前",
+    "inMinutes": "{{count}} 分後",
+    "inHours": "{{count}} 時間後"
   },
   "calendar": {
     "focusSession": "集中",
@@ -2861,7 +2923,8 @@
     "searching": "検索中..."
   },
   "subtasks": {
-    "placeholder": "サブタスクを追加..."
+    "placeholder": "サブタスクを追加...",
+    "title": "サブタスク"
   },
   "backup": {
     "title": "バックアップと復元",
@@ -2923,7 +2986,8 @@
       "email": "メール",
       "push": "プッシュ",
       "telegram": "テレグラム",
-      "desktop": "デスクトップ"
+      "desktop": "デスクトップ",
+      "apprise": "Apprise"
     },
     "types": {
       "dueTasks": "期限内のタスク",
@@ -3046,7 +3110,31 @@
       "enable": "おやすみ時間",
       "from": "開始",
       "to": "終了"
-    }
+    },
+    "apprise": {
+      "saved": "Apprise サーバーを保存しました。",
+      "title": "Apprise",
+      "connected": "{{host}} 経由で送信中。",
+      "description": "お使いの Apprise サーバー経由で、Pushover、ntfy、Discord、Matrix などへ通知を送信します。",
+      "remove": "削除",
+      "serverLabel": "Apprise サーバーのアドレス",
+      "keyPlaceholder": "設定キー",
+      "keyLabel": "設定キー",
+      "tagsPlaceholder": "タグ（任意、例: all）",
+      "tagsLabel": "タグ",
+      "help": "Apprise サーバーで設定を作成し、そのキーをここに貼り付けてください。",
+      "save": "保存"
+    },
+    "justNow": "たった今",
+    "minutesAgo": "{{count}} 分前",
+    "hoursAgo": "{{count}} 時間前",
+    "daysAgo": "{{count}} 日前",
+    "title": "通知",
+    "markAllRead": "すべて既読にする",
+    "loading": "読み込み中...",
+    "noNotifications": "通知はまだありません",
+    "markAsRead": "既読にする",
+    "delete": "削除"
   },
   "projectStatus": {
     "not_started": "未開始",
@@ -3758,10 +3846,32 @@
     "close": "Close",
     "filesAttached_one": "1 file attached.",
     "button": "キャプチャ",
-    "syntaxHint": "#tag  +project  !1〜!3 優先度  明日15時 日付指定"
+    "syntaxHint": "#tag  +project  !1〜!3 優先度  明日15時 日付指定",
+    "slash": {
+      "tag": "タグ",
+      "project": "プロジェクト",
+      "person": "人物",
+      "area": "エリア",
+      "date": "期限日",
+      "repeat": "繰り返し",
+      "today": "今日",
+      "tomorrow": "明日",
+      "nextMonday": "次の月曜日",
+      "inAWeek": "1週間後",
+      "everyDay": "毎日",
+      "everyWeekday": "毎平日",
+      "everyWeek": "毎週",
+      "everyMonth": "毎月",
+      "create": "{{token}} を作成"
+    }
   },
   "area": {
-    "loadError": "エリアを読み込めませんでした"
+    "loadError": "エリアを読み込めませんでした",
+    "viaProject": "プロジェクト経由",
+    "viewArea": "エリアへ移動",
+    "searchAreas": "エリアを検索…",
+    "clearArea": "エリアを削除",
+    "noAreasFound": "エリアが見つかりません"
   },
   "goals": {
     "newGoal": "新しい目標",
@@ -3813,7 +3923,21 @@
       "placeholder": "主要な結果",
       "progress": "{{done}} / {{total}} 完了"
     },
-    "progressSummary": "目標の進捗 · {{done}} / {{total}} 完了"
+    "progressSummary": "目標の進捗 · {{done}} / {{total}} 完了",
+    "sort": {
+      "titleAsc": "タイトル A→Z",
+      "titleDesc": "タイトル Z→A",
+      "status": "ステータス",
+      "horizon": "期間",
+      "area": "エリア",
+      "projects": "プロジェクト数順",
+      "tasks": "タスク数順",
+      "custom": "カスタム順",
+      "label": "目標を並べ替え"
+    },
+    "reorderError": "目標の順序を保存できませんでした",
+    "noGoalsInArea": "このエリアに紐づく目標はありません。",
+    "maintenance": "メンテナンス"
   },
   "templates": {
     "new": "新しいテンプレート",
@@ -4434,7 +4558,9 @@
   "sortable": {
     "move": "Move",
     "project": "sortable project",
-    "task": "sortable task"
+    "task": "sortable task",
+    "area": "並べ替え可能なエリア",
+    "goal": "並べ替え可能な目標"
   },
   "groupPage": {
     "title": "Group",
@@ -4471,7 +4597,18 @@
     "previous": "Previous file",
     "next": "Next file",
     "renameError": "Could not save the title",
-    "confirmDelete": "Delete file?"
+    "confirmDelete": "Delete file?",
+    "uploadSuccess": "ファイルをアップロードしました",
+    "uploadError": "ファイルのアップロードに失敗しました",
+    "deleteSuccess": "添付ファイルを削除しました",
+    "deleteError": "ファイルの削除に失敗しました",
+    "heading": "添付ファイル",
+    "uploading": "アップロード中...",
+    "clickToUpload": "クリックしてアップロード",
+    "maxSize": "最大 {{size}} MB",
+    "anyFormat": "すべてのファイル形式",
+    "deleteConfirmTitle": "添付ファイルを削除",
+    "deleteConfirmMessage": "この添付ファイルを削除してもよろしいですか？この操作は取り消せません。"
   },
   "feedback": {
     "title": "Send feedback",
@@ -4928,5 +5065,9 @@
   },
   "sidebarDrop": {
     "failed": "この項目を更新できませんでした。"
+  },
+  "loading": {
+    "tasks": "タスクを読み込み中…",
+    "subtasks": "サブタスクを読み込み中..."
   }
 }
