@@ -131,6 +131,10 @@
     <string name="tasks_disconnect">Se déconnecter</string>
     <string name="tasks_disconnect_title">Se déconnecter du serveur Cadence ?</string>
     <string name="tasks_disconnect_message">Les données synchronisées seront effacées de cet appareil.</string>
+    <string name="tasks_foreign_habits_title">Ces habitudes viennent d\'un autre compte</string>
+    <string name="tasks_foreign_habits_message">Les habitudes de ce téléphone appartiennent au compte utilisé avant. Elles ne sont pas envoyées à ce compte-ci. Gardées sur ce téléphone seulement, elles ne se synchronisent plus avec ce compte ; supprimées, ce sont les habitudes de ce compte qui arrivent.</string>
+    <string name="tasks_foreign_habits_keep">Les garder sur ce téléphone seulement</string>
+    <string name="tasks_foreign_habits_delete">Les supprimer</string>
     <string name="tasks_scan_qr">Scanner le code QR</string>
     <string name="tasks_or">ou</string>
     <string name="tasks_server_address">Adresse du serveur</string>

@@ -33,4 +33,16 @@ interface ServerConnection {
 
     /** Oublie la clé et vide les données synchronisées de l'appareil. */
     suspend fun disconnect()
+
+    /**
+     * Vrai quand le compte connecté n'est pas celui des habitudes du téléphone et que la personne n'a
+     * pas encore choisi : ces habitudes ne lui sont jamais envoyées en silence.
+     */
+    fun observeForeignHabits(): Flow<Boolean>
+
+    /** Garde ces habitudes sur ce téléphone seulement : leur synchro reste coupée avec ce compte. */
+    suspend fun keepForeignHabitsLocal()
+
+    /** Supprime ces habitudes du téléphone ; celles du compte connecté arrivent au prochain passage. */
+    suspend fun deleteForeignHabits()
 }

@@ -189,6 +189,32 @@ describe('due time', () => {
             expect(result.remindersSent).toBe(0);
         });
 
+        // reminder_sent_at is the job's own bookkeeping ("this reminder_at was
+        // handled"), not "the user was notified": it is stamped even when no
+        // channel sent anything, and the phone never reads it (it rings task
+        // reminders itself, docs/36-notifications.md).
+        it('stamps reminder_sent_at as handled even when nothing was sent', async () => {
+            await user.update({
+                notification_preferences: {
+                    taskReminders: { inApp: false },
+                },
+            });
+            const task = await Task.create({
+                name: 'Phone only',
+                user_id: user.id,
+                reminder_at: new Date('2026-10-15T09:59:00Z'),
+            });
+            const now = new Date('2026-10-15T10:00:00Z');
+
+            await checkTaskReminders(now);
+
+            await task.reload();
+            expect(task.reminder_sent_at.toISOString()).toBe(now.toISOString());
+            expect(
+                await Notification.count({ where: { user_id: user.id } })
+            ).toBe(0);
+        });
+
         it('keeps task reminders off the desktop unless asked', async () => {
             await Task.create({
                 name: 'Phone only',

@@ -12,7 +12,9 @@ import ch.nicolab.cadence.tasks.sync.HttpSyncApi
 import ch.nicolab.cadence.tasks.sync.AuthError
 import ch.nicolab.cadence.tasks.sync.HABIT_ENTITIES
 import ch.nicolab.cadence.tasks.sync.HabitSyncRegistry
+import ch.nicolab.cadence.tasks.sync.HabitOwnership
 import ch.nicolab.cadence.tasks.sync.HabitSyncStore
+import ch.nicolab.cadence.tasks.sync.LocalHabits
 import ch.nicolab.cadence.tasks.sync.SYNCED_ENTITIES
 import ch.nicolab.cadence.tasks.sync.SyncEngine
 
@@ -36,8 +38,19 @@ internal class TasksRuntime private constructor(context: Context) {
         .build()
     private val clockState = ClockStateStore(appContext)
     private val hlc = Hlc(node = clockState.node(), initial = clockState.load())
-    private val habitStore = HabitSyncRegistry.storage?.let { storage ->
-        HabitSyncStore(storage, clockState.node()) { op, reason, name ->
+    private val habitStorage = HabitSyncRegistry.storage
+    private val ownership = HabitOwnership(
+        DataStoreHabitOwnerStore(appContext),
+        habitStorage?.let { storage ->
+            object : LocalHabits {
+                override suspend fun hasRows() = storage.hasRows()
+                override suspend fun clearOutbox() = storage.clearOutbox()
+                override suspend fun deleteAll() = storage.deleteAll()
+            }
+        },
+    )
+    private val habitStore = habitStorage?.let { storage ->
+        HabitSyncStore(storage, clockState.node(), allowed = ownership::syncAllowed) { op, reason, name ->
             database.failedOpDao().insert(
                 FailedOpEntity(op.opId, op.entity, op.uid, reason, System.currentTimeMillis(), name),
             )
@@ -46,7 +59,7 @@ internal class TasksRuntime private constructor(context: Context) {
     private val store = RoomSyncStore(database, clockState, habits = habitStore)
     private val deviceZone = DeviceZone(appContext)
     // La connexion et le moteur se réfèrent l'un à l'autre : le moteur n'est lu qu'à l'exécution.
-    val connection = ServerConnectionImpl(appContext, database, store) { engine }
+    val connection = ServerConnectionImpl(appContext, database, store, ownership) { engine }
     val api = HttpSyncApi { connection.currentSession() ?: throw AuthError("Aucun serveur configuré") }
     val linkPreviews = RoomLinkPreviews(database.linkPreviewDao(), api::linkMetadata)
     val review = ReviewRepository(api::call, ReviewCache(reviewCacheDir(appContext)))

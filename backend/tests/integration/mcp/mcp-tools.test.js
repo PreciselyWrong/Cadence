@@ -3640,6 +3640,25 @@ describe('MCP Tools Integration', () => {
                 await item.reload();
                 expect(item.status).toBe('processed');
             });
+
+            it('processes an item captured on Android with a UUID uid', async () => {
+                const item = await InboxItem.create({
+                    uid: '3f2a9c1e-7b4d-4e8a-9f01-2c3d4e5f6a7b',
+                    user_id: user.id,
+                    content: 'From the phone',
+                    source: 'android',
+                });
+
+                const response = await callMcpTool(
+                    apiTokenValue,
+                    'process_inbox_item',
+                    { uid: item.uid }
+                );
+
+                expect(response.status).toBe(200);
+                await item.reload();
+                expect(item.status).toBe('processed');
+            });
         });
 
         describe('delete_inbox_item', () => {

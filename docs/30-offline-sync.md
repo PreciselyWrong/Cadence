@@ -23,7 +23,7 @@ The protocol stays the same.
 
 ### Server-only task field
 
-`task` also carries `reminder_sent_at` (instant, or null): written by the server when it has notified the reminder, listed in `server_fields` of `GET /sync/meta` and refused (`rejected`) when a client pushes it. The server clears it when `reminder_at` is moved from a device. A device must not ring a reminder whose `reminder_sent_at` is at or after its `reminder_at`.
+`task` also carries `reminder_sent_at` (instant, or null): the server reminder job's bookkeeping, written when the job has handled the reminder (even if it sent nothing), listed in `server_fields` of `GET /sync/meta` and refused (`rejected`) when a client pushes it. The server clears it when `reminder_at` is moved from a device. Devices must not use it to silence their own alarms: the phone rings every task reminder and keeps its own per-device record of what it rang ([Notifications](36-notifications.md)).
 
 ### Cadence habit entities
 

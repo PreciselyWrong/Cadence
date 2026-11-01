@@ -41,6 +41,8 @@ data class AccountProfile(
     val timezone: String?,
     val firstDayOfWeek: Int? = null,
     val quietHours: QuietHours? = null,
+    /** `uid` du compte : avec l'adresse du serveur, il dit à qui appartiennent les habitudes du téléphone. */
+    val uid: String? = null,
 )
 
 data class PushResult(val opId: String, val status: String, val reason: String?)

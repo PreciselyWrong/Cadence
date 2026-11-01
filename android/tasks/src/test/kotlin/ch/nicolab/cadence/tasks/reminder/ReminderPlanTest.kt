@@ -1,8 +1,14 @@
 package ch.nicolab.cadence.tasks.reminder
 
+import ch.nicolab.cadence.tasks.data.TaskRow
+import ch.nicolab.cadence.tasks.data.WireCodec
+import ch.nicolab.cadence.tasks.data.toItem
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskStatus
 import java.time.Instant
+import java.time.ZoneOffset
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -16,8 +22,11 @@ class ReminderPlanTest {
         reminderAt: Instant? = null,
         status: Int = TaskStatus.NOT_STARTED,
         dueDate: Instant? = null,
-        reminderSentAt: Instant? = null,
-    ) = TaskItem(uid = uid, name = uid, status = status, reminderAt = reminderAt, dueDate = dueDate, reminderSentAt = reminderSentAt)
+    ) = TaskItem(uid = uid, name = uid, status = status, reminderAt = reminderAt, dueDate = dueDate)
+
+    private fun fromWire(json: String) =
+        TaskRow(WireCodec.taskFromWire(Json.parseToJsonElement(json).jsonObject), pendingSync = false)
+            .toItem(ZoneOffset.UTC, ZoneOffset.UTC)
 
     @Test
     fun `pose les rappels à venir dans les 14 jours seulement`() {
@@ -48,17 +57,17 @@ class ReminderPlanTest {
     }
 
     @Test
-    fun `ne sonne pas un rappel que le serveur a déjà notifié`() {
-        val at = now.plusSeconds(3600)
-        val tasks = listOf(
-            task("notifie", reminderAt = at, reminderSentAt = at),
-            task("notifie-apres", reminderAt = at, reminderSentAt = at.plusSeconds(5)),
-            task("notifie-avant", reminderAt = at, reminderSentAt = at.minusSeconds(86_400)),
-            task("jamais", reminderAt = at),
-            task("notifie-en-retard", reminderAt = now.minusSeconds(3600), reminderSentAt = now.minusSeconds(3590)),
+    fun `sonne même si le serveur a déjà posé sa cloche (reminder_sent_at)`() {
+        // Le téléphone est la seule voix des rappels de tâches : le tampon du serveur
+        // (sa propre comptabilité, posé même sans aucun envoi) ne le fait jamais taire.
+        val upcoming = fromWire(
+            """{"uid":"a-venir","name":"Appeler","reminder_at":"2026-10-30T10:00:00.000Z","reminder_sent_at":"2026-10-30T10:00:05.000Z"}""",
+        )
+        val late = fromWire(
+            """{"uid":"en-retard","name":"Lire","reminder_at":"2026-10-30T08:00:00.000Z","reminder_sent_at":"2026-10-30T08:00:30.000Z"}""",
         )
 
-        assertEquals(setOf("notifie-avant", "jamais"), ReminderPlan.wanted(tasks, emptySet(), now).keys)
+        assertEquals(setOf("a-venir", "en-retard"), ReminderPlan.wanted(listOf(upcoming, late), emptySet(), now).keys)
     }
 
     @Test

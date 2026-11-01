@@ -56,11 +56,6 @@ class TaskReminderReceiver : BroadcastReceiver() {
         val task = TasksGraph.repository(context).observeTask(uid).first() ?: return
         // Un rappel déplacé ou fermé depuis sa pose ne doit pas notifier : une autre alarme s'en charge.
         if (task.isClosed || task.reminderAt?.toEpochMilli() != firedAt) return
-        // Le serveur ou un autre appareil a déjà notifié ce rappel : pas de seconde sonnerie.
-        if (task.reminderAlreadySent) {
-            TaskReminderScheduler.recordDelivered(context, uid, Instant.ofEpochMilli(firedAt))
-            return
-        }
         TaskReminderNotifier.show(context, task)
         TaskReminderScheduler.recordDelivered(context, uid, Instant.ofEpochMilli(firedAt))
     }

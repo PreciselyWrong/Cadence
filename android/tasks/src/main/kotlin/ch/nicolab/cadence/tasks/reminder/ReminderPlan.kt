@@ -28,13 +28,17 @@ internal object ReminderPlan {
 
     fun occurrenceOf(dueDate: Instant?): Long = dueDate?.toEpochMilli() ?: NO_OCCURRENCE
 
-    /** Rappels à poser, par uid : à venir dans l'horizon, ou passés depuis moins de [LATE_WINDOW] et non remis. */
+    /**
+     * Rappels à poser, par uid : à venir dans l'horizon, ou passés depuis moins de [LATE_WINDOW] et non remis.
+     * Le téléphone est la seule voix des rappels de tâches : seule sa propre remise ([delivered], par appareil)
+     * l'empêche de sonner ; `reminder_sent_at` est la comptabilité du serveur et n'est pas lu ici.
+     */
     fun wanted(tasks: List<TaskItem>, delivered: Set<String>, now: Instant): Map<String, Instant> {
         val horizon = now.plus(HORIZON)
         val earliest = now.minus(LATE_WINDOW)
         return buildMap {
             for (task in tasks) {
-                if (task.isClosed || task.reminderAlreadySent) continue
+                if (task.isClosed) continue
                 val at = task.reminderAt ?: continue
                 val upcoming = at.isAfter(now) && !at.isAfter(horizon)
                 val late = !at.isAfter(now) && !at.isBefore(earliest) &&

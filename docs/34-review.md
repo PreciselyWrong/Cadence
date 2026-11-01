@@ -29,6 +29,8 @@ Three different intentions stay three different things:
 - Review page: one visible **Decide** button per row (label always shown, with a chevron) that opens a menu with the choices that fit the list.
 - API: `PATCH /api/task/:uid` accepts `in_view` (boolean), `week_of` (`YYYY-MM-DD` in that week, `this_week`, `next_week` or `null`), `review_on` (`YYYY-MM-DD` or `null`), `later` (boolean) and `reviewed: true`. MCP `update_task` takes the first four.
 
+`this_week` is the calendar week that contains today in the user's timezone, starting on their first day of week (Profile; Monday when unset). It stays that week on its last day: on a Sunday, a Monday-start user's *This week* is the week that ends tonight, because the **This week** tab, Today's suggestions and the chips all compare `week_of` with the current week, and a task decided for the coming week would vanish from them until Monday. To plan the coming week, send `next_week` (or a date in it). A Sunday-start user's week opens on Sunday, so the same Sunday already gives the new week.
+
 `later: true` adds the user's `#someday` tag and takes the task out of view, out of the week and off today's plan; it wins over `in_view` or `week_of` sent with it. `later: false` removes the tag. A parked task keeps its project, note, tags, links and history, stays in search, and is never shown as overdue on Today (the existing `#someday` rule). Its due date, if it has one, is left alone.
 
 ### On Today

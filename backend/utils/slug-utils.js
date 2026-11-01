@@ -1,5 +1,11 @@
 'use strict';
 
+const SERVER_UID = /^[0-9abcdefghijkmnpqrstuvwxyz]{15}$/;
+const UUID_SOURCE =
+    '[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}';
+const CLIENT_UUID = new RegExp(`^${UUID_SOURCE}$`);
+const UUID_PREFIX = new RegExp(`^(${UUID_SOURCE})(?:-|$)`);
+
 /**
  * Creates a URL-safe slug from a string
  * @param {string} text - The text to slugify
@@ -44,8 +50,11 @@ function createUidSlug(uid, name, maxSlugLength = 40) {
 function extractUidFromSlug(uidSlug) {
     if (!uidSlug) return '';
 
+    // A UUID (made offline by a client) holds hyphens itself: take it whole.
+    const uuidMatch = uidSlug.match(UUID_PREFIX);
+    if (uuidMatch) return uuidMatch[1];
+
     // UID is always 15 characters by our custom implementation, extract the first part before the first hyphen
-    // But handle cases where the uid itself might contain hyphens
     const parts = uidSlug.split('-');
     if (parts.length === 1) {
         // No slug, just uid
@@ -64,12 +73,16 @@ function extractUidFromSlug(uidSlug) {
 }
 
 /**
- * Validates if a string looks like a valid uid
+ * Validates if a string looks like a valid uid: one made by the server, or a
+ * UUID chosen by a client that created the row offline (/api/v1/sync).
  * @param {string} str - String to validate
  * @returns {boolean} True if it looks like a uid
  */
 function isValidUid(str) {
-    return /^[0-9abcdefghijkmnpqrstuvwxyz]{15}$/.test(str);
+    return (
+        typeof str === 'string' &&
+        (SERVER_UID.test(str) || CLIENT_UUID.test(str))
+    );
 }
 
 module.exports = {

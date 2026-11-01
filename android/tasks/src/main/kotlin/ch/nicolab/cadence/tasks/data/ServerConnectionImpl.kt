@@ -14,6 +14,7 @@ import ch.nicolab.cadence.tasks.ServerConnection
 import ch.nicolab.cadence.tasks.model.Funnel
 import ch.nicolab.cadence.tasks.sync.AccountProfile
 import ch.nicolab.cadence.tasks.sync.AuthError
+import ch.nicolab.cadence.tasks.sync.HabitOwnership
 import ch.nicolab.cadence.tasks.sync.HttpSyncApi
 import ch.nicolab.cadence.tasks.sync.ProtocolError
 import ch.nicolab.cadence.tasks.sync.ServerSession
@@ -48,6 +49,7 @@ internal class ServerConnectionImpl(
     private val context: Context,
     private val database: TududiDatabase,
     private val store: SyncStore,
+    private val ownership: HabitOwnership,
     private val engineProvider: () -> SyncEngine,
 ) : ServerConnection {
 
@@ -96,8 +98,11 @@ internal class ServerConnectionImpl(
             }
             // Le prochain passage repart d'un instantané complet, pour ce serveur.
             store.saveCursor(null)
+            // Les habitudes d'un autre compte ne partent jamais vers celui-ci : la personne choisit.
+            val owned = ownership.onConnect(HabitOwnership.accountId(url, profile.uid, profile.email)) ==
+                HabitOwnership.Outcome.OWNED
             // Un autre serveur ne connaît pas les habitudes du téléphone : elles repartent en entier.
-            if (previousUrl != url) store.serverChanged()
+            if (owned && previousUrl != url) store.serverChanged()
             SyncScheduler.schedulePeriodic(context)
             SyncScheduler.requestNow(context)
             Result.success(
@@ -124,7 +129,23 @@ internal class ServerConnectionImpl(
 
     /** Appelé à chaque synchronisation : un changement de fuseau sur le web est pris en compte. */
     suspend fun saveProfile(profile: AccountProfile) {
-        context.connectionStore.edit { prefs -> applyProfile(prefs, profile) }
+        val prefs = context.connectionStore.edit { prefs -> applyProfile(prefs, profile) }
+        prefs[ConnectionKeys.SERVER_URL]?.let { url ->
+            ownership.adoptIfUnknown(HabitOwnership.accountId(url, profile.uid, profile.email))
+        }
+    }
+
+    override fun observeForeignHabits(): Flow<Boolean> = ownership.observeForeign()
+
+    override suspend fun keepForeignHabitsLocal() = ownership.keepLocal()
+
+    override suspend fun deleteForeignHabits() {
+        engineProvider().whileIdle {
+            ownership.deleteLocal()
+            // Les habitudes du compte connecté n'ont pas été reçues tant que la synchro était coupée.
+            store.saveCursor(null)
+        }
+        SyncScheduler.requestNow(context)
     }
 
     /**
@@ -137,6 +158,7 @@ internal class ServerConnectionImpl(
         SyncScheduler.cancel(context)
         engine.whileIdle {
             context.connectionStore.edit { prefs -> prefs.clear() }
+            ownership.onDisconnect()
             withContext(Dispatchers.IO) {
                 database.clearAllTables()
                 reviewCacheDir(context).deleteRecursively()

@@ -161,6 +161,19 @@ describe('Areas Routes', () => {
             expect(response.body.description).toBe(area.description);
         });
 
+        it('gets an area created offline with a UUID uid', async () => {
+            const offline = await Area.create({
+                uid: '3f2a9c1e-7b4d-4e8a-9f01-2c3d4e5f6a7b',
+                name: 'Phone area',
+                user_id: user.id,
+            });
+
+            const response = await agent.get(`/api/areas/${offline.uid}`);
+
+            expect(response.status).toBe(200);
+            expect(response.body.uid).toBe(offline.uid);
+        });
+
         it('should return 400 for invalid uid format', async () => {
             const response = await agent.get('/api/areas/invalid-uid');
 

@@ -34,7 +34,11 @@ class HabitSyncStoreTest {
         override suspend fun delete(entity: String, uid: String) = Unit
         override suspend fun deleteEntry(entryUid: String) { deletedEntries += entryUid }
         override suspend fun displayName(entity: String, uid: String): String? = "Lire"
-        override suspend fun markAllDirty() = Unit
+        var dirtied = 0
+        override suspend fun markAllDirty() { dirtied++ }
+        override suspend fun hasRows() = rows.isNotEmpty()
+        override suspend fun clearOutbox() = entries.clear()
+        override suspend fun deleteAll() { rows.clear(); entries.clear() }
         override suspend fun raiseClockFloor(ms: Long) { floor = maxOf(floor, ms) }
         override fun observeLastChange(): Flow<Long> = emptyFlow()
     }
@@ -111,6 +115,23 @@ class HabitSyncStoreTest {
         val row = buildJsonObject { put("uid", "hc-remote"); put("record_id", "r1") }
         store.applyServerRow("health_connect_import", row)
         assertEquals(listOf("hc-local"), storage.deletedEntries)
+    }
+
+    @Test
+    fun `habitudes d'un autre compte, rien ne part, rien n'arrive, rien n'est renvoye en entier`() = runTest {
+        var allowed = false
+        val guarded = HabitSyncStore(storage, "andtest", nowMs = { 1_700_000_000_000L }, allowed = { allowed }) { _, _, _ -> }
+        storage.entries += OutboxEntry("habit", "h1", "name", 1)
+        storage.rows["habit" to "h1"] = mapOf("name" to "Lire")
+
+        assertTrue(guarded.pendingOps(10).isEmpty())
+        guarded.applyServerRow("habit", buildJsonObject { put("uid", "h2") })
+        guarded.markAllDirty()
+        assertTrue(storage.applied.isEmpty())
+        assertEquals(0, storage.dirtied)
+
+        allowed = true
+        assertEquals(listOf("habit"), guarded.pendingOps(10).map { it.entity })
     }
 
     @Test

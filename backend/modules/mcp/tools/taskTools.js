@@ -722,7 +722,7 @@ function registerTaskTools(server, context, tools) {
         week_of: {
             type: ['string', 'null'],
             description:
-                'Commit the task to a week: a date in that week (YYYY-MM-DD), "this_week" or "next_week"; null removes it. Not a due date.',
+                'Commit the task to a week: a date in that week (YYYY-MM-DD), "this_week" or "next_week"; null removes it. Not a due date. Weeks start on the user\'s first day of week; "this_week" is the week containing today even on its last day, so use "next_week" to plan the coming week.',
         },
         review_on: {
             type: ['string', 'null'],

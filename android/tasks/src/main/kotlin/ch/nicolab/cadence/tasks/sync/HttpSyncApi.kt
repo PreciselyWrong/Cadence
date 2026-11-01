@@ -137,6 +137,7 @@ private fun isResetRequired(body: String?): Boolean = body != null && runCatchin
 internal fun profileOf(fields: JsonObject): AccountProfile = shaped {
     AccountProfile(
         email = (fields["email"] as? JsonPrimitive)?.contentOrNull,
+        uid = (fields["uid"] as? JsonPrimitive)?.contentOrNull,
         timezone = (fields["timezone"] as? JsonPrimitive)?.contentOrNull,
         firstDayOfWeek = (fields["first_day_of_week"] as? JsonPrimitive)?.intOrNull,
         quietHours = (fields["quiet_hours"] as? JsonObject)?.let { quiet ->

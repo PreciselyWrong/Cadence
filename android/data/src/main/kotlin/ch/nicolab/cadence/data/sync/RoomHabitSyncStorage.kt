@@ -126,6 +126,29 @@ class RoomHabitSyncStorage(private val database: CadenceDatabase) : HabitSyncSto
         withContext(Dispatchers.IO) { database.runInTransaction { HabitSyncTriggers.markAllDirty(db) } }
     }
 
+    override suspend fun hasRows(): Boolean = withContext(Dispatchers.IO) {
+        HabitSyncSpecs.all.any { spec -> db.query("SELECT 1 FROM ${spec.table} LIMIT 1").use { it.moveToFirst() } }
+    }
+
+    override suspend fun clearOutbox() {
+        withContext(Dispatchers.IO) { db.execSQL("DELETE FROM habit_sync_outbox") }
+    }
+
+    override suspend fun deleteAll() {
+        withContext(Dispatchers.IO) {
+            database.runInTransaction {
+                db.execSQL("INSERT OR REPLACE INTO habit_sync_state (`key`, value) VALUES ('${HabitSyncTriggers.STATE_APPLYING}', '1')")
+                try {
+                    // Enfants d'abord ; les clés étrangères suivent par cascade de toute façon.
+                    HabitSyncSpecs.all.asReversed().forEach { spec -> db.execSQL("DELETE FROM ${spec.table}") }
+                    db.execSQL("DELETE FROM habit_sync_outbox")
+                } finally {
+                    db.execSQL("DELETE FROM habit_sync_state WHERE `key` = '${HabitSyncTriggers.STATE_APPLYING}'")
+                }
+            }
+        }
+    }
+
     override suspend fun raiseClockFloor(ms: Long) {
         val current = dao.state(HabitSyncTriggers.STATE_FLOOR)?.toLongOrNull() ?: 0L
         if (ms > current) dao.putState(HabitSyncStateEntity(HabitSyncTriggers.STATE_FLOOR, ms.toString()))

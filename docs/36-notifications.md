@@ -24,7 +24,8 @@ Each type has its own switches: **In-app, Push, Telegram, Apprise, Desktop**. Em
 
 - The notification row is always the record; the external channels do not depend on **In-app**. A task reminder with In-app off and Push on still rings the phone: the row is stored already read, so no badge appears.
 - Server-side the chosen channels are written to the notification `sources` (`push`, `apprise`, `telegram`, `desktop`).
-- **The phone owns task reminders.** Android sets the alarm itself; `taskReminders.desktop` is **off by default**. Turn it on for a row only if you want the computer to ring too.
+- **The phone owns task reminders.** Android sets the alarm itself and rings every task reminder, whatever the server did: it never reads `reminder_sent_at`, and it keeps only its own record of what it rang (per device, keyed by task uid and `reminder_at`), so an inexact alarm that fires late still rings. Two phones on one account each ring. `taskReminders.desktop` is **off by default**. Turn it on for a row only if you want the computer to ring too.
+- `tasks.reminder_sent_at` is the server job's bookkeeping: the `task_reminders` job stamps it when it has handled a `reminder_at` (before sending, so a failing channel is not retried every minute), whether or not any channel was on. It does not mean anyone was notified.
 - **The phone owns habit reminders too.** `habitReminders` is in-app only by default: Push, Telegram, Apprise and Desktop are off, so the phone is the one voice. Turn a channel on only if you want the server to ring there too.
 - **Desktop is on by default** for due soon (tasks and projects) and for deferred-now-active, off for everything else. A stored explicit choice always wins.
 - The desktop client (`desktop/`) shows a notification only when its `sources` contain `desktop`, once per notification `uid` (the last 500 uids are remembered on disk), and not before `deliver_after`.
@@ -62,4 +63,4 @@ Web: in the task panel, **More** reveals a **Reminder** chip (shown directly onc
 
 ## Sync notes
 
-`reminder_at` and `reminder_sent_at` reach clients through the normal task sync. A device that changes `reminder_at` must reset `reminder_sent_at` on the server (the sync module does not yet; see the repository TODO). `quiet_hours` is read through `GET /api/profile` and is not an entity of `/api/v1/sync`.
+`reminder_at` and `reminder_sent_at` reach clients through the normal task sync. `reminder_sent_at` is a server-only field (`serverFields` in `backend/modules/sync/registry.js`): a device cannot push it, and the sync module clears it when a push changes `reminder_at`, so the server job handles the new time. Clients must not use it to silence their own alarms. `quiet_hours` is read through `GET /api/profile` and is not an entity of `/api/v1/sync`.

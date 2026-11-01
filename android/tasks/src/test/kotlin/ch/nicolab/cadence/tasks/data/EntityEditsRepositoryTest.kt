@@ -244,5 +244,8 @@ class EntityEditsRepositoryTest {
         override fun observe(): Flow<ConnectionInfo?> = emptyFlow()
         override suspend fun connect(serverUrl: String, token: String): Result<ConnectionInfo> = error("hors ligne")
         override suspend fun disconnect() = Unit
+        override fun observeForeignHabits(): Flow<Boolean> = emptyFlow()
+        override suspend fun keepForeignHabitsLocal() = Unit
+        override suspend fun deleteForeignHabits() = Unit
     }
 }

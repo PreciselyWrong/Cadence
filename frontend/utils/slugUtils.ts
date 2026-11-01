@@ -57,8 +57,15 @@ export function createUidSlug(
  * @param uidSlug - The uid-slug (e.g., "abc123-clean-the-backyard")
  * @returns The extracted uid
  */
+// Rows created offline on Android have a UUID uid, hyphens included.
+const UUID_PREFIX =
+    /^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})(?:-|$)/;
+
 export function extractUidFromSlug(uidSlug: string): string {
     if (!uidSlug) return '';
+
+    const uuidMatch = uidSlug.match(UUID_PREFIX);
+    if (uuidMatch) return uuidMatch[1];
 
     // UID is always 15 characters by our custom implementation, extract the first part before the first hyphen
     // But handle cases where the uid itself might contain hyphens

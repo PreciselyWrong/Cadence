@@ -24,13 +24,15 @@ internal class HabitSyncStore(
     private val storage: HabitSyncStorage,
     private val node: String,
     private val nowMs: () -> Long = System::currentTimeMillis,
+    /** Faux tant que le compte connecté n'est pas celui des habitudes ([HabitOwnership]) : synchro coupée. */
+    private val allowed: suspend () -> Boolean = { true },
     private val recordFailure: suspend (op: OutboxOp, reason: String?, name: String?) -> Unit,
 ) {
     /** Les lignes envoyées dont l'acquittement est attendu, pour savoir quoi retirer. */
     private val inFlight = mutableMapOf<String, List<OutboxEntry>>()
 
     suspend fun pendingOps(limit: Int): List<OutboxOp> {
-        if (limit <= 0) return emptyList()
+        if (limit <= 0 || !allowed()) return emptyList()
         val plan = HabitSyncPlanner.plan(storage.pendingEntries(limit)) { entity, uid -> storage.row(entity, uid) }
         if (plan.orphans.isNotEmpty()) storage.clear(plan.orphans)
         return plan.ops.take(limit).map { planned ->
@@ -62,6 +64,7 @@ internal class HabitSyncStore(
     }
 
     suspend fun applyServerRow(entity: String, data: JsonObject) {
+        if (!allowed()) return
         raiseFloor(data)
         val result = try {
             storage.apply(entity, data)
@@ -71,9 +74,13 @@ internal class HabitSyncStore(
         if (result is ApplyResult.Applied) result.replacedEntryUid?.let { storage.deleteEntry(it) }
     }
 
-    suspend fun deleteRow(entity: String, uid: String) = storage.delete(entity, uid)
+    suspend fun deleteRow(entity: String, uid: String) {
+        if (allowed()) storage.delete(entity, uid)
+    }
 
-    suspend fun markAllDirty() = storage.markAllDirty()
+    suspend fun markAllDirty() {
+        if (allowed()) storage.markAllDirty()
+    }
 
     private suspend fun raiseFloor(data: JsonObject) {
         val clocks = data["field_clocks"] as? JsonObject ?: return

@@ -476,6 +476,23 @@ describe('Inbox Routes', () => {
             expect(response.body.status).toBe('processed');
         });
 
+        it('processes an item captured offline with a UUID uid', async () => {
+            const offline = await InboxItem.create({
+                uid: '3f2a9c1e-7b4d-4e8a-9f01-2c3d4e5f6a7b',
+                content: 'Captured on the phone',
+                status: 'added',
+                source: 'android',
+                user_id: user.id,
+            });
+
+            const response = await agent.patch(
+                `/api/inbox/${offline.uid}/process`
+            );
+
+            expect(response.status).toBe(200);
+            expect(response.body.status).toBe('processed');
+        });
+
         it('should return 404 for non-existent inbox item', async () => {
             const response = await agent.patch(
                 '/api/inbox/invalid-uid/process'

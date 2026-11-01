@@ -274,6 +274,7 @@ Natural key, unique per user: `habit_uid` + `local_date`; a second row with the 
 - **Timer.** `accumulated_seconds` and `running_since` are merged field by field: always push both together in the same op, so a merge never mixes two devices' halves.
 - **Default groups.** The server creates the four default groups of a user the first time it needs them (first habit created from the web, `GET /cadence/groups`, import) with the oldest possible clock, so a group a device renamed or moved always wins over the server's copy.
 - **Account erasure** deletes all of them.
+- **Switching accounts on a device.** Habits are local first and stay on the phone when it disconnects. The Android app remembers which account (server address and user `uid`) they belong to; connected to another account, it never pushes them: their outbox is cleared, their sync is off both ways, and the app asks whether to keep them on this phone only (sync stays off with that account) or delete them (the new account's habits then arrive from a full snapshot). Reconnecting the original account resumes their sync.
 
 ### Rule engine and golden fixtures
 

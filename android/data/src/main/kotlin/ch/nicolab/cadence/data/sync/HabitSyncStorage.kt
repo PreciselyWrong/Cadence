@@ -45,6 +45,15 @@ interface HabitSyncStorage {
     /** Retient la plus haute horloge serveur vue, en ms : les écritures suivantes la dépassent. */
     suspend fun raiseClockFloor(ms: Long)
 
+    /** Vrai si le téléphone garde au moins une ligne d'habitude synchronisable. */
+    suspend fun hasRows(): Boolean
+
+    /** Oublie toutes les écritures en attente, sans toucher aux lignes. */
+    suspend fun clearOutbox()
+
+    /** Supprime toutes les lignes synchronisables et leur file, sans rien noter à envoyer. */
+    suspend fun deleteAll()
+
     /** Émet la date de la dernière écriture en attente ; sert à demander une synchro après une saisie. */
     fun observeLastChange(): kotlinx.coroutines.flow.Flow<Long>
 }

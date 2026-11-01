@@ -149,6 +149,21 @@ describe('Projects Routes', () => {
             expect(response.body.description).toBe(project.description);
         });
 
+        it('gets a project created offline with a UUID uid', async () => {
+            const offline = await Project.create({
+                uid: '3f2a9c1e-7b4d-4e8a-9f01-2c3d4e5f6a7b',
+                name: 'Phone Project',
+                user_id: user.id,
+            });
+
+            const response = await agent.get(
+                `/api/project/${offline.uid}-phone-project`
+            );
+
+            expect(response.status).toBe(200);
+            expect(response.body.id).toBe(offline.id);
+        });
+
         it('should return 404 for non-existent project', async () => {
             const response = await agent.get(
                 '/api/project/nonexistent-uid-slug'

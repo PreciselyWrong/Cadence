@@ -50,6 +50,7 @@ fun TududiConnectionSection(modifier: Modifier = Modifier) {
     val connection = remember(context) { TasksGraph.connection(context) }
     val repository = remember(context) { TasksGraph.repository(context) }
     val info by connection.observe().collectAsStateWithLifecycle(initialValue = null)
+    val foreignHabits by connection.observeForeignHabits().collectAsStateWithLifecycle(initialValue = false)
     val scope = rememberCoroutineScope()
     val notifications = rememberNotificationPermission()
 
@@ -170,6 +171,25 @@ fun TududiConnectionSection(modifier: Modifier = Modifier) {
                 color = MaterialTheme.colorScheme.error,
             )
         }
+    }
+
+    if (foreignHabits) {
+        // Pas de fermeture sans choix ; d'ici là, la synchro des habitudes reste coupée.
+        AlertDialog(
+            onDismissRequest = {},
+            title = { Text(stringResource(R.string.tasks_foreign_habits_title)) },
+            text = { Text(stringResource(R.string.tasks_foreign_habits_message)) },
+            confirmButton = {
+                TextButton(onClick = { scope.launch { connection.keepForeignHabitsLocal() } }) {
+                    Text(stringResource(R.string.tasks_foreign_habits_keep))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { scope.launch { connection.deleteForeignHabits() } }) {
+                    Text(stringResource(R.string.tasks_foreign_habits_delete), color = MaterialTheme.colorScheme.error)
+                }
+            },
+        )
     }
 
     if (confirmDisconnect) {
