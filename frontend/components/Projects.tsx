@@ -7,7 +7,6 @@ import {
 } from '@heroicons/react/24/solid';
 import ConfirmDialog from './Shared/ConfirmDialog';
 import ProjectModal from './Project/ProjectModal';
-import IconSortDropdown from './Shared/IconSortDropdown';
 import FilterDropdown, { FilterOption } from './Shared/FilterDropdown';
 import {
     DndContext,
@@ -66,9 +65,6 @@ import useCompleteProject, {
 import { useToast } from './Shared/ToastContext';
 import { saveProjectAsTemplate } from '../utils/templatesService';
 import { fetchProfile, updateUiSettings } from '../utils/profileService';
-import ProjectsListSettings, {
-    ProjectsListFilters,
-} from './Project/ProjectsListSettings';
 import { flattenProjectTree } from '../utils/projectTree';
 import OverflowMenu from './Shared/OverflowMenu';
 import SkeletonRows from './Shared/SkeletonRows';
@@ -119,6 +115,11 @@ const compareProjects = (a: Project, b: Project, orderBy: string) => {
     if (valueA > valueB) return isAsc ? 1 : -1;
     return 0;
 };
+
+interface ProjectsListFilters {
+    showSomeday: boolean;
+    showCompleted: boolean;
+}
 
 const LIST_FILTERS_KEY = 'projectsListFilters';
 
@@ -936,23 +937,52 @@ const Projects: React.FC = () => {
                                 </button>
                             ))}
                         </div>
-                        <IconSortDropdown
-                            options={sortOptions}
-                            value={orderBy}
-                            onChange={handleSortChange}
-                            ariaLabel={t('tasks.sortBy', 'Sort by')}
-                            title={t('tasks.sortBy', 'Sort by')}
-                            dropdownLabel={t('tasks.sortBy', 'Sort by')}
-                            align="right"
-                        />
-                        <ProjectsListSettings
-                            value={listFilters}
-                            onChange={handleListFiltersChange}
-                        />
                         <OverflowMenu
                             label={t('common.moreActions', 'More actions')}
                             testId="projects-more-menu"
                             items={[
+                                ...sortOptions.map((option) => ({
+                                    key: `sort-${option.value}`,
+                                    label: option.label,
+                                    checked: orderBy === option.value,
+                                    onClick: () =>
+                                        handleSortChange(option.value),
+                                    testId: `projects-sort-${option.value}`,
+                                })),
+                                {
+                                    key: 'show-someday',
+                                    label: t(
+                                        'projects.listSettings.showSomeday',
+                                        'Show someday projects'
+                                    ),
+                                    title: t(
+                                        'projects.listSettings.showSomedayHint',
+                                        'Projects tagged #someday.'
+                                    ),
+                                    checked: listFilters.showSomeday,
+                                    onClick: () =>
+                                        handleListFiltersChange({
+                                            ...listFilters,
+                                            showSomeday:
+                                                !listFilters.showSomeday,
+                                        }),
+                                    testId: 'projects-show-someday',
+                                },
+                                {
+                                    key: 'show-completed',
+                                    label: t(
+                                        'projects.listSettings.showCompleted',
+                                        'Show completed projects'
+                                    ),
+                                    checked: listFilters.showCompleted,
+                                    onClick: () =>
+                                        handleListFiltersChange({
+                                            ...listFilters,
+                                            showCompleted:
+                                                !listFilters.showCompleted,
+                                        }),
+                                    testId: 'projects-show-completed',
+                                },
                                 {
                                     key: 'history',
                                     label: t('projects.history', 'History'),

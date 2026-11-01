@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
+import { CheckIcon, EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 
 export interface OverflowMenuItem {
     key: string;
@@ -12,6 +12,8 @@ export interface OverflowMenuItem {
     testId?: string;
     /** Tooltip explaining the action. */
     title?: string;
+    /** Shows a check and marks the item as a checkbox (a choice or a toggle). */
+    checked?: boolean;
 }
 
 interface OverflowMenuProps {
@@ -91,7 +93,12 @@ const OverflowMenu: React.FC<OverflowMenuProps> = ({
                             <button
                                 key={item.key}
                                 type="button"
-                                role="menuitem"
+                                role={
+                                    item.checked === undefined
+                                        ? 'menuitem'
+                                        : 'menuitemcheckbox'
+                                }
+                                aria-checked={item.checked}
                                 onClick={() => {
                                     setOpen(false);
                                     item.onClick?.();
@@ -101,7 +108,10 @@ const OverflowMenu: React.FC<OverflowMenuProps> = ({
                                 title={item.title}
                             >
                                 {item.icon}
-                                {item.label}
+                                <span className="flex-1">{item.label}</span>
+                                {item.checked && (
+                                    <CheckIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                                )}
                             </button>
                         )
                     )}

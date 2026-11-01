@@ -301,3 +301,9 @@ Revue écran par écran (Aujourd'hui, Boîte, Tâches, Projets, page projet, Age
 - **Problème** : un assistant qui classe les nouveaux éléments (Hermès, profil `capture`) n'apprenait que les nouvelles tâches.
 - **Décision** : deux cases de plus dans le groupe « Changes » de la carte Webhooks (Profil → Notifications) : « Note created » et « Link saved » (`note.created`, `link.created`). Logique : `backend/modules/webhooks/captureEvents.js`, `frontend/utils/webhooksService.ts`.
 - **Android** : rien à reprendre. Les webhooks se règlent sur le web seulement.
+
+### 2026-11-01 — En-tête de Projets : un tri et des réglages en moins
+
+- **Problème** : l'en-tête des Projets comptait sept contrôles (recherche, cartes/liste, tri, réglages, « … », nouveau) ; le tri et les réglages (projets « someday » et terminés) servaient rarement.
+- **Décision** : restent visibles la recherche, le choix cartes/liste, « … » et « Nouveau projet ». Le tri (cinq choix, coché) et les deux interrupteurs de réglages passent dans le menu « … », après lesquels viennent Historique, Depuis un modèle et Importer. Le menu se ferme au choix, interrupteurs compris. Le point bleu du réglage modifié disparaît avec le bouton réglages ; l'état reste visible dans le menu (coche).
+- **Android à reprendre** : tri et deux réglages (projets someday et terminés) dans le menu de la barre d'outils, pas en boutons à part ; coche sur le choix actif.
