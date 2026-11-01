@@ -54,6 +54,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
@@ -80,6 +81,8 @@ internal class RoomTaskRepository(
     private val nowMs: () -> Long = System::currentTimeMillis,
     /** Le téléphone a un réseau ([NetworkMonitor]) : sans lui, la ligne d'état dit « Hors ligne ». */
     private val online: Flow<Boolean> = NetworkMonitor.online,
+    /** Écritures d'habitudes à envoyer, déjà filtrées par le compte ([pendingHabitWrites]). */
+    private val habitPending: Flow<Int> = flowOf(0),
 ) : TaskRepository {
     private val taskDao = database.taskDao()
     private val projectDao = database.projectDao()
@@ -209,7 +212,7 @@ internal class RoomTaskRepository(
     override fun observeSyncStatus(): Flow<SyncStatus> = combine(
         connection.observe(),
         syncState,
-        combine(outbox.observeCount(), database.deferredCallDao().observeCount()) { ops, calls -> ops + calls },
+        combine(outbox.observeCount(), database.deferredCallDao().observeCount(), habitPending) { ops, calls, habits -> ops + calls + habits },
         database.syncMetaDao().observe(RoomSyncStore.LAST_SYNC),
         online,
     ) { info, state, pending, lastSync, isOnline ->

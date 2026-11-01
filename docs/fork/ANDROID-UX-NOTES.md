@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-01 — « En attente » compte les habitudes
+
+- **Problème** : la ligne de synchro comptait les tâches et les appels différés, pas les habitudes restées sur le téléphone.
+- **Décision** : une ligne d'habitude non envoyée compte (une seule fois par ligne, même si plusieurs champs changent) ; rien ne compte pour un autre compte dont la synchro est coupée.
+- **Web** : rien à reprendre.
+
 ### 2026-11-01 — Raccourci « Inbox » sur l'icône
 
 - **Problème** : pour noter une idée sans date, il fallait ouvrir la liste des tâches puis choisir l'Inbox.

@@ -21,6 +21,8 @@ class RoomHabitSyncStorage(private val database: CadenceDatabase) : HabitSyncSto
     private val dao get() = database.habitSyncDao()
     private val db: SupportSQLiteDatabase get() = database.openHelper.writableDatabase
 
+    override fun observePendingCount(): kotlinx.coroutines.flow.Flow<Int> = dao.observePendingWrites()
+
     override suspend fun pendingEntries(maxRows: Int): List<OutboxEntry> {
         val out = mutableListOf<OutboxEntry>()
         var rows = 0

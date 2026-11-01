@@ -7,6 +7,9 @@ import ch.nicolab.cadence.tasks.TaskRepository
 import ch.nicolab.cadence.tasks.review.ReviewCache
 import ch.nicolab.cadence.tasks.review.ReviewRepository
 import java.io.File
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOf
 import ch.nicolab.cadence.tasks.sync.Hlc
 import ch.nicolab.cadence.tasks.sync.HttpSyncApi
 import ch.nicolab.cadence.tasks.sync.AuthError
@@ -15,6 +18,7 @@ import ch.nicolab.cadence.tasks.sync.HabitSyncRegistry
 import ch.nicolab.cadence.tasks.sync.HabitOwnership
 import ch.nicolab.cadence.tasks.sync.HabitSyncStore
 import ch.nicolab.cadence.tasks.sync.LocalHabits
+import ch.nicolab.cadence.tasks.sync.pendingHabitWrites
 import ch.nicolab.cadence.tasks.sync.SYNCED_ENTITIES
 import ch.nicolab.cadence.tasks.sync.SyncEngine
 
@@ -69,6 +73,9 @@ internal class TasksRuntime private constructor(context: Context) {
         onProfile = connection::saveProfile,
         entities = if (habitStore != null) SYNCED_ENTITIES + HABIT_ENTITIES else SYNCED_ENTITIES,
     )
+    private val habitPending: Flow<Int> = habitStorage?.let { storage ->
+        combine(storage.observePendingCount(), ownership.observeForeign()) { count, foreign -> pendingHabitWrites(count, foreign) }
+    } ?: flowOf(0)
     val repository = RoomTaskRepository(
         appContext,
         database,
@@ -78,6 +85,7 @@ internal class TasksRuntime private constructor(context: Context) {
         connection,
         engine.state,
         deviceZone.zone,
+        habitPending = habitPending,
     )
     val review = ReviewRepository(
         api::call,

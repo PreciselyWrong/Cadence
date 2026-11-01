@@ -9,6 +9,9 @@
 ### Nouveautés
 - Raccourci « Inbox » sur l'icône : une idée part directement dans l'Inbox, sans date ni choix de tâche.
 
+### Nouveautés
+- « Hors ligne · N modifications en attente » compte aussi les écritures d'habitudes non envoyées (pas pour un autre compte, dont la synchro est coupée).
+
 ### Corrections
 - Échéance passée : plus de couleur d'alerte ni de graisse dans le widget Tâches, le widget Aujourd'hui, la barre de l'agenda et le bloc « À replanifier » ; la date passée s'affiche comme les autres.
 - En-têtes de section : un compteur à zéro n'est plus affiché.

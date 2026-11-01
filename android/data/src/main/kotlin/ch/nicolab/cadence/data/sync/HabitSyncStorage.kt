@@ -54,6 +54,9 @@ interface HabitSyncStorage {
     /** Supprime toutes les lignes synchronisables et leur file, sans rien noter à envoyer. */
     suspend fun deleteAll()
 
+    /** Nombre de lignes d'habitudes à envoyer ; 0 pour un stockage sans file. */
+    fun observePendingCount(): kotlinx.coroutines.flow.Flow<Int> = kotlinx.coroutines.flow.flowOf(0)
+
     /** Émet la date de la dernière écriture en attente ; sert à demander une synchro après une saisie. */
     fun observeLastChange(): kotlinx.coroutines.flow.Flow<Long>
 }

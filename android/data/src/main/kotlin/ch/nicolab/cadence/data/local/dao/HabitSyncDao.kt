@@ -17,6 +17,10 @@ interface HabitSyncDao {
     @Query("SELECT COUNT(*) FROM habit_sync_outbox")
     suspend fun pendingCount(): Int
 
+    /** Lignes d'habitudes à envoyer : un champ modifié compte pour sa ligne. */
+    @Query("SELECT COUNT(*) FROM (SELECT DISTINCT entity, uid FROM habit_sync_outbox)")
+    fun observePendingWrites(): kotlinx.coroutines.flow.Flow<Int>
+
     @Query("SELECT field FROM habit_sync_outbox WHERE entity = :entity AND uid = :uid")
     suspend fun pendingFields(entity: String, uid: String): List<String>
 
