@@ -1,4 +1,11 @@
 {
+  "outline": {
+    "saveError": "Could not save that change",
+    "hintLocked": "Enter: new line",
+    "hint": "Enter: new line · Tab / Shift+Tab: indent · Alt+↑ / Alt+↓: move",
+    "newLine": "New task",
+    "title": "Outline"
+  },
   "focusStats": {
     "title": "Фокус",
     "lastDays_one": "{{count}} ден",

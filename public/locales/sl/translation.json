@@ -1,4 +1,11 @@
 {
+  "outline": {
+    "saveError": "Could not save that change",
+    "hintLocked": "Enter: new line",
+    "hint": "Enter: new line · Tab / Shift+Tab: indent · Alt+↑ / Alt+↓: move",
+    "newLine": "New task",
+    "title": "Outline"
+  },
   "focusStats": {
     "title": "Osredotočenost",
     "lastDays_one": "{{count}} dan",
@@ -1150,7 +1157,7 @@
     "stuckProjectsDesc": "Projekti, ki niso bili nedavno posodobljeni",
     "reviewItems": "Kliknite za pregled in izboljšanje svojega delovnega toka",
     "suggestion": "Kliknite na katerikoli element zgoraj, da ga odprete in izboljšate.",
-    "issuesFound_one": "1 težava s produktivnostjo potrebuje pozornost",
+    "issuesFound_one": "{{count}} težava s produktivnostjo potrebuje pozornost",
     "issuesFound_other": "{{count}} težav s produktivnostjo potrebuje pozornost",
     "nothingYet": "Še ni ničesar za pregled.",
     "blankSlateHint": "Asistent pregleda vaše naloge in projekte ter poišče, kar potrebuje pozornost, na primer nejasne naloge, zastalo delo ali obtičale projekte. Dodajte nekaj nalog in se vrnite pozneje.",

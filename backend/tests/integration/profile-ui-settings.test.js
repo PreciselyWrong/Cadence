@@ -335,6 +335,17 @@ describe('PUT /api/profile/ui-settings', () => {
             });
         });
 
+        it('saves an outline for a project', async () => {
+            await agent.put('/api/profile/ui-settings').send({
+                viewTypes: { 'project:p1': 'outline' },
+            });
+
+            const profile = await agent.get('/api/profile');
+            expect(profile.body.ui_settings.viewTypes).toEqual({
+                'project:p1': 'outline',
+            });
+        });
+
         it('drops values other than list, board or calendar', async () => {
             await agent.put('/api/profile/ui-settings').send({
                 viewTypes: {

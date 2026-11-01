@@ -1,4 +1,11 @@
 {
+  "outline": {
+    "saveError": "Could not save that change",
+    "hintLocked": "Enter: new line",
+    "hint": "Enter: new line · Tab / Shift+Tab: indent · Alt+↑ / Alt+↓: move",
+    "newLine": "New task",
+    "title": "Outline"
+  },
   "focusStats": {
     "title": "Фокус",
     "lastDays_one": "{{count}} день",
@@ -1150,7 +1157,7 @@
     "stuckProjectsDesc": "Проекты давно не обновлялись",
     "reviewItems": "Нажмите, чтобы просмотреть и улучшить свой рабочий процесс",
     "suggestion": "Нажмите на любой элемент выше, чтобы открыть его и внести улучшения.",
-    "issuesFound_one": "1 проблема с продуктивностью требует внимания",
+    "issuesFound_one": "{{count}} проблема с продуктивностью требует внимания",
     "issuesFound_other": "{{count}} проблем с продуктивностью требуют внимания",
     "nothingYet": "Пока нечего проверять.",
     "blankSlateHint": "Ассистент просматривает ваши задачи и проекты в поисках того, что требует внимания: размытых задач, застоявшейся работы или застрявших проектов. Добавьте несколько задач и загляните позже.",

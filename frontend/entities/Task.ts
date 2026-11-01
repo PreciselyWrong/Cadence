@@ -94,6 +94,8 @@ export interface Task {
     parent_task_id?: number;
     parent_task?: { id: number; uid: string; name: string } | null;
     subtasks?: Task[];
+    // Position of a subtask among its siblings (server-assigned).
+    order?: number | null;
     parent_child_logic_executed?: boolean;
     attachments?: Attachment[];
     comments_count?: number;

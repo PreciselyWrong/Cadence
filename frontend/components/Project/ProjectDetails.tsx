@@ -61,6 +61,7 @@ import ProjectShareModal from './ProjectShareModal';
 import ProjectModal from './ProjectModal';
 import ProjectTasksSection from './ProjectTasksSection';
 import ProjectTimeline from './Timeline/ProjectTimeline';
+import ProjectOutline from './ProjectOutline';
 import ProjectBoard from './Board/ProjectBoard';
 import TaskMonthCalendar from '../Task/TaskMonthCalendar';
 import { useViewType } from '../../hooks/useViewType';
@@ -85,13 +86,13 @@ import { saveProjectAsTemplate } from '../../utils/templatesService';
 import TaskModal from '../Task/TaskModal';
 import { comparePinnedTasks } from '../../utils/taskPin';
 
-type ProjectViewTab = 'tasks' | 'timeline' | 'board' | 'calendar';
+type ProjectViewTab = 'tasks' | 'outline' | 'timeline' | 'board' | 'calendar';
 
-// Minimal adds Calendar; Dense keeps the three tabs it always had.
+// Minimal adds Calendar; Dense keeps the tabs it always had, plus Outline.
 const projectViewTabs = (isMinimal: boolean): ProjectViewTab[] =>
     isMinimal
-        ? ['tasks', 'board', 'calendar', 'timeline']
-        : ['tasks', 'board', 'timeline'];
+        ? ['tasks', 'outline', 'board', 'calendar', 'timeline']
+        : ['tasks', 'outline', 'board', 'timeline'];
 
 const ProjectDetails: React.FC = () => {
     const { uidSlug } = useParams<{ uidSlug: string }>();
@@ -120,7 +121,8 @@ const ProjectDetails: React.FC = () => {
             const stored = localStorage.getItem('project_view');
             return stored === 'timeline' ||
                 stored === 'board' ||
-                stored === 'calendar'
+                stored === 'calendar' ||
+                stored === 'outline'
                 ? stored
                 : 'tasks';
         } catch {
@@ -434,6 +436,13 @@ const ProjectDetails: React.FC = () => {
             ...(isTodoMdProject(project) ? { todo_section: todoSection } : {}),
         } as Task);
         setTasks((prev) => [created, ...prev]);
+    };
+
+    // The outline changes parents and order: it reads the tasks again.
+    const reloadProjectTasks = async () => {
+        if (!uidSlug) return;
+        const fresh = await fetchProjectBySlug(uidSlug);
+        setTasks(fresh.tasks || fresh.Tasks || []);
     };
 
     // TODO.md projects: read the files again, then show what they now hold.
@@ -1010,37 +1019,47 @@ const ProjectDetails: React.FC = () => {
                                         >
                                             {tab === 'tasks'
                                                 ? t('tasks.title', 'Tasks')
-                                                : tab === 'board'
+                                                : tab === 'outline'
                                                   ? t(
-                                                        'projectBoard.title',
-                                                        'Board'
+                                                        'outline.title',
+                                                        'Outline'
                                                     )
-                                                  : tab === 'calendar'
+                                                  : tab === 'board'
                                                     ? t(
-                                                          'viewType.calendar',
-                                                          'Calendar'
+                                                          'projectBoard.title',
+                                                          'Board'
                                                       )
-                                                    : t(
-                                                          'projectTimeline.title',
-                                                          'Timeline'
-                                                      )}
+                                                    : tab === 'calendar'
+                                                      ? t(
+                                                            'viewType.calendar',
+                                                            'Calendar'
+                                                        )
+                                                      : t(
+                                                            'projectTimeline.title',
+                                                            'Timeline'
+                                                        )}
                                         </button>
                                     ))}
                                 </div>
 
                                 {
                                     <div className="flex shrink-0 items-center justify-end gap-2 sm:gap-4">
-                                        {/* The Minimal task list has its own
-                                            "+ Add task" line right below. */}
-                                        {!(isMinimal && view === 'tasks') && (
-                                            <NewItemButton
-                                                label={t('capture.add', 'Add')}
-                                                onClick={() =>
-                                                    openCaptureForProject()
-                                                }
-                                                testId="project-add-button"
-                                            />
-                                        )}
+                                        {/* The Minimal task list and the
+                                            outline have their own
+                                            "+ Add task" line below. */}
+                                        {!(isMinimal && view === 'tasks') &&
+                                            view !== 'outline' && (
+                                                <NewItemButton
+                                                    label={t(
+                                                        'capture.add',
+                                                        'Add'
+                                                    )}
+                                                    onClick={() =>
+                                                        openCaptureForProject()
+                                                    }
+                                                    testId="project-add-button"
+                                                />
+                                            )}
                                         {aiAssistantEnabled && (
                                             <button
                                                 onClick={() =>
@@ -1174,6 +1193,17 @@ const ProjectDetails: React.FC = () => {
                                                 due_date: dueDate,
                                             })
                                         }
+                                    />
+                                ) : view === 'outline' ? (
+                                    <ProjectOutline
+                                        tasks={displayTasks}
+                                        projectUid={project.uid as string}
+                                        onReorder={handleTaskReorder}
+                                        onReload={reloadProjectTasks}
+                                        readOnly={project.access_level === 'ro'}
+                                        structureLocked={isTodoMdProject(
+                                            project
+                                        )}
                                     />
                                 ) : view === 'timeline' ? (
                                     <ProjectTimeline

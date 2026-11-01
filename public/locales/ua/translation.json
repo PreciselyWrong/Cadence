@@ -1,4 +1,11 @@
 {
+  "outline": {
+    "saveError": "Could not save that change",
+    "hintLocked": "Enter: new line",
+    "hint": "Enter: new line · Tab / Shift+Tab: indent · Alt+↑ / Alt+↓: move",
+    "newLine": "New task",
+    "title": "Outline"
+  },
   "focusStats": {
     "title": "Фокус",
     "lastDays_one": "{{count}} день",
@@ -2151,7 +2158,7 @@
     "stuckProjectsDesc": "Проекти не оновлювалися нещодавно",
     "reviewItems": "Натисніть, щоб переглянути та вдосконалити ваш робочий процес",
     "suggestion": "Натисніть на будь-який пункт вище, щоб відкрити його та внести поліпшення.",
-    "issuesFound_one": "1 проблема з продуктивністю потребує уваги",
+    "issuesFound_one": "{{count}} проблема з продуктивністю потребує уваги",
     "issuesFound_other": "{{count}} проблем з продуктивністю потребують уваги",
     "nothingYet": "Поки нічого перевіряти.",
     "blankSlateHint": "Асистент переглядає ваші завдання й проекти, шукаючи те, що потребує уваги: розмиті завдання, роботу, що застоялася, або проекти, які застрягли. Додайте кілька завдань і загляньте пізніше.",

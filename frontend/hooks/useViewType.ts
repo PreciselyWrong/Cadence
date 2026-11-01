@@ -5,7 +5,7 @@ import {
     updateUiSettings,
 } from '../utils/profileService';
 
-export const VIEW_TYPES: ViewType[] = ['list', 'board', 'calendar'];
+export const VIEW_TYPES: ViewType[] = ['list', 'board', 'calendar', 'outline'];
 
 export const isViewType = (value: unknown): value is ViewType =>
     typeof value === 'string' && (VIEW_TYPES as string[]).includes(value);

@@ -1,4 +1,11 @@
 {
+  "outline": {
+    "saveError": "Could not save that change",
+    "hintLocked": "Enter: new line",
+    "hint": "Enter: new line · Tab / Shift+Tab: indent · Alt+↑ / Alt+↓: move",
+    "newLine": "New task",
+    "title": "Outline"
+  },
   "focusStats": {
     "title": "Skupienie",
     "lastDays_one": "{{count}} dzień",
@@ -1150,7 +1157,7 @@
     "stuckProjectsDesc": "Projekty nieaktualizowane ostatnio",
     "reviewItems": "Kliknij, aby przejrzeć i poprawić swój przepływ pracy",
     "suggestion": "Kliknij na dowolny element powyżej, aby go otworzyć i wprowadzić poprawki.",
-    "issuesFound_one": "1 problem z produktywnością wymaga uwagi",
+    "issuesFound_one": "{{count}} problem z produktywnością wymaga uwagi",
     "issuesFound_other": "{{count}} problemów z produktywnością wymaga uwagi",
     "nothingYet": "Na razie nie ma nic do przejrzenia.",
     "blankSlateHint": "Asystent przegląda twoje zadania i projekty w poszukiwaniu rzeczy wymagających uwagi, takich jak niejasne zadania, zaległa praca czy utknięte projekty. Dodaj kilka zadań i zajrzyj później.",

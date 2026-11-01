@@ -22,8 +22,9 @@ export interface EisenhowerMatrixConfig {
     quadrants: MatrixQuadrant[];
 }
 
-// How a saved view, tag, project or the Tasks list is shown in Minimal.
-export type ViewType = 'list' | 'board' | 'calendar';
+// How a saved view, tag, project or the Tasks list is shown in Minimal
+// (`outline` only for a project).
+export type ViewType = 'list' | 'board' | 'calendar' | 'outline';
 
 interface Profile {
     id: number;

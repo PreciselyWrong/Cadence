@@ -1,4 +1,11 @@
 {
+  "outline": {
+    "saveError": "Impossible d'enregistrer ce changement",
+    "hintLocked": "Entrée : nouvelle ligne",
+    "hint": "Entrée : nouvelle ligne · Tab / Maj+Tab : décaler · Alt+↑ / Alt+↓ : déplacer",
+    "newLine": "Nouvelle tâche",
+    "title": "Arborescence"
+  },
   "focusStats": {
     "title": "Focus",
     "lastDays_one": "{{count}} jour",

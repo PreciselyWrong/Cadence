@@ -408,7 +408,7 @@ A project can have a **parent project** it owns. Use it to split a big project i
 
 ## Timeline View
 
-The project page has three tabs above the tasks: **Tasks** (the list), **Board** (free columns, see [Board View](#board-view)) and **Timeline** (a Gantt chart). The chosen tab is remembered per browser. In Minimal, a **Calendar** tab (a month of the tasks by due date, drag to change the due date) is added, and the List, Board and Calendar choice is remembered for each project in `ui_settings.viewTypes` (see [Lists, Board or Calendar](08-views-system.md#list-board-or-calendar-minimal)).
+The project page has four tabs above the tasks: **Tasks** (the list), **Outline** (see [Outline View](#outline-view)), **Board** (free columns, see [Board View](#board-view)) and **Timeline** (a Gantt chart). The chosen tab is remembered per browser. In Minimal, a **Calendar** tab (a month of the tasks by due date, drag to change the due date) is added, and the List, Outline, Board and Calendar choice is remembered for each project in `ui_settings.viewTypes` (see [Lists, Board or Calendar](08-views-system.md#list-board-or-calendar-minimal)).
 
 - **Bars** run from a task's start date to its due date. A task with only a due date shows as a diamond; one with only a start shows as a short faded bar. Tasks with neither sit in a "No dates yet" tray under the chart.
 - **Scheduling:** drag a bar to move both dates, drag either end to change one, drag a diamond to move the due date. Times of day are kept. Drag a task from the tray onto a day to give it that day as start and due. Clicking a bar opens the task.
@@ -417,6 +417,17 @@ The project page has three tabs above the tasks: **Tasks** (the list), **Board**
 - **Colour:** status (default), priority (red, amber, blue) or the first tag's colour. Done tasks, overdue ones and the highlighted path keep their own colours. The choice is remembered per browser.
 - **Scale:** Days, Weeks or Months. A line marks today, dashed lines mark the project's start and due date, and open tasks past their due date are orange.
 - The chart follows the page's status filter and search.
+
+## Outline View
+
+The **Outline** tab (both densities) shows the project's tasks and their subtasks as one indented list of editable lines, driven from the keyboard:
+
+- **Enter** saves the line and opens a new one below at the same level (a subtask line opens a subtask of the same parent); typing a name and pressing **Enter** creates the task there and opens the next line. **Escape**, or **Backspace** on an empty line, drops it. **+ Add task** at the foot adds a line at the end (the header **Add** button is hidden on this tab).
+- **Tab** makes a task a subtask of the task above it; **Shift+Tab** lifts a subtask back out, right after its former parent. One level only, as everywhere else: a task that has subtasks of its own does not indent.
+- **Alt+↑ / Alt+↓** move a line among its siblings: for tasks this saves the project's custom order (and switches the list to it), for subtasks it rewrites the order of all the parent's subtasks as the server holds them, so none is dropped.
+- **↑ / ↓** move between lines; the checkbox completes or reopens a task; leaving a line saves its new name.
+- Read-only viewers get the outline without editing. In a TODO.md project only new lines and ticks are written (names, indentation and order belong to the file).
+- The outline follows the page's status filter, search and sort. In Minimal the choice is remembered per project in `ui_settings.viewTypes` (`outline`). Logic: `frontend/components/Project/ProjectOutline.tsx`, using the existing task endpoints (`POST /api/task`, `PATCH /api/task/:uid` with `parent_task_id` or `subtasks`, `PUT /api/tasks/order`).
 
 ## Board View
 
