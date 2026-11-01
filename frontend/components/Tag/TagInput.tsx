@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTagColor } from '../../utils/tagColor';
 import { Tag } from '../../entities/Tag';
 import { useTranslation } from 'react-i18next';
 
@@ -18,6 +19,7 @@ const TagInput: React.FC<TagInputProps> = ({
     onFocus,
 }) => {
     const { t } = useTranslation();
+    const tagColor = useTagColor();
     const [inputValue, setInputValue] = useState('');
     const [tags, setTags] = useState<string[]>(initialTags || []);
     const [filteredTags, setFilteredTags] = useState<Tag[]>([]);
@@ -216,15 +218,20 @@ const TagInput: React.FC<TagInputProps> = ({
                             title={
                                 tag.pinned
                                     ? t('tags.pinnedTag', 'Pinned tag')
-                                    : t('tags.frequentlyUsed', 'Frequently used')
+                                    : t(
+                                          'tags.frequentlyUsed',
+                                          'Frequently used'
+                                      )
                             }
                         >
-                            {tag.color && (
+                            {
                                 <span
                                     className="inline-block w-2 h-2 rounded-full flex-shrink-0"
-                                    style={{ backgroundColor: tag.color }}
+                                    style={{
+                                        backgroundColor: tagColor(tag).value,
+                                    }}
                                 />
-                            )}
+                            }
                             {tag.name}
                         </button>
                     ))}
@@ -235,24 +242,24 @@ const TagInput: React.FC<TagInputProps> = ({
                 ref={containerRef}
                 className="flex flex-wrap items-center gap-2 border border-gray-300 dark:border-gray-900 bg-white dark:bg-gray-900 rounded-md px-2 min-h-[40px] py-2"
             >
-                {tags.length > 0 ? (
-                    tags.map((tag, index) => (
-                        <span
-                            key={index}
-                            className="flex items-center bg-gray-200 text-gray-700 text-xs font-medium px-2.5 py-0.5 rounded"
-                        >
-                            {tag}
-                            <button
-                                type="button"
-                                onClick={() => removeTag(index)}
-                                className="ml-1 text-gray-600 hover:text-gray-800 "
-                                aria-label={`Remove tag ${tag}`}
-                            >
-                                &times;
-                            </button>
-                        </span>
-                    ))
-                ) : null}
+                {tags.length > 0
+                    ? tags.map((tag, index) => (
+                          <span
+                              key={index}
+                              className="flex items-center bg-gray-200 text-gray-700 text-xs font-medium px-2.5 py-0.5 rounded"
+                          >
+                              {tag}
+                              <button
+                                  type="button"
+                                  onClick={() => removeTag(index)}
+                                  className="ml-1 text-gray-600 hover:text-gray-800 "
+                                  aria-label={`Remove tag ${tag}`}
+                              >
+                                  &times;
+                              </button>
+                          </span>
+                      ))
+                    : null}
 
                 <input
                     type="text"
@@ -297,12 +304,15 @@ const TagInput: React.FC<TagInputProps> = ({
                             aria-selected={highlightedIndex === index}
                         >
                             <span className="inline-flex items-center gap-1.5">
-                                {tag.color && (
+                                {
                                     <span
                                         className="inline-block w-2.5 h-2.5 rounded-full flex-shrink-0"
-                                        style={{ backgroundColor: tag.color }}
+                                        style={{
+                                            backgroundColor:
+                                                tagColor(tag).value,
+                                        }}
                                     />
-                                )}
+                                }
                                 {highlightedIndex === index ? (
                                     <>
                                         {inputValue.length > 0 && (

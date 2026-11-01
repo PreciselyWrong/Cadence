@@ -27,7 +27,7 @@ internal object TaskExtras {
      * Règle de la série d'après les champs serveur `recurrence_*` gardés dans les extras. Les tableaux
      * (`recurrence_weekdays`, `recurrence_exdates`) arrivent en liste JSON ou en texte JSON ; une valeur illisible est ignorée.
      */
-    fun recurrenceRule(extrasJson: String): RecurrenceRule {
+    fun recurrenceRule(extrasJson: String, zone: ZoneId? = null): RecurrenceRule {
         val extras = runCatching { Json.parseToJsonElement(extrasJson).jsonObject }.getOrNull() ?: return RecurrenceRule()
         fun scalar(key: String) = (extras[key] as? JsonPrimitive)?.contentOrNull
         fun list(key: String): List<String> {
@@ -42,11 +42,22 @@ internal object TaskExtras {
             weekdays = list("recurrence_weekdays").mapNotNull { it.toIntOrNull() },
             monthDay = scalar("recurrence_month_day")?.toIntOrNull(),
             weekOfMonth = scalar("recurrence_week_of_month")?.toIntOrNull(),
-            endDay = scalar("recurrence_end_date")?.take(10)?.let { runCatching { LocalDate.parse(it) }.getOrNull() },
+            endDay = scalar("recurrence_end_date")?.let { endDay(it, zone) },
             exdates = list("recurrence_exdates").mapNotNull { runCatching { LocalDate.parse(it.take(10)) }.getOrNull() }.toSet(),
             completionBased = scalar("completion_based").let { it == "true" || it == "1" },
         )
     }
+}
+
+/**
+ * Dernier jour d'une série. Le serveur stocke un instant (la veille d'une coupe, « début du jour moins 1 ms ») :
+ * lu dans le fuseau du compte il donne le bon jour, lu en UTC il dérive d'un jour à l'ouest de Greenwich.
+ */
+private fun endDay(raw: String, zone: ZoneId?): LocalDate? {
+    if (zone != null) {
+        parseInstant(raw)?.let { return it.atZone(zone).toLocalDate() }
+    }
+    return runCatching { LocalDate.parse(raw.take(10)) }.getOrNull()
 }
 
 /** Valeurs envoyées au serveur pour les champs que l'appareil écrit sans colonne dédiée. */

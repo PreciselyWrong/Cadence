@@ -11,6 +11,7 @@ import {
 import { Tag } from '../../entities/Tag';
 import PushPinIcon from '../Shared/Icons/PushPinIcon';
 import EntityIcon from '../Shared/EntityIcon';
+import { useTagColor } from '../../utils/tagColor';
 
 interface TagRowProps {
     tag: Tag;
@@ -24,6 +25,7 @@ interface TagRowProps {
 // goal and area lists. The root is meant to sit inside a task-sheet list.
 const TagRow: React.FC<TagRowProps> = ({ tag, label, onEdit, onDelete }) => {
     const { t } = useTranslation();
+    const tagColor = useTagColor();
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
     const isSystem = tag.tag_type === 'system';
@@ -75,7 +77,7 @@ const TagRow: React.FC<TagRowProps> = ({ tag, label, onEdit, onDelete }) => {
             className={`relative flex items-center gap-4 -ml-1.5 py-2.5 pl-5 pr-2 border-l-4 border-gray-300 dark:border-gray-600 group ${
                 menuOpen ? 'z-50' : ''
             }`}
-            style={{ borderLeftColor: tag.color || undefined }}
+            style={{ borderLeftColor: tagColor(tag).value }}
         >
             <Link
                 to={tagPath}

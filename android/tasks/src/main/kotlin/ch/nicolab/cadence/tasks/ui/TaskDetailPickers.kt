@@ -255,9 +255,15 @@ internal fun TagsSheet(
     selected: Set<String>,
     onChange: (Set<String>) -> Unit,
     onDismiss: () -> Unit,
+    /** Une série pose sa question une fois : le choix n'est écrit qu'à la fermeture de la feuille. */
+    deferred: Boolean = false,
 ) {
     var chosen by remember { mutableStateOf(selected) }
-    CadenceSheet(title = stringResource(R.string.tasks_field_tags), subtitle = null, dismiss = onDismiss) {
+    val dismiss = {
+        if (deferred && chosen != selected) onChange(chosen)
+        onDismiss()
+    }
+    CadenceSheet(title = stringResource(R.string.tasks_field_tags), subtitle = null, dismiss = dismiss) {
         if (tags.isEmpty()) {
             Text(
                 stringResource(R.string.tasks_detail_no_tags),
@@ -274,7 +280,7 @@ internal fun TagsSheet(
                 tags.forEach { tag ->
                     ChoiceChip(label = "#" + tag.name, selected = tag.uid in chosen, leadingIcon = entityIcon(tag.icon)) {
                         chosen = if (tag.uid in chosen) chosen - tag.uid else chosen + tag.uid
-                        onChange(chosen)
+                        if (!deferred) onChange(chosen)
                     }
                 }
             }

@@ -5231,7 +5231,12 @@
   },
   "colors": {
     "label": "颜色",
-    "none": "无"
+    "none": "无",
+    "automatic": "Automatic",
+    "custom": "Custom (hex)",
+    "light": "light",
+    "medium": "medium",
+    "deep": "deep"
   },
   "tag": {
     "viewTag": "前往标签"

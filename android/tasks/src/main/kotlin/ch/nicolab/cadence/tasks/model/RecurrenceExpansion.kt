@@ -66,6 +66,25 @@ object RecurrenceExpansion {
 
     private val SUPPORTED = setOf("daily", "weekly", "monthly", "monthly_weekday", "monthly_last_day")
 
+    /** La règle est de celles que [expand] et [nextAfter] savent suivre. */
+    fun isSupported(type: String?): Boolean = type in SUPPORTED
+
+    /**
+     * Jour de la série qui suit [after], exceptions et dernier jour compris ; null quand la série s'arrête
+     * ou que la règle est inconnue.
+     */
+    fun nextAfter(type: String?, rule: RecurrenceRule, after: LocalDate): LocalDate? {
+        var current = after
+        repeat(MAX_STEPS) {
+            val next = nextDay(type, rule, current)
+            if (next == null || !next.isAfter(current)) return null
+            if (rule.endDay?.let { next.isAfter(it) } == true) return null
+            if (next !in rule.exdates) return next
+            current = next
+        }
+        return null
+    }
+
     private fun occurrence(task: TaskItem, day: LocalDate, time: LocalTime?, zone: ZoneId): TaskItem {
         // `atZone` replace une heure tombée dans le saut du printemps par la suivante, et garde la première de l'automne.
         val at = (time?.let { day.atTime(it) } ?: day.atTime(LocalTime.MAX)).atZone(zone).toInstant()

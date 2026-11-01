@@ -70,6 +70,8 @@ import ch.nicolab.cadence.domain.WidgetGroupMode
 import ch.nicolab.cadence.domain.WidgetGroupSelection
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.model.ProjectItem
+import ch.nicolab.cadence.tasks.model.TagColor
+import ch.nicolab.cadence.tasks.model.TagColors
 import ch.nicolab.cadence.tasks.model.RelativeDay
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.quickadd.TaskQuickAddActivity
@@ -149,6 +151,7 @@ class TodayWidget : GlanceAppWidget() {
         val projects = tasksRepository.observeProjects().first().associateBy { it.uid }
         val tagList = tasksRepository.observeTags().first()
         val tagNames = tagList.associate { it.uid to it.name }
+        val tagColors = TagColors.byUid(tagList)
         val selection = selectWidgetTasks(tasks, eventsOf(app, config, today, zone), config, today, zone, now, tagList)
         val facets = if (config.habitPlacement == HabitPlacement.HIDDEN) {
             emptyList()
@@ -167,6 +170,7 @@ class TodayWidget : GlanceAppWidget() {
             facets = facets,
             projects = projects,
             tagNames = tagNames,
+            tagColors = tagColors,
             today = today,
             zone = zone,
         )
@@ -349,6 +353,7 @@ private class TodayView(
     val facets: List<FacetView>,
     val projects: Map<String, ProjectItem>,
     val tagNames: Map<String, String>,
+    val tagColors: Map<String, TagColor>,
     val today: LocalDate,
     val zone: ZoneId,
 )
@@ -538,7 +543,9 @@ private fun TaskRowView(
     val projectArgb = task.projectUid?.let { view.projects[it]?.color }?.let(::parseColour)
     val projectColour = projectArgb?.let(::constantProvider)
     val accent = palette.provider { it.taskTint(task.priority, config.controlColour, projectArgb) }
-    val meta = if (config.showTaskMeta) taskMeta(task, view.projects.mapValues { it.value.name }, view.tagNames) else null
+    val projectNames = view.projects.mapValues { it.value.name }
+    val meta = if (config.showTaskMeta) taskMeta(task, projectNames, view.tagNames) else null
+    val metaTags = if (config.showTaskMeta) taskMetaTags(task, view.tagNames, view.tagColors) else emptyList()
     val context = LocalContext.current
     val openIntent = openTaskIntent(context, task.uid) ?: Intent(context, MainActivity::class.java)
     Row(
@@ -583,8 +590,24 @@ private fun TaskRowView(
                     textDecoration = if (checked) TextDecoration.LineThrough else null,
                 ),
             )
-            meta?.let {
-                Text(it, maxLines = 1, style = TextStyle(color = palette.provider { p -> p.muted }, fontSize = sizes.small.sp))
+            if (metaTags.isEmpty()) {
+                meta?.let {
+                    Text(it, maxLines = 1, style = TextStyle(color = palette.provider { p -> p.muted }, fontSize = sizes.small.sp))
+                }
+            } else {
+                // Les étiquettes gardent leur couleur : un point plein, clair la nuit, devant chaque « #nom ».
+                val metaStyle = TextStyle(color = palette.provider { p -> p.muted }, fontSize = sizes.small.sp)
+                Row(verticalAlignment = Alignment.Vertical.CenterVertically) {
+                    taskMeta(task, projectNames, emptyMap())?.let { Text("$it · ", maxLines = 1, style = metaStyle) }
+                    metaTags.forEachIndexed { index, tag ->
+                        if (index > 0) Box(GlanceModifier.width(6.dp)) {}
+                        Box(
+                            GlanceModifier.size(6.dp).background(ColorProvider(day = Color(tag.color.lightArgb), night = Color(tag.color.darkArgb))).cornerRadius(3.dp),
+                        ) {}
+                        Box(GlanceModifier.width(3.dp)) {}
+                        Text("#${tag.name}", maxLines = 1, style = metaStyle)
+                    }
+                }
             }
         }
         dueLabel?.let {

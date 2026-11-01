@@ -25,6 +25,10 @@ data class TrayItem(
     val colorArgb: Int?,
     val pastDue: LocalDate?,
     val estimateMinutes: Int? = null,
+    /** Tâche récurrente : l'enregistrement demande la portée (« cette tâche ou la série ? »). */
+    val recurring: Boolean = false,
+    /** Jour d'une occurrence à venir d'une série ; null pour la tâche enregistrée. */
+    val occurrence: LocalDate? = null,
 )
 
 /**

@@ -113,8 +113,8 @@ internal fun ColumnScope.TimeAgenda(
     now: LocalTime,
     onToggleEvent: (EventInstanceKey) -> Unit,
     drag: TrayDragState,
-    onDrop: (String, LocalDateTime) -> Unit,
-    onResize: (String, Int) -> Unit,
+    onDrop: (TrayItem, LocalDateTime) -> Unit,
+    onResize: (AgendaEntry.Task, Int) -> Unit,
 ) {
     val days = remember(state.mode, state.selected, state.options.weekends) {
         if (state.mode == AgendaMode.DAY) listOf(state.selected) else threeDays(state.selected, state.options.weekends)
@@ -191,7 +191,7 @@ private fun AllDayRow(
     checkEvents: Boolean,
     onToggleEvent: (EventInstanceKey) -> Unit,
     drag: TrayDragState,
-    onDrop: (String, LocalDateTime) -> Unit,
+    onDrop: (TrayItem, LocalDateTime) -> Unit,
 ) {
     val columns = days.map { layouts[it]?.allDay.orEmpty() }
     if (columns.all { it.isEmpty() }) return
@@ -269,7 +269,7 @@ private fun AllDayChip(
     checkEvents: Boolean,
     onToggleEvent: (EventInstanceKey) -> Unit,
     drag: TrayDragState,
-    onDrop: (String, LocalDateTime) -> Unit,
+    onDrop: (TrayItem, LocalDateTime) -> Unit,
 ) {
     val colors = rememberBlockColors(entry)
     val actions = LocalAgendaEventActions.current
@@ -324,7 +324,7 @@ private fun TimeGrid(
     checkEvents: Boolean,
     onToggleEvent: (EventInstanceKey) -> Unit,
     drag: TrayDragState,
-    onResize: (String, Int) -> Unit,
+    onResize: (AgendaEntry.Task, Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val palette = cadence
@@ -448,7 +448,7 @@ private fun BoxWithConstraintsScope.TimedBlockView(
     checkEvents: Boolean,
     onToggleEvent: (EventInstanceKey) -> Unit,
     hourHeightPx: Float,
-    onResize: (String, Int) -> Unit,
+    onResize: (AgendaEntry.Task, Int) -> Unit,
 ) {
     val entry = block.entry
     val colors = rememberBlockColors(entry)
@@ -456,7 +456,7 @@ private fun BoxWithConstraintsScope.TimedBlockView(
     val density = LocalDensity.current
     val measurer = rememberTextMeasurer()
     val columnWidth = maxWidth / block.columnCount
-    val task = (entry as? AgendaEntry.Task)?.takeIf { !it.done && !it.recurring }
+    val task = (entry as? AgendaEntry.Task)?.takeIf { !it.done }
     var liveEnd by remember(block.startMinute, block.endMinute) { mutableStateOf<Int?>(null) }
     val endMinute = liveEnd ?: block.endMinute
     val top = Size.agendaHour * (block.startMinute / 60f)
@@ -547,7 +547,7 @@ private fun BoxWithConstraintsScope.TimedBlockView(
                 hourHeightPx = hourHeightPx,
                 onPreview = { liveEnd = block.startMinute + it },
                 onCommit = { minutes ->
-                    if (minutes == block.endMinute - block.startMinute) liveEnd = null else onResize(task.uid, minutes)
+                    if (minutes == block.endMinute - block.startMinute) liveEnd = null else onResize(task, minutes)
                 },
                 onCancel = { liveEnd = null },
                 modifier = Modifier.align(Alignment.BottomCenter),

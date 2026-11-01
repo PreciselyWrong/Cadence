@@ -5248,7 +5248,12 @@
   },
   "colors": {
     "label": "Culoare",
-    "none": "Niciuna"
+    "none": "Niciuna",
+    "automatic": "Automatic",
+    "custom": "Custom (hex)",
+    "light": "light",
+    "medium": "medium",
+    "deep": "deep"
   },
   "tag": {
     "viewTag": "Mergi la etichetă"

@@ -5,6 +5,7 @@ import { TagIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 import TagInput from '../../Tag/TagInput';
 import { Task } from '../../../entities/Task';
 import { Tag } from '../../../entities/Tag';
+import { useTagColor } from '../../../utils/tagColor';
 
 interface TaskTagsCardProps {
     task: Task;
@@ -26,6 +27,7 @@ const TaskTagsCard: React.FC<TaskTagsCardProps> = ({
     getTagLink,
 }) => {
     const { t } = useTranslation();
+    const tagColor = useTagColor();
     const [isEditing, setIsEditing] = useState(false);
     const [editedTags, setEditedTags] = useState<string[]>(
         task?.tags?.map((tag: any) => tag.name) || []
@@ -109,7 +111,10 @@ const TaskTagsCard: React.FC<TaskTagsCardProps> = ({
                                     }}
                                     className="flex items-center space-x-2 min-w-0 flex-1 text-left"
                                 >
-                                    <TagIcon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
+                                    <TagIcon
+                                        className="h-4 w-4"
+                                        style={{ color: tagColor(tag).value }}
+                                    />
                                     <span className="text-sm text-gray-900 dark:text-gray-100 truncate">
                                         {tag.name}
                                     </span>

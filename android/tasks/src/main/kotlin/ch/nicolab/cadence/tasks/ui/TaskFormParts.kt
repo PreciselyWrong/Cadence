@@ -101,13 +101,16 @@ internal fun StatusChips(selected: Int, onSelect: (Int) -> Unit) {
 
 @Composable
 internal fun TagChips(tags: List<TagItem>, selected: Set<String>, onToggle: (String) -> Unit) {
+    val colors = remember(tags) { tagBadgeColors(tags) }
     FlowRow(horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)) {
         tags.forEach { tag ->
+            val color = colors[tag.uid]
             FilterChip(
                 selected = tag.uid in selected,
                 onClick = { onToggle(tag.uid) },
                 label = { Text(tag.name) },
-                leadingIcon = entityIcon(tag.icon)?.let { icon -> { EntityIcon(icon, tint = LocalContentColor.current, size = Size.iconSm) } },
+                leadingIcon = entityIcon(tag.icon)?.let { icon -> { EntityIcon(icon, tint = color ?: LocalContentColor.current, size = Size.iconSm) } }
+                    ?: color?.let { dot -> { TagDot(dot) } },
             )
         }
     }

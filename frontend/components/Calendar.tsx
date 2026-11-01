@@ -1,4 +1,6 @@
 import SegmentedTabs from './Shared/ui/SegmentedTabs';
+import { ACCENT, accentVars } from '../constants/colorPalette';
+import { useTagColor } from '../utils/tagColor';
 import OverflowMenu from './Shared/OverflowMenu';
 import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -1427,6 +1429,7 @@ const TaskEventModal: React.FC<TaskEventModalProps> = ({
     onEditTask,
 }) => {
     const { t, i18n } = useTranslation();
+    const tagColor = useTagColor();
     const locale = getLocale(i18n.language);
 
     if (!isOpen) return null;
@@ -1544,7 +1547,8 @@ const TaskEventModal: React.FC<TaskEventModalProps> = ({
                                     {task.tags.map((tag: any) => (
                                         <span
                                             key={tag.id || tag.name}
-                                            className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded"
+                                            style={accentVars(tagColor(tag))}
+                                            className={`text-xs ${ACCENT.softBg} ${ACCENT.chipText} px-1.5 py-0.5 rounded`}
                                         >
                                             {tag.name}
                                         </span>

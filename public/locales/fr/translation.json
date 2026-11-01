@@ -5233,7 +5233,12 @@
   },
   "colors": {
     "label": "Couleur",
-    "none": "Aucune"
+    "none": "Aucune",
+    "automatic": "Automatique",
+    "custom": "Personnalisée (hex)",
+    "light": "clair",
+    "medium": "moyen",
+    "deep": "foncé"
   },
   "notFound": {
     "description": "La page que vous cherchez n'existe pas. Elle a peut-être été déplacée ou supprimée, ou l'adresse est incorrecte.",

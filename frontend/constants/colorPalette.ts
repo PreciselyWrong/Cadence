@@ -27,7 +27,37 @@ export const PALETTE: PaletteColor[] = [
     { key: 'gray', name: 'Gray', value: '#374151', dark: '#9ca3af' },
 ];
 
+// A middle shade per hue, between the light one (`dark`) and the deep one
+// (`value`). Together they give every hue three variations in pickers.
+export const MEDIUM_SHADES: Record<string, string> = {
+    red: '#dc2626',
+    orange: '#ea580c',
+    yellow: '#eab308',
+    green: '#16a34a',
+    teal: '#0d9488',
+    cyan: '#0891b2',
+    blue: '#2563eb',
+    indigo: '#4f46e5',
+    purple: '#9333ea',
+    pink: '#db2777',
+    gray: '#4b5563',
+};
+
+// [light, medium, deep] hex values of a hue, as stored when picked.
+export function shadesOf(color: PaletteColor): [string, string, string] {
+    return [color.dark, MEDIUM_SHADES[color.key] ?? color.value, color.value];
+}
+
 const byValue = new Map(PALETTE.map((c) => [c.value.toLowerCase(), c]));
+// Picked shades keep the palette's dark-mode pairing: the deep shade turns to
+// its light one, the medium one to the light one, the light one stays.
+PALETTE.forEach((c) => {
+    const [light, medium] = shadesOf(c);
+    byValue.set(medium.toLowerCase(), { ...c, value: medium, dark: light });
+    if (!byValue.has(light.toLowerCase())) {
+        byValue.set(light.toLowerCase(), { ...c, value: light, dark: light });
+    }
+});
 
 // Colors saved before the palette existed (for example CalDAV calendars) are
 // kept as they are and used for both modes.
@@ -74,6 +104,10 @@ export const ACCENT = {
     softBg: 'bg-[color:color-mix(in_srgb,var(--accent-light)_12%,transparent)] dark:bg-[color:color-mix(in_srgb,var(--accent-dark)_16%,transparent)]',
     softerBg:
         'bg-[color:color-mix(in_srgb,var(--accent-light)_7%,transparent)] dark:bg-[color:color-mix(in_srgb,var(--accent-dark)_10%,transparent)]',
+    // Text on a soft tint (tag chips): the accent pulled toward the text
+    // color of the mode so it keeps AA contrast whatever hue was picked.
+    chipText:
+        'text-[color:color-mix(in_srgb,var(--accent-light)_70%,black)] dark:text-[color:color-mix(in_srgb,var(--accent-dark)_55%,white)]',
     hoverSoftBg:
         'hover:bg-[color:color-mix(in_srgb,var(--accent-light)_12%,transparent)] dark:hover:bg-[color:color-mix(in_srgb,var(--accent-dark)_16%,transparent)]',
     hoverText:

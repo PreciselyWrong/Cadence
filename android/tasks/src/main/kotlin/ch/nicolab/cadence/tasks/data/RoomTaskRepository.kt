@@ -9,12 +9,14 @@ import ch.nicolab.cadence.tasks.model.GoalItem
 import ch.nicolab.cadence.tasks.model.IconIds
 import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.model.NoteChange
+import ch.nicolab.cadence.tasks.model.OccurrenceFields
 import ch.nicolab.cadence.tasks.model.NoteItem
 import ch.nicolab.cadence.tasks.model.ProjectHierarchy
 import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.model.ProjectStatus
 import ch.nicolab.cadence.tasks.model.RecurringScope
 import ch.nicolab.cadence.tasks.model.SyncStatus
+import ch.nicolab.cadence.tasks.model.TagColors
 import ch.nicolab.cadence.tasks.model.TagEditPlan
 import ch.nicolab.cadence.tasks.model.TagEditProblem
 import ch.nicolab.cadence.tasks.model.TagItem
@@ -49,7 +51,7 @@ import kotlinx.serialization.json.JsonPrimitive
 /**
  * Chaque écriture met à jour la ligne locale et ajoute son opération dans la même
  * transaction, puis demande une synchronisation. Rien ne dépend du réseau, sauf
- * [moveRecurring].
+ * [moveRecurring] (le décalage d'un jour seul passe par le serveur).
  */
 internal class RoomTaskRepository(
     private val context: Context,
@@ -147,10 +149,16 @@ internal class RoomTaskRepository(
     }
 
     override suspend fun updateTask(uid: String, change: TaskChange) {
+        val fields = fieldsFor(uid, change)
+        if (fields.isNotEmpty()) writeFields(uid, fields)
+    }
+
+    /** Champs serveur d'un changement : effacer est explicite, une heure seule garde la date déjà prévue. */
+    private suspend fun fieldsFor(uid: String, change: TaskChange): Map<String, JsonElement> {
         // Une heure seule garde la date déjà prévue.
         val keptDate = if (change.dueDate == null && change.dueTime != null) currentDueDate(uid) else null
         val accountZone = accountZone().first()
-        val fields = buildMap<String, JsonElement> {
+        return buildMap<String, JsonElement> {
             change.name?.let { put("name", JsonPrimitive(it)) }
             change.note?.let { put("note", JsonPrimitive(it)) }
             if (change.clearPriority) put("priority", JsonNull)
@@ -180,7 +188,6 @@ internal class RoomTaskRepository(
             change.repetition?.let { putAll(TaskFields.repetition(it, repetitionAnchor(uid, change))) }
             if (change.hasDecision()) putAll(decisionFields(uid, change))
         }
-        if (fields.isNotEmpty()) writeFields(uid, fields)
     }
 
     /** Champs de l'entonnoir ; « Plus tard » crée l'étiquette `someday` si l'appareil ne la connaît pas encore. */
@@ -263,6 +270,75 @@ internal class RoomTaskRepository(
         }
     }
 
+    override suspend fun editRecurring(
+        uid: String,
+        scope: RecurringScope,
+        occurrence: LocalDate?,
+        change: TaskChange,
+    ): Result<Unit> = recurringWrite(uid) { task, zones ->
+        val current = occurrenceDayOf(task.dueDateRaw, zones.account) ?: error("Pas d'échéance à modifier")
+        val scoped = OccurrenceFields.scoped(change)
+        val occurrenceChange = OccurrenceChange(
+            fields = fieldsFor(uid, scoped.copy(dueDate = null, dueTime = null)),
+            day = scoped.dueDate,
+            time = scoped.dueTime,
+        )
+        RecurringEdits.edit(
+            series = WireCodec.taskToWire(task),
+            scope = scope,
+            occurrence = occurrence ?: current,
+            change = occurrenceChange,
+            newUid = UUID.randomUUID().toString(),
+            zones = zones,
+            today = Instant.ofEpochMilli(nowMs()).atZone(zones.account).toLocalDate(),
+            now = Instant.ofEpochMilli(nowMs()),
+        )
+    }
+
+    override suspend fun deleteRecurring(uid: String, scope: RecurringScope, occurrence: LocalDate?): Result<Unit> =
+        recurringWrite(uid) { task, zones ->
+            val current = occurrenceDayOf(task.dueDateRaw, zones.account) ?: error("Pas d'échéance à supprimer")
+            RecurringEdits.delete(WireCodec.taskToWire(task), scope, occurrence ?: current, zones)
+        }
+
+    /** Construit le plan d'une modification de série puis l'écrit : lignes locales et file d'envoi, sans réseau. */
+    private suspend fun recurringWrite(
+        uid: String,
+        plan: suspend (TaskEntity, Zones) -> RecurringPlan,
+    ): Result<Unit> {
+        val task = taskDao.get(uid) ?: return Result.failure(IllegalArgumentException("Tâche introuvable"))
+        return try {
+            val ops = plan(task, Zones(accountZone().first(), deviceZone.value)).ops
+            val clocks = ops.map { hlc.now() }
+            database.withTransaction { ops.zip(clocks).forEach { (op, clock) -> writeOp(op, clock) } }
+            afterLocalWrite()
+            Result.success(Unit)
+        } catch (error: IllegalStateException) {
+            Result.failure(error)
+        } catch (error: IllegalArgumentException) {
+            Result.failure(error)
+        }
+    }
+
+    private suspend fun writeOp(op: RecurringOp, clock: String) {
+        when (op) {
+            is RecurringOp.Upsert -> {
+                val current = taskDao.get(op.uid)?.let { WireCodec.taskToWire(it) }
+                    ?: JsonObject(mapOf("uid" to JsonPrimitive(op.uid)))
+                taskDao.upsert(WireCodec.taskFromWire(JsonObject(current + op.fields)))
+                outbox.insert(LocalOps.upsert("task", op.uid, op.fields, clock, nowMs()))
+            }
+            is RecurringOp.Delete -> {
+                taskDao.delete(op.uid)
+                outbox.insert(LocalOps.delete("task", op.uid, clock, nowMs()))
+            }
+            is RecurringOp.Skip -> {
+                taskDao.get(op.uid)?.let { taskDao.upsert(it.copy(status = TaskStatus.DONE)) }
+                outbox.insert(LocalOps.occurrence(ACTION_SKIP_OCCURRENCE, op.uid, op.occurrenceDate, clock, nowMs()))
+            }
+        }
+    }
+
     override suspend fun saveNote(uid: String, change: NoteChange) {
         val existing = noteDao.get(uid)
         val fields = buildMap<String, JsonElement> {
@@ -336,6 +412,19 @@ internal class RoomTaskRepository(
             if (existing.icon == value) return@withTransaction false
             tagDao.upsert(existing.copy(icon = value))
             outbox.insert(LocalOps.upsert("tag", uid, mapOf("icon" to jsonString(value)), clock, nowMs()))
+            true
+        }
+        if (written) afterLocalWrite()
+    }
+
+    override suspend fun setTagColor(uid: String, color: String?) {
+        val value = color?.trim()?.lowercase()?.also { require(TagColors.parse(it) != null) { "Couleur invalide" } }
+        val clock = hlc.now()
+        val written = database.withTransaction {
+            val existing = tagDao.get(uid) ?: return@withTransaction false
+            if (existing.color == value) return@withTransaction false
+            tagDao.upsert(existing.copy(color = value))
+            outbox.insert(LocalOps.upsert("tag", uid, mapOf("color" to jsonString(value)), clock, nowMs()))
             true
         }
         if (written) afterLocalWrite()

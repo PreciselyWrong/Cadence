@@ -5,6 +5,7 @@ import ch.nicolab.cadence.tasks.model.GoalItem
 import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.NoteItem
+import ch.nicolab.cadence.tasks.model.OccurrenceFields
 import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.model.ProjectStatus
 import ch.nicolab.cadence.tasks.model.RecurringScope
@@ -63,6 +64,18 @@ interface TaskRepository {
     suspend fun moveRecurring(uid: String, scope: RecurringScope, newDate: LocalDate): Result<Unit>
 
     /**
+     * Modifie une occurrence d'une série selon [scope] : « celle-ci » crée une tâche simple et laisse la
+     * journée de côté, « celle-ci et les suivantes » coupe la série, « toutes » écrit la série. Hors ligne
+     * comme en ligne (opérations de `docs/01-recurring-tasks-behavior.md`). [occurrence] est le jour de
+     * l'occurrence touchée, null pour l'occurrence courante. Seuls les champs de [OccurrenceFields.scoped]
+     * sont écrits ; le reste de [change] est à écrire par [updateTask].
+     */
+    suspend fun editRecurring(uid: String, scope: RecurringScope, occurrence: LocalDate?, change: TaskChange): Result<Unit>
+
+    /** Supprime une occurrence selon [scope], avec les mêmes opérations hors ligne ; [occurrence] null = la courante. */
+    suspend fun deleteRecurring(uid: String, scope: RecurringScope, occurrence: LocalDate?): Result<Unit>
+
+    /**
      * Écrit les champs de [change] sur la note [uid], qui est créée si elle n'existe pas encore
      * (l'uid est choisi par l'appareil) : une note vide jamais enregistrée n'atteint donc pas le serveur.
      */
@@ -77,6 +90,9 @@ interface TaskRepository {
 
     /** Pose ou retire l'icône de l'étiquette [uid]. */
     suspend fun setTagIcon(uid: String, icon: String?)
+
+    /** Pose (`#rrggbb`) ou retire (null) la couleur de l'étiquette [uid] ; refuse toute autre valeur. Sans effet si l'étiquette est inconnue. */
+    suspend fun setTagColor(uid: String, color: String?)
 
     /**
      * Place le projet [uid] sous [parentUid] (null : au premier niveau). Retourne false, sans rien écrire, quand le

@@ -55,6 +55,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.nicolab.cadence.R
 import ch.nicolab.cadence.designsystem.components.HeaderButtonStyle
+import ch.nicolab.cadence.tasks.ui.RecurringAction
+import ch.nicolab.cadence.tasks.ui.RecurringScopeDialog
 import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
 import ch.nicolab.cadence.designsystem.components.SegmentedTabs
 import ch.nicolab.cadence.designsystem.components.rememberAppSnackbarHostState
@@ -127,6 +129,12 @@ fun AgendaScreen(modifier: Modifier = Modifier, onOpenHabit: (String) -> Unit = 
         }
     }
     LaunchedEffect(viewModel) {
+        viewModel.errors.collect { message ->
+            snackbar.currentSnackbarData?.dismiss()
+            launch { snackbar.showSnackbar(message) }
+        }
+    }
+    LaunchedEffect(viewModel) {
         viewModel.hidden.collect { event ->
             snackbar.currentSnackbarData?.dismiss()
             launch {
@@ -192,8 +200,8 @@ fun AgendaScreen(modifier: Modifier = Modifier, onOpenHabit: (String) -> Unit = 
                             now = now,
                             onToggleEvent = viewModel::toggleEvent,
                             drag = drag,
-                            onDrop = { uid, at -> viewModel.schedule(uid, at) },
-                            onResize = { uid, minutes -> viewModel.resizeTask(uid, minutes) },
+                            onDrop = { item, at -> viewModel.schedule(item, at) },
+                            onResize = { task, minutes -> viewModel.resizeTask(task, minutes) },
                         )
                         AgendaMode.MONTH -> MonthAgenda(
                             state = state,
@@ -212,6 +220,11 @@ fun AgendaScreen(modifier: Modifier = Modifier, onOpenHabit: (String) -> Unit = 
             }
         }
         DragGhost(drag = drag, origin = boxOrigin)
+    }
+
+    val pendingScope by viewModel.pendingScope.collectAsStateWithLifecycle()
+    if (pendingScope != null) {
+        RecurringScopeDialog(action = RecurringAction.EDIT, onAnswer = viewModel::answerScope)
     }
 
     AgendaEventSheets(

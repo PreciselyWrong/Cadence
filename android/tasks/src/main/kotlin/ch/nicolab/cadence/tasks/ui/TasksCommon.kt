@@ -88,7 +88,7 @@ internal fun projectRailColor(value: String?): Int? {
 
 /**
  * Effets communs aux écrans de tâches : messages en bandeau, fiche d'une tâche et
- * question de déplacement d'une occurrence récurrente.
+ * question « cette tâche ou la série ? » d'une tâche récurrente.
  */
 @Composable
 internal fun TaskOverlays(
@@ -97,7 +97,7 @@ internal fun TaskOverlays(
     selectedTaskUid: String?,
     onCloseTask: () -> Unit,
 ) {
-    val pendingMove by viewModel.pendingMove.collectAsStateWithLifecycle()
+    val pendingScope by viewModel.pendingScope.collectAsStateWithLifecycle()
     LaunchedEffect(viewModel) {
         viewModel.messages.collect { snackbar.showSnackbar(it) }
     }
@@ -134,12 +134,11 @@ internal fun TaskOverlays(
     }
     SwipeSheets(viewModel)
     EventSheets(viewModel)
-    val pendingDelete by viewModel.pendingDelete.collectAsStateWithLifecycle()
-    if (pendingDelete != null) {
-        RecurringDeleteDialog(onAnswer = viewModel::answerRecurringDelete)
-    }
-    if (pendingMove != null) {
-        RecurringMoveDialog(onAnswer = viewModel::answerRecurringMove)
+    pendingScope?.let { pending ->
+        RecurringScopeDialog(
+            action = if (pending is PendingScope.Delete) RecurringAction.DELETE else RecurringAction.EDIT,
+            onAnswer = viewModel::answerScope,
+        )
     }
 }
 

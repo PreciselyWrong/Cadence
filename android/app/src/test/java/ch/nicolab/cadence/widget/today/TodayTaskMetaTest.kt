@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.widget.today
 
+import ch.nicolab.cadence.tasks.model.TagColor
 import ch.nicolab.cadence.tasks.model.TaskItem
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
@@ -19,5 +20,15 @@ class TodayTaskMetaTest {
     fun `sans projet ni étiquette connus, rien`() {
         assertNull(taskMeta(TaskItem(uid = "t", name = "t", tagUids = listOf("inconnue")), projects, tags))
         assertEquals("#d1", taskMeta(TaskItem(uid = "t", name = "t", tagUids = listOf("a")), projects, tags))
+    }
+
+    @Test
+    fun `les étiquettes colorées suivent l'ordre de la tâche et ignorent les inconnues`() {
+        val colors = mapOf("a" to TagColor("#1d4ed8", "#60a5fa"), "b" to TagColor("#b91c1c", "#f87171"))
+        val task = TaskItem(uid = "t", name = "t", tagUids = listOf("b", "inconnue", "a"))
+        assertEquals(
+            listOf(MetaTag("e1", colors.getValue("b")), MetaTag("d1", colors.getValue("a"))),
+            taskMetaTags(task, tags, colors),
+        )
     }
 }

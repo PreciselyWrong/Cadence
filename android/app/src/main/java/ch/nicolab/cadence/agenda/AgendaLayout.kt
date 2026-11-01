@@ -60,7 +60,7 @@ sealed interface AgendaEntry {
         override val colorArgb: Int?,
         /** Estimation de la tâche : durée de son bloc sur la grille. */
         val estimateMinutes: Int? = null,
-        /** Une récurrente ne se déplace pas par simple dépôt : elle demande un périmètre. */
+        /** Tâche d'une série : déposer ou redimensionner demande la portée (« cette tâche ou la série ? »). */
         val recurring: Boolean = false,
         /** Occurrence à venir d'une série, calculée et non enregistrée : on l'ouvre, on ne la coche ni ne la déplace. */
         val virtual: Boolean = false,

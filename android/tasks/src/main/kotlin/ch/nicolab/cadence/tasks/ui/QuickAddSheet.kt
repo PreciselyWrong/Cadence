@@ -95,7 +95,7 @@ import kotlinx.coroutines.launch
 /** Destination d'une saisie : l'Inbox (à trier), une tâche, ou une note. */
 enum class CaptureTarget { INBOX, TASK, NOTE }
 
-private class ParsedChip(val icon: ImageVector, val label: String, val onRemove: () -> Unit)
+private class ParsedChip(val icon: ImageVector, val label: String, val tint: Color? = null, val onRemove: () -> Unit)
 
 /**
  * Ajout rapide d'une tâche, réutilisable par d'autres écrans (ex. l'activité du widget).
@@ -140,6 +140,7 @@ fun QuickAddSheet(
 
     val projectRefs = remember(projects) { projects.map { NamedRef(it.uid, it.name) } }
     val tagRefs = remember(tags) { tags.map { NamedRef(it.uid, it.name) } }
+    val tagColors = remember(tags) { tagBadgeColors(tags) }
     val parsed = remember(text, ignored, projectRefs, tagRefs, clock, isTask) {
         val result = QuickAddParser.parse(text, clock, projectRefs, tagRefs, ignored.toSet())
         // Une idée ou une note garde le texte tel quel : rien n'y est reconnu.
@@ -219,7 +220,7 @@ fun QuickAddSheet(
         }
         tagUids.forEach { uid ->
             tags.firstOrNull { it.uid == uid }?.let { tag ->
-                add(ParsedChip(Icons.Outlined.Sell, "#" + tag.name) {
+                add(ParsedChip(Icons.Outlined.Sell, "#" + tag.name, tagColors[uid]) {
                     tagOverrides = tagOverrides - uid
                     ignore(TokenKind.TAG, uid = uid)
                 })
@@ -296,6 +297,7 @@ fun QuickAddSheet(
                     },
                     tags = tags.map { it.uid to it.name },
                     tagIcons = tags.associate { it.uid to it.icon },
+                    tagColors = tagColors,
                     tagUids = tagUids,
                     onTag = { uid ->
                         if (uid in tagUids) {
@@ -436,7 +438,7 @@ private fun ChipView(chip: ParsedChip) {
             .padding(start = Space.md, end = Space.sm),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(chip.icon, null, tint = palette.primary, modifier = Modifier.size(Size.iconSm))
+        Icon(chip.icon, null, tint = chip.tint ?: palette.primary, modifier = Modifier.size(Size.iconSm))
         Spacer(Modifier.width(Space.xs))
         Text(
             chip.label,
@@ -487,6 +489,7 @@ private fun MoreOptions(
     onProject: (String?) -> Unit,
     tags: List<Pair<String, String>>,
     tagIcons: Map<String, String?>,
+    tagColors: Map<String, Color>,
     tagUids: List<String>,
     onTag: (String) -> Unit,
 ) {
@@ -517,7 +520,7 @@ private fun MoreOptions(
             FieldGroup(stringResource(R.string.tasks_field_tags)) {
                 Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
                     tags.forEach { (uid, name) ->
-                        ChoiceChip("#$name", selected = uid in tagUids, leadingIcon = entityIcon(tagIcons[uid])) { onTag(uid) }
+                        ChoiceChip("#$name", selected = uid in tagUids, leadingIcon = entityIcon(tagIcons[uid]), dotColor = tagColors[uid]) { onTag(uid) }
                     }
                 }
             }

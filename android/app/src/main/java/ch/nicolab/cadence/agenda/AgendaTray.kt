@@ -118,7 +118,7 @@ internal class TrayDragState {
  * elle montre une rangée défilante de pastilles à glisser sur la grille horaire. Absent quand il est vide.
  */
 @Composable
-internal fun TrayRow(items: List<TrayItem>, drag: TrayDragState, onDrop: (String, LocalDateTime) -> Unit) {
+internal fun TrayRow(items: List<TrayItem>, drag: TrayDragState, onDrop: (TrayItem, LocalDateTime) -> Unit) {
     if (items.isEmpty()) return
     val palette = cadence
     var open by rememberSaveable { mutableStateOf(false) }
@@ -168,12 +168,12 @@ internal fun TrayRow(items: List<TrayItem>, drag: TrayDragState, onDrop: (String
 internal fun Modifier.trayDragSource(
     item: TrayItem,
     drag: TrayDragState,
-    onDrop: (String, LocalDateTime) -> Unit,
+    onDrop: (TrayItem, LocalDateTime) -> Unit,
 ): Modifier {
     var origin by remember { mutableStateOf(Offset.Zero) }
     val latestDrop by rememberUpdatedState(onDrop)
     val haptic = rememberCadenceHaptic()
-    val lifted = drag.item?.uid == item.uid
+    val lifted = drag.item == item
     return this
         .alpha(if (lifted) DRAGGED_SOURCE_ALPHA else 1f)
         .onGloballyPositioned { origin = it.positionInRoot() }
@@ -189,7 +189,7 @@ internal fun Modifier.trayDragSource(
                     drag.pointer += amount
                 },
                 onDragEnd = {
-                    drag.target?.let { latestDrop(item.uid, it) }
+                    drag.target?.let { latestDrop(item, it) }
                     drag.item = null
                 },
                 onDragCancel = { drag.item = null },
@@ -198,7 +198,7 @@ internal fun Modifier.trayDragSource(
 }
 
 @Composable
-private fun TrayChip(item: TrayItem, drag: TrayDragState, onDrop: (String, LocalDateTime) -> Unit) {
+private fun TrayChip(item: TrayItem, drag: TrayDragState, onDrop: (TrayItem, LocalDateTime) -> Unit) {
     val palette = cadence
     val pastDue = item.pastDue
     val source = (if (pastDue != null) palette.error else item.colorArgb?.let { Color(it) } ?: palette.primary).toArgb()

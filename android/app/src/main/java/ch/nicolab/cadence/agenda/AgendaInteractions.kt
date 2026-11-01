@@ -35,15 +35,20 @@ fun capAllDay(entries: List<AgendaEntry>, expanded: Boolean, maxRows: Int = ALL_
 /** Durée du bloc déposé : l'estimation de la tâche si elle existe, sinon le bloc minimal. */
 fun dropBlockMinutes(estimateMinutes: Int?): Int = estimateMinutes?.takeIf { it > 0 } ?: MIN_BLOCK_MINUTES
 
-/** Tâche d'une rangée de journée qu'on peut glisser sur la grille ; null pour une tâche faite, récurrente ou un autre élément. */
+/**
+ * Tâche d'une rangée de journée qu'on peut glisser sur la grille ; null pour une tâche faite ou un autre
+ * élément. Une série (occurrence à venir comprise) se glisse aussi : son dépôt demande la portée.
+ */
 fun draggableTaskItem(entry: AgendaEntry): TrayItem? {
-    if (entry !is AgendaEntry.Task || entry.done || entry.recurring) return null
+    if (entry !is AgendaEntry.Task || entry.done) return null
     return TrayItem(
         uid = entry.uid,
         title = entry.title,
         colorArgb = entry.colorArgb,
         pastDue = null,
         estimateMinutes = entry.estimateMinutes,
+        recurring = entry.recurring,
+        occurrence = entry.start.toLocalDate().takeIf { entry.virtual },
     )
 }
 

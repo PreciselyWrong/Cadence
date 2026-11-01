@@ -12,6 +12,7 @@ import { createTagUrl } from '../../utils/slugUtils';
 import { useSidebarSectionExpanded } from '../../hooks/useSidebarSectionExpanded';
 import { useIsMinimal } from '../../hooks/useUiDensity';
 import { useSidebarSectionBadge } from '../../hooks/useSidebarSectionBadge';
+import { resolveTagColor } from '../../utils/tagColor';
 import { buildTagTree, flattenTagTree, tagLeafName } from '../../utils/tagTree';
 import EntityIcon from '../Shared/EntityIcon';
 import {
@@ -172,6 +173,17 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
                                 onClick={() => navigate(item)}
                                 data-testid={`sidebar-tag-${item.uid || item.id}`}
                             >
+                                <span
+                                    aria-hidden="true"
+                                    data-testid="tag-color-dot"
+                                    className="mr-1.5 h-2 w-2 flex-shrink-0 rounded-full"
+                                    style={{
+                                        backgroundColor: resolveTagColor(
+                                            item,
+                                            tags
+                                        ).value,
+                                    }}
+                                />
                                 <EntityIcon
                                     icon={item.icon}
                                     className="mr-1.5 h-[15px] w-[15px] text-gray-500 dark:text-gray-400"

@@ -1,0 +1,251 @@
+{
+  "_doc": "Palette, hash and inheritance of tag colors; replayed by frontend/utils/__tests__/tagColor.test.ts and android tasks TagColorsTest. Derived color = hash of the lower-cased root segment (h = h*31 + UTF-16 unit, unsigned 32 bits) modulo the 10 non-gray hues, deep shade. Order: own color, nearest ancestor with a color, derived.",
+  "palette": [
+    {
+      "key": "red",
+      "value": "#b91c1c",
+      "dark": "#f87171",
+      "medium": "#dc2626"
+    },
+    {
+      "key": "orange",
+      "value": "#c2410c",
+      "dark": "#fb923c",
+      "medium": "#ea580c"
+    },
+    {
+      "key": "yellow",
+      "value": "#ca8a04",
+      "dark": "#facc15",
+      "medium": "#eab308"
+    },
+    {
+      "key": "green",
+      "value": "#15803d",
+      "dark": "#4ade80",
+      "medium": "#16a34a"
+    },
+    {
+      "key": "teal",
+      "value": "#0f766e",
+      "dark": "#2dd4bf",
+      "medium": "#0d9488"
+    },
+    {
+      "key": "cyan",
+      "value": "#0e7490",
+      "dark": "#22d3ee",
+      "medium": "#0891b2"
+    },
+    {
+      "key": "blue",
+      "value": "#1d4ed8",
+      "dark": "#60a5fa",
+      "medium": "#2563eb"
+    },
+    {
+      "key": "indigo",
+      "value": "#4338ca",
+      "dark": "#818cf8",
+      "medium": "#4f46e5"
+    },
+    {
+      "key": "purple",
+      "value": "#7e22ce",
+      "dark": "#c084fc",
+      "medium": "#9333ea"
+    },
+    {
+      "key": "pink",
+      "value": "#be185d",
+      "dark": "#f472b6",
+      "medium": "#db2777"
+    },
+    {
+      "key": "gray",
+      "value": "#374151",
+      "dark": "#9ca3af",
+      "medium": "#4b5563"
+    }
+  ],
+  "derived": [
+    {
+      "name": "perso",
+      "color": "#15803d"
+    },
+    {
+      "name": "travail",
+      "color": "#c2410c"
+    },
+    {
+      "name": "sport",
+      "color": "#7e22ce"
+    },
+    {
+      "name": "Perso",
+      "color": "#15803d"
+    },
+    {
+      "name": "perso/sport",
+      "color": "#15803d"
+    },
+    {
+      "name": "perso/sport/course",
+      "color": "#15803d"
+    },
+    {
+      "name": "Écriture",
+      "color": "#c2410c"
+    },
+    {
+      "name": "maison",
+      "color": "#4338ca"
+    },
+    {
+      "name": "a",
+      "color": "#4338ca"
+    },
+    {
+      "name": "lecture",
+      "color": "#7e22ce"
+    }
+  ],
+  "resolve": [
+    {
+      "title": "explicit color wins",
+      "tag": {
+        "name": "perso",
+        "color": "#2563eb"
+      },
+      "tags": [
+        {
+          "name": "perso",
+          "color": "#2563eb"
+        }
+      ],
+      "color": "#2563eb"
+    },
+    {
+      "title": "child inherits parent",
+      "tag": {
+        "name": "perso/sport",
+        "color": null
+      },
+      "tags": [
+        {
+          "name": "perso",
+          "color": "#dc2626"
+        },
+        {
+          "name": "perso/sport",
+          "color": null
+        }
+      ],
+      "color": "#dc2626"
+    },
+    {
+      "title": "child own color beats parent",
+      "tag": {
+        "name": "perso/sport",
+        "color": "#16a34a"
+      },
+      "tags": [
+        {
+          "name": "perso",
+          "color": "#dc2626"
+        },
+        {
+          "name": "perso/sport",
+          "color": "#16a34a"
+        }
+      ],
+      "color": "#16a34a"
+    },
+    {
+      "title": "grandchild inherits nearest colored ancestor",
+      "tag": {
+        "name": "perso/sport/course",
+        "color": null
+      },
+      "tags": [
+        {
+          "name": "perso",
+          "color": "#dc2626"
+        },
+        {
+          "name": "perso/sport",
+          "color": "#16a34a"
+        },
+        {
+          "name": "perso/sport/course",
+          "color": null
+        }
+      ],
+      "color": "#16a34a"
+    },
+    {
+      "title": "grandchild skips an uncolored parent",
+      "tag": {
+        "name": "perso/sport/course",
+        "color": null
+      },
+      "tags": [
+        {
+          "name": "perso",
+          "color": "#dc2626"
+        },
+        {
+          "name": "perso/sport",
+          "color": null
+        },
+        {
+          "name": "perso/sport/course",
+          "color": null
+        }
+      ],
+      "color": "#dc2626"
+    },
+    {
+      "title": "no colored ancestor derives from the root",
+      "tag": {
+        "name": "perso/sport",
+        "color": null
+      },
+      "tags": [
+        {
+          "name": "perso/sport",
+          "color": null
+        }
+      ],
+      "color": "#15803d"
+    },
+    {
+      "title": "uncolored root derives from its name",
+      "tag": {
+        "name": "travail",
+        "color": null
+      },
+      "tags": [
+        {
+          "name": "travail",
+          "color": null
+        }
+      ],
+      "color": "#c2410c"
+    },
+    {
+      "title": "blank color counts as none",
+      "tag": {
+        "name": "travail",
+        "color": ""
+      },
+      "tags": [
+        {
+          "name": "travail",
+          "color": ""
+        }
+      ],
+      "color": "#c2410c"
+    }
+  ]
+}

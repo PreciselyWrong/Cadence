@@ -5231,7 +5231,12 @@
   },
   "colors": {
     "label": "Färg",
-    "none": "Ingen"
+    "none": "Ingen",
+    "automatic": "Automatic",
+    "custom": "Custom (hex)",
+    "light": "light",
+    "medium": "medium",
+    "deep": "deep"
   },
   "tag": {
     "viewTag": "Gå till tagg"

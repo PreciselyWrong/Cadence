@@ -5231,7 +5231,12 @@
   },
   "colors": {
     "label": "色",
-    "none": "なし"
+    "none": "なし",
+    "automatic": "Automatic",
+    "custom": "Custom (hex)",
+    "light": "light",
+    "medium": "medium",
+    "deep": "deep"
   },
   "tag": {
     "viewTag": "タグへ移動"

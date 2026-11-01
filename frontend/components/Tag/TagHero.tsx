@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTagColor } from '../../utils/tagColor';
 import { TFunction } from 'i18next';
 import {
     MagnifyingGlassIcon,
@@ -38,8 +39,9 @@ const TagHero: React.FC<TagHeroProps> = ({
     onTogglePin,
     onDeleteClick,
 }) => {
+    const tagColor = useTagColor();
     const isSystem = tag.tag_type === 'system';
-    const tint = tag.color || '#3b82f6';
+    const tint = tagColor(tag).value;
     const percent =
         totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 0;
     const actionClass =

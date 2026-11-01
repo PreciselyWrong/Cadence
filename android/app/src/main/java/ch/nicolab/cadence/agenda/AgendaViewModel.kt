@@ -16,7 +16,9 @@ import ch.nicolab.cadence.calendar.isUsed
 import ch.nicolab.cadence.calendar.ofDays
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.TaskRepository
+import ch.nicolab.cadence.tasks.model.RecurringScope
 import ch.nicolab.cadence.tasks.model.TaskChange
+import ch.nicolab.cadence.R
 import java.time.LocalDateTime
 import java.time.LocalDate
 import java.time.YearMonth
@@ -29,6 +31,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -68,6 +71,9 @@ internal data class AgendaUiState(
     val permissionMissing: Boolean = false,
     val checkEvents: Boolean = false,
 )
+
+/** Changement d'une tâche récurrente en attente de sa portée ; [occurrence] est le jour d'une occurrence à venir, null pour l'enregistrée. */
+internal data class PendingAgendaScope(val uid: String, val change: TaskChange, val occurrence: LocalDate?)
 
 /** Planification faite par un dépôt : de quoi la défaire (« Annuler ») en rendant à la tâche son échéance d'avant. */
 internal data class ScheduleReceipt(val uid: String, val at: LocalDateTime, val restore: TaskChange)
@@ -169,11 +175,26 @@ internal class AgendaViewModel(application: Application) : AndroidViewModel(appl
     /** Tâches terminées à l'instant ; une récurrente avance d'occurrence et n'en fait pas partie. */
     val completed: SharedFlow<String> = _completed.asSharedFlow()
 
-    /** Dépôt d'une tâche sur la grille : date et heure passent par la mise à jour normale, donc synchronisée. */
-    fun schedule(uid: String, at: LocalDateTime) = viewModelScope.launch {
-        val before = tasks.observeTask(uid).first()
-        tasks.updateTask(uid, dropChange(at))
-        before?.let { _scheduled.tryEmit(ScheduleReceipt(uid, at, restoreSchedule(it, zone))) }
+    private val _pendingScope = MutableStateFlow<PendingAgendaScope?>(null)
+
+    /** Dépôt ou redimensionnement d'une tâche récurrente en attente de « cette tâche ou la série ? ». */
+    internal val pendingScope: StateFlow<PendingAgendaScope?> = _pendingScope.asStateFlow()
+
+    private val _errors = MutableSharedFlow<String>(extraBufferCapacity = 2)
+    val errors: SharedFlow<String> = _errors.asSharedFlow()
+
+    /**
+     * Dépôt d'une tâche sur la grille : date et heure passent par la mise à jour normale, donc synchronisée.
+     * Une série (occurrence à venir comprise) demande d'abord la portée et ne s'annule pas par « Annuler ».
+     */
+    internal fun schedule(item: TrayItem, at: LocalDateTime) = viewModelScope.launch {
+        if (item.recurring) {
+            _pendingScope.value = PendingAgendaScope(item.uid, dropChange(at), item.occurrence)
+            return@launch
+        }
+        val before = tasks.observeTask(item.uid).first()
+        tasks.updateTask(item.uid, dropChange(at))
+        before?.let { _scheduled.tryEmit(ScheduleReceipt(item.uid, at, restoreSchedule(it, zone))) }
     }
 
     fun undoSchedule(receipt: ScheduleReceipt) = viewModelScope.launch {
@@ -181,8 +202,25 @@ internal class AgendaViewModel(application: Application) : AndroidViewModel(appl
     }
 
     /** Bord bas d'un bloc tiré : la durée est l'estimation de la tâche, écrite comme un champ synchronisé ordinaire. */
-    fun resizeTask(uid: String, minutes: Int) = viewModelScope.launch {
-        tasks.updateTask(uid, TaskChange(estimatedMinutes = minutes))
+    fun resizeTask(task: AgendaEntry.Task, minutes: Int) = viewModelScope.launch {
+        val change = TaskChange(estimatedMinutes = minutes)
+        if (task.recurring) {
+            _pendingScope.value = PendingAgendaScope(task.uid, change, task.start.toLocalDate().takeIf { task.virtual })
+        } else {
+            tasks.updateTask(task.uid, change)
+        }
+    }
+
+    /** Réponse à la question de portée ; null = annulé, rien n'est écrit. */
+    fun answerScope(scope: RecurringScope?) {
+        val pending = _pendingScope.value ?: return
+        _pendingScope.value = null
+        if (scope == null) return
+        viewModelScope.launch {
+            tasks.editRecurring(pending.uid, scope, pending.occurrence, pending.change).onFailure {
+                _errors.tryEmit(it.message ?: getApplication<Application>().getString(R.string.agenda_recurring_failed))
+            }
+        }
     }
 
     fun toggleTask(task: AgendaEntry.Task) = viewModelScope.launch {

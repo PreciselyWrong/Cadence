@@ -5231,7 +5231,12 @@
   },
   "colors": {
     "label": "색상",
-    "none": "없음"
+    "none": "없음",
+    "automatic": "Automatic",
+    "custom": "Custom (hex)",
+    "light": "light",
+    "medium": "medium",
+    "deep": "deep"
   },
   "tag": {
     "viewTag": "태그로 이동"

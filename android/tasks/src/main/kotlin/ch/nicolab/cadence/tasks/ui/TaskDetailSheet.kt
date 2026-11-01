@@ -124,6 +124,7 @@ internal fun TaskDetailSheet(
     val weekStart by viewModel.weekStart.collectAsStateWithLifecycle()
     val projects by viewModel.projects.collectAsStateWithLifecycle()
     val tags by viewModel.tags.collectAsStateWithLifecycle()
+    val tagColors = remember(tags) { tagBadgeColorsByName(tags) }
     val zone = moment.zone
     val today = moment.today
     val palette = cadence
@@ -141,12 +142,13 @@ internal fun TaskDetailSheet(
         if (change != TaskChange()) {
             change.name?.let { sent.name = it }
             change.note?.let { sent.note = it }
-            viewModel.update(latest.uid, change)
+            viewModel.edit(latest, change)
         }
     }
+    // Une série demande sa portée à chaque enregistrement : le texte n'est donc proposé qu'à la fermeture.
     LaunchedEffect(title, note) {
         delay(AUTOSAVE_DELAY_MS)
-        flushText()
+        if (!latest.isRecurring) flushText()
     }
     DisposableEffect(current.uid) { onDispose { flushText() } }
     val close = {
@@ -211,6 +213,7 @@ internal fun TaskDetailSheet(
                     projectIcon = projects.firstOrNull { it.uid == current.projectUid }?.icon,
                     projectColor = current.projectUid?.let { projectColors[it] }?.let(::Color),
                     tagNames = tags.filter { it.uid in current.tagUids }.map { it.name },
+                    tagColors = tagColors,
                     onDates = { openDates(DateTab.Due) },
                     onPriority = { picker = Picker.Priority },
                     onProject = { picker = Picker.Project },
@@ -281,8 +284,9 @@ internal fun TaskDetailSheet(
 
     val applyDue = { date: LocalDate?, time: LocalTime? ->
         val result = TaskEdits.due(latest, date, time, zone)
-        if (result.change != TaskChange()) viewModel.update(latest.uid, result.change)
-        result.moveDate?.let { viewModel.askRecurringMove(latest.uid, it) }
+        // Pour une série, le jour et l'heure forment un seul changement : une seule question.
+        val change = result.moveDate?.let { result.change.copy(dueDate = it) } ?: result.change
+        if (change != TaskChange()) viewModel.edit(latest, change)
     }
     val dismissPicker = { picker = null }
     when (picker) {
@@ -322,7 +326,7 @@ internal fun TaskDetailSheet(
         )
         Picker.Estimate -> EstimateSheet(
             current = current.estimatedMinutes,
-            onSelect = { viewModel.update(current.uid, TaskEdits.estimate(latest, it)) },
+            onSelect = { viewModel.edit(latest, TaskEdits.estimate(latest, it)) },
             onDismiss = dismissPicker,
         )
         Picker.Priority -> ChoiceSheet(
@@ -331,26 +335,27 @@ internal fun TaskDetailSheet(
                 SheetChoice(it, stringResource(priorityLabel(it)), priorityColor(it))
             },
             selected = current.priority ?: NO_PRIORITY,
-            onSelect = { if (it != current.priority) viewModel.update(current.uid, TaskChange(priority = it)) },
+            onSelect = { if (it != current.priority) viewModel.edit(latest, TaskChange(priority = it)) },
             onDismiss = dismissPicker,
         )
         Picker.Status -> ChoiceSheet(
             title = stringResource(R.string.tasks_field_status),
             choices = editableStatuses.map { SheetChoice(it, stringResource(statusLabelRes(it))) },
             selected = current.status,
-            onSelect = { if (it != current.status) viewModel.update(current.uid, TaskChange(status = it)) },
+            onSelect = { if (it != current.status) viewModel.edit(latest, TaskChange(status = it)) },
             onDismiss = dismissPicker,
         )
         Picker.Tags -> TagsSheet(
             tags = tags,
             selected = current.tagUids.toSet(),
-            onChange = { viewModel.update(current.uid, TaskChange(tagUids = it.toList())) },
+            onChange = { viewModel.edit(latest, TaskChange(tagUids = it.toList())) },
+            deferred = current.isRecurring,
             onDismiss = dismissPicker,
         )
         Picker.Project -> ProjectSheet(
             projects = ProjectChoices.forTask(projects, current.projectUid),
             selectedUid = current.projectUid,
-            onSelect = { viewModel.update(current.uid, TaskEdits.project(latest, it)) },
+            onSelect = { viewModel.edit(latest, TaskEdits.project(latest, it)) },
             onDismiss = dismissPicker,
         )
         Picker.Actions -> CadenceSheet(
@@ -368,7 +373,15 @@ internal fun TaskDetailSheet(
                 }
                 ActionRow(Icons.Outlined.Delete, stringResource(R.string.tasks_action_delete), palette.error) {
                     picker = null
-                    confirmDelete = true
+                    if (current.isRecurring) {
+                        // La portée est demandée à la place de la confirmation ; le texte en attente n'est plus à écrire.
+                        sent.name = title.trim()
+                        sent.note = note.trim()
+                        viewModel.askDelete(current)
+                        onDismiss()
+                    } else {
+                        confirmDelete = true
+                    }
                 }
             }
         }
@@ -474,6 +487,7 @@ private fun DetailBadges(
     projectIcon: String?,
     projectColor: Color?,
     tagNames: List<String>,
+    tagColors: Map<String, Color>,
     onDates: () -> Unit,
     onPriority: () -> Unit,
     onProject: () -> Unit,
@@ -529,7 +543,7 @@ private fun DetailBadges(
             }
         }
         tagNames.take(MAX_TAG_BADGES).forEach { name ->
-            TapBadge(onTags, enabled) { CadenceBadge(text = "#$name") }
+            TapBadge(onTags, enabled) { CadenceBadge(text = "#$name", color = tagColors[name]) }
         }
         if (tagNames.size > MAX_TAG_BADGES) {
             TapBadge(onTags, enabled) {

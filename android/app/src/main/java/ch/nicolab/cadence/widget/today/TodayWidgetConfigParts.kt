@@ -45,6 +45,7 @@ import ch.nicolab.cadence.designsystem.theme.hexToOpaqueArgb
 import ch.nicolab.cadence.designsystem.theme.hueToArgb
 import ch.nicolab.cadence.designsystem.theme.opaqueArgbToHex
 import ch.nicolab.cadence.tasks.model.ProjectItem
+import ch.nicolab.cadence.tasks.model.TagColors
 import ch.nicolab.cadence.tasks.model.TagItem
 import ch.nicolab.cadence.tasks.model.TaskPriority
 
@@ -113,9 +114,10 @@ internal fun FilterChips(
         }
         if (tags.isNotEmpty()) {
             Text(stringResource(R.string.today_config_filter_tags), style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)
+            val tagColors = remember(tags) { TagColors.byUid(tags).mapValues { Color(it.value.lightArgb) } }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.xs), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
                 tags.forEach { tag ->
-                    ChoiceChip(label = "#${tag.name}", selected = tag.uid in config.tagUids) {
+                    ChoiceChip(label = "#${tag.name}", selected = tag.uid in config.tagUids, dotColor = tagColors[tag.uid]) {
                         onChange(config.copy(tagUids = config.tagUids.toggled(tag.uid)))
                     }
                 }

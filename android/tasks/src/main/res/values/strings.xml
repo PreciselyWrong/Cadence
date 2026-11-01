@@ -50,6 +50,13 @@
     <string name="tasks_project_empty">Aucune tâche ouverte dans ce projet.</string>
     <string name="tasks_back">Retour</string>
     <string name="tasks_edit_icon">Icône</string>
+    <string name="tasks_edit_color">Couleur</string>
+    <string name="tasks_color_auto">Automatique</string>
+    <string name="tasks_color_remove">Revenir à la couleur automatique</string>
+    <string name="tasks_color_hex">Code hex</string>
+    <string name="tasks_color_hex_support">Format attendu : #RRGGBB</string>
+    <string name="tasks_color_apply">Appliquer</string>
+    <string name="tasks_color_swatch">Couleur %1$s</string>
     <string name="tasks_icon_none">Aucune icône</string>
     <string name="tasks_icon_remove">Retirer l\'icône</string>
     <string name="tasks_edit_parent">Projet parent</string>
@@ -119,10 +126,18 @@
     <string name="tasks_delete_title">Supprimer la tâche ?</string>
     <string name="tasks_delete_message">La tâche sera supprimée du serveur Cadence.</string>
 
-    <string name="tasks_move_recurring_title">Déplacer une tâche récurrente</string>
-    <string name="tasks_move_this">Seulement cette occurrence</string>
-    <string name="tasks_move_following">Cette occurrence et les suivantes</string>
-    <string name="tasks_move_all">Toutes les occurrences</string>
+    <string name="recurring_edit_title">Modifier cette tâche ou la série ?</string>
+    <string name="recurring_delete_title">Supprimer cette tâche ou la série ?</string>
+    <string name="recurring_this">Seulement celle-ci</string>
+    <string name="recurring_following">Celle-ci et les suivantes</string>
+    <string name="recurring_all">Toutes</string>
+    <string name="recurring_edit_this_hint">Les autres occurrences ne changent pas.</string>
+    <string name="recurring_edit_following_hint">Cette occurrence et toutes celles qui suivent changent.</string>
+    <string name="recurring_edit_all_hint">Toute la série change.</string>
+    <string name="recurring_delete_this_hint">Cette date est ignorée, la série continue.</string>
+    <string name="recurring_delete_following_hint">Cette occurrence et les suivantes sont supprimées, la série s\'arrête avant.</string>
+    <string name="recurring_delete_all_hint">La tâche et toutes ses occurrences sont supprimées.</string>
+    <string name="recurring_unsupported">Cette répétition ne se modifie que pour toute la série.</string>
 
     <string name="tasks_connect_title">Serveur Cadence</string>
     <string name="tasks_connected_to">Connecté à %1$s</string>

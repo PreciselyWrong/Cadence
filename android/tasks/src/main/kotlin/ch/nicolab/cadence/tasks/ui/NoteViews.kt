@@ -283,7 +283,7 @@ private fun NoteEditor(viewModel: TasksViewModel, uid: String, note: NoteItem?, 
                 singleLine = true,
             )
             if (note != null) {
-                NoteMeta(note, projects.firstOrNull { it.uid == note.projectUid }?.name, tags.filter { it.uid in note.tagUids }.map { it.name })
+                NoteMeta(note, projects.firstOrNull { it.uid == note.projectUid }?.name, tags.filter { it.uid in note.tagUids }.map { it.name }, remember(tags) { tagBadgeColorsByName(tags) })
             }
             if (editing) {
                 PlainField(
@@ -375,12 +375,12 @@ private fun PlainField(
 }
 
 @Composable
-private fun NoteMeta(note: NoteItem, projectName: String?, tagNames: List<String>) {
+private fun NoteMeta(note: NoteItem, projectName: String?, tagNames: List<String>, tagColors: Map<String, Color>) {
     val accent = noteAccent(note.color, cadence.isDark)
     FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
         accent?.let { Box(Modifier.size(Size.badgeHeight).padding(Space.xs).clip(CircleShape).background(it)) }
         projectName?.let { CadenceBadge(it, tone = BadgeTone.Primary) }
-        tagNames.forEach { CadenceBadge("#$it") }
+        tagNames.forEach { CadenceBadge("#$it", color = tagColors[it]) }
         note.updatedAt?.let {
             CadenceBadge(
                 stringResource(R.string.tasks_note_updated, it.atZone(ZoneId.systemDefault()).toLocalDate().format(noteDate)),

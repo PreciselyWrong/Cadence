@@ -6,6 +6,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
@@ -22,6 +23,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
@@ -179,7 +181,7 @@ fun TertiaryAction(
     }
 }
 
-/** Puce sélectionnable avec retour tactile et transition douce. [leadingIcon] annonce l'état, par exemple une coche. */
+/** Puce sélectionnable avec retour tactile et transition douce. [leadingIcon] annonce l'état, par exemple une coche ; [dotColor] pose un point de couleur devant le texte. */
 @Composable
 fun ChoiceChip(
     label: String,
@@ -187,6 +189,7 @@ fun ChoiceChip(
     modifier: Modifier = Modifier,
     accent: Color? = null,
     leadingIcon: ImageVector? = null,
+    dotColor: Color? = null,
     onClick: () -> Unit,
 ) {
     val palette = cadence
@@ -224,6 +227,11 @@ fun ChoiceChip(
         Row(verticalAlignment = Alignment.CenterVertically) {
             leadingIcon?.let {
                 Icon(it, null, tint = content, modifier = Modifier.size(Size.iconSm))
+                Spacer(Modifier.width(Space.xs))
+            }
+            // Repère de couleur (étiquettes) : un point plein, entouré de la couleur du texte une fois la puce remplie.
+            dotColor?.let {
+                Box(Modifier.size(10.dp).clip(CircleShape).background(it).border(1.dp, content.copy(alpha = if (selected) 0.8f else 0f), CircleShape))
                 Spacer(Modifier.width(Space.xs))
             }
             Text(label, style = MaterialTheme.typography.labelLarge, color = content)

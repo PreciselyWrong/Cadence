@@ -120,6 +120,32 @@ class EntityEditsRepositoryTest {
     }
 
     @Test
+    fun `choosing and clearing a tag color sends tag upserts`() = runBlocking {
+        database.tagDao().upsert(tag("sport"))
+
+        repository.setTagColor("sport", "#2563EB")
+        repository.setTagColor("sport", "#2563eb")
+        repository.setTagColor("sport", null)
+
+        assertNull(database.tagDao().get("sport")?.color)
+        val ops = pending()
+        assertEquals(listOf("tag", "tag"), ops.map { it.first })
+        assertEquals("#2563eb", ops[0].third.getValue("color").jsonPrimitive.content)
+        assertEquals(JsonNull, ops[1].third.getValue("color"))
+    }
+
+    @Test
+    fun `a tag color the server would not store is rejected before any write`() = runBlocking {
+        database.tagDao().upsert(tag("sport"))
+
+        assertThrows(IllegalArgumentException::class.java) { runBlocking { repository.setTagColor("sport", "blue") } }
+        repository.setTagColor("ghost", "#2563eb")
+
+        assertNull(database.tagDao().get("sport")?.color)
+        assertTrue(pending().isEmpty())
+    }
+
+    @Test
     fun `setting and removing a tag icon sends tag upserts`() = runBlocking {
         database.tagDao().upsert(tag("sport"))
 

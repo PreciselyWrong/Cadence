@@ -36,10 +36,12 @@ import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.ProjectHierarchy
 import ch.nicolab.cadence.tasks.model.ProjectItem
+import ch.nicolab.cadence.tasks.model.TagColor
+import ch.nicolab.cadence.tasks.model.TagColors
 import ch.nicolab.cadence.tasks.model.TagItem
 import ch.nicolab.cadence.tasks.model.TagPaths
 
-private enum class EditPage { MAIN, ICON, PARENT }
+private enum class EditPage { MAIN, ICON, PARENT, COLOR }
 
 /** Statut, icône et projet parent d'un projet : la feuille du statut mène aux deux autres choix. */
 @Composable
@@ -62,6 +64,7 @@ internal fun ProjectEditSheets(project: ProjectItem, viewModel: TasksViewModel, 
             onPick = { viewModel.setProjectIcon(project.uid, it) },
             onDismiss = onDismiss,
         )
+        EditPage.COLOR -> Unit // couleur : étiquettes seulement
         EditPage.PARENT -> {
             val candidates = remember(projects, project.uid) { ProjectHierarchy.parentCandidates(projects, project.uid) }
             ParentSheet(
@@ -88,8 +91,16 @@ internal fun TagEditSheets(tag: TagItem, viewModel: TasksViewModel, onDismiss: (
             tag = tag,
             parentName = parent?.name,
             onRename = { leaf, done -> viewModel.renameTag(tag.uid, TagPaths.renamedLeaf(tag.name, leaf), done) },
+            resolvedColor = TagColors.resolve(tag, tags),
             onEditIcon = { page = EditPage.ICON },
+            onEditColor = { page = EditPage.COLOR },
             onEditParent = { page = EditPage.PARENT },
+            onDismiss = onDismiss,
+        )
+        EditPage.COLOR -> TagColorSheet(
+            tag = tag,
+            automatic = TagColors.resolve(tag.copy(color = null), tags),
+            onPick = { viewModel.setTagColor(tag.uid, it) },
             onDismiss = onDismiss,
         )
         EditPage.ICON -> EntityIconSheet(
@@ -119,7 +130,9 @@ private fun TagMainSheet(
     tag: TagItem,
     parentName: String?,
     onRename: (String, (Boolean) -> Unit) -> Unit,
+    resolvedColor: TagColor,
     onEditIcon: () -> Unit,
+    onEditColor: () -> Unit,
     onEditParent: () -> Unit,
     onDismiss: () -> Unit,
 ) {
@@ -144,18 +157,24 @@ private fun TagMainSheet(
             Spacer(Modifier.height(Space.lg))
         }
         RowGroup {
-            val rows = if (reserved) 1 else 2
+            val rows = if (reserved) 2 else 3
             SettingRow(
                 title = stringResource(R.string.tasks_edit_icon),
                 shape = rowGroupShape(0, rows),
                 trailing = { IconValue(tag.icon) },
                 onClick = onEditIcon,
             )
+            SettingRow(
+                title = stringResource(R.string.tasks_edit_color),
+                shape = rowGroupShape(1, rows),
+                trailing = { TagColorValue(tag, resolvedColor) },
+                onClick = onEditColor,
+            )
             if (!reserved) {
                 SettingRow(
                     title = stringResource(R.string.tasks_tag_edit_parent),
                     subtitle = parentName ?: stringResource(R.string.tasks_tag_edit_parent_none),
-                    shape = rowGroupShape(1, rows),
+                    shape = rowGroupShape(2, rows),
                     onClick = onEditParent,
                 )
             }

@@ -17,10 +17,12 @@ import ch.nicolab.cadence.calendar.TimeRange
 import ch.nicolab.cadence.calendar.ofDays
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
+import ch.nicolab.cadence.tasks.data.UnsupportedRecurrence
 import ch.nicolab.cadence.tasks.model.AreaFilter
 import ch.nicolab.cadence.tasks.model.AreaItem
 import ch.nicolab.cadence.tasks.model.AreaSuggestions
 import ch.nicolab.cadence.tasks.model.NextAction
+import ch.nicolab.cadence.tasks.model.OccurrenceFields
 import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.links.LinkPreviews
 import ch.nicolab.cadence.tasks.model.NoteChange
@@ -116,8 +118,16 @@ internal enum class DeletionKind { Note, Idea }
 /** Suppression en attente de confirmation, annulable par [TasksViewModel.undoDeletion]. */
 internal data class PendingDeletion(val kind: DeletionKind, val uid: String)
 
-/** Déplacement d'une tâche récurrente en attente du choix de portée. */
-internal data class PendingMove(val taskUid: String, val date: LocalDate)
+/**
+ * Question « cette tâche ou la série ? » en attente sur une tâche récurrente. [occurrence] est le jour de
+ * l'occurrence touchée (une occurrence à venir de l'Agenda), null pour l'occurrence courante.
+ */
+internal sealed interface PendingScope {
+    val task: TaskItem
+
+    data class Edit(override val task: TaskItem, val change: TaskChange, val occurrence: LocalDate? = null) : PendingScope
+    data class Delete(override val task: TaskItem) : PendingScope
+}
 
 /** Bandeau avec « Annuler » pour un geste qui déplace ou supprime une tâche. */
 internal class UndoNotice(val message: String, val undo: () -> Unit)
@@ -193,13 +203,10 @@ internal class TasksViewModel(
     private val _sheet = MutableStateFlow<SwipeSheet?>(null)
     val sheet: StateFlow<SwipeSheet?> = _sheet.asStateFlow()
 
-    private val _pendingDelete = MutableStateFlow<TaskItem?>(null)
+    private val _pendingScope = MutableStateFlow<PendingScope?>(null)
 
-    /** Suppression d'une tâche récurrente en attente du choix « cette occurrence / toute la série ». */
-    val pendingDelete: StateFlow<TaskItem?> = _pendingDelete.asStateFlow()
-
-    private val _pendingMove = MutableStateFlow<PendingMove?>(null)
-    val pendingMove: StateFlow<PendingMove?> = _pendingMove.asStateFlow()
+    /** Modification ou suppression d'une tâche récurrente en attente du choix de portée. */
+    val pendingScope: StateFlow<PendingScope?> = _pendingScope.asStateFlow()
 
     val moment: StateFlow<Moment> = minuteTicks().stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), Moment.current(),
@@ -325,6 +332,23 @@ internal class TasksViewModel(
 
     fun update(uid: String, change: TaskChange) = launchAction { repository.updateTask(uid, change) }
 
+    /**
+     * Enregistre [change] sur [task]. Pour une tâche récurrente, un champ d'occurrence (titre, note, priorité,
+     * heure, durée, projet, étiquettes, statut) demande d'abord la portée ; le reste s'écrit sur la série.
+     */
+    fun edit(task: TaskItem, change: TaskChange) {
+        if (task.isRecurring && OccurrenceFields.isScoped(change)) {
+            _pendingScope.value = PendingScope.Edit(task, change)
+        } else {
+            update(task.uid, change)
+        }
+    }
+
+    /** Suppression : une tâche récurrente demande la portée, une tâche simple part avec « Annuler ». */
+    fun askDelete(task: TaskItem) {
+        if (task.isRecurring) _pendingScope.value = PendingScope.Delete(task) else deleteWithUndo(task)
+    }
+
     /** Report à demain ; une tâche récurrente demande d'abord la portée. */
     fun postpone(task: TaskItem) = reschedule(task, moment.value.today.plusDays(1))
 
@@ -343,7 +367,7 @@ internal class TasksViewModel(
             SwipeAction.IN_VIEW -> funnel(task, FunnelStage.IN_VIEW)
             SwipeAction.THIS_WEEK -> funnel(task, FunnelStage.THIS_WEEK)
             SwipeAction.LATER -> funnel(task, FunnelStage.LATER)
-            SwipeAction.DELETE -> if (task.isRecurring) _pendingDelete.value = task else deleteWithUndo(task)
+            SwipeAction.DELETE -> askDelete(task)
             SwipeAction.NONE -> Unit
         }
     }
@@ -378,7 +402,7 @@ internal class TasksViewModel(
         _sheet.value = null
         if (!FileBackedActions.canEdit(task)) return
         if (date != null && task.isRecurring) {
-            askRecurringMove(task.uid, date)
+            edit(task, TaskChange(dueDate = date))
             return
         }
         val zone = moment.value.zone
@@ -403,20 +427,51 @@ internal class TasksViewModel(
         changeWithUndo(task, change, UndoChanges.restorePriority(task), getString(R.string.swipe_notice_priority, task.name))
     }
 
-    /** Réponse à « Cette occurrence / Toute la série » pour une suppression ; null = annulé. */
-    fun answerRecurringDelete(scope: RecurringScope?) {
-        val task = _pendingDelete.value ?: return
-        _pendingDelete.value = null
-        when (scope) {
-            null -> Unit
-            RecurringScope.THIS -> skipOccurrence(task)
-            else -> deleteWithUndo(task)
+    /** Réponse à « Cette tâche ou la série ? » ; null = annulé, rien n'est écrit. */
+    fun answerScope(scope: RecurringScope?) {
+        val pending = _pendingScope.value ?: return
+        _pendingScope.value = null
+        if (scope == null) return
+        when (pending) {
+            is PendingScope.Edit -> applyEdit(pending, scope)
+            is PendingScope.Delete -> applyDelete(pending.task, scope)
         }
     }
 
+    private fun applyEdit(pending: PendingScope.Edit, scope: RecurringScope) = launchAction {
+        val uid = pending.task.uid
+        val scoped = OccurrenceFields.scoped(pending.change)
+        // Le jour seul se décale sur le serveur (il déplace aussi la règle) ; le reste s'écrit hors ligne.
+        val moveDate = scoped.dueDate.takeIf { pending.occurrence == null && OccurrenceFields.isDateOnly(pending.change) }
+        if (moveDate != null) {
+            repository.moveRecurring(uid, scope, moveDate).getOrThrow()
+        } else {
+            repository.editRecurring(uid, scope, pending.occurrence, pending.change).getOrElse { throw recurringFailure(it) }
+        }
+        OccurrenceFields.rest(pending.change).takeIf { it != TaskChange() }?.let { repository.updateTask(uid, it) }
+    }
+
+    private fun applyDelete(task: TaskItem, scope: RecurringScope) {
+        // « Toutes » et « celle-ci et les suivantes » sur l'occurrence courante suppriment la série : avec « Annuler ».
+        if (scope == RecurringScope.ALL || scope == RecurringScope.FOLLOWING) {
+            deleteWithUndo(task)
+        } else {
+            launchAction { repository.deleteRecurring(task.uid, scope, null).getOrThrow() }
+        }
+    }
+
+    private fun recurringFailure(error: Throwable): Throwable =
+        if (error is UnsupportedRecurrence) {
+            IllegalStateException(getString(R.string.recurring_unsupported), error)
+        } else {
+            error
+        }
+
+    /** Une série ne se défait pas d'un geste : la portée vient d'être choisie, pas d'« Annuler ». */
     private fun changeWithUndo(task: TaskItem, change: TaskChange, restore: TaskChange, message: String) {
-        update(task.uid, change)
-        _notices.tryEmit(UndoNotice(message) { update(task.uid, restore) })
+        edit(task, change)
+        val askedScope = task.isRecurring && OccurrenceFields.isScoped(change)
+        if (!askedScope) _notices.tryEmit(UndoNotice(message) { update(task.uid, restore) })
     }
 
     /** Masque la tâche tout de suite et ne la supprime pour de bon qu'une fois le délai d'annulation écoulé. */
@@ -446,19 +501,6 @@ internal class TasksViewModel(
     private fun getString(res: Int): String = getApplication<Application>().getString(res)
 
     private fun getString(res: Int, arg: String): String = getApplication<Application>().getString(res, arg)
-
-    fun askRecurringMove(uid: String, date: LocalDate) {
-        _pendingMove.value = PendingMove(uid, date)
-    }
-
-    /** Réponse à la boîte « Déplacer une tâche récurrente » ; null = annulé. */
-    fun answerRecurringMove(scope: RecurringScope?) {
-        val move = _pendingMove.value ?: return
-        _pendingMove.value = null
-        if (scope != null) {
-            launchAction { repository.moveRecurring(move.taskUid, scope, move.date).getOrThrow() }
-        }
-    }
 
     // Écritures des formulaires : suspendues, pour que l'écran ne se ferme qu'après succès.
     // Les erreurs remontent à l'appelant, qui garde les valeurs saisies.
@@ -521,6 +563,8 @@ internal class TasksViewModel(
     fun setProjectIcon(uid: String, icon: String?) = launchAction { repository.setProjectIcon(uid, icon) }
 
     fun setTagIcon(uid: String, icon: String?) = launchAction { repository.setTagIcon(uid, icon) }
+
+    fun setTagColor(uid: String, color: String?) = launchAction { repository.setTagColor(uid, color) }
 
     fun moveProject(uid: String, parentUid: String?) = launchAction {
         if (!repository.moveProject(uid, parentUid)) _messages.tryEmit(getString(R.string.tasks_project_move_refused))

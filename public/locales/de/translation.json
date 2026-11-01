@@ -5240,7 +5240,12 @@
   },
   "colors": {
     "label": "Farbe",
-    "none": "Keine"
+    "none": "Keine",
+    "automatic": "Automatic",
+    "custom": "Custom (hex)",
+    "light": "light",
+    "medium": "medium",
+    "deep": "deep"
   },
   "tag": {
     "viewTag": "Zum Tag wechseln"

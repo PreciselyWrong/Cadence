@@ -112,9 +112,20 @@ class AgendaInteractionsTest {
     }
 
     @Test
-    fun `done, recurring and non-task entries are not draggable`() {
+    fun `a series can be dragged and its upcoming occurrence carries its day`() {
+        val stored = draggableTaskItem(allDayTask("b", recurring = true))!!
+        assertTrue(stored.recurring)
+        assertNull(stored.occurrence)
+        val later = allDayTask("b", recurring = true).copy(start = day.plusDays(7).atStartOfDay(), virtual = true)
+        val item = draggableTaskItem(later)!!
+        assertTrue(item.recurring)
+        assertEquals(day.plusDays(7), item.occurrence)
+        assertNull(draggableTaskItem(allDayTask("done", recurring = true, done = true)))
+    }
+
+    @Test
+    fun `done and non-task entries are not draggable`() {
         assertNull(draggableTaskItem(allDayTask("a", done = true)))
-        assertNull(draggableTaskItem(allDayTask("b", recurring = true)))
         val habit = AgendaEntry.Habit("h", "Eau", day.atStartOfDay(), day.plusDays(1).atStartOfDay(), true, false, null)
         assertNull(draggableTaskItem(habit))
     }

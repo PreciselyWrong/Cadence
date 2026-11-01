@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Tag } from '../../entities/Tag';
 import { useToast } from '../Shared/ToastContext';
 import { useTranslation } from 'react-i18next';
-import ColorPicker from '../Shared/ColorPicker';
+import TagColorPicker from './TagColorPicker';
+import { resolveTagColor } from '../../utils/tagColor';
 import IconPicker from '../Shared/IconPicker';
 import { useStore } from '../../store/useStore';
 import {
@@ -252,8 +253,11 @@ const TagModal: React.FC<TagModalProps> = ({
             </SidePanelSection>
 
             <SidePanelSection title={t('forms.color', 'Color')}>
-                <ColorPicker
+                <TagColorPicker
                     value={formData.color || ''}
+                    automatic={
+                        resolveTagColor({ name: fullName() }, allTags).value
+                    }
                     onChange={(color) =>
                         setFormData((prev) => ({
                             ...prev,

@@ -59,6 +59,7 @@ internal fun TagsTab(
     var collapsed by rememberSaveable { mutableStateOf(emptyList<String>()) }
     val counts = remember(tags, tasks) { TaskOverviews.tagCards(tags, tasks).associate { it.tag.uid to it.openCount } }
     val rows = remember(tags, collapsed) { TagPaths.rows(tags, collapsed.toSet()) }
+    val colors = remember(tags) { tagBadgeColors(tags) }
     val nested = remember(rows) { rows.any { it.hasChildren } }
 
     LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
@@ -68,7 +69,7 @@ internal fun TagsTab(
         itemsIndexed(rows, key = { _, row -> row.tag.uid }) { index, row ->
             val tag = row.tag
             val isCollapsed = tag.uid in collapsed
-            val tint = projectRailColor(tag.color)?.let(::Color) ?: cadence.outline
+            val tint = colors.getValue(tag.uid)
             val icon = entityIcon(tag.icon)
             Panel(
                 modifier = Modifier.padding(bottom = Space.groupGap),
@@ -104,7 +105,7 @@ internal fun TagsTab(
                         }
                     }
                     if (icon != null) {
-                        EntityIcon(icon, tint = if (tag.color == null) cadence.onSurfaceVariant else tint)
+                        EntityIcon(icon, tint = tint)
                     } else {
                         Box(Modifier.size(Space.md).clip(CircleShape).background(tint))
                     }
@@ -153,7 +154,7 @@ internal fun TagTasksPane(
                     Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = stringResource(R.string.tasks_back))
                 }
                 if (icon != null) {
-                    EntityIcon(icon, tint = projectRailColor(tag?.color)?.let(::Color) ?: cadence.onSurfaceVariant)
+                    EntityIcon(icon, tint = tag?.let { tagBadgeColors(tags)[it.uid] } ?: cadence.onSurfaceVariant)
                     Spacer(Modifier.width(Space.sm))
                 }
                 Text(

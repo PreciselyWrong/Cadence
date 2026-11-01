@@ -2,6 +2,8 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TaskTagChips from '../TaskRow/TaskTagChips';
+import { useStore } from '../../../store/useStore';
+import { derivedTagColor } from '../../../utils/tagColor';
 
 jest.mock('react-i18next', () => ({
     useTranslation: () => ({
@@ -40,5 +42,31 @@ describe('TaskTagChips', () => {
         expect(screen.getByText('a').getAttribute('style')).toContain(
             '--accent-light'
         );
+    });
+
+    it('gives an uncolored tag the color derived from its name', () => {
+        render(<TaskTagChips tags={[{ name: 'travail' }]} />);
+        expect(screen.getByText('travail').getAttribute('style')).toContain(
+            derivedTagColor('travail').value
+        );
+    });
+
+    it('lets a sub-tag take its parent color from the store', () => {
+        useStore.setState((state) => ({
+            tagsStore: {
+                ...state.tagsStore,
+                tags: [
+                    { name: 'perso', color: '#dc2626' },
+                    { name: 'perso/sport' },
+                ],
+            },
+        }));
+        render(<TaskTagChips tags={[{ name: 'perso/sport' }]} />);
+        expect(screen.getByText('perso/sport').getAttribute('style')).toContain(
+            '#dc2626'
+        );
+        useStore.setState((state) => ({
+            tagsStore: { ...state.tagsStore, tags: [] },
+        }));
     });
 });

@@ -5261,7 +5261,12 @@
   },
   "colors": {
     "label": "Колір",
-    "none": "Немає"
+    "none": "Немає",
+    "automatic": "Automatic",
+    "custom": "Custom (hex)",
+    "light": "light",
+    "medium": "medium",
+    "deep": "deep"
   },
   "tag": {
     "viewTag": "Перейти до мітки"

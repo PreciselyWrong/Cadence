@@ -1,10 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-    ACCENT,
-    accentVars,
-    resolveColor,
-} from '../../../constants/colorPalette';
+import { ACCENT, accentVars } from '../../../constants/colorPalette';
+import { useTagColor } from '../../../utils/tagColor';
 import EntityIcon from '../../Shared/EntityIcon';
 
 interface TagLike {
@@ -20,14 +17,15 @@ interface TaskTagChipsProps {
     className?: string;
 }
 
-// Tags as small rounded chips: the tag's palette color when it has one,
-// neutral gray otherwise. Past `max`, a "+N" chip lists the rest in its tooltip.
+// Tags as small rounded chips tinted with the tag's color (its own, its
+// parent's, or one derived from its name). Past `max`, a "+N" chip lists the rest in its tooltip.
 const TaskTagChips: React.FC<TaskTagChipsProps> = ({
     tags,
     max = 2,
     className = '',
 }) => {
     const { t } = useTranslation();
+    const tagColor = useTagColor();
     if (!tags || tags.length === 0) return null;
     const shown = tags.slice(0, max);
     const rest = tags.slice(max);
@@ -42,15 +40,13 @@ const TaskTagChips: React.FC<TaskTagChipsProps> = ({
             data-testid="task-tag-chips"
         >
             {shown.map((tag) => {
-                const color = resolveColor(tag.color);
+                const color = tagColor(tag);
                 return (
                     <span
                         key={tag.uid || tag.name}
                         title={tag.name}
                         style={accentVars(color)}
-                        className={`${base} max-w-[7rem] truncate ${
-                            color ? `${ACCENT.softBg} ${ACCENT.text}` : neutral
-                        }`}
+                        className={`${base} max-w-[7rem] truncate ${ACCENT.softBg} ${ACCENT.chipText}`}
                     >
                         <EntityIcon
                             icon={tag.icon}
