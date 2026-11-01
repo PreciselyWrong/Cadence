@@ -759,6 +759,15 @@
     "calendarDescription": "Activa la vista Calendario para ver las tareas por fecha límite en día, semana y mes.",
     "templatesDescription": "Activa las plantillas de proyecto para guardar y reutilizar estructuras de proyecto.",
     "mcp": {
+      "connector": {
+        "error": "No se pudo abrir la ventana de emparejamiento.",
+        "notAllowed": "Solo un administrador puede conectar asistentes a Cadence.",
+        "mfaRequired": "Activa la autenticación de dos factores (Seguridad) antes de conectar un asistente.",
+        "open": "Esperando un conector hasta las {{time}}. Añádelo o vuelve a conectarlo en claude.ai ahora.",
+        "authorize": "Autorizar un conector nuevo",
+        "description": "Añade Cadence como conector personalizado en claude.ai en {{url}}. Cadence solo acepta un conector nuevo durante los 10 minutos posteriores a que pulses abajo.",
+        "title": "Conectar claude.ai"
+      },
       "title": "Integración MCP",
       "description": "Conecta Cadence con cualquier aplicación compatible con MCP mediante el Model Context Protocol. Así, los asistentes de IA pueden trabajar con tus tareas, proyectos y notas, con servidores Cadence locales o remotos.",
       "step1": {

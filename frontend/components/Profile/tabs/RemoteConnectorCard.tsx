@@ -33,16 +33,16 @@ const RemoteConnectorCard: React.FC = () => {
             setError(
                 code === 'mfa_required'
                     ? t(
-                          'profile.mcp.remote.mfaRequired',
+                          'profile.mcp.connector.mfaRequired',
                           'Turn on two-factor sign-in (Security) before connecting an assistant.'
                       )
                     : code === 'not_allowed'
                       ? t(
-                            'profile.mcp.remote.notAllowed',
+                            'profile.mcp.connector.notAllowed',
                             'Only an administrator can connect assistants to Cadence.'
                         )
                       : t(
-                            'profile.mcp.remote.error',
+                            'profile.mcp.connector.error',
                             'Could not open the pairing window.'
                         )
             );
@@ -62,11 +62,11 @@ const RemoteConnectorCard: React.FC = () => {
     return (
         <section className="border-l-4 border-indigo-500 pl-4">
             <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
-                {t('profile.mcp.remote.title', 'Connect claude.ai')}
+                {t('profile.mcp.connector.title', 'Connect claude.ai')}
             </h4>
             <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
                 {t(
-                    'profile.mcp.remote.description',
+                    'profile.mcp.connector.description',
                     'Add Cadence as a custom connector in claude.ai at {{url}}. Cadence only accepts a new connector in the 10 minutes after you click below.',
                     { url: pairing.url }
                 )}
@@ -77,7 +77,7 @@ const RemoteConnectorCard: React.FC = () => {
                 disabled={busy}
                 className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:opacity-50"
             >
-                {t('profile.mcp.remote.authorize', 'Authorize a new connector')}
+                {t('profile.mcp.connector.authorize', 'Authorize a new connector')}
             </button>
             {until && (
                 <p
@@ -85,7 +85,7 @@ const RemoteConnectorCard: React.FC = () => {
                     role="status"
                 >
                     {t(
-                        'profile.mcp.remote.open',
+                        'profile.mcp.connector.open',
                         'Waiting for a connector until {{time}}. Add or reconnect it in claude.ai now.',
                         { time: until }
                     )}

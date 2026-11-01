@@ -893,6 +893,15 @@
     "habitsDescription": "Aktifkan bagian Kebiasaan untuk melacak perilaku berulang dan rangkaian.",
     "loading": "Memuat...",
     "mcp": {
+      "connector": {
+        "error": "Jendela pemasangan tidak dapat dibuka.",
+        "notAllowed": "Hanya administrator yang dapat menghubungkan asisten ke Cadence.",
+        "mfaRequired": "Aktifkan verifikasi dua langkah (Keamanan) sebelum menghubungkan asisten.",
+        "open": "Menunggu konektor sampai {{time}}. Tambahkan atau hubungkan ulang di claude.ai sekarang.",
+        "authorize": "Otorisasi konektor baru",
+        "description": "Tambahkan Cadence sebagai konektor kustom di claude.ai pada {{url}}. Cadence hanya menerima konektor baru dalam 10 menit setelah Anda mengklik tombol di bawah.",
+        "title": "Hubungkan claude.ai"
+      },
       "description": "Hubungkan Cadence dengan aplikasi apa pun yang kompatibel dengan MCP melalui Model Context Protocol. Dengan begitu asisten AI bisa bekerja dengan tugas, proyek, dan catatanmu, baik di server Cadence lokal maupun jarak jauh.",
       "example1": "Tampilkan tugasku untuk hari ini",
       "example2": "Buat tugas untuk meninjau integrasi MCP",

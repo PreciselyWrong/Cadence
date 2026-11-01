@@ -894,6 +894,15 @@
     "habitsDescription": "Ativar a secção Hábitos para acompanhar comportamentos recorrentes e sequências.",
     "loading": "A carregar...",
     "mcp": {
+      "connector": {
+        "error": "Não foi possível abrir a janela de emparelhamento.",
+        "notAllowed": "Só um administrador pode ligar assistentes ao Cadence.",
+        "mfaRequired": "Ative a verificação em duas etapas (Segurança) antes de ligar um assistente.",
+        "open": "A aguardar um conector até {{time}}. Adicione-o ou volte a ligá-lo no claude.ai agora.",
+        "authorize": "Autorizar um novo conector",
+        "description": "Adicione o Cadence como conector personalizado no claude.ai em {{url}}. O Cadence só aceita um novo conector nos 10 minutos seguintes a clicar abaixo.",
+        "title": "Ligar ao claude.ai"
+      },
       "description": "Ligue o Cadence a qualquer aplicação compatível com MCP através do Model Context Protocol. Assim, os assistentes de IA podem trabalhar com as suas tarefas, projetos e notas, em servidores Cadence locais ou remotos.",
       "example1": "Mostra-me as minhas tarefas de hoje",
       "example2": "Cria uma tarefa para rever a integração MCP",

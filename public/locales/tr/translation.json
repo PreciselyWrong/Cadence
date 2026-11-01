@@ -893,6 +893,15 @@
     "habitsDescription": "Tekrarlayan davranışları ve serileri takip etmek için Alışkanlıklar bölümünü etkinleştir.",
     "loading": "Yükleniyor...",
     "mcp": {
+      "connector": {
+        "error": "Eşleştirme penceresi açılamadı.",
+        "notAllowed": "Asistanları Cadence'ye yalnızca bir yönetici bağlayabilir.",
+        "mfaRequired": "Bir asistan bağlamadan önce iki adımlı doğrulamayı (Güvenlik) aç.",
+        "open": "{{time}} saatine kadar bağlayıcı bekleniyor. Şimdi claude.ai içinde ekle veya yeniden bağla.",
+        "authorize": "Yeni bir bağlayıcıyı yetkilendir",
+        "description": "Cadence'yi claude.ai içinde {{url}} adresinde özel bir bağlayıcı olarak ekle. Cadence, yeni bağlayıcıyı yalnızca aşağıdaki düğmeye tıkladıktan sonraki 10 dakika içinde kabul eder.",
+        "title": "claude.ai'ye bağlan"
+      },
       "description": "Model Context Protocol ile Cadence'yi MCP uyumlu herhangi bir uygulamaya bağla. Böylece yapay zeka asistanları görevlerin, projelerin ve notlarınla çalışabilir; yerel ve uzak Cadence sunucularında çalışır.",
       "example1": "Bugünkü görevlerimi göster",
       "example2": "MCP entegrasyonunu gözden geçirmek için bir görev oluştur",

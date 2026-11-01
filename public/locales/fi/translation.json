@@ -893,6 +893,15 @@
     "habitsDescription": "Ota käyttöön Tavat-osio toistuvien tekojen ja putkien seuraamiseen.",
     "loading": "Ladataan...",
     "mcp": {
+      "connector": {
+        "error": "Pariliitosikkunaa ei voitu avata.",
+        "notAllowed": "Vain ylläpitäjä voi yhdistää avustajia Cadenceen.",
+        "mfaRequired": "Ota kaksivaiheinen tunnistautuminen käyttöön (Turvallisuus) ennen avustajan yhdistämistä.",
+        "open": "Odotetaan liitintä {{time}} asti. Lisää tai yhdistä se uudelleen claude.ai:ssä nyt.",
+        "authorize": "Valtuuta uusi liitin",
+        "description": "Lisää Cadence mukautettuna liittimenä claude.ai:hin osoitteessa {{url}}. Cadence hyväksyy uuden liittimen vain 10 minuutin ajan sen jälkeen, kun napsautat alla olevaa painiketta.",
+        "title": "Yhdistä claude.ai"
+      },
       "description": "Yhdistä Cadence mihin tahansa MCP-yhteensopivaan sovellukseen Model Context Protocolin avulla. Näin AI-avustajat voivat käsitellä tehtäviäsi, projektejasi ja muistiinpanojasi, niin paikallisella kuin etäpalvelimellakin.",
       "example1": "Näytä tämän päivän tehtäväni",
       "example2": "Luo tehtävä MCP-integraation tarkistamisesta",

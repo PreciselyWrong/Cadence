@@ -893,6 +893,15 @@
     "habitsDescription": "Bật mục Thói quen để theo dõi hành vi lặp lại và chuỗi ngày.",
     "loading": "Đang tải...",
     "mcp": {
+      "connector": {
+        "error": "Không thể mở cửa sổ ghép nối.",
+        "notAllowed": "Chỉ quản trị viên mới có thể kết nối trợ lý với Cadence.",
+        "mfaRequired": "Bật xác minh hai bước (Bảo mật) trước khi kết nối trợ lý.",
+        "open": "Đang chờ trình kết nối đến {{time}}. Hãy thêm hoặc kết nối lại trong claude.ai ngay bây giờ.",
+        "authorize": "Cấp quyền cho trình kết nối mới",
+        "description": "Thêm Cadence làm trình kết nối tùy chỉnh trong claude.ai tại {{url}}. Cadence chỉ chấp nhận trình kết nối mới trong 10 phút sau khi bạn nhấn nút bên dưới.",
+        "title": "Kết nối claude.ai"
+      },
       "description": "Kết nối Cadence với bất kỳ ứng dụng nào tương thích MCP qua Model Context Protocol. Nhờ đó trợ lý AI có thể làm việc với công việc, dự án và ghi chú của bạn, trên cả máy chủ Cadence cục bộ lẫn từ xa.",
       "example1": "Cho tôi xem công việc hôm nay",
       "example2": "Tạo một công việc để rà soát tích hợp MCP",

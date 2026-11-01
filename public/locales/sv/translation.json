@@ -893,6 +893,15 @@
     "habitsDescription": "Aktivera sektionen Vanor för att följa återkommande beteenden och sviter.",
     "loading": "Läser in...",
     "mcp": {
+      "connector": {
+        "error": "Det gick inte att öppna kopplingsfönstret.",
+        "notAllowed": "Endast en administratör kan ansluta assistenter till Cadence.",
+        "mfaRequired": "Slå på tvåfaktorsautentisering (Säkerhet) innan du ansluter en assistent.",
+        "open": "Väntar på en koppling till {{time}}. Lägg till eller anslut den igen i claude.ai nu.",
+        "authorize": "Godkänn en ny koppling",
+        "description": "Lägg till Cadence som en anpassad koppling i claude.ai på {{url}}. Cadence accepterar bara en ny koppling under de 10 minuter som följer efter att du klickar nedan.",
+        "title": "Anslut claude.ai"
+      },
       "description": "Koppla Cadence till valfri MCP-kompatibel app via Model Context Protocol. Då kan AI-assistenter arbeta med dina uppgifter, projekt och anteckningar, både på lokala och fjärranslutna Cadence-servrar.",
       "example1": "Visa mina uppgifter för idag",
       "example2": "Skapa en uppgift att granska MCP-integrationen",

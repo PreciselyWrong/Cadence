@@ -894,6 +894,15 @@
     "habitsDescription": "Slå på Vaner-seksjonen for å følge gjentakende atferd og rekker.",
     "loading": "Laster...",
     "mcp": {
+      "connector": {
+        "error": "Kunne ikke åpne paringsvinduet.",
+        "notAllowed": "Bare en administrator kan koble assistenter til Cadence.",
+        "mfaRequired": "Slå på tofaktorautentisering (Sikkerhet) før du kobler til en assistent.",
+        "open": "Venter på en connector til {{time}}. Legg den til eller koble den til på nytt i claude.ai nå.",
+        "authorize": "Godkjenn en ny connector",
+        "description": "Legg til Cadence som en egendefinert connector i claude.ai på {{url}}. Cadence godtar bare en ny connector i løpet av de 10 minuttene etter at du klikker nedenfor.",
+        "title": "Koble til claude.ai"
+      },
       "description": "Koble Cadence til enhver MCP-kompatibel app via Model Context Protocol. Da kan AI-assistenter jobbe med oppgavene, prosjektene og notatene dine, både på lokale og eksterne Cadence-servere.",
       "example1": "Vis meg oppgavene mine for i dag",
       "example2": "Lag en oppgave om å gå gjennom MCP-integrasjonen",

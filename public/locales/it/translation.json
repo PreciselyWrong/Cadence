@@ -902,6 +902,15 @@
     "calendarDescription": "Attiva la vista Calendario per vedere le attività per scadenza per giorno, settimana e mese.",
     "templatesDescription": "Attiva i modelli di progetto per salvare e riutilizzare strutture di progetto.",
     "mcp": {
+      "connector": {
+        "error": "Impossibile aprire la finestra di abbinamento.",
+        "notAllowed": "Solo un amministratore può collegare assistenti a Cadence.",
+        "mfaRequired": "Attiva l'autenticazione a due fattori (Sicurezza) prima di collegare un assistente.",
+        "open": "In attesa di un connettore fino alle {{time}}. Aggiungilo o ricollegalo in claude.ai ora.",
+        "authorize": "Autorizza un nuovo connettore",
+        "description": "Aggiungi Cadence come connettore personalizzato in claude.ai all'indirizzo {{url}}. Cadence accetta un nuovo connettore solo nei 10 minuti successivi al clic qui sotto.",
+        "title": "Collega claude.ai"
+      },
       "title": "Integrazione MCP",
       "description": "Collega Cadence a qualsiasi applicazione compatibile con MCP tramite il Model Context Protocol. Gli assistenti IA possono così lavorare con attività, progetti e note, con server Cadence locali o remoti.",
       "step1": {

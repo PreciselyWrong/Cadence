@@ -1398,6 +1398,15 @@
     "calendarDescription": "Aktiviert die Kalenderansicht, um Aufgaben nach Fälligkeit in Tag, Woche und Monat zu sehen.",
     "templatesDescription": "Aktiviert Projektvorlagen, um Projektstrukturen zu speichern und wiederzuverwenden.",
     "mcp": {
+      "connector": {
+        "error": "Das Kopplungsfenster konnte nicht geöffnet werden.",
+        "notAllowed": "Nur ein Administrator kann Assistenten mit Cadence verbinden.",
+        "mfaRequired": "Aktiviere die Zwei-Faktor-Anmeldung (Sicherheit), bevor du einen Assistenten verbindest.",
+        "open": "Warte bis {{time}} auf einen Connector. Füge ihn jetzt in claude.ai hinzu oder verbinde ihn neu.",
+        "authorize": "Neuen Connector autorisieren",
+        "description": "Füge Cadence als benutzerdefinierten Connector in claude.ai unter {{url}} hinzu. Cadence nimmt einen neuen Connector nur innerhalb von 10 Minuten nach einem Klick unten an.",
+        "title": "claude.ai verbinden"
+      },
       "title": "MCP-Integration",
       "description": "Verbinde Cadence über das Model Context Protocol mit jeder MCP-fähigen Anwendung. So können KI-Assistenten mit deinen Aufgaben, Projekten und Notizen arbeiten, mit lokalen und entfernten Cadence-Servern.",
       "step1": {

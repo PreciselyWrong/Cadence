@@ -895,6 +895,15 @@
     "habitsDescription": "Włącz sekcję Nawyki, aby śledzić powtarzalne zachowania i serie.",
     "loading": "Ładowanie...",
     "mcp": {
+      "connector": {
+        "error": "Nie udało się otworzyć okna parowania.",
+        "notAllowed": "Tylko administrator może połączyć asystentów z Cadence.",
+        "mfaRequired": "Włącz weryfikację dwuetapową (Bezpieczeństwo) przed połączeniem asystenta.",
+        "open": "Oczekiwanie na konektor do {{time}}. Dodaj go lub połącz ponownie w claude.ai teraz.",
+        "authorize": "Autoryzuj nowy konektor",
+        "description": "Dodaj Cadence jako niestandardowy konektor w claude.ai pod adresem {{url}}. Cadence przyjmuje nowy konektor tylko przez 10 minut po kliknięciu przycisku poniżej.",
+        "title": "Połącz z claude.ai"
+      },
       "description": "Połącz Cadence z dowolną aplikacją obsługującą Model Context Protocol (MCP). Asystenci AI będą mogli pracować z Twoimi zadaniami, projektami i notatkami, zarówno na lokalnym, jak i zdalnym serwerze Cadence.",
       "example1": "Pokaż moje zadania na dziś",
       "example2": "Utwórz zadanie przejrzenia integracji MCP",

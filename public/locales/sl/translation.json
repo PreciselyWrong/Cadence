@@ -895,6 +895,15 @@
     "habitsDescription": "Omogoči razdelek Navade za sledenje ponavljajočim se dejanjem in nizom.",
     "loading": "Nalaganje...",
     "mcp": {
+      "connector": {
+        "error": "Okna za seznanitev ni bilo mogoče odpreti.",
+        "notAllowed": "Pomočnike s Cadence lahko povezuje le skrbnik.",
+        "mfaRequired": "Pred povezavo pomočnika vklopi dvostopenjsko preverjanje (Varnost).",
+        "open": "Čakanje na konektor do {{time}}. Dodaj ali znova poveži konektor v claude.ai zdaj.",
+        "authorize": "Odobri nov konektor",
+        "description": "Dodaj Cadence kot prilagojen konektor v claude.ai na naslovu {{url}}. Cadence sprejme nov konektor le v 10 minutah po kliku na spodnji gumb.",
+        "title": "Poveži claude.ai"
+      },
       "description": "Poveži Cadence s katero koli aplikacijo, ki podpira Model Context Protocol (MCP). Tako lahko AI pomočniki delajo s tvojimi opravili, projekti in zapiski, na lokalnem ali oddaljenem strežniku Cadence.",
       "example1": "Pokaži moja opravila za danes",
       "example2": "Ustvari opravilo za pregled integracije MCP",

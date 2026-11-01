@@ -893,6 +893,15 @@
     "habitsDescription": "Aktivér sektionen Vaner til at følge tilbagevendende adfærd og stimer.",
     "loading": "Indlæser...",
     "mcp": {
+      "connector": {
+        "error": "Parringsvinduet kunne ikke åbnes.",
+        "notAllowed": "Kun en administrator kan forbinde assistenter til Cadence.",
+        "mfaRequired": "Slå totrinsbekræftelse til (Sikkerhed), før du forbinder en assistent.",
+        "open": "Venter på en connector indtil {{time}}. Tilføj eller genopret den i claude.ai nu.",
+        "authorize": "Godkend en ny connector",
+        "description": "Tilføj Cadence som en brugerdefineret connector i claude.ai på {{url}}. Cadence accepterer kun en ny connector i de 10 minutter efter, at du klikker nedenfor.",
+        "title": "Forbind claude.ai"
+      },
       "description": "Forbind Cadence med enhver MCP-kompatibel app via Model Context Protocol. Så kan AI-assistenter arbejde med dine opgaver, projekter og noter, både på lokale og eksterne Cadence-servere.",
       "example1": "Vis mig mine opgaver for i dag",
       "example2": "Opret en opgave om at gennemgå MCP-integrationen",

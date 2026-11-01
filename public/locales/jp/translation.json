@@ -893,6 +893,15 @@
     "habitsDescription": "繰り返しの行動や連続記録を追跡する習慣セクションを有効にします。",
     "loading": "読み込み中...",
     "mcp": {
+      "connector": {
+        "error": "ペアリング画面を開けませんでした。",
+        "notAllowed": "Cadence にアシスタントを接続できるのは管理者だけです。",
+        "mfaRequired": "アシスタントを接続する前に、2段階認証（セキュリティ）をオンにしてください。",
+        "open": "{{time}} までコネクタを待機中です。今すぐ claude.ai で追加または再接続してください。",
+        "authorize": "新しいコネクタを承認",
+        "description": "claude.ai の {{url}} に、カスタムコネクタとして Cadence を追加してください。Cadence が新しいコネクタを受け付けるのは、下のボタンを押してから 10 分以内だけです。",
+        "title": "claude.ai に接続"
+      },
       "description": "Model Context Protocol を使って、Cadence を MCP 対応の任意のアプリと接続します。AIアシスタントがあなたのタスク、プロジェクト、ノートを扱えるようになります。ローカルとリモートどちらの Cadence サーバーでも使えます。",
       "example1": "今日のタスクを見せて",
       "example2": "MCP連携を確認するタスクを作成して",

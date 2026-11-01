@@ -928,6 +928,15 @@
     "calendarDescription": "Enable the Calendar view for visualising tasks by due date across day, week, and month.",
     "templatesDescription": "Enable Project Templates to save and reuse project structures.",
     "mcp": {
+      "connector": {
+        "error": "Could not open the pairing window.",
+        "notAllowed": "Only an administrator can connect assistants to Cadence.",
+        "mfaRequired": "Turn on two-factor sign-in (Security) before connecting an assistant.",
+        "open": "Waiting for a connector until {{time}}. Add or reconnect it in claude.ai now.",
+        "authorize": "Authorize a new connector",
+        "description": "Add Cadence as a custom connector in claude.ai at {{url}}. Cadence only accepts a new connector in the 10 minutes after you click below.",
+        "title": "Connect claude.ai"
+      },
       "title": "MCP Integration",
       "description": "Connect Cadence with any MCP-compatible application using the Model Context Protocol. This enables AI assistants to interact with your tasks, projects, and notes - works with both local and remote Cadence servers.",
       "step1": {

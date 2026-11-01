@@ -1137,6 +1137,15 @@
     "calendarDescription": "Povoľte zobrazenie Kalendár na vizualizáciu úloh podľa termínu v dennom, týždennom a mesačnom zobrazení.",
     "templatesDescription": "Povoľte šablóny projektov na ukladanie a opätovné použitie štruktúr projektov.",
     "mcp": {
+      "connector": {
+        "error": "Okno párovania sa nepodarilo otvoriť.",
+        "notAllowed": "Asistentov k Cadence môže pripojiť iba správca.",
+        "mfaRequired": "Pred pripojením asistenta zapnite dvojfaktorové overenie (Zabezpečenie).",
+        "open": "Čaká sa na konektor do {{time}}. Pridajte ho alebo znova pripojte v claude.ai hneď teraz.",
+        "authorize": "Autorizovať nový konektor",
+        "description": "Pridajte Cadence ako vlastný konektor v claude.ai na adrese {{url}}. Cadence prijme nový konektor iba 10 minút po kliknutí na tlačidlo nižšie.",
+        "title": "Pripojiť claude.ai"
+      },
       "title": "Integrácia MCP",
       "description": "Prepojte Cadence s ľubovoľnou aplikáciou kompatibilnou s MCP pomocou protokolu Model Context Protocol. AI asistenti tak môžu pracovať s vašimi úlohami, projektmi a poznámkami – funguje s lokálnymi aj vzdialenými servermi Cadence.",
       "step1": {

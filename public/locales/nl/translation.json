@@ -893,6 +893,15 @@
     "habitsDescription": "Schakel de sectie Gewoonten in om terugkerend gedrag en reeksen bij te houden.",
     "loading": "Laden...",
     "mcp": {
+      "connector": {
+        "error": "Het koppelvenster kon niet worden geopend.",
+        "notAllowed": "Alleen een beheerder kan assistenten met Cadence verbinden.",
+        "mfaRequired": "Zet tweestapsverificatie (Beveiliging) aan voordat je een assistent verbindt.",
+        "open": "Wachten op een connector tot {{time}}. Voeg hem nu toe of verbind hem opnieuw in claude.ai.",
+        "authorize": "Een nieuwe connector autoriseren",
+        "description": "Voeg Cadence als aangepaste connector toe in claude.ai op {{url}}. Cadence accepteert pas een nieuwe connector in de 10 minuten nadat je hieronder klikt.",
+        "title": "claude.ai verbinden"
+      },
       "description": "Verbind Cadence met elke MCP-compatibele app via het Model Context Protocol. Zo kunnen AI-assistenten werken met je taken, projecten en notities, op zowel lokale als externe Cadence-servers.",
       "example1": "Laat mijn taken voor vandaag zien",
       "example2": "Maak een taak om de MCP-integratie te controleren",

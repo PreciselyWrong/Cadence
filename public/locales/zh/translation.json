@@ -893,6 +893,15 @@
     "habitsDescription": "启用习惯板块,追踪重复行为和连续记录。",
     "loading": "加载中...",
     "mcp": {
+      "connector": {
+        "error": "无法打开配对窗口。",
+        "notAllowed": "只有管理员可以将助手连接到 Cadence。",
+        "mfaRequired": "请先开启两步验证（安全），然后再连接助手。",
+        "open": "正在等待连接器，截止时间 {{time}}。请立即在 claude.ai 中添加或重新连接。",
+        "authorize": "授权新连接器",
+        "description": "在 claude.ai 中将 Cadence 添加为自定义连接器，地址为 {{url}}。点击下方按钮后的 10 分钟内，Cadence 才会接受新的连接器。",
+        "title": "连接 claude.ai"
+      },
       "description": "通过 Model Context Protocol 将 Cadence 连接到任意兼容 MCP 的应用。这样 AI 助手就能处理你的任务、项目和笔记,本地和远程 Cadence 服务器均可使用。",
       "example1": "显示我今天的任务",
       "example2": "创建一个检查 MCP 集成的任务",

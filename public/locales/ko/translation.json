@@ -893,6 +893,15 @@
     "habitsDescription": "반복 행동과 연속 기록을 추적하는 습관 섹션을 사용합니다.",
     "loading": "불러오는 중...",
     "mcp": {
+      "connector": {
+        "error": "페어링 창을 열 수 없습니다.",
+        "notAllowed": "관리자만 Cadence에 어시스턴트를 연결할 수 있습니다.",
+        "mfaRequired": "어시스턴트를 연결하기 전에 2단계 인증(보안)을 켜세요.",
+        "open": "{{time}}까지 커넥터를 기다리는 중입니다. 지금 claude.ai에서 추가하거나 다시 연결하세요.",
+        "authorize": "새 커넥터 승인",
+        "description": "claude.ai에서 {{url}} 주소로 Cadence를 맞춤 커넥터로 추가하세요. Cadence는 아래 버튼을 누른 뒤 10분 안에만 새 커넥터를 받습니다.",
+        "title": "claude.ai 연결"
+      },
       "description": "Model Context Protocol을 사용해 tududi를 MCP 호환 앱과 연결합니다. AI 어시스턴트가 작업, 프로젝트, 노트를 다룰 수 있으며, 로컬과 원격 Cadence 서버 모두에서 동작합니다.",
       "example1": "오늘 할 작업을 보여줘",
       "example2": "MCP 연동을 검토하는 작업을 만들어줘",

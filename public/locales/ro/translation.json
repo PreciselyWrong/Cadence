@@ -896,6 +896,15 @@
     "habitsDescription": "Activează secțiunea Obiceiuri pentru a urmări comportamente recurente și serii.",
     "loading": "Se încarcă...",
     "mcp": {
+      "connector": {
+        "error": "Nu s-a putut deschide fereastra de asociere.",
+        "notAllowed": "Doar un administrator poate conecta asistenți la Cadence.",
+        "mfaRequired": "Activează autentificarea în doi pași (Securitate) înainte de a conecta un asistent.",
+        "open": "Se așteaptă un conector până la {{time}}. Adaugă-l sau reconectează-l în claude.ai acum.",
+        "authorize": "Autorizează un conector nou",
+        "description": "Adaugă Cadence ca fiind un conector personalizat în claude.ai la {{url}}. Cadence acceptă un conector nou doar în cele 10 minute după ce dai clic mai jos.",
+        "title": "Conectează claude.ai"
+      },
       "description": "Conectează Cadence la orice aplicație compatibilă MCP prin Model Context Protocol. Astfel, asistenții AI pot lucra cu sarcinile, proiectele și notițele tale, pe servere Cadence locale sau la distanță.",
       "example1": "Arată-mi sarcinile de azi",
       "example2": "Creează o sarcină pentru revizuirea integrării MCP",
