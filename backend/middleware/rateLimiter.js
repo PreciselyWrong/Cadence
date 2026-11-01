@@ -129,9 +129,10 @@ const oidcLimiter = rateLimit({
     },
 });
 
-// The OAuth endpoints of remote MCP connectors (docs/38-remote-mcp.md),
-// per IP. Only failed requests count: a connector that signs in normally
-// never runs out, while guessing codes, clients or passwords does.
+// The consent page of remote MCP connectors (docs/38-remote-mcp.md), per
+// IP: it opens in the owner's own browser. Only failed requests count: a
+// connector that signs in normally never runs out, while guessing clients
+// or passwords does.
 const oauthLimiter = rateLimit({
     store: createRateLimitStore('oauth'),
     windowMs: rateLimitConfig.auth.windowMs,
@@ -144,6 +145,55 @@ const oauthLimiter = rateLimit({
     handler: (req, res) => {
         res.status(429).json({
             error: 'Too many authentication attempts',
+            retryAfter: retryAfterSeconds(req),
+        });
+    },
+});
+
+// Remote MCP connectors call /oauth/token and /mcp from Anthropic's egress
+// range, which every Claude user shares (docs/38-remote-mcp.md): failures
+// counted per IP would let anyone's failing connector lock ours out. So the
+// token endpoint counts failures per client_id and the public /mcp per
+// token prefix, the part that selects which hashes get a bcrypt comparison.
+const digestKey = (kind, value) =>
+    `${kind}:${crypto.createHash('sha256').update(value).digest('hex').slice(0, 32)}`;
+
+const oauthTokenLimiter = rateLimit({
+    store: createRateLimitStore('oauth-token'),
+    windowMs: rateLimitConfig.auth.windowMs,
+    max: rateLimitConfig.auth.max,
+    standardHeaders: true,
+    legacyHeaders: false,
+    skip: skipInTest,
+    skipSuccessfulRequests: true,
+    keyGenerator: (req) => {
+        const clientId = req.body?.client_id;
+        return typeof clientId === 'string' && clientId
+            ? digestKey('client', clientId)
+            : ipKeyGenerator(req.ip);
+    },
+    handler: (req, res) => {
+        res.status(429).json({
+            error: 'Too many authentication attempts',
+            retryAfter: retryAfterSeconds(req),
+        });
+    },
+});
+
+const connectorBearerFailureLimiter = rateLimit({
+    store: createRateLimitStore('connector-bearer-failures'),
+    windowMs: rateLimitConfig.auth.windowMs,
+    max: rateLimitConfig.bearerFailure.max,
+    standardHeaders: true,
+    legacyHeaders: false,
+    skip: (req) => !rateLimitConfig.enabled || !getBearerCredential(req),
+    skipSuccessfulRequests: true,
+    requestWasSuccessful: (req, res) => res.statusCode !== 401,
+    keyGenerator: (req) =>
+        digestKey('prefix', getBearerCredential(req).slice(0, 12)),
+    handler: (req, res) => {
+        res.status(429).json({
+            error: 'Too many failed authentication attempts',
             retryAfter: retryAfterSeconds(req),
         });
     },
@@ -508,6 +558,8 @@ module.exports = {
     authLimiter,
     oidcLimiter,
     oauthLimiter,
+    oauthTokenLimiter,
+    connectorBearerFailureLimiter,
     signInLinkLimiter,
     authEmailLimiter,
     loginLimiter,

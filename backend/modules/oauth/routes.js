@@ -5,6 +5,7 @@ const { handleProtectedResource } = require('./protectedResource');
 const authorizationServer = require('./authorizationServer');
 const {
     oauthLimiter,
+    oauthTokenLimiter,
     loginEmailLimiter,
 } = require('../../middleware/rateLimiter');
 
@@ -33,12 +34,15 @@ router.get(
     '/.well-known/oauth-protected-resource/mcp',
     handleProtectedResource
 );
+// The metadata documents and registration have no limiter: Anthropic's
+// egress range is shared, so per-IP counts would let other people's
+// connectors lock ours out. Registration is closed outside the pairing
+// window, which costs nothing to refuse (docs/38-remote-mcp.md).
 router.get(
     '/.well-known/oauth-authorization-server',
-    oauthLimiter,
     authorizationServer.authorizationServerMetadata
 );
-router.post('/oauth/register', oauthLimiter, authorizationServer.register);
+router.post('/oauth/register', authorizationServer.register);
 router.get('/oauth/authorize', oauthLimiter, authorizationServer.showAuthorize);
 router.post(
     '/oauth/authorize',
@@ -46,6 +50,6 @@ router.post(
     loginEmailLimiter,
     authorizationServer.submitAuthorize
 );
-router.post('/oauth/token', oauthLimiter, authorizationServer.token);
+router.post('/oauth/token', oauthTokenLimiter, authorizationServer.token);
 
 module.exports = router;
