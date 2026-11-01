@@ -31,7 +31,9 @@ Profile → Sidebar has a **Minimal sidebar** section (it shows for Minimal only
 - **Count badges**: Projects, Areas and Tags show their item count in the header by default; switch it off per section. (Favorites has no count badge.)
 - **Reset to default** puts every smart list, rail item and badge back to the defaults.
 
-The same entry, **Customize sidebar**, sits in the More menu of the icon rail and above the footer of the panel; both open that Profile section.
+The entry **Customize sidebar** sits once, in the More menu of the icon rail (Escape closes that menu); it opens that Profile section.
+
+The panel is the only scroller: sections (Favorites, Projects, Areas, Tags, Goals, People, Views) grow with their content and fold from their header instead of scrolling inside a fixed-height box.
 
 Stored in `users.sidebar_settings` as `smartLists: [{key, visible, showCount}]`, `rail: [{key, place}]` and `sectionBadges: {favorites, projects, areas, tags}`. Unknown keys are dropped and flags are read as booleans. Items missing from a saved list (for example, a new item added later) take their default and appear at the end.
 
