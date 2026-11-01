@@ -25,7 +25,7 @@ The protocol stays the same.
 
 | Entity | Fields | Server fields | Lists | Notes |
 |---|---|---|---|---|
-| `link` | `note`, `status` (`new`, `tested`, `kept`, `parked`, `dropped`) | `url`, `title`, `description`, `image_url`, `site_name`, `kind`, `github_stars`, `github_language`, `github_last_commit`, `readme_excerpt`, `source_type`, `source_uid`, `fetch_status`, `fetched_at` | `tag_uids` | found by the server in inbox items, tasks and notes ([37-links.md](37-links.md)); a device cannot create one (`unknown_link`) and an unknown status is refused (`invalid_status`) |
+| `link` | `note`, `status` (`new`, `tested`, `kept`, `parked`, `dropped`), `review_at` (`YYYY-MM-DD` or null) | `url`, `title`, `description`, `image_url`, `site_name`, `kind`, `github_stars`, `github_language`, `github_last_commit`, `readme_excerpt`, `source_type`, `source_uid`, `fetch_status`, `fetched_at` | `tag_uids` | found by the server in inbox items, tasks and notes ([37-links.md](37-links.md)); a device cannot create one (`unknown_link`) and an unknown status is refused (`invalid_status`), a review day that is not a date too (`invalid_review_at`) |
 
 ### Server-only task field
 

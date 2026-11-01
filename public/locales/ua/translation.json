@@ -5277,6 +5277,12 @@
     "viewTag": "Перейти до мітки"
   },
   "links": {
+    "tryTaskName": "Спробувати: {{title}}",
+    "tryProject": "Проєкт",
+    "tryNoProject": "Без проєкту",
+    "tryCreate": "Створити завдання",
+    "triageError": "Не вдалося зберегти рішення.",
+    "reviewOn": "Переглянути {{date}}",
     "title": "Посилання",
     "count_one": "{{count}} посилання",
     "count_other": "{{count}} посилання",

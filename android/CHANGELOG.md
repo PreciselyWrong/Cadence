@@ -1,3 +1,11 @@
+## [1.6.6] — 1 novembre 2026
+
+### Nouveautés
+- Liens : « Aller à la source » ouvre la tâche ou la note où le lien a été trouvé ; pour une idée, l'écran se ferme sur l'Inbox où elle se trouve.
+- Saisie rapide : quand aucune étiquette ne correspond à `#nom`, « Créer #nom » apparaît en dernier ; un appui crée l'étiquette (hors ligne, par la file d'envoi) et insère le jeton. Les chemins (`perso/sport`) ne se créent pas depuis la saisie.
+- Saisie rapide : ajouter une tâche depuis la page d'un projet la prérenseigne avec ce projet.
+- Liens : « Plus tard » garde la date de revue sur le serveur (`review_at`, +30 jours) au lieu du seul téléphone ; elle se retrouve sur le web, où l'Inbox a les mêmes quatre décisions (Garder, Tester, Plus tard, Jeter).
+
 ## [1.6.5] — 1 novembre 2026
 
 ### Nouveautés

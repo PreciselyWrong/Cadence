@@ -65,6 +65,7 @@ import ch.nicolab.cadence.tasks.model.LinkFilter
 import ch.nicolab.cadence.tasks.model.LinkItem
 import ch.nicolab.cadence.tasks.model.LinkKind
 import ch.nicolab.cadence.tasks.model.LinkLists
+import ch.nicolab.cadence.tasks.model.LinkSource
 import ch.nicolab.cadence.tasks.model.LinkStatus
 import ch.nicolab.cadence.tasks.model.TagItem
 import java.time.LocalDate
@@ -104,10 +105,6 @@ internal class LinksViewModel(application: Application) : AndroidViewModel(appli
     val tags: StateFlow<List<TagItem>> = repository.observeTags()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
-    private val triage = LinkTriageStore(application)
-
-    /** Date de revue d'un lien mis de côté, locale à l'appareil. */
-    fun reviewDate(uid: String): LocalDate? = triage.reviewOn(uid)
 }
 
 private val ACTIONS = listOf(
@@ -123,7 +120,7 @@ private val ACTIONS = listOf(
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun LinksScreen(onBack: () -> Unit) {
+fun LinksScreen(onBack: () -> Unit, onOpenSource: (LinkSource) -> Unit) {
     val viewModel: LinksViewModel = viewModel()
     val links by viewModel.shown.collectAsStateWithLifecycle()
     val total by viewModel.total.collectAsStateWithLifecycle()
@@ -192,9 +189,10 @@ fun LinksScreen(onBack: () -> Unit) {
                     LinkCard(
                         link = link,
                         tags = tags,
-                        reviewOn = if (link.status == LinkStatus.PARKED) viewModel.reviewDate(link.uid) else null,
+                        reviewOn = if (link.status == LinkStatus.PARKED) link.reviewAt else null,
                         onTags = { viewModel.setTags(link.uid, it) },
                         onEditNote = { editing = link },
+                        onOpenSource = { link.source?.let(onOpenSource) },
                         onStatus = { status -> viewModel.setStatus(link.uid, if (link.status == status) LinkStatus.NEW else status) },
                     )
                 }
@@ -218,6 +216,7 @@ private fun LinkCard(
     reviewOn: LocalDate?,
     onTags: (List<String>) -> Unit,
     onEditNote: () -> Unit,
+    onOpenSource: () -> Unit,
     onStatus: (LinkStatus) -> Unit,
 ) {
     val palette = cadence
@@ -248,6 +247,9 @@ private fun LinkCard(
                 style = MaterialTheme.typography.labelMedium,
                 color = palette.primary,
             )
+        }
+        if (link.source != null) {
+            TextButton(onClick = onOpenSource) { Text(stringResource(R.string.links_go_to_source)) }
         }
         LinkNoteLine(link.note, onEditNote)
         LinkTagLine(link, tags, onTags)

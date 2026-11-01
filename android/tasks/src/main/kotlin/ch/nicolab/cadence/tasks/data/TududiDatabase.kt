@@ -22,7 +22,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         SyncConflictEntity::class,
         DeferredCallEntity::class,
     ],
-    version = 10,
+    version = 11,
     exportSchema = true,
 )
 abstract class TududiDatabase : RoomDatabase() {
@@ -146,6 +146,14 @@ internal val MIGRATION_8_9 = object : Migration(8, 9) {
                 "`githubLastCommitRaw` TEXT, `readmeExcerpt` TEXT, `note` TEXT, `status` TEXT, `tagUidsJson` TEXT NOT NULL, " +
                 "`sourceType` TEXT, `sourceUid` TEXT, `fetchStatus` TEXT, `createdAtRaw` TEXT, PRIMARY KEY(`uid`))",
         )
+        db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
+    }
+}
+
+/** Jour de revue des liens mis de côté (`review_at`, entité `link`). Le curseur est retiré : le prochain instantané le remplit. */
+internal val MIGRATION_10_11 = object : Migration(10, 11) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE links ADD COLUMN reviewAtRaw TEXT")
         db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
     }
 }

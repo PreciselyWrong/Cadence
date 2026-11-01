@@ -5247,6 +5247,12 @@
     "viewTag": "Към етикета"
   },
   "links": {
+    "tryTaskName": "Пробвай: {{title}}",
+    "tryProject": "Проект",
+    "tryNoProject": "Без проект",
+    "tryCreate": "Създай задача",
+    "triageError": "Решението не можа да се запази.",
+    "reviewOn": "Преглед на {{date}}",
     "title": "Връзки",
     "count_one": "{{count}} връзка",
     "count_other": "{{count}} връзки",

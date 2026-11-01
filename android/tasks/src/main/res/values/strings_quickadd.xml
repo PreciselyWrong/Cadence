@@ -2,6 +2,7 @@
 <resources>
     <string name="tasks_suggest_close">Masquer les suggestions</string>
     <string name="tasks_suggest_priority">!%1$d %2$s</string>
+    <string name="tasks_suggest_create_tag">Créer #%1$s</string>
     <string name="tasks_capture_done">Terminé</string>
     <string name="tasks_capture_undo_last">Annuler la dernière</string>
     <plurals name="tasks_capture_series_project">

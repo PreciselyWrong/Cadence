@@ -5256,6 +5256,12 @@
     "viewTag": "Zum Tag wechseln"
   },
   "links": {
+    "tryTaskName": "Testen: {{title}}",
+    "tryProject": "Projekt",
+    "tryNoProject": "Kein Projekt",
+    "tryCreate": "Aufgabe erstellen",
+    "triageError": "Die Entscheidung konnte nicht gespeichert werden.",
+    "reviewOn": "Wieder ansehen am {{date}}",
     "title": "Links",
     "count_one": "{{count}} Link",
     "count_other": "{{count}} Links",

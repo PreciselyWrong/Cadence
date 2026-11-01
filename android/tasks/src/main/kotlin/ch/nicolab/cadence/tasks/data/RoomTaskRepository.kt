@@ -136,6 +136,11 @@ internal class RoomTaskRepository(
         writeLink(uid, "status" to JsonPrimitive(status.wire)) { it.copy(status = status.wire) }
     }
 
+    override suspend fun setLinkReviewDate(uid: String, date: java.time.LocalDate?) {
+        val value = date?.toString()
+        writeLink(uid, "review_at" to (value?.let(::JsonPrimitive) ?: JsonNull)) { it.copy(reviewAtRaw = value) }
+    }
+
     override suspend fun setLinkTags(uid: String, tagUids: List<String>) {
         val tags = tagUids.distinct()
         writeLink(uid, "tag_uids" to jsonArray(tags)) { it.copy(tagUidsJson = jsonArray(tags).toString()) }
@@ -591,6 +596,18 @@ internal class RoomTaskRepository(
             true
         }
         if (written) afterLocalWrite()
+    }
+
+    override suspend fun createTag(name: String): String {
+        tagDao.findByName(name)?.let { return it.uid }
+        val uid = UUID.randomUUID().toString()
+        val clock = hlc.now()
+        database.withTransaction {
+            tagDao.upsert(TagEntity(uid, name, null))
+            outbox.insert(LocalOps.upsert("tag", uid, mapOf("name" to JsonPrimitive(name)), clock, nowMs()))
+        }
+        afterLocalWrite()
+        return uid
     }
 
     override suspend fun createArea(name: String): String {

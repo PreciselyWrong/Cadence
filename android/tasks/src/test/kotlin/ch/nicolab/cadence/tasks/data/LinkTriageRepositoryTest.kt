@@ -12,17 +12,20 @@ import ch.nicolab.cadence.tasks.sync.Hlc
 import ch.nicolab.cadence.tasks.sync.SyncApi
 import ch.nicolab.cadence.tasks.sync.SyncState
 import java.lang.reflect.Proxy
+import java.time.LocalDate
 import java.time.ZoneId
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -115,6 +118,29 @@ class LinkTriageRepositoryTest {
 
         assertEquals("kept", database.linkDao().get("l1")?.status)
         assertEquals(listOf("inbox_item", "link", "inbox_item"), pending().map { it.first })
+    }
+
+    @Test
+    fun `a review day is kept on the link and sent to the server`() = runBlocking {
+        database.linkDao().upsert(link("l1"))
+
+        repository.setLinkReviewDate("l1", LocalDate.of(2027, 1, 2))
+
+        assertEquals("2027-01-02", database.linkDao().get("l1")?.reviewAtRaw)
+        assertEquals(
+            listOf(Triple("link", "l1", mapOf("review_at" to JsonPrimitive("2027-01-02")))),
+            pending(),
+        )
+    }
+
+    @Test
+    fun `clearing the review day sends null`() = runBlocking {
+        database.linkDao().upsert(link("l1").copy(reviewAtRaw = "2027-01-02"))
+
+        repository.setLinkReviewDate("l1", null)
+
+        assertNull(database.linkDao().get("l1")?.reviewAtRaw)
+        assertEquals(listOf(Triple("link", "l1", mapOf("review_at" to JsonNull))), pending())
     }
 
     @Test

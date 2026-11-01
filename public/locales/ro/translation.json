@@ -5264,6 +5264,12 @@
     "viewTag": "Mergi la etichetă"
   },
   "links": {
+    "tryTaskName": "Încearcă: {{title}}",
+    "tryProject": "Proiect",
+    "tryNoProject": "Fără proiect",
+    "tryCreate": "Creează sarcina",
+    "triageError": "Nu s-a putut salva decizia.",
+    "reviewOn": "De revizuit pe {{date}}",
     "title": "Linkuri",
     "count_one": "{{count}} link",
     "count_other": "{{count}} de linkuri",

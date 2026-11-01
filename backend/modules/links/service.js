@@ -4,6 +4,7 @@ const { Tag } = require('../../models');
 const linksRepository = require('./repository');
 const { LINK_STATUSES } = require('./core/constants');
 const { domainOf } = require('./core/urls');
+const { isDay, laterReviewDay } = require('./core/reviewDate');
 const { validateTagName } = require('../tags/tagsService');
 const { NotFoundError, ValidationError } = require('../../shared/errors');
 
@@ -32,6 +33,7 @@ function serializeLink(link) {
         readme_excerpt: link.readme_excerpt,
         note: link.note,
         status: link.status,
+        review_at: link.review_at ?? null,
         tags,
         source_type: link.source_type,
         source_uid: link.source_uid,
@@ -99,6 +101,22 @@ async function update(userId, uid, body = {}) {
             );
         }
         changes.status = body.status;
+        // Parked for a later look: a fresh review day unless one is given.
+        if (body.status === 'parked' && !('review_at' in body)) {
+            changes.review_at = laterReviewDay();
+        }
+    }
+    if ('review_at' in body) {
+        if (
+            body.review_at !== null &&
+            body.review_at !== '' &&
+            !isDay(body.review_at)
+        ) {
+            throw new ValidationError(
+                'review_at must be a date (YYYY-MM-DD) or null'
+            );
+        }
+        changes.review_at = body.review_at || null;
     }
     const tags =
         'tags' in body ? await resolveTags(body.tags, userId) : undefined;

@@ -5261,6 +5261,12 @@
     "viewTag": "Aller à l'étiquette"
   },
   "links": {
+    "tryTaskName": "Tester : {{title}}",
+    "tryProject": "Projet",
+    "tryNoProject": "Sans projet",
+    "tryCreate": "Créer la tâche",
+    "triageError": "Impossible d'enregistrer la décision.",
+    "reviewOn": "À revoir le {{date}}",
     "title": "Liens",
     "count_one": "{{count}} lien",
     "count_other": "{{count}} liens",

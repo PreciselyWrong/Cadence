@@ -315,8 +315,6 @@ internal class TasksViewModel(
         _skippedLinks.value = LinkTriage.skip(_skippedLinks.value, entryUid).also(linkTriage::saveSkipped)
     }
 
-    fun reviewDate(linkUid: String) = linkTriage.reviewOn(linkUid)
-
     private val triageSink = object : TriageSink {
         override suspend fun createTask(draft: TaskDraft) {
             repository.createTask(draft)
@@ -324,7 +322,7 @@ internal class TasksViewModel(
 
         override suspend fun setLinkStatus(uid: String, status: LinkStatus) = repository.setLinkStatus(uid, status)
 
-        override suspend fun setReviewDate(uid: String, date: LocalDate) = linkTriage.setReviewOn(uid, date)
+        override suspend fun setReviewDate(uid: String, date: LocalDate) = repository.setLinkReviewDate(uid, date)
 
         override suspend fun processInboxItem(uid: String) = repository.processInboxItem(uid)
     }
@@ -734,6 +732,8 @@ internal class TasksViewModel(
     fun convertIdea(entry: InboxEntry, draft: TaskDraft) = launchAction { saveConversion(entry, draft) }
 
     fun captureInbox(text: String) = launchAction { repository.captureInbox(text) }
+
+    fun createTag(name: String) = launchAction { repository.createTag(name) }
 
     fun deleteInboxItem(uid: String) = launchAction { repository.deleteInboxItem(uid) }
 

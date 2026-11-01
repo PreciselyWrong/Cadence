@@ -5247,6 +5247,12 @@
     "viewTag": "Gå til mærke"
   },
   "links": {
+    "tryTaskName": "Test: {{title}}",
+    "tryProject": "Projekt",
+    "tryNoProject": "Intet projekt",
+    "tryCreate": "Opret opgave",
+    "triageError": "Kunne ikke gemme beslutningen.",
+    "reviewOn": "Gennemgå {{date}}",
     "title": "Links",
     "count_one": "{{count}} link",
     "count_other": "{{count}} links",

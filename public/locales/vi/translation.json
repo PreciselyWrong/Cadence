@@ -5247,6 +5247,12 @@
     "viewTag": "Đến thẻ"
   },
   "links": {
+    "tryTaskName": "Thử: {{title}}",
+    "tryProject": "Dự án",
+    "tryNoProject": "Không có dự án",
+    "tryCreate": "Tạo việc",
+    "triageError": "Không thể lưu quyết định.",
+    "reviewOn": "Xem lại vào {{date}}",
     "title": "Liên kết",
     "count_one": "{{count}} liên kết",
     "count_other": "{{count}} liên kết",

@@ -5245,6 +5245,12 @@
     "viewTag": "タグへ移動"
   },
   "links": {
+    "tryTaskName": "試す: {{title}}",
+    "tryProject": "プロジェクト",
+    "tryNoProject": "プロジェクトなし",
+    "tryCreate": "タスクを作成",
+    "triageError": "判断を保存できませんでした。",
+    "reviewOn": "{{date}}に見直す",
     "title": "リンク",
     "count_one": "{{count}} 件のリンク",
     "count_other": "{{count}} 件のリンク",

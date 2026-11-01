@@ -5277,6 +5277,12 @@
     "viewTag": "Pojdi na oznako"
   },
   "links": {
+    "tryTaskName": "Preizkusi: {{title}}",
+    "tryProject": "Projekt",
+    "tryNoProject": "Brez projekta",
+    "tryCreate": "Ustvari nalogo",
+    "triageError": "Odločitve ni bilo mogoče shraniti.",
+    "reviewOn": "Pregled {{date}}",
     "title": "Povezave",
     "count_one": "{{count}} povezava",
     "count_other": "{{count}} povezav",

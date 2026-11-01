@@ -268,6 +268,7 @@ fun TasksScreen(
         QuickAddSheet(
             onDismiss = { quickAddOpen = false },
             targets = listOf(CaptureTarget.TASK, CaptureTarget.INBOX, CaptureTarget.NOTE),
+            initialProjectUid = openProjectUid,
             onNoteCreated = {
                 selectedNoteIsNew = false
                 selectedNoteUid = it

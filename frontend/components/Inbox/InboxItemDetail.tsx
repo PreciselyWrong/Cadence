@@ -8,6 +8,7 @@ import { Note } from '../../entities/Note';
 import ConfirmDialog from '../Shared/ConfirmDialog';
 import InboxItemAttachments from './InboxItemAttachments';
 import InboxLinkPreview from '../Links/InboxLinkPreview';
+import LinkTriageActions from '../Links/LinkTriageActions';
 import { useLinksStore } from '../../store/linksStore';
 import { firstUrl, linkForItem, residualText } from '../../utils/linkFilters';
 import { useStore } from '../../store/useStore';
@@ -714,6 +715,13 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                             </p>
                         )}
                         {link && <InboxLinkPreview link={link} />}
+                        {link && (
+                            <LinkTriageActions
+                                item={item}
+                                link={link}
+                                projects={projects}
+                            />
+                        )}
                         {item.uid && item.attachments && (
                             <InboxItemAttachments
                                 itemUid={item.uid}

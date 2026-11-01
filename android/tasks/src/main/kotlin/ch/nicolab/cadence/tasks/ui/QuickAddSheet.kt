@@ -36,6 +36,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material.icons.outlined.Folder
@@ -343,8 +344,9 @@ fun QuickAddSheet(
             if (suggestions.isNotEmpty() && token != null) {
                 SuggestionStrip(
                     suggestions = suggestions,
-                    onPick = { replacement ->
-                        val edit = QuickAddSuggestions.insert(text, token, replacement)
+                    onPick = { picked ->
+                        picked.createTag?.let(viewModel::createTag)
+                        val edit = QuickAddSuggestions.insert(text, token, picked.token)
                         field = TextFieldValue(edit.text, TextRange(edit.cursor))
                     },
                     onClose = { dismissedSuggestionAt = token.start },
@@ -648,7 +650,14 @@ private val MediumPriorityDot = Color(0xFFF59E0B)
 private val LowPriorityDot = Color(0xFF3B82F6)
 
 /** Une proposition de la liste : ce qu'elle montre, et le jeton qu'elle met dans le texte. */
-private class Suggestion(val label: String, val token: String, val icon: ImageVector? = null, val dot: Color? = null)
+private class Suggestion(
+    val label: String,
+    val token: String,
+    val icon: ImageVector? = null,
+    val dot: Color? = null,
+    /** Nom d'une étiquette à créer avant d'insérer le jeton. */
+    val createTag: String? = null,
+)
 
 /**
  * Propositions pour le jeton en cours, depuis les données locales : étiquettes (les plus utilisées d'abord,
@@ -664,9 +673,18 @@ private fun quickAddSuggestions(
 ): List<Suggestion> = when (token.kind) {
     SuggestionKind.TAG -> {
         val uses = remember(tasks) { tasks.flatMap { it.tagUids }.groupingBy { it }.eachCount() }
-        QuickAddSuggestions.rank(tags, token.query, { it.name }, { uses[it.uid] ?: 0 }).map {
+        val matches = QuickAddSuggestions.rank(tags, token.query, { it.name }, { uses[it.uid] ?: 0 }).map {
             Suggestion("#" + it.name, QuickAddSuggestions.tagToken(it.name), entityIcon(it.icon), tagColors[it.uid])
         }
+        val created = if (matches.isEmpty()) QuickAddSuggestions.newTagName(token.query) else null
+        matches + listOfNotNull(created?.let {
+            Suggestion(
+                stringResource(R.string.tasks_suggest_create_tag, it),
+                QuickAddSuggestions.tagToken(it),
+                Icons.Outlined.Add,
+                createTag = it,
+            )
+        })
     }
     SuggestionKind.PROJECT -> {
         val uses = remember(tasks) { tasks.mapNotNull { it.projectUid }.groupingBy { it }.eachCount() }
@@ -686,7 +704,7 @@ private fun quickAddSuggestions(
 
 /** Liste compacte juste sous le champ, au-dessus du clavier : un appui insère le jeton. */
 @Composable
-private fun SuggestionStrip(suggestions: List<Suggestion>, onPick: (String) -> Unit, onClose: () -> Unit) {
+private fun SuggestionStrip(suggestions: List<Suggestion>, onPick: (Suggestion) -> Unit, onClose: () -> Unit) {
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         Row(
             Modifier.weight(1f).horizontalScroll(rememberScrollState()),
@@ -694,7 +712,7 @@ private fun SuggestionStrip(suggestions: List<Suggestion>, onPick: (String) -> U
         ) {
             suggestions.forEach { suggestion ->
                 ChoiceChip(suggestion.label, selected = false, leadingIcon = suggestion.icon, dotColor = suggestion.dot) {
-                    onPick(suggestion.token)
+                    onPick(suggestion)
                 }
             }
         }

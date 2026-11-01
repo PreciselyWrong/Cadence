@@ -5260,6 +5260,12 @@
     "viewTag": "Vai al tag"
   },
   "links": {
+    "tryTaskName": "Provare: {{title}}",
+    "tryProject": "Progetto",
+    "tryNoProject": "Nessun progetto",
+    "tryCreate": "Crea attività",
+    "triageError": "Impossibile salvare la decisione.",
+    "reviewOn": "Da rivedere il {{date}}",
     "title": "Link",
     "count_one": "{{count}} link",
     "count_other": "{{count}} link",

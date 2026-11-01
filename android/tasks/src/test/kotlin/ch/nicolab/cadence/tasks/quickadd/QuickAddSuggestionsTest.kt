@@ -116,4 +116,12 @@ class QuickAddSuggestionsTest {
         val many = (1..30).map { "tag$it" }
         assertEquals(8, QuickAddSuggestions.rank(many, "tag", { it }).size)
     }
+
+    @Test
+    fun `une étiquette nouvelle se crée au nom tapé, sans chemin`() {
+        assertEquals("xyz", QuickAddSuggestions.newTagName(" xyz "))
+        assertEquals("Café au lait", QuickAddSuggestions.newTagName("Café au lait"))
+        assertNull(QuickAddSuggestions.newTagName("   "))
+        assertNull(QuickAddSuggestions.newTagName("perso/sport"))
+    }
 }

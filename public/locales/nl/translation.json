@@ -5247,6 +5247,12 @@
     "viewTag": "Ga naar tag"
   },
   "links": {
+    "tryTaskName": "Uitproberen: {{title}}",
+    "tryProject": "Project",
+    "tryNoProject": "Geen project",
+    "tryCreate": "Taak maken",
+    "triageError": "Kon de keuze niet opslaan.",
+    "reviewOn": "Opnieuw bekijken op {{date}}",
     "title": "Links",
     "count_one": "{{count}} link",
     "count_other": "{{count}} links",

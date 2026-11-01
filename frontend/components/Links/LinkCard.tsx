@@ -100,7 +100,7 @@ const LinkCard: React.FC<LinkCardProps> = ({
     onChange,
     availableTags,
 }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const [editingTags, setEditingTags] = useState(false);
     const [imageFailed, setImageFailed] = useState(false);
@@ -151,6 +151,18 @@ const LinkCard: React.FC<LinkCardProps> = ({
                 {status && (
                     <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-medium text-blue-700 dark:bg-blue-400/10 dark:text-blue-300">
                         {status}
+                    </span>
+                )}
+                {link.status === 'parked' && link.review_at && (
+                    <span>
+                        {t('links.reviewOn', 'Review on {{date}}', {
+                            date: new Date(
+                                `${link.review_at}T12:00:00`
+                            ).toLocaleDateString(toIntlLocale(i18n.language), {
+                                day: 'numeric',
+                                month: 'short',
+                            }),
+                        })}
                     </span>
                 )}
                 {link.fetch_status === 'pending' && (

@@ -5247,6 +5247,12 @@
     "viewTag": "Buka tag"
   },
   "links": {
+    "tryTaskName": "Coba: {{title}}",
+    "tryProject": "Proyek",
+    "tryNoProject": "Tanpa proyek",
+    "tryCreate": "Buat tugas",
+    "triageError": "Keputusan tidak dapat disimpan.",
+    "reviewOn": "Tinjau pada {{date}}",
     "title": "Tautan",
     "count_one": "{{count}} tautan",
     "count_other": "{{count}} tautan",

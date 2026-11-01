@@ -91,7 +91,7 @@ function registerLinkTools(server, context, tools) {
     tools.push({
         name: 'update_link',
         description:
-            'Update the note, tags or status of a saved link. tags replaces the whole set (tag names; nested tags as paths like "dev/tools"). Only the fields given change.',
+            'Update the note, tags, status or review day of a saved link. tags replaces the whole set (tag names; nested tags as paths like "dev/tools"). Only the fields given change.',
         inputSchema: {
             type: 'object',
             properties: {
@@ -112,6 +112,11 @@ function registerLinkTools(server, context, tools) {
                     description:
                         'new, kept (keep), tested (tried), parked (later), dropped',
                 },
+                review_at: {
+                    type: ['string', 'null'],
+                    description:
+                        'Day to look at the link again (YYYY-MM-DD, or null). A parked link gets today + 30 days when none is given',
+                },
             },
             required: ['uid'],
         },
@@ -119,6 +124,7 @@ function registerLinkTools(server, context, tools) {
             const body = {};
             if ('note' in params) body.note = params.note;
             if ('status' in params) body.status = params.status;
+            if ('review_at' in params) body.review_at = params.review_at;
             if ('tags' in params) body.tags = decodeTagsInput(params.tags);
             const link = await links.update(context.userId, params.uid, body);
             return text({ link });

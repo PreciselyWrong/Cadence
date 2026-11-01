@@ -5277,6 +5277,12 @@
     "viewTag": "Перейти к метке"
   },
   "links": {
+    "tryTaskName": "Попробовать: {{title}}",
+    "tryProject": "Проект",
+    "tryNoProject": "Без проекта",
+    "tryCreate": "Создать задачу",
+    "triageError": "Не удалось сохранить решение.",
+    "reviewOn": "Пересмотреть {{date}}",
     "title": "Ссылки",
     "count_one": "{{count}} ссылка",
     "count_other": "{{count}} ссылки",

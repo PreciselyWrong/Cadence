@@ -67,6 +67,8 @@ module.exports = (sequelize) => {
                 defaultValue: 'pending',
             },
             fetched_at: { type: DataTypes.DATE, allowNull: true },
+            // Local day to look at a parked link again; never a due date.
+            review_at: { type: DataTypes.DATEONLY, allowNull: true },
         },
         {
             tableName: 'links',

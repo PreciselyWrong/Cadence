@@ -20,6 +20,8 @@ export interface Link {
     readme_excerpt: string | null;
     note: string | null;
     status: LinkStatus;
+    // Local day to look at a parked link again (YYYY-MM-DD); never a due date.
+    review_at: string | null;
     tags: { uid: string; name: string; color: string | null }[];
     source_type: LinkSourceType | null;
     source_uid: string | null;

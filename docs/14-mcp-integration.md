@@ -1223,6 +1223,7 @@ Links are found by the server in inbox items, tasks and notes, with their page m
 | `note` | string or null | No | Free text; `null` or `""` clears it |
 | `tags` | string[] | No | Replaces the whole set; nested tags as paths (`dev/tools`); `[]` removes all |
 | `status` | string | No | `new`, `kept`, `tested`, `parked`, `dropped` |
+| `review_at` | string or null | No | Day to look at a link again (`YYYY-MM-DD`, or `null`); a `parked` link without it gets today + 30 days |
 
 ---
 

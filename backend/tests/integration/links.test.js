@@ -189,6 +189,46 @@ describe('Links', () => {
         expect(cleared.body.link.tags).toEqual([]);
     });
 
+    it('sets a review day for a parked link, 30 days out unless one is given', async () => {
+        await capture('https://example.com/later');
+        const link = await Link.findOne({ where: { user_id: user.id } });
+        const plusDays = (offset) => {
+            const d = new Date();
+            d.setDate(d.getDate() + offset);
+            return [
+                d.getFullYear(),
+                String(d.getMonth() + 1).padStart(2, '0'),
+                String(d.getDate()).padStart(2, '0'),
+            ].join('-');
+        };
+
+        const parked = await agent
+            .patch(`/api/links/${link.uid}`)
+            .send({ status: 'parked' });
+        expect(parked.body.link.review_at).toBe(plusDays(30));
+
+        const dated = await agent
+            .patch(`/api/links/${link.uid}`)
+            .send({ status: 'parked', review_at: '2027-03-01' });
+        expect(dated.body.link.review_at).toBe('2027-03-01');
+
+        const cleared = await agent
+            .patch(`/api/links/${link.uid}`)
+            .send({ review_at: null });
+        expect(cleared.body.link.review_at).toBeNull();
+    });
+
+    it('refuses a review day that is not a date', async () => {
+        await capture('https://example.com/date');
+        const link = await Link.findOne({ where: { user_id: user.id } });
+
+        const res = await agent
+            .patch(`/api/links/${link.uid}`)
+            .send({ review_at: 'next week' });
+
+        expect(res.status).toBe(400);
+    });
+
     it('drops a deleted tag from its links', async () => {
         await capture('https://example.com/tagged');
         const link = await Link.findOne({ where: { user_id: user.id } });
@@ -289,6 +329,36 @@ describe('Links', () => {
             expect(fresh.body.link.note).toBe('from phone');
             expect(fresh.body.link.status).toBe('parked');
             expect(fresh.body.link.tags.map((t) => t.name)).toEqual(['later']);
+        });
+
+        it('applies a review day pushed by a device and refuses a bad one', async () => {
+            await capture('https://example.com/review');
+            const link = await Link.findOne({ where: { user_id: user.id } });
+
+            const res = await agent.post('/api/v1/sync/push').send({
+                ops: [
+                    upsert(
+                        'op-r1',
+                        link.uid,
+                        { review_at: '2027-02-14' },
+                        hlc(Date.now())
+                    ),
+                    upsert(
+                        'op-r2',
+                        link.uid,
+                        { review_at: 'someday' },
+                        hlc(Date.now() + 1)
+                    ),
+                ],
+            });
+
+            expect(res.body.results.map((r) => r.status)).toEqual([
+                'applied',
+                'rejected',
+            ]);
+            expect(res.body.results[1].reason).toBe('invalid_review_at');
+            const fresh = await agent.get(`/api/links/${link.uid}`);
+            expect(fresh.body.link.review_at).toBe('2027-02-14');
         });
 
         it('refuses server fields, unknown links and bad statuses', async () => {

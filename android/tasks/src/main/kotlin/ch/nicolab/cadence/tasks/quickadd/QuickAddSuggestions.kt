@@ -63,6 +63,12 @@ object QuickAddSuggestions {
         return TokenEdit(head + " " + spaced, head.length + 1)
     }
 
+    /**
+     * Le nom d'une étiquette à créer depuis la saisie : le texte tapé, sans espaces autour. Pas de chemin
+     * (`perso/sport`) : ses parents n'existent pas forcément sur l'appareil.
+     */
+    fun newTagName(query: String): String? = query.trim().takeIf { it.isNotEmpty() && '/' !in it }
+
     /** `#perso/sport`, ou `#"nom avec espace"` quand le nom n'est pas un mot. */
     fun tagToken(name: String): String = "#" + wordOrQuoted(name)
 

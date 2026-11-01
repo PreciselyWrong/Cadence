@@ -5247,6 +5247,12 @@
     "viewTag": "Gå till tagg"
   },
   "links": {
+    "tryTaskName": "Testa: {{title}}",
+    "tryProject": "Projekt",
+    "tryNoProject": "Inget projekt",
+    "tryCreate": "Skapa uppgift",
+    "triageError": "Kunde inte spara beslutet.",
+    "reviewOn": "Granska {{date}}",
     "title": "Länkar",
     "count_one": "{{count}} länk",
     "count_other": "{{count}} länkar",

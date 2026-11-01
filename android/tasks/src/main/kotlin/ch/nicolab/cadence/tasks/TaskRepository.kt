@@ -54,6 +54,9 @@ interface TaskRepository {
 
     /** Étiquettes d'un lien (remplace l'ensemble). Sans effet si le lien est inconnu. */
     suspend fun setLinkTags(uid: String, tagUids: List<String>)
+
+    /** Jour où revoir un lien mis de côté ; null l'efface. */
+    suspend fun setLinkReviewDate(uid: String, date: java.time.LocalDate?)
     fun observeInbox(): Flow<List<InboxEntry>>
 
     /** Notes, épinglées d'abord puis de la plus récente à la plus ancienne. */
@@ -144,6 +147,9 @@ interface TaskRepository {
 
     /** Crée un domaine (l'uid est choisi par l'appareil) et retourne son uid. */
     suspend fun createArea(name: String): String
+
+    /** Crée une étiquette nommée [name] (l'uid est choisi par l'appareil) ; une existante de même nom est rendue. */
+    suspend fun createTag(name: String): String
 
     suspend fun captureInbox(text: String): String
     suspend fun deleteInboxItem(uid: String)

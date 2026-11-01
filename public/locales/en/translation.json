@@ -5210,6 +5210,12 @@
     "viewTag": "Go to tag"
   },
   "links": {
+    "tryTaskName": "Try: {{title}}",
+    "tryProject": "Project",
+    "tryNoProject": "No project",
+    "tryCreate": "Create task",
+    "triageError": "Could not save the decision.",
+    "reviewOn": "Review on {{date}}",
     "title": "Links",
     "count_one": "{{count}} link",
     "count_other": "{{count}} links",

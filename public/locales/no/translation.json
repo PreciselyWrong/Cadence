@@ -5252,6 +5252,12 @@
     "viewTag": "Gå til merkelapp"
   },
   "links": {
+    "tryTaskName": "Prøv: {{title}}",
+    "tryProject": "Prosjekt",
+    "tryNoProject": "Ingen prosjekt",
+    "tryCreate": "Opprett oppgave",
+    "triageError": "Kunne ikke lagre valget.",
+    "reviewOn": "Vurder igjen {{date}}",
     "title": "Lenker",
     "count_one": "{{count}} lenke",
     "count_other": "{{count}} lenker",

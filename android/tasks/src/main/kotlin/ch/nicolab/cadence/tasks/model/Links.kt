@@ -4,6 +4,7 @@ import ch.nicolab.cadence.tasks.links.LinkExtractor
 import java.net.URI
 import java.text.Normalizer
 import java.time.Instant
+import java.time.LocalDate
 
 /** Ce que l'utilisateur a fait d'un lien ; valeur serveur dans [wire]. */
 enum class LinkStatus(val wire: String) {
@@ -22,6 +23,18 @@ enum class LinkKind(val wire: String) {
         fun fromWire(value: String?): LinkKind = entries.firstOrNull { it.wire == value } ?: OTHER
     }
 }
+
+/** Où le serveur a trouvé le lien : valeur serveur dans [wire] (`source_type`). */
+enum class LinkSourceKind(val wire: String) {
+    TASK("task"), NOTE("note"), INBOX_ITEM("inbox_item");
+
+    companion object {
+        fun fromWire(value: String?): LinkSourceKind? = entries.firstOrNull { it.wire == value }
+    }
+}
+
+/** La fiche, la note ou l'idée d'où vient un lien, ouverte par « Aller à la source ». */
+data class LinkSource(val kind: LinkSourceKind, val uid: String)
 
 /**
  * Lien trouvé par le serveur dans une idée, une tâche ou une note (docs/37-links.md) : ses métadonnées
@@ -48,10 +61,16 @@ data class LinkItem(
     val fetching: Boolean = false,
     val createdAt: Instant? = null,
     val pendingSync: Boolean = false,
+    /** Jour où revoir un lien mis de côté ; jamais une échéance. */
+    val reviewAt: LocalDate? = null,
 ) {
     val domain: String get() = LinkExtractor.domain(url) ?: url
     val displayTitle: String get() = title?.takeIf { it.isNotBlank() } ?: domain
     val displayDescription: String? get() = (description ?: readmeExcerpt)?.takeIf { it.isNotBlank() }
+    val source: LinkSource? get() {
+        val kind = LinkSourceKind.fromWire(sourceType) ?: return null
+        return sourceUid?.let { LinkSource(kind, it) }
+    }
 }
 
 /** Filtre de l'écran Liens ; [status] null montre tout sauf les liens jetés. */

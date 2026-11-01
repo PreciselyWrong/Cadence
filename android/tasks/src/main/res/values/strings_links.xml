@@ -2,6 +2,7 @@
 <resources>
     <string name="links_title">Liens</string>
     <string name="links_open_screen">Voir tous les liens</string>
+    <string name="links_go_to_source">Aller à la source</string>
     <string name="links_back">Retour à l\'Inbox</string>
     <plurals name="links_count">
         <item quantity="one">%d lien</item>

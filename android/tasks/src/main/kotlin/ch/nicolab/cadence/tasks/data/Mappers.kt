@@ -120,6 +120,7 @@ internal fun LinkRow.toItem() = LinkItem(
     fetching = link.fetchStatus == "pending",
     createdAt = parseInstant(link.createdAtRaw),
     pendingSync = pendingSync,
+    reviewAt = parseDay(link.reviewAtRaw),
 )
 
 internal fun InboxRow.toEntry() = InboxEntry(

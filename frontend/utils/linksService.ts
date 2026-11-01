@@ -15,6 +15,7 @@ export const fetchLinks = async (): Promise<Link[]> => {
 export interface LinkChanges {
     note?: string | null;
     status?: LinkStatus;
+    review_at?: string | null;
     tags?: string[];
 }
 

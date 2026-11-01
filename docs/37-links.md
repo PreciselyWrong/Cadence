@@ -28,6 +28,7 @@ A background queue (`backend/modules/links/jobs.js`) fetches each new link once,
 | `url`, `title`, `description`, `image_url`, `site_name`, `kind`, `github_stars`, `github_language`, `github_last_commit`, `readme_excerpt`, `fetch_status`, `fetched_at`, `source_type`, `source_uid` | server | read-only for clients |
 | `note` | user | free text, empty clears it |
 | `status` | user | `new`, `tested` (Try), `kept` (Keep), `parked` (Later), `dropped` (Drop); pressing the active one goes back to `new` |
+| `review_at` | user | day to look at a parked link again (`YYYY-MM-DD`, or none); a `parked` status without `review_at` sets today + 30 days (server day). Never a due date |
 | tags | user | the existing tags (`links_tags`), nested paths allowed |
 
 Dropped links stay (hidden by default in the list) so a link is never lost by a tap.
@@ -36,15 +37,15 @@ Dropped links stay (hidden by default in the list) so a link is never lost by a 
 
 - `GET /api/links` — filters `status` (comma list), `kind`, `tag` (exact name), `untagged=true`, `domain` (without `www.`), `q` (title, description, url, note, README), `source_type`, `source_uid`, `sort` (`newest` | `oldest`), `limit` (default 500, max 1000), `offset`. Answers `{ links, total }`.
 - `GET /api/links/:uid` — `{ link }`.
-- `PATCH /api/links/:uid` — `{ note?, status?, tags? }` (tags: names; replaces the set). `400` for an unknown status or bad tag name, `404` for another user's link.
+- `PATCH /api/links/:uid` — `{ note?, status?, tags?, review_at? }` (tags: names; replaces the set; `review_at`: `YYYY-MM-DD` or `null`). `400` for an unknown status, a bad tag name or a review day that is not a date, `404` for another user's link.
 
 ## Offline sync
 
-Entity `link` (schema 4): fields `note`, `status`; server fields listed above; list `tag_uids`. A device cannot create a link (`unknown_link`), push a server field (`unknown_field:url`) or an unknown status (`invalid_status`). Android reads links offline (Room table `links`, v9) and writes note and status through its outbox.
+Entity `link` (schema 4): fields `note`, `status`, `review_at`; server fields listed above; list `tag_uids`. A device cannot create a link (`unknown_link`), push a server field (`unknown_field:url`), an unknown status (`invalid_status`) or a review day that is not a date (`invalid_review_at`). Android reads links offline (Room table `links`, v11, migration 10→11 clears the cursor) and writes note, status and review day through its outbox. A client that predates `review_at` ignores the field.
 
 ## MCP
 
-`list_links` (same filters, `query` for the text search, `untagged` to find links still to tag), `get_link`, `update_link` (`note`, `tags`, `status`). They never change the URL or the metadata.
+`list_links` (same filters, `query` for the text search, `untagged` to find links still to tag), `get_link`, `update_link` (`note`, `tags`, `status`, `review_at`). They never change the URL or the metadata.
 
 ## Clients
 
@@ -60,10 +61,17 @@ Entity `link` (schema 4): fields `note`, `status`; server fields listed above; l
 |---|---|---|
 | Garder | `kept` | |
 | À tester | `tested` | creates the task "Tester : <title>" (note: the URL then the user's note) in the chosen project or none |
-| Plus tard | `parked` | review date today + 30 days, kept on the device (the server has no review field) |
+| Plus tard | `parked` | review day `review_at` = today + 30 days, synced (the same on the web) |
 | Jeter | `dropped` | |
 
   Writes happen after a 4.5 s window; the snackbar names the link and "Annuler" drops them. "Plus…" keeps Aujourd'hui / Planifier / Projet to turn the idea into a task (that path deletes the inbox item, as before).
 - **Swipe** on a link card: right = Garder, left = Jeter (fixed; the task swipe configuration is task-specific).
 - **Trier les liens (n)**: shown from two links; one link at a time, full width, same four decisions plus "Passer". The queue is the Inbox links, oldest first; a skipped link goes to the end (order kept on the device), so reopening resumes where the user stopped.
 - The decision-to-writes mapping is `model/LinkTriage.kt` (pure, tested in `LinkTriageTest`); the repository additions are `TaskRepository.setLinkTags` and `processInboxItem`.
+
+### Web inbox triage
+
+- A link card in the Inbox (`frontend/components/Links/LinkTriageActions.tsx`) has the same four decisions, one tap each: Keep, Try, Later, Drop. Each sets the link status through `PATCH /api/links/:uid` and marks the inbox item `processed`; there is no undo, and nothing is written later than the tap.
+- Try opens a project choice (a project or none), then creates the task "Try: <title>" with the address and the note as task note, and sets the link to `tested`.
+- Later sends `status: parked` without a date: the server sets `review_at` to today + 30 days. The `/links` card shows "Review on <date>" for a parked link.
+- The date is the synced `review_at` on both clients; Android keeps no local copy of it.

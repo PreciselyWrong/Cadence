@@ -165,6 +165,7 @@ internal object WireCodec {
         sourceUid = wire.string("source_uid"),
         fetchStatus = wire.string("fetch_status"),
         createdAtRaw = wire.string("created_at"),
+        reviewAtRaw = wire.string("review_at"),
     )
 
     fun inboxFromWire(wire: JsonObject) = InboxItemEntity(

@@ -5247,6 +5247,12 @@
     "viewTag": "Ir a la etiqueta"
   },
   "links": {
+    "tryTaskName": "Probar: {{title}}",
+    "tryProject": "Proyecto",
+    "tryNoProject": "Sin proyecto",
+    "tryCreate": "Crear tarea",
+    "triageError": "No se pudo guardar la decisión.",
+    "reviewOn": "Revisar el {{date}}",
     "title": "Enlaces",
     "count_one": "{{count}} enlace",
     "count_other": "{{count}} enlaces",

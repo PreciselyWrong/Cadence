@@ -5248,6 +5248,12 @@
     "viewTag": "Μετάβαση στην ετικέτα"
   },
   "links": {
+    "tryTaskName": "Δοκίμασε: {{title}}",
+    "tryProject": "Έργο",
+    "tryNoProject": "Χωρίς έργο",
+    "tryCreate": "Δημιουργία εργασίας",
+    "triageError": "Δεν ήταν δυνατή η αποθήκευση της απόφασης.",
+    "reviewOn": "Επανεξέταση στις {{date}}",
     "title": "Σύνδεσμοι",
     "count_one": "{{count}} σύνδεσμος",
     "count_other": "{{count}} σύνδεσμοι",

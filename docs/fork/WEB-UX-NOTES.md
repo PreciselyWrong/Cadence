@@ -192,3 +192,8 @@ Interface directe, très claire, sans encombrement. Références de comportement
   - aucune IA dans la chaîne ; un assistant pourra proposer étiquettes et notes par MCP (`list_links untagged`, `update_link`).
 - **Android à reprendre / repris** : écran Liens depuis l'en-tête de l'Inbox (recherche, puces de type et « Jetés », mêmes cartes, note dans une petite fenêtre, statut en puces), lecture hors ligne (Room `links`, v9) et écritures de note et statut par la file d'envoi ; idées de l'Inbox avec le résumé du lien et sa note. Reste : étiquettes d'un lien et « aller à la source » (web seulement, inscrit dans `TODO.md`).
 
+### 2026-11-01 — Trier un lien de l'Inbox sur le web
+
+- **Problème** : une idée qui contient un lien offrait Aujourd'hui / Planifier / Projet, mais aucune décision « à voir un jour » ; sur Android, « Plus tard » gardait sa date seulement sur le téléphone, le web ne pouvait pas l'afficher.
+- **Décision** : la carte d'un lien dans l'Inbox porte quatre boutons Garder, Tester, Plus tard, Jeter (mêmes statuts, même marquage « traité »). Tester demande le projet (ou aucun) puis crée « Tester : titre », l'adresse et la note en note de tâche. Plus tard pose la date de revue (`review_at`, +30 jours) côté serveur ; la page Liens l'affiche (« À revoir le … »). Pas d'annulation : il n'existe pas de retour d'une idée traitée. Le mode « Trier les liens » (un lien à la fois) reste à faire (TODO).
+- **Android** : la date de revue est désormais le champ synchronisé `review_at`, plus une valeur locale.

@@ -5307,6 +5307,12 @@
     "viewTag": "الانتقال إلى الوسم"
   },
   "links": {
+    "tryTaskName": "تجربة: {{title}}",
+    "tryProject": "المشروع",
+    "tryNoProject": "بدون مشروع",
+    "tryCreate": "إنشاء مهمة",
+    "triageError": "تعذر حفظ القرار.",
+    "reviewOn": "للمراجعة في {{date}}",
     "title": "الروابط",
     "count_one": "{{count}} رابط",
     "count_other": "{{count}} رابط",

@@ -1,4 +1,12 @@
 {
+  "links": {
+    "tryTaskName": "Vyskúšať: {{title}}",
+    "tryProject": "Projekt",
+    "tryNoProject": "Bez projektu",
+    "tryCreate": "Vytvoriť úlohu",
+    "triageError": "Rozhodnutie sa nepodarilo uložiť.",
+    "reviewOn": "Preskúmať {{date}}"
+  },
     "focusStats": {
         "title": "Sústredenie",
         "lastDays_one": "{{count}} deň",

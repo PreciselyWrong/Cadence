@@ -39,4 +39,21 @@ class LinksMigrationTest {
             db.query("SELECT value FROM sync_meta WHERE `key` = 'cursor'").use { assertFalse(it.moveToFirst()) }
         }
     }
+
+    @Test
+    fun migrationAddsTheReviewDayAndResetsTheCursor() {
+        helper.createDatabase("links", 10).apply {
+            execSQL("INSERT INTO links (uid, url, tagUidsJson, status) VALUES ('l1', 'https://a.io/', '[]', 'parked')")
+            execSQL("INSERT INTO sync_meta (`key`, value) VALUES ('cursor', '42')")
+            close()
+        }
+
+        helper.runMigrationsAndValidate("links", 11, true, MIGRATION_10_11).use { db ->
+            db.query("SELECT reviewAtRaw FROM links WHERE uid = 'l1'").use {
+                assertTrue(it.moveToFirst())
+                assertTrue(it.isNull(0))
+            }
+            db.query("SELECT value FROM sync_meta WHERE `key` = 'cursor'").use { assertFalse(it.moveToFirst()) }
+        }
+    }
 }

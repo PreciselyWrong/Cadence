@@ -69,4 +69,14 @@ class LinksTest {
         assertEquals(LinkKind.OTHER, LinkKind.fromWire(null))
         assertEquals("a.io", LinkItem(uid = "x", url = "https://www.a.io/").displayTitle)
     }
+
+    @Test
+    fun `le lien garde sa source, la note, la fiche ou l'idée d'origine`() {
+        assertEquals(LinkSource(LinkSourceKind.NOTE, "n1"), post.copy(sourceType = "note", sourceUid = "n1").source)
+        assertEquals(LinkSource(LinkSourceKind.TASK, "t9"), post.copy(sourceType = "task", sourceUid = "t9").source)
+        assertEquals(LinkSource(LinkSourceKind.INBOX_ITEM, "i1"), post.copy(sourceType = "inbox_item", sourceUid = "i1").source)
+        assertNull(post.copy(sourceType = "task", sourceUid = null).source)
+        assertNull(post.copy(sourceType = "archive", sourceUid = "x").source)
+        assertNull(post.source)
+    }
 }

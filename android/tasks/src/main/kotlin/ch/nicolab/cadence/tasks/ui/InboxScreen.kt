@@ -31,6 +31,7 @@ import android.content.Context
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
 import ch.nicolab.cadence.tasks.model.LinkDecision
+import ch.nicolab.cadence.tasks.model.LinkSourceKind
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -135,7 +136,20 @@ fun InboxScreen(modifier: Modifier = Modifier, onOpenSearch: () -> Unit = {}, on
     selectedNoteUid?.let { uid ->
         NoteScreen(viewModel, uid, isNew = false, onBack = { selectedNoteUid = null })
     }
-    if (linksOpen) LinksScreen(onBack = { linksOpen = false })
+    if (linksOpen) {
+        LinksScreen(
+            onBack = { linksOpen = false },
+            onOpenSource = { source ->
+                linksOpen = false
+                when (source.kind) {
+                    LinkSourceKind.TASK -> selectedTaskUid = source.uid
+                    LinkSourceKind.NOTE -> selectedNoteUid = source.uid
+                    // L'idée reste dans la liste de l'Inbox, que l'écran des liens laisse voir.
+                    LinkSourceKind.INBOX_ITEM -> Unit
+                }
+            },
+        )
+    }
     if (triageOpen) LinkTriageScreen(viewModel, onBack = { triageOpen = false })
 }
 

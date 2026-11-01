@@ -5,6 +5,20 @@ import { MemoryRouter } from 'react-router-dom';
 import LinkCard from '../LinkCard';
 import { Link } from '../../../entities/Link';
 
+jest.mock('react-i18next', () => ({
+    useTranslation: () => ({
+        t: (
+            _key: string,
+            fallback: string,
+            options?: Record<string, unknown>
+        ) =>
+            fallback.replace(/\{\{(\w+)\}\}/g, (_match, name: string) =>
+                String(options?.[name] ?? `{{${name}}}`)
+            ),
+        i18n: { language: 'en' },
+    }),
+}));
+
 const link: Link = {
     uid: 'l1',
     url: 'https://github.com/owner/tool',
@@ -20,6 +34,7 @@ const link: Link = {
     readme_excerpt: 'Tool reads JSON and prints tables.',
     note: null,
     status: 'new',
+    review_at: null,
     tags: [{ uid: 't', name: 'dev', color: null }],
     source_type: 'task',
     source_uid: 'task1',
@@ -94,5 +109,17 @@ describe('LinkCard', () => {
         expect(
             screen.getByRole('button', { name: 'Go to where it was saved' })
         ).toBeInTheDocument();
+    });
+
+    it('says when a parked link comes back for review', () => {
+        renderCard({ status: 'parked', review_at: '2026-12-01' });
+
+        expect(screen.getByText('Review on Dec 1')).toBeInTheDocument();
+    });
+
+    it('shows no review day for a link that is not parked', () => {
+        renderCard({ status: 'kept', review_at: '2026-12-01' });
+
+        expect(screen.queryByText(/Review on/)).not.toBeInTheDocument();
     });
 });

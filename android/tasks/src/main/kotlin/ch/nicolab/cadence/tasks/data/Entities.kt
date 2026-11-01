@@ -143,6 +143,8 @@ data class LinkEntity(
     val sourceUid: String?,
     val fetchStatus: String?,
     val createdAtRaw: String?,
+    /** Jour de revue d'un lien mis de côté (YYYY-MM-DD), écrit par le serveur ou le téléphone. */
+    val reviewAtRaw: String? = null,
 )
 
 @Entity(tableName = "inbox_items")

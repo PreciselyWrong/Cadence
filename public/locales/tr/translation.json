@@ -5247,6 +5247,12 @@
     "viewTag": "Etikete git"
   },
   "links": {
+    "tryTaskName": "Dene: {{title}}",
+    "tryProject": "Proje",
+    "tryNoProject": "Proje yok",
+    "tryCreate": "Görev oluştur",
+    "triageError": "Karar kaydedilemedi.",
+    "reviewOn": "{{date}} tarihinde gözden geçir",
     "title": "Bağlantılar",
     "count_one": "{{count}} bağlantı",
     "count_other": "{{count}} bağlantı",

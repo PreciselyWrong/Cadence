@@ -269,10 +269,18 @@ const ENTITIES = {
             if ('status' in values && !LINK_STATUSES.includes(values.status)) {
                 return 'invalid_status';
             }
+            const { isDay } = require('../links/core/reviewDate');
+            if (
+                'review_at' in values &&
+                values.review_at !== null &&
+                !isDay(values.review_at)
+            ) {
+                return 'invalid_review_at';
+            }
             return null;
         },
         version: 1,
-        fields: ['note', 'status'],
+        fields: ['note', 'status', 'review_at'],
         serverFields: [
             'url',
             'title',

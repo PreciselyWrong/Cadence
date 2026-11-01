@@ -25,6 +25,7 @@ const link = (overrides: Partial<Link>): Link => ({
     readme_excerpt: null,
     note: null,
     status: 'new',
+    review_at: null,
     tags: [],
     source_type: null,
     source_uid: null,

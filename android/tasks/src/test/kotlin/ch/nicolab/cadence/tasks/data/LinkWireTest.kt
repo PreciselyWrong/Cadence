@@ -3,6 +3,7 @@ package ch.nicolab.cadence.tasks.data
 import ch.nicolab.cadence.tasks.model.LinkKind
 import ch.nicolab.cadence.tasks.model.LinkStatus
 import java.time.Instant
+import java.time.LocalDate
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -47,5 +48,14 @@ class LinkWireTest {
         assertTrue(item.pendingSync)
         assertEquals(LinkStatus.NEW, item.status)
         assertEquals("a.io", item.displayTitle)
+    }
+
+    @Test
+    fun `a parked link reads the day to look at it again`() {
+        val entity = WireCodec.linkFromWire(
+            wire("""{"uid":"l1","url":"https://a.io/","status":"parked","review_at":"2027-01-02","tag_uids":[]}"""),
+        )
+
+        assertEquals(LocalDate.of(2027, 1, 2), LinkRow(entity, pendingSync = false).toItem().reviewAt)
     }
 }

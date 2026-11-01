@@ -5277,6 +5277,12 @@
     "viewTag": "Przejdź do tagu"
   },
   "links": {
+    "tryTaskName": "Wypróbuj: {{title}}",
+    "tryProject": "Projekt",
+    "tryNoProject": "Bez projektu",
+    "tryCreate": "Utwórz zadanie",
+    "triageError": "Nie udało się zapisać decyzji.",
+    "reviewOn": "Do ponownego przejrzenia: {{date}}",
     "title": "Linki",
     "count_one": "{{count}} link",
     "count_other": "{{count}} linka",

@@ -5247,6 +5247,12 @@
     "viewTag": "Siirry tunnisteeseen"
   },
   "links": {
+    "tryTaskName": "Kokeile: {{title}}",
+    "tryProject": "Projekti",
+    "tryNoProject": "Ei projektia",
+    "tryCreate": "Luo tehtävä",
+    "triageError": "Päätöstä ei voitu tallentaa.",
+    "reviewOn": "Tarkista {{date}}",
     "title": "Linkit",
     "count_one": "{{count}} linkki",
     "count_other": "{{count}} linkkiä",

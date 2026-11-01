@@ -5245,6 +5245,12 @@
     "viewTag": "태그로 이동"
   },
   "links": {
+    "tryTaskName": "체험: {{title}}",
+    "tryProject": "프로젝트",
+    "tryNoProject": "프로젝트 없음",
+    "tryCreate": "작업 만들기",
+    "triageError": "결정을 저장하지 못했습니다.",
+    "reviewOn": "{{date}}에 다시 보기",
     "title": "링크",
     "count_one": "링크 {{count}}개",
     "count_other": "링크 {{count}}개",
