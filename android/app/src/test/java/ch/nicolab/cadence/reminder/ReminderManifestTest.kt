@@ -38,6 +38,22 @@ class ReminderManifestTest {
     }
 
     @Test
+    fun `les alarmes sont reposées quand les alarmes exactes sont accordées ou retirées`() {
+        assertTrue(actionsOf(".reminder.ReminderBootReceiver").contains("android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED"))
+        assertTrue(ReminderBootReceiver.handles("android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED"))
+    }
+
+    @Test
+    fun `le récepteur des événements d'agenda est déclaré et privé`() {
+        val doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(File("src/main/AndroidManifest.xml"))
+        val receivers = doc.getElementsByTagName("receiver")
+        val element = (0 until receivers.length).map { receivers.item(it) as Element }
+            .first { it.getAttribute("android:name") == ".reminder.EventReminderReceiver" }
+
+        assertFalse(element.getAttribute("android:exported").toBoolean())
+    }
+
+    @Test
     fun `le récepteur de redémarrage traite toutes les actions déclarées`() {
         assertTrue(ReminderBootReceiver.handles("android.intent.action.MY_PACKAGE_REPLACED"))
         assertTrue(ReminderBootReceiver.handles("android.intent.action.BOOT_COMPLETED"))

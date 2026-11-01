@@ -127,6 +127,7 @@ fun SearchScreen(
 
     val projectNames = remember(projects) { projects.associate { it.uid to it.name } }
     val projectIcons = remember(projects) { projects.mapNotNull { p -> p.icon?.takeIf { it.isNotBlank() }?.let { p.uid to it } }.toMap() }
+    val projectColors = remember(projects) { projects.mapNotNull { p -> projectRailColor(p.color)?.let { p.uid to it } }.toMap() }
     val tagNames = remember(tags) { tags.associate { it.uid to it.name } }
     val entries = remember(tasks, projects, notes, habits, projectNames, tagNames) {
         SearchSources.tasks(tasks, projectNames, tagNames) +
@@ -229,6 +230,7 @@ fun SearchScreen(
                                                 task = task,
                                                 projectName = task.projectUid?.let(projectNames::get),
                                                 projectIcon = task.projectUid?.let(projectIcons::get),
+                                                projectColor = task.projectUid?.let(projectColors::get),
                                                 today = moment.today,
                                                 zone = moment.zone,
                                                 onToggle = { viewModel.toggle(task, hold = true) },

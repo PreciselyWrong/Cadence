@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="event_reminders_channel">Événements d’agenda</string>
+    <string name="event_reminders_in_minutes">Dans %1$d min · %2$s</string>
+    <string name="event_reminders_now">Maintenant · %1$s</string>
+    <string name="event_reminders_open_agenda">Ouvrir l’agenda</string>
+    <string name="event_reminders_done">Fait</string>
+    <string name="event_reminders_digest_title">Aujourd’hui, %1$s</string>
+
+    <string name="calendars_surface_notify">Notifications</string>
+
+    <string name="settings_page_notifications">Notifications</string>
+    <string name="notifications_intro">Une seule voix : le téléphone sonne, calmement. Les heures calmes s’appliquent à tout.</string>
+    <string name="notifications_off_title">Notifications désactivées</string>
+    <string name="notifications_off_message">Android ne laisse pas Cadence afficher de notifications : rien ne sonnera tant que ce n’est pas rétabli.</string>
+    <string name="notifications_off_action">Ouvrir les réglages d’Android</string>
+    <string name="notifications_exact_title">Heure exacte</string>
+    <string name="notifications_exact_subtitle">Autorisez les alarmes exactes pour sonner à la minute près. Sinon, à une minute près.</string>
+    <string name="notifications_exact_on">Les rappels sonnent à l’heure exacte.</string>
+
+    <string name="notifications_tasks_header">Tâches à heure fixe</string>
+    <string name="notifications_tasks_title">Rappeler les tâches à heure fixe</string>
+    <string name="notifications_tasks_subtitle">Une tâche qui a une heure sonne à cette heure, sans rappel à poser. Un rappel que vous avez choisi passe avant.</string>
+
+    <string name="notifications_events_header">Événements d’agenda</string>
+    <string name="notifications_events_title">Rappeler les événements</string>
+    <string name="notifications_events_subtitle">Les événements de vos agendas sonnent avant leur début. Les journées entières ne sonnent pas.</string>
+    <string name="notifications_digest_title">Résumé des journées entières à 8 h</string>
+    <string name="notifications_digest_subtitle">Une seule notification le matin, avec ce qui dure toute la journée</string>
+    <string name="notifications_calendars_header">Par agenda</string>
+    <string name="notifications_calendars_hint">Un agenda masqué partout ne sonne jamais. Un même événement sur plusieurs agendas ne sonne qu’une fois.</string>
+    <string name="notifications_calendars_permission">Autorisez l’accès aux agendas dans Réglages › Agendas pour choisir ceux qui sonnent.</string>
+
+    <string name="notifications_lead_label">Quand</string>
+    <string name="notifications_lead_at_time">À l’heure</string>
+    <string name="notifications_lead_minutes">%1$d min avant</string>
+
+    <string name="notifications_habits_header">Habitudes</string>
+    <string name="notifications_habits_message">Une habitude avec une heure de rappel sonne à cette heure, tant qu’elle reste à faire. Ajoutez ou retirez l’heure dans la fiche de l’habitude.</string>
+
+    <string name="notifications_quiet_header">Heures calmes</string>
+    <string name="notifications_quiet_range">De %1$s à %2$s</string>
+    <string name="notifications_quiet_none">Aucune. Elles se règlent dans votre profil Cadence, sur le web.</string>
+    <string name="notifications_quiet_hint">Ce qui tombe dans cette plage sonne à sa fin. Elles s’appliquent aux tâches, aux événements et aux habitudes.</string>
+</resources>

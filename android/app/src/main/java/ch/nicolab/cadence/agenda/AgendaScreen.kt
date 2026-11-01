@@ -246,6 +246,7 @@ fun AgendaScreen(modifier: Modifier = Modifier, onOpenHabit: (String) -> Unit = 
             onCalendarShown = viewModel::setCalendarShown,
             onCalendarTasksShown = viewModel::setCalendarTasks,
             onCalendarHidden = viewModel::setCalendarHidden,
+            onCalendarNotify = viewModel::setCalendarNotify,
             onDismiss = { displayOpen = false },
         )
     }

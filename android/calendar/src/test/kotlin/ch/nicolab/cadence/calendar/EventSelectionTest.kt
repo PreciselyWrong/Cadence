@@ -173,6 +173,25 @@ class EventSelectionTest {
     }
 
     @Test
+    fun `un agenda dont les notifications sont coupées n'a aucun événement sur la surface Rappels mais reste ailleurs`() {
+        val displays = mapOf(1L to CalendarDisplay(notify = false))
+        val events = listOf(event())
+
+        assertEquals(0, select(events, displays = displays, surface = CalendarSurface.REMINDERS).size)
+        assertEquals(1, select(events, displays = displays, surface = CalendarSurface.AGENDA).size)
+        assertEquals(1, select(events, surface = CalendarSurface.REMINDERS).size)
+    }
+
+    @Test
+    fun `un doublon sur un agenda aux notifications coupées sonne via l'autre agenda`() {
+        val calendars = listOf(calendar(1L), calendar(2L))
+        val displays = mapOf(1L to CalendarDisplay(notify = false))
+        val events = listOf(event(eventId = 1L, calendarId = 1L), event(eventId = 2L, calendarId = 2L))
+
+        assertEquals(listOf(2L to 2L), ids(select(events, calendars, displays, surface = CalendarSurface.REMINDERS)))
+    }
+
+    @Test
     fun `masquer une occurrence d'une série garde les autres occurrences`() {
         val first = event(eventId = 5L, begin = at(10))
         val second = event(eventId = 5L, begin = at(14))

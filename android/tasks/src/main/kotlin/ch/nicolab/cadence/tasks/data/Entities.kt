@@ -178,6 +178,38 @@ data class FailedOpEntity(
     val displayName: String? = null,
 )
 
+/**
+ * Champ d'une écriture du téléphone écartée par le serveur, qui avait une valeur plus récente : les deux
+ * valeurs, au format du serveur ([localJson], [serverJson]) et lisibles ([localText], [serverText]).
+ * Une ligne par champ (`entity|uid|field`) : un nouveau conflit sur le même champ remplace l'ancien.
+ */
+@Entity(tableName = "sync_conflicts")
+data class SyncConflictEntity(
+    @PrimaryKey val id: String,
+    val entity: String,
+    val uid: String,
+    val field: String,
+    val localJson: String,
+    val serverJson: String?,
+    val localText: String,
+    val serverText: String?,
+    val displayName: String?,
+    val atMs: Long,
+)
+
+/** Appel à l'API fait hors ligne (revue, routine, occurrence déplacée), rejoué au passage suivant. */
+@Entity(tableName = "deferred_calls")
+data class DeferredCallEntity(
+    @PrimaryKey val key: String,
+    val method: String,
+    val path: String,
+    val bodyJson: String?,
+    val label: String,
+    val createdAtMs: Long,
+    val attempts: Int = 0,
+    val lastError: String? = null,
+)
+
 @Entity(tableName = "sync_meta")
 data class SyncMetaEntity(
     @PrimaryKey val key: String,

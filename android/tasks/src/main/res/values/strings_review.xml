@@ -56,7 +56,7 @@
     <string name="review_retry">Réessayer</string>
     <string name="review_more">%1$d de plus sur le web</string>
     <string name="review_not_synced">« %1$s » n\'est pas encore sur le téléphone : synchronisez puis réessayez.</string>
-    <string name="review_online_only">Connexion requise pour ce choix.</string>
+    <string name="review_online_only">Le serveur n\'a pas accepté ce choix.</string>
     <string name="review_saved">« %1$s » : %2$s</string>
     <string name="review_empty_undecided">L\'Inbox est vide.</string>
     <string name="review_empty_pushed">Rien ne glisse en ce moment.</string>

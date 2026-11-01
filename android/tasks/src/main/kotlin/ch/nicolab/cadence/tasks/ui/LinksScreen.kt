@@ -66,6 +66,8 @@ import ch.nicolab.cadence.tasks.model.LinkItem
 import ch.nicolab.cadence.tasks.model.LinkKind
 import ch.nicolab.cadence.tasks.model.LinkLists
 import ch.nicolab.cadence.tasks.model.LinkStatus
+import ch.nicolab.cadence.tasks.model.TagItem
+import java.time.LocalDate
 import android.icu.text.CompactDecimalFormat
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -97,6 +99,15 @@ internal class LinksViewModel(application: Application) : AndroidViewModel(appli
 
     fun setNote(uid: String, note: String?) = viewModelScope.launch { repository.setLinkNote(uid, note) }
     fun setStatus(uid: String, status: LinkStatus) = viewModelScope.launch { repository.setLinkStatus(uid, status) }
+    fun setTags(uid: String, tagUids: List<String>) = viewModelScope.launch { repository.setLinkTags(uid, tagUids) }
+
+    val tags: StateFlow<List<TagItem>> = repository.observeTags()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+
+    private val triage = LinkTriageStore(application)
+
+    /** Date de revue d'un lien mis de côté, locale à l'appareil. */
+    fun reviewDate(uid: String): LocalDate? = triage.reviewOn(uid)
 }
 
 private val ACTIONS = listOf(
@@ -117,6 +128,7 @@ fun LinksScreen(onBack: () -> Unit) {
     val links by viewModel.shown.collectAsStateWithLifecycle()
     val total by viewModel.total.collectAsStateWithLifecycle()
     val filter by viewModel.filter.collectAsStateWithLifecycle()
+    val tags by viewModel.tags.collectAsStateWithLifecycle()
     var editing by remember { mutableStateOf<LinkItem?>(null) }
     val palette = cadence
     BackHandler(onBack = onBack)
@@ -179,6 +191,9 @@ fun LinksScreen(onBack: () -> Unit) {
                 items(links, key = { it.uid }) { link ->
                     LinkCard(
                         link = link,
+                        tags = tags,
+                        reviewOn = if (link.status == LinkStatus.PARKED) viewModel.reviewDate(link.uid) else null,
+                        onTags = { viewModel.setTags(link.uid, it) },
                         onEditNote = { editing = link },
                         onStatus = { status -> viewModel.setStatus(link.uid, if (link.status == status) LinkStatus.NEW else status) },
                     )
@@ -197,7 +212,14 @@ fun LinksScreen(onBack: () -> Unit) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun LinkCard(link: LinkItem, onEditNote: () -> Unit, onStatus: (LinkStatus) -> Unit) {
+private fun LinkCard(
+    link: LinkItem,
+    tags: List<TagItem>,
+    reviewOn: LocalDate?,
+    onTags: (List<String>) -> Unit,
+    onEditNote: () -> Unit,
+    onStatus: (LinkStatus) -> Unit,
+) {
     val palette = cadence
     val uriHandler = LocalUriHandler.current
     Column(
@@ -219,7 +241,16 @@ private fun LinkCard(link: LinkItem, onEditNote: () -> Unit, onStatus: (LinkStat
                 overflow = TextOverflow.Ellipsis,
             )
         }
+        reviewOn?.let { date ->
+            val today = LocalDate.now()
+            Text(
+                if (date > today) stringResource(R.string.links_review_on, compactDate(date, today)) else stringResource(R.string.links_review_due),
+                style = MaterialTheme.typography.labelMedium,
+                color = palette.primary,
+            )
+        }
         LinkNoteLine(link.note, onEditNote)
+        LinkTagLine(link, tags, onTags)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
             ACTIONS.forEach { (status, label) ->
                 ChoiceChip(label = stringResource(label), selected = link.status == status, onClick = { onStatus(status) })

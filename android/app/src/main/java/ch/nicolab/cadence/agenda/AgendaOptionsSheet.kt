@@ -89,6 +89,7 @@ internal fun AgendaOptionsSheet(
     onCalendarShown: (CalendarWithDisplay, Boolean) -> Unit,
     onCalendarTasksShown: (CalendarWithDisplay, Boolean) -> Unit,
     onCalendarHidden: (CalendarWithDisplay, Boolean) -> Unit,
+    onCalendarNotify: (CalendarWithDisplay, Boolean) -> Unit,
     onDismiss: () -> Unit,
 ) {
     val palette = cadence
@@ -165,6 +166,7 @@ internal fun AgendaOptionsSheet(
                             shape = rowGroupShape(index, calendars.size),
                             onAgendaShown = { onCalendarShown(item, !(item.display.agenda && !item.display.isHiddenEverywhere(item.calendar))) },
                             onTasksShown = { onCalendarTasksShown(item, !(item.display.tasks && !item.display.isHiddenEverywhere(item.calendar))) },
+                            onNotifyChanged = { onCalendarNotify(item, !(item.display.notify && !item.display.isHiddenEverywhere(item.calendar))) },
                             onHidden = { onCalendarHidden(item, !item.display.isHiddenEverywhere(item.calendar)) },
                         )
                     }
@@ -221,7 +223,7 @@ private fun OptionRow(toggle: OptionToggle, shape: Shape) {
     }
 }
 
-/** Un agenda : son nom, son compte pour le distinguer d'un homonyme, puis Agenda, Liste Tâches et Masquer partout. */
+/** Un agenda : son nom, son compte pour le distinguer d'un homonyme, puis Agenda, Liste Tâches, Notifications et Masquer partout. */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun CalendarShownRow(
@@ -229,6 +231,7 @@ private fun CalendarShownRow(
     shape: Shape,
     onAgendaShown: () -> Unit,
     onTasksShown: () -> Unit,
+    onNotifyChanged: () -> Unit,
     onHidden: () -> Unit,
 ) {
     val palette = cadence
@@ -274,6 +277,13 @@ private fun CalendarShownRow(
                 accent = readableTintOf(Color(calendar.colorArgb), minContrast = ICON_CONTRAST),
                 leadingIcon = if (display.tasks && !hidden) Icons.Outlined.Check else null,
                 onClick = onTasksShown,
+            )
+            ChoiceChip(
+                label = stringResource(R.string.calendars_surface_notify),
+                selected = display.notify && !hidden,
+                accent = readableTintOf(Color(calendar.colorArgb), minContrast = ICON_CONTRAST),
+                leadingIcon = if (display.notify && !hidden) Icons.Outlined.Check else null,
+                onClick = onNotifyChanged,
             )
             ChoiceChip(
                 label = stringResource(R.string.calendars_hide_everywhere),

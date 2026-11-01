@@ -21,6 +21,16 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.res.pluralStringResource
+import kotlinx.coroutines.delay
+import ch.nicolab.cadence.tasks.model.ProjectItem
+import ch.nicolab.cadence.tasks.model.TagItem
+import ch.nicolab.cadence.tasks.quickadd.QuickAddSeries
+import ch.nicolab.cadence.tasks.quickadd.QuickAddSuggestions
+import ch.nicolab.cadence.tasks.quickadd.SuggestionKind
+import ch.nicolab.cadence.tasks.quickadd.TokenAtCursor
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -114,6 +124,8 @@ fun QuickAddSheet(
     targets: List<CaptureTarget> = emptyList(),
     /** Une note vient d'être créée avec ce titre : l'écran ouvre son éditeur. */
     onNoteCreated: (String) -> Unit = {},
+    /** Projet d'où la saisie est ouverte : proposé d'office dès la première tâche. */
+    initialProjectUid: String? = null,
 ) {
     val viewModel: TasksViewModel = viewModel()
     val projects by viewModel.projects.collectAsStateWithLifecycle()
@@ -122,7 +134,10 @@ fun QuickAddSheet(
     val today = moment.today
     val clock = remember(moment.zone) { Clock.system(moment.zone) }
 
-    var text by rememberSaveable { mutableStateOf(initialName) }
+    var field by rememberSaveable(stateSaver = TextFieldValue.Saver) {
+        mutableStateOf(TextFieldValue(initialName, TextRange(initialName.length)))
+    }
+    val text = field.text
     var target by rememberSaveable { mutableStateOf(targets.firstOrNull() ?: CaptureTarget.TASK) }
     val isTask = target == CaptureTarget.TASK
     var ignored by rememberSaveable { mutableStateOf(emptyList<String>()) }
@@ -130,6 +145,11 @@ fun QuickAddSheet(
     var dateOverride by remember { mutableStateOf<Pair<LocalDate, LocalTime?>?>(null) }
     var priorityOverride by remember { mutableStateOf<Int?>(null) }
     var projectOverride by remember { mutableStateOf<String?>(null) }
+    // Projet de la série en cours : proposé pour la tâche suivante tant qu'on n'arrête pas d'en ajouter.
+    var carriedProject by remember { mutableStateOf(initialProjectUid) }
+    var series by remember { mutableStateOf(QuickAddSeries()) }
+    var lastCreatedUid by remember { mutableStateOf<String?>(null) }
+    var dismissedSuggestionAt by remember { mutableStateOf<Int?>(null) }
     var tagOverrides by remember { mutableStateOf(emptySet<String>()) }
     var pickingDate by remember { mutableStateOf(false) }
     val focus = remember { FocusRequester() }
@@ -149,8 +169,20 @@ fun QuickAddSheet(
     val date = dateOverride?.first ?: parsed.date
     val time = if (dateOverride != null) dateOverride?.second else parsed.time
     val priority = priorityOverride ?: parsed.priority
-    val projectUid = projectOverride ?: parsed.projectUid
+    val projectUid = projectOverride ?: parsed.projectUid ?: carriedProject
     val tagUids = (parsed.tagUids + tagOverrides).distinct()
+
+    val allTasks by viewModel.allTasks.collectAsStateWithLifecycle()
+    val token: TokenAtCursor? = if (isTask && field.selection.collapsed) {
+        QuickAddSuggestions.tokenAt(text, field.selection.start)?.takeIf { it.start != dismissedSuggestionAt }
+    } else {
+        null
+    }
+    val suggestions = if (token == null) {
+        emptyList()
+    } else {
+        quickAddSuggestions(token, tags, projects, allTasks, tagColors)
+    }
 
     fun ignore(vararg kinds: TokenKind, uid: String? = null) {
         val keys = parsed.tokens
@@ -160,14 +192,23 @@ fun QuickAddSheet(
     }
 
     LaunchedEffect(Unit) { focus.requestFocus() }
+    // Taper garde la série en vie ; deux minutes de pause la terminent.
+    LaunchedEffect(field.text) { series = series.touched(System.currentTimeMillis()) }
+    LaunchedEffect(series) {
+        if (series.added > 0 || series.projectUid != null) {
+            delay(QuickAddSeries.IDLE_MS)
+            series = QuickAddSeries()
+            carriedProject = null
+        }
+    }
 
-    fun launchSave(write: suspend () -> Unit) {
+    fun launchSave(keepOpen: Boolean = false, write: suspend () -> Unit) {
         saving = true
         saveError = null
         scope.launch {
             try {
                 write()
-                onDismiss()
+                if (keepOpen) saving = false else onDismiss()
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -193,13 +234,42 @@ fun QuickAddSheet(
             projectUid = projectUid,
             tagUids = tagUids,
         )
-        val write: suspend (TaskDraft) -> Unit = onSave ?: viewModel::saveNewTask
-        launchSave { write(draft) }
+        if (onSave != null) return launchSave { onSave(draft) }
+        // La tâche est écrite, la saisie reste ouverte et vide pour la suivante : seul le projet suit.
+        launchSave(keepOpen = true) {
+            val uid = viewModel.saveNewTask(draft)
+            val now = System.currentTimeMillis()
+            series = series.saved(projectUid, now)
+            lastCreatedUid = uid
+            carriedProject = series.carriedProject(now)
+            field = TextFieldValue("")
+            ignored = emptyList()
+            dateOverride = null
+            priorityOverride = null
+            projectOverride = null
+            tagOverrides = emptySet()
+            focus.requestFocus()
+        }
+    }
+
+    fun undoLast() {
+        val uid = lastCreatedUid ?: return
+        lastCreatedUid = null
+        viewModel.everyTask.value.firstOrNull { it.uid == uid }?.let(viewModel::delete)
+        series = series.undone(System.currentTimeMillis())
     }
 
     val priorityBadgeText = priority?.let { stringResource(priorityBadge(it)) }
     val dateText = date?.let { compactDateTime(it, time, today) }
     val chips = if (!isTask) emptyList() else buildList {
+        projects.firstOrNull { it.uid == projectUid }?.let { project ->
+            add(ParsedChip(Icons.Outlined.Folder, project.name) {
+                projectOverride = null
+                carriedProject = null
+                series = series.projectRemoved(System.currentTimeMillis())
+                ignore(TokenKind.PROJECT)
+            })
+        }
         dateText?.let {
             add(ParsedChip(Icons.Outlined.Today, it) {
                 dateOverride = null
@@ -210,12 +280,6 @@ fun QuickAddSheet(
             add(ParsedChip(Icons.Outlined.Flag, it) {
                 priorityOverride = null
                 ignore(TokenKind.PRIORITY)
-            })
-        }
-        projects.firstOrNull { it.uid == projectUid }?.let { project ->
-            add(ParsedChip(Icons.Outlined.Folder, project.name) {
-                projectOverride = null
-                ignore(TokenKind.PROJECT)
             })
         }
         tagUids.forEach { uid ->
@@ -258,8 +322,11 @@ fun QuickAddSheet(
                 )
             }
             CaptureBox(
-                text = text,
-                onTextChange = { text = it },
+                value = field,
+                onValueChange = {
+                    field = it
+                    if (dismissedSuggestionAt != null) dismissedSuggestionAt = null
+                },
                 parsed = parsed,
                 chips = chips,
                 enabled = !saving,
@@ -273,6 +340,16 @@ fun QuickAddSheet(
                     },
                 ),
             )
+            if (suggestions.isNotEmpty() && token != null) {
+                SuggestionStrip(
+                    suggestions = suggestions,
+                    onPick = { replacement ->
+                        val edit = QuickAddSuggestions.insert(text, token, replacement)
+                        field = TextFieldValue(edit.text, TextRange(edit.cursor))
+                    },
+                    onClose = { dismissedSuggestionAt = token.start },
+                )
+            }
             if (isTask) {
                 DateShortcuts(
                     today = today,
@@ -293,7 +370,11 @@ fun QuickAddSheet(
                     projectUid = projectUid,
                     onProject = { picked ->
                         projectOverride = picked
-                        if (picked == null) ignore(TokenKind.PROJECT)
+                        if (picked == null) {
+                            carriedProject = null
+                            series = series.projectRemoved(System.currentTimeMillis())
+                            ignore(TokenKind.PROJECT)
+                        }
                     },
                     tags = tags.map { it.uid to it.name },
                     tagIcons = tags.associate { it.uid to it.icon },
@@ -310,6 +391,26 @@ fun QuickAddSheet(
                 )
             }
             saveError?.let { ErrorText(it) }
+            if (series.added > 0 && isTask) {
+                val projectName = projects.firstOrNull { it.uid == series.projectUid }?.name
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        if (projectName != null) {
+                            pluralStringResource(R.plurals.tasks_capture_series_project, series.added, series.added, projectName)
+                        } else {
+                            pluralStringResource(R.plurals.tasks_capture_series, series.added, series.added)
+                        },
+                        style = MaterialTheme.typography.labelLarge,
+                        color = cadence.onSurfaceVariant,
+                        modifier = Modifier.weight(1f),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                    if (lastCreatedUid != null) {
+                        TertiaryAction(label = stringResource(R.string.tasks_capture_undo_last)) { undoLast() }
+                    }
+                }
+            }
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 if (isTask) {
                     TertiaryAction(
@@ -317,6 +418,9 @@ fun QuickAddSheet(
                     ) { moreOptions = !moreOptions }
                 }
                 Spacer(Modifier.weight(1f))
+                if (series.added > 0 && isTask) {
+                    TertiaryAction(label = stringResource(R.string.tasks_capture_done)) { onDismiss() }
+                }
                 PrimaryAction(
                     label = stringResource(R.string.tasks_add),
                     enabled = parsed.title.isNotEmpty() && !saving,
@@ -347,8 +451,8 @@ fun QuickAddSheet(
 /** Champ unique : le texte, les mots reconnus en accent, et leurs pastilles juste dessous. */
 @Composable
 private fun CaptureBox(
-    text: String,
-    onTextChange: (String) -> Unit,
+    value: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
     parsed: ParsedQuickAdd,
     chips: List<ParsedChip>,
     enabled: Boolean,
@@ -365,7 +469,10 @@ private fun CaptureBox(
             val styled = buildAnnotatedString {
                 append(source)
                 parsed.tokens.forEach { token ->
-                    if (token.end <= source.length) addStyle(SpanStyle(color = tokenColor), token.start, token.end)
+                    if (token.end <= source.length) {
+                        val soft = if (token.kind == TokenKind.DATE || token.kind == TokenKind.TIME) tokenColor.copy(alpha = DATE_HIGHLIGHT_ALPHA) else Color.Unspecified
+                        addStyle(SpanStyle(color = tokenColor, background = soft), token.start, token.end)
+                    }
                 }
             }
             TransformedText(styled, OffsetMapping.Identity)
@@ -381,7 +488,7 @@ private fun CaptureBox(
         verticalArrangement = Arrangement.spacedBy(Space.sm),
     ) {
         Box(Modifier.fillMaxWidth().heightIn(min = Size.touch), contentAlignment = Alignment.CenterStart) {
-            if (text.isEmpty()) {
+            if (value.text.isEmpty()) {
                 Text(
                     placeholder,
                     style = MaterialTheme.typography.bodyLarge,
@@ -391,8 +498,8 @@ private fun CaptureBox(
                 )
             }
             BasicTextField(
-                value = text,
-                onValueChange = onTextChange,
+                value = value,
+                onValueChange = onValueChange,
                 enabled = enabled,
                 singleLine = true,
                 textStyle = MaterialTheme.typography.bodyLarge.copy(color = palette.onSurface),
@@ -534,3 +641,74 @@ private val CaptureTarget.label: Int
         CaptureTarget.TASK -> R.string.tasks_capture_target_task
         CaptureTarget.NOTE -> R.string.tasks_capture_target_note
     }
+
+private const val DATE_HIGHLIGHT_ALPHA = 0.14f
+private val HighPriorityDot = Color(0xFFEF4444)
+private val MediumPriorityDot = Color(0xFFF59E0B)
+private val LowPriorityDot = Color(0xFF3B82F6)
+
+/** Une proposition de la liste : ce qu'elle montre, et le jeton qu'elle met dans le texte. */
+private class Suggestion(val label: String, val token: String, val icon: ImageVector? = null, val dot: Color? = null)
+
+/**
+ * Propositions pour le jeton en cours, depuis les données locales : étiquettes (les plus utilisées d'abord,
+ * chemin complet), projets ouverts (ni en pause ni clos), priorités `!1`-`!3`.
+ */
+@Composable
+private fun quickAddSuggestions(
+    token: TokenAtCursor,
+    tags: List<TagItem>,
+    projects: List<ProjectItem>,
+    tasks: List<ch.nicolab.cadence.tasks.model.TaskItem>,
+    tagColors: Map<String, Color>,
+): List<Suggestion> = when (token.kind) {
+    SuggestionKind.TAG -> {
+        val uses = remember(tasks) { tasks.flatMap { it.tagUids }.groupingBy { it }.eachCount() }
+        QuickAddSuggestions.rank(tags, token.query, { it.name }, { uses[it.uid] ?: 0 }).map {
+            Suggestion("#" + it.name, QuickAddSuggestions.tagToken(it.name), entityIcon(it.icon), tagColors[it.uid])
+        }
+    }
+    SuggestionKind.PROJECT -> {
+        val uses = remember(tasks) { tasks.mapNotNull { it.projectUid }.groupingBy { it }.eachCount() }
+        val open = projects.filter { !it.projectStatus.isClosed && !it.projectStatus.isStash }
+        QuickAddSuggestions.rank(open, token.query, { it.name }, { uses[it.uid] ?: 0 }).map {
+            Suggestion(it.name, QuickAddSuggestions.projectToken(it.name), entityIcon(it.icon) ?: Icons.Outlined.Folder)
+        }
+    }
+    SuggestionKind.PRIORITY -> listOf(
+        Triple(1, R.string.tasks_priority_high, HighPriorityDot),
+        Triple(2, R.string.tasks_priority_medium, MediumPriorityDot),
+        Triple(3, R.string.tasks_priority_low, LowPriorityDot),
+    ).map { (digit, label, dot) ->
+        Suggestion(stringResource(R.string.tasks_suggest_priority, digit, stringResource(label)), QuickAddSuggestions.priorityToken(digit), dot = dot)
+    }
+}
+
+/** Liste compacte juste sous le champ, au-dessus du clavier : un appui insère le jeton. */
+@Composable
+private fun SuggestionStrip(suggestions: List<Suggestion>, onPick: (String) -> Unit, onClose: () -> Unit) {
+    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            Modifier.weight(1f).horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(Space.sm),
+        ) {
+            suggestions.forEach { suggestion ->
+                ChoiceChip(suggestion.label, selected = false, leadingIcon = suggestion.icon, dotColor = suggestion.dot) {
+                    onPick(suggestion.token)
+                }
+            }
+        }
+        val close = stringResource(R.string.tasks_suggest_close)
+        Icon(
+            Icons.Outlined.Close,
+            contentDescription = close,
+            tint = cadence.onSurfaceVariant,
+            modifier = Modifier
+                .padding(start = Space.sm)
+                .size(Size.touch)
+                .clip(Radius.Pill)
+                .clickable(role = Role.Button, onClick = onClose)
+                .padding(Space.md),
+        )
+    }
+}

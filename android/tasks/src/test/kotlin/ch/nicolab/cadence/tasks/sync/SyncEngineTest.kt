@@ -104,7 +104,7 @@ class SyncEngineTest {
 
         val result = engine(api, store).sync()
 
-        assertEquals(SyncResult.Offline("pas de réseau"), result)
+        assertEquals(SyncResult.Offline("Erreur réseau : pas de réseau"), result)
         assertEquals(listOf("op-1"), store.pendingOps(10).map { it.opId })
         assertEquals(5L, store.cursor())
     }
@@ -341,7 +341,7 @@ class SyncEngineTest {
 
         val result = engine(api, store).sync()
 
-        assertTrue(result is SyncResult.Offline)
+        assertTrue(result is SyncResult.Failed, result.toString())
         assertEquals(2, api.pullCursors.size)
     }
 
@@ -373,87 +373,4 @@ class SyncEngineTest {
             })
         },
     )
-}
-
-private class FakeSyncApi : SyncApi {
-    var onSnapshot: (String, Long, Long?) -> SnapshotPage = { _, _, _ -> SnapshotPage(0, null, emptyList()) }
-    var onPull: suspend (Long) -> PullPage = { cursor -> PullPage(cursor, false, emptyList()) }
-    var onPush: (List<JsonObject>) -> List<PushResult> = { emptyList() }
-
-    val snapshotArgs = mutableListOf<Triple<String, Long, Long?>>()
-    val snapshotEntities = mutableListOf<String>()
-    val pullCursors = mutableListOf<Long>()
-
-    override suspend fun meta(): JsonObject = JsonObject(emptyMap())
-
-    override suspend fun profile(): AccountProfile = AccountProfile(email = null, timezone = null)
-
-    override suspend fun snapshot(entity: String, after: Long, cursor: Long?, limit: Int): SnapshotPage {
-        snapshotArgs += Triple(entity, after, cursor)
-        if (after == 0L) snapshotEntities += entity
-        return onSnapshot(entity, after, cursor)
-    }
-
-    override suspend fun pull(cursor: Long, limit: Int): PullPage {
-        pullCursors += cursor
-        return onPull(cursor)
-    }
-
-    override suspend fun push(ops: List<JsonObject>): List<PushResult> = onPush(ops)
-
-    override suspend fun moveOccurrence(uid: String, scope: String, occurrenceDate: String, dueDate: String) = Unit
-}
-
-private class FakeSyncStore(
-    private var cursor: Long? = null,
-    ops: List<OutboxOp> = emptyList(),
-    rows: Map<Pair<String, String>, JsonObject> = emptyMap(),
-    private val keepsRejected: Set<String> = emptySet(),
-) : SyncStore {
-    override fun discardsRejectedCreation(entity: String) = entity !in keepsRejected
-
-    private val queue = ops.toMutableList()
-    private val table = rows.toMutableMap()
-    val rejected = mutableListOf<String>()
-    var clock: String? = null
-
-    fun row(entity: String, uid: String): JsonObject = table[entity to uid] ?: JsonObject(emptyMap())
-
-    override suspend fun cursor(): Long? = cursor
-
-    override suspend fun saveCursor(cursor: Long?) {
-        this.cursor = cursor
-    }
-
-    override suspend fun clearSyncedRows() {
-        table.clear()
-    }
-
-    override suspend fun applyServerRow(entity: String, data: JsonObject) {
-        val uid = data.getValue("uid").jsonPrimitive.content
-        val pending = queue.filter { it.entity == entity && it.uid == uid }
-        PendingOverlay.apply(data, pending)?.let { table[entity to uid] = it }
-    }
-
-    override suspend fun deleteRow(entity: String, uid: String) {
-        table.remove(entity to uid)
-    }
-
-    override suspend fun pendingOps(limit: Int): List<OutboxOp> = queue.take(limit)
-
-    override suspend fun removeOps(opIds: List<String>) {
-        queue.removeAll { it.opId in opIds }
-    }
-
-    override suspend fun recordFailure(opIds: List<String>, message: String) = Unit
-
-    override suspend fun recordRejected(op: OutboxOp, reason: String?) {
-        rejected += op.opId
-    }
-
-    override suspend fun saveClock(state: String) {
-        clock = state
-    }
-
-    override suspend fun markSynced(atMs: Long) = Unit
 }

@@ -1,0 +1,98 @@
+package ch.nicolab.cadence.tasks.model
+
+import java.time.LocalDate
+
+/** Les quatre décisions sur un lien de l'Inbox : garder, tester, repousser, jeter. */
+enum class LinkDecision { KEEP, TEST, LATER, DROP }
+
+/** Une écriture locale d'une décision ; chacune part par la file d'envoi, hors ligne compris. */
+sealed interface TriageStep {
+    data class CreateTask(val draft: TaskDraft) : TriageStep
+    data class SetStatus(val linkUid: String, val status: LinkStatus) : TriageStep
+    data class SetReviewDate(val linkUid: String, val date: LocalDate) : TriageStep
+    data class ProcessInbox(val entryUid: String) : TriageStep
+}
+
+/** Où les écritures d'une décision atterrissent ; le dépôt Room en prod, un faux dans les tests. */
+interface TriageSink {
+    suspend fun createTask(draft: TaskDraft)
+    suspend fun setLinkStatus(uid: String, status: LinkStatus)
+    suspend fun setReviewDate(uid: String, date: LocalDate)
+    suspend fun processInboxItem(uid: String)
+}
+
+/** Une idée de l'Inbox et le lien qu'elle porte. */
+data class TriageCard(val entry: InboxEntry, val link: LinkItem)
+
+/** Avancement du tri en série : [total] liens au départ, [remaining] encore dans l'Inbox. */
+data class TriageProgress(val total: Int, val remaining: Int) {
+    val position: Int get() = (total - remaining + 1).coerceIn(1, maxOf(total, 1))
+}
+
+object LinkTriage {
+    /** « Plus tard » repose le lien un mois. */
+    const val LATER_DAYS = 30L
+
+    /**
+     * Ce que fait chaque décision. Le lien change toujours de statut et l'idée est toujours marquée traitée
+     * (elle quitte l'Inbox, le lien reste dans la bibliothèque) ; l'idée est traitée en dernier pour
+     * qu'une écriture qui échoue la laisse visible. « À tester » crée en plus la tâche [testTaskName].
+     */
+    fun steps(
+        decision: LinkDecision,
+        entryUid: String,
+        link: LinkItem,
+        today: LocalDate,
+        projectUid: String?,
+        testTaskName: String,
+    ): List<TriageStep> = buildList {
+        when (decision) {
+            LinkDecision.KEEP -> add(TriageStep.SetStatus(link.uid, LinkStatus.KEPT))
+            LinkDecision.TEST -> {
+                add(TriageStep.CreateTask(TaskDraft(name = testTaskName, note = testTaskNote(link), projectUid = projectUid)))
+                add(TriageStep.SetStatus(link.uid, LinkStatus.TESTED))
+            }
+            LinkDecision.LATER -> {
+                add(TriageStep.SetStatus(link.uid, LinkStatus.PARKED))
+                add(TriageStep.SetReviewDate(link.uid, today.plusDays(LATER_DAYS)))
+            }
+            LinkDecision.DROP -> add(TriageStep.SetStatus(link.uid, LinkStatus.DROPPED))
+        }
+        add(TriageStep.ProcessInbox(entryUid))
+    }
+
+    /** L'adresse d'abord, puis la note de l'utilisateur : la tâche garde de quoi retrouver et comprendre le lien. */
+    fun testTaskNote(link: LinkItem): String = listOfNotNull(link.url, link.note?.takeIf { it.isNotBlank() }).joinToString("\n\n")
+
+    suspend fun run(steps: List<TriageStep>, sink: TriageSink) {
+        steps.forEach { step ->
+            when (step) {
+                is TriageStep.CreateTask -> sink.createTask(step.draft)
+                is TriageStep.SetStatus -> sink.setLinkStatus(step.linkUid, step.status)
+                is TriageStep.SetReviewDate -> sink.setReviewDate(step.linkUid, step.date)
+                is TriageStep.ProcessInbox -> sink.processInboxItem(step.entryUid)
+            }
+        }
+    }
+
+    /**
+     * Les idées à trier, la plus ancienne d'abord. Celles passées (« Passer ») vont à la fin, dans l'ordre où
+     * elles ont été passées : la file se reprend où on l'a laissée, sans état en plus que cette liste.
+     */
+    fun queue(entries: List<InboxEntry>, links: List<LinkItem>, skipped: List<String> = emptyList()): List<TriageCard> {
+        val cards = entries
+            .sortedWith(compareBy<InboxEntry> { it.createdAt ?: java.time.Instant.EPOCH }.thenBy { it.uid })
+            .mapNotNull { entry -> LinkLists.forEntry(links, entry.uid, entry.content)?.let { TriageCard(entry, it) } }
+        val (passed, fresh) = cards.partition { it.entry.uid in skipped }
+        return fresh + passed.sortedBy { skipped.indexOf(it.entry.uid) }
+    }
+
+    /** « Passer » : l'idée repart au bout de la file. */
+    fun skip(skipped: List<String>, entryUid: String): List<String> = skipped.filterNot { it == entryUid } + entryUid
+
+    /** Oublie les idées qui ne sont plus dans l'Inbox. */
+    fun pruneSkipped(skipped: List<String>, live: Set<String>): List<String> = skipped.filter { it in live }
+
+    fun toggleTag(current: List<String>, tagUid: String): List<String> =
+        if (tagUid in current) current - tagUid else current + tagUid
+}

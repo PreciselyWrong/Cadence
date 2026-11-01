@@ -1,13 +1,20 @@
 package ch.nicolab.cadence.tasks.data
 
 import androidx.room.withTransaction
+import ch.nicolab.cadence.tasks.model.SyncConflictText
+import ch.nicolab.cadence.tasks.sync.ConflictRecord
+import ch.nicolab.cadence.tasks.sync.DeferredCall
 import ch.nicolab.cadence.tasks.sync.HABIT_ENTITIES
 import ch.nicolab.cadence.tasks.sync.HabitSyncStore
 import ch.nicolab.cadence.tasks.sync.OutboxOp
 import ch.nicolab.cadence.tasks.sync.PendingOverlay
 import ch.nicolab.cadence.tasks.sync.SyncStore
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
@@ -34,6 +41,7 @@ internal class RoomSyncStore(
         if (cursor == null) {
             meta.delete(CURSOR)
             meta.delete(HABITS_SNAPSHOT)
+            meta.delete(SNAPSHOT_ENTITIES)
         } else {
             meta.put(SyncMetaEntity(CURSOR, cursor.toString()))
             if (habits != null) meta.put(SyncMetaEntity(HABITS_SNAPSHOT, "1"))
@@ -120,6 +128,68 @@ internal class RoomSyncStore(
         )
     }
 
+    override suspend fun snapshottedEntities(): Set<String>? =
+        meta.get(SNAPSHOT_ENTITIES)?.split(',')?.filter { it.isNotBlank() }?.toSet()
+
+    override suspend fun saveSnapshottedEntities(entities: Set<String>) {
+        meta.put(SyncMetaEntity(SNAPSHOT_ENTITIES, entities.sorted().joinToString(",")))
+    }
+
+    override suspend fun recordConflict(conflict: ConflictRecord) {
+        val names = referencedNames(conflict.field, listOfNotNull(conflict.local, conflict.server))
+        val nameOf: (String, String) -> String? = { _, uid -> names[uid] }
+        database.syncConflictDao().upsert(
+            SyncConflictEntity(
+                id = "${conflict.entity}|${conflict.uid}|${conflict.field}",
+                entity = conflict.entity,
+                uid = conflict.uid,
+                field = conflict.field,
+                localJson = conflict.local.toString(),
+                serverJson = conflict.server?.toString(),
+                localText = SyncConflictText.render(conflict.field, conflict.local, nameOf = nameOf),
+                serverText = conflict.server?.let { SyncConflictText.render(conflict.field, it, nameOf = nameOf) },
+                displayName = displayName(conflict.entity, conflict.uid),
+                atMs = nowMs(),
+            ),
+        )
+    }
+
+    /** Noms des lignes que désignent les valeurs d'un champ de référence (projet, étiquettes…). */
+    private suspend fun referencedNames(field: String, values: List<JsonElement>): Map<String, String> {
+        val target = SyncConflictText.REFERENCES[field] ?: return emptyMap()
+        val uids = values.flatMap { value ->
+            when (value) {
+                is JsonArray -> value.mapNotNull { (it as? JsonPrimitive)?.contentOrNull }
+                is JsonPrimitive -> listOfNotNull(value.contentOrNull)
+                else -> emptyList()
+            }
+        }.toSet()
+        return uids.mapNotNull { uid -> displayName(target, uid)?.let { uid to it } }.toMap()
+    }
+
+    override suspend fun deferredCalls(): List<DeferredCall> = database.deferredCallDao().all().map { row ->
+        DeferredCall(
+            key = row.key,
+            method = row.method,
+            path = row.path,
+            body = row.bodyJson?.let { Json.parseToJsonElement(it).jsonObject },
+            label = row.label,
+            attempts = row.attempts,
+        )
+    }
+
+    override suspend fun removeDeferredCall(key: String) = database.deferredCallDao().delete(key)
+
+    override suspend fun failDeferredCall(call: DeferredCall, message: String) =
+        database.deferredCallDao().markFailed(call.key, message)
+
+    override suspend fun rejectDeferredCall(call: DeferredCall, reason: String) {
+        database.withTransaction {
+            database.deferredCallDao().delete(call.key)
+            database.failedOpDao().insert(FailedOpEntity("call:${call.key}", "call", call.key, reason, nowMs(), call.label))
+        }
+    }
+
     private suspend fun displayName(entity: String, uid: String): String? = when (entity) {
         "task" -> database.taskDao().get(uid)?.name
         "project" -> database.projectDao().get(uid)?.name
@@ -151,5 +221,6 @@ internal class RoomSyncStore(
         const val CURSOR = "cursor"
         const val LAST_SYNC = "last_sync_at"
         const val HABITS_SNAPSHOT = "habits_snapshot"
+        const val SNAPSHOT_ENTITIES = "snapshot_entities"
     }
 }

@@ -24,7 +24,11 @@ import ch.nicolab.cadence.tasks.model.AreaSuggestions
 import ch.nicolab.cadence.tasks.model.NextAction
 import ch.nicolab.cadence.tasks.model.OccurrenceFields
 import ch.nicolab.cadence.tasks.model.InboxEntry
+import ch.nicolab.cadence.tasks.model.LinkDecision
 import ch.nicolab.cadence.tasks.model.LinkItem
+import ch.nicolab.cadence.tasks.model.LinkStatus
+import ch.nicolab.cadence.tasks.model.LinkTriage
+import ch.nicolab.cadence.tasks.model.TriageSink
 import ch.nicolab.cadence.tasks.links.LinkPreviews
 import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.NoteItem
@@ -43,6 +47,7 @@ import ch.nicolab.cadence.tasks.model.TaskDraft
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskViews
 import ch.nicolab.cadence.tasks.model.DecisionContext
+import ch.nicolab.cadence.tasks.model.Delivery
 import ch.nicolab.cadence.tasks.model.Funnel
 import ch.nicolab.cadence.tasks.model.FunnelStage
 import ch.nicolab.cadence.tasks.model.ReviewDecisions
@@ -114,10 +119,18 @@ internal data class TodayState(
     val completed: List<TaskItem> = emptyList(),
 )
 
-internal enum class DeletionKind { Note, Idea }
+internal enum class DeletionKind { Note, Idea, Link }
 
-/** Suppression en attente de confirmation, annulable par [TasksViewModel.undoDeletion]. */
-internal data class PendingDeletion(val kind: DeletionKind, val uid: String)
+/**
+ * Suppression en attente de confirmation, annulable par [TasksViewModel.undoDeletion]. Pour [DeletionKind.Link],
+ * [decision] et [title] disent quelle décision sur quel lien l'écran annonce.
+ */
+internal data class PendingDeletion(
+    val kind: DeletionKind,
+    val uid: String,
+    val decision: LinkDecision? = null,
+    val title: String? = null,
+)
 
 /**
  * Question « cette tâche ou la série ? » en attente sur une tâche récurrente. [occurrence] est le jour de
@@ -290,6 +303,63 @@ internal class TasksViewModel(
 
     fun setLinkNote(uid: String, note: String?) = launchAction { repository.setLinkNote(uid, note) }
 
+    fun setLinkTags(uid: String, tagUids: List<String>) = launchAction { repository.setLinkTags(uid, tagUids) }
+
+    private val linkTriage = LinkTriageStore(application)
+    private val _skippedLinks = MutableStateFlow(linkTriage.skipped())
+
+    /** Idées de lien passées en tri en série, dans l'ordre : elles repartent au bout de la file. */
+    val skippedLinks: StateFlow<List<String>> = _skippedLinks.asStateFlow()
+
+    fun skipLink(entryUid: String) {
+        _skippedLinks.value = LinkTriage.skip(_skippedLinks.value, entryUid).also(linkTriage::saveSkipped)
+    }
+
+    fun reviewDate(linkUid: String) = linkTriage.reviewOn(linkUid)
+
+    private val triageSink = object : TriageSink {
+        override suspend fun createTask(draft: TaskDraft) {
+            repository.createTask(draft)
+        }
+
+        override suspend fun setLinkStatus(uid: String, status: LinkStatus) = repository.setLinkStatus(uid, status)
+
+        override suspend fun setReviewDate(uid: String, date: LocalDate) = linkTriage.setReviewOn(uid, date)
+
+        override suspend fun processInboxItem(uid: String) = repository.processInboxItem(uid)
+    }
+
+    /**
+     * Garder, tester, repousser ou jeter le lien d'une idée de l'Inbox. L'idée disparaît tout de suite ;
+     * les écritures partent après la fenêtre d'annulation (« Annuler » les abandonne), hors ligne comme en ligne.
+     * [projectUid] range la tâche « Tester : … » d'un [LinkDecision.TEST] ; null la laisse sans projet.
+     */
+    fun decideLink(entry: InboxEntry, link: LinkItem, decision: LinkDecision, projectUid: String? = null) {
+        val steps = LinkTriage.steps(
+            decision = decision,
+            entryUid = entry.uid,
+            link = link,
+            today = moment.value.today,
+            projectUid = projectUid,
+            testTaskName = getApplication<Application>().getString(R.string.links_test_task_name, link.displayTitle),
+        )
+        hidden.value = hidden.value + entry.uid
+        _deletions.tryEmit(PendingDeletion(DeletionKind.Link, entry.uid, decision, link.displayTitle))
+        launchAction {
+            delay(UNDO_WINDOW_MS)
+            if (entry.uid !in hidden.value) return@launchAction
+            try {
+                LinkTriage.run(steps, triageSink)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                hidden.value = hidden.value - entry.uid
+                throw e
+            }
+            // L'idée reste masquée : traitée, elle ne revient pas, et rien ne clignote avant la mise à jour de la liste.
+        }
+    }
+
     val notes: StateFlow<List<NoteItem>> = combine(repository.observeNotes(), hidden) { all, gone ->
         all.filterNot { it.uid in gone }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
@@ -451,7 +521,10 @@ internal class TasksViewModel(
         // Le jour seul se décale sur le serveur (il déplace aussi la règle) ; le reste s'écrit hors ligne.
         val moveDate = scoped.dueDate.takeIf { pending.occurrence == null && OccurrenceFields.isDateOnly(pending.change) }
         if (moveDate != null) {
-            repository.moveRecurring(uid, scope, moveDate).getOrThrow()
+            // Hors ligne, le déplacement attend le réseau : la personne le sait, la date changera à l'envoi.
+            if (repository.moveRecurring(uid, scope, moveDate).getOrThrow() == Delivery.QUEUED) {
+                _messages.tryEmit(getString(R.string.tasks_sync_offline_queued))
+            }
         } else {
             repository.editRecurring(uid, scope, pending.occurrence, pending.change).getOrElse { throw recurringFailure(it) }
         }
@@ -513,9 +586,8 @@ internal class TasksViewModel(
     // Les erreurs remontent à l'appelant, qui garde les valeurs saisies.
     suspend fun saveChange(uid: String, change: TaskChange) = repository.updateTask(uid, change)
 
-    suspend fun saveNewTask(draft: TaskDraft) {
-        repository.createTask(draft)
-    }
+    /** Crée la tâche et retourne son uid, pour l'annuler dans la saisie rapide. */
+    suspend fun saveNewTask(draft: TaskDraft): String = repository.createTask(draft)
 
     suspend fun captureIdea(text: String) {
         repository.captureInbox(text)

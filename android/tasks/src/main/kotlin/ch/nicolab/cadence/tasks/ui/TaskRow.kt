@@ -88,6 +88,7 @@ internal fun TaskRow(
     onMenu: () -> Unit,
     modifier: Modifier = Modifier,
     sectionDay: LocalDate? = null,
+    decor: RowDecor = rememberRowDecor(),
 ) {
     val haptic = rememberCadenceHaptic()
     val interaction = remember { MutableInteractionSource() }
@@ -158,7 +159,19 @@ internal fun TaskRow(
             Spacer(Modifier.width(8.dp))
             Column(Modifier.weight(1f).padding(vertical = 6.dp)) {
                 StrikingTitle(task.name, struck = showClosed)
-                TaskMeta(task, projectName, projectIcon, today, zone, sectionDay)
+                TaskMeta(task, projectName, projectIcon, projectColor, today, zone, sectionDay, decor)
+                if (decor.showDescription) {
+                    TaskRowMeta.notePreview(task.note)?.let { preview ->
+                        Text(
+                            text = preview,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = TaskRowMeta.DESCRIPTION_LINES,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(top = 2.dp),
+                        )
+                    }
+                }
             }
             // Une priorité haute est déjà portée par le trait rouge de la case.
             task.priority?.takeIf { it != TaskPriority.HIGH }?.let { priority ->
@@ -236,7 +249,16 @@ internal fun showsDueDay(dueDay: LocalDate, sectionDay: LocalDate?, overdue: Boo
     overdue || sectionDay != dueDay
 
 @Composable
-private fun TaskMeta(task: TaskItem, projectName: String?, projectIcon: String?, today: LocalDate, zone: ZoneId, sectionDay: LocalDate?) {
+private fun TaskMeta(
+    task: TaskItem,
+    projectName: String?,
+    projectIcon: String?,
+    projectColor: Int?,
+    today: LocalDate,
+    zone: ZoneId,
+    sectionDay: LocalDate?,
+    decor: RowDecor,
+) {
     val pendingText = stringResource(R.string.tasks_pending_sync)
     val recurringText = stringResource(R.string.tasks_recurring)
     val dueDate = task.dueDay
@@ -284,23 +306,50 @@ private fun TaskMeta(task: TaskItem, projectName: String?, projectIcon: String?,
                 modifier = Modifier.size(14.dp),
             )
         }
-        if (projectName != null) {
-            Row(
+        when (val origin = TaskRowMeta.origin(task.projectUid, projectName, task.areaUid?.let { decor.areaNames[it] })) {
+            is RowOrigin.Project -> Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier.weight(1f, fill = false),
             ) {
+                val tint = projectColor?.let { Color(it) } ?: MaterialTheme.colorScheme.onSurfaceVariant
                 // Sans icône choisie, le nom reste seul : pas de pastille de remplacement.
-                entityIcon(projectIcon)?.let { EntityIcon(it, tint = MaterialTheme.colorScheme.onSurfaceVariant, size = 14.dp) }
+                entityIcon(projectIcon)?.let { EntityIcon(it, tint = tint, size = 14.dp) }
                 Text(
-                    text = projectName,
+                    text = origin.name,
                     style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = tint,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f, fill = false),
                 )
             }
+            is RowOrigin.Area -> Text(
+                text = origin.name,
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f, fill = false),
+            )
+            RowOrigin.None -> Unit
+        }
+        val rowTags = remember(task.tagUids, decor.tags) { TaskRowMeta.tags(task.tagUids, decor.tags) }
+        rowTags.shown.forEach { tag ->
+            Text(
+                text = "#${tag.label}",
+                style = MaterialTheme.typography.labelMedium,
+                color = decor.tagColors[tag.uid] ?: MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+        if (rowTags.more > 0) {
+            Text(
+                text = "+${rowTags.more}",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
         if (task.pendingSync) {
             Box(

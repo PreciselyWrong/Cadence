@@ -23,8 +23,10 @@ interface CalendarSource {
 interface CalendarSettingsStore {
     val displays: Flow<Map<Long, CalendarDisplay>>
     val global: Flow<CalendarGlobalSettings>
+    val reminders: Flow<EventReminderSettings>
 
     suspend fun setDisplay(calendarId: Long, display: CalendarDisplay)
+    suspend fun setReminders(settings: EventReminderSettings)
     suspend fun setCheckEvents(enabled: Boolean)
     suspend fun setHideDone(enabled: Boolean)
 }
@@ -50,6 +52,9 @@ interface CalendarRepository {
     val permissionMissing: Flow<Boolean>
     val globalSettings: Flow<CalendarGlobalSettings>
 
+    /** Rappels des événements : actif, avance, résumé des journées entières. */
+    val reminderSettings: Flow<EventReminderSettings>
+
     /** Agendas de l'appareil avec leurs réglages, triés par compte puis par nom. */
     fun calendars(): Flow<List<CalendarWithDisplay>>
 
@@ -63,6 +68,10 @@ interface CalendarRepository {
     suspend fun setDisplay(calendarId: Long, display: CalendarDisplay)
     suspend fun setCheckEvents(enabled: Boolean)
     suspend fun setHideDone(enabled: Boolean)
+    suspend fun setReminderSettings(settings: EventReminderSettings)
+
+    /** Marque l'occurrence faite comme la case le fait ; sans effet si « Cocher un événement » est désactivé. */
+    suspend fun markDone(key: EventInstanceKey)
 
     /** Masque l'occurrence sur toutes les surfaces, dans Cadence seulement (aucune écriture dans le fournisseur). */
     suspend fun hideEvent(event: HiddenEvent)

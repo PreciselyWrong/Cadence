@@ -28,5 +28,6 @@ private fun TaskRowPreview() {
         onOpen = {},
         onSwipeAction = {},
         onMenu = {},
+        decor = RowDecor(),
     )
 }

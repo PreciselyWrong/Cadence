@@ -110,6 +110,7 @@ internal fun CadenceAppScreen(
     openTaskUid: String? = null,
     openQuestionHabitId: String? = null,
     openQuestionForAmount: Boolean = false,
+    openAgenda: Boolean = false,
 ) {
     val habits by viewModel.habits.collectAsStateWithLifecycle()
     val groups by viewModel.groups.collectAsStateWithLifecycle()
@@ -131,6 +132,13 @@ internal fun CadenceAppScreen(
     androidx.compose.runtime.LaunchedEffect(openTaskUid) {
         if (openTaskUid != null) {
             tab = Tab.TASKS
+            settingsOpen = false
+        }
+    }
+    // Une notification d'événement ouvre l'Agenda, quel que soit l'onglet restauré.
+    androidx.compose.runtime.LaunchedEffect(openAgenda) {
+        if (openAgenda) {
+            tab = Tab.AGENDA
             settingsOpen = false
         }
     }

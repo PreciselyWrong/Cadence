@@ -36,4 +36,12 @@ class ReminderManifestTest {
             "actions déclarées : $actions",
         )
     }
+
+    @Test
+    fun `les alarmes exactes sont demandées et leur changement repose les alarmes`() {
+        val manifest = File("src/main/AndroidManifest.xml").readText()
+
+        assertTrue(manifest.contains("android.permission.SCHEDULE_EXACT_ALARM"))
+        assertTrue(actionsOf(".reminder.TaskReminderBootReceiver").contains("android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED"))
+    }
 }

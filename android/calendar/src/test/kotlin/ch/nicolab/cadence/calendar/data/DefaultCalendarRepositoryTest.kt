@@ -178,6 +178,29 @@ class DefaultCalendarRepositoryTest {
     }
 
     @Test
+    fun `marquer fait pose l'état fait sans jamais le retirer`() = runTest {
+        val source = FakeCalendarSource().apply { calendars = listOf(calendar); events = listOf(event()) }
+        val repo = repository(source)
+
+        repo.markDone(event().key)
+        repo.markDone(event().key)
+
+        assertTrue(repo.events(range, CalendarSurface.AGENDA).first().single().done)
+    }
+
+    @Test
+    fun `marquer fait ne fait rien quand cocher un événement est désactivé`() = runTest {
+        val source = FakeCalendarSource().apply { calendars = listOf(calendar); events = listOf(event()) }
+        val repo = repository(source)
+        repo.setCheckEvents(false)
+
+        repo.markDone(event().key)
+        repo.setCheckEvents(true)
+
+        assertFalse(repo.events(range, CalendarSurface.AGENDA).first().single().done)
+    }
+
+    @Test
     fun `masquer deux fois le même événement ne crée qu'une entrée`() = runTest {
         val source = FakeCalendarSource().apply { calendars = listOf(calendar); events = listOf(event()) }
         val repo = repository(source)

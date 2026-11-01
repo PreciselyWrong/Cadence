@@ -1,7 +1,6 @@
 package ch.nicolab.cadence.tasks.sync
 
 import ch.nicolab.cadence.domain.QuietHours
-import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
@@ -53,15 +52,12 @@ class HttpSyncApi(private val session: suspend () -> ServerSession) : SyncApi {
     }
 
     override suspend fun moveOccurrence(uid: String, scope: String, occurrenceDate: String, dueDate: String) {
-        val body = JsonObject(
-            mapOf(
-                "scope" to JsonPrimitive(scope),
-                "occurrence_date" to JsonPrimitive(occurrenceDate),
-                "due_date" to JsonPrimitive(dueDate),
-            ),
-        )
-        request("POST", "/api/v1/task/${encode(uid)}/move-occurrence", body = body)
+        val call = moveOccurrenceCall(uid, scope, occurrenceDate, dueDate)
+        request(call.method, call.path, body = call.body)
     }
+
+    override suspend fun send(method: String, path: String, body: JsonObject?): JsonObject =
+        request(method, path, body = body)
 
     /** Métadonnées d'une page (titre, image, description) : le serveur la lit, jamais l'appareil. */
     internal suspend fun linkMetadata(url: String): JsonObject = request("GET", "/api/url/title", mapOf("url" to url))
@@ -126,13 +122,14 @@ internal fun parseResponse(text: String): JsonObject = shaped { Json.parseToJson
 internal fun httpFailure(code: Int, body: String?): Exception = when {
     code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN ->
         AuthError("Clé API refusée ($code)")
-    code == HttpURLConnection.HTTP_GONE && isResetRequired(body) -> ResetRequired()
-    else -> IOException("HTTP $code")
+    code == HttpURLConnection.HTTP_GONE && errorCodeOf(body) == "reset_required" -> ResetRequired()
+    else -> HttpError(code, errorCodeOf(body))
 }
 
-private fun isResetRequired(body: String?): Boolean = body != null && runCatching {
-    (Json.parseToJsonElement(body).jsonObject["error"] as? JsonPrimitive)?.contentOrNull == "reset_required"
-}.getOrDefault(false)
+/** `error` d'un corps d'erreur JSON ; null pour une page HTML ou un corps vide. Borné : il finit dans un message. */
+private fun errorCodeOf(body: String?): String? = body?.let {
+    runCatching { (Json.parseToJsonElement(it).jsonObject["error"] as? JsonPrimitive)?.contentOrNull }.getOrNull()
+}?.take(80)
 
 internal fun profileOf(fields: JsonObject): AccountProfile = shaped {
     AccountProfile(
@@ -183,6 +180,9 @@ internal fun pushResultsOf(fields: JsonObject): List<PushResult> = shaped {
             opId = result.string("op_id"),
             status = result.string("status"),
             reason = (result["reason"] as? JsonPrimitive)?.contentOrNull,
+            rejectedFields = (result["rejected_fields"] as? JsonArray)
+                ?.mapNotNull { (it as? JsonPrimitive)?.contentOrNull }
+                .orEmpty(),
         )
     }
 }

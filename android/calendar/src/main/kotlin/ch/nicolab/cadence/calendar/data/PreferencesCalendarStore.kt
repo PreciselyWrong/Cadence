@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import ch.nicolab.cadence.calendar.CalendarCodecs
@@ -15,6 +16,7 @@ import ch.nicolab.cadence.calendar.CalendarGlobalSettings
 import ch.nicolab.cadence.calendar.CalendarSettingsStore
 import ch.nicolab.cadence.calendar.EventDoneStore
 import ch.nicolab.cadence.calendar.EventHiddenStore
+import ch.nicolab.cadence.calendar.EventReminderSettings
 import ch.nicolab.cadence.calendar.EventInstanceKey
 import ch.nicolab.cadence.calendar.HiddenEvent
 import java.io.IOException
@@ -52,6 +54,14 @@ internal class PreferencesCalendarStore(
         )
     }.distinctUntilChanged()
 
+    override val reminders: Flow<EventReminderSettings> = prefs.map { p ->
+        EventReminderSettings(
+            enabled = p[REMIND_EVENTS] ?: true,
+            leadMinutes = p[EVENT_LEAD_MINUTES] ?: DEFAULT_EVENT_LEAD_MINUTES,
+            allDayDigest = p[ALL_DAY_DIGEST] ?: false,
+        )
+    }.distinctUntilChanged()
+
     override val done: Flow<Set<EventInstanceKey>> = prefs.map { p ->
         p[DONE_INSTANCES].orEmpty().mapNotNull(CalendarCodecs::decodeKey).toSet()
     }.distinctUntilChanged()
@@ -62,6 +72,14 @@ internal class PreferencesCalendarStore(
 
     override suspend fun setDisplay(calendarId: Long, display: CalendarDisplay) {
         dataStore.edit { it[intPreferencesKey("$DISPLAY_PREFIX$calendarId")] = CalendarCodecs.encodeDisplay(display) }
+    }
+
+    override suspend fun setReminders(settings: EventReminderSettings) {
+        dataStore.edit {
+            it[REMIND_EVENTS] = settings.enabled
+            it[EVENT_LEAD_MINUTES] = settings.leadMinutes
+            it[ALL_DAY_DIGEST] = settings.allDayDigest
+        }
     }
 
     override suspend fun setCheckEvents(enabled: Boolean) {
@@ -92,6 +110,10 @@ internal class PreferencesCalendarStore(
         const val DISPLAY_PREFIX = "display_"
         val CHECK_EVENTS = booleanPreferencesKey("check_events")
         val HIDE_DONE = booleanPreferencesKey("hide_done")
+        val REMIND_EVENTS = booleanPreferencesKey("remind_events")
+        val EVENT_LEAD_MINUTES = longPreferencesKey("event_lead_minutes")
+        val ALL_DAY_DIGEST = booleanPreferencesKey("all_day_digest")
+        const val DEFAULT_EVENT_LEAD_MINUTES = 10L
         val DONE_INSTANCES = stringSetPreferencesKey("done_instances")
         val HIDDEN_INSTANCES = stringSetPreferencesKey("hidden_instances")
     }

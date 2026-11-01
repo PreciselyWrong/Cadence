@@ -24,6 +24,8 @@ class ReminderPlanTest {
         dueDate: Instant? = null,
     ) = TaskItem(uid = uid, name = uid, status = status, reminderAt = reminderAt, dueDate = dueDate)
 
+    private fun uids(wanted: Map<String, ReminderPlan.Wanted>): Set<String> = wanted.values.mapTo(HashSet()) { it.uid }
+
     private fun fromWire(json: String) =
         TaskRow(WireCodec.taskFromWire(Json.parseToJsonElement(json).jsonObject), pendingSync = false)
             .toItem(ZoneOffset.UTC, ZoneOffset.UTC)
@@ -36,14 +38,14 @@ class ReminderPlanTest {
             task("sans-rappel"),
         )
 
-        assertEquals(setOf("proche"), ReminderPlan.wanted(tasks, emptySet(), now).keys)
+        assertEquals(setOf("proche"), uids(ReminderPlan.wanted(tasks, emptySet(), now)))
     }
 
     @Test
     fun `garde un rappel passé mais non remis, dans la fenêtre de 24 h`() {
         val late = task("en-retard", reminderAt = now.minusSeconds(3 * 3600))
 
-        assertEquals(setOf("en-retard"), ReminderPlan.wanted(listOf(late), emptySet(), now).keys)
+        assertEquals(setOf("en-retard"), uids(ReminderPlan.wanted(listOf(late), emptySet(), now)))
     }
 
     @Test
@@ -53,7 +55,7 @@ class ReminderPlanTest {
         val remis = task("remis", reminderAt = at)
         val ancien = task("ancien", reminderAt = now.minusSeconds(25 * 3600))
 
-        assertEquals(emptySet<String>(), ReminderPlan.wanted(listOf(remis, ancien), delivered, now).keys)
+        assertEquals(emptySet<String>(), uids(ReminderPlan.wanted(listOf(remis, ancien), delivered, now)))
     }
 
     @Test
@@ -67,7 +69,7 @@ class ReminderPlanTest {
             """{"uid":"en-retard","name":"Lire","reminder_at":"2026-10-30T08:00:00.000Z","reminder_sent_at":"2026-10-30T08:00:30.000Z"}""",
         )
 
-        assertEquals(setOf("a-venir", "en-retard"), ReminderPlan.wanted(listOf(upcoming, late), emptySet(), now).keys)
+        assertEquals(setOf("a-venir", "en-retard"), uids(ReminderPlan.wanted(listOf(upcoming, late), emptySet(), now)))
     }
 
     @Test
@@ -77,7 +79,7 @@ class ReminderPlanTest {
             task("annulee", reminderAt = now.plusSeconds(3600), status = TaskStatus.CANCELLED),
         )
 
-        assertEquals(emptySet<String>(), ReminderPlan.wanted(tasks, emptySet(), now).keys)
+        assertEquals(emptySet<String>(), uids(ReminderPlan.wanted(tasks, emptySet(), now)))
     }
 
     @Test

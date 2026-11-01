@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.distinctUntilChanged
 import ch.nicolab.cadence.reminder.AbstinenceMilestoneScheduler
 import ch.nicolab.cadence.reminder.AlcoholFollowUpScheduler
+import ch.nicolab.cadence.reminder.EventReminderScheduler
 import ch.nicolab.cadence.reminder.LearnedQuestionScheduler
 import ch.nicolab.cadence.widget.CadenceWidget
 import ch.nicolab.cadence.widget.WidgetAutoRefresh
@@ -36,6 +37,7 @@ class CadenceApp : Application() {
         AbstinenceMilestoneScheduler.createChannel(this)
         AlcoholFollowUpScheduler.createChannel(this)
         LearnedQuestionScheduler.createChannel(this)
+        EventReminderScheduler.createChannel(this)
         // Les alarmes disparaissent à la mise à jour ou au redémarrage et une synchro peut ajouter ou retirer des
         // rappels : on les suit sur la table plutôt que sur chaque appelant.
         ReminderScheduler.observeAndKeepScheduled(this, repository, applicationScope)
@@ -54,6 +56,8 @@ class CadenceApp : Application() {
         // Tâches Tududi : synchronisation, widgets et rappels suivent leur propre base.
         TasksBackground.start(this)
         TasksWidgetsAndReminders.start(this, applicationScope)
+        // Événements d'agenda : alarmes posées sur le fournisseur d'agendas, les réglages et la plage silencieuse.
+        EventReminderScheduler.start(this, applicationScope)
         applicationScope.launch {
             TasksGraph.repository(this@CadenceApp).observeTasks()
                 .distinctUntilChanged()

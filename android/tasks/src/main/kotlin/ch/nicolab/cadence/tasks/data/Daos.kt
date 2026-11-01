@@ -270,6 +270,49 @@ interface OutboxDao {
 interface FailedOpDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(op: FailedOpEntity)
+
+    @Query("SELECT * FROM failed_ops ORDER BY atMs DESC LIMIT :limit")
+    fun observeRecent(limit: Int): Flow<List<FailedOpEntity>>
+
+    @Query("DELETE FROM failed_ops")
+    suspend fun clear()
+}
+
+@Dao
+interface SyncConflictDao {
+    @Upsert
+    suspend fun upsert(conflict: SyncConflictEntity)
+
+    @Query("SELECT * FROM sync_conflicts ORDER BY atMs DESC")
+    fun observeAll(): Flow<List<SyncConflictEntity>>
+
+    @Query("SELECT * FROM sync_conflicts WHERE id = :id")
+    suspend fun get(id: String): SyncConflictEntity?
+
+    @Query("DELETE FROM sync_conflicts WHERE id = :id")
+    suspend fun delete(id: String)
+}
+
+@Dao
+interface DeferredCallDao {
+    /** Remplace un appel de même clé : seul le dernier compte, et il passe en fin de file. */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun put(call: DeferredCallEntity)
+
+    @Query("SELECT * FROM deferred_calls ORDER BY rowid")
+    suspend fun all(): List<DeferredCallEntity>
+
+    @Query("SELECT COUNT(*) FROM deferred_calls")
+    fun observeCount(): Flow<Int>
+
+    @Query("SELECT EXISTS(SELECT 1 FROM deferred_calls WHERE `key` = :key)")
+    fun observeExists(key: String): Flow<Boolean>
+
+    @Query("DELETE FROM deferred_calls WHERE `key` = :key")
+    suspend fun delete(key: String)
+
+    @Query("UPDATE deferred_calls SET attempts = attempts + 1, lastError = :message WHERE `key` = :key")
+    suspend fun markFailed(key: String, message: String)
 }
 
 @Dao

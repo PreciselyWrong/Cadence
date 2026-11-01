@@ -4,6 +4,7 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import ch.nicolab.cadence.calendar.CalendarDisplay
 import ch.nicolab.cadence.calendar.CalendarGlobalSettings
 import ch.nicolab.cadence.calendar.EventInstanceKey
+import ch.nicolab.cadence.calendar.EventReminderSettings
 import ch.nicolab.cadence.calendar.HiddenEvent
 import java.io.File
 import kotlinx.coroutines.CoroutineScope
@@ -70,6 +71,27 @@ class PreferencesCalendarStoreTest {
         store.setHideDone(true)
 
         assertEquals(CalendarGlobalSettings(checkEvents = false, hideDone = true), store.global.first())
+    }
+
+    @Test
+    fun `event reminders default to on, 10 minutes before, no digest, and round-trip`() = runBlocking {
+        val store = store()
+
+        assertEquals(EventReminderSettings(enabled = true, leadMinutes = 10, allDayDigest = false), store.reminders.first())
+
+        store.setReminders(EventReminderSettings(enabled = false, leadMinutes = 30, allDayDigest = true))
+
+        assertEquals(EventReminderSettings(enabled = false, leadMinutes = 30, allDayDigest = true), store.reminders.first())
+    }
+
+    @Test
+    fun `notifications off survive for one calendar only`() = runBlocking {
+        val store = store()
+
+        store.setDisplay(1L, CalendarDisplay(notify = false))
+        store.setDisplay(2L, CalendarDisplay())
+
+        assertEquals(mapOf(1L to CalendarDisplay(notify = false), 2L to CalendarDisplay()), store.displays.first())
     }
 
     @Test

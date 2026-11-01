@@ -86,12 +86,19 @@
         <item quantity="other">%d tâches ouvertes</item>
     </plurals>
 
-    <plurals name="tasks_sync_pending">
-        <item quantity="one">%d modification en attente</item>
-        <item quantity="other">%d modifications en attente</item>
-    </plurals>
-    <string name="tasks_sync_not_connected">Non connecté au serveur Cadence</string>
-    <string name="tasks_sync_running">Synchronisation…</string>
+    <string name="tasks_sync_title">Synchronisation</string>
+    <string name="tasks_sync_unsupported">Ce serveur ne connaît pas encore : %1$s. Ces modifications attendent sa mise à jour.</string>
+    <string name="tasks_sync_conflicts_title">Conflits</string>
+    <string name="tasks_sync_conflicts_hint">Le serveur avait une valeur plus récente et l\'a gardée. Choisissez celle qui reste.</string>
+    <string name="tasks_sync_conflict_local">Ce téléphone : %1$s</string>
+    <string name="tasks_sync_conflict_server">Serveur : %1$s</string>
+    <string name="tasks_sync_conflict_server_unknown">Serveur : valeur non relue</string>
+    <string name="tasks_sync_keep_local">Garder ce téléphone</string>
+    <string name="tasks_sync_keep_server">Garder le serveur</string>
+    <string name="tasks_sync_dismiss">Compris</string>
+    <string name="tasks_sync_refused_title">Refusées par le serveur</string>
+    <string name="tasks_sync_refused_clear">Effacer la liste</string>
+    <string name="tasks_sync_offline_queued">Hors ligne : envoyé dès le retour du réseau</string>
 
     <string name="tasks_field_name">Nom</string>
     <string name="tasks_field_note">Note</string>

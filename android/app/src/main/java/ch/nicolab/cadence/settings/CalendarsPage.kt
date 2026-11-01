@@ -303,6 +303,11 @@ private fun CalendarBlock(
                     selected = display.tasks,
                     leadingIcon = if (display.tasks) Icons.Rounded.Check else null,
                 ) { onDisplay(display.copy(tasks = !display.tasks)) }
+                ChoiceChip(
+                    label = stringResource(R.string.calendars_surface_notify),
+                    selected = display.notify,
+                    leadingIcon = if (display.notify) Icons.Rounded.Check else null,
+                ) { onDisplay(display.copy(notify = !display.notify)) }
             }
         }
     }

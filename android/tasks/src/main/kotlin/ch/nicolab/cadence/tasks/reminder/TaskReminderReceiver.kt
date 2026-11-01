@@ -55,8 +55,8 @@ class TaskReminderReceiver : BroadcastReceiver() {
     private suspend fun showIfStillDue(context: Context, uid: String, firedAt: Long) {
         val task = TasksGraph.repository(context).observeTask(uid).first() ?: return
         // Un rappel déplacé ou fermé depuis sa pose ne doit pas notifier : une autre alarme s'en charge.
-        if (task.isClosed || task.reminderAt?.toEpochMilli() != firedAt) return
-        TaskReminderNotifier.show(context, task)
+        if (!stillCurrent(context, task, firedAt)) return
+        TaskReminderNotifier.show(context, requireNotNull(task), Instant.ofEpochMilli(firedAt))
         TaskReminderScheduler.recordDelivered(context, uid, Instant.ofEpochMilli(firedAt))
     }
 
@@ -64,9 +64,12 @@ class TaskReminderReceiver : BroadcastReceiver() {
     private suspend fun showSnoozedIfStillDue(context: Context, uid: String, reminderAt: Long) {
         TaskReminderScheduler.clearSnooze(context, uid)
         val task = TasksGraph.repository(context).observeTask(uid).first() ?: return
-        if (task.isClosed || task.reminderAt?.toEpochMilli() != reminderAt) return
-        TaskReminderNotifier.show(context, task)
+        if (!stillCurrent(context, task, reminderAt)) return
+        TaskReminderNotifier.show(context, requireNotNull(task), Instant.ofEpochMilli(reminderAt))
     }
+
+    private fun stillCurrent(context: Context, task: TaskItem?, marker: Long): Boolean =
+        ReminderPlan.isCurrentMarker(task, marker, TimedRemindersStore(context).read(), Instant.now(), ZoneId.systemDefault())
 
     /** Une notification d'occurrence passée ne doit pas terminer la suivante. */
     private suspend fun completeIfSameOccurrence(context: Context, uid: String, occurrence: Long) {
@@ -104,18 +107,25 @@ internal object TaskReminderNotifier {
     private val timeFormat = DateTimeFormatter.ofPattern("HH:mm")
     private val dateFormat = DateTimeFormatter.ofPattern("d MMM", tasksLocale)
 
-    fun show(context: Context, task: TaskItem) {
+    /**
+     * [marker] : repère du rappel (son `reminder_at`, ou l'échéance de l'occurrence pour un rappel à heure fixe).
+     * « Terminer » n'est proposé que pour l'occurrence enregistrée : une occurrence à venir d'une série ne se coche pas.
+     */
+    fun show(context: Context, task: TaskItem, marker: Instant) {
         // Sans permission rien ne s'affiche ; la remise est tout de même notée pour ne pas retenter pendant 24 h.
         if (!TaskReminderScheduler.notificationsAllowed(context)) return
+        val dueAt = if (task.reminderAt == marker) task.dueDate else marker
         val builder = NotificationCompat.Builder(context, TaskReminderScheduler.CHANNEL_ID)
             .setSmallIcon(R.drawable.tasks_ic_notification)
             .setContentTitle(task.name)
-            .setContentText(detail(context, task))
+            .setContentText(detail(context, task, dueAt))
             .setCategory(NotificationCompat.CATEGORY_REMINDER)
             .setAutoCancel(true)
-            .addAction(0, context.getString(R.string.tasks_reminder_complete), completePendingIntent(context, task))
+        if (dueAt == task.dueDate) {
+            builder.addAction(0, context.getString(R.string.tasks_reminder_complete), completePendingIntent(context, task))
+        }
         SnoozeDelay.entries.forEach { delay ->
-            builder.addAction(0, context.getString(snoozeLabel(delay)), snoozePendingIntent(context, task, delay))
+            builder.addAction(0, context.getString(snoozeLabel(delay)), snoozePendingIntent(context, task, delay, marker))
         }
         openTaskIntent(context, task.uid)?.let { open ->
             builder.setContentIntent(
@@ -135,8 +145,8 @@ internal object TaskReminderNotifier {
         NotificationManagerCompat.from(context).cancel(uid, NOTIFICATION_ID)
     }
 
-    private fun detail(context: Context, task: TaskItem): String {
-        val due = task.dueDate ?: return context.getString(R.string.tasks_reminder_default_text)
+    private fun detail(context: Context, task: TaskItem, dueAt: Instant?): String {
+        val due = dueAt ?: return context.getString(R.string.tasks_reminder_default_text)
         return if (task.dueHasTime) {
             context.getString(R.string.tasks_reminder_due_time, due.atZone(ZoneId.systemDefault()).format(timeFormat))
         } else {
@@ -150,8 +160,8 @@ internal object TaskReminderNotifier {
         SnoozeDelay.ONE_HOUR -> R.string.tasks_reminder_snooze_1_hour
     }
 
-    private fun snoozePendingIntent(context: Context, task: TaskItem, delay: SnoozeDelay): PendingIntent {
-        val reminderAt = task.reminderAt?.toEpochMilli() ?: -1L
+    private fun snoozePendingIntent(context: Context, task: TaskItem, delay: SnoozeDelay, marker: Instant): PendingIntent {
+        val reminderAt = marker.toEpochMilli()
         val intent = Intent(context, TaskReminderReceiver::class.java)
             .setAction(TaskReminderReceiver.ACTION_SNOOZE)
             .setData(Uri.parse("tududi-reminder://snooze-action/${task.uid}/${delay.minutes}"))

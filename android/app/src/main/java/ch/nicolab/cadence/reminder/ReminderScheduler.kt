@@ -549,6 +549,7 @@ class ReminderBootReceiver : BroadcastReceiver() {
                 AlcoholFollowUpScheduler.scheduleAll(context, repository)
                 LearnedQuestionScheduler.scheduleAll(context, (context.applicationContext as CadenceApp).learnedQuestions)
                 ReminderScheduler.restorePendingSnoozes(context, repository)
+                EventReminderScheduler.resync(context)
             } finally {
                 pending.finish()
             }
@@ -561,6 +562,8 @@ class ReminderBootReceiver : BroadcastReceiver() {
             Intent.ACTION_MY_PACKAGE_REPLACED,
             Intent.ACTION_TIMEZONE_CHANGED,
             Intent.ACTION_TIME_CHANGED,
+            // L'utilisateur vient d'accorder (ou de retirer) les alarmes exactes : on repose les alarmes en conséquence.
+            AlarmManager.ACTION_SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED,
         )
 
         internal fun handles(action: String?): Boolean = action in ACTIONS

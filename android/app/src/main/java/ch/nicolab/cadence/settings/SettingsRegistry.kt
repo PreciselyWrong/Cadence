@@ -13,9 +13,11 @@ import androidx.compose.material.icons.outlined.CloudUpload
 import androidx.compose.material.icons.outlined.EventAvailable
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Flight
+import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Swipe
+import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material.icons.outlined.Widgets
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -35,6 +37,8 @@ import ch.nicolab.cadence.designsystem.theme.rememberStoredAppearance
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.health.HealthConnectSettingsPanel
 import ch.nicolab.cadence.tasks.ui.settings.SwipeSettings
+import ch.nicolab.cadence.tasks.ui.settings.SyncSettingsSection
+import ch.nicolab.cadence.tasks.ui.settings.syncSettingsSummary
 import ch.nicolab.cadence.tasks.ui.settings.TududiConnectionSection
 import ch.nicolab.cadence.tasks.ui.settings.swipeSettingsSummary
 
@@ -102,6 +106,14 @@ internal fun settingsPages(deps: SettingsDeps): List<SettingsPage> = listOf(
         title = R.string.settings_page_calendars,
         subtitle = { calendarsSubtitle() },
         content = { CalendarsPage() },
+    ),
+    SettingsPage(
+        id = "notifications",
+        section = SettingsSection.ORGANISATION,
+        icon = Icons.Outlined.Notifications,
+        title = R.string.settings_page_notifications,
+        subtitle = { null },
+        content = { NotificationsPage() },
     ),
     SettingsPage(
         id = "planning",
@@ -198,5 +210,13 @@ internal fun settingsPages(deps: SettingsDeps): List<SettingsPage> = listOf(
         title = R.string.settings_page_tududi,
         subtitle = { null },
         content = { Panel { TududiConnectionSection() } },
+    ),
+    SettingsPage(
+        id = "sync",
+        section = SettingsSection.DATA,
+        icon = Icons.Outlined.Sync,
+        title = ch.nicolab.cadence.tasks.R.string.tasks_sync_title,
+        subtitle = { syncSettingsSummary() },
+        content = { Panel { SyncSettingsSection() } },
     ),
 )

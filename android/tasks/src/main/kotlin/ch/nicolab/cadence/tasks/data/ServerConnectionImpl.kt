@@ -16,11 +16,11 @@ import ch.nicolab.cadence.tasks.sync.AccountProfile
 import ch.nicolab.cadence.tasks.sync.AuthError
 import ch.nicolab.cadence.tasks.sync.HabitOwnership
 import ch.nicolab.cadence.tasks.sync.HttpSyncApi
-import ch.nicolab.cadence.tasks.sync.ProtocolError
 import ch.nicolab.cadence.tasks.sync.ServerSession
 import ch.nicolab.cadence.tasks.sync.SyncEngine
 import ch.nicolab.cadence.tasks.sync.SyncScheduler
 import ch.nicolab.cadence.tasks.sync.SyncStore
+import ch.nicolab.cadence.tasks.sync.describeFailure
 import java.io.IOException
 import java.time.ZoneId
 import kotlinx.coroutines.CancellationException
@@ -118,10 +118,9 @@ internal class ServerConnectionImpl(
             throw error
         } catch (error: AuthError) {
             Result.failure(IllegalStateException("Clé API refusée", error))
-        } catch (error: ProtocolError) {
-            Result.failure(IllegalStateException("Réponse inattendue du serveur", error))
         } catch (error: IOException) {
-            Result.failure(IllegalStateException("Serveur injoignable", error))
+            // « Injoignable » seulement si rien n'est revenu : une erreur HTTP ou une page inattendue le dit.
+            Result.failure(IllegalStateException(describeFailure(error), error))
         } catch (error: Exception) {
             Result.failure(IllegalStateException("Connexion impossible", error))
         }

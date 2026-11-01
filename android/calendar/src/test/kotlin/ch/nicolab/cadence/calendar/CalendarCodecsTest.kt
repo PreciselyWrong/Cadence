@@ -39,6 +39,22 @@ class CalendarCodecsTest {
     }
 
     @Test
+    fun `les notifications sont actives par défaut et un réglage antérieur au bit reste actif`() {
+        assertEquals(true, CalendarDisplay().notify)
+        assertEquals(true, CalendarCodecs.decodeDisplay(7).notify)
+        assertEquals(false, CalendarCodecs.decodeDisplay(7 or 32).notify)
+        assertEquals(7, CalendarCodecs.encodeDisplay(CalendarDisplay(agenda = true, tasks = true, widget = true)))
+    }
+
+    @Test
+    fun `couper les notifications survit à l'aller-retour avec les autres choix`() {
+        listOf(null, true, false).forEach { used ->
+            val display = CalendarDisplay(agenda = false, tasks = true, widget = true, used = used, notify = false)
+            assertEquals(display, CalendarCodecs.decodeDisplay(CalendarCodecs.encodeDisplay(display)))
+        }
+    }
+
+    @Test
     fun `le choix utilisé survit à l'aller-retour (jamais choisi, oui, non)`() {
         listOf(null, true, false).forEach { used ->
             val display = CalendarDisplay(agenda = false, tasks = true, widget = true, used = used)

@@ -250,10 +250,16 @@ data class TaskChange(
 
 enum class RecurringScope(val wire: String) { THIS("this"), FOLLOWING("following"), ALL("all") }
 
+/** Sort d'une écriture qui demande le serveur : partie tout de suite, ou gardée pour le prochain passage. */
+enum class Delivery { SENT, QUEUED }
+
 sealed interface SyncStatus {
     /** Aucun serveur configuré : l'app fonctionne seule. */
     data object NotConnected : SyncStatus
     data object Syncing : SyncStatus
     data class Idle(val lastSyncAt: Instant?, val pendingOps: Int) : SyncStatus
+
+    /** Le téléphone n'a pas de réseau : tout s'écrit localement, envoyé au retour de la connexion. */
+    data class Offline(val lastSyncAt: Instant?, val pendingOps: Int) : SyncStatus
     data class Failed(val message: String, val pendingOps: Int) : SyncStatus
 }

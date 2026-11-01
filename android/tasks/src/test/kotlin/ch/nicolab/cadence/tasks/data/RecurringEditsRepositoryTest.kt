@@ -127,6 +127,7 @@ class RecurringEditsRepositoryTest {
         override suspend fun pull(cursor: Long, limit: Int): PullPage = error("hors ligne")
         override suspend fun push(ops: List<JsonObject>): List<PushResult> = error("hors ligne")
         override suspend fun moveOccurrence(uid: String, scope: String, occurrenceDate: String, dueDate: String) = error("hors ligne")
+        override suspend fun send(method: String, path: String, body: JsonObject?): JsonObject = error("hors ligne")
     }
 
     private object NoConnection : ServerConnection {

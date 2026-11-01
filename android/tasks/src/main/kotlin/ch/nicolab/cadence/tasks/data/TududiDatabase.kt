@@ -19,8 +19,10 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         OutboxEntity::class,
         FailedOpEntity::class,
         SyncMetaEntity::class,
+        SyncConflictEntity::class,
+        DeferredCallEntity::class,
     ],
-    version = 9,
+    version = 10,
     exportSchema = true,
 )
 abstract class TududiDatabase : RoomDatabase() {
@@ -36,6 +38,8 @@ abstract class TududiDatabase : RoomDatabase() {
     abstract fun outboxDao(): OutboxDao
     abstract fun failedOpDao(): FailedOpDao
     abstract fun syncMetaDao(): SyncMetaDao
+    abstract fun syncConflictDao(): SyncConflictDao
+    abstract fun deferredCallDao(): DeferredCallDao
 }
 
 /** Ajoute le nom de la ligne rejetée au journal des échecs. */
@@ -143,5 +147,24 @@ internal val MIGRATION_8_9 = object : Migration(8, 9) {
                 "`sourceType` TEXT, `sourceUid` TEXT, `fetchStatus` TEXT, `createdAtRaw` TEXT, PRIMARY KEY(`uid`))",
         )
         db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
+    }
+}
+
+/**
+ * Conflits perdus par le téléphone (Réglages, Synchronisation) et appels à l'API faits hors ligne. Le curseur
+ * reste : rien de ce que le serveur envoie ne change.
+ */
+internal val MIGRATION_9_10 = object : Migration(9, 10) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL(
+            "CREATE TABLE IF NOT EXISTS `sync_conflicts` (`id` TEXT NOT NULL, `entity` TEXT NOT NULL, `uid` TEXT NOT NULL, " +
+                "`field` TEXT NOT NULL, `localJson` TEXT NOT NULL, `serverJson` TEXT, `localText` TEXT NOT NULL, " +
+                "`serverText` TEXT, `displayName` TEXT, `atMs` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        )
+        db.execSQL(
+            "CREATE TABLE IF NOT EXISTS `deferred_calls` (`key` TEXT NOT NULL, `method` TEXT NOT NULL, `path` TEXT NOT NULL, " +
+                "`bodyJson` TEXT, `label` TEXT NOT NULL, `createdAtMs` INTEGER NOT NULL, `attempts` INTEGER NOT NULL, " +
+                "`lastError` TEXT, PRIMARY KEY(`key`))",
+        )
     }
 }

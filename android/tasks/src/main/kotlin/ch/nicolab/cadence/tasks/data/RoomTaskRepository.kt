@@ -5,6 +5,10 @@ import androidx.room.withTransaction
 import ch.nicolab.cadence.tasks.ServerConnection
 import ch.nicolab.cadence.tasks.TaskRepository
 import ch.nicolab.cadence.tasks.model.AreaItem
+import ch.nicolab.cadence.tasks.model.Delivery
+import ch.nicolab.cadence.tasks.model.RefusedItem
+import ch.nicolab.cadence.tasks.model.SyncConflictItem
+import ch.nicolab.cadence.tasks.model.SyncConflictText
 import ch.nicolab.cadence.tasks.model.GoalItem
 import ch.nicolab.cadence.tasks.model.IconIds
 import ch.nicolab.cadence.tasks.model.InboxEntry
@@ -28,7 +32,12 @@ import ch.nicolab.cadence.tasks.model.TaskDraft
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskStatus
 import ch.nicolab.cadence.tasks.sync.AuthError
+import ch.nicolab.cadence.tasks.sync.HttpError
 import ch.nicolab.cadence.tasks.sync.Hlc
+import ch.nicolab.cadence.tasks.sync.DeferredCall
+import ch.nicolab.cadence.tasks.sync.NetworkMonitor
+import ch.nicolab.cadence.tasks.sync.describeFailure
+import ch.nicolab.cadence.tasks.sync.moveOccurrenceCall
 import ch.nicolab.cadence.tasks.sync.SyncApi
 import ch.nicolab.cadence.tasks.sync.SyncScheduler
 import ch.nicolab.cadence.tasks.sync.SyncState
@@ -44,6 +53,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonNull
@@ -52,8 +62,8 @@ import kotlinx.serialization.json.JsonPrimitive
 
 /**
  * Chaque écriture met à jour la ligne locale et ajoute son opération dans la même
- * transaction, puis demande une synchronisation. Rien ne dépend du réseau, sauf
- * [moveRecurring] (le décalage d'un jour seul passe par le serveur).
+ * transaction, puis demande une synchronisation. Rien ne dépend du réseau : [moveRecurring]
+ * (le décalage d'un jour seul passe par le serveur) attend dans la file des appels différés.
  */
 internal class RoomTaskRepository(
     private val context: Context,
@@ -66,6 +76,8 @@ internal class RoomTaskRepository(
     /** Suivi du fuseau de l'appareil : les vues se recalculent à chaque changement. */
     private val deviceZone: StateFlow<ZoneId>,
     private val nowMs: () -> Long = System::currentTimeMillis,
+    /** Le téléphone a un réseau ([NetworkMonitor]) : sans lui, la ligne d'état dit « Hors ligne ». */
+    private val online: Flow<Boolean> = NetworkMonitor.online,
 ) : TaskRepository {
     private val taskDao = database.taskDao()
     private val projectDao = database.projectDao()
@@ -124,6 +136,11 @@ internal class RoomTaskRepository(
         writeLink(uid, "status" to JsonPrimitive(status.wire)) { it.copy(status = status.wire) }
     }
 
+    override suspend fun setLinkTags(uid: String, tagUids: List<String>) {
+        val tags = tagUids.distinct()
+        writeLink(uid, "tag_uids" to jsonArray(tags)) { it.copy(tagUidsJson = jsonArray(tags).toString()) }
+    }
+
     private suspend fun writeLink(uid: String, field: Pair<String, JsonElement>, change: (LinkEntity) -> LinkEntity) {
         val clock = hlc.now()
         val written = database.withTransaction {
@@ -147,16 +164,70 @@ internal class RoomTaskRepository(
     override fun observeSyncStatus(): Flow<SyncStatus> = combine(
         connection.observe(),
         syncState,
-        outbox.observeCount(),
+        combine(outbox.observeCount(), database.deferredCallDao().observeCount()) { ops, calls -> ops + calls },
         database.syncMetaDao().observe(RoomSyncStore.LAST_SYNC),
-    ) { info, state, pending, lastSync ->
+        online,
+    ) { info, state, pending, lastSync, isOnline ->
+        val lastSyncAt = lastSync?.toLongOrNull()?.let(Instant::ofEpochMilli)
         when {
             info == null -> SyncStatus.NotConnected
             state.running -> SyncStatus.Syncing
+            // Sans réseau, l'erreur du dernier passage n'est plus l'information utile : tout attend le réseau.
+            !isOnline -> SyncStatus.Offline(lastSyncAt, pending)
             state.lastError != null -> SyncStatus.Failed(state.lastError, pending)
-            else -> SyncStatus.Idle(lastSync?.toLongOrNull()?.let(Instant::ofEpochMilli), pending)
+            else -> SyncStatus.Idle(lastSyncAt, pending)
         }
     }
+
+    override fun observeUnsupportedEntities(): Flow<List<String>> = syncState.map { it.unsupported }.distinctUntilChanged()
+
+    override fun observeConflicts(): Flow<List<SyncConflictItem>> = database.syncConflictDao().observeAll().map { rows ->
+        rows.map { row ->
+            SyncConflictItem(
+                id = row.id,
+                entityLabel = SyncConflictText.entityLabel(row.entity),
+                name = row.displayName,
+                fieldLabel = SyncConflictText.fieldLabel(row.field),
+                localText = row.localText,
+                serverText = row.serverText,
+                atMs = row.atMs,
+                canKeepLocal = row.entity in SyncConflictText.REAPPLICABLE,
+            )
+        }
+    }
+
+    override suspend fun resolveConflict(id: String, keepLocal: Boolean) {
+        val conflict = database.syncConflictDao().get(id) ?: return
+        if (!keepLocal || conflict.entity !in SyncConflictText.REAPPLICABLE) {
+            database.syncConflictDao().delete(id)
+            return
+        }
+        val value = Json.parseToJsonElement(conflict.localJson)
+        val field = mapOf(conflict.field to value)
+        // Une horloge neuve, plus récente que celle du serveur : la valeur du téléphone l'emporte à l'envoi.
+        val clock = hlc.now()
+        database.withTransaction {
+            when (conflict.entity) {
+                "task" -> taskDao.get(conflict.uid)?.let {
+                    taskDao.upsert(WireCodec.taskFromWire(JsonObject(WireCodec.taskToWire(it) + field)))
+                }
+                "note" -> noteDao.get(conflict.uid)?.let {
+                    noteDao.upsert(WireCodec.noteFromWire(JsonObject(WireCodec.noteToWire(it) + field)))
+                }
+                // Les autres lignes prennent la valeur à l'écho du serveur, au passage qui suit.
+                else -> Unit
+            }
+            outbox.insert(LocalOps.upsert(conflict.entity, conflict.uid, field, clock, nowMs()))
+            database.syncConflictDao().delete(id)
+        }
+        afterLocalWrite()
+    }
+
+    override fun observeRefused(): Flow<List<RefusedItem>> = database.failedOpDao().observeRecent(REFUSED_SHOWN).map { rows ->
+        rows.map { RefusedItem(SyncConflictText.entityLabel(it.entity), it.displayName, it.reason, it.atMs) }
+    }
+
+    override suspend fun clearRefused() = database.failedOpDao().clear()
 
     override suspend fun createTask(draft: TaskDraft): String {
         val uid = UUID.randomUUID().toString()
@@ -280,18 +351,24 @@ internal class RoomTaskRepository(
         afterLocalWrite()
     }
 
-    override suspend fun moveRecurring(uid: String, scope: RecurringScope, newDate: LocalDate): Result<Unit> {
+    override suspend fun moveRecurring(uid: String, scope: RecurringScope, newDate: LocalDate): Result<Delivery> {
         val task = taskDao.get(uid) ?: return Result.failure(IllegalArgumentException("Tâche introuvable"))
         val occurrence = occurrenceDayOf(task.dueDateRaw, accountZone().first())
             ?: return Result.failure(IllegalStateException("Pas d'échéance à déplacer"))
         return try {
             api.moveOccurrence(uid, scope.wire, occurrence.toString(), newDate.toString())
             requestSync()
-            Result.success(Unit)
+            Result.success(Delivery.SENT)
         } catch (error: AuthError) {
             Result.failure(IllegalStateException("Clé API refusée", error))
+        } catch (error: HttpError) {
+            if (error.isClientError) {
+                Result.failure(IllegalStateException(describeFailure(error), error))
+            } else {
+                defer(moveOccurrenceCall(uid, scope.wire, occurrence.toString(), newDate.toString()))
+            }
         } catch (error: IOException) {
-            Result.failure(IllegalStateException("Connexion requise", error))
+            defer(moveOccurrenceCall(uid, scope.wire, occurrence.toString(), newDate.toString()))
         }
     }
 
@@ -552,7 +629,27 @@ internal class RoomTaskRepository(
         afterLocalWrite()
     }
 
+    override suspend fun processInboxItem(uid: String) {
+        val clock = hlc.now()
+        val written = database.withTransaction {
+            val existing = inboxDao.get(uid) ?: return@withTransaction false
+            inboxDao.upsert(existing.copy(status = INBOX_PROCESSED))
+            outbox.insert(LocalOps.upsert("inbox_item", uid, mapOf("status" to JsonPrimitive(INBOX_PROCESSED)), clock, nowMs()))
+            true
+        }
+        if (written) afterLocalWrite()
+    }
+
     override fun requestSync() = SyncScheduler.requestNow(context)
+
+    /** Garde un appel à l'API pour le prochain passage ; un appel de même clé est remplacé. */
+    suspend fun defer(call: DeferredCall): Result<Delivery> {
+        database.deferredCallDao().put(
+            DeferredCallEntity(call.key, call.method, call.path, call.body?.toString(), call.label, nowMs()),
+        )
+        requestSync()
+        return Result.success(Delivery.QUEUED)
+    }
 
     private suspend fun writeFields(uid: String, fields: Map<String, JsonElement>) {
         val clock = hlc.now()
@@ -607,10 +704,12 @@ internal class RoomTaskRepository(
     }
 
     private companion object {
+        const val REFUSED_SHOWN = 20
         const val ACTION_COMPLETE_OCCURRENCE = "complete_occurrence"
         const val ACTION_SKIP_OCCURRENCE = "skip_occurrence"
         const val INBOX_STATUS = "added"
         const val INBOX_SOURCE = "android"
+        const val INBOX_PROCESSED = "processed"
         /** Étiquette système de « Plus tard », comme `review/repository.js` du serveur. */
         const val SOMEDAY_TAG = TagPaths.SOMEDAY
     }

@@ -20,6 +20,7 @@ import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.model.TaskItem
 import java.time.Duration
 import java.time.Instant
+import java.time.ZoneId
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -31,8 +32,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 /**
- * Pose une alarme par rappel de tâche ouverte à approcher, et retire les notifications
- * devenues fausses. Les alarmes sont approchées : aucune permission d'alarme exacte.
+ * Pose une alarme par rappel de tâche ouverte à approcher (rappel explicite, ou échéance horaire quand
+ * [TimedReminders] est actif), et retire les notifications devenues fausses. Les alarmes sont exactes si
+ * Android l'autorise, sinon une fenêtre de ±1 minute ([ReminderAlarms]).
  */
 object TaskReminderScheduler {
     const val CHANNEL_ID = "tududi_task_reminders"
@@ -42,7 +44,9 @@ object TaskReminderScheduler {
     internal const val ACTION_SNOOZED_REMINDER = "ch.nicolab.cadence.tasks.reminder.ACTION_SNOOZED_REMINDER"
 
     private const val PREFS = "tududi_reminders"
-    private const val KEY_SCHEDULED_UIDS = "scheduled_uids"
+    /** Ancienne clé : une alarme par tâche, identifiée par son uid seul. */
+    private const val KEY_LEGACY_SCHEDULED_UIDS = "scheduled_uids"
+    private const val KEY_SCHEDULED_ALARMS = "scheduled_alarms"
     private const val KEY_DELIVERED = "delivered"
     private const val KEY_POSTED = "posted"
     // Reports « Plus tard » : locaux à l'appareil, jamais synchronisés.
@@ -64,15 +68,27 @@ object TaskReminderScheduler {
     fun start(context: Context, scope: CoroutineScope) {
         val app = context.applicationContext
         scope.launch {
-            // La plage silencieuse du compte peut changer côté web : elle repose les alarmes comme une tâche modifiée.
-            combine(TasksGraph.repository(app).observeTasks(), periodicTicks(), quietPolicies(app)) { tasks, _, quiet -> tasks to quiet }
-                .collect { (tasks, quiet) -> sync(app, tasks, Instant.now(), quiet) }
+            // La plage silencieuse du compte peut changer côté web, et le réglage des rappels à heure fixe sur le
+            // téléphone : l'un et l'autre repose les alarmes comme une tâche modifiée.
+            combine(
+                TasksGraph.repository(app).observeTasks(),
+                periodicTicks(),
+                quietPolicies(app),
+                TimedRemindersStore(app).changes(),
+            ) { tasks, _, quiet, timed -> Triple(tasks, quiet, timed) }
+                .collect { (tasks, quiet, timed) -> sync(app, tasks, Instant.now(), quiet, timed) }
         }
     }
 
     /** Aligne les alarmes sur la base courante : après démarrage ou après une écriture hors app. */
     suspend fun resync(context: Context) {
-        sync(context, TasksGraph.repository(context).observeTasks().first(), Instant.now(), currentQuiet(context))
+        sync(
+            context,
+            TasksGraph.repository(context).observeTasks().first(),
+            Instant.now(),
+            currentQuiet(context),
+            TimedRemindersStore(context).read(),
+        )
     }
 
     private fun quietPolicies(context: Context): Flow<QuietPolicy> =
@@ -101,11 +117,27 @@ object TaskReminderScheduler {
         }
     }
 
-    internal fun cancel(context: Context, uid: String) {
+    /** Retire l'alarme de la clé [key] (`uid|repère`, voir [ReminderPlan.alarmKey]). */
+    internal fun cancel(context: Context, key: String) {
+        val pending = PendingIntent.getBroadcast(
+            context,
+            key.hashCode(),
+            alarmIntent(context, key.substringBeforeLast('|'), key.substringAfterLast('|').toLongOrNull() ?: 0L),
+            PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE,
+        ) ?: return
+        context.getSystemService(AlarmManager::class.java).cancel(pending)
+        pending.cancel()
+    }
+
+    /** Avant l'identification par repère, l'alarme d'une tâche n'avait que son uid : on la retire encore. */
+    private fun cancelLegacy(context: Context, uid: String) {
         val pending = PendingIntent.getBroadcast(
             context,
             uid.hashCode(),
-            alarmIntent(context, uid),
+            Intent(context, TaskReminderReceiver::class.java)
+                .setAction(ACTION_REMINDER)
+                .setData(Uri.parse("tududi-reminder://task/$uid"))
+                .putExtra(EXTRA_TASK_UID, uid),
             PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE,
         ) ?: return
         context.getSystemService(AlarmManager::class.java).cancel(pending)
@@ -133,20 +165,22 @@ object TaskReminderScheduler {
         }
     }
 
-    private fun sync(context: Context, tasks: List<TaskItem>, now: Instant, quiet: QuietPolicy) {
+    private fun sync(context: Context, tasks: List<TaskItem>, now: Instant, quiet: QuietPolicy, timed: TimedReminders) {
         synchronized(lock) {
             val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
             val delivered = ReminderPlan.pruneDelivered(prefs.stringSet(KEY_DELIVERED), now)
             val storedSnoozes = prefs.stringSet(KEY_SNOOZED)
-            val plan = ReminderPlan.alarms(tasks, delivered, prefs.stringSet(KEY_SCHEDULED_UIDS), storedSnoozes, now, quiet)
-            val alarms = context.getSystemService(AlarmManager::class.java)
+            val plan = ReminderPlan.alarms(
+                tasks, delivered, prefs.stringSet(KEY_SCHEDULED_ALARMS), storedSnoozes, now, quiet, timed, ZoneId.systemDefault(),
+            )
+            prefs.stringSet(KEY_LEGACY_SCHEDULED_UIDS).forEach { cancelLegacy(context, it) }
             plan.staleReminders.forEach { cancel(context, it) }
             // Poser une alarme sur une clé existante la remplace : un rappel déplacé est mis à jour ainsi.
-            plan.reminders.forEach { (uid, alarm) ->
-                alarms.setAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
+            plan.reminders.forEach { (key, alarm) ->
+                ReminderAlarms.arm(
+                    context,
                     alarm.triggerAt.toEpochMilli(),
-                    alarmPendingIntent(context, uid, alarm.reminderAt.toEpochMilli()),
+                    alarmPendingIntent(context, key, alarm.uid, alarm.reminderAt.toEpochMilli()),
                 )
             }
             plan.staleSnoozes.forEach { raw -> TaskSnooze.decode(raw)?.let { cancelSnoozeAlarm(context, it.uid) } }
@@ -158,7 +192,8 @@ object TaskReminderScheduler {
             stale.forEach { notifications.cancel(it.substringBefore('|'), NOTIFICATION_ID) }
 
             prefs.edit()
-                .putStringSet(KEY_SCHEDULED_UIDS, plan.reminders.keys.toSet())
+                .remove(KEY_LEGACY_SCHEDULED_UIDS)
+                .putStringSet(KEY_SCHEDULED_ALARMS, plan.reminders.keys.toSet())
                 .putStringSet(KEY_DELIVERED, delivered)
                 .putStringSet(KEY_POSTED, posted - stale)
                 .putStringSet(KEY_SNOOZED, storedSnoozes - plan.staleSnoozes)
@@ -176,11 +211,11 @@ object TaskReminderScheduler {
     private fun SharedPreferences.stringSet(key: String): Set<String> =
         getStringSet(key, emptySet()).orEmpty().toSet()
 
-    private fun alarmPendingIntent(context: Context, uid: String, reminderAtMillis: Long): PendingIntent =
+    private fun alarmPendingIntent(context: Context, key: String, uid: String, markerMillis: Long): PendingIntent =
         PendingIntent.getBroadcast(
             context,
-            uid.hashCode(),
-            alarmIntent(context, uid).putExtra(EXTRA_REMINDER_AT, reminderAtMillis),
+            key.hashCode(),
+            alarmIntent(context, uid, markerMillis).putExtra(EXTRA_REMINDER_AT, markerMillis),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
 
@@ -210,9 +245,9 @@ object TaskReminderScheduler {
             flag or PendingIntent.FLAG_IMMUTABLE,
         )
 
-    private fun alarmIntent(context: Context, uid: String): Intent =
+    private fun alarmIntent(context: Context, uid: String, markerMillis: Long): Intent =
         Intent(context, TaskReminderReceiver::class.java)
             .setAction(ACTION_REMINDER)
-            .setData(Uri.parse("tududi-reminder://task/$uid"))
+            .setData(Uri.parse("tududi-reminder://task/$uid/$markerMillis"))
             .putExtra(EXTRA_TASK_UID, uid)
 }

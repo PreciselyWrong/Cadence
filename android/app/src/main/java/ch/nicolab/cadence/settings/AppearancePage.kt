@@ -23,6 +23,7 @@ import androidx.compose.material.icons.outlined.Colorize
 import androidx.compose.material.icons.outlined.Contrast
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.LightMode
+import androidx.compose.material.icons.outlined.Notes
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Wallpaper
@@ -148,12 +149,13 @@ internal fun AppearanceSettings() {
 private fun AppearanceOptions(appearance: Appearance, update: ((Appearance) -> Appearance) -> Unit) {
     var freeColourOpen by rememberSaveable { mutableStateOf(false) }
     val materialYouAvailable = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+    val appContext = androidx.compose.ui.platform.LocalContext.current
     RowGroup {
         SettingRow(
             title = stringResource(R.string.settings_free_colour),
             subtitle = stringResource(R.string.settings_free_colour_subtitle),
             icon = Icons.Outlined.Colorize,
-            shape = rowGroupShape(0, 3),
+            shape = rowGroupShape(0, 4),
             trailing = { Icon(Icons.Outlined.Palette, null, tint = cadence.primary, modifier = Modifier.size(Size.icon)) },
             onClick = { freeColourOpen = true },
         )
@@ -163,7 +165,7 @@ private fun AppearanceOptions(appearance: Appearance, update: ((Appearance) -> A
             icon = Icons.Outlined.Wallpaper,
             checked = appearance.materialYou && materialYouAvailable,
             onCheckedChange = { checked -> update { it.copy(materialYou = checked) } },
-            shape = rowGroupShape(1, 3),
+            shape = rowGroupShape(1, 4),
             enabled = materialYouAvailable,
         )
         SettingToggleRow(
@@ -172,7 +174,17 @@ private fun AppearanceOptions(appearance: Appearance, update: ((Appearance) -> A
             icon = Icons.Outlined.Contrast,
             checked = appearance.pureBlack,
             onCheckedChange = { checked -> update { it.copy(pureBlack = checked) } },
-            shape = rowGroupShape(2, 3),
+            shape = rowGroupShape(2, 4),
+        )
+        val rowDisplay = remember { ch.nicolab.cadence.tasks.ui.RowDisplayStore(appContext) }
+        val showDescription = ch.nicolab.cadence.tasks.ui.rememberShowTaskDescription()
+        SettingToggleRow(
+            title = stringResource(R.string.settings_show_task_description),
+            subtitle = stringResource(R.string.settings_show_task_description_subtitle),
+            icon = Icons.Outlined.Notes,
+            checked = showDescription,
+            onCheckedChange = rowDisplay::setShowDescription,
+            shape = rowGroupShape(3, 4),
         )
     }
 

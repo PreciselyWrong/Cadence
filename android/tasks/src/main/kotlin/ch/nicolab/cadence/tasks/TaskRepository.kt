@@ -1,6 +1,9 @@
 package ch.nicolab.cadence.tasks
 
 import ch.nicolab.cadence.tasks.model.AreaItem
+import ch.nicolab.cadence.tasks.model.Delivery
+import ch.nicolab.cadence.tasks.model.RefusedItem
+import ch.nicolab.cadence.tasks.model.SyncConflictItem
 import ch.nicolab.cadence.tasks.model.GoalItem
 import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.model.LinkItem
@@ -48,12 +51,28 @@ interface TaskRepository {
 
     /** Statut d'un lien (Tester, Garder, Plus tard, Jeter, ou Nouveau). Sans effet si le lien est inconnu. */
     suspend fun setLinkStatus(uid: String, status: LinkStatus)
+
+    /** Étiquettes d'un lien (remplace l'ensemble). Sans effet si le lien est inconnu. */
+    suspend fun setLinkTags(uid: String, tagUids: List<String>)
     fun observeInbox(): Flow<List<InboxEntry>>
 
     /** Notes, épinglées d'abord puis de la plus récente à la plus ancienne. */
     fun observeNotes(): Flow<List<NoteItem>>
     fun observeNote(uid: String): Flow<NoteItem?>
     fun observeSyncStatus(): Flow<SyncStatus>
+
+    /** Entités du téléphone que le serveur connecté ne connaît pas encore (serveur plus ancien). */
+    fun observeUnsupportedEntities(): Flow<List<String>>
+
+    /** Conflits perdus par le téléphone, les plus récents d'abord. */
+    fun observeConflicts(): Flow<List<SyncConflictItem>>
+
+    /** [keepLocal] renvoie la valeur du téléphone (nouvelle horloge, elle l'emporte) ; sinon le conflit est classé. */
+    suspend fun resolveConflict(id: String, keepLocal: Boolean)
+
+    /** Dernières opérations refusées par le serveur. */
+    fun observeRefused(): Flow<List<RefusedItem>>
+    suspend fun clearRefused()
 
     /** Retourne l'uid de la tâche créée. */
     suspend fun createTask(draft: TaskDraft): String
@@ -69,10 +88,10 @@ interface TaskRepository {
     suspend fun deleteTask(uid: String)
 
     /**
-     * Déplace l'occurrence courante d'une tâche récurrente. Demande le réseau :
-     * renvoie un échec explicite hors ligne.
+     * Déplace l'occurrence courante d'une tâche récurrente, sur le serveur (il déplace aussi la règle). Hors
+     * ligne, l'appel est gardé et part au prochain passage ([Delivery.QUEUED]).
      */
-    suspend fun moveRecurring(uid: String, scope: RecurringScope, newDate: LocalDate): Result<Unit>
+    suspend fun moveRecurring(uid: String, scope: RecurringScope, newDate: LocalDate): Result<Delivery>
 
     /**
      * Modifie une occurrence d'une série selon [scope] : « celle-ci » crée une tâche simple et laisse la
@@ -128,6 +147,9 @@ interface TaskRepository {
 
     suspend fun captureInbox(text: String): String
     suspend fun deleteInboxItem(uid: String)
+
+    /** Marque une idée traitée : elle quitte l'Inbox sans être supprimée (un lien reste dans la bibliothèque). */
+    suspend fun processInboxItem(uid: String)
 
     /** Demande une synchronisation au plus tôt (sans attendre la fin). */
     fun requestSync()

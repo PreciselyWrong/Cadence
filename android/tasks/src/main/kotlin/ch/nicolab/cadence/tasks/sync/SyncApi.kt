@@ -10,6 +10,19 @@ class ProtocolError(cause: Throwable? = null) : IOException("Réponse inattendue
 /** Le journal du serveur ne remonte plus jusqu'au curseur (HTTP 410) : il faut reprendre un instantané. */
 class ResetRequired : IOException("Curseur trop ancien, instantané requis")
 
+/**
+ * Le serveur a répondu, mais par une erreur HTTP (hors 401/403 et 410 `reset_required`) : il est joignable.
+ * [error] est le code d'erreur lu dans le corps (`{"error": "unknown_entity"}`), s'il y en a un.
+ */
+class HttpError(val code: Int, val error: String?) :
+    IOException(if (error == null) "HTTP $code" else "HTTP $code : $error") {
+    /** Erreur propre à la requête (corps refusé) : une autre requête peut réussir. */
+    val isClientError get() = code in 400..499 && code != 404 && code != 408 && code != 429
+
+    /** Panne passagère du serveur ou de son proxy : rien à isoler, on réessaie plus tard. */
+    val isUnavailable get() = code == 502 || code == 503 || code == 504 || code == 408 || code == 429
+}
+
 /** Clé API refusée ou absente : il faut que l'utilisateur la renouvelle. */
 class AuthError(message: String) : Exception(message)
 
@@ -45,7 +58,13 @@ data class AccountProfile(
     val uid: String? = null,
 )
 
-data class PushResult(val opId: String, val status: String, val reason: String?)
+/** [rejectedFields] : champs d'un `conflict` dont la valeur du serveur, plus récente, a été gardée. */
+data class PushResult(
+    val opId: String,
+    val status: String,
+    val reason: String?,
+    val rejectedFields: List<String> = emptyList(),
+)
 
 /**
  * Protocole `/api/v1/sync` de Tududi. Les erreurs réseau remontent en
@@ -58,6 +77,9 @@ interface SyncApi {
     suspend fun pull(cursor: Long, limit: Int): PullPage
     suspend fun push(ops: List<JsonObject>): List<PushResult>
 
-    /** Déplace une occurrence récurrente ; demande le réseau, pas de file d'attente. */
+    /** Déplace une occurrence récurrente ; demande le réseau (hors ligne, l'appel passe par [send] différé). */
     suspend fun moveOccurrence(uid: String, scope: String, occurrenceDate: String, dueDate: String)
+
+    /** Appel direct à l'API (revue, routine, déplacement d'occurrence), rejoué depuis la file des appels différés. */
+    suspend fun send(method: String, path: String, body: JsonObject?): JsonObject
 }

@@ -264,6 +264,11 @@ internal class AgendaViewModel(application: Application) : AndroidViewModel(appl
         calendar.setDisplay(item.calendar.id, item.display.copy(tasks = shown, used = if (shown) true else item.display.used))
     }
 
+    /** « Notifications » d'un agenda : activer sur un agenda masqué le rend, comme les autres choix. */
+    fun setCalendarNotify(item: CalendarWithDisplay, notify: Boolean) = viewModelScope.launch {
+        calendar.setDisplay(item.calendar.id, item.display.copy(notify = notify, used = if (notify) true else item.display.used))
+    }
+
     fun toggleEvent(key: EventInstanceKey) = viewModelScope.launch {
         calendar.toggleDone(key)
     }

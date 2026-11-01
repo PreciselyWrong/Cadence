@@ -8,6 +8,7 @@ import ch.nicolab.cadence.calendar.CalendarSource
 import ch.nicolab.cadence.calendar.DeviceCalendar
 import ch.nicolab.cadence.calendar.EventDoneStore
 import ch.nicolab.cadence.calendar.EventHiddenStore
+import ch.nicolab.cadence.calendar.EventReminderSettings
 import ch.nicolab.cadence.calendar.EventInstanceKey
 import ch.nicolab.cadence.calendar.HiddenEvent
 import ch.nicolab.cadence.calendar.TimeRange
@@ -38,15 +39,21 @@ internal class InMemoryCalendarStore :
     private val hiddenState = MutableStateFlow<Set<HiddenEvent>>(emptySet())
     private val displayState = MutableStateFlow<Map<Long, CalendarDisplay>>(emptyMap())
     private val globalState = MutableStateFlow(CalendarGlobalSettings())
+    private val reminderState = MutableStateFlow(EventReminderSettings())
     private val doneState = MutableStateFlow<Set<EventInstanceKey>>(emptySet())
 
     override val displays: Flow<Map<Long, CalendarDisplay>> = displayState
     override val global: Flow<CalendarGlobalSettings> = globalState
+    override val reminders: Flow<EventReminderSettings> = reminderState
     override val done: Flow<Set<EventInstanceKey>> = doneState
     override val hidden: Flow<Set<HiddenEvent>> = hiddenState
 
     override suspend fun setDisplay(calendarId: Long, display: CalendarDisplay) {
         displayState.value = displayState.value + (calendarId to display)
+    }
+
+    override suspend fun setReminders(settings: EventReminderSettings) {
+        reminderState.value = settings
     }
 
     override suspend fun setCheckEvents(enabled: Boolean) {

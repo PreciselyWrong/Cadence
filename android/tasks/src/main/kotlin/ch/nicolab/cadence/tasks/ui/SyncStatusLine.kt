@@ -14,25 +14,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.SyncStatus
+import ch.nicolab.cadence.tasks.model.SyncStatusText
+import java.time.Instant
 
-/** Petite ligne d'état de synchronisation ; invisible quand tout est à jour. */
+/**
+ * Petite ligne d'état de synchronisation ; invisible quand tout est à jour dans les listes ([always] la montre
+ * aussi alors, pour Réglages : « Synchronisé · il y a 2 min »).
+ */
 @Composable
-internal fun SyncStatusLine(status: SyncStatus, modifier: Modifier = Modifier) {
-    if (status is SyncStatus.Idle && status.pendingOps == 0) return
+internal fun SyncStatusLine(status: SyncStatus, modifier: Modifier = Modifier, always: Boolean = false) {
+    if (!always && status is SyncStatus.Idle && status.pendingOps == 0) return
 
-    val text = when (status) {
-        SyncStatus.NotConnected -> stringResource(R.string.tasks_sync_not_connected)
-        SyncStatus.Syncing -> stringResource(R.string.tasks_sync_running)
-        is SyncStatus.Idle -> pluralStringResource(R.plurals.tasks_sync_pending, status.pendingOps, status.pendingOps)
-        is SyncStatus.Failed -> status.message
-    }
+    val text = SyncStatusText.line(status, Instant.now())
     val icon = when (status) {
-        SyncStatus.NotConnected -> Icons.Outlined.CloudOff
+        SyncStatus.NotConnected, is SyncStatus.Offline -> Icons.Outlined.CloudOff
         is SyncStatus.Failed -> Icons.Outlined.ErrorOutline
         else -> Icons.Outlined.Sync
     }

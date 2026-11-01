@@ -27,7 +27,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import android.content.Context
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.platform.LocalContext
+import ch.nicolab.cadence.tasks.model.LinkDecision
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -54,6 +57,7 @@ fun InboxScreen(modifier: Modifier = Modifier, onOpenSearch: () -> Unit = {}, on
     var selectedNoteUid by rememberSaveable { mutableStateOf<String?>(null) }
     var captureOpen by rememberSaveable { mutableStateOf(false) }
     var linksOpen by rememberSaveable { mutableStateOf(false) }
+    var triageOpen by rememberSaveable { mutableStateOf(false) }
     val ideas by viewModel.inbox.collectAsStateWithLifecycle()
     val syncStatus by viewModel.syncStatus.collectAsStateWithLifecycle()
     DeletionUndoEffect(viewModel, snackbar)
@@ -99,6 +103,7 @@ fun InboxScreen(modifier: Modifier = Modifier, onOpenSearch: () -> Unit = {}, on
                         viewModel = viewModel,
                         captureFocus = captureFocus,
                         onOpen = { selectedTaskUid = it.uid },
+                        onTriage = { triageOpen = true },
                         modifier = Modifier.fillMaxSize(),
                     )
                 }
@@ -131,20 +136,20 @@ fun InboxScreen(modifier: Modifier = Modifier, onOpenSearch: () -> Unit = {}, on
         NoteScreen(viewModel, uid, isNew = false, onBack = { selectedNoteUid = null })
     }
     if (linksOpen) LinksScreen(onBack = { linksOpen = false })
+    if (triageOpen) LinkTriageScreen(viewModel, onBack = { triageOpen = false })
 }
 
-/** Bandeau « Annuler » des suppressions de notes et d'idées, sur l'écran qui les montre. */
+/** Bandeau « Annuler » des suppressions de notes et d'idées et des décisions sur un lien, sur l'écran qui les montre. */
 @Composable
 internal fun DeletionUndoEffect(viewModel: TasksViewModel, snackbar: SnackbarHostState) {
-    val noteDeleted = stringResource(R.string.tasks_note_deleted)
-    val ideaDeleted = stringResource(R.string.tasks_idea_deleted)
+    val context = LocalContext.current
     val undoLabel = stringResource(R.string.tasks_undo)
     LaunchedEffect(viewModel) {
         viewModel.deletions.collect { deletion ->
             snackbar.currentSnackbarData?.dismiss()
             launch {
                 val result = snackbar.showSnackbar(
-                    message = if (deletion.kind == DeletionKind.Note) noteDeleted else ideaDeleted,
+                    message = deletionMessage(context, deletion),
                     actionLabel = undoLabel,
                     duration = SnackbarDuration.Short,
                 )
@@ -152,4 +157,18 @@ internal fun DeletionUndoEffect(viewModel: TasksViewModel, snackbar: SnackbarHos
             }
         }
     }
+}
+
+private fun deletionMessage(context: Context, deletion: PendingDeletion): String = when (deletion.kind) {
+    DeletionKind.Note -> context.getString(R.string.tasks_note_deleted)
+    DeletionKind.Idea -> context.getString(R.string.tasks_idea_deleted)
+    DeletionKind.Link -> context.getString(
+        when (deletion.decision) {
+            LinkDecision.KEEP -> R.string.links_decided_kept
+            LinkDecision.TEST -> R.string.links_decided_test
+            LinkDecision.LATER -> R.string.links_decided_later
+            LinkDecision.DROP, null -> R.string.links_decided_dropped
+        },
+        deletion.title.orEmpty(),
+    )
 }

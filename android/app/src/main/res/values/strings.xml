@@ -543,6 +543,8 @@
     <string name="settings_page_widgets">Widgets</string>
     <string name="settings_page_appearance">Apparence</string>
     <string name="settings_appearance_subtitle">%1$s · %2$s</string>
+    <string name="settings_show_task_description">Afficher la description sous le titre</string>
+    <string name="settings_show_task_description_subtitle">Deux lignes de la note, dans les listes de tâches</string>
     <string name="settings_appearance_theme">Thème</string>
     <string name="settings_appearance_accent">Couleur d\'accent</string>
     <string name="settings_appearance_accent_default">Par défaut</string>

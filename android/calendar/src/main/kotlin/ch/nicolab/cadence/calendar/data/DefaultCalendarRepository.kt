@@ -10,6 +10,7 @@ import ch.nicolab.cadence.calendar.CalendarSurface
 import ch.nicolab.cadence.calendar.CalendarWithDisplay
 import ch.nicolab.cadence.calendar.DeviceCalendar
 import ch.nicolab.cadence.calendar.EventDoneStore
+import ch.nicolab.cadence.calendar.EventReminderSettings
 import ch.nicolab.cadence.calendar.EventHiddenStore
 import ch.nicolab.cadence.calendar.HiddenEvent
 import ch.nicolab.cadence.calendar.EventInstanceKey
@@ -56,6 +57,8 @@ internal class DefaultCalendarRepository(
 
     override val globalSettings: Flow<CalendarGlobalSettings> = settings.global
 
+    override val reminderSettings: Flow<EventReminderSettings> = settings.reminders
+
     override fun calendars(): Flow<List<CalendarWithDisplay>> = combine(
         ticks.mapLatest { readCalendars() },
         settings.displays,
@@ -81,6 +84,15 @@ internal class DefaultCalendarRepository(
 
     override suspend fun setHideDone(enabled: Boolean) {
         settings.setHideDone(enabled)
+    }
+
+    override suspend fun setReminderSettings(settings: EventReminderSettings) {
+        this.settings.setReminders(settings)
+    }
+
+    override suspend fun markDone(key: EventInstanceKey) {
+        if (!settings.global.first().checkEvents) return
+        doneStore.setDone(key, true)
     }
 
     override suspend fun hideEvent(event: HiddenEvent) {

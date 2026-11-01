@@ -49,4 +49,21 @@ Entity `link` (schema 4): fields `note`, `status`; server fields listed above; l
 ## Clients
 
 - **Web**: `/links` (`frontend/components/Links/`): search, kind, status (default: not dropped), tag, site and sort filters, remembered per browser; cards with title, two lines of description, domain, kind badge, GitHub stats, README start for repositories, note (click to write, Enter saves), tags, status buttons, open, go to the source. In the inbox, an item with a link shows the link card and its note; the item's text is shown only when it says more than the note.
-- **Android**: Links screen from the Inbox header (search, kind and "Jetés" chips, same cards, note in a small dialog, status chips); inbox ideas show the link summary and its note, editable.
+- **Android**: Links screen from the Inbox header (search, kind and "Jetés" chips, same cards, note in a small dialog, status chips, tag picker); inbox ideas that hold a link are triaged in one tap (below). All writes go through the outbox (`link` note, status, `tag_uids`; `inbox_item` status), so triage works offline.
+
+### Android inbox triage
+
+- **Card**: title, 1-2 lines of description, domain, kind, GitHub stars, the user's note. Tapping the card unfolds the README start, an inline "Ajouter une note" field (saved on Done, on leaving the field and before any decision) and the tags; "Ouvrir" is a separate icon button.
+- **Decisions** (calm chips; each marks the inbox item `processed`, so it leaves the Inbox but is never deleted, and the link stays in the library):
+
+| Chip | Link status | Also |
+|---|---|---|
+| Garder | `kept` | |
+| À tester | `tested` | creates the task "Tester : <title>" (note: the URL then the user's note) in the chosen project or none |
+| Plus tard | `parked` | review date today + 30 days, kept on the device (the server has no review field) |
+| Jeter | `dropped` | |
+
+  Writes happen after a 4.5 s window; the snackbar names the link and "Annuler" drops them. "Plus…" keeps Aujourd'hui / Planifier / Projet to turn the idea into a task (that path deletes the inbox item, as before).
+- **Swipe** on a link card: right = Garder, left = Jeter (fixed; the task swipe configuration is task-specific).
+- **Trier les liens (n)**: shown from two links; one link at a time, full width, same four decisions plus "Passer". The queue is the Inbox links, oldest first; a skipped link goes to the end (order kept on the device), so reopening resumes where the user stopped.
+- The decision-to-writes mapping is `model/LinkTriage.kt` (pure, tested in `LinkTriageTest`); the repository additions are `TaskRepository.setLinkTags` and `processInboxItem`.

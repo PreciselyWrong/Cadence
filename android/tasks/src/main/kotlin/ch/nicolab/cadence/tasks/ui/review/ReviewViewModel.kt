@@ -9,6 +9,7 @@ import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.model.Decision
 import ch.nicolab.cadence.tasks.model.DecisionContext
+import ch.nicolab.cadence.tasks.model.Delivery
 import ch.nicolab.cadence.tasks.model.Funnel
 import ch.nicolab.cadence.tasks.model.ProjectStatus
 import ch.nicolab.cadence.tasks.model.ReviewDecisions
@@ -111,12 +112,12 @@ internal class ReviewViewModel(application: Application) : AndroidViewModel(appl
         viewModelScope.launch { review.weeklyRoutineExists().onSuccess { _routineMissing.value = !it } }
     }
 
-    /** « Planifier une revue le vendredi » : tâche récurrente sans rappel, créée au toucher seulement, en ligne. */
+    /** « Planifier une revue le vendredi » : tâche récurrente sans rappel, créée au toucher seulement (hors ligne : au retour du réseau). */
     fun planRoutine() = run("routine") {
         review.planWeeklyRoutine(getString(R.string.review_routine_name))
-            .onSuccess {
+            .onSuccess { delivery ->
                 _routineMissing.value = false
-                _messages.tryEmit(getString(R.string.review_routine_planned))
+                _messages.tryEmit(sentOrQueued(delivery, R.string.review_routine_planned))
             }
             .onFailure { _messages.tryEmit(getString(R.string.review_online_only)) }
     }
@@ -174,10 +175,13 @@ internal class ReviewViewModel(application: Application) : AndroidViewModel(appl
         handled.value += "project:${project.uid}"
     }
 
-    /** « Garder tel quel » : `projects.reviewed_at` n'est pas synchronisé, l'appel demande le réseau. */
+    /** « Garder tel quel » : `projects.reviewed_at` n'est pas synchronisé ; hors ligne, l'appel attend le réseau. */
     fun keepProject(project: ReviewProject) = run("project:${project.uid}") {
-        review.keepProject(project.uid)
-            .onSuccess { handled.value += "project:${project.uid}" }
+        review.keepProject(project.uid, project.name)
+            .onSuccess { delivery ->
+                handled.value += "project:${project.uid}"
+                if (delivery == Delivery.QUEUED) _messages.tryEmit(getString(R.string.tasks_sync_offline_queued))
+            }
             .onFailure { _messages.tryEmit(getString(R.string.review_online_only)) }
     }
 
@@ -190,9 +194,9 @@ internal class ReviewViewModel(application: Application) : AndroidViewModel(appl
 
     fun saveCapacity(minutes: Int?) = run("capacity") {
         review.saveWeekCapacity(minutes)
-            .onSuccess {
-                _messages.tryEmit(getString(R.string.review_capacity_saved))
-                load()
+            .onSuccess { delivery ->
+                _messages.tryEmit(sentOrQueued(delivery, R.string.review_capacity_saved))
+                if (delivery == Delivery.SENT) load()
             }
             .onFailure { _messages.tryEmit(getString(R.string.review_online_only)) }
     }
@@ -223,4 +227,8 @@ internal class ReviewViewModel(application: Application) : AndroidViewModel(appl
     }
 
     private fun getString(res: Int, vararg args: Any): String = getApplication<Application>().getString(res, *args)
+
+    /** Envoyé : le message de l'action. Gardé hors ligne : il partira au retour du réseau. */
+    private fun sentOrQueued(delivery: Delivery, sent: Int): String =
+        if (delivery == Delivery.SENT) getString(sent) else getString(R.string.tasks_sync_offline_queued)
 }

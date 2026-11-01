@@ -80,23 +80,26 @@ data class EventDetail(
 }
 
 /** Surface de Cadence où un agenda peut apparaître. */
-enum class CalendarSurface { AGENDA, TASKS, WIDGET }
+enum class CalendarSurface { AGENDA, TASKS, WIDGET, REMINDERS }
 
 /**
  * Où les événements d'un agenda apparaissent. Les valeurs par défaut sont celles d'un agenda neuf.
  *
  * @property used « Utiliser dans Cadence » ; null tant que l'utilisateur n'a pas choisi (voir [isUsed]).
+ * @property notify « Notifications » : les événements de l'agenda sonnent (oui par défaut).
  */
 data class CalendarDisplay(
     val agenda: Boolean = true,
     val tasks: Boolean = true,
     val widget: Boolean = false,
     val used: Boolean? = null,
+    val notify: Boolean = true,
 ) {
     fun shows(surface: CalendarSurface): Boolean = when (surface) {
         CalendarSurface.AGENDA -> agenda
         CalendarSurface.TASKS -> tasks
         CalendarSurface.WIDGET -> widget
+        CalendarSurface.REMINDERS -> notify
     }
 }
 
@@ -118,6 +121,19 @@ fun CalendarDisplay.hiddenEverywhere(hidden: Boolean): CalendarDisplay = copy(us
 data class CalendarGlobalSettings(
     val checkEvents: Boolean = true,
     val hideDone: Boolean = false,
+)
+
+/**
+ * Rappels des événements d'agenda, communs à tous les agendas (le réglage par agenda est [CalendarDisplay.notify]).
+ *
+ * @property enabled « Rappeler les événements ».
+ * @property leadMinutes avance sur le début : 0, 5, 10, 15 ou 30 minutes (voir `ReminderLead`).
+ * @property allDayDigest « Résumé des journées entières à 8 h » : une notification par jour au lieu d'une par événement.
+ */
+data class EventReminderSettings(
+    val enabled: Boolean = true,
+    val leadMinutes: Long = 10,
+    val allDayDigest: Boolean = false,
 )
 
 data class CalendarWithDisplay(

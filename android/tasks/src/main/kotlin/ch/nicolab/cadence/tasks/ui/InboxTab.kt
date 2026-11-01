@@ -71,6 +71,8 @@ import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.model.TaskItem
 
+private const val TRIAGE_MIN_LINKS = 2
+
 /**
  * Capture rapide : le champ en tête envoie la saisie à la boîte de réception.
  * « Convertir en tâche » ouvre l'ajout rapide pré-rempli, puis supprime l'entrée.
@@ -82,11 +84,11 @@ internal fun InboxTab(
     viewModel: TasksViewModel,
     captureFocus: FocusRequester,
     onOpen: (TaskItem) -> Unit,
+    onTriage: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val entries by viewModel.inbox.collectAsStateWithLifecycle()
     val links by viewModel.links.collectAsStateWithLifecycle()
-    var notingLink by remember { mutableStateOf<LinkItem?>(null) }
     val unsorted by viewModel.unsorted.collectAsStateWithLifecycle()
     val moment by viewModel.moment.collectAsStateWithLifecycle()
     val projectNames = rememberProjectNames(viewModel)
@@ -104,6 +106,8 @@ internal fun InboxTab(
         }
     }
 
+    val linkCount = remember(entries, links) { entries.count { LinkLists.forEntry(links, it.uid, it.content) != null } }
+
     LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
         item(key = "capture") {
             CaptureField(
@@ -116,19 +120,34 @@ internal fun InboxTab(
         if (entries.isEmpty()) {
             item { EmptyState(R.string.tasks_inbox_empty) }
         }
+        if (linkCount >= TRIAGE_MIN_LINKS) {
+            item(key = "triage") { TriageEntry(linkCount, onTriage, Modifier.padding(bottom = Space.md)) }
+        }
         items(entries, key = { it.uid }) { entry ->
-            IdeaRow(
-                modifier = Modifier.padding(bottom = Space.sm),
-                entry = entry,
-                link = remember(links, entry) { LinkLists.forEntry(links, entry.uid, entry.content) },
-                onEditLinkNote = { notingLink = it },
-                previews = viewModel.linkPreviews,
-                onOpen = { converting = entry },
-                onToday = { viewModel.convertIdea(entry, TaskDraft(name = entry.content, dueDate = moment.today)) },
-                onSchedule = { scheduling = entry },
-                onProject = { filing = entry },
-                onDelete = { viewModel.deleteIdeaWithUndo(entry.uid) },
-            )
+            val link = remember(links, entry) { LinkLists.forEntry(links, entry.uid, entry.content) }
+            val onToday = { viewModel.convertIdea(entry, TaskDraft(name = entry.content, dueDate = moment.today)) }
+            if (link != null) {
+                LinkIdeaCard(
+                    entry = entry,
+                    link = link,
+                    viewModel = viewModel,
+                    onToday = onToday,
+                    onSchedule = { scheduling = entry },
+                    onProject = { filing = entry },
+                    modifier = Modifier.padding(bottom = Space.sm),
+                )
+            } else {
+                IdeaRow(
+                    modifier = Modifier.padding(bottom = Space.sm),
+                    entry = entry,
+                    previews = viewModel.linkPreviews,
+                    onOpen = { converting = entry },
+                    onToday = onToday,
+                    onSchedule = { scheduling = entry },
+                    onProject = { filing = entry },
+                    onDelete = { viewModel.deleteIdeaWithUndo(entry.uid) },
+                )
+            }
         }
         if (unsorted.isNotEmpty()) {
             item { SectionHeader(title = stringResource(R.string.tasks_section_unsorted)) }
@@ -136,13 +155,6 @@ internal fun InboxTab(
         }
     }
 
-    notingLink?.let { link ->
-        LinkNoteDialog(
-            initial = link.note,
-            onSave = { viewModel.setLinkNote(link.uid, it); notingLink = null },
-            onDismiss = { notingLink = null },
-        )
-    }
     scheduling?.let { entry ->
         TaskDatePickerDialog(
             initial = moment.today,
@@ -218,16 +230,14 @@ private fun CaptureField(
 }
 
 /**
- * Idée de la boîte : carte arrondie, texte (ou aperçu du lien quand l'idée n'est qu'un lien) et trois
- * actions en pastilles de texte. Glisser vers la gauche supprime, avec « Annuler » ; toucher le texte
+ * Idée de la boîte sans lien enregistré : carte arrondie, texte (avec l'aperçu d'un lien pas encore lu par
+ * le serveur) et trois actions en pastilles de texte. Une idée au lien enregistré est une [LinkIdeaCard]. Glisser vers la gauche supprime, avec « Annuler » ; toucher le texte
  * ouvre l'ajout complet.
  */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 private fun IdeaRow(
     entry: InboxEntry,
-    link: LinkItem?,
-    onEditLinkNote: (LinkItem) -> Unit,
     previews: LinkPreviews,
     onOpen: () -> Unit,
     onToday: () -> Unit,
@@ -273,32 +283,14 @@ private fun IdeaRow(
                 Modifier.fillMaxWidth().clickable(onClick = onOpen),
                 verticalArrangement = Arrangement.spacedBy(Space.sm),
             ) {
-                if (LinkLists.showsText(entry.content, link)) {
-                    Text(
-                        text = entry.content,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = palette.onSurface,
-                        maxLines = 3,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                }
-                if (link == null) LinkPreviewList(entry.content, previews, limit = 1)
-            }
-            // Le lien enregistré : ce qu'il est (titre, description, domaine), puis la note, modifiable.
-            link?.let { saved ->
-                val uriHandler = LocalUriHandler.current
-                Column(
-                    Modifier
-                        .fillMaxWidth()
-                        .clip(Radius.Control)
-                        .background(palette.containerHigh)
-                        .clickable(role = Role.Button) { runCatching { uriHandler.openUri(saved.url) } }
-                        .padding(Space.md),
-                    verticalArrangement = Arrangement.spacedBy(Space.xs),
-                ) {
-                    LinkSummary(saved, descriptionLines = 1)
-                }
-                LinkNoteLine(saved.note) { onEditLinkNote(saved) }
+                Text(
+                    text = entry.content,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = palette.onSurface,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                LinkPreviewList(entry.content, previews, limit = 1)
             }
             // Passe à la ligne plutôt que de rogner une pastille en grande police.
             FlowRow(
@@ -313,20 +305,33 @@ private fun IdeaRow(
     }
 }
 
-/** Action rapide en pastille de texte : le verbe est écrit, rien ne se lit comme « fait ». */
+/**
+ * Action rapide en pastille de texte : le verbe est écrit, rien ne se lit comme « fait ». [quiet] grise la
+ * pastille pour les gestes secondaires ; [tall] l'agrandit pour le tri en série.
+ */
 @Composable
-private fun QuickPill(label: String, onClick: () -> Unit) {
+internal fun QuickPill(
+    label: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    quiet: Boolean = false,
+    tall: Boolean = false,
+) {
     val palette = cadence
     Box(
-        Modifier
-            .heightIn(min = Size.tab)
+        modifier
+            .heightIn(min = if (tall) Size.control else Size.tab)
             .clip(Radius.Pill)
-            .background(palette.primaryContainer)
+            .background(if (quiet) palette.containerHigh else palette.primaryContainer)
             .clickable(role = Role.Button, onClick = onClick)
             .padding(horizontal = Space.lg),
         contentAlignment = Alignment.Center,
     ) {
-        Text(label, style = MaterialTheme.typography.labelLarge, color = palette.onPrimaryContainer)
+        Text(
+            label,
+            style = MaterialTheme.typography.labelLarge,
+            color = if (quiet) palette.onSurfaceVariant else palette.onPrimaryContainer,
+        )
     }
 }
 

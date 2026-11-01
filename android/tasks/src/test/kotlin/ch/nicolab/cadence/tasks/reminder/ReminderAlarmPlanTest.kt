@@ -30,7 +30,7 @@ class ReminderAlarmPlanTest {
 
         val plan = ReminderPlan.alarms(listOf(task("t", reminder)), emptySet(), emptySet(), emptySet(), now, quiet)
 
-        val alarm = plan.reminders.getValue("t")
+        val alarm = plan.reminders.getValue(ReminderPlan.alarmKey("t", reminder))
         assertEquals(reminder, alarm.reminderAt)
         assertEquals(at("2026-11-03T07:00:00"), alarm.triggerAt)
     }
@@ -42,7 +42,7 @@ class ReminderAlarmPlanTest {
 
         val plan = ReminderPlan.alarms(listOf(task("t", reminder)), emptySet(), emptySet(), emptySet(), now, quiet)
 
-        assertEquals(reminder, plan.reminders.getValue("t").triggerAt)
+        assertEquals(reminder, plan.reminders.getValue(ReminderPlan.alarmKey("t", reminder)).triggerAt)
     }
 
     @Test
@@ -52,7 +52,7 @@ class ReminderAlarmPlanTest {
 
         val plan = ReminderPlan.alarms(listOf(task("t", reminder)), emptySet(), emptySet(), emptySet(), now, quiet)
 
-        assertEquals(at("2026-11-03T07:00:00"), plan.reminders.getValue("t").triggerAt)
+        assertEquals(at("2026-11-03T07:00:00"), plan.reminders.getValue(ReminderPlan.alarmKey("t", reminder)).triggerAt)
     }
 
     @Test
@@ -60,9 +60,13 @@ class ReminderAlarmPlanTest {
         val now = at("2026-11-02T08:00:00")
         val tasks = listOf(task("garde", at("2026-11-02T18:00:00")), task("fermee", at("2026-11-02T18:00:00"), TaskStatus.DONE))
 
-        val plan = ReminderPlan.alarms(tasks, emptySet(), setOf("garde", "fermee", "disparue"), emptySet(), now, QuietPolicy.NONE)
+        val keep = ReminderPlan.alarmKey("garde", at("2026-11-02T18:00:00"))
+        val closed = ReminderPlan.alarmKey("fermee", at("2026-11-02T18:00:00"))
+        val gone = ReminderPlan.alarmKey("disparue", at("2026-11-02T18:00:00"))
 
-        assertEquals(setOf("fermee", "disparue"), plan.staleReminders)
+        val plan = ReminderPlan.alarms(tasks, emptySet(), setOf(keep, closed, gone), emptySet(), now, QuietPolicy.NONE)
+
+        assertEquals(setOf(closed, gone), plan.staleReminders)
     }
 
     @Test

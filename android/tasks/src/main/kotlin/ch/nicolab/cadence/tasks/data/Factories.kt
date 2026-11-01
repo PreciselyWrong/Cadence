@@ -34,7 +34,7 @@ internal fun reviewCacheDir(context: Context): File = File(context.cacheDir, "re
 internal class TasksRuntime private constructor(context: Context) {
     private val appContext = context.applicationContext
     private val database: TududiDatabase = Room.databaseBuilder(appContext, TududiDatabase::class.java, "tududi.db")
-        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9)
+        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10)
         .build()
     private val clockState = ClockStateStore(appContext)
     private val hlc = Hlc(node = clockState.node(), initial = clockState.load())
@@ -62,8 +62,7 @@ internal class TasksRuntime private constructor(context: Context) {
     val connection = ServerConnectionImpl(appContext, database, store, ownership) { engine }
     val api = HttpSyncApi { connection.currentSession() ?: throw AuthError("Aucun serveur configuré") }
     val linkPreviews = RoomLinkPreviews(database.linkPreviewDao(), api::linkMetadata)
-    val review = ReviewRepository(api::call, ReviewCache(reviewCacheDir(appContext)))
-    val engine: SyncEngine =SyncEngine(
+    val engine: SyncEngine = SyncEngine(
         api,
         store,
         hlc,
@@ -79,6 +78,11 @@ internal class TasksRuntime private constructor(context: Context) {
         connection,
         engine.state,
         deviceZone.zone,
+    )
+    val review = ReviewRepository(
+        api::call,
+        ReviewCache(reviewCacheDir(appContext)),
+        defer = { call -> repository.defer(call).getOrThrow() },
     )
 
     companion object {
