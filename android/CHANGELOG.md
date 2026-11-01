@@ -1,4 +1,4 @@
-## [1.6.8] — à publier
+## [1.6.8] — 1 novembre 2026
 
 ### Nouveautés
 - Événements de l'agenda : l'icône d'agenda sert de case (Aujourd'hui, Agenda, widget Aujourd'hui) ; non faite, elle est en contour à la couleur du calendrier, faite, elle devient un agenda coché. L'ancien petit icône à côté de l'heure disparaît. Sans « Cocher un événement », l'icône reste en décor.

@@ -4,10 +4,10 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Now
 
-Tout le code prévu est livré dans `main` et poussé ; APK 1.6.7 et image `ghcr.io/preciselywrong/cadence:latest` publiés. Vérifié : suites serveur sur SQLite et sur PostgreSQL 16 (podman local, migrations du jour rejouées), tests web, tests Android dont les migrations Room sous Robolectric. Reste ce qui demande l'usage réel, ton téléphone ou ton serveur.
+Tout le code prévu est livré dans `main` et poussé ; APK 1.6.8 et image `ghcr.io/preciselywrong/cadence:latest` publiés. Vérifié : suites serveur sur SQLite et sur PostgreSQL 16 (podman local, migrations du jour rejouées), tests web, tests Android dont les migrations Room sous Robolectric. Reste ce qui demande l'usage réel, ton téléphone ou ton serveur.
 
 - **À faire par toi.**
-  - Installer l'APK 1.6.7 (versionCode 39) depuis NicoApps et mettre à jour le conteneur sur Unraid (`docker pull ghcr.io/preciselywrong/cadence:latest` puis redémarrer). Vérif : synchro dans les deux sens par Tailscale, rappels, « Plus tard », heures calmes, widgets, revue, Stash ; 1.6.5 : mode avion puis retour réseau (ligne « Hors ligne · N en attente » puis synchro seule), notification d'une tâche à heure fixe et d'un événement d'agenda, tri des liens dans la Boîte (balayage, « À tester », « Trier les liens »), ajout rapide en chaîne.
+  - Installer l'APK 1.6.7 (versionCode 40) depuis NicoApps et mettre à jour le conteneur sur Unraid (`docker pull ghcr.io/preciselywrong/cadence:latest` puis redémarrer). Vérif : synchro dans les deux sens par Tailscale, rappels, « Plus tard », heures calmes, widgets, revue, Stash ; 1.6.5 : mode avion puis retour réseau (ligne « Hors ligne · N en attente » puis synchro seule), notification d'une tâche à heure fixe et d'un événement d'agenda, tri des liens dans la Boîte (balayage, « À tester », « Trier les liens »), ajout rapide en chaîne.
   - Synchro Google (`docs/33-google-sync.md`) : créer le client OAuth (Calendar + Tasks API, app « En production »), `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` sur Unraid, connecter, 3 jours d'usage mixte. Vérif : aucun doublon, modifs visibles des deux côtés en < 2 min.
   - Revue (`docs/34-review.md`) : 2 semaines d'usage réel, puis ajuster seuils (3 reports en 30 j, « jour arrivé ou lendemain », 90 j « Ancien », 30 j « projet stagnant ») seulement si des faux positifs apparaissent.
   - Production sur le Postgres d'Unraid : export puis import (⛔ jamais par-dessus une base SQLite remplie). Le code est vérifié sur PostgreSQL 16 en local.
