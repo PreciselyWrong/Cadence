@@ -413,6 +413,7 @@
     }
   },
   "profile": {
+    "showTaskDescription": "Show the description under the title",
     "sectionFailed": "This section could not be displayed. Pick another section or reload the page.",
     "taskFeed": {
       "title": "Subscribe to your tasks",

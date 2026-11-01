@@ -394,6 +394,7 @@
     "noActivity": "Aucune activité pour le moment"
   },
   "profile": {
+    "showTaskDescription": "Afficher la description sous le titre",
     "sectionFailed": "Cette section n’a pas pu s’afficher. Choisissez une autre section ou rechargez la page.",
     "taskFeed": {
       "title": "S'abonner à vos tâches",

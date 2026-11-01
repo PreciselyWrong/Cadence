@@ -47,6 +47,10 @@ import QuickCaptureInput, {
 import { useStore } from '../../../store/useStore';
 import { useIsMinimal } from '../../../hooks/useUiDensity';
 import {
+    descriptionPreview,
+    useShowTaskDescription,
+} from '../../../utils/taskRowDisplay';
+import {
     TaskRowFieldKey,
     normalizeTaskRowFields,
 } from '../../../constants/taskRowFields';
@@ -183,6 +187,10 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
     const { t } = useTranslation();
     const tagColor = useTagColor();
     const isMinimal = useIsMinimal();
+    const showDescription = useShowTaskDescription();
+    const descriptionText = showDescription
+        ? descriptionPreview(task.note)
+        : null;
     const currentName = task.original_name || task.name;
     const titleInputRef = useRef<QuickCaptureInputHandle>(null);
     const rowRef = useRef<HTMLDivElement>(null);
@@ -687,6 +695,17 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                         </div>
                     )}
                 </div>
+
+                {descriptionText && (
+                    <p
+                        className={`line-clamp-2 whitespace-pre-line text-xs leading-relaxed text-gray-500 dark:text-gray-400 ${
+                            isMinimal ? 'w-full basis-full' : 'mt-0.5'
+                        }`}
+                        data-testid="task-row-description"
+                    >
+                        {descriptionText}
+                    </p>
+                )}
 
                 {/* The chips may give way on a narrow row: they clip from
                     the left so the time at the end stays readable, and the

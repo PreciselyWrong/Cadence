@@ -13,6 +13,10 @@ import {
 } from '@heroicons/react/24/outline';
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
 import {
+    useShowTaskDescription,
+    writeShowTaskDescription,
+} from '../../../utils/taskRowDisplay';
+import {
     ACCENT_PRESETS,
     applyAppearance,
     getStoredAccent,
@@ -130,6 +134,7 @@ const AppearanceTab: React.FC<AppearanceTabProps> = ({
     const { t } = useTranslation();
     const [accent, setAccent] = useState(getStoredAccent);
     const [pureBlack, setPureBlack] = useState(getStoredPureBlack);
+    const showTaskDescription = useShowTaskDescription();
     const [customHex, setCustomHex] = useState(accent);
 
     if (!isActive) return null;
@@ -307,6 +312,21 @@ const AppearanceTab: React.FC<AppearanceTabProps> = ({
                         </button>
                     ))}
                 </div>
+                <label className="mt-4 flex items-center gap-3 text-sm text-gray-700 dark:text-gray-300">
+                    <input
+                        type="checkbox"
+                        role="switch"
+                        checked={showTaskDescription}
+                        onChange={() =>
+                            writeShowTaskDescription(!showTaskDescription)
+                        }
+                        className="h-4 w-4 rounded"
+                    />
+                    {t(
+                        'profile.showTaskDescription',
+                        'Show the description under the title'
+                    )}
+                </label>
                 <p className="mt-3 text-xs text-gray-600 dark:text-gray-300">
                     {t(
                         'profile.densityDescription',

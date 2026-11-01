@@ -10,6 +10,7 @@ import {
 import { Task } from '../../../entities/Task';
 import { Project } from '../../../entities/Project';
 import * as tasksService from '../../../utils/tasksService';
+import { writeShowTaskDescription } from '../../../utils/taskRowDisplay';
 
 jest.mock('../../../hooks/useUiDensity', () => ({
     useIsMinimal: jest.fn(),
@@ -95,6 +96,24 @@ const renderRow = (task: Task, extra: Record<string, unknown> = {}) =>
 describe('TaskRowCollapsed in minimal mode', () => {
     beforeEach(() => {
         (useIsMinimal as jest.Mock).mockReturnValue(true);
+    });
+
+    it('shows the note under the title only when the row setting is on', () => {
+        const task = baseTask({
+            note: 'Bring the signed form\nand the receipt',
+        });
+        const { unmount } = renderRow(task);
+
+        expect(screen.queryByTestId('task-row-description')).toBeNull();
+        unmount();
+
+        writeShowTaskDescription(true);
+        renderRow(task);
+
+        expect(screen.getByTestId('task-row-description')).toHaveTextContent(
+            'Bring the signed form and the receipt'
+        );
+        writeShowTaskDescription(false);
     });
 
     it('shows the project and tag icons in the metadata line', () => {
