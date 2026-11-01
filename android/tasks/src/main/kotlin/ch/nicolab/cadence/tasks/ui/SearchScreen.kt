@@ -15,6 +15,7 @@ import androidx.compose.material.icons.outlined.History
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -52,6 +53,7 @@ import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.Hexagon
+import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -124,6 +126,7 @@ fun SearchScreen(
     val tasks by viewModel.everyTask.collectAsStateWithLifecycle()
     val projects by viewModel.projects.collectAsStateWithLifecycle()
     val notes by viewModel.notes.collectAsStateWithLifecycle()
+    val links by viewModel.links.collectAsStateWithLifecycle()
     val tags by viewModel.tags.collectAsStateWithLifecycle()
     val moment by viewModel.moment.collectAsStateWithLifecycle()
     val filters = SearchFilter.entries
@@ -133,10 +136,11 @@ fun SearchScreen(
     val projectIcons = remember(projects) { projects.mapNotNull { p -> p.icon?.takeIf { it.isNotBlank() }?.let { p.uid to it } }.toMap() }
     val projectColors = remember(projects) { projects.mapNotNull { p -> projectRailColor(p.color)?.let { p.uid to it } }.toMap() }
     val tagNames = remember(tags) { tags.associate { it.uid to it.name } }
-    val entries = remember(tasks, projects, notes, goals, habits, projectNames, tagNames) {
+    val entries = remember(tasks, projects, notes, links, goals, habits, projectNames, tagNames) {
         SearchSources.tasks(tasks, projectNames, tagNames) +
             SearchSources.projects(projects) +
             SearchSources.notes(notes, tagNames) +
+            SearchSources.links(links) +
             SearchSources.goals(goals) +
             habits
     }
@@ -150,6 +154,8 @@ fun SearchScreen(
         tasks.filter { !it.isClosed && it.projectUid != null }.groupingBy { it.projectUid }.eachCount()
     }
     val notesByUid = remember(notes) { notes.associateBy { it.uid } }
+    val linksByUid = remember(links) { links.associateBy { it.uid } }
+    val uriHandler = LocalUriHandler.current
 
     val suggestions = remember(projects, tags, openByProject, tasks) { searchSuggestions(projects, tags, tasks, openByProject) }
     // Une recherche compte comme faite quand elle mène quelque part : un résultat ouvert ou la touche Rechercher.
@@ -221,7 +227,7 @@ fun SearchScreen(
                             bottom = navigationClearance(),
                         ),
                     ) {
-                        listOf(SearchKind.TASK, SearchKind.PROJECT, SearchKind.NOTE, SearchKind.GOAL, SearchKind.HABIT).forEach { kind ->
+                        listOf(SearchKind.TASK, SearchKind.PROJECT, SearchKind.NOTE, SearchKind.LINK, SearchKind.GOAL, SearchKind.HABIT).forEach { kind ->
                             val hits = grouped[kind].orEmpty()
                             if (hits.isEmpty()) return@forEach
                             item(key = "header-$kind") {
@@ -272,6 +278,18 @@ fun SearchScreen(
                                         onClick = { keepQuery(); selectedNoteUid = hit.entry.id },
                                     )
                                 }
+                                SearchKind.LINK -> items(hits, key = { "link-${it.entry.id}" }) { hit ->
+                                    val link = linksByUid[hit.entry.id]
+                                    ResultRow(
+                                        icon = Icons.Outlined.Link,
+                                        title = highlighted(hit.entry.title, SearchHighlight.ranges(hit.entry.title, query)),
+                                        subtitle = link?.let { AnnotatedString(it.domain) },
+                                        onClick = {
+                                            keepQuery()
+                                            link?.let { runCatching { uriHandler.openUri(it.url) } }
+                                        },
+                                    )
+                                }
                                 SearchKind.GOAL -> items(hits, key = { "goal-${it.entry.id}" }) { hit ->
                                     val goal = goalsByUid[hit.entry.id]
                                     val kind = goal?.bucket?.let { stringResource(R.string.goals_search_wish, stringResource(bucketLabel(it))) }
@@ -315,6 +333,7 @@ private fun filterLabel(filter: SearchFilter): String = stringResource(
         SearchFilter.ALL -> R.string.tasks_search_all
         SearchFilter.TASKS -> R.string.tasks_search_tasks
         SearchFilter.NOTES -> R.string.tasks_search_notes
+        SearchFilter.LINKS -> R.string.tasks_search_links
         SearchFilter.PROJECTS -> R.string.tasks_search_projects
         SearchFilter.GOALS -> R.string.tasks_search_goals
         SearchFilter.HABITS -> R.string.tasks_search_habits
@@ -327,6 +346,7 @@ private fun kindTitle(kind: SearchKind): String = stringResource(
         SearchKind.TASK -> R.string.tasks_search_tasks
         SearchKind.PROJECT -> R.string.tasks_search_projects
         SearchKind.NOTE -> R.string.tasks_search_notes
+        SearchKind.LINK -> R.string.tasks_search_links
         SearchKind.GOAL -> R.string.tasks_search_goals
         SearchKind.HABIT -> R.string.tasks_search_habits
     },

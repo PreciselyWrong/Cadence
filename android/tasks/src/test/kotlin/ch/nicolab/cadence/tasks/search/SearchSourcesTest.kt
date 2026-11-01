@@ -2,6 +2,7 @@ package ch.nicolab.cadence.tasks.search
 
 import ch.nicolab.cadence.tasks.model.GoalBucket
 import ch.nicolab.cadence.tasks.model.GoalItem
+import ch.nicolab.cadence.tasks.model.LinkItem
 import ch.nicolab.cadence.tasks.model.TaskItem
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -24,5 +25,19 @@ class SearchSourcesTest {
         assertEquals(listOf(SearchKind.GOAL, SearchKind.GOAL), entries.map { it.kind })
         assertEquals("g", SearchEngine.search(entries, "santé", SearchFilter.GOALS).single().entry.id)
         assertEquals("w", SearchEngine.search(entries, "japon", SearchFilter.ALL).single().entry.id)
+    }
+
+    @Test
+    fun `a link is found by its title, its site and its note`() {
+        val link = LinkItem(uid = "l1", url = "https://github.com/a/b", title = "Fast JSON", note = "outil du café")
+
+        assertEquals(SearchEntry(SearchKind.LINK, "l1", "Fast JSON", "github.com outil du café"), SearchSources.links(listOf(link)).single())
+    }
+
+    @Test
+    fun `a link without title is named after its site`() {
+        val link = LinkItem(uid = "l2", url = "https://blog.example.com/p")
+
+        assertEquals("blog.example.com", SearchSources.links(listOf(link)).single().title)
     }
 }

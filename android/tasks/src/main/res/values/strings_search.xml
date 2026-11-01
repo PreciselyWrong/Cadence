@@ -14,6 +14,7 @@
     <string name="tasks_search_all">Tout</string>
     <string name="tasks_search_tasks">Tâches</string>
     <string name="tasks_search_notes">Notes</string>
+    <string name="tasks_search_links">Liens</string>
     <string name="tasks_search_projects">Projets</string>
     <string name="tasks_search_habits">Habitudes</string>
     <string name="tasks_search_goals">Objectifs</string>

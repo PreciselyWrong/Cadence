@@ -76,4 +76,11 @@ class SearchEngineTest {
         assertEquals(1, counts[SearchKind.NOTE])
         assertEquals(null, counts[SearchKind.HABIT])
     }
+
+    @Test
+    fun `le filtre Liens ne garde que les liens, trouvés aussi par leur site`() {
+        val pool = listOf(entry(SearchKind.LINK, "l1", "Fast JSON", "github.com"), entry(SearchKind.NOTE, "n1", "Notes github"))
+
+        assertEquals(listOf("l1"), SearchEngine.search(pool, "github", SearchFilter.LINKS).map { it.entry.id })
+    }
 }

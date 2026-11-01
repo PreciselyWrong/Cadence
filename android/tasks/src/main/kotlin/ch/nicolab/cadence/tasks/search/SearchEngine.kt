@@ -2,13 +2,14 @@ package ch.nicolab.cadence.tasks.search
 
 import java.text.Normalizer
 
-enum class SearchKind { TASK, PROJECT, NOTE, GOAL, HABIT }
+enum class SearchKind { TASK, PROJECT, NOTE, LINK, GOAL, HABIT }
 
 /** Filtre de la recherche : `ALL` ou un seul type de résultat. */
 enum class SearchFilter(val kind: SearchKind?) {
     ALL(null),
     TASKS(SearchKind.TASK),
     NOTES(SearchKind.NOTE),
+    LINKS(SearchKind.LINK),
     PROJECTS(SearchKind.PROJECT),
     GOALS(SearchKind.GOAL),
     HABITS(SearchKind.HABIT),

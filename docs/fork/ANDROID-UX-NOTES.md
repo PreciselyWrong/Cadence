@@ -171,3 +171,9 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Problème** : relier deux notes obligeait à retrouver la note par la recherche ; une référence écrite dans le texte ne menait nulle part.
 - **Décision** : `[[titre]]` s'affiche en pastille cliquable qui ouvre la note au titre égal (casse et espaces aux bords ignorés) ; sans correspondance, un message « Note introuvable ». Un titre vide, sur deux lignes ou imbriqué reste du texte.
 - **Web** : pas encore d'équivalent (voir `TODO.md`, Petits restes).
+
+### 2026-11-01 — Liens dans la recherche globale
+
+- **Problème** : retrouver un lien par son site ou une note disait « rien trouvé » ; seuls tâches, notes, projets et objectifs étaient cherchés.
+- **Décision** : les liens entrent dans la recherche (titre, site, note) avec un filtre « Liens » ; toucher un résultat ouvre le lien dans le navigateur, comme la carte de la liste des liens.
+- **Web** : la recherche globale n'a pas encore de liens (voir `TODO.md`, Petits restes).
