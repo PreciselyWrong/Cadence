@@ -1,6 +1,7 @@
 package ch.nicolab.cadence.tasks
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import ch.nicolab.cadence.tasks.data.createRepository
 import ch.nicolab.cadence.tasks.data.createLinkPreviews
 import ch.nicolab.cadence.tasks.data.createReview
@@ -17,6 +18,12 @@ object TasksGraph {
         repository ?: synchronized(this) {
             repository ?: createRepository(context.applicationContext).also { repository = it }
         }
+
+    /** Tests : un dépôt sur une base en mémoire à la place du vrai ; null rend la main au câblage normal. */
+    @VisibleForTesting
+    internal fun replaceRepository(value: TaskRepository?) {
+        repository = value
+    }
 
     fun linkPreviews(context: Context): LinkPreviews = createLinkPreviews(context.applicationContext)
 

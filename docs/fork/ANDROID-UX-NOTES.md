@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-01 — Partager vers l'Inbox en moins d'une seconde
+
+- **Problème** : après « Partager › Cadence », la fenêtre attendait la fin de l'écriture avant de se fermer ; au premier lancement (base à ouvrir), l'application d'origine restait figée un moment.
+- **Décision** : la fenêtre se ferme dès sa création ; l'écriture (Inbox et file d'envoi, jamais le réseau) continue en arrière-plan, puis le toast « Ajouté à l'Inbox » confirme, ou « Impossible d'ajouter à l'Inbox » si elle échoue. Le sujet du partage sert quand il n'y a pas de texte. Mesure : fermée en moins d'une seconde, sans appel réseau (`ShareCaptureTest`).
+- **Web** : pas d'équivalent système ; rien à reprendre.
+
 ### 2026-11-01 — « En attente » compte les habitudes
 
 - **Problème** : la ligne de synchro comptait les tâches et les appels différés, pas les habitudes restées sur le téléphone.

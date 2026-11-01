@@ -22,11 +22,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.lifecycle.lifecycleScope
 import ch.nicolab.cadence.designsystem.theme.CadenceTheme
 import ch.nicolab.cadence.tasks.R
-import ch.nicolab.cadence.tasks.TasksGraph
-import kotlinx.coroutines.launch
+import ch.nicolab.cadence.tasks.quickadd.ShareCapture
 
 /** Capture vers la boîte depuis la barre de capture : idée saisie ou texte dicté. */
 class CaptureActivity : ComponentActivity() {
@@ -58,16 +56,8 @@ class CaptureActivity : ComponentActivity() {
     }
 
     private fun save(text: String) {
-        val content = text.trim()
-        if (content.isEmpty()) {
-            finish()
-            return
-        }
-        lifecycleScope.launch {
-            TasksGraph.repository(this@CaptureActivity).captureInbox(content)
-            Toast.makeText(this@CaptureActivity, R.string.tasks_share_saved, Toast.LENGTH_SHORT).show()
-            finish()
-        }
+        text.trim().takeIf { it.isNotEmpty() }?.let { ShareCapture.save(this, it) }
+        finish()
     }
 
     companion object {

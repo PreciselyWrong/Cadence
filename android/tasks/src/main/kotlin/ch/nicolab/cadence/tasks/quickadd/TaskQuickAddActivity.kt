@@ -2,7 +2,6 @@ package ch.nicolab.cadence.tasks.quickadd
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.StringRes
@@ -33,7 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.lifecycleScope
 import ch.nicolab.cadence.designsystem.components.CadenceField
 import ch.nicolab.cadence.designsystem.components.ChoiceChip
 import ch.nicolab.cadence.designsystem.components.ErrorText
@@ -54,14 +52,16 @@ import kotlinx.coroutines.launch
 
 /**
  * Ajout rapide, affiché comme une fenêtre transparente au-dessus de l'écran courant.
- * Reçoit aussi un texte partagé : il part directement dans la boîte de réception.
+ * Reçoit aussi un texte partagé ou sélectionné : il part dans l'Inbox et la fenêtre se ferme aussitôt ([ShareCapture]).
  */
 class TaskQuickAddActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         when (intent.action) {
-            Intent.ACTION_SEND -> captureShared(intent.getStringExtra(Intent.EXTRA_TEXT))
-            Intent.ACTION_PROCESS_TEXT -> captureShared(intent.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)?.toString())
+            Intent.ACTION_SEND, Intent.ACTION_PROCESS_TEXT -> {
+                ShareCapture.sharedText(intent)?.let { ShareCapture.save(this, it) }
+                finish()
+            }
             else -> showQuickAdd(QuickAddTarget.fromAction(intent.action))
         }
     }
@@ -78,19 +78,6 @@ class TaskQuickAddActivity : ComponentActivity() {
                     onDismiss = { finish() },
                 )
             }
-        }
-    }
-
-    private fun captureShared(text: String?) {
-        val content = text?.trim()
-        if (content.isNullOrEmpty()) {
-            finish()
-            return
-        }
-        lifecycleScope.launch {
-            TasksGraph.repository(this@TaskQuickAddActivity).captureInbox(content)
-            Toast.makeText(this@TaskQuickAddActivity, R.string.tasks_share_saved, Toast.LENGTH_SHORT).show()
-            finish()
         }
     }
 }

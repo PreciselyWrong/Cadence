@@ -16,6 +16,9 @@
 - Échéance passée : plus de couleur d'alerte ni de graisse dans le widget Tâches, le widget Aujourd'hui, la barre de l'agenda et le bloc « À replanifier » ; la date passée s'affiche comme les autres.
 - En-têtes de section : un compteur à zéro n'est plus affiché.
 
+### Nouveautés
+- Partage vers Cadence : la fenêtre se ferme aussitôt et rend la main à l'application d'origine ; l'idée est écrite sur le téléphone (Inbox et file d'envoi, sans attendre le réseau) puis « Ajouté à l'Inbox » le confirme. Un partage sans texte garde son sujet ; un échec d'écriture le dit au lieu de se taire. Même chemin pour le texte sélectionné et la barre de capture.
+
 ## [1.6.9] — 1 novembre 2026
 
 ### Nouveautés
