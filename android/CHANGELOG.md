@@ -1,3 +1,8 @@
+## [1.6.3] — 1 novembre 2026
+
+### Nouveautés
+- Widget « Aujourd'hui » : section « Habitudes affichées » dans les réglages. Chaque nature d'habitude se masque à part (habitudes à faire, quantités, limites « au plus », abstinences, suivis seuls, chronos), avec « Seulement celles prévues aujourd'hui » et « Masquer celles déjà faites ». Par défaut tout reste affiché, y compris pour un widget déjà réglé.
+
 ## [1.6.2] — 1 novembre 2026
 
 ### Nouveautés

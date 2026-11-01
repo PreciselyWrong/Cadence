@@ -15,6 +15,9 @@ object TodayWidgetConfigCodec {
     private const val HABIT_PLACEMENT = "habitPlacement"
     private const val HABIT_SELECTION = "habitSelection"
     private const val HABIT_IDS = "habitIds"
+    private const val HIDDEN_KINDS = "hiddenHabitKinds"
+    private const val ONLY_PLANNED = "onlyPlannedHabits"
+    private const val HIDE_DONE = "hideDoneHabits"
     private const val MAX_FACETS = "maxFacets"
     private const val TASK_SCOPE = "taskScope"
     private const val HIGH_PRIORITY = "highPriorityOnly"
@@ -61,6 +64,9 @@ object TodayWidgetConfigCodec {
         HABIT_PLACEMENT to config.habitPlacement.name,
         HABIT_SELECTION to config.habitSelection.name,
         HABIT_IDS to config.habitIds.joinToString(ID_SEPARATOR),
+        HIDDEN_KINDS to config.hiddenHabitKinds.joinToString(ID_SEPARATOR) { it.name },
+        ONLY_PLANNED to flag(config.onlyPlannedHabits),
+        HIDE_DONE to flag(config.hideDoneHabits),
         MAX_FACETS to config.maxFacets.toString(),
         TASK_SCOPE to config.taskScope.name,
         HIGH_PRIORITY to flag(config.highPriorityOnly),
@@ -92,6 +98,9 @@ object TodayWidgetConfigCodec {
             habitPlacement = enumOf(read(HABIT_PLACEMENT), defaults.habitPlacement),
             habitSelection = enumOf(read(HABIT_SELECTION), defaults.habitSelection),
             habitIds = ids(read(HABIT_IDS)),
+            hiddenHabitKinds = ids(read(HIDDEN_KINDS)).mapNotNull { name -> HabitKind.entries.firstOrNull { it.name == name } }.toSet(),
+            onlyPlannedHabits = bool(read(ONLY_PLANNED), defaults.onlyPlannedHabits),
+            hideDoneHabits = bool(read(HIDE_DONE), defaults.hideDoneHabits),
             maxFacets = int(read(MAX_FACETS), defaults.maxFacets, TodayWidgetLimits.FACETS),
             taskScope = enumOf(read(TASK_SCOPE), defaults.taskScope),
             highPriorityOnly = bool(read(HIGH_PRIORITY), defaults.highPriorityOnly),

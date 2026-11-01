@@ -40,6 +40,12 @@ data class TodayWidgetConfig(
     val habitSelection: HabitSelection = HabitSelection.BY_TIME,
     /** Habitudes retenues quand [habitSelection] vaut [HabitSelection.CHOOSE]. */
     val habitIds: Set<String> = emptySet(),
+    /** Natures d'habitude masquées ; vide = toutes affichées. */
+    val hiddenHabitKinds: Set<HabitKind> = emptySet(),
+    /** Seulement les habitudes prévues aujourd'hui. */
+    val onlyPlannedHabits: Boolean = false,
+    /** Masquer les habitudes déjà faites. */
+    val hideDoneHabits: Boolean = false,
     /** Nombre maximal de facettes, 1 à 8. */
     val maxFacets: Int = 5,
     val taskScope: TaskScope = TaskScope.OVERDUE_AND_TODAY,

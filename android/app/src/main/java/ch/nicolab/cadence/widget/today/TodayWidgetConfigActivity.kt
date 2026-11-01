@@ -170,6 +170,14 @@ private fun TodayWidgetConfiguration(
                             }
                         }
                     }
+                    Text(stringResource(R.string.today_config_habit_kinds), style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant)
+                    HabitKind.entries.forEach { kind ->
+                        ToggleRow(stringResource(habitKindLabel(kind)), kind !in config.hiddenHabitKinds) { shown ->
+                            edit { c -> c.copy(hiddenHabitKinds = if (shown) c.hiddenHabitKinds - kind else c.hiddenHabitKinds + kind) }
+                        }
+                    }
+                    ToggleRow(stringResource(R.string.today_config_only_planned), config.onlyPlannedHabits) { edit { c -> c.copy(onlyPlannedHabits = it) } }
+                    ToggleRow(stringResource(R.string.today_config_hide_done), config.hideDoneHabits) { edit { c -> c.copy(hideDoneHabits = it) } }
                     SliderRow(stringResource(R.string.today_config_max_facets), config.maxFacets, TodayWidgetLimits.FACETS.first..TodayWidgetLimits.FACETS.last) { edit { c -> c.copy(maxFacets = it) } }
                 }
             }
@@ -259,6 +267,15 @@ private fun placementLabel(value: HabitPlacement): Int = when (value) {
 }
 
 @StringRes
+private fun habitKindLabel(value: HabitKind): Int = when (value) {
+    HabitKind.TODO -> R.string.today_kind_todo
+    HabitKind.QUANTITY -> R.string.today_kind_quantity
+    HabitKind.LIMIT -> R.string.today_kind_limit
+    HabitKind.ABSTINENCE -> R.string.today_kind_abstinence
+    HabitKind.TRACKER -> R.string.today_kind_tracker
+    HabitKind.TIMER -> R.string.today_kind_timer
+}
+
 private fun selectionLabel(value: HabitSelection): Int = when (value) {
     HabitSelection.BY_TIME -> R.string.today_selection_by_time
     HabitSelection.ALL -> R.string.today_selection_all

@@ -16,6 +16,9 @@ class TodayWidgetConfigCodecTest {
             habitPlacement = HabitPlacement.ABOVE,
             habitSelection = HabitSelection.CHOOSE,
             habitIds = setOf("h-1", "h-2"),
+            hiddenHabitKinds = setOf(HabitKind.ABSTINENCE, HabitKind.TRACKER),
+            onlyPlannedHabits = true,
+            hideDoneHabits = true,
             maxFacets = 3,
             taskScope = TaskScope.NEXT_7,
             highPriorityOnly = true,
@@ -51,6 +54,22 @@ class TodayWidgetConfigCodecTest {
         assertEquals(
             defaults.copy(habitIds = junk, projectUids = junk, tagUids = junk),
             TodayWidgetConfigCodec.decode { "n'importe quoi" },
+        )
+    }
+
+    @Test
+    fun `un ancien reglage sans filtres d'habitudes les affiche toutes`() {
+        val legacy = TodayWidgetConfigCodec.encode(TodayWidgetConfig())
+            .minus(setOf("hiddenHabitKinds", "onlyPlannedHabits", "hideDoneHabits"))
+
+        val config = TodayWidgetConfigCodec.decode(legacy::get)
+
+        assertEquals(emptySet<HabitKind>(), config.hiddenHabitKinds)
+        assertEquals(false, config.onlyPlannedHabits)
+        assertEquals(false, config.hideDoneHabits)
+        assertEquals(
+            setOf(HabitKind.LIMIT),
+            TodayWidgetConfigCodec.decode(mapOf("hiddenHabitKinds" to "LIMIT,INCONNU")::get).hiddenHabitKinds,
         )
     }
 

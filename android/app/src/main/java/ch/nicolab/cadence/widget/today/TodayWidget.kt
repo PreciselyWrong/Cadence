@@ -234,7 +234,7 @@ class TodayWidget : GlanceAppWidget() {
             HabitSelection.CHOOSE -> pending.filter { it.habit.id in config.habitIds }
         }
         val ink = TodayPalette.of(config).day.ink
-        return chosen.take(config.maxFacets).map { item ->
+        return chosen.filter { showsHabit(it.habit.goal, it.evaluation, config) }.take(config.maxFacets).map { item ->
             val progress = WidgetHabitPresentation.progress(item.habit.goal, item.evaluation.progressMinor, item.evaluation.targetMinor)
             val colour = item.habit.colorArgb ?: TodayControlPalette.argb(config.controlColour, config.freeControlArgb) ?: ink
             FacetView(

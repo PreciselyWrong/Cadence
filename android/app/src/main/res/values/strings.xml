@@ -645,6 +645,15 @@
     <string name="today_config_show_task_meta">Projet et étiquettes sous chaque tâche</string>
     <string name="today_config_habit_placement">Position des habitudes</string>
     <string name="today_config_habit_selection">Habitudes affichées</string>
+    <string name="today_config_habit_kinds">Habitudes affichées</string>
+    <string name="today_kind_todo">Habitudes à faire</string>
+    <string name="today_kind_quantity">Quantités</string>
+    <string name="today_kind_limit">Limites (au plus)</string>
+    <string name="today_kind_abstinence">Abstinences</string>
+    <string name="today_kind_tracker">Suivis seuls</string>
+    <string name="today_kind_timer">Chronos (durées)</string>
+    <string name="today_config_only_planned">Seulement celles prévues aujourd’hui</string>
+    <string name="today_config_hide_done">Masquer celles déjà faites</string>
     <string name="today_config_max_facets">Facettes max.</string>
     <string name="today_config_high_priority">Priorité haute seulement</string>
     <string name="today_config_hide_recurring">Masquer les récurrences</string>
