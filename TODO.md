@@ -17,7 +17,7 @@ Tout le code prévu est livré dans `main` et poussé ; APK 1.6.1 et image `ghcr
   - Serveur : rappels d'habitudes envoyés par le téléphone seulement ; avec plusieurs processus serveur, une création incomplète (sans nom) qui croise une autre création du même uid est refusée au lieu d'être fusionnée ; défaut ancien `habitReminders` dans `users.notification_preferences` sur les bases mises à niveau (sans effet).
   - Traductions automatiques des 24 langues hors fr/en : non relues (surtout ja, ko).
   - Fixtures dorées des habitudes : compléter (abstinence, alcool, aperçus, questions apprises, semaine) quand le web en a besoin.
-- Hors périmètre volontaire : scores V/E/M/D (échelles à définir ; en attendant, tags imbriqués `V/3`) et limite de projets actifs (compteur seulement).
+- Hors périmètre volontaire : limite de projets actifs (compteur seulement). V/E/M/D abandonné le 2026-11-01 : le planificateur Hermès arbitre ; les 24 tags sont supprimés, valeurs et grille archivées dans la note Cadence « Archive V/E/M/D » et `~/Documents/cadence-archives/`.
 
 ## Next
 
