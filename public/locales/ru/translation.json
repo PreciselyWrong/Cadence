@@ -396,6 +396,8 @@
   "profile": {
     "showTaskDescription": "Показывать описание под заголовком",
     "sync": {
+      "pending_many": "{{count}} изменений, сделанных офлайн в этом браузере, ждут отправки.",
+      "pending_few": "{{count}} изменения, сделанных офлайн в этом браузере, ждут отправки.",
       "field": {
         "review_at": "Дата пересмотра",
         "review_on": "Дата пересмотра",
@@ -1132,6 +1134,8 @@
     "pureBlack": "Чисто чёрный в тёмной теме"
   },
   "productivity": {
+    "issuesFound_many": "{{count}} проблем с продуктивностью требуют внимания",
+    "issuesFound_few": "{{count}} проблемы с продуктивностью требуют внимания",
     "stalledProjects": "Приостановленные проекты",
     "stalledProjectsDesc": "У этих проектов нет задач или действий",
     "needsNextAction": "Проекты нуждаются в следующем действии",
@@ -1390,6 +1394,14 @@
     "waiting": "Ожидание"
   },
   "project": {
+    "noteCount_many": "{{count}} заметок",
+    "noteCount_few": "{{count}} заметки",
+    "memberCount_many": "{{count}} участников",
+    "memberCount_few": "{{count}} участника",
+    "fileCount_many": "{{count}} файлов",
+    "fileCount_few": "{{count}} файла",
+    "daysToDue_many": "{{count}} дней до срока",
+    "daysToDue_few": "{{count}} дня до срока",
     "name": "Название проекта",
     "projectImage": "Изображение проекта",
     "uploadImageHint": "Загрузите изображение для вашего проекта (макс 10МБ)",
@@ -2557,6 +2569,8 @@
     "deleteUser": "Удалить пользователя",
     "confirmDeleteUser": "Вы уверены, что хотите удалить {{email}}? Это действие нельзя отменить.",
     "billing": {
+      "trialDaysLeft_many": "Осталось {{count}} дней",
+      "trialDaysLeft_few": "Осталось {{count}} дня",
       "title": "Оплата",
       "accounts": "Аккаунты",
       "onPro": "На Pro",
@@ -2790,6 +2804,10 @@
       "statusResolved": "Решён"
     },
     "userStatus": {
+      "itemsCreated_many": "{{count}} элементов",
+      "itemsCreated_few": "{{count}} элемента",
+      "emailsSent_many": "{{count}} отправлено",
+      "emailsSent_few": "{{count}} отправлено",
       "title": "Пользователи",
       "user": "Пользователь",
       "signedUp": "Зарегистрирован",
@@ -3187,6 +3205,8 @@
     "title": "Подзадачи"
   },
   "backup": {
+    "accountsCount_many": "Других учётных записей: {{count}}",
+    "accountsCount_few": "Других учётных записей: {{count}}",
     "title": "Резервное копирование и восстановление",
     "description": "Создайте резервные копии или восстановите из предыдущих резервных копий. Ваши последние 5 резервных копий сохраняются автоматически.",
     "createBackup": "Создать резервную копию",
@@ -3702,6 +3722,8 @@
     "planChanged": "Ваш тариф изменён."
   },
   "subscription": {
+    "trialBanner_many": "Вы на пробном периоде, осталось {{count}} дней",
+    "trialBanner_few": "Вы на пробном периоде, осталось {{count}} дня",
     "title": "Подписка",
     "chooseForCloud": "Выберите план для Cadence Cloud",
     "noActive": "Нет активной подписки",
@@ -3958,6 +3980,8 @@
     "lateWarning": "Время прошло, а задача не выполнена",
     "movedOffPlan": "«{{name}}» больше не со сроком на сегодня, поэтому она убрана из плана на день.",
     "tips": {
+      "missed_many": "{{count}} запланированных блоков уже прошли",
+      "missed_few": "{{count}} запланированных блока уже прошли",
       "title": "Советы по планированию",
       "missed": "Прошло запланированных блоков: {{count}}",
       "moveMissed": "Перенести в ближайшие свободные промежутки",
