@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-01 — Outliner d'un projet
+
+- **Problème** : la page d'un projet listait les tâches de premier niveau ; les sous-tâches ne se voyaient que dans la fiche, et rien ne permettait de les réorganiser.
+- **Décision** : un bouton de l'en-tête du projet bascule vers l'outliner (retenu sur l'appareil). Les tâches ouvertes du projet, chacune suivie de ses sous-tâches ouvertes, décalées d'un cran. Toucher une ligne la choisit et montre Monter, Descendre (dans son groupe de sœurs), Décaler (devient la dernière sous-tâche de la tâche précédente), Ressortir (remonte juste après son parent), Ajouter après (même retrait) et Ouvrir ; la case termine. Retrait = `parent_task_uid`, un seul niveau ; rang = `order` du groupe, renuméroté 0..n quand l'ordre change ou qu'une tâche y entre (un groupe qui perd une tâche garde ses rangs) ; sans `order`, l'ordre de la liste. Une série ne devient pas sous-tâche et n'en reçoit pas, une tâche qui a des sous-tâches ne se décale pas. Projet TODO.md : seule la case. Logique pure : `model/Outline.kt`.
+- **Web** : l'outliner web (en cours) doit garder ces règles : parent = retrait, `order` par groupe de sœurs, un seul niveau.
+
 ### 2026-11-01 — Notes et liens : liste ou galerie
 
 - **Problème** : les notes n'existaient qu'en grille de cartes, les liens qu'en liste ; impossible de parcourir beaucoup de notes d'un coup d'œil, ni de voir les liens par leur image.

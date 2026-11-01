@@ -10,6 +10,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.material.icons.outlined.Folder
 import ch.nicolab.cadence.tasks.model.ProjectHierarchy
+import ch.nicolab.cadence.tasks.model.Outline
+import androidx.compose.material.icons.outlined.AccountTree
+import androidx.compose.material.icons.automirrored.outlined.ViewList
+import androidx.compose.ui.platform.LocalContext
 import ch.nicolab.cadence.tasks.model.SubProject
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -324,6 +328,12 @@ internal fun ProjectTasksPane(
     val headerIcon = entityIcon(project?.icon)
     val headerColor = projectRailColor(project?.color)?.let(::Color) ?: cadence.primary
     var editingStatus by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val layouts = remember(context) { LayoutStore(context) }
+    var outline by rememberSaveable { mutableStateOf(layouts.isOn(LayoutStore.OUTLINE)) }
+    var selectedRow by rememberSaveable(projectUid) { mutableStateOf<String?>(null) }
+    val every by viewModel.everyTask.collectAsStateWithLifecycle()
+    val tree = remember(tasks, every) { Outline.tree(tasks, every) }
     // La prochaine action choisie ; sinon la suggestion automatique (la première tâche ouverte).
     val nextLine = project?.let { NextAction.of(it, tasks) }?.let { stringResource(R.string.next_action_line, it.name) }
         ?: tasks.firstOrNull()?.let { stringResource(R.string.tasks_projects_next, it.name) }
@@ -353,6 +363,17 @@ internal fun ProjectTasksPane(
                         )
                     }
                 }
+                IconButton(
+                    onClick = {
+                        outline = !outline
+                        layouts.set(LayoutStore.OUTLINE, outline)
+                    },
+                ) {
+                    Icon(
+                        if (outline) Icons.AutoMirrored.Outlined.ViewList else Icons.Outlined.AccountTree,
+                        contentDescription = stringResource(if (outline) R.string.outline_hide else R.string.outline_show),
+                    )
+                }
                 if (project != null) {
                     TextButton(onClick = { editingStatus = true }) {
                         Text(stringResource(projectStatusLabel(project.projectStatus)))
@@ -381,8 +402,25 @@ internal fun ProjectTasksPane(
         if (tasks.isEmpty() && subProjects.isEmpty()) {
             item { EmptyState(R.string.tasks_project_empty) }
         }
-        // L'en-tête porte déjà le projet : les lignes ne répètent pas son nom.
-        taskRows(tasks, emptyMap(), projectColors, moment, viewModel, onOpen)
+        if (outline) {
+            outlineItems(
+                rows = Outline.rows(tree),
+                selected = selectedRow,
+                onSelect = { selectedRow = it },
+                actions = OutlineActions(
+                    tree = tree,
+                    // Un projet TODO.md se lit dans son fichier : seule la case s'y écrit.
+                    editable = project?.isFileBacked != true,
+                    apply = { after -> viewModel.applyOutline(tree, after) },
+                    addAfter = { uid, name -> viewModel.addOutlineSibling(projectUid, tree, uid, name) },
+                    toggle = { viewModel.toggle(it, hold = true) },
+                    open = onOpen,
+                ),
+            )
+        } else {
+            // L'en-tête porte déjà le projet : les lignes ne répètent pas son nom.
+            taskRows(tasks, emptyMap(), projectColors, moment, viewModel, onOpen)
+        }
     }
 
     if (editingStatus && project != null) {

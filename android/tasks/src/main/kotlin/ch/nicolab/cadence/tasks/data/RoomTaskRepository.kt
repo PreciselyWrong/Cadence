@@ -288,6 +288,7 @@ internal class RoomTaskRepository(
             draft.areaUid?.let { put("area_uid", JsonPrimitive(it)) }
             draft.parentTaskUid?.let { put("parent_task_uid", JsonPrimitive(it)) }
             draft.goalUid?.let { put("goal_uid", JsonPrimitive(it)) }
+            draft.order?.let { put("order", JsonPrimitive(it)) }
             putAll(dueFields(draft.dueDate, draft.dueTime))
         }
         writeFields(uid, fields)
@@ -340,6 +341,9 @@ internal class RoomTaskRepository(
             }
             change.repetition?.let { putAll(TaskFields.repetition(it, repetitionAnchor(uid, change))) }
             change.pinned?.let { put("pinned_at", if (it) JsonPrimitive(Instant.ofEpochMilli(nowMs()).toString()) else JsonNull) }
+            if (change.clearParent) put("parent_task_uid", JsonNull)
+            change.parentTaskUid?.let { put("parent_task_uid", JsonPrimitive(it)) }
+            change.order?.let { put("order", JsonPrimitive(it)) }
             if (change.hasDecision()) putAll(decisionFields(uid, change))
         }
     }

@@ -29,6 +29,9 @@
 ### Nouveautés
 - Notes : bouton Liste / Galerie dans l'en-tête de l'onglet Notes (galerie par défaut, choix retenu sur le téléphone) ; la liste montre une ligne par note (couleur, titre, début du texte, épingle). La galerie des notes s'élargit à trois colonnes sur un grand écran.
 
+### Nouveautés
+- Projets : outliner (bouton de l'en-tête du projet, choix retenu) : tâches et sous-tâches en liste décalée. Toucher une ligne montre Monter, Descendre, Décaler (en faire une sous-tâche de la précédente), Ressortir, Ajouter après et Ouvrir ; la case termine. Hors ligne, synchronisé (parent et rang `order`). Un projet TODO.md n'accepte que la case.
+
 ## [1.6.9] — 1 novembre 2026
 
 ### Nouveautés

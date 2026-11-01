@@ -146,7 +146,7 @@ internal fun LinksScreen(tasks: TasksViewModel, onBack: () -> Unit, onOpenSource
     val links = remember(filtered, masked) { filtered.filterNot { it.uid in masked } }
     val context = LocalContext.current
     val layouts = remember(context) { LayoutStore(context) }
-    var gallery by rememberSaveable { mutableStateOf(layouts.isGallery(LayoutStore.LINKS)) }
+    var gallery by rememberSaveable { mutableStateOf(layouts.isOn(LayoutStore.LINKS)) }
     var picking by remember { mutableStateOf<Pair<LinkItem, LinkDecision>?>(null) }
     val decide: (LinkItem, LinkDecision, String?) -> Unit = { link, decision, projectUid ->
         tasks.decideLink(LinkTriage.openEntry(link, inbox, every), link, decision, projectUid, maskLink = true)
@@ -173,7 +173,7 @@ internal fun LinksScreen(tasks: TasksViewModel, onBack: () -> Unit, onOpenSource
                             contentDescription = stringResource(if (gallery) R.string.links_show_list else R.string.links_show_gallery),
                             onClick = {
                                 gallery = !gallery
-                                layouts.setGallery(LayoutStore.LINKS, gallery)
+                                layouts.set(LayoutStore.LINKS, gallery)
                             },
                         )
                     },

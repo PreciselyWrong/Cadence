@@ -113,7 +113,7 @@ fun TasksScreen(
 
     val context = LocalContext.current
     val layouts = remember(context) { LayoutStore(context) }
-    var notesGallery by rememberSaveable { mutableStateOf(layouts.isGallery(LayoutStore.NOTES)) }
+    var notesGallery by rememberSaveable { mutableStateOf(layouts.isOn(LayoutStore.NOTES)) }
     val overdueCount = todayState.overdue.size
     val eventCount = todayEvents.size
     val dateLine = remember(moment.today) { formatHeaderDate(moment.today) }
@@ -145,7 +145,7 @@ fun TasksScreen(
                                 contentDescription = stringResource(if (notesGallery) R.string.links_show_list else R.string.links_show_gallery),
                                 onClick = {
                                     notesGallery = !notesGallery
-                                    layouts.setGallery(LayoutStore.NOTES, notesGallery)
+                                    layouts.set(LayoutStore.NOTES, notesGallery)
                                 },
                             )
                         }

@@ -174,4 +174,13 @@
     <string name="tasks_connect_error">Connexion impossible.</string>
     <string name="tasks_qr_invalid">Ce code QR ne vient pas de Cadence.</string>
     <string name="tasks_quick_add_saving">Ajout…</string>
+    <string name="outline_show">Plan du projet (outliner)</string>
+    <string name="outline_hide">Liste des tâches</string>
+    <string name="outline_up">Monter</string>
+    <string name="outline_down">Descendre</string>
+    <string name="outline_indent">Décaler (sous-tâche)</string>
+    <string name="outline_outdent">Ressortir</string>
+    <string name="outline_add_after">Ajouter après</string>
+    <string name="outline_open">Ouvrir</string>
+    <string name="outline_new_sibling">Nouvelle tâche</string>
 </resources>

@@ -17,6 +17,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -62,5 +63,21 @@ class SubtaskRepositoryTest {
         assertEquals(emptyList<String>(), repository.observeSubtasks(parent).first().map { it.uid })
         assertNull(database.taskDao().get(child))
         assertEquals("delete", database.outboxDao().forUid("task", child).last().action)
+    }
+
+    @Test
+    fun `the outliner indents, ranks and outdents through the outbox`() = runBlocking {
+        val first = repository.createTask(TaskDraft(name = "Plan", projectUid = "p"))
+        val second = repository.createTask(TaskDraft(name = "Billets", projectUid = "p", order = 1))
+
+        repository.updateTask(second, TaskChange(parentTaskUid = first, order = 0))
+        assertEquals(listOf(second), repository.observeSubtasks(first).first().map { it.uid })
+        assertEquals("0", repository.observeSubtasks(first).first().single().extras["order"])
+        val sent = database.outboxDao().forUid("task", second).last().payloadJson
+        assertTrue(sent, sent.contains("\"parent_task_uid\"") && sent.contains("\"order\""))
+
+        repository.updateTask(second, TaskChange(clearParent = true, order = 1))
+        assertEquals(emptyList<String>(), repository.observeSubtasks(first).first().map { it.uid })
+        assertNull(database.taskDao().get(second)?.parentTaskUid)
     }
 }

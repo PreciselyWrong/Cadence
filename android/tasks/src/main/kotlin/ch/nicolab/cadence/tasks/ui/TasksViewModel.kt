@@ -50,6 +50,8 @@ import ch.nicolab.cadence.tasks.model.Subtasks
 import ch.nicolab.cadence.tasks.model.TagItem
 import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskDraft
+import ch.nicolab.cadence.tasks.model.Outline
+import ch.nicolab.cadence.tasks.model.OutlineNode
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskViews
 import ch.nicolab.cadence.tasks.model.DecisionContext
@@ -420,6 +422,18 @@ internal class TasksViewModel(
 
     fun observeProjectTasks(projectUid: String): Flow<List<TaskItem>> =
         combine(tasks, moment) { all, m -> TaskViews.ofProject(all, projectUid, m.now) }
+
+    /** Outliner : écrit les parents et rangs qui passent de [before] à [after], par la file d'envoi. */
+    fun applyOutline(before: List<OutlineNode>, after: List<OutlineNode>) = launchAction {
+        Outline.changes(before, after).forEach { repository.updateTask(it.uid, it.change) }
+    }
+
+    /** Outliner : ajoute [name] juste après [afterUid], au même retrait, dans le projet. */
+    fun addOutlineSibling(projectUid: String, tree: List<OutlineNode>, afterUid: String, name: String) = launchAction {
+        val slot = Outline.siblingSlot(tree, afterUid)
+        slot.shifts.forEach { repository.updateTask(it.uid, it.change) }
+        repository.createTask(TaskDraft(name = name, projectUid = projectUid, parentTaskUid = slot.parentUid, order = slot.order))
+    }
 
     /**
      * [hold] laisse la ligne cochée et barrée un instant avant que la tâche quitte la liste ;

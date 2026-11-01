@@ -46,17 +46,20 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 
-/** Liste ou galerie, retenu par écran sur l'appareil seulement ; les notes s'ouvrent en galerie, les liens en liste. */
+/** Disposition choisie par écran, sur l'appareil seulement : galerie (notes, par défaut ; liens), outliner (page d'un projet). */
 internal class LayoutStore(context: Context) {
     private val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
-    fun isGallery(screen: String): Boolean = prefs.getBoolean(screen, screen == NOTES)
+    fun isOn(screen: String): Boolean = prefs.getBoolean(screen, screen == NOTES)
 
-    fun setGallery(screen: String, gallery: Boolean) = prefs.edit { putBoolean(screen, gallery) }
+    fun set(screen: String, on: Boolean) = prefs.edit { putBoolean(screen, on) }
 
     companion object {
         const val LINKS = "links"
         const val NOTES = "notes"
+
+        /** Page d'un projet : liste des tâches ou outliner. */
+        const val OUTLINE = "project_outline"
         private const val PREFS = "cadence_layouts"
     }
 }

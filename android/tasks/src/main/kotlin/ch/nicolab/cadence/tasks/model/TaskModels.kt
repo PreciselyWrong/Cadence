@@ -213,6 +213,8 @@ data class TaskDraft(
     val parentTaskUid: String? = null,
     /** Objectif ou envie dont la tâche est un pas (`goal_uid`). */
     val goalUid: String? = null,
+    /** Rang parmi ses sœurs (`order`, outliner) ; null le laisse au serveur. */
+    val order: Int? = null,
 )
 
 /**
@@ -252,6 +254,11 @@ data class TaskChange(
     val pinned: Boolean? = null,
     /** Horodate la décision (`reviewed_at`) : ce que compte « décidées cette semaine ». */
     val reviewed: Boolean = false,
+    /** Outliner : fait de la tâche une sous-tâche de [parentTaskUid] ; [clearParent] la remonte au premier niveau. */
+    val parentTaskUid: String? = null,
+    val clearParent: Boolean = false,
+    /** Rang parmi ses sœurs (`order`). */
+    val order: Int? = null,
 )
 
 enum class RecurringScope(val wire: String) { THIS("this"), FOLLOWING("following"), ALL("all") }
