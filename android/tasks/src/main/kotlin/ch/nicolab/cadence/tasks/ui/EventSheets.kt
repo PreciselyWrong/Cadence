@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ch.nicolab.cadence.calendar.EventDetail
+import ch.nicolab.cadence.calendar.EventLocation
 import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.PrimaryAction
 import ch.nicolab.cadence.designsystem.components.RowGroup
@@ -64,6 +65,7 @@ fun EventDetailSheet(
     val previews = remember(context) { TasksGraph.linkPreviews(context) }
     val title = detail.title.ifBlank { stringResource(R.string.tasks_event_untitled) }
     val description = remember(detail.description) { EventDescription.plain(detail.description) }
+    val meeting = remember(detail.location, detail.description) { EventLocation.meetingLink(detail.location, detail.description) }
     val allDay = stringResource(R.string.tasks_event_all_day)
     val whenText = eventWhenText(detail, allDay, stringResource(R.string.tasks_event_date_range), stringResource(R.string.tasks_event_date_time_range))
     CadenceSheet(title = title, subtitle = detail.calendarName, dismiss = onDismiss) {
@@ -125,6 +127,14 @@ fun EventDetailSheet(
                 style = MaterialTheme.typography.bodySmall,
                 color = palette.onSurfaceVariant,
             )
+            val noApp = stringResource(R.string.tasks_event_location_no_app)
+            meeting?.let { url ->
+                PrimaryAction(
+                    label = stringResource(R.string.tasks_event_join),
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { openUrl(context, url, noApp) },
+                )
+            }
             Row(
                 Modifier.fillMaxWidth().padding(bottom = Space.md),
                 horizontalArrangement = Arrangement.spacedBy(Space.md),

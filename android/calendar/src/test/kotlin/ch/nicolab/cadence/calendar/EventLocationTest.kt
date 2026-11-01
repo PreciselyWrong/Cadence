@@ -2,6 +2,7 @@ package ch.nicolab.cadence.calendar
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
@@ -29,5 +30,32 @@ class EventLocationTest {
             "https://www.google.com/maps/search/?api=1&query=Caf%C3%A9%20%26%20Bar",
             EventLocation.mapsSearchUrl("Café & Bar"),
         )
+    }
+
+    @Test
+    fun `un lien de visio est trouve dans le lieu puis dans la description`() {
+        assertEquals(
+            "https://meet.google.com/abc-defg-hij",
+            EventLocation.meetingLink("https://meet.google.com/abc-defg-hij", null),
+        )
+        assertEquals(
+            "https://exemple.zoom.us/j/123456789",
+            EventLocation.meetingLink("Salle 2", "Rejoindre : https://exemple.zoom.us/j/123456789."),
+        )
+        assertEquals(
+            "https://teams.microsoft.com/l/meetup-join/xyz",
+            EventLocation.meetingLink(null, "<a href=\"https://teams.microsoft.com/l/meetup-join/xyz\">Teams</a>"),
+        )
+        assertEquals(
+            "https://acme.webex.com/meet/anna",
+            EventLocation.meetingLink("https://acme.webex.com/meet/anna", "https://zoom.us/j/1"),
+        )
+    }
+
+    @Test
+    fun `un lien ordinaire ou un hote qui ressemble ne compte pas comme visio`() {
+        assertNull(EventLocation.meetingLink("https://exemple.ch/salle", "Voir https://notzoom.us.example.org/x"))
+        assertNull(EventLocation.meetingLink("Rue du Lac 4", null))
+        assertNull(EventLocation.meetingLink(null, null))
     }
 }

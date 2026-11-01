@@ -79,7 +79,7 @@ private fun openInMaps(context: Context, address: String, noApp: String) {
     }
 }
 
-private fun openUrl(context: Context, url: String, noApp: String) {
+internal fun openUrl(context: Context, url: String, noApp: String) {
     try {
         context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
     } catch (_: ActivityNotFoundException) {
