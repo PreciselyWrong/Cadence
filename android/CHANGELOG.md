@@ -10,6 +10,7 @@
 - Tâches : la case rebondit en se cochant, le titre se barre d'un trait qui se trace, et un second toucher avant que la ligne parte annule la coche.
 
 ### Corrections
+- Agenda : les blocs sont opaques (plus rien ne transparaît derrière), sans barre colorée à gauche ; un petit repère distingue la tâche (case carrée), l'événement (rond) et l'habitude (hexagone), et laisse la place au titre sur deux ou trois lignes, même en vue 3 jours ; un bloc de 30 minutes montre son titre au lieu de « … ». Même style pour les journées entières, le bac, le mois et la liste.
 - Agenda : la feuille Affichage défile, les agendas du bas sont atteignables.
 - Agenda : défiler la grille n'affiche ni ne masque plus la ligne des jours ; elle est remplacée par le bouton calendrier.
 - Widget « Aujourd'hui » : une tâche cochée peu après une autre disparaît aussitôt au lieu de rester affichée jusqu'à la prochaine modification ; les réglages enregistrés s'appliquent aussi tout de suite.

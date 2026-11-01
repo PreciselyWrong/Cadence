@@ -1,7 +1,9 @@
 package ch.nicolab.cadence.agenda
 
-import ch.nicolab.cadence.designsystem.components.ICON_CONTRAST
-import ch.nicolab.cadence.designsystem.components.readableTintOf
+import ch.nicolab.cadence.designsystem.components.TEXT_CONTRAST
+import ch.nicolab.cadence.designsystem.theme.readableTint
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.ui.graphics.toArgb
 import android.os.Build
 import android.view.HapticFeedbackConstants
 import androidx.compose.animation.animateContentSize
@@ -59,7 +61,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import ch.nicolab.cadence.R
-import ch.nicolab.cadence.designsystem.theme.Glass
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
@@ -199,32 +200,38 @@ internal fun Modifier.trayDragSource(
 @Composable
 private fun TrayChip(item: TrayItem, drag: TrayDragState, onDrop: (String, LocalDateTime) -> Unit) {
     val palette = cadence
-    val color = readableTintOf(item.colorArgb?.let { Color(it) } ?: palette.primary, minContrast = ICON_CONTRAST)
     val pastDue = item.pastDue
-    val tint = if (pastDue != null) palette.error else color
+    val source = (if (pastDue != null) palette.error else item.colorArgb?.let { Color(it) } ?: palette.primary).toArgb()
+    val card = palette.card.toArgb()
+    val ink = palette.onSurface.toArgb()
+    val variant = palette.onSurfaceVariant.toArgb()
+    val colors = remember(source, card, ink, variant) { blockColors(source, card, ink, variant, done = false) }
     Row(
         Modifier
+            .height(Size.actionSm)
             .clip(Radius.Chip)
-            .background(tint.copy(alpha = Glass.BadgeAlpha))
-            .trayDragSource(item, drag, onDrop),
+            .background(Color(colors.fill))
+            .trayDragSource(item, drag, onDrop)
+            .padding(horizontal = BLOCK_PADDING),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(Modifier.width(Size.rail).height(Size.actionSm).background(tint))
+        AgendaMark(MarkShape.TASK, done = false, color = Color(colors.mark), onColor = Color(colors.onMark))
+        Spacer(Modifier.width(MARK_GAP))
         Text(
             text = item.title.ifBlank { stringResource(R.string.agenda_untitled) },
             style = MaterialTheme.typography.labelLarge,
-            color = palette.onSurface,
+            color = Color(colors.title),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.padding(horizontal = Space.sm).widthIn(max = CHIP_MAX_WIDTH),
+            modifier = Modifier.padding(end = Space.xs).widthIn(max = CHIP_MAX_WIDTH),
         )
         if (pastDue != null) {
             // La date d'échéance, jamais un compteur de jours de retard (WEB-UX-NOTES, ton sans culpabilité).
             Text(
                 text = stringResource(R.string.agenda_tray_due, trayDueFormat.format(pastDue)),
                 style = MaterialTheme.typography.labelMedium,
-                color = palette.error,
-                modifier = Modifier.padding(end = Space.sm),
+                color = Color(readableTint(colors.mark, colors.fill, TEXT_CONTRAST)),
+                modifier = Modifier.padding(end = Space.xs),
             )
         }
     }

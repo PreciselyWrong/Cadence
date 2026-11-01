@@ -1,8 +1,6 @@
 package ch.nicolab.cadence.agenda
 
 import androidx.compose.ui.semantics.selected
-import ch.nicolab.cadence.designsystem.components.ICON_CONTRAST
-import ch.nicolab.cadence.designsystem.components.readableTintOf
 import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -46,10 +44,6 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import ch.nicolab.cadence.designsystem.components.TaskCheckbox
-import androidx.compose.material.icons.outlined.Hexagon
-import androidx.compose.material.icons.filled.Hexagon
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
@@ -63,15 +57,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextStyle as ComposeTextStyle
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ch.nicolab.cadence.R
 import ch.nicolab.cadence.calendar.EventInstanceKey
-import ch.nicolab.cadence.designsystem.components.EventCheck
 import ch.nicolab.cadence.designsystem.components.navigationClearance
-import ch.nicolab.cadence.designsystem.theme.Glass
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
@@ -87,7 +82,14 @@ import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.collectLatest
 
 /** Puce de journée entière : une ligne, pour laisser la grille horaire visible. */
-private val ALL_DAY_CHIP_HEIGHT = 32.dp
+private val ALL_DAY_CHIP_HEIGHT = 28.dp
+/** En dessous de cette largeur de colonne (vue 3 jours), le titre passe en petit corps. */
+private val NARROW_COLUMN = 160.dp
+/** Écart vertical entre deux blocs qui se suivent : chacun garde son bord. */
+private val BLOCK_GAP = 1.dp
+/** Marge latérale d'un bloc : deux blocs côte à côte restent séparés de 4 dp. */
+private val BLOCK_SIDE_GAP = 2.dp
+private val BLOCK_HOUR_MINUTE: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 private val ALL_DAY_MORE_HEIGHT = 28.dp
 /** Déplié, le bloc des journées entières défile au-delà de cette hauteur au lieu de manger la grille. */
 private val ALL_DAY_EXPANDED_MAX = 168.dp
@@ -269,33 +271,47 @@ private fun AllDayChip(
     drag: TrayDragState,
     onDrop: (String, LocalDateTime) -> Unit,
 ) {
-    val palette = cadence
-    // Couleur d'agenda ou de projet : rail, cercle et teinte restent visibles (3:1) en clair comme en sombre.
-    val color = readableTintOf(entry.colorArgb?.let { Color(it) } ?: palette.primary, minContrast = ICON_CONTRAST)
+    val colors = rememberBlockColors(entry)
+    val actions = LocalAgendaEventActions.current
     val dragItem = draggableTaskItem(entry)
     val source = if (dragItem != null) Modifier.trayDragSource(dragItem, drag, onDrop) else Modifier
-    Row(
+    Box(
         Modifier
             .fillMaxWidth()
+            .height(ALL_DAY_CHIP_HEIGHT)
             .clip(Radius.Chip)
-            .background(color.copy(alpha = Glass.BadgeAlpha))
-            .alpha(if (entry.done) DONE_ALPHA else 1f)
+            .background(Color(colors.fill))
             .eventTouch(entry)
             .then(source),
-        verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(Modifier.width(Size.rail).height(ALL_DAY_CHIP_HEIGHT).background(color))
-        EntryMarker(entry, color, checkEvents, onToggleEvent, Modifier.size(ALL_DAY_CHIP_HEIGHT))
-        Text(
-            text = entry.title.ifBlank { stringResource(R.string.agenda_untitled) },
-            style = MaterialTheme.typography.labelLarge,
-            color = palette.onSurface,
-            textDecoration = if (entry.done) TextDecoration.LineThrough else null,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.padding(horizontal = Space.sm),
+        Row(
+            Modifier.fillMaxSize().padding(horizontal = BLOCK_PADDING),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            EntryMark(entry, colors, checkEvents)
+            Spacer(Modifier.width(MARK_GAP))
+            BlockTitle(entry, colors, MaterialTheme.typography.labelMedium, maxLines = 1)
+        }
+        Box(
+            Modifier
+                .width(MARK_HIT_WIDTH)
+                .fillMaxHeight()
+                .markToggle(entry, checkEvents, onToggleEvent, actions.toggleTask),
         )
     }
+}
+
+/** Titre d'un bloc ou d'une puce, à l'encre lisible sur son fond ; barré une fois fait. */
+@Composable
+private fun BlockTitle(entry: AgendaEntry, colors: BlockColors, style: ComposeTextStyle, maxLines: Int) {
+    Text(
+        text = entry.title.ifBlank { stringResource(R.string.agenda_untitled) },
+        style = style,
+        color = Color(colors.title),
+        textDecoration = if (entry.done) TextDecoration.LineThrough else null,
+        maxLines = maxLines,
+        overflow = TextOverflow.Ellipsis,
+    )
 }
 
 @Composable
@@ -434,55 +450,98 @@ private fun BoxWithConstraintsScope.TimedBlockView(
     hourHeightPx: Float,
     onResize: (String, Int) -> Unit,
 ) {
-    val palette = cadence
     val entry = block.entry
-    // Couleur d'agenda ou de projet : rail, cercle et teinte restent visibles (3:1) en clair comme en sombre.
-    val color = readableTintOf(entry.colorArgb?.let { Color(it) } ?: palette.primary, minContrast = ICON_CONTRAST)
+    val colors = rememberBlockColors(entry)
+    val actions = LocalAgendaEventActions.current
+    val density = LocalDensity.current
+    val measurer = rememberTextMeasurer()
     val columnWidth = maxWidth / block.columnCount
     val task = (entry as? AgendaEntry.Task)?.takeIf { !it.done && !it.recurring }
     var liveEnd by remember(block.startMinute, block.endMinute) { mutableStateOf<Int?>(null) }
     val endMinute = liveEnd ?: block.endMinute
     val top = Size.agendaHour * (block.startMinute / 60f)
     val height = Size.agendaHour * ((endMinute - block.startMinute) / 60f)
-    // L'hexagone tient sur un bloc court ; une case demande la hauteur d'une cible.
-    val marked = height >= Size.actionSm || entry is AgendaEntry.Habit
+    // Colonne étroite (3 jours, chevauchements) : un corps plus petit loge deux ou trois lignes de titre.
+    val narrow = columnWidth < NARROW_COLUMN
+    val titleStyle = if (narrow) MaterialTheme.typography.labelMedium else MaterialTheme.typography.labelLarge
+    val timeStyle = MaterialTheme.typography.labelSmall
+    val title = entry.title.ifBlank { stringResource(R.string.agenda_untitled) }
+    val innerWidth = columnWidth - BLOCK_SIDE_GAP * 2 - BLOCK_PADDING * 2
+    // Trop étroit pour loger le titre à côté du repère : le repère passe au-dessus du titre.
+    val stacked = !markFitsBeside(innerWidth.value)
+    val textWidth = if (stacked) innerWidth else innerWidth - MARK_SIZE - MARK_GAP
+    val titleLine = with(density) { titleStyle.lineHeight.toDp() }
+    val text = remember(title, titleStyle, textWidth, height, endMinute, density, stacked) {
+        val widthPx = with(density) { textWidth.roundToPx() }.coerceAtLeast(1)
+        val needed = measurer.measure(
+            text = title,
+            style = titleStyle,
+            constraints = Constraints(maxWidth = widthPx),
+            maxLines = MAX_TITLE_LINES,
+        ).lineCount
+        blockText(
+            minutes = endMinute - block.startMinute,
+            heightDp = (height - BLOCK_GAP * 2).value,
+            titleLineDp = titleLine.value,
+            timeLineDp = with(density) { timeStyle.lineHeight.toDp() }.value,
+            neededTitleLines = needed,
+            markAboveDp = if (stacked) (MARK_SIZE + MARK_GAP).value else 0f,
+        )
+    }
+    // Bloc court et étroit : le titre seul, plutôt qu'un repère suivi de « … ».
+    val showMark = !(stacked && text.inline)
     Box(
         Modifier
             .offset(x = columnWidth * block.column, y = top)
             .width(columnWidth)
             .height(height)
-            .padding(horizontal = Space.xs)
+            .padding(horizontal = BLOCK_SIDE_GAP, vertical = BLOCK_GAP)
             .clip(Radius.Chip)
-            .background(color.copy(alpha = Glass.BadgeAlpha))
-            .alpha(if (entry.done) DONE_ALPHA else 1f)
+            .background(Color(colors.fill))
             .eventTouch(entry),
     ) {
-        Row(Modifier.fillMaxSize()) {
-            Box(Modifier.width(Size.rail).fillMaxHeight().background(color))
-            if (marked) EntryMarker(entry, color, checkEvents, onToggleEvent)
-            Column(Modifier.padding(horizontal = Space.sm, vertical = Space.xs)) {
+        val content: @Composable () -> Unit = {
+            BlockTitle(entry, colors, titleStyle, maxLines = text.titleLines)
+            if (text.showTime) {
                 Text(
-                    text = entry.title.ifBlank { stringResource(R.string.agenda_untitled) },
-                    style = MaterialTheme.typography.labelLarge,
-                    color = palette.onSurface,
-                    textDecoration = if (entry.done) TextDecoration.LineThrough else null,
-                    maxLines = if (height >= Size.touch) 2 else 1,
+                    text = blockTime(entry, startOnly = narrow),
+                    style = timeStyle,
+                    color = Color(colors.meta),
+                    maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
-                if (height >= Size.touch * 1.25f) {
-                    Text(
-                        text = agendaMeta(entry),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = palette.onSurfaceVariant,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
+            }
+        }
+        if (stacked) {
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = BLOCK_PADDING, vertical = if (text.inline) 0.dp else BLOCK_PADDING),
+                verticalArrangement = if (text.inline) Arrangement.Center else Arrangement.Top,
+            ) {
+                if (showMark) {
+                    EntryMark(entry, colors, checkEvents)
+                    Spacer(Modifier.height(MARK_GAP))
                 }
+                content()
+            }
+        } else {
+            Row(
+                Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = BLOCK_PADDING, vertical = if (text.inline) 0.dp else BLOCK_PADDING),
+                verticalAlignment = if (text.inline) Alignment.CenterVertically else Alignment.Top,
+            ) {
+                // Le repère s'aligne sur la première ligne du titre.
+                val markTop = if (text.inline) 0.dp else ((titleLine - MARK_SIZE) / 2).coerceAtLeast(0.dp)
+                EntryMark(entry, colors, checkEvents, Modifier.padding(top = markTop))
+                Spacer(Modifier.width(MARK_GAP))
+                Column { content() }
             }
         }
         if (task != null) {
             ResizeHandle(
-                color = palette.onSurface,
+                color = Color(colors.meta),
                 startMinute = block.startMinute,
                 baseMinutes = block.endMinute - block.startMinute,
                 hourHeightPx = hourHeightPx,
@@ -494,8 +553,26 @@ private fun BoxWithConstraintsScope.TimedBlockView(
                 modifier = Modifier.align(Alignment.BottomCenter),
             )
         }
+        // Posée en dernier, la zone de la case passe devant la poignée sur un bloc court.
+        if (showMark) {
+            Box(
+                Modifier
+                    .width(MARK_HIT_WIDTH)
+                    .height(Size.touch)
+                    .markToggle(entry, checkEvents, onToggleEvent, actions.toggleTask),
+            )
+        }
     }
 }
+
+/** Horaire d'un bloc : début et fin, ou le début seul en colonne étroite ; sans la source, le repère la dit. */
+@Composable
+private fun blockTime(entry: AgendaEntry, startOnly: Boolean): String =
+    if (startOnly) {
+        entry.start.format(BLOCK_HOUR_MINUTE)
+    } else {
+        stringResource(R.string.agenda_time_range, entry.start.format(BLOCK_HOUR_MINUTE), entry.end.format(BLOCK_HOUR_MINUTE))
+    }
 
 /** Poignée du bord bas : un glissement vertical change la durée par crans, avec un tic à chaque cran. */
 @Composable
@@ -553,59 +630,6 @@ private fun ResizeHandle(
     }
 }
 
-/**
- * Repère du type d'élément, à gauche du titre : rond à la couleur de l'agenda pour un événement,
- * case carrée pour une tâche, hexagone pour une habitude (réservé aux habitudes partout dans Cadence).
- */
-@Composable
-private fun EntryMarker(
-    entry: AgendaEntry,
-    color: Color,
-    checkEvents: Boolean,
-    onToggleEvent: (EventInstanceKey) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val actions = LocalAgendaEventActions.current
-    val doneLabel = stringResource(if (entry.done) R.string.agenda_mark_undone else R.string.agenda_mark_done)
-    when (entry) {
-        is AgendaEntry.Event -> if (checkEvents) EventCheckSlot(entry, color, onToggleEvent, modifier)
-        is AgendaEntry.Task -> Box(modifier.padding(start = Space.xs), contentAlignment = Alignment.Center) {
-            TaskCheckbox(
-                checked = entry.done,
-                onCheckedChange = { actions.toggleTask(entry) },
-                modifier = Modifier.alpha(if (entry.virtual) VIRTUAL_ALPHA else 1f),
-                contentDescription = doneLabel,
-            )
-        }
-        is AgendaEntry.Habit -> Box(modifier.padding(start = Space.sm), contentAlignment = Alignment.Center) {
-            Icon(
-                if (entry.done) Icons.Filled.Hexagon else Icons.Outlined.Hexagon,
-                contentDescription = stringResource(R.string.agenda_habit_kind),
-                tint = color,
-                modifier = Modifier.size(Size.icon),
-            )
-        }
-    }
-}
-
-@Composable
-private fun EventCheckSlot(
-    entry: AgendaEntry.Event,
-    color: Color,
-    onToggleEvent: (EventInstanceKey) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    EventCheck(
-        checked = entry.done,
-        color = color,
-        onCheckedChange = { onToggleEvent(entry.eventKey) },
-        modifier = Modifier.padding(start = Space.xs).then(modifier),
-        contentDescription = stringResource(
-            if (entry.done) R.string.agenda_mark_undone else R.string.agenda_mark_done,
-        ),
-    )
-}
-
 @Composable
 private fun BoxWithConstraintsScope.NowLine(now: LocalTime) {
     val palette = cadence
@@ -629,8 +653,6 @@ private fun BoxWithConstraintsScope.NowLine(now: LocalTime) {
 private fun DayOfWeek.narrow(): String = getDisplayName(TextStyle.NARROW, Locale.FRENCH).uppercase(Locale.FRENCH)
 
 internal fun LocalDate.isWeekend(): Boolean = dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY
-
-internal const val DONE_ALPHA = 0.55f
 
 /** Case d'une occurrence à venir : visible mais atténuée, elle ne se coche pas. */
 internal const val VIRTUAL_ALPHA = 0.4f
