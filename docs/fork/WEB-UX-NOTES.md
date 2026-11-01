@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-01 — Profil › MCP : « Autoriser un nouveau connecteur »
+
+- **Problème** : claude.ai pouvait enregistrer un connecteur à tout moment, sans geste de l'utilisateur dans Cadence.
+- **Décision** : quand le serveur a une URL MCP publique, Profil › MCP montre une carte « Connecter claude.ai » avec l'URL à ajouter et un bouton « Autoriser un nouveau connecteur » ; il ouvre une fenêtre de 10 minutes et la carte dit jusqu'à quelle heure Cadence attend. Refus expliqués sur place : double authentification à activer d'abord, ou compte non autorisé. Carte absente sans URL publique.
+- **À reprendre sur Android** : rien ; l'app n'a pas de réglages MCP ni de clés d'API, et l'appairage se fait depuis le web sur Tailscale.
+
 ### 2026-11-01 — Boîte : « Trier les liens » sur le web
 
 - **Problème** : sur le web, un lien de la boîte se décidait carte par carte, sans mode pour les parcourir l'un après l'autre.
