@@ -89,6 +89,9 @@ interface TaskRepository {
 
     /** Retourne l'uid de la tâche créée. */
     suspend fun createTask(draft: TaskDraft): String
+
+    /** Copie une tâche (contenu, dates, durée, liens) sous un nouvel uid ; null si elle n'existe plus. */
+    suspend fun duplicateTask(uid: String): String?
     suspend fun updateTask(uid: String, change: TaskChange)
 
     /**

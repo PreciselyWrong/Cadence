@@ -290,6 +290,13 @@ internal class RoomTaskRepository(
         return uid
     }
 
+    override suspend fun duplicateTask(uid: String): String? {
+        val source = taskDao.get(uid) ?: return null
+        val copy = UUID.randomUUID().toString()
+        writeFields(copy, TaskCopy.fields(WireCodec.taskToWire(source)))
+        return copy
+    }
+
     override suspend fun updateTask(uid: String, change: TaskChange) {
         val fields = fieldsFor(uid, change)
         if (fields.isNotEmpty()) writeFields(uid, fields)

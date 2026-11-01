@@ -130,6 +130,7 @@
     <string name="tasks_action_reopen">Rouvrir</string>
     <string name="tasks_action_skip">Sauter cette occurrence</string>
     <string name="tasks_action_pin">Épingler</string>
+    <string name="tasks_action_duplicate">Dupliquer</string>
     <string name="tasks_action_unpin">Désépingler</string>
     <string name="tasks_action_delete">Supprimer</string>
     <string name="tasks_delete_title">Supprimer la tâche ?</string>

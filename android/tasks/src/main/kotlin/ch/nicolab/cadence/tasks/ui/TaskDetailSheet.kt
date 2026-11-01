@@ -24,6 +24,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material.icons.outlined.Folder
@@ -379,6 +380,11 @@ internal fun TaskDetailSheet(
                         picker = null
                         onDismiss()
                     }
+                }
+                ActionRow(Icons.Outlined.ContentCopy, stringResource(R.string.tasks_action_duplicate), palette.primary) {
+                    viewModel.duplicate(current)
+                    picker = null
+                    onDismiss()
                 }
                 ActionRow(Icons.Outlined.Delete, stringResource(R.string.tasks_action_delete), palette.error) {
                     picker = null

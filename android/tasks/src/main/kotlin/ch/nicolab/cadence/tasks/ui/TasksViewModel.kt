@@ -430,6 +430,8 @@ internal class TasksViewModel(
 
     fun update(uid: String, change: TaskChange) = launchAction { repository.updateTask(uid, change) }
 
+    fun duplicate(task: TaskItem) = launchAction { repository.duplicateTask(task.uid) }
+
     /**
      * Enregistre [change] sur [task]. Pour une tâche récurrente, un champ d'occurrence (titre, note, priorité,
      * heure, durée, projet, étiquettes, statut) demande d'abord la portée ; le reste s'écrit sur la série.

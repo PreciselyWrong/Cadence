@@ -1,6 +1,7 @@
 ## [1.6.9] — à publier
 
 ### Nouveautés
+- Tâches : « Dupliquer » dans les actions de la fiche copie le contenu, les dates, la durée, le projet, le domaine et les étiquettes ; la copie repart à faire, non épinglée, sans rappel ni parent.
 - Tâches : « Épingler » et « Désépingler » dans les actions de la fiche (la tâche épinglée reste en tête de liste).
 - Rappels de tâches : « À la fin » (échéance plus la durée estimée, pour une tâche horaire avec une estimation) et « Demain » (même heure le lendemain) remplacent « 1 h » ; « 10 min » reste quand « À la fin » n'est pas proposé.
 - Notifications d'événements : deux nouveaux boutons, « À la fin » (le rappel revient à la fin de l'événement, masqué s'il finit dans moins de 5 min ou pour une journée entière) et « 10 min ». Le rappel repris relit l'événement et respecte les heures calmes.
