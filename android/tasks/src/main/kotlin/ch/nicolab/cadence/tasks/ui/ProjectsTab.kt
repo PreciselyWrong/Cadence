@@ -74,6 +74,14 @@ internal fun projectCounterLine(projects: List<ProjectItem>): String {
     )
 }
 
+/** Ce que fait un statut qui sort le projet de la liste active ; null pour les autres. */
+internal fun projectStatusHint(status: ProjectStatus): Int? = when (status) {
+    ProjectStatus.PAUSED -> R.string.tasks_project_status_paused_hint
+    ProjectStatus.CANCELLED -> R.string.tasks_project_status_cancelled_hint
+    ProjectStatus.ARCHIVED -> R.string.tasks_project_status_archived_hint
+    else -> null
+}
+
 internal fun projectStatusLabel(status: ProjectStatus): Int = when (status) {
     ProjectStatus.NOT_STARTED -> R.string.tasks_project_status_not_started
     ProjectStatus.PLANNED -> R.string.tasks_project_status_planned
@@ -98,6 +106,7 @@ internal fun ProjectStatusSheet(
             ProjectStatus.entries.forEachIndexed { index, status ->
                 SettingRow(
                     title = stringResource(projectStatusLabel(status)),
+                    subtitle = projectStatusHint(status)?.let { stringResource(it) },
                     shape = rowGroupShape(index, ProjectStatus.entries.size),
                     trailing = {
                         if (status == project.projectStatus) {
@@ -277,7 +286,6 @@ internal fun ProjectTasksPane(
     val tasks by remember(projectUid) { viewModel.observeProjectTasks(projectUid) }
         .collectAsStateWithLifecycle(initialValue = emptyList())
     val moment by viewModel.moment.collectAsStateWithLifecycle()
-    val projectNames = rememberProjectNames(viewModel)
     val projectColors = rememberProjectColors(viewModel)
     val project = projects.firstOrNull { it.uid == projectUid }
     val projectName = project?.name.orEmpty()
@@ -324,7 +332,8 @@ internal fun ProjectTasksPane(
         if (tasks.isEmpty()) {
             item { EmptyState(R.string.tasks_project_empty) }
         }
-        taskRows(tasks, projectNames, projectColors, moment, viewModel, onOpen)
+        // L'en-tête porte déjà le projet : les lignes ne répètent pas son nom.
+        taskRows(tasks, emptyMap(), projectColors, moment, viewModel, onOpen)
     }
 
     if (editingStatus && project != null) {

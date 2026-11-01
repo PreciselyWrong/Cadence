@@ -40,7 +40,7 @@ fun draggableTaskItem(entry: AgendaEntry): TrayItem? {
         uid = entry.uid,
         title = entry.title,
         colorArgb = entry.colorArgb,
-        overdueDays = 0,
+        pastDue = null,
         estimateMinutes = entry.estimateMinutes,
     )
 }

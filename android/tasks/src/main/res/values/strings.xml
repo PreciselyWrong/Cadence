@@ -18,6 +18,8 @@
     <string name="tasks_notifications_settings">Ouvrir les réglages</string>
     <string name="tasks_section_today">Aujourd\'hui</string>
     <string name="tasks_section_completed">Terminées aujourd\'hui (%1$d)</string>
+    <string name="tasks_completed_show">Afficher les tâches terminées</string>
+    <string name="tasks_completed_hide">Masquer les tâches terminées</string>
     <string name="tasks_upcoming_empty">Aucune échéance dans les 7 prochains jours.</string>
     <string name="tasks_recurring">Tâche récurrente</string>
     <string name="tasks_pending_sync">Modification non synchronisée</string>

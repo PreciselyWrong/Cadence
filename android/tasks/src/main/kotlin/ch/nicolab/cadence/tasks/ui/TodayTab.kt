@@ -3,6 +3,7 @@ package ch.nicolab.cadence.tasks.ui
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
@@ -28,11 +29,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.semantics.Role
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.nicolab.cadence.designsystem.components.SectionHeader
 import ch.nicolab.cadence.designsystem.components.SectionTone
+import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.EstimateFormat
@@ -264,11 +266,13 @@ internal fun TodayTab(
         item(key = "routine") { routineStrip() }
         if (state.completed.isNotEmpty()) {
             item(key = "completed-header") {
+                val toggleLabel = stringResource(if (completedExpanded) R.string.tasks_completed_hide else R.string.tasks_completed_show)
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { completedExpanded = !completedExpanded }
-                        .padding(vertical = 12.dp),
+                        .heightIn(min = Size.touch)
+                        .clickable(role = Role.Button, onClickLabel = toggleLabel) { completedExpanded = !completedExpanded }
+                        .padding(vertical = Space.md),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(

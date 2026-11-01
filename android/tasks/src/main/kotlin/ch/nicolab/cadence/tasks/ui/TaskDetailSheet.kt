@@ -83,6 +83,7 @@ import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskPriority
 import ch.nicolab.cadence.tasks.model.TaskStatus
+import ch.nicolab.cadence.tasks.model.TaskViews
 import ch.nicolab.cadence.tasks.swipe.FileBackedActions
 import java.time.LocalDate
 import java.time.LocalTime
@@ -481,7 +482,7 @@ private fun DetailBadges(
         verticalArrangement = Arrangement.spacedBy(Space.sm),
     ) {
         task.dueDay?.let { due ->
-            val overdue = due.isBefore(today) && !task.isClosed
+            val overdue = TaskViews.isOverdue(task, today)
             val text = compactDateTime(due, dueTime, today)
             TapBadge(onDates, enabled) {
                 CadenceBadge(
@@ -491,17 +492,20 @@ private fun DetailBadges(
                 )
             }
         }
-        TapBadge(onPriority, enabled) {
-            val priority = task.priority
-            CadenceBadge(
-                text = priority?.let { stringResource(priorityBadge(it)) } ?: stringResource(R.string.tasks_field_priority),
-                tone = when (priority) {
-                    TaskPriority.HIGH -> BadgeTone.Error
-                    TaskPriority.MEDIUM -> BadgeTone.Warning
-                    else -> BadgeTone.Neutral
-                },
-                icon = Icons.Outlined.Flag,
-            )
+        // Comme projet, statut et étiquettes : un badge seulement pour une valeur posée ; la ligne Priorité
+        // plus bas reste là pour en choisir une. Une tâche simple garde une fiche simple.
+        task.priority?.let { priority ->
+            TapBadge(onPriority, enabled) {
+                CadenceBadge(
+                    text = stringResource(priorityBadge(priority)),
+                    tone = when (priority) {
+                        TaskPriority.HIGH -> BadgeTone.Error
+                        TaskPriority.MEDIUM -> BadgeTone.Warning
+                        else -> BadgeTone.Neutral
+                    },
+                    icon = Icons.Outlined.Flag,
+                )
+            }
         }
         projectName?.let {
             TapBadge(onProject, enabled) { CadenceBadge(text = it, tone = BadgeTone.Neutral, color = projectColor) }

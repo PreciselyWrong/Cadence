@@ -58,7 +58,7 @@
     <string name="review_not_synced">« %1$s » n\'est pas encore sur le téléphone : synchronisez puis réessayez.</string>
     <string name="review_online_only">Connexion requise pour ce choix.</string>
     <string name="review_saved">« %1$s » : %2$s</string>
-    <string name="review_empty_undecided">La boîte est vide.</string>
+    <string name="review_empty_undecided">L\'Inbox est vide.</string>
     <string name="review_empty_pushed">Rien ne glisse en ce moment.</string>
     <string name="review_empty_projects">Chaque projet actif avance.</string>
     <string name="review_empty_later">Rien de mis de côté.</string>

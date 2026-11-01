@@ -21,11 +21,12 @@
     </plurals>
     <string name="planning_sheet_title">Planifier la journée</string>
     <string name="planning_triage_title">Trier le retard</string>
-    <string name="planning_triage_hint">« Plus tard » retire l\'échéance : la tâche reste dans votre liste, sans date.</string>
+    <!-- « Sans date », pas « Plus tard » : « Plus tard » est la mise de côté de la revue (étiquette someday). -->
+    <string name="planning_triage_hint">« Sans date » retire l\'échéance : la tâche reste dans votre liste.</string>
     <string name="planning_triage_bulk">Tout le retard</string>
     <string name="planning_target_today">Aujourd\'hui</string>
     <string name="planning_target_tomorrow">Demain</string>
-    <string name="planning_target_later">Plus tard</string>
+    <string name="planning_target_later">Sans date</string>
     <string name="planning_place_title">Placer dans la journée</string>
     <string name="planning_place_summary">%1$s libres · %2$s planifiées</string>
     <string name="planning_place_auto">Placer automatiquement</string>
@@ -60,8 +61,8 @@
         <item quantity="other">%d tâches reportées à demain</item>
     </plurals>
     <plurals name="planning_moved_later">
-        <item quantity="one">%d tâche mise de côté</item>
-        <item quantity="other">%d tâches mises de côté</item>
+        <item quantity="one">%d tâche sans date</item>
+        <item quantity="other">%d tâches sans date</item>
     </plurals>
 
     <!-- Carte du soir et journée bouclée -->
@@ -103,14 +104,18 @@
     <string name="tasks_projects_closed_show">Terminés, abandonnés et archivés (%d)</string>
     <string name="tasks_projects_closed_hide">Masquer les projets clos</string>
     <string name="tasks_project_status_title">Statut du projet</string>
-    <string name="tasks_project_status_not_started">Pas commencé</string>
-    <string name="tasks_project_status_planned">Planifié</string>
+    <string name="tasks_project_status_not_started">Non commencé</string>
+    <string name="tasks_project_status_planned">Prévu</string>
     <string name="tasks_project_status_in_progress">En cours</string>
     <string name="tasks_project_status_waiting">En attente</string>
     <string name="tasks_project_status_done">Terminé</string>
     <string name="tasks_project_status_cancelled">Abandonné</string>
     <string name="tasks_project_status_paused">En pause</string>
     <string name="tasks_project_status_archived">Archivé</string>
+    <!-- Sous-titres des statuts qui retirent un projet de la liste active (mêmes sens que le web). -->
+    <string name="tasks_project_status_paused_hint">Dans le Stash, à reprendre plus tard</string>
+    <string name="tasks_project_status_cancelled_hint">Décidé de ne pas poursuivre</string>
+    <string name="tasks_project_status_archived_hint">Consultable, hors de vue</string>
     <string name="tasks_project_status_change">Changer le statut</string>
     <plurals name="tasks_tags_subtitle">
         <item quantity="one">%d étiquette</item>

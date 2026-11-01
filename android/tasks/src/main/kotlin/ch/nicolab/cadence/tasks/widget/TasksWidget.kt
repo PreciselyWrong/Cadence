@@ -36,6 +36,8 @@ import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.layout.size
 import androidx.glance.layout.width
+import androidx.glance.semantics.contentDescription
+import androidx.glance.semantics.semantics
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
@@ -138,12 +140,14 @@ private fun WidgetHeader(count: Int) {
             style = TextStyle(color = GlanceTheme.colors.onSurfaceVariant, fontSize = 14.sp, fontWeight = FontWeight.Medium),
         )
         Box(modifier = GlanceModifier.width(8.dp)) {}
+        val addLabel = LocalContext.current.getString(R.string.tasks_fab_add)
         Box(
             modifier = GlanceModifier
                 .size(32.dp)
                 .background(GlanceTheme.colors.primary)
                 .cornerRadius(16.dp)
-                .clickable(actionStartActivity<TaskQuickAddActivity>()),
+                .clickable(actionStartActivity<TaskQuickAddActivity>())
+                .semantics { contentDescription = addLabel },
             contentAlignment = Alignment.Center,
         ) {
             Text(
@@ -163,11 +167,11 @@ private fun TaskRow(task: TaskItem, overdue: Boolean, today: LocalDate, zone: Zo
         modifier = GlanceModifier.fillMaxWidth().padding(vertical = 4.dp),
         verticalAlignment = Alignment.Vertical.CenterVertically,
     ) {
-        CompletionCircle(task.uid)
+        CompletionCircle(task.uid, LocalContext.current.getString(R.string.tasks_mark_done))
         Column(
             modifier = GlanceModifier
                 .defaultWeight()
-                .padding(start = 10.dp)
+                .padding(start = 2.dp)
                 .then(if (open != null) GlanceModifier.clickable(actionStartActivityIntent(open)) else GlanceModifier),
         ) {
             Text(
@@ -190,23 +194,30 @@ private fun TaskRow(task: TaskItem, overdue: Boolean, today: LocalDate, zone: Zo
     }
 }
 
-/** Anneau cliquable : termine la tâche sans l'ouvrir. */
+/** Anneau cliquable : termine la tâche sans l'ouvrir. La cible fait 40 dp autour de l'anneau de 24 dp. */
 @Composable
-private fun CompletionCircle(uid: String) {
+private fun CompletionCircle(uid: String, label: String) {
     Box(
         modifier = GlanceModifier
-            .size(24.dp)
-            .background(GlanceTheme.colors.outline)
-            .cornerRadius(12.dp)
-            .clickable(actionRunCallback<CompleteTaskAction>(actionParametersOf(taskUidKey to uid))),
+            .size(40.dp)
+            .clickable(actionRunCallback<CompleteTaskAction>(actionParametersOf(taskUidKey to uid)))
+            .semantics { contentDescription = label },
         contentAlignment = Alignment.Center,
     ) {
         Box(
             modifier = GlanceModifier
-                .size(20.dp)
-                .background(GlanceTheme.colors.widgetBackground)
-                .cornerRadius(10.dp),
-        ) {}
+                .size(24.dp)
+                .background(GlanceTheme.colors.outline)
+                .cornerRadius(12.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            Box(
+                modifier = GlanceModifier
+                    .size(20.dp)
+                    .background(GlanceTheme.colors.widgetBackground)
+                    .cornerRadius(10.dp),
+            ) {}
+        }
     }
 }
 

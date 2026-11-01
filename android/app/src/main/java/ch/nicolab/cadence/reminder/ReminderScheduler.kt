@@ -209,7 +209,7 @@ object ReminderScheduler {
             message = if (reminder!!.conditional) {
                 ReminderNotifications.remainingMessage(habit, evaluation!!.progressMinor)
             } else {
-                "Votre rappel est prêt"
+                context.getString(R.string.habit_reminder_ready)
             },
             reminderId = reminder.id,
         )
@@ -309,7 +309,7 @@ class ReminderReceiver : BroadcastReceiver() {
                         } else if (reminder.conditional) {
                             ReminderNotifications.remainingMessage(habit, evaluation.progressMinor)
                         } else {
-                            "Votre rappel est prêt"
+                            context.getString(R.string.habit_reminder_ready)
                         },
                         reminderId = reminder.id,
                     )

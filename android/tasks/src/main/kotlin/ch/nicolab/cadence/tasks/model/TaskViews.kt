@@ -59,7 +59,14 @@ object TaskViews {
     }
 
     fun overdue(tasks: List<TaskItem>, today: LocalDate, now: Instant): List<TaskItem> =
-        today(tasks, today, now).filter { it.dueDay?.isBefore(today) == true }
+        today(tasks, today, now).filter { isOverdue(it, today) }
+
+    /**
+     * Signal « en retard » d'une ligne, d'une fiche ou du bac de l'Agenda : échéance passée d'une tâche
+     * ouverte. Une tâche mise de côté (« Plus tard ») ne l'est jamais, comme dans [today].
+     */
+    fun isOverdue(task: TaskItem, today: LocalDate): Boolean =
+        !task.isClosed && !task.someday && task.dueDay?.isBefore(today) == true
 
     /** Tâches à échéance dans les [days] prochains jours, après aujourd'hui, groupées par jour. */
     fun upcoming(

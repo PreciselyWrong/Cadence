@@ -120,6 +120,7 @@ private fun ItemRow(item: MdBlock.Item, onToggleCheckbox: (Int) -> Unit) {
                 TaskCheckbox(
                     checked = item.checked,
                     onCheckedChange = { onToggleCheckbox(item.line) },
+                    contentDescription = item.text,
                 )
             }
             else -> Text(

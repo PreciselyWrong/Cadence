@@ -2,11 +2,11 @@ package ch.nicolab.cadence.agenda
 
 import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskItem
+import ch.nicolab.cadence.tasks.model.TaskViews
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
 import kotlin.math.roundToInt
 
 /** Pas d'accrochage d'un dépôt sur la grille horaire. */
@@ -15,32 +15,35 @@ private const val MINUTES_PER_HOUR = 60
 private const val MINUTES_PER_DAY = 24 * MINUTES_PER_HOUR
 private val HOUR_MINUTE_WIRE: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
-/** Tâche proposée dans le bac « À planifier » : sans échéance ([overdueDays] = 0) ou en retard. */
+/**
+ * Tâche proposée dans le bac « À planifier » : sans échéance ([pastDue] null) ou en retard, [pastDue]
+ * étant alors son échéance. On affiche cette date, jamais un nombre de jours de retard.
+ */
 data class TrayItem(
     val uid: String,
     val title: String,
     val colorArgb: Int?,
-    val overdueDays: Int,
+    val pastDue: LocalDate?,
     val estimateMinutes: Int? = null,
 )
 
 /**
- * Bac « À planifier » : tâches ouvertes sans échéance ou échues avant [today], les plus en retard
- * d'abord. Une tâche récurrente en est exclue : la déplacer demande un périmètre (cette occurrence,
- * les suivantes), que le simple dépôt ne peut pas porter.
+ * Bac « À planifier » : tâches ouvertes sans échéance ou échues avant [today], les plus anciennes
+ * échéances d'abord. Une tâche récurrente en est exclue : la déplacer demande un périmètre (cette
+ * occurrence, les suivantes), que le simple dépôt ne peut pas porter. Une tâche mise de côté
+ * (« Plus tard ») n'est jamais en retard ([TaskViews.isOverdue]) : datée, elle n'y figure pas.
  */
 fun trayItems(tasks: List<TaskItem>, projectColors: Map<String, Int?>, today: LocalDate): List<TrayItem> =
     tasks.asSequence()
         .filter { !it.isClosed && !it.isRecurring }
         .mapNotNull { task ->
-            val overdue = task.dueDay?.let { ChronoUnit.DAYS.between(it, today).toInt() }
             when {
-                task.dueDate == null -> TrayItem(task.uid, task.name, projectColors[task.projectUid], 0, task.estimatedMinutes)
-                overdue != null && overdue > 0 -> TrayItem(task.uid, task.name, projectColors[task.projectUid], overdue, task.estimatedMinutes)
+                task.dueDate == null -> TrayItem(task.uid, task.name, projectColors[task.projectUid], null, task.estimatedMinutes)
+                TaskViews.isOverdue(task, today) -> TrayItem(task.uid, task.name, projectColors[task.projectUid], task.dueDay, task.estimatedMinutes)
                 else -> null
             }
         }
-        .sortedWith(compareByDescending<TrayItem> { it.overdueDays }.thenBy { it.title.lowercase() })
+        .sortedWith(compareBy<TrayItem, LocalDate?>(nullsLast()) { it.pastDue }.thenBy { it.title.lowercase() })
         .toList()
 
 /** Minute de la journée sous [yPx] (relatif au haut de la grille), arrondie au pas et bornée au jour. */

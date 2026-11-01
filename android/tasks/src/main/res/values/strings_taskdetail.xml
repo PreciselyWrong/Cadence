@@ -14,7 +14,7 @@
     <string name="tasks_detail_dates_none">Aucune date</string>
     <string name="tasks_detail_starts">Début le %1$s</string>
     <string name="tasks_detail_start">Début</string>
-    <string name="tasks_detail_overdue">En retard · %1$s</string>
+    <string name="tasks_detail_overdue">Échéance %1$s</string>
     <string name="tasks_detail_badge_priority_low">Priorité basse</string>
     <string name="tasks_detail_badge_priority_medium">Priorité moyenne</string>
     <string name="tasks_detail_badge_priority_high">Priorité haute</string>

@@ -105,7 +105,7 @@ class AgendaInteractionsTest {
     fun `an open one-off all-day task can be dragged with its estimate`() {
         val item = draggableTaskItem(allDayTask("Payer", estimate = 30))!!
         assertEquals("Payer", item.uid)
-        assertEquals(0, item.overdueDays)
+        assertNull(item.pastDue)
         assertEquals(30, item.estimateMinutes)
         assertEquals(0xFF112233.toInt(), item.colorArgb)
     }

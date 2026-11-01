@@ -44,6 +44,7 @@ import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskPriority
 import ch.nicolab.cadence.tasks.model.TaskStatus
+import ch.nicolab.cadence.tasks.model.TaskViews
 import ch.nicolab.cadence.tasks.swipe.FileBackedActions
 import ch.nicolab.cadence.tasks.swipe.SwipeAction
 import ch.nicolab.cadence.tasks.swipe.rememberSwipeConfig
@@ -175,7 +176,7 @@ private fun TaskMeta(task: TaskItem, projectName: String?, today: LocalDate, zon
         horizontalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         if (dueDate != null) {
-            val overdue = dueDate.isBefore(today) && !task.isClosed
+            val overdue = TaskViews.isOverdue(task, today)
             val day = if (showsDueDay(dueDate, sectionDay, overdue)) dayLabel(dueDate, today) else null
             val time = task.dueDate?.takeIf { task.dueHasTime }?.let { wireTime(instantTime(it, zone)) }
             val badge = listOfNotNull(day, time).joinToString(" ")

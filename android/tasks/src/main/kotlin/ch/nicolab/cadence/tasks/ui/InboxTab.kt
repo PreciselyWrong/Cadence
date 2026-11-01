@@ -19,6 +19,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -205,7 +207,7 @@ private fun CaptureField(
  * actions en pastilles de texte. Glisser vers la gauche supprime, avec « Annuler » ; toucher le texte
  * ouvre l'ajout complet.
  */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 private fun IdeaRow(
     entry: InboxEntry,
@@ -265,7 +267,11 @@ private fun IdeaRow(
                 }
                 LinkPreviewList(entry.content, previews, limit = 1)
             }
-            Row(horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+            // Passe à la ligne plutôt que de rogner une pastille en grande police.
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(Space.sm),
+                verticalArrangement = Arrangement.spacedBy(Space.sm),
+            ) {
                 QuickPill(stringResource(R.string.tasks_idea_today), onToday)
                 QuickPill(stringResource(R.string.tasks_idea_schedule), onSchedule)
                 QuickPill(stringResource(R.string.tasks_idea_project), onProject)

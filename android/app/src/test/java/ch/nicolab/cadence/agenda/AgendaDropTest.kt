@@ -93,7 +93,7 @@ class AgendaDropTest {
             listOf("overdue-old", "overdue-yesterday", "undated-a", "undated-b"),
             tray.map { it.uid },
         )
-        assertEquals(listOf(5, 1, 0, 0), tray.map { it.overdueDays })
+        assertEquals(listOf(day.minusDays(5), day.minusDays(1), null, null), tray.map { it.pastDue })
     }
 
     @Test
@@ -105,6 +105,15 @@ class AgendaDropTest {
     @Test
     fun `timed overdue task is still in the tray`() {
         val tray = trayItems(listOf(task("t", due = day.minusDays(1), hasTime = true)), emptyMap(), day)
-        assertEquals(1, tray.single().overdueDays)
+        assertEquals(day.minusDays(1), tray.single().pastDue)
+    }
+
+    @Test
+    fun `a task set aside for later is never proposed as overdue`() {
+        val parked = task("parked", due = day.minusDays(3)).copy(someday = true)
+        val undatedParked = task("parked-undated").copy(someday = true)
+        val tray = trayItems(listOf(parked, undatedParked), emptyMap(), day)
+        assertEquals(listOf("parked-undated"), tray.map { it.uid })
+        assertNull(tray.single().pastDue)
     }
 }

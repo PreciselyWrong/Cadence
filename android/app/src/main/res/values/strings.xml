@@ -423,6 +423,7 @@
     <string name="abstinence_source_nhs">NHS · Masturbation et santé sexuelle</string>
     <string name="abstinence_source_retracted">PubMed · Article rétracté</string>
     <string name="abstinence_widget_tracking">Habitude</string>
+    <string name="habit_reminder_ready">Votre rappel est prêt</string>
     <string name="abstinence_reminder_check_in">Un moment pour faire le point</string>
     <string name="abstinence_reminders_title">Rappels</string>
     <string name="abstinence_reminders_subtitle">Un moment pour faire le point sur votre habitude.</string>
@@ -509,8 +510,7 @@
     <string name="agenda_previous">Précédent</string>
     <string name="agenda_next">Suivant</string>
     <string name="agenda_tray_title">À planifier · glisser dans la journée</string>
-    <string name="agenda_tray_yesterday">Hier</string>
-    <string name="agenda_tray_overdue">%1$d j</string>
+    <string name="agenda_tray_due">Échéance %1$s</string>
     <string name="agenda_tray_drop_at">Déposer à %1$s</string>
     <string name="agenda_meta">%1$s · %2$s</string>
     <string name="agenda_time_range">%1$s–%2$s</string>

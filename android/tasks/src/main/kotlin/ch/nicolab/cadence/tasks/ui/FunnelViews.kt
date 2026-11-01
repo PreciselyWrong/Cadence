@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -19,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.EventNote
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.ChoiceChip
 import ch.nicolab.cadence.designsystem.components.RowGroup
@@ -93,7 +96,8 @@ internal fun FunnelSection(
                 Row(
                     Modifier
                         .weight(1f)
-                        .clickable(enabled = enabled) { picking = true }
+                        .heightIn(min = Size.touch)
+                        .clickable(enabled = enabled, role = Role.Button) { picking = true }
                         .padding(vertical = Space.xs),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -107,12 +111,15 @@ internal fun FunnelSection(
                     )
                 }
                 if (task.reviewOn != null && enabled) {
-                    Icon(
-                        Icons.Outlined.Close,
-                        contentDescription = stringResource(R.string.funnel_review_on_clear),
-                        tint = palette.outline,
-                        modifier = Modifier.size(Size.icon).clickable { onReviewOn(null) },
-                    )
+                    // Cible de 48 dp : l'icône seule (20 dp) se ratait au doigt.
+                    IconButton(onClick = { onReviewOn(null) }) {
+                        Icon(
+                            Icons.Outlined.Close,
+                            contentDescription = stringResource(R.string.funnel_review_on_clear),
+                            tint = palette.outline,
+                            modifier = Modifier.size(Size.icon),
+                        )
+                    }
                 }
             }
         }

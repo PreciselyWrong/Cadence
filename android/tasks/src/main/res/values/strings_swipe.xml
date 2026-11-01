@@ -19,11 +19,11 @@
     <string name="swipe_project_title">Déplacer vers un projet</string>
     <string name="swipe_priority_title">Priorité</string>
 
-    <string name="swipe_notice_deleted">Tâche supprimée</string>
-    <string name="swipe_notice_scheduled">Tâche replanifiée</string>
-    <string name="swipe_notice_unscheduled">Échéance retirée</string>
-    <string name="swipe_notice_moved">Tâche déplacée</string>
-    <string name="swipe_notice_priority">Priorité modifiée</string>
+    <string name="swipe_notice_deleted">« %1$s » supprimée</string>
+    <string name="swipe_notice_scheduled">« %1$s » replanifiée</string>
+    <string name="swipe_notice_unscheduled">« %1$s » sans date</string>
+    <string name="swipe_notice_moved">« %1$s » changée de projet</string>
+    <string name="swipe_notice_priority">Priorité de « %1$s » modifiée</string>
     <string name="swipe_delete_recurring_title">Supprimer une tâche récurrente</string>
     <string name="swipe_delete_this_hint">Cette date est ignorée, la série continue.</string>
     <string name="swipe_delete_all_hint">La tâche et toutes ses occurrences sont supprimées.</string>

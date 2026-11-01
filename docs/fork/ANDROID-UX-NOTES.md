@@ -63,3 +63,27 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Problème** : en couleur « Projet », toutes les cases avaient la même teinte (aucun projet n'a de couleur) ; le widget ne montrait ni projet ni étiquettes.
 - **Décision** : un projet sans couleur rend la couleur de priorité (haute rouge, moyenne orange, basse bleue, aucune gris) ; une ligne discrète sous le titre donne « projet · #étiquettes », désactivable. Les événements gardent leur rond à la couleur de l'agenda.
 - **Web** : dans les listes compactes, une case n'est jamais neutre par défaut quand la tâche a une priorité ; projet et étiquettes restent lisibles sous le titre.
+
+### 2026-11-01 — Revue UI/UX : retard sans compteur, « Plus tard » sans double sens
+
+- **Problème** : le bac « À planifier » de l'Agenda affichait « 5 j » en rouge (compteur de jours de retard) ; la fiche disait « En retard · 20 sept. » ; une tâche mise de côté (« Plus tard », `someday`) avec une vieille échéance restait rouge dans les lignes, la fiche et le bac.
+- **Décision** : le bac et la fiche affichent « Échéance 20 sept. » (même texte que `dailyPlan.dueSince`), les plus anciennes échéances d'abord ; une règle unique (`TaskViews.isOverdue`) : échéance passée d'une tâche ouverte qui n'est pas mise de côté.
+- **Web** : aucun compteur de jours dans le bac de planification du calendrier ; une tâche `someday` n'y est jamais proposée comme en retard.
+
+### 2026-11-01 — « Sans date » au tri du matin
+
+- **Problème** : « Plus tard » voulait dire deux choses : retirer l'échéance (tri « Planifier la journée ») et mettre de côté (`someday`, revue et fiche).
+- **Décision** : le tri du matin dit « Sans date » (« 3 tâches sans date ») ; « Plus tard » est réservé à la mise de côté.
+- **Web** : le planificateur du jour garde « Plus tard » pour un créneau plus tard dans la journée ; s'il retire l'échéance, il dit « Sans date ».
+
+### 2026-11-01 — Messages et projets
+
+- **Problème** : les messages d'un balayage ne nommaient pas la tâche (« Tâche supprimée ») ; dans la page d'un projet, chaque ligne répétait le nom du projet déjà en tête ; les statuts « Pas commencé » et « Planifié » différaient du web ; rien ne disait que « En pause » range le projet dans le Stash.
+- **Décision** : « « Acheter du pain » supprimée / replanifiée / sans date / changée de projet », « Priorité de « … » modifiée » ; les lignes d'un projet n'affichent plus son nom ; statuts « Non commencé » et « Prévu » comme le web ; dans le choix du statut, sous-titres « Dans le Stash, à reprendre plus tard » (En pause), « Décidé de ne pas poursuivre » (Abandonné), « Consultable, hors de vue » (Archivé).
+- **Web** : les toasts nomment l'élément ; le sélecteur de statut de projet montre ces trois descriptions.
+
+### 2026-11-01 — Fiche de tâche et cibles tactiles
+
+- **Problème** : un badge « Priorité » vide encombrait la fiche d'une tâche sans priorité (la ligne Priorité existe plus bas) ; la croix « Retirer la date » (20 dp), la ligne « Revoir le… » et l'anneau du widget Liste (24 dp) étaient trop petits ; les cases des sous-tâches et des listes de notes n'avaient pas de nom pour TalkBack ; les trois pastilles d'une idée de l'Inbox débordaient en grande police.
+- **Décision** : badge de priorité seulement s'il y en a une ; cibles de 48 dp (40 dp dans le widget) ; chaque case porte le nom de son élément, une sous-tâche faite est barrée ; les pastilles passent à la ligne.
+- **Web** : un badge n'apparaît que pour une valeur posée ; une case de sous-tâche a un libellé accessible.

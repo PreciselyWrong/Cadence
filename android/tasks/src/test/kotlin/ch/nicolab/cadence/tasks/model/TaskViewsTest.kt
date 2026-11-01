@@ -4,6 +4,8 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class TaskViewsTest {
@@ -156,5 +158,15 @@ class TaskViewsTest {
             listOf("semaine", "vue-recente", "vue-ancienne"),
             TaskViews.suggestions(tasks, today, now, week).map { it.uid },
         )
+    }
+
+    @Test
+    fun `en retard seulement pour une échéance passée d'une tâche ouverte qui n'est pas mise de côté`() {
+        val past = LocalDate.of(2026, 10, 28)
+        assertTrue(TaskViews.isOverdue(task("retard", due = past), today))
+        assertFalse(TaskViews.isOverdue(task("aujourdhui", due = today), today))
+        assertFalse(TaskViews.isOverdue(task("sans-date"), today))
+        assertFalse(TaskViews.isOverdue(task("terminee", due = past, status = TaskStatus.DONE), today))
+        assertFalse(TaskViews.isOverdue(task("plus-tard", due = past).copy(someday = true), today))
     }
 }

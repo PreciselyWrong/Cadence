@@ -67,6 +67,7 @@ import ch.nicolab.cadence.designsystem.theme.cadence
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 import kotlin.math.roundToInt
 
 private val DROP_LABEL: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
@@ -199,7 +200,8 @@ internal fun Modifier.trayDragSource(
 private fun TrayChip(item: TrayItem, drag: TrayDragState, onDrop: (String, LocalDateTime) -> Unit) {
     val palette = cadence
     val color = readableTintOf(item.colorArgb?.let { Color(it) } ?: palette.primary, minContrast = ICON_CONTRAST)
-    val tint = if (item.overdueDays > 0) palette.error else color
+    val pastDue = item.pastDue
+    val tint = if (pastDue != null) palette.error else color
     Row(
         Modifier
             .clip(Radius.Chip)
@@ -216,13 +218,10 @@ private fun TrayChip(item: TrayItem, drag: TrayDragState, onDrop: (String, Local
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.padding(horizontal = Space.sm).widthIn(max = CHIP_MAX_WIDTH),
         )
-        if (item.overdueDays > 0) {
+        if (pastDue != null) {
+            // La date d'échéance, jamais un compteur de jours de retard (WEB-UX-NOTES, ton sans culpabilité).
             Text(
-                text = if (item.overdueDays == 1) {
-                    stringResource(R.string.agenda_tray_yesterday)
-                } else {
-                    stringResource(R.string.agenda_tray_overdue, item.overdueDays)
-                },
+                text = stringResource(R.string.agenda_tray_due, trayDueFormat.format(pastDue)),
                 style = MaterialTheme.typography.labelMedium,
                 color = palette.error,
                 modifier = Modifier.padding(end = Space.sm),
@@ -230,6 +229,8 @@ private fun TrayChip(item: TrayItem, drag: TrayDragState, onDrop: (String, Local
         }
     }
 }
+
+private val trayDueFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM", Locale.FRENCH)
 
 internal fun snapTickConstant(): Int =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {

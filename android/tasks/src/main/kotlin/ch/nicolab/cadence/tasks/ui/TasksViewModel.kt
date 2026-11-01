@@ -367,7 +367,7 @@ internal class TasksViewModel(
         }
         val zone = moment.value.zone
         val change = if (date == null) TaskChange(clearDue = true) else TaskViews.postponeChange(task, date, zone)
-        val message = getString(if (date == null) R.string.swipe_notice_unscheduled else R.string.swipe_notice_scheduled)
+        val message = getString(if (date == null) R.string.swipe_notice_unscheduled else R.string.swipe_notice_scheduled, task.name)
         changeWithUndo(task, change, UndoChanges.restoreDue(task, zone), message)
     }
 
@@ -376,7 +376,7 @@ internal class TasksViewModel(
         if (!FileBackedActions.canEdit(task)) return
         if (projectUid == task.projectUid) return
         val change = if (projectUid == null) TaskChange(clearProject = true) else TaskChange(projectUid = projectUid)
-        changeWithUndo(task, change, UndoChanges.restoreProject(task), getString(R.string.swipe_notice_moved))
+        changeWithUndo(task, change, UndoChanges.restoreProject(task), getString(R.string.swipe_notice_moved, task.name))
     }
 
     fun setPriority(task: TaskItem, priority: Int?) {
@@ -384,7 +384,7 @@ internal class TasksViewModel(
         if (!FileBackedActions.canEdit(task)) return
         if (priority == task.priority) return
         val change = if (priority == null) TaskChange(clearPriority = true) else TaskChange(priority = priority)
-        changeWithUndo(task, change, UndoChanges.restorePriority(task), getString(R.string.swipe_notice_priority))
+        changeWithUndo(task, change, UndoChanges.restorePriority(task), getString(R.string.swipe_notice_priority, task.name))
     }
 
     /** Réponse à « Cette occurrence / Toute la série » pour une suppression ; null = annulé. */
@@ -419,7 +419,7 @@ internal class TasksViewModel(
                 hiddenUids.value -= task.uid
             }
         }
-        _notices.tryEmit(UndoNotice(getString(R.string.swipe_notice_deleted)) { undoDelete(task.uid) })
+        _notices.tryEmit(UndoNotice(getString(R.string.swipe_notice_deleted, task.name)) { undoDelete(task.uid) })
     }
 
     private fun undoDelete(uid: String) {
