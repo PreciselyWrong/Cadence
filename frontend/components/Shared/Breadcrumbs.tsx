@@ -190,17 +190,21 @@ const Breadcrumbs: React.FC = () => {
                     return (
                         <li
                             key={`${index}-${crumb.label}`}
-                            className={`flex items-center gap-1 ${isLast ? 'min-w-0' : 'flex-shrink-0'}`}
+                            // Every crumb may shrink: a long parent project
+                            // name used to push the page wider than a phone.
+                            className="flex min-w-0 items-center gap-1"
                         >
                             {crumb.to ? (
                                 <Link
                                     to={crumb.to}
-                                    className="hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
+                                    title={crumb.label}
+                                    className="truncate hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
                                 >
                                     {crumb.label}
                                 </Link>
                             ) : (
                                 <span
+                                    title={crumb.label}
                                     className="truncate font-medium text-gray-700 dark:text-gray-200"
                                     aria-current={isLast ? 'page' : undefined}
                                 >

@@ -374,7 +374,7 @@ const ProductivityAssistant: React.FC<ProductivityAssistantProps> = ({
                             <div key={itemIndex} className="text-sm">
                                 <button
                                     onClick={() => handleItemClick(item)}
-                                    className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline text-left"
+                                    className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline text-left [overflow-wrap:anywhere]"
                                 >
                                     • {item.name}
                                 </button>

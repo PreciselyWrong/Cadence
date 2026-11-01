@@ -67,6 +67,33 @@ describe('Breadcrumbs', () => {
         );
     });
 
+    it('lets a long parent name shrink and keeps it whole on hover', () => {
+        const long =
+            'Refonte complète du site web de l’association des parents';
+        act(() => {
+            useStore.setState((state: any) => ({
+                projectsStore: {
+                    ...state.projectsStore,
+                    projects: [
+                        { uid: 'site1', name: long },
+                        {
+                            uid: 'cms1',
+                            name: 'Migration',
+                            parent_project_uid: 'site1',
+                        },
+                    ],
+                },
+            }));
+        });
+        renderAt('/project/cms1-migration');
+
+        const parent = screen.getByRole('link', { name: long });
+        expect(parent).toHaveAttribute('title', long);
+        // jsdom has no layout: the crumb must not refuse to shrink.
+        expect(parent.closest('li')).not.toHaveClass('flex-shrink-0');
+        expect(parent).toHaveClass('truncate');
+    });
+
     it('renders nothing on the Everyone page itself', () => {
         const { container } = renderAt('/everyone');
         expect(container).toBeEmptyDOMElement();
