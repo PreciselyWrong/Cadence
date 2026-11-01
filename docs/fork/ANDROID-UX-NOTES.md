@@ -255,3 +255,9 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Problème** : Réglages › Synchronisation ne montrait que les conflits perdus par le téléphone ; ni les appareils, ni les pertes des autres appareils (que le web montrait déjà).
 - **Décision** : en ligne, la section lit `GET /api/v1/sync/status`. « Appareils » : nom · « Synchronisé il y a 2 h ». « Conflits » : d'abord ceux du serveur (« Écartée : … », « Gardée : … », « Garder cette valeur » / « Garder l'autre », « Compris » seul pour une habitude), réglés par `POST /api/v1/sync/conflicts/:id/resolve` ; puis ceux que seul le téléphone connaît (« Ce téléphone » / « Serveur »). Un même champ (`entité|uid|champ`) ne donne qu'une ligne, celle du serveur, et la régler efface aussi la copie du téléphone. Hors ligne : la liste du téléphone seule.
 - **Web** : rien à reprendre (la page web fait déjà de même). Reste : rien d'essayé sur le téléphone.
+
+### 2026-11-01 — En-tête de projet et compteurs à zéro (reprise du web)
+
+- **Problème** : règles d'épure du web du 2026-11-01 (en-tête de projet, pas de compteur 0) à vérifier sur Android.
+- **Décision** : l'en-tête d'un projet gagne un menu « … » avec « Épingler / Désépingler » (`pin_to_sidebar`, synchronisé ; `TaskRepository.setProjectPinned`), rien en bouton visible. Android n'affiche pas l'échéance d'un projet (`due_date_at` n'est pas gardé dans Room) : aucune couleur d'alerte possible. L'Inbox vide n'a plus de sous-titre « 0 idée à trier » ; Aujourd'hui n'a pas de pastilles de filtre Boîte / Tout (les compteurs de la planification ne s'affichent déjà que non nuls).
+- **Web** : rien à reprendre. Reste : afficher l'échéance d'un projet sur Android demanderait une colonne Room et une migration ; rien d'essayé sur le téléphone.

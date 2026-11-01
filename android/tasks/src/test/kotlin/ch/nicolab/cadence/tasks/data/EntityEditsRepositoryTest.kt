@@ -88,6 +88,25 @@ class EntityEditsRepositoryTest {
     }
 
     @Test
+    fun `pinning a project writes the row and one pin-only upsert, unpinning sends false`() = runBlocking {
+        database.projectDao().upsert(project("p1"))
+
+        repository.setProjectPinned("p1", true)
+
+        assertTrue(database.projectDao().get("p1")!!.pinToSidebar)
+        val op = pending().single()
+        assertEquals(setOf("pin_to_sidebar"), op.third.keys)
+        assertEquals("true", op.third.getValue("pin_to_sidebar").jsonPrimitive.content)
+
+        repository.setProjectPinned("p1", false)
+        repository.setProjectPinned("p1", false)
+        repository.setProjectPinned("ghost", true)
+
+        assertEquals(false, database.projectDao().get("p1")!!.pinToSidebar)
+        assertEquals(2, pending().size)
+    }
+
+    @Test
     fun `removing a project icon sends a null icon`() = runBlocking {
         database.projectDao().upsert(project("p1", icon = "home"))
 

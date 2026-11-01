@@ -695,6 +695,8 @@ internal class TasksViewModel(
 
     fun setProjectIcon(uid: String, icon: String?) = launchAction { repository.setProjectIcon(uid, icon) }
 
+    fun setProjectPinned(uid: String, pinned: Boolean) = launchAction { repository.setProjectPinned(uid, pinned) }
+
     fun setTagIcon(uid: String, icon: String?) = launchAction { repository.setTagIcon(uid, icon) }
 
     fun setTagColor(uid: String, color: String?) = launchAction { repository.setTagColor(uid, color) }

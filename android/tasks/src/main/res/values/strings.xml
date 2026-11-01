@@ -143,6 +143,7 @@
     <string name="tasks_subtask_rename_title">Renommer la sous-tâche</string>
     <string name="tasks_subtask_open">Ouvrir comme tâche</string>
     <string name="tasks_action_unpin">Désépingler</string>
+    <string name="tasks_project_more">Plus d\'actions sur le projet</string>
     <string name="tasks_action_delete">Supprimer</string>
     <string name="tasks_delete_title">Supprimer la tâche ?</string>
     <string name="tasks_delete_message">La tâche sera supprimée du serveur Cadence.</string>

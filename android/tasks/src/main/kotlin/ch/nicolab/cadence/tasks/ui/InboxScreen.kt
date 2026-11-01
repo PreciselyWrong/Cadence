@@ -71,7 +71,8 @@ fun InboxScreen(modifier: Modifier = Modifier, onOpenSearch: () -> Unit = {}, on
             Column(Modifier.fillMaxSize()) {
                 ScreenHeader(
                     title = stringResource(R.string.tasks_inbox_title),
-                    subtitle = pluralStringResource(R.plurals.tasks_inbox_subtitle, ideas.size, ideas.size),
+                    // Jamais « 0 idée » : une Inbox vide n'a pas de sous-titre.
+                    subtitle = ideas.size.takeIf { it > 0 }?.let { pluralStringResource(R.plurals.tasks_inbox_subtitle, it, it) },
                     modifier = Modifier.statusBarsPadding().padding(horizontal = Space.gutter),
                     actions = {
                         RoundHeaderButton(

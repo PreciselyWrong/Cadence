@@ -22,6 +22,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.PushPin
+import androidx.compose.material.icons.filled.PushPin
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -328,6 +333,7 @@ internal fun ProjectTasksPane(
     val headerIcon = entityIcon(project?.icon)
     val headerColor = projectRailColor(project?.color)?.let(::Color) ?: cadence.primary
     var editingStatus by remember { mutableStateOf(false) }
+    var menuOpen by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val layouts = remember(context) { LayoutStore(context) }
     var outline by rememberSaveable { mutableStateOf(layouts.isOn(LayoutStore.OUTLINE)) }
@@ -377,6 +383,22 @@ internal fun ProjectTasksPane(
                 if (project != null) {
                     TextButton(onClick = { editingStatus = true }) {
                         Text(stringResource(projectStatusLabel(project.projectStatus)))
+                    }
+                    // Épingler sert rarement : dans le menu, comme sur le web, jamais en bouton visible.
+                    Box {
+                        IconButton(onClick = { menuOpen = true }) {
+                            Icon(Icons.Outlined.MoreVert, contentDescription = stringResource(R.string.tasks_project_more))
+                        }
+                        DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(if (project.pinToSidebar) R.string.tasks_action_unpin else R.string.tasks_action_pin)) },
+                                leadingIcon = { Icon(if (project.pinToSidebar) Icons.Filled.PushPin else Icons.Outlined.PushPin, contentDescription = null) },
+                                onClick = {
+                                    menuOpen = false
+                                    viewModel.setProjectPinned(project.uid, !project.pinToSidebar)
+                                },
+                            )
+                        }
                     }
                 }
             }

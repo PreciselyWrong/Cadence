@@ -1,6 +1,9 @@
 ## [1.7.0] — à publier
 
 ### Nouveautés
+- En-tête d'un projet : « Épingler / Désépingler » (épingle de la barre latérale du web, synchronisée) dans un menu « … », jamais en bouton visible ; l'Inbox vide n'affiche plus « 0 idée à trier ».
+
+### Nouveautés
 - Réglages › Synchronisation : la liste des appareils et leur dernière synchro, et les conflits gardés par le serveur (perdus par n'importe quel appareil) avec les deux valeurs, réglés sur le serveur ; un champ perdu aussi par le téléphone ne fait qu'une ligne. Comme la page du web.
 
 ### Corrections

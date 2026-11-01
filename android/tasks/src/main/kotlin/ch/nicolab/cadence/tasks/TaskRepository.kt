@@ -134,6 +134,9 @@ interface TaskRepository {
     /** Pose (identifiant du jeu partagé) ou retire (null) l'icône du projet [uid] ; refuse un identifiant invalide. Sans effet si le projet est inconnu. */
     suspend fun setProjectIcon(uid: String, icon: String?)
 
+    /** Épingle le projet (`pin_to_sidebar`, la barre latérale du web) ; rien n'est écrit si rien ne change. */
+    suspend fun setProjectPinned(uid: String, pinned: Boolean)
+
     /** Pose ou retire l'icône de l'étiquette [uid]. */
     suspend fun setTagIcon(uid: String, icon: String?)
 
