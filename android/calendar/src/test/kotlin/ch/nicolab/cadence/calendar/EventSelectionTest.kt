@@ -217,4 +217,136 @@ class EventSelectionTest {
             assertEquals(0, select(events, calendars = listOf(synced), displays = displays, surface = surface).size, surface.name)
         }
     }
+
+    private fun ids(result: List<EventWithDone>) = result.map { it.event.key.calendarId to it.event.eventId }
+
+    @Test
+    fun `masquer partout est le choix inverse d'utiliser`() {
+        val display = CalendarDisplay(agenda = true, tasks = true, widget = true)
+
+        val hidden = display.hiddenEverywhere(true)
+        assertEquals(false, hidden.used)
+        assertEquals(true, hidden.isHiddenEverywhere(calendar))
+        assertEquals(true, hidden.agenda && hidden.tasks && hidden.widget)
+
+        val back = hidden.hiddenEverywhere(false)
+        assertEquals(true, back.used)
+        assertEquals(false, back.isHiddenEverywhere(calendar))
+    }
+
+    @Test
+    fun `un agenda masqué partout n'a aucun événement sur aucune surface même avec des doublons ailleurs`() {
+        val calendars = listOf(calendar(1L), calendar(2L))
+        val displays = mapOf(1L to CalendarDisplay(widget = true).hiddenEverywhere(true), 2L to CalendarDisplay(widget = true))
+        val events = listOf(event(eventId = 1L, calendarId = 1L), event(eventId = 2L, calendarId = 2L))
+
+        CalendarSurface.entries.forEach { surface ->
+            assertEquals(listOf(2L to 2L), ids(select(events, calendars, displays, surface = surface)), surface.name)
+        }
+    }
+
+    @Test
+    fun `un même événement sur deux agendas n'apparaît qu'une fois`() {
+        val calendars = listOf(calendar(1L), calendar(2L))
+        val events = listOf(event(eventId = 1L, calendarId = 1L, title = "Dentiste"), event(eventId = 9L, calendarId = 2L, title = "  dentiste "))
+
+        assertEquals(listOf(1L to 1L), ids(select(events, calendars)))
+    }
+
+    @Test
+    fun `le doublon garde l'agenda principal, sinon le premier dans l'ordre`() {
+        val shared = calendar(1L)
+        val own = calendar(2L).copy(primary = true)
+        val third = calendar(3L)
+        val events = listOf(event(eventId = 1L, calendarId = 1L), event(eventId = 2L, calendarId = 2L), event(eventId = 3L, calendarId = 3L))
+
+        assertEquals(listOf(2L to 2L), ids(select(events, listOf(shared, own, third))))
+        assertEquals(listOf(1L to 1L), ids(select(events, listOf(shared, third))))
+    }
+
+    @Test
+    fun `même titre à une autre heure ou un autre jour n'est pas fusionné`() {
+        val calendars = listOf(calendar(1L), calendar(2L))
+        val events = listOf(
+            event(eventId = 1L, calendarId = 1L, begin = at(10)),
+            event(eventId = 2L, calendarId = 2L, begin = at(11)),
+            event(eventId = 3L, calendarId = 2L, begin = at(10), end = at(10) + 1_800_000L),
+        )
+
+        assertEquals(3, select(events, calendars).size)
+    }
+
+    @Test
+    fun `une journée entière en double est fusionnée, pas celle d'un autre jour`() {
+        val calendars = listOf(calendar(1L), calendar(2L))
+        val utcDay = day.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+        val allDay = { id: Long, cal: Long, offset: Long ->
+            event(eventId = id, calendarId = cal, begin = utcDay, end = utcDay + 86_400_000L, allDay = true, title = "Congé")
+                .let { it.copy(instanceBegin = it.instanceBegin + offset * 86_400_000L, instanceEnd = it.instanceEnd + offset * 86_400_000L) }
+        }
+
+        assertEquals(1, select(listOf(allDay(1L, 1L, 0), allDay(2L, 2L, 0)), calendars).size)
+        assertEquals(1, select(listOf(allDay(1L, 1L, 0), allDay(2L, 2L, 1)), calendars).size)
+    }
+
+    @Test
+    fun `une journée entière et un événement horaire de même titre restent deux`() {
+        val calendars = listOf(calendar(1L), calendar(2L))
+        val utcDay = day.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+        val events = listOf(
+            event(eventId = 1L, calendarId = 1L, begin = utcDay, end = utcDay + 86_400_000L, allDay = true),
+            event(eventId = 2L, calendarId = 2L),
+        )
+
+        assertEquals(2, select(events, calendars).size)
+    }
+
+    @Test
+    fun `les occurrences d'une série ne se fusionnent qu'avec la même occurrence d'un autre agenda`() {
+        val calendars = listOf(calendar(1L), calendar(2L))
+        val nextDay = day.plusDays(1)
+        val wide = TimeRange.ofDays(day, 2, zone)
+        val events = listOf(
+            event(eventId = 1L, calendarId = 1L, begin = at(9)),
+            event(eventId = 1L, calendarId = 1L, begin = at(9, nextDay)),
+            event(eventId = 5L, calendarId = 2L, begin = at(9)),
+            event(eventId = 5L, calendarId = 2L, begin = at(9, nextDay)),
+        )
+
+        val result = selectEvents(events, calendars, emptyMap(), defaults, emptySet(), wide, CalendarSurface.AGENDA, zone)
+
+        assertEquals(listOf(1L to 1L, 1L to 1L), ids(result))
+    }
+
+    @Test
+    fun `deux lieux différents gardent deux événements, un lieu absent fusionne`() {
+        val calendars = listOf(calendar(1L), calendar(2L), calendar(3L))
+        val a = event(eventId = 1L, calendarId = 1L).copy(location = "Salle A")
+        val b = event(eventId = 2L, calendarId = 2L).copy(location = "salle b")
+        val c = event(eventId = 3L, calendarId = 3L).copy(location = null)
+
+        assertEquals(2, select(listOf(a, b), calendars).size)
+        assertEquals(1, select(listOf(a, c), calendars).size)
+    }
+
+    @Test
+    fun `le doublon est jugé après le filtre par surface`() {
+        val calendars = listOf(calendar(1L).copy(primary = true), calendar(2L))
+        val displays = mapOf(1L to CalendarDisplay(tasks = false))
+        val events = listOf(event(eventId = 1L, calendarId = 1L), event(eventId = 2L, calendarId = 2L))
+
+        assertEquals(listOf(2L to 2L), ids(select(events, calendars, displays, surface = CalendarSurface.TASKS)))
+        assertEquals(listOf(1L to 1L), ids(select(events, calendars, displays, surface = CalendarSurface.AGENDA)))
+    }
+
+    @Test
+    fun `cocher l'événement gardé le marque fait`() {
+        val calendars = listOf(calendar(1L), calendar(2L))
+        val events = listOf(event(eventId = 1L, calendarId = 1L), event(eventId = 2L, calendarId = 2L))
+        val kept = events.first().key
+
+        val result = select(events, calendars, done = setOf(kept))
+
+        assertEquals(listOf(true), result.map { it.done })
+    }
 }

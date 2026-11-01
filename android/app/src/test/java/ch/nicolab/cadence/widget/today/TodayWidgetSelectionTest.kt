@@ -5,6 +5,7 @@ import ch.nicolab.cadence.calendar.DeviceCalendar
 import ch.nicolab.cadence.calendar.EventWithDone
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskPriority
+import ch.nicolab.cadence.tasks.ui.mergeTodayItems
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -290,7 +291,7 @@ class TodayWidgetSelectionTest {
             task("yesterday-b", today.minusDays(1)),
         )
 
-        val sections = taskSections(select(tasks, TodayWidgetConfig(groupByDay = true)), TodayWidgetConfig(groupByDay = true), today)
+        val sections = taskSections(select(tasks, TodayWidgetConfig(groupByDay = true)), TodayWidgetConfig(groupByDay = true), today, zone)
 
         assertEquals(listOf(today.minusDays(3), today.minusDays(1), today), sections.map { it.day })
         assertEquals(listOf(true, true, false), sections.map { it.overdue })
@@ -301,7 +302,7 @@ class TodayWidgetSelectionTest {
     @Test
     fun `une seule section du jour n'a pas d'intitule`() {
         val config = TodayWidgetConfig(groupByDay = true)
-        val sections = taskSections(select(listOf(task("a", today), task("b", today)), config), config, today)
+        val sections = taskSections(select(listOf(task("a", today), task("b", today)), config), config, today, zone)
 
         assertEquals(1, sections.size)
         assertEquals(false, sections.single().labelled)
@@ -312,10 +313,68 @@ class TodayWidgetSelectionTest {
         val config = TodayWidgetConfig(groupByDay = false)
         val tasks = listOf(task("today", today), task("old", today.minusDays(3)), task("y", today.minusDays(1)))
 
-        val sections = taskSections(select(tasks, config), config, today)
+        val sections = taskSections(select(tasks, config), config, today, zone)
 
         assertEquals(listOf(true, false), sections.map { it.overdue })
         assertEquals(listOf(true, false), sections.map { it.labelled })
         assertEquals(listOf(listOf("old", "y"), listOf("today")), sections.map { s -> s.tasks.map { it.uid } })
+    }
+
+    @Test
+    fun `les evenements sont affiches par defaut`() {
+        assertTrue(TodayWidgetConfig().showEvents)
+    }
+
+    @Test
+    fun `un reglage enregistre sans le champ evenements prend la valeur par defaut, un choix explicite est garde`() {
+        val absent = TodayWidgetConfigCodec.decode { null }
+        assertTrue(absent.showEvents)
+        val off = TodayWidgetConfigCodec.encode(TodayWidgetConfig(showEvents = false)).let { saved -> TodayWidgetConfigCodec.decode { saved[it] } }
+        assertEquals(false, off.showEvents)
+    }
+
+    @Test
+    fun `la section d'aujourd'hui du widget est celle de la liste Aujourd'hui de l'application`() {
+        val timed = TaskItem(uid = "t", name = "t", dueDay = today, dueDate = today.atTime(11, 0).toInstant(ZoneOffset.UTC), dueHasTime = true)
+        val untimed = task("u", today)
+        val tasks = listOf(untimed, timed)
+        val events = listOf(event("all", begin = at("00:00"), allDay = true), event("morning", begin = at("09:00"), allDay = false))
+        val config = TodayWidgetConfig(showOverdueSection = false, groupByDay = true)
+
+        val section = taskSections(select(tasks, config, events), config, today, zone).single { it.day == today }
+
+        val app = mergeTodayItems(select(tasks, config).tasks, events, zone)
+        assertEquals(app.map { it.key }, section.items.map { it.key })
+        assertEquals(listOf("event", "event", "task", "task"), section.items.map { it.key.substringBefore(':') })
+    }
+
+    @Test
+    fun `sans tache le jour, les evenements forment quand meme la section d'aujourd'hui`() {
+        val config = TodayWidgetConfig(groupByDay = true)
+        val sections = taskSections(select(emptyList(), config, listOf(event("solo", begin = at("09:00"), allDay = false))), config, today, zone)
+
+        assertEquals(listOf(today), sections.map { it.day })
+        assertEquals(1, sections.single().items.size)
+    }
+
+    @Test
+    fun `sans evenements demandes, aucune ligne d'evenement`() {
+        val config = TodayWidgetConfig(showEvents = false)
+        val sections = taskSections(select(listOf(task("a", today)), config, listOf(event("x", at("09:00"), false))), config, today, zone)
+
+        assertTrue(sections.flatMap { it.items }.none { it is ch.nicolab.cadence.tasks.ui.TodayItem.Event })
+    }
+
+    @Test
+    fun `la migration des evenements force l'affichage une seule fois puis respecte un retrait`() {
+        val saved = TodayWidgetConfigCodec.encode(TodayWidgetConfig(showEvents = false)).toMutableMap().apply { remove("eventsMigrated") }
+
+        val writes = TodayWidgetConfigCodec.eventsMigration { saved[it] }
+        saved.putAll(writes)
+        assertTrue(TodayWidgetConfigCodec.decode { saved[it] }.showEvents)
+
+        val afterOptOut = TodayWidgetConfigCodec.encode(TodayWidgetConfig(showEvents = false))
+        assertEquals(emptyMap<String, String>(), TodayWidgetConfigCodec.eventsMigration { afterOptOut[it] })
+        assertEquals(false, TodayWidgetConfigCodec.decode { afterOptOut[it] }.showEvents)
     }
 }

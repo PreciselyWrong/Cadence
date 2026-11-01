@@ -597,8 +597,8 @@
     <string name="calendars_intro">Pour chaque agenda, choisissez où ses événements apparaissent.</string>
     <string name="calendars_source_google">Google</string>
     <string name="calendars_surface_agenda">Agenda</string>
+    <string name="calendars_hide_everywhere">Masquer partout</string>
     <string name="calendars_surface_tasks">Liste Tâches</string>
-    <string name="calendars_surface_widget">Widget</string>
     <string name="calendars_check_title">Cocher un événement</string>
     <string name="calendars_check_subtitle">Le marque fait dans Cadence, sans modifier Google</string>
     <string name="calendars_hidden_title">Événements masqués</string>
@@ -611,7 +611,7 @@
     <string name="calendars_permission_action">Autoriser l’accès aux agendas</string>
     <string name="calendars_empty">Aucun agenda sur cet appareil</string>
     <string name="calendars_use">Utiliser dans Cadence</string>
-    <string name="calendars_use_hint">Les agendas non utilisés n’apparaissent nulle part dans Cadence.</string>
+    <string name="calendars_use_hint">Les agendas non utilisés ou masqués partout n’apparaissent nulle part dans Cadence. Un même événement présent sur plusieurs agendas n’est montré qu’une fois.</string>
     <string name="calendars_unused_header">Non utilisés (%1$d)</string>
     <string name="routine_title">Routine · %1$s %2$d/%3$d</string>
     <string name="routine_open_habits">Ouvrir les habitudes</string>
@@ -626,7 +626,7 @@
     <string name="today_overdue_label">Échues · %1$d</string>
     <string name="today_no_date_label">Sans date</string>
     <string name="today_event_all_day">Journée</string>
-    <string name="today_events_label">Agenda</string>
+    <string name="today_widget_calendar_access">Autoriser l’agenda</string>
     <string name="today_event_check_description">Marquer %1$s comme fait</string>
     <string name="today_widget_check_description">Terminer %1$s</string>
     <string name="today_widget_uncheck_description">Annuler la coche de %1$s</string>

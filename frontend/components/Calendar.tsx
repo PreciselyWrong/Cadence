@@ -28,6 +28,7 @@ import {
     updateGoogleCalendar,
     updateGoogleEvent,
 } from '../utils/googleSyncService';
+import { dedupeCalendarEvents } from '../utils/dedupeCalendarEvents';
 import GoogleEventModal, {
     GoogleEventDraft,
 } from './Calendar/GoogleEventModal';
@@ -464,6 +465,10 @@ const Calendar: React.FC = () => {
             .filter((calendar) => calendar.show_on_calendar)
             .map((calendar) => calendar.feed_uid),
     ]);
+    // The owner's primary Google calendar wins over a duplicate elsewhere.
+    const feedPriority = googleCalendars
+        .filter((calendar) => calendar.is_primary)
+        .map((calendar) => calendar.feed_uid);
     const calendarEvents = [
         ...holidays.map(holidayToEvent),
         ...focusSessions.map((session) =>
@@ -471,9 +476,10 @@ const Calendar: React.FC = () => {
         ),
         ...events,
         ...habitEvents,
-        ...feedEvents
-            .filter((event) => shownFeedUids.has(event.feed_uid))
-            .map(feedEventToCalendarEvent),
+        ...dedupeCalendarEvents(
+            feedEvents.filter((event) => shownFeedUids.has(event.feed_uid)),
+            feedPriority
+        ).map(feedEventToCalendarEvent),
     ];
     const failedFeedNames = feeds
         .filter(

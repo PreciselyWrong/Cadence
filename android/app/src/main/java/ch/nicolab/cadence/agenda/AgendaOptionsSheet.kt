@@ -7,6 +7,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -43,6 +45,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import ch.nicolab.cadence.R
 import ch.nicolab.cadence.calendar.CalendarWithDisplay
+import ch.nicolab.cadence.calendar.isHiddenEverywhere
 import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.CadenceSwitch
 import ch.nicolab.cadence.designsystem.components.ChoiceChip
@@ -85,6 +88,7 @@ internal fun AgendaOptionsSheet(
     onOptionsChange: ((AgendaOptions) -> AgendaOptions) -> Unit,
     onCalendarShown: (CalendarWithDisplay, Boolean) -> Unit,
     onCalendarTasksShown: (CalendarWithDisplay, Boolean) -> Unit,
+    onCalendarHidden: (CalendarWithDisplay, Boolean) -> Unit,
     onDismiss: () -> Unit,
 ) {
     val palette = cadence
@@ -159,8 +163,9 @@ internal fun AgendaOptionsSheet(
                         CalendarShownRow(
                             item = item,
                             shape = rowGroupShape(index, calendars.size),
-                            onAgendaShown = { onCalendarShown(item, !item.display.agenda) },
-                            onTasksShown = { onCalendarTasksShown(item, !item.display.tasks) },
+                            onAgendaShown = { onCalendarShown(item, !(item.display.agenda && !item.display.isHiddenEverywhere(item.calendar))) },
+                            onTasksShown = { onCalendarTasksShown(item, !(item.display.tasks && !item.display.isHiddenEverywhere(item.calendar))) },
+                            onHidden = { onCalendarHidden(item, !item.display.isHiddenEverywhere(item.calendar)) },
                         )
                     }
                 }
@@ -216,17 +221,20 @@ private fun OptionRow(toggle: OptionToggle, shape: Shape) {
     }
 }
 
-/** Un agenda utilisé : son nom, son compte pour le distinguer d'un homonyme, puis Agenda et Liste Tâches. */
+/** Un agenda : son nom, son compte pour le distinguer d'un homonyme, puis Agenda, Liste Tâches et Masquer partout. */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun CalendarShownRow(
     item: CalendarWithDisplay,
     shape: Shape,
     onAgendaShown: () -> Unit,
     onTasksShown: () -> Unit,
+    onHidden: () -> Unit,
 ) {
     val palette = cadence
     val calendar = item.calendar
     val display = item.display
+    val hidden = display.isHiddenEverywhere(calendar)
     Column(
         Modifier
             .fillMaxWidth()
@@ -251,21 +259,28 @@ private fun CalendarShownRow(
                 overflow = TextOverflow.Ellipsis,
             )
         }
-        Row(horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
             ChoiceChip(
                 label = stringResource(R.string.calendars_surface_agenda),
-                selected = display.agenda,
+                selected = display.agenda && !hidden,
                 // Un agenda sombre en thème sombre (ou clair en thème clair) doit se distinguer du fond.
                 accent = readableTintOf(Color(calendar.colorArgb), minContrast = ICON_CONTRAST),
-                leadingIcon = if (display.agenda) Icons.Outlined.Check else null,
+                leadingIcon = if (display.agenda && !hidden) Icons.Outlined.Check else null,
                 onClick = onAgendaShown,
             )
             ChoiceChip(
                 label = stringResource(R.string.calendars_surface_tasks),
-                selected = display.tasks,
+                selected = display.tasks && !hidden,
                 accent = readableTintOf(Color(calendar.colorArgb), minContrast = ICON_CONTRAST),
-                leadingIcon = if (display.tasks) Icons.Outlined.Check else null,
+                leadingIcon = if (display.tasks && !hidden) Icons.Outlined.Check else null,
                 onClick = onTasksShown,
+            )
+            ChoiceChip(
+                label = stringResource(R.string.calendars_hide_everywhere),
+                selected = hidden,
+                accent = readableTintOf(Color(calendar.colorArgb), minContrast = ICON_CONTRAST),
+                leadingIcon = if (hidden) Icons.Outlined.Check else null,
+                onClick = onHidden,
             )
         }
     }

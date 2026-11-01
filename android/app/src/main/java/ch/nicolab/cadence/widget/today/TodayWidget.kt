@@ -75,6 +75,7 @@ import ch.nicolab.cadence.tasks.model.TagColors
 import ch.nicolab.cadence.tasks.model.RelativeDay
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.quickadd.TaskQuickAddActivity
+import ch.nicolab.cadence.tasks.ui.TodayItem
 import ch.nicolab.cadence.tasks.widget.WidgetCompletions
 import ch.nicolab.cadence.tasks.widget.WidgetTrace
 import ch.nicolab.cadence.tasks.widget.openTaskIntent
@@ -165,6 +166,7 @@ class TodayWidget : GlanceAppWidget() {
             sheen = TodayPalette.sheenAlpha(config).takeIf { it > 0f }?.let(::renderGlassSheen),
             marks = marks,
             checkEvents = config.showEvents && CalendarGraph.repository(app).globalSettings.first().checkEvents,
+            calendarAccessMissing = config.showEvents && CalendarGraph.repository(app).permissionMissing.first(),
             now = now,
             selection = selection,
             facets = facets,
@@ -190,7 +192,7 @@ class TodayWidget : GlanceAppWidget() {
             add(app.repository.observeWidgetRevisions())
             add(calendar.globalSettings)
             add(TodayWidgetReloads.requests)
-            if (showEvents) add(calendar.events(todayRange(today, zone), CalendarSurface.WIDGET))
+            if (showEvents) add(calendar.events(todayRange(today, zone), CalendarSurface.TASKS))
         }
         return sources.merge().map { }
     }
@@ -202,7 +204,7 @@ class TodayWidget : GlanceAppWidget() {
         zone: ZoneId,
     ): List<EventWithDone> {
         if (!config.showEvents) return emptyList()
-        return CalendarGraph.repository(context).events(todayRange(today, zone), CalendarSurface.WIDGET).first()
+        return CalendarGraph.repository(context).events(todayRange(today, zone), CalendarSurface.TASKS).first()
     }
 
     private fun todayRange(today: LocalDate, zone: ZoneId): TimeRange = TimeRange(
@@ -348,6 +350,8 @@ private class TodayView(
     val marks: TodayMarks,
     /** « Cocher un événement » est actif : l'anneau coche l'occurrence au lieu d'ouvrir l'application. */
     val checkEvents: Boolean,
+    /** `READ_CALENDAR` manque alors que les événements sont demandés : une ligne discrète la réclame. */
+    val calendarAccessMissing: Boolean,
     val now: Instant,
     val selection: TodaySelection,
     val facets: List<FacetView>,
@@ -381,7 +385,7 @@ private fun TodayContent(view: TodayView, held: Set<String>) {
     val habitsShown = view.facets.isNotEmpty()
     val tasksShown = config.showTasks && (view.selection.tasks.isNotEmpty() || view.selection.overdue.isNotEmpty())
     val eventsShown = config.showEvents && view.selection.events.isNotEmpty()
-    val listWanted = tasksShown || eventsShown
+    val listWanted = tasksShown || eventsShown || view.calendarAccessMissing
     val listShown = listWanted && TodayWidgetLayout.listFits(size.height.value, text, habitsShown)
     // Le verre est une surface translucide posée dans son liseré : la couche extérieure, teinte du
     // liseré, ne dépasse que sur RIM_DP tout autour ; le reflet est une image étirée sous le contenu.
@@ -405,7 +409,7 @@ private fun TodayContent(view: TodayView, held: Set<String>) {
                 Box(GlanceModifier.height(6.dp)) {}
                 if (config.habitPlacement == HabitPlacement.ABOVE && habitsShown) HabitsRow(view, text)
                 if (listShown) {
-                    TodayList(view, held, text, tasksShown)
+                    TodayList(view, held, text)
                 } else {
                     Box(modifier = GlanceModifier.fillMaxWidth().defaultWeight(), contentAlignment = Alignment.Center) {
                         if (config.showTasks && !listWanted && !habitsShown) EmptyLabel(context.getString(R.string.today_widget_empty), palette, text)
@@ -418,39 +422,51 @@ private fun TodayContent(view: TodayView, held: Set<String>) {
 }
 
 /**
- * Toutes les tâches (retards d'abord) puis les événements du jour, dans une liste qui défile. Les
- * événements suivent un intitulé « Agenda » quand des tâches les précèdent.
+ * Les tâches (retards d'abord) puis celles du jour mêlées aux événements, dans l'ordre de la liste
+ * Aujourd'hui de l'application, dans une liste qui défile. Sans permission d'agenda, une ligne
+ * discrète la demande.
  */
 @Composable
-private fun ColumnScope.TodayList(view: TodayView, held: Set<String>, text: TodayTextSizes, tasksShown: Boolean) {
+private fun ColumnScope.TodayList(view: TodayView, held: Set<String>, text: TodayTextSizes) {
     val context = LocalContext.current
-    val selection = view.selection
+    val selection = if (view.config.showTasks) view.selection else view.selection.copy(overdue = emptyList(), tasks = emptyList())
     val grouped = view.config.groupByDay
     LazyColumn(modifier = GlanceModifier.fillMaxWidth().defaultWeight()) {
-        if (view.config.showTasks) {
-            taskSections(selection, view.config, view.today).forEach { section ->
-                if (section.labelled) {
-                    item(itemId = section.labelId()) {
-                        val colour = if (section.overdue) view.palette.provider { it.overdue } else view.palette.provider { it.muted }
-                        SectionLabel(section.label(view, context), colour, text)
-                    }
+        taskSections(selection, view.config, view.today, view.zone).forEach { section ->
+            if (section.labelled) {
+                item(itemId = section.labelId()) {
+                    val colour = if (section.overdue) view.palette.provider { it.overdue } else view.palette.provider { it.muted }
+                    SectionLabel(section.label(view, context), colour, text)
                 }
-                items(section.tasks, itemId = { it.rowKey.hashCode().toLong() }) {
-                    // Regroupée par jour, la ligne ne répète pas la date de sa section : l'heure seule.
-                    val due = if (grouped) it.dueTimeLabel(view) else it.dueLabel(view, context)
-                    TaskRowView(it, view, due, overdue = section.overdue, checked = it.uid in held, text)
+            }
+            items(section.items, itemId = { it.key.hashCode().toLong() }) { row ->
+                when (row) {
+                    is TodayItem.Task -> {
+                        val task = row.task
+                        // Regroupée par jour, la ligne ne répète pas la date de sa section : l'heure seule.
+                        val due = if (grouped) task.dueTimeLabel(view) else task.dueLabel(view, context)
+                        TaskRowView(task, view, due, overdue = section.overdue, checked = task.uid in held, text)
+                    }
+                    is TodayItem.Event -> EventRowView(row.event, view, text)
                 }
             }
         }
-        if (view.config.showEvents && selection.events.isNotEmpty()) {
-            if (tasksShown) {
-                item(itemId = TodayListIds.EVENTS) {
-                    SectionLabel(context.getString(R.string.today_events_label), view.palette.provider { it.muted }, text)
-                }
-            }
-            items(selection.events) { EventRowView(it, view, text) }
+        if (view.calendarAccessMissing) {
+            item(itemId = TodayListIds.EVENTS) { CalendarAccessRow(view, text) }
         }
     }
+}
+
+/** Ligne unique et calme qui ouvre la demande de permission de lecture des agendas. */
+@Composable
+private fun CalendarAccessRow(view: TodayView, text: TodayTextSizes) {
+    val context = LocalContext.current
+    Text(
+        context.getString(R.string.today_widget_calendar_access),
+        maxLines = 1,
+        style = TextStyle(color = view.palette.provider { it.muted }, fontSize = text.small.sp),
+        modifier = GlanceModifier.fillMaxWidth().padding(vertical = 8.dp).clickable(actionStartActivity<CalendarAccessActivity>()),
+    )
 }
 
 @Composable
@@ -635,7 +651,7 @@ private fun EventRowView(event: EventWithDone, view: TodayView, sizes: TodayText
     val palette = view.palette
     val state = TodayEventPresentation.state(event, view.now, view.zone)
     val time = TodayEventPresentation.timeLabel(event.event, view.zone, context.getString(R.string.today_event_all_day))
-    val calendarArgb = event.event.colorArgb
+    val calendarArgb = event.event.colorArgb.takeIf { it != 0 } ?: event.calendar.colorArgb
     // La teinte de l'agenda est éclaircie ou assombrie jusqu'à 4,5:1 sur la surface de chaque thème.
     val tint = ColorProvider(
         day = Color(readableTint(calendarArgb, opaque(palette.day.surface))),

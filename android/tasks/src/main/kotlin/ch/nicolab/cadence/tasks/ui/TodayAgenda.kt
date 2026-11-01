@@ -5,8 +5,8 @@ import ch.nicolab.cadence.calendar.localStart
 import ch.nicolab.cadence.tasks.model.TaskItem
 import java.time.ZoneId
 
-/** Élément de la liste Aujourd'hui : une tâche de Cadence ou un événement de l'agenda de l'appareil. */
-internal sealed interface TodayItem {
+/** Élément de la liste Aujourd'hui (partagé par l'app et le widget, pour qu'ils ne divergent pas) : une tâche de Cadence ou un événement de l'agenda de l'appareil. */
+sealed interface TodayItem {
     val key: String
 
     data class Task(val task: TaskItem) : TodayItem {
@@ -23,7 +23,7 @@ internal sealed interface TodayItem {
  * Mêle les événements et les tâches du jour. Ordre : journées entières (ordre fourni), puis
  * éléments à heure par heure locale, puis tâches sans heure dans leur ordre d'origine.
  */
-internal fun mergeTodayItems(
+fun mergeTodayItems(
     tasks: List<TaskItem>,
     events: List<EventWithDone>,
     zone: ZoneId,

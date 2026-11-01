@@ -7,6 +7,8 @@ import ch.nicolab.cadence.tasks.model.TagPaths
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskPriority
 import ch.nicolab.cadence.tasks.model.TaskViews
+import ch.nicolab.cadence.tasks.ui.TodayItem
+import ch.nicolab.cadence.tasks.ui.mergeTodayItems
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -62,23 +64,38 @@ fun selectWidgetTasks(
  * Section de la liste du widget. [day] est le jour d'échéance quand les tâches sont regroupées par
  * jour, null pour la section « En retard » unique, le reste non regroupé ou les tâches sans date.
  * [labelled] dit si la section porte un intitulé : une section seule et à jour n'en a pas, le
- * titre du widget le dit déjà.
+ * titre du widget le dit déjà. [items] mêle les événements du jour aux tâches de la section
+ * d'aujourd'hui, avec la fonction de la liste Aujourd'hui de l'application ([mergeTodayItems]).
  */
-data class TodaySection(val day: LocalDate?, val overdue: Boolean, val labelled: Boolean, val tasks: List<TaskItem>)
+data class TodaySection(
+    val day: LocalDate?,
+    val overdue: Boolean,
+    val labelled: Boolean,
+    val tasks: List<TaskItem>,
+    val items: List<TodayItem> = tasks.map { TodayItem.Task(it) },
+)
 
-/** Découpe les tâches de [selection] en sections, par jour d'échéance ou en « retards puis le reste ». */
-fun taskSections(selection: TodaySelection, config: TodayWidgetConfig, today: LocalDate): List<TodaySection> {
+/**
+ * Découpe les tâches de [selection] en sections, par jour d'échéance ou en « retards puis le reste ».
+ * Les événements du jour rejoignent la section d'aujourd'hui (la section sans retard quand rien n'est regroupé).
+ */
+fun taskSections(selection: TodaySelection, config: TodayWidgetConfig, today: LocalDate, zone: ZoneId): List<TodaySection> {
+    val events = selection.events
+    fun merged(tasks: List<TaskItem>, withEvents: Boolean): List<TodayItem> = mergeTodayItems(tasks, if (withEvents) events else emptyList(), zone)
     if (!config.groupByDay) {
         return listOfNotNull(
             selection.overdue.takeIf { it.isNotEmpty() }?.let { TodaySection(null, overdue = true, labelled = true, tasks = it) },
-            selection.tasks.takeIf { it.isNotEmpty() }?.let { TodaySection(null, overdue = false, labelled = false, tasks = it) },
+            (selection.tasks.takeIf { it.isNotEmpty() || events.isNotEmpty() })
+                ?.let { TodaySection(null, overdue = false, labelled = false, tasks = it, items = merged(it, withEvents = true)) },
         )
     }
-    val byDay = (selection.overdue + selection.tasks).groupBy { it.dueDay }
+    val byDay = (selection.overdue + selection.tasks).groupBy { it.dueDay }.toMutableMap()
+    if (events.isNotEmpty() && today !in byDay) byDay[today] = emptyList()
     val days = byDay.keys.sortedWith(nullsLast())
     val single = days.size == 1 && days.single()?.isBefore(today) != true
     return days.map { day ->
-        TodaySection(day, overdue = day?.isBefore(today) == true, labelled = !single, tasks = byDay.getValue(day))
+        val tasks = byDay.getValue(day)
+        TodaySection(day, overdue = day?.isBefore(today) == true, labelled = !single, tasks = tasks, items = merged(tasks, withEvents = day == today))
     }
 }
 

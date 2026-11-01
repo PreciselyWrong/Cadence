@@ -6,6 +6,7 @@ package ch.nicolab.cadence.calendar
  * @property accountType type de compte Android (`com.google` pour Google), pour libeller la source.
  * @property visibleOnDevice choix « visible » de l'application d'agenda du système, indicatif seulement.
  * @property syncEvents l'agenda est synchronisé sur l'appareil ; sinon ses occurrences sont absentes.
+ * @property primary le compte possède l'agenda (niveau d'accès propriétaire et propriétaire = compte).
  */
 data class DeviceCalendar(
     val id: Long,
@@ -15,6 +16,8 @@ data class DeviceCalendar(
     val colorArgb: Int,
     val visibleOnDevice: Boolean,
     val syncEvents: Boolean = true,
+    /** Agenda dont le compte est propriétaire : il l'emporte sur un autre agenda pour un même événement en double. */
+    val primary: Boolean = false,
 )
 
 /** Identité stable d'une occurrence : un événement récurrent a une clé par occurrence. */
@@ -99,6 +102,12 @@ data class CalendarDisplay(
 
 /** Vrai si l'agenda sert dans Cadence : le choix de l'utilisateur, sinon la synchronisation de l'appareil. */
 fun CalendarDisplay.isUsed(calendar: DeviceCalendar): Boolean = used ?: calendar.syncEvents
+
+/** Vrai si l'agenda est masqué partout : aucune de ses occurrences n'apparaît dans Cadence. */
+fun CalendarDisplay.isHiddenEverywhere(calendar: DeviceCalendar): Boolean = !isUsed(calendar)
+
+/** Masque l'agenda partout (« Masquer partout ») ou le rend, en gardant les surfaces choisies. */
+fun CalendarDisplay.hiddenEverywhere(hidden: Boolean): CalendarDisplay = copy(used = !hidden)
 
 /**
  * Réglages communs à tous les agendas.

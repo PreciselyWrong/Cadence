@@ -76,7 +76,7 @@ internal fun calendarsSubtitle(): String? {
     val permissionMissing by repository.permissionMissing.collectAsStateWithLifecycle(initialValue = true)
     val calendars by calendarsFlow.collectAsStateWithLifecycle(initialValue = emptyList())
     if (permissionMissing) return null
-    val shown = calendars.count { it.display.isUsed(it.calendar) && (it.display.agenda || it.display.tasks || it.display.widget) }
+    val shown = calendars.count { it.display.isUsed(it.calendar) && (it.display.agenda || it.display.tasks) }
     return pluralStringResource(R.plurals.settings_calendars_count, shown, shown)
 }
 
@@ -303,11 +303,6 @@ private fun CalendarBlock(
                     selected = display.tasks,
                     leadingIcon = if (display.tasks) Icons.Rounded.Check else null,
                 ) { onDisplay(display.copy(tasks = !display.tasks)) }
-                ChoiceChip(
-                    label = stringResource(R.string.calendars_surface_widget),
-                    selected = display.widget,
-                    leadingIcon = if (display.widget) Icons.Rounded.Check else null,
-                ) { onDisplay(display.copy(widget = !display.widget)) }
             }
         }
     }

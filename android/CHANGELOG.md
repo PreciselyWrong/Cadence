@@ -1,6 +1,9 @@
 ## [1.6.2] — 1 novembre 2026
 
 ### Nouveautés
+- Agendas : « Masquer partout » dans la feuille Affichage de l'Agenda (par agenda) : ses événements n'apparaissent plus nulle part (Agenda, liste Tâches, widget). Un agenda masqué reste listé pour le rendre.
+- Agendas : un même événement présent sur plusieurs agendas (même titre, même heure, ou même journée entière) n'est montré qu'une fois, dans l'Agenda, la liste Tâches et le widget ; l'agenda principal du compte l'emporte, sinon le premier. Deux lieux différents gardent deux événements.
+- Widget « Aujourd'hui » : les événements de l'agenda s'affichent par défaut, mêlés aux tâches du jour par heure comme dans l'onglet Aujourd'hui, avec le rond de leur agenda (toucher le coche). Ils suivent le réglage « Liste Tâches » de chaque agenda. Sans permission d'agenda, une ligne « Autoriser l'agenda » la demande.
 - Tâches récurrentes : modifier ou supprimer une occurrence demande « cette tâche ou la série ? » (Seulement celle-ci, Celle-ci et les suivantes, Toutes). La question vaut pour le titre, la note, la priorité, l'heure, la durée, le projet, les étiquettes et le statut, depuis la fiche, le menu, les balayages et l'Agenda (déposer ou étirer un bloc, occurrences à venir comprises), et fonctionne hors ligne ; la synchronisation envoie ensuite les mêmes changements que le web.
 - Étiquettes colorées : chaque étiquette a une couleur (la sienne, celle de son parent, ou une teinte tirée de son nom, identique sur le web), visible dans la fiche de tâche, la saisie rapide, l'onglet Étiquettes, les notes et le widget « Aujourd'hui ». On la choisit dans le crayon de l'étiquette : chaque teinte en trois nuances, un code hex libre, ou « Automatique ».
 - Icônes : choisir ou retirer l'icône d'un projet (appui long ou bouton de statut, puis Icône) et d'une étiquette (crayon de l'en-tête), avec le même jeu que les habitudes et le web.

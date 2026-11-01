@@ -26,6 +26,7 @@ object TodayWidgetConfigCodec {
     private const val CHECK_FROM_WIDGET = "checkFromWidget"
     private const val PROJECT_RAIL = "projectRail"
     private const val SHOW_EVENTS = "showEvents"
+    private const val EVENTS_MIGRATED = "eventsMigrated"
     private const val TEXT_SIZE = "textSize"
     private const val CORNER = "cornerRadius"
     private const val GROUP_BY_DAY = "groupByDay"
@@ -40,8 +41,17 @@ object TodayWidgetConfigCodec {
     /** Les identifiants d'habitude, de projet et d'étiquette sont des UUID : la virgule ne peut pas s'y glisser. */
     private const val ID_SEPARATOR = ","
 
+    /**
+     * Migration unique de la 1.6.2, où les événements passent à « affichés » : un réglage sans
+     * [EVENTS_MIGRATED] reçoit `showEvents = true` une fois, puis le drapeau, de sorte qu'un
+     * retrait ultérieur est respecté. Renvoie les écritures à faire, vide si déjà migré.
+     */
+    fun eventsMigration(read: (String) -> String?): Map<String, String> =
+        if (read(EVENTS_MIGRATED) != null) emptyMap() else mapOf(SHOW_EVENTS to flag(true), EVENTS_MIGRATED to "1")
+
     fun encode(config: TodayWidgetConfig): Map<String, String> = mapOf(
         VERSION to CURRENT_VERSION,
+        EVENTS_MIGRATED to "1",
         BACKGROUND to config.background.name,
         CONTROL to config.controlColour.name,
         FREE_CONTROL to config.freeControlArgb.toString(),

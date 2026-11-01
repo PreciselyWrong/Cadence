@@ -6,8 +6,15 @@ import android.content.Context
 class TodayWidgetConfigStore(context: Context) {
     private val prefs = context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
-    fun load(appWidgetId: Int): TodayWidgetConfig =
-        TodayWidgetConfigCodec.decode { field -> prefs.getString(key(appWidgetId, field), null) }
+    fun load(appWidgetId: Int): TodayWidgetConfig {
+        val migration = TodayWidgetConfigCodec.eventsMigration { field -> prefs.getString(key(appWidgetId, field), null) }
+        if (migration.isNotEmpty()) {
+            val editor = prefs.edit()
+            migration.forEach { (field, value) -> editor.putString(key(appWidgetId, field), value) }
+            editor.apply()
+        }
+        return TodayWidgetConfigCodec.decode { field -> prefs.getString(key(appWidgetId, field), null) }
+    }
 
     fun save(appWidgetId: Int, config: TodayWidgetConfig) {
         val editor = prefs.edit()

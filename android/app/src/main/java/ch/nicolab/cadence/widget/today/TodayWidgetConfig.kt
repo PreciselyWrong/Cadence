@@ -58,7 +58,8 @@ data class TodayWidgetConfig(
     val showTaskMeta: Boolean = true,
     /** Trait de couleur du projet à gauche de chaque tâche. */
     val projectRail: Boolean = true,
-    val showEvents: Boolean = false,
+    /** Événements des agendas : activés par défaut, y compris pour un réglage enregistré sans ce champ. */
+    val showEvents: Boolean = true,
     /** Une section par jour d'échéance (retards en tête, en rouge) ; sinon une seule section « En retard ». */
     val groupByDay: Boolean = true,
     /** Verre : opacité de la surface, en %. Plus bas, le fond d'écran transparaît davantage. */
