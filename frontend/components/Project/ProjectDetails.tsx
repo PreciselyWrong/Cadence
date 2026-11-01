@@ -151,7 +151,12 @@ const ProjectDetails: React.FC = () => {
     };
     useEffect(() => {
         if (!isMinimal || !projectViewLoaded) return;
-        setView(savedProjectView === 'list' ? 'tasks' : savedProjectView);
+        // `gallery` belongs to the Links and Notes pages, never a project.
+        setView(
+            savedProjectView === 'list' || savedProjectView === 'gallery'
+                ? 'tasks'
+                : savedProjectView
+        );
     }, [isMinimal, projectViewLoaded, savedProjectView]);
     const [isBannerEditModalOpen, setIsBannerEditModalOpen] = useState(false);
     const attachmentsApi = useMemo(
