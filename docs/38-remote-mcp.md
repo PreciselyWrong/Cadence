@@ -167,7 +167,7 @@ Zero Trust › Access › Applications › Add › Self-hosted:
 
 - **Application domain:** `cadence.nicolab.ch`, **path** `oauth/authorize`. Only that path: claude.ai's servers call the other endpoints and cannot pass Access.
 - **Session duration:** short, e.g. 15 minutes.
-- **Policy:** Allow, Include › Emails › `coppens.n@gmail.com` <!-- TODO: confirm the address Nicolas wants for Access -->
+- **Policy:** Allow, Include › Emails › `coppens.n@gmail.com`
 - **Login method:** One-time PIN (Settings › Authentication).
 
 Do not enable "Bypass" or "Service auth" policies on this application.
