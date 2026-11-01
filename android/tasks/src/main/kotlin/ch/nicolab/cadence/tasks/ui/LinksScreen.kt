@@ -20,6 +20,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
+import androidx.compose.foundation.lazy.staggeredgrid.items as gridItems
+import androidx.compose.material.icons.automirrored.outlined.ViewList
+import androidx.compose.material.icons.outlined.GridView
+import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
+import ch.nicolab.cadence.tasks.model.LinkDecision
+import ch.nicolab.cadence.tasks.model.LinkTriage
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
@@ -128,9 +137,20 @@ private val ACTIONS = listOf(
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun LinksScreen(onBack: () -> Unit, onOpenSource: (LinkSource) -> Unit) {
+internal fun LinksScreen(tasks: TasksViewModel, onBack: () -> Unit, onOpenSource: (LinkSource) -> Unit) {
     val viewModel: LinksViewModel = viewModel()
-    val links by viewModel.shown.collectAsStateWithLifecycle()
+    val masked by tasks.masked.collectAsStateWithLifecycle()
+    val inbox by tasks.inbox.collectAsStateWithLifecycle()
+    val every by tasks.links.collectAsStateWithLifecycle()
+    val filtered by viewModel.shown.collectAsStateWithLifecycle()
+    val links = remember(filtered, masked) { filtered.filterNot { it.uid in masked } }
+    val context = LocalContext.current
+    val layouts = remember(context) { LayoutStore(context) }
+    var gallery by rememberSaveable { mutableStateOf(layouts.isGallery(LAYOUT_KEY)) }
+    var picking by remember { mutableStateOf<Pair<LinkItem, LinkDecision>?>(null) }
+    val decide: (LinkItem, LinkDecision, String?) -> Unit = { link, decision, projectUid ->
+        tasks.decideLink(LinkTriage.openEntry(link, inbox, every), link, decision, projectUid, maskLink = true)
+    }
     val total by viewModel.total.collectAsStateWithLifecycle()
     val filter by viewModel.filter.collectAsStateWithLifecycle()
     val tags by viewModel.tags.collectAsStateWithLifecycle()
@@ -147,6 +167,16 @@ fun LinksScreen(onBack: () -> Unit, onOpenSource: (LinkSource) -> Unit) {
                     subtitle = pluralStringResource(R.plurals.links_count, total, total),
                     onBack = onBack,
                     backDescription = stringResource(R.string.links_back),
+                    actions = {
+                        RoundHeaderButton(
+                            icon = if (gallery) Icons.AutoMirrored.Outlined.ViewList else Icons.Outlined.GridView,
+                            contentDescription = stringResource(if (gallery) R.string.links_show_list else R.string.links_show_gallery),
+                            onClick = {
+                                gallery = !gallery
+                                layouts.setGallery(LAYOUT_KEY, gallery)
+                            },
+                        )
+                    },
                 )
             }
             SearchPill(
@@ -209,34 +239,65 @@ fun LinksScreen(onBack: () -> Unit, onOpenSource: (LinkSource) -> Unit) {
                     }
                 }
             }
-            LazyColumn(
-                Modifier.weight(1f),
-                contentPadding = PaddingValues(start = Space.gutter, end = Space.gutter, top = Space.md, bottom = Space.xxxl),
-                verticalArrangement = Arrangement.spacedBy(Space.sm),
-            ) {
-                if (links.isEmpty()) {
-                    item(key = "empty") {
-                        Text(
-                            stringResource(if (total == 0) R.string.links_empty else R.string.links_no_match),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = palette.onSurfaceVariant,
-                            modifier = Modifier.padding(vertical = Space.lg),
+            if (gallery) {
+                LazyVerticalStaggeredGrid(
+                    columns = StaggeredGridCells.Adaptive(Size.galleryCell),
+                    modifier = Modifier.weight(1f),
+                    contentPadding = PaddingValues(start = Space.gutter, end = Space.gutter, top = Space.md, bottom = Space.xxxl),
+                    horizontalArrangement = Arrangement.spacedBy(Space.sm),
+                    verticalItemSpacing = Space.sm,
+                ) {
+                    if (links.isEmpty()) {
+                        item(key = "empty", span = StaggeredGridItemSpan.FullLine) { LinksEmpty(total) }
+                    }
+                    gridItems(links, key = { it.uid }) { link ->
+                        LinkGalleryCard(
+                            link = link,
+                            onDecide = { decision ->
+                                if (decision == LinkDecision.TEST || decision == LinkDecision.ATTACH) {
+                                    picking = link to decision
+                                } else {
+                                    decide(link, decision, null)
+                                }
+                            },
                         )
                     }
                 }
-                items(links, key = { it.uid }) { link ->
-                    LinkCard(
-                        link = link,
-                        tags = tags,
-                        reviewOn = if (link.status == LinkStatus.PARKED) link.reviewAt else null,
-                        onTags = { viewModel.setTags(link.uid, it) },
-                        onEditNote = { editing = link },
-                        onOpenSource = { link.source?.let(onOpenSource) },
-                        onStatus = { status -> viewModel.setStatus(link.uid, if (link.status == status) LinkStatus.NEW else status) },
-                    )
+            } else {
+                LazyColumn(
+                    Modifier.weight(1f),
+                    contentPadding = PaddingValues(start = Space.gutter, end = Space.gutter, top = Space.md, bottom = Space.xxxl),
+                    verticalArrangement = Arrangement.spacedBy(Space.sm),
+                ) {
+                    if (links.isEmpty()) {
+                        item(key = "empty") { LinksEmpty(total) }
+                    }
+                    items(links, key = { it.uid }) { link ->
+                        LinkCard(
+                            link = link,
+                            tags = tags,
+                            reviewOn = if (link.status == LinkStatus.PARKED) link.reviewAt else null,
+                            onTags = { viewModel.setTags(link.uid, it) },
+                            onEditNote = { editing = link },
+                            onOpenSource = { link.source?.let(onOpenSource) },
+                            onStatus = { status -> viewModel.setStatus(link.uid, if (link.status == status) LinkStatus.NEW else status) },
+                        )
+                    }
                 }
             }
         }
+    }
+    picking?.let { (link, decision) ->
+        TestProjectSheet(
+            viewModel = tasks,
+            onPick = { projectUid ->
+                picking = null
+                decide(link, decision, projectUid)
+            },
+            onDismiss = { picking = null },
+            title = if (decision == LinkDecision.ATTACH) R.string.links_attach_project_title else R.string.links_test_project_title,
+            allowNone = decision == LinkDecision.TEST,
+        )
     }
     editing?.let { link ->
         LinkNoteDialog(
@@ -343,7 +404,7 @@ internal fun LinkSummary(link: LinkItem, descriptionLines: Int) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Outlined.Star, contentDescription = null, tint = palette.outline, modifier = Modifier.size(Size.iconSm))
                 Text(
-                    CompactDecimalFormat.getInstance(Locale.getDefault(), CompactDecimalFormat.CompactStyle.SHORT).format(stars),
+                    starsText(stars),
                     style = MaterialTheme.typography.labelSmall,
                     color = palette.outline,
                 )
@@ -402,6 +463,18 @@ internal fun LinkNoteDialog(initial: String?, onSave: (String?) -> Unit, onDismi
 }
 
 @Composable
+private fun LinksEmpty(total: Int) {
+    Text(
+        stringResource(if (total == 0) R.string.links_empty else R.string.links_no_match),
+        style = MaterialTheme.typography.bodyMedium,
+        color = cadence.onSurfaceVariant,
+        modifier = Modifier.padding(vertical = Space.lg),
+    )
+}
+
+private const val LAYOUT_KEY = "links"
+
+@Composable
 private fun SearchPill(value: String, onChange: (String) -> Unit, modifier: Modifier = Modifier) {
     val palette = cadence
     Row(
@@ -434,10 +507,14 @@ private fun kindLabel(kind: LinkKind): Int = when (kind) {
     LinkKind.OTHER -> R.string.links_kind_other
 }
 
-private fun statusLabel(status: LinkStatus): Int? = when (status) {
+internal fun statusLabel(status: LinkStatus): Int? = when (status) {
     LinkStatus.TESTED -> R.string.links_status_tested
     LinkStatus.KEPT -> R.string.links_status_kept
     LinkStatus.PARKED -> R.string.links_status_parked
     LinkStatus.DROPPED -> R.string.links_status_dropped
     LinkStatus.NEW -> null
 }
+
+/** Nombre d'étoiles court (« 1,2 k »), dans la langue de l'appareil. */
+internal fun starsText(stars: Int): String =
+    CompactDecimalFormat.getInstance(Locale.getDefault(), CompactDecimalFormat.CompactStyle.SHORT).format(stars)

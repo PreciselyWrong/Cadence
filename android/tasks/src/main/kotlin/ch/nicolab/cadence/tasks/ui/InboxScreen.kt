@@ -138,6 +138,7 @@ fun InboxScreen(modifier: Modifier = Modifier, onOpenSearch: () -> Unit = {}, on
     }
     if (linksOpen) {
         LinksScreen(
+            tasks = viewModel,
             onBack = { linksOpen = false },
             onOpenSource = { source ->
                 linksOpen = false
@@ -167,7 +168,7 @@ internal fun DeletionUndoEffect(viewModel: TasksViewModel, snackbar: SnackbarHos
                     actionLabel = undoLabel,
                     duration = SnackbarDuration.Short,
                 )
-                if (result == SnackbarResult.ActionPerformed) viewModel.undoDeletion(deletion.uid)
+                if (result == SnackbarResult.ActionPerformed) viewModel.undoDeletion(deletion)
             }
         }
     }
@@ -181,6 +182,7 @@ private fun deletionMessage(context: Context, deletion: PendingDeletion): String
         when (deletion.decision) {
             LinkDecision.KEEP -> R.string.links_decided_kept
             LinkDecision.TEST -> R.string.links_decided_test
+            LinkDecision.ATTACH -> R.string.links_decided_attach
             LinkDecision.LATER -> R.string.links_decided_later
             LinkDecision.DROP, null -> R.string.links_decided_dropped
         },

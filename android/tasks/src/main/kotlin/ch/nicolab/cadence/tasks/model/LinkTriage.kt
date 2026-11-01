@@ -2,8 +2,11 @@ package ch.nicolab.cadence.tasks.model
 
 import java.time.LocalDate
 
-/** Les quatre décisions sur un lien de l'Inbox : garder, tester, repousser, jeter. */
-enum class LinkDecision { KEEP, TEST, LATER, DROP }
+/**
+ * Décisions sur un lien : garder, tester, rattacher à un projet, repousser, jeter. L'Inbox en offre quatre
+ * ([LinkTriage.INBOX_DECISIONS]), la galerie des découvertes quatre autres ([LinkTriage.GALLERY_DECISIONS]).
+ */
+enum class LinkDecision { KEEP, TEST, ATTACH, LATER, DROP }
 
 /** Une écriture locale d'une décision ; chacune part par la file d'envoi, hors ligne compris. */
 sealed interface TriageStep {
@@ -33,14 +36,22 @@ object LinkTriage {
     /** « Plus tard » repose le lien un mois. */
     const val LATER_DAYS = 30L
 
+    /** Pastilles d'une idée de l'Inbox ; « Plus… » y garde la conversion en tâche. */
+    val INBOX_DECISIONS = listOf(LinkDecision.KEEP, LinkDecision.TEST, LinkDecision.LATER, LinkDecision.DROP)
+
+    /** Pastilles d'une carte de la galerie : Tester, Rattacher, Reporter, Jeter. */
+    val GALLERY_DECISIONS = listOf(LinkDecision.TEST, LinkDecision.ATTACH, LinkDecision.LATER, LinkDecision.DROP)
+
     /**
-     * Ce que fait chaque décision. Le lien change toujours de statut et l'idée est toujours marquée traitée
-     * (elle quitte l'Inbox, le lien reste dans la bibliothèque) ; l'idée est traitée en dernier pour
-     * qu'une écriture qui échoue la laisse visible. « À tester » crée en plus la tâche [testTaskName].
+     * Ce que fait chaque décision. Le lien change toujours de statut ; l'idée [entryUid] qui le porte, s'il y en a
+     * une encore ouverte, est marquée traitée (elle quitte l'Inbox, le lien reste dans la bibliothèque), en dernier
+     * pour qu'une écriture qui échoue la laisse visible. « À tester » crée en plus la tâche [testTaskName] ;
+     * « Rattacher » crée dans le projet [projectUid] une tâche au nom du lien, qui garde l'adresse en note
+     * (un lien n'a pas de projet : c'est la tâche qui le range), et marque le lien gardé.
      */
     fun steps(
         decision: LinkDecision,
-        entryUid: String,
+        entryUid: String?,
         link: LinkItem,
         today: LocalDate,
         projectUid: String?,
@@ -52,14 +63,22 @@ object LinkTriage {
                 add(TriageStep.CreateTask(TaskDraft(name = testTaskName, note = testTaskNote(link), projectUid = projectUid)))
                 add(TriageStep.SetStatus(link.uid, LinkStatus.TESTED))
             }
+            LinkDecision.ATTACH -> {
+                add(TriageStep.CreateTask(TaskDraft(name = link.displayTitle, note = testTaskNote(link), projectUid = projectUid)))
+                add(TriageStep.SetStatus(link.uid, LinkStatus.KEPT))
+            }
             LinkDecision.LATER -> {
                 add(TriageStep.SetStatus(link.uid, LinkStatus.PARKED))
                 add(TriageStep.SetReviewDate(link.uid, today.plusDays(LATER_DAYS)))
             }
             LinkDecision.DROP -> add(TriageStep.SetStatus(link.uid, LinkStatus.DROPPED))
         }
-        add(TriageStep.ProcessInbox(entryUid))
+        entryUid?.let { add(TriageStep.ProcessInbox(it)) }
     }
+
+    /** L'idée encore dans l'Inbox qui porte [link] ; null s'il a été trouvé ailleurs ou que l'idée est traitée. */
+    fun openEntry(link: LinkItem, entries: List<InboxEntry>, links: List<LinkItem>): InboxEntry? =
+        entries.firstOrNull { LinkLists.forEntry(links, it.uid, it.content)?.uid == link.uid }
 
     /** L'adresse d'abord, puis la note de l'utilisateur : la tâche garde de quoi retrouver et comprendre le lien. */
     fun testTaskNote(link: LinkItem): String = listOfNotNull(link.url, link.note?.takeIf { it.isNotBlank() }).joinToString("\n\n")

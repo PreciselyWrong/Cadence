@@ -72,6 +72,20 @@ Entity `link` (schema 4): fields `note`, `status`, `review_at`; server fields li
 - **Trier les liens (n)**: shown from two links; one link at a time, full width, same four decisions plus "Passer". The queue is the Inbox links, oldest first; a skipped link goes to the end (order kept on the device), so reopening resumes where the user stopped.
 - The decision-to-writes mapping is `model/LinkTriage.kt` (pure, tested in `LinkTriageTest`); the repository additions are `TaskRepository.setLinkTags` and `processInboxItem`.
 
+### Android discoveries gallery
+
+- The Links screen has a list / gallery switch in its header (remembered on the device). The gallery is a grid of cards (two columns on a phone): the page image when the server read one (`image_url`; no image, no placeholder), title, site, GitHub stars, the README start for a repository (else the description), the note, and four one-tap decisions. It shows the same links and filters as the list, newest first.
+- **Decisions** (mapping in `model/LinkTriage.kt`, `GALLERY_DECISIONS`):
+
+| Chip | Link status | Also |
+|---|---|---|
+| Tester | `tested` | task "Tester : <title>" in the chosen project or none (as in the inbox) |
+| Rattacher | `kept` | task named after the link, with the URL then the note as task note, in the chosen project (a project is required). A link has no project: the task is what files it there |
+| Reporter | `parked` | `review_at` = today + 30 days |
+| Jeter | `dropped` | |
+
+  When an open inbox idea holds the link, it is marked `processed` too. The card leaves the gallery at once; the writes wait for the 4.5 s "Annuler" window, then go through the outbox (offline included).
+
 ### Web inbox triage
 
 - A link card in the Inbox (`frontend/components/Links/LinkTriageActions.tsx`) has the same four decisions, one tap each: Keep, Try, Later, Drop. Each sets the link status through `PATCH /api/links/:uid` and marks the inbox item `processed`; there is no undo, and nothing is written later than the tap.

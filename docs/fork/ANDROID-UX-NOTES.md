@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-01 — Galerie des découvertes dans l'écran Liens
+
+- **Problème** : décider des liens partagés demandait de les ouvrir un par un ; la liste ne montrait ni l'image de la page ni de quoi les rattacher à un projet.
+- **Décision** : un bouton de l'en-tête bascule Liste / Galerie (retenu sur l'appareil). La galerie est une grille de cartes : image de la page si le serveur l'a lue (sinon rien), titre, site, étoiles, début du README d'un dépôt, note, puis Tester, Rattacher, Reporter, Jeter d'un toucher. Rattacher demande un projet et y crée une tâche au nom du lien (l'adresse et la note en note de tâche), le lien passe en « gardé ». La carte part tout de suite, « Annuler » pendant 4,5 s ; l'idée de l'Inbox qui porte le lien est traitée avec.
+- **Web** : à reprendre sur `/links` (cartes en grille déjà là) : la décision « Rattacher » (projet, tâche au nom du lien) et l'image de la page sur la carte.
+
 ### 2026-11-01 — Partager vers l'Inbox en moins d'une seconde
 
 - **Problème** : après « Partager › Cadence », la fenêtre attendait la fin de l'écriture avant de se fermer ; au premier lancement (base à ouvrir), l'application d'origine restait figée un moment.

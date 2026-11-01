@@ -60,4 +60,11 @@
     <string name="links_triage_done_hint">Ce que vous avez gardé est dans Liens.</string>
     <string name="links_review_due">À revoir</string>
     <string name="links_review_on">À revoir : %1$s</string>
+    <string name="links_decided_attach">« %1$s » rattaché au projet : tâche créée</string>
+    <string name="links_gallery_test">Tester</string>
+    <string name="links_gallery_attach">Rattacher</string>
+    <string name="links_gallery_later">Reporter</string>
+    <string name="links_attach_project_title">Rattacher à quel projet ?</string>
+    <string name="links_show_gallery">Afficher en galerie</string>
+    <string name="links_show_list">Afficher en liste</string>
 </resources>

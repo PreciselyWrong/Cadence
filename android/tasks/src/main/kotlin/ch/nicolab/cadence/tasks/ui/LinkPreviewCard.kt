@@ -51,7 +51,7 @@ import ch.nicolab.cadence.tasks.links.LinkPreviews
 internal enum class PreviewSize { Compact, Large }
 
 private val THUMB = 56.dp
-private val IMAGE_RATIO = 1.91f
+internal const val LINK_IMAGE_RATIO = 1.91f
 
 /**
  * Carte d'aperçu d'un lien : vignette, titre, domaine. Elle s'affiche tout de suite avec le domaine,
@@ -87,7 +87,7 @@ internal fun LinkPreviewCard(
             },
     ) {
         if (large) {
-            Thumbnail(shown, domain, Modifier.fillMaxWidth().aspectRatio(IMAGE_RATIO), RectangleShape)
+            Thumbnail(shown, domain, Modifier.fillMaxWidth().aspectRatio(LINK_IMAGE_RATIO), RectangleShape)
             LinkTexts(title, description ?: shown.description, domain, Modifier.padding(Space.md))
         } else {
             Row(
@@ -156,7 +156,7 @@ internal fun LinkThumbStrip(url: String, previews: LinkPreviews, modifier: Modif
     val preview by remember(url) { previews.observe(url) }.collectAsStateWithLifecycle(initialValue = null)
     LaunchedEffect(url) { previews.ensure(url) }
     val shown = preview?.takeUnless { it.failed || it.imageUrl == null } ?: return
-    Thumbnail(shown, LinkExtractor.domain(url) ?: url, modifier.fillMaxWidth().aspectRatio(IMAGE_RATIO), Radius.Chip)
+    Thumbnail(shown, LinkExtractor.domain(url) ?: url, modifier.fillMaxWidth().aspectRatio(LINK_IMAGE_RATIO), Radius.Chip)
 }
 
 /** Jusqu'à [limit] cartes pour les liens de [text] ; rien s'il n'y en a pas. */

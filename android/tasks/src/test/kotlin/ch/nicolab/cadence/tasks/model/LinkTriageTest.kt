@@ -68,6 +68,31 @@ class LinkTriageTest {
     }
 
     @Test
+    fun `rattacher crée une tâche au nom du lien dans le projet, garde le lien et traite l'idée`() {
+        val result = steps(LinkDecision.ATTACH, projectUid = "p2", item = link.copy(note = "pour le build"))
+        val task = (result[0] as TriageStep.CreateTask).draft
+        assertEquals("a/b", task.name)
+        assertEquals("p2", task.projectUid)
+        assertEquals("https://github.com/a/b\n\npour le build", task.note)
+        assertEquals(listOf(TriageStep.SetStatus("l1", LinkStatus.KEPT), TriageStep.ProcessInbox("e1")), result.drop(1))
+    }
+
+    @Test
+    fun `un lien de la galerie sans idée ouverte ne touche pas l'Inbox`() {
+        LinkDecision.entries.forEach { decision ->
+            val result = LinkTriage.steps(decision, null, link, today, "p1", "Tester : a/b")
+            assertTrue(result.none { it is TriageStep.ProcessInbox }, decision.name)
+            assertTrue(result.any { it is TriageStep.SetStatus }, decision.name)
+        }
+    }
+
+    @Test
+    fun `la galerie propose tester, rattacher, reporter, jeter, l'Inbox garde ses quatre décisions`() {
+        assertEquals(listOf(LinkDecision.TEST, LinkDecision.ATTACH, LinkDecision.LATER, LinkDecision.DROP), LinkTriage.GALLERY_DECISIONS)
+        assertEquals(listOf(LinkDecision.KEEP, LinkDecision.TEST, LinkDecision.LATER, LinkDecision.DROP), LinkTriage.INBOX_DECISIONS)
+    }
+
+    @Test
     fun `run écrit chaque étape dans l'ordre`() = runBlocking {
         val calls = mutableListOf<String>()
         val sink = object : TriageSink {
@@ -148,5 +173,11 @@ class LinkTriageTest {
     fun `une étiquette se coche et se décoche sans toucher aux autres`() {
         assertEquals(listOf("a", "b"), LinkTriage.toggleTag(listOf("a"), "b"))
         assertEquals(listOf("a"), LinkTriage.toggleTag(listOf("a", "b"), "b"))
+    }
+
+    @Test
+    fun `l'idée ouverte d'un lien est celle qui le porte, sinon aucune`() {
+        assertEquals("e2", LinkTriage.openEntry(links[1], entries, links)?.uid)
+        assertEquals(null, LinkTriage.openEntry(LinkItem("lz", "https://z.io/"), entries, links))
     }
 }

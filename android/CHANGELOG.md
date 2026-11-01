@@ -19,6 +19,9 @@
 ### Nouveautés
 - Partage vers Cadence : la fenêtre se ferme aussitôt et rend la main à l'application d'origine ; l'idée est écrite sur le téléphone (Inbox et file d'envoi, sans attendre le réseau) puis « Ajouté à l'Inbox » le confirme. Un partage sans texte garde son sujet ; un échec d'écriture le dit au lieu de se taire. Même chemin pour le texte sélectionné et la barre de capture.
 
+### Nouveautés
+- Liens : galerie des découvertes (bouton de l'en-tête, retenu sur le téléphone) : cartes en deux colonnes avec l'image de la page, le site, les étoiles et le début du README d'un dépôt, et quatre décisions d'un toucher : Tester (tâche « Tester : … »), Rattacher (tâche au nom du lien dans le projet choisi, lien gardé), Reporter (revoir dans 30 jours), Jeter. La carte quitte la galerie, « Annuler » la fait revenir ; l'idée de l'Inbox qui porte le lien est traitée aussi.
+
 ## [1.6.9] — 1 novembre 2026
 
 ### Nouveautés

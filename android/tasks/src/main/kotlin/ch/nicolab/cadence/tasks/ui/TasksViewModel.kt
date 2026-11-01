@@ -129,13 +129,15 @@ internal enum class DeletionKind { Note, Idea, Link, Goal }
 
 /**
  * Suppression en attente de confirmation, annulable par [TasksViewModel.undoDeletion]. Pour [DeletionKind.Link],
- * [decision] et [title] disent quelle décision sur quel lien l'écran annonce.
+ * [decision] et [title] disent quelle décision sur quel lien l'écran annonce. [masked] : tout ce qui est masqué
+ * pendant l'attente (l'idée et, depuis la galerie, la carte du lien), que « Annuler » fait revenir.
  */
 internal data class PendingDeletion(
     val kind: DeletionKind,
     val uid: String,
     val decision: LinkDecision? = null,
     val title: String? = null,
+    val masked: Set<String> = setOf(uid),
 )
 
 /**
@@ -333,34 +335,40 @@ internal class TasksViewModel(
         override suspend fun processInboxItem(uid: String) = repository.processInboxItem(uid)
     }
 
+    /** Éléments masqués en attendant la fin d'une fenêtre d'annulation ; la galerie des liens y lit ses cartes décidées. */
+    val masked: StateFlow<Set<String>> = hidden.asStateFlow()
+
     /**
-     * Garder, tester, repousser ou jeter le lien d'une idée de l'Inbox. L'idée disparaît tout de suite ;
-     * les écritures partent après la fenêtre d'annulation (« Annuler » les abandonne), hors ligne comme en ligne.
-     * [projectUid] range la tâche « Tester : … » d'un [LinkDecision.TEST] ; null la laisse sans projet.
+     * Décider d'un lien : le garder, le tester, le rattacher à un projet, le repousser ou le jeter. L'idée [entry]
+     * qui le porte (s'il y en a une encore ouverte) disparaît tout de suite, comme la carte du lien si [maskLink]
+     * (galerie) ; les écritures partent après la fenêtre d'annulation (« Annuler » les abandonne), hors ligne comme
+     * en ligne. [projectUid] range la tâche d'un [LinkDecision.TEST] (null : sans projet) ou d'un [LinkDecision.ATTACH].
      */
-    fun decideLink(entry: InboxEntry, link: LinkItem, decision: LinkDecision, projectUid: String? = null) {
+    fun decideLink(entry: InboxEntry?, link: LinkItem, decision: LinkDecision, projectUid: String? = null, maskLink: Boolean = false) {
         val steps = LinkTriage.steps(
             decision = decision,
-            entryUid = entry.uid,
+            entryUid = entry?.uid,
             link = link,
             today = moment.value.today,
             projectUid = projectUid,
             testTaskName = getApplication<Application>().getString(R.string.links_test_task_name, link.displayTitle),
         )
-        hidden.value = hidden.value + entry.uid
-        _deletions.tryEmit(PendingDeletion(DeletionKind.Link, entry.uid, decision, link.displayTitle))
+        val key = entry?.uid ?: link.uid
+        val masks = setOfNotNull(entry?.uid, link.uid.takeIf { maskLink || entry == null })
+        hidden.value = hidden.value + masks
+        _deletions.tryEmit(PendingDeletion(DeletionKind.Link, key, decision, link.displayTitle, masks))
         launchAction {
             delay(UNDO_WINDOW_MS)
-            if (entry.uid !in hidden.value) return@launchAction
+            if (key !in hidden.value) return@launchAction
             try {
                 LinkTriage.run(steps, triageSink)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                hidden.value = hidden.value - entry.uid
+                hidden.value = hidden.value - masks
                 throw e
             }
-            // L'idée reste masquée : traitée, elle ne revient pas, et rien ne clignote avant la mise à jour de la liste.
+            // Tout reste masqué : l'idée traitée ne revient pas, et la carte décidée quitte la galerie de la session.
         }
     }
 
@@ -726,8 +734,8 @@ internal class TasksViewModel(
 
     fun deleteIdeaWithUndo(uid: String) = deleteWithUndo(PendingDeletion(DeletionKind.Idea, uid)) { repository.deleteInboxItem(uid) }
 
-    fun undoDeletion(uid: String) {
-        hidden.value = hidden.value - uid
+    fun undoDeletion(deletion: PendingDeletion) {
+        hidden.value = hidden.value - deletion.masked
     }
 
     /** Masque l'élément tout de suite ; la suppression réelle attend la fin de la fenêtre d'annulation. */

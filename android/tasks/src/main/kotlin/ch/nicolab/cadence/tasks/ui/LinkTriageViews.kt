@@ -105,6 +105,7 @@ internal fun rememberNoteDraft(link: LinkItem, onSave: (String?) -> Unit): NoteD
 private fun decisionLabel(decision: LinkDecision): Int = when (decision) {
     LinkDecision.KEEP -> R.string.links_action_kept
     LinkDecision.TEST -> R.string.links_decision_test
+    LinkDecision.ATTACH -> R.string.links_gallery_attach
     LinkDecision.LATER -> R.string.links_action_parked
     LinkDecision.DROP -> R.string.links_action_dropped
 }
@@ -246,7 +247,7 @@ private fun OpenLinkButton(url: String) {
 @Composable
 private fun DecisionPills(decide: (LinkDecision) -> Unit, more: @Composable () -> Unit) {
     FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-        LinkDecision.entries.forEach { decision ->
+        LinkTriage.INBOX_DECISIONS.forEach { decision ->
             QuickPill(
                 label = stringResource(decisionLabel(decision)),
                 onClick = { decide(decision) },
@@ -345,11 +346,17 @@ internal fun LinkTagLine(link: LinkItem, tags: List<TagItem>, onTags: (List<Stri
 /** « À tester » : dans quel projet ranger la tâche « Tester : … » (ou aucun). */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun TestProjectSheet(viewModel: TasksViewModel, onPick: (String?) -> Unit, onDismiss: () -> Unit) {
+internal fun TestProjectSheet(
+    viewModel: TasksViewModel,
+    onPick: (String?) -> Unit,
+    onDismiss: () -> Unit,
+    title: Int = R.string.links_test_project_title,
+    allowNone: Boolean = true,
+) {
     val projects by viewModel.projects.collectAsStateWithLifecycle()
-    CadenceSheet(title = stringResource(R.string.links_test_project_title), subtitle = null, dismiss = onDismiss) {
+    CadenceSheet(title = stringResource(title), subtitle = null, dismiss = onDismiss) {
         Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(bottom = Space.xl)) {
-            ProjectRow(stringResource(R.string.tasks_no_project)) { onPick(null) }
+            if (allowNone) ProjectRow(stringResource(R.string.tasks_no_project)) { onPick(null) }
             ProjectChoices.forTask(projects, null).forEach { project -> ProjectRow(project.name) { onPick(project.uid) } }
         }
     }
