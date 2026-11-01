@@ -34,7 +34,7 @@ interface SearchResultsProps {
 }
 
 interface SearchResult {
-    type: 'Task' | 'Project' | 'Area' | 'Note' | 'Tag' | 'Goal';
+    type: 'Task' | 'Project' | 'Area' | 'Note' | 'Tag' | 'Goal' | 'Link';
     id: number;
     uid?: string;
     name: string;
