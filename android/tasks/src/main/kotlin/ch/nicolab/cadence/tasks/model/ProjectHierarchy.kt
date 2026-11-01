@@ -26,4 +26,34 @@ object ProjectHierarchy {
             .sortedBy { it.name.lowercase() }
             .map { SubProject(it, open[it.uid] ?: 0) }
     }
+
+    /** Tous les sous-projets de [uid], à toute profondeur ; une boucle dans les données ne fait pas tourner la recherche. */
+    fun descendants(projects: List<ProjectItem>, uid: String): Set<String> {
+        val childrenOf = projects.filter { it.parentProjectUid != null }.groupBy { it.parentProjectUid }
+        val found = linkedSetOf<String>()
+        val queue = ArrayDeque(listOf(uid))
+        while (queue.isNotEmpty()) {
+            childrenOf[queue.removeFirst()].orEmpty().forEach { child ->
+                if (child.uid != uid && found.add(child.uid)) queue.add(child.uid)
+            }
+        }
+        return found
+    }
+
+    /**
+     * [uid] peut passer sous [parentUid] (null : au premier niveau) : le projet existe, le parent aussi, et ce
+     * n'est ni lui-même ni l'un de ses sous-projets (le serveur refuse ces deux cas, `invalid_hierarchy`).
+     */
+    fun canMove(projects: List<ProjectItem>, uid: String, parentUid: String?): Boolean {
+        if (projects.none { it.uid == uid }) return false
+        if (parentUid == null) return true
+        if (parentUid == uid || projects.none { it.uid == parentUid }) return false
+        return parentUid !in descendants(projects, uid)
+    }
+
+    /** Parents possibles de [uid] par nom : tous les projets sauf lui et ses sous-projets. */
+    fun parentCandidates(projects: List<ProjectItem>, uid: String): List<ProjectItem> {
+        val excluded = descendants(projects, uid) + uid
+        return projects.filter { it.uid !in excluded }.sortedBy { it.name.lowercase() }
+    }
 }

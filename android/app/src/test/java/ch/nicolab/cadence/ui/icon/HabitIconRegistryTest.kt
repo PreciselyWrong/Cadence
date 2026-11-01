@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.ui.icon
 
+import ch.nicolab.cadence.tasks.model.IconIds
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -20,5 +21,10 @@ class HabitIconRegistryTest {
     @Test
     fun `unknown persisted id resolves to stable fallback`() {
         assertEquals(HabitIconRegistry.DEFAULT_ICON_ID, HabitIconRegistry.getIcon("missing").id)
+    }
+
+    @Test
+    fun `every picker id is one the server accepts for a project or tag icon`() {
+        HabitIconRegistry.ICONS.forEach { assertTrue(IconIds.isValid(it.id), it.id) }
     }
 }

@@ -67,12 +67,68 @@ class AgendaHabitsTest {
         assertEquals(listOf(friday), result.map { it.start.toLocalDate() })
     }
 
+    private val flexibleWeekly = habit(
+        "flex",
+        goal = HabitGoal(3, PeriodType.WEEK, GoalType.BINARY),
+        schedule = HabitSchedule(mode = ScheduleMode.FLEXIBLE_PERIOD),
+    )
+    private val tracker = habit("track", goal = HabitGoal(0, PeriodType.DAY, GoalType.QUANTITY, direction = GoalDirection.TRACK_ONLY))
+    private val abstinence = habit("abs", goal = HabitGoal(0, PeriodType.DAY, GoalType.QUANTITY, direction = GoalDirection.AT_MOST))
+
     @Test
-    fun `flexible, tracker and abstinence habits are not scheduled`() {
-        val flexible = habit("flex", schedule = HabitSchedule(mode = ScheduleMode.FLEXIBLE_PERIOD))
-        val tracker = habit("track", goal = HabitGoal(0, PeriodType.DAY, GoalType.QUANTITY, direction = GoalDirection.TRACK_ONLY))
-        val abstinence = habit("abs", goal = HabitGoal(0, PeriodType.DAY, GoalType.QUANTITY, direction = GoalDirection.AT_MOST))
-        assertTrue(entries(listOf(flexible, tracker, abstinence)).isEmpty())
+    fun `a flexible habit has no due day and shows nowhere while nothing is done`() {
+        assertTrue(entries(listOf(flexibleWeekly, tracker), listOf(friday, saturday)).isEmpty())
+    }
+
+    @Test
+    fun `a flexible habit shows only on the days it was done, flagged done`() {
+        val result = entries(listOf(flexibleWeekly), listOf(friday, saturday), done = mapOf("flex" to setOf(saturday)))
+        assertEquals(listOf(saturday), result.map { it.start.toLocalDate() })
+        assertEquals(listOf(true), result.map { it.done })
+    }
+
+    @Test
+    fun `a flexible habit in a timed group sits at the group start on its done day`() {
+        val flexibleMorning = habit(
+            "flex",
+            goal = HabitGoal(3, PeriodType.WEEK, GoalType.BINARY),
+            schedule = HabitSchedule(mode = ScheduleMode.FLEXIBLE_PERIOD),
+            groupId = "morning",
+        )
+        val entry = entries(listOf(flexibleMorning), done = mapOf("flex" to setOf(friday))).single()
+        assertEquals(LocalDateTime.of(2026, 10, 30, 8, 0), entry.start)
+        assertEquals(false, entry.allDay)
+    }
+
+    @Test
+    fun `a flexible habit done on a paused day is left out`() {
+        val pause = HabitPause(friday, saturday)
+        val result = entries(
+            listOf(flexibleWeekly),
+            listOf(friday, saturday),
+            pauses = mapOf("flex" to listOf(pause)),
+            done = mapOf("flex" to setOf(friday, saturday)),
+        )
+        assertEquals(listOf(saturday), result.map { it.start.toLocalDate() })
+    }
+
+    @Test
+    fun `a flexible habit does not show on a day before it started`() {
+        val started = flexibleWeekly.copy(startsOn = saturday)
+        val result = entries(listOf(started), listOf(friday, saturday), done = mapOf("flex" to setOf(friday, saturday)))
+        assertEquals(listOf(saturday), result.map { it.start.toLocalDate() })
+    }
+
+    @Test
+    fun `a tracker shows on the days it has an entry, even paused`() {
+        val pause = HabitPause(friday, saturday)
+        val result = entries(listOf(tracker), listOf(friday, saturday), pauses = mapOf("track" to listOf(pause)), done = mapOf("track" to setOf(friday)))
+        assertEquals(listOf(friday), result.map { it.start.toLocalDate() })
+    }
+
+    @Test
+    fun `abstinence habits are never on the agenda`() {
+        assertTrue(entries(listOf(abstinence), done = mapOf("abs" to setOf(friday))).isEmpty())
     }
 
     @Test

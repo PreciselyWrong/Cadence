@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.ChevronRight
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -143,6 +144,7 @@ internal fun TagTasksPane(
     val name = tag?.name.orEmpty()
     val icon = entityIcon(tag?.icon)
     val tasks = remember(all, tags, tagUid, moment.now) { TaskOverviews.ofTag(all, tags, tagUid, moment.now) }
+    var editing by remember { mutableStateOf(false) }
 
     LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
         item {
@@ -161,6 +163,11 @@ internal fun TagTasksPane(
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f),
                 )
+                if (tag != null) {
+                    IconButton(onClick = { editing = true }) {
+                        Icon(Icons.Outlined.Edit, contentDescription = stringResource(R.string.tasks_tag_edit))
+                    }
+                }
             }
         }
         if (tasks.isEmpty()) {
@@ -168,6 +175,8 @@ internal fun TagTasksPane(
         }
         taskRows(tasks, projectNames, projectColors, moment, viewModel, onOpen, projectIcons = projectIcons)
     }
+
+    if (editing && tag != null) TagEditSheets(tag = tag, viewModel = viewModel, onDismiss = { editing = false })
 }
 
 /** Tâches terminées, du jour le plus récent au plus ancien. */

@@ -1,6 +1,8 @@
 package ch.nicolab.cadence.tasks.model
 
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class ProjectHierarchyTest {
@@ -43,5 +45,36 @@ class ProjectHierarchyTest {
         val children = ProjectHierarchy.children(projects, "maison", tasks)
         assertEquals(listOf("Atelier" to 0, "Cuisine" to 2), children.map { it.project.name to it.openCount })
         assertEquals(emptyList<SubProject>(), ProjectHierarchy.children(projects, "autre", tasks))
+    }
+
+    @Test
+    fun `descendants cover every depth and survive a loop`() {
+        assertEquals(setOf("cuisine", "four", "atelier"), ProjectHierarchy.descendants(projects, "maison"))
+        assertEquals(emptySet<String>(), ProjectHierarchy.descendants(projects, "autre"))
+        val loop = listOf(ProjectItem("b", "B", parentProjectUid = "c"), ProjectItem("c", "C", parentProjectUid = "b"))
+        assertEquals(setOf("c"), ProjectHierarchy.descendants(loop, "b"))
+    }
+
+    @Test
+    fun `a project moves under an unrelated project or to the top level`() {
+        assertTrue(ProjectHierarchy.canMove(projects, "four", "autre"))
+        assertTrue(ProjectHierarchy.canMove(projects, "four", "maison"))
+        assertTrue(ProjectHierarchy.canMove(projects, "four", null))
+        assertTrue(ProjectHierarchy.canMove(projects, "maison", "autre"))
+    }
+
+    @Test
+    fun `a project cannot move under itself, a sub-project or an unknown project`() {
+        assertFalse(ProjectHierarchy.canMove(projects, "maison", "maison"))
+        assertFalse(ProjectHierarchy.canMove(projects, "maison", "cuisine"))
+        assertFalse(ProjectHierarchy.canMove(projects, "maison", "four"))
+        assertFalse(ProjectHierarchy.canMove(projects, "cuisine", "ghost"))
+        assertFalse(ProjectHierarchy.canMove(projects, "ghost", null))
+    }
+
+    @Test
+    fun `parent candidates leave out the project and its sub-projects`() {
+        assertEquals(listOf("Atelier", "Autre", "Maison"), ProjectHierarchy.parentCandidates(projects, "cuisine").map { it.name }.filter { it != "Four" && it != "Cuisine" })
+        assertEquals(listOf("Autre"), ProjectHierarchy.parentCandidates(projects, "maison").map { it.name })
     }
 }

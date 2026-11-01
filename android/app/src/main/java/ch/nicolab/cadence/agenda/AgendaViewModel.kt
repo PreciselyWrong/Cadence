@@ -258,7 +258,7 @@ internal class AgendaViewModel(application: Application) : AndroidViewModel(appl
 
     private suspend fun loadHabitEntries(w: AgendaWindow): List<AgendaEntry> {
         val days = List(w.days) { w.first.plusDays(it.toLong()) }
-        val habits = habitRepository.getHabitsEffectiveAt(LocalDate.now(zone)).filter { it.isAgendaScheduled() }
+        val habits = habitRepository.getHabitsEffectiveAt(LocalDate.now(zone)).filter { it.isOnAgenda() }
         val pauses = habits.associate { it.id to habitRepository.getPauses(it.id) }
         val done = habits.associate { habit ->
             habit.id to habitRepository.getEntries(habit.id, days.first(), days.last())

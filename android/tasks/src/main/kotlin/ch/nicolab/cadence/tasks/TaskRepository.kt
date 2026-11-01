@@ -9,6 +9,7 @@ import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.model.ProjectStatus
 import ch.nicolab.cadence.tasks.model.RecurringScope
 import ch.nicolab.cadence.tasks.model.SyncStatus
+import ch.nicolab.cadence.tasks.model.TagEditProblem
 import ch.nicolab.cadence.tasks.model.TagItem
 import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskDraft
@@ -70,6 +71,27 @@ interface TaskRepository {
 
     /** Change le statut du projet [uid] (valeur serveur, voir [ProjectStatus.wire]) ; sans effet si le projet est inconnu. */
     suspend fun setProjectStatus(uid: String, status: ProjectStatus)
+
+    /** Pose (identifiant du jeu partagé) ou retire (null) l'icône du projet [uid] ; refuse un identifiant invalide. Sans effet si le projet est inconnu. */
+    suspend fun setProjectIcon(uid: String, icon: String?)
+
+    /** Pose ou retire l'icône de l'étiquette [uid]. */
+    suspend fun setTagIcon(uid: String, icon: String?)
+
+    /**
+     * Place le projet [uid] sous [parentUid] (null : au premier niveau). Retourne false, sans rien écrire, quand le
+     * projet ou le parent est inconnu ou que le déplacement ferait une boucle (sous lui-même ou l'un de ses sous-projets).
+     */
+    suspend fun moveProject(uid: String, parentUid: String?): Boolean
+
+    /**
+     * Renomme l'étiquette [uid] : [name] est le chemin complet. Ses sous-étiquettes suivent (le serveur renomme
+     * l'arbre, seule l'étiquette modifiée est envoyée). Retourne null une fois écrit, sinon la raison du refus.
+     */
+    suspend fun renameTag(uid: String, name: String): TagEditProblem?
+
+    /** Place l'étiquette [uid] sous [parentUid] (null : à la racine) ; son nom devient `parent/dernier-segment`. */
+    suspend fun moveTag(uid: String, parentUid: String?): TagEditProblem?
 
     /** Désigne [taskUid] comme prochaine action du projet [projectUid] ; null retire le choix. Sans effet si le projet est inconnu. */
     suspend fun setNextAction(projectUid: String, taskUid: String?)

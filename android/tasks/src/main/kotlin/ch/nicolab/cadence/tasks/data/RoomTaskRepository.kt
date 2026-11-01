@@ -6,14 +6,19 @@ import ch.nicolab.cadence.tasks.ServerConnection
 import ch.nicolab.cadence.tasks.TaskRepository
 import ch.nicolab.cadence.tasks.model.AreaItem
 import ch.nicolab.cadence.tasks.model.GoalItem
+import ch.nicolab.cadence.tasks.model.IconIds
 import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.NoteItem
+import ch.nicolab.cadence.tasks.model.ProjectHierarchy
 import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.model.ProjectStatus
 import ch.nicolab.cadence.tasks.model.RecurringScope
 import ch.nicolab.cadence.tasks.model.SyncStatus
+import ch.nicolab.cadence.tasks.model.TagEditPlan
+import ch.nicolab.cadence.tasks.model.TagEditProblem
 import ch.nicolab.cadence.tasks.model.TagItem
+import ch.nicolab.cadence.tasks.model.TagPaths
 import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskDraft
 import ch.nicolab.cadence.tasks.model.TaskItem
@@ -308,6 +313,83 @@ internal class RoomTaskRepository(
         if (written) afterLocalWrite()
     }
 
+    override suspend fun setProjectIcon(uid: String, icon: String?) {
+        require(IconIds.isValid(icon)) { "Identifiant d'icône invalide" }
+        val value = IconIds.normalize(icon)
+        val clock = hlc.now()
+        val written = database.withTransaction {
+            val existing = projectDao.get(uid) ?: return@withTransaction false
+            if (existing.icon == value) return@withTransaction false
+            projectDao.upsert(existing.copy(icon = value))
+            outbox.insert(LocalOps.upsert("project", uid, mapOf("icon" to jsonString(value)), clock, nowMs()))
+            true
+        }
+        if (written) afterLocalWrite()
+    }
+
+    override suspend fun setTagIcon(uid: String, icon: String?) {
+        require(IconIds.isValid(icon)) { "Identifiant d'icône invalide" }
+        val value = IconIds.normalize(icon)
+        val clock = hlc.now()
+        val written = database.withTransaction {
+            val existing = tagDao.get(uid) ?: return@withTransaction false
+            if (existing.icon == value) return@withTransaction false
+            tagDao.upsert(existing.copy(icon = value))
+            outbox.insert(LocalOps.upsert("tag", uid, mapOf("icon" to jsonString(value)), clock, nowMs()))
+            true
+        }
+        if (written) afterLocalWrite()
+    }
+
+    override suspend fun moveProject(uid: String, parentUid: String?): Boolean {
+        val clock = hlc.now()
+        var accepted = false
+        var written = false
+        database.withTransaction {
+            val projects = projectDao.all()
+            accepted = ProjectHierarchy.canMove(projects.map { it.toItem() }, uid, parentUid)
+            val existing = projects.firstOrNull { it.uid == uid }
+            if (!accepted || existing == null || existing.parentProjectUid == parentUid) return@withTransaction
+            projectDao.upsert(existing.copy(parentProjectUid = parentUid))
+            outbox.insert(LocalOps.upsert("project", uid, mapOf("parent_project_uid" to jsonString(parentUid)), clock, nowMs()))
+            written = true
+        }
+        if (written) afterLocalWrite()
+        return accepted
+    }
+
+    override suspend fun renameTag(uid: String, name: String): TagEditProblem? =
+        editTag(uid) { tags -> TagPaths.plan(tags, uid, name) }
+
+    override suspend fun moveTag(uid: String, parentUid: String?): TagEditProblem? =
+        editTag(uid) { tags ->
+            val target = TagPaths.moveTarget(tags, uid, parentUid)
+            if (target == null) TagEditPlan.Rejected(TagEditProblem.UNKNOWN) else TagPaths.plan(tags, uid, target)
+        }
+
+    /**
+     * Seule l'étiquette modifiée part dans la file : le serveur renomme son sous-arbre et le renvoie au pull.
+     * Les sous-étiquettes changent aussi ici, pour que l'arbre reste cohérent en attendant la synchronisation.
+     */
+    private suspend fun editTag(uid: String, plan: (List<TagItem>) -> TagEditPlan): TagEditProblem? {
+        val clock = hlc.now()
+        val problem = database.withTransaction {
+            when (val result = plan(tagDao.all().map { it.toItem() })) {
+                is TagEditPlan.Rejected -> result.problem
+                is TagEditPlan.Apply -> {
+                    (listOf(result.root) + result.cascaded).forEach { change ->
+                        val existing = tagDao.get(change.uid) ?: return@forEach
+                        tagDao.upsert(existing.copy(name = change.name, parentUid = change.parentUid))
+                    }
+                    outbox.insert(LocalOps.upsert("tag", uid, mapOf("name" to JsonPrimitive(result.root.name)), clock, nowMs()))
+                    null
+                }
+            }
+        }
+        if (problem == null) afterLocalWrite()
+        return problem
+    }
+
     override suspend fun setNextAction(projectUid: String, taskUid: String?) {
         val clock = hlc.now()
         val fields = mapOf("next_task_uid" to jsonString(taskUid))
@@ -416,7 +498,7 @@ internal class RoomTaskRepository(
         const val INBOX_STATUS = "added"
         const val INBOX_SOURCE = "android"
         /** Étiquette système de « Plus tard », comme `review/repository.js` du serveur. */
-        const val SOMEDAY_TAG = "someday"
+        const val SOMEDAY_TAG = TagPaths.SOMEDAY
     }
 }
 

@@ -17,6 +17,12 @@ import ch.nicolab.cadence.designsystem.theme.Size
  */
 val LocalEntityIcons = staticCompositionLocalOf<(String) -> ImageVector?> { { null } }
 
+/**
+ * Sélecteur d'icône du jeu partagé (grille avec recherche et catégories), fourni par l'application comme
+ * [LocalEntityIcons] ; null tant qu'elle n'en fournit pas, et les feuilles d'édition n'offrent alors pas l'icône.
+ */
+val LocalEntityIconPicker = staticCompositionLocalOf<(@Composable (selected: String?, onPick: (String) -> Unit) -> Unit)?> { null }
+
 /** Icône choisie pour un projet ou une étiquette ; null quand aucune n'est posée (le repli reste celui de l'écran). */
 @Composable
 internal fun entityIcon(id: String?): ImageVector? = id?.takeIf { it.isNotBlank() }?.let { LocalEntityIcons.current(it) }

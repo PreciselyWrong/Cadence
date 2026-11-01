@@ -101,12 +101,18 @@ internal fun projectStatusLabel(status: ProjectStatus): Int = when (status) {
     ProjectStatus.ARCHIVED -> R.string.tasks_project_status_archived
 }
 
-/** Choix du statut d'un projet : la valeur courante est cochée, un appui l'applique et ferme la feuille. */
+/**
+ * Choix du statut d'un projet : la valeur courante est cochée, un appui l'applique et ferme la feuille.
+ * Avec [onEditIcon] et [onEditParent], deux lignes mènent au choix de l'icône et du projet parent.
+ */
 @Composable
 internal fun ProjectStatusSheet(
     project: ProjectItem,
     onPick: (ProjectStatus) -> Unit,
     onDismiss: () -> Unit,
+    parentName: String? = null,
+    onEditIcon: (() -> Unit)? = null,
+    onEditParent: (() -> Unit)? = null,
 ) {
     val palette = cadence
     CadenceSheet(title = stringResource(R.string.tasks_project_status_title), subtitle = project.name, dismiss = onDismiss) {
@@ -125,6 +131,23 @@ internal fun ProjectStatusSheet(
                         onPick(status)
                         onDismiss()
                     },
+                )
+            }
+        }
+        if (onEditIcon != null && onEditParent != null) {
+            Spacer(Modifier.height(Space.lg))
+            RowGroup {
+                SettingRow(
+                    title = stringResource(R.string.tasks_edit_icon),
+                    shape = rowGroupShape(0, 2),
+                    trailing = { IconValue(project.icon) },
+                    onClick = onEditIcon,
+                )
+                SettingRow(
+                    title = stringResource(R.string.tasks_edit_parent),
+                    subtitle = parentName ?: stringResource(R.string.tasks_edit_parent_none),
+                    shape = rowGroupShape(1, 2),
+                    onClick = onEditParent,
                 )
             }
         }
@@ -201,11 +224,7 @@ internal fun ProjectsTab(
 
     val editing = allProjects.firstOrNull { it.uid == statusFor }
     if (editing != null) {
-        ProjectStatusSheet(
-            project = editing,
-            onPick = { viewModel.setProjectStatus(editing.uid, it) },
-            onDismiss = { statusFor = null },
-        )
+        ProjectEditSheets(project = editing, viewModel = viewModel, onDismiss = { statusFor = null })
     }
 }
 
@@ -367,11 +386,7 @@ internal fun ProjectTasksPane(
     }
 
     if (editingStatus && project != null) {
-        ProjectStatusSheet(
-            project = project,
-            onPick = { viewModel.setProjectStatus(project.uid, it) },
-            onDismiss = { editingStatus = false },
-        )
+        ProjectEditSheets(project = project, viewModel = viewModel, onDismiss = { editingStatus = false })
     }
 }
 

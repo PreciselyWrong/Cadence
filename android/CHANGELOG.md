@@ -1,3 +1,11 @@
+## [1.6.2] — 1 novembre 2026
+
+### Nouveautés
+- Icônes : choisir ou retirer l'icône d'un projet (appui long ou bouton de statut, puis Icône) et d'une étiquette (crayon de l'en-tête), avec le même jeu que les habitudes et le web.
+- Projets : déplacer un projet sous un autre projet, ou le remettre au premier niveau, depuis sa feuille ; un projet ne peut pas passer sous lui-même ni sous l'un de ses sous-projets.
+- Étiquettes : renommer une étiquette ou la placer sous une autre (crayon de l'en-tête) ; ses sous-étiquettes suivent, comme sur le web.
+- Agenda : une habitude « N fois par semaine » (ou un suivi libre) apparaît les jours où elle a été faite.
+
 ## [1.6.1] — 1 novembre 2026
 
 ### Nouveautés

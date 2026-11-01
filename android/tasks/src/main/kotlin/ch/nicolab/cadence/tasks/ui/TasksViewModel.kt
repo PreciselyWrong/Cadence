@@ -33,6 +33,7 @@ import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.model.ProjectStatus
 import ch.nicolab.cadence.tasks.model.RecurringScope
 import ch.nicolab.cadence.tasks.model.SyncStatus
+import ch.nicolab.cadence.tasks.model.TagEditProblem
 import ch.nicolab.cadence.tasks.model.TagItem
 import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskDraft
@@ -507,6 +508,36 @@ internal class TasksViewModel(
     fun saveNoteAttributes(uid: String, change: NoteChange) = launchAction { repository.saveNote(uid, change) }
 
     fun setProjectStatus(uid: String, status: ProjectStatus) = launchAction { repository.setProjectStatus(uid, status) }
+
+    fun setProjectIcon(uid: String, icon: String?) = launchAction { repository.setProjectIcon(uid, icon) }
+
+    fun setTagIcon(uid: String, icon: String?) = launchAction { repository.setTagIcon(uid, icon) }
+
+    fun moveProject(uid: String, parentUid: String?) = launchAction {
+        if (!repository.moveProject(uid, parentUid)) _messages.tryEmit(getString(R.string.tasks_project_move_refused))
+    }
+
+    /** [onDone] reçoit true quand le nom est écrit (ou inchangé) : la feuille peut se fermer. */
+    fun renameTag(uid: String, name: String, onDone: (Boolean) -> Unit = {}) = launchAction {
+        reportTagProblem(repository.renameTag(uid, name), onDone)
+    }
+
+    fun moveTag(uid: String, parentUid: String?) = launchAction {
+        reportTagProblem(repository.moveTag(uid, parentUid)) {}
+    }
+
+    private fun reportTagProblem(problem: TagEditProblem?, onDone: (Boolean) -> Unit) {
+        val message = when (problem) {
+            null, TagEditProblem.UNCHANGED -> null
+            TagEditProblem.INVALID -> R.string.tasks_tag_problem_invalid
+            TagEditProblem.CLASH -> R.string.tasks_tag_problem_clash
+            TagEditProblem.INTO_SELF -> R.string.tasks_tag_problem_into_self
+            TagEditProblem.RESERVED -> R.string.tasks_tag_problem_reserved
+            TagEditProblem.UNKNOWN -> R.string.tasks_error_generic
+        }
+        message?.let { _messages.tryEmit(getString(it)) }
+        onDone(message == null)
+    }
 
     /** Choisit ou retire la prochaine action de son projet ; une seule par projet. */
     fun toggleNextAction(task: TaskItem) {

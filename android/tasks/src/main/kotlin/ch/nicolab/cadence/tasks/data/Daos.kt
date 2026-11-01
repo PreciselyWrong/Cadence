@@ -75,6 +75,9 @@ interface ProjectDao {
     @Query("SELECT * FROM projects ORDER BY name COLLATE NOCASE")
     fun observeAll(): Flow<List<ProjectEntity>>
 
+    @Query("SELECT * FROM projects")
+    suspend fun all(): List<ProjectEntity>
+
     @Query("SELECT * FROM projects WHERE uid = :uid")
     suspend fun get(uid: String): ProjectEntity?
 
@@ -128,6 +131,9 @@ interface GoalDao {
 interface TagDao {
     @Query("SELECT * FROM tags ORDER BY name COLLATE NOCASE")
     fun observeAll(): Flow<List<TagEntity>>
+
+    @Query("SELECT * FROM tags")
+    suspend fun all(): List<TagEntity>
 
     @Query("SELECT * FROM tags WHERE uid = :uid")
     suspend fun get(uid: String): TagEntity?
