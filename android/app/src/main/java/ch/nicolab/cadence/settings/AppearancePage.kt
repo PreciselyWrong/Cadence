@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Colorize
 import androidx.compose.material.icons.outlined.Contrast
+import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material.icons.outlined.Notes
@@ -155,7 +156,7 @@ private fun AppearanceOptions(appearance: Appearance, update: ((Appearance) -> A
             title = stringResource(R.string.settings_free_colour),
             subtitle = stringResource(R.string.settings_free_colour_subtitle),
             icon = Icons.Outlined.Colorize,
-            shape = rowGroupShape(0, 4),
+            shape = rowGroupShape(0, 5),
             trailing = { Icon(Icons.Outlined.Palette, null, tint = cadence.primary, modifier = Modifier.size(Size.icon)) },
             onClick = { freeColourOpen = true },
         )
@@ -165,7 +166,7 @@ private fun AppearanceOptions(appearance: Appearance, update: ((Appearance) -> A
             icon = Icons.Outlined.Wallpaper,
             checked = appearance.materialYou && materialYouAvailable,
             onCheckedChange = { checked -> update { it.copy(materialYou = checked) } },
-            shape = rowGroupShape(1, 4),
+            shape = rowGroupShape(1, 5),
             enabled = materialYouAvailable,
         )
         SettingToggleRow(
@@ -174,7 +175,7 @@ private fun AppearanceOptions(appearance: Appearance, update: ((Appearance) -> A
             icon = Icons.Outlined.Contrast,
             checked = appearance.pureBlack,
             onCheckedChange = { checked -> update { it.copy(pureBlack = checked) } },
-            shape = rowGroupShape(2, 4),
+            shape = rowGroupShape(2, 5),
         )
         val rowDisplay = remember { ch.nicolab.cadence.tasks.ui.RowDisplayStore(appContext) }
         val showDescription = ch.nicolab.cadence.tasks.ui.rememberShowTaskDescription()
@@ -184,7 +185,16 @@ private fun AppearanceOptions(appearance: Appearance, update: ((Appearance) -> A
             icon = Icons.Outlined.Notes,
             checked = showDescription,
             onCheckedChange = rowDisplay::setShowDescription,
-            shape = rowGroupShape(3, 4),
+            shape = rowGroupShape(3, 5),
+        )
+        val showProjectRail = ch.nicolab.cadence.tasks.ui.rememberShowProjectRail()
+        SettingToggleRow(
+            title = stringResource(R.string.settings_show_project_rail),
+            subtitle = stringResource(R.string.settings_show_project_rail_subtitle),
+            icon = Icons.Outlined.Folder,
+            checked = showProjectRail,
+            onCheckedChange = rowDisplay::setShowProjectRail,
+            shape = rowGroupShape(4, 5),
         )
     }
 

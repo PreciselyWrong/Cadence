@@ -1,3 +1,11 @@
+## [1.6.7] — 1 novembre 2026
+
+### Nouveautés
+- Widget « Aujourd'hui » en 2×1 et 2×2 : mise en page compacte (en-tête avec le compte, puis le prochain élément : un retard d'abord, sinon la première tâche ou le premier événement du jour), ouverte d'un appui. Le widget peut descendre à 110 × 100 dp ; à partir de 180 dp sur les deux axes, la liste complète reprend.
+- Réglages › Apparence : « Liseré de couleur des projets » affiche le trait du projet à gauche de chaque tâche (activé par défaut ; désactivé, la place reste réservée pour aligner les cases).
+- Mode voyage : les dates « Du » et « Au » se choisissent au calendrier, affichées en français, au lieu d'une saisie ISO à la main.
+- Saisie rapide d'habitude sans habitude précise : la feuille reprend la coquille commune de l'application.
+
 ## [1.6.6] — 1 novembre 2026
 
 ### Nouveautés

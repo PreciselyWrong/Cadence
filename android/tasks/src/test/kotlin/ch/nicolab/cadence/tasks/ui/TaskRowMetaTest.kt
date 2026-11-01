@@ -58,4 +58,19 @@ class TaskRowMetaTest {
         assertNull(TaskRowMeta.notePreview("  \n "))
         assertNull(TaskRowMeta.notePreview("---"))
     }
+
+    @Test
+    fun `project rail shows the project colour when the setting is on`() {
+        assertEquals(0xFF112233.toInt(), TaskRowMeta.railColor(0xFF112233.toInt(), enabled = true))
+    }
+
+    @Test
+    fun `project rail is hidden when the setting is off, keeping the task without colour`() {
+        assertNull(TaskRowMeta.railColor(0xFF112233.toInt(), enabled = false))
+    }
+
+    @Test
+    fun `task without project has no rail`() {
+        assertNull(TaskRowMeta.railColor(null, enabled = true))
+    }
 }

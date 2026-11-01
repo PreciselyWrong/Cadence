@@ -139,7 +139,7 @@ internal fun TaskRow(
                     .width(RailWidth)
                     .height(32.dp)
                     .clip(RoundedCornerShape(2.dp))
-                    .background(projectColor?.let { Color(it) } ?: Color.Transparent),
+                    .background(TaskRowMeta.railColor(projectColor, decor.showProjectRail)?.let { Color(it) } ?: Color.Transparent),
             )
             TaskCheckbox(
                 checked = showClosed,

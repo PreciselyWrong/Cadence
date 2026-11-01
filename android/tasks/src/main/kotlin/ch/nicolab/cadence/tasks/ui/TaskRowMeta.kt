@@ -58,12 +58,18 @@ internal object TaskRowMeta {
         else -> RowOrigin.None
     }
 
+    /** Couleur du liseré de projet ; nulle quand le réglage le masque ou que la tâche n'a pas de projet coloré. */
+    fun railColor(projectColor: Int?, enabled: Boolean): Int? = projectColor.takeIf { enabled }
+
     /** Début de la note en texte brut, sur au plus [DESCRIPTION_LINES] lignes ; null si elle ne dit rien. */
     fun notePreview(note: String?): String? =
         note?.takeIf { it.isNotBlank() }?.let { Markdown.preview(it, DESCRIPTION_LINES) }?.takeIf { it.isNotBlank() }
 }
 
-/** Préférence « Afficher la description sous le titre », persistée dans `cadence_row_display`. */
+/**
+ * Préférences d'affichage des lignes, persistées dans `cadence_row_display` : description sous le titre
+ * (désactivée par défaut) et liseré de projet (activé par défaut, comme dans la maquette).
+ */
 class RowDisplayStore(context: Context) {
     private val preferences: SharedPreferences =
         context.applicationContext.getSharedPreferences(NAME, Context.MODE_PRIVATE)
@@ -74,9 +80,17 @@ class RowDisplayStore(context: Context) {
         preferences.edit { putBoolean(KEY_DESCRIPTION, value) }
     }
 
-    fun changes(): Flow<Boolean> = callbackFlow {
-        send(showDescription())
-        val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, _ -> trySend(showDescription()) }
+    fun showProjectRail(): Boolean = preferences.getBoolean(KEY_PROJECT_RAIL, true)
+
+    fun setShowProjectRail(value: Boolean) {
+        preferences.edit { putBoolean(KEY_PROJECT_RAIL, value) }
+    }
+
+    fun changes(): Flow<RowDisplay> = callbackFlow {
+        send(RowDisplay(showDescription(), showProjectRail()))
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, _ ->
+            trySend(RowDisplay(showDescription(), showProjectRail()))
+        }
         preferences.registerOnSharedPreferenceChangeListener(listener)
         awaitClose { preferences.unregisterOnSharedPreferenceChangeListener(listener) }
     }
@@ -84,17 +98,26 @@ class RowDisplayStore(context: Context) {
     private companion object {
         const val NAME = "cadence_row_display"
         const val KEY_DESCRIPTION = "show_description"
+        const val KEY_PROJECT_RAIL = "show_project_rail"
     }
 }
 
+data class RowDisplay(val showDescription: Boolean, val showProjectRail: Boolean)
+
 @Composable
-fun rememberShowTaskDescription(): Boolean {
+internal fun rememberRowDisplay(): RowDisplay {
     val context = LocalContext.current
     val store = remember(context) { RowDisplayStore(context) }
-    val initial = remember(store) { store.showDescription() }
+    val initial = remember(store) { RowDisplay(store.showDescription(), store.showProjectRail()) }
     val value by produceState(initial, store) { store.changes().collect { this.value = it } }
     return value
 }
+
+@Composable
+fun rememberShowTaskDescription(): Boolean = rememberRowDisplay().showDescription
+
+@Composable
+fun rememberShowProjectRail(): Boolean = rememberRowDisplay().showProjectRail
 
 /** Ce qu'une ligne a besoin de connaître au-delà de sa tâche. */
 internal data class RowDecor(
@@ -102,14 +125,17 @@ internal data class RowDecor(
     val tagColors: Map<String, Color> = emptyMap(),
     val areaNames: Map<String, String> = emptyMap(),
     val showDescription: Boolean = false,
+    val showProjectRail: Boolean = true,
 )
 
 @Composable
 internal fun rememberRowDecor(viewModel: TasksViewModel = viewModel()): RowDecor {
     val tags by viewModel.tags.collectAsStateWithLifecycle()
     val areas by viewModel.areas.collectAsStateWithLifecycle()
-    val showDescription = rememberShowTaskDescription()
+    val display = rememberRowDisplay()
     val colors = remember(tags) { tagBadgeColors(tags) }
     val areaNames = remember(areas) { areas.associate { it.uid to it.name } }
-    return remember(tags, colors, areaNames, showDescription) { RowDecor(tags, colors, areaNames, showDescription) }
+    return remember(tags, colors, areaNames, display) {
+        RowDecor(tags, colors, areaNames, display.showDescription, display.showProjectRail)
+    }
 }

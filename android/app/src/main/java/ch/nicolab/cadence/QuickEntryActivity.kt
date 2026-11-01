@@ -9,8 +9,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,7 +20,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -33,7 +30,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -44,15 +40,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ch.nicolab.cadence.designsystem.components.CadenceField
+import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.HabitFacet
 import ch.nicolab.cadence.designsystem.components.Hairline
 import ch.nicolab.cadence.designsystem.components.PrimaryAction
@@ -60,8 +54,6 @@ import ch.nicolab.cadence.designsystem.components.SecondaryAction
 import ch.nicolab.cadence.designsystem.components.TertiaryAction
 import ch.nicolab.cadence.designsystem.components.ValueChip
 import ch.nicolab.cadence.designsystem.theme.CadenceTheme
-import ch.nicolab.cadence.designsystem.theme.Elevation
-import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
@@ -87,6 +79,7 @@ class QuickEntryActivity : ComponentActivity() {
     }
 }
 
+@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
 private fun QuickEntryScreen(viewModel: MainViewModel, habitId: String?, alcoholConsumptionId: String?, dismiss: () -> Unit) {
     val palette = cadence
@@ -176,68 +169,51 @@ private fun QuickEntryScreen(viewModel: MainViewModel, habitId: String?, alcohol
         }
         return
     }
-    Box(
-        Modifier.fillMaxSize().background(palette.scrim.copy(alpha = .72f)).clickable(onClick = dismiss),
-        contentAlignment = Alignment.BottomCenter,
+    CadenceSheet(
+        title = stringResource(R.string.quick_sheet_title),
+        subtitle = stringResource(R.string.quick_sheet_subtitle),
+        dismiss = dismiss,
     ) {
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .pointerInput(Unit) { detectVerticalDragGestures { _, drag -> if (drag > 120f) dismiss() } }
-                .clickable(onClick = {}),
-            shape = Radius.Sheet,
-            color = palette.card,
-            contentColor = palette.onSurface,
-            shadowElevation = Elevation.floating,
-        ) {
-            Column(Modifier.navigationBarsPadding().padding(horizontal = Space.xl, vertical = Space.lg), horizontalAlignment = Alignment.CenterHorizontally) {
-                Box(Modifier.align(Alignment.CenterHorizontally).width(36.dp).height(4.dp).background(palette.outlineVariant, CircleShape))
-                Spacer(Modifier.height(Space.lg))
-                Text(stringResource(R.string.quick_sheet_subtitle), style = MaterialTheme.typography.labelMedium, color = palette.outline, textAlign = TextAlign.Center)
-                Text(stringResource(R.string.quick_sheet_title), style = MaterialTheme.typography.headlineSmall, color = palette.onSurface, textAlign = TextAlign.Center)
-                Spacer(Modifier.height(Space.lg))
-                if (!isLoaded) {
-                    Spacer(Modifier.height(100.dp))
-                } else if (pending.isEmpty() && abstinences.isEmpty()) {
-                    Row(Modifier.fillMaxWidth().padding(vertical = Space.xl), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-                        Box(Modifier.size(36.dp).clip(CircleShape).background(palette.success.copy(alpha = .16f)), contentAlignment = Alignment.Center) {
-                            Icon(Icons.Outlined.Check, null, tint = palette.success, modifier = Modifier.size(Size.icon))
-                        }
-                        Spacer(Modifier.width(Space.md))
-                        Text(stringResource(if (habitId != null && habits.none { it.stored.id == habitId }) R.string.abstinence_quick_unavailable else R.string.quick_all_done), style = MaterialTheme.typography.bodyLarge, color = palette.onSurface)
-                    }
-                } else {
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(Space.lg),
-                        modifier = Modifier.heightIn(max = 420.dp),
-                    ) {
-                        items(abstinences, key = { "abstinence-${it.stored.id}" }) { habit ->
-                            SecondaryAction(habit.stored.name, Modifier.fillMaxWidth()) {
-                                viewModel.clearSaveError(); selectedId = habit.stored.id
-                            }
-                        }
-                        items(pending, key = { it.stored.id }) { habit ->
-                            QuickHabit(
-                                habit,
-                                timers[habit.stored.id],
-                                start = { viewModel.startTimer(habit.stored.id) },
-                                pauseTimer = { viewModel.pauseTimer(habit.stored.id) },
-                                finishTimer = { viewModel.finishTimer(habit); dismiss() },
-                                resetTimer = { viewModel.resetTimer(habit.stored.id) },
-                            ) { value, sessionId, note -> viewModel.addEntry(habit, value, "QUICK_MODAL", sessionId, note) }
-                        }
+        if (!isLoaded) {
+            Spacer(Modifier.height(100.dp))
+        } else if (pending.isEmpty() && abstinences.isEmpty()) {
+            Row(Modifier.fillMaxWidth().padding(vertical = Space.xl), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+                Box(Modifier.size(36.dp).clip(CircleShape).background(palette.success.copy(alpha = .16f)), contentAlignment = Alignment.Center) {
+                    Icon(Icons.Outlined.Check, null, tint = palette.success, modifier = Modifier.size(Size.icon))
+                }
+                Spacer(Modifier.width(Space.md))
+                Text(stringResource(if (habitId != null && habits.none { it.stored.id == habitId }) R.string.abstinence_quick_unavailable else R.string.quick_all_done), style = MaterialTheme.typography.bodyLarge, color = palette.onSurface)
+            }
+        } else {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(Space.lg),
+                modifier = Modifier.heightIn(max = 420.dp),
+            ) {
+                items(abstinences, key = { "abstinence-${it.stored.id}" }) { habit ->
+                    SecondaryAction(habit.stored.name, Modifier.fillMaxWidth()) {
+                        viewModel.clearSaveError(); selectedId = habit.stored.id
                     }
                 }
-                Spacer(Modifier.height(Space.lg))
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md)) {
-                    lastEntry?.let { last ->
-                        TertiaryAction(stringResource(R.string.quick_btn_undo), Modifier.weight(1f), onClick = { viewModel.undoLastEntry(last.habitId) })
-                    }
-                    SecondaryAction(stringResource(R.string.quick_btn_close), Modifier.weight(1f), onClick = dismiss)
+                items(pending, key = { it.stored.id }) { habit ->
+                    QuickHabit(
+                        habit,
+                        timers[habit.stored.id],
+                        start = { viewModel.startTimer(habit.stored.id) },
+                        pauseTimer = { viewModel.pauseTimer(habit.stored.id) },
+                        finishTimer = { viewModel.finishTimer(habit); dismiss() },
+                        resetTimer = { viewModel.resetTimer(habit.stored.id) },
+                    ) { value, sessionId, note -> viewModel.addEntry(habit, value, "QUICK_MODAL", sessionId, note) }
                 }
-                Spacer(Modifier.height(Space.sm))
             }
         }
+        Spacer(Modifier.height(Space.lg))
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md)) {
+            lastEntry?.let { last ->
+                TertiaryAction(stringResource(R.string.quick_btn_undo), Modifier.weight(1f), onClick = { viewModel.undoLastEntry(last.habitId) })
+            }
+            SecondaryAction(stringResource(R.string.quick_btn_close), Modifier.weight(1f), onClick = dismiss)
+        }
+        Spacer(Modifier.height(Space.sm))
     }
 }
 

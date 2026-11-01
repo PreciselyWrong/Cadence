@@ -27,6 +27,8 @@ import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.PauseReason
+import ch.nicolab.cadence.ui.FrenchDatePickerDialog
+import ch.nicolab.cadence.ui.longFrench
 import java.time.LocalDate
 
 /** Libellé français d'un motif de pause. */
@@ -95,6 +97,8 @@ internal fun SkipSheet(
     }
 }
 
+private enum class TravelBound { FROM, TO }
+
 /**
  * Suspension de plusieurs habitudes entre deux dates. La sélection par groupe évite de
  * cocher une à une; la plage est inclusive, son dernier jour reste suspendu.
@@ -112,20 +116,43 @@ internal fun TravelSheet(
     val accent = palette.primary
     val selectable = habits.filterNot { it.stored.archived }
     var selected by remember { mutableStateOf(emptySet<String>()) }
-    var from by remember { mutableStateOf(today.toString()) }
-    var to by remember { mutableStateOf(today.plusDays(6).toString()) }
+    var from by remember { mutableStateOf(today) }
+    var to by remember { mutableStateOf(today.plusDays(6)) }
+    var picking by remember { mutableStateOf<TravelBound?>(null) }
     var error by remember { mutableStateOf<String?>(null) }
     val badRange = stringResource(R.string.travel_error_range)
     val emptySelection = stringResource(R.string.travel_error_empty)
 
+    picking?.let { bound ->
+        val current = if (bound == TravelBound.FROM) from else to
+        FrenchDatePickerDialog(
+            initial = current,
+            title = stringResource(R.string.travel_date_title),
+            confirmLabel = stringResource(R.string.abst_setup_date_confirm),
+            latest = null,
+            onDismiss = { picking = null },
+        ) { picked ->
+            if (bound == TravelBound.FROM) from = picked else to = picked
+            picking = null
+        }
+    }
     CadenceSheet(
         title = stringResource(R.string.travel_title),
         subtitle = stringResource(R.string.travel_subtitle),
         dismiss = dismiss,
     ) {
+        // Dates choisies au calendrier, affichées en français : aucune écriture ISO à taper.
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md)) {
-            CadenceField(from, { from = it }, stringResource(R.string.travel_from_label), Modifier.weight(1f), accent = accent)
-            CadenceField(to, { to = it }, stringResource(R.string.travel_to_label), Modifier.weight(1f), accent = accent)
+            SecondaryAction(
+                stringResource(R.string.travel_from_value, from.longFrench()),
+                Modifier.weight(1f),
+                onClick = { error = null; picking = TravelBound.FROM },
+            )
+            SecondaryAction(
+                stringResource(R.string.travel_to_value, to.longFrench()),
+                Modifier.weight(1f),
+                onClick = { error = null; picking = TravelBound.TO },
+            )
         }
         Spacer(Modifier.height(Space.md))
         FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
@@ -170,12 +197,10 @@ internal fun TravelSheet(
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.md)) {
             SecondaryAction(stringResource(R.string.form_btn_cancel), Modifier.weight(1f), onClick = dismiss)
             PrimaryAction(stringResource(R.string.travel_start), Modifier.weight(1f), accent = accent) {
-                val parsedFrom = runCatching { LocalDate.parse(from.trim()) }.getOrNull()
-                val parsedTo = runCatching { LocalDate.parse(to.trim()) }.getOrNull()
                 when {
                     selected.isEmpty() -> error = emptySelection
-                    parsedFrom == null || parsedTo == null || parsedTo < parsedFrom -> error = badRange
-                    else -> start(selected.toList(), parsedFrom, parsedTo)
+                    to < from -> error = badRange
+                    else -> start(selected.toList(), from, to)
                 }
             }
         }

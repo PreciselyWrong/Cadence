@@ -191,8 +191,9 @@
     <string name="skip_notice">Le saut ne valide pas l\'habitude et ne casse pas la série. Il reste annulable aujourd\'hui.</string>
     <string name="travel_title">Mode voyage</string>
     <string name="travel_subtitle">Suspendre plusieurs habitudes</string>
-    <string name="travel_from_label">Du</string>
-    <string name="travel_to_label">Au (inclus)</string>
+    <string name="travel_from_value">Du %1$s</string>
+    <string name="travel_to_value">Au %1$s (inclus)</string>
+    <string name="travel_date_title">Date du voyage</string>
     <string name="travel_select_group">Tout le groupe %1$s</string>
     <string name="travel_select_all">Toutes les habitudes</string>
     <string name="travel_start">Suspendre la période</string>
@@ -545,6 +546,8 @@
     <string name="settings_appearance_subtitle">%1$s · %2$s</string>
     <string name="settings_show_task_description">Afficher la description sous le titre</string>
     <string name="settings_show_task_description_subtitle">Deux lignes de la note, dans les listes de tâches</string>
+    <string name="settings_show_project_rail">Liseré de couleur des projets</string>
+    <string name="settings_show_project_rail_subtitle">Un trait à la couleur du projet, à gauche de chaque tâche</string>
     <string name="settings_appearance_theme">Thème</string>
     <string name="settings_appearance_accent">Couleur d\'accent</string>
     <string name="settings_appearance_accent_default">Par défaut</string>

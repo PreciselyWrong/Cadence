@@ -9,8 +9,9 @@ import kotlin.math.max
  */
 object TodayWidgetLayout {
     /**
-     * Hauteur minimale que le lanceur laisse au widget (`minResizeHeight` de `today_widget_info.xml`).
-     * Elle garde l'en-tête et les habitudes entiers pour les trois tailles de texte.
+     * Hauteur à partir de laquelle l'en-tête et les habitudes tiennent entiers pour les trois tailles
+     * de texte. Le lanceur peut descendre plus bas (`minResizeHeight`) : sous [TodaySize.FULL_MIN_DP]
+     * le widget passe en mise en page compacte.
      */
     const val MIN_HEIGHT_DP = 140f
 

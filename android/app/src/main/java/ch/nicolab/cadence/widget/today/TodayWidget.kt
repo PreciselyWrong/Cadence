@@ -386,6 +386,7 @@ private fun TodayContent(view: TodayView, held: Set<String>) {
     val tasksShown = config.showTasks && (view.selection.tasks.isNotEmpty() || view.selection.overdue.isNotEmpty())
     val eventsShown = config.showEvents && view.selection.events.isNotEmpty()
     val listWanted = tasksShown || eventsShown || view.calendarAccessMissing
+    val compact = TodaySize.classOf(size.width.value, size.height.value) == TodaySizeClass.COMPACT
     val listShown = listWanted && TodayWidgetLayout.listFits(size.height.value, text, habitsShown)
     // Le verre est une surface translucide posée dans son liseré : la couche extérieure, teinte du
     // liseré, ne dépasse que sur RIM_DP tout autour ; le reflet est une image étirée sous le contenu.
@@ -407,15 +408,60 @@ private fun TodayContent(view: TodayView, held: Set<String>) {
             Column(modifier = GlanceModifier.fillMaxSize().padding((12 - rim).dp)) {
                 Header(view, text)
                 Box(GlanceModifier.height(6.dp)) {}
-                if (config.habitPlacement == HabitPlacement.ABOVE && habitsShown) HabitsRow(view, text)
-                if (listShown) {
-                    TodayList(view, held, text)
+                if (compact) {
+                    CompactNext(view, text)
                 } else {
-                    Box(modifier = GlanceModifier.fillMaxWidth().defaultWeight(), contentAlignment = Alignment.Center) {
-                        if (config.showTasks && !listWanted && !habitsShown) EmptyLabel(context.getString(R.string.today_widget_empty), palette, text)
+                    if (config.habitPlacement == HabitPlacement.ABOVE && habitsShown) HabitsRow(view, text)
+                    if (listShown) {
+                        TodayList(view, held, text)
+                    } else {
+                        Box(modifier = GlanceModifier.fillMaxWidth().defaultWeight(), contentAlignment = Alignment.Center) {
+                            if (config.showTasks && !listWanted && !habitsShown) EmptyLabel(context.getString(R.string.today_widget_empty), palette, text)
+                        }
                     }
+                    if (config.habitPlacement == HabitPlacement.BELOW && habitsShown) HabitsRow(view, text)
                 }
-                if (config.habitPlacement == HabitPlacement.BELOW && habitsShown) HabitsRow(view, text)
+            }
+        }
+    }
+}
+
+/**
+ * Mise en page compacte (2x1, 2x2) : l'en-tête avec le compte, puis le prochain élément seul, ouvert
+ * par un appui. Sans rien à montrer, la ligne « Rien à faire aujourd'hui ».
+ */
+@Composable
+private fun ColumnScope.CompactNext(view: TodayView, text: TodayTextSizes) {
+    val context = LocalContext.current
+    val palette = view.palette
+    val source = if (view.config.showTasks) view.selection else view.selection.copy(overdue = emptyList(), tasks = emptyList())
+    val next = TodayCompactNext.of(source, view.zone)
+    Box(modifier = GlanceModifier.fillMaxWidth().defaultWeight(), contentAlignment = Alignment.CenterStart) {
+        when (next) {
+            null -> EmptyLabel(context.getString(R.string.today_widget_empty), palette, text)
+            is TodayItem.Task -> Column {
+                Text(
+                    next.task.name,
+                    maxLines = 2,
+                    style = TextStyle(color = palette.provider { it.ink }, fontSize = text.body.sp, fontWeight = FontWeight.Medium),
+                    modifier = GlanceModifier.fillMaxWidth().clickable(actionStartActivityIntent(openTaskIntent(context, next.task.uid) ?: Intent(context, MainActivity::class.java))),
+                )
+                next.task.dueLabel(view, context)?.let {
+                    Text(it, maxLines = 1, style = TextStyle(color = palette.provider { p -> p.muted }, fontSize = text.small.sp))
+                }
+            }
+            is TodayItem.Event -> Column {
+                Text(
+                    next.event.event.title,
+                    maxLines = 2,
+                    style = TextStyle(color = palette.provider { it.ink }, fontSize = text.body.sp, fontWeight = FontWeight.Medium),
+                    modifier = GlanceModifier.fillMaxWidth().clickable(actionStartActivity<MainActivity>()),
+                )
+                Text(
+                    TodayEventPresentation.timeLabel(next.event.event, view.zone, context.getString(R.string.today_event_all_day)),
+                    maxLines = 1,
+                    style = TextStyle(color = palette.provider { it.muted }, fontSize = text.small.sp),
+                )
             }
         }
     }
