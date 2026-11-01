@@ -29,6 +29,7 @@ import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.HourglassEmpty
 import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.outlined.Repeat
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Sell
@@ -364,6 +365,14 @@ internal fun TaskDetailSheet(
             dismiss = dismissPicker,
         ) {
             Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+                ActionRow(
+                    Icons.Outlined.PushPin,
+                    stringResource(if (current.pinnedAt == null) R.string.tasks_action_pin else R.string.tasks_action_unpin),
+                    palette.primary,
+                ) {
+                    viewModel.edit(latest, TaskChange(pinned = current.pinnedAt == null))
+                    picker = null
+                }
                 if (current.isRecurring) {
                     ActionRow(Icons.Outlined.SkipNext, stringResource(R.string.tasks_action_skip), palette.primary) {
                         viewModel.skipOccurrence(current)

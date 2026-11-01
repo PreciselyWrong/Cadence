@@ -328,6 +328,7 @@ internal class RoomTaskRepository(
                 change.estimatedMinutes != null -> putAll(TaskFields.estimate(change.estimatedMinutes))
             }
             change.repetition?.let { putAll(TaskFields.repetition(it, repetitionAnchor(uid, change))) }
+            change.pinned?.let { put("pinned_at", if (it) JsonPrimitive(Instant.ofEpochMilli(nowMs()).toString()) else JsonNull) }
             if (change.hasDecision()) putAll(decisionFields(uid, change))
         }
     }

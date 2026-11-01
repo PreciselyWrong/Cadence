@@ -6,8 +6,6 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.work.Configuration
 import androidx.work.WorkManager
-import ch.nicolab.cadence.tasks.ConnectionInfo
-import ch.nicolab.cadence.tasks.ServerConnection
 import ch.nicolab.cadence.tasks.model.Delivery
 import ch.nicolab.cadence.tasks.model.LinkStatus
 import ch.nicolab.cadence.tasks.model.NoteChange
@@ -16,15 +14,9 @@ import ch.nicolab.cadence.tasks.model.RecurringScope
 import ch.nicolab.cadence.tasks.model.SyncStatus
 import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskDraft
-import ch.nicolab.cadence.tasks.sync.AccountProfile
 import ch.nicolab.cadence.tasks.sync.ConflictRecord
 import ch.nicolab.cadence.tasks.sync.Hlc
-import ch.nicolab.cadence.tasks.sync.PullPage
-import ch.nicolab.cadence.tasks.sync.PushResult
-import ch.nicolab.cadence.tasks.sync.SnapshotPage
-import ch.nicolab.cadence.tasks.sync.SyncApi
 import ch.nicolab.cadence.tasks.sync.SyncState
-import java.net.ConnectException
 import java.time.LocalDate
 import java.time.ZoneId
 import kotlinx.coroutines.flow.Flow
@@ -160,26 +152,5 @@ class OfflineWritesRepositoryTest {
         assertEquals("Écrit hors ligne", field.getValue("value").jsonPrimitive.content)
         assertNotEquals("", field.getValue("hlc").jsonPrimitive.content)
         assertTrue(repository.observeConflicts().first().isEmpty())
-    }
-
-    private object Unreachable : SyncApi {
-        override suspend fun meta(): JsonObject = throw ConnectException("hors ligne")
-        override suspend fun profile(): AccountProfile = throw ConnectException("hors ligne")
-        override suspend fun snapshot(entity: String, after: Long, cursor: Long?, limit: Int): SnapshotPage = throw ConnectException("hors ligne")
-        override suspend fun pull(cursor: Long, limit: Int): PullPage = throw ConnectException("hors ligne")
-        override suspend fun push(ops: List<JsonObject>): List<PushResult> = throw ConnectException("hors ligne")
-        override suspend fun moveOccurrence(uid: String, scope: String, occurrenceDate: String, dueDate: String) = throw ConnectException("hors ligne")
-        override suspend fun send(method: String, path: String, body: JsonObject?): JsonObject = throw ConnectException("hors ligne")
-    }
-
-    private object Connected : ServerConnection {
-        override fun observe(): Flow<ConnectionInfo?> = flowOf(
-            ConnectionInfo("http://10.0.2.2:3313", "a@b.c", ZoneId.of("Europe/Paris"), java.time.DayOfWeek.MONDAY, null),
-        )
-        override suspend fun connect(serverUrl: String, token: String): Result<ConnectionInfo> = error("non")
-        override suspend fun disconnect() = Unit
-        override fun observeForeignHabits(): Flow<Boolean> = flowOf(false)
-        override suspend fun keepForeignHabitsLocal() = Unit
-        override suspend fun deleteForeignHabits() = Unit
     }
 }

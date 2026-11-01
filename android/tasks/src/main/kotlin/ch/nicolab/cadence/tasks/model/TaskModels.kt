@@ -246,6 +246,8 @@ data class TaskChange(
     val clearReviewOn: Boolean = false,
     /** true ajoute l'étiquette `someday` et sort de la vue et de la semaine ; false la retire. */
     val later: Boolean? = null,
+    /** true épingle la tâche (`pinned_at` = maintenant), false la désépingle. Jamais à portée de série. */
+    val pinned: Boolean? = null,
     /** Horodate la décision (`reviewed_at`) : ce que compte « décidées cette semaine ». */
     val reviewed: Boolean = false,
 )
