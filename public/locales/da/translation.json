@@ -2069,6 +2069,7 @@
     "toggleDropdownMenu": "Skift rullemenu"
   },
   "notes": {
+    "allNotes": "All notes",
     "emptyPreview": "Tom note",
     "loading": "Indlæser noter...",
     "error": "Fejl ved indlæsning af noter",
@@ -3044,6 +3045,7 @@
     }
   },
   "viewType": {
+    "gallery": "Gallery",
     "label": "Visning",
     "list": "Liste",
     "board": "Tavle",

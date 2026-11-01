@@ -2337,6 +2337,7 @@
     "toggleDropdownMenu": "Prepnúť rozbaľovaciu ponuku"
   },
   "notes": {
+    "allNotes": "All notes",
     "emptyPreview": "Prázdna poznámka",
     "addNote": "Pridať poznámku",
     "loading": "Načítavajú sa poznámky...",
@@ -3383,6 +3384,7 @@
     }
   },
   "viewType": {
+    "gallery": "Gallery",
     "label": "Zobrazenie",
     "list": "Zoznam",
     "board": "Nástenka",

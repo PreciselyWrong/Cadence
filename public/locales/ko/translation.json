@@ -2069,6 +2069,7 @@
     "toggleDropdownMenu": "드롭다운 메뉴 전환"
   },
   "notes": {
+    "allNotes": "All notes",
     "emptyPreview": "빈 메모",
     "loading": "노트 로딩 중...",
     "error": "노트 로딩 오류",
@@ -3044,6 +3045,7 @@
     }
   },
   "viewType": {
+    "gallery": "Gallery",
     "label": "보기",
     "list": "목록",
     "board": "보드",

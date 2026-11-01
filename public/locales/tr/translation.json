@@ -2069,6 +2069,7 @@
     "toggleDropdownMenu": "Açılır menüyü aç/kapat"
   },
   "notes": {
+    "allNotes": "All notes",
     "emptyPreview": "Boş not",
     "loading": "Notlar yükleniyor...",
     "error": "Notlar yüklenirken hata",
@@ -3044,6 +3045,7 @@
     }
   },
   "viewType": {
+    "gallery": "Gallery",
     "label": "Görünüm",
     "list": "Liste",
     "board": "Pano",

@@ -763,6 +763,7 @@
     "areaDeleted": "Область успішно видалено!"
   },
   "notes": {
+    "allNotes": "All notes",
     "emptyPreview": "Порожня нотатка",
     "loading": "Завантаження нотаток...",
     "error": "Помилка завантаження нотаток",
@@ -3074,6 +3075,7 @@
     }
   },
   "viewType": {
+    "gallery": "Gallery",
     "label": "Вигляд",
     "list": "Список",
     "board": "Дошка",

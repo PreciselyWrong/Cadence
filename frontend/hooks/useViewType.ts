@@ -5,13 +5,20 @@ import {
     updateUiSettings,
 } from '../utils/profileService';
 
-export const VIEW_TYPES: ViewType[] = ['list', 'board', 'calendar', 'outline'];
+export const VIEW_TYPES: ViewType[] = [
+    'list',
+    'board',
+    'calendar',
+    'outline',
+    'gallery',
+];
 
 export const isViewType = (value: unknown): value is ViewType =>
     typeof value === 'string' && (VIEW_TYPES as string[]).includes(value);
 
 // The list, board or calendar choice for one view (`view:<uid>`,
-// `tag:<name>`, `project:<uid>` or `tasks`), saved in
+// `tag:<name>`, `project:<uid>` or `tasks`), or list or gallery for the
+// `links` and `notes` pages, saved in
 // ui_settings.viewTypes. `loaded` turns true once the saved choice is read.
 export const useViewType = (key: string) => {
     const [viewType, setType] = useState<ViewType>('list');

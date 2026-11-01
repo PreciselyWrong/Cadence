@@ -2087,6 +2087,7 @@
     "toggleDropdownMenu": "Przełącz menu rozwijane"
   },
   "notes": {
+    "allNotes": "All notes",
     "emptyPreview": "Pusta notatka",
     "loading": "Ładowanie notatek...",
     "error": "Błąd podczas ładowania notatek",
@@ -3074,6 +3075,7 @@
     }
   },
   "viewType": {
+    "gallery": "Gallery",
     "label": "Widok",
     "list": "Lista",
     "board": "Tablica",

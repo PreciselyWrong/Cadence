@@ -2072,6 +2072,7 @@
     "toggleDropdownMenu": "Alternar menu suspenso"
   },
   "notes": {
+    "allNotes": "All notes",
     "emptyPreview": "Nota vazia",
     "loading": "Carregando notas...",
     "error": "Erro ao carregar notas",
@@ -3050,6 +3051,7 @@
     }
   },
   "viewType": {
+    "gallery": "Gallery",
     "label": "Vista",
     "list": "Lista",
     "board": "Quadro",

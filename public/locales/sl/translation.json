@@ -2087,6 +2087,7 @@
     "toggleDropdownMenu": "Preklopi spustni meni"
   },
   "notes": {
+    "allNotes": "All notes",
     "emptyPreview": "Prazna opomba",
     "loading": "Nalaganje opomb...",
     "error": "Napaka pri nalaganju opomb",
@@ -3074,6 +3075,7 @@
     }
   },
   "viewType": {
+    "gallery": "Gallery",
     "label": "Pogled",
     "list": "Seznam",
     "board": "Tabla",

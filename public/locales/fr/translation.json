@@ -2073,6 +2073,7 @@
     "toggleDropdownMenu": "Afficher ou masquer le menu"
   },
   "notes": {
+    "allNotes": "Toutes les notes",
     "emptyPreview": "Note vide",
     "loading": "Chargement des notes...",
     "error": "Erreur lors du chargement des notes",
@@ -3051,6 +3052,7 @@
     }
   },
   "viewType": {
+    "gallery": "Galerie",
     "label": "Affichage",
     "list": "Liste",
     "board": "Tableau",

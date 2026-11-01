@@ -605,6 +605,7 @@
     "areaDeleted": "Bereich erfolgreich gelöscht!"
   },
   "notes": {
+    "allNotes": "All notes",
     "emptyPreview": "Leere Notiz",
     "title": "Notizen",
     "loading": "Notizen werden geladen...",
@@ -3053,6 +3054,7 @@
     }
   },
   "viewType": {
+    "gallery": "Gallery",
     "label": "Ansicht",
     "list": "Liste",
     "board": "Board",

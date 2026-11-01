@@ -2101,6 +2101,7 @@
     "toggleDropdownMenu": "Toggle dropdown menu"
   },
   "notes": {
+    "allNotes": "All notes",
     "emptyPreview": "Empty note",
     "addNote": "Add Note",
     "backgroundImage": "Background",
@@ -3282,6 +3283,7 @@
     }
   },
   "viewType": {
+    "gallery": "Gallery",
     "label": "View",
     "list": "List",
     "board": "Board",

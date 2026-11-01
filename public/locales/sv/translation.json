@@ -2069,6 +2069,7 @@
     "toggleDropdownMenu": "Växla rullgardinsmeny"
   },
   "notes": {
+    "allNotes": "All notes",
     "emptyPreview": "Tom anteckning",
     "loading": "Laddar anteckningar...",
     "error": "Fel vid inläsning av anteckningar",
@@ -3044,6 +3045,7 @@
     }
   },
   "viewType": {
+    "gallery": "Gallery",
     "label": "Vy",
     "list": "Lista",
     "board": "Tavla",

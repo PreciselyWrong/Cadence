@@ -1657,6 +1657,7 @@
     "toggleDropdownMenu": "ドロップダウンメニューを切り替え"
   },
   "notes": {
+    "allNotes": "All notes",
     "emptyPreview": "空のメモ",
     "loading": "ノートを読み込み中...",
     "noNotesFound": "ノートが見つかりませんでした",
@@ -3044,6 +3045,7 @@
     }
   },
   "viewType": {
+    "gallery": "Gallery",
     "label": "表示",
     "list": "リスト",
     "board": "ボード",

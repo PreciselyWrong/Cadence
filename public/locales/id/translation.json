@@ -2069,6 +2069,7 @@
     "toggleDropdownMenu": "Buka atau tutup menu tarik-turun"
   },
   "notes": {
+    "allNotes": "All notes",
     "emptyPreview": "Catatan kosong",
     "loading": "Memuat catatan...",
     "error": "Kesalahan memuat catatan",
@@ -3044,6 +3045,7 @@
     }
   },
   "viewType": {
+    "gallery": "Gallery",
     "label": "Tampilan",
     "list": "Daftar",
     "board": "Papan",

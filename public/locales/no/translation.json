@@ -2070,6 +2070,7 @@
     "toggleDropdownMenu": "Veksle rullegardinmeny"
   },
   "notes": {
+    "allNotes": "All notes",
     "emptyPreview": "Tom notat",
     "loading": "Laster notater...",
     "error": "Feil ved lasting av notater",
@@ -3045,6 +3046,7 @@
     }
   },
   "viewType": {
+    "gallery": "Gallery",
     "label": "Visning",
     "list": "Liste",
     "board": "Tavle",

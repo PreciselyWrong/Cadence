@@ -13,6 +13,9 @@ import {
     tagsOf,
 } from '../../utils/linkFilters';
 import { useToast } from '../Shared/ToastContext';
+import GalleryCard from '../Shared/GalleryCard';
+import { ViewTypeSwitch } from '../Task/TaskViewBody';
+import { useViewType } from '../../hooks/useViewType';
 import LinkCard from './LinkCard';
 
 const FILTER_KEY = 'links.filter';
@@ -42,6 +45,10 @@ const LinksPage: React.FC = () => {
     const save = useLinksStore((s) => s.save);
     const tagsStore = useStore((s) => s.tagsStore);
     const [filter, setFilterState] = useState<LinkFilter>(readFilter);
+    // List (cards with actions) or Gallery (pictures), remembered in
+    // ui_settings.viewTypes.links.
+    const { viewType, setViewType } = useViewType('links');
+    const gallery = viewType === 'gallery';
 
     useEffect(() => {
         if (!tagsStore.hasLoaded) void tagsStore.loadTags();
@@ -89,16 +96,25 @@ const LinksPage: React.FC = () => {
 
     return (
         <div className="mx-auto w-full max-w-6xl px-4 pb-10 pt-4 sm:px-6">
-            <header className="mb-4">
-                <h2 className="text-2xl font-light text-gray-900 dark:text-gray-100">
-                    {t('links.title', 'Links')}
-                </h2>
-                {loaded && links.length > 0 && (
-                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
-                        {t('links.count', '{{count}} links', {
-                            count: links.length,
-                        })}
-                    </p>
+            <header className="mb-4 flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                    <h2 className="text-2xl font-light text-gray-900 dark:text-gray-100">
+                        {t('links.title', 'Links')}
+                    </h2>
+                    {loaded && links.length > 0 && (
+                        <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
+                            {t('links.count', '{{count}} links', {
+                                count: links.length,
+                            })}
+                        </p>
+                    )}
+                </div>
+                {links.length > 0 && (
+                    <ViewTypeSwitch
+                        value={gallery ? 'gallery' : 'list'}
+                        onChange={setViewType}
+                        keys={['list', 'gallery']}
+                    />
                 )}
             </header>
 
@@ -236,16 +252,32 @@ const LinksPage: React.FC = () => {
                 </p>
             )}
 
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-                {shown.map((link) => (
-                    <LinkCard
-                        key={link.uid}
-                        link={link}
-                        onChange={change(link.uid)}
-                        availableTags={tagsStore.tags}
-                    />
-                ))}
-            </div>
+            {gallery ? (
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
+                    {shown.map((link) => (
+                        <GalleryCard
+                            key={link.uid}
+                            title={link.title || link.domain || link.url}
+                            image={link.image_url}
+                            meta={link.site_name || link.domain}
+                            tags={link.tags}
+                            href={link.url}
+                            dimmed={link.status === 'dropped'}
+                        />
+                    ))}
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+                    {shown.map((link) => (
+                        <LinkCard
+                            key={link.uid}
+                            link={link}
+                            onChange={change(link.uid)}
+                            availableTags={tagsStore.tags}
+                        />
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

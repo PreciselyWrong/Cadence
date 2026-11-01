@@ -112,13 +112,14 @@ function sanitizeDensity(density) {
     return DENSITIES.includes(density) ? density : undefined;
 }
 
-const VIEW_TYPES = ['list', 'board', 'calendar', 'outline'];
+const VIEW_TYPES = ['list', 'board', 'calendar', 'outline', 'gallery'];
 const MAX_VIEW_TYPE_ENTRIES = 500;
 const MAX_VIEW_TYPE_KEY_LENGTH = 120;
 
 // How a saved view, a tag, a project or the Tasks list is shown in Minimal:
 // keyed by `view:<uid>`, `tag:<name>`, `project:<uid>` or `tasks`
-// (`outline` is for projects). Only the known types are kept, keys are capped in length and the map keeps at
+// (`outline` is for projects), plus list or `gallery` for the `links` and
+// `notes` pages. Only the known types are kept, keys are capped in length and the map keeps at
 // most 500 entries (the oldest go first). Dense does not read it.
 function sanitizeViewTypes(raw) {
     if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;

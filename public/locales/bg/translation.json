@@ -2069,6 +2069,7 @@
     "toggleDropdownMenu": "Превключване на падащото меню"
   },
   "notes": {
+    "allNotes": "All notes",
     "emptyPreview": "Празна бележка",
     "loading": "Зареждане на бележки...",
     "error": "Грешка при зареждане на бележки",
@@ -3044,6 +3045,7 @@
     }
   },
   "viewType": {
+    "gallery": "Gallery",
     "label": "Изглед",
     "list": "Списък",
     "board": "Табло",

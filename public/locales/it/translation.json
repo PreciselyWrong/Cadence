@@ -2072,6 +2072,7 @@
     "toggleDropdownMenu": "Apri o chiudi menu a discesa"
   },
   "notes": {
+    "allNotes": "All notes",
     "emptyPreview": "Nota vuota",
     "loading": "Caricamento note...",
     "error": "Errore nel caricamento delle note",
@@ -3050,6 +3051,7 @@
     }
   },
   "viewType": {
+    "gallery": "Gallery",
     "label": "Vista",
     "list": "Elenco",
     "board": "Bacheca",

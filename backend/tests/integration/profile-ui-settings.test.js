@@ -346,6 +346,18 @@ describe('PUT /api/profile/ui-settings', () => {
             });
         });
 
+        it('saves a gallery for the links and notes pages', async () => {
+            await agent.put('/api/profile/ui-settings').send({
+                viewTypes: { links: 'gallery', notes: 'gallery' },
+            });
+
+            const profile = await agent.get('/api/profile');
+            expect(profile.body.ui_settings.viewTypes).toEqual({
+                links: 'gallery',
+                notes: 'gallery',
+            });
+        });
+
         it('drops values other than list, board or calendar', async () => {
             await agent.put('/api/profile/ui-settings').send({
                 viewTypes: {

@@ -1382,6 +1382,7 @@
     }
   },
   "notes": {
+    "allNotes": "All notes",
     "emptyPreview": "Κενή σημείωση",
     "loading": "Φόρτωση σημειώσεων...",
     "error": "Σφάλμα φόρτωσης σημειώσεων",
@@ -3045,6 +3046,7 @@
     }
   },
   "viewType": {
+    "gallery": "Gallery",
     "label": "Προβολή",
     "list": "Λίστα",
     "board": "Πίνακας",

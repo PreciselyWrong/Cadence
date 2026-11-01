@@ -2069,6 +2069,7 @@
     "toggleDropdownMenu": "Vervolgkeuzemenu wisselen"
   },
   "notes": {
+    "allNotes": "All notes",
     "emptyPreview": "Lege notitie",
     "loading": "Bezig met het laden van notities...",
     "error": "Fout bij het laden van notities",
@@ -3044,6 +3045,7 @@
     }
   },
   "viewType": {
+    "gallery": "Gallery",
     "label": "Weergave",
     "list": "Lijst",
     "board": "Bord",

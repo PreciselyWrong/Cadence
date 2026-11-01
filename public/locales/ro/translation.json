@@ -2074,6 +2074,7 @@
     "toggleDropdownMenu": "Comutare meniu derulant"
   },
   "notes": {
+    "allNotes": "All notes",
     "emptyPreview": "Notă goală",
     "loading": "Se încarcă notițele...",
     "error": "Eroare la încărcarea notițelor",
@@ -3052,6 +3053,7 @@
     }
   },
   "viewType": {
+    "gallery": "Gallery",
     "label": "Vizualizare",
     "list": "Listă",
     "board": "Panou",

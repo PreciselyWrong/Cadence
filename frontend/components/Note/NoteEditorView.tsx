@@ -10,6 +10,7 @@ import {
     XMarkIcon,
     ArrowsPointingOutIcon,
     GlobeAltIcon,
+    Squares2X2Icon,
 } from '@heroicons/react/24/outline';
 import PushPinIcon from '../Shared/Icons/PushPinIcon';
 import TagInput from '../Tag/TagInput';
@@ -48,6 +49,8 @@ interface NoteEditorViewProps {
     onDelete: () => void;
     onShare: () => void;
     onOpenFocusMode: () => void;
+    // Leaves the note for the overview of all notes (Notes page only).
+    onShowAll?: () => void;
     // Extra buttons after the note options, e.g. close in a side panel
     headerActions?: React.ReactNode;
 }
@@ -65,6 +68,7 @@ const NoteEditorView: React.FC<NoteEditorViewProps> = ({
     onDelete,
     onShare,
     onOpenFocusMode,
+    onShowAll,
     headerActions,
 }) => {
     const { t } = useTranslation();
@@ -347,6 +351,18 @@ const NoteEditorView: React.FC<NoteEditorViewProps> = ({
                                     />
                                 </div>
                                 <div className="py-1">
+                                    {onShowAll && (
+                                        <button
+                                            onClick={() => {
+                                                setShowOptions(false);
+                                                onShowAll();
+                                            }}
+                                            className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
+                                        >
+                                            <Squares2X2Icon className="h-4 w-4" />
+                                            {t('notes.allNotes', 'All notes')}
+                                        </button>
+                                    )}
                                     <button
                                         onClick={() => {
                                             onSaveNow();

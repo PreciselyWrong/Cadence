@@ -2003,6 +2003,7 @@
     "toggleDropdownMenu": "Alternar menú desplegable"
   },
   "notes": {
+    "allNotes": "All notes",
     "emptyPreview": "Nota vacía",
     "loading": "Cargando notas...",
     "error": "Error al cargar notas",
@@ -3037,6 +3038,7 @@
     }
   },
   "viewType": {
+    "gallery": "Gallery",
     "label": "Vista",
     "list": "Lista",
     "board": "Tablero",

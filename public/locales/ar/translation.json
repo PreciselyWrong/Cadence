@@ -2081,6 +2081,7 @@
     "toggleDropdownMenu": "تبديل قائمة السحب المنسدلة"
   },
   "notes": {
+    "allNotes": "All notes",
     "emptyPreview": "ملاحظة فارغة",
     "loading": "جارٍ تحميل الملاحظات...",
     "error": "خطأ في تحميل الملاحظات",
@@ -3068,6 +3069,7 @@
     }
   },
   "viewType": {
+    "gallery": "Gallery",
     "label": "عرض",
     "list": "قائمة",
     "board": "لوحة",

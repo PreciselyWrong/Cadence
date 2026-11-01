@@ -23,8 +23,9 @@ export interface EisenhowerMatrixConfig {
 }
 
 // How a saved view, tag, project or the Tasks list is shown in Minimal
-// (`outline` only for a project).
-export type ViewType = 'list' | 'board' | 'calendar' | 'outline';
+// (`outline` only for a project), and the Links and Notes pages
+// (`list` or `gallery`).
+export type ViewType = 'list' | 'board' | 'calendar' | 'outline' | 'gallery';
 
 interface Profile {
     id: number;

@@ -284,7 +284,7 @@ Hover the left edge of a paragraph, heading, list item, quote, code block or tab
 - Metadata row: last updated (or "New"), project selector, tag manager
 - Save status indicator (✓ Saved / Saving... / • Unsaved)
 - The live editor fills the rest of the panel
-- **Focus mode** button, **Share** globe icon and **⋮ menu** (color, background, Save, Pin to sidebar, Delete)
+- **Focus mode** button, **Share** globe icon and **⋮ menu** (All notes, color, background, Save, Pin to sidebar, Delete)
 
 **Back button (mobile):**
 - ← Back to list
@@ -292,6 +292,12 @@ Hover the left edge of a paragraph, heading, list item, quote, code block or tab
 
 **Empty state:**
 - "Select a note" message when no note is open (desktop only)
+
+### Overview: List or Gallery
+
+- `/notes` without a note open shows every note under a **List / Gallery** switch, remembered for the account in `ui_settings.viewTypes.notes`. **List** (default) shows text cards; on a wide screen the most recent note opens by itself, as before. **Gallery** shows picture cards (two to four columns) and the page always lands on it: the note's first image (Markdown `![](…)` or `<img>`, web addresses and this server's files only), else the preview image of a link found in the note (`links.image_url`, see [Links](37-links.md)), else the start of its text without Markdown; then the title and up to three tags. A card opens the note.
+- **All notes** in a note's ⋮ menu leaves the note for this overview (it stays there for the visit even in List mode).
+- Logic: `frontend/components/Note/NoteGallery.tsx`, `frontend/components/Shared/GalleryCard.tsx`, `frontend/utils/galleryPreview.ts`.
 
 ## Focus Mode
 

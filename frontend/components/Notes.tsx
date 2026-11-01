@@ -34,6 +34,9 @@ import {
 import NoteFocusMode from './Note/NoteFocusMode';
 import NoteEditorView from './Note/NoteEditorView';
 import NoteCard from './Shared/NoteCard';
+import NoteGallery from './Note/NoteGallery';
+import { ViewTypeSwitch } from './Task/TaskViewBody';
+import { useViewType } from '../hooks/useViewType';
 import NewItemButton from './Shared/NewItemButton';
 import BlankSlate from './Shared/BlankSlate';
 import { noteMatchesFocus, useFocus } from '../utils/focus';
@@ -77,6 +80,16 @@ const Notes: React.FC = () => {
     >('saved');
     const [isFocusMode, setIsFocusMode] = useState(false);
     const hasAutoSelected = useRef(false);
+    // Gallery (pictures) or list (the latest note opens on a wide screen),
+    // remembered in ui_settings.viewTypes.notes.
+    const {
+        viewType: notesView,
+        setViewType: setNotesView,
+        loaded: notesViewLoaded,
+    } = useViewType('notes');
+    const notesGallery = notesView === 'gallery';
+    // "All notes" from a note's menu: stay on the overview this visit.
+    const [showOverview, setShowOverview] = useState(false);
     const currentUidRef = useRef(uid);
     const [urlNoteMissing, setUrlNoteMissing] = useState(false);
     // Timestamp flag attached to the /notes navigation state by Layout's
@@ -498,6 +511,9 @@ const Notes: React.FC = () => {
         if (newNoteSignal) return;
         if (
             !uid &&
+            notesViewLoaded &&
+            !notesGallery &&
+            !showOverview &&
             sortedNotes.length > 0 &&
             !previewNote &&
             !isEditing &&
@@ -509,7 +525,15 @@ const Notes: React.FC = () => {
                 hasAutoSelected.current = true;
             }
         }
-    }, [sortedNotes, previewNote, uid, isEditing]);
+    }, [
+        sortedNotes,
+        previewNote,
+        uid,
+        isEditing,
+        notesViewLoaded,
+        notesGallery,
+        showOverview,
+    ]);
 
     useEffect(() => {
         const handleEscape = (e: KeyboardEvent) => {
@@ -553,11 +577,18 @@ const Notes: React.FC = () => {
     const notesHeader = (
         <div className="flex items-center justify-between gap-2 mb-6">
             <h2 className="text-2xl font-light">{t('notes.title', 'Notes')}</h2>
-            <NewItemButton
-                label={t('notes.new', 'New Note')}
-                onClick={startNewNote}
-                testId="new-note-button"
-            />
+            <div className="flex items-center gap-3">
+                <ViewTypeSwitch
+                    value={notesGallery ? 'gallery' : 'list'}
+                    onChange={setNotesView}
+                    keys={['list', 'gallery']}
+                />
+                <NewItemButton
+                    label={t('notes.new', 'New Note')}
+                    onClick={startNewNote}
+                    testId="new-note-button"
+                />
+            </div>
         </div>
     );
 
@@ -596,6 +627,10 @@ const Notes: React.FC = () => {
                                 }}
                                 onShare={() => setNoteToShare(editingNote)}
                                 onOpenFocusMode={() => setIsFocusMode(true)}
+                                onShowAll={() => {
+                                    setShowOverview(true);
+                                    void handleSelectNote(null);
+                                }}
                             />
                         ) : previewNote ? null : sortedNotes.length > 0 ? (
                             // No note selected yet (mobile lands here since
@@ -605,15 +640,19 @@ const Notes: React.FC = () => {
                             // instead of a dead-end placeholder (#1527).
                             <div className="flex-1 overflow-y-auto p-6">
                                 {notesHeader}
-                                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-                                    {sortedNotes.map((note) => (
-                                        <NoteCard
-                                            key={note.uid}
-                                            note={note}
-                                            showActions={false}
-                                        />
-                                    ))}
-                                </div>
+                                {notesGallery ? (
+                                    <NoteGallery notes={sortedNotes} />
+                                ) : (
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                                        {sortedNotes.map((note) => (
+                                            <NoteCard
+                                                key={note.uid}
+                                                note={note}
+                                                showActions={false}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         ) : hasLoaded ? (
                             <div className="flex-1 overflow-y-auto p-6">

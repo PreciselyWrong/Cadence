@@ -2087,6 +2087,7 @@
     "toggleDropdownMenu": "Переключить выпадающее меню"
   },
   "notes": {
+    "allNotes": "All notes",
     "emptyPreview": "Пустая заметка",
     "loading": "Загрузка заметок...",
     "error": "Ошибка загрузки заметок",
@@ -3074,6 +3075,7 @@
     }
   },
   "viewType": {
+    "gallery": "Gallery",
     "label": "Вид",
     "list": "Список",
     "board": "Доска",

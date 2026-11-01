@@ -17,19 +17,25 @@ import TaskMonthCalendar from './TaskMonthCalendar';
 interface ViewTypeSwitchProps {
     value: ViewType;
     onChange: (next: ViewType) => void;
+    // The choices offered, in order (default: List / Board / Calendar).
+    keys?: ViewType[];
 }
 
-// Small segmented control: List / Board / Calendar.
+// Small segmented control: List / Board / Calendar, or the given choices.
 export const ViewTypeSwitch: React.FC<ViewTypeSwitchProps> = ({
     value,
     onChange,
+    keys = ['list', 'board', 'calendar'],
 }) => {
     const { t } = useTranslation();
-    const options: { key: ViewType; label: string }[] = [
-        { key: 'list', label: t('viewType.list', 'List') },
-        { key: 'board', label: t('viewType.board', 'Board') },
-        { key: 'calendar', label: t('viewType.calendar', 'Calendar') },
-    ];
+    const labels: Record<ViewType, string> = {
+        list: t('viewType.list', 'List'),
+        board: t('viewType.board', 'Board'),
+        calendar: t('viewType.calendar', 'Calendar'),
+        outline: t('outline.title', 'Outline'),
+        gallery: t('viewType.gallery', 'Gallery'),
+    };
+    const options = keys.map((key) => ({ key, label: labels[key] }));
     return (
         <div
             role="group"

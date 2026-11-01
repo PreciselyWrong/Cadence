@@ -52,7 +52,7 @@ Entity `link` (schema 4): fields `note`, `status`, `review_at`; server fields li
 
 ## Clients
 
-- **Web**: `/links` (`frontend/components/Links/`): search, kind, status (default: not dropped), tag, site and sort filters, remembered per browser; cards with title, two lines of description, domain, kind badge, GitHub stats, README start for repositories, note (click to write, Enter saves), tags, status buttons, open, go to the source. In the inbox, an item with a link shows the link card and its note; the item's text is shown only when it says more than the note.
+- **Web**: `/links` (`frontend/components/Links/`): search, kind, status (default: not dropped), tag, site and sort filters, remembered per browser; cards with title, two lines of description, domain, kind badge, GitHub stats, README start for repositories, note (click to write, Enter saves), tags, status buttons, open, go to the source. A **List / Gallery** switch in the header (remembered for the account in `ui_settings.viewTypes.links`) turns the page into a gallery: picture cards (two to four columns) with the page image (`image_url`, else the site's initial), title, site and up to three tags; a card opens the page in a new tab; the filters apply the same way. In the inbox, an item with a link shows the link card and its note; the item's text is shown only when it says more than the note.
 - **Android**: Links screen from the Inbox header (search, kind and "Jetés" chips, same cards, note in a small dialog, status chips, tag picker); inbox ideas that hold a link are triaged in one tap (below). All writes go through the outbox (`link` note, status, `tag_uids`; `inbox_item` status), so triage works offline.
 
 ### Android inbox triage

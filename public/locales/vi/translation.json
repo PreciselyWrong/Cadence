@@ -2069,6 +2069,7 @@
     "toggleDropdownMenu": "Bật/tắt menu thả xuống"
   },
   "notes": {
+    "allNotes": "All notes",
     "emptyPreview": "Ghi chú trống",
     "loading": "Đang tải ghi chú...",
     "error": "Lỗi khi tải ghi chú",
@@ -3044,6 +3045,7 @@
     }
   },
   "viewType": {
+    "gallery": "Gallery",
     "label": "Chế độ xem",
     "list": "Danh sách",
     "board": "Bảng",

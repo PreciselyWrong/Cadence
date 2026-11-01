@@ -2069,6 +2069,7 @@
     "toggleDropdownMenu": "Avaa tai sulje pudotusvalikko"
   },
   "notes": {
+    "allNotes": "All notes",
     "emptyPreview": "Tyhjä muistiinpano",
     "loading": "Ladataan muistiinpanoja...",
     "error": "Virhe muistiinpanojen lataamisessa",
@@ -3044,6 +3045,7 @@
     }
   },
   "viewType": {
+    "gallery": "Gallery",
     "label": "Näkymä",
     "list": "Lista",
     "board": "Taulu",

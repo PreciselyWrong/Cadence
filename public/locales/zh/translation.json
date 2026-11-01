@@ -2069,6 +2069,7 @@
     "toggleDropdownMenu": "切换下拉菜单"
   },
   "notes": {
+    "allNotes": "All notes",
     "emptyPreview": "空笔记",
     "loading": "加载笔记...",
     "error": "加载笔记时出错",
@@ -3044,6 +3045,7 @@
     }
   },
   "viewType": {
+    "gallery": "Gallery",
     "label": "视图",
     "list": "列表",
     "board": "看板",
