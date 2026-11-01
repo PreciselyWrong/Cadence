@@ -37,6 +37,11 @@ const filterTypes = [
         labelKey: 'search.entityTypes.note',
         color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
     },
+    {
+        value: 'Link',
+        labelKey: 'search.entityTypes.link',
+        color: 'bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-200',
+    },
 ];
 
 const priorityOptions = [

@@ -3066,6 +3066,7 @@
     "startTyping": "Commencez à taper pour rechercher ou sélectionnez des filtres ci-dessus",
     "noResults": "Aucun résultat trouvé",
     "entityTypes": {
+      "link": "Liens",
       "task": "tâche",
       "project": "projet",
       "area": "zone",
@@ -3096,6 +3097,7 @@
       "hasNoProject": "n'a pas de projet"
     },
     "groups": {
+      "Link": "Liens",
       "Task": "Tâches",
       "Project": "Projets",
       "Area": "Zones",

@@ -3312,12 +3312,14 @@
     "startTyping": "Start typing to search or select filters above",
     "noResults": "No results found",
     "entityTypes": {
+      "link": "Links",
       "task": "task",
       "project": "project",
       "area": "area",
       "note": "note"
     },
     "groups": {
+      "Link": "Links",
       "Task": "Tasks",
       "Project": "Projects",
       "Area": "Areas",

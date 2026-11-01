@@ -171,12 +171,25 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     publicNoteHref = publicLinkPage,
 }) => {
     const storeNotes = useStore((state) => state.notesStore.notes);
+    const notesLoaded = useStore((state) => state.notesStore.hasLoaded);
+    const loadNotes = useStore((state) => state.notesStore.loadNotes);
+
+    // A [[title]] link opens the note of that title, whatever page shows it:
+    // the note list is loaded here when the page has not loaded it yet.
+    const needsNoteList = !summaryMode && !publicNoteLinks;
+    const hasWikilinks = content.includes('[[');
+    useEffect(() => {
+        if (needsNoteList && hasWikilinks && !notesLoaded) loadNotes();
+    }, [needsNoteList, hasWikilinks, notesLoaded, loadNotes]);
 
     const noteTitleToSlug = useMemo(() => {
         const map = new Map<string, string>();
         for (const n of storeNotes) {
             if (n.uid && n.title) {
-                map.set(n.title.toLowerCase(), `${n.uid}-${slugify(n.title)}`);
+                map.set(
+                    n.title.trim().toLowerCase(),
+                    `${n.uid}-${slugify(n.title)}`
+                );
             }
         }
         return map;
@@ -435,7 +448,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
                                 );
                             }
                             const slug = noteTitleToSlug.get(
-                                title.toLowerCase()
+                                title.trim().toLowerCase()
                             );
                             const to = slug ? `/note/${slug}` : null;
                             const badge = <NoteBadge title={title} />;

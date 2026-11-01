@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
+    LinkIcon,
     CheckCircleIcon,
     FolderIcon,
     RectangleStackIcon,
@@ -39,10 +40,15 @@ interface SearchResult {
     uid?: string;
     name: string;
     title?: string;
+    url?: string;
     description?: string;
     priority?: string;
     status?: string;
 }
+
+// The types a search covers when no filter is chosen. Links are in it: a
+// link is found by its title, address or note like any other item.
+const DEFAULT_SEARCH_TYPES = ['Task', 'Project', 'Area', 'Note', 'Tag', 'Link'];
 
 const SearchResults: React.FC<SearchResultsProps> = ({
     navRef,
@@ -84,7 +90,10 @@ const SearchResults: React.FC<SearchResultsProps> = ({
             try {
                 const data = await searchUniversal({
                     query: searchQuery,
-                    filters: selectedFilters,
+                    filters:
+                        selectedFilters.length > 0
+                            ? selectedFilters
+                            : DEFAULT_SEARCH_TYPES,
                     priority: selectedPriority || undefined,
                     taskStatus: selectedStatus || undefined,
                     due: selectedDue || undefined,
@@ -131,6 +140,8 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                 return <DocumentTextIcon className="h-5 w-5 text-yellow-500" />;
             case 'Tag':
                 return <TagIcon className="h-5 w-5 text-pink-500" />;
+            case 'Link':
+                return <LinkIcon className="h-5 w-5 text-sky-500" />;
             default:
                 return null;
         }
@@ -145,12 +156,17 @@ const SearchResults: React.FC<SearchResultsProps> = ({
             window.dispatchEvent(new CustomEvent('closeMobileSearch'));
         }
 
+        if (result.type === 'Link' && result.url) {
+            window.open(result.url, '_blank', 'noopener');
+            return;
+        }
+
         const destination = searchDestination(result);
         if (destination?.kind === 'task') openTaskPanel(destination.uid);
         else if (destination?.kind === 'path') navigate(destination.path);
     };
 
-    const TYPE_ORDER = ['Task', 'Project', 'Area', 'Note', 'Tag'];
+    const TYPE_ORDER = ['Task', 'Project', 'Area', 'Note', 'Tag', 'Link'];
     const grouped = useMemo(() => {
         const byType: Record<string, SearchResult[]> = {};
         for (const result of results) {

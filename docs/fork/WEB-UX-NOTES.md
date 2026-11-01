@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-01 — Recherche : liens ; `[[titre]]` entre notes
+
+- **Problème** : la recherche globale ne cherchait pas les liens (filtre « Liens » absent, un clic sur un lien ne faisait rien) ; un `[[titre]]` affichait « Note not found » sur les pages qui ne chargeaient pas la liste des notes.
+- **Décision** : la recherche couvre les liens sans filtre et propose le filtre « Liens » ; un clic ouvre l'adresse du lien dans un nouvel onglet. Un `[[titre]]` ouvre la note de même titre, sans tenir compte de la casse ni des espaces autour ; la liste des notes se charge au besoin. Un titre inconnu reste « Note not found ».
+- **À reprendre sur Android** : la recherche des liens et le filtre « Liens » existent ; vérifier qu'un `[[titre]]` ouvre la note de même titre sans casse.
+
 ### 2026-11-01 — Revue : puces au lieu du menu « Décider », Annuler, Trier un par un
 
 - **Problème** : chaque ligne de `/review` ouvrait un menu « Décider » ; une décision était définitive ; « Plus tard » ne se parcourait qu'en liste.
@@ -326,3 +332,9 @@ Revue écran par écran (Aujourd'hui, Boîte, Tâches, Projets, page projet, Age
 - **Problème** : l'en-tête des Projets comptait sept contrôles (recherche, cartes/liste, tri, réglages, « … », nouveau) ; le tri et les réglages (projets « someday » et terminés) servaient rarement.
 - **Décision** : restent visibles la recherche, le choix cartes/liste, « … » et « Nouveau projet ». Le tri (cinq choix, coché) et les deux interrupteurs de réglages passent dans le menu « … », après lesquels viennent Historique, Depuis un modèle et Importer. Le menu se ferme au choix, interrupteurs compris. Le point bleu du réglage modifié disparaît avec le bouton réglages ; l'état reste visible dans le menu (coche).
 - **Android à reprendre** : tri et deux réglages (projets someday et terminés) dans le menu de la barre d'outils, pas en boutons à part ; coche sur le choix actif.
+
+### 2026-11-01 — Projet TODO.md d'un dépôt git : état de synchro
+
+- **Problème** : un projet lu depuis un dépôt Gitea/GitHub peut ne pas être à jour, ou une modification faite dans Cadence peut ne pas avoir atteint le dépôt ; rien ne le montrait.
+- **Décision** : sous le titre d'un projet `git:<slug>`, une ligne discrète « Synchronisé avec <dépôt> · il y a 3 minutes ». Si une modification n'a pas pu être poussée : « Conflit : « Fix bug » a changé dans le dépôt, rien n'a été écrit. » ou « N modification(s) en attente : le dépôt est injoignable. », en ambre, avec « Réessayer » et « Abandonner ». Visible du seul compte propriétaire des projets TODO.md. Logique : `frontend/components/Project/TodoMdRepoSync.tsx`, `GET /api/todo-md/status` (`repos`), `POST /api/todo-md/repos/<slug>/retry|discard`.
+- **Android à reprendre** : même ligne d'état sur l'en-tête d'un projet `git:` (lire `/api/todo-md/status`, pas par la synchro), mêmes boutons ; un ajout ou une case refusé(e) en `todo_md_conflict` / `todo_md_repo_unreachable` doit l'afficher au lieu d'un échec muet. Reste : rien d'essayé.
