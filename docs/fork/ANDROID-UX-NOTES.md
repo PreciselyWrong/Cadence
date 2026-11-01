@@ -165,3 +165,9 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Problème** : une idée captée trop vite ne se corrigeait pas, et pour garder une réflexion il fallait la recopier à la main dans une note.
 - **Décision** : deux pastilles discrètes et « Note » à côté de « Aujourd'hui », « Planifier » et « Projet » ; « Modifier » ouvre un champ de texte. « Note » crée une note (titre = première ligne, contenu = la suite) par la voie d'écriture des notes, puis retire l'idée de la boîte.
 - **Web** : l'Inbox web a déjà l'édition et la conversion d'une idée ; à reprendre seulement si le web ajoute « Note ».
+
+### 2026-11-01 — Liens entre notes `[[titre]]`
+
+- **Problème** : relier deux notes obligeait à retrouver la note par la recherche ; une référence écrite dans le texte ne menait nulle part.
+- **Décision** : `[[titre]]` s'affiche en pastille cliquable qui ouvre la note au titre égal (casse et espaces aux bords ignorés) ; sans correspondance, un message « Note introuvable ». Un titre vide, sur deux lignes ou imbriqué reste du texte.
+- **Web** : pas encore d'équivalent (voir `TODO.md`, Petits restes).

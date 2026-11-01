@@ -134,7 +134,7 @@ fun InboxScreen(modifier: Modifier = Modifier, onOpenSearch: () -> Unit = {}, on
         )
     }
     selectedNoteUid?.let { uid ->
-        NoteScreen(viewModel, uid, isNew = false, onBack = { selectedNoteUid = null })
+        NoteScreen(viewModel, uid, isNew = false, onBack = { selectedNoteUid = null }, onOpenNote = { selectedNoteUid = it })
     }
     if (linksOpen) {
         LinksScreen(

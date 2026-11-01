@@ -99,6 +99,7 @@
     <string name="tasks_notes_empty">Aucune note. Écrivez la première, elle se synchronise avec le web.</string>
     <string name="tasks_note_untitled">Sans titre</string>
     <string name="tasks_note_empty_content">Touchez pour écrire.</string>
+    <string name="tasks_wiki_not_found">Note introuvable</string>
     <string name="tasks_note_updated">Modifiée le %1$s</string>
     <string name="tasks_note_back">Retour</string>
     <string name="tasks_note_new">Nouvelle note</string>

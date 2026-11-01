@@ -15,12 +15,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.LinkInteractionListener
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.TextStyle
@@ -45,19 +48,32 @@ import ch.nicolab.cadence.tasks.notes.MdRun
 private val INDENT_STEP = 20.dp
 private val QUOTE_BAR = 3.dp
 
-/** Rend un contenu markdown ; cocher une case appelle [onToggleCheckbox] avec l'index de sa ligne source. */
+/** Ouvre la note dont le titre est [title] (lien `[[titre]]`) ; absente, c'est à l'appelant de le dire. */
+private val LocalWikiLinkHandler = compositionLocalOf<(String) -> Unit> { {} }
+
+/**
+ * Rend un contenu markdown ; cocher une case appelle [onToggleCheckbox] avec l'index de sa ligne source,
+ * toucher un lien `[[titre]]` appelle [onWikiLink] avec ce titre.
+ */
 @Composable
-internal fun MarkdownView(content: String, onToggleCheckbox: (line: Int) -> Unit, modifier: Modifier = Modifier) {
+internal fun MarkdownView(
+    content: String,
+    onToggleCheckbox: (line: Int) -> Unit,
+    modifier: Modifier = Modifier,
+    onWikiLink: (title: String) -> Unit = {},
+) {
     val blocks = remember(content) { Markdown.parse(content) }
-    Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-        blocks.forEach { block ->
-            when (block) {
-                is MdBlock.Heading -> InlineText(block.text, headingStyle(block.level), bold = true)
-                is MdBlock.Paragraph -> InlineText(block.text, MaterialTheme.typography.bodyLarge)
-                is MdBlock.Item -> ItemRow(block, onToggleCheckbox)
-                is MdBlock.Quote -> QuoteRow(block.text)
-                is MdBlock.Code -> CodeBlock(block.text)
-                is MdBlock.Rule -> Hairline(Modifier.padding(vertical = Space.sm))
+    CompositionLocalProvider(LocalWikiLinkHandler provides onWikiLink) {
+        Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+            blocks.forEach { block ->
+                when (block) {
+                    is MdBlock.Heading -> InlineText(block.text, headingStyle(block.level), bold = true)
+                    is MdBlock.Paragraph -> InlineText(block.text, MaterialTheme.typography.bodyLarge)
+                    is MdBlock.Item -> ItemRow(block, onToggleCheckbox)
+                    is MdBlock.Quote -> QuoteRow(block.text)
+                    is MdBlock.Code -> CodeBlock(block.text)
+                    is MdBlock.Rule -> Hairline(Modifier.padding(vertical = Space.sm))
+                }
             }
         }
     }
@@ -74,8 +90,12 @@ private fun headingStyle(level: Int): TextStyle = when (level) {
 private fun InlineText(text: String, style: TextStyle, modifier: Modifier = Modifier, bold: Boolean = false, dim: Boolean = false, struck: Boolean = false) {
     val palette = cadence
     val linkStyle = TextLinkStyles(SpanStyle(color = palette.primary, textDecoration = TextDecoration.Underline))
+    val chipStyle = TextLinkStyles(SpanStyle(color = palette.onPrimaryContainer, background = palette.primaryContainer, fontWeight = FontWeight.Medium))
     val codeBackground = palette.containerHigh
-    val annotated = remember(text, linkStyle, codeBackground) { annotate(Markdown.inline(text), linkStyle, codeBackground) }
+    val onWikiLink = LocalWikiLinkHandler.current
+    val annotated = remember(text, linkStyle, chipStyle, codeBackground, onWikiLink) {
+        annotate(Markdown.inline(text), linkStyle, chipStyle, codeBackground, onWikiLink)
+    }
     Text(
         text = annotated,
         style = style.merge(
@@ -89,7 +109,13 @@ private fun InlineText(text: String, style: TextStyle, modifier: Modifier = Modi
     )
 }
 
-private fun annotate(runs: List<MdRun>, linkStyle: TextLinkStyles, codeBackground: androidx.compose.ui.graphics.Color): AnnotatedString =
+private fun annotate(
+    runs: List<MdRun>,
+    linkStyle: TextLinkStyles,
+    chipStyle: TextLinkStyles,
+    codeBackground: androidx.compose.ui.graphics.Color,
+    onWikiLink: (String) -> Unit,
+): AnnotatedString =
     buildAnnotatedString {
         runs.forEach { run ->
             val style = SpanStyle(
@@ -99,7 +125,13 @@ private fun annotate(runs: List<MdRun>, linkStyle: TextLinkStyles, codeBackgroun
                 background = if (run.code) codeBackground else androidx.compose.ui.graphics.Color.Unspecified,
                 textDecoration = if (run.strike) TextDecoration.LineThrough else null,
             )
-            if (run.link != null) {
+            val wiki = run.wiki
+            if (wiki != null) {
+                val listener = LinkInteractionListener { onWikiLink(wiki) }
+                withLink(LinkAnnotation.Clickable(tag = wiki, styles = chipStyle, linkInteractionListener = listener)) {
+                    withStyle(style) { append(run.text) }
+                }
+            } else if (run.link != null) {
                 withLink(LinkAnnotation.Url(run.link, linkStyle)) { withStyle(style) { append(run.text) } }
             } else {
                 withStyle(style) { append(run.text) }

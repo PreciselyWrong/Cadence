@@ -11,6 +11,8 @@ data class MdRun(
     val code: Boolean = false,
     val strike: Boolean = false,
     val link: String? = null,
+    /** Titre de la note visée par un lien `[[titre]]` ; le texte est alors ce titre. */
+    val wiki: String? = null,
 )
 
 /** Bloc markdown ; [line] est l'index (base 0) de sa première ligne dans le contenu source. */
@@ -109,7 +111,7 @@ object Markdown {
         scan(text, MdRun(""), out)
         return out.fold(mutableListOf()) { merged, run ->
             val last = merged.lastOrNull()
-            if (last != null && last.copy(text = "") == run.copy(text = "") && run.link == null) {
+            if (last != null && last.copy(text = "") == run.copy(text = "") && run.link == null && run.wiki == null) {
                 merged[merged.lastIndex] = last.copy(text = last.text + run.text)
             } else {
                 merged += run
@@ -171,6 +173,7 @@ object Markdown {
                 source.startsWith("~~", i) -> pair(source, i, "~~", style.copy(strike = true), out, ::flush)
                 (c == '*' || c == '_') && canOpenEmphasis(source, i) ->
                     pair(source, i, c.toString(), style.copy(italic = true), out, ::flush)
+                source.startsWith("[[", i) && WikiLinks.at(source, i) != null -> wikiLink(source, i, style, out, ::flush)
                 c == '[' -> markdownLink(source, i, style, out, ::flush)
                 (c.isLetterOrDigit() || c == '+') && (i == 0 || !source[i - 1].isLetterOrDigit()) ->
                     bareLink(source, i, style, out, ::flush)
@@ -222,6 +225,13 @@ object Markdown {
         labelRuns.forEach { out += it.copy(link = match.url) }
         val after = close + 2 + match.range.last + 1
         return if (source.getOrNull(after) == ')') after + 1 else after
+    }
+
+    private fun wikiLink(source: String, start: Int, style: MdRun, out: MutableList<MdRun>, flush: () -> Unit): Int {
+        val link = WikiLinks.at(source, start) ?: return -1
+        flush()
+        out += style.copy(text = link.title, wiki = link.title)
+        return link.end
     }
 
     private fun bareLink(source: String, start: Int, style: MdRun, out: MutableList<MdRun>, flush: () -> Unit): Int {

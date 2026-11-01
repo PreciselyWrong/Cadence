@@ -2,6 +2,7 @@
 
 package ch.nicolab.cadence.tasks.ui
 
+import android.widget.Toast
 import ch.nicolab.cadence.designsystem.components.onColorOf
 import ch.nicolab.cadence.designsystem.components.tintedSurface
 import ch.nicolab.cadence.designsystem.components.readableTintOf
@@ -101,6 +102,7 @@ import ch.nicolab.cadence.tasks.notes.MarkdownCheckbox
 import ch.nicolab.cadence.tasks.notes.MarkdownEditing
 import ch.nicolab.cadence.tasks.notes.NoteFields
 import ch.nicolab.cadence.tasks.notes.TextEdit
+import ch.nicolab.cadence.tasks.notes.WikiLinks
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
@@ -188,21 +190,22 @@ internal fun NoteCard(note: NoteItem, previews: LinkPreviews, onClick: () -> Uni
 
 /** Note en plein écran. [isNew] : la note n'existe pas encore, elle est créée à la première saisie. */
 @Composable
-internal fun NoteScreen(viewModel: TasksViewModel, noteUid: String, isNew: Boolean, onBack: () -> Unit) {
+internal fun NoteScreen(viewModel: TasksViewModel, noteUid: String, isNew: Boolean, onBack: () -> Unit, onOpenNote: (String) -> Unit) {
     BackHandler(onBack = onBack)
     val flow = remember(noteUid) { viewModel.observeNote(noteUid) }
     val note by flow.collectAsStateWithLifecycle(initialValue = null)
     Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         if (note != null || isNew) {
-            NoteEditor(viewModel, noteUid, note, onBack)
+            NoteEditor(viewModel, noteUid, note, onBack, onOpenNote)
         }
     }
 }
 
 @Composable
-private fun NoteEditor(viewModel: TasksViewModel, uid: String, note: NoteItem?, onBack: () -> Unit) {
+private fun NoteEditor(viewModel: TasksViewModel, uid: String, note: NoteItem?, onBack: () -> Unit, onOpenNote: (String) -> Unit) {
     val palette = cadence
     val context = LocalContext.current
+    val allNotes by viewModel.notes.collectAsStateWithLifecycle()
     val focus = LocalFocusManager.current
     val session = remember(uid) { viewModel.noteSession(uid, NoteFields(note?.title.orEmpty(), note?.content.orEmpty())) }
     var title by remember(uid) { mutableStateOf(TextFieldValue(session.current.title)) }
@@ -336,6 +339,14 @@ private fun NoteEditor(viewModel: TasksViewModel, uid: String, note: NoteItem?, 
                             onToggleCheckbox = { line ->
                                 setBody(TextFieldValue(MarkdownCheckbox.toggle(body.text, line)))
                                 viewModel.flushNote(uid)
+                            },
+                            onWikiLink = { title ->
+                                val target = WikiLinks.findNote(title, allNotes)
+                                if (target != null) {
+                                    onOpenNote(target.uid)
+                                } else {
+                                    Toast.makeText(context, R.string.tasks_wiki_not_found, Toast.LENGTH_SHORT).show()
+                                }
                             },
                         )
                     }
