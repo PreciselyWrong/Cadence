@@ -33,6 +33,9 @@ const devResources = isDevelopment
       }
     : undefined;
 
+const translationLanguage = (lng: string) =>
+    i18n.services.languageUtils.getLanguagePartFromCode(lng);
+
 const i18nInstance = i18n
     .use(Backend)
     .use(LanguageDetector)
@@ -96,7 +99,9 @@ i18nInstance
         },
     })
     .then(() => {
-        const loadPath = getLocalesPath(`${i18n.language}/translation.json`);
+        const loadPath = getLocalesPath(
+            `${translationLanguage(i18n.language)}/translation.json`
+        );
 
         fetch(loadPath)
             .then((response) => {
@@ -109,7 +114,7 @@ i18nInstance
             })
             .then((data) => {
                 i18n.addResourceBundle(
-                    i18n.language,
+                    translationLanguage(i18n.language),
                     'translation',
                     data,
                     true,
@@ -121,7 +126,7 @@ i18nInstance
                     try {
                         setTimeout(() => {
                             const retryPath = getLocalesPath(
-                                `${i18n.language}/translation.json`
+                                `${translationLanguage(i18n.language)}/translation.json`
                             );
                             fetch(retryPath, {
                                 headers: { Accept: 'application/json' },
@@ -130,7 +135,7 @@ i18nInstance
                                 .then((res) => res.json())
                                 .then((data) => {
                                     i18n.addResourceBundle(
-                                        i18n.language,
+                                        translationLanguage(i18n.language),
                                         'translation',
                                         data,
                                         true,
@@ -176,15 +181,16 @@ i18n.on('languageChanged', (lng) => {
         }
     };
 
-    if (!i18n.hasResourceBundle(lng, 'translation')) {
-        const loadPath = getLocalesPath(`${lng}/translation.json`);
+    const baseLng = translationLanguage(lng);
+    if (!i18n.hasResourceBundle(baseLng, 'translation')) {
+        const loadPath = getLocalesPath(`${baseLng}/translation.json`);
 
         fetch(loadPath)
             .then((response) => response.json())
             .then((data) => {
                 if (data) {
                     i18n.addResourceBundle(
-                        lng,
+                        baseLng,
                         'translation',
                         data,
                         true,
