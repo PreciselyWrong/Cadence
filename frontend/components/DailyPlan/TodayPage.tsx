@@ -148,6 +148,8 @@ type Mode = 'timeline' | 'list';
 type PanelMode = 'day' | 'agenda';
 const MODE_KEY = 'dailyPlanMode';
 const CALENDAR_OPEN_KEY = 'today.calendarOpen';
+// From 18:00 the day can be wrapped up without any task done.
+const WRAP_UP_MINUTE = 18 * 60;
 const PANEL_MODE_KEY = 'today.panelMode';
 const QUOTE_KEY = 'today.showQuote';
 const GUIDE_KEY_PREFIX = 'today.guide.';
@@ -453,13 +455,12 @@ const TodayPage: React.FC = () => {
             .map((task) => `${task.uid}:${task.status}`)
             .join(',')}`
     );
-    const draftMenuRef = useDismiss(
-        draftChoiceOpen,
-        useCallback(() => setDraftChoiceOpen(false), [])
-    );
     const moreMenuRef = useDismiss(
         moreOpen,
-        useCallback(() => setMoreOpen(false), [])
+        useCallback(() => {
+            setMoreOpen(false);
+            setDraftChoiceOpen(false);
+        }, [])
     );
 
     const mode: Mode = narrow ? 'list' : preferredMode;
@@ -1728,6 +1729,19 @@ const TodayPage: React.FC = () => {
               : '';
     const isPast = !!date && dayOffset < 0;
     const doneCount = items.filter(isItemDone).length;
+    const openToPlace = candidates
+        ? orderedCandidates(candidates)
+              .map((entry) => entry.task)
+              .filter(
+                  (task) =>
+                      task.uid &&
+                      !plannedMap.has(task.uid) &&
+                      !isTaskDone(task.status)
+              )
+        : [];
+    // Wrap up is the evening's job, or the day's once something is done.
+    const showWrapUpButton =
+        isToday && (showWrapUp || now >= WRAP_UP_MINUTE || doneCount > 0);
     const minutesLeft = items
         .filter((item) => !isItemDone(item))
         .reduce((sum, item) => sum + item.duration_minutes, 0);
@@ -1836,17 +1850,19 @@ const TodayPage: React.FC = () => {
                     )}
 
                     <div className="flex items-center gap-2">
-                        {candidates && isToday && mode === 'timeline' && (
-                            <button
-                                type="button"
-                                onClick={previewPlaceAll}
-                                className="min-h-[34px] rounded-lg bg-primary px-3.5 text-sm font-medium text-primary-on hover:bg-primary/90"
-                                data-testid="place-all"
-                            >
-                                {t('dailyPlan.placeAll', 'Place all')}
-                            </button>
-                        )}
-                        {isToday && (
+                        {openToPlace.length > 0 &&
+                            isToday &&
+                            mode === 'timeline' && (
+                                <button
+                                    type="button"
+                                    onClick={previewPlaceAll}
+                                    className="min-h-[34px] rounded-lg bg-primary px-3.5 text-sm font-medium text-primary-on hover:bg-primary/90"
+                                    data-testid="place-all"
+                                >
+                                    {t('dailyPlan.placeAll', 'Place all')}
+                                </button>
+                            )}
+                        {showWrapUpButton && (
                             <button
                                 type="button"
                                 onClick={() => setShutdownOpen(!showWrapUp)}
@@ -1949,6 +1965,116 @@ const TodayPage: React.FC = () => {
                                                   'Show the daily quote'
                                               )}
                                     </button>
+                                    {aiSwitch && aiLocked && isToday && (
+                                        <Link
+                                            to="/subscription/new?feature=ai"
+                                            onClick={() => setMoreOpen(false)}
+                                            className="flex items-center gap-1.5 rounded-md px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-800"
+                                            title={t(
+                                                'subscription.trialLock.ai',
+                                                'The AI assistant is not part of the free trial. Subscribe to turn it on.'
+                                            )}
+                                            data-testid="ai-draft-locked"
+                                        >
+                                            <LockClosedIcon className="h-4 w-4" />
+                                            {t(
+                                                'dailyPlan.ai.draft',
+                                                'Draft with AI'
+                                            )}
+                                        </Link>
+                                    )}
+                                    {aiEnabled && isToday && (
+                                        <>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    if (items.length === 0) {
+                                                        setMoreOpen(false);
+                                                        void runDraft(
+                                                            'replace'
+                                                        );
+                                                    } else {
+                                                        setDraftChoiceOpen(
+                                                            (open) => !open
+                                                        );
+                                                    }
+                                                }}
+                                                disabled={drafting || !date}
+                                                aria-expanded={draftChoiceOpen}
+                                                className="flex items-center gap-1.5 rounded-md px-3 py-2 text-left hover:bg-gray-100 disabled:opacity-60 dark:hover:bg-gray-800"
+                                                data-testid="ai-draft-button"
+                                            >
+                                                <SparklesIcon
+                                                    className={`h-4 w-4 ${drafting ? 'animate-pulse' : ''}`}
+                                                />
+                                                {drafting
+                                                    ? t(
+                                                          'dailyPlan.ai.drafting',
+                                                          'Drafting…'
+                                                      )
+                                                    : t(
+                                                          'dailyPlan.ai.draft',
+                                                          'Draft with AI'
+                                                      )}
+                                            </button>
+                                            {draftChoiceOpen && (
+                                                <>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setDraftChoiceOpen(
+                                                                false
+                                                            );
+                                                            setMoreOpen(false);
+                                                            void runDraft(
+                                                                'fill'
+                                                            );
+                                                        }}
+                                                        className="rounded-md px-3 py-2 pl-7 text-left hover:bg-gray-100 dark:hover:bg-gray-800"
+                                                    >
+                                                        <span className="block font-medium">
+                                                            {t(
+                                                                'dailyPlan.ai.fill',
+                                                                'Fill free time'
+                                                            )}
+                                                        </span>
+                                                        <span className="block text-xs text-gray-600 dark:text-gray-300">
+                                                            {t(
+                                                                'dailyPlan.ai.fillHint',
+                                                                'Keep what is planned, add around it'
+                                                            )}
+                                                        </span>
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setDraftChoiceOpen(
+                                                                false
+                                                            );
+                                                            setMoreOpen(false);
+                                                            void runDraft(
+                                                                'replace'
+                                                            );
+                                                        }}
+                                                        className="rounded-md px-3 py-2 pl-7 text-left hover:bg-gray-100 dark:hover:bg-gray-800"
+                                                    >
+                                                        <span className="block font-medium">
+                                                            {t(
+                                                                'dailyPlan.ai.replace',
+                                                                'Start over'
+                                                            )}
+                                                        </span>
+                                                        <span className="block text-xs text-gray-600 dark:text-gray-300">
+                                                            {t(
+                                                                'dailyPlan.ai.replaceHint',
+                                                                'Draft the whole day again (you can undo)'
+                                                            )}
+                                                        </span>
+                                                    </button>
+                                                </>
+                                            )}
+                                        </>
+                                    )}
                                     {calendarEnabled && (
                                         <button
                                             type="button"
@@ -2017,88 +2143,6 @@ const TodayPage: React.FC = () => {
                                 </div>
                             )}
                         </div>
-                        {aiSwitch && aiLocked && isToday && (
-                            <Link
-                                to="/subscription/new?feature=ai"
-                                className="inline-flex min-h-[34px] items-center gap-1.5 rounded-lg bg-blue-50 px-3.5 text-sm font-medium text-blue-700 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-200 dark:hover:bg-blue-900/50"
-                                title={t(
-                                    'subscription.trialLock.ai',
-                                    'The AI assistant is not part of the free trial. Subscribe to turn it on.'
-                                )}
-                                data-testid="ai-draft-locked"
-                            >
-                                <LockClosedIcon className="h-4 w-4" />
-                                {t('dailyPlan.ai.draft', 'Draft with AI')}
-                            </Link>
-                        )}
-                        {aiEnabled && isToday && (
-                            <div className="relative" ref={draftMenuRef}>
-                                <button
-                                    type="button"
-                                    onClick={startDraft}
-                                    disabled={drafting || !date}
-                                    className="inline-flex min-h-[34px] items-center gap-1.5 rounded-lg bg-violet-100 px-3.5 text-sm font-medium text-violet-700 hover:bg-violet-200 disabled:opacity-60 dark:bg-violet-500/20 dark:text-violet-200 dark:hover:bg-violet-500/30"
-                                    data-testid="ai-draft-button"
-                                >
-                                    <SparklesIcon
-                                        className={`h-4 w-4 ${drafting ? 'animate-pulse' : ''}`}
-                                    />
-                                    {drafting
-                                        ? t(
-                                              'dailyPlan.ai.drafting',
-                                              'Drafting…'
-                                          )
-                                        : t(
-                                              'dailyPlan.ai.draft',
-                                              'Draft with AI'
-                                          )}
-                                </button>
-                                {draftChoiceOpen && (
-                                    <div className="absolute right-0 z-[45] mt-1 flex w-56 flex-col rounded-lg bg-white p-1 shadow-lg ring-0 dark:bg-gray-800 dark:bg-gray-900">
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                void runDraft('fill')
-                                            }
-                                            className="rounded-md px-3 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
-                                        >
-                                            <span className="block font-medium">
-                                                {t(
-                                                    'dailyPlan.ai.fill',
-                                                    'Fill free time'
-                                                )}
-                                            </span>
-                                            <span className="block text-xs text-gray-600 dark:text-gray-300">
-                                                {t(
-                                                    'dailyPlan.ai.fillHint',
-                                                    'Keep what is planned, add around it'
-                                                )}
-                                            </span>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                void runDraft('replace')
-                                            }
-                                            className="rounded-md px-3 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
-                                        >
-                                            <span className="block font-medium">
-                                                {t(
-                                                    'dailyPlan.ai.replace',
-                                                    'Start over'
-                                                )}
-                                            </span>
-                                            <span className="block text-xs text-gray-600 dark:text-gray-300">
-                                                {t(
-                                                    'dailyPlan.ai.replaceHint',
-                                                    'Draft the whole day again (you can undo)'
-                                                )}
-                                            </span>
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        )}
                         <button
                             type="button"
                             aria-pressed={calendarOpen}

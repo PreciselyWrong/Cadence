@@ -336,6 +336,25 @@ describe('TodayPage', () => {
         expect(window.localStorage.getItem('today.panelMode')).toBe('agenda');
     });
 
+    it('offers Place all only while a candidate is still unplaced', async () => {
+        render(<TodayPage />);
+
+        expect(await screen.findByTestId('place-all')).toBeInTheDocument();
+    });
+
+    it('hides Place all when no candidate is left to place', async () => {
+        (fetchPlanCandidates as jest.Mock).mockResolvedValue({
+            ...candidates,
+            overdue: [],
+            due_today: [],
+        });
+        render(<TodayPage />);
+
+        await waitFor(() => expect(fetchPlanCandidates).toHaveBeenCalled());
+        await act(async () => {});
+        expect(screen.queryByTestId('place-all')).toBeNull();
+    });
+
     it('keeps the daily quote off until it is chosen in the day menu', async () => {
         render(<TodayPage />);
 

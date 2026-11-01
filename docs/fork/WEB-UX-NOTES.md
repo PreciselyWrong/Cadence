@@ -12,6 +12,13 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-01 — Aujourd'hui : en-tête réduit, description sous le titre
+
+- **Problème** : l'en-tête d'Aujourd'hui gardait quatre boutons en permanence (Tout placer, Clore la journée, IA, Calendrier) ; « Tout placer » apparaissait même sans tâche à placer.
+- **Décision** : « Tout placer » seulement s'il reste une tâche non placée ; « Clore la journée » le soir (à partir de 18 h) ou dès qu'une tâche est faite (ou quand le bilan est ouvert) ; « Rédiger avec l'IA » passe dans « … » (même choix « Compléter / Recommencer »). « Calendrier » reste visible.
+- **Décision** : option « Afficher la description sous le titre » (désactivée par défaut, par appareil) dans Apparence ; deux lignes de la note en texte brut sous le titre de chaque ligne de tâche.
+- **À reprendre sur Android** : mêmes règles d'en-tête (Tout placer conditionnel ; Clore la journée le soir ou si une tâche est faite ; IA dans « … »). La description sous le titre existe déjà côté Android (`RowDisplayStore`).
+
 ### 2026-11-01 — Cartes de projet : statut par défaut et avancement
 
 - **Problème** : chaque carte de projet affichait « En cours » et une barre `0/1` ou `0/0`, du bruit sur un état attendu.

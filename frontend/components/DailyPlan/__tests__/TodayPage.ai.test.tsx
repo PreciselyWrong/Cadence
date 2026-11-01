@@ -192,6 +192,7 @@ describe('TodayPage AI help', () => {
         render(<TodayPage />);
 
         await waitFor(() => expect(estimateWithAi).toHaveBeenCalledWith(['a']));
+        fireEvent.click(screen.getByTestId('plan-more'));
         fireEvent.click(await screen.findByTestId('ai-draft-button'));
         fireEvent.click(screen.getByText('Fill free time'));
 
