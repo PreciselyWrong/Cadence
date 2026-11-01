@@ -279,7 +279,8 @@ const CandidateList: React.FC<CandidateListProps> = ({
             !planned.has(entry.task.uid as string)
     );
 
-    const counts: { key: CandidateFilter; label: string; count: number }[] = [
+    type Pill = { key: CandidateFilter; label: string; count: number };
+    const pills: Pill[] = [
         { key: 'all', label: t('dailyPlan.all', 'All'), count: entries.length },
         ...GROUP_ORDER.map((key) => ({
             key: key as CandidateFilter,
@@ -300,6 +301,10 @@ const CandidateList: React.FC<CandidateListProps> = ({
             count: candidates.inbox_count,
         },
     ];
+    // An empty inbox has nothing to browse; the active pill stays.
+    const counts = pills.filter(
+        (pill) => pill.key !== 'inbox' || pill.count > 0 || filter === 'inbox'
+    );
 
     const changeFilter = (next: CandidateFilter) => onFilterChange(next);
 
@@ -379,7 +384,9 @@ const CandidateList: React.FC<CandidateListProps> = ({
                                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
                                 }`}
                             >
-                                {pill.label} {pill.count}
+                                {pill.count > 0
+                                    ? `${pill.label} ${pill.count}`
+                                    : pill.label}
                             </button>
                         );
                     })}

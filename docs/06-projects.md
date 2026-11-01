@@ -152,6 +152,7 @@ Area: "Personal"
 11. **Pin to Sidebar** (boolean, default: `false`)
     - Pins project to left sidebar for quick access
     - Pinned projects shown above unpinned ones
+    - On the project page, **Pin** / **Pinned** lives in the header's **…** menu (rare action); a past due date in the header reads "Due 20 Sep" in the normal text colour, never red
     - Useful for currently active projects
 
 12. **Icon** (optional, `icon`)

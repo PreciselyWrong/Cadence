@@ -11,9 +11,7 @@ import {
     EllipsisHorizontalIcon,
     FolderIcon,
     ShareIcon,
-    StarIcon,
 } from '@heroicons/react/24/outline';
-import { StarIcon as StarSolidIcon } from '@heroicons/react/24/solid';
 import { Project, ProjectStatus } from '../../entities/Project';
 import { Area } from '../../entities/Area';
 import { getAssetPath } from '../../config/paths';
@@ -328,17 +326,8 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                                     </div>
                                 )}
                             </div>
-                            {dueText && (
-                                <span
-                                    className={
-                                        daysLeft !== null && daysLeft < 0
-                                            ? 'font-semibold text-red-600 dark:text-red-400'
-                                            : ''
-                                    }
-                                >
-                                    {dueText}
-                                </span>
-                            )}
+                            {/* A past due date reads like any other date. */}
+                            {dueText && <span>{dueText}</span>}
                             {completedDate && (
                                 <span data-testid="project-completed-on">
                                     {t(
@@ -523,23 +512,6 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                                 {t('project.markComplete', 'Complete')}
                             </button>
                         )}
-                        {onTogglePin && (
-                            <button
-                                type="button"
-                                onClick={onTogglePin}
-                                className={`${actionClass} max-sm:hidden`}
-                                aria-pressed={!!project.pin_to_sidebar}
-                            >
-                                {project.pin_to_sidebar ? (
-                                    <StarSolidIcon className="h-4 w-4 text-amber-500" />
-                                ) : (
-                                    <StarIcon className="h-4 w-4" />
-                                )}
-                                {project.pin_to_sidebar
-                                    ? t('project.pinned', 'Pinned')
-                                    : t('project.pin', 'Pin')}
-                            </button>
-                        )}
                         <button
                             type="button"
                             onClick={onShareClick}
@@ -563,10 +535,11 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                             </button>
                             {menuOpen && (
                                 <div className="absolute right-0 top-full z-30 mt-1 w-52 overflow-hidden rounded-md bg-white py-1 shadow-lg dark:bg-gray-800">
+                                    {/* Pinning is rare: menu only. */}
                                     {onTogglePin && (
                                         <button
                                             type="button"
-                                            className={`${menuItemClass} sm:hidden`}
+                                            className={menuItemClass}
                                             onClick={() => {
                                                 setMenuOpen(false);
                                                 onTogglePin();

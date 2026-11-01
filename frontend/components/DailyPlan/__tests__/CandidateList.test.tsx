@@ -186,4 +186,26 @@ describe('CandidateList', () => {
             'false'
         );
     });
+
+    it('shows no filter with a zero count', () => {
+        renderList();
+        fireEvent.click(screen.getByRole('button', { name: /Browse/ }));
+
+        const pills = screen.getAllByRole('tab').map((tab) => tab.textContent);
+        expect(pills).not.toContain('Inbox 0');
+        expect(pills.some((label) => /\b0$/.test(label ?? ''))).toBe(false);
+    });
+
+    it('drops the count of an empty list from its pill', () => {
+        renderList({
+            ...candidates,
+            overdue: [],
+            due_today: [],
+            in_progress: [],
+            suggested: [],
+        });
+        fireEvent.click(screen.getByRole('button', { name: /Browse/ }));
+
+        expect(screen.getByRole('tab', { name: 'All' })).toBeInTheDocument();
+    });
 });
