@@ -149,9 +149,11 @@ describe('ReviewPage', () => {
         renderPage();
         expect(await screen.findByText('Test app X')).toBeInTheDocument();
         expect(screen.getByText(/Apps · moved 6 times/)).toBeInTheDocument();
+        // Calm header: what needs a look, never a count of decisions.
         expect(
-            screen.getByText(/1 to look at · 2 decided this week/)
+            screen.getByText('1 thing to look at, at your own pace')
         ).toBeInTheDocument();
+        expect(screen.queryByText(/decided this week/)).not.toBeInTheDocument();
         expect(mocked.fetchReviewCategory).toHaveBeenCalledWith(
             'pushed',
             0,
@@ -453,6 +455,147 @@ describe('ReviewPage', () => {
                     reviewed: true,
                 })
             );
+        });
+    });
+
+    it('shows no backlog count on Later, only reviews that came due', async () => {
+        mocked.fetchReviewSummary.mockResolvedValue({
+            ...summary,
+            counts: { ...summary.counts, later: 133, review_due: 2 },
+        } as any);
+        renderPage();
+        const tab = await screen.findByRole('tab', { name: /Later/ });
+        await waitFor(() => expect(tab).toHaveTextContent('Later2'));
+        expect(tab).not.toHaveTextContent('133');
+    });
+
+    describe('quick review', () => {
+        const lists: Record<string, unknown[]> = {
+            undecided: [
+                {
+                    uid: 'i1',
+                    title: null,
+                    content: 'Shared shopping list',
+                    created_at: '2026-10-30T00:00:00Z',
+                },
+            ],
+            pushed: pushed.items,
+            projects: [],
+            stale: [],
+            later: [
+                {
+                    task: {
+                        uid: 'l1',
+                        name: 'Learn to juggle',
+                        status: 'not_started',
+                        reviewed_at: null,
+                    },
+                    review_due: false,
+                    last_activity_at: '2026-05-01T00:00:00Z',
+                },
+            ],
+        };
+
+        beforeEach(() => {
+            mocked.fetchReviewCategory.mockImplementation(
+                async (category: string) =>
+                    ({
+                        total: (lists[category] || []).length,
+                        items: lists[category] || [],
+                    }) as any
+            );
+        });
+
+        it('goes through one thing at a time, with gentle progress', async () => {
+            renderPage();
+            fireEvent.click(
+                await screen.findByRole('button', { name: 'Start' })
+            );
+            expect(
+                await screen.findByText('Shared shopping list')
+            ).toBeInTheDocument();
+            expect(screen.getByText('1 of 3')).toBeInTheDocument();
+            expect(screen.queryByText('Test app X')).not.toBeInTheDocument();
+            expect(mocked.fetchReviewCategory).toHaveBeenCalledWith(
+                'later',
+                0,
+                200
+            );
+
+            fireEvent.click(screen.getByRole('button', { name: 'Skip' }));
+            expect(await screen.findByText('Test app X')).toBeInTheDocument();
+            expect(screen.getByText('2 of 3')).toBeInTheDocument();
+
+            fireEvent.click(screen.getByRole('button', { name: /Keep as is/ }));
+            await waitFor(() =>
+                expect(mocked.decideTask).toHaveBeenCalledWith('t1', {
+                    reviewed: true,
+                })
+            );
+            // A parked idea offers "Keep parked" at once, so it rotates out.
+            expect(
+                await screen.findByText('Learn to juggle')
+            ).toBeInTheDocument();
+            fireEvent.click(
+                screen.getByRole('button', { name: /Keep parked/ })
+            );
+            await waitFor(() =>
+                expect(mocked.decideTask).toHaveBeenCalledWith('l1', {
+                    review_on: null,
+                    reviewed: true,
+                })
+            );
+            expect(
+                await screen.findByText("That's it for now.")
+            ).toBeInTheDocument();
+            fireEvent.click(
+                screen.getByRole('button', { name: 'Back to the review' })
+            );
+            expect(
+                await screen.findByRole('button', { name: 'Start' })
+            ).toBeInTheDocument();
+        });
+
+        it('answers the keyboard: a number chooses, S skips, Escape stops', async () => {
+            renderPage();
+            fireEvent.click(
+                await screen.findByRole('button', { name: 'Start' })
+            );
+            await screen.findByText('Shared shopping list');
+            fireEvent.keyDown(window, { key: 's' });
+            expect(await screen.findByText('Test app X')).toBeInTheDocument();
+            // Pushed back: 1 = Do today
+            fireEvent.keyDown(window, { key: '1' });
+            await waitFor(() =>
+                expect(mocked.decideTask).toHaveBeenCalledWith('t1', {
+                    today: true,
+                    reviewed: true,
+                })
+            );
+            expect(
+                await screen.findByText('Learn to juggle')
+            ).toBeInTheDocument();
+            fireEvent.keyDown(window, { key: 'Escape' });
+            expect(
+                await screen.findByRole('button', { name: 'Start' })
+            ).toBeInTheDocument();
+        });
+
+        it('says so calmly when there is nothing to look at', async () => {
+            mocked.fetchReviewSummary.mockResolvedValue({
+                ...summary,
+                counts: { ...summary.counts, pushed: 0 },
+                attention_total: 0,
+            } as any);
+            Object.keys(lists).forEach((key) => (lists[key] = []));
+            renderPage();
+            expect(
+                await screen.findByText('All up to date')
+            ).toBeInTheDocument();
+            fireEvent.click(screen.getByRole('button', { name: 'Start' }));
+            expect(
+                await screen.findByText('Nothing needs a look right now.')
+            ).toBeInTheDocument();
         });
     });
 });

@@ -4730,6 +4730,23 @@
     "loadError": "Impossible de charger cette tâche."
   },
   "review": {
+    "quick": {
+      "keys": "1–9 choisir · S passer · O ouvrir · Échap arrêter",
+      "nothing": "Rien ne demande votre attention pour l'instant.",
+      "back": "Retour à la revue",
+      "again": "Encore un tour",
+      "saved": "Chaque décision est enregistrée. Ce que vous avez passé reviendra la prochaine fois.",
+      "done": "C'est tout pour cette fois.",
+      "position": "{{position}} sur {{total}}",
+      "stop": "Arrêter",
+      "start": "Commencer",
+      "pitch": "Environ 5 minutes, une chose à la fois. Arrêtez quand vous voulez.",
+      "title": "Revue rapide"
+    },
+    "loading": "Chargement…",
+    "calmClear": "Tout est à jour",
+    "calm_other": "{{count}} choses à regarder, à votre rythme",
+    "calm_one": "{{count}} chose à regarder, à votre rythme",
     "decided": "Décision enregistrée.",
     "more": "Plus…",
     "choices": "Choix",

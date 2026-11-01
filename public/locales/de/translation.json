@@ -4731,6 +4731,23 @@
     "loadError": "Diese Aufgabe konnte nicht geladen werden."
   },
   "review": {
+    "quick": {
+      "keys": "1–9 wählen · S überspringen · O öffnen · Esc beenden",
+      "nothing": "Gerade braucht nichts deine Aufmerksamkeit.",
+      "back": "Zurück zur Durchsicht",
+      "again": "Noch eine Runde",
+      "saved": "Jede Entscheidung ist gespeichert. Übersprungenes kommt nächstes Mal wieder.",
+      "done": "Das war's für jetzt.",
+      "position": "{{position}} von {{total}}",
+      "stop": "Beenden",
+      "start": "Starten",
+      "pitch": "Etwa 5 Minuten, eins nach dem anderen. Hör auf, wann du willst.",
+      "title": "Kurze Durchsicht"
+    },
+    "loading": "Wird geladen…",
+    "calmClear": "Alles auf dem neuesten Stand",
+    "calm_other": "{{count}} Dinge zum Ansehen, in deinem Tempo",
+    "calm_one": "{{count}} Sache zum Ansehen, in deinem Tempo",
     "cancelDate": "Abbrechen",
     "choices": "Auswahl",
     "more": "Mehr…",

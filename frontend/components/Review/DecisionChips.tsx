@@ -13,6 +13,8 @@ interface DecisionChipsProps {
     // The first options show as one-tap chips; the rest sit behind "More…".
     options: DecisionOption[];
     disabled?: boolean;
+    // Shows each chip's keyboard number (one item at a time).
+    numbered?: boolean;
 }
 
 const SHOWN = 3;
@@ -21,7 +23,11 @@ const chipClass =
     'rounded-full border border-gray-200 px-2.5 py-1 text-xs text-gray-700 hover:bg-gray-50 disabled:opacity-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800';
 
 // The choices of a row as one-tap chips: nothing to open for the common ones.
-const DecisionChips: React.FC<DecisionChipsProps> = ({ options, disabled }) => {
+const DecisionChips: React.FC<DecisionChipsProps> = ({
+    options,
+    disabled,
+    numbered,
+}) => {
     const { t } = useTranslation();
     const [more, setMore] = useState(false);
     const [askingDate, setAskingDate] = useState<DecisionOption | null>(null);
@@ -62,7 +68,7 @@ const DecisionChips: React.FC<DecisionChipsProps> = ({ options, disabled }) => {
             role="group"
             aria-label={t('review.choices', 'Choices')}
         >
-            {shown.map((option) => (
+            {shown.map((option, index) => (
                 <button
                     key={option.key}
                     type="button"
@@ -72,6 +78,14 @@ const DecisionChips: React.FC<DecisionChipsProps> = ({ options, disabled }) => {
                         option.date ? setAskingDate(option) : option.run()
                     }
                 >
+                    {numbered && index < 9 && !option.date && (
+                        <span
+                            aria-hidden="true"
+                            className="mr-1.5 text-gray-400 dark:text-gray-500"
+                        >
+                            {index + 1}
+                        </span>
+                    )}
                     {option.label}
                 </button>
             ))}

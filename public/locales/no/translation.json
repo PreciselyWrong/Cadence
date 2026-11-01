@@ -4727,6 +4727,23 @@
     "loadError": "Kunne ikke laste denne oppgaven."
   },
   "review": {
+    "quick": {
+      "keys": "1–9 choose · S skip · O open · Esc stop",
+      "nothing": "Nothing needs a look right now.",
+      "back": "Back to the review",
+      "again": "Another round",
+      "saved": "Every decision is saved. What you skipped comes back next time.",
+      "done": "That's it for now.",
+      "position": "{{position}} of {{total}}",
+      "stop": "Stop",
+      "start": "Start",
+      "pitch": "About 5 minutes, one thing at a time. Stop whenever you like.",
+      "title": "Quick review"
+    },
+    "loading": "Loading…",
+    "calmClear": "All up to date",
+    "calm_other": "{{count}} things to look at, at your own pace",
+    "calm_one": "{{count}} thing to look at, at your own pace",
     "cancelDate": "Avbryt",
     "choices": "Valg",
     "more": "Mer…",

@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-01 — Revue : « Revue rapide », une chose à la fois
+
+- **Problème** (vu avec 133 idées dans « Plus tard », 4 repoussées, 2 projets stagnants) : six onglets à compteurs (« Plus tard 133 » se lisait comme une dette), rien ne disait par où commencer, chaque ligne de « Plus tard » portait quatre puces (des centaines de décisions à l'écran), le nom du projet répété sous chaque ligne d'un groupe déjà nommé, l'onglet restait vide pendant le chargement, pas de clavier ; le stock « Plus tard » n'était jamais relu sauf tri volontaire.
+- **Décision** : en tête de `/review`, une carte « Revue rapide — environ 5 minutes, une chose à la fois » et « Commencer ». File de 10 éléments au plus : Inbox, repoussées, projets stagnants, revues arrivées, anciennes, puis les idées de « Plus tard » regardées il y a le plus longtemps, avec au moins 3 places pour elles. Un élément à la fois, ses choix habituels numérotés, « Passer » (n'écrit rien, revient une autre fois), « 3 sur 10 » et une barre fine, jamais la taille du stock ; fin : « C'est tout pour cette fois. », « Encore un tour » sans ce qui a été passé. Dans la session, « Garder de côté » est à un geste pour une idée de « Plus tard » (elle repart au bout de la file). Clavier : 1–9 choisit, S ou → passe, O ouvre, Échap arrête (aussi dans « Trier un par un »). En-tête calme comme Android (« 5 choses à regarder, à votre rythme » / « Tout est à jour »), sans « décidées cette semaine » ; l'onglet « Plus tard » ne compte que les revues arrivées ; « Chargement… » pendant la lecture ; plus de projet répété dans un groupe.
+- **Android** : repris dans la même étape (carte « Revue rapide » au-dessus des onglets, écran plein une chose à la fois, même file et mêmes tests, onglet « Plus tard » compté de la même façon). Pas de clavier sur le téléphone.
+
 ### 2026-11-01 — Profil › MCP : « Autoriser un nouveau connecteur »
 
 - **Problème** : claude.ai pouvait enregistrer un connecteur à tout moment, sans geste de l'utilisateur dans Cadence.

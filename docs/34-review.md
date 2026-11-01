@@ -83,7 +83,26 @@ Once a task has been pushed back, a single grey line shows *Moved N times, M in 
 
 Opened from **More** in the Minimal rail (it can be moved to the rail in Profile → Sidebar), from the app launcher, or from Insights in Dense. Route `/review`.
 
-The tabs are the steps of a review, in order; each can be opened alone, and the page remembers the last one in this browser. **Next: …** at the bottom goes to the next step. Decisions are saved one by one on the tasks themselves, so a review stopped after four items resumes where it was and loses nothing. The header shows how many items need a look (each counted once even when it is in two lists) and how many were decided this week. On Android the header says it calmly (*5 things to look at, at your own pace*, or *All up to date*) and never shows a count of decisions; the tabs scroll under a fade with short labels (*Projects*, *Week*).
+The header says calmly how many things need a look (*5 things to look at, at your own pace*, each counted once even when it is in two lists, or *All up to date*), on the web and on Android; it never shows a count of decisions. Under it, **Quick review** is the place to start (see below); the tabs stay for looking at one list in full.
+
+The tabs are the steps of a review, in order; each can be opened alone, and the page remembers the last one in this browser. **Next: …** at the bottom goes to the next step. Decisions are saved one by one on the tasks themselves, so a review stopped after four items resumes where it was and loses nothing. A tab's count is what needs a look in it; **Later** counts only the reviews that came due, never the size of the backlog (133 parked ideas are a stock, not a debt). On Android the tabs scroll under a fade with short labels (*Projects*, *Week*). While a list loads, the web says *Loading…* instead of an empty page.
+
+### Quick review
+
+**Quick review** (*Revue rapide*) — *About 5 minutes, one thing at a time* — shows one item, its usual choices and **Skip**, then the next. It reads every list once (`GET /api/review/:category`, Later up to 200) and builds a queue of at most **10** items, on the client (`buildQuickReview` in `frontend/components/Review/reviewUtils.ts`, `QuickReview.build` in `android/tasks/.../review/QuickReview.kt`, same rule and tests):
+
+1. what needs a look, in the order of the tabs: Inbox items, pushed back tasks, stalled projects, parked tasks whose review date came, old tasks;
+2. then parked ideas, the ones looked at longest ago first (`reviewed_at`, never reviewed first, then the oldest `last_activity_at`).
+
+At least **3** places go to parked ideas when there are any, however much else needs a look, so a large Later backlog is read a few ideas at a time instead of never. A task in two lists comes once.
+
+- The choices are the list's own, except for a parked task: **Do today**, **This week** and **Keep parked** are one tap (the rest behind **More…**), so a parked idea looked at goes to the back of the queue for next time. A saved decision offers **Undo** as in the lists; undoing does not bring the item back into the session.
+- **Skip** writes nothing: the item comes back in a later session. **Another round** at the end builds a new queue without what was skipped during this visit.
+- Progress is the session's own (*3 of 10* and a thin bar), never the size of what remains. The end says *That's it for now.* and that every decision is saved; with nothing to look at, *Nothing needs a look right now.*
+- Web keyboard, in the quick review and in **Sort one by one**: **1–9** picks the choice with that number (shown on the chips; a choice that asks for a date needs the mouse), **S** or **→** skips, **O** opens the item, **Esc** stops. Keys are ignored while typing in a field or with Ctrl, Alt or Meta held.
+- Android: the same queue as a full screen over the review, with the same choices, **Passer**, *N sur M* and a thin bar; back stops it. An item decided anywhere (a list, another device) leaves the session by itself.
+
+Nothing new is stored: the session lives in the page (web) or the screen (Android), and every decision is the same write as in the lists.
 
 | Tab | Lists | Choices |
 |---|---|---|

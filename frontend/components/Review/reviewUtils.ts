@@ -1,6 +1,11 @@
 import { toLocalDateString } from '../../utils/dateUtils';
 import { Task } from '../../entities/Task';
-import { TaskReviewItem } from '../../utils/reviewService';
+import {
+    InboxReviewItem,
+    ProjectReviewItem,
+    PushedItem,
+    TaskReviewItem,
+} from '../../utils/reviewService';
 
 export const addDaysToToday = (days: number): string => {
     const date = new Date();
@@ -118,4 +123,86 @@ export const rowLinkText = (
     const trimmed = (note ?? '').trim();
     const match = trimmed.match(URL_PATTERN);
     return match && match[0] === trimmed ? trimmed : null;
+};
+
+export interface QuickLists {
+    undecided: InboxReviewItem[];
+    pushed: PushedItem[];
+    projects: ProjectReviewItem[];
+    later: TaskReviewItem[];
+    stale: TaskReviewItem[];
+}
+
+export type QuickEntry =
+    | { category: 'undecided'; item: InboxReviewItem }
+    | { category: 'pushed'; item: PushedItem }
+    | { category: 'projects'; item: ProjectReviewItem }
+    | { category: 'later' | 'stale'; item: TaskReviewItem };
+
+// About five minutes at a calm pace: a session never asks for more.
+export const QUICK_REVIEW_SIZE = 10;
+
+export const quickKey = (entry: QuickEntry): string =>
+    entry.category === 'undecided'
+        ? `i:${entry.item.uid}`
+        : entry.category === 'projects'
+          ? `p:${entry.item.project.uid}`
+          : `t:${entry.item.task.uid}`;
+
+const reviewedTime = (item: TaskReviewItem) =>
+    Date.parse(item.task.reviewed_at || '') || 0;
+
+// Places a session keeps for parked ideas, however much else needs a look.
+const PARKED_PLACES = 3;
+
+// The quick review: one short queue instead of six lists. What needs a look
+// comes first, in the order of the tabs (Inbox, pushed back, stalled
+// projects, due reviews, old tasks); then parked ideas looked at longest
+// ago, at least three when there are any, so the Later backlog gets read a
+// few at a time instead of never.
+export const buildQuickReview = (
+    lists: QuickLists,
+    size = QUICK_REVIEW_SIZE,
+    exclude: string[] = []
+): QuickEntry[] => {
+    const parked = [...lists.later].sort(
+        (a, b) => reviewedTime(a) - reviewedTime(b) || touched(a) - touched(b)
+    );
+    const candidates: QuickEntry[] = [
+        ...lists.undecided.map((item) => ({
+            category: 'undecided' as const,
+            item,
+        })),
+        ...lists.pushed.map((item) => ({ category: 'pushed' as const, item })),
+        ...lists.projects.map((item) => ({
+            category: 'projects' as const,
+            item,
+        })),
+        ...lists.later
+            .filter((item) => item.review_due)
+            .map((item) => ({ category: 'later' as const, item })),
+        ...lists.stale.map((item) => ({ category: 'stale' as const, item })),
+        ...parked
+            .filter((item) => !item.review_due)
+            .map((item) => ({ category: 'later' as const, item })),
+    ];
+    const seen = new Set(exclude);
+    const unique = candidates.filter((entry) => {
+        const key = quickKey(entry);
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+    });
+    const isParked = (entry: QuickEntry) => entry.category === 'later';
+    const parkedCount = unique.filter(isParked).length;
+    const attention = unique.filter((entry) => !isParked(entry));
+    const attentionTaken = Math.min(
+        attention.length,
+        size - Math.min(PARKED_PLACES, parkedCount, size)
+    );
+    const chosen = new Set([
+        ...attention.slice(0, attentionTaken),
+        ...unique.filter(isParked).slice(0, size - attentionTaken),
+    ]);
+    return unique.filter((entry) => chosen.has(entry));
 };
