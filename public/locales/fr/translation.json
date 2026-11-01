@@ -5374,6 +5374,11 @@
       "allDomains": "Tous les sites"
     },
     "sort": {
+      "done": "Aucun lien à trier.",
+      "skip": "Passer",
+      "exit": "Retour à la boîte",
+      "left": "{{count}} restants",
+      "start": "Trier les liens ({{count}})",
       "newest": "Plus récents d'abord",
       "oldest": "Plus anciens d'abord"
     },

@@ -56,6 +56,7 @@ jest.mock('../../../utils/profileService', () => ({
 }));
 jest.mock('../../../store/linksStore', () => ({
     useLinksRefresh: jest.fn(),
+    useLinksStore: (pick: (state: unknown) => unknown) => pick({ links: [] }),
 }));
 jest.mock('../../../utils/shareTargetService', () => ({
     takeSharedText: () => '',

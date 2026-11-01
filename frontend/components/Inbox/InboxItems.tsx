@@ -26,7 +26,9 @@ import { createProject } from '../../utils/projectsService';
 import { createNote } from '../../utils/notesService';
 import { OfflineQueuedError } from '../../utils/authUtils';
 import { isUrl } from '../../utils/urlService';
-import { useLinksRefresh } from '../../store/linksStore';
+import { useLinksRefresh, useLinksStore } from '../../store/linksStore';
+import { linkForItem } from '../../utils/linkFilters';
+import LinkSorter from '../Links/LinkSorter';
 import { takeSharedText } from '../../utils/shareTargetService';
 import { fetchAreas } from '../../utils/areasService';
 import { fetchProjects } from '../../utils/projectsService';
@@ -521,6 +523,24 @@ const InboxItems: React.FC = () => {
         setSearchParams(next);
     };
 
+    const savedLinks = useLinksStore((state) => state.links);
+    const linkItems = inboxItems.filter((item) =>
+        linkForItem(savedLinks, item.uid, item.content || '')
+    );
+    const [sortingLinks, setSortingLinks] = useState(false);
+
+    if (sortingLinks && linkItems.length > 0) {
+        return (
+            <div className="w-full px-4 sm:px-6 lg:px-8 pt-4 pb-8">
+                <LinkSorter
+                    items={linkItems}
+                    projects={projects}
+                    onExit={() => setSortingLinks(false)}
+                />
+            </div>
+        );
+    }
+
     if (isTriage) {
         return (
             <div className="w-full px-4 sm:px-6 lg:px-8 pt-4 pb-8">
@@ -546,6 +566,22 @@ const InboxItems: React.FC = () => {
                         {t('inbox.title')}
                     </h1>
                     <div className="flex items-center gap-2">
+                        {linkItems.length > 1 && (
+                            <button
+                                type="button"
+                                data-testid="inbox-sort-links"
+                                onClick={() => setSortingLinks(true)}
+                                className="rounded-lg px-3 py-1.5 text-sm font-medium text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                            >
+                                {t(
+                                    'links.sort.start',
+                                    'Sort links ({{count}})',
+                                    {
+                                        count: linkItems.length,
+                                    }
+                                )}
+                            </button>
+                        )}
                         {inboxItems.length > 0 && (
                             <button
                                 type="button"

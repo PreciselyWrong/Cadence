@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-01 — Boîte : « Trier les liens » sur le web
+
+- **Problème** : sur le web, un lien de la boîte se décidait carte par carte, sans mode pour les parcourir l'un après l'autre.
+- **Décision** : à partir de deux liens dans la boîte, « Trier les liens (n) » ouvre un lien à la fois, pleine largeur, avec les quatre décisions (Garder, Tester, Plus tard, Jeter) et « Passer » (le lien repart au bout de la file). Un lien décidé quitte la boîte et la file ; « Retour à la boîte » sort du mode.
+- **À reprendre sur Android** : rien de nouveau ; le mode existe déjà (« Trier les liens »). Vérifier que le web et Android partagent les quatre décisions et l'ordre de « Passer ».
+
 ### 2026-11-01 — Recherche : liens ; `[[titre]]` entre notes
 
 - **Problème** : la recherche globale ne cherchait pas les liens (filtre « Liens » absent, un clic sur un lien ne faisait rien) ; un `[[titre]]` affichait « Note not found » sur les pages qui ne chargeaient pas la liste des notes.

@@ -5323,6 +5323,11 @@
       "allDomains": "All sites"
     },
     "sort": {
+      "done": "No link left to sort.",
+      "skip": "Skip",
+      "exit": "Back to the inbox",
+      "left": "{{count}} left",
+      "start": "Sort links ({{count}})",
       "newest": "Newest first",
       "oldest": "Oldest first"
     },
