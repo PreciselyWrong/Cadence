@@ -396,3 +396,13 @@ The Android app comes from the former Cadence habits app, now in [`android/`](an
 ![Cadence, light mode](screenshots/all-light.png)
 
 ![Cadence, dark mode](screenshots/all-dark.png)
+
+### Android
+
+<table>
+  <tr>
+    <td><img src="screenshots/android-today.png" alt="Cadence on Android, Today" width="250"></td>
+    <td><img src="screenshots/android-agenda.png" alt="Cadence on Android, Agenda" width="250"></td>
+    <td><img src="screenshots/android-review.png" alt="Cadence on Android, Review" width="250"></td>
+  </tr>
+</table>
