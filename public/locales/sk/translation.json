@@ -5119,6 +5119,8 @@
       "title": "Zatiaľ žiadne návyky."
     },
     "entry": {
+      "undoFailed": "Could not undo the entry.",
+      "logged": "{{name}} logged",
       "add": "Pridať záznam",
       "date": "Dátum",
       "delete": "Odstrániť záznam",

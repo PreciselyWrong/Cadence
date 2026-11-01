@@ -5063,6 +5063,8 @@
       "title": "Ingen vaner ennå."
     },
     "entry": {
+      "undoFailed": "Could not undo the entry.",
+      "logged": "{{name}} logged",
       "add": "Legg til en oppføring",
       "date": "Dato",
       "delete": "Slett oppføring",

@@ -5058,6 +5058,8 @@
       "title": "Chưa có thói quen nào."
     },
     "entry": {
+      "undoFailed": "Could not undo the entry.",
+      "logged": "{{name}} logged",
       "add": "Thêm mục ghi",
       "date": "Ngày",
       "delete": "Xóa mục ghi",

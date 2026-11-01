@@ -5058,6 +5058,8 @@
       "title": "还没有习惯。"
     },
     "entry": {
+      "undoFailed": "Could not undo the entry.",
+      "logged": "{{name}} logged",
       "add": "添加记录",
       "date": "日期",
       "delete": "删除记录",

@@ -5082,6 +5082,8 @@
       "title": "Звичок поки немає."
     },
     "entry": {
+      "undoFailed": "Could not undo the entry.",
+      "logged": "{{name}} logged",
       "add": "Додати запис",
       "date": "Дата",
       "delete": "Видалити запис",

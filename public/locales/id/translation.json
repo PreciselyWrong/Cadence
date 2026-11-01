@@ -5058,6 +5058,8 @@
       "title": "Belum ada kebiasaan."
     },
     "entry": {
+      "undoFailed": "Could not undo the entry.",
+      "logged": "{{name}} logged",
       "add": "Tambah entri",
       "date": "Tanggal",
       "delete": "Hapus entri",

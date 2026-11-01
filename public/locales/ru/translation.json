@@ -5082,6 +5082,8 @@
       "title": "Привычек пока нет."
     },
     "entry": {
+      "undoFailed": "Could not undo the entry.",
+      "logged": "{{name}} logged",
       "add": "Добавить запись",
       "date": "Дата",
       "delete": "Удалить запись",

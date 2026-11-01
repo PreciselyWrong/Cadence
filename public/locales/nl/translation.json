@@ -5058,6 +5058,8 @@
       "title": "Nog geen gewoonten."
     },
     "entry": {
+      "undoFailed": "Could not undo the entry.",
+      "logged": "{{name}} logged",
       "add": "Een notitie toevoegen",
       "date": "Datum",
       "delete": "Notitie verwijderen",

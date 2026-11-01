@@ -229,3 +229,9 @@ Revue écran par écran (Aujourd'hui, Boîte, Tâches, Projets, page projet, Age
 - **Problème** : un événement dont le lieu ou la description contient un lien Meet, Zoom, Teams ou Webex obligeait à copier le lien ou à le chercher dans le texte.
 - **Décision** : la fiche d'événement (modale Google) affiche un bouton « Rejoindre » sous le lieu dès qu'un lien de réunion est trouvé dans le lieu, puis dans la description. Détection pure dans `frontend/components/Calendar/eventLocation.ts` (`findMeetingLink`) : hôtes `meet.google.com`, `zoom.us`, `teams.microsoft.com`, `teams.live.com`, `webex.com`.
 - **Android** : à reprendre. Même détection (le lieu puis la description), bouton « Rejoindre » dans la fiche d'événement qui ouvre le lien dans le navigateur ou l'application de réunion. Reste : rien d'essayé sur le téléphone.
+
+### 2026-11-01 — Annuler une saisie d'habitude
+
+- **Problème** : une saisie d'habitude (un tap, une valeur rapide ou un montant) était enregistrée sans retour ; une erreur de tap ne se rattrapait qu'en ouvrant l'entrée et en la supprimant.
+- **Décision** : après chaque saisie réussie, un toast « {{nom}} noté » avec « Annuler » (6 s) supprime cette entrée (`deleteRow`, rechargement de la page). Le toast n'apparaît qu'une fois l'entrée enregistrée : un échec garde l'erreur habituelle. Un échec d'annulation affiche un toast d'erreur.
+- **Android** : à reprendre. Après une saisie, un snackbar « Annuler » qui supprime la dernière entrée, comme les autres annulations de l'application. Reste : rien d'essayé sur le téléphone.

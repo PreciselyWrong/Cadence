@@ -5067,6 +5067,8 @@
       "title": "Noch keine Gewohnheiten."
     },
     "entry": {
+      "undoFailed": "Could not undo the entry.",
+      "logged": "{{name}} logged",
       "add": "Eintrag hinzufügen",
       "date": "Datum",
       "delete": "Eintrag löschen",

@@ -9,6 +9,7 @@ import {
 import { MemoryRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
 import Habits from '../Habits';
+import { ToastProvider } from '../../Shared/ToastContext';
 import * as api from '../../../utils/cadenceHabitsService';
 import { evaluation, goal, habit, minutesGoal, quick } from './fixtures';
 
@@ -19,6 +20,7 @@ jest.mock('../../../utils/cadenceHabitsService', () => ({
     fetchCadenceGroups: jest.fn(),
     fetchRows: jest.fn(),
     createRow: jest.fn(),
+    deleteRow: jest.fn(),
     updateCadenceHabit: jest.fn(),
 }));
 
@@ -49,9 +51,11 @@ const list = (habits: api.CadenceHabit[]) => ({
 
 const renderPage = () =>
     render(
-        <MemoryRouter>
-            <Habits />
-        </MemoryRouter>
+        <ToastProvider>
+            <MemoryRouter>
+                <Habits />
+            </MemoryRouter>
+        </ToastProvider>
     );
 
 beforeEach(() => {
@@ -98,6 +102,38 @@ describe('Habits page', () => {
                 service.fetchCadenceHabits.mock.calls.length
             ).toBeGreaterThan(2)
         );
+    });
+
+    it('offers an undo right after logging and deletes the entry on undo', async () => {
+        service.fetchCadenceHabits.mockResolvedValue(list([habit()]));
+        service.createRow.mockResolvedValue({ uid: 'e1' });
+        service.deleteRow.mockResolvedValue({ deleted: true });
+        renderPage();
+        fireEvent.click(
+            await screen.findByRole('button', { name: 'Mark Lire as done' })
+        );
+        fireEvent.click(await screen.findByRole('button', { name: 'Undo' }));
+        await waitFor(() =>
+            expect(service.deleteRow).toHaveBeenCalledWith(
+                'h1',
+                'entries',
+                'e1'
+            )
+        );
+    });
+
+    it('does not offer an undo when the entry was not saved', async () => {
+        service.fetchCadenceHabits.mockResolvedValue(list([habit()]));
+        service.createRow.mockRejectedValue(new Error('offline'));
+        jest.spyOn(console, 'error').mockImplementation(() => {});
+        renderPage();
+        fireEvent.click(
+            await screen.findByRole('button', { name: 'Mark Lire as done' })
+        );
+        await waitFor(() => expect(console.error).toHaveBeenCalled());
+        expect(
+            screen.queryByRole('button', { name: 'Undo' })
+        ).not.toBeInTheDocument();
     });
 
     it('shows a yes/no habit done at once, before the server answers', async () => {

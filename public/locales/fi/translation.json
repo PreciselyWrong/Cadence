@@ -5058,6 +5058,8 @@
       "title": "Ei vielä tapoja."
     },
     "entry": {
+      "undoFailed": "Could not undo the entry.",
+      "logged": "{{name}} logged",
       "add": "Lisää merkintä",
       "date": "Päivämäärä",
       "delete": "Poista merkintä",

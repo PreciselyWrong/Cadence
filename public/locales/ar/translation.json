@@ -5106,6 +5106,8 @@
       "title": "لا توجد عادات بعد."
     },
     "entry": {
+      "undoFailed": "Could not undo the entry.",
+      "logged": "{{name}} logged",
       "add": "أضف إدخالًا",
       "date": "التاريخ",
       "delete": "حذف الإدخال",

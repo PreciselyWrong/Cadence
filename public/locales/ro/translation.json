@@ -5072,6 +5072,8 @@
       "title": "Încă nu ai obiceiuri."
     },
     "entry": {
+      "undoFailed": "Could not undo the entry.",
+      "logged": "{{name}} logged",
       "add": "Adaugă o intrare",
       "date": "Data",
       "delete": "Șterge intrarea",

@@ -5058,6 +5058,8 @@
       "title": "Henüz alışkanlık yok."
     },
     "entry": {
+      "undoFailed": "Could not undo the entry.",
+      "logged": "{{name}} logged",
       "add": "Kayıt ekle",
       "date": "Tarih",
       "delete": "Kaydı sil",

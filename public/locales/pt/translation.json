@@ -5068,6 +5068,8 @@
       "title": "Ainda não há hábitos."
     },
     "entry": {
+      "undoFailed": "Could not undo the entry.",
+      "logged": "{{name}} logged",
       "add": "Adicionar um registro",
       "date": "Data",
       "delete": "Excluir registro",

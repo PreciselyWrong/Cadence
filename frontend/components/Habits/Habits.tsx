@@ -17,12 +17,15 @@ import HabitEditor from './HabitEditor';
 import PauseEditor from './PauseEditor';
 import { withEntry } from './habitStatus';
 import TabPills from '../Shared/ui/TabPills';
+import { useToast } from '../Shared/ToastContext';
 import BlankSlate from '../Shared/BlankSlate';
 import {
+    CadenceEntry,
     CadenceGroup,
     CadenceHabit,
     CadenceQuickValue,
     createRow,
+    deleteRow,
     fetchCadenceGroups,
     fetchCadenceHabits,
     fetchRows,
@@ -44,6 +47,7 @@ const wantsQuickValues = (habit: CadenceHabit) =>
 const Habits: React.FC = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const { showUndoToast, showErrorToast } = useToast();
     const [tab, setTab] = useState<Tab>('habits');
     const [habits, setHabits] = useState<CadenceHabit[]>([]);
     const [archived, setArchived] = useState<CadenceHabit[]>([]);
@@ -111,8 +115,9 @@ const Habits: React.FC = () => {
                 item.uid === habit.uid ? withEntry(item, amountMinor) : item
             )
         );
+        let entry: CadenceEntry;
         try {
-            await createRow(habit.uid, 'entries', {
+            entry = await createRow<CadenceEntry>(habit.uid, 'entries', {
                 value_minor: amountMinor,
                 note: note ?? null,
             });
@@ -122,6 +127,25 @@ const Habits: React.FC = () => {
                 current.map((item) => (item.uid === habit.uid ? habit : item))
             );
             setFailed(true);
+            return;
+        }
+        await load();
+        showUndoToast(
+            t('cadenceHabits.entry.logged', '{{name}} logged', {
+                name: habit.name,
+            }),
+            () => undoEntry(habit, entry.uid)
+        );
+    };
+
+    const undoEntry = async (habit: CadenceHabit, entryUid: string) => {
+        try {
+            await deleteRow(habit.uid, 'entries', entryUid);
+        } catch (error) {
+            console.error('Failed to undo an entry:', error);
+            showErrorToast(
+                t('cadenceHabits.entry.undoFailed', 'Could not undo the entry.')
+            );
             return;
         }
         await load();

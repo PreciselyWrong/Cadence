@@ -5068,6 +5068,8 @@
       "title": "Ancora nessuna abitudine."
     },
     "entry": {
+      "undoFailed": "Could not undo the entry.",
+      "logged": "{{name}} logged",
       "add": "Aggiungi una registrazione",
       "date": "Data",
       "delete": "Elimina registrazione",

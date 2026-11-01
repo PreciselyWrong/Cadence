@@ -5069,6 +5069,8 @@
       "title": "Aucune habitude pour l'instant."
     },
     "entry": {
+      "undoFailed": "Impossible d'annuler la saisie.",
+      "logged": "{{name}} noté",
       "add": "Ajouter une entrée",
       "date": "Date",
       "delete": "Supprimer l'entrée",

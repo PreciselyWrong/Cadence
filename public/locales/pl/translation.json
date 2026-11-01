@@ -5082,6 +5082,8 @@
       "title": "Nie ma jeszcze nawyków."
     },
     "entry": {
+      "undoFailed": "Could not undo the entry.",
+      "logged": "{{name}} logged",
       "add": "Dodaj wpis",
       "date": "Data",
       "delete": "Usuń wpis",

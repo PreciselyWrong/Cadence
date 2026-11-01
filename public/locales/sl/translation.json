@@ -5082,6 +5082,8 @@
       "title": "Še ni navad."
     },
     "entry": {
+      "undoFailed": "Could not undo the entry.",
+      "logged": "{{name}} logged",
       "add": "Dodaj vnos",
       "date": "Datum",
       "delete": "Izbriši vnos",
