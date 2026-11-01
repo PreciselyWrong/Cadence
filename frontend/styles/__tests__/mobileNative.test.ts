@@ -8,7 +8,8 @@ const displayAt = (css: string, selector: string, width: number) => {
     let display: string | undefined;
     postcss.parse(css).walkRules((rule: Rule) => {
         if (!rule.selectors.includes(selector)) return;
-        const media = rule.parent?.type === 'atrule' ? (rule.parent as AtRule) : null;
+        const media =
+            rule.parent?.type === 'atrule' ? (rule.parent as AtRule) : null;
         if (media) {
             const min = /min-width:\s*(\d+)px/.exec(media.params);
             const max = /max-width:\s*(\d+)px/.exec(media.params);
@@ -28,12 +29,9 @@ describe('mobile-native.css', () => {
         'utf8'
     );
 
-    it.each(['.cdm-fab', '.cdm-bar'])(
-        'shows %s on phones only',
-        (selector) => {
-            expect(displayAt(css, selector, 375)).toBe('flex');
-            expect(displayAt(css, selector, 768)).toBe('none');
-            expect(displayAt(css, selector, 1440)).toBe('none');
-        }
-    );
+    it.each(['.cdm-fab', '.cdm-bar'])('shows %s on phones only', (selector) => {
+        expect(displayAt(css, selector, 375)).toBe('flex');
+        expect(displayAt(css, selector, 768)).toBe('none');
+        expect(displayAt(css, selector, 1440)).toBe('none');
+    });
 });

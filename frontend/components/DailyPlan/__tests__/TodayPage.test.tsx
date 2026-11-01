@@ -368,8 +368,12 @@ describe('TodayPage', () => {
         try {
             render(<TodayPage />);
 
-            expect(await screen.findByTestId('day-timeline')).toBeInTheDocument();
-            expect(screen.queryByTestId('pane-splitter')).not.toBeInTheDocument();
+            expect(
+                await screen.findByTestId('day-timeline')
+            ).toBeInTheDocument();
+            expect(
+                screen.queryByTestId('pane-splitter')
+            ).not.toBeInTheDocument();
             expect(screen.getByTestId('left-pane').style.width).toBe('');
         } finally {
             (window as any).ResizeObserver = original;

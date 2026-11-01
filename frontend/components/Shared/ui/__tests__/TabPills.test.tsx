@@ -20,8 +20,8 @@ describe('TabPills', () => {
         expect(screen.getByRole('tab', { name: /Habits/ })).toHaveTextContent(
             'Habits3'
         );
-        expect(
-            screen.getByRole('tab', { name: /Archived/ })
-        ).toHaveTextContent(/^Archived$/);
+        expect(screen.getByRole('tab', { name: /Archived/ })).toHaveTextContent(
+            /^Archived$/
+        );
     });
 });
