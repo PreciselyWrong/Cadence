@@ -2181,6 +2181,11 @@
     "done": "Готово"
   },
   "calendar": {
+    "slot": {
+      "googleEvent": "New Google event",
+      "taskName": "Task name",
+      "addTaskAt": "Add task at {{time}}"
+    },
     "meetingJoin": "Присоединиться",
     "location": {
       "copy": "Скопировать адрес",

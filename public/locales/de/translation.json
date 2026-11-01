@@ -1737,6 +1737,11 @@
     "noUpcomingOccurrences": "Keine anstehenden Termine."
   },
   "calendar": {
+    "slot": {
+      "googleEvent": "New Google event",
+      "taskName": "Task name",
+      "addTaskAt": "Add task at {{time}}"
+    },
     "meetingJoin": "Beitreten",
     "location": {
       "copy": "Adresse kopieren",

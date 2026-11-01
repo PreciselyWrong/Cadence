@@ -1,5 +1,10 @@
 {
   "calendar": {
+    "slot": {
+      "googleEvent": "New Google event",
+      "taskName": "Task name",
+      "addTaskAt": "Add task at {{time}}"
+    },
     "meetingJoin": "Pripojiť sa",
     "location": {
       "copy": "Kopírovať adresu",

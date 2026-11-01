@@ -2106,6 +2106,11 @@
     "noUpcomingOccurrences": "今後の予定はありません。"
   },
   "calendar": {
+    "slot": {
+      "googleEvent": "New Google event",
+      "taskName": "Task name",
+      "addTaskAt": "Add task at {{time}}"
+    },
     "meetingJoin": "参加",
     "location": {
       "copy": "住所をコピー",

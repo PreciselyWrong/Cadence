@@ -2179,6 +2179,11 @@
     "done": "Fait"
   },
   "calendar": {
+    "slot": {
+      "googleEvent": "Nouvel événement Google",
+      "taskName": "Nom de la tâche",
+      "addTaskAt": "Ajouter une tâche à {{time}}"
+    },
     "meetingJoin": "Rejoindre",
     "location": {
       "copy": "Copier l'adresse",

@@ -2353,6 +2353,11 @@
     "done": "Done"
   },
   "calendar": {
+    "slot": {
+      "googleEvent": "New Google event",
+      "taskName": "Task name",
+      "addTaskAt": "Add task at {{time}}"
+    },
     "meetingJoin": "Join",
     "location": {
       "copy": "Copy address",

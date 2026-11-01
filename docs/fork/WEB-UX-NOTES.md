@@ -265,3 +265,9 @@ Revue écran par écran (Aujourd'hui, Boîte, Tâches, Projets, page projet, Age
 - **Problème** : un numéro ou une adresse écrit dans une note, une tâche ou la description d'un événement ne se touchait pas pour appeler ou écrire.
 - **Décision** : dans le rendu markdown (notes, notes de tâche, aperçu de la description d'un événement Google), un numéro suisse ou français (`079 123 45 67`, `+41 79 123 45 67`) devient un lien `tel:`, une adresse un lien `mailto:`. Les dates, heures et années ne deviennent jamais des numéros. La description d'un événement Google affiche son rendu sous le champ quand il n'est pas vide. Logique dans `frontend/utils/contactLinks.ts`.
 - **Android** : à reprendre. Mêmes règles de détection dans le rendu des notes, des tâches et des descriptions d'événement. Reste : rien d'essayé sur le téléphone.
+
+### 2026-11-01 — Une case vide du calendrier crée une tâche
+
+- **Problème** : cliquer une heure vide de la semaine ou du jour ouvrait un événement Google, ou ne faisait rien sans agenda Google accessible en écriture.
+- **Décision** : une heure vide ouvre un petit choix : un champ « Nom de la tâche » et le bouton « Ajouter une tâche à 14:00 » (la tâche tombe ce jour-là, à cette heure, statut à faire). « Nouvel événement Google » reste en second choix, seulement si un agenda Google est accessible en écriture. Logique : `frontend/components/Calendar/slotTask.ts` et `SlotChoiceDialog.tsx`.
+- **Android** : à reprendre. Même choix sur une heure vide de l'agenda. Reste : rien d'essayé sur le téléphone.

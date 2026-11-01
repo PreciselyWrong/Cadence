@@ -2187,6 +2187,11 @@
     "done": "تم"
   },
   "calendar": {
+    "slot": {
+      "googleEvent": "New Google event",
+      "taskName": "Task name",
+      "addTaskAt": "Add task at {{time}}"
+    },
     "meetingJoin": "انضم",
     "location": {
       "copy": "نسخ العنوان",

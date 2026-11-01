@@ -1897,6 +1897,11 @@
     "noUpcomingOccurrences": "Немає найближчих повторів."
   },
   "calendar": {
+    "slot": {
+      "googleEvent": "New Google event",
+      "taskName": "Task name",
+      "addTaskAt": "Add task at {{time}}"
+    },
     "meetingJoin": "Приєднатися",
     "location": {
       "copy": "Копіювати адресу",

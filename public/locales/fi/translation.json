@@ -2175,6 +2175,11 @@
     "done": "Valmis"
   },
   "calendar": {
+    "slot": {
+      "googleEvent": "New Google event",
+      "taskName": "Task name",
+      "addTaskAt": "Add task at {{time}}"
+    },
     "meetingJoin": "Liity",
     "location": {
       "copy": "Kopioi osoite",

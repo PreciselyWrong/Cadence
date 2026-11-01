@@ -32,6 +32,9 @@ import { dedupeCalendarEvents } from '../utils/dedupeCalendarEvents';
 import GoogleEventModal, {
     GoogleEventDraft,
 } from './Calendar/GoogleEventModal';
+import SlotChoiceDialog from './Calendar/SlotChoiceDialog';
+import { slotTaskInput } from './Calendar/slotTask';
+import { createTask } from '../utils/tasksService';
 import { useToast } from './Shared/ToastContext';
 import {
     ChevronLeftIcon,
@@ -225,6 +228,7 @@ const Calendar: React.FC = () => {
     const [feedErrors, setFeedErrors] = useState<string[]>([]);
     const [isManagerOpen, setIsManagerOpen] = useState(false);
     const [googleStatus, setGoogleStatus] = useState<GoogleStatus | null>(null);
+    const [slotStart, setSlotStart] = useState<Date | null>(null);
     const [googleDraft, setGoogleDraft] = useState<GoogleEventDraft | null>(
         null
     );
@@ -725,16 +729,37 @@ const Calendar: React.FC = () => {
         }
     };
 
-    // An empty hour clicked: a new one-hour event in Google.
+    // An empty hour clicked: a task due then, or a one-hour Google event.
     const handleTimeSlotClick = (date: Date, hour: number) => {
         const start = new Date(date);
         start.setHours(hour, 0, 0, 0);
+        setSlotStart(start);
+    };
+
+    const openSlotGoogleDraft = (start: Date) => {
         openGoogleDraft({
             title: '',
             allDay: false,
             start,
             end: new Date(start.getTime() + 60 * 60 * 1000),
         });
+    };
+
+    const addSlotTask = async (name: string, start: Date) => {
+        try {
+            await createTask(
+                slotTaskInput(name, start) as unknown as Task
+            );
+        } catch (error) {
+            showErrorToast(
+                error instanceof Error
+                    ? error.message
+                    : t('errors.generic', 'Something went wrong')
+            );
+            return;
+        }
+        setSlotStart(null);
+        await loadTasks();
     };
 
     const handleEditTask = () => {
@@ -1291,6 +1316,20 @@ const Calendar: React.FC = () => {
                             setFeedsVersion((v) => v + 1);
                         }}
                         onClose={() => setIsManagerOpen(false)}
+                    />
+                )}
+
+                {slotStart && (
+                    <SlotChoiceDialog
+                        start={slotStart}
+                        googleAvailable={writableGoogle.length > 0}
+                        onAddTask={(name) => addSlotTask(name, slotStart)}
+                        onGoogleEvent={() => {
+                            const start = slotStart;
+                            setSlotStart(null);
+                            openSlotGoogleDraft(start);
+                        }}
+                        onClose={() => setSlotStart(null)}
                     />
                 )}
 

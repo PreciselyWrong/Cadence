@@ -2176,6 +2176,11 @@
     "done": "Ferdig"
   },
   "calendar": {
+    "slot": {
+      "googleEvent": "New Google event",
+      "taskName": "Task name",
+      "addTaskAt": "Add task at {{time}}"
+    },
     "meetingJoin": "Bli med",
     "location": {
       "copy": "Kopier adresse",

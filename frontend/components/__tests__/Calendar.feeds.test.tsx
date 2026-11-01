@@ -9,6 +9,17 @@ import {
     updateCalendarFeed,
 } from '../../utils/calendarFeedsService';
 
+// The markdown stack is ESM-only and Jest cannot load it; the event
+// description preview is not under test here.
+jest.mock('../Shared/MarkdownRenderer', () => {
+    const mockReact = require('react');
+    return {
+        __esModule: true,
+        default: ({ content }: { content: string }) =>
+            mockReact.createElement('div', null, content),
+    };
+});
+
 jest.mock('react-i18next', () => {
     const t = (key: string, fallback?: any, options?: any) => {
         if (typeof fallback !== 'string') return key;
