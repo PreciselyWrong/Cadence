@@ -60,13 +60,6 @@
     }
 }
 
-@media (min-width: 768px) {
-    .cdm-bar,
-    .cdm-fab {
-        display: none;
-    }
-}
-
 .cdm-item {
     flex: 1 1 0;
     min-width: 0;
@@ -125,6 +118,16 @@
 
 .cdm-fab:active {
     transform: scale(0.97);
+}
+
+/* After the base rules: same specificity, so the later rule wins. Placed
+   above them, it lost to `.cdm-fab { display: flex }` and the phone button
+   showed on desktop next to the header's Capture button. */
+@media (min-width: 768px) {
+    .cdm-bar,
+    .cdm-fab {
+        display: none;
+    }
 }
 
 /* Connected row groups (RowGroup.kt, SettingRow.kt): outer radius 20, inner 4,
