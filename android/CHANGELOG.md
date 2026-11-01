@@ -1,4 +1,4 @@
-## [1.7.1] — à publier
+## [1.7.1] — 1 novembre 2026
 
 ### Épure
 - Aujourd'hui : la jauge « planifiées / libres » n'apparaît qu'une fois une tâche planifiée ; la carte du matin ne compte plus le retard ; les en-têtes « Aujourd'hui » et « Demain » n'ont plus de compteur (il reste sur l'onglet).
