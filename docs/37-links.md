@@ -64,12 +64,13 @@ Entity `link` (schema 4): fields `note`, `status`, `review_at`; server fields li
 |---|---|---|
 | Garder | `kept` | |
 | À tester | `tested` | creates the task "Tester : <title>" (note: the URL then the user's note) in the chosen project or none |
+| Rattacher | `kept` | shown when the user has an open project; creates a task named after the link (note: the URL then the user's note) in the chosen project (required), as the gallery and the web's Attach |
 | Plus tard | `parked` | review day `review_at` = today + 30 days, synced (the same on the web) |
 | Jeter | `dropped` | |
 
   Writes happen after a 4.5 s window; the snackbar names the link and "Annuler" drops them. "Plus…" keeps Aujourd'hui / Planifier / Projet to turn the idea into a task (that path deletes the inbox item, as before).
 - **Swipe** on a link card: right = Garder, left = Jeter (fixed; the task swipe configuration is task-specific).
-- **Trier les liens (n)**: shown from two links; one link at a time, full width, same four decisions plus "Passer". The queue is the Inbox links, oldest first; a skipped link goes to the end (order kept on the device), so reopening resumes where the user stopped.
+- **Trier les liens (n)**: shown from two links; one link at a time, full width, Garder, À tester, Plus tard and Jeter plus "Passer" (no Rattacher there). The queue is the Inbox links, oldest first; a skipped link goes to the end (order kept on the device), so reopening resumes where the user stopped.
 - The decision-to-writes mapping is `model/LinkTriage.kt` (pure, tested in `LinkTriageTest`); the repository additions are `TaskRepository.setLinkTags` and `processInboxItem`.
 
 ### Android discoveries gallery

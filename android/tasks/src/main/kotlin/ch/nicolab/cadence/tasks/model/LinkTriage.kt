@@ -3,8 +3,8 @@ package ch.nicolab.cadence.tasks.model
 import java.time.LocalDate
 
 /**
- * Décisions sur un lien : garder, tester, rattacher à un projet, repousser, jeter. L'Inbox en offre quatre
- * ([LinkTriage.INBOX_DECISIONS]), la galerie des découvertes quatre autres ([LinkTriage.GALLERY_DECISIONS]).
+ * Décisions sur un lien : garder, tester, rattacher à un projet, repousser, jeter. L'Inbox les offre toutes
+ * ([LinkTriage.inboxDecisions]), la galerie des découvertes toutes sauf garder ([LinkTriage.GALLERY_DECISIONS]).
  */
 enum class LinkDecision { KEEP, TEST, ATTACH, LATER, DROP }
 
@@ -36,8 +36,18 @@ object LinkTriage {
     /** « Plus tard » repose le lien un mois. */
     const val LATER_DAYS = 30L
 
-    /** Pastilles d'une idée de l'Inbox ; « Plus… » y garde la conversion en tâche. */
-    val INBOX_DECISIONS = listOf(LinkDecision.KEEP, LinkDecision.TEST, LinkDecision.LATER, LinkDecision.DROP)
+    /** Pastilles d'une idée de l'Inbox, dans l'ordre du web ; « Plus… » y garde la conversion en tâche. */
+    val INBOX_DECISIONS = listOf(LinkDecision.KEEP, LinkDecision.TEST, LinkDecision.ATTACH, LinkDecision.LATER, LinkDecision.DROP)
+
+    /** « Rattacher » n'existe pas sans projet ouvert où ranger la tâche (comme le web). */
+    fun inboxDecisions(hasProjects: Boolean): List<LinkDecision> =
+        if (hasProjects) INBOX_DECISIONS else INBOX_DECISIONS - LinkDecision.ATTACH
+
+    /** Les décisions qui demandent d'abord un projet. */
+    fun needsProject(decision: LinkDecision): Boolean = decision == LinkDecision.TEST || decision == LinkDecision.ATTACH
+
+    /** « À tester » peut rester sans projet ; « Rattacher » exige d'en choisir un. */
+    fun allowsNoProject(decision: LinkDecision): Boolean = decision == LinkDecision.TEST
 
     /** Pastilles d'une carte de la galerie : Tester, Rattacher, Reporter, Jeter. */
     val GALLERY_DECISIONS = listOf(LinkDecision.TEST, LinkDecision.ATTACH, LinkDecision.LATER, LinkDecision.DROP)

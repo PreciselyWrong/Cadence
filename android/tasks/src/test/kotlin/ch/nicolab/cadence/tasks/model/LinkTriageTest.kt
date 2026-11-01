@@ -87,9 +87,33 @@ class LinkTriageTest {
     }
 
     @Test
-    fun `la galerie propose tester, rattacher, reporter, jeter, l'Inbox garde ses quatre décisions`() {
+    fun `la galerie propose tester, rattacher, reporter, jeter`() {
         assertEquals(listOf(LinkDecision.TEST, LinkDecision.ATTACH, LinkDecision.LATER, LinkDecision.DROP), LinkTriage.GALLERY_DECISIONS)
-        assertEquals(listOf(LinkDecision.KEEP, LinkDecision.TEST, LinkDecision.LATER, LinkDecision.DROP), LinkTriage.INBOX_DECISIONS)
+    }
+
+    @Test
+    fun `l'Inbox propose rattacher entre tester et plus tard, comme le web`() {
+        assertEquals(
+            listOf(LinkDecision.KEEP, LinkDecision.TEST, LinkDecision.ATTACH, LinkDecision.LATER, LinkDecision.DROP),
+            LinkTriage.inboxDecisions(hasProjects = true),
+        )
+    }
+
+    @Test
+    fun `sans projet ouvert, l'Inbox n'offre pas rattacher`() {
+        assertEquals(
+            listOf(LinkDecision.KEEP, LinkDecision.TEST, LinkDecision.LATER, LinkDecision.DROP),
+            LinkTriage.inboxDecisions(hasProjects = false),
+        )
+    }
+
+    @Test
+    fun `rattacher exige un projet, tester l'accepte sans projet`() {
+        assertTrue(LinkTriage.needsProject(LinkDecision.ATTACH))
+        assertTrue(LinkTriage.needsProject(LinkDecision.TEST))
+        assertTrue(!LinkTriage.allowsNoProject(LinkDecision.ATTACH))
+        assertTrue(LinkTriage.allowsNoProject(LinkDecision.TEST))
+        listOf(LinkDecision.KEEP, LinkDecision.LATER, LinkDecision.DROP).forEach { assertTrue(!LinkTriage.needsProject(it), it.name) }
     }
 
     @Test

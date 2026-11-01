@@ -111,8 +111,8 @@ private fun decisionLabel(decision: LinkDecision): Int = when (decision) {
 }
 
 /**
- * Carte d'une idée qui contient un lien : ce qu'est la page, puis quatre décisions d'un toucher
- * (Garder, À tester, Plus tard, Jeter). Toucher la carte déplie le détail (début du README, note, étiquettes) ;
+ * Carte d'une idée qui contient un lien : ce qu'est la page, puis les décisions d'un toucher
+ * (Garder, À tester, Rattacher s'il existe un projet ouvert, Plus tard, Jeter). Toucher la carte déplie le détail (début du README, note, étiquettes) ;
  * « Ouvrir » est un bouton à part. « Plus… » garde Aujourd'hui, Planifier et Projet pour en faire une tâche.
  * Glisser à droite garde le lien, à gauche le jette, avec « Annuler ».
  */
@@ -130,12 +130,14 @@ internal fun LinkIdeaCard(
     val palette = cadence
     val tags by viewModel.tags.collectAsStateWithLifecycle()
     var expanded by rememberSaveable(entry.uid) { mutableStateOf(false) }
-    var choosingProject by remember { mutableStateOf(false) }
+    var choosingProject by remember { mutableStateOf<LinkDecision?>(null) }
+    val projects by viewModel.projects.collectAsStateWithLifecycle()
+    val decisions = LinkTriage.inboxDecisions(hasProjects = ProjectChoices.forTask(projects, null).isNotEmpty())
     val draft = rememberNoteDraft(link) { viewModel.setLinkNote(link.uid, it) }
     val decide: (LinkDecision) -> Unit = { decision ->
         draft.commit()
-        if (decision == LinkDecision.TEST) {
-            choosingProject = true
+        if (LinkTriage.needsProject(decision)) {
+            choosingProject = decision
         } else {
             viewModel.decideLink(entry, draft.applyTo(link), decision)
         }
@@ -211,19 +213,21 @@ internal fun LinkIdeaCard(
             AnimatedVisibility(expanded) {
                 LinkDetails(link, tags, draft, onTags = { viewModel.setLinkTags(link.uid, it) })
             }
-            DecisionPills(decide = decide) {
+            DecisionPills(decisions = decisions, decide = decide) {
                 MoreMenu(onToday = onToday, onSchedule = onSchedule, onProject = onProject)
             }
         }
     }
-    if (choosingProject) {
+    choosingProject?.let { decision ->
         TestProjectSheet(
             viewModel = viewModel,
             onPick = { projectUid ->
-                viewModel.decideLink(entry, draft.applyTo(link), LinkDecision.TEST, projectUid)
-                choosingProject = false
+                choosingProject = null
+                viewModel.decideLink(entry, draft.applyTo(link), decision, projectUid)
             },
-            onDismiss = { choosingProject = false },
+            onDismiss = { choosingProject = null },
+            title = if (decision == LinkDecision.ATTACH) R.string.links_attach_project_title else R.string.links_test_project_title,
+            allowNone = LinkTriage.allowsNoProject(decision),
         )
     }
 }
@@ -242,12 +246,12 @@ private fun OpenLinkButton(url: String) {
     }
 }
 
-/** Les quatre décisions en pastilles calmes : Garder et À tester pleines, Plus tard et Jeter discrètes. */
+/** Les décisions en pastilles calmes : Garder, À tester et Rattacher pleines, Plus tard et Jeter discrètes. */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun DecisionPills(decide: (LinkDecision) -> Unit, more: @Composable () -> Unit) {
+private fun DecisionPills(decisions: List<LinkDecision>, decide: (LinkDecision) -> Unit, more: @Composable () -> Unit) {
     FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-        LinkTriage.INBOX_DECISIONS.forEach { decision ->
+        decisions.forEach { decision ->
             QuickPill(
                 label = stringResource(decisionLabel(decision)),
                 onClick = { decide(decision) },

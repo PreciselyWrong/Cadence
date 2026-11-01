@@ -261,3 +261,10 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Problème** : règles d'épure du web du 2026-11-01 (en-tête de projet, pas de compteur 0) à vérifier sur Android.
 - **Décision** : l'en-tête d'un projet gagne un menu « … » avec « Épingler / Désépingler » (`pin_to_sidebar`, synchronisé ; `TaskRepository.setProjectPinned`), rien en bouton visible. Android n'affiche pas l'échéance d'un projet (`due_date_at` n'est pas gardé dans Room) : aucune couleur d'alerte possible. L'Inbox vide n'a plus de sous-titre « 0 idée à trier » ; Aujourd'hui n'a pas de pastilles de filtre Boîte / Tout (les compteurs de la planification ne s'affichent déjà que non nuls).
 - **Web** : rien à reprendre. Reste : afficher l'échéance d'un projet sur Android demanderait une colonne Room et une migration ; rien d'essayé sur le téléphone.
+
+### 2026-11-01 — « Rattacher » sur la carte de lien de l'Inbox
+
+- **Problème** : le web propose « Rattacher » dans l'Inbox et sur `/links` ; Android ne l'offrait que dans la galerie des découvertes, la carte de lien de l'Inbox gardait quatre décisions.
+- **Décision** : la carte de lien de l'Inbox a cinq pastilles, dans l'ordre du web : Garder, À tester, Rattacher, Plus tard, Jeter (`LinkTriage.inboxDecisions`). « Rattacher » n'apparaît que s'il existe un projet ouvert ; il ouvre « Rattacher à quel projet ? » sans « Sans projet », puis crée une tâche au nom du lien (adresse puis note), garde le lien et traite l'idée, après la fenêtre « Annuler » de 4,5 s. Le tri en série « Trier les liens » garde ses quatre boutons.
+- **Web** : rien à reprendre. Reste : rien d'essayé sur le téléphone.
+

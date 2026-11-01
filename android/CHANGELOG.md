@@ -1,6 +1,9 @@
 ## [1.7.0] — à publier
 
 ### Nouveautés
+- Inbox : la carte d'un lien gagne « Rattacher » (entre À tester et Plus tard, s'il existe un projet ouvert) : choix d'un projet obligatoire, tâche au nom du lien avec l'adresse puis la note, lien gardé, idée traitée, « Annuler » pendant 4,5 s. Comme sur le web.
+
+### Nouveautés
 - Revue, Repoussées : « Session courte aujourd’hui (25 min) », comme sur le web : la tâche rejoint le plan du jour du serveur pour 25 min, sans heure, et compte comme revue (en ligne seulement).
 
 ### Nouveautés
