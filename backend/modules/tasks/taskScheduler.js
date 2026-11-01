@@ -34,6 +34,7 @@ const getCronExpression = (frequency) => {
         due_tasks: '*/15 * * * *',
         due_projects: '*/15 * * * *',
         task_reminders: '* * * * *',
+        habit_reminders: '* * * * *',
         account_lifecycle: '0 3 * * *',
         webhook_deliveries: '* * * * *',
         webhook_summaries: '*/5 * * * *',
@@ -59,6 +60,11 @@ const runJob = async (frequency) => {
     } else if (frequency === 'task_reminders') {
         const { checkTaskReminders } = require('./taskReminderService');
         await checkTaskReminders();
+    } else if (frequency === 'habit_reminders') {
+        const {
+            checkHabitReminders,
+        } = require('../habits/cadence/reminderService');
+        await checkHabitReminders();
     } else if (frequency === 'webhook_deliveries') {
         const { processDue } = require('../webhooks/dispatcher');
         await processDue();
@@ -95,6 +101,7 @@ const createJobEntries = () => {
         'due_tasks',
         'due_projects',
         'task_reminders',
+        'habit_reminders',
         'account_lifecycle',
         'webhook_deliveries',
         'webhook_summaries',

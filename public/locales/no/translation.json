@@ -3134,7 +3134,8 @@
       "taskAssigned": "Oppgave Tildelt",
       "habitReminders": "Vanepåminnelser",
       "comments": "Comments & Mentions",
-      "taskReminders": "Oppgavepåminnelser"
+      "taskReminders": "Oppgavepåminnelser",
+      "habitReminders": "Vanepåminnelser"
     },
     "descriptions": {
       "dueTasks": "Oppgaver som forfaller innen 24 timer",
@@ -3145,7 +3146,8 @@
       "taskAssigned": "En oppgave ble tildelt deg av noen andre",
       "habitReminders": "På påminnelsestidspunktet for en vane, så lenge den fortsatt er åpen",
       "comments": "Replies, comments on your tasks, and @mentions",
-      "taskReminders": "Tidspunktet du setter på en oppgave. Telefonen ringer; legg til Datamaskin hvis datamaskinen også skal ringe"
+      "taskReminders": "Tidspunktet du setter på en oppgave. Telefonen ringer; legg til Datamaskin hvis datamaskinen også skal ringe",
+      "habitReminders": "Telefonen minner deg allerede på dem; slå på Push bare hvis serveren også skal ringe."
     },
     "telegram": {
       "notConfigured": {

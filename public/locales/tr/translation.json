@@ -3133,7 +3133,8 @@
       "taskAssigned": "Görev Atandı",
       "habitReminders": "Alışkanlık hatırlatmaları",
       "comments": "Comments & Mentions",
-      "taskReminders": "Görev hatırlatıcıları"
+      "taskReminders": "Görev hatırlatıcıları",
+      "habitReminders": "Alışkanlık hatırlatıcıları"
     },
     "descriptions": {
       "dueTasks": "24 saat içinde vadesi gelen görevler",
@@ -3144,7 +3145,8 @@
       "taskAssigned": "Bir görev başka biri tarafından size atandı",
       "habitReminders": "Bir alışkanlığa ayarlanan hatırlatma saatinde, alışkanlık hâlâ açıkken",
       "comments": "Replies, comments on your tasks, and @mentions",
-      "taskReminders": "Bir göreve koyduğunuz saat. Telefonunuz çalar; bilgisayarın da çalmasını istiyorsanız Bilgisayar'ı ekleyin"
+      "taskReminders": "Bir göreve koyduğunuz saat. Telefonunuz çalar; bilgisayarın da çalmasını istiyorsanız Bilgisayar'ı ekleyin",
+      "habitReminders": "Telefonunuz zaten hatırlatır; sunucunun da çalmasını istiyorsanız Push'u açın."
     },
     "telegram": {
       "notConfigured": {

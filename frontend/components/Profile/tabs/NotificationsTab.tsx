@@ -4,6 +4,7 @@ import {
     BellIcon,
     BellAlertIcon,
     BellSnoozeIcon,
+    CheckCircleIcon,
     FolderIcon,
     ClockIcon,
     MoonIcon,
@@ -48,6 +49,7 @@ const DEFAULT_PREFERENCES: NotificationPreferences = {
     deferUntil: channelsOf(true),
     taskAssigned: channelsOf(false),
     taskReminders: channelsOf(false),
+    habitReminders: channelsOf(false),
     comments: channelsOf(false),
 };
 
@@ -420,6 +422,25 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
                             preferences={preferences.taskReminders}
                             onToggle={(channel, value) =>
                                 handleToggle('taskReminders', channel, value)
+                            }
+                            telegramConfigured={telegramConfigured}
+                            showTelegram={showTelegram}
+                            pushAvailable={pushAvailable}
+                            appriseConfigured={appriseConfigured}
+                        />
+                        <NotificationTypeRow
+                            icon={CheckCircleIcon}
+                            label={t(
+                                'notifications.types.habitReminders',
+                                'Habit reminders'
+                            )}
+                            description={t(
+                                'notifications.descriptions.habitReminders',
+                                'Your phone also reminds you; turn Push on only if you want the server to ring too.'
+                            )}
+                            preferences={preferences.habitReminders}
+                            onToggle={(channel, value) =>
+                                handleToggle('habitReminders', channel, value)
                             }
                             telegramConfigured={telegramConfigured}
                             showTelegram={showTelegram}

@@ -3133,7 +3133,8 @@
       "taskAssigned": "Tugas Diberikan",
       "habitReminders": "Pengingat kebiasaan",
       "comments": "Comments & Mentions",
-      "taskReminders": "Pengingat tugas"
+      "taskReminders": "Pengingat tugas",
+      "habitReminders": "Pengingat kebiasaan"
     },
     "descriptions": {
       "dueTasks": "Tugas yang jatuh tempo dalam 24 jam",
@@ -3144,7 +3145,8 @@
       "taskAssigned": "Sebuah tugas telah diberikan kepada Anda oleh orang lain",
       "habitReminders": "Pada waktu pengingat yang diatur di kebiasaan, selama kebiasaan itu masih terbuka",
       "comments": "Replies, comments on your tasks, and @mentions",
-      "taskReminders": "Waktu yang Anda atur pada tugas. Ponsel Anda berdering; tambahkan Komputer jika ingin komputer ikut berdering"
+      "taskReminders": "Waktu yang Anda atur pada tugas. Ponsel Anda berdering; tambahkan Komputer jika ingin komputer ikut berdering",
+      "habitReminders": "Ponsel Anda sudah mengingatkan; aktifkan Push hanya jika server juga harus berdering."
     },
     "telegram": {
       "notConfigured": {

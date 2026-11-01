@@ -3139,7 +3139,8 @@
       "taskAssigned": "Tarefa Atribuída",
       "habitReminders": "Lembretes de hábitos",
       "comments": "Comments & Mentions",
-      "taskReminders": "Lembretes de tarefas"
+      "taskReminders": "Lembretes de tarefas",
+      "habitReminders": "Lembretes de hábitos"
     },
     "descriptions": {
       "dueTasks": "Tarefas que vencem em 24 horas",
@@ -3150,7 +3151,8 @@
       "taskAssigned": "Uma tarefa foi atribuída a você por outra pessoa",
       "habitReminders": "À hora do lembrete definida num hábito, enquanto ainda está em aberto",
       "comments": "Replies, comments on your tasks, and @mentions",
-      "taskReminders": "A hora que define numa tarefa. O telemóvel toca; adicione Computador se quiser que o computador também toque"
+      "taskReminders": "A hora que define numa tarefa. O telemóvel toca; adicione Computador se quiser que o computador também toque",
+      "habitReminders": "O telemóvel já os lembra; ative o Push só se quiser que o servidor também toque."
     },
     "telegram": {
       "notConfigured": {

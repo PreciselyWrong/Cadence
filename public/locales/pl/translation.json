@@ -3145,7 +3145,8 @@
       "taskAssigned": "Zadanie przypisane",
       "habitReminders": "Przypomnienia o nawykach",
       "comments": "Comments & Mentions",
-      "taskReminders": "Przypomnienia o zadaniach"
+      "taskReminders": "Przypomnienia o zadaniach",
+      "habitReminders": "Przypomnienia o nawykach"
     },
     "descriptions": {
       "dueTasks": "Zadania, które muszą być wykonane w ciągu 24 godzin",
@@ -3156,7 +3157,8 @@
       "taskAssigned": "Zadanie zostało przypisane do Ciebie przez kogoś innego",
       "habitReminders": "O godzinie przypomnienia ustawionej dla nawyku, dopóki jest otwarty",
       "comments": "Replies, comments on your tasks, and @mentions",
-      "taskReminders": "Godzina ustawiona w zadaniu. Dzwoni telefon; dodaj Komputer, jeśli komputer też ma dzwonić"
+      "taskReminders": "Godzina ustawiona w zadaniu. Dzwoni telefon; dodaj Komputer, jeśli komputer też ma dzwonić",
+      "habitReminders": "Telefon już o nich przypomina; włącz Push tylko, jeśli serwer też ma dzwonić."
     },
     "telegram": {
       "notConfigured": {

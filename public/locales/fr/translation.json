@@ -3140,7 +3140,8 @@
       "taskAssigned": "Tâche assignée",
       "habitReminders": "Rappels d'habitudes",
       "comments": "Commentaires et mentions",
-      "taskReminders": "Rappels de tâche"
+      "taskReminders": "Rappels de tâche",
+      "habitReminders": "Rappels d'habitudes"
     },
     "descriptions": {
       "dueTasks": "Tâches qui doivent être effectuées dans les 24 heures",
@@ -3151,7 +3152,8 @@
       "taskAssigned": "Une tâche vous a été assignée par quelqu'un d'autre",
       "habitReminders": "À l'heure de rappel définie sur une habitude, tant qu'elle n'est pas faite",
       "comments": "Réponses, commentaires sur les tâches et mentions @",
-      "taskReminders": "L'heure fixée sur une tâche. Votre téléphone sonne ; ajoutez Ordinateur pour que le poste sonne aussi"
+      "taskReminders": "L'heure fixée sur une tâche. Votre téléphone sonne ; ajoutez Ordinateur pour que le poste sonne aussi",
+      "habitReminders": "Le téléphone vous le rappelle déjà ; activez Push seulement si le serveur doit aussi sonner."
     },
     "telegram": {
       "notConfigured": {

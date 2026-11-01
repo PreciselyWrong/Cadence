@@ -3133,7 +3133,8 @@
       "taskAssigned": "Tehtävä annettu",
       "habitReminders": "Tapamuistutukset",
       "comments": "Comments & Mentions",
-      "taskReminders": "Tehtävämuistutukset"
+      "taskReminders": "Tehtävämuistutukset",
+      "habitReminders": "Tapamuistutukset"
     },
     "descriptions": {
       "dueTasks": "Tehtävät, jotka erääntyvät 24 tunnin sisällä",
@@ -3144,7 +3145,8 @@
       "taskAssigned": "Tehtävä on annettu sinulle jonkun muun toimesta",
       "habitReminders": "Tavalle asetettuna muistutusaikana, kun se on vielä avoinna",
       "comments": "Replies, comments on your tasks, and @mentions",
-      "taskReminders": "Tehtävälle asettamasi aika. Puhelimesi soi; lisää Tietokone, jos haluat tietokoneenkin soivan"
+      "taskReminders": "Tehtävälle asettamasi aika. Puhelimesi soi; lisää Tietokone, jos haluat tietokoneenkin soivan",
+      "habitReminders": "Puhelimesi muistuttaa jo; kytke Push päälle vain, jos palvelimen pitää soida myös."
     },
     "telegram": {
       "notConfigured": {

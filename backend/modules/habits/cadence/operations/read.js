@@ -194,4 +194,5 @@ module.exports = {
     getHabitRow,
     listGroups,
     loadBundles,
+    engineInputs,
 };

@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import NotificationsTab from '../NotificationsTab';
+import { countPushDevices } from '../../../../utils/pushService';
 
 jest.mock('react-i18next', () => {
     const t = (key: string, fallback?: any) =>
@@ -46,13 +47,13 @@ describe('NotificationsTab', () => {
         }) as unknown as typeof fetch;
     });
 
-    it('lists task reminders and hides the overdue, habit and email controls', async () => {
+    it('lists task and habit reminders and hides the overdue and email controls', async () => {
         await renderTab();
 
         expect(screen.getByText('Task reminders')).toBeInTheDocument();
+        expect(screen.getByText('Habit reminders')).toBeInTheDocument();
         expect(screen.queryByText('Overdue Tasks')).not.toBeInTheDocument();
         expect(screen.queryByText('Overdue Projects')).not.toBeInTheDocument();
-        expect(screen.queryByText('Habit Reminders')).not.toBeInTheDocument();
         expect(
             screen.queryByRole('columnheader', { name: /email/i })
         ).not.toBeInTheDocument();
@@ -73,6 +74,23 @@ describe('NotificationsTab', () => {
         expect(onChange).toHaveBeenCalledWith(
             expect.objectContaining({
                 taskReminders: expect.objectContaining({ desktop: true }),
+            })
+        );
+    });
+
+    it('turns push on for habit reminders', async () => {
+        (countPushDevices as jest.Mock).mockResolvedValueOnce(1);
+        const { onChange } = await renderTab();
+
+        fireEvent.click(
+            screen.getByRole('switch', {
+                name: 'Push · Habit reminders',
+            })
+        );
+
+        expect(onChange).toHaveBeenCalledWith(
+            expect.objectContaining({
+                habitReminders: expect.objectContaining({ push: true }),
             })
         );
     });

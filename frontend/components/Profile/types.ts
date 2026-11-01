@@ -100,6 +100,7 @@ export interface NotificationPreferences {
     deferUntil: NotificationChannels;
     taskAssigned: NotificationChannels;
     taskReminders: NotificationChannels;
+    habitReminders: NotificationChannels;
     comments: NotificationChannels;
 }
 

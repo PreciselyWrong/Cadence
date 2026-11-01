@@ -3133,7 +3133,8 @@
       "taskAssigned": "任务分配",
       "habitReminders": "习惯提醒",
       "comments": "Comments & Mentions",
-      "taskReminders": "任务提醒"
+      "taskReminders": "任务提醒",
+      "habitReminders": "习惯提醒"
     },
     "descriptions": {
       "dueTasks": "在24小时内到期的任务",
@@ -3144,7 +3145,8 @@
       "taskAssigned": "有人将任务分配给您",
       "habitReminders": "在习惯设定的提醒时间,且该习惯仍未完成时",
       "comments": "Replies, comments on your tasks, and @mentions",
-      "taskReminders": "你在任务上设置的时间。手机会响铃；如果希望电脑也响，请添加桌面"
+      "taskReminders": "你在任务上设置的时间。手机会响铃；如果希望电脑也响，请添加桌面",
+      "habitReminders": "手机已经会提醒你；只有希望服务器也响铃时才开启推送。"
     },
     "telegram": {
       "notConfigured": {

@@ -3139,7 +3139,8 @@
       "taskAssigned": "Compito Assegnato",
       "habitReminders": "Promemoria abitudini",
       "comments": "Comments & Mentions",
-      "taskReminders": "Promemoria delle attività"
+      "taskReminders": "Promemoria delle attività",
+      "habitReminders": "Promemoria delle abitudini"
     },
     "descriptions": {
       "dueTasks": "Compiti che scadono entro 24 ore",
@@ -3150,7 +3151,8 @@
       "taskAssigned": "Un compito ti è stato assegnato da qualcun altro",
       "habitReminders": "All'ora di promemoria impostata sull'abitudine, finché è ancora da fare",
       "comments": "Replies, comments on your tasks, and @mentions",
-      "taskReminders": "L'ora che imposti su un'attività. Suona il telefono; aggiungi Desktop se vuoi che suoni anche il computer"
+      "taskReminders": "L'ora che imposti su un'attività. Suona il telefono; aggiungi Desktop se vuoi che suoni anche il computer",
+      "habitReminders": "Il telefono ti ricorda già; attiva Push solo se vuoi che suoni anche il server."
     },
     "telegram": {
       "notConfigured": {

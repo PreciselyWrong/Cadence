@@ -3354,7 +3354,8 @@
       "taskAssigned": "Task Assigned",
       "habitReminders": "Habit Reminders",
       "comments": "Comments & Mentions",
-      "taskReminders": "Task reminders"
+      "taskReminders": "Task reminders",
+      "habitReminders": "Habit reminders"
     },
     "descriptions": {
       "dueTasks": "Tasks that are due within 24 hours",
@@ -3365,7 +3366,8 @@
       "taskAssigned": "A task was assigned to you by someone else",
       "habitReminders": "At the reminder time set on a habit, while it is still open",
       "comments": "Replies, comments on your tasks, and @mentions",
-      "taskReminders": "The time you set on a task. Your phone rings; add Desktop if you want your computer to ring too"
+      "taskReminders": "The time you set on a task. Your phone rings; add Desktop if you want your computer to ring too",
+      "habitReminders": "Your phone also reminds you; turn Push on only if you want the server to ring too."
     },
     "telegram": {
       "notConfigured": {

@@ -3374,7 +3374,8 @@
             "taskAssigned": "Priradená úloha",
             "habitReminders": "Pripomienky návykov",
             "comments": "Comments & Mentions",
-            "taskReminders": "Pripomienky úloh"
+            "taskReminders": "Pripomienky úloh",
+            "habitReminders": "Pripomienky návykov"
         },
         "descriptions": {
             "dueTasks": "Úlohy s termínom do 24 hodín",
@@ -3385,7 +3386,8 @@
             "taskAssigned": "Niekto iný vám priradil úlohu",
             "habitReminders": "V čase pripomienky nastavenom pri návyku, kým je ešte otvorený",
             "comments": "Replies, comments on your tasks, and @mentions",
-            "taskReminders": "Čas nastavený pri úlohe. Zvoní telefón; pridajte Počítač, ak má zvoniť aj počítač"
+            "taskReminders": "Čas nastavený pri úlohe. Zvoní telefón; pridajte Počítač, ak má zvoniť aj počítač",
+            "habitReminders": "Telefón vám ich už pripomína; zapnite Push, iba ak má zvoniť aj server."
         },
         "telegram": {
             "notConfigured": {

@@ -3133,7 +3133,8 @@
       "taskAssigned": "タスクが割り当てられました",
       "habitReminders": "習慣のリマインダー",
       "comments": "Comments & Mentions",
-      "taskReminders": "タスクのリマインダー"
+      "taskReminders": "タスクのリマインダー",
+      "habitReminders": "習慣のリマインダー"
     },
     "descriptions": {
       "dueTasks": "24時間以内に期限が来るタスク",
@@ -3144,7 +3145,8 @@
       "taskAssigned": "他の誰かからあなたにタスクが割り当てられました",
       "habitReminders": "習慣に設定したリマインダー時刻に、まだ未完了の場合",
       "comments": "Replies, comments on your tasks, and @mentions",
-      "taskReminders": "タスクに設定した時刻。スマートフォンが鳴ります。パソコンも鳴らしたい場合はデスクトップを追加してください"
+      "taskReminders": "タスクに設定した時刻。スマートフォンが鳴ります。パソコンも鳴らしたい場合はデスクトップを追加してください",
+      "habitReminders": "スマートフォンで既に通知されます。サーバーからも鳴らす場合のみプッシュを有効にしてください。"
     },
     "telegram": {
       "notConfigured": {

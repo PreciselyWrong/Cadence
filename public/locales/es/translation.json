@@ -3126,7 +3126,8 @@
       "taskAssigned": "Tarea Asignada",
       "habitReminders": "Recordatorios de hábitos",
       "comments": "Comments & Mentions",
-      "taskReminders": "Recordatorios de tareas"
+      "taskReminders": "Recordatorios de tareas",
+      "habitReminders": "Recordatorios de hábitos"
     },
     "descriptions": {
       "dueTasks": "Tareas que vencen en 24 horas",
@@ -3137,7 +3138,8 @@
       "taskAssigned": "Se te asignó una tarea por otra persona",
       "habitReminders": "A la hora de recordatorio del hábito, mientras siga pendiente",
       "comments": "Replies, comments on your tasks, and @mentions",
-      "taskReminders": "La hora que fijas en una tarea. Suena tu móvil; añade Escritorio si quieres que suene también el ordenador"
+      "taskReminders": "La hora que fijas en una tarea. Suena tu móvil; añade Escritorio si quieres que suene también el ordenador",
+      "habitReminders": "Tu móvil ya te los recuerda; activa Push solo si quieres que el servidor también suene."
     },
     "telegram": {
       "notConfigured": {

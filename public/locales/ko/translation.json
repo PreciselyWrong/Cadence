@@ -3133,7 +3133,8 @@
       "taskAssigned": "작업 할당됨",
       "habitReminders": "습관 알림",
       "comments": "Comments & Mentions",
-      "taskReminders": "작업 알림"
+      "taskReminders": "작업 알림",
+      "habitReminders": "습관 알림"
     },
     "descriptions": {
       "dueTasks": "24시간 이내에 기한이 도래하는 작업",
@@ -3144,7 +3145,8 @@
       "taskAssigned": "다른 사람이 당신에게 작업을 할당했습니다",
       "habitReminders": "습관에 설정한 알림 시간에, 아직 완료되지 않았을 때",
       "comments": "Replies, comments on your tasks, and @mentions",
-      "taskReminders": "작업에 설정한 시간입니다. 휴대폰이 울립니다. 컴퓨터도 울리게 하려면 데스크톱을 추가하세요"
+      "taskReminders": "작업에 설정한 시간입니다. 휴대폰이 울립니다. 컴퓨터도 울리게 하려면 데스크톱을 추가하세요",
+      "habitReminders": "휴대폰이 이미 알려 줍니다. 서버에서도 울리게 하려면 푸시를 켜세요."
     },
     "telegram": {
       "notConfigured": {

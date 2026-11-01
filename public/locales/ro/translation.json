@@ -3141,7 +3141,8 @@
       "taskAssigned": "Sarcină atribuită",
       "habitReminders": "Mementouri pentru obiceiuri",
       "comments": "Comments & Mentions",
-      "taskReminders": "Mementouri pentru sarcini"
+      "taskReminders": "Mementouri pentru sarcini",
+      "habitReminders": "Mementouri pentru obiceiuri"
     },
     "descriptions": {
       "dueTasks": "Sarcini care sunt scadente în următoarele 24 de ore",
@@ -3152,7 +3153,8 @@
       "taskAssigned": "O sarcină a fost atribuită de altcineva",
       "habitReminders": "La ora de reamintire setată pentru un obicei, cât timp este încă deschis",
       "comments": "Replies, comments on your tasks, and @mentions",
-      "taskReminders": "Ora stabilită pe o sarcină. Sună telefonul; adaugă Calculator dacă vrei să sune și computerul"
+      "taskReminders": "Ora stabilită pe o sarcină. Sună telefonul; adaugă Calculator dacă vrei să sune și computerul",
+      "habitReminders": "Telefonul te anunță deja; activează Push doar dacă vrei ca serverul să sune și el."
     },
     "telegram": {
       "notConfigured": {

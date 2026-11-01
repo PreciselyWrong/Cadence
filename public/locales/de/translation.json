@@ -3142,7 +3142,8 @@
       "taskAssigned": "Aufgabe zugewiesen",
       "habitReminders": "Gewohnheits-Erinnerungen",
       "comments": "Comments & Mentions",
-      "taskReminders": "Aufgabenerinnerungen"
+      "taskReminders": "Aufgabenerinnerungen",
+      "habitReminders": "Gewohnheitserinnerungen"
     },
     "descriptions": {
       "dueTasks": "Aufgaben, die innerhalb von 24 Stunden fällig sind",
@@ -3153,7 +3154,8 @@
       "taskAssigned": "Eine Aufgabe wurde Ihnen von jemand anderem zugewiesen",
       "habitReminders": "Zur bei der Gewohnheit eingestellten Zeit, solange sie noch offen ist",
       "comments": "Replies, comments on your tasks, and @mentions",
-      "taskReminders": "Die Zeit, die du an einer Aufgabe festlegst. Dein Handy klingelt; aktiviere Desktop, wenn auch dein Computer klingeln soll"
+      "taskReminders": "Die Zeit, die du an einer Aufgabe festlegst. Dein Handy klingelt; aktiviere Desktop, wenn auch dein Computer klingeln soll",
+      "habitReminders": "Dein Handy erinnert dich bereits; aktiviere Push nur, wenn der Server auch klingeln soll."
     },
     "telegram": {
       "notConfigured": {

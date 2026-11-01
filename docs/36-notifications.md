@@ -4,7 +4,7 @@ One voice, no guilt, set and forget. Cadence tells you when something is **due s
 
 **Related:** [Recurring tasks](01-recurring-tasks-behavior.md), [Webhooks](27-webhooks.md), [Offline sync](30-offline-sync.md), [Desktop client](fork/DESKTOP.md)
 
-Code: `backend/models/notification.js` (create and deliver), `backend/utils/notificationPreferences.js` (who gets what), `backend/utils/quietHours.js`, `backend/modules/tasks/{dueTaskService,deferredTaskService,taskReminderService}.js`, `backend/modules/projects/dueProjectService.js`, `desktop/src-tauri/src/sync.rs`. Settings: Profile, Notifications.
+Code: `backend/models/notification.js` (create and deliver), `backend/utils/notificationPreferences.js` (who gets what), `backend/utils/quietHours.js`, `backend/modules/tasks/{dueTaskService,deferredTaskService,taskReminderService}.js`, `backend/modules/habits/cadence/reminderService.js`, `backend/modules/projects/dueProjectService.js`, `desktop/src-tauri/src/sync.rs`. Settings: Profile, Notifications.
 
 ## What triggers a notification
 
@@ -12,6 +12,7 @@ Code: `backend/models/notification.js` (create and deliver), `backend/utils/noti
 | --- | --- | --- |
 | Due tasks / projects (`dueTasks`, `dueProjects`) | A task or project becomes due within 24 hours | **Once per due date.** While unread it is refreshed in place (same notification, same `uid` and `created_at`); if the due date moves, the unread one is updated, never destroyed and recreated. Read or dismissed ones are left alone. |
 | Task reminders (`taskReminders`) | `reminder_at` is reached | Once per `reminder_at`. A recurring task shifts `reminder_at` with its due date, see below. |
+| Habit reminders (`habitReminders`) | A `habit_reminder` time is reached in the user's timezone | Once per reminder per local day, see [Habit reminders](#habit-reminders). |
 | Defer until (`deferUntil`) | A deferred task becomes active | Once per task per `defer_until`, and only if that date passed within the last day. |
 | Task assigned, comments and mentions | Someone else acts | Immediately. |
 
@@ -24,9 +25,23 @@ Each type has its own switches: **In-app, Push, Telegram, Apprise, Desktop**. Em
 - The notification row is always the record; the external channels do not depend on **In-app**. A task reminder with In-app off and Push on still rings the phone: the row is stored already read, so no badge appears.
 - Server-side the chosen channels are written to the notification `sources` (`push`, `apprise`, `telegram`, `desktop`).
 - **The phone owns task reminders.** Android sets the alarm itself; `taskReminders.desktop` is **off by default**. Turn it on for a row only if you want the computer to ring too.
+- **The phone owns habit reminders too.** `habitReminders` is in-app only by default: Push, Telegram, Apprise and Desktop are off, so the phone is the one voice. Turn a channel on only if you want the server to ring there too.
 - **Desktop is on by default** for due soon (tasks and projects) and for deferred-now-active, off for everything else. A stored explicit choice always wins.
 - The desktop client (`desktop/`) shows a notification only when its `sources` contain `desktop`, once per notification `uid` (the last 500 uids are remembered on disk), and not before `deliver_after`.
 - Telegram receives due-soon items as one batch per run; push and Apprise send per notification. A channel is not repeated for the same notification within 24 hours.
+
+## Habit reminders
+
+The `habit_reminders` job (every minute, `backend/modules/habits/cadence/reminderService.js`, one process at a time through `withJobLock`, off in tests and with `DISABLE_SCHEDULER=true`) reads the synced `habit_reminder` rows and creates a notification (`type: reminder`, `data.reason: habit_reminder`, message `Rappel : <habit>`, never a word about being late) when all of this holds, in the user's profile timezone:
+
+- the reminder is enabled and its habit is active and not archived;
+- the local time of the reminder was reached within the last 10 minutes (a server that was down longer misses it rather than ringing a morning reminder in the evening);
+- its weekday matches `days_of_week` (empty means every day);
+- the habit is not paused that day, and the JS rule engine says the habit is due: a **conditional** reminder (the default) rings only while the period still needs attention, so not once the goal is met; a non-conditional one rings on the days the habit is planned. This is the rule the phone applies to its own alarms.
+
+Once per reminder per local day: the notification carries `data.reminderUid` and `data.date`, and a reminder that already has one for that date is skipped. The row is stored unread when In-app is on; with In-app off and no external channel nothing is created, and with only an external channel the row is stored already read. Chosen channels go to `sources`, and quiet hours hold them through `deliver_after` like any other notification. The webhook event is `habit.reminder`.
+
+Preference key for settings screens: `habitReminders` (`inApp: true`, `push`, `telegram`, `apprise`, `desktop`: `false` by default).
 
 ## Quiet hours
 

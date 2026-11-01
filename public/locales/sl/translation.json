@@ -3145,7 +3145,8 @@
       "taskAssigned": "Naloga dodeljena",
       "habitReminders": "Opomniki za navade",
       "comments": "Comments & Mentions",
-      "taskReminders": "Opomniki za naloge"
+      "taskReminders": "Opomniki za naloge",
+      "habitReminders": "Opomniki za navade"
     },
     "descriptions": {
       "dueTasks": "Naloge, ki zapadejo v 24 urah",
@@ -3156,7 +3157,8 @@
       "taskAssigned": "Naloga je bila dodeljena vam s strani nekoga drugega",
       "habitReminders": "Ob uri opomnika, nastavljeni pri navadi, dokler je še odprta",
       "comments": "Replies, comments on your tasks, and @mentions",
-      "taskReminders": "Čas, ki ga nastavite pri nalogi. Zvoni telefon; dodajte Računalnik, če želite, da zvoni tudi računalnik"
+      "taskReminders": "Čas, ki ga nastavite pri nalogi. Zvoni telefon; dodajte Računalnik, če želite, da zvoni tudi računalnik",
+      "habitReminders": "Telefon vas nanje že opomni; vklopite Push le, če naj zvoni tudi strežnik."
     },
     "telegram": {
       "notConfigured": {

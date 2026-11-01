@@ -13,7 +13,7 @@ const { runWithOp } = require('./context');
 const { applyOccurrence } = require('./occurrences');
 const { runExclusive } = require('./rowMutex');
 const { purgedThrough } = require('./compaction');
-const { withRowLock } = require('../../utils/db-dialect');
+const { withRowLock, lockNewRow } = require('../../utils/db-dialect');
 const todoMdSync = require('../todo-md/syncHook');
 
 const UID_FORMAT = /^[A-Za-z0-9_-]{8,64}$/;
@@ -299,7 +299,13 @@ function mergeLocked(userId, op, lastTry) {
 async function mergeUpsert(userId, op, { transaction, lock }, lastTry) {
     const def = ENTITIES[op.entity];
     const Model = models()[def.model];
-    const row = await findByUid(def, userId, op.uid, { transaction, lock });
+    let row = await findByUid(def, userId, op.uid, { transaction, lock });
+    if (
+        !row &&
+        (await lockNewRow(models().sequelize, transaction, rowKey(userId, op)))
+    ) {
+        row = await findByUid(def, userId, op.uid, { transaction, lock });
+    }
     // Checked again: the row may have gone, or come, since the first read.
     const refused = await refuseUpsert(userId, op, row, transaction);
     if (refused) throw new Refusal(refused.reason);
@@ -339,8 +345,18 @@ async function mergeUpsert(userId, op, { transaction, lock }, lastTry) {
     const previous = row && def.afterApply ? row.toJSON() : null;
     const writeOptions = { syncApplied: true, transaction };
     let target = row;
+    let creating = false;
+    // Another process made the row meanwhile: its insert collides on the
+    // uid, or ours fails validation first (the pushed fields alone are not a
+    // whole row) and the row is there when read again.
+    const lostCreateRace = async (error) =>
+        error.name === 'SequelizeUniqueConstraintError' ||
+        (creating &&
+            error.name === 'SequelizeValidationError' &&
+            !!(await findByUid(def, userId, op.uid, { transaction })));
     try {
         if (!target) {
+            creating = true;
             target = await Model.create(
                 {
                     ...values,
@@ -350,6 +366,7 @@ async function mergeUpsert(userId, op, { transaction, lock }, lastTry) {
                 },
                 writeOptions
             );
+            creating = false;
         } else if (Object.keys(values).length > 0) {
             target.set({ ...values, field_clocks: clocks });
             await target.save(writeOptions);
@@ -360,11 +377,7 @@ async function mergeUpsert(userId, op, { transaction, lock }, lastTry) {
         }
         await writeLists(def, target, listValues, transaction);
     } catch (error) {
-        if (
-            !row &&
-            !lastTry &&
-            error.name === 'SequelizeUniqueConstraintError'
-        ) {
+        if (!row && !lastTry && (await lostCreateRace(error))) {
             throw new CreateRaceLost();
         }
         if (error.name && error.name.startsWith('Sequelize')) {

@@ -69,6 +69,14 @@ describe('notificationPreferences utils', () => {
                     apprise: false,
                     desktop: false,
                 },
+                habitReminders: {
+                    inApp: true,
+                    email: false,
+                    push: false,
+                    telegram: false,
+                    apprise: false,
+                    desktop: false,
+                },
                 comments: {
                     inApp: true,
                     email: false,
@@ -241,6 +249,7 @@ describe('notificationPreferences utils', () => {
                 project_overdue: 'overdueProjects',
                 task_assigned: 'taskAssigned',
                 task_reminder: 'taskReminders',
+                habit_reminder: 'habitReminders',
                 comment_added: 'comments',
                 mention: 'comments',
             });
@@ -416,6 +425,14 @@ describe('notificationPreferences utils', () => {
                     apprise: false,
                     desktop: false,
                 },
+                habitReminders: {
+                    inApp: true,
+                    email: false,
+                    push: false,
+                    telegram: false,
+                    apprise: false,
+                    desktop: false,
+                },
                 comments: {
                     inApp: true,
                     email: false,
@@ -559,6 +576,20 @@ describe('desktop channel', () => {
         });
         expect(result.dueTasks.desktop).toBe(true);
         expect(result.taskReminders.desktop).toBe(false);
-        expect(result.habitReminders).toBeUndefined();
+        expect(result.habitReminders).toEqual({
+            inApp: true,
+            email: false,
+            push: false,
+            telegram: false,
+            apprise: false,
+            desktop: false,
+        });
+    });
+
+    it('maps habit reminders to their own key, in-app only by default', () => {
+        expect(NOTIFICATION_TYPE_MAPPING.habit_reminder).toBe('habitReminders');
+        const user = { notification_preferences: {} };
+        expect(shouldSendInAppNotification(user, 'habit_reminder')).toBe(true);
+        expect(deliverySources(user, 'habit_reminder')).toEqual([]);
     });
 });

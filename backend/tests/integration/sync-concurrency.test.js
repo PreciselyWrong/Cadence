@@ -104,6 +104,62 @@ describe('Offline sync under concurrent pushes', () => {
         expect(tasks[0].note).toBe('From B');
     });
 
+    // Another process commits its create of the row between this one's read
+    // ("no such row") and its insert. The pushed fields alone are not a valid
+    // new task (no name), so the create fails validation before the database
+    // can report the duplicate uid: the row that now exists must be merged
+    // into, not the push refused.
+    it('merges a create that is not valid alone into the row another process just made', async () => {
+        let competitorDone = false;
+        Task.addHook('beforeValidate', 'competingCreate', async (task) => {
+            if (competitorDone || task.uid !== 'racetask000003') return;
+            competitorDone = true;
+            await Task.create({
+                uid: 'racetask000003',
+                user_id: user.id,
+                name: 'From A',
+            });
+        });
+
+        let response;
+        try {
+            response = await syncService.push(user.id, [
+                upsert(
+                    'race-late-b',
+                    'racetask000003',
+                    { note: 'From B' },
+                    hlc(41, 0, 'devB')
+                ),
+            ]);
+        } finally {
+            Task.removeHook('beforeValidate', 'competingCreate');
+        }
+
+        expect(competitorDone).toBe(true);
+        expect(statusOf(response)).toBe('applied');
+        const tasks = await Task.findAll({ where: { uid: 'racetask000003' } });
+        expect(tasks).toHaveLength(1);
+        expect(tasks[0].name).toBe('From A');
+        expect(tasks[0].note).toBe('From B');
+    });
+
+    it('still refuses a create that is not valid and finds no row', async () => {
+        const response = await syncService.push(user.id, [
+            upsert(
+                'race-invalid',
+                'racetask000004',
+                { note: 'No name' },
+                hlc(42, 0, 'devB')
+            ),
+        ]);
+
+        expect(response.results[0]).toMatchObject({
+            status: 'rejected',
+            reason: 'invalid_value',
+        });
+        expect(await Task.count({ where: { uid: 'racetask000004' } })).toBe(0);
+    });
+
     describe('recurring occurrences', () => {
         const DUE = '2026-11-02T09:00:00.000Z';
         const occurrence = (opId) => ({

@@ -69,6 +69,16 @@ const DEFAULT_PREFERENCES = {
         apprise: false,
         desktop: false,
     },
+    // The phone rings habit reminders itself (one voice): the server row is
+    // the in-app record, the other channels are opt-in.
+    habitReminders: {
+        inApp: true,
+        email: false,
+        push: false,
+        telegram: false,
+        apprise: false,
+        desktop: false,
+    },
 };
 
 /**
@@ -77,6 +87,7 @@ const DEFAULT_PREFERENCES = {
 const NOTIFICATION_TYPE_MAPPING = {
     task_due_soon: 'dueTasks',
     task_reminder: 'taskReminders',
+    habit_reminder: 'habitReminders',
     task_overdue: 'overdueTasks',
     project_due_soon: 'dueProjects',
     project_overdue: 'overdueProjects',

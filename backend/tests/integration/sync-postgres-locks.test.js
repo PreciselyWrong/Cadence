@@ -126,6 +126,36 @@ describeOnPostgres('Offline sync locks across processes (PostgreSQL)', () => {
         });
     });
 
+    // The loser's fields are not a valid task alone (no name), so its create
+    // fails validation before the unique index could make it wait: the
+    // creation lock makes it wait for the winner and merge into its row.
+    it('merges a create that is not valid alone onto the winning row', async () => {
+        const [a, b] = await Promise.all([
+            syncService.push(user.id, [
+                upsert(
+                    'pg-partial-a',
+                    'pglocktask0003',
+                    { name: 'From A' },
+                    hlc(40, 0, 'devA')
+                ),
+            ]),
+            syncService.push(user.id, [
+                upsert(
+                    'pg-partial-b',
+                    'pglocktask0003',
+                    { note: 'From B' },
+                    hlc(41, 0, 'devB')
+                ),
+            ]),
+        ]);
+
+        expect([statusOf(a), statusOf(b)]).toEqual(['applied', 'applied']);
+        const tasks = await Task.findAll({ where: { uid: 'pglocktask0003' } });
+        expect(tasks).toHaveLength(1);
+        expect(tasks[0].name).toBe('From A');
+        expect(tasks[0].note).toBe('From B');
+    });
+
     // A pull that returned id N never reads below it again, so a later id
     // must not become visible while an earlier one is still uncommitted.
     it('makes journal ids visible in commit order per user', async () => {

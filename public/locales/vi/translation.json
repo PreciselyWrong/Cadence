@@ -3133,7 +3133,8 @@
       "taskAssigned": "Nhiệm vụ đã được giao",
       "habitReminders": "Nhắc nhở thói quen",
       "comments": "Comments & Mentions",
-      "taskReminders": "Nhắc nhở công việc"
+      "taskReminders": "Nhắc nhở công việc",
+      "habitReminders": "Nhắc nhở thói quen"
     },
     "descriptions": {
       "dueTasks": "Công việc đến hạn trong vòng 24 giờ",
@@ -3144,7 +3145,8 @@
       "taskAssigned": "Một nhiệm vụ đã được giao cho bạn bởi người khác",
       "habitReminders": "Vào giờ nhắc đặt cho thói quen, khi thói quen đó vẫn còn mở",
       "comments": "Replies, comments on your tasks, and @mentions",
-      "taskReminders": "Giờ bạn đặt cho một công việc. Điện thoại sẽ đổ chuông; bật Máy tính nếu muốn máy tính cũng kêu"
+      "taskReminders": "Giờ bạn đặt cho một công việc. Điện thoại sẽ đổ chuông; bật Máy tính nếu muốn máy tính cũng kêu",
+      "habitReminders": "Điện thoại đã nhắc bạn rồi; chỉ bật Push nếu bạn muốn máy chủ cũng đổ chuông."
     },
     "telegram": {
       "notConfigured": {

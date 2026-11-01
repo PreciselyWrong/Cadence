@@ -3133,7 +3133,8 @@
       "taskAssigned": "Taak Toegewezen",
       "habitReminders": "Gewoonteherinneringen",
       "comments": "Comments & Mentions",
-      "taskReminders": "Taakherinneringen"
+      "taskReminders": "Taakherinneringen",
+      "habitReminders": "Gewoonte-herinneringen"
     },
     "descriptions": {
       "dueTasks": "Taken die binnen 24 uur vervallen",
@@ -3144,7 +3145,8 @@
       "taskAssigned": "Een taak is aan jou toegewezen door iemand anders",
       "habitReminders": "Op het herinneringstijdstip van een gewoonte, zolang die nog open staat",
       "comments": "Replies, comments on your tasks, and @mentions",
-      "taskReminders": "De tijd die je bij een taak instelt. Je telefoon gaat af; zet Desktop aan als je computer ook moet afgaan"
+      "taskReminders": "De tijd die je bij een taak instelt. Je telefoon gaat af; zet Desktop aan als je computer ook moet afgaan",
+      "habitReminders": "Je telefoon herinnert je er al aan; zet Push alleen aan als de server ook moet afgaan."
     },
     "telegram": {
       "notConfigured": {

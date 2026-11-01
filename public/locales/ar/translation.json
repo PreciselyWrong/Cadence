@@ -3157,7 +3157,8 @@
       "taskAssigned": "مهمة معينة",
       "habitReminders": "تذكيرات العادات",
       "comments": "Comments & Mentions",
-      "taskReminders": "تذكيرات المهام"
+      "taskReminders": "تذكيرات المهام",
+      "habitReminders": "تذكيرات العادات"
     },
     "descriptions": {
       "dueTasks": "المهام المستحقة خلال 24 ساعة",
@@ -3168,7 +3169,8 @@
       "taskAssigned": "تم تعيين مهمة لك من قبل شخص آخر",
       "habitReminders": "في وقت التذكير المحدد للعادة، ما دامت لم تُنجز بعد",
       "comments": "Replies, comments on your tasks, and @mentions",
-      "taskReminders": "الوقت الذي تحدده لمهمة. يرن هاتفك؛ أضف الكمبيوتر إن أردت أن يرن حاسوبك أيضًا"
+      "taskReminders": "الوقت الذي تحدده لمهمة. يرن هاتفك؛ أضف الكمبيوتر إن أردت أن يرن حاسوبك أيضًا",
+      "habitReminders": "هاتفك يذكّرك بها بالفعل؛ فعّل الدفع فقط إن أردت أن يرن الخادم أيضًا."
     },
     "telegram": {
       "notConfigured": {

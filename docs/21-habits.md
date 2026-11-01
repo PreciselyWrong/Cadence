@@ -2,11 +2,11 @@
 
 Habits are Cadence habits: the model of the Android app (goal and schedule versions, limits, pauses, timers, groups), stored on the server so that every device and the web read and write the same data. The pages `/habits` and `/habit/:uid` show them ([Web screens](#web-screens)); the API is `/api/cadence/*` ([REST](#rest)); the phone syncs them through the [offline sync](30-offline-sync.md). The MCP habit tools use the same operations ([MCP](#mcp)).
 
-A habit is not a task: it never appears in a task list, and it collects entries, not completions. Reminders of a habit are the phone's (`habit_reminder` rows are synced, the server sends none).
+A habit is not a task: it never appears in a task list, and it collects entries, not completions. Reminders of a habit ring on the phone from its own alarms (`habit_reminder` rows are synced); the server also reads them to add an in-app notification, by default the only thing it sends ([Habit reminders](36-notifications.md#habit-reminders)).
 
 ## Habits from before Cadence habits
 
-Until the Cadence habits, habits were tasks with `habit_mode = true`, served by `/api/habits` with their own engine and a reminder job. That module is removed: no `/api/habits` route, no `habit_reminders` scheduler job, no habit engine on the server.
+Until the Cadence habits, habits were tasks with `habit_mode = true`, served by `/api/habits` with their own engine and a reminder job. That module is removed: no `/api/habits` route, no habit engine for those tasks. The reminder job is back, rebuilt on the Cadence habits (`habit_reminders` scheduler job, [Habit reminders](36-notifications.md#habit-reminders)).
 
 What stays, because old installs still have the data:
 
@@ -15,7 +15,7 @@ What stays, because old installs still have the data:
 - **The rows.** They are not deleted after the import. They stay out of every task list instead: All tasks, Today, Upcoming, the calendar, the planner and the Today metrics skip `habit_mode` tasks. Review, the spreadsheet export, Google sync, webhook summaries and Everyone already did.
 - **Data export and import** (`userDataTransfer`) keep carrying the `habit_*` columns of those tasks.
 - **CalDAV** still maps `habit_mode` tasks to VTODO items like any other task.
-- **The `habitReminders` notification preference** is still stored and accepted; nothing sends that kind of notification now.
+- **The `habitReminders` notification preference** was dead for a while and is the type key of the new server-side habit reminders again (in-app on, every other channel off by default).
 
 Onboarding starters create Cadence habits (a yes/no every day, on chosen weekdays, or once a week).
 
