@@ -13,7 +13,7 @@ const DEFAULT_TOKEN_DAYS = 30;
 const MAX_TOKEN_DAYS = 365;
 
 // The public origin the connector is reached at, e.g.
-// https://cadence.nicolab.ch. Every URL in the metadata is built from it,
+// https://cadence.example.com. Every URL in the metadata is built from it,
 // never from Host or X-Forwarded-Host, which a client can set. Unset (or
 // not an https origin, except localhost) means the server is off.
 function publicBase() {

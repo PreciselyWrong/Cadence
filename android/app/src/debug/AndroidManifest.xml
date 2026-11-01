@@ -3,6 +3,7 @@
     <application>
         <receiver
             android:name="ch.nicolab.cadence.debug.DummyDataReceiver"
-            android:exported="true" />
+            android:exported="true"
+            android:permission="android.permission.DUMP" />
     </application>
 </manifest>

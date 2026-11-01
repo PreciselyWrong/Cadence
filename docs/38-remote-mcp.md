@@ -1,6 +1,6 @@
 # Remote MCP connector (claude.ai)
 
-How to add Cadence as a **custom connector** in claude.ai (web, Desktop, mobile) at a public URL such as `https://cadence.nicolab.ch/mcp`, published through a Cloudflare Tunnel, while the web app, `/api/*` and `/api/v1/sync` stay on Tailscale or the LAN.
+How to add Cadence as a **custom connector** in claude.ai (web, Desktop, mobile) at a public URL such as `https://cadence.example.com/mcp`, published through a Cloudflare Tunnel, while the web app, `/api/*` and `/api/v1/sync` stay on Tailscale or the LAN.
 
 **Related:** [MCP Integration](14-mcp-integration.md), [User Management](08-user-management.md), [Two-factor sign-in](29-two-factor-sign-in.md)
 
@@ -96,15 +96,15 @@ Anthropic's egress range is shared by every Claude user, so nothing on the machi
 
 | Variable | Value | Why |
 |---|---|---|
-| `TUDUDI_PUBLIC_MCP_URL` | `https://cadence.nicolab.ch` | Turns the authorization server and the root `/mcp` on (both `404` without it); every URL in the metadata is built from it, never from `Host` or `X-Forwarded-Host`. Must be an `https` origin |
-| `TUDUDI_MCP_OAUTH_ALLOWED_EMAILS` | `coppens.n@gmail.com` | Comma-separated accounts allowed to open a pairing and consent (case does not matter). Unset: admins only |
+| `TUDUDI_PUBLIC_MCP_URL` | `https://cadence.example.com` | Turns the authorization server and the root `/mcp` on (both `404` without it); every URL in the metadata is built from it, never from `Host` or `X-Forwarded-Host`. Must be an `https` origin |
+| `TUDUDI_MCP_OAUTH_ALLOWED_EMAILS` | `you@example.com` | Comma-separated accounts allowed to open a pairing and consent (case does not matter). Unset: admins only |
 | `TUDUDI_MCP_OAUTH_REDIRECT_URIS` | leave unset | Default: `https://claude.ai/api/mcp/auth_callback,https://claude.com/api/mcp/auth_callback`. Set it (comma-separated, exact match) to narrow it; clients registered for a removed URI stop working |
 | `TUDUDI_MCP_OAUTH_TOKEN_DAYS` | `30` (default) | Token lifetime, 1 to 365 days |
 | `TUDUDI_SESSION_SECRET` | already set, keep it | Signs the client ids; if it changes (or is unset, which makes a new one at each start), claude.ai has to connect again and the old `Claude MCP (…)` keys must be revoked by hand (see [Tokens](#tokens)). Cadence logs an error at start when it is missing |
 | `TUDUDI_TRUST_PROXY` | the address cloudflared's requests come from, e.g. `172.17.0.1` (see below) | So `req.ip` in the logs, the audit log and the consent-page limiter is the caller (`X-Forwarded-For` from cloudflared) rather than cloudflared. Use that one address, not a hop count (`1`) or a broad range: every address you trust can choose the IP that gets logged |
 | `PASSWORD_AUTH_ENABLED` | unset or `true` | The consent page signs in with your password |
 
-**Finding the address for `TUDUDI_TRUST_PROXY`.** With the variable unset, open `https://cadence.nicolab.ch/oauth/authorize` after the Access code (check 6 below), then read the `remoteAddress` of that request in the request log (`docker logs Cadence 2>&1 | grep oauth/authorize | tail -1`). When cloudflared runs as a container on Unraid's default bridge and reaches Cadence at `<unraid-lan-ip>:3002`, that is usually the bridge gateway `172.17.0.1`; with both containers on a custom network, it is cloudflared's address on it (`docker inspect cloudflared --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'`). If a LAN reverse proxy already needs `TUDUDI_TRUST_PROXY`, list both addresses, comma-separated.
+**Finding the address for `TUDUDI_TRUST_PROXY`.** With the variable unset, open `https://cadence.example.com/oauth/authorize` after the Access code (check 6 below), then read the `remoteAddress` of that request in the request log (`docker logs Cadence 2>&1 | grep oauth/authorize | tail -1`). When cloudflared runs as a container on Unraid's default bridge and reaches Cadence at `<unraid-lan-ip>:3002`, that is usually the bridge gateway `172.17.0.1`; with both containers on a custom network, it is cloudflared's address on it (`docker inspect cloudflared --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'`). If a LAN reverse proxy already needs `TUDUDI_TRUST_PROXY`, list both addresses, comma-separated.
 
 **Sign-up must stay closed.** Registration is off by default and stored in the database (`registration_enabled`). Check it from Tailscale:
 
@@ -116,7 +116,7 @@ If it says `true`, an admin turns it off with `POST /api/admin/toggle-registrati
 
 **Two-factor sign-in is required** for the account that connects: Profile › Security › turn on two-factor sign-in ([Two-factor sign-in](29-two-factor-sign-in.md)). Without it the pairing button and the consent page both refuse (`mfa_required`).
 
-Restart the container, then from Tailscale check `curl -s http://<host>:3002/.well-known/oauth-authorization-server` shows `https://cadence.nicolab.ch/...` URLs.
+Restart the container, then from Tailscale check `curl -s http://<host>:3002/.well-known/oauth-authorization-server` shows `https://cadence.example.com/...` URLs.
 
 ## Cloudflare
 
@@ -139,22 +139,22 @@ Locally managed tunnel (`config.yml`), above the existing rules:
 
 ```yaml
 ingress:
-  - hostname: cadence.nicolab.ch
+  - hostname: cadence.example.com
     path: ^/(mcp|oauth/(authorize|token|register)|\.well-known/oauth-(protected-resource(/mcp)?|authorization-server))$
     service: http://<unraid-lan-ip>:3002
-  - hostname: cadence.nicolab.ch
+  - hostname: cadence.example.com
     service: http_status:404
   # ... existing rules ...
   - service: http_status:404
 ```
 
-Validate with `cloudflared tunnel ingress validate` and test a path with `cloudflared tunnel ingress rule https://cadence.nicolab.ch/api/tasks` (must match the 404 rule).
+Validate with `cloudflared tunnel ingress validate` and test a path with `cloudflared tunnel ingress rule https://cadence.example.com/api/tasks` (must match the 404 rule).
 
-Dashboard-managed tunnel (Zero Trust › Networks › Tunnels › your tunnel › Public hostname): add `cadence.nicolab.ch` with **Path** set to the same regular expression and service `HTTP` `<unraid-lan-ip>:3002`. Requests to any other path on that hostname fall through to the tunnel's catch-all `404`.
+Dashboard-managed tunnel (Zero Trust › Networks › Tunnels › your tunnel › Public hostname): add `cadence.example.com` with **Path** set to the same regular expression and service `HTTP` `<unraid-lan-ip>:3002`. Requests to any other path on that hostname fall through to the tunnel's catch-all `404`.
 
-On a dashboard-managed tunnel, make sure no wildcard public hostname (e.g. `*.nicolab.ch`) comes after this rule: unmatched paths would reach that wildcard's service instead of the 404.
+On a dashboard-managed tunnel, make sure no wildcard public hostname (e.g. `*.example.com`) comes after this rule: unmatched paths would reach that wildcard's service instead of the 404.
 
-Keep **no** `cadence.nicolab.ch` DNS record other than the tunnel's CNAME, so nothing bypasses the tunnel.
+Keep **no** `cadence.example.com` DNS record other than the tunnel's CNAME, so nothing bypasses the tunnel.
 
 ### 2. WAF custom rules (lock 2)
 
@@ -163,7 +163,7 @@ Security › WAF › Custom rules › Create rule. Rules 1 and 3 are required; r
 **Rule 1, Block — machine paths only from Anthropic:**
 
 ```
-(http.host eq "cadence.nicolab.ch"
+(http.host eq "cadence.example.com"
  and http.request.uri.path in {"/mcp" "/oauth/token" "/oauth/register" "/.well-known/oauth-protected-resource" "/.well-known/oauth-protected-resource/mcp" "/.well-known/oauth-authorization-server"}
  and not ip.src in {160.79.104.0/21})
 ```
@@ -171,7 +171,7 @@ Security › WAF › Custom rules › Create rule. Rules 1 and 3 are required; r
 **Rule 2 (optional), Block — only the expected methods:**
 
 ```
-(http.host eq "cadence.nicolab.ch"
+(http.host eq "cadence.example.com"
  and ((http.request.uri.path eq "/mcp" and http.request.method ne "POST")
    or (http.request.uri.path in {"/oauth/token" "/oauth/register"} and http.request.method ne "POST")))
 ```
@@ -179,10 +179,10 @@ Security › WAF › Custom rules › Create rule. Rules 1 and 3 are required; r
 **Rule 3, Block — no percent-encoded paths.** Rule 1 compares literal paths; an encoded one (`/oauth/%74oken`, `/oauth%2Fregister`) could otherwise reach the tunnel without matching it. Matching on `%` in the raw path works whatever Cloudflare's URL normalization settings are:
 
 ```
-(http.host eq "cadence.nicolab.ch" and raw.http.request.uri.path contains "%")
+(http.host eq "cadence.example.com" and raw.http.request.uri.path contains "%")
 ```
 
-Claude's calls come from servers, not browsers: for `cadence.nicolab.ch`, keep **Bot Fight Mode**, **Block AI bots / AI Crawl Control** and **Browser Integrity Check** off, or skip them for this host with a configuration or skip rule. Otherwise `/mcp` and `/oauth/token` get a challenge and the connection never completes.
+Claude's calls come from servers, not browsers: for `cadence.example.com`, keep **Bot Fight Mode**, **Block AI bots / AI Crawl Control** and **Browser Integrity Check** off, or skip them for this host with a configuration or skip rule. Otherwise `/mcp` and `/oauth/token` get a challenge and the connection never completes.
 
 Re-check [Anthropic's IP page](https://platform.claude.com/docs/en/api/ip-addresses) from time to time; if the range changes the connector stops working (fail closed), it never opens up.
 
@@ -190,9 +190,9 @@ Re-check [Anthropic's IP page](https://platform.claude.com/docs/en/api/ip-addres
 
 Zero Trust › Access › Applications › Add › Self-hosted:
 
-- **Application domain:** `cadence.nicolab.ch`, **path** `oauth/authorize`. Only that path: claude.ai's servers call the other endpoints and cannot pass Access.
+- **Application domain:** `cadence.example.com`, **path** `oauth/authorize`. Only that path: claude.ai's servers call the other endpoints and cannot pass Access.
 - **Session duration:** short, e.g. 15 minutes.
-- **Policy:** Allow, Include › Emails › `coppens.n@gmail.com`
+- **Policy:** Allow, Include › Emails › `you@example.com`
 - **Login method:** One-time PIN (Settings › Authentication).
 
 Do not enable "Bypass" or "Service auth" policies on this application.
@@ -200,7 +200,7 @@ Do not enable "Bypass" or "Service auth" policies on this application.
 ### 4. Pair, then connect in claude.ai (lock 4)
 
 1. In Cadence over Tailscale: Profile › MCP › **Authorize a new connector**. The card shows the URL to add and until when Cadence waits.
-2. Within those 10 minutes, in claude.ai: Customize › Connectors › **Add custom connector** › URL `https://cadence.nicolab.ch/mcp`, leave the OAuth client ID and secret empty (Claude registers itself). Click **Connect**: the Access email code, then the Cadence consent page (check the client registered "less than a minute ago"), then back to claude.ai.
+2. Within those 10 minutes, in claude.ai: Customize › Connectors › **Add custom connector** › URL `https://cadence.example.com/mcp`, leave the OAuth client ID and secret empty (Claude registers itself). Click **Connect**: the Access email code, then the Cadence consent page (check the client registered "less than a minute ago"), then back to claude.ai.
 
 To reconnect later (token expired or revoked), click **Authorize a new connector** again, then **Connect** in claude.ai.
 
@@ -212,11 +212,11 @@ Run 1 to 6 from your own machine (not from Anthropic's range), the rest as descr
 
 | # | Check | Expected |
 |---|---|---|
-| 1 | `curl -si -X POST https://cadence.nicolab.ch/mcp` | `403` (WAF block page) |
-| 2 | `curl -si https://cadence.nicolab.ch/` and `/api/tasks`, `/api/v1/sync`, `/api/login`, `/login` | `404` from the tunnel |
-| 3 | `curl -si https://cadence.nicolab.ch/oauth/token -d grant_type=x`, then `curl -si -X POST https://cadence.nicolab.ch/oauth/%72egister` and `curl -si -X POST https://cadence.nicolab.ch/oauth%2Fregister` | `403` each (WAF rule 1, then rule 3) |
-| 4 | `curl -si https://cadence.nicolab.ch/.well-known/oauth-authorization-server` | `403` (WAF) |
-| 5 | Open `https://cadence.nicolab.ch/oauth/authorize` in a private window | Cloudflare Access login, not Cadence |
+| 1 | `curl -si -X POST https://cadence.example.com/mcp` | `403` (WAF block page) |
+| 2 | `curl -si https://cadence.example.com/` and `/api/tasks`, `/api/v1/sync`, `/api/login`, `/login` | `404` from the tunnel |
+| 3 | `curl -si https://cadence.example.com/oauth/token -d grant_type=x`, then `curl -si -X POST https://cadence.example.com/oauth/%72egister` and `curl -si -X POST https://cadence.example.com/oauth%2Fregister` | `403` each (WAF rule 1, then rule 3) |
+| 4 | `curl -si https://cadence.example.com/.well-known/oauth-authorization-server` | `403` (WAF) |
+| 5 | Open `https://cadence.example.com/oauth/authorize` in a private window | Cloudflare Access login, not Cadence |
 | 6 | After the Access code, the same URL without parameters | Cadence "Cannot connect" page (unknown client), no redirect |
 | 7 | Without clicking **Authorize a new connector**, Connect from claude.ai | claude.ai fails to register; log has `oauth.client_refused` with `error: pairing_closed` |
 | 8 | Pair, Connect, wrong password (then: right password, wrong code) | Consent page again with "Sign-in failed"; `oauth.authorize_refused` (`invalid_credentials`, then `mfa_invalid`); your web sign-in still works |

@@ -114,3 +114,7 @@ backend-express/tests/
 **/*.bak
 **/*.backup
 **/*.orig
+# Other clients, not part of the server image
+android/
+desktop/
+.claude/
