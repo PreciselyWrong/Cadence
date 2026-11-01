@@ -95,7 +95,11 @@ describe('Focus sessions API', () => {
         expect(res.body.total_minutes).toBe(40);
         expect(res.body.sessions).toBe(2);
         expect(res.body.by_day).toHaveLength(7);
-        expect(res.body.by_day[6].minutes).toBe(40);
+        // A session is filed under the day it started: just after midnight
+        // these two began yesterday, so check the week's total, not today's.
+        expect(res.body.by_day.reduce((sum, day) => sum + day.minutes, 0)).toBe(
+            40
+        );
         expect(res.body.by_hour.reduce((a, b) => a + b, 0)).toBe(40);
         expect(res.body.top_tasks).toEqual([
             { uid: task.uid, name: 'Write', minutes: 25 },
