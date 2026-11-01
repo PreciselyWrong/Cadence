@@ -4876,6 +4876,7 @@
     "toggleTheme": "Превключване на тъмен режим",
     "showShortcuts": "Клавишни комбинации",
     "groups": {
+      "links": "Links",
       "recent": "Скорошни",
       "task": "Тази задача",
       "create": "Създаване",

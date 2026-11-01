@@ -4887,6 +4887,7 @@
     "toggleTheme": "Comută modul întunecat",
     "showShortcuts": "Comenzi rapide de la tastatură",
     "groups": {
+      "links": "Links",
       "recent": "Recente",
       "task": "Această sarcină",
       "create": "Creează",

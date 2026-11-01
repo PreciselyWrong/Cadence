@@ -4894,6 +4894,7 @@
     "toggleTheme": "Перемкнути темну тему",
     "showShortcuts": "Гарячі клавіші",
     "groups": {
+      "links": "Links",
       "recent": "Нещодавні",
       "task": "Це завдання",
       "create": "Створити",

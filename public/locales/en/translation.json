@@ -4839,6 +4839,7 @@
     "toggleTheme": "Toggle dark mode",
     "showShortcuts": "Keyboard shortcuts",
     "groups": {
+      "links": "Links",
       "recent": "Recent",
       "task": "This task",
       "create": "Create",

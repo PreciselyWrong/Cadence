@@ -4931,6 +4931,7 @@
     "toggleTheme": "Prepnúť tmavý režim",
     "showShortcuts": "Klávesové skratky",
     "groups": {
+      "links": "Links",
       "recent": "Nedávne",
       "task": "Táto úloha",
       "create": "Vytvoriť",

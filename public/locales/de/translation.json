@@ -4885,6 +4885,7 @@
     "toggleTheme": "Dunkelmodus umschalten",
     "showShortcuts": "Tastenkürzel",
     "groups": {
+      "links": "Links",
       "recent": "Zuletzt verwendet",
       "task": "Diese Aufgabe",
       "create": "Erstellen",

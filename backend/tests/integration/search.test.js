@@ -1,6 +1,15 @@
 const request = require('supertest');
 const app = require('../../app');
-const { Task, Project, Area, Note, Tag, User, Goal } = require('../../models');
+const {
+    Task,
+    Project,
+    Area,
+    Note,
+    Tag,
+    User,
+    Goal,
+    Link,
+} = require('../../models');
 const { createTestUser } = require('../helpers/testUtils');
 const { isPostgres } = require('../../utils/db-dialect');
 const moment = require('moment-timezone');
@@ -68,6 +77,61 @@ describe('Universal Search Routes', () => {
                 expect(
                     defaults.body.results.filter((r) => r.type === 'Goal')
                 ).toHaveLength(0);
+            });
+        });
+
+        describe('Link search', () => {
+            it('finds own links by title, address or note, only when requested', async () => {
+                const other = await createTestUser({
+                    email: 'search-link-other@example.com',
+                });
+                await Link.create({
+                    user_id: user.id,
+                    url: 'https://example.com/marathon-plan',
+                    title: 'Marathon plan',
+                });
+                await Link.create({
+                    user_id: user.id,
+                    url: 'https://example.com/recipes',
+                    note: 'Try before the marathon weekend',
+                });
+                await Link.create({
+                    user_id: other.id,
+                    url: 'https://example.com/marathon-other',
+                    title: 'Marathon of someone else',
+                });
+
+                const byTitle = await agent
+                    .get('/api/search')
+                    .query({ q: 'marathon', filters: 'Link' });
+                expect(byTitle.status).toBe(200);
+                expect(byTitle.body.results).toHaveLength(2);
+                expect(byTitle.body.results.map((r) => r.type)).toEqual([
+                    'Link',
+                    'Link',
+                ]);
+                const titled = byTitle.body.results.find(
+                    (r) => r.name === 'Marathon plan'
+                );
+                expect(titled).toMatchObject({
+                    url: 'https://example.com/marathon-plan',
+                });
+                expect(titled.uid).toBeTruthy();
+
+                const byAddress = await agent
+                    .get('/api/search')
+                    .query({ q: 'recipes', filters: 'Link' });
+                expect(byAddress.body.results).toHaveLength(1);
+                expect(byAddress.body.results[0].url).toBe(
+                    'https://example.com/recipes'
+                );
+
+                const unfiltered = await agent
+                    .get('/api/search')
+                    .query({ q: 'marathon' });
+                expect(
+                    unfiltered.body.results.some((r) => r.type === 'Link')
+                ).toBe(false);
             });
         });
 

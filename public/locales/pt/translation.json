@@ -4883,6 +4883,7 @@
     "toggleTheme": "Alternar modo escuro",
     "showShortcuts": "Atalhos de teclado",
     "groups": {
+      "links": "Links",
       "recent": "Recentes",
       "task": "Esta tarefa",
       "create": "Criar",

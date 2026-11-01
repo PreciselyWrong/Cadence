@@ -4876,6 +4876,7 @@
     "toggleTheme": "Växla mörkt läge",
     "showShortcuts": "Kortkommandon",
     "groups": {
+      "links": "Links",
       "recent": "Senaste",
       "task": "Den här uppgiften",
       "create": "Skapa",

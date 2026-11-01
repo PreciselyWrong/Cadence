@@ -4883,6 +4883,7 @@
     "toggleTheme": "Attiva/disattiva modalità scura",
     "showShortcuts": "Scorciatoie da tastiera",
     "groups": {
+      "links": "Links",
       "recent": "Recenti",
       "task": "Questa attività",
       "create": "Crea",

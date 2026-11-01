@@ -18,11 +18,13 @@ interface SearchParams {
 }
 
 interface SearchResult {
-    type: 'Task' | 'Project' | 'Area' | 'Note' | 'Tag' | 'Goal';
+    type: 'Task' | 'Project' | 'Area' | 'Note' | 'Tag' | 'Goal' | 'Link';
     id: number;
     uid?: string;
     name: string;
     title?: string;
+    // Set on a Link: the address it opens at.
+    url?: string;
     description?: string;
     priority?: string;
     status?: string;

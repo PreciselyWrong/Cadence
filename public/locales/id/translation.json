@@ -4876,6 +4876,7 @@
     "toggleTheme": "Ganti mode gelap",
     "showShortcuts": "Pintasan keyboard",
     "groups": {
+      "links": "Links",
       "recent": "Terbaru",
       "task": "Tugas ini",
       "create": "Buat",

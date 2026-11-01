@@ -4876,6 +4876,7 @@
     "toggleTheme": "Bật/tắt chế độ tối",
     "showShortcuts": "Phím tắt",
     "groups": {
+      "links": "Links",
       "recent": "Gần đây",
       "task": "Công việc này",
       "create": "Tạo",

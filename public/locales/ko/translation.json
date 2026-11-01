@@ -4874,6 +4874,7 @@
     "toggleTheme": "다크 모드 전환",
     "showShortcuts": "키보드 단축키",
     "groups": {
+      "links": "Links",
       "recent": "최근",
       "task": "이 작업",
       "create": "만들기",

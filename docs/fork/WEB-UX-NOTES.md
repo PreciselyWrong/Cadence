@@ -289,3 +289,9 @@ Revue écran par écran (Aujourd'hui, Boîte, Tâches, Projets, page projet, Age
 - **Problème** : cliquer un événement d'un agenda ICS ne faisait rien : son lieu, sa description et sa fin étaient perdus à l'import.
 - **Décision** : la fiche en lecture seule affiche l'heure (ou « Toute la journée »), l'agenda, le lieu (lien vers Maps, copie, « Rejoindre » pour un lien de réunion) et la description telle quelle. Le serveur garde lieu et description pour la page Calendrier seulement ; la vue du jour (Aujourd'hui, brouillon IA) n'en reçoit pas. Logique : `frontend/components/Calendar/FeedEventPopover.tsx`, `backend/modules/calendar-feeds/icsEvents.js`.
 - **Android** : à reprendre. Même fiche en lecture seule pour les événements d'agenda ICS. Reste : rien d'essayé sur le téléphone.
+
+### 2026-11-01 — Recherche : texte trouvé en couleur, liens inclus
+
+- **Problème** : dans Ctrl+K, rien ne montrait pourquoi une ligne correspondait, et les liens n'étaient pas cherchés.
+- **Décision** : chaque mot tapé est mis en gras et en bleu dans le titre des résultats, sans tenir compte de la casse. Les liens entrent dans la recherche, sous « Liens » ; un lien s'ouvre à son adresse dans un nouvel onglet. Logique : `frontend/utils/highlightMatches.ts`, `frontend/components/CommandPalette/CommandPalette.tsx`.
+- **Android** : à reprendre. Même mise en évidence dans la recherche, et les liens dans la recherche globale. Reste : rien d'essayé sur le téléphone.

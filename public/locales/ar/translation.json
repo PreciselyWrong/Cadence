@@ -4912,6 +4912,7 @@
     "toggleTheme": "تبديل الوضع الداكن",
     "showShortcuts": "اختصارات لوحة المفاتيح",
     "groups": {
+      "links": "Links",
       "recent": "الأخيرة",
       "task": "هذه المهمة",
       "create": "إنشاء",

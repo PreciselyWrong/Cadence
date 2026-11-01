@@ -7,6 +7,7 @@ const {
     Area,
     Note,
     Goal,
+    Link,
     sequelize,
 } = require('../../models');
 const { Op, QueryTypes } = require('sequelize');
@@ -185,6 +186,19 @@ class SearchRepository {
 
     async countGoals(conditions) {
         return Goal.count({ where: conditions });
+    }
+
+    async countLinks(conditions) {
+        return Link.count({ where: conditions });
+    }
+
+    async findLinks(conditions, limit, offset) {
+        return Link.findAll({
+            where: conditions,
+            limit,
+            offset,
+            order: [['updated_at', 'DESC']],
+        });
     }
 
     async findGoals(conditions, limit, offset) {

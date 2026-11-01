@@ -4876,6 +4876,7 @@
     "toggleTheme": "Skift mørk tilstand",
     "showShortcuts": "Tastaturgenveje",
     "groups": {
+      "links": "Links",
       "recent": "Seneste",
       "task": "Denne opgave",
       "create": "Opret",

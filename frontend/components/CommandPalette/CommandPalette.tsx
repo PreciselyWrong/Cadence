@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import type { Project } from '../../entities/Project';
 import { searchUniversal } from '../../utils/searchService';
+import { highlightMatches } from '../../utils/highlightMatches';
 import { fetchCadenceHabits } from '../../utils/cadenceHabitsService';
 import { openCapture } from '../../utils/captureUi';
 import {
@@ -80,6 +81,7 @@ const GROUP_LABELS: Record<string, { key: string; fallback: string }> = {
     tasks: { key: 'commandCenter.groups.tasks', fallback: 'Tasks' },
     notes: { key: 'commandCenter.groups.notes', fallback: 'Notes' },
     goals: { key: 'commandCenter.groups.goals', fallback: 'Goals' },
+    links: { key: 'commandCenter.groups.links', fallback: 'Links' },
     habits: { key: 'commandCenter.groups.habits', fallback: 'Habits' },
 };
 
@@ -87,6 +89,7 @@ const PALETTE_GROUP_BY_TYPE: Record<string, PaletteItem['group']> = {
     Task: 'tasks',
     Project: 'projects',
     Goal: 'goals',
+    Link: 'links',
 };
 
 const Keys: React.FC<{ keys?: string[] }> = ({ keys }) =>
@@ -179,7 +182,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
         const timer = setTimeout(() => {
             searchUniversal({
                 query: text,
-                filters: ['Task', 'Project', 'Note', 'Goal'],
+                filters: ['Task', 'Project', 'Note', 'Goal', 'Link'],
                 limit: 12,
             })
                 .then((response) => {
@@ -197,11 +200,17 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
                                     group,
                                     prematched: true,
                                     run: () =>
-                                        openEntity(
-                                            result.type,
-                                            result.uid as string,
-                                            name
-                                        ),
+                                        result.type === 'Link' && result.url
+                                            ? window.open(
+                                                  result.url,
+                                                  '_blank',
+                                                  'noopener'
+                                              )
+                                            : openEntity(
+                                                  result.type,
+                                                  result.uid as string,
+                                                  name
+                                              ),
                                 } as PaletteItem;
                             })
                     );
@@ -335,6 +344,20 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
         }
     };
 
+    const renderHighlighted = (text: string) =>
+        highlightMatches(text, query).map((segment, index) =>
+            segment.match ? (
+                <mark
+                    key={index}
+                    className="bg-transparent font-semibold text-blue-700 dark:text-blue-300"
+                >
+                    {segment.text}
+                </mark>
+            ) : (
+                <React.Fragment key={index}>{segment.text}</React.Fragment>
+            )
+        );
+
     const showHeadings = !query.trim() && step === 'root';
     const placeholder =
         step === 'project'
@@ -424,7 +447,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
                                 >
                                     <div className="flex-1 min-w-0">
                                         <div className="truncate text-sm text-gray-900 dark:text-gray-100">
-                                            {item.title}
+                                            {renderHighlighted(item.title)}
                                         </div>
                                         {item.subtitle && (
                                             <div className="truncate text-xs text-gray-500 dark:text-gray-400">

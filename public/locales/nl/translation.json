@@ -4876,6 +4876,7 @@
     "toggleTheme": "Donkere modus wisselen",
     "showShortcuts": "Sneltoetsen",
     "groups": {
+      "links": "Links",
       "recent": "Recent",
       "task": "Deze taak",
       "create": "Maken",

@@ -586,6 +586,56 @@ class SearchService {
     }
 
     /**
+     * Search the user's own links (title, address and note). Only runs when
+     * the caller asks for the Link type.
+     */
+    async searchLinks(userId, params) {
+        const { searchQuery, hasPagination, limit, offset } = params;
+
+        const conditions = { user_id: userId };
+        if (searchQuery) {
+            const lowerQuery = searchQuery.toLowerCase();
+            conditions[Op.or] = [
+                sequelize.where(
+                    sequelize.fn('LOWER', sequelize.col('Link.title')),
+                    { [Op.like]: `%${lowerQuery}%` }
+                ),
+                sequelize.where(
+                    sequelize.fn('LOWER', sequelize.col('Link.url')),
+                    { [Op.like]: `%${lowerQuery}%` }
+                ),
+                sequelize.where(
+                    sequelize.fn('LOWER', sequelize.col('Link.note')),
+                    { [Op.like]: `%${lowerQuery}%` }
+                ),
+            ];
+        }
+
+        const count = hasPagination
+            ? await searchRepository.countLinks(conditions)
+            : 0;
+        const links = await searchRepository.findLinks(
+            conditions,
+            limit,
+            offset
+        );
+
+        return {
+            count,
+            results: links.map((link) => ({
+                type: 'Link',
+                id: link.id,
+                uid: link.uid,
+                name: link.title || link.url,
+                title: link.title || link.url,
+                url: link.url,
+                description: link.note ? link.note.substring(0, 100) : '',
+                status: link.status,
+            })),
+        };
+    }
+
+    /**
      * Search notes.
      */
     async searchNotes(userId, params, tagIds, scope = null) {
@@ -821,6 +871,12 @@ class SearchService {
             const goalResults = await this.searchGoals(userId, params);
             results.push(...goalResults.results);
             totalCount += goalResults.count;
+        }
+
+        if (filterTypes.includes('Link')) {
+            const linkResults = await this.searchLinks(userId, params);
+            results.push(...linkResults.results);
+            totalCount += linkResults.count;
         }
 
         if (filterTypes.includes('Tag')) {

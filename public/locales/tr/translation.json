@@ -4876,6 +4876,7 @@
     "toggleTheme": "Koyu modu aç/kapat",
     "showShortcuts": "Klavye kısayolları",
     "groups": {
+      "links": "Links",
       "recent": "Son kullanılanlar",
       "task": "Bu görev",
       "create": "Oluştur",

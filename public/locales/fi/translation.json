@@ -4876,6 +4876,7 @@
     "toggleTheme": "Vaihda tumma tila",
     "showShortcuts": "Pikanäppäimet",
     "groups": {
+      "links": "Links",
       "recent": "Viimeisimmät",
       "task": "Tämä tehtävä",
       "create": "Luo",

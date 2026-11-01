@@ -4884,6 +4884,7 @@
     "toggleTheme": "Basculer le mode sombre",
     "showShortcuts": "Raccourcis clavier",
     "groups": {
+      "links": "Liens",
       "recent": "Récents",
       "task": "Cette tâche",
       "create": "Créer",

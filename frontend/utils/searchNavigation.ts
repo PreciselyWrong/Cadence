@@ -1,7 +1,7 @@
 // Where a search result leads, shared by the search overlay and the palette.
 
 export interface SearchTarget {
-    type: 'Task' | 'Project' | 'Area' | 'Note' | 'Tag' | 'Habit' | 'Goal';
+    type: 'Task' | 'Project' | 'Area' | 'Note' | 'Tag' | 'Habit' | 'Goal' | 'Link';
     uid?: string;
     name: string;
     title?: string;

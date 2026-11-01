@@ -4894,6 +4894,7 @@
     "toggleTheme": "Preklopi temni način",
     "showShortcuts": "Bližnjice na tipkovnici",
     "groups": {
+      "links": "Links",
       "recent": "Nedavno",
       "task": "To opravilo",
       "create": "Ustvari",

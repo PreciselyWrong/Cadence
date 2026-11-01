@@ -4881,6 +4881,7 @@
     "toggleTheme": "Bytt mørk modus",
     "showShortcuts": "Hurtigtaster",
     "groups": {
+      "links": "Links",
       "recent": "Nylige",
       "task": "Denne oppgaven",
       "create": "Opprett",

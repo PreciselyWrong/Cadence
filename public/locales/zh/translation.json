@@ -4876,6 +4876,7 @@
     "toggleTheme": "切换深色模式",
     "showShortcuts": "键盘快捷键",
     "groups": {
+      "links": "Links",
       "recent": "最近",
       "task": "此任务",
       "create": "创建",

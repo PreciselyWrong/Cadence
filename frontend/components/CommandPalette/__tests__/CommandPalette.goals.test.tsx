@@ -62,7 +62,9 @@ describe('CommandPalette goals', () => {
             target: { value: 'marathon' },
         });
 
-        const row = await screen.findByText('Run a marathon');
+        const row = await screen.findByRole('option', {
+            name: /Run a marathon/,
+        });
         expect(searchUniversal).toHaveBeenCalledWith(
             expect.objectContaining({
                 filters: expect.arrayContaining(['Goal']),

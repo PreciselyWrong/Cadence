@@ -4874,6 +4874,7 @@
     "toggleTheme": "ダークモードを切り替え",
     "showShortcuts": "キーボードショートカット",
     "groups": {
+      "links": "Links",
       "recent": "最近",
       "task": "このタスク",
       "create": "作成",

@@ -4870,6 +4870,7 @@
     "toggleTheme": "Alternar modo oscuro",
     "showShortcuts": "Atajos de teclado",
     "groups": {
+      "links": "Links",
       "recent": "Recientes",
       "task": "Esta tarea",
       "create": "Crear",
