@@ -5422,6 +5422,7 @@
     "viewTag": "Buka tag"
   },
   "links": {
+    "attachPick": "Pilih proyek",
     "tryTaskName": "Coba: {{title}}",
     "tryProject": "Proyek",
     "tryNoProject": "Tanpa proyek",
@@ -5468,6 +5469,7 @@
       "dropped": "Dibuang"
     },
     "action": {
+      "attach": "Lampirkan",
       "tested": "Coba",
       "kept": "Simpan",
       "parked": "Nanti",

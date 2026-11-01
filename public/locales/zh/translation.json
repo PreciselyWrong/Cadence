@@ -5422,6 +5422,7 @@
     "viewTag": "前往标签"
   },
   "links": {
+    "attachPick": "选择项目",
     "tryTaskName": "尝试：{{title}}",
     "tryProject": "项目",
     "tryNoProject": "无项目",
@@ -5468,6 +5469,7 @@
       "dropped": "已放弃"
     },
     "action": {
+      "attach": "归入项目",
       "tested": "试用",
       "kept": "保留",
       "parked": "稍后",

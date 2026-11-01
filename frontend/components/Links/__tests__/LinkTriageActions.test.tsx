@@ -68,11 +68,12 @@ const link: Link = {
     updated_at: '2026-10-02T00:00:00.000Z',
 };
 
-const item = { uid: 'i1', content: 'https://github.com/owner/tool' } as InboxItem;
+const item = {
+    uid: 'i1',
+    content: 'https://github.com/owner/tool',
+} as InboxItem;
 
-const projects = [
-    { uid: 'p1', name: 'Tooling' },
-] as Project[];
+const projects = [{ uid: 'p1', name: 'Tooling' }] as Project[];
 
 const renderActions = () =>
     render(<LinkTriageActions item={item} link={link} projects={projects} />);
@@ -82,14 +83,19 @@ describe('LinkTriageActions', () => {
         jest.clearAllMocks();
         mockSave.mockResolvedValue({});
         mockProcess.mockResolvedValue({});
-        mockCreateTask.mockResolvedValue({ uid: 't1', name: 'Try: owner/tool' });
+        mockCreateTask.mockResolvedValue({
+            uid: 't1',
+            name: 'Try: owner/tool',
+        });
     });
 
-    it('offers Keep, Try, Later and Drop', () => {
+    it('offers Keep, Try, Attach, Later and Drop', () => {
         renderActions();
 
-        for (const label of ['Keep', 'Try', 'Later', 'Drop']) {
-            expect(screen.getByRole('button', { name: label })).toBeInTheDocument();
+        for (const label of ['Keep', 'Try', 'Attach', 'Later', 'Drop']) {
+            expect(
+                screen.getByRole('button', { name: label })
+            ).toBeInTheDocument();
         }
     });
 
@@ -124,7 +130,9 @@ describe('LinkTriageActions', () => {
         renderActions();
 
         fireEvent.click(screen.getByRole('button', { name: 'Try' }));
-        fireEvent.change(screen.getByLabelText('Project'), { target: { value: 'p1' } });
+        fireEvent.change(screen.getByLabelText('Project'), {
+            target: { value: 'p1' },
+        });
         fireEvent.click(screen.getByRole('button', { name: 'Create task' }));
 
         await waitFor(() =>
@@ -149,6 +157,29 @@ describe('LinkTriageActions', () => {
                 expect.objectContaining({ project_uid: undefined })
             )
         );
+    });
+
+    it('Attach creates a task named after the link in the chosen project and keeps the link', async () => {
+        renderActions();
+
+        fireEvent.click(screen.getByRole('button', { name: 'Attach' }));
+        expect(screen.queryByRole('option', { name: 'No project' })).toBeNull();
+        const create = screen.getByRole('button', { name: 'Create task' });
+        expect(create).toBeDisabled();
+        fireEvent.change(screen.getByLabelText('Project'), {
+            target: { value: 'p1' },
+        });
+        fireEvent.click(create);
+
+        await waitFor(() =>
+            expect(mockCreateTask).toHaveBeenCalledWith({
+                name: 'owner/tool',
+                note: 'https://github.com/owner/tool\n\ncompare with jq',
+                project_uid: 'p1',
+            })
+        );
+        expect(mockSave).toHaveBeenCalledWith('l1', { status: 'kept' });
+        expect(mockProcess).toHaveBeenCalledWith('i1', { task_uid: 't1' });
     });
 
     it('reports a failed decision and leaves the item in the inbox', async () => {

@@ -5422,6 +5422,7 @@
     "viewTag": "Đến thẻ"
   },
   "links": {
+    "attachPick": "Chọn dự án",
     "tryTaskName": "Thử: {{title}}",
     "tryProject": "Dự án",
     "tryNoProject": "Không có dự án",
@@ -5468,6 +5469,7 @@
       "dropped": "Đã bỏ"
     },
     "action": {
+      "attach": "Gắn vào",
       "tested": "Thử",
       "kept": "Giữ",
       "parked": "Để sau",

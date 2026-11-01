@@ -16,6 +16,8 @@ import { useToast } from '../Shared/ToastContext';
 import GalleryCard from '../Shared/GalleryCard';
 import { ViewTypeSwitch } from '../Task/TaskViewBody';
 import { useViewType } from '../../hooks/useViewType';
+import { attachLinkToProject } from '../../utils/linkTriage';
+import { Link } from '../../entities/Link';
 import LinkCard from './LinkCard';
 
 const FILTER_KEY = 'links.filter';
@@ -44,6 +46,7 @@ const LinksPage: React.FC = () => {
     const loadError = useLinksStore((s) => s.error);
     const save = useLinksStore((s) => s.save);
     const tagsStore = useStore((s) => s.tagsStore);
+    const projectsStore = useStore((s) => s.projectsStore);
     const [filter, setFilterState] = useState<LinkFilter>(readFilter);
     // List (cards with actions) or Gallery (pictures), remembered in
     // ui_settings.viewTypes.links.
@@ -53,6 +56,12 @@ const LinksPage: React.FC = () => {
     useEffect(() => {
         if (!tagsStore.hasLoaded) void tagsStore.loadTags();
     }, [tagsStore]);
+
+    useEffect(() => {
+        if (!projectsStore.hasLoaded && !projectsStore.isLoading) {
+            void projectsStore.loadProjects();
+        }
+    }, [projectsStore]);
 
     const setFilter = (changes: Partial<LinkFilter>) => {
         const next = { ...filter, ...changes };
@@ -73,6 +82,11 @@ const LinksPage: React.FC = () => {
 
     const change = (uid: string) => (changes: Parameters<typeof save>[1]) =>
         save(uid, changes).catch(() =>
+            showErrorToast(t('links.saveError', 'Could not save the link.'))
+        );
+
+    const attach = (link: Link) => (projectUid: string) =>
+        attachLinkToProject(link, projectUid, save).catch(() =>
             showErrorToast(t('links.saveError', 'Could not save the link.'))
         );
 
@@ -274,6 +288,8 @@ const LinksPage: React.FC = () => {
                             link={link}
                             onChange={change(link.uid)}
                             availableTags={tagsStore.tags}
+                            projects={projectsStore.projects}
+                            onAttach={attach(link)}
                         />
                     ))}
                 </div>

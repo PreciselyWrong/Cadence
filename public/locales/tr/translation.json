@@ -5422,6 +5422,7 @@
     "viewTag": "Etikete git"
   },
   "links": {
+    "attachPick": "Bir proje seçin",
     "tryTaskName": "Dene: {{title}}",
     "tryProject": "Proje",
     "tryNoProject": "Proje yok",
@@ -5468,6 +5469,7 @@
       "dropped": "Atıldı"
     },
     "action": {
+      "attach": "Bağla",
       "tested": "Dene",
       "kept": "Tut",
       "parked": "Sonra",

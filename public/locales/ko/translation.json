@@ -5420,6 +5420,7 @@
     "viewTag": "태그로 이동"
   },
   "links": {
+    "attachPick": "프로젝트 선택",
     "tryTaskName": "체험: {{title}}",
     "tryProject": "프로젝트",
     "tryNoProject": "프로젝트 없음",
@@ -5466,6 +5467,7 @@
       "dropped": "버림"
     },
     "action": {
+      "attach": "연결",
       "tested": "사용해 보기",
       "kept": "보관",
       "parked": "나중에",

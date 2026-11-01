@@ -5422,6 +5422,7 @@
     "viewTag": "Gå till tagg"
   },
   "links": {
+    "attachPick": "Välj ett projekt",
     "tryTaskName": "Testa: {{title}}",
     "tryProject": "Projekt",
     "tryNoProject": "Inget projekt",
@@ -5468,6 +5469,7 @@
       "dropped": "Kasserad"
     },
     "action": {
+      "attach": "Koppla",
       "tested": "Testa",
       "kept": "Behåll",
       "parked": "Senare",

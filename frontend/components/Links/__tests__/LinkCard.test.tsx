@@ -122,4 +122,36 @@ describe('LinkCard', () => {
 
         expect(screen.queryByText(/Review on/)).not.toBeInTheDocument();
     });
+
+    it('attaches the link to a chosen project', async () => {
+        const onAttach = jest.fn().mockResolvedValue(undefined);
+        render(
+            <MemoryRouter>
+                <LinkCard
+                    link={link}
+                    onChange={jest.fn()}
+                    availableTags={[]}
+                    projects={[{ uid: 'p1', name: 'Tooling' } as never]}
+                    onAttach={onAttach}
+                />
+            </MemoryRouter>
+        );
+
+        fireEvent.click(screen.getByRole('button', { name: 'Attach' }));
+        fireEvent.change(screen.getByLabelText('Project'), {
+            target: { value: 'p1' },
+        });
+        fireEvent.click(screen.getByRole('button', { name: 'Create task' }));
+
+        await waitFor(() => expect(onAttach).toHaveBeenCalledWith('p1'));
+        await waitFor(() =>
+            expect(screen.queryByLabelText('Project')).not.toBeInTheDocument()
+        );
+    });
+
+    it('offers no Attach without projects', () => {
+        renderCard();
+
+        expect(screen.queryByRole('button', { name: 'Attach' })).toBeNull();
+    });
 });

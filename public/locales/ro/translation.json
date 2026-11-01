@@ -5439,6 +5439,7 @@
     "viewTag": "Mergi la etichetă"
   },
   "links": {
+    "attachPick": "Alege un proiect",
     "tryTaskName": "Încearcă: {{title}}",
     "tryProject": "Proiect",
     "tryNoProject": "Fără proiect",
@@ -5486,6 +5487,7 @@
       "dropped": "Renunțat"
     },
     "action": {
+      "attach": "Atașează",
       "tested": "Încearcă",
       "kept": "Păstrează",
       "parked": "Mai târziu",

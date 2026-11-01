@@ -5476,6 +5476,7 @@
     "viewTag": "Pojdi na oznako"
   },
   "links": {
+    "attachPick": "Izberite projekt",
     "tryTaskName": "Preizkusi: {{title}}",
     "tryProject": "Projekt",
     "tryNoProject": "Brez projekta",
@@ -5524,6 +5525,7 @@
       "dropped": "Zavrženo"
     },
     "action": {
+      "attach": "Pripni",
       "tested": "Preizkusi",
       "kept": "Shrani",
       "parked": "Pozneje",

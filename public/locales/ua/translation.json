@@ -5476,6 +5476,7 @@
     "viewTag": "Перейти до мітки"
   },
   "links": {
+    "attachPick": "Виберіть проєкт",
     "tryTaskName": "Спробувати: {{title}}",
     "tryProject": "Проєкт",
     "tryNoProject": "Без проєкту",
@@ -5524,6 +5525,7 @@
       "dropped": "Відкинуте"
     },
     "action": {
+      "attach": "Прив’язати",
       "tested": "Перевірити",
       "kept": "Зберегти",
       "parked": "Пізніше",

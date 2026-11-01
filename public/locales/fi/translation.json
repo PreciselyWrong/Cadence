@@ -5422,6 +5422,7 @@
     "viewTag": "Siirry tunnisteeseen"
   },
   "links": {
+    "attachPick": "Valitse projekti",
     "tryTaskName": "Kokeile: {{title}}",
     "tryProject": "Projekti",
     "tryNoProject": "Ei projektia",
@@ -5468,6 +5469,7 @@
       "dropped": "Hylätty"
     },
     "action": {
+      "attach": "Liitä",
       "tested": "Kokeile",
       "kept": "Säilytä",
       "parked": "Myöhemmin",

@@ -13,12 +13,18 @@ import { LINK_ACTIONS, sourcePath } from '../../utils/linkFilters';
 import { toIntlLocale } from '../../utils/intlLocale';
 import { LinkChanges } from '../../utils/linksService';
 import TagInput from '../Tag/TagInput';
+import { Project } from '../../entities/Project';
 import LinkNote from './LinkNote';
+import LinkProjectPicker from './LinkProjectPicker';
 
 interface LinkCardProps {
     link: Link;
     onChange: (changes: LinkChanges) => Promise<unknown>;
     availableTags: Tag[];
+    // Attach files a task named after the link in a project (no button
+    // without projects).
+    projects?: Project[];
+    onAttach?: (projectUid: string) => Promise<unknown>;
 }
 
 const compactCount = (value: number, locale: string): string =>
@@ -99,10 +105,26 @@ const LinkCard: React.FC<LinkCardProps> = ({
     link,
     onChange,
     availableTags,
+    projects = [],
+    onAttach,
 }) => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const [editingTags, setEditingTags] = useState(false);
+    const [attaching, setAttaching] = useState(false);
+    const [busy, setBusy] = useState(false);
+    const canAttach = Boolean(onAttach) && projects.length > 0;
+
+    const attach = async (projectUid: string) => {
+        if (!onAttach) return;
+        setBusy(true);
+        try {
+            await onAttach(projectUid);
+            setAttaching(false);
+        } finally {
+            setBusy(false);
+        }
+    };
     const [imageFailed, setImageFailed] = useState(false);
     const title = link.title || link.domain || link.url;
     const description = link.description || link.readme_excerpt;
@@ -233,6 +255,16 @@ const LinkCard: React.FC<LinkCardProps> = ({
                         </button>
                     );
                 })}
+                {canAttach && (
+                    <button
+                        type="button"
+                        aria-expanded={attaching}
+                        onClick={() => setAttaching((open) => !open)}
+                        className="min-h-[32px] rounded-full px-3 text-[12px] text-gray-600 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                    >
+                        {t('links.action.attach', 'Attach')}
+                    </button>
+                )}
                 <span className="ml-auto flex items-center">
                     <button
                         type="button"
@@ -272,6 +304,15 @@ const LinkCard: React.FC<LinkCardProps> = ({
                     </a>
                 </span>
             </div>
+            {attaching && canAttach && (
+                <LinkProjectPicker
+                    id={`link-attach-project-${link.uid}`}
+                    projects={projects}
+                    allowNone={false}
+                    busy={busy}
+                    onConfirm={(projectUid) => void attach(projectUid)}
+                />
+            )}
         </article>
     );
 };

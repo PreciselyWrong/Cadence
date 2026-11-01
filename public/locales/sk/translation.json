@@ -154,6 +154,7 @@
     "task": "Úloha"
   },
   "links": {
+    "attachPick": "Vyberte projekt",
     "tryTaskName": "Vyskúšať: {{title}}",
     "tryProject": "Projekt",
     "tryNoProject": "Bez projektu",
@@ -202,6 +203,7 @@
       "dropped": "Zahodený"
     },
     "action": {
+      "attach": "Priradiť",
       "tested": "Vyskúšať",
       "kept": "Ponechať",
       "parked": "Neskôr",

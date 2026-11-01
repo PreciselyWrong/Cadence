@@ -5422,6 +5422,7 @@
     "viewTag": "Към етикета"
   },
   "links": {
+    "attachPick": "Изберете проект",
     "tryTaskName": "Пробвай: {{title}}",
     "tryProject": "Проект",
     "tryNoProject": "Без проект",
@@ -5468,6 +5469,7 @@
       "dropped": "Отхвърлена"
     },
     "action": {
+      "attach": "Прикачи",
       "tested": "Пробвай",
       "kept": "Запази",
       "parked": "По-късно",

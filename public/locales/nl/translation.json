@@ -5422,6 +5422,7 @@
     "viewTag": "Ga naar tag"
   },
   "links": {
+    "attachPick": "Kies een project",
     "tryTaskName": "Uitproberen: {{title}}",
     "tryProject": "Project",
     "tryNoProject": "Geen project",
@@ -5468,6 +5469,7 @@
       "dropped": "Weggegooid"
     },
     "action": {
+      "attach": "Koppelen",
       "tested": "Proberen",
       "kept": "Bewaren",
       "parked": "Later",

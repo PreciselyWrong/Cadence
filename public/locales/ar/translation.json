@@ -5482,6 +5482,7 @@
     "viewTag": "الانتقال إلى الوسم"
   },
   "links": {
+    "attachPick": "اختر مشروعًا",
     "tryTaskName": "تجربة: {{title}}",
     "tryProject": "المشروع",
     "tryNoProject": "بدون مشروع",
@@ -5532,6 +5533,7 @@
       "dropped": "مرفوض"
     },
     "action": {
+      "attach": "إلحاق",
       "tested": "جرّب",
       "kept": "احتفظ",
       "parked": "لاحقًا",

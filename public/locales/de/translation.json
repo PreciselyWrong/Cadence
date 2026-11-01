@@ -5431,6 +5431,7 @@
     "viewTag": "Zum Tag wechseln"
   },
   "links": {
+    "attachPick": "Projekt wählen",
     "tryTaskName": "Testen: {{title}}",
     "tryProject": "Projekt",
     "tryNoProject": "Kein Projekt",
@@ -5477,6 +5478,7 @@
       "dropped": "Verworfen"
     },
     "action": {
+      "attach": "Zuordnen",
       "tested": "Testen",
       "kept": "Behalten",
       "parked": "Später",

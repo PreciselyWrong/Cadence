@@ -52,7 +52,7 @@ Entity `link` (schema 4): fields `note`, `status`, `review_at`; server fields li
 
 ## Clients
 
-- **Web**: `/links` (`frontend/components/Links/`): search, kind, status (default: not dropped), tag, site and sort filters, remembered per browser; cards with title, two lines of description, domain, kind badge, GitHub stats, README start for repositories, note (click to write, Enter saves), tags, status buttons, open, go to the source. A **List / Gallery** switch in the header (remembered for the account in `ui_settings.viewTypes.links`) turns the page into a gallery: picture cards (two to four columns) with the page image (`image_url`, else the site's initial), title, site and up to three tags; a card opens the page in a new tab; the filters apply the same way. In the inbox, an item with a link shows the link card and its note; the item's text is shown only when it says more than the note.
+- **Web**: `/links` (`frontend/components/Links/`): search, kind, status (default: not dropped), tag, site and sort filters, remembered per browser; cards with title, two lines of description, domain, kind badge, GitHub stats, README start for repositories, note (click to write, Enter saves), tags, status buttons, Attach to a project (see Web inbox triage), open, go to the source. A **List / Gallery** switch in the header (remembered for the account in `ui_settings.viewTypes.links`) turns the page into a gallery: picture cards (two to four columns) with the page image (`image_url`, else the site's initial), title, site and up to three tags; a card opens the page in a new tab; the filters apply the same way. In the inbox, an item with a link shows the link card and its note; the item's text is shown only when it says more than the note.
 - **Android**: Links screen from the Inbox header (search, kind and "Jetés" chips, same cards, note in a small dialog, status chips, tag picker); inbox ideas that hold a link are triaged in one tap (below). All writes go through the outbox (`link` note, status, `tag_uids`; `inbox_item` status), so triage works offline.
 
 ### Android inbox triage
@@ -88,7 +88,8 @@ Entity `link` (schema 4): fields `note`, `status`, `review_at`; server fields li
 
 ### Web inbox triage
 
-- A link card in the Inbox (`frontend/components/Links/LinkTriageActions.tsx`) has the same four decisions, one tap each: Keep, Try, Later, Drop. Each sets the link status through `PATCH /api/links/:uid` and marks the inbox item `processed`; there is no undo, and nothing is written later than the tap.
+- A link card in the Inbox (`frontend/components/Links/LinkTriageActions.tsx`) has five decisions, one tap each: Keep, Try, Attach, Later, Drop. Each sets the link status through `PATCH /api/links/:uid` and marks the inbox item `processed`; there is no undo, and nothing is written later than the tap.
 - Try opens a project choice (a project or none), then creates the task "Try: <title>" with the address and the note as task note, and sets the link to `tested`.
+- Attach (shown when the user has projects) opens a project choice (a project is required), then creates a task named after the link (title, else domain, else address) with the address and the note as task note in that project, and sets the link to `kept`, as Android's Rattacher. The same **Attach** button sits on each `/links` card (List view), without an inbox item to process. Logic: `frontend/utils/linkTriage.ts`, `frontend/components/Links/LinkProjectPicker.tsx`.
 - Later sends `status: parked` without a date: the server sets `review_at` to today + 30 days. The `/links` card shows "Review on <date>" for a parked link.
 - The date is the synced `review_at` on both clients; Android keeps no local copy of it.

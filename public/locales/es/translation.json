@@ -5422,6 +5422,7 @@
     "viewTag": "Ir a la etiqueta"
   },
   "links": {
+    "attachPick": "Elige un proyecto",
     "tryTaskName": "Probar: {{title}}",
     "tryProject": "Proyecto",
     "tryNoProject": "Sin proyecto",
@@ -5468,6 +5469,7 @@
       "dropped": "Descartado"
     },
     "action": {
+      "attach": "Vincular",
       "tested": "Probar",
       "kept": "Guardar",
       "parked": "Más tarde",

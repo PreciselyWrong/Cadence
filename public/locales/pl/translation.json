@@ -5476,6 +5476,7 @@
     "viewTag": "Przejdź do tagu"
   },
   "links": {
+    "attachPick": "Wybierz projekt",
     "tryTaskName": "Wypróbuj: {{title}}",
     "tryProject": "Projekt",
     "tryNoProject": "Bez projektu",
@@ -5524,6 +5525,7 @@
       "dropped": "Odrzucony"
     },
     "action": {
+      "attach": "Przypisz",
       "tested": "Wypróbuj",
       "kept": "Zachowaj",
       "parked": "Później",

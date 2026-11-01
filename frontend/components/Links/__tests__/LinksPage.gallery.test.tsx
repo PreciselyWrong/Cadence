@@ -76,6 +76,12 @@ jest.mock('../../../store/linksStore', () => ({
 jest.mock('../../../store/useStore', () => {
     const state = {
         tagsStore: { hasLoaded: true, tags: [], loadTags: jest.fn() },
+        projectsStore: {
+            hasLoaded: true,
+            isLoading: false,
+            projects: [],
+            loadProjects: jest.fn(),
+        },
     };
     return {
         useStore: (selector?: (s: unknown) => unknown) =>

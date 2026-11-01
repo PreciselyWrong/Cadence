@@ -5423,6 +5423,7 @@
     "viewTag": "Μετάβαση στην ετικέτα"
   },
   "links": {
+    "attachPick": "Επιλέξτε έργο",
     "tryTaskName": "Δοκίμασε: {{title}}",
     "tryProject": "Έργο",
     "tryNoProject": "Χωρίς έργο",
@@ -5469,6 +5470,7 @@
       "dropped": "Απορρίφθηκε"
     },
     "action": {
+      "attach": "Σύνδεση",
       "tested": "Δοκίμασε",
       "kept": "Κράτα",
       "parked": "Αργότερα",

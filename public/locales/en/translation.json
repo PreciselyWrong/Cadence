@@ -5390,6 +5390,7 @@
     "viewTag": "Go to tag"
   },
   "links": {
+    "attachPick": "Choose a project",
     "tryTaskName": "Try: {{title}}",
     "tryProject": "Project",
     "tryNoProject": "No project",
@@ -5436,6 +5437,7 @@
       "dropped": "Dropped"
     },
     "action": {
+      "attach": "Attach",
       "tested": "Try",
       "kept": "Keep",
       "parked": "Later",

@@ -5436,6 +5436,7 @@
     "viewTag": "Aller à l'étiquette"
   },
   "links": {
+    "attachPick": "Choisir un projet",
     "tryTaskName": "Tester : {{title}}",
     "tryProject": "Projet",
     "tryNoProject": "Sans projet",
@@ -5482,6 +5483,7 @@
       "dropped": "Jeté"
     },
     "action": {
+      "attach": "Rattacher",
       "tested": "Tester",
       "kept": "Garder",
       "parked": "Plus tard",
