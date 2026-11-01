@@ -5,6 +5,11 @@
 - Projets : déplacer un projet sous un autre projet, ou le remettre au premier niveau, depuis sa feuille ; un projet ne peut pas passer sous lui-même ni sous l'un de ses sous-projets.
 - Étiquettes : renommer une étiquette ou la placer sous une autre (crayon de l'en-tête) ; ses sous-étiquettes suivent, comme sur le web.
 - Agenda : une habitude « N fois par semaine » (ou un suivi libre) apparaît les jours où elle a été faite.
+- Agenda : un bouton calendrier dans l'en-tête déplie le mois pour aller à une date (un jour touché y mène et referme le calendrier).
+
+### Corrections
+- Agenda : la feuille Affichage défile, les agendas du bas sont atteignables.
+- Agenda : défiler la grille n'affiche ni ne masque plus la ligne des jours ; elle est remplacée par le bouton calendrier.
 
 ## [1.6.1] — 1 novembre 2026
 

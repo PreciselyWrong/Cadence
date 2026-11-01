@@ -198,11 +198,6 @@ internal class AgendaViewModel(application: Application) : AndroidViewModel(appl
 
     fun undoComplete(uid: String) = viewModelScope.launch { tasks.reopenTask(uid) }
 
-    /** Balayage de la bande des jours : une semaine à la fois. */
-    fun swipeWeek(direction: Int) {
-        _selected.value = _selected.value.plusWeeks(direction.toLong())
-    }
-
     fun updateOptions(transform: (AgendaOptions) -> AgendaOptions) {
         val next = transform(_options.value)
         _options.value = next

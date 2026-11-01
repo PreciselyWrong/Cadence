@@ -497,6 +497,10 @@
     <string name="tab_bilan">Bilan</string>
     <string name="agenda_today">Aujourd’hui</string>
     <string name="agenda_display">Affichage</string>
+    <string name="agenda_calendar_show">Afficher le calendrier</string>
+    <string name="agenda_calendar_hide">Masquer le calendrier</string>
+    <string name="agenda_calendar_previous_month">Mois précédent</string>
+    <string name="agenda_calendar_next_month">Mois suivant</string>
     <string name="agenda_mode_day">Jour</string>
     <string name="agenda_mode_three_days">3 jours</string>
     <string name="agenda_mode_month">Mois</string>

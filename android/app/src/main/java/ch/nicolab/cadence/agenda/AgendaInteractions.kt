@@ -2,7 +2,9 @@ package ch.nicolab.cadence.agenda
 
 import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskItem
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.YearMonth
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
@@ -73,20 +75,19 @@ fun resizedMinutes(
 }
 
 /**
- * Repli du bandeau des jours pendant le défilement de la grille. [travel] cumule les glissements du
- * doigt dans le même sens (négatif = la grille avance) ; il repart de zéro quand le sens change.
+ * Calendrier du mois ouvert depuis l'en-tête. Il ne s'ouvre et ne se ferme que par le bouton ou le
+ * choix d'un jour : le défilement de la grille n'y touche jamais. [month] est le mois parcouru, qui
+ * repart du jour choisi à chaque ouverture.
  */
-data class ScrollCollapse(val collapsed: Boolean = false, val travel: Float = 0f) {
-    fun after(deltaY: Float, thresholdPx: Float): ScrollCollapse {
-        if (deltaY == 0f) return this
-        val sameDirection = travel == 0f || (travel < 0f) == (deltaY < 0f)
-        val total = if (sameDirection) travel + deltaY else deltaY
-        return when {
-            !collapsed && total <= -thresholdPx -> ScrollCollapse(collapsed = true)
-            collapsed && total >= thresholdPx -> ScrollCollapse(collapsed = false)
-            else -> copy(travel = total)
-        }
-    }
+data class CalendarPanel(val open: Boolean = false, val month: YearMonth? = null) {
+    fun toggled(selected: LocalDate): CalendarPanel =
+        if (open) CalendarPanel() else CalendarPanel(open = true, month = YearMonth.from(selected))
+
+    fun browsed(selected: LocalDate, months: Int): CalendarPanel =
+        copy(month = (month ?: YearMonth.from(selected)).plusMonths(months.toLong()))
+
+    /** Choisir un jour referme le calendrier. */
+    fun picked(): CalendarPanel = CalendarPanel()
 }
 
 /** Hauteur d'une case du mois : la grille ([rows] lignes plus l'en-tête) tient dans sa part de l'écran, sans devenir minuscule. */

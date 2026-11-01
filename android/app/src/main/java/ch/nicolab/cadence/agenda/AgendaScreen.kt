@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.nicolab.cadence.R
+import ch.nicolab.cadence.designsystem.components.HeaderButtonStyle
 import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
 import ch.nicolab.cadence.designsystem.components.SegmentedTabs
 import ch.nicolab.cadence.designsystem.components.rememberAppSnackbarHostState
@@ -66,6 +67,7 @@ import ch.nicolab.cadence.designsystem.theme.glass
 import ch.nicolab.cadence.designsystem.theme.glassBorder
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.YearMonth
 import java.time.temporal.WeekFields
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -89,6 +91,7 @@ fun AgendaScreen(modifier: Modifier = Modifier, onOpenHabit: (String) -> Unit = 
     val state by viewModel.state.collectAsStateWithLifecycle()
     val calendars by viewModel.calendars.collectAsStateWithLifecycle()
     var displayOpen by rememberSaveable { mutableStateOf(false) }
+    var calendar by remember { mutableStateOf(CalendarPanel()) }
     val drag = remember { TrayDragState() }
     var boxOrigin by remember { mutableStateOf(Offset.Zero) }
     val snackbar = rememberAppSnackbarHostState()
@@ -158,6 +161,20 @@ fun AgendaScreen(modifier: Modifier = Modifier, onOpenHabit: (String) -> Unit = 
                 onNext = { viewModel.swipe(1) },
                 onToday = viewModel::goToToday,
                 onDisplay = { displayOpen = true },
+                calendarOpen = calendar.open && state.mode != AgendaMode.MONTH,
+                onCalendar = if (state.mode == AgendaMode.MONTH) null else ({ calendar = calendar.toggled(state.selected) }),
+            )
+            AgendaCalendarPanel(
+                visible = calendar.open && state.mode != AgendaMode.MONTH,
+                month = calendar.month ?: YearMonth.from(state.selected),
+                selected = state.selected,
+                today = state.today,
+                weekends = state.options.weekends,
+                onBrowse = { calendar = calendar.browsed(state.selected, it) },
+                onPick = {
+                    viewModel.select(it)
+                    calendar = calendar.picked()
+                },
             )
             SegmentedTabs(
                 labels = AgendaMode.entries.map { stringResource(it.labelRes()) },
@@ -173,8 +190,6 @@ fun AgendaScreen(modifier: Modifier = Modifier, onOpenHabit: (String) -> Unit = 
                         AgendaMode.DAY, AgendaMode.THREE_DAYS -> TimeAgenda(
                             state = state,
                             now = now,
-                            onSelect = viewModel::select,
-                            onSwipeWeek = viewModel::swipeWeek,
                             onToggleEvent = viewModel::toggleEvent,
                             drag = drag,
                             onDrop = { uid, at -> viewModel.schedule(uid, at) },
@@ -233,6 +248,8 @@ private fun AgendaHeader(
     onNext: () -> Unit,
     onToday: () -> Unit,
     onDisplay: () -> Unit,
+    calendarOpen: Boolean,
+    onCalendar: (() -> Unit)?,
 ) {
     val palette = cadence
     Row(
@@ -258,6 +275,15 @@ private fun AgendaHeader(
             CapsuleButton(Icons.Outlined.ChevronLeft, stringResource(R.string.agenda_previous), onPrevious)
             CapsuleButton(Icons.Outlined.Today, stringResource(R.string.agenda_today), onToday)
             CapsuleButton(Icons.Outlined.ChevronRight, stringResource(R.string.agenda_next), onNext)
+        }
+        if (onCalendar != null) {
+            Spacer(Modifier.width(Space.sm))
+            RoundHeaderButton(
+                icon = Icons.Outlined.CalendarMonth,
+                contentDescription = stringResource(if (calendarOpen) R.string.agenda_calendar_hide else R.string.agenda_calendar_show),
+                style = if (calendarOpen) HeaderButtonStyle.Filled else HeaderButtonStyle.Glass,
+                onClick = onCalendar,
+            )
         }
         Spacer(Modifier.width(Space.sm))
         RoundHeaderButton(

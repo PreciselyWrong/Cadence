@@ -4,11 +4,9 @@ import androidx.compose.ui.semantics.selected
 import ch.nicolab.cadence.designsystem.components.ICON_CONTRAST
 import ch.nicolab.cadence.designsystem.components.readableTintOf
 import androidx.compose.material.icons.outlined.WbSunny
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Arrangement
@@ -56,9 +54,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -98,27 +93,22 @@ private val ALL_DAY_MORE_HEIGHT = 28.dp
 private val ALL_DAY_EXPANDED_MAX = 168.dp
 private val RESIZE_HANDLE_HEIGHT = 20.dp
 private val RESIZE_GRIP_WIDTH = 28.dp
-private val COLLAPSE_TRAVEL = 36.dp
 private val EDGE_SCROLL_ZONE = 56.dp
 private const val EDGE_SCROLL_MAX_PX = 22f
 private const val DROP_PREVIEW_ALPHA = 0.28f
 private const val GRIP_ALPHA = 0.45f
 private const val HOURS_PER_DAY = 24
 private const val DEFAULT_START_HOUR = 8
-/** Glissement franc, en pixels, au-delà duquel un balayage change de semaine ou de période. */
-private const val SWIPE_THRESHOLD_PX = 80f
 
 /**
- * Vue Jour et 3 jours : bandeau des jours (ou en-têtes de colonnes), rangée des journées entières,
- * puis grille horaire défilante. Les blocs gardent la couleur de leur source. Faire défiler la grille
- * replie le bandeau de la semaine en une ligne : la grille prend la place libérée.
+ * Vue Jour et 3 jours : en-têtes de colonnes (3 jours), rangée des journées entières,
+ * puis grille horaire défilante. Les blocs gardent la couleur de leur source. Défiler la grille ne
+ * change rien d'autre : le calendrier du mois s'ouvre seulement par le bouton de l'en-tête.
  */
 @Composable
 internal fun ColumnScope.TimeAgenda(
     state: AgendaUiState,
     now: LocalTime,
-    onSelect: (LocalDate) -> Unit,
-    onSwipeWeek: (Int) -> Unit,
     onToggleEvent: (EventInstanceKey) -> Unit,
     drag: TrayDragState,
     onDrop: (String, LocalDateTime) -> Unit,
@@ -128,31 +118,8 @@ internal fun ColumnScope.TimeAgenda(
         if (state.mode == AgendaMode.DAY) listOf(state.selected) else threeDays(state.selected, state.options.weekends)
     }
     val layouts = remember(state.entries, days) { days.associateWith { layoutDay(state.entries, it) } }
-    val dotDays = remember(state.entries) { dotsByDay(state.entries).keys }
-    var collapse by remember { mutableStateOf(ScrollCollapse()) }
-    val travelPx = with(LocalDensity.current) { COLLAPSE_TRAVEL.toPx() }
-    val connection = remember(travelPx) {
-        object : NestedScrollConnection {
-            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-                collapse = collapse.after(available.y, travelPx)
-                return Offset.Zero
-            }
-        }
-    }
-
-    Column(Modifier.weight(1f).nestedScroll(connection)) {
+    Column(Modifier.weight(1f)) {
         if (state.mode == AgendaMode.DAY) {
-            // Replié, la semaine disparaît : l'en-tête porte déjà la date ; remonter la rouvre.
-            AnimatedVisibility(visible = !collapse.collapsed, label = "weekStrip") {
-                WeekStrip(
-                    week = weekDays(state.selected).filter { state.options.weekends || !it.isWeekend() },
-                    selected = state.selected,
-                    today = state.today,
-                    daysWithEntries = dotDays,
-                    onSelect = onSelect,
-                    onSwipeWeek = onSwipeWeek,
-                )
-            }
             TrayRow(items = state.tray, drag = drag, onDrop = onDrop)
         } else {
             DayColumnHeaders(days = days, today = state.today)
@@ -160,7 +127,6 @@ internal fun ColumnScope.TimeAgenda(
         AllDayRow(
             days = days,
             layouts = layouts,
-            compact = collapse.collapsed,
             checkEvents = state.checkEvents,
             onToggleEvent = onToggleEvent,
             drag = drag,
@@ -177,91 +143,6 @@ internal fun ColumnScope.TimeAgenda(
             drag = drag,
             onResize = onResize,
             modifier = Modifier.weight(1f),
-        )
-    }
-}
-
-@Composable
-private fun WeekStrip(
-    week: List<LocalDate>,
-    selected: LocalDate,
-    today: LocalDate,
-    daysWithEntries: Set<LocalDate>,
-    onSelect: (LocalDate) -> Unit,
-    onSwipeWeek: (Int) -> Unit,
-) {
-    val swipe = rememberHorizontalSwipe(onSwipeWeek)
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .padding(top = Space.sm)
-            .then(swipe),
-    ) {
-        week.forEach { day ->
-            DayCell(
-                day = day,
-                selected = day == selected,
-                today = day == today,
-                hasEntries = day in daysWithEntries,
-                onClick = { onSelect(day) },
-                modifier = Modifier.weight(1f),
-            )
-        }
-    }
-}
-
-@Composable
-private fun DayCell(
-    day: LocalDate,
-    selected: Boolean,
-    today: Boolean,
-    hasEntries: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val palette = cadence
-    // « M 27 » ne dit pas si c'est mardi ou mercredi : le lecteur d'écran entend la date entière.
-    val description = day.agendaDayDescription()
-    Column(
-        modifier
-            .clip(Radius.Chip)
-            .clickable(role = Role.Button, onClick = onClick)
-            .semantics(mergeDescendants = true) {
-                contentDescription = description
-                this.selected = selected
-            }
-            .padding(vertical = Space.xs),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(
-            text = day.dayOfWeek.narrow(),
-            style = MaterialTheme.typography.labelMedium,
-            color = palette.onSurfaceVariant,
-        )
-        Spacer(Modifier.height(Space.xs))
-        Box(
-            Modifier
-                .size(Size.actionSm)
-                .clip(Radius.Pill)
-                .background(if (selected) palette.primary else Color.Transparent),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(
-                text = day.dayOfMonth.toString(),
-                style = MaterialTheme.typography.titleMedium,
-                color = when {
-                    selected -> palette.onPrimary
-                    today -> palette.primary
-                    else -> palette.onSurface
-                },
-            )
-        }
-        Spacer(Modifier.height(Space.xs))
-        Box(
-            Modifier
-                .size(Size.agendaDot)
-                .clip(Radius.Pill)
-                .background(if (hasEntries) palette.primary else Color.Transparent),
         )
     }
 }
@@ -305,7 +186,6 @@ private fun DayColumnHeaders(days: List<LocalDate>, today: LocalDate) {
 private fun AllDayRow(
     days: List<LocalDate>,
     layouts: Map<LocalDate, DayLayout>,
-    compact: Boolean,
     checkEvents: Boolean,
     onToggleEvent: (EventInstanceKey) -> Unit,
     drag: TrayDragState,
@@ -346,7 +226,7 @@ private fun AllDayRow(
         }
         columns.forEach { entries ->
             // En défilant, une seule ligne : la grille reprend la place des journées entières.
-            val cap = if (compact) capAllDay(entries, expanded = false, maxRows = 1) else capAllDay(entries, expanded)
+            val cap = capAllDay(entries, expanded)
             Column(Modifier.weight(1f).padding(horizontal = Space.xs), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
                 cap.visible.forEach { entry ->
                     AllDayChip(entry = entry, checkEvents = checkEvents, onToggleEvent = onToggleEvent, drag = drag, onDrop = onDrop)
@@ -744,24 +624,6 @@ private fun BoxWithConstraintsScope.NowLine(now: LocalTime) {
             .clip(Radius.Pill)
             .background(palette.error),
     )
-}
-
-/** Balayage horizontal sans conflit avec le défilement vertical : seul le glissement franc déclenche l'action. */
-@Composable
-internal fun rememberHorizontalSwipe(onSwipe: (Int) -> Unit): Modifier {
-    val latest by rememberUpdatedState(onSwipe)
-    return Modifier.pointerInput(Unit) {
-        var total = 0f
-        detectHorizontalDragGestures(
-            onDragStart = { total = 0f },
-            onDragEnd = {
-                when {
-                    total > SWIPE_THRESHOLD_PX -> latest(-1)
-                    total < -SWIPE_THRESHOLD_PX -> latest(1)
-                }
-            },
-        ) { _, amount -> total += amount }
-    }
 }
 
 private fun DayOfWeek.narrow(): String = getDisplayName(TextStyle.NARROW, Locale.FRENCH).uppercase(Locale.FRENCH)

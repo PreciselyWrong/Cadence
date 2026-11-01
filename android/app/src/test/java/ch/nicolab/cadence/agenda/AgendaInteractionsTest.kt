@@ -4,6 +4,7 @@ import ch.nicolab.cadence.tasks.model.TaskItem
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.YearMonth
 import java.time.ZoneId
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -170,33 +171,36 @@ class AgendaInteractionsTest {
         assertEquals(60, resizedMinutes(startMinute = 23 * 60, baseMinutes = 30, deltaPx = 900f, hourHeightPx = 100f))
     }
 
-    // --- bandeau des jours replié au défilement ---
+    // --- calendrier du mois ouvert par le bouton ---
+
+    private val friday = LocalDate.of(2026, 10, 30)
 
     @Test
-    fun `scrolling down past the threshold collapses the strip`() {
-        var s = ScrollCollapse()
-        s = s.after(-20f, 48f)
-        assertFalse(s.collapsed)
-        s = s.after(-40f, 48f)
-        assertTrue(s.collapsed)
+    fun `the calendar starts closed`() {
+        assertFalse(CalendarPanel().open)
     }
 
     @Test
-    fun `scrolling back up past the threshold expands it`() {
-        var s = ScrollCollapse(collapsed = true)
-        s = s.after(30f, 48f)
-        assertTrue(s.collapsed)
-        s = s.after(30f, 48f)
-        assertFalse(s.collapsed)
+    fun `the button opens the calendar on the selected month and closes it again`() {
+        val opened = CalendarPanel().toggled(friday)
+        assertTrue(opened.open)
+        assertEquals(YearMonth.of(2026, 10), opened.month)
+        assertEquals(CalendarPanel(), opened.toggled(friday))
     }
 
     @Test
-    fun `a direction change restarts the travel`() {
-        var s = ScrollCollapse()
-        s = s.after(-40f, 48f)
-        s = s.after(10f, 48f)
-        s = s.after(-40f, 48f)
-        assertFalse(s.collapsed)
+    fun `browsing moves the month without closing and reopening restarts on the selected day`() {
+        val browsed = CalendarPanel().toggled(friday).browsed(friday, 2)
+        assertTrue(browsed.open)
+        assertEquals(YearMonth.of(2026, 12), browsed.month)
+        assertEquals(YearMonth.of(2026, 9), browsed.browsed(friday, -3).month)
+        val reopened = browsed.toggled(friday).toggled(friday)
+        assertEquals(YearMonth.of(2026, 10), reopened.month)
+    }
+
+    @Test
+    fun `picking a day closes the calendar`() {
+        assertFalse(CalendarPanel().toggled(friday).browsed(friday, 1).picked().open)
     }
 
     // --- grille du mois ---

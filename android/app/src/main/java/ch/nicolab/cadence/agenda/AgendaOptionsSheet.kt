@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.DoneAll
@@ -94,67 +96,76 @@ internal fun AgendaOptionsSheet(
             Icon(Icons.Outlined.Tune, contentDescription = null, tint = palette.primary, modifier = Modifier.size(Size.iconLarge))
         },
     ) {
-        val toggles = listOf(
-            OptionToggle(R.string.agenda_option_timed_tasks, R.string.agenda_option_timed_tasks_hint, Icons.Outlined.Schedule, options.timedTasks) {
-                onOptionsChange { o -> o.copy(timedTasks = it) }
-            },
-            OptionToggle(R.string.agenda_option_habits, null, Icons.Outlined.Repeat, options.habits) {
-                onOptionsChange { o -> o.copy(habits = it) }
-            },
-            OptionToggle(R.string.agenda_option_done, null, Icons.Outlined.DoneAll, options.showDone) {
-                onOptionsChange { o -> o.copy(showDone = it) }
-            },
-            OptionToggle(R.string.agenda_option_weekends, null, Icons.Outlined.Weekend, options.weekends) {
-                onOptionsChange { o -> o.copy(weekends = it) }
-            },
-            OptionToggle(R.string.agenda_option_week_numbers, null, Icons.Outlined.Tag, options.weekNumbers) {
-                onOptionsChange { o -> o.copy(weekNumbers = it) }
-            },
-        )
-        RowGroup {
-            toggles.forEachIndexed { index, toggle ->
-                OptionRow(toggle = toggle, shape = rowGroupShape(index, toggles.size))
-            }
-        }
-        Spacer(Modifier.height(Space.lg))
-        Text(
-            text = stringResource(R.string.agenda_calendars),
-            style = MaterialTheme.typography.labelLarge,
-            color = palette.onSurfaceVariant,
-            modifier = Modifier.fillMaxWidth().padding(bottom = Space.sm),
-        )
-        when {
-            permissionMissing -> Column(
-                Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(Space.md),
-            ) {
-                Text(
-                    text = stringResource(R.string.agenda_calendar_access_hint),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = palette.onSurfaceVariant,
-                )
-                PrimaryAction(
-                    label = stringResource(R.string.agenda_calendar_access),
-                    onClick = onRequestPermission,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
-            calendars.isEmpty() -> Text(
-                text = stringResource(R.string.agenda_calendars_empty),
-                style = MaterialTheme.typography.bodyMedium,
-                color = palette.onSurfaceVariant,
-                modifier = Modifier.fillMaxWidth(),
+        // La feuille s'arrête à la hauteur de l'écran : sans défilement, les agendas du bas restaient hors d'atteinte.
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .weight(1f, fill = false)
+                .verticalScroll(rememberScrollState()),
+        ) {
+            val toggles = listOf(
+                OptionToggle(R.string.agenda_option_timed_tasks, R.string.agenda_option_timed_tasks_hint, Icons.Outlined.Schedule, options.timedTasks) {
+                    onOptionsChange { o -> o.copy(timedTasks = it) }
+                },
+                OptionToggle(R.string.agenda_option_habits, null, Icons.Outlined.Repeat, options.habits) {
+                    onOptionsChange { o -> o.copy(habits = it) }
+                },
+                OptionToggle(R.string.agenda_option_done, null, Icons.Outlined.DoneAll, options.showDone) {
+                    onOptionsChange { o -> o.copy(showDone = it) }
+                },
+                OptionToggle(R.string.agenda_option_weekends, null, Icons.Outlined.Weekend, options.weekends) {
+                    onOptionsChange { o -> o.copy(weekends = it) }
+                },
+                OptionToggle(R.string.agenda_option_week_numbers, null, Icons.Outlined.Tag, options.weekNumbers) {
+                    onOptionsChange { o -> o.copy(weekNumbers = it) }
+                },
             )
-            else -> RowGroup {
-                calendars.forEachIndexed { index, item ->
-                    CalendarShownRow(
-                        item = item,
-                        shape = rowGroupShape(index, calendars.size),
-                        onAgendaShown = { onCalendarShown(item, !item.display.agenda) },
-                        onTasksShown = { onCalendarTasksShown(item, !item.display.tasks) },
-                    )
+            RowGroup {
+                toggles.forEachIndexed { index, toggle ->
+                    OptionRow(toggle = toggle, shape = rowGroupShape(index, toggles.size))
                 }
             }
+            Spacer(Modifier.height(Space.lg))
+            Text(
+                text = stringResource(R.string.agenda_calendars),
+                style = MaterialTheme.typography.labelLarge,
+                color = palette.onSurfaceVariant,
+                modifier = Modifier.fillMaxWidth().padding(bottom = Space.sm),
+            )
+            when {
+                permissionMissing -> Column(
+                    Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(Space.md),
+                ) {
+                    Text(
+                        text = stringResource(R.string.agenda_calendar_access_hint),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = palette.onSurfaceVariant,
+                    )
+                    PrimaryAction(
+                        label = stringResource(R.string.agenda_calendar_access),
+                        onClick = onRequestPermission,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+                calendars.isEmpty() -> Text(
+                    text = stringResource(R.string.agenda_calendars_empty),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = palette.onSurfaceVariant,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                else -> RowGroup {
+                    calendars.forEachIndexed { index, item ->
+                        CalendarShownRow(
+                            item = item,
+                            shape = rowGroupShape(index, calendars.size),
+                            onAgendaShown = { onCalendarShown(item, !item.display.agenda) },
+                            onTasksShown = { onCalendarTasksShown(item, !item.display.tasks) },
+                        )
+                    }
+                }
+            }
+            Spacer(Modifier.height(Space.lg))
         }
     }
 }
