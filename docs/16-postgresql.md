@@ -198,7 +198,11 @@ DATABASE_URL=postgres://tududi:tududi@localhost:5432/tududi_dev npm run backend:
 DATABASE_URL=postgres://tududi:tududi@localhost:5432/tududi_test npm run backend:test:pg
 ```
 
-Never run two PostgreSQL test invocations at the same time against the same server: they share the per-worker databases and recreate each other's tables. See [testing.md](testing.md#test-database).
+Never run two PostgreSQL test invocations at the same time against the same server: they share the per-worker databases and recreate each other's tables. See [testing.md](testing.md#test-database). On a machine with little memory, run the suite in batches of files with `npx jest -w 2 --runTestsByPath <files>` from `backend/` instead of the whole suite at once. `podman` works in place of `docker` for the throwaway server.
+
+`tests/integration/sync-postgres-locks.test.js` runs only on PostgreSQL: it switches off the in-process row mutex to stand in for several server processes and checks the row lock of concurrent pushes, the retry of a create that lost the race, and that journal ids become visible in commit order.
+
+A fresh install records every migration as already applied, so migrations only execute on a database created by an older release. To exercise new migrations on PostgreSQL, bootstrap an empty database with an older checkout (`git archive <commit> backend package.json`, then `node scripts/db-prepare.js`), then run `npx sequelize-cli db:migrate --config config/database.js` from the current `backend/`.
 
 ---
 
