@@ -81,6 +81,8 @@
 
     <!-- Choix -->
     <string name="review_action_today">Faire aujourd\'hui</string>
+    <string name="review_action_short_session">Session courte aujourd’hui (25 min)</string>
+    <string name="review_short_session_offline">La session courte s\'ajoute au plan du jour sur le serveur : connectez-vous puis réessayez.</string>
     <string name="review_action_split">Découper en étapes</string>
     <string name="review_action_later">Plus tard</string>
     <string name="review_action_drop">Abandonner</string>

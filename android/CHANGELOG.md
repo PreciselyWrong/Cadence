@@ -1,6 +1,9 @@
 ## [1.7.0] — à publier
 
 ### Nouveautés
+- Revue, Repoussées : « Session courte aujourd’hui (25 min) », comme sur le web : la tâche rejoint le plan du jour du serveur pour 25 min, sans heure, et compte comme revue (en ligne seulement).
+
+### Nouveautés
 - En-tête d'un projet : « Épingler / Désépingler » (épingle de la barre latérale du web, synchronisée) dans un menu « … », jamais en bouton visible ; l'Inbox vide n'affiche plus « 0 idée à trier ».
 
 ### Nouveautés

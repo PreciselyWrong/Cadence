@@ -33,6 +33,7 @@ import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.OpenInFull
 import androidx.compose.material.icons.outlined.PauseCircle
 import androidx.compose.material.icons.outlined.TaskAlt
+import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -521,6 +522,7 @@ private fun rememberChoices(
     val today = stringResource(R.string.review_action_today)
     val todayShort = stringResource(R.string.review_action_today_short)
     val split = stringResource(R.string.review_action_split)
+    val shortSession = stringResource(R.string.review_action_short_session)
     val later = stringResource(R.string.review_action_later)
     val drop = stringResource(R.string.review_action_drop)
     val keep = stringResource(R.string.review_action_keep)
@@ -560,6 +562,7 @@ private fun rememberChoices(
                 when (step) {
                     ReviewStep.PUSHED -> listOf(
                         Choice(Icons.Outlined.Today, today, primary = true, run = d(item, Decision.Today, today)),
+                        Choice(Icons.Outlined.Timer, shortSession) { viewModel.shortSession(item, shortSession) },
                         Choice(Icons.Outlined.CallSplit, split) { onOpenTask(item.uid) },
                         Choice(funnelIcon(FunnelStage.LATER), later, run = d(item, Decision.Later, later)),
                         Choice(Icons.Outlined.Check, keep, run = d(item, Decision.Keep, keep)),

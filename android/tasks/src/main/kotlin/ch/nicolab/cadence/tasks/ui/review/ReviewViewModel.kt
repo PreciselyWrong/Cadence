@@ -13,6 +13,7 @@ import ch.nicolab.cadence.tasks.model.Delivery
 import ch.nicolab.cadence.tasks.model.Funnel
 import ch.nicolab.cadence.tasks.model.ProjectStatus
 import ch.nicolab.cadence.tasks.model.ReviewDecisions
+import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskDraft
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.review.Loaded
@@ -213,6 +214,26 @@ internal class ReviewViewModel(application: Application) : AndroidViewModel(appl
             val restore = ReviewBacklog.undo(decision, task, ctx.zone)
             _notices.tryEmit(UndoNotice(getString(R.string.review_saved, item.name, it)) { undo(task.uid) { tasks.updateTask(task.uid, restore) } })
         }
+    }
+
+    /**
+     * « Session courte aujourd'hui » (Repoussées), comme le web : la tâche rejoint le plan d'aujourd'hui pour 25 min,
+     * sans heure, puis compte comme revue. Pas d'« Annuler » : le plan du jour appartient à la journée, comme
+     * « Faire aujourd'hui » sur le web. Le plan s'écrit en ligne ; hors ligne, rien n'est écrit.
+     */
+    fun shortSession(item: ReviewTask, label: String) = run(item.uid) {
+        val task = local.value[item.uid]
+        if (task == null) {
+            _messages.tryEmit(getString(R.string.review_not_synced, item.name))
+            return@run
+        }
+        review.shortSession(task.uid)
+            .onSuccess {
+                undone.value -= task.uid
+                tasks.updateTask(task.uid, TaskChange(reviewed = true))
+                _messages.tryEmit(getString(R.string.review_saved, item.name, label))
+            }
+            .onFailure { _messages.tryEmit(getString(R.string.review_short_session_offline)) }
     }
 
     /** « Terminer » : la tâche est fermée comme d'une coche ; « Annuler » la rouvre. */

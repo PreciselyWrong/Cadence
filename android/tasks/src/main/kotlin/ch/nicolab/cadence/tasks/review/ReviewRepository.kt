@@ -118,6 +118,14 @@ class ReviewRepository internal constructor(
         ),
     )
 
+    /** « Session courte » ([ShortSession]) : lit le plan d'aujourd'hui puis le remplace ; en ligne seulement. */
+    suspend fun shortSession(taskUid: String): Result<Unit> = runCatching {
+        val current = call("GET", "/api/v1/daily-plan", emptyMap(), null)
+        val date = ShortSession.date(current) ?: error("Plan du jour sans date")
+        call("PUT", "/api/v1/daily-plan/${encode(date)}", emptyMap(), ShortSession.body(current, taskUid))
+        Unit
+    }
+
     private suspend fun <T> read(
         key: String,
         path: String,
