@@ -13,6 +13,7 @@ import ch.nicolab.cadence.R
 import ch.nicolab.cadence.calendar.CalendarGraph
 import ch.nicolab.cadence.calendar.CalendarSurface
 import ch.nicolab.cadence.calendar.EventReminderSettings
+import ch.nicolab.cadence.calendar.EventSnoozeMode
 import ch.nicolab.cadence.calendar.EventReminders
 import ch.nicolab.cadence.calendar.EventWithDone
 import ch.nicolab.cadence.calendar.TimeRange
@@ -53,7 +54,10 @@ object EventReminderScheduler {
     internal const val ACTION_DIGEST = "ch.nicolab.cadence.reminder.EVENT_DIGEST"
     internal const val ACTION_DONE = "ch.nicolab.cadence.reminder.EVENT_DONE"
     internal const val ACTION_REFRESH = "ch.nicolab.cadence.reminder.EVENT_REFRESH"
+    internal const val ACTION_SNOOZE = "ch.nicolab.cadence.reminder.EVENT_SNOOZE"
+    internal const val ACTION_SNOOZE_FIRE = "ch.nicolab.cadence.reminder.EVENT_SNOOZE_FIRE"
     internal const val EXTRA_TOKEN = "event_token"
+    internal const val EXTRA_SNOOZE_MODE = "event_snooze_mode"
     internal const val NOTIFICATION_ID = 7
 
     private const val PREFS = "cadence_event_reminders"
@@ -170,6 +174,19 @@ object EventReminderScheduler {
                 .setData(Uri.parse("cadence-event://alarm/$action/$token"))
                 .putExtra(EXTRA_TOKEN, token),
             flag or PendingIntent.FLAG_IMMUTABLE,
+        )
+
+    /** Intent d'une action de report (bouton ou réveil du report), distinct par mode de report. */
+    internal fun snoozeIntent(context: Context, action: String, token: String, mode: EventSnoozeMode): PendingIntent =
+        PendingIntent.getBroadcast(
+            context,
+            "$action:$token:${mode.name}".hashCode(),
+            Intent(context, EventReminderReceiver::class.java)
+                .setAction(action)
+                .setData(Uri.parse("cadence-event://snooze/${mode.name}/$token"))
+                .putExtra(EXTRA_TOKEN, token)
+                .putExtra(EXTRA_SNOOZE_MODE, mode.name),
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
 
     private fun cancel(context: Context, token: String) {

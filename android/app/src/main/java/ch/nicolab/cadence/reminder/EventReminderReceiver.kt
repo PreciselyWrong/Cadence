@@ -13,11 +13,15 @@ import ch.nicolab.cadence.R
 import ch.nicolab.cadence.calendar.CalendarGraph
 import ch.nicolab.cadence.calendar.CalendarSurface
 import ch.nicolab.cadence.calendar.EventReminders
+import ch.nicolab.cadence.calendar.EventSnooze
+import ch.nicolab.cadence.calendar.EventSnoozeMode
 import ch.nicolab.cadence.calendar.EventWithDone
 import ch.nicolab.cadence.calendar.TimeRange
 import ch.nicolab.cadence.calendar.eventKeyOfToken
+import ch.nicolab.cadence.calendar.localEnd
 import ch.nicolab.cadence.calendar.localStart
 import ch.nicolab.cadence.designsystem.R as DesignR
+import ch.nicolab.cadence.tasks.reminder.ReminderAlarms
 import ch.nicolab.cadence.widget.today.TodayWidget
 import java.time.Instant
 import java.time.LocalDate
@@ -41,6 +45,8 @@ class EventReminderReceiver : BroadcastReceiver() {
                     EventReminderScheduler.ACTION_FIRE -> token?.let { EventReminderNotifier.fire(context, it) }
                     EventReminderScheduler.ACTION_DIGEST -> token?.let { EventReminderNotifier.fireDigest(context, it) }
                     EventReminderScheduler.ACTION_DONE -> token?.let { EventReminderNotifier.markDone(context, it) }
+                    EventReminderScheduler.ACTION_SNOOZE -> snoozeMode(intent)?.let { mode -> token?.let { EventReminderNotifier.snooze(context, it, mode) } }
+                    EventReminderScheduler.ACTION_SNOOZE_FIRE -> snoozeMode(intent)?.let { mode -> token?.let { EventReminderNotifier.fireSnoozed(context, it, mode) } }
                     EventReminderScheduler.ACTION_REFRESH -> EventReminderScheduler.resync(context)
                 }
             } finally {
@@ -49,6 +55,9 @@ class EventReminderReceiver : BroadcastReceiver() {
         }
     }
 }
+
+private fun snoozeMode(intent: Intent): EventSnoozeMode? =
+    intent.getStringExtra(EventReminderScheduler.EXTRA_SNOOZE_MODE)?.let { name -> EventSnoozeMode.entries.firstOrNull { it.name == name } }
 
 /** Affiche les notifications d'événements, après avoir relu l'événement : déplacé, supprimé, masqué ou fait, il se tait. */
 internal object EventReminderNotifier {
@@ -93,6 +102,35 @@ internal object EventReminderNotifier {
         NotificationManagerCompat.from(context).notify(token, EventReminderScheduler.NOTIFICATION_ID, builder.build())
     }
 
+    /** Pose le réveil du report ; l'événement est relu à l'heure dite. Sans événement vivant, rien n'est posé. */
+    suspend fun snooze(context: Context, token: String, mode: EventSnoozeMode) {
+        NotificationManagerCompat.from(context).cancel(token, EventReminderScheduler.NOTIFICATION_ID)
+        val item = liveItem(context, token) ?: return
+        val now = Instant.now()
+        val end = Instant.ofEpochMilli(item.event.localEnd(ZoneId.systemDefault()))
+        if (mode == EventSnoozeMode.UNTIL_END && !EventSnooze.offersUntilEnd(end, now, item.event.allDay)) return
+        val at = EventSnooze.triggerAt(mode, now, end, EventReminderScheduler.currentQuiet(context)::shift)
+        ReminderAlarms.arm(context, at.toEpochMilli(), EventReminderScheduler.snoozeIntent(context, EventReminderScheduler.ACTION_SNOOZE_FIRE, token, mode))
+    }
+
+    /** Réveil d'un report : même relecture qu'à la première notification, sans le contrôle « déjà commencé ». */
+    suspend fun fireSnoozed(context: Context, token: String, mode: EventSnoozeMode) {
+        val repository = CalendarGraph.repository(context)
+        if (!repository.reminderSettings.first().enabled) return
+        val item = liveItem(context, token) ?: return
+        val start = item.event.localStart(ZoneId.systemDefault())
+        show(context, token, item, start, System.currentTimeMillis(), repository.globalSettings.first().checkEvents, endingOnly = mode == EventSnoozeMode.UNTIL_END)
+    }
+
+    /** L'occurrence telle qu'elle est encore dans l'agenda, non faite, non journée entière : sinon null. */
+    private suspend fun liveItem(context: Context, token: String): EventWithDone? {
+        val key = eventKeyOfToken(token) ?: return null
+        val zone = ZoneId.systemDefault()
+        val day = Instant.ofEpochMilli(key.instanceBegin).atZone(zone).toLocalDate()
+        return CalendarGraph.repository(context).events(EventReminderScheduler.dayRange(day, zone).widened(), CalendarSurface.REMINDERS).first()
+            .firstOrNull { it.event.key == key && !it.done && !it.event.allDay }
+    }
+
     /** « Fait » : comme la case de l'agenda, dans Cadence seulement. */
     suspend fun markDone(context: Context, token: String) {
         val key = eventKeyOfToken(token) ?: return
@@ -102,12 +140,16 @@ internal object EventReminderNotifier {
         TodayWidget().updateAll(context)
     }
 
-    private fun show(context: Context, token: String, item: EventWithDone, start: Long, now: Long, canCheck: Boolean) {
+    private fun show(context: Context, token: String, item: EventWithDone, start: Long, now: Long, canCheck: Boolean, endingOnly: Boolean = false) {
         if (!notificationsAllowed(context)) return
         val zone = ZoneId.systemDefault()
         val time = Instant.ofEpochMilli(start).atZone(zone).format(timeFormat)
         val minutes = ((start - now + MINUTE_MS / 2) / MINUTE_MS).toInt()
-        val base = if (minutes >= 1) context.getString(R.string.event_reminders_in_minutes, minutes, time) else context.getString(R.string.event_reminders_now, time)
+        val base = when {
+            endingOnly -> context.getString(R.string.event_reminders_ends_at, Instant.ofEpochMilli(item.event.localEnd(zone)).atZone(zone).format(timeFormat))
+            minutes >= 1 -> context.getString(R.string.event_reminders_in_minutes, minutes, time)
+            else -> context.getString(R.string.event_reminders_now, time)
+        }
         val builder = NotificationCompat.Builder(context, EventReminderScheduler.CHANNEL_ID)
             .setSmallIcon(DesignR.drawable.ic_widget_mark)
             .setContentTitle(item.event.title.ifBlank { context.getString(R.string.agenda_untitled) })
@@ -119,6 +161,10 @@ internal object EventReminderNotifier {
         if (canCheck) {
             builder.addAction(0, context.getString(R.string.event_reminders_done), EventReminderScheduler.pending(context, EventReminderScheduler.ACTION_DONE, token, PendingIntent.FLAG_UPDATE_CURRENT))
         }
+        if (EventSnooze.offersUntilEnd(Instant.ofEpochMilli(item.event.localEnd(zone)), Instant.ofEpochMilli(now), item.event.allDay)) {
+            builder.addAction(0, context.getString(R.string.event_reminders_until_end), EventReminderScheduler.snoozeIntent(context, EventReminderScheduler.ACTION_SNOOZE, token, EventSnoozeMode.UNTIL_END))
+        }
+        builder.addAction(0, context.getString(R.string.event_reminders_snooze_10_min), EventReminderScheduler.snoozeIntent(context, EventReminderScheduler.ACTION_SNOOZE, token, EventSnoozeMode.TEN_MINUTES))
         NotificationManagerCompat.from(context).notify(token, EventReminderScheduler.NOTIFICATION_ID, builder.build())
         EventReminderScheduler.recordPosted(context, token)
     }

@@ -5,6 +5,9 @@
     <string name="event_reminders_now">Maintenant · %1$s</string>
     <string name="event_reminders_open_agenda">Ouvrir l’agenda</string>
     <string name="event_reminders_done">Fait</string>
+    <string name="event_reminders_until_end">À la fin</string>
+    <string name="event_reminders_snooze_10_min">10 min</string>
+    <string name="event_reminders_ends_at">Se termine à %1$s</string>
     <string name="event_reminders_digest_title">Aujourd’hui, %1$s</string>
 
     <string name="calendars_surface_notify">Notifications</string>

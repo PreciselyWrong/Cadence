@@ -112,3 +112,8 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Décision** : onglet « Objectifs » dans Tâches (après Étiquettes) et résultats « Objectifs » dans la recherche ; la carte du Bilan reste. Toucher un but ouvre une fiche : nom, note, type (envies), état, « Créer une tâche » (ajout rapide prérempli, tâche liée par `goal_uid`), « Supprimer » avec « Annuler ».
 - **Web** : la barre latérale montre déjà Objectifs (section par défaut ; en disposition Minimal, dans le rail). Repris : « Créer une tâche » sur une envie et « Tâches liées : N ». La recherche web trouve déjà les objectifs (palette Ctrl+K).
 
+### 2026-11-01 — Notification d'événement : reporter à la fin ou de 10 min
+
+- **Problème** : une notification d'événement ne proposait que « Ouvrir l'agenda » et « Fait » ; pour un rendez-vous long, le rappel tombait trop tôt pour savoir s'il était fini.
+- **Décision** : « À la fin » reveille au moment où l'événement se termine (masqué si moins de 5 min restent ou journée entière) et « 10 min » reveille dix minutes plus tard. Le rappel repris relit l'événement : fait, masqué, déplacé ou supprimé, il se tait ; les heures calmes décalent le réveil.
+- **Web** : rien à reprendre tant que l'agenda web n'envoie pas de rappels à reporter.
