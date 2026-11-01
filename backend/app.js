@@ -184,17 +184,6 @@ const billingModule = require('./modules/billing');
 // Paddle's default payment link (pay an invoice, replace a failed card).
 app.get('/billing/pay', billingModule.payPage);
 
-// Gitea/GitHub push webhook of a TODO.md repository: raw body, before JSON
-// parsing and authentication. The HMAC signature is the authentication.
-const todoMdWebhook = require('./modules/todo-md/webhook');
-['/api', API_BASE_PATH].forEach((base) => {
-    app.post(
-        `${base}/todo-md/webhook/:slug`,
-        express.raw({ type: '*/*', limit: '1mb' }),
-        todoMdWebhook.handler()
-    );
-});
-
 // Body parsing (skip for CalDAV routes which need raw body access)
 app.use((req, res, next) => {
     const isCalDAVPath =
