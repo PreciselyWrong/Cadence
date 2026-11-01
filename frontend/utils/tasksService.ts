@@ -270,13 +270,17 @@ export const saveTaskOrder = async (
     await handleAuthResponse(response, 'Failed to save task order.');
 };
 
-export const deleteTask = async (taskUid: string): Promise<void> => {
+export const deleteTask = async (
+    taskUid: string,
+    options: { keepalive?: boolean } = {}
+): Promise<void> => {
     const response = await fetch(
         getApiPath(`task/${encodeURIComponent(taskUid)}`),
         {
             method: 'DELETE',
             credentials: 'include',
             headers: await getPostHeadersWithCsrf(),
+            keepalive: options.keepalive,
         }
     );
 

@@ -195,6 +195,7 @@
     "hideCompleted": "إخفاء المهام المكتملة"
   },
   "tasks": {
+    "deletedToast": "\"{{name}}\" deleted",
     "title": "المهام",
     "today": "اليوم",
     "total": "Total",

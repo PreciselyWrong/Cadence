@@ -13,10 +13,15 @@ import { useToast } from './Shared/ToastContext';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import NoteModal from './Note/NoteModal';
 import PublicShareModal from './Note/PublicShareModal';
-import ConfirmDialog from './Shared/ConfirmDialog';
 import DiscardChangesDialog from './Shared/DiscardChangesDialog';
 import { Note } from '../entities/Note';
-import { createNote, updateNote, fetchNoteBySlug } from '../utils/notesService';
+import {
+    createNote,
+    deleteNote,
+    updateNote,
+    fetchNoteBySlug,
+} from '../utils/notesService';
+import { deferDelete } from '../utils/deferredDelete';
 import { deleteNoteWithStoreUpdate } from '../utils/noteDeleteUtils';
 import { useStore } from '../store/useStore';
 import { createProject } from '../utils/projectsService';
@@ -52,7 +57,7 @@ const mergeSavedNote = (current: Note | null, saved: Note): Note | null => {
 const Notes: React.FC = () => {
     const { t } = useTranslation();
     const focus = useFocus();
-    const { showSuccessToast } = useToast();
+    const { showSuccessToast, showErrorToast, showUndoToast } = useToast();
     const { uid } = useParams<{ uid?: string }>();
     const navigate = useNavigate();
     const location = useLocation();
@@ -61,8 +66,6 @@ const Notes: React.FC = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [editingNote, setEditingNote] = useState<Note | null>(null);
     const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
-    const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
-    const [noteToDelete, setNoteToDelete] = useState<Note | null>(null);
     const [noteToShare, setNoteToShare] = useState<Note | null>(null);
     // Notes are browsed via the sidebar's folder tree now, not a list on
     // this page - this page is the editor/preview pane only. `orderBy`
@@ -209,27 +212,40 @@ const Notes: React.FC = () => {
         }
     };
 
-    const handleDeleteNote = async () => {
-        if (!noteToDelete) return;
-        try {
-            await deleteNoteWithStoreUpdate(noteToDelete, showSuccessToast, t);
-            setIsConfirmDialogOpen(false);
-            setNoteToDelete(null);
-
-            if (previewNote?.uid === noteToDelete.uid) {
-                setPreviewNote(null);
-            }
-
-            if (editingNote?.uid === noteToDelete.uid) {
-                setIsEditing(false);
-                setEditingNote(null);
-                setSaveStatus('saved');
-            }
-
-            navigate('/notes', { replace: true });
-        } catch (err) {
-            console.error('Error deleting note:', err);
+    // The note leaves the list at once; the delete waits for the undo window.
+    const deleteNoteWithUndo = (note: Note) => {
+        const uid = note.uid;
+        if (!uid) return;
+        const restore = () => {
+            const { notes: current, setNotes } = useStore.getState().notesStore;
+            setNotes([...current, note]);
+        };
+        const { notes: current, setNotes } = useStore.getState().notesStore;
+        setNotes(current.filter((item) => item.uid !== uid));
+        if (previewNote?.uid === uid) {
+            setPreviewNote(null);
         }
+        if (editingNote?.uid === uid) {
+            setIsEditing(false);
+            setEditingNote(null);
+            setSaveStatus('saved');
+        }
+        navigate('/notes', { replace: true });
+
+        const undo = deferDelete(
+            `note:${uid}`,
+            (options) => deleteNote(uid, options),
+            (error) => {
+                console.error('Error deleting note:', error);
+                restore();
+                showErrorToast(
+                    t('errors.permissionDenied', 'Permission denied')
+                );
+            }
+        );
+        showUndoToast(t('success.noteDeleted'), () => {
+            if (undo()) restore();
+        });
     };
 
     const handleEditNote = (note: Note) => {
@@ -576,8 +592,7 @@ const Notes: React.FC = () => {
                                 }}
                                 onTogglePin={() => handleTogglePin(editingNote)}
                                 onDelete={() => {
-                                    setNoteToDelete(editingNote);
-                                    setIsConfirmDialogOpen(true);
+                                    deleteNoteWithUndo(editingNote);
                                 }}
                                 onShare={() => setNoteToShare(editingNote)}
                                 onOpenFocusMode={() => setIsFocusMode(true)}
@@ -718,17 +733,6 @@ const Notes: React.FC = () => {
                         }
                     }}
                 />
-
-                {isConfirmDialogOpen && noteToDelete && (
-                    <ConfirmDialog
-                        title={t('modals.deleteNote.title')}
-                        message={t('modals.deleteNote.message', {
-                            noteTitle: noteToDelete.title,
-                        })}
-                        onConfirm={handleDeleteNote}
-                        onCancel={() => setIsConfirmDialogOpen(false)}
-                    />
-                )}
 
                 {showDiscardDialog && (
                     <DiscardChangesDialog

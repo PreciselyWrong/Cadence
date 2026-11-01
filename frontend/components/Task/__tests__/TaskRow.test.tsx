@@ -20,6 +20,7 @@ import {
 
 import { useStore } from '../../../store/useStore';
 import { NativeTaskDragContext } from '../../Sidebar/sidebarDrop';
+import { UNDO_WINDOW_MS } from '../../../utils/deferredDelete';
 
 const navigateMock = jest.fn();
 
@@ -41,11 +42,13 @@ jest.mock('../../../i18n', () => ({
     default: { language: 'en' },
 }));
 
+const mockShowUndoToast = jest.fn();
+
 jest.mock('../../Shared/ToastContext', () => ({
     useToast: () => ({
         showSuccessToast: jest.fn(),
         showErrorToast: jest.fn(),
-        showUndoToast: jest.fn(),
+        showUndoToast: mockShowUndoToast,
     }),
 }));
 
@@ -492,14 +495,50 @@ describe('TaskRow', () => {
             ).not.toBeInTheDocument();
         });
 
-        it('deletes the task after confirming', () => {
-            const onTaskDelete = jest.fn();
-            renderRow(baseTask(), { onTaskDelete });
-            fireEvent.click(screen.getByTestId('task-actions-menu-button'));
-            fireEvent.click(screen.getByRole('menuitem', { name: 'Delete' }));
-            expect(onTaskDelete).not.toHaveBeenCalled();
-            fireEvent.click(screen.getByRole('button', { name: 'Delete' }));
-            expect(onTaskDelete).toHaveBeenCalledWith('task-1');
+        it('hides a deleted task at once and deletes it after the undo window', () => {
+            jest.useFakeTimers();
+            mockShowUndoToast.mockClear();
+            try {
+                const onTaskDelete = jest.fn();
+                const { container } = renderRow(baseTask(), { onTaskDelete });
+                fireEvent.click(screen.getByTestId('task-actions-menu-button'));
+                fireEvent.click(
+                    screen.getByRole('menuitem', { name: 'Delete' })
+                );
+                expect(container).toBeEmptyDOMElement();
+                expect(onTaskDelete).not.toHaveBeenCalled();
+                expect(mockShowUndoToast).toHaveBeenLastCalledWith(
+                    expect.anything(),
+                    expect.any(Function)
+                );
+                act(() => {
+                    jest.advanceTimersByTime(UNDO_WINDOW_MS);
+                });
+                expect(onTaskDelete).toHaveBeenCalledWith('task-1');
+            } finally {
+                jest.useRealTimers();
+            }
+        });
+
+        it('brings a deleted task back when the undo is used', () => {
+            jest.useFakeTimers();
+            try {
+                const onTaskDelete = jest.fn();
+                renderRow(baseTask(), { onTaskDelete });
+                fireEvent.click(screen.getByTestId('task-actions-menu-button'));
+                fireEvent.click(
+                    screen.getByRole('menuitem', { name: 'Delete' })
+                );
+                const onUndo = mockShowUndoToast.mock.calls.at(-1)?.[1];
+                act(() => onUndo());
+                act(() => {
+                    jest.advanceTimersByTime(UNDO_WINDOW_MS);
+                });
+                expect(onTaskDelete).not.toHaveBeenCalled();
+                expect(screen.getByText('Buy tickets')).toBeInTheDocument();
+            } finally {
+                jest.useRealTimers();
+            }
         });
 
         it('pins the task with a field-only PATCH', async () => {

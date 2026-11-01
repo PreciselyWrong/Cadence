@@ -191,6 +191,7 @@
     "hideCompleted": "Abgeschlossene Aufgaben ausblenden"
   },
   "tasks": {
+    "deletedToast": "\"{{name}}\" deleted",
     "title": "Aufgaben",
     "backlog": "Backlog",
     "inProgress": "In Bearbeitung",

@@ -191,6 +191,7 @@
     "hideCompleted": "Piilota valmiit tehtävät"
   },
   "tasks": {
+    "deletedToast": "\"{{name}}\" deleted",
     "title": "Tehtävät",
     "today": "Tänään",
     "total": "Total",

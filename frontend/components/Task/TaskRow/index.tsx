@@ -21,6 +21,7 @@ import { Task } from '../../../entities/Task';
 import { Project } from '../../../entities/Project';
 import { useToast } from '../../Shared/ToastContext';
 import ConfirmDialog from '../../Shared/ConfirmDialog';
+import { deferDelete } from '../../../utils/deferredDelete';
 import { isTaskCompleted, isTaskDone } from '../../../constants/taskStatus';
 import {
     toggleTaskCompletion,
@@ -124,7 +125,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
     const { showErrorToast, showUndoToast } = useToast();
 
     const [projectList, setProjectList] = useState<Project[]>(projects);
-    const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+    const [isDeleted, setIsDeleted] = useState(false);
     const [isBlockedConfirmOpen, setIsBlockedConfirmOpen] = useState(false);
     const [isAnimatingOut, setIsAnimatingOut] = useState(false);
     const [isStatusMenuOpen, setIsStatusMenuOpen] = useState(false);
@@ -343,12 +344,39 @@ const TaskRow: React.FC<TaskRowProps> = ({
         setContextMenuAt({ x: e.clientX, y: e.clientY });
     }, []);
 
-    // A recurring task's scope prompt is its confirmation.
+    // The row hides at once and the delete waits for the undo window. A
+    // recurring task's scope prompt is its confirmation, so it deletes now.
+    const deleteWithUndo = () => {
+        if (!task.uid) return;
+        const uid = task.uid;
+        setIsDeleted(true);
+        const undo = deferDelete(
+            `task:${uid}`,
+            (options) =>
+                options.keepalive
+                    ? deleteTask(uid, options)
+                    : onTaskDelete(uid),
+            (error) => {
+                console.error('Task delete failed:', error);
+                setIsDeleted(false);
+                showErrorToast(
+                    t('errors.permissionDenied', 'Permission denied')
+                );
+            }
+        );
+        showUndoToast(
+            t('tasks.deletedToast', '"{{name}}" deleted', { name: task.name }),
+            () => {
+                if (undo()) setIsDeleted(false);
+            }
+        );
+    };
+
     const askToDelete = () => {
         if (task.uid && task.due_date && isRecurringTask(task)) {
             void handleDelete();
         } else {
-            setIsConfirmDialogOpen(true);
+            deleteWithUndo();
         }
     };
 
@@ -519,6 +547,8 @@ const TaskRow: React.FC<TaskRowProps> = ({
                   )
               )
             : {};
+
+    if (isDeleted) return null;
 
     return (
         <div
@@ -743,22 +773,6 @@ const TaskRow: React.FC<TaskRowProps> = ({
                         void performToggleCompletion();
                     }}
                     onCancel={() => setIsBlockedConfirmOpen(false)}
-                />
-            )}
-
-            {isConfirmDialogOpen && (
-                <ConfirmDialog
-                    title={t('tasks.deleteConfirmTitle', 'Delete Task')}
-                    message={t(
-                        'tasks.deleteConfirmMessage',
-                        'Are you sure you want to delete "{{name}}"? This action cannot be undone.',
-                        { name: task.name }
-                    )}
-                    onConfirm={() => {
-                        setIsConfirmDialogOpen(false);
-                        void handleDelete();
-                    }}
-                    onCancel={() => setIsConfirmDialogOpen(false)}
                 />
             )}
         </div>

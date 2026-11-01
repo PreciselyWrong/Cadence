@@ -191,6 +191,7 @@
     "hideCompleted": "Tamamlanan Görevleri Gizle"
   },
   "tasks": {
+    "deletedToast": "\"{{name}}\" deleted",
     "title": "Görevler",
     "today": "Bugün",
     "total": "Total",

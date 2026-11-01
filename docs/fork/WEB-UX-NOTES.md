@@ -241,3 +241,9 @@ Revue écran par écran (Aujourd'hui, Boîte, Tâches, Projets, page projet, Age
 - **Problème** : pour sauter un jour, il fallait ouvrir « Pause », choisir la date et le motif ; le seul geste était une pause de plusieurs jours.
 - **Décision** : la page d'une habitude a « Passer aujourd'hui » (hors habitudes archivées). Il crée une pause d'un jour, motif Repos (`REST`), du jour à demain, comme sur Android : la série ne se casse pas. Le même bouton devient « Annuler le saut » tant que la pause du jour existe, et la supprime. Sans toast : l'état du bouton suit la pause.
 - **Android** : à reprendre : rien, déjà le cas (`skipToday`, `cancelSkip`, motif Repos).
+
+### 2026-11-01 — Supprimer avec annulation
+
+- **Problème** : supprimer une tâche, une note ou une idée de la boîte demandait une fenêtre de confirmation avant chaque suppression, et rien ne se rattrapait ensuite.
+- **Décision** : l'élément disparaît aussitôt, un toast « Annuler » dure 5 s (6 s à l'écran) ; sans annulation, la suppression part à la fin de ce délai, ou tout de suite si la page est quittée (requête `keepalive`). Une tâche récurrente garde son choix de portée. Une date ou un projet changé dans le menu clic droit propose aussi « Annuler » (voir l'entrée suivante). Mécanisme dans `frontend/utils/deferredDelete.ts`.
+- **Android** : à reprendre. Même règle pour tâches, notes et idées : retrait immédiat, annulation pendant le délai, suppression ensuite. Reste : les suppressions de l'application ne sont pas encore toutes passées par ce délai.

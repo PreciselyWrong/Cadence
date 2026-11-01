@@ -191,6 +191,7 @@
     "hideCompleted": "Verberg Voltooide Taken"
   },
   "tasks": {
+    "deletedToast": "\"{{name}}\" deleted",
     "title": "Taken",
     "today": "Vandaag",
     "total": "Total",

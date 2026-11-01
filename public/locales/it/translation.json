@@ -192,6 +192,7 @@
     "hideCompleted": "Nascondi Attività Completate"
   },
   "tasks": {
+    "deletedToast": "\"{{name}}\" deleted",
     "title": "Attività",
     "today": "Oggi",
     "total": "Total",

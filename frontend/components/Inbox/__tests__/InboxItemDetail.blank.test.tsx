@@ -47,12 +47,11 @@ describe('InboxItemDetail - blank content', () => {
         expect(screen.getByText('(Empty item)')).toBeInTheDocument();
     });
 
-    it('allows deleting a blank item', () => {
+    it('deletes a blank item at once, the parent offers the undo', () => {
         const onDelete = jest.fn();
         renderItem({ uid: 'abc123', content: '', title: null }, onDelete);
 
         fireEvent.click(screen.getByLabelText('Delete'));
-        fireEvent.click(screen.getByTestId('confirm-dialog-confirm'));
 
         expect(onDelete).toHaveBeenCalledWith('abc123');
     });

@@ -193,6 +193,7 @@
     "hideCompleted": "Skrij dokončane naloge"
   },
   "tasks": {
+    "deletedToast": "\"{{name}}\" deleted",
     "title": "Naloge",
     "today": "Danes",
     "total": "Total",

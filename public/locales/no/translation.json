@@ -192,6 +192,7 @@
     "hideCompleted": "Skjul Fullførte Oppgaver"
   },
   "tasks": {
+    "deletedToast": "\"{{name}}\" deleted",
     "title": "Oppgaver",
     "today": "I dag",
     "total": "Total",

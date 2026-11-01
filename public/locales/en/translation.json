@@ -190,6 +190,7 @@
     "hideCompleted": "Hide Completed Tasks"
   },
   "tasks": {
+    "deletedToast": "\"{{name}}\" deleted",
     "title": "Tasks",
     "reorderError": "Failed to save task order",
     "today": "Today",

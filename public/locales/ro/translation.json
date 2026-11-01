@@ -192,6 +192,7 @@
     "hideCompleted": "Ascunde Sarcini Finalizate"
   },
   "tasks": {
+    "deletedToast": "\"{{name}}\" deleted",
     "title": "Sarcini",
     "today": "Astăzi",
     "total": "Total",

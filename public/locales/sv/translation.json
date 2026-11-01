@@ -191,6 +191,7 @@
     "hideCompleted": "Dölj slutförda uppgifter"
   },
   "tasks": {
+    "deletedToast": "\"{{name}}\" deleted",
     "title": "Uppgifter",
     "today": "Idag",
     "total": "Total",

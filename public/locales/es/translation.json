@@ -973,6 +973,7 @@
     "tag": "Etiqueta"
   },
   "tasks": {
+    "deletedToast": "\"{{name}}\" deleted",
     "title": "Tareas",
     "today": "Hoy",
     "total": "Total",

@@ -214,7 +214,10 @@ export const processInboxItem = async (
     return await response.json();
 };
 
-export const deleteInboxItem = async (itemUid: string): Promise<void> => {
+export const deleteInboxItem = async (
+    itemUid: string,
+    options: { keepalive?: boolean } = {}
+): Promise<void> => {
     const response = await fetch(getApiPath(`inbox/${itemUid}`), {
         method: 'DELETE',
         credentials: 'include',
@@ -222,6 +225,7 @@ export const deleteInboxItem = async (itemUid: string): Promise<void> => {
             Accept: 'application/json',
             'x-csrf-token': await getCsrfToken(),
         },
+        keepalive: options.keepalive,
     });
 
     await handleAuthResponse(response, 'Failed to delete inbox item.');

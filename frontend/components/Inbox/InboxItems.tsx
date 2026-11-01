@@ -7,12 +7,13 @@ import {
     loadInboxItemsToStore,
     loadMoreInboxItemsToStore,
     processInboxItemWithStore,
-    deleteInboxItemWithStore,
+    deleteInboxItem,
     updateInboxItemWithStore,
     ProcessedInto,
 } from '../../utils/inboxService';
 import InboxItemDetail from './InboxItemDetail';
 import { useToast } from '../Shared/ToastContext';
+import { deferDelete } from '../../utils/deferredDelete';
 import { useTranslation } from 'react-i18next';
 import { InboxIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
 import LoadingScreen from '../Shared/LoadingScreen';
@@ -38,7 +39,7 @@ import { TASK_SHEET_CLASS } from '../Task/taskSheet';
 import { openTaskPanel } from '../../store/taskPanelStore';
 const InboxItems: React.FC = () => {
     const { t } = useTranslation();
-    const { showSuccessToast, showErrorToast } = useToast();
+    const { showSuccessToast, showErrorToast, showUndoToast } = useToast();
     const [searchParams, setSearchParams] = useSearchParams();
 
     const [hasInitialized, setHasInitialized] = useState(false);
@@ -254,14 +255,30 @@ const InboxItems: React.FC = () => {
         }
     };
 
-    const handleDeleteItem = async (uid: string) => {
-        try {
-            await deleteInboxItemWithStore(uid);
-            showSuccessToast(t('inbox.itemDeleted'));
-        } catch (error) {
-            console.error('Failed to delete inbox item:', error);
-            showErrorToast(t('inbox.deleteError'));
-        }
+    // The item leaves the list at once; the delete waits for the undo window.
+    const handleDeleteItem = (uid: string) => {
+        const {
+            inboxItems: current,
+            removeInboxItemByUid,
+            addInboxItem,
+        } = useStore.getState().inboxStore;
+        const item = current.find((entry) => entry.uid === uid);
+        removeInboxItemByUid(uid);
+        const restore = () => {
+            if (item) addInboxItem(item);
+        };
+        const undo = deferDelete(
+            `inbox:${uid}`,
+            (options) => deleteInboxItem(uid, options),
+            (error) => {
+                console.error('Failed to delete inbox item:', error);
+                restore();
+                showErrorToast(t('inbox.deleteError'));
+            }
+        );
+        showUndoToast(t('inbox.itemDeleted'), () => {
+            if (undo()) restore();
+        });
     };
 
     const createTaskAndHandleConversion = async (

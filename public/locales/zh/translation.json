@@ -191,6 +191,7 @@
     "hideCompleted": "隐藏已完成的任务"
   },
   "tasks": {
+    "deletedToast": "\"{{name}}\" deleted",
     "title": "任务",
     "today": "今天",
     "total": "Total",

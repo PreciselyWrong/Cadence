@@ -83,11 +83,15 @@ export const updateNote = async (
     return updated;
 };
 
-export const deleteNote = async (noteUid: string): Promise<void> => {
+export const deleteNote = async (
+    noteUid: string,
+    options: { keepalive?: boolean } = {}
+): Promise<void> => {
     const response = await fetch(getApiPath(`note/${noteUid}`), {
         method: 'DELETE',
         credentials: 'include',
         headers: await getPostHeadersWithCsrf(),
+        keepalive: options.keepalive,
     });
 
     await handleAuthResponse(response, 'Failed to delete note.');
@@ -99,7 +103,9 @@ export interface BacklinkNote {
     title: string;
 }
 
-export const fetchNoteBacklinks = async (noteUid: string): Promise<BacklinkNote[]> => {
+export const fetchNoteBacklinks = async (
+    noteUid: string
+): Promise<BacklinkNote[]> => {
     const response = await fetch(getApiPath(`note/${noteUid}/backlinks`), {
         credentials: 'include',
         headers: getDefaultHeaders(),

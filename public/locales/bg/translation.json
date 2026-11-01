@@ -191,6 +191,7 @@
     "hideCompleted": "Скрий завършени задачи"
   },
   "tasks": {
+    "deletedToast": "\"{{name}}\" deleted",
     "title": "Задачи",
     "today": "Днес",
     "total": "Total",

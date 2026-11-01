@@ -193,6 +193,7 @@
     "todayPageSettings": "Paramètres de la page Aujourd'hui"
   },
   "tasks": {
+    "deletedToast": "« {{name}} » supprimée",
     "title": "Tâches",
     "today": "Aujourd'hui",
     "total": "Total",

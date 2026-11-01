@@ -193,6 +193,7 @@
     "hideCompleted": "Сховати завершені завдання"
   },
   "tasks": {
+    "deletedToast": "\"{{name}}\" deleted",
     "title": "Завдання",
     "today": "Сьогодні",
     "total": "Total",

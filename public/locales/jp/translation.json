@@ -191,6 +191,7 @@
     "hideCompleted": "完了したタスクを非表示"
   },
   "tasks": {
+    "deletedToast": "\"{{name}}\" deleted",
     "title": "タスク",
     "today": "今日",
     "total": "合計",

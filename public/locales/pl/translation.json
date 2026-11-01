@@ -193,6 +193,7 @@
     "hideCompleted": "Ukryj zakończone zadania"
   },
   "tasks": {
+    "deletedToast": "\"{{name}}\" deleted",
     "title": "Zadania",
     "today": "Dziś",
     "total": "Total",

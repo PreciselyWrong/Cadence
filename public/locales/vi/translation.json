@@ -191,6 +191,7 @@
     "hideCompleted": "Ẩn Nhiệm vụ Đã hoàn thành"
   },
   "tasks": {
+    "deletedToast": "\"{{name}}\" deleted",
     "title": "Nhiệm vụ",
     "today": "Hôm nay",
     "total": "Total",

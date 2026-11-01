@@ -5,7 +5,6 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Task } from '../../entities/Task';
 import { Project } from '../../entities/Project';
 import { Note } from '../../entities/Note';
-import ConfirmDialog from '../Shared/ConfirmDialog';
 import InboxItemAttachments from './InboxItemAttachments';
 import InboxLinkPreview from '../Links/InboxLinkPreview';
 import LinkTriageActions from '../Links/LinkTriageActions';
@@ -56,7 +55,6 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
     const {
         tagsStore: { tags },
     } = useStore();
-    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
     const [loading, setLoading] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     // The edit box opens with the cleaned title (tokens like #tag, ~area,
@@ -599,10 +597,9 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
         await onUpdate(item.uid, text);
     };
 
-    const handleDelete = () => setShowConfirmDialog(true);
-    const confirmDelete = () => {
+    // The parent hides the item and offers an undo, so no confirmation here.
+    const handleDelete = () => {
         if (item.uid !== undefined) onDelete(item.uid);
-        setShowConfirmDialog(false);
     };
 
     // ── Edit-mode footer ──────────────────────────────────────────────────────
@@ -743,18 +740,6 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                         <XMarkIcon className="h-3.5 w-3.5" />
                     </button>
                 </div>
-            )}
-
-            {showConfirmDialog && (
-                <ConfirmDialog
-                    title={t('inbox.deleteConfirmTitle', 'Delete Item')}
-                    message={t(
-                        'inbox.deleteConfirmMessage',
-                        'Are you sure you want to delete this inbox item? This action cannot be undone.'
-                    )}
-                    onConfirm={confirmDelete}
-                    onCancel={() => setShowConfirmDialog(false)}
-                />
             )}
         </div>
     );

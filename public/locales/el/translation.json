@@ -972,6 +972,7 @@
     "tag": "Ετικέτα"
   },
   "tasks": {
+    "deletedToast": "\"{{name}}\" deleted",
     "title": "Εργασίες",
     "today": "Σήμερα",
     "total": "Total",

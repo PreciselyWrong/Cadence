@@ -191,6 +191,7 @@
     "hideCompleted": "Sembunyikan Tugas yang Selesai"
   },
   "tasks": {
+    "deletedToast": "\"{{name}}\" deleted",
     "title": "Tugas",
     "today": "Hari Ini",
     "total": "Total",

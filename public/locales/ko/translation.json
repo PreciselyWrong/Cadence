@@ -191,6 +191,7 @@
     "hideCompleted": "완료된 작업 숨기기"
   },
   "tasks": {
+    "deletedToast": "\"{{name}}\" deleted",
     "title": "작업",
     "today": "오늘",
     "total": "합계",

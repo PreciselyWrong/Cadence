@@ -392,6 +392,7 @@
     "hideCompleted": "Skryť dokončené úlohy"
   },
   "tasks": {
+    "deletedToast": "\"{{name}}\" deleted",
     "title": "Úlohy",
     "reorderError": "Poradie úloh sa nepodarilo uložiť",
     "today": "Dnes",
