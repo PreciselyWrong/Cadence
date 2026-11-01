@@ -44,7 +44,8 @@ const TabPills: React.FC<TabPillsProps> = ({
                     }`}
                 >
                     {tab.label}
-                    {tab.count !== undefined && (
+                    {/* A zero count says nothing the empty list won't. */}
+                    {!!tab.count && (
                         <span
                             className={`text-label-m ${
                                 active
