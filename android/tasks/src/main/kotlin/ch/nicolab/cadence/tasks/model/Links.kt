@@ -73,12 +73,13 @@ data class LinkItem(
     }
 }
 
-/** Filtre de l'écran Liens ; [status] null montre tout sauf les liens jetés. */
+/** Filtre de l'écran Liens ; [status] null montre tout sauf les liens jetés, [tagUid] garde les liens qui portent l'étiquette. */
 data class LinkFilter(
     val query: String = "",
     val kind: LinkKind? = null,
     val status: LinkStatus? = null,
     val domain: String? = null,
+    val tagUid: String? = null,
 )
 
 object LinkLists {
@@ -89,6 +90,7 @@ object LinkLists {
             (filter.kind == null || link.kind == filter.kind) &&
                 (if (filter.status == null) link.status != LinkStatus.DROPPED else link.status == filter.status) &&
                 (filter.domain == null || link.domain == filter.domain) &&
+                (filter.tagUid == null || filter.tagUid in link.tagUids) &&
                 (words.isEmpty() || haystack(link, tagNames).let { text -> words.all { it in text } })
         }.sortedWith(compareByDescending<LinkItem> { it.createdAt ?: Instant.EPOCH }.thenBy { it.uid })
     }

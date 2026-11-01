@@ -22,6 +22,7 @@
 - Inbox : une idée se modifie (« Modifier ») et devient une note (« Note ») : sa première ligne fait le titre, la suite le contenu ; l'idée quitte la boîte.
 - Notes : un lien `[[titre]]` s'affiche en pastille ; toucher ouvre la note de même titre (casse ignorée), sinon « Note introuvable ».
 - Recherche : les liens sont cherchés par titre, site et note, avec un filtre « Liens » ; toucher un résultat ouvre le lien.
+- Liens : filtres en pastilles « Gardés », « À tester », « Plus tard » et une pastille par étiquette portée par un lien ; « Tous » remet tout à zéro.
 
 ### Corrections
 - Fiche de tâche : un titre long s'affiche en entier (il passait à la ligne puis était coupé après deux lignes) et prend une police plus petite ; les boutons restent alignés en haut.

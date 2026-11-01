@@ -45,6 +45,23 @@ class LinksTest {
     }
 
     @Test
+    fun `le filtre par statut ne garde que ce statut, gardés, à tester ou plus tard`() {
+        val tested = LinkItem(uid = "try", url = "https://b.io/y", status = LinkStatus.TESTED, createdAt = Instant.parse("2026-10-05T00:00:00Z"))
+        val parked = LinkItem(uid = "later", url = "https://a.io/x", status = LinkStatus.PARKED, createdAt = Instant.parse("2026-10-04T00:00:00Z"))
+        val pool = listOf(parked, tested, post)
+
+        assertEquals(listOf("try"), LinkLists.filter(pool, LinkFilter(status = LinkStatus.TESTED)).map { it.uid })
+        assertEquals(listOf("later"), LinkLists.filter(pool, LinkFilter(status = LinkStatus.PARKED)).map { it.uid })
+        assertEquals(listOf("post"), LinkLists.filter(pool, LinkFilter(status = LinkStatus.KEPT)).map { it.uid })
+    }
+
+    @Test
+    fun `le filtre par étiquette garde les liens qui la portent`() {
+        assertEquals(listOf("repo"), uids(LinkFilter(tagUid = "t1")))
+        assertEquals(emptyList<String>(), uids(LinkFilter(tagUid = "t2")))
+    }
+
+    @Test
     fun `une idée retrouve son lien, sinon la même page`() {
         val own = LinkItem(uid = "own", url = "https://a.io/x", sourceType = "inbox_item", sourceUid = "i1")
         assertEquals("own", LinkLists.forEntry(listOf(own), "i1", "https://a.io/x")?.uid)

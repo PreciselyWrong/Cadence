@@ -20,6 +20,9 @@
     <string name="links_status_parked">Plus tard</string>
     <string name="links_status_dropped">Jeté</string>
     <string name="links_show_dropped">Jetés</string>
+    <string name="links_filter_kept">Gardés</string>
+    <string name="links_filter_tested">À tester</string>
+    <string name="links_filter_parked">Plus tard</string>
     <string name="links_action_tested">Tester</string>
     <string name="links_action_kept">Garder</string>
     <string name="links_action_parked">Plus tard</string>

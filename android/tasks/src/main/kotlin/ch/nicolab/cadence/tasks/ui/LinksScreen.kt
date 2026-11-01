@@ -107,6 +107,12 @@ internal class LinksViewModel(application: Application) : AndroidViewModel(appli
     val tags: StateFlow<List<TagItem>> = repository.observeTags()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
+    /** Étiquettes portées par au moins un lien : seules celles-là sont proposées en filtre. */
+    val linkTags: StateFlow<List<TagItem>> = combine(all, tags) { links, known ->
+        val used = links.flatMapTo(HashSet()) { it.tagUids }
+        known.filter { it.uid in used }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+
 }
 
 private val ACTIONS = listOf(
@@ -128,6 +134,7 @@ fun LinksScreen(onBack: () -> Unit, onOpenSource: (LinkSource) -> Unit) {
     val total by viewModel.total.collectAsStateWithLifecycle()
     val filter by viewModel.filter.collectAsStateWithLifecycle()
     val tags by viewModel.tags.collectAsStateWithLifecycle()
+    val linkTags by viewModel.linkTags.collectAsStateWithLifecycle()
     var editing by remember { mutableStateOf<LinkItem?>(null) }
     val palette = cadence
     BackHandler(onBack = onBack)
@@ -153,8 +160,8 @@ fun LinksScreen(onBack: () -> Unit, onOpenSource: (LinkSource) -> Unit) {
             ) {
                 ChoiceChip(
                     label = stringResource(R.string.links_filter_all_kinds),
-                    selected = filter.kind == null && filter.status == null,
-                    onClick = { viewModel.filter.value = filter.copy(kind = null, status = null) },
+                    selected = filter.kind == null && filter.status == null && filter.tagUid == null,
+                    onClick = { viewModel.filter.value = filter.copy(kind = null, status = null, tagUid = null) },
                 )
                 LinkKind.entries.filter { it != LinkKind.OTHER }.forEach { kind ->
                     ChoiceChip(
@@ -171,6 +178,36 @@ fun LinksScreen(onBack: () -> Unit, onOpenSource: (LinkSource) -> Unit) {
                             filter.copy(status = if (filter.status == LinkStatus.DROPPED) null else LinkStatus.DROPPED)
                     },
                 )
+            }
+            Row(
+                Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = Space.gutter),
+                horizontalArrangement = Arrangement.spacedBy(Space.sm),
+            ) {
+                listOf(
+                    LinkStatus.KEPT to R.string.links_filter_kept,
+                    LinkStatus.TESTED to R.string.links_filter_tested,
+                    LinkStatus.PARKED to R.string.links_filter_parked,
+                ).forEach { (status, label) ->
+                    ChoiceChip(
+                        label = stringResource(label),
+                        selected = filter.status == status,
+                        onClick = { viewModel.filter.value = filter.copy(status = if (filter.status == status) null else status) },
+                    )
+                }
+            }
+            if (linkTags.isNotEmpty()) {
+                Row(
+                    Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = Space.gutter),
+                    horizontalArrangement = Arrangement.spacedBy(Space.sm),
+                ) {
+                    linkTags.forEach { tag ->
+                        ChoiceChip(
+                            label = tag.name,
+                            selected = filter.tagUid == tag.uid,
+                            onClick = { viewModel.filter.value = filter.copy(tagUid = if (filter.tagUid == tag.uid) null else tag.uid) },
+                        )
+                    }
+                }
             }
             LazyColumn(
                 Modifier.weight(1f),

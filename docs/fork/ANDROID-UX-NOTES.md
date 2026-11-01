@@ -177,3 +177,10 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Problème** : retrouver un lien par son site ou une note disait « rien trouvé » ; seuls tâches, notes, projets et objectifs étaient cherchés.
 - **Décision** : les liens entrent dans la recherche (titre, site, note) avec un filtre « Liens » ; toucher un résultat ouvre le lien dans le navigateur, comme la carte de la liste des liens.
 - **Web** : la recherche globale n'a pas encore de liens (voir `TODO.md`, Petits restes).
+
+### 2026-11-01 — Filtres de l'écran Liens : statut et étiquette
+
+- **Problème** : l'écran Liens ne filtrait que par type et « Jetés » ; retrouver les liens gardés, à tester ou mis de côté, ou ceux d'une étiquette, supposait de tout parcourir.
+- **Décision** : une ligne de pastilles de statut (« Gardés », « À tester », « Plus tard », un toucher pour choisir, à nouveau pour lâcher) et une ligne d'étiquettes portées par au moins un lien. « Tous » remet le type, le statut et l'étiquette à zéro.
+- **Web** : la page Liens filtre déjà par statut et étiquette, dans deux listes déroulantes ; même filtre, autre contrôle.
+
