@@ -392,6 +392,7 @@
     "noActivity": "아직 활동이 없습니다"
   },
   "profile": {
+    "showTaskDescription": "제목 아래에 설명 표시",
     "sync": {
       "field": {
         "review_at": "Review on",
@@ -3126,6 +3127,7 @@
     "startTyping": "검색하거나 위의 필터를 선택하려면 입력을 시작하세요.",
     "noResults": "결과를 찾을 수 없습니다.",
     "entityTypes": {
+      "link": "링크",
       "task": "작업",
       "project": "프로젝트",
       "area": "영역",
@@ -3156,6 +3158,7 @@
       "hasNoProject": "프로젝트 없음"
     },
     "groups": {
+      "Link": "링크",
       "Task": "작업",
       "Project": "프로젝트",
       "Area": "영역",
@@ -4708,7 +4711,16 @@
     "loadError": "이 작업을 불러올 수 없습니다."
   },
   "review": {
+    "cancelDate": "취소",
+    "choices": "선택지",
+    "more": "더 보기…",
+    "decided": "결정이 저장되었습니다.",
     "later": {
+      "sortOneByOne": "하나씩 정리",
+      "left": "{{count}}개 남음",
+      "backToList": "목록으로 돌아가기",
+      "skip": "건너뛰기",
+      "sorted": "정리할 항목이 없습니다.",
       "noMatch": "Nothing matches.",
       "noProject": "No project",
       "filter": "Filter"
@@ -5422,6 +5434,11 @@
       "allDomains": "모든 사이트"
     },
     "sort": {
+      "start": "링크 정리 ({{count}})",
+      "left": "{{count}}개 남음",
+      "exit": "받은편지함으로 돌아가기",
+      "skip": "건너뛰기",
+      "done": "정리할 링크가 없습니다.",
       "newest": "최신순",
       "oldest": "오래된순"
     },
