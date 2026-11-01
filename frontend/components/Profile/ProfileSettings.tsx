@@ -27,6 +27,7 @@ import {
     ViewColumnsIcon,
     QueueListIcon,
     TableCellsIcon,
+    ArrowPathIcon,
 } from '@heroicons/react/24/outline';
 import { Squares2X2Icon } from '@heroicons/react/24/solid';
 import TelegramIcon from '../Shared/Icons/TelegramIcon';
@@ -70,6 +71,7 @@ import AIAssistantTab from './tabs/AIAssistantTab';
 import BillingTab from './tabs/BillingTab';
 import PlanningTab from './tabs/PlanningTab';
 import ImportExportTab from './tabs/ImportExportTab';
+import SyncTab from './tabs/SyncTab';
 import { getDefaultConfig } from '../../utils/keyboardShortcutsService';
 import { PASSWORD_MIN_LENGTH } from '../../utils/passwordPolicy';
 import { getFeatureFlags, type FeatureFlags } from '../../utils/featureFlags';
@@ -122,6 +124,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
             'telegram',
             'keyboard-shortcuts',
             'caldav',
+            'sync',
             'calendars',
             'planning',
             'mcp',
@@ -1488,6 +1491,12 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
             icon: <QueueListIcon className="w-5 h-5" />,
         },
         {
+            id: 'sync',
+            group: 'integrations',
+            name: t('profile.tabs.sync', 'Sync'),
+            icon: <ArrowPathIcon className="w-5 h-5" />,
+        },
+        {
             id: 'caldav',
             group: 'integrations',
             name: t('profile.tabs.caldav', 'CalDAV Sync'),
@@ -2025,6 +2034,8 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                                     />
 
                                     <McpTab isActive={activeTab === 'mcp'} />
+
+                                    <SyncTab isActive={activeTab === 'sync'} />
 
                                     <CalDAVTab
                                         isActive={activeTab === 'caldav'}

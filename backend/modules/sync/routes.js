@@ -74,4 +74,38 @@ router.post('/sync/push', async (req, res, next) => {
     }
 });
 
+router.get('/sync/status', async (req, res, next) => {
+    try {
+        res.json(await syncService.status(req.currentUser.id));
+    } catch (error) {
+        next(error);
+    }
+});
+
+const RESOLVE_ERRORS = {
+    invalid_keep: 400,
+    not_reapplicable: 400,
+    not_found: 404,
+};
+
+router.post('/sync/conflicts/:id/resolve', async (req, res, next) => {
+    try {
+        const id = readInt(req.params.id, null);
+        if (id === null) return res.status(404).json({ error: 'not_found' });
+        const result = await syncService.resolveConflict(
+            req.currentUser.id,
+            id,
+            req.body && req.body.keep
+        );
+        if (result.error) {
+            return res
+                .status(RESOLVE_ERRORS[result.error] ?? 409)
+                .json({ error: result.error });
+        }
+        res.json(result);
+    } catch (error) {
+        next(error);
+    }
+});
+
 module.exports = router;

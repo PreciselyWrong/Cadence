@@ -393,6 +393,65 @@
     "noActivity": "Nenhuma atividade ainda"
   },
   "profile": {
+    "showTaskDescription": "Mostrar a descrição abaixo do título",
+    "sync": {
+      "field": {
+        "review_at": "Review on",
+        "review_on": "Review on",
+        "in_view_at": "In view",
+        "week_of": "Week",
+        "estimated_minutes": "Duration",
+        "recurrence_type": "Repeat",
+        "icon": "Icon",
+        "color": "Colour",
+        "tag_uids": "Tags",
+        "next_task_uid": "Next action",
+        "parent_task_uid": "Parent task",
+        "goal_uid": "Goal",
+        "area_uid": "Area",
+        "parent_project_uid": "Parent project",
+        "project_uid": "Project",
+        "completed_at": "Completed on",
+        "start_date": "Start",
+        "due_date": "Due date",
+        "status": "Status",
+        "priority": "Priority",
+        "description": "Description",
+        "content": "Content",
+        "note": "Note",
+        "title": "Title",
+        "name": "Title"
+      },
+      "entity": {
+        "link": "Link",
+        "inbox_item": "Idea",
+        "note": "Note",
+        "tag": "Tag",
+        "goal": "Goal",
+        "area": "Area",
+        "project": "Project",
+        "task": "Task"
+      },
+      "resolveError": "Could not settle that conflict",
+      "loadError": "Could not load the sync status",
+      "no": "no",
+      "yes": "yes",
+      "empty": "(empty)",
+      "dismiss": "Got it",
+      "keepCurrent": "Keep the other",
+      "keepLost": "Keep this value",
+      "current": "Kept: {{value}}",
+      "lost": "Set aside: {{value}}",
+      "conflictsHint": "A device sent a value older than the one on the server, which kept its own. Choose the one that stays.",
+      "conflicts": "Conflicts",
+      "pending_other": "{{count}} changes made offline in this browser are waiting to be sent.",
+      "pending_one": "{{count}} change made offline in this browser is waiting to be sent.",
+      "lastChange": "Last change on the server {{ago}}",
+      "lastSeen": "Synced {{ago}}",
+      "noDevices": "No device has synced yet. Connect the phone or the Linux app from API Keys.",
+      "devices": "Devices",
+      "title": "Sync"
+    },
     "sectionFailed": "Não foi possível mostrar esta secção. Escolha outra secção ou recarregue a página.",
     "taskFeed": {
       "title": "Assinar suas tarefas",
@@ -504,6 +563,7 @@
     "nextTaskSuggestion": "Sugestão da Próxima Tarefa",
     "enableNextTaskSuggestion": "Ativar Sugestões de Próxima Tarefa",
     "tabs": {
+      "sync": "Sync",
       "general": "Geral",
       "security": "Segurança",
       "productivity": "Produtividade",
@@ -1322,7 +1382,7 @@
     "inProgress": "Em Progresso",
     "done": "Concluído",
     "archived": "Arquivado",
-    "unknown": "Desconhecido",
+    "unknown": "Estado {{status}}",
     "telegramConnected": "Telegram conectado e recebendo dados",
     "telegramConnectionProblem": "Problema de conexão com o Telegram",
     "completed": "Concluído",
@@ -2401,7 +2461,7 @@
       "noteNotFound": "Nota não encontrada.",
       "noteDeleted": "Nota excluída com sucesso.",
       "profileNotFound": "Perfil não encontrado.",
-      "passwordTooShort": "A senha deve ter pelo menos 6 caracteres",
+      "passwordTooShort": "A senha deve ter pelo menos {{count}} caracteres",
       "currentPasswordIncorrect": "A senha atual está incorreta",
       "failedToUpdateProfile": "Falha ao atualizar o perfil.",
       "passwordChangeRequired": "A senha atual e a nova senha são obrigatórias",
@@ -3073,6 +3133,7 @@
     "startTyping": "Comece a digitar para buscar ou selecione filtros acima",
     "noResults": "Nenhum resultado encontrado",
     "entityTypes": {
+      "link": "Links",
       "task": "tarefa",
       "project": "projeto",
       "area": "área",
@@ -3103,6 +3164,7 @@
       "hasNoProject": "não tem Projeto"
     },
     "groups": {
+      "Link": "Links",
       "Task": "Tarefas",
       "Project": "Projetos",
       "Area": "Áreas",
@@ -4658,7 +4720,16 @@
     "loadError": "Não foi possível carregar esta tarefa."
   },
   "review": {
+    "cancelDate": "Cancelar",
+    "choices": "Opções",
+    "more": "Mais…",
+    "decided": "Decisão guardada.",
     "later": {
+      "sortOneByOne": "Ordenar um a um",
+      "left": "{{count}} restantes",
+      "backToList": "Voltar à lista",
+      "skip": "Ignorar",
+      "sorted": "Nada mais para ordenar.",
       "noMatch": "Nothing matches.",
       "noProject": "No project",
       "filter": "Filter"
@@ -5378,6 +5449,11 @@
       "allDomains": "Todos os sites"
     },
     "sort": {
+      "start": "Ordenar links ({{count}})",
+      "left": "{{count}} restantes",
+      "exit": "Voltar à caixa de entrada",
+      "skip": "Ignorar",
+      "done": "Nenhum link restante para ordenar.",
       "newest": "Mais recentes primeiro",
       "oldest": "Mais antigos primeiro"
     },

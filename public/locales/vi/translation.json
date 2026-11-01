@@ -392,6 +392,65 @@
     "noActivity": "Chưa có hoạt động nào"
   },
   "profile": {
+    "showTaskDescription": "Hiện mô tả dưới tiêu đề",
+    "sync": {
+      "field": {
+        "review_at": "Review on",
+        "review_on": "Review on",
+        "in_view_at": "In view",
+        "week_of": "Week",
+        "estimated_minutes": "Duration",
+        "recurrence_type": "Repeat",
+        "icon": "Icon",
+        "color": "Colour",
+        "tag_uids": "Tags",
+        "next_task_uid": "Next action",
+        "parent_task_uid": "Parent task",
+        "goal_uid": "Goal",
+        "area_uid": "Area",
+        "parent_project_uid": "Parent project",
+        "project_uid": "Project",
+        "completed_at": "Completed on",
+        "start_date": "Start",
+        "due_date": "Due date",
+        "status": "Status",
+        "priority": "Priority",
+        "description": "Description",
+        "content": "Content",
+        "note": "Note",
+        "title": "Title",
+        "name": "Title"
+      },
+      "entity": {
+        "link": "Link",
+        "inbox_item": "Idea",
+        "note": "Note",
+        "tag": "Tag",
+        "goal": "Goal",
+        "area": "Area",
+        "project": "Project",
+        "task": "Task"
+      },
+      "resolveError": "Could not settle that conflict",
+      "loadError": "Could not load the sync status",
+      "no": "no",
+      "yes": "yes",
+      "empty": "(empty)",
+      "dismiss": "Got it",
+      "keepCurrent": "Keep the other",
+      "keepLost": "Keep this value",
+      "current": "Kept: {{value}}",
+      "lost": "Set aside: {{value}}",
+      "conflictsHint": "A device sent a value older than the one on the server, which kept its own. Choose the one that stays.",
+      "conflicts": "Conflicts",
+      "pending_other": "{{count}} changes made offline in this browser are waiting to be sent.",
+      "pending_one": "{{count}} change made offline in this browser is waiting to be sent.",
+      "lastChange": "Last change on the server {{ago}}",
+      "lastSeen": "Synced {{ago}}",
+      "noDevices": "No device has synced yet. Connect the phone or the Linux app from API Keys.",
+      "devices": "Devices",
+      "title": "Sync"
+    },
     "sectionFailed": "This section could not be displayed. Pick another section or reload the page.",
     "taskFeed": {
       "title": "Đăng ký công việc của bạn",
@@ -503,6 +562,7 @@
     "nextTaskSuggestion": "Gợi ý Nhiệm vụ Tiếp theo",
     "enableNextTaskSuggestion": "Bật Gợi ý Nhiệm vụ Tiếp theo",
     "tabs": {
+      "sync": "Sync",
       "general": "Chung",
       "security": "Bảo mật",
       "productivity": "Năng suất",
@@ -1321,7 +1381,7 @@
     "inProgress": "Đang tiến hành",
     "done": "Đã hoàn thành",
     "archived": "Đã lưu trữ",
-    "unknown": "Không xác định",
+    "unknown": "Trạng thái {{status}}",
     "telegramConnected": "Telegram đã kết nối và đang kiểm tra",
     "telegramConnectionProblem": "Vấn đề kết nối Telegram",
     "completed": "Đã hoàn thành",
@@ -2396,7 +2456,7 @@
       "noteNotFound": "Không tìm thấy ghi chú.",
       "noteDeleted": "Ghi chú đã được xóa thành công.",
       "profileNotFound": "Không tìm thấy hồ sơ.",
-      "passwordTooShort": "Mật khẩu phải có ít nhất 6 ký tự",
+      "passwordTooShort": "Mật khẩu phải có ít nhất {{count}} ký tự",
       "currentPasswordIncorrect": "Mật khẩu hiện tại không chính xác",
       "failedToUpdateProfile": "Cập nhật hồ sơ không thành công.",
       "passwordChangeRequired": "Mật khẩu hiện tại và mật khẩu mới là bắt buộc",
@@ -3067,6 +3127,7 @@
     "startTyping": "Bắt đầu gõ để tìm kiếm hoặc chọn bộ lọc ở trên",
     "noResults": "Không tìm thấy kết quả nào",
     "entityTypes": {
+      "link": "Liên kết",
       "task": "công việc",
       "project": "dự án",
       "area": "khu vực",
@@ -3097,6 +3158,7 @@
       "hasNoProject": "không có Dự án"
     },
     "groups": {
+      "Link": "Liên kết",
       "Task": "Công việc",
       "Project": "Dự án",
       "Area": "Khu vực",
@@ -4651,7 +4713,16 @@
     "loadError": "Không thể tải công việc này."
   },
   "review": {
+    "cancelDate": "Hủy",
+    "choices": "Lựa chọn",
+    "more": "Xem thêm…",
+    "decided": "Đã lưu quyết định.",
     "later": {
+      "sortOneByOne": "Sắp xếp từng cái một",
+      "left": "Còn {{count}}",
+      "backToList": "Quay lại danh sách",
+      "skip": "Bỏ qua",
+      "sorted": "Không còn gì để sắp xếp.",
       "noMatch": "Nothing matches.",
       "noProject": "No project",
       "filter": "Filter"
@@ -5365,6 +5436,11 @@
       "allDomains": "Mọi trang web"
     },
     "sort": {
+      "start": "Sắp xếp liên kết ({{count}})",
+      "left": "Còn {{count}}",
+      "exit": "Quay lại hộp thư đến",
+      "skip": "Bỏ qua",
+      "done": "Không còn liên kết nào để sắp xếp.",
       "newest": "Mới nhất trước",
       "oldest": "Cũ nhất trước"
     },

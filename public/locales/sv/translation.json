@@ -392,6 +392,65 @@
     }
   },
   "profile": {
+    "showTaskDescription": "Visa beskrivningen under rubriken",
+    "sync": {
+      "field": {
+        "review_at": "Review on",
+        "review_on": "Review on",
+        "in_view_at": "In view",
+        "week_of": "Week",
+        "estimated_minutes": "Duration",
+        "recurrence_type": "Repeat",
+        "icon": "Icon",
+        "color": "Colour",
+        "tag_uids": "Tags",
+        "next_task_uid": "Next action",
+        "parent_task_uid": "Parent task",
+        "goal_uid": "Goal",
+        "area_uid": "Area",
+        "parent_project_uid": "Parent project",
+        "project_uid": "Project",
+        "completed_at": "Completed on",
+        "start_date": "Start",
+        "due_date": "Due date",
+        "status": "Status",
+        "priority": "Priority",
+        "description": "Description",
+        "content": "Content",
+        "note": "Note",
+        "title": "Title",
+        "name": "Title"
+      },
+      "entity": {
+        "link": "Link",
+        "inbox_item": "Idea",
+        "note": "Note",
+        "tag": "Tag",
+        "goal": "Goal",
+        "area": "Area",
+        "project": "Project",
+        "task": "Task"
+      },
+      "resolveError": "Could not settle that conflict",
+      "loadError": "Could not load the sync status",
+      "no": "no",
+      "yes": "yes",
+      "empty": "(empty)",
+      "dismiss": "Got it",
+      "keepCurrent": "Keep the other",
+      "keepLost": "Keep this value",
+      "current": "Kept: {{value}}",
+      "lost": "Set aside: {{value}}",
+      "conflictsHint": "A device sent a value older than the one on the server, which kept its own. Choose the one that stays.",
+      "conflicts": "Conflicts",
+      "pending_other": "{{count}} changes made offline in this browser are waiting to be sent.",
+      "pending_one": "{{count}} change made offline in this browser is waiting to be sent.",
+      "lastChange": "Last change on the server {{ago}}",
+      "lastSeen": "Synced {{ago}}",
+      "noDevices": "No device has synced yet. Connect the phone or the Linux app from API Keys.",
+      "devices": "Devices",
+      "title": "Sync"
+    },
     "sectionFailed": "This section could not be displayed. Pick another section or reload the page.",
     "taskFeed": {
       "title": "Prenumerera på dina uppgifter",
@@ -511,6 +570,7 @@
     "nextTaskSuggestion": "Förslag på nästa uppgift",
     "enableNextTaskSuggestion": "Aktivera förslag på nästa uppgift",
     "tabs": {
+      "sync": "Sync",
       "general": "Allmänt",
       "security": "Säkerhet",
       "productivity": "Produktivitet",
@@ -1130,7 +1190,7 @@
     },
     "deleteProject": {
       "title": "Ta bort projekt",
-      "message": "Tar du bort detta projekt kommer endast projektet att tas bort. Alla objekt inuti kommer att finnas kvar men inte längre tillhöra något projekt. Fortsätt?"
+      "message": "Om du tar bort projektet „{{projectName}}“ tas bara projektet bort. Alla objekt i det finns kvar men tillhör inget projekt längre. Fortsätt?"
     },
     "deleteGoal": {
       "title": "Radera mål",
@@ -1321,7 +1381,7 @@
     "inProgress": "Pågående",
     "done": "Klar",
     "archived": "Arkiverad",
-    "unknown": "Okänd",
+    "unknown": "Status {{status}}",
     "telegramConnected": "Telegram ansluten och pollar",
     "telegramConnectionProblem": "Problem med Telegram-anslutning",
     "completed": "Slutförd",
@@ -2396,7 +2456,7 @@
       "noteNotFound": "Anteckning hittades inte.",
       "noteDeleted": "Anteckning borttagen.",
       "profileNotFound": "Profilen hittades inte.",
-      "passwordTooShort": "Lösenordet måste vara minst 6 tecken",
+      "passwordTooShort": "Lösenordet måste vara minst {{count}} tecken",
       "currentPasswordIncorrect": "Nuvarande lösenord är felaktigt",
       "failedToUpdateProfile": "Kunde inte uppdatera profilen.",
       "passwordChangeRequired": "Nuvarande lösenord och nytt lösenord krävs",
@@ -3067,6 +3127,7 @@
     "startTyping": "Börja skriva för att söka eller välj filter ovan",
     "noResults": "Inga resultat hittades",
     "entityTypes": {
+      "link": "Länkar",
       "task": "uppgift",
       "project": "projekt",
       "area": "område",
@@ -3097,6 +3158,7 @@
       "hasNoProject": "har inget Projekt"
     },
     "groups": {
+      "Link": "Länkar",
       "Task": "Uppgifter",
       "Project": "Projekt",
       "Area": "Områden",
@@ -4651,7 +4713,16 @@
     "loadError": "Den här uppgiften kunde inte laddas."
   },
   "review": {
+    "cancelDate": "Avbryt",
+    "choices": "Val",
+    "more": "Mer…",
+    "decided": "Beslutet sparades.",
     "later": {
+      "sortOneByOne": "Sortera en i taget",
+      "left": "{{count}} kvar",
+      "backToList": "Tillbaka till listan",
+      "skip": "Hoppa över",
+      "sorted": "Inget kvar att sortera.",
       "noMatch": "Nothing matches.",
       "noProject": "No project",
       "filter": "Filter"
@@ -5365,6 +5436,11 @@
       "allDomains": "Alla webbplatser"
     },
     "sort": {
+      "start": "Sortera länkar ({{count}})",
+      "left": "{{count}} kvar",
+      "exit": "Tillbaka till inkorgen",
+      "skip": "Hoppa över",
+      "done": "Inga länkar kvar att sortera.",
       "newest": "Nyast först",
       "oldest": "Äldst först"
     },

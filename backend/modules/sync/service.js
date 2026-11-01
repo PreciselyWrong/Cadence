@@ -15,6 +15,7 @@ const { runExclusive } = require('./rowMutex');
 const { purgedThrough } = require('./compaction');
 const { withRowLock, lockNewRow } = require('../../utils/db-dialect');
 const todoMdSync = require('../todo-md/syncHook');
+const syncRepository = require('./repository');
 
 const UID_FORMAT = /^[A-Za-z0-9_-]{8,64}$/;
 const OP_ID_FORMAT = /^[A-Za-z0-9_.:-]{1,100}$/;
@@ -484,4 +485,52 @@ async function pushOne(userId, op, opId) {
     return result;
 }
 
-module.exports = { describe, pull, snapshot, push, PAGE_MAX };
+// What the web settings page shows: the devices that have synced, the last
+// journal write and the values that lost a merge.
+async function status(userId) {
+    const [devices, lastChangeAt, conflicts] = await Promise.all([
+        syncRepository.listDevices(userId),
+        syncRepository.lastChangeAt(userId),
+        syncRepository.listConflicts(userId),
+    ]);
+    return {
+        devices: devices.map((d) => ({
+            id: d.id,
+            name: d.name,
+            last_used_at: d.last_used_at,
+        })),
+        last_change_at: lastChangeAt,
+        conflicts,
+    };
+}
+
+// `keep: 'lost'` writes the value that lost back as a fresh edit;
+// `keep: 'current'` leaves the row as it is. Either way the field's
+// conflicts are settled.
+async function resolveConflict(userId, id, keep) {
+    if (keep !== 'lost' && keep !== 'current') return { error: 'invalid_keep' };
+    const conflict = await syncRepository.findConflict(userId, id);
+    if (!conflict) return { error: 'not_found' };
+    if (keep === 'lost') {
+        if (!syncRepository.REAPPLICABLE.has(conflict.entity)) {
+            return { error: 'not_reapplicable' };
+        }
+        const op = await syncRepository.lostValueOp(conflict);
+        const { results } = await push(userId, [op]);
+        if (results[0].status !== 'applied') {
+            return { error: results[0].reason || results[0].status };
+        }
+    }
+    await syncRepository.dropConflictsOfField(conflict);
+    return { ok: true };
+}
+
+module.exports = {
+    describe,
+    pull,
+    snapshot,
+    push,
+    status,
+    resolveConflict,
+    PAGE_MAX,
+};

@@ -396,6 +396,65 @@
     "noActivity": "لا توجد أنشطة حتى الآن"
   },
   "profile": {
+    "showTaskDescription": "إظهار الوصف أسفل العنوان",
+    "sync": {
+      "field": {
+        "review_at": "Review on",
+        "review_on": "Review on",
+        "in_view_at": "In view",
+        "week_of": "Week",
+        "estimated_minutes": "Duration",
+        "recurrence_type": "Repeat",
+        "icon": "Icon",
+        "color": "Colour",
+        "tag_uids": "Tags",
+        "next_task_uid": "Next action",
+        "parent_task_uid": "Parent task",
+        "goal_uid": "Goal",
+        "area_uid": "Area",
+        "parent_project_uid": "Parent project",
+        "project_uid": "Project",
+        "completed_at": "Completed on",
+        "start_date": "Start",
+        "due_date": "Due date",
+        "status": "Status",
+        "priority": "Priority",
+        "description": "Description",
+        "content": "Content",
+        "note": "Note",
+        "title": "Title",
+        "name": "Title"
+      },
+      "entity": {
+        "link": "Link",
+        "inbox_item": "Idea",
+        "note": "Note",
+        "tag": "Tag",
+        "goal": "Goal",
+        "area": "Area",
+        "project": "Project",
+        "task": "Task"
+      },
+      "resolveError": "Could not settle that conflict",
+      "loadError": "Could not load the sync status",
+      "no": "no",
+      "yes": "yes",
+      "empty": "(empty)",
+      "dismiss": "Got it",
+      "keepCurrent": "Keep the other",
+      "keepLost": "Keep this value",
+      "current": "Kept: {{value}}",
+      "lost": "Set aside: {{value}}",
+      "conflictsHint": "A device sent a value older than the one on the server, which kept its own. Choose the one that stays.",
+      "conflicts": "Conflicts",
+      "pending_other": "{{count}} changes made offline in this browser are waiting to be sent.",
+      "pending_one": "{{count}} change made offline in this browser is waiting to be sent.",
+      "lastChange": "Last change on the server {{ago}}",
+      "lastSeen": "Synced {{ago}}",
+      "noDevices": "No device has synced yet. Connect the phone or the Linux app from API Keys.",
+      "devices": "Devices",
+      "title": "Sync"
+    },
     "sectionFailed": "This section could not be displayed. Pick another section or reload the page.",
     "taskFeed": {
       "title": "الاشتراك في مهامك",
@@ -507,6 +566,7 @@
     "nextTaskSuggestion": "اقتراح المهمة التالية",
     "enableNextTaskSuggestion": "تفعيل اقتراحات المهمة التالية",
     "tabs": {
+      "sync": "Sync",
       "general": "عام",
       "security": "الأمان",
       "productivity": "الإنتاجية",
@@ -1325,7 +1385,7 @@
     "inProgress": "قيد التقدم",
     "done": "تم",
     "archived": "مؤرشف",
-    "unknown": "غير معروف",
+    "unknown": "الحالة {{status}}",
     "telegramConnected": "تم الاتصال بتليجرام وجاري الاستطلاع",
     "telegramConnectionProblem": "مشكلة في اتصال تليجرام",
     "completed": "مكتمل",
@@ -2416,7 +2476,7 @@
       "noteNotFound": "لم يتم العثور على الملاحظة.",
       "noteDeleted": "تم حذف الملاحظة بنجاح.",
       "profileNotFound": "لم يتم العثور على الملف الشخصي.",
-      "passwordTooShort": "يجب أن تكون كلمة المرور على الأقل {{count}} حرفاً",
+      "passwordTooShort": "يجب أن تكون كلمة المرور {{count}} أحرف على الأقل",
       "currentPasswordIncorrect": "كلمة المرور الحالية غير صحيحة",
       "failedToUpdateProfile": "فشل في تحديث الملف الشخصي.",
       "passwordChangeRequired": "كلمة المرور الحالية وكلمة المرور الجديدة مطلوبة",
@@ -3091,6 +3151,7 @@
     "startTyping": "ابدأ الكتابة للبحث أو اختر الفلاتر أعلاه",
     "noResults": "لم يتم العثور على نتائج",
     "entityTypes": {
+      "link": "الروابط",
       "task": "مهمة",
       "project": "مشروع",
       "area": "منطقة",
@@ -3121,6 +3182,7 @@
       "hasNoProject": "بلا مشروع"
     },
     "groups": {
+      "Link": "الروابط",
       "Task": "المهام",
       "Project": "المشاريع",
       "Area": "المناطق",
@@ -4687,7 +4749,16 @@
     "loadError": "تعذّر تحميل هذه المهمة."
   },
   "review": {
+    "cancelDate": "إلغاء",
+    "choices": "الخيارات",
+    "more": "المزيد…",
+    "decided": "تم حفظ القرار.",
     "later": {
+      "sortOneByOne": "الفرز واحدًا تلو الآخر",
+      "left": "المتبقي: {{count}}",
+      "backToList": "العودة إلى القائمة",
+      "skip": "تخطي",
+      "sorted": "لا شيء متبقٍّ للفرز.",
       "noMatch": "Nothing matches.",
       "noProject": "No project",
       "filter": "Filter"
@@ -5429,6 +5500,11 @@
       "allDomains": "كل المواقع"
     },
     "sort": {
+      "start": "فرز الروابط ({{count}})",
+      "left": "المتبقي: {{count}}",
+      "exit": "العودة إلى الوارد",
+      "skip": "تخطي",
+      "done": "لا يوجد رابط متبقٍّ للفرز.",
       "newest": "الأحدث أولاً",
       "oldest": "الأقدم أولاً"
     },

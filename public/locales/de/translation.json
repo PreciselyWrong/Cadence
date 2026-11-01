@@ -889,6 +889,65 @@
     "noCompletedTasks": "Keine abgeschlossenen Aufgaben."
   },
   "profile": {
+    "showTaskDescription": "Beschreibung unter dem Titel anzeigen",
+    "sync": {
+      "field": {
+        "review_at": "Review on",
+        "review_on": "Review on",
+        "in_view_at": "In view",
+        "week_of": "Week",
+        "estimated_minutes": "Duration",
+        "recurrence_type": "Repeat",
+        "icon": "Icon",
+        "color": "Colour",
+        "tag_uids": "Tags",
+        "next_task_uid": "Next action",
+        "parent_task_uid": "Parent task",
+        "goal_uid": "Goal",
+        "area_uid": "Area",
+        "parent_project_uid": "Parent project",
+        "project_uid": "Project",
+        "completed_at": "Completed on",
+        "start_date": "Start",
+        "due_date": "Due date",
+        "status": "Status",
+        "priority": "Priority",
+        "description": "Description",
+        "content": "Content",
+        "note": "Note",
+        "title": "Title",
+        "name": "Title"
+      },
+      "entity": {
+        "link": "Link",
+        "inbox_item": "Idea",
+        "note": "Note",
+        "tag": "Tag",
+        "goal": "Goal",
+        "area": "Area",
+        "project": "Project",
+        "task": "Task"
+      },
+      "resolveError": "Could not settle that conflict",
+      "loadError": "Could not load the sync status",
+      "no": "no",
+      "yes": "yes",
+      "empty": "(empty)",
+      "dismiss": "Got it",
+      "keepCurrent": "Keep the other",
+      "keepLost": "Keep this value",
+      "current": "Kept: {{value}}",
+      "lost": "Set aside: {{value}}",
+      "conflictsHint": "A device sent a value older than the one on the server, which kept its own. Choose the one that stays.",
+      "conflicts": "Conflicts",
+      "pending_other": "{{count}} changes made offline in this browser are waiting to be sent.",
+      "pending_one": "{{count}} change made offline in this browser is waiting to be sent.",
+      "lastChange": "Last change on the server {{ago}}",
+      "lastSeen": "Synced {{ago}}",
+      "noDevices": "No device has synced yet. Connect the phone or the Linux app from API Keys.",
+      "devices": "Devices",
+      "title": "Sync"
+    },
     "sectionFailed": "Dieser Bereich konnte nicht angezeigt werden. Wähle einen anderen Bereich oder lade die Seite neu.",
     "taskFeed": {
       "title": "Aufgaben abonnieren",
@@ -942,6 +1001,7 @@
     "nextTaskSuggestion": "Nächste Aufgabenvorschlag",
     "enableNextTaskSuggestion": "Nächste Aufgabenvorschläge aktivieren",
     "tabs": {
+      "sync": "Sync",
       "general": "Allgemein",
       "security": "Sicherheit",
       "productivity": "Produktivität",
@@ -2022,7 +2082,7 @@
     "inProgress": "In Bearbeitung",
     "done": "Erledigt",
     "archived": "Archiviert",
-    "unknown": "Unbekannt",
+    "unknown": "Status {{status}}",
     "telegramConnected": "Telegram verbunden und abfragt",
     "telegramConnectionProblem": "Telegram-Verbindungsproblem",
     "completed": "Abgeschlossen",
@@ -2405,7 +2465,7 @@
       "noteNotFound": "Notiz nicht gefunden.",
       "noteDeleted": "Notiz erfolgreich gelöscht.",
       "profileNotFound": "Profil nicht gefunden.",
-      "passwordTooShort": "Das Passwort muss mindestens 6 Zeichen lang sein.",
+      "passwordTooShort": "Das Passwort muss mindestens {{count}} Zeichen lang sein.",
       "currentPasswordIncorrect": "Das aktuelle Passwort ist falsch.",
       "failedToUpdateProfile": "Fehler beim Aktualisieren des Profils.",
       "passwordChangeRequired": "Aktuelles Passwort und neues Passwort sind erforderlich",
@@ -3076,6 +3136,7 @@
     "startTyping": "Beginnen Sie mit der Eingabe, um zu suchen oder wählen Sie die Filter oben aus",
     "noResults": "Keine Ergebnisse gefunden",
     "entityTypes": {
+      "link": "Links",
       "task": "Aufgabe",
       "project": "Projekt",
       "area": "Bereich",
@@ -3106,6 +3167,7 @@
       "hasNoProject": "hat kein Projekt"
     },
     "groups": {
+      "Link": "Links",
       "Task": "Aufgaben",
       "Project": "Projekte",
       "Area": "Bereiche",
@@ -4660,7 +4722,16 @@
     "loadError": "Diese Aufgabe konnte nicht geladen werden."
   },
   "review": {
+    "cancelDate": "Abbrechen",
+    "choices": "Auswahl",
+    "more": "Mehr…",
+    "decided": "Entscheidung gespeichert.",
     "later": {
+      "sortOneByOne": "Einzeln sortieren",
+      "left": "{{count}} übrig",
+      "backToList": "Zurück zur Liste",
+      "skip": "Überspringen",
+      "sorted": "Nichts mehr zu sortieren.",
       "noMatch": "Nothing matches.",
       "noProject": "No project",
       "filter": "Filter"
@@ -5374,6 +5445,11 @@
       "allDomains": "Alle Websites"
     },
     "sort": {
+      "start": "Links sortieren ({{count}})",
+      "left": "{{count}} übrig",
+      "exit": "Zurück zum Posteingang",
+      "skip": "Überspringen",
+      "done": "Kein Link mehr zu sortieren.",
       "newest": "Neueste zuerst",
       "oldest": "Älteste zuerst"
     },

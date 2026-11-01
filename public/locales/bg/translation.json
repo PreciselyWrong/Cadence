@@ -392,6 +392,65 @@
     "noActivity": "Все още няма активност"
   },
   "profile": {
+    "showTaskDescription": "Показване на описанието под заглавието",
+    "sync": {
+      "field": {
+        "review_at": "Review on",
+        "review_on": "Review on",
+        "in_view_at": "In view",
+        "week_of": "Week",
+        "estimated_minutes": "Duration",
+        "recurrence_type": "Repeat",
+        "icon": "Icon",
+        "color": "Colour",
+        "tag_uids": "Tags",
+        "next_task_uid": "Next action",
+        "parent_task_uid": "Parent task",
+        "goal_uid": "Goal",
+        "area_uid": "Area",
+        "parent_project_uid": "Parent project",
+        "project_uid": "Project",
+        "completed_at": "Completed on",
+        "start_date": "Start",
+        "due_date": "Due date",
+        "status": "Status",
+        "priority": "Priority",
+        "description": "Description",
+        "content": "Content",
+        "note": "Note",
+        "title": "Title",
+        "name": "Title"
+      },
+      "entity": {
+        "link": "Link",
+        "inbox_item": "Idea",
+        "note": "Note",
+        "tag": "Tag",
+        "goal": "Goal",
+        "area": "Area",
+        "project": "Project",
+        "task": "Task"
+      },
+      "resolveError": "Could not settle that conflict",
+      "loadError": "Could not load the sync status",
+      "no": "no",
+      "yes": "yes",
+      "empty": "(empty)",
+      "dismiss": "Got it",
+      "keepCurrent": "Keep the other",
+      "keepLost": "Keep this value",
+      "current": "Kept: {{value}}",
+      "lost": "Set aside: {{value}}",
+      "conflictsHint": "A device sent a value older than the one on the server, which kept its own. Choose the one that stays.",
+      "conflicts": "Conflicts",
+      "pending_other": "{{count}} changes made offline in this browser are waiting to be sent.",
+      "pending_one": "{{count}} change made offline in this browser is waiting to be sent.",
+      "lastChange": "Last change on the server {{ago}}",
+      "lastSeen": "Synced {{ago}}",
+      "noDevices": "No device has synced yet. Connect the phone or the Linux app from API Keys.",
+      "devices": "Devices",
+      "title": "Sync"
+    },
     "sectionFailed": "This section could not be displayed. Pick another section or reload the page.",
     "taskFeed": {
       "title": "Абониране за задачите ви",
@@ -503,6 +562,7 @@
     "nextTaskSuggestion": "Предложение за следваща задача",
     "enableNextTaskSuggestion": "Активирайте предложенията за следваща задача",
     "tabs": {
+      "sync": "Sync",
       "general": "Общо",
       "security": "Сигурност",
       "productivity": "Продуктивност",
@@ -1321,7 +1381,7 @@
     "inProgress": "В процес на изпълнение",
     "done": "Завършено",
     "archived": "Архивирано",
-    "unknown": "Неизвестно",
+    "unknown": "Статус {{status}}",
     "telegramConnected": "Telegram свързан и проверява",
     "telegramConnectionProblem": "Проблем с връзката на Telegram",
     "completed": "Завършено",
@@ -2396,7 +2456,7 @@
       "noteNotFound": "Бележката не е намерена.",
       "noteDeleted": "Бележката беше успешно изтрита.",
       "profileNotFound": "Профилът не е намерен.",
-      "passwordTooShort": "Паролата трябва да е поне 6 символа",
+      "passwordTooShort": "Паролата трябва да е поне {{count}} символа",
       "currentPasswordIncorrect": "Текущата парола е неправилна",
       "failedToUpdateProfile": "Неуспешно обновяване на профила.",
       "passwordChangeRequired": "Текущата парола и новата парола са задължителни",
@@ -3067,6 +3127,7 @@
     "startTyping": "Започнете да пишете, за да търсите или изберете филтри по-горе",
     "noResults": "Не са намерени резултати",
     "entityTypes": {
+      "link": "Връзки",
       "task": "задача",
       "project": "проект",
       "area": "област",
@@ -3097,6 +3158,7 @@
       "hasNoProject": "няма Проект"
     },
     "groups": {
+      "Link": "Връзки",
       "Task": "Задачи",
       "Project": "Проекти",
       "Area": "Зони",
@@ -4651,7 +4713,16 @@
     "loadError": "Задачата не можа да се зареди."
   },
   "review": {
+    "cancelDate": "Отказ",
+    "choices": "Избори",
+    "more": "Още…",
+    "decided": "Решението е запазено.",
     "later": {
+      "sortOneByOne": "Сортиране едно по едно",
+      "left": "Остават {{count}}",
+      "backToList": "Обратно към списъка",
+      "skip": "Пропусни",
+      "sorted": "Няма нищо за сортиране.",
       "noMatch": "Nothing matches.",
       "noProject": "No project",
       "filter": "Filter"
@@ -5365,6 +5436,11 @@
       "allDomains": "Всички сайтове"
     },
     "sort": {
+      "start": "Сортиране на връзките ({{count}})",
+      "left": "Остават {{count}}",
+      "exit": "Обратно към входящите",
+      "skip": "Пропусни",
+      "done": "Няма останала връзка за сортиране.",
       "newest": "Първо най-новите",
       "oldest": "Първо най-старите"
     },

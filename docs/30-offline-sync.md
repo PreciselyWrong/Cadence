@@ -56,6 +56,12 @@ Widget configuration and reminder snoozes are not synced. Rows are validated aga
 | `GET /sync/snapshot?entity=&after=&limit=` | First download of a device, page by page. It returns `cursor`, which the device then pulls from. |
 | `GET /sync/pull?cursor=&limit=` | Changes after `cursor`, in order: `{seq, entity, uid, op: upsert/delete, data, op_id}`, plus the next `cursor` and `has_more`. `410 {error: "reset_required"}` when the journal was compacted past `cursor` (see Compaction): take a new snapshot. |
 | `POST /sync/push` | `{ops: [...]}`, up to 500, applied in order. Every op gets its own result, and a bad op never fails the batch. |
+| `GET /sync/status` | For the web Settings › Sync page: `devices` (API keys used at least once, not revoked nor expired, most recent first: `id`, `name`, `last_used_at`), `last_change_at` (latest journal entry) and the open `conflicts`. |
+| `POST /sync/conflicts/:id/resolve` | `{keep: "lost" \| "current"}` settles every recorded loss of that field. `404` for a conflict of another user, `400 invalid_keep` / `not_reapplicable`, `409 <reason>` when the write is refused. |
+
+### Conflicts on the web
+
+A conflict listed by `GET /sync/status` is `{id, entity, uid, field, name, created_at, lost: {value, label?}, current: {value, label?}, can_keep_lost}`. `name` is the row's title; `label` names the rows a reference or tag list points at. Only the latest loss of each field is listed, and a conflict whose row is gone or already holds the lost value is left out. `keep: "lost"` pushes the lost value again as an op stamped with the server clock (`op_id` `conflict:<id>:<ms>`): it goes through the same checks as a device write, wins the merge and reaches every device by pull. It is offered for tasks, projects, areas, goals, tags, notes, inbox items and links (`can_keep_lost`); habit rows can only be dismissed, as on Android. `keep: "current"` changes nothing but the conflict list. The page also counts the writes the browser queued offline (`public/sw.js` queue); a device's own pending writes are known only to that device.
 
 A pushed op:
 

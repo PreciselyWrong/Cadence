@@ -1049,6 +1049,65 @@
     "noCompletedTasks": "Немає виконаних завдань."
   },
   "profile": {
+    "showTaskDescription": "Показувати опис під заголовком",
+    "sync": {
+      "field": {
+        "review_at": "Review on",
+        "review_on": "Review on",
+        "in_view_at": "In view",
+        "week_of": "Week",
+        "estimated_minutes": "Duration",
+        "recurrence_type": "Repeat",
+        "icon": "Icon",
+        "color": "Colour",
+        "tag_uids": "Tags",
+        "next_task_uid": "Next action",
+        "parent_task_uid": "Parent task",
+        "goal_uid": "Goal",
+        "area_uid": "Area",
+        "parent_project_uid": "Parent project",
+        "project_uid": "Project",
+        "completed_at": "Completed on",
+        "start_date": "Start",
+        "due_date": "Due date",
+        "status": "Status",
+        "priority": "Priority",
+        "description": "Description",
+        "content": "Content",
+        "note": "Note",
+        "title": "Title",
+        "name": "Title"
+      },
+      "entity": {
+        "link": "Link",
+        "inbox_item": "Idea",
+        "note": "Note",
+        "tag": "Tag",
+        "goal": "Goal",
+        "area": "Area",
+        "project": "Project",
+        "task": "Task"
+      },
+      "resolveError": "Could not settle that conflict",
+      "loadError": "Could not load the sync status",
+      "no": "no",
+      "yes": "yes",
+      "empty": "(empty)",
+      "dismiss": "Got it",
+      "keepCurrent": "Keep the other",
+      "keepLost": "Keep this value",
+      "current": "Kept: {{value}}",
+      "lost": "Set aside: {{value}}",
+      "conflictsHint": "A device sent a value older than the one on the server, which kept its own. Choose the one that stays.",
+      "conflicts": "Conflicts",
+      "pending_other": "{{count}} changes made offline in this browser are waiting to be sent.",
+      "pending_one": "{{count}} change made offline in this browser is waiting to be sent.",
+      "lastChange": "Last change on the server {{ago}}",
+      "lastSeen": "Synced {{ago}}",
+      "noDevices": "No device has synced yet. Connect the phone or the Linux app from API Keys.",
+      "devices": "Devices",
+      "title": "Sync"
+    },
     "sectionFailed": "This section could not be displayed. Pick another section or reload the page.",
     "taskFeed": {
       "title": "Підписка на ваші завдання",
@@ -1102,6 +1161,7 @@
     "nextTaskSuggestion": "Пропозиція наступного завдання",
     "enableNextTaskSuggestion": "Увімкнути пропозиції наступного завдання",
     "tabs": {
+      "sync": "Sync",
       "general": "Загальні",
       "security": "Безпека",
       "productivity": "Продуктивність",
@@ -2177,7 +2237,7 @@
     "inProgress": "В процесі",
     "done": "Завершено",
     "archived": "Архівовано",
-    "unknown": "Невідомо",
+    "unknown": "Статус {{status}}",
     "telegramConnected": "Telegram підключено та опитування",
     "telegramConnectionProblem": "Проблема з підключенням Telegram",
     "completed": "Завершено",
@@ -2406,7 +2466,7 @@
       "noteNotFound": "Запис не знайдено.",
       "noteDeleted": "Запис успішно видалено.",
       "profileNotFound": "Профіль не знайдено.",
-      "passwordTooShort": "Пароль має містити не менше 6 символів",
+      "passwordTooShort": "Пароль має містити не менше {{count}} символів",
       "currentPasswordIncorrect": "Поточний пароль неправильний",
       "failedToUpdateProfile": "Не вдалося оновити профіль.",
       "passwordChangeRequired": "Поточний пароль та новий пароль є обов'язковими",
@@ -3079,6 +3139,7 @@
     "startTyping": "Почніть вводити для пошуку або виберіть фільтри вище",
     "noResults": "Не знайдено жодного результату",
     "entityTypes": {
+      "link": "Посилання",
       "task": "задача",
       "project": "проект",
       "area": "область",
@@ -3109,6 +3170,7 @@
       "hasNoProject": "не має проекту"
     },
     "groups": {
+      "Link": "Посилання",
       "Task": "Завдання",
       "Project": "Проєкти",
       "Area": "Області",
@@ -4669,7 +4731,16 @@
     "loadError": "Не вдалося завантажити це завдання."
   },
   "review": {
+    "cancelDate": "Скасувати",
+    "choices": "Варіанти",
+    "more": "Ще…",
+    "decided": "Рішення збережено.",
     "later": {
+      "sortOneByOne": "Сортувати по одному",
+      "left": "Залишилось: {{count}}",
+      "backToList": "Назад до списку",
+      "skip": "Пропустити",
+      "sorted": "Більше нічого сортувати.",
       "noMatch": "Nothing matches.",
       "noProject": "No project",
       "filter": "Filter"
@@ -5397,6 +5468,11 @@
       "allDomains": "Усі сайти"
     },
     "sort": {
+      "start": "Сортувати посилання ({{count}})",
+      "left": "Залишилось: {{count}}",
+      "exit": "Назад до вхідних",
+      "skip": "Пропустити",
+      "done": "Немає посилань для сортування.",
       "newest": "Спочатку нові",
       "oldest": "Спочатку старі"
     },

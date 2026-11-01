@@ -392,6 +392,65 @@
     "noActivity": "Nog geen activiteit"
   },
   "profile": {
+    "showTaskDescription": "Beschrijving onder de titel tonen",
+    "sync": {
+      "field": {
+        "review_at": "Review on",
+        "review_on": "Review on",
+        "in_view_at": "In view",
+        "week_of": "Week",
+        "estimated_minutes": "Duration",
+        "recurrence_type": "Repeat",
+        "icon": "Icon",
+        "color": "Colour",
+        "tag_uids": "Tags",
+        "next_task_uid": "Next action",
+        "parent_task_uid": "Parent task",
+        "goal_uid": "Goal",
+        "area_uid": "Area",
+        "parent_project_uid": "Parent project",
+        "project_uid": "Project",
+        "completed_at": "Completed on",
+        "start_date": "Start",
+        "due_date": "Due date",
+        "status": "Status",
+        "priority": "Priority",
+        "description": "Description",
+        "content": "Content",
+        "note": "Note",
+        "title": "Title",
+        "name": "Title"
+      },
+      "entity": {
+        "link": "Link",
+        "inbox_item": "Idea",
+        "note": "Note",
+        "tag": "Tag",
+        "goal": "Goal",
+        "area": "Area",
+        "project": "Project",
+        "task": "Task"
+      },
+      "resolveError": "Could not settle that conflict",
+      "loadError": "Could not load the sync status",
+      "no": "no",
+      "yes": "yes",
+      "empty": "(empty)",
+      "dismiss": "Got it",
+      "keepCurrent": "Keep the other",
+      "keepLost": "Keep this value",
+      "current": "Kept: {{value}}",
+      "lost": "Set aside: {{value}}",
+      "conflictsHint": "A device sent a value older than the one on the server, which kept its own. Choose the one that stays.",
+      "conflicts": "Conflicts",
+      "pending_other": "{{count}} changes made offline in this browser are waiting to be sent.",
+      "pending_one": "{{count}} change made offline in this browser is waiting to be sent.",
+      "lastChange": "Last change on the server {{ago}}",
+      "lastSeen": "Synced {{ago}}",
+      "noDevices": "No device has synced yet. Connect the phone or the Linux app from API Keys.",
+      "devices": "Devices",
+      "title": "Sync"
+    },
     "sectionFailed": "Dit onderdeel kon niet worden weergegeven. Kies een ander onderdeel of laad de pagina opnieuw.",
     "taskFeed": {
       "title": "Abonneren op je taken",
@@ -503,6 +562,7 @@
     "nextTaskSuggestion": "Volgende Taak Suggestie",
     "enableNextTaskSuggestion": "Schakel Volgende Taak Suggesties in",
     "tabs": {
+      "sync": "Sync",
       "general": "Algemeen",
       "security": "Beveiliging",
       "productivity": "Productiviteit",
@@ -1321,7 +1381,7 @@
     "inProgress": "Bezig",
     "done": "Klaar",
     "archived": "Gearchiveerd",
-    "unknown": "Onbekend",
+    "unknown": "Status {{status}}",
     "telegramConnected": "Telegram verbonden en aan het polleren",
     "telegramConnectionProblem": "Probleem met Telegram-verbinding",
     "completed": "Voltooid",
@@ -2396,7 +2456,7 @@
       "noteNotFound": "Notitie niet gevonden.",
       "noteDeleted": "Notitie succesvol verwijderd.",
       "profileNotFound": "Profiel niet gevonden.",
-      "passwordTooShort": "Wachtwoord moet minimaal 6 tekens zijn.",
+      "passwordTooShort": "Wachtwoord moet minimaal {{count}} tekens zijn.",
       "currentPasswordIncorrect": "Huidig wachtwoord is onjuist.",
       "failedToUpdateProfile": "Mislukt om profiel bij te werken.",
       "passwordChangeRequired": "Huidig wachtwoord en nieuw wachtwoord zijn vereist",
@@ -3067,6 +3127,7 @@
     "startTyping": "Begin met typen om te zoeken of selecteer filters hierboven",
     "noResults": "Geen resultaten gevonden",
     "entityTypes": {
+      "link": "Links",
       "task": "taak",
       "project": "project",
       "area": "gebied",
@@ -3097,6 +3158,7 @@
       "hasNoProject": "heeft geen Project"
     },
     "groups": {
+      "Link": "Links",
       "Task": "Taken",
       "Project": "Projecten",
       "Area": "Gebieden",
@@ -4651,7 +4713,16 @@
     "loadError": "Deze taak kon niet worden geladen."
   },
   "review": {
+    "cancelDate": "Annuleren",
+    "choices": "Keuzes",
+    "more": "Meer…",
+    "decided": "Beslissing opgeslagen.",
     "later": {
+      "sortOneByOne": "Een voor een sorteren",
+      "left": "{{count}} over",
+      "backToList": "Terug naar de lijst",
+      "skip": "Overslaan",
+      "sorted": "Niets meer om te sorteren.",
       "noMatch": "Nothing matches.",
       "noProject": "No project",
       "filter": "Filter"
@@ -5365,6 +5436,11 @@
       "allDomains": "Alle sites"
     },
     "sort": {
+      "start": "Links sorteren ({{count}})",
+      "left": "{{count}} over",
+      "exit": "Terug naar de inbox",
+      "skip": "Overslaan",
+      "done": "Geen link meer om te sorteren.",
       "newest": "Nieuwste eerst",
       "oldest": "Oudste eerst"
     },

@@ -392,6 +392,65 @@
     "noActivity": "还没有活动"
   },
   "profile": {
+    "showTaskDescription": "在标题下方显示描述",
+    "sync": {
+      "field": {
+        "review_at": "Review on",
+        "review_on": "Review on",
+        "in_view_at": "In view",
+        "week_of": "Week",
+        "estimated_minutes": "Duration",
+        "recurrence_type": "Repeat",
+        "icon": "Icon",
+        "color": "Colour",
+        "tag_uids": "Tags",
+        "next_task_uid": "Next action",
+        "parent_task_uid": "Parent task",
+        "goal_uid": "Goal",
+        "area_uid": "Area",
+        "parent_project_uid": "Parent project",
+        "project_uid": "Project",
+        "completed_at": "Completed on",
+        "start_date": "Start",
+        "due_date": "Due date",
+        "status": "Status",
+        "priority": "Priority",
+        "description": "Description",
+        "content": "Content",
+        "note": "Note",
+        "title": "Title",
+        "name": "Title"
+      },
+      "entity": {
+        "link": "Link",
+        "inbox_item": "Idea",
+        "note": "Note",
+        "tag": "Tag",
+        "goal": "Goal",
+        "area": "Area",
+        "project": "Project",
+        "task": "Task"
+      },
+      "resolveError": "Could not settle that conflict",
+      "loadError": "Could not load the sync status",
+      "no": "no",
+      "yes": "yes",
+      "empty": "(empty)",
+      "dismiss": "Got it",
+      "keepCurrent": "Keep the other",
+      "keepLost": "Keep this value",
+      "current": "Kept: {{value}}",
+      "lost": "Set aside: {{value}}",
+      "conflictsHint": "A device sent a value older than the one on the server, which kept its own. Choose the one that stays.",
+      "conflicts": "Conflicts",
+      "pending_other": "{{count}} changes made offline in this browser are waiting to be sent.",
+      "pending_one": "{{count}} change made offline in this browser is waiting to be sent.",
+      "lastChange": "Last change on the server {{ago}}",
+      "lastSeen": "Synced {{ago}}",
+      "noDevices": "No device has synced yet. Connect the phone or the Linux app from API Keys.",
+      "devices": "Devices",
+      "title": "Sync"
+    },
     "sectionFailed": "This section could not be displayed. Pick another section or reload the page.",
     "taskFeed": {
       "title": "订阅你的任务",
@@ -503,6 +562,7 @@
     "nextTaskSuggestion": "下一个任务建议",
     "enableNextTaskSuggestion": "启用下一个任务建议",
     "tabs": {
+      "sync": "Sync",
       "general": "常规",
       "security": "安全",
       "productivity": "生产力",
@@ -1321,7 +1381,7 @@
     "inProgress": "进行中",
     "done": "完成",
     "archived": "已归档",
-    "unknown": "未知",
+    "unknown": "状态 {{status}}",
     "telegramConnected": "Telegram 已连接并正在轮询",
     "telegramConnectionProblem": "Telegram 连接问题",
     "completed": "已完成",
@@ -2396,7 +2456,7 @@
       "noteNotFound": "未找到笔记。",
       "noteDeleted": "笔记已成功删除。",
       "profileNotFound": "未找到个人资料。",
-      "passwordTooShort": "密码必须至少为6个字符",
+      "passwordTooShort": "密码必须至少为{{count}}个字符",
       "currentPasswordIncorrect": "当前密码不正确",
       "failedToUpdateProfile": "更新个人资料失败。",
       "passwordChangeRequired": "当前密码和新密码是必需的",
@@ -3067,6 +3127,7 @@
     "startTyping": "开始输入以搜索或选择上面的过滤器",
     "noResults": "未找到结果",
     "entityTypes": {
+      "link": "链接",
       "task": "任务",
       "project": "项目",
       "area": "区域",
@@ -3097,6 +3158,7 @@
       "hasNoProject": "无项目"
     },
     "groups": {
+      "Link": "链接",
       "Task": "任务",
       "Project": "项目",
       "Area": "领域",
@@ -4651,7 +4713,16 @@
     "loadError": "无法加载此任务。"
   },
   "review": {
+    "cancelDate": "取消",
+    "choices": "选项",
+    "more": "更多…",
+    "decided": "已保存决定。",
     "later": {
+      "sortOneByOne": "逐个排序",
+      "left": "剩余 {{count}}",
+      "backToList": "返回列表",
+      "skip": "跳过",
+      "sorted": "没有可排序的内容了。",
       "noMatch": "Nothing matches.",
       "noProject": "No project",
       "filter": "Filter"
@@ -5365,6 +5436,11 @@
       "allDomains": "全部网站"
     },
     "sort": {
+      "start": "排序链接（{{count}}）",
+      "left": "剩余 {{count}}",
+      "exit": "返回收件箱",
+      "skip": "跳过",
+      "done": "没有可排序的链接了。",
       "newest": "最新在前",
       "oldest": "最早在前"
     },

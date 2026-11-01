@@ -250,6 +250,65 @@
     "already_have_account": "¿Ya tienes una cuenta?"
   },
   "profile": {
+    "showTaskDescription": "Mostrar la descripción debajo del título",
+    "sync": {
+      "field": {
+        "review_at": "Review on",
+        "review_on": "Review on",
+        "in_view_at": "In view",
+        "week_of": "Week",
+        "estimated_minutes": "Duration",
+        "recurrence_type": "Repeat",
+        "icon": "Icon",
+        "color": "Colour",
+        "tag_uids": "Tags",
+        "next_task_uid": "Next action",
+        "parent_task_uid": "Parent task",
+        "goal_uid": "Goal",
+        "area_uid": "Area",
+        "parent_project_uid": "Parent project",
+        "project_uid": "Project",
+        "completed_at": "Completed on",
+        "start_date": "Start",
+        "due_date": "Due date",
+        "status": "Status",
+        "priority": "Priority",
+        "description": "Description",
+        "content": "Content",
+        "note": "Note",
+        "title": "Title",
+        "name": "Title"
+      },
+      "entity": {
+        "link": "Link",
+        "inbox_item": "Idea",
+        "note": "Note",
+        "tag": "Tag",
+        "goal": "Goal",
+        "area": "Area",
+        "project": "Project",
+        "task": "Task"
+      },
+      "resolveError": "Could not settle that conflict",
+      "loadError": "Could not load the sync status",
+      "no": "no",
+      "yes": "yes",
+      "empty": "(empty)",
+      "dismiss": "Got it",
+      "keepCurrent": "Keep the other",
+      "keepLost": "Keep this value",
+      "current": "Kept: {{value}}",
+      "lost": "Set aside: {{value}}",
+      "conflictsHint": "A device sent a value older than the one on the server, which kept its own. Choose the one that stays.",
+      "conflicts": "Conflicts",
+      "pending_other": "{{count}} changes made offline in this browser are waiting to be sent.",
+      "pending_one": "{{count}} change made offline in this browser is waiting to be sent.",
+      "lastChange": "Last change on the server {{ago}}",
+      "lastSeen": "Synced {{ago}}",
+      "noDevices": "No device has synced yet. Connect the phone or the Linux app from API Keys.",
+      "devices": "Devices",
+      "title": "Sync"
+    },
     "sectionFailed": "No se pudo mostrar esta sección. Elige otra sección o vuelve a cargar la página.",
     "taskFeed": {
       "title": "Suscribirse a tus tareas",
@@ -293,6 +352,7 @@
     "nextTaskSuggestion": "Sugerencia de Próxima Tarea",
     "enableNextTaskSuggestion": "Habilitar Sugerencias de Próxima Tarea",
     "tabs": {
+      "sync": "Sync",
       "general": "General",
       "security": "Seguridad",
       "productivity": "Productividad",
@@ -1506,7 +1566,7 @@
     "inProgress": "En Progreso",
     "done": "Completado",
     "archived": "Archivado",
-    "unknown": "Desconocido",
+    "unknown": "Estado {{status}}",
     "telegramConnected": "Telegram conectado y sondeando",
     "telegramConnectionProblem": "Problema de conexión de Telegram",
     "completed": "Completado",
@@ -2388,7 +2448,7 @@
       "noteNotFound": "Nota no encontrada.",
       "noteDeleted": "Nota eliminada con éxito.",
       "profileNotFound": "Perfil no encontrado.",
-      "passwordTooShort": "La contraseña debe tener al menos 6 caracteres.",
+      "passwordTooShort": "La contraseña debe tener al menos {{count}} caracteres.",
       "currentPasswordIncorrect": "La contraseña actual es incorrecta.",
       "failedToUpdateProfile": "Error al actualizar el perfil.",
       "passwordChangeRequired": "Se requiere la contraseña actual y la nueva contraseña",
@@ -3060,6 +3120,7 @@
     "startTyping": "Comienza a escribir para buscar o seleccionar filtros arriba",
     "noResults": "No se encontraron resultados",
     "entityTypes": {
+      "link": "Enlaces",
       "task": "tarea",
       "project": "proyecto",
       "area": "área",
@@ -3090,6 +3151,7 @@
       "hasNoProject": "no tiene Proyecto"
     },
     "groups": {
+      "Link": "Enlaces",
       "Task": "Tareas",
       "Project": "Proyectos",
       "Area": "Áreas",
@@ -4645,7 +4707,16 @@
     "loadError": "No se pudo cargar esta tarea."
   },
   "review": {
+    "cancelDate": "Cancelar",
+    "choices": "Opciones",
+    "more": "Más…",
+    "decided": "Decisión guardada.",
     "later": {
+      "sortOneByOne": "Ordenar uno a uno",
+      "left": "{{count}} restantes",
+      "backToList": "Volver a la lista",
+      "skip": "Omitir",
+      "sorted": "No queda nada por ordenar.",
       "noMatch": "Nothing matches.",
       "noProject": "No project",
       "filter": "Filter"
@@ -5365,6 +5436,11 @@
       "allDomains": "Todos los sitios"
     },
     "sort": {
+      "start": "Ordenar enlaces ({{count}})",
+      "left": "{{count}} restantes",
+      "exit": "Volver a la bandeja de entrada",
+      "skip": "Omitir",
+      "done": "No queda ningún enlace por ordenar.",
       "newest": "Más recientes primero",
       "oldest": "Más antiguos primero"
     },
