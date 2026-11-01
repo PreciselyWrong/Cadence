@@ -59,10 +59,14 @@ import kotlinx.coroutines.launch
 class TaskQuickAddActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (intent.action == Intent.ACTION_SEND) {
-            captureShared(intent.getStringExtra(Intent.EXTRA_TEXT))
-            return
+        when (intent.action) {
+            Intent.ACTION_SEND -> captureShared(intent.getStringExtra(Intent.EXTRA_TEXT))
+            Intent.ACTION_PROCESS_TEXT -> captureShared(intent.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)?.toString())
+            else -> showQuickAdd()
         }
+    }
+
+    private fun showQuickAdd() {
         setContent {
             CadenceTheme {
                 QuickAddCard(

@@ -89,6 +89,29 @@
             </intent-filter>
         </activity>
 
+        <activity-alias
+            android:name=".quickadd.TaskProcessTextAlias"
+            android:targetActivity=".quickadd.TaskQuickAddActivity"
+            android:exported="true"
+            android:label="@string/tasks_process_text_label">
+            <intent-filter>
+                <action android:name="android.intent.action.PROCESS_TEXT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity-alias>
+
+        <service
+            android:name=".quickadd.QuickAddTileService"
+            android:exported="true"
+            android:icon="@drawable/tasks_ic_notification"
+            android:label="@string/tasks_tile_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
         <receiver
             android:name=".reminder.TaskReminderReceiver"
             android:exported="false" />

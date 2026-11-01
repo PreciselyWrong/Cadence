@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tasks_tile_label">Capturer</string>
+    <string name="tasks_process_text_label">Cadence</string>
+</resources>

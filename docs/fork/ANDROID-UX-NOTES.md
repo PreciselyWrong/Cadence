@@ -141,3 +141,9 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Problème** : depuis la fiche d'un événement, impossible d'aller voir l'événement complet (invités, rappels, pièces jointes) dans l'agenda du téléphone.
 - **Décision** : « Ouvrir dans l'agenda » (action secondaire) lance l'événement par `ACTION_VIEW` à son heure de début ; sans application d'agenda, un message le dit.
 - **Web** : l'agenda web a déjà l'événement ouvert dans son propre panneau ; à reprendre seulement si le web ajoute un lien vers le fournisseur.
+
+### 2026-11-01 — Capturer sans ouvrir l'application
+
+- **Problème** : pour noter une idée il fallait ouvrir l'application ; le texte sélectionné ailleurs ne pouvait pas partir directement dans Cadence.
+- **Décision** : raccourci statique « Nouvelle tâche » sur l'icône, tuile « Capturer » dans les réglages rapides (ouvre l'ajout rapide), et entrée « Cadence » dans le menu de sélection (`PROCESS_TEXT`), qui range le texte dans l'Inbox comme le partage.
+- **Web** : pas d'équivalent système ; la capture rapide web reste la palette Ctrl+K.
