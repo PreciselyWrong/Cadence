@@ -68,21 +68,36 @@ object TaskViews {
     fun isOverdue(task: TaskItem, today: LocalDate): Boolean =
         !task.isClosed && !task.someday && task.dueDay?.isBefore(today) == true
 
-    /** Tâches à échéance dans les [days] prochains jours, après aujourd'hui, groupées par jour. */
+    /**
+     * Tâches à échéance dans les [days] prochains jours, après aujourd'hui, groupées par jour. Une série ouverte
+     * y ajoute ses occurrences à venir ([RecurrenceExpansion], `virtual`), même quand son occurrence enregistrée
+     * est déjà passée : en retard, elle reste dans Aujourd'hui et Upcoming ne montre que la suite, comme le web
+     * (docs/03-upcoming-view.md). Seule l'occurrence enregistrée se coche.
+     */
     fun upcoming(
         tasks: List<TaskItem>,
         today: LocalDate,
         now: Instant,
+        zone: ZoneId,
         days: Long = 7,
     ): Map<LocalDate, List<TaskItem>> {
+        val first = today.plusDays(1)
         val last = today.plusDays(days)
-        return tasks
-            .filter { visibleNow(it, now) }
-            .mapNotNull { task -> task.dueDay?.let { it to task } }
-            .filter { (due, _) -> due.isAfter(today) && !due.isAfter(last) }
-            .sortedWith(compareBy({ it.first }, { it.second.dueDate }))
-            .groupBy({ it.first }, { it.second })
+        val open = tasks.filter { visibleNow(it, now) }
+        val stored = open.filter { task -> task.dueDay?.let { it.isAfter(today) && !it.isAfter(last) } == true }
+        val later = open.flatMap { RecurrenceExpansion.expand(it, first, last, zone) }
+        return (stored + later)
+            .sortedWith(compareBy({ it.dueDay }, { it.dueDate }))
+            .groupBy { it.dueDay!! }
     }
+
+    /**
+     * Occurrences d'aujourd'hui des séries dont l'occurrence enregistrée est déjà passée (en retard) : le web les
+     * compte pour aujourd'hui sans empiler les jours manqués, une seule ligne par série.
+     */
+    fun todayOccurrences(tasks: List<TaskItem>, today: LocalDate, now: Instant, zone: ZoneId): List<TaskItem> =
+        tasks.filter { visibleNow(it, now) && !it.someday && it.dueDay?.isBefore(today) == true }
+            .flatMap { RecurrenceExpansion.expand(it, today, today, zone) }
 
     /** Tâches ouvertes sans échéance ni projet : à trier. */
     fun unsorted(tasks: List<TaskItem>, now: Instant): List<TaskItem> =

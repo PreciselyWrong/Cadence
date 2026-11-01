@@ -210,6 +210,34 @@ class TodayWidgetSelectionTest {
         assertEquals(listOf("parent"), select(tasks, config).tasks.map { it.uid })
     }
 
+    @Test
+    fun `les trois prochains jours listent les occurrences d'une serie quotidienne, sans cocher les a venir`() {
+        val tasks = listOf(task("daily", today.plusDays(1), recurrenceType = "daily"))
+
+        val selection = select(tasks, TodayWidgetConfig(taskScope = TaskScope.NEXT_3))
+
+        assertEquals(listOf(today.plusDays(1), today.plusDays(2), today.plusDays(3)), selection.tasks.map { it.dueDay })
+        assertEquals(listOf(false, true, true), selection.tasks.map { it.virtual })
+        assertEquals(3, selection.tasks.map { it.rowKey }.toSet().size)
+    }
+
+    @Test
+    fun `aujourd'hui seulement compte l'occurrence du jour d'une serie dont l'occurrence enregistree est en retard`() {
+        val tasks = listOf(
+            task("late-daily", today.minusDays(2), recurrenceType = "daily"),
+            task("late-plain", today.minusDays(2)),
+        )
+
+        val today = select(tasks, TodayWidgetConfig(taskScope = TaskScope.TODAY))
+        val both = select(tasks, TodayWidgetConfig(taskScope = TaskScope.OVERDUE_AND_TODAY))
+
+        assertEquals(listOf("late-daily"), today.tasks.map { it.uid })
+        assertEquals(this.today, today.tasks.single().dueDay)
+        // Avec les retards, l'occurrence enregistrée (en retard) reste seule : une série ne s'empile pas.
+        assertEquals(listOf("late-daily", "late-plain"), both.overdue.map { it.uid })
+        assertEquals(emptyList<String>(), both.tasks.map { it.uid })
+    }
+
     private fun select(
         tasks: List<TaskItem>,
         config: TodayWidgetConfig,

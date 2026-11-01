@@ -4,22 +4,19 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Now
 
-Le reste est livré dans `main` (14 commits d'avance sur `origin/main`, non poussés) et vérifié par tests, build et émulateur ; ci-dessous, ce qui demande l'usage réel, le téléphone, le serveur ou du code.
+Tout le code prévu est livré dans `main` et poussé ; APK 1.6.1 et image `ghcr.io/preciselywrong/cadence:latest` publiés. Vérifié : suites serveur sur SQLite et sur PostgreSQL 16 (podman local, migrations du jour rejouées), tests web, tests Android dont les migrations Room sous Robolectric. Reste ce qui demande l'usage réel, ton téléphone ou ton serveur.
 
 - **À faire par toi.**
+  - Installer l'APK 1.6.1 (versionCode 33) depuis NicoApps et mettre à jour le conteneur sur Unraid (`docker pull ghcr.io/preciselywrong/cadence:latest` puis redémarrer). Vérif : synchro dans les deux sens par Tailscale, rappels, « Plus tard », heures calmes, widgets, revue, Stash.
   - Synchro Google (`docs/33-google-sync.md`) : créer le client OAuth (Calendar + Tasks API, app « En production »), `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` sur Unraid, connecter, 3 jours d'usage mixte. Vérif : aucun doublon, modifs visibles des deux côtés en < 2 min.
-  - Revue (`docs/34-review.md`) : 2 semaines d'usage réel, puis ajuster le seuil (3 reports en 30 j), « jour arrivé ou lendemain », 90 jours « Ancien », 30 jours « projet stagnant », seulement si des faux positifs apparaissent.
-  - Installer l'APK 1.6.0 (versionCode 32) sur le vrai téléphone, joindre le vrai serveur par Tailscale. Vérif : sync dans les deux sens, rappels, snooze, heures calmes, widgets ; APK à publier sur NicoApps (`android/publish.ps1`).
-  - Passer la production sur le Postgres d'Unraid (export puis import) et lancer `DATABASE_URL=... npm run backend:test:pg`. Vérif : les branches Postgres de la synchro (ordre du journal, compaction) et des migrations n'ont jamais tourné ; `backend:test:upgrade` vert sur les deux moteurs.
-- **Parité Android restante** (règle du fork : à livrer ou à garder ici).
-  - `reminder_sent_at` hors du format de synchro : entrée du registre serveur (`backend/modules/sync/`) puis colonne Android.
-  - Icônes dans les lignes de tâches et le `ProjectDropdown` ; édition des icônes et des parents (sous-projets, tags) sur Android.
-  - Onglet À venir et widgets n'étendent pas les occurrences récurrentes (l'Agenda le fait) ; filtre par zone absent des onglets Étiquettes et Terminées ; choix « Session courte » de la revue ; cibles de glissement du tiroir : sans objet sur téléphone.
-  - Tests instrumentés des migrations Room 5→6, 6→7, 7→8 : non lancés (l'émulateur plante sur cette machine, code 139). Vérif : un émulateur ou un appareil qui les exécute.
-- **Client Linux (`desktop/`, `docs/fork/DESKTOP.md`).** Le raccourci global ne part pas sous Wayland (lier `cadence-desktop --quick` dans KDE) ; captures livrées au moins une fois (la synchro `push` donnerait exactement une fois) ; le clic sur une notification n'ouvre pas l'app ; démarrage automatique non empaqueté. Vérif : RAM au repos < 100 Mo, notification reçue app fermée.
-- **Web, restes.** Avertissement `<form>` imbriqué dans Réglages ; défilement du tableau des notifications sur téléphone ; objectifs absents de Ctrl+K ; 162 clés FR manquantes (admin, connexion) ; habitudes absentes du calendrier (l'option « Afficher les habitudes » ne fait rien) ; rappels d'habitudes côté serveur absents (téléphone seulement).
-- **Revue web, restes de code.** Rangée de décision en Dense ; e2e Playwright du parcours de revue (reprise après 4 décisions, Plus tard → réactivation, date de réexamen) ; tests d'acceptation manquants (récurrence + Google sans faux report, tâche partagée sans fuite, plusieurs milliers de tâches : temps de `/api/review*`).
-- **Fixtures dorées des habitudes** : à compléter des règles pas encore reprises côté JS (statistiques d'abstinence et d'alcool, aperçus, questions apprises, semaine) quand le web en a besoin.
+  - Revue (`docs/34-review.md`) : 2 semaines d'usage réel, puis ajuster seuils (3 reports en 30 j, « jour arrivé ou lendemain », 90 j « Ancien », 30 j « projet stagnant ») seulement si des faux positifs apparaissent.
+  - Production sur le Postgres d'Unraid : export puis import (⛔ jamais par-dessus une base SQLite remplie). Le code est vérifié sur PostgreSQL 16 en local.
+  - Client Linux : choisir une touche pour l'ajout rapide dans les raccourcis KDE (le portail Wayland la propose ; Ctrl+Alt+Space est déjà pris par Claude), installer le RPM `desktop/src-tauri/target/release/bundle/rpm/`.
+- **Petits restes, à faire quand le besoin se montre.**
+  - Android : éditer icônes et parents (sous-projets, tags) — web seulement ; choix « Session courte » de la revue (Android n'a pas de plan du jour) ; habitudes « N fois par semaine » absentes de l'Agenda.
+  - Serveur : rappels d'habitudes envoyés par le téléphone seulement ; avec plusieurs processus serveur, une création incomplète (sans nom) qui croise une autre création du même uid est refusée au lieu d'être fusionnée ; défaut ancien `habitReminders` dans `users.notification_preferences` sur les bases mises à niveau (sans effet).
+  - Traductions automatiques des 24 langues hors fr/en : non relues (surtout ja, ko).
+  - Fixtures dorées des habitudes : compléter (abstinence, alcool, aperçus, questions apprises, semaine) quand le web en a besoin.
 - Hors périmètre volontaire : scores V/E/M/D (échelles à définir ; en attendant, tags imbriqués `V/3`) et limite de projets actifs (compteur seulement).
 
 ## Next

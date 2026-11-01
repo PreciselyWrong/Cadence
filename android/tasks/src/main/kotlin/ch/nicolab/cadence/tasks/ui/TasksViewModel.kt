@@ -170,8 +170,10 @@ internal class TasksViewModel(
     private val tasks: Flow<List<TaskItem>> =
         combine(repository.observeTasks(), hiddenUids) { all, hidden -> all.withoutHidden(hidden) }
 
-    /** Tâches du domaine filtré : Aujourd'hui, À venir et les suggestions ; Étiquettes, Terminées et les projets gardent [tasks]. */
-    private val scopedTasks: Flow<List<TaskItem>> =
+    /** Tâches du domaine filtré : Aujourd'hui, À venir et les suggestions ; les projets et le Bilan gardent [tasks]. */
+    private val scopedTasks: Flow<List<TaskItem>> = scopedAllTasks()
+
+    private fun scopedAllTasks(): Flow<List<TaskItem>> =
         combine(tasks, _areaFilter, projects) { all, area, projects -> AreaFilter.tasks(all, projects, area) }
 
     private val _messages = MutableSharedFlow<String>(extraBufferCapacity = 8)
@@ -233,7 +235,7 @@ internal class TasksViewModel(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), false)
 
     val upcoming: StateFlow<Map<LocalDate, List<TaskItem>>> = combine(scopedTasks, moment) { all, m ->
-        TaskViews.upcoming(all, m.today, m.now)
+        TaskViews.upcoming(all, m.today, m.now, m.zone)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyMap())
 
     /** Tâches sans échéance ni projet : sans cette liste, elles n'apparaîtraient dans aucun onglet. */
@@ -248,6 +250,10 @@ internal class TasksViewModel(
 
     /** Tâches de premier niveau, ouvertes et fermées : Projets, Étiquettes, Terminées et le Bilan en dérivent. */
     val allTasks: StateFlow<List<TaskItem>> = tasks
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+
+    /** [allTasks] du domaine filtré : comptes et listes des Étiquettes, et Terminées. */
+    val areaTasks: StateFlow<List<TaskItem>> = scopedAllTasks()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
     val tags: StateFlow<List<TagItem>> = repository.observeTags()

@@ -39,6 +39,8 @@ data class TaskItem(
     val dueDay: LocalDate? = null,
     val deferUntil: Instant? = null,
     val reminderAt: Instant? = null,
+    /** Instant où le serveur (ou un autre appareil) a notifié le rappel ; écrit par le serveur seul (`reminder_sent_at`). */
+    val reminderSentAt: Instant? = null,
     /** null ou "none" : tâche simple ; sinon "daily", "weekly", "monthly"… */
     val recurrenceType: String? = null,
     val projectUid: String? = null,
@@ -72,9 +74,18 @@ data class TaskItem(
     val goalUid: String? = null,
     /** Règle complète de la série (jours, fin, exceptions) ; sert à [RecurrenceExpansion]. */
     val recurrence: RecurrenceRule = RecurrenceRule(),
+    /** Occurrence à venir d'une série ([RecurrenceExpansion]) : copie de la tâche enregistrée à un autre jour, ni cochable ni modifiable. */
+    val virtual: Boolean = false,
 ) {
+    /** Clé de liste : la tâche enregistrée et ses occurrences à venir partagent le même [uid]. */
+    val rowKey: String get() = if (virtual) "$uid|$dueDay" else uid
+
     val isRecurring: Boolean get() = recurrenceType != null && recurrenceType != "none"
     val isClosed: Boolean get() = TaskStatus.isClosed(status)
+
+    /** Le rappel a déjà été notifié ailleurs : l'appareil ne le sonne pas une seconde fois. */
+    val reminderAlreadySent: Boolean
+        get() = reminderAt != null && reminderSentAt != null && !reminderSentAt.isBefore(reminderAt)
 }
 
 enum class RepeatType(val wire: String) {

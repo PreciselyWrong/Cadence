@@ -35,7 +35,7 @@ fun selectWidgetTasks(
 ): TodaySelection {
     // Filtrer par une étiquette parente inclut ses sous-étiquettes, comme sur le web.
     val tagScope = TagPaths.withDescendants(tags, config.tagUids)
-    val candidates = scopeTasks(tasks, config.taskScope, today, now)
+    val candidates = scopeTasks(tasks, config.taskScope, today, now, zone)
         .filter { !config.highPriorityOnly || it.priority == TaskPriority.HIGH }
         .filter { config.projectUids.isEmpty() || it.projectUid in config.projectUids }
         .filter { tagScope.isEmpty() || it.tagUids.any(tagScope::contains) }
@@ -97,13 +97,15 @@ object TodayListIds {
     fun day(day: LocalDate): Long = DAYS + day.toEpochDay()
 }
 
-private fun scopeTasks(tasks: List<TaskItem>, scope: TaskScope, today: LocalDate, now: Instant): List<TaskItem> =
+private fun scopeTasks(tasks: List<TaskItem>, scope: TaskScope, today: LocalDate, now: Instant, zone: ZoneId): List<TaskItem> =
     when (scope) {
         TaskScope.OVERDUE_AND_TODAY -> TaskViews.today(tasks, today, now)
-        TaskScope.TODAY -> TaskViews.today(tasks, today, now).filterNot { it.isOverdue(today) }
-        TaskScope.TOMORROW -> TaskViews.upcoming(tasks, today, now, days = 1).values.flatten()
-        TaskScope.NEXT_3 -> TaskViews.upcoming(tasks, today, now, days = 3).values.flatten()
-        TaskScope.NEXT_7 -> TaskViews.upcoming(tasks, today, now, days = 7).values.flatten()
+        // Une série en retard est exclue d'« aujourd'hui seulement » par son occurrence enregistrée ; son occurrence du jour y reste.
+        TaskScope.TODAY -> TaskViews.today(tasks, today, now).filterNot { it.isOverdue(today) } +
+            TaskViews.todayOccurrences(tasks, today, now, zone)
+        TaskScope.TOMORROW -> TaskViews.upcoming(tasks, today, now, zone, days = 1).values.flatten()
+        TaskScope.NEXT_3 -> TaskViews.upcoming(tasks, today, now, zone, days = 3).values.flatten()
+        TaskScope.NEXT_7 -> TaskViews.upcoming(tasks, today, now, zone, days = 7).values.flatten()
         TaskScope.NO_DATE -> tasks.filter { task ->
             val deferredUntil = task.deferUntil
             task.parentTaskUid == null && !task.isClosed && task.dueDate == null && task.dueDay == null &&

@@ -69,7 +69,7 @@ object RecurrenceExpansion {
     private fun occurrence(task: TaskItem, day: LocalDate, time: LocalTime?, zone: ZoneId): TaskItem {
         // `atZone` replace une heure tombée dans le saut du printemps par la suivante, et garde la première de l'automne.
         val at = (time?.let { day.atTime(it) } ?: day.atTime(LocalTime.MAX)).atZone(zone).toInstant()
-        return task.copy(dueDate = at, dueDay = day)
+        return task.copy(dueDate = at, dueDay = day, virtual = true)
     }
 
     private fun nextDay(type: String?, rule: RecurrenceRule, from: LocalDate): LocalDate? {

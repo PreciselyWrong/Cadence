@@ -16,7 +16,8 @@ class ReminderPlanTest {
         reminderAt: Instant? = null,
         status: Int = TaskStatus.NOT_STARTED,
         dueDate: Instant? = null,
-    ) = TaskItem(uid = uid, name = uid, status = status, reminderAt = reminderAt, dueDate = dueDate)
+        reminderSentAt: Instant? = null,
+    ) = TaskItem(uid = uid, name = uid, status = status, reminderAt = reminderAt, dueDate = dueDate, reminderSentAt = reminderSentAt)
 
     @Test
     fun `pose les rappels à venir dans les 14 jours seulement`() {
@@ -44,6 +45,20 @@ class ReminderPlanTest {
         val ancien = task("ancien", reminderAt = now.minusSeconds(25 * 3600))
 
         assertEquals(emptySet<String>(), ReminderPlan.wanted(listOf(remis, ancien), delivered, now).keys)
+    }
+
+    @Test
+    fun `ne sonne pas un rappel que le serveur a déjà notifié`() {
+        val at = now.plusSeconds(3600)
+        val tasks = listOf(
+            task("notifie", reminderAt = at, reminderSentAt = at),
+            task("notifie-apres", reminderAt = at, reminderSentAt = at.plusSeconds(5)),
+            task("notifie-avant", reminderAt = at, reminderSentAt = at.minusSeconds(86_400)),
+            task("jamais", reminderAt = at),
+            task("notifie-en-retard", reminderAt = now.minusSeconds(3600), reminderSentAt = now.minusSeconds(3590)),
+        )
+
+        assertEquals(setOf("notifie-avant", "jamais"), ReminderPlan.wanted(tasks, emptySet(), now).keys)
     }
 
     @Test

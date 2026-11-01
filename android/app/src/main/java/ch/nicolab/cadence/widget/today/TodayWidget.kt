@@ -349,7 +349,7 @@ private fun ColumnScope.TodayList(view: TodayView, text: TodayTextSizes, tasksSh
                         SectionLabel(section.label(view, context), colour, text)
                     }
                 }
-                items(section.tasks, itemId = { it.uid.hashCode().toLong() }) {
+                items(section.tasks, itemId = { it.rowKey.hashCode().toLong() }) {
                     // Regroupée par jour, la ligne ne répète pas la date de sa section : l'heure seule.
                     val due = if (grouped) it.dueTimeLabel(view) else it.dueLabel(view, context)
                     TaskRowView(it, view, due, overdue = section.overdue, text)
@@ -466,7 +466,7 @@ private fun TaskRowView(task: TaskItem, view: TodayView, dueLabel: String?, over
         Image(
             ImageProvider(view.checkBox),
             context.getString(R.string.today_widget_check_description, task.name),
-            modifier = if (config.checkFromWidget) {
+            modifier = if (config.checkFromWidget && !task.virtual) {
                 checkbox.clickable(actionRunCallback<CompleteTodayTaskAction>(actionParametersOf(taskUidKey to task.uid)))
             } else {
                 checkbox.clickable(actionStartActivityIntent(openIntent))

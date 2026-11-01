@@ -54,7 +54,7 @@ internal fun TagsTab(
     modifier: Modifier = Modifier,
 ) {
     val tags by viewModel.tags.collectAsStateWithLifecycle()
-    val tasks by viewModel.allTasks.collectAsStateWithLifecycle()
+    val tasks by viewModel.areaTasks.collectAsStateWithLifecycle()
     var collapsed by rememberSaveable { mutableStateOf(emptyList<String>()) }
     val counts = remember(tags, tasks) { TaskOverviews.tagCards(tags, tasks).associate { it.tag.uid to it.openCount } }
     val rows = remember(tags, collapsed) { TagPaths.rows(tags, collapsed.toSet()) }
@@ -134,10 +134,11 @@ internal fun TagTasksPane(
     modifier: Modifier = Modifier,
 ) {
     val tags by viewModel.tags.collectAsStateWithLifecycle()
-    val all by viewModel.allTasks.collectAsStateWithLifecycle()
+    val all by viewModel.areaTasks.collectAsStateWithLifecycle()
     val moment by viewModel.moment.collectAsStateWithLifecycle()
     val projectNames = rememberProjectNames(viewModel)
     val projectColors = rememberProjectColors(viewModel)
+    val projectIcons = rememberProjectIcons(viewModel)
     val tag = tags.firstOrNull { it.uid == tagUid }
     val name = tag?.name.orEmpty()
     val icon = entityIcon(tag?.icon)
@@ -165,7 +166,7 @@ internal fun TagTasksPane(
         if (tasks.isEmpty()) {
             item { EmptyState(R.string.tasks_tag_empty) }
         }
-        taskRows(tasks, projectNames, projectColors, moment, viewModel, onOpen)
+        taskRows(tasks, projectNames, projectColors, moment, viewModel, onOpen, projectIcons = projectIcons)
     }
 }
 
@@ -176,10 +177,11 @@ internal fun DoneTab(
     onOpen: (TaskItem) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val all by viewModel.allTasks.collectAsStateWithLifecycle()
+    val all by viewModel.areaTasks.collectAsStateWithLifecycle()
     val moment by viewModel.moment.collectAsStateWithLifecycle()
     val projectNames = rememberProjectNames(viewModel)
     val projectColors = rememberProjectColors(viewModel)
+    val projectIcons = rememberProjectIcons(viewModel)
     val groups = remember(all, moment.zone) { TaskOverviews.completedByDay(all, moment.zone) }
 
     LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
@@ -188,7 +190,7 @@ internal fun DoneTab(
         }
         groups.forEach { (day, tasks) ->
             item(key = "done-$day") { SectionHeader(title = dayLabel(day, moment.today), count = tasks.size) }
-            taskRows(tasks, projectNames, projectColors, moment, viewModel, onOpen, sectionDay = day)
+            taskRows(tasks, projectNames, projectColors, moment, viewModel, onOpen, sectionDay = day, projectIcons = projectIcons)
         }
     }
 }

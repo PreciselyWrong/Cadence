@@ -21,6 +21,10 @@ The protocol stays the same.
 
 `task` and `project` gain the reference `goal_uid` (their existing goal link, which may now point at a key result), and `project` gains the field `next_task_uid` (uid of an open task of that project, or null; the server clears it when the task is done, deleted or moved). A push is rejected as `invalid_hierarchy` when a goal would have a parent that is not the user's own, a parent that itself has a parent, key results of its own, or a bucket together with a parent. Deleting a goal on a device deletes its key results and clears the goal link of their projects and tasks, as the web does. Progress (`done/total` of the linked items) is not synced: a client computes it from the tasks and projects it holds.
 
+### Server-only task field
+
+`task` also carries `reminder_sent_at` (instant, or null): written by the server when it has notified the reminder, listed in `server_fields` of `GET /sync/meta` and refused (`rejected`) when a client pushes it. The server clears it when `reminder_at` is moved from a device. A device must not ring a reminder whose `reminder_sent_at` is at or after its `reminder_at`.
+
 ### Cadence habit entities
 
 Listed in `GET /sync/meta` in dependency order. Field names, types, units and rules of each one are in [21-habits.md](21-habits.md#cadence-habits): that page is the contract the Android sync and the web UI are built from. Their wire names are the snake_case of the Room properties (a Room `habitId` is the reference `habit_uid`).

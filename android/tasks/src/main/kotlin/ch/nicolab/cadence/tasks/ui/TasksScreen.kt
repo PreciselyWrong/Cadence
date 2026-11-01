@@ -55,6 +55,9 @@ internal enum class TasksTab(@StringRes val label: Int) {
     DONE(R.string.tasks_tab_done),
 }
 
+/** Onglets que le filtre de domaine restreint ; les Notes n'ont pas de domaine. */
+private val AREA_FILTER_TABS = setOf(TasksTab.TODAY, TasksTab.UPCOMING, TasksTab.PROJECTS, TasksTab.TAGS, TasksTab.DONE)
+
 /**
  * Écran Tâches : titre et date, onglets à pastilles, tirer pour synchroniser, ajout rapide.
  * [openTaskUid] ouvre directement la fiche d'une tâche (depuis le widget ou un rappel).
@@ -164,7 +167,7 @@ fun TasksScreen(
                         },
                     )
                 }
-                if (openProjectUid == null && (tab == TasksTab.TODAY || tab == TasksTab.UPCOMING || tab == TasksTab.PROJECTS)) {
+                if (openProjectUid == null && tab in AREA_FILTER_TABS) {
                     AreaFilterRow(
                         areas = areas,
                         selected = areaFilter,

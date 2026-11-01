@@ -58,6 +58,9 @@ const ENTITIES = {
             'order',
             'completed_at',
         ],
+        // Set when the server (or any device) has already notified the
+        // reminder; a device must not ring one that was sent after it.
+        serverFields: ['reminder_sent_at'],
         refs: {
             project_uid: { column: 'project_id', entity: 'project' },
             area_uid: { column: 'area_id', entity: 'area' },

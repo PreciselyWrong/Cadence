@@ -1,3 +1,13 @@
+## [1.6.1] — 1 novembre 2026
+
+### Nouveautés
+- À venir : une tâche récurrente apparaît à chaque occurrence des sept prochains jours, estompée ; seule l'occurrence enregistrée se coche, les suivantes ouvrent la fiche de la tâche. Une série en retard reste dans Aujourd'hui (une seule ligne) et À venir n'en montre que la suite. Le widget « Aujourd'hui » fait de même pour Demain, 3 jours et 7 jours, et « Aujourd'hui seulement » compte l'occurrence du jour d'une série en retard.
+- Icônes de projet : elles s'affichent aussi devant le nom du projet dans les lignes de tâche et dans le choix du projet (champ et menu).
+- Domaines : la rangée de puces filtre aussi Étiquettes (nombres et listes) et Terminées.
+
+### Corrections
+- Rappels : un rappel déjà notifié par le serveur ou par un autre appareil ne sonne plus une seconde fois sur le téléphone. Un rappel déplacé sonne de nouveau.
+
 ## [1.6.0] — 31 octobre 2026
 
 ### Nouveautés

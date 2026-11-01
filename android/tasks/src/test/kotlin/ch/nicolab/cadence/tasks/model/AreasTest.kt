@@ -30,6 +30,23 @@ class AreasTest {
     }
 
     @Test
+    fun `tag counts and the done list follow the area filter`() {
+        val zone = java.time.ZoneOffset.UTC
+        val done = java.time.Instant.parse("2026-11-01T08:00:00Z")
+        val tagged = listOf(
+            TaskItem("a", "A", projectUid = "p1", tagUids = listOf("t")),
+            TaskItem("b", "B", projectUid = "p2", tagUids = listOf("t")),
+            TaskItem("c", "C", projectUid = "p1", status = TaskStatus.DONE, completedAt = done),
+            TaskItem("d", "D", projectUid = "p2", status = TaskStatus.DONE, completedAt = done),
+        )
+        val perso = AreaFilter.tasks(tagged, projects, "perso")
+
+        assertEquals(1, TaskOverviews.tagCards(listOf(TagItem("t", "t")), perso).single().openCount)
+        assertEquals(listOf("c"), TaskOverviews.completedByDay(perso, zone).flatMap { it.second }.map { it.uid })
+        assertEquals(2, TaskOverviews.tagCards(listOf(TagItem("t", "t")), AreaFilter.tasks(tagged, projects, null)).single().openCount)
+    }
+
+    @Test
     fun `projects filter by area`() {
         assertEquals(listOf("p2"), AreaFilter.projects(projects, "tech").map { it.uid })
     }

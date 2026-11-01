@@ -63,6 +63,7 @@ internal fun UpcomingTab(
     val moment by viewModel.moment.collectAsStateWithLifecycle()
     val projectNames = rememberProjectNames(viewModel)
     val projectColors = rememberProjectColors(viewModel)
+    val projectIcons = rememberProjectIcons(viewModel)
     var selectedEpochDay by rememberSaveable { mutableStateOf<Long?>(null) }
     val today = moment.today
     val selected = selectedEpochDay?.let(LocalDate::ofEpochDay)?.takeIf { it in today..today.plusDays(6) }
@@ -92,7 +93,7 @@ internal fun UpcomingTab(
             item(key = "day-$date") {
                 SectionHeader(title = sectionDayTitle(date, today), count = tasks.size)
             }
-            taskRows(tasks, projectNames, projectColors, moment, viewModel, onOpen, sectionDay = date)
+            taskRows(tasks, projectNames, projectColors, moment, viewModel, onOpen, sectionDay = date, projectIcons = projectIcons)
         }
     }
 }

@@ -70,6 +70,15 @@ internal fun rememberProjectColors(viewModel: TasksViewModel): Map<String, Int> 
     }
 }
 
+/** Identifiant d'icône (jeu partagé avec le web) des projets qui en ont une. */
+@Composable
+internal fun rememberProjectIcons(viewModel: TasksViewModel): Map<String, String> {
+    val projects by viewModel.projects.collectAsStateWithLifecycle()
+    return remember(projects) {
+        projects.mapNotNull { project -> project.icon?.takeIf { it.isNotBlank() }?.let { project.uid to it } }.toMap()
+    }
+}
+
 /** Couleur `#RRGGBB` d'un projet en ARGB opaque ; null si elle est absente ou illisible (pas de liseré). */
 internal fun projectRailColor(value: String?): Int? {
     val hex = value?.trim()?.removePrefix("#") ?: return null
@@ -222,12 +231,14 @@ internal fun LazyListScope.taskRows(
     viewModel: TasksViewModel,
     onOpen: (TaskItem) -> Unit,
     sectionDay: LocalDate? = null,
+    projectIcons: Map<String, String> = emptyMap(),
 ) {
-    items(tasks, key = { it.uid }) { task ->
+    items(tasks, key = { it.rowKey }) { task ->
         TaskRow(
             modifier = Modifier.animateItem(),
             task = task,
             projectName = task.projectUid?.let { projectNames[it] },
+            projectIcon = task.projectUid?.let { projectIcons[it] },
             projectColor = task.projectUid?.let { projectColors[it] },
             today = moment.today,
             zone = moment.zone,

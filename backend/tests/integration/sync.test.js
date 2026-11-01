@@ -155,6 +155,43 @@ describe('Offline sync API', () => {
         expect(task.reminder_sent_at).toBeNull();
     });
 
+    it('sends reminder_sent_at to devices but refuses a push that writes it', async () => {
+        await push(agent, [
+            upsert(
+                'op-rs1',
+                'task',
+                'clienttask00r02',
+                { name: 'Call', reminder_at: '2026-11-02T08:00:00.000Z' },
+                hlc(10)
+            ),
+        ]);
+        await Task.update(
+            { reminder_sent_at: new Date('2026-11-02T08:00:05.000Z') },
+            { where: { uid: 'clienttask00r02' } }
+        );
+
+        const pulled = await agent.get('/api/v1/sync/pull?cursor=0');
+        const change = pulled.body.changes
+            .filter((c) => c.uid === 'clienttask00r02')
+            .pop();
+        expect(change.data.reminder_sent_at).toBe('2026-11-02T08:00:05.000Z');
+
+        const res = await push(agent, [
+            upsert(
+                'op-rs2',
+                'task',
+                'clienttask00r02',
+                { reminder_sent_at: null },
+                hlc(30)
+            ),
+        ]);
+        expect(res.body.results[0].status).toBe('rejected');
+        const task = await Task.findOne({ where: { uid: 'clienttask00r02' } });
+        expect(task.reminder_sent_at.toISOString()).toBe(
+            '2026-11-02T08:00:05.000Z'
+        );
+    });
+
     it('keeps the newer value and reports the older one as a conflict', async () => {
         await push(agent, [
             upsert('op-n', 'task', 'clienttask00004', { name: 'New' }, hlc(50)),

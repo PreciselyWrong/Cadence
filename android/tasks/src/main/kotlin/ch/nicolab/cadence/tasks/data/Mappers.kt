@@ -29,6 +29,7 @@ internal fun TaskRow.toItem(accountZone: ZoneId, deviceZone: ZoneId): TaskItem =
         dueDay = dueDayOf(dueDateRaw, dueHasTime, accountZone, deviceZone),
         deferUntil = parseInstant(deferUntilRaw),
         reminderAt = parseInstant(reminderAtRaw),
+        reminderSentAt = parseInstant(extras["reminder_sent_at"]),
         recurrenceType = recurrenceType,
         projectUid = projectUid,
         areaUid = areaUid,

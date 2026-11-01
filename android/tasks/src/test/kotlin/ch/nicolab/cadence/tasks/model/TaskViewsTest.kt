@@ -11,6 +11,13 @@ import org.junit.jupiter.api.Test
 class TaskViewsTest {
     private val today = LocalDate.of(2026, 10, 30)
     private val now: Instant = Instant.parse("2026-10-30T09:00:00Z")
+    private val utc: ZoneId = ZoneId.of("UTC")
+
+    private fun series(uid: String, type: String, due: LocalDate, rule: RecurrenceRule = RecurrenceRule(), status: Int = TaskStatus.NOT_STARTED) =
+        TaskItem(
+            uid = uid, name = uid, status = status, recurrenceType = type, recurrence = rule,
+            dueDay = due, dueDate = due.atStartOfDay(utc).toInstant(),
+        )
 
     private fun task(
         uid: String,
@@ -74,7 +81,7 @@ class TaskViewsTest {
             task("reportee", due = LocalDate.of(2026, 11, 2), defer = "2026-11-05T00:00:00Z"),
         )
 
-        val grouped = TaskViews.upcoming(tasks, today, now)
+        val grouped = TaskViews.upcoming(tasks, today, now, utc)
 
         assertEquals(
             mapOf(
@@ -168,5 +175,69 @@ class TaskViewsTest {
         assertFalse(TaskViews.isOverdue(task("sans-date"), today))
         assertFalse(TaskViews.isOverdue(task("terminee", due = past, status = TaskStatus.DONE), today))
         assertFalse(TaskViews.isOverdue(task("plus-tard", due = past).copy(someday = true), today))
+    }
+
+    @Test
+    fun `upcoming lists the later occurrences of a series next to its stored one, which alone is not virtual`() {
+        val daily = series("quotidienne", "daily", LocalDate.of(2026, 10, 31))
+
+        val grouped = TaskViews.upcoming(listOf(daily), today, now, utc, days = 3)
+
+        assertEquals(
+            listOf(LocalDate.of(2026, 10, 31), LocalDate.of(2026, 11, 1), LocalDate.of(2026, 11, 2)),
+            grouped.keys.toList(),
+        )
+        assertEquals(listOf(false, true, true), grouped.values.map { it.single().virtual })
+        assertEquals(3, grouped.values.flatten().map { it.rowKey }.toSet().size)
+    }
+
+    @Test
+    fun `an overdue series leaves its stored row to Today and upcoming shows only the future ones`() {
+        val weekly = series("hebdo", "weekly", LocalDate.of(2026, 10, 19), RecurrenceRule(weekday = 1))
+
+        val grouped = TaskViews.upcoming(listOf(weekly), today, now, utc)
+
+        assertEquals(listOf(LocalDate.of(2026, 11, 2)), grouped.keys.toList())
+        assertTrue(grouped.values.single().single().virtual)
+        assertTrue(TaskViews.today(listOf(weekly), today, now).single().let { !it.virtual && it.uid == "hebdo" })
+    }
+
+    @Test
+    fun `upcoming expands neither closed, deferred, subtask, completion based nor out of window series`() {
+        val tasks = listOf(
+            series("terminee", "daily", today, status = TaskStatus.DONE),
+            series("reportee", "daily", today).copy(deferUntil = Instant.parse("2026-12-01T00:00:00Z")),
+            series("sous-tache", "daily", today).copy(parentTaskUid = "x"),
+            series("apres-completion", "daily", today, RecurrenceRule(completionBased = true)),
+            series("loin", "monthly", LocalDate.of(2026, 12, 15)),
+        )
+
+        assertTrue(TaskViews.upcoming(tasks, today, now, utc).isEmpty())
+    }
+
+    @Test
+    fun `the series ends on its last day and skips removed days`() {
+        val daily = series(
+            "bornee", "daily", today,
+            RecurrenceRule(endDay = LocalDate.of(2026, 11, 2), exdates = setOf(LocalDate.of(2026, 11, 1))),
+        )
+
+        assertEquals(
+            listOf(LocalDate.of(2026, 10, 31), LocalDate.of(2026, 11, 2)),
+            TaskViews.upcoming(listOf(daily), today, now, utc).keys.toList(),
+        )
+    }
+
+    @Test
+    fun `an overdue series is also due today through its occurrence of the day, once`() {
+        val daily = series("quotidienne", "daily", LocalDate.of(2026, 10, 27))
+        val someday = series("plus-tard", "daily", LocalDate.of(2026, 10, 27)).copy(someday = true)
+        val onTime = series("a-jour", "daily", today)
+
+        val occurrences = TaskViews.todayOccurrences(listOf(daily, someday, onTime), today, now, utc)
+
+        assertEquals(listOf("quotidienne"), occurrences.map { it.uid })
+        assertEquals(today, occurrences.single().dueDay)
+        assertTrue(occurrences.single().virtual)
     }
 }

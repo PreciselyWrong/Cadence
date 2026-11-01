@@ -73,6 +73,7 @@ internal fun TodayTab(
     val closedDay by planning.closedDay.collectAsStateWithLifecycle()
     val projectNames = rememberProjectNames(viewModel)
     val projectColors = rememberProjectColors(viewModel)
+    val projectIcons = rememberProjectIcons(viewModel)
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val genericError = stringResource(R.string.tasks_error_generic)
@@ -246,7 +247,7 @@ internal fun TodayTab(
                 item(key = "tomorrow-header") {
                     SectionHeader(title = stringResource(R.string.planning_closed_tomorrow), count = tomorrowTasks.size)
                 }
-                taskRows(tomorrowTasks, projectNames, projectColors, moment, viewModel, onOpen, sectionDay = today.plusDays(1))
+                taskRows(tomorrowTasks, projectNames, projectColors, moment, viewModel, onOpen, sectionDay = today.plusDays(1), projectIcons = projectIcons)
             }
         }
         if (state.overdue.isNotEmpty()) {
@@ -257,11 +258,11 @@ internal fun TodayTab(
                     tone = SectionTone.Error,
                 )
             }
-            taskRows(state.overdue, projectNames, projectColors, moment, viewModel, onOpen)
+            taskRows(state.overdue, projectNames, projectColors, moment, viewModel, onOpen, projectIcons = projectIcons)
         }
         if (agenda.isNotEmpty()) {
             item(key = "today-header") { SectionHeader(title = stringResource(R.string.tasks_section_today), count = agenda.size) }
-            agendaRows(agenda, projectNames, projectColors, moment, viewModel, onOpen, calendarSettings.checkEvents)
+            agendaRows(agenda, projectNames, projectColors, moment, viewModel, onOpen, calendarSettings.checkEvents, projectIcons = projectIcons)
         }
         item(key = "routine") { routineStrip() }
         if (state.completed.isNotEmpty()) {
@@ -287,7 +288,7 @@ internal fun TodayTab(
                 }
             }
             if (completedExpanded) {
-                taskRows(state.completed, projectNames, projectColors, moment, viewModel, onOpen)
+                taskRows(state.completed, projectNames, projectColors, moment, viewModel, onOpen, projectIcons = projectIcons)
             }
         }
     }
@@ -348,6 +349,7 @@ private fun LazyListScope.agendaRows(
     viewModel: TasksViewModel,
     onOpen: (TaskItem) -> Unit,
     checkEvents: Boolean,
+    projectIcons: Map<String, String> = emptyMap(),
 ) {
     items(agenda, key = { it.key }) { item ->
         when (item) {
@@ -355,6 +357,7 @@ private fun LazyListScope.agendaRows(
                 modifier = Modifier.animateItem(),
                 task = item.task,
                 projectName = item.task.projectUid?.let { projectNames[it] },
+                projectIcon = item.task.projectUid?.let { projectIcons[it] },
                 projectColor = item.task.projectUid?.let { projectColors[it] },
                 today = moment.today,
                 zone = moment.zone,

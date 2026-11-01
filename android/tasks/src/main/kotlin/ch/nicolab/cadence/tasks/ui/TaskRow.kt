@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -47,6 +48,7 @@ import ch.nicolab.cadence.tasks.model.TaskStatus
 import ch.nicolab.cadence.tasks.model.TaskViews
 import ch.nicolab.cadence.tasks.swipe.FileBackedActions
 import ch.nicolab.cadence.tasks.swipe.SwipeAction
+import ch.nicolab.cadence.tasks.swipe.SwipeConfig
 import ch.nicolab.cadence.tasks.swipe.rememberSwipeConfig
 import java.time.LocalDate
 import java.time.ZoneId
@@ -54,6 +56,7 @@ import kotlinx.coroutines.delay
 
 private val RowShape = Radius.Control
 private val RailWidth = 3.dp
+private const val VIRTUAL_ALPHA = 0.6f
 
 /** Temps pendant lequel la ligne reste cochée et barrée avant de quitter la liste. */
 private const val COMPLETION_HOLD_MILLIS = 1_500L
@@ -68,6 +71,7 @@ internal fun TaskRow(
     task: TaskItem,
     projectName: String?,
     projectColor: Int? = null,
+    projectIcon: String? = null,
     today: LocalDate,
     zone: ZoneId,
     onToggle: () -> Unit,
@@ -91,7 +95,10 @@ internal fun TaskRow(
 
     val swipeConfig = rememberSwipeConfig()
     SwipeActionContainer(
-        config = remember(task.fileBacked, swipeConfig) { FileBackedActions.swipeConfig(task, swipeConfig) },
+        config = remember(task.fileBacked, task.virtual, swipeConfig) {
+            if (task.virtual) SwipeConfig(SwipeAction.NONE, SwipeAction.NONE, SwipeAction.NONE, SwipeAction.NONE)
+            else FileBackedActions.swipeConfig(task, swipeConfig)
+        },
         closed = task.isClosed,
         onAction = onSwipeAction,
         shape = RowShape,
@@ -103,13 +110,15 @@ internal fun TaskRow(
                 .pressable(interaction, RowShape)
                 .background(MaterialTheme.colorScheme.surface, RowShape)
                 .then(swipeSemantics)
+                .alpha(if (task.virtual) VIRTUAL_ALPHA else 1f)
                 .combinedClickable(
                     interactionSource = interaction,
                     indication = null,
                     onClick = onOpen,
+                    // Une occurrence à venir n'a pas d'actions propres : le menu agirait sur la tâche enregistrée.
                     onLongClick = {
                         haptic.longPress()
-                        onMenu()
+                        if (task.virtual) onOpen() else onMenu()
                     },
                 )
                 .padding(vertical = 4.dp),
@@ -126,8 +135,13 @@ internal fun TaskRow(
             TaskCheckbox(
                 checked = showClosed,
                 onCheckedChange = {
-                    if (!task.isClosed) completing = true
-                    onToggle()
+                    // Seule l'occurrence enregistrée se coche : ouvrir la fiche vaut mieux qu'un geste sans effet.
+                    if (task.virtual) {
+                        onOpen()
+                    } else {
+                        if (!task.isClosed) completing = true
+                        onToggle()
+                    }
                 },
                 highPriority = task.priority == TaskPriority.HIGH,
                 contentDescription = stringResource(if (task.isClosed) R.string.tasks_mark_undone else R.string.tasks_mark_done),
@@ -142,7 +156,7 @@ internal fun TaskRow(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                 )
-                TaskMeta(task, projectName, today, zone, sectionDay)
+                TaskMeta(task, projectName, projectIcon, today, zone, sectionDay)
             }
             // Une priorité haute est déjà portée par le trait rouge de la case.
             task.priority?.takeIf { it != TaskPriority.HIGH }?.let { priority ->
@@ -167,7 +181,7 @@ internal fun showsDueDay(dueDay: LocalDate, sectionDay: LocalDate?, overdue: Boo
     overdue || sectionDay != dueDay
 
 @Composable
-private fun TaskMeta(task: TaskItem, projectName: String?, today: LocalDate, zone: ZoneId, sectionDay: LocalDate?) {
+private fun TaskMeta(task: TaskItem, projectName: String?, projectIcon: String?, today: LocalDate, zone: ZoneId, sectionDay: LocalDate?) {
     val pendingText = stringResource(R.string.tasks_pending_sync)
     val recurringText = stringResource(R.string.tasks_recurring)
     val dueDate = task.dueDay
@@ -215,14 +229,22 @@ private fun TaskMeta(task: TaskItem, projectName: String?, today: LocalDate, zon
             )
         }
         if (projectName != null) {
-            Text(
-                text = projectName,
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier.weight(1f, fill = false),
-            )
+            ) {
+                // Sans icône choisie, le nom reste seul : pas de pastille de remplacement.
+                entityIcon(projectIcon)?.let { EntityIcon(it, tint = MaterialTheme.colorScheme.onSurfaceVariant, size = 14.dp) }
+                Text(
+                    text = projectName,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f, fill = false),
+                )
+            }
         }
         if (task.pendingSync) {
             Box(

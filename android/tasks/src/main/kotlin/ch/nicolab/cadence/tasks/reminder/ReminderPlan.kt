@@ -34,7 +34,7 @@ internal object ReminderPlan {
         val earliest = now.minus(LATE_WINDOW)
         return buildMap {
             for (task in tasks) {
-                if (task.isClosed) continue
+                if (task.isClosed || task.reminderAlreadySent) continue
                 val at = task.reminderAt ?: continue
                 val upcoming = at.isAfter(now) && !at.isAfter(horizon)
                 val late = !at.isAfter(now) && !at.isBefore(earliest) &&

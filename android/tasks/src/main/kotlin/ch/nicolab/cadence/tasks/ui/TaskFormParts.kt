@@ -116,8 +116,8 @@ internal fun TagChips(tags: List<TagItem>, selected: Set<String>, onToggle: (Str
 @Composable
 internal fun ProjectDropdown(projects: List<ProjectItem>, selectedUid: String?, onSelect: (String?) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
-    val selectedName = projects.firstOrNull { it.uid == selectedUid }?.name
-        ?: stringResource(R.string.tasks_no_project)
+    val selected = projects.firstOrNull { it.uid == selectedUid }
+    val selectedName = selected?.name ?: stringResource(R.string.tasks_no_project)
 
     ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }) {
         OutlinedTextField(
@@ -125,6 +125,7 @@ internal fun ProjectDropdown(projects: List<ProjectItem>, selectedUid: String?, 
             onValueChange = {},
             readOnly = true,
             label = { Text(stringResource(R.string.tasks_field_project)) },
+            leadingIcon = entityIcon(selected?.icon)?.let { icon -> { EntityIcon(icon, tint = LocalContentColor.current) } },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable).fillMaxWidth(),
         )
@@ -139,6 +140,7 @@ internal fun ProjectDropdown(projects: List<ProjectItem>, selectedUid: String?, 
             projects.forEach { project ->
                 DropdownMenuItem(
                     text = { Text(project.name) },
+                    leadingIcon = entityIcon(project.icon)?.let { icon -> { EntityIcon(icon, tint = LocalContentColor.current) } },
                     onClick = {
                         onSelect(project.uid)
                         expanded = false
