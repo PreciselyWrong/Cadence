@@ -9,8 +9,10 @@ import ch.nicolab.cadence.data.local.entities.HabitReminderEntity
 import ch.nicolab.cadence.data.local.model.IdentifiedPause
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.domain.HabitEntry
+import ch.nicolab.cadence.domain.HabitOrder
 import ch.nicolab.cadence.domain.LearnedAnswer
 import ch.nicolab.cadence.domain.LearnedPattern
+import ch.nicolab.cadence.domain.OrderSlot
 import ch.nicolab.cadence.domain.LearnedQuestion
 import ch.nicolab.cadence.domain.LearnedQuestionSettings
 import ch.nicolab.cadence.domain.GoalType
@@ -629,15 +631,15 @@ class MainViewModel(
         refreshAll()
     }
 
+    /** Monte (-1) ou descend (+1) l'habitude dans son groupe, comme le web : le groupe est renuméroté. */
     fun moveHabit(habitId: String, direction: Int) = viewModelScope.launch {
-        val ordered = latest.sortedBy(PersistedHabit::sortOrder)
-        val index = ordered.indexOfFirst { it.id == habitId }
-        val otherIndex = index + direction
-        if (index !in ordered.indices || otherIndex !in ordered.indices) return@launch
-        val current = ordered[index]
-        val other = ordered[otherIndex]
-        repository.updateSortOrder(current.id, other.sortOrder)
-        repository.updateSortOrder(other.id, current.sortOrder)
+        val habit = latest.firstOrNull { it.id == habitId } ?: return@launch
+        val group = latest.filter { it.groupId == habit.groupId }
+            .sortedBy(PersistedHabit::sortOrder)
+            .map { OrderSlot(it.id, it.sortOrder) }
+        HabitOrder.movePatches(group, habitId, direction).forEach { (id, sortOrder) ->
+            repository.updateSortOrder(id, sortOrder)
+        }
         refreshAll()
     }
 
@@ -649,7 +651,9 @@ class MainViewModel(
             abstinenceStartedAt = if (habit.goal.isAbstinence) clock.instant() else null,
             createdAtEpochMs = 0,
             updatedAtEpochMs = 0,
-            sortOrder = latest.maxOfOrNull(PersistedHabit::sortOrder)?.plus(1) ?: 0,
+            sortOrder = HabitOrder.nextSortOrder(
+                latest.filter { it.groupId == habit.groupId }.map { OrderSlot(it.id, it.sortOrder) },
+            ),
         )
         repository.addHabit(copy)
         repository.replaceQuickValues(copy.id, repository.getQuickValues(habit.id).map(HabitQuickValueEntity::amountMinor))

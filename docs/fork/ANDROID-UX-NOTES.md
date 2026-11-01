@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-01 — Ordre des habitudes par groupe sur Android
+
+- **Problème** : « Monter » et « Descendre » échangeaient avec la voisine de toute la liste, pas de son groupe ; deux habitudes au même rang ne bougeaient pas.
+- **Décision** : déplacement dans le groupe affiché, groupe renuméroté 0..n ; la copie se place à la fin du groupe. Logique pure dans `domain/HabitOrder.kt`.
+- **Web** : déjà ainsi (`frontend/utils/habitOrder.ts`) ; rien à reprendre.
+
 ### 2026-11-01 — Passe « UI épurée » reprise sur Android
 
 - **Problème** : des écrans Android gardaient les réflexes d'avant la passe web : date passée en rouge dans les widgets et la barre de l'agenda, « 0 » affiché dans les en-têtes de section.

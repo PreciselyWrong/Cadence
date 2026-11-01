@@ -1,5 +1,8 @@
 ## [1.7.0] — à publier
 
+### Nouveautés
+- Habitudes : « Monter » et « Descendre » rangent dans le groupe affiché (plus seulement à côté dans la liste entière) et renumérotent le groupe ; « Dupliquer » place la copie à la fin de son groupe. Même ordre que sur le web.
+
 ### Corrections
 - Échéance passée : plus de couleur d'alerte ni de graisse dans le widget Tâches, le widget Aujourd'hui, la barre de l'agenda et le bloc « À replanifier » ; la date passée s'affiche comme les autres.
 - En-têtes de section : un compteur à zéro n'est plus affiché.
