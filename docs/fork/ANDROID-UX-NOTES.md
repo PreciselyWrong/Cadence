@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-01 — Notes et liens : liste ou galerie
+
+- **Problème** : les notes n'existaient qu'en grille de cartes, les liens qu'en liste ; impossible de parcourir beaucoup de notes d'un coup d'œil, ni de voir les liens par leur image.
+- **Décision** : un bouton de l'en-tête bascule Liste / Galerie, retenu par écran sur l'appareil (notes : galerie par défaut ; liens : liste). Liste des notes : une ligne par note (pastille de couleur, titre, une ligne de texte, épingle). Galeries : colonnes d'au moins 160 dp (deux sur un téléphone). Mêmes cartes que la galerie des découvertes pour les liens.
+- **Web** : vue galerie et outliner en cours côté web (`TODO.md`, Ideas) ; garder le même choix par écran et le même défaut.
+
 ### 2026-11-01 — Un seul « + » dans Habitudes, pas de « 0 » sur les onglets
 
 - **Problème** : sans habitude, l'écran montrait deux boutons d'ajout (le « + » de l'en-tête et celui de l'état vide) ; un onglet à pastille affichait « Notes 0 ».

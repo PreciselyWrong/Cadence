@@ -26,6 +26,9 @@
 - Onglets à pastille (Tâches, recherche, revue) : un compteur à zéro n'est plus affiché.
 - Habitudes : un seul bouton d'ajout, le « + » de l'en-tête ; la liste vide n'a plus son propre bouton et dit où toucher.
 
+### Nouveautés
+- Notes : bouton Liste / Galerie dans l'en-tête de l'onglet Notes (galerie par défaut, choix retenu sur le téléphone) ; la liste montre une ligne par note (couleur, titre, début du texte, épingle). La galerie des notes s'élargit à trois colonnes sur un grand écran.
+
 ## [1.6.9] — 1 novembre 2026
 
 ### Nouveautés

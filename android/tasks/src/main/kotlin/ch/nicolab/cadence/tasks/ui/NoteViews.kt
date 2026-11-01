@@ -24,6 +24,8 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items as listItems
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
@@ -113,9 +115,9 @@ private val NOTE_CARD_MIN_HEIGHT = 72.dp
 private val NOTE_BODY_MIN = 200.dp
 private val SWATCH = 40.dp
 
-/** Notes en grille de cartes décalées : épinglées d'abord, puis les plus récentes. */
+/** Notes en grille de cartes décalées ([gallery]) ou en liste compacte : épinglées d'abord, puis les plus récentes. */
 @Composable
-internal fun NotesTab(viewModel: TasksViewModel, onOpen: (NoteItem) -> Unit, modifier: Modifier = Modifier) {
+internal fun NotesTab(viewModel: TasksViewModel, onOpen: (NoteItem) -> Unit, modifier: Modifier = Modifier, gallery: Boolean = true) {
     val notes by viewModel.notes.collectAsStateWithLifecycle()
     if (notes.isEmpty()) {
         DsEmptyState(
@@ -125,8 +127,14 @@ internal fun NotesTab(viewModel: TasksViewModel, onOpen: (NoteItem) -> Unit, mod
         )
         return
     }
+    if (!gallery) {
+        LazyColumn(modifier = modifier, contentPadding = tasksListPadding(), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+            listItems(notes, key = { it.uid }) { note -> NoteListRow(note, onClick = { onOpen(note) }) }
+        }
+        return
+    }
     LazyVerticalStaggeredGrid(
-        columns = StaggeredGridCells.Fixed(2),
+        columns = StaggeredGridCells.Adaptive(Size.galleryCell),
         modifier = modifier,
         contentPadding = tasksListPadding(),
         horizontalArrangement = Arrangement.spacedBy(Space.sm),
@@ -183,6 +191,47 @@ internal fun NoteCard(note: NoteItem, previews: LinkPreviews, onClick: () -> Uni
                 color = palette.onSurfaceVariant,
                 maxLines = PREVIEW_LINES + 1,
                 overflow = TextOverflow.Ellipsis,
+            )
+        }
+    }
+}
+
+/** Ligne de la liste des notes : pastille de couleur, titre, une ligne d'aperçu et l'épingle. */
+@Composable
+private fun NoteListRow(note: NoteItem, onClick: () -> Unit) {
+    val palette = cadence
+    val accent = noteAccent(note.color, palette.isDark)
+    val preview = remember(note.content) { Markdown.preview(note.content, 1) }
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .heightIn(min = Size.touch)
+            .clip(Radius.Card)
+            .background(palette.card)
+            .clickable(onClick = onClick)
+            .padding(horizontal = Space.lg, vertical = Space.md),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(Space.md),
+    ) {
+        accent?.let { Box(Modifier.size(Size.badgeIcon).clip(CircleShape).background(it)) }
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+            Text(
+                note.title.ifBlank { stringResource(R.string.tasks_note_untitled) },
+                style = MaterialTheme.typography.titleSmall,
+                color = palette.onSurface,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            if (preview.isNotBlank()) {
+                Text(preview, style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            }
+        }
+        if (note.pinned) {
+            Icon(
+                Icons.Filled.PushPin,
+                contentDescription = stringResource(R.string.tasks_note_pinned_badge),
+                tint = palette.onSurfaceVariant,
+                modifier = Modifier.size(Size.iconSm),
             )
         }
     }

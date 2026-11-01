@@ -20,6 +20,9 @@ import ch.nicolab.cadence.designsystem.components.rememberAppSnackbarHostState
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.material.icons.automirrored.outlined.ViewList
+import androidx.compose.material.icons.outlined.GridView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -108,6 +111,9 @@ fun TasksScreen(
     BackHandler(enabled = openProjectUid != null) { openProjectUid = null }
     BackHandler(enabled = openTagUid != null && openProjectUid == null) { openTagUid = null }
 
+    val context = LocalContext.current
+    val layouts = remember(context) { LayoutStore(context) }
+    var notesGallery by rememberSaveable { mutableStateOf(layouts.isGallery(LayoutStore.NOTES)) }
     val overdueCount = todayState.overdue.size
     val eventCount = todayEvents.size
     val dateLine = remember(moment.today) { formatHeaderDate(moment.today) }
@@ -133,6 +139,16 @@ fun TasksScreen(
                     subtitle = subtitle,
                     modifier = Modifier.statusBarsPadding().padding(horizontal = Space.gutter),
                     actions = {
+                        if (tab == TasksTab.NOTES && openProjectUid == null) {
+                            RoundHeaderButton(
+                                icon = if (notesGallery) Icons.AutoMirrored.Outlined.ViewList else Icons.Outlined.GridView,
+                                contentDescription = stringResource(if (notesGallery) R.string.links_show_list else R.string.links_show_gallery),
+                                onClick = {
+                                    notesGallery = !notesGallery
+                                    layouts.setGallery(LayoutStore.NOTES, notesGallery)
+                                },
+                            )
+                        }
                         RoundHeaderButton(
                             icon = Icons.Outlined.Search,
                             contentDescription = stringResource(R.string.tasks_search_open),
@@ -228,6 +244,7 @@ fun TasksScreen(
                         tab == TasksTab.GOALS -> GoalsPane(viewModel = viewModel, modifier = Modifier.fillMaxSize())
                         tab == TasksTab.NOTES -> NotesTab(
                             viewModel = viewModel,
+                            gallery = notesGallery,
                             onOpen = {
                                 selectedNoteIsNew = false
                                 selectedNoteUid = it.uid
