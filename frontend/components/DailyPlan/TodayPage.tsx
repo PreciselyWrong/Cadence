@@ -1988,16 +1988,9 @@ const TodayPage: React.FC = () => {
                                             <button
                                                 type="button"
                                                 onClick={() => {
-                                                    if (items.length === 0) {
+                                                    if (items.length === 0)
                                                         setMoreOpen(false);
-                                                        void runDraft(
-                                                            'replace'
-                                                        );
-                                                    } else {
-                                                        setDraftChoiceOpen(
-                                                            (open) => !open
-                                                        );
-                                                    }
+                                                    startDraft();
                                                 }}
                                                 disabled={drafting || !date}
                                                 aria-expanded={draftChoiceOpen}
