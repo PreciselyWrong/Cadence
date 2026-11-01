@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-01 — Domaine dans l'ajout rapide : `~nom`
+
+- **Problème** : le web désigne un domaine par `~nom` dans la saisie, Android l'ignorait.
+- **Décision** : `~nom` reconnu comme les autres jetons (`#`, `+`, `@`), seulement pour un domaine existant ; sinon le mot reste dans le titre. Pure logique dans `QuickAddParser`.
+- **Web** : rien à reprendre.
+
 ### 2026-11-01 — Ordre des habitudes par groupe sur Android
 
 - **Problème** : « Monter » et « Descendre » échangeaient avec la voisine de toute la liste, pas de son groupe ; deux habitudes au même rang ne bougeaient pas.

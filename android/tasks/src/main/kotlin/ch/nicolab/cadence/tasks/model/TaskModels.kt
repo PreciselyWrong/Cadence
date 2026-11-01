@@ -207,6 +207,8 @@ data class TaskDraft(
     val priority: Int? = null,
     val projectUid: String? = null,
     val tagUids: List<String> = emptyList(),
+    /** Domaine désigné par `~nom` dans la saisie (`area_uid`). */
+    val areaUid: String? = null,
     /** Fait de la tâche une sous-tâche. */
     val parentTaskUid: String? = null,
     /** Objectif ou envie dont la tâche est un pas (`goal_uid`). */

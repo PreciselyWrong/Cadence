@@ -282,6 +282,7 @@ internal class RoomTaskRepository(
             put("priority", jsonInt(draft.priority))
             put("project_uid", jsonString(draft.projectUid))
             put("tag_uids", jsonArray(draft.tagUids))
+            draft.areaUid?.let { put("area_uid", JsonPrimitive(it)) }
             draft.parentTaskUid?.let { put("parent_task_uid", JsonPrimitive(it)) }
             draft.goalUid?.let { put("goal_uid", JsonPrimitive(it)) }
             putAll(dueFields(draft.dueDate, draft.dueTime))

@@ -134,6 +134,7 @@ fun QuickAddSheet(
     val viewModel: TasksViewModel = viewModel()
     val projects by viewModel.projects.collectAsStateWithLifecycle()
     val tags by viewModel.tags.collectAsStateWithLifecycle()
+    val areas by viewModel.areas.collectAsStateWithLifecycle()
     val moment by viewModel.moment.collectAsStateWithLifecycle()
     val today = moment.today
     val clock = remember(moment.zone) { Clock.system(moment.zone) }
@@ -165,9 +166,10 @@ fun QuickAddSheet(
 
     val projectRefs = remember(projects) { projects.map { NamedRef(it.uid, it.name) } }
     val tagRefs = remember(tags) { tags.map { NamedRef(it.uid, it.name) } }
+    val areaRefs = remember(areas) { areas.map { NamedRef(it.uid, it.name) } }
     val tagColors = remember(tags) { tagBadgeColors(tags) }
-    val parsed = remember(text, ignored, projectRefs, tagRefs, clock, isTask) {
-        val result = QuickAddParser.parse(text, clock, projectRefs, tagRefs, ignored.toSet())
+    val parsed = remember(text, ignored, projectRefs, tagRefs, areaRefs, clock, isTask) {
+        val result = QuickAddParser.parse(text, clock, projectRefs, tagRefs, ignored.toSet(), areaRefs)
         // Une idée ou une note garde le texte tel quel : rien n'y est reconnu.
         if (isTask) result else result.copy(title = text.trim(), tokens = emptyList())
     }
@@ -238,6 +240,7 @@ fun QuickAddSheet(
             priority = priority,
             projectUid = projectUid,
             tagUids = tagUids,
+            areaUid = parsed.areaUid,
         )
         if (onSave != null) return launchSave { onSave(draft) }
         // La tâche est écrite, la saisie reste ouverte et vide pour la suivante : seul le projet suit.

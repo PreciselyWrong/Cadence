@@ -246,4 +246,20 @@ class QuickAddParserTest {
     fun `everything recognised leaves a blank title`() {
         assertEquals("", parse("demain 14h").title)
     }
+
+    @Test
+    fun `tilde designe un domaine existant et le sort du titre`() {
+        val result = QuickAddParser.parse(
+            "Relire le contrat ~Travail", clock, projects, tags, areas = listOf(NamedRef("ar-work", "Travail")),
+        )
+        assertEquals("ar-work", result.areaUid)
+        assertEquals("Relire le contrat", result.title)
+    }
+
+    @Test
+    fun `tilde sans domaine connu reste dans le titre`() {
+        val result = QuickAddParser.parse("Relire ~Inconnu", clock, projects, tags, areas = emptyList())
+        assertNull(result.areaUid)
+        assertEquals("Relire ~Inconnu", result.title)
+    }
 }

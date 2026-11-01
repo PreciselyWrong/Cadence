@@ -10,7 +10,7 @@ import java.time.LocalTime
 /** Projet ou étiquette existants, désignés dans le texte par leur nom. */
 data class NamedRef(val uid: String, val name: String)
 
-enum class TokenKind { DATE, TIME, PRIORITY, PROJECT, TAG }
+enum class TokenKind { DATE, TIME, PRIORITY, PROJECT, TAG, AREA }
 
 /**
  * Un mot reconnu dans le texte. [key] ne dépend pas de la position : ignorer « demain » l'ignore
@@ -33,6 +33,7 @@ data class ParsedQuickAdd(
     val priority: Int?,
     val projectUid: String?,
     val tagUids: List<String>,
+    val areaUid: String? = null,
     val tokens: List<ParsedToken>,
 )
 
@@ -115,7 +116,7 @@ object QuickAddParser {
     private val colonTime = Regex("(?<![\\p{L}\\p{N}_:])(?:a\\s+)?(\\d{1,2}):(\\d{2})$BOUND_AFTER")
     private val noon = Regex("(?<![\\p{L}\\p{N}_])(?:a\\s+)?midi$BOUND_AFTER")
     private val priorityToken = Regex("(?<!\\S)!([123])(?!\\S)")
-    private val markedToken = Regex("(?<!\\S)([#+@^])(?:\"([^\"]+)\"|([\\p{L}\\p{N}_/-]+))")
+    private val markedToken = Regex("(?<!\\S)([#+@^~])(?:\"([^\"]+)\"|([\\p{L}\\p{N}_/-]+))")
     private val spaces = Regex("\\s+")
 
     fun parse(
@@ -124,6 +125,7 @@ object QuickAddParser {
         projects: List<NamedRef>,
         tags: List<NamedRef>,
         ignored: Set<String> = emptySet(),
+        areas: List<NamedRef> = emptyList(),
     ): ParsedQuickAdd {
         val today = LocalDate.now(clock)
         val folded = fold(text)
@@ -160,6 +162,7 @@ object QuickAddParser {
             ?.let { priorityOf(it.groupValues[1]) }
 
         var projectUid: String? = null
+        var areaUid: String? = null
         val tagUids = mutableListOf<String>()
         for (match in markedToken.findAll(folded)) {
             val start = match.range.first
@@ -179,6 +182,9 @@ object QuickAddParser {
                         projectUid = project.uid
                     }
                 }
+                "~" -> if (areaUid == null) {
+                    findUnique(areas, query)?.let { if (claim(TokenKind.AREA, start, end, it.uid)) areaUid = it.uid }
+                }
                 "@" -> findUnique(tags, query)?.let {
                     if (it.uid !in tagUids && claim(TokenKind.TAG, start, end, it.uid)) tagUids += it.uid
                 }
@@ -196,6 +202,7 @@ object QuickAddParser {
             priority = priority,
             projectUid = projectUid,
             tagUids = tagUids,
+            areaUid = areaUid,
             tokens = tokens.sortedBy { it.start },
         )
     }
