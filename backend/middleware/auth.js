@@ -162,6 +162,20 @@ const requireAuth = async (req, res, next) => {
     }
 };
 
+// The public /mcp only takes the tokens Cadence issued to remote connectors
+// (docs/38-remote-mcp.md): a full-access API key, a session cookie or an
+// OIDC access token reaching it through the tunnel is refused. /api/mcp,
+// reached over Tailscale, keeps accepting them. Runs after requireAuth.
+const requireConnectorToken = (req, res, next) => {
+    if (req.authToken?.abilities?.scope === 'mcp') return next();
+    return unauthorized(
+        req,
+        res,
+        'This endpoint only accepts connector tokens'
+    );
+};
+
 module.exports = {
     requireAuth,
+    requireConnectorToken,
 };

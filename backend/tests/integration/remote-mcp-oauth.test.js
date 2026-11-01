@@ -4,9 +4,16 @@ const crypto = require('crypto');
 const request = require('supertest');
 const app = require('../../app');
 const { ApiToken } = require('../../models');
-const { createTestUser, enrollMfa } = require('../helpers/testUtils');
+const {
+    createTestUser,
+    enrollMfa,
+    authenticateUser,
+} = require('../helpers/testUtils');
 const { logger } = require('../../services/logService');
-const { revokeApiToken } = require('../../modules/users/apiTokenService');
+const {
+    createApiToken,
+    revokeApiToken,
+} = require('../../modules/users/apiTokenService');
 
 const BASE = 'https://cadence.example.test';
 const CALLBACK = 'https://claude.ai/api/mcp/auth_callback';
@@ -155,6 +162,36 @@ describe('Remote MCP OAuth authorization server', () => {
             expect(res.headers['www-authenticate']).toBe(
                 `Bearer resource_metadata="${BASE}/.well-known/oauth-protected-resource/mcp"`
             );
+        });
+
+        it('refuses a full-access API key or a session on the public /mcp', async () => {
+            const { rawToken } = await createApiToken({
+                userId: user.id,
+                name: 'Full access',
+            });
+            const list = { jsonrpc: '2.0', id: 1, method: 'tools/list' };
+            const metadata = `Bearer resource_metadata="${BASE}/.well-known/oauth-protected-resource/mcp"`;
+
+            const key = await mcpCall(rawToken, list);
+            expect(key.status).toBe(401);
+            expect(key.headers['www-authenticate']).toBe(metadata);
+
+            const cookie = await authenticateUser(request(app), user);
+            const session = await request(app)
+                .post('/mcp')
+                .set('Cookie', cookie)
+                .set('Accept', 'application/json, text/event-stream')
+                .send(list);
+            expect(session.status).toBe(401);
+            expect(session.headers['www-authenticate']).toBe(metadata);
+
+            // Tailscale clients keep using full-access keys on /api/mcp.
+            const legacy = await request(app)
+                .post('/api/mcp')
+                .set('Authorization', `Bearer ${rawToken}`)
+                .set('Accept', 'application/json, text/event-stream')
+                .send(list);
+            expect(legacy.status).toBe(200);
         });
 
         it('refuses GET /mcp with 405 instead of serving the web app', async () => {

@@ -349,7 +349,7 @@ if (serveFromDist) {
 }
 
 // Authentication middleware
-const { requireAuth } = require('./middleware/auth');
+const { requireAuth, requireConnectorToken } = require('./middleware/auth');
 const { requireSubscription } = require('./middleware/entitlements');
 const { uploadsAccessControl } = require('./middleware/uploadsAccess');
 const { INLINE_SAFE_EXTENSIONS } = require('./utils/attachment-utils');
@@ -609,15 +609,16 @@ if (API_VERSION && API_BASE_PATH !== '/api') {
 routeBases.forEach(registerApiRoutes);
 
 // The MCP endpoint at the root, the one path a tunnel exposes for remote
-// connectors such as claude.ai (docs/38-remote-mcp.md). Same auth, limiters
-// and handlers as /api/mcp. The transport is stateless, so there is no SSE
-// stream to open or session to delete: anything but POST gets a 405 rather
-// than the web app.
+// connectors such as claude.ai (docs/38-remote-mcp.md). Same limiters and
+// handlers as /api/mcp, but only connector tokens get in. The transport is
+// stateless, so there is no SSE stream to open or session to delete:
+// anything but POST gets a 405 rather than the web app.
 app.post(
     '/mcp',
     bearerFailureLimiter,
     authenticatedApiLimiter,
     requireAuth,
+    requireConnectorToken,
     requireSubscription,
     ...mcpModule.routes.protocolHandlers
 );
