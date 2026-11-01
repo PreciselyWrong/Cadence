@@ -40,9 +40,36 @@ const sumProgress = (parts) => {
     return { ...sum, percent: percentOf(sum) };
 };
 
+// The task to do next among open top-level tasks: the nearest due date, then
+// the oldest, then by name. Android applies the same rule (`Goals.nextStep`).
+const time = (value) => (value ? new Date(value).getTime() : null);
+const compareNextSteps = (a, b) => {
+    const dueA = time(a.due_date);
+    const dueB = time(b.due_date);
+    if (dueA !== dueB) {
+        if (dueA === null) return 1;
+        if (dueB === null) return -1;
+        return dueA - dueB;
+    }
+    const createdA = time(a.created_at);
+    const createdB = time(b.created_at);
+    if (createdA !== createdB) {
+        if (createdA === null) return 1;
+        if (createdB === null) return -1;
+        return createdA - createdB;
+    }
+    return (a.name || '').localeCompare(b.name || '');
+};
+
+const firstStep = (candidates) =>
+    candidates.filter(Boolean).sort(compareNextSteps)[0] || null;
+
+const OPEN_EXCLUDED_STATUSES = [...DONE_TASK_STATUSES, CANCELLED_TASK_STATUS];
+
 class GoalsRepository {
     // Own progress of each goal id: the share of its linked projects and
-    // tasks that are finished, as { done, total }.
+    // tasks that are finished, as { done, total }, and its next open task
+    // (`step`).
     async _ownProgress(goalIds, userId) {
         const [projectWhere, taskWhere] = await Promise.all([
             visibleWhere('project', userId),
@@ -63,14 +90,26 @@ class GoalsRepository {
                         taskWhere,
                     ],
                 },
-                attributes: ['goal_id', 'status'],
+                attributes: [
+                    'goal_id',
+                    'status',
+                    'uid',
+                    'name',
+                    'due_date',
+                    'created_at',
+                ],
                 raw: true,
             }),
         ]);
 
         const progress = new Map(
-            goalIds.map((id) => [id, { done: 0, total: 0 }])
+            goalIds.map((id) => [id, { done: 0, total: 0, step: null }])
         );
+        for (const task of tasks) {
+            if (OPEN_EXCLUDED_STATUSES.includes(task.status)) continue;
+            const entry = progress.get(task.goal_id);
+            entry.step = firstStep([entry.step, task]);
+        }
         const count = (rows, isDone, isCancelled) => {
             for (const row of rows) {
                 if (isCancelled(row.status)) continue;
@@ -117,10 +156,20 @@ class GoalsRepository {
                 const parts = [goal.id, ...(childrenOf.get(goal.id) || [])].map(
                     (id) => own.get(id)
                 );
+                const step = firstStep(parts.map((p) => p.step));
                 return [
                     goal.id,
                     {
                         progress: sumProgress(parts),
+                        next_task: step
+                            ? {
+                                  uid: step.uid,
+                                  name: step.name,
+                                  due_date: step.due_date
+                                      ? new Date(step.due_date).toISOString()
+                                      : null,
+                              }
+                            : null,
                         key_results_count: (childrenOf.get(goal.id) || [])
                             .length,
                     },

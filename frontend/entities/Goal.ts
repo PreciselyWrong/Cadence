@@ -13,6 +13,11 @@ export interface GoalProgress {
     total: number;
     percent: number | null;
 }
+export interface GoalNextTask {
+    uid: string;
+    name: string;
+    due_date: string | null;
+}
 export type GoalStatus = 'active' | 'achieved' | 'paused' | 'dropped';
 
 export interface Goal {
@@ -36,6 +41,9 @@ export interface Goal {
     KeyResults?: Goal[];
     key_results_count?: number;
     progress?: GoalProgress;
+    // The open task to do next for this goal (an objective's includes its
+    // key results' tasks): nearest due date, then oldest. Goals list only.
+    next_task?: GoalNextTask | null;
     created_at?: string;
     updated_at?: string;
     Area?: Area | null;

@@ -10,6 +10,7 @@ import ch.nicolab.cadence.tasks.model.RefusedItem
 import ch.nicolab.cadence.tasks.model.SyncConflictMerge
 import ch.nicolab.cadence.tasks.model.SyncConflictItem
 import ch.nicolab.cadence.tasks.model.SyncConflictText
+import ch.nicolab.cadence.tasks.model.GoalBucket
 import ch.nicolab.cadence.tasks.model.GoalChange
 import ch.nicolab.cadence.tasks.model.GoalItem
 import ch.nicolab.cadence.tasks.model.GoalStatus
@@ -156,6 +157,24 @@ internal class RoomTaskRepository(
             true
         }
         if (written) afterLocalWrite()
+    }
+
+    override suspend fun createWish(title: String, bucket: GoalBucket): String? {
+        val name = title.trim()
+        if (name.isEmpty()) return null
+        val uid = UUID.randomUUID().toString()
+        val clock = hlc.now()
+        val fields = mapOf(
+            "title" to JsonPrimitive(name),
+            "bucket" to JsonPrimitive(bucket.wire),
+            "status" to JsonPrimitive(GoalStatus.ACTIVE.wire),
+        )
+        database.withTransaction {
+            database.goalDao().upsert(GoalEntity(uid, name, null, null, null, GoalStatus.ACTIVE.wire, null, bucket.wire, null, null))
+            outbox.insert(LocalOps.upsert("goal", uid, fields, clock, nowMs()))
+        }
+        afterLocalWrite()
+        return uid
     }
 
     override suspend fun deleteGoal(uid: String) {

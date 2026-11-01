@@ -155,6 +155,71 @@ describe('Goals: key results, horizons and bucket list', () => {
             });
         });
 
+        it('lists each goal with its next step: nearest due date, then oldest', async () => {
+            const objective = await makeGoal({ title: 'Objective' });
+            const kr = await makeGoal({
+                title: 'KR',
+                parent_goal_uid: objective.uid,
+            });
+            const wish = await makeGoal({ title: 'Wish', bucket: 'do' });
+            const [objectiveRow, krRow] = await Promise.all([
+                Goal.findOne({ where: { uid: objective.uid } }),
+                Goal.findOne({ where: { uid: kr.uid } }),
+            ]);
+            const older = new Date('2026-01-01T08:00:00Z');
+            const newer = new Date('2026-02-01T08:00:00Z');
+            await Task.create({
+                name: 'Done first',
+                user_id: user.id,
+                goal_id: krRow.id,
+                status: Task.STATUS.DONE,
+                due_date: new Date('2025-12-01T12:00:00Z'),
+            });
+            const parent = await Task.create({
+                name: 'Newer, no date',
+                user_id: user.id,
+                goal_id: objectiveRow.id,
+                created_at: newer,
+            });
+            await Task.create({
+                name: 'Subtask with a date',
+                user_id: user.id,
+                goal_id: objectiveRow.id,
+                parent_task_id: parent.id,
+                due_date: new Date('2025-12-02T12:00:00Z'),
+            });
+            const oldest = await Task.create({
+                name: 'Older, no date',
+                user_id: user.id,
+                goal_id: krRow.id,
+                created_at: older,
+            });
+
+            const res = await agent.get('/api/goals');
+            const byUid = Object.fromEntries(
+                res.body.goals.map((goal) => [goal.uid, goal])
+            );
+
+            expect(byUid[kr.uid].next_task).toEqual({
+                uid: oldest.uid,
+                name: 'Older, no date',
+                due_date: null,
+            });
+            // An objective's next step can come from one of its key results.
+            expect(byUid[objective.uid].next_task.uid).toBe(oldest.uid);
+            expect(byUid[wish.uid].next_task).toBeNull();
+
+            const due = await Task.create({
+                name: 'Due soon',
+                user_id: user.id,
+                goal_id: objectiveRow.id,
+                due_date: new Date('2026-03-01T12:00:00Z'),
+            });
+            const again = await agent.get('/api/goals');
+            const shown = again.body.goals.find((g) => g.uid === objective.uid);
+            expect(shown.next_task.uid).toBe(due.uid);
+        });
+
         it('names the objective on a key result', async () => {
             const objective = await makeGoal({ title: 'Launch the business' });
             const kr = await makeGoal({

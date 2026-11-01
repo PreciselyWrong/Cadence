@@ -99,11 +99,26 @@ A goal with a parent is a key result of that objective; the tree is one level de
 
 ## Bucket list
 
-A goal with a `bucket` (`have`, `be` or `do`) is a wish, not a plan: no target date is asked, and it never shows in Today, the daily plan or the sidebar. The **Bucket list** tab of the Goals page groups them as *Have / Be / Do* (Avoir / Être / Faire) with a **+ Add** per group. Moving a goal off the list is `bucket: null`. A bucket-list goal can still be linked to projects and tasks like any other.
+A goal with a `bucket` (`have`, `be` or `do`) is a wish, not a plan: no target date is asked, and it never shows in Today, the daily plan or the sidebar. Moving a goal off the list is `bucket: null`. A bucket-list goal can still be linked to projects and tasks like any other.
 
-**Turning an item into a task.** An item's menu on the Bucket list tab has **Create a task**: the quick-add box opens on *Task*, pre-filled with the item's name and a "Next step for …" line; the saved task is linked to the item (`goal_id`, synced as `goal_uid`) and may get a project like any task. The item stays on the list (it is the dream, the task its next step) and shows *Linked tasks: N* (tasks linked to it, without cancelled ones or subtasks on Android).
+- **Open and fulfilled.** An active or paused wish is *open* and sits in its group (*Have / Be / Do*, *Avoir / Être / Faire*). An achieved or dropped one leaves the group for the folded *Fulfilled* (*Réalisées*) list. One tap on a wish's box sets it `achieved`, with *Undo* (back to `active`).
+- **Adding.** Wishes are added from the list itself: a field at the bottom of an open group on the web, the + button of the Goals screen on Android (name and group; the sheet stays open for the next one). Android creates the `goal` through the sync outbox (`TaskRepository.createWish`: title, bucket, `active`).
+- **Turning an item into a task.** *Create a task* (a button on every open wish, and in its sheet on Android) opens the quick add on *Task*, pre-filled with the item's name; the saved task is linked to the item (`goal_id`, synced as `goal_uid`) and may get a project like any task. The item stays on the list (it is the dream, the task its next step); the row shows that next step, or *Linked tasks: N*.
 
-**Android.** Goals are reachable from the **Objectifs** tab of the Tasks screen, from search (title and why; *Objectifs* filter) and from the Bilan card. Touching an objective, a key result or a wish opens an edit sheet: name, note (`why`, blank clears it), type *Avoir / Être / Faire* (wishes only), state (*Actif / Atteint / En pause / Abandonné*), **Créer une tâche** (quick add pre-filled with the name, task linked by `goal_uid`) and **Supprimer** with *Annuler* for five seconds. Writes go through the offline outbox as the `goal` entity (`TaskRepository.updateGoal` sends only the changed fields; `deleteGoal` removes the goal and its key results locally, as the server does). Creating goals stays on the web.
+## Next step
+
+Every goal in `GET /api/goals` carries `next_task: { uid, name, due_date } | null`: among the open top-level tasks linked to it (not done, archived or cancelled; an objective also counts its key results' tasks), the one with the nearest due date, then the oldest (`created_at`), then by name. Android computes the same rule locally (`Goals.nextStep`). The Goals screen shows it on each active objective with a box that finishes it; without one, *Add a next step* opens the quick add linked to the objective.
+
+## Goals screen (web `/goals`, Android Tasks › Objectifs and the Bilan card)
+
+One scrolling screen, the same on both clients (`frontend/utils/goalsOverview.ts`, `android/.../model/Goals.kt`):
+
+1. **Search** on title and why, ignoring case and accents. An objective stays when it matches (with all its key results) or when one of its key results does (only those stay); groups with a match open by themselves.
+2. **Objectives**: active objectives, nearest target date first, then the others, then by title (French collation, so *Écrire* sorts with the E). Each card: title, percent, horizon and target date, a thin progress bar, the next step, then its key results as one-line rows (*title … 3/10*, a check when all is done). Key results are never listed on their own.
+3. **Paused, achieved or dropped** objectives, folded.
+4. **Bucket list**: *Have*, *Be*, *Do* folded with their count, then *Fulfilled*.
+
+Touching a goal opens its page on the web and its sheet on Android: next step and *Create a task* first, then name, note (`why`, blank clears it), kind (wishes), state (*Active / Fulfilled / Paused / Dropped* for a wish, *Actif / Atteint / En pause / Abandonné* for an objective), and *Delete* with *Undo* for five seconds. Writes go through the offline outbox as the `goal` entity (`TaskRepository.updateGoal` sends only the changed fields; `deleteGoal` removes the goal and its key results locally, as the server does). Creating objectives and key results stays on the web; on Android the Goals tab sits right after Projects.
 
 ## Scarcity Rule
 
@@ -113,20 +128,7 @@ The Area detail page displays a warning banner when an area has **more than 5 ac
 
 ## Goals List Page (`/goals`)
 
-A grid view of all the user's goals across all areas.
-
-**Layout:** Responsive grid (1 / 2 / 3 / 4 columns depending on screen size)
-
-**Each goal card shows:**
-- Title
-- Why text (truncated)
-- Status badge (color-coded)
-- Horizon badge
-- Area name (if set)
-- Project count and task count in a footer stats bar
-- Three-dot menu (hover) with Edit and Delete
-
-Clicking a card navigates to the Goal detail page.
+See [Goals screen](#goals-screen-web-goals-android-tasks--objectifs-and-the-bilan-card). The header keeps **New Goal** (GoalModal). The page no longer sorts, filters by area or reorders by drag; `PUT /api/goals/order` stays for other clients.
 
 ---
 
@@ -258,7 +260,7 @@ GET /api/goals?area_uid=:uid
 GET /api/goals?area_id=:id
 ```
 
-Returns `{ goals: Goal[] }`. Pass `area_uid` or `area_id` to filter to a single area.
+Returns `{ goals: Goal[] }`. Pass `area_uid` or `area_id` to filter to a single area. Each goal carries `parent_goal_uid`, `progress`, `key_results_count`, `projects_count`, `tasks_count` and `next_task` (see [Next step](#next-step)).
 
 ### Get goal (with related tasks and projects)
 
@@ -365,7 +367,7 @@ goal_id  INTEGER  → goals.id  SET NULL on delete
 | Frontend API client | `/frontend/utils/goalsService.ts` |
 | Goals Zustand store | `/frontend/store/useStore.ts` (`goalsStore` slice) |
 | Slug helper | `/frontend/utils/slugUtils.ts` (`createGoalUrl`) |
-| Goals list page | `/frontend/components/Goals.tsx` |
+| Goals list page | `/frontend/components/Goals.tsx` (view model: `/frontend/utils/goalsOverview.ts`) |
 | Goal detail page (also create and edit) | `/frontend/components/Goal/GoalDetails.tsx` |
 | Sidebar section | `/frontend/components/Sidebar/SidebarGoals.tsx` |
 | Task goal card | `/frontend/components/Task/TaskDetails/TaskGoalCard.tsx` |
@@ -404,6 +406,6 @@ See [MCP Integration](14-mcp-integration.md#goals-tools-5) for full parameter de
 
 ---
 
-**Document Version:** 2.0.0
-**Last Updated:** 2026-07-30
+**Document Version:** 2.1.0
+**Last Updated:** 2026-11-01
 **Audience:** Developers and AI assistants

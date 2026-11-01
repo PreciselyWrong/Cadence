@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-01 — Page Objectifs : un seul écran, comme Android
+
+- **Problème** : `/goals` séparait Objectifs et Liste d'envies en onglets ; un objectif n'était qu'une ligne (titre, « pourquoi ») sans avancement à 375 px, sans résultats clés ni prochain pas ; tri, filtre par domaine et glisser-déposer chargeaient l'écran ; « Créer une tâche » d'une envie était caché dans un menu « … » ; une envie réalisée restait dans son groupe sans le dire sur téléphone.
+- **Décision** : même écran qu'Android. Recherche (titre ou note, sans accents), objectifs actifs en cartes (%, horizon et échéance, barre, « Prochain pas » avec sa case, sinon « Ajouter un prochain pas », résultats clés « titre … 3/10 »), « En pause, atteints ou abandonnés » replié, puis la liste d'envies Avoir / Être / Faire repliable (ligne : case « Réalisée » avec Annuler, titre vers sa page, prochain pas, bouton « Créer une tâche » toujours visible), un champ « Ajouter une envie… » au bas du groupe ouvert, « Réalisées » à part. Le tri, le filtre par domaine et l'ordre personnalisé quittent cette page (l'API `/api/goals/order` reste). L'API ajoute `next_task` à chaque but de `GET /api/goals`.
+- **Android** : repris dans la même étape (onglet Objectifs des Tâches et écran du Bilan).
+
 ### 2026-11-01 — Revue : « Revue rapide », une chose à la fois
 
 - **Problème** (vu avec 133 idées dans « Plus tard », 4 repoussées, 2 projets stagnants) : six onglets à compteurs (« Plus tard 133 » se lisait comme une dette), rien ne disait par où commencer, chaque ligne de « Plus tard » portait quatre puces (des centaines de décisions à l'écran), le nom du projet répété sous chaque ligne d'un groupe déjà nommé, l'onglet restait vide pendant le chargement, pas de clavier ; le stock « Plus tard » n'était jamais relu sauf tri volontaire.

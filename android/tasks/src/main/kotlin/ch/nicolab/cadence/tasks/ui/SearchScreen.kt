@@ -324,7 +324,18 @@ fun SearchScreen(
         onCloseTask = { selectedTaskUid = null },
     )
     selectedNoteUid?.let { uid -> NoteScreen(viewModel, uid, isNew = false, onBack = { selectedNoteUid = null }, onOpenNote = { selectedNoteUid = it }) }
-    GoalSheets(viewModel, selectedGoalUid, onClose = { selectedGoalUid = null })
+    var goalStepFor by rememberSaveable { mutableStateOf<String?>(null) }
+    GoalSheets(
+        viewModel,
+        selectedGoalUid,
+        goalStepFor,
+        onOpenTask = { selectedTaskUid = it },
+        onClose = {
+            selectedGoalUid = null
+            goalStepFor = null
+        },
+        onCreateStep = { goalStepFor = it },
+    )
 }
 
 @Composable

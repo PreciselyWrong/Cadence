@@ -100,14 +100,87 @@ class GoalsTest {
     }
 
     @Test
-    fun `active objectives come first then the nearest target date`() {
+    fun `active objectives sort by nearest target date and the others fold apart`() {
         val goals = listOf(
             GoalItem("paused", "A", status = "paused"),
             GoalItem("late", "B", targetDate = java.time.LocalDate.of(2027, 1, 1)),
             GoalItem("soon", "C", targetDate = java.time.LocalDate.of(2026, 12, 1)),
             GoalItem("open", "D"),
+            GoalItem("won", "E", status = "achieved"),
         )
-        assertEquals(listOf("soon", "late", "open", "paused"), Goals.overview(goals, emptyList(), emptyList()).objectives.map { it.goal.uid })
+        val overview = Goals.overview(goals, emptyList(), emptyList())
+        assertEquals(listOf("soon", "late", "open"), overview.objectives.map { it.goal.uid })
+        assertEquals(listOf("paused", "won"), overview.otherObjectives.map { it.goal.uid })
+    }
+
+    @Test
+    fun `the next step is the open task with the nearest due day, then the oldest, then the first by name`() {
+        val day = java.time.LocalDate.of(2026, 11, 3)
+        val tasks = listOf(
+            task("closed", "k", TaskStatus.DONE).copy(dueDay = day.minusDays(5)),
+            task("sub", "k", parent = "x").copy(dueDay = day.minusDays(4)),
+            task("Zèbre", "o"),
+            task("Écrire", "o"),
+            task("due", "k").copy(dueDay = day),
+            task("other", "elsewhere").copy(dueDay = day.minusDays(9)),
+        )
+        assertEquals("due", Goals.nextStep(setOf("o", "k"), tasks)?.uid)
+        assertEquals("Écrire", Goals.nextStep(setOf("o"), tasks)?.uid)
+        assertNull(Goals.nextStep(setOf("nothing"), tasks))
+
+        val created = listOf(
+            task("étape 10", "s").copy(extras = mapOf("created_at" to "2026-10-02T08:00:00Z")),
+            task("étape 4", "s").copy(extras = mapOf("created_at" to "2026-10-01T08:00:00Z")),
+            task("pas encore envoyée", "s"),
+        )
+        assertEquals("étape 4", Goals.nextStep(setOf("s"), created)?.uid)
+
+        val goals = listOf(GoalItem("o", "Objectif"), GoalItem("k", "Résultat", parentGoalUid = "o"))
+        assertEquals("due", Goals.overview(goals, tasks, emptyList()).objectives.single().nextStep?.uid)
+    }
+
+    @Test
+    fun `achieved and dropped wishes leave the groups, paused ones stay, accents sort with their letter`() {
+        val goals = listOf(
+            GoalItem("z", "Zanzibar", bucket = GoalBucket.DO),
+            GoalItem("e", "Écrire un livre", bucket = GoalBucket.DO),
+            GoalItem("a", "Apprendre", bucket = GoalBucket.DO, status = "paused"),
+            GoalItem("won", "Marathon", bucket = GoalBucket.DO, status = "achieved"),
+            GoalItem("gone", "Bateau", bucket = GoalBucket.HAVE, status = "dropped"),
+        )
+        val overview = Goals.overview(goals, listOf(task("t", "e")), emptyList())
+        assertEquals(listOf("a", "e", "z"), overview.wishes.getValue(GoalBucket.DO).map { it.uid })
+        assertEquals(listOf("gone", "won"), overview.doneWishes.map { it.uid })
+        assertEquals(3, overview.openWishCount)
+        assertEquals("t", overview.wishSteps["e"]?.uid)
+    }
+
+    @Test
+    fun `filtering ignores case and accents and keeps an objective for a matching key result`() {
+        val goals = listOf(
+            GoalItem("o1", "Courir un semi"),
+            GoalItem("k1", "10 km sous 55 min", parentGoalUid = "o1"),
+            GoalItem("k2", "Inscription", parentGoalUid = "o1"),
+            GoalItem("o2", "Finances", why = "Dormir sereinement"),
+            GoalItem("k3", "Budget", parentGoalUid = "o2"),
+            GoalItem("w1", "Écrire un livre", bucket = GoalBucket.DO),
+            GoalItem("w2", "Un chien", bucket = GoalBucket.HAVE),
+        )
+        val overview = Goals.overview(goals, emptyList(), emptyList())
+
+        val byKeyResult = Goals.filter(overview, "INSCRIPTION")
+        assertEquals(listOf("o1"), byKeyResult.objectives.map { it.goal.uid })
+        assertEquals(listOf("k2"), byKeyResult.objectives.single().keyResults.map { it.goal.uid })
+
+        val byWhy = Goals.filter(overview, "serein")
+        assertEquals(listOf("k3"), byWhy.objectives.single().keyResults.map { it.goal.uid })
+
+        val byWish = Goals.filter(overview, "ecrire")
+        assertTrue(byWish.objectives.isEmpty())
+        assertEquals(listOf("w1"), byWish.wishes.getValue(GoalBucket.DO).map { it.uid })
+        assertTrue(byWish.wishes.getValue(GoalBucket.HAVE).isEmpty())
+
+        assertEquals(overview, Goals.filter(overview, "  "))
     }
 
     @Test

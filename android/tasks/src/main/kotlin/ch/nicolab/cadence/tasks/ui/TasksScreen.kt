@@ -53,8 +53,8 @@ internal enum class TasksTab(@StringRes val label: Int) {
     TODAY(R.string.tasks_tab_today),
     UPCOMING(R.string.tasks_tab_upcoming),
     PROJECTS(R.string.tasks_tab_projects),
-    TAGS(R.string.tasks_tab_tags),
     GOALS(R.string.tasks_tab_goals),
+    TAGS(R.string.tasks_tab_tags),
     NOTES(R.string.tasks_tab_notes),
     DONE(R.string.tasks_tab_done),
 }
@@ -173,8 +173,8 @@ fun TasksScreen(
                                 upcoming.values.sumOf { it.size },
                             ),
                             TabPill(stringResource(TasksTab.PROJECTS.label)),
-                            TabPill(stringResource(TasksTab.TAGS.label)),
                             TabPill(stringResource(TasksTab.GOALS.label)),
+                            TabPill(stringResource(TasksTab.TAGS.label)),
                             TabPill(stringResource(TasksTab.NOTES.label), notes.size),
                             TabPill(stringResource(TasksTab.DONE.label)),
                         ),
@@ -241,7 +241,11 @@ fun TasksScreen(
                             onOpenTag = { openTagUid = it },
                             modifier = Modifier.fillMaxSize(),
                         )
-                        tab == TasksTab.GOALS -> GoalsPane(viewModel = viewModel, modifier = Modifier.fillMaxSize())
+                        tab == TasksTab.GOALS -> GoalsPane(
+                            viewModel = viewModel,
+                            modifier = Modifier.fillMaxSize(),
+                            onOpenTask = { selectedTaskUid = it },
+                        )
                         tab == TasksTab.NOTES -> NotesTab(
                             viewModel = viewModel,
                             gallery = notesGallery,
@@ -259,7 +263,8 @@ fun TasksScreen(
                     }
                 }
             }
-            CadenceFab(
+            // L'onglet Objectifs pose son propre bouton : « Ajouter une envie ».
+            if (tab != TasksTab.GOALS || openProjectUid != null) CadenceFab(
                 icon = Icons.Outlined.Add,
                 contentDescription = stringResource(
                     if (tab == TasksTab.NOTES) R.string.tasks_note_new else R.string.tasks_fab_add,

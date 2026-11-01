@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-01 — Objectifs et liste d'envies : un seul écran calme
+
+- **Problème** (émulateur, ~5 objectifs, 15 résultats clés, 62 envies) : l'onglet Objectifs était le cinquième des Tâches, hors de l'écran ; il ouvrait une deuxième rangée d'onglets Objectifs / Liste d'envies ; une carte d'objectif occupait tout l'écran (chaque résultat clé avec sa barre) sans dire quoi faire ensuite ; les 62 envies formaient une colonne de grosses cartes sans recherche, sans ajout, sans geste « faite », les réalisées mêlées aux autres, « Écrire » rangé après « Voir » ; la liste d'envies s'ouvrait au milieu (défilement repris de l'autre onglet) ; le bouton + créait une tâche ; les états de la fiche étaient décalés.
+- **Décision** : un seul écran défilant. Recherche en tête (titre ou note, sans casse ni accents ; ouvre les groupes qui correspondent). Section « Objectifs » : carte par objectif actif (titre, %, horizon et échéance, barre fine, « Prochain pas » avec sa case, ou « Ajouter un prochain pas », résultats clés en lignes d'une ligne « titre … 3/10 », coche quand tout est fait). « En pause, atteints ou abandonnés » replié. « Liste d'envies » : Avoir, Être, Faire repliés avec leur nombre ; ligne = case « Réalisée » (avec « Annuler »), titre, prochain pas éventuel, bouton « Créer une tâche » ; « Réalisées » repliées à part. Le bouton + de l'écran ajoute des envies à la suite (nom, groupe ; la feuille reste ouverte). Prochain pas = tâche ouverte de premier niveau liée au but (ou à un résultat clé), échéance la plus proche, puis la plus ancienne, puis le nom : même règle que le serveur (`next_task` de `GET /api/goals`). La fiche met « Prochain pas » et « Créer une tâche » en premier. Onglet Objectifs juste après Projets. Logique pure : `model/Goals.kt` (`overview`, `nextStep`, `filter`).
+- **Web** : repris dans la même étape sur `/goals` (même ordre, mêmes groupes repliables, recherche, case « Réalisée », « + » de tâche, champ « Ajouter une envie… » au bas de chaque groupe ouvert).
+
 ### 2026-11-01 — Projet TODO.md d'un dépôt git : état de synchro sur Android
 
 - **Problème** : sur Android, un projet tiré d'un dépôt ne disait jamais s'il était à jour, et une case refusée par le dépôt revenait seule à son état avec « 1 modification refusée par le serveur ».

@@ -149,6 +149,27 @@ class GoalEditsRepositoryTest {
         assertFalse(pending().single().third!!.containsKey("goal_uid"))
     }
 
+    @Test
+    fun `a new wish is written locally in its group and sent as one goal upsert`() = runBlocking {
+        val uid = repository.createWish("  Voir les aurores boréales ", GoalBucket.DO)!!
+
+        val row = database.goalDao().get(uid)!!
+        assertEquals("Voir les aurores boréales", row.title)
+        assertEquals("do", row.bucket)
+        assertNull(row.parentGoalUid)
+        val op = pending().single()
+        assertEquals("goal" to uid, op.first to op.second)
+        assertEquals("Voir les aurores boréales", op.third!!.getValue("title").jsonPrimitive.content)
+        assertEquals("do", op.third!!.getValue("bucket").jsonPrimitive.content)
+        assertEquals("active", op.third!!.getValue("status").jsonPrimitive.content)
+    }
+
+    @Test
+    fun `a blank wish writes nothing`() = runBlocking {
+        assertNull(repository.createWish("   ", GoalBucket.HAVE))
+        assertTrue(pending().isEmpty())
+    }
+
     private object NoApi : SyncApi {
         override suspend fun meta(): JsonObject = error("hors ligne")
         override suspend fun profile(): AccountProfile = error("hors ligne")

@@ -4,6 +4,7 @@ import ch.nicolab.cadence.tasks.model.AreaItem
 import ch.nicolab.cadence.tasks.model.Delivery
 import ch.nicolab.cadence.tasks.model.RefusedItem
 import ch.nicolab.cadence.tasks.model.SyncConflictItem
+import ch.nicolab.cadence.tasks.model.GoalBucket
 import ch.nicolab.cadence.tasks.model.GoalChange
 import ch.nicolab.cadence.tasks.model.GoalItem
 import ch.nicolab.cadence.tasks.model.InboxEntry
@@ -52,6 +53,12 @@ interface TaskRepository {
 
     /** Supprime l'objectif [uid] (et ses résultats clés, comme le serveur) ; ses tâches et projets perdent le lien. */
     suspend fun deleteGoal(uid: String)
+
+    /**
+     * Ajoute une envie [title] au groupe [bucket] de la liste d'envies (l'uid est choisi par l'appareil, entité `goal`).
+     * Un titre vide n'écrit rien et rend null.
+     */
+    suspend fun createWish(title: String, bucket: GoalBucket): String?
 
     /** Liens trouvés par le serveur, lisibles hors ligne, les plus récents d'abord. */
     fun observeLinks(): Flow<List<LinkItem>>

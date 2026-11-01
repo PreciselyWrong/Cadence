@@ -21,9 +21,8 @@
     <string name="goals_entry_detail">Résultats clés et liste d\'envies</string>
     <string name="goals_title">Objectifs</string>
     <string name="goals_back">Retour au Bilan</string>
-    <string name="goals_tab_objectives">Objectifs</string>
     <string name="goals_tab_wishes">Liste d\'envies</string>
-    <string name="goals_empty">Aucun objectif pour l\'instant. Ils se créent sur le web et arrivent ici à la synchronisation.</string>
+    <string name="goals_empty">Aucun objectif ni envie pour l\'instant. Les objectifs se créent sur le web ; touchez + pour noter une envie.</string>
     <string name="goals_wishes_empty">Liste d\'envies vide.</string>
     <string name="goals_progress">%1$d sur %2$d faits</string>
     <string name="goals_nothing_linked">Rien de lié</string>
@@ -56,6 +55,31 @@
         <item quantity="one">%d tâche liée</item>
         <item quantity="other">%d tâches liées</item>
     </plurals>
+    <string name="goals_section_objectives">Objectifs</string>
+    <string name="goals_section_other">En pause, atteints ou abandonnés</string>
+    <string name="goals_section_done_wishes">Réalisées</string>
+    <string name="goals_search_hint">Chercher un objectif ou une envie</string>
+    <string name="goals_search_clear">Effacer la recherche</string>
+    <string name="goals_search_none">Rien ne correspond.</string>
+    <string name="goals_fold_open">Ouvrir %1$s</string>
+    <string name="goals_fold_close">Replier %1$s</string>
+    <string name="goals_percent">%1$d %%</string>
+    <string name="goals_fraction">%1$d/%2$d</string>
+    <string name="goals_step_label">Prochain pas</string>
+    <string name="goals_step_inline">Prochain pas : %1$s</string>
+    <string name="goals_step_add">Ajouter un prochain pas</string>
+    <string name="goals_step_complete">Terminer « %1$s »</string>
+    <string name="goals_create_task_for">Créer une tâche pour « %1$s »</string>
+    <string name="goals_wish_done">Marquer « %1$s » comme réalisée</string>
+    <string name="goals_wish_done_notice">« %1$s » réalisée</string>
+    <string name="goals_wish_add">Ajouter une envie</string>
+    <string name="goals_wish_add_action">Ajouter</string>
+    <string name="goals_wish_name">Envie</string>
+    <string name="goals_wish_name_hint">Voir les aurores boréales…</string>
+    <string name="goals_wish_added">« %1$s » ajoutée à %2$s</string>
+    <string name="goals_status_wish_active">Active</string>
+    <string name="goals_status_wish_done">Réalisée</string>
+    <string name="goals_status_wish_dropped">Abandonnée</string>
     <string name="goals_search_wish">Envie · %1$s</string>
     <string name="goals_search_goal">Objectif · %1$s</string>
 

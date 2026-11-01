@@ -30,9 +30,11 @@ import ch.nicolab.cadence.tasks.model.LinkStatus
 import ch.nicolab.cadence.tasks.model.LinkTriage
 import ch.nicolab.cadence.tasks.model.TriageSink
 import ch.nicolab.cadence.tasks.links.LinkPreviews
+import ch.nicolab.cadence.tasks.model.GoalBucket
 import ch.nicolab.cadence.tasks.model.GoalChange
 import ch.nicolab.cadence.tasks.model.GoalItem
 import ch.nicolab.cadence.tasks.model.GoalOverview
+import ch.nicolab.cadence.tasks.model.GoalStatus
 import ch.nicolab.cadence.tasks.model.Goals
 import ch.nicolab.cadence.tasks.model.IdeaNotes
 import ch.nicolab.cadence.tasks.model.NoteChange
@@ -400,7 +402,31 @@ internal class TasksViewModel(
             Goals.overview(goals, tasks, projects)
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), null)
 
+    private val _goalQuery = MutableStateFlow("")
+
+    /** Recherche de l'écran Objectifs : titre ou note, sans casse ni accents. */
+    val goalQuery: StateFlow<String> = _goalQuery
+
+    fun searchGoals(query: String) {
+        _goalQuery.value = query
+    }
+
+    /** [goalOverview] restreint à [goalQuery]. */
+    val visibleGoals: StateFlow<GoalOverview?> = combine(goalOverview, _goalQuery) { overview, query ->
+        overview?.let { Goals.filter(it, query) }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), null)
+
     fun updateGoal(uid: String, change: GoalChange) = launchAction { repository.updateGoal(uid, change) }
+
+    fun createWish(title: String, bucket: GoalBucket) = launchAction { repository.createWish(title, bucket) }
+
+    /** « Faite » : l'envie passe en réalisée et quitte son groupe ; « Annuler » la rend active. */
+    fun markWishDone(wish: GoalItem) = launchAction {
+        repository.updateGoal(wish.uid, GoalChange(status = GoalStatus.ACHIEVED))
+        _notices.tryEmit(UndoNotice(getString(R.string.goals_wish_done_notice, wish.title)) { reopenWish(wish.uid) })
+    }
+
+    fun reopenWish(uid: String) = launchAction { repository.updateGoal(uid, GoalChange(status = GoalStatus.ACTIVE)) }
 
     fun deleteGoalWithUndo(goal: GoalItem) =
         deleteWithUndo(PendingDeletion(DeletionKind.Goal, goal.uid, title = goal.title)) { repository.deleteGoal(goal.uid) }
