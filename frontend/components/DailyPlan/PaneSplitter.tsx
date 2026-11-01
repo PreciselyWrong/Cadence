@@ -29,22 +29,28 @@ const writeWidth = (width: number) => {
 // right pane its minimum; remembered per browser. `fits` is false when the
 // container is too narrow for both columns (sidebar open on a tablet): the
 // panes then stack instead of squeezing the day into a scrolling sliver.
-// `mounted` re-attaches the observer once the container renders.
-export const usePaneWidth = (
-    containerRef: React.RefObject<HTMLElement>,
-    mounted = true
-) => {
+export const usePaneWidth = (containerRef: React.RefObject<HTMLElement>) => {
     const [width, setWidth] = useState(readWidth);
     const [total, setTotal] = useState(0);
+    const observed = useRef<{
+        el: HTMLElement;
+        observer: ResizeObserver;
+    } | null>(null);
+    // The container mounts only once the day has loaded, and can be
+    // replaced: check after every render and follow the current element.
     useEffect(() => {
         const el = containerRef.current;
-        if (!el || typeof ResizeObserver === 'undefined') return undefined;
+        if (observed.current?.el === el) return;
+        observed.current?.observer.disconnect();
+        observed.current = null;
+        if (!el || typeof ResizeObserver === 'undefined') return;
         const observer = new ResizeObserver((entries) => {
             setTotal(entries[0].contentRect.width);
         });
         observer.observe(el);
-        return () => observer.disconnect();
-    }, [containerRef, mounted]);
+        observed.current = { el, observer };
+    });
+    useEffect(() => () => observed.current?.observer.disconnect(), []);
     const clamp = useCallback(
         (value: number) => {
             const available = containerRef.current?.clientWidth || 0;

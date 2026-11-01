@@ -406,7 +406,7 @@ const TodayPage: React.FC = () => {
     const [filter, setFilter] = useState<CandidateFilter>('all');
     const [preferredMode, setPreferredMode] = useState<Mode>(readMode);
     const panesRef = useRef<HTMLDivElement>(null);
-    const paneWidth = usePaneWidth(panesRef, Boolean(candidates));
+    const paneWidth = usePaneWidth(panesRef);
     const sideBySide = !narrow && paneWidth.fits;
     const [panelMode, setPanelMode] = useState<PanelMode>(readPanelMode);
     const [calendarOpen, setCalendarOpen] = useState(() =>
