@@ -12,6 +12,7 @@ import {
     GoogleEventInput,
 } from '../../utils/googleSyncService';
 import { useToast } from '../Shared/ToastContext';
+import MarkdownRenderer from '../Shared/MarkdownRenderer';
 import { findMeetingLink, locationHref } from './eventLocation';
 
 export interface GoogleEventDraft {
@@ -300,6 +301,14 @@ const GoogleEventModal: React.FC<GoogleEventModalProps> = ({
                     aria-label={t('calendar.google.description', 'Description')}
                     className={inputClass}
                 />
+                {description.trim() && (
+                    <div
+                        data-testid="event-description-preview"
+                        className="rounded-md bg-gray-50 px-3 py-2 text-sm dark:bg-gray-800"
+                    >
+                        <MarkdownRenderer content={description} />
+                    </div>
+                )}
 
                 {draft.recurring && (
                     <p className="text-xs text-gray-600 dark:text-gray-300">

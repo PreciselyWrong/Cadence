@@ -6,6 +6,16 @@ import GoogleEventModal, {
 } from '../Calendar/GoogleEventModal';
 import { ToastProvider } from '../Shared/ToastContext';
 
+// The markdown stack is ESM-only; the preview is covered by contactLinks tests.
+jest.mock('../Shared/MarkdownRenderer', () => {
+    const mockReact = require('react');
+    return {
+        __esModule: true,
+        default: ({ content }: { content: string }) =>
+            mockReact.createElement('div', { 'data-testid': 'md' }, content),
+    };
+});
+
 jest.mock('react-i18next', () => ({
     useTranslation: () => ({
         t: (key: string, fallback?: string) => fallback ?? key,
@@ -56,5 +66,21 @@ describe('GoogleEventModal join link', () => {
     it('shows no Join link without a meeting link', () => {
         renderModal(draft({ location: 'Rue du Lac 4, Vevey' }));
         expect(screen.queryByRole('link', { name: 'Join' })).toBeNull();
+    });
+});
+
+describe('GoogleEventModal description preview', () => {
+    it('shows the rendered description under the field when it is not empty', () => {
+        renderModal(draft({ description: 'Appeler 079 123 45 67' }));
+        expect(
+            screen.getByTestId('event-description-preview')
+        ).toHaveTextContent('Appeler 079 123 45 67');
+    });
+
+    it('shows no preview for an empty description', () => {
+        renderModal(draft({ description: '   ' }));
+        expect(
+            screen.queryByTestId('event-description-preview')
+        ).toBeNull();
     });
 });

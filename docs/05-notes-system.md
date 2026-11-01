@@ -979,3 +979,7 @@ Note payloads never include the token. They carry `is_public` (boolean) instead,
 **Document Version:** 1.0.0
 **Last Updated:** 2026-03-14
 **Audience:** Developers, AI assistants, and end users
+
+## Téléphones et e-mails cliquables
+
+Dans le rendu markdown, un numéro de téléphone devient un lien `tel:` et une adresse e-mail un lien `mailto:`. Formats acceptés : international avec `+` (8 à 15 chiffres, séparateurs espace, point, tiret, parenthèses) et national à 10 chiffres commençant par 0 (`079 123 45 67`). Les dates, heures et années ne sont pas détectées. Le texte déjà dans un lien ou du code reste tel quel. Logique : `frontend/utils/contactLinks.ts`.

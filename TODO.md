@@ -14,6 +14,7 @@ Tout le code prévu est livré dans `main` et poussé ; APK 1.6.8 et image `ghcr
   - Client Linux : choisir une touche pour l'ajout rapide dans les raccourcis KDE (le portail Wayland la propose ; Ctrl+Alt+Space est déjà pris par Claude), installer le RPM `desktop/src-tauri/target/release/bundle/rpm/`.
 - **Petits restes, à faire quand le besoin se montre.**
   - Android : choix « Session courte » de la revue (Android n'a pas de plan du jour).
+  - Parité, Android : liens `tel:` / `mailto:` dans les notes, tâches et descriptions d'événement (web : `docs/fork/WEB-UX-NOTES.md`, 2026-11-01). Vérif : un numéro `079 123 45 67` dans une note s'appelle d'un tap, une date ne devient pas un lien.
   - Parité 1.6.5, web : liste des conflits et page Synchronisation (Android seul) ; mode « Trier les liens » sur le web (un lien à la fois, « Passer » ; les quatre décisions sont faites, voir `docs/fork/ANDROID-UX-NOTES.md`) ; option « description sous le titre » des lignes de tâches. Vérif : un lien trié sur le web quitte l'inbox du téléphone.
   - Parité 1.6.5, Android : zone `~` ; écritures d'habitudes en attente non comptées dans « N en attente ».
   - Parité, venus de l'amont (`eda9aa60`) et web seulement : quitter un partage, choisir qui reprend les tâches d'un membre retiré ; Android n'a pas d'écran de partage, à faire quand il en aura un.

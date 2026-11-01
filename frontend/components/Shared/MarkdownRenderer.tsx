@@ -11,6 +11,10 @@ import CalloutBlock from './CalloutBlock';
 import MermaidDiagram, { getMermaidSource } from './MermaidDiagram';
 import { detectCallout } from '../../utils/calloutParser';
 import { toggleTaskListItem } from '../../utils/markdownTaskList';
+import {
+    contactUrlTransform,
+    remarkContactLinks,
+} from '../../utils/contactLinks';
 import { useStore } from '../../store/useStore';
 
 const WIKILINK_PREFIX = '/__wikilink__/';
@@ -244,7 +248,8 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     return (
         <div className={`markdown-content ${className}`}>
             <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
+                remarkPlugins={[remarkGfm, remarkContactLinks]}
+                urlTransform={contactUrlTransform}
                 rehypePlugins={[
                     [rehypeHighlight, { detect: true, ignoreMissing: true }],
                 ]}
