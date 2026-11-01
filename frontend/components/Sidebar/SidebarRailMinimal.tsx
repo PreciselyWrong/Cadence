@@ -272,8 +272,17 @@ const SidebarRailMinimal: React.FC<SidebarRailMinimalProps> = ({
                 setIsMoreOpen(false);
             }
         };
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (event.key !== 'Escape') return;
+            setIsMoreOpen(false);
+            moreRef.current?.querySelector('button')?.focus();
+        };
         document.addEventListener('mousedown', onPointerDown);
-        return () => document.removeEventListener('mousedown', onPointerDown);
+        document.addEventListener('keydown', onKeyDown);
+        return () => {
+            document.removeEventListener('mousedown', onPointerDown);
+            document.removeEventListener('keydown', onKeyDown);
+        };
     }, [isMoreOpen]);
 
     const isVisible = (id: RailItemId): boolean => {

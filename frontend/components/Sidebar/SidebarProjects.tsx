@@ -171,7 +171,7 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
 
             {isExpanded && (
                 <li className="p-0 list-none">
-                    <div className="max-h-[168px] overflow-y-auto overflow-x-hidden overscroll-y-contain flex flex-col gap-0.5 mb-1.5">
+                    <div className="overflow-x-hidden flex flex-col gap-0.5 mb-1.5">
                         {flattenProjectTree(activeProjects).map(
                             ({ project, depth }) => (
                                 <div

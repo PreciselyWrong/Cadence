@@ -308,6 +308,33 @@ describe('Sidebar in minimal mode', () => {
         ).toBeInTheDocument();
     });
 
+    it('offers Customize sidebar once, in the rail More menu', () => {
+        renderSidebar(true);
+
+        // The open panel used to repeat it under its lists.
+        expect(screen.queryByTestId('sidebar-customize')).toBeNull();
+        fireEvent.click(screen.getByTestId('sidebar-rail-more'));
+        expect(screen.getAllByText('Customize sidebar')).toHaveLength(1);
+        expect(
+            screen.getByTestId('sidebar-rail-customize')
+        ).toBeInTheDocument();
+    });
+
+    it('closes the rail More menu with Escape and returns focus to its button', () => {
+        renderSidebar(false);
+
+        const more = screen.getByTestId('sidebar-rail-more');
+        fireEvent.click(more);
+        expect(
+            screen.getByTestId('sidebar-rail-more-boards')
+        ).toBeInTheDocument();
+
+        fireEvent.keyDown(document, { key: 'Escape' });
+
+        expect(screen.queryByTestId('sidebar-rail-more-boards')).toBeNull();
+        expect(more).toHaveFocus();
+    });
+
     it('puts Boards, Templates and Access in the rail More menu', () => {
         act(() => {
             useStore.setState((state: any) => ({

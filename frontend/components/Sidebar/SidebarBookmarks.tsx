@@ -182,7 +182,7 @@ const SidebarBookmarks: React.FC<SidebarBookmarksProps> = ({
             </div>
 
             {isExpanded && (
-                <div className="max-h-[168px] overflow-y-auto overscroll-y-contain flex flex-col gap-0.5 mb-1.5">
+                <div className="flex flex-col gap-0.5 mb-1.5">
                     {pinnedProjects.map((project) => (
                         <div
                             key={project.uid}

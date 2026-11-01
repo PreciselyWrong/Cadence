@@ -156,7 +156,7 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
             </div>
 
             {isExpanded && (
-                <div className="max-h-[168px] overflow-y-auto overscroll-y-contain flex flex-col gap-0.5 mb-1.5">
+                <div className="flex flex-col gap-0.5 mb-1.5">
                     {flattenTagTree(buildTagTree(tags)).map(
                         ({ tag: item, depth }) => (
                             <div

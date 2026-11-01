@@ -138,7 +138,7 @@ const SidebarGoals: React.FC<SidebarGoalsProps> = ({
             </div>
 
             {isExpanded && (
-                <div className="max-h-[168px] overflow-y-auto overscroll-y-contain flex flex-col gap-0.5 mb-1.5">
+                <div className="flex flex-col gap-0.5 mb-1.5">
                     {activeGoals.map((goal: Goal) => {
                         const goalPath = goal.uid
                             ? createGoalUrl({

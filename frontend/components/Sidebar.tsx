@@ -382,22 +382,6 @@ const Sidebar: React.FC<SidebarProps> = ({
                                 )}
                             </div>
 
-                            {isMinimal && (
-                                <div className="px-2.5 pb-1">
-                                    <button
-                                        type="button"
-                                        onClick={openSidebarSettings}
-                                        data-testid="sidebar-customize"
-                                        className="w-full text-left px-[10px] h-[30px] rounded-[8px] text-[13px] text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-                                    >
-                                        {t(
-                                            'sidebar.customize',
-                                            'Customize sidebar'
-                                        )}
-                                    </button>
-                                </div>
-                            )}
-
                             <SidebarTrialCard />
                             <SidebarFooter
                                 currentUser={currentUser}
