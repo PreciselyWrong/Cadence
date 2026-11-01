@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package ch.nicolab.cadence.tasks.ui
 
 import androidx.compose.foundation.background
@@ -18,10 +20,17 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Link
+import androidx.compose.material.icons.outlined.OpenInNew
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -42,7 +51,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import ch.nicolab.cadence.designsystem.components.ActionRow
 import ch.nicolab.cadence.designsystem.components.BadgeTone
+import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.CadenceBadge
 import ch.nicolab.cadence.designsystem.components.Panel
 import ch.nicolab.cadence.designsystem.components.RowGroup
@@ -168,12 +179,17 @@ internal fun NoteCard(note: String, onNoteChange: (String) -> Unit, readOnly: Bo
     }
 }
 
-/** Sous-tâches : liste à cocher, progression dans le titre, ajout en ligne. */
+/**
+ * Sous-tâches : liste à cocher, progression dans le titre, ajout en ligne. Toucher une sous-tâche ouvre
+ * un menu (renommer, ouvrir comme tâche, supprimer avec « Annuler »).
+ */
 @Composable
-internal fun SubtasksCard(parentUid: String, viewModel: TasksViewModel) {
+internal fun SubtasksCard(parentUid: String, viewModel: TasksViewModel, onOpen: (TaskItem) -> Unit) {
     val flow = remember(parentUid) { viewModel.observeSubtasks(parentUid) }
     val subtasks by flow.collectAsStateWithLifecycle(initialValue = emptyList())
     var draft by rememberSaveable(parentUid) { mutableStateOf("") }
+    var menuFor by remember { mutableStateOf<TaskItem?>(null) }
+    var renaming by remember { mutableStateOf<TaskItem?>(null) }
     val submit = {
         val name = draft.trim()
         if (name.isNotEmpty()) {
@@ -203,7 +219,7 @@ internal fun SubtasksCard(parentUid: String, viewModel: TasksViewModel) {
                         style = MaterialTheme.typography.bodyLarge,
                         color = if (subtask.isClosed) palette.onSurfaceVariant else palette.onSurface,
                         textDecoration = if (subtask.isClosed) TextDecoration.LineThrough else null,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1f).heightIn(min = Size.touch).clickable(role = Role.Button) { menuFor = subtask },
                     )
                 }
             }
@@ -223,6 +239,57 @@ internal fun SubtasksCard(parentUid: String, viewModel: TasksViewModel) {
             }
         }
     }
+    menuFor?.let { subtask ->
+        CadenceSheet(title = subtask.name, subtitle = null, dismiss = { menuFor = null }) {
+            Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+                ActionRow(Icons.Outlined.Edit, stringResource(R.string.tasks_subtask_rename), palette.primary) {
+                    menuFor = null
+                    renaming = subtask
+                }
+                ActionRow(Icons.Outlined.OpenInNew, stringResource(R.string.tasks_subtask_open), palette.primary) {
+                    menuFor = null
+                    onOpen(subtask)
+                }
+                ActionRow(Icons.Outlined.Delete, stringResource(R.string.tasks_action_delete), palette.error) {
+                    menuFor = null
+                    viewModel.askDelete(subtask)
+                }
+            }
+        }
+    }
+    renaming?.let { subtask ->
+        RenameSubtaskDialog(
+            current = subtask.name,
+            onSave = { name ->
+                viewModel.renameSubtask(subtask, name)
+                renaming = null
+            },
+            onDismiss = { renaming = null },
+        )
+    }
+}
+
+@Composable
+private fun RenameSubtaskDialog(current: String, onSave: (String) -> Unit, onDismiss: () -> Unit) {
+    var name by rememberSaveable(current) { mutableStateOf(current) }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.tasks_subtask_rename_title)) },
+        text = {
+            TextField(
+                value = name,
+                onValueChange = { name = it },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = { onSave(name) }) { Text(stringResource(R.string.goals_edit_save)) }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.tasks_quick_add_cancel)) }
+        },
+    )
 }
 
 @Composable

@@ -52,6 +52,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -165,6 +166,8 @@ internal fun TaskDetailSheet(
     var picker by remember { mutableStateOf<Picker?>(null) }
     var dateTab by remember { mutableStateOf(DateTab.Due) }
     var confirmDelete by remember { mutableStateOf(false) }
+    // Une sous-tâche ouverte s'affiche par-dessus : sa fiche est une fiche de tâche comme une autre.
+    var openedSubtask by rememberSaveable(current.uid) { mutableStateOf<String?>(null) }
     val notifications = rememberNotificationPermission()
     val hasReminder = current.reminderAt != null
     LaunchedEffect(hasReminder) {
@@ -248,7 +251,7 @@ internal fun TaskDetailSheet(
                 PostponementLine(taskUid = current.uid, version = current.dueDay)
                 NoteCard(note = note, onNoteChange = { note = it }, readOnly = readOnly)
                 LinkPreviewList("$title\n$note", viewModel.linkPreviews)
-                if (!readOnly) SubtasksCard(parentUid = current.uid, viewModel = viewModel)
+                if (!readOnly) SubtasksCard(parentUid = current.uid, viewModel = viewModel, onOpen = { openedSubtask = it.uid })
                 DetailFieldGroup(
                     detailFields(
                         task = current,
@@ -414,6 +417,9 @@ internal fun TaskDetailSheet(
         }
         Picker.Focus -> FocusTimerSheet(taskUid = current.uid, taskName = current.name, onDismiss = dismissPicker)
         null -> Unit
+    }
+    openedSubtask?.let { uid ->
+        TaskDetailSheet(taskUid = uid, viewModel = viewModel, onDismiss = { openedSubtask = null })
     }
     if (confirmDelete) {
         AlertDialog(

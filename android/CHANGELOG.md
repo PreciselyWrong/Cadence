@@ -1,6 +1,7 @@
 ## [1.6.9] — à publier
 
 ### Nouveautés
+- Sous-tâches : toucher une sous-tâche ouvre un menu « Renommer », « Ouvrir comme tâche » (fiche par-dessus) et « Supprimer » (avec « Annuler »).
 - Partager et copier : « Partager » et « Copier » dans les actions de la tâche, dans l'en-tête d'une note et sur les cartes de lien (titre et adresse).
 - Tâches : « Dupliquer » dans les actions de la fiche copie le contenu, les dates, la durée, le projet, le domaine et les étiquettes ; la copie repart à faire, non épinglée, sans rappel ni parent.
 - Tâches : « Épingler » et « Désépingler » dans les actions de la fiche (la tâche épinglée reste en tête de liste).

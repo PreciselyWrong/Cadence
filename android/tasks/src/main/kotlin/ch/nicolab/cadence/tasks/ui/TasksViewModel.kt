@@ -45,6 +45,7 @@ import ch.nicolab.cadence.tasks.model.ProjectStatus
 import ch.nicolab.cadence.tasks.model.RecurringScope
 import ch.nicolab.cadence.tasks.model.SyncStatus
 import ch.nicolab.cadence.tasks.model.TagEditProblem
+import ch.nicolab.cadence.tasks.model.Subtasks
 import ch.nicolab.cadence.tasks.model.TagItem
 import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskDraft
@@ -396,10 +397,17 @@ internal class TasksViewModel(
 
     fun observeNote(uid: String): Flow<NoteItem?> = repository.observeNote(uid)
 
-    fun observeSubtasks(parentUid: String): Flow<List<TaskItem>> = repository.observeSubtasks(parentUid)
+    fun observeSubtasks(parentUid: String): Flow<List<TaskItem>> =
+        combine(repository.observeSubtasks(parentUid), hiddenUids) { all, hidden -> Subtasks.visible(all, hidden) }
 
     fun addSubtask(parentUid: String, name: String) =
         launchAction { repository.createTask(TaskDraft(name = name, parentTaskUid = parentUid)) }
+
+    /** Renomme une sous-tâche ; un nom vide ou inchangé n'écrit rien. */
+    fun renameSubtask(task: TaskItem, raw: String) {
+        val name = Subtasks.cleanName(raw) ?: return
+        if (name != task.name) update(task.uid, TaskChange(name = name))
+    }
 
     fun observeProjectTasks(projectUid: String): Flow<List<TaskItem>> =
         combine(tasks, moment) { all, m -> TaskViews.ofProject(all, projectUid, m.now) }
