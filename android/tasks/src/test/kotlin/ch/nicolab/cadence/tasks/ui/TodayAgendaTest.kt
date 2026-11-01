@@ -70,6 +70,18 @@ class TodayAgendaTest {
     }
 
     @Test
+    fun `une tâche sans heure placée dans le plan du serveur se range à l'heure du plan`() {
+        val items = mergeTodayItems(
+            tasks = listOf(untimedTask("plan1630"), timedTask("t0900", at(9)), untimedTask("free")),
+            events = listOf(timedEvent("e1400", 14)),
+            zone = zone,
+            planStarts = mapOf("plan1630" to at(16, 30)),
+        )
+
+        assertEquals(listOf("t0900", "e1400", "plan1630", "free"), labels(items))
+    }
+
+    @Test
     fun `tâches et événements à heure se mêlent par heure de début`() {
         val items = mergeTodayItems(
             tasks = listOf(timedTask("t0900", at(9)), timedTask("t1100", at(11))),

@@ -76,6 +76,9 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import ch.nicolab.cadence.tasks.planning.PlanEntry
+import ch.nicolab.cadence.tasks.planning.ServerPlan
+import ch.nicolab.cadence.tasks.reminder.PlanSlotsStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -121,10 +124,16 @@ private fun funnelNotice(stage: FunnelStage, on: Boolean): Int = when (stage) {
     FunnelStage.LATER -> if (on) R.string.funnel_notice_later else R.string.funnel_notice_not_later
 }
 
+/**
+ * [planStarts] : heure où le plan du jour du serveur place une tâche d'[today] ; [plan] : ce plan pour aujourd'hui,
+ * dernière lecture gardée sur l'appareil ([ServerPlan]).
+ */
 internal data class TodayState(
     val overdue: List<TaskItem> = emptyList(),
     val today: List<TaskItem> = emptyList(),
     val completed: List<TaskItem> = emptyList(),
+    val planStarts: Map<String, Instant> = emptyMap(),
+    val plan: List<PlanEntry> = emptyList(),
 )
 
 internal enum class DeletionKind { Note, Idea, Link, Goal }
@@ -236,7 +245,9 @@ internal class TasksViewModel(
         viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), Moment.current(),
     )
 
-    val today: StateFlow<TodayState> = combine(scopedTasks, moment) { all, m -> todayState(all, m) }
+    val today: StateFlow<TodayState> = combine(scopedTasks, moment, PlanSlotsStore(application).entryChanges()) { all, m, plan ->
+        todayState(all, m, plan)
+    }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), TodayState())
 
     /** Premier jour de la semaine en cours, selon le premier jour du compte : « Cette semaine ». */
@@ -872,12 +883,17 @@ private fun minuteTicks(): Flow<Moment> = flow {
     }
 }
 
-private fun todayState(all: List<TaskItem>, m: Moment): TodayState {
+/** Aujourd'hui calculé sur l'appareil, plus les tâches que le plan du jour du serveur ([plan]) y place. */
+private fun todayState(all: List<TaskItem>, m: Moment, plan: List<PlanEntry>): TodayState {
     val overdue = TaskViews.overdue(all, m.today, m.now)
     val overdueUids = overdue.mapTo(HashSet()) { it.uid }
+    val today = TaskViews.today(all, m.today, m.now).filterNot { it.uid in overdueUids }
+    val planned = ServerPlan.apply(overdue, today, all, plan, m.today, m.zone)
     return TodayState(
-        overdue = overdue,
-        today = TaskViews.today(all, m.today, m.now).filterNot { it.uid in overdueUids },
+        overdue = planned.overdue,
+        today = planned.today,
         completed = TaskViews.completedToday(all, m.today, m.zone),
+        planStarts = planned.starts,
+        plan = plan.filter { it.day == m.today },
     )
 }

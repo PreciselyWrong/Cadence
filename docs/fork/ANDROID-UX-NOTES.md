@@ -268,3 +268,9 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Décision** : la carte de lien de l'Inbox a cinq pastilles, dans l'ordre du web : Garder, À tester, Rattacher, Plus tard, Jeter (`LinkTriage.inboxDecisions`). « Rattacher » n'apparaît que s'il existe un projet ouvert ; il ouvre « Rattacher à quel projet ? » sans « Sans projet », puis crée une tâche au nom du lien (adresse puis note), garde le lien et traite l'idée, après la fenêtre « Annuler » de 4,5 s. Le tri en série « Trier les liens » garde ses quatre boutons.
 - **Web** : rien à reprendre. Reste : rien d'essayé sur le téléphone.
 
+### 2026-11-01 — Aujourd'hui lit le plan du jour du serveur
+
+- **Problème** : une tâche placée dans le plan du jour (à 16:30 sur le web, ou sans heure par la « Session courte » de la revue) sonnait sur le téléphone mais n'apparaissait pas dans son Aujourd'hui, qui ne calcule que l'échéance et le statut.
+- **Décision** : la dernière lecture du plan (aujourd'hui, demain, gardée sur l'appareil après chaque synchro) s'ajoute à Aujourd'hui : chaque tâche ouverte du plan une seule fois, à l'heure du plan (heure montrée sur la ligne, avant l'échéance) ou dans la partie sans heure ; une tâche en retard placée aujourd'hui passe du retard au jour. Un placement à heure occupe son créneau dans « Planifier la journée » et n'est plus à placer. Le reste de la planification d'Android ne change pas ; le téléphone n'écrit pas le plan (sauf la session courte). Le widget Aujourd'hui ne lit pas encore le plan.
+- **Web** : rien à reprendre (le web lit déjà son plan). Reste : rien d'essayé sur le téléphone.
+

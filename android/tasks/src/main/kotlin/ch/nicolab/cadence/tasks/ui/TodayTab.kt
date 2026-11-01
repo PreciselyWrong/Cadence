@@ -42,6 +42,7 @@ import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.planning.DayPlans
 import ch.nicolab.cadence.tasks.planning.DayRhythm
 import ch.nicolab.cadence.tasks.planning.PlanningChanges
+import java.time.Instant
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import kotlinx.coroutines.launch
@@ -92,11 +93,12 @@ internal fun TodayTab(
             events = events.map { it.event },
             dayTasks = state.today,
             notBefore = DayPlans.notBefore(today, moment.now, zone),
+            planned = state.plan,
         )
     }
     val proposedUids = proposals?.uids.orEmpty()
-    val agenda = remember(state.today, proposedUids, events, zone) {
-        mergeTodayItems(state.today.filterNot { it.uid in proposedUids }, events, zone)
+    val agenda = remember(state.today, state.planStarts, proposedUids, events, zone) {
+        mergeTodayItems(state.today.filterNot { it.uid in proposedUids }, events, zone, state.planStarts)
     }
     val triageable = remember(state.overdue) { PlanningChanges.movable(state.overdue) }
     val unfinished = remember(state.today) { PlanningChanges.movable(state.today) }
@@ -258,7 +260,7 @@ internal fun TodayTab(
         }
         if (agenda.isNotEmpty()) {
             item(key = "today-header") { SectionHeader(title = stringResource(R.string.tasks_section_today), count = agenda.size) }
-            agendaRows(agenda, projectNames, projectColors, moment, viewModel, onOpen, calendarSettings.checkEvents, projectIcons = projectIcons)
+            agendaRows(agenda, projectNames, projectColors, moment, viewModel, onOpen, calendarSettings.checkEvents, projectIcons = projectIcons, planStarts = state.planStarts)
         }
         item(key = "routine") { routineStrip() }
         if (state.completed.isNotEmpty()) {
@@ -346,6 +348,7 @@ private fun LazyListScope.agendaRows(
     onOpen: (TaskItem) -> Unit,
     checkEvents: Boolean,
     projectIcons: Map<String, String> = emptyMap(),
+    planStarts: Map<String, Instant> = emptyMap(),
 ) {
     items(agenda, key = { it.key }) { item ->
         when (item) {
@@ -362,6 +365,7 @@ private fun LazyListScope.agendaRows(
                 onSwipeAction = { viewModel.swipe(item.task, it) },
                 onMenu = { viewModel.openMenu(item.task) },
                 sectionDay = moment.today,
+                plannedAt = planStarts[item.task.uid],
             )
             is TodayItem.Event -> EventRow(
                 item = item.event,

@@ -34,7 +34,8 @@ object DayPlans {
 
     /**
      * @param dayTasks tâches ouvertes prévues ce jour-là ; [notBefore] est l'heure courante en minutes
-     * quand [day] est aujourd'hui, sinon 0.
+     * quand [day] est aujourd'hui, sinon 0. [planned] : le plan du jour du serveur ; une tâche qu'il place à une
+     * heure occupe ce créneau (sa durée, sinon son estimation) au lieu de son échéance, et n'est plus à placer.
      */
     fun of(
         day: LocalDate,
@@ -43,17 +44,27 @@ object DayPlans {
         events: List<CalendarEvent>,
         dayTasks: List<TaskItem>,
         notBefore: Int = 0,
+        planned: List<PlanEntry> = emptyList(),
     ): DayPlan {
         val hours = settings.hours
         val external = eventSlots(day, zone, events) + focusSlots(day, settings)
-        val timed = timedTaskSlots(day, zone, dayTasks)
+        val placed = planned.filter { it.day == day && it.startMinute != null }.associateBy { it.uid }
+        val byUid = dayTasks.associateBy { it.uid }
+        val planSlots = placed.values.mapNotNull { entry ->
+            val task = byUid[entry.uid] ?: return@mapNotNull null
+            val start = entry.startMinute ?: return@mapNotNull null
+            val length = entry.durationMinutes?.takeIf { it > 0 }
+                ?: task.estimatedMinutes?.takeIf { it > 0 } ?: DayPlanner.DEFAULT_ESTIMATE_MINUTES
+            Slot(start.coerceIn(0, MINUTES_PER_DAY), (start + length).coerceIn(0, MINUTES_PER_DAY)).takeIf { it.end > it.start }
+        }
+        val timed = timedTaskSlots(day, zone, dayTasks.filterNot { it.uid in placed }) + planSlots
         val available = DayPlanner.availableMinutes(day, hours, external, notBefore)
         val planned = dayTasks.sumOf { it.estimatedMinutes?.takeIf { m -> m > 0 } ?: DayPlanner.DEFAULT_ESTIMATE_MINUTES }
         return DayPlan(
             day = day,
             workday = hours.isWorkday(day),
             capacity = Capacity(planned, available),
-            toPlace = dayTasks.filterNot { it.dueHasTime },
+            toPlace = dayTasks.filterNot { it.dueHasTime || it.uid in placed },
             hours = hours,
             busy = external + timed,
             notBefore = notBefore,

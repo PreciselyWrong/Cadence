@@ -3,6 +3,7 @@ package ch.nicolab.cadence.tasks.ui
 import ch.nicolab.cadence.calendar.EventWithDone
 import ch.nicolab.cadence.calendar.localStart
 import ch.nicolab.cadence.tasks.model.TaskItem
+import java.time.Instant
 import java.time.ZoneId
 
 /** Élément de la liste Aujourd'hui (partagé par l'app et le widget, pour qu'ils ne divergent pas) : une tâche de Cadence ou un événement de l'agenda de l'appareil. */
@@ -21,18 +22,21 @@ sealed interface TodayItem {
 
 /**
  * Mêle les événements et les tâches du jour. Ordre : journées entières (ordre fourni), puis
- * éléments à heure par heure locale, puis tâches sans heure dans leur ordre d'origine.
+ * éléments à heure par heure locale, puis tâches sans heure dans leur ordre d'origine. [planStarts] : l'heure où le
+ * plan du jour du serveur place une tâche, qui prime sur son échéance.
  */
 fun mergeTodayItems(
     tasks: List<TaskItem>,
     events: List<EventWithDone>,
     zone: ZoneId,
+    planStarts: Map<String, Instant> = emptyMap(),
 ): List<TodayItem> {
+    fun TaskItem.startMillis(): Long? = planStarts[uid]?.toEpochMilli() ?: dueTimeMillis()
     val allDay = events.filter { it.event.allDay }.map { TodayItem.Event(it) }
     val timed: List<Pair<TodayItem, Long>> =
         events.filterNot { it.event.allDay }.map { TodayItem.Event(it) to it.event.localStart(zone) } +
-            tasks.mapNotNull { task -> task.dueTimeMillis()?.let { TodayItem.Task(task) to it } }
-    val untimed = tasks.filter { it.dueTimeMillis() == null }.map { TodayItem.Task(it) }
+            tasks.mapNotNull { task -> task.startMillis()?.let { TodayItem.Task(task) to it } }
+    val untimed = tasks.filter { it.startMillis() == null }.map { TodayItem.Task(it) }
     return allDay + timed.sortedBy { it.second }.map { it.first } + untimed
 }
 

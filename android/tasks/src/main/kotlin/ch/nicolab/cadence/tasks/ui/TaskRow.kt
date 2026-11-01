@@ -58,6 +58,7 @@ import ch.nicolab.cadence.tasks.swipe.FileBackedActions
 import ch.nicolab.cadence.tasks.swipe.SwipeAction
 import ch.nicolab.cadence.tasks.swipe.SwipeConfig
 import ch.nicolab.cadence.tasks.swipe.rememberSwipeConfig
+import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import kotlinx.coroutines.delay
@@ -89,6 +90,8 @@ internal fun TaskRow(
     modifier: Modifier = Modifier,
     sectionDay: LocalDate? = null,
     decor: RowDecor = rememberRowDecor(),
+    /** Heure où le plan du jour du serveur place la tâche ; montrée à la place de l'heure d'échéance. */
+    plannedAt: Instant? = null,
 ) {
     val haptic = rememberCadenceHaptic()
     val interaction = remember { MutableInteractionSource() }
@@ -159,7 +162,7 @@ internal fun TaskRow(
             Spacer(Modifier.width(8.dp))
             Column(Modifier.weight(1f).padding(vertical = 6.dp)) {
                 StrikingTitle(task.name, struck = showClosed)
-                TaskMeta(task, projectName, projectIcon, projectColor, today, zone, sectionDay, decor)
+                TaskMeta(task, projectName, projectIcon, projectColor, today, zone, sectionDay, decor, plannedAt)
                 if (decor.showDescription) {
                     TaskRowMeta.notePreview(task.note)?.let { preview ->
                         Text(
@@ -258,6 +261,7 @@ private fun TaskMeta(
     zone: ZoneId,
     sectionDay: LocalDate?,
     decor: RowDecor,
+    plannedAt: Instant?,
 ) {
     val pendingText = stringResource(R.string.tasks_pending_sync)
     val recurringText = stringResource(R.string.tasks_recurring)
@@ -266,10 +270,10 @@ private fun TaskMeta(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(6.dp),
     ) {
-        if (dueDate != null) {
-            val overdue = TaskViews.isOverdue(task, today)
-            val day = if (showsDueDay(dueDate, sectionDay, overdue)) dayLabel(dueDate, today) else null
-            val time = task.dueDate?.takeIf { task.dueHasTime }?.let { wireTime(instantTime(it, zone)) }
+        if (dueDate != null || plannedAt != null) {
+            val overdue = dueDate != null && TaskViews.isOverdue(task, today)
+            val day = if (dueDate != null && showsDueDay(dueDate, sectionDay, overdue)) dayLabel(dueDate, today) else null
+            val time = (plannedAt ?: task.dueDate?.takeIf { task.dueHasTime })?.let { wireTime(instantTime(it, zone)) }
             val badge = listOfNotNull(day, time).joinToString(" ")
             if (badge.isNotEmpty()) {
                 Text(

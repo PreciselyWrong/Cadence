@@ -1,6 +1,9 @@
 ## [1.7.0] — à publier
 
 ### Nouveautés
+- Aujourd'hui montre le plan du jour du serveur : une tâche placée sur le web (par exemple à 16:30) ou par la « Session courte » de la revue apparaît à son heure, ou dans la partie sans heure, une seule fois ; une tâche en retard placée aujourd'hui quitte le retard. Le plan est relu après chaque synchro et reste lisible hors ligne.
+
+### Nouveautés
 - Inbox : la carte d'un lien gagne « Rattacher » (entre À tester et Plus tard, s'il existe un projet ouvert) : choix d'un projet obligatoire, tâche au nom du lien avec l'adresse puis la note, lien gardé, idée traitée, « Annuler » pendant 4,5 s. Comme sur le web.
 
 ### Nouveautés
