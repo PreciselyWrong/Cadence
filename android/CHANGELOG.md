@@ -30,7 +30,7 @@
 - Notes : bouton Liste / Galerie dans l'en-tête de l'onglet Notes (galerie par défaut, choix retenu sur le téléphone) ; la liste montre une ligne par note (couleur, titre, début du texte, épingle). La galerie des notes s'élargit à trois colonnes sur un grand écran.
 
 ### Nouveautés
-- Projets : outliner (bouton de l'en-tête du projet, choix retenu) : tâches et sous-tâches en liste décalée. Toucher une ligne montre Monter, Descendre, Décaler (en faire une sous-tâche de la précédente), Ressortir, Ajouter après et Ouvrir ; la case termine. Hors ligne, synchronisé (parent et rang `order`). Un projet TODO.md n'accepte que la case.
+- Projets : vue « Arborescence » (bouton de l'en-tête du projet, choix retenu) : tâches et sous-tâches en liste décalée, comme l'onglet du web. Toucher une ligne montre Monter, Descendre, Décaler (en faire une sous-tâche de la précédente), Ressortir, Ajouter après et Ouvrir ; la case termine. Hors ligne, synchronisé (parent et rang `order`). Un projet TODO.md n'accepte que la case.
 
 ### Nouveautés
 - Projets TODO.md d'un dépôt git : sous le titre, « Synchronisé avec <dépôt> · il y a 3 min », ou le conflit (« « Fix bug » a changé dans le dépôt, rien n'a été écrit. ») et les modifications en attente, avec « Réessayer » et « Abandonner ». Lu en ligne, pour le compte propriétaire.

@@ -10,11 +10,11 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Décision** : même ligne que le web sous le titre du projet (synchronisé · il y a N min, conflit nommé, N modifications en attente, erreur), lue en ligne toutes les 30 s, avec « Réessayer » et « Abandonner » quand il reste des modifications ; un refus `todo_md_conflict` / `todo_md_repo_unreachable` est dit en clair dans la ligne de synchro et la liste des refus.
 - **Web** : la ligne du projet existe ; la page Synchronisation web pourrait aussi traduire ces deux raisons de refus.
 
-### 2026-11-01 — Outliner d'un projet
+### 2026-11-01 — Arborescence (outliner) d'un projet
 
 - **Problème** : la page d'un projet listait les tâches de premier niveau ; les sous-tâches ne se voyaient que dans la fiche, et rien ne permettait de les réorganiser.
 - **Décision** : un bouton de l'en-tête du projet bascule vers l'outliner (retenu sur l'appareil). Les tâches ouvertes du projet, chacune suivie de ses sous-tâches ouvertes, décalées d'un cran. Toucher une ligne la choisit et montre Monter, Descendre (dans son groupe de sœurs), Décaler (devient la dernière sous-tâche de la tâche précédente), Ressortir (remonte juste après son parent), Ajouter après (même retrait) et Ouvrir ; la case termine. Retrait = `parent_task_uid`, un seul niveau ; rang = `order` du groupe, renuméroté 0..n quand l'ordre change ou qu'une tâche y entre (un groupe qui perd une tâche garde ses rangs) ; sans `order`, l'ordre de la liste. Une série ne devient pas sous-tâche et n'en reçoit pas, une tâche qui a des sous-tâches ne se décale pas. Projet TODO.md : seule la case. Logique pure : `model/Outline.kt`.
-- **Web** : l'outliner web (en cours) doit garder ces règles : parent = retrait, `order` par groupe de sœurs, un seul niveau.
+- **Web** : l'onglet « Arborescence » du web garde les mêmes règles (parent = retrait, un seul niveau, `order` des sous-tâches). Écart : le web range les tâches du projet par son ordre personnalisé (`user_task_orders`, non synchronisé), Android par `order` ; à unifier côté serveur (synchroniser l'ordre du projet, ou lire `order`).
 
 ### 2026-11-01 — Notes et liens : liste ou galerie
 
