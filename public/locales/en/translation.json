@@ -4702,7 +4702,16 @@
     "loadError": "Could not load this task."
   },
   "review": {
+    "decided": "Decision saved.",
+    "more": "More…",
+    "choices": "Choices",
+    "cancelDate": "Cancel",
     "later": {
+      "sorted": "Nothing left to sort.",
+      "skip": "Skip",
+      "backToList": "Back to the list",
+      "left": "{{count}} left",
+      "sortOneByOne": "Sort one by one",
       "noMatch": "Nothing matches.",
       "noProject": "No project",
       "filter": "Filter"

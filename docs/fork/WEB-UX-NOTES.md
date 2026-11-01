@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-01 — Revue : puces au lieu du menu « Décider », Annuler, Trier un par un
+
+- **Problème** : chaque ligne de `/review` ouvrait un menu « Décider » ; une décision était définitive ; « Plus tard » ne se parcourait qu'en liste.
+- **Décision** : les choix d'une ligne sont des puces à un geste (trois au plus, puis « Plus… ») ; rouge retiré, « Abandonner » est une puce neutre. Une décision enregistrée affiche « Décision enregistrée » avec **Annuler**, qui remet la ligne et rétablit les champs modifiés (En vue, Cette semaine, Plus tard, date de revue, statut). Pas d'annulation pour « Faire aujourd'hui » ni « Passer en session courte » : elles touchent le plan de la journée. « Trier un par un » sur « Plus tard » montre une tâche à la fois avec les mêmes choix et « Passer » (la tâche passée repart au bout).
+- **À reprendre sur Android** : Android a déjà le balayage, l'annulation et « Trier un par un » ; vérifier que les mêmes décisions sont annulables et que « Plus… » reprend les choix masqués.
+
 ### 2026-11-01 — Aujourd'hui : en-tête réduit, description sous le titre
 
 - **Problème** : l'en-tête d'Aujourd'hui gardait quatre boutons en permanence (Tout placer, Clore la journée, IA, Calendrier) ; « Tout placer » apparaissait même sans tâche à placer.

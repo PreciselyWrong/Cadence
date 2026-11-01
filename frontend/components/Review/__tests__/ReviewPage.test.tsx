@@ -1,5 +1,11 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import {
+    act,
+    render,
+    screen,
+    fireEvent,
+    waitFor,
+} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import ReviewPage from '../ReviewPage';
@@ -52,7 +58,11 @@ const mockLinks = {
 jest.mock('../../../store/linksStore', () => ({
     useLinksStore: (pick: (s: unknown) => unknown) => pick(mockLinks),
 }));
-const mockToast = { showSuccessToast: jest.fn(), showErrorToast: jest.fn() };
+const mockToast = {
+    showSuccessToast: jest.fn(),
+    showErrorToast: jest.fn(),
+    showUndoToast: jest.fn(),
+};
 jest.mock('../../Shared/ToastContext', () => ({
     useToast: () => mockToast,
 }));
@@ -152,8 +162,7 @@ describe('ReviewPage', () => {
     it('keeps a task as it is and takes it off the list', async () => {
         renderPage();
         await screen.findByText('Test app X');
-        fireEvent.click(screen.getByRole('button', { name: /Decide/ }));
-        fireEvent.click(screen.getByRole('menuitem', { name: 'Keep as is' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Keep as is' }));
         await waitFor(() =>
             expect(mocked.decideTask).toHaveBeenCalledWith('t1', {
                 reviewed: true,
@@ -171,8 +180,7 @@ describe('ReviewPage', () => {
         );
         renderPage();
         await screen.findByText('Test app X');
-        fireEvent.click(screen.getByRole('button', { name: /Decide/ }));
-        fireEvent.click(screen.getByRole('menuitem', { name: 'Keep as is' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Keep as is' }));
         // Gone before the server answers
         expect(screen.queryByText('Test app X')).not.toBeInTheDocument();
 
@@ -184,14 +192,97 @@ describe('ReviewPage', () => {
     it('parks a task for later', async () => {
         renderPage();
         await screen.findByText('Test app X');
-        fireEvent.click(screen.getByRole('button', { name: /Decide/ }));
-        fireEvent.click(screen.getByRole('menuitem', { name: 'Later' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Later' }));
         await waitFor(() =>
             expect(mocked.decideTask).toHaveBeenCalledWith('t1', {
                 later: true,
                 reviewed: true,
             })
         );
+    });
+
+    it('offers the common choices as chips and keeps the rest behind More', async () => {
+        renderPage();
+        await screen.findByText('Test app X');
+
+        expect(screen.queryByRole('button', { name: /Decide/ })).toBeNull();
+        expect(
+            screen.getByRole('button', { name: 'Do today' })
+        ).toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'Drop' })).toBeNull();
+
+        fireEvent.click(screen.getByRole('button', { name: 'More…' }));
+        expect(
+            screen.getByRole('button', { name: 'Drop' })
+        ).toBeInTheDocument();
+    });
+
+    it('offers Undo after a decision and restores what it changed', async () => {
+        renderPage();
+        await screen.findByText('Test app X');
+        fireEvent.click(screen.getByRole('button', { name: 'Later' }));
+        await waitFor(() => expect(mocked.decideTask).toHaveBeenCalledTimes(1));
+
+        expect(mockToast.showUndoToast).toHaveBeenCalledWith(
+            expect.any(String),
+            expect.any(Function)
+        );
+        const [, undo] = mockToast.showUndoToast.mock.calls[0];
+        act(() => undo());
+
+        expect(await screen.findByText('Test app X')).toBeInTheDocument();
+        await waitFor(() =>
+            expect(mocked.decideTask).toHaveBeenLastCalledWith('t1', {
+                in_view: false,
+                week_of: null,
+                review_on: null,
+                later: false,
+            })
+        );
+    });
+
+    it('sorts Later one task at a time and passes a skipped one to the end', async () => {
+        localStorage.setItem('review.step', 'later');
+        mocked.fetchReviewCategory.mockResolvedValue({
+            total: 2,
+            items: [
+                {
+                    task: {
+                        uid: 'a',
+                        name: 'First parked',
+                        status: 'not_started',
+                    },
+                    review_due: false,
+                    last_activity_at: '2026-09-01T00:00:00Z',
+                },
+                {
+                    task: {
+                        uid: 'b',
+                        name: 'Second parked',
+                        status: 'not_started',
+                    },
+                    review_due: false,
+                    last_activity_at: '2026-09-02T00:00:00Z',
+                },
+            ],
+        } as any);
+        renderPage();
+        fireEvent.click(
+            await screen.findByRole('button', { name: 'Sort one by one' })
+        );
+
+        expect(screen.getByText('First parked')).toBeInTheDocument();
+        fireEvent.click(screen.getByRole('button', { name: 'Skip' }));
+        expect(screen.getByText('Second parked')).toBeInTheDocument();
+        fireEvent.click(screen.getByRole('button', { name: 'Do today' }));
+        await waitFor(() =>
+            expect(mocked.decideTask).toHaveBeenCalledWith('b', {
+                today: true,
+                later: false,
+                reviewed: true,
+            })
+        );
+        expect(await screen.findByText('First parked')).toBeInTheDocument();
     });
 
     it('opens the task from its title and remembers the step', async () => {
@@ -353,9 +444,8 @@ describe('ReviewPage', () => {
             renderPage();
             await screen.findByText('Fix the gate');
             fireEvent.click(
-                screen.getAllByRole('button', { name: /Decide/ })[0]
+                screen.getAllByRole('button', { name: 'Do today' })[0]
             );
-            fireEvent.click(screen.getByRole('menuitem', { name: 'Do today' }));
             await waitFor(() =>
                 expect(mocked.decideTask).toHaveBeenCalledWith('b', {
                     today: true,

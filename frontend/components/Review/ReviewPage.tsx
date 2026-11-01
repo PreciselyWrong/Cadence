@@ -9,6 +9,7 @@ import {
     fetchWeeklyRoutine,
     fetchReviewSummary,
     InboxReviewItem,
+    isParked,
     keepProject,
     ProjectReviewItem,
     PushedItem,
@@ -29,7 +30,7 @@ import { useToast } from '../Shared/ToastContext';
 import { useTaskPane } from '../../contexts/TaskPaneContext';
 import { openTaskPanel } from '../../store/taskPanelStore';
 import { useIsMinimal } from '../../hooks/useUiDensity';
-import DecisionMenu, { DecisionOption } from './DecisionMenu';
+import DecisionChips, { DecisionOption } from './DecisionChips';
 import WeekStep from './WeekStep';
 import {
     addDaysToToday,
@@ -98,10 +99,90 @@ const toRows = (step: ReviewCategory, items: unknown[]): Row[] =>
                 : { kind: 'task', item: item as TaskReviewItem }
     );
 
+interface LaterSorterProps {
+    queue: Row[];
+    onSkip: (key: string) => void;
+    onStop: () => void;
+    options: (row: Row) => DecisionOption[];
+    title: (row: Row) => string;
+    meta: (row: Row) => string;
+    onOpen: (row: Row) => void;
+}
+
+// "Sort one by one": one parked task at a time, with the same choices and Skip.
+const LaterSorter: React.FC<LaterSorterProps> = ({
+    queue,
+    onSkip,
+    onStop,
+    options,
+    title,
+    meta,
+    onOpen,
+}) => {
+    const { t } = useTranslation();
+    const current = queue[0];
+
+    if (!current) {
+        return (
+            <div className="space-y-3 py-10 text-center">
+                <p className="text-sm text-gray-600 dark:text-gray-300">
+                    {t('review.later.sorted', 'Nothing left to sort.')}
+                </p>
+                <button
+                    type="button"
+                    onClick={onStop}
+                    className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400"
+                >
+                    {t('review.later.backToList', 'Back to the list')}
+                </button>
+            </div>
+        );
+    }
+
+    return (
+        <div className="space-y-4 py-4">
+            <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-300">
+                <span>
+                    {t('review.later.left', '{{count}} left', {
+                        count: queue.length,
+                    })}
+                </span>
+                <button
+                    type="button"
+                    onClick={onStop}
+                    className="hover:underline"
+                >
+                    {t('review.later.backToList', 'Back to the list')}
+                </button>
+            </div>
+            <div className="space-y-1">
+                <button
+                    type="button"
+                    onClick={() => onOpen(current)}
+                    className="block w-full text-left text-lg font-medium text-gray-900 hover:underline dark:text-gray-100"
+                >
+                    {title(current)}
+                </button>
+                <span className="block text-sm text-gray-600 dark:text-gray-300">
+                    {meta(current)}
+                </span>
+            </div>
+            <DecisionChips key={rowKey(current)} options={options(current)} />
+            <button
+                type="button"
+                onClick={() => onSkip(rowKey(current))}
+                className="text-sm text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100"
+            >
+                {t('review.later.skip', 'Skip')}
+            </button>
+        </div>
+    );
+};
+
 const ReviewPage: React.FC = () => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
-    const { showErrorToast, showSuccessToast } = useToast();
+    const { showErrorToast, showSuccessToast, showUndoToast } = useToast();
     const isMinimal = useIsMinimal();
     const { openTask } = useTaskPane();
     const [step, setStepState] = useState<Step>(readStep);
@@ -118,6 +199,9 @@ const ReviewPage: React.FC = () => {
     const loadLinks = useLinksStore((state) => state.load);
     const [laterQuery, setLaterQuery] = useState('');
     const [openGroups, setOpenGroups] = useState<Set<string> | null>(null);
+    // "Sort one by one" on Later: the rows passed over, in the order passed.
+    const [sorting, setSorting] = useState(false);
+    const [skipped, setSkipped] = useState<string[]>([]);
 
     useEffect(() => {
         void loadLinks();
@@ -153,6 +237,8 @@ const ReviewPage: React.FC = () => {
     };
 
     const setStep = (next: Step) => {
+        setSorting(false);
+        setSkipped([]);
         setStepState(next);
         try {
             localStorage.setItem(STEP_KEY, next);
@@ -208,7 +294,24 @@ const ReviewPage: React.FC = () => {
 
     // Takes the row off at once, then runs the decision; a failed save puts
     // the row back where it was and says so.
-    const decide = async (row: Row, action: () => Promise<unknown>) => {
+    // Puts a row back at its place: after a failed save, or an undo.
+    const putBack = (row: Row, index: number) => {
+        const key = rowKey(row);
+        setRows((current) => {
+            if (current.some((r) => rowKey(r) === key)) return current;
+            const at = index < 0 ? 0 : Math.min(index, current.length);
+            return [...current.slice(0, at), row, ...current.slice(at)];
+        });
+        setTotal((count) => count + 1);
+    };
+
+    // With `undo`, a saved decision offers "Undo", which puts the row back
+    // and restores what the decision changed.
+    const decide = async (
+        row: Row,
+        action: () => Promise<unknown>,
+        undo?: () => Promise<unknown>
+    ) => {
         const key = rowKey(row);
         const index = rows.findIndex((r) => rowKey(r) === key);
         setRows((current) => current.filter((r) => rowKey(r) !== key));
@@ -216,22 +319,54 @@ const ReviewPage: React.FC = () => {
         try {
             await action();
             refreshSummary();
+            if (undo) {
+                showUndoToast(t('review.decided', 'Decision saved.'), () => {
+                    putBack(row, index);
+                    undo()
+                        .then(refreshSummary)
+                        .catch(() =>
+                            showErrorToast(
+                                t(
+                                    'review.saveError',
+                                    'Could not save the decision.'
+                                )
+                            )
+                        );
+                });
+            }
         } catch {
-            setRows((current) => {
-                if (current.some((r) => rowKey(r) === key)) return current;
-                const at = index < 0 ? 0 : Math.min(index, current.length);
-                return [...current.slice(0, at), row, ...current.slice(at)];
-            });
-            setTotal((count) => count + 1);
+            putBack(row, index);
             showErrorToast(
                 t('review.saveError', 'Could not save the decision.')
             );
         }
     };
 
+    // The task's decision fields as they were before `decision`.
+    const undoOf =
+        (task: Task, decision: TaskDecision) => (): Promise<unknown> =>
+            decideTask(task.uid as string, {
+                in_view: Boolean(task.in_view),
+                week_of: task.week_of ?? null,
+                review_on: task.review_on ?? null,
+                later: isParked(task),
+                ...(decision.status !== undefined &&
+                typeof task.status === 'string'
+                    ? { status: task.status }
+                    : {}),
+            });
+
+    // Saved decisions that change the day's plan have no undo: the plan is
+    // the user's own day, and "Do today" is not taken back by the review.
     const onTask = (row: Row, task: Task, decision: TaskDecision) =>
-        decide(row, () =>
-            decideTask(task.uid as string, { ...decision, reviewed: true })
+        decide(
+            row,
+            () =>
+                decideTask(task.uid as string, {
+                    ...decision,
+                    reviewed: true,
+                }),
+            decision.today ? undefined : undoOf(task, decision)
         );
 
     const shortSession = (row: Row, task: Task) =>
@@ -262,7 +397,6 @@ const ReviewPage: React.FC = () => {
         const drop: DecisionOption = {
             key: 'drop',
             label: a('drop', 'Drop'),
-            danger: true,
             run: () => void onTask(row, task, { status: 'cancelled' }),
         };
         const keep: DecisionOption = {
@@ -297,6 +431,8 @@ const ReviewPage: React.FC = () => {
                     label: a('today', 'Do today'),
                     run: () => void onTask(row, task, { today: true }),
                 },
+                later,
+                keep,
                 {
                     key: 'short',
                     label: a('shortSession', 'Short session today (25 min)'),
@@ -307,9 +443,7 @@ const ReviewPage: React.FC = () => {
                     label: a('split', 'Break into steps'),
                     run: () => openTaskDetails(task.uid as string),
                 },
-                later,
                 drop,
-                keep,
             ];
         }
         if (step === 'later') {
@@ -389,7 +523,6 @@ const ReviewPage: React.FC = () => {
             {
                 key: 'discard',
                 label: t('review.actions.discard', 'Discard'),
-                danger: true,
                 run: () => void decide(row, () => deleteInboxItem(item.uid)),
             },
         ];
@@ -569,7 +702,9 @@ const ReviewPage: React.FC = () => {
                             {meta(row)}
                         </span>
                     </button>
-                    <DecisionMenu options={options(row)} />
+                </div>
+                <div className="mt-2">
+                    <DecisionChips options={options(row)} />
                 </div>
                 {found && (
                     <InboxLinkPreview link={found.link} withNote={false} />
@@ -598,6 +733,14 @@ const ReviewPage: React.FC = () => {
             </li>
         );
     };
+
+    // Rows not passed over come first, in list order; passed ones go last.
+    const laterQueue = (): Row[] => [
+        ...rows.filter(
+            (row) => row.kind === 'task' && !skipped.includes(rowKey(row))
+        ),
+        ...skipped.flatMap((key) => rows.filter((row) => rowKey(row) === key)),
+    ];
 
     const laterItems = rows.flatMap((row) =>
         row.kind === 'task' ? [row.item] : []
@@ -722,8 +865,32 @@ const ReviewPage: React.FC = () => {
                             {emptyText(step)}
                         </p>
                     )}
-                    {step === 'later' && rows.length > 0 ? (
+                    {step === 'later' && rows.length > 0 && sorting ? (
+                        <LaterSorter
+                            queue={laterQueue()}
+                            onSkip={(key) =>
+                                setSkipped((keys) => [...keys, key])
+                            }
+                            onStop={() => setSorting(false)}
+                            options={options}
+                            title={title}
+                            meta={meta}
+                            onOpen={openRow}
+                        />
+                    ) : step === 'later' && rows.length > 0 ? (
                         <div className="space-y-3">
+                            <div className="flex justify-end">
+                                <button
+                                    type="button"
+                                    onClick={() => setSorting(true)}
+                                    className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400"
+                                >
+                                    {t(
+                                        'review.later.sortOneByOne',
+                                        'Sort one by one'
+                                    )}
+                                </button>
+                            </div>
                             <input
                                 type="search"
                                 value={laterQuery}

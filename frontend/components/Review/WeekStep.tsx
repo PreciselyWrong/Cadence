@@ -10,7 +10,7 @@ import {
 } from '../../utils/reviewService';
 import { useToast } from '../Shared/ToastContext';
 import { formatDuration } from '../DailyPlan/planUtils';
-import DecisionMenu from './DecisionMenu';
+import DecisionChips from './DecisionChips';
 import ThisOrThat from './ThisOrThat';
 
 interface WeekStepProps {
@@ -122,7 +122,7 @@ const WeekStep: React.FC<WeekStepProps> = ({ onOpenTask }) => {
                                     .join(' · ')}
                             </span>
                         </button>
-                        <DecisionMenu options={options(task)} />
+                        <DecisionChips options={options(task)} />
                     </li>
                 ))}
             </ul>

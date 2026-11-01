@@ -4651,7 +4651,16 @@
     "loadError": "Impossible de charger cette tâche."
   },
   "review": {
+    "decided": "Décision enregistrée.",
+    "more": "Plus…",
+    "choices": "Choix",
+    "cancelDate": "Annuler",
     "later": {
+      "sorted": "Rien à trier.",
+      "skip": "Passer",
+      "backToList": "Retour à la liste",
+      "left": "{{count}} restantes",
+      "sortOneByOne": "Trier un par un",
       "noMatch": "Rien ne correspond.",
       "noProject": "Sans projet",
       "filter": "Filtrer"
