@@ -63,6 +63,8 @@ Widget configuration and reminder snoozes are not synced. Rows are validated aga
 
 A conflict listed by `GET /sync/status` is `{id, entity, uid, field, name, created_at, lost: {value, label?}, current: {value, label?}, can_keep_lost}`. `name` is the row's title; `label` names the rows a reference or tag list points at. Only the latest loss of each field is listed, and a conflict whose row is gone or already holds the lost value is left out. `keep: "lost"` pushes the lost value again as an op stamped with the server clock (`op_id` `conflict:<id>:<ms>`): it goes through the same checks as a device write, wins the merge and reaches every device by pull. It is offered for tasks, projects, areas, goals, tags, notes, inbox items and links (`can_keep_lost`); habit rows can only be dismissed, as on Android. `keep: "current"` changes nothing but the conflict list. The page also counts the writes the browser queued offline (`public/sw.js` queue); a device's own pending writes are known only to that device.
 
+Android (Réglages › Synchronisation) reads the same `GET /api/v1/sync/status` while online: the devices with their last sync, then the server conflicts (lost by any device) followed by the ones only the phone holds (offline, or not read yet). One row per field (`entity|uid|field`): when the phone lost the same field, the server row is shown and settling it (`keep: lost|current`, habits: "Compris" only) also drops the phone's copy. Logic: `android/tasks/.../model/ServerSyncStatus.kt` (`SyncConflictMerge`), `syncstatus/SyncStatusClient.kt`, `ui/settings/SyncSettingsSection.kt`.
+
 A pushed op:
 
 ```json

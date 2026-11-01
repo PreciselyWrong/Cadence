@@ -8,6 +8,8 @@ import ch.nicolab.cadence.tasks.data.createReview
 import ch.nicolab.cadence.tasks.data.createServerConnection
 import ch.nicolab.cadence.tasks.data.createTodoMd
 import ch.nicolab.cadence.tasks.todomd.TodoMdClient
+import ch.nicolab.cadence.tasks.data.createSyncStatus
+import ch.nicolab.cadence.tasks.syncstatus.SyncStatusClient
 import ch.nicolab.cadence.tasks.review.ReviewRepository
 import ch.nicolab.cadence.tasks.links.LinkPreviews
 
@@ -34,6 +36,9 @@ object TasksGraph {
 
     /** État des dépôts git des projets TODO.md, servi par le serveur (en ligne seulement). */
     fun todoMd(context: Context): TodoMdClient = createTodoMd(context.applicationContext)
+
+    /** Appareils et conflits vus du serveur (en ligne seulement). */
+    fun syncStatus(context: Context): SyncStatusClient = createSyncStatus(context.applicationContext)
 
     fun connection(context: Context): ServerConnection =
         connection ?: synchronized(this) {

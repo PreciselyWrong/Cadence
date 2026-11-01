@@ -250,3 +250,8 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Décision** : une ligne de pastilles de statut (« Gardés », « À tester », « Plus tard », un toucher pour choisir, à nouveau pour lâcher) et une ligne d'étiquettes portées par au moins un lien. « Tous » remet le type, le statut et l'étiquette à zéro.
 - **Web** : la page Liens filtre déjà par statut et étiquette, dans deux listes déroulantes ; même filtre, autre contrôle.
 
+### 2026-11-01 — Synchronisation : appareils et conflits du serveur
+
+- **Problème** : Réglages › Synchronisation ne montrait que les conflits perdus par le téléphone ; ni les appareils, ni les pertes des autres appareils (que le web montrait déjà).
+- **Décision** : en ligne, la section lit `GET /api/v1/sync/status`. « Appareils » : nom · « Synchronisé il y a 2 h ». « Conflits » : d'abord ceux du serveur (« Écartée : … », « Gardée : … », « Garder cette valeur » / « Garder l'autre », « Compris » seul pour une habitude), réglés par `POST /api/v1/sync/conflicts/:id/resolve` ; puis ceux que seul le téléphone connaît (« Ce téléphone » / « Serveur »). Un même champ (`entité|uid|champ`) ne donne qu'une ligne, celle du serveur, et la régler efface aussi la copie du téléphone. Hors ligne : la liste du téléphone seule.
+- **Web** : rien à reprendre (la page web fait déjà de même). Reste : rien d'essayé sur le téléphone.

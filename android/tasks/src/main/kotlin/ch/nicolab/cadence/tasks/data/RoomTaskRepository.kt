@@ -7,6 +7,7 @@ import ch.nicolab.cadence.tasks.TaskRepository
 import ch.nicolab.cadence.tasks.model.AreaItem
 import ch.nicolab.cadence.tasks.model.Delivery
 import ch.nicolab.cadence.tasks.model.RefusedItem
+import ch.nicolab.cadence.tasks.model.SyncConflictMerge
 import ch.nicolab.cadence.tasks.model.SyncConflictItem
 import ch.nicolab.cadence.tasks.model.SyncConflictText
 import ch.nicolab.cadence.tasks.model.GoalChange
@@ -240,6 +241,7 @@ internal class RoomTaskRepository(
                 serverText = row.serverText,
                 atMs = row.atMs,
                 canKeepLocal = row.entity in SyncConflictText.REAPPLICABLE,
+                key = SyncConflictMerge.key(row.entity, row.uid, row.field),
             )
         }
     }

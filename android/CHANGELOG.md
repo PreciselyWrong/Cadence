@@ -1,5 +1,8 @@
 ## [1.7.0] — à publier
 
+### Nouveautés
+- Réglages › Synchronisation : la liste des appareils et leur dernière synchro, et les conflits gardés par le serveur (perdus par n'importe quel appareil) avec les deux valeurs, réglés sur le serveur ; un champ perdu aussi par le téléphone ne fait qu'une ligne. Comme la page du web.
+
 ### Corrections
 - Une tâche placée à une heure dans le plan du jour (web ou téléphone) sonne à cette heure, même sans heure d'échéance, avec l'avance des tâches à heure fixe ; le plan est relu après chaque synchro, un placement déplacé ou retiré déplace ou retire l'alarme.
 

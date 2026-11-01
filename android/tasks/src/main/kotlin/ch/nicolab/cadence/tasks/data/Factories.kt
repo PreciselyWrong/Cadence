@@ -7,6 +7,7 @@ import ch.nicolab.cadence.tasks.TaskRepository
 import ch.nicolab.cadence.tasks.review.ReviewCache
 import ch.nicolab.cadence.tasks.review.ReviewRepository
 import ch.nicolab.cadence.tasks.todomd.TodoMdClient
+import ch.nicolab.cadence.tasks.syncstatus.SyncStatusClient
 import ch.nicolab.cadence.tasks.reminder.PlanSlotsStore
 import ch.nicolab.cadence.tasks.reminder.refreshPlanSlots
 import java.io.File
@@ -35,6 +36,8 @@ internal fun createServerConnection(context: Context): ServerConnection = TasksR
 internal fun createReview(context: Context): ReviewRepository = TasksRuntime.get(context).review
 
 internal fun createTodoMd(context: Context): TodoMdClient = TasksRuntime.get(context).todoMd
+
+internal fun createSyncStatus(context: Context): SyncStatusClient = TasksRuntime.get(context).syncStatus
 
 /** Dernières listes de revue lues, pour la lecture hors ligne ; effacées à la déconnexion. */
 internal fun reviewCacheDir(context: Context): File = File(context.cacheDir, "review")
@@ -94,6 +97,7 @@ internal class TasksRuntime private constructor(context: Context) {
         habitPending = habitPending,
     )
     val todoMd = TodoMdClient(api::call)
+    val syncStatus = SyncStatusClient(api::call)
 
     val review = ReviewRepository(
         api::call,

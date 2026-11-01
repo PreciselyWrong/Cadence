@@ -96,6 +96,12 @@
     <string name="tasks_sync_keep_local">Garder ce téléphone</string>
     <string name="tasks_sync_keep_server">Garder le serveur</string>
     <string name="tasks_sync_dismiss">Compris</string>
+    <string name="tasks_sync_devices_title">Appareils</string>
+    <string name="tasks_sync_device_seen">Synchronisé %1$s</string>
+    <string name="tasks_sync_conflict_lost">Écartée : %1$s</string>
+    <string name="tasks_sync_conflict_kept">Gardée : %1$s</string>
+    <string name="tasks_sync_keep_lost">Garder cette valeur</string>
+    <string name="tasks_sync_keep_current">Garder l\'autre</string>
     <string name="tasks_sync_refused_title">Refusées par le serveur</string>
     <string name="tasks_sync_refused_clear">Effacer la liste</string>
     <string name="tasks_sync_offline_queued">Hors ligne : envoyé dès le retour du réseau</string>

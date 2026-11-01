@@ -26,6 +26,8 @@ data class SyncConflictItem(
     val serverText: String?,
     val atMs: Long,
     val canKeepLocal: Boolean,
+    /** `entité|uid|champ` ([SyncConflictMerge.key]) : rapproche la ligne d'un conflit lu sur le serveur. */
+    val key: String = "",
 )
 
 /** Opération refusée par le serveur : la ligne, l'entité et la raison donnée. */
