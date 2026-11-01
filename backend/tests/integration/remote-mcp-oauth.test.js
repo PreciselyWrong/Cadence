@@ -3,7 +3,8 @@
 const crypto = require('crypto');
 const request = require('supertest');
 const app = require('../../app');
-const { ApiToken } = require('../../models');
+const { ApiToken, Role } = require('../../models');
+const mfaService = require('../../modules/mfa/service');
 const {
     createTestUser,
     enrollMfa,
@@ -17,6 +18,7 @@ const {
 
 const BASE = 'https://cadence.example.test';
 const CALLBACK = 'https://claude.ai/api/mcp/auth_callback';
+const MFA_CODE = '246810';
 
 // jest.replaceProperty restores automatically between tests (restoreMocks).
 const withEnv = (vars) =>
@@ -71,7 +73,27 @@ describe('Remote MCP OAuth authorization server', () => {
             email: `remote-mcp-${Date.now()}@example.com`,
             email_verified: true,
         });
+        await Role.update({ is_admin: true }, { where: { user_id: user.id } });
+        await enrollMfa(user);
+        jest.spyOn(mfaService, 'verify').mockImplementation(
+            async (userId, { code }) => {
+                if (code !== MFA_CODE) throw new Error('Invalid code');
+            }
+        );
     });
+
+    const consent = (client, owner, extra = {}) =>
+        request(app)
+            .post('/oauth/authorize')
+            .type('form')
+            .send({
+                ...authorizeParams(client, newVerifier()),
+                email: owner.email,
+                password: 'password123',
+                mfa_code: MFA_CODE,
+                decision: 'allow',
+                ...extra,
+            });
 
     async function obtainCode({ verifier, clientId } = {}) {
         const client = clientId || (await registerClient()).body.client_id;
@@ -82,6 +104,7 @@ describe('Remote MCP OAuth authorization server', () => {
                 ...authorizeParams(client, verifier),
                 email: user.email,
                 password: 'password123',
+                mfa_code: MFA_CODE,
                 decision: 'allow',
             });
         expect(res.status).toBe(302);
@@ -345,20 +368,73 @@ describe('Remote MCP OAuth authorization server', () => {
             expect(res.headers.location).toBeUndefined();
         });
 
-        it('requires the two-factor code when two-factor sign-in is on', async () => {
-            await enrollMfa(user);
+        it('requires the two-factor code', async () => {
             const client = (await registerClient()).body.client_id;
-            const res = await request(app)
-                .post('/oauth/authorize')
-                .type('form')
-                .send({
-                    ...authorizeParams(client, newVerifier()),
-                    email: user.email,
-                    password: 'password123',
-                    decision: 'allow',
-                });
+            for (const mfa_code of ['', '000000']) {
+                const res = await consent(client, user, { mfa_code });
+                expect(res.status).toBe(401);
+                expect(res.headers.location).toBeUndefined();
+            }
+        });
+
+        it('refuses an account without two-factor sign-in', async () => {
+            const warnSpy = jest.spyOn(logger, 'warn');
+            const owner = await createTestUser({
+                email: `no-mfa-${Date.now()}@example.com`,
+                email_verified: true,
+            });
+            await Role.update(
+                { is_admin: true },
+                { where: { user_id: owner.id } }
+            );
+            const client = (await registerClient()).body.client_id;
+            const res = await consent(client, owner);
             expect(res.status).toBe(401);
             expect(res.headers.location).toBeUndefined();
+            expect(res.text).toContain('Turn on two-factor sign-in');
+            const refused = warnSpy.mock.calls.find(
+                ([fields]) => fields?.event === 'oauth.authorize_refused'
+            );
+            expect(refused[0]).toMatchObject({
+                reason: 'mfa_required',
+                userId: owner.id,
+            });
+        });
+
+        it('only lets admins consent when no email allowlist is set', async () => {
+            const member = await createTestUser({
+                email: `member-${Date.now()}@example.com`,
+                email_verified: true,
+            });
+            await Role.update(
+                { is_admin: false },
+                { where: { user_id: member.id } }
+            );
+            await enrollMfa(member);
+            const client = (await registerClient()).body.client_id;
+            const res = await consent(client, member);
+            expect(res.status).toBe(403);
+            expect(res.headers.location).toBeUndefined();
+        });
+
+        it('lets only the emails in TUDUDI_MCP_OAUTH_ALLOWED_EMAILS consent', async () => {
+            const member = await createTestUser({
+                email: `Member-${Date.now()}@example.com`,
+                email_verified: true,
+            });
+            await Role.update(
+                { is_admin: false },
+                { where: { user_id: member.id } }
+            );
+            await enrollMfa(member);
+            withEnv({
+                TUDUDI_MCP_OAUTH_ALLOWED_EMAILS: ` other@example.com, ${member.email.toUpperCase()} `,
+            });
+
+            const client = (await registerClient()).body.client_id;
+            expect((await consent(client, member)).status).toBe(302);
+            // The admin is not on the list, so it is refused too.
+            expect((await consent(client, user)).status).toBe(403);
         });
 
         it('redirects with access_denied when the owner refuses', async () => {

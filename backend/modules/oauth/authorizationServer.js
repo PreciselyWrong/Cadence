@@ -20,6 +20,17 @@ const { renderConsent, renderError } = require('./consentPage');
 // set. See docs/38-remote-mcp.md.
 
 const SCOPE = 'mcp';
+
+// What the consent page says for each refusal; anything else is the
+// generic sign-in failure, which tells nothing about which part was wrong.
+const REFUSAL_MESSAGES = {
+    password_auth_disabled: 'Password sign-in is turned off on this server.',
+    mfa_required:
+        'Turn on two-factor sign-in in Cadence (Profile › Security) before connecting an assistant.',
+    not_allowed: 'This account may not connect assistants to Cadence.',
+};
+const SIGN_IN_FAILED =
+    'Sign-in failed. Check your email, password and two-factor code.';
 const CHALLENGE_PATTERN = /^[A-Za-z0-9_-]{43}$/;
 const VERIFIER_PATTERN = /^[A-Za-z0-9._~-]{43,128}$/;
 
@@ -200,11 +211,8 @@ async function submitAuthorize(req, res, next) {
             return renderConsent(res, {
                 client,
                 params,
-                status: 401,
-                error:
-                    owner.reason === 'password_auth_disabled'
-                        ? 'Password sign-in is turned off on this server.'
-                        : 'Sign-in failed. Check your email, password and two-factor code.',
+                status: owner.reason === 'not_allowed' ? 403 : 401,
+                error: REFUSAL_MESSAGES[owner.reason] || SIGN_IN_FAILED,
             });
         }
 

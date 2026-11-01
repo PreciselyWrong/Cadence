@@ -45,6 +45,17 @@ function allowedRedirectUris() {
         .filter(Boolean);
 }
 
+// The accounts allowed to grant a connector, as lowercase emails, or null
+// when TUDUDI_MCP_OAUTH_ALLOWED_EMAILS is unset: then only admins may.
+function allowedConsentEmails() {
+    const raw = process.env.TUDUDI_MCP_OAUTH_ALLOWED_EMAILS;
+    if (raw === undefined || raw.trim() === '') return null;
+    return raw
+        .split(',')
+        .map((email) => email.trim().toLowerCase())
+        .filter(Boolean);
+}
+
 function tokenLifetimeSeconds() {
     const days = parseInt(process.env.TUDUDI_MCP_OAUTH_TOKEN_DAYS, 10);
     const valid = Number.isInteger(days) && days >= 1 && days <= MAX_TOKEN_DAYS;
@@ -57,5 +68,6 @@ module.exports = {
     isEnabled,
     resourceUrl,
     allowedRedirectUris,
+    allowedConsentEmails,
     tokenLifetimeSeconds,
 };

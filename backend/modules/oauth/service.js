@@ -4,15 +4,24 @@ const { User, ApiToken } = require('../../models');
 const { isPasswordAuthEnabled } = require('../../config/authConfig');
 const mfaService = require('../mfa/service');
 const { createApiToken, revokeApiToken } = require('../users/apiTokenService');
-const { tokenLifetimeSeconds } = require('./config');
+const { isAdmin } = require('../../services/rolesService');
+const { tokenLifetimeSeconds, allowedConsentEmails } = require('./config');
 
 // bcrypt of a random string, never a real password.
 const TIMING_DUMMY_HASH =
     '$2b$12$S7EHH/j.ogiwRJnVUy21FO6KKB0TmCnemad4iGJOnBeqGcUjoMY4u';
 
-// The consent page asks for the account's own password and, when two-factor
-// sign-in is on, a current code: a grant is never given on the strength of
-// an edge login alone. Recovery codes are not accepted here.
+async function mayGrant(user) {
+    const allowed = allowedConsentEmails();
+    if (allowed) return allowed.includes(String(user.email).toLowerCase());
+    return isAdmin(user.id);
+}
+
+// The consent page asks for the account's own password and a current
+// two-factor code: a grant is never given on the strength of an edge login
+// alone, and an account without two-factor sign-in cannot grant one.
+// Recovery codes are not accepted here. Only the accounts in
+// TUDUDI_MCP_OAUTH_ALLOWED_EMAILS, or admins when it is unset, may consent.
 async function verifyOwner({ email, password, mfaCode }, req) {
     if (!isPasswordAuthEnabled()) {
         return { ok: false, reason: 'password_auth_disabled' };
@@ -42,17 +51,22 @@ async function verifyOwner({ email, password, mfaCode }, req) {
         return { ok: false, reason: 'email_not_verified', userId: user.id };
     }
 
-    if (await mfaService.isEnabled(user.id)) {
-        if (typeof mfaCode !== 'string' || !mfaCode.trim()) {
-            return { ok: false, reason: 'mfa_required', userId: user.id };
-        }
-        try {
-            await mfaService.verify(user.id, { code: mfaCode.trim() }, req, {
-                allowRecovery: false,
-            });
-        } catch {
-            return { ok: false, reason: 'mfa_invalid', userId: user.id };
-        }
+    if (!(await mayGrant(user))) {
+        return { ok: false, reason: 'not_allowed', userId: user.id };
+    }
+
+    if (!(await mfaService.isEnabled(user.id))) {
+        return { ok: false, reason: 'mfa_required', userId: user.id };
+    }
+    if (typeof mfaCode !== 'string' || !mfaCode.trim()) {
+        return { ok: false, reason: 'mfa_code_missing', userId: user.id };
+    }
+    try {
+        await mfaService.verify(user.id, { code: mfaCode.trim() }, req, {
+            allowRecovery: false,
+        });
+    } catch {
+        return { ok: false, reason: 'mfa_invalid', userId: user.id };
     }
 
     return { ok: true, user };
@@ -86,4 +100,4 @@ async function issueMcpToken({ userId, clientName }) {
     return { rawToken, tokenId: tokenRecord.id, expiresAt, lifetime };
 }
 
-module.exports = { verifyOwner, issueMcpToken };
+module.exports = { verifyOwner, mayGrant, issueMcpToken };
