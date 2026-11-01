@@ -92,6 +92,10 @@ describe('FocusChip', () => {
     it('reads "Focus" without a scope and names the scope when one is set', () => {
         const { rerender } = render(<FocusChip />);
         expect(screen.getByTestId('focus-chip')).toHaveTextContent('Focus');
+        // Without a scope the chip is an icon: the word stays for screen readers only
+        expect(screen.getByTestId('focus-chip-label').className).toMatch(
+            /sr-only/
+        );
         expect(screen.queryByTestId('focus-chip-clear')).toBeNull();
 
         act(() => {
@@ -104,6 +108,9 @@ describe('FocusChip', () => {
         rerender(<FocusChip />);
         expect(screen.getByTestId('focus-chip')).toHaveTextContent(
             'Work › Launch · #urgent'
+        );
+        expect(screen.getByTestId('focus-chip-label').className).not.toMatch(
+            /sr-only/
         );
         expect(screen.getByTestId('focus-chip-clear')).toBeInTheDocument();
     });

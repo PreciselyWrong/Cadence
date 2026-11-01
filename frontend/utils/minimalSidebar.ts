@@ -78,13 +78,20 @@ const DEFAULT_RAIL_PLACE: Record<RailId, RailPlace> = {
 };
 
 export const DEFAULT_MINIMAL_SIDEBAR: MinimalSidebarSettings = {
+    // Calm by default: counts only where something waits for the user
+    // (Today, Inbox); the rest can be turned on in Profile > Sidebar.
     smartLists: SMART_LIST_IDS.map((key) => ({
         key,
         visible: true,
-        showCount: true,
+        showCount: key === 'today' || key === 'inbox',
     })),
     rail: RAIL_IDS.map((key) => ({ key, place: DEFAULT_RAIL_PLACE[key] })),
-    sectionBadges: { favorites: true, projects: true, areas: true, tags: true },
+    sectionBadges: {
+        favorites: false,
+        projects: false,
+        areas: false,
+        tags: false,
+    },
 };
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -146,14 +153,14 @@ export function resolveMinimalSidebar(saved: unknown): MinimalSidebarSettings {
                     : fallback.place,
             })
         ),
-        sectionBadges: {
-            favorites:
-                typeof badges.favorites === 'boolean' ? badges.favorites : true,
-            projects:
-                typeof badges.projects === 'boolean' ? badges.projects : true,
-            areas: typeof badges.areas === 'boolean' ? badges.areas : true,
-            tags: typeof badges.tags === 'boolean' ? badges.tags : true,
-        },
+        sectionBadges: Object.fromEntries(
+            SECTION_BADGE_IDS.map((id) => [
+                id,
+                typeof badges[id] === 'boolean'
+                    ? (badges[id] as boolean)
+                    : DEFAULT_MINIMAL_SIDEBAR.sectionBadges[id],
+            ])
+        ) as MinimalSidebarSettings['sectionBadges'],
     };
 }
 

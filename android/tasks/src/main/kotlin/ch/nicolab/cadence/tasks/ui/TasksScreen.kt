@@ -93,9 +93,7 @@ fun TasksScreen(
     val moment by viewModel.moment.collectAsStateWithLifecycle()
     val todayState by viewModel.today.collectAsStateWithLifecycle()
     val todayEvents by viewModel.todayEvents.collectAsStateWithLifecycle()
-    val upcoming by viewModel.upcoming.collectAsStateWithLifecycle()
     val projects by viewModel.projects.collectAsStateWithLifecycle()
-    val tags by viewModel.tags.collectAsStateWithLifecycle()
     val areas by viewModel.areas.collectAsStateWithLifecycle()
     val areaFilter by viewModel.areaFilter.collectAsStateWithLifecycle()
 
@@ -120,9 +118,9 @@ fun TasksScreen(
     val subtitle = when {
         tab == TasksTab.UPCOMING -> stringResource(R.string.tasks_upcoming_subtitle)
         tab == TasksTab.PROJECTS -> projectCounterLine(projects)
-        tab == TasksTab.TAGS -> pluralStringResource(R.plurals.tasks_tags_subtitle, tags.size, tags.size)
+        tab == TasksTab.TAGS -> null
         tab == TasksTab.GOALS -> stringResource(R.string.goals_entry_detail)
-        tab == TasksTab.NOTES -> pluralStringResource(R.plurals.tasks_notes_subtitle, notes.size, notes.size)
+        tab == TasksTab.NOTES -> null
         tab == TasksTab.DONE -> stringResource(R.string.tasks_done_subtitle)
         eventCount > 0 -> "$dateLine · ${pluralStringResource(R.plurals.tasks_events_count, eventCount, eventCount)}"
         else -> dateLine
@@ -168,14 +166,12 @@ fun TasksScreen(
                                 stringResource(TasksTab.TODAY.label),
                                 overdueCount + todayState.today.size + eventCount,
                             ),
-                            TabPill(
-                                stringResource(TasksTab.UPCOMING.label),
-                                upcoming.values.sumOf { it.size },
-                            ),
+                            // Seul « Aujourd'hui » garde un compte (comme la barre latérale du web : Aujourd'hui et Inbox).
+                            TabPill(stringResource(TasksTab.UPCOMING.label)),
                             TabPill(stringResource(TasksTab.PROJECTS.label)),
                             TabPill(stringResource(TasksTab.GOALS.label)),
                             TabPill(stringResource(TasksTab.TAGS.label)),
-                            TabPill(stringResource(TasksTab.NOTES.label), notes.size),
+                            TabPill(stringResource(TasksTab.NOTES.label)),
                             TabPill(stringResource(TasksTab.DONE.label)),
                         ),
                         selected = tab.ordinal,

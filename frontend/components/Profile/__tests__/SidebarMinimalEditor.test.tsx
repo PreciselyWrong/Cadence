@@ -92,7 +92,7 @@ describe('SidebarMinimalEditor', () => {
         );
     });
 
-    it('turns a section count badge off', () => {
+    it('turns a section count badge on (off by default)', () => {
         renderEditor();
 
         fireEvent.click(screen.getByLabelText('Show count for Projects'));
@@ -100,7 +100,7 @@ describe('SidebarMinimalEditor', () => {
         const [patch] = saveMock.mock.calls[0];
         expect(patch.sectionBadges).toEqual({
             ...DEFAULT_MINIMAL_SIDEBAR.sectionBadges,
-            projects: false,
+            projects: true,
         });
     });
 

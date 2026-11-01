@@ -9,7 +9,7 @@ The sidebar has two looks, chosen with `ui_settings.appearance.density`. This pa
 
 ## Smart lists
 
-Four rows at the top of the panel, each with its open-task count on the right. Each row can be hidden, moved up or down, or have its count switched off (see [Customising](#customising)):
+Four rows at the top of the panel. By default only Today and Inbox show a count on the right (what waits for you); Tomorrow and Next 7 days stay quiet until their count is switched on. Each row can be hidden, moved up or down, or have its count switched off (see [Customising](#customising)):
 
 | Row | Opens | Count |
 |---|---|---|
@@ -28,7 +28,7 @@ Profile → Sidebar has a **Minimal sidebar** section (it shows for Minimal only
 
 - **Smart lists**: show or hide each row, switch its count badge on or off, and move it up or down. Hidden rows are not fetched for counts unless another visible row needs one.
 - **Icon rail and More**: each item is on the icon rail, in the More menu, or hidden. Within each place, the order is the order in the editor.
-- **Count badges**: Projects, Areas and Tags show their item count in the header by default; switch it off per section. (Favorites has no count badge.)
+- **Count badges**: Projects, Areas and Tags can show their item count in the header; off by default, switch it on per section. (Favorites has no count badge.)
 - **Reset to default** puts every smart list, rail item and badge back to the defaults.
 
 The entry **Customize sidebar** sits once, in the More menu of the icon rail (Escape closes that menu); it opens that Profile section.

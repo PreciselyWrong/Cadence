@@ -118,10 +118,6 @@
     <string name="tasks_project_status_cancelled_hint">Décidé de ne pas poursuivre</string>
     <string name="tasks_project_status_archived_hint">Consultable, hors de vue</string>
     <string name="tasks_project_status_change">Changer le statut</string>
-    <plurals name="tasks_tags_subtitle">
-        <item quantity="one">%d étiquette</item>
-        <item quantity="other">%d étiquettes</item>
-    </plurals>
     <string name="tasks_done_subtitle">Les plus récentes d\'abord</string>
     <string name="tasks_strip_day_empty">Rien de prévu ce jour-là.</string>
     <string name="tasks_strip_day_description">%1$s : %2$d tâches</string>

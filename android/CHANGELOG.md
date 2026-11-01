@@ -2,6 +2,7 @@
 
 ### Épure
 - Aujourd'hui : la jauge « planifiées / libres » n'apparaît qu'une fois une tâche planifiée ; la carte du matin ne compte plus le retard ; les en-têtes « Aujourd'hui » et « Demain » n'ont plus de compteur (il reste sur l'onglet).
+- Tâches : les onglets « À venir » et « Notes » n'affichent plus de compteur, les sous-titres « N étiquettes » et « N notes » disparaissent ; seul « Aujourd'hui » garde son compte.
 
 ### Nouveautés
 - Objectifs : un seul écran, sans onglets imbriqués. Une recherche (titre ou note, sans accents), les objectifs actifs en cartes (pourcentage, barre fine, prochain pas avec sa case, résultats clés en lignes « 3/10 »), les objectifs en pause ou atteints repliés, puis la liste d'envies en trois groupes repliables Avoir / Être / Faire et les envies réalisées à part.

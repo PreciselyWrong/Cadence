@@ -12,7 +12,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { fabTarget } from './Shared/MobileBottomBar';
-import { shortcutKeyCaps, shortcutTooltip } from '../utils/shortcutRegistry';
+import { shortcutTooltip } from '../utils/shortcutRegistry';
 import PomodoroTimer from './Shared/PomodoroTimer';
 import UniversalSearch from './UniversalSearch/UniversalSearch';
 import SidebarPanelIcon from './Sidebar/SidebarPanelIcon';
@@ -278,9 +278,6 @@ const Navbar: React.FC<NavbarProps> = ({
                         <span className="hidden md:inline-block ml-1.5 text-sm font-semibold">
                             {t('capture.button', 'Capture')}
                         </span>
-                        <kbd className="hidden lg:inline-block ml-2 px-1.5 rounded bg-blue-600/60 text-[12px] font-mono text-blue-100">
-                            {shortcutKeyCaps('capture')[0]}
-                        </kbd>
                     </button>
                     {pomodoroEnabled && <PomodoroTimer />}
 

@@ -66,7 +66,13 @@ const FocusChip: React.FC = () => {
                         <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-blue-500 sm:hidden" />
                     )}
                 </span>
-                <span className="hidden truncate sm:inline">{label}</span>
+                {/* Off, the chip is a quiet icon; the word comes with a scope. */}
+                <span
+                    className={active ? 'hidden truncate sm:inline' : 'sr-only'}
+                    data-testid="focus-chip-label"
+                >
+                    {label}
+                </span>
             </button>
             {active && (
                 <button

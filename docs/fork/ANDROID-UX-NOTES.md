@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-01 — Passe d'épure : onglets de Tâches (reprise du web)
+
+- **Problème** : les pastilles « À venir 14 » et « Notes 23 » et les sous-titres « 9 étiquettes », « 23 notes » répétaient des comptes sans action attendue.
+- **Décision** : seul l'onglet « Aujourd'hui » garde un compte ; plus de sous-titre de comptage sur Étiquettes et Notes (Projets garde « N actifs · N dans le stash »).
+- **Web** : même étape (barre latérale : comptes sur Aujourd'hui et Boîte seulement). Reste : rien d'essayé sur le téléphone.
+
 ### 2026-11-01 — Passe d'épure : Aujourd'hui (reprise du web)
 
 - **Problème** : la jauge « 0 min planifiées » s'affichait sur un jour vide, la carte du matin comptait le retard (« 3 à replanifier »), les en-têtes « Aujourd'hui » et « Demain » répétaient un compteur déjà porté par l'onglet.

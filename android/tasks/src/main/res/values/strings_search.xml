@@ -93,10 +93,6 @@
         <item quantity="one">%d idée à trier</item>
         <item quantity="other">%d idées à trier</item>
     </plurals>
-    <plurals name="tasks_notes_subtitle">
-        <item quantity="one">%d note</item>
-        <item quantity="other">%d notes</item>
-    </plurals>
     <string name="tasks_notes_empty">Aucune note. Écrivez la première, elle se synchronise avec le web.</string>
     <string name="tasks_note_untitled">Sans titre</string>
     <string name="tasks_note_empty_content">Touchez pour écrire.</string>

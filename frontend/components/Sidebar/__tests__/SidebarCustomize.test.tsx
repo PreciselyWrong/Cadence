@@ -178,7 +178,10 @@ describe('Minimal sidebar customization', () => {
 
     it('hiding a count hides the badge but keeps the row', async () => {
         setUp('minimal', {
-            smartLists: [{ key: 'today', visible: true, showCount: false }],
+            smartLists: [
+                { key: 'today', visible: true, showCount: false },
+                { key: 'tomorrow', visible: true, showCount: true },
+            ],
         });
 
         render(

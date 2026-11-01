@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-01 — Passe d'épure : navigation
+
+- **Problème** : la barre latérale affichait sept compteurs permanents (Aujourd'hui, Demain, 7 prochains jours, Boîte, Projets 6, Zones 1, Étiquettes 9) ; la barre du haut gardait le mot « Focus » même sans focus et une touche « C » collée au bouton Capturer.
+- **Décision** : par défaut, seuls Aujourd'hui et la Boîte gardent un compte (ce qui attend une action) ; Demain, 7 prochains jours et les en-têtes de section n'en ont plus (Profil › Barre latérale pour les rallumer ; un choix déjà enregistré est gardé). « Focus » sans portée est une icône (le mot reste pour les lecteurs d'écran, il apparaît dès qu'une portée est choisie) ; le raccourci de Capturer reste dans l'info-bulle.
+- **Android** : repris dans la même étape : l'onglet « À venir » et l'onglet « Notes » perdent leur compteur (seul « Aujourd'hui » garde le sien), les sous-titres « N étiquettes » et « N notes » sont retirés. Le sous-titre des Projets (« N actifs · N dans le stash ») reste, comme sur le web.
+
 ### 2026-11-01 — Passe d'épure : Aujourd'hui
 
 - **Problème** : un jour vide s'ouvrait sur la jauge « 0 min planifiées sur 7 h libres » et sur le grand guide « Démarrer la journée, étape 1 sur 3 » (même avec « Rien ne reste d'hier ») ; chaque ligne répétait « Échéance aujourd'hui » sous la page Aujourd'hui et « 30 min », la durée par défaut, sur toutes les tâches ; le « + » d'ajout au plan restait visible sur chaque ligne.
