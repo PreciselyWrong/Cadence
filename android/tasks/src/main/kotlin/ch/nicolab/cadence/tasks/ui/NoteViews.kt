@@ -42,6 +42,8 @@ import androidx.compose.material.icons.outlined.FormatListBulleted
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.outlined.StickyNote2
 import androidx.compose.material.icons.outlined.Title
+import androidx.compose.material.icons.outlined.ContentCopy
+import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -66,6 +68,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -92,6 +95,7 @@ import ch.nicolab.cadence.tasks.links.LinkExtractor
 import ch.nicolab.cadence.tasks.links.LinkPreviews
 import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.NoteItem
+import ch.nicolab.cadence.tasks.model.ShareText
 import ch.nicolab.cadence.tasks.notes.Markdown
 import ch.nicolab.cadence.tasks.notes.MarkdownCheckbox
 import ch.nicolab.cadence.tasks.notes.MarkdownEditing
@@ -198,6 +202,7 @@ internal fun NoteScreen(viewModel: TasksViewModel, noteUid: String, isNew: Boole
 @Composable
 private fun NoteEditor(viewModel: TasksViewModel, uid: String, note: NoteItem?, onBack: () -> Unit) {
     val palette = cadence
+    val context = LocalContext.current
     val focus = LocalFocusManager.current
     val session = remember(uid) { viewModel.noteSession(uid, NoteFields(note?.title.orEmpty(), note?.content.orEmpty())) }
     var title by remember(uid) { mutableStateOf(TextFieldValue(session.current.title)) }
@@ -244,6 +249,18 @@ private fun NoteEditor(viewModel: TasksViewModel, uid: String, note: NoteItem?, 
                     contentDescription = stringResource(if (note.pinned) R.string.tasks_note_unpin else R.string.tasks_note_pin),
                     style = if (note.pinned) HeaderButtonStyle.Filled else HeaderButtonStyle.Plain,
                     onClick = { viewModel.saveNoteAttributes(uid, NoteChange(pinned = !note.pinned)) },
+                )
+                RoundHeaderButton(
+                    icon = Icons.Outlined.Share,
+                    contentDescription = stringResource(R.string.tasks_action_share),
+                    style = HeaderButtonStyle.Plain,
+                    onClick = { context.shareText(ShareText.withNote(title.text, body.text), title.text.trim()) },
+                )
+                RoundHeaderButton(
+                    icon = Icons.Outlined.ContentCopy,
+                    contentDescription = stringResource(R.string.tasks_action_copy),
+                    style = HeaderButtonStyle.Plain,
+                    onClick = { context.copyText(title.text.trim(), ShareText.withNote(title.text, body.text)) },
                 )
                 RoundHeaderButton(
                     icon = Icons.Outlined.Tune,

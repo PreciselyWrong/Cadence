@@ -43,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -67,6 +68,7 @@ import ch.nicolab.cadence.tasks.model.LinkKind
 import ch.nicolab.cadence.tasks.model.LinkLists
 import ch.nicolab.cadence.tasks.model.LinkSource
 import ch.nicolab.cadence.tasks.model.LinkStatus
+import ch.nicolab.cadence.tasks.model.ShareText
 import ch.nicolab.cadence.tasks.model.TagItem
 import java.time.LocalDate
 import android.icu.text.CompactDecimalFormat
@@ -221,6 +223,7 @@ private fun LinkCard(
 ) {
     val palette = cadence
     val uriHandler = LocalUriHandler.current
+    val context = LocalContext.current
     Column(
         Modifier.fillMaxWidth().clip(Radius.Card).background(palette.card).padding(Space.lg),
         verticalArrangement = Arrangement.spacedBy(Space.sm),
@@ -250,6 +253,14 @@ private fun LinkCard(
         }
         if (link.source != null) {
             TextButton(onClick = onOpenSource) { Text(stringResource(R.string.links_go_to_source)) }
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+            TextButton(onClick = { context.shareText(ShareText.link(link.title, link.url), link.displayTitle) }) {
+                Text(stringResource(R.string.tasks_action_share))
+            }
+            TextButton(onClick = { context.copyText(link.displayTitle, ShareText.link(link.title, link.url)) }) {
+                Text(stringResource(R.string.tasks_action_copy))
+            }
         }
         LinkNoteLine(link.note, onEditNote)
         LinkTagLine(link, tags, onTags)

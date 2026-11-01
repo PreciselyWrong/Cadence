@@ -31,6 +31,7 @@ import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.HourglassEmpty
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.PushPin
+import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.outlined.Repeat
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Sell
@@ -61,6 +62,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ch.nicolab.cadence.designsystem.components.ActionRow
@@ -82,6 +84,7 @@ import ch.nicolab.cadence.tasks.model.ProjectChoices
 import ch.nicolab.cadence.tasks.model.EstimateFormat
 import ch.nicolab.cadence.tasks.model.NextAction
 import ch.nicolab.cadence.tasks.model.RepeatType
+import ch.nicolab.cadence.tasks.model.ShareText
 import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskPriority
@@ -130,6 +133,7 @@ internal fun TaskDetailSheet(
     val zone = moment.zone
     val today = moment.today
     val palette = cadence
+    val context = LocalContext.current
 
     var title by remember(current.uid) { mutableStateOf(current.name) }
     var note by remember(current.uid) { mutableStateOf(current.note.orEmpty()) }
@@ -380,6 +384,14 @@ internal fun TaskDetailSheet(
                         picker = null
                         onDismiss()
                     }
+                }
+                ActionRow(Icons.Outlined.Share, stringResource(R.string.tasks_action_share), palette.primary) {
+                    context.shareText(ShareText.withNote(current.name, current.note), current.name)
+                    picker = null
+                }
+                ActionRow(Icons.Outlined.ContentCopy, stringResource(R.string.tasks_action_copy), palette.primary) {
+                    context.copyText(current.name, ShareText.withNote(current.name, current.note))
+                    picker = null
                 }
                 ActionRow(Icons.Outlined.ContentCopy, stringResource(R.string.tasks_action_duplicate), palette.primary) {
                     viewModel.duplicate(current)
