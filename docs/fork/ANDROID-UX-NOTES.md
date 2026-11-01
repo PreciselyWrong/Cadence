@@ -88,6 +88,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Décision** : badge de priorité seulement s'il y en a une ; cibles de 48 dp (40 dp dans le widget) ; chaque case porte le nom de son élément, une sous-tâche faite est barrée ; les pastilles passent à la ligne.
 - **Web** : un badge n'apparaît que pour une valeur posée ; une case de sous-tâche a un libellé accessible.
 
+### 2026-11-01 — Rappels, partage, épingle, sous-tâches, copie
+
+- **Problème** : une notification de tâche ne proposait que « 10 min » et « 1 h » ; une tâche ne se partageait, ne s'épinglait ni ne se dupliquait ; une sous-tâche ne se renommait ni ne s'ouvrait ; le titre long de la fiche était coupé après deux lignes.
+- **Décision** : la notification propose « Fait », puis « À la fin » (échéance plus durée estimée, masqué si moins de 5 min restent ou sans estimation) ou « 10 min », puis « Demain » (même heure le lendemain) ; « 1 h » disparaît (trois actions au plus). Les fiches de tâche, les notes et les cartes de lien ont « Partager » et « Copier » (titre, puis note après une ligne vide ; un lien : titre et adresse). La fiche a « Épingler » / « Désépingler » (`pinned_at`), « Dupliquer » (contenu, dates, durée, projet, domaine, étiquettes ; la copie repart à faire, non épinglée, sans rappel ni parent). Toucher une sous-tâche ouvre « Renommer », « Ouvrir comme tâche » (fiche par-dessus) ou « Supprimer » avec « Annuler ». Un titre de plus de 60 caractères passe en corps plus petit et s'affiche en entier.
+- **Web** : vérifier que « À la fin » et « Demain » existent dans le rappel web (ou les noter dans `TODO.md`) ; le web doit dupliquer et partager avec les mêmes champs ; une sous-tâche doit pouvoir se renommer et s'ouvrir depuis sa ligne.
+
 ### 2026-11-01 — Échues sans compteur, filtre de domaines à partir de deux
 
 - **Problème** (QA sur émulateur) : l'en-tête de Tâches disait « Dim. 1 nov. · 41 en retard » et la section « En retard 41 » était rouge, comme les pastilles de date et le chiffre du Bilan ; la rangée « Tous · Bucket list » s'affichait avec un seul domaine ; « Déplacer vers un projet » proposait des projets terminés.
