@@ -2175,6 +2175,7 @@
     "done": "Končano"
   },
   "calendar": {
+    "meetingJoin": "Pridruži se",
     "location": {
       "copy": "Kopiraj naslov",
       "copied": "Naslov kopiran",

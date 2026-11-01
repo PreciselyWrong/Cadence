@@ -11,3 +11,26 @@ export const mapsSearchUrl = (address: string): string =>
 
 export const locationHref = (location: string): string =>
     isWebLocation(location) ? location.trim() : mapsSearchUrl(location);
+
+const URL_IN_TEXT = /https?:\/\/[^\s<>"']+/gi;
+const MEETING_HOST =
+    /^(meet\.google\.com|([a-z0-9-]+\.)?zoom\.us|teams\.microsoft\.com|teams\.live\.com|([a-z0-9-]+\.)?webex\.com)$/i;
+
+const meetingUrlIn = (text: string): string | null => {
+    for (const match of text.matchAll(URL_IN_TEXT)) {
+        try {
+            const url = new URL(match[0]);
+            if (MEETING_HOST.test(url.hostname)) return match[0];
+        } catch {
+            // Not a parseable URL: keep looking.
+        }
+    }
+    return null;
+};
+
+// The first Meet, Zoom, Teams or Webex link, looking at the location first.
+export const findMeetingLink = (
+    location: string | null | undefined,
+    description: string | null | undefined
+): string | null =>
+    meetingUrlIn(location ?? '') ?? meetingUrlIn(description ?? '');

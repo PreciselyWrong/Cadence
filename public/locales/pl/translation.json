@@ -2175,6 +2175,7 @@
     "done": "Zrobione"
   },
   "calendar": {
+    "meetingJoin": "Dołącz",
     "location": {
       "copy": "Kopiuj adres",
       "copied": "Adres skopiowano",

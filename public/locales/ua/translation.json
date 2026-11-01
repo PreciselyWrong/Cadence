@@ -1891,6 +1891,7 @@
     "noUpcomingOccurrences": "Немає найближчих повторів."
   },
   "calendar": {
+    "meetingJoin": "Приєднатися",
     "location": {
       "copy": "Копіювати адресу",
       "copied": "Адресу скопійовано",

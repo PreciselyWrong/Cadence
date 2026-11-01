@@ -12,7 +12,7 @@ import {
     GoogleEventInput,
 } from '../../utils/googleSyncService';
 import { useToast } from '../Shared/ToastContext';
-import { locationHref } from './eventLocation';
+import { findMeetingLink, locationHref } from './eventLocation';
 
 export interface GoogleEventDraft {
     // Set when editing an existing event.
@@ -78,6 +78,7 @@ const GoogleEventModal: React.FC<GoogleEventModalProps> = ({
     const [location, setLocation] = useState(draft.location || '');
     const [description, setDescription] = useState(draft.description || '');
     const [saving, setSaving] = useState(false);
+    const meetingLink = findMeetingLink(location, description);
 
     const copyLocation = async () => {
         try {
@@ -277,6 +278,16 @@ const GoogleEventModal: React.FC<GoogleEventModalProps> = ({
                             <ClipboardDocumentIcon className="h-4 w-4" />
                         </button>
                     </div>
+                )}
+                {meetingLink && (
+                    <a
+                        href={meetingLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex w-fit items-center rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+                    >
+                        {t('calendar.meetingJoin', 'Join')}
+                    </a>
                 )}
                 <textarea
                     value={description}

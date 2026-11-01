@@ -1731,6 +1731,7 @@
     "noUpcomingOccurrences": "Keine anstehenden Termine."
   },
   "calendar": {
+    "meetingJoin": "Beitreten",
     "location": {
       "copy": "Adresse kopieren",
       "copied": "Adresse kopiert",

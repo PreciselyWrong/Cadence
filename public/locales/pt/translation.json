@@ -2172,6 +2172,7 @@
     "done": "Concluído"
   },
   "calendar": {
+    "meetingJoin": "Participar",
     "location": {
       "copy": "Copiar endereço",
       "copied": "Endereço copiado",

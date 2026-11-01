@@ -223,3 +223,9 @@ Revue écran par écran (Aujourd'hui, Boîte, Tâches, Projets, page projet, Age
 - **Habitudes** — Problème : onglet « Archivées 0 ». Décision : un compteur à zéro n'est pas affiché. À reprendre sur Android : pas de badge « 0 ».
 - **Noms longs** — Problème : sur un sous-projet, le fil d'Ariane gardait le nom complet du parent et élargissait la page à 670 px sur un écran de 375 px ; un nom de tâche sans espace élargissait la page Insights. Décision : chaque élément du fil d'Ariane se tronque (nom complet en infobulle) ; les noms longs passent à la ligne. À reprendre sur Android : fil d'Ariane d'un sous-projet tronqué, jamais de défilement horizontal.
 - **Vérification** : aucun débordement horizontal de la page à 375, 768, 1280 et 1920 px sur 21 écrans (seule la rangée d'onglets de la Revue défile dans sa propre bande, voulu).
+
+### 2026-11-01 — Rejoindre une réunion depuis l'événement
+
+- **Problème** : un événement dont le lieu ou la description contient un lien Meet, Zoom, Teams ou Webex obligeait à copier le lien ou à le chercher dans le texte.
+- **Décision** : la fiche d'événement (modale Google) affiche un bouton « Rejoindre » sous le lieu dès qu'un lien de réunion est trouvé dans le lieu, puis dans la description. Détection pure dans `frontend/components/Calendar/eventLocation.ts` (`findMeetingLink`) : hôtes `meet.google.com`, `zoom.us`, `teams.microsoft.com`, `teams.live.com`, `webex.com`.
+- **Android** : à reprendre. Même détection (le lieu puis la description), bouton « Rejoindre » dans la fiche d'événement qui ouvre le lien dans le navigateur ou l'application de réunion. Reste : rien d'essayé sur le téléphone.

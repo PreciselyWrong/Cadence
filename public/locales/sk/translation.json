@@ -1,4 +1,7 @@
 {
+  "calendar": {
+    "meetingJoin": "Pripojiť sa"
+  },
   "links": {
     "tryTaskName": "Vyskúšať: {{title}}",
     "tryProject": "Projekt",

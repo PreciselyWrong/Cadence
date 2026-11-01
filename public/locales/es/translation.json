@@ -2133,6 +2133,7 @@
     "done": "Hecho"
   },
   "calendar": {
+    "meetingJoin": "Unirse",
     "location": {
       "copy": "Copiar dirección",
       "copied": "Dirección copiada",

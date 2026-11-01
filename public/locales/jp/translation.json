@@ -2100,6 +2100,7 @@
     "noUpcomingOccurrences": "今後の予定はありません。"
   },
   "calendar": {
+    "meetingJoin": "参加",
     "location": {
       "copy": "住所をコピー",
       "copied": "住所をコピーしました",

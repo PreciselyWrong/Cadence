@@ -2173,6 +2173,7 @@
     "done": "Fait"
   },
   "calendar": {
+    "meetingJoin": "Rejoindre",
     "location": {
       "copy": "Copier l'adresse",
       "copied": "Adresse copiée",

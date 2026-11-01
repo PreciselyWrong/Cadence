@@ -2169,6 +2169,7 @@
     "done": "Valmis"
   },
   "calendar": {
+    "meetingJoin": "Liity",
     "location": {
       "copy": "Kopioi osoite",
       "copied": "Osoite kopioitu",

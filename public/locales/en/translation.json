@@ -2347,6 +2347,7 @@
     "done": "Done"
   },
   "calendar": {
+    "meetingJoin": "Join",
     "location": {
       "copy": "Copy address",
       "copied": "Address copied",

@@ -1,4 +1,5 @@
 import {
+    findMeetingLink,
     isWebLocation,
     locationHref,
     mapsSearchUrl,
@@ -26,5 +27,39 @@ describe('event location', () => {
         expect(locationHref('Salle A & B')).toBe(
             'https://www.google.com/maps/search/?api=1&query=Salle%20A%20%26%20B'
         );
+    });
+});
+
+describe('meeting link detection', () => {
+    it('finds a Meet, Zoom, Teams or Webex link in the location', () => {
+        expect(
+            findMeetingLink('https://meet.google.com/abc-defg-hij', '')
+        ).toBe('https://meet.google.com/abc-defg-hij');
+        expect(findMeetingLink('https://zoom.us/j/123456789?pwd=x', '')).toBe(
+            'https://zoom.us/j/123456789?pwd=x'
+        );
+        expect(
+            findMeetingLink('https://teams.microsoft.com/l/meetup-join/abc', '')
+        ).toBe('https://teams.microsoft.com/l/meetup-join/abc');
+        expect(findMeetingLink('https://acme.webex.com/meet/bob', '')).toBe(
+            'https://acme.webex.com/meet/bob'
+        );
+    });
+
+    it('falls back to the description when the location has no meeting link', () => {
+        expect(
+            findMeetingLink(
+                'Salle A',
+                'Rejoindre : https://zoom.us/j/987654321 (code 1234)'
+            )
+        ).toBe('https://zoom.us/j/987654321');
+    });
+
+    it('ignores ordinary web pages and addresses', () => {
+        expect(
+            findMeetingLink('https://www.exemple.ch/salle', 'Ordre du jour')
+        ).toBeNull();
+        expect(findMeetingLink('Rue du Lac 4, 1800 Vevey', '')).toBeNull();
+        expect(findMeetingLink('', null)).toBeNull();
     });
 });
