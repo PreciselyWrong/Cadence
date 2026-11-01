@@ -507,6 +507,9 @@ const InboxItems: React.FC = () => {
         }
     };
 
+    const savedLinks = useLinksStore((state) => state.links);
+    const [sortingLinks, setSortingLinks] = useState(false);
+
     if (isLoading && inboxItems.length === 0) {
         return <LoadingScreen />;
     }
@@ -523,12 +526,9 @@ const InboxItems: React.FC = () => {
         setSearchParams(next);
     };
 
-    const savedLinks = useLinksStore((state) => state.links);
     const linkItems = inboxItems.filter((item) =>
         linkForItem(savedLinks, item.uid, item.content || '')
     );
-    const [sortingLinks, setSortingLinks] = useState(false);
-
     if (sortingLinks && linkItems.length > 0) {
         return (
             <div className="w-full px-4 sm:px-6 lg:px-8 pt-4 pb-8">

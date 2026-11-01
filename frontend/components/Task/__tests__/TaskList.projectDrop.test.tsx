@@ -39,7 +39,7 @@ jest.mock('../TaskItem', () => {
     );
     return {
         __esModule: true,
-        default: ({ task }: any) => {
+        default: function TaskItemMock({ task }: any) {
             const native = React.useContext(NativeTaskDragContext);
             return React.createElement(
                 'div',

@@ -17,6 +17,15 @@ const Tooltip: React.FC<TooltipProps> = ({
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const delay = 300;
 
+    useEffect(
+        () => () => {
+            if (timerRef.current) {
+                clearTimeout(timerRef.current);
+            }
+        },
+        []
+    );
+
     if (!content) {
         return <span className={className}>{children}</span>;
     }
@@ -43,15 +52,6 @@ const Tooltip: React.FC<TooltipProps> = ({
         }
         setIsVisible(false);
     };
-
-    useEffect(
-        () => () => {
-            if (timerRef.current) {
-                clearTimeout(timerRef.current);
-            }
-        },
-        []
-    );
 
     return (
         <span

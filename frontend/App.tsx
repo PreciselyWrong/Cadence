@@ -108,10 +108,6 @@ const App: React.FC = () => {
     const adminElement = (element: React.ReactElement) =>
         currentUser?.admin_mfa_required ? <AdminMfaRequired /> : element;
 
-    if (!i18n.isInitialized) {
-        return <LoadingScreen fullScreen />;
-    }
-
     const fetchCurrentUser = async () => {
         try {
             const response = await fetch(getApiPath('current_user'), {
@@ -378,6 +374,10 @@ const App: React.FC = () => {
             </div>
         </div>
     );
+
+    if (!i18n.isInitialized) {
+        return <LoadingScreen fullScreen />;
+    }
 
     if (loading) {
         return <LoadingComponent />;

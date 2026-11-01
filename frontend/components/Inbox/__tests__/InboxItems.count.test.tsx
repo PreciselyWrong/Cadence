@@ -131,3 +131,22 @@ describe('InboxItems count footer', () => {
         ).toHaveTextContent('Showing 20 of 45 items');
     });
 });
+
+describe('InboxItems first load', () => {
+    it('shows the items once the first load ends', async () => {
+        act(() => {
+            useStore.setState((state: any) => ({
+                inboxStore: {
+                    ...state.inboxStore,
+                    inboxItems: [],
+                    isLoading: true,
+                },
+            }));
+        });
+        render(<InboxItems />);
+
+        setInbox(2, 2);
+
+        expect(await screen.findAllByTestId('inbox-item')).toHaveLength(2);
+    });
+});
