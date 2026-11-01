@@ -631,6 +631,8 @@
   "profile": {
     "showTaskDescription": "Zobraziť popis pod názvom",
     "sync": {
+      "pending_many": "{{count}} zmien urobených offline v tomto prehliadači čaká na odoslanie.",
+      "pending_few": "{{count}} zmeny urobené offline v tomto prehliadači čakajú na odoslanie.",
       "field": {
         "review_at": "Preskúmať dňa",
         "review_on": "Preskúmať dňa",
@@ -1636,6 +1638,14 @@
     "unknown": "Stav {{status}}"
   },
   "project": {
+    "noteCount_many": "{{count}} poznámok",
+    "noteCount_few": "{{count}} poznámky",
+    "memberCount_many": "{{count}} členov",
+    "memberCount_few": "{{count}} členovia",
+    "fileCount_many": "{{count}} súborov",
+    "fileCount_few": "{{count}} súbory",
+    "daysToDue_many": "{{count}} dní do termínu",
+    "daysToDue_few": "{{count}} dni do termínu",
     "name": "Názov projektu",
     "projectImage": "Obrázok projektu",
     "editProject": "Upraviť projekt",
@@ -2770,6 +2780,8 @@
   },
   "admin": {
     "billing": {
+      "trialDaysLeft_many": "zostáva {{count}} dní",
+      "trialDaysLeft_few": "zostávajú {{count}} dni",
       "title": "Fakturácia",
       "accounts": "Účty",
       "onPro": "S Pro",
@@ -3032,6 +3044,10 @@
       "preview": "Náhľad v aplikácii"
     },
     "userStatus": {
+      "itemsCreated_many": "{{count}} položiek",
+      "itemsCreated_few": "{{count}} položky",
+      "emailsSent_many": "odoslaných: {{count}}",
+      "emailsSent_few": "odoslané: {{count}}",
       "title": "Používatelia",
       "user": "Používateľ",
       "signedUp": "Registrovaný",
@@ -3774,6 +3790,8 @@
     "overview": "Prehľad"
   },
   "subscription": {
+    "trialBanner_many": "Používate bezplatnú skúšobnú verziu, zostáva {{count}} dní",
+    "trialBanner_few": "Používate bezplatnú skúšobnú verziu, zostávajú {{count}} dni",
     "trialBanner": "Bezplatná skúška, zostáva dní: {{count}}",
     "title": "Predplatné",
     "chooseForCloud": "Vyberte si plán pre Cadence Cloud",
@@ -4047,6 +4065,8 @@
     "lateWarning": "Čas uplynul a ešte nie je hotové",
     "movedOffPlan": "'{{name}}' už nemá termín dnes, preto zmizla z dnešného plánu.",
     "tips": {
+      "missed_many": "{{count}} naplánovaných blokov už uplynulo",
+      "missed_few": "{{count}} naplánované bloky už uplynuli",
       "title": "Tipy na plánovanie",
       "missed": "Už uplynulo naplánovaných blokov: {{count}}",
       "moveMissed": "Presunúť do najbližších voľných časov",
