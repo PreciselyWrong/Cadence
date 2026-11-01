@@ -3229,6 +3229,8 @@
         "taskUpdated": "Đã thay đổi công việc",
         "taskCompleted": "Đã hoàn thành công việc",
         "taskDeleted": "Đã xóa công việc",
+        "noteCreated": "Đã tạo ghi chú",
+        "linkCreated": "Đã lưu liên kết",
         "dailySummary": "Tóm tắt hằng ngày",
         "test": "Thử nghiệm"
       },

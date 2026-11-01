@@ -23,9 +23,17 @@ const TASK_EVENTS = [
     'task.deleted',
 ];
 
+// A new note or saved link, from any write path.
+const CAPTURE_EVENTS = ['note.created', 'link.created'];
+
 const SUMMARY_EVENTS = ['daily_summary'];
 
-const ALL_EVENTS = [...NOTIFICATION_EVENTS, ...TASK_EVENTS, ...SUMMARY_EVENTS];
+const ALL_EVENTS = [
+    ...NOTIFICATION_EVENTS,
+    ...TASK_EVENTS,
+    ...CAPTURE_EVENTS,
+    ...SUMMARY_EVENTS,
+];
 
 // The webhook event for an in-app notification, or null for notifications
 // that are not sent out (billing and other system messages).
@@ -62,6 +70,7 @@ function eventForNotification(notification) {
 module.exports = {
     NOTIFICATION_EVENTS,
     TASK_EVENTS,
+    CAPTURE_EVENTS,
     SUMMARY_EVENTS,
     ALL_EVENTS,
     eventForNotification,

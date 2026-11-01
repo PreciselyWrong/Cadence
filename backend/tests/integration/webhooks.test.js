@@ -12,6 +12,7 @@ const crypto = require('crypto');
 const request = require('supertest');
 const app = require('../../app');
 const {
+    Link,
     Notification,
     Task,
     User,
@@ -193,6 +194,8 @@ describe('Webhooks', () => {
             );
             expect(call.headers['X-Tududi-Event']).toBe('task.created');
             expect(call.headers['X-Tududi-Delivery']).toBe(body.id);
+            expect(call.headers['X-Webhook-Timestamp']).toBe(ts);
+            expect(call.headers['X-Webhook-Signature-V2']).toBe(expected);
 
             await delivery.reload();
             expect(delivery.status).toBe('delivered');
@@ -244,6 +247,61 @@ describe('Webhooks', () => {
                 .patch(`/api/webhooks/${created.uid}`)
                 .send({ enabled: false });
             await agent.post('/api/task').send({ name: 'Quiet' });
+            expect(await pending()).toHaveLength(0);
+        });
+    });
+
+    describe('capture events', () => {
+        it('sends note.created for a new note', async () => {
+            await createWebhook({ events: ['note.created'] });
+            const create = await agent
+                .post('/api/note')
+                .send({ title: 'Reading list', content: 'Books to borrow' });
+            expect(create.status).toBe(201);
+
+            const [delivery] = await pending();
+            expect(delivery.event).toBe('note.created');
+            await dispatcher.processDue();
+
+            const body = JSON.parse(safeRequest.mock.calls[0][0].data);
+            expect(body.text).toBe('New note: Reading list');
+            expect(body.data.note).toMatchObject({
+                uid: create.body.uid,
+                title: 'Reading list',
+                project_uid: null,
+            });
+        });
+
+        it('sends link.created for a new link', async () => {
+            await createWebhook({ events: ['link.created'] });
+            const link = await Link.create({
+                user_id: user.id,
+                url: 'https://example.com/tool',
+                title: 'A tool',
+                kind: 'tool',
+                status: 'new',
+                source_type: 'inbox_item',
+                source_uid: 'inbox-0001',
+            });
+
+            const [delivery] = await pending();
+            expect(delivery.event).toBe('link.created');
+            await dispatcher.processDue();
+
+            const body = JSON.parse(safeRequest.mock.calls[0][0].data);
+            expect(body.text).toBe('New link: A tool');
+            expect(body.data.link).toEqual({
+                uid: link.uid,
+                url: 'https://example.com/tool',
+                title: 'A tool',
+                source_type: 'inbox_item',
+                source_uid: 'inbox-0001',
+            });
+        });
+
+        it('sends no capture event to a webhook that did not pick it', async () => {
+            await createWebhook({ events: ['task.created'] });
+            await agent.post('/api/note').send({ title: 'Quiet' });
             expect(await pending()).toHaveLength(0);
         });
     });

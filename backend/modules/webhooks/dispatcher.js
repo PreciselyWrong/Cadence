@@ -149,6 +149,7 @@ async function post(webhook, { uid: deliveryUid, event, payload }) {
     const url = secretCipher.decrypt(webhook.url);
     const secret = secretCipher.decrypt(webhook.secret);
     const timestamp = Math.floor(Date.now() / 1000);
+    const signature = sign(secret, timestamp, payload);
 
     return safeRequest({
         method: 'POST',
@@ -160,7 +161,11 @@ async function post(webhook, { uid: deliveryUid, event, payload }) {
             'X-Tududi-Event': event,
             'X-Tududi-Delivery': deliveryUid,
             'X-Tududi-Timestamp': String(timestamp),
-            'X-Tududi-Signature': `sha256=${sign(secret, timestamp, payload)}`,
+            'X-Tududi-Signature': `sha256=${signature}`,
+            // The same signature under the generic names other receivers
+            // check (Hermes Agent webhooks: HMAC of "<timestamp>.<body>").
+            'X-Webhook-Timestamp': String(timestamp),
+            'X-Webhook-Signature-V2': signature,
         },
         transformRequest: [(body) => body],
         timeout: TIMEOUT_MS,

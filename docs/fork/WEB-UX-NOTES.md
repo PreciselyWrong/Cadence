@@ -295,3 +295,9 @@ Revue écran par écran (Aujourd'hui, Boîte, Tâches, Projets, page projet, Age
 - **Problème** : dans Ctrl+K, rien ne montrait pourquoi une ligne correspondait, et les liens n'étaient pas cherchés.
 - **Décision** : chaque mot tapé est mis en gras et en bleu dans le titre des résultats, sans tenir compte de la casse. Les liens entrent dans la recherche, sous « Liens » ; un lien s'ouvre à son adresse dans un nouvel onglet. Logique : `frontend/utils/highlightMatches.ts`, `frontend/components/CommandPalette/CommandPalette.tsx`.
 - **Android** : à reprendre. Même mise en évidence dans la recherche, et les liens dans la recherche globale. Reste : rien d'essayé sur le téléphone.
+
+### 2026-11-01 — Webhooks : note créée, lien enregistré
+
+- **Problème** : un assistant qui classe les nouveaux éléments (Hermès, profil `capture`) n'apprenait que les nouvelles tâches.
+- **Décision** : deux cases de plus dans le groupe « Changes » de la carte Webhooks (Profil → Notifications) : « Note created » et « Link saved » (`note.created`, `link.created`). Logique : `backend/modules/webhooks/captureEvents.js`, `frontend/utils/webhooksService.ts`.
+- **Android** : rien à reprendre. Les webhooks se règlent sur le web seulement.

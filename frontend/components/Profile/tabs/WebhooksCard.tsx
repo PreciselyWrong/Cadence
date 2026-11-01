@@ -87,6 +87,14 @@ const eventLabel = (t: TFunction, event: string) =>
             'notifications.webhooks.events.taskDeleted',
             'Task deleted'
         ),
+        'note.created': t(
+            'notifications.webhooks.events.noteCreated',
+            'Note created'
+        ),
+        'link.created': t(
+            'notifications.webhooks.events.linkCreated',
+            'Link saved'
+        ),
         daily_summary: t(
             'notifications.webhooks.events.dailySummary',
             'Daily summary'

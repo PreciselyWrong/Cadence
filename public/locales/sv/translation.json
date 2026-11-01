@@ -3229,6 +3229,8 @@
         "taskUpdated": "Uppgift ändrad",
         "taskCompleted": "Uppgift slutförd",
         "taskDeleted": "Uppgift borttagen",
+        "noteCreated": "Anteckning skapad",
+        "linkCreated": "Länk sparad",
         "dailySummary": "Daglig sammanfattning",
         "test": "Test"
       },

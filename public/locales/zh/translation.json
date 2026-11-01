@@ -3229,6 +3229,8 @@
         "taskUpdated": "任务已更改",
         "taskCompleted": "任务已完成",
         "taskDeleted": "任务已删除",
+        "noteCreated": "已创建笔记",
+        "linkCreated": "已保存链接",
         "dailySummary": "每日摘要",
         "test": "测试"
       },

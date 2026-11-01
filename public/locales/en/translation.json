@@ -3462,6 +3462,8 @@
         "taskUpdated": "Task changed",
         "taskCompleted": "Task completed",
         "taskDeleted": "Task deleted",
+        "noteCreated": "Note created",
+        "linkCreated": "Link saved",
         "dailySummary": "Daily summary",
         "test": "Test"
       },

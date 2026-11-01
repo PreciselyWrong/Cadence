@@ -3229,6 +3229,8 @@
         "taskUpdated": "Tugas diubah",
         "taskCompleted": "Tugas selesai",
         "taskDeleted": "Tugas dihapus",
+        "noteCreated": "Catatan dibuat",
+        "linkCreated": "Tautan disimpan",
         "dailySummary": "Ringkasan harian",
         "test": "Tes"
       },

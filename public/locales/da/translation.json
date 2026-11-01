@@ -3229,6 +3229,8 @@
         "taskUpdated": "Opgave ændret",
         "taskCompleted": "Opgave fuldført",
         "taskDeleted": "Opgave slettet",
+        "noteCreated": "Note oprettet",
+        "linkCreated": "Link gemt",
         "dailySummary": "Daglig oversigt",
         "test": "Test"
       },

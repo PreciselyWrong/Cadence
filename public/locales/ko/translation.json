@@ -3227,6 +3227,8 @@
         "taskUpdated": "작업 변경됨",
         "taskCompleted": "작업 완료됨",
         "taskDeleted": "작업 삭제됨",
+        "noteCreated": "메모 생성됨",
+        "linkCreated": "링크 저장됨",
         "dailySummary": "일일 요약",
         "test": "테스트"
       },

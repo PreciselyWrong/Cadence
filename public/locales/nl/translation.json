@@ -3229,6 +3229,8 @@
         "taskUpdated": "Taak gewijzigd",
         "taskCompleted": "Taak voltooid",
         "taskDeleted": "Taak verwijderd",
+        "noteCreated": "Notitie gemaakt",
+        "linkCreated": "Link opgeslagen",
         "dailySummary": "Dagelijkse samenvatting",
         "test": "Test"
       },

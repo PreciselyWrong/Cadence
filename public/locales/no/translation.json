@@ -3230,6 +3230,8 @@
         "taskUpdated": "Oppgave endret",
         "taskCompleted": "Oppgave fullført",
         "taskDeleted": "Oppgave slettet",
+        "noteCreated": "Notat opprettet",
+        "linkCreated": "Lenke lagret",
         "dailySummary": "Daglig sammendrag",
         "test": "Test"
       },

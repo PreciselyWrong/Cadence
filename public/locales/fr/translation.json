@@ -3236,6 +3236,8 @@
         "taskUpdated": "Tâche modifiée",
         "taskCompleted": "Tâche terminée",
         "taskDeleted": "Tâche supprimée",
+        "noteCreated": "Note créée",
+        "linkCreated": "Lien enregistré",
         "dailySummary": "Résumé quotidien",
         "test": "Test"
       },

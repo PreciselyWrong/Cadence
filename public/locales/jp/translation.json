@@ -3227,6 +3227,8 @@
         "taskUpdated": "タスクの変更",
         "taskCompleted": "タスクの完了",
         "taskDeleted": "タスクの削除",
+        "noteCreated": "ノートを作成",
+        "linkCreated": "リンクを保存",
         "dailySummary": "デイリーサマリー",
         "test": "テスト"
       },

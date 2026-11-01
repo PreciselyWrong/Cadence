@@ -3238,6 +3238,8 @@
         "taskUpdated": "Aufgabe geändert",
         "taskCompleted": "Aufgabe erledigt",
         "taskDeleted": "Aufgabe gelöscht",
+        "noteCreated": "Notiz erstellt",
+        "linkCreated": "Link gespeichert",
         "dailySummary": "Tägliche Zusammenfassung",
         "test": "Test"
       },

@@ -3229,6 +3229,8 @@
         "taskUpdated": "Görev değişti",
         "taskCompleted": "Görev tamamlandı",
         "taskDeleted": "Görev silindi",
+        "noteCreated": "Not oluşturuldu",
+        "linkCreated": "Bağlantı kaydedildi",
         "dailySummary": "Günlük özet",
         "test": "Test"
       },

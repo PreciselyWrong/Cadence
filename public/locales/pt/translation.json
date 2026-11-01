@@ -3235,6 +3235,8 @@
         "taskUpdated": "Tarefa alterada",
         "taskCompleted": "Tarefa concluída",
         "taskDeleted": "Tarefa excluída",
+        "noteCreated": "Nota criada",
+        "linkCreated": "Link guardado",
         "dailySummary": "Resumo diário",
         "test": "Teste"
       },

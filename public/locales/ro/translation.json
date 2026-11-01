@@ -3237,6 +3237,8 @@
         "taskUpdated": "Sarcină modificată",
         "taskCompleted": "Sarcină finalizată",
         "taskDeleted": "Sarcină ștearsă",
+        "noteCreated": "Notă creată",
+        "linkCreated": "Link salvat",
         "dailySummary": "Rezumat zilnic",
         "test": "Test"
       },

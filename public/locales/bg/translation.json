@@ -3229,6 +3229,8 @@
         "taskUpdated": "Променена задача",
         "taskCompleted": "Завършена задача",
         "taskDeleted": "Изтрита задача",
+        "noteCreated": "Създадена бележка",
+        "linkCreated": "Запазена връзка",
         "dailySummary": "Дневно обобщение",
         "test": "Тест"
       },

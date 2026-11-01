@@ -3534,6 +3534,8 @@
         "taskUpdated": "Úloha zmenená",
         "taskCompleted": "Úloha dokončená",
         "taskDeleted": "Úloha odstránená",
+        "noteCreated": "Poznámka vytvorená",
+        "linkCreated": "Odkaz uložený",
         "dailySummary": "Denný súhrn",
         "test": "Test"
       },

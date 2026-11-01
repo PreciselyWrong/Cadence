@@ -24,6 +24,7 @@ On Cadence Cloud, webhooks are part of the paid plan and not of the free trial.
 | `comment.added`, `comment.mention` | A comment on your task, or a mention |
 | `share.invitation` | Someone shares something with you |
 | `task.created`, `task.updated`, `task.completed`, `task.deleted` | One of your tasks changes, from any source (web, API, MCP, inbox) |
+| `note.created`, `link.created` | A note is created, or a link is saved (found in an inbox item, task or note, see [Links](37-links.md)), from any source |
 | `daily_summary` | Once a day at the hour you pick, in your timezone: overdue, due today and in progress |
 
 The reminder and alert events follow the same notifications as the in-app bell: if the in-app column is off for a type, no webhook is sent for it either. `task.updated` only fires for changes that matter outside Cadence (name, note, status, priority, dates, project, parent, estimate) and lists them in `data.changed`. Habit check-ins do not count as task changes. Changes to many tasks at once through a bulk update are not sent.
@@ -56,6 +57,8 @@ The reminder and alert events follow the same notifications as the in-app bell: 
 }
 ```
 
+`note.created` sends `data.note` (`uid`, `title`, `project_uid`, `url`); `link.created` sends `data.link` (`uid`, `url`, `title`, `source_type`, `source_uid`). The link is saved before its page is read, so the title is often still empty.
+
 `text` and `content` carry the same readable message, so a Slack (`text`) or Discord (`content`) incoming webhook shows it without anything in between. Notification events put the notification under `data.notification` next to its own fields (`taskUid`, `taskName` and so on). `daily_summary` sends `data.date`, `data.timezone`, `data.overdue` (open tasks from earlier days; the key keeps its name for existing receivers), `data.due_today` and `data.in_progress`, each a list of tasks in the shape above. The text says "still open" with the date each task was due, never "overdue".
 
 ## Verifying a request
@@ -68,6 +71,7 @@ Every request has these headers:
 | `X-Tududi-Delivery` | The payload `id`; the same on every retry |
 | `X-Tududi-Timestamp` | Unix seconds when this attempt was sent |
 | `X-Tududi-Signature` | `sha256=` + hex HMAC-SHA256 of `<timestamp>.<raw body>` with the secret |
+| `X-Webhook-Timestamp`, `X-Webhook-Signature-V2` | The same timestamp and hex signature (without `sha256=`) under generic names, for receivers that check those (Hermes Agent webhooks) |
 
 ```js
 const crypto = require('crypto');

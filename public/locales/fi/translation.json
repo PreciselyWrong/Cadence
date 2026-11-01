@@ -3229,6 +3229,8 @@
         "taskUpdated": "Tehtävä muutettu",
         "taskCompleted": "Tehtävä valmis",
         "taskDeleted": "Tehtävä poistettu",
+        "noteCreated": "Muistiinpano luotu",
+        "linkCreated": "Linkki tallennettu",
         "dailySummary": "Päivän yhteenveto",
         "test": "Testi"
       },
