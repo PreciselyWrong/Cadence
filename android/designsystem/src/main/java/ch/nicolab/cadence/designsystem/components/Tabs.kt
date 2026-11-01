@@ -38,8 +38,10 @@ import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.designsystem.theme.glass
 import ch.nicolab.cadence.designsystem.theme.glassBorder
 
-/** Onglet à pastille : libellé et compteur facultatif. */
-data class TabPill(val label: String, val count: Int? = null)
+/** Onglet à pastille : libellé et compteur facultatif ; un compteur à zéro n'est pas affiché. */
+data class TabPill(val label: String, val count: Int? = null) {
+    val shownCount: Int? get() = visibleSectionCount(count)
+}
 
 /**
  * Onglets défilants horizontalement. L'onglet actif est plein en primaire, les autres sont
@@ -103,7 +105,7 @@ private fun PillTab(tab: TabPill, active: Boolean, onClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(tab.label, style = MaterialTheme.typography.labelLarge, color = content, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            tab.count?.let {
+            tab.shownCount?.let {
                 Spacer(Modifier.width(Space.xs))
                 Text(it.toString(), style = MaterialTheme.typography.labelMedium, color = countColor)
             }

@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-01 — Un seul « + » dans Habitudes, pas de « 0 » sur les onglets
+
+- **Problème** : sans habitude, l'écran montrait deux boutons d'ajout (le « + » de l'en-tête et celui de l'état vide) ; un onglet à pastille affichait « Notes 0 ».
+- **Décision** : le « + » de l'en-tête reste seul, l'état vide dit « Touchez + en haut pour créer une première habitude. » ; un compteur d'onglet à zéro n'est pas affiché (règle dans `TabPill`, comme les en-têtes de section).
+- **Web** : déjà ainsi (passe « UI épurée » du 2026-11-01) ; rien à reprendre.
+
 ### 2026-11-01 — Galerie des découvertes dans l'écran Liens
 
 - **Problème** : décider des liens partagés demandait de les ouvrir un par un ; la liste ne montrait ni l'image de la page ni de quoi les rattacher à un projet.

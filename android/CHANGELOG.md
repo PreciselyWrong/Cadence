@@ -22,6 +22,10 @@
 ### Nouveautés
 - Liens : galerie des découvertes (bouton de l'en-tête, retenu sur le téléphone) : cartes en deux colonnes avec l'image de la page, le site, les étoiles et le début du README d'un dépôt, et quatre décisions d'un toucher : Tester (tâche « Tester : … »), Rattacher (tâche au nom du lien dans le projet choisi, lien gardé), Reporter (revoir dans 30 jours), Jeter. La carte quitte la galerie, « Annuler » la fait revenir ; l'idée de l'Inbox qui porte le lien est traitée aussi.
 
+### Corrections
+- Onglets à pastille (Tâches, recherche, revue) : un compteur à zéro n'est plus affiché.
+- Habitudes : un seul bouton d'ajout, le « + » de l'en-tête ; la liste vide n'a plus son propre bouton et dit où toucher.
+
 ## [1.6.9] — 1 novembre 2026
 
 ### Nouveautés

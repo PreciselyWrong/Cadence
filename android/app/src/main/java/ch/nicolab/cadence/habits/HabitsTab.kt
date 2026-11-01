@@ -64,10 +64,10 @@ internal fun HabitsTab(
     }
     if (segment == SEGMENT_TODAY) {
         HabitsTodayScreen(
-            header, habits, groups, selectedGroupId, onSelectGroup, quick, options, create, timers, busy, direct, offerReturn, resume, edit, questions, answer,
+            header, habits, groups, selectedGroupId, onSelectGroup, quick, options, timers, busy, direct, offerReturn, resume, edit, questions, answer,
         )
     } else {
-        HabitsScreen(header, habits, groups, selectedGroupId, onSelectGroup, create, options, quick)
+        HabitsScreen(header, habits, groups, selectedGroupId, onSelectGroup, options, quick)
     }
 }
 

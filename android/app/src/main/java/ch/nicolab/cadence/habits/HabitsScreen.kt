@@ -13,7 +13,6 @@ import androidx.compose.ui.res.stringResource
 import ch.nicolab.cadence.HabitCardState
 import ch.nicolab.cadence.R
 import ch.nicolab.cadence.designsystem.components.EmptyState
-import ch.nicolab.cadence.designsystem.components.PrimaryAction
 import ch.nicolab.cadence.designsystem.components.SectionHeader
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.ui.ScreenList
@@ -25,7 +24,6 @@ internal fun HabitsScreen(
     groups: List<HabitGroup>,
     selectedGroupId: String?,
     onSelectGroup: (String?) -> Unit,
-    create: () -> Unit,
     options: (HabitCardState) -> Unit,
     open: (HabitCardState) -> Unit,
 ) {
@@ -43,9 +41,7 @@ internal fun HabitsScreen(
             }
         } else if (active.isEmpty() && archived.isEmpty()) {
             item {
-                EmptyState(Icons.Outlined.AutoAwesome, stringResource(R.string.empty_habits_title), stringResource(R.string.empty_habits_message)) {
-                    PrimaryAction(stringResource(R.string.create_habit_button), onClick = create)
-                }
+                EmptyState(Icons.Outlined.AutoAwesome, stringResource(R.string.empty_habits_title), stringResource(R.string.empty_habits_hint))
             }
         }
         val activeHabits = active.filter { !it.stored.goal.isTracker && !it.stored.goal.isAbstinence }

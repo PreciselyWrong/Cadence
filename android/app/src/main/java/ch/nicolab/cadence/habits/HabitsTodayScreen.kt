@@ -74,7 +74,6 @@ internal fun HabitsTodayScreen(
     onSelectGroup: (String?) -> Unit,
     quick: (HabitCardState) -> Unit,
     options: (HabitCardState) -> Unit,
-    create: () -> Unit,
     timers: Map<String, HabitTimer>,
     busy: Boolean,
     direct: (HabitCardState) -> Unit,
@@ -139,10 +138,8 @@ internal fun HabitsTodayScreen(
                 EmptyState(
                     Icons.Outlined.AutoAwesome,
                     stringResource(if (selectedGroupId == null) R.string.empty_habits_title else R.string.group_filter_empty),
-                    stringResource(R.string.empty_habits_message),
-                ) {
-                    if (selectedGroupId == null) PrimaryAction(stringResource(R.string.create_habit_button), onClick = create)
-                }
+                    stringResource(if (selectedGroupId == null) R.string.empty_habits_hint else R.string.empty_habits_message),
+                )
             }
             toComplete.isEmpty() && pendingHabits.isEmpty() && trackers.isEmpty() && abstinences.isEmpty() -> item {
                 EmptyState(Icons.Outlined.Check, stringResource(R.string.empty_today_done_title), stringResource(R.string.empty_today_done_message))
