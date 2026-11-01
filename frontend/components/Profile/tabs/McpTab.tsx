@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { CpuChipIcon, DocumentDuplicateIcon } from '@heroicons/react/24/outline';
 import { useToast } from '../../Shared/ToastContext';
 import { getApiPath } from '../../../config/paths';
+import RemoteConnectorCard from './RemoteConnectorCard';
 
 interface McpTabProps {
     isActive: boolean;
@@ -101,6 +102,8 @@ const McpTab: React.FC<McpTabProps> = ({ isActive }) => {
             </p>
 
             <div className="space-y-8">
+                <RemoteConnectorCard />
+
                 {/* Step 1: API Token */}
                 <section className="border-l-4 border-indigo-500 pl-4">
                     <h4 className="font-semibold text-gray-900 dark:text-white mb-2">

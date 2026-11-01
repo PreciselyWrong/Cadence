@@ -16,6 +16,10 @@ router.get('/mcp/config', requireFeature('mcp'), controller.getMcpConfig);
 // List available MCP tools
 router.get('/mcp/tools', requireFeature('mcp'), controller.listMcpTools);
 
+// Pairing window for remote connectors (docs/38-remote-mcp.md)
+router.get('/mcp/pairing', controller.getPairing);
+router.post('/mcp/pairing', controller.openPairing);
+
 // MCP protocol endpoint - uses Bearer token auth, not session auth
 // This endpoint handles actual MCP protocol messages from remote clients
 // Also mounted at /mcp by app.js for remote connectors (docs/38-remote-mcp.md).

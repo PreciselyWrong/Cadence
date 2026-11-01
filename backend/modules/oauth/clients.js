@@ -108,7 +108,12 @@ function readClient(clientId) {
             Buffer.from(payload, 'base64url').toString('utf8')
         );
         if (metadata.v !== 1 || !Array.isArray(metadata.r)) return null;
-        return { clientId, name: metadata.n, redirectUris: metadata.r };
+        return {
+            clientId,
+            name: metadata.n,
+            redirectUris: metadata.r,
+            issuedAt: new Date(metadata.t * 1000),
+        };
     } catch {
         return null;
     }

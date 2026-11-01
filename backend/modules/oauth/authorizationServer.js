@@ -10,6 +10,7 @@ const {
     acceptsRedirect,
 } = require('./clients');
 const { issueCode, consumeCode } = require('./codes');
+const pairing = require('./pairing');
 const { verifyOwner, issueMcpToken } = require('./service');
 const { renderConsent, renderError } = require('./consentPage');
 
@@ -28,7 +29,11 @@ const REFUSAL_MESSAGES = {
     mfa_required:
         'Turn on two-factor sign-in in Cadence (Profile › Security) before connecting an assistant.',
     not_allowed: 'This account may not connect assistants to Cadence.',
+    pairing_other_user:
+        'This connection was started from another Cadence account.',
 };
+const PAIRING_CLOSED =
+    'Cadence is not expecting a new connector. In Cadence, open Profile › MCP, click Authorize a new connector, then connect again within 10 minutes.';
 const SIGN_IN_FAILED =
     'Sign-in failed. Check your email, password and two-factor code.';
 const CHALLENGE_PATTERN = /^[A-Za-z0-9_-]{43}$/;
@@ -56,8 +61,23 @@ function authorizationServerMetadata(req, res) {
 
 function register(req, res) {
     if (!oauthConfig.isEnabled()) return notFound(res);
+    if (!pairing.acceptsRegistration()) {
+        logger.warn(
+            {
+                event: 'oauth.client_refused',
+                error: 'pairing_closed',
+                ip: req.ip,
+            },
+            'OAuth client registration refused'
+        );
+        return res.status(403).json({
+            error: 'access_denied',
+            error_description: PAIRING_CLOSED,
+        });
+    }
     try {
         const client = registerClient(req.body || {});
+        pairing.bind(client.client_id);
         logger.info(
             {
                 event: 'oauth.client_registered',
@@ -108,6 +128,9 @@ function checkAuthorizeRequest(params) {
             fatal: 'This app asked to return to an address Cadence does not accept.',
         };
     }
+    if (!pairing.admitClient(client.clientId)) {
+        return { fatal: PAIRING_CLOSED, status: 403 };
+    }
     if (params.response_type !== 'code') {
         return { client, error: 'unsupported_response_type' };
     }
@@ -149,7 +172,7 @@ function showAuthorize(req, res) {
     if (!oauthConfig.isEnabled()) return notFound(res);
     const params = pickParams(req.query);
     const check = checkAuthorizeRequest(params);
-    if (check.fatal) return renderError(res, check.fatal);
+    if (check.fatal) return renderError(res, check.fatal, check.status);
     if (check.error) {
         return redirectWith(res, params.redirect_uri, {
             error: check.error,
@@ -165,7 +188,7 @@ async function submitAuthorize(req, res, next) {
         const body = req.body || {};
         const params = pickParams(body);
         const check = checkAuthorizeRequest(params);
-        if (check.fatal) return renderError(res, check.fatal);
+        if (check.fatal) return renderError(res, check.fatal, check.status);
         if (check.error) {
             return redirectWith(res, params.redirect_uri, {
                 error: check.error,
@@ -189,7 +212,7 @@ async function submitAuthorize(req, res, next) {
             });
         }
 
-        const owner = await verifyOwner(
+        const verified = await verifyOwner(
             {
                 email: body.email,
                 password: body.password,
@@ -197,6 +220,16 @@ async function submitAuthorize(req, res, next) {
             },
             req
         );
+        // The pairing was opened from a signed-in session: only that
+        // account may grant it.
+        const owner =
+            verified.ok && verified.user.id !== pairing.openedBy()
+                ? {
+                      ok: false,
+                      reason: 'pairing_other_user',
+                      userId: verified.user.id,
+                  }
+                : verified;
         if (!owner.ok) {
             logger.warn(
                 {
@@ -211,7 +244,11 @@ async function submitAuthorize(req, res, next) {
             return renderConsent(res, {
                 client,
                 params,
-                status: owner.reason === 'not_allowed' ? 403 : 401,
+                status: ['not_allowed', 'pairing_other_user'].includes(
+                    owner.reason
+                )
+                    ? 403
+                    : 401,
                 error: REFUSAL_MESSAGES[owner.reason] || SIGN_IN_FAILED,
             });
         }
@@ -223,6 +260,7 @@ async function submitAuthorize(req, res, next) {
             codeChallenge: params.code_challenge,
             userId: owner.user.id,
         });
+        pairing.close();
         logger.info(
             {
                 event: 'oauth.authorize_granted',

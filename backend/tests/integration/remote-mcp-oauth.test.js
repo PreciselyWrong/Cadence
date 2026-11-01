@@ -5,6 +5,7 @@ const request = require('supertest');
 const app = require('../../app');
 const { ApiToken, Role } = require('../../models');
 const mfaService = require('../../modules/mfa/service');
+const pairing = require('../../modules/oauth/pairing');
 const {
     createTestUser,
     enrollMfa,
@@ -29,7 +30,18 @@ const newVerifier = () => base64url(crypto.randomBytes(32));
 const challengeOf = (verifier) =>
     base64url(crypto.createHash('sha256').update(verifier).digest());
 
-async function registerClient(body = {}) {
+// Opens the pairing window the way the profile page does.
+const openPairing = (cookie) =>
+    request(app).post('/api/mcp/pairing').set('Cookie', cookie);
+
+let ownerCookie;
+
+async function registerClient(body = {}, { cookie = ownerCookie } = {}) {
+    if (cookie) expect((await openPairing(cookie)).status).toBe(201);
+    return rawRegister(body);
+}
+
+function rawRegister(body = {}) {
     return request(app)
         .post('/oauth/register')
         .send({
@@ -74,6 +86,9 @@ describe('Remote MCP OAuth authorization server', () => {
             email_verified: true,
         });
         await Role.update({ is_admin: true }, { where: { user_id: user.id } });
+        pairing.close();
+        // Signed in before two-factor is on, so the password is enough.
+        ownerCookie = await authenticateUser(request(app), user);
         await enrollMfa(user);
         jest.spyOn(mfaService, 'verify').mockImplementation(
             async (userId, { code }) => {
@@ -96,6 +111,7 @@ describe('Remote MCP OAuth authorization server', () => {
             });
 
     async function obtainCode({ verifier, clientId } = {}) {
+        if (clientId) await openPairing(ownerCookie);
         const client = clientId || (await registerClient()).body.client_id;
         const res = await request(app)
             .post('/oauth/authorize')
@@ -174,7 +190,8 @@ describe('Remote MCP OAuth authorization server', () => {
             ]) {
                 expect((await request(app).get(path)).status).toBe(404);
             }
-            expect((await registerClient()).status).toBe(404);
+            expect((await rawRegister()).status).toBe(404);
+            expect((await openPairing(ownerCookie)).status).toBe(404);
         });
 
         it('answers an anonymous POST /mcp with 401 and a resource_metadata pointer', async () => {
@@ -253,6 +270,7 @@ describe('Remote MCP OAuth authorization server', () => {
                     'https://other.example/cb, https://second.example/cb',
             });
             expect((await registerClient()).status).toBe(400);
+            pairing.close();
             const res = await registerClient({
                 redirect_uris: ['https://second.example/cb'],
             });
@@ -263,6 +281,150 @@ describe('Remote MCP OAuth authorization server', () => {
             const res = await registerClient({ redirect_uris: undefined });
             expect(res.status).toBe(400);
             expect(res.body.error).toBe('invalid_redirect_uri');
+        });
+    });
+
+    describe('pairing window', () => {
+        const ttl = 10 * 60 * 1000;
+
+        it('refuses registration and authorization without an open pairing', async () => {
+            const refused = await rawRegister();
+            expect(refused.status).toBe(403);
+            expect(refused.body.error).toBe('access_denied');
+
+            const client = (await registerClient()).body.client_id;
+            pairing.close();
+            const res = await request(app)
+                .get('/oauth/authorize')
+                .query(authorizeParams(client, newVerifier()));
+            expect(res.status).toBe(403);
+            expect(res.headers.location).toBeUndefined();
+            expect(res.text).toContain('Authorize a new connector');
+        });
+
+        it('opens for ten minutes', async () => {
+            const opened = await openPairing(ownerCookie);
+            expect(opened.status).toBe(201);
+            const expiresAt = new Date(opened.body.expires_at).getTime();
+            expect(expiresAt - Date.now()).toBeGreaterThan(ttl - 5000);
+            expect(expiresAt - Date.now()).toBeLessThanOrEqual(ttl);
+
+            const status = await request(app)
+                .get('/api/mcp/pairing')
+                .set('Cookie', ownerCookie);
+            expect(status.body).toMatchObject({
+                enabled: true,
+                open: true,
+                url: `${BASE}/mcp`,
+            });
+
+            const now = Date.now();
+            jest.spyOn(Date, 'now').mockReturnValue(now + ttl + 1000);
+            expect((await rawRegister()).status).toBe(403);
+        });
+
+        it('accepts one client per pairing', async () => {
+            expect((await registerClient()).status).toBe(201);
+            expect((await rawRegister()).status).toBe(403);
+        });
+
+        it('lets only the client of the pairing authorize', async () => {
+            const first = (await registerClient()).body.client_id;
+            pairing.close();
+            const second = (await registerClient()).body.client_id;
+            const res = await request(app)
+                .get('/oauth/authorize')
+                .query(authorizeParams(first, newVerifier()));
+            expect(res.status).toBe(403);
+            const own = await request(app)
+                .get('/oauth/authorize')
+                .query(authorizeParams(second, newVerifier()));
+            expect(own.status).toBe(200);
+        });
+
+        it('lets an existing client reconnect in a new pairing', async () => {
+            const verifier = newVerifier();
+            const { client } = await obtainCode({ verifier });
+            expect((await rawRegister()).status).toBe(403);
+
+            await openPairing(ownerCookie);
+            const res = await request(app)
+                .get('/oauth/authorize')
+                .query(authorizeParams(client, newVerifier()));
+            expect(res.status).toBe(200);
+            // That reconnect is the pairing's one client.
+            expect((await rawRegister()).status).toBe(403);
+        });
+
+        it('closes once a grant is given', async () => {
+            const verifier = newVerifier();
+            const { client } = await obtainCode({ verifier });
+            const again = await consent(client, user);
+            expect(again.status).toBe(403);
+            expect(again.headers.location).toBeUndefined();
+        });
+
+        it('only takes the consent of the account that opened it', async () => {
+            const other = await createTestUser({
+                email: `other-admin-${Date.now()}@example.com`,
+                email_verified: true,
+            });
+            await Role.update(
+                { is_admin: true },
+                { where: { user_id: other.id } }
+            );
+            await enrollMfa(other);
+            const client = (await registerClient()).body.client_id;
+            const res = await consent(client, other);
+            expect(res.status).toBe(403);
+            expect(res.headers.location).toBeUndefined();
+        });
+
+        it('is opened only from a signed-in session of an allowed account with two-factor', async () => {
+            expect((await request(app).post('/api/mcp/pairing')).status).toBe(
+                401
+            );
+
+            const { rawToken } = await createApiToken({
+                userId: user.id,
+                name: 'Full access',
+            });
+            const byKey = await request(app)
+                .post('/api/mcp/pairing')
+                .set('Authorization', `Bearer ${rawToken}`);
+            expect(byKey.status).toBe(403);
+
+            const member = await createTestUser({
+                email: `pair-member-${Date.now()}@example.com`,
+                email_verified: true,
+            });
+            await Role.update(
+                { is_admin: false },
+                { where: { user_id: member.id } }
+            );
+            const memberCookie = await authenticateUser(request(app), member);
+            const notAllowed = await openPairing(memberCookie);
+            expect(notAllowed.status).toBe(403);
+            expect(notAllowed.body.error).toBe('not_allowed');
+
+            await Role.update(
+                { is_admin: true },
+                { where: { user_id: member.id } }
+            );
+            const noMfa = await openPairing(memberCookie);
+            expect(noMfa.status).toBe(403);
+            expect(noMfa.body.error).toBe('mfa_required');
+            expect((await rawRegister()).status).toBe(403);
+        });
+
+        it('shows how long ago the client registered', async () => {
+            const client = (await registerClient()).body.client_id;
+            const res = await request(app)
+                .get('/oauth/authorize')
+                .query(authorizeParams(client, newVerifier()));
+            expect(res.text).toContain(
+                'registered with Cadence less than a minute ago'
+            );
         });
     });
 
@@ -426,14 +588,18 @@ describe('Remote MCP OAuth authorization server', () => {
                 { is_admin: false },
                 { where: { user_id: member.id } }
             );
+            const memberCookie = await authenticateUser(request(app), member);
             await enrollMfa(member);
             withEnv({
                 TUDUDI_MCP_OAUTH_ALLOWED_EMAILS: ` other@example.com, ${member.email.toUpperCase()} `,
             });
 
-            const client = (await registerClient()).body.client_id;
+            const client = (await registerClient({}, { cookie: memberCookie }))
+                .body.client_id;
             expect((await consent(client, member)).status).toBe(302);
             // The admin is not on the list, so it is refused too.
+            expect((await openPairing(ownerCookie)).status).toBe(403);
+            await openPairing(memberCookie);
             expect((await consent(client, user)).status).toBe(403);
         });
 

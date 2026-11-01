@@ -2,6 +2,60 @@
 
 const { handleMcpHttpRequest } = require('./httpTransport');
 const { logger } = require('../../services/logService');
+const oauthConfig = require('../oauth/config');
+const pairing = require('../oauth/pairing');
+const { mayGrant } = require('../oauth/service');
+const mfaService = require('../mfa/service');
+
+const pairingBody = () => {
+    const { open, expiresAt } = pairing.status();
+    return {
+        enabled: oauthConfig.isEnabled(),
+        url: oauthConfig.isEnabled() ? oauthConfig.resourceUrl() : null,
+        open,
+        expires_at: expiresAt,
+    };
+};
+
+// The remote connector state shown in the profile (docs/38-remote-mcp.md).
+function getPairing(req, res) {
+    res.json(pairingBody());
+}
+
+// "Authorize a new connector": opens the ten-minute window in which one
+// remote client may register and connect. Only from a signed-in browser
+// session (the web app is only reachable over Tailscale), never with an
+// API key, and only for an account that may grant a connector.
+async function openPairing(req, res, next) {
+    try {
+        if (!oauthConfig.isEnabled()) {
+            return res.status(404).json({ error: 'remote_mcp_disabled' });
+        }
+        if (!req.session?.userId || req.authToken) {
+            return res.status(403).json({ error: 'session_required' });
+        }
+        const user = req.currentUser;
+        if (!(await mayGrant(user))) {
+            return res.status(403).json({ error: 'not_allowed' });
+        }
+        if (!(await mfaService.isEnabled(user.id))) {
+            return res.status(403).json({ error: 'mfa_required' });
+        }
+        const { expiresAt } = pairing.open(user.id);
+        logger.info(
+            {
+                event: 'oauth.pairing_opened',
+                userId: user.id,
+                expiresAt: expiresAt.toISOString(),
+                ip: req.ip,
+            },
+            'OAuth pairing opened'
+        );
+        return res.status(201).json(pairingBody());
+    } catch (error) {
+        return next(error);
+    }
+}
 
 // The transport is stateless, so the initialize request is what marks a
 // client connecting. One audit line per connection; never the token.
@@ -204,6 +258,8 @@ async function listMcpTools(req, res) {
 }
 
 module.exports = {
+    getPairing,
+    openPairing,
     getMcpConfig,
     getMcpStatus,
     listMcpTools,

@@ -72,6 +72,18 @@ ${body}
         );
 }
 
+// How long ago the client registered, so a client made by someone else
+// moments before (or long ago) stands out.
+function age(since, now = Date.now()) {
+    const minutes = Math.floor((now - since.getTime()) / 60000);
+    if (minutes < 1) return 'less than a minute ago';
+    if (minutes < 60)
+        return minutes === 1 ? '1 minute ago' : `${minutes} minutes ago`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 48) return hours === 1 ? '1 hour ago' : `${hours} hours ago`;
+    return `${Math.floor(hours / 24)} days ago`;
+}
+
 function renderConsent(res, { client, params, error, status = 200 }) {
     const redirect = new URL(params.redirect_uri);
     const hidden = FORWARDED_FIELDS.filter(
@@ -88,7 +100,7 @@ function renderConsent(res, { client, params, error, status = 200 }) {
         redirect.origin,
         `<h1>Connect an assistant to Cadence</h1>
 <p>An app calling itself <strong>${escapeHtml(client.name)}</strong> asks to read and change your Cadence tasks, projects, notes and habits through MCP.</p>
-<p>After you allow it, you go back to <strong>${escapeHtml(redirect.host)}</strong>.</p>
+<p>This app registered with Cadence ${age(client.issuedAt)}. After you allow it, you go back to <strong>${escapeHtml(redirect.host)}</strong>.</p>
 ${error ? `<p class="error" role="alert">${escapeHtml(error)}</p>` : ''}
 <form method="post" action="/oauth/authorize" autocomplete="on">
 ${hidden}
