@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-01 — Passe d'épure : page projet
+
+- **Problème** (projet de 2 tâches, rien de rempli) : « Démarré le 29 oct. », une barre « 0 tâches sur 2 terminées 0 % », un bouton « Partager » à côté de « Terminer », un panneau « Infos du projet » de 7 lignes toutes vides (« Définir un domaine », « Aucune date de début »…), deux panneaux « Aucune note pour l'instant » et « Aucun fichier pour l'instant… », et « Terminé (0) ».
+- **Décision** : une date de début passée ne s'affiche plus (« Commence le » reste pour une date à venir) ; la barre d'avancement attend une première tâche faite (ou des dates de début et d'échéance) ; « Partager » rejoint « Épingler » dans « … » ; le panneau d'infos ne montre que les champs remplis, « Ajouter un détail » dévoile les autres ; Notes et Pièces jointes vides n'ont plus que leur titre et « + » ; une section « Terminé (0) » ne s'affiche pas (toutes les listes).
+- **Android** : rien à reprendre : l'en-tête de projet n'a ni date de début, ni barre, ni partage, ni panneau d'infos, et la section des terminées n'apparaît déjà que non vide. Le statut reste visible des deux côtés (c'est son seul accès).
+
 ### 2026-11-01 — Passe d'épure : navigation
 
 - **Problème** : la barre latérale affichait sept compteurs permanents (Aujourd'hui, Demain, 7 prochains jours, Boîte, Projets 6, Zones 1, Étiquettes 9) ; la barre du haut gardait le mot « Focus » même sans focus et une touche « C » collée au bouton Capturer.

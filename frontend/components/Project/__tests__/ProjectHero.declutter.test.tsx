@@ -13,7 +13,12 @@ const t = ((
         String(values?.[name] ?? '')
     )) as never;
 
-const renderHero = (project: Partial<Project> = {}, onTogglePin = jest.fn()) =>
+const renderHero = (
+    project: Partial<Project> = {},
+    onTogglePin = jest.fn(),
+    counts = { done: 1, total: 4 },
+    onShareClick = jest.fn()
+) =>
     render(
         <ProjectHero
             project={{
@@ -24,11 +29,11 @@ const renderHero = (project: Partial<Project> = {}, onTogglePin = jest.fn()) =>
             }}
             areas={[]}
             t={t}
-            doneCount={1}
-            totalCount={4}
+            doneCount={counts.done}
+            totalCount={counts.total}
             onUpdate={jest.fn().mockResolvedValue(undefined)}
             onDeleteClick={jest.fn()}
-            onShareClick={jest.fn()}
+            onShareClick={onShareClick}
             onTogglePin={onTogglePin}
         />
     );
@@ -51,5 +56,37 @@ describe('ProjectHero declutter', () => {
         fireEvent.click(screen.getByRole('button', { name: 'Pin' }));
 
         expect(onTogglePin).toHaveBeenCalled();
+    });
+
+    it('keeps Share in the "…" menu, not in the action row', () => {
+        const onShareClick = jest.fn();
+        renderHero({}, jest.fn(), { done: 1, total: 4 }, onShareClick);
+
+        expect(screen.queryAllByRole('button', { name: /Share/ })).toHaveLength(
+            0
+        );
+        fireEvent.click(screen.getByRole('button', { name: 'More options' }));
+        fireEvent.click(screen.getByRole('button', { name: /Share/ }));
+
+        expect(onShareClick).toHaveBeenCalled();
+    });
+
+    it('shows no progress bar before a first task is done', () => {
+        renderHero({}, jest.fn(), { done: 0, total: 2 });
+        expect(screen.queryByText(/Project progress/)).toBeNull();
+    });
+
+    it('shows the progress once a task is done', () => {
+        renderHero({}, jest.fn(), { done: 1, total: 2 });
+        expect(screen.getByText(/Project progress/)).toBeInTheDocument();
+    });
+
+    it('says nothing about a start date already behind, only a coming one', () => {
+        const { unmount } = renderHero({ start_date: '2020-01-10' });
+        expect(screen.queryByText(/Started/)).toBeNull();
+        unmount();
+
+        renderHero({ start_date: '2999-01-10' });
+        expect(screen.getByText(/Starts/)).toBeInTheDocument();
     });
 });

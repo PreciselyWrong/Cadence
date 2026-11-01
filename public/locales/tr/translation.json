@@ -1395,6 +1395,8 @@
     "waiting": "Bekliyor"
   },
   "project": {
+    "hideEmptyDetails": "Hide empty fields",
+    "addDetail": "Add a detail",
     "name": "Proje Adı",
     "projectImage": "Proje Görseli",
     "uploadImageHint": "Projeniz için bir görsel yükleyin (maks 10MB)",

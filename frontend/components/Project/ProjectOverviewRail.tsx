@@ -93,6 +93,7 @@ const EditableRow: React.FC<{
     editing: boolean;
     onStartEdit: () => void;
     editor: React.ReactNode;
+    revealEmpty: boolean;
     children?: React.ReactNode;
 }> = ({
     label,
@@ -102,38 +103,41 @@ const EditableRow: React.FC<{
     editing,
     onStartEdit,
     editor,
+    revealEmpty,
     children,
-}) => (
-    <div className="group py-2 text-sm">
-        <div className="flex items-center justify-between gap-3">
-            <dt className="text-gray-600 dark:text-gray-300">{label}</dt>
-            <dd className="flex min-w-0 flex-wrap items-center justify-end gap-1.5 text-right text-gray-800 dark:text-gray-200">
-                {hasValue ? (
-                    <>
+}) =>
+    // An empty field stays out of sight until "Add a detail" reveals it.
+    !hasValue && !editing && !revealEmpty ? null : (
+        <div className="group py-2 text-sm">
+            <div className="flex items-center justify-between gap-3">
+                <dt className="text-gray-600 dark:text-gray-300">{label}</dt>
+                <dd className="flex min-w-0 flex-wrap items-center justify-end gap-1.5 text-right text-gray-800 dark:text-gray-200">
+                    {hasValue ? (
+                        <>
+                            <button
+                                type="button"
+                                onClick={onStartEdit}
+                                className="rounded p-0.5 text-gray-500 opacity-0 transition-opacity hover:text-gray-700 focus-visible:opacity-100 group-hover:opacity-100 dark:hover:text-gray-200 [@media(hover:none)]:opacity-100"
+                                aria-label={editLabel}
+                            >
+                                <PencilIcon className="h-3.5 w-3.5" />
+                            </button>
+                            {children}
+                        </>
+                    ) : (
                         <button
                             type="button"
                             onClick={onStartEdit}
-                            className="rounded p-0.5 text-gray-500 opacity-0 transition-opacity hover:text-gray-700 focus-visible:opacity-100 group-hover:opacity-100 dark:hover:text-gray-200 [@media(hover:none)]:opacity-100"
-                            aria-label={editLabel}
+                            className="text-gray-500 hover:text-gray-700 hover:underline dark:text-gray-400 dark:hover:text-gray-200"
                         >
-                            <PencilIcon className="h-3.5 w-3.5" />
+                            {empty}
                         </button>
-                        {children}
-                    </>
-                ) : (
-                    <button
-                        type="button"
-                        onClick={onStartEdit}
-                        className="text-gray-500 hover:text-gray-700 hover:underline dark:text-gray-400 dark:hover:text-gray-200"
-                    >
-                        {empty}
-                    </button>
-                )}
-            </dd>
+                    )}
+                </dd>
+            </div>
+            {editing && <div className="mt-2">{editor}</div>}
         </div>
-        {editing && <div className="mt-2">{editor}</div>}
-    </div>
-);
+    );
 
 type EditableField =
     'area' | 'goal' | 'priority' | 'start' | 'due' | 'tags' | 'color' | null;
@@ -152,6 +156,7 @@ const ProjectOverviewRail: React.FC<ProjectOverviewRailProps> = ({
     const [editing, setEditing] = useState<EditableField>(null);
     const [goals, setGoals] = useState<Goal[]>([]);
     const [tagDraft, setTagDraft] = useState<string[]>([]);
+    const [revealEmpty, setRevealEmpty] = useState(false);
 
     useEffect(() => {
         if (editing !== 'goal' || goals.length > 0) return;
@@ -261,6 +266,15 @@ const ProjectOverviewRail: React.FC<ProjectOverviewRailProps> = ({
             new Date(a.updated_at || 0).getTime()
     );
     const divided = 'space-y-0.5';
+    const hasEmptyField = [
+        area?.name,
+        goal?.title || project.is_maintenance,
+        priorityLevel,
+        project.start_date,
+        project.due_date_at,
+        project.tags && project.tags.length > 0,
+        project.color,
+    ].some((value) => !value);
 
     return (
         <div className="space-y-4">
@@ -338,6 +352,7 @@ const ProjectOverviewRail: React.FC<ProjectOverviewRailProps> = ({
             <Panel title={t('project.info', 'Project info')}>
                 <dl className={divided}>
                     <EditableRow
+                        revealEmpty={revealEmpty}
                         label={t('common.area', 'Area')}
                         editLabel={t('project.changeArea', 'Change area')}
                         empty={t('project.setArea', 'Set area')}
@@ -364,6 +379,7 @@ const ProjectOverviewRail: React.FC<ProjectOverviewRailProps> = ({
                         )}
                     </EditableRow>
                     <EditableRow
+                        revealEmpty={revealEmpty}
                         label={t('common.goal', 'Goal')}
                         editLabel={t('project.changeGoal', 'Change goal')}
                         empty={t('project.setGoal', 'Set goal')}
@@ -399,6 +415,7 @@ const ProjectOverviewRail: React.FC<ProjectOverviewRailProps> = ({
                         )}
                     </EditableRow>
                     <EditableRow
+                        revealEmpty={revealEmpty}
                         label={t('common.priority', 'Priority')}
                         editLabel={t(
                             'project.changePriority',
@@ -425,6 +442,7 @@ const ProjectOverviewRail: React.FC<ProjectOverviewRailProps> = ({
                         {t(`priority.${priorityLevel}`, String(priorityLevel))}
                     </EditableRow>
                     <EditableRow
+                        revealEmpty={revealEmpty}
                         label={t('task.startDate', 'Start')}
                         editLabel={t(
                             'forms.task.startDatePlaceholder',
@@ -463,6 +481,7 @@ const ProjectOverviewRail: React.FC<ProjectOverviewRailProps> = ({
                             )}${project.start_time ? ` ${project.start_time}` : ''}`}
                     </EditableRow>
                     <EditableRow
+                        revealEmpty={revealEmpty}
                         label={t('common.due', 'Due')}
                         editLabel={t('project.changeDue', 'Change due date')}
                         empty={t('projectItem.noDueDate', 'No due date')}
@@ -488,6 +507,7 @@ const ProjectOverviewRail: React.FC<ProjectOverviewRailProps> = ({
                             )}
                     </EditableRow>
                     <EditableRow
+                        revealEmpty={revealEmpty}
                         label={t('common.tags', 'Tags')}
                         editLabel={t('project.changeTags', 'Change tags')}
                         empty={t('project.addTags', 'Add tags')}
@@ -535,6 +555,7 @@ const ProjectOverviewRail: React.FC<ProjectOverviewRailProps> = ({
                         ))}
                     </EditableRow>
                     <EditableRow
+                        revealEmpty={revealEmpty}
                         label={t('forms.color', 'Color')}
                         editLabel={t('project.changeColor', 'Change color')}
                         empty={t('project.setColor', 'Set color')}
@@ -554,6 +575,18 @@ const ProjectOverviewRail: React.FC<ProjectOverviewRailProps> = ({
                         />
                     </EditableRow>
                 </dl>
+                {hasEmptyField && (
+                    <button
+                        type="button"
+                        onClick={() => setRevealEmpty((open) => !open)}
+                        aria-expanded={revealEmpty}
+                        className="text-sm text-gray-500 hover:text-gray-700 hover:underline dark:text-gray-400 dark:hover:text-gray-200"
+                    >
+                        {revealEmpty
+                            ? t('project.hideEmptyDetails', 'Hide empty fields')
+                            : t('project.addDetail', 'Add a detail')}
+                    </button>
+                )}
             </Panel>
 
             <Panel
@@ -576,11 +609,7 @@ const ProjectOverviewRail: React.FC<ProjectOverviewRailProps> = ({
                     </button>
                 }
             >
-                {recentNotes.length === 0 ? (
-                    <p className="text-sm text-gray-600 dark:text-gray-300">
-                        {t('project.noNotesYet', 'No notes yet.')}
-                    </p>
-                ) : (
+                {recentNotes.length > 0 && (
                     <ul className={divided}>
                         {recentNotes.map((note) => (
                             <li key={note.uid || note.id}>

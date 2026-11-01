@@ -1647,6 +1647,8 @@
     "unknown": "Stav {{status}}"
   },
   "project": {
+    "hideEmptyDetails": "Hide empty fields",
+    "addDetail": "Add a detail",
     "noteCount_many": "{{count}} poznámok",
     "noteCount_few": "{{count}} poznámky",
     "memberCount_many": "{{count}} členov",

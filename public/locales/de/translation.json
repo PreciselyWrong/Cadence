@@ -812,6 +812,8 @@
     }
   },
   "project": {
+    "hideEmptyDetails": "Leere Felder ausblenden",
+    "addDetail": "Detail hinzufügen",
     "projectImage": "Projektbild",
     "uploadImageHint": "Laden Sie ein Bild für Ihr Projekt hoch (max. 10MB)",
     "browseImage": "Bild durchsuchen",

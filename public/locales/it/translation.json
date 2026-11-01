@@ -1396,6 +1396,8 @@
     "waiting": "In attesa"
   },
   "project": {
+    "hideEmptyDetails": "Nascondi i campi vuoti",
+    "addDetail": "Aggiungi un dettaglio",
     "name": "Nome Progetto",
     "projectImage": "Immagine Progetto",
     "uploadImageHint": "Carica un'immagine per il tuo progetto (max 10MB)",

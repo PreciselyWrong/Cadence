@@ -163,15 +163,13 @@ const ProjectAttachmentsWidget: React.FC<ProjectAttachmentsWidgetProps> = ({
                 />
             </div>
 
+            {/* An empty panel is just its title and "+"; dropping still works. */}
             {files.length === 0 ? (
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                    {uploading
-                        ? t('project.uploading', 'Uploading...')
-                        : t(
-                              'project.noFilesYet',
-                              'No files yet. Drop files here or use +.'
-                          )}
-                </p>
+                uploading && (
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                        {t('project.uploading', 'Uploading...')}
+                    </p>
+                )
             ) : (
                 <ul className="space-y-0.5">
                     {files

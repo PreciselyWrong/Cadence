@@ -1395,6 +1395,8 @@
     "waiting": "Väntar"
   },
   "project": {
+    "hideEmptyDetails": "Hide empty fields",
+    "addDetail": "Add a detail",
     "name": "Projektnamn",
     "projectImage": "Projektbild",
     "uploadImageHint": "Ladda upp en bild för ditt projekt (max 10 MB)",

@@ -2159,6 +2159,8 @@
     "saturday": "Σάβ"
   },
   "project": {
+    "hideEmptyDetails": "Hide empty fields",
+    "addDetail": "Add a detail",
     "name": "Όνομα Έργου",
     "projectImage": "Εικόνα Έργου",
     "uploadImageHint": "Μεταφορτώστε μια εικόνα για το έργο σας (μέγ. 10MB)",

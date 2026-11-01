@@ -86,7 +86,7 @@ Area: "Personal"
 4. **Start** (optional)
    - When the project begins: a day, optionally with a time
    - Same API shape as tasks: `start_date` (YYYY-MM-DD) and `start_time` (HH:mm) in the user's timezone, stored in `start_date_at`
-   - Shown and edited in the project's overview panel; the page header says "Starts" or "Started", or falls back to the created date when no start is set
+   - Shown and edited in the project's overview panel; the page header says "Starts" while the start is ahead and nothing once it has passed
    - Cannot be after the project's due date in the web UI
 
 ### Organization
@@ -538,7 +538,7 @@ The project page has an **Attachments** tab next to Tasks and Notes. It holds fi
 
 **How to share:**
 1. Open project detail page
-2. Click "Share" button
+2. Open the **⋯** menu and choose **Share**
 3. Choose **User** and enter their email, or choose **Group** (the toggle appears once the instance has a group, see [User Groups](18-user-groups.md))
 4. Select access level (read-only or read-write)
 5. The recipient gets a `share_invitation` notification
@@ -747,7 +747,7 @@ A template is a project row with `is_template = true`. Templates live on the **T
 Displayed on project cards and detail page:
 
 **Total tasks**: Count of all parent tasks (excluding subtasks)
-**Completion percentage**: Visual progress bar
+**Completion percentage**: Visual progress bar (on the project page, shown once a task is done or when start and due dates are both set)
 **Breakdown by status**:
 - Done (green)
 - In progress (blue)
@@ -818,7 +818,7 @@ Displayed on project cards and detail page:
 **Scenario:** Working with team member
 
 1. Open project "Client Onboarding"
-2. Click "Share" button
+2. Choose **Share** in the **⋯** menu
 3. Enter collaborator email: alice@example.com
 4. Select "Read-Write" access
 5. Save
@@ -892,9 +892,9 @@ Displayed on project cards and detail page:
    - Name (editable inline)
    - Status dropdown
    - Priority selector
-   - Pin toggle
-   - Share button
-3. **Metadata Row**
+   - Pin and Share in the **⋯** menu
+3. **Project info** (side panel): only the filled fields (area, goal, priority, start, due, tags, colour); **Add a detail** reveals the empty ones. The Notes and Attachments panels show no empty-state sentence, and the collapsed **Completed (N)** section of a list is hidden while N is 0.
+4. **Metadata Row**
    - Area (linked)
    - Due date (if set)
    - Tags (editable)

@@ -1398,6 +1398,8 @@
     "waiting": "În așteptare"
   },
   "project": {
+    "hideEmptyDetails": "Hide empty fields",
+    "addDetail": "Add a detail",
     "name": "Numele Proiectului",
     "projectImage": "Imaginea Proiectului",
     "uploadImageHint": "Încărcați o imagine pentru proiectul dvs. (max 10MB)",

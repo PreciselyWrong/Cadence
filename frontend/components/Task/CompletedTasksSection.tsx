@@ -49,6 +49,9 @@ const CompletedTasksSection: React.FC<CompletedTasksSectionProps> = ({
 
     const Chevron = open ? ChevronDownIcon : ChevronRightIcon;
 
+    // "Completed (0)" has nothing to open.
+    if (count === 0) return null;
+
     return (
         <section className="mt-6" data-testid="completed-tasks-section">
             <button

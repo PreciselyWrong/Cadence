@@ -138,4 +138,13 @@ describe('useCompletedTasks', () => {
         );
         expect(load).toHaveBeenCalledTimes(2);
     });
+
+    it('shows nothing when no task is completed', () => {
+        render(
+            <CompletedTasksSection list="tasks" count={0}>
+                <div>row</div>
+            </CompletedTasksSection>
+        );
+        expect(screen.queryByTestId('completed-tasks-section')).toBeNull();
+    });
 });

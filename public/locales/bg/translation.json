@@ -1395,6 +1395,8 @@
     "waiting": "В очакване"
   },
   "project": {
+    "hideEmptyDetails": "Hide empty fields",
+    "addDetail": "Add a detail",
     "name": "Име на проекта",
     "projectImage": "Снимка на проекта",
     "uploadImageHint": "Качете изображение за вашия проект (макс 10MB)",

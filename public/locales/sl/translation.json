@@ -1401,6 +1401,8 @@
     "waiting": "Čaka"
   },
   "project": {
+    "hideEmptyDetails": "Hide empty fields",
+    "addDetail": "Add a detail",
     "noteCount_few": "{{count}} opombe",
     "noteCount_two": "{{count}} opombi",
     "memberCount_few": "{{count}} člani",

@@ -1395,6 +1395,8 @@
     "waiting": "Đang chờ"
   },
   "project": {
+    "hideEmptyDetails": "Hide empty fields",
+    "addDetail": "Add a detail",
     "name": "Tên Dự Án",
     "projectImage": "Hình Ảnh Dự Án",
     "uploadImageHint": "Tải lên một hình ảnh cho dự án của bạn (tối đa 10MB)",

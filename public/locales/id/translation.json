@@ -1395,6 +1395,8 @@
     "waiting": "Menunggu"
   },
   "project": {
+    "hideEmptyDetails": "Hide empty fields",
+    "addDetail": "Add a detail",
     "name": "Nama Proyek",
     "projectImage": "Gambar Proyek",
     "uploadImageHint": "Unggah gambar untuk proyek Anda (maks 10MB)",

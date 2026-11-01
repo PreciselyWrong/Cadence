@@ -1395,6 +1395,8 @@
     "waiting": "Venter"
   },
   "project": {
+    "hideEmptyDetails": "Hide empty fields",
+    "addDetail": "Add a detail",
     "name": "Projekt Navn",
     "projectImage": "Projektbillede",
     "uploadImageHint": "Upload et billede til dit projekt (maks 10MB)",

@@ -1395,6 +1395,8 @@
     "waiting": "Wachten"
   },
   "project": {
+    "hideEmptyDetails": "Hide empty fields",
+    "addDetail": "Add a detail",
     "name": "Projectnaam",
     "projectImage": "Projectafbeelding",
     "uploadImageHint": "Upload een afbeelding voor je project (max 10MB)",

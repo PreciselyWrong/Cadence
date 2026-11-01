@@ -10,7 +10,6 @@ import {
     ChevronDownIcon,
     EllipsisHorizontalIcon,
     FolderIcon,
-    ShareIcon,
 } from '@heroicons/react/24/outline';
 import { Project, ProjectStatus } from '../../entities/Project';
 import { Area } from '../../entities/Area';
@@ -341,39 +340,22 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                                     )}
                                 </span>
                             )}
-                            {startDate && (
+                            {/* A start already behind says nothing new; only a coming one shows. */}
+                            {startDate && startsLater && (
                                 <>
                                     {(dueText || completedDate) && (
                                         <span>·</span>
                                     )}
                                     <span>
-                                        {startsLater
-                                            ? t(
-                                                  'project.startsOn',
-                                                  'Starts {{date}}',
-                                                  {
-                                                      date: format(
-                                                          startDate,
-                                                          'PP',
-                                                          {
-                                                              locale: getCurrentLocale(),
-                                                          }
-                                                      ),
-                                                  }
-                                              )
-                                            : t(
-                                                  'project.startedOn',
-                                                  'Started {{date}}',
-                                                  {
-                                                      date: format(
-                                                          startDate,
-                                                          'PP',
-                                                          {
-                                                              locale: getCurrentLocale(),
-                                                          }
-                                                      ),
-                                                  }
-                                              )}
+                                        {t(
+                                            'project.startsOn',
+                                            'Starts {{date}}',
+                                            {
+                                                date: format(startDate, 'PP', {
+                                                    locale: getCurrentLocale(),
+                                                }),
+                                            }
+                                        )}
                                     </span>
                                 </>
                             )}
@@ -512,14 +494,6 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                                 {t('project.markComplete', 'Complete')}
                             </button>
                         )}
-                        <button
-                            type="button"
-                            onClick={onShareClick}
-                            className={`${actionClass} max-sm:hidden`}
-                        >
-                            <ShareIcon className="h-4 w-4" />
-                            {t('projectItem.share', 'Share')}
-                        </button>
                         <div className="relative" ref={menuRef}>
                             <button
                                 type="button"
@@ -550,9 +524,10 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                                                 : t('project.pin', 'Pin')}
                                         </button>
                                     )}
+                                    {/* Sharing is occasional: menu only, like Pin. */}
                                     <button
                                         type="button"
-                                        className={`${menuItemClass} sm:hidden`}
+                                        className={menuItemClass}
                                         onClick={() => {
                                             setMenuOpen(false);
                                             onShareClick();
@@ -675,55 +650,59 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                     </p>
                 )}
 
-                <div
-                    className="space-y-2"
-                    title={
-                        timeUsed !== null
-                            ? t(
-                                  'project.progressHint',
-                                  'Bar: tasks done. Line: time passed between start and due date.'
-                              )
-                            : undefined
-                    }
-                >
-                    <div className="flex items-baseline justify-between gap-3 text-xs text-gray-600 tabular-nums dark:text-gray-300">
-                        <span>
-                            {t(
-                                'project.progressSummary',
-                                'Project progress · {{done}} of {{total}} tasks done',
-                                {
-                                    done: doneCount,
-                                    total: totalCount,
-                                }
-                            )}
-                            {timeUsed !== null &&
-                                ` · ${t('project.timeUsed', '{{percent}}% of time used', { percent: timeUsed })}`}
-                        </span>
-                        <span className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-                            {percent}
-                            <span className="ml-0.5 text-xs font-medium text-gray-600 dark:text-gray-300">
-                                %
-                            </span>
-                        </span>
-                    </div>
+                {/* Before a first task is done (and with no dates to compare)
+                    the bar would only say 0 %. */}
+                {(doneCount > 0 || timeUsed !== null) && (
                     <div
-                        className="relative h-1.5 rounded-full"
-                        style={{
-                            backgroundColor: `color-mix(in srgb, ${tint} 20%, transparent)`,
-                        }}
+                        className="space-y-2"
+                        title={
+                            timeUsed !== null
+                                ? t(
+                                      'project.progressHint',
+                                      'Bar: tasks done. Line: time passed between start and due date.'
+                                  )
+                                : undefined
+                        }
                     >
+                        <div className="flex items-baseline justify-between gap-3 text-xs text-gray-600 tabular-nums dark:text-gray-300">
+                            <span>
+                                {t(
+                                    'project.progressSummary',
+                                    'Project progress · {{done}} of {{total}} tasks done',
+                                    {
+                                        done: doneCount,
+                                        total: totalCount,
+                                    }
+                                )}
+                                {timeUsed !== null &&
+                                    ` · ${t('project.timeUsed', '{{percent}}% of time used', { percent: timeUsed })}`}
+                            </span>
+                            <span className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+                                {percent}
+                                <span className="ml-0.5 text-xs font-medium text-gray-600 dark:text-gray-300">
+                                    %
+                                </span>
+                            </span>
+                        </div>
                         <div
-                            className="absolute inset-y-0 left-0 rounded-full bg-blue-500 transition-all duration-300"
-                            style={{ width: `${percent}%` }}
-                        />
-                        {timeUsed !== null && (
+                            className="relative h-1.5 rounded-full"
+                            style={{
+                                backgroundColor: `color-mix(in srgb, ${tint} 20%, transparent)`,
+                            }}
+                        >
                             <div
-                                className="absolute -top-1 h-3.5 w-0.5 rounded-full bg-gray-900/50 dark:bg-gray-100/50"
-                                style={{ left: `${timeUsed}%` }}
+                                className="absolute inset-y-0 left-0 rounded-full bg-blue-500 transition-all duration-300"
+                                style={{ width: `${percent}%` }}
                             />
-                        )}
+                            {timeUsed !== null && (
+                                <div
+                                    className="absolute -top-1 h-3.5 w-0.5 rounded-full bg-gray-900/50 dark:bg-gray-100/50"
+                                    style={{ left: `${timeUsed}%` }}
+                                />
+                            )}
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
         </div>
     );

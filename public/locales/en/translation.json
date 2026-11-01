@@ -1421,6 +1421,8 @@
     "unknown": "Status {{status}}"
   },
   "project": {
+    "hideEmptyDetails": "Hide empty fields",
+    "addDetail": "Add a detail",
     "name": "Project Name",
     "projectImage": "Project image",
     "editProject": "Edit project",

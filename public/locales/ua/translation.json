@@ -970,6 +970,8 @@
     }
   },
   "project": {
+    "hideEmptyDetails": "Hide empty fields",
+    "addDetail": "Add a detail",
     "noteCount_many": "{{count}} нотаток",
     "noteCount_few": "{{count}} нотатки",
     "memberCount_many": "{{count}} учасників",

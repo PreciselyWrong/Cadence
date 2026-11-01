@@ -1395,6 +1395,8 @@
     "waiting": "等待中"
   },
   "project": {
+    "hideEmptyDetails": "Hide empty fields",
+    "addDetail": "Add a detail",
     "name": "项目名称",
     "projectImage": "项目图片",
     "uploadImageHint": "上传项目图片（最大10MB）",

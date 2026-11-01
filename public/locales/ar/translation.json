@@ -1399,6 +1399,8 @@
     "waiting": "في الانتظار"
   },
   "project": {
+    "hideEmptyDetails": "Hide empty fields",
+    "addDetail": "Add a detail",
     "name": "اسم المشروع",
     "projectImage": "صورة المشروع",
     "uploadImageHint": "قم بتحميل صورة لمشروعك (حد أقصى 10 ميجابايت)",

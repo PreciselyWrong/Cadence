@@ -1395,6 +1395,8 @@
     "waiting": "대기 중"
   },
   "project": {
+    "hideEmptyDetails": "Hide empty fields",
+    "addDetail": "Add a detail",
     "name": "프로젝트 이름",
     "projectImage": "프로젝트 이미지",
     "uploadImageHint": "프로젝트를 위한 이미지를 업로드하세요 (최대 10MB)",

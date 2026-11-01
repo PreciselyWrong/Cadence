@@ -1919,6 +1919,8 @@
     }
   },
   "project": {
+    "hideEmptyDetails": "Hide empty fields",
+    "addDetail": "Add a detail",
     "projectImage": "プロジェクト画像",
     "uploadImageHint": "プロジェクト用の画像をアップロード（最大10MB）",
     "browseImage": "画像を参照",
