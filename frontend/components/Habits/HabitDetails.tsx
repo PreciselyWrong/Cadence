@@ -5,6 +5,7 @@ import {
     ArchiveBoxIcon,
     ArrowLeftIcon,
     ArrowUturnLeftIcon,
+    ForwardIcon,
     PauseCircleIcon,
     PencilSquareIcon,
     PlusIcon,
@@ -32,6 +33,7 @@ import {
     CadenceGroup,
     CadenceHabitDetail,
     CadencePause,
+    createRow,
     deleteCadenceHabit,
     fetchCadenceGroups,
     fetchCadenceHabit,
@@ -262,6 +264,13 @@ const HabitDetails: React.FC = () => {
     const pauses = [...habit.pauses].sort((a, b) =>
         b.start.localeCompare(a.start)
     );
+    // A skip is a one-day rest pause that starts today.
+    const skippedToday = habit.pauses.find(
+        (pause) =>
+            pause.reason === 'REST' &&
+            pause.start === today &&
+            pause.end_exclusive === addDays(today, 1)
+    );
 
     const kindLabel = {
         goal: t('cadenceHabits.kind.goal', 'Goal'),
@@ -385,6 +394,39 @@ const HabitDetails: React.FC = () => {
                         />
                         {t('common.edit', 'Edit')}
                     </button>
+                    {!habit.archived && (
+                        <button
+                            type="button"
+                            className={smallButton}
+                            onClick={() =>
+                                act(() =>
+                                    skippedToday
+                                        ? deleteRow(
+                                              uid,
+                                              'pauses',
+                                              skippedToday.uid
+                                          )
+                                        : createRow(uid, 'pauses', {
+                                              start: today,
+                                              end_exclusive: addDays(today, 1),
+                                              reason: 'REST',
+                                              reason_label: null,
+                                          })
+                                )
+                            }
+                        >
+                            <ForwardIcon
+                                className="h-5 w-5"
+                                aria-hidden="true"
+                            />
+                            {skippedToday
+                                ? t(
+                                      'cadenceHabits.skip.cancel',
+                                      'Cancel the skip'
+                                  )
+                                : t('cadenceHabits.skip.today', 'Skip today')}
+                        </button>
+                    )}
                     <button
                         type="button"
                         className={smallButton}

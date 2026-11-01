@@ -4955,6 +4955,10 @@
     "addFailed": "Không thể ghi vào tệp TODO.md."
   },
   "cadenceHabits": {
+    "skip": {
+      "cancel": "Cancel the skip",
+      "today": "Skip today"
+    },
     "abstinence": {
       "assumption": "Con số này phụ thuộc vào những gì bạn ghi nhận. Các ngày tạm dừng không được tính và sẽ làm gián đoạn chuỗi. Các số liệu này không đo lường sức khỏe của bạn.",
       "best": "Chuỗi dài nhất",

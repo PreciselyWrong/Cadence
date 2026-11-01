@@ -4973,6 +4973,10 @@
     "addFailed": "V datoteko TODO.md ni bilo mogoče pisati."
   },
   "cadenceHabits": {
+    "skip": {
+      "cancel": "Cancel the skip",
+      "today": "Skip today"
+    },
     "abstinence": {
       "assumption": "To štetje je odvisno od tega, kaj zabeležite. Dnevi premora se ne štejejo in prekinejo niz. Te številke ne merijo vašega zdravja.",
       "best": "Najdaljši niz",

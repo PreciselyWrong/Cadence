@@ -4991,6 +4991,10 @@
     "addFailed": "تعذرت الكتابة في ملف TODO.md."
   },
   "cadenceHabits": {
+    "skip": {
+      "cancel": "Cancel the skip",
+      "today": "Skip today"
+    },
     "abstinence": {
       "assumption": "يعتمد هذا العدد على ما تسجّله. أيام التوقف المؤقت لا تُحسب وتوقف السلسلة. هذه الأرقام لا تقيس صحتك.",
       "best": "أفضل سلسلة",

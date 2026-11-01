@@ -4966,6 +4966,10 @@
     "addFailed": "Nu s-a putut scrie în fișierul TODO.md."
   },
   "cadenceHabits": {
+    "skip": {
+      "cancel": "Cancel the skip",
+      "today": "Skip today"
+    },
     "abstinence": {
       "assumption": "Acest număr depinde de ce notezi. Zilele în pauză nu se numără și opresc seria. Aceste cifre nu măsoară sănătatea ta.",
       "best": "Cea mai bună serie",

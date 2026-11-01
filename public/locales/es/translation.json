@@ -4949,6 +4949,10 @@
     "addFailed": "No se pudo escribir en el archivo TODO.md."
   },
   "cadenceHabits": {
+    "skip": {
+      "cancel": "Cancel the skip",
+      "today": "Skip today"
+    },
     "abstinence": {
       "assumption": "Este recuento depende de lo que registres. Los días en pausa no cuentan y cortan la racha. Estas cifras no miden tu salud.",
       "best": "Mejor racha",

@@ -5010,6 +5010,10 @@
     "addFailed": "Do súboru TODO.md sa nepodarilo zapisovať."
   },
   "cadenceHabits": {
+    "skip": {
+      "cancel": "Cancel the skip",
+      "today": "Skip today"
+    },
     "abstinence": {
       "assumption": "Tento počet závisí od toho, čo zaznamenávate. Dni pozastavenia sa nerátajú a prerušia sériu. Tieto čísla nemerajú vaše zdravie.",
       "best": "Najlepšia séria",

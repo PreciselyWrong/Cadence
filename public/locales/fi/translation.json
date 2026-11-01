@@ -4955,6 +4955,10 @@
     "addFailed": "TODO.md-tiedostoon ei voitu kirjoittaa."
   },
   "cadenceHabits": {
+    "skip": {
+      "cancel": "Cancel the skip",
+      "today": "Skip today"
+    },
     "abstinence": {
       "assumption": "Luku riippuu siitä, mitä merkitset. Taukopäivät jätetään pois ja katkaisevat putken. Luvut eivät mittaa terveyttäsi.",
       "best": "Paras putki",

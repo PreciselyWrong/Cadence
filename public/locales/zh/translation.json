@@ -4955,6 +4955,10 @@
     "addFailed": "无法写入 TODO.md 文件。"
   },
   "cadenceHabits": {
+    "skip": {
+      "cancel": "Cancel the skip",
+      "today": "Skip today"
+    },
     "abstinence": {
       "assumption": "此计数取决于您记录的内容。暂停的日子不计入，并会中断连续记录。这些数字并不衡量您的健康状况。",
       "best": "最长记录",

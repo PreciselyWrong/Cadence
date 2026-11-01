@@ -4953,6 +4953,10 @@
     "addFailed": "TODO.md 파일에 쓸 수 없습니다."
   },
   "cadenceHabits": {
+    "skip": {
+      "cancel": "Cancel the skip",
+      "today": "Skip today"
+    },
     "abstinence": {
       "assumption": "이 횟수는 기록한 내용에 따라 달라집니다. 일시 중지한 날은 제외되며 연속 기록을 멈춥니다. 이 수치는 건강 상태를 측정하지 않습니다.",
       "best": "최장 기록",

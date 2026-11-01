@@ -4918,6 +4918,10 @@
     "addFailed": "Could not write to the TODO.md file."
   },
   "cadenceHabits": {
+    "skip": {
+      "cancel": "Cancel the skip",
+      "today": "Skip today"
+    },
     "abstinence": {
       "assumption": "This count depends on what you note. Paused days are left out and stop the run. These figures do not measure your health.",
       "best": "Best run",

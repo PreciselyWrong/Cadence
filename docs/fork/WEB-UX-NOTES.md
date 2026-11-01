@@ -235,3 +235,9 @@ Revue écran par écran (Aujourd'hui, Boîte, Tâches, Projets, page projet, Age
 - **Problème** : une saisie d'habitude (un tap, une valeur rapide ou un montant) était enregistrée sans retour ; une erreur de tap ne se rattrapait qu'en ouvrant l'entrée et en la supprimant.
 - **Décision** : après chaque saisie réussie, un toast « {{nom}} noté » avec « Annuler » (6 s) supprime cette entrée (`deleteRow`, rechargement de la page). Le toast n'apparaît qu'une fois l'entrée enregistrée : un échec garde l'erreur habituelle. Un échec d'annulation affiche un toast d'erreur.
 - **Android** : à reprendre. Après une saisie, un snackbar « Annuler » qui supprime la dernière entrée, comme les autres annulations de l'application. Reste : rien d'essayé sur le téléphone.
+
+### 2026-11-01 — Passer une habitude aujourd'hui
+
+- **Problème** : pour sauter un jour, il fallait ouvrir « Pause », choisir la date et le motif ; le seul geste était une pause de plusieurs jours.
+- **Décision** : la page d'une habitude a « Passer aujourd'hui » (hors habitudes archivées). Il crée une pause d'un jour, motif Repos (`REST`), du jour à demain, comme sur Android : la série ne se casse pas. Le même bouton devient « Annuler le saut » tant que la pause du jour existe, et la supprime. Sans toast : l'état du bouton suit la pause.
+- **Android** : à reprendre : rien, déjà le cas (`skipToday`, `cancelSkip`, motif Repos).

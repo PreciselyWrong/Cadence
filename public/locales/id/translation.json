@@ -4955,6 +4955,10 @@
     "addFailed": "Tidak dapat menulis ke file TODO.md."
   },
   "cadenceHabits": {
+    "skip": {
+      "cancel": "Cancel the skip",
+      "today": "Skip today"
+    },
     "abstinence": {
       "assumption": "Hitungan ini bergantung pada apa yang Anda catat. Hari jeda tidak dihitung dan menghentikan rangkaian. Angka ini tidak mengukur kesehatan Anda.",
       "best": "Rangkaian terbaik",

@@ -4962,6 +4962,10 @@
     "addFailed": "Não foi possível gravar no arquivo TODO.md."
   },
   "cadenceHabits": {
+    "skip": {
+      "cancel": "Cancel the skip",
+      "today": "Skip today"
+    },
     "abstinence": {
       "assumption": "Essa contagem depende do que você registra. Dias pausados não entram e interrompem a sequência. Esses números não medem a sua saúde.",
       "best": "Melhor sequência",

@@ -118,6 +118,58 @@ describe('HabitDetails', () => {
         );
     });
 
+    it('skips today with a one-day rest pause', async () => {
+        service.createRow.mockResolvedValue({});
+        renderPage();
+        fireEvent.click(
+            await screen.findByRole('button', { name: 'Skip today' })
+        );
+        await waitFor(() =>
+            expect(service.createRow).toHaveBeenCalledWith('h1', 'pauses', {
+                start: '2026-10-05',
+                end_exclusive: '2026-10-06',
+                reason: 'REST',
+                reason_label: null,
+            })
+        );
+    });
+
+    it('cancels today skip when it is already set', async () => {
+        service.fetchCadenceHabit.mockResolvedValue(
+            detail({
+                goal: minutesGoal(),
+                goals: [minutesGoal()],
+                status: {
+                    date: '2026-10-05',
+                    evaluation: evaluation(),
+                    streak: { current: 3, best: 7 },
+                },
+                pauses: [
+                    {
+                        uid: 'skip1',
+                        habit_uid: 'h1',
+                        start: '2026-10-05',
+                        end_exclusive: '2026-10-06',
+                        reason: 'REST',
+                        reason_label: null,
+                    },
+                ],
+            })
+        );
+        service.deleteRow.mockResolvedValue({ deleted: true });
+        renderPage();
+        fireEvent.click(
+            await screen.findByRole('button', { name: 'Cancel the skip' })
+        );
+        await waitFor(() =>
+            expect(service.deleteRow).toHaveBeenCalledWith(
+                'h1',
+                'pauses',
+                'skip1'
+            )
+        );
+    });
+
     it('says when the habit does not exist', async () => {
         service.fetchCadenceHabit.mockRejectedValue(
             new api.CadenceHabitError(404, 'Habit not found')

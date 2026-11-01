@@ -4955,6 +4955,10 @@
     "addFailed": "Kon niet naar het TODO.md-bestand schrijven."
   },
   "cadenceHabits": {
+    "skip": {
+      "cancel": "Cancel the skip",
+      "today": "Skip today"
+    },
     "abstinence": {
       "assumption": "Dit aantal hangt af van wat je noteert. Pauzedagen tellen niet mee en onderbreken de reeks. Deze cijfers meten je gezondheid niet.",
       "best": "Beste reeks",

@@ -4963,6 +4963,10 @@
     "addFailed": "Impossible d'écrire dans le fichier TODO.md."
   },
   "cadenceHabits": {
+    "skip": {
+      "cancel": "Annuler le saut",
+      "today": "Passer aujourd'hui"
+    },
     "abstinence": {
       "assumption": "Ce compte dépend de ce que vous notez. Les jours en pause sont exclus et interrompent la série. Ces chiffres ne mesurent pas votre santé.",
       "best": "Meilleure série",

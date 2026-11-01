@@ -4955,6 +4955,10 @@
     "addFailed": "TODO.md dosyasına yazılamadı."
   },
   "cadenceHabits": {
+    "skip": {
+      "cancel": "Cancel the skip",
+      "today": "Skip today"
+    },
     "abstinence": {
       "assumption": "Bu sayı neyi not ettiğine bağlıdır. Duraklatılmış günler sayılmaz ve seriyi durdurur. Bu rakamlar sağlığını ölçmez.",
       "best": "En iyi seri",

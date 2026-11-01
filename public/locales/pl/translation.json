@@ -4973,6 +4973,10 @@
     "addFailed": "Nie udało się zapisać do pliku TODO.md."
   },
   "cadenceHabits": {
+    "skip": {
+      "cancel": "Cancel the skip",
+      "today": "Skip today"
+    },
     "abstinence": {
       "assumption": "Ten licznik zależy od tego, co zapisujesz. Dni w pauzie są pomijane i przerywają serię. Te liczby nie mierzą twojego zdrowia.",
       "best": "Najlepsza seria",

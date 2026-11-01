@@ -4953,6 +4953,10 @@
     "addFailed": "TODO.mdファイルに書き込めませんでした。"
   },
   "cadenceHabits": {
+    "skip": {
+      "cancel": "Cancel the skip",
+      "today": "Skip today"
+    },
     "abstinence": {
       "assumption": "この件数は記録の内容によります。休止日は除外され、連続記録を止めます。この数字は健康状態を測るものではありません。",
       "best": "最長記録",

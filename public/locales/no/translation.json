@@ -4960,6 +4960,10 @@
     "addFailed": "Kunne ikke skrive til TODO.md-filen."
   },
   "cadenceHabits": {
+    "skip": {
+      "cancel": "Cancel the skip",
+      "today": "Skip today"
+    },
     "abstinence": {
       "assumption": "Tallet avhenger av hva du noterer. Pausedager telles ikke og bryter rekken. Tallene måler ikke helsen din.",
       "best": "Beste rekke",
