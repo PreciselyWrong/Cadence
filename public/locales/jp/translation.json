@@ -392,6 +392,7 @@
     "noActivity": "まだアクティビティはありません"
   },
   "profile": {
+    "showTaskDescription": "タイトルの下に説明を表示",
     "sync": {
       "field": {
         "review_at": "Review on",
@@ -3126,6 +3127,7 @@
     "startTyping": "検索するには入力を開始するか、上のフィルターを選択してください",
     "noResults": "結果が見つかりませんでした",
     "entityTypes": {
+      "link": "リンク",
       "task": "タスク",
       "project": "プロジェクト",
       "area": "エリア",
@@ -3156,6 +3158,7 @@
       "hasNoProject": "プロジェクトなし"
     },
     "groups": {
+      "Link": "リンク",
       "Task": "タスク",
       "Project": "プロジェクト",
       "Area": "エリア",
@@ -4708,7 +4711,16 @@
     "loadError": "このタスクを読み込めませんでした。"
   },
   "review": {
+    "cancelDate": "キャンセル",
+    "choices": "選択肢",
+    "more": "もっと見る…",
+    "decided": "判断を保存しました。",
     "later": {
+      "sortOneByOne": "1件ずつ仕分ける",
+      "left": "残り {{count}} 件",
+      "backToList": "一覧に戻る",
+      "skip": "スキップ",
+      "sorted": "仕分けるものはありません。",
       "noMatch": "Nothing matches.",
       "noProject": "No project",
       "filter": "Filter"
@@ -5422,6 +5434,11 @@
       "allDomains": "すべてのサイト"
     },
     "sort": {
+      "start": "リンクを仕分ける ({{count}})",
+      "left": "残り {{count}} 件",
+      "exit": "受信箱に戻る",
+      "skip": "スキップ",
+      "done": "仕分けるリンクはありません。",
       "newest": "新しい順",
       "oldest": "古い順"
     },
