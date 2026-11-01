@@ -2,6 +2,8 @@ package ch.nicolab.cadence.widget.today
 
 import ch.nicolab.cadence.calendar.EventWithDone
 import ch.nicolab.cadence.calendar.localStart
+import ch.nicolab.cadence.tasks.model.TagItem
+import ch.nicolab.cadence.tasks.model.TagPaths
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskPriority
 import ch.nicolab.cadence.tasks.model.TaskViews
@@ -29,11 +31,14 @@ fun selectWidgetTasks(
     today: LocalDate,
     zone: ZoneId,
     now: Instant = Instant.now(),
+    tags: List<TagItem> = emptyList(),
 ): TodaySelection {
+    // Filtrer par une étiquette parente inclut ses sous-étiquettes, comme sur le web.
+    val tagScope = TagPaths.withDescendants(tags, config.tagUids)
     val candidates = scopeTasks(tasks, config.taskScope, today, now)
         .filter { !config.highPriorityOnly || it.priority == TaskPriority.HIGH }
         .filter { config.projectUids.isEmpty() || it.projectUid in config.projectUids }
-        .filter { config.tagUids.isEmpty() || it.tagUids.any(config.tagUids::contains) }
+        .filter { tagScope.isEmpty() || it.tagUids.any(tagScope::contains) }
         .filter { !config.hideRecurring || !it.isRecurring }
         .sortedWith(comparatorOf(config.sort))
     val overdueFirst = config.showOverdueSection

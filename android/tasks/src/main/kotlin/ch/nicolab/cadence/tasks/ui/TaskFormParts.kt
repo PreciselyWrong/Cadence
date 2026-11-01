@@ -2,6 +2,8 @@
 
 package ch.nicolab.cadence.tasks.ui
 
+import androidx.compose.material3.LocalContentColor
+import ch.nicolab.cadence.designsystem.theme.Size
 import android.text.format.DateFormat as AndroidDateFormat
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -105,6 +107,7 @@ internal fun TagChips(tags: List<TagItem>, selected: Set<String>, onToggle: (Str
                 selected = tag.uid in selected,
                 onClick = { onToggle(tag.uid) },
                 label = { Text(tag.name) },
+                leadingIcon = entityIcon(tag.icon)?.let { icon -> { EntityIcon(icon, tint = LocalContentColor.current, size = Size.iconSm) } },
             )
         }
     }

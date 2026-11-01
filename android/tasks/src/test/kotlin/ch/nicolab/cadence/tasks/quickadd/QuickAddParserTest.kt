@@ -183,6 +183,16 @@ class QuickAddParserTest {
     }
 
     @Test
+    fun `a nested tag path is one token`() {
+        val nested = listOf(NamedRef("t-perso", "perso"), NamedRef("t-sport", "perso/sport"), NamedRef("t-course", "perso/sport/course"))
+        val result = QuickAddParser.parse("Footing #perso/sport/course demain", clock, projects, nested)
+        assertEquals(listOf("t-course"), result.tagUids)
+        assertEquals("Footing", result.title)
+        assertEquals(listOf("t-sport"), QuickAddParser.parse("Abdos @perso/sport", clock, projects, nested).tagUids)
+        assertEquals(listOf("t-perso"), QuickAddParser.parse("Appeler #perso", clock, projects, nested).tagUids)
+    }
+
+    @Test
     fun `unknown hash token stays in the title`() {
         val result = parse("Parler de #inconnu")
         assertTrue(result.tagUids.isEmpty())

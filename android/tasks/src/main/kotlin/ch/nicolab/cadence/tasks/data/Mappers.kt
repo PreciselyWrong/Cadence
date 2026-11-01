@@ -54,7 +54,19 @@ internal fun TaskRow.toItem(accountZone: ZoneId, deviceZone: ZoneId): TaskItem =
     )
 }
 
-internal fun ProjectEntity.toItem() = ProjectItem(uid, name, status, color, areaUid, pinToSidebar, sourceType, nextTaskUid, goalUid)
+internal fun ProjectEntity.toItem() = ProjectItem(
+    uid = uid,
+    name = name,
+    status = status,
+    color = color,
+    areaUid = areaUid,
+    pinToSidebar = pinToSidebar,
+    sourceType = sourceType,
+    nextTaskUid = nextTaskUid,
+    goalUid = goalUid,
+    icon = icon,
+    parentProjectUid = parentProjectUid,
+)
 
 internal fun GoalEntity.toItem() = GoalItem(
     uid = uid,
@@ -71,7 +83,7 @@ internal fun GoalEntity.toItem() = GoalItem(
 
 internal fun AreaEntity.toItem() = AreaItem(uid, name, color)
 
-internal fun TagEntity.toItem() = TagItem(uid, name, color)
+internal fun TagEntity.toItem() = TagItem(uid, name, color, icon, parentUid)
 
 internal fun NoteRow.toItem() = NoteItem(
     uid = note.uid,

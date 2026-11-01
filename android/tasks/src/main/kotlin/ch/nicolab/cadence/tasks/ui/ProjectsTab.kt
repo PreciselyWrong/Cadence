@@ -2,7 +2,15 @@
 
 package ch.nicolab.cadence.tasks.ui
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.icons.outlined.ChevronRight
+import androidx.compose.material.icons.outlined.Folder
+import ch.nicolab.cadence.tasks.model.ProjectHierarchy
+import ch.nicolab.cadence.tasks.model.SubProject
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -236,7 +244,8 @@ private fun ProjectCardRow(
     val progressDescription = stringResource(R.string.tasks_projects_progress, card.doneCount, card.openCount + card.doneCount)
     Panel(modifier = modifier, shape = shape, onClick = onClick, onLongClick = onLongClick) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(Modifier.size(Space.md).clip(CircleShape).background(color))
+            val icon = entityIcon(card.project.icon)
+            if (icon != null) EntityIcon(icon, tint = color) else Box(Modifier.size(Space.md).clip(CircleShape).background(color))
             Spacer(Modifier.width(Space.md))
             Column(Modifier.weight(1f)) {
                 Text(
@@ -279,16 +288,22 @@ internal fun ProjectTasksPane(
     viewModel: TasksViewModel,
     projectUid: String,
     onBack: () -> Unit,
+    onOpenProject: (String) -> Unit,
     onOpen: (TaskItem) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val projects by viewModel.projects.collectAsStateWithLifecycle()
+    val allTasks by viewModel.allTasks.collectAsStateWithLifecycle()
     val tasks by remember(projectUid) { viewModel.observeProjectTasks(projectUid) }
         .collectAsStateWithLifecycle(initialValue = emptyList())
     val moment by viewModel.moment.collectAsStateWithLifecycle()
     val projectColors = rememberProjectColors(viewModel)
     val project = projects.firstOrNull { it.uid == projectUid }
     val projectName = project?.name.orEmpty()
+    val ancestors = remember(projects, projectUid) { ProjectHierarchy.ancestors(projects, projectUid) }
+    val subProjects = remember(projects, allTasks, projectUid) { ProjectHierarchy.children(projects, projectUid, allTasks) }
+    val headerIcon = entityIcon(project?.icon)
+    val headerColor = projectRailColor(project?.color)?.let(::Color) ?: cadence.primary
     var editingStatus by remember { mutableStateOf(false) }
     // La prochaine action choisie ; sinon la suggestion automatique (la première tâche ouverte).
     val nextLine = project?.let { NextAction.of(it, tasks) }?.let { stringResource(R.string.next_action_line, it.name) }
@@ -303,13 +318,22 @@ internal fun ProjectTasksPane(
                         contentDescription = stringResource(R.string.tasks_back),
                     )
                 }
-                Text(
-                    text = projectName,
-                    style = MaterialTheme.typography.titleLarge,
-                    maxLines = 3,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f),
-                )
+                Column(Modifier.weight(1f)) {
+                    if (ancestors.isNotEmpty()) ProjectBreadcrumb(ancestors, onOpenProject)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        if (headerIcon != null) {
+                            EntityIcon(headerIcon, tint = headerColor, size = Size.iconLarge)
+                            Spacer(Modifier.width(Space.sm))
+                        }
+                        Text(
+                            text = projectName,
+                            style = MaterialTheme.typography.titleLarge,
+                            maxLines = 3,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f),
+                        )
+                    }
+                }
                 if (project != null) {
                     TextButton(onClick = { editingStatus = true }) {
                         Text(stringResource(projectStatusLabel(project.projectStatus)))
@@ -329,7 +353,13 @@ internal fun ProjectTasksPane(
                 )
             }
         }
-        if (tasks.isEmpty()) {
+        if (subProjects.isNotEmpty()) {
+            item(key = "sub-projects") { SectionHeader(title = stringResource(R.string.tasks_subprojects_title), count = subProjects.size) }
+            itemsIndexed(subProjects, key = { _, sub -> "sub-${sub.project.uid}" }) { index, sub ->
+                SubProjectRow(sub, rowGroupShape(index, subProjects.size)) { onOpenProject(sub.project.uid) }
+            }
+        }
+        if (tasks.isEmpty() && subProjects.isEmpty()) {
             item { EmptyState(R.string.tasks_project_empty) }
         }
         // L'en-tête porte déjà le projet : les lignes ne répètent pas son nom.
@@ -342,5 +372,60 @@ internal fun ProjectTasksPane(
             onPick = { viewModel.setProjectStatus(project.uid, it) },
             onDismiss = { editingStatus = false },
         )
+    }
+}
+
+/** Fil d'Ariane d'un sous-projet : les parents, la racine d'abord, chacun ouvre son projet. */
+@Composable
+private fun ProjectBreadcrumb(ancestors: List<ProjectItem>, onOpen: (String) -> Unit) {
+    Row(Modifier.horizontalScroll(rememberScrollState()), verticalAlignment = Alignment.CenterVertically) {
+        ancestors.forEach { parent ->
+            val label = stringResource(R.string.tasks_project_open_named, parent.name)
+            Box(
+                Modifier
+                    .heightIn(min = Size.touch)
+                    .clip(Radius.Chip)
+                    .clickable(onClickLabel = label) { onOpen(parent.uid) }
+                    .padding(horizontal = Space.xs),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    parent.name,
+                    style = MaterialTheme.typography.labelLarge,
+                    color = cadence.primary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+            Text("›", style = MaterialTheme.typography.labelLarge, color = cadence.onSurfaceVariant, modifier = Modifier.padding(horizontal = Space.xs))
+        }
+    }
+}
+
+/** Un sous-projet comme un dossier : icône, nom, tâches ouvertes, chevron. */
+@Composable
+private fun SubProjectRow(sub: SubProject, shape: Shape, onClick: () -> Unit) {
+    val color = projectRailColor(sub.project.color)?.let(::Color) ?: cadence.primary
+    val icon = entityIcon(sub.project.icon) ?: Icons.Outlined.Folder
+    Panel(modifier = Modifier.padding(bottom = Space.groupGap), shape = shape, onClick = onClick) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            EntityIcon(icon, tint = color)
+            Spacer(Modifier.width(Space.md))
+            Text(
+                sub.project.name,
+                style = MaterialTheme.typography.titleMedium,
+                color = cadence.onSurface,
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f),
+            )
+            Spacer(Modifier.width(Space.md))
+            Text(
+                pluralStringResource(R.plurals.tasks_open_count, sub.openCount, sub.openCount),
+                style = MaterialTheme.typography.bodySmall,
+                color = cadence.onSurfaceVariant,
+            )
+            Icon(Icons.Outlined.ChevronRight, contentDescription = null, tint = cadence.onSurfaceVariant, modifier = Modifier.size(Size.icon))
+        }
     }
 }

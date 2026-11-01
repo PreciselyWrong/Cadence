@@ -19,7 +19,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         FailedOpEntity::class,
         SyncMetaEntity::class,
     ],
-    version = 7,
+    version = 8,
     exportSchema = true,
 )
 abstract class TududiDatabase : RoomDatabase() {
@@ -112,6 +112,21 @@ internal val MIGRATION_6_7 = object : Migration(6, 7) {
                 "`targetDateRaw` TEXT, `status` TEXT, `color` TEXT, `bucket` TEXT, `areaUid` TEXT, `parentGoalUid` TEXT, " +
                 "PRIMARY KEY(`uid`))",
         )
+        db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
+    }
+}
+
+/**
+ * Icône et parent des projets (sous-projets), icône et parent des étiquettes (noms devenus des chemins
+ * `perso/sport` côté serveur). Le curseur est retiré : le prochain instantané retélécharge les étiquettes
+ * renommées et remplit les nouvelles colonnes.
+ */
+internal val MIGRATION_7_8 = object : Migration(7, 8) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE projects ADD COLUMN icon TEXT")
+        db.execSQL("ALTER TABLE projects ADD COLUMN parentProjectUid TEXT")
+        db.execSQL("ALTER TABLE tags ADD COLUMN icon TEXT")
+        db.execSQL("ALTER TABLE tags ADD COLUMN parentUid TEXT")
         db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
     }
 }

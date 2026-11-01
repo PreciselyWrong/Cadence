@@ -272,7 +272,7 @@ internal fun TagsSheet(
                 verticalArrangement = Arrangement.spacedBy(Space.sm),
             ) {
                 tags.forEach { tag ->
-                    ChoiceChip(label = "#" + tag.name, selected = tag.uid in chosen) {
+                    ChoiceChip(label = "#" + tag.name, selected = tag.uid in chosen, leadingIcon = entityIcon(tag.icon)) {
                         chosen = if (tag.uid in chosen) chosen - tag.uid else chosen + tag.uid
                         onChange(chosen)
                     }

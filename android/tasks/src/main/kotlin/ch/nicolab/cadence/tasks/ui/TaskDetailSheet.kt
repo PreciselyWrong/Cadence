@@ -207,6 +207,7 @@ internal fun TaskDetailSheet(
                     today = today,
                     dueTime = dueTime,
                     projectName = projects.firstOrNull { it.uid == current.projectUid }?.name,
+                    projectIcon = projects.firstOrNull { it.uid == current.projectUid }?.icon,
                     projectColor = current.projectUid?.let { projectColors[it] }?.let(::Color),
                     tagNames = tags.filter { it.uid in current.tagUids }.map { it.name },
                     onDates = { openDates(DateTab.Due) },
@@ -245,6 +246,7 @@ internal fun TaskDetailSheet(
                         dueTime = dueTime,
                         startTime = startTime,
                         projectName = projects.firstOrNull { it.uid == current.projectUid }?.name,
+                        projectIcon = projects.firstOrNull { it.uid == current.projectUid }?.icon,
                         tagNames = tags.filter { it.uid in current.tagUids }.map { it.name },
                         onDates = { openDates(DateTab.Due) },
                         onRepeat = { picker = Picker.Repeat },
@@ -468,6 +470,7 @@ private fun DetailBadges(
     today: LocalDate,
     dueTime: LocalTime?,
     projectName: String?,
+    projectIcon: String?,
     projectColor: Color?,
     tagNames: List<String>,
     onDates: () -> Unit,
@@ -508,7 +511,9 @@ private fun DetailBadges(
             }
         }
         projectName?.let {
-            TapBadge(onProject, enabled) { CadenceBadge(text = it, tone = BadgeTone.Neutral, color = projectColor) }
+            TapBadge(onProject, enabled) {
+                CadenceBadge(text = it, tone = BadgeTone.Neutral, color = projectColor, icon = entityIcon(projectIcon))
+            }
         }
         if (task.isClosed) {
             CadenceBadge(text = stringResource(R.string.tasks_detail_done), tone = BadgeTone.Success)
@@ -547,6 +552,7 @@ private fun detailFields(
     dueTime: LocalTime?,
     startTime: LocalTime?,
     projectName: String?,
+    projectIcon: String?,
     tagNames: List<String>,
     onDates: () -> Unit,
     onRepeat: () -> Unit,
@@ -602,7 +608,7 @@ private fun detailFields(
             tagNames.isEmpty(),
         ),
         DetailField(
-            Icons.Outlined.Folder,
+            entityIcon(projectIcon) ?: Icons.Outlined.Folder,
             stringResource(R.string.tasks_field_project),
             projectName ?: stringResource(R.string.tasks_no_project),
             onProject,

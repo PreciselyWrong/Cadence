@@ -51,4 +51,26 @@ class GoalWireTest {
         assertEquals("g1", TaskExtras.parse(task.extrasJson)["goal_uid"])
         assertFalse(WireCodec.taskToWire(task).isEmpty())
     }
+
+    @Test
+    fun `a project reads its icon and parent`() {
+        val project = WireCodec.projectFromWire(wire("""{"uid":"p2","name":"Cuisine","icon":"cook","parent_project_uid":"p1"}"""))
+        assertEquals("cook", project.icon)
+        assertEquals("p1", project.parentProjectUid)
+        val item = project.toItem()
+        assertEquals("cook", item.icon)
+        assertEquals("p1", item.parentProjectUid)
+        val bare = WireCodec.projectFromWire(wire("""{"uid":"p3","name":"Seul","icon":null}""")).toItem()
+        assertNull(bare.icon)
+        assertNull(bare.parentProjectUid)
+    }
+
+    @Test
+    fun `a tag reads its path, icon and parent`() {
+        val item = WireCodec.tagFromWire(wire("""{"uid":"t2","name":"perso/sport","color":"#00ff00","icon":"run","parent_uid":"t1"}""")).toItem()
+        assertEquals("perso/sport", item.name)
+        assertEquals("run", item.icon)
+        assertEquals("t1", item.parentUid)
+        assertNull(WireCodec.tagFromWire(wire("""{"uid":"t3","name":"travail"}""")).toItem().parentUid)
+    }
 }

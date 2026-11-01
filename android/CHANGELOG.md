@@ -13,6 +13,9 @@
 - Agenda : une tâche récurrente apparaît à chaque occurrence de la plage affichée, avec son heure et sa durée, comme sur le web (une tâche hebdomadaire à 9 h se voit chaque semaine). Les occurrences à venir sont estompées : on les ouvre, mais seule la prochaine se coche ou se déplace.
 - Rappels de tâches : deux actions « Plus tard · 10 min » et « Plus tard · 1 h » sur la notification. Le report reste sur le téléphone et s'éteint si la tâche est terminée ou son rappel déplacé.
 - Heures calmes : la plage silencieuse du compte (réglée sur le web) repousse à sa fin les rappels de tâches et d'habitudes qui y tombent, y compris les « Plus tard » et à travers minuit.
+- Étiquettes imbriquées : le nom d'une étiquette est un chemin (`perso/sport/course`). L'onglet Étiquettes devient un arbre repliable, filtrer par un parent inclut ses sous-étiquettes (onglet, compteurs, filtre du widget Aujourd'hui), et `#perso/sport` est reconnu dans la saisie rapide. La première synchronisation après la mise à jour retélécharge les étiquettes.
+- Icônes : celles que vous choisissez sur le web pour un projet ou une étiquette s'affichent sur la carte et l'en-tête du projet, dans l'onglet Étiquettes, sur les puces et sur la fiche d'une tâche.
+- Sous-projets : la page d'un projet liste ses sous-projets (icône, nom, tâches ouvertes), et un sous-projet affiche le chemin de ses parents, chacun ouvrant son projet.
 
 ### Corrections
 - Une tâche mise de côté (« Plus tard ») n'apparaît plus en retard, ni dans Aujourd'hui ni dans les widgets.

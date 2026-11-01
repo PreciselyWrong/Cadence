@@ -78,7 +78,23 @@ class TaskOverviewsTest {
         val tags = listOf(TagItem("t1", "Urgent"), TagItem("t2", "Admin"))
         val tasks = listOf(open("a", tags = listOf("t1")), open("b", tags = listOf("t1", "t2"), due = friday), done("c", friday).copy(tagUids = listOf("t1")))
         assertEquals(listOf("Admin" to 1, "Urgent" to 2), TaskOverviews.tagCards(tags, tasks).map { it.tag.name to it.openCount })
-        assertEquals(listOf("b", "a"), TaskOverviews.ofTag(tasks, "t1", now).map { it.uid })
+        assertEquals(listOf("b", "a"), TaskOverviews.ofTag(tasks, tags, "t1", now).map { it.uid })
+    }
+
+    @Test
+    fun `a parent tag counts and lists the tasks of its sub-tags`() {
+        val tags = listOf(TagItem("p", "perso"), TagItem("s", "perso/sport"), TagItem("c", "perso/sport/course"), TagItem("o", "perso2"))
+        val tasks = listOf(
+            open("a", tags = listOf("p")),
+            open("b", tags = listOf("s")),
+            open("c", tags = listOf("c", "s")),
+            open("d", tags = listOf("o")),
+        )
+        val counts = TaskOverviews.tagCards(tags, tasks).associate { it.tag.name to it.openCount }
+        assertEquals(mapOf("perso" to 3, "perso/sport" to 2, "perso/sport/course" to 1, "perso2" to 1), counts)
+        assertEquals(setOf("a", "b", "c"), TaskOverviews.ofTag(tasks, tags, "p", now).map { it.uid }.toSet())
+        assertEquals(setOf("b", "c"), TaskOverviews.ofTag(tasks, tags, "s", now).map { it.uid }.toSet())
+        assertEquals(listOf("c"), TaskOverviews.ofTag(tasks, tags, "c", now).map { it.uid })
     }
 
     @Test

@@ -112,8 +112,9 @@ class TodayWidget : GlanceAppWidget() {
         val tasksRepository = TasksGraph.repository(context)
         val tasks = tasksRepository.observeTasks().first()
         val projects = tasksRepository.observeProjects().first().associateBy { it.uid }
-        val tagNames = tasksRepository.observeTags().first().associate { it.uid to it.name }
-        val selection = selectWidgetTasks(tasks, eventsOf(context, config, today, zone), config, today, zone, now)
+        val tagList = tasksRepository.observeTags().first()
+        val tagNames = tagList.associate { it.uid to it.name }
+        val selection = selectWidgetTasks(tasks, eventsOf(context, config, today, zone), config, today, zone, now, tagList)
         val facets = if (config.habitPlacement == HabitPlacement.HIDDEN) {
             emptyList()
         } else {

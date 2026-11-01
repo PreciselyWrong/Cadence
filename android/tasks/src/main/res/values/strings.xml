@@ -49,6 +49,10 @@
     <string name="tasks_projects_empty">Aucun projet pour l\'instant.</string>
     <string name="tasks_project_empty">Aucune tâche ouverte dans ce projet.</string>
     <string name="tasks_back">Retour</string>
+    <string name="tasks_tag_collapse">Replier %1$s</string>
+    <string name="tasks_tag_expand">Déplier %1$s</string>
+    <string name="tasks_subprojects_title">Sous-projets</string>
+    <string name="tasks_project_open_named">Ouvrir le projet %1$s</string>
     <plurals name="tasks_overdue_count">
         <item quantity="one">%d en retard</item>
         <item quantity="other">%d en retard</item>

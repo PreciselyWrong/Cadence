@@ -40,7 +40,7 @@ data class ParsedQuickAdd(
  * Analyse d'une saisie rapide en français : dates (aujourd'hui, demain, après-demain, jours de la
  * semaine, « lundi prochain », « dans 3 jours », « ce soir », « ce week-end », « semaine
  * prochaine »), heures (« à 14h », « 14h30 », « 14:30 », « midi »), `+projet` / `^projet` /
- * `#nom`, `@étiquette` et `!1`-`!3`. Les jetons `#`, `+`, `^` et `!` sont ceux de la capture
+ * `#nom`, `@étiquette` et `!1`-`!3`. Un nom d'étiquette est un chemin (`#perso/sport`) : `/` fait partie du mot. Les jetons `#`, `+`, `^` et `!` sont ceux de la capture
  * web (`frontend/utils/inboxTokens.ts`) ; `#nom` désigne une étiquette, ou à défaut un projet
  * existant, `@nom` une étiquette. Un mot qui ne désigne rien d'existant reste dans le titre.
  * Les accents et la casse sont ignorés.
@@ -115,7 +115,7 @@ object QuickAddParser {
     private val colonTime = Regex("(?<![\\p{L}\\p{N}_:])(?:a\\s+)?(\\d{1,2}):(\\d{2})$BOUND_AFTER")
     private val noon = Regex("(?<![\\p{L}\\p{N}_])(?:a\\s+)?midi$BOUND_AFTER")
     private val priorityToken = Regex("(?<!\\S)!([123])(?!\\S)")
-    private val markedToken = Regex("(?<!\\S)([#+@^])(?:\"([^\"]+)\"|([\\p{L}\\p{N}_-]+))")
+    private val markedToken = Regex("(?<!\\S)([#+@^])(?:\"([^\"]+)\"|([\\p{L}\\p{N}_/-]+))")
     private val spaces = Regex("\\s+")
 
     fun parse(

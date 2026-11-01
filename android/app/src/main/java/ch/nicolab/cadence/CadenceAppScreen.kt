@@ -85,7 +85,9 @@ import ch.nicolab.cadence.tasks.ui.InboxScreen
 import ch.nicolab.cadence.tasks.search.SearchEntry
 import ch.nicolab.cadence.tasks.search.SearchKind
 import ch.nicolab.cadence.tasks.ui.SearchScreen
+import ch.nicolab.cadence.tasks.ui.LocalEntityIcons
 import ch.nicolab.cadence.tasks.ui.TasksScreen
+import ch.nicolab.cadence.ui.icon.HabitIconRegistry
 import java.time.LocalDate
 import java.util.UUID
 import kotlinx.coroutines.launch
@@ -212,7 +214,10 @@ internal fun CadenceAppScreen(
     )
 
     CadenceScreen {
-        CompositionLocalProvider(LocalAppSnackbarHostState provides snackbar) {
+        CompositionLocalProvider(
+            LocalAppSnackbarHostState provides snackbar,
+            LocalEntityIcons provides { id -> HabitIconRegistry.getIcon(id).imageVector },
+        ) {
             Crossfade(
                 targetState = if (settingsOpen) null else tab,
                 modifier = Modifier.fillMaxSize().backdropSource(backdrop),

@@ -192,11 +192,30 @@ class TodayWidgetSelectionTest {
         assertEquals(listOf("both"), selection.tasks.map { it.uid })
     }
 
+    @Test
+    fun `a parent tag filter keeps the tasks of its sub-tags`() {
+        val tags = listOf(
+            ch.nicolab.cadence.tasks.model.TagItem("p", "perso"),
+            ch.nicolab.cadence.tasks.model.TagItem("s", "perso/sport"),
+            ch.nicolab.cadence.tasks.model.TagItem("o", "perso2"),
+        )
+        val tasks = listOf(
+            task("parent", today, tagUids = listOf("p")),
+            task("child", today, tagUids = listOf("s")),
+            task("lookalike", today, tagUids = listOf("o")),
+        )
+        val config = TodayWidgetConfig(taskScope = TaskScope.TODAY, tagUids = setOf("p"))
+
+        assertEquals(setOf("parent", "child"), select(tasks, config, tags = tags).tasks.map { it.uid }.toSet())
+        assertEquals(listOf("parent"), select(tasks, config).tasks.map { it.uid })
+    }
+
     private fun select(
         tasks: List<TaskItem>,
         config: TodayWidgetConfig,
         events: List<EventWithDone> = emptyList(),
-    ) = selectWidgetTasks(tasks, events, config, today, zone, now)
+        tags: List<ch.nicolab.cadence.tasks.model.TagItem> = emptyList(),
+    ) = selectWidgetTasks(tasks, events, config, today, zone, now, tags)
 
     private fun task(
         uid: String,

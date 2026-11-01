@@ -288,12 +288,14 @@ fun QuickAddSheet(
                         if (picked == null) ignore(TokenKind.PRIORITY)
                     },
                     projects = projects.map { it.uid to it.name },
+                    projectIcons = projects.associate { it.uid to it.icon },
                     projectUid = projectUid,
                     onProject = { picked ->
                         projectOverride = picked
                         if (picked == null) ignore(TokenKind.PROJECT)
                     },
                     tags = tags.map { it.uid to it.name },
+                    tagIcons = tags.associate { it.uid to it.icon },
                     tagUids = tagUids,
                     onTag = { uid ->
                         if (uid in tagUids) {
@@ -480,9 +482,11 @@ private fun MoreOptions(
     priority: Int?,
     onPriority: (Int?) -> Unit,
     projects: List<Pair<String, String>>,
+    projectIcons: Map<String, String?>,
     projectUid: String?,
     onProject: (String?) -> Unit,
     tags: List<Pair<String, String>>,
+    tagIcons: Map<String, String?>,
     tagUids: List<String>,
     onTag: (String) -> Unit,
 ) {
@@ -505,7 +509,7 @@ private fun MoreOptions(
             Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
                 ChoiceChip(stringResource(R.string.tasks_no_project), selected = projectUid == null) { onProject(null) }
                 projects.forEach { (uid, name) ->
-                    ChoiceChip(name, selected = projectUid == uid) { onProject(uid) }
+                    ChoiceChip(name, selected = projectUid == uid, leadingIcon = entityIcon(projectIcons[uid])) { onProject(uid) }
                 }
             }
         }
@@ -513,7 +517,7 @@ private fun MoreOptions(
             FieldGroup(stringResource(R.string.tasks_field_tags)) {
                 Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
                     tags.forEach { (uid, name) ->
-                        ChoiceChip("#$name", selected = uid in tagUids) { onTag(uid) }
+                        ChoiceChip("#$name", selected = uid in tagUids, leadingIcon = entityIcon(tagIcons[uid])) { onTag(uid) }
                     }
                 }
             }

@@ -111,6 +111,10 @@ data class ProjectItem(
     /** Prochaine action choisie (`next_task_uid`) ; n'a de sens que tant que la tâche est ouverte et dans le projet. */
     val nextTaskUid: String? = null,
     val goalUid: String? = null,
+    /** Identifiant d'icône du jeu partagé avec le web et les habitudes (`icon`) ; null : aucune icône choisie. */
+    val icon: String? = null,
+    /** Projet parent (`parent_project_uid`) ; null pour un projet de premier niveau. */
+    val parentProjectUid: String? = null,
 ) {
     val isFileBacked: Boolean get() = sourceType == SOURCE_TODO_MD
     val projectStatus: ProjectStatus get() = ProjectStatus.fromWire(status)
@@ -144,7 +148,17 @@ const val SOURCE_TODO_MD = "todo_md"
 
 data class AreaItem(val uid: String, val name: String, val color: String? = null)
 
-data class TagItem(val uid: String, val name: String, val color: String? = null)
+/**
+ * Étiquette. [name] est son chemin complet (`perso/sport`), voir [TagPaths] ; [parentUid] est posé par le
+ * serveur, l'arbre se déduit pourtant du nom.
+ */
+data class TagItem(
+    val uid: String,
+    val name: String,
+    val color: String? = null,
+    val icon: String? = null,
+    val parentUid: String? = null,
+)
 
 data class NoteItem(
     val uid: String,

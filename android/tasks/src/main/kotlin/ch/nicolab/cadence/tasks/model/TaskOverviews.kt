@@ -95,13 +95,23 @@ object TaskOverviews {
         )
     }
 
+    /** Étiquettes avec leurs tâches ouvertes ; un parent compte aussi celles de ses sous-étiquettes. */
     fun tagCards(tags: List<TagItem>, tasks: List<TaskItem>): List<TagCard> =
-        tags.map { tag -> TagCard(tag, tasks.count { tag.uid in it.tagUids && !it.isClosed }) }
-            .sortedBy { it.tag.name.lowercase() }
+        tags.map { tag ->
+            val scope = TagPaths.withDescendants(tags, setOf(tag.uid))
+            TagCard(tag, tasks.count { task -> !task.isClosed && task.tagUids.any { it in scope } })
+        }.sortedBy { it.tag.name.lowercase() }
 
-    fun ofTag(tasks: List<TaskItem>, tagUid: String, now: Instant): List<TaskItem> =
-        tasks.filter { tagUid in it.tagUids && !it.isClosed && it.parentTaskUid == null && (it.deferUntil == null || !it.deferUntil.isAfter(now)) }
+    /** Tâches d'une étiquette ou de l'une de ses sous-étiquettes, à toute profondeur. */
+    fun ofTag(tasks: List<TaskItem>, tags: List<TagItem>, tagUid: String, now: Instant): List<TaskItem> {
+        val scope = TagPaths.withDescendants(tags, setOf(tagUid))
+        return tasks
+            .filter { task ->
+                task.tagUids.any { it in scope } && !task.isClosed && task.parentTaskUid == null &&
+                    (task.deferUntil == null || !task.deferUntil.isAfter(now))
+            }
             .sortedWith(compareBy<TaskItem> { it.dueDate == null }.thenBy { it.dueDate }.thenBy { it.name.lowercase() })
+    }
 
     /** Tâches terminées, du jour le plus récent au plus ancien, plafonnées pour garder la liste légère. */
     fun completedByDay(tasks: List<TaskItem>, zone: ZoneId): List<Pair<LocalDate, List<TaskItem>>> =

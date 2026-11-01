@@ -57,6 +57,10 @@ data class ProjectEntity(
     val nextTaskUid: String? = null,
     /** Objectif ou résultat clé lié (`goal_uid`). */
     val goalUid: String? = null,
+    /** Identifiant d'icône du jeu partagé (`icon`). */
+    val icon: String? = null,
+    /** Projet parent (`parent_project_uid`). */
+    val parentProjectUid: String? = null,
 )
 
 /** Objectif, résultat clé (un objectif parent) ou envie de la liste d'envies (`bucket`) ; lecture seule ici. */
@@ -86,6 +90,10 @@ data class TagEntity(
     @PrimaryKey val uid: String,
     val name: String,
     val color: String?,
+    /** Identifiant d'icône du jeu partagé (`icon`). */
+    val icon: String? = null,
+    /** Étiquette parente (`parent_uid`) ; le nom porte déjà le chemin complet. */
+    val parentUid: String? = null,
 )
 
 @Entity(tableName = "notes")

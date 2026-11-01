@@ -187,6 +187,7 @@ fun TasksScreen(
                             viewModel = viewModel,
                             projectUid = projectUid,
                             onBack = { openProjectUid = null },
+                            onOpenProject = { openProjectUid = it },
                             onOpen = { selectedTaskUid = it.uid },
                             modifier = Modifier.fillMaxSize(),
                         )
