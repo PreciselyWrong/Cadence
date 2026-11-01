@@ -18,6 +18,9 @@
 - Une tâche mise de côté (« Plus tard ») n'apparaît plus en retard, ni dans Aujourd'hui ni dans les widgets.
 - Rappels d'habitudes : ils ne se perdent plus. Ils sont reposés à chaque ouverture de l'app, après une synchronisation qui en ajoute ou en retire, après une mise à jour de l'app et quand l'heure ou le fuseau change (c'était déjà le cas pour les tâches, sauf l'heure et le fuseau).
 - Synchronisation : quand le serveur a compacté son journal au-delà du point où le téléphone s'était arrêté (réponse 410), le téléphone reprend un instantané complet au lieu d'échouer, sans perdre les modifications en attente d'envoi.
+- Mots plus calmes : « Échéance 20 sept. » remplace les compteurs de jours de retard (fiche, bac « À planifier » de l'Agenda) ; dans Planifier la journée, retirer la date s'appelle « Sans date », pour ne plus confondre avec « Plus tard ».
+- Fiche plus légère : le badge de priorité n'apparaît que si une priorité est posée ; la page d'un projet ne répète plus son nom sur chaque ligne ; les messages après un geste nomment la tâche.
+- Accessibilité : cibles tactiles de 48 dp (Revoir le, widget Liste), cases des sous-tâches nommées et barrées une fois faites, idées de la Boîte lisibles en grande police.
 
 ## [1.5.0] — 31 octobre 2026
 
