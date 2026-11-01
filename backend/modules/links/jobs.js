@@ -6,10 +6,21 @@
 // time, spaced, so a burst of links does not hammer anyone; the GitHub API
 // rate limit pauses only the GitHub lookups.
 
+const cron = require('node-cron');
+const { Op } = require('sequelize');
 const { logError } = require('../../services/logService');
 const { GithubRateLimited } = require('./core/github');
 
 const STARTUP_BATCH = 200;
+const DAY_MS = 24 * 60 * 60 * 1000;
+// A read page is read again after a month (GitHub stars, last push, README
+// move); a page that could not be read is tried again after a week. A few
+// per run, so the GitHub hourly limit is never the bottleneck.
+const REFRESH_AFTER_DAYS = 30;
+const RETRY_FAILED_AFTER_DAYS = 7;
+const REFRESH_BATCH = 25;
+const REFRESH_CRON = '0 2 * * *';
+let refreshJob = null;
 
 const state = {
     enabled: process.env.NODE_ENV !== 'test',
@@ -84,10 +95,19 @@ async function fetchAndStore(linkId) {
     }
     const now = new Date();
     if (!meta) {
-        await link.update({ fetch_status: 'failed', fetched_at: now });
+        // A page read before stays as it was read; the next try is later.
+        await link.update({
+            fetch_status: link.fetch_status === 'done' ? 'done' : 'failed',
+            fetched_at: now,
+        });
         return;
     }
-    await link.update({ ...meta, fetch_status: 'done', fetched_at: now });
+    // A reading never erases what an earlier one found (a page that answers
+    // without its image this time keeps the image).
+    const read = Object.fromEntries(
+        Object.entries(meta).filter(([, value]) => value != null)
+    );
+    await link.update({ ...read, fetch_status: 'done', fetched_at: now });
 }
 
 async function runQueue() {
@@ -128,6 +148,66 @@ async function initialize() {
         raw: true,
     });
     pending.forEach((l) => enqueueFetch(l.id));
+    await captureExisting();
+    scheduleRefresh();
+}
+
+// Queues the links whose reading is old (done) or worth retrying (failed),
+// oldest reading first. Dropped links are left alone. Returns how many.
+async function refreshStale(now = new Date()) {
+    if (!state.enabled) return 0;
+    const { Link } = require('../../models');
+    const stale = await Link.findAll({
+        where: {
+            status: { [Op.ne]: 'dropped' },
+            [Op.or]: [
+                {
+                    fetch_status: 'done',
+                    fetched_at: {
+                        [Op.lt]: new Date(now - REFRESH_AFTER_DAYS * DAY_MS),
+                    },
+                },
+                {
+                    fetch_status: 'failed',
+                    fetched_at: {
+                        [Op.lt]: new Date(
+                            now - RETRY_FAILED_AFTER_DAYS * DAY_MS
+                        ),
+                    },
+                },
+            ],
+        },
+        attributes: ['id'],
+        order: [['fetched_at', 'ASC']],
+        limit: REFRESH_BATCH,
+        raw: true,
+    });
+    stale.forEach((l) => enqueueFetch(l.id));
+    return stale.length;
+}
+
+function captureExisting() {
+    return require('./capture').captureExisting();
+}
+
+function scheduleRefresh() {
+    const { getConfig } = require('../../config/config');
+    const config = getConfig();
+    if (
+        refreshJob ||
+        config.environment === 'test' ||
+        config.disableScheduler
+    ) {
+        return;
+    }
+    refreshJob = cron.schedule(
+        REFRESH_CRON,
+        () =>
+            refreshStale().catch((error) =>
+                logError({ error }, 'Link refresh failed')
+            ),
+        { timezone: 'UTC' }
+    );
 }
 
 // Waits until no capture or fetch is left (tests).
@@ -144,5 +224,7 @@ module.exports = {
     enqueueFetch,
     fetchAndStore,
     initialize,
+    captureExisting,
+    refreshStale,
     drain,
 };

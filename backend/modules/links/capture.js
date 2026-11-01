@@ -2,6 +2,7 @@
 
 const { Op } = require('sequelize');
 const jobs = require('./jobs');
+const { ciLike } = require('../../utils/db-dialect');
 const {
     extractUrls,
     normalizeUrl,
@@ -93,6 +94,58 @@ function snapshot(model, row) {
     };
 }
 
+const BACKFILL_BATCH = 200;
+// Ideas the user threw away: their links are not brought back.
+const DISCARDED_INBOX = ['deleted', 'trashed'];
+
+function existingRowsWhere(name, fields) {
+    const conditions = [
+        { [Op.or]: fields.map((f) => ({ [f]: ciLike('%http%') })) },
+    ];
+    if (name === 'Task') {
+        conditions.push({
+            [Op.or]: [{ habit_mode: false }, { habit_mode: null }],
+        });
+    }
+    if (name === 'InboxItem') {
+        conditions.push({ status: { [Op.notIn]: DISCARDED_INBOX } });
+    }
+    return { [Op.and]: conditions };
+}
+
+// Rows saved before links were captured (or while capture was off): their
+// links are found as if the rows had just been written. Inbox items first,
+// so a link later turned into a task or a note moves there as usual.
+// Idempotent: a link already saved is only found again.
+async function captureExisting() {
+    const models = require('../../models');
+    for (const [name, source] of Object.entries(SOURCES)) {
+        const Model = models[name];
+        if (!Model) continue;
+        let lastId = 0;
+        for (;;) {
+            const rows = await Model.findAll({
+                where: {
+                    [Op.and]: [
+                        { id: { [Op.gt]: lastId } },
+                        existingRowsWhere(name, source.fields),
+                    ],
+                },
+                attributes: ['id', 'uid', 'user_id', ...source.fields],
+                order: [['id', 'ASC']],
+                limit: BACKFILL_BATCH,
+            });
+            for (const row of rows) {
+                if (row.user_id && row.uid) {
+                    await captureFrom(snapshot(name, row));
+                }
+            }
+            if (rows.length < BACKFILL_BATCH) break;
+            lastId = rows[rows.length - 1].id;
+        }
+    }
+}
+
 function install(models) {
     for (const [name, source] of Object.entries(SOURCES)) {
         const Model = models[name];
@@ -114,4 +167,4 @@ function install(models) {
     }
 }
 
-module.exports = { install, captureFrom, SOURCES };
+module.exports = { install, captureFrom, captureExisting, SOURCES };

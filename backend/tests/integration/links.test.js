@@ -281,6 +281,144 @@ describe('Links', () => {
         expect((await other.agent.get('/api/links')).body.total).toBe(0);
     });
 
+    describe('rows written before links were captured', () => {
+        it('captures their links once, skipping thrown-away ideas and habits', async () => {
+            jobs.configure({ enabled: false });
+            const { InboxItem, Task, Note } = require('../../models');
+            const idea = await InboxItem.create({
+                user_id: user.id,
+                content: 'HTTPS://github.com/old/repo - old idea',
+                source: 'android',
+            });
+            await InboxItem.create({
+                user_id: user.id,
+                content: 'https://example.com/thrown-away',
+                source: 'android',
+                status: 'deleted',
+            });
+            const task = await Task.create({
+                user_id: user.id,
+                name: 'Read',
+                note: 'https://example.com/article',
+            });
+            await Task.create({
+                user_id: user.id,
+                name: 'Habit https://example.com/habit',
+                habit_mode: true,
+            });
+            await Note.create({
+                user_id: user.id,
+                title: 'Refs',
+                content: 'See https://example.com/article and no other',
+            });
+            await Task.create({ user_id: user.id, name: 'No link here' });
+            expect(await Link.count({ where: { user_id: user.id } })).toBe(0);
+            jobs.configure({ enabled: true });
+
+            await jobs.captureExisting();
+            await jobs.captureExisting();
+            await jobs.drain();
+
+            const links = (
+                await Link.findAll({
+                    where: { user_id: user.id },
+                    order: [['url', 'ASC']],
+                })
+            ).map((l) => [l.url, l.source_type, l.source_uid, l.note]);
+            expect(links).toEqual([
+                ['https://example.com/article', 'task', task.uid, null],
+                [
+                    'https://github.com/old/repo',
+                    'inbox_item',
+                    idea.uid,
+                    'old idea',
+                ],
+            ]);
+            expect(fetched.sort()).toEqual([
+                'https://example.com/article',
+                'https://github.com/old/repo',
+            ]);
+        });
+    });
+
+    describe('refresh of read pages', () => {
+        const daysAgo = (n) => new Date(Date.now() - n * 24 * 3600 * 1000);
+        const make = (url, fields) =>
+            Link.create({ user_id: user.id, url, kind: 'other', ...fields });
+
+        it('reads stale and failed links again, never fresh or dropped ones', async () => {
+            const stale = await make('https://github.com/s/stale', {
+                kind: 'repo',
+                fetch_status: 'done',
+                fetched_at: daysAgo(40),
+                github_stars: 10,
+                image_url: 'https://img.example.com/s.png',
+            });
+            const failed = await make('https://example.com/failed', {
+                fetch_status: 'failed',
+                fetched_at: daysAgo(8),
+            });
+            const fresh = await make('https://example.com/fresh', {
+                fetch_status: 'done',
+                fetched_at: daysAgo(2),
+                title: 'Fresh',
+            });
+            const recentFailure = await make(
+                'https://example.com/recent-fail',
+                {
+                    fetch_status: 'failed',
+                    fetched_at: daysAgo(1),
+                }
+            );
+            const dropped = await make('https://example.com/dropped', {
+                fetch_status: 'done',
+                fetched_at: daysAgo(90),
+                status: 'dropped',
+            });
+
+            const queued = await jobs.refreshStale();
+            await jobs.drain();
+
+            expect(queued).toBe(2);
+            expect(fetched.sort()).toEqual([
+                'https://example.com/failed',
+                'https://github.com/s/stale',
+            ]);
+            await stale.reload();
+            expect(stale.github_stars).toBe(42);
+            // Nothing read before is erased by a reading that lacks it.
+            expect(stale.image_url).toBe('https://img.example.com/s.png');
+            expect(stale.fetched_at.getTime()).toBeGreaterThan(
+                daysAgo(1).getTime()
+            );
+            await failed.reload();
+            expect(failed.fetch_status).toBe('done');
+            for (const untouched of [fresh, recentFailure, dropped]) {
+                const before = untouched.fetched_at.getTime();
+                await untouched.reload();
+                expect(untouched.fetched_at.getTime()).toBe(before);
+            }
+        });
+
+        it('keeps a page read before when reading it again fails', async () => {
+            const link = await make('https://broken.example.com/was-ok', {
+                fetch_status: 'done',
+                fetched_at: daysAgo(31),
+                title: 'Was readable',
+            });
+
+            await jobs.refreshStale();
+            await jobs.drain();
+
+            await link.reload();
+            expect(link.fetch_status).toBe('done');
+            expect(link.title).toBe('Was readable');
+            expect(link.fetched_at.getTime()).toBeGreaterThan(
+                daysAgo(1).getTime()
+            );
+        });
+    });
+
     describe('offline sync', () => {
         it('sends links to devices with their metadata', async () => {
             await capture('https://github.com/o/r');
