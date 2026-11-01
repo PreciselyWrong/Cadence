@@ -56,6 +56,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.nicolab.cadence.R
 import ch.nicolab.cadence.designsystem.components.HeaderButtonStyle
 import ch.nicolab.cadence.tasks.ui.RecurringAction
+import ch.nicolab.cadence.tasks.ui.QuickAddSheet
 import ch.nicolab.cadence.tasks.ui.RecurringScopeDialog
 import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
 import ch.nicolab.cadence.designsystem.components.SegmentedTabs
@@ -68,6 +69,7 @@ import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.designsystem.theme.glass
 import ch.nicolab.cadence.designsystem.theme.glassBorder
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.YearMonth
 import java.time.temporal.WeekFields
@@ -98,6 +100,7 @@ fun AgendaScreen(modifier: Modifier = Modifier, onOpenHabit: (String) -> Unit = 
     var boxOrigin by remember { mutableStateOf(Offset.Zero) }
     val snackbar = rememberAppSnackbarHostState()
     var eventSheet by remember { mutableStateOf<AgendaEventSheet?>(null) }
+    var slotAt by remember { mutableStateOf<LocalDateTime?>(null) }
     val eventActions = remember {
         AgendaEventActions(
             open = { eventSheet = AgendaEventSheet.Detail(it.eventKey) },
@@ -202,6 +205,7 @@ fun AgendaScreen(modifier: Modifier = Modifier, onOpenHabit: (String) -> Unit = 
                             drag = drag,
                             onDrop = { item, at -> viewModel.schedule(item, at) },
                             onResize = { task, minutes -> viewModel.resizeTask(task, minutes) },
+                            onSlotTap = { slotAt = it },
                         )
                         AgendaMode.MONTH -> MonthAgenda(
                             state = state,
@@ -220,6 +224,14 @@ fun AgendaScreen(modifier: Modifier = Modifier, onOpenHabit: (String) -> Unit = 
             }
         }
         DragGhost(drag = drag, origin = boxOrigin)
+    }
+
+    slotAt?.let { at ->
+        QuickAddSheet(
+            onDismiss = { slotAt = null },
+            initialDate = at.toLocalDate(),
+            initialTime = at.toLocalTime(),
+        )
     }
 
     val pendingScope by viewModel.pendingScope.collectAsStateWithLifecycle()

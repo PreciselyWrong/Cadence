@@ -10,6 +10,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Décision** : « Plus tard » groupé par projet (puis domaine, puis « Sans projet »), groupes pliables avec leur nombre, triés par dernière activité, filtre en tête ; lignes compactes (liseré du projet, titre sur deux lignes, étiquettes). Toucher une ligne déplie les choix en pastilles d'un toucher ; « Annuler » après chaque décision. Balayage : droite = Aujourd'hui (la ressort de Plus tard), gauche = revoir dans 30 jours. « Trier un par un » : une tâche en grand, mêmes choix + « Passer », « N sur M », reprise. Les lignes qui ne sont qu'une adresse montrent la carte du lien. En-tête calme, sans compte des décisions ; onglets courts sous un fondu.
 - **Web** : groupes, filtre, cartes de lien, « Faire aujourd'hui » et « Terminer » dans Plus tard repris sur `/review` ; le tri un par un et les pastilles d'un toucher restent à faire (`TODO.md`).
 
+### Agenda — ajouter une tâche sur un créneau vide
+
+- **Problème** : pour placer une tâche à une heure précise, il fallait passer par l'ajout puis l'échéance.
+- **Décision** : toucher un créneau vide de la grille (Jour, 3 jours) ouvre l'ajout rapide, date et heure du créneau pré-remplies. Le créneau est la demi-heure touchée, arrondie vers le bas.
+- **Web** : reprendre le même geste sur la vue jour du calendrier ; la saisie garde la date et l'heure du créneau.
+
 ### 2026-10-31 — « Inbox », pas « Boîte »
 
 - **Problème** : l'onglet s'appelait « Boîte », un mot qui ne dit rien.

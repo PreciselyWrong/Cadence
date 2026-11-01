@@ -5,6 +5,7 @@ import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Arrangement
@@ -115,6 +116,7 @@ internal fun ColumnScope.TimeAgenda(
     drag: TrayDragState,
     onDrop: (TrayItem, LocalDateTime) -> Unit,
     onResize: (AgendaEntry.Task, Int) -> Unit,
+    onSlotTap: (LocalDateTime) -> Unit,
 ) {
     val days = remember(state.mode, state.selected, state.options.weekends) {
         if (state.mode == AgendaMode.DAY) listOf(state.selected) else threeDays(state.selected, state.options.weekends)
@@ -144,6 +146,7 @@ internal fun ColumnScope.TimeAgenda(
             onToggleEvent = onToggleEvent,
             drag = drag,
             onResize = onResize,
+            onSlotTap = onSlotTap,
             modifier = Modifier.weight(1f),
         )
     }
@@ -325,6 +328,7 @@ private fun TimeGrid(
     onToggleEvent: (EventInstanceKey) -> Unit,
     drag: TrayDragState,
     onResize: (AgendaEntry.Task, Int) -> Unit,
+    onSlotTap: (LocalDateTime) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val palette = cadence
@@ -395,6 +399,9 @@ private fun TimeGrid(
                         if (index > 0) {
                             drawLine(lineColor, Offset(0f, 0f), Offset(0f, size.height), strokeWidth = hairline)
                         }
+                    }
+                    .pointerInput(day, hourHeightPx) {
+                        detectTapGestures { offset -> onSlotTap(slotDateTime(day, offset.y, hourHeightPx)) }
                     },
             ) {
                 BoxWithConstraints(Modifier.fillMaxSize()) {

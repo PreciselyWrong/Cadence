@@ -127,6 +127,9 @@ fun QuickAddSheet(
     onNoteCreated: (String) -> Unit = {},
     /** Projet d'où la saisie est ouverte : proposé d'office dès la première tâche. */
     initialProjectUid: String? = null,
+    /** Créneau d'où la saisie est ouverte (agenda) : date et heure proposées d'office. */
+    initialDate: LocalDate? = null,
+    initialTime: LocalTime? = null,
 ) {
     val viewModel: TasksViewModel = viewModel()
     val projects by viewModel.projects.collectAsStateWithLifecycle()
@@ -143,7 +146,8 @@ fun QuickAddSheet(
     val isTask = target == CaptureTarget.TASK
     var ignored by rememberSaveable { mutableStateOf(emptyList<String>()) }
     var moreOptions by rememberSaveable { mutableStateOf(false) }
-    var dateOverride by remember { mutableStateOf<Pair<LocalDate, LocalTime?>?>(null) }
+    val initialSlot = initialDate?.let { it to initialTime }
+    var dateOverride by remember { mutableStateOf(initialSlot) }
     var priorityOverride by remember { mutableStateOf<Int?>(null) }
     var projectOverride by remember { mutableStateOf<String?>(null) }
     // Projet de la série en cours : proposé pour la tâche suivante tant qu'on n'arrête pas d'en ajouter.
@@ -245,7 +249,7 @@ fun QuickAddSheet(
             carriedProject = series.carriedProject(now)
             field = TextFieldValue("")
             ignored = emptyList()
-            dateOverride = null
+            dateOverride = initialSlot
             priorityOverride = null
             projectOverride = null
             tagOverrides = emptySet()

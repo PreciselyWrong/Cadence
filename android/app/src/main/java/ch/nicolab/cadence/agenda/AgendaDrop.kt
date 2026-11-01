@@ -60,6 +60,15 @@ fun dropMinute(yPx: Float, hourHeightPx: Float, step: Int = DROP_STEP_MINUTES): 
 fun dropDateTime(day: LocalDate, yPx: Float, hourHeightPx: Float): LocalDateTime =
     day.atTime(LocalTime.of(0, 0)).plusMinutes(dropMinute(yPx, hourHeightPx).toLong())
 
+/** Pas des créneaux vides : une case de la grille correspond à une demi-heure. */
+const val SLOT_STEP_MINUTES = 30
+
+/** Début du créneau de [day] touché à [yPx] : l'heure de la demi-heure en cours, jamais la suivante. */
+fun slotDateTime(day: LocalDate, yPx: Float, hourHeightPx: Float): LocalDateTime {
+    val minutes = (yPx / hourHeightPx * MINUTES_PER_HOUR / SLOT_STEP_MINUTES).toInt() * SLOT_STEP_MINUTES
+    return day.atTime(LocalTime.of(0, 0)).plusMinutes(minutes.coerceIn(0, MINUTES_PER_DAY - SLOT_STEP_MINUTES).toLong())
+}
+
 /**
  * Instant visé par un doigt relâché en ([x], [y]) (coordonnées de l'écran). La grille occupe le
  * rectangle ([left], [top], [width], [height]) ; son contenu a défilé de [scrollPx]. Null hors de la
