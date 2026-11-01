@@ -159,3 +159,9 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Problème** : pour noter une idée il fallait ouvrir l'application ; le texte sélectionné ailleurs ne pouvait pas partir directement dans Cadence.
 - **Décision** : raccourci statique « Nouvelle tâche » sur l'icône, tuile « Capturer » dans les réglages rapides (ouvre l'ajout rapide), et entrée « Cadence » dans le menu de sélection (`PROCESS_TEXT`), qui range le texte dans l'Inbox comme le partage.
 - **Web** : pas d'équivalent système ; la capture rapide web reste la palette Ctrl+K.
+
+### 2026-11-01 — Idée de l'Inbox : modifier et convertir en note
+
+- **Problème** : une idée captée trop vite ne se corrigeait pas, et pour garder une réflexion il fallait la recopier à la main dans une note.
+- **Décision** : deux pastilles discrètes et « Note » à côté de « Aujourd'hui », « Planifier » et « Projet » ; « Modifier » ouvre un champ de texte. « Note » crée une note (titre = première ligne, contenu = la suite) par la voie d'écriture des notes, puis retire l'idée de la boîte.
+- **Web** : l'Inbox web a déjà l'édition et la conversion d'une idée ; à reprendre seulement si le web ajoute « Note ».

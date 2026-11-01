@@ -39,7 +39,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Send
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.TaskAlt
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -98,6 +101,7 @@ internal fun InboxTab(
     var converting by remember { mutableStateOf<InboxEntry?>(null) }
     var scheduling by remember { mutableStateOf<InboxEntry?>(null) }
     var filing by remember { mutableStateOf<InboxEntry?>(null) }
+    var editing by remember { mutableStateOf<InboxEntry?>(null) }
     val submit = {
         val text = capture.trim()
         if (text.isNotEmpty()) {
@@ -145,6 +149,8 @@ internal fun InboxTab(
                     onToday = onToday,
                     onSchedule = { scheduling = entry },
                     onProject = { filing = entry },
+                    onNote = { viewModel.convertIdeaToNote(entry) },
+                    onEdit = { editing = entry },
                     onDelete = { viewModel.deleteIdeaWithUndo(entry.uid) },
                 )
             }
@@ -173,6 +179,16 @@ internal fun InboxTab(
                 filing = null
             },
             onDismiss = { filing = null },
+        )
+    }
+    editing?.let { entry ->
+        IdeaTextDialog(
+            initial = entry.content,
+            onSave = { text ->
+                viewModel.renameIdea(entry.uid, text)
+                editing = null
+            },
+            onDismiss = { editing = null },
         )
     }
     converting?.let { entry ->
@@ -243,6 +259,8 @@ private fun IdeaRow(
     onToday: () -> Unit,
     onSchedule: () -> Unit,
     onProject: () -> Unit,
+    onNote: () -> Unit,
+    onEdit: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -300,9 +318,35 @@ private fun IdeaRow(
                 QuickPill(stringResource(R.string.tasks_idea_today), onToday)
                 QuickPill(stringResource(R.string.tasks_idea_schedule), onSchedule)
                 QuickPill(stringResource(R.string.tasks_idea_project), onProject)
+                QuickPill(stringResource(R.string.tasks_idea_note), onNote)
+                QuickPill(stringResource(R.string.tasks_idea_edit), onEdit, quiet = true)
             }
         }
     }
+}
+
+@Composable
+private fun IdeaTextDialog(initial: String, onSave: (String) -> Unit, onDismiss: () -> Unit) {
+    var text by rememberSaveable { mutableStateOf(initial) }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.tasks_idea_edit_title)) },
+        text = {
+            OutlinedTextField(
+                value = text,
+                onValueChange = { text = it },
+                minLines = 2,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onSave(text.trim()) },
+                enabled = text.isNotBlank(),
+            ) { Text(stringResource(R.string.tasks_idea_edit_save)) }
+        },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.tasks_cancel)) } },
+    )
 }
 
 /**

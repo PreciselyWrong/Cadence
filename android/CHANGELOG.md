@@ -19,6 +19,8 @@
 - Événements : « Ouvrir dans l'agenda » ouvre l'occurrence dans l'application d'agenda, à son heure.
 - Capture sans ouvrir l'application : raccourci « Nouvelle tâche » (appui long sur l'icône), tuile « Capturer » dans les réglages rapides, et « Cadence » dans le menu du texte sélectionné (envoie le texte à l'Inbox).
 
+- Inbox : une idée se modifie (« Modifier ») et devient une note (« Note ») : sa première ligne fait le titre, la suite le contenu ; l'idée quitte la boîte.
+
 ### Corrections
 - Fiche de tâche : un titre long s'affiche en entier (il passait à la ligne puis était coupé après deux lignes) et prend une police plus petite ; les boutons restent alignés en haut.
 

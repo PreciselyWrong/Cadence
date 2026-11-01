@@ -34,6 +34,7 @@ import ch.nicolab.cadence.tasks.model.GoalChange
 import ch.nicolab.cadence.tasks.model.GoalItem
 import ch.nicolab.cadence.tasks.model.GoalOverview
 import ch.nicolab.cadence.tasks.model.Goals
+import ch.nicolab.cadence.tasks.model.IdeaNotes
 import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.NoteItem
 import ch.nicolab.cadence.tasks.notes.Autosaver
@@ -763,6 +764,14 @@ internal class TasksViewModel(
 
     /** Une idée devient une tâche (échéance ou projet choisis) : l'idée est retirée de la boîte. */
     fun convertIdea(entry: InboxEntry, draft: TaskDraft) = launchAction { saveConversion(entry, draft) }
+
+    /** Une idée devient une note (créée par la voie d'écriture des notes) ; l'idée est retirée de la boîte. */
+    fun convertIdeaToNote(entry: InboxEntry) = launchAction {
+        repository.saveNote(UUID.randomUUID().toString(), IdeaNotes.change(entry.content))
+        repository.processInboxItem(entry.uid)
+    }
+
+    fun renameIdea(uid: String, text: String) = launchAction { repository.renameInboxItem(uid, text) }
 
     fun captureInbox(text: String) = launchAction { repository.captureInbox(text) }
 

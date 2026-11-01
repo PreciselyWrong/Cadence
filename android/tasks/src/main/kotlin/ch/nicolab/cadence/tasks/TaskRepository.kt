@@ -165,6 +165,9 @@ interface TaskRepository {
     suspend fun createTag(name: String): String
 
     suspend fun captureInbox(text: String): String
+
+    /** Remplace le texte d'une idée ; une idée inconnue n'écrit rien. */
+    suspend fun renameInboxItem(uid: String, text: String)
     suspend fun deleteInboxItem(uid: String)
 
     /** Marque une idée traitée : elle quitte l'Inbox sans être supprimée (un lien reste dans la bibliothèque). */

@@ -686,6 +686,17 @@ internal class RoomTaskRepository(
         return uid
     }
 
+    override suspend fun renameInboxItem(uid: String, text: String) {
+        val clock = hlc.now()
+        val written = database.withTransaction {
+            val existing = inboxDao.get(uid) ?: return@withTransaction false
+            inboxDao.upsert(existing.copy(content = text))
+            outbox.insert(LocalOps.upsert("inbox_item", uid, mapOf("content" to JsonPrimitive(text)), clock, nowMs()))
+            true
+        }
+        if (written) afterLocalWrite()
+    }
+
     override suspend fun deleteInboxItem(uid: String) {
         val clock = hlc.now()
         database.withTransaction {
