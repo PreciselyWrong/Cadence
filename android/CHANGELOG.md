@@ -1,4 +1,4 @@
-## [1.7.0] — à publier
+## [1.7.0] — 1 novembre 2026
 
 ### Nouveautés
 - Aujourd'hui montre le plan du jour du serveur : une tâche placée sur le web (par exemple à 16:30) ou par la « Session courte » de la revue apparaît à son heure, ou dans la partie sans heure, une seule fois ; une tâche en retard placée aujourd'hui quitte le retard. Le plan est relu après chaque synchro et reste lisible hors ligne.
