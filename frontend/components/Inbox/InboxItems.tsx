@@ -754,17 +754,23 @@ const InboxItems: React.FC = () => {
                                         </div>
                                     )}
 
-                                    {/* Item count */}
-                                    <div className="text-center text-xs text-gray-500 dark:text-gray-400 pt-4 pb-2">
-                                        {t(
-                                            'inbox.showingItems',
-                                            'Showing {{current}} of {{total}} items',
-                                            {
-                                                current: inboxItems.length,
-                                                total: pagination.total,
-                                            }
-                                        )}
-                                    </div>
+                                    {/* Only while items remain to load: the
+                                        header already counts a full list. */}
+                                    {inboxItems.length < pagination.total && (
+                                        <div
+                                            className="text-center text-xs text-gray-500 dark:text-gray-400 pt-4 pb-2"
+                                            data-testid="inbox-showing-count"
+                                        >
+                                            {t(
+                                                'inbox.showingItems',
+                                                'Showing {{current}} of {{total}} items',
+                                                {
+                                                    current: inboxItems.length,
+                                                    total: pagination.total,
+                                                }
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             </>
                         )}
