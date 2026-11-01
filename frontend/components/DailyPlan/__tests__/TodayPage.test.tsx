@@ -336,6 +336,46 @@ describe('TodayPage', () => {
         expect(window.localStorage.getItem('today.panelMode')).toBe('agenda');
     });
 
+    it('keeps the daily quote off until it is chosen in the day menu', async () => {
+        render(<TodayPage />);
+
+        await screen.findByTestId('candidate-o1');
+        expect(screen.queryByTestId('daily-quote')).not.toBeInTheDocument();
+
+        fireEvent.click(screen.getByTestId('plan-more'));
+        fireEvent.click(screen.getByTestId('plan-toggle-quote'));
+
+        expect(await screen.findByTestId('daily-quote')).toBeInTheDocument();
+        expect(window.localStorage.getItem('today.showQuote')).toBe('1');
+    });
+
+    it('stacks the calendar under the list when both columns do not fit', async () => {
+        const original = (window as any).ResizeObserver;
+        (window as any).ResizeObserver = class {
+            callback: ResizeObserverCallback;
+            constructor(callback: ResizeObserverCallback) {
+                this.callback = callback;
+            }
+            observe() {
+                // A tablet with the sidebar open: 500 px for both columns.
+                this.callback(
+                    [{ contentRect: { width: 500 } } as ResizeObserverEntry],
+                    this as unknown as ResizeObserver
+                );
+            }
+            disconnect() {}
+        };
+        try {
+            render(<TodayPage />);
+
+            expect(await screen.findByTestId('day-timeline')).toBeInTheDocument();
+            expect(screen.queryByTestId('pane-splitter')).not.toBeInTheDocument();
+            expect(screen.getByTestId('left-pane').style.width).toBe('');
+        } finally {
+            (window as any).ResizeObserver = original;
+        }
+    });
+
     it('resizes the left column with the splitter and remembers the width', async () => {
         render(<TodayPage />);
 

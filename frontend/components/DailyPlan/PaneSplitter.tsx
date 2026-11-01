@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const PANE_MIN = 280;
@@ -26,14 +26,30 @@ const writeWidth = (width: number) => {
 };
 
 // Width in px of the left column, kept between PANE_MIN and what leaves the
-// right pane its minimum; remembered per browser.
-export const usePaneWidth = (containerRef: React.RefObject<HTMLElement>) => {
+// right pane its minimum; remembered per browser. `fits` is false when the
+// container is too narrow for both columns (sidebar open on a tablet): the
+// panes then stack instead of squeezing the day into a scrolling sliver.
+// `mounted` re-attaches the observer once the container renders.
+export const usePaneWidth = (
+    containerRef: React.RefObject<HTMLElement>,
+    mounted = true
+) => {
     const [width, setWidth] = useState(readWidth);
+    const [total, setTotal] = useState(0);
+    useEffect(() => {
+        const el = containerRef.current;
+        if (!el || typeof ResizeObserver === 'undefined') return undefined;
+        const observer = new ResizeObserver((entries) => {
+            setTotal(entries[0].contentRect.width);
+        });
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, [containerRef, mounted]);
     const clamp = useCallback(
         (value: number) => {
-            const total = containerRef.current?.clientWidth || 0;
-            const max = total
-                ? Math.max(PANE_MIN, total - RIGHT_MIN)
+            const available = containerRef.current?.clientWidth || 0;
+            const max = available
+                ? Math.max(PANE_MIN, available - RIGHT_MIN)
                 : Infinity;
             return Math.min(max, Math.max(PANE_MIN, value));
         },
@@ -47,7 +63,12 @@ export const usePaneWidth = (containerRef: React.RefObject<HTMLElement>) => {
         },
         [clamp]
     );
-    return { width, update };
+    // The stored width can be wider than this window allows.
+    const shown = total
+        ? Math.min(width, Math.max(PANE_MIN, total - RIGHT_MIN))
+        : width;
+    const fits = total === 0 || total >= PANE_MIN + RIGHT_MIN;
+    return { width: shown, update, fits };
 };
 
 interface PaneSplitterProps {

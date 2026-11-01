@@ -162,15 +162,14 @@ const countSuggested = (list: PlanCandidates, delta: number) =>
         (list.suggested_total ?? list.suggested.length) + delta
     );
 
-// The daily quote is off on phones unless chosen; remembered per browser.
-const readShowQuote = (narrow: boolean): boolean => {
+// The daily quote is off unless chosen in the day's menu (a calm Today
+// carries no slogan by default); remembered per browser.
+const readShowQuote = (): boolean => {
     try {
-        const saved = localStorage.getItem(QUOTE_KEY);
-        if (saved !== null) return saved === '1';
+        return localStorage.getItem(QUOTE_KEY) === '1';
     } catch {
-        // Fall through to the default.
+        return false;
     }
-    return !narrow;
 };
 
 const guideDismissed = (date: string): boolean => {
@@ -345,7 +344,7 @@ const TodayPage: React.FC = () => {
     const [quotePreference, setQuotePreference] = useState<boolean | null>(
         null
     );
-    const showQuote = quotePreference ?? readShowQuote(narrow);
+    const showQuote = quotePreference ?? readShowQuote();
     const quote = useDailyQuote(i18n.language, showQuote);
     const setProgress = useDailyPlanProgress((s) => s.setProgress);
 
@@ -407,7 +406,8 @@ const TodayPage: React.FC = () => {
     const [filter, setFilter] = useState<CandidateFilter>('all');
     const [preferredMode, setPreferredMode] = useState<Mode>(readMode);
     const panesRef = useRef<HTMLDivElement>(null);
-    const paneWidth = usePaneWidth(panesRef);
+    const paneWidth = usePaneWidth(panesRef, Boolean(candidates));
+    const sideBySide = !narrow && paneWidth.fits;
     const [panelMode, setPanelMode] = useState<PanelMode>(readPanelMode);
     const [calendarOpen, setCalendarOpen] = useState(() =>
         readCalendarOpen(narrow)
@@ -1882,7 +1882,10 @@ const TodayPage: React.FC = () => {
                                 <EllipsisHorizontalIcon className="h-5 w-5" />
                             </button>
                             {moreOpen && (
-                                <div className="absolute right-0 z-[45] mt-1 flex w-56 flex-col rounded-lg bg-white p-1 text-sm shadow-lg dark:bg-gray-800 dark:bg-gray-900">
+                                <div
+                                    className="absolute left-0 z-[45] mt-1 flex w-56 max-w-[calc(100vw-2rem)] flex-col rounded-lg bg-white p-1 text-sm shadow-lg dark:bg-gray-900"
+                                    data-testid="plan-more-menu"
+                                >
                                     <button
                                         type="button"
                                         onClick={() => {
@@ -2165,14 +2168,20 @@ const TodayPage: React.FC = () => {
                 ) : (
                     <div
                         ref={panesRef}
-                        className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto md:flex-row md:gap-0 md:overflow-hidden"
+                        className={`flex min-h-0 flex-1 ${
+                            sideBySide
+                                ? 'flex-row gap-0 overflow-hidden'
+                                : 'flex-col gap-4 overflow-y-auto'
+                        }`}
                     >
                         <aside
-                            className={`shrink-0 rounded-xl bg-white px-4 py-5 sm:px-5 md:max-h-full md:self-start md:overflow-y-auto dark:bg-gray-900 ${
-                                calendarOpen ? '' : 'md:w-full'
-                            }`}
+                            className={`shrink-0 rounded-xl bg-white px-4 py-5 sm:px-5 dark:bg-gray-900 ${
+                                sideBySide
+                                    ? 'max-h-full self-start overflow-y-auto'
+                                    : ''
+                            } ${calendarOpen ? '' : 'md:w-full'}`}
                             style={
-                                calendarOpen && !narrow
+                                calendarOpen && sideBySide
                                     ? { width: paneWidth.width }
                                     : undefined
                             }
@@ -2251,7 +2260,7 @@ const TodayPage: React.FC = () => {
                                 </CompletedTasksSection>
                             )}
                         </aside>
-                        {calendarOpen && date && !narrow && (
+                        {calendarOpen && date && sideBySide && (
                             <PaneSplitter
                                 width={paneWidth.width}
                                 containerRef={panesRef}
@@ -2259,7 +2268,13 @@ const TodayPage: React.FC = () => {
                             />
                         )}
                         {calendarOpen && date && (
-                            <section className="isolate min-w-0 flex-1 rounded-xl bg-white px-4 py-5 sm:px-6 md:ml-1 md:max-h-full md:overflow-y-auto dark:bg-gray-900">
+                            <section
+                                className={`isolate min-w-0 flex-1 rounded-xl bg-white px-4 py-5 sm:px-6 dark:bg-gray-900 ${
+                                    sideBySide
+                                        ? 'ml-1 max-h-full overflow-y-auto'
+                                        : ''
+                                }`}
+                            >
                                 <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
                                     <div
                                         role="group"
