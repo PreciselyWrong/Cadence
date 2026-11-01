@@ -323,6 +323,8 @@
       "setDueDate": "Vervaldatum instellen"
     },
     "contextMenu": {
+      "projectChanged": "Project changed",
+      "dateChanged": "Date changed",
       "label": "Taakacties",
       "priority": "Prioriteit",
       "date": "Datum",

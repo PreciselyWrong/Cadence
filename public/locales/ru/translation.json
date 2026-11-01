@@ -325,6 +325,8 @@
       "setDueDate": "Задать срок"
     },
     "contextMenu": {
+      "projectChanged": "Project changed",
+      "dateChanged": "Date changed",
       "label": "Действия с задачей",
       "priority": "Приоритет",
       "date": "Дата",

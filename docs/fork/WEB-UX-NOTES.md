@@ -247,3 +247,9 @@ Revue écran par écran (Aujourd'hui, Boîte, Tâches, Projets, page projet, Age
 - **Problème** : supprimer une tâche, une note ou une idée de la boîte demandait une fenêtre de confirmation avant chaque suppression, et rien ne se rattrapait ensuite.
 - **Décision** : l'élément disparaît aussitôt, un toast « Annuler » dure 5 s (6 s à l'écran) ; sans annulation, la suppression part à la fin de ce délai, ou tout de suite si la page est quittée (requête `keepalive`). Une tâche récurrente garde son choix de portée. Une date ou un projet changé dans le menu clic droit propose aussi « Annuler » (voir l'entrée suivante). Mécanisme dans `frontend/utils/deferredDelete.ts`.
 - **Android** : à reprendre. Même règle pour tâches, notes et idées : retrait immédiat, annulation pendant le délai, suppression ensuite. Reste : les suppressions de l'application ne sont pas encore toutes passées par ce délai.
+
+### 2026-11-01 — Annuler une date ou un projet changé
+
+- **Problème** : dans le menu clic droit d'une tâche, changer la date ou le projet était définitif : une erreur de clic se réparait à la main.
+- **Décision** : après un changement enregistré, un toast « Annuler » (« Date modifiée » ou « Projet modifié ») remet l'ancienne valeur, heure comprise. Rien n'est proposé si l'enregistrement échoue, ni pour une tâche récurrente (son choix de portée décide déjà, et une portée annulée n'enregistre rien).
+- **Android** : à reprendre. Le même « Annuler » après un changement de date ou de projet depuis le menu d'une ligne. Reste : rien d'essayé sur le téléphone.

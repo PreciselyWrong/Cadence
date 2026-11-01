@@ -123,3 +123,9 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Problème** : une notification d'événement ne proposait que « Ouvrir l'agenda » et « Fait » ; pour un rendez-vous long, le rappel tombait trop tôt pour savoir s'il était fini.
 - **Décision** : « À la fin » reveille au moment où l'événement se termine (masqué si moins de 5 min restent ou journée entière) et « 10 min » reveille dix minutes plus tard. Le rappel repris relit l'événement : fait, masqué, déplacé ou supprimé, il se tait ; les heures calmes décalent le réveil.
 - **Web** : rien à reprendre tant que l'agenda web n'envoie pas de rappels à reporter.
+
+### 2026-11-01 — Téléphones, mails et liens cliquables dans les descriptions
+
+- **Problème** : un numéro ou une adresse dans la description d'un événement ou dans une note n'était pas touchable ; seules les URL l'étaient dans les notes.
+- **Décision** : `tel:` (numéros suisses et français, reconnus avec ou sans indicatif), `mailto:` et URL, dans les notes markdown et la description d'un événement. Les dates et heures ne sont pas prises pour des numéros.
+- **Web** : à reprendre dans les descriptions d'événements et les notes si le web ne linkifie pas déjà les numéros et adresses.

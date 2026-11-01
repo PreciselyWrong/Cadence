@@ -1,6 +1,7 @@
 package ch.nicolab.cadence.tasks.notes
 
 import ch.nicolab.cadence.tasks.links.LinkExtractor
+import ch.nicolab.cadence.tasks.links.TextLinks
 
 /** Segment de texte en ligne partageant un même style ; [link] est la cible d'un lien. */
 data class MdRun(
@@ -171,7 +172,7 @@ object Markdown {
                 (c == '*' || c == '_') && canOpenEmphasis(source, i) ->
                     pair(source, i, c.toString(), style.copy(italic = true), out, ::flush)
                 c == '[' -> markdownLink(source, i, style, out, ::flush)
-                (c == 'h' || c == 'H') && (i == 0 || !source[i - 1].isLetterOrDigit()) ->
+                (c.isLetterOrDigit() || c == '+') && (i == 0 || !source[i - 1].isLetterOrDigit()) ->
                     bareLink(source, i, style, out, ::flush)
                 else -> -1
             }
@@ -224,10 +225,10 @@ object Markdown {
     }
 
     private fun bareLink(source: String, start: Int, style: MdRun, out: MutableList<MdRun>, flush: () -> Unit): Int {
-        val match = LinkExtractor.matches(source.substring(start)).firstOrNull()
+        val match = TextLinks.matches(source.substring(start)).firstOrNull()
         if (match == null || match.range.first != 0) return -1
         flush()
-        out += style.copy(text = match.url, link = match.url)
+        out += style.copy(text = source.substring(start, start + match.range.last + 1), link = match.url)
         return start + match.range.last + 1
     }
 

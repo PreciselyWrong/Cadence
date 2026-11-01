@@ -1105,6 +1105,8 @@
       "setDueDate": "Establecer fecha límite"
     },
     "contextMenu": {
+      "projectChanged": "Project changed",
+      "dateChanged": "Date changed",
       "label": "Acciones de la tarea",
       "priority": "Prioridad",
       "date": "Fecha",

@@ -525,6 +525,8 @@
       "setDueDate": "Nastaviť termín"
     },
     "contextMenu": {
+      "projectChanged": "Project changed",
+      "dateChanged": "Date changed",
       "label": "Akcie úlohy",
       "priority": "Priorita",
       "date": "Dátum",

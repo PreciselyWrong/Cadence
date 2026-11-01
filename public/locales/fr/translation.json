@@ -325,6 +325,8 @@
       "setDueDate": "Définir l'échéance"
     },
     "contextMenu": {
+      "projectChanged": "Projet modifié",
+      "dateChanged": "Date modifiée",
       "label": "Actions de la tâche",
       "priority": "Priorité",
       "date": "Date",

@@ -323,6 +323,8 @@
       "setDueDate": "Ange förfallodatum"
     },
     "contextMenu": {
+      "projectChanged": "Project changed",
+      "dateChanged": "Date changed",
       "label": "Åtgärder för uppgiften",
       "priority": "Prioritet",
       "date": "Datum",

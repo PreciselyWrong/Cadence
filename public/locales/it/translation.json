@@ -324,6 +324,8 @@
       "setDueDate": "Imposta scadenza"
     },
     "contextMenu": {
+      "projectChanged": "Project changed",
+      "dateChanged": "Date changed",
       "label": "Azioni attività",
       "priority": "Priorità",
       "date": "Data",

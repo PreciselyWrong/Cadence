@@ -22,6 +22,7 @@ import {
     isParked,
     TaskDecision,
 } from '../../../utils/reviewService';
+import { isRecurringTask } from '../../../utils/recurringScope';
 import { isCurrentWeek } from '../../Review/TaskDecisionRow';
 import { useToast } from '../../Shared/ToastContext';
 import { useNextAction } from '../../../contexts/NextActionContext';
@@ -78,7 +79,7 @@ const MinimalContextMenu: React.FC<MinimalContextMenuProps> = ({
         [onTaskUpdate]
     );
     const setters = useTaskRowSave(task, saveAndAnnounce);
-    const { showErrorToast } = useToast();
+    const { showErrorToast, showUndoToast } = useToast();
     // Only on a project page, for an open task of the project itself.
     const nextAction = useNextAction();
     const canBeNextAction =
@@ -146,6 +147,20 @@ const MinimalContextMenu: React.FC<MinimalContextMenuProps> = ({
     const run = (action: () => Promise<void>) => {
         onClose();
         void action().catch(() => {});
+    };
+    // A saved date or project change can be taken back. A change that failed
+    // rejects before the toast. A recurring task may answer the scope prompt
+    // with a cancel, which saves nothing and returns quietly, so none is offered.
+    const changeWithUndo = async (
+        change: () => Promise<void>,
+        previous: () => Promise<void>,
+        message: string
+    ) => {
+        await change();
+        if (isRecurringTask(task)) return;
+        showUndoToast(message, () => {
+            void previous().catch(() => {});
+        });
     };
 
     const priorities: { value: PriorityType; label: string }[] = [
@@ -225,7 +240,22 @@ const MinimalContextMenu: React.FC<MinimalContextMenuProps> = ({
                     key={option.key}
                     type="button"
                     role="menuitem"
-                    onClick={() => run(() => setters.setDue(option.date, null))}
+                    onClick={() =>
+                        run(() =>
+                            changeWithUndo(
+                                () => setters.setDue(option.date, null),
+                                () =>
+                                    setters.setDue(
+                                        task.due_date ?? null,
+                                        task.due_time ?? null
+                                    ),
+                                t(
+                                    'tasks.contextMenu.dateChanged',
+                                    'Date changed'
+                                )
+                            )
+                        )
+                    }
                     className={itemClass}
                 >
                     {option.label}
@@ -239,7 +269,18 @@ const MinimalContextMenu: React.FC<MinimalContextMenuProps> = ({
             <button
                 type="button"
                 role="menuitem"
-                onClick={() => run(() => setters.setProject(null))}
+                onClick={() =>
+                    run(() =>
+                        changeWithUndo(
+                            () => setters.setProject(null),
+                            () => setters.setProject(task.project_id ?? null),
+                            t(
+                                'tasks.contextMenu.projectChanged',
+                                'Project changed'
+                            )
+                        )
+                    )
+                }
                 className={`${itemClass} ${
                     task.project_id ? '' : selectedClass
                 }`}
@@ -252,7 +293,17 @@ const MinimalContextMenu: React.FC<MinimalContextMenuProps> = ({
                     type="button"
                     role="menuitem"
                     onClick={() =>
-                        run(() => setters.setProject(project.id ?? null))
+                        run(() =>
+                            changeWithUndo(
+                                () => setters.setProject(project.id ?? null),
+                                () =>
+                                    setters.setProject(task.project_id ?? null),
+                                t(
+                                    'tasks.contextMenu.projectChanged',
+                                    'Project changed'
+                                )
+                            )
+                        )
                     }
                     className={`${itemClass} ${
                         task.project_id === project.id ? selectedClass : ''

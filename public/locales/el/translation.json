@@ -1104,6 +1104,8 @@
       "setDueDate": "Ορισμός ημερομηνίας λήξης"
     },
     "contextMenu": {
+      "projectChanged": "Project changed",
+      "dateChanged": "Date changed",
       "label": "Ενέργειες εργασίας",
       "priority": "Προτεραιότητα",
       "date": "Ημερομηνία",

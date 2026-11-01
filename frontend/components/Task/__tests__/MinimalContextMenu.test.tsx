@@ -16,11 +16,13 @@ jest.mock('../../../utils/tasksService', () => ({
     updateTask: jest.fn(),
 }));
 
+const mockShowUndoToast = jest.fn();
+
 jest.mock('../../Shared/ToastContext', () => ({
     useToast: () => ({
         showSuccessToast: jest.fn(),
         showErrorToast: jest.fn(),
-        showUndoToast: jest.fn(),
+        showUndoToast: mockShowUndoToast,
     }),
 }));
 
@@ -178,6 +180,56 @@ describe('MinimalContextMenu', () => {
             due_date: getTomorrowDateString(),
             due_time: null,
         });
+    });
+
+    it('offers an undo after a date change that puts the old date back', async () => {
+        renderMenu(baseTask({ due_date: '2026-01-05', due_time: '09:30' }));
+
+        await act(async () => {
+            fireEvent.click(screen.getByRole('menuitem', { name: 'Tomorrow' }));
+        });
+        expect(mockShowUndoToast).toHaveBeenLastCalledWith(
+            expect.anything(),
+            expect.any(Function)
+        );
+        (tasksService.updateTask as jest.Mock).mockClear();
+
+        const onUndo = mockShowUndoToast.mock.calls.at(-1)?.[1];
+        await act(async () => {
+            onUndo();
+        });
+        expect(savedPatch()).toEqual({
+            due_date: '2026-01-05',
+            due_time: '09:30',
+        });
+    });
+
+    it('offers an undo after a project change that puts the old project back', async () => {
+        renderMenu();
+
+        await act(async () => {
+            fireEvent.click(screen.getByRole('menuitem', { name: 'Home' }));
+        });
+        (tasksService.updateTask as jest.Mock).mockClear();
+
+        const onUndo = mockShowUndoToast.mock.calls.at(-1)?.[1];
+        await act(async () => {
+            onUndo();
+        });
+        expect(savedPatch()).toEqual({ project_id: 1 });
+    });
+
+    it('offers no undo when the change was not saved', async () => {
+        (tasksService.updateTask as jest.Mock).mockRejectedValue(
+            new Error('offline')
+        );
+        mockShowUndoToast.mockClear();
+        renderMenu();
+
+        await act(async () => {
+            fireEvent.click(screen.getByRole('menuitem', { name: 'Tomorrow' }));
+        });
+        expect(mockShowUndoToast).not.toHaveBeenCalled();
     });
 
     it('sets the due date to the next Monday for Next week', async () => {

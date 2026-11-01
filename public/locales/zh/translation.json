@@ -323,6 +323,8 @@
       "setDueDate": "设置截止日期"
     },
     "contextMenu": {
+      "projectChanged": "Project changed",
+      "dateChanged": "Date changed",
       "label": "任务操作",
       "priority": "优先级",
       "date": "日期",

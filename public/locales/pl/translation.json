@@ -325,6 +325,8 @@
       "setDueDate": "Ustaw termin"
     },
     "contextMenu": {
+      "projectChanged": "Project changed",
+      "dateChanged": "Date changed",
       "label": "Działania zadania",
       "priority": "Priorytet",
       "date": "Data",

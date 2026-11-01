@@ -111,7 +111,11 @@ fun EventDetailSheet(
                         )
                     }
                     SelectionContainer {
-                        Text(description, style = MaterialTheme.typography.bodyMedium, color = palette.onSurface)
+                        Text(
+                            remember(description) { linkifiedText(description, palette.primary) },
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = palette.onSurface,
+                        )
                     }
                 }
             }

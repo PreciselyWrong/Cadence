@@ -71,6 +71,19 @@ class MarkdownTest {
     }
 
     @Test
+    fun `un numero et une adresse mail deviennent cliquables`() {
+        assertEquals(
+            listOf(
+                MdRun("appeler "),
+                MdRun("+41 79 123 45 67", link = "tel:+41791234567"),
+                MdRun(" ou "),
+                MdRun("anna@exemple.ch", link = "mailto:anna@exemple.ch"),
+            ),
+            Markdown.inline("appeler +41 79 123 45 67 ou anna@exemple.ch"),
+        )
+    }
+
+    @Test
     fun `un lien nu devient cliquable sans sa ponctuation finale`() {
         assertEquals(
             listOf(MdRun("va sur "), MdRun("https://a.example/x", link = "https://a.example/x"), MdRun(", puis")),

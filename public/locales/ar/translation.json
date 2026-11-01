@@ -327,6 +327,8 @@
       "setDueDate": "تحديد تاريخ الاستحقاق"
     },
     "contextMenu": {
+      "projectChanged": "Project changed",
+      "dateChanged": "Date changed",
       "label": "إجراءات المهمة",
       "priority": "الأولوية",
       "date": "التاريخ",
