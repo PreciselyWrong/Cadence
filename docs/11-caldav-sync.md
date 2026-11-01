@@ -595,7 +595,7 @@ Cadence supports CalDAV recurring tasks via RRULE (RFC 5545):
 **Solutions:**
 1. Verify credentials (email and password are correct)
 2. Ensure HTTP Basic Auth is supported by client
-3. Try creating a new API token in Profile settings
+3. Try creating a new API token in Profile settings. A `Claude MCP (…)` key issued to a remote connector is refused here: it only opens the MCP endpoint ([Remote MCP connector](38-remote-mcp.md))
 
 ### Tasks Not Syncing
 

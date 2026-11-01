@@ -1,6 +1,30 @@
 'use strict';
 
 const { handleMcpHttpRequest } = require('./httpTransport');
+const { logger } = require('../../services/logService');
+
+// The transport is stateless, so the initialize request is what marks a
+// client connecting. One audit line per connection; never the token.
+function logSessionStart(req) {
+    const messages = Array.isArray(req.body) ? req.body : [req.body];
+    const initialize = messages.find((m) => m && m.method === 'initialize');
+    if (!initialize) return;
+    const clientInfo = initialize.params?.clientInfo || {};
+    logger.info(
+        {
+            event: 'mcp.session_started',
+            userId: req.mcpUser?.id,
+            tokenId: req.authToken?.id,
+            client:
+                typeof clientInfo.name === 'string'
+                    ? clientInfo.name.slice(0, 100)
+                    : undefined,
+            ip: req.ip,
+            userAgent: req.get('user-agent'),
+        },
+        'MCP session started'
+    );
+}
 
 /**
  * Get MCP configuration for Claude Desktop
@@ -49,6 +73,7 @@ async function getMcpConfig(req, res) {
 async function handleMcpMessage(req, res) {
     try {
         const user = req.mcpUser;
+        logSessionStart(req);
 
         // Delegate to HTTP transport handler
         await handleMcpHttpRequest(req, res, user);

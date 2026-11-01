@@ -137,6 +137,7 @@ Cadence supports two transport modes for different deployment scenarios:
 - **Communication:** HTTP POST to `/api/mcp`
 - **Protocol:** Streamable HTTP (stateless mode)
 - **Setup:** Requires `mcp-remote` npm package
+- **claude.ai custom connector:** with `TUDUDI_PUBLIC_MCP_URL` set, the same endpoint is also served at `/mcp` with a built-in OAuth authorization server (DCR, PKCE, MCP-only tokens). See [Remote MCP connector (claude.ai)](38-remote-mcp.md)
 
 **Best for:**
 
@@ -1418,6 +1419,7 @@ const result = await client.callTool({
 - Tokens are scoped to a single user — no cross-user data access
 - Tokens can be revoked at any time from `Profile → API Keys`
 - HTTP mode uses Bearer token in the `Authorization` header
+- OAuth tokens issued to a remote connector (claude.ai) only open the MCP endpoint and appear under `Profile → API Keys` as `Claude MCP (…)`; see [Remote MCP connector](38-remote-mcp.md)
 
 ### Access Control
 

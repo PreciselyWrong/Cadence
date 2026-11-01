@@ -28,7 +28,9 @@ async function startMcpServer() {
         }
 
         // Validate token and get user context
-        const tokenRecord = await findValidTokenByValue(apiToken);
+        const tokenRecord = await findValidTokenByValue(apiToken, {
+            allowScopes: ['mcp'],
+        });
         if (!tokenRecord) {
             throw new Error(
                 'Invalid or expired TUDUDI_API_TOKEN. ' +

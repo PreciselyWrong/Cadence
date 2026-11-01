@@ -46,6 +46,7 @@ Fichiers propres au fork : `AGENTS.md`, `TODO.md`, `README.md`, `docs/fork/`, `a
 | Liens (capture, métadonnées, page Liens) | `docs/37-links.md`, `backend/modules/links/` |
 | Projets depuis des `TODO.md` | `docs/35-todo-md-projects.md`, `backend/modules/todo-md/` |
 | MCP | `docs/14-mcp-integration.md` |
+| MCP distant (connecteur claude.ai, OAuth, Cloudflare) | `docs/38-remote-mcp.md`, `backend/modules/oauth/` |
 | PR ou issue vers l'amont | `docs/MEMORY.md`, `.github/pull_request_template.md` |
 
 ## Commandes
@@ -80,7 +81,7 @@ Tests Postgres : `DATABASE_URL=... npm run backend:test:pg`. Module tâches Andr
 - `backend/modules/tasks/` : tâches, récurrence (`recurringTaskService.js`, `taskScheduler.js`, `operations/moveOccurrence.js`).
 - `backend/modules/sync/` : synchro hors ligne (registre d'entités, journal, HLC, compaction quotidienne `compaction.js`, `410 reset_required`) ; `backend/modules/habits/cadence/` : habitudes Cadence (schéma `schema.js`, moteur JS des règles, routes `/api/cadence/*`, import des anciennes) ; les écrans web des habitudes passent déjà par `/api/cadence/*` (`frontend/utils/cadenceHabitsService.ts`) ; l'ancien module des habitudes-tâches (`/api/habits`, moteur, rappels, `habitsService.ts`) est retiré ; les colonnes `tasks.habit_*` restent et les tâches `habit_mode` sont importées au démarrage puis exclues de toutes les listes de tâches. Fixtures partagées avec Android : `fixtures/habits/`.
 - `backend/modules/links/` : liens trouvés dans idées, tâches et notes (hooks de modèle `capture.js`, file de lecture des pages `jobs.js`, GitHub `core/github.js`, routes `/api/links`, entité de synchro `link`) ; web `frontend/components/Links/`, Android `ui/LinksScreen.kt`.
-- `backend/modules/mcp/` : serveur MCP (`npm run mcp:start`).
+- `backend/modules/mcp/` : serveur MCP (`npm run mcp:start`), servi aussi à `/mcp` ; `backend/modules/oauth/` : serveur d'autorisation OAuth intégré pour les connecteurs distants (actif si `TUDUDI_PUBLIC_MCP_URL`, `docs/38-remote-mcp.md`).
 - `backend/modules/todo-md/` : projets miroirs de fichiers `TODO.md` (`TUDUDI_TODO_ROOT`) ; le fichier fait foi, écriture atomique (ajout, case cochée) uniquement.
 - `frontend/components/<Feature>/` : React ; `frontend/store/useStore.ts` (Zustand) ; `frontend/utils/*Service.ts` (appels API).
 - `public/locales/<lang>/` : traductions i18next (26 langues, base `en`).

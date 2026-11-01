@@ -177,7 +177,7 @@ Cadence builds on [chrisvel/tududi](https://github.com/chrisvel/tududi) (last sy
 - **Families and small teams:** roles (admin, user, guest), groups, members without an email, assigning tasks to members or contacts. [Docs](docs/19-people-and-roles.md)
 - **26 languages.**
 - **Installable PWA** on Android, iOS and desktop.
-- **REST API** with personal API keys and Swagger docs at `/api-docs`; **MCP server** for AI assistants. [Docs](docs/14-mcp-integration.md)
+- **REST API** with personal API keys and Swagger docs at `/api-docs`; **MCP server** for AI assistants, also usable as a claude.ai custom connector through a tunnel (built-in OAuth, MCP-only tokens). [Docs](docs/14-mcp-integration.md), [remote connector](docs/38-remote-mcp.md)
 - **OIDC/SSO** sign-in (Google, Okta, Keycloak, Authentik, PocketID, Azure AD…) and **CalDAV** sync (tasks.org, Apple Reminders, Thunderbird, Nextcloud…).
 
 ## Getting started

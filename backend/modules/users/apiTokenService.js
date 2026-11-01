@@ -83,13 +83,23 @@ const isUsable = (token) =>
     !token.revoked_at &&
     !(token.expires_at && token.expires_at < new Date());
 
-async function findValidTokenByValue(tokenValue) {
+// A token with abilities.scope (e.g. 'mcp' for remote connectors,
+// docs/38-remote-mcp.md) is only found by callers that name that scope, so
+// a new consumer of API keys refuses restricted tokens by default.
+const scopeAllowed = (token, allowScopes) => {
+    const scope = token.abilities?.scope;
+    return !scope || allowScopes.includes(scope);
+};
+
+async function findValidTokenByValue(tokenValue, { allowScopes = [] } = {}) {
     if (!tokenValue) return null;
 
     const cached = verifiedTokens.get(cacheKeyFor(tokenValue));
     if (cached && cached.expires > Date.now()) {
         const token = await ApiToken.findByPk(cached.tokenId);
-        if (isUsable(token)) return token;
+        if (isUsable(token)) {
+            return scopeAllowed(token, allowScopes) ? token : null;
+        }
         verifiedTokens.delete(cacheKeyFor(tokenValue));
     }
 
@@ -104,7 +114,7 @@ async function findValidTokenByValue(tokenValue) {
         const match = await bcrypt.compare(tokenValue, token.token_hash);
         if (match) {
             rememberVerified(tokenValue, token.id);
-            return token;
+            return scopeAllowed(token, allowScopes) ? token : null;
         }
     }
 

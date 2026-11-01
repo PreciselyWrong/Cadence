@@ -2,6 +2,7 @@ const request = require('supertest');
 const app = require('../../app');
 const { User } = require('../../models');
 const { createTestUser } = require('../helpers/testUtils');
+const { createApiToken } = require('../../modules/users/apiTokenService');
 
 const basic = (email, password) =>
     `Basic ${Buffer.from(`${email}:${password}`).toString('base64')}`;
@@ -35,5 +36,27 @@ describe('CalDAV Basic auth hardening', () => {
             );
 
         expect([200, 204]).toContain(res.status);
+    });
+
+    // Tokens issued to a remote MCP connector (docs/38-remote-mcp.md) only
+    // open the MCP endpoint, so CalDAV must refuse them both ways.
+    it('refuses an MCP-only token as Bearer and as the Basic password', async () => {
+        const user = await createTestUser({
+            email: `caldav_mcp_${Date.now()}@example.com`,
+        });
+        const { rawToken } = await createApiToken({
+            userId: user.id,
+            name: 'Claude MCP (Claude)',
+            abilities: { scope: 'mcp' },
+        });
+        const propfind = (authorization) =>
+            request(app)
+                .propfind(`/caldav/${user.email}/`)
+                .set('Authorization', authorization)
+                .set('Content-Type', 'application/xml')
+                .send('<?xml version="1.0"?><D:propfind xmlns:D="DAV:"/>');
+
+        expect((await propfind(`Bearer ${rawToken}`)).status).toBe(401);
+        expect((await propfind(basic(user.email, rawToken))).status).toBe(401);
     });
 });

@@ -2,6 +2,8 @@ const { User, OIDCIdentity } = require('../models');
 const { findValidTokenByValue } = require('../modules/users/apiTokenService');
 const { validateAccessToken } = require('../modules/oidc/service');
 const providerConfig = require('../modules/oidc/providerConfig');
+const oauthConfig = require('../modules/oauth/config');
+const { isMcpPath } = require('../modules/mcp/paths');
 
 const normalizeIssuer = (issuer) => String(issuer || '').replace(/\/+$/, '');
 
@@ -14,10 +16,16 @@ const getBearerToken = (req) => {
     return null;
 };
 
-// Sends a 401 and, when OIDC is enabled, sets WWW-Authenticate so OAuth2 clients
-// can discover the authorization server (RFC 9728).
-const unauthorized = (res, message) => {
-    if ((process.env.OIDC_ENABLED || '').toLowerCase() === 'true') {
+// Sends a 401 and sets WWW-Authenticate so OAuth2 clients can discover the
+// authorization server (RFC 9728): Cadence's own for the MCP endpoint when a
+// public MCP URL is configured, otherwise the OIDC provider's.
+const unauthorized = (req, res, message) => {
+    if (oauthConfig.isEnabled() && isMcpPath(req)) {
+        res.set(
+            'WWW-Authenticate',
+            `Bearer resource_metadata="${oauthConfig.publicBase()}/.well-known/oauth-protected-resource/mcp"`
+        );
+    } else if ((process.env.OIDC_ENABLED || '').toLowerCase() === 'true') {
         const baseUrl = process.env.BASE_URL?.replace(/\/$/, ''); // trim trailing slash
         if (baseUrl) {
             res.set(
@@ -49,19 +57,29 @@ const requireAuth = async (req, res, next) => {
 
         const bearerToken = getBearerToken(req);
         if (!bearerToken) {
-            return unauthorized(res, 'Authentication required');
+            return unauthorized(req, res, 'Authentication required');
         }
 
         if (bearerToken.startsWith('tt_')) {
             // Tududi API key - validate via bcrypt
-            const apiToken = await findValidTokenByValue(bearerToken);
+            const apiToken = await findValidTokenByValue(bearerToken, {
+                allowScopes: ['mcp'],
+            });
             if (!apiToken) {
-                return unauthorized(res, 'Invalid or expired API token');
+                return unauthorized(req, res, 'Invalid or expired API token');
             }
 
             const user = await User.findByPk(apiToken.user_id);
             if (!user) {
-                return unauthorized(res, 'User not found');
+                return unauthorized(req, res, 'User not found');
+            }
+
+            // Tokens issued to remote MCP connectors only open the MCP
+            // endpoint, whatever path reaches the server.
+            if (apiToken.abilities?.scope === 'mcp' && !isMcpPath(req)) {
+                return res
+                    .status(403)
+                    .json({ error: 'This token only grants MCP access' });
             }
 
             req.currentUser = user;
@@ -90,7 +108,11 @@ const requireAuth = async (req, res, next) => {
                 payload = await validateAccessToken(bearerToken);
             } catch (err) {
                 console.error('JWT validation failed:', err);
-                return unauthorized(res, 'Invalid or expired access token');
+                return unauthorized(
+                    req,
+                    res,
+                    'Invalid or expired access token'
+                );
             }
 
             // A subject is only unique within one provider, so the identity is
@@ -108,6 +130,7 @@ const requireAuth = async (req, res, next) => {
                         `[OIDC] Bearer token issuer ${payload.iss} does not match any configured provider`
                     );
                     return unauthorized(
+                        req,
                         res,
                         'No account found for this identity. Please log in via OIDC first.'
                     );
@@ -122,6 +145,7 @@ const requireAuth = async (req, res, next) => {
 
             if (!identity?.User) {
                 return unauthorized(
+                    req,
                     res,
                     'No account found for this identity. Please log in via OIDC first.'
                 );
@@ -131,7 +155,7 @@ const requireAuth = async (req, res, next) => {
             return next();
         }
 
-        return unauthorized(res, 'Invalid or expired API token');
+        return unauthorized(req, res, 'Invalid or expired API token');
     } catch (error) {
         console.error('Authentication error:', error);
         res.status(500).json({ error: 'Authentication error' });

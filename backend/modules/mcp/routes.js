@@ -18,11 +18,13 @@ router.get('/mcp/tools', requireFeature('mcp'), controller.listMcpTools);
 
 // MCP protocol endpoint - uses Bearer token auth, not session auth
 // This endpoint handles actual MCP protocol messages from remote clients
-router.post(
-    '/mcp',
+// Also mounted at /mcp by app.js for remote connectors (docs/38-remote-mcp.md).
+const protocolHandlers = [
     authenticateMcpRequest,
     requireFeature('mcp'),
-    controller.handleMcpMessage
-);
+    controller.handleMcpMessage,
+];
+router.post('/mcp', ...protocolHandlers);
 
 module.exports = router;
+module.exports.protocolHandlers = protocolHandlers;

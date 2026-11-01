@@ -129,6 +129,26 @@ const oidcLimiter = rateLimit({
     },
 });
 
+// The OAuth endpoints of remote MCP connectors (docs/38-remote-mcp.md),
+// per IP. Only failed requests count: a connector that signs in normally
+// never runs out, while guessing codes, clients or passwords does.
+const oauthLimiter = rateLimit({
+    store: createRateLimitStore('oauth'),
+    windowMs: rateLimitConfig.auth.windowMs,
+    max: rateLimitConfig.auth.max,
+    standardHeaders: true,
+    legacyHeaders: false,
+    skip: skipInTest,
+    skipSuccessfulRequests: true,
+    keyGenerator: (req) => ipKeyGenerator(req.ip),
+    handler: (req, res) => {
+        res.status(429).json({
+            error: 'Too many authentication attempts',
+            retryAfter: retryAfterSeconds(req),
+        });
+    },
+});
+
 // The two public sign-in link routes (look at a link, use it). Each device
 // needs two requests, so a household handing links to several devices would
 // use up the strict auth limit at once. The token is 256 random bits, so this
@@ -487,6 +507,7 @@ module.exports = {
     caldavAuthLimiter,
     authLimiter,
     oidcLimiter,
+    oauthLimiter,
     signInLinkLimiter,
     authEmailLimiter,
     loginLimiter,

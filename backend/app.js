@@ -608,6 +608,23 @@ if (API_VERSION && API_BASE_PATH !== '/api') {
 }
 routeBases.forEach(registerApiRoutes);
 
+// The MCP endpoint at the root, the one path a tunnel exposes for remote
+// connectors such as claude.ai (docs/38-remote-mcp.md). Same auth, limiters
+// and handlers as /api/mcp. The transport is stateless, so there is no SSE
+// stream to open or session to delete: anything but POST gets a 405 rather
+// than the web app.
+app.post(
+    '/mcp',
+    bearerFailureLimiter,
+    authenticatedApiLimiter,
+    requireAuth,
+    requireSubscription,
+    ...mcpModule.routes.protocolHandlers
+);
+app.all('/mcp', (req, res) => {
+    res.set('Allow', 'POST').status(405).json({ error: 'Method not allowed' });
+});
+
 // SPA fallback
 app.get('*', (req, res) => {
     if (
