@@ -32,6 +32,16 @@ const upsert = (opId, uid, fields, clock) => ({
 const statusOf = (response) => response.results[0].status;
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+// db-dialect.lockNewRow's advisory key space ('CRET').
+const ROW_CREATE_LOCK_SPACE = 0x43524554;
+const creationLockHeld = async () => {
+    const [rows] = await sequelize.query(
+        "SELECT 1 FROM pg_locks WHERE locktype = 'advisory' AND granted AND classid = :space",
+        { replacements: { space: ROW_CREATE_LOCK_SPACE } }
+    );
+    return rows.length > 0;
+};
+
 // Task names in the user's journal, in id order (the user's tags, journaled
 // by createTestUser, are left out).
 const taskJournal = async (userId) =>
@@ -129,16 +139,27 @@ describeOnPostgres('Offline sync locks across processes (PostgreSQL)', () => {
     // The loser's fields are not a valid task alone (no name), so its create
     // fails validation before the unique index could make it wait: the
     // creation lock makes it wait for the winner and merge into its row.
+    // B starts only once A holds that lock (or is done): if B took it first
+    // there would be no row to merge into and B would rightly be refused.
     it('merges a create that is not valid alone onto the winning row', async () => {
+        const pushA = syncService.push(user.id, [
+            upsert(
+                'pg-partial-a',
+                'pglocktask0003',
+                { name: 'From A' },
+                hlc(40, 0, 'devA')
+            ),
+        ]);
+        let aDone = false;
+        pushA.then(
+            () => (aDone = true),
+            () => (aDone = true)
+        );
+        for (let i = 0; i < 200 && !aDone && !(await creationLockHeld()); i++) {
+            await wait(5);
+        }
         const [a, b] = await Promise.all([
-            syncService.push(user.id, [
-                upsert(
-                    'pg-partial-a',
-                    'pglocktask0003',
-                    { name: 'From A' },
-                    hlc(40, 0, 'devA')
-                ),
-            ]),
+            pushA,
             syncService.push(user.id, [
                 upsert(
                     'pg-partial-b',
