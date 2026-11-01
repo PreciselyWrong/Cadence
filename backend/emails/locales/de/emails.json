@@ -84,6 +84,10 @@
         "outro": "Wir schicken Ihnen keine weitere E-Mail dieser Art, bis Sie wieder vorbeigeschaut haben."
     },
     "securityNotice": {
+        "mcpConnected": {
+            "body": "Über den MCP-Connector wurde ein Assistent mit Ihrem Cadence-Konto verbunden. Er kann Ihre Aufgaben, Projekte, Notizen und Gewohnheiten lesen und ändern, bis Sie seinen Schlüssel unter Profil › API-Schlüssel widerrufen.",
+            "subject": "Ein Assistent wurde mit Ihrem Konto verbunden"
+        },
         "mfaEnabled": {
             "subject": "Zwei-Faktor-Anmeldung ist an",
             "body": "Die Zwei-Faktor-Anmeldung wurde für Ihr Cadence-Konto eingeschaltet. Zum Anmelden brauchen Sie jetzt einen Code aus Ihrer Authenticator-App, und alle anderen Geräte wurden abgemeldet."

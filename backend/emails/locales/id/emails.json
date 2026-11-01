@@ -77,6 +77,10 @@
         "outro": "Kami tidak akan mengirim email seperti ini lagi sampai Anda kembali."
     },
     "securityNotice": {
+        "mcpConnected": {
+            "body": "Asisten telah terhubung ke akun Cadence Anda melalui konektor MCP jarak jauh. Asisten dapat membaca dan mengubah tugas, proyek, catatan, dan kebiasaan Anda sampai Anda mencabut kuncinya di Profil › Kunci API.",
+            "subject": "Asisten telah terhubung ke akun Anda"
+        },
         "mfaEnabled": {
             "subject": "Verifikasi dua langkah aktif",
             "body": "Verifikasi dua langkah telah diaktifkan untuk akun Cadence Anda. Untuk masuk, kini diperlukan kode dari aplikasi autentikator Anda, dan semua perangkat lain telah dikeluarkan."

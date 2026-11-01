@@ -91,6 +91,10 @@
         "outro": "Não vamos enviar outro e-mail como este até você voltar."
     },
     "securityNotice": {
+        "mcpConnected": {
+            "body": "Um assistente foi ligado à sua conta Cadence através do conector MCP remoto. Pode ler e alterar as suas tarefas, projetos, notas e hábitos até revogar a chave em Perfil › Chaves API.",
+            "subject": "Um assistente foi ligado à sua conta"
+        },
         "mfaEnabled": {
             "subject": "A verificação em duas etapas está ativada",
             "body": "A verificação em duas etapas foi ativada na sua conta Cadence. Agora, para entrar, é preciso um código do seu app autenticador, e todos os outros dispositivos foram desconectados."

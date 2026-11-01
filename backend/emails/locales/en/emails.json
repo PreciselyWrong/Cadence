@@ -84,6 +84,10 @@
         "outro": "We will not send another one of these until you have been back."
     },
     "securityNotice": {
+        "mcpConnected": {
+            "body": "An assistant was connected to your Cadence account through the remote MCP connector. It can read and change your tasks, projects, notes and habits until you revoke its key under Profile › API keys.",
+            "subject": "An assistant was connected to your account"
+        },
         "mfaEnabled": {
             "subject": "Two-factor sign-in is on",
             "body": "Two-factor sign-in was turned on for your Cadence account. Signing in now takes a code from your authenticator app, and every other device was signed out."

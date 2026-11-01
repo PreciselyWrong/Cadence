@@ -98,6 +98,10 @@
         "outro": "Ďalší takýto e-mail vám nepošleme, kým sa nevrátite."
     },
     "securityNotice": {
+        "mcpConnected": {
+            "body": "K vášmu účtu Cadence bol pomocou vzdialeného konektora MCP pripojený asistent. Môže čítať a meniť vaše úlohy, projekty, poznámky a návyky, kým neodvoláte jeho kľúč v časti Profil › API kľúče.",
+            "subject": "K vášmu účtu bol pripojený asistent"
+        },
         "mfaEnabled": {
             "subject": "Dvojfaktorové overenie je zapnuté",
             "body": "Pre váš účet Cadence bolo zapnuté dvojfaktorové overenie. Na prihlásenie teraz potrebujete kód z overovacej aplikácie a všetky ostatné zariadenia boli odhlásené."

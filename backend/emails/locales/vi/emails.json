@@ -77,6 +77,10 @@
         "outro": "Chúng tôi sẽ không gửi email như thế này nữa cho đến khi bạn quay lại."
     },
     "securityNotice": {
+        "mcpConnected": {
+            "body": "Một trợ lý đã được kết nối với tài khoản Cadence của bạn qua trình kết nối MCP từ xa. Trợ lý có thể đọc và thay đổi công việc, dự án, ghi chú và thói quen của bạn cho đến khi bạn thu hồi khóa của nó trong Hồ sơ › Khóa API.",
+            "subject": "Một trợ lý đã được kết nối với tài khoản của bạn"
+        },
         "mfaEnabled": {
             "subject": "Xác minh hai bước đã bật",
             "body": "Xác minh hai bước đã được bật cho tài khoản Cadence của bạn. Giờ đây, đăng nhập cần mã từ ứng dụng xác thực, và mọi thiết bị khác đã bị đăng xuất."

@@ -84,6 +84,10 @@
         "outro": "Emme lähetä toista tällaista viestiä ennen kuin olet käynyt takaisin."
     },
     "securityNotice": {
+        "mcpConnected": {
+            "body": "Cadence-tiliisi yhdistettiin avustaja etäkäyttöisen MCP-liittimen kautta. Se voi lukea ja muuttaa tehtäviäsi, projektejasi, muistiinpanojasi ja tapojasi, kunnes kumoat sen avaimen kohdassa Profiili › API-avaimet.",
+            "subject": "Tiliisi yhdistettiin avustaja"
+        },
         "mfaEnabled": {
             "subject": "Kaksivaiheinen tunnistautuminen on käytössä",
             "body": "Kaksivaiheinen tunnistautuminen otettiin käyttöön Cadence-tililläsi. Kirjautumiseen tarvitaan nyt koodi todennussovelluksestasi, ja kaikki muut laitteet kirjattiin ulos."

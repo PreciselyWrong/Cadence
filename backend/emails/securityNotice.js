@@ -1,8 +1,9 @@
 'use strict';
 
-// Sent when someone's two-factor sign-in changes: turned on or off, reset by
-// an admin, a recovery code used, or new recovery codes made. `event` names
-// which; `url` opens the security settings.
+// Sent when someone's two-factor sign-in changes (turned on or off, reset by
+// an admin, a recovery code used, new recovery codes made) or a remote MCP
+// connector is granted access. `event` names which; `url` opens the
+// security settings.
 module.exports = ({ t }, { event, url }) => ({
     subject: t(`securityNotice.${event}.subject`),
     blocks: [

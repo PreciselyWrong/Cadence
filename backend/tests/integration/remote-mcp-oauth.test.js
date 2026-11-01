@@ -3,7 +3,9 @@
 const crypto = require('crypto');
 const request = require('supertest');
 const app = require('../../app');
-const { ApiToken, Role } = require('../../models');
+const bcrypt = require('bcrypt');
+const { ApiToken, AuthAuditLog, Role, User } = require('../../models');
+const { TIMING_DUMMY_HASH } = require('../../modules/oauth/service');
 const mfaService = require('../../modules/mfa/service');
 const pairing = require('../../modules/oauth/pairing');
 const {
@@ -281,6 +283,78 @@ describe('Remote MCP OAuth authorization server', () => {
             const res = await registerClient({ redirect_uris: undefined });
             expect(res.status).toBe(400);
             expect(res.body.error).toBe('invalid_redirect_uri');
+        });
+    });
+
+    describe('hardening', () => {
+        it('serves no /mcp at the root when TUDUDI_PUBLIC_MCP_URL is unset', async () => {
+            withEnv({ TUDUDI_PUBLIC_MCP_URL: undefined });
+            const { rawToken } = await createApiToken({
+                userId: user.id,
+                name: 'Connector',
+                abilities: { scope: 'mcp', oauth_client: 'mcp_x' },
+            });
+            const post = await mcpCall(rawToken, {
+                jsonrpc: '2.0',
+                id: 1,
+                method: 'tools/list',
+            });
+            expect(post.status).toBe(404);
+            expect((await request(app).get('/mcp')).status).toBe(404);
+        });
+
+        it('answers 405 to methods the OAuth endpoints do not take', async () => {
+            for (const [method, path, allow] of [
+                ['get', '/oauth/token', 'POST'],
+                ['get', '/oauth/register', 'POST'],
+                ['put', '/oauth/authorize', 'GET, POST'],
+                ['delete', '/oauth/token', 'POST'],
+            ]) {
+                const res = await request(app)[method](path);
+                expect(res.status).toBe(405);
+                expect(res.headers.allow).toBe(allow);
+            }
+            withEnv({ TUDUDI_PUBLIC_MCP_URL: undefined });
+            expect((await request(app).get('/oauth/token')).status).toBe(404);
+        });
+
+        it('compares unknown emails against a hash as costly as a real one', async () => {
+            const real = await User.hashPassword('anything');
+            expect(bcrypt.getRounds(TIMING_DUMMY_HASH)).toBe(
+                bcrypt.getRounds(real)
+            );
+        });
+
+        it('strips bidi and other invisible characters from the client name', async () => {
+            const res = await registerClient({
+                client_name:
+                    'Clau\u202Ede\u200F \u2066AI\u2069\u0085\u2028\uFEFF',
+            });
+            expect(res.status).toBe(201);
+            expect(res.body.client_name).toBe('Claude AI');
+        });
+
+        it('writes the grant to the audit log and sends the security email', async () => {
+            const notify = jest
+                .spyOn(mfaService, 'notify')
+                .mockImplementation(() => {});
+            await obtainCode({ verifier: newVerifier() });
+
+            const row = await AuthAuditLog.findOne({
+                where: {
+                    user_id: user.id,
+                    event_type: 'mcp_connector_granted',
+                },
+            });
+            expect(row).not.toBeNull();
+            expect(row.auth_method).toBe('mcp_oauth');
+            expect(JSON.parse(row.metadata)).toMatchObject({
+                clientName: 'Claude',
+            });
+            expect(notify).toHaveBeenCalledWith(
+                expect.objectContaining({ id: user.id }),
+                'mcpConnected'
+            );
         });
     });
 
@@ -759,13 +833,30 @@ describe('Remote MCP OAuth authorization server', () => {
             const oldToken = (await exchange(one.client, one.code, first)).body
                 .access_token;
             const second = newVerifier();
-            const two = await obtainCode({ verifier: second });
+            const two = await obtainCode({
+                verifier: second,
+                clientId: one.client,
+            });
             const newToken = (await exchange(two.client, two.code, second)).body
                 .access_token;
 
             const list = { jsonrpc: '2.0', id: 1, method: 'tools/list' };
             expect((await mcpCall(oldToken, list)).status).toBe(401);
             expect((await mcpCall(newToken, list)).status).toBe(200);
+        });
+
+        it('keeps the token of another client with the same name', async () => {
+            const first = newVerifier();
+            const one = await obtainCode({ verifier: first });
+            const oldToken = (await exchange(one.client, one.code, first)).body
+                .access_token;
+            const second = newVerifier();
+            const two = await obtainCode({ verifier: second });
+            expect(two.client).not.toBe(one.client);
+            await exchange(two.client, two.code, second);
+
+            const list = { jsonrpc: '2.0', id: 1, method: 'tools/list' };
+            expect((await mcpCall(oldToken, list)).status).toBe(200);
         });
 
         it('stops working once the token is revoked from the profile', async () => {

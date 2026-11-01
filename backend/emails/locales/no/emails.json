@@ -84,6 +84,10 @@
         "outro": "Vi sender ikke flere slike e-poster før du har vært tilbake."
     },
     "securityNotice": {
+        "mcpConnected": {
+            "body": "En assistent ble koblet til Cadence-kontoen din via den eksterne MCP-connectoren. Den kan lese og endre oppgavene, prosjektene, notatene og vanene dine til du tilbakekaller nøkkelen under Profil › API-nøkler.",
+            "subject": "En assistent ble koblet til kontoen din"
+        },
         "mfaEnabled": {
             "subject": "Tofaktorautentisering er på",
             "body": "Tofaktorautentisering ble slått på for Cadence-kontoen din. Innlogging krever nå en kode fra autentiseringsappen din, og alle andre enheter ble logget ut."

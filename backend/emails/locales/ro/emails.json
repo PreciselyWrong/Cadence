@@ -91,6 +91,10 @@
         "outro": "Nu îți vom mai trimite un astfel de e-mail până nu revii."
     },
     "securityNotice": {
+        "mcpConnected": {
+            "body": "Un asistent a fost conectat la contul tău Cadence prin conectorul MCP la distanță. Poate citi și modifica sarcinile, proiectele, notițele și obiceiurile tale până când revoci cheia lui din Profil › Chei API.",
+            "subject": "Un asistent a fost conectat la contul tău"
+        },
         "mfaEnabled": {
             "subject": "Autentificarea în doi pași este activată",
             "body": "Autentificarea în doi pași a fost activată pentru contul tău Cadence. Pentru conectare ai nevoie acum de un cod din aplicația de autentificare, iar toate celelalte dispozitive au fost deconectate."

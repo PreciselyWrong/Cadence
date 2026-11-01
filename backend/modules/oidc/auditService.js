@@ -16,6 +16,7 @@ const EVENT_TYPES = {
     MFA_FAILED: 'mfa_failed',
     MFA_RECOVERY_CODE_USED: 'mfa_recovery_code_used',
     MFA_RECOVERY_CODES_REGENERATED: 'mfa_recovery_codes_regenerated',
+    MCP_CONNECTOR_GRANTED: 'mcp_connector_granted',
 };
 
 const AUTH_METHODS = {
@@ -24,6 +25,7 @@ const AUTH_METHODS = {
     API_TOKEN: 'api_token',
     SIGN_IN_LINK: 'sign_in_link',
     MFA: 'mfa',
+    MCP_OAUTH: 'mcp_oauth',
 };
 
 async function logEvent({

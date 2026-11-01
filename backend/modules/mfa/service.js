@@ -343,6 +343,7 @@ module.exports = {
     disable,
     regenerateRecoveryCodes,
     reset,
+    notify,
     generateRecoveryCode,
     normalizeRecoveryCode,
     FAILURE_LIMIT,

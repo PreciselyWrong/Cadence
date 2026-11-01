@@ -627,6 +627,7 @@ routeBases.forEach(registerApiRoutes);
 // anything but POST gets a 405 rather than the web app.
 app.post(
     '/mcp',
+    oauthRoutes.onlyWhenEnabled,
     connectorBearerFailureLimiter,
     authenticatedApiLimiter,
     requireAuth,
@@ -634,7 +635,7 @@ app.post(
     requireSubscription,
     ...mcpModule.routes.protocolHandlers
 );
-app.all('/mcp', (req, res) => {
+app.all('/mcp', oauthRoutes.onlyWhenEnabled, (req, res) => {
     res.set('Allow', 'POST').status(405).json({ error: 'Method not allowed' });
 });
 

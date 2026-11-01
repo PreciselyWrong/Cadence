@@ -84,6 +84,10 @@
         "outro": "Vi skickar inget nytt mejl av det här slaget förrän du har varit tillbaka."
     },
     "securityNotice": {
+        "mcpConnected": {
+            "body": "En assistent kopplades till ditt Cadence-konto via den fjärranslutna MCP-kopplingen. Den kan läsa och ändra dina uppgifter, projekt, anteckningar och vanor tills du återkallar dess nyckel under Profil › API-nycklar.",
+            "subject": "En assistent kopplades till ditt konto"
+        },
         "mfaEnabled": {
             "subject": "Tvåfaktorsautentisering är på",
             "body": "Tvåfaktorsautentisering har slagits på för ditt Cadence-konto. Inloggning kräver nu en kod från din autentiseringsapp, och alla andra enheter har loggats ut."

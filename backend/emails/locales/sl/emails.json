@@ -98,6 +98,10 @@
         "outro": "Drugega takšnega e-sporočila vam ne bomo poslali, dokler se ne vrnete."
     },
     "securityNotice": {
+        "mcpConnected": {
+            "body": "Na vaš račun Cadence je bil prek oddaljenega konektorja MCP povezan pomočnik. Lahko bere in spreminja vaše opravila, projekte, zapiske in navade, dokler v razdelku Profil › API ključi ne preklicete njegovega ključa.",
+            "subject": "Na vaš račun je bil povezan pomočnik"
+        },
         "mfaEnabled": {
             "subject": "Dvostopenjsko preverjanje je vklopljeno",
             "body": "Za vaš račun Cadence je bilo vklopljeno dvostopenjsko preverjanje. Za prijavo zdaj potrebujete kodo iz aplikacije za preverjanje pristnosti, vse druge naprave pa so bile odjavljene."

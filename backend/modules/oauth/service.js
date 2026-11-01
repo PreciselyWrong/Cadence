@@ -7,9 +7,10 @@ const { createApiToken, revokeApiToken } = require('../users/apiTokenService');
 const { isAdmin } = require('../../services/rolesService');
 const { tokenLifetimeSeconds, allowedConsentEmails } = require('./config');
 
-// bcrypt of a random string, never a real password.
+// bcrypt of a random string, never a real password, at the cost of real
+// password hashes (User.hashPassword), so an unknown email takes as long.
 const TIMING_DUMMY_HASH =
-    '$2b$12$S7EHH/j.ogiwRJnVUy21FO6KKB0TmCnemad4iGJOnBeqGcUjoMY4u';
+    '$2b$10$I3LufNUtJ4gY2WmNAHS21eQSVVDhhw3tA.GhIMpeBqUpFegBtgSne';
 
 async function mayGrant(user) {
     const allowed = allowedConsentEmails();
@@ -74,16 +75,18 @@ async function verifyOwner({ email, password, mfaCode }, req) {
 
 // The access token is a regular API key restricted to the MCP endpoint, so
 // it shows up, and can be revoked, under Profile > API keys.
-async function issueMcpToken({ userId, clientName }) {
-    // One live token per connector: connecting again retires the previous
-    // one instead of leaving it valid until it expires.
+async function issueMcpToken({ userId, clientId, clientName }) {
+    // One live token per client: the same client connecting again retires
+    // its previous token instead of leaving it valid until it expires.
+    // Matched on the signed client_id, not the name, which any client
+    // chooses.
     const previous = await ApiToken.findAll({
         where: { user_id: userId, revoked_at: null },
     });
     for (const token of previous) {
         if (
             token.abilities?.scope === 'mcp' &&
-            token.abilities?.oauth_client === clientName
+            token.abilities?.oauth_client === clientId
         ) {
             await revokeApiToken(token.id, userId);
         }
@@ -95,9 +98,9 @@ async function issueMcpToken({ userId, clientName }) {
         userId,
         name: `Claude MCP (${clientName})`.slice(0, 255),
         expiresAt,
-        abilities: { scope: 'mcp', oauth_client: clientName },
+        abilities: { scope: 'mcp', oauth_client: clientId },
     });
     return { rawToken, tokenId: tokenRecord.id, expiresAt, lifetime };
 }
 
-module.exports = { verifyOwner, mayGrant, issueMcpToken };
+module.exports = { TIMING_DUMMY_HASH, verifyOwner, mayGrant, issueMcpToken };

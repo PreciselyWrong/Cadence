@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Add i18n keys to public/locales/*/translation.json without reformatting.
 
-Usage: python3 -I scripts/add-locale-keys.py spec.json
+Usage: python3 -I scripts/add-locale-keys.py spec.json [--emails]
+--emails targets backend/emails/locales/*/emails.json instead.
 spec.json: {"en": {"calendar.location.copy": "Copy address"}, "fr": {...}, "*": {...}}
 "*" applies to every locale that has no value of its own for that key.
 
@@ -32,19 +33,19 @@ def object_lines(lines):
     return found
 
 
-def insert(lines, path, value):
+def insert(lines, path, value, unit='  '):
     objs = object_lines(lines)
     depth = len(path) - 1
     while tuple(path[:depth]) not in objs:
         depth -= 1
     at = objs[tuple(path[:depth])]
-    indent = '  ' * (depth + 1)
+    indent = unit * (depth + 1)
     new, close = [], []
     for j, name in enumerate(path[depth:-1]):
-        pad = indent + '  ' * j
+        pad = indent + unit * j
         new.append('%s%s: {' % (pad, json.dumps(name, ensure_ascii=False)))
         close.insert(0, pad + '}')
-    leaf_pad = indent + '  ' * (len(path) - 1 - depth)
+    leaf_pad = indent + unit * (len(path) - 1 - depth)
     new.append('%s%s: %s' % (leaf_pad, json.dumps(path[-1], ensure_ascii=False),
                              json.dumps(value, ensure_ascii=False)))
     block = new + close
@@ -66,18 +67,23 @@ def has(data, path):
 
 def main():
     spec = json.load(open(sys.argv[1]))
-    root = os.path.join(os.path.dirname(__file__), '..', 'public', 'locales')
-    for p in sorted(glob.glob(os.path.join(root, '*', 'translation.json'))):
+    here = os.path.dirname(__file__)
+    if '--emails' in sys.argv[2:]:
+        root, name = os.path.join(here, '..', 'backend', 'emails', 'locales'), 'emails.json'
+    else:
+        root, name = os.path.join(here, '..', 'public', 'locales'), 'translation.json'
+    for p in sorted(glob.glob(os.path.join(root, '*', name))):
         lang = os.path.basename(os.path.dirname(p))
         keys = dict(spec.get('*', {}))
         keys.update(spec.get(lang, {}))
         lines = open(p, encoding='utf-8').read().split('\n')
+        unit = re.match(r'^(\s*)', lines[1]).group(1) or '  '
         added = 0
         for key, value in keys.items():
             path = key.split('.')
             if has(json.loads('\n'.join(lines)), path):
                 continue
-            insert(lines, path, value)
+            insert(lines, path, value, unit)
             added += 1
         out = '\n'.join(lines)
         data = json.loads(out)

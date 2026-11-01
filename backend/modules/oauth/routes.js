@@ -29,6 +29,20 @@ if (oauthConfig.isEnabled() && !process.env.TUDUDI_SESSION_SECRET) {
 
 const router = express.Router();
 
+const notFound = (req, res) => res.status(404).end();
+
+// The remote connector paths exist only with TUDUDI_PUBLIC_MCP_URL set.
+const onlyWhenEnabled = (req, res, next) =>
+    oauthConfig.isEnabled() ? next() : notFound(req, res);
+
+const methodNotAllowed = (allow) => (req, res) =>
+    oauthConfig.isEnabled()
+        ? res
+              .set('Allow', allow)
+              .status(405)
+              .json({ error: 'Method not allowed' })
+        : notFound(req, res);
+
 router.get('/.well-known/oauth-protected-resource', handleProtectedResource);
 router.get(
     '/.well-known/oauth-protected-resource/mcp',
@@ -52,4 +66,9 @@ router.post(
 );
 router.post('/oauth/token', oauthTokenLimiter, authorizationServer.token);
 
+router.all('/oauth/register', methodNotAllowed('POST'));
+router.all('/oauth/token', methodNotAllowed('POST'));
+router.all('/oauth/authorize', methodNotAllowed('GET, POST'));
+
 module.exports = router;
+module.exports.onlyWhenEnabled = onlyWhenEnabled;

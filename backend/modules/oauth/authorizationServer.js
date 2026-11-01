@@ -13,6 +13,8 @@ const { issueCode, consumeCode } = require('./codes');
 const pairing = require('./pairing');
 const { verifyOwner, issueMcpToken } = require('./service');
 const { renderConsent, renderError } = require('./consentPage');
+const auditService = require('../oidc/auditService');
+const mfaService = require('../mfa/service');
 
 // OAuth 2.1 authorization server for remote MCP connectors such as
 // claude.ai custom connectors: RFC 8414 metadata, RFC 7591 registration
@@ -261,6 +263,18 @@ async function submitAuthorize(req, res, next) {
             userId: owner.user.id,
         });
         pairing.close();
+        await auditService.logEvent({
+            userId: owner.user.id,
+            eventType: auditService.EVENT_TYPES.MCP_CONNECTOR_GRANTED,
+            authMethod: auditService.AUTH_METHODS.MCP_OAUTH,
+            ipAddress: req.ip,
+            userAgent: req.get('user-agent'),
+            metadata: {
+                clientName: client.name,
+                clientIssuedAt: client.issuedAt.toISOString(),
+            },
+        });
+        mfaService.notify(owner.user, 'mcpConnected');
         logger.info(
             {
                 event: 'oauth.authorize_granted',
@@ -338,6 +352,7 @@ async function token(req, res, next) {
 
         const issued = await issueMcpToken({
             userId: grant.userId,
+            clientId: grant.clientId,
             clientName: grant.clientName,
         });
         logger.info(

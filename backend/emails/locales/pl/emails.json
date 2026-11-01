@@ -98,6 +98,10 @@
         "outro": "Nie wyślemy kolejnego takiego e-maila, dopóki nie wrócisz."
     },
     "securityNotice": {
+        "mcpConnected": {
+            "body": "Asystent został podłączony do Twojego konta Cadence przez zdalny konektor MCP. Może odczytywać i zmieniać Twoje zadania, projekty, notatki i nawyki, dopóki nie unieważnisz jego klucza w Profil › Klucze API.",
+            "subject": "Do Twojego konta podłączono asystenta"
+        },
         "mfaEnabled": {
             "subject": "Weryfikacja dwuetapowa jest włączona",
             "body": "Na Twoim koncie Cadence włączono weryfikację dwuetapową. Logowanie wymaga teraz kodu z aplikacji uwierzytelniającej, a wszystkie inne urządzenia zostały wylogowane."

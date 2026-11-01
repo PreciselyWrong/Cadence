@@ -84,6 +84,10 @@
         "outro": "We sturen je geen nieuwe e-mail als deze tot je weer bent langs geweest."
     },
     "securityNotice": {
+        "mcpConnected": {
+            "body": "Er is een assistent aan je Cadence-account gekoppeld via de externe MCP-connector. Die kan je taken, projecten, notities en gewoonten lezen en wijzigen totdat je de sleutel intrekt onder Profiel › API-sleutels.",
+            "subject": "Er is een assistent aan je account gekoppeld"
+        },
         "mfaEnabled": {
             "subject": "Tweestapsverificatie staat aan",
             "body": "Tweestapsverificatie is ingeschakeld voor je Cadence-account. Voor inloggen heb je nu een code uit je authenticator-app nodig, en alle andere apparaten zijn uitgelogd."

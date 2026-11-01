@@ -84,6 +84,10 @@
         "outro": "Siz geri dönene kadar bu türden başka bir e-posta göndermeyeceğiz."
     },
     "securityNotice": {
+        "mcpConnected": {
+            "body": "Uzak MCP bağlayıcısı üzerinden Cadence hesabınıza bir asistan bağlandı. Anahtarını Profil › API anahtarları bölümünden iptal edene kadar görevlerinizi, projelerinizi, notlarınızı ve alışkanlıklarınızı okuyabilir ve değiştirebilir.",
+            "subject": "Hesabınıza bir asistan bağlandı"
+        },
         "mfaEnabled": {
             "subject": "İki adımlı doğrulama açık",
             "body": "Cadence hesabınız için iki adımlı doğrulama açıldı. Giriş yapmak için artık doğrulama uygulamanızdan bir kod gerekiyor ve diğer tüm cihazlarda oturum kapatıldı."

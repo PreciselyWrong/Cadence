@@ -32,8 +32,9 @@ const sign = (payload) =>
 
 function cleanName(value) {
     if (typeof value !== 'string') return 'MCP client';
-    // eslint-disable-next-line no-control-regex
-    const name = value.replace(/[\u0000-\u001f\u007f]/g, '').trim();
+    // Control, format (bidi overrides, zero-width) and line separator
+    // characters could make the consent page show another name.
+    const name = value.replace(/[\p{Cc}\p{Cf}\p{Zl}\p{Zp}]/gu, '').trim();
     return name.slice(0, MAX_NAME_LENGTH) || 'MCP client';
 }
 

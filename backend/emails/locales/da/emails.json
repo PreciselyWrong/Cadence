@@ -84,6 +84,10 @@
         "outro": "Vi sender ikke flere af disse, før du har været tilbage."
     },
     "securityNotice": {
+        "mcpConnected": {
+            "body": "En assistent blev forbundet til din Cadence-konto via MCP-connectoren. Den kan læse og ændre dine opgaver, projekter, noter og vaner, indtil du tilbagekalder dens nøgle under Profil › API-nøgler.",
+            "subject": "Der blev forbundet en assistent til din konto"
+        },
         "mfaEnabled": {
             "subject": "Totrinsbekræftelse er slået til",
             "body": "Totrinsbekræftelse er slået til for din Cadence-konto. Når du logger ind, skal du nu bruge en kode fra din godkendelsesapp, og alle andre enheder er blevet logget ud."
