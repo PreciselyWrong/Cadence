@@ -32,6 +32,8 @@ import {
     updateCadenceHabit,
 } from '../../utils/cadenceHabitsService';
 import { groupHabits, kindOf } from '../../utils/cadenceHabitUtils';
+import { duplicateHabit } from '../../utils/cadenceHabitSave';
+import { moveHabitPatches } from '../../utils/habitOrder';
 
 type Tab = 'habits' | 'archived';
 
@@ -145,6 +147,51 @@ const Habits: React.FC = () => {
             console.error('Failed to undo an entry:', error);
             showErrorToast(
                 t('cadenceHabits.entry.undoFailed', 'Could not undo the entry.')
+            );
+            return;
+        }
+        await load();
+    };
+
+    // The group's habits are renumbered 0..n, so a swap cannot tie.
+    const moveHabit = async (
+        group: CadenceHabit[],
+        habit: CadenceHabit,
+        delta: -1 | 1
+    ) => {
+        const patches = moveHabitPatches(group, habit.uid, delta);
+        if (patches.length === 0) return;
+        try {
+            await Promise.all(
+                patches.map((patch) =>
+                    updateCadenceHabit(patch.uid, {
+                        sort_order: patch.sort_order,
+                    })
+                )
+            );
+        } catch (error) {
+            console.error('Failed to move the habit:', error);
+            showErrorToast(
+                t('cadenceHabits.errors.move', 'Could not move the habit.')
+            );
+        }
+        await load();
+    };
+
+    const copyHabit = async (group: CadenceHabit[], habit: CadenceHabit) => {
+        const sortOrder = Math.max(...group.map((item) => item.sort_order)) + 1;
+        try {
+            await duplicateHabit(
+                habit.uid,
+                t('cadenceHabits.copyName', '{{name}} (copy)', {
+                    name: habit.name,
+                }),
+                sortOrder
+            );
+        } catch (error) {
+            console.error('Failed to copy the habit:', error);
+            showErrorToast(
+                t('cadenceHabits.errors.copy', 'Could not copy the habit.')
             );
             return;
         }
@@ -373,7 +420,7 @@ const Habits: React.FC = () => {
                                     )}
                             </h2>
                             <div className="grid grid-cols-1 gap-3 md:grid-cols-2 2xl:grid-cols-3">
-                                {items.map((habit) => (
+                                {items.map((habit, index) => (
                                     <HabitCard
                                         key={habit.uid}
                                         habit={habit}
@@ -381,6 +428,15 @@ const Habits: React.FC = () => {
                                             quickValues[habit.uid] ?? []
                                         }
                                         onLog={log}
+                                        manage={{
+                                            canMoveUp: index > 0,
+                                            canMoveDown:
+                                                index < items.length - 1,
+                                            onMove: (delta) =>
+                                                moveHabit(items, habit, delta),
+                                            onDuplicate: () =>
+                                                copyHabit(items, habit),
+                                        }}
                                     />
                                 ))}
                             </div>

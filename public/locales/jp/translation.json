@@ -4970,6 +4970,13 @@
     "addFailed": "TODO.mdファイルに書き込めませんでした。"
   },
   "cadenceHabits": {
+    "copyName": "{{name}} (copy)",
+    "manage": {
+      "duplicate": "Duplicate",
+      "down": "Move down",
+      "up": "Move up",
+      "label": "Actions for {{name}}"
+    },
     "skip": {
       "cancel": "Cancel the skip",
       "today": "Skip today"
@@ -5090,6 +5097,8 @@
       "valueUnit": "量（{{unit}}）"
     },
     "errors": {
+      "copy": "Could not copy the habit.",
+      "move": "Could not move the habit.",
       "action": "うまくいきませんでした（{{code}}）。",
       "activeDays": "少なくとも1日選んでください。",
       "customUnit": "単位名と記号を入力してください。",

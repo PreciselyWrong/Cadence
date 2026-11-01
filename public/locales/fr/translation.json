@@ -4980,6 +4980,13 @@
     "addFailed": "Impossible d'écrire dans le fichier TODO.md."
   },
   "cadenceHabits": {
+    "copyName": "{{name}} (copie)",
+    "manage": {
+      "duplicate": "Dupliquer",
+      "down": "Descendre",
+      "up": "Monter",
+      "label": "Actions pour {{name}}"
+    },
     "skip": {
       "cancel": "Annuler le saut",
       "today": "Passer aujourd'hui"
@@ -5103,6 +5110,8 @@
       "valueUnit": "Quantité ({{unit}})"
     },
     "errors": {
+      "copy": "Impossible de copier l'habitude.",
+      "move": "Impossible de déplacer l'habitude.",
       "action": "Cela n'a pas fonctionné ({{code}}).",
       "activeDays": "Choisissez au moins un jour.",
       "customUnit": "Nommez l'unité et indiquez son symbole.",

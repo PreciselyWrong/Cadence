@@ -277,3 +277,9 @@ Revue écran par écran (Aujourd'hui, Boîte, Tâches, Projets, page projet, Age
 - **Problème** : cliquer une heure vide de la semaine ou du jour ouvrait un événement Google, ou ne faisait rien sans agenda Google accessible en écriture.
 - **Décision** : une heure vide ouvre un petit choix : un champ « Nom de la tâche » et le bouton « Ajouter une tâche à 14:00 » (la tâche tombe ce jour-là, à cette heure, statut à faire). « Nouvel événement Google » reste en second choix, seulement si un agenda Google est accessible en écriture. Logique : `frontend/components/Calendar/slotTask.ts` et `SlotChoiceDialog.tsx`.
 - **Android** : à reprendre. Même choix sur une heure vide de l'agenda. Reste : rien d'essayé sur le téléphone.
+
+### 2026-11-01 — Ordonner et copier les habitudes
+
+- **Problème** : l'ordre des habitudes d'un moment de la journée ne se changeait pas, et refaire une habitude semblable demandait de tout ressaisir.
+- **Décision** : le menu « ⋯ » de chaque carte propose « Monter », « Descendre » (dans son groupe, selon l'ordre affiché) et « Dupliquer ». La copie garde le groupe, la cible, les montants rapides, les rappels et le type de l'habitude, démarre aujourd'hui sans historique, et se place à la fin du groupe. L'ordre s'écrit par `sort_order` via `PATCH /api/cadence/habits/:uid` ; le groupe est renuméroté 0..n pour qu'une égalité ne masque pas un échange. Logique : `frontend/utils/habitOrder.ts`, `duplicateHabit` dans `frontend/utils/cadenceHabitSave.ts`.
+- **Android** : à reprendre. Même menu sur les lignes d'habitude, même écriture de `sort_order`. Reste : rien d'essayé sur le téléphone.

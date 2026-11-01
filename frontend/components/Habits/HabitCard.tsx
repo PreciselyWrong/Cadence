@@ -7,6 +7,7 @@ import {
     FireIcon,
 } from '@heroicons/react/24/outline';
 import FacetGauge from '../Shared/ui/FacetGauge';
+import OverflowMenu from '../Shared/OverflowMenu';
 import HabitQuickEntry from './HabitQuickEntry';
 import { statusLine } from './habitStatus';
 import type {
@@ -22,6 +23,15 @@ import {
     unitOfGoal,
 } from '../../utils/cadenceHabitUtils';
 
+// Reordering and copying belong to the group the card sits in, so the page
+// supplies them; a card without them has no menu.
+export interface HabitManage {
+    canMoveUp: boolean;
+    canMoveDown: boolean;
+    onMove: (delta: -1 | 1) => void;
+    onDuplicate: () => void;
+}
+
 interface HabitCardProps {
     habit: CadenceHabit;
     quickValues: CadenceQuickValue[];
@@ -30,6 +40,7 @@ interface HabitCardProps {
         amountMinor: number,
         note?: string
     ) => Promise<void>;
+    manage?: HabitManage;
 }
 
 export const habitTint = (habit: Pick<CadenceHabit, 'color_argb'>) =>
@@ -39,7 +50,12 @@ export const habitTint = (habit: Pick<CadenceHabit, 'color_argb'>) =>
 // facet filling with the period's progress, and the quick action on the right
 // (Android HabitRow). The name is the link to the habit; the action buttons
 // sit above it so the card stays one tab stop per control.
-const HabitCard: React.FC<HabitCardProps> = ({ habit, quickValues, onLog }) => {
+const HabitCard: React.FC<HabitCardProps> = ({
+    habit,
+    quickValues,
+    onLog,
+    manage,
+}) => {
     const { t } = useTranslation();
     const [open, setOpen] = useState(false);
     const [busy, setBusy] = useState(false);
@@ -223,6 +239,49 @@ const HabitCard: React.FC<HabitCardProps> = ({ habit, quickValues, onLog }) => {
                 </div>
                 <div className="relative z-10 flex shrink-0 items-center gap-1">
                     {action}
+                    {manage && (
+                        <OverflowMenu
+                            label={t(
+                                'cadenceHabits.manage.label',
+                                'Actions for {{name}}',
+                                { name: habit.name }
+                            )}
+                            items={[
+                                ...(manage.canMoveUp
+                                    ? [
+                                          {
+                                              key: 'up',
+                                              label: t(
+                                                  'cadenceHabits.manage.up',
+                                                  'Move up'
+                                              ),
+                                              onClick: () => manage.onMove(-1),
+                                          },
+                                      ]
+                                    : []),
+                                ...(manage.canMoveDown
+                                    ? [
+                                          {
+                                              key: 'down',
+                                              label: t(
+                                                  'cadenceHabits.manage.down',
+                                                  'Move down'
+                                              ),
+                                              onClick: () => manage.onMove(1),
+                                          },
+                                      ]
+                                    : []),
+                                {
+                                    key: 'duplicate',
+                                    label: t(
+                                        'cadenceHabits.manage.duplicate',
+                                        'Duplicate'
+                                    ),
+                                    onClick: manage.onDuplicate,
+                                },
+                            ]}
+                        />
+                    )}
                     {showEntryPanel && (
                         <button
                             type="button"

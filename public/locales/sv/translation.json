@@ -4972,6 +4972,13 @@
     "addFailed": "Kunde inte skriva till TODO.md-filen."
   },
   "cadenceHabits": {
+    "copyName": "{{name}} (copy)",
+    "manage": {
+      "duplicate": "Duplicate",
+      "down": "Move down",
+      "up": "Move up",
+      "label": "Actions for {{name}}"
+    },
     "skip": {
       "cancel": "Cancel the skip",
       "today": "Skip today"
@@ -5092,6 +5099,8 @@
       "valueUnit": "Mängd ({{unit}})"
     },
     "errors": {
+      "copy": "Could not copy the habit.",
+      "move": "Could not move the habit.",
       "action": "Det gick inte ({{code}}).",
       "activeDays": "Välj minst en dag.",
       "customUnit": "Ange enhetens namn och symbol.",

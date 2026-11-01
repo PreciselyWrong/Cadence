@@ -359,3 +359,7 @@ Differences to know: an amount check-in without a value counted for nothing befo
 - **Abstinence and alcohol**: days clear (current and best run from the engine, 90-day strip, clear days and slips noted), check-ins and urges (`abstinence_log`), a slip today (an entry), and for the alcohol profile the standard drinks per date (`alcohol_consumption`). No savings and no health claim.
 
 Entries typed for a past date send `local_date`, `observed_zone_id` (the zone of the browser) and an `occurred_at` at noon of that date in that zone; for today the server fills them in.
+
+## Ordre et copie (web)
+
+Dans chaque groupe, la carte d'une habitude a un menu « ⋯ » : monter, descendre, dupliquer. Monter ou descendre renumérote tout le groupe (`sort_order` 0..n) par `PATCH /api/cadence/habits/:uid`. Dupliquer relit l'habitude, la recrée avec `POST /api/cadence/habits` (objectif, calendrier, montants rapides, rappels, groupe ; démarre aujourd'hui sans historique) et la place en fin de groupe. Logique : `frontend/utils/habitOrder.ts`, `duplicateHabit` dans `frontend/utils/cadenceHabitSave.ts`.

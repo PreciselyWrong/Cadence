@@ -11,7 +11,14 @@ import '@testing-library/jest-dom';
 import Habits from '../Habits';
 import { ToastProvider } from '../../Shared/ToastContext';
 import * as api from '../../../utils/cadenceHabitsService';
-import { evaluation, goal, habit, minutesGoal, quick } from './fixtures';
+import {
+    detail,
+    evaluation,
+    goal,
+    habit,
+    minutesGoal,
+    quick,
+} from './fixtures';
 
 jest.mock('react-i18next', () => jest.requireActual('./testI18n').mockI18n);
 jest.mock('../../../utils/cadenceHabitsService', () => ({
@@ -22,6 +29,8 @@ jest.mock('../../../utils/cadenceHabitsService', () => ({
     createRow: jest.fn(),
     deleteRow: jest.fn(),
     updateCadenceHabit: jest.fn(),
+    createCadenceHabit: jest.fn(),
+    fetchCadenceHabit: jest.fn(),
 }));
 
 const service = api as jest.Mocked<typeof api>;
@@ -244,5 +253,57 @@ describe('Habits page', () => {
                 archived: false,
             })
         );
+    });
+
+    it('moves a habit up within its group', async () => {
+        service.fetchCadenceHabits.mockResolvedValue(
+            list([
+                habit({ uid: 'a', name: 'Méditer', group_uid: 'group-morning', sort_order: 0 }),
+                habit({ uid: 'b', name: 'Lire', group_uid: 'group-morning', sort_order: 1 }),
+            ])
+        );
+        service.updateCadenceHabit.mockResolvedValue(detail());
+        renderPage();
+        const morning = await screen.findByRole('region', { name: /Matin/ });
+        fireEvent.click(
+            within(morning).getByRole('button', { name: 'Actions for Lire' })
+        );
+        fireEvent.click(screen.getByText('Move up'));
+        await waitFor(() =>
+            expect(service.updateCadenceHabit).toHaveBeenCalledWith('b', {
+                sort_order: 0,
+            })
+        );
+        expect(service.updateCadenceHabit).toHaveBeenCalledWith('a', {
+            sort_order: 1,
+        });
+    });
+
+    it('copies a habit at the end of its group', async () => {
+        service.fetchCadenceHabits.mockResolvedValue(
+            list([
+                habit({ uid: 'a', name: 'Méditer', group_uid: 'group-morning', sort_order: 0 }),
+                habit({ uid: 'b', name: 'Lire', group_uid: 'group-morning', sort_order: 1 }),
+            ])
+        );
+        service.fetchCadenceHabit.mockResolvedValue(
+            detail({ uid: 'b', name: 'Lire' })
+        );
+        service.createCadenceHabit.mockResolvedValue(detail({ uid: 'copy' }));
+        service.updateCadenceHabit.mockResolvedValue(detail());
+        renderPage();
+        const morning = await screen.findByRole('region', { name: /Matin/ });
+        fireEvent.click(
+            within(morning).getByRole('button', { name: 'Actions for Lire' })
+        );
+        fireEvent.click(screen.getByText('Duplicate'));
+        await waitFor(() =>
+            expect(service.createCadenceHabit).toHaveBeenCalledWith(
+                expect.objectContaining({ name: 'Lire (copy)' })
+            )
+        );
+        expect(service.updateCadenceHabit).toHaveBeenCalledWith('copy', {
+            sort_order: 2,
+        });
     });
 });

@@ -4983,6 +4983,13 @@
     "addFailed": "Nu s-a putut scrie în fișierul TODO.md."
   },
   "cadenceHabits": {
+    "copyName": "{{name}} (copy)",
+    "manage": {
+      "duplicate": "Duplicate",
+      "down": "Move down",
+      "up": "Move up",
+      "label": "Actions for {{name}}"
+    },
     "skip": {
       "cancel": "Cancel the skip",
       "today": "Skip today"
@@ -5106,6 +5113,8 @@
       "valueUnit": "Valoare ({{unit}})"
     },
     "errors": {
+      "copy": "Could not copy the habit.",
+      "move": "Could not move the habit.",
       "action": "Nu a funcționat ({{code}}).",
       "activeDays": "Alege cel puțin o zi.",
       "customUnit": "Denumește unitatea și dă-i simbolul.",

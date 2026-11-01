@@ -4972,6 +4972,13 @@
     "addFailed": "无法写入 TODO.md 文件。"
   },
   "cadenceHabits": {
+    "copyName": "{{name}} (copy)",
+    "manage": {
+      "duplicate": "Duplicate",
+      "down": "Move down",
+      "up": "Move up",
+      "label": "Actions for {{name}}"
+    },
     "skip": {
       "cancel": "Cancel the skip",
       "today": "Skip today"
@@ -5092,6 +5099,8 @@
       "valueUnit": "数量（{{unit}}）"
     },
     "errors": {
+      "copy": "Could not copy the habit.",
+      "move": "Could not move the habit.",
       "action": "操作未成功（{{code}}）。",
       "activeDays": "请至少选择一天。",
       "customUnit": "请填写单位名称和符号。",

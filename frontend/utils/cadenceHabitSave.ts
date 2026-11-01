@@ -6,6 +6,7 @@ import {
     createCadenceHabit,
     createRow,
     deleteRow,
+    fetchCadenceHabit,
     updateCadenceHabit,
     updateRow,
 } from './cadenceHabitsService';
@@ -14,6 +15,7 @@ import {
     HabitDraft,
     buildGoal,
     buildSchedule,
+    draftFromHabit,
     draftScale,
     hexToArgb,
     quickAmounts,
@@ -225,4 +227,21 @@ async function syncReminders(current: CadenceHabitDetail, draft: HabitDraft) {
             });
         }
     }
+}
+
+// A copy of a habit: the same goal, schedule, quick amounts, reminders and
+// group, starting today with no history. It takes sort_order, so it lands
+// after the habit it copies.
+export async function duplicateHabit(
+    sourceUid: string,
+    name: string,
+    sortOrder: number
+): Promise<CadenceHabitDetail> {
+    const source = await fetchCadenceHabit(sourceUid);
+    const copy = await createFromDraft({
+        ...draftFromHabit(source),
+        name,
+    });
+    await updateCadenceHabit(copy.uid, { sort_order: sortOrder });
+    return copy;
 }

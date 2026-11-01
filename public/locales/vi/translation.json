@@ -4972,6 +4972,13 @@
     "addFailed": "Không thể ghi vào tệp TODO.md."
   },
   "cadenceHabits": {
+    "copyName": "{{name}} (copy)",
+    "manage": {
+      "duplicate": "Duplicate",
+      "down": "Move down",
+      "up": "Move up",
+      "label": "Actions for {{name}}"
+    },
     "skip": {
       "cancel": "Cancel the skip",
       "today": "Skip today"
@@ -5092,6 +5099,8 @@
       "valueUnit": "Số lượng ({{unit}})"
     },
     "errors": {
+      "copy": "Could not copy the habit.",
+      "move": "Could not move the habit.",
       "action": "Không thành công ({{code}}).",
       "activeDays": "Hãy chọn ít nhất một ngày.",
       "customUnit": "Hãy đặt tên đơn vị và nhập ký hiệu.",

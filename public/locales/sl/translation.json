@@ -4990,6 +4990,13 @@
     "addFailed": "V datoteko TODO.md ni bilo mogoče pisati."
   },
   "cadenceHabits": {
+    "copyName": "{{name}} (copy)",
+    "manage": {
+      "duplicate": "Duplicate",
+      "down": "Move down",
+      "up": "Move up",
+      "label": "Actions for {{name}}"
+    },
     "skip": {
       "cancel": "Cancel the skip",
       "today": "Skip today"
@@ -5116,6 +5123,8 @@
       "valueUnit": "Količina ({{unit}})"
     },
     "errors": {
+      "copy": "Could not copy the habit.",
+      "move": "Could not move the habit.",
       "action": "Ni uspelo ({{code}}).",
       "activeDays": "Izberite vsaj en dan.",
       "customUnit": "Poimenujte enoto in vnesite njeno oznako.",

@@ -5008,6 +5008,13 @@
     "addFailed": "تعذرت الكتابة في ملف TODO.md."
   },
   "cadenceHabits": {
+    "copyName": "{{name}} (copy)",
+    "manage": {
+      "duplicate": "Duplicate",
+      "down": "Move down",
+      "up": "Move up",
+      "label": "Actions for {{name}}"
+    },
     "skip": {
       "cancel": "Cancel the skip",
       "today": "Skip today"
@@ -5140,6 +5147,8 @@
       "valueUnit": "الكمية ({{unit}})"
     },
     "errors": {
+      "copy": "Could not copy the habit.",
+      "move": "Could not move the habit.",
       "action": "لم تنجح العملية ({{code}}).",
       "activeDays": "اختر يومًا واحدًا على الأقل.",
       "customUnit": "سمِّ الوحدة وأدخل رمزها.",

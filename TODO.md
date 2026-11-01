@@ -15,6 +15,7 @@ Tout le code prévu est livré dans `main` et poussé ; APK 1.6.8 et image `ghcr
 - **Petits restes, à faire quand le besoin se montre.**
   - Android : choix « Session courte » de la revue (Android n'a pas de plan du jour).
   - Parité, Android : une heure vide de l'agenda propose « Ajouter une tâche à HH:MM » (web : `docs/fork/WEB-UX-NOTES.md`, 2026-11-01). Vérif : la tâche tombe à cette heure dans le calendrier et dans Aujourd'hui.
+  - Parité, Android : monter, descendre et dupliquer une habitude (menu « ⋯ » sur la carte, web : `docs/fork/WEB-UX-NOTES.md`, 2026-11-01). Vérif : l'ordre écrit par `sort_order` est le même sur les deux clients après synchro.
   - Parité, Android : liens `tel:` / `mailto:` dans les notes, tâches et descriptions d'événement (web : `docs/fork/WEB-UX-NOTES.md`, 2026-11-01). Vérif : un numéro `079 123 45 67` dans une note s'appelle d'un tap, une date ne devient pas un lien.
   - Parité 1.6.5, web : liste des conflits et page Synchronisation (Android seul) ; mode « Trier les liens » sur le web (un lien à la fois, « Passer » ; les quatre décisions sont faites, voir `docs/fork/ANDROID-UX-NOTES.md`) ; option « description sous le titre » des lignes de tâches. Vérif : un lien trié sur le web quitte l'inbox du téléphone.
   - Parité 1.6.9, web : revue — choix d'un toucher au lieu du menu « Décider », « Annuler » après une décision et « Trier un par un » sur Plus tard (Android seul, `docs/fork/ANDROID-UX-NOTES.md`, 2026-11-01). Vérif : sur `/review`, une tâche passée revient en fin de file, une décision se défait.

@@ -5027,6 +5027,13 @@
     "addFailed": "Do súboru TODO.md sa nepodarilo zapisovať."
   },
   "cadenceHabits": {
+    "copyName": "{{name}} (copy)",
+    "manage": {
+      "duplicate": "Duplicate",
+      "down": "Move down",
+      "up": "Move up",
+      "label": "Actions for {{name}}"
+    },
     "skip": {
       "cancel": "Cancel the skip",
       "today": "Skip today"
@@ -5153,6 +5160,8 @@
       "valueUnit": "Množstvo ({{unit}})"
     },
     "errors": {
+      "copy": "Could not copy the habit.",
+      "move": "Could not move the habit.",
       "action": "Nepodarilo sa ({{code}}).",
       "activeDays": "Vyberte aspoň jeden deň.",
       "customUnit": "Pomenujte jednotku a zadajte jej značku.",

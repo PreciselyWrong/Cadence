@@ -1,4 +1,8 @@
-import { createFromDraft, updateFromDraft } from '../cadenceHabitSave';
+import {
+    createFromDraft,
+    duplicateHabit,
+    updateFromDraft,
+} from '../cadenceHabitSave';
 import { draftFromHabit, emptyDraft, hexToArgb } from '../cadenceHabitUtils';
 import * as service from '../cadenceHabitsService';
 import {
@@ -236,5 +240,25 @@ describe('updateFromDraft', () => {
             expect.objectContaining({ time: '19:00' })
         );
         expect(api.deleteRow).not.toHaveBeenCalledWith('h1', 'reminders', 'r1');
+    });
+});
+
+describe('duplicateHabit', () => {
+    it('copies the habit goal and schedule under a new name, placed at sort_order', async () => {
+        api.fetchCadenceHabit.mockResolvedValue(
+            detail({ uid: 'source', name: 'Lire' })
+        );
+
+        const copy = await duplicateHabit('source', 'Lire (copie)', 4);
+
+        const body = api.createCadenceHabit.mock.calls[0][0];
+        expect(body).toMatchObject({
+            name: 'Lire (copie)',
+            goal: expect.any(Object),
+        });
+        expect(api.updateCadenceHabit).toHaveBeenCalledWith('new-habit', {
+            sort_order: 4,
+        });
+        expect(copy.uid).toBe('new-habit');
     });
 });

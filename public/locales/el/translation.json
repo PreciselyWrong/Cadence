@@ -4973,6 +4973,13 @@
     "addFailed": "Δεν ήταν δυνατή η εγγραφή στο αρχείο TODO.md."
   },
   "cadenceHabits": {
+    "copyName": "{{name}} (copy)",
+    "manage": {
+      "duplicate": "Duplicate",
+      "down": "Move down",
+      "up": "Move up",
+      "label": "Actions for {{name}}"
+    },
     "skip": {
       "cancel": "Cancel the skip",
       "today": "Skip today"
@@ -5093,6 +5100,8 @@
       "valueUnit": "Ποσότητα ({{unit}})"
     },
     "errors": {
+      "copy": "Could not copy the habit.",
+      "move": "Could not move the habit.",
       "action": "Δεν λειτούργησε ({{code}}).",
       "activeDays": "Επίλεξε τουλάχιστον μία μέρα.",
       "customUnit": "Δώσε όνομα στη μονάδα και το σύμβολό της.",
