@@ -169,6 +169,7 @@ class ReviewRepository internal constructor(
     private fun encode(value: String): String = encodePath(value)
 
     private companion object {
-        val PAGE = mapOf("limit" to "100")
+        // Le maximum du serveur : « Plus tard » se parcourt en entier, groupé, sur le téléphone.
+        val PAGE = mapOf("limit" to "200")
     }
 }

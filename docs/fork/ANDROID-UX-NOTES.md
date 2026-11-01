@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-01 — Revue : « Plus tard » comme un fonds à parcourir
+
+- **Problème** : la revue était une liste plate de cartes identiques avec un menu « Décider ▾ » ; un lien s'affichait en URL brute ; ~150 tâches « Plus tard » formaient un long déversement.
+- **Décision** : « Plus tard » groupé par projet (puis domaine, puis « Sans projet »), groupes pliables avec leur nombre, triés par dernière activité, filtre en tête ; lignes compactes (liseré du projet, titre sur deux lignes, étiquettes). Toucher une ligne déplie les choix en pastilles d'un toucher ; « Annuler » après chaque décision. Balayage : droite = Aujourd'hui (la ressort de Plus tard), gauche = revoir dans 30 jours. « Trier un par un » : une tâche en grand, mêmes choix + « Passer », « N sur M », reprise. Les lignes qui ne sont qu'une adresse montrent la carte du lien. En-tête calme, sans compte des décisions ; onglets courts sous un fondu.
+- **Web** : groupes, filtre, cartes de lien, « Faire aujourd'hui » et « Terminer » dans Plus tard repris sur `/review` ; le tri un par un et les pastilles d'un toucher restent à faire (`TODO.md`).
+
 ### 2026-10-31 — « Inbox », pas « Boîte »
 
 - **Problème** : l'onglet s'appelait « Boîte », un mot qui ne dit rien.

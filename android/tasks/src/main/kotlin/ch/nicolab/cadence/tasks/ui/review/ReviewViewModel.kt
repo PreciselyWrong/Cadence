@@ -22,7 +22,9 @@ import ch.nicolab.cadence.tasks.review.ReviewPage
 import ch.nicolab.cadence.tasks.review.ReviewProject
 import ch.nicolab.cadence.tasks.review.ReviewStep
 import ch.nicolab.cadence.tasks.review.ReviewSummary
+import ch.nicolab.cadence.tasks.review.ReviewBacklog
 import ch.nicolab.cadence.tasks.review.ReviewTask
+import ch.nicolab.cadence.tasks.ui.UndoNotice
 import ch.nicolab.cadence.tasks.review.ReviewWeek
 import java.time.DayOfWeek
 import java.time.Instant
@@ -44,6 +46,7 @@ import kotlinx.coroutines.launch
 
 private const val PREFS = "tududi_review"
 private const val KEY_STEP = "step"
+private const val KEY_LATER_SKIPPED = "later_skipped"
 private const val STOP_TIMEOUT_MS = 5_000L
 
 /** Contenu d'une étape tel que servi ; [fetchedAt] et [fromCache] disent d'où il vient. */
@@ -82,17 +85,23 @@ internal class ReviewViewModel(application: Application) : AndroidViewModel(appl
     /** Lignes traitées ici qui ne portent pas de `reviewed_at` (boîte, projets) : masquées jusqu'au prochain chargement. */
     private val handled = MutableStateFlow<Set<String>>(emptySet())
 
+    /** Décisions défaites par « Annuler » : `reviewed_at` reste horodaté, la ligne doit pourtant revenir. */
+    private val undone = MutableStateFlow<Set<String>>(emptySet())
+
     val local: StateFlow<Map<String, TaskItem>> = tasks.observeAllTasks().map { all -> all.associateBy { it.uid } }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyMap())
 
     /** Étape affichée, sans ce que le téléphone vient de décider. */
-    val content: StateFlow<StepContent> = combine(_content, local, handled) { content, local, gone ->
+    val content: StateFlow<StepContent> = combine(_content, local, handled, undone) { content, local, gone, back ->
+        fun pending(items: List<ReviewTask>) = ReviewLists.pending(items, local).let { kept ->
+            if (back.isEmpty()) kept else items.filter { it in kept || (it.uid in back && local[it.uid]?.isClosed != true) }
+        }
         when (content) {
-            is StepContent.Tasks -> content.copy(page = content.page.copy(items = ReviewLists.pending(content.page.items, local)))
+            is StepContent.Tasks -> content.copy(page = content.page.copy(items = pending(content.page.items)))
             is StepContent.Week -> content.copy(
                 week = content.week.copy(
-                    committed = ReviewLists.pending(content.week.committed, local),
-                    inView = ReviewLists.pending(content.week.inView, local),
+                    committed = pending(content.week.committed),
+                    inView = pending(content.week.inView),
                 ),
             )
             is StepContent.Inbox -> content.copy(page = content.page.copy(items = content.page.items.filterNot { "inbox:${it.uid}" in gone }))
@@ -103,6 +112,48 @@ internal class ReviewViewModel(application: Application) : AndroidViewModel(appl
 
     private val _messages = MutableSharedFlow<String>(extraBufferCapacity = 4)
     val messages: SharedFlow<String> = _messages.asSharedFlow()
+
+    private val _notices = MutableSharedFlow<UndoNotice>(extraBufferCapacity = 4)
+
+    /** Chaque décision sur une tâche se défait depuis la bannière « Annuler ». */
+    val notices: SharedFlow<UndoNotice> = _notices.asSharedFlow()
+
+    private val _laterQuery = MutableStateFlow("")
+
+    /** Filtre de « Plus tard », gardé le temps de l'écran. */
+    val laterQuery: StateFlow<String> = _laterQuery.asStateFlow()
+
+    fun filterLater(query: String) {
+        _laterQuery.value = query
+    }
+
+    private val _openGroups = MutableStateFlow<Set<String>?>(null)
+
+    /** Groupes de « Plus tard » ouverts ; null : le choix par défaut ([ch.nicolab.cadence.tasks.review.ReviewBacklog.defaultOpen]). */
+    val openGroups: StateFlow<Set<String>?> = _openGroups.asStateFlow()
+
+    fun toggleGroup(key: String, current: Set<String>) {
+        _openGroups.value = if (key in current) current - key else current + key
+    }
+
+    private val _skipped = MutableStateFlow(prefs.getString(KEY_LATER_SKIPPED, null)?.split(',')?.filter { it.isNotEmpty() }.orEmpty())
+
+    /** Tâches passées dans « Trier un par un », dans l'ordre : elles repartent au bout, même après fermeture. */
+    val skipped: StateFlow<List<String>> = _skipped.asStateFlow()
+
+    fun skip(uid: String) {
+        val next = _skipped.value.filterNot { it == uid } + uid
+        _skipped.value = next
+        prefs.edit { putString(KEY_LATER_SKIPPED, next.joinToString(",")) }
+    }
+
+    /** Oublie les tâches passées qui ont quitté la liste (décidées ici ou ailleurs). */
+    fun pruneSkipped(live: Set<String>) {
+        val next = _skipped.value.filter { it in live }
+        if (next.size == _skipped.value.size) return
+        _skipped.value = next
+        prefs.edit { putString(KEY_LATER_SKIPPED, next.joinToString(",")) }
+    }
 
     private val _busy = MutableStateFlow<String?>(null)
     val busy: StateFlow<String?> = _busy.asStateFlow()
@@ -133,6 +184,7 @@ internal class ReviewViewModel(application: Application) : AndroidViewModel(appl
         val step = _step.value
         _content.value = StepContent.Loading
         handled.value = emptySet()
+        undone.value = emptySet()
         viewModelScope.launch {
             review.summary().onSuccess { _summary.value = it }
             _content.value = when (step) {
@@ -144,14 +196,40 @@ internal class ReviewViewModel(application: Application) : AndroidViewModel(appl
         }
     }
 
-    /** Décision prise sur une tâche servie : écrite sur la tâche, `reviewed_at` compris. */
-    fun decide(item: ReviewTask, decision: Decision) = run(item.uid) {
+    /**
+     * Décision prise sur une tâche servie : écrite tout de suite sur la tâche, `reviewed_at` compris (une
+     * revue quittée garde ce qui a été décidé), puis « Annuler » remet ce que la décision a changé.
+     */
+    fun decide(item: ReviewTask, decision: Decision, label: String? = null) = run(item.uid) {
         val task = local.value[item.uid]
         if (task == null) {
             _messages.tryEmit(getString(R.string.review_not_synced, item.name))
             return@run
         }
-        tasks.updateTask(task.uid, ReviewDecisions.change(decision, task, context()))
+        val ctx = context()
+        undone.value -= task.uid
+        tasks.updateTask(task.uid, ReviewDecisions.change(decision, task, ctx))
+        label?.let {
+            val restore = ReviewBacklog.undo(decision, task, ctx.zone)
+            _notices.tryEmit(UndoNotice(getString(R.string.review_saved, item.name, it)) { undo(task.uid) { tasks.updateTask(task.uid, restore) } })
+        }
+    }
+
+    /** « Terminer » : la tâche est fermée comme d'une coche ; « Annuler » la rouvre. */
+    fun complete(item: ReviewTask, label: String) = run(item.uid) {
+        val task = local.value[item.uid]
+        if (task == null) {
+            _messages.tryEmit(getString(R.string.review_not_synced, item.name))
+            return@run
+        }
+        undone.value -= task.uid
+        tasks.completeTask(task.uid)
+        _notices.tryEmit(UndoNotice(getString(R.string.review_saved, item.name, label)) { undo(task.uid) { tasks.reopenTask(task.uid) } })
+    }
+
+    private fun undo(uid: String, write: suspend () -> Unit) = run(uid) {
+        undone.value += uid
+        write()
     }
 
     fun toTask(item: ReviewInboxItem, decision: Decision?) = run("inbox:${item.uid}") {

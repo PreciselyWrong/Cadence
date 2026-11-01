@@ -62,7 +62,8 @@ object ReviewDecisions {
     /** Décision prise en revue : chacune horodate `reviewed_at`, ce qui la retire des listes et la compte dans la semaine. */
     fun change(decision: Decision, task: TaskItem, ctx: DecisionContext): TaskChange {
         val base = when (decision) {
-            Decision.Today -> TaskViews.postponeChange(task, ctx.today, ctx.zone)
+            // Une tâche mise de côté ressort de « Plus tard » : sinon elle resterait hors des suggestions du jour.
+            Decision.Today -> TaskViews.postponeChange(task, ctx.today, ctx.zone).let { if (task.someday) it.copy(later = false) else it }
             Decision.ThisWeek -> TaskChange(later = false, weekOf = ctx.weekStart, clearReviewOn = true)
             Decision.NotThisWeek -> TaskChange(clearWeek = true)
             Decision.InView -> TaskChange(later = false, inView = true, clearReviewOn = true)

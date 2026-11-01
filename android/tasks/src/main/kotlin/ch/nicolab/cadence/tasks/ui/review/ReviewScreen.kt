@@ -4,16 +4,15 @@ package ch.nicolab.cadence.tasks.ui.review
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -30,14 +29,17 @@ import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.CloudOff
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.EventNote
-import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material.icons.outlined.Folder
+import androidx.compose.material.icons.outlined.OpenInFull
 import androidx.compose.material.icons.outlined.PauseCircle
+import androidx.compose.material.icons.outlined.TaskAlt
 import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,10 +51,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.nicolab.cadence.designsystem.components.ActionRow
@@ -68,42 +70,71 @@ import ch.nicolab.cadence.designsystem.components.TabPill
 import ch.nicolab.cadence.designsystem.components.TabPills
 import ch.nicolab.cadence.designsystem.components.TertiaryAction
 import ch.nicolab.cadence.designsystem.components.rememberAppSnackbarHostState
-import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.Decision
 import ch.nicolab.cadence.tasks.model.FunnelStage
+import ch.nicolab.cadence.tasks.model.LinkItem
+import ch.nicolab.cadence.tasks.model.TagPaths
+import ch.nicolab.cadence.tasks.model.TaskItem
+import ch.nicolab.cadence.tasks.review.BacklogGroup
+import ch.nicolab.cadence.tasks.review.BacklogNames
 import ch.nicolab.cadence.tasks.review.ProjectReason
+import ch.nicolab.cadence.tasks.review.ReviewBacklog
 import ch.nicolab.cadence.tasks.review.ReviewInboxItem
 import ch.nicolab.cadence.tasks.review.ReviewProject
 import ch.nicolab.cadence.tasks.review.ReviewStep
 import ch.nicolab.cadence.tasks.review.ReviewTask
 import ch.nicolab.cadence.tasks.review.WeekCapacity
 import ch.nicolab.cadence.tasks.ui.ChoiceCard
+import ch.nicolab.cadence.tasks.ui.QuickPill
 import ch.nicolab.cadence.tasks.ui.TaskDatePickerDialog
-import ch.nicolab.cadence.tasks.ui.ThisOrThatSheet
 import ch.nicolab.cadence.tasks.ui.TaskDetailSheet
+import ch.nicolab.cadence.tasks.ui.TaskRowMeta
 import ch.nicolab.cadence.tasks.ui.TasksViewModel
+import ch.nicolab.cadence.tasks.ui.ThisOrThatSheet
 import ch.nicolab.cadence.tasks.ui.formatReviewDay
 import ch.nicolab.cadence.tasks.ui.funnelIcon
+import ch.nicolab.cadence.tasks.ui.rememberProjectColors
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.ZoneId
 
-/** Ligne ouverte par « Décider », avec la liste où elle figure. */
-private sealed interface Deciding {
-    data class Task(val item: ReviewTask, val step: ReviewStep, val committed: Boolean = false) : Deciding
-    data class Inbox(val item: ReviewInboxItem) : Deciding
-    data class Project(val item: ReviewProject) : Deciding
+/** Feuille encore utile : un champ (prochaine tâche d'un projet) ou une date (« Revoir le… »). */
+private sealed interface Asking {
+    data class NextTask(val project: ReviewProject) : Asking
+    data class ReviewDate(val item: ReviewTask) : Asking
 }
 
-private class Choice(val icon: ImageVector, val label: Int, val danger: Boolean = false, val run: () -> Unit)
+/** Ce que le téléphone sait de chaque ligne servie : la tâche locale, son lien, ses étiquettes. */
+internal class RowContext(
+    val local: Map<String, TaskItem>,
+    val links: List<LinkItem>,
+    val tagNames: Map<String, String>,
+    val projectColors: Map<String, Int>,
+) {
+    fun link(item: ReviewTask): RowLink? {
+        val task = local[item.uid]
+        val text = ReviewBacklog.linkText(item.name, task?.note) ?: return null
+        return RowLink(text, ReviewBacklog.linkFor(links, "task", item.uid, text))
+    }
+
+    fun tags(item: ReviewTask): List<String> {
+        val task = local[item.uid] ?: return emptyList()
+        return task.tagUids.mapNotNull { tagNames[it] }.filter { it != TagPaths.SOMEDAY }
+            .map(TagPaths::leaf).take(TaskRowMeta.MAX_TAGS)
+    }
+
+    fun rail(item: ReviewTask): Color? = local[item.uid]?.projectUid?.let(projectColors::get)?.let(::Color)
+}
 
 /**
  * Revue, ouverte depuis le Bilan : six étapes, une à la fois, l'étape gardée entre deux sessions.
- * Un bouton « Décider » par ligne ; chaque décision est enregistrée seule, une revue interrompue
- * reprend donc là où elle était. Aucune notification, aucun rappel.
+ * Toucher une ligne la déplie sur ses choix d'un toucher ; chaque décision est enregistrée seule, avec
+ * « Annuler », une revue interrompue reprend donc là où elle était. « Plus tard » se parcourt par projet,
+ * se filtre, se balaie (droite : aujourd'hui, gauche : dans un mois) ou se trie un par un.
  */
 @Composable
 fun ReviewScreen(onBack: () -> Unit, onOpenProject: (String) -> Unit) {
@@ -114,23 +145,60 @@ fun ReviewScreen(onBack: () -> Unit, onOpenProject: (String) -> Unit) {
     val content by viewModel.content.collectAsStateWithLifecycle()
     val busy by viewModel.busy.collectAsStateWithLifecycle()
     val routineMissing by viewModel.routineMissing.collectAsStateWithLifecycle()
+    val local by viewModel.local.collectAsStateWithLifecycle()
+    val links by tasksViewModel.links.collectAsStateWithLifecycle()
+    val tags by tasksViewModel.tags.collectAsStateWithLifecycle()
+    val projects by tasksViewModel.projects.collectAsStateWithLifecycle()
+    val areas by tasksViewModel.areas.collectAsStateWithLifecycle()
+    val projectColors = rememberProjectColors(tasksViewModel)
     val snackbar = rememberAppSnackbarHostState()
-    var deciding by remember { mutableStateOf<Deciding?>(null) }
+    var expanded by rememberSaveable { mutableStateOf<String?>(null) }
+    var asking by remember { mutableStateOf<Asking?>(null) }
     var openTaskUid by rememberSaveable { mutableStateOf<String?>(null) }
     var choosing by remember { mutableStateOf<List<ReviewTask>?>(null) }
     var settingCapacity by remember { mutableStateOf<Int?>(null) }
     var settingCapacityOpen by remember { mutableStateOf(false) }
+    var triaging by rememberSaveable { mutableStateOf(false) }
     val palette = cadence
+    val undoLabel = stringResource(R.string.tasks_undo)
 
     LaunchedEffect(viewModel) { viewModel.messages.collect { snackbar.showSnackbar(it) } }
-    BackHandler(enabled = openTaskUid == null, onBack = onBack)
+    LaunchedEffect(viewModel) {
+        viewModel.notices.collect { notice ->
+            snackbar.currentSnackbarData?.dismiss()
+            launch {
+                val result = snackbar.showSnackbar(notice.message, actionLabel = undoLabel, duration = SnackbarDuration.Short)
+                if (result == SnackbarResult.ActionPerformed) notice.undo()
+            }
+        }
+    }
+    BackHandler(enabled = openTaskUid == null && !triaging, onBack = onBack)
 
+    val rows = remember(local, links, tags, projectColors) {
+        RowContext(local, links, tags.associate { it.uid to it.name }, projectColors)
+    }
+    val choices = rememberChoices(viewModel, onOpenTask = { openTaskUid = it }, onOpenProject = onOpenProject, ask = { asking = it })
     val counts = summary?.value?.counts
     val subtitle = summary?.value?.let {
-        pluralStringResource(R.plurals.review_attention, it.attentionTotal, it.attentionTotal) + " · " +
-            pluralStringResource(R.plurals.review_decided, it.decidedThisWeek, it.decidedThisWeek)
+        if (it.attentionTotal == 0) stringResource(R.string.review_calm_clear)
+        else pluralStringResource(R.plurals.review_calm, it.attentionTotal, it.attentionTotal)
     }
+    val laterTasks = (content as? StepContent.Tasks)?.takeIf { step == ReviewStep.LATER }?.page?.items.orEmpty()
+    val names = remember(projects, areas, rows) {
+        BacklogNames(projects.associate { it.uid to it.name }, areas.associate { it.uid to it.name }, rows.tagNames)
+    }
+    val laterQuery by viewModel.laterQuery.collectAsStateWithLifecycle()
+    val openedGroups by viewModel.openGroups.collectAsStateWithLifecycle()
+    val laterGroups = remember(laterTasks, rows, names, laterQuery) {
+        val linkTitles = laterTasks.mapNotNull { item -> rows.link(item)?.saved?.let { item.uid to it.displayTitle } }.toMap()
+        ReviewBacklog.groups(laterTasks, rows.local, names, laterQuery, linkTitles)
+    }
+    val todayLabel = stringResource(R.string.review_action_today_short)
+    val laterLabel = stringResource(R.string.review_action_review30)
+    val noProject = stringResource(R.string.review_no_project)
 
+    // Le tri un par un se pose par-dessus la liste, quel que soit le conteneur de l'écran.
+    Box(Modifier.fillMaxSize()) {
     Surface(Modifier.fillMaxSize(), color = palette.background, contentColor = palette.onSurface) {
         Column(Modifier.fillMaxSize().statusBarsPadding()) {
             Box(Modifier.padding(horizontal = Space.gutter)) {
@@ -148,11 +216,24 @@ fun ReviewScreen(onBack: () -> Unit, onOpenProject: (String) -> Unit) {
                     onClick = viewModel::planRoutine,
                 )
             }
-            TabPills(
-                tabs = ReviewStep.entries.map { TabPill(stringResource(stepLabel(it)), counts?.of(it)) },
-                selected = step.ordinal,
-                onSelect = { viewModel.select(ReviewStep.entries[it]) },
-            )
+            Box {
+                TabPills(
+                    tabs = ReviewStep.entries.map { TabPill(stringResource(stepLabel(it)), counts?.of(it)?.takeIf { n -> n > 0 }) },
+                    selected = step.ordinal,
+                    onSelect = { expanded = null; viewModel.select(ReviewStep.entries[it]) },
+                    contentPadding = PaddingValues(start = Space.gutter, end = Space.xxl),
+                )
+                // Le dernier onglet glisse sous un fondu : la rangée se lit comme défilante, pas coupée.
+                Box(Modifier.matchParentSize()) {
+                    Box(
+                        Modifier
+                            .align(Alignment.CenterEnd)
+                            .fillMaxHeight()
+                            .width(Space.xl)
+                            .background(Brush.horizontalGradient(listOf(Color.Transparent, palette.background))),
+                    )
+                }
+            }
             LazyColumn(
                 Modifier.weight(1f),
                 contentPadding = PaddingValues(start = Space.gutter, end = Space.gutter, top = Space.md, bottom = Space.xxxl),
@@ -169,29 +250,49 @@ fun ReviewScreen(onBack: () -> Unit, onOpenProject: (String) -> Unit) {
                             action = { SecondaryAction(stringResource(R.string.review_retry), onClick = viewModel::load) },
                         )
                     }
-                    is StepContent.Tasks -> {
+                    is StepContent.Tasks -> if (step == ReviewStep.LATER) {
+                        laterList(
+                            items = current.page.items,
+                            groups = laterGroups,
+                            query = laterQuery,
+                            open = openedGroups ?: ReviewBacklog.defaultOpen(laterGroups),
+                            labels = Triple(todayLabel, laterLabel, noProject),
+                            rows = rows,
+                            viewModel = viewModel,
+                            tasksViewModel = tasksViewModel,
+                            choices = choices,
+                            busy = busy,
+                            expanded = expanded,
+                            onExpand = { expanded = if (expanded == it) null else it },
+                            onTriage = { triaging = true },
+                        )
+                        moreOnWeb(current.page.total, current.page.items.size)
+                    } else {
                         if (current.page.items.isEmpty()) emptyStep(step)
                         items(current.page.items, key = { it.uid }) { item ->
-                            ReviewRow(
-                                title = item.name,
-                                meta = taskMeta(item, step),
-                                busy = busy == item.uid,
-                                onOpen = { openTaskUid = item.uid },
-                                onDecide = { deciding = Deciding.Task(item, step) },
-                            )
+                            TaskCard(item, taskMeta(item, step), rows, tasksViewModel, choices.task(item, step), busy == item.uid, expanded, { expanded = it })
                         }
                         moreOnWeb(current.page.total, current.page.items.size)
                     }
                     is StepContent.Inbox -> {
                         if (current.page.items.isEmpty()) emptyStep(step)
                         items(current.page.items, key = { it.uid }) { item ->
-                            ReviewRow(
+                            val link = remember(item, links) {
+                                ch.nicolab.cadence.tasks.links.LinkExtractor.urls(item.text, 1).firstOrNull()?.let {
+                                    RowLink(item.text, ReviewBacklog.linkFor(links, "inbox_item", item.uid, item.text))
+                                }
+                            }
+                            ReviewCard(
                                 title = item.text,
                                 meta = item.createdAt?.let {
                                     stringResource(R.string.review_captured_on, formatReviewDay(it.atZone(ZoneId.systemDefault()).toLocalDate()))
                                 },
+                                link = link,
+                                previews = tasksViewModel.linkPreviews,
+                                expanded = expanded == "inbox:${item.uid}",
+                                onToggle = { expanded = if (expanded == "inbox:${item.uid}") null else "inbox:${item.uid}" },
+                                choices = choices.inbox(item),
                                 busy = busy == "inbox:${item.uid}",
-                                onDecide = { deciding = Deciding.Inbox(item) },
                             )
                         }
                         moreOnWeb(current.page.total, current.page.items.size)
@@ -199,12 +300,16 @@ fun ReviewScreen(onBack: () -> Unit, onOpenProject: (String) -> Unit) {
                     is StepContent.Projects -> {
                         if (current.page.items.isEmpty()) emptyStep(step)
                         items(current.page.items, key = { it.uid }) { item ->
-                            ReviewRow(
+                            ReviewCard(
                                 title = item.name,
                                 meta = item.reasons.map { stringResource(reasonLabel(it)) }.joinToString(" · "),
+                                link = null,
+                                previews = tasksViewModel.linkPreviews,
+                                expanded = expanded == "project:${item.uid}",
+                                onToggle = { expanded = if (expanded == "project:${item.uid}") null else "project:${item.uid}" },
+                                choices = choices.project(item),
                                 busy = busy == "project:${item.uid}",
-                                onOpen = { onOpenProject(item.uid) },
-                                onDecide = { deciding = Deciding.Project(item) },
+                                rail = projectColors[item.uid]?.let(::Color),
                             )
                         }
                     }
@@ -221,29 +326,23 @@ fun ReviewScreen(onBack: () -> Unit, onOpenProject: (String) -> Unit) {
                                 },
                             )
                         }
-                        val choices = week.committed + week.inView
-                        if (choices.size >= 2) {
+                        val all = week.committed + week.inView
+                        if (all.size >= 2) {
                             item(key = "choose") {
                                 SecondaryAction(
                                     stringResource(R.string.choose_open),
                                     modifier = Modifier.fillMaxWidth(),
-                                    onClick = { choosing = choices },
+                                    onClick = { choosing = all },
                                 )
                             }
                         }
-                        if (choices.isEmpty()) emptyStep(step)
+                        if (all.isEmpty()) emptyStep(step)
                         if (week.committed.isNotEmpty()) {
                             item(key = "committed-header") {
                                 SectionHeader(title = stringResource(R.string.review_week_committed), count = week.committed.size)
                             }
                             items(week.committed, key = { "c:${it.uid}" }) { item ->
-                                ReviewRow(
-                                    title = item.name,
-                                    meta = listOfNotNull(item.projectName, item.estimatedMinutes?.let(::estimateText)).joinToString(" · "),
-                                    busy = busy == item.uid,
-                                    onOpen = { openTaskUid = item.uid },
-                                    onDecide = { deciding = Deciding.Task(item, step, committed = true) },
-                                )
+                                TaskCard(item, weekMeta(item), rows, tasksViewModel, choices.week(item, true), busy == item.uid, expanded, { expanded = it })
                             }
                         }
                         if (week.inView.isNotEmpty()) {
@@ -251,13 +350,7 @@ fun ReviewScreen(onBack: () -> Unit, onOpenProject: (String) -> Unit) {
                                 SectionHeader(title = stringResource(R.string.review_week_in_view), count = week.inView.size)
                             }
                             items(week.inView, key = { "v:${it.uid}" }) { item ->
-                                ReviewRow(
-                                    title = item.name,
-                                    meta = listOfNotNull(item.projectName, item.estimatedMinutes?.let(::estimateText)).joinToString(" · "),
-                                    busy = busy == item.uid,
-                                    onOpen = { openTaskUid = item.uid },
-                                    onDecide = { deciding = Deciding.Task(item, step, committed = false) },
-                                )
+                                TaskCard(item, weekMeta(item), rows, tasksViewModel, choices.week(item, false), busy == item.uid, expanded, { expanded = it })
                             }
                         }
                     }
@@ -267,7 +360,7 @@ fun ReviewScreen(onBack: () -> Unit, onOpenProject: (String) -> Unit) {
                         TertiaryAction(
                             stringResource(R.string.review_next, stringResource(stepLabel(next))),
                             modifier = Modifier.fillMaxWidth().padding(top = Space.md),
-                            onClick = { viewModel.select(next) },
+                            onClick = { expanded = null; viewModel.select(next) },
                         )
                     }
                 }
@@ -275,14 +368,33 @@ fun ReviewScreen(onBack: () -> Unit, onOpenProject: (String) -> Unit) {
         }
     }
 
-    deciding?.let { open ->
-        DecisionSheet(
-            open = open,
+    if (triaging) {
+        LaterTriageScreen(
+            items = laterTasks,
+            rows = rows,
+            order = laterGroups.flatMap { it.items },
             viewModel = viewModel,
+            previews = tasksViewModel.linkPreviews,
+            choices = choices,
             onOpenTask = { openTaskUid = it },
-            onOpenProject = onOpenProject,
-            dismiss = { deciding = null },
+            onClose = { triaging = false },
         )
+    }
+    }
+    when (val open = asking) {
+        is Asking.NextTask -> NextTaskSheet(open.project, viewModel) { asking = null }
+        is Asking.ReviewDate -> {
+            val label = stringResource(R.string.review_action_review_on)
+            TaskDatePickerDialog(
+                initial = open.item.reviewOn ?: LocalDate.now().plusDays(30),
+                onConfirm = {
+                    asking = null
+                    viewModel.decide(open.item, Decision.ReviewOn(it), label)
+                },
+                onDismiss = { asking = null },
+            )
+        }
+        null -> Unit
     }
     choosing?.let { list ->
         val byUid = remember(list) { list.associateBy { it.uid } }
@@ -301,6 +413,215 @@ fun ReviewScreen(onBack: () -> Unit, onOpenProject: (String) -> Unit) {
     }
     openTaskUid?.let { uid ->
         TaskDetailSheet(taskUid = uid, viewModel = tasksViewModel, onDismiss = { openTaskUid = null })
+    }
+}
+
+@Composable
+private fun TaskCard(
+    item: ReviewTask,
+    meta: String,
+    rows: RowContext,
+    tasksViewModel: TasksViewModel,
+    choices: List<Choice>,
+    busy: Boolean,
+    expanded: String?,
+    onExpand: (String?) -> Unit,
+) {
+    val link = remember(item, rows) { rows.link(item) }
+    ReviewCard(
+        title = item.name,
+        meta = meta,
+        link = link,
+        previews = tasksViewModel.linkPreviews,
+        expanded = expanded == item.uid,
+        onToggle = { onExpand(if (expanded == item.uid) null else item.uid) },
+        choices = choices,
+        busy = busy,
+        rail = rows.rail(item),
+        tags = rows.tags(item),
+    )
+}
+
+/** « Plus tard » : filtre, « Trier un par un », puis les groupes par projet, pliables. */
+private fun LazyListScope.laterList(
+    items: List<ReviewTask>,
+    groups: List<BacklogGroup>,
+    query: String,
+    open: Set<String>,
+    labels: Triple<String, String, String>,
+    rows: RowContext,
+    viewModel: ReviewViewModel,
+    tasksViewModel: TasksViewModel,
+    choices: ReviewChoices,
+    busy: String?,
+    expanded: String?,
+    onExpand: (String) -> Unit,
+    onTriage: () -> Unit,
+) {
+    if (items.isEmpty()) {
+        emptyStep(ReviewStep.LATER)
+        return
+    }
+    val (todayLabel, laterLabel, noProject) = labels
+    item(key = "later-tools") {
+        Column(verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+            CadenceField(value = query, onValue = viewModel::filterLater, label = stringResource(R.string.review_later_filter), modifier = Modifier.fillMaxWidth())
+            if (items.size >= 2) {
+                Row { QuickPill(pluralStringResource(R.plurals.review_triage_start, items.size, items.size), onTriage) }
+            }
+        }
+    }
+    if (groups.isEmpty()) {
+        item(key = "later-none") {
+            Text(stringResource(R.string.review_later_no_match), style = MaterialTheme.typography.bodyMedium, color = cadence.onSurfaceVariant, modifier = Modifier.padding(vertical = Space.lg))
+        }
+    }
+    groups.forEach { group ->
+        val isOpen = query.isNotBlank() || group.key in open
+        item(key = "group:${group.key}") {
+            GroupHeader(
+                name = group.name ?: noProject,
+                count = group.items.size,
+                color = if (group.kind == BacklogGroup.Kind.PROJECT) group.items.firstNotNullOfOrNull { rows.rail(it) } else null,
+                open = isOpen,
+                onToggle = { viewModel.toggleGroup(group.key, open) },
+            )
+        }
+        if (isOpen) {
+            items(group.items, key = { it.uid }) { item ->
+                SwipeDecision(
+                    todayLabel = todayLabel,
+                    laterLabel = laterLabel,
+                    onToday = { viewModel.decide(item, Decision.Today, todayLabel) },
+                    onLater = { viewModel.decide(item, Decision.ReviewIn30Days, laterLabel) },
+                ) {
+                    TaskCard(item, taskMeta(item, ReviewStep.LATER), rows, tasksViewModel, choices.later(item), busy == item.uid, expanded) { onExpand(item.uid) }
+                }
+            }
+        }
+    }
+}
+
+/** Les choix de chaque liste, dans l'ordre du web ; les mêmes servent aux lignes et au tri un par un. */
+internal class ReviewChoices(
+    val task: (ReviewTask, ReviewStep) -> List<Choice>,
+    val later: (ReviewTask) -> List<Choice>,
+    val week: (ReviewTask, Boolean) -> List<Choice>,
+    val inbox: (ReviewInboxItem) -> List<Choice>,
+    val project: (ReviewProject) -> List<Choice>,
+)
+
+@Composable
+private fun rememberChoices(
+    viewModel: ReviewViewModel,
+    onOpenTask: (String) -> Unit,
+    onOpenProject: (String) -> Unit,
+    ask: (Asking) -> Unit,
+): ReviewChoices {
+    val today = stringResource(R.string.review_action_today)
+    val todayShort = stringResource(R.string.review_action_today_short)
+    val split = stringResource(R.string.review_action_split)
+    val later = stringResource(R.string.review_action_later)
+    val drop = stringResource(R.string.review_action_drop)
+    val keep = stringResource(R.string.review_action_keep)
+    val week = stringResource(R.string.review_action_this_week)
+    val inView = stringResource(R.string.review_action_in_view)
+    val review30 = stringResource(R.string.review_action_review30)
+    val reviewOn = stringResource(R.string.review_action_review_on)
+    val keepParked = stringResource(R.string.review_action_keep_parked)
+    val notWeek = stringResource(R.string.review_action_not_this_week)
+    val outOfView = stringResource(R.string.review_action_out_of_view)
+    val complete = stringResource(R.string.review_action_complete)
+    val open = stringResource(R.string.review_action_open)
+    val toTask = stringResource(R.string.review_action_to_task)
+    val park = stringResource(R.string.review_action_park)
+    val discard = stringResource(R.string.review_action_discard)
+    val nextTask = stringResource(R.string.review_action_next_task)
+    val openProject = stringResource(R.string.review_action_open_project)
+    val hold = stringResource(R.string.review_action_hold)
+    return remember(viewModel, today) {
+        fun d(item: ReviewTask, decision: Decision, label: String) = { viewModel.decide(item, decision, label) }
+        fun opening(item: ReviewTask) = Choice(Icons.Outlined.OpenInFull, open, more = true) { onOpenTask(item.uid) }
+        val laterChoices = { item: ReviewTask ->
+            listOf(
+                Choice(Icons.Outlined.Today, todayShort, primary = true, run = d(item, Decision.Today, todayShort)),
+                Choice(funnelIcon(FunnelStage.THIS_WEEK), week, run = d(item, Decision.ThisWeek, week)),
+                Choice(funnelIcon(FunnelStage.LATER), later, run = d(item, Decision.ReviewIn30Days, review30)),
+                Choice(Icons.Outlined.TaskAlt, complete) { viewModel.complete(item, complete) },
+                Choice(Icons.Outlined.Block, drop, danger = true, run = d(item, Decision.Drop, drop)),
+                Choice(Icons.Outlined.EventNote, reviewOn, more = true) { ask(Asking.ReviewDate(item)) },
+                Choice(funnelIcon(FunnelStage.IN_VIEW), inView, more = true, run = d(item, Decision.InView, inView)),
+                Choice(Icons.Outlined.Check, keepParked, more = true, run = d(item, Decision.KeepParked, keepParked)),
+                opening(item),
+            )
+        }
+        ReviewChoices(
+            task = { item, step ->
+                when (step) {
+                    ReviewStep.PUSHED -> listOf(
+                        Choice(Icons.Outlined.Today, today, primary = true, run = d(item, Decision.Today, today)),
+                        Choice(Icons.Outlined.CallSplit, split) { onOpenTask(item.uid) },
+                        Choice(funnelIcon(FunnelStage.LATER), later, run = d(item, Decision.Later, later)),
+                        Choice(Icons.Outlined.Check, keep, run = d(item, Decision.Keep, keep)),
+                        Choice(Icons.Outlined.Block, drop, danger = true, more = true, run = d(item, Decision.Drop, drop)),
+                        opening(item),
+                    )
+                    ReviewStep.LATER -> laterChoices(item)
+                    else -> listOf(
+                        Choice(funnelIcon(FunnelStage.THIS_WEEK), week, primary = true, run = d(item, Decision.ThisWeek, week)),
+                        Choice(funnelIcon(FunnelStage.IN_VIEW), inView, run = d(item, Decision.InView, inView)),
+                        Choice(funnelIcon(FunnelStage.LATER), later, run = d(item, Decision.Later, later)),
+                        Choice(Icons.Outlined.Check, keep, run = d(item, Decision.Keep, keep)),
+                        Choice(Icons.Outlined.Block, drop, danger = true, more = true, run = d(item, Decision.Drop, drop)),
+                        opening(item),
+                    )
+                }
+            },
+            later = laterChoices,
+            week = { item, committed ->
+                if (committed) listOf(
+                    Choice(Icons.Outlined.Today, today, primary = true, run = d(item, Decision.Today, today)),
+                    Choice(Icons.Outlined.VisibilityOff, notWeek, run = d(item, Decision.NotThisWeek, notWeek)),
+                    Choice(funnelIcon(FunnelStage.LATER), later, run = d(item, Decision.Later, later)),
+                    opening(item),
+                ) else listOf(
+                    Choice(funnelIcon(FunnelStage.THIS_WEEK), week, primary = true, run = d(item, Decision.ThisWeek, week)),
+                    Choice(Icons.Outlined.VisibilityOff, outOfView, run = d(item, Decision.OutOfView, outOfView)),
+                    Choice(funnelIcon(FunnelStage.LATER), later, run = d(item, Decision.Later, later)),
+                    opening(item),
+                )
+            },
+            inbox = { item ->
+                listOf(
+                    Choice(Icons.Outlined.Add, toTask, primary = true) { viewModel.toTask(item, null) },
+                    Choice(funnelIcon(FunnelStage.THIS_WEEK), week) { viewModel.toTask(item, Decision.ThisWeek) },
+                    Choice(funnelIcon(FunnelStage.LATER), park) { viewModel.toTask(item, Decision.Later) },
+                    Choice(Icons.Outlined.Delete, discard, danger = true) { viewModel.discard(item) },
+                )
+            },
+            project = { item ->
+                listOf(
+                    Choice(Icons.Outlined.Add, nextTask, primary = true) { ask(Asking.NextTask(item)) },
+                    Choice(Icons.Outlined.Folder, openProject) { onOpenProject(item.uid) },
+                    Choice(Icons.Outlined.PauseCircle, hold) { viewModel.holdProject(item) },
+                    Choice(Icons.Outlined.Check, keep) { viewModel.keepProject(item) },
+                )
+            },
+        )
+    }
+}
+
+@Composable
+private fun NextTaskSheet(project: ReviewProject, viewModel: ReviewViewModel, dismiss: () -> Unit) {
+    var name by remember { mutableStateOf("") }
+    CadenceSheet(title = project.name, subtitle = null, dismiss = dismiss) {
+        Column(Modifier.navigationBarsPadding(), verticalArrangement = Arrangement.spacedBy(Space.md)) {
+            CadenceField(value = name, onValue = { name = it }, label = stringResource(R.string.review_next_task_hint))
+            PrimaryAction(stringResource(R.string.review_next_task_add), modifier = Modifier.fillMaxWidth(), enabled = name.isNotBlank()) {
+                viewModel.addNextTask(project, name)
+                dismiss()
+            }
+        }
     }
 }
 
@@ -348,51 +669,6 @@ private fun LazyListScope.moreOnWeb(total: Int, shown: Int) {
     }
 }
 
-/** Une ligne de revue : titre, contexte neutre, et le bouton « Décider » toujours visible. */
-@Composable
-private fun ReviewRow(
-    title: String,
-    meta: String?,
-    busy: Boolean,
-    onDecide: () -> Unit,
-    onOpen: (() -> Unit)? = null,
-) {
-    val palette = cadence
-    Panel(onClick = onOpen) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Column(Modifier.weight(1f)) {
-                Text(title, style = MaterialTheme.typography.bodyLarge, maxLines = 2, overflow = TextOverflow.Ellipsis)
-                if (!meta.isNullOrBlank()) {
-                    Text(meta, style = MaterialTheme.typography.labelMedium, color = palette.onSurfaceVariant, maxLines = 2)
-                }
-            }
-            Spacer(Modifier.width(Space.md))
-            DecideButton(enabled = !busy, onClick = onDecide)
-        }
-    }
-}
-
-@Composable
-private fun DecideButton(enabled: Boolean, onClick: () -> Unit) {
-    val palette = cadence
-    Row(
-        Modifier
-            .heightIn(min = Size.control)
-            .background(palette.containerHigh, Radius.Chip)
-            .clickable(enabled = enabled, onClick = onClick)
-            .padding(horizontal = Space.md),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(
-            stringResource(R.string.review_decide),
-            style = MaterialTheme.typography.labelLarge,
-            color = if (enabled) palette.onSurface else palette.outline,
-        )
-        Spacer(Modifier.width(Space.xs))
-        Icon(Icons.Outlined.ExpandMore, null, tint = palette.onSurfaceVariant, modifier = Modifier.size(Size.iconSm))
-    }
-}
-
 @Composable
 private fun CapacityPanel(planned: Int, capacity: Int?, unestimated: Int, onSet: () -> Unit) {
     val palette = cadence
@@ -431,110 +707,6 @@ private fun CapacitySheet(current: Int?, onPick: (Int?) -> Unit, dismiss: () -> 
     }
 }
 
-@Composable
-private fun DecisionSheet(
-    open: Deciding,
-    viewModel: ReviewViewModel,
-    onOpenTask: (String) -> Unit,
-    onOpenProject: (String) -> Unit,
-    dismiss: () -> Unit,
-) {
-    var pickingDate by remember { mutableStateOf(false) }
-    var nextTask by remember { mutableStateOf<String?>(null) }
-    val title = when (open) {
-        is Deciding.Task -> open.item.name
-        is Deciding.Inbox -> open.item.text
-        is Deciding.Project -> open.item.name
-    }
-    fun task(decision: Decision) = { (open as Deciding.Task).let { viewModel.decide(it.item, decision) }; dismiss() }
-    val choices: List<Choice> = when (open) {
-        is Deciding.Task -> when {
-            open.step == ReviewStep.PUSHED -> listOf(
-                Choice(Icons.Outlined.Today, R.string.review_action_today, run = task(Decision.Today)),
-                Choice(Icons.Outlined.CallSplit, R.string.review_action_split) { dismiss(); onOpenTask(open.item.uid) },
-                Choice(funnelIcon(FunnelStage.LATER), R.string.review_action_later, run = task(Decision.Later)),
-                Choice(Icons.Outlined.Block, R.string.review_action_drop, danger = true, run = task(Decision.Drop)),
-                Choice(Icons.Outlined.Check, R.string.review_action_keep, run = task(Decision.Keep)),
-            )
-            open.step == ReviewStep.LATER -> listOf(
-                Choice(Icons.Outlined.EventNote, R.string.review_action_review30, run = task(Decision.ReviewIn30Days)),
-                Choice(Icons.Outlined.EventNote, R.string.review_action_review_on) { pickingDate = true },
-                Choice(funnelIcon(FunnelStage.IN_VIEW), R.string.review_action_in_view, run = task(Decision.InView)),
-                Choice(funnelIcon(FunnelStage.THIS_WEEK), R.string.review_action_this_week, run = task(Decision.ThisWeek)),
-                Choice(Icons.Outlined.Check, R.string.review_action_keep_parked, run = task(Decision.KeepParked)),
-                Choice(Icons.Outlined.Block, R.string.review_action_drop, danger = true, run = task(Decision.Drop)),
-            )
-            open.step == ReviewStep.WEEK && open.committed -> listOf(
-                Choice(Icons.Outlined.Today, R.string.review_action_today, run = task(Decision.Today)),
-                Choice(Icons.Outlined.VisibilityOff, R.string.review_action_not_this_week, run = task(Decision.NotThisWeek)),
-                Choice(funnelIcon(FunnelStage.LATER), R.string.review_action_later, run = task(Decision.Later)),
-            )
-            open.step == ReviewStep.WEEK -> listOf(
-                Choice(funnelIcon(FunnelStage.THIS_WEEK), R.string.review_action_this_week, run = task(Decision.ThisWeek)),
-                Choice(Icons.Outlined.VisibilityOff, R.string.review_action_out_of_view, run = task(Decision.OutOfView)),
-                Choice(funnelIcon(FunnelStage.LATER), R.string.review_action_later, run = task(Decision.Later)),
-            )
-            else -> listOf(
-                Choice(funnelIcon(FunnelStage.THIS_WEEK), R.string.review_action_this_week, run = task(Decision.ThisWeek)),
-                Choice(funnelIcon(FunnelStage.IN_VIEW), R.string.review_action_in_view, run = task(Decision.InView)),
-                Choice(funnelIcon(FunnelStage.LATER), R.string.review_action_later, run = task(Decision.Later)),
-                Choice(Icons.Outlined.Check, R.string.review_action_keep, run = task(Decision.Keep)),
-                Choice(Icons.Outlined.Block, R.string.review_action_drop, danger = true, run = task(Decision.Drop)),
-            )
-        }
-        is Deciding.Inbox -> listOf(
-            Choice(Icons.Outlined.Add, R.string.review_action_to_task) { viewModel.toTask(open.item, null); dismiss() },
-            Choice(funnelIcon(FunnelStage.THIS_WEEK), R.string.review_action_this_week) { viewModel.toTask(open.item, Decision.ThisWeek); dismiss() },
-            Choice(funnelIcon(FunnelStage.LATER), R.string.review_action_park) { viewModel.toTask(open.item, Decision.Later); dismiss() },
-            Choice(Icons.Outlined.Delete, R.string.review_action_discard, danger = true) { viewModel.discard(open.item); dismiss() },
-        )
-        is Deciding.Project -> listOf(
-            Choice(Icons.Outlined.Add, R.string.review_action_next_task) { nextTask = "" },
-            Choice(Icons.Outlined.Folder, R.string.review_action_open_project) { dismiss(); onOpenProject(open.item.uid) },
-            Choice(Icons.Outlined.PauseCircle, R.string.review_action_hold) { viewModel.holdProject(open.item); dismiss() },
-            Choice(Icons.Outlined.Check, R.string.review_action_keep) { viewModel.keepProject(open.item); dismiss() },
-        )
-    }
-    val palette = cadence
-    CadenceSheet(title = title, subtitle = null, dismiss = dismiss) {
-        val pending = nextTask
-        if (pending != null && open is Deciding.Project) {
-            Column(verticalArrangement = Arrangement.spacedBy(Space.md)) {
-                CadenceField(
-                    value = pending,
-                    onValue = { nextTask = it },
-                    label = stringResource(R.string.review_next_task_hint),
-                )
-                PrimaryAction(
-                    stringResource(R.string.review_next_task_add),
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = pending.isNotBlank(),
-                ) {
-                    viewModel.addNextTask(open.item, pending)
-                    dismiss()
-                }
-            }
-        } else {
-            Column(Modifier.navigationBarsPadding(), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
-                choices.forEach { choice ->
-                    ActionRow(choice.icon, stringResource(choice.label), if (choice.danger) palette.error else palette.primary, choice.run)
-                }
-            }
-        }
-    }
-    if (pickingDate && open is Deciding.Task) {
-        TaskDatePickerDialog(
-            initial = open.item.reviewOn ?: LocalDate.now().plusDays(30),
-            onConfirm = {
-                pickingDate = false
-                viewModel.decide(open.item, Decision.ReviewOn(it))
-                dismiss()
-            },
-            onDismiss = { pickingDate = false },
-        )
-    }
-}
-
 private fun stepLabel(step: ReviewStep): Int = when (step) {
     ReviewStep.UNDECIDED -> R.string.review_step_undecided
     ReviewStep.PUSHED -> R.string.review_step_pushed
@@ -559,10 +731,13 @@ private fun reasonLabel(reason: ProjectReason): Int = when (reason) {
     ProjectReason.PUSHED_TASKS -> R.string.review_reason_pushed_tasks
 }
 
+private fun weekMeta(item: ReviewTask): String = listOfNotNull(item.projectName, item.estimatedMinutes?.let(::estimateText)).joinToString(" · ")
+
+/** Contexte neutre d'une ligne ; dans « Plus tard », le projet est déjà le titre du groupe. */
 @Composable
-private fun taskMeta(item: ReviewTask, step: ReviewStep): String {
+internal fun taskMeta(item: ReviewTask, step: ReviewStep): String {
     val parts = mutableListOf<String>()
-    item.projectName?.let(parts::add)
+    if (step != ReviewStep.LATER) item.projectName?.let(parts::add)
     when (step) {
         ReviewStep.PUSHED -> item.push?.let { push ->
             parts += pluralStringResource(R.plurals.review_pushed_meta, push.recentCount, push.recentCount)

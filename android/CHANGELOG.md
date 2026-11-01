@@ -1,6 +1,9 @@
 ## [1.6.9] — à publier
 
 ### Nouveautés
+- Revue : « Plus tard » se parcourt par projet (puis domaine, puis « Sans projet »), groupes pliables avec leur nombre, le plus récemment touché d'abord, et un champ « Filtrer » (titre, projet, étiquettes, titre du lien). Glisser à droite passe la tâche à aujourd'hui, à gauche la laisse de côté un mois ; « Trier un par un » montre une tâche à la fois (« Passer », « N sur M », reprise là où vous étiez).
+- Revue : toucher une ligne déplie les choix en un toucher (Aujourd'hui, Cette semaine, Plus tard, Terminer, Abandonner, « Plus… ») au lieu du bouton « Décider » ; chaque décision propose « Annuler ».
+- Revue : une tâche ou une idée qui n'est qu'une adresse s'affiche comme sa carte de lien (titre, description, site, étoiles GitHub) au lieu de l'URL brute. L'en-tête dit calmement ce qui reste à regarder, sans compter les décisions, et les onglets défilent sous un fondu.
 - Sous-tâches : toucher une sous-tâche ouvre un menu « Renommer », « Ouvrir comme tâche » (fiche par-dessus) et « Supprimer » (avec « Annuler »).
 - Partager et copier : « Partager » et « Copier » dans les actions de la tâche, dans l'en-tête d'une note et sur les cartes de lien (titre et adresse).
 - Tâches : « Dupliquer » dans les actions de la fiche copie le contenu, les dates, la durée, le projet, le domaine et les étiquettes ; la copie repart à faire, non épinglée, sans rappel ni parent.

@@ -99,10 +99,10 @@ object LinkLists {
             .sortedWith(compareByDescending<Map.Entry<String, Int>> { it.value }.thenBy { it.key })
             .map { it.key }
 
-    /** Le lien enregistré d'une idée : celui trouvé dans l'idée, sinon la même page. */
-    fun forEntry(links: List<LinkItem>, entryUid: String, content: String): LinkItem? {
+    /** Le lien enregistré d'une idée (ou d'une autre [sourceType]) : celui trouvé dans la source, sinon la même page. */
+    fun forEntry(links: List<LinkItem>, entryUid: String, content: String, sourceType: String = "inbox_item"): LinkItem? {
         val url = LinkExtractor.urls(content, 1).firstOrNull() ?: return null
-        links.firstOrNull { it.sourceType == "inbox_item" && it.sourceUid == entryUid }?.let { return it }
+        links.firstOrNull { it.sourceType == sourceType && it.sourceUid == entryUid }?.let { return it }
         val key = comparable(url)
         return links.firstOrNull { comparable(it.url) == key }
     }

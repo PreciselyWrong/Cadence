@@ -26,7 +26,7 @@ Three different intentions stay three different things:
 
 - Task pane (Minimal) and the full task page (`/task/:uid`, the only detail view in Dense): three chips, **In view**, **This week**, **Later**, with the postponement line under them. A **Review on** date appears only for a parked task or one that already has a date.
 - Right-click menu of a Minimal row: the same three choices.
-- Review page: one visible **Decide** button per row (label always shown, with a chevron) that opens a menu with the choices that fit the list.
+- Review page: one visible **Decide** button per row (label always shown, with a chevron) that opens a menu with the choices that fit the list. On Android, touching a row unfolds the same choices as one-tap chips (the least used ones under **More…**); there is no dropdown.
 - API: `PATCH /api/task/:uid` accepts `in_view` (boolean), `week_of` (`YYYY-MM-DD` in that week, `this_week`, `next_week` or `null`), `review_on` (`YYYY-MM-DD` or `null`), `later` (boolean) and `reviewed: true`. MCP `update_task` takes the first four.
 
 `this_week` is the calendar week that contains today in the user's timezone, starting on their first day of week (Profile; Monday when unset). It stays that week on its last day: on a Sunday, a Monday-start user's *This week* is the week that ends tonight, because the **This week** tab, Today's suggestions and the chips all compare `week_of` with the current week, and a task decided for the coming week would vanish from them until Monday. To plan the coming week, send `next_week` (or a date in it). A Sunday-start user's week opens on Sunday, so the same Sunday already gives the new week.
@@ -83,16 +83,26 @@ Once a task has been pushed back, a single grey line shows *Moved N times, M in 
 
 Opened from **More** in the Minimal rail (it can be moved to the rail in Profile → Sidebar), from the app launcher, or from Insights in Dense. Route `/review`.
 
-The tabs are the steps of a review, in order; each can be opened alone, and the page remembers the last one in this browser. **Next: …** at the bottom goes to the next step. Decisions are saved one by one on the tasks themselves, so a review stopped after four items resumes where it was and loses nothing. The header shows how many items need a look (each counted once even when it is in two lists) and how many were decided this week.
+The tabs are the steps of a review, in order; each can be opened alone, and the page remembers the last one in this browser. **Next: …** at the bottom goes to the next step. Decisions are saved one by one on the tasks themselves, so a review stopped after four items resumes where it was and loses nothing. The header shows how many items need a look (each counted once even when it is in two lists) and how many were decided this week. On Android the header says it calmly (*5 things to look at, at your own pace*, or *All up to date*) and never shows a count of decisions; the tabs scroll under a fade with short labels (*Projects*, *Week*).
 
 | Tab | Lists | Choices |
 |---|---|---|
 | **To decide** | Open Inbox items, oldest first | Make a task, This week, Park for later, Discard; the Inbox itself for anything else |
 | **Pushed back** | Frequently pushed tasks, most pushed first, with project, count and last planned day | Do today, Short session today (25 min on today's plan), Break into steps (opens the task), Later, Drop, Keep as is |
 | **Stalled projects** | Active projects (in progress or planned) with no next task, no change in 30 days, or two or more tasks pushed back | Add the next task (inline field), Open project, Put on hold, Keep as is |
-| **Later** | Parked tasks and any task whose review date has come; due reviews first | Review in 30 days, Review on…, In view, This week, Keep parked, Drop |
+| **Later** | Parked tasks and any task whose review date has come; due reviews first | Do today, This week, Review in 30 days, Review on…, In view, Keep parked, Done, Drop |
 | **Old** | Open tasks unchanged for 90 days (not parked, waiting, recurring, habits or subtasks) | This week, In view, Later, Keep as is, Drop |
 | **This week** | Tasks decided for this week, then tasks in view, with planned time | Decided: Do today, Not this week, Later. In view: This week, Out of view, Later. **Help me choose** |
+
+### Later as a backlog
+
+Later is where most parked ideas live, so it reads as a backlog instead of one flat list:
+
+- **Grouped**: by project, then by area for a task without a project, then *No project* last. Groups are ordered by their most recently touched task (`last_activity_at`); inside a group, due reviews come first, then the most recently touched. Each group header shows its count and folds; a long list (more than 20) opens only the first group.
+- **Filter**: one field above the groups matches the title, the project or area, the tags and the title of the row's saved link, ignoring case and accents.
+- **Links**: a row whose title contains an address (or whose note is only a link) shows its saved `link` (title, one line of description, domain, kind, GitHub stars) instead of the raw URL, the one found in that task first, else the same page; without a saved link, the device's page preview. To decide shows the same card for an Inbox item.
+- **Do today** on a parked task also takes it out of Later (`later: false`): a `#someday` task never reaches Today's suggestions otherwise. **Done** completes the task.
+- Android: swipe right = **Do today**, swipe left = **Review in 30 days**; every decision shows *Undo*, which puts back what the decision changed. **Sort one by one** shows one task at a time, big, with the same choices and **Skip**, *N of M*; skipped tasks go to the end of the queue (kept on the device), so it resumes where it was left. The phone reads up to 200 rows per list (the server maximum).
 
 Stalled projects leave out projects that are waiting, not started, done, cancelled, parked (`#someday`), templates, and projects whose open tasks are all waiting or deferred. "No change in 30 days" is not raised for a project with a due date ahead. **Keep as is** hides "no next task" until the project or one of its tasks changes, and "no change" for another 30 days (`projects.reviewed_at`).
 

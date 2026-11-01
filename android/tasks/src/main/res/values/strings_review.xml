@@ -44,10 +44,10 @@
     </plurals>
     <string name="review_step_undecided">À décider</string>
     <string name="review_step_pushed">Repoussées</string>
-    <string name="review_step_projects">Projets stagnants</string>
+    <string name="review_step_projects">Projets</string>
     <string name="review_step_later">Plus tard</string>
     <string name="review_step_stale">Anciennes</string>
-    <string name="review_step_week">Cette semaine</string>
+    <string name="review_step_week">Semaine</string>
     <string name="review_next">Suivant : %1$s</string>
     <string name="review_decide">Décider</string>
     <string name="review_offline">Hors ligne · lecture du %1$s</string>
@@ -100,6 +100,30 @@
     <string name="review_action_open_project">Ouvrir le projet</string>
     <string name="review_next_task_hint">Prochaine tâche</string>
     <string name="review_next_task_add">Ajouter</string>
+
+    <!-- En-tête calme et « Plus tard » parcouru par groupe -->
+    <plurals name="review_calm">
+        <item quantity="one">Une chose à regarder, à votre rythme</item>
+        <item quantity="other">%d choses à regarder, à votre rythme</item>
+    </plurals>
+    <string name="review_calm_clear">Tout est à jour</string>
+    <string name="review_action_today_short">Aujourd\'hui</string>
+    <string name="review_action_complete">Terminer</string>
+    <string name="review_action_open">Ouvrir</string>
+    <string name="review_action_more">Plus…</string>
+    <string name="review_later_filter">Filtrer</string>
+    <string name="review_later_no_match">Rien ne correspond.</string>
+    <string name="review_no_project">Sans projet</string>
+    <plurals name="review_triage_start">
+        <item quantity="one">Trier un par un (%d)</item>
+        <item quantity="other">Trier un par un (%d)</item>
+    </plurals>
+    <string name="review_triage_title">Trier un par un</string>
+    <string name="review_triage_position">%1$d sur %2$d</string>
+    <string name="review_triage_skip">Passer</string>
+    <string name="review_triage_done">Tout est passé en revue</string>
+    <string name="review_triage_done_hint">Les tâches passées reviendront la prochaine fois.</string>
+    <string name="review_triage_close">Fermer</string>
 
     <!-- Semaine -->
     <string name="review_week_committed">Décidées cette semaine</string>
