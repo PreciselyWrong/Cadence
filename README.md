@@ -36,8 +36,9 @@ Native Kotlin app (Jetpack Compose, Room, Glance widgets), merged from the forme
 - **Tasks, offline:** every task is kept on the phone and synced with the server through [`/api/v1/sync`](docs/30-offline-sync.md). Changes made offline are queued and sent when the server is reachable again; conflicts are merged field by field.
 - **Connect with a QR code:** create an API key in the web app (Profile → API keys) and scan the QR code shown under it, or type the server address and key.
 - **Widgets:** a _Today_ widget where a task is checked off in one tap, a _+ Task_ widget for quick capture, and the habit widgets.
-- **Capture and reminders:** share text from any app into the inbox, and get due-time reminders with a _Complete_ action.
-- **Habits:** kept on the phone for now; syncing them with the server is planned.
+- **Capture and reminders:** share text from any app into the inbox, and get reminders with _Complete_ and _Later_ actions, shifted out of your quiet hours.
+- **Habits:** synced with the server, so they can be seen and edited on the web.
+- **Review, goals, Stash:** the weekly review, the Stash of paused projects, next actions and goals, as on the web.
 
 Build and install a debug APK with `cd android && ./dev.sh` (JDK 21). See [android/AGENTS.md](android/AGENTS.md).
 
@@ -56,6 +57,8 @@ Cadence builds on [chrisvel/tududi](https://github.com/chrisvel/tududi) (last sy
 | Offline clients         | The PWA reads from cache and queues writes | A **sync API** (`/api/v1/sync`): snapshot, pull by cursor, idempotent push, hybrid logical clocks, field-by-field merge, conflict log. Used by the Android app. [Docs](docs/30-offline-sync.md) |
 | Device setup            | Copy the API key by hand                   | A **QR code** under each new API key, scanned by the Android app                                                                                                                                |
 | Moving a recurring task | Moves the whole series                     | Choose **this occurrence**, **this and the following ones**, or **the whole series**, from the calendar, Today or the task row                                                                  |
+| Journal size | Not applicable | The sync journal is **compacted daily** (30 days by default); a device that fell behind gets a clear `410` and takes a fresh snapshot. Pushes are serialized per row, so two devices cannot corrupt one task |
+| Timed recurring tasks | Time of day may drift after a clock change | A recurring task with a time keeps its **wall-clock time across daylight-saving changes**; quick add reads French recurrences, a time and a duration. [Docs](docs/01-recurring-tasks-behavior.md) |
 
 ### Calendar
 
@@ -108,6 +111,7 @@ Cadence builds on [chrisvel/tududi](https://github.com/chrisvel/tududi) (last sy
 | Postponements   | Due date changes logged, never read | Due date changes are classified (pushed back, rescheduled, time changed, automatic) and unfinished plan days counted; a task pushed back 3 times in 30 days is listed, and the task pane shows its history. No badges, no score. [Docs](docs/34-review.md)                                                                                                    |
 | TODO.md projects | —                                  | **Folders of `TODO.md` files as projects** (`TUDUDI_TODO_ROOT`): sections become tags, the file stays the source of truth (re-read every 30 s or with **Reread**); **add a task** or **check one off** and it is written to the file, everything else is read-only with a **TODO.md** badge; also on Android through sync. Mount a dedicated folder, never `~/Dev`. [Docs](docs/35-todo-md-projects.md) |
 | Review          | —                                   | One page, `/review` (More menu): **To decide**, **Pushed back**, **Stalled projects**, **Later**, **Old**, **This week** with planned time against available time; one Decide menu per row; decisions saved one by one, so a review can stop and resume. **Help me choose** compares two tasks at a time, on Today and in the week. [Docs](docs/34-review.md) |
+| Weekly routine  | —                                   | **Plan a Friday review** from Review creates a recurring task without a reminder (once). Wording stays neutral: no days-late counter, an undated task is never overdue. On Android too |
 
 ### Projects
 
@@ -115,6 +119,9 @@ Cadence builds on [chrisvel/tududi](https://github.com/chrisvel/tududi) (last sy
 | ------------ | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
 | Timeline     | Bars coloured by status | Also **colour by priority or tag**                                                                                              |
 | Sub-projects | Flat list of projects   | **Sub-projects**, any depth; a sub-project takes its parent's area; listed on the parent page, indented in the list and sidebar |
+| Stash | Statuses not started, planned, in progress, waiting, done, cancelled | **En pause** and **archived** statuses; the **Stash** is the paused filter with an "N active · N in the stash" counter, and the same grouping on Android. [Docs](docs/06-projects.md) |
+| Next action | — | Pick **one next action** per project (row menu); shown on the project page and cards, and the only suggestion Today makes for that project. On Android too |
+| Goals | Goals linked to tasks and projects, no key results | **Key results** under a goal (progress = share of done linked tasks and projects), **month and quarter** horizons, a **bucket list** (Have / Be / Do, no date, never in Today); **Suggest 5 domains** on Areas. On Android too |
 
 ### Tasks, tags and boards
 
@@ -126,13 +133,20 @@ Cadence builds on [chrisvel/tududi](https://github.com/chrisvel/tududi) (last sy
 | Row gestures            | Subtasks through a list icon; no row menu; no keyboard moves between rows | In Minimal, a **chevron** before the check opens a row's subtasks, and group headers in project and day lists collapse. **Right-click** a row for priority, date (today, tomorrow, next week, clear), project, pin and delete. Arrow keys move between rows; Space completes, Enter opens, **D** and **P** open the date and priority pickers. Dense keeps upstream. [Docs](docs/00-tasks-behavior.md) |
 | Drag to reorder         | —                                                                         | In Minimal, drag a row in the Tasks, project or tag list to set its order; it is saved per account and list and the list sorts by **Custom**. Drop a row on a project in the sidebar to move it there (the project lights up while you hover). [Docs](docs/00-tasks-behavior.md)                                                                                                                       |
 | Add and completed       | Add box at the top of the page; completed tasks mixed into the list       | In Minimal, Today, Tasks, project and tag lists start with a **+ Add task** field (Enter adds to that list) and end with a collapsed **Completed (N)** section. Dense keeps upstream. [Docs](docs/00-tasks-behavior.md)                                                                                                                                                                                |
-| Tags                    | Flat list                                                                 | **Nested tags** (one level of tag folders); a parent tag also matches its children in task/note filters, search, saved views and Focus                                                                                                                                                                                                                                                                 |
+| Tags                    | Flat list                                                                 | **Nested tags** of any depth (`perso/sport`); a parent tag also matches its children in task/note filters, search, saved views and Focus; optional **icons** on projects and tags, shared with Android |
 | Quick add               | English dates only                                                        | **French dates** too (`demain 15h`, `après-demain`, `le 12`, `d'ici vendredi`), **`!1`–`!3`** sets priority (high, medium, low), and **`^list`** is an alias of `+project`, matched without regard to case or accents. [Docs](docs/04-inbox-page.md)                                                                                                                                                   |
 | Project board           | Kanban by status only                                                     | **Board** tab with free **sections** per project: add, rename, delete columns, drag columns and cards (order kept); read-only viewers can't edit                                                                                                                                                                                                                                                       |
 | New view                | Views created from Universal Search only                                  | **New view** in the Minimal sidebar's Views section: name, project, tag, priority, due (today, next 7 days, overdue, no date) and status (open or done); a view can be narrowed to one project (`views.project_uid`). [Docs](docs/08-views-system.md)                                                                                                                                                  |
 | List, board or calendar | One list per view                                                         | In Minimal, a saved view, tag page, project and the Tasks list switch between **List**, **Board** (columns by priority, drag to change it) and **Calendar** (a month by due date, drag to move it); the choice is remembered per view in `ui_settings.viewTypes`. Dense is unchanged. [Docs](docs/08-views-system.md)                                                                                  |
 | Eisenhower matrix       | One fixed urgent/important matrix                                         | Up to 10 **custom matrices** with editable rules per quadrant (priority, due window, tags, projects); dragging a task edits its priority/tag to fit                                                                                                                                                                                                                                                    |
 | Period summary          | —                                                                         | Insights → **Summary**: tasks completed in a period (plus open ones due in it), grouped by project/day/status, exported as Markdown, .txt, .csv or printed; saved as a template                                                                                                                                                                                                                        |
+
+### Notifications
+
+|  | Upstream | This fork |
+| --- | --- | --- |
+| Tone | Overdue alerts | **No overdue alert.** Due soon is sent once per due date and refreshed in place. [Docs](docs/36-notifications.md) |
+| Channels | In-app, push, Telegram, Apprise | Adds a **Desktop** channel per type (Linux client), **quiet hours** (held until they end) and recurring reminders that follow the due date; the task panel has a **Reminder** field. On Android, reminders survive reboots and can be snoozed |
 
 ### Under the hood
 

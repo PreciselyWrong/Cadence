@@ -122,7 +122,10 @@ Area: "Personal"
    - **In Progress**: Currently being worked on
    - **Waiting**: Blocked or waiting on external dependency
    - **Done**: Project completed successfully
-   - **Cancelled**: Project abandoned or no longer relevant
+   - **Cancelled**: shown as **Abandonné** (fr) — a decision to stop
+   - **Paused**: set aside to pick up later; paused projects form the **Stash**, a filter on the Projects page (web) and a group of the Projects tab (Android), counted as "N active · N in the stash". Paused projects send no due notification
+   - **Archived**: kept for reference, hidden from project lists and due checks; reachable through the closed-projects filter (web) or toggle (Android)
+   - Added by migration `20261031200000`; synced as the project `status` field
 
 9. **Priority** (optional)
    - 0 = None (default)

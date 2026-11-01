@@ -9,12 +9,24 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $root = $PSScriptRoot
-$versionFile = Join-Path $root 'app-release\version.json'
+$versionFile = Join-Path $root 'app-release/version.json'
 $changelogFile = Join-Path $root 'CHANGELOG.md'
 $supportedDestinations = @('smartphone', 'nicoapps', 'default')
-$artifact = Join-Path $root 'app\build\outputs\apk\debug\app-debug.apk'
-$javaHome = 'C:\Program Files\Android\Android Studio\jbr'
-$uploader = Join-Path $root 'scripts\dev-publish\upload-release.ps1'
+$artifact = Join-Path $root 'app/build/outputs/apk/debug/app-debug.apk'
+$javaHome = if ($IsWindows) { 'C:\Program Files\Android\Android Studio\jbr' } else { '/usr/lib/jvm/temurin-21-jdk' }
+$uploader = Join-Path $root 'scripts/dev-publish/upload-release.ps1'
+
+# The committed gradlew does not run on Linux (android/AGENTS.md): call the
+# wrapper jar with the JDK directly there.
+function Invoke-Gradle([string[]]$Arguments) {
+    if ($IsWindows) {
+        & (Join-Path $root 'gradlew.bat') @Arguments
+    } else {
+        if (-not $env:ANDROID_HOME) { $env:ANDROID_HOME = Join-Path $HOME 'Android/Sdk' }
+        $wrapper = Join-Path $root 'gradle/wrapper/gradle-wrapper.jar'
+        & (Join-Path $javaHome 'bin/java') '-Dorg.gradle.jvmargs=-Xmx3g' -cp $wrapper org.gradle.wrapper.GradleWrapperMain --max-workers=4 @Arguments
+    }
+}
 
 function Fail([string]$message, [int]$code = 2) {
     [Console]::Error.WriteLine($message)
@@ -43,7 +55,7 @@ if ($Destination) {
 $selectedDestinations = if ($Destination) { $Destination } else { @('default') }
 
 $adbCommand = Get-Command adb -ErrorAction SilentlyContinue
-$adb = if ($adbCommand) { $adbCommand.Source } else { Join-Path $env:LOCALAPPDATA 'Android\Sdk\platform-tools\adb.exe' }
+$adb = if ($adbCommand) { $adbCommand.Source } elseif ($IsWindows) { Join-Path $env:LOCALAPPDATA 'Android\Sdk\platform-tools\adb.exe' } else { Join-Path $HOME 'Android/Sdk/platform-tools/adb' }
 
 function Get-ConnectedPhone {
     if (-not (Test-Path $adb)) { return $null }
@@ -63,7 +75,7 @@ if ($Plan) {
     & $uploader -ApkPath $artifact -Changelog $releaseChangelog -Plan
     Write-Output "  - Smartphone : $phoneTarget"
     Write-Output 'Vérifications : tests domaine et construction debug Android'
-    Write-Output 'Artefact : app\build\outputs\apk\debug\app-debug.apk'
+    Write-Output 'Artefact : app/build/outputs/apk/debug/app-debug.apk'
     exit 0
 }
 
@@ -78,11 +90,11 @@ if (-not $Confirm) { Fail 'Publication refusée : utilisez -Confirm en mode non 
 $env:JAVA_HOME = $javaHome
 
 Write-Host "Exécution des tests..." -ForegroundColor Cyan
-& (Join-Path $root 'gradlew.bat') ':domain:test'
+Invoke-Gradle @(':domain:test', ':tasks:testDebugUnitTest', ':app:testDebugUnitTest')
 if ($LASTEXITCODE -ne 0) { Fail 'Les tests ont échoué.' 3 }
 
 Write-Host "Construction debug..." -ForegroundColor Cyan
-& (Join-Path $root 'gradlew.bat') ':app:assembleDebug' '--no-configuration-cache'
+Invoke-Gradle @(':app:assembleDebug', '--no-configuration-cache')
 if ($LASTEXITCODE -ne 0 -or -not (Test-Path $artifact)) { Fail 'La construction Android a échoué.' 3 }
 
 # NicoApps

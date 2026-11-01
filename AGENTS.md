@@ -2,7 +2,7 @@
 
 ## Quoi
 
-Cadence : un seul système personnel (tâches, projets, habitudes, notes, capture) sur le web, Android et bientôt Linux, auto-hébergé sur Unraid et joint via Tailscale, sans IA obligatoire. Fork MIT de [chrisvel/tududi](https://github.com/chrisvel/tududi) (origin : `PreciselyWrong/cadence`) ; l'attribution et la licence de l'amont restent.
+Cadence : un seul système personnel (tâches, projets, habitudes, notes, capture) sur le web, Android et Linux (client Tauri 2 dans `desktop/`), auto-hébergé sur Unraid et joint via Tailscale, sans IA obligatoire. Fork MIT de [chrisvel/tududi](https://github.com/chrisvel/tududi) (origin : `PreciselyWrong/cadence`) ; l'attribution et la licence de l'amont restent.
 
 - Serveur et web : React 18 + TypeScript (webpack, Tailwind, Zustand + SWR) ; Express + Sequelize ; SQLite par défaut ou PostgreSQL via `DATABASE_URL`. Dev : deux serveurs (front `:8080` proxifie `/api` vers back `:3002`) ; prod : Express sert `/dist`.
 - Android : `android/` (ex-dépôt Cadence, historique importé) : Kotlin, Compose, Room, widgets Glance ; habitudes locales et tâches synchronisées hors ligne avec le serveur (`/api/v1/sync`).
@@ -30,6 +30,8 @@ Fichiers propres au fork : `AGENTS.md`, `TODO.md`, `README.md`, `docs/fork/`, `a
 | Fonctionnalités du fork, synchro amont | `docs/fork/FORK.md` |
 | Décisions UX à reporter entre web et Android | `docs/fork/WEB-UX-NOTES.md` (web → Android), `docs/fork/ANDROID-UX-NOTES.md` (Android → web) |
 | Clients Android/Linux, plan de synchro | `docs/fork/PLAN-clients-sync.md`, `docs/fork/CADENCE-PARITY.md` |
+| Client Linux (Tauri, tray, ajout rapide) | `docs/fork/DESKTOP.md`, `desktop/AGENTS.md` |
+| Notifications, heures calmes, rappels | `docs/36-notifications.md` |
 | Synchronisation hors ligne (API) | `docs/30-offline-sync.md`, `backend/modules/sync/` |
 | App Android | `android/AGENTS.md` (règles des habitudes, widget, ⛔ propres à l'app) |
 | Interface web, UX à reprendre sur Android | `docs/fork/WEB-UX-NOTES.md` (journal à compléter à chaque changement d'UI web) |
@@ -75,11 +77,12 @@ Tests Postgres : `DATABASE_URL=... npm run backend:test:pg`. Module tâches Andr
 - `backend/models/`, `backend/migrations/` : schéma Sequelize ; helpers `backend/utils/migration-utils.js`.
 - `backend/middleware/authorize.js` : `hasAccess(level, resourceType, getResourceUid)`, droits hérités du projet.
 - `backend/modules/tasks/` : tâches, récurrence (`recurringTaskService.js`, `taskScheduler.js`, `operations/moveOccurrence.js`).
-- `backend/modules/sync/` : synchro hors ligne (registre d'entités, journal, HLC) ; `backend/modules/habits/cadence/` : habitudes Cadence (schéma `schema.js`, moteur JS des règles, routes `/api/cadence/*`, import des anciennes) ; les écrans web des habitudes passent déjà par `/api/cadence/*` (`frontend/utils/cadenceHabitsService.ts`) ; l'ancien module des habitudes-tâches (`/api/habits`, moteur, rappels, `habitsService.ts`) est retiré ; les colonnes `tasks.habit_*` restent et les tâches `habit_mode` sont importées au démarrage puis exclues de toutes les listes de tâches. Fixtures partagées avec Android : `fixtures/habits/`.
+- `backend/modules/sync/` : synchro hors ligne (registre d'entités, journal, HLC, compaction quotidienne `compaction.js`, `410 reset_required`) ; `backend/modules/habits/cadence/` : habitudes Cadence (schéma `schema.js`, moteur JS des règles, routes `/api/cadence/*`, import des anciennes) ; les écrans web des habitudes passent déjà par `/api/cadence/*` (`frontend/utils/cadenceHabitsService.ts`) ; l'ancien module des habitudes-tâches (`/api/habits`, moteur, rappels, `habitsService.ts`) est retiré ; les colonnes `tasks.habit_*` restent et les tâches `habit_mode` sont importées au démarrage puis exclues de toutes les listes de tâches. Fixtures partagées avec Android : `fixtures/habits/`.
 - `backend/modules/mcp/` : serveur MCP (`npm run mcp:start`).
 - `backend/modules/todo-md/` : projets miroirs de fichiers `TODO.md` (`TUDUDI_TODO_ROOT`) ; le fichier fait foi, écriture atomique (ajout, case cochée) uniquement.
 - `frontend/components/<Feature>/` : React ; `frontend/store/useStore.ts` (Zustand) ; `frontend/utils/*Service.ts` (appels API).
 - `public/locales/<lang>/` : traductions i18next (26 langues, base `en`).
+- `desktop/` : client Linux Tauri 2 (`src-tauri/`, coque mince autour du serveur ; `docs/fork/DESKTOP.md`).
 - `android/` : `domain/` (règles des habitudes, Kotlin pur), `data/`, `tasks/` (tâches synchronisées), `app/`.
 - `e2e/` : Playwright ; `scripts/` : dev, Docker, versions, sauvegardes Postgres.
 
@@ -105,4 +108,4 @@ Tests Postgres : `DATABASE_URL=... npm run backend:test:pg`. Module tâches Andr
 
 ## État
 
-Monorepo Cadence (web, serveur, Android) sur `main`, à jour de l'amont v1.14.0 ; pas encore de remote `upstream` local. Android : tâches synchronisées, widgets et rappels vérifiés sur émulateur ; habitudes synchronisées Android ↔ serveur (15 entités, Room v26). Le `gradlew` d'`android/` est exécutable dans l'arbre de travail (mode non commité) : le piège Linux d'`android/AGENTS.md` est à revérifier. Prochaine étape : `Now` de `TODO.md`.
+Monorepo Cadence (web, serveur, Android, Linux) sur `main`, à jour de l'amont v1.14.0, en avance sur `origin/main` (non poussé) ; pas encore de remote `upstream` local. Android 1.6.0 (versionCode 32, Room tâches v8, habitudes v26) : tâches, habitudes, revue, objectifs, rappels et tags imbriqués synchronisés, vérifiés sur émulateur. Client Linux livré (reste : Wayland, voir `TODO.md`). Le `gradlew` d'`android/` est exécutable dans l'arbre de travail (mode non commité) : le piège Linux d'`android/AGENTS.md` est à revérifier. Prochaine étape : `Now` de `TODO.md`.

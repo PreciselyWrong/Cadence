@@ -8,16 +8,25 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
-[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false)
-$OutputEncoding = [System.Text.UTF8Encoding]::new($false)
+
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
 $lanBaseUrl = 'http://192.168.1.172:6812'
 $publicBaseUrl = 'https://nicoapps.nicolab.ch'
-$tokenPath = Join-Path $env:LOCALAPPDATA 'NicoApps\admin-token.dat'
+# Windows range le jeton chiffré par DPAPI ; Linux le confie au trousseau du
+# bureau (Secret Service : KWallet ou GNOME Keyring), sous ces attributs.
+$tokenPath = if ($IsWindows) { [System.IO.Path]::Combine($env:LOCALAPPDATA, 'NicoApps', 'admin-token.dat') } else { $null }
+$keyringAttributes = @('service', 'nicoapps', 'kind', 'admin-token')
+$curl = if ($IsWindows) { 'curl.exe' } else { 'curl' }
 
 function Get-AdminToken {
     if (-not [string]::IsNullOrWhiteSpace($env:NICOAPPS_ADMIN_TOKEN)) {
         return $env:NICOAPPS_ADMIN_TOKEN
+    }
+    if (-not $IsWindows) {
+        $stored = & secret-tool lookup @keyringAttributes 2>$null
+        if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($stored)) { return $null }
+        return ([string]$stored).Trim()
     }
     if (-not (Test-Path -LiteralPath $tokenPath)) {
         return $null
@@ -35,7 +44,7 @@ function Get-BaseUrl {
         return $env:NICOAPPS_BASE_URL.TrimEnd('/')
     }
     try {
-        $health = & curl.exe -s -m 2 "$lanBaseUrl/health" | ConvertFrom-Json
+        $health = & $curl -s -m 2 "$lanBaseUrl/health" | ConvertFrom-Json
         if ($health.PSObject.Properties['status'] -and $health.status -eq 'ok') { return $lanBaseUrl }
         return $publicBaseUrl
     } catch {
@@ -49,13 +58,13 @@ if ($Plan) {
     exit 0
 }
 
-$baseUrl = Get-BaseUrl
-
 $token = Get-AdminToken
 if ([string]::IsNullOrWhiteSpace($token)) {
-    Write-Error "Diffusion ignoree : aucun jeton d'administration. Lancer scripts\dev-publish\new-admin-token.ps1 dans NicoApps, puis declarer son empreinte au serveur."
+    Write-Error "Diffusion impossible : aucun jeton d'administration. Lancer scripts/dev-publish/new-admin-token.ps1, puis declarer son empreinte au serveur. Utiliser -NoUpload seulement pour produire volontairement un APK local."
     exit 1
 }
+
+$baseUrl = Get-BaseUrl
 
 if (-not (Test-Path -LiteralPath $ApkPath)) {
     Write-Error "APK introuvable : $ApkPath"
@@ -63,7 +72,7 @@ if (-not (Test-Path -LiteralPath $ApkPath)) {
 }
 
 Write-Host "Envoi de l'APK a $baseUrl..." -ForegroundColor Cyan
-$uploadRaw = & curl.exe -s -S -X POST -H "Authorization: Bearer $token" -F "file=@$ApkPath" "$baseUrl/v1/admin/releases/upload"
+$uploadRaw = & $curl -s -S -X POST -H "Authorization: Bearer $token" -F "file=@$ApkPath" "$baseUrl/v1/admin/releases/upload"
 if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($uploadRaw)) {
     Write-Error "L'envoi a echoue."
     exit 1
@@ -98,7 +107,7 @@ $publishBody = $publishPayload | ConvertTo-Json -Compress
 $publishTemp = [System.IO.Path]::GetTempFileName()
 try {
     [System.IO.File]::WriteAllBytes($publishTemp, [System.Text.Encoding]::UTF8.GetBytes($publishBody))
-    $publishRaw = & curl.exe -s -S -X POST -H "Authorization: Bearer $token" -H "Content-Type: application/json" --data-binary "@$publishTemp" "$baseUrl/v1/admin/releases/$releaseId/publish"
+    $publishRaw = & $curl -s -S -X POST -H "Authorization: Bearer $token" -H "Content-Type: application/json" --data-binary "@$publishTemp" "$baseUrl/v1/admin/releases/$releaseId/publish"
 } finally {
     if (Test-Path -LiteralPath $publishTemp) { Remove-Item -LiteralPath $publishTemp -Force }
 }
@@ -113,7 +122,7 @@ if ($publishResult.PSObject.Properties['error'] -and $publishResult.error) {
     exit 1
 }
 
-$catalogRaw = & curl.exe -s -S -H "Authorization: Bearer $token" "$baseUrl/v1/catalog"
+$catalogRaw = & $curl -s -S -H "Authorization: Bearer $token" "$baseUrl/v1/catalog"
 if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($catalogRaw)) {
     Write-Output 'UPLOAD_VERIFY_FAILED'
     Write-Error "La publication est partie, mais NicoApps n'a pas pu la confirmer."
