@@ -11,8 +11,13 @@ $ErrorActionPreference = 'Stop'
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
-$lanBaseUrl = 'http://192.168.1.172:6812'
-$publicBaseUrl = 'https://nicoapps.nicolab.ch'
+# Les adresses du catalogue restent hors du dépôt public : variables
+# NICOAPPS_LAN_URL / NICOAPPS_PUBLIC_URL, sinon ~/.config/cadence/nicoapps.json
+# ({ "lan": "http://…", "public": "https://…" }).
+$nicoAppsConfigPath = [System.IO.Path]::Combine([Environment]::GetFolderPath('UserProfile'), '.config', 'cadence', 'nicoapps.json')
+$nicoAppsConfig = if (Test-Path -LiteralPath $nicoAppsConfigPath) { Get-Content -Raw -LiteralPath $nicoAppsConfigPath | ConvertFrom-Json } else { $null }
+$lanBaseUrl = if ($env:NICOAPPS_LAN_URL) { $env:NICOAPPS_LAN_URL } elseif ($nicoAppsConfig) { $nicoAppsConfig.lan } else { $null }
+$publicBaseUrl = if ($env:NICOAPPS_PUBLIC_URL) { $env:NICOAPPS_PUBLIC_URL } elseif ($nicoAppsConfig) { $nicoAppsConfig.public } else { $null }
 # Windows range le jeton chiffré par DPAPI ; Linux le confie au trousseau du
 # bureau (Secret Service : KWallet ou GNOME Keyring), sous ces attributs.
 $tokenPath = if ($IsWindows) { [System.IO.Path]::Combine($env:LOCALAPPDATA, 'NicoApps', 'admin-token.dat') } else { $null }
@@ -43,6 +48,10 @@ function Get-BaseUrl {
     if (-not [string]::IsNullOrWhiteSpace($env:NICOAPPS_BASE_URL)) {
         return $env:NICOAPPS_BASE_URL.TrimEnd('/')
     }
+    if (-not $lanBaseUrl -and -not $publicBaseUrl) {
+        throw "Adresse NicoApps inconnue : définir NICOAPPS_BASE_URL ou créer $nicoAppsConfigPath."
+    }
+    if (-not $lanBaseUrl) { return $publicBaseUrl }
     try {
         $health = & $curl -s -m 2 "$lanBaseUrl/health" | ConvertFrom-Json
         if ($health.PSObject.Properties['status'] -and $health.status -eq 'ok') { return $lanBaseUrl }
