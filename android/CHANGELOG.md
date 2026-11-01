@@ -11,6 +11,7 @@
 - Objectifs et liste d'envies : toucher un objectif, un résultat clé ou une envie ouvre sa fiche : nom, note, type Avoir / Être / Faire (envies), état (Actif, Atteint, En pause, Abandonné) et « Supprimer » avec « Annuler ». Tout s'écrit hors ligne et se synchronise avec le web.
 - Liste d'envies : « Créer une tâche » ouvre l'ajout rapide avec le nom de l'envie ; la tâche est liée à l'envie (projet au choix), l'envie reste et affiche le nombre de tâches liées.
 - Liens dans les descriptions d'événements et les notes : numéros de téléphone (appel), adresses mail (écrire) et URL, touchables ; « +41 79 123 45 67 », « 079 123 45 67 » et « 01 23 45 67 89 » reconnus.
+- Événements : « Rejoindre » ouvre le lien Meet, Zoom, Teams ou Webex trouvé dans le lieu ou la description.
 
 ### Corrections
 - Fiche de tâche : un titre long s'affiche en entier (il passait à la ligne puis était coupé après deux lignes) et prend une police plus petite ; les boutons restent alignés en haut.

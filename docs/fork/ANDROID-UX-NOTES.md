@@ -129,3 +129,9 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Problème** : un numéro ou une adresse dans la description d'un événement ou dans une note n'était pas touchable ; seules les URL l'étaient dans les notes.
 - **Décision** : `tel:` (numéros suisses et français, reconnus avec ou sans indicatif), `mailto:` et URL, dans les notes markdown et la description d'un événement. Les dates et heures ne sont pas prises pour des numéros.
 - **Web** : à reprendre dans les descriptions d'événements et les notes si le web ne linkifie pas déjà les numéros et adresses.
+
+### 2026-11-01 — Rejoindre une réunion depuis la fiche d'événement
+
+- **Problème** : une visio (Meet, Zoom, Teams, Webex) collée dans le lieu ou la description fallait être recopiée à la main.
+- **Décision** : bouton « Rejoindre » pleine largeur au-dessus des actions quand le lieu ou la description contient un lien de visio ; même liste d'hôtes que le web (`findMeetingLink`).
+- **Web** : la fiche d'événement web a déjà `findMeetingLink` ; rien à reprendre.
