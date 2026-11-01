@@ -183,4 +183,6 @@
     <string name="outline_add_after">Ajouter après</string>
     <string name="outline_open">Ouvrir</string>
     <string name="outline_new_sibling">Nouvelle tâche</string>
+    <string name="todo_md_retry">Réessayer</string>
+    <string name="todo_md_discard">Abandonner</string>
 </resources>

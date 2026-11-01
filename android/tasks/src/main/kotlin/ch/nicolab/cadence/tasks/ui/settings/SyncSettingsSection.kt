@@ -21,6 +21,7 @@ import ch.nicolab.cadence.designsystem.components.SecondaryAction
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.model.RefusedItem
+import ch.nicolab.cadence.tasks.model.TodoMdRepos
 import ch.nicolab.cadence.tasks.model.SyncConflictItem
 import ch.nicolab.cadence.tasks.model.SyncConflictText
 import ch.nicolab.cadence.tasks.model.SyncStatus
@@ -122,7 +123,7 @@ private fun ConflictRow(conflict: SyncConflictItem, keepLocal: () -> Unit, keepS
 @Composable
 private fun RefusedRow(item: RefusedItem) {
     Text(
-        listOfNotNull(item.entityLabel, item.name?.let { "« $it »" }, item.reason).joinToString(" · "),
+        listOfNotNull(item.entityLabel, item.name?.let { "« $it »" }, TodoMdRepos.rejection(item.reason) ?: item.reason).joinToString(" · "),
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
     )

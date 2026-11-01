@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-01 — Projet TODO.md d'un dépôt git : état de synchro sur Android
+
+- **Problème** : sur Android, un projet tiré d'un dépôt ne disait jamais s'il était à jour, et une case refusée par le dépôt revenait seule à son état avec « 1 modification refusée par le serveur ».
+- **Décision** : même ligne que le web sous le titre du projet (synchronisé · il y a N min, conflit nommé, N modifications en attente, erreur), lue en ligne toutes les 30 s, avec « Réessayer » et « Abandonner » quand il reste des modifications ; un refus `todo_md_conflict` / `todo_md_repo_unreachable` est dit en clair dans la ligne de synchro et la liste des refus.
+- **Web** : la ligne du projet existe ; la page Synchronisation web pourrait aussi traduire ces deux raisons de refus.
+
 ### 2026-11-01 — Outliner d'un projet
 
 - **Problème** : la page d'un projet listait les tâches de premier niveau ; les sous-tâches ne se voyaient que dans la fiche, et rien ne permettait de les réorganiser.

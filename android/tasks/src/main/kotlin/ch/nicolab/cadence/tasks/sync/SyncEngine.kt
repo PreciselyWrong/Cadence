@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.tasks.sync
 
+import ch.nicolab.cadence.tasks.model.TodoMdRepos
 import java.util.concurrent.atomic.AtomicLong
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -134,6 +135,7 @@ class SyncEngine(
     private suspend fun pushAndReconcile(catalog: ServerCatalog, report: PassReport) {
         val pushed = pushPending(catalog)
         report.rejected += pushed.rejected.size
+        report.rejectedReasons += pushed.rejectedReasons
         report.heldByError += pushed.heldByError
         // Un conflit ou un rejet n'émet aucun changement : on relit l'entité pour
         // montrer la valeur qui a gagné côté serveur.
@@ -282,6 +284,7 @@ class SyncEngine(
                         checkOpen()
                         store.recordRejected(op, result.reason)
                         pushed.rejected += op
+                        pushed.rejectedReasons += result.reason
                     }
                     "conflict" -> if (result.rejectedFields.isNotEmpty()) pushed.conflicts += Conflict(op, result.rejectedFields)
                 }
@@ -396,6 +399,9 @@ class SyncEngine(
 
     private fun SyncResult.errorMessage(report: PassReport): String? = when (this) {
         SyncResult.Synced -> when {
+            // Un refus d'un dépôt TODO.md dit sa cause (ligne changée, dépôt injoignable) au lieu d'un simple compte.
+            report.rejected > 0 && TodoMdRepos.rejectionSummary(report.rejectedReasons) != null ->
+                TodoMdRepos.rejectionSummary(report.rejectedReasons)
             report.rejected == 1 -> "1 modification refusée par le serveur"
             report.rejected > 1 -> "${report.rejected} modifications refusées par le serveur"
             report.heldByError == 1 -> "1 modification en attente : erreur du serveur, nouvel essai plus tard"
@@ -412,6 +418,7 @@ class SyncEngine(
 
     private class PassReport {
         var rejected = 0
+        val rejectedReasons = mutableListOf<String?>()
         var heldByError = 0
         var unsupported: List<String> = emptyList()
     }
@@ -421,6 +428,7 @@ class SyncEngine(
     private class Pushed {
         val stale = mutableSetOf<String>()
         val rejected = mutableListOf<OutboxOp>()
+        val rejectedReasons = mutableListOf<String?>()
         val conflicts = mutableListOf<Conflict>()
         var heldByError = 0
     }

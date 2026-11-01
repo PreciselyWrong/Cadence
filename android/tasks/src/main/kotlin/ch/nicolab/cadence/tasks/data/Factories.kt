@@ -6,6 +6,7 @@ import ch.nicolab.cadence.tasks.ServerConnection
 import ch.nicolab.cadence.tasks.TaskRepository
 import ch.nicolab.cadence.tasks.review.ReviewCache
 import ch.nicolab.cadence.tasks.review.ReviewRepository
+import ch.nicolab.cadence.tasks.todomd.TodoMdClient
 import java.io.File
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -30,6 +31,8 @@ internal fun createLinkPreviews(context: Context): ch.nicolab.cadence.tasks.link
 internal fun createServerConnection(context: Context): ServerConnection = TasksRuntime.get(context).connection
 
 internal fun createReview(context: Context): ReviewRepository = TasksRuntime.get(context).review
+
+internal fun createTodoMd(context: Context): TodoMdClient = TasksRuntime.get(context).todoMd
 
 /** Dernières listes de revue lues, pour la lecture hors ligne ; effacées à la déconnexion. */
 internal fun reviewCacheDir(context: Context): File = File(context.cacheDir, "review")
@@ -87,6 +90,8 @@ internal class TasksRuntime private constructor(context: Context) {
         deviceZone.zone,
         habitPending = habitPending,
     )
+    val todoMd = TodoMdClient(api::call)
+
     val review = ReviewRepository(
         api::call,
         ReviewCache(reviewCacheDir(appContext)),

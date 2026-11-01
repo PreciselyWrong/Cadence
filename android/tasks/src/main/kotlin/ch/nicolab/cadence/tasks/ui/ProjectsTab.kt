@@ -381,6 +381,15 @@ internal fun ProjectTasksPane(
                 }
             }
         }
+        if (project?.isFileBacked == true) {
+            item(key = "todo-md-repo") {
+                TodoMdRepoLine(
+                    projectUid = projectUid,
+                    onChanged = viewModel::requestSync,
+                    modifier = Modifier.padding(start = Space.md, end = Space.md, bottom = Space.xs),
+                )
+            }
+        }
         if (nextLine != null) {
             item(key = "next-action") {
                 Text(

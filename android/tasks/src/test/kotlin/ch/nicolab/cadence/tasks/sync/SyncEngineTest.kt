@@ -373,4 +373,19 @@ class SyncEngineTest {
             })
         },
     )
+
+    @Test
+    fun `un refus TODO_md est dit en clair au lieu d'un compte muet`() = runTest {
+        val store = FakeSyncStore(cursor = 5, ops = listOf(op("op-1", "task-1")))
+        val api = FakeSyncApi().apply {
+            onPush = { listOf(PushResult("op-1", "rejected", "todo_md_conflict")) }
+            onSnapshot = { _, _, _ -> SnapshotPage(5, null, emptyList()) }
+            onPull = { PullPage(5, false, emptyList()) }
+        }
+        val engine = engine(api, store)
+
+        engine.sync()
+
+        assertEquals("La ligne a changé dans le dépôt : rien n'a été écrit (TODO.md).", engine.state.value.lastError)
+    }
 }

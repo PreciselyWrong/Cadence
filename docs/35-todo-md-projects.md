@@ -150,6 +150,8 @@ A task created on a device inside a TODO.md project goes through the same server
 
 Android reads `source_type` (Room `projects.sourceType`, base v5): a task whose project is a TODO.md project shows a **TODO.md** badge, its detail sheet is read-only, and swipe, long-press menu and the check box only offer done / reopen. The task rows keep a `fileBacked` flag computed in the query, so it follows the project after a sync.
 
+On a sync push, a check or an added task that cannot reach a git repository is answered `rejected` with reason `todo_md_conflict` (the bullet changed in the repository) or `todo_md_repo_unreachable` (the edit stays pending on the server). Android says so in the sync line ("La ligne a changé dans le dépôt : rien n'a été écrit (TODO.md)." / "Dépôt injoignable : la modification attend sur le serveur (TODO.md).") and in Settings › Synchronisation, instead of a bare count. The project page of a repository project shows the same status line as the web, read online from `GET /api/v1/todo-md/status` every 30 s (matched by `project_uid`), with **Réessayer** / **Abandonner** while edits are pending (`model/TodoMdRepos.kt`, `todomd/TodoMdClient.kt`, `ui/TodoMdRepoLine.kt`); offline or for another account nothing is shown.
+
 ## Known limits
 
 - A folder renamed or removed leaves its old project in place (nothing is deleted while a file is missing); remove it by hand.

@@ -32,6 +32,12 @@
 ### Nouveautés
 - Projets : outliner (bouton de l'en-tête du projet, choix retenu) : tâches et sous-tâches en liste décalée. Toucher une ligne montre Monter, Descendre, Décaler (en faire une sous-tâche de la précédente), Ressortir, Ajouter après et Ouvrir ; la case termine. Hors ligne, synchronisé (parent et rang `order`). Un projet TODO.md n'accepte que la case.
 
+### Nouveautés
+- Projets TODO.md d'un dépôt git : sous le titre, « Synchronisé avec <dépôt> · il y a 3 min », ou le conflit (« « Fix bug » a changé dans le dépôt, rien n'a été écrit. ») et les modifications en attente, avec « Réessayer » et « Abandonner ». Lu en ligne, pour le compte propriétaire.
+
+### Corrections
+- Une case cochée ou une tâche ajoutée dans un projet TODO.md que le dépôt refuse n'échoue plus en silence : la ligne de synchro et Réglages › Synchronisation disent « La ligne a changé dans le dépôt » ou « Dépôt injoignable », au lieu de « 1 modification refusée par le serveur ».
+
 ## [1.6.9] — 1 novembre 2026
 
 ### Nouveautés
