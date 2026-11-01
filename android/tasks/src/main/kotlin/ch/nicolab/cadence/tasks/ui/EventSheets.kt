@@ -2,6 +2,12 @@
 
 package ch.nicolab.cadence.tasks.ui
 
+import android.content.ActivityNotFoundException
+import android.content.ContentUris
+import android.content.Context
+import android.content.Intent
+import android.provider.CalendarContract
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -43,6 +49,19 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Locale
+
+/** Ouvre l'occurrence de l'événement dans l'application d'agenda, à son heure de début. */
+private fun openInCalendar(context: Context, detail: EventDetail, noApp: String) {
+    val event = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, detail.key.eventId)
+    val intent = Intent(Intent.ACTION_VIEW)
+        .setData(event)
+        .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, detail.key.instanceBegin)
+    try {
+        context.startActivity(intent)
+    } catch (_: ActivityNotFoundException) {
+        Toast.makeText(context, noApp, Toast.LENGTH_SHORT).show()
+    }
+}
 
 private val FULL_DAY: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).withLocale(Locale.FRENCH)
 private val SHORT_DAY: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(Locale.FRENCH)
@@ -128,6 +147,7 @@ fun EventDetailSheet(
                 color = palette.onSurfaceVariant,
             )
             val noApp = stringResource(R.string.tasks_event_location_no_app)
+            val calendarNoApp = stringResource(R.string.tasks_event_calendar_no_app)
             meeting?.let { url ->
                 PrimaryAction(
                     label = stringResource(R.string.tasks_event_join),
@@ -135,6 +155,11 @@ fun EventDetailSheet(
                     onClick = { openUrl(context, url, noApp) },
                 )
             }
+            SecondaryAction(
+                label = stringResource(R.string.tasks_event_open_calendar),
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { openInCalendar(context, detail, calendarNoApp) },
+            )
             Row(
                 Modifier.fillMaxWidth().padding(bottom = Space.md),
                 horizontalArrangement = Arrangement.spacedBy(Space.md),

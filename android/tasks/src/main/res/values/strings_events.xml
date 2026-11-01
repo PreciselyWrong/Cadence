@@ -5,6 +5,8 @@
     <string name="tasks_event_menu_title">Événement</string>
     <string name="tasks_event_menu_details">Voir les détails</string>
     <string name="tasks_event_join">Rejoindre</string>
+    <string name="tasks_event_open_calendar">Ouvrir dans l\'agenda</string>
+    <string name="tasks_event_calendar_no_app">Aucune application d\'agenda pour ouvrir cet événement</string>
     <string name="tasks_event_hide">Masquer ici</string>
     <string name="tasks_event_hide_hint">Reste dans votre agenda : il n\'est caché que dans Cadence. Les événements masqués se retrouvent dans Réglages › Agendas.</string>
     <string name="tasks_event_field_calendar">Agenda</string>

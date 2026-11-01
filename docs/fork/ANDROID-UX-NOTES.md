@@ -135,3 +135,9 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Problème** : une visio (Meet, Zoom, Teams, Webex) collée dans le lieu ou la description fallait être recopiée à la main.
 - **Décision** : bouton « Rejoindre » pleine largeur au-dessus des actions quand le lieu ou la description contient un lien de visio ; même liste d'hôtes que le web (`findMeetingLink`).
 - **Web** : la fiche d'événement web a déjà `findMeetingLink` ; rien à reprendre.
+
+### 2026-11-01 — Ouvrir un événement dans l'agenda système
+
+- **Problème** : depuis la fiche d'un événement, impossible d'aller voir l'événement complet (invités, rappels, pièces jointes) dans l'agenda du téléphone.
+- **Décision** : « Ouvrir dans l'agenda » (action secondaire) lance l'événement par `ACTION_VIEW` à son heure de début ; sans application d'agenda, un message le dit.
+- **Web** : l'agenda web a déjà l'événement ouvert dans son propre panneau ; à reprendre seulement si le web ajoute un lien vers le fournisseur.
