@@ -75,6 +75,31 @@ class GoalsTest {
     }
 
     @Test
+    fun `a wish counts the tasks created from it, without cancelled ones or subtasks`() {
+        val goals = listOf(GoalItem("w", "Voyager", bucket = GoalBucket.DO), GoalItem("v", "Maison", bucket = GoalBucket.HAVE))
+        val tasks = listOf(
+            task("a", "w"),
+            task("b", "w", TaskStatus.DONE),
+            task("c", "w", TaskStatus.CANCELLED),
+            task("d", "w", parent = "a"),
+            task("e", "other"),
+        )
+
+        val overview = Goals.overview(goals, tasks, emptyList())
+
+        assertEquals(2, overview.linkedTasks["w"])
+        assertEquals(0, overview.linkedTasks["v"] ?: 0)
+    }
+
+    @Test
+    fun `a goal status reads its wire value and an unknown one stays active`() {
+        assertEquals(GoalStatus.ACHIEVED, GoalStatus.fromWire("achieved"))
+        assertEquals(GoalStatus.DROPPED, GoalStatus.fromWire("dropped"))
+        assertEquals(GoalStatus.ACTIVE, GoalStatus.fromWire(null))
+        assertEquals(GoalStatus.ACTIVE, GoalStatus.fromWire("weird"))
+    }
+
+    @Test
     fun `active objectives come first then the nearest target date`() {
         val goals = listOf(
             GoalItem("paused", "A", status = "paused"),

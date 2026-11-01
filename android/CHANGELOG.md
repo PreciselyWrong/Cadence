@@ -1,3 +1,10 @@
+## [1.6.9] — à publier
+
+### Nouveautés
+- Objectifs : un onglet « Objectifs » dans Tâches (à côté de Projets et Étiquettes) et des résultats dans la recherche (titre et note, filtre « Objectifs ») ; la carte du Bilan reste.
+- Objectifs et liste d'envies : toucher un objectif, un résultat clé ou une envie ouvre sa fiche : nom, note, type Avoir / Être / Faire (envies), état (Actif, Atteint, En pause, Abandonné) et « Supprimer » avec « Annuler ». Tout s'écrit hors ligne et se synchronise avec le web.
+- Liste d'envies : « Créer une tâche » ouvre l'ajout rapide avec le nom de l'envie ; la tâche est liée à l'envie (projet au choix), l'envie reste et affiche le nombre de tâches liées.
+
 ## [1.6.8] — 1 novembre 2026
 
 ### Nouveautés

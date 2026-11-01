@@ -63,7 +63,7 @@ data class ProjectEntity(
     val parentProjectUid: String? = null,
 )
 
-/** Objectif, résultat clé (un objectif parent) ou envie de la liste d'envies (`bucket`) ; lecture seule ici. */
+/** Objectif, résultat clé (un objectif parent) ou envie de la liste d'envies (`bucket`). */
 @Entity(tableName = "goals")
 data class GoalEntity(
     @PrimaryKey val uid: String,

@@ -4,6 +4,7 @@ import ch.nicolab.cadence.tasks.model.AreaItem
 import ch.nicolab.cadence.tasks.model.Delivery
 import ch.nicolab.cadence.tasks.model.RefusedItem
 import ch.nicolab.cadence.tasks.model.SyncConflictItem
+import ch.nicolab.cadence.tasks.model.GoalChange
 import ch.nicolab.cadence.tasks.model.GoalItem
 import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.model.LinkItem
@@ -40,8 +41,17 @@ interface TaskRepository {
     fun observeAreas(): Flow<List<AreaItem>>
     fun observeTags(): Flow<List<TagItem>>
 
-    /** Objectifs, résultats clés et envies, en lecture seule sur l'appareil. */
+    /** Objectifs, résultats clés et envies. */
     fun observeGoals(): Flow<List<GoalItem>>
+
+    /**
+     * Écrit les champs changés de l'objectif ou de l'envie [uid] (entité `goal`). Sans effet si le but est inconnu,
+     * si le titre serait vide ou si rien ne change.
+     */
+    suspend fun updateGoal(uid: String, change: GoalChange)
+
+    /** Supprime l'objectif [uid] (et ses résultats clés, comme le serveur) ; ses tâches et projets perdent le lien. */
+    suspend fun deleteGoal(uid: String)
 
     /** Liens trouvés par le serveur, lisibles hors ligne, les plus récents d'abord. */
     fun observeLinks(): Flow<List<LinkItem>>

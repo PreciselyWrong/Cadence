@@ -20,6 +20,23 @@ enum class GoalBucket(val wire: String) {
     }
 }
 
+/** État d'un objectif (`goals.status`) ; une valeur inconnue ou absente compte comme actif, comme sur le serveur. */
+enum class GoalStatus(val wire: String) {
+    ACTIVE("active"), ACHIEVED("achieved"), PAUSED("paused"), DROPPED("dropped");
+
+    companion object {
+        fun fromWire(value: String?): GoalStatus = entries.firstOrNull { it.wire == value } ?: ACTIVE
+    }
+}
+
+/** Modification d'un objectif ou d'une envie : seuls les champs non null changent ; un pourquoi vide l'efface. */
+data class GoalChange(
+    val title: String? = null,
+    val why: String? = null,
+    val bucket: GoalBucket? = null,
+    val status: GoalStatus? = null,
+)
+
 data class GoalItem(
     val uid: String,
     val title: String,
@@ -58,6 +75,8 @@ data class GoalOverview(
     val objectives: List<ObjectiveCard>,
     /** Envies par groupe, dans l'ordre Avoir, Être, Faire ; un groupe vide est présent avec une liste vide. */
     val wishes: Map<GoalBucket, List<GoalItem>>,
+    /** Tâches liées à chaque envie (hors abandonnées et sous-tâches) : les prochains pas vers elle. */
+    val linkedTasks: Map<String, Int> = emptyMap(),
 ) {
     val isEmpty: Boolean get() = objectives.isEmpty() && wishes.values.all { it.isEmpty() }
 }
@@ -106,6 +125,11 @@ object Goals {
         val wishes = GoalBucket.entries.associateWith { bucket ->
             goals.filter { it.bucket == bucket }.sortedBy { it.title.lowercase() }
         }
-        return GoalOverview(objectives, wishes)
+        val wishUids = goals.filter { it.isWish }.mapTo(HashSet()) { it.uid }
+        val linkedTasks = tasks
+            .filter { it.goalUid in wishUids && it.parentTaskUid == null && it.status != TaskStatus.CANCELLED }
+            .groupingBy { it.goalUid!! }
+            .eachCount()
+        return GoalOverview(objectives, wishes, linkedTasks)
     }
 }

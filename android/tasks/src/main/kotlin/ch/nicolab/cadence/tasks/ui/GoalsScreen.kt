@@ -1,9 +1,9 @@
 package ch.nicolab.cadence.tasks.ui
 
-import android.app.Application
 import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,25 +26,28 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.lifecycle.AndroidViewModel
+import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.nicolab.cadence.designsystem.components.Panel
 import ch.nicolab.cadence.designsystem.components.ScreenHeader
 import ch.nicolab.cadence.designsystem.components.SectionHeader
 import ch.nicolab.cadence.designsystem.components.TabPill
 import ch.nicolab.cadence.designsystem.components.TabPills
+import ch.nicolab.cadence.designsystem.components.navigationClearance
+import ch.nicolab.cadence.designsystem.components.rememberAppSnackbarHostState
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
@@ -56,27 +59,10 @@ import ch.nicolab.cadence.tasks.model.GoalHorizon
 import ch.nicolab.cadence.tasks.model.GoalItem
 import ch.nicolab.cadence.tasks.model.GoalOverview
 import ch.nicolab.cadence.tasks.model.GoalProgress
-import ch.nicolab.cadence.tasks.model.Goals
 import ch.nicolab.cadence.tasks.model.ObjectiveCard
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Locale
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
-
-private const val STOP_TIMEOUT_MS = 5_000L
-
-/** Objectifs, résultats clés et liste d'envies : calculés sur ce qui est déjà synchronisé, en lecture seule. */
-internal class GoalsViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = TasksGraph.repository(application)
-
-    val overview: StateFlow<GoalOverview?> =
-        combine(repository.observeGoals(), repository.observeAllTasks(), repository.observeProjects()) { goals, tasks, projects ->
-            Goals.overview(goals, tasks, projects)
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), null)
-}
 
 private enum class GoalsTab(@StringRes val label: Int) {
     OBJECTIVES(R.string.goals_tab_objectives),
@@ -84,14 +70,14 @@ private enum class GoalsTab(@StringRes val label: Int) {
 }
 
 /**
- * Écran Objectifs, ouvert depuis le Bilan : un onglet pour les objectifs (résultats clés dessous, avec leur
- * avancement) et un pour la liste d'envies (Avoir, Être, Faire). Ni Aujourd'hui ni les widgets n'en montrent rien.
+ * Écran Objectifs, ouvert depuis le Bilan : le même contenu que l'onglet Objectifs des Tâches ([GoalsPane]).
+ * Ni Aujourd'hui ni les widgets n'en montrent rien.
  */
 @Composable
 fun GoalsScreen(onBack: () -> Unit) {
-    val viewModel: GoalsViewModel = viewModel()
-    val overview by viewModel.overview.collectAsStateWithLifecycle()
-    var tab by rememberSaveable { mutableIntStateOf(0) }
+    val viewModel: TasksViewModel = viewModel()
+    val snackbar = rememberAppSnackbarHostState()
+    DeletionUndoEffect(viewModel, snackbar)
     val palette = cadence
     BackHandler(onBack = onBack)
 
@@ -104,34 +90,50 @@ fun GoalsScreen(onBack: () -> Unit) {
                     backDescription = stringResource(R.string.goals_back),
                 )
             }
-            TabPills(
-                tabs = GoalsTab.entries.map { TabPill(stringResource(it.label)) },
-                selected = tab,
-                onSelect = { tab = it },
-            )
-            val current = overview
-            LazyColumn(
-                Modifier.weight(1f),
-                contentPadding = PaddingValues(start = Space.gutter, end = Space.gutter, top = Space.md, bottom = Space.xxxl),
-                verticalArrangement = Arrangement.spacedBy(Space.sm),
-            ) {
-                if (current != null) {
-                    if (GoalsTab.entries[tab] == GoalsTab.OBJECTIVES) objectives(current) else wishes(current)
-                }
-            }
+            GoalsPane(viewModel, Modifier.weight(1f), bottomPadding = Space.xxxl)
         }
     }
 }
 
-private fun androidx.compose.foundation.lazy.LazyListScope.objectives(overview: GoalOverview) {
+/**
+ * Objectifs (résultats clés dessous, avec leur avancement) et liste d'envies (Avoir, Être, Faire), sur deux
+ * onglets. Toucher un but ouvre sa feuille de modification ([GoalSheets]).
+ */
+@Composable
+internal fun GoalsPane(viewModel: TasksViewModel, modifier: Modifier = Modifier, bottomPadding: Dp = navigationClearance()) {
+    val overview by viewModel.goalOverview.collectAsStateWithLifecycle()
+    var tab by rememberSaveable { mutableIntStateOf(0) }
+    var editingUid by rememberSaveable { mutableStateOf<String?>(null) }
+    Column(modifier) {
+        TabPills(
+            tabs = GoalsTab.entries.map { TabPill(stringResource(it.label)) },
+            selected = tab,
+            onSelect = { tab = it },
+        )
+        val current = overview
+        LazyColumn(
+            Modifier.weight(1f),
+            contentPadding = PaddingValues(start = Space.gutter, end = Space.gutter, top = Space.md, bottom = bottomPadding),
+            verticalArrangement = Arrangement.spacedBy(Space.sm),
+        ) {
+            if (current != null) {
+                val open: (String) -> Unit = { editingUid = it }
+                if (GoalsTab.entries[tab] == GoalsTab.OBJECTIVES) objectives(current, open) else wishes(current, open)
+            }
+        }
+    }
+    GoalSheets(viewModel, editingUid, onClose = { editingUid = null })
+}
+
+private fun androidx.compose.foundation.lazy.LazyListScope.objectives(overview: GoalOverview, onOpen: (String) -> Unit) {
     if (overview.objectives.isEmpty()) {
         item(key = "empty") { EmptyLine(R.string.goals_empty) }
         return
     }
-    items(overview.objectives, key = { it.goal.uid }) { ObjectivePanel(it) }
+    items(overview.objectives, key = { it.goal.uid }) { ObjectivePanel(it, onOpen) }
 }
 
-private fun androidx.compose.foundation.lazy.LazyListScope.wishes(overview: GoalOverview) {
+private fun androidx.compose.foundation.lazy.LazyListScope.wishes(overview: GoalOverview, onOpen: (String) -> Unit) {
     if (overview.wishes.values.all { it.isEmpty() }) {
         item(key = "empty") { EmptyLine(R.string.goals_wishes_empty) }
         return
@@ -141,10 +143,19 @@ private fun androidx.compose.foundation.lazy.LazyListScope.wishes(overview: Goal
         if (wishes.isEmpty()) return@forEach
         item(key = "header-${bucket.wire}") { SectionHeader(title = stringResource(bucketLabel(bucket)), count = wishes.size) }
         items(wishes, key = { "wish-${it.uid}" }) { wish ->
-            Panel {
+            val linked = overview.linkedTasks[wish.uid] ?: 0
+            val description = stringResource(R.string.goals_open_edit, wish.title)
+            Panel(Modifier.semantics { contentDescription = description }, onClick = { onOpen(wish.uid) }) {
                 Text(wish.title, style = MaterialTheme.typography.titleMedium, color = cadence.onSurface)
                 wish.why?.takeIf { it.isNotBlank() }?.let {
                     Text(it, style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant, maxLines = 3, overflow = TextOverflow.Ellipsis)
+                }
+                val meta = listOfNotNull(
+                    statusLabel(wish.status)?.let { stringResource(it) },
+                    if (linked > 0) pluralStringResource(R.plurals.goals_linked_tasks, linked, linked) else null,
+                )
+                if (meta.isNotEmpty()) {
+                    Text(meta.joinToString(" · "), style = MaterialTheme.typography.labelMedium, color = cadence.onSurfaceVariant)
                 }
             }
         }
@@ -162,9 +173,9 @@ private fun EmptyLine(@StringRes message: Int) {
 }
 
 @Composable
-private fun ObjectivePanel(card: ObjectiveCard) {
+private fun ObjectivePanel(card: ObjectiveCard, onOpen: (String) -> Unit) {
     val palette = cadence
-    Panel {
+    Panel(onClick = { onOpen(card.goal.uid) }) {
         Text(card.goal.title, style = MaterialTheme.typography.titleMedium, color = palette.onSurface, maxLines = 3, overflow = TextOverflow.Ellipsis)
         goalMeta(card.goal)?.let {
             Text(it, style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant)
@@ -176,8 +187,10 @@ private fun ObjectivePanel(card: ObjectiveCard) {
             Text(stringResource(R.string.goals_key_results), style = MaterialTheme.typography.labelMedium, color = palette.outline)
             card.keyResults.forEach { result ->
                 Spacer(Modifier.height(Space.sm))
-                Text(result.goal.title, style = MaterialTheme.typography.bodyMedium, color = palette.onSurface, maxLines = 2, overflow = TextOverflow.Ellipsis)
-                ProgressLine(result.progress, goalColor(result.goal))
+                Column(Modifier.fillMaxWidth().clip(Radius.Chip).clickable { onOpen(result.goal.uid) }) {
+                    Text(result.goal.title, style = MaterialTheme.typography.bodyMedium, color = palette.onSurface, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                    ProgressLine(result.progress, goalColor(result.goal))
+                }
             }
         }
     }
@@ -229,7 +242,7 @@ internal fun horizonLabel(horizon: GoalHorizon): Int = when (horizon) {
 }
 
 @StringRes
-private fun statusLabel(status: String?): Int? = when (status) {
+internal fun statusLabel(status: String?): Int? = when (status) {
     "achieved" -> R.string.goals_status_achieved
     "paused" -> R.string.goals_status_paused
     "dropped" -> R.string.goals_status_dropped

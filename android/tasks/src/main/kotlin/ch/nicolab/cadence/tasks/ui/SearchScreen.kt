@@ -49,6 +49,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.Hexagon
 import androidx.compose.material.icons.outlined.Search
@@ -88,6 +89,7 @@ import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
+import ch.nicolab.cadence.tasks.model.GoalHorizon
 import ch.nicolab.cadence.tasks.search.SearchEngine
 import ch.nicolab.cadence.tasks.search.SearchEntry
 import ch.nicolab.cadence.tasks.search.SearchFilter
@@ -117,6 +119,8 @@ fun SearchScreen(
     var filterIndex by rememberSaveable { mutableIntStateOf(0) }
     var selectedTaskUid by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedNoteUid by rememberSaveable { mutableStateOf<String?>(null) }
+    var selectedGoalUid by rememberSaveable { mutableStateOf<String?>(null) }
+    val goals by viewModel.goals.collectAsStateWithLifecycle()
     val tasks by viewModel.everyTask.collectAsStateWithLifecycle()
     val projects by viewModel.projects.collectAsStateWithLifecycle()
     val notes by viewModel.notes.collectAsStateWithLifecycle()
@@ -129,12 +133,14 @@ fun SearchScreen(
     val projectIcons = remember(projects) { projects.mapNotNull { p -> p.icon?.takeIf { it.isNotBlank() }?.let { p.uid to it } }.toMap() }
     val projectColors = remember(projects) { projects.mapNotNull { p -> projectRailColor(p.color)?.let { p.uid to it } }.toMap() }
     val tagNames = remember(tags) { tags.associate { it.uid to it.name } }
-    val entries = remember(tasks, projects, notes, habits, projectNames, tagNames) {
+    val entries = remember(tasks, projects, notes, goals, habits, projectNames, tagNames) {
         SearchSources.tasks(tasks, projectNames, tagNames) +
             SearchSources.projects(projects) +
             SearchSources.notes(notes, tagNames) +
+            SearchSources.goals(goals) +
             habits
     }
+    val goalsByUid = remember(goals) { goals.associateBy { it.uid } }
     val allHits = remember(entries, query) { SearchEngine.search(entries, query, SearchFilter.ALL) }
     val counts = remember(allHits) { SearchEngine.counts(allHits) }
     val shown = remember(allHits, filter) { allHits.filter { filter.kind == null || it.entry.kind == filter.kind } }
@@ -215,7 +221,7 @@ fun SearchScreen(
                             bottom = navigationClearance(),
                         ),
                     ) {
-                        listOf(SearchKind.TASK, SearchKind.PROJECT, SearchKind.NOTE, SearchKind.HABIT).forEach { kind ->
+                        listOf(SearchKind.TASK, SearchKind.PROJECT, SearchKind.NOTE, SearchKind.GOAL, SearchKind.HABIT).forEach { kind ->
                             val hits = grouped[kind].orEmpty()
                             if (hits.isEmpty()) return@forEach
                             item(key = "header-$kind") {
@@ -266,6 +272,17 @@ fun SearchScreen(
                                         onClick = { keepQuery(); selectedNoteUid = hit.entry.id },
                                     )
                                 }
+                                SearchKind.GOAL -> items(hits, key = { "goal-${it.entry.id}" }) { hit ->
+                                    val goal = goalsByUid[hit.entry.id]
+                                    val kind = goal?.bucket?.let { stringResource(R.string.goals_search_wish, stringResource(bucketLabel(it))) }
+                                        ?: stringResource(R.string.goals_search_goal, stringResource(horizonLabel(goal?.horizon ?: GoalHorizon.SEASON)))
+                                    ResultRow(
+                                        icon = Icons.Outlined.Flag,
+                                        title = highlighted(hit.entry.title, SearchHighlight.ranges(hit.entry.title, query)),
+                                        subtitle = AnnotatedString(kind),
+                                        onClick = { keepQuery(); selectedGoalUid = hit.entry.id },
+                                    )
+                                }
                                 SearchKind.HABIT -> items(hits, key = { "habit-${it.entry.id}" }) { hit ->
                                     ResultRow(
                                         icon = Icons.Outlined.Hexagon,
@@ -289,6 +306,7 @@ fun SearchScreen(
         onCloseTask = { selectedTaskUid = null },
     )
     selectedNoteUid?.let { uid -> NoteScreen(viewModel, uid, isNew = false, onBack = { selectedNoteUid = null }) }
+    GoalSheets(viewModel, selectedGoalUid, onClose = { selectedGoalUid = null })
 }
 
 @Composable
@@ -298,6 +316,7 @@ private fun filterLabel(filter: SearchFilter): String = stringResource(
         SearchFilter.TASKS -> R.string.tasks_search_tasks
         SearchFilter.NOTES -> R.string.tasks_search_notes
         SearchFilter.PROJECTS -> R.string.tasks_search_projects
+        SearchFilter.GOALS -> R.string.tasks_search_goals
         SearchFilter.HABITS -> R.string.tasks_search_habits
     },
 )
@@ -308,6 +327,7 @@ private fun kindTitle(kind: SearchKind): String = stringResource(
         SearchKind.TASK -> R.string.tasks_search_tasks
         SearchKind.PROJECT -> R.string.tasks_search_projects
         SearchKind.NOTE -> R.string.tasks_search_notes
+        SearchKind.GOAL -> R.string.tasks_search_goals
         SearchKind.HABIT -> R.string.tasks_search_habits
     },
 )

@@ -30,6 +30,10 @@ import ch.nicolab.cadence.tasks.model.LinkStatus
 import ch.nicolab.cadence.tasks.model.LinkTriage
 import ch.nicolab.cadence.tasks.model.TriageSink
 import ch.nicolab.cadence.tasks.links.LinkPreviews
+import ch.nicolab.cadence.tasks.model.GoalChange
+import ch.nicolab.cadence.tasks.model.GoalItem
+import ch.nicolab.cadence.tasks.model.GoalOverview
+import ch.nicolab.cadence.tasks.model.Goals
 import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.NoteItem
 import ch.nicolab.cadence.tasks.notes.Autosaver
@@ -119,7 +123,7 @@ internal data class TodayState(
     val completed: List<TaskItem> = emptyList(),
 )
 
-internal enum class DeletionKind { Note, Idea, Link }
+internal enum class DeletionKind { Note, Idea, Link, Goal }
 
 /**
  * Suppression en attente de confirmation, annulable par [TasksViewModel.undoDeletion]. Pour [DeletionKind.Link],
@@ -361,6 +365,25 @@ internal class TasksViewModel(
     val notes: StateFlow<List<NoteItem>> = combine(repository.observeNotes(), hidden) { all, gone ->
         all.filterNot { it.uid in gone }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+
+    /** Objectifs, résultats clés et envies ; un but en cours de suppression (et ses résultats clés) est masqué. */
+    val goals: StateFlow<List<GoalItem>> = combine(repository.observeGoals(), hidden) { all, gone ->
+        all.filterNot { it.uid in gone || it.parentGoalUid in gone }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
+
+    /** Progression et liste d'envies, calculées sur ce qui est déjà synchronisé ; null avant la première lecture. */
+    val goalOverview: StateFlow<GoalOverview?> =
+        combine(goals, repository.observeAllTasks(), repository.observeProjects()) { goals, tasks, projects ->
+            Goals.overview(goals, tasks, projects)
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), null)
+
+    fun updateGoal(uid: String, change: GoalChange) = launchAction { repository.updateGoal(uid, change) }
+
+    fun deleteGoalWithUndo(goal: GoalItem) =
+        deleteWithUndo(PendingDeletion(DeletionKind.Goal, goal.uid, title = goal.title)) { repository.deleteGoal(goal.uid) }
+
+    /** Tâche créée depuis une envie ou un objectif : son prochain pas, liée par `goal_uid` ; le but reste. */
+    suspend fun createTaskForGoal(goalUid: String, draft: TaskDraft): String = repository.createTask(draft.copy(goalUid = goalUid))
 
     /** Chaque tâche, sous-tâches comprises ; ne sert qu'à la recherche. */
     val everyTask: StateFlow<List<TaskItem>> = combine(repository.observeAllTasks(), hiddenUids) { all, hidden -> all.withoutHidden(hidden) }

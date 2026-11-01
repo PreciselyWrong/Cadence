@@ -51,6 +51,7 @@ internal enum class TasksTab(@StringRes val label: Int) {
     UPCOMING(R.string.tasks_tab_upcoming),
     PROJECTS(R.string.tasks_tab_projects),
     TAGS(R.string.tasks_tab_tags),
+    GOALS(R.string.tasks_tab_goals),
     NOTES(R.string.tasks_tab_notes),
     DONE(R.string.tasks_tab_done),
 }
@@ -114,6 +115,7 @@ fun TasksScreen(
         tab == TasksTab.UPCOMING -> stringResource(R.string.tasks_upcoming_subtitle)
         tab == TasksTab.PROJECTS -> projectCounterLine(projects)
         tab == TasksTab.TAGS -> pluralStringResource(R.plurals.tasks_tags_subtitle, tags.size, tags.size)
+        tab == TasksTab.GOALS -> stringResource(R.string.goals_entry_detail)
         tab == TasksTab.NOTES -> pluralStringResource(R.plurals.tasks_notes_subtitle, notes.size, notes.size)
         tab == TasksTab.DONE -> stringResource(R.string.tasks_done_subtitle)
         eventCount > 0 -> "$dateLine · ${pluralStringResource(R.plurals.tasks_events_count, eventCount, eventCount)}"
@@ -156,6 +158,7 @@ fun TasksScreen(
                             ),
                             TabPill(stringResource(TasksTab.PROJECTS.label)),
                             TabPill(stringResource(TasksTab.TAGS.label)),
+                            TabPill(stringResource(TasksTab.GOALS.label)),
                             TabPill(stringResource(TasksTab.NOTES.label), notes.size),
                             TabPill(stringResource(TasksTab.DONE.label)),
                         ),
@@ -222,6 +225,7 @@ fun TasksScreen(
                             onOpenTag = { openTagUid = it },
                             modifier = Modifier.fillMaxSize(),
                         )
+                        tab == TasksTab.GOALS -> GoalsPane(viewModel = viewModel, modifier = Modifier.fillMaxSize())
                         tab == TasksTab.NOTES -> NotesTab(
                             viewModel = viewModel,
                             onOpen = {

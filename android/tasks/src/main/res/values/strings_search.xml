@@ -16,6 +16,7 @@
     <string name="tasks_search_notes">Notes</string>
     <string name="tasks_search_projects">Projets</string>
     <string name="tasks_search_habits">Habitudes</string>
+    <string name="tasks_search_goals">Objectifs</string>
     <string name="tasks_search_habit_subtitle">Habitude</string>
 
     <!-- Détail d'une tâche -->

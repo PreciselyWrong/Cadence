@@ -209,6 +209,8 @@ data class TaskDraft(
     val tagUids: List<String> = emptyList(),
     /** Fait de la tâche une sous-tâche. */
     val parentTaskUid: String? = null,
+    /** Objectif ou envie dont la tâche est un pas (`goal_uid`). */
+    val goalUid: String? = null,
 )
 
 /**

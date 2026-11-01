@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.tasks.search
 
+import ch.nicolab.cadence.tasks.model.GoalItem
 import ch.nicolab.cadence.tasks.model.NoteItem
 import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.model.TaskItem
@@ -26,4 +27,8 @@ object SearchSources {
             val detail = (listOf(note.content.take(MAX_CONTENT)) + note.tagUids.mapNotNull { tagNames[it] }).joinToString(" ")
             SearchEntry(SearchKind.NOTE, note.uid, note.title, detail)
         }
+
+    /** Objectifs, résultats clés et envies, trouvés aussi par leur pourquoi. */
+    fun goals(goals: List<GoalItem>): List<SearchEntry> =
+        goals.map { SearchEntry(SearchKind.GOAL, it.uid, it.title, it.why.orEmpty()) }
 }

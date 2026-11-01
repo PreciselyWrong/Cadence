@@ -176,6 +176,7 @@ internal fun DeletionUndoEffect(viewModel: TasksViewModel, snackbar: SnackbarHos
 private fun deletionMessage(context: Context, deletion: PendingDeletion): String = when (deletion.kind) {
     DeletionKind.Note -> context.getString(R.string.tasks_note_deleted)
     DeletionKind.Idea -> context.getString(R.string.tasks_idea_deleted)
+    DeletionKind.Goal -> context.getString(R.string.goals_deleted, deletion.title.orEmpty())
     DeletionKind.Link -> context.getString(
         when (deletion.decision) {
             LinkDecision.KEEP -> R.string.links_decided_kept

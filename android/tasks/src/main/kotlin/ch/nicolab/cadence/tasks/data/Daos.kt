@@ -123,6 +123,10 @@ interface GoalDao {
     @Query("DELETE FROM goals WHERE uid = :uid")
     suspend fun delete(uid: String)
 
+    /** Résultats clés d'un objectif : le serveur les supprime avec lui. */
+    @Query("DELETE FROM goals WHERE parentGoalUid = :uid")
+    suspend fun deleteKeyResults(uid: String)
+
     @Query("DELETE FROM goals")
     suspend fun deleteAll()
 }

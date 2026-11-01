@@ -91,6 +91,7 @@
 
     <!-- Onglets À venir, Projets, Étiquettes, Terminées -->
     <string name="tasks_tab_tags">Étiquettes</string>
+    <string name="tasks_tab_goals">Objectifs</string>
     <string name="tasks_tab_done">Terminées</string>
     <string name="tasks_upcoming_subtitle">7 prochains jours</string>
     <plurals name="tasks_projects_active">

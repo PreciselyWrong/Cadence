@@ -9,7 +9,9 @@ import ch.nicolab.cadence.tasks.model.Delivery
 import ch.nicolab.cadence.tasks.model.RefusedItem
 import ch.nicolab.cadence.tasks.model.SyncConflictItem
 import ch.nicolab.cadence.tasks.model.SyncConflictText
+import ch.nicolab.cadence.tasks.model.GoalChange
 import ch.nicolab.cadence.tasks.model.GoalItem
+import ch.nicolab.cadence.tasks.model.GoalStatus
 import ch.nicolab.cadence.tasks.model.IconIds
 import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.model.LinkItem
@@ -123,6 +125,44 @@ internal class RoomTaskRepository(
 
     override fun observeGoals(): Flow<List<GoalItem>> =
         database.goalDao().observeAll().map { rows -> rows.map { it.toItem() } }
+
+    override suspend fun updateGoal(uid: String, change: GoalChange) {
+        val clock = hlc.now()
+        val written = database.withTransaction {
+            val existing = database.goalDao().get(uid) ?: return@withTransaction false
+            val title = change.title?.trim()
+            if (title != null && title.isEmpty()) return@withTransaction false
+            val why = change.why?.let { it.trim().ifEmpty { null } }
+            val fields = buildMap<String, JsonElement> {
+                if (title != null && title != existing.title) put("title", JsonPrimitive(title))
+                if (change.why != null && why != existing.why) put("why", jsonString(why))
+                change.bucket?.wire?.takeIf { it != existing.bucket }?.let { put("bucket", JsonPrimitive(it)) }
+                change.status?.wire?.takeIf { it != (existing.status ?: GoalStatus.ACTIVE.wire) }?.let { put("status", JsonPrimitive(it)) }
+            }
+            if (fields.isEmpty()) return@withTransaction false
+            database.goalDao().upsert(
+                existing.copy(
+                    title = title ?: existing.title,
+                    why = if (change.why != null) why else existing.why,
+                    bucket = change.bucket?.wire ?: existing.bucket,
+                    status = change.status?.wire ?: existing.status,
+                ),
+            )
+            outbox.insert(LocalOps.upsert("goal", uid, fields, clock, nowMs()))
+            true
+        }
+        if (written) afterLocalWrite()
+    }
+
+    override suspend fun deleteGoal(uid: String) {
+        val clock = hlc.now()
+        database.withTransaction {
+            database.goalDao().deleteKeyResults(uid)
+            database.goalDao().delete(uid)
+            outbox.insert(LocalOps.delete("goal", uid, clock, nowMs()))
+        }
+        afterLocalWrite()
+    }
 
     override fun observeLinks(): Flow<List<LinkItem>> =
         database.linkDao().observeAll().map { rows -> rows.map { it.toItem() } }
@@ -243,6 +283,7 @@ internal class RoomTaskRepository(
             put("project_uid", jsonString(draft.projectUid))
             put("tag_uids", jsonArray(draft.tagUids))
             draft.parentTaskUid?.let { put("parent_task_uid", JsonPrimitive(it)) }
+            draft.goalUid?.let { put("goal_uid", JsonPrimitive(it)) }
             putAll(dueFields(draft.dueDate, draft.dueTime))
         }
         writeFields(uid, fields)
