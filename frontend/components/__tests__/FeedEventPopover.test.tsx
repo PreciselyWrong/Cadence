@@ -40,7 +40,9 @@ const renderPopover = (d: FeedEventDetail, onClose = jest.fn()) =>
 describe('FeedEventPopover', () => {
     it('shows the title, the time and the calendar name', () => {
         renderPopover(detail());
-        expect(screen.getByRole('heading', { name: 'Workshop' })).toBeInTheDocument();
+        expect(
+            screen.getByRole('heading', { name: 'Workshop' })
+        ).toBeInTheDocument();
         expect(screen.getByText('16:00–17:00')).toBeInTheDocument();
         expect(screen.getByText('Work')).toBeInTheDocument();
     });
@@ -70,7 +72,9 @@ describe('FeedEventPopover', () => {
     });
 
     it('shows the description as written, line breaks kept', () => {
-        renderPopover(detail({ description: 'Bring the laptop\nand the badge' }));
+        renderPopover(
+            detail({ description: 'Bring the laptop\nand the badge' })
+        );
         expect(
             screen.getByText(/Bring the laptop/, { collapseWhitespace: false })
         ).toHaveClass('whitespace-pre-line');

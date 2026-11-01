@@ -33,9 +33,7 @@ import GoogleEventModal, {
     GoogleEventDraft,
 } from './Calendar/GoogleEventModal';
 import SlotChoiceDialog from './Calendar/SlotChoiceDialog';
-import FeedEventPopover, {
-    FeedEventDetail,
-} from './Calendar/FeedEventPopover';
+import FeedEventPopover, { FeedEventDetail } from './Calendar/FeedEventPopover';
 import { slotTaskInput } from './Calendar/slotTask';
 import { createTask } from '../utils/tasksService';
 import { useToast } from './Shared/ToastContext';
@@ -768,9 +766,7 @@ const Calendar: React.FC = () => {
 
     const addSlotTask = async (name: string, start: Date) => {
         try {
-            await createTask(
-                slotTaskInput(name, start) as unknown as Task
-            );
+            await createTask(slotTaskInput(name, start) as unknown as Task);
         } catch (error) {
             showErrorToast(
                 error instanceof Error

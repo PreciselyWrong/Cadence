@@ -8,7 +8,7 @@ import { ToastProvider } from '../Shared/ToastContext';
 
 // The markdown stack is ESM-only; the preview is covered by contactLinks tests.
 jest.mock('../Shared/MarkdownRenderer', () => {
-    const mockReact = require('react');
+    const mockReact = jest.requireActual('react');
     return {
         __esModule: true,
         default: ({ content }: { content: string }) =>
@@ -79,8 +79,6 @@ describe('GoogleEventModal description preview', () => {
 
     it('shows no preview for an empty description', () => {
         renderModal(draft({ description: '   ' }));
-        expect(
-            screen.queryByTestId('event-description-preview')
-        ).toBeNull();
+        expect(screen.queryByTestId('event-description-preview')).toBeNull();
     });
 });

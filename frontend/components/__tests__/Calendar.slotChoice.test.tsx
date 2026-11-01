@@ -39,7 +39,9 @@ describe('SlotChoiceDialog', () => {
         });
         expect(add).toBeEnabled();
         fireEvent.click(add);
-        await waitFor(() => expect(onAddTask).toHaveBeenCalledWith('Call dentist'));
+        await waitFor(() =>
+            expect(onAddTask).toHaveBeenCalledWith('Call dentist')
+        );
     });
 
     it('hides the Google event choice without a writable Google calendar', () => {
@@ -68,7 +70,9 @@ describe('SlotChoiceDialog', () => {
                 onClose={jest.fn()}
             />
         );
-        fireEvent.click(screen.getByRole('button', { name: 'New Google event' }));
+        fireEvent.click(
+            screen.getByRole('button', { name: 'New Google event' })
+        );
         expect(onGoogleEvent).toHaveBeenCalledTimes(1);
     });
 });

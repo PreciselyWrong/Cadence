@@ -314,7 +314,11 @@ describe('event details', () => {
     ].join('\r\n');
 
     it('keeps the location, description and end of a timed event', () => {
-        const [event] = eventsForDate(parseCalendar(detailed), '2026-10-25', 'Europe/Athens');
+        const [event] = eventsForDate(
+            parseCalendar(detailed),
+            '2026-10-25',
+            'Europe/Athens'
+        );
         expect(event).toMatchObject({
             title: 'Workshop',
             location: 'Rue du Lac 4, Vevey',
@@ -326,7 +330,11 @@ describe('event details', () => {
     });
 
     it('keeps the description of an all-day event and no location', () => {
-        const [event] = eventsForDate(parseCalendar(detailed), '2026-10-26', 'Europe/Athens');
+        const [event] = eventsForDate(
+            parseCalendar(detailed),
+            '2026-10-26',
+            'Europe/Athens'
+        );
         expect(event).toMatchObject({
             title: 'Trip',
             all_day: true,

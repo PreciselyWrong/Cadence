@@ -11,9 +11,9 @@ export interface ContactMatch {
 // formats). Separators are spaces, dots, dashes and parentheses. Dates
 // (2026-11-01, 01.11.2026) and times (14:30) never match: they hold too few
 // digits or a colon.
-const PHONE =
-    /(?<![\w+])(\+\d[\d ().-]{6,}\d|0\d[\d ().-]{7,}\d)(?![\w])/g;
-const EMAIL = /[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}/g;
+const PHONE = /(?<![\w+])(\+\d[\d ().-]{6,}\d|0\d[\d ().-]{7,}\d)(?![\w])/g;
+const EMAIL =
+    /[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}/g;
 
 const phoneHref = (candidate: string): string | null => {
     const digits = candidate.replace(/\D/g, '');

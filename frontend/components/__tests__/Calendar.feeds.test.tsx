@@ -12,7 +12,7 @@ import {
 // The markdown stack is ESM-only and Jest cannot load it; the event
 // description preview is not under test here.
 jest.mock('../Shared/MarkdownRenderer', () => {
-    const mockReact = require('react');
+    const mockReact = jest.requireActual('react');
     return {
         __esModule: true,
         default: ({ content }: { content: string }) =>

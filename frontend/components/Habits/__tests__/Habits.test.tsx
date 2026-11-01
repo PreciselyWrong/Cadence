@@ -258,8 +258,18 @@ describe('Habits page', () => {
     it('moves a habit up within its group', async () => {
         service.fetchCadenceHabits.mockResolvedValue(
             list([
-                habit({ uid: 'a', name: 'Méditer', group_uid: 'group-morning', sort_order: 0 }),
-                habit({ uid: 'b', name: 'Lire', group_uid: 'group-morning', sort_order: 1 }),
+                habit({
+                    uid: 'a',
+                    name: 'Méditer',
+                    group_uid: 'group-morning',
+                    sort_order: 0,
+                }),
+                habit({
+                    uid: 'b',
+                    name: 'Lire',
+                    group_uid: 'group-morning',
+                    sort_order: 1,
+                }),
             ])
         );
         service.updateCadenceHabit.mockResolvedValue(detail());
@@ -282,8 +292,18 @@ describe('Habits page', () => {
     it('copies a habit at the end of its group', async () => {
         service.fetchCadenceHabits.mockResolvedValue(
             list([
-                habit({ uid: 'a', name: 'Méditer', group_uid: 'group-morning', sort_order: 0 }),
-                habit({ uid: 'b', name: 'Lire', group_uid: 'group-morning', sort_order: 1 }),
+                habit({
+                    uid: 'a',
+                    name: 'Méditer',
+                    group_uid: 'group-morning',
+                    sort_order: 0,
+                }),
+                habit({
+                    uid: 'b',
+                    name: 'Lire',
+                    group_uid: 'group-morning',
+                    sort_order: 1,
+                }),
             ])
         );
         service.fetchCadenceHabit.mockResolvedValue(

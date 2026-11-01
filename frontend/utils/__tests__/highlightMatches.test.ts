@@ -16,7 +16,9 @@ describe('highlightMatches', () => {
     });
 
     it('marks every occurrence', () => {
-        expect(highlightMatches('ab ab', 'ab').filter((s) => s.match)).toHaveLength(2);
+        expect(
+            highlightMatches('ab ab', 'ab').filter((s) => s.match)
+        ).toHaveLength(2);
     });
 
     it('marks each word of a multi-word query', () => {
