@@ -120,7 +120,6 @@
     "toggleDarkMode": "Dunkelmodus umschalten",
     "insights": "Einblicke",
     "boards": "Boards",
-    "bookmarks": "Lesezeichen",
     "reports": "Berichte",
     "productivityAssistant": "Produktivitätsassistent",
     "assignedToMe": "Mir zugewiesen",
@@ -130,8 +129,6 @@
     "templates": "Vorlagen",
     "people": "Personen",
     "allEntities": "Alle Elemente",
-    "collapseFavorites": "Favoriten einklappen",
-    "expandFavorites": "Favoriten ausklappen",
     "telegramConnected": "Telegram verbunden",
     "telegramProblem": "Problem mit der Telegram-Verbindung",
     "resize": "Seitenleiste anpassen",
@@ -143,7 +140,10 @@
     "more": "Mehr",
     "toggleFolder": "Projekte ein- oder ausblenden",
     "customize": "Seitenleiste anpassen",
-    "toggleSection": "Ein- oder ausklappen"
+    "toggleSection": "Ein- oder ausklappen",
+    "pinned": "Angeheftet",
+    "pinItem": "{{name}} anheften",
+    "unpinItem": "{{name}} lösen"
   },
   "navigation": {
     "home": "Startseite",
@@ -3265,10 +3265,9 @@
       "dueProjects": "Fällige Projekte",
       "overdueProjects": "Überfällige Projekte",
       "taskAssigned": "Aufgabe zugewiesen",
-      "habitReminders": "Gewohnheits-Erinnerungen",
+      "habitReminders": "Gewohnheitserinnerungen",
       "comments": "Kommentare & Erwähnungen",
-      "taskReminders": "Aufgabenerinnerungen",
-      "habitReminders": "Gewohnheitserinnerungen"
+      "taskReminders": "Aufgabenerinnerungen"
     },
     "descriptions": {
       "dueTasks": "Aufgaben, die innerhalb von 24 Stunden fällig sind",
@@ -3277,10 +3276,9 @@
       "dueProjects": "Projekte, die innerhalb von 24 Stunden fällig sind",
       "overdueProjects": "Projekte, deren Fälligkeitsdatum überschritten ist",
       "taskAssigned": "Eine Aufgabe wurde Ihnen von jemand anderem zugewiesen",
-      "habitReminders": "Zur bei der Gewohnheit eingestellten Zeit, solange sie noch offen ist",
+      "habitReminders": "Dein Handy erinnert dich bereits; aktiviere Push nur, wenn der Server auch klingeln soll.",
       "comments": "Antworten, Kommentare zu deinen Aufgaben und @-Erwähnungen",
-      "taskReminders": "Die Zeit, die du an einer Aufgabe festlegst. Dein Handy klingelt; aktiviere Desktop, wenn auch dein Computer klingeln soll",
-      "habitReminders": "Dein Handy erinnert dich bereits; aktiviere Push nur, wenn der Server auch klingeln soll."
+      "taskReminders": "Die Zeit, die du an einer Aufgabe festlegst. Dein Handy klingelt; aktiviere Desktop, wenn auch dein Computer klingeln soll"
     },
     "telegram": {
       "notConfigured": {

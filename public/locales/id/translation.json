@@ -120,7 +120,6 @@
     "toggleDarkMode": "Beralih ke Mode Gelap",
     "insights": "Wawasan",
     "boards": "Papan",
-    "bookmarks": "Tanda Buku",
     "reports": "Laporan",
     "productivityAssistant": "Asisten Produktivitas",
     "assignedToMe": "Ditetapkan untuk saya",
@@ -130,8 +129,6 @@
     "templates": "Templat",
     "people": "Orang",
     "allEntities": "Semua item",
-    "collapseFavorites": "Ciutkan favorit",
-    "expandFavorites": "Luaskan favorit",
     "telegramConnected": "Telegram terhubung",
     "telegramProblem": "Masalah koneksi Telegram",
     "resize": "Ubah ukuran bilah sisi",
@@ -143,7 +140,10 @@
     "more": "Lainnya",
     "toggleFolder": "Tampilkan atau sembunyikan proyek",
     "customize": "Sesuaikan sidebar",
-    "toggleSection": "Perluas atau ciutkan"
+    "toggleSection": "Perluas atau ciutkan",
+    "pinned": "Disematkan",
+    "pinItem": "Sematkan {{name}}",
+    "unpinItem": "Lepas sematan {{name}}"
   },
   "navigation": {
     "home": "Beranda",
@@ -3258,8 +3258,7 @@
       "taskAssigned": "Tugas Diberikan",
       "habitReminders": "Pengingat kebiasaan",
       "comments": "Komentar dan sebutan",
-      "taskReminders": "Pengingat tugas",
-      "habitReminders": "Pengingat kebiasaan"
+      "taskReminders": "Pengingat tugas"
     },
     "descriptions": {
       "dueTasks": "Tugas yang jatuh tempo dalam 24 jam",
@@ -3268,10 +3267,9 @@
       "dueProjects": "Proyek yang jatuh tempo dalam 24 jam",
       "overdueProjects": "Proyek yang telah melewati tanggal jatuh tempo",
       "taskAssigned": "Sebuah tugas telah diberikan kepada Anda oleh orang lain",
-      "habitReminders": "Pada waktu pengingat yang diatur di kebiasaan, selama kebiasaan itu masih terbuka",
+      "habitReminders": "Ponsel Anda sudah mengingatkan; aktifkan Push hanya jika server juga harus berdering.",
       "comments": "Balasan, komentar pada tugas Anda, dan @sebutan",
-      "taskReminders": "Waktu yang Anda atur pada tugas. Ponsel Anda berdering; tambahkan Komputer jika ingin komputer ikut berdering",
-      "habitReminders": "Ponsel Anda sudah mengingatkan; aktifkan Push hanya jika server juga harus berdering."
+      "taskReminders": "Waktu yang Anda atur pada tugas. Ponsel Anda berdering; tambahkan Komputer jika ingin komputer ikut berdering"
     },
     "telegram": {
       "notConfigured": {

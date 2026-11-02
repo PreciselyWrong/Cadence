@@ -221,6 +221,17 @@ describe('Sidebar in minimal mode', () => {
         expect(screen.getByTestId('favorites')).toBeInTheDocument();
     });
 
+    it('puts pinned items at the very top, above the smart lists', () => {
+        renderSidebar(true);
+
+        const favorites = screen.getByTestId('favorites');
+        const today = screen.getByTestId('sidebar-smart-today');
+        expect(
+            favorites.compareDocumentPosition(today) &
+                Node.DOCUMENT_POSITION_FOLLOWING
+        ).toBeTruthy();
+    });
+
     it.each(['goals', 'notes', 'people', 'habits', 'views', 'insights'])(
         'moves %s out of the main panel into the rail',
         (id) => {

@@ -119,7 +119,6 @@
     "toggleDarkMode": "Toggle Dark Mode",
     "insights": "Insights",
     "boards": "Boards",
-    "bookmarks": "Favorites",
     "reports": "Reports",
     "productivityAssistant": "Productivity Assistant",
     "assignedToMe": "Assigned to me",
@@ -130,8 +129,6 @@
     "allEntities": "All entities",
     "resize": "Resize sidebar",
     "templates": "Templates",
-    "collapseFavorites": "Collapse favorites",
-    "expandFavorites": "Expand favorites",
     "telegramConnected": "Telegram connected",
     "telegramProblem": "Telegram connection problem",
     "collapseViews": "Collapse views list",
@@ -142,7 +139,10 @@
     "more": "More",
     "toggleFolder": "Show or hide projects",
     "customize": "Customize sidebar",
-    "toggleSection": "Expand or collapse"
+    "toggleSection": "Expand or collapse",
+    "pinned": "Pinned",
+    "pinItem": "Pin {{name}}",
+    "unpinItem": "Unpin {{name}}"
   },
   "navigation": {
     "home": "Home",
@@ -3483,10 +3483,9 @@
       "dueProjects": "Due Projects",
       "overdueProjects": "Overdue Projects",
       "taskAssigned": "Task Assigned",
-      "habitReminders": "Habit Reminders",
+      "habitReminders": "Habit reminders",
       "comments": "Comments & Mentions",
-      "taskReminders": "Task reminders",
-      "habitReminders": "Habit reminders"
+      "taskReminders": "Task reminders"
     },
     "descriptions": {
       "dueTasks": "Tasks that are due within 24 hours",
@@ -3495,10 +3494,9 @@
       "dueProjects": "Projects that are due within 24 hours",
       "overdueProjects": "Projects that have passed their due date",
       "taskAssigned": "A task was assigned to you by someone else",
-      "habitReminders": "At the reminder time set on a habit, while it is still open",
+      "habitReminders": "Your phone also reminds you; turn Push on only if you want the server to ring too.",
       "comments": "Replies, comments on your tasks, and @mentions",
-      "taskReminders": "The time you set on a task. Your phone rings; add Desktop if you want your computer to ring too",
-      "habitReminders": "Your phone also reminds you; turn Push on only if you want the server to ring too."
+      "taskReminders": "The time you set on a task. Your phone rings; add Desktop if you want your computer to ring too"
     },
     "telegram": {
       "notConfigured": {

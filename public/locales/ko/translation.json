@@ -120,7 +120,6 @@
     "toggleDarkMode": "다크 모드 전환",
     "insights": "인사이트",
     "boards": "보드",
-    "bookmarks": "북마크",
     "reports": "보고서",
     "productivityAssistant": "생산성 도우미",
     "assignedToMe": "내게 할당됨",
@@ -130,8 +129,6 @@
     "templates": "템플릿",
     "people": "사람",
     "allEntities": "모든 항목",
-    "collapseFavorites": "즐겨찾기 접기",
-    "expandFavorites": "즐겨찾기 펼치기",
     "telegramConnected": "Telegram 연결됨",
     "telegramProblem": "Telegram 연결 문제",
     "resize": "사이드바 크기 조정",
@@ -143,7 +140,10 @@
     "more": "더보기",
     "toggleFolder": "프로젝트 표시 또는 숨기기",
     "customize": "사이드바 사용자 지정",
-    "toggleSection": "펼치거나 접기"
+    "toggleSection": "펼치거나 접기",
+    "pinned": "고정됨",
+    "pinItem": "{{name}} 고정",
+    "unpinItem": "{{name}} 고정 해제"
   },
   "navigation": {
     "home": "홈",

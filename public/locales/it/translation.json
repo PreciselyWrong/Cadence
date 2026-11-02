@@ -121,7 +121,6 @@
     "toggleDarkMode": "Attiva Modalità Scura",
     "insights": "Approfondimenti",
     "boards": "Bacheche",
-    "bookmarks": "Segnalibri",
     "reports": "Report",
     "productivityAssistant": "Assistente alla Produttività",
     "assignedToMe": "Assegnato a me",
@@ -131,8 +130,6 @@
     "templates": "Modelli",
     "people": "Persone",
     "allEntities": "Tutti gli elementi",
-    "collapseFavorites": "Comprimi preferiti",
-    "expandFavorites": "Espandi preferiti",
     "telegramConnected": "Telegram connesso",
     "telegramProblem": "Problema di connessione Telegram",
     "resize": "Ridimensiona la barra laterale",
@@ -144,7 +141,10 @@
     "more": "Altro",
     "toggleFolder": "Mostra o nascondi progetti",
     "customize": "Personalizza la barra laterale",
-    "toggleSection": "Apri o chiudi"
+    "toggleSection": "Apri o chiudi",
+    "pinned": "Fissati",
+    "pinItem": "Fissa {{name}}",
+    "unpinItem": "Sblocca {{name}}"
   },
   "navigation": {
     "home": "Inizio",
@@ -3262,10 +3262,9 @@
       "dueProjects": "Progetti Scaduti",
       "overdueProjects": "Progetti In Ritardo",
       "taskAssigned": "Compito Assegnato",
-      "habitReminders": "Promemoria abitudini",
+      "habitReminders": "Promemoria delle abitudini",
       "comments": "Commenti e menzioni",
-      "taskReminders": "Promemoria delle attività",
-      "habitReminders": "Promemoria delle abitudini"
+      "taskReminders": "Promemoria delle attività"
     },
     "descriptions": {
       "dueTasks": "Compiti che scadono entro 24 ore",
@@ -3274,10 +3273,9 @@
       "dueProjects": "Progetti che scadono entro 24 ore",
       "overdueProjects": "Progetti che hanno superato la loro data di scadenza",
       "taskAssigned": "Un compito ti è stato assegnato da qualcun altro",
-      "habitReminders": "All'ora di promemoria impostata sull'abitudine, finché è ancora da fare",
+      "habitReminders": "Il telefono ti ricorda già; attiva Push solo se vuoi che suoni anche il server.",
       "comments": "Risposte, commenti sulle tue attività e menzioni @",
-      "taskReminders": "L'ora che imposti su un'attività. Suona il telefono; aggiungi Desktop se vuoi che suoni anche il computer",
-      "habitReminders": "Il telefono ti ricorda già; attiva Push solo se vuoi che suoni anche il server."
+      "taskReminders": "L'ora che imposti su un'attività. Suona il telefono; aggiungi Desktop se vuoi che suoni anche il computer"
     },
     "telegram": {
       "notConfigured": {

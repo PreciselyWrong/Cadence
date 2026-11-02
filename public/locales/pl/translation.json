@@ -122,7 +122,6 @@
     "toggleDarkMode": "Przełącz tryb ciemny",
     "insights": "Wnioski",
     "boards": "Tablice",
-    "bookmarks": "Zakładki",
     "reports": "Raporty",
     "productivityAssistant": "Asystent produktywności",
     "assignedToMe": "Przypisane do mnie",
@@ -132,8 +131,6 @@
     "templates": "Szablony",
     "people": "Osoby",
     "allEntities": "Wszystkie elementy",
-    "collapseFavorites": "Zwiń ulubione",
-    "expandFavorites": "Rozwiń ulubione",
     "telegramConnected": "Telegram połączony",
     "telegramProblem": "Problem z połączeniem z Telegramem",
     "resize": "Zmień szerokość paska bocznego",
@@ -145,7 +142,10 @@
     "more": "Więcej",
     "toggleFolder": "Pokaż lub ukryj projekty",
     "customize": "Dostosuj pasek boczny",
-    "toggleSection": "Rozwiń lub zwiń"
+    "toggleSection": "Rozwiń lub zwiń",
+    "pinned": "Przypięte",
+    "pinItem": "Przypnij {{name}}",
+    "unpinItem": "Odepnij {{name}}"
   },
   "navigation": {
     "home": "Strona główna",
@@ -3290,8 +3290,7 @@
       "taskAssigned": "Zadanie przypisane",
       "habitReminders": "Przypomnienia o nawykach",
       "comments": "Komentarze i wzmianki",
-      "taskReminders": "Przypomnienia o zadaniach",
-      "habitReminders": "Przypomnienia o nawykach"
+      "taskReminders": "Przypomnienia o zadaniach"
     },
     "descriptions": {
       "dueTasks": "Zadania, które muszą być wykonane w ciągu 24 godzin",
@@ -3300,10 +3299,9 @@
       "dueProjects": "Projekty, które muszą być wykonane w ciągu 24 godzin",
       "overdueProjects": "Projekty, których termin minął",
       "taskAssigned": "Zadanie zostało przypisane do Ciebie przez kogoś innego",
-      "habitReminders": "O godzinie przypomnienia ustawionej dla nawyku, dopóki jest otwarty",
+      "habitReminders": "Telefon już o nich przypomina; włącz Push tylko, jeśli serwer też ma dzwonić.",
       "comments": "Odpowiedzi, komentarze do Twoich zadań i wzmianki @",
-      "taskReminders": "Godzina ustawiona w zadaniu. Dzwoni telefon; dodaj Komputer, jeśli komputer też ma dzwonić",
-      "habitReminders": "Telefon już o nich przypomina; włącz Push tylko, jeśli serwer też ma dzwonić."
+      "taskReminders": "Godzina ustawiona w zadaniu. Dzwoni telefon; dodaj Komputer, jeśli komputer też ma dzwonić"
     },
     "telegram": {
       "notConfigured": {

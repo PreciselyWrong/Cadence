@@ -121,7 +121,6 @@
     "toggleDarkMode": "Alternar Modo Escuro",
     "insights": "Insights",
     "boards": "Quadros",
-    "bookmarks": "Favoritos",
     "reports": "Relatórios",
     "productivityAssistant": "Assistente de Produtividade",
     "assignedToMe": "Atribuído a mim",
@@ -131,8 +130,6 @@
     "templates": "Modelos",
     "people": "Pessoas",
     "allEntities": "Todos os itens",
-    "collapseFavorites": "Recolher favoritos",
-    "expandFavorites": "Expandir favoritos",
     "telegramConnected": "Telegram conectado",
     "telegramProblem": "Problema na conexão com o Telegram",
     "resize": "Redimensionar a barra lateral",
@@ -144,7 +141,10 @@
     "more": "Mais",
     "toggleFolder": "Mostrar ou ocultar projetos",
     "customize": "Personalizar barra lateral",
-    "toggleSection": "Expandir ou recolher"
+    "toggleSection": "Expandir ou recolher",
+    "pinned": "Fixados",
+    "pinItem": "Fixar {{name}}",
+    "unpinItem": "Desafixar {{name}}"
   },
   "navigation": {
     "home": "Início",
@@ -3264,8 +3264,7 @@
       "taskAssigned": "Tarefa Atribuída",
       "habitReminders": "Lembretes de hábitos",
       "comments": "Comentários e menções",
-      "taskReminders": "Lembretes de tarefas",
-      "habitReminders": "Lembretes de hábitos"
+      "taskReminders": "Lembretes de tarefas"
     },
     "descriptions": {
       "dueTasks": "Tarefas que vencem em 24 horas",
@@ -3274,10 +3273,9 @@
       "dueProjects": "Projetos que vencem em 24 horas",
       "overdueProjects": "Projetos que passaram da data de vencimento",
       "taskAssigned": "Uma tarefa foi atribuída a você por outra pessoa",
-      "habitReminders": "À hora do lembrete definida num hábito, enquanto ainda está em aberto",
+      "habitReminders": "O telemóvel já os lembra; ative o Push só se quiser que o servidor também toque.",
       "comments": "Respostas, comentários nas suas tarefas e @menções",
-      "taskReminders": "A hora que define numa tarefa. O telemóvel toca; adicione Computador se quiser que o computador também toque",
-      "habitReminders": "O telemóvel já os lembra; ative o Push só se quiser que o servidor também toque."
+      "taskReminders": "A hora que define numa tarefa. O telemóvel toca; adicione Computador se quiser que o computador também toque"
     },
     "telegram": {
       "notConfigured": {

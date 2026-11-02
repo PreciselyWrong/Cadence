@@ -15,6 +15,7 @@ import { useSidebarSectionBadge } from '../../hooks/useSidebarSectionBadge';
 import { resolveTagColor } from '../../utils/tagColor';
 import { buildTagTree, flattenTagTree, tagLeafName } from '../../utils/tagTree';
 import EntityIcon from '../Shared/EntityIcon';
+import { SidebarPinButton, useTagPin } from './sidebarPins';
 import {
     DROP_HIGHLIGHT_CLASS,
     dropTargetAttrs,
@@ -40,6 +41,7 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
     const showBadge = useSidebarSectionBadge('tags');
 
     const tags = useStore((state) => state.tagsStore.tags);
+    const pinTag = useTagPin();
     const hasLoaded = useStore((state) => state.tagsStore.hasLoaded);
     const loadTags = useStore((state) => state.tagsStore.loadTags);
 
@@ -193,6 +195,11 @@ const SidebarTags: React.FC<SidebarTagsProps> = ({
                                         ? tagLeafName(item.name)
                                         : item.name}
                                 </span>
+                                <SidebarPinButton
+                                    name={item.name}
+                                    pinned={!!item.pinned}
+                                    onToggle={(pinned) => pinTag(item, pinned)}
+                                />
                             </div>
                         )
                     )}

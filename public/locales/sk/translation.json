@@ -337,7 +337,6 @@
     "toggleDarkMode": "Prepnúť tmavý režim",
     "insights": "Prehľady",
     "boards": "Tabule",
-    "bookmarks": "Obľúbené",
     "reports": "Prehľady výsledkov",
     "productivityAssistant": "Asistent produktivity",
     "assignedToMe": "Priradené mne",
@@ -348,8 +347,6 @@
     "allEntities": "Všetky položky",
     "resize": "Zmeniť veľkosť bočného panela",
     "templates": "Šablóny",
-    "collapseFavorites": "Zbaliť obľúbené",
-    "expandFavorites": "Rozbaliť obľúbené",
     "telegramConnected": "Telegram pripojený",
     "telegramProblem": "Problém s pripojením k Telegramu",
     "collapseViews": "Zbaliť zoznam zobrazení",
@@ -360,7 +357,10 @@
     "more": "Viac",
     "toggleFolder": "Zobraziť alebo skryť projekty",
     "customize": "Prispôsobiť bočný panel",
-    "toggleSection": "Rozbaliť alebo zbaliť"
+    "toggleSection": "Rozbaliť alebo zbaliť",
+    "pinned": "Pripnuté",
+    "pinItem": "Pripnúť {{name}}",
+    "unpinItem": "Odopnúť {{name}}"
   },
   "navigation": {
     "home": "Domov",

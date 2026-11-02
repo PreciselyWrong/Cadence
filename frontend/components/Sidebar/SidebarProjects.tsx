@@ -21,6 +21,7 @@ import {
 } from './sidebarDrop';
 import EntityIcon from '../Shared/EntityIcon';
 import { isProjectLive } from '../../utils/projectStatus';
+import { SidebarPinButton, useProjectPin } from './sidebarPins';
 
 interface SidebarProjectsProps {
     handleNavClick: (path: string, title: string, icon: JSX.Element) => void;
@@ -59,6 +60,7 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
     }, [hasLoaded, loadProjects]);
 
     const activeProjects = projects.filter((p) => isProjectLive(p.status));
+    const pinProject = useProjectPin();
 
     useEffect(() => {
         if (
@@ -208,6 +210,13 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
                                     <span className="truncate min-w-0 flex-1">
                                         {project.name}
                                     </span>
+                                    <SidebarPinButton
+                                        name={project.name}
+                                        pinned={!!project.pin_to_sidebar}
+                                        onToggle={(pinned) =>
+                                            pinProject(project, pinned)
+                                        }
+                                    />
                                 </div>
                             )
                         )}

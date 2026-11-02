@@ -122,7 +122,6 @@
     "toggleDarkMode": "Preklopi temni način",
     "insights": "Vpogledi",
     "boards": "Deske",
-    "bookmarks": "Zaznamki",
     "reports": "Poročila",
     "productivityAssistant": "Asistent za produktivnost",
     "assignedToMe": "Dodeljeno meni",
@@ -132,8 +131,6 @@
     "templates": "Predloge",
     "people": "Ljudje",
     "allEntities": "Vsi elementi",
-    "collapseFavorites": "Strni priljubljene",
-    "expandFavorites": "Razširi priljubljene",
     "telegramConnected": "Telegram povezan",
     "telegramProblem": "Težava s povezavo Telegram",
     "resize": "Spremeni širino stranske vrstice",
@@ -145,7 +142,10 @@
     "more": "Več",
     "toggleFolder": "Prikaži ali skrij projekte",
     "customize": "Prilagodi stransko vrstico",
-    "toggleSection": "Razširi ali skrči"
+    "toggleSection": "Razširi ali skrči",
+    "pinned": "Pripeto",
+    "pinItem": "Pripni {{name}}",
+    "unpinItem": "Odpni {{name}}"
   },
   "navigation": {
     "home": "Domov",
@@ -3290,8 +3290,7 @@
       "taskAssigned": "Naloga dodeljena",
       "habitReminders": "Opomniki za navade",
       "comments": "Komentarji in omembe",
-      "taskReminders": "Opomniki za naloge",
-      "habitReminders": "Opomniki za navade"
+      "taskReminders": "Opomniki za naloge"
     },
     "descriptions": {
       "dueTasks": "Naloge, ki zapadejo v 24 urah",
@@ -3300,10 +3299,9 @@
       "dueProjects": "Projekti, ki zapadejo v 24 urah",
       "overdueProjects": "Projekti, ki so prešli rok",
       "taskAssigned": "Naloga je bila dodeljena vam s strani nekoga drugega",
-      "habitReminders": "Ob uri opomnika, nastavljeni pri navadi, dokler je še odprta",
+      "habitReminders": "Telefon vas nanje že opomni; vklopite Push le, če naj zvoni tudi strežnik.",
       "comments": "Odgovori, komentarji na vaše naloge in omembe z @",
-      "taskReminders": "Čas, ki ga nastavite pri nalogi. Zvoni telefon; dodajte Računalnik, če želite, da zvoni tudi računalnik",
-      "habitReminders": "Telefon vas nanje že opomni; vklopite Push le, če naj zvoni tudi strežnik."
+      "taskReminders": "Čas, ki ga nastavite pri nalogi. Zvoni telefon; dodajte Računalnik, če želite, da zvoni tudi računalnik"
     },
     "telegram": {
       "notConfigured": {

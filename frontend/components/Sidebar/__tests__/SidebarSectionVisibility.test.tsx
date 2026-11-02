@@ -202,7 +202,12 @@ describe('Sidebar section visibility', () => {
         const rendered = screen
             .getAllByTestId(new RegExp(`^(${sections.join('|')})$`))
             .map((el) => el.getAttribute('data-testid'));
-        expect(rendered.slice(0, 2)).toEqual(['insights', 'notes']);
+        // Pinned items stay at the top whatever the saved order.
+        expect(rendered.slice(0, 3)).toEqual([
+            'favorites',
+            'insights',
+            'notes',
+        ]);
         expect(rendered).toHaveLength(sections.length);
 
         act(() => {

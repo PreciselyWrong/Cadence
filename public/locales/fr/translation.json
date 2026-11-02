@@ -121,7 +121,6 @@
     "toggleDarkMode": "Basculer en mode sombre",
     "insights": "Aperçus",
     "boards": "Tableaux",
-    "bookmarks": "Signets",
     "reports": "Rapports",
     "productivityAssistant": "Assistant de productivité",
     "assignedToMe": "Assigné à moi",
@@ -131,8 +130,6 @@
     "templates": "Modèles",
     "people": "Personnes",
     "allEntities": "Tous les éléments",
-    "collapseFavorites": "Replier les favoris",
-    "expandFavorites": "Déplier les favoris",
     "telegramConnected": "Telegram connecté",
     "telegramProblem": "Problème de connexion Telegram",
     "resize": "Redimensionner la barre latérale",
@@ -144,7 +141,10 @@
     "more": "Plus",
     "toggleFolder": "Afficher ou masquer les projets",
     "customize": "Personnaliser la barre latérale",
-    "toggleSection": "Déplier ou replier"
+    "toggleSection": "Déplier ou replier",
+    "pinned": "Épinglés",
+    "pinItem": "Épingler {{name}}",
+    "unpinItem": "Désépingler {{name}}"
   },
   "navigation": {
     "home": "Accueil",
@@ -3265,8 +3265,7 @@
       "taskAssigned": "Tâche assignée",
       "habitReminders": "Rappels d'habitudes",
       "comments": "Commentaires et mentions",
-      "taskReminders": "Rappels de tâche",
-      "habitReminders": "Rappels d'habitudes"
+      "taskReminders": "Rappels de tâche"
     },
     "descriptions": {
       "dueTasks": "Tâches qui doivent être effectuées dans les 24 heures",
@@ -3275,10 +3274,9 @@
       "dueProjects": "Projets qui doivent être réalisés dans les 24 heures",
       "overdueProjects": "Projets dont la date limite est dépassée",
       "taskAssigned": "Une tâche vous a été assignée par quelqu'un d'autre",
-      "habitReminders": "À l'heure de rappel définie sur une habitude, tant qu'elle n'est pas faite",
+      "habitReminders": "Le téléphone vous le rappelle déjà ; activez Push seulement si le serveur doit aussi sonner.",
       "comments": "Réponses, commentaires sur les tâches et mentions @",
-      "taskReminders": "L'heure fixée sur une tâche. Votre téléphone sonne ; ajoutez Ordinateur pour que le poste sonne aussi",
-      "habitReminders": "Le téléphone vous le rappelle déjà ; activez Push seulement si le serveur doit aussi sonner."
+      "taskReminders": "L'heure fixée sur une tâche. Votre téléphone sonne ; ajoutez Ordinateur pour que le poste sonne aussi"
     },
     "telegram": {
       "notConfigured": {

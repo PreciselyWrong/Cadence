@@ -353,12 +353,14 @@ const SidebarLayoutEditor: React.FC<SidebarLayoutEditorProps> = ({
         },
     ];
 
+    // Pinned items always open the sidebar: they can be hidden, not moved.
+    const pinnedRow: Row = {
+        id: 'favorites',
+        label: t('sidebar.pinned', 'Pinned'),
+        Icon: PushPinIcon,
+    };
+
     const sectionRows: Row[] = [
-        {
-            id: 'favorites',
-            label: t('sidebar.bookmarks', 'Favorites'),
-            Icon: PushPinIcon,
-        },
         {
             id: 'projects',
             label: t('sidebar.projects', 'Projects'),
@@ -428,6 +430,18 @@ const SidebarLayoutEditor: React.FC<SidebarLayoutEditorProps> = ({
             data-testid="sidebar-preview"
             className="w-full max-w-sm rounded-2xl bg-gray-50 p-3 shadow-sm ring-1 ring-black/5 dark:bg-gray-900 dark:ring-white/10"
         >
+            <div className="mb-5">
+                <PreviewRow
+                    row={pinnedRow}
+                    variant="section"
+                    checked={visibleSections.favorites !== false}
+                    switchLabel={t('profile.sidebarShowItem', 'Show {{name}}', {
+                        name: pinnedRow.label,
+                    })}
+                    onToggle={() => onToggleSection('favorites' as ItemKey)}
+                />
+            </div>
+
             <SortableGroup
                 variant="link"
                 rows={linkRows}
@@ -441,7 +455,7 @@ const SidebarLayoutEditor: React.FC<SidebarLayoutEditorProps> = ({
                 <SortableGroup
                     variant="section"
                     rows={sectionRows}
-                    order={sectionOrder}
+                    order={sectionOrder.filter((id) => id !== 'favorites')}
                     visibleSections={visibleSections}
                     onToggleSection={onToggleSection}
                     onReorder={(order) => onReorder('sections', order)}

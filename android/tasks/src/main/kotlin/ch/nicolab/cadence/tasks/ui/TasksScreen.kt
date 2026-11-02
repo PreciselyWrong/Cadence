@@ -43,6 +43,9 @@ import ch.nicolab.cadence.designsystem.components.TabPills
 import ch.nicolab.cadence.designsystem.components.navigationClearance
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.tasks.R
+import ch.nicolab.cadence.tasks.model.NoteChange
+import ch.nicolab.cadence.tasks.model.PinnedShortcut
+import ch.nicolab.cadence.tasks.model.PinnedShortcuts
 import ch.nicolab.cadence.tasks.model.SyncStatus
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -165,6 +168,25 @@ fun TasksScreen(
                     },
                 )
                 if (openProjectUid == null) {
+                    PinnedStrip(
+                        shortcuts = remember(projects, notes) { PinnedShortcuts.of(projects, notes) },
+                        onOpen = { shortcut ->
+                            when (shortcut.kind) {
+                                PinnedShortcut.Kind.PROJECT -> openProjectUid = shortcut.uid
+                                PinnedShortcut.Kind.NOTE -> {
+                                    selectedNoteIsNew = false
+                                    selectedNoteUid = shortcut.uid
+                                }
+                            }
+                        },
+                        onUnpin = { shortcut ->
+                            when (shortcut.kind) {
+                                PinnedShortcut.Kind.PROJECT -> viewModel.setProjectPinned(shortcut.uid, false)
+                                PinnedShortcut.Kind.NOTE -> viewModel.saveNoteAttributes(shortcut.uid, NoteChange(pinned = false))
+                            }
+                        },
+                        modifier = Modifier.padding(bottom = Space.sm),
+                    )
                     TabPills(
                         tabs = listOf(
                             TabPill(

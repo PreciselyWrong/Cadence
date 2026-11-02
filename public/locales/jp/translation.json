@@ -120,7 +120,6 @@
     "toggleDarkMode": "ダークモードを切り替え",
     "insights": "インサイト",
     "boards": "ボード",
-    "bookmarks": "ブックマーク",
     "reports": "レポート",
     "productivityAssistant": "生産性アシスタント",
     "assignedToMe": "私に割り当てられた",
@@ -130,8 +129,6 @@
     "templates": "テンプレート",
     "people": "人物",
     "allEntities": "すべての項目",
-    "collapseFavorites": "お気に入りを閉じる",
-    "expandFavorites": "お気に入りを開く",
     "telegramConnected": "Telegram 接続済み",
     "telegramProblem": "Telegram 接続に問題があります",
     "resize": "サイドバーの幅を変更",
@@ -143,7 +140,10 @@
     "more": "その他",
     "toggleFolder": "プロジェクトの表示・非表示",
     "customize": "サイドバーをカスタマイズ",
-    "toggleSection": "展開または折りたたみ"
+    "toggleSection": "展開または折りたたみ",
+    "pinned": "ピン留め",
+    "pinItem": "{{name}} をピン留め",
+    "unpinItem": "{{name}} のピン留めを解除"
   },
   "navigation": {
     "home": "ホーム",

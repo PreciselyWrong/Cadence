@@ -120,7 +120,6 @@
     "toggleDarkMode": "Karanlık Modu Aç/Kapat",
     "insights": "İçgörüler",
     "boards": "Panolar",
-    "bookmarks": "Yer İşaretleri",
     "reports": "Raporlar",
     "productivityAssistant": "Verimlilik Asistanı",
     "assignedToMe": "Bana atanmış",
@@ -130,8 +129,6 @@
     "templates": "Şablonlar",
     "people": "Kişiler",
     "allEntities": "Tüm öğeler",
-    "collapseFavorites": "Favorileri daralt",
-    "expandFavorites": "Favorileri genişlet",
     "telegramConnected": "Telegram bağlı",
     "telegramProblem": "Telegram bağlantı sorunu",
     "resize": "Kenar çubuğunu yeniden boyutlandır",
@@ -143,7 +140,10 @@
     "more": "Daha fazla",
     "toggleFolder": "Projeleri göster veya gizle",
     "customize": "Kenar çubuğunu özelleştir",
-    "toggleSection": "Genişlet veya daralt"
+    "toggleSection": "Genişlet veya daralt",
+    "pinned": "Sabitlenenler",
+    "pinItem": "{{name}} öğesini sabitle",
+    "unpinItem": "{{name}} sabitlemesini kaldır"
   },
   "navigation": {
     "home": "Ana Sayfa",
@@ -3256,10 +3256,9 @@
       "dueProjects": "Vadesi Gelen Projeler",
       "overdueProjects": "Vadesi Geçmiş Projeler",
       "taskAssigned": "Görev Atandı",
-      "habitReminders": "Alışkanlık hatırlatmaları",
+      "habitReminders": "Alışkanlık hatırlatıcıları",
       "comments": "Yorumlar ve @bahsetmeler",
-      "taskReminders": "Görev hatırlatıcıları",
-      "habitReminders": "Alışkanlık hatırlatıcıları"
+      "taskReminders": "Görev hatırlatıcıları"
     },
     "descriptions": {
       "dueTasks": "24 saat içinde vadesi gelen görevler",
@@ -3268,10 +3267,9 @@
       "dueProjects": "24 saat içinde vadesi gelen projeler",
       "overdueProjects": "Vade tarihini geçmiş projeler",
       "taskAssigned": "Bir görev başka biri tarafından size atandı",
-      "habitReminders": "Bir alışkanlığa ayarlanan hatırlatma saatinde, alışkanlık hâlâ açıkken",
+      "habitReminders": "Telefonunuz zaten hatırlatır; sunucunun da çalmasını istiyorsanız Push'u açın.",
       "comments": "Yanıtlar, görevlerinizdeki yorumlar ve @bahsetmeler",
-      "taskReminders": "Bir göreve koyduğunuz saat. Telefonunuz çalar; bilgisayarın da çalmasını istiyorsanız Bilgisayar'ı ekleyin",
-      "habitReminders": "Telefonunuz zaten hatırlatır; sunucunun da çalmasını istiyorsanız Push'u açın."
+      "taskReminders": "Bir göreve koyduğunuz saat. Telefonunuz çalar; bilgisayarın da çalmasını istiyorsanız Bilgisayar'ı ekleyin"
     },
     "telegram": {
       "notConfigured": {

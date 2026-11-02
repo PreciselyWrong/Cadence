@@ -120,7 +120,6 @@
     "toggleDarkMode": "Skift til mørk tilstand",
     "insights": "Indsigter",
     "boards": "Tavler",
-    "bookmarks": "Bogmærker",
     "reports": "Rapporter",
     "productivityAssistant": "Produktivitetsassistent",
     "assignedToMe": "Tildelt til mig",
@@ -130,8 +129,6 @@
     "templates": "Skabeloner",
     "people": "Personer",
     "allEntities": "Alle elementer",
-    "collapseFavorites": "Skjul favoritter",
-    "expandFavorites": "Vis favoritter",
     "telegramConnected": "Telegram forbundet",
     "telegramProblem": "Problem med Telegram-forbindelsen",
     "resize": "Tilpas sidebjælken",
@@ -143,7 +140,10 @@
     "more": "Mere",
     "toggleFolder": "Vis eller skjul projekter",
     "customize": "Tilpas sidebar",
-    "toggleSection": "Expand or collapse"
+    "toggleSection": "Expand or collapse",
+    "pinned": "Fastgjort",
+    "pinItem": "Fastgør {{name}}",
+    "unpinItem": "Frigør {{name}}"
   },
   "navigation": {
     "home": "Hjem",
@@ -3258,8 +3258,7 @@
       "taskAssigned": "Opgave tildelt",
       "habitReminders": "Vanepåmindelser",
       "comments": "Kommentarer og omtaler",
-      "taskReminders": "Opgavepåmindelser",
-      "habitReminders": "Vanepåmindelser"
+      "taskReminders": "Opgavepåmindelser"
     },
     "descriptions": {
       "dueTasks": "Opgaver der forfalder inden for 24 timer",
@@ -3268,10 +3267,9 @@
       "dueProjects": "Projekter der forfalder inden for 24 timer",
       "overdueProjects": "Projekter der er overskredet deres forfaldsdato",
       "taskAssigned": "En opgave blev tildelt dig af en anden",
-      "habitReminders": "På påmindelsestidspunktet for en vane, så længe den stadig er åben",
+      "habitReminders": "Din telefon minder dig allerede om dem; slå Push til kun hvis serveren også skal ringe.",
       "comments": "Svar, kommentarer på dine opgaver og @omtaler",
-      "taskReminders": "Tidspunktet du sætter på en opgave. Din telefon ringer; tilføj Computer, hvis din computer også skal ringe",
-      "habitReminders": "Din telefon minder dig allerede om dem; slå Push til kun hvis serveren også skal ringe."
+      "taskReminders": "Tidspunktet du sætter på en opgave. Din telefon ringer; tilføj Computer, hvis din computer også skal ringe"
     },
     "telegram": {
       "notConfigured": {

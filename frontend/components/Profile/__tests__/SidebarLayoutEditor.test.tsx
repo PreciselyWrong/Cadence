@@ -83,8 +83,9 @@ describe('SidebarLayoutEditor', () => {
         renderEditor();
 
         expect(renderedIds()).toEqual([
+            'favorites',
             ...DEFAULT_LINK_ORDER,
-            ...DEFAULT_SECTION_ORDER,
+            ...DEFAULT_SECTION_ORDER.filter((id) => id !== 'favorites'),
             'templates',
         ]);
     });
@@ -110,8 +111,8 @@ describe('SidebarLayoutEditor', () => {
         });
 
         const ids = renderedIds();
-        expect(ids.slice(0, 2)).toEqual(['today', 'inbox']);
-        expect(ids.slice(7, 9)).toEqual(['notes', 'projects']);
+        expect(ids.slice(0, 3)).toEqual(['favorites', 'today', 'inbox']);
+        expect(ids.slice(8, 10)).toEqual(['notes', 'projects']);
     });
 
     it('has a switch on every row that reflects what is visible', () => {
@@ -153,6 +154,17 @@ describe('SidebarLayoutEditor', () => {
         ).toBeNull();
         expect(
             screen.queryByRole('button', { name: 'Move Access' })
+        ).toBeNull();
+    });
+
+    it('keeps pinned items fixed at the top: they can be hidden, not moved', () => {
+        renderEditor();
+
+        expect(
+            screen.getByRole('switch', { name: 'Show Pinned' })
+        ).toBeInTheDocument();
+        expect(
+            screen.queryByRole('button', { name: 'Move Pinned' })
         ).toBeNull();
     });
 
@@ -244,15 +256,19 @@ describe('SidebarLayoutEditor', () => {
             act(() => {
                 dropHandlers[1]({
                     active: { id: 'insights' },
-                    over: { id: 'favorites' },
+                    over: { id: 'projects' },
                 });
             });
 
+            // Pinned items are fixed at the top and left out of the order.
             expect(onReorder).toHaveBeenCalledWith('sections', [
                 'insights',
-                'favorites',
+                'projects',
                 ...DEFAULT_SECTION_ORDER.filter(
-                    (id) => id !== 'insights' && id !== 'favorites'
+                    (id) =>
+                        id !== 'insights' &&
+                        id !== 'projects' &&
+                        id !== 'favorites'
                 ),
             ]);
         });

@@ -120,7 +120,6 @@
     "toggleDarkMode": "Vaihda tummalle tilalle",
     "insights": "Näkymät",
     "boards": "Taulut",
-    "bookmarks": "Kirjanmerkit",
     "reports": "Raportit",
     "productivityAssistant": "Tuottavuusavustaja",
     "assignedToMe": "Mulle osoitettu",
@@ -130,8 +129,6 @@
     "templates": "Mallit",
     "people": "Ihmiset",
     "allEntities": "Kaikki kohteet",
-    "collapseFavorites": "Pienennä suosikit",
-    "expandFavorites": "Laajenna suosikit",
     "telegramConnected": "Telegram yhdistetty",
     "telegramProblem": "Telegram-yhteydessä on ongelma",
     "resize": "Muuta sivupalkin kokoa",
@@ -143,7 +140,10 @@
     "more": "Lisää",
     "toggleFolder": "Näytä tai piilota projektit",
     "customize": "Mukauta sivupalkki",
-    "toggleSection": "Laajenna tai supista"
+    "toggleSection": "Laajenna tai supista",
+    "pinned": "Kiinnitetyt",
+    "pinItem": "Kiinnitä {{name}}",
+    "unpinItem": "Irrota {{name}}"
   },
   "navigation": {
     "home": "Koti",
@@ -3258,8 +3258,7 @@
       "taskAssigned": "Tehtävä annettu",
       "habitReminders": "Tapamuistutukset",
       "comments": "Kommentit ja maininnat",
-      "taskReminders": "Tehtävämuistutukset",
-      "habitReminders": "Tapamuistutukset"
+      "taskReminders": "Tehtävämuistutukset"
     },
     "descriptions": {
       "dueTasks": "Tehtävät, jotka erääntyvät 24 tunnin sisällä",
@@ -3268,10 +3267,9 @@
       "dueProjects": "Projektit, jotka erääntyvät 24 tunnin sisällä",
       "overdueProjects": "Projektit, joiden eräpäivä on mennyt",
       "taskAssigned": "Tehtävä on annettu sinulle jonkun muun toimesta",
-      "habitReminders": "Tavalle asetettuna muistutusaikana, kun se on vielä avoinna",
+      "habitReminders": "Puhelimesi muistuttaa jo; kytke Push päälle vain, jos palvelimen pitää soida myös.",
       "comments": "Vastaukset, tehtäviesi kommentit ja @-maininnat",
-      "taskReminders": "Tehtävälle asettamasi aika. Puhelimesi soi; lisää Tietokone, jos haluat tietokoneenkin soivan",
-      "habitReminders": "Puhelimesi muistuttaa jo; kytke Push päälle vain, jos palvelimen pitää soida myös."
+      "taskReminders": "Tehtävälle asettamasi aika. Puhelimesi soi; lisää Tietokone, jos haluat tietokoneenkin soivan"
     },
     "telegram": {
       "notConfigured": {

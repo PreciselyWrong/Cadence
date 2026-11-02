@@ -120,7 +120,6 @@
     "toggleDarkMode": "Schakel Donkere Modus In",
     "insights": "Inzichten",
     "boards": "Borden",
-    "bookmarks": "Bladwijzers",
     "reports": "Rapporten",
     "productivityAssistant": "Productiviteitsassistent",
     "assignedToMe": "Aan mij toegewezen",
@@ -130,8 +129,6 @@
     "templates": "Sjablonen",
     "people": "Personen",
     "allEntities": "Alle items",
-    "collapseFavorites": "Favorieten inklappen",
-    "expandFavorites": "Favorieten uitklappen",
     "telegramConnected": "Telegram verbonden",
     "telegramProblem": "Probleem met Telegram-verbinding",
     "resize": "Zijbalk aanpassen",
@@ -143,7 +140,10 @@
     "more": "Meer",
     "toggleFolder": "Projecten tonen of verbergen",
     "customize": "Zijbalk aanpassen",
-    "toggleSection": "Uitklappen of inklappen"
+    "toggleSection": "Uitklappen of inklappen",
+    "pinned": "Vastgezet",
+    "pinItem": "{{name}} vastzetten",
+    "unpinItem": "{{name}} losmaken"
   },
   "navigation": {
     "home": "Home",
@@ -3256,10 +3256,9 @@
       "dueProjects": "Vervaldagen Projecten",
       "overdueProjects": "Te Laat Projecten",
       "taskAssigned": "Taak Toegewezen",
-      "habitReminders": "Gewoonteherinneringen",
+      "habitReminders": "Gewoonte-herinneringen",
       "comments": "Reacties en vermeldingen",
-      "taskReminders": "Taakherinneringen",
-      "habitReminders": "Gewoonte-herinneringen"
+      "taskReminders": "Taakherinneringen"
     },
     "descriptions": {
       "dueTasks": "Taken die binnen 24 uur vervallen",
@@ -3268,10 +3267,9 @@
       "dueProjects": "Projecten die binnen 24 uur vervallen",
       "overdueProjects": "Projecten die hun vervaldatum hebben overschreden",
       "taskAssigned": "Een taak is aan jou toegewezen door iemand anders",
-      "habitReminders": "Op het herinneringstijdstip van een gewoonte, zolang die nog open staat",
+      "habitReminders": "Je telefoon herinnert je er al aan; zet Push alleen aan als de server ook moet afgaan.",
       "comments": "Antwoorden, reacties op je taken en @vermeldingen",
-      "taskReminders": "De tijd die je bij een taak instelt. Je telefoon gaat af; zet Desktop aan als je computer ook moet afgaan",
-      "habitReminders": "Je telefoon herinnert je er al aan; zet Push alleen aan als de server ook moet afgaan."
+      "taskReminders": "De tijd die je bij een taak instelt. Je telefoon gaat af; zet Desktop aan als je computer ook moet afgaan"
     },
     "telegram": {
       "notConfigured": {

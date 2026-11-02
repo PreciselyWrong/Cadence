@@ -121,7 +121,6 @@
     "toggleDarkMode": "Alternar modo oscuro",
     "insights": "Perspectivas",
     "boards": "Tableros",
-    "bookmarks": "Marcadores",
     "reports": "Informes",
     "productivityAssistant": "Asistente de Productividad",
     "assignedToMe": "Asignado a mí",
@@ -131,8 +130,6 @@
     "templates": "Plantillas",
     "people": "Personas",
     "allEntities": "Todos los elementos",
-    "collapseFavorites": "Contraer favoritos",
-    "expandFavorites": "Expandir favoritos",
     "telegramConnected": "Telegram conectado",
     "telegramProblem": "Problema de conexión con Telegram",
     "resize": "Cambiar tamaño de la barra lateral",
@@ -144,7 +141,10 @@
     "more": "Más",
     "toggleFolder": "Mostrar u ocultar proyectos",
     "customize": "Personalizar la barra lateral",
-    "toggleSection": "Expandir o contraer"
+    "toggleSection": "Expandir o contraer",
+    "pinned": "Fijados",
+    "pinItem": "Fijar {{name}}",
+    "unpinItem": "Desfijar {{name}}"
   },
   "navigation": {
     "home": "Inicio",
@@ -3251,8 +3251,7 @@
       "taskAssigned": "Tarea Asignada",
       "habitReminders": "Recordatorios de hábitos",
       "comments": "Comentarios y menciones",
-      "taskReminders": "Recordatorios de tareas",
-      "habitReminders": "Recordatorios de hábitos"
+      "taskReminders": "Recordatorios de tareas"
     },
     "descriptions": {
       "dueTasks": "Tareas que vencen en 24 horas",
@@ -3261,10 +3260,9 @@
       "dueProjects": "Proyectos que vencen en 24 horas",
       "overdueProjects": "Proyectos que han pasado su fecha de vencimiento",
       "taskAssigned": "Se te asignó una tarea por otra persona",
-      "habitReminders": "A la hora de recordatorio del hábito, mientras siga pendiente",
+      "habitReminders": "Tu móvil ya te los recuerda; activa Push solo si quieres que el servidor también suene.",
       "comments": "Respuestas, comentarios en tus tareas y menciones con @",
-      "taskReminders": "La hora que fijas en una tarea. Suena tu móvil; añade Escritorio si quieres que suene también el ordenador",
-      "habitReminders": "Tu móvil ya te los recuerda; activa Push solo si quieres que el servidor también suene."
+      "taskReminders": "La hora que fijas en una tarea. Suena tu móvil; añade Escritorio si quieres que suene también el ordenador"
     },
     "telegram": {
       "notConfigured": {

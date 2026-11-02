@@ -28,18 +28,28 @@ Profile → Sidebar has a **Minimal sidebar** section (it shows for Minimal only
 
 - **Smart lists**: show or hide each row, switch its count badge on or off, and move it up or down. Hidden rows are not fetched for counts unless another visible row needs one.
 - **Icon rail and More**: each item is on the icon rail, in the More menu, or hidden. Within each place, the order is the order in the editor.
-- **Count badges**: Projects, Areas and Tags can show their item count in the header; off by default, switch it on per section. (Favorites has no count badge.)
+- **Count badges**: Projects, Areas and Tags can show their item count in the header; off by default, switch it on per section. (Pinned has no count badge.)
 - **Reset to default** puts every smart list, rail item and badge back to the defaults.
 
 The entry **Customize sidebar** sits once, in the More menu of the icon rail (Escape closes that menu); it opens that Profile section.
 
-The panel is the only scroller: sections (Favorites, Projects, Areas, Tags, Goals, People, Views) grow with their content and fold from their header instead of scrolling inside a fixed-height box.
+The panel is the only scroller: sections (Pinned, Projects, Areas, Tags, Goals, People, Views) grow with their content and fold from their header instead of scrolling inside a fixed-height box.
 
 Stored in `users.sidebar_settings` as `smartLists: [{key, visible, showCount}]`, `rail: [{key, place}]` and `sectionBadges: {favorites, projects, areas, tags}`. Unknown keys are dropped and flags are read as booleans. Items missing from a saved list (for example, a new item added later) take their default and appear at the end.
 
+## Pinned
+
+Pinned projects, notes and tags open the panel, above the smart lists (or the Dense links), in a tinted block titled **Pinned**. The block is always open and has no collapse arrow; it disappears when nothing is pinned.
+
+- **Pin** from any project or tag row of the sidebar: the pin button shows on hover (always on touch screens), one click, nothing opens. Notes and projects can still be pinned from their page (**…** menu).
+- A pinned row shows the project's icon in its colour, the tag's colour dot or the note icon; the cross on hover unpins.
+- Profile → Sidebar keeps a **Pinned** switch at the top of the layout editor to hide the block. It cannot be moved: it always comes first.
+
+Projects and notes use `pin_to_sidebar`, tags `pinned`; all are synced.
+
 ## Lists
 
-- **Favorites**, **Projects** and **Tags** stay in the panel. Projects and tags keep their nesting.
+- **Projects** and **Tags** stay in the panel under the smart lists. Projects and tags keep their nesting.
 - **Areas** are folders. Click the arrow to show the projects inside an area; click the name to open the area page.
 - Rows are 34 px tall with 14 px text.
 

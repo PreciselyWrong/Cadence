@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Location } from 'react-router-dom';
 import {
     FolderIcon,
     BookOpenIcon,
     TagIcon,
-    ChevronRightIcon,
     XMarkIcon,
 } from '@heroicons/react/24/outline';
 import PushPinIcon from '../Shared/Icons/PushPinIcon';
+import EntityIcon from '../Shared/EntityIcon';
 import { useTranslation } from 'react-i18next';
 import { useStore } from '../../store/useStore';
-import { updateProject } from '../../utils/projectsService';
-import { updateNote } from '../../utils/notesService';
-import { updateTag } from '../../utils/tagsService';
 import { createNoteUrl, createTagUrl } from '../../utils/slugUtils';
+import { resolveColor } from '../../constants/colorPalette';
+import { resolveTagColor } from '../../utils/tagColor';
 import { Project } from '../../entities/Project';
 import { Note } from '../../entities/Note';
 import { Tag } from '../../entities/Tag';
+import { useNotePin, useProjectPin, useTagPin } from './sidebarPins';
 
 interface SidebarBookmarksProps {
     handleNavClick: (path: string, title: string, icon: JSX.Element) => void;
@@ -47,220 +47,168 @@ const getTagPath = (tag: Tag) => {
     }
 };
 
+interface PinnedRowProps {
+    name: string;
+    active: boolean;
+    icon: React.ReactNode;
+    onOpen: () => void;
+    onUnpin: () => void;
+}
+
+const PinnedRow: React.FC<PinnedRowProps> = ({
+    name,
+    active,
+    icon,
+    onOpen,
+    onUnpin,
+}) => {
+    const { t } = useTranslation();
+    const label = t('sidebar.unpinItem', 'Unpin {{name}}', { name });
+    return (
+        <div
+            className={`group flex items-center gap-2 rounded-[8px] px-[10px] py-[6px] text-[14px] font-medium cursor-pointer text-gray-900 dark:text-white hover:bg-white dark:hover:bg-white/10 ${
+                active ? 'bg-white dark:bg-white/10' : ''
+            }`}
+            onClick={onOpen}
+        >
+            <span className="flex h-4 w-4 flex-shrink-0 items-center justify-center">
+                {icon}
+            </span>
+            <span className="truncate min-w-0 flex-1">{name}</span>
+            <button
+                type="button"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onUnpin();
+                }}
+                className="[@media(hover:hover)]:opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity flex-shrink-0 text-gray-500 hover:text-gray-700 dark:hover:text-gray-200"
+                aria-label={label}
+                title={label}
+            >
+                <XMarkIcon className="h-3.5 w-3.5" />
+            </button>
+        </div>
+    );
+};
+
+// Pinned projects, notes and tags, always open at the very top of the
+// sidebar so they are one click away, like pinned lists in TickTick.
 const SidebarBookmarks: React.FC<SidebarBookmarksProps> = ({
     handleNavClick,
     location,
 }) => {
     const { t } = useTranslation();
-    const [isExpanded, setIsExpanded] = useState(() => {
-        return localStorage.getItem('bookmarksSidebarCollapsed') === 'false';
-    });
 
     const projects = useStore((state) => state.projectsStore.projects);
-    const setProjects = useStore((state) => state.projectsStore.setProjects);
     const notes = useStore((state) => state.notesStore.notes);
-    const setNotes = useStore((state) => state.notesStore.setNotes);
     const tags = useStore((state) => state.tagsStore.tags);
-    const setTags = useStore((state) => state.tagsStore.setTags);
+    const pinProject = useProjectPin();
+    const pinNote = useNotePin();
+    const pinTag = useTagPin();
 
     const pinnedProjects = projects.filter((p) => p.pin_to_sidebar);
     const pinnedNotes = notes.filter((n) => n.pin_to_sidebar);
     const pinnedTags = tags.filter((t) => t.pinned);
 
-    const hasBookmarks =
-        pinnedProjects.length > 0 ||
-        pinnedNotes.length > 0 ||
-        pinnedTags.length > 0;
-
-    if (!hasBookmarks) return null;
+    if (
+        pinnedProjects.length === 0 &&
+        pinnedNotes.length === 0 &&
+        pinnedTags.length === 0
+    ) {
+        return null;
+    }
 
     const isActive = (path: string) => location.pathname === path;
 
-    const itemClass = (path: string) =>
-        `group flex justify-between items-center rounded-[8px] pl-[30px] pr-[10px] py-[4px] text-[13.5px] cursor-pointer text-gray-600 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-gray-800 ${
-            isActive(path) ? 'bg-gray-100 dark:bg-gray-800' : ''
-        }`;
-
-    const unpinProject = async (project: Project, e: React.MouseEvent) => {
-        e.stopPropagation();
-        if (!project.uid) return;
-        setProjects(
-            projects.map((p) =>
-                p.uid === project.uid ? { ...p, pin_to_sidebar: false } : p
-            )
-        );
-        try {
-            await updateProject(project.uid, { pin_to_sidebar: false });
-        } catch {
-            setProjects(
-                projects.map((p) =>
-                    p.uid === project.uid ? { ...p, pin_to_sidebar: true } : p
-                )
-            );
-        }
-    };
-
-    const unpinNote = async (note: Note, e: React.MouseEvent) => {
-        e.stopPropagation();
-        if (!note.uid) return;
-        setNotes(
-            notes.map((n) =>
-                n.uid === note.uid ? { ...n, pin_to_sidebar: false } : n
-            )
-        );
-        try {
-            await updateNote(note.uid, { ...note, pin_to_sidebar: false });
-        } catch {
-            setNotes(
-                notes.map((n) =>
-                    n.uid === note.uid ? { ...n, pin_to_sidebar: true } : n
-                )
-            );
-        }
-    };
-
-    const unpinTag = async (tag: Tag, e: React.MouseEvent) => {
-        e.stopPropagation();
-        if (!tag.uid) return;
-        setTags(
-            tags.map((t) => (t.uid === tag.uid ? { ...t, pinned: false } : t))
-        );
-        try {
-            await updateTag(tag.uid, { ...tag, pinned: false });
-        } catch {
-            setTags(
-                tags.map((t) =>
-                    t.uid === tag.uid ? { ...t, pinned: true } : t
-                )
-            );
-        }
-    };
-
     return (
-        <div className="flex flex-col">
-            <div
-                className="flex justify-between items-center px-[10px] py-[4px] rounded-md cursor-pointer"
-                onClick={() => {
-                    const next = !isExpanded;
-                    setIsExpanded(next);
-                    localStorage.setItem(
-                        'bookmarksSidebarCollapsed',
-                        String(!next)
-                    );
-                }}
-            >
-                <span className="flex items-center gap-[6px] text-[12px] tracking-[0.01em] font-semibold uppercase text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
-                    <PushPinIcon className="h-[14px] w-[14px]" />
-                    {t('sidebar.bookmarks', 'Favorites')}
-                </span>
-                <div className="flex items-center gap-1">
-                    <span className="h-3.5 w-3.5" aria-hidden="true" />
-                    <button
-                        className="text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white "
-                        aria-label={
-                            isExpanded
-                                ? t(
-                                      'sidebar.collapseFavorites',
-                                      'Collapse favorites'
-                                  )
-                                : t(
-                                      'sidebar.expandFavorites',
-                                      'Expand favorites'
-                                  )
+        <section
+            aria-label={t('sidebar.pinned', 'Pinned')}
+            className="flex flex-col gap-0.5 rounded-xl bg-gray-100/80 dark:bg-white/5 p-1"
+        >
+            <span className="flex items-center gap-[6px] px-[10px] pt-[4px] pb-[2px] text-[12px] tracking-[0.01em] font-semibold uppercase text-gray-500 dark:text-gray-400">
+                <PushPinIcon className="h-[13px] w-[13px]" filled />
+                {t('sidebar.pinned', 'Pinned')}
+            </span>
+            {pinnedProjects.map((project) => {
+                const path = getProjectPath(project);
+                const color = resolveColor(project.color)?.value;
+                return (
+                    <PinnedRow
+                        key={project.uid}
+                        name={project.name}
+                        active={isActive(path)}
+                        icon={
+                            <span style={color ? { color } : undefined}>
+                                <EntityIcon
+                                    icon={project.icon}
+                                    className="h-4 w-4"
+                                    fallback={
+                                        <FolderIcon className="h-4 w-4" />
+                                    }
+                                />
+                            </span>
                         }
-                    >
-                        <ChevronRightIcon
-                            className="h-3 w-3 transition-transform duration-150"
-                            style={{
-                                transform: isExpanded
-                                    ? 'rotate(90deg)'
-                                    : 'none',
-                            }}
-                        />
-                    </button>
-                </div>
-            </div>
-
-            {isExpanded && (
-                <div className="flex flex-col gap-0.5 mb-1.5">
-                    {pinnedProjects.map((project) => (
-                        <div
-                            key={project.uid}
-                            className={itemClass(getProjectPath(project))}
-                            onClick={() =>
-                                handleNavClick(
-                                    getProjectPath(project),
-                                    project.name,
-                                    <FolderIcon className="h-4 w-4 mr-2" />
-                                )
-                            }
-                        >
-                            <span className="truncate min-w-0">
-                                {project.name}
-                            </span>
-                            <button
-                                onClick={(e) => unpinProject(project, e)}
-                                className="[@media(hover:hover)]:opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity flex-shrink-0 text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 "
-                                aria-label={`Unpin ${project.name}`}
-                                title={`Unpin ${project.name}`}
-                            >
-                                <XMarkIcon className="h-3.5 w-3.5" />
-                            </button>
-                        </div>
-                    ))}
-
-                    {pinnedNotes.map((note) => (
-                        <div
-                            key={note.uid || note.id}
-                            className={itemClass(getNotePath(note))}
-                            onClick={() =>
-                                handleNavClick(
-                                    getNotePath(note),
-                                    note.title,
-                                    <BookOpenIcon className="h-4 w-4 mr-2" />
-                                )
-                            }
-                        >
-                            <span className="truncate min-w-0">
-                                {note.title}
-                            </span>
-                            <button
-                                onClick={(e) => unpinNote(note, e)}
-                                className="[@media(hover:hover)]:opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity flex-shrink-0 text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 "
-                                aria-label={`Unpin ${note.title}`}
-                                title={`Unpin ${note.title}`}
-                            >
-                                <XMarkIcon className="h-3.5 w-3.5" />
-                            </button>
-                        </div>
-                    ))}
-
-                    {pinnedTags.map((tag) => (
-                        <div
-                            key={tag.uid || tag.id}
-                            className={itemClass(getTagPath(tag))}
-                            onClick={() =>
-                                handleNavClick(
-                                    getTagPath(tag),
-                                    tag.name,
-                                    <TagIcon className="h-4 w-4 mr-2" />
-                                )
-                            }
-                        >
-                            <span className="truncate min-w-0">{tag.name}</span>
-                            <button
-                                onClick={(e) => unpinTag(tag, e)}
-                                className="[@media(hover:hover)]:opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity flex-shrink-0 text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 "
-                                aria-label={`Unpin ${tag.name}`}
-                                title={`Unpin ${tag.name}`}
-                            >
-                                <XMarkIcon className="h-3.5 w-3.5" />
-                            </button>
-                        </div>
-                    ))}
-                </div>
-            )}
-        </div>
+                        onOpen={() =>
+                            handleNavClick(
+                                path,
+                                project.name,
+                                <FolderIcon className="h-4 w-4 mr-2" />
+                            )
+                        }
+                        onUnpin={() => pinProject(project, false)}
+                    />
+                );
+            })}
+            {pinnedNotes.map((note) => {
+                const path = getNotePath(note);
+                return (
+                    <PinnedRow
+                        key={note.uid || note.id}
+                        name={note.title}
+                        active={isActive(path)}
+                        icon={
+                            <BookOpenIcon className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                        }
+                        onOpen={() =>
+                            handleNavClick(
+                                path,
+                                note.title,
+                                <BookOpenIcon className="h-4 w-4 mr-2" />
+                            )
+                        }
+                        onUnpin={() => pinNote(note, false)}
+                    />
+                );
+            })}
+            {pinnedTags.map((tag) => {
+                const path = getTagPath(tag);
+                return (
+                    <PinnedRow
+                        key={tag.uid || tag.id}
+                        name={tag.name}
+                        active={isActive(path)}
+                        icon={
+                            <span
+                                aria-hidden="true"
+                                className="h-2.5 w-2.5 rounded-full"
+                                style={{
+                                    backgroundColor: resolveTagColor(tag, tags)
+                                        .value,
+                                }}
+                            />
+                        }
+                        onOpen={() =>
+                            handleNavClick(
+                                path,
+                                tag.name,
+                                <TagIcon className="h-4 w-4 mr-2" />
+                            )
+                        }
+                        onUnpin={() => pinTag(tag, false)}
+                    />
+                );
+            })}
+        </section>
     );
 };
 

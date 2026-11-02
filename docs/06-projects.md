@@ -151,7 +151,8 @@ Area: "Personal"
 
 11. **Pin to Sidebar** (boolean, default: `false`)
     - Pins project to left sidebar for quick access
-    - Pinned projects shown above unpinned ones
+    - Pinned projects show in the **Pinned** block at the very top of the sidebar ([32-sidebar.md](32-sidebar.md)); the pin button on a sidebar project row pins it in one click
+    - Android: pinned projects and notes are chips at the very top of Tasks (tap opens, long press unpins)
     - On the project page, **Pin** / **Pinned** lives in the header's **…** menu (rare action); a past due date in the header reads "Due 20 Sep" in the normal text colour, never red
     - Useful for currently active projects
 

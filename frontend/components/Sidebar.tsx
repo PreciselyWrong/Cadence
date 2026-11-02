@@ -65,12 +65,8 @@ interface SidebarProps {
 export const SIDEBAR_CANVAS = 'bg-gray-200 dark:bg-gray-900';
 
 // Minimal keeps only these lists in the panel; the rest live in the icon rail.
-const MINIMAL_LIST_SECTIONS: SidebarSectionId[] = [
-    'favorites',
-    'projects',
-    'areas',
-    'tags',
-];
+// Pinned items sit above everything in both layouts.
+const MINIMAL_LIST_SECTIONS: SidebarSectionId[] = ['projects', 'areas', 'tags'];
 
 const Sidebar: React.FC<SidebarProps> = ({
     isSidebarOpen,
@@ -327,7 +323,12 @@ const Sidebar: React.FC<SidebarProps> = ({
                                 </button>
                             </div>
                             <div className="flex-1 min-h-0 overflow-y-auto px-2.5 pt-3 pb-4">
-                                {/* Sidebar Contents */}
+                                {/* Pinned items always sit at the very top */}
+                                {isSectionVisible('favorites') && (
+                                    <div className="mb-[14px] empty:hidden">
+                                        {sectionElements.favorites}
+                                    </div>
+                                )}
                                 <div className="mb-[22px]">
                                     {isMinimal ? (
                                         <SidebarSmartLists
@@ -351,6 +352,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                                     ) {
                                         return null;
                                     }
+                                    if (id === 'favorites') return null;
                                     if (id === 'habits' && !habitsEnabled)
                                         return null;
                                     if (

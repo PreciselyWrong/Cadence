@@ -124,7 +124,6 @@
     "toggleDarkMode": "تبديل الوضع المظلم",
     "insights": "رؤى",
     "boards": "لوحات",
-    "bookmarks": "المفضلات",
     "reports": "تقارير",
     "productivityAssistant": "مساعد الإنتاجية",
     "assignedToMe": "مخصص لي",
@@ -134,8 +133,6 @@
     "templates": "القوالب",
     "people": "الأشخاص",
     "allEntities": "كل العناصر",
-    "collapseFavorites": "طي المفضلة",
-    "expandFavorites": "توسيع المفضلة",
     "telegramConnected": "Telegram متصل",
     "telegramProblem": "مشكلة في اتصال Telegram",
     "resize": "تغيير حجم الشريط الجانبي",
@@ -147,7 +144,10 @@
     "more": "المزيد",
     "toggleFolder": "إظهار المشاريع أو إخفاؤها",
     "customize": "تخصيص الشريط الجانبي",
-    "toggleSection": "توسيع أو طي"
+    "toggleSection": "توسيع أو طي",
+    "pinned": "المثبّتة",
+    "pinItem": "تثبيت {{name}}",
+    "unpinItem": "إلغاء تثبيت {{name}}"
   },
   "navigation": {
     "home": "الرئيسية",
@@ -3282,8 +3282,7 @@
       "taskAssigned": "مهمة معينة",
       "habitReminders": "تذكيرات العادات",
       "comments": "التعليقات والإشارات",
-      "taskReminders": "تذكيرات المهام",
-      "habitReminders": "تذكيرات العادات"
+      "taskReminders": "تذكيرات المهام"
     },
     "descriptions": {
       "dueTasks": "المهام المستحقة خلال 24 ساعة",
@@ -3292,10 +3291,9 @@
       "dueProjects": "المشاريع المستحقة خلال 24 ساعة",
       "overdueProjects": "المشاريع التي تجاوزت تاريخ استحقاقها",
       "taskAssigned": "تم تعيين مهمة لك من قبل شخص آخر",
-      "habitReminders": "في وقت التذكير المحدد للعادة، ما دامت لم تُنجز بعد",
+      "habitReminders": "هاتفك يذكّرك بها بالفعل؛ فعّل الدفع فقط إن أردت أن يرن الخادم أيضًا.",
       "comments": "الردود والتعليقات على مهامك والإشارات @",
-      "taskReminders": "الوقت الذي تحدده لمهمة. يرن هاتفك؛ أضف الكمبيوتر إن أردت أن يرن حاسوبك أيضًا",
-      "habitReminders": "هاتفك يذكّرك بها بالفعل؛ فعّل الدفع فقط إن أردت أن يرن الخادم أيضًا."
+      "taskReminders": "الوقت الذي تحدده لمهمة. يرن هاتفك؛ أضف الكمبيوتر إن أردت أن يرن حاسوبك أيضًا"
     },
     "telegram": {
       "notConfigured": {

@@ -120,7 +120,6 @@
     "toggleDarkMode": "切换暗黑模式",
     "insights": "洞察",
     "boards": "看板",
-    "bookmarks": "书签",
     "reports": "报告",
     "productivityAssistant": "生产力助手",
     "assignedToMe": "分配给我",
@@ -130,8 +129,6 @@
     "templates": "模板",
     "people": "人员",
     "allEntities": "所有项目",
-    "collapseFavorites": "收起收藏",
-    "expandFavorites": "展开收藏",
     "telegramConnected": "Telegram 已连接",
     "telegramProblem": "Telegram 连接出现问题",
     "resize": "调整侧边栏宽度",
@@ -143,7 +140,10 @@
     "more": "更多",
     "toggleFolder": "显示或隐藏项目",
     "customize": "自定义侧边栏",
-    "toggleSection": "展开或收起"
+    "toggleSection": "展开或收起",
+    "pinned": "已固定",
+    "pinItem": "固定 {{name}}",
+    "unpinItem": "取消固定 {{name}}"
   },
   "navigation": {
     "home": "首页",
@@ -3258,8 +3258,7 @@
       "taskAssigned": "任务分配",
       "habitReminders": "习惯提醒",
       "comments": "评论与提及",
-      "taskReminders": "任务提醒",
-      "habitReminders": "习惯提醒"
+      "taskReminders": "任务提醒"
     },
     "descriptions": {
       "dueTasks": "在24小时内到期的任务",
@@ -3268,10 +3267,9 @@
       "dueProjects": "在24小时内到期的项目",
       "overdueProjects": "已过截止日期的项目",
       "taskAssigned": "有人将任务分配给您",
-      "habitReminders": "在习惯设定的提醒时间,且该习惯仍未完成时",
+      "habitReminders": "手机已经会提醒你；只有希望服务器也响铃时才开启推送。",
       "comments": "回复、你的任务上的评论以及 @提及",
-      "taskReminders": "你在任务上设置的时间。手机会响铃；如果希望电脑也响，请添加桌面",
-      "habitReminders": "手机已经会提醒你；只有希望服务器也响铃时才开启推送。"
+      "taskReminders": "你在任务上设置的时间。手机会响铃；如果希望电脑也响，请添加桌面"
     },
     "telegram": {
       "notConfigured": {

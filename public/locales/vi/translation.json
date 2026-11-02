@@ -120,7 +120,6 @@
     "toggleDarkMode": "Chuyển đổi Chế độ Tối",
     "insights": "Thông tin chi tiết",
     "boards": "Bảng",
-    "bookmarks": "Đánh dấu",
     "reports": "Báo cáo",
     "productivityAssistant": "Trợ lý Năng suất",
     "assignedToMe": "Được giao cho tôi",
@@ -130,8 +129,6 @@
     "templates": "Mẫu",
     "people": "Mọi người",
     "allEntities": "Tất cả mục",
-    "collapseFavorites": "Thu gọn mục yêu thích",
-    "expandFavorites": "Mở rộng mục yêu thích",
     "telegramConnected": "Đã kết nối Telegram",
     "telegramProblem": "Sự cố kết nối Telegram",
     "resize": "Đổi kích thước thanh bên",
@@ -143,7 +140,10 @@
     "more": "Thêm",
     "toggleFolder": "Hiện hoặc ẩn dự án",
     "customize": "Tùy chỉnh thanh bên",
-    "toggleSection": "Mở rộng hoặc thu gọn"
+    "toggleSection": "Mở rộng hoặc thu gọn",
+    "pinned": "Đã ghim",
+    "pinItem": "Ghim {{name}}",
+    "unpinItem": "Bỏ ghim {{name}}"
   },
   "navigation": {
     "home": "Trang chủ",
@@ -3258,8 +3258,7 @@
       "taskAssigned": "Nhiệm vụ đã được giao",
       "habitReminders": "Nhắc nhở thói quen",
       "comments": "Bình luận và nhắc đến",
-      "taskReminders": "Nhắc nhở công việc",
-      "habitReminders": "Nhắc nhở thói quen"
+      "taskReminders": "Nhắc nhở công việc"
     },
     "descriptions": {
       "dueTasks": "Công việc đến hạn trong vòng 24 giờ",
@@ -3268,10 +3267,9 @@
       "dueProjects": "Dự án đến hạn trong vòng 24 giờ",
       "overdueProjects": "Dự án đã qua hạn",
       "taskAssigned": "Một nhiệm vụ đã được giao cho bạn bởi người khác",
-      "habitReminders": "Vào giờ nhắc đặt cho thói quen, khi thói quen đó vẫn còn mở",
+      "habitReminders": "Điện thoại đã nhắc bạn rồi; chỉ bật Push nếu bạn muốn máy chủ cũng đổ chuông.",
       "comments": "Phản hồi, bình luận trên nhiệm vụ của bạn và @nhắc đến",
-      "taskReminders": "Giờ bạn đặt cho một công việc. Điện thoại sẽ đổ chuông; bật Máy tính nếu muốn máy tính cũng kêu",
-      "habitReminders": "Điện thoại đã nhắc bạn rồi; chỉ bật Push nếu bạn muốn máy chủ cũng đổ chuông."
+      "taskReminders": "Giờ bạn đặt cho một công việc. Điện thoại sẽ đổ chuông; bật Máy tính nếu muốn máy tính cũng kêu"
     },
     "telegram": {
       "notConfigured": {
