@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-02 — Tâches ne rouvre plus la dernière fiche ; textes longs lisibles
+
+- **Problème** : après une tâche ouverte depuis un widget ou un rappel, chaque passage Inbox → Tâches rouvrait cette fiche (l'extra de l'intent restait lu). Le champ d'ajout rapide tenait sur une ligne qui défilait de côté : un long titre ne se lisait pas. Une idée longue de l'Inbox était coupée à trois lignes sans moyen de la lire en entier, sauf « Modifier ».
+- **Décision** : la tâche demandée par le widget, le rappel ou le Bilan est servie une fois puis oubliée (`TaskOpening`) ; changer d'onglet ne rouvre rien. Le champ d'ajout rapide passe à la ligne (six lignes, puis défile) ; Entrée valide toujours, un saut de ligne collé devient une espace (`singleLineCapture`). Le renommage d'une sous-tâche passe aussi à la ligne. Une idée longue garde trois lignes et un lien « Afficher tout » / « Réduire ».
+- **Web** : rien à reprendre (le champ d'ajout du web passe déjà à la ligne, les idées s'affichent en entier). Reste : rien d'essayé sur le téléphone.
+
 ### 2026-11-01 — Passe d'épure : sous-titres d'explication (reprise du web)
 
 - **Problème** : les onglets Objectifs et Terminées affichaient une phrase d'explication sous le titre, comme le bouton « i » que le web vient de retirer.

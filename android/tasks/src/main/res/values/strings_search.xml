@@ -122,6 +122,8 @@
     <string name="tasks_idea_project">Projet</string>
     <string name="tasks_idea_note">Note</string>
     <string name="tasks_idea_edit">Modifier</string>
+    <string name="tasks_idea_show_more">Afficher tout</string>
+    <string name="tasks_idea_show_less">Réduire</string>
     <string name="tasks_idea_edit_title">Modifier l\'idée</string>
     <string name="tasks_idea_edit_save">Enregistrer</string>
     <string name="tasks_idea_project_title">Ranger dans un projet</string>

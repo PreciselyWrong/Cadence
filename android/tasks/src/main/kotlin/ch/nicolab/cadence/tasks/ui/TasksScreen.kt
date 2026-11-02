@@ -64,7 +64,7 @@ private val AREA_FILTER_TABS = setOf(TasksTab.TODAY, TasksTab.UPCOMING, TasksTab
 
 /**
  * Écran Tâches : titre et date, onglets à pastilles, tirer pour synchroniser, ajout rapide.
- * [openTaskUid] ouvre directement la fiche d'une tâche (depuis le widget ou un rappel).
+ * [openTaskUid] ouvre directement la fiche d'une tâche (widget, rappel ou Bilan) ; [onTaskOpened] signale qu'elle est servie.
  * [showProjectUid] ouvre directement le contenu d'un projet (depuis la recherche).
  * [routineStrip] est affiché dans l'onglet Aujourd'hui, sous les tâches du jour.
  */
@@ -72,6 +72,7 @@ private val AREA_FILTER_TABS = setOf(TasksTab.TODAY, TasksTab.UPCOMING, TasksTab
 fun TasksScreen(
     modifier: Modifier = Modifier,
     openTaskUid: String? = null,
+    onTaskOpened: () -> Unit = {},
     showProjectUid: String? = null,
     onProjectShown: () -> Unit = {},
     onOpenSearch: () -> Unit = {},
@@ -98,7 +99,10 @@ fun TasksScreen(
     val areaFilter by viewModel.areaFilter.collectAsStateWithLifecycle()
 
     LaunchedEffect(openTaskUid) {
-        if (openTaskUid != null) selectedTaskUid = openTaskUid
+        if (openTaskUid != null) {
+            selectedTaskUid = openTaskUid
+            onTaskOpened()
+        }
     }
     LaunchedEffect(showProjectUid) {
         if (showProjectUid != null) {

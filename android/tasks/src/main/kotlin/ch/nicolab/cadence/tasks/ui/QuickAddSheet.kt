@@ -31,6 +31,7 @@ import ch.nicolab.cadence.tasks.quickadd.QuickAddSeries
 import ch.nicolab.cadence.tasks.quickadd.QuickAddSuggestions
 import ch.nicolab.cadence.tasks.quickadd.SuggestionKind
 import ch.nicolab.cadence.tasks.quickadd.TokenAtCursor
+import ch.nicolab.cadence.tasks.quickadd.singleLineCapture
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -508,9 +509,17 @@ private fun CaptureBox(
             }
             BasicTextField(
                 value = value,
-                onValueChange = onValueChange,
+                // Passe à la ligne pour montrer tout le titre ; Entrée valide au lieu d'ajouter une ligne.
+                onValueChange = { next ->
+                    if ('\n' in next.text && next.text.length == value.text.length + 1) {
+                        onDone()
+                    } else {
+                        onValueChange(next.copy(text = singleLineCapture(next.text)))
+                    }
+                },
                 enabled = enabled,
-                singleLine = true,
+                singleLine = false,
+                maxLines = CAPTURE_MAX_LINES,
                 textStyle = MaterialTheme.typography.bodyLarge.copy(color = palette.onSurface),
                 cursorBrush = SolidColor(palette.primary),
                 visualTransformation = highlight,
@@ -737,3 +746,6 @@ private fun SuggestionStrip(suggestions: List<Suggestion>, onPick: (Suggestion) 
         )
     }
 }
+
+/** Au-delà, le champ défile : le titre reste lisible sans pousser les pastilles hors de la feuille. */
+private const val CAPTURE_MAX_LINES = 6

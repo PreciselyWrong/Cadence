@@ -66,6 +66,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ch.nicolab.cadence.designsystem.components.HeaderButtonStyle
 import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
 import ch.nicolab.cadence.designsystem.components.SectionHeader
+import ch.nicolab.cadence.designsystem.components.readableTintOf
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
@@ -301,13 +302,28 @@ private fun IdeaRow(
                 Modifier.fillMaxWidth().clickable(onClick = onOpen),
                 verticalArrangement = Arrangement.spacedBy(Space.sm),
             ) {
+                // Trois lignes au repos ; « Afficher tout » déplie une idée longue sans quitter la liste.
+                var expanded by rememberSaveable(entry.uid) { mutableStateOf(false) }
+                var overflows by remember(entry.content) { mutableStateOf(false) }
                 Text(
                     text = entry.content,
                     style = MaterialTheme.typography.bodyLarge,
                     color = palette.onSurface,
-                    maxLines = 3,
+                    maxLines = if (expanded) Int.MAX_VALUE else IDEA_COLLAPSED_LINES,
                     overflow = TextOverflow.Ellipsis,
+                    onTextLayout = { if (!expanded) overflows = it.hasVisualOverflow },
                 )
+                if (overflows || expanded) {
+                    Text(
+                        stringResource(if (expanded) R.string.tasks_idea_show_less else R.string.tasks_idea_show_more),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = readableTintOf(palette.primary, palette.card),
+                        modifier = Modifier
+                            .clip(Radius.Pill)
+                            .clickable { expanded = !expanded }
+                            .padding(vertical = Space.xs),
+                    )
+                }
                 LinkPreviewList(entry.content, previews, limit = 1)
             }
             // Passe à la ligne plutôt que de rogner une pastille en grande police.
@@ -400,3 +416,5 @@ private fun IdeaProjectSheet(viewModel: TasksViewModel, onPick: (String?) -> Uni
         }
     }
 }
+
+private const val IDEA_COLLAPSED_LINES = 3

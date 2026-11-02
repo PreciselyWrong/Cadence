@@ -125,12 +125,14 @@ internal fun CadenceAppScreen(
     var reviewOpen by rememberSaveable { mutableStateOf(false) }
     var goalsOpen by rememberSaveable { mutableStateOf(false) }
     var projectToShow by rememberSaveable { mutableStateOf<String?>(null) }
-    // Tâche ouverte depuis le Bilan ; effacée dès qu'on change d'onglet pour ne pas la rouvrir.
-    var taskToOpen by rememberSaveable { mutableStateOf<String?>(null) }
+    // Tâche à ouvrir (widget, rappel ou Bilan) ; effacée dès que Tâches l'a ouverte pour ne pas la rouvrir.
+    var opening by rememberSaveable(stateSaver = taskOpeningSaver) { mutableStateOf(TaskOpening()) }
     BackHandler(enabled = settingsOpen) { settingsOpen = false }
     // Une tâche ouverte depuis un widget ou un rappel doit s'afficher dans Tâches, quel que soit l'onglet restauré.
     androidx.compose.runtime.LaunchedEffect(openTaskUid) {
-        if (openTaskUid != null) {
+        val next = opening.fromLaunch(openTaskUid)
+        if (next != opening) {
+            opening = next
             tab = Tab.TASKS
             settingsOpen = false
         }
@@ -239,7 +241,8 @@ internal fun CadenceAppScreen(
                     null -> SettingsScreen(settingsDeps, onBack = { settingsOpen = false })
                     Tab.INBOX -> InboxScreen(onOpenSearch = { searchOpen = true }, onOpenSettings = { settingsOpen = true })
                     Tab.TASKS -> TasksScreen(
-                        openTaskUid = taskToOpen ?: openTaskUid,
+                        openTaskUid = opening.pending,
+                        onTaskOpened = { opening = opening.consumed() },
                         showProjectUid = projectToShow,
                         onProjectShown = { projectToShow = null },
                         onOpenSearch = { searchOpen = true },
@@ -288,7 +291,7 @@ internal fun CadenceAppScreen(
                         options = { options = it },
                         onCorrect = { viewModel.clearSaveError(); correctingId = it.id },
                         onOpenTask = { uid ->
-                            taskToOpen = uid
+                            opening = opening.request(uid)
                             tab = Tab.TASKS
                         },
                         onOpenReview = { reviewOpen = true },
@@ -324,7 +327,7 @@ internal fun CadenceAppScreen(
             NavigationBarScrim()
             if (!settingsOpen && !searchOpen && !reviewOpen && !goalsOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop) { index ->
                 tab = Tab.entries[index]
-                taskToOpen = null
+                opening = opening.consumed()
             }
             CadenceSnackbarHost(
                 snackbar,
@@ -501,3 +504,8 @@ private fun DeleteDialog(dismiss: () -> Unit, confirm: () -> Unit) {
         dismissButton = { TertiaryAction(stringResource(R.string.delete_dialog_cancel), onClick = dismiss) },
     )
 }
+
+private val taskOpeningSaver = androidx.compose.runtime.saveable.listSaver<TaskOpening, Any?>(
+    save = { it.save() },
+    restore = { TaskOpening.restore(it) },
+)

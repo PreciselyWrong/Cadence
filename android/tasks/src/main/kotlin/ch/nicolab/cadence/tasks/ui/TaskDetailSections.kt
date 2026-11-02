@@ -67,6 +67,7 @@ import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.RepeatType
 import ch.nicolab.cadence.tasks.model.Repetition
+import ch.nicolab.cadence.tasks.quickadd.singleLineCapture
 import ch.nicolab.cadence.tasks.model.TaskExtraRows
 import ch.nicolab.cadence.tasks.model.TaskItem
 import java.time.LocalDate
@@ -300,8 +301,8 @@ private fun RenameSubtaskDialog(current: String, onSave: (String) -> Unit, onDis
         text = {
             TextField(
                 value = name,
-                onValueChange = { name = it },
-                singleLine = true,
+                onValueChange = { name = singleLineCapture(it) },
+                maxLines = 6,
                 modifier = Modifier.fillMaxWidth(),
             )
         },
