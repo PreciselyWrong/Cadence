@@ -133,7 +133,8 @@ describe('SidebarSmartLists', () => {
         });
     });
 
-    it('shows Today, Tomorrow, Next 7 days and Inbox with their counts', async () => {
+    // Only what waits for an action keeps a count by default (Today, Inbox).
+    it('shows Today, Tomorrow, Next 7 days and Inbox, counting Today and Inbox', async () => {
         render(
             <SidebarSmartLists handleNavClick={jest.fn()} location={location} />
         );
@@ -149,10 +150,10 @@ describe('SidebarSmartLists', () => {
             );
         });
         expect(screen.getByTestId('sidebar-smart-tomorrow')).toHaveTextContent(
-            '5'
+            /^Tomorrow$/
         );
         expect(screen.getByTestId('sidebar-smart-next7')).toHaveTextContent(
-            '9'
+            /^Next 7 days$/
         );
         expect(screen.getByTestId('sidebar-smart-inbox')).toHaveTextContent(
             '2'
