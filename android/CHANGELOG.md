@@ -1,3 +1,16 @@
+## [1.8.0] — 2 novembre 2026
+
+### Épure
+- Tâches : plus de rangées de pastilles. Le titre est la liste ouverte (« Aujourd'hui ▾ ») : un appui ouvre Listes, avec les épinglés, Aujourd'hui, À venir, Projets, Étiquettes, Notes, Terminées, le domaine et les Réglages. Objectifs se trouve dans Bilan.
+- Aujourd'hui : les tâches d'abord. La charge ne s'affiche que pour une journée pleine ; la fin de journée devient une ligne discrète après les tâches ; plus de bannière d'agendas.
+- Lignes de tâche : date en texte simple, projet dans sa couleur, priorité haute en case rouge ; plus de point de priorité ni de trait de projet.
+- Inbox : chaque idée a « Aujourd'hui » et « … » au lieu de cinq boutons.
+- Projets et Étiquettes en lignes simples, sans « 0 » ni barres vides ; Bilan n'affiche plus de graphique vide.
+- Couleurs plus sobres : fonds neutres, boutons d'en-tête sans cercle, ajout toujours par le bouton + en bas (Habitudes compris).
+
+### Corrections
+- Fiche de tâche : plus de gros bouton « Terminer » qui fermait la tâche par erreur ; on termine avec la case à côté du titre. Le titre tient sur toute la largeur.
+
 ## [1.7.3] — 2 novembre 2026
 
 ### Nouveautés
