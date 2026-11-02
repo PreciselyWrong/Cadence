@@ -1,3 +1,14 @@
+## [1.7.3] — 2 novembre 2026
+
+### Nouveautés
+- Tâches : les projets et notes épinglés s'affichent en pastilles tout en haut de l'écran ; un appui les ouvre, un appui long les désépingle.
+
+### Corrections
+- Tâches ne rouvre plus la dernière tâche ouverte depuis un widget ou un rappel quand on revient de l'Inbox.
+- Ajout rapide : un long titre passe à la ligne au lieu de défiler sur le côté ; Entrée valide toujours.
+- Inbox : une idée longue se lit en entier avec « Afficher tout ».
+- Renommer une sous-tâche : le champ passe à la ligne.
+
 ## [1.7.2] — 2 novembre 2026
 
 ### Nouveautés
