@@ -1,3 +1,10 @@
+## [1.7.2] — 2 novembre 2026
+
+### Nouveautés
+- Réglages › Planification : les plages protégées sont désormais celles du serveur, les mêmes que sur le web ; les plages déjà créées sur le téléphone y sont envoyées si le serveur n'en a aucune.
+- Plages protégées : des exceptions pour les vacances ou un jour de congé (premier et dernier jour, motif facultatif, toutes les plages ou seulement certaines) ; ces jours-là, Cadence peut proposer des tâches sur ces heures. Une exception passée disparaît d'elle-même.
+- Une modification faite hors ligne est gardée et envoyée à la synchro suivante.
+
 ## [1.7.1] — 1 novembre 2026
 
 ### Épure
