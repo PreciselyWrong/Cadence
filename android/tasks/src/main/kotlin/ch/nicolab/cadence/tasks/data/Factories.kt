@@ -8,6 +8,8 @@ import ch.nicolab.cadence.tasks.review.ReviewCache
 import ch.nicolab.cadence.tasks.review.ReviewRepository
 import ch.nicolab.cadence.tasks.todomd.TodoMdClient
 import ch.nicolab.cadence.tasks.syncstatus.SyncStatusClient
+import ch.nicolab.cadence.tasks.planning.FocusRepository
+import ch.nicolab.cadence.tasks.planning.PlanningStore
 import ch.nicolab.cadence.tasks.reminder.PlanSlotsStore
 import ch.nicolab.cadence.tasks.reminder.refreshPlanSlots
 import java.io.File
@@ -34,6 +36,8 @@ internal fun createLinkPreviews(context: Context): ch.nicolab.cadence.tasks.link
 internal fun createServerConnection(context: Context): ServerConnection = TasksRuntime.get(context).connection
 
 internal fun createReview(context: Context): ReviewRepository = TasksRuntime.get(context).review
+
+internal fun createFocus(context: Context): FocusRepository = TasksRuntime.get(context).focus
 
 internal fun createTodoMd(context: Context): TodoMdClient = TasksRuntime.get(context).todoMd
 
@@ -80,7 +84,10 @@ internal class TasksRuntime private constructor(context: Context) {
         hlc,
         onProfile = connection::saveProfile,
         entities = if (habitStore != null) SYNCED_ENTITIES + HABIT_ENTITIES else SYNCED_ENTITIES,
-        onSynced = { refreshPlanSlots(PlanSlotsStore(appContext), api::call) },
+        onSynced = {
+            refreshPlanSlots(PlanSlotsStore(appContext), api::call)
+            focus.sync()
+        },
     )
     private val habitPending: Flow<Int> = habitStorage?.let { storage ->
         combine(storage.observePendingCount(), ownership.observeForeign()) { count, foreign -> pendingHabitWrites(count, foreign) }
@@ -104,6 +111,8 @@ internal class TasksRuntime private constructor(context: Context) {
         ReviewCache(reviewCacheDir(appContext)),
         defer = { call -> repository.defer(call).getOrThrow() },
     )
+
+    val focus = FocusRepository(PlanningStore.of(appContext), api::call)
 
     companion object {
         @Volatile

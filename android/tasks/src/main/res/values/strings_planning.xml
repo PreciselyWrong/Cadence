@@ -139,12 +139,24 @@
     <string name="planning_settings_shutdown">Fin de journée</string>
     <string name="planning_settings_shutdown_hint">À partir de cette heure, Cadence propose de terminer la journée.</string>
     <string name="planning_settings_focus">Plages protégées</string>
-    <string name="planning_settings_focus_hint">Cadence n\'y place aucune tâche : travail de fond, repas, sport.</string>
+    <string name="planning_settings_focus_hint">Cadence n\'y place aucune tâche, ici comme sur le web : travail, repas, sport.</string>
     <string name="planning_settings_focus_empty">Aucune plage protégée.</string>
     <string name="planning_settings_focus_add">Ajouter une plage</string>
     <string name="planning_settings_focus_default">Travail de fond</string>
     <string name="planning_settings_focus_name">Nom</string>
     <string name="planning_settings_focus_remove">Supprimer la plage %1$s</string>
+    <string name="planning_settings_exceptions">Exceptions</string>
+    <string name="planning_settings_exceptions_hint">Vacances ou jour de congé : les plages choisies sont libres ces jours-là.</string>
+    <string name="planning_settings_exceptions_empty">Aucune exception à venir.</string>
+    <string name="planning_settings_exception_add">Ajouter une exception</string>
+    <string name="planning_settings_exception_label">Motif (facultatif)</string>
+    <string name="planning_settings_exception_start">Premier jour</string>
+    <string name="planning_settings_exception_end">Dernier jour</string>
+    <string name="planning_settings_exception_all">Toutes les plages</string>
+    <string name="planning_settings_exception_remove">Supprimer l\'exception</string>
+    <string name="planning_settings_day_before">%1$s : un jour plus tôt</string>
+    <string name="planning_settings_day_after">%1$s : un jour plus tard</string>
+    <string name="planning_settings_focus_error">Plages non enregistrées : %1$s</string>
     <string name="planning_settings_earlier">%1$s : 30 minutes plus tôt</string>
     <string name="planning_settings_later">%1$s : 30 minutes plus tard</string>
 </resources>

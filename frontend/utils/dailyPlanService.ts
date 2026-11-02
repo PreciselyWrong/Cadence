@@ -69,10 +69,28 @@ export interface FocusBlock {
     label?: string;
 }
 
+// Days (YYYY-MM-DD, both included) on which focus blocks are free, such as
+// holidays; block_ids null frees every block.
+export interface FocusException {
+    id: string;
+    start: string;
+    end: string;
+    block_ids: string[] | null;
+    label?: string;
+}
+
+export interface FocusSettings {
+    blocks: FocusBlock[];
+    exceptions: FocusException[];
+}
+
 export interface DailyPlanResponse {
     date: string;
     day_hours?: DayHours;
     focus_blocks?: FocusBlock[];
+    focus_exceptions?: FocusException[];
+    // The blocks that hold on this date, exceptions applied
+    focus_blocks_of_day?: FocusBlock[];
     plan: DailyPlan | null;
 }
 
@@ -379,24 +397,15 @@ export const carryOverTasks = async (
     return response.json();
 };
 
-export const fetchFocusBlocks = async (): Promise<FocusBlock[]> => {
-    const response = await fetch(getApiPath('daily-plan/focus-blocks'), {
-        credentials: 'include',
-        headers: getDefaultHeaders(),
-    });
-    await handleAuthResponse(response, 'Failed to load your focus blocks.');
-    return (await response.json()).blocks;
-};
-
-export const saveFocusBlocks = async (
-    blocks: Omit<FocusBlock, 'id'>[] | FocusBlock[]
-): Promise<FocusBlock[]> => {
+export const saveFocus = async (
+    focus: FocusSettings
+): Promise<FocusSettings> => {
     const response = await fetch(getApiPath('daily-plan/focus-blocks'), {
         method: 'PUT',
         credentials: 'include',
         headers: await getPostHeadersWithCsrf(),
-        body: JSON.stringify({ blocks }),
+        body: JSON.stringify(focus),
     });
     await handleAuthResponse(response, 'Failed to save your focus blocks.');
-    return (await response.json()).blocks;
+    return response.json();
 };

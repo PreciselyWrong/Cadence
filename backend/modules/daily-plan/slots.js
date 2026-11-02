@@ -75,8 +75,22 @@ function freeGaps(spans, range, from, minLength = 15) {
     return gaps;
 }
 
+// The recurring focus blocks that hold on `date` (YYYY-MM-DD): those of its
+// weekday, less the ones an exception (holidays, a day off) frees that day.
+// An exception without block_ids frees every block.
+function focusBlocksOn(blocks, exceptions, date) {
+    const weekday = new Date(`${date}T12:00:00Z`).getUTCDay();
+    const freed = exceptions.filter((e) => e.start <= date && date <= e.end);
+    return blocks.filter(
+        (block) =>
+            block.days.includes(weekday) &&
+            !freed.some((e) => !e.block_ids || e.block_ids.includes(block.id))
+    );
+}
+
 module.exports = {
     SLOT_MINUTES,
+    focusBlocksOn,
     MINUTES_PER_DAY,
     DEFAULT_DAY_HOURS,
     snap,

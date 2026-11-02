@@ -231,13 +231,21 @@ async function getPlan(user, date, scopeQuery = null) {
     const [plan, dayHours, focusBlocks, scope] = await Promise.all([
         repository.findPlan(user.id, planDate),
         getDayHours(user),
-        getFocusBlocks(user),
+        repository
+            .findUiSettings(user.id)
+            .then((settings) => readFocus(settings, user)),
         scopeQuery ? scopeService.resolveScope(scopeQuery, user.id) : null,
     ]);
     return {
         date: planDate,
         day_hours: dayHours,
         focus_blocks: focusBlocks.blocks,
+        focus_exceptions: focusBlocks.exceptions,
+        focus_blocks_of_day: slots.focusBlocksOn(
+            focusBlocks.blocks,
+            focusBlocks.allExceptions,
+            planDate
+        ),
         plan: await serializePlan(
             plan,
             user.id,
@@ -653,15 +661,88 @@ const normalizeFocusBlock = (block) => {
     };
 };
 
-async function getFocusBlocks(user) {
-    const settings = await repository.findUiSettings(user.id);
-    const saved = settings.planning?.focusBlocks;
-    const blocks = Array.isArray(saved)
-        ? saved.map(normalizeFocusBlock).filter(Boolean)
+// Exceptions free focus blocks between two dates, both included (holidays,
+// a day off); stored in ui_settings.planning.focusExceptions. One that has
+// ended is dropped, and so is one whose chosen blocks were all deleted.
+const MAX_FOCUS_EXCEPTIONS = 50;
+
+const isDate = (value) =>
+    typeof value === 'string' && moment(value, 'YYYY-MM-DD', true).isValid();
+
+const normalizeFocusException = (exception, blockIds) => {
+    if (!exception || typeof exception !== 'object') return null;
+    const { start, end, block_ids: chosen } = exception;
+    if (!isDate(start) || !isDate(end) || end < start) return null;
+    if (chosen !== undefined && chosen !== null && !Array.isArray(chosen)) {
+        return null;
+    }
+    const label =
+        typeof exception.label === 'string'
+            ? exception.label.trim().slice(0, 60)
+            : '';
+    return {
+        id:
+            typeof exception.id === 'string' && exception.id
+                ? exception.id.slice(0, 40)
+                : crypto.randomUUID(),
+        start,
+        end,
+        block_ids: chosen?.length ? [...new Set(chosen)] : null,
+        ...(label ? { label } : {}),
+    };
+};
+
+// Keeps the exceptions still to come whose blocks still exist.
+const liveFocusExceptions = (exceptions, blocks, today) => {
+    const ids = new Set(blocks.map((block) => block.id));
+    return exceptions
+        .filter((exception) => exception.end >= today)
+        .map((exception) =>
+            exception.block_ids
+                ? {
+                      ...exception,
+                      block_ids: exception.block_ids.filter((id) =>
+                          ids.has(id)
+                      ),
+                  }
+                : exception
+        )
+        .filter(
+            (exception) => !exception.block_ids || exception.block_ids.length
+        )
+        .sort((a, b) => a.start.localeCompare(b.start));
+};
+
+const userToday = (user) =>
+    getCurrentDateInTimezone(getSafeTimezone(user.timezone));
+
+// `exceptions` are the ones still to come; `allExceptions` keeps the ended
+// ones too, so a past day is shown with the blocks it really had.
+const readFocus = (settings, user) => {
+    const savedBlocks = settings.planning?.focusBlocks;
+    const blocks = Array.isArray(savedBlocks)
+        ? savedBlocks.map(normalizeFocusBlock).filter(Boolean)
         : [];
-    return { blocks };
+    const savedExceptions = settings.planning?.focusExceptions;
+    const allExceptions = Array.isArray(savedExceptions)
+        ? savedExceptions.map((e) => normalizeFocusException(e)).filter(Boolean)
+        : [];
+    return {
+        blocks,
+        exceptions: liveFocusExceptions(allExceptions, blocks, userToday(user)),
+        allExceptions,
+    };
+};
+
+async function getFocusBlocks(user) {
+    const { blocks, exceptions } = readFocus(
+        await repository.findUiSettings(user.id),
+        user
+    );
+    return { blocks, exceptions };
 }
 
+// `exceptions` is optional: left out, the saved ones are kept.
 async function saveFocusBlocks(user, body) {
     const input = body?.blocks;
     if (!Array.isArray(input) || input.length > MAX_FOCUS_BLOCKS) {
@@ -676,9 +757,36 @@ async function saveFocusBlocks(user, body) {
         );
     }
     const settings = await repository.findUiSettings(user.id);
+    let exceptions = readFocus(settings, user).exceptions;
+    if (body.exceptions !== undefined) {
+        const list = body.exceptions;
+        if (!Array.isArray(list) || list.length > MAX_FOCUS_EXCEPTIONS) {
+            throw new ValidationError(
+                `exceptions must be a list of at most ${MAX_FOCUS_EXCEPTIONS} exceptions`
+            );
+        }
+        const ids = new Set(blocks.map((block) => block.id));
+        exceptions = list.map((e) => normalizeFocusException(e));
+        const invalid = exceptions.some(
+            (e) => e === null || e.block_ids?.some((id) => !ids.has(id))
+        );
+        if (invalid) {
+            throw new ValidationError(
+                'each exception needs a start and an end date (YYYY-MM-DD, end not before start) and only known block ids'
+            );
+        }
+    }
     await repository.saveUiSettings(user.id, {
         ...settings,
-        planning: { ...(settings.planning || {}), focusBlocks: blocks },
+        planning: {
+            ...(settings.planning || {}),
+            focusBlocks: blocks,
+            focusExceptions: liveFocusExceptions(
+                exceptions,
+                blocks,
+                userToday(user)
+            ),
+        },
     });
     return getFocusBlocks(user);
 }

@@ -4,6 +4,7 @@ const app = require('../../app');
 const {
     Task,
     Tag,
+    User,
     Project,
     InboxItem,
     DailyPlan,
@@ -513,6 +514,146 @@ describe('Daily plan routes', () => {
     ])('rejects invalid focus blocks %j', async (body) => {
         const res = await agent.put('/api/daily-plan/focus-blocks').send(body);
         expect(res.status).toBe(400);
+    });
+
+    describe('focus exceptions', () => {
+        const nextDay = (offset) =>
+            moment.tz('Europe/Athens').add(offset, 'days').format('YYYY-MM-DD');
+
+        const saveWork = () =>
+            agent.put('/api/daily-plan/focus-blocks').send({
+                blocks: [
+                    {
+                        id: 'work',
+                        days: [0, 1, 2, 3, 4, 5, 6],
+                        start: 450,
+                        end: 1080,
+                        label: 'Work',
+                    },
+                    {
+                        id: 'gym',
+                        days: [0, 1, 2, 3, 4, 5, 6],
+                        start: 1140,
+                        end: 1200,
+                    },
+                ],
+            });
+
+        it('saves exceptions and leaves the suspended blocks out of the day', async () => {
+            await saveWork();
+            const saved = await agent.put('/api/daily-plan/focus-blocks').send({
+                blocks: (await agent.get('/api/daily-plan/focus-blocks')).body
+                    .blocks,
+                exceptions: [
+                    { start: today, end: nextDay(2), label: 'Holidays' },
+                    {
+                        start: nextDay(5),
+                        end: nextDay(5),
+                        block_ids: ['gym'],
+                    },
+                ],
+            });
+            expect(saved.status).toBe(200);
+            expect(saved.body.exceptions).toHaveLength(2);
+            expect(saved.body.exceptions[0]).toMatchObject({
+                start: today,
+                end: nextDay(2),
+                block_ids: null,
+                label: 'Holidays',
+            });
+
+            const plan = await agent.get('/api/daily-plan');
+            expect(plan.body.focus_blocks).toHaveLength(2);
+            expect(plan.body.focus_exceptions).toEqual(saved.body.exceptions);
+            expect(plan.body.focus_blocks_of_day).toEqual([]);
+
+            const later = await agent.get(`/api/daily-plan?date=${nextDay(5)}`);
+            expect(later.body.focus_blocks_of_day.map((b) => b.id)).toEqual([
+                'work',
+            ]);
+            const free = await agent.get(`/api/daily-plan?date=${nextDay(3)}`);
+            expect(free.body.focus_blocks_of_day).toHaveLength(2);
+        });
+
+        it('keeps the exceptions when only the blocks are saved', async () => {
+            await saveWork();
+            await agent.put('/api/daily-plan/focus-blocks').send({
+                blocks: (await agent.get('/api/daily-plan/focus-blocks')).body
+                    .blocks,
+                exceptions: [{ start: today, end: today, block_ids: ['gym'] }],
+            });
+            await saveWork();
+            const kept = await agent.get('/api/daily-plan/focus-blocks');
+            expect(kept.body.exceptions).toHaveLength(1);
+        });
+
+        it('drops an exception whose blocks were all deleted, and past ones', async () => {
+            await saveWork();
+            const blocks = (await agent.get('/api/daily-plan/focus-blocks'))
+                .body.blocks;
+            await agent.put('/api/daily-plan/focus-blocks').send({
+                blocks,
+                exceptions: [
+                    { start: today, end: today, block_ids: ['gym'] },
+                    { start: nextDay(-9), end: nextDay(-1) },
+                    {
+                        start: today,
+                        end: nextDay(1),
+                        block_ids: ['work', 'gym'],
+                    },
+                ],
+            });
+            const res = await agent.put('/api/daily-plan/focus-blocks').send({
+                blocks: blocks.filter((b) => b.id === 'work'),
+            });
+            expect(res.body.exceptions).toEqual([
+                expect.objectContaining({ block_ids: ['work'] }),
+            ]);
+        });
+
+        it('applies a past exception when a past day is shown', async () => {
+            await saveWork();
+            const settings = await User.findByPk(user.id);
+            const ui = settings.ui_settings || {};
+            await User.update(
+                {
+                    ui_settings: {
+                        ...ui,
+                        planning: {
+                            ...(ui.planning || {}),
+                            focusExceptions: [
+                                {
+                                    id: 'past',
+                                    start: nextDay(-3),
+                                    end: nextDay(-2),
+                                    block_ids: null,
+                                },
+                            ],
+                        },
+                    },
+                },
+                { where: { id: user.id } }
+            );
+            const past = await agent.get(`/api/daily-plan?date=${nextDay(-3)}`);
+            expect(past.body.focus_blocks_of_day).toEqual([]);
+            expect(past.body.focus_exceptions).toEqual([]);
+        });
+
+        it.each([
+            [{ start: '2026-13-01', end: '2026-13-02' }],
+            [{ start: '2099-01-05', end: '2099-01-04' }],
+            [{ start: '2099-01-05' }],
+            [{ start: '2099-01-05', end: '2099-01-06', block_ids: 'work' }],
+            [{ start: '2099-01-05', end: '2099-01-06', block_ids: ['nope'] }],
+        ])('rejects an invalid exception %j', async (exception) => {
+            await saveWork();
+            const res = await agent.put('/api/daily-plan/focus-blocks').send({
+                blocks: (await agent.get('/api/daily-plan/focus-blocks')).body
+                    .blocks,
+                exceptions: [exception],
+            });
+            expect(res.status).toBe(400);
+        });
     });
 
     it('rejects a ranking that does not list every bucket once', async () => {

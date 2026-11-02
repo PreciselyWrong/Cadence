@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.annotation.VisibleForTesting
 import ch.nicolab.cadence.tasks.data.createRepository
 import ch.nicolab.cadence.tasks.data.createLinkPreviews
+import ch.nicolab.cadence.tasks.data.createFocus
 import ch.nicolab.cadence.tasks.data.createReview
+import ch.nicolab.cadence.tasks.planning.FocusRepository
 import ch.nicolab.cadence.tasks.data.createServerConnection
 import ch.nicolab.cadence.tasks.data.createTodoMd
 import ch.nicolab.cadence.tasks.todomd.TodoMdClient
@@ -33,6 +35,9 @@ object TasksGraph {
 
     /** Listes de la revue, servies par le serveur (en ligne, dernière lecture hors ligne). */
     fun review(context: Context): ReviewRepository = createReview(context.applicationContext)
+
+    /** Plages protégées et exceptions, servies par le serveur (dernière lecture gardée, envoi différé hors ligne). */
+    fun focus(context: Context): FocusRepository = createFocus(context.applicationContext)
 
     /** État des dépôts git des projets TODO.md, servi par le serveur (en ligne seulement). */
     fun todoMd(context: Context): TodoMdClient = createTodoMd(context.applicationContext)

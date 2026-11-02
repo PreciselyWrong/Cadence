@@ -30,6 +30,7 @@ import {
     DailyPlanItem,
     DayHours,
     FocusBlock,
+    FocusException,
     InboxCandidate,
     PlanCandidates,
     fetchDailyPlan,
@@ -350,6 +351,11 @@ const TodayPage: React.FC = () => {
     const [date, setDate] = useState<string | null>(null);
     const [dayHours, setDayHours] = useState<DayHours | undefined>();
     const [focusBlocks, setFocusBlocks] = useState<FocusBlock[]>([]);
+    const [focusExceptions, setFocusExceptions] = useState<FocusException[]>(
+        []
+    );
+    // The blocks that hold on the shown date, exceptions applied (server)
+    const [focusBlocksOfDay, setFocusBlocksOfDay] = useState<FocusBlock[]>([]);
     const [focusOpen, setFocusOpen] = useState(false);
     const [placeAllPreview, setPlaceAllPreview] = useState<{
         placements: Placement[];
@@ -496,6 +502,8 @@ const TodayPage: React.FC = () => {
                 setDate(day);
                 setDayHours(planResponse.day_hours);
                 setFocusBlocks(planResponse.focus_blocks ?? []);
+                setFocusExceptions(planResponse.focus_exceptions ?? []);
+                setFocusBlocksOfDay(planResponse.focus_blocks_of_day ?? []);
                 setStarted(!!planResponse.plan?.started_at);
                 setItems(planResponse.plan?.items ?? []);
                 setWrapUp(planResponse.plan?.ai_wrap_up ?? null);
@@ -739,18 +747,18 @@ const TodayPage: React.FC = () => {
             showAllHours,
         ]
     );
-    // Recurring focus blocks of this weekday: reserved like meetings, so the
-    // free time and every slot search leave them alone.
+    // Focus blocks of this day (weekday, less exceptions): reserved like
+    // meetings, so the free time and every slot search leave them alone.
     const focusEvents = useMemo(
         () =>
             date
-                ? focusBlockEvents(focusBlocks, date).filter(
+                ? focusBlockEvents(focusBlocksOfDay, date).filter(
                       (e) =>
                           (e.end_minute as number) > range.start &&
                           (e.start_minute as number) < range.end
                   )
                 : [],
-        [focusBlocks, date, range]
+        [focusBlocksOfDay, date, range]
     );
     // The day's calendar events plus its open timed tasks that are not in
     // the plan, so the day view shows both (one source: taskToEvents).
@@ -2617,8 +2625,15 @@ const TodayPage: React.FC = () => {
             {focusOpen && (
                 <FocusBlocksDialog
                     blocks={focusBlocks}
+                    exceptions={focusExceptions}
+                    today={todayString()}
                     language={i18n.language}
-                    onSaved={setFocusBlocks}
+                    onSaved={(focus) => {
+                        setFocusBlocks(focus.blocks);
+                        setFocusExceptions(focus.exceptions);
+                        // The day's blocks come from the server
+                        setReloadToken((count) => count + 1);
+                    }}
                     onClose={() => setFocusOpen(false)}
                 />
             )}

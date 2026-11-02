@@ -234,6 +234,15 @@ async function loadDayEvents(user, date) {
     }
 }
 
+const focusBlockEvents = (blocks) =>
+    blocks.map((block) => ({
+        title: block.label || 'Focus time',
+        all_day: false,
+        busy: true,
+        start_minute: block.start,
+        end_minute: block.end,
+    }));
+
 async function draftDay(userId, { date, mode = 'fill' } = {}) {
     const user = await assertAiEnabled(userId);
     if (!['fill', 'replace'].includes(mode)) {
@@ -243,11 +252,18 @@ async function draftDay(userId, { date, mode = 'fill' } = {}) {
     const planDate = dailyPlanService.resolvePlanDate(date, timezone);
     const fullUser = { id: userId, timezone, features: user.features };
 
-    const [{ plan, day_hours: hours }, candidates, events] = await Promise.all([
+    const [
+        { plan, day_hours: hours, focus_blocks_of_day: focusBlocks },
+        candidates,
+        calendarEvents,
+    ] = await Promise.all([
         dailyPlanService.getPlan(fullUser, planDate),
         dailyPlanService.getCandidates(fullUser),
         loadDayEvents(fullUser, planDate),
     ]);
+    // Focus blocks are reserved like meetings, so the model and the clean-up
+    // keep tasks out of them.
+    const events = [...calendarEvents, ...focusBlockEvents(focusBlocks)];
     const planned = plan?.items || [];
     const existing = mode === 'fill' ? planned : [];
     const now = nowMinute(timezone, planDate);

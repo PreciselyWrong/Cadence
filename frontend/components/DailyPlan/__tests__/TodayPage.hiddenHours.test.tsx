@@ -253,6 +253,36 @@ describe('TodayPage planning mode: hidden hours', () => {
         expect(timelineStart()).toBe(9 * 60);
     });
 
+    it('shows the focus blocks of the day only, exceptions applied', async () => {
+        const employer = {
+            id: 'work',
+            days: [0, 1, 2, 3, 4, 5, 6],
+            start: 720,
+            end: 780,
+            label: 'Employer',
+        };
+        const planResponse = {
+            date: TODAY,
+            plan: { uid: 'p', date: TODAY, started_at: null, items: [planned] },
+            focus_blocks: [employer],
+        };
+        (fetchDailyPlan as jest.Mock).mockResolvedValue({
+            ...planResponse,
+            focus_blocks_of_day: [],
+        });
+        const { unmount } = render(<TodayPage />);
+        await screen.findByText('1 earlier');
+        expect(screen.queryByText('Employer')).not.toBeInTheDocument();
+        unmount();
+
+        (fetchDailyPlan as jest.Mock).mockResolvedValue({
+            ...planResponse,
+            focus_blocks_of_day: [employer],
+        });
+        render(<TodayPage />);
+        expect(await screen.findByText('Employer')).toBeInTheDocument();
+    });
+
     it('reviews a past day: relative label and a done summary, no suggestions', async () => {
         const d = new Date(`${TODAY}T12:00:00Z`);
         d.setUTCDate(d.getUTCDate() - 1);

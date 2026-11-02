@@ -80,7 +80,7 @@ object DayPlans {
     }
 
     fun focusSlots(day: LocalDate, settings: PlanningSettings): List<Slot> =
-        settings.focusBlocks.filter { day.dayOfWeek in it.days }.map { it.slot }
+        settings.focusBlocksOn(day).map { it.slot }
 
     /** Une tâche à heure fixe occupe son estimation à partir de cette heure. */
     fun timedTaskSlots(day: LocalDate, zone: ZoneId, tasks: List<TaskItem>): List<Slot> {

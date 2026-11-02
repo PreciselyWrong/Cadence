@@ -173,6 +173,43 @@ describe('Daily plan AI routes', () => {
         });
     });
 
+    it('never drafts a task inside a focus block of the day', async () => {
+        const a = await dueToday('Pay invoice', { estimated_minutes: 30 });
+        await agent.put('/api/daily-plan/focus-blocks').send({
+            blocks: [
+                {
+                    days: [0, 1, 2, 3, 4, 5, 6],
+                    start: 0,
+                    end: 1440,
+                    label: 'Employer',
+                },
+            ],
+        });
+        mockCreate.mockResolvedValue(
+            reply({
+                summary: 'ok',
+                items: [
+                    {
+                        task_uid: a.uid,
+                        start_minute: 600,
+                        duration_minutes: 30,
+                        reason: 'Due today',
+                    },
+                ],
+                skipped: [],
+            })
+        );
+
+        const res = await agent.post('/api/daily-plan/ai/draft').send({});
+
+        expect(res.status).toBe(200);
+        expect(res.body.items[0].start_minute).toBeNull();
+        const prompt = mockCreate.mock.calls[0][0].messages
+            .map((m) => m.content)
+            .join('\n');
+        expect(prompt).toContain('Employer');
+    });
+
     it('estimates once and serves repeats from the cache', async () => {
         const a = await Task.create({ name: 'Write report', user_id: user.id });
         mockCreate.mockResolvedValue(
