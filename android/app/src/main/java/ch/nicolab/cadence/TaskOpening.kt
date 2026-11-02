@@ -7,8 +7,6 @@ package ch.nicolab.cadence
 internal data class TaskOpening(val pending: String? = null, val launchServed: Boolean = false) {
     fun fromLaunch(uid: String?): TaskOpening = if (uid == null || launchServed) this else TaskOpening(uid, launchServed = true)
 
-    fun request(uid: String): TaskOpening = copy(pending = uid)
-
     fun consumed(): TaskOpening = copy(pending = null)
 
     fun save(): List<Any?> = listOf(pending, launchServed)

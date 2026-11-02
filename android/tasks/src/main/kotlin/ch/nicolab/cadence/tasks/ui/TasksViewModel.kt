@@ -2,7 +2,6 @@ package ch.nicolab.cadence.tasks.ui
 
 import android.app.Application
 import android.content.Context
-import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import ch.nicolab.cadence.calendar.CalendarGlobalSettings
@@ -12,24 +11,20 @@ import ch.nicolab.cadence.calendar.CalendarSurface
 import ch.nicolab.cadence.calendar.EventInstanceKey
 import ch.nicolab.cadence.calendar.EventWithDone
 import ch.nicolab.cadence.calendar.HiddenEvent
-import ch.nicolab.cadence.calendar.toHidden
 import ch.nicolab.cadence.calendar.TimeRange
 import ch.nicolab.cadence.calendar.ofDays
+import ch.nicolab.cadence.calendar.toHidden
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.data.UnsupportedRecurrence
+import ch.nicolab.cadence.tasks.links.LinkPreviews
 import ch.nicolab.cadence.tasks.model.AreaFilter
 import ch.nicolab.cadence.tasks.model.AreaItem
 import ch.nicolab.cadence.tasks.model.AreaSuggestions
-import ch.nicolab.cadence.tasks.model.NextAction
-import ch.nicolab.cadence.tasks.model.OccurrenceFields
-import ch.nicolab.cadence.tasks.model.InboxEntry
-import ch.nicolab.cadence.tasks.model.LinkDecision
-import ch.nicolab.cadence.tasks.model.LinkItem
-import ch.nicolab.cadence.tasks.model.LinkStatus
-import ch.nicolab.cadence.tasks.model.LinkTriage
-import ch.nicolab.cadence.tasks.model.TriageSink
-import ch.nicolab.cadence.tasks.links.LinkPreviews
+import ch.nicolab.cadence.tasks.model.DecisionContext
+import ch.nicolab.cadence.tasks.model.Delivery
+import ch.nicolab.cadence.tasks.model.Funnel
+import ch.nicolab.cadence.tasks.model.FunnelStage
 import ch.nicolab.cadence.tasks.model.GoalBucket
 import ch.nicolab.cadence.tasks.model.GoalChange
 import ch.nicolab.cadence.tasks.model.GoalItem
@@ -37,36 +32,43 @@ import ch.nicolab.cadence.tasks.model.GoalOverview
 import ch.nicolab.cadence.tasks.model.GoalStatus
 import ch.nicolab.cadence.tasks.model.Goals
 import ch.nicolab.cadence.tasks.model.IdeaNotes
+import ch.nicolab.cadence.tasks.model.InboxEntry
+import ch.nicolab.cadence.tasks.model.LinkDecision
+import ch.nicolab.cadence.tasks.model.LinkItem
+import ch.nicolab.cadence.tasks.model.LinkStatus
+import ch.nicolab.cadence.tasks.model.LinkTriage
+import ch.nicolab.cadence.tasks.model.NextAction
 import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.NoteItem
+import ch.nicolab.cadence.tasks.model.OccurrenceFields
+import ch.nicolab.cadence.tasks.model.Outline
+import ch.nicolab.cadence.tasks.model.OutlineNode
+import ch.nicolab.cadence.tasks.model.ProjectItem
+import ch.nicolab.cadence.tasks.model.ProjectStatus
+import ch.nicolab.cadence.tasks.model.RecurringScope
+import ch.nicolab.cadence.tasks.model.ReviewDecisions
+import ch.nicolab.cadence.tasks.model.Subtasks
+import ch.nicolab.cadence.tasks.model.SyncStatus
+import ch.nicolab.cadence.tasks.model.TagEditProblem
+import ch.nicolab.cadence.tasks.model.TagItem
+import ch.nicolab.cadence.tasks.model.TaskChange
+import ch.nicolab.cadence.tasks.model.TaskDraft
+import ch.nicolab.cadence.tasks.model.TaskItem
+import ch.nicolab.cadence.tasks.model.TaskViews
+import ch.nicolab.cadence.tasks.model.TriageSink
 import ch.nicolab.cadence.tasks.notes.Autosaver
 import ch.nicolab.cadence.tasks.notes.NoteEditSession
 import ch.nicolab.cadence.tasks.notes.NoteFields
 import ch.nicolab.cadence.tasks.notes.NotePatch
-import ch.nicolab.cadence.tasks.model.ProjectItem
-import ch.nicolab.cadence.tasks.model.ProjectStatus
-import ch.nicolab.cadence.tasks.model.RecurringScope
-import ch.nicolab.cadence.tasks.model.SyncStatus
-import ch.nicolab.cadence.tasks.model.TagEditProblem
-import ch.nicolab.cadence.tasks.model.Subtasks
-import ch.nicolab.cadence.tasks.model.TagItem
-import ch.nicolab.cadence.tasks.model.TaskChange
-import ch.nicolab.cadence.tasks.model.TaskDraft
-import ch.nicolab.cadence.tasks.model.Outline
-import ch.nicolab.cadence.tasks.model.OutlineNode
-import ch.nicolab.cadence.tasks.model.TaskItem
-import ch.nicolab.cadence.tasks.model.TaskViews
-import ch.nicolab.cadence.tasks.model.DecisionContext
-import ch.nicolab.cadence.tasks.model.Delivery
-import ch.nicolab.cadence.tasks.model.Funnel
-import ch.nicolab.cadence.tasks.model.FunnelStage
-import ch.nicolab.cadence.tasks.model.ReviewDecisions
-import java.time.DayOfWeek
+import ch.nicolab.cadence.tasks.planning.PlanEntry
+import ch.nicolab.cadence.tasks.planning.ServerPlan
+import ch.nicolab.cadence.tasks.reminder.PlanSlotsStore
 import ch.nicolab.cadence.tasks.swipe.FileBackedActions
 import ch.nicolab.cadence.tasks.swipe.SchedulePreset
 import ch.nicolab.cadence.tasks.swipe.SwipeAction
 import ch.nicolab.cadence.tasks.swipe.UndoChanges
 import ch.nicolab.cadence.tasks.widget.HeldCompletion
+import java.time.DayOfWeek
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
@@ -78,9 +80,6 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import ch.nicolab.cadence.tasks.planning.PlanEntry
-import ch.nicolab.cadence.tasks.planning.ServerPlan
-import ch.nicolab.cadence.tasks.reminder.PlanSlotsStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -105,8 +104,6 @@ private const val DELETE_UNDO_WINDOW_MS = 5_000L
 private const val COMPLETE_HOLD_MS = 600L
 private const val UNDO_WINDOW_MS = 4_500L
 private const val NOTE_SAVE_DELAY_MS = 700L
-private const val CALENDAR_PREFS = "tududi_calendar_notice"
-private const val KEY_NOTICE_DISMISSED = "dismissed"
 private const val FILTER_PREFS = "tududi_tasks_filter"
 private const val KEY_AREA = "area"
 
@@ -193,7 +190,6 @@ internal class TasksViewModel(
 
     private val repository = TasksGraph.repository(application)
     private val connection = TasksGraph.connection(application)
-    private val calendarPrefs = application.getSharedPreferences(CALENDAR_PREFS, Context.MODE_PRIVATE)
     private val genericError = application.getString(R.string.tasks_error_generic)
     /** Tâches supprimées par geste, masquées le temps de pouvoir annuler. */
     private val hiddenUids = MutableStateFlow<Set<String>>(emptySet())
@@ -273,13 +269,6 @@ internal class TasksViewModel(
 
     val calendarSettings: StateFlow<CalendarGlobalSettings> = calendar.globalSettings
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), CalendarGlobalSettings())
-
-    private val calendarNoticeDismissed = MutableStateFlow(calendarPrefs.getBoolean(KEY_NOTICE_DISMISSED, false))
-
-    /** Carte « Afficher vos agendas » : tant que la permission manque et que l'utilisateur ne l'a pas masquée. */
-    val calendarNoticeVisible: StateFlow<Boolean> = combine(calendar.permissionMissing, calendarNoticeDismissed) { missing, dismissed ->
-        missing && !dismissed
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), false)
 
     val upcoming: StateFlow<Map<LocalDate, List<TaskItem>>> = combine(scopedTasks, moment) { all, m ->
         TaskViews.upcoming(all, m.today, m.now, m.zone)
@@ -879,11 +868,6 @@ internal class TasksViewModel(
 
     /** À appeler après l'octroi de READ_CALENDAR, pour relire les agendas sans attendre le prochain changement. */
     fun refreshCalendar() = calendar.refresh()
-
-    fun dismissCalendarNotice() {
-        calendarPrefs.edit { putBoolean(KEY_NOTICE_DISMISSED, true) }
-        calendarNoticeDismissed.value = true
-    }
 
     private fun launchAction(block: suspend () -> Unit) {
         viewModelScope.launch {

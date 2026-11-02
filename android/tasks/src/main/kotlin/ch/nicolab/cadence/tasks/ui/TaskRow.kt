@@ -176,16 +176,7 @@ internal fun TaskRow(
                     }
                 }
             }
-            // Une priorité haute est déjà portée par le trait rouge de la case.
-            task.priority?.takeIf { it != TaskPriority.HIGH }?.let { priority ->
-                Box(
-                    Modifier
-                        .padding(start = 8.dp)
-                        .size(8.dp)
-                        .clip(CircleShape)
-                        .background(priorityColor(priority)),
-                )
-            }
+            // Un seul signal de priorité : le trait rouge de la case pour une priorité haute, rien d'autre.
             Spacer(Modifier.width(16.dp))
         }
     }
@@ -276,15 +267,11 @@ private fun TaskMeta(
             val time = (plannedAt ?: task.dueDate?.takeIf { task.dueHasTime })?.let { wireTime(instantTime(it, zone)) }
             val badge = listOfNotNull(day, time).joinToString(" ")
             if (badge.isNotEmpty()) {
+                // Texte simple, sans pastille ; une échéance passée reste neutre, jamais la couleur d'erreur.
                 Text(
                     text = badge,
-                    style = MaterialTheme.typography.labelSmall,
-                    // Une échéance passée se distingue sans alarme : teinte neutre, jamais la couleur d'erreur.
-                    color = if (overdue) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSecondaryContainer,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(if (overdue) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.secondaryContainer)
-                        .padding(horizontal = 6.dp, vertical = 2.dp),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
@@ -293,13 +280,9 @@ private fun TaskMeta(
             val fileDescription = stringResource(R.string.tasks_file_badge_description)
             Text(
                 text = fileText,
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
-                    .padding(horizontal = 6.dp, vertical = 2.dp)
-                    .semantics { contentDescription = fileDescription },
+                modifier = Modifier.semantics { contentDescription = fileDescription },
             )
         }
         if (task.isRecurring) {

@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.designsystem.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -9,9 +10,12 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.ExpandMore
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
@@ -32,9 +37,11 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.util.lerp
+import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
@@ -89,7 +96,8 @@ fun CollapsingHeaderHost(modifier: Modifier = Modifier, content: @Composable Box
 }
 
 /**
- * En-tête d'écran : retour facultatif, titre fort, sous-titre de contexte et actions à droite.
+ * En-tête d'écran : retour facultatif, titre fort (touchable avec [onTitleClick], chevron à l'appui), sous-titre
+ * de contexte et actions à droite.
  * La ligne de titre a la même hauteur sur tous les onglets, donc la même ligne de base ; le
  * sous-titre vit dessous et disparaît à la réduction.
  */
@@ -100,6 +108,8 @@ fun ScreenHeader(
     subtitle: String? = null,
     onBack: (() -> Unit)? = null,
     backDescription: String? = null,
+    onTitleClick: (() -> Unit)? = null,
+    titleClickLabel: String? = null,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
     val palette = cadence
@@ -125,19 +135,44 @@ fun ScreenHeader(
                 )
                 Spacer(Modifier.width(Space.sm))
             }
-            Text(
-                title,
+            // Un titre touchable (sélecteur de liste) porte un chevron : il dit qu'il s'ouvre.
+            Row(
                 Modifier.weight(1f).graphicsLayer {
                     val scale = lerp(1f, COLLAPSED_TITLE_SCALE, collapse?.fraction ?: 0f)
                     scaleX = scale
                     scaleY = scale
                     transformOrigin = TransformOrigin(0f, 0.5f)
                 },
-                style = MaterialTheme.typography.displaySmall,
-                color = palette.onSurface,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Row(
+                    if (onTitleClick != null) {
+                        Modifier
+                            .clip(Radius.Control)
+                            .clickable(role = Role.Button, onClickLabel = titleClickLabel, onClick = onTitleClick)
+                    } else {
+                        Modifier
+                    },
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        title,
+                        Modifier.weight(1f, fill = false),
+                        style = MaterialTheme.typography.displaySmall,
+                        color = palette.onSurface,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                    if (onTitleClick != null) {
+                        Icon(
+                            Icons.Outlined.ExpandMore,
+                            contentDescription = null,
+                            tint = palette.onSurfaceVariant,
+                            modifier = Modifier.padding(start = Space.xs).size(Size.iconLarge),
+                        )
+                    }
+                }
+            }
             Row(
                 horizontalArrangement = Arrangement.spacedBy(Space.sm),
                 verticalAlignment = Alignment.CenterVertically,

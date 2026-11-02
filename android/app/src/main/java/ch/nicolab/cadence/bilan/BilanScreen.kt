@@ -35,7 +35,6 @@ internal fun BilanScreen(
     quick: (HabitCardState) -> Unit,
     options: (HabitCardState) -> Unit,
     onCorrect: (HabitEntry) -> Unit,
-    onOpenTask: (String) -> Unit,
     onOpenReview: () -> Unit,
     onOpenGoals: () -> Unit,
 ) {
@@ -70,7 +69,7 @@ internal fun BilanScreen(
         item(key = "task-kpis") { TaskKpiPanel(habits) }
         item(key = "review-entry") { ReviewEntryPanel(onOpenReview) }
         item(key = "goals-entry") { GoalsEntryPanel(onOpenGoals) }
-        item(key = "task-review") { TaskReviewPanel(onOpenTask) }
+        item(key = "task-review") { TaskReviewPanel() }
         weekItems(habits, outlook, quick, options)
         statisticsItems(habits, openStatistics)
     }

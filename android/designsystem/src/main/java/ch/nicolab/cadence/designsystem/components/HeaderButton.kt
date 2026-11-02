@@ -3,7 +3,6 @@ package ch.nicolab.cadence.designsystem.components
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -26,10 +25,11 @@ import androidx.compose.ui.semantics.semantics
 import ch.nicolab.cadence.designsystem.theme.Motion
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.cadence
-import ch.nicolab.cadence.designsystem.theme.glass
-import ch.nicolab.cadence.designsystem.theme.glassBorder
 
-/** Style d'un bouton d'en-tête : verre sur les écrans principaux, nu sur le détail, plein pour l'action principale. */
+/**
+ * Style d'un bouton d'en-tête. Glass et Plain sont désormais une icône nue (refonte 2026-11 : plus de pastilles
+ * rondes dans les en-têtes) ; Filled reste réservé à l'action principale.
+ */
 enum class HeaderButtonStyle { Glass, Plain, Filled }
 
 /** Bouton circulaire d'en-tête, cible tactile de 48 dp et retour physique au toucher. */
@@ -51,16 +51,10 @@ fun RoundHeaderButton(
         label = "roundHeaderButtonPress",
     )
     val fill = when (style) {
-        HeaderButtonStyle.Glass -> palette.glass
-        HeaderButtonStyle.Plain -> Color.Transparent
+        HeaderButtonStyle.Glass, HeaderButtonStyle.Plain -> Color.Transparent
         HeaderButtonStyle.Filled -> palette.primary
     }
     val tint = if (style == HeaderButtonStyle.Filled) palette.onPrimary else palette.onSurface
-    val outline = if (style == HeaderButtonStyle.Glass) {
-        Modifier.border(Size.hairline, palette.glassBorder, CircleShape)
-    } else {
-        Modifier
-    }
     Box(
         modifier
             .graphicsLayer {
@@ -70,7 +64,6 @@ fun RoundHeaderButton(
             .size(Size.headerButton)
             .clip(CircleShape)
             .background(fill)
-            .then(outline)
             .clickable(
                 interactionSource = interactionSource,
                 indication = LocalIndication.current,

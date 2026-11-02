@@ -25,7 +25,7 @@ data class AccentRoles(
 )
 
 /** Carte claire (`LightPalette.card`), la surface claire la plus courante sous un texte d'accent. */
-private const val LIGHT_CARD = 0xFFF3F1FC.toInt()
+private const val LIGHT_CARD = 0xFFF4F4F6.toInt()
 
 private val VioletLight = AccentRoles(
     primary = 0xFF5E5CE6.toInt(),

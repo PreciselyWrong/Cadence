@@ -1,7 +1,10 @@
 package ch.nicolab.cadence.habits
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Settings
@@ -10,13 +13,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import ch.nicolab.cadence.HabitCardState
 import ch.nicolab.cadence.R
-import ch.nicolab.cadence.designsystem.components.HeaderButtonStyle
+import ch.nicolab.cadence.designsystem.components.CadenceFab
 import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
 import ch.nicolab.cadence.designsystem.components.ScreenHeader
 import ch.nicolab.cadence.designsystem.components.SegmentedTabs
+import ch.nicolab.cadence.designsystem.components.navigationClearance
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.HabitTimer
@@ -51,23 +57,36 @@ internal fun HabitsTab(
             ScreenHeader(
                 title = stringResource(R.string.habits_title),
                 actions = {
-                    RoundHeaderButton(Icons.Outlined.Add, stringResource(R.string.create_habit_button), style = HeaderButtonStyle.Filled, onClick = create)
                     RoundHeaderButton(Icons.Outlined.Settings, stringResource(R.string.tab_settings), onClick = openSettings)
                 },
             )
-            SegmentedTabs(
-                listOf(stringResource(R.string.habits_segment_today), stringResource(R.string.habits_segment_all)),
-                segment,
-                { segment = it },
-            )
+            // Sans habitude, rien à départager : pas de sélecteur Aujourd'hui / Toutes.
+            if (habits.isNotEmpty()) {
+                SegmentedTabs(
+                    listOf(stringResource(R.string.habits_segment_today), stringResource(R.string.habits_segment_all)),
+                    segment,
+                    { segment = it },
+                )
+            }
         }
     }
-    if (segment == SEGMENT_TODAY) {
-        HabitsTodayScreen(
-            header, habits, groups, selectedGroupId, onSelectGroup, quick, options, timers, busy, direct, offerReturn, resume, edit, questions, answer,
+    // Même geste d'ajout que partout ailleurs : le bouton flottant en bas à droite, pas un + dans l'en-tête.
+    Box(Modifier.fillMaxSize()) {
+        if (segment == SEGMENT_TODAY) {
+            HabitsTodayScreen(
+                header, habits, groups, selectedGroupId, onSelectGroup, quick, options, timers, busy, direct, offerReturn, resume, edit, questions, answer,
+            )
+        } else {
+            HabitsScreen(header, habits, groups, selectedGroupId, onSelectGroup, options, quick)
+        }
+        CadenceFab(
+            icon = Icons.Outlined.Add,
+            contentDescription = stringResource(R.string.create_habit_button),
+            onClick = create,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = Space.gutter, bottom = navigationClearance() + Space.lg),
         )
-    } else {
-        HabitsScreen(header, habits, groups, selectedGroupId, onSelectGroup, options, quick)
     }
 }
 

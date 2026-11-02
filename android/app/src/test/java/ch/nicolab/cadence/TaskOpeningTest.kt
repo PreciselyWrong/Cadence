@@ -20,13 +20,6 @@ class TaskOpeningTest {
     }
 
     @Test
-    fun `a task requested from Bilan opens after the launch one was served`() {
-        val served = TaskOpening().fromLaunch("t1").consumed()
-        assertEquals("t2", served.request("t2").pending)
-        assertNull(served.request("t2").consumed().fromLaunch("t1").pending)
-    }
-
-    @Test
     fun `the state survives a save and restore`() {
         val opening = TaskOpening().fromLaunch("t1")
         assertEquals(opening, TaskOpening.restore(opening.save()))

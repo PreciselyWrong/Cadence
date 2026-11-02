@@ -25,11 +25,12 @@ internal fun AreaFilterRow(
     selected: String?,
     onSelect: (String?) -> Unit,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(horizontal = Space.gutter),
 ) {
     if (!AreaFilter.offersChoice(areas)) return
     LazyRow(
         modifier = modifier,
-        contentPadding = PaddingValues(horizontal = Space.gutter),
+        contentPadding = contentPadding,
         horizontalArrangement = Arrangement.spacedBy(Space.sm),
     ) {
         item(key = "all") {

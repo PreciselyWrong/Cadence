@@ -22,7 +22,6 @@ import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.OpenInNew
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,13 +32,12 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
@@ -49,12 +47,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ch.nicolab.cadence.designsystem.components.ActionRow
 import ch.nicolab.cadence.designsystem.components.BadgeTone
-import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.CadenceBadge
+import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.Panel
 import ch.nicolab.cadence.designsystem.components.RowGroup
 import ch.nicolab.cadence.designsystem.components.SettingRow
@@ -67,9 +66,9 @@ import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.RepeatType
 import ch.nicolab.cadence.tasks.model.Repetition
-import ch.nicolab.cadence.tasks.quickadd.singleLineCapture
 import ch.nicolab.cadence.tasks.model.TaskExtraRows
 import ch.nicolab.cadence.tasks.model.TaskItem
+import ch.nicolab.cadence.tasks.quickadd.singleLineCapture
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
@@ -324,25 +323,10 @@ internal fun repeatLabel(repetition: Repetition): String = when (repetition.type
     RepeatType.OTHER -> stringResource(R.string.tasks_repeat_custom)
 }
 
-/**
- * Ce que l'appareil n'écrit pas encore : liens et commentaires en une seule ligne discrète, puis les
- * champs serveur lus tels quels.
- */
+/** Champs serveur que l'appareil n'écrit pas encore, lus tels quels ; affichés sous « Plus de champs ». */
 @Composable
 internal fun ReadOnlyDetails(task: TaskItem) {
     val palette = cadence
-    Row(
-        Modifier.fillMaxWidth().padding(horizontal = Space.lg, vertical = Space.sm),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Icon(Icons.Outlined.Link, null, tint = palette.outline, modifier = Modifier.size(Size.icon))
-        Spacer(Modifier.width(Space.md))
-        Text(
-            stringResource(R.string.tasks_detail_links_row),
-            style = MaterialTheme.typography.bodyMedium,
-            color = palette.outline,
-        )
-    }
     val rows = TaskExtraRows.visible(task.extras)
     if (rows.isNotEmpty()) {
         Text(

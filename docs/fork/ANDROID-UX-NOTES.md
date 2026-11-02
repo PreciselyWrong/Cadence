@@ -4,6 +4,19 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-02 — Passe de soustraction (revue UI/UX complète)
+
+- **Problème** : avec cinq tâches, l'écran Tâches montrait trois rangées de pastilles (épinglés, sept onglets, domaines), puis trois cartes (agendas, jauge de charge, « Terminer la journée » avec le plus gros bouton de l'écran) avant la première tâche. Chaque ligne portait trois signaux de couleur (case, liseré, point de priorité) et une pastille de date ; chaque idée de la Boîte cinq boutons ; la fiche un gros « Terminer » pris pour « Enregistrer » ; Projets, Étiquettes et Bilan des cartes identiques pleines de « 0 ». Critique indépendante sur captures : 4/10.
+- **Décision** : retirer plutôt qu'ajouter.
+  - En-tête : le titre est la liste ouverte (« Aujourd'hui ▾ ») et ouvre un sélecteur : épinglés, listes (Aujourd'hui, À venir, Projets, Étiquettes, Notes, Terminées), domaine, Réglages. Objectifs ne vit plus que dans Bilan. Icônes d'en-tête nues, ajout toujours par le bouton flottant (Habitudes compris).
+  - Aujourd'hui : les tâches d'abord ; la charge ne s'affiche que pour une journée pleine (une ligne, sans jauge) ; plus de bannière d'agendas (l'Agenda et Réglages › Agendas la proposent) ; matin et soir en lignes texte, le soir après les tâches.
+  - Lignes : date en texte simple (retard neutre), projet en sa couleur sous le titre, priorité haute = case rouge ; plus de liseré par défaut ni de point de priorité.
+  - Boîte : « Aujourd'hui » et « … » par idée.
+  - Fiche : on termine par la case à côté du titre ; horizon, prochaine action et champs serveur seulement s'ils servent ou sous « Plus de champs » ; plus de ligne « Liens et commentaires : sur le web ».
+  - Projets, Étiquettes : lignes simples, nombre seulement s'il est non nul, pas de barre d'avancement. Bilan : pas de graphique tant que rien n'est fait, plus de liste « échues » en double.
+  - Couleur : surfaces neutres (plus de lavande), couleur réservée au projet, à la priorité haute et à l'action principale.
+- **Web à reprendre** : tout, à l'étape suivante (`TODO.md` › Next). Équivalents : la barre latérale garde son rôle de sélecteur ; le reste (Aujourd'hui, lignes, Boîte, fiche, Projets, surfaces) s'applique tel quel.
+
 ### 2026-11-02 — Tâches ne rouvre plus la dernière fiche ; textes longs lisibles
 
 - **Problème** : après une tâche ouverte depuis un widget ou un rappel, chaque passage Inbox → Tâches rouvrait cette fiche (l'extra de l'intent restait lu). Le champ d'ajout rapide tenait sur une ligne qui défilait de côté : un long titre ne se lisait pas. Une idée longue de l'Inbox était coupée à trois lignes sans moyen de la lire en entier, sauf « Modifier ».

@@ -13,17 +13,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AutoGraph
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.Hexagon
 import androidx.compose.material.icons.filled.Inbox
-import androidx.compose.material.icons.outlined.AutoGraph
+import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Checklist
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Hexagon
 import androidx.compose.material.icons.outlined.Inbox
+import androidx.compose.material.icons.outlined.Insights
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -46,16 +46,14 @@ import androidx.health.connect.client.PermissionController
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ch.nicolab.cadence.agenda.AgendaScreen
 import ch.nicolab.cadence.bilan.BilanScreen
-import ch.nicolab.cadence.tasks.ui.GoalsScreen
-import ch.nicolab.cadence.tasks.ui.review.ReviewScreen
 import ch.nicolab.cadence.data.local.model.PersistedHabit
 import ch.nicolab.cadence.designsystem.components.CadenceNavigation
-import ch.nicolab.cadence.designsystem.components.CadenceSnackbarHost
-import ch.nicolab.cadence.designsystem.components.LocalAppSnackbarHostState
-import ch.nicolab.cadence.designsystem.components.NavigationBarScrim
 import ch.nicolab.cadence.designsystem.components.CadenceScreen
 import ch.nicolab.cadence.designsystem.components.CadenceSheet
+import ch.nicolab.cadence.designsystem.components.CadenceSnackbarHost
+import ch.nicolab.cadence.designsystem.components.LocalAppSnackbarHostState
 import ch.nicolab.cadence.designsystem.components.NavDestination
+import ch.nicolab.cadence.designsystem.components.NavigationBarScrim
 import ch.nicolab.cadence.designsystem.components.PrimaryAction
 import ch.nicolab.cadence.designsystem.components.SecondaryAction
 import ch.nicolab.cadence.designsystem.components.TertiaryAction
@@ -71,9 +69,9 @@ import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.habits.EntryEditor
 import ch.nicolab.cadence.habits.GroupPickerSheet
 import ch.nicolab.cadence.habits.HabitOptionsSheet
+import ch.nicolab.cadence.habits.HabitsTab
 import ch.nicolab.cadence.habits.LearnedQuestionSheet
 import ch.nicolab.cadence.habits.LearnedQuestionsPanelHost
-import ch.nicolab.cadence.habits.HabitsTab
 import ch.nicolab.cadence.habits.QuickSheet
 import ch.nicolab.cadence.habits.RoutineStrip
 import ch.nicolab.cadence.habits.habitTint
@@ -81,13 +79,15 @@ import ch.nicolab.cadence.health.HealthConnectGateway
 import ch.nicolab.cadence.health.HealthConnectRulesSheet
 import ch.nicolab.cadence.settings.SettingsDeps
 import ch.nicolab.cadence.settings.SettingsScreen
-import ch.nicolab.cadence.tasks.ui.InboxScreen
 import ch.nicolab.cadence.tasks.search.SearchEntry
 import ch.nicolab.cadence.tasks.search.SearchKind
-import ch.nicolab.cadence.tasks.ui.SearchScreen
+import ch.nicolab.cadence.tasks.ui.GoalsScreen
+import ch.nicolab.cadence.tasks.ui.InboxScreen
 import ch.nicolab.cadence.tasks.ui.LocalEntityIconPicker
 import ch.nicolab.cadence.tasks.ui.LocalEntityIcons
+import ch.nicolab.cadence.tasks.ui.SearchScreen
 import ch.nicolab.cadence.tasks.ui.TasksScreen
+import ch.nicolab.cadence.tasks.ui.review.ReviewScreen
 import ch.nicolab.cadence.ui.icon.HabitIconPicker
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
 import java.time.LocalDate
@@ -99,7 +99,7 @@ private enum class Tab(@param:StringRes val label: Int, val icon: ImageVector, v
     TASKS(R.string.tab_tasks, Icons.Outlined.Checklist, Icons.Filled.Checklist),
     AGENDA(R.string.tab_agenda, Icons.Outlined.CalendarMonth, Icons.Filled.CalendarMonth),
     HABITS(R.string.tab_habits, Icons.Outlined.Hexagon, Icons.Filled.Hexagon),
-    BILAN(R.string.tab_bilan, Icons.Outlined.AutoGraph, Icons.Filled.AutoGraph),
+    BILAN(R.string.tab_bilan, Icons.Outlined.Insights, Icons.Filled.Insights),
 }
 
 @Composable
@@ -125,7 +125,7 @@ internal fun CadenceAppScreen(
     var reviewOpen by rememberSaveable { mutableStateOf(false) }
     var goalsOpen by rememberSaveable { mutableStateOf(false) }
     var projectToShow by rememberSaveable { mutableStateOf<String?>(null) }
-    // Tâche à ouvrir (widget, rappel ou Bilan) ; effacée dès que Tâches l'a ouverte pour ne pas la rouvrir.
+    // Tâche à ouvrir (widget ou rappel) ; effacée dès que Tâches l'a ouverte pour ne pas la rouvrir.
     var opening by rememberSaveable(stateSaver = taskOpeningSaver) { mutableStateOf(TaskOpening()) }
     BackHandler(enabled = settingsOpen) { settingsOpen = false }
     // Une tâche ouverte depuis un widget ou un rappel doit s'afficher dans Tâches, quel que soit l'onglet restauré.
@@ -290,10 +290,6 @@ internal fun CadenceAppScreen(
                         quick = { viewModel.clearSaveError(); quickHabitId = it.stored.id },
                         options = { options = it },
                         onCorrect = { viewModel.clearSaveError(); correctingId = it.id },
-                        onOpenTask = { uid ->
-                            opening = opening.request(uid)
-                            tab = Tab.TASKS
-                        },
                         onOpenReview = { reviewOpen = true },
                         onOpenGoals = { goalsOpen = true },
                     )

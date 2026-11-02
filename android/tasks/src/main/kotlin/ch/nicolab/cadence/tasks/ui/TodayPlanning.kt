@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
@@ -28,6 +29,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -35,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
@@ -77,41 +80,16 @@ internal data class Proposals(val blocks: List<ProposedBlock>, val unplaced: Lis
     val uids: Set<String> get() = blocks.mapTo(HashSet()) { it.uid }
 }
 
-/** « 3 h 20 planifiées · 4 h libres » avec sa jauge ; l'avertissement apparaît à 100 % de charge. */
+/** Journée pleine : une ligne calme, sans jauge, seulement quand la charge atteint 100 %. */
 @Composable
 internal fun CapacityLine(capacity: Capacity, modifier: Modifier = Modifier) {
-    val palette = cadence
-    val tone = if (capacity.overloaded) palette.warning else palette.onSurfaceVariant
-    val fill by animateFloatAsState(capacity.fill, Motion.normal(), label = "capacityFill")
-    val percent = if (capacity.availableMinutes > 0) capacity.plannedMinutes * 100 / capacity.availableMinutes else 100
-    val description = stringResource(R.string.planning_capacity_description, percent)
-    Column(modifier.fillMaxWidth().semantics(mergeDescendants = true) { contentDescription = description }) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                stringResource(
-                    R.string.planning_capacity,
-                    formatMinutes(capacity.plannedMinutes),
-                    formatMinutes(capacity.freeMinutes),
-                ),
-                style = MaterialTheme.typography.labelLarge,
-                color = tone,
-                modifier = Modifier.weight(1f),
-            )
-            if (capacity.overloaded) {
-                CadenceBadge(stringResource(R.string.planning_capacity_full), tone = BadgeTone.Warning)
-            }
-        }
-        Spacer(Modifier.height(Space.xs))
-        Box(Modifier.fillMaxWidth().height(Size.counterTrack).clip(Radius.Pill).background(palette.containerHigh)) {
-            Box(
-                Modifier
-                    .fillMaxWidth(fill)
-                    .height(Size.counterTrack)
-                    .clip(Radius.Pill)
-                    .background(if (capacity.overloaded) palette.warning else palette.primary),
-            )
-        }
-    }
+    Text(
+        stringResource(R.string.planning_capacity_full_line, formatMinutes(capacity.plannedMinutes)),
+        // Information, pas alarme : texte neutre.
+        style = MaterialTheme.typography.labelLarge,
+        color = cadence.onSurfaceVariant,
+        modifier = modifier.fillMaxWidth(),
+    )
 }
 
 /**
@@ -138,35 +116,30 @@ internal fun MorningCard(
     )
 }
 
-/** Carte du soir : terminées du jour, ce qu'il reste, et un geste pour tout reporter à demain. */
+/** Fin de journée : une ligne après les tâches, deux liens texte ; jamais un gros bouton qui passe avant le travail. */
 @Composable
 internal fun EveningCard(doneCount: Int, unfinishedCount: Int, onCarry: () -> Unit, onKeep: () -> Unit) {
     val summary = buildList {
         add(pluralStringResource(R.plurals.planning_evening_done, doneCount, doneCount))
         if (unfinishedCount > 0) add(pluralStringResource(R.plurals.planning_evening_left, unfinishedCount, unfinishedCount))
     }.joinToString(" · ")
-    Panel {
+    Column(Modifier.fillMaxWidth().padding(vertical = Space.sm)) {
+        Text(summary, style = MaterialTheme.typography.bodyMedium, color = cadence.onSurfaceVariant)
         Row(verticalAlignment = Alignment.CenterVertically) {
-            CardIcon(Icons.Outlined.NightsStay)
-            Spacer(Modifier.width(Space.md))
-            Column(Modifier.weight(1f)) {
-                Text(stringResource(R.string.planning_evening_title), style = MaterialTheme.typography.titleMedium, color = cadence.onSurface)
-                Text(summary, style = MaterialTheme.typography.bodyMedium, color = cadence.onSurfaceVariant)
+            TextButton(onClick = onCarry, contentPadding = PaddingValues()) {
+                Text(
+                    if (unfinishedCount > 0) {
+                        pluralStringResource(R.plurals.planning_evening_carry, unfinishedCount, unfinishedCount)
+                    } else {
+                        stringResource(R.string.planning_evening_close)
+                    },
+                )
             }
-        }
-        Spacer(Modifier.height(Space.md))
-        Row(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalAlignment = Alignment.CenterVertically) {
-            PrimaryAction(
-                label = if (unfinishedCount > 0) {
-                    pluralStringResource(R.plurals.planning_evening_carry, unfinishedCount, unfinishedCount)
-                } else {
-                    stringResource(R.string.planning_evening_close)
-                },
-                modifier = Modifier.weight(1f),
-                onClick = onCarry,
-            )
             if (unfinishedCount > 0) {
-                TertiaryAction(stringResource(R.string.planning_evening_keep), onClick = onKeep)
+                Spacer(Modifier.width(Space.lg))
+                TextButton(onClick = onKeep) {
+                    Text(stringResource(R.string.planning_evening_keep), color = cadence.onSurfaceVariant)
+                }
             }
         }
     }
@@ -174,35 +147,27 @@ internal fun EveningCard(doneCount: Int, unfinishedCount: Int, onCarry: () -> Un
 
 @Composable
 private fun PlanningCard(icon: androidx.compose.ui.graphics.vector.ImageVector, title: String, summary: String, onClick: () -> Unit, onDismiss: () -> Unit) {
-    Panel(onClick = onClick) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            CardIcon(icon)
-            Spacer(Modifier.width(Space.md))
-            Column(Modifier.weight(1f)) {
-                Text(title, style = MaterialTheme.typography.titleMedium, color = cadence.onSurface)
-                if (summary.isNotEmpty()) {
-                    Text(summary, style = MaterialTheme.typography.bodyMedium, color = cadence.onSurfaceVariant)
-                }
-            }
-            IconButton(onClick = onDismiss, modifier = Modifier.size(Size.touch)) {
-                Icon(
-                    Icons.Outlined.Close,
-                    contentDescription = stringResource(R.string.planning_dismiss_today),
-                    tint = cadence.onSurfaceVariant,
-                    modifier = Modifier.size(Size.icon),
-                )
+    // Une ligne-lien, pas une carte : l'invitation reste visible sans peser plus que les tâches.
+    Row(
+        Modifier.fillMaxWidth().clip(Radius.Control).clickable(role = Role.Button, onClick = onClick).padding(vertical = Space.xs),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(icon, contentDescription = null, tint = cadence.primary, modifier = Modifier.size(Size.icon))
+        Spacer(Modifier.width(Space.md))
+        Column(Modifier.weight(1f)) {
+            Text(title, style = MaterialTheme.typography.labelLarge, color = cadence.primary)
+            if (summary.isNotEmpty()) {
+                Text(summary, style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)
             }
         }
-    }
-}
-
-@Composable
-private fun CardIcon(icon: androidx.compose.ui.graphics.vector.ImageVector) {
-    Box(
-        Modifier.size(Size.badge).clip(CircleShape).background(cadence.primaryContainer),
-        contentAlignment = Alignment.Center,
-    ) {
-        Icon(icon, contentDescription = null, tint = cadence.onPrimaryContainer, modifier = Modifier.size(Size.iconLarge))
+        IconButton(onClick = onDismiss, modifier = Modifier.size(Size.touch)) {
+            Icon(
+                Icons.Outlined.Close,
+                contentDescription = stringResource(R.string.planning_dismiss_today),
+                tint = cadence.onSurfaceVariant,
+                modifier = Modifier.size(Size.icon),
+            )
+        }
     }
 }
 

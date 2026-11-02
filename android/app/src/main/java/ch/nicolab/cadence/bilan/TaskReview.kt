@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -41,14 +40,13 @@ import java.time.format.TextStyle
 import java.util.Locale
 
 private const val PROJECT_LIMIT = 5
-private const val OVERDUE_LIMIT = 5
 
 /**
  * Revue des tâches de la semaine : terminées par jour, par projet, et les plus anciennes en retard.
  * Toucher une tâche en retard l'ouvre dans Tâches.
  */
 @Composable
-internal fun TaskReviewPanel(onOpenTask: (String) -> Unit) {
+internal fun TaskReviewPanel() {
     val context = LocalContext.current
     val repository = remember(context) { TasksGraph.repository(context) }
     val tasks by repository.observeTasks().collectAsStateWithLifecycle(initialValue = emptyList())
@@ -59,39 +57,18 @@ internal fun TaskReviewPanel(onOpenTask: (String) -> Unit) {
     val names = remember(projects) { projects.associate { it.uid to it.name } }
     val palette = cadence
 
+    // Rien de terminé cette semaine : pas de graphique de zéros. Le retard vit dans Tâches et dans la revue.
+    if (review.doneByProject.isEmpty()) return
     Panel {
         Column(verticalArrangement = Arrangement.spacedBy(Space.md)) {
             Text(stringResource(R.string.bilan_tasks_title), style = MaterialTheme.typography.titleMedium, color = palette.onSurface)
-            Caption(stringResource(R.string.bilan_tasks_per_day))
             DayBars(review.donePerDay, today)
-            if (review.doneByProject.isEmpty()) {
-                Text(stringResource(R.string.bilan_tasks_none), style = MaterialTheme.typography.bodyMedium, color = palette.onSurfaceVariant)
-            } else {
-                Caption(stringResource(R.string.bilan_tasks_by_project))
-                review.doneByProject.take(PROJECT_LIMIT).forEach { (uid, count) ->
-                    LineWithCount(
-                        label = uid?.let(names::get) ?: stringResource(R.string.bilan_tasks_no_project),
-                        count = count.toString(),
-                    )
-                }
-            }
-            if (review.overdue.isNotEmpty()) {
-                Caption(stringResource(R.string.bilan_tasks_overdue))
-                review.overdue.take(OVERDUE_LIMIT).forEach { task ->
-                    LineWithCount(
-                        label = task.name,
-                        count = task.dueDay?.let(::shortDate).orEmpty(),
-                        onClick = { onOpenTask(task.uid) },
-                    )
-                }
-                val more = review.overdue.size - OVERDUE_LIMIT
-                if (more > 0) {
-                    Text(
-                        pluralStringResource(R.plurals.bilan_tasks_overdue_more, more, more),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = palette.onSurfaceVariant,
-                    )
-                }
+            Caption(stringResource(R.string.bilan_tasks_by_project))
+            review.doneByProject.take(PROJECT_LIMIT).forEach { (uid, count) ->
+                LineWithCount(
+                    label = uid?.let(names::get) ?: stringResource(R.string.bilan_tasks_no_project),
+                    count = count.toString(),
+                )
             }
         }
     }
@@ -134,13 +111,12 @@ private fun Caption(text: String, color: androidx.compose.ui.graphics.Color = ca
 }
 
 @Composable
-private fun LineWithCount(label: String, count: String, onClick: (() -> Unit)? = null) {
+private fun LineWithCount(label: String, count: String) {
     val palette = cadence
     Row(
         Modifier
             .fillMaxWidth()
-            .heightIn(min = if (onClick != null) Size.touch else Size.iconLarge)
-            .then(if (onClick != null) Modifier.clip(Radius.Control).clickable(onClick = onClick) else Modifier),
+            .heightIn(min = Size.iconLarge),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Space.md),
     ) {
@@ -155,7 +131,5 @@ private fun LineWithCount(label: String, count: String, onClick: (() -> Unit)? =
         Text(count, style = MaterialTheme.typography.labelLarge, color = palette.onSurfaceVariant)
     }
 }
-
-private fun shortDate(date: LocalDate): String = DateTimeFormatter.ofPattern("d MMM", Locale.FRENCH).format(date)
 
 private const val MUTED_ALPHA = 0.45f

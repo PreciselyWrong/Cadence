@@ -267,7 +267,7 @@
     <string name="empty_today_done_message">Les habitudes prévues sont à jour.</string>
     <string name="empty_habits_title">Votre rythme, à vous</string>
     <string name="empty_habits_message">Créez une première habitude pour commencer.</string>
-    <string name="empty_habits_hint">Touchez + en haut pour créer une première habitude.</string>
+    <string name="empty_habits_hint">Touchez + pour créer une première habitude.</string>
     <string name="create_habit_button">Créer une habitude</string>
     <string name="duplicate_suffix">(copie)</string>
     <string name="today_completed_section">Terminé</string>

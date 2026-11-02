@@ -5,6 +5,7 @@
     <!-- Charge de la journée -->
     <string name="planning_capacity">%1$s planifiées · %2$s libres</string>
     <string name="planning_capacity_full">Journée pleine</string>
+    <string name="planning_capacity_full_line">Journée pleine · %1$s planifiées</string>
     <string name="planning_capacity_description">%1$d %% du temps disponible est planifié</string>
 
     <!-- Carte du matin et feuille « Planifier la journée » -->

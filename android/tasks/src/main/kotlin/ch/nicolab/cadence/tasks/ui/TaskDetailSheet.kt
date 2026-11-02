@@ -9,14 +9,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -32,10 +33,10 @@ import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.HourglassEmpty
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.PushPin
-import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.outlined.Repeat
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Sell
+import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.outlined.SkipNext
 import androidx.compose.material.icons.outlined.TaskAlt
 import androidx.compose.material.icons.outlined.Timer
@@ -47,25 +48,25 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ch.nicolab.cadence.designsystem.components.ActionRow
 import ch.nicolab.cadence.designsystem.components.BadgeTone
@@ -73,23 +74,25 @@ import ch.nicolab.cadence.designsystem.components.CadenceBadge
 import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.ChoiceChip
 import ch.nicolab.cadence.designsystem.components.HeaderButtonStyle
-import ch.nicolab.cadence.designsystem.components.PrimaryAction
 import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
-import ch.nicolab.cadence.designsystem.components.SecondaryAction
 import ch.nicolab.cadence.designsystem.components.SegmentedTabs
+import ch.nicolab.cadence.designsystem.components.TaskCheckbox
 import ch.nicolab.cadence.designsystem.theme.Glass
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
-import ch.nicolab.cadence.tasks.model.ProjectChoices
-import ch.nicolab.cadence.tasks.model.EstimateFormat
-import ch.nicolab.cadence.tasks.model.NextAction
-import ch.nicolab.cadence.tasks.model.RepeatType
 import ch.nicolab.cadence.tasks.model.DetailTitle
+import ch.nicolab.cadence.tasks.model.EstimateFormat
+import ch.nicolab.cadence.tasks.model.Funnel
+import ch.nicolab.cadence.tasks.model.FunnelStage
+import ch.nicolab.cadence.tasks.model.NextAction
+import ch.nicolab.cadence.tasks.model.ProjectChoices
+import ch.nicolab.cadence.tasks.model.RepeatType
 import ch.nicolab.cadence.tasks.model.ShareText
 import ch.nicolab.cadence.tasks.model.TaskChange
+import ch.nicolab.cadence.tasks.model.TaskExtraRows
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskPriority
 import ch.nicolab.cadence.tasks.model.TaskStatus
@@ -204,6 +207,14 @@ internal fun TaskDetailSheet(
             DetailHeader(
                 title = title,
                 readOnly = readOnly,
+                closed = current.isClosed,
+                highPriority = current.priority == TaskPriority.HIGH,
+                // Terminer est la case, à côté du titre (comme une ligne) : plus de gros bouton pris pour « Enregistrer ».
+                onToggle = {
+                    flushText()
+                    viewModel.toggle(current)
+                    onDismiss()
+                },
                 onTitleChange = { title = it },
                 onBack = close,
                 onFocusTimer = { picker = Picker.Focus },
@@ -234,7 +245,10 @@ internal fun TaskDetailSheet(
                     onTags = { picker = Picker.Tags },
                     onRepeat = { picker = Picker.Repeat },
                 )
-                if (!current.isRecurring && current.parentTaskUid == null) {
+                // Horizon et prochaine action : seulement s'ils servent déjà, sinon derrière « Plus de champs ».
+                val funnelInUse = current.someday || current.reviewOn != null ||
+                    FunnelStage.entries.any { Funnel.has(current, it, weekStart) }
+                if (!current.isRecurring && current.parentTaskUid == null && (funnelInUse || moreFields)) {
                     FunnelSection(
                         task = current,
                         weekStart = weekStart,
@@ -244,7 +258,7 @@ internal fun TaskDetailSheet(
                         onReviewOn = { viewModel.reviewOn(current, it) },
                     )
                 }
-                if (!readOnly && NextAction.canDesignate(current)) {
+                if (!readOnly && NextAction.canDesignate(current) && (moreFields || NextAction.isDesignated(current, projects))) {
                     ChoiceChip(
                         label = stringResource(R.string.next_action_chip),
                         selected = NextAction.isDesignated(current, projects),
@@ -276,11 +290,16 @@ internal fun TaskDetailSheet(
                     .filter { DetailFieldRules.visible(it.key, it.filled, it.hasBadge, moreFields) }
                     .map { it.field }
                 if (shownFields.isNotEmpty()) DetailFieldGroup(shownFields, enabled = !readOnly)
-                val canShowMore = DetailFieldRules.hasHidden(
-                    keyedFields.map { it.key to it.filled },
-                    keyedFields.filter { it.hasBadge }.mapTo(HashSet()) { it.key },
-                    moreFields,
-                )
+                val canShowMore = !moreFields && (
+                    DetailFieldRules.hasHidden(
+                        keyedFields.map { it.key to it.filled },
+                        keyedFields.filter { it.hasBadge }.mapTo(HashSet()) { it.key },
+                        moreFields,
+                    ) ||
+                        TaskExtraRows.visible(current.extras).isNotEmpty() ||
+                        (!funnelInUse && !current.isRecurring && current.parentTaskUid == null) ||
+                        (!readOnly && NextAction.canDesignate(current) && !NextAction.isDesignated(current, projects))
+                    )
                 if (!readOnly && canShowMore) {
                     TextButton(onClick = { moreFields = true }, modifier = Modifier.heightIn(min = Size.touch)) {
                         Text(stringResource(R.string.tasks_detail_more_fields))
@@ -289,19 +308,8 @@ internal fun TaskDetailSheet(
                 if (hasReminder && !notifications.allowed) {
                     NotificationsOffNotice()
                 }
-                ReadOnlyDetails(current)
-            }
-            if (!WindowInsets.isImeVisible) {
-                DetailActionBar(
-                    closed = current.isClosed,
-                    canPlan = !readOnly,
-                    onPlan = { openDates(DateTab.Due) },
-                    onToggle = {
-                        flushText()
-                        viewModel.toggle(current)
-                        onDismiss()
-                    },
-                )
+                if (moreFields || readOnly) ReadOnlyDetails(current)
+                Spacer(Modifier.height(Space.xl))
             }
         }
     }
@@ -467,6 +475,9 @@ private fun priorityLabel(priority: Int): Int = when (priority) {
 private fun DetailHeader(
     title: String,
     readOnly: Boolean,
+    closed: Boolean,
+    highPriority: Boolean,
+    onToggle: () -> Unit,
     onTitleChange: (String) -> Unit,
     onBack: () -> Unit,
     onFocusTimer: () -> Unit,
@@ -479,19 +490,39 @@ private fun DetailHeader(
     } else {
         MaterialTheme.typography.headlineSmall
     }
-    Row(
-        Modifier.fillMaxWidth().padding(horizontal = Space.sm, vertical = Space.sm),
-        verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.spacedBy(Space.xs),
-    ) {
-        RoundHeaderButton(
-            icon = Icons.AutoMirrored.Outlined.ArrowBack,
-            contentDescription = stringResource(R.string.tasks_detail_back),
-            style = HeaderButtonStyle.Plain,
-            onClick = onBack,
-        )
-        Row(Modifier.weight(1f).padding(top = Space.xs), verticalAlignment = Alignment.Top) {
-            Box(Modifier.weight(1f)) {
+    // Barre d'outils seule sur sa ligne, puis le titre sur toute la largeur avec sa case : un titre court
+    // tient sur une ligne au lieu d'être serré entre quatre boutons.
+    Column(Modifier.fillMaxWidth().padding(horizontal = Space.sm, vertical = Space.sm)) {
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            RoundHeaderButton(
+                icon = Icons.AutoMirrored.Outlined.ArrowBack,
+                contentDescription = stringResource(R.string.tasks_detail_back),
+                style = HeaderButtonStyle.Plain,
+                onClick = onBack,
+            )
+            Spacer(Modifier.weight(1f))
+            RoundHeaderButton(
+                icon = Icons.Outlined.Timer,
+                contentDescription = stringResource(R.string.tasks_focus_open),
+                onClick = onFocusTimer,
+            )
+            if (!readOnly) {
+                RoundHeaderButton(
+                    icon = Icons.Outlined.MoreVert,
+                    contentDescription = stringResource(R.string.tasks_detail_more),
+                    onClick = onMore,
+                )
+            }
+        }
+        Row(Modifier.fillMaxWidth().padding(horizontal = Space.sm), verticalAlignment = Alignment.Top) {
+            TaskCheckbox(
+                checked = closed,
+                onCheckedChange = { onToggle() },
+                highPriority = highPriority,
+                contentDescription = stringResource(if (closed) R.string.tasks_mark_undone else R.string.tasks_mark_done),
+            )
+            Spacer(Modifier.width(Space.sm))
+            Box(Modifier.weight(1f).padding(top = Space.sm)) {
                 if (title.isEmpty()) {
                     Text(
                         stringResource(R.string.tasks_detail_title_hint),
@@ -513,18 +544,6 @@ private fun DetailHeader(
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
-        }
-        RoundHeaderButton(
-            icon = Icons.Outlined.Timer,
-            contentDescription = stringResource(R.string.tasks_focus_open),
-            onClick = onFocusTimer,
-        )
-        if (!readOnly) {
-            RoundHeaderButton(
-                icon = Icons.Outlined.MoreVert,
-                contentDescription = stringResource(R.string.tasks_detail_more),
-                onClick = onMore,
-            )
         }
     }
 }
@@ -724,26 +743,3 @@ private fun detailFields(
 /** Une ligne de la fiche avec ce qu'il faut pour décider si elle s'affiche ([DetailFieldRules]). */
 internal class KeyedDetailField(val key: DetailFieldKey, val filled: Boolean, val hasBadge: Boolean, val field: DetailField)
 
-/** Barre fixe du bas : planifier ou terminer, sans avoir à faire défiler la fiche. */
-@Composable
-private fun DetailActionBar(closed: Boolean, canPlan: Boolean, onPlan: () -> Unit, onToggle: () -> Unit) {
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .padding(horizontal = Space.gutter, vertical = Space.md),
-        horizontalArrangement = Arrangement.spacedBy(Space.md),
-    ) {
-        if (canPlan) {
-            SecondaryAction(
-                label = stringResource(R.string.tasks_detail_plan),
-                modifier = Modifier.weight(1f),
-                onClick = onPlan,
-            )
-        }
-        PrimaryAction(
-            label = stringResource(if (closed) R.string.tasks_action_reopen else R.string.tasks_action_complete),
-            modifier = Modifier.weight(1f),
-            onClick = onToggle,
-        )
-    }
-}

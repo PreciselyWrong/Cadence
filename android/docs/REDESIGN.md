@@ -14,7 +14,7 @@ Source of truth: the OpenPencil file `~/Dev/Cadence/Cadence.fig`. Every screen i
 
 - Floating pill bar, 5 equal targets: **Inbox · Tâches · Agenda · Habitudes · Bilan**. Tâches is selected at launch. Active item: rounded `primaryContainer` pill, filled icon and label. The bar is translucent (background @ 60 % light / 72 % dark) with a backdrop blur where available (API 31+, plain translucency below) and a soft shadow. It sits above the system navigation (3-button or gesture); content scrolls under it.
 - Réglages opens from a header button (gear) on Tâches, Boîte, Habitudes; it is a pushed screen with a back arrow, not a tab.
-- Tâches top tabs scroll horizontally: Aujourd'hui · À venir · Projets · Étiquettes · Terminées (selected = filled `primary` pill, others glass pills with a count).
+- Tâches has no tab or chip rows (2026-11 subtraction pass): the header title is the open list (« Aujourd'hui ▾ »); tapping it opens the list switcher sheet (`ui/ListSwitcherSheet.kt`): pinned projects and notes, then Aujourd'hui · À venir · Projets · Étiquettes · Notes · Terminées, the area filter, Réglages. Objectifs lives in Bilan only. The subtitle carries the date and the chosen area.
 - Habitudes tab: segmented « Aujourd'hui | Toutes ». Aujourd'hui is the former Jour screen (restyled), Toutes the former habits list (abstinences, habitudes, activités libres, group chips). Bilan replaces Semaine + Stats (stages À faire / Bien parti / Minimum / Terminé, task KPIs, régularité per habit, existing statistics sheets).
 
 ## Tokens (light default, violet + white)
@@ -27,7 +27,7 @@ Source of truth: the OpenPencil file `~/Dev/Cadence/Cadence.fig`. Every screen i
 | background = surface | `#FDFCFF` | `#121218` |
 | onSurface | `#1B1B21` | `#E5E1EC` |
 | surfaceVariant / on | `#E4E1EC` / `#46464F` | `#46454F` / `#C8C5D0` |
-| card (rows, cards) | `#F3F1FC` | `#1F1E2A` |
+| card (rows, cards) | `#F4F4F6` (neutral since 2026-11) | `#1E1E21` |
 | containerLow / High / Highest | `#F5F3FA` / `#E9E7F0` / `#E3E1EA` | `#1B1B21` / `#2A2930` / `#35343B` |
 | outline / outlineVariant | `#66656F` / `#C7C5D0` | `#918F9A` / `#46454F` |
 | error / errorContainer | `#BA1A1A` / `#FFDAD6` | `#FFB4AB` / `#93000A` |
@@ -43,10 +43,10 @@ Source of truth: the OpenPencil file `~/Dev/Cadence/Cadence.fig`. Every screen i
 
 ## Components (see `redesign/s01-systeme.png`)
 
-- Round 48 dp header buttons (glass, or plain on detail screens; add = filled primary).
+- 48 dp header buttons are bare icons (no glass disc since 2026-11); adding is always the FAB, never a header button.
 - Task checkbox: 24 dp rounded square (radius 8), 2 dp `outline` stroke; done = filled `primary` with white check; high priority = `error` stroke.
 - Calendar event check: 24 dp **circle** stroked in the calendar colour; done = filled calendar colour + white check, row at 55 % opacity, title struck through. Event rows show a 14 dp calendar icon in the calendar colour, the time range and the calendar name.
-- Row: 3 dp project/calendar colour rail on the left, title (1 line, ellipsis), meta line of badges (date/time badge, project badge).
+- Row: title (2 lines), then one plain meta line: date/time as text (overdue stays neutral), project name in its colour, tags. One colour signal per row: the project text; high priority = red checkbox stroke. The project rail is off by default (setting kept), no priority dot.
 - Badges: 24 dp pill, tones neutral / primary / success / warning / error / project colour @ 16 %.
 - Habit card (`e07`): 80 dp, radius 20, three-stop gradient of the habit tint, facet on the left, quick action pill on the right (« +1 », « ▶ 10 min ») or a check when done.
 - Routine strip (`e01`): card « Routine · <moment> n/m », optional « 1 à compléter » badge, up to 5 tappable facets with name and value. Tapping a facet opens quick entry; the chevron opens Habitudes › Aujourd'hui.
@@ -87,9 +87,16 @@ Source of truth: the OpenPencil file `~/Dev/Cadence/Cadence.fig`. Every screen i
 
 ## Task detail and quick add (2026-10)
 
-- Detail (`ui/TaskDetailSheet.kt`) follows `e19`: header with back, title edited in place, focus timer and actions menu; tappable badges (date, priority, project, status, tags), each shown only when the value is set; sub-task card; connected rows Début → échéance, Répétition, Estimation, Priorité, Statut, Étiquettes, Projet, each opening a design-system sheet; sticky « Planifier » / « Terminer » bar (hidden while the keyboard is up); links and comments are one muted row. There is no Save button: every picker writes its field as soon as it is chosen, title and note are written after a 700 ms pause and on close (`TaskEdits` builds the `TaskChange`).
+- Detail (`ui/TaskDetailSheet.kt`) follows `e19`: header with back, title edited in place, focus timer and actions menu; tappable badges (date, priority, project, status, tags), each shown only when the value is set; sub-task card; connected rows Début → échéance, Répétition, Estimation, Priorité, Statut, Étiquettes, Projet, each opening a design-system sheet; completing is the checkbox next to the title (the former sticky « Terminer » bar read as « Save » and closed tasks by mistake); horizon chips, next action and read-only server fields only show when set or under « Plus de champs ». There is no Save button: every picker writes its field as soon as it is chosen, title and note are written after a 700 ms pause and on close (`TaskEdits` builds the `TaskChange`).
 - Shared date sheet (`ui/TaskDateSheet.kt`, `quickadd/QuickDates.kt`): Aujourd'hui, Demain, Ce week-end, Semaine prochaine, Sans date, mini calendar, optional time. Same labels and order as the web `DatePopover`; the weekend and next-week rules mirror `frontend/utils/dateShortcuts.ts` (next week starts on Monday).
 - Quick add (`ui/QuickAddSheet.kt`): one field, parsed chips under it (tap to remove: the word goes back to the title), « Plus d'options » for priority, project and tags. The parser (`quickadd/QuickAddParser.kt`, pure Kotlin, fixed `Clock` in tests) reads aujourd'hui, demain, après-demain, weekdays (next occurrence, « lundi prochain » = that day next calendar week), « dans 3 jours / 2 semaines / 1 mois », « ce soir » (19:00), « ce week-end », « semaine prochaine », « à 14h », « 14h30 », « 14:30 », « midi », `!1`-`!3`, `+projet` / `^projet`, `#nom` (tag, else project) and `@étiquette`. `#`, `+`, `^`, `!` are the web capture tokens (`frontend/utils/inboxTokens.ts`); a word that names nothing existing stays in the title.
+
+## Subtraction pass (2026-11-02)
+
+- Today: tasks first. No calendar-permission banner (Agenda and Réglages › Agendas ask); the load line shows only when the day is full (« Journée pleine · 1 h 30 planifiées », no gauge); morning and evening prompts are text rows, the evening one after the tasks with text links (« Reporter 3 à demain », « Laisser tel quel »).
+- Inbox: an idea shows « Aujourd'hui » and « … » (Planifier, Projet, Note, Modifier).
+- Projets and Étiquettes: plain rows (colour dot or icon, name, next task, open count only when > 0), no cards, no progress bar; « Sans domaine » only beside other areas. Bilan hides the weekly task panel until something is done and no longer repeats the overdue list.
+- Habitudes: add is the FAB.
 
 ## Not in this pass
 

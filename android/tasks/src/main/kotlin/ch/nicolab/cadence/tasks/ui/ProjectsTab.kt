@@ -2,81 +2,84 @@
 
 package ch.nicolab.cadence.tasks.ui
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.icons.outlined.ChevronRight
-import androidx.compose.material.icons.outlined.Folder
-import ch.nicolab.cadence.tasks.model.ProjectHierarchy
-import ch.nicolab.cadence.tasks.model.Outline
-import androidx.compose.material.icons.outlined.AccountTree
-import androidx.compose.material.icons.automirrored.outlined.ViewList
-import androidx.compose.ui.platform.LocalContext
-import ch.nicolab.cadence.tasks.model.SubProject
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Icon
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.MoreVert
-import androidx.compose.material.icons.outlined.PushPin
-import androidx.compose.material.icons.filled.PushPin
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ViewList
+import androidx.compose.material.icons.filled.PushPin
+import androidx.compose.material.icons.outlined.AccountTree
+import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.ChevronRight
+import androidx.compose.material.icons.outlined.Folder
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.PushPin
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.Panel
+import ch.nicolab.cadence.designsystem.components.RowGroup
 import ch.nicolab.cadence.designsystem.components.SectionHeader
+import ch.nicolab.cadence.designsystem.components.SettingRow
 import ch.nicolab.cadence.designsystem.components.rowGroupShape
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
-import ch.nicolab.cadence.tasks.model.NextAction
-import ch.nicolab.cadence.tasks.model.ProjectCard
-import ch.nicolab.cadence.tasks.model.TaskOverviews
 import ch.nicolab.cadence.tasks.R
-import ch.nicolab.cadence.tasks.model.TaskItem
-import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.material.icons.outlined.Check
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.pluralStringResource
-import ch.nicolab.cadence.designsystem.components.CadenceSheet
-import ch.nicolab.cadence.designsystem.components.RowGroup
-import ch.nicolab.cadence.designsystem.components.SettingRow
 import ch.nicolab.cadence.tasks.model.AreaGroup
+import ch.nicolab.cadence.tasks.model.NextAction
+import ch.nicolab.cadence.tasks.model.Outline
+import ch.nicolab.cadence.tasks.model.ProjectCard
+import ch.nicolab.cadence.tasks.model.ProjectHierarchy
 import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.model.ProjectStatus
+import ch.nicolab.cadence.tasks.model.SubProject
+import ch.nicolab.cadence.tasks.model.TaskItem
+import ch.nicolab.cadence.tasks.model.TaskOverviews
 
 /** « N actifs · N dans le stash » : le stash n'apparaît que s'il n'est pas vide. */
 @Composable
@@ -164,8 +167,8 @@ internal fun ProjectStatusSheet(
 }
 
 /**
- * Projets groupés par domaine : pastille de couleur, nom (qui passe à la ligne), prochaine tâche,
- * nombre de tâches ouvertes et barre d'avancement. Toucher ouvre le projet.
+ * Projets groupés par domaine, en lignes simples : couleur, nom, prochaine tâche et nombre ouvert.
+ * Toucher ouvre le projet ; appui long pour son statut et ses réglages.
  */
 @Composable
 internal fun ProjectsTab(
@@ -211,7 +214,6 @@ internal fun ProjectsTab(
                     shape = rowGroupShape(index, stash.size),
                     onClick = { onOpenProject(card.project.uid) },
                     onLongClick = { onLongClick(card) },
-                    modifier = Modifier.padding(bottom = Space.groupGap),
                 )
             }
         }
@@ -244,8 +246,11 @@ private fun LazyListScope.areaGroups(
     onLongClick: (ProjectCard) -> Unit,
 ) {
     groups.forEach { group ->
-        item(key = "$prefix-area-${group.area?.uid ?: "none"}") {
-            SectionHeader(title = group.area?.name ?: stringResource(R.string.tasks_projects_no_area))
+        // « Sans domaine » ne s'écrit que s'il y a d'autres domaines à distinguer.
+        if (group.area != null || groups.size > 1) {
+            item(key = "$prefix-area-${group.area?.uid ?: "none"}") {
+                SectionHeader(title = group.area?.name ?: stringResource(R.string.tasks_projects_no_area))
+            }
         }
         itemsIndexed(group.projects, key = { _, card -> "$prefix-${card.project.uid}" }) { index, card ->
             ProjectCardRow(
@@ -253,12 +258,12 @@ private fun LazyListScope.areaGroups(
                 shape = rowGroupShape(index, group.projects.size),
                 onClick = { onOpenProject(card.project.uid) },
                 onLongClick = { onLongClick(card) },
-                modifier = Modifier.padding(bottom = Space.groupGap),
             )
         }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ProjectCardRow(
     card: ProjectCard,
@@ -267,45 +272,52 @@ private fun ProjectCardRow(
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    // Une ligne simple, comme une liste de Things : couleur du projet, nom, prochaine tâche, nombre ouvert.
+    // Pas de carte ni de barre d'avancement vide ; un projet sans tâche ouverte n'affiche pas « 0 ».
     val palette = cadence
-    val color = projectRailColor(card.project.color)?.let(::Color) ?: palette.primary
+    val color = projectRailColor(card.project.color)?.let(::Color) ?: palette.onSurfaceVariant
     val progressDescription = stringResource(R.string.tasks_projects_progress, card.doneCount, card.openCount + card.doneCount)
-    Panel(modifier = modifier, shape = shape, onClick = onClick, onLongClick = onLongClick) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            val icon = entityIcon(card.project.icon)
-            if (icon != null) EntityIcon(icon, tint = color) else Box(Modifier.size(Space.md).clip(CircleShape).background(color))
-            Spacer(Modifier.width(Space.md))
-            Column(Modifier.weight(1f)) {
+    Row(
+        modifier
+            .fillMaxWidth()
+            .heightIn(min = Size.touch)
+            .clip(shape)
+            .combinedClickable(onClick = onClick, onLongClick = onLongClick)
+            .semantics { stateDescription = progressDescription }
+            .padding(vertical = Space.sm, horizontal = Space.xs),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        val icon = entityIcon(card.project.icon)
+        if (icon != null) {
+            EntityIcon(icon, tint = color)
+        } else {
+            Box(Modifier.size(Size.icon), contentAlignment = Alignment.Center) {
+                Box(Modifier.size(Space.md).clip(CircleShape).background(color))
+            }
+        }
+        Spacer(Modifier.width(Space.md))
+        Column(Modifier.weight(1f)) {
+            Text(
+                card.project.name,
+                style = MaterialTheme.typography.bodyLarge,
+                color = palette.onSurface,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+            )
+            (card.nextActionName?.let { stringResource(R.string.next_action_line, it) }
+                ?: card.nextTaskName?.let { stringResource(R.string.tasks_projects_next, it) })?.let { next ->
                 Text(
-                    card.project.name,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = palette.onSurface,
-                    maxLines = 3,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                Text(
-                    card.nextActionName?.let { stringResource(R.string.next_action_line, it) }
-                        ?: card.nextTaskName?.let { stringResource(R.string.tasks_projects_next, it) }
-                        ?: stringResource(R.string.tasks_projects_done_all),
+                    next,
                     style = MaterialTheme.typography.bodySmall,
                     color = palette.onSurfaceVariant,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
             }
-            Spacer(Modifier.width(Space.md))
-            Text(card.openCount.toString(), style = MaterialTheme.typography.titleLarge, color = palette.onSurface)
         }
-        Spacer(Modifier.height(Space.sm))
-        Box(
-            Modifier
-                .fillMaxWidth()
-                .height(Size.counterTrack)
-                .clip(Radius.Pill)
-                .background(palette.containerHigh)
-                .semantics { contentDescription = progressDescription },
-        ) {
-            Box(Modifier.fillMaxWidth(card.progress).height(Size.counterTrack).clip(Radius.Pill).background(color))
+        if (card.openCount > 0) {
+            Spacer(Modifier.width(Space.md))
+            Text(card.openCount.toString(), style = MaterialTheme.typography.labelLarge, color = palette.onSurfaceVariant)
         }
     }
 }

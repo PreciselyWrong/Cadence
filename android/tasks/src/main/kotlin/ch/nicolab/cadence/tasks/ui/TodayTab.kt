@@ -67,7 +67,6 @@ internal fun TodayTab(
     val suggestions by viewModel.suggestions.collectAsStateWithLifecycle()
     val weekStart by viewModel.weekStart.collectAsStateWithLifecycle()
     val calendarSettings by viewModel.calendarSettings.collectAsStateWithLifecycle()
-    val calendarNoticeVisible by viewModel.calendarNoticeVisible.collectAsStateWithLifecycle()
     val settings by planning.settings.collectAsStateWithLifecycle()
     val dismissedDay by planning.dismissedDay.collectAsStateWithLifecycle()
     val closedDay by planning.closedDay.collectAsStateWithLifecycle()
@@ -174,16 +173,6 @@ internal fun TodayTab(
     }
 
     LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
-        if (calendarNoticeVisible) {
-            item(key = "calendar-notice") {
-                CardSlot {
-                    CalendarPermissionNotice(
-                        onGranted = viewModel::refreshCalendar,
-                        onDismiss = viewModel::dismissCalendarNotice,
-                    )
-                }
-            }
-        }
         if (DayRhythm.capacityVisible(plan.workday, closed, plan.capacity)) {
             item(key = "capacity") { CardSlot { CapacityLine(plan.capacity) } }
         }
@@ -229,18 +218,6 @@ internal fun TodayTab(
                 }
             }
         }
-        if (eveningVisible) {
-            item(key = "evening") {
-                CardSlot {
-                    EveningCard(
-                        doneCount = state.completed.size,
-                        unfinishedCount = unfinished.size,
-                        onCarry = ::carryToTomorrow,
-                        onKeep = { planning.closeDay(today) },
-                    )
-                }
-            }
-        }
         if (state.overdue.isEmpty() && agenda.isEmpty() && proposals == null) {
             item(key = "closed") { ClosedDay(state.completed.size) }
             if (tomorrowTasks.isNotEmpty()) {
@@ -258,9 +235,23 @@ internal fun TodayTab(
             taskRows(state.overdue, projectNames, projectColors, moment, viewModel, onOpen, projectIcons = projectIcons)
         }
         if (agenda.isNotEmpty()) {
-            // Le compte du jour est déjà sur l'onglet « Aujourd'hui » : pas de second compteur ici.
-            item(key = "today-header") { SectionHeader(title = stringResource(R.string.tasks_section_today)) }
+            // Le titre de l'écran dit déjà « Aujourd'hui » : la section ne se nomme que pour la séparer des échues.
+            if (state.overdue.isNotEmpty()) {
+                item(key = "today-header") { SectionHeader(title = stringResource(R.string.tasks_section_today)) }
+            }
             agendaRows(agenda, projectNames, projectColors, moment, viewModel, onOpen, calendarSettings.checkEvents, projectIcons = projectIcons, planStarts = state.planStarts)
+        }
+        if (eveningVisible) {
+            item(key = "evening") {
+                CardSlot {
+                    EveningCard(
+                        doneCount = state.completed.size,
+                        unfinishedCount = unfinished.size,
+                        onCarry = ::carryToTomorrow,
+                        onKeep = { planning.closeDay(today) },
+                    )
+                }
+            }
         }
         item(key = "routine") { routineStrip() }
         if (state.completed.isNotEmpty()) {

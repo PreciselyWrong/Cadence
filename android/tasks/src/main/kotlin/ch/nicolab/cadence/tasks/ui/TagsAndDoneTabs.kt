@@ -3,6 +3,7 @@ package ch.nicolab.cadence.tasks.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -30,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -71,10 +73,12 @@ internal fun TagsTab(
             val isCollapsed = tag.uid in collapsed
             val tint = colors.getValue(tag.uid)
             val icon = entityIcon(tag.icon)
+            // Ligne simple, sans carte : la couleur de l'étiquette suffit à la distinguer.
             Panel(
-                modifier = Modifier.padding(bottom = Space.groupGap),
                 shape = rowGroupShape(index, rows.size),
                 onClick = { onOpenTag(tag.uid) },
+                container = SolidColor(Color.Transparent),
+                contentPadding = PaddingValues(horizontal = Space.xs, vertical = Space.sm),
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Spacer(Modifier.width(Space.xl * row.depth))
@@ -112,14 +116,17 @@ internal fun TagsTab(
                     Spacer(Modifier.width(Space.md))
                     Text(
                         row.label,
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.bodyLarge,
                         color = cadence.onSurface,
                         maxLines = 3,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f),
                     )
-                    Spacer(Modifier.width(Space.md))
-                    Text((counts[tag.uid] ?: 0).toString(), style = MaterialTheme.typography.titleLarge, color = cadence.onSurface)
+                    // Le nombre ne s'affiche que s'il dit quelque chose : pas de colonne de « 0 ».
+                    counts[tag.uid]?.takeIf { it > 0 }?.let { count ->
+                        Spacer(Modifier.width(Space.md))
+                        Text(count.toString(), style = MaterialTheme.typography.labelLarge, color = cadence.onSurfaceVariant)
+                    }
                 }
             }
         }

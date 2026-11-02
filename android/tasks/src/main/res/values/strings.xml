@@ -38,9 +38,6 @@
         <item quantity="one">%d événement</item>
         <item quantity="other">%d événements</item>
     </plurals>
-    <string name="tasks_calendar_notice_title">Afficher vos agendas</string>
-    <string name="tasks_calendar_notice_allow">Autoriser</string>
-    <string name="tasks_calendar_notice_dismiss">Masquer</string>
 
     <string name="tasks_inbox_capture_hint">Capturer une idée…</string>
     <string name="tasks_inbox_empty">L\'Inbox est vide.</string>
@@ -140,6 +137,9 @@
     <string name="tasks_subtask_open">Ouvrir comme tâche</string>
     <string name="tasks_action_unpin">Désépingler</string>
     <string name="tasks_pinned_title">Épinglés</string>
+    <string name="tasks_lists_title">Listes</string>
+    <string name="tasks_lists_open">Changer de liste</string>
+    <string name="tasks_lists_area">Domaine</string>
     <string name="tasks_project_more">Plus d\'actions sur le projet</string>
     <string name="tasks_action_delete">Supprimer</string>
     <string name="tasks_delete_title">Supprimer la tâche ?</string>

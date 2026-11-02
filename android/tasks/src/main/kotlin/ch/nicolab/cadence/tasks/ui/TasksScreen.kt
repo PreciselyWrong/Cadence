@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import ch.nicolab.cadence.designsystem.components.CollapsingHeaderHost
@@ -38,8 +37,6 @@ import androidx.annotation.StringRes
 import ch.nicolab.cadence.designsystem.components.CadenceFab
 import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
 import ch.nicolab.cadence.designsystem.components.ScreenHeader
-import ch.nicolab.cadence.designsystem.components.TabPill
-import ch.nicolab.cadence.designsystem.components.TabPills
 import ch.nicolab.cadence.designsystem.components.navigationClearance
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.tasks.R
@@ -56,7 +53,6 @@ internal enum class TasksTab(@StringRes val label: Int) {
     TODAY(R.string.tasks_tab_today),
     UPCOMING(R.string.tasks_tab_upcoming),
     PROJECTS(R.string.tasks_tab_projects),
-    GOALS(R.string.tasks_tab_goals),
     TAGS(R.string.tasks_tab_tags),
     NOTES(R.string.tasks_tab_notes),
     DONE(R.string.tasks_tab_done),
@@ -67,7 +63,7 @@ private val AREA_FILTER_TABS = setOf(TasksTab.TODAY, TasksTab.UPCOMING, TasksTab
 
 /**
  * Écran Tâches : titre et date, onglets à pastilles, tirer pour synchroniser, ajout rapide.
- * [openTaskUid] ouvre directement la fiche d'une tâche (widget, rappel ou Bilan) ; [onTaskOpened] signale qu'elle est servie.
+ * [openTaskUid] ouvre directement la fiche d'une tâche (widget ou rappel) ; [onTaskOpened] signale qu'elle est servie.
  * [showProjectUid] ouvre directement le contenu d'un projet (depuis la recherche).
  * [routineStrip] est affiché dans l'onglet Aujourd'hui, sous les tâches du jour.
  */
@@ -89,6 +85,7 @@ fun TasksScreen(
     var openTagUid by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedTaskUid by rememberSaveable { mutableStateOf(openTaskUid) }
     var quickAddOpen by rememberSaveable { mutableStateOf(false) }
+    var switcherOpen by rememberSaveable { mutableStateOf(false) }
     var selectedNoteUid by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedNoteIsNew by rememberSaveable { mutableStateOf(false) }
     val notes by viewModel.notes.collectAsStateWithLifecycle()
@@ -127,7 +124,6 @@ fun TasksScreen(
         tab == TasksTab.PROJECTS -> projectCounterLine(projects)
         tab == TasksTab.TAGS -> null
         // Pas de phrase d'explication sous le titre (comme le web, qui a retiré ses boutons « i »).
-        tab == TasksTab.GOALS -> null
         tab == TasksTab.NOTES -> null
         tab == TasksTab.DONE -> null
         eventCount > 0 -> "$dateLine · ${pluralStringResource(R.plurals.tasks_events_count, eventCount, eventCount)}"
@@ -140,10 +136,14 @@ fun TasksScreen(
     ) { padding ->
         CollapsingHeaderHost(Modifier.fillMaxSize().padding(padding)) {
             Column(Modifier.fillMaxSize()) {
+                val areaName = areas.firstOrNull { it.uid == areaFilter }?.name?.takeIf { tab in AREA_FILTER_TABS }
                 ScreenHeader(
-                    title = stringResource(R.string.tasks_title),
-                    subtitle = subtitle,
+                    // Le titre est la liste ouverte ; un appui ouvre le sélecteur (épinglés, listes, domaine).
+                    title = stringResource(tab.label),
+                    subtitle = listOfNotNull(subtitle, areaName).joinToString(" · ").ifEmpty { null },
                     modifier = Modifier.statusBarsPadding().padding(horizontal = Space.gutter),
+                    onTitleClick = { switcherOpen = true },
+                    titleClickLabel = stringResource(R.string.tasks_lists_open),
                     actions = {
                         if (tab == TasksTab.NOTES && openProjectUid == null) {
                             RoundHeaderButton(
@@ -160,62 +160,8 @@ fun TasksScreen(
                             contentDescription = stringResource(R.string.tasks_search_open),
                             onClick = onOpenSearch,
                         )
-                        RoundHeaderButton(
-                            icon = Icons.Outlined.Settings,
-                            contentDescription = stringResource(R.string.tasks_open_settings),
-                            onClick = onOpenSettings,
-                        )
                     },
                 )
-                if (openProjectUid == null) {
-                    PinnedStrip(
-                        shortcuts = remember(projects, notes) { PinnedShortcuts.of(projects, notes) },
-                        onOpen = { shortcut ->
-                            when (shortcut.kind) {
-                                PinnedShortcut.Kind.PROJECT -> openProjectUid = shortcut.uid
-                                PinnedShortcut.Kind.NOTE -> {
-                                    selectedNoteIsNew = false
-                                    selectedNoteUid = shortcut.uid
-                                }
-                            }
-                        },
-                        onUnpin = { shortcut ->
-                            when (shortcut.kind) {
-                                PinnedShortcut.Kind.PROJECT -> viewModel.setProjectPinned(shortcut.uid, false)
-                                PinnedShortcut.Kind.NOTE -> viewModel.saveNoteAttributes(shortcut.uid, NoteChange(pinned = false))
-                            }
-                        },
-                        modifier = Modifier.padding(bottom = Space.sm),
-                    )
-                    TabPills(
-                        tabs = listOf(
-                            TabPill(
-                                stringResource(TasksTab.TODAY.label),
-                                overdueCount + todayState.today.size + eventCount,
-                            ),
-                            // Seul « Aujourd'hui » garde un compte (comme la barre latérale du web : Aujourd'hui et Inbox).
-                            TabPill(stringResource(TasksTab.UPCOMING.label)),
-                            TabPill(stringResource(TasksTab.PROJECTS.label)),
-                            TabPill(stringResource(TasksTab.GOALS.label)),
-                            TabPill(stringResource(TasksTab.TAGS.label)),
-                            TabPill(stringResource(TasksTab.NOTES.label)),
-                            TabPill(stringResource(TasksTab.DONE.label)),
-                        ),
-                        selected = tab.ordinal,
-                        onSelect = {
-                            tab = TasksTab.entries[it]
-                            openTagUid = null
-                        },
-                    )
-                }
-                if (openProjectUid == null && tab in AREA_FILTER_TABS) {
-                    AreaFilterRow(
-                        areas = areas,
-                        selected = areaFilter,
-                        onSelect = viewModel::selectArea,
-                        modifier = Modifier.padding(bottom = Space.xs),
-                    )
-                }
                 SyncStatusLine(
                     status = syncStatus,
                     modifier = Modifier.padding(horizontal = Space.gutter, vertical = Space.xs),
@@ -264,11 +210,6 @@ fun TasksScreen(
                             onOpenTag = { openTagUid = it },
                             modifier = Modifier.fillMaxSize(),
                         )
-                        tab == TasksTab.GOALS -> GoalsPane(
-                            viewModel = viewModel,
-                            modifier = Modifier.fillMaxSize(),
-                            onOpenTask = { selectedTaskUid = it },
-                        )
                         tab == TasksTab.NOTES -> NotesTab(
                             viewModel = viewModel,
                             gallery = notesGallery,
@@ -286,8 +227,7 @@ fun TasksScreen(
                     }
                 }
             }
-            // L'onglet Objectifs pose son propre bouton : « Ajouter une envie ».
-            if (tab != TasksTab.GOALS || openProjectUid != null) CadenceFab(
+            CadenceFab(
                 icon = Icons.Outlined.Add,
                 contentDescription = stringResource(
                     if (tab == TasksTab.NOTES) R.string.tasks_note_new else R.string.tasks_fab_add,
@@ -307,6 +247,46 @@ fun TasksScreen(
         }
     }
 
+    if (switcherOpen) {
+        ListSwitcherSheet(
+            current = tab,
+            todayCount = overdueCount + todayState.today.size + eventCount,
+            pinned = remember(projects, notes) { PinnedShortcuts.of(projects, notes) },
+            areas = areas,
+            areaFilter = areaFilter,
+            onSelectTab = {
+                tab = it
+                openTagUid = null
+                openProjectUid = null
+                switcherOpen = false
+            },
+            onOpenPinned = { shortcut ->
+                switcherOpen = false
+                when (shortcut.kind) {
+                    PinnedShortcut.Kind.PROJECT -> {
+                        tab = TasksTab.PROJECTS
+                        openProjectUid = shortcut.uid
+                    }
+                    PinnedShortcut.Kind.NOTE -> {
+                        selectedNoteIsNew = false
+                        selectedNoteUid = shortcut.uid
+                    }
+                }
+            },
+            onUnpin = { shortcut ->
+                when (shortcut.kind) {
+                    PinnedShortcut.Kind.PROJECT -> viewModel.setProjectPinned(shortcut.uid, false)
+                    PinnedShortcut.Kind.NOTE -> viewModel.saveNoteAttributes(shortcut.uid, NoteChange(pinned = false))
+                }
+            },
+            onSelectArea = viewModel::selectArea,
+            onOpenSettings = {
+                switcherOpen = false
+                onOpenSettings()
+            },
+            onDismiss = { switcherOpen = false },
+        )
+    }
     TaskOverlays(
         viewModel = viewModel,
         snackbar = snackbar,

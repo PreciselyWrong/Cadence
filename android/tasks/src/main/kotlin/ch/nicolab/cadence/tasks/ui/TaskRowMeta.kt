@@ -68,7 +68,7 @@ internal object TaskRowMeta {
 
 /**
  * Préférences d'affichage des lignes, persistées dans `cadence_row_display` : description sous le titre
- * (désactivée par défaut) et liseré de projet (activé par défaut, comme dans la maquette).
+ * (désactivée par défaut) et liseré de projet (désactivé par défaut : un seul signal de couleur par ligne).
  */
 class RowDisplayStore(context: Context) {
     private val preferences: SharedPreferences =
@@ -80,7 +80,8 @@ class RowDisplayStore(context: Context) {
         preferences.edit { putBoolean(KEY_DESCRIPTION, value) }
     }
 
-    fun showProjectRail(): Boolean = preferences.getBoolean(KEY_PROJECT_RAIL, true)
+    // Désactivé par défaut depuis la refonte 2026-11 : le projet se lit déjà dans sa couleur sous le titre.
+    fun showProjectRail(): Boolean = preferences.getBoolean(KEY_PROJECT_RAIL, false)
 
     fun setShowProjectRail(value: Boolean) {
         preferences.edit { putBoolean(KEY_PROJECT_RAIL, value) }
@@ -125,7 +126,7 @@ internal data class RowDecor(
     val tagColors: Map<String, Color> = emptyMap(),
     val areaNames: Map<String, String> = emptyMap(),
     val showDescription: Boolean = false,
-    val showProjectRail: Boolean = true,
+    val showProjectRail: Boolean = false,
 )
 
 @Composable

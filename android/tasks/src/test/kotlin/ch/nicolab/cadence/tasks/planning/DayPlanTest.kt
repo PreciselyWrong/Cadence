@@ -105,10 +105,12 @@ class DayPlanTest {
     }
 
     @Test
-    fun `capacity line waits for something planned, like the web gauge`() {
+    fun `capacity line only speaks up when the day is full`() {
         assertFalse(DayRhythm.capacityVisible(workday = true, closed = false, capacity = Capacity(0, 420)))
-        assertTrue(DayRhythm.capacityVisible(workday = true, closed = false, capacity = Capacity(30, 420)))
-        assertFalse(DayRhythm.capacityVisible(workday = false, closed = false, capacity = Capacity(30, 420)))
-        assertFalse(DayRhythm.capacityVisible(workday = true, closed = true, capacity = Capacity(30, 420)))
+        // Une journée qui a encore de la place n'a rien à signaler : la ligne ne prend pas la place des tâches.
+        assertFalse(DayRhythm.capacityVisible(workday = true, closed = false, capacity = Capacity(30, 420)))
+        assertTrue(DayRhythm.capacityVisible(workday = true, closed = false, capacity = Capacity(420, 420)))
+        assertFalse(DayRhythm.capacityVisible(workday = false, closed = false, capacity = Capacity(480, 420)))
+        assertFalse(DayRhythm.capacityVisible(workday = true, closed = true, capacity = Capacity(480, 420)))
     }
 }

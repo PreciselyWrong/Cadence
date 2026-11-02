@@ -21,7 +21,6 @@
     <string name="tasks_detail_badge_priority_high">Priorité haute</string>
     <string name="tasks_detail_done">Terminée</string>
     <string name="tasks_detail_more_tags">+%1$d</string>
-    <string name="tasks_detail_links_row">Liens et commentaires : sur le web</string>
     <string name="tasks_detail_validate">Valider</string>
     <string name="tasks_detail_actions_title">Actions</string>
     <string name="tasks_detail_no_tags">Aucune étiquette pour l\'instant : elles se créent sur le web.</string>
