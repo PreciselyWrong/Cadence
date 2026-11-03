@@ -1,3 +1,8 @@
+## [1.8.1] — 3 novembre 2026
+
+### Corrections
+- Rappels de tâches et d'événements d'agenda : ils sonnent aussi quand le téléphone dort la nuit, sans la permission « Heure exacte ». Avant, un rappel de 6 h pouvait partir après l'heure et se taire.
+
 ## [1.8.0] — 2 novembre 2026
 
 ### Épure
