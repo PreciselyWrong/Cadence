@@ -58,10 +58,11 @@ const CalendarHoursMenu: React.FC<CalendarHoursMenuProps> = ({
                 />
             </button>
             {open && (
+                // Above the sticky plan tips (z-40) that reach up under the pane header.
                 <div
                     role="dialog"
                     aria-label={label}
-                    className="absolute right-0 z-30 mt-2 w-60 space-y-2 rounded-lg border border-gray-200 bg-white p-3 shadow-lg dark:border-gray-600 dark:bg-gray-800"
+                    className="absolute right-0 z-50 mt-2 w-60 space-y-2 rounded-lg border border-gray-200 bg-white p-3 shadow-lg dark:border-gray-600 dark:bg-gray-800"
                 >
                     <VisibleHoursPicker value={value} onChange={onChange} />
                 </div>
