@@ -5,8 +5,11 @@ import NotificationsTab from '../NotificationsTab';
 import { countPushDevices } from '../../../../utils/pushService';
 
 jest.mock('react-i18next', () => {
-    const t = (key: string, fallback?: any) =>
-        typeof fallback === 'string' ? fallback : key;
+    const t = (key: string, fallback?: any, options?: any) =>
+        (typeof fallback === 'string' ? fallback : key).replace(
+            /{{(\w+)}}/g,
+            (_: string, name: string) => options?.[name] ?? name
+        );
     const value = { t };
     return { useTranslation: () => value };
 });
@@ -75,6 +78,26 @@ describe('NotificationsTab', () => {
             expect.objectContaining({
                 taskReminders: expect.objectContaining({ desktop: true }),
             })
+        );
+    });
+
+    it('sends a desktop test and says where it shows', async () => {
+        await renderTab();
+
+        await act(async () => {
+            fireEvent.click(
+                screen.getByRole('button', { name: 'Send a test via Desktop' })
+            );
+        });
+
+        expect(global.fetch).toHaveBeenCalledWith(
+            '/api/test-notifications/trigger',
+            expect.objectContaining({
+                body: JSON.stringify({ channel: 'desktop' }),
+            })
+        );
+        expect(screen.getByRole('status')).toHaveTextContent(
+            'Test sent. It shows on this computer within a minute if the Cadence app is running.'
         );
     });
 

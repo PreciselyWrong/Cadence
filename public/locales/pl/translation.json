@@ -3318,6 +3318,7 @@
       "button": "Test",
       "sendVia": "Wyślij test przez {{channel}}",
       "sent": "Wysłano test przez {{channel}}.",
+      "sentDesktop": "Test wysłany. Pojawi się na tym komputerze w ciągu minuty, jeśli aplikacja Cadence działa.",
       "failed": "Nie udało się wysłać testu."
     },
     "info": {

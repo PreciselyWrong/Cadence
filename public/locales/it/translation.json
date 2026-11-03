@@ -3292,6 +3292,7 @@
       "button": "Prova",
       "sendVia": "Invia una prova tramite {{channel}}",
       "sent": "Prova inviata tramite {{channel}}.",
+      "sentDesktop": "Test inviato. Compare su questo computer entro un minuto se l'app Cadence è aperta.",
       "failed": "Impossibile inviare la prova."
     },
     "info": {

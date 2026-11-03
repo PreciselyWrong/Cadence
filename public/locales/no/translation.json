@@ -3287,6 +3287,7 @@
       "button": "Test",
       "sendVia": "Send test via {{channel}}",
       "sent": "Test sendt via {{channel}}.",
+      "sentDesktop": "Test sendt. Den vises på denne datamaskinen innen ett minutt hvis Cadence-appen kjører.",
       "failed": "Kunne ikke sende testen."
     },
     "info": {

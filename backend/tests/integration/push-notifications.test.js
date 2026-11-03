@@ -319,6 +319,23 @@ describe('Push notifications', () => {
             ).toBe(0);
         });
 
+        it('queues a desktop test that rings now, even in quiet hours', async () => {
+            await user.update({
+                quiet_hours: { enabled: true, start: '00:00', end: '23:59' },
+            });
+
+            const res = await trigger('desktop');
+
+            expect(res.status).toBe(200);
+            const rows = await Notification.findAll({
+                where: { user_id: user.id },
+            });
+            expect(rows).toHaveLength(1);
+            expect(rows[0].sources).toEqual(['desktop']);
+            expect(rows[0].deliver_after).toBeNull();
+            expect(webpush.sendNotification).not.toHaveBeenCalled();
+        });
+
         it('explains when no device can receive push', async () => {
             const res = await trigger('push');
 

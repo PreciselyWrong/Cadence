@@ -3618,6 +3618,7 @@
       "button": "Test",
       "sendVia": "Odoslať skúšobné cez {{channel}}",
       "sent": "Skúšobné upozornenie odoslané cez {{channel}}.",
+      "sentDesktop": "Test odoslaný. Zobrazí sa na tomto počítači do minúty, ak aplikácia Cadence beží.",
       "failed": "Skúšobné upozornenie sa nepodarilo odoslať."
     },
     "info": {

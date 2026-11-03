@@ -77,6 +77,21 @@ class NotificationsService {
             return { channel, delivered: true };
         }
 
+        // The desktop client polls for unread rows routed to it. The test is
+        // created directly so quiet hours do not hold it: a test rings now.
+        if (channel === 'desktop') {
+            await Notification.create({
+                user_id: userId,
+                type: 'system',
+                title: 'Test notification',
+                message: 'Desktop notifications are working.',
+                sources: ['desktop'],
+                level: 'info',
+                sent_at: new Date(),
+            });
+            return { channel, delivered: true };
+        }
+
         if (channel === 'push') {
             const pushService = require('../push/service');
             const sent = await pushService.sendToUser(userId, {

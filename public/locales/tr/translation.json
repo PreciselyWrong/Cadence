@@ -3286,6 +3286,7 @@
       "button": "Test",
       "sendVia": "{{channel}} ile test gönder",
       "sent": "Test {{channel}} ile gönderildi.",
+      "sentDesktop": "Test gönderildi. Cadence uygulaması açıksa bir dakika içinde bu bilgisayarda görünür.",
       "failed": "Test gönderilemedi."
     },
     "info": {

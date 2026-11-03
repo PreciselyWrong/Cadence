@@ -3286,6 +3286,7 @@
       "button": "Uji",
       "sendVia": "Kirim uji lewat {{channel}}",
       "sent": "Uji terkirim lewat {{channel}}.",
+      "sentDesktop": "Tes terkirim. Akan muncul di komputer ini dalam satu menit jika aplikasi Cadence berjalan.",
       "failed": "Tidak dapat mengirim uji."
     },
     "info": {

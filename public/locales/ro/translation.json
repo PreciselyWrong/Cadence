@@ -3294,6 +3294,7 @@
       "button": "Test",
       "sendVia": "Trimite un test prin {{channel}}",
       "sent": "Test trimis prin {{channel}}.",
+      "sentDesktop": "Test trimis. Apare pe acest computer în cel mult un minut dacă aplicația Cadence rulează.",
       "failed": "Testul nu a putut fi trimis."
     },
     "info": {

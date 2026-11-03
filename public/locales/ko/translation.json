@@ -3286,6 +3286,7 @@
       "button": "테스트",
       "sendVia": "{{channel}}(으)로 테스트 보내기",
       "sent": "{{channel}}(으)로 테스트를 보냈습니다.",
+      "sentDesktop": "테스트를 보냈습니다. Cadence 앱이 실행 중이면 1분 안에 이 컴퓨터에 표시됩니다.",
       "failed": "테스트를 보내지 못했습니다."
     },
     "info": {

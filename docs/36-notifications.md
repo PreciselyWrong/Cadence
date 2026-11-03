@@ -29,6 +29,7 @@ Each type has its own switches: **In-app, Push, Telegram, Apprise, Desktop**. Em
 - **The phone owns habit reminders too.** `habitReminders` is in-app only by default: Push, Telegram, Apprise and Desktop are off, so the phone is the one voice. Turn a channel on only if you want the server to ring there too.
 - **Desktop is on by default** for due soon (tasks and projects) and for deferred-now-active, off for everything else. A stored explicit choice always wins.
 - The desktop client (`desktop/`) shows a notification only when its `sources` contain `desktop`, once per notification `uid` (the last 500 uids are remembered on disk), and not before `deliver_after`.
+- **Test buttons.** Profile › Notifications has a **Test** button per column (`POST /api/test-notifications/trigger` `{ channel }`). The Desktop test creates an unread row routed only to `desktop`, outside quiet hours (a test rings now); the computer shows it at its next poll (60 s by default) if the Cadence desktop app is running. It also appears in the in-app list, since that row is what the desktop client reads.
 - Telegram receives due-soon items as one batch per run; push and Apprise send per notification. A channel is not repeated for the same notification within 24 hours.
 
 ## Habit reminders

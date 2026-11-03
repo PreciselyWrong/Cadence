@@ -3318,6 +3318,7 @@
       "button": "Preizkusi",
       "sendVia": "Pošlji preizkus prek: {{channel}}",
       "sent": "Preizkus poslan prek: {{channel}}.",
+      "sentDesktop": "Test poslan. Prikaže se na tem računalniku v eni minuti, če aplikacija Cadence teče.",
       "failed": "Preizkusnega sporočila ni bilo mogoče poslati."
     },
     "info": {

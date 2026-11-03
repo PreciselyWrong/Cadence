@@ -3511,6 +3511,7 @@
       "sendVia": "Send a test via {{channel}}",
       "sending": "Sending...",
       "sent": "Test sent via {{channel}}.",
+      "sentDesktop": "Test sent. It shows on this computer within a minute if the Cadence app is running.",
       "failed": "Could not send the test."
     },
     "info": {

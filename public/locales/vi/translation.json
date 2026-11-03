@@ -3286,6 +3286,7 @@
       "button": "Thử",
       "sendVia": "Gửi thử qua {{channel}}",
       "sent": "Đã gửi thử qua {{channel}}.",
+      "sentDesktop": "Đã gửi thử. Thông báo sẽ hiện trên máy tính này trong vòng một phút nếu ứng dụng Cadence đang chạy.",
       "failed": "Không thể gửi thử."
     },
     "info": {

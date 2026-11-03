@@ -3286,6 +3286,7 @@
       "button": "测试",
       "sendVia": "通过 {{channel}} 发送测试",
       "sent": "已通过 {{channel}} 发送测试。",
+      "sentDesktop": "测试已发送。如果 Cadence 应用正在运行，它会在一分钟内显示在这台电脑上。",
       "failed": "无法发送测试。"
     },
     "info": {

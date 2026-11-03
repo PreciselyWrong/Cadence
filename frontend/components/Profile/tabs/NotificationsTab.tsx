@@ -61,6 +61,7 @@ const DEFAULT_QUIET_HOURS: QuietHours = {
 
 type Channel = 'inApp' | 'email' | 'push' | 'telegram' | 'apprise';
 type PrefChannel = Channel | 'desktop';
+type TestChannel = Channel | 'desktop';
 
 interface NotificationTypeRowProps {
     icon: React.ComponentType<{ className?: string }>;
@@ -195,9 +196,8 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
 }) => {
     const { t } = useTranslation();
     const [profile, setProfile] = React.useState<any>(null);
-    const [testingChannel, setTestingChannel] = React.useState<Channel | null>(
-        null
-    );
+    const [testingChannel, setTestingChannel] =
+        React.useState<TestChannel | null>(null);
     const [testResult, setTestResult] = React.useState<{
         ok: boolean;
         text: string;
@@ -256,7 +256,7 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
         onChange(updatedPreferences);
     };
 
-    const handleTest = async (channel: Channel) => {
+    const handleTest = async (channel: TestChannel) => {
         setTestingChannel(channel);
         setTestResult(null);
         try {
@@ -273,11 +273,18 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
                 response.ok
                     ? {
                           ok: true,
-                          text: t(
-                              'notifications.test.sent',
-                              'Test sent via {{channel}}.',
-                              { channel: channelLabel(channel) }
-                          ),
+                          // The desktop client polls, so the test arrives later.
+                          text:
+                              channel === 'desktop'
+                                  ? t(
+                                        'notifications.test.sentDesktop',
+                                        'Test sent. It shows on this computer within a minute if the Cadence app is running.'
+                                    )
+                                  : t(
+                                        'notifications.test.sent',
+                                        'Test sent via {{channel}}.',
+                                        { channel: channelLabel(channel) }
+                                    ),
                       }
                     : {
                           ok: false,
@@ -302,24 +309,26 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
         }
     };
 
-    const channelLabel = (channel: Channel) =>
+    const channelLabel = (channel: TestChannel) =>
         ({
             inApp: t('notifications.channels.inApp', 'In-app'),
             email: t('notifications.channels.email', 'Email'),
             push: t('notifications.channels.push', 'Push'),
             telegram: t('notifications.channels.telegram', 'Telegram'),
             apprise: t('notifications.channels.apprise', 'Apprise'),
+            desktop: t('notifications.channels.desktop', 'Desktop'),
         })[channel];
 
-    const channelAvailable: Record<Channel, boolean> = {
+    const channelAvailable: Record<TestChannel, boolean> = {
         inApp: true,
         email: false,
         push: pushAvailable,
         telegram: telegramConfigured,
         apprise: appriseConfigured,
+        desktop: true,
     };
 
-    const renderTestButton = (channel: Channel) => (
+    const renderTestButton = (channel: TestChannel) => (
         <button
             type="button"
             onClick={() => handleTest(channel)}
@@ -532,7 +541,15 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
                                     'Send a test notification'
                                 )}
                             </td>
-                            {(['inApp', 'push', 'telegram', 'apprise'] as const)
+                            {(
+                                [
+                                    'inApp',
+                                    'push',
+                                    'telegram',
+                                    'apprise',
+                                    'desktop',
+                                ] as const
+                            )
                                 .filter(
                                     (channel) =>
                                         showTelegram || channel !== 'telegram'
@@ -548,7 +565,6 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
                                         {renderTestButton(channel)}
                                     </td>
                                 ))}
-                            <td className="hidden md:table-cell" />
                         </tr>
                     </tfoot>
                 </table>
