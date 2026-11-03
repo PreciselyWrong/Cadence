@@ -7,8 +7,9 @@ import android.os.Build
 
 /**
  * Pose des alarmes de rappel : exactes si Android l'autorise (permission « Alarmes et rappels » accordée, ou
- * version qui n'en demande pas), sinon une fenêtre de ±1 minute autour de l'heure. Partagé par les rappels
- * de tâches et d'événements.
+ * version qui n'en demande pas), sinon inexactes à partir d'une minute avant l'heure. Les deux sonnent en
+ * veille profonde : une alarme `setWindow` attendrait la fin de Doze, souvent après le début de l'événement,
+ * qui ne sonnerait alors plus. Partagé par les rappels de tâches et d'événements.
  */
 object ReminderAlarms {
     /** Largeur de la fenêtre : ±1 minute autour de l'heure voulue. */
@@ -37,7 +38,7 @@ object ReminderAlarms {
                 // Permission retirée entre la vérification et la pose : la fenêtre ci-dessous suffit.
             }
         }
-        alarms.setWindow(AlarmManager.RTC_WAKEUP, windowStart(triggerAtMillis), WINDOW_MILLIS, pending)
+        alarms.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, windowStart(triggerAtMillis), pending)
     }
 
     private fun canScheduleExactNow(context: Context): Boolean =
