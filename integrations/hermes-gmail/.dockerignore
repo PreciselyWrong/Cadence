@@ -1,0 +1,5 @@
+*
+!gmail_restricted/
+!gmail_restricted_mcp.py
+!setup_oauth.py
+**/__pycache__

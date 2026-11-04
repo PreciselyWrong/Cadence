@@ -1,10 +1,12 @@
 import contextlib
+import http.client
 import io
 import json
 import os
 import re
 import sys
 import tempfile
+import threading
 import tokenize
 import unittest
 from pathlib import Path
@@ -16,7 +18,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import setup_oauth  # noqa: E402
 from fake_gmail import ACCESS_TOKEN, REFRESH_TOKEN, FakeGoogle, html_message, plain_message  # noqa: E402
-from gmail_restricted import netio, oauth  # noqa: E402
+from gmail_restricted import http_transport, netio, oauth  # noqa: E402
 from gmail_restricted.gmail_api import RefusedRequest, check_request  # noqa: E402
 from gmail_restricted.server import Server  # noqa: E402
 from gmail_restricted.tools import TOOL_NAMES, GmailTools  # noqa: E402
@@ -365,6 +367,122 @@ class Protocol(Base):
         self.assertFalse(responses[1]["result"]["isError"])
         self.assertTrue(responses[2]["result"]["isError"])
         self.assertEqual(responses[3]["error"]["code"], -32601)
+
+
+class Http(Base):
+    TOKEN = "t" * 40
+
+    def setUp(self):
+        super().setUp()
+        self.token_file = os.path.join(self.tmp.name, "mcp_token")
+        fd = os.open(self.token_file, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        with os.fdopen(fd, "w") as handle:
+            handle.write(self.TOKEN + "\n")
+        self.calls = []
+        tools = self.tools
+
+        class CountingTools:
+            def call(inner, name, arguments):
+                self.calls.append(name)
+                return tools.call(name, arguments)
+
+        token = http_transport.read_token(self.token_file)
+        self.httpd = http_transport.HttpServer(("127.0.0.1", 0), Server(CountingTools()), token, max_body=4096)
+        thread = threading.Thread(target=self.httpd.serve_forever, daemon=True)
+        thread.start()
+        self.addCleanup(self.httpd.server_close)
+        self.addCleanup(self.httpd.shutdown)
+        quiet = contextlib.redirect_stderr(io.StringIO())
+        quiet.__enter__()
+        self.addCleanup(quiet.__exit__, None, None, None)
+
+    def request(self, method="POST", body=None, headers=None, path="/mcp", token=TOKEN):
+        connection = http.client.HTTPConnection("127.0.0.1", self.httpd.server_address[1], timeout=10)
+        self.addCleanup(connection.close)
+        sent = {"Content-Type": "application/json", "Accept": "application/json, text/event-stream"}
+        if token is not None:
+            sent["Authorization"] = f"Bearer {token}"
+        sent.update(headers or {})
+        payload = json.dumps(body).encode() if isinstance(body, (dict, list)) else body
+        connection.request(method, path, body=payload, headers=sent)
+        response = connection.getresponse()
+        raw = response.read()
+        return response, (json.loads(raw) if raw else None)
+
+    def rpc(self, method, params=None, request_id=1, **kwargs):
+        body = {"jsonrpc": "2.0", "id": request_id, "method": method}
+        if params is not None:
+            body["params"] = params
+        return self.request(body=body, **kwargs)
+
+    def test_missing_or_wrong_token_is_refused_before_any_tool_runs(self):
+        call = {"name": "archive_thread", "arguments": {"account": "perso", "thread_id": "t1"}}
+        for token in (None, "", "t" * 39, "u" * 40, "t" * 41):
+            with self.subTest(token=token):
+                response, payload = self.rpc("tools/call", call, token=token)
+                self.assertEqual(response.status, 401)
+                self.assertEqual(response.getheader("WWW-Authenticate"), "Bearer")
+                self.assertEqual(payload, {"error": "unauthorized"})
+        response, _ = self.rpc("tools/call", call, headers={"Authorization": f"Basic {self.TOKEN}"})
+        self.assertEqual(response.status, 401)
+        self.assertEqual(self.calls, [])
+        self.assertEqual(self.google.calls, [])
+
+    def test_initialize_then_list_exactly_the_seven_tools(self):
+        response, payload = self.rpc("initialize", {"protocolVersion": "2025-06-18", "capabilities": {},
+                                                    "clientInfo": {"name": "t", "version": "1"}})
+        self.assertEqual(response.status, 200)
+        self.assertEqual(payload["result"]["protocolVersion"], "2025-06-18")
+        self.assertIsNone(response.getheader("Access-Control-Allow-Origin"))
+        response, payload = self.request(body={"jsonrpc": "2.0", "method": "notifications/initialized"},
+                                         headers={"MCP-Protocol-Version": "2025-06-18"})
+        self.assertEqual((response.status, payload), (202, None))
+        response, payload = self.rpc("tools/list", request_id=2, headers={"MCP-Protocol-Version": "2025-06-18"})
+        self.assertEqual(response.status, 200)
+        self.assertEqual(tuple(t["name"] for t in payload["result"]["tools"]), EXPECTED_TOOLS)
+
+    def test_tool_call_goes_through_the_same_restricted_tools(self):
+        _, payload = self.rpc("tools/call", {"name": "archive_thread", "arguments": {"account": "perso", "thread_id": "t1"}})
+        self.assertFalse(payload["result"]["isError"])
+        _, payload = self.rpc("tools/call", {"name": "send_message", "arguments": {}}, request_id=2)
+        self.assertTrue(payload["result"]["isError"])
+        self.assertEqual(self.calls, ["archive_thread", "send_message"])
+
+    def test_oversized_body_is_refused_unread(self):
+        big = json.dumps({"jsonrpc": "2.0", "id": 1, "method": "ping", "params": {"pad": "x" * 5000}})
+        response, payload = self.request(body=big.encode())
+        self.assertEqual(response.status, 413)
+        self.assertEqual(payload, {"error": "payload_too_large"})
+        response, _ = self.request(body=big.encode(), token="wrong-token-" + "x" * 30)
+        self.assertEqual(response.status, 401, "authentication is checked before the size")
+
+    def test_browser_and_protocol_misuse_is_refused(self):
+        response, _ = self.rpc("ping", headers={"Origin": "http://evil.example"})
+        self.assertEqual(response.status, 403)
+        response, _ = self.request("GET")
+        self.assertEqual(response.status, 405)
+        response, _ = self.rpc("ping", path="/other")
+        self.assertEqual(response.status, 404)
+        response, _ = self.rpc("ping", headers={"Content-Type": "text/plain"})
+        self.assertEqual(response.status, 415)
+        response, _ = self.rpc("ping", headers={"MCP-Protocol-Version": "1999-01-01"})
+        self.assertEqual(response.status, 400)
+        response, payload = self.request(body=[{"jsonrpc": "2.0", "id": 1, "method": "ping"}])
+        self.assertEqual((response.status, payload["error"]["code"]), (400, -32600))
+        response, payload = self.request(body=b"{not json")
+        self.assertEqual((response.status, payload["error"]["code"]), (400, -32700))
+        self.assertEqual(self.calls, [])
+
+    def test_token_file_must_be_private_and_long_enough(self):
+        os.chmod(self.token_file, 0o644)
+        with self.assertRaises(oauth.AuthError):
+            http_transport.read_token(self.token_file)
+        short = os.path.join(self.tmp.name, "short")
+        fd = os.open(short, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        with os.fdopen(fd, "w") as handle:
+            handle.write("too-short")
+        with self.assertRaises(oauth.AuthError):
+            http_transport.read_token(short)
 
 
 if __name__ == "__main__":

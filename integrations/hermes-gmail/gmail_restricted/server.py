@@ -1,4 +1,4 @@
-"""Minimal MCP server over stdio (newline-delimited JSON-RPC 2.0), standard library only.
+"""MCP request handling and the stdio transport (newline-delimited JSON-RPC 2.0), standard library only.
 
 Only initialize, ping and the tools methods are served; resources and prompts are not offered.
 """
@@ -84,11 +84,27 @@ def _error(request_id, code, message):
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="Serveur MCP Gmail restreint (stdio).")
+    parser = argparse.ArgumentParser(description="Serveur MCP Gmail restreint (stdio ou HTTP).")
     parser.add_argument("--accounts", required=True, help="Fichier JSON non secret des comptes.")
     parser.add_argument("--state-dir", required=True, help="Répertoire privé (700) : client OAuth, jetons, registre.")
+    parser.add_argument("--transport", choices=("stdio", "http"), default="stdio")
+    parser.add_argument("--bind", default="127.0.0.1", help="HTTP : adresse d'écoute.")
+    parser.add_argument("--port", type=int, default=8700, help="HTTP : port d'écoute.")
+    parser.add_argument("--token-file", help="HTTP : fichier privé (600) contenant le jeton Bearer attendu.")
     args = parser.parse_args(argv)
-    _log(f"starting {__version__}")
+    if args.transport == "http" and not args.token_file:
+        parser.error("--token-file est obligatoire avec --transport http")
+    _log(f"starting {__version__} ({args.transport})")
+    server = Server(GmailTools(args.accounts, args.state_dir))
+    if args.transport == "http":
+        from .http_transport import serve
+        from .oauth import AuthError
+        try:
+            serve(server, args.bind, args.port, args.token_file)
+        except (AuthError, OSError) as error:
+            _log(f"cannot start: {error}")
+            sys.exit(1)
+        return
     stdin = io.TextIOWrapper(sys.stdin.buffer, encoding="utf-8", errors="replace")
     stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", line_buffering=True)
-    Server(GmailTools(args.accounts, args.state_dir)).serve(stdin, stdout)
+    server.serve(stdin, stdout)

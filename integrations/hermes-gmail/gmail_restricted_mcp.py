@@ -1,4 +1,4 @@
-"""Entry point for Hermes (stdio). Run with `python -I`: only this directory is added to the path."""
+"""Entry point (stdio for a local Hermes, or --transport http in its own container). Run with `python -I`: only this directory is added to the path."""
 
 import os
 import sys
