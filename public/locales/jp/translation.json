@@ -5537,5 +5537,218 @@
     "loadError": "リンクを読み込めませんでした。",
     "empty": "受信トレイ、タスク、メモから保存したリンクが、ページ自身の説明とともにここに表示されます。",
     "noMatch": "この条件に一致するリンクはありません。"
+  },
+  "dailyBrief": {
+    "sectionName": {
+      "verdict": "判定",
+      "timeline": "今後の日程",
+      "tonight": "今夜",
+      "moves": "移動するもの",
+      "anticipate": "先回りするもの",
+      "replies": "想定される返信",
+      "inbox": "受信箱",
+      "resolved": "完了"
+    },
+    "priority": {
+      "consequence": "影響",
+      "blocking": "他をブロック",
+      "money_deadline": "お金または期限",
+      "planned_load": "予定の負荷",
+      "long_term": "長期"
+    },
+    "alertType": {
+      "conflict": "競合する予定",
+      "overload": "過負荷",
+      "duplicate": "重複の可能性",
+      "deadline_in_note": "メモで見つかった期限",
+      "postponed": "よく先送りされる",
+      "dependency": "依存関係",
+      "event_in_work_hours": "勤務時間内の予定"
+    },
+    "source": {
+      "calendar": "カレンダー",
+      "mail": "メールエージェント",
+      "llm": "AI で書き直し",
+      "voice": "音声",
+      "agent": "エージェント"
+    },
+    "settings": {
+      "postponements": "カードの前の延期",
+      "maxMoves": "表示された移動",
+      "maxTonight": "今夜の表示タスク",
+      "closedLookback": "確認済みの完了タスク（日）",
+      "optEvening": "夜のまとめ",
+      "optTelegram": "Telegram に送信",
+      "optSonos": "Sonos で再生",
+      "optWeekly": "週間サマリー",
+      "title": "デイリーブリーフ",
+      "description": "毎朝のまとめ：今後の日程、今夜に残っていること、動かせるもの。",
+      "status": "ソースの状態",
+      "timezoneWarning": "タイムゾーンが未設定のため、ブリーフの時刻が正しくない可能性があります。",
+      "showOnToday": "今日にブリーフを表示",
+      "generation": "生成",
+      "enabled": "毎朝生成する",
+      "time": "時刻",
+      "days": "曜日",
+      "sections": "セクション",
+      "sectionsHint": "チェックを外したセクションは非表示になり、順序はリストの順です。",
+      "moveUp": "{{name}} を上へ",
+      "moveDown": "{{name}} を下へ",
+      "sources": "読み取るカレンダー",
+      "noCalendars": "カレンダーがありません。プロフィール › カレンダーで追加してください。",
+      "lookahead": "先読みする日数",
+      "evening": "夜と負荷",
+      "eveningHint": "勤務時間は「今日」（集中ブロック）で設定します。",
+      "openToday": "今日を開く",
+      "eveningStart": "開始",
+      "eveningEnd": "終了",
+      "eveningMinutes": "分",
+      "dayNote": "日のメモ",
+      "arbitrage": "ランキング",
+      "priorities": "優先順位",
+      "alerts": "アラート",
+      "writing": "文章作成",
+      "llmEnabled": "判定を AI で書き直す",
+      "llmProvider": "AI プロバイダー: プロフィール › AI アシスタント",
+      "tone": "トーン",
+      "signature": "署名",
+      "instructions": "指示",
+      "retention": "保持",
+      "decisionsDays": "保持する決定（日）",
+      "audioDays": "保持する音声（日）",
+      "voice": "音声",
+      "voiceEnabled": "ブリーフを読み上げる",
+      "piperUrl": "Piper のアドレス",
+      "voiceName": "声",
+      "speed": "速度",
+      "options": "オプション",
+      "save": "保存",
+      "saved": "設定を保存しました",
+      "saveError": "設定を保存できませんでした。",
+      "loadError": "ブリーフの設定を読み込めませんでした。",
+      "eveningRemove": "削除"
+    },
+    "hours": "{{hours}} 時間",
+    "hoursMinutes": "{{hours}} 時間 {{rest}}",
+    "minutes": "{{count}} 分",
+    "task": {
+      "complete": "完了",
+      "done": "「{{name}}」を完了しました",
+      "reopened": "「{{name}}」を再開しました",
+      "error": "タスクを更新できませんでした。"
+    },
+    "decision": {
+      "error": "選択を保存できませんでした。"
+    },
+    "loadError": "ブリーフを読み込めませんでした。",
+    "generateError": "生成に失敗しました。",
+    "generateNow": "今すぐ生成",
+    "generating": "生成中…",
+    "regenerate": "再生成",
+    "empty": "今日のブリーフはまだありません。",
+    "failed": "前回の生成に失敗しました。前のブリーフは保持されています。",
+    "settingsLink": "ブリーフの設定",
+    "counters": {
+      "overdue": "期限切れ",
+      "today": "今日"
+    },
+    "timeline": {
+      "today": "今日",
+      "planned": "{{minutes}} 分",
+      "ofCapacity": "{{planned}} / {{capacity}} 分",
+      "over": "{{minutes}} 分超過",
+      "duringWork": "勤務時間中",
+      "legendWork": "勤務",
+      "legendEvening": "夜",
+      "legendEvent": "予定",
+      "legendConflict": "競合"
+    },
+    "tonight": {
+      "ofCapacity": "{{capacity}} 分中 {{planned}} 分を予定"
+    },
+    "moves": {
+      "acceptAria": "{{date}} に移動",
+      "refuse": "この日は除く",
+      "moved": "「{{name}}」を移動しました"
+    },
+    "anticipate": {
+      "yes": "はい",
+      "no": "いいえ",
+      "precise": "指定する",
+      "preciseLabel": "詳細",
+      "save": "保存",
+      "answered": "回答を保存しました"
+    },
+    "feedback": {
+      "useful": "役に立つ",
+      "noise": "ノイズ"
+    },
+    "replies": {
+      "sourceNotRead": "ソース未読"
+    },
+    "status": {
+      "configured": "設定済み",
+      "missing": "未設定",
+      "failing": "失敗"
+    },
+    "card": {
+      "title": "デイリーブリーフ",
+      "open": "ブリーフを見る",
+      "error": "ブリーフは利用できません。"
+    },
+    "context": {
+      "title": "コンテキスト",
+      "edit": "コンテキストを編集",
+      "save": "保存",
+      "delete": "削除"
+    }
+  },
+  "agents": {
+    "title": "エージェント",
+    "description": "エージェントがメールを読み、下書きを作成します。Cadence はメールの認証情報を保存しません。",
+    "baseUrl": "エージェントのアドレス",
+    "apiKey": "API キー",
+    "key": {
+      "setLast4": "保存済み（…{{last4}}）",
+      "notSet": "キーは保存されていません",
+      "willClear": "保存時に消去されます",
+      "replace": "キーを置き換える",
+      "clear": "消去"
+    },
+    "timeout": "タイムアウト（秒）",
+    "profiles": {
+      "mail": "メールプロフィール",
+      "drafting": "下書きプロフィール"
+    },
+    "triage": {
+      "title": "振り分けルール",
+      "empty": "ルールはありません。",
+      "from": "送信者",
+      "label": "ラベル",
+      "instruction": "指示",
+      "mode": "モード",
+      "propose": "提案",
+      "off": "オフ",
+      "add": "ルールを追加",
+      "remove": "ルールを削除"
+    },
+    "test": {
+      "button": "接続をテスト",
+      "health": "エージェントに接続できます",
+      "auth": "認証",
+      "mail": "メールプロフィール",
+      "drafting": "下書きプロフィール"
+    },
+    "check": {
+      "ok": "OK",
+      "unauthorized": "キーが拒否されました",
+      "missing": "プロフィールが未設定です",
+      "error": "エラー"
+    },
+    "save": "保存",
+    "saved": "設定を保存しました",
+    "saveError": "設定を保存できませんでした。",
+    "loadError": "エージェントの設定を読み込めませんでした。",
+    "testError": "テストに失敗しました。"
   }
 }

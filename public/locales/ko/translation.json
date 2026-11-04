@@ -5537,5 +5537,218 @@
     "loadError": "링크를 불러올 수 없습니다.",
     "empty": "받은편지함, 작업, 메모에서 저장한 링크가 페이지 소개와 함께 여기에 표시됩니다.",
     "noMatch": "이 필터와 일치하는 링크가 없습니다."
+  },
+  "dailyBrief": {
+    "sectionName": {
+      "verdict": "판정",
+      "timeline": "다가오는 날",
+      "tonight": "오늘 밤",
+      "moves": "옮길 일",
+      "anticipate": "미리 챙길 일",
+      "replies": "예상되는 답장",
+      "inbox": "받은편지함",
+      "resolved": "완료"
+    },
+    "priority": {
+      "consequence": "영향",
+      "blocking": "다른 일을 막음",
+      "money_deadline": "돈 또는 마감",
+      "planned_load": "계획된 작업량",
+      "long_term": "장기"
+    },
+    "alertType": {
+      "conflict": "겹치는 일정",
+      "overload": "과부하",
+      "duplicate": "중복 가능성",
+      "deadline_in_note": "메모에서 찾은 마감",
+      "postponed": "자주 미뤄짐",
+      "dependency": "의존성",
+      "event_in_work_hours": "근무 시간 중 일정"
+    },
+    "source": {
+      "calendar": "캘린더",
+      "mail": "메일 에이전트",
+      "llm": "AI 다시 쓰기",
+      "voice": "음성",
+      "agent": "에이전트"
+    },
+    "settings": {
+      "postponements": "카드 전 미루기 횟수",
+      "maxMoves": "표시된 이동 제안",
+      "maxTonight": "오늘 밤 표시된 작업",
+      "closedLookback": "확인한 완료 작업 (일)",
+      "optEvening": "저녁 마무리",
+      "optTelegram": "Telegram으로 보내기",
+      "optSonos": "Sonos에서 재생",
+      "optWeekly": "주간 요약",
+      "title": "일일 브리핑",
+      "description": "매일 아침 요약: 다가오는 날, 오늘 밤 남은 일, 옮길 수 있는 일.",
+      "status": "소스 상태",
+      "timezoneWarning": "시간대가 설정되지 않아 브리핑 시간이 틀릴 수 있습니다.",
+      "showOnToday": "오늘 화면에 브리핑 표시",
+      "generation": "생성",
+      "enabled": "매일 아침 생성",
+      "time": "시간",
+      "days": "요일",
+      "sections": "섹션",
+      "sectionsHint": "선택하지 않은 섹션은 숨겨지며, 순서는 목록 순서를 따릅니다.",
+      "moveUp": "{{name}} 위로 이동",
+      "moveDown": "{{name}} 아래로 이동",
+      "sources": "읽는 캘린더",
+      "noCalendars": "캘린더가 없습니다. 프로필 › 캘린더에서 추가하세요.",
+      "lookahead": "미리 볼 일 수",
+      "evening": "저녁과 작업량",
+      "eveningHint": "근무 시간은 오늘 화면(집중 블록)에서 설정합니다.",
+      "openToday": "오늘 열기",
+      "eveningStart": "시작",
+      "eveningEnd": "종료",
+      "eveningMinutes": "분",
+      "dayNote": "날짜 메모",
+      "arbitrage": "순위",
+      "priorities": "우선순위 순서",
+      "alerts": "알림",
+      "writing": "작성",
+      "llmEnabled": "AI로 판정 다시 쓰기",
+      "llmProvider": "AI 제공자: 프로필 › AI 어시스턴트",
+      "tone": "어조",
+      "signature": "서명",
+      "instructions": "지침",
+      "retention": "보관",
+      "decisionsDays": "보관할 결정 (일)",
+      "audioDays": "보관할 오디오 (일)",
+      "voice": "음성",
+      "voiceEnabled": "브리핑 소리 내어 읽기",
+      "piperUrl": "Piper 주소",
+      "voiceName": "음성",
+      "speed": "속도",
+      "options": "옵션",
+      "save": "저장",
+      "saved": "설정이 저장됨",
+      "saveError": "설정을 저장할 수 없습니다.",
+      "loadError": "브리핑 설정을 불러올 수 없습니다.",
+      "eveningRemove": "제거"
+    },
+    "hours": "{{hours}}시간",
+    "hoursMinutes": "{{hours}}시간 {{rest}}",
+    "minutes": "{{count}}분",
+    "task": {
+      "complete": "완료",
+      "done": "“{{name}}” 완료됨",
+      "reopened": "“{{name}}” 다시 열림",
+      "error": "작업을 업데이트할 수 없습니다."
+    },
+    "decision": {
+      "error": "선택을 저장할 수 없습니다."
+    },
+    "loadError": "브리핑을 불러올 수 없습니다.",
+    "generateError": "생성에 실패했습니다.",
+    "generateNow": "지금 생성",
+    "generating": "생성 중…",
+    "regenerate": "다시 생성",
+    "empty": "오늘 브리핑이 아직 없습니다.",
+    "failed": "마지막 생성에 실패했습니다. 이전 브리핑은 유지됩니다.",
+    "settingsLink": "브리핑 설정",
+    "counters": {
+      "overdue": "기한 지남",
+      "today": "오늘"
+    },
+    "timeline": {
+      "today": "오늘",
+      "planned": "{{minutes}}분",
+      "ofCapacity": "{{planned}} / {{capacity}}분",
+      "over": "{{minutes}}분 초과",
+      "duringWork": "근무 중",
+      "legendWork": "근무",
+      "legendEvening": "저녁",
+      "legendEvent": "일정",
+      "legendConflict": "충돌"
+    },
+    "tonight": {
+      "ofCapacity": "{{capacity}}분 중 {{planned}}분 계획됨"
+    },
+    "moves": {
+      "acceptAria": "{{date}}(으)로 이동",
+      "refuse": "이 날은 안 함",
+      "moved": "“{{name}}” 이동됨"
+    },
+    "anticipate": {
+      "yes": "예",
+      "no": "아니요",
+      "precise": "구체화",
+      "preciseLabel": "세부 사항",
+      "save": "저장",
+      "answered": "답변 저장됨"
+    },
+    "feedback": {
+      "useful": "유용함",
+      "noise": "소음"
+    },
+    "replies": {
+      "sourceNotRead": "소스를 읽지 않음"
+    },
+    "status": {
+      "configured": "설정됨",
+      "missing": "설정 안 됨",
+      "failing": "실패"
+    },
+    "card": {
+      "title": "일일 브리핑",
+      "open": "브리핑 보기",
+      "error": "브리핑을 사용할 수 없습니다."
+    },
+    "context": {
+      "title": "맥락",
+      "edit": "맥락 편집",
+      "save": "저장",
+      "delete": "삭제"
+    }
+  },
+  "agents": {
+    "title": "에이전트",
+    "description": "에이전트가 메일을 읽고 초안을 작성합니다. Cadence는 메일 자격 증명을 저장하지 않습니다.",
+    "baseUrl": "에이전트 주소",
+    "apiKey": "API 키",
+    "key": {
+      "setLast4": "저장됨 (…{{last4}})",
+      "notSet": "저장된 키 없음",
+      "willClear": "저장 시 지워집니다",
+      "replace": "키 바꾸기",
+      "clear": "지우기"
+    },
+    "timeout": "시간 초과 (초)",
+    "profiles": {
+      "mail": "메일 프로필",
+      "drafting": "초안 프로필"
+    },
+    "triage": {
+      "title": "분류 규칙",
+      "empty": "규칙이 없습니다.",
+      "from": "보낸 사람",
+      "label": "라벨",
+      "instruction": "지침",
+      "mode": "모드",
+      "propose": "제안",
+      "off": "끔",
+      "add": "규칙 추가",
+      "remove": "규칙 제거"
+    },
+    "test": {
+      "button": "연결 테스트",
+      "health": "에이전트에 연결 가능",
+      "auth": "인증",
+      "mail": "메일 프로필",
+      "drafting": "초안 프로필"
+    },
+    "check": {
+      "ok": "확인",
+      "unauthorized": "키가 거부됨",
+      "missing": "프로필이 설정되지 않음",
+      "error": "오류"
+    },
+    "save": "저장",
+    "saved": "설정이 저장됨",
+    "saveError": "설정을 저장할 수 없습니다.",
+    "loadError": "에이전트 설정을 불러올 수 없습니다.",
+    "testError": "테스트에 실패했습니다."
   }
 }

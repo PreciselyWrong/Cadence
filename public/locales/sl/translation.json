@@ -5593,5 +5593,218 @@
     "loadError": "Povezav ni bilo mogoče naložiti.",
     "empty": "Povezave, ki jih zajamete v pladnju, nalogi ali zapisu, se prikažejo tukaj, skupaj z opisom strani.",
     "noMatch": "Nobena povezava ne ustreza tem filtrom."
+  },
+  "dailyBrief": {
+    "sectionName": {
+      "verdict": "Presoja",
+      "timeline": "Prihajajoči dnevi",
+      "tonight": "Nocoj",
+      "moves": "Za premik",
+      "anticipate": "Za predvidevanje",
+      "replies": "Pričakovani odgovori",
+      "inbox": "Prejeto",
+      "resolved": "Opravljeno"
+    },
+    "priority": {
+      "consequence": "Posledica",
+      "blocking": "Blokira druge",
+      "money_deadline": "Denar ali rok",
+      "planned_load": "Načrtovana obremenitev",
+      "long_term": "Dolgoročno"
+    },
+    "alertType": {
+      "conflict": "Dogodki, ki se prekrivajo",
+      "overload": "Preobremenitev",
+      "duplicate": "Morebitni podvojeni vnos",
+      "deadline_in_note": "Rok najden v zapisku",
+      "postponed": "Pogosto odloženo",
+      "dependency": "Odvisnost",
+      "event_in_work_hours": "Dogodek med delovnim časom"
+    },
+    "source": {
+      "calendar": "Koledarji",
+      "mail": "Poštni agent",
+      "llm": "Prepis z UI",
+      "voice": "Glas",
+      "agent": "Agent"
+    },
+    "settings": {
+      "postponements": "Odlogi pred kartico",
+      "maxMoves": "Prikazani premiki",
+      "maxTonight": "Prikazane naloge za nocoj",
+      "closedLookback": "Pregledane zaključene naloge (dni)",
+      "optEvening": "Večerni povzetek",
+      "optTelegram": "Pošlji na Telegram",
+      "optSonos": "Predvajaj na Sonosu",
+      "optWeekly": "Tedenski povzetek",
+      "title": "Dnevni povzetek",
+      "description": "Povzetek vsako jutro: prihajajoči dnevi, kar ostaja za nocoj in kaj se lahko premakne.",
+      "status": "Stanje virov",
+      "timezoneWarning": "Časovni pas ni nastavljen: časi v povzetku so lahko napačni.",
+      "showOnToday": "Prikaži povzetek na strani Danes",
+      "generation": "Ustvarjanje",
+      "enabled": "Ustvari vsako jutro",
+      "time": "Čas",
+      "days": "Dnevi",
+      "sections": "Razdelki",
+      "sectionsHint": "Neizbran razdelek je skrit; vrstni red je vrstni red seznama.",
+      "moveUp": "Premakni {{name}} gor",
+      "moveDown": "Premakni {{name}} dol",
+      "sources": "Prebrani koledarji",
+      "noCalendars": "Ni koledarja. Dodajte ga v Profil › Koledarji.",
+      "lookahead": "Dni vnaprej",
+      "evening": "Večer in obremenitev",
+      "eveningHint": "Delovni čas nastavite na strani Danes (bloki za osredotočenost).",
+      "openToday": "Odpri Danes",
+      "eveningStart": "Začetek",
+      "eveningEnd": "Konec",
+      "eveningMinutes": "Minut",
+      "dayNote": "Dnevni zapisek",
+      "arbitrage": "Razvrščanje",
+      "priorities": "Vrstni red prednosti",
+      "alerts": "Opozorila",
+      "writing": "Pisanje",
+      "llmEnabled": "Prepiši presojo z UI",
+      "llmProvider": "Ponudnik UI: Profil › Pomočnik UI",
+      "tone": "Ton",
+      "signature": "Podpis",
+      "instructions": "Navodila",
+      "retention": "Hramba",
+      "decisionsDays": "Hranjene odločitve (dni)",
+      "audioDays": "Hranjen zvok (dni)",
+      "voice": "Glas",
+      "voiceEnabled": "Glasno preberi povzetek",
+      "piperUrl": "Naslov Piper",
+      "voiceName": "Glas",
+      "speed": "Hitrost",
+      "options": "Možnosti",
+      "save": "Shrani",
+      "saved": "Nastavitve shranjene",
+      "saveError": "Nastavitev ni mogoče shraniti.",
+      "loadError": "Nastavitev povzetka ni mogoče naložiti.",
+      "eveningRemove": "Odstrani"
+    },
+    "hours": "{{hours}} h",
+    "hoursMinutes": "{{hours}} h {{rest}}",
+    "minutes": "{{count}} min",
+    "task": {
+      "complete": "Opravljeno",
+      "done": "»{{name}}« opravljeno",
+      "reopened": "»{{name}}« ponovno odprto",
+      "error": "Naloge ni mogoče posodobiti."
+    },
+    "decision": {
+      "error": "Vaše izbire ni mogoče shraniti."
+    },
+    "loadError": "Povzetka ni mogoče naložiti.",
+    "generateError": "Ustvarjanje ni uspelo.",
+    "generateNow": "Ustvari zdaj",
+    "generating": "Ustvarjanje…",
+    "regenerate": "Ustvari znova",
+    "empty": "Za danes še ni povzetka.",
+    "failed": "Zadnje ustvarjanje ni uspelo. Prejšnji povzetek je ohranjen.",
+    "settingsLink": "Nastavitve povzetka",
+    "counters": {
+      "overdue": "zamujeno",
+      "today": "danes"
+    },
+    "timeline": {
+      "today": "Danes",
+      "planned": "{{minutes}} min",
+      "ofCapacity": "{{planned}} / {{capacity}} min",
+      "over": "{{minutes}} min nad",
+      "duringWork": "med delom",
+      "legendWork": "Delo",
+      "legendEvening": "Večer",
+      "legendEvent": "Dogodek",
+      "legendConflict": "Konflikt"
+    },
+    "tonight": {
+      "ofCapacity": "{{planned}} od {{capacity}} min načrtovano"
+    },
+    "moves": {
+      "acceptAria": "Premakni na {{date}}",
+      "refuse": "Ne na ta dan",
+      "moved": "»{{name}}« premaknjeno"
+    },
+    "anticipate": {
+      "yes": "Da",
+      "no": "Ne",
+      "precise": "Natančneje",
+      "preciseLabel": "Podrobnost",
+      "save": "Shrani",
+      "answered": "Odgovor shranjen"
+    },
+    "feedback": {
+      "useful": "Uporabno",
+      "noise": "Šum"
+    },
+    "replies": {
+      "sourceNotRead": "Vir ni prebran"
+    },
+    "status": {
+      "configured": "Nastavljeno",
+      "missing": "Ni nastavljeno",
+      "failing": "Ne deluje"
+    },
+    "card": {
+      "title": "Dnevni povzetek",
+      "open": "Poglej povzetek",
+      "error": "Povzetek ni na voljo."
+    },
+    "context": {
+      "title": "Kontekst",
+      "edit": "Uredi kontekst",
+      "save": "Shrani",
+      "delete": "Izbriši"
+    }
+  },
+  "agents": {
+    "title": "Agenti",
+    "description": "Agent bere pošto in pripravlja osnutke. Cadence ne hrani poverilnic za pošto.",
+    "baseUrl": "Naslov agenta",
+    "apiKey": "Ključ API",
+    "key": {
+      "setLast4": "Shranjen (…{{last4}})",
+      "notSet": "Ključ ni shranjen",
+      "willClear": "Ob shranjevanju bo izbrisan",
+      "replace": "Zamenjaj ključ",
+      "clear": "Počisti"
+    },
+    "timeout": "Časovna omejitev (sekunde)",
+    "profiles": {
+      "mail": "Profil pošte",
+      "drafting": "Profil osnutkov"
+    },
+    "triage": {
+      "title": "Pravila razvrščanja",
+      "empty": "Ni pravila.",
+      "from": "Pošiljatelj",
+      "label": "Oznaka",
+      "instruction": "Navodilo",
+      "mode": "Način",
+      "propose": "Predlagaj",
+      "off": "Izklopljeno",
+      "add": "Dodaj pravilo",
+      "remove": "Odstrani pravilo"
+    },
+    "test": {
+      "button": "Preizkusi povezavo",
+      "health": "Agent dosegljiv",
+      "auth": "Overitev",
+      "mail": "Profil pošte",
+      "drafting": "Profil osnutkov"
+    },
+    "check": {
+      "ok": "V redu",
+      "unauthorized": "Ključ zavrnjen",
+      "missing": "Profil ni nastavljen",
+      "error": "Napaka"
+    },
+    "save": "Shrani",
+    "saved": "Nastavitve shranjene",
+    "saveError": "Nastavitev ni mogoče shraniti.",
+    "loadError": "Nastavitev agenta ni mogoče naložiti.",
+    "testError": "Preizkus ni uspel."
   }
 }

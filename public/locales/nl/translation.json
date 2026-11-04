@@ -5537,5 +5537,218 @@
     "loadError": "De links konden niet worden geladen.",
     "empty": "Links die je vastlegt in de inbox, een taak of een notitie verschijnen hier, met wat de pagina over zichzelf zegt.",
     "noMatch": "Geen link komt overeen met deze filters."
+  },
+  "dailyBrief": {
+    "sectionName": {
+      "verdict": "Oordeel",
+      "timeline": "Komende dagen",
+      "tonight": "Vanavond",
+      "moves": "Te verplaatsen",
+      "anticipate": "Vooruit te denken",
+      "replies": "Verwachte antwoorden",
+      "inbox": "Inbox",
+      "resolved": "Klaar"
+    },
+    "priority": {
+      "consequence": "Gevolg",
+      "blocking": "Blokkeert anderen",
+      "money_deadline": "Geld of deadline",
+      "planned_load": "Geplande belasting",
+      "long_term": "Lange termijn"
+    },
+    "alertType": {
+      "conflict": "Conflicterende afspraken",
+      "overload": "Overbelasting",
+      "duplicate": "Mogelijk duplicaat",
+      "deadline_in_note": "Deadline gevonden in een notitie",
+      "postponed": "Vaak uitgesteld",
+      "dependency": "Afhankelijkheid",
+      "event_in_work_hours": "Afspraak tijdens werkuren"
+    },
+    "source": {
+      "calendar": "Agenda's",
+      "mail": "Mailagent",
+      "llm": "AI-herschrijving",
+      "voice": "Stem",
+      "agent": "Agent"
+    },
+    "settings": {
+      "postponements": "Uitstellen voor een kaart",
+      "maxMoves": "Getoonde verplaatsingen",
+      "maxTonight": "Getoonde taken van vanavond",
+      "closedLookback": "Gecontroleerde afgeronde taken (dagen)",
+      "optEvening": "Avondafsluiting",
+      "optTelegram": "Versturen via Telegram",
+      "optSonos": "Afspelen op Sonos",
+      "optWeekly": "Wekelijkse samenvatting",
+      "title": "Dagelijkse briefing",
+      "description": "Elke ochtend een samenvatting: de komende dagen, wat er voor vanavond overblijft en wat kan verschuiven.",
+      "status": "Bronstatus",
+      "timezoneWarning": "De tijdzone is niet ingesteld: de tijden van de briefing kunnen onjuist zijn.",
+      "showOnToday": "Briefing tonen bij Vandaag",
+      "generation": "Generatie",
+      "enabled": "Elke ochtend genereren",
+      "time": "Tijd",
+      "days": "Dagen",
+      "sections": "Secties",
+      "sectionsHint": "Een niet-aangevinkte sectie wordt verborgen; de volgorde is die van de lijst.",
+      "moveUp": "{{name}} omhoog verplaatsen",
+      "moveDown": "{{name}} omlaag verplaatsen",
+      "sources": "Gelezen agenda's",
+      "noCalendars": "Geen agenda. Voeg er een toe via Profiel › Agenda's.",
+      "lookahead": "Dagen vooruit kijken",
+      "evening": "Avond en belasting",
+      "eveningHint": "Werkuren stel je in bij Vandaag (focusblokken).",
+      "openToday": "Vandaag openen",
+      "eveningStart": "Begin",
+      "eveningEnd": "Einde",
+      "eveningMinutes": "Minuten",
+      "dayNote": "Dagnotitie",
+      "arbitrage": "Rangschikking",
+      "priorities": "Prioriteitsvolgorde",
+      "alerts": "Meldingen",
+      "writing": "Opstellen",
+      "llmEnabled": "Oordeel herschrijven met AI",
+      "llmProvider": "AI-aanbieder: Profiel › AI-assistent",
+      "tone": "Toon",
+      "signature": "Handtekening",
+      "instructions": "Instructies",
+      "retention": "Bewaartermijn",
+      "decisionsDays": "Bewaarde beslissingen (dagen)",
+      "audioDays": "Bewaard audio (dagen)",
+      "voice": "Stem",
+      "voiceEnabled": "Briefing hardop voorlezen",
+      "piperUrl": "Piper-adres",
+      "voiceName": "Stem",
+      "speed": "Snelheid",
+      "options": "Opties",
+      "save": "Opslaan",
+      "saved": "Instellingen opgeslagen",
+      "saveError": "Instellingen konden niet worden opgeslagen.",
+      "loadError": "Briefinginstellingen konden niet worden geladen.",
+      "eveningRemove": "Verwijderen"
+    },
+    "hours": "{{hours}} u",
+    "hoursMinutes": "{{hours}} u {{rest}}",
+    "minutes": "{{count}} min",
+    "task": {
+      "complete": "Klaar",
+      "done": "«{{name}}» klaar",
+      "reopened": "«{{name}}» heropend",
+      "error": "De taak kon niet worden bijgewerkt."
+    },
+    "decision": {
+      "error": "Je keuze kon niet worden opgeslagen."
+    },
+    "loadError": "De briefing kon niet worden geladen.",
+    "generateError": "Genereren mislukt.",
+    "generateNow": "Nu genereren",
+    "generating": "Bezig met genereren…",
+    "regenerate": "Opnieuw genereren",
+    "empty": "Nog geen briefing voor vandaag.",
+    "failed": "De laatste generatie is mislukt. De vorige briefing blijft bewaard.",
+    "settingsLink": "Briefinginstellingen",
+    "counters": {
+      "overdue": "te laat",
+      "today": "vandaag"
+    },
+    "timeline": {
+      "today": "Vandaag",
+      "planned": "{{minutes}} min",
+      "ofCapacity": "{{planned}} / {{capacity}} min",
+      "over": "{{minutes}} min te veel",
+      "duringWork": "tijdens werk",
+      "legendWork": "Werk",
+      "legendEvening": "Avond",
+      "legendEvent": "Afspraak",
+      "legendConflict": "Conflict"
+    },
+    "tonight": {
+      "ofCapacity": "{{planned}} van {{capacity}} gepland"
+    },
+    "moves": {
+      "acceptAria": "Verplaatsen naar {{date}}",
+      "refuse": "Niet op deze dag",
+      "moved": "«{{name}}» verplaatst"
+    },
+    "anticipate": {
+      "yes": "Ja",
+      "no": "Nee",
+      "precise": "Specificeren",
+      "preciseLabel": "Details",
+      "save": "Opslaan",
+      "answered": "Antwoord opgeslagen"
+    },
+    "feedback": {
+      "useful": "Nuttig",
+      "noise": "Ruis"
+    },
+    "replies": {
+      "sourceNotRead": "Bron niet gelezen"
+    },
+    "status": {
+      "configured": "Ingesteld",
+      "missing": "Niet ingesteld",
+      "failing": "Mislukt"
+    },
+    "card": {
+      "title": "Dagelijkse briefing",
+      "open": "Bekijk de briefing",
+      "error": "De briefing is niet beschikbaar."
+    },
+    "context": {
+      "title": "Context",
+      "edit": "Context bewerken",
+      "save": "Opslaan",
+      "delete": "Verwijderen"
+    }
+  },
+  "agents": {
+    "title": "Agents",
+    "description": "De agent leest mail en maakt concepten. Cadence bewaart geen mailgegevens.",
+    "baseUrl": "Adres van de agent",
+    "apiKey": "API-sleutel",
+    "key": {
+      "setLast4": "Opgeslagen (…{{last4}})",
+      "notSet": "Geen sleutel opgeslagen",
+      "willClear": "Wordt gewist bij opslaan",
+      "replace": "Sleutel vervangen",
+      "clear": "Wissen"
+    },
+    "timeout": "Time-out (seconden)",
+    "profiles": {
+      "mail": "Mailprofiel",
+      "drafting": "Conceptprofiel"
+    },
+    "triage": {
+      "title": "Sorteerregels",
+      "empty": "Geen regel.",
+      "from": "Afzender",
+      "label": "Label",
+      "instruction": "Instructie",
+      "mode": "Modus",
+      "propose": "Voorstellen",
+      "off": "Uit",
+      "add": "Regel toevoegen",
+      "remove": "Regel verwijderen"
+    },
+    "test": {
+      "button": "De verbinding testen",
+      "health": "Agent bereikbaar",
+      "auth": "Authenticatie",
+      "mail": "Mailprofiel",
+      "drafting": "Conceptprofiel"
+    },
+    "check": {
+      "ok": "OK",
+      "unauthorized": "Sleutel geweigerd",
+      "missing": "Profiel niet ingesteld",
+      "error": "Fout"
+    },
+    "save": "Opslaan",
+    "saved": "Instellingen opgeslagen",
+    "saveError": "Instellingen konden niet worden opgeslagen.",
+    "loadError": "Agentinstellingen konden niet worden geladen.",
+    "testError": "De test is mislukt."
   }
 }

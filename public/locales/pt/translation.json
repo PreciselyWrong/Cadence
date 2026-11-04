@@ -5550,5 +5550,218 @@
     "loadError": "Não foi possível carregar os links.",
     "empty": "Os links que você captura na caixa de entrada, em uma tarefa ou em uma nota aparecem aqui, com o que a própria página diz sobre si.",
     "noMatch": "Nenhum link corresponde a estes filtros."
+  },
+  "dailyBrief": {
+    "sectionName": {
+      "verdict": "Veredito",
+      "timeline": "Próximos dias",
+      "tonight": "Esta noite",
+      "moves": "A mover",
+      "anticipate": "A antecipar",
+      "replies": "Respostas esperadas",
+      "inbox": "Caixa de entrada",
+      "resolved": "Concluído"
+    },
+    "priority": {
+      "consequence": "Consequência",
+      "blocking": "Bloqueia outros",
+      "money_deadline": "Dinheiro ou prazo",
+      "planned_load": "Carga planejada",
+      "long_term": "Longo prazo"
+    },
+    "alertType": {
+      "conflict": "Eventos em conflito",
+      "overload": "Sobrecarga",
+      "duplicate": "Possível duplicado",
+      "deadline_in_note": "Prazo encontrado em uma nota",
+      "postponed": "Muitas vezes adiado",
+      "dependency": "Dependência",
+      "event_in_work_hours": "Evento em horário de trabalho"
+    },
+    "source": {
+      "calendar": "Calendários",
+      "mail": "Agente de e-mail",
+      "llm": "Reescrita por IA",
+      "voice": "Voz",
+      "agent": "Agente"
+    },
+    "settings": {
+      "postponements": "Adiamentos antes de um cartão",
+      "maxMoves": "Movimentos exibidos",
+      "maxTonight": "Tarefas exibidas esta noite",
+      "closedLookback": "Tarefas concluídas verificadas (dias)",
+      "optEvening": "Fechamento da noite",
+      "optTelegram": "Enviar pelo Telegram",
+      "optSonos": "Tocar no Sonos",
+      "optWeekly": "Resumo semanal",
+      "title": "Resumo diário",
+      "description": "Um resumo toda manhã: os próximos dias, o que resta para esta noite e o que pode ser movido.",
+      "status": "Estado das fontes",
+      "timezoneWarning": "O fuso horário não está definido: os horários do resumo podem estar errados.",
+      "showOnToday": "Mostrar o resumo em Hoje",
+      "generation": "Geração",
+      "enabled": "Gerar toda manhã",
+      "time": "Horário",
+      "days": "Dias",
+      "sections": "Seções",
+      "sectionsHint": "Uma seção desmarcada fica oculta; a ordem é a da lista.",
+      "moveUp": "Mover {{name}} para cima",
+      "moveDown": "Mover {{name}} para baixo",
+      "sources": "Calendários lidos",
+      "noCalendars": "Nenhum calendário. Adicione um em Perfil › Calendários.",
+      "lookahead": "Dias de antecedência",
+      "evening": "Noite e carga",
+      "eveningHint": "Os horários de trabalho são definidos em Hoje (blocos de foco).",
+      "openToday": "Abrir Hoje",
+      "eveningStart": "Início",
+      "eveningEnd": "Fim",
+      "eveningMinutes": "Minutos",
+      "dayNote": "Nota do dia",
+      "arbitrage": "Classificação",
+      "priorities": "Ordem de prioridade",
+      "alerts": "Alertas",
+      "writing": "Escrita",
+      "llmEnabled": "Reescrever o veredito com IA",
+      "llmProvider": "Provedor de IA: Perfil › Assistente de IA",
+      "tone": "Tom",
+      "signature": "Assinatura",
+      "instructions": "Instruções",
+      "retention": "Retenção",
+      "decisionsDays": "Decisões mantidas (dias)",
+      "audioDays": "Áudio mantido (dias)",
+      "voice": "Voz",
+      "voiceEnabled": "Ler o resumo em voz alta",
+      "piperUrl": "Endereço do Piper",
+      "voiceName": "Voz",
+      "speed": "Velocidade",
+      "options": "Opções",
+      "save": "Salvar",
+      "saved": "Configurações salvas",
+      "saveError": "Não foi possível salvar as configurações.",
+      "loadError": "Não foi possível carregar as configurações do resumo.",
+      "eveningRemove": "Remover"
+    },
+    "hours": "{{hours}} h",
+    "hoursMinutes": "{{hours}} h {{rest}}",
+    "minutes": "{{count}} min",
+    "task": {
+      "complete": "Concluída",
+      "done": "«{{name}}» concluída",
+      "reopened": "«{{name}}» reaberta",
+      "error": "Não foi possível atualizar a tarefa."
+    },
+    "decision": {
+      "error": "Não foi possível salvar sua escolha."
+    },
+    "loadError": "Não foi possível carregar o resumo.",
+    "generateError": "Falha na geração.",
+    "generateNow": "Gerar agora",
+    "generating": "Gerando…",
+    "regenerate": "Gerar novamente",
+    "empty": "Ainda não há resumo para hoje.",
+    "failed": "A última geração falhou. O resumo anterior foi mantido.",
+    "settingsLink": "Configurações do resumo",
+    "counters": {
+      "overdue": "atrasadas",
+      "today": "hoje"
+    },
+    "timeline": {
+      "today": "Hoje",
+      "planned": "{{minutes}} min",
+      "ofCapacity": "{{planned}} / {{capacity}} min",
+      "over": "{{minutes}} min a mais",
+      "duringWork": "durante o trabalho",
+      "legendWork": "Trabalho",
+      "legendEvening": "Noite",
+      "legendEvent": "Evento",
+      "legendConflict": "Conflito"
+    },
+    "tonight": {
+      "ofCapacity": "{{planned}} de {{capacity}} planejados"
+    },
+    "moves": {
+      "acceptAria": "Mover para {{date}}",
+      "refuse": "Não neste dia",
+      "moved": "«{{name}}» movida"
+    },
+    "anticipate": {
+      "yes": "Sim",
+      "no": "Não",
+      "precise": "Especificar",
+      "preciseLabel": "Detalhe",
+      "save": "Salvar",
+      "answered": "Resposta salva"
+    },
+    "feedback": {
+      "useful": "Útil",
+      "noise": "Ruído"
+    },
+    "replies": {
+      "sourceNotRead": "Fonte não lida"
+    },
+    "status": {
+      "configured": "Configurado",
+      "missing": "Não configurado",
+      "failing": "Com falha"
+    },
+    "card": {
+      "title": "Resumo diário",
+      "open": "Ver o resumo",
+      "error": "O resumo não está disponível."
+    },
+    "context": {
+      "title": "Contexto",
+      "edit": "Editar contexto",
+      "save": "Salvar",
+      "delete": "Excluir"
+    }
+  },
+  "agents": {
+    "title": "Agentes",
+    "description": "O agente lê e-mails e cria rascunhos. O Cadence não guarda credenciais de e-mail.",
+    "baseUrl": "Endereço do agente",
+    "apiKey": "Chave de API",
+    "key": {
+      "setLast4": "Salva (…{{last4}})",
+      "notSet": "Nenhuma chave salva",
+      "willClear": "Será apagada ao salvar",
+      "replace": "Substituir a chave",
+      "clear": "Limpar"
+    },
+    "timeout": "Tempo limite (segundos)",
+    "profiles": {
+      "mail": "Perfil de e-mail",
+      "drafting": "Perfil de rascunhos"
+    },
+    "triage": {
+      "title": "Regras de triagem",
+      "empty": "Nenhuma regra.",
+      "from": "Remetente",
+      "label": "Rótulo",
+      "instruction": "Instrução",
+      "mode": "Modo",
+      "propose": "Propor",
+      "off": "Desativado",
+      "add": "Adicionar uma regra",
+      "remove": "Remover a regra"
+    },
+    "test": {
+      "button": "Testar a conexão",
+      "health": "Agente acessível",
+      "auth": "Autenticação",
+      "mail": "Perfil de e-mail",
+      "drafting": "Perfil de rascunhos"
+    },
+    "check": {
+      "ok": "OK",
+      "unauthorized": "Chave recusada",
+      "missing": "Perfil não definido",
+      "error": "Erro"
+    },
+    "save": "Salvar",
+    "saved": "Configurações salvas",
+    "saveError": "Não foi possível salvar as configurações.",
+    "loadError": "Não foi possível carregar as configurações do agente.",
+    "testError": "O teste falhou."
   }
 }

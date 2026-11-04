@@ -5537,5 +5537,218 @@
     "loadError": "Không thể tải liên kết.",
     "empty": "Liên kết bạn lưu từ hộp thư đến, công việc hoặc ghi chú sẽ hiện ở đây, kèm nội dung trang tự mô tả.",
     "noMatch": "Không có liên kết nào khớp với bộ lọc này."
+  },
+  "dailyBrief": {
+    "sectionName": {
+      "verdict": "Nhận định",
+      "timeline": "Những ngày sắp tới",
+      "tonight": "Tối nay",
+      "moves": "Cần dời",
+      "anticipate": "Cần dự đoán trước",
+      "replies": "Phản hồi được mong đợi",
+      "inbox": "Hộp thư đến",
+      "resolved": "Đã xong"
+    },
+    "priority": {
+      "consequence": "Hệ quả",
+      "blocking": "Chặn việc khác",
+      "money_deadline": "Tiền hoặc hạn chót",
+      "planned_load": "Khối lượng đã lên kế hoạch",
+      "long_term": "Dài hạn"
+    },
+    "alertType": {
+      "conflict": "Sự kiện trùng lịch",
+      "overload": "Quá tải",
+      "duplicate": "Có thể trùng lặp",
+      "deadline_in_note": "Hạn chót tìm thấy trong ghi chú",
+      "postponed": "Thường bị trì hoãn",
+      "dependency": "Phụ thuộc",
+      "event_in_work_hours": "Sự kiện trong giờ làm việc"
+    },
+    "source": {
+      "calendar": "Lịch",
+      "mail": "Tác nhân thư",
+      "llm": "Viết lại bằng AI",
+      "voice": "Giọng nói",
+      "agent": "Tác nhân"
+    },
+    "settings": {
+      "postponements": "Số lần hoãn trước một thẻ",
+      "maxMoves": "Các lần dời đã hiển thị",
+      "maxTonight": "Việc hiển thị tối nay",
+      "closedLookback": "Việc đã xong được kiểm tra (ngày)",
+      "optEvening": "Tổng kết buổi tối",
+      "optTelegram": "Gửi qua Telegram",
+      "optSonos": "Phát trên Sonos",
+      "optWeekly": "Tổng kết tuần",
+      "title": "Bản tóm tắt hằng ngày",
+      "description": "Bản tóm tắt mỗi sáng: những ngày sắp tới, việc còn lại cho tối nay và việc có thể dời.",
+      "status": "Trạng thái nguồn",
+      "timezoneWarning": "Chưa đặt múi giờ: giờ trong bản tóm tắt có thể không chính xác.",
+      "showOnToday": "Hiển thị bản tóm tắt ở Hôm nay",
+      "generation": "Tạo bản tóm tắt",
+      "enabled": "Tạo mỗi sáng",
+      "time": "Giờ",
+      "days": "Ngày",
+      "sections": "Mục",
+      "sectionsHint": "Mục không chọn sẽ bị ẩn; thứ tự theo thứ tự danh sách.",
+      "moveUp": "Chuyển {{name}} lên",
+      "moveDown": "Chuyển {{name}} xuống",
+      "sources": "Lịch được đọc",
+      "noCalendars": "Chưa có lịch. Thêm lịch trong Hồ sơ › Lịch.",
+      "lookahead": "Số ngày xem trước",
+      "evening": "Buổi tối và khối lượng",
+      "eveningHint": "Giờ làm việc đặt ở Hôm nay (khối tập trung).",
+      "openToday": "Mở Hôm nay",
+      "eveningStart": "Bắt đầu",
+      "eveningEnd": "Kết thúc",
+      "eveningMinutes": "Phút",
+      "dayNote": "Ghi chú ngày",
+      "arbitrage": "Xếp hạng",
+      "priorities": "Thứ tự ưu tiên",
+      "alerts": "Cảnh báo",
+      "writing": "Soạn thảo",
+      "llmEnabled": "Viết lại nhận định bằng AI",
+      "llmProvider": "Nhà cung cấp AI: Hồ sơ › Trợ lý AI",
+      "tone": "Giọng điệu",
+      "signature": "Chữ ký",
+      "instructions": "Hướng dẫn",
+      "retention": "Lưu giữ",
+      "decisionsDays": "Quyết định được giữ (ngày)",
+      "audioDays": "Âm thanh được giữ (ngày)",
+      "voice": "Giọng nói",
+      "voiceEnabled": "Đọc bản tóm tắt thành tiếng",
+      "piperUrl": "Địa chỉ Piper",
+      "voiceName": "Giọng",
+      "speed": "Tốc độ",
+      "options": "Tùy chọn",
+      "save": "Lưu",
+      "saved": "Đã lưu cài đặt",
+      "saveError": "Không thể lưu cài đặt.",
+      "loadError": "Không thể tải cài đặt bản tóm tắt.",
+      "eveningRemove": "Xóa"
+    },
+    "hours": "{{hours}} giờ",
+    "hoursMinutes": "{{hours}} giờ {{rest}}",
+    "minutes": "{{count}} phút",
+    "task": {
+      "complete": "Xong",
+      "done": "Đã hoàn thành “{{name}}”",
+      "reopened": "Đã mở lại “{{name}}”",
+      "error": "Không thể cập nhật việc."
+    },
+    "decision": {
+      "error": "Không thể lưu lựa chọn của bạn."
+    },
+    "loadError": "Không thể tải bản tóm tắt.",
+    "generateError": "Tạo bản tóm tắt thất bại.",
+    "generateNow": "Tạo ngay",
+    "generating": "Đang tạo…",
+    "regenerate": "Tạo lại",
+    "empty": "Chưa có bản tóm tắt cho hôm nay.",
+    "failed": "Lần tạo gần nhất thất bại. Bản tóm tắt trước được giữ lại.",
+    "settingsLink": "Cài đặt bản tóm tắt",
+    "counters": {
+      "overdue": "quá hạn",
+      "today": "hôm nay"
+    },
+    "timeline": {
+      "today": "Hôm nay",
+      "planned": "{{minutes}} phút",
+      "ofCapacity": "{{planned}} / {{capacity}} phút",
+      "over": "Vượt {{minutes}} phút",
+      "duringWork": "trong giờ làm việc",
+      "legendWork": "Công việc",
+      "legendEvening": "Buổi tối",
+      "legendEvent": "Sự kiện",
+      "legendConflict": "Trùng lịch"
+    },
+    "tonight": {
+      "ofCapacity": "{{planned}} trên {{capacity}} phút đã lên kế hoạch"
+    },
+    "moves": {
+      "acceptAria": "Chuyển đến {{date}}",
+      "refuse": "Không phải ngày này",
+      "moved": "Đã chuyển “{{name}}”"
+    },
+    "anticipate": {
+      "yes": "Có",
+      "no": "Không",
+      "precise": "Chỉ định",
+      "preciseLabel": "Chi tiết",
+      "save": "Lưu",
+      "answered": "Đã lưu phản hồi"
+    },
+    "feedback": {
+      "useful": "Hữu ích",
+      "noise": "Nhiễu"
+    },
+    "replies": {
+      "sourceNotRead": "Chưa đọc nguồn"
+    },
+    "status": {
+      "configured": "Đã cấu hình",
+      "missing": "Chưa cấu hình",
+      "failing": "Lỗi"
+    },
+    "card": {
+      "title": "Tóm tắt hằng ngày",
+      "open": "Xem bản tóm tắt",
+      "error": "Bản tóm tắt không khả dụng."
+    },
+    "context": {
+      "title": "Ngữ cảnh",
+      "edit": "Sửa ngữ cảnh",
+      "save": "Lưu",
+      "delete": "Xóa"
+    }
+  },
+  "agents": {
+    "title": "Tác nhân",
+    "description": "Tác nhân đọc thư và soạn bản nháp. Cadence không lưu thông tin đăng nhập thư.",
+    "baseUrl": "Địa chỉ tác nhân",
+    "apiKey": "Khóa API",
+    "key": {
+      "setLast4": "Đã lưu (…{{last4}})",
+      "notSet": "Chưa lưu khóa",
+      "willClear": "Sẽ bị xóa khi lưu",
+      "replace": "Thay khóa",
+      "clear": "Xóa"
+    },
+    "timeout": "Thời gian chờ (giây)",
+    "profiles": {
+      "mail": "Hồ sơ thư",
+      "drafting": "Hồ sơ bản nháp"
+    },
+    "triage": {
+      "title": "Quy tắc phân loại",
+      "empty": "Chưa có quy tắc.",
+      "from": "Người gửi",
+      "label": "Nhãn",
+      "instruction": "Hướng dẫn",
+      "mode": "Chế độ",
+      "propose": "Đề xuất",
+      "off": "Tắt",
+      "add": "Thêm quy tắc",
+      "remove": "Xóa quy tắc"
+    },
+    "test": {
+      "button": "Kiểm tra kết nối",
+      "health": "Tác nhân truy cập được",
+      "auth": "Xác thực",
+      "mail": "Hồ sơ thư",
+      "drafting": "Hồ sơ bản nháp"
+    },
+    "check": {
+      "ok": "OK",
+      "unauthorized": "Khóa bị từ chối",
+      "missing": "Chưa đặt hồ sơ",
+      "error": "Lỗi"
+    },
+    "save": "Lưu",
+    "saved": "Đã lưu cài đặt",
+    "saveError": "Không thể lưu cài đặt.",
+    "loadError": "Không thể tải cài đặt tác nhân.",
+    "testError": "Kiểm tra thất bại."
   }
 }

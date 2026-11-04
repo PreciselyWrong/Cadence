@@ -5542,5 +5542,218 @@
     "loadError": "Lenkene kunne ikke lastes.",
     "empty": "Lenker du lagrer fra innboksen, en oppgave eller et notat vises her, med det siden sier om seg selv.",
     "noMatch": "Ingen lenker samsvarer med disse filtrene."
+  },
+  "dailyBrief": {
+    "sectionName": {
+      "verdict": "Vurdering",
+      "timeline": "Kommende dager",
+      "tonight": "I kveld",
+      "moves": "Å flytte",
+      "anticipate": "Å forutse",
+      "replies": "Forventede svar",
+      "inbox": "Innboks",
+      "resolved": "Ferdig"
+    },
+    "priority": {
+      "consequence": "Konsekvens",
+      "blocking": "Blokkerer andre",
+      "money_deadline": "Penger eller frist",
+      "planned_load": "Planlagt belastning",
+      "long_term": "Langsiktig"
+    },
+    "alertType": {
+      "conflict": "Kolliderende hendelser",
+      "overload": "Overbelastning",
+      "duplicate": "Mulig duplikat",
+      "deadline_in_note": "Frist funnet i et notat",
+      "postponed": "Ofte utsatt",
+      "dependency": "Avhengighet",
+      "event_in_work_hours": "Hendelse i arbeidstid"
+    },
+    "source": {
+      "calendar": "Kalendere",
+      "mail": "E-postagent",
+      "llm": "KI-omskriving",
+      "voice": "Stemme",
+      "agent": "Agent"
+    },
+    "settings": {
+      "postponements": "Utsettelser før et kort",
+      "maxMoves": "Viste flyttinger",
+      "maxTonight": "Viste oppgaver i kveld",
+      "closedLookback": "Sjekkede fullførte oppgaver (dager)",
+      "optEvening": "Kveldsoppsummering",
+      "optTelegram": "Send på Telegram",
+      "optSonos": "Spill av på Sonos",
+      "optWeekly": "Ukesoppsummering",
+      "title": "Daglig oversikt",
+      "description": "En oppsummering hver morgen: de kommende dagene, det som gjenstår i kveld, og det som kan flyttes.",
+      "status": "Kildestatus",
+      "timezoneWarning": "Tidssonen er ikke satt: klokkeslettene i oversikten kan være feil.",
+      "showOnToday": "Vis oversikten på I dag",
+      "generation": "Generering",
+      "enabled": "Generer hver morgen",
+      "time": "Klokkeslett",
+      "days": "Dager",
+      "sections": "Seksjoner",
+      "sectionsHint": "En avkrysset seksjon skjules; rekkefølgen er listens rekkefølge.",
+      "moveUp": "Flytt {{name}} opp",
+      "moveDown": "Flytt {{name}} ned",
+      "sources": "Leste kalendere",
+      "noCalendars": "Ingen kalender. Legg til en under Profil › Kalendere.",
+      "lookahead": "Dager fremover",
+      "evening": "Kveld og belastning",
+      "eveningHint": "Arbeidstid settes under I dag (fokusblokker).",
+      "openToday": "Åpne I dag",
+      "eveningStart": "Start",
+      "eveningEnd": "Slutt",
+      "eveningMinutes": "Minutter",
+      "dayNote": "Dagsnotat",
+      "arbitrage": "Rangering",
+      "priorities": "Prioritetsrekkefølge",
+      "alerts": "Varsler",
+      "writing": "Skriving",
+      "llmEnabled": "Skriv om vurderingen med KI",
+      "llmProvider": "KI-leverandør: Profil › KI-assistent",
+      "tone": "Tone",
+      "signature": "Signatur",
+      "instructions": "Instruksjoner",
+      "retention": "Oppbevaring",
+      "decisionsDays": "Beslutninger lagret (dager)",
+      "audioDays": "Lyd lagret (dager)",
+      "voice": "Stemme",
+      "voiceEnabled": "Les oversikten høyt",
+      "piperUrl": "Piper-adresse",
+      "voiceName": "Stemme",
+      "speed": "Hastighet",
+      "options": "Alternativer",
+      "save": "Lagre",
+      "saved": "Innstillinger lagret",
+      "saveError": "Kunne ikke lagre innstillingene.",
+      "loadError": "Kunne ikke laste oversiktsinnstillingene.",
+      "eveningRemove": "Fjern"
+    },
+    "hours": "{{hours}} t",
+    "hoursMinutes": "{{hours}} t {{rest}}",
+    "minutes": "{{count}} min",
+    "task": {
+      "complete": "Ferdig",
+      "done": "«{{name}}» ferdig",
+      "reopened": "«{{name}}» gjenåpnet",
+      "error": "Kunne ikke oppdatere oppgaven."
+    },
+    "decision": {
+      "error": "Kunne ikke lagre valget ditt."
+    },
+    "loadError": "Kunne ikke laste oversikten.",
+    "generateError": "Generering mislyktes.",
+    "generateNow": "Generer nå",
+    "generating": "Genererer…",
+    "regenerate": "Generer på nytt",
+    "empty": "Ingen oversikt for i dag ennå.",
+    "failed": "Siste generering mislyktes. Den forrige oversikten beholdes.",
+    "settingsLink": "Oversiktsinnstillinger",
+    "counters": {
+      "overdue": "forfalt",
+      "today": "i dag"
+    },
+    "timeline": {
+      "today": "I dag",
+      "planned": "{{minutes}} min",
+      "ofCapacity": "{{planned}} / {{capacity}} min",
+      "over": "{{minutes}} min over",
+      "duringWork": "i arbeidstiden",
+      "legendWork": "Arbeid",
+      "legendEvening": "Kveld",
+      "legendEvent": "Hendelse",
+      "legendConflict": "Konflikt"
+    },
+    "tonight": {
+      "ofCapacity": "{{planned}} av {{capacity}} planlagt"
+    },
+    "moves": {
+      "acceptAria": "Flytt til {{date}}",
+      "refuse": "Ikke denne dagen",
+      "moved": "«{{name}}» flyttet"
+    },
+    "anticipate": {
+      "yes": "Ja",
+      "no": "Nei",
+      "precise": "Spesifiser",
+      "preciseLabel": "Detalj",
+      "save": "Lagre",
+      "answered": "Svar lagret"
+    },
+    "feedback": {
+      "useful": "Nyttig",
+      "noise": "Støy"
+    },
+    "replies": {
+      "sourceNotRead": "Kilden er ikke lest"
+    },
+    "status": {
+      "configured": "Konfigurert",
+      "missing": "Ikke konfigurert",
+      "failing": "Feiler"
+    },
+    "card": {
+      "title": "Daglig oversikt",
+      "open": "Se oversikten",
+      "error": "Oversikten er ikke tilgjengelig."
+    },
+    "context": {
+      "title": "Kontekst",
+      "edit": "Rediger kontekst",
+      "save": "Lagre",
+      "delete": "Slett"
+    }
+  },
+  "agents": {
+    "title": "Agenter",
+    "description": "Agenten leser e-post og lager utkast. Cadence lagrer ingen e-postlegitimasjon.",
+    "baseUrl": "Agentens adresse",
+    "apiKey": "API-nøkkel",
+    "key": {
+      "setLast4": "Lagret (…{{last4}})",
+      "notSet": "Ingen nøkkel lagret",
+      "willClear": "Fjernes ved lagring",
+      "replace": "Erstatt nøkkelen",
+      "clear": "Fjern"
+    },
+    "timeout": "Tidsavbrudd (sekunder)",
+    "profiles": {
+      "mail": "E-postprofil",
+      "drafting": "Utkastprofil"
+    },
+    "triage": {
+      "title": "Sorteringsregler",
+      "empty": "Ingen regel.",
+      "from": "Avsender",
+      "label": "Etikett",
+      "instruction": "Instruksjon",
+      "mode": "Modus",
+      "propose": "Foreslå",
+      "off": "Av",
+      "add": "Legg til en regel",
+      "remove": "Fjern regelen"
+    },
+    "test": {
+      "button": "Test tilkoblingen",
+      "health": "Agenten kan nås",
+      "auth": "Autentisering",
+      "mail": "E-postprofil",
+      "drafting": "Utkastprofil"
+    },
+    "check": {
+      "ok": "OK",
+      "unauthorized": "Nøkkelen ble avvist",
+      "missing": "Profil ikke satt",
+      "error": "Feil"
+    },
+    "save": "Lagre",
+    "saved": "Innstillinger lagret",
+    "saveError": "Kunne ikke lagre innstillingene.",
+    "loadError": "Kunne ikke laste agentinnstillingene.",
+    "testError": "Testen mislyktes."
   }
 }

@@ -5537,5 +5537,218 @@
     "loadError": "Länkarna kunde inte laddas.",
     "empty": "Länkar du sparar från inkorgen, en uppgift eller en anteckning visas här, med det sidan säger om sig själv.",
     "noMatch": "Inga länkar matchar de här filtren."
+  },
+  "dailyBrief": {
+    "sectionName": {
+      "verdict": "Bedömning",
+      "timeline": "Kommande dagar",
+      "tonight": "Ikväll",
+      "moves": "Att flytta",
+      "anticipate": "Att förutse",
+      "replies": "Väntade svar",
+      "inbox": "Inkorg",
+      "resolved": "Klart"
+    },
+    "priority": {
+      "consequence": "Konsekvens",
+      "blocking": "Blockerar andra",
+      "money_deadline": "Pengar eller deadline",
+      "planned_load": "Planerad belastning",
+      "long_term": "Långsiktigt"
+    },
+    "alertType": {
+      "conflict": "Krockande händelser",
+      "overload": "Överbelastning",
+      "duplicate": "Möjlig dubblett",
+      "deadline_in_note": "Deadline hittad i en anteckning",
+      "postponed": "Ofta uppskjuten",
+      "dependency": "Beroende",
+      "event_in_work_hours": "Händelse under arbetstid"
+    },
+    "source": {
+      "calendar": "Kalendrar",
+      "mail": "E-postagent",
+      "llm": "AI-omskrivning",
+      "voice": "Röst",
+      "agent": "Agent"
+    },
+    "settings": {
+      "postponements": "Uppskjutningar före ett kort",
+      "maxMoves": "Visade flyttar",
+      "maxTonight": "Visade uppgifter ikväll",
+      "closedLookback": "Kontrollerade avslutade uppgifter (dagar)",
+      "optEvening": "Kvällsavslut",
+      "optTelegram": "Skicka via Telegram",
+      "optSonos": "Spela upp på Sonos",
+      "optWeekly": "Veckosammanfattning",
+      "title": "Daglig sammanfattning",
+      "description": "En sammanfattning varje morgon: de kommande dagarna, vad som återstår ikväll och vad som kan flyttas.",
+      "status": "Källstatus",
+      "timezoneWarning": "Tidszonen är inte inställd: tiderna i sammanfattningen kan vara felaktiga.",
+      "showOnToday": "Visa sammanfattningen under Idag",
+      "generation": "Generering",
+      "enabled": "Generera varje morgon",
+      "time": "Tid",
+      "days": "Dagar",
+      "sections": "Avsnitt",
+      "sectionsHint": "Ett avmarkerat avsnitt döljs; ordningen är listans ordning.",
+      "moveUp": "Flytta {{name}} uppåt",
+      "moveDown": "Flytta {{name}} nedåt",
+      "sources": "Lästa kalendrar",
+      "noCalendars": "Ingen kalender. Lägg till en under Profil › Kalendrar.",
+      "lookahead": "Dagar framåt",
+      "evening": "Kväll och belastning",
+      "eveningHint": "Arbetstiden ställs in under Idag (fokusblock).",
+      "openToday": "Öppna Idag",
+      "eveningStart": "Start",
+      "eveningEnd": "Slut",
+      "eveningMinutes": "Minuter",
+      "dayNote": "Dagsanteckning",
+      "arbitrage": "Rangordning",
+      "priorities": "Prioritetsordning",
+      "alerts": "Varningar",
+      "writing": "Skrivande",
+      "llmEnabled": "Skriv om bedömningen med AI",
+      "llmProvider": "AI-leverantör: Profil › AI-assistent",
+      "tone": "Ton",
+      "signature": "Signatur",
+      "instructions": "Instruktioner",
+      "retention": "Lagringstid",
+      "decisionsDays": "Beslut som sparas (dagar)",
+      "audioDays": "Ljud som sparas (dagar)",
+      "voice": "Röst",
+      "voiceEnabled": "Läs upp sammanfattningen",
+      "piperUrl": "Piper-adress",
+      "voiceName": "Röst",
+      "speed": "Hastighet",
+      "options": "Alternativ",
+      "save": "Spara",
+      "saved": "Inställningarna sparades",
+      "saveError": "Inställningarna kunde inte sparas.",
+      "loadError": "Sammanfattningsinställningarna kunde inte läsas in.",
+      "eveningRemove": "Ta bort"
+    },
+    "hours": "{{hours}} t",
+    "hoursMinutes": "{{hours}} t {{rest}}",
+    "minutes": "{{count}} min",
+    "task": {
+      "complete": "Klar",
+      "done": "”{{name}}” klar",
+      "reopened": "”{{name}}” öppnad igen",
+      "error": "Uppgiften kunde inte uppdateras."
+    },
+    "decision": {
+      "error": "Ditt val kunde inte sparas."
+    },
+    "loadError": "Sammanfattningen kunde inte läsas in.",
+    "generateError": "Genereringen misslyckades.",
+    "generateNow": "Generera nu",
+    "generating": "Genererar…",
+    "regenerate": "Generera igen",
+    "empty": "Ingen sammanfattning för idag ännu.",
+    "failed": "Senaste genereringen misslyckades. Den föregående sammanfattningen behålls.",
+    "settingsLink": "Sammanfattningsinställningar",
+    "counters": {
+      "overdue": "försenad",
+      "today": "idag"
+    },
+    "timeline": {
+      "today": "Idag",
+      "planned": "{{minutes}} min",
+      "ofCapacity": "{{planned}} / {{capacity}} min",
+      "over": "{{minutes}} min över",
+      "duringWork": "under arbetstid",
+      "legendWork": "Arbete",
+      "legendEvening": "Kväll",
+      "legendEvent": "Händelse",
+      "legendConflict": "Konflikt"
+    },
+    "tonight": {
+      "ofCapacity": "{{planned}} av {{capacity}} planerade"
+    },
+    "moves": {
+      "acceptAria": "Flytta till {{date}}",
+      "refuse": "Inte denna dag",
+      "moved": "”{{name}}” flyttad"
+    },
+    "anticipate": {
+      "yes": "Ja",
+      "no": "Nej",
+      "precise": "Ange",
+      "preciseLabel": "Detalj",
+      "save": "Spara",
+      "answered": "Svar sparat"
+    },
+    "feedback": {
+      "useful": "Användbart",
+      "noise": "Brus"
+    },
+    "replies": {
+      "sourceNotRead": "Källan är inte läst"
+    },
+    "status": {
+      "configured": "Konfigurerad",
+      "missing": "Inte konfigurerad",
+      "failing": "Misslyckas"
+    },
+    "card": {
+      "title": "Daglig sammanfattning",
+      "open": "Visa sammanfattningen",
+      "error": "Sammanfattningen är inte tillgänglig."
+    },
+    "context": {
+      "title": "Kontext",
+      "edit": "Redigera kontext",
+      "save": "Spara",
+      "delete": "Ta bort"
+    }
+  },
+  "agents": {
+    "title": "Agenter",
+    "description": "Agenten läser e-post och skriver utkast. Cadence sparar inga e-postuppgifter.",
+    "baseUrl": "Agentens adress",
+    "apiKey": "API-nyckel",
+    "key": {
+      "setLast4": "Sparad (…{{last4}})",
+      "notSet": "Ingen nyckel sparad",
+      "willClear": "Rensas vid sparning",
+      "replace": "Byt nyckel",
+      "clear": "Rensa"
+    },
+    "timeout": "Tidsgräns (sekunder)",
+    "profiles": {
+      "mail": "E-postprofil",
+      "drafting": "Utkastprofil"
+    },
+    "triage": {
+      "title": "Sorteringsregler",
+      "empty": "Ingen regel.",
+      "from": "Avsändare",
+      "label": "Etikett",
+      "instruction": "Instruktion",
+      "mode": "Läge",
+      "propose": "Föreslå",
+      "off": "Av",
+      "add": "Lägg till en regel",
+      "remove": "Ta bort regeln"
+    },
+    "test": {
+      "button": "Testa anslutningen",
+      "health": "Agenten nås",
+      "auth": "Autentisering",
+      "mail": "E-postprofil",
+      "drafting": "Utkastprofil"
+    },
+    "check": {
+      "ok": "OK",
+      "unauthorized": "Nyckeln avvisad",
+      "missing": "Profil inte angiven",
+      "error": "Fel"
+    },
+    "save": "Spara",
+    "saved": "Inställningarna sparades",
+    "saveError": "Inställningarna kunde inte sparas.",
+    "loadError": "Agentinställningarna kunde inte läsas in.",
+    "testError": "Testet misslyckades."
   }
 }

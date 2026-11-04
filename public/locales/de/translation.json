@@ -5546,5 +5546,218 @@
     "loadError": "Die Links konnten nicht geladen werden.",
     "empty": "Links, die Sie im Posteingang, in einer Aufgabe oder einer Notiz erfassen, erscheinen hier, mit dem, was die Seite über sich selbst sagt.",
     "noMatch": "Kein Link passt zu diesen Filtern."
+  },
+  "dailyBrief": {
+    "sectionName": {
+      "verdict": "Ergebnis",
+      "timeline": "Kommende Tage",
+      "tonight": "Heute Abend",
+      "moves": "Zu verschieben",
+      "anticipate": "Vorausschauen",
+      "replies": "Erwartete Antworten",
+      "inbox": "Posteingang",
+      "resolved": "Erledigt"
+    },
+    "priority": {
+      "consequence": "Auswirkung",
+      "blocking": "Blockiert andere",
+      "money_deadline": "Geld oder Frist",
+      "planned_load": "Geplante Auslastung",
+      "long_term": "Langfristig"
+    },
+    "alertType": {
+      "conflict": "Sich überschneidende Termine",
+      "overload": "Überlastung",
+      "duplicate": "Mögliches Duplikat",
+      "deadline_in_note": "Frist in einer Notiz gefunden",
+      "postponed": "Oft verschoben",
+      "dependency": "Abhängigkeit",
+      "event_in_work_hours": "Termin während der Arbeitszeit"
+    },
+    "source": {
+      "calendar": "Kalender",
+      "mail": "E-Mail-Agent",
+      "llm": "KI-Umformulierung",
+      "voice": "Sprache",
+      "agent": "Agent"
+    },
+    "settings": {
+      "postponements": "Verschiebungen vor einer Karte",
+      "maxMoves": "Angezeigte Verschiebungen",
+      "maxTonight": "Heute Abend angezeigte Aufgaben",
+      "closedLookback": "Geprüfte erledigte Aufgaben (Tage)",
+      "optEvening": "Abendabschluss",
+      "optTelegram": "Auf Telegram senden",
+      "optSonos": "Auf Sonos abspielen",
+      "optWeekly": "Wochenzusammenfassung",
+      "title": "Tagesbriefing",
+      "description": "Jeden Morgen eine Zusammenfassung: die kommenden Tage, was heute Abend noch ansteht und was verschoben werden kann.",
+      "status": "Quellenstatus",
+      "timezoneWarning": "Die Zeitzone ist nicht eingestellt: Die Uhrzeiten des Briefings könnten falsch sein.",
+      "showOnToday": "Briefing auf Heute anzeigen",
+      "generation": "Erstellung",
+      "enabled": "Jeden Morgen erstellen",
+      "time": "Uhrzeit",
+      "days": "Tage",
+      "sections": "Abschnitte",
+      "sectionsHint": "Ein nicht angekreuzter Abschnitt wird ausgeblendet. Die Reihenfolge entspricht der Listenreihenfolge.",
+      "moveUp": "{{name}} nach oben verschieben",
+      "moveDown": "{{name}} nach unten verschieben",
+      "sources": "Gelesene Kalender",
+      "noCalendars": "Kein Kalender. Füge einen unter Profil › Kalender hinzu.",
+      "lookahead": "Vorausschau in Tagen",
+      "evening": "Abend und Auslastung",
+      "eveningHint": "Arbeitszeiten werden in Heute festgelegt (Fokusblöcke).",
+      "openToday": "„Heute“ öffnen",
+      "eveningStart": "Beginn",
+      "eveningEnd": "Ende",
+      "eveningMinutes": "Minuten",
+      "dayNote": "Tagesnotiz",
+      "arbitrage": "Rangfolge",
+      "priorities": "Prioritätsreihenfolge",
+      "alerts": "Warnungen",
+      "writing": "Verfassen",
+      "llmEnabled": "Ergebnis mit KI umformulieren",
+      "llmProvider": "KI-Anbieter: Profil › KI-Assistent",
+      "tone": "Ton",
+      "signature": "Signatur",
+      "instructions": "Anweisungen",
+      "retention": "Aufbewahrung",
+      "decisionsDays": "Aufbewahrte Entscheidungen (Tage)",
+      "audioDays": "Aufbewahrtes Audio (Tage)",
+      "voice": "Stimme",
+      "voiceEnabled": "Briefing vorlesen",
+      "piperUrl": "Piper-Adresse",
+      "voiceName": "Stimme",
+      "speed": "Geschwindigkeit",
+      "options": "Optionen",
+      "save": "Speichern",
+      "saved": "Einstellungen gespeichert",
+      "saveError": "Einstellungen konnten nicht gespeichert werden.",
+      "loadError": "Briefing-Einstellungen konnten nicht geladen werden.",
+      "eveningRemove": "Entfernen"
+    },
+    "hours": "{{hours}} Std.",
+    "hoursMinutes": "{{hours}} Std. {{rest}}",
+    "minutes": "{{count}} Min.",
+    "task": {
+      "complete": "Erledigt",
+      "done": "„{{name}}“ erledigt",
+      "reopened": "„{{name}}“ wieder geöffnet",
+      "error": "Die Aufgabe konnte nicht aktualisiert werden."
+    },
+    "decision": {
+      "error": "Deine Auswahl konnte nicht gespeichert werden."
+    },
+    "loadError": "Das Briefing konnte nicht geladen werden.",
+    "generateError": "Erstellung fehlgeschlagen.",
+    "generateNow": "Jetzt erstellen",
+    "generating": "Wird erstellt…",
+    "regenerate": "Neu erstellen",
+    "empty": "Noch kein Briefing für heute.",
+    "failed": "Die letzte Erstellung ist fehlgeschlagen. Das vorherige Briefing bleibt erhalten.",
+    "settingsLink": "Briefing-Einstellungen",
+    "counters": {
+      "overdue": "überfällig",
+      "today": "heute"
+    },
+    "timeline": {
+      "today": "Heute",
+      "planned": "{{minutes}} Min.",
+      "ofCapacity": "{{planned}} / {{capacity}} Min.",
+      "over": "{{minutes}} Min. zu viel",
+      "duringWork": "während der Arbeit",
+      "legendWork": "Arbeit",
+      "legendEvening": "Abend",
+      "legendEvent": "Termin",
+      "legendConflict": "Konflikt"
+    },
+    "tonight": {
+      "ofCapacity": "{{planned}} von {{capacity}} geplant"
+    },
+    "moves": {
+      "acceptAria": "Verschieben auf {{date}}",
+      "refuse": "Nicht an diesem Tag",
+      "moved": "„{{name}}“ verschoben"
+    },
+    "anticipate": {
+      "yes": "Ja",
+      "no": "Nein",
+      "precise": "Präzisieren",
+      "preciseLabel": "Details",
+      "save": "Speichern",
+      "answered": "Antwort gespeichert"
+    },
+    "feedback": {
+      "useful": "Hilfreich",
+      "noise": "Störend"
+    },
+    "replies": {
+      "sourceNotRead": "Quelle nicht gelesen"
+    },
+    "status": {
+      "configured": "Konfiguriert",
+      "missing": "Nicht konfiguriert",
+      "failing": "Fehlerhaft"
+    },
+    "card": {
+      "title": "Tagesbriefing",
+      "open": "Briefing ansehen",
+      "error": "Das Briefing ist nicht verfügbar."
+    },
+    "context": {
+      "title": "Kontext",
+      "edit": "Kontext bearbeiten",
+      "save": "Speichern",
+      "delete": "Löschen"
+    }
+  },
+  "agents": {
+    "title": "Agenten",
+    "description": "Der Agent liest E-Mails und erstellt Entwürfe. Cadence speichert keine E-Mail-Zugangsdaten.",
+    "baseUrl": "Agent-Adresse",
+    "apiKey": "API-Schlüssel",
+    "key": {
+      "setLast4": "Gespeichert (…{{last4}})",
+      "notSet": "Kein Schlüssel gespeichert",
+      "willClear": "Wird beim Speichern gelöscht",
+      "replace": "Schlüssel ersetzen",
+      "clear": "Löschen"
+    },
+    "timeout": "Zeitlimit (Sekunden)",
+    "profiles": {
+      "mail": "Mail-Profil",
+      "drafting": "Entwurfsprofil"
+    },
+    "triage": {
+      "title": "Triage-Regeln",
+      "empty": "Keine Regel.",
+      "from": "Absender",
+      "label": "Label",
+      "instruction": "Anweisung",
+      "mode": "Modus",
+      "propose": "Vorschlagen",
+      "off": "Aus",
+      "add": "Regel hinzufügen",
+      "remove": "Regel entfernen"
+    },
+    "test": {
+      "button": "Verbindung testen",
+      "health": "Agent erreichbar",
+      "auth": "Authentifizierung",
+      "mail": "Mail-Profil",
+      "drafting": "Entwurfsprofil"
+    },
+    "check": {
+      "ok": "OK",
+      "unauthorized": "Schlüssel abgelehnt",
+      "missing": "Profil nicht gesetzt",
+      "error": "Fehler"
+    },
+    "save": "Speichern",
+    "saved": "Einstellungen gespeichert",
+    "saveError": "Einstellungen konnten nicht gespeichert werden.",
+    "loadError": "Agent-Einstellungen konnten nicht geladen werden.",
+    "testError": "Test fehlgeschlagen."
   }
 }

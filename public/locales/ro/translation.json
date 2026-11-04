@@ -5555,5 +5555,218 @@
     "loadError": "Linkurile nu au putut fi încărcate.",
     "empty": "Linkurile salvate din inbox, dintr-o sarcină sau dintr-o notă apar aici, cu ce spune pagina despre ea.",
     "noMatch": "Niciun link nu se potrivește cu aceste filtre."
+  },
+  "dailyBrief": {
+    "sectionName": {
+      "verdict": "Verdict",
+      "timeline": "Zilele următoare",
+      "tonight": "Diseară",
+      "moves": "De mutat",
+      "anticipate": "De anticipat",
+      "replies": "Răspunsuri așteptate",
+      "inbox": "Inbox",
+      "resolved": "Gata"
+    },
+    "priority": {
+      "consequence": "Consecință",
+      "blocking": "Blochează alte sarcini",
+      "money_deadline": "Bani sau termen limită",
+      "planned_load": "Încărcare planificată",
+      "long_term": "Pe termen lung"
+    },
+    "alertType": {
+      "conflict": "Evenimente în conflict",
+      "overload": "Supraîncărcare",
+      "duplicate": "Posibil duplicat",
+      "deadline_in_note": "Termen limită găsit într-o notiță",
+      "postponed": "Amânat des",
+      "dependency": "Dependență",
+      "event_in_work_hours": "Eveniment în timpul programului de lucru"
+    },
+    "source": {
+      "calendar": "Calendare",
+      "mail": "Agent de e-mail",
+      "llm": "Rescriere cu AI",
+      "voice": "Voce",
+      "agent": "Agent"
+    },
+    "settings": {
+      "postponements": "Amânări înainte de un card",
+      "maxMoves": "Mutări afișate",
+      "maxTonight": "Sarcini afișate diseară",
+      "closedLookback": "Sarcini închise verificate (zile)",
+      "optEvening": "Încheiere de seară",
+      "optTelegram": "Trimite pe Telegram",
+      "optSonos": "Redă pe Sonos",
+      "optWeekly": "Rezumat săptămânal",
+      "title": "Rezumat zilnic",
+      "description": "Un rezumat în fiecare dimineață: zilele următoare, ce mai rămâne pentru diseară și ce poate fi mutat.",
+      "status": "Starea surselor",
+      "timezoneWarning": "Fusul orar nu este setat: orele din rezumat pot fi greșite.",
+      "showOnToday": "Afișează rezumatul în Azi",
+      "generation": "Generare",
+      "enabled": "Generează în fiecare dimineață",
+      "time": "Ora",
+      "days": "Zile",
+      "sections": "Secțiuni",
+      "sectionsHint": "O secțiune debifată este ascunsă; ordinea este ordinea din listă.",
+      "moveUp": "Mută {{name}} în sus",
+      "moveDown": "Mută {{name}} în jos",
+      "sources": "Calendare citite",
+      "noCalendars": "Niciun calendar. Adaugă unul în Profil › Calendare.",
+      "lookahead": "Zile de urmărit înainte",
+      "evening": "Seara și încărcarea",
+      "eveningHint": "Orele de lucru se setează în Azi (blocuri de concentrare).",
+      "openToday": "Deschide Azi",
+      "eveningStart": "Început",
+      "eveningEnd": "Sfârșit",
+      "eveningMinutes": "Minute",
+      "dayNote": "Notița zilei",
+      "arbitrage": "Clasament",
+      "priorities": "Ordinea priorităților",
+      "alerts": "Alerte",
+      "writing": "Scriere",
+      "llmEnabled": "Rescrie verdictul cu AI",
+      "llmProvider": "Furnizor AI: Profil › Asistent AI",
+      "tone": "Ton",
+      "signature": "Semnătură",
+      "instructions": "Instrucțiuni",
+      "retention": "Păstrare",
+      "decisionsDays": "Decizii păstrate (zile)",
+      "audioDays": "Audio păstrat (zile)",
+      "voice": "Voce",
+      "voiceEnabled": "Citește rezumatul cu voce tare",
+      "piperUrl": "Adresa Piper",
+      "voiceName": "Voce",
+      "speed": "Viteză",
+      "options": "Opțiuni",
+      "save": "Salvează",
+      "saved": "Setări salvate",
+      "saveError": "Setările nu au putut fi salvate.",
+      "loadError": "Setările rezumatului nu au putut fi încărcate.",
+      "eveningRemove": "Elimină"
+    },
+    "hours": "{{hours}} h",
+    "hoursMinutes": "{{hours}} h {{rest}}",
+    "minutes": "{{count}} min",
+    "task": {
+      "complete": "Gata",
+      "done": "„{{name}}” finalizată",
+      "reopened": "„{{name}}” redeschisă",
+      "error": "Sarcina nu a putut fi actualizată."
+    },
+    "decision": {
+      "error": "Alegerea ta nu a putut fi salvată."
+    },
+    "loadError": "Rezumatul nu a putut fi încărcat.",
+    "generateError": "Generarea a eșuat.",
+    "generateNow": "Generează acum",
+    "generating": "Se generează…",
+    "regenerate": "Regenerează",
+    "empty": "Încă nu există rezumat pentru azi.",
+    "failed": "Ultima generare a eșuat. Rezumatul anterior este păstrat.",
+    "settingsLink": "Setări rezumat",
+    "counters": {
+      "overdue": "restante",
+      "today": "azi"
+    },
+    "timeline": {
+      "today": "Azi",
+      "planned": "{{minutes}} min",
+      "ofCapacity": "{{planned}} / {{capacity}} min",
+      "over": "{{minutes}} min în plus",
+      "duringWork": "în timpul programului de lucru",
+      "legendWork": "Lucru",
+      "legendEvening": "Seară",
+      "legendEvent": "Eveniment",
+      "legendConflict": "Conflict"
+    },
+    "tonight": {
+      "ofCapacity": "{{planned}} din {{capacity}} planificate"
+    },
+    "moves": {
+      "acceptAria": "Mută pe {{date}}",
+      "refuse": "Nu în această zi",
+      "moved": "„{{name}}” mutată"
+    },
+    "anticipate": {
+      "yes": "Da",
+      "no": "Nu",
+      "precise": "Precizează",
+      "preciseLabel": "Detaliu",
+      "save": "Salvează",
+      "answered": "Răspuns salvat"
+    },
+    "feedback": {
+      "useful": "Util",
+      "noise": "Zgomot"
+    },
+    "replies": {
+      "sourceNotRead": "Sursa nu a fost citită"
+    },
+    "status": {
+      "configured": "Configurat",
+      "missing": "Neconfigurat",
+      "failing": "Eșuează"
+    },
+    "card": {
+      "title": "Rezumat zilnic",
+      "open": "Vezi rezumatul",
+      "error": "Rezumatul nu este disponibil."
+    },
+    "context": {
+      "title": "Context",
+      "edit": "Modifică contextul",
+      "save": "Salvează",
+      "delete": "Șterge"
+    }
+  },
+  "agents": {
+    "title": "Agenți",
+    "description": "Agentul citește e-mailurile și pregătește ciorne. Cadence nu păstrează credențiale de e-mail.",
+    "baseUrl": "Adresa agentului",
+    "apiKey": "Cheie API",
+    "key": {
+      "setLast4": "Salvată (…{{last4}})",
+      "notSet": "Nicio cheie salvată",
+      "willClear": "Va fi ștearsă la salvare",
+      "replace": "Înlocuiește cheia",
+      "clear": "Șterge"
+    },
+    "timeout": "Timp maxim de așteptare (secunde)",
+    "profiles": {
+      "mail": "Profil de e-mail",
+      "drafting": "Profil de ciorne"
+    },
+    "triage": {
+      "title": "Reguli de triere",
+      "empty": "Nicio regulă.",
+      "from": "Expeditor",
+      "label": "Etichetă",
+      "instruction": "Instrucțiune",
+      "mode": "Mod",
+      "propose": "Propune",
+      "off": "Dezactivat",
+      "add": "Adaugă o regulă",
+      "remove": "Elimină regula"
+    },
+    "test": {
+      "button": "Testează conexiunea",
+      "health": "Agent accesibil",
+      "auth": "Autentificare",
+      "mail": "Profil de e-mail",
+      "drafting": "Profil de ciorne"
+    },
+    "check": {
+      "ok": "OK",
+      "unauthorized": "Cheie refuzată",
+      "missing": "Profil nesetat",
+      "error": "Eroare"
+    },
+    "save": "Salvează",
+    "saved": "Setări salvate",
+    "saveError": "Setările nu au putut fi salvate.",
+    "loadError": "Setările agentului nu au putut fi încărcate.",
+    "testError": "Testul a eșuat."
   }
 }

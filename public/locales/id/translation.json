@@ -5537,5 +5537,218 @@
     "loadError": "Tautan tidak dapat dimuat.",
     "empty": "Tautan yang Anda simpan dari kotak masuk, tugas, atau catatan akan muncul di sini, beserta keterangan dari halaman itu sendiri.",
     "noMatch": "Tidak ada tautan yang cocok dengan filter ini."
+  },
+  "dailyBrief": {
+    "sectionName": {
+      "verdict": "Ringkasan",
+      "timeline": "Hari-hari mendatang",
+      "tonight": "Malam ini",
+      "moves": "Perlu dipindahkan",
+      "anticipate": "Perlu diantisipasi",
+      "replies": "Balasan yang diharapkan",
+      "inbox": "Kotak masuk",
+      "resolved": "Selesai"
+    },
+    "priority": {
+      "consequence": "Dampak",
+      "blocking": "Menghalangi yang lain",
+      "money_deadline": "Uang atau tenggat",
+      "planned_load": "Beban terjadwal",
+      "long_term": "Jangka panjang"
+    },
+    "alertType": {
+      "conflict": "Acara yang bentrok",
+      "overload": "Kelebihan beban",
+      "duplicate": "Kemungkinan duplikat",
+      "deadline_in_note": "Tenggat ditemukan di catatan",
+      "postponed": "Sering ditunda",
+      "dependency": "Ketergantungan",
+      "event_in_work_hours": "Acara di jam kerja"
+    },
+    "source": {
+      "calendar": "Kalender",
+      "mail": "Agen email",
+      "llm": "Tulis ulang dengan AI",
+      "voice": "Suara",
+      "agent": "Agen"
+    },
+    "settings": {
+      "postponements": "Penundaan sebelum kartu",
+      "maxMoves": "Pemindahan yang ditampilkan",
+      "maxTonight": "Tugas yang ditampilkan malam ini",
+      "closedLookback": "Tugas selesai yang diperiksa (hari)",
+      "optEvening": "Rangkuman malam",
+      "optTelegram": "Kirim ke Telegram",
+      "optSonos": "Putar di Sonos",
+      "optWeekly": "Ringkasan mingguan",
+      "title": "Ringkasan harian",
+      "description": "Ringkasan setiap pagi: hari-hari mendatang, yang tersisa untuk malam ini, dan yang bisa dipindahkan.",
+      "status": "Status sumber",
+      "timezoneWarning": "Zona waktu belum diatur: waktu di ringkasan mungkin keliru.",
+      "showOnToday": "Tampilkan ringkasan di Hari ini",
+      "generation": "Pembuatan",
+      "enabled": "Buat setiap pagi",
+      "time": "Waktu",
+      "days": "Hari",
+      "sections": "Bagian",
+      "sectionsHint": "Bagian yang tidak dicentang akan disembunyikan; urutannya mengikuti urutan daftar.",
+      "moveUp": "Naikkan {{name}}",
+      "moveDown": "Turunkan {{name}}",
+      "sources": "Kalender yang dibaca",
+      "noCalendars": "Belum ada kalender. Tambahkan di Profil › Kalender.",
+      "lookahead": "Hari ke depan",
+      "evening": "Malam dan beban",
+      "eveningHint": "Jam kerja diatur di Hari ini (blok fokus).",
+      "openToday": "Buka Hari ini",
+      "eveningStart": "Mulai",
+      "eveningEnd": "Selesai",
+      "eveningMinutes": "Menit",
+      "dayNote": "Catatan hari",
+      "arbitrage": "Peringkat",
+      "priorities": "Urutan prioritas",
+      "alerts": "Peringatan",
+      "writing": "Penulisan",
+      "llmEnabled": "Tulis ulang ringkasan dengan AI",
+      "llmProvider": "Penyedia AI: Profil › Asisten AI",
+      "tone": "Nada",
+      "signature": "Tanda tangan",
+      "instructions": "Instruksi",
+      "retention": "Retensi",
+      "decisionsDays": "Keputusan disimpan (hari)",
+      "audioDays": "Audio disimpan (hari)",
+      "voice": "Suara",
+      "voiceEnabled": "Bacakan ringkasan",
+      "piperUrl": "Alamat Piper",
+      "voiceName": "Suara",
+      "speed": "Kecepatan",
+      "options": "Opsi",
+      "save": "Simpan",
+      "saved": "Pengaturan disimpan",
+      "saveError": "Pengaturan tidak dapat disimpan.",
+      "loadError": "Pengaturan ringkasan tidak dapat dimuat.",
+      "eveningRemove": "Hapus"
+    },
+    "hours": "{{hours}} j",
+    "hoursMinutes": "{{hours}} j {{rest}}",
+    "minutes": "{{count}} mnt",
+    "task": {
+      "complete": "Selesai",
+      "done": "“{{name}}” selesai",
+      "reopened": "“{{name}}” dibuka kembali",
+      "error": "Tugas tidak dapat diperbarui."
+    },
+    "decision": {
+      "error": "Pilihan Anda tidak dapat disimpan."
+    },
+    "loadError": "Ringkasan tidak dapat dimuat.",
+    "generateError": "Pembuatan gagal.",
+    "generateNow": "Buat sekarang",
+    "generating": "Membuat…",
+    "regenerate": "Buat ulang",
+    "empty": "Belum ada ringkasan untuk hari ini.",
+    "failed": "Pembuatan terakhir gagal. Ringkasan sebelumnya tetap disimpan.",
+    "settingsLink": "Pengaturan ringkasan",
+    "counters": {
+      "overdue": "terlambat",
+      "today": "hari ini"
+    },
+    "timeline": {
+      "today": "Hari ini",
+      "planned": "{{minutes}} mnt",
+      "ofCapacity": "{{planned}} / {{capacity}} mnt",
+      "over": "{{minutes}} mnt lebih",
+      "duringWork": "selama jam kerja",
+      "legendWork": "Kerja",
+      "legendEvening": "Malam",
+      "legendEvent": "Acara",
+      "legendConflict": "Konflik"
+    },
+    "tonight": {
+      "ofCapacity": "{{planned}} dari {{capacity}} mnt direncanakan"
+    },
+    "moves": {
+      "acceptAria": "Pindahkan ke {{date}}",
+      "refuse": "Bukan di hari ini",
+      "moved": "“{{name}}” dipindahkan"
+    },
+    "anticipate": {
+      "yes": "Ya",
+      "no": "Tidak",
+      "precise": "Tentukan",
+      "preciseLabel": "Detail",
+      "save": "Simpan",
+      "answered": "Jawaban disimpan"
+    },
+    "feedback": {
+      "useful": "Berguna",
+      "noise": "Gangguan"
+    },
+    "replies": {
+      "sourceNotRead": "Sumber belum dibaca"
+    },
+    "status": {
+      "configured": "Sudah dikonfigurasi",
+      "missing": "Belum dikonfigurasi",
+      "failing": "Gagal"
+    },
+    "card": {
+      "title": "Ringkasan harian",
+      "open": "Lihat ringkasan",
+      "error": "Ringkasan tidak tersedia."
+    },
+    "context": {
+      "title": "Konteks",
+      "edit": "Ubah konteks",
+      "save": "Simpan",
+      "delete": "Hapus"
+    }
+  },
+  "agents": {
+    "title": "Agen",
+    "description": "Agen membaca email dan menyiapkan draf. Cadence tidak menyimpan kredensial email.",
+    "baseUrl": "Alamat agen",
+    "apiKey": "Kunci API",
+    "key": {
+      "setLast4": "Tersimpan (…{{last4}})",
+      "notSet": "Belum ada kunci tersimpan",
+      "willClear": "Akan dihapus saat disimpan",
+      "replace": "Ganti kunci",
+      "clear": "Hapus kunci"
+    },
+    "timeout": "Batas waktu (detik)",
+    "profiles": {
+      "mail": "Profil email",
+      "drafting": "Profil draf"
+    },
+    "triage": {
+      "title": "Aturan pemilahan",
+      "empty": "Belum ada aturan.",
+      "from": "Pengirim",
+      "label": "Label",
+      "instruction": "Instruksi",
+      "mode": "Mode",
+      "propose": "Usulkan",
+      "off": "Nonaktif",
+      "add": "Tambah aturan",
+      "remove": "Hapus aturan"
+    },
+    "test": {
+      "button": "Uji koneksi",
+      "health": "Agen dapat dijangkau",
+      "auth": "Autentikasi",
+      "mail": "Profil email",
+      "drafting": "Profil draf"
+    },
+    "check": {
+      "ok": "OK",
+      "unauthorized": "Kunci ditolak",
+      "missing": "Profil belum diatur",
+      "error": "Galat"
+    },
+    "save": "Simpan",
+    "saved": "Pengaturan disimpan",
+    "saveError": "Pengaturan tidak dapat disimpan.",
+    "loadError": "Pengaturan agen tidak dapat dimuat.",
+    "testError": "Pengujian gagal."
   }
 }

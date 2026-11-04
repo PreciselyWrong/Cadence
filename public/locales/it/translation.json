@@ -5550,5 +5550,218 @@
     "loadError": "Impossibile caricare i link.",
     "empty": "I link salvati dalla posta in arrivo, da un'attività o da una nota compaiono qui, con quello che la pagina dice di sé.",
     "noMatch": "Nessun link corrisponde a questi filtri."
+  },
+  "dailyBrief": {
+    "sectionName": {
+      "verdict": "Verdetto",
+      "timeline": "Prossimi giorni",
+      "tonight": "Stasera",
+      "moves": "Da spostare",
+      "anticipate": "Da anticipare",
+      "replies": "Risposte attese",
+      "inbox": "Posta in arrivo",
+      "resolved": "Fatto"
+    },
+    "priority": {
+      "consequence": "Conseguenza",
+      "blocking": "Blocca altri",
+      "money_deadline": "Denaro o scadenza",
+      "planned_load": "Carico pianificato",
+      "long_term": "Lungo termine"
+    },
+    "alertType": {
+      "conflict": "Eventi in conflitto",
+      "overload": "Sovraccarico",
+      "duplicate": "Possibile duplicato",
+      "deadline_in_note": "Scadenza trovata in una nota",
+      "postponed": "Spesso rinviato",
+      "dependency": "Dipendenza",
+      "event_in_work_hours": "Evento in orario di lavoro"
+    },
+    "source": {
+      "calendar": "Calendari",
+      "mail": "Agente di posta",
+      "llm": "Riscrittura con IA",
+      "voice": "Voce",
+      "agent": "Agente"
+    },
+    "settings": {
+      "postponements": "Rinvii prima di una scheda",
+      "maxMoves": "Spostamenti mostrati",
+      "maxTonight": "Attività mostrate stasera",
+      "closedLookback": "Attività chiuse controllate (giorni)",
+      "optEvening": "Riepilogo serale",
+      "optTelegram": "Invia su Telegram",
+      "optSonos": "Riproduci su Sonos",
+      "optWeekly": "Riepilogo settimanale",
+      "title": "Briefing giornaliero",
+      "description": "Un riepilogo ogni mattina: i prossimi giorni, cosa resta per stasera e cosa si può spostare.",
+      "status": "Stato delle fonti",
+      "timezoneWarning": "Il fuso orario non è impostato: gli orari del briefing potrebbero essere sbagliati.",
+      "showOnToday": "Mostra il briefing in Oggi",
+      "generation": "Generazione",
+      "enabled": "Genera ogni mattina",
+      "time": "Ora",
+      "days": "Giorni",
+      "sections": "Sezioni",
+      "sectionsHint": "Una sezione non selezionata viene nascosta; l'ordine è quello dell'elenco.",
+      "moveUp": "Sposta {{name}} su",
+      "moveDown": "Sposta {{name}} giù",
+      "sources": "Calendari letti",
+      "noCalendars": "Nessun calendario. Aggiungine uno in Profilo › Calendari.",
+      "lookahead": "Giorni da guardare avanti",
+      "evening": "Sera e carico",
+      "eveningHint": "Gli orari di lavoro si impostano in Oggi (blocchi di concentrazione).",
+      "openToday": "Apri Oggi",
+      "eveningStart": "Inizio",
+      "eveningEnd": "Fine",
+      "eveningMinutes": "Minuti",
+      "dayNote": "Nota del giorno",
+      "arbitrage": "Classifica",
+      "priorities": "Ordine di priorità",
+      "alerts": "Avvisi",
+      "writing": "Scrittura",
+      "llmEnabled": "Riscrivi il verdetto con l'IA",
+      "llmProvider": "Provider IA: Profilo › Assistente IA",
+      "tone": "Tono",
+      "signature": "Firma",
+      "instructions": "Istruzioni",
+      "retention": "Conservazione",
+      "decisionsDays": "Decisioni conservate (giorni)",
+      "audioDays": "Audio conservato (giorni)",
+      "voice": "Voce",
+      "voiceEnabled": "Leggi il briefing ad alta voce",
+      "piperUrl": "Indirizzo Piper",
+      "voiceName": "Voce",
+      "speed": "Velocità",
+      "options": "Opzioni",
+      "save": "Salva",
+      "saved": "Impostazioni salvate",
+      "saveError": "Impossibile salvare le impostazioni.",
+      "loadError": "Impossibile caricare le impostazioni del briefing.",
+      "eveningRemove": "Rimuovi"
+    },
+    "hours": "{{hours}} h",
+    "hoursMinutes": "{{hours}} h {{rest}}",
+    "minutes": "{{count}} min",
+    "task": {
+      "complete": "Fatto",
+      "done": "«{{name}}» fatta",
+      "reopened": "«{{name}}» riaperta",
+      "error": "Impossibile aggiornare l'attività."
+    },
+    "decision": {
+      "error": "Impossibile salvare la tua scelta."
+    },
+    "loadError": "Impossibile caricare il briefing.",
+    "generateError": "Generazione non riuscita.",
+    "generateNow": "Genera ora",
+    "generating": "Generazione in corso…",
+    "regenerate": "Rigenera",
+    "empty": "Nessun briefing per oggi.",
+    "failed": "L'ultima generazione non è riuscita. Il briefing precedente è conservato.",
+    "settingsLink": "Impostazioni del briefing",
+    "counters": {
+      "overdue": "in ritardo",
+      "today": "oggi"
+    },
+    "timeline": {
+      "today": "Oggi",
+      "planned": "{{minutes}} min",
+      "ofCapacity": "{{planned}} / {{capacity}} min",
+      "over": "{{minutes}} min in più",
+      "duringWork": "durante il lavoro",
+      "legendWork": "Lavoro",
+      "legendEvening": "Sera",
+      "legendEvent": "Evento",
+      "legendConflict": "Conflitto"
+    },
+    "tonight": {
+      "ofCapacity": "{{planned}} di {{capacity}} pianificati"
+    },
+    "moves": {
+      "acceptAria": "Sposta al {{date}}",
+      "refuse": "Non in questo giorno",
+      "moved": "«{{name}}» spostata"
+    },
+    "anticipate": {
+      "yes": "Sì",
+      "no": "No",
+      "precise": "Specifica",
+      "preciseLabel": "Dettaglio",
+      "save": "Salva",
+      "answered": "Risposta salvata"
+    },
+    "feedback": {
+      "useful": "Utile",
+      "noise": "Rumore"
+    },
+    "replies": {
+      "sourceNotRead": "Fonte non letta"
+    },
+    "status": {
+      "configured": "Configurato",
+      "missing": "Non configurato",
+      "failing": "In errore"
+    },
+    "card": {
+      "title": "Briefing giornaliero",
+      "open": "Vedi il briefing",
+      "error": "Il briefing non è disponibile."
+    },
+    "context": {
+      "title": "Contesto",
+      "edit": "Modifica contesto",
+      "save": "Salva",
+      "delete": "Elimina"
+    }
+  },
+  "agents": {
+    "title": "Agenti",
+    "description": "L'agente legge la posta e prepara le bozze. Cadence non conserva credenziali di posta.",
+    "baseUrl": "Indirizzo dell'agente",
+    "apiKey": "Chiave API",
+    "key": {
+      "setLast4": "Salvata (…{{last4}})",
+      "notSet": "Nessuna chiave salvata",
+      "willClear": "Verrà cancellata al salvataggio",
+      "replace": "Sostituisci la chiave",
+      "clear": "Cancella"
+    },
+    "timeout": "Timeout (secondi)",
+    "profiles": {
+      "mail": "Profilo posta",
+      "drafting": "Profilo bozze"
+    },
+    "triage": {
+      "title": "Regole di smistamento",
+      "empty": "Nessuna regola.",
+      "from": "Mittente",
+      "label": "Etichetta",
+      "instruction": "Istruzione",
+      "mode": "Modalità",
+      "propose": "Proponi",
+      "off": "Disattivata",
+      "add": "Aggiungi una regola",
+      "remove": "Rimuovi la regola"
+    },
+    "test": {
+      "button": "Testa la connessione",
+      "health": "Agente raggiungibile",
+      "auth": "Autenticazione",
+      "mail": "Profilo posta",
+      "drafting": "Profilo bozze"
+    },
+    "check": {
+      "ok": "OK",
+      "unauthorized": "Chiave rifiutata",
+      "missing": "Profilo non impostato",
+      "error": "Errore"
+    },
+    "save": "Salva",
+    "saved": "Impostazioni salvate",
+    "saveError": "Impossibile salvare le impostazioni.",
+    "loadError": "Impossibile caricare le impostazioni dell'agente.",
+    "testError": "Test non riuscito."
   }
 }

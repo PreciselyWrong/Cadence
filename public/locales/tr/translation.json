@@ -5537,5 +5537,218 @@
     "loadError": "Bağlantılar yüklenemedi.",
     "empty": "Gelen kutusunda, bir görevde ya da notta kaydettiğiniz bağlantılar, sayfanın kendisi hakkında söyledikleriyle birlikte burada görünür.",
     "noMatch": "Bu filtrelerle eşleşen bağlantı yok."
+  },
+  "dailyBrief": {
+    "sectionName": {
+      "verdict": "Karar",
+      "timeline": "Yaklaşan günler",
+      "tonight": "Bu akşam",
+      "moves": "Taşınacaklar",
+      "anticipate": "Öngörülecekler",
+      "replies": "Beklenen yanıtlar",
+      "inbox": "Gelen kutusu",
+      "resolved": "Tamamlandı"
+    },
+    "priority": {
+      "consequence": "Sonuç",
+      "blocking": "Diğerlerini engelliyor",
+      "money_deadline": "Para veya son tarih",
+      "planned_load": "Planlanmış yük",
+      "long_term": "Uzun vadeli"
+    },
+    "alertType": {
+      "conflict": "Çakışan etkinlikler",
+      "overload": "Aşırı yük",
+      "duplicate": "Olası yinelenen",
+      "deadline_in_note": "Notta bulunan son tarih",
+      "postponed": "Sık ertelenen",
+      "dependency": "Bağımlılık",
+      "event_in_work_hours": "Mesai saatinde etkinlik"
+    },
+    "source": {
+      "calendar": "Takvimler",
+      "mail": "E-posta ajanı",
+      "llm": "Yapay zekâ ile yeniden yazma",
+      "voice": "Ses",
+      "agent": "Ajan"
+    },
+    "settings": {
+      "postponements": "Karttan önceki ertelemeler",
+      "maxMoves": "Gösterilen taşımalar",
+      "maxTonight": "Bu akşam gösterilen görevler",
+      "closedLookback": "Kontrol edilen kapalı görevler (gün)",
+      "optEvening": "Akşam özeti",
+      "optTelegram": "Telegram'a gönder",
+      "optSonos": "Sonos'ta çal",
+      "optWeekly": "Haftalık özet",
+      "title": "Günlük özet",
+      "description": "Her sabah bir özet: yaklaşan günler, bu akşam kalanlar ve taşınabilecekler.",
+      "status": "Kaynak durumu",
+      "timezoneWarning": "Saat dilimi ayarlanmamış: özetteki saatler yanlış olabilir.",
+      "showOnToday": "Özeti Bugün'de göster",
+      "generation": "Oluşturma",
+      "enabled": "Her sabah oluştur",
+      "time": "Saat",
+      "days": "Günler",
+      "sections": "Bölümler",
+      "sectionsHint": "İşaretlenmeyen bölüm gizlenir; sıra liste sırasıdır.",
+      "moveUp": "{{name}} öğesini yukarı taşı",
+      "moveDown": "{{name}} öğesini aşağı taşı",
+      "sources": "Okunan takvimler",
+      "noCalendars": "Takvim yok. Profil › Takvimler bölümünden ekleyin.",
+      "lookahead": "İleriye bakılacak gün",
+      "evening": "Akşam ve yük",
+      "eveningHint": "Mesai saatleri Bugün sayfasında ayarlanır (odak blokları).",
+      "openToday": "Bugün'ü aç",
+      "eveningStart": "Başlangıç",
+      "eveningEnd": "Bitiş",
+      "eveningMinutes": "Dakika",
+      "dayNote": "Gün notu",
+      "arbitrage": "Sıralama",
+      "priorities": "Öncelik sırası",
+      "alerts": "Uyarılar",
+      "writing": "Yazım",
+      "llmEnabled": "Kararı yapay zekâ ile yeniden yaz",
+      "llmProvider": "Yapay zekâ sağlayıcısı: Profil › Yapay zekâ asistanı",
+      "tone": "Ton",
+      "signature": "İmza",
+      "instructions": "Talimatlar",
+      "retention": "Saklama",
+      "decisionsDays": "Saklanan kararlar (gün)",
+      "audioDays": "Saklanan ses (gün)",
+      "voice": "Ses",
+      "voiceEnabled": "Özeti sesli oku",
+      "piperUrl": "Piper adresi",
+      "voiceName": "Ses",
+      "speed": "Hız",
+      "options": "Seçenekler",
+      "save": "Kaydet",
+      "saved": "Ayarlar kaydedildi",
+      "saveError": "Ayarlar kaydedilemedi.",
+      "loadError": "Özet ayarları yüklenemedi.",
+      "eveningRemove": "Kaldır"
+    },
+    "hours": "{{hours}} sa",
+    "hoursMinutes": "{{hours}} sa {{rest}}",
+    "minutes": "{{count}} dk",
+    "task": {
+      "complete": "Tamamlandı",
+      "done": "“{{name}}” tamamlandı",
+      "reopened": "“{{name}}” yeniden açıldı",
+      "error": "Görev güncellenemedi."
+    },
+    "decision": {
+      "error": "Seçiminiz kaydedilemedi."
+    },
+    "loadError": "Özet yüklenemedi.",
+    "generateError": "Oluşturma başarısız oldu.",
+    "generateNow": "Şimdi oluştur",
+    "generating": "Oluşturuluyor…",
+    "regenerate": "Yeniden oluştur",
+    "empty": "Bugün için henüz bir özet yok.",
+    "failed": "Son oluşturma başarısız oldu. Önceki özet korunuyor.",
+    "settingsLink": "Özet ayarları",
+    "counters": {
+      "overdue": "gecikmiş",
+      "today": "bugün"
+    },
+    "timeline": {
+      "today": "Bugün",
+      "planned": "{{minutes}} dk",
+      "ofCapacity": "{{planned}} / {{capacity}} dk",
+      "over": "{{minutes}} dk fazla",
+      "duringWork": "mesai sırasında",
+      "legendWork": "Çalışma",
+      "legendEvening": "Akşam",
+      "legendEvent": "Etkinlik",
+      "legendConflict": "Çakışma"
+    },
+    "tonight": {
+      "ofCapacity": "{{capacity}} dakikadan {{planned}} dakika planlandı"
+    },
+    "moves": {
+      "acceptAria": "{{date}} tarihine taşı",
+      "refuse": "Bu gün değil",
+      "moved": "“{{name}}” taşındı"
+    },
+    "anticipate": {
+      "yes": "Evet",
+      "no": "Hayır",
+      "precise": "Belirt",
+      "preciseLabel": "Ayrıntı",
+      "save": "Kaydet",
+      "answered": "Yanıt kaydedildi"
+    },
+    "feedback": {
+      "useful": "Faydalı",
+      "noise": "Gürültü"
+    },
+    "replies": {
+      "sourceNotRead": "Kaynak okunmadı"
+    },
+    "status": {
+      "configured": "Yapılandırılmış",
+      "missing": "Yapılandırılmamış",
+      "failing": "Başarısız"
+    },
+    "card": {
+      "title": "Günlük özet",
+      "open": "Özeti gör",
+      "error": "Özet kullanılamıyor."
+    },
+    "context": {
+      "title": "Bağlam",
+      "edit": "Bağlamı düzenle",
+      "save": "Kaydet",
+      "delete": "Sil"
+    }
+  },
+  "agents": {
+    "title": "Ajanlar",
+    "description": "Ajan e-postaları okur ve taslak hazırlar. Cadence e-posta kimlik bilgilerini saklamaz.",
+    "baseUrl": "Ajan adresi",
+    "apiKey": "API anahtarı",
+    "key": {
+      "setLast4": "Kaydedildi (…{{last4}})",
+      "notSet": "Kayıtlı anahtar yok",
+      "willClear": "Kaydedildiğinde silinecek",
+      "replace": "Anahtarı değiştir",
+      "clear": "Temizle"
+    },
+    "timeout": "Zaman aşımı (saniye)",
+    "profiles": {
+      "mail": "E-posta profili",
+      "drafting": "Taslak profili"
+    },
+    "triage": {
+      "title": "Ayıklama kuralları",
+      "empty": "Kural yok.",
+      "from": "Gönderen",
+      "label": "Etiket",
+      "instruction": "Talimat",
+      "mode": "Mod",
+      "propose": "Öner",
+      "off": "Kapalı",
+      "add": "Kural ekle",
+      "remove": "Kuralı kaldır"
+    },
+    "test": {
+      "button": "Bağlantıyı test et",
+      "health": "Ajana erişilebiliyor",
+      "auth": "Kimlik doğrulama",
+      "mail": "E-posta profili",
+      "drafting": "Taslak profili"
+    },
+    "check": {
+      "ok": "Tamam",
+      "unauthorized": "Anahtar reddedildi",
+      "missing": "Profil ayarlanmamış",
+      "error": "Hata"
+    },
+    "save": "Kaydet",
+    "saved": "Ayarlar kaydedildi",
+    "saveError": "Ayarlar kaydedilemedi.",
+    "loadError": "Ajan ayarları yüklenemedi.",
+    "testError": "Test başarısız oldu."
   }
 }

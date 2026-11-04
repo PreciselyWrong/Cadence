@@ -5593,5 +5593,218 @@
     "loadError": "Nie udało się wczytać linków.",
     "empty": "Linki zapisane z skrzynki, zadania lub notatki pojawią się tutaj, wraz z opisem, jaki podaje sama strona.",
     "noMatch": "Żaden link nie pasuje do tych filtrów."
+  },
+  "dailyBrief": {
+    "sectionName": {
+      "verdict": "Ocena",
+      "timeline": "Najbliższe dni",
+      "tonight": "Dziś wieczorem",
+      "moves": "Do przeniesienia",
+      "anticipate": "Do przewidzenia",
+      "replies": "Oczekiwane odpowiedzi",
+      "inbox": "Skrzynka odbiorcza",
+      "resolved": "Gotowe"
+    },
+    "priority": {
+      "consequence": "Konsekwencje",
+      "blocking": "Blokuje innych",
+      "money_deadline": "Pieniądze lub termin",
+      "planned_load": "Zaplanowane obciążenie",
+      "long_term": "Długoterminowe"
+    },
+    "alertType": {
+      "conflict": "Kolidujące wydarzenia",
+      "overload": "Przeciążenie",
+      "duplicate": "Możliwy duplikat",
+      "deadline_in_note": "Termin znaleziony w notatce",
+      "postponed": "Często odkładane",
+      "dependency": "Zależność",
+      "event_in_work_hours": "Wydarzenie w godzinach pracy"
+    },
+    "source": {
+      "calendar": "Kalendarze",
+      "mail": "Agent poczty",
+      "llm": "Przeredagowanie przez AI",
+      "voice": "Głos",
+      "agent": "Agent"
+    },
+    "settings": {
+      "postponements": "Odroczenia przed kartą",
+      "maxMoves": "Wyświetlane przeniesienia",
+      "maxTonight": "Wyświetlane zadania na wieczór",
+      "closedLookback": "Sprawdzane zamknięte zadania (dni)",
+      "optEvening": "Podsumowanie wieczorne",
+      "optTelegram": "Wyślij na Telegram",
+      "optSonos": "Odtwórz na Sonos",
+      "optWeekly": "Podsumowanie tygodnia",
+      "title": "Dzienne podsumowanie",
+      "description": "Podsumowanie każdego ranka: nadchodzące dni, co zostało na wieczór i co można przesunąć.",
+      "status": "Stan źródeł",
+      "timezoneWarning": "Nie ustawiono strefy czasowej: godziny w podsumowaniu mogą być błędne.",
+      "showOnToday": "Pokazuj podsumowanie w Dziś",
+      "generation": "Generowanie",
+      "enabled": "Generuj co rano",
+      "time": "Godzina",
+      "days": "Dni",
+      "sections": "Sekcje",
+      "sectionsHint": "Odznaczona sekcja jest ukryta; kolejność to kolejność na liście.",
+      "moveUp": "Przesuń {{name}} w górę",
+      "moveDown": "Przesuń {{name}} w dół",
+      "sources": "Odczytywane kalendarze",
+      "noCalendars": "Brak kalendarza. Dodaj go w Profil › Kalendarze.",
+      "lookahead": "Dni do przodu",
+      "evening": "Wieczór i obciążenie",
+      "eveningHint": "Godziny pracy ustawia się w Dziś (bloki skupienia).",
+      "openToday": "Otwórz Dziś",
+      "eveningStart": "Początek",
+      "eveningEnd": "Koniec",
+      "eveningMinutes": "Minuty",
+      "dayNote": "Notatka dnia",
+      "arbitrage": "Ranking",
+      "priorities": "Kolejność priorytetów",
+      "alerts": "Alerty",
+      "writing": "Pisanie",
+      "llmEnabled": "Przepisz ocenę przez AI",
+      "llmProvider": "Dostawca AI: Profil › Asystent AI",
+      "tone": "Ton",
+      "signature": "Podpis",
+      "instructions": "Instrukcje",
+      "retention": "Przechowywanie",
+      "decisionsDays": "Zachowywane decyzje (dni)",
+      "audioDays": "Zachowywane nagrania (dni)",
+      "voice": "Głos",
+      "voiceEnabled": "Czytaj podsumowanie na głos",
+      "piperUrl": "Adres Piper",
+      "voiceName": "Głos",
+      "speed": "Szybkość",
+      "options": "Opcje",
+      "save": "Zapisz",
+      "saved": "Ustawienia zapisano",
+      "saveError": "Nie udało się zapisać ustawień.",
+      "loadError": "Nie udało się wczytać ustawień podsumowania.",
+      "eveningRemove": "Usuń"
+    },
+    "hours": "{{hours}} godz.",
+    "hoursMinutes": "{{hours}} godz. {{rest}}",
+    "minutes": "{{count}} min",
+    "task": {
+      "complete": "Gotowe",
+      "done": "„{{name}}” zrobione",
+      "reopened": "„{{name}}” ponownie otwarte",
+      "error": "Nie udało się zaktualizować zadania."
+    },
+    "decision": {
+      "error": "Nie udało się zapisać wyboru."
+    },
+    "loadError": "Nie udało się wczytać podsumowania.",
+    "generateError": "Generowanie nie powiodło się.",
+    "generateNow": "Generuj teraz",
+    "generating": "Generowanie…",
+    "regenerate": "Generuj ponownie",
+    "empty": "Brak podsumowania na dziś.",
+    "failed": "Ostatnie generowanie nie powiodło się. Poprzednie podsumowanie zostało zachowane.",
+    "settingsLink": "Ustawienia podsumowania",
+    "counters": {
+      "overdue": "po terminie",
+      "today": "dziś"
+    },
+    "timeline": {
+      "today": "Dziś",
+      "planned": "{{minutes}} min",
+      "ofCapacity": "{{planned}} / {{capacity}} min",
+      "over": "{{minutes}} min ponad",
+      "duringWork": "w godzinach pracy",
+      "legendWork": "Praca",
+      "legendEvening": "Wieczór",
+      "legendEvent": "Wydarzenie",
+      "legendConflict": "Konflikt"
+    },
+    "tonight": {
+      "ofCapacity": "{{planned}} z {{capacity}} zaplanowanych"
+    },
+    "moves": {
+      "acceptAria": "Przenieś na {{date}}",
+      "refuse": "Nie w tym dniu",
+      "moved": "„{{name}}” przeniesiono"
+    },
+    "anticipate": {
+      "yes": "Tak",
+      "no": "Nie",
+      "precise": "Doprecyzuj",
+      "preciseLabel": "Szczegóły",
+      "save": "Zapisz",
+      "answered": "Odpowiedź zapisana"
+    },
+    "feedback": {
+      "useful": "Przydatne",
+      "noise": "Szum"
+    },
+    "replies": {
+      "sourceNotRead": "Nie przeczytano źródła"
+    },
+    "status": {
+      "configured": "Skonfigurowane",
+      "missing": "Nieskonfigurowane",
+      "failing": "Błąd"
+    },
+    "card": {
+      "title": "Dzienne podsumowanie",
+      "open": "Zobacz podsumowanie",
+      "error": "Podsumowanie jest niedostępne."
+    },
+    "context": {
+      "title": "Kontekst",
+      "edit": "Edytuj kontekst",
+      "save": "Zapisz",
+      "delete": "Usuń"
+    }
+  },
+  "agents": {
+    "title": "Agenci",
+    "description": "Agent czyta pocztę i przygotowuje szkice. Cadence nie przechowuje danych logowania do poczty.",
+    "baseUrl": "Adres agenta",
+    "apiKey": "Klucz API",
+    "key": {
+      "setLast4": "Zapisany (…{{last4}})",
+      "notSet": "Brak zapisanego klucza",
+      "willClear": "Zostanie usunięty po zapisaniu",
+      "replace": "Zastąp klucz",
+      "clear": "Wyczyść"
+    },
+    "timeout": "Limit czasu (sekundy)",
+    "profiles": {
+      "mail": "Profil poczty",
+      "drafting": "Profil szkiców"
+    },
+    "triage": {
+      "title": "Reguły segregowania",
+      "empty": "Brak reguł.",
+      "from": "Nadawca",
+      "label": "Etykieta",
+      "instruction": "Instrukcja",
+      "mode": "Tryb",
+      "propose": "Proponuj",
+      "off": "Wyłączone",
+      "add": "Dodaj regułę",
+      "remove": "Usuń regułę"
+    },
+    "test": {
+      "button": "Przetestuj połączenie",
+      "health": "Agent osiągalny",
+      "auth": "Uwierzytelnianie",
+      "mail": "Profil poczty",
+      "drafting": "Profil szkiców"
+    },
+    "check": {
+      "ok": "OK",
+      "unauthorized": "Klucz odrzucony",
+      "missing": "Profil nieustawiony",
+      "error": "Błąd"
+    },
+    "save": "Zapisz",
+    "saved": "Ustawienia zapisano",
+    "saveError": "Nie udało się zapisać ustawień.",
+    "loadError": "Nie udało się wczytać ustawień agenta.",
+    "testError": "Test nie powiódł się."
   }
 }

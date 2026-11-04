@@ -5537,5 +5537,218 @@
     "loadError": "Linkene kunne ikke indlæses.",
     "empty": "Links, du gemmer fra indbakken, en opgave eller en note, vises her sammen med det, siden selv siger.",
     "noMatch": "Ingen links matcher disse filtre."
+  },
+  "dailyBrief": {
+    "sectionName": {
+      "verdict": "Vurdering",
+      "timeline": "Kommende dage",
+      "tonight": "I aften",
+      "moves": "Skal flyttes",
+      "anticipate": "At forudse",
+      "replies": "Forventede svar",
+      "inbox": "Indbakke",
+      "resolved": "Udført"
+    },
+    "priority": {
+      "consequence": "Konsekvens",
+      "blocking": "Blokerer andre",
+      "money_deadline": "Penge eller frist",
+      "planned_load": "Planlagt belastning",
+      "long_term": "Langsigtet"
+    },
+    "alertType": {
+      "conflict": "Modstridende begivenheder",
+      "overload": "Overbelastning",
+      "duplicate": "Mulig dublet",
+      "deadline_in_note": "Frist fundet i en note",
+      "postponed": "Ofte udskudt",
+      "dependency": "Afhængighed",
+      "event_in_work_hours": "Begivenhed i arbejdstid"
+    },
+    "source": {
+      "calendar": "Kalendere",
+      "mail": "Mailagent",
+      "llm": "AI-omskrivning",
+      "voice": "Stemme",
+      "agent": "Agent"
+    },
+    "settings": {
+      "postponements": "Udskydelser før et kort",
+      "maxMoves": "Viste flytninger",
+      "maxTonight": "Viste opgaver i aften",
+      "closedLookback": "Gennemgåede afsluttede opgaver (dage)",
+      "optEvening": "Aftenopsamling",
+      "optTelegram": "Send på Telegram",
+      "optSonos": "Afspil på Sonos",
+      "optWeekly": "Ugentlig oversigt",
+      "title": "Dagligt overblik",
+      "description": "Et resumé hver morgen: de kommende dage, det der er tilbage i aften, og hvad der kan flyttes.",
+      "status": "Kildestatus",
+      "timezoneWarning": "Tidszonen er ikke angivet: tidspunkterne i overblikket kan være forkerte.",
+      "showOnToday": "Vis overblikket under I dag",
+      "generation": "Generering",
+      "enabled": "Generer hver morgen",
+      "time": "Tidspunkt",
+      "days": "Dage",
+      "sections": "Sektioner",
+      "sectionsHint": "En afkrydset sektion vises ikke; rækkefølgen er listens rækkefølge.",
+      "moveUp": "Flyt {{name}} op",
+      "moveDown": "Flyt {{name}} ned",
+      "sources": "Læste kalendere",
+      "noCalendars": "Ingen kalender. Tilføj en under Profil › Kalendere.",
+      "lookahead": "Dage at kigge frem",
+      "evening": "Aften og belastning",
+      "eveningHint": "Arbejdstid angives under I dag (fokusblokke).",
+      "openToday": "Åbn I dag",
+      "eveningStart": "Start",
+      "eveningEnd": "Slut",
+      "eveningMinutes": "Minutter",
+      "dayNote": "Dagsnote",
+      "arbitrage": "Rangering",
+      "priorities": "Prioritetsrækkefølge",
+      "alerts": "Advarsler",
+      "writing": "Skrivning",
+      "llmEnabled": "Omskriv vurderingen med AI",
+      "llmProvider": "AI-udbyder: Profil › AI-assistent",
+      "tone": "Tone",
+      "signature": "Signatur",
+      "instructions": "Instruktioner",
+      "retention": "Opbevaring",
+      "decisionsDays": "Beslutninger gemt (dage)",
+      "audioDays": "Lyd gemt (dage)",
+      "voice": "Stemme",
+      "voiceEnabled": "Læs overblikket højt",
+      "piperUrl": "Piper-adresse",
+      "voiceName": "Stemme",
+      "speed": "Hastighed",
+      "options": "Valgmuligheder",
+      "save": "Gem",
+      "saved": "Indstillinger gemt",
+      "saveError": "Indstillingerne kunne ikke gemmes.",
+      "loadError": "Overblikindstillingerne kunne ikke indlæses.",
+      "eveningRemove": "Fjern"
+    },
+    "hours": "{{hours}} t",
+    "hoursMinutes": "{{hours}} t {{rest}}",
+    "minutes": "{{count}} min",
+    "task": {
+      "complete": "Udført",
+      "done": "“{{name}}” udført",
+      "reopened": "“{{name}}” genåbnet",
+      "error": "Opgaven kunne ikke opdateres."
+    },
+    "decision": {
+      "error": "Dit valg kunne ikke gemmes."
+    },
+    "loadError": "Overblikket kunne ikke indlæses.",
+    "generateError": "Generering mislykkedes.",
+    "generateNow": "Generer nu",
+    "generating": "Genererer…",
+    "regenerate": "Generer igen",
+    "empty": "Intet overblik for i dag endnu.",
+    "failed": "Seneste generering mislykkedes. Det forrige overblik gemmes.",
+    "settingsLink": "Overblikindstillinger",
+    "counters": {
+      "overdue": "forfalden",
+      "today": "i dag"
+    },
+    "timeline": {
+      "today": "I dag",
+      "planned": "{{minutes}} min",
+      "ofCapacity": "{{planned}} / {{capacity}} min",
+      "over": "{{minutes}} min over",
+      "duringWork": "i arbejdstiden",
+      "legendWork": "Arbejde",
+      "legendEvening": "Aften",
+      "legendEvent": "Begivenhed",
+      "legendConflict": "Konflikt"
+    },
+    "tonight": {
+      "ofCapacity": "{{planned}} af {{capacity}} planlagt"
+    },
+    "moves": {
+      "acceptAria": "Flyt til {{date}}",
+      "refuse": "Ikke denne dag",
+      "moved": "“{{name}}” flyttet"
+    },
+    "anticipate": {
+      "yes": "Ja",
+      "no": "Nej",
+      "precise": "Angiv",
+      "preciseLabel": "Detalje",
+      "save": "Gem",
+      "answered": "Svar gemt"
+    },
+    "feedback": {
+      "useful": "Nyttig",
+      "noise": "Støj"
+    },
+    "replies": {
+      "sourceNotRead": "Kilde ikke læst"
+    },
+    "status": {
+      "configured": "Konfigureret",
+      "missing": "Ikke konfigureret",
+      "failing": "Fejler"
+    },
+    "card": {
+      "title": "Dagligt overblik",
+      "open": "Se overblikket",
+      "error": "Overblikket er ikke tilgængeligt."
+    },
+    "context": {
+      "title": "Kontekst",
+      "edit": "Rediger kontekst",
+      "save": "Gem",
+      "delete": "Slet"
+    }
+  },
+  "agents": {
+    "title": "Agenter",
+    "description": "Agenten læser mail og laver udkast. Cadence gemmer ingen mailoplysninger.",
+    "baseUrl": "Agentens adresse",
+    "apiKey": "API-nøgle",
+    "key": {
+      "setLast4": "Gemt (…{{last4}})",
+      "notSet": "Ingen nøgle gemt",
+      "willClear": "Fjernes ved gem",
+      "replace": "Udskift nøglen",
+      "clear": "Ryd"
+    },
+    "timeout": "Timeout (sekunder)",
+    "profiles": {
+      "mail": "Mailprofil",
+      "drafting": "Udkastsprofil"
+    },
+    "triage": {
+      "title": "Sorteringsregler",
+      "empty": "Ingen regel.",
+      "from": "Afsender",
+      "label": "Etiket",
+      "instruction": "Instruktion",
+      "mode": "Tilstand",
+      "propose": "Foreslå",
+      "off": "Fra",
+      "add": "Tilføj en regel",
+      "remove": "Fjern reglen"
+    },
+    "test": {
+      "button": "Test forbindelsen",
+      "health": "Agent kan nås",
+      "auth": "Godkendelse",
+      "mail": "Mailprofil",
+      "drafting": "Udkastsprofil"
+    },
+    "check": {
+      "ok": "OK",
+      "unauthorized": "Nøglen afvist",
+      "missing": "Profil ikke angivet",
+      "error": "Fejl"
+    },
+    "save": "Gem",
+    "saved": "Indstillinger gemt",
+    "saveError": "Indstillingerne kunne ikke gemmes.",
+    "loadError": "Agentindstillingerne kunne ikke indlæses.",
+    "testError": "Testen mislykkedes."
   }
 }

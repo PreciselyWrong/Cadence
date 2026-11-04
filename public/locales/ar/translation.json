@@ -5601,5 +5601,218 @@
     "loadError": "تعذّر تحميل الروابط.",
     "empty": "تظهر هنا الروابط التي تحفظها من الوارد أو مهمة أو ملاحظة، مع ما تقوله الصفحة عن نفسها.",
     "noMatch": "لا يوجد رابط يطابق هذه الفلاتر."
+  },
+  "dailyBrief": {
+    "sectionName": {
+      "verdict": "الحكم",
+      "timeline": "الأيام القادمة",
+      "tonight": "الليلة",
+      "moves": "للنقل",
+      "anticipate": "للتوقّع",
+      "replies": "الردود المتوقعة",
+      "inbox": "الوارد",
+      "resolved": "تم"
+    },
+    "priority": {
+      "consequence": "العواقب",
+      "blocking": "يعطّل الآخرين",
+      "money_deadline": "المال أو الموعد النهائي",
+      "planned_load": "الحِمل المخطط",
+      "long_term": "المدى الطويل"
+    },
+    "alertType": {
+      "conflict": "أحداث متعارضة",
+      "overload": "حِمل زائد",
+      "duplicate": "تكرار محتمل",
+      "deadline_in_note": "موعد نهائي وُجد في ملاحظة",
+      "postponed": "يُؤجَّل كثيرًا",
+      "dependency": "تبعية",
+      "event_in_work_hours": "حدث خلال ساعات العمل"
+    },
+    "source": {
+      "calendar": "التقويمات",
+      "mail": "وكيل البريد",
+      "llm": "إعادة الصياغة بالذكاء الاصطناعي",
+      "voice": "الصوت",
+      "agent": "الوكيل"
+    },
+    "settings": {
+      "postponements": "تأجيلات قبل البطاقة",
+      "maxMoves": "عمليات النقل المعروضة",
+      "maxTonight": "المهام المعروضة الليلة",
+      "closedLookback": "المهام المنجزة التي جرى فحصها (أيام)",
+      "optEvening": "الخلاصة المسائية",
+      "optTelegram": "أرسل إلى Telegram",
+      "optSonos": "شغّل على Sonos",
+      "optWeekly": "الملخص الأسبوعي",
+      "title": "الموجز اليومي",
+      "description": "ملخص كل صباح: الأيام القادمة، وما تبقى لليلة، وما يمكن نقله.",
+      "status": "حالة المصادر",
+      "timezoneWarning": "المنطقة الزمنية غير مضبوطة: قد تكون أوقات الموجز غير دقيقة.",
+      "showOnToday": "عرض الموجز في اليوم",
+      "generation": "الإنشاء",
+      "enabled": "إنشاء كل صباح",
+      "time": "الوقت",
+      "days": "الأيام",
+      "sections": "الأقسام",
+      "sectionsHint": "القسم غير المحدد يُخفى؛ والترتيب هو ترتيب القائمة.",
+      "moveUp": "نقل {{name}} لأعلى",
+      "moveDown": "نقل {{name}} لأسفل",
+      "sources": "التقويمات المقروءة",
+      "noCalendars": "لا يوجد تقويم. أضِف واحدًا من الملف الشخصي › التقويمات.",
+      "lookahead": "أيام للنظر إلى الأمام",
+      "evening": "المساء والحِمل",
+      "eveningHint": "تُضبط ساعات العمل في صفحة اليوم (كتل التركيز).",
+      "openToday": "فتح اليوم",
+      "eveningStart": "البداية",
+      "eveningEnd": "النهاية",
+      "eveningMinutes": "دقائق",
+      "dayNote": "ملاحظة اليوم",
+      "arbitrage": "الترتيب",
+      "priorities": "ترتيب الأولويات",
+      "alerts": "التنبيهات",
+      "writing": "الكتابة",
+      "llmEnabled": "أعد صياغة الحكم بالذكاء الاصطناعي",
+      "llmProvider": "مزوّد الذكاء الاصطناعي: الملف الشخصي › مساعد الذكاء الاصطناعي",
+      "tone": "النبرة",
+      "signature": "التوقيع",
+      "instructions": "التعليمات",
+      "retention": "الاحتفاظ",
+      "decisionsDays": "القرارات المحفوظة (أيام)",
+      "audioDays": "الصوت المحفوظ (أيام)",
+      "voice": "الصوت",
+      "voiceEnabled": "اقرأ الموجز بصوت عالٍ",
+      "piperUrl": "عنوان Piper",
+      "voiceName": "الصوت",
+      "speed": "السرعة",
+      "options": "الخيارات",
+      "save": "حفظ",
+      "saved": "تم حفظ الإعدادات",
+      "saveError": "تعذّر حفظ الإعدادات.",
+      "loadError": "تعذّر تحميل إعدادات الموجز.",
+      "eveningRemove": "إزالة"
+    },
+    "hours": "{{hours}} س",
+    "hoursMinutes": "{{hours}} س {{rest}}",
+    "minutes": "{{count}} د",
+    "task": {
+      "complete": "تم",
+      "done": "تم إنجاز «{{name}}»",
+      "reopened": "أُعيد فتح «{{name}}»",
+      "error": "تعذّر تحديث المهمة."
+    },
+    "decision": {
+      "error": "تعذّر حفظ اختيارك."
+    },
+    "loadError": "تعذّر تحميل الموجز.",
+    "generateError": "فشل الإنشاء.",
+    "generateNow": "أنشئ الآن",
+    "generating": "جارٍ الإنشاء…",
+    "regenerate": "أعِد الإنشاء",
+    "empty": "لا يوجد موجز لليوم بعد.",
+    "failed": "فشل آخر إنشاء. تم الاحتفاظ بالموجز السابق.",
+    "settingsLink": "إعدادات الموجز",
+    "counters": {
+      "overdue": "متأخرة",
+      "today": "اليوم"
+    },
+    "timeline": {
+      "today": "اليوم",
+      "planned": "{{minutes}} د",
+      "ofCapacity": "{{planned}} / {{capacity}} د",
+      "over": "تجاوز بـ {{minutes}} د",
+      "duringWork": "خلال ساعات العمل",
+      "legendWork": "العمل",
+      "legendEvening": "المساء",
+      "legendEvent": "حدث",
+      "legendConflict": "تعارض"
+    },
+    "tonight": {
+      "ofCapacity": "{{planned}} من {{capacity}} د مخططة"
+    },
+    "moves": {
+      "acceptAria": "نقل إلى {{date}}",
+      "refuse": "ليس في هذا اليوم",
+      "moved": "تم نقل «{{name}}»"
+    },
+    "anticipate": {
+      "yes": "نعم",
+      "no": "لا",
+      "precise": "تحديد",
+      "preciseLabel": "التفاصيل",
+      "save": "حفظ",
+      "answered": "تم حفظ الرد"
+    },
+    "feedback": {
+      "useful": "مفيد",
+      "noise": "ضجيج"
+    },
+    "replies": {
+      "sourceNotRead": "لم تُقرأ المصدر"
+    },
+    "status": {
+      "configured": "مُعدّ",
+      "missing": "غير مُعدّ",
+      "failing": "فشل"
+    },
+    "card": {
+      "title": "الموجز اليومي",
+      "open": "عرض الموجز",
+      "error": "الموجز غير متاح."
+    },
+    "context": {
+      "title": "السياق",
+      "edit": "تعديل السياق",
+      "save": "حفظ",
+      "delete": "حذف"
+    }
+  },
+  "agents": {
+    "title": "الوكلاء",
+    "description": "يقرأ الوكيل البريد ويُعدّ المسودات. لا يحفظ Cadence بيانات اعتماد البريد.",
+    "baseUrl": "عنوان الوكيل",
+    "apiKey": "مفتاح API",
+    "key": {
+      "setLast4": "محفوظ (…{{last4}})",
+      "notSet": "لا يوجد مفتاح محفوظ",
+      "willClear": "سيُمسح عند الحفظ",
+      "replace": "استبدال المفتاح",
+      "clear": "مسح"
+    },
+    "timeout": "المهلة (ثوانٍ)",
+    "profiles": {
+      "mail": "ملف البريد",
+      "drafting": "ملف المسودات"
+    },
+    "triage": {
+      "title": "قواعد الفرز",
+      "empty": "لا توجد قاعدة.",
+      "from": "المرسل",
+      "label": "الوسم",
+      "instruction": "التعليمات",
+      "mode": "الوضع",
+      "propose": "اقتراح",
+      "off": "إيقاف",
+      "add": "إضافة قاعدة",
+      "remove": "إزالة القاعدة"
+    },
+    "test": {
+      "button": "اختبار الاتصال",
+      "health": "الوكيل متاح",
+      "auth": "المصادقة",
+      "mail": "ملف البريد",
+      "drafting": "ملف المسودات"
+    },
+    "check": {
+      "ok": "موافق",
+      "unauthorized": "تم رفض المفتاح",
+      "missing": "الملف غير مُعدّ",
+      "error": "خطأ"
+    },
+    "save": "حفظ",
+    "saved": "تم حفظ الإعدادات",
+    "saveError": "تعذّر حفظ الإعدادات.",
+    "loadError": "تعذّر تحميل إعدادات الوكيل.",
+    "testError": "فشل الاختبار."
   }
 }

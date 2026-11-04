@@ -222,6 +222,219 @@
     "empty": "Odkazy, ktoré zachytíte v prijatých, v úlohe alebo v poznámke, sa zobrazia tu spolu s tým, čo o sebe hovorí stránka.",
     "noMatch": "Žiadny odkaz nezodpovedá týmto filtrom."
   },
+  "dailyBrief": {
+    "sectionName": {
+      "verdict": "Verdikt",
+      "timeline": "Nadchádzajúce dni",
+      "tonight": "Dnes večer",
+      "moves": "Na presun",
+      "anticipate": "Na predvídanie",
+      "replies": "Očakávané odpovede",
+      "inbox": "Doručené",
+      "resolved": "Hotovo"
+    },
+    "priority": {
+      "consequence": "Dôsledok",
+      "blocking": "Blokuje ostatných",
+      "money_deadline": "Peniaze alebo termín",
+      "planned_load": "Plánované zaťaženie",
+      "long_term": "Dlhodobé"
+    },
+    "alertType": {
+      "conflict": "Kolidujúce udalosti",
+      "overload": "Preťaženie",
+      "duplicate": "Možný duplikát",
+      "deadline_in_note": "Termín nájdený v poznámke",
+      "postponed": "Často odkladané",
+      "dependency": "Závislosť",
+      "event_in_work_hours": "Udalosť v pracovnej dobe"
+    },
+    "source": {
+      "calendar": "Kalendáre",
+      "mail": "Poštový agent",
+      "llm": "Prepísanie pomocou AI",
+      "voice": "Hlas",
+      "agent": "Agent"
+    },
+    "settings": {
+      "postponements": "Odklady pred kartou",
+      "maxMoves": "Zobrazené presuny",
+      "maxTonight": "Zobrazené úlohy na dnes večer",
+      "closedLookback": "Kontrolované uzavreté úlohy (dni)",
+      "optEvening": "Večerné zhrnutie",
+      "optTelegram": "Odoslať cez Telegram",
+      "optSonos": "Prehrať na Sonos",
+      "optWeekly": "Týždenný prehľad",
+      "title": "Denný prehľad",
+      "description": "Prehľad každé ráno: nadchádzajúce dni, čo zostáva na dnes večer a čo sa dá presunúť.",
+      "status": "Stav zdrojov",
+      "timezoneWarning": "Časové pásmo nie je nastavené: časy v prehľade môžu byť nesprávne.",
+      "showOnToday": "Zobraziť prehľad v Dnes",
+      "generation": "Generovanie",
+      "enabled": "Generovať každé ráno",
+      "time": "Čas",
+      "days": "Dni",
+      "sections": "Sekcie",
+      "sectionsHint": "Nezaškrtnutá sekcia sa skryje; poradie je poradie zoznamu.",
+      "moveUp": "Posunúť {{name}} nahor",
+      "moveDown": "Posunúť {{name}} nadol",
+      "sources": "Čítané kalendáre",
+      "noCalendars": "Žiadny kalendár. Pridajte ho v Profil › Kalendáre.",
+      "lookahead": "Dni dopredu",
+      "evening": "Večer a zaťaženie",
+      "eveningHint": "Pracovná doba sa nastavuje v Dnes (bloky sústredenia).",
+      "openToday": "Otvoriť Dnes",
+      "eveningStart": "Začiatok",
+      "eveningEnd": "Koniec",
+      "eveningMinutes": "Minúty",
+      "dayNote": "Poznámka ku dňu",
+      "arbitrage": "Poradie",
+      "priorities": "Poradie priorít",
+      "alerts": "Upozornenia",
+      "writing": "Písanie",
+      "llmEnabled": "Prepísať verdikt pomocou AI",
+      "llmProvider": "Poskytovateľ AI: Profil › Asistent AI",
+      "tone": "Tón",
+      "signature": "Podpis",
+      "instructions": "Pokyny",
+      "retention": "Uchovávanie",
+      "decisionsDays": "Uchovávané rozhodnutia (dni)",
+      "audioDays": "Uchovávané audio (dni)",
+      "voice": "Hlas",
+      "voiceEnabled": "Prečítať prehľad nahlas",
+      "piperUrl": "Adresa Piper",
+      "voiceName": "Hlas",
+      "speed": "Rýchlosť",
+      "options": "Možnosti",
+      "save": "Uložiť",
+      "saved": "Nastavenia uložené",
+      "saveError": "Nastavenia sa nepodarilo uložiť.",
+      "loadError": "Nastavenia prehľadu sa nepodarilo načítať.",
+      "eveningRemove": "Odstrániť"
+    },
+    "hours": "{{hours}} h",
+    "hoursMinutes": "{{hours}} h {{rest}}",
+    "minutes": "{{count}} min",
+    "task": {
+      "complete": "Hotovo",
+      "done": "„{{name}}“ hotová",
+      "reopened": "„{{name}}“ znovu otvorená",
+      "error": "Úlohu sa nepodarilo aktualizovať."
+    },
+    "decision": {
+      "error": "Vašu voľbu sa nepodarilo uložiť."
+    },
+    "loadError": "Prehľad sa nepodarilo načítať.",
+    "generateError": "Generovanie zlyhalo.",
+    "generateNow": "Generovať teraz",
+    "generating": "Generuje sa…",
+    "regenerate": "Vygenerovať znova",
+    "empty": "Na dnes zatiaľ nie je prehľad.",
+    "failed": "Posledné generovanie zlyhalo. Predchádzajúci prehľad sa zachoval.",
+    "settingsLink": "Nastavenia prehľadu",
+    "counters": {
+      "overdue": "po termíne",
+      "today": "dnes"
+    },
+    "timeline": {
+      "today": "Dnes",
+      "planned": "{{minutes}} min",
+      "ofCapacity": "{{planned}} / {{capacity}} min",
+      "over": "{{minutes}} min nad limit",
+      "duringWork": "počas práce",
+      "legendWork": "Práca",
+      "legendEvening": "Večer",
+      "legendEvent": "Udalosť",
+      "legendConflict": "Konflikt"
+    },
+    "tonight": {
+      "ofCapacity": "{{planned}} z {{capacity}} min naplánované"
+    },
+    "moves": {
+      "acceptAria": "Presunúť na {{date}}",
+      "refuse": "Nie v tento deň",
+      "moved": "„{{name}}“ presunutá"
+    },
+    "anticipate": {
+      "yes": "Áno",
+      "no": "Nie",
+      "precise": "Upresniť",
+      "preciseLabel": "Podrobnosti",
+      "save": "Uložiť",
+      "answered": "Odpoveď uložená"
+    },
+    "feedback": {
+      "useful": "Užitočné",
+      "noise": "Šum"
+    },
+    "replies": {
+      "sourceNotRead": "Zdroj nebol prečítaný"
+    },
+    "status": {
+      "configured": "Nakonfigurované",
+      "missing": "Nenakonfigurované",
+      "failing": "Zlyháva"
+    },
+    "card": {
+      "title": "Denný prehľad",
+      "open": "Zobraziť prehľad",
+      "error": "Prehľad nie je k dispozícii."
+    },
+    "context": {
+      "title": "Kontext",
+      "edit": "Upraviť kontext",
+      "save": "Uložiť",
+      "delete": "Odstrániť"
+    }
+  },
+  "agents": {
+    "title": "Agenti",
+    "description": "Agent číta poštu a pripravuje koncepty. Cadence neukladá prihlasovacie údaje k pošte.",
+    "baseUrl": "Adresa agenta",
+    "apiKey": "API kľúč",
+    "key": {
+      "setLast4": "Uložený (…{{last4}})",
+      "notSet": "Žiadny kľúč nie je uložený",
+      "willClear": "Pri uložení sa vymaže",
+      "replace": "Nahradiť kľúč",
+      "clear": "Vymazať"
+    },
+    "timeout": "Časový limit (sekundy)",
+    "profiles": {
+      "mail": "Profil pošty",
+      "drafting": "Profil konceptov"
+    },
+    "triage": {
+      "title": "Pravidlá triedenia",
+      "empty": "Žiadne pravidlo.",
+      "from": "Odosielateľ",
+      "label": "Štítok",
+      "instruction": "Pokyn",
+      "mode": "Režim",
+      "propose": "Navrhovať",
+      "off": "Vypnuté",
+      "add": "Pridať pravidlo",
+      "remove": "Odstrániť pravidlo"
+    },
+    "test": {
+      "button": "Otestovať pripojenie",
+      "health": "Agent je dostupný",
+      "auth": "Overenie",
+      "mail": "Profil pošty",
+      "drafting": "Profil konceptov"
+    },
+    "check": {
+      "ok": "OK",
+      "unauthorized": "Kľúč bol odmietnutý",
+      "missing": "Profil nie je nastavený",
+      "error": "Chyba"
+    },
+    "save": "Uložiť",
+    "saved": "Nastavenia uložené",
+    "saveError": "Nastavenia sa nepodarilo uložiť.",
+    "loadError": "Nastavenia agenta sa nepodarilo načítať.",
+    "testError": "Test zlyhal."
+  },
   "focusStats": {
     "title": "Sústredenie",
     "lastDays_one": "{{count}} deň",
