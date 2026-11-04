@@ -1,15 +1,22 @@
 # Résumé matinal — audit et plan (phase 0)
 
-Statut : proposition à valider. Aucune implémentation avant validation.
+Statut : proposition révisée après les premières réponses. Aucune implémentation avant validation.
 Ce document ne contient aucune valeur d'une installation précise : les exemples sont fictifs et se saisissent dans l'interface.
+
+## Décisions prises
+
+1. Le résumé **remplace et améliore** le Daily Brief de l'amont, à la même place.
+2. **Cadence n'accède pas aux mails.** L'agent Hermes détient l'accès Gmail ; Cadence lui envoie des demandes et affiche ses réponses.
+3. Les horaires de travail sont des **plages protégées** (focus time) déjà en place.
+4. Tous les réglages du résumé se modifient **sur le web et sur Android**, dans les écrans de réglages existants.
 
 ## En bref
 
-- Cadence a déjà un **Daily Brief** (IA seule, à la demande, une case par utilisateur) et un **plan du jour** (`daily_plans`, une ligne par jour, avec déjà le bilan du soir `ai_wrap_up`). Le résumé matinal **étend les deux** au lieu de créer une entité parallèle.
-- Le calendrier est déjà lu côté serveur (`calendar-feeds` fusionne flux ICS et Google). **Gmail n'est lu nulle part**, ni dans Cadence ni par l'agent Hermes observé.
+- Cadence a déjà un **Daily Brief** (IA seule, à la demande, une case par utilisateur) et un **plan du jour** (`daily_plans`, une ligne par jour, avec déjà le bilan du soir `ai_wrap_up`). Le résumé matinal **étend les deux**.
+- Le calendrier est déjà lu côté serveur (`calendar-feeds` fusionne flux ICS et Google).
+- Gmail passe uniquement par Hermes. Hermes n'a aujourd'hui aucun outil Gmail adapté : il faut lui ajouter un outil Gmail restreint (section 7), à valider avant toute modification.
 - Les jobs passent par `taskScheduler.js` (node-cron, verrou `withJobLock`). Le résumé s'y ajoute comme le `daily_summary` des webhooks, à l'heure locale de chaque utilisateur.
-- Trois ajouts de schéma : des colonnes du résumé sur `daily_plans`, une table `brief_proposals` (journal et propositions), une table `linked_contexts` (contexte lié). Le reste vit dans `ui_settings`.
-- Hermes expose une API HTTP `/v1/runs` adaptée (statut, événements, approbation, idempotence). Aucun changement d'Hermes n'est nécessaire si Cadence reste le seul client Gmail.
+- Trois ajouts de schéma : des colonnes du résumé sur `daily_plans`, une table `brief_proposals` (journal, propositions, demandes à l'agent), une table `linked_contexts` (contexte lié). Les réglages vivent dans `ui_settings`.
 
 ## 1. Inventaire des features existantes
 
@@ -36,92 +43,96 @@ Ce document ne contient aucune valeur d'une installation précise : les exemples
 | Calendrier Android            | lecture seule de l'appareil (`CalendarContract`), « Cocher une fois passé » par agenda                                                                                                                                                       | `calendar/.../AndroidCalendarSource.kt`, `EventSelection.kt`                                                                                                                                  | `AgendaScreen.kt`, `CalendarsPage.kt`                                                                                                                                                          |
 | LLM                           | fournisseur compatible OpenAI par utilisateur (clé chiffrée), désactivé par défaut (`features.ai_assistant_enabled`)                                                                                                                         | `ai-assistant/service.js` (`getOpenAIClient`, `callWithFallback`)                                                                                                                             | Profil › Assistant IA                                                                                                                                                                          |
 | Secrets                       | `shared/crypto/secretCipher.js` (AES-256-GCM, clé dérivée de `TUDUDI_SESSION_SECRET` ou `TUDUDI_OIDC_SECRET_ENCRYPTION_KEY`) ; masquage « 4 derniers caractères »                                                                            | utilisé par IA, Google, flux ICS, Apprise, webhooks                                                                                                                                           | —                                                                                                                                                                                              |
+| Réglages web                  | onglets de `frontend/components/Profile/ProfileSettings.tsx` (`tabs/`) : général, notifications, Telegram, calendriers, planification, synchro, MCP, assistant IA…                                                                           | `PATCH /api/profile` (liste blanche `PROFILE_UPDATE_ATTRIBUTES`), routes dédiées par module                                                                                                   | Profil                                                                                                                                                                                         |
+| Réglages Android              | `app/.../settings/SettingsRegistry.kt` (pages Accueil, Organisation, Données), `tasks/.../ui/settings/` (connexion, synchro, planification)                                                                                                  | profil serveur lu seul (`/api/v1/profile`) ; plages protégées écrites sur le serveur                                                                                                          | Réglages                                                                                                                                                                                       |
 | Synchro hors ligne            | registre `sync/registry.js` (8 entités + habitudes), outbox Room, appels différés (`DeferredCallEntity`)                                                                                                                                     | `/api/v1/sync/*`                                                                                                                                                                              | Android `SyncEngine.kt`, `RoomSyncStore.kt`                                                                                                                                                    |
 | Fichiers                      | `TUDUDI_UPLOAD_PATH`                                                                                                                                                                                                                         | servi statiquement                                                                                                                                                                            | —                                                                                                                                                                                              |
 | Audio, TTS, lecteur           | **absents** (web et Android)                                                                                                                                                                                                                 | —                                                                                                                                                                                             | —                                                                                                                                                                                              |
-| Gmail                         | **absent**                                                                                                                                                                                                                                   | —                                                                                                                                                                                             | —                                                                                                                                                                                              |
+| Mails                         | **absents** de Cadence, et le restent                                                                                                                                                                                                        | —                                                                                                                                                                                             | —                                                                                                                                                                                              |
 
-Pièges relevés : « Focus » désigne trois choses (plages protégées, puce de portée `ui_settings.focus`, sessions de minuteur) ; le Daily Brief amont n'a qu'une case par utilisateur, sans historique ; `users.telegram_bot_token` est stocké et renvoyé en clair (hors périmètre, voir questions).
+Pièges relevés : « Focus » désigne trois choses (plages protégées, puce de portée `ui_settings.focus`, sessions de minuteur) ; le Daily Brief amont n'a qu'une case par utilisateur, sans historique.
 
 ## 2. Besoins : réutiliser, étendre ou créer
 
-| Besoin                                     | Décision                                                                                                                          | Justification                                                                                                                                                                                                                                                                  |
-| ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Entité du résumé par jour                  | **Étendre** `daily_plans` : colonnes `brief` (JSON), `brief_version`, `brief_status`, `brief_generated_at`                        | `daily_plans` est déjà « la journée » (une ligne par utilisateur et par date, bilan du soir `ai_wrap_up`). `users.ai_daily_brief` examiné : une seule case, pas d'historique ni de statut, insuffisant.                                                                        |
-| Page du résumé                             | **Étendre** `/insights/daily-brief` (`DailyBriefPage`, `DailyAssistant`) et la carte du Today (`showDailyBrief`)                  | Même nom et même place ; le rendu passe au nouveau JSON. Sans LLM, la page s'affiche (aujourd'hui elle exige l'IA).                                                                                                                                                            |
-| Moteur sans IA                             | **Créer** `backend/modules/daily-plan/brief/` (collecte, règles, script audio)                                                    | Aucun moteur déterministe n'existe ; il vit dans le module du plan du jour et réutilise `getCandidates`, `slots.js`, `postponements.js`, `eventsForRangeOfDays`.                                                                                                               |
-| Rédaction et arbitrage LLM                 | **Réutiliser** le fournisseur de l'Assistant IA (`getOpenAIClient`, `callWithFallback`)                                           | Déjà configurable dans l'UI, clé chiffrée.                                                                                                                                                                                                                                     |
-| Calendrier lu                              | **Réutiliser** `calendar-feeds/service.js` ; **étendre** `google_calendars` et `calendar_feeds` d'un drapeau « lu par le résumé » | Le service fusionne déjà ICS et Google côté serveur.                                                                                                                                                                                                                           |
-| Horaires de travail                        | **Réutiliser** les plages protégées (un bloc étiqueté par plage de travail, jours et heures)                                      | Même structure (jours, début, fin, étiquette), déjà partagée avec Android, déjà soustraite de la capacité. Le télétravail partiel sans créneau devient une note de charge par jour dans les réglages du résumé.                                                                |
-| Capacité du soir                           | **Étendre** `ui_settings.planning` : fenêtre du soir et minutes utiles par jour                                                   | Calculée moins les plages protégées et les événements de la fenêtre ; affichée comme hypothèse.                                                                                                                                                                                |
-| Reports, « 3 reports »                     | **Réutiliser** `review/postponements.js` (seuil 3 déjà en place)                                                                  | Rien à créer.                                                                                                                                                                                                                                                                  |
-| Doublons                                   | **Réutiliser** `task_relations` (`duplicates`) pour l'action « marquer en doublon » ; détection en code                           | Exact : nom normalisé ; probable : similarité de jetons, seuil réglable.                                                                                                                                                                                                       |
-| Limite écrite dans une note                | **Réutiliser** `chrono-node` (déjà en dépendance, locale française)                                                               | Une date extraite de la note prime sur `due_date`, présentée comme question.                                                                                                                                                                                                   |
-| Actions « C'est fait », déplacer           | **Réutiliser** les écritures de tâche existantes (web : services ; Android : outbox Room)                                         | Hors ligne et annulation déjà gérés (snackbar d'annulation Android, `TasksCommon.kt`).                                                                                                                                                                                         |
-| « Plus tard », abandonner                  | **Réutiliser** `PATCH later: true` et `status` annulé                                                                             | —                                                                                                                                                                                                                                                                              |
-| Journal des décisions, propositions de tri | **Créer** la table `brief_proposals`                                                                                              | Examinés : `task_events` (changements effectués, pas propositions refusées), `notifications` (pas de décision), livraisons de webhooks (envoi sortant sans résultat). Aucun ne garde proposition, décision, motif et état d'exécution. Une seule table couvre résumé et mails. |
-| Contexte lié                               | **Créer** la table `linked_contexts`                                                                                              | Examinés : `note` et `comments` de tâche. Ils ne couvrent que les tâches ; les événements et séries d'agenda n'ont pas d'entité Cadence, et ni l'un ni l'autre n'a de fin de vie.                                                                                              |
-| Retour « utile / bruit »                   | **Réutiliser** `brief_proposals` (type `feedback`) ; règles dans les réglages                                                     | Pas de table de plus.                                                                                                                                                                                                                                                          |
-| Gmail                                      | **Créer** un lecteur Gmail dans `google-sync/` (même compte OAuth, portée ajoutée)                                                | Aucun accès existant ; réutilise `google_accounts` et son chiffrement.                                                                                                                                                                                                         |
-| Connecteur Hermes                          | **Créer** `backend/modules/agents/` (client `/v1/runs`)                                                                           | Examinés : MCP (`/mcp`, entrant), webhooks (sortant sans résultat), Telegram. Aucun ne suit une demande et récupère son résultat.                                                                                                                                              |
-| Audio                                      | **Créer** le client Piper et le stockage des fichiers (`TUDUDI_UPLOAD_PATH/briefs/`)                                              | Rien d'audio n'existe.                                                                                                                                                                                                                                                         |
-| Lecteur Android                            | **Créer** un écran poussé depuis le Today (précédent : la revue, poussée depuis le Bilan) et un service Media3                    | Pas de 6e onglet (règle des cinq cibles égales). Aucune bibliothèque média installée.                                                                                                                                                                                          |
-| Notification « résumé prêt »               | **Réutiliser** les canaux locaux Android (pas de push serveur vers Android aujourd'hui)                                           | Postée par le worker de synchro quand il récupère le résumé.                                                                                                                                                                                                                   |
-| Bilan du soir                              | **Réutiliser** `ai_wrap_up` et `WrapUpCard`                                                                                       | Option 6.                                                                                                                                                                                                                                                                      |
-| Envoi Telegram                             | **Réutiliser** `telegram/` et le mécanisme de `taskSummaryService`                                                                | Option 6.                                                                                                                                                                                                                                                                      |
-| Écran d'état                               | **Créer** une section en tête de l'onglet Résumé                                                                                  | Aucune page d'état d'intégrations n'existe.                                                                                                                                                                                                                                    |
+| Besoin                                    | Décision                                                                                                                          | Justification                                                                                                                                                                                                                                                                                    |
+| ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Entité du résumé par jour                 | **Étendre** `daily_plans` : colonnes `brief` (JSON), `brief_version`, `brief_status`, `brief_generated_at`                        | `daily_plans` est déjà « la journée » (une ligne par utilisateur et par date, bilan du soir `ai_wrap_up`). `users.ai_daily_brief` examiné : une seule case, pas d'historique ni de statut, insuffisant.                                                                                          |
+| Page du résumé                            | **Remplacer le rendu** de `/insights/daily-brief` (`DailyBriefPage`, `DailyAssistant`) et de la carte du Today (`showDailyBrief`) | Même nom et même place. Sans LLM, la page s'affiche (aujourd'hui elle exige l'IA). L'ancien appel `generateDailyBrief` n'est plus utilisé par l'interface ; ses colonnes restent tant que l'amont les garde.                                                                                     |
+| Moteur sans IA                            | **Créer** `backend/modules/daily-plan/brief/` (collecte, règles, script audio)                                                    | Aucun moteur déterministe n'existe ; il réutilise `getCandidates`, `slots.js`, `postponements.js`, `eventsForRangeOfDays`.                                                                                                                                                                       |
+| Rédaction et arbitrage LLM                | **Réutiliser** le fournisseur de l'Assistant IA (`getOpenAIClient`, `callWithFallback`)                                           | Déjà configurable dans l'UI, clé chiffrée.                                                                                                                                                                                                                                                       |
+| Calendrier lu                             | **Réutiliser** `calendar-feeds/service.js` ; **étendre** `google_calendars` et `calendar_feeds` d'un drapeau « lu par le résumé » | Le service fusionne déjà ICS et Google côté serveur.                                                                                                                                                                                                                                             |
+| Horaires de travail                       | **Réutiliser** les plages protégées                                                                                               | Décision 3. Le télétravail partiel sans créneau devient une note de charge par jour dans les réglages de planification.                                                                                                                                                                          |
+| Capacité du soir                          | **Étendre** `ui_settings.planning` : fenêtre du soir et minutes utiles par jour                                                   | Calculée moins les plages protégées et les événements de la fenêtre ; affichée comme hypothèse.                                                                                                                                                                                                  |
+| Reports, « 3 reports »                    | **Réutiliser** `review/postponements.js` (seuil 3 déjà en place)                                                                  | Rien à créer.                                                                                                                                                                                                                                                                                    |
+| Doublons                                  | **Réutiliser** `task_relations` (`duplicates`) pour l'action « marquer en doublon » ; détection en code                           | Exact : nom normalisé ; probable : similarité de jetons, seuil réglable.                                                                                                                                                                                                                         |
+| Limite écrite dans une note               | **Réutiliser** `chrono-node` (déjà en dépendance, locale française)                                                               | Une date extraite de la note prime sur `due_date`, présentée comme question.                                                                                                                                                                                                                     |
+| Actions « C'est fait », déplacer          | **Réutiliser** les écritures de tâche existantes (web : services ; Android : outbox Room)                                         | Hors ligne et annulation déjà gérés (snackbar d'annulation Android, `TasksCommon.kt`).                                                                                                                                                                                                           |
+| « Plus tard », abandonner                 | **Réutiliser** `PATCH later: true` et `status` annulé                                                                             | —                                                                                                                                                                                                                                                                                                |
+| Tâche créée depuis un mail                | **Réutiliser** la création de tâche de Cadence ; lien vers le fil fourni par l'agent dans la note                                 | La tâche reste une écriture Cadence ; seul le mail passe par Hermes.                                                                                                                                                                                                                             |
+| Journal, propositions, demandes à l'agent | **Créer** la table `brief_proposals`                                                                                              | Examinés : `task_events` (changements effectués, pas propositions refusées), `notifications` (pas de décision), livraisons de webhooks (envoi sortant sans résultat). Aucun ne garde proposition, décision, motif, état d'exécution et exécution Hermes. Une seule table couvre résumé et mails. |
+| Contexte lié                              | **Créer** la table `linked_contexts`                                                                                              | Examinés : `note` et `comments` de tâche. Ils ne couvrent que les tâches ; les événements et séries d'agenda n'ont pas d'entité Cadence, et ni l'un ni l'autre n'a de fin de vie.                                                                                                                |
+| Retour « utile / bruit »                  | **Réutiliser** `brief_proposals` (type `feedback`) ; règles dans les réglages                                                     | Pas de table de plus.                                                                                                                                                                                                                                                                            |
+| Connecteur Hermes                         | **Créer** `backend/modules/agents/` (client `/v1/runs`)                                                                           | Examinés : MCP (`/mcp`, entrant), webhooks (sortant sans résultat), Telegram. Aucun ne suit une demande et récupère son résultat.                                                                                                                                                                |
+| Mails                                     | **Aucun code Gmail dans Cadence**                                                                                                 | Décision 2. Cadence ne connaît que des identifiants de fil et des métadonnées renvoyés par l'agent.                                                                                                                                                                                              |
+| Audio                                     | **Créer** le client Piper et le stockage des fichiers (`TUDUDI_UPLOAD_PATH/briefs/`)                                              | Rien d'audio n'existe.                                                                                                                                                                                                                                                                           |
+| Lecteur Android                           | **Créer** un écran poussé depuis le Today (précédent : la revue, poussée depuis le Bilan) et un service Media3                    | Pas de 6e onglet (règle des cinq cibles égales). Aucune bibliothèque média installée.                                                                                                                                                                                                            |
+| Réglages                                  | **Étendre** les écrans existants : web `ProfileSettings.tsx`, Android `SettingsRegistry.kt`                                       | Décision 4. Une API de réglages du résumé sert les deux.                                                                                                                                                                                                                                         |
+| Notification « résumé prêt »              | **Réutiliser** les canaux locaux Android (pas de push serveur vers Android aujourd'hui)                                           | Postée par le worker de synchro quand il récupère le résumé.                                                                                                                                                                                                                                     |
+| Bilan du soir                             | **Réutiliser** `ai_wrap_up` et `WrapUpCard`                                                                                       | Option 6.                                                                                                                                                                                                                                                                                        |
+| Envoi Telegram                            | **Réutiliser** `telegram/` et le mécanisme de `taskSummaryService`                                                                | Option 6.                                                                                                                                                                                                                                                                                        |
+| Écran d'état                              | **Créer** une section en tête de la page de réglages du résumé, web et Android                                                    | Aucune page d'état d'intégrations n'existe.                                                                                                                                                                                                                                                      |
 
-## 3. Accès à Google Calendar et à Gmail
+## 3. Accès au calendrier et aux mails
 
 **Calendrier, aujourd'hui :**
 
-- Google Calendar par OAuth (`google-sync/`) : lecture et écriture, portée `calendar` complète, client OAuth fourni par `GOOGLE_CLIENT_ID` et `GOOGLE_CLIENT_SECRET` (variables d'environnement), jetons chiffrés dans `google_accounts`.
-- Flux ICS (`calendar-feeds/`) : URL secrète saisie dans l'UI, chiffrée, aucun client OAuth requis. Lecture seule.
+- Google Calendar par OAuth (`google-sync/`) : connexion par utilisateur dans Profil › Calendriers ; le client OAuth de l'instance vient de variables d'environnement de l'amont.
+- Flux ICS (`calendar-feeds/`) : URL secrète saisie dans l'UI, chiffrée, sans client OAuth. Lecture seule.
 - Android lit les agendas de l'appareil, sans le serveur.
 
-**Proposition calendrier :** le résumé lit `eventsForRangeOfDays`, filtré par un drapeau « lu par le résumé » posé dans Profil › Calendriers sur chaque agenda Google ou flux ICS. La voie la plus simple, sans abonnement ni client OAuth : l'adresse ICS secrète de chaque agenda.
+**Proposition calendrier :** le résumé lit `eventsForRangeOfDays`, filtré par un drapeau « lu par le résumé » posé sur chaque agenda Google ou flux ICS. La voie la plus simple, sans abonnement ni variable d'environnement : l'adresse ICS secrète de chaque agenda, saisie dans l'UI. La connexion Google existante reste utilisable telle quelle ; aucun écran d'administration n'est ajouté.
 
-**Gmail, aujourd'hui :** aucun accès, ni dans Cadence, ni dans l'agent Hermes observé.
+**Mails :** Cadence ne lit aucun mail et ne détient aucun jeton Gmail. Toute opération passe par une demande à l'agent Hermes configuré pour les mails :
 
-**Proposition Gmail :** Cadence devient le seul client Gmail, sur le compte Google déjà connecté, avec une portée ajoutée à la demande :
+- **Réponses attendues** (phase 1) : Cadence demande la liste des fils où l'on attend une réponse, sur les comptes activés. L'agent applique la règle fixée (dernier message d'un tiers, compte en `To`, pas d'envoi automatique, fenêtre réglable) et renvoie pour chaque fil : compte, identifiant, expéditeur, objet, date, un résumé court, un lien. L'agent ouvre chaque fil cité.
+- **Tri** (phase 5) : l'agent renvoie une proposition par mail ; après accord, Cadence demande l'exécution (brouillon, archivage, désarchivage) et reçoit le résultat (lien du brouillon, statut).
+- **Hermes arrêté ou compte non connecté :** la section affiche « source non lue ». Aucune déduction.
 
-- `gmail.readonly` pour les réponses attendues et la lecture des fils (phase 1) ;
-- `gmail.modify` seulement si le tri est activé (phase 5) : retirer le libellé `INBOX`, créer et lire les brouillons.
+**Droits Gmail nécessaires, côté Hermes :**
 
-Droits et pièges :
-
-- Aucune portée Google ne limite aux brouillons : `gmail.compose` et `gmail.modify` autorisent aussi l'envoi. L'interdiction d'envoyer se garantit donc dans le code : le client n'expose pas d'appel `send`, un test le vérifie.
-- `gmail.readonly` et `gmail.modify` sont des portées restreintes. Pour un usage personnel, le client OAuth reste non vérifié, avec un avertissement à la connexion. En statut « Testing », les jetons de rafraîchissement expirent après 7 jours : il faut passer le client en production. À confirmer dans la documentation Google avant la phase 1.
-- Le client OAuth vient aujourd'hui de variables d'environnement. Pour respecter « tout dans l'UI », proposition : l'administrateur saisit l'identifiant et le secret dans Admin, chiffrés. Les variables existantes restent la valeur de repli de l'amont.
-- Un compte non connecté ou sans portée Gmail fait disparaître la section « Réponses attendues », avec la mention « source non lue ». Aucune déduction.
-
-« Réponse attendue » se calcule en code : dernier message du fil venant d'un tiers, compte en `To`, pas de `List-Unsubscribe` ni d'expéditeur automatique, dans une fenêtre réglable, compte non exclu. Chaque fil retenu est relu en entier (`threads.get`).
+- `gmail.modify` couvre la lecture, les brouillons et le retrait du libellé `INBOX`. Aucune portée plus étroite ne permet les brouillons : `gmail.compose` et `gmail.modify` autorisent aussi l'envoi. L'interdiction d'envoyer se garantit donc dans la couche d'outils de l'agent, pas par la portée.
+- `gmail.readonly` suffit tant que le tri n'est pas activé.
+- Portées restreintes : client OAuth non vérifié pour un usage personnel. En statut « Testing », les jetons de rafraîchissement expirent après 7 jours ; il faut passer le client en production. À confirmer dans la documentation Google avant la phase 1.
 
 ## 4. Planifier un job serveur
 
 - Ajouter une fréquence `daily_brief` (toutes les 5 minutes) dans la table des fréquences de `backend/modules/tasks/taskScheduler.js`, sous `withJobLock('task-scheduler:daily_brief')`.
 - Le job parcourt les utilisateurs dont le résumé est activé, convertit l'heure dans leur `users.timezone`, et génère si l'heure réglée est passée, si le jour est actif et si aucun résumé n'existe pour la date. C'est le motif de `webhooks/summary.js` (`summary_hour`).
-- Idempotence : un résumé existant n'est jamais réécrit par le job ; seul le bouton « Régénérer » crée une nouvelle version.
+- Les demandes à l'agent partent sans bloquer : le résumé est publié avec les sources locales (`partial`), puis complété quand l'agent répond, dans un délai réglable. Au-delà, la section affiche « agent indisponible » et un bouton « Réessayer ».
+- Idempotence : un résumé existant n'est jamais réécrit par le job ; seul le bouton « Régénérer » crée une nouvelle version. Compléter une section mail attendue n'est pas une réécriture.
 - Purges (contexte expiré, journal, audio) : une fréquence quotidienne existante (02:00 ou 03:00).
-- Désactivé en test, comme les autres jobs. Le fuseau vient du profil ; par défaut `UTC`, à régler dans Profil › Général.
+- Désactivé en test, comme les autres jobs. Le fuseau vient du profil ; par défaut `UTC`, à régler dans les réglages généraux.
 
 ## 5. Schéma et synchronisation Android
 
 Migrations (toutes avec `safe*` de `migration-utils.js`, testées SQLite et PostgreSQL, sauvegarde `docs/backups.md` avant, `down` documenté) :
 
-1. `daily_plans` : `brief` (JSON), `brief_version` (entier), `brief_status` (`pending`, `ready`, `partial`, `failed`), `brief_generated_at`. Le job crée la ligne du jour avec `findOrCreatePlan` ; `started_at` reste nul, donc le plan n'est pas « commencé ». À vérifier : aucun écran ne traite une ligne vide comme un plan ouvert.
-2. `brief_proposals` : `uid`, `user_id`, `brief_date`, `kind` (`move`, `tonight`, `anticipate`, `question`, `mail`, `feedback`), `target_type`, `target_ref`, `proposal` (JSON sans corps de mail), `fingerprint` (pour « ne revient pas à l'identique »), `decision` (`pending`, `accepted`, `refused`, `ignored`), `reason`, `rule`, `agent`, `execution_status`, `execution_ref` (brouillon, tâche créée), `idempotency_key` (unique), `decided_at`, `created_at`. Purge après la durée réglée (90 jours par défaut).
+1. `daily_plans` : `brief` (JSON), `brief_version` (entier), `brief_status` (`pending`, `partial`, `ready`, `failed`), `brief_generated_at`. Le job crée la ligne du jour avec `findOrCreatePlan` ; `started_at` reste nul, donc le plan n'est pas « commencé ». À vérifier : aucun écran ne traite une ligne vide comme un plan ouvert.
+2. `brief_proposals` : `uid`, `user_id`, `brief_date`, `kind` (`move`, `tonight`, `anticipate`, `question`, `mail`, `feedback`), `target_type`, `target_ref`, `proposal` (JSON, sans corps de mail), `fingerprint` (pour « ne revient pas à l'identique »), `decision` (`pending`, `accepted`, `refused`, `ignored`), `reason`, `rule`, `agent`, `run_id` (exécution Hermes), `execution_status`, `execution_ref` (brouillon, tâche créée), `idempotency_key` (unique), `decided_at`, `created_at`. Purge après la durée réglée (90 jours par défaut).
 3. `linked_contexts` : `uid`, `user_id`, `scope` (`task`, `event`, `series`), `target_ref`, `text` (court, borné), `created_at`, `updated_at`. Fins de vie :
     - `task` : uid de tâche ; supprimé quand la tâche est fermée ;
     - `event` : clé `iCalUID` + début d'origine ; supprimé après la fin de l'événement ;
     - `series` : `iCalUID` de l'événement récurrent, ou uid de la tâche mère récurrente ; supprimé quand la série n'existe plus (plus d'occurrence trouvée, ou `recurrence_type` remis à `none`). L'`iCalUID` survit à un changement d'horaire.
       Le moteur filtre à la lecture ; la purge quotidienne nettoie.
 
+Réglages : `ui_settings.brief` (JSON non secret) ; extensions de `ui_settings.planning` (soir, note de charge). Le jeton Hermes va dans une colonne chiffrée `users.agent_api_key` (comme `ai_api_key`), jamais renvoyée en clair.
+
 Synchro Android :
 
 - Le résumé est produit par le serveur et lu seulement : pas d'entité de synchro. Android le lit par `GET /api/v1/daily-plan/:date/brief`, comme les plages protégées, le met en cache (table Room `briefs`, base `tududi.db` v12, migration testée sous Robolectric) et télécharge l'audio dans les fichiers de l'app.
 - Les actions sur tâches passent par l'outbox existante : hors ligne et conflits déjà gérés. Une tâche cochée ailleurs se reflète par la synchro des tâches ; le résumé affiche l'état courant de la tâche, pas une copie.
-- Réponses, décisions et retours partent par la file d'appels différés existante (`DeferredCallEntity`), rejouée à la reconnexion. Clé d'idempotence générée sur le téléphone.
+- Réponses, décisions, retours et validations de mails partent par la file d'appels différés existante (`DeferredCallEntity`), rejouée à la reconnexion, avec une clé d'idempotence générée sur le téléphone. Une action mail validée hors ligne s'exécute à la reconnexion ; la carte l'indique.
+- Réglages : `GET/PUT /api/v1/daily-plan/brief/settings` et `/api/v1/agents/settings`, lus et écrits par le web et Android. Hors ligne, Android garde la dernière valeur lue et envoie la modification par appel différé.
 - Contexte d'un événement sur Android : la colonne `UID_2445` de `CalendarContract` donne l'`iCalUID`, ce qui relie l'événement de l'appareil à celui du serveur.
 - `SCHEMA_VERSION` de la synchro ne change pas.
 
@@ -133,7 +144,7 @@ Synchro Android :
 - Prononciation : remplacements de texte du dictionnaire avant synthèse ; les blocs de phonèmes `[[ … ]]` existent en ligne de commande, pas confirmés sur l'API HTTP.
 - Voix françaises du catalogue `rhasspy/piper-voices` (`fr_FR`, pas de `fr_BE` ni `fr_CH`) :
 
-| Voix     | Qualité     | Voix                    | Licence des données |
+| Voix     | Qualité     | Locuteurs               | Licence des données |
 | -------- | ----------- | ----------------------- | ------------------- |
 | siwis    | low, medium | 1, féminine             | CC BY 4.0           |
 | upmc     | medium      | 2 (féminine, masculine) | CC BY-SA 4.0        |
@@ -146,10 +157,11 @@ Toutes conviennent à un usage personnel. La voix nommée dans la demande n'exis
 
 - Temps attendu : facteur temps réel publié de 0,1 à 0,2 sur un processeur x86 de bureau, soit **10 à 20 s pour 90 s d'audio**, plus 1 à 2 s d'encodage. **Pas de mesure faite** : Piper n'est pas installé sur le serveur et l'installer aurait modifié le serveur. Mesure prévue au premier commit de la phase 4.
 - Repli : si Piper échoue, `audio_status = failed`, la page s'affiche, Android lit le script avec `TextToSpeech` (plateforme, sans dépendance).
+- Le script audio ne quitte pas le serveur : Cadence l'envoie seulement à l'adresse Piper réglée, vérifiée comme adresse locale ou privée.
 
 ## 7. Hermes, fonctionnement constaté
 
-Constat générique, en lecture seule (liste des conteneurs, processus, code source de l'image, noms des fichiers de profil, deux requêtes `GET` de santé et une `GET` refusée sans jeton). Aucun fichier de secrets, aucune variable d'environnement, aucune configuration n'a été lu en entier ni modifié.
+Constat générique, en lecture seule (liste des conteneurs, processus, code source de l'image, noms des fichiers de profil, compétences installées, trois requêtes `GET` sur l'API, dont une refusée sans jeton). Aucun fichier de secrets, aucune variable d'environnement n'a été lu, rien n'a été modifié.
 
 **Interfaces :**
 
@@ -170,56 +182,62 @@ Constat générique, en lecture seule (liste des conteneurs, processus, code sou
 - Une action d'outil sensible met l'exécution en `waiting_for_approval` ; la réponse est `once`, `session`, `always` ou `deny`.
 - Sur la messagerie, des boutons rappellent un script sans IA.
 
-**Lecture des mails :**
+**Lecture des mails, état actuel :**
 
-- Aucun connecteur Gmail actif.
-- Un profil de tri porte une compétence de brouillons qui décrit le contrat : lire le fil exact, ne jamais envoyer, filtrer les opérations dans la couche d'outils, ne pas écraser un brouillon humain, relire après écriture, chercher le résultat après un délai dépassé avant de recréer, traiter le contenu reçu comme donnée.
+- Aucun connecteur Gmail actif, aucun serveur MCP Gmail dans le catalogue optionnel.
+- La compétence Google fournie avec Hermes demande des portées larges, **dont `gmail.send`**, propose une commande d'envoi et aucune commande de brouillon : inutilisable telle quelle pour ce besoin.
+- Un profil de tri porte une compétence de brouillons qui décrit le bon contrat : lire le fil exact, ne jamais envoyer, filtrer les opérations dans la couche d'outils, jeton illisible par le modèle, ne pas écraser un brouillon humain, relire après écriture, chercher le résultat après un délai dépassé avant de recréer, traiter le contenu reçu comme donnée. Il n'existe pas encore d'outil qui l'applique.
 
-**Conséquence pour Cadence :**
+**Minimum à ajouter dans Hermes (à valider, rien n'est modifié) :**
 
-- Le connecteur appelle `/v1/runs` avec un jeton saisi dans l'UI, un profil par type de demande, une clé d'idempotence par proposition, et suit le statut par interrogation (pas de port entrant vers Cadence).
-- Cadence envoie des extraits de mails comme **données** délimitées et reçoit une proposition JSON validée par un schéma. L'agent n'a besoin d'aucun outil Gmail : c'est Cadence qui crée le brouillon après mon accord. Aucun changement d'Hermes n'est donc requis.
+1. Un outil Gmail restreint pour le seul profil de tri, sous forme de serveur MCP local ou d'extension, exposant uniquement : chercher des fils, lire un fil, lister, créer et mettre à jour un brouillon de réponse dans un fil, retirer et remettre le libellé `INBOX`. Aucune opération d'envoi, de corbeille, de suppression ou de spam n'existe dans l'outil.
+2. Le jeton OAuth reste dans le processus de l'outil, illisible par le modèle. Le profil n'a ni terminal, ni exécution de code, ni navigateur authentifié, pour qu'il ne puisse pas appeler l'API Gmail autrement.
+3. Une compétence qui fixe les formats de sortie JSON attendus par Cadence (réponses attendues, propositions de tri, résultat d'exécution).
+
+**Contrat Cadence → Hermes :**
+
+- Cadence appelle `/p/<profil>/v1/runs` avec le jeton saisi dans l'UI, un profil par type de demande, une clé d'idempotence par proposition, et suit le statut par interrogation (aucun port entrant vers Cadence).
+- Types de demandes fermés : `replies_list`, `triage_propose`, `draft_create`, `mail_archive`, `mail_unarchive`. Il n'existe pas de type d'envoi ; un test vérifie qu'aucun chemin du code n'en construit.
+- Le contexte envoyé (tâches proches, règles de tri, instructions permanentes) est séparé des données de mail, que l'agent traite comme non fiables. La réponse est validée par un schéma : un champ inattendu ou un destinataire non issu des en-têtes du fil invalide la proposition.
 - Si une exécution passe en `waiting_for_approval`, Cadence ne l'approuve jamais seule : la carte affiche « l'agent demande une autorisation », avec « Refuser » (`deny`).
-- Écart à trancher : le contrat de brouillons observé prévoit que l'agent détienne lui-même l'accès Gmail. Ce plan propose l'inverse (question 2).
+- Le journal Cadence garde proposition, décision, règle, agent, `run_id` et statut, jamais le corps du mail.
 
 ## 8. Réglages : variables, écran, défaut
 
-Tout est vide ou désactivé par défaut. Les secrets sont masqués, chiffrés par `secretCipher`, jamais renvoyés en clair. Aucune variable d'environnement nouvelle.
+Tout est vide ou désactivé par défaut. Les secrets sont masqués, chiffrés par `secretCipher`, jamais renvoyés en clair. Aucune variable d'environnement nouvelle. Chaque réglage existe sur le web (Profil) et sur Android (Réglages), servi par la même API.
 
-| Variable                                                                     | Écran                                      | Défaut                                   |
-| ---------------------------------------------------------------------------- | ------------------------------------------ | ---------------------------------------- |
-| Résumé activé                                                                | Profil › Résumé                            | non                                      |
-| Heure de génération, jours actifs                                            | Profil › Résumé                            | 07:00, aucun jour                        |
-| Fuseau                                                                       | Profil › Général (existant)                | `UTC`                                    |
-| Sections affichées et ordre                                                  | Profil › Résumé                            | les 8 sections, ordre de la demande      |
-| Horizon de la timeline                                                       | Profil › Résumé                            | 3 jours                                  |
-| Agendas lus, horizon de lecture                                              | Profil › Calendriers (drapeau par agenda)  | aucun, 7 jours                           |
-| Comptes Gmail lus, comptes exclus, fenêtre des réponses                      | Profil › Résumé › Sources                  | aucun, 14 jours                          |
-| Horaires de travail                                                          | Plan du jour › Plages protégées (existant) | aucun                                    |
-| Note de charge par jour (télétravail partiel…)                               | Profil › Planification                     | vide                                     |
-| Fenêtre et minutes utiles du soir, par jour                                  | Profil › Planification                     | vide (section « Ce soir » sans capacité) |
-| Ordre des priorités                                                          | Profil › Résumé › Arbitrage                | ordre de la demande                      |
-| Seuils : reports, similarité des doublons, nombre de propositions            | Profil › Résumé › Arbitrage                | 3, 0,8, 3                                |
-| Durées : journal, audio, contexte                                            | Profil › Résumé › Conservation             | 90 j, 7 j, fin de vie de la cible        |
-| Types d'alerte et règles de bruit                                            | Profil › Résumé › Alertes                  | tous actifs, aucune règle                |
-| Ton, signature, instructions permanentes                                     | Profil › Résumé › Rédaction                | neutre, vide, vide                       |
-| LLM et fournisseur                                                           | Profil › Assistant IA (existant)           | désactivé                                |
-| Adresse de Piper, voix, vitesse, extrait                                     | Profil › Résumé › Voix                     | vide, aucune, 1,0                        |
-| Dictionnaire de prononciation                                                | Profil › Résumé › Voix                     | vide                                     |
-| Hermes : adresse, jeton (secret), délai, test                                | Profil › Agents                            | vide, 120 s                              |
-| Agents : profil par type de demande                                          | Profil › Agents                            | aucun                                    |
-| Règles de tri (expéditeur, libellé, type, instruction ; `proposer` ou `off`) | Profil › Agents › Tri                      | aucune                                   |
-| Client OAuth Google (identifiant, secret)                                    | Admin › Intégrations                       | vide (repli : variables existantes)      |
-| Options : notification, bilan du soir, Telegram, Sonos, hebdo                | Profil › Résumé › Options                  | toutes désactivées                       |
-| Notification « résumé prêt » sur Android                                     | Android › Réglages › Notifications         | non                                      |
+| Variable                                                                     | Web                                        | Android                                  | Défaut                                   |
+| ---------------------------------------------------------------------------- | ------------------------------------------ | ---------------------------------------- | ---------------------------------------- |
+| Résumé activé                                                                | Profil › Résumé                            | Réglages › Résumé                        | non                                      |
+| Heure de génération, jours actifs                                            | Profil › Résumé                            | Réglages › Résumé                        | 07:00, aucun jour                        |
+| Fuseau                                                                       | Profil › Général (existant)                | lu seul aujourd'hui, à rendre modifiable | `UTC`                                    |
+| Sections affichées et ordre                                                  | Profil › Résumé                            | Réglages › Résumé                        | les 8 sections, ordre de la demande      |
+| Horizon de la timeline                                                       | Profil › Résumé                            | Réglages › Résumé                        | 3 jours                                  |
+| Agendas lus, horizon de lecture                                              | Profil › Calendriers (drapeau par agenda)  | Réglages › Résumé › Sources              | aucun, 7 jours                           |
+| Comptes mail lus, comptes exclus, fenêtre des réponses                       | Profil › Agents › Mails                    | Réglages › Agents                        | aucun, 14 jours                          |
+| Horaires de travail                                                          | Plan du jour › Plages protégées (existant) | Réglages › Planification (existant)      | aucun                                    |
+| Note de charge par jour (télétravail partiel…)                               | Profil › Planification                     | Réglages › Planification                 | vide                                     |
+| Fenêtre et minutes utiles du soir, par jour                                  | Profil › Planification                     | Réglages › Planification                 | vide (section « Ce soir » sans capacité) |
+| Ordre des priorités                                                          | Profil › Résumé › Arbitrage                | Réglages › Résumé                        | ordre de la demande                      |
+| Seuils : reports, similarité des doublons, nombre de propositions            | Profil › Résumé › Arbitrage                | Réglages › Résumé                        | 3, 0,8, 3                                |
+| Durées : journal, audio, contexte                                            | Profil › Résumé › Conservation             | Réglages › Résumé                        | 90 j, 7 j, fin de vie de la cible        |
+| Types d'alerte et règles de bruit                                            | Profil › Résumé › Alertes                  | Réglages › Résumé                        | tous actifs, aucune règle                |
+| Ton, signature, instructions permanentes                                     | Profil › Résumé › Rédaction                | Réglages › Résumé                        | neutre, vide, vide                       |
+| LLM et fournisseur                                                           | Profil › Assistant IA (existant)           | Réglages › Résumé                        | désactivé                                |
+| Adresse de Piper, voix, vitesse, extrait                                     | Profil › Résumé › Voix                     | Réglages › Résumé › Voix                 | vide, aucune, 1,0                        |
+| Dictionnaire de prononciation                                                | Profil › Résumé › Voix                     | Réglages › Résumé › Voix                 | vide                                     |
+| Hermes : adresse, jeton (secret), délai, test                                | Profil › Agents                            | Réglages › Agents                        | vide, 120 s                              |
+| Agents : profil par type de demande                                          | Profil › Agents                            | Réglages › Agents                        | aucun                                    |
+| Règles de tri (expéditeur, libellé, type, instruction ; `proposer` ou `off`) | Profil › Agents › Tri                      | Réglages › Agents › Tri                  | aucune                                   |
+| Options : bilan du soir, Telegram, Sonos, hebdo                              | Profil › Résumé › Options                  | Réglages › Résumé › Options              | toutes désactivées                       |
+| Notification « résumé prêt »                                                 | —                                          | Réglages › Notifications (existant)      | non                                      |
+| Lecture : téléchargement hors ligne                                          | —                                          | Réglages › Résumé › Voix                 | oui                                      |
 
-Écran d'état, en tête de Profil › Résumé : chaque source (agendas, Gmail, Cadence), LLM, Piper, Hermes, avec « configuré, manquant, fonctionne » et la dernière erreur. Boutons de test : Piper (extrait), Hermes (`/health` puis `/v1/models` authentifié), Gmail (profil du compte).
-
-Android : le résumé, la lecture et la notification se règlent sur Android ; le reste se règle sur le web, comme le profil aujourd'hui (lu seul depuis `/api/v1/profile`).
+Écran d'état, en tête de la page Résumé (web et Android) : chaque source (agendas, mails par l'agent, Cadence), LLM, Piper, Hermes, avec « configuré, manquant, fonctionne » et la dernière erreur. Boutons de test : Piper (extrait), Hermes (`/health` puis `/v1/models` authentifié), mails (demande `replies_list` à blanc).
 
 ## 9. Découpage en commits
 
-Un commit par étape vérifiée, sur `main`, sans pousser.
+Un commit par étape vérifiée, sur `main`, sans pousser. Chaque étape livre le web et Android ensemble, ou l'inscrit dans `TODO.md`.
 
 **Phase 1 :**
 
@@ -227,15 +245,16 @@ Un commit par étape vérifiée, sur `main`, sans pousser.
 2. Collecte : tâches, calendrier filtré, tâches closes sur 7 jours avec notes.
 3. Règles : timeline, charge, conflits avec les horaires, doublons, dates candidates, limites de note.
 4. Job planifié et bouton « Régénérer » ; rédaction LLM optionnelle.
-5. Lecteur Gmail en lecture seule ; section « Réponses attendues ».
+5. API et écrans de réglages du résumé, web et Android, avec l'écran d'état.
+6. Connecteur Hermes (client `/v1/runs`, faux agent pour les tests) et demande `replies_list` ; section « Réponses attendues ».
 
-**Phase 2 :** 6. Page web, carte Today, actions avec annulation. 7. Android : cache Room, écran, actions par outbox et appels différés.
+**Phase 2 :** 7. Page web et carte Today (remplacent l'ancien Daily Brief), actions avec annulation. 8. Android : cache Room, écran, actions par outbox et appels différés.
 
-**Phase 3 :** 8. `brief_proposals` (journal, purge) et `linked_contexts` (fins de vie) ; questions Oui, Non, texte. 9. Édition des contextes depuis la tâche et l'événement, web et Android.
+**Phase 3 :** 9. `brief_proposals` (journal, purge) et `linked_contexts` (fins de vie) ; questions Oui, Non, texte. 10. Édition des contextes depuis la tâche et l'événement, web et Android.
 
-**Phase 4 :** 10. Script audio, client Piper, `ffmpeg`, stockage et purge ; lecture web. 11. Android : Media3, lecture en arrière-plan, chapitres ; repli `TextToSpeech`.
+**Phase 4 :** 11. Script audio, client Piper, `ffmpeg`, stockage et purge ; lecture web. 12. Android : Media3, lecture en arrière-plan, chapitres ; repli `TextToSpeech`.
 
-**Phase 5 :** 12. Connecteur Hermes et onglet Agents. 13. Tri proposé, exécution après accord, annulation, test « jamais d'envoi ».
+**Phase 5 :** 13. Tri proposé, validation, exécution après accord, annulation, test « jamais d'envoi ». Prérequis : l'outil Gmail restreint dans Hermes, après validation.
 
 **Phase 6 :** 14. Options : notification, bilan du soir, Telegram ; points d'extension Sonos et hebdomadaire.
 
@@ -243,24 +262,22 @@ Chaque commit met à jour `docs/fork/FORK.md`, la page `docs/*.md` du comporteme
 
 ## 10. Risques
 
-| Risque                                                           | Parade                                                                                                                                                             |
-| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Divergence avec l'amont sur `ai-assistant` et `DailyBriefPage`   | Code nouveau dans `daily-plan/brief/` ; modifications minimales des fichiers de l'amont                                                                            |
-| Injection dans un mail ou un événement                           | Données délimitées, sortie de l'agent validée par schéma, destinataires et actions jamais tirés du texte, échappement à l'affichage, test avec une consigne cachée |
-| Envoi accidentel                                                 | Aucun appel `send` dans le client ; test qui échoue si un chemin d'envoi apparaît                                                                                  |
-| Jetons Gmail expirant au bout de 7 jours (client en « Testing ») | Client en production non vérifié ; état visible dans l'écran d'état                                                                                                |
-| Double exécution (double clic, reprise hors ligne)               | Clé d'idempotence unique par proposition, côté Cadence et côté Hermes                                                                                              |
-| Archivage sans tâche                                             | Archivage seulement après confirmation de création ; sinon le mail reste dans l'inbox                                                                              |
-| Annulation d'une tâche modifiée entre-temps                      | Annulation refusée si la tâche a changé depuis sa création (horloge de champs)                                                                                     |
-| Ligne `daily_plans` créée par le job                             | Vérifier les écrans et `postponements.js` : seuls les plans commencés ou avec éléments comptent                                                                    |
-| Lecture en arrière-plan sur Android (batterie, autorisations)    | Service Media3 de premier plan, test sur l'émulateur puis le téléphone                                                                                             |
-| Données de production                                            | Développement sur base de test et fixtures fictives ; aucune lecture ni écriture de la base de production                                                          |
-| Fuseau `UTC` par défaut                                          | Écran d'état signale un fuseau non réglé                                                                                                                           |
+| Risque                                                           | Parade                                                                                                                                                              |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Divergence avec l'amont sur `ai-assistant` et `DailyBriefPage`   | Code nouveau dans `daily-plan/brief/` ; modifications minimales des fichiers de l'amont                                                                             |
+| Injection dans un mail ou un événement                           | Données séparées des consignes, sortie de l'agent validée par schéma, destinataires jamais tirés du texte, échappement à l'affichage, test avec une consigne cachée |
+| Envoi accidentel                                                 | Aucun type de demande d'envoi côté Cadence (test) ; aucune opération d'envoi dans l'outil Gmail de Hermes                                                           |
+| Outil Gmail dans Hermes non encore écrit                         | Phase 5 bloquée tant qu'il n'est pas validé ; les phases 1 à 4 fonctionnent sans mails                                                                              |
+| Jetons Gmail expirant au bout de 7 jours (client en « Testing ») | Client en production non vérifié ; état visible dans l'écran d'état                                                                                                 |
+| Double exécution (double clic, reprise hors ligne)               | Clé d'idempotence unique par proposition, côté Cadence et côté Hermes                                                                                               |
+| Archivage sans tâche                                             | Archivage demandé seulement après confirmation de création ; sinon le mail reste dans l'inbox                                                                       |
+| Annulation d'une tâche modifiée entre-temps                      | Annulation refusée si la tâche a changé depuis sa création (horloge de champs)                                                                                      |
+| Ligne `daily_plans` créée par le job                             | Vérifier les écrans et `postponements.js` : seuls les plans commencés ou avec éléments comptent                                                                     |
+| Lecture en arrière-plan sur Android (batterie, autorisations)    | Service Media3 de premier plan, test sur l'émulateur puis le téléphone                                                                                              |
+| Données de production                                            | Développement sur base de test et fixtures fictives ; aucune lecture ni écriture de la base de production                                                           |
+| Fuseau `UTC` par défaut                                          | Écran d'état signale un fuseau non réglé                                                                                                                            |
 
-## 11. Questions
+## 11. Questions ouvertes
 
-1. **Daily Brief de l'amont :** je remplace son rendu par le nouveau résumé sur la même page (`/insights/daily-brief`) et la carte du Today, en gardant son fournisseur LLM. D'accord ? Sinon, deux résumés coexisteraient.
-2. **Gmail :** Cadence est le seul client Gmail (lecture, puis brouillons et archivage après accord) et l'agent Hermes ne fait que rédiger et proposer. D'accord ? L'autre voie donnerait l'accès Gmail à l'agent, ce qui demande un connecteur dans Hermes.
-3. **Horaires de travail :** je les saisis comme plages protégées étiquetées, déjà soustraites de la capacité et partagées avec Android. D'accord ?
-4. **Client OAuth Google dans l'UI d'administration**, en plus des variables existantes. D'accord ?
-5. **Hors périmètre :** le jeton du bot Telegram est stocké et renvoyé en clair. Je l'inscris dans `TODO.md` ?
+1. Valider l'ajout dans Hermes décrit en section 7 (outil Gmail restreint pour le seul profil de tri). Sans lui, la phase 5 ne démarre pas.
+2. Hors périmètre : le jeton du bot Telegram est enregistré en clair dans la base et renvoyé en entier au navigateur, contrairement aux autres secrets. L'inscrire dans `TODO.md` ?
