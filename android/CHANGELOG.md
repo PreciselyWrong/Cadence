@@ -1,3 +1,9 @@
+## [1.9.0] — 4 novembre 2026
+
+### Nouveautés
+- Résumé du jour : une ligne en haut d'Aujourd'hui ouvre le résumé préparé chaque matin par le serveur : les trois prochains jours en un coup d'œil (travail, agenda, conflits, temps du soir), ce soir dans l'ordre, les tâches à déplacer avec leur date proposée, les questions à confirmer, les réponses attendues, l'inbox et ce qui vient de se régler. Cocher, déplacer et répondre marchent hors ligne.
+- Réglages › Résumé et Réglages › Agents : heure, jours, sections, soirées et connecteur d'agents, comme sur le web.
+
 ## [1.8.2] — 4 novembre 2026
 
 ### Nouveautés
