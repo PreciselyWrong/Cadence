@@ -37,23 +37,55 @@ function stillOpenTonight(morningBrief, openUids) {
         .map((item) => ({ task_uid: item.task_uid, minutes: item.minutes }));
 }
 
-// Open tasks due today or planned today that are not in tonight's list.
+const MONTHS = [
+    'janvier',
+    'février',
+    'mars',
+    'avril',
+    'mai',
+    'juin',
+    'juillet',
+    'août',
+    'septembre',
+    'octobre',
+    'novembre',
+    'décembre',
+];
+
+// '2026-10-28' -> '28 octobre'.
+function dayMonth(date) {
+    const [, month, day] = date.split('-').map(Number);
+    return `${day} ${MONTHS[month - 1]}`;
+}
+
+function slipReason(task, today) {
+    if (task.due_date && task.due_date < today) {
+        return texts.evening.reason.overdue(dayMonth(task.due_date));
+    }
+    return task.due_date === today
+        ? texts.evening.reason.dueToday
+        : texts.evening.reason.planned;
+}
+
+// Open tasks overdue, due today or planned today that are not in tonight's
+// list: the oldest due date first, then by name.
 function slippedToday(input, tonightUids) {
     const today = input.today;
     return input.tasks
         .filter(
             (task) =>
                 !tonightUids.has(task.uid) &&
-                (task.due_date === today ||
+                ((task.due_date && task.due_date <= today) ||
                     (task.planned_on || []).includes(today))
         )
-        .sort(byName)
+        .sort(
+            (a, b) =>
+                (a.due_date || today).localeCompare(b.due_date || today) ||
+                byName(a, b)
+        )
         .map((task) => ({
             task_uid: task.uid,
-            reason:
-                task.due_date === today
-                    ? texts.evening.reason.dueToday
-                    : texts.evening.reason.planned,
+            reason: slipReason(task, today),
         }));
 }
 

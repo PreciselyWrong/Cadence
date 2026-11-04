@@ -80,6 +80,24 @@ describe('buildEvening', () => {
         expect(result.slipped[1].reason).toContain('Prévue aujourd’hui');
     });
 
+    it('also slips the open tasks overdue from earlier days, oldest first', () => {
+        const tasks = [
+            task({ uid: 'today', name: 'Today', due_date: TODAY }),
+            task({ uid: 'monday', name: 'Monday', due_date: '2026-11-02' }),
+            task({ uid: 'october', name: 'October', due_date: '2026-10-28' }),
+        ];
+        const result = review({ tasks }, null);
+
+        expect(result.slipped.map((item) => item.task_uid)).toEqual([
+            'october',
+            'monday',
+            'today',
+        ]);
+        expect(result.slipped[0].reason).toContain('28 octobre');
+        expect(result.counters.slipped).toBe(3);
+        expect(result.carry_over).toEqual(['october', 'monday', 'today']);
+    });
+
     it('never lists a tonight task as slipped', () => {
         const tasks = [task({ uid: 'a', name: 'Alpha', due_date: TODAY })];
         const morning = {

@@ -29,6 +29,11 @@ jobs:
     - name: Run linting
       run: npm run lint
 
+    - name: Install ffmpeg
+      # The brief audio tests encode real MP3s, as the production image does
+      # (Dockerfile installs ffmpeg; docs/39-daily-brief.md, Audio).
+      run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
+
     - name: Run backend tests
       run: npm run backend:test
 
@@ -80,6 +85,11 @@ jobs:
         node scripts/db-prepare.js
       env:
         NODE_ENV: production
+
+    - name: Install ffmpeg
+      # The brief audio tests encode real MP3s, as the production image does
+      # (Dockerfile installs ffmpeg; docs/39-daily-brief.md, Audio).
+      run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
 
     - name: Run backend tests against PostgreSQL
       run: npm run backend:test:pg

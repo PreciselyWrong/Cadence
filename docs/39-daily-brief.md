@@ -213,7 +213,7 @@ The morning brief arbitrates the day; after the switch time the clients show the
   "counters": { "done": 0, "slipped": 0, "tonight_minutes": 0, "capacity_minutes": null },
   "done": ["task_uid"],                                  // completed today (local day), newest first, max 10
   "tonight": [{ "task_uid": "…", "minutes": 30 }],       // the morning brief's tonight items still open, in order
-  "slipped": [{ "task_uid": "…", "reason": "…" }],       // due or planned today, still open, not in tonight
+  "slipped": [{ "task_uid": "…", "reason": "…" }],       // overdue, due or planned today, still open, not in tonight; oldest due date first
   "carry_over": ["task_uid"],                             // slipped + tonight items, proposed for tomorrow
   "tomorrow": { /* one timeline day, same shape as brief.timeline[] */ },
   "audio_script": { "chapters": [{ "id": "intro" | "done" | "tonight" | "tomorrow", "title": "…", "text": "…" }] }

@@ -101,6 +101,7 @@ const texts = {
         reason: {
             dueToday: 'Due aujourd’hui, pas dans la liste de ce soir',
             planned: 'Prévue aujourd’hui, pas dans la liste de ce soir',
+            overdue: (dayMonth) => `Échue depuis le ${dayMonth}`,
         },
     },
 };
