@@ -39,6 +39,9 @@ interface Profile {
     telegram_chat_id: string | null;
     task_summary_enabled: boolean;
     task_summary_frequency: string;
+    today_settings?: {
+        showDailyBrief?: boolean;
+    };
     features?: {
         pomodoro_enabled?: boolean;
         eisenhower_enabled?: boolean;

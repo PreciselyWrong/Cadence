@@ -59,7 +59,7 @@ import ReportsPage from './components/Insights/ReportsPage';
 import SummaryPage from './components/Insights/SummaryPage';
 import ReviewPage from './components/Review/ReviewPage';
 import LinksPage from './components/Links/LinksPage';
-import DailyBriefPage from './components/Insights/DailyBriefPage';
+import BriefPage from './components/DailyBrief/BriefPage';
 import PeopleList from './components/People/PeopleList';
 import PersonDetails from './components/People/PersonDetails';
 import EveryoneDashboard from './components/Everyone/EveryoneDashboard';
@@ -546,7 +546,7 @@ const App: React.FC = () => {
                             />
                             <Route
                                 path="/insights/daily-brief"
-                                element={<DailyBriefPage />}
+                                element={<BriefPage />}
                             />
                             <Route
                                 path="/insights/productivity"

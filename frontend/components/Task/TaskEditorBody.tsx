@@ -14,6 +14,7 @@ import { SidePanelSection } from '../SidePanel/SidePanelParts';
 import TaskSubtasksCard from './TaskDetails/TaskSubtasksCard';
 import TaskAttachmentsCard from './TaskDetails/TaskAttachmentsCard';
 import TaskComments from './TaskComments';
+import TaskContexts from './TaskContexts';
 import TaskChipRow from './TaskChipRow';
 import { SaveState } from './useTaskAutosave';
 import { TaskEditor } from './useTaskEditor';
@@ -317,6 +318,8 @@ export const TaskEditorBody: React.FC<{ ed: TaskEditor }> = ({ ed }) => {
                             {t('capture.attach', 'Attach files')}
                         </button>
                     )}
+
+                    <TaskContexts taskUid={task.uid} readOnly={readOnly} />
 
                     <SidePanelSection
                         title={

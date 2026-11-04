@@ -18,7 +18,9 @@ import {
     CheckIcon,
     BellIcon,
     CommandLineIcon,
+    ChatBubbleLeftRightIcon,
     CpuChipIcon,
+    NewspaperIcon,
     CalendarIcon,
     CalendarDaysIcon,
     SparklesIcon,
@@ -70,6 +72,8 @@ import CalendarFeedsTab from './tabs/CalendarFeedsTab';
 import AIAssistantTab from './tabs/AIAssistantTab';
 import BillingTab from './tabs/BillingTab';
 import PlanningTab from './tabs/PlanningTab';
+import DailyBriefTab from './tabs/DailyBriefTab';
+import AgentsTab from './tabs/AgentsTab';
 import ImportExportTab from './tabs/ImportExportTab';
 import SyncTab from './tabs/SyncTab';
 import { getDefaultConfig } from '../../utils/keyboardShortcutsService';
@@ -127,6 +131,8 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
             'sync',
             'calendars',
             'planning',
+            'daily-brief',
+            'agents',
             'mcp',
             'ai-assistant',
             'features',
@@ -1491,6 +1497,12 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
             icon: <QueueListIcon className="w-5 h-5" />,
         },
         {
+            id: 'daily-brief',
+            group: 'planning',
+            name: t('profile.tabs.dailyBrief', 'Résumé'),
+            icon: <NewspaperIcon className="w-5 h-5" />,
+        },
+        {
             id: 'sync',
             group: 'integrations',
             name: t('profile.tabs.sync', 'Sync'),
@@ -1507,6 +1519,12 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
             group: 'integrations',
             name: t('profile.tabs.mcp', 'MCP Integration'),
             icon: <CpuChipIcon className="w-5 h-5" />,
+        },
+        {
+            id: 'agents',
+            group: 'integrations',
+            name: t('profile.tabs.agents', 'Agents'),
+            icon: <ChatBubbleLeftRightIcon className="w-5 h-5" />,
         },
         {
             id: 'ai-assistant',
@@ -2047,6 +2065,14 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 
                                     <PlanningTab
                                         isActive={activeTab === 'planning'}
+                                    />
+
+                                    <DailyBriefTab
+                                        isActive={activeTab === 'daily-brief'}
+                                    />
+
+                                    <AgentsTab
+                                        isActive={activeTab === 'agents'}
                                     />
 
                                     <BillingTab

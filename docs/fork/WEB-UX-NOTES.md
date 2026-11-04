@@ -12,6 +12,19 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-04 — Résumé du jour (web)
+
+- **Problème** : l'ancien Daily Brief était un bloc IA unique (focus, actions, pièges) sans heure, sans charge et sans moyen de dire « non » ; sa carte d'aujourd'hui n'existait pas.
+- **Décision** : `/insights/daily-brief` affiche le résumé dans l'ordre des sections des réglages (`sections`), sans tout remonter : verdict et deux compteurs en tête ; une frise de trois jours (axe 8 h à 22 h) avec travail en gris, soir en encadré (remplissage = déjà prévu), réunions en barres sombres, conflit en rouge, texte seulement sous la frise (« 40 / 90 min », « 15 min de trop » en gras quand c'est dépassé) ; puis Ce soir, À déplacer, À anticiper, Réponses attendues, Inbox, Réglé. Une ligne de tâche garde le cercle de fin (annulable par toast), montre l'état actuel de la tâche et ouvre son panneau au clic.
+- **Déplacer** : la pastille de date accepte la proposition (la date de la tâche change, annulable) ; « Pas cette date » la refuse pour ce jour. Rien ne bouge sans ce geste.
+- **Questions** : Oui / Non / Préciser (texte) écrivent un contexte lié ; « Utile » / « Bruit » sont des boutons texte discrets, pas des icônes.
+- **Pas de bouton sans effet** : pas d'action « Brouillon » ni « Créer une tâche » pour les mails tant que la phase de rédaction n'existe pas ; « Source non lue » s'affiche à la place quand la source mail n'est pas lue.
+- **États** : vide = une phrase et « Générer maintenant » ; échec = message court et « Régénérer » (le résumé précédent reste visible) ; chargement = squelette.
+- **Aujourd'hui** : une carte compacte (date, verdict, deux compteurs, « Voir le résumé ») quand Aujourd'hui affiche le résumé (réglage `today_settings.showDailyBrief`, posé dans Profil › Résumé).
+- **Réglages** : Profil › Résumé (état des sources et fuseau en tête, puis génération, sections, calendriers, soir et charge, arbitrage, alertes, rédaction, conservation, voix, options) ; Profil › Agents (adresse, clé masquée au dernier 4 caractères, délai, profils, règles de tri, « Tester la connexion »).
+- **Contexte** : le panneau d'une tâche liste ses contextes liés (modifier, supprimer) ; rien quand il n'y en a aucun.
+- **À reprendre sur Android** : la frise (mêmes bandes, mêmes libellés de charge, conflit rouge), l'ordre et le masquage des sections selon les réglages, la pastille de date qui déplace la tâche et « Pas cette date », les questions Oui / Non / Préciser, « Utile » / « Bruit », les trois états vide / échec / chargement, le bloc « Contexte » du panneau de tâche, et les réglages Résumé et Agents (même découpage de sections). Pas de « Écouter » tant que l'audio n'est pas prêt (phase 4).
+
 ### 2026-11-01 — Passe d'épure : liste des tâches
 
 - **Problème** : l'en-tête de « Toutes les tâches » (et des listes Demain, À venir…) gardait un bouton « i » bleu qui dépliait une phrase d'explication.

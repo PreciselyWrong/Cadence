@@ -589,7 +589,9 @@
       "mcp": "Intégration MCP",
       "aiAssistant": "Assistant IA",
       "features": "Fonctionnalités et modules",
-      "sidebar": "Barre latérale"
+      "sidebar": "Barre latérale",
+      "dailyBrief": "Résumé",
+      "agents": "Agents"
     },
     "security": "Paramètres de sécurité",
     "deleteAccount": "Supprimer le compte",
@@ -5551,5 +5553,218 @@
     "loadError": "Impossible de charger les liens.",
     "empty": "Les liens notés dans la boîte de réception, une tâche ou une note arrivent ici, avec ce que la page dit d'elle-même.",
     "noMatch": "Aucun lien ne correspond à ces filtres."
+  },
+  "dailyBrief": {
+    "sectionName": {
+      "verdict": "Verdict",
+      "timeline": "Les prochains jours",
+      "tonight": "Ce soir",
+      "moves": "À déplacer",
+      "anticipate": "À anticiper",
+      "replies": "Réponses attendues",
+      "inbox": "Inbox",
+      "resolved": "Réglé"
+    },
+    "priority": {
+      "consequence": "Conséquence",
+      "blocking": "Bloque d'autres tâches",
+      "money_deadline": "Argent ou échéance",
+      "planned_load": "Charge prévue",
+      "long_term": "Long terme"
+    },
+    "alertType": {
+      "conflict": "Événements en conflit",
+      "overload": "Surcharge",
+      "duplicate": "Doublon possible",
+      "deadline_in_note": "Échéance trouvée dans une note",
+      "postponed": "Souvent reportée",
+      "dependency": "Dépendance",
+      "event_in_work_hours": "Événement pendant le travail"
+    },
+    "source": {
+      "calendar": "Calendriers",
+      "mail": "Agent courrier",
+      "llm": "Réécriture IA",
+      "voice": "Voix",
+      "agent": "Agent"
+    },
+    "settings": {
+      "postponements": "Reports avant une alerte",
+      "maxMoves": "Déplacements proposés",
+      "maxTonight": "Tâches proposées ce soir",
+      "closedLookback": "Tâches fermées vérifiées (jours)",
+      "optEvening": "Bilan du soir",
+      "optTelegram": "Envoyer sur Telegram",
+      "optSonos": "Lire sur Sonos",
+      "optWeekly": "Résumé hebdomadaire",
+      "title": "Résumé du jour",
+      "description": "Un résumé chaque matin : la semaine à venir, ce qui attend ce soir, ce qui peut bouger.",
+      "status": "État des sources",
+      "timezoneWarning": "Le fuseau horaire n'est pas défini : les heures du résumé peuvent être fausses.",
+      "showOnToday": "Afficher le résumé sur Aujourd'hui",
+      "generation": "Génération",
+      "enabled": "Générer chaque matin",
+      "time": "Heure",
+      "days": "Jours",
+      "sections": "Sections",
+      "sectionsHint": "Une section décochée est masquée ; l'ordre reste celui de la liste.",
+      "moveUp": "Monter {{name}}",
+      "moveDown": "Descendre {{name}}",
+      "sources": "Calendriers lus",
+      "noCalendars": "Aucun calendrier. Ajoutez-en dans Profil › Calendriers.",
+      "lookahead": "Jours à regarder",
+      "evening": "Soir et charge",
+      "eveningHint": "Les heures de travail se règlent dans Aujourd'hui (blocs de focus).",
+      "openToday": "Ouvrir Aujourd'hui",
+      "eveningStart": "Début",
+      "eveningEnd": "Fin",
+      "eveningMinutes": "Minutes",
+      "dayNote": "Note du jour",
+      "arbitrage": "Arbitrage",
+      "priorities": "Ordre de priorité",
+      "alerts": "Alertes",
+      "writing": "Rédaction",
+      "llmEnabled": "Réécrire le verdict avec l'IA",
+      "llmProvider": "Fournisseur IA : Profil › Assistant IA",
+      "tone": "Ton",
+      "signature": "Signature",
+      "instructions": "Consignes",
+      "retention": "Conservation",
+      "decisionsDays": "Décisions gardées (jours)",
+      "audioDays": "Audio gardé (jours)",
+      "voice": "Voix",
+      "voiceEnabled": "Lire le résumé à voix haute",
+      "piperUrl": "Adresse Piper",
+      "voiceName": "Voix",
+      "speed": "Vitesse",
+      "options": "Options",
+      "save": "Enregistrer",
+      "saved": "Réglages enregistrés",
+      "saveError": "Impossible d'enregistrer les réglages.",
+      "loadError": "Impossible de charger les réglages du résumé.",
+      "eveningRemove": "Retirer"
+    },
+    "hours": "{{hours}} h",
+    "hoursMinutes": "{{hours}} h {{rest}}",
+    "minutes": "{{count}} min",
+    "task": {
+      "complete": "C'est fait",
+      "done": "« {{name}} » terminée",
+      "reopened": "« {{name}} » rouverte",
+      "error": "Impossible de modifier la tâche."
+    },
+    "decision": {
+      "error": "Impossible d'enregistrer votre choix."
+    },
+    "loadError": "Impossible de charger le résumé.",
+    "generateError": "La génération a échoué.",
+    "generateNow": "Générer maintenant",
+    "generating": "Génération…",
+    "regenerate": "Régénérer",
+    "empty": "Pas encore de résumé pour aujourd'hui.",
+    "failed": "La dernière génération a échoué. Le résumé précédent est gardé.",
+    "settingsLink": "Réglages du résumé",
+    "counters": {
+      "overdue": "en retard",
+      "today": "aujourd'hui"
+    },
+    "timeline": {
+      "today": "Aujourd'hui",
+      "planned": "{{minutes}} min",
+      "ofCapacity": "{{planned}} / {{capacity}} min",
+      "over": "{{minutes}} min de trop",
+      "duringWork": "pendant le travail",
+      "legendWork": "Travail",
+      "legendEvening": "Soir",
+      "legendEvent": "Événement",
+      "legendConflict": "Conflit"
+    },
+    "tonight": {
+      "ofCapacity": "{{planned}} sur {{capacity}} supposées"
+    },
+    "moves": {
+      "acceptAria": "Déplacer au {{date}}",
+      "refuse": "Pas cette date",
+      "moved": "« {{name}} » déplacée"
+    },
+    "anticipate": {
+      "yes": "Oui",
+      "no": "Non",
+      "precise": "Préciser",
+      "preciseLabel": "Précision",
+      "save": "Enregistrer",
+      "answered": "Réponse enregistrée"
+    },
+    "feedback": {
+      "useful": "Utile",
+      "noise": "Bruit"
+    },
+    "replies": {
+      "sourceNotRead": "Source non lue"
+    },
+    "status": {
+      "configured": "Configuré",
+      "missing": "Non configuré",
+      "failing": "En erreur"
+    },
+    "card": {
+      "title": "Résumé du jour",
+      "open": "Voir le résumé",
+      "error": "Le résumé est indisponible."
+    },
+    "context": {
+      "title": "Contexte",
+      "edit": "Modifier le contexte",
+      "save": "Enregistrer",
+      "delete": "Supprimer"
+    }
+  },
+  "agents": {
+    "title": "Agents",
+    "description": "L'agent lit le courrier et rédige. Cadence ne garde aucun identifiant de messagerie.",
+    "baseUrl": "Adresse de l'agent",
+    "apiKey": "Clé d'API",
+    "key": {
+      "setLast4": "Enregistrée (…{{last4}})",
+      "notSet": "Aucune clé enregistrée",
+      "willClear": "Sera effacée à l'enregistrement",
+      "replace": "Remplacer la clé",
+      "clear": "Effacer"
+    },
+    "timeout": "Délai (secondes)",
+    "profiles": {
+      "mail": "Profil courrier",
+      "drafting": "Profil rédaction"
+    },
+    "triage": {
+      "title": "Règles de tri",
+      "empty": "Aucune règle.",
+      "from": "Expéditeur",
+      "label": "Libellé",
+      "instruction": "Consigne",
+      "mode": "Mode",
+      "propose": "Proposer",
+      "off": "Désactivée",
+      "add": "Ajouter une règle",
+      "remove": "Supprimer la règle"
+    },
+    "test": {
+      "button": "Tester la connexion",
+      "health": "Agent joignable",
+      "auth": "Authentification",
+      "mail": "Profil courrier",
+      "drafting": "Profil rédaction"
+    },
+    "check": {
+      "ok": "OK",
+      "unauthorized": "Clé refusée",
+      "missing": "Profil non défini",
+      "error": "Erreur"
+    },
+    "save": "Enregistrer",
+    "saved": "Réglages enregistrés",
+    "saveError": "Impossible d'enregistrer les réglages.",
+    "loadError": "Impossible de charger les réglages de l'agent.",
+    "testError": "Le test a échoué."
   }
 }

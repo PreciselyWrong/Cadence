@@ -650,7 +650,9 @@
       "mcp": "MCP Integration",
       "aiAssistant": "AI Assistant",
       "features": "Features & Add-ons",
-      "sidebar": "Sidebar"
+      "sidebar": "Sidebar",
+      "dailyBrief": "Brief",
+      "agents": "Agents"
     },
     "caldav": {
       "title": "CalDAV Synchronization",
@@ -5505,5 +5507,218 @@
     "loadError": "Could not load the links.",
     "empty": "Links you capture in the inbox, a task or a note show up here, with what the page says about itself.",
     "noMatch": "No link matches these filters."
+  },
+  "dailyBrief": {
+    "sectionName": {
+      "verdict": "Verdict",
+      "timeline": "Upcoming days",
+      "tonight": "Tonight",
+      "moves": "To move",
+      "anticipate": "To anticipate",
+      "replies": "Replies expected",
+      "inbox": "Inbox",
+      "resolved": "Done"
+    },
+    "priority": {
+      "consequence": "Consequence",
+      "blocking": "Blocks others",
+      "money_deadline": "Money or deadline",
+      "planned_load": "Planned load",
+      "long_term": "Long term"
+    },
+    "alertType": {
+      "conflict": "Conflicting events",
+      "overload": "Overload",
+      "duplicate": "Possible duplicate",
+      "deadline_in_note": "Deadline found in a note",
+      "postponed": "Often postponed",
+      "dependency": "Dependency",
+      "event_in_work_hours": "Event during work hours"
+    },
+    "source": {
+      "calendar": "Calendars",
+      "mail": "Mail agent",
+      "llm": "AI rewrite",
+      "voice": "Voice",
+      "agent": "Agent"
+    },
+    "settings": {
+      "postponements": "Postponements before a card",
+      "maxMoves": "Moves shown",
+      "maxTonight": "Tasks shown tonight",
+      "closedLookback": "Closed tasks checked (days)",
+      "optEvening": "Evening wrap-up",
+      "optTelegram": "Send on Telegram",
+      "optSonos": "Play on Sonos",
+      "optWeekly": "Weekly summary",
+      "title": "Daily brief",
+      "description": "A summary every morning: the coming days, what is left for tonight, what can move.",
+      "status": "Source status",
+      "timezoneWarning": "The time zone is not set: the brief times may be wrong.",
+      "showOnToday": "Show the brief on Today",
+      "generation": "Generation",
+      "enabled": "Generate every morning",
+      "time": "Time",
+      "days": "Days",
+      "sections": "Sections",
+      "sectionsHint": "An unchecked section is hidden; the order is the list order.",
+      "moveUp": "Move {{name}} up",
+      "moveDown": "Move {{name}} down",
+      "sources": "Calendars read",
+      "noCalendars": "No calendar. Add one in Profile › Calendars.",
+      "lookahead": "Days to look ahead",
+      "evening": "Evening and load",
+      "eveningHint": "Work hours are set in Today (focus blocks).",
+      "openToday": "Open Today",
+      "eveningStart": "Start",
+      "eveningEnd": "End",
+      "eveningMinutes": "Minutes",
+      "dayNote": "Day note",
+      "arbitrage": "Ranking",
+      "priorities": "Priority order",
+      "alerts": "Alerts",
+      "writing": "Writing",
+      "llmEnabled": "Rewrite the verdict with AI",
+      "llmProvider": "AI provider: Profile › AI Assistant",
+      "tone": "Tone",
+      "signature": "Signature",
+      "instructions": "Instructions",
+      "retention": "Retention",
+      "decisionsDays": "Decisions kept (days)",
+      "audioDays": "Audio kept (days)",
+      "voice": "Voice",
+      "voiceEnabled": "Read the brief aloud",
+      "piperUrl": "Piper address",
+      "voiceName": "Voice",
+      "speed": "Speed",
+      "options": "Options",
+      "save": "Save",
+      "saved": "Settings saved",
+      "saveError": "Could not save the settings.",
+      "loadError": "Could not load the brief settings.",
+      "eveningRemove": "Remove"
+    },
+    "hours": "{{hours}} h",
+    "hoursMinutes": "{{hours}} h {{rest}}",
+    "minutes": "{{count}} min",
+    "task": {
+      "complete": "Done",
+      "done": "“{{name}}” done",
+      "reopened": "“{{name}}” reopened",
+      "error": "Could not update the task."
+    },
+    "decision": {
+      "error": "Could not save your choice."
+    },
+    "loadError": "Could not load the brief.",
+    "generateError": "Generation failed.",
+    "generateNow": "Generate now",
+    "generating": "Generating…",
+    "regenerate": "Regenerate",
+    "empty": "No brief for today yet.",
+    "failed": "The last generation failed. The previous brief is kept.",
+    "settingsLink": "Brief settings",
+    "counters": {
+      "overdue": "overdue",
+      "today": "today"
+    },
+    "timeline": {
+      "today": "Today",
+      "planned": "{{minutes}} min",
+      "ofCapacity": "{{planned}} / {{capacity}} min",
+      "over": "{{minutes}} min over",
+      "duringWork": "during work",
+      "legendWork": "Work",
+      "legendEvening": "Evening",
+      "legendEvent": "Event",
+      "legendConflict": "Conflict"
+    },
+    "tonight": {
+      "ofCapacity": "{{planned}} of {{capacity}} planned"
+    },
+    "moves": {
+      "acceptAria": "Move to {{date}}",
+      "refuse": "Not this day",
+      "moved": "“{{name}}” moved"
+    },
+    "anticipate": {
+      "yes": "Yes",
+      "no": "No",
+      "precise": "Specify",
+      "preciseLabel": "Detail",
+      "save": "Save",
+      "answered": "Answer saved"
+    },
+    "feedback": {
+      "useful": "Useful",
+      "noise": "Noise"
+    },
+    "replies": {
+      "sourceNotRead": "Source not read"
+    },
+    "status": {
+      "configured": "Configured",
+      "missing": "Not configured",
+      "failing": "Failing"
+    },
+    "card": {
+      "title": "Daily brief",
+      "open": "See the brief",
+      "error": "The brief is unavailable."
+    },
+    "context": {
+      "title": "Context",
+      "edit": "Edit context",
+      "save": "Save",
+      "delete": "Delete"
+    }
+  },
+  "agents": {
+    "title": "Agents",
+    "description": "The agent reads mail and drafts. Cadence keeps no mail credentials.",
+    "baseUrl": "Agent address",
+    "apiKey": "API key",
+    "key": {
+      "setLast4": "Saved (…{{last4}})",
+      "notSet": "No key saved",
+      "willClear": "Will be cleared on save",
+      "replace": "Replace the key",
+      "clear": "Clear"
+    },
+    "timeout": "Timeout (seconds)",
+    "profiles": {
+      "mail": "Mail profile",
+      "drafting": "Drafting profile"
+    },
+    "triage": {
+      "title": "Triage rules",
+      "empty": "No rule.",
+      "from": "Sender",
+      "label": "Label",
+      "instruction": "Instruction",
+      "mode": "Mode",
+      "propose": "Propose",
+      "off": "Off",
+      "add": "Add a rule",
+      "remove": "Remove the rule"
+    },
+    "test": {
+      "button": "Test the connection",
+      "health": "Agent reachable",
+      "auth": "Authentication",
+      "mail": "Mail profile",
+      "drafting": "Drafting profile"
+    },
+    "check": {
+      "ok": "OK",
+      "unauthorized": "Key refused",
+      "missing": "Profile not set",
+      "error": "Error"
+    },
+    "save": "Save",
+    "saved": "Settings saved",
+    "saveError": "Could not save the settings.",
+    "loadError": "Could not load the agent settings.",
+    "testError": "The test failed."
   }
 }
