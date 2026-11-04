@@ -37,6 +37,26 @@ module.exports = (sequelize) => {
                 type: DataTypes.JSON,
                 allowNull: true,
             },
+            // The day's brief JSON; kept on the day so a past day shows its own brief.
+            brief: {
+                type: DataTypes.JSON,
+                allowNull: true,
+            },
+            // Goes up by one only on an explicit regeneration.
+            brief_version: {
+                type: DataTypes.INTEGER,
+                allowNull: true,
+            },
+            // pending, partial, ready or failed: clients show progress from it.
+            brief_status: {
+                type: DataTypes.STRING(16),
+                allowNull: true,
+            },
+            // When the current brief version was built.
+            brief_generated_at: {
+                type: DataTypes.DATE,
+                allowNull: true,
+            },
         },
         {
             tableName: 'daily_plans',

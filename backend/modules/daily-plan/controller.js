@@ -2,6 +2,7 @@
 
 const dailyPlanService = require('./service');
 const dailyPlanAi = require('./ai');
+const briefService = require('./brief/service');
 const { UnauthorizedError } = require('../../shared/errors');
 
 function requireUser(req) {
@@ -107,6 +108,33 @@ const dailyPlanController = {
         try {
             const user = requireUser(req);
             res.json(await dailyPlanService.saveDayHours(user, req.body));
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    async getBriefSettings(req, res, next) {
+        try {
+            const user = requireUser(req);
+            res.json(await briefService.getBriefSettings(user));
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    async saveBriefSettings(req, res, next) {
+        try {
+            const user = requireUser(req);
+            res.json(await briefService.saveBriefSettings(user, req.body));
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    async getBrief(req, res, next) {
+        try {
+            const user = requireUser(req);
+            res.json(await briefService.getBrief(user, req.params.date));
         } catch (err) {
             next(err);
         }
