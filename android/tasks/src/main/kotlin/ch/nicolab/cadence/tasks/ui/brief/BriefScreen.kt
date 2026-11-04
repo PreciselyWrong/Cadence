@@ -19,6 +19,8 @@ import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
@@ -105,66 +107,68 @@ fun BriefScreen(onBack: () -> Unit) {
         }
     }
 
-    Column(Modifier.fillMaxSize()) {
-        ScreenHeader(
-            title = stringResource(R.string.brief_title),
-            onBack = onBack,
-            backDescription = stringResource(R.string.brief_back),
-        )
-        LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = tasksListPadding()) {
-            val snapshot = cached
-            if (snapshot == null) {
-                item(key = "empty") {
-                    EmptyState(
-                        icon = Icons.Outlined.WbSunny,
-                        title = stringResource(R.string.brief_empty_title),
-                        message = stringResource(R.string.brief_empty_message),
-                    )
-                }
-                return@LazyColumn
-            }
-            if (snapshot.status == STATUS_FAILED) {
-                item(key = "failed") {
-                    Text(
-                        stringResource(R.string.brief_failed_message),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = cadence.error,
-                        modifier = Modifier.padding(bottom = Space.md),
-                    )
-                }
-            }
-            val brief = snapshot.brief
-            if (brief == null) {
-                item(key = "unreadable") {
-                    EmptyState(
-                        icon = Icons.Outlined.WbSunny,
-                        title = stringResource(R.string.brief_empty_title),
-                        message = stringResource(R.string.brief_unreadable_message),
-                    )
-                }
-                return@LazyColumn
-            }
-            val date = snapshot.date
-            val sections = brief.sections ?: settings?.let { BriefSettingsJson.sections(it) } ?: DEFAULT_BRIEF_SECTIONS
-            val context = BriefContext(
-                brief = brief,
-                date = date,
-                today = today,
-                zone = zone,
-                tasks = tasks,
-                settings = settings,
-                snapshot = snapshot,
-                onOpen = { openedTaskUid = it.uid },
-                onComplete = viewModel::complete,
-                onMove = { task, move -> viewModel.move(date, task, move) },
-                onRefuse = { move -> viewModel.refuseMove(date, move) },
-                onAnswer = { question, answer -> viewModel.answer(date, question, answer) },
-                onFeedback = { card, vote -> viewModel.feedback(date, card, vote) },
-                onPrecise = { preciseFor = it },
-                onReopen = { task -> tasksViewModel.toggle(task, hold = false) },
+    Surface(Modifier.fillMaxSize(), color = cadence.background, contentColor = cadence.onSurface) {
+        Column(Modifier.fillMaxSize().statusBarsPadding()) {
+            ScreenHeader(
+                title = stringResource(R.string.brief_title),
+                onBack = onBack,
+                backDescription = stringResource(R.string.brief_back),
             )
-            item(key = "header") { BriefHeader(brief = brief, date = date, today = today) }
-            sections.forEach { id -> briefSection(id, context) }
+            LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = tasksListPadding()) {
+                val snapshot = cached
+                if (snapshot == null) {
+                    item(key = "empty") {
+                        EmptyState(
+                            icon = Icons.Outlined.WbSunny,
+                            title = stringResource(R.string.brief_empty_title),
+                            message = stringResource(R.string.brief_empty_message),
+                        )
+                    }
+                    return@LazyColumn
+                }
+                if (snapshot.status == STATUS_FAILED) {
+                    item(key = "failed") {
+                        Text(
+                            stringResource(R.string.brief_failed_message),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = cadence.error,
+                            modifier = Modifier.padding(bottom = Space.md),
+                        )
+                    }
+                }
+                val brief = snapshot.brief
+                if (brief == null) {
+                    item(key = "unreadable") {
+                        EmptyState(
+                            icon = Icons.Outlined.WbSunny,
+                            title = stringResource(R.string.brief_empty_title),
+                            message = stringResource(R.string.brief_unreadable_message),
+                        )
+                    }
+                    return@LazyColumn
+                }
+                val date = snapshot.date
+                val sections = brief.sections ?: settings?.let { BriefSettingsJson.sections(it) } ?: DEFAULT_BRIEF_SECTIONS
+                val context = BriefContext(
+                    brief = brief,
+                    date = date,
+                    today = today,
+                    zone = zone,
+                    tasks = tasks,
+                    settings = settings,
+                    snapshot = snapshot,
+                    onOpen = { openedTaskUid = it.uid },
+                    onComplete = viewModel::complete,
+                    onMove = { task, move -> viewModel.move(date, task, move) },
+                    onRefuse = { move -> viewModel.refuseMove(date, move) },
+                    onAnswer = { question, answer -> viewModel.answer(date, question, answer) },
+                    onFeedback = { card, vote -> viewModel.feedback(date, card, vote) },
+                    onPrecise = { preciseFor = it },
+                    onReopen = { task -> tasksViewModel.toggle(task, hold = false) },
+                )
+                item(key = "header") { BriefHeader(brief = brief, date = date, today = today) }
+                sections.forEach { id -> briefSection(id, context) }
+            }
         }
     }
 
