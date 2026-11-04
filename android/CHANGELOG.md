@@ -1,3 +1,8 @@
+## [1.10.1] — 4 novembre 2026
+
+### Corrections
+- Mise à jour plus légère : l'application ne contient plus que le moteur de voix des téléphones (environ 36 Mo de moins).
+
 ## [1.10.0] — 4 novembre 2026
 
 ### Nouveautés

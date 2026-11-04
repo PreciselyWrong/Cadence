@@ -94,7 +94,7 @@ Invoke-Gradle @(':domain:test', ':tasks:testDebugUnitTest', ':app:testDebugUnitT
 if ($LASTEXITCODE -ne 0) { Fail 'Les tests ont échoué.' 3 }
 
 Write-Host "Construction debug..." -ForegroundColor Cyan
-Invoke-Gradle @(':app:assembleDebug', '--no-configuration-cache')
+Invoke-Gradle @(':app:assembleDebug', '-Pcadence.abis=arm64-v8a', '--no-configuration-cache')
 if ($LASTEXITCODE -ne 0 -or -not (Test-Path $artifact)) { Fail 'La construction Android a échoué.' 3 }
 
 # NicoApps

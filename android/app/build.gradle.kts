@@ -42,7 +42,9 @@ android {
         // Sherpa-ONNX pèse environ 12 Mo compressés par architecture : seules celles des appareils de Nicolas
         // (téléphone arm64, émulateur x86_64) sont embarquées.
         ndk {
-            abiFilters += listOf("arm64-v8a", "x86_64")
+            // Phones are arm64; x86_64 is only for the emulator. publish.ps1 passes
+            // -Pcadence.abis=arm64-v8a so the APK sent to phones skips ~36 MB of native code.
+            abiFilters += (providers.gradleProperty("cadence.abis").orNull ?: "arm64-v8a,x86_64").split(",")
         }
     }
 
