@@ -31,6 +31,8 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
 ## Next
 
 - Web : reprendre la passe de soustraction Android du 2026-11-02 (`docs/fork/ANDROID-UX-NOTES.md`) : Aujourd'hui sans bannière ni jauge sauf journée pleine, fin de journée en ligne après les tâches, un seul signal couleur par ligne, deux gestes par idée dans la Boîte, fiche terminée par sa case, Projets et Étiquettes en lignes sans « 0 », surfaces neutres. Vérif : captures avant/après à 390 px et en bureau.
+- Résumé matinal : plan validé le 2026-11-04 (`docs/resume-matinal-plan.md`), phases 1 à 6 à suivre ; l'outil Gmail restreint d'Hermes (`integrations/hermes-gmail/`) est le prérequis de la phase 5.
+- Sécurité : `users.telegram_bot_token` est stocké en clair et renvoyé en entier au navigateur (`backend/models/user.js`, `PROFILE_UPDATE_ATTRIBUTES` de `users/repository.js`). Le chiffrer avec `secretCipher` (migration des valeurs existantes) et ne renvoyer que les 4 derniers caractères, comme `ai_api_key`. Vérif : la colonne commence par `enc:v1:`, `GET /api/profile` ne contient plus le jeton, le bot Telegram répond toujours.
 - Fusionner l'amont (`chrisvel/tududi`) chaque semaine (dernière synchro : `eda9aa60`, v1.14.0 ; vérifié le 2026-11-01 : rien de neuf).
 
 ## Ideas
