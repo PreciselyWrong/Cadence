@@ -12,9 +12,11 @@ const { collectInput } = require('./collect');
 const { buildBrief } = require('./build');
 const { writeBrief } = require('./writer');
 const decisions = require('./decisions');
+const { buildAudioScript } = require('./script');
+const audio = require('./audio');
 
-// Mail replies still running, so tests and shutdown can wait for them.
-const pendingReplies = new Set();
+// Mail replies and brief audio still running, so tests and shutdown can wait.
+const pendingJobs = new Set();
 
 const withSource = (sources, source) => [
     ...sources.filter((item) => item.id !== source.id),
@@ -90,12 +92,35 @@ function startRepliesRequest({ user, planId, planDate, version, settings }) {
             });
         }
     })();
-    pendingReplies.add(job);
-    job.finally(() => pendingReplies.delete(job));
+    trackJob(job);
+}
+
+function trackJob(job) {
+    pendingJobs.add(job);
+    job.finally(() => pendingJobs.delete(job));
+}
+
+// Renders the audio of one version in the background. The audio script is
+// the one of that version: replies that arrive later are not spoken.
+function startAudioRender({ user, planId, planDate, version, brief }) {
+    const job = audio
+        .renderBriefAudio(user, {
+            id: planId,
+            plan_date: planDate,
+            brief_version: version,
+            brief,
+        })
+        .catch((error) => {
+            logger.error(
+                { code: error.code || error.name, userId: user.id, version },
+                'Daily brief audio not rendered'
+            );
+        });
+    trackJob(job);
 }
 
 async function settlePendingReplies() {
-    await Promise.allSettled([...pendingReplies]);
+    await Promise.allSettled([...pendingJobs]);
 }
 
 // The proposals a brief shows are kept as pending, to tell later whether the
@@ -153,7 +178,11 @@ async function generateBrief(
         const brief = {
             ...written.brief,
             sources: withSource(written.brief.sources, written.llm),
+            audio_script: buildAudioScript(written.brief, settings, {
+                tasksByUid,
+            }),
         };
+        brief.audio = audio.initialAudioState(settings);
 
         const version = (row.brief_version ?? 0) + 1;
         const pending = isMailPending(brief);
@@ -173,6 +202,15 @@ async function generateBrief(
                 planDate,
                 version,
                 settings,
+            });
+        }
+        if (brief.audio.status === 'pending') {
+            startAudioRender({
+                user,
+                planId: row.id,
+                planDate,
+                version,
+                brief,
             });
         }
     } catch (error) {

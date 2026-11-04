@@ -6,11 +6,12 @@
 const moment = require('moment-timezone');
 const { logger } = require('../../../services/logService');
 const { getSafeTimezone } = require('../../../utils/timezone-utils');
-const { normalizeBriefSettings } = require('./settings');
+const { briefSettingsFromUiSettings } = require('./settings');
 const briefRepository = require('./repository');
 const { generateBrief } = require('./generate');
 const decisions = require('./decisions');
 const contexts = require('./contexts');
+const { purgeBriefAudio } = require('./audio');
 
 // Due when the local clock has reached the chosen time on an active day.
 function isDue(settings, local) {
@@ -19,9 +20,7 @@ function isDue(settings, local) {
 }
 
 async function generateForUser(user, now) {
-    const settings = normalizeBriefSettings(
-        readSettings(user.ui_settings).brief
-    );
+    const settings = briefSettingsFromUiSettings(user.ui_settings);
     if (!settings.enabled) return false;
 
     const local = moment.tz(now, getSafeTimezone(user.timezone));
@@ -33,17 +32,6 @@ async function generateForUser(user, now) {
 
     await generateBrief(user, today, { reason: 'job', now });
     return true;
-}
-
-function readSettings(value) {
-    if (typeof value === 'string') {
-        try {
-            return JSON.parse(value) || {};
-        } catch {
-            return {};
-        }
-    }
-    return value && typeof value === 'object' ? value : {};
 }
 
 // Returns how many briefs were generated. One user's failure is logged
@@ -64,14 +52,17 @@ async function generateDueBriefs({ now = new Date() } = {}) {
     return { generated };
 }
 
-// Daily purge (taskScheduler "brief_purge"): decisions past their retention and
-// contexts whose lifetime is over (docs/39-daily-brief.md, Memory).
+// Daily purge (taskScheduler "brief_purge"): decisions past their retention,
+// contexts whose lifetime is over (docs/39-daily-brief.md, Memory) and brief
+// audio past retention.retention.audioDays (docs/39-daily-brief.md, Audio).
 async function purgeBriefMemory({ now = new Date() } = {}) {
     const contextsResult = await contexts.purgeContexts(now);
     const decisionsResult = await decisions.purgeDecisions(now);
+    const audioResult = await purgeBriefAudio({ now });
     return {
         contexts: contextsResult.deleted,
         decisions: decisionsResult.deleted,
+        audio: audioResult.deleted,
     };
 }
 

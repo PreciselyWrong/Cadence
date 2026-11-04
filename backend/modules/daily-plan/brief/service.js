@@ -10,6 +10,7 @@ const dailyPlanRepository = require('../repository');
 const dailyPlanService = require('../service');
 const briefRepository = require('./repository');
 const { llmConfigured } = require('./sources');
+const { checkPiper } = require('./piper');
 const {
     normalizeBriefSettings,
     validateBriefSettingsUpdate,
@@ -100,9 +101,33 @@ async function getBrief(user, date) {
     };
 }
 
+// The Piper server is the only source asked from here: a short request to its
+// voice list, with a few seconds timeout. Everything else is read from settings.
+async function voiceSource(voice) {
+    const configured = voice.enabled && Boolean(voice.piperUrl);
+    if (!configured) {
+        return {
+            id: 'voice',
+            configured,
+            working: null,
+            detail: null,
+        };
+    }
+    const check = await checkPiper(voice.piperUrl);
+    if (!check.ok) {
+        return { id: 'voice', configured, working: false, detail: check.code };
+    }
+    return {
+        id: 'voice',
+        configured,
+        working: true,
+        detail: voice.voice ? null : 'voice_not_set',
+    };
+}
+
 // Each optional source: whether it is set up, and whether it worked last time
-// when that can be known without calling it (null otherwise). Reads only; no
-// source is contacted here.
+// when that can be known without calling it (null otherwise). Calendar and
+// agent settings are read only; the Piper server is asked (voiceSource).
 async function getBriefStatus(user) {
     const settings = await getBriefSettings(user);
     const agent = await agentsService.getSettings(user);
@@ -140,12 +165,7 @@ async function getBriefStatus(user) {
             working: null,
             detail: !settings.llm.enabled ? 'disabled' : null,
         },
-        {
-            id: 'voice',
-            configured: Boolean(settings.voice.piperUrl),
-            working: null,
-            detail: null,
-        },
+        await voiceSource(settings.voice),
         {
             id: 'agent',
             configured: agentReady,

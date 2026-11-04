@@ -24,6 +24,11 @@ router.put('/daily-plan/focus-blocks', dailyPlanController.saveFocusBlocks);
 router.get('/daily-plan/brief/settings', dailyPlanController.getBriefSettings);
 router.put('/daily-plan/brief/settings', dailyPlanController.saveBriefSettings);
 router.get('/daily-plan/brief/status', dailyPlanController.getBriefStatus);
+router.get('/daily-plan/brief/voices', dailyPlanController.getBriefVoices);
+router.post(
+    '/daily-plan/brief/voice-preview',
+    dailyPlanController.previewBriefVoice
+);
 router.post(
     '/daily-plan/ai/draft',
     requireFeature('ai'),
@@ -36,6 +41,7 @@ router.post(
 );
 router.get('/daily-plan/:date/brief', dailyPlanController.getBrief);
 router.post('/daily-plan/:date/brief', dailyPlanController.regenerateBrief);
+router.get('/daily-plan/:date/brief/audio', dailyPlanController.getBriefAudio);
 router.post(
     '/daily-plan/:date/brief/decisions',
     dailyPlanController.recordBriefDecision

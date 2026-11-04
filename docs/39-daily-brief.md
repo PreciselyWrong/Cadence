@@ -17,12 +17,12 @@ Plan and decisions: `docs/resume-matinal-plan.md`.
 
 The brief of a day lives on that day's `daily_plans` row (one per user and local date):
 
-| Column | Meaning |
-|---|---|
-| `brief` | JSON below, never HTML |
-| `brief_version` | 1 for the first generation, +1 per "Regenerate" |
-| `brief_status` | `pending`, `partial` (some sources still pending), `ready`, `failed` |
-| `brief_generated_at` | when the current version was built |
+| Column               | Meaning                                                              |
+| -------------------- | -------------------------------------------------------------------- |
+| `brief`              | JSON below, never HTML                                               |
+| `brief_version`      | 1 for the first generation, +1 per "Regenerate"                      |
+| `brief_status`       | `pending`, `partial` (some sources still pending), `ready`, `failed` |
+| `brief_generated_at` | when the current version was built                                   |
 
 Creating the row for a brief leaves `started_at` empty, so the day plan is not "started" and Today keeps offering the planner.
 
@@ -59,7 +59,7 @@ Creating the row for a brief leaves `started_at` empty, so the day plan is not "
   "inbox": [{ "uid": "…", "title": "…", "proposal": { "action": "task" | "note" | "later" | "delete", "reason": "…" } }],
   "resolved": [{ "task_uid": "…", "completed_at": "ISO" }],
   "audio_script": { "chapters": [{ "id": "tonight" | "anticipate" | "replies" | "intro", "title": "…", "text": "…" }] },
-  "audio": { "status": "none" | "pending" | "ready" | "failed", "path": null, "duration_seconds": null, "chapters": [{ "id": "…", "start_seconds": 0 }], "voice": null }
+  "audio": { "status": "none" | "pending" | "ready" | "failed" | "expired", "path": null, "duration_seconds": null, "chapters": [{ "id": "…", "start_seconds": 0 }], "voice": null, "error": null | "piper_unreachable" | "piper_error" | "piper_url_invalid" | "ffmpeg_missing" | "ffmpeg_error" | "render_failed" }
 }
 ```
 
@@ -71,26 +71,26 @@ Event refs are stable strings built by the engine: `event:<feed_uid>:<event uid>
 
 Normalized by `backend/modules/daily-plan/brief/settings.js`; unknown or invalid values fall back to the default. Work hours are **focus blocks** (`ui_settings.planning.focusBlocks`), not a brief setting.
 
-| Key | Default | Notes |
-|---|---|---|
-| `enabled` | `false` | |
-| `time` | `"07:00"` | local `HH:mm`, 5-minute steps |
-| `days` | `[]` | 0 = Sunday … 6 |
-| `sections` | `["verdict","timeline","tonight","moves","anticipate","replies","inbox","resolved"]` | order; a missing key hides the section |
-| `timelineDays` | `3` | 1–7 |
-| `calendarFeedUids` | `[]` | `feed_uid` values of ICS feeds and Google calendars read by the brief |
-| `calendarLookaheadDays` | `7` | 1–14 |
-| `priorities` | `["consequence","blocking","money_deadline","planned_load","long_term"]` | order used by the tonight ranking |
-| `thresholds` | `{ postponements: 3, duplicateSimilarity: 0.8, maxMoves: 3, maxTonight: 3, closedLookbackDays: 7 }` | |
-| `capacity.evening` | `{}` | per weekday `"0"`–`"6"`: `{ start: "HH:mm", end: "HH:mm", minutes }`; missing = no evening capacity shown |
-| `capacity.dayNotes` | `{}` | per weekday: short text shown on the timeline (e.g. partial remote day) |
-| `retention` | `{ decisionsDays: 90, audioDays: 7 }` | |
-| `alerts` | `{ disabled: [], noise: { minVotes: 3, ratio: 0.7 } }` | alert types switched off by hand; noise rule below |
-| `writing` | `{ tone: "neutral", signature: "", instructions: "" }` | used by the optional LLM only |
-| `llm` | `{ enabled: false }` | provider = Profile › AI Assistant |
-| `voice` | `{ enabled: false, piperUrl: "", voice: "", speed: 1, dictionary: [] }` | dictionary: `[{ from, to }]` |
-| `mail` | `{ enabled: false, accounts: [], excludedAccounts: [], replyWindowDays: 14 }` | read through the mail agent only |
-| `options` | `{ eveningWrapUp: false, telegram: false, sonos: false, weekly: false }` | Android "brief ready" notification is an Android setting |
+| Key                     | Default                                                                                             | Notes                                                                                                     |
+| ----------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `enabled`               | `false`                                                                                             |                                                                                                           |
+| `time`                  | `"07:00"`                                                                                           | local `HH:mm`, 5-minute steps                                                                             |
+| `days`                  | `[]`                                                                                                | 0 = Sunday … 6                                                                                            |
+| `sections`              | `["verdict","timeline","tonight","moves","anticipate","replies","inbox","resolved"]`                | order; a missing key hides the section                                                                    |
+| `timelineDays`          | `3`                                                                                                 | 1–7                                                                                                       |
+| `calendarFeedUids`      | `[]`                                                                                                | `feed_uid` values of ICS feeds and Google calendars read by the brief                                     |
+| `calendarLookaheadDays` | `7`                                                                                                 | 1–14                                                                                                      |
+| `priorities`            | `["consequence","blocking","money_deadline","planned_load","long_term"]`                            | order used by the tonight ranking                                                                         |
+| `thresholds`            | `{ postponements: 3, duplicateSimilarity: 0.8, maxMoves: 3, maxTonight: 3, closedLookbackDays: 7 }` |                                                                                                           |
+| `capacity.evening`      | `{}`                                                                                                | per weekday `"0"`–`"6"`: `{ start: "HH:mm", end: "HH:mm", minutes }`; missing = no evening capacity shown |
+| `capacity.dayNotes`     | `{}`                                                                                                | per weekday: short text shown on the timeline (e.g. partial remote day)                                   |
+| `retention`             | `{ decisionsDays: 90, audioDays: 7 }`                                                               |                                                                                                           |
+| `alerts`                | `{ disabled: [], noise: { minVotes: 3, ratio: 0.7 } }`                                              | alert types switched off by hand; noise rule below                                                        |
+| `writing`               | `{ tone: "neutral", signature: "", instructions: "" }`                                              | used by the optional LLM only                                                                             |
+| `llm`                   | `{ enabled: false }`                                                                                | provider = Profile › AI Assistant                                                                         |
+| `voice`                 | `{ enabled: false, piperUrl: "", voice: "", speed: 1, dictionary: [] }`                             | dictionary: `[{ from, to }]`                                                                              |
+| `mail`                  | `{ enabled: false, accounts: [], excludedAccounts: [], replyWindowDays: 14 }`                       | read through the mail agent only                                                                          |
+| `options`               | `{ eveningWrapUp: false, telegram: false, sonos: false, weekly: false }`                            | Android "brief ready" notification is an Android setting                                                  |
 
 Agent settings (`ui_settings.agents`, secret in `users.agent_api_key`, encrypted with `secretCipher`, shown as last 4 characters): `baseUrl`, `timeoutSeconds` (120), `profiles` `{ mail: "", drafting: "" }`, `triageRules` `[{ id, match: { from, label, type }, instruction, mode: "propose" | "off" }]`.
 
@@ -98,17 +98,20 @@ Agent settings (`ui_settings.agents`, secret in `users.agent_api_key`, encrypted
 
 All routes exist under `/api` and `/api/v1`.
 
-| Route | |
-|---|---|
-| `GET /daily-plan/:date/brief` | `{ brief, version, status, generated_at, tasks }`; `brief: null` when none exists |
-| `POST /daily-plan/:date/brief` | explicit regeneration: new version |
-| `GET /daily-plan/brief/settings`, `PUT /daily-plan/brief/settings` | normalized settings; `PUT` merges and validates |
-| `GET /daily-plan/brief/status` | each source: configured, missing, working, last error |
-| `POST /daily-plan/:date/brief/decisions` | records a decision on a proposal (`kind`, `target_type`, `target_ref`, `proposal`, `fingerprint`, `decision`, `reason?`, `idempotency_key`) |
-| `POST /daily-plan/:date/brief/answers` | answers a question: `{ question_key, target: {scope, ref}, answer: 'yes' \| 'no' \| text, idempotency_key }`; writes the linked context and a `question` decision |
-| `GET /daily-plan/brief/contexts?scope=&target_ref=` | the user's linked contexts, optionally filtered |
-| `PATCH /daily-plan/brief/contexts/:uid` | `{ text }` |
-| `DELETE /daily-plan/brief/contexts/:uid` | `204` |
+| Route                                                              |                                                                                                                                                                   |
+| ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET /daily-plan/:date/brief`                                      | `{ brief, version, status, generated_at, tasks }`; `brief: null` when none exists                                                                                 |
+| `POST /daily-plan/:date/brief`                                     | explicit regeneration: new version                                                                                                                                |
+| `GET /daily-plan/brief/settings`, `PUT /daily-plan/brief/settings` | normalized settings; `PUT` merges and validates                                                                                                                   |
+| `GET /daily-plan/brief/status`                                     | each source: configured, missing, working, last error (the voice source asks the Piper server for its voices)                                                     |
+| `GET /daily-plan/:date/brief/audio`                                | the MP3 of the current version (`audio/mpeg`, byte ranges); `404` when none is ready                                                                              |
+| `GET /daily-plan/brief/voices`                                     | `{ voices: [id] }` from the user's Piper server; `502` `{ error }` when it does not answer                                                                        |
+| `POST /daily-plan/brief/voice-preview`                             | `{ voice, speed, text? }` (text at most 200 characters): a sample, `audio/mpeg` (`audio/wav` without ffmpeg), nothing stored                                      |
+| `POST /daily-plan/:date/brief/decisions`                           | records a decision on a proposal (`kind`, `target_type`, `target_ref`, `proposal`, `fingerprint`, `decision`, `reason?`, `idempotency_key`)                       |
+| `POST /daily-plan/:date/brief/answers`                             | answers a question: `{ question_key, target: {scope, ref}, answer: 'yes' \| 'no' \| text, idempotency_key }`; writes the linked context and a `question` decision |
+| `GET /daily-plan/brief/contexts?scope=&target_ref=`                | the user's linked contexts, optionally filtered                                                                                                                   |
+| `PATCH /daily-plan/brief/contexts/:uid`                            | `{ text }`                                                                                                                                                        |
+| `DELETE /daily-plan/brief/contexts/:uid`                           | `204`                                                                                                                                                             |
 
 ## Engine
 
@@ -117,8 +120,8 @@ All routes exist under `/api` and `/api/v1`.
 - `settings.js`: defaults, normalization, validation.
 - `collect.js`: reads the inputs (open tasks today, overdue, upcoming within the lookahead, inbox, tasks closed in `closedLookbackDays` with their notes, events of the selected calendars, focus blocks and exceptions, postponements from `review/postponements.js`, live contexts, decisions and feedback from the memory below, replies from the mail agent).
 - `rules/*.js`: **pure functions** of `(input, settings, today)`; one file per rule, each unit-tested.
-- `build.js`: assembles the JSON from the rules; `writer.js`: optional LLM rewrite of `verdict.text` and reasons, falling back to the rules text on any error.
-- `generate.js`: `generateBrief(user, date, { reason })`. A job run keeps an existing brief; a manual run makes a new version. A failed run sets `brief_status = failed` and keeps the previous brief; the job does not retry it, "Regenerate" does. Replies from the mail agent arrive afterwards and update only `replies`, `counters.replies` and the mail source.
+- `build.js`: assembles the JSON from the rules; `writer.js`: optional LLM rewrite of `verdict.text` and reasons, falling back to the rules text on any error. `script.js`: `buildAudioScript`, the spoken script. `audio.js`, `piper.js`, `wav.js`: audio rendering, Piper client, WAV helpers (see Audio).
+- `generate.js`: `generateBrief(user, date, { reason })`. A job run keeps an existing brief; a manual run makes a new version. A failed run sets `brief_status = failed` and keeps the previous brief; the job does not retry it, "Regenerate" does. Replies from the mail agent arrive afterwards and update only `replies`, `counters.replies` and the mail source. The audio script is built with the brief, and the audio renders in the background after it.
 - `job.js`: `generateDueBriefs({ now })`, run every 5 minutes by `taskScheduler.js` (`daily_brief`).
 - `sources.js`: configuration checks used by `GET /daily-plan/brief/status`.
 
@@ -135,6 +138,50 @@ All routes exist under `/api` and `/api/v1`.
 - **Contexts**: before producing a question or an alert, the engine drops it when a live context exists for its target.
 - **Refused and ignored moves**: a move refused for a day is never proposed for that day again; a move left without answer is ignored by the next brief and not repeated identically (same task, same day).
 - **Noise**: a card type with at least `alerts.noise.minVotes` votes, of which at least `alerts.noise.ratio` say "noise", is dropped from `anticipate`.
+
+## Audio
+
+The brief is read aloud by a Piper server on the user's network. The script is built with the brief, so every client speaks the same text, and the Android text-to-speech fallback reads it too.
+
+### Script (`script.js`)
+
+- Four chapters in French, written for the ear: `intro` (date and verdict), `tonight` (ordinal list with durations), `anticipate` (the questions), `replies` (count and senders). An empty chapter is left out.
+- Target 60 to 90 seconds: at most 230 words. Lists are trimmed from the end (`anticipate`, then reply senders, then `tonight`) until the script fits; the leads still state the full counts.
+- Numbers, durations and dates are spelled out in French, because Piper does not normalize digits: `speakDuration(90)` is "une heure trente", `speakTime(630)` is "dix heures trente", `0` and `720` are "minuit" and "midi". The date is "mercredi quatre novembre".
+- The verdict is spoken from the counters, not from `verdict.text`: an LLM rewrite of the verdict is not read.
+- External text (task names, senders, questions) loses control characters and `[[` / `]]` before it is spoken.
+- `settings.voice.dictionary` is applied last, as whole-word, case-insensitive replacements.
+- Task titles come from the task map given at generation; without it the tonight list says "une tâche".
+
+### Rendering (`audio.js`)
+
+- Starts after the brief is saved, when the voice is enabled with an address and a voice. `audio.status` is `pending` meanwhile, then `ready` or `failed`. The audio renders once per version, from that version's script: replies that arrive later are not spoken.
+- Each chapter is synthesized by Piper; the WAV clips are joined with 0.8 s of silence and encoded to MP3 (mono, 48 kbit/s) by `ffmpeg`, spawned with an argument array and fed through stdin/stdout. `chapters[].start_seconds` comes from the clip durations.
+- ffmpeg is looked for once per process. Without it the render fails with `ffmpeg_missing`, and the voice preview answers WAV instead of MP3.
+- A failure sets `audio.status = 'failed'` and `audio.error` to a code (`piper_unreachable`, `piper_error`, `piper_url_invalid`, `ffmpeg_missing`, `ffmpeg_error`, `render_failed`). The brief stays usable. The job does not retry; "Regenerate" renders again.
+- The file is kept only if the day still holds the same `brief_version`; a version replaced meanwhile removes its file.
+
+### Piper contract (`piper.js`)
+
+Piper's HTTP server (`python -m piper.http_server`, see `docker/piper/README.md`):
+
+- `POST {piperUrl}/synthesize` with `{ text, voice, length_scale }`, answers a WAV. `length_scale = 1 / speed`; speed is 0.5 to 2.
+- `GET {piperUrl}/voices`: the voice ids (voice picker, `checkPiper`).
+
+The address must be http(s), without credentials, and not a link-local or cloud metadata host (the guard of the agent address, `isLinkLocalOrMetadataHost`). Private and loopback addresses are allowed: Piper runs on the LAN. Requests time out (60 s to synthesize, 3 s to check), refuse redirects, and never log their text. The script only goes to the configured address.
+
+### Storage and access
+
+- File: `<TUDUDI_UPLOAD_PATH>/briefs/<user uid>/<date>-v<version>.mp3`; folder mode 0700, file mode 0600. The row keeps the relative `audio.path`.
+- Not public: the static uploads route refuses the `briefs` category (`uploadsAccessControl`). The owner gets it from `GET /daily-plan/:date/brief/audio`, which supports byte ranges (`206`, `416`) for seeking, and only for the path of the current version.
+
+### Retention
+
+- `brief_purge` (02:30 UTC) deletes the MP3 files older than the owner's `retention.audioDays` (default 7) and sets their brief's `audio.status` to `expired`. A folder whose owner no longer exists keeps the default.
+
+### Fallback
+
+Clients play the audio when `audio.status` is `ready`. Otherwise (`none`, `pending`, `failed`, `expired`) they read `audio_script` with the device's text-to-speech, or stay silent.
 
 ## Mail
 

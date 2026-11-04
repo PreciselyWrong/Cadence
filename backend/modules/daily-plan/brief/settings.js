@@ -356,6 +356,22 @@ function normalizeBriefSettings(saved) {
     return normalizeValue(SCHEMA, saved);
 }
 
+// The normalized brief settings of a stored ui_settings value (JSON text or an
+// object, as the database returns it).
+function briefSettingsFromUiSettings(value) {
+    let parsed = value;
+    if (typeof value === 'string') {
+        try {
+            parsed = JSON.parse(value);
+        } catch {
+            parsed = {};
+        }
+    }
+    return normalizeBriefSettings(
+        isPlainObject(parsed) ? parsed.brief : undefined
+    );
+}
+
 // Throws ValidationError for a patch the UI should not have sent.
 function validateBriefSettingsUpdate(patch) {
     if (!isPlainObject(patch)) {
@@ -393,6 +409,7 @@ module.exports = {
     PRIORITIES,
     ALERT_TYPES,
     normalizeBriefSettings,
+    briefSettingsFromUiSettings,
     validateBriefSettingsUpdate,
     mergeBriefSettings,
 };

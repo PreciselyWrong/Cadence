@@ -27,6 +27,11 @@ const METADATA_HOSTNAMES = new Set([
 
 const DEFAULT_TIMEOUT_SECONDS = 120;
 
+// Cloud metadata names and link-local addresses: never a service Cadence calls.
+function isLinkLocalOrMetadataHost(host) {
+    return METADATA_HOSTNAMES.has(host) || isLinkLocalIp(host);
+}
+
 function defaultSettings() {
     return {
         baseUrl: '',
@@ -78,7 +83,7 @@ function validateBaseUrl(value) {
     }
 
     const host = url.hostname.replace(/^\[|\]$/g, '').toLowerCase();
-    if (METADATA_HOSTNAMES.has(host) || isLinkLocalIp(host)) {
+    if (isLinkLocalOrMetadataHost(host)) {
         throw invalid(
             'baseUrl must not point to a link-local or metadata host'
         );
@@ -206,6 +211,7 @@ function validateAgentSettings(input) {
 
 module.exports = {
     DEFAULT_TIMEOUT_SECONDS,
+    isLinkLocalOrMetadataHost,
     MAX_TRIAGE_RULES,
     defaultSettings,
     normalizeAgentSettings,

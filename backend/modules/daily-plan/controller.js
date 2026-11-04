@@ -1,13 +1,18 @@
 'use strict';
 
+const path = require('path');
 const dailyPlanService = require('./service');
 const dailyPlanAi = require('./ai');
 const briefService = require('./brief/service');
 const { generateBrief } = require('./brief/generate');
 const decisions = require('./brief/decisions');
 const contexts = require('./brief/contexts');
+const briefRepository = require('./brief/repository');
+const briefAudio = require('./brief/audio');
+const { PiperError } = require('./brief/piper');
 const { getSafeTimezone } = require('../../utils/timezone-utils');
 const { UnauthorizedError, ValidationError } = require('../../shared/errors');
+const { getConfig } = require('../../config/config');
 
 function requireUser(req) {
     if (!req.currentUser)
@@ -21,6 +26,20 @@ function briefDateOf(user, date) {
         date,
         getSafeTimezone(user.timezone)
     );
+}
+
+// Piper and ffmpeg failures are answered with their code; the brief itself
+// is never affected by them.
+function sendAudioError(res, error, next) {
+    if (error instanceof PiperError) {
+        res.status(502).json({ error: error.code });
+        return;
+    }
+    if (error?.name === 'AudioError') {
+        res.status(500).json({ error: error.code });
+        return;
+    }
+    next(error);
 }
 
 function requireIdempotencyKey(body) {
@@ -254,6 +273,59 @@ const dailyPlanController = {
             res.status(204).end();
         } catch (err) {
             next(err);
+        }
+    },
+
+    // The MP3 of the day's current brief version (byte ranges supported).
+    async getBriefAudio(req, res, next) {
+        try {
+            const user = requireUser(req);
+            const planDate = briefDateOf(user, req.params.date);
+            const row = await briefRepository.findBriefRow(user.id, planDate);
+            const audio = row?.brief?.audio;
+            const served =
+                audio?.status === 'ready' &&
+                audio.path ===
+                    briefAudio.audioRelativePath(
+                        user.uid,
+                        planDate,
+                        row.brief_version
+                    ) &&
+                (await briefAudio.sendBriefAudio(
+                    req,
+                    res,
+                    path.join(getConfig().uploadPath, audio.path)
+                ));
+            if (!served) res.status(404).json({ error: 'audio_not_found' });
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    // The voices of the user's Piper server.
+    async getBriefVoices(req, res, next) {
+        try {
+            const user = requireUser(req);
+            const voices = await briefAudio.listVoicesForUser(user);
+            res.json({ voices });
+        } catch (err) {
+            sendAudioError(res, err, next);
+        }
+    },
+
+    // A short sample in a voice, with the speed being tried. Nothing is stored.
+    async previewBriefVoice(req, res, next) {
+        try {
+            const user = requireUser(req);
+            const { body, contentType } = await briefAudio.previewVoice(
+                user,
+                req.body
+            );
+            res.setHeader('Content-Type', contentType);
+            res.setHeader('Cache-Control', 'no-store');
+            res.send(body);
+        } catch (err) {
+            sendAudioError(res, err, next);
         }
     },
 

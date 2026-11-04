@@ -98,6 +98,21 @@ class DailyBriefRepository {
         });
     }
 
+    async findPlanRowByDate(userId, planDate) {
+        return DailyPlan.findOne({
+            where: { user_id: userId, plan_date: planDate },
+            attributes: ['id', ...BRIEF_COLUMNS],
+        });
+    }
+
+    // Brief audio purge: the owner of a storage folder, named by the user uid.
+    async findUserByUid(uid) {
+        return User.findOne({
+            where: { uid },
+            attributes: ['id', 'ui_settings'],
+        });
+    }
+
     // Only tasks the user can see now; a task whose share was revoked comes
     // back as "not found" in the brief, like in the planner.
     async findVisibleTasksByUids(visibleWhere, uids) {
@@ -225,7 +240,7 @@ class DailyBriefRepository {
     // in code: ui_settings is JSON and its shape differs per database.
     async findAllUsersForBriefJob() {
         return User.findAll({
-            attributes: ['id', 'timezone', 'ui_settings'],
+            attributes: ['id', 'uid', 'timezone', 'ui_settings'],
         });
     }
 }
