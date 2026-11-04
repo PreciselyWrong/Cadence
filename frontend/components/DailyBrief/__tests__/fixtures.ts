@@ -3,6 +3,8 @@ import {
     BriefTaskState,
     DailyBrief,
     DailyBriefResponse,
+    DailyEvening,
+    DailyEveningResponse,
 } from '../../../utils/dailyBriefService';
 
 export const TODAY = '2026-11-04';
@@ -21,6 +23,7 @@ export const SETTINGS: BriefSettings = {
         'inbox',
         'resolved',
     ],
+    evening: { enabled: true, switchTime: '18:00' },
     timelineDays: 3,
     calendarFeedUids: [],
     calendarLookaheadDays: 7,
@@ -193,4 +196,58 @@ export const i18nMock = () => {
         );
     };
     return { useTranslation: () => ({ t, i18n: { language: 'fr' } }) };
+};
+
+export const DONE_TASK: BriefTaskState = {
+    uid: 't3',
+    name: 'Écrire le compte rendu',
+    status: 'done',
+    due_date: TODAY,
+    completed_at: '2026-11-04T16:00:00.000Z',
+    estimated_minutes: 20,
+    priority: null,
+    project_name: null,
+};
+
+export const EVENING: DailyEvening = {
+    schema: 1,
+    date: TODAY,
+    generated_at: '2026-11-04T17:00:00.000Z',
+    verdict: {
+        text: '1 tâche terminée aujourd’hui, 1 glisse vers demain.',
+        by: 'rules',
+    },
+    counters: {
+        done: 1,
+        slipped: 1,
+        tonight_minutes: 40,
+        capacity_minutes: 90,
+    },
+    done: ['t3'],
+    tonight: [{ task_uid: 't1', minutes: 40 }],
+    slipped: [
+        {
+            task_uid: 't2',
+            reason: 'Due aujourd’hui, pas dans la liste de ce soir',
+        },
+    ],
+    carry_over: ['t2', 't1'],
+    tomorrow: {
+        date: '2026-11-05',
+        work: [],
+        events: [],
+        task_uids: [],
+        load: {
+            planned_minutes: 0,
+            capacity_minutes: null,
+            hypothesis: true,
+        },
+        flags: [],
+    },
+};
+
+export const EVENING_RESPONSE: DailyEveningResponse = {
+    date: TODAY,
+    evening: EVENING,
+    tasks: { t1: TASKS.t1, t2: TASKS.t2, t3: DONE_TASK },
 };

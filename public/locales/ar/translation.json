@@ -5690,7 +5690,12 @@
       "saved": "تم حفظ الإعدادات",
       "saveError": "تعذّر حفظ الإعدادات.",
       "loadError": "تعذّر تحميل إعدادات الموجز.",
-      "eveningRemove": "إزالة"
+      "eveningRemove": "إزالة",
+      "review": {
+        "title": "مراجعة المساء",
+        "enabled": "عرض مراجعة المساء بعد وقت التبديل",
+        "switchTime": "وقت التبديل إلى مراجعة المساء"
+      }
     },
     "hours": "{{hours}} س",
     "hoursMinutes": "{{hours}} س {{rest}}",
@@ -5765,6 +5770,28 @@
       "edit": "تعديل السياق",
       "save": "حفظ",
       "delete": "حذف"
+    },
+    "evening": {
+      "switchToMorning": "عرض ملخص الصباح",
+      "switchToEvening": "عرض مراجعة المساء",
+      "counters": {
+        "done": "منجزة",
+        "tonight": "الليلة",
+        "slipped": "مؤجلة"
+      },
+      "sections": {
+        "done": "أُنجز اليوم",
+        "slipped": "تأخرت",
+        "tomorrow": "غدًا"
+      },
+      "carry": "نقل إلى الغد",
+      "carried": "نُقلت إلى الغد",
+      "carryDone": "تم نقل « {{name}} » إلى الغد",
+      "carryError": "تعذّر نقل المهمة.",
+      "emptyTonight": "لا شيء آخر للقيام به الليلة.",
+      "emptyDone": "لم يُنجز شيء اليوم.",
+      "emptySlipped": "لا شيء متأخر.",
+      "loadError": "تعذّر تحميل مراجعة المساء."
     }
   },
   "agents": {

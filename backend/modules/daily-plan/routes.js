@@ -42,6 +42,7 @@ router.post(
 router.get('/daily-plan/:date/brief', dailyPlanController.getBrief);
 router.post('/daily-plan/:date/brief', dailyPlanController.regenerateBrief);
 router.get('/daily-plan/:date/brief/audio', dailyPlanController.getBriefAudio);
+router.get('/daily-plan/:date/evening', dailyPlanController.getEvening);
 router.post(
     '/daily-plan/:date/brief/decisions',
     dailyPlanController.recordBriefDecision

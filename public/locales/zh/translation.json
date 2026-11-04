@@ -5626,7 +5626,12 @@
       "saved": "设置已保存",
       "saveError": "无法保存设置。",
       "loadError": "无法加载简报设置。",
-      "eveningRemove": "移除"
+      "eveningRemove": "移除",
+      "review": {
+        "title": "晚间回顾",
+        "enabled": "切换时间后显示晚间回顾",
+        "switchTime": "切换到晚间回顾的时间"
+      }
     },
     "hours": "{{hours}} 小时",
     "hoursMinutes": "{{hours}} 小时 {{rest}}",
@@ -5701,6 +5706,28 @@
       "edit": "编辑上下文",
       "save": "保存",
       "delete": "删除"
+    },
+    "evening": {
+      "switchToMorning": "查看晨间简报",
+      "switchToEvening": "查看晚间回顾",
+      "counters": {
+        "done": "已完成",
+        "tonight": "今晚",
+        "slipped": "已顺延"
+      },
+      "sections": {
+        "done": "今天已完成",
+        "slipped": "顺延",
+        "tomorrow": "明天"
+      },
+      "carry": "顺延到明天",
+      "carried": "已顺延到明天",
+      "carryDone": "「{{name}}」已顺延到明天",
+      "carryError": "无法顺延该任务。",
+      "emptyTonight": "今晚没有其他事项。",
+      "emptyDone": "今天没有完成的事项。",
+      "emptySlipped": "没有顺延的事项。",
+      "loadError": "无法加载晚间回顾。"
     }
   },
   "agents": {

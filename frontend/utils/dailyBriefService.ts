@@ -155,10 +155,52 @@ export interface DailyBriefResponse {
     tasks: Record<string, BriefTaskState>;
 }
 
+// The evening review (docs/39-daily-brief.md, Evening review). Built on each
+// request from the current state; nothing is stored.
+export interface EveningSlipped {
+    task_uid: string;
+    reason: string;
+}
+
+export interface EveningTonightItem {
+    task_uid: string;
+    minutes: number;
+}
+
+export interface DailyEvening {
+    schema: number;
+    date: string;
+    generated_at: string;
+    verdict: { text: string; by: 'rules' };
+    counters: {
+        done: number;
+        slipped: number;
+        tonight_minutes: number;
+        capacity_minutes: number | null;
+    };
+    done: string[];
+    tonight: EveningTonightItem[];
+    slipped: EveningSlipped[];
+    carry_over: string[];
+    tomorrow: BriefTimelineDay;
+    audio_script?: unknown;
+}
+
+export interface DailyEveningResponse {
+    date: string;
+    evening: DailyEvening;
+    tasks: Record<string, BriefTaskState>;
+}
+
 export interface BriefEveningWindow {
     start: string;
     end: string;
     minutes: number;
+}
+
+export interface BriefEveningSettings {
+    enabled: boolean;
+    switchTime: string;
 }
 
 export interface BriefSettings {
@@ -166,6 +208,7 @@ export interface BriefSettings {
     time: string;
     days: number[];
     sections: string[];
+    evening: BriefEveningSettings;
     timelineDays: number;
     calendarFeedUids: string[];
     calendarLookaheadDays: number;
@@ -333,6 +376,18 @@ export const regenerateDailyBrief = async (
             'POST',
             {},
             'Failed to generate the daily brief.'
+        )
+    ).json();
+
+export const fetchDailyEvening = async (
+    date: string
+): Promise<DailyEveningResponse> =>
+    (
+        await jsonRequest(
+            `daily-plan/${encodeURIComponent(date)}/evening`,
+            'GET',
+            undefined,
+            'Failed to load the evening review.'
         )
     ).json();
 

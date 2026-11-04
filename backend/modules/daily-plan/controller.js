@@ -177,6 +177,15 @@ const dailyPlanController = {
         }
     },
 
+    async getEvening(req, res, next) {
+        try {
+            const user = requireUser(req);
+            res.json(await briefService.getEvening(user, req.params.date));
+        } catch (err) {
+            next(err);
+        }
+    },
+
     async getBriefStatus(req, res, next) {
         try {
             const user = requireUser(req);

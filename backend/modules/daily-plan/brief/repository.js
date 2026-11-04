@@ -136,13 +136,19 @@ class DailyBriefRepository {
 
     // Open tasks that the brief reads: due by `lastDay`, overdue, in progress,
     // or planned on one of the plan days. Habits are never listed here.
-    async findCandidateTasks(visibleWhere, { lastDayEnd, plannedTaskIds }) {
+    async findCandidateTasks(
+        visibleWhere,
+        { lastDayEnd, plannedTaskIds, extraUids = [] }
+    ) {
         const relevant = [
             { due_date: { [Op.lte]: lastDayEnd } },
             { status: Task.STATUS.IN_PROGRESS },
         ];
         if (plannedTaskIds.length > 0) {
             relevant.push({ id: { [Op.in]: plannedTaskIds } });
+        }
+        if (extraUids.length > 0) {
+            relevant.push({ uid: { [Op.in]: extraUids } });
         }
         return Task.findAll({
             where: {

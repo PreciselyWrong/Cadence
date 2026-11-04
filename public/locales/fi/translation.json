@@ -5626,7 +5626,12 @@
       "saved": "Asetukset tallennettu",
       "saveError": "Asetuksia ei voitu tallentaa.",
       "loadError": "Yhteenvedon asetuksia ei voitu ladata.",
-      "eveningRemove": "Poista"
+      "eveningRemove": "Poista",
+      "review": {
+        "title": "Illan katsaus",
+        "enabled": "Näytä illan katsaus vaihtoajan jälkeen",
+        "switchTime": "Illan katsauksen vaihtoaika"
+      }
     },
     "hours": "{{hours}} h",
     "hoursMinutes": "{{hours}} h {{rest}}",
@@ -5701,6 +5706,28 @@
       "edit": "Muokkaa kontekstia",
       "save": "Tallenna",
       "delete": "Poista"
+    },
+    "evening": {
+      "switchToMorning": "Näytä aamun yhteenveto",
+      "switchToEvening": "Näytä illan katsaus",
+      "counters": {
+        "done": "tehty",
+        "tonight": "tänä iltana",
+        "slipped": "siirtyi"
+      },
+      "sections": {
+        "done": "Tehty tänään",
+        "slipped": "Siirtyy",
+        "tomorrow": "Huomenna"
+      },
+      "carry": "Siirrä huomiseen",
+      "carried": "Siirretty huomiseen",
+      "carryDone": "« {{name}} » siirretty huomiseen",
+      "carryError": "Tehtävää ei voitu siirtää.",
+      "emptyTonight": "Tänä iltana ei ole enää tehtävää.",
+      "emptyDone": "Tänään ei ole valmistunut mitään.",
+      "emptySlipped": "Mitään ei siirry.",
+      "loadError": "Illan katsausta ei voitu ladata."
     }
   },
   "agents": {

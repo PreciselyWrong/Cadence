@@ -192,4 +192,4 @@ function buildBrief(input, settings) {
     };
 }
 
-module.exports = { buildBrief };
+module.exports = { buildBrief, timelineDay };

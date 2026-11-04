@@ -310,7 +310,12 @@
       "saved": "Nastavenia uložené",
       "saveError": "Nastavenia sa nepodarilo uložiť.",
       "loadError": "Nastavenia prehľadu sa nepodarilo načítať.",
-      "eveningRemove": "Odstrániť"
+      "eveningRemove": "Odstrániť",
+      "review": {
+        "title": "Večerný prehľad",
+        "enabled": "Zobraziť večerný prehľad po čase prepnutia",
+        "switchTime": "Čas prepnutia na večerný prehľad"
+      }
     },
     "hours": "{{hours}} h",
     "hoursMinutes": "{{hours}} h {{rest}}",
@@ -385,6 +390,28 @@
       "edit": "Upraviť kontext",
       "save": "Uložiť",
       "delete": "Odstrániť"
+    },
+    "evening": {
+      "switchToMorning": "Zobraziť ranný prehľad",
+      "switchToEvening": "Zobraziť večerný prehľad",
+      "counters": {
+        "done": "hotové",
+        "tonight": "dnes večer",
+        "slipped": "odsunuté"
+      },
+      "sections": {
+        "done": "Hotové dnes",
+        "slipped": "Posúva sa",
+        "tomorrow": "Zajtra"
+      },
+      "carry": "Presunúť na zajtra",
+      "carried": "Presunuté na zajtra",
+      "carryDone": "« {{name}} » presunuté na zajtra",
+      "carryError": "Úlohu sa nepodarilo presunúť.",
+      "emptyTonight": "Dnes večer nie je nič ďalšie.",
+      "emptyDone": "Dnes nič dokončené.",
+      "emptySlipped": "Nič sa neposúva.",
+      "loadError": "Večerný prehľad sa nepodarilo načítať."
     }
   },
   "agents": {

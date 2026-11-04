@@ -5626,7 +5626,12 @@
       "saved": "Ajustes guardados",
       "saveError": "No se pudieron guardar los ajustes.",
       "loadError": "No se pudo cargar la configuración del resumen.",
-      "eveningRemove": "Quitar"
+      "eveningRemove": "Quitar",
+      "review": {
+        "title": "Balance de la noche",
+        "enabled": "Mostrar el balance de la noche tras la hora de cambio",
+        "switchTime": "Hora de cambio al balance"
+      }
     },
     "hours": "{{hours}} h",
     "hoursMinutes": "{{hours}} h {{rest}}",
@@ -5701,6 +5706,28 @@
       "edit": "Editar contexto",
       "save": "Guardar",
       "delete": "Eliminar"
+    },
+    "evening": {
+      "switchToMorning": "Ver el resumen de la mañana",
+      "switchToEvening": "Ver el balance de la noche",
+      "counters": {
+        "done": "hechas",
+        "tonight": "esta noche",
+        "slipped": "aplazadas"
+      },
+      "sections": {
+        "done": "Hecho hoy",
+        "slipped": "Se aplaza",
+        "tomorrow": "Mañana"
+      },
+      "carry": "Pasar a mañana",
+      "carried": "Pasada a mañana",
+      "carryDone": "« {{name}} » pasada a mañana",
+      "carryError": "No se pudo pasar la tarea.",
+      "emptyTonight": "Nada más que hacer esta noche.",
+      "emptyDone": "Nada terminado hoy.",
+      "emptySlipped": "Nada se aplaza.",
+      "loadError": "No se pudo cargar el balance de la noche."
     }
   },
   "agents": {

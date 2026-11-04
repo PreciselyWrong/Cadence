@@ -5635,7 +5635,12 @@
       "saved": "Einstellungen gespeichert",
       "saveError": "Einstellungen konnten nicht gespeichert werden.",
       "loadError": "Briefing-Einstellungen konnten nicht geladen werden.",
-      "eveningRemove": "Entfernen"
+      "eveningRemove": "Entfernen",
+      "review": {
+        "title": "Abendrückblick",
+        "enabled": "Abendrückblick nach der Umschaltzeit anzeigen",
+        "switchTime": "Umschaltzeit auf den Abendrückblick"
+      }
     },
     "hours": "{{hours}} Std.",
     "hoursMinutes": "{{hours}} Std. {{rest}}",
@@ -5710,6 +5715,28 @@
       "edit": "Kontext bearbeiten",
       "save": "Speichern",
       "delete": "Löschen"
+    },
+    "evening": {
+      "switchToMorning": "Zum Morgenüberblick",
+      "switchToEvening": "Zum Abendrückblick",
+      "counters": {
+        "done": "erledigt",
+        "tonight": "heute Abend",
+        "slipped": "verschoben"
+      },
+      "sections": {
+        "done": "Heute erledigt",
+        "slipped": "Rutscht",
+        "tomorrow": "Morgen"
+      },
+      "carry": "Auf morgen verschieben",
+      "carried": "Auf morgen verschoben",
+      "carryDone": "« {{name}} » auf morgen verschoben",
+      "carryError": "Die Aufgabe konnte nicht verschoben werden.",
+      "emptyTonight": "Heute Abend ist nichts mehr zu tun.",
+      "emptyDone": "Heute nichts erledigt.",
+      "emptySlipped": "Nichts ist verschoben.",
+      "loadError": "Der Abendrückblick konnte nicht geladen werden."
     }
   },
   "agents": {

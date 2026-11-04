@@ -5639,7 +5639,12 @@
       "saved": "Impostazioni salvate",
       "saveError": "Impossibile salvare le impostazioni.",
       "loadError": "Impossibile caricare le impostazioni del briefing.",
-      "eveningRemove": "Rimuovi"
+      "eveningRemove": "Rimuovi",
+      "review": {
+        "title": "Bilancio serale",
+        "enabled": "Mostra il bilancio serale dopo l’orario di passaggio",
+        "switchTime": "Orario di passaggio al bilancio"
+      }
     },
     "hours": "{{hours}} h",
     "hoursMinutes": "{{hours}} h {{rest}}",
@@ -5714,6 +5719,28 @@
       "edit": "Modifica contesto",
       "save": "Salva",
       "delete": "Elimina"
+    },
+    "evening": {
+      "switchToMorning": "Vedi il riepilogo del mattino",
+      "switchToEvening": "Vedi il bilancio serale",
+      "counters": {
+        "done": "fatte",
+        "tonight": "stasera",
+        "slipped": "rinviate"
+      },
+      "sections": {
+        "done": "Fatto oggi",
+        "slipped": "Slittano",
+        "tomorrow": "Domani"
+      },
+      "carry": "Rinvia a domani",
+      "carried": "Rinviata a domani",
+      "carryDone": "« {{name}} » rinviata a domani",
+      "carryError": "Impossibile rinviare l’attività.",
+      "emptyTonight": "Niente altro da fare stasera.",
+      "emptyDone": "Niente di concluso oggi.",
+      "emptySlipped": "Niente slitta.",
+      "loadError": "Impossibile caricare il bilancio serale."
     }
   },
   "agents": {

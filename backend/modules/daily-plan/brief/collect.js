@@ -121,7 +121,10 @@ function mapEvent(event) {
 
 // Due by `dueUntil` (overdue included), in progress, or planned on a day
 // from `today` to `plannedUntil`.
-async function readTasks(user, { today, dueUntil, plannedUntil, timezone }) {
+async function readTasks(
+    user,
+    { today, dueUntil, plannedUntil, timezone, extraUids = [] }
+) {
     const planned = await briefRepository.findPlannedDays(
         user.id,
         today,
@@ -132,6 +135,7 @@ async function readTasks(user, { today, dueUntil, plannedUntil, timezone }) {
         {
             lastDayEnd: getDayBoundsInUTC(dueUntil, timezone).end,
             plannedTaskIds: [...planned.keys()],
+            extraUids,
         }
     );
     const ids = candidates.map((task) => task.id);
@@ -270,7 +274,13 @@ async function readMemory(user, settings, { today, timezone, now }) {
 
 // The input of buildBrief for the user's local day `today` (YYYY-MM-DD,
 // default: today in their timezone), built at the instant `now`.
-async function collectInput(user, settings, { today, now = new Date() } = {}) {
+// `extraTaskUids` are read even when they are not otherwise candidates (the
+// evening review checks whether the morning's tonight tasks are still open).
+async function collectInput(
+    user,
+    settings,
+    { today, now = new Date(), extraTaskUids = [] } = {}
+) {
     const timezone = getSafeTimezone(user.timezone);
     const day = today ?? moment.tz(now, timezone).format('YYYY-MM-DD');
     const eventsLastDay = addDays(day, settings.calendarLookaheadDays);
@@ -295,6 +305,7 @@ async function collectInput(user, settings, { today, now = new Date() } = {}) {
             dueUntil: eventsLastDay,
             plannedUntil: lastDay,
             timezone,
+            extraUids: extraTaskUids,
         }),
         readClosedTasks(user, {
             today: day,

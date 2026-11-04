@@ -5596,7 +5596,12 @@
       "saved": "Settings saved",
       "saveError": "Could not save the settings.",
       "loadError": "Could not load the brief settings.",
-      "eveningRemove": "Remove"
+      "eveningRemove": "Remove",
+      "review": {
+        "title": "Evening review",
+        "enabled": "Show the evening review after the switch time",
+        "switchTime": "Switch to the evening review at"
+      }
     },
     "hours": "{{hours}} h",
     "hoursMinutes": "{{hours}} h {{rest}}",
@@ -5671,6 +5676,28 @@
       "edit": "Edit context",
       "save": "Save",
       "delete": "Delete"
+    },
+    "evening": {
+      "switchToMorning": "See the morning brief",
+      "switchToEvening": "See the evening review",
+      "counters": {
+        "done": "done",
+        "tonight": "tonight",
+        "slipped": "slipped"
+      },
+      "sections": {
+        "done": "Done today",
+        "slipped": "Slipped",
+        "tomorrow": "Tomorrow"
+      },
+      "carry": "Move to tomorrow",
+      "carried": "Moved to tomorrow",
+      "carryDone": "« {{name}} » moved to tomorrow",
+      "carryError": "Could not move the task.",
+      "emptyTonight": "Nothing left to do tonight.",
+      "emptyDone": "Nothing finished today.",
+      "emptySlipped": "Nothing slipped.",
+      "loadError": "Could not load the evening review."
     }
   },
   "agents": {

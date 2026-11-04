@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    act,
     render,
     screen,
     fireEvent,
@@ -13,12 +14,25 @@ import {
     answerBriefQuestion,
     fetchBriefSettings,
     fetchDailyBrief,
+    fetchDailyEvening,
     recordBriefDecision,
     regenerateDailyBrief,
 } from '../../../utils/dailyBriefService';
 import { toggleTaskCompletion, updateTask } from '../../../utils/tasksService';
 import { openTaskPanel } from '../../../store/taskPanelStore';
-import { RESPONSE, SETTINGS, TASKS, TODAY } from './fixtures';
+import {
+    EVENING,
+    EVENING_RESPONSE,
+    RESPONSE,
+    SETTINGS,
+    TASKS,
+    TODAY,
+} from './fixtures';
+import {
+    carryOverTasks,
+    fetchDailyPlan,
+    saveDailyPlanItems,
+} from '../../../utils/dailyPlanService';
 
 jest.mock('react-i18next', () => {
     const t = (
@@ -35,13 +49,22 @@ jest.mock('react-i18next', () => {
 });
 jest.mock('../../../utils/dateUtils', () => ({
     getTodayDateString: () => '2026-11-04',
+    getUserTimezone: () => 'Europe/Paris',
 }));
 jest.mock('../../../utils/dailyBriefService', () => ({
     fetchDailyBrief: jest.fn(),
     fetchBriefSettings: jest.fn(),
+    fetchDailyEvening: jest.fn(),
     regenerateDailyBrief: jest.fn(),
     recordBriefDecision: jest.fn(),
     answerBriefQuestion: jest.fn(),
+}));
+jest.mock('../../../utils/dailyPlanService', () => ({
+    carryOverTasks: jest.fn(),
+    fetchDailyPlan: jest.fn(),
+    saveDailyPlanItems: jest.fn(),
+    toPlanItemInputs: (items: { task_uid: string }[]) =>
+        items.map((item) => ({ task_uid: item.task_uid })),
 }));
 jest.mock('../../../utils/tasksService', () => ({
     toggleTaskCompletion: jest.fn(),
@@ -52,9 +75,14 @@ jest.mock('../../../store/taskPanelStore', () => ({
 }));
 const showUndoToast = jest.fn();
 const showErrorToast = jest.fn();
+const showSuccessToast = jest.fn();
 jest.mock('../../Shared/ToastContext', () => ({
-    useToast: () => ({ showUndoToast, showErrorToast }),
+    useToast: () => ({ showUndoToast, showErrorToast, showSuccessToast }),
 }));
+
+// 10:00 UTC is 11:00 in Paris (morning view); 17:00 UTC is 18:00 (switch).
+const BEFORE_SWITCH = new Date('2026-11-04T10:00:00Z');
+const AT_SWITCH = new Date('2026-11-04T17:00:00Z');
 
 const renderPage = () =>
     render(
@@ -71,6 +99,7 @@ const sectionNames = () =>
 describe('BriefPage', () => {
     beforeEach(() => {
         jest.clearAllMocks();
+        jest.useFakeTimers({ now: BEFORE_SWITCH });
         (fetchDailyBrief as jest.Mock).mockResolvedValue(RESPONSE);
         (fetchBriefSettings as jest.Mock).mockResolvedValue(SETTINGS);
         (recordBriefDecision as jest.Mock).mockResolvedValue({});
@@ -81,6 +110,10 @@ describe('BriefPage', () => {
             completed_at: '2026-11-04T10:00:00Z',
         });
         (updateTask as jest.Mock).mockResolvedValue({});
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
     });
 
     it('renders the verdict, then the sections in the settings order', async () => {
@@ -223,5 +256,189 @@ describe('BriefPage', () => {
         expect(
             screen.getByRole('button', { name: 'Régénérer' })
         ).toBeInTheDocument();
+    });
+});
+
+describe('BriefPage evening review', () => {
+    const MORNING_VERDICT = 'Ce soir, une seule chose compte.';
+    const TOMORROW = '2026-11-05';
+
+    const renderAt = async (now: Date, settings = SETTINGS) => {
+        jest.useFakeTimers({ now });
+        (fetchDailyBrief as jest.Mock).mockResolvedValue(RESPONSE);
+        (fetchBriefSettings as jest.Mock).mockResolvedValue(settings);
+        (fetchDailyEvening as jest.Mock).mockResolvedValue(EVENING_RESPONSE);
+        (fetchDailyPlan as jest.Mock).mockResolvedValue({
+            date: TOMORROW,
+            plan: {
+                uid: 'p',
+                date: TOMORROW,
+                started_at: null,
+                items: [{ task_uid: 'other' }],
+            },
+        });
+        (carryOverTasks as jest.Mock).mockResolvedValue({});
+        (saveDailyPlanItems as jest.Mock).mockResolvedValue({});
+        (toggleTaskCompletion as jest.Mock).mockResolvedValue({
+            ...TASKS.t1,
+            status: 'done',
+            completed_at: '2026-11-04T10:00:00Z',
+        });
+        renderPage();
+    };
+
+    const rowOf = async (name: string) =>
+        (await screen.findByText(name)).closest(
+            '[data-testid="brief-task-row"]'
+        ) as HTMLElement;
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
+    });
+
+    it('shows the evening review by default after the switch time', async () => {
+        await renderAt(AT_SWITCH);
+
+        expect(
+            await screen.findByText(EVENING.verdict.text)
+        ).toBeInTheDocument();
+        expect(screen.queryByText(MORNING_VERDICT)).not.toBeInTheDocument();
+        expect(sectionNames()).toEqual([
+            'Ce soir',
+            'Fait aujourd’hui',
+            'Glisse',
+            'Demain',
+        ]);
+        expect(
+            screen.getByRole('button', { name: 'Voir le résumé du matin' })
+        ).toBeInTheDocument();
+    });
+
+    it('switches to the morning brief and back from the quiet links', async () => {
+        await renderAt(AT_SWITCH);
+        fireEvent.click(
+            await screen.findByRole('button', {
+                name: 'Voir le résumé du matin',
+            })
+        );
+
+        expect(await screen.findByText(MORNING_VERDICT)).toBeInTheDocument();
+        fireEvent.click(
+            screen.getByRole('button', { name: 'Voir le bilan du soir' })
+        );
+        expect(
+            await screen.findByText(EVENING.verdict.text)
+        ).toBeInTheDocument();
+    });
+
+    it('keeps the morning brief before the switch time', async () => {
+        await renderAt(BEFORE_SWITCH);
+
+        expect(await screen.findByText(MORNING_VERDICT)).toBeInTheDocument();
+        expect(fetchDailyEvening).not.toHaveBeenCalled();
+    });
+
+    it('keeps the morning brief all day when the evening review is disabled', async () => {
+        await renderAt(AT_SWITCH, {
+            ...SETTINGS,
+            evening: { enabled: false, switchTime: '18:00' },
+        });
+
+        expect(await screen.findByText(MORNING_VERDICT)).toBeInTheDocument();
+        expect(fetchDailyEvening).not.toHaveBeenCalled();
+        expect(
+            screen.queryByRole('button', { name: 'Voir le bilan du soir' })
+        ).not.toBeInTheDocument();
+    });
+
+    it('ticks a task row at once through the task service', async () => {
+        await renderAt(AT_SWITCH);
+        const row = await rowOf('Envoyer la déclaration');
+        const check = within(row).getByRole('checkbox');
+        expect(check).toHaveAttribute('aria-checked', 'false');
+
+        fireEvent.click(check);
+
+        await waitFor(() =>
+            expect(toggleTaskCompletion).toHaveBeenCalledWith('t1')
+        );
+        await waitFor(() =>
+            expect(within(row).getByRole('checkbox')).toHaveAttribute(
+                'aria-checked',
+                'true'
+            )
+        );
+        expect(showUndoToast).toHaveBeenCalled();
+    });
+
+    it('moves a slipped task to tomorrow and undo takes it off again', async () => {
+        await renderAt(AT_SWITCH);
+        const row = await rowOf('Trier les photos');
+        (fetchDailyPlan as jest.Mock)
+            .mockResolvedValueOnce({
+                date: TOMORROW,
+                plan: {
+                    uid: 'p',
+                    date: TOMORROW,
+                    started_at: null,
+                    items: [{ task_uid: 'other' }],
+                },
+            })
+            .mockResolvedValueOnce({
+                date: TOMORROW,
+                plan: {
+                    uid: 'p',
+                    date: TOMORROW,
+                    started_at: null,
+                    items: [{ task_uid: 'other' }, { task_uid: 't2' }],
+                },
+            });
+
+        fireEvent.click(
+            within(row).getByRole('button', { name: 'Reporter à demain' })
+        );
+
+        await waitFor(() =>
+            expect(carryOverTasks).toHaveBeenCalledWith(TOMORROW, ['t2'])
+        );
+        expect(showUndoToast).toHaveBeenCalledWith(
+            '« Trier les photos » reportée à demain',
+            expect.any(Function)
+        );
+
+        const [, undo] = (showUndoToast as jest.Mock).mock.calls[0];
+        await act(async () => {
+            await undo();
+        });
+
+        expect(saveDailyPlanItems).toHaveBeenCalledWith(TOMORROW, [
+            { task_uid: 'other' },
+        ]);
+    });
+
+    it('does not add a task that tomorrow already holds, and offers no undo', async () => {
+        await renderAt(AT_SWITCH);
+        const row = await rowOf('Trier les photos');
+        (fetchDailyPlan as jest.Mock).mockResolvedValueOnce({
+            date: TOMORROW,
+            plan: {
+                uid: 'p',
+                date: TOMORROW,
+                started_at: null,
+                items: [{ task_uid: 't2' }],
+            },
+        });
+
+        fireEvent.click(
+            within(row).getByRole('button', { name: 'Reporter à demain' })
+        );
+
+        await waitFor(() => expect(showSuccessToast).toHaveBeenCalled());
+        expect(carryOverTasks).not.toHaveBeenCalled();
+        expect(showUndoToast).not.toHaveBeenCalled();
     });
 });

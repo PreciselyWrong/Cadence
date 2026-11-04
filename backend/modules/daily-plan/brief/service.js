@@ -11,6 +11,8 @@ const dailyPlanService = require('../service');
 const briefRepository = require('./repository');
 const { llmConfigured } = require('./sources');
 const { checkPiper } = require('./piper');
+const { collectInput } = require('./collect');
+const { buildEvening } = require('./rules/evening');
 const {
     normalizeBriefSettings,
     validateBriefSettingsUpdate,
@@ -69,8 +71,7 @@ function serializeTask(task) {
 
 // The brief keeps task uids only; this loads each referenced task as it is
 // now, so a task finished elsewhere shows as finished.
-async function loadCurrentTasks(user, brief) {
-    const uids = brief ? taskUidsOf(brief) : [];
+async function loadTasksByUids(user, uids) {
     if (uids.length === 0) return {};
     const visibleWhere = await permissionsService.ownershipOrPermissionWhere(
         'task',
@@ -97,7 +98,42 @@ async function getBrief(user, date) {
         version: brief ? (row.brief_version ?? null) : null,
         status: brief ? (row.brief_status ?? null) : null,
         generated_at: brief ? (row.brief_generated_at ?? null) : null,
-        tasks: await loadCurrentTasks(user, brief),
+        tasks: await loadTasksByUids(user, brief ? taskUidsOf(brief) : []),
+    };
+}
+
+// Every task uid the evening review points at.
+function eveningTaskUids(evening) {
+    const uids = new Set([
+        ...evening.done,
+        ...evening.tonight.map((item) => item.task_uid),
+        ...evening.slipped.map((item) => item.task_uid),
+        ...evening.tomorrow.task_uids,
+    ]);
+    return [...uids];
+}
+
+// The evening review of a day, built from the current state on each call.
+// Reads only: nothing is stored and no task changes.
+async function getEvening(user, date) {
+    const timezone = getSafeTimezone(user.timezone);
+    const planDate = dailyPlanService.resolvePlanDate(date, timezone);
+    const settings = await getBriefSettings(user);
+    const row = await briefRepository.findBriefRow(user.id, planDate);
+    const morningBrief = row?.brief ?? null;
+    const now = new Date();
+    const input = await collectInput(user, settings, {
+        today: planDate,
+        now,
+        extraTaskUids: (morningBrief?.tonight || []).map(
+            (item) => item.task_uid
+        ),
+    });
+    const evening = buildEvening(input, settings, morningBrief, now);
+    return {
+        date: planDate,
+        evening,
+        tasks: await loadTasksByUids(user, eveningTaskUids(evening)),
     };
 }
 
@@ -184,6 +220,7 @@ module.exports = {
     getBriefSettings,
     saveBriefSettings,
     getBrief,
+    getEvening,
     getBriefStatus,
     taskUidsOf,
 };

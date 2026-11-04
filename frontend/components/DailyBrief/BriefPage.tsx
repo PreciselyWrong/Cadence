@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { toggleTaskCompletion, updateTask } from '../../utils/tasksService';
 import { Task } from '../../entities/Task';
-import { getTodayDateString } from '../../utils/dateUtils';
+import { getUserTimezone } from '../../utils/dateUtils';
 import { openTaskPanel } from '../../store/taskPanelStore';
 import { useToast } from '../Shared/ToastContext';
 import {
@@ -12,14 +12,28 @@ import {
     BriefSettings,
     BriefTaskState,
     DailyBriefResponse,
+    DailyEveningResponse,
     answerBriefQuestion,
     fetchBriefSettings,
     fetchDailyBrief,
+    fetchDailyEvening,
     recordBriefDecision,
     regenerateDailyBrief,
 } from '../../utils/dailyBriefService';
+import {
+    carryOverTasks,
+    fetchDailyPlan,
+    saveDailyPlanItems,
+    toPlanItemInputs,
+} from '../../utils/dailyPlanService';
 import BriefTimeline from './BriefTimeline';
-import { capitalizeFirst } from './briefTime';
+import BriefEvening from './BriefEvening';
+import {
+    capitalizeFirst,
+    isEveningTime,
+    localClock,
+    nextDay,
+} from './briefTime';
 import {
     AnticipateSection,
     BriefActions,
@@ -49,12 +63,19 @@ const SKELETON = (
 
 const BriefPage: React.FC = () => {
     const { t, i18n } = useTranslation();
-    const { showUndoToast, showErrorToast } = useToast();
-    const date = getTodayDateString();
+    const { showUndoToast, showSuccessToast, showErrorToast } = useToast();
+    // The day and the time are read in the profile's timezone: the evening
+    // review switches at the configured time of that clock.
+    const [clock] = useState(() => localClock(new Date(), getUserTimezone()));
+    const date = clock.date;
     const locale = localeOf(i18n?.language);
 
     const [data, setData] = useState<DailyBriefResponse | null>(null);
     const [settings, setSettings] = useState<BriefSettings | null>(null);
+    const [view, setView] = useState<'morning' | 'evening'>('morning');
+    const [evening, setEvening] = useState<DailyEveningResponse | null>(null);
+    const [eveningError, setEveningError] = useState(false);
+    const [carried, setCarried] = useState<Record<string, boolean>>({});
     const [loading, setLoading] = useState(true);
     const [loadError, setLoadError] = useState<string | null>(null);
     const [generating, setGenerating] = useState(false);
@@ -72,6 +93,14 @@ const BriefPage: React.FC = () => {
             .then(([brief, briefSettings]) => {
                 setData(brief);
                 setSettings(briefSettings);
+                setView(
+                    isEveningTime(briefSettings.evening, clock.minute)
+                        ? 'evening'
+                        : 'morning'
+                );
+                setEvening(null);
+                setEveningError(false);
+                setCarried({});
                 setOverrides({});
                 setHiddenMoves(new Set());
                 setAnswered({});
@@ -86,15 +115,35 @@ const BriefPage: React.FC = () => {
                 )
             )
             .finally(() => setLoading(false));
-    }, [date, t]);
+    }, [date, clock.minute, t]);
 
     useEffect(() => {
         load();
     }, [load]);
 
+    // The evening review is fetched when it is shown, and kept for the page.
+    useEffect(() => {
+        if (view !== 'evening' || evening || !settings?.evening.enabled) return;
+        let cancelled = false;
+        fetchDailyEvening(date)
+            .then((response) => {
+                if (!cancelled) setEvening(response);
+            })
+            .catch(() => {
+                if (!cancelled) setEveningError(true);
+            });
+        return () => {
+            cancelled = true;
+        };
+    }, [view, date, evening, settings]);
+
     const tasks = useMemo<Record<string, BriefTaskState>>(
-        () => ({ ...(data?.tasks ?? {}), ...overrides }),
-        [data, overrides]
+        () => ({
+            ...(data?.tasks ?? {}),
+            ...(evening?.tasks ?? {}),
+            ...overrides,
+        }),
+        [data, evening, overrides]
     );
 
     const regenerate = async () => {
@@ -155,6 +204,60 @@ const BriefPage: React.FC = () => {
                 t('dailyBrief.task.error', 'Impossible de modifier la tâche.')
             );
         }
+    };
+
+    // Adds the task to tomorrow's plan. Undo takes it off again, but only when
+    // this action added it: a task already planned for tomorrow is left alone.
+    const carryToTomorrow = async (uid: string) => {
+        const name = tasks[uid]?.name ?? '';
+        const tomorrow = nextDay(date);
+        const message = t(
+            'dailyBrief.evening.carryDone',
+            '« {{name}} » reportée à demain',
+            { name }
+        );
+        try {
+            const plan = await fetchDailyPlan(tomorrow);
+            const alreadyPlanned = (plan.plan?.items ?? []).some(
+                (item) => item.task_uid === uid
+            );
+            if (alreadyPlanned) {
+                setCarried((prev) => ({ ...prev, [uid]: true }));
+                showSuccessToast(message);
+                return;
+            }
+            await carryOverTasks(tomorrow, [uid]);
+        } catch {
+            showErrorToast(
+                t(
+                    'dailyBrief.evening.carryError',
+                    'Impossible de reporter la tâche.'
+                )
+            );
+            return;
+        }
+        setCarried((prev) => ({ ...prev, [uid]: true }));
+        showUndoToast(message, async () => {
+            try {
+                const current = await fetchDailyPlan(tomorrow);
+                const items = (current.plan?.items ?? []).filter(
+                    (item) => item.task_uid !== uid
+                );
+                await saveDailyPlanItems(tomorrow, toPlanItemInputs(items));
+                setCarried((prev) => {
+                    const next = { ...prev };
+                    delete next[uid];
+                    return next;
+                });
+            } catch {
+                showErrorToast(
+                    t(
+                        'dailyBrief.evening.carryError',
+                        'Impossible de reporter la tâche.'
+                    )
+                );
+            }
+        });
     };
 
     const acceptMove = async (move: BriefMove) => {
@@ -285,6 +388,12 @@ const BriefPage: React.FC = () => {
         }
     };
 
+    const eveningActions = {
+        onToggle: toggle,
+        onOpen: (uid: string) => openTaskPanel(uid),
+        onCarry: carryToTomorrow,
+    };
+
     const actions: BriefActions = {
         onToggle: toggle,
         onOpen: (uid) => openTaskPanel(uid),
@@ -398,6 +507,33 @@ const BriefPage: React.FC = () => {
 
     const failed = data?.status === 'failed';
 
+    const renderEvening = () => {
+        if (eveningError) {
+            return (
+                <p
+                    role="alert"
+                    className="text-sm text-red-600 dark:text-red-400"
+                >
+                    {t(
+                        'dailyBrief.evening.loadError',
+                        'Impossible de charger le bilan du soir.'
+                    )}
+                </p>
+            );
+        }
+        if (!evening || !settings) return SKELETON;
+        return (
+            <BriefEvening
+                evening={evening.evening}
+                tasks={tasks}
+                settings={settings}
+                locale={locale}
+                carried={carried}
+                actions={eveningActions}
+            />
+        );
+    };
+
     let body: React.ReactNode;
     if (loading) {
         body = SKELETON;
@@ -407,6 +543,8 @@ const BriefPage: React.FC = () => {
                 {loadError}
             </p>
         );
+    } else if (view === 'evening') {
+        body = renderEvening();
     } else if (!data?.brief) {
         body = (
             <div className="space-y-4 py-6" data-testid="brief-empty">
@@ -459,10 +597,35 @@ const BriefPage: React.FC = () => {
         );
     }
 
+    const viewToggle = settings?.evening.enabled && (
+        <div className="mb-2 flex justify-end">
+            <button
+                type="button"
+                onClick={() =>
+                    setView((current) =>
+                        current === 'evening' ? 'morning' : 'evening'
+                    )
+                }
+                className="min-h-[36px] text-[13px] text-gray-600 underline underline-offset-2 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+            >
+                {view === 'evening'
+                    ? t(
+                          'dailyBrief.evening.switchToMorning',
+                          'Voir le résumé du matin'
+                      )
+                    : t(
+                          'dailyBrief.evening.switchToEvening',
+                          'Voir le bilan du soir'
+                      )}
+            </button>
+        </div>
+    );
+
     return (
         <div className="mx-auto w-full max-w-2xl px-4 pb-28 pt-4 sm:px-6 sm:pb-8">
-            {data?.brief && renderHeader()}
-            {!data?.brief && !loading && (
+            {viewToggle}
+            {view === 'morning' && data?.brief && renderHeader()}
+            {view === 'morning' && !data?.brief && !loading && (
                 <div className="mb-2">
                     <p className="text-[13px] text-gray-600 dark:text-gray-300">
                         {date}
@@ -470,16 +633,20 @@ const BriefPage: React.FC = () => {
                 </div>
             )}
             {body}
-            {!loading && !data?.brief && !loadError && data && (
-                <p className="mt-6 text-xs text-gray-500 dark:text-gray-400">
-                    <Link
-                        to="/profile?section=daily-brief"
-                        className="underline"
-                    >
-                        {t('dailyBrief.settingsLink', 'Réglages du résumé')}
-                    </Link>
-                </p>
-            )}
+            {view === 'morning' &&
+                !loading &&
+                !data?.brief &&
+                !loadError &&
+                data && (
+                    <p className="mt-6 text-xs text-gray-500 dark:text-gray-400">
+                        <Link
+                            to="/profile?section=daily-brief"
+                            className="underline"
+                        >
+                            {t('dailyBrief.settingsLink', 'Réglages du résumé')}
+                        </Link>
+                    </p>
+                )}
         </div>
     );
 };

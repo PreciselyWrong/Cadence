@@ -287,6 +287,10 @@ const SCHEMA = field.object({
     time: field.time('07:00'),
     days: field.list([], parseDay, { sort: true }),
     sections: field.list(SECTIONS, parseChoice(SECTIONS)),
+    evening: field.object({
+        enabled: field.bool(true),
+        switchTime: field.time('18:00'),
+    }),
     timelineDays: field.number(3, 1, 7, true),
     calendarFeedUids: field.list([], parseText(100, { nonEmpty: true }), {
         max: 50,

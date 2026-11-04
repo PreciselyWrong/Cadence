@@ -5639,7 +5639,12 @@
       "saved": "Configurações salvas",
       "saveError": "Não foi possível salvar as configurações.",
       "loadError": "Não foi possível carregar as configurações do resumo.",
-      "eveningRemove": "Remover"
+      "eveningRemove": "Remover",
+      "review": {
+        "title": "Balanço da noite",
+        "enabled": "Mostrar o balanço da noite após a hora de troca",
+        "switchTime": "Hora de troca para o balanço"
+      }
     },
     "hours": "{{hours}} h",
     "hoursMinutes": "{{hours}} h {{rest}}",
@@ -5714,6 +5719,28 @@
       "edit": "Editar contexto",
       "save": "Salvar",
       "delete": "Excluir"
+    },
+    "evening": {
+      "switchToMorning": "Ver o resumo da manhã",
+      "switchToEvening": "Ver o balanço da noite",
+      "counters": {
+        "done": "feitas",
+        "tonight": "esta noite",
+        "slipped": "adiadas"
+      },
+      "sections": {
+        "done": "Feito hoje",
+        "slipped": "Escorregou",
+        "tomorrow": "Amanhã"
+      },
+      "carry": "Adiar para amanhã",
+      "carried": "Adiada para amanhã",
+      "carryDone": "« {{name}} » adiada para amanhã",
+      "carryError": "Não foi possível adiar a tarefa.",
+      "emptyTonight": "Nada mais a fazer esta noite.",
+      "emptyDone": "Nada concluído hoje.",
+      "emptySlipped": "Nada escorregou.",
+      "loadError": "Não foi possível carregar o balanço da noite."
     }
   },
   "agents": {

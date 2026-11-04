@@ -68,3 +68,43 @@ export const loadLabel = (
 // Fraction of the evening window already planned, 0 to 1.
 export const eveningFill = (planned: number, capacity: number): number =>
     capacity > 0 ? clamp(planned / capacity, 0, 1) : 0;
+
+// The day and the minute after midnight of an instant, read in an IANA
+// timezone (the profile's, not the browser's). The evening review depends on it.
+export const localClock = (
+    now: Date,
+    timezone: string
+): { date: string; minute: number } => {
+    const parts = new Intl.DateTimeFormat('en-CA', {
+        timeZone: timezone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hourCycle: 'h23',
+    }).formatToParts(now);
+    const read = (type: string) =>
+        parts.find((part) => part.type === type)?.value ?? '';
+    return {
+        date: `${read('year')}-${read('month')}-${read('day')}`,
+        minute: Number(read('hour')) * 60 + Number(read('minute')),
+    };
+};
+
+// The evening review shows from the switch time on, when it is enabled.
+export const isEveningTime = (
+    evening: { enabled: boolean; switchTime: string } | undefined,
+    minute: number
+): boolean => {
+    if (!evening?.enabled) return false;
+    const switchAt = parseClock(evening.switchTime);
+    return switchAt !== null && minute >= switchAt;
+};
+
+// The day after a YYYY-MM-DD date, in the same format.
+export const nextDay = (date: string): string => {
+    const [year, month, day] = date.split('-').map(Number);
+    const next = new Date(Date.UTC(year, month - 1, day + 1));
+    return next.toISOString().slice(0, 10);
+};

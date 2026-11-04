@@ -77,6 +77,7 @@ Normalized by `backend/modules/daily-plan/brief/settings.js`; unknown or invalid
 | `time`                  | `"07:00"`                                                                                           | local `HH:mm`, 5-minute steps                                                                             |
 | `days`                  | `[]`                                                                                                | 0 = Sunday … 6                                                                                            |
 | `sections`              | `["verdict","timeline","tonight","moves","anticipate","replies","inbox","resolved"]`                | order; a missing key hides the section                                                                    |
+| `evening`               | `{ enabled: true, switchTime: "18:00" }`                                                            | evening review from `switchTime` (local `HH:mm`, 5-minute steps), see Evening review                      |
 | `timelineDays`          | `3`                                                                                                 | 1–7                                                                                                       |
 | `calendarFeedUids`      | `[]`                                                                                                | `feed_uid` values of ICS feeds and Google calendars read by the brief                                     |
 | `calendarLookaheadDays` | `7`                                                                                                 | 1–14                                                                                                      |
@@ -104,6 +105,7 @@ All routes exist under `/api` and `/api/v1`.
 | `POST /daily-plan/:date/brief`                                     | explicit regeneration: new version                                                                                                                                |
 | `GET /daily-plan/brief/settings`, `PUT /daily-plan/brief/settings` | normalized settings; `PUT` merges and validates                                                                                                                   |
 | `GET /daily-plan/brief/status`                                     | each source: configured, missing, working, last error (the voice source asks the Piper server for its voices)                                                     |
+| `GET /daily-plan/:date/evening`                                    | `{ date, evening, tasks }`: the evening review, built on each call, nothing stored (see Evening review)                                                           |
 | `GET /daily-plan/:date/brief/audio`                                | the MP3 of the current version (`audio/mpeg`, byte ranges); `404` when none is ready                                                                              |
 | `GET /daily-plan/brief/voices`                                     | `{ voices: [id] }` from the user's Piper server; `502` `{ error }` when it does not answer                                                                        |
 | `POST /daily-plan/brief/voice-preview`                             | `{ voice, speed, text? }` (text at most 200 characters): a sample, `audio/mpeg` (`audio/wav` without ffmpeg), nothing stored                                      |
@@ -218,7 +220,10 @@ The morning brief arbitrates the day; after the switch time the clients show the
 }
 ```
 
-- Actions: "C'est fait" on every task (existing completion with undo); "Reporter à demain" on carry-over items uses the existing `POST /daily-plan/:date/carry-over` (adds them to tomorrow's plan, never changes their due date) and can be undone by removing them from tomorrow's plan.
+- `counters.done` counts every task completed today; `done` lists the newest ten.
+- `audio_script.chapters` ids are `intro`, `done`, `tonight` and `tomorrow` (an empty `done` or `tonight` chapter is left out). The spoken text uses the same helpers as the morning script.
+- Web: the page and the Today card switch at `evening.switchTime` read in the profile's timezone (the browser's clock is not used). The page keeps the morning brief one tap away ("Voir le résumé du matin") and the evening review one tap away from the morning ("Voir le bilan du soir").
+- Actions: "C'est fait" on every task (existing completion with undo; the row stays in place and shows the new state at once); "Reporter à demain" on carry-over items calls the existing `POST /daily-plan/:date/carry-over` for tomorrow (never changes a due date). Undo removes the task from tomorrow's plan with `PUT /daily-plan/:date`, only when the action added it: a task already planned for tomorrow is left alone and offers no undo.
 - Android caches the last evening response like the brief and renders its audio script on the phone with the same voice.
 
 ## Mail

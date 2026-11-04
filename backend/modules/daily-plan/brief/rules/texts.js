@@ -84,6 +84,25 @@ const texts = {
         planned: 'Prévue aujourd’hui',
         project: (name) => `Fait avancer « ${name} »`,
     },
+    evening: {
+        verdict: {
+            done: (n) =>
+                plural(
+                    n,
+                    '1 tâche terminée aujourd’hui',
+                    `${n} tâches terminées aujourd’hui`
+                ),
+            tonight: (n) =>
+                plural(n, '1 reste pour ce soir', `${n} restent pour ce soir`),
+            slipped: (n) =>
+                plural(n, '1 glisse vers demain', `${n} glissent vers demain`),
+            nothing: 'Rien à reprendre ce soir.',
+        },
+        reason: {
+            dueToday: 'Due aujourd’hui, pas dans la liste de ce soir',
+            planned: 'Prévue aujourd’hui, pas dans la liste de ce soir',
+        },
+    },
 };
 
 module.exports = { texts, formatDay, titleOf };

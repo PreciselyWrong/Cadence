@@ -12,6 +12,15 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-04 — Bilan du soir (web)
+
+- **Problème** : après la journée, le résumé du matin ne répond plus à la question utile : qu'est-ce qui est fait, qu'est-ce qui reste ce soir, qu'est-ce qui glisse, et que vaut demain.
+- **Décision** : à partir de `evening.switchTime` (heure du profil, 18:00 par défaut ; réglage `Profil › Résumé › Bilan du soir`, désactivable), `/insights/daily-brief` et la carte d'Aujourd'hui montrent le bilan. Lien discret « Voir le résumé du matin » (et « Voir le bilan du soir » pour revenir). Ordre : verdict et trois compteurs (faites, ce soir, glissées) ; « Ce soir » (ce qui reste de la liste du matin) ; « Fait aujourd'hui » ; « Glisse » (dues ou prévues aujourd'hui, non retenues pour ce soir, avec la raison) ; « Demain » (une journée de la frise).
+- **Ligne de tâche** : le cercle de fin change l'état tout de suite (la ligne reste à sa place, barrée ou non, avec le toast d'annulation). Les lignes « Ce soir » et « Glisse » ont « Reporter à demain » : la tâche rejoint le plan de demain, sans changer sa date ; le toast « Annuler » la retire de ce plan, sauf si elle y était déjà (rien n'est ajouté, pas d'annulation).
+- **États** : chargement = squelette ; erreur = une phrase ; listes vides = une phrase (« Plus rien à faire ce soir. », « Rien ne glisse. »).
+- **Réglages** : bloc « Bilan du soir » sous « Génération » (case et heure de passage, pas de 5 minutes).
+- **À reprendre sur Android** : le même découpage (verdict, trois compteurs, quatre sections dans cet ordre), l'heure de passage lue dans le fuseau du profil, le lien entre les deux vues, « Reporter à demain » avec son annulation par retrait du plan de demain, et le réglage. Contrat : `docs/39-daily-brief.md`, section « Evening review ».
+
 ### 2026-11-04 — Résumé du jour (web)
 
 - **Problème** : l'ancien Daily Brief était un bloc IA unique (focus, actions, pièges) sans heure, sans charge et sans moyen de dire « non » ; sa carte d'aujourd'hui n'existait pas.

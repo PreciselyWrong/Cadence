@@ -5682,7 +5682,12 @@
       "saved": "Ustawienia zapisano",
       "saveError": "Nie udało się zapisać ustawień.",
       "loadError": "Nie udało się wczytać ustawień podsumowania.",
-      "eveningRemove": "Usuń"
+      "eveningRemove": "Usuń",
+      "review": {
+        "title": "Podsumowanie wieczoru",
+        "enabled": "Pokazuj podsumowanie wieczoru po godzinie przełączenia",
+        "switchTime": "Godzina przełączenia na podsumowanie"
+      }
     },
     "hours": "{{hours}} godz.",
     "hoursMinutes": "{{hours}} godz. {{rest}}",
@@ -5757,6 +5762,28 @@
       "edit": "Edytuj kontekst",
       "save": "Zapisz",
       "delete": "Usuń"
+    },
+    "evening": {
+      "switchToMorning": "Zobacz podsumowanie poranka",
+      "switchToEvening": "Zobacz podsumowanie wieczoru",
+      "counters": {
+        "done": "zrobione",
+        "tonight": "dziś wieczorem",
+        "slipped": "przesunięte"
+      },
+      "sections": {
+        "done": "Zrobione dziś",
+        "slipped": "Przesuwa się",
+        "tomorrow": "Jutro"
+      },
+      "carry": "Przenieś na jutro",
+      "carried": "Przeniesiono na jutro",
+      "carryDone": "« {{name}} » przeniesiono na jutro",
+      "carryError": "Nie udało się przenieść zadania.",
+      "emptyTonight": "Nic więcej do zrobienia dziś wieczorem.",
+      "emptyDone": "Dziś nic nie ukończono.",
+      "emptySlipped": "Nic się nie przesuwa.",
+      "loadError": "Nie udało się wczytać podsumowania wieczoru."
     }
   },
   "agents": {

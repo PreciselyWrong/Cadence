@@ -155,6 +155,46 @@ describe('normalizeBriefSettings', () => {
         expect(result.writing.instructions).toHaveLength(2000);
     });
 
+    it('defaults the evening review to on, at 18:00', () => {
+        expect(DEFAULTS.evening).toEqual({
+            enabled: true,
+            switchTime: '18:00',
+        });
+    });
+
+    it('keeps the evening switch time on a 5-minute step only', () => {
+        expect(
+            normalizeBriefSettings({ evening: { switchTime: '19:30' } }).evening
+                .switchTime
+        ).toBe('19:30');
+        expect(
+            normalizeBriefSettings({ evening: { switchTime: '19:03' } }).evening
+                .switchTime
+        ).toBe('18:00');
+        expect(
+            normalizeBriefSettings({ evening: { switchTime: '7:00pm' } })
+                .evening.switchTime
+        ).toBe('18:00');
+        expect(
+            normalizeBriefSettings({ evening: { enabled: 'no' } }).evening
+                .enabled
+        ).toBe(true);
+    });
+
+    it('validates the evening review on update', () => {
+        expect(() =>
+            validateBriefSettingsUpdate({
+                evening: { enabled: false, switchTime: '20:15' },
+            })
+        ).not.toThrow();
+        expect(() =>
+            validateBriefSettingsUpdate({ evening: { switchTime: '20:17' } })
+        ).toThrow(ValidationError);
+        expect(() =>
+            validateBriefSettingsUpdate({ evening: { enabled: 'yes' } })
+        ).toThrow(ValidationError);
+    });
+
     it('keeps evening windows only when valid', () => {
         const result = normalizeBriefSettings({
             capacity: {

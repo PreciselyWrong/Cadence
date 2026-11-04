@@ -5626,7 +5626,12 @@
       "saved": "Pengaturan disimpan",
       "saveError": "Pengaturan tidak dapat disimpan.",
       "loadError": "Pengaturan ringkasan tidak dapat dimuat.",
-      "eveningRemove": "Hapus"
+      "eveningRemove": "Hapus",
+      "review": {
+        "title": "Tinjauan malam",
+        "enabled": "Tampilkan tinjauan malam setelah waktu pergantian",
+        "switchTime": "Waktu pergantian ke tinjauan malam"
+      }
     },
     "hours": "{{hours}} j",
     "hoursMinutes": "{{hours}} j {{rest}}",
@@ -5701,6 +5706,28 @@
       "edit": "Ubah konteks",
       "save": "Simpan",
       "delete": "Hapus"
+    },
+    "evening": {
+      "switchToMorning": "Lihat ringkasan pagi",
+      "switchToEvening": "Lihat tinjauan malam",
+      "counters": {
+        "done": "selesai",
+        "tonight": "malam ini",
+        "slipped": "tertunda"
+      },
+      "sections": {
+        "done": "Selesai hari ini",
+        "slipped": "Tergeser",
+        "tomorrow": "Besok"
+      },
+      "carry": "Pindahkan ke besok",
+      "carried": "Dipindahkan ke besok",
+      "carryDone": "« {{name}} » dipindahkan ke besok",
+      "carryError": "Tugas tidak dapat dipindahkan.",
+      "emptyTonight": "Tidak ada lagi yang harus dikerjakan malam ini.",
+      "emptyDone": "Belum ada yang selesai hari ini.",
+      "emptySlipped": "Tidak ada yang tergeser.",
+      "loadError": "Tinjauan malam tidak dapat dimuat."
     }
   },
   "agents": {

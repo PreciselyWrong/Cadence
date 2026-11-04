@@ -5631,7 +5631,12 @@
       "saved": "Innstillinger lagret",
       "saveError": "Kunne ikke lagre innstillingene.",
       "loadError": "Kunne ikke laste oversiktsinnstillingene.",
-      "eveningRemove": "Fjern"
+      "eveningRemove": "Fjern",
+      "review": {
+        "title": "Kveldsoppsummering",
+        "enabled": "Vis kveldsoppsummeringen etter byttetidspunktet",
+        "switchTime": "Byttetidspunkt til kveldsoppsummeringen"
+      }
     },
     "hours": "{{hours}} t",
     "hoursMinutes": "{{hours}} t {{rest}}",
@@ -5706,6 +5711,28 @@
       "edit": "Rediger kontekst",
       "save": "Lagre",
       "delete": "Slett"
+    },
+    "evening": {
+      "switchToMorning": "Vis morgenoppsummeringen",
+      "switchToEvening": "Vis kveldsoppsummeringen",
+      "counters": {
+        "done": "gjort",
+        "tonight": "i kveld",
+        "slipped": "utsatt"
+      },
+      "sections": {
+        "done": "Gjort i dag",
+        "slipped": "Glipper",
+        "tomorrow": "I morgen"
+      },
+      "carry": "Flytt til i morgen",
+      "carried": "Flyttet til i morgen",
+      "carryDone": "« {{name}} » flyttet til i morgen",
+      "carryError": "Kunne ikke flytte oppgaven.",
+      "emptyTonight": "Ingenting mer å gjøre i kveld.",
+      "emptyDone": "Ingenting fullført i dag.",
+      "emptySlipped": "Ingenting glipper.",
+      "loadError": "Kunne ikke laste kveldsoppsummeringen."
     }
   },
   "agents": {

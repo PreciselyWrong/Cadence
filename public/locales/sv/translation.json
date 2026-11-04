@@ -5626,7 +5626,12 @@
       "saved": "Inställningarna sparades",
       "saveError": "Inställningarna kunde inte sparas.",
       "loadError": "Sammanfattningsinställningarna kunde inte läsas in.",
-      "eveningRemove": "Ta bort"
+      "eveningRemove": "Ta bort",
+      "review": {
+        "title": "Kvällsgenomgång",
+        "enabled": "Visa kvällsgenomgången efter växlingstiden",
+        "switchTime": "Växlingstid till kvällsgenomgången"
+      }
     },
     "hours": "{{hours}} t",
     "hoursMinutes": "{{hours}} t {{rest}}",
@@ -5701,6 +5706,28 @@
       "edit": "Redigera kontext",
       "save": "Spara",
       "delete": "Ta bort"
+    },
+    "evening": {
+      "switchToMorning": "Visa morgonsammanfattningen",
+      "switchToEvening": "Visa kvällsgenomgången",
+      "counters": {
+        "done": "klara",
+        "tonight": "ikväll",
+        "slipped": "flyttade"
+      },
+      "sections": {
+        "done": "Klart idag",
+        "slipped": "Glider",
+        "tomorrow": "Imorgon"
+      },
+      "carry": "Flytta till imorgon",
+      "carried": "Flyttad till imorgon",
+      "carryDone": "« {{name}} » flyttad till imorgon",
+      "carryError": "Kunde inte flytta uppgiften.",
+      "emptyTonight": "Inget mer att göra ikväll.",
+      "emptyDone": "Inget klart idag.",
+      "emptySlipped": "Inget glider.",
+      "loadError": "Kunde inte ladda kvällsgenomgången."
     }
   },
   "agents": {

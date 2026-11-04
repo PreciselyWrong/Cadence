@@ -343,9 +343,156 @@ function buildAudioScript(brief, settings, { tasksByUid } = {}) {
     return { chapters };
 }
 
+const EVENING_DONE_NAMES_MAX = 5;
+
+// The evening review's script: intro (the counts), done, tonight, tomorrow.
+// Same rules as the morning script: spelled numbers, cleaned external text,
+// the dictionary last, and lists trimmed from the end to fit the budget.
+function buildEveningAudioScript(evening, settings, { tasksByUid } = {}) {
+    const counters = evening.counters || {};
+    const tonightCount = (evening.tonight || []).length;
+    const lists = {
+        tonight: (evening.tonight || [])
+            .slice(0, TONIGHT_MAX)
+            .map((pick, index) => {
+                const task = tasksByUid?.get(pick.task_uid);
+                const title = task
+                    ? cleanExternal(task.name) || 'Sans titre'
+                    : 'une tâche';
+                return `${capitalize(ORDINALS[index])}, ${title}, ${speakDuration(pick.minutes)}.`;
+            }),
+        doneNames: (evening.done || [])
+            .slice(0, EVENING_DONE_NAMES_MAX)
+            .map((uid) => {
+                const task = tasksByUid?.get(uid);
+                return task
+                    ? cleanExternal(task.name) || 'Sans titre'
+                    : 'une tâche';
+            }),
+    };
+
+    const facts = [];
+    if (counters.done) {
+        facts.push(
+            counted(counters.done, 'tâche terminée', 'tâches terminées', {
+                feminine: true,
+            })
+        );
+    }
+    if (tonightCount) {
+        facts.push(
+            counted(
+                tonightCount,
+                'tâche reste pour ce soir',
+                'tâches restent pour ce soir',
+                {
+                    feminine: true,
+                }
+            )
+        );
+    }
+    if (counters.slipped) {
+        facts.push(
+            counted(
+                counters.slipped,
+                'tâche glisse à demain',
+                'tâches glissent à demain',
+                {
+                    feminine: true,
+                }
+            )
+        );
+    }
+    const intro = `Bilan du soir, ${spokenDate(evening.date)}. ${
+        facts.length
+            ? `${capitalize(facts.join(', '))}.`
+            : 'Rien à reprendre ce soir.'
+    }`;
+
+    const render = () => {
+        const chapters = [
+            { id: 'intro', title: 'Le bilan du soir', text: intro },
+        ];
+        if (counters.done) {
+            const more = counters.done > EVENING_DONE_NAMES_MAX;
+            const lead = `${capitalize(
+                counted(counters.done, 'tâche terminée', 'tâches terminées', {
+                    feminine: true,
+                })
+            )} aujourd'hui.`;
+            const names = lists.doneNames.length
+                ? ` ${capitalize(joinFrench(lists.doneNames))}${more ? " et d'autres" : ''}.`
+                : '';
+            chapters.push({
+                id: 'done',
+                title: 'Fait aujourd’hui',
+                text: `${lead}${names}`,
+            });
+        }
+        if (tonightCount) {
+            const lead = `Ce soir, ${counted(
+                Math.min(tonightCount, TONIGHT_MAX),
+                'tâche à faire',
+                'tâches à faire',
+                { feminine: true }
+            )}.`;
+            chapters.push({
+                id: 'tonight',
+                title: 'Ce soir',
+                text: [lead, ...lists.tonight].join(' '),
+            });
+        }
+        chapters.push({
+            id: 'tomorrow',
+            title: 'Demain',
+            text: eveningTomorrowText(evening.tomorrow),
+        });
+        return chapters;
+    };
+
+    const fitted = fitEveningBudget(render, lists);
+    const dictionary = settings?.voice?.dictionary ?? [];
+    return {
+        chapters: fitted.map((chapter) => ({
+            ...chapter,
+            text: applyDictionary(chapter.text, dictionary),
+        })),
+    };
+}
+
+function eveningTomorrowText(day) {
+    const count = (day?.task_uids || []).length;
+    const parts = [`Demain, ${spokenDate(day.date)}.`];
+    parts.push(
+        count
+            ? `${capitalize(counted(count, 'tâche prévue', 'tâches prévues', { feminine: true }))}.`
+            : "Rien de prévu pour l'instant."
+    );
+    const planned = day.load?.planned_minutes ?? 0;
+    if (planned > 0) parts.push(`Environ ${speakDuration(planned)} prévues.`);
+    if ((day.flags || []).includes('overloaded')) {
+        parts.push('La journée est déjà chargée.');
+    }
+    return parts.join(' ');
+}
+
+function fitEveningBudget(render, lists) {
+    let chapters = render();
+    for (;;) {
+        if (wordCount(chapters) <= WORD_BUDGET) return chapters;
+        const key = ['tonight', 'doneNames'].find(
+            (name) => lists[name].length > 0
+        );
+        if (!key) return chapters;
+        lists[key].pop();
+        chapters = render();
+    }
+}
+
 module.exports = {
     WORD_BUDGET,
     buildAudioScript,
+    buildEveningAudioScript,
     cleanExternal,
     spellNumber,
     speakDuration,

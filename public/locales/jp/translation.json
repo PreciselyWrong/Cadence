@@ -5626,7 +5626,12 @@
       "saved": "設定を保存しました",
       "saveError": "設定を保存できませんでした。",
       "loadError": "ブリーフの設定を読み込めませんでした。",
-      "eveningRemove": "削除"
+      "eveningRemove": "削除",
+      "review": {
+        "title": "夜の振り返り",
+        "enabled": "切り替え時刻の後に夜の振り返りを表示",
+        "switchTime": "夜の振り返りへの切り替え時刻"
+      }
     },
     "hours": "{{hours}} 時間",
     "hoursMinutes": "{{hours}} 時間 {{rest}}",
@@ -5701,6 +5706,28 @@
       "edit": "コンテキストを編集",
       "save": "保存",
       "delete": "削除"
+    },
+    "evening": {
+      "switchToMorning": "朝の要約を見る",
+      "switchToEvening": "夜の振り返りを見る",
+      "counters": {
+        "done": "完了",
+        "tonight": "今夜",
+        "slipped": "延期"
+      },
+      "sections": {
+        "done": "今日完了",
+        "slipped": "ずれ込み",
+        "tomorrow": "明日"
+      },
+      "carry": "明日に回す",
+      "carried": "明日に回しました",
+      "carryDone": "「{{name}}」を明日に回しました",
+      "carryError": "タスクを回せませんでした。",
+      "emptyTonight": "今夜やることはありません。",
+      "emptyDone": "今日完了したものはありません。",
+      "emptySlipped": "ずれ込みはありません。",
+      "loadError": "夜の振り返りを読み込めませんでした。"
     }
   },
   "agents": {

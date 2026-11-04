@@ -353,6 +353,42 @@ const DailyBriefTab: React.FC<DailyBriefTabProps> = ({ isActive }) => {
                 </fieldset>
             </Card>
 
+            <Card
+                title={t('dailyBrief.settings.review.title', 'Bilan du soir')}
+                testId="brief-evening-settings"
+            >
+                <Check
+                    label={t(
+                        'dailyBrief.settings.review.enabled',
+                        'Montrer le bilan du soir après l’heure de passage'
+                    )}
+                    checked={draft.evening.enabled}
+                    onChange={(enabled) =>
+                        update({ evening: { ...draft.evening, enabled } })
+                    }
+                />
+                <label className="flex items-center justify-between gap-3 text-sm text-gray-800 dark:text-gray-200">
+                    {t(
+                        'dailyBrief.settings.review.switchTime',
+                        'Heure de passage au bilan'
+                    )}
+                    <input
+                        type="time"
+                        step={300}
+                        value={draft.evening.switchTime}
+                        onChange={(event) =>
+                            update({
+                                evening: {
+                                    ...draft.evening,
+                                    switchTime: event.target.value,
+                                },
+                            })
+                        }
+                        className={`${FORM.input} w-32`}
+                    />
+                </label>
+            </Card>
+
             <Card title={t('dailyBrief.settings.sections', 'Sections')}>
                 <ul className="space-y-1">
                     {sectionOrder.map((id, index) => (

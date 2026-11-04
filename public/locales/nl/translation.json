@@ -5626,7 +5626,12 @@
       "saved": "Instellingen opgeslagen",
       "saveError": "Instellingen konden niet worden opgeslagen.",
       "loadError": "Briefinginstellingen konden niet worden geladen.",
-      "eveningRemove": "Verwijderen"
+      "eveningRemove": "Verwijderen",
+      "review": {
+        "title": "Avondevaluatie",
+        "enabled": "Avondevaluatie tonen na het overschakelmoment",
+        "switchTime": "Overschakelmoment naar de avondevaluatie"
+      }
     },
     "hours": "{{hours}} u",
     "hoursMinutes": "{{hours}} u {{rest}}",
@@ -5701,6 +5706,28 @@
       "edit": "Context bewerken",
       "save": "Opslaan",
       "delete": "Verwijderen"
+    },
+    "evening": {
+      "switchToMorning": "Bekijk het ochtendoverzicht",
+      "switchToEvening": "Bekijk de avondevaluatie",
+      "counters": {
+        "done": "klaar",
+        "tonight": "vanavond",
+        "slipped": "uitgesteld"
+      },
+      "sections": {
+        "done": "Vandaag klaar",
+        "slipped": "Schuift op",
+        "tomorrow": "Morgen"
+      },
+      "carry": "Verplaats naar morgen",
+      "carried": "Verplaatst naar morgen",
+      "carryDone": "« {{name}} » verplaatst naar morgen",
+      "carryError": "Kon de taak niet verplaatsen.",
+      "emptyTonight": "Vanavond is er niets meer te doen.",
+      "emptyDone": "Vandaag niets afgerond.",
+      "emptySlipped": "Niets schuift op.",
+      "loadError": "Kon de avondevaluatie niet laden."
     }
   },
   "agents": {

@@ -5644,7 +5644,12 @@
       "saved": "Setări salvate",
       "saveError": "Setările nu au putut fi salvate.",
       "loadError": "Setările rezumatului nu au putut fi încărcate.",
-      "eveningRemove": "Elimină"
+      "eveningRemove": "Elimină",
+      "review": {
+        "title": "Bilanț de seară",
+        "enabled": "Arată bilanțul de seară după ora de trecere",
+        "switchTime": "Ora de trecere la bilanț"
+      }
     },
     "hours": "{{hours}} h",
     "hoursMinutes": "{{hours}} h {{rest}}",
@@ -5719,6 +5724,28 @@
       "edit": "Modifică contextul",
       "save": "Salvează",
       "delete": "Șterge"
+    },
+    "evening": {
+      "switchToMorning": "Vezi rezumatul de dimineață",
+      "switchToEvening": "Vezi bilanțul de seară",
+      "counters": {
+        "done": "făcute",
+        "tonight": "în seara aceasta",
+        "slipped": "amânate"
+      },
+      "sections": {
+        "done": "Făcut azi",
+        "slipped": "Alunecă",
+        "tomorrow": "Mâine"
+      },
+      "carry": "Mută pe mâine",
+      "carried": "Mutată pe mâine",
+      "carryDone": "« {{name}} » mutată pe mâine",
+      "carryError": "Nu s-a putut muta sarcina.",
+      "emptyTonight": "Nimic de făcut în seara aceasta.",
+      "emptyDone": "Nimic terminat azi.",
+      "emptySlipped": "Nimic nu alunecă.",
+      "loadError": "Bilanțul de seară nu a putut fi încărcat."
     }
   },
   "agents": {

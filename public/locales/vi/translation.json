@@ -5626,7 +5626,12 @@
       "saved": "Đã lưu cài đặt",
       "saveError": "Không thể lưu cài đặt.",
       "loadError": "Không thể tải cài đặt bản tóm tắt.",
-      "eveningRemove": "Xóa"
+      "eveningRemove": "Xóa",
+      "review": {
+        "title": "Tổng kết buổi tối",
+        "enabled": "Hiện tổng kết buổi tối sau giờ chuyển",
+        "switchTime": "Giờ chuyển sang tổng kết"
+      }
     },
     "hours": "{{hours}} giờ",
     "hoursMinutes": "{{hours}} giờ {{rest}}",
@@ -5701,6 +5706,28 @@
       "edit": "Sửa ngữ cảnh",
       "save": "Lưu",
       "delete": "Xóa"
+    },
+    "evening": {
+      "switchToMorning": "Xem tóm tắt buổi sáng",
+      "switchToEvening": "Xem tổng kết buổi tối",
+      "counters": {
+        "done": "đã xong",
+        "tonight": "tối nay",
+        "slipped": "trễ hẹn"
+      },
+      "sections": {
+        "done": "Đã xong hôm nay",
+        "slipped": "Bị trễ",
+        "tomorrow": "Ngày mai"
+      },
+      "carry": "Chuyển sang mai",
+      "carried": "Đã chuyển sang mai",
+      "carryDone": "Đã chuyển « {{name}} » sang mai",
+      "carryError": "Không thể chuyển công việc.",
+      "emptyTonight": "Tối nay không còn việc nào.",
+      "emptyDone": "Hôm nay chưa xong việc nào.",
+      "emptySlipped": "Không có việc nào bị trễ.",
+      "loadError": "Không thể tải tổng kết buổi tối."
     }
   },
   "agents": {

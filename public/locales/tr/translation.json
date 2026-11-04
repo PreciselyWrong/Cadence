@@ -5626,7 +5626,12 @@
       "saved": "Ayarlar kaydedildi",
       "saveError": "Ayarlar kaydedilemedi.",
       "loadError": "Özet ayarları yüklenemedi.",
-      "eveningRemove": "Kaldır"
+      "eveningRemove": "Kaldır",
+      "review": {
+        "title": "Akşam değerlendirmesi",
+        "enabled": "Geçiş saatinden sonra akşam değerlendirmesini göster",
+        "switchTime": "Akşam değerlendirmesine geçiş saati"
+      }
     },
     "hours": "{{hours}} sa",
     "hoursMinutes": "{{hours}} sa {{rest}}",
@@ -5701,6 +5706,28 @@
       "edit": "Bağlamı düzenle",
       "save": "Kaydet",
       "delete": "Sil"
+    },
+    "evening": {
+      "switchToMorning": "Sabah özetini gör",
+      "switchToEvening": "Akşam değerlendirmesini gör",
+      "counters": {
+        "done": "tamamlandı",
+        "tonight": "bu akşam",
+        "slipped": "kaydı"
+      },
+      "sections": {
+        "done": "Bugün tamamlananlar",
+        "slipped": "Kayanlar",
+        "tomorrow": "Yarın"
+      },
+      "carry": "Yarına taşı",
+      "carried": "Yarına taşındı",
+      "carryDone": "« {{name}} » yarına taşındı",
+      "carryError": "Görev taşınamadı.",
+      "emptyTonight": "Bu akşam yapılacak başka bir şey yok.",
+      "emptyDone": "Bugün tamamlanan bir şey yok.",
+      "emptySlipped": "Kayan bir şey yok.",
+      "loadError": "Akşam değerlendirmesi yüklenemedi."
     }
   },
   "agents": {

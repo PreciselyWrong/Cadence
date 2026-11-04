@@ -20,4 +20,15 @@ function verdictText(counters) {
     return sentence.charAt(0).toUpperCase() + sentence.slice(1);
 }
 
-module.exports = { verdictText };
+// The evening review's sentence, from its counts only.
+function eveningVerdictText({ done, tonight, slipped }) {
+    const parts = [];
+    if (done) parts.push(texts.evening.verdict.done(done));
+    if (tonight) parts.push(texts.evening.verdict.tonight(tonight));
+    if (slipped) parts.push(texts.evening.verdict.slipped(slipped));
+    if (!parts.length) return texts.evening.verdict.nothing;
+    const sentence = `${parts.join(', ')}.`;
+    return sentence.charAt(0).toUpperCase() + sentence.slice(1);
+}
+
+module.exports = { verdictText, eveningVerdictText };

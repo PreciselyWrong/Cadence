@@ -5682,7 +5682,12 @@
       "saved": "Nastavitve shranjene",
       "saveError": "Nastavitev ni mogoče shraniti.",
       "loadError": "Nastavitev povzetka ni mogoče naložiti.",
-      "eveningRemove": "Odstrani"
+      "eveningRemove": "Odstrani",
+      "review": {
+        "title": "Večerni pregled",
+        "enabled": "Pokaži večerni pregled po času preklopa",
+        "switchTime": "Čas preklopa na večerni pregled"
+      }
     },
     "hours": "{{hours}} h",
     "hoursMinutes": "{{hours}} h {{rest}}",
@@ -5757,6 +5762,28 @@
       "edit": "Uredi kontekst",
       "save": "Shrani",
       "delete": "Izbriši"
+    },
+    "evening": {
+      "switchToMorning": "Poglej jutranji povzetek",
+      "switchToEvening": "Poglej večerni pregled",
+      "counters": {
+        "done": "opravljeno",
+        "tonight": "nocoj",
+        "slipped": "prestavljeno"
+      },
+      "sections": {
+        "done": "Opravljeno danes",
+        "slipped": "Zdrsne",
+        "tomorrow": "Jutri"
+      },
+      "carry": "Prestavi na jutri",
+      "carried": "Prestavljeno na jutri",
+      "carryDone": "« {{name}} » prestavljeno na jutri",
+      "carryError": "Opravila ni bilo mogoče prestaviti.",
+      "emptyTonight": "Nocoj ni nič več za narediti.",
+      "emptyDone": "Danes ni nič opravljenega.",
+      "emptySlipped": "Nič ne zdrsne.",
+      "loadError": "Večernega pregleda ni bilo mogoče naložiti."
     }
   },
   "agents": {

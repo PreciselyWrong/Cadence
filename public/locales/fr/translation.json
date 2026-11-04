@@ -5642,7 +5642,12 @@
       "saved": "Réglages enregistrés",
       "saveError": "Impossible d'enregistrer les réglages.",
       "loadError": "Impossible de charger les réglages du résumé.",
-      "eveningRemove": "Retirer"
+      "eveningRemove": "Retirer",
+      "review": {
+        "title": "Bilan du soir",
+        "enabled": "Montrer le bilan du soir après l’heure de passage",
+        "switchTime": "Heure de passage au bilan"
+      }
     },
     "hours": "{{hours}} h",
     "hoursMinutes": "{{hours}} h {{rest}}",
@@ -5717,6 +5722,28 @@
       "edit": "Modifier le contexte",
       "save": "Enregistrer",
       "delete": "Supprimer"
+    },
+    "evening": {
+      "switchToMorning": "Voir le résumé du matin",
+      "switchToEvening": "Voir le bilan du soir",
+      "counters": {
+        "done": "faites",
+        "tonight": "ce soir",
+        "slipped": "glissées"
+      },
+      "sections": {
+        "done": "Fait aujourd’hui",
+        "slipped": "Glisse",
+        "tomorrow": "Demain"
+      },
+      "carry": "Reporter à demain",
+      "carried": "Reportée à demain",
+      "carryDone": "« {{name}} » reportée à demain",
+      "carryError": "Impossible de reporter la tâche.",
+      "emptyTonight": "Plus rien à faire ce soir.",
+      "emptyDone": "Rien de terminé aujourd’hui.",
+      "emptySlipped": "Rien ne glisse.",
+      "loadError": "Impossible de charger le bilan du soir."
     }
   },
   "agents": {

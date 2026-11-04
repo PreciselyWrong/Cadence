@@ -20,6 +20,7 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
   - PR à l'amont : ouvrir d'abord les issues de discussion (`docs/fork/upstream-prs/task-ics-feed.md`, `calendar-views.md`), puis envoyer les PR préparées dans `../cadence-upstream-*`.
   - Refonte TickTick, étape 4 (faite le 2026-11-01 sans voir TickTick, accès refusé) : comparer à l'écran avec TickTick 8.0.20 le calendrier de Cadence (ordre des tâches sans heure, Demain / Semaine prochaine dans l'agenda d'Aujourd'hui, dépôt au quart d'heure) et signaler les écarts.
   - Traductions : relecture par des locuteurs natifs des 22 langues hors fr/en/ja/ko (traduites automatiquement le 2026-11-01, pluriels slaves ajoutés).
+- Bilan du soir sur Android (parité du web, 2026-11-04) : écran du bilan après `evening.switchTime` (fuseau du profil), `GET /daily-plan/:date/evening`, « Reporter à demain » (annulation par retrait du plan de demain), réglage `Bilan du soir` ; contrat `docs/39-daily-brief.md` § Evening review, écarts web dans `docs/fork/WEB-UX-NOTES.md` (2026-11-04). Vérif : mêmes quatre sections et mêmes compteurs que le web pour une même journée sur le serveur de test, puis passage à 18:00 sur le téléphone.
 - **Quand le besoin se montre.**
   - Parité, venus de l'amont et web seulement : quitter un partage, choisir qui reprend les tâches d'un membre retiré ; Android n'a pas d'écran de partage.
   - Fixtures dorées des habitudes : compléter (abstinence, alcool, aperçus, questions apprises, semaine) quand le web en a besoin.

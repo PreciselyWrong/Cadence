@@ -5626,7 +5626,12 @@
       "saved": "Indstillinger gemt",
       "saveError": "Indstillingerne kunne ikke gemmes.",
       "loadError": "Overblikindstillingerne kunne ikke indlæses.",
-      "eveningRemove": "Fjern"
+      "eveningRemove": "Fjern",
+      "review": {
+        "title": "Aftenbillede",
+        "enabled": "Vis aftenbilledet efter skiftetidspunktet",
+        "switchTime": "Skiftetidspunkt til aftenbilledet"
+      }
     },
     "hours": "{{hours}} t",
     "hoursMinutes": "{{hours}} t {{rest}}",
@@ -5701,6 +5706,28 @@
       "edit": "Rediger kontekst",
       "save": "Gem",
       "delete": "Slet"
+    },
+    "evening": {
+      "switchToMorning": "Se morgenoversigten",
+      "switchToEvening": "Se aftenbilledet",
+      "counters": {
+        "done": "udført",
+        "tonight": "i aften",
+        "slipped": "udskudt"
+      },
+      "sections": {
+        "done": "Udført i dag",
+        "slipped": "Glider",
+        "tomorrow": "I morgen"
+      },
+      "carry": "Flyt til i morgen",
+      "carried": "Flyttet til i morgen",
+      "carryDone": "« {{name}} » flyttet til i morgen",
+      "carryError": "Opgaven kunne ikke flyttes.",
+      "emptyTonight": "Intet mere at gøre i aften.",
+      "emptyDone": "Intet afsluttet i dag.",
+      "emptySlipped": "Intet glider.",
+      "loadError": "Aftenbilledet kunne ikke indlæses."
     }
   },
   "agents": {
