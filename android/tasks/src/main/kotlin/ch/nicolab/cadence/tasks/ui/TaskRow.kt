@@ -96,6 +96,8 @@ internal fun TaskRow(
     subtitle: String? = null,
     /** Action de fin de ligne (ex. date proposée du résumé du jour). */
     trailing: (@Composable () -> Unit)? = null,
+    /** La ligne se montre cochée et barrée avant que la tâche le soit (geste du résumé, tâche récurrente qui reste ouverte). */
+    forceClosed: Boolean = false,
 ) {
     val haptic = rememberCadenceHaptic()
     val interaction = remember { MutableInteractionSource() }
@@ -107,7 +109,7 @@ internal fun TaskRow(
             completing = false
         }
     }
-    val showClosed = task.isClosed || completing
+    val showClosed = task.isClosed || completing || forceClosed
 
     val swipeConfig = rememberSwipeConfig()
     SwipeActionContainer(

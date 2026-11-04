@@ -1,3 +1,13 @@
+## [1.11.0] — 4 novembre 2026
+
+### Nouveautés
+- Bilan du soir : à partir de 18 h (réglable dans Réglages › Résumé), le résumé laisse place au bilan : ce qui reste ce soir, ce qui est fait, ce qui glisse et demain. « Reporter à demain » ajoute une tâche au plan de demain. Le résumé du matin reste à un toucher.
+- « Écouter » lit toujours avec une voix Piper : sans voix installée, il propose Siwis ou Tom et la télécharge.
+
+### Corrections
+- Chaque toucher dans le résumé se voit tout de suite : tâche cochée, date choisie, réponse donnée, puis « Annuler ».
+- Les messages d'annulation ne passent plus sous les boutons de navigation.
+
 ## [1.10.1] — 4 novembre 2026
 
 ### Corrections

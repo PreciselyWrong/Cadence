@@ -32,3 +32,30 @@ interface BriefDao {
     @Query("DELETE FROM brief WHERE `date` = :date")
     suspend fun delete(date: String)
 }
+
+/**
+ * Dernier bilan du soir lu, pour la lecture hors ligne. Une ligne par date locale. Table à part du `brief` : le bilan
+ * n'a ni version ni statut (le serveur le recalcule à chaque lecture), et `brief` a la date pour clé unique.
+ */
+@Entity(tableName = "evening")
+data class EveningEntity(
+    @PrimaryKey val date: String,
+    val json: String,
+    val fetchedAtMs: Long,
+)
+
+@Dao
+interface EveningDao {
+    @Upsert
+    suspend fun put(evening: EveningEntity)
+
+    @Query("SELECT * FROM evening WHERE `date` = :date")
+    fun observe(date: String): Flow<EveningEntity?>
+
+    @Query("DELETE FROM evening WHERE `date` = :date")
+    suspend fun delete(date: String)
+
+    /** Les bilans des jours passés ne servent plus. */
+    @Query("DELETE FROM evening WHERE `date` < :date")
+    suspend fun deleteBefore(date: String)
+}

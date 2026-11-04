@@ -143,7 +143,7 @@ All routes exist under `/api` and `/api/v1`.
 
 ## Audio
 
-The brief is read aloud by a Piper server on the user's network, or by a Piper voice on the Android phone itself (see On-device rendering). The script is built with the brief, so every client speaks the same text, and the text-to-speech fallbacks read it too.
+The brief is read aloud by a Piper server on the user's network, or by a Piper voice on the Android phone itself (see On-device rendering). The script is built with the brief, so every client speaks the same text.
 
 ### Script (`script.js`)
 
@@ -183,7 +183,7 @@ The address must be http(s), without credentials, and not a link-local or cloud 
 
 ### Fallback
 
-Clients play, in this order: the audio rendered on the device (Android), the server MP3 when `audio.status` is `ready`, then the device's text-to-speech reading `audio_script`; with none of them (no script, no audio) the play button is hidden.
+Android plays, in this order: the file rendered on the device, the server MP3 when `audio.status` is `ready`, then a render made on demand with the installed Piper voice; with no voice installed, « Écouter » offers Siwis or Tom, downloads it and renders. The device's text-to-speech is never used. The web plays the server MP3 only.
 
 ### On-device rendering (Android)
 
@@ -193,8 +193,8 @@ The Android app is the default renderer: it speaks `audio_script` itself with a 
 - **Rendering**: after each brief refresh (`SyncEngine.onSynced`) a WorkManager job (`brief-audio`, KEEP so a running render is never restarted) renders today's brief when a voice is installed: each chapter of `audio_script` is synthesized, the clips are joined with 0.8 s of silence like the server render, and the result is one mono 16-bit WAV per brief date and version, `files/brief-audio/<date>-v<version>.wav`, with a `.json` sheet holding the duration, the start offset of every chapter, the voice and the speed. WAV rather than AAC: no encoder to manage, exact seeking, and about 2.6 MB per minute, so under 40 MB for the seven days kept. A render made with another voice or speed is replaced; a failed render leaves nothing behind and the server MP3 takes over.
 - **Retention**: the job deletes audio files older than 7 days (`BriefAudioFiles.RETENTION_DAYS`) and the other versions of the same day; deleting a voice deletes its renders.
 - **Server MP3**: without a usable local voice, the job copies the MP3 of a `ready` audio (`GET /daily-plan/:date/brief/audio`, device API key) next to a sheet built from `audio.chapters[].start_seconds`, so it plays offline. Pressing play with no copy downloads it on the spot.
-- **Playback**: Media3 ExoPlayer in a `MediaSessionService` (foreground service type `mediaPlayback`, channel « Lecture du résumé »): lock-screen and Bluetooth controls, previous/next chapter, and a resume position kept per brief version. The brief header shows « Écouter · N min » (N from the file, or estimated at 150 words per minute for the system voice) and, once playing, pause and chapter skip.
-- **System voice**: Android `TextToSpeech` (French) reads the chapters one after the other. It has no media session: it follows the brief screen.
+- **Playback**: Media3 ExoPlayer in a `MediaSessionService` (foreground service type `mediaPlayback`, channel « Lecture du résumé »): lock-screen and Bluetooth controls, previous/next chapter, and a resume position kept per brief version. The brief header shows « Écouter · N min » (N from the file, or estimated at 150 words per minute for a render not yet made) and, once playing, pause and chapter skip.
+- **Voice sheet**: with no voice installed, « Écouter » opens a sheet (Siwis or Tom, size, license), downloads the voice with progress, renders the brief on demand and plays it.
 
 ## Evening review
 
@@ -224,7 +224,7 @@ The morning brief arbitrates the day; after the switch time the clients show the
 - `audio_script.chapters` ids are `intro`, `done`, `tonight` and `tomorrow` (an empty `done` or `tonight` chapter is left out). The spoken text uses the same helpers as the morning script.
 - Web: the page and the Today card switch at `evening.switchTime` read in the profile's timezone (the browser's clock is not used). The page keeps the morning brief one tap away ("Voir le résumé du matin") and the evening review one tap away from the morning ("Voir le bilan du soir").
 - Actions: "C'est fait" on every task (existing completion with undo; the row stays in place and shows the new state at once); "Reporter à demain" on carry-over items calls the existing `POST /daily-plan/:date/carry-over` for tomorrow (never changes a due date). Undo removes the task from tomorrow's plan with `PUT /daily-plan/:date`, only when the action added it: a task already planned for tomorrow is left alone and offers no undo.
-- Android caches the last evening response like the brief and renders its audio script on the phone with the same voice.
+- Android keeps the last evening response in the Room table `evening` (tasks DB v13) and renders its four chapters on the phone with the same voice.
 
 ## Mail
 

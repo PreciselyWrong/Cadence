@@ -2,6 +2,8 @@ package ch.nicolab.cadence.tasks.brief
 
 import ch.nicolab.cadence.tasks.sync.DeferredCall
 import java.time.LocalDate
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
@@ -14,10 +16,43 @@ import kotlinx.serialization.json.put
 internal object BriefRequests {
     private const val DECISION_PREFIX = "brief-decision"
     private const val ANSWER_PREFIX = "brief-answer"
+    private const val CARRY_PREFIX = "brief-carry"
     private const val SETTINGS_KEY = "brief-settings"
 
     fun decisionKey(idempotencyKey: String) = "$DECISION_PREFIX:$idempotencyKey"
     fun answerKey(idempotencyKey: String) = "$ANSWER_PREFIX:$idempotencyKey"
+    fun carryKey(idempotencyKey: String) = "$CARRY_PREFIX:$idempotencyKey"
+
+    /**
+     * Ajoute des tâches au plan de [day] (`POST /daily-plan/:date/carry-over`). Le serveur saute celles déjà au plan :
+     * un deuxième envoi ne change rien, la clé sert à retirer l'appel tant qu'il n'est pas parti.
+     */
+    fun carryOver(day: LocalDate, idempotencyKey: String, taskUids: List<String>, label: String) = DeferredCall(
+        key = carryKey(idempotencyKey),
+        method = "POST",
+        path = "/api/v1/daily-plan/$day/carry-over",
+        body = buildJsonObject { put("task_uids", JsonArray(taskUids.map { JsonPrimitive(it) })) },
+        label = label,
+    )
+
+    /**
+     * Corps de `PUT /daily-plan/:date` qui garde le plan lu sans [removed] : le serveur remplace tout le plan, on renvoie
+     * donc les autres lignes telles quelles (tâche, heure, durée). Null quand rien n'est à retirer.
+     */
+    fun planWithout(planResponse: JsonObject, removed: Collection<String>): JsonObject? {
+        val items = ((planResponse["plan"] as? JsonObject)?.get("items") as? JsonArray)?.mapNotNull { it as? JsonObject }.orEmpty()
+        val kept = items.filter { (it["task_uid"] as? JsonPrimitive)?.content !in removed }
+        if (kept.size == items.size) return null
+        return buildJsonObject {
+            put("items", JsonArray(kept.map { item ->
+                buildJsonObject {
+                    put("task_uid", item["task_uid"] ?: JsonNull)
+                    put("start_minute", item["start_minute"] ?: JsonNull)
+                    put("duration_minutes", item["duration_minutes"] ?: JsonNull)
+                }
+            }))
+        }
+    }
 
     fun decision(
         date: LocalDate,

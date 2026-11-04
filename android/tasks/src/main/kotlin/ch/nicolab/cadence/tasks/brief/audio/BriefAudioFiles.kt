@@ -36,6 +36,7 @@ data class StoredAudio(
     val meta: BriefAudioMeta,
 ) {
     val key: String get() = BriefAudioFiles.key(date, version)
+    val isEvening: Boolean get() = BriefAudioFiles.isEvening(version)
 }
 
 /**
@@ -81,14 +82,17 @@ class BriefAudioFiles(private val root: File) {
         return StoredAudio(date, version, origin, target, meta)
     }
 
-    /** Retire les autres versions de [date] et les fichiers de plus de [RETENTION_DAYS] jours ; rend ce qui a été effacé. */
-    fun purge(today: LocalDate, keep: Pair<LocalDate, Int>? = null): List<File> {
+    /**
+     * Retire les fichiers de plus de [RETENTION_DAYS] jours et, pour chaque version de [keep], les autres versions de
+     * la même date et du même genre (matin ou soir) ; rend ce qui a été effacé.
+     */
+    fun purge(today: LocalDate, keep: Set<Pair<LocalDate, Int>> = emptySet()): List<File> {
         val removed = ArrayList<File>()
         root.listFiles().orEmpty().forEach { file ->
             val entry = parseName(file.name)
             val stale = entry == null ||
                 entry.date.isBefore(today.minusDays(RETENTION_DAYS.toLong())) ||
-                (keep != null && entry.date == keep.first && entry.version != keep.second)
+                keep.any { (date, version) -> entry.date == date && isEvening(entry.version) == isEvening(version) && entry.version != version }
             if (stale && file.delete()) removed += file
         }
         return removed
@@ -121,6 +125,14 @@ class BriefAudioFiles(private val root: File) {
 
     companion object {
         const val RETENTION_DAYS = 7
+
+        /** Les versions du bilan du soir commencent ici : il n'a pas de version serveur, son numéro vient de son texte. */
+        const val EVENING_BASE = 1_000_000
+
+        fun isEvening(version: Int): Boolean = version >= EVENING_BASE
+
+        /** Numéro stable pour un script de bilan : le même texte retrouve le même fichier, un autre en refait un. */
+        fun eveningVersion(script: String): Int = EVENING_BASE + (script.hashCode() and 0xFFFFF)
         private val NAME = Regex("""(\d{4}-\d{2}-\d{2})-v(\d+)\.(?:wav|mp3|json)(?:\.part)?""")
         private val KEY = Regex("""(\d{4}-\d{2}-\d{2})-v(\d+)""")
 

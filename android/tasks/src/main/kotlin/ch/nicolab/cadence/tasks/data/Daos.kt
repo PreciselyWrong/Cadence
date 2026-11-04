@@ -312,8 +312,9 @@ interface DeferredCallDao {
     @Query("SELECT EXISTS(SELECT 1 FROM deferred_calls WHERE `key` = :key)")
     fun observeExists(key: String): Flow<Boolean>
 
+    /** Rend le nombre de lignes retirées : 0 quand l'appel est déjà parti. */
     @Query("DELETE FROM deferred_calls WHERE `key` = :key")
-    suspend fun delete(key: String)
+    suspend fun delete(key: String): Int
 
     @Query("UPDATE deferred_calls SET attempts = attempts + 1, lastError = :message WHERE `key` = :key")
     suspend fun markFailed(key: String, message: String)

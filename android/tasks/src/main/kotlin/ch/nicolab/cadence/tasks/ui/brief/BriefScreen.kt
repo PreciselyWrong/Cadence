@@ -1,5 +1,7 @@
 package ch.nicolab.cadence.tasks.ui.brief
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.Row
@@ -40,7 +42,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.nicolab.cadence.designsystem.components.CadenceField
@@ -59,11 +60,11 @@ import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.brief.AnticipateDto
 import ch.nicolab.cadence.tasks.brief.BriefDto
 import ch.nicolab.cadence.tasks.brief.BriefSettingsJson
+import ch.nicolab.cadence.tasks.brief.BriefView
 import ch.nicolab.cadence.tasks.brief.CachedBrief
 import ch.nicolab.cadence.tasks.brief.DEFAULT_BRIEF_SECTIONS
 import ch.nicolab.cadence.tasks.brief.MoveDto
 import ch.nicolab.cadence.tasks.brief.QuestionDto
-import ch.nicolab.cadence.tasks.brief.audio.BriefAudioFiles
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.planning.PlanningChanges
 import ch.nicolab.cadence.tasks.ui.TaskDetailSheet
@@ -83,13 +84,19 @@ import kotlinx.serialization.json.JsonObject
 fun BriefScreen(onBack: () -> Unit) {
     val viewModel: BriefViewModel = viewModel()
     val cached by viewModel.brief.collectAsStateWithLifecycle()
+    val eveningCached by viewModel.evening.collectAsStateWithLifecycle()
+    val view by viewModel.view.collectAsStateWithLifecycle()
+    val pending by viewModel.pending.collectAsStateWithLifecycle()
     val settings by viewModel.settings.collectAsStateWithLifecycle()
     val tasks by viewModel.tasks.collectAsStateWithLifecycle()
     val today by viewModel.today.collectAsStateWithLifecycle()
     val zone by viewModel.zone.collectAsStateWithLifecycle()
     val audioChoice by viewModel.audioChoice.collectAsStateWithLifecycle()
+    val audioKey by viewModel.audioKey.collectAsStateWithLifecycle()
     val playerState by viewModel.playerState.collectAsStateWithLifecycle()
-    val speakerState by viewModel.speakerState.collectAsStateWithLifecycle()
+    val preparing by viewModel.preparing.collectAsStateWithLifecycle()
+    val voiceSheet by viewModel.voiceSheet.collectAsStateWithLifecycle()
+    val voiceInstall by viewModel.voiceInstall.collectAsStateWithLifecycle()
     val marks by viewModel.marks.collectAsStateWithLifecycle()
     val tasksViewModel: TasksViewModel = viewModel()
     val snackbar = rememberAppSnackbarHostState()
@@ -97,7 +104,10 @@ fun BriefScreen(onBack: () -> Unit) {
     var openedTaskUid by remember { mutableStateOf<String?>(null) }
     var preciseFor by remember { mutableStateOf<QuestionDto?>(null) }
 
-    LaunchedEffect(viewModel) { viewModel.refresh() }
+    LaunchedEffect(viewModel) {
+        viewModel.opened()
+        viewModel.refresh()
+    }
     LaunchedEffect(viewModel) {
         viewModel.notices.collect { notice ->
             snackbar.currentSnackbarData?.dismiss()
@@ -112,14 +122,57 @@ fun BriefScreen(onBack: () -> Unit) {
         }
     }
 
+    val audioUi = BriefAudioUi(
+        choice = audioChoice,
+        briefKey = audioKey.orEmpty(),
+        player = playerState,
+        marks = marks,
+        preparing = preparing,
+    )
+    val audioControls: @Composable () -> Unit = {
+        BriefAudioControls(
+            ui = audioUi,
+            onPlay = viewModel::playAudio,
+            onToggle = viewModel::toggleAudio,
+            onNext = viewModel::nextChapter,
+            onPrevious = viewModel::previousChapter,
+            modifier = Modifier.padding(top = Space.sm),
+        )
+    }
+    // Un geste sur une tâche déjà terminée la rouvre ; sur une tâche ouverte il la termine (avec « Annuler »).
+    val toggle: (TaskItem) -> Unit = { task ->
+        if (task.isClosed) tasksViewModel.toggle(task, hold = false) else viewModel.complete(task)
+    }
+
     Surface(Modifier.fillMaxSize(), color = cadence.background, contentColor = cadence.onSurface) {
         Column(Modifier.fillMaxSize().statusBarsPadding()) {
             ScreenHeader(
-                title = stringResource(R.string.brief_title),
+                title = stringResource(if (view == BriefView.EVENING) R.string.evening_title else R.string.brief_title),
                 onBack = onBack,
                 backDescription = stringResource(R.string.brief_back),
             )
             LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = tasksListPadding()) {
+                val night = eveningCached?.evening
+                if (view == BriefView.EVENING && night != null) {
+                    eveningSections(
+                        evening = night,
+                        context = EveningContext(
+                            date = eveningCached?.date ?: today,
+                            today = today,
+                            zone = zone,
+                            tasks = tasks,
+                            settings = settings,
+                            pending = pending,
+                            onOpen = { openedTaskUid = it.uid },
+                            onToggle = toggle,
+                            onCarry = viewModel::carryOver,
+                            hasMorning = cached?.brief != null,
+                            onShowMorning = viewModel::showMorning,
+                            audio = audioControls,
+                        ),
+                    )
+                    return@LazyColumn
+                }
                 val snapshot = cached
                 if (snapshot == null) {
                     item(key = "empty") {
@@ -162,8 +215,9 @@ fun BriefScreen(onBack: () -> Unit) {
                     tasks = tasks,
                     settings = settings,
                     snapshot = snapshot,
+                    pending = pending,
                     onOpen = { openedTaskUid = it.uid },
-                    onComplete = viewModel::complete,
+                    onComplete = toggle,
                     onMove = { task, move -> viewModel.move(date, task, move) },
                     onRefuse = { move -> viewModel.refuseMove(date, move) },
                     onAnswer = { question, answer -> viewModel.answer(date, question, answer) },
@@ -171,25 +225,18 @@ fun BriefScreen(onBack: () -> Unit) {
                     onPrecise = { preciseFor = it },
                     onReopen = { task -> tasksViewModel.toggle(task, hold = false) },
                 )
-                val audioUi = BriefAudioUi(
-                    choice = audioChoice,
-                    briefKey = BriefAudioFiles.key(date, snapshot.version),
-                    player = playerState,
-                    speaker = speakerState,
-                    marks = marks,
-                    speechChapters = brief.audioScript?.chapters.orEmpty().count { it.text.isNotBlank() },
-                )
                 item(key = "header") {
-                    BriefHeader(brief = brief, date = date, today = today) {
-                        BriefAudioControls(
-                            ui = audioUi,
-                            onPlay = viewModel::playAudio,
-                            onToggle = viewModel::toggleAudio,
-                            onNext = viewModel::nextChapter,
-                            onPrevious = viewModel::previousChapter,
-                            modifier = Modifier.padding(top = Space.sm),
-                        )
-                    }
+                    BriefHeader(
+                        brief = brief,
+                        date = date,
+                        today = today,
+                        audio = audioControls,
+                        link = {
+                            if (eveningCached?.evening != null) {
+                                TertiaryAction(stringResource(R.string.evening_show), onClick = viewModel::showEvening)
+                            }
+                        },
+                    )
                 }
                 sections.forEach { id -> briefSection(id, context) }
             }
@@ -209,12 +256,20 @@ fun BriefScreen(onBack: () -> Unit) {
             onDismiss = { preciseFor = null },
         )
     }
+    if (voiceSheet) {
+        BriefVoiceSheet(
+            install = voiceInstall,
+            onDownload = viewModel::downloadVoice,
+            onCancel = viewModel::cancelVoiceDownload,
+            onDismiss = viewModel::dismissVoiceSheet,
+        )
+    }
 }
 
 private const val STATUS_FAILED = "failed"
 
 /** Tout ce qu'une section lit ou fait : évite de passer une dizaine de paramètres à chaque section. */
-private class BriefContext(
+internal class BriefContext(
     val brief: BriefDto,
     val date: LocalDate,
     val today: LocalDate,
@@ -222,6 +277,8 @@ private class BriefContext(
     val tasks: Map<String, TaskItem>,
     val settings: JsonObject?,
     val snapshot: CachedBrief,
+    /** Gestes tout juste faits : lignes cochées, cartes refermées sur leur choix. */
+    val pending: BriefPending,
     val onOpen: (TaskItem) -> Unit,
     val onComplete: (TaskItem) -> Unit,
     val onMove: (TaskItem, MoveDto) -> Unit,
@@ -259,26 +316,38 @@ private fun LazyListScope.briefSection(id: String, context: BriefContext) {
                     val task = context.tasks[move.taskUid] ?: return@forEach
                     val target = runCatching { LocalDate.parse(move.to) }.getOrNull() ?: return@forEach
                     val movable = PlanningChanges.movable(listOf(task)).isNotEmpty()
-                    Column {
+                    val moved = context.pending.moved[move.proposalKey]
+                    val refused = move.proposalKey in context.pending.refused
+                    val open = moved == null && !refused
+                    Column(Modifier.animateContentSize()) {
                         BriefTaskRow(
                             task = task,
                             context = context,
                             subtitle = move.reason.ifBlank { null },
                             onToggle = { context.onComplete(task) },
-                            trailing = if (movable) {
-                                {
-                                    ChoiceChip(
-                                        label = BriefFormat.chip(target) + "  →",
-                                        selected = false,
-                                        onClick = { context.onMove(task, move) },
-                                    )
+                            trailing = when {
+                                moved != null -> {
+                                    { DecisionTag(stringResource(R.string.brief_move_done, BriefFormat.chip(moved))) }
                                 }
-                            } else {
-                                null
+                                refused -> {
+                                    { DecisionTag(stringResource(R.string.brief_move_refused)) }
+                                }
+                                movable -> {
+                                    {
+                                        ChoiceChip(
+                                            label = BriefFormat.chip(target) + "  →",
+                                            selected = false,
+                                            onClick = { context.onMove(task, move) },
+                                        )
+                                    }
+                                }
+                                else -> null
                             },
                         )
-                        Row(Modifier.fillMaxWidth().padding(start = 40.dp)) {
-                            TertiaryAction(stringResource(R.string.brief_refuse_date), onClick = { context.onRefuse(move) })
+                        AnimatedVisibility(visible = open) {
+                            Row(Modifier.fillMaxWidth().padding(start = RowContentInset)) {
+                                TertiaryAction(stringResource(R.string.brief_refuse_date), onClick = { context.onRefuse(move) })
+                            }
                         }
                     }
                 }
@@ -288,24 +357,36 @@ private fun LazyListScope.briefSection(id: String, context: BriefContext) {
             if (brief.anticipate.isEmpty()) return@item
             BriefSection(stringResource(R.string.brief_anticipate_title), null) {
                 brief.anticipate.forEach { card ->
-                    Column(Modifier.padding(bottom = Space.md)) {
+                    val answer = card.question?.let { context.pending.answers[it.key] }
+                    val vote = context.pending.feedback[card.key]
+                    Column(Modifier.padding(bottom = Space.md).animateContentSize()) {
                         Text(
                             card.question?.text ?: card.text,
                             style = MaterialTheme.typography.bodyLarge,
                             color = cadence.onSurface,
                         )
                         card.question?.let { question ->
-                            Row(Modifier.padding(top = Space.xs)) {
-                                SecondaryAction(stringResource(R.string.brief_answer_yes), onClick = { context.onAnswer(question, "yes") })
-                                Spacer(Modifier.width(Space.xs))
-                                SecondaryAction(stringResource(R.string.brief_answer_no), onClick = { context.onAnswer(question, "no") })
-                                Spacer(Modifier.width(Space.xs))
-                                TertiaryAction(stringResource(R.string.brief_answer_precise), onClick = { context.onPrecise(question) })
+                            AnimatedVisibility(visible = answer == null) {
+                                Row(Modifier.padding(top = Space.xs)) {
+                                    SecondaryAction(stringResource(R.string.brief_answer_yes), onClick = { context.onAnswer(question, "yes") })
+                                    Spacer(Modifier.width(Space.xs))
+                                    SecondaryAction(stringResource(R.string.brief_answer_no), onClick = { context.onAnswer(question, "no") })
+                                    Spacer(Modifier.width(Space.xs))
+                                    TertiaryAction(stringResource(R.string.brief_answer_precise), onClick = { context.onPrecise(question) })
+                                }
                             }
                         }
                         Row(Modifier.padding(top = Space.xs), verticalAlignment = Alignment.CenterVertically) {
-                            TertiaryAction(stringResource(R.string.brief_feedback_useful), onClick = { context.onFeedback(card, "useful") })
-                            TertiaryAction(stringResource(R.string.brief_feedback_noise), onClick = { context.onFeedback(card, "noise") })
+                            if (answer != null) {
+                                DecisionTag(stringResource(R.string.brief_answer_given, answerLabel(answer)))
+                                Spacer(Modifier.width(Space.xs))
+                            }
+                            if (vote == null) {
+                                TertiaryAction(stringResource(R.string.brief_feedback_useful), onClick = { context.onFeedback(card, "useful") })
+                                TertiaryAction(stringResource(R.string.brief_feedback_noise), onClick = { context.onFeedback(card, "noise") })
+                            } else {
+                                DecisionTag(stringResource(R.string.brief_feedback_given, stringResource(if (vote == "useful") R.string.brief_feedback_useful else R.string.brief_feedback_noise)))
+                            }
                         }
                     }
                 }
@@ -357,6 +438,14 @@ private fun LazyListScope.briefSection(id: String, context: BriefContext) {
     }
 }
 
+/** « Oui » et « Non » en toutes lettres ; une réponse libre se lit telle qu'elle a été écrite. */
+@Composable
+private fun answerLabel(answer: String): String = when (answer) {
+    "yes" -> stringResource(R.string.brief_answer_yes)
+    "no" -> stringResource(R.string.brief_answer_no)
+    else -> answer
+}
+
 /** Durée lisible : « 40 min », « 2 h », « 1 h 10 ». */
 @Composable
 internal fun durationLabel(minutes: Int): String {
@@ -369,7 +458,7 @@ internal fun durationLabel(minutes: Int): String {
 }
 
 @Composable
-private fun BriefHeader(brief: BriefDto, date: LocalDate, today: LocalDate, audio: @Composable () -> Unit) {
+private fun BriefHeader(brief: BriefDto, date: LocalDate, today: LocalDate, audio: @Composable () -> Unit, link: @Composable () -> Unit) {
     val palette = cadence
     Column(Modifier.fillMaxWidth().padding(bottom = Space.md)) {
         Text(BriefFormat.longDate(date), style = MaterialTheme.typography.bodyMedium, color = palette.onSurfaceVariant)
@@ -386,18 +475,19 @@ private fun BriefHeader(brief: BriefDto, date: LocalDate, today: LocalDate, audi
             Text(countLine(R.string.brief_today_count, brief.counters.dueToday), style = MaterialTheme.typography.bodyMedium, color = palette.onSurfaceVariant)
         }
         audio()
+        link()
     }
 }
 
 @Composable
-private fun countLine(@StringRes label: Int, count: Int): AnnotatedString = buildAnnotatedString {
+internal fun countLine(@StringRes label: Int, count: Int): AnnotatedString = buildAnnotatedString {
     withStyle(SpanStyle(fontWeight = FontWeight.SemiBold, color = cadence.onSurface)) { append(count.toString()) }
     append(" ")
     append(stringResource(label))
 }
 
 @Composable
-private fun BriefSection(title: String, detail: String?, content: @Composable () -> Unit) {
+internal fun BriefSection(title: String, detail: String?, content: @Composable () -> Unit) {
     Column(Modifier.fillMaxWidth().padding(top = Space.xl, bottom = Space.xs)) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Text(title, style = MaterialTheme.typography.titleSmall, color = cadence.onSurfaceVariant)
@@ -409,7 +499,37 @@ private fun BriefSection(title: String, detail: String?, content: @Composable ()
     }
 }
 
-/** Ligne de tâche : état et titre viennent de Room ; le motif du brief s'écrit sous le titre. */
+/**
+ * Ligne de tâche : état et titre viennent de Room ; le motif du brief s'écrit sous le titre. Un geste tout juste fait
+ * ([BriefPending.completing]) coche et barre la ligne à l'instant, même si la tâche est récurrente et reste ouverte.
+ */
+@Composable
+internal fun BriefTaskRow(
+    task: TaskItem,
+    today: LocalDate,
+    zone: ZoneId,
+    pending: BriefPending,
+    subtitle: String?,
+    onOpen: (TaskItem) -> Unit,
+    onToggle: () -> Unit,
+    trailing: (@Composable () -> Unit)? = null,
+) {
+    TaskRow(
+        task = task,
+        projectName = null,
+        today = today,
+        zone = zone,
+        // Une ligne déjà cochée par ce geste ne se coche pas deux fois : « Annuler » du message la rend.
+        onToggle = { if (!pending.isCompleting(task.uid)) onToggle() },
+        onOpen = { onOpen(task) },
+        onSwipeAction = {},
+        onMenu = { onOpen(task) },
+        subtitle = subtitle,
+        trailing = trailing,
+        forceClosed = pending.isCompleting(task.uid),
+    )
+}
+
 @Composable
 private fun BriefTaskRow(
     task: TaskItem,
@@ -417,20 +537,7 @@ private fun BriefTaskRow(
     subtitle: String?,
     onToggle: () -> Unit,
     trailing: (@Composable () -> Unit)? = null,
-) {
-    TaskRow(
-        task = task,
-        projectName = null,
-        today = context.today,
-        zone = context.zone,
-        onToggle = onToggle,
-        onOpen = { context.onOpen(task) },
-        onSwipeAction = {},
-        onMenu = { context.onOpen(task) },
-        subtitle = subtitle,
-        trailing = trailing,
-    )
-}
+) = BriefTaskRow(task, context.today, context.zone, context.pending, subtitle, context.onOpen, onToggle, trailing)
 
 /** « Préciser » : une réponse libre, envoyée comme un texte d'answer au serveur. */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -459,17 +566,24 @@ private fun PreciseAnswerSheet(question: QuestionDto, onSend: (String) -> Unit, 
 
 private const val MAX_ANSWER = 500
 
-/** Carte d'entrée dans Aujourd'hui : une ligne (verdict tronqué, chevron), seulement quand le brief du jour existe. */
+/** Carte d'entrée dans Aujourd'hui : une ligne (verdict tronqué, chevron) ; le bilan du soir y remplace le résumé du matin. */
 @Composable
-internal fun BriefCard(cached: CachedBrief, onOpen: () -> Unit, modifier: Modifier = Modifier) {
-    val verdict = cached.brief?.verdict?.text?.takeIf { it.isNotBlank() } ?: return
+internal fun BriefCard(card: BriefCardState, onOpen: () -> Unit, modifier: Modifier = Modifier) {
     Panel(modifier = modifier.fillMaxWidth(), onClick = onOpen) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
-                Text(stringResource(R.string.brief_card_title), style = MaterialTheme.typography.labelMedium, color = cadence.onSurfaceVariant)
-                Text(verdict, style = MaterialTheme.typography.bodyLarge, color = cadence.onSurface, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(
+                    stringResource(if (card.evening) R.string.evening_card_title else R.string.brief_card_title),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = cadence.onSurfaceVariant,
+                )
+                Text(card.verdict, style = MaterialTheme.typography.bodyLarge, color = cadence.onSurface, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
-            Icon(Icons.Outlined.ChevronRight, contentDescription = stringResource(R.string.brief_card_open), tint = cadence.onSurfaceVariant)
+            Icon(
+                Icons.Outlined.ChevronRight,
+                contentDescription = stringResource(if (card.evening) R.string.evening_card_open else R.string.brief_card_open),
+                tint = cadence.onSurfaceVariant,
+            )
         }
     }
 }

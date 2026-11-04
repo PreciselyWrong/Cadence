@@ -47,8 +47,33 @@
     <string name="brief_refused_notice">Date refusée</string>
     <string name="brief_answered_notice">Réponse enregistrée</string>
     <string name="brief_feedback_notice">Merci, c\'est noté</string>
+    <string name="brief_move_done">Déplacé · %1$s</string>
+    <string name="brief_move_refused">Date refusée</string>
+    <string name="brief_answer_given">Réponse : %1$s</string>
+    <string name="brief_feedback_given">Avis : %1$s</string>
     <string name="brief_precise_label">Votre réponse</string>
     <string name="brief_precise_send">Envoyer</string>
+
+    <!-- Bilan du soir -->
+    <string name="evening_title">Bilan du soir</string>
+    <string name="evening_card_title">Bilan du soir</string>
+    <string name="evening_card_open">Ouvrir le bilan du soir</string>
+    <string name="evening_show">Voir le bilan du soir</string>
+    <string name="evening_show_morning">Voir le résumé du matin</string>
+    <string name="evening_done_count">faites</string>
+    <string name="evening_slipped_count">glissées</string>
+    <string name="evening_tonight_title">Ce soir</string>
+    <string name="evening_done_title">Fait aujourd\'hui</string>
+    <string name="evening_slipped_title">Glisse</string>
+    <string name="evening_tomorrow_title">Demain</string>
+    <string name="evening_carry">Reporter à demain</string>
+    <string name="evening_carried">Reporté à demain</string>
+    <string name="evening_carried_notice">Reportée à demain</string>
+    <string name="evening_settings_title">Bilan du soir</string>
+    <string name="evening_settings_hint">Après l\'heure choisie, le bilan de la journée remplace le résumé du matin dans Aujourd\'hui ; le résumé du matin reste à un appui.</string>
+    <string name="evening_enabled">Bilan du soir</string>
+    <string name="evening_switch_time">À partir de</string>
+    <string name="evening_switch_time_support">HH:mm, heure locale, par pas de 5 minutes</string>
 
     <!-- Réglages › Résumé -->
     <string name="brief_settings_title">Résumé</string>

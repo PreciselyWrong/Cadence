@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.tasks.brief
 
+import ch.nicolab.cadence.tasks.brief.audio.AudioTarget
 import ch.nicolab.cadence.tasks.data.BriefDao
 import ch.nicolab.cadence.tasks.data.BriefEntity
 import java.time.LocalDate
@@ -19,6 +20,10 @@ data class CachedBrief(
     val generatedAt: String?,
     val fetchedAtMs: Long,
 )
+
+/** Ce que la voix lit de ce brief : son script et l'audio du serveur ; null quand le brief ne se lit plus. */
+fun CachedBrief.audioTarget(): AudioTarget? =
+    brief?.let { AudioTarget(date, version, it.audioScript, it.audio) }
 
 /**
  * Brief du jour : lecture `GET /daily-plan/:date/brief` quand le serveur répond, sinon la dernière lecture gardée dans

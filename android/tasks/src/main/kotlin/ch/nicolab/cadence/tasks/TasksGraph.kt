@@ -19,6 +19,8 @@ import ch.nicolab.cadence.tasks.brief.BriefAgentsRepository
 import ch.nicolab.cadence.tasks.brief.BriefRepository
 import ch.nicolab.cadence.tasks.brief.BriefSettingsRepository
 import ch.nicolab.cadence.tasks.brief.BriefStore
+import ch.nicolab.cadence.tasks.brief.EveningRepository
+import ch.nicolab.cadence.tasks.data.createEvening
 import ch.nicolab.cadence.tasks.data.createBrief
 import ch.nicolab.cadence.tasks.data.createBriefActions
 import ch.nicolab.cadence.tasks.data.createBriefAgents
@@ -57,6 +59,9 @@ object TasksGraph {
 
     /** Brief du jour, lu en ligne et gardé pour le hors ligne. */
     fun brief(context: Context): BriefRepository = createBrief(context.applicationContext)
+
+    /** Bilan du soir, lu en ligne et gardé pour le hors ligne. */
+    fun evening(context: Context): EveningRepository = createEvening(context.applicationContext)
 
     /** Réglages du brief (dernière lecture gardée, écriture différée hors ligne). */
     fun briefSettings(context: Context): BriefSettingsRepository = createBriefSettings(context.applicationContext)

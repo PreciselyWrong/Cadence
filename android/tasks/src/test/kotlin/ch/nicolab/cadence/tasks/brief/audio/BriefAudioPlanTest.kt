@@ -26,7 +26,7 @@ class BriefAudioPlanTest {
     }
 
     @Test
-    fun serverCopyThenServerReadyComeBeforeSystemSpeech() {
+    fun serverCopyThenServerReadyComeBeforeALocalRender() {
         assertEquals(AudioChoice(AudioSource.SERVER, 1), BriefAudioPlan.choose(null, stored(AudioOrigin.SERVER, 59_000), null, 200))
         assertEquals(AudioChoice(AudioSource.SERVER, 2), BriefAudioPlan.choose(null, null, ready, 200))
     }
@@ -34,13 +34,29 @@ class BriefAudioPlanTest {
     @Test
     fun aServerAudioThatIsNotReadyDoesNotCount() {
         for (status in listOf("none", "pending", "failed", "expired")) {
-            assertEquals(AudioSource.SPEECH, BriefAudioPlan.choose(null, null, AudioDto(status = status), 120).source, status)
+            assertEquals(AudioSource.RENDER, BriefAudioPlan.choose(null, null, AudioDto(status = status), 120, voiceReady = true).source, status)
         }
     }
 
     @Test
-    fun systemSpeechReadsTheScriptWhenNothingElseExists() {
-        assertEquals(AudioChoice(AudioSource.SPEECH, 2), BriefAudioPlan.choose(null, null, null, 230))
+    fun anInstalledVoiceRendersOnDemandWhenNoFileExists() {
+        assertEquals(AudioChoice(AudioSource.RENDER, 2), BriefAudioPlan.choose(null, null, null, 230, voiceReady = true))
+    }
+
+    @Test
+    fun withoutAnInstalledVoiceListeningOffersTheVoices() {
+        assertEquals(AudioChoice(AudioSource.GET_VOICE, 2), BriefAudioPlan.choose(null, null, null, 230, voiceReady = false))
+    }
+
+    @Test
+    fun theSystemVoiceIsNeverAnOption() {
+        assertEquals(setOf("LOCAL", "SERVER", "RENDER", "GET_VOICE", "NONE"), AudioSource.entries.map { it.name }.toSet())
+    }
+
+    @Test
+    fun withoutAnEngineOrAScriptThereIsNothingToRender() {
+        assertEquals(AudioSource.NONE, BriefAudioPlan.choose(null, null, null, 230, voiceReady = true, engineAvailable = false).source)
+        assertEquals(AudioSource.NONE, BriefAudioPlan.choose(null, null, null, 0, voiceReady = true).source)
     }
 
     @Test

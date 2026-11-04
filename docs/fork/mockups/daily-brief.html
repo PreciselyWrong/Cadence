@@ -1,0 +1,118 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Résumé du jour, maquette</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+:root{--bg:#ECECEF;--surface:#FCFCFD;--low:#F4F4F6;--high:#E4E4E8;--on:#1B1B21;--onv:#5A5A63;--line:#E6E6EA;--outline:#C7C5D0;--accent:#5E5CE6;--accentC:#E4E3FF;--onAccentC:#16136B;--error:#BA1A1A;--errorC:#FFDAD6;--warn:#7C5800;--ok:#286C2A}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font:16px/1.5 "Plus Jakarta Sans",system-ui,sans-serif;color:var(--on);display:flex;gap:40px;justify-content:center;align-items:flex-start;padding:40px 24px;flex-wrap:wrap;-webkit-font-smoothing:antialiased;word-spacing:.08em}
+.cap{font-size:12px;color:var(--onv);text-align:center;margin:0 0 10px;letter-spacing:.01em}
+.ph{width:412px;background:var(--surface);border-radius:36px;padding:28px 20px 32px;outline:1px solid #DADADF}
+.date{font-size:13px;color:var(--onv)}
+.verdict{font-size:22px;line-height:28px;font-weight:600;letter-spacing:-.01em;margin:4px 0 0;text-wrap:balance}
+.facts{display:flex;align-items:center;gap:16px;margin-top:14px;font-size:14px;color:var(--onv)}
+.facts b{color:var(--on);font-weight:600;font-variant-numeric:tabular-nums}
+.play{margin-left:auto;display:flex;align-items:center;gap:8px;height:44px;padding:0 18px 0 14px;border-radius:999px;background:var(--accent);color:#fff;font-weight:600;font-size:14px;border:0}
+.play i{font-size:20px}
+h2{font-size:14px;font-weight:600;margin:30px 0 8px;display:flex;justify-content:space-between;align-items:baseline}
+h2 span{font-weight:400;font-size:13px;color:var(--onv)}
+.day{margin-top:14px}
+.dh{display:flex;justify-content:space-between;font-size:14px;font-weight:600}
+.dh span{font-weight:400;color:var(--onv);font-variant-numeric:tabular-nums}
+.dh span.full{color:var(--on);font-weight:700}
+.track{position:relative;height:28px;background:var(--low);border-radius:8px;margin-top:6px;overflow:hidden}
+.blk{position:absolute;top:0;bottom:0}
+.work{background:#E2E2E7}
+.work.part{background:repeating-linear-gradient(135deg,#E2E2E7 0 6px,transparent 6px 12px)}
+.eve{border-left:1px dashed var(--outline);}
+.eve i{position:absolute;left:0;top:0;bottom:0;background:var(--accentC)}
+.ev{top:9px;bottom:9px;border-radius:5px;background:#4A4A55;min-width:8px}
+.ev.bad{background:var(--error)}
+.evs{font-size:13px;color:var(--onv);margin-top:5px;font-variant-numeric:tabular-nums}
+.evs .bad{color:var(--error);font-weight:500}
+.axis{position:relative;height:16px;margin-top:8px;font-size:11px;color:var(--onv);font-variant-numeric:tabular-nums}
+.axis span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--onv);margin-top:10px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.row{display:flex;gap:14px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--line)}
+.row:first-of-type{border-top:0}
+.ck{width:22px;height:22px;border-radius:7px;border:1.8px solid var(--outline);flex:none;margin-top:1px}
+.ck.hi{border-color:var(--error)}
+.t{flex:1;min-width:0}
+.m{font-size:13px;color:var(--onv);margin-top:1px}
+.proj{font-weight:500}
+.to{flex:none;height:32px;padding:0 12px;border:0;border-radius:999px;background:var(--accentC);color:var(--onAccentC);font-size:13px;font-weight:600;display:flex;align-items:center;gap:4px}
+.q{padding:14px 0 4px}
+.qt{font-size:15px}
+.ans{display:flex;gap:0;margin:6px 0 0 -12px;align-items:center}
+.b{height:44px;padding:0 12px;border-radius:10px;border:0;background:transparent;font-weight:600;color:var(--accent)!important;font:inherit;font-size:14px;color:var(--on);display:flex;align-items:center;gap:6px}
+.ghost{margin-left:auto;display:flex;gap:2px}
+.ghost button{width:36px;height:36px;border:0;background:transparent;border-radius:999px;color:var(--onv);font-size:18px}
+.ic{flex:none;width:22px;text-align:center;color:var(--onv);font-size:20px;margin-top:1px}
+.done{color:var(--onv)}
+.done .t{text-decoration:line-through;text-decoration-color:var(--outline)}
+.hint{font-size:12px;color:var(--onv);margin:4px 0 0}
+.mail{background:var(--surface);border-radius:20px;padding:14px 16px;margin-top:10px}
+.mh{display:flex;gap:12px;align-items:flex-start}
+.mh input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--accent)}
+.act{display:block;margin-top:8px;font-size:14px;font-weight:600;color:var(--on)}
+.risk{}
+.risk .why{color:var(--error);font-size:13px;margin-top:6px}
+.primary{height:44px;padding:0 20px;border-radius:999px;background:var(--accent);color:#fff;border:0;font:inherit;font-weight:600;font-size:14px}
+.snack{margin-top:18px;background:#2B2B31;color:#F2F2F5;border-radius:14px;padding:0 6px 0 16px;height:48px;display:flex;align-items:center;justify-content:space-between;font-size:14px}
+.snack button{height:40px;padding:0 12px;border:0;background:transparent;color:#C9C7FF;font:inherit;font-weight:600}
+</style></head><body>
+
+<div><p class="cap">Android · Résumé du jour</p><div class="ph">
+<div class="date">Mercredi 4 novembre</div>
+<p class="verdict">Ce soir, une seule chose compte&nbsp;: la déclaration.</p>
+<div class="facts"><span><b>2</b> en retard</span><span><b>4</b> aujourd'hui</span><button class="play" aria-label="Écouter le résumé, 1 min 20"><i class="ti ti-player-play"></i>Écouter · 1 min</button></div>
+
+<h2>Trois jours <span>soir prévu / libre</span></h2>
+<div class="axis" style="margin:2px 0 -4px"><span style="left:0;transform:none">8 h</span><span style="left:28.6%">12 h</span><span style="left:64.3%">17 h</span><span style="left:100%;transform:translateX(-100%)">22 h</span></div>
+<div class="day"><div class="dh">Aujourd'hui<span>40 / 90 min</span></div>
+<div class="track"><div class="blk work" style="left:0;width:64.3%"></div><div class="blk eve" style="left:75%;width:25%"><i style="width:44%"></i></div><div class="blk ev bad" style="left:35.7%;width:7.1%"></div><div class="blk ev" style="left:75%;width:10.7%"></div></div>
+<div class="evs"><span class="bad">13:00 Dentiste, pendant le travail</span> · 18:30 Gym</div></div>
+<div class="day"><div class="dh">Jeudi<span>10 / 120 min</span></div>
+<div class="track"><div class="blk eve" style="left:71.4%;width:28.6%"><i style="width:8%"></i></div><div class="blk ev" style="left:3.6%;width:25%"></div><div class="blk ev" style="left:71.4%;width:7.1%"></div></div>
+<div class="evs">8:30 Voiture au garage · 18:00 Natation</div></div>
+<div class="day"><div class="dh">Vendredi<span class="full">15 min de trop</span></div>
+<div class="track"><div class="blk work part" style="left:0;width:64.3%"></div><div class="blk eve" style="left:78.6%;width:21.4%"><i style="width:100%"></i></div><div class="blk ev" style="left:14.3%;width:7.1%"></div><div class="blk ev" style="left:42.9%;width:10.7%"></div></div>
+<div class="evs">Télétravail ½ · 10:00 Sport · 14:00 Atelier</div></div>
+
+<h2>Ce soir <span>1 h 10 sur 1 h 30 supposées</span></h2>
+<div class="row"><span class="ck hi" role="checkbox" aria-label="C'est fait"></span><div class="t">Envoyer la déclaration d'impôts<div class="m"><span class="proj" style="color:#6750A4">Administratif</span> · échéance demain · 40 min</div></div></div>
+<div class="row"><span class="ck" role="checkbox" aria-label="C'est fait"></span><div class="t">Répondre au devis du plombier<div class="m"><span class="proj" style="color:#00658F">Maison</span> · il attend ta réponse · 15 min</div></div></div>
+<div class="row"><span class="ck" role="checkbox" aria-label="C'est fait"></span><div class="t">Payer la facture d'électricité<div class="m"><span class="proj" style="color:#00658F">Maison</span> · 15 min</div></div></div>
+
+<h2>À déplacer</h2>
+<div class="row"><span class="ck" role="checkbox" aria-label="C'est fait"></span><div class="t">Trier les photos de vacances<div class="m">Reportée 3 fois</div></div><button class="to" aria-label="Déplacer au samedi 7">Sam 7 <i class="ti ti-arrow-right" style="font-size:15px"></i></button></div>
+<div class="row"><span class="ck" role="checkbox" aria-label="C'est fait"></span><div class="t">Rappeler l'assurance<div class="m">En retard depuis lundi</div></div><button class="to" aria-label="Déplacer au jeudi 5">Jeu 5 <i class="ti ti-arrow-right" style="font-size:15px"></i></button></div>
+
+<h2>À anticiper</h2>
+<div class="q"><div class="qt">Garage jeudi 8:30&nbsp;: c'est la même voiture que la révision de mars&nbsp;?</div>
+<div class="ans"><button class="b">Oui</button><button class="b">Non</button><button class="b">Préciser</button>
+<span class="ghost" style="font-size:13px;color:var(--onv);gap:12px;margin-right:0">Utile · Bruit</span></div></div>
+
+<h2>Réponses attendues</h2>
+<div class="row"><span class="ic"><i class="ti ti-mail"></i></span><div class="t">Club de foot · horaires du tournoi<div class="m">Depuis 2 jours</div></div><button class="b">Brouillon</button></div>
+
+<h2>Inbox</h2>
+<div class="row"><span class="ic"><i class="ti ti-bulb"></i></span><div class="t">Idée cadeau anniversaire<div class="m">En tâche pour la semaine prochaine&nbsp;?</div></div><button class="b">Oui</button></div>
+
+<h2>Réglé <span>1 depuis hier</span></h2>
+<div class="row done"><span class="ic" style="color:var(--ok)"><i class="ti ti-circle-check"></i></span><div class="t">Renouveler la carte d'identité</div></div>
+</div></div>
+
+<div><p class="cap">Phase 5 · tri des mails proposé</p><div class="ph" style="background:var(--low)">
+<h2 style="margin-top:0">Mails à trier <span>3 propositions</span></h2>
+<div class="mail"><div class="mh"><input type="checkbox" checked aria-label="Inclure dans la sélection"><div class="t">École · sortie de classe vendredi<div class="m">il y a 1 h</div><span class="act">Tâche puis archivage</span><div class="m" style="margin-top:6px">« Signer l'autorisation » · jeudi 5</div></div></div>
+<div class="ans" style="padding-left:32px"><button class="b">Oui</button><button class="b">Non</button><button class="b">Modifier</button></div></div>
+<div class="mail"><div class="mh"><input type="checkbox" checked aria-label="Inclure dans la sélection"><div class="t">Voisin · prêt de la remorque<div class="m">hier</div><span class="act">Brouillon de réponse</span><div class="m" style="margin-top:6px">Accepter, proposer samedi matin</div></div></div>
+<div class="ans" style="padding-left:32px"><button class="b">Oui</button><button class="b">Non</button><button class="b">Modifier</button></div></div>
+<div class="mail risk"><div class="t" style="padding-left:32px">Banque · confirmez votre identité<div class="why"><i class="ti ti-lock" style="font-size:14px;vertical-align:-2px"></i> Argent ou identifiants&nbsp;: pas de brouillon ni d'archivage en un geste.</div></div>
+<div class="ans" style="padding-left:32px"><button class="b">Créer une tâche</button><button class="b">Ignorer</button></div></div>
+<div style="display:flex;justify-content:flex-end;margin-top:16px"><button class="primary">Valider les 2 sélectionnés</button></div>
+<p class="hint" style="text-align:right">Rien n'est envoyé : les brouillons restent dans Gmail.</p>
+<p class="hint" style="margin-top:22px">Après une action&nbsp;:</p><div class="snack" role="status" style="margin-top:6px">Tâche créée, mail archivé<button>Annuler</button></div>
+</div></div>
+</body></html>

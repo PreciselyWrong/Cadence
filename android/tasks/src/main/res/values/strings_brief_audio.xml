@@ -9,8 +9,13 @@
     <string name="brief_audio_next">Chapitre suivant</string>
     <string name="brief_audio_previous">Chapitre précédent</string>
     <string name="brief_audio_chapter">Chapitre %1$d sur %2$d</string>
-    <string name="brief_audio_unavailable">Audio indisponible : connectez-vous au serveur ou installez une voix dans Réglages › Résumé.</string>
-    <string name="brief_audio_speech_failed">La voix française du système n\'est pas installée.</string>
+    <string name="brief_audio_unavailable">Audio indisponible : connectez-vous au serveur ou téléchargez une voix dans Réglages › Résumé.</string>
+    <string name="brief_audio_preparing">Préparation de la voix…</string>
+    <string name="brief_audio_render_failed">La voix n\'a pas pu préparer la lecture. Réessayez.</string>
+
+    <!-- Écouter sans voix installée -->
+    <string name="brief_voice_sheet_title">Choisir une voix</string>
+    <string name="brief_voice_sheet_message">Le résumé se lit avec une voix qui tourne sur le téléphone : le texte ne part nulle part. Le téléchargement, une seule fois, est le seul usage du réseau.</string>
 
     <!-- Réglages › Résumé › Voix sur ce téléphone -->
     <string name="brief_voice_local_title">Voix sur ce téléphone</string>

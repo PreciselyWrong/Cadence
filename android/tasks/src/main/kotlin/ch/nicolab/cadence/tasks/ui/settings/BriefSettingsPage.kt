@@ -40,6 +40,7 @@ import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.brief.BriefSettingsJson
 import ch.nicolab.cadence.tasks.brief.DEFAULT_BRIEF_SECTIONS
+import ch.nicolab.cadence.tasks.brief.EveningMode
 import ch.nicolab.cadence.tasks.ui.brief.BriefFormat
 import ch.nicolab.cadence.tasks.ui.brief.BriefViewModel
 import kotlinx.serialization.json.JsonArray
@@ -71,6 +72,7 @@ fun BriefSettingsPage(modifier: Modifier = Modifier) {
         } else {
             val save: (JsonObject) -> Unit = viewModel::saveSettings
             SendingPanel(current, save)
+            EveningReviewPanel(current, save)
             SectionsPanel(current, save)
             TimelinePanel(current, save)
             ThresholdsPanel(current, save)
@@ -120,6 +122,29 @@ private fun SendingPanel(current: JsonObject, save: (JsonObject) -> Unit) {
                     },
                 )
             }
+        }
+    }
+}
+
+/** Bilan du soir : après l'heure de bascule, il remplace le résumé du matin dans Aujourd'hui et dans l'écran du résumé. */
+@Composable
+private fun EveningReviewPanel(current: JsonObject, save: (JsonObject) -> Unit) {
+    val switch = EveningMode.switchOf(current)
+    Panel {
+        Text(stringResource(R.string.evening_settings_title), style = MaterialTheme.typography.titleMedium, color = cadence.onSurface)
+        Text(stringResource(R.string.evening_settings_hint), style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)
+        ToggleRow(
+            label = stringResource(R.string.evening_enabled),
+            checked = switch.enabled,
+            onChecked = { save(EveningMode.withSwitch(current, switch.copy(enabled = it))) },
+        )
+        if (switch.enabled) {
+            TextSetting(
+                label = stringResource(R.string.evening_switch_time),
+                value = EveningMode.clock(switch.switchMinute),
+                support = stringResource(R.string.evening_switch_time_support),
+                valid = { EveningMode.parseMinute(it) != null },
+            ) { text -> EveningMode.parseMinute(text)?.let { save(EveningMode.withSwitch(current, switch.copy(switchMinute = it))) } }
         }
     }
 }

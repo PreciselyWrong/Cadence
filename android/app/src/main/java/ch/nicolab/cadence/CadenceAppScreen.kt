@@ -8,6 +8,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -332,7 +335,14 @@ internal fun CadenceAppScreen(
             }
             CadenceSnackbarHost(
                 snackbar,
-                Modifier.align(Alignment.BottomCenter).padding(bottom = if (settingsOpen || searchOpen || reviewOpen || goalsOpen || briefOpen) Space.lg else navigationClearance() + Space.sm),
+                Modifier.align(Alignment.BottomCenter).padding(
+                    // Sans barre flottante, la bannière s'arrête quand même au-dessus des boutons du système (3 boutons ou gestes).
+                    bottom = if (settingsOpen || searchOpen || reviewOpen || goalsOpen || briefOpen) {
+                        WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + Space.lg
+                    } else {
+                        navigationClearance() + Space.sm
+                    },
+                ),
                 backdrop = backdrop,
             )
         }

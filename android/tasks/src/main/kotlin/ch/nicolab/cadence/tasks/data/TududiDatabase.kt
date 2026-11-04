@@ -22,8 +22,9 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         SyncConflictEntity::class,
         DeferredCallEntity::class,
         BriefEntity::class,
+        EveningEntity::class,
     ],
-    version = 12,
+    version = 13,
     exportSchema = true,
 )
 abstract class TududiDatabase : RoomDatabase() {
@@ -42,6 +43,7 @@ abstract class TududiDatabase : RoomDatabase() {
     abstract fun syncConflictDao(): SyncConflictDao
     abstract fun deferredCallDao(): DeferredCallDao
     abstract fun briefDao(): BriefDao
+    abstract fun eveningDao(): EveningDao
 }
 
 /** Ajoute le nom de la ligne rejetée au journal des échecs. */
@@ -185,6 +187,15 @@ internal val MIGRATION_11_12 = object : Migration(11, 12) {
         db.execSQL(
             "CREATE TABLE IF NOT EXISTS `brief` (`date` TEXT NOT NULL, `json` TEXT NOT NULL, `version` INTEGER NOT NULL, " +
                 "`status` TEXT NOT NULL, `generatedAt` TEXT, `fetchedAtMs` INTEGER NOT NULL, PRIMARY KEY(`date`))",
+        )
+    }
+}
+
+/** Table du bilan du soir, pour la lecture hors ligne. Rien d'existant n'est touché : le curseur reste. */
+internal val MIGRATION_12_13 = object : Migration(12, 13) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL(
+            "CREATE TABLE IF NOT EXISTS `evening` (`date` TEXT NOT NULL, `json` TEXT NOT NULL, `fetchedAtMs` INTEGER NOT NULL, PRIMARY KEY(`date`))",
         )
     }
 }

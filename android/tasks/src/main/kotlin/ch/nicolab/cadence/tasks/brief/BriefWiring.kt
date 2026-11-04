@@ -14,8 +14,8 @@ internal class RepositoryBriefTasks(private val repository: TaskRepository) : Br
 /** File d'appels différés : l'envoi passe par le dépôt (qui relance la synchro), l'annulation retire la ligne gardée. */
 internal class DeferredBriefQueue(
     private val defer: suspend (DeferredCall) -> Unit,
-    private val cancelKey: suspend (String) -> Unit,
+    private val cancelKey: suspend (String) -> Boolean,
 ) : BriefQueue {
     override suspend fun enqueue(call: DeferredCall) = defer(call)
-    override suspend fun cancel(key: String) = cancelKey(key)
+    override suspend fun cancel(key: String): Boolean = cancelKey(key)
 }

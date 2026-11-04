@@ -4,6 +4,17 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-04 — Résumé : voix Piper à la demande, retour immédiat, bilan du soir
+
+- **Problème** (essai de la 1.10.1 sur un Pixel) : sans voix Piper installée, « Écouter » lisait avec la voix du système ; toucher la case, la pastille de date, Oui/Non/Préciser ou Utile/Bruit ne changeait rien à l'écran ; la bannière « Annuler » se posait sous les boutons de navigation d'Android (invisible avec 3 boutons) ; rien ne marquait la fin de journée.
+- **Décision** :
+  - Voix : la voix du système disparaît du résumé. Sans voix installée, « Écouter » ouvre une feuille (Siwis ou Tom : licence, taille), télécharge avec progression, puis prépare (« Préparation de la voix… ») et lit. Le MP3 du serveur reste la seule autre source.
+  - Retour immédiat : chaque geste se voit à l'appui. La case coche et barre la ligne ; la pastille de date devient « Déplacé · Jeu 5 » et « Pas cette date » disparaît ; Oui/Non/Préciser deviennent « Réponse : Oui » ; Utile/Bruit deviennent « Avis : Utile ». Puis la bannière « Annuler », qui rend les boutons. Une écriture qui échoue défait l'état et le dit. Les décisions du jour sont gardées : la carte ne se rouvre pas au prochain passage.
+  - Bannières : l'hôte s'arrête au-dessus des boutons du système sur tous les écrans sans barre flottante (résumé, recherche, revue, objectifs, réglages).
+  - Bilan du soir : après l'heure de bascule (Réglages › Résumé › Bilan du soir, 18:00 par défaut, réglé côté serveur), la carte d'Aujourd'hui et l'écran passent au bilan : verdict et compteurs, Ce soir, Fait aujourd'hui, Glisse (avec « Reporter à demain », « Reporté à demain » ensuite), Demain (une frise). Lien discret « Voir le résumé du matin » et retour « Voir le bilan du soir ». Le bilan se lit avec la même voix (intro, fait, ce soir, demain). « Reporter à demain » est un appel différé (hors ligne compris) ; « Annuler » le retire s'il n'est pas parti, sinon retire la tâche du plan de demain, sauf si la dernière lecture du plan l'y montrait déjà.
+  - Cache : table Room `evening` à part (le `brief` a la date pour clé unique et une version ; le bilan n'a ni version ni statut, le serveur le recalcule à chaque lecture), Room des tâches v13.
+- **Web** : les cartes décidées (« Déplacé · jeudi 5 », « Réponse : Oui », « Avis : Utile ») et la ligne cochée à l'appui sont à vérifier sur la page du résumé web ; le bilan du soir web existe déjà (docs/39).
+
 ### 2026-11-04 — Notes dans la page d'un projet
 
 - **Problème** : une note rattachée à un projet n'apparaissait que dans la liste Notes ; la page du projet sur Android ne montrait que tâches et sous-projets, alors que le web affiche ses notes.

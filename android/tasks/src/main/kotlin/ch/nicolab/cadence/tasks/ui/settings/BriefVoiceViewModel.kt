@@ -8,20 +8,16 @@ import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.brief.audio.BriefAudioScheduler
 import ch.nicolab.cadence.tasks.brief.audio.BriefVoice
 import ch.nicolab.cadence.tasks.brief.audio.BriefVoiceCatalog
-import ch.nicolab.cadence.tasks.brief.audio.BriefVoiceDownload
+import ch.nicolab.cadence.tasks.brief.audio.BriefVoiceInstaller
 import ch.nicolab.cadence.tasks.brief.audio.BriefVoiceEngine
 import ch.nicolab.cadence.tasks.brief.audio.VoicePreview
-import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -50,10 +46,16 @@ internal class BriefVoiceViewModel(application: Application) : AndroidViewModel(
     private val prefs = audio.prefs
     private val preview = VoicePreview()
     private val local = MutableStateFlow(VoiceUiState())
-    private var download: Job? = null
+    private val installer = BriefVoiceInstaller(audio.voices, viewModelScope)
 
-    val state: StateFlow<VoiceUiState> = combine(local, prefs.voiceId, prefs.speed) { current, voice, speed ->
-        current.copy(selectedId = BriefVoiceCatalog.resolve(voice).id, speed = speed)
+    val state: StateFlow<VoiceUiState> = combine(local, prefs.voiceId, prefs.speed, installer.state) { current, voice, speed, install ->
+        current.copy(
+            selectedId = BriefVoiceCatalog.resolve(voice).id,
+            speed = speed,
+            downloadingId = install.downloadingId,
+            progress = install.progress,
+            message = install.message ?: current.message,
+        )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, VoiceUiState())
 
     init {
@@ -71,38 +73,19 @@ internal class BriefVoiceViewModel(application: Application) : AndroidViewModel(
     }
 
     fun download(voice: BriefVoice) {
-        if (download?.isActive == true) return
-        local.update { it.copy(downloadingId = voice.id, progress = 0f, message = null) }
-        download = viewModelScope.launch(Dispatchers.IO) {
-            val job = coroutineContext.job
-            var lastPercent = -1
-            try {
-                BriefVoiceDownload.fetch(voice, audio.voices, checkActive = { job.ensureActive() }) { bytes ->
-                    val percent = (bytes * PERCENT / voice.pack.bytes).toInt()
-                    if (percent != lastPercent) {
-                        lastPercent = percent
-                        local.update { it.copy(progress = percent / PERCENT.toFloat()) }
-                    }
-                }
+        local.update { it.copy(message = null) }
+        installer.clearMessage()
+        installer.download(
+            voice,
+            onInstalled = {
                 prefs.setVoice(voice.id)
                 BriefAudioScheduler.request(getApplication())
-                local.update { it.copy(message = null) }
-            } catch (error: CancellationException) {
-                audio.voices.cleanInterrupted(voice.pack)
-                throw error
-            } catch (error: Exception) {
-                audio.voices.cleanInterrupted(voice.pack)
-                local.update { it.copy(message = BriefVoiceDownload.failureMessage(error)) }
-            } finally {
-                local.update { it.copy(downloadingId = null, progress = 0f) }
-                reload()
-            }
-        }
+            },
+            onSettled = ::reload,
+        )
     }
 
-    fun cancelDownload() {
-        download?.cancel()
-    }
+    fun cancelDownload() = installer.cancel()
 
     fun delete(voice: BriefVoice) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -151,9 +134,5 @@ internal class BriefVoiceViewModel(application: Application) : AndroidViewModel(
     override fun onCleared() {
         preview.stop()
         super.onCleared()
-    }
-
-    private companion object {
-        const val PERCENT = 100L
     }
 }

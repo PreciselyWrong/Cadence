@@ -84,9 +84,26 @@ class BriefAudioFilesTest {
         publish(files, today, 2)
         publish(files, today.minusDays(1), 1)
 
-        files.purge(today, keep = today to 2)
+        files.purge(today, keep = setOf(today to 2))
 
         assertEquals(setOf("2026-11-10-v2", "2026-11-09-v1"), files.keys())
+    }
+
+    @Test
+    fun theEveningReviewKeepsItsOwnVersionNextToTheMorningBrief() {
+        val files = files()
+        val evening = BriefAudioFiles.eveningVersion("intro|Bonsoir")
+        val staleEvening = BriefAudioFiles.eveningVersion("intro|Autre texte")
+        publish(files, today, 2)
+        publish(files, today, evening)
+        publish(files, today, staleEvening)
+
+        files.purge(today, keep = setOf(today to 2, today to evening))
+
+        assertEquals(setOf("2026-11-10-v2", "2026-11-10-v$evening"), files.keys())
+        assertTrue(BriefAudioFiles.isEvening(evening))
+        assertFalse(BriefAudioFiles.isEvening(2))
+        assertEquals(evening, BriefAudioFiles.eveningVersion("intro|Bonsoir"))
     }
 
     @Test
@@ -97,7 +114,7 @@ class BriefAudioFilesTest {
         File(files.directory(), "2026-11-01-v1.wav.part").writeText("x")
         files.partFile(today, 1, AudioOrigin.SERVER).writeText("x")
 
-        files.purge(today, keep = today to 1)
+        files.purge(today, keep = setOf(today to 1))
 
         assertEquals(setOf("2026-11-10-v1.wav", "2026-11-10-v1.json", "2026-11-10-v1.mp3.part"), files.directory().list()!!.toSet())
     }

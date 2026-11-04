@@ -1,0 +1,77 @@
+package ch.nicolab.cadence.tasks.ui.brief
+
+import java.time.LocalDate
+
+/**
+ * Ce que la personne vient de faire dans le résumé, montré à l'instant sans attendre Room ni le serveur : la ligne se
+ * coche, la carte se referme sur son choix. Pur, donc testé sur la JVM ; l'écran ne fait que le lire.
+ *
+ * Deux durées de vie : [completing] ne vit que le temps que Room rattrape la tâche (une tâche récurrente reste
+ * ouverte, la ligne reste cochée jusqu'à l'annulation) ; le reste est une décision, gardée avec le jour
+ * ([lasting] / [fromLasting]) pour que la carte ne se rouvre pas au prochain passage. Toute entrée s'annule.
+ */
+data class BriefPending(
+    val completing: Set<String> = emptySet(),
+    /** Clé de la proposition de déplacement -> jour choisi. */
+    val moved: Map<String, LocalDate> = emptyMap(),
+    /** Clés des déplacements refusés (« Pas cette date »). */
+    val refused: Set<String> = emptySet(),
+    /** Clé de la question -> réponse (`yes`, `no` ou texte libre). */
+    val answers: Map<String, String> = emptyMap(),
+    /** Clé de la carte -> avis (`useful` ou `noise`). */
+    val feedback: Map<String, String> = emptyMap(),
+    /** Tâches reportées à demain depuis le bilan du soir. */
+    val carried: Set<String> = emptySet(),
+) {
+    fun isCompleting(uid: String): Boolean = uid in completing
+
+    fun complete(uid: String) = copy(completing = completing + uid)
+    fun uncomplete(uid: String) = copy(completing = completing - uid)
+
+    fun move(proposalKey: String, to: LocalDate) = copy(moved = moved + (proposalKey to to), refused = refused - proposalKey)
+    fun unmove(proposalKey: String) = copy(moved = moved - proposalKey)
+
+    fun refuse(proposalKey: String) = copy(refused = refused + proposalKey, moved = moved - proposalKey)
+    fun unrefuse(proposalKey: String) = copy(refused = refused - proposalKey)
+
+    fun answer(questionKey: String, answer: String) = copy(answers = answers + (questionKey to answer))
+    fun unanswer(questionKey: String) = copy(answers = answers - questionKey)
+
+    fun vote(cardKey: String, vote: String) = copy(feedback = feedback + (cardKey to vote))
+    fun unvote(cardKey: String) = copy(feedback = feedback - cardKey)
+
+    fun carry(uids: Collection<String>) = copy(carried = carried + uids)
+    fun uncarry(uids: Collection<String>) = copy(carried = carried - uids.toSet())
+
+    /** Les décisions à garder (tout sauf [completing]), à plat : `genre:clé` -> valeur. */
+    fun lasting(): Map<String, String> = buildMap {
+        moved.forEach { (key, day) -> put("$MOVE$key", day.toString()) }
+        refused.forEach { put("$REFUSE$it", "") }
+        answers.forEach { (key, value) -> put("$ANSWER$key", value) }
+        feedback.forEach { (key, value) -> put("$FEEDBACK$key", value) }
+        carried.forEach { put("$CARRY$it", "") }
+    }
+
+    companion object {
+        private const val MOVE = "move:"
+        private const val REFUSE = "refuse:"
+        private const val ANSWER = "answer:"
+        private const val FEEDBACK = "feedback:"
+        private const val CARRY = "carry:"
+
+        /** Relit [lasting] ; une entrée inconnue ou une date illisible est ignorée. */
+        fun fromLasting(entries: Map<String, String>): BriefPending {
+            var pending = BriefPending()
+            entries.forEach { (raw, value) ->
+                when {
+                    raw.startsWith(MOVE) -> runCatching { LocalDate.parse(value) }.getOrNull()?.let { pending = pending.move(raw.removePrefix(MOVE), it) }
+                    raw.startsWith(REFUSE) -> pending = pending.refuse(raw.removePrefix(REFUSE))
+                    raw.startsWith(ANSWER) -> pending = pending.answer(raw.removePrefix(ANSWER), value)
+                    raw.startsWith(FEEDBACK) -> pending = pending.vote(raw.removePrefix(FEEDBACK), value)
+                    raw.startsWith(CARRY) -> pending = pending.carry(listOf(raw.removePrefix(CARRY)))
+                }
+            }
+            return pending
+        }
+    }
+}

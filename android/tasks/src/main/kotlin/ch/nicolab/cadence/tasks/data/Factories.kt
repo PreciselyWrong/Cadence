@@ -29,9 +29,12 @@ import ch.nicolab.cadence.tasks.sync.SYNCED_ENTITIES
 import ch.nicolab.cadence.tasks.sync.SyncEngine
 import ch.nicolab.cadence.tasks.brief.BriefActions
 import ch.nicolab.cadence.tasks.brief.BriefAgentsRepository
+import ch.nicolab.cadence.tasks.brief.BriefPlanWrites
+import ch.nicolab.cadence.tasks.brief.BriefRequests
 import ch.nicolab.cadence.tasks.brief.BriefRepository
 import ch.nicolab.cadence.tasks.brief.BriefSettingsRepository
 import ch.nicolab.cadence.tasks.brief.BriefStore
+import ch.nicolab.cadence.tasks.brief.EveningRepository
 import ch.nicolab.cadence.tasks.brief.DeferredBriefQueue
 import ch.nicolab.cadence.tasks.brief.RepositoryBriefTasks
 import java.time.ZoneId
@@ -64,6 +67,8 @@ internal fun createBriefAudio(context: Context): ch.nicolab.cadence.tasks.brief.
 
 internal fun createBriefStore(context: Context): BriefStore = TasksRuntime.get(context).briefStore
 
+internal fun createEvening(context: Context): EveningRepository = TasksRuntime.get(context).evening
+
 /** Dernières listes de revue lues, pour la lecture hors ligne ; effacées à la déconnexion. */
 internal fun reviewCacheDir(context: Context): File = File(context.cacheDir, "review")
 
@@ -71,7 +76,7 @@ internal fun reviewCacheDir(context: Context): File = File(context.cacheDir, "re
 internal class TasksRuntime private constructor(context: Context) {
     private val appContext = context.applicationContext
     private val database: TududiDatabase = Room.databaseBuilder(appContext, TududiDatabase::class.java, "tududi.db")
-        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12)
+        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13)
         .build()
     private val clockState = ClockStateStore(appContext)
     private val hlc = Hlc(node = clockState.node(), initial = clockState.load())
@@ -109,6 +114,7 @@ internal class TasksRuntime private constructor(context: Context) {
             refreshPlanSlots(PlanSlotsStore(appContext), api::call)
             focus.sync()
             brief.refreshToday()
+            evening.refreshIfDue(briefStore.settings.value)
             ch.nicolab.cadence.tasks.brief.audio.BriefAudioScheduler.request(appContext)
         },
     )
@@ -140,16 +146,21 @@ internal class TasksRuntime private constructor(context: Context) {
     val briefStore = BriefStore.of(appContext)
     private val accountZone: suspend () -> ZoneId = { connection.observe().first()?.accountZone ?: ZoneId.systemDefault() }
     val brief = BriefRepository(database.briefDao(), api::call, accountZone)
-    val briefAudio = ch.nicolab.cadence.tasks.brief.audio.BriefAudio(appContext, brief, api::download)
+    val evening = EveningRepository(database.eveningDao(), api::call, accountZone)
+    val briefAudio = ch.nicolab.cadence.tasks.brief.audio.BriefAudio(appContext, brief, evening, api::download)
     val briefSettings = BriefSettingsRepository(briefStore, api::call) { call -> repository.defer(call).getOrThrow() }
     val briefAgents = BriefAgentsRepository(api::call)
     val briefActions = BriefActions(
         tasks = RepositoryBriefTasks(repository),
         queue = DeferredBriefQueue(
             defer = { call -> repository.defer(call).getOrThrow() },
-            cancelKey = { key -> database.deferredCallDao().delete(key) },
+            cancelKey = { key -> database.deferredCallDao().delete(key) > 0 },
         ),
         zone = accountZone,
+        plan = BriefPlanWrites { date, uids ->
+            val current = api.call("GET", "/api/v1/daily-plan", mapOf("date" to date.toString()))
+            BriefRequests.planWithout(current, uids)?.let { api.call("PUT", "/api/v1/daily-plan/$date", body = it) }
+        },
     )
 
     companion object {

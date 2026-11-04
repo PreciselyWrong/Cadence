@@ -178,7 +178,9 @@ internal class RoomSyncStore(
         )
     }
 
-    override suspend fun removeDeferredCall(key: String) = database.deferredCallDao().delete(key)
+    override suspend fun removeDeferredCall(key: String) {
+        database.deferredCallDao().delete(key)
+    }
 
     override suspend fun failDeferredCall(call: DeferredCall, message: String) =
         database.deferredCallDao().markFailed(call.key, message)

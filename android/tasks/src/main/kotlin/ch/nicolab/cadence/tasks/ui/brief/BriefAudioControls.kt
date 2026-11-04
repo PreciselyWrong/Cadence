@@ -26,7 +26,6 @@ import ch.nicolab.cadence.tasks.brief.audio.AudioSource
 import ch.nicolab.cadence.tasks.brief.audio.ChapterMark
 import ch.nicolab.cadence.tasks.brief.audio.ChapterMarks
 import ch.nicolab.cadence.tasks.brief.audio.PlayerState
-import ch.nicolab.cadence.tasks.brief.audio.SpeakerState
 
 /** Ce que l'écran sait de la lecture de ce brief. */
 internal class BriefAudioUi(
@@ -34,15 +33,14 @@ internal class BriefAudioUi(
     /** Identifiant `<date>-v<version>` de ce brief, pour reconnaître le fichier chargé dans le lecteur. */
     val briefKey: String,
     val player: PlayerState,
-    val speaker: SpeakerState,
     val marks: List<ChapterMark>,
-    /** Nombre de chapitres lus par la voix du système. */
-    val speechChapters: Int,
+    /** La voix prépare le fichier après « Écouter » : le bouton le dit au lieu de rester muet. */
+    val preparing: Boolean = false,
 )
 
 /**
  * « Écouter · N min » dans l'en-tête du résumé ; une fois lancée, pause, chapitre précédent/suivant et position.
- * Masqué quand il n'y a ni audio ni script à lire.
+ * Masqué quand il n'y a ni fichier, ni MP3 du serveur, ni script que la voix Piper puisse lire.
  */
 @Composable
 internal fun BriefAudioControls(
@@ -53,9 +51,11 @@ internal fun BriefAudioControls(
     onPrevious: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val speechActive = ui.speaker.loaded
-    val fileActive = !speechActive && ui.player.key == ui.briefKey
-    if (!speechActive && !fileActive) {
+    if (ui.preparing) {
+        SecondaryAction(label = stringResource(R.string.brief_audio_preparing), modifier = modifier, enabled = false, onClick = {})
+        return
+    }
+    if (ui.player.key != ui.briefKey) {
         val minutes = ui.choice.minutes
         if (ui.choice.source == AudioSource.NONE) return
         SecondaryAction(
@@ -65,10 +65,8 @@ internal fun BriefAudioControls(
         )
         return
     }
-    val playing = if (speechActive) ui.speaker.speaking else ui.player.playing
-    val chapterLine = if (speechActive) {
-        stringResource(R.string.brief_audio_chapter, ui.speaker.chapter + 1, ui.speechChapters.coerceAtLeast(1))
-    } else if (ui.marks.isNotEmpty()) {
+    val playing = ui.player.playing
+    val chapterLine = if (ui.marks.isNotEmpty()) {
         stringResource(R.string.brief_audio_chapter, ChapterMarks.indexAt(ui.marks, ui.player.positionMs) + 1, ui.marks.size)
     } else {
         null
@@ -89,7 +87,7 @@ internal fun BriefAudioControls(
         }
         Column(Modifier.padding(start = Space.sm)) {
             chapterLine?.let { Text(it, style = MaterialTheme.typography.bodyMedium, color = cadence.onSurface) }
-            if (!speechActive && ui.player.durationMs > 0) {
+            if (ui.player.durationMs > 0) {
                 Text(
                     clock(ui.player.positionMs) + " / " + clock(ui.player.durationMs),
                     style = MaterialTheme.typography.bodySmall,

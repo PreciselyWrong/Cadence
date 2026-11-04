@@ -21,10 +21,15 @@ internal interface BriefTaskWrites {
     suspend fun write(uid: String, change: TaskChange)
 }
 
-/** File des appels différés ([DeferredCall]) ; [cancel] retire un appel encore en attente (sans effet s'il est parti). */
+/** File des appels différés ([DeferredCall]) ; [cancel] retire un appel encore en attente et dit s'il y était (faux : il est déjà parti). */
 internal interface BriefQueue {
     suspend fun enqueue(call: DeferredCall)
-    suspend fun cancel(key: String)
+    suspend fun cancel(key: String): Boolean
+}
+
+/** Plan du jour côté serveur, en ligne seulement : sert à défaire un report déjà arrivé. */
+internal fun interface BriefPlanWrites {
+    suspend fun removeFromPlan(date: LocalDate, taskUids: List<String>)
 }
 
 /**
@@ -36,6 +41,7 @@ internal class BriefActions(
     private val tasks: BriefTaskWrites,
     private val queue: BriefQueue,
     private val zone: suspend () -> ZoneId,
+    private val plan: BriefPlanWrites = BriefPlanWrites { _, _ -> },
     private val newKey: () -> String = { UUID.randomUUID().toString() },
 ) {
     suspend fun complete(uid: String): BriefUndo {
@@ -120,6 +126,18 @@ internal class BriefActions(
             ),
         )
         return { queue.cancel(BriefRequests.decisionKey(key)) }
+    }
+
+    /**
+     * « Reporter à demain » (bilan du soir) : ajoute les tâches au plan de demain, sans toucher à leur échéance.
+     * Annuler retire l'appel s'il n'est pas parti, sinon retire les tâches du plan de demain (en ligne).
+     */
+    suspend fun carryOver(tomorrow: LocalDate, taskUids: List<String>): BriefUndo {
+        val key = newKey()
+        queue.enqueue(BriefRequests.carryOver(tomorrow, key, taskUids, label = "Bilan du soir : report à demain"))
+        return {
+            if (!queue.cancel(BriefRequests.carryKey(key))) plan.removeFromPlan(tomorrow, taskUids)
+        }
     }
 
     private fun feedbackProposal(cardType: String, vote: String): JsonObject = buildJsonObject {

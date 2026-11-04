@@ -104,7 +104,7 @@ class BriefPlaybackService : MediaSessionService() {
             controller: MediaSession.ControllerInfo,
             mediaItems: MutableList<MediaItem>,
         ): ListenableFuture<MutableList<MediaItem>> {
-            val resolved = mediaItems.mapNotNull { item -> audio.files.findByKey(item.mediaId)?.let { mediaItemOf(it, getString(R.string.brief_title)) } }
+            val resolved = mediaItems.mapNotNull { item -> audio.files.findByKey(item.mediaId)?.let { mediaItemOf(it, getString(if (it.isEvening) R.string.evening_title else R.string.brief_title)) } }
             return Futures.immediateFuture(resolved.toMutableList())
         }
     }
