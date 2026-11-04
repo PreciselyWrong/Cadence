@@ -16,7 +16,9 @@ import androidx.compose.material.icons.outlined.Flight
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Schedule
+import androidx.compose.material.icons.outlined.SmartToy
 import androidx.compose.material.icons.outlined.Swipe
+import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material.icons.outlined.Widgets
 import androidx.compose.material3.MaterialTheme
@@ -122,6 +124,22 @@ internal fun settingsPages(deps: SettingsDeps): List<SettingsPage> = listOf(
         title = ch.nicolab.cadence.tasks.R.string.planning_settings_title,
         subtitle = { null },
         content = { ch.nicolab.cadence.tasks.ui.settings.PlanningSettingsPage() },
+    ),
+    SettingsPage(
+        id = "brief",
+        section = SettingsSection.ORGANISATION,
+        icon = Icons.Outlined.WbSunny,
+        title = ch.nicolab.cadence.tasks.R.string.brief_settings_title,
+        subtitle = { null },
+        content = { ch.nicolab.cadence.tasks.ui.settings.BriefSettingsPage() },
+    ),
+    SettingsPage(
+        id = "agents",
+        section = SettingsSection.ORGANISATION,
+        icon = Icons.Outlined.SmartToy,
+        title = ch.nicolab.cadence.tasks.R.string.brief_agents_title,
+        subtitle = { null },
+        content = { ch.nicolab.cadence.tasks.ui.settings.AgentSettingsPage() },
     ),
     SettingsPage(
         id = "gestures",

@@ -27,6 +27,15 @@ import ch.nicolab.cadence.tasks.sync.LocalHabits
 import ch.nicolab.cadence.tasks.sync.pendingHabitWrites
 import ch.nicolab.cadence.tasks.sync.SYNCED_ENTITIES
 import ch.nicolab.cadence.tasks.sync.SyncEngine
+import ch.nicolab.cadence.tasks.brief.BriefActions
+import ch.nicolab.cadence.tasks.brief.BriefAgentsRepository
+import ch.nicolab.cadence.tasks.brief.BriefRepository
+import ch.nicolab.cadence.tasks.brief.BriefSettingsRepository
+import ch.nicolab.cadence.tasks.brief.BriefStore
+import ch.nicolab.cadence.tasks.brief.DeferredBriefQueue
+import ch.nicolab.cadence.tasks.brief.RepositoryBriefTasks
+import java.time.ZoneId
+import kotlinx.coroutines.flow.first
 
 internal fun createRepository(context: Context): TaskRepository = TasksRuntime.get(context).repository
 
@@ -43,6 +52,16 @@ internal fun createTodoMd(context: Context): TodoMdClient = TasksRuntime.get(con
 
 internal fun createSyncStatus(context: Context): SyncStatusClient = TasksRuntime.get(context).syncStatus
 
+internal fun createBrief(context: Context): BriefRepository = TasksRuntime.get(context).brief
+
+internal fun createBriefSettings(context: Context): BriefSettingsRepository = TasksRuntime.get(context).briefSettings
+
+internal fun createBriefAgents(context: Context): BriefAgentsRepository = TasksRuntime.get(context).briefAgents
+
+internal fun createBriefActions(context: Context): BriefActions = TasksRuntime.get(context).briefActions
+
+internal fun createBriefStore(context: Context): BriefStore = TasksRuntime.get(context).briefStore
+
 /** Dernières listes de revue lues, pour la lecture hors ligne ; effacées à la déconnexion. */
 internal fun reviewCacheDir(context: Context): File = File(context.cacheDir, "review")
 
@@ -50,7 +69,7 @@ internal fun reviewCacheDir(context: Context): File = File(context.cacheDir, "re
 internal class TasksRuntime private constructor(context: Context) {
     private val appContext = context.applicationContext
     private val database: TududiDatabase = Room.databaseBuilder(appContext, TududiDatabase::class.java, "tududi.db")
-        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11)
+        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12)
         .build()
     private val clockState = ClockStateStore(appContext)
     private val hlc = Hlc(node = clockState.node(), initial = clockState.load())
@@ -87,6 +106,7 @@ internal class TasksRuntime private constructor(context: Context) {
         onSynced = {
             refreshPlanSlots(PlanSlotsStore(appContext), api::call)
             focus.sync()
+            brief.refreshToday()
         },
     )
     private val habitPending: Flow<Int> = habitStorage?.let { storage ->
@@ -113,6 +133,20 @@ internal class TasksRuntime private constructor(context: Context) {
     )
 
     val focus = FocusRepository(PlanningStore.of(appContext), api::call)
+
+    val briefStore = BriefStore.of(appContext)
+    private val accountZone: suspend () -> ZoneId = { connection.observe().first()?.accountZone ?: ZoneId.systemDefault() }
+    val brief = BriefRepository(database.briefDao(), api::call, accountZone)
+    val briefSettings = BriefSettingsRepository(briefStore, api::call) { call -> repository.defer(call).getOrThrow() }
+    val briefAgents = BriefAgentsRepository(api::call)
+    val briefActions = BriefActions(
+        tasks = RepositoryBriefTasks(repository),
+        queue = DeferredBriefQueue(
+            defer = { call -> repository.defer(call).getOrThrow() },
+            cancelKey = { key -> database.deferredCallDao().delete(key) },
+        ),
+        zone = accountZone,
+    )
 
     companion object {
         @Volatile

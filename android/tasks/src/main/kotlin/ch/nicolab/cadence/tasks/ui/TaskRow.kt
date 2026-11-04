@@ -92,6 +92,10 @@ internal fun TaskRow(
     decor: RowDecor = rememberRowDecor(),
     /** Heure où le plan du jour du serveur place la tâche ; montrée à la place de l'heure d'échéance. */
     plannedAt: Instant? = null,
+    /** Motif donné par le résumé du jour, lu sous le titre. */
+    subtitle: String? = null,
+    /** Action de fin de ligne (ex. date proposée du résumé du jour). */
+    trailing: (@Composable () -> Unit)? = null,
 ) {
     val haptic = rememberCadenceHaptic()
     val interaction = remember { MutableInteractionSource() }
@@ -163,6 +167,16 @@ internal fun TaskRow(
             Column(Modifier.weight(1f).padding(vertical = 6.dp)) {
                 StrikingTitle(task.name, struck = showClosed)
                 TaskMeta(task, projectName, projectIcon, projectColor, today, zone, sectionDay, decor, plannedAt)
+                subtitle?.let {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.padding(top = 2.dp),
+                    )
+                }
                 if (decor.showDescription) {
                     TaskRowMeta.notePreview(task.note)?.let { preview ->
                         Text(
@@ -175,6 +189,10 @@ internal fun TaskRow(
                         )
                     }
                 }
+            }
+            trailing?.let {
+                Spacer(Modifier.width(8.dp))
+                it()
             }
             // Un seul signal de priorité : le trait rouge de la case pour une priorité haute, rien d'autre.
             Spacer(Modifier.width(16.dp))

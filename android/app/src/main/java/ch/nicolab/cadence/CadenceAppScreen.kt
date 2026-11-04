@@ -87,6 +87,7 @@ import ch.nicolab.cadence.tasks.ui.LocalEntityIconPicker
 import ch.nicolab.cadence.tasks.ui.LocalEntityIcons
 import ch.nicolab.cadence.tasks.ui.SearchScreen
 import ch.nicolab.cadence.tasks.ui.TasksScreen
+import ch.nicolab.cadence.tasks.ui.brief.BriefScreen
 import ch.nicolab.cadence.tasks.ui.review.ReviewScreen
 import ch.nicolab.cadence.ui.icon.HabitIconPicker
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
@@ -123,11 +124,13 @@ internal fun CadenceAppScreen(
     var settingsOpen by rememberSaveable { mutableStateOf(false) }
     var searchOpen by rememberSaveable { mutableStateOf(false) }
     var reviewOpen by rememberSaveable { mutableStateOf(false) }
+    var briefOpen by rememberSaveable { mutableStateOf(false) }
     var goalsOpen by rememberSaveable { mutableStateOf(false) }
     var projectToShow by rememberSaveable { mutableStateOf<String?>(null) }
     // Tâche à ouvrir (widget ou rappel) ; effacée dès que Tâches l'a ouverte pour ne pas la rouvrir.
     var opening by rememberSaveable(stateSaver = taskOpeningSaver) { mutableStateOf(TaskOpening()) }
     BackHandler(enabled = settingsOpen) { settingsOpen = false }
+    BackHandler(enabled = briefOpen) { briefOpen = false }
     // Une tâche ouverte depuis un widget ou un rappel doit s'afficher dans Tâches, quel que soit l'onglet restauré.
     androidx.compose.runtime.LaunchedEffect(openTaskUid) {
         val next = opening.fromLaunch(openTaskUid)
@@ -243,6 +246,7 @@ internal fun CadenceAppScreen(
                     Tab.TASKS -> TasksScreen(
                         openTaskUid = opening.pending,
                         onTaskOpened = { opening = opening.consumed() },
+                        onOpenBrief = { briefOpen = true },
                         showProjectUid = projectToShow,
                         onProjectShown = { projectToShow = null },
                         onOpenSearch = { searchOpen = true },
@@ -320,14 +324,15 @@ internal fun CadenceAppScreen(
                 },
             )
             if (goalsOpen) GoalsScreen(onBack = { goalsOpen = false })
+            if (briefOpen) BriefScreen(onBack = { briefOpen = false })
             NavigationBarScrim()
-            if (!settingsOpen && !searchOpen && !reviewOpen && !goalsOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop) { index ->
+            if (!settingsOpen && !searchOpen && !reviewOpen && !goalsOpen && !briefOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop) { index ->
                 tab = Tab.entries[index]
                 opening = opening.consumed()
             }
             CadenceSnackbarHost(
                 snackbar,
-                Modifier.align(Alignment.BottomCenter).padding(bottom = if (settingsOpen || searchOpen || reviewOpen || goalsOpen) Space.lg else navigationClearance() + Space.sm),
+                Modifier.align(Alignment.BottomCenter).padding(bottom = if (settingsOpen || searchOpen || reviewOpen || goalsOpen || briefOpen) Space.lg else navigationClearance() + Space.sm),
                 backdrop = backdrop,
             )
         }

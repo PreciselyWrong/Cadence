@@ -77,6 +77,7 @@ fun TasksScreen(
     onOpenSearch: () -> Unit = {},
     onOpenSettings: () -> Unit,
     routineStrip: @Composable () -> Unit = {},
+    onOpenBrief: () -> Unit = {},
 ) {
     val viewModel: TasksViewModel = viewModel()
     val snackbar = rememberAppSnackbarHostState()
@@ -194,6 +195,7 @@ fun TasksScreen(
                             onOpen = { selectedTaskUid = it.uid },
                             modifier = Modifier.fillMaxSize(),
                             routineStrip = routineStrip,
+                            onOpenBrief = onOpenBrief,
                         )
                         tab == TasksTab.UPCOMING -> UpcomingTab(
                             viewModel = viewModel,
