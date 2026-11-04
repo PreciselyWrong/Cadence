@@ -21,12 +21,14 @@ const REDACT = [
     'token',
     'telegram_bot_token',
     'ai_api_key',
+    'agent_api_key',
     '*.password',
     '*.password_digest',
     '*.password_encrypted',
     '*.token',
     '*.telegram_bot_token',
     '*.ai_api_key',
+    '*.agent_api_key',
 ];
 
 // pino's default error serializer copies every enumerable property of the

@@ -466,6 +466,7 @@ const appriseModule = require('./modules/apprise');
 const webhooksModule = require('./modules/webhooks');
 const spreadsheetsModule = require('./modules/spreadsheets');
 const mfaModule = require('./modules/mfa');
+const agentsModule = require('./modules/agents');
 
 // Swagger documentation - enabled by default, protected by authentication
 // Mounted on /api-docs to avoid conflicts with API routes
@@ -610,6 +611,7 @@ const registerApiRoutes = (basePath) => {
     app.use(basePath, webhooksModule.routes);
     app.use(basePath, spreadsheetsModule.routes);
     app.use(basePath, mfaModule.routes);
+    app.use(basePath, agentsModule.routes);
 };
 
 // Register routes at both /api and /api/v1 (if versioned) to maintain backwards compatibility

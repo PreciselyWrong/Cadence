@@ -287,6 +287,13 @@ module.exports = (sequelize) => {
                 comment:
                     'Encrypted per-user LLM API key, overrides LLM_API_KEY/.env',
             },
+            agent_api_key: {
+                type: DataTypes.TEXT,
+                allowNull: true,
+                defaultValue: null,
+                comment:
+                    'Encrypted Hermes agent API key (secretCipher), never returned by the API',
+            },
             ai_base_url: {
                 type: DataTypes.STRING,
                 allowNull: true,
