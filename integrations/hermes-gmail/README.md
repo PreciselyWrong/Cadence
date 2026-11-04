@@ -23,6 +23,7 @@ Les résultats de lecture portent `untrusted_content_notice` : le contenu reçu 
 - **Scope unique** `https://www.googleapis.com/auth/gmail.modify` ; un jeton accordé avec d'autres droits est refusé (à la connexion et à chaque rafraîchissement).
 - **Jetons** : `<répertoire-d-état>/tokens/<compte>.json` et le client OAuth, en 600 dans un répertoire 700 appartenant à l'utilisateur du serveur ; le serveur refuse de les lire si les permissions sont plus larges. Les jetons d'accès restent en mémoire. Aucun outil ne renvoie de jeton ni de corps de réponse OAuth.
 - **Brouillons** : registre local `<répertoire-d-état>/ledger.json`. La version d'un brouillon est l'id Gmail de son message, qui change à chaque modification (y compris une modification humaine dans Gmail). `update_draft` refuse un brouillon que l'outil n'a pas créé, une `expected_version` périmée, ou un brouillon modifié hors de l'outil, puis relit après écriture. Gmail n'a pas d'écriture conditionnelle : une modification humaine dans la seconde qui précède le remplacement reste possible ; la réponse le rappelle.
+- **Journal d'audit** : chaque appel d'outil ajoute une ligne JSON à `<répertoire-d-état>/audit.log` (600) : `ts` (UTC), `tool`, `account` (clé du compte), `outcome` (`ok` ou le code d'erreur, par exemple `unknown_account`) et `thread` (empreinte SHA-256 tronquée de l'id du fil). Jamais de corps, d'objet, d'adresse, de texte de brouillon ni de jeton ; un nom d'outil ou de compte invalide est remplacé par `unknown` ou `invalid`. Rotation par taille (1 Mo, 5 fichiers `audit.log.1` à `.5`). Un échec d'écriture du journal est signalé sur la sortie d'erreur sans bloquer l'appel.
 - **Après un timeout** à la création, la clé reste « en attente » : l'appel suivant avec la même clé cherche d'abord dans les brouillons du fil (même `In-Reply-To`, même texte) avant de créer.
 - **Isolation** : en HTTP, le jeton OAuth et le client Google restent dans le volume du conteneur Gmail, jamais montés dans le conteneur de Hermes. Hermes ne détient qu'un jeton Bearer qui ouvre ces sept outils et rien d'autre. En stdio, les permissions des fichiers protègent des autres comptes Unix, pas des processus du même utilisateur.
 - **Limite commune** : tout processus qui lit le jeton Bearer (même utilisateur Unix que Hermes) et joint le conteneur peut appeler les sept outils. La barrière réelle reste qu'aucun profil agent tournant sous cet utilisateur n'ait d'outil de lecture de fichiers, de terminal, d'exécution de code, ni de délégation vers un profil qui en a. À vérifier avant d'activer (§ 4).
@@ -45,7 +46,7 @@ Transport HTTP « streamable » réduit : un seul point `POST /mcp`, réponses J
 
 ```bash
 # Sur l'hôte Docker, depuis une copie de ce dossier :
-docker build -t gmail-restricted:1.1.0 .
+docker build -t gmail-restricted:1.2.0 .
 
 # Dossiers d'état, au nom d'un uid dédié (exemple : <uid>:<gid>) :
 install -d -m 700 -o <uid> -g <gid> <appdata>/state <appdata>/secrets
@@ -56,7 +57,7 @@ docker run -d --name gmail-restricted --network <réseau-de-hermes> --user <uid>
   --read-only --cap-drop ALL --security-opt no-new-privileges --memory 128m --pids-limit 64 \
   --restart unless-stopped \
   -v <appdata>/state:/state:rw -v <appdata>/secrets:/secrets:ro \
-  gmail-restricted:1.1.0
+  gmail-restricted:1.2.0
 ```
 
 Ne publier aucun port : seul le réseau Docker partagé avec Hermes doit joindre `http://gmail-restricted:8700/mcp`. Le jeton va aussi dans le magasin de secrets du seul profil autorisé (`$HERMES_HOME/profiles/<profil>/.env`, variable `GMAIL_MCP_TOKEN`), par exemple sans l'afficher :
@@ -137,4 +138,4 @@ mcp_servers:
 python3 -I -B -m unittest discover -s tests -v
 ```
 
-Faux Gmail en mémoire (`tests/fake_gmail.py`), réseau bloqué pendant les tests. Couvre : liste exacte des outils, absence de toute route interdite dans le code, refus de la liste blanche, texte masqué, destinataires hors fil, idempotence, reprise après timeout, conflit de version, brouillon modifié à la main, archivage limité à `INBOX`, scope élargi refusé, permissions des fichiers, protocole stdio ; en HTTP : jeton absent ou faux refusé avant tout outil, liste des outils, corps trop gros, `Origin`, méthode, chemin, type de contenu, version de protocole, fichier du jeton trop ouvert ou trop court.
+Faux Gmail en mémoire (`tests/fake_gmail.py`), réseau bloqué pendant les tests. Couvre : liste exacte des outils, absence de toute route interdite dans le code, refus de la liste blanche, texte masqué, destinataires hors fil, idempotence, reprise après timeout, conflit de version, brouillon modifié à la main, archivage limité à `INBOX`, scope élargi refusé, permissions des fichiers, protocole stdio, journal d'audit (contenu, normalisation, rotation, échec non bloquant) ; en HTTP : jeton absent ou faux refusé avant tout outil, liste des outils, corps trop gros, `Origin`, méthode, chemin, type de contenu, version de protocole, fichier du jeton trop ouvert ou trop court.

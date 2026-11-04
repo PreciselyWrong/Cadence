@@ -18,9 +18,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import setup_oauth  # noqa: E402
 from fake_gmail import ACCESS_TOKEN, REFRESH_TOKEN, FakeGoogle, html_message, plain_message  # noqa: E402
-from gmail_restricted import http_transport, netio, oauth  # noqa: E402
+from gmail_restricted import audit, http_transport, netio, oauth  # noqa: E402
 from gmail_restricted.gmail_api import RefusedRequest, check_request  # noqa: E402
 from gmail_restricted.server import Server  # noqa: E402
+from gmail_restricted.server import main as server_main  # noqa: E402
 from gmail_restricted.tools import TOOL_NAMES, GmailTools  # noqa: E402
 
 CLIENT = {"installed": {"client_id": "cid.apps.googleusercontent.com", "client_secret": "client-secret-VALUE"}}
@@ -344,6 +345,82 @@ class Setup(unittest.TestCase):
     def test_web_client_files_are_refused(self):
         with self.assertRaises(oauth.AuthError):
             self.store.save_client({"web": {"client_id": "x", "client_secret": "y"}})
+
+
+class Audit(Base):
+    def setUp(self):
+        super().setUp()
+        self.log_path = os.path.join(self.state, "audit.log")
+        self.audit = audit.AuditLog(self.log_path, clock=lambda: 1793800000.0)
+        self.server = Server(self.tools, audit=self.audit)
+
+    def tool_call(self, name, arguments, request_id=1):
+        with contextlib.redirect_stderr(io.StringIO()):
+            return self.server.handle({"jsonrpc": "2.0", "id": request_id, "method": "tools/call",
+                                       "params": {"name": name, "arguments": arguments}})
+
+    def lines(self, path=None):
+        with open(path or self.log_path, encoding="utf-8") as handle:
+            return [json.loads(line) for line in handle]
+
+    def test_each_tool_call_appends_one_line_without_content(self):
+        self.tool_call("get_thread", {"account": "perso", "thread_id": "t1"})
+        self.tool_call("archive_thread", {"account": "perso", "thread_id": "t1"}, request_id=2)
+        entries = self.lines()
+        self.assertEqual(len(entries), 2)
+        self.assertEqual(entries[0], {"ts": "2026-11-04T13:46:40Z", "tool": "get_thread", "account": "perso",
+                                      "outcome": "ok", "thread": audit.thread_hash("t1")})
+        self.assertEqual(entries[1]["tool"], "archive_thread")
+        self.assertNotEqual(entries[0]["thread"], "t1")
+        with open(self.log_path, encoding="utf-8") as handle:
+            raw = handle.read()
+        for leaked in ("t1\"", "alice@example.org", "me@example.com", "Bonjour", "Dîner", ACCESS_TOKEN, REFRESH_TOKEN):
+            self.assertNotIn(leaked, raw)
+        self.assertEqual(os.stat(self.log_path).st_mode & 0o777, 0o600)
+
+    def test_refused_call_records_its_outcome_code(self):
+        response = self.tool_call("get_thread", {"account": "inconnu", "thread_id": "t9"})
+        self.assertTrue(response["result"]["isError"])
+        self.assertEqual(self.lines(), [{"ts": "2026-11-04T13:46:40Z", "tool": "get_thread", "account": "inconnu",
+                                         "outcome": "unknown_account", "thread": audit.thread_hash("t9")}])
+
+    def test_untrusted_names_are_normalised(self):
+        self.tool_call("send_message", {"account": "perso"})
+        self.tool_call("get_thread", {"account": "Someone <x@example.org>", "thread_id": ["t1"]}, request_id=2)
+        self.tool_call("archive_thread", "not-an-object", request_id=3)
+        first, second, third = self.lines()
+        self.assertEqual((first["tool"], first["account"], first["outcome"], first["thread"]),
+                         ("unknown", "perso", "unknown_tool", None))
+        self.assertEqual((second["account"], second["thread"]), ("invalid", None))
+        self.assertEqual((third["account"], third["outcome"]), (None, "invalid_arguments"))
+
+    def test_size_rotation_keeps_a_bounded_number_of_files(self):
+        small = audit.AuditLog(self.log_path, max_bytes=400, backups=2, clock=lambda: 1793800000.0)
+        for _ in range(20):
+            small.record("archive_thread", {"account": "perso", "thread_id": "t1"}, {}, False)
+        names = sorted(name for name in os.listdir(self.state) if name.startswith("audit.log"))
+        self.assertEqual(names, ["audit.log", "audit.log.1", "audit.log.2"])
+        for name in names:
+            path = os.path.join(self.state, name)
+            self.assertLessEqual(os.path.getsize(path), 400)
+            self.assertTrue(self.lines(path))
+            self.assertEqual(os.stat(path).st_mode & 0o777, 0o600)
+
+    def test_audit_failure_never_blocks_the_call(self):
+        broken = Server(self.tools, audit=audit.AuditLog(os.path.join(self.tmp.name, "missing", "audit.log")))
+        errors = io.StringIO()
+        with contextlib.redirect_stderr(errors):
+            response = broken.handle({"jsonrpc": "2.0", "id": 1, "method": "tools/call",
+                                      "params": {"name": "archive_thread",
+                                                 "arguments": {"account": "perso", "thread_id": "t1"}}})
+        self.assertFalse(response["result"]["isError"])
+        self.assertIn("audit write failed", errors.getvalue())
+
+    def test_main_writes_the_audit_log_in_the_state_directory(self):
+        with mock.patch.object(http_transport, "serve") as serve, contextlib.redirect_stderr(io.StringIO()):
+            server_main(["--transport", "http", "--accounts", self.accounts, "--state-dir", self.state,
+                         "--token-file", os.path.join(self.tmp.name, "unused")])
+        self.assertEqual(serve.call_args.args[0].audit.path, self.log_path)
 
 
 class Protocol(Base):

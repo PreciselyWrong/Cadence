@@ -6,9 +6,11 @@ Only initialize, ping and the tools methods are served; resources and prompts ar
 import argparse
 import io
 import json
+import os
 import sys
 
 from . import __version__
+from .audit import AuditLog
 from .tools import TOOLS, GmailTools
 
 SUPPORTED_VERSIONS = ("2024-11-05", "2025-03-26", "2025-06-18", "2025-11-25")
@@ -21,8 +23,9 @@ def _log(message):
 
 
 class Server:
-    def __init__(self, tools):
+    def __init__(self, tools, audit=None):
         self.tools = tools
+        self.audit = audit
 
     def handle(self, request):
         """Return the response dict, or None for a notification."""
@@ -49,6 +52,11 @@ class Server:
             result, is_error = self.tools.call(name, arguments)
             if is_error:
                 _log(f"tool {name} refused: {result.get('error')}")
+            if self.audit is not None:
+                try:
+                    self.audit.record(name, arguments, result, is_error)
+                except OSError as error:  # the call already happened: report, never hide its result
+                    _log(f"audit write failed: {type(error).__name__}")
             return _result(request_id, {
                 "content": [{"type": "text", "text": json.dumps(result, ensure_ascii=False)}],
                 "isError": is_error,
@@ -95,7 +103,8 @@ def main(argv=None):
     if args.transport == "http" and not args.token_file:
         parser.error("--token-file est obligatoire avec --transport http")
     _log(f"starting {__version__} ({args.transport})")
-    server = Server(GmailTools(args.accounts, args.state_dir))
+    audit = AuditLog(os.path.join(args.state_dir, "audit.log"))
+    server = Server(GmailTools(args.accounts, args.state_dir), audit=audit)
     if args.transport == "http":
         from .http_transport import serve
         from .oauth import AuthError
