@@ -194,6 +194,33 @@ The Android app is the default renderer: it speaks `audio_script` itself with a 
 - **Playback**: Media3 ExoPlayer in a `MediaSessionService` (foreground service type `mediaPlayback`, channel « Lecture du résumé »): lock-screen and Bluetooth controls, previous/next chapter, and a resume position kept per brief version. The brief header shows « Écouter · N min » (N from the file, or estimated at 150 words per minute for the system voice) and, once playing, pause and chapter skip.
 - **System voice**: Android `TextToSpeech` (French) reads the chapters one after the other. It has no media session: it follows the brief screen.
 
+## Evening review
+
+The morning brief arbitrates the day; after the switch time the clients show the **evening review** instead. The morning brief stays one tap away ("Voir le résumé du matin").
+
+- Setting `ui_settings.brief.evening`: `{ enabled: true, switchTime: "18:00" }` (local `HH:mm`, 5-minute steps). Disabled: the morning brief stays all day.
+- No AI, no job, nothing stored: `GET /daily-plan/:date/evening` computes it from the current state each time (pure rules in `brief/rules/evening.js`), so it is never stale. The optional AI recap of the day stays the existing wrap-up (`ai_wrap_up`, `POST /daily-plan/:date/ai/wrap-up`).
+- Response `{ date, evening, tasks }`, `tasks` = the same current-state map as the morning route. `evening` (`schema: 1`):
+
+```jsonc
+{
+  "schema": 1,
+  "date": "YYYY-MM-DD",
+  "generated_at": "ISO",
+  "verdict": { "text": "One sentence.", "by": "rules" },
+  "counters": { "done": 0, "slipped": 0, "tonight_minutes": 0, "capacity_minutes": null },
+  "done": ["task_uid"],                                  // completed today (local day), newest first, max 10
+  "tonight": [{ "task_uid": "…", "minutes": 30 }],       // the morning brief's tonight items still open, in order
+  "slipped": [{ "task_uid": "…", "reason": "…" }],       // due or planned today, still open, not in tonight
+  "carry_over": ["task_uid"],                             // slipped + tonight items, proposed for tomorrow
+  "tomorrow": { /* one timeline day, same shape as brief.timeline[] */ },
+  "audio_script": { "chapters": [{ "id": "intro" | "done" | "tonight" | "tomorrow", "title": "…", "text": "…" }] }
+}
+```
+
+- Actions: "C'est fait" on every task (existing completion with undo); "Reporter à demain" on carry-over items uses the existing `POST /daily-plan/:date/carry-over` (adds them to tomorrow's plan, never changes their due date) and can be undone by removing them from tomorrow's plan.
+- Android caches the last evening response like the brief and renders its audio script on the phone with the same voice.
+
 ## Mail
 
 Cadence holds no mail credentials and reads no mail. The mail agent (Hermes, `docs/resume-matinal-plan.md` §7) answers typed requests through `/v1/runs`; Cadence only stores thread refs and metadata. When the agent is not configured or not reachable, the replies section says "source not read" and nothing is inferred.
