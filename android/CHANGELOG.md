@@ -1,3 +1,8 @@
+## [1.9.2] — 4 novembre 2026
+
+### Nouveautés
+- Page d'un projet : ses notes s'affichent sous les tâches, comme sur le web ; un appui ouvre la note.
+
 ## [1.9.1] — 4 novembre 2026
 
 ### Corrections
