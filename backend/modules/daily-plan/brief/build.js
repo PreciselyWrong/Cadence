@@ -16,6 +16,7 @@ const { postponedCards } = require('./rules/postponed');
 const { moveProposals } = require('./rules/moves');
 const { tonightPicks } = require('./rules/tonight');
 const { isSilenced } = require('./rules/contexts');
+const { noisyCardTypes } = require('./rules/noise');
 const { verdictText } = require('./rules/verdict');
 
 const SCHEMA = 1;
@@ -65,12 +66,14 @@ function timelineDay(input, settings, date, load, conflictRefs) {
     };
 }
 
-// Cards in the order the client shows them; a disabled type or a silenced
-// question is dropped here, the rules never know about settings or contexts.
+// Cards in the order the client shows them; a disabled or noisy type or a
+// silenced question is dropped here, the rules never know about settings,
+// contexts or feedback.
 function anticipateCards(input, settings, cards) {
     const disabled = new Set(settings.alerts?.disabled || []);
+    const noisy = noisyCardTypes(input.noiseStats, settings);
     return cards
-        .filter((card) => !disabled.has(card.type))
+        .filter((card) => !disabled.has(card.type) && !noisy.has(card.type))
         .filter(
             (card) =>
                 !card.question ||

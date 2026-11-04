@@ -36,6 +36,23 @@ router.post(
 );
 router.get('/daily-plan/:date/brief', dailyPlanController.getBrief);
 router.post('/daily-plan/:date/brief', dailyPlanController.regenerateBrief);
+router.post(
+    '/daily-plan/:date/brief/decisions',
+    dailyPlanController.recordBriefDecision
+);
+router.post(
+    '/daily-plan/:date/brief/answers',
+    dailyPlanController.answerBriefQuestion
+);
+router.get('/daily-plan/brief/contexts', dailyPlanController.listBriefContexts);
+router.patch(
+    '/daily-plan/brief/contexts/:uid',
+    dailyPlanController.updateBriefContext
+);
+router.delete(
+    '/daily-plan/brief/contexts/:uid',
+    dailyPlanController.deleteBriefContext
+);
 router.put('/daily-plan/:date', dailyPlanController.replace);
 router.post('/daily-plan/:date/carry-over', dailyPlanController.carryOver);
 router.post(

@@ -104,13 +104,18 @@ All routes exist under `/api` and `/api/v1`.
 | `POST /daily-plan/:date/brief` | explicit regeneration: new version |
 | `GET /daily-plan/brief/settings`, `PUT /daily-plan/brief/settings` | normalized settings; `PUT` merges and validates |
 | `GET /daily-plan/brief/status` | each source: configured, missing, working, last error |
+| `POST /daily-plan/:date/brief/decisions` | records a decision on a proposal (`kind`, `target_type`, `target_ref`, `proposal`, `fingerprint`, `decision`, `reason?`, `idempotency_key`) |
+| `POST /daily-plan/:date/brief/answers` | answers a question: `{ question_key, target: {scope, ref}, answer: 'yes' \| 'no' \| text, idempotency_key }`; writes the linked context and a `question` decision |
+| `GET /daily-plan/brief/contexts?scope=&target_ref=` | the user's linked contexts, optionally filtered |
+| `PATCH /daily-plan/brief/contexts/:uid` | `{ text }` |
+| `DELETE /daily-plan/brief/contexts/:uid` | `204` |
 
 ## Engine
 
 `backend/modules/daily-plan/brief/`:
 
 - `settings.js`: defaults, normalization, validation.
-- `collect.js`: reads the inputs (open tasks today, overdue, upcoming within the lookahead, inbox, tasks closed in `closedLookbackDays` with their notes, events of the selected calendars, focus blocks and exceptions, postponements from `review/postponements.js`, contexts and decisions once phase 3 exists, replies from the mail agent).
+- `collect.js`: reads the inputs (open tasks today, overdue, upcoming within the lookahead, inbox, tasks closed in `closedLookbackDays` with their notes, events of the selected calendars, focus blocks and exceptions, postponements from `review/postponements.js`, live contexts, decisions and feedback from the memory below, replies from the mail agent).
 - `rules/*.js`: **pure functions** of `(input, settings, today)`; one file per rule, each unit-tested.
 - `build.js`: assembles the JSON from the rules; `writer.js`: optional LLM rewrite of `verdict.text` and reasons, falling back to the rules text on any error.
 - `generate.js`: `generateBrief(user, date, { reason })`. A job run keeps an existing brief; a manual run makes a new version. A failed run sets `brief_status = failed` and keeps the previous brief; the job does not retry it, "Regenerate" does. Replies from the mail agent arrive afterwards and update only `replies`, `counters.replies` and the mail source.
@@ -127,8 +132,27 @@ All routes exist under `/api` and `/api/v1`.
 - **Candidate dates**: a move target is the first day after today, within the timeline, that is not overloaded, not refused before for that task, and fits the task's minutes.
 - **Postponed**: a task with `recent_count >= thresholds.postponements` gets the "do, drop or later" card.
 - **Deductions are questions**: anything inferred (transport, presence, dependency) is phrased as a question with a target, never as a fact.
-- **Contexts**: before producing a question or an alert, the engine drops it when a live context exists for its target (phase 3).
+- **Contexts**: before producing a question or an alert, the engine drops it when a live context exists for its target.
+- **Refused and ignored moves**: a move refused for a day is never proposed for that day again; a move left without answer is ignored by the next brief and not repeated identically (same task, same day).
+- **Noise**: a card type with at least `alerts.noise.minVotes` votes, of which at least `alerts.noise.ratio` say "noise", is dropped from `anticipate`.
 
 ## Mail
 
 Cadence holds no mail credentials and reads no mail. The mail agent (Hermes, `docs/resume-matinal-plan.md` §7) answers typed requests through `/v1/runs`; Cadence only stores thread refs and metadata. When the agent is not configured or not reachable, the replies section says "source not read" and nothing is inferred.
+
+## Memory
+
+What the user decided or said, read by the engine on the next brief. Tables (migrations `20261104100000`, `20261104100100`, all `safe*`):
+
+- `brief_proposals`: one row per proposal shown (`pending`), per decision (`accepted`, `refused`, `ignored`) and per answer or feedback. A shown proposal that gets a decision keeps its row. `idempotency_key` is unique: the same key returns the stored row. `proposal` is JSON without any mail body.
+- `linked_contexts`: `scope` (`task`, `event`, `series`), `target_ref`, `text` (1 to 500 characters). One context per user, scope and target; an answer replaces its text.
+
+Lifetimes, applied when the brief reads them (`contexts.js`) and purged daily (`brief_purge`, 02:30 UTC):
+
+- `task`: over when the task is done, archived, cancelled or gone.
+- `series` with a task uid: over when the task is gone or its recurrence is `none`.
+- `series` with a `series:` ref: over when its calendar was read without error and has no occurrence from 30 days back to the lookahead. A time change keeps the ref, so the context stays.
+- `event`: over at the end of the event's local day (the ref has no end time).
+- Decisions: deleted after `retention.decisionsDays` (default 90).
+
+Feedback is a decision of kind `feedback` with `proposal: { card_type, vote: 'useful' | 'noise' }`.

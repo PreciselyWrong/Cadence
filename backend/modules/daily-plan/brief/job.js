@@ -9,6 +9,8 @@ const { getSafeTimezone } = require('../../../utils/timezone-utils');
 const { normalizeBriefSettings } = require('./settings');
 const briefRepository = require('./repository');
 const { generateBrief } = require('./generate');
+const decisions = require('./decisions');
+const contexts = require('./contexts');
 
 // Due when the local clock has reached the chosen time on an active day.
 function isDue(settings, local) {
@@ -62,4 +64,15 @@ async function generateDueBriefs({ now = new Date() } = {}) {
     return { generated };
 }
 
-module.exports = { generateDueBriefs, isDue };
+// Daily purge (taskScheduler "brief_purge"): decisions past their retention and
+// contexts whose lifetime is over (docs/39-daily-brief.md, Memory).
+async function purgeBriefMemory({ now = new Date() } = {}) {
+    const contextsResult = await contexts.purgeContexts(now);
+    const decisionsResult = await decisions.purgeDecisions(now);
+    return {
+        contexts: contextsResult.deleted,
+        decisions: decisionsResult.deleted,
+    };
+}
+
+module.exports = { generateDueBriefs, purgeBriefMemory, isDue };

@@ -13,6 +13,8 @@ const dailyPlanRepository = require('../repository');
 const dailyPlanService = require('../service');
 const slots = require('../slots');
 const briefRepository = require('./repository');
+const decisions = require('./decisions');
+const contexts = require('./contexts');
 const { addDays } = require('./rules/dates');
 const {
     getSafeTimezone,
@@ -247,6 +249,25 @@ async function readMailSource(user, settings) {
     return { id: 'mail', status: 'pending', detail: null };
 }
 
+// What the user said and decided, read by the engine: the live contexts, the
+// decisions of the retention window, and the feedback counts per card type.
+async function readMemory(user, settings, { today, timezone, now }) {
+    const [liveContexts, decisionRows, noiseStats] = await Promise.all([
+        contexts.liveContexts(user, {
+            now,
+            timezone,
+            today,
+            lookaheadDays: settings.calendarLookaheadDays,
+        }),
+        decisions.listForEngine(
+            user,
+            addDays(today, -settings.retention.decisionsDays)
+        ),
+        decisions.noiseStats(user),
+    ]);
+    return { contexts: liveContexts, decisions: decisionRows, noiseStats };
+}
+
 // The input of buildBrief for the user's local day `today` (YYYY-MM-DD,
 // default: today in their timezone), built at the instant `now`.
 async function collectInput(user, settings, { today, now = new Date() } = {}) {
@@ -267,6 +288,7 @@ async function collectInput(user, settings, { today, now = new Date() } = {}) {
         postponements,
         calendar,
         mail,
+        memory,
     ] = await Promise.all([
         readTasks(user, {
             today: day,
@@ -284,6 +306,7 @@ async function collectInput(user, settings, { today, now = new Date() } = {}) {
         readPostponements(user, timezone, day),
         readCalendar(user, settings, { today: day, lastDay: eventsLastDay }),
         readMailSource(user, settings),
+        readMemory(user, settings, { today: day, timezone, now }),
     ]);
 
     return {
@@ -296,8 +319,9 @@ async function collectInput(user, settings, { today, now = new Date() } = {}) {
         events: calendar.events,
         focusBlocksByDate,
         postponements,
-        contexts: [],
-        decisions: [],
+        contexts: memory.contexts,
+        decisions: memory.decisions,
+        noiseStats: memory.noiseStats,
         replies: null,
         sources: [
             { id: 'tasks', status: 'read', detail: null },

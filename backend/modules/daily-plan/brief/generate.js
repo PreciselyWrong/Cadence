@@ -11,6 +11,7 @@ const { getBriefSettings } = require('./service');
 const { collectInput } = require('./collect');
 const { buildBrief } = require('./build');
 const { writeBrief } = require('./writer');
+const decisions = require('./decisions');
 
 // Mail replies still running, so tests and shutdown can wait for them.
 const pendingReplies = new Set();
@@ -97,6 +98,19 @@ async function settlePendingReplies() {
     await Promise.allSettled([...pendingReplies]);
 }
 
+// The proposals a brief shows are kept as pending, to tell later whether the
+// user answered them. A failure here does not undo the brief.
+async function recordShownProposals(user, planDate, brief) {
+    try {
+        await decisions.recordShown(user, planDate, brief);
+    } catch (error) {
+        logger.error(
+            { code: error.code || error.name, userId: user.id },
+            'Daily brief proposals not recorded'
+        );
+    }
+}
+
 async function recordFailure(user, row, error) {
     logger.error(
         { code: error.code || error.name, userId: user.id },
@@ -121,6 +135,9 @@ async function generateBrief(
 
     try {
         const settings = await getBriefSettings(user);
+        // Before the inputs are read: the proposals of the previous brief that
+        // got no answer are now ignored, so the engine does not repeat them.
+        await decisions.markIgnored(user, planDate);
         const input = await collectInput(user, settings, {
             today: planDate,
             now,
@@ -146,6 +163,8 @@ async function generateBrief(
             brief_status: pending ? 'partial' : 'ready',
             brief_generated_at: now,
         });
+
+        await recordShownProposals(user, planDate, brief);
 
         if (pending) {
             startRepliesRequest({
