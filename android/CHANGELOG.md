@@ -1,3 +1,8 @@
+## [1.8.2] — 4 novembre 2026
+
+### Nouveautés
+- Agendas : chaque agenda a l'option « Cocher une fois passé » (Réglages › Agendas). Ses événements terminés apparaissent cochés d'eux-mêmes dans Tâches, l'Agenda et le widget, sans rien changer dans l'agenda du téléphone.
+
 ## [1.8.1] — 3 novembre 2026
 
 ### Corrections
