@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-04 — Ajout rapide des widgets = la saisie de l'app
+
+- **Problème** : les widgets, la tuile et les raccourcis de l'icône ouvraient une carte à part (titre, Aujourd'hui/Demain/Sans date) : ni `#étiquette`, ni `+projet`, ni `!1`-`!3` reconnus ou proposés, le texte devenait le titre tel quel.
+- **Décision** : cette fenêtre ouvre la même saisie que l'app (`QuickAddSheet`) : suggestions en direct, pastilles, destination Tâche ou Inbox (celle du raccourci d'abord), saisie qui reste ouverte pour la tâche suivante. Plus d'échéance « Aujourd'hui » d'office : la date se tape (« auj », « demain ») comme dans l'app.
+- **Web** : rien à reprendre (la capture web reconnaît déjà ces jetons). Reste : rien d'essayé sur le téléphone ni l'émulateur (non joignables).
+
 ### 2026-11-02 — Passe de soustraction (revue UI/UX complète)
 
 - **Problème** : avec cinq tâches, l'écran Tâches montrait trois rangées de pastilles (épinglés, sept onglets, domaines), puis trois cartes (agendas, jauge de charge, « Terminer la journée » avec le plus gros bouton de l'écran) avant la première tâche. Chaque ligne portait trois signaux de couleur (case, liseré, point de priorité) et une pastille de date ; chaque idée de la Boîte cinq boutons ; la fiche un gros « Terminer » pris pour « Enregistrer » ; Projets, Étiquettes et Bilan des cartes identiques pleines de « 0 ». Critique indépendante sur captures : 4/10.

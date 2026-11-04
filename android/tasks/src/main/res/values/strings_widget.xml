@@ -9,11 +9,6 @@
     <string name="tasks_quick_add_widget_button">Ajouter</string>
     <string name="tasks_quick_add_title">Nouvelle tâche</string>
     <string name="tasks_shortcut_inbox">Inbox</string>
-    <string name="tasks_quick_add_inbox_hint">Idée pour l’Inbox</string>
-    <string name="tasks_quick_add_hint">Titre de la tâche</string>
-    <string name="tasks_quick_add_today">Aujourd\'hui</string>
-    <string name="tasks_quick_add_tomorrow">Demain</string>
-    <string name="tasks_quick_add_no_date">Sans date</string>
     <string name="tasks_quick_add_submit">Ajouter</string>
     <string name="tasks_quick_add_cancel">Annuler</string>
     <string name="tasks_share_label">Cadence – Inbox</string>
