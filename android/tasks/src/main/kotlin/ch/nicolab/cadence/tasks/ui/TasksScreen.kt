@@ -180,6 +180,10 @@ fun TasksScreen(
                             onBack = { openProjectUid = null },
                             onOpenProject = { openProjectUid = it },
                             onOpen = { selectedTaskUid = it.uid },
+                            onOpenNote = {
+                                selectedNoteIsNew = false
+                                selectedNoteUid = it.uid
+                            },
                             modifier = Modifier.fillMaxSize(),
                         )
                         tab == TasksTab.TAGS && openTagUid != null -> TagTasksPane(

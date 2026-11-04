@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-04 — Notes dans la page d'un projet
+
+- **Problème** : une note rattachée à un projet n'apparaissait que dans la liste Notes ; la page du projet sur Android ne montrait que tâches et sous-projets, alors que le web affiche ses notes.
+- **Décision** : section « Notes » sous les tâches du projet, épinglées d'abord ; toucher une note l'ouvre. Pas encore de « Nouvelle note » depuis le projet (le web l'a).
+- **Web** : rien à reprendre.
+
 ### 2026-11-04 — Ajout rapide des widgets = la saisie de l'app
 
 - **Problème** : les widgets, la tuile et les raccourcis de l'icône ouvraient une carte à part (titre, Aujourd'hui/Demain/Sans date) : ni `#étiquette`, ni `+projet`, ni `!1`-`!3` reconnus ou proposés, le texte devenait le titre tel quel.

@@ -198,12 +198,12 @@ internal fun NoteCard(note: NoteItem, previews: LinkPreviews, onClick: () -> Uni
 
 /** Ligne de la liste des notes : pastille de couleur, titre, une ligne d'aperçu et l'épingle. */
 @Composable
-private fun NoteListRow(note: NoteItem, onClick: () -> Unit) {
+internal fun NoteListRow(note: NoteItem, onClick: () -> Unit, modifier: Modifier = Modifier) {
     val palette = cadence
     val accent = noteAccent(note.color, palette.isDark)
     val preview = remember(note.content) { Markdown.preview(note.content, 1) }
     Row(
-        Modifier
+        modifier
             .fillMaxWidth()
             .heightIn(min = Size.touch)
             .clip(Radius.Card)

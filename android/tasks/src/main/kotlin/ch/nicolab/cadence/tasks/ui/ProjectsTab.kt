@@ -68,6 +68,9 @@ import ch.nicolab.cadence.designsystem.components.rowGroupShape
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
+import ch.nicolab.cadence.tasks.model.ProjectNotes
+import ch.nicolab.cadence.tasks.model.NoteItem
+import androidx.compose.foundation.lazy.items
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.AreaGroup
@@ -330,9 +333,12 @@ internal fun ProjectTasksPane(
     onBack: () -> Unit,
     onOpenProject: (String) -> Unit,
     onOpen: (TaskItem) -> Unit,
+    onOpenNote: (NoteItem) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val projects by viewModel.projects.collectAsStateWithLifecycle()
+    val allNotes by viewModel.notes.collectAsStateWithLifecycle()
+    val notes = remember(allNotes, projectUid) { ProjectNotes.of(allNotes, projectUid) }
     val allTasks by viewModel.allTasks.collectAsStateWithLifecycle()
     val tasks by remember(projectUid) { viewModel.observeProjectTasks(projectUid) }
         .collectAsStateWithLifecycle(initialValue = emptyList())
@@ -442,7 +448,7 @@ internal fun ProjectTasksPane(
                 SubProjectRow(sub, rowGroupShape(index, subProjects.size)) { onOpenProject(sub.project.uid) }
             }
         }
-        if (tasks.isEmpty() && subProjects.isEmpty()) {
+        if (tasks.isEmpty() && subProjects.isEmpty() && notes.isEmpty()) {
             item { EmptyState(R.string.tasks_project_empty) }
         }
         if (outline) {
@@ -463,6 +469,12 @@ internal fun ProjectTasksPane(
         } else {
             // L'en-tête porte déjà le projet : les lignes ne répètent pas son nom.
             taskRows(tasks, emptyMap(), projectColors, moment, viewModel, onOpen)
+        }
+        if (notes.isNotEmpty()) {
+            item(key = "notes") { SectionHeader(title = stringResource(R.string.tasks_inbox_segment_notes), count = notes.size) }
+            items(notes, key = { "note-${it.uid}" }) { note ->
+                NoteListRow(note, onClick = { onOpenNote(note) }, modifier = Modifier.padding(bottom = Space.sm))
+            }
         }
     }
 
