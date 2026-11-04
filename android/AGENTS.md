@@ -26,6 +26,7 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 `domain/` - calculs temporels et règles métier Kotlin sans Android.
 `data/` - persistance locale, préférences et sauvegardes.
 `tasks/` - tâches Tududi : base Room `tududi.db`, synchronisation hors ligne (`/api/v1/sync`, file d'envoi, horloges HLC), écrans, widgets Glance, rappels. Contrat : `TaskRepository`, `ServerConnection`, `TasksGraph`.
+`tasks/.../brief/audio/` - lecture du résumé du jour sur le téléphone : catalogue et magasin des voix Piper, rendu WAV par chapitre (`BriefAudioRenderer`, fonctions pures `BriefAudioMath`, `BriefAudioPlan`), fichiers gardés 7 jours (`BriefAudioFiles`), travail de fond `BriefAudioWorker`, service de lecture Media3 `BriefPlaybackService`, voix du système `BriefSpeaker`. Le moteur natif ne vit pas ici : `:app` (`voice/SherpaVoiceSynthesizer`) l'enregistre dans `BriefVoiceEngine.factory`.
 `designsystem/` - thème et composants Compose partagés par `app/` et `tasks/` : jetons, typographie, palette, accent, apparence, navigation.
 `calendar/` - agendas de l'appareil en lecture seule, réglages par agenda et occurrences faites. Contrat : `CalendarRepository`, `CalendarGraph`.
 `app/` - UI Compose, widget Glance, rappels et assemblage (`habits/`, `bilan/`, `agenda/`, `settings/`).
@@ -33,6 +34,7 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 `../docs/fork/WEB-UX-NOTES.md` - décisions UX prises sur le web, à reprendre dans l'app : lire avant tout travail d'interface.
 
 ## Décisions
+- Résumé lu à voix haute (`../docs/39-daily-brief.md`, « On-device rendering ») : voix Piper locale par Sherpa-ONNX, ordre local, MP3 du serveur, voix du système. Dépendances ajoutées : AAR `sherpa-onnx` 1.13.8 (Apache-2.0, release GitHub k2-fsa, téléchargé par la tâche `:app:prepareSherpa` avec vérification SHA-256 et cache dans `android/build/cache/downloads/`), seulement dans `:app` et limité à `arm64-v8a` et `x86_64` (~12 Mo compressés par architecture, mais ~34 Mo par architecture dans l'APK de debug où les `.so` sont stockés non compressés) ; `androidx.media3` `exoplayer` et `session` 1.10.1 (commandes d'écran verrouillé, Bluetooth, lecture en arrière-plan, service `mediaPlayback`) ; `commons-compress` (extraction des archives `.tar.bz2` des voix). Les voix (Siwis CC BY 4.0, Tom AGPL-3.0) se téléchargent à la demande, aucune n'est embarquée ; la vitesse est appliquée à la synthèse, un changement de voix ou de vitesse relance le rendu.
 - Min SDK 26, compilation et cible API 36.
 - Une entrée garde la date civile et le fuseau observés lors de sa saisie.
 - Les changements d'objectif ou de période s'appliquent à partir du jour même; les jours déjà écoulés gardent la version qui les a produits.
@@ -111,6 +113,9 @@ Lister ce qui a changé et ce qui reste, pas la démarche.
 - Le minuteur de concentration (`tasks/focus/PomodoroState`) est local et dérivé de l'horloge, comme `HabitTimer` : on ne stocke que l'instant de reprise et le reste figé.
 
 ## ⛔ Interdits
+- ⛔ Envoyer le texte du résumé hors de l'appareil pour le lire — le script audio ne va qu'au moteur local (Sherpa) ou à la voix du système ; seul le téléchargement du modèle de voix, à la demande, utilise le réseau.
+- ⛔ Charger une bibliothèque native depuis `:tasks` ou ses tests — le moteur passe par l'interface `VoiceSynthesizer` ; l'implémentation Sherpa reste dans `:app`.
+- ⛔ Télécharger une voix sans la vérifier ou sans demande — taille et SHA-256 du catalogue, extraction sans lien ni chemin extérieur, aucune voix par défaut.
 - ⛔ Poser du texte sur une teinte d'habitude, de projet ou d'accent sans `readableOn`/`readableTint` — la teinte seule à 10 % d'opacité passe sous 4,5:1 pour les teintes claires.
 - ⛔ Choisir l'encre d'un fond coloré par `onSurface` ou `Color.White` — `onSurface` est clair en thème sombre : texte clair sur bouton clair (agendas, interrupteurs) ; passer par `onColorOf`.
 - ⛔ Créer un `SnackbarHost` dans un écran — deux hôtes sur le même état affichent chaque message deux fois.

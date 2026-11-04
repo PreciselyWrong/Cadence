@@ -1,3 +1,8 @@
+## [1.10.0] — 4 novembre 2026
+
+### Nouveautés
+- Résumé du jour à écouter : télécharge une voix française (Siwis ou Tom) dans Réglages › Résumé › Voix. Le téléphone prépare l'audio chaque matin, sans réseau ; « Écouter » le lit en arrière-plan, écran éteint, avec les commandes de l'écran verrouillé et le saut de chapitre. Sans voix téléchargée, la voix du téléphone lit le résumé.
+
 ## [1.9.2] — 4 novembre 2026
 
 ### Nouveautés

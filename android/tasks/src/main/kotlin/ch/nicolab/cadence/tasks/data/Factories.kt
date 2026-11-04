@@ -60,6 +60,8 @@ internal fun createBriefAgents(context: Context): BriefAgentsRepository = TasksR
 
 internal fun createBriefActions(context: Context): BriefActions = TasksRuntime.get(context).briefActions
 
+internal fun createBriefAudio(context: Context): ch.nicolab.cadence.tasks.brief.audio.BriefAudio = TasksRuntime.get(context).briefAudio
+
 internal fun createBriefStore(context: Context): BriefStore = TasksRuntime.get(context).briefStore
 
 /** Dernières listes de revue lues, pour la lecture hors ligne ; effacées à la déconnexion. */
@@ -107,6 +109,7 @@ internal class TasksRuntime private constructor(context: Context) {
             refreshPlanSlots(PlanSlotsStore(appContext), api::call)
             focus.sync()
             brief.refreshToday()
+            ch.nicolab.cadence.tasks.brief.audio.BriefAudioScheduler.request(appContext)
         },
     )
     private val habitPending: Flow<Int> = habitStorage?.let { storage ->
@@ -137,6 +140,7 @@ internal class TasksRuntime private constructor(context: Context) {
     val briefStore = BriefStore.of(appContext)
     private val accountZone: suspend () -> ZoneId = { connection.observe().first()?.accountZone ?: ZoneId.systemDefault() }
     val brief = BriefRepository(database.briefDao(), api::call, accountZone)
+    val briefAudio = ch.nicolab.cadence.tasks.brief.audio.BriefAudio(appContext, brief, api::download)
     val briefSettings = BriefSettingsRepository(briefStore, api::call) { call -> repository.defer(call).getOrThrow() }
     val briefAgents = BriefAgentsRepository(api::call)
     val briefActions = BriefActions(

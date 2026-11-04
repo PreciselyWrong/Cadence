@@ -141,7 +141,7 @@ All routes exist under `/api` and `/api/v1`.
 
 ## Audio
 
-The brief is read aloud by a Piper server on the user's network. The script is built with the brief, so every client speaks the same text, and the Android text-to-speech fallback reads it too.
+The brief is read aloud by a Piper server on the user's network, or by a Piper voice on the Android phone itself (see On-device rendering). The script is built with the brief, so every client speaks the same text, and the text-to-speech fallbacks read it too.
 
 ### Script (`script.js`)
 
@@ -181,7 +181,18 @@ The address must be http(s), without credentials, and not a link-local or cloud 
 
 ### Fallback
 
-Clients play the audio when `audio.status` is `ready`. Otherwise (`none`, `pending`, `failed`, `expired`) they read `audio_script` with the device's text-to-speech, or stay silent.
+Clients play, in this order: the audio rendered on the device (Android), the server MP3 when `audio.status` is `ready`, then the device's text-to-speech reading `audio_script`; with none of them (no script, no audio) the play button is hidden.
+
+### On-device rendering (Android)
+
+The Android app is the default renderer: it speaks `audio_script` itself with a Piper voice running on the phone (Sherpa-ONNX, CPU), so the script never leaves the device and the server's Piper and `ffmpeg` are optional.
+
+- **Voices**: Réglages › Résumé › « Voix sur ce téléphone ». Two French voices are offered, `siwis` (CC BY 4.0) and `tom` (AGPL-3.0), with their license line, size, progress and a delete button. Nothing is installed or downloaded until the user asks; the voice archive (`.tar.bz2`, about 21 MB each, from the Sherpa-ONNX GitHub release) is the only network use of the feature. It is checked by size and SHA-256, extracted without links or paths outside the folder, and moved into place in one step (`files/brief-voices/<id>`); the archive's `MODEL_CARD` license file stays with the model. The voice, the speed (0.5 to 2, one tenth steps) and the sample ("Écouter un extrait") are Android-local settings, never synced.
+- **Rendering**: after each brief refresh (`SyncEngine.onSynced`) a WorkManager job (`brief-audio`, KEEP so a running render is never restarted) renders today's brief when a voice is installed: each chapter of `audio_script` is synthesized, the clips are joined with 0.8 s of silence like the server render, and the result is one mono 16-bit WAV per brief date and version, `files/brief-audio/<date>-v<version>.wav`, with a `.json` sheet holding the duration, the start offset of every chapter, the voice and the speed. WAV rather than AAC: no encoder to manage, exact seeking, and about 2.6 MB per minute, so under 40 MB for the seven days kept. A render made with another voice or speed is replaced; a failed render leaves nothing behind and the server MP3 takes over.
+- **Retention**: the job deletes audio files older than 7 days (`BriefAudioFiles.RETENTION_DAYS`) and the other versions of the same day; deleting a voice deletes its renders.
+- **Server MP3**: without a usable local voice, the job copies the MP3 of a `ready` audio (`GET /daily-plan/:date/brief/audio`, device API key) next to a sheet built from `audio.chapters[].start_seconds`, so it plays offline. Pressing play with no copy downloads it on the spot.
+- **Playback**: Media3 ExoPlayer in a `MediaSessionService` (foreground service type `mediaPlayback`, channel « Lecture du résumé »): lock-screen and Bluetooth controls, previous/next chapter, and a resume position kept per brief version. The brief header shows « Écouter · N min » (N from the file, or estimated at 150 words per minute for the system voice) and, once playing, pause and chapter skip.
+- **System voice**: Android `TextToSpeech` (French) reads the chapters one after the other. It has no media session: it follows the brief screen.
 
 ## Mail
 

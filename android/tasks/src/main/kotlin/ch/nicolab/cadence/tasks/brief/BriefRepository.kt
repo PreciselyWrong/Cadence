@@ -6,6 +6,7 @@ import java.time.LocalDate
 import java.time.ZoneId
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.JsonObject
 
@@ -46,6 +47,9 @@ class BriefRepository internal constructor(
     } catch (error: Exception) {
         Result.failure(error)
     }
+
+    /** Le brief du jour tel que gardé, sans appel réseau ; null quand il n'y en a pas. */
+    suspend fun cachedToday(): CachedBrief? = dao.observe(LocalDate.now(zone()).toString()).first()?.let(::cached)
 
     /** Relit le brief du jour, dans le fuseau du compte. */
     suspend fun refreshToday(): Result<Unit> = refresh(LocalDate.now(zone()))

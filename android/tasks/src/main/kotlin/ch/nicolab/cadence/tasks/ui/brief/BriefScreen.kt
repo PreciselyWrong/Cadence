@@ -63,6 +63,7 @@ import ch.nicolab.cadence.tasks.brief.CachedBrief
 import ch.nicolab.cadence.tasks.brief.DEFAULT_BRIEF_SECTIONS
 import ch.nicolab.cadence.tasks.brief.MoveDto
 import ch.nicolab.cadence.tasks.brief.QuestionDto
+import ch.nicolab.cadence.tasks.brief.audio.BriefAudioFiles
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.planning.PlanningChanges
 import ch.nicolab.cadence.tasks.ui.TaskDetailSheet
@@ -86,6 +87,10 @@ fun BriefScreen(onBack: () -> Unit) {
     val tasks by viewModel.tasks.collectAsStateWithLifecycle()
     val today by viewModel.today.collectAsStateWithLifecycle()
     val zone by viewModel.zone.collectAsStateWithLifecycle()
+    val audioChoice by viewModel.audioChoice.collectAsStateWithLifecycle()
+    val playerState by viewModel.playerState.collectAsStateWithLifecycle()
+    val speakerState by viewModel.speakerState.collectAsStateWithLifecycle()
+    val marks by viewModel.marks.collectAsStateWithLifecycle()
     val tasksViewModel: TasksViewModel = viewModel()
     val snackbar = rememberAppSnackbarHostState()
     val undoLabel = stringResource(R.string.tasks_undo)
@@ -166,7 +171,26 @@ fun BriefScreen(onBack: () -> Unit) {
                     onPrecise = { preciseFor = it },
                     onReopen = { task -> tasksViewModel.toggle(task, hold = false) },
                 )
-                item(key = "header") { BriefHeader(brief = brief, date = date, today = today) }
+                val audioUi = BriefAudioUi(
+                    choice = audioChoice,
+                    briefKey = BriefAudioFiles.key(date, snapshot.version),
+                    player = playerState,
+                    speaker = speakerState,
+                    marks = marks,
+                    speechChapters = brief.audioScript?.chapters.orEmpty().count { it.text.isNotBlank() },
+                )
+                item(key = "header") {
+                    BriefHeader(brief = brief, date = date, today = today) {
+                        BriefAudioControls(
+                            ui = audioUi,
+                            onPlay = viewModel::playAudio,
+                            onToggle = viewModel::toggleAudio,
+                            onNext = viewModel::nextChapter,
+                            onPrevious = viewModel::previousChapter,
+                            modifier = Modifier.padding(top = Space.sm),
+                        )
+                    }
+                }
                 sections.forEach { id -> briefSection(id, context) }
             }
         }
@@ -345,7 +369,7 @@ internal fun durationLabel(minutes: Int): String {
 }
 
 @Composable
-private fun BriefHeader(brief: BriefDto, date: LocalDate, today: LocalDate) {
+private fun BriefHeader(brief: BriefDto, date: LocalDate, today: LocalDate, audio: @Composable () -> Unit) {
     val palette = cadence
     Column(Modifier.fillMaxWidth().padding(bottom = Space.md)) {
         Text(BriefFormat.longDate(date), style = MaterialTheme.typography.bodyMedium, color = palette.onSurfaceVariant)
@@ -361,6 +385,7 @@ private fun BriefHeader(brief: BriefDto, date: LocalDate, today: LocalDate) {
             Spacer(Modifier.width(Space.lg))
             Text(countLine(R.string.brief_today_count, brief.counters.dueToday), style = MaterialTheme.typography.bodyMedium, color = palette.onSurfaceVariant)
         }
+        audio()
     }
 }
 

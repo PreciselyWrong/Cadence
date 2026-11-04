@@ -1,6 +1,8 @@
 package ch.nicolab.cadence.tasks.sync
 
 import ch.nicolab.cadence.domain.QuietHours
+import java.io.File
+import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
@@ -66,6 +68,47 @@ class HttpSyncApi(private val session: suspend () -> ServerSession) : SyncApi {
     internal suspend fun call(method: String, path: String, query: Map<String, String> = emptyMap(), body: JsonObject? = null): JsonObject =
         request(method, path, query, body)
 
+    /**
+     * Copie une réponse binaire (MP3 du résumé) dans [target], avec la clé API de l'appareil. Le fichier s'écrit
+     * d'abord à côté ([target].part) : un échec ne laisse jamais un fichier tronqué sous le nom final.
+     */
+    internal suspend fun download(path: String, target: File, maxBytes: Long): Unit = withContext(Dispatchers.IO) {
+        val server = session()
+        val connection = (URL(server.baseUrl + path).openConnection() as HttpURLConnection).apply {
+            requestMethod = "GET"
+            connectTimeout = TIMEOUT_MS
+            readTimeout = DOWNLOAD_READ_TIMEOUT_MS
+            setRequestProperty("Authorization", "Bearer ${server.token}")
+            setRequestProperty("Accept", "audio/mpeg")
+        }
+        val part = File(target.parentFile, target.name + ".part")
+        try {
+            val code = connection.responseCode
+            if (code !in 200..299) {
+                val errorBody = runCatching { connection.errorStream?.bufferedReader(Charsets.UTF_8)?.use { it.readText() } }.getOrNull()
+                throw httpFailure(code, errorBody)
+            }
+            var count = 0L
+            connection.inputStream.use { input ->
+                part.outputStream().use { output ->
+                    val buffer = ByteArray(DOWNLOAD_BUFFER)
+                    while (true) {
+                        val n = input.read(buffer)
+                        if (n < 0) break
+                        count += n
+                        if (count > maxBytes) throw IOException("Fichier audio trop volumineux")
+                        output.write(buffer, 0, n)
+                    }
+                }
+            }
+            if (count == 0L) throw IOException("Fichier audio vide")
+            if (!part.renameTo(target)) throw IOException("Impossible d'enregistrer le fichier audio")
+        } finally {
+            part.delete()
+            connection.disconnect()
+        }
+    }
+
     private suspend fun request(
         method: String,
         path: String,
@@ -106,6 +149,8 @@ class HttpSyncApi(private val session: suspend () -> ServerSession) : SyncApi {
 
     private companion object {
         const val TIMEOUT_MS = 15_000
+        const val DOWNLOAD_READ_TIMEOUT_MS = 60_000
+        const val DOWNLOAD_BUFFER = 65_536
     }
 }
 

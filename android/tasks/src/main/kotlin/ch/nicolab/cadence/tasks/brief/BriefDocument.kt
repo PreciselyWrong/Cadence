@@ -28,7 +28,27 @@ data class BriefDto(
     val replies: List<ReplyDto> = emptyList(),
     val inbox: List<InboxDto> = emptyList(),
     val resolved: List<ResolvedDto> = emptyList(),
+    /** Texte écrit pour l'oreille (heures et nombres en lettres, dictionnaire appliqué) : lu par la voix du téléphone. */
+    @SerialName("audio_script") val audioScript: AudioScriptDto? = null,
+    /** MP3 du serveur, quand il en a rendu un. */
+    val audio: AudioDto? = null,
 )
+
+@Serializable
+data class AudioScriptDto(val chapters: List<ScriptChapterDto> = emptyList())
+
+@Serializable
+data class ScriptChapterDto(val id: String = "", val title: String = "", val text: String = "")
+
+@Serializable
+data class AudioDto(
+    val status: String = "none",
+    @SerialName("duration_seconds") val durationSeconds: Double? = null,
+    val chapters: List<AudioChapterDto> = emptyList(),
+)
+
+@Serializable
+data class AudioChapterDto(val id: String = "", @SerialName("start_seconds") val startSeconds: Double = 0.0)
 
 @Serializable
 data class SourceDto(val id: String = "", val status: String = "", val detail: String? = null)

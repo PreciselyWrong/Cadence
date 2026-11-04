@@ -67,6 +67,10 @@ object TasksGraph {
     /** Actions du brief : tâche et décision (file d'appels différés), avec annulation. */
     internal fun briefActions(context: Context): BriefActions = createBriefActions(context.applicationContext)
 
+    /** Audio du résumé : voix locale, fichiers rendus, copie du MP3 du serveur. */
+    fun briefAudio(context: Context): ch.nicolab.cadence.tasks.brief.audio.BriefAudio =
+        ch.nicolab.cadence.tasks.data.createBriefAudio(context.applicationContext)
+
     /** Préférences du brief propres à l'appareil (notification « résumé prêt »). */
     fun briefStore(context: Context): BriefStore = createBriefStore(context.applicationContext)
 

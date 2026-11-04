@@ -78,6 +78,7 @@ fun BriefSettingsPage(modifier: Modifier = Modifier) {
             WritingPanel(current, save)
             VoicePanel(current, save)
         }
+        BriefVoiceLocalPanel()
         Panel {
             ToggleRow(
                 label = stringResource(R.string.brief_notify_ready),
