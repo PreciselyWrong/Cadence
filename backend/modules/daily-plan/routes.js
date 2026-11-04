@@ -23,6 +23,7 @@ router.get('/daily-plan/focus-blocks', dailyPlanController.getFocusBlocks);
 router.put('/daily-plan/focus-blocks', dailyPlanController.saveFocusBlocks);
 router.get('/daily-plan/brief/settings', dailyPlanController.getBriefSettings);
 router.put('/daily-plan/brief/settings', dailyPlanController.saveBriefSettings);
+router.get('/daily-plan/brief/status', dailyPlanController.getBriefStatus);
 router.post(
     '/daily-plan/ai/draft',
     requireFeature('ai'),
@@ -34,6 +35,7 @@ router.post(
     dailyPlanController.aiEstimates
 );
 router.get('/daily-plan/:date/brief', dailyPlanController.getBrief);
+router.post('/daily-plan/:date/brief', dailyPlanController.regenerateBrief);
 router.put('/daily-plan/:date', dailyPlanController.replace);
 router.post('/daily-plan/:date/carry-over', dailyPlanController.carryOver);
 router.post(

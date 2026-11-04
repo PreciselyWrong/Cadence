@@ -792,6 +792,7 @@ async function saveFocusBlocks(user, body) {
 }
 
 module.exports = {
+    readFocus,
     getFocusBlocks,
     saveFocusBlocks,
     getDayHours,

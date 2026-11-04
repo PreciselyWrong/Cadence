@@ -58,6 +58,7 @@ function base(row, calendar) {
         description: row.description,
         html_link: row.html_link,
         recurring: Boolean(row.recurring_event_id),
+        series_id: row.recurring_event_id || null,
     };
 }
 

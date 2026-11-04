@@ -76,6 +76,7 @@ const REVIEWABLE = {
 
 const PUSH_RULE_COLUMNS = [
     'id',
+    'uid',
     'project_id',
     'habit_mode',
     'recurrence_type',
@@ -86,7 +87,9 @@ const PUSH_RULE_COLUMNS = [
 
 // Frequently pushed open tasks, with their push summary, most pushed first.
 // Reads only the last 30 days of the user's own due changes and plans.
-async function computePushed(user, timezone, today) {
+// `all` keeps every task that was pushed at all, whatever the frequency
+// threshold: the daily brief compares the count with its own threshold.
+async function computePushed(user, timezone, today, { all = false } = {}) {
     const sinceDay = addDays(today, -WINDOW_DAYS - 1);
     const since = moment.tz(sinceDay, timezone).toDate();
     const [events, planDays] = await Promise.all([
@@ -124,7 +127,7 @@ async function computePushed(user, timezone, today) {
         );
         const pushes = collectPushes(changesByTask.get(task.id) || [], missed);
         const summary = summarize(pushes, today, task.reviewed_at, timezone);
-        if (summary.frequent) result.push({ task, push: summary });
+        if (all || summary.frequent) result.push({ task, push: summary });
     }
     return result.sort(
         (a, b) =>
@@ -495,6 +498,7 @@ async function markProjectReviewed(uid) {
 
 module.exports = {
     CATEGORIES,
+    computePushed,
     markProjectReviewed,
     STALE_AFTER_DAYS,
     weekStartOf,

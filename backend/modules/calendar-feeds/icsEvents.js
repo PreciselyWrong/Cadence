@@ -178,7 +178,7 @@ function eventsForRange(events, startDate, endDate, userTimezone) {
         .add(2, 'day');
     const results = [];
 
-    const collect = (event, start, end, tzid) => {
+    const collect = (event, start, end, tzid, recurring) => {
         for (const day of days) {
             const occurrence = buildOccurrence(
                 event,
@@ -188,7 +188,9 @@ function eventsForRange(events, startDate, endDate, userTimezone) {
                 userTimezone,
                 tzid
             );
-            if (occurrence) results.push({ ...occurrence, date: day });
+            if (occurrence) {
+                results.push({ ...occurrence, date: day, recurring });
+            }
         }
     };
 
@@ -198,7 +200,7 @@ function eventsForRange(events, startDate, endDate, userTimezone) {
             ?.getParameter('tzid');
 
         if (!event.isRecurring()) {
-            collect(event, event.startDate, event.endDate, tzid);
+            collect(event, event.startDate, event.endDate, tzid, false);
             continue;
         }
 
@@ -229,7 +231,8 @@ function eventsForRange(events, startDate, endDate, userTimezone) {
                     ? tzid
                     : details.item.component
                           .getFirstProperty('dtstart')
-                          ?.getParameter('tzid')
+                          ?.getParameter('tzid'),
+                true
             );
         }
     }

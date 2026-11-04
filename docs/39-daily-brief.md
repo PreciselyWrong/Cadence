@@ -65,7 +65,7 @@ Creating the row for a brief leaves `started_at` empty, so the day plan is not "
 
 Tasks are referenced by `uid` only. Clients show the task's **current** state (web: the `tasks` map returned with the brief; Android: Room), so a task done elsewhere shows as done in the brief.
 
-Event refs are stable strings built by the engine: `event:<feed_uid>:<event uid>:<start ISO or date>` for one occurrence, `series:<feed_uid>:<series id>` for a recurring series (ICS `UID`, Google `recurring_event_id`).
+Event refs are stable strings built by the engine: `event:<feed_uid>:<event uid>:<start ISO or date>` for one occurrence, `series:<feed_uid>:<series id>` for a recurring series (ICS `UID`, Google `recurring_event_id`). Google calendars have `feed_uid` `google-<calendar uid>`.
 
 ## Settings (`ui_settings.brief`)
 
@@ -113,7 +113,9 @@ All routes exist under `/api` and `/api/v1`.
 - `collect.js`: reads the inputs (open tasks today, overdue, upcoming within the lookahead, inbox, tasks closed in `closedLookbackDays` with their notes, events of the selected calendars, focus blocks and exceptions, postponements from `review/postponements.js`, contexts and decisions once phase 3 exists, replies from the mail agent).
 - `rules/*.js`: **pure functions** of `(input, settings, today)`; one file per rule, each unit-tested.
 - `build.js`: assembles the JSON from the rules; `writer.js`: optional LLM rewrite of `verdict.text` and reasons, falling back to the rules text on any error.
+- `generate.js`: `generateBrief(user, date, { reason })`. A job run keeps an existing brief; a manual run makes a new version. A failed run sets `brief_status = failed` and keeps the previous brief; the job does not retry it, "Regenerate" does. Replies from the mail agent arrive afterwards and update only `replies`, `counters.replies` and the mail source.
 - `job.js`: `generateDueBriefs({ now })`, run every 5 minutes by `taskScheduler.js` (`daily_brief`).
+- `sources.js`: configuration checks used by `GET /daily-plan/brief/status`.
 
 ### Rules
 

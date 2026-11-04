@@ -39,6 +39,7 @@ const getCronExpression = (frequency) => {
         webhook_deliveries: '* * * * *',
         webhook_summaries: '*/5 * * * *',
         held_notifications: '* * * * *',
+        daily_brief: '*/5 * * * *',
     };
     return expressions[frequency];
 };
@@ -74,6 +75,9 @@ const runJob = async (frequency) => {
     } else if (frequency === 'webhook_summaries') {
         const { sendDueSummaries } = require('../webhooks/summary');
         await sendDueSummaries();
+    } else if (frequency === 'daily_brief') {
+        const { generateDueBriefs } = require('../daily-plan/brief/job');
+        await generateDueBriefs();
     } else {
         await processSummariesForFrequency(frequency);
     }
@@ -106,6 +110,7 @@ const createJobEntries = () => {
         'webhook_deliveries',
         'webhook_summaries',
         'held_notifications',
+        'daily_brief',
     ];
 
     return frequencies.map((frequency) => {

@@ -1,5 +1,6 @@
 'use strict';
 
+const { Op } = require('sequelize');
 const { CalendarFeed } = require('../../models');
 const secretCipher = require('../../shared/crypto/secretCipher');
 const { ValidationError, NotFoundError } = require('../../shared/errors');
@@ -18,6 +19,7 @@ const MIN_REFRESH_MS = 30 * 1000;
 const MAX_FEEDS_PER_USER = 10;
 const MAX_RANGE_DAYS = 62;
 const COLOR_PATTERN = /^#[0-9a-fA-F]{6}$/;
+const GOOGLE_FEED_PREFIX = require('../google-sync/eventsService').FEED_PREFIX;
 
 // Parsed feeds per process, keyed by feed uid. A feed changes rarely and
 // Google only refreshes its secret address every few hours anyway.
@@ -185,16 +187,26 @@ const withoutDetails = ({
     ...event
 }) => event;
 
+// `feedUids` keeps only those calendars (ICS feeds and Google calendars,
+// whose feed_uid starts with the Google prefix). Feeds left out are not
+// fetched at all.
 async function eventsBetween(
     user,
     startDate,
     endDate,
-    { refresh = false, shownOnly = false, details = false } = {}
+    {
+        refresh = false,
+        shownOnly = false,
+        details = false,
+        feedUids = null,
+    } = {}
 ) {
     const timezone = getSafeTimezone(user.timezone);
+    const wanted = feedUids ? new Set(feedUids) : null;
 
     const where = { user_id: user.id };
     if (shownOnly) where.show_on_calendar = true;
+    if (wanted) where.uid = { [Op.in]: [...wanted] };
     const feeds = await CalendarFeed.findAll({
         where,
         order: [['created_at', 'ASC']],
@@ -226,13 +238,23 @@ async function eventsBetween(
     );
 
     // Google calendars connected through Profile -> Calendars (fork).
+    const googleWanted =
+        !wanted ||
+        [...wanted].some((uid) => uid.startsWith(GOOGLE_FEED_PREFIX));
     try {
-        const { eventsService } = require('../google-sync');
-        events.push(
-            ...(await eventsService.eventsBetween(user, startDate, endDate, {
-                shownOnly,
-            }))
-        );
+        if (googleWanted) {
+            const { eventsService } = require('../google-sync');
+            events.push(
+                ...(await eventsService.eventsBetween(
+                    user,
+                    startDate,
+                    endDate,
+                    {
+                        shownOnly,
+                    }
+                ))
+            );
+        }
     } catch (err) {
         errors.push({ feed_uid: 'google', message: err.message });
     }
@@ -289,6 +311,29 @@ async function eventsForRangeOfDays(
     return { start, end, ...result };
 }
 
+// The events the daily brief reads: only the calendars the user selected
+// for it, each one shaped as the brief's event (docs/39-daily-brief.md).
+// Errors come back per calendar and never throw.
+async function eventsForBrief(user, startDate, endDate, feedUids) {
+    if (!feedUids || feedUids.length === 0) {
+        return { events: [], errors: [] };
+    }
+    const { events, errors } = await eventsBetween(user, startDate, endDate, {
+        feedUids,
+    });
+    return {
+        events: events
+            .filter((event) => feedUids.includes(event.feed_uid))
+            .map((event) => ({
+                ...event,
+                series_id: event.recurring
+                    ? (event.series_id ?? event.uid)
+                    : null,
+            })),
+        errors,
+    };
+}
+
 function clearCache() {
     cache.clear();
 }
@@ -300,5 +345,6 @@ module.exports = {
     remove,
     eventsForDay,
     eventsForRangeOfDays,
+    eventsForBrief,
     clearCache,
 };

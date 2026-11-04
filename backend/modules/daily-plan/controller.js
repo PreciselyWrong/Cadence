@@ -3,6 +3,7 @@
 const dailyPlanService = require('./service');
 const dailyPlanAi = require('./ai');
 const briefService = require('./brief/service');
+const { generateBrief } = require('./brief/generate');
 const { UnauthorizedError } = require('../../shared/errors');
 
 function requireUser(req) {
@@ -134,6 +135,26 @@ const dailyPlanController = {
     async getBrief(req, res, next) {
         try {
             const user = requireUser(req);
+            res.json(await briefService.getBrief(user, req.params.date));
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    async getBriefStatus(req, res, next) {
+        try {
+            const user = requireUser(req);
+            res.json(await briefService.getBriefStatus(user));
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    // Regenerate: a new version of the day's brief, then the same payload as GET.
+    async regenerateBrief(req, res, next) {
+        try {
+            const user = requireUser(req);
+            await generateBrief(user, req.params.date, { reason: 'manual' });
             res.json(await briefService.getBrief(user, req.params.date));
         } catch (err) {
             next(err);
