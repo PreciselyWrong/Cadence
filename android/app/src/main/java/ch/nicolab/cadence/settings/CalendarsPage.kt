@@ -308,6 +308,11 @@ private fun CalendarBlock(
                     selected = display.notify,
                     leadingIcon = if (display.notify) Icons.Rounded.Check else null,
                 ) { onDisplay(display.copy(notify = !display.notify)) }
+                ChoiceChip(
+                    label = stringResource(R.string.calendars_auto_done_past),
+                    selected = display.autoDonePast,
+                    leadingIcon = if (display.autoDonePast) Icons.Rounded.Check else null,
+                ) { onDisplay(display.copy(autoDonePast = !display.autoDonePast)) }
             }
         }
     }

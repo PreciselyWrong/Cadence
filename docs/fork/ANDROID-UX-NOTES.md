@@ -329,3 +329,8 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Décision** : la dernière lecture du plan (aujourd'hui, demain, gardée sur l'appareil après chaque synchro) s'ajoute à Aujourd'hui : chaque tâche ouverte du plan une seule fois, à l'heure du plan (heure montrée sur la ligne, avant l'échéance) ou dans la partie sans heure ; une tâche en retard placée aujourd'hui passe du retard au jour. Un placement à heure occupe son créneau dans « Planifier la journée » et n'est plus à placer. Le reste de la planification d'Android ne change pas ; le téléphone n'écrit pas le plan (sauf la session courte). Le widget Aujourd'hui ne lit pas encore le plan.
 - **Web** : rien à reprendre (le web lit déjà son plan). Reste : rien d'essayé sur le téléphone.
 
+### 2026-11-04 — Cocher une fois passé, agenda par agenda
+
+- **Problème** : les événements passés d'un agenda restaient à cocher un par un dans Tâches, Agenda et le widget.
+- **Décision** : chaque agenda (Réglages › Agendas) a une puce « Cocher une fois passé », coupée par défaut. Une occurrence terminée (journée entière : à minuit) est montrée faite partout, sans rien enregistrer ni toucher au fournisseur ; « Masquer les événements faits » la masque, sans « Cocher un événement » rien n'est coché. La liste se met à jour chaque minute. Tant que la puce est active, une occurrence passée ne se décoche pas.
+- **Web** : rien à reprendre, le web n'a pas d'événements cochables. Reste : rien d'essayé sur le téléphone.

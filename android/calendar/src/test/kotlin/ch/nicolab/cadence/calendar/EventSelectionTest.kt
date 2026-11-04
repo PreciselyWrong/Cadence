@@ -52,7 +52,8 @@ class EventSelectionTest {
         done: Set<EventInstanceKey> = emptySet(),
         surface: CalendarSurface = CalendarSurface.AGENDA,
         hidden: Set<EventInstanceKey> = emptySet(),
-    ): List<EventWithDone> = selectEvents(events, calendars, displays, global, done, range, surface, zone, hidden)
+        now: Long = at(12),
+    ): List<EventWithDone> = selectEvents(events, calendars, displays, global, done, range, surface, zone, hidden, now)
 
     @Test
     fun `un agenda sans réglage s'affiche sur l'agenda et les tâches, pas sur le widget`() {
@@ -367,5 +368,43 @@ class EventSelectionTest {
         val result = select(events, calendars, done = setOf(kept))
 
         assertEquals(listOf(true), result.map { it.done })
+    }
+
+    @Test
+    fun `un agenda qui coche le passé montre faites les occurrences terminées, pas celles en cours ou à venir`() {
+        val displays = mapOf(1L to CalendarDisplay(autoDonePast = true))
+        val ended = event(eventId = 1L, begin = at(9), end = at(10))
+        val running = event(eventId = 2L, begin = at(11), end = at(13))
+        val later = event(eventId = 3L, begin = at(15))
+
+        val result = select(listOf(ended, running, later), displays = displays, now = at(12))
+
+        assertEquals(mapOf(1L to true, 2L to false, 3L to false), result.associate { it.event.eventId to it.done })
+    }
+
+    @Test
+    fun `sans le réglage, une occurrence terminée reste à cocher`() {
+        val result = select(listOf(event(begin = at(9), end = at(10))), now = at(12))
+
+        assertFalse(result.single().done)
+    }
+
+    @Test
+    fun `une journée entière se coche seule à minuit local, pas avant`() {
+        val displays = mapOf(1L to CalendarDisplay(autoDonePast = true))
+        val utcDay = day.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+        val allDay = event(begin = utcDay, end = utcDay + 86_400_000L, allDay = true)
+
+        assertFalse(select(listOf(allDay), displays = displays, now = at(23)).single().done)
+        assertEquals(true, select(listOf(allDay), displays = displays, now = at(0, day.plusDays(1))).single().done)
+    }
+
+    @Test
+    fun `cocher le passé suit « Cocher un événement » et « Masquer les événements faits »`() {
+        val displays = mapOf(1L to CalendarDisplay(autoDonePast = true))
+        val ended = event(begin = at(9), end = at(10))
+
+        assertFalse(select(listOf(ended), displays = displays, global = CalendarGlobalSettings(checkEvents = false)).single().done)
+        assertEquals(0, select(listOf(ended), displays = displays, global = CalendarGlobalSettings(hideDone = true)).size)
     }
 }

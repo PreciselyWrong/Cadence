@@ -16,7 +16,8 @@ fun withDisplays(calendars: List<DeviceCalendar>, displays: Map<Long, CalendarDi
 
 /**
  * Occurrences à montrer sur [surface] dans [range]. Garde celles dont l'agenda est connu dans [calendars], utilisé et affiché sur [surface],
- * qui chevauchent [range] dans [zone]. done = global.checkEvents && key in done. Retire les faites si global.hideDone et les occurrences de [hidden], sur toute surface.
+ * qui chevauchent [range] dans [zone]. done = global.checkEvents && (key in done, ou occurrence terminée à [now] d'un agenda
+ * qui coche le passé, voir [CalendarDisplay.autoDonePast]). Retire les faites si global.hideDone et les occurrences de [hidden], sur toute surface.
  * Un même événement présent sur plusieurs agendas (titre, début, fin et jour entier identiques ; lieux compatibles) n'est
  * montré qu'une fois, voir [withoutDuplicates]. Tri : allDay d'abord, puis localStart, puis title (insensible à la casse), puis eventId.
  */
@@ -30,6 +31,7 @@ fun selectEvents(
     surface: CalendarSurface,
     zone: ZoneId,
     hidden: Set<EventInstanceKey> = emptySet(),
+    now: Long = System.currentTimeMillis(),
 ): List<EventWithDone> {
     val calendarsById = calendars.associateBy { it.id }
     val order = calendars.withIndex().associate { it.value.id to it.index }
@@ -44,7 +46,10 @@ fun selectEvents(
             event to calendar
         }
     return withoutDuplicates(shown, order, zone)
-        .map { (event, calendar) -> EventWithDone(event, calendar, done = global.checkEvents && event.key in done) }
+        .map { (event, calendar) ->
+            val ended = displays.displayFor(calendar.id).autoDonePast && event.localEnd(zone) <= now
+            EventWithDone(event, calendar, done = global.checkEvents && (event.key in done || ended))
+        }
         .filterNot { global.hideDone && it.done }
         .sortedWith(
             compareByDescending<EventWithDone> { it.event.allDay }

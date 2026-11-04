@@ -20,11 +20,13 @@ import ch.nicolab.cadence.calendar.selectEvents
 import ch.nicolab.cadence.calendar.withDisplays
 import java.time.ZoneId
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -43,6 +45,7 @@ internal class DefaultCalendarRepository(
     private val doneStore: EventDoneStore,
     private val hiddenStore: EventHiddenStore,
     private val zone: () -> ZoneId = ZoneId::systemDefault,
+    private val clock: () -> Long = System::currentTimeMillis,
 ) : CalendarRepository {
 
     private val refreshTick = MutableStateFlow(0)
@@ -64,14 +67,23 @@ internal class DefaultCalendarRepository(
         settings.displays,
     ) { calendars, displays -> withDisplays(calendars, displays) }
 
+    // L'heure revient chaque minute : une occurrence d'un agenda qui coche le passé se coche à sa fin, écran ouvert.
+    private val minutes: Flow<Long> = flow {
+        while (true) {
+            emit(clock())
+            delay(MINUTE_MILLIS)
+        }
+    }
+
     override fun events(range: TimeRange, surface: CalendarSurface): Flow<List<EventWithDone>> = combine(
-        ticks.mapLatest { readCalendarsAndEvents(range) },
+        combine(ticks.mapLatest { readCalendarsAndEvents(range) }, minutes, ::Pair),
         settings.displays,
         settings.global,
         doneStore.done,
         hiddenStore.hidden,
-    ) { (calendars, events), displays, global, done, hidden ->
-        selectEvents(events, calendars, displays, global, done, range, surface, zone(), hidden.mapTo(HashSet()) { it.key })
+    ) { (read, now), displays, global, done, hidden ->
+        val (calendars, events) = read
+        selectEvents(events, calendars, displays, global, done, range, surface, zone(), hidden.mapTo(HashSet()) { it.key }, now)
     }.distinctUntilChanged()
 
     override suspend fun setDisplay(calendarId: Long, display: CalendarDisplay) {
@@ -124,3 +136,5 @@ internal class DefaultCalendarRepository(
         if (source.hasPermission()) source.calendars() to source.instances(range)
         else emptyList<DeviceCalendar>() to emptyList()
 }
+
+private const val MINUTE_MILLIS = 60_000L

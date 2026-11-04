@@ -605,6 +605,7 @@
     <string name="calendars_surface_agenda">Agenda</string>
     <string name="calendars_hide_everywhere">Masquer partout</string>
     <string name="calendars_surface_tasks">Liste Tâches</string>
+    <string name="calendars_auto_done_past">Cocher une fois passé</string>
     <string name="calendars_check_title">Cocher un événement</string>
     <string name="calendars_check_subtitle">Le marque fait dans Cadence, sans modifier Google</string>
     <string name="calendars_hidden_title">Événements masqués</string>

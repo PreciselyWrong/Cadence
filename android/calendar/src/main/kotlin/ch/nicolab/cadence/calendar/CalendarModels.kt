@@ -87,6 +87,7 @@ enum class CalendarSurface { AGENDA, TASKS, WIDGET, REMINDERS }
  *
  * @property used « Utiliser dans Cadence » ; null tant que l'utilisateur n'a pas choisi (voir [isUsed]).
  * @property notify « Notifications » : les événements de l'agenda sonnent (oui par défaut).
+ * @property autoDonePast « Cocher une fois passé » : une occurrence terminée est montrée faite sans être cochée.
  */
 data class CalendarDisplay(
     val agenda: Boolean = true,
@@ -94,6 +95,7 @@ data class CalendarDisplay(
     val widget: Boolean = false,
     val used: Boolean? = null,
     val notify: Boolean = true,
+    val autoDonePast: Boolean = false,
 ) {
     fun shows(surface: CalendarSurface): Boolean = when (surface) {
         CalendarSurface.AGENDA -> agenda

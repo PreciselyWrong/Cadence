@@ -55,6 +55,16 @@ class CalendarCodecsTest {
     }
 
     @Test
+    fun `cocher le passé est coupé par défaut et survit à l'aller-retour`() {
+        assertEquals(false, CalendarDisplay().autoDonePast)
+        assertEquals(false, CalendarCodecs.decodeDisplay(7 or 32).autoDonePast)
+        listOf(null, true, false).forEach { used ->
+            val display = CalendarDisplay(agenda = false, tasks = true, used = used, notify = false, autoDonePast = true)
+            assertEquals(display, CalendarCodecs.decodeDisplay(CalendarCodecs.encodeDisplay(display)))
+        }
+    }
+
+    @Test
     fun `le choix utilisé survit à l'aller-retour (jamais choisi, oui, non)`() {
         listOf(null, true, false).forEach { used ->
             val display = CalendarDisplay(agenda = false, tasks = true, widget = true, used = used)

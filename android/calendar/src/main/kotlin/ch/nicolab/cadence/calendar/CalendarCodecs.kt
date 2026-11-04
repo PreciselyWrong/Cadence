@@ -9,6 +9,7 @@ internal object CalendarCodecs {
     private const val USED_VALUE_BIT = 16
     /** Posé quand les notifications de l'agenda sont coupées : un réglage antérieur (bit absent) reste « oui ». */
     private const val NOTIFY_OFF_BIT = 32
+    private const val AUTO_DONE_PAST_BIT = 64
     private const val HIDDEN_PARTS = 5
 
     /** "calendarId:eventId:instanceBegin" */
@@ -42,7 +43,7 @@ internal object CalendarCodecs {
 
     /**
      * Bits: agenda = 1, tasks = 2, widget = 4. Choix « utilisé » : bit 8 posé s'il est fait, bit 16 posé s'il vaut oui.
-     * Sans bit 8 (réglage antérieur au choix), `used` vaut null. Bit 32 : notifications coupées.
+     * Sans bit 8 (réglage antérieur au choix), `used` vaut null. Bit 32 : notifications coupées. Bit 64 : cocher une fois passé.
      */
     fun encodeDisplay(display: CalendarDisplay): Int {
         val used = display.used
@@ -55,6 +56,7 @@ internal object CalendarCodecs {
             (if (display.tasks) TASKS_BIT else 0) or
             (if (display.widget) WIDGET_BIT else 0) or
             (if (display.notify) 0 else NOTIFY_OFF_BIT) or
+            (if (display.autoDonePast) AUTO_DONE_PAST_BIT else 0) or
             usedBits
     }
 
@@ -64,5 +66,6 @@ internal object CalendarCodecs {
         widget = bits and WIDGET_BIT != 0,
         used = if (bits and USED_SET_BIT != 0) bits and USED_VALUE_BIT != 0 else null,
         notify = bits and NOTIFY_OFF_BIT == 0,
+        autoDonePast = bits and AUTO_DONE_PAST_BIT != 0,
     )
 }
