@@ -1,3 +1,8 @@
+## [1.9.1] — 4 novembre 2026
+
+### Corrections
+- Ajout rapide depuis un widget, la tuile ou l'icône : c'est maintenant la même saisie que dans l'app. `#` propose les étiquettes, `+` les projets, `!` les priorités, et la date se tape (« demain 9h »).
+
 ## [1.9.0] — 4 novembre 2026
 
 ### Nouveautés
