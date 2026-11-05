@@ -223,7 +223,8 @@ The morning brief arbitrates the day; after the switch time the clients show the
 - `counters.done` counts every task completed today; `done` lists the newest ten.
 - `audio_script.chapters` ids are `intro`, `done`, `tonight` and `tomorrow` (an empty `done` or `tonight` chapter is left out). The spoken text uses the same helpers as the morning script.
 - Web: the page and the Today card switch at `evening.switchTime` read in the profile's timezone (the browser's clock is not used). The page keeps the morning brief one tap away ("Voir le résumé du matin") and the evening review one tap away from the morning ("Voir le bilan du soir").
-- Actions: "C'est fait" on every task (existing completion with undo; the row stays in place and shows the new state at once); "Reporter à demain" on carry-over items calls the existing `POST /daily-plan/:date/carry-over` for tomorrow (never changes a due date). Undo removes the task from tomorrow's plan with `PUT /daily-plan/:date`, only when the action added it: a task already planned for tomorrow is left alone and offers no undo.
+- Actions on every tonight and slipped task, each shown at once on the row, then an undo snackbar: "C'est fait" (existing completion); "Demain" (existing `POST /daily-plan/:date/carry-over`, adds the task to tomorrow's plan, never changes its due date; undo removes it from tomorrow's plan when it was added); "Choisir une date" (date picker, existing task due-date update; undo restores the old date); "Plus tard" (existing `PATCH later: true`, the `#someday` tag; undo removes it); "Abandonner" (existing status cancelled; undo restores the previous status).
+- Feedback on anticipate cards reads "Utile · Pas utile" (stored votes keep `useful` / `noise`); after "Pas utile" the card says "Tu verras moins ce type d'alerte".
 - Android keeps the last evening response in the Room table `evening` (tasks DB v13) and renders its four chapters on the phone with the same voice.
 
 ## Mail
