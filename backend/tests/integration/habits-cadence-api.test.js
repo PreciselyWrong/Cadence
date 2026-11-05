@@ -157,6 +157,36 @@ describe('Cadence habits REST', () => {
         expect(habit.status.streak).toEqual({ current: 1, best: 1 });
     });
 
+    it('reports weekday, month and year patterns in the habit detail', async () => {
+        await createReading();
+        await logEntry('2026-10-05', 1800);
+        await logEntry('2026-10-12', 600);
+
+        const detail = await agent.get(
+            `/api/cadence/habits/${READING.uid}?date=2026-10-14`
+        );
+        expect(detail.status).toBe(200);
+        const { patterns } = detail.body.stats;
+        expect(patterns.weekdays).toHaveLength(7);
+        expect(patterns.weekdays[0]).toEqual({
+            day: 'MONDAY',
+            done: 2,
+            counted: 2,
+            ratePercent: 100,
+        });
+        expect(patterns.year).toEqual({
+            done: 2,
+            counted: 13,
+            ratePercent: 15,
+        });
+        expect(patterns.months.at(-1)).toEqual({
+            month: '2026-10',
+            done: 2,
+            counted: 13,
+            ratePercent: 15,
+        });
+    });
+
     it('derives the local date of an entry from its instant and zone', async () => {
         await createReading();
 

@@ -11,6 +11,7 @@ const models = require('./models');
 const evaluator = require('./evaluator');
 const streak = require('./streak');
 const statistics = require('./statistics');
+const patterns = require('./patterns');
 const timerAndGroup = require('./timerAndGroup');
 
 module.exports = {
@@ -22,6 +23,7 @@ module.exports = {
     computeStreak: streak.computeStreak,
     computeSummary: statistics.computeSummary,
     computeActivity: statistics.computeActivity,
+    computePatterns: patterns.computePatterns,
     confidenceFor: statistics.confidenceFor,
     elapsedSecondsAt: timerAndGroup.elapsedSecondsAt,
     timerAttainment: timerAndGroup.timerAttainment,

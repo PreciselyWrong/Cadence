@@ -104,6 +104,9 @@ const RUNNERS = {
             entriesOf(c, c.habitId)
         );
     },
+    patterns(c) {
+        return cadence.computePatterns(c.days, c.today);
+    },
     target_at(c) {
         return {
             targetMinor: cadence.targetAt(cadence.buildGoal(c.goal), c.date),

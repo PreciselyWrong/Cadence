@@ -171,6 +171,7 @@ async function getHabit(userId, uid, { date } = {}) {
         ...extras,
         stats: {
             summary,
+            patterns: engine.computePatterns(summary.calendarDays, ctx.today),
             activity: engine.computeActivity(
                 habit.uid,
                 habit.starts_on,
