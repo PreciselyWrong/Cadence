@@ -330,6 +330,25 @@ internal class BriefViewModel(application: Application) : AndroidViewModel(appli
         ) { actions.carryOver(tomorrow, added) }
     }
 
+    /** « Choisir une date » du bilan du soir : l'échéance change, la ligne dit « Échéance : jeu 6 ». */
+    fun setDue(task: TaskItem, day: LocalDate) = change(
+        apply = { it.decide(task.uid, RowOutcome.Due(day)) },
+        revert = { it.undecide(task.uid) },
+        message = string(R.string.evening_due_notice, BriefFormat.dueChip(day)),
+    ) { actions.setDue(task, day) }
+
+    fun later(task: TaskItem) = change(
+        apply = { it.decide(task.uid, RowOutcome.Later) },
+        revert = { it.undecide(task.uid) },
+        message = string(R.string.evening_later_notice),
+    ) { actions.later(task) }
+
+    fun abandon(task: TaskItem) = change(
+        apply = { it.decide(task.uid, RowOutcome.Abandoned) },
+        revert = { it.undecide(task.uid) },
+        message = string(R.string.evening_abandoned_notice),
+    ) { actions.abandon(task) }
+
     /** Sauvegarde les réglages ; un refus du serveur est annoncé, la lecture gardée revient. */
     fun saveSettings(next: JsonObject) {
         viewModelScope.launch {

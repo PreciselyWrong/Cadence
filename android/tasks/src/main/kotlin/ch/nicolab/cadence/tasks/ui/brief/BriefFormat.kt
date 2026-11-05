@@ -16,6 +16,9 @@ internal object BriefFormat {
     fun chip(date: LocalDate): String =
         capitalize(date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.FRENCH).removeSuffix(".").take(3)) + " " + date.dayOfMonth
 
+    /** « jeu 6 » : le jour court en minuscules, pour « Échéance : jeu 6 ». */
+    fun dueChip(date: LocalDate): String = chip(date).lowercase(Locale.FRENCH)
+
     /** Nom du jour (« Jeudi ») ; null pour le jour même, dont le libellé vient des ressources. */
     fun dayTitle(date: LocalDate, today: LocalDate): String? =
         if (date == today) null else capitalize(date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.FRENCH))

@@ -357,3 +357,9 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Problème** : les événements passés d'un agenda restaient à cocher un par un dans Tâches, Agenda et le widget.
 - **Décision** : chaque agenda (Réglages › Agendas) a une puce « Cocher une fois passé », coupée par défaut. Une occurrence terminée (journée entière : à minuit) est montrée faite partout, sans rien enregistrer ni toucher au fournisseur ; « Masquer les événements faits » la masque, sans « Cocher un événement » rien n'est coché. La liste se met à jour chaque minute. Tant que la puce est active, une occurrence passée ne se décoche pas.
 - **Web** : rien à reprendre, le web n'a pas d'événements cochables. Reste : rien d'essayé sur le téléphone.
+
+### 2026-11-05 — Bilan du soir : plus de choix par tâche
+
+- **Problème** : le bilan du soir n'offrait que « Reporter à demain » ; une tâche qui glisse se décale, se range ou s'abandonne aussi.
+- **Décision** : chaque tâche du soir et chaque tâche qui a glissé garde sa case et gagne un bouton « … » : Demain (ajout au plan de demain, échéance inchangée), Choisir une date (feuille de date, échéance écrite), Plus tard (étiquette `#someday`), Abandonner (statut annulé). La ligne le dit aussitôt (« Demain », « Échéance : jeu 6 », « Plus tard », « Abandonnée » barrée) et le message « Annuler » rend l'état d'avant (ancienne échéance, étiquette retirée, ancien statut, tâche retirée du plan de demain ou appel retiré de la file). « Bruit » devient « Pas utile » ; la carte répond « Tu verras moins ce type d'alerte » (valeurs `useful` / `noise` inchangées).
+- **Web** : à reprendre pareil (contrat dans `docs/39-daily-brief.md`, « Evening review »). Reste : rien d'essayé sur le téléphone.

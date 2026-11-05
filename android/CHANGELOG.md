@@ -1,3 +1,11 @@
+## [1.11.1] — 5 novembre 2026
+
+### Nouveautés
+- Bilan du soir : un bouton « … » sur chaque tâche du soir et chaque tâche qui a glissé propose Demain, Choisir une date, Plus tard et Abandonner. Le choix se lit tout de suite sur la ligne, puis « Annuler ».
+
+### Corrections
+- Dans le résumé, « Pas utile » remplace « Bruit », et la carte confirme « Tu verras moins ce type d'alerte ».
+
 ## [1.11.0] — 4 novembre 2026
 
 ### Nouveautés

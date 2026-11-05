@@ -1,6 +1,7 @@
 package ch.nicolab.cadence.tasks.ui.brief
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,9 +9,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.MoreHoriz
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -37,6 +48,10 @@ internal class EveningContext(
     /** Termine une tâche ouverte (avec « Annuler »), rouvre une tâche terminée. */
     val onToggle: (TaskItem) -> Unit,
     val onCarry: (List<String>) -> Unit,
+    /** Ouvre la feuille de date pour la tâche. */
+    val onPickDate: (TaskItem) -> Unit,
+    val onLater: (TaskItem) -> Unit,
+    val onAbandon: (TaskItem) -> Unit,
     /** Le résumé du matin existe : le lien « Voir le résumé du matin » s'affiche. */
     val hasMorning: Boolean,
     val onShowMorning: () -> Unit,
@@ -59,7 +74,7 @@ internal fun LazyListScope.eveningSections(evening: EveningDto, context: Evening
             BriefSection(stringResource(R.string.evening_tonight_title), detail) {
                 evening.tonight.forEach { entry ->
                     val task = context.tasks[entry.taskUid] ?: return@forEach
-                    EveningTask(task, context, subtitle = entry.minutes?.let { durationLabel(it) }, carryable = entry.taskUid in evening.carryOver)
+                    EveningTask(task, context, subtitle = entry.minutes?.let { durationLabel(it) }, actionable = true)
                 }
             }
         }
@@ -69,7 +84,7 @@ internal fun LazyListScope.eveningSections(evening: EveningDto, context: Evening
     if (done.isNotEmpty()) {
         item(key = "evening-done") {
             BriefSection(stringResource(R.string.evening_done_title), evening.counters.done.takeIf { it > 0 }?.toString()) {
-                done.forEach { task -> EveningTask(task, context, subtitle = null, carryable = false) }
+                done.forEach { task -> EveningTask(task, context, subtitle = null, actionable = false) }
             }
         }
     }
@@ -79,7 +94,7 @@ internal fun LazyListScope.eveningSections(evening: EveningDto, context: Evening
             BriefSection(stringResource(R.string.evening_slipped_title), evening.counters.slipped.takeIf { it > 0 }?.toString()) {
                 evening.slipped.forEach { entry ->
                     val task = context.tasks[entry.taskUid] ?: return@forEach
-                    EveningTask(task, context, subtitle = entry.reason.ifBlank { null }, carryable = entry.taskUid in evening.carryOver)
+                    EveningTask(task, context, subtitle = entry.reason.ifBlank { null }, actionable = true)
                 }
             }
         }
@@ -125,12 +140,14 @@ private fun EveningHeader(evening: EveningDto, context: EveningContext) {
 }
 
 /**
- * Ligne du bilan : se coche à l'instant ; « Reporter à demain » se remplace par « Reporté à demain » dès l'appui. Pas de
- * report pour une tâche déjà terminée.
+ * Ligne du bilan : se coche à l'instant ; « … » ouvre Demain, Choisir une date, Plus tard, Abandonner. Dès qu'un choix est
+ * fait, « … » laisse la place à son étiquette (« Demain », « Échéance : jeu 6 »…) et une tâche abandonnée est barrée.
+ * Pas de choix pour une tâche déjà terminée.
  */
 @Composable
-private fun EveningTask(task: TaskItem, context: EveningContext, subtitle: String?, carryable: Boolean) {
-    val carried = task.uid in context.pending.carried
+private fun EveningTask(task: TaskItem, context: EveningContext, subtitle: String?, actionable: Boolean) {
+    val outcome = context.pending.outcome(task.uid)
+    val open = actionable && !task.isClosed && !context.pending.isCompleting(task.uid)
     Column(Modifier.animateContentSize()) {
         BriefTaskRow(
             task = task,
@@ -140,14 +157,51 @@ private fun EveningTask(task: TaskItem, context: EveningContext, subtitle: Strin
             subtitle = subtitle,
             onOpen = context.onOpen,
             onToggle = { context.onToggle(task) },
+            forceClosed = outcome == RowOutcome.Abandoned,
+            trailing = if (open && outcome == null) ({ EveningMenu(task, context) }) else null,
         )
-        if (carryable && !task.isClosed && !context.pending.isCompleting(task.uid)) {
+        if (outcome != null && !context.pending.isCompleting(task.uid)) {
             Row(Modifier.fillMaxWidth().padding(start = RowContentInset)) {
-                if (carried) {
-                    DecisionTag(stringResource(R.string.evening_carried))
-                } else {
-                    TertiaryAction(stringResource(R.string.evening_carry), onClick = { context.onCarry(listOf(task.uid)) })
-                }
+                DecisionTag(outcomeLabel(outcome))
+            }
+        }
+    }
+}
+
+@Composable
+private fun outcomeLabel(outcome: RowOutcome): String = when (outcome) {
+    RowOutcome.Tomorrow -> stringResource(R.string.evening_outcome_tomorrow)
+    is RowOutcome.Due -> stringResource(R.string.evening_outcome_due, BriefFormat.dueChip(outcome.day))
+    RowOutcome.Later -> stringResource(R.string.evening_outcome_later)
+    RowOutcome.Abandoned -> stringResource(R.string.evening_outcome_abandoned)
+}
+
+@Composable
+private fun EveningMenu(task: TaskItem, context: EveningContext) {
+    var expanded by remember { mutableStateOf(false) }
+    Box {
+        IconButton(onClick = { expanded = true }) {
+            Icon(
+                Icons.Outlined.MoreHoriz,
+                contentDescription = stringResource(R.string.evening_more),
+                tint = cadence.onSurfaceVariant,
+            )
+        }
+        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+            // A recurring task's due date belongs to its series: no single-date choice here.
+            listOfNotNull<Pair<Int, () -> Unit>>(
+                R.string.evening_action_tomorrow to { context.onCarry(listOf(task.uid)) },
+                if (task.isRecurring) null else R.string.evening_action_date to { context.onPickDate(task) },
+                R.string.evening_action_later to { context.onLater(task) },
+                R.string.evening_action_abandon to { context.onAbandon(task) },
+            ).forEach { (label, action) ->
+                DropdownMenuItem(
+                    text = { Text(stringResource(label)) },
+                    onClick = {
+                        expanded = false
+                        action()
+                    },
+                )
             }
         }
     }

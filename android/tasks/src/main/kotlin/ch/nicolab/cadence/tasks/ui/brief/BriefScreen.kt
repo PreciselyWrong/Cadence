@@ -67,6 +67,7 @@ import ch.nicolab.cadence.tasks.brief.MoveDto
 import ch.nicolab.cadence.tasks.brief.QuestionDto
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.planning.PlanningChanges
+import ch.nicolab.cadence.tasks.ui.TaskDateSheet
 import ch.nicolab.cadence.tasks.ui.TaskDetailSheet
 import ch.nicolab.cadence.tasks.ui.TaskRow
 import ch.nicolab.cadence.tasks.ui.TasksViewModel
@@ -102,6 +103,7 @@ fun BriefScreen(onBack: () -> Unit) {
     val snackbar = rememberAppSnackbarHostState()
     val undoLabel = stringResource(R.string.tasks_undo)
     var openedTaskUid by remember { mutableStateOf<String?>(null) }
+    var datingTask by remember { mutableStateOf<TaskItem?>(null) }
     var preciseFor by remember { mutableStateOf<QuestionDto?>(null) }
 
     LaunchedEffect(viewModel) {
@@ -166,6 +168,9 @@ fun BriefScreen(onBack: () -> Unit) {
                             onOpen = { openedTaskUid = it.uid },
                             onToggle = toggle,
                             onCarry = viewModel::carryOver,
+                            onPickDate = { datingTask = it },
+                            onLater = viewModel::later,
+                            onAbandon = viewModel::abandon,
                             hasMorning = cached?.brief != null,
                             onShowMorning = viewModel::showMorning,
                             audio = audioControls,
@@ -243,6 +248,17 @@ fun BriefScreen(onBack: () -> Unit) {
         }
     }
 
+    datingTask?.let { task ->
+        TaskDateSheet(
+            title = stringResource(R.string.evening_action_date),
+            today = today,
+            date = task.dueDay,
+            time = null,
+            // « Aucune échéance » n'est pas un report : seule une vraie date est écrite.
+            onApply = { day, _ -> day?.let { viewModel.setDue(task, it) } },
+            onDismiss = { datingTask = null },
+        )
+    }
     openedTaskUid?.let { uid ->
         TaskDetailSheet(taskUid = uid, viewModel = tasksViewModel, onDismiss = { openedTaskUid = null })
     }
@@ -384,8 +400,10 @@ private fun LazyListScope.briefSection(id: String, context: BriefContext) {
                             if (vote == null) {
                                 TertiaryAction(stringResource(R.string.brief_feedback_useful), onClick = { context.onFeedback(card, "useful") })
                                 TertiaryAction(stringResource(R.string.brief_feedback_noise), onClick = { context.onFeedback(card, "noise") })
+                            } else if (vote == "useful") {
+                                DecisionTag(stringResource(R.string.brief_feedback_given, stringResource(R.string.brief_feedback_useful)))
                             } else {
-                                DecisionTag(stringResource(R.string.brief_feedback_given, stringResource(if (vote == "useful") R.string.brief_feedback_useful else R.string.brief_feedback_noise)))
+                                DecisionTag(stringResource(R.string.brief_feedback_less))
                             }
                         }
                     }
@@ -513,6 +531,7 @@ internal fun BriefTaskRow(
     onOpen: (TaskItem) -> Unit,
     onToggle: () -> Unit,
     trailing: (@Composable () -> Unit)? = null,
+    forceClosed: Boolean = false,
 ) {
     TaskRow(
         task = task,
@@ -526,7 +545,7 @@ internal fun BriefTaskRow(
         onMenu = { onOpen(task) },
         subtitle = subtitle,
         trailing = trailing,
-        forceClosed = pending.isCompleting(task.uid),
+        forceClosed = forceClosed || pending.isCompleting(task.uid),
     )
 }
 

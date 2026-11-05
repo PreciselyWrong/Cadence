@@ -22,6 +22,8 @@ data class BriefPending(
     val feedback: Map<String, String> = emptyMap(),
     /** Tâches reportées à demain depuis le bilan du soir. */
     val carried: Set<String> = emptySet(),
+    /** Tâche -> ce que le bilan du soir en a fait (nouvelle échéance, « Plus tard », abandon). */
+    val outcomes: Map<String, RowOutcome> = emptyMap(),
 ) {
     fun isCompleting(uid: String): Boolean = uid in completing
 
@@ -43,6 +45,12 @@ data class BriefPending(
     fun carry(uids: Collection<String>) = copy(carried = carried + uids)
     fun uncarry(uids: Collection<String>) = copy(carried = carried - uids.toSet())
 
+    fun decide(uid: String, outcome: RowOutcome) = copy(outcomes = outcomes + (uid to outcome))
+    fun undecide(uid: String) = copy(outcomes = outcomes - uid)
+
+    /** Ce que la ligne du bilan du soir doit dire : la dernière décision, sinon « Demain » si elle est reportée. */
+    fun outcome(uid: String): RowOutcome? = outcomes[uid] ?: RowOutcome.Tomorrow.takeIf { uid in carried }
+
     /** Les décisions à garder (tout sauf [completing]), à plat : `genre:clé` -> valeur. */
     fun lasting(): Map<String, String> = buildMap {
         moved.forEach { (key, day) -> put("$MOVE$key", day.toString()) }
@@ -50,6 +58,7 @@ data class BriefPending(
         answers.forEach { (key, value) -> put("$ANSWER$key", value) }
         feedback.forEach { (key, value) -> put("$FEEDBACK$key", value) }
         carried.forEach { put("$CARRY$it", "") }
+        outcomes.forEach { (uid, outcome) -> put("$OUTCOME$uid", outcome.encode()) }
     }
 
     companion object {
@@ -58,6 +67,7 @@ data class BriefPending(
         private const val ANSWER = "answer:"
         private const val FEEDBACK = "feedback:"
         private const val CARRY = "carry:"
+        private const val OUTCOME = "outcome:"
 
         /** Relit [lasting] ; une entrée inconnue ou une date illisible est ignorée. */
         fun fromLasting(entries: Map<String, String>): BriefPending {
@@ -68,10 +78,36 @@ data class BriefPending(
                     raw.startsWith(REFUSE) -> pending = pending.refuse(raw.removePrefix(REFUSE))
                     raw.startsWith(ANSWER) -> pending = pending.answer(raw.removePrefix(ANSWER), value)
                     raw.startsWith(FEEDBACK) -> pending = pending.vote(raw.removePrefix(FEEDBACK), value)
+                    raw.startsWith(OUTCOME) -> RowOutcome.decode(value)?.let { pending = pending.decide(raw.removePrefix(OUTCOME), it) }
                     raw.startsWith(CARRY) -> pending = pending.carry(listOf(raw.removePrefix(CARRY)))
                 }
             }
             return pending
+        }
+    }
+}
+
+/** Ce qu'une ligne du bilan du soir a reçu : sert d'étiquette à la ligne, et de mémoire d'un jour à l'autre passage. */
+sealed interface RowOutcome {
+    data object Tomorrow : RowOutcome
+    data class Due(val day: LocalDate) : RowOutcome
+    data object Later : RowOutcome
+    data object Abandoned : RowOutcome
+
+    fun encode(): String = when (this) {
+        Tomorrow -> "tomorrow"
+        is Due -> "due:$day"
+        Later -> "later"
+        Abandoned -> "abandoned"
+    }
+
+    companion object {
+        fun decode(raw: String): RowOutcome? = when {
+            raw == "tomorrow" -> Tomorrow
+            raw == "later" -> Later
+            raw == "abandoned" -> Abandoned
+            raw.startsWith("due:") -> runCatching { LocalDate.parse(raw.removePrefix("due:")) }.getOrNull()?.let(::Due)
+            else -> null
         }
     }
 }

@@ -62,6 +62,48 @@ class BriefActionsTest {
     }
 
     @Test
+    fun settingADueDayWritesItAndUndoRestoresTheOldOne() = runTest {
+        val task = TaskItem(uid = "t3", name = "Appeler", dueDay = today)
+
+        val undo = actions.setDue(task, LocalDate.of(2026, 11, 6))
+        assertEquals(LocalDate.of(2026, 11, 6), tasks.writes.single().second.dueDate)
+        undo()
+
+        assertEquals(today, tasks.writes.last().second.dueDate)
+        assertTrue(queue.queued.isEmpty())
+    }
+
+    @Test
+    fun undoingADueDayOnATaskWithoutOneClearsIt() = runTest {
+        val task = TaskItem(uid = "t3", name = "Appeler")
+
+        actions.setDue(task, LocalDate.of(2026, 11, 6))()
+
+        assertTrue(tasks.writes.last().second.clearDue)
+    }
+
+    @Test
+    fun laterTagsTheTaskAndUndoRemovesTheTagOnlyIfItWasNotThere() = runTest {
+        actions.later(TaskItem(uid = "t4", name = "Ranger"))()
+        assertEquals(listOf(true, false), tasks.writes.map { it.second.later })
+
+        tasks.writes.clear()
+        actions.later(TaskItem(uid = "t5", name = "Ranger", someday = true))()
+        assertEquals(listOf<Boolean?>(true), tasks.writes.map { it.second.later })
+    }
+
+    @Test
+    fun abandoningCancelsTheTaskAndUndoRestoresThePreviousStatus() = runTest {
+        val task = TaskItem(uid = "t6", name = "Vieux", status = ch.nicolab.cadence.tasks.model.TaskStatus.IN_PROGRESS)
+
+        val undo = actions.abandon(task)
+        assertEquals(ch.nicolab.cadence.tasks.model.TaskStatus.CANCELLED, tasks.writes.single().second.status)
+        undo()
+
+        assertEquals(ch.nicolab.cadence.tasks.model.TaskStatus.IN_PROGRESS, tasks.writes.last().second.status)
+    }
+
+    @Test
     fun refusingADateOnlyQueuesARefusedDecision() = runTest {
         actions.refuseMove(today, move(to = "2026-11-07"))
 

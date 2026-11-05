@@ -77,4 +77,28 @@ class BriefPendingTest {
 
         assertEquals(BriefPending(answers = mapOf("q" to "no")), restored)
     }
+
+    @Test
+    fun eachEveningActionShowsItsLabelAtOnceAndUndoClearsIt() {
+        val due = BriefPending().decide("t1", RowOutcome.Due(thursday))
+        val later = BriefPending().decide("t1", RowOutcome.Later)
+        val dropped = BriefPending().decide("t1", RowOutcome.Abandoned)
+        val tomorrow = BriefPending().carry(listOf("t1"))
+
+        assertEquals(RowOutcome.Due(thursday), due.outcome("t1"))
+        assertEquals(RowOutcome.Later, later.outcome("t1"))
+        assertEquals(RowOutcome.Abandoned, dropped.outcome("t1"))
+        assertEquals(RowOutcome.Tomorrow, tomorrow.outcome("t1"))
+        assertEquals(null, due.outcome("t2"))
+        assertEquals(BriefPending(), due.undecide("t1"))
+        assertEquals(BriefPending(), tomorrow.uncarry(listOf("t1")))
+    }
+
+    @Test
+    fun eveningOutcomesSurviveAReopenAndTheDueLabelReadsLikeTheDesign() {
+        val pending = BriefPending().decide("a", RowOutcome.Due(thursday)).decide("b", RowOutcome.Later).decide("c", RowOutcome.Abandoned)
+
+        assertEquals(pending, BriefPending.fromLasting(pending.lasting()))
+        assertEquals("jeu 5", BriefFormat.dueChip(thursday))
+    }
 }

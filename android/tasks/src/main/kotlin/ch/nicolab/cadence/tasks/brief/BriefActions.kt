@@ -2,6 +2,7 @@ package ch.nicolab.cadence.tasks.brief
 
 import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskItem
+import ch.nicolab.cadence.tasks.model.TaskStatus
 import ch.nicolab.cadence.tasks.planning.PlanningChanges
 import ch.nicolab.cadence.tasks.sync.DeferredCall
 import java.time.LocalDate
@@ -138,6 +139,24 @@ internal class BriefActions(
         return {
             if (!queue.cancel(BriefRequests.carryKey(key))) plan.removeFromPlan(tomorrow, taskUids)
         }
+    }
+
+    /** « Choisir une date » : l'échéance change tout de suite (l'heure fixe est gardée) ; annuler remet l'ancienne. */
+    suspend fun setDue(task: TaskItem, day: LocalDate): BriefUndo {
+        tasks.write(task.uid, PlanningChanges.moveToDay(task, day, zone()))
+        return { tasks.write(task.uid, PlanningChanges.restore(task, zone())) }
+    }
+
+    /** « Plus tard » : l'étiquette `#someday`, sans toucher à l'échéance ; annuler la retire si la tâche ne l'avait pas. */
+    suspend fun later(task: TaskItem): BriefUndo {
+        tasks.write(task.uid, TaskChange(later = true))
+        return { if (!task.someday) tasks.write(task.uid, TaskChange(later = false)) }
+    }
+
+    /** « Abandonner » : statut annulé ; annuler remet le statut d'avant. */
+    suspend fun abandon(task: TaskItem): BriefUndo {
+        tasks.write(task.uid, TaskChange(status = TaskStatus.CANCELLED))
+        return { tasks.write(task.uid, TaskChange(status = task.status)) }
     }
 
     private fun feedbackProposal(cardType: String, vote: String): JsonObject = buildJsonObject {
