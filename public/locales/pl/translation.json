@@ -5742,7 +5742,8 @@
     },
     "feedback": {
       "useful": "Przydatne",
-      "noise": "Szum"
+      "noise": "Nieprzydatne",
+      "fewer": "Zobaczysz mniej alertów tego typu"
     },
     "replies": {
       "sourceNotRead": "Nie przeczytano źródła"
@@ -5776,14 +5777,27 @@
         "slipped": "Przesuwa się",
         "tomorrow": "Jutro"
       },
-      "carry": "Przenieś na jutro",
-      "carried": "Przeniesiono na jutro",
       "carryDone": "« {{name}} » przeniesiono na jutro",
       "carryError": "Nie udało się przenieść zadania.",
       "emptyTonight": "Nic więcej do zrobienia dziś wieczorem.",
       "emptyDone": "Dziś nic nie ukończono.",
       "emptySlipped": "Nic się nie przesuwa.",
-      "loadError": "Nie udało się wczytać podsumowania wieczoru."
+      "loadError": "Nie udało się wczytać podsumowania wieczoru.",
+      "actions": {
+        "menu": "Działania dla „{{name}}”",
+        "tomorrow": "Jutro",
+        "dueDate": "Wybierz datę",
+        "dueLabel": "Termin",
+        "later": "Później",
+        "cancel": "Porzuć"
+      },
+      "state": {
+        "due": "Termin: {{date}}",
+        "cancelled": "Porzucona"
+      },
+      "dueDone": "„{{name}}” termin {{date}}",
+      "laterDone": "„{{name}}” odłożona",
+      "cancelDone": "„{{name}}” porzucona"
     }
   },
   "agents": {

@@ -370,7 +370,8 @@
     },
     "feedback": {
       "useful": "Užitočné",
-      "noise": "Šum"
+      "noise": "Nie je užitočné",
+      "fewer": "Uvidíš menej upozornení tohto typu"
     },
     "replies": {
       "sourceNotRead": "Zdroj nebol prečítaný"
@@ -404,14 +405,27 @@
         "slipped": "Posúva sa",
         "tomorrow": "Zajtra"
       },
-      "carry": "Presunúť na zajtra",
-      "carried": "Presunuté na zajtra",
       "carryDone": "« {{name}} » presunuté na zajtra",
       "carryError": "Úlohu sa nepodarilo presunúť.",
       "emptyTonight": "Dnes večer nie je nič ďalšie.",
       "emptyDone": "Dnes nič dokončené.",
       "emptySlipped": "Nič sa neposúva.",
-      "loadError": "Večerný prehľad sa nepodarilo načítať."
+      "loadError": "Večerný prehľad sa nepodarilo načítať.",
+      "actions": {
+        "menu": "Akcie pre „{{name}}“",
+        "tomorrow": "Zajtra",
+        "dueDate": "Vybrať dátum",
+        "dueLabel": "Termín",
+        "later": "Neskôr",
+        "cancel": "Zrušiť"
+      },
+      "state": {
+        "due": "Termín: {{date}}",
+        "cancelled": "Zrušená"
+      },
+      "dueDone": "„{{name}}“ termín {{date}}",
+      "laterDone": "„{{name}}“ odložená",
+      "cancelDone": "„{{name}}“ zrušená"
     }
   },
   "agents": {

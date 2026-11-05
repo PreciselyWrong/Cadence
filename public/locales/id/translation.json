@@ -5686,7 +5686,8 @@
     },
     "feedback": {
       "useful": "Berguna",
-      "noise": "Gangguan"
+      "noise": "Tidak berguna",
+      "fewer": "Anda akan melihat lebih sedikit peringatan jenis ini"
     },
     "replies": {
       "sourceNotRead": "Sumber belum dibaca"
@@ -5720,14 +5721,27 @@
         "slipped": "Tergeser",
         "tomorrow": "Besok"
       },
-      "carry": "Pindahkan ke besok",
-      "carried": "Dipindahkan ke besok",
       "carryDone": "« {{name}} » dipindahkan ke besok",
       "carryError": "Tugas tidak dapat dipindahkan.",
       "emptyTonight": "Tidak ada lagi yang harus dikerjakan malam ini.",
       "emptyDone": "Belum ada yang selesai hari ini.",
       "emptySlipped": "Tidak ada yang tergeser.",
-      "loadError": "Tinjauan malam tidak dapat dimuat."
+      "loadError": "Tinjauan malam tidak dapat dimuat.",
+      "actions": {
+        "menu": "Tindakan untuk “{{name}}”",
+        "tomorrow": "Besok",
+        "dueDate": "Pilih tanggal",
+        "dueLabel": "Tenggat",
+        "later": "Nanti",
+        "cancel": "Batalkan"
+      },
+      "state": {
+        "due": "Tenggat: {{date}}",
+        "cancelled": "Dibatalkan"
+      },
+      "dueDone": "“{{name}}” tenggat {{date}}",
+      "laterDone": "“{{name}}” ditunda",
+      "cancelDone": "“{{name}}” dibatalkan"
     }
   },
   "agents": {

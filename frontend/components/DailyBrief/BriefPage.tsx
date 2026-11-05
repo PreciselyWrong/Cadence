@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { toggleTaskCompletion, updateTask } from '../../utils/tasksService';
+import { decideTask } from '../../utils/reviewService';
 import { Task } from '../../entities/Task';
 import { getUserTimezone } from '../../utils/dateUtils';
 import { openTaskPanel } from '../../store/taskPanelStore';
@@ -27,12 +28,14 @@ import {
     toPlanItemInputs,
 } from '../../utils/dailyPlanService';
 import BriefTimeline from './BriefTimeline';
-import BriefEvening from './BriefEvening';
+import BriefEvening, { BriefEveningActions } from './BriefEvening';
+import { EveningHandled } from './BriefEveningRow';
 import {
     capitalizeFirst,
     isEveningTime,
     localClock,
     nextDay,
+    shortDay,
 } from './briefTime';
 import {
     AnticipateSection,
@@ -45,13 +48,25 @@ import {
     SectionTitle,
     TonightSection,
 } from './BriefSections';
-import { isTaskCompleted } from '../../constants/taskStatus';
+import { isTaskCompleted, TASK_STATUS } from '../../constants/taskStatus';
 
 // Every idempotency key is unique per user action.
 const newKey = (prefix: string) =>
     `${prefix}:${Date.now()}:${Math.random().toString(36).slice(2, 10)}`;
 
 const localeOf = (language: string | undefined) => language || 'en';
+
+// The map with `uid` set to `value`, or without `uid` when `value` is undefined.
+const withRow = <T,>(
+    map: Record<string, T>,
+    uid: string,
+    value: T | undefined
+): Record<string, T> => {
+    const next = { ...map };
+    if (value === undefined) delete next[uid];
+    else next[uid] = value;
+    return next;
+};
 
 const SKELETON = (
     <div className="animate-pulse space-y-4" data-testid="brief-skeleton">
@@ -75,7 +90,7 @@ const BriefPage: React.FC = () => {
     const [view, setView] = useState<'morning' | 'evening'>('morning');
     const [evening, setEvening] = useState<DailyEveningResponse | null>(null);
     const [eveningError, setEveningError] = useState(false);
-    const [carried, setCarried] = useState<Record<string, boolean>>({});
+    const [handled, setHandled] = useState<Record<string, EveningHandled>>({});
     const [loading, setLoading] = useState(true);
     const [loadError, setLoadError] = useState<string | null>(null);
     const [generating, setGenerating] = useState(false);
@@ -100,7 +115,7 @@ const BriefPage: React.FC = () => {
                 );
                 setEvening(null);
                 setEveningError(false);
-                setCarried({});
+                setHandled({});
                 setOverrides({});
                 setHiddenMoves(new Set());
                 setAnswered({});
@@ -222,7 +237,7 @@ const BriefPage: React.FC = () => {
                 (item) => item.task_uid === uid
             );
             if (alreadyPlanned) {
-                setCarried((prev) => ({ ...prev, [uid]: true }));
+                setHandled((prev) => withRow(prev, uid, { kind: 'tomorrow' }));
                 showSuccessToast(message);
                 return;
             }
@@ -236,7 +251,7 @@ const BriefPage: React.FC = () => {
             );
             return;
         }
-        setCarried((prev) => ({ ...prev, [uid]: true }));
+        setHandled((prev) => withRow(prev, uid, { kind: 'tomorrow' }));
         showUndoToast(message, async () => {
             try {
                 const current = await fetchDailyPlan(tomorrow);
@@ -244,11 +259,7 @@ const BriefPage: React.FC = () => {
                     (item) => item.task_uid !== uid
                 );
                 await saveDailyPlanItems(tomorrow, toPlanItemInputs(items));
-                setCarried((prev) => {
-                    const next = { ...prev };
-                    delete next[uid];
-                    return next;
-                });
+                setHandled((prev) => withRow(prev, uid, undefined));
             } catch {
                 showErrorToast(
                     t(
@@ -259,6 +270,106 @@ const BriefPage: React.FC = () => {
             }
         });
     };
+
+    // One evening action on a row: the row shows its new state at once, and the
+    // undo restores the server and the row as they were.
+    const changeEveningRow = async (
+        uid: string,
+        change: {
+            handled: EveningHandled;
+            message: string;
+            apply: () => Promise<Partial<BriefTaskState>>;
+            revert: (current: BriefTaskState) => Promise<unknown>;
+        }
+    ) => {
+        const current = tasks[uid];
+        if (!current) return;
+        const previous = handled[uid];
+        let patch: Partial<BriefTaskState>;
+        try {
+            patch = await change.apply();
+        } catch {
+            showErrorToast(
+                t('dailyBrief.task.error', 'Impossible de modifier la tâche.')
+            );
+            return;
+        }
+        setOverrides((prev) => ({
+            ...prev,
+            [uid]: { ...current, ...patch },
+        }));
+        setHandled((prev) => withRow(prev, uid, change.handled));
+        showUndoToast(change.message, async () => {
+            try {
+                await change.revert(current);
+                setOverrides((prev) => ({ ...prev, [uid]: current }));
+                setHandled((prev) => withRow(prev, uid, previous));
+            } catch {
+                showErrorToast(
+                    t(
+                        'dailyBrief.task.error',
+                        'Impossible de modifier la tâche.'
+                    )
+                );
+            }
+        });
+    };
+
+    const setEveningDue = (uid: string, date: string) =>
+        changeEveningRow(uid, {
+            handled: { kind: 'due', date },
+            message: t(
+                'dailyBrief.evening.dueDone',
+                '« {{name}} » échéance {{date}}',
+                {
+                    name: tasks[uid]?.name ?? '',
+                    date: shortDay(date, locale),
+                }
+            ),
+            apply: async () => {
+                await updateTask(uid, { due_date: date } as Partial<Task>);
+                return { due_date: date };
+            },
+            revert: (current) =>
+                updateTask(uid, {
+                    due_date: current.due_date,
+                } as Partial<Task>),
+        });
+
+    const parkEveningTask = (uid: string) =>
+        changeEveningRow(uid, {
+            handled: { kind: 'later' },
+            message: t(
+                'dailyBrief.evening.laterDone',
+                '« {{name}} » mise de côté',
+                { name: tasks[uid]?.name ?? '' }
+            ),
+            apply: async () => {
+                await decideTask(uid, { later: true });
+                return {};
+            },
+            revert: () => decideTask(uid, { later: false }),
+        });
+
+    const cancelEveningTask = (uid: string) =>
+        changeEveningRow(uid, {
+            handled: { kind: 'cancelled' },
+            message: t(
+                'dailyBrief.evening.cancelDone',
+                '« {{name}} » abandonnée',
+                { name: tasks[uid]?.name ?? '' }
+            ),
+            apply: async () => {
+                await updateTask(uid, {
+                    status: TASK_STATUS.CANCELLED,
+                } as Partial<Task>);
+                return { status: TASK_STATUS.CANCELLED };
+            },
+            revert: (current) =>
+                updateTask(uid, {
+                    status: current.status as Task['status'],
+                }),
+        });
 
     const acceptMove = async (move: BriefMove) => {
         const current = tasks[move.task_uid];
@@ -388,10 +499,13 @@ const BriefPage: React.FC = () => {
         }
     };
 
-    const eveningActions = {
+    const eveningActions: BriefEveningActions = {
         onToggle: toggle,
         onOpen: (uid: string) => openTaskPanel(uid),
-        onCarry: carryToTomorrow,
+        onTomorrow: carryToTomorrow,
+        onSetDue: setEveningDue,
+        onLater: parkEveningTask,
+        onCancel: cancelEveningTask,
     };
 
     const actions: BriefActions = {
@@ -528,7 +642,7 @@ const BriefPage: React.FC = () => {
                 tasks={tasks}
                 settings={settings}
                 locale={locale}
-                carried={carried}
+                handled={handled}
                 actions={eveningActions}
             />
         );

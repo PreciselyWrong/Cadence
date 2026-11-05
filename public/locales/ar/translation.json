@@ -5750,7 +5750,8 @@
     },
     "feedback": {
       "useful": "مفيد",
-      "noise": "ضجيج"
+      "noise": "غير مفيد",
+      "fewer": "سترى تنبيهات أقل من هذا النوع"
     },
     "replies": {
       "sourceNotRead": "لم تُقرأ المصدر"
@@ -5784,14 +5785,27 @@
         "slipped": "تأخرت",
         "tomorrow": "غدًا"
       },
-      "carry": "نقل إلى الغد",
-      "carried": "نُقلت إلى الغد",
       "carryDone": "تم نقل « {{name}} » إلى الغد",
       "carryError": "تعذّر نقل المهمة.",
       "emptyTonight": "لا شيء آخر للقيام به الليلة.",
       "emptyDone": "لم يُنجز شيء اليوم.",
       "emptySlipped": "لا شيء متأخر.",
-      "loadError": "تعذّر تحميل مراجعة المساء."
+      "loadError": "تعذّر تحميل مراجعة المساء.",
+      "actions": {
+        "menu": "إجراءات لـ «{{name}}»",
+        "tomorrow": "غداً",
+        "dueDate": "اختيار تاريخ",
+        "dueLabel": "تاريخ الاستحقاق",
+        "later": "لاحقاً",
+        "cancel": "إلغاء"
+      },
+      "state": {
+        "due": "الاستحقاق: {{date}}",
+        "cancelled": "أُلغيت"
+      },
+      "dueDone": "«{{name}}» الاستحقاق {{date}}",
+      "laterDone": "«{{name}}» أُجلت",
+      "cancelDone": "«{{name}}» أُلغيت"
     }
   },
   "agents": {

@@ -5702,7 +5702,8 @@
     },
     "feedback": {
       "useful": "Utile",
-      "noise": "Bruit"
+      "noise": "Pas utile",
+      "fewer": "Tu verras moins ce type d’alerte"
     },
     "replies": {
       "sourceNotRead": "Source non lue"
@@ -5736,14 +5737,27 @@
         "slipped": "Glisse",
         "tomorrow": "Demain"
       },
-      "carry": "Reporter à demain",
-      "carried": "Reportée à demain",
       "carryDone": "« {{name}} » reportée à demain",
       "carryError": "Impossible de reporter la tâche.",
       "emptyTonight": "Plus rien à faire ce soir.",
       "emptyDone": "Rien de terminé aujourd’hui.",
       "emptySlipped": "Rien ne glisse.",
-      "loadError": "Impossible de charger le bilan du soir."
+      "loadError": "Impossible de charger le bilan du soir.",
+      "actions": {
+        "menu": "Actions pour « {{name}} »",
+        "tomorrow": "Demain",
+        "dueDate": "Choisir une date",
+        "dueLabel": "Échéance",
+        "later": "Plus tard",
+        "cancel": "Abandonner"
+      },
+      "state": {
+        "due": "Échéance : {{date}}",
+        "cancelled": "Abandonnée"
+      },
+      "dueDone": "« {{name}} » échéance {{date}}",
+      "laterDone": "« {{name}} » mise de côté",
+      "cancelDone": "« {{name}} » abandonnée"
     }
   },
   "agents": {

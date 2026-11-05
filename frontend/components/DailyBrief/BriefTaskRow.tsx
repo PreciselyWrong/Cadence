@@ -7,19 +7,24 @@ interface BriefTaskRowProps {
     done: boolean;
     onToggle: () => void;
     onOpen: () => void;
+    struck?: boolean;
     meta?: string;
     trailing?: React.ReactNode;
+    footer?: React.ReactNode;
 }
 
 // A task line of the brief: the completion circle, the title (opens the task
 // panel) and one quiet meta line. The state shown is the task's current one.
+// `struck` marks an abandoned task; `footer` sits under the text (a date input).
 const BriefTaskRow: React.FC<BriefTaskRowProps> = ({
     name,
     done,
     onToggle,
     onOpen,
+    struck,
     meta,
     trailing,
+    footer,
 }) => {
     const { t } = useTranslation();
     return (
@@ -46,7 +51,7 @@ const BriefTaskRow: React.FC<BriefTaskRowProps> = ({
                     type="button"
                     onClick={onOpen}
                     className={`block max-w-full truncate text-left text-[15px] text-gray-900 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:text-gray-100 ${
-                        done
+                        done || struck
                             ? 'text-gray-500 line-through decoration-gray-400 dark:text-gray-400'
                             : ''
                     }`}
@@ -58,6 +63,7 @@ const BriefTaskRow: React.FC<BriefTaskRowProps> = ({
                         {meta}
                     </div>
                 )}
+                {footer}
             </div>
             {trailing}
         </div>

@@ -5686,7 +5686,8 @@
     },
     "feedback": {
       "useful": "Nyttig",
-      "noise": "Støj"
+      "noise": "Ikke nyttig",
+      "fewer": "Du ser færre advarsler af denne type"
     },
     "replies": {
       "sourceNotRead": "Kilde ikke læst"
@@ -5720,14 +5721,27 @@
         "slipped": "Glider",
         "tomorrow": "I morgen"
       },
-      "carry": "Flyt til i morgen",
-      "carried": "Flyttet til i morgen",
       "carryDone": "« {{name}} » flyttet til i morgen",
       "carryError": "Opgaven kunne ikke flyttes.",
       "emptyTonight": "Intet mere at gøre i aften.",
       "emptyDone": "Intet afsluttet i dag.",
       "emptySlipped": "Intet glider.",
-      "loadError": "Aftenbilledet kunne ikke indlæses."
+      "loadError": "Aftenbilledet kunne ikke indlæses.",
+      "actions": {
+        "menu": "Handlinger for “{{name}}”",
+        "tomorrow": "I morgen",
+        "dueDate": "Vælg dato",
+        "dueLabel": "Forfaldsdato",
+        "later": "Senere",
+        "cancel": "Opgiv"
+      },
+      "state": {
+        "due": "Forfalder: {{date}}",
+        "cancelled": "Opgivet"
+      },
+      "dueDone": "“{{name}}” forfalder {{date}}",
+      "laterDone": "“{{name}}” lagt til senere",
+      "cancelDone": "“{{name}}” opgivet"
     }
   },
   "agents": {

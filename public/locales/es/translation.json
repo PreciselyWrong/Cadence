@@ -5686,7 +5686,8 @@
     },
     "feedback": {
       "useful": "Útil",
-      "noise": "Ruido"
+      "noise": "No útil",
+      "fewer": "Verás menos alertas de este tipo"
     },
     "replies": {
       "sourceNotRead": "Fuente no leída"
@@ -5720,14 +5721,27 @@
         "slipped": "Se aplaza",
         "tomorrow": "Mañana"
       },
-      "carry": "Pasar a mañana",
-      "carried": "Pasada a mañana",
       "carryDone": "« {{name}} » pasada a mañana",
       "carryError": "No se pudo pasar la tarea.",
       "emptyTonight": "Nada más que hacer esta noche.",
       "emptyDone": "Nada terminado hoy.",
       "emptySlipped": "Nada se aplaza.",
-      "loadError": "No se pudo cargar el balance de la noche."
+      "loadError": "No se pudo cargar el balance de la noche.",
+      "actions": {
+        "menu": "Acciones para «{{name}}»",
+        "tomorrow": "Mañana",
+        "dueDate": "Elegir fecha",
+        "dueLabel": "Vencimiento",
+        "later": "Más tarde",
+        "cancel": "Descartar"
+      },
+      "state": {
+        "due": "Vence: {{date}}",
+        "cancelled": "Descartada"
+      },
+      "dueDone": "«{{name}}» vence {{date}}",
+      "laterDone": "«{{name}}» aplazada",
+      "cancelDone": "«{{name}}» descartada"
     }
   },
   "agents": {

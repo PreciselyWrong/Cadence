@@ -26,6 +26,13 @@ export const spanPercent = (
 export const capitalizeFirst = (text: string): string =>
     text.charAt(0).toUpperCase() + text.slice(1);
 
+// "ven. 6": the short weekday and the day of a stored date, in the locale.
+export const shortDay = (date: string, locale: string): string =>
+    new Intl.DateTimeFormat(locale, {
+        weekday: 'short',
+        day: 'numeric',
+    }).format(new Date(`${date}T12:00:00`));
+
 export const formatClock = (minute: number): string => {
     const hours = Math.floor(minute / 60) % 24;
     const minutes = minute % 60;

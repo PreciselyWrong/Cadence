@@ -5686,7 +5686,8 @@
     },
     "feedback": {
       "useful": "Hyödyllinen",
-      "noise": "Kohina"
+      "noise": "Ei hyödyllinen",
+      "fewer": "Näet vähemmän tämäntyyppisiä ilmoituksia"
     },
     "replies": {
       "sourceNotRead": "Lähdettä ei ole luettu"
@@ -5720,14 +5721,27 @@
         "slipped": "Siirtyy",
         "tomorrow": "Huomenna"
       },
-      "carry": "Siirrä huomiseen",
-      "carried": "Siirretty huomiseen",
       "carryDone": "« {{name}} » siirretty huomiseen",
       "carryError": "Tehtävää ei voitu siirtää.",
       "emptyTonight": "Tänä iltana ei ole enää tehtävää.",
       "emptyDone": "Tänään ei ole valmistunut mitään.",
       "emptySlipped": "Mitään ei siirry.",
-      "loadError": "Illan katsausta ei voitu ladata."
+      "loadError": "Illan katsausta ei voitu ladata.",
+      "actions": {
+        "menu": "Toiminnot: {{name}}",
+        "tomorrow": "Huomenna",
+        "dueDate": "Valitse päivä",
+        "dueLabel": "Eräpäivä",
+        "later": "Myöhemmin",
+        "cancel": "Hylkää"
+      },
+      "state": {
+        "due": "Eräpäivä: {{date}}",
+        "cancelled": "Hylätty"
+      },
+      "dueDone": "“{{name}}” eräpäivä {{date}}",
+      "laterDone": "“{{name}}” siirretty myöhemmäksi",
+      "cancelDone": "“{{name}}” hylätty"
     }
   },
   "agents": {

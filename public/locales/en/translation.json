@@ -5656,7 +5656,8 @@
     },
     "feedback": {
       "useful": "Useful",
-      "noise": "Noise"
+      "noise": "Not useful",
+      "fewer": "You'll see fewer alerts of this kind"
     },
     "replies": {
       "sourceNotRead": "Source not read"
@@ -5690,14 +5691,27 @@
         "slipped": "Slipped",
         "tomorrow": "Tomorrow"
       },
-      "carry": "Move to tomorrow",
-      "carried": "Moved to tomorrow",
       "carryDone": "« {{name}} » moved to tomorrow",
       "carryError": "Could not move the task.",
       "emptyTonight": "Nothing left to do tonight.",
       "emptyDone": "Nothing finished today.",
       "emptySlipped": "Nothing slipped.",
-      "loadError": "Could not load the evening review."
+      "loadError": "Could not load the evening review.",
+      "actions": {
+        "menu": "Actions for “{{name}}”",
+        "tomorrow": "Tomorrow",
+        "dueDate": "Pick a date",
+        "dueLabel": "Due date",
+        "later": "Later",
+        "cancel": "Abandon"
+      },
+      "state": {
+        "due": "Due: {{date}}",
+        "cancelled": "Abandoned"
+      },
+      "dueDone": "“{{name}}” due {{date}}",
+      "laterDone": "“{{name}}” set aside",
+      "cancelDone": "“{{name}}” abandoned"
     }
   },
   "agents": {

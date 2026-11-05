@@ -5695,7 +5695,8 @@
     },
     "feedback": {
       "useful": "Hilfreich",
-      "noise": "Störend"
+      "noise": "Nicht hilfreich",
+      "fewer": "Du siehst weniger Hinweise dieser Art"
     },
     "replies": {
       "sourceNotRead": "Quelle nicht gelesen"
@@ -5729,14 +5730,27 @@
         "slipped": "Rutscht",
         "tomorrow": "Morgen"
       },
-      "carry": "Auf morgen verschieben",
-      "carried": "Auf morgen verschoben",
       "carryDone": "« {{name}} » auf morgen verschoben",
       "carryError": "Die Aufgabe konnte nicht verschoben werden.",
       "emptyTonight": "Heute Abend ist nichts mehr zu tun.",
       "emptyDone": "Heute nichts erledigt.",
       "emptySlipped": "Nichts ist verschoben.",
-      "loadError": "Der Abendrückblick konnte nicht geladen werden."
+      "loadError": "Der Abendrückblick konnte nicht geladen werden.",
+      "actions": {
+        "menu": "Aktionen für „{{name}}“",
+        "tomorrow": "Morgen",
+        "dueDate": "Datum wählen",
+        "dueLabel": "Fälligkeit",
+        "later": "Später",
+        "cancel": "Verwerfen"
+      },
+      "state": {
+        "due": "Fällig: {{date}}",
+        "cancelled": "Verworfen"
+      },
+      "dueDone": "„{{name}}“ fällig {{date}}",
+      "laterDone": "„{{name}}“ auf später gelegt",
+      "cancelDone": "„{{name}}“ verworfen"
     }
   },
   "agents": {

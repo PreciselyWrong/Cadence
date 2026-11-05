@@ -5686,7 +5686,8 @@
     },
     "feedback": {
       "useful": "有用",
-      "noise": "噪音"
+      "noise": "没用",
+      "fewer": "你会减少看到这类提醒"
     },
     "replies": {
       "sourceNotRead": "未读取来源"
@@ -5720,14 +5721,27 @@
         "slipped": "顺延",
         "tomorrow": "明天"
       },
-      "carry": "顺延到明天",
-      "carried": "已顺延到明天",
       "carryDone": "「{{name}}」已顺延到明天",
       "carryError": "无法顺延该任务。",
       "emptyTonight": "今晚没有其他事项。",
       "emptyDone": "今天没有完成的事项。",
       "emptySlipped": "没有顺延的事项。",
-      "loadError": "无法加载晚间回顾。"
+      "loadError": "无法加载晚间回顾。",
+      "actions": {
+        "menu": "“{{name}}”的操作",
+        "tomorrow": "明天",
+        "dueDate": "选择日期",
+        "dueLabel": "截止日期",
+        "later": "稍后",
+        "cancel": "放弃"
+      },
+      "state": {
+        "due": "截止：{{date}}",
+        "cancelled": "已放弃"
+      },
+      "dueDone": "“{{name}}” 截止 {{date}}",
+      "laterDone": "“{{name}}” 已稍后处理",
+      "cancelDone": "“{{name}}” 已放弃"
     }
   },
   "agents": {

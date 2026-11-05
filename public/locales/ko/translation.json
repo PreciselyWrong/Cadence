@@ -5686,7 +5686,8 @@
     },
     "feedback": {
       "useful": "유용함",
-      "noise": "소음"
+      "noise": "도움 안 됨",
+      "fewer": "이런 종류의 알림이 줄어듭니다"
     },
     "replies": {
       "sourceNotRead": "소스를 읽지 않음"
@@ -5720,14 +5721,27 @@
         "slipped": "밀린 일",
         "tomorrow": "내일"
       },
-      "carry": "내일로 넘기기",
-      "carried": "내일로 넘김",
       "carryDone": "« {{name}} » 내일로 넘김",
       "carryError": "작업을 넘기지 못했습니다.",
       "emptyTonight": "오늘 밤에 할 일이 없습니다.",
       "emptyDone": "오늘 완료한 항목이 없습니다.",
       "emptySlipped": "밀린 항목이 없습니다.",
-      "loadError": "저녁 점검을 불러오지 못했습니다."
+      "loadError": "저녁 점검을 불러오지 못했습니다.",
+      "actions": {
+        "menu": "“{{name}}” 작업",
+        "tomorrow": "내일",
+        "dueDate": "날짜 선택",
+        "dueLabel": "마감일",
+        "later": "나중에",
+        "cancel": "포기"
+      },
+      "state": {
+        "due": "마감: {{date}}",
+        "cancelled": "포기함"
+      },
+      "dueDone": "“{{name}}” 마감 {{date}}",
+      "laterDone": "“{{name}}” 나중으로 미룸",
+      "cancelDone": "“{{name}}” 포기함"
     }
   },
   "agents": {

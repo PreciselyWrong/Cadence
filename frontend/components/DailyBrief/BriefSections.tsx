@@ -11,6 +11,7 @@ import {
 } from '../../utils/dailyBriefService';
 import { isTaskCompleted } from '../../constants/taskStatus';
 import BriefTaskRow from './BriefTaskRow';
+import { shortDay } from './briefTime';
 
 // The actions of the page, passed down: the page owns the requests and the
 // optimistic task state. Drafts (phase 5) add no action here on purpose.
@@ -47,12 +48,6 @@ export const SectionTitle: React.FC<{
         )}
     </h2>
 );
-
-const shortDay = (date: string, locale: string) =>
-    new Intl.DateTimeFormat(locale, {
-        weekday: 'short',
-        day: 'numeric',
-    }).format(new Date(`${date}T12:00:00`));
 
 const minutesText = (minutes: number, t: Translate) => {
     if (minutes < 60) {
@@ -280,9 +275,20 @@ const AnticipateItem: React.FC<{
                     }}
                     className="py-1 hover:text-gray-900 dark:hover:text-gray-100"
                 >
-                    {t('dailyBrief.feedback.noise', 'Bruit')}
+                    {t('dailyBrief.feedback.noise', 'Pas utile')}
                 </button>
             </div>
+            {voted === 'noise' && (
+                <p
+                    role="status"
+                    className="mt-1 text-xs text-gray-600 dark:text-gray-300"
+                >
+                    {t(
+                        'dailyBrief.feedback.fewer',
+                        'Tu verras moins ce type d’alerte'
+                    )}
+                </p>
+            )}
         </div>
     );
 };

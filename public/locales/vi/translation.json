@@ -5686,7 +5686,8 @@
     },
     "feedback": {
       "useful": "Hữu ích",
-      "noise": "Nhiễu"
+      "noise": "Không hữu ích",
+      "fewer": "Bạn sẽ thấy ít cảnh báo loại này hơn"
     },
     "replies": {
       "sourceNotRead": "Chưa đọc nguồn"
@@ -5720,14 +5721,27 @@
         "slipped": "Bị trễ",
         "tomorrow": "Ngày mai"
       },
-      "carry": "Chuyển sang mai",
-      "carried": "Đã chuyển sang mai",
       "carryDone": "Đã chuyển « {{name}} » sang mai",
       "carryError": "Không thể chuyển công việc.",
       "emptyTonight": "Tối nay không còn việc nào.",
       "emptyDone": "Hôm nay chưa xong việc nào.",
       "emptySlipped": "Không có việc nào bị trễ.",
-      "loadError": "Không thể tải tổng kết buổi tối."
+      "loadError": "Không thể tải tổng kết buổi tối.",
+      "actions": {
+        "menu": "Thao tác cho “{{name}}”",
+        "tomorrow": "Ngày mai",
+        "dueDate": "Chọn ngày",
+        "dueLabel": "Hạn",
+        "later": "Để sau",
+        "cancel": "Bỏ"
+      },
+      "state": {
+        "due": "Hạn: {{date}}",
+        "cancelled": "Đã bỏ"
+      },
+      "dueDone": "“{{name}}” hạn {{date}}",
+      "laterDone": "“{{name}}” đã để sau",
+      "cancelDone": "“{{name}}” đã bỏ"
     }
   },
   "agents": {

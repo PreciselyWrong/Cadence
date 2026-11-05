@@ -5686,7 +5686,8 @@
     },
     "feedback": {
       "useful": "Användbart",
-      "noise": "Brus"
+      "noise": "Inte användbart",
+      "fewer": "Du ser färre varningar av den här typen"
     },
     "replies": {
       "sourceNotRead": "Källan är inte läst"
@@ -5720,14 +5721,27 @@
         "slipped": "Glider",
         "tomorrow": "Imorgon"
       },
-      "carry": "Flytta till imorgon",
-      "carried": "Flyttad till imorgon",
       "carryDone": "« {{name}} » flyttad till imorgon",
       "carryError": "Kunde inte flytta uppgiften.",
       "emptyTonight": "Inget mer att göra ikväll.",
       "emptyDone": "Inget klart idag.",
       "emptySlipped": "Inget glider.",
-      "loadError": "Kunde inte ladda kvällsgenomgången."
+      "loadError": "Kunde inte ladda kvällsgenomgången.",
+      "actions": {
+        "menu": "Åtgärder för “{{name}}”",
+        "tomorrow": "Imorgon",
+        "dueDate": "Välj datum",
+        "dueLabel": "Förfallodatum",
+        "later": "Senare",
+        "cancel": "Avbryt"
+      },
+      "state": {
+        "due": "Förfaller: {{date}}",
+        "cancelled": "Avbruten"
+      },
+      "dueDone": "“{{name}}” förfaller {{date}}",
+      "laterDone": "“{{name}}” lagd till senare",
+      "cancelDone": "“{{name}}” avbruten"
     }
   },
   "agents": {

@@ -5699,7 +5699,8 @@
     },
     "feedback": {
       "useful": "Útil",
-      "noise": "Ruído"
+      "noise": "Não útil",
+      "fewer": "Você verá menos alertas desse tipo"
     },
     "replies": {
       "sourceNotRead": "Fonte não lida"
@@ -5733,14 +5734,27 @@
         "slipped": "Escorregou",
         "tomorrow": "Amanhã"
       },
-      "carry": "Adiar para amanhã",
-      "carried": "Adiada para amanhã",
       "carryDone": "« {{name}} » adiada para amanhã",
       "carryError": "Não foi possível adiar a tarefa.",
       "emptyTonight": "Nada mais a fazer esta noite.",
       "emptyDone": "Nada concluído hoje.",
       "emptySlipped": "Nada escorregou.",
-      "loadError": "Não foi possível carregar o balanço da noite."
+      "loadError": "Não foi possível carregar o balanço da noite.",
+      "actions": {
+        "menu": "Ações para «{{name}}»",
+        "tomorrow": "Amanhã",
+        "dueDate": "Escolher data",
+        "dueLabel": "Prazo",
+        "later": "Mais tarde",
+        "cancel": "Abandonar"
+      },
+      "state": {
+        "due": "Prazo: {{date}}",
+        "cancelled": "Abandonada"
+      },
+      "dueDone": "«{{name}}» prazo {{date}}",
+      "laterDone": "«{{name}}» adiada",
+      "cancelDone": "«{{name}}» abandonada"
     }
   },
   "agents": {

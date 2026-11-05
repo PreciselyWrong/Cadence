@@ -5699,7 +5699,8 @@
     },
     "feedback": {
       "useful": "Utile",
-      "noise": "Rumore"
+      "noise": "Non utile",
+      "fewer": "Vedrai meno avvisi di questo tipo"
     },
     "replies": {
       "sourceNotRead": "Fonte non letta"
@@ -5733,14 +5734,27 @@
         "slipped": "Slittano",
         "tomorrow": "Domani"
       },
-      "carry": "Rinvia a domani",
-      "carried": "Rinviata a domani",
       "carryDone": "« {{name}} » rinviata a domani",
       "carryError": "Impossibile rinviare l’attività.",
       "emptyTonight": "Niente altro da fare stasera.",
       "emptyDone": "Niente di concluso oggi.",
       "emptySlipped": "Niente slitta.",
-      "loadError": "Impossibile caricare il bilancio serale."
+      "loadError": "Impossibile caricare il bilancio serale.",
+      "actions": {
+        "menu": "Azioni per «{{name}}»",
+        "tomorrow": "Domani",
+        "dueDate": "Scegli una data",
+        "dueLabel": "Scadenza",
+        "later": "Più tardi",
+        "cancel": "Abbandona"
+      },
+      "state": {
+        "due": "Scadenza: {{date}}",
+        "cancelled": "Abbandonata"
+      },
+      "dueDone": "«{{name}}» scadenza {{date}}",
+      "laterDone": "«{{name}}» rinviata",
+      "cancelDone": "«{{name}}» abbandonata"
     }
   },
   "agents": {

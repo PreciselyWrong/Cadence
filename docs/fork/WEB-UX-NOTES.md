@@ -480,3 +480,12 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Problème** : la colonne Ordinateur de Profil › Notifications n'avait pas de bouton « Tester » ; impossible de savoir si le poste Linux recevait quelque chose sans attendre un vrai rappel.
 - **Décision** : la ligne « Envoyer une notification de test » a maintenant un bouton par colonne, Ordinateur compris. Le message dit que le test arrive sur l'ordinateur dans la minute si l'app Cadence tourne (le client interroge le serveur, rien n'est poussé). Logique : `frontend/components/Profile/tabs/NotificationsTab.tsx`, `backend/modules/notifications/service.js`.
 - **Android à reprendre** : rien ; l'écran des réglages de notifications d'Android n'a pas de colonne par canal serveur.
+
+### 2026-11-05 — Bilan du soir : quatre gestes sur chaque ligne, « Pas utile »
+
+- **Problème** : au bilan du soir, reporter à demain était le seul geste sur une tâche ce soir ou glissée ; changer l'échéance, la mettre de côté ou l'abandonner passait par la fiche. Le vote « Bruit » sur une alerte ne disait pas ce qu'il changeait.
+- **Décision** :
+  - Chaque ligne « Ce soir » et « Glisse » a une case et un bouton « … » qui ouvre : Demain, Choisir une date, Plus tard, Abandonner. Le geste se voit tout de suite sur la ligne (« Demain », « Échéance : ven. 6 », « Plus tard », « Abandonnée » avec le titre barré), avec une annulation de 6 secondes qui rétablit la tâche et la ligne. Services existants : report au plan du lendemain, `updateTask` (échéance, statut), `decideTask` (`later`).
+  - Vote d'alerte : « Utile · Pas utile » ; après « Pas utile », la carte dit « Tu verras moins ce type d’alerte ». Les votes stockés restent `useful` / `noise`.
+  - Écart : annuler « Plus tard » retire l'étiquette #someday seulement. Le serveur a aussi retiré la tâche de la vue, de la semaine et du plan du jour ; l'annulation ne les rétablit pas.
+- **Android à reprendre** : le même menu sur le bilan du soir et le libellé « Pas utile » ; rien d'essayé sur le téléphone.

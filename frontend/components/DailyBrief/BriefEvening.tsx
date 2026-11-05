@@ -6,14 +6,16 @@ import {
     DailyEvening,
 } from '../../utils/dailyBriefService';
 import { isTaskCompleted } from '../../constants/taskStatus';
-import BriefTaskRow from './BriefTaskRow';
+import BriefEveningRow, {
+    EveningHandled,
+    EveningRowActions,
+} from './BriefEveningRow';
 import BriefTimeline from './BriefTimeline';
 import { SectionTitle } from './BriefSections';
 
-export interface BriefEveningActions {
+export interface BriefEveningActions extends EveningRowActions {
     onToggle: (uid: string) => void;
     onOpen: (uid: string) => void;
-    onCarry: (uid: string) => void;
 }
 
 interface BriefEveningProps {
@@ -21,7 +23,7 @@ interface BriefEveningProps {
     tasks: Record<string, BriefTaskState>;
     settings: BriefSettings;
     locale: string;
-    carried: Record<string, boolean>;
+    handled: Record<string, EveningHandled>;
     actions: BriefEveningActions;
 }
 
@@ -33,7 +35,7 @@ export const BriefEvening: React.FC<BriefEveningProps> = ({
     tasks,
     settings,
     locale,
-    carried,
+    handled,
     actions,
 }) => {
     const { t } = useTranslation();
@@ -41,32 +43,28 @@ export const BriefEvening: React.FC<BriefEveningProps> = ({
     const done = evening.done.filter((uid) => tasks[uid]);
     const slipped = evening.slipped.filter((item) => tasks[item.task_uid]);
 
-    const carryButton = (uid: string) =>
-        carried[uid] ? (
-            <span className="mt-0.5 flex-none text-[13px] text-gray-600 dark:text-gray-300">
-                {t('dailyBrief.evening.carried', 'Reportée à demain')}
-            </span>
-        ) : (
-            <button
-                type="button"
-                onClick={() => actions.onCarry(uid)}
-                className="mt-0.5 min-h-[32px] flex-none rounded-lg px-2 text-[13px] font-semibold text-indigo-700 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:text-indigo-300"
-            >
-                {t('dailyBrief.evening.carry', 'Reporter à demain')}
-            </button>
-        );
-
-    const row = (uid: string, meta: string | undefined, carry: boolean) => {
+    const row = (
+        uid: string,
+        meta: string | undefined,
+        actionable: boolean
+    ) => {
         const task = tasks[uid];
         return (
-            <BriefTaskRow
+            <BriefEveningRow
                 key={uid}
+                uid={uid}
                 name={task.name}
                 done={isTaskCompleted(task.status)}
+                status={task.status}
+                meta={meta}
+                dueDate={task.due_date}
+                recurring={task.recurring}
+                handled={handled[uid]}
+                actionable={actionable}
+                locale={locale}
+                actions={actions}
                 onToggle={() => actions.onToggle(uid)}
                 onOpen={() => actions.onOpen(uid)}
-                meta={meta}
-                trailing={carry ? carryButton(uid) : undefined}
             />
         );
     };

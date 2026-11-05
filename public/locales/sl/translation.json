@@ -5742,7 +5742,8 @@
     },
     "feedback": {
       "useful": "Uporabno",
-      "noise": "Šum"
+      "noise": "Ni uporabno",
+      "fewer": "Videli boste manj opozoril te vrste"
     },
     "replies": {
       "sourceNotRead": "Vir ni prebran"
@@ -5776,14 +5777,27 @@
         "slipped": "Zdrsne",
         "tomorrow": "Jutri"
       },
-      "carry": "Prestavi na jutri",
-      "carried": "Prestavljeno na jutri",
       "carryDone": "« {{name}} » prestavljeno na jutri",
       "carryError": "Opravila ni bilo mogoče prestaviti.",
       "emptyTonight": "Nocoj ni nič več za narediti.",
       "emptyDone": "Danes ni nič opravljenega.",
       "emptySlipped": "Nič ne zdrsne.",
-      "loadError": "Večernega pregleda ni bilo mogoče naložiti."
+      "loadError": "Večernega pregleda ni bilo mogoče naložiti.",
+      "actions": {
+        "menu": "Dejanja za »{{name}}«",
+        "tomorrow": "Jutri",
+        "dueDate": "Izberi datum",
+        "dueLabel": "Rok",
+        "later": "Kasneje",
+        "cancel": "Opusti"
+      },
+      "state": {
+        "due": "Rok: {{date}}",
+        "cancelled": "Opuščeno"
+      },
+      "dueDone": "»{{name}}« rok {{date}}",
+      "laterDone": "»{{name}}« odloženo",
+      "cancelDone": "»{{name}}« opuščeno"
     }
   },
   "agents": {

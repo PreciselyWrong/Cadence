@@ -5704,7 +5704,8 @@
     },
     "feedback": {
       "useful": "Util",
-      "noise": "Zgomot"
+      "noise": "Nu e utilă",
+      "fewer": "Vei vedea mai puține alerte de acest fel"
     },
     "replies": {
       "sourceNotRead": "Sursa nu a fost citită"
@@ -5738,14 +5739,27 @@
         "slipped": "Alunecă",
         "tomorrow": "Mâine"
       },
-      "carry": "Mută pe mâine",
-      "carried": "Mutată pe mâine",
       "carryDone": "« {{name}} » mutată pe mâine",
       "carryError": "Nu s-a putut muta sarcina.",
       "emptyTonight": "Nimic de făcut în seara aceasta.",
       "emptyDone": "Nimic terminat azi.",
       "emptySlipped": "Nimic nu alunecă.",
-      "loadError": "Bilanțul de seară nu a putut fi încărcat."
+      "loadError": "Bilanțul de seară nu a putut fi încărcat.",
+      "actions": {
+        "menu": "Acțiuni pentru „{{name}}”",
+        "tomorrow": "Mâine",
+        "dueDate": "Alege o dată",
+        "dueLabel": "Termen",
+        "later": "Mai târziu",
+        "cancel": "Renunță"
+      },
+      "state": {
+        "due": "Termen: {{date}}",
+        "cancelled": "Renunțată"
+      },
+      "dueDone": "„{{name}}” termen {{date}}",
+      "laterDone": "„{{name}}” amânată",
+      "cancelDone": "„{{name}}” abandonată"
     }
   },
   "agents": {

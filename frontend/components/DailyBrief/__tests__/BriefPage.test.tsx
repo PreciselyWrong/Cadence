@@ -33,6 +33,7 @@ import {
     fetchDailyPlan,
     saveDailyPlanItems,
 } from '../../../utils/dailyPlanService';
+import { decideTask } from '../../../utils/reviewService';
 
 jest.mock('react-i18next', () => {
     const t = (
@@ -69,6 +70,9 @@ jest.mock('../../../utils/dailyPlanService', () => ({
 jest.mock('../../../utils/tasksService', () => ({
     toggleTaskCompletion: jest.fn(),
     updateTask: jest.fn(),
+}));
+jest.mock('../../../utils/reviewService', () => ({
+    decideTask: jest.fn(),
 }));
 jest.mock('../../../store/taskPanelStore', () => ({
     openTaskPanel: jest.fn(),
@@ -207,7 +211,9 @@ describe('BriefPage', () => {
 
     it('records a feedback vote on a card', async () => {
         renderPage();
-        fireEvent.click(await screen.findByRole('button', { name: 'Bruit' }));
+        fireEvent.click(
+            await screen.findByRole('button', { name: 'Pas utile' })
+        );
         await waitFor(() =>
             expect(recordBriefDecision).toHaveBeenCalledWith(
                 TODAY,
@@ -220,6 +226,9 @@ describe('BriefPage', () => {
                 })
             )
         );
+        expect(
+            screen.getByText('Tu verras moins ce type d’alerte')
+        ).toBeInTheDocument();
     });
 
     it('shows an empty state with a button that generates the brief', async () => {
@@ -263,11 +272,15 @@ describe('BriefPage evening review', () => {
     const MORNING_VERDICT = 'Ce soir, une seule chose compte.';
     const TOMORROW = '2026-11-05';
 
-    const renderAt = async (now: Date, settings = SETTINGS) => {
+    const renderAt = async (
+        now: Date,
+        settings = SETTINGS,
+        evening = EVENING_RESPONSE
+    ) => {
         jest.useFakeTimers({ now });
         (fetchDailyBrief as jest.Mock).mockResolvedValue(RESPONSE);
         (fetchBriefSettings as jest.Mock).mockResolvedValue(settings);
-        (fetchDailyEvening as jest.Mock).mockResolvedValue(EVENING_RESPONSE);
+        (fetchDailyEvening as jest.Mock).mockResolvedValue(evening);
         (fetchDailyPlan as jest.Mock).mockResolvedValue({
             date: TOMORROW,
             plan: {
@@ -279,6 +292,8 @@ describe('BriefPage evening review', () => {
         });
         (carryOverTasks as jest.Mock).mockResolvedValue({});
         (saveDailyPlanItems as jest.Mock).mockResolvedValue({});
+        (updateTask as jest.Mock).mockResolvedValue({});
+        (decideTask as jest.Mock).mockResolvedValue({});
         (toggleTaskCompletion as jest.Mock).mockResolvedValue({
             ...TASKS.t1,
             status: 'done',
@@ -291,6 +306,14 @@ describe('BriefPage evening review', () => {
         (await screen.findByText(name)).closest(
             '[data-testid="brief-task-row"]'
         ) as HTMLElement;
+
+    const openActions = (row: HTMLElement) =>
+        fireEvent.click(within(row).getByRole('button', { name: /^Actions/ }));
+
+    const undoOf = (): (() => Promise<void>) => {
+        const calls = (showUndoToast as jest.Mock).mock.calls;
+        return calls[calls.length - 1][1];
+    };
 
     beforeEach(() => {
         jest.clearAllMocks();
@@ -398,26 +421,26 @@ describe('BriefPage evening review', () => {
                 },
             });
 
-        fireEvent.click(
-            within(row).getByRole('button', { name: 'Reporter à demain' })
-        );
+        openActions(row);
+        fireEvent.click(screen.getByRole('menuitem', { name: 'Demain' }));
 
         await waitFor(() =>
             expect(carryOverTasks).toHaveBeenCalledWith(TOMORROW, ['t2'])
         );
+        expect(within(row).getByText('Demain')).toBeInTheDocument();
         expect(showUndoToast).toHaveBeenCalledWith(
             '« Trier les photos » reportée à demain',
             expect.any(Function)
         );
 
-        const [, undo] = (showUndoToast as jest.Mock).mock.calls[0];
         await act(async () => {
-            await undo();
+            await undoOf()();
         });
 
         expect(saveDailyPlanItems).toHaveBeenCalledWith(TOMORROW, [
             { task_uid: 'other' },
         ]);
+        expect(within(row).queryByText('Demain')).not.toBeInTheDocument();
     });
 
     it('does not add a task that tomorrow already holds, and offers no undo', async () => {
@@ -433,12 +456,125 @@ describe('BriefPage evening review', () => {
             },
         });
 
-        fireEvent.click(
-            within(row).getByRole('button', { name: 'Reporter à demain' })
-        );
+        openActions(row);
+        fireEvent.click(screen.getByRole('menuitem', { name: 'Demain' }));
 
         await waitFor(() => expect(showSuccessToast).toHaveBeenCalled());
         expect(carryOverTasks).not.toHaveBeenCalled();
+        expect(showUndoToast).not.toHaveBeenCalled();
+    });
+
+    it('offers no single-date choice for a recurring task', async () => {
+        const recurring = {
+            ...EVENING_RESPONSE,
+            tasks: {
+                ...EVENING_RESPONSE.tasks,
+                t2: { ...EVENING_RESPONSE.tasks.t2, recurring: true },
+            },
+        };
+        await renderAt(AT_SWITCH, SETTINGS, recurring);
+        openActions(await rowOf('Trier les photos'));
+
+        expect(
+            screen.queryByRole('menuitem', { name: 'Choisir une date' })
+        ).toBeNull();
+        expect(screen.getByRole('menuitem', { name: 'Demain' })).toBeTruthy();
+    });
+
+    it('sets a new due date from the picker and undo restores the old one', async () => {
+        await renderAt(AT_SWITCH);
+        const row = await rowOf('Trier les photos');
+        openActions(row);
+        fireEvent.click(
+            screen.getByRole('menuitem', { name: 'Choisir une date' })
+        );
+        fireEvent.change(within(row).getByLabelText('Échéance'), {
+            target: { value: '2026-11-06' },
+        });
+
+        await waitFor(() =>
+            expect(updateTask).toHaveBeenCalledWith('t2', {
+                due_date: '2026-11-06',
+            })
+        );
+        expect(
+            await within(row).findByText(/^Échéance : /)
+        ).toBeInTheDocument();
+        expect(
+            within(row).queryByLabelText('Échéance')
+        ).not.toBeInTheDocument();
+
+        await act(async () => {
+            await undoOf()();
+        });
+
+        expect(updateTask).toHaveBeenLastCalledWith('t2', { due_date: TODAY });
+        await waitFor(() =>
+            expect(
+                within(row).queryByText(/^Échéance : /)
+            ).not.toBeInTheDocument()
+        );
+    });
+
+    it('parks a task for later and undo takes the later tag off', async () => {
+        await renderAt(AT_SWITCH);
+        const row = await rowOf('Trier les photos');
+        openActions(row);
+        fireEvent.click(screen.getByRole('menuitem', { name: 'Plus tard' }));
+
+        await waitFor(() =>
+            expect(decideTask).toHaveBeenCalledWith('t2', { later: true })
+        );
+        expect(await within(row).findByText('Plus tard')).toBeInTheDocument();
+
+        await act(async () => {
+            await undoOf()();
+        });
+
+        expect(decideTask).toHaveBeenLastCalledWith('t2', { later: false });
+        expect(within(row).queryByText('Plus tard')).not.toBeInTheDocument();
+    });
+
+    it('abandons a task at once, struck, and undo restores its status', async () => {
+        await renderAt(AT_SWITCH);
+        const row = await rowOf('Trier les photos');
+        openActions(row);
+        fireEvent.click(screen.getByRole('menuitem', { name: 'Abandonner' }));
+
+        await waitFor(() =>
+            expect(updateTask).toHaveBeenCalledWith('t2', { status: 5 })
+        );
+        expect(await within(row).findByText('Abandonnée')).toBeInTheDocument();
+        expect(within(row).getByText('Trier les photos')).toHaveClass(
+            'line-through'
+        );
+        expect(showUndoToast).toHaveBeenCalledWith(
+            expect.stringContaining('Trier les photos'),
+            expect.any(Function)
+        );
+
+        await act(async () => {
+            await undoOf()();
+        });
+
+        expect(updateTask).toHaveBeenLastCalledWith('t2', {
+            status: 'not_started',
+        });
+        expect(within(row).queryByText('Abandonnée')).not.toBeInTheDocument();
+        expect(within(row).getByText('Trier les photos')).not.toHaveClass(
+            'line-through'
+        );
+    });
+
+    it('keeps the task and says so when a service call fails', async () => {
+        await renderAt(AT_SWITCH);
+        const row = await rowOf('Trier les photos');
+        (decideTask as jest.Mock).mockRejectedValueOnce(new Error('down'));
+        openActions(row);
+        fireEvent.click(screen.getByRole('menuitem', { name: 'Plus tard' }));
+
+        await waitFor(() => expect(showErrorToast).toHaveBeenCalled());
+        expect(within(row).queryByText('Plus tard')).not.toBeInTheDocument();
         expect(showUndoToast).not.toHaveBeenCalled();
     });
 });

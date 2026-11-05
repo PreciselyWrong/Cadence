@@ -5686,7 +5686,8 @@
     },
     "feedback": {
       "useful": "Nuttig",
-      "noise": "Ruis"
+      "noise": "Niet nuttig",
+      "fewer": "Je ziet minder meldingen van dit type"
     },
     "replies": {
       "sourceNotRead": "Bron niet gelezen"
@@ -5720,14 +5721,27 @@
         "slipped": "Schuift op",
         "tomorrow": "Morgen"
       },
-      "carry": "Verplaats naar morgen",
-      "carried": "Verplaatst naar morgen",
       "carryDone": "« {{name}} » verplaatst naar morgen",
       "carryError": "Kon de taak niet verplaatsen.",
       "emptyTonight": "Vanavond is er niets meer te doen.",
       "emptyDone": "Vandaag niets afgerond.",
       "emptySlipped": "Niets schuift op.",
-      "loadError": "Kon de avondevaluatie niet laden."
+      "loadError": "Kon de avondevaluatie niet laden.",
+      "actions": {
+        "menu": "Acties voor “{{name}}”",
+        "tomorrow": "Morgen",
+        "dueDate": "Datum kiezen",
+        "dueLabel": "Vervaldatum",
+        "later": "Later",
+        "cancel": "Laten vallen"
+      },
+      "state": {
+        "due": "Vervalt: {{date}}",
+        "cancelled": "Gestopt"
+      },
+      "dueDone": "“{{name}}” vervalt {{date}}",
+      "laterDone": "“{{name}}” voor later gezet",
+      "cancelDone": "“{{name}}” gestopt"
     }
   },
   "agents": {

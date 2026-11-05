@@ -5686,7 +5686,8 @@
     },
     "feedback": {
       "useful": "役に立つ",
-      "noise": "ノイズ"
+      "noise": "役に立たない",
+      "fewer": "この種類の通知は表示が減ります"
     },
     "replies": {
       "sourceNotRead": "ソース未読"
@@ -5720,14 +5721,27 @@
         "slipped": "ずれ込み",
         "tomorrow": "明日"
       },
-      "carry": "明日に回す",
-      "carried": "明日に回しました",
       "carryDone": "「{{name}}」を明日に回しました",
       "carryError": "タスクを回せませんでした。",
       "emptyTonight": "今夜やることはありません。",
       "emptyDone": "今日完了したものはありません。",
       "emptySlipped": "ずれ込みはありません。",
-      "loadError": "夜の振り返りを読み込めませんでした。"
+      "loadError": "夜の振り返りを読み込めませんでした。",
+      "actions": {
+        "menu": "「{{name}}」の操作",
+        "tomorrow": "明日",
+        "dueDate": "日付を選ぶ",
+        "dueLabel": "期限",
+        "later": "あとで",
+        "cancel": "中止"
+      },
+      "state": {
+        "due": "期限: {{date}}",
+        "cancelled": "中止済み"
+      },
+      "dueDone": "「{{name}}」期限 {{date}}",
+      "laterDone": "「{{name}}」をあとで",
+      "cancelDone": "「{{name}}」を中止"
     }
   },
   "agents": {

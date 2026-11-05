@@ -142,6 +142,7 @@ export interface BriefTaskState {
     estimated_minutes: number | null;
     priority: string | number | null;
     project_name: string | null;
+    recurring?: boolean;
 }
 
 export type BriefStatus = 'pending' | 'partial' | 'ready' | 'failed' | null;

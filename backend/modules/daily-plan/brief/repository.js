@@ -127,6 +127,8 @@ class DailyBriefRepository {
                 'completed_at',
                 'estimated_minutes',
                 'priority',
+                'recurrence_type',
+                'recurring_parent_id',
             ],
             include: [
                 { model: Project, attributes: ['name'], required: false },

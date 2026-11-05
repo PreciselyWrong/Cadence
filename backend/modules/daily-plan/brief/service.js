@@ -66,6 +66,10 @@ function serializeTask(task) {
         estimated_minutes: task.estimated_minutes,
         priority: task.priority,
         project_name: task.Project?.name ?? null,
+        // A recurring task's date belongs to its series: clients offer no single-date move.
+        recurring:
+            Boolean(task.recurring_parent_id) ||
+            Boolean(task.recurrence_type && task.recurrence_type !== 'none'),
     };
 }
 

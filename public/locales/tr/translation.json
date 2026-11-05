@@ -5686,7 +5686,8 @@
     },
     "feedback": {
       "useful": "Faydalı",
-      "noise": "Gürültü"
+      "noise": "Faydalı değil",
+      "fewer": "Bu türden daha az uyarı göreceksin"
     },
     "replies": {
       "sourceNotRead": "Kaynak okunmadı"
@@ -5720,14 +5721,27 @@
         "slipped": "Kayanlar",
         "tomorrow": "Yarın"
       },
-      "carry": "Yarına taşı",
-      "carried": "Yarına taşındı",
       "carryDone": "« {{name}} » yarına taşındı",
       "carryError": "Görev taşınamadı.",
       "emptyTonight": "Bu akşam yapılacak başka bir şey yok.",
       "emptyDone": "Bugün tamamlanan bir şey yok.",
       "emptySlipped": "Kayan bir şey yok.",
-      "loadError": "Akşam değerlendirmesi yüklenemedi."
+      "loadError": "Akşam değerlendirmesi yüklenemedi.",
+      "actions": {
+        "menu": "“{{name}}” için işlemler",
+        "tomorrow": "Yarın",
+        "dueDate": "Tarih seç",
+        "dueLabel": "Bitiş tarihi",
+        "later": "Daha sonra",
+        "cancel": "Vazgeç"
+      },
+      "state": {
+        "due": "Bitiş: {{date}}",
+        "cancelled": "Vazgeçildi"
+      },
+      "dueDone": "“{{name}}” bitiş {{date}}",
+      "laterDone": "“{{name}}” daha sonraya bırakıldı",
+      "cancelDone": "“{{name}}” vazgeçildi"
     }
   },
   "agents": {

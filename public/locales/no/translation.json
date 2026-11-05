@@ -5691,7 +5691,8 @@
     },
     "feedback": {
       "useful": "Nyttig",
-      "noise": "Støy"
+      "noise": "Ikke nyttig",
+      "fewer": "Du ser færre varsler av denne typen"
     },
     "replies": {
       "sourceNotRead": "Kilden er ikke lest"
@@ -5725,14 +5726,27 @@
         "slipped": "Glipper",
         "tomorrow": "I morgen"
       },
-      "carry": "Flytt til i morgen",
-      "carried": "Flyttet til i morgen",
       "carryDone": "« {{name}} » flyttet til i morgen",
       "carryError": "Kunne ikke flytte oppgaven.",
       "emptyTonight": "Ingenting mer å gjøre i kveld.",
       "emptyDone": "Ingenting fullført i dag.",
       "emptySlipped": "Ingenting glipper.",
-      "loadError": "Kunne ikke laste kveldsoppsummeringen."
+      "loadError": "Kunne ikke laste kveldsoppsummeringen.",
+      "actions": {
+        "menu": "Handlinger for «{{name}}»",
+        "tomorrow": "I morgen",
+        "dueDate": "Velg dato",
+        "dueLabel": "Forfallsdato",
+        "later": "Senere",
+        "cancel": "Avbryt"
+      },
+      "state": {
+        "due": "Forfaller: {{date}}",
+        "cancelled": "Avbrutt"
+      },
+      "dueDone": "«{{name}}» forfaller {{date}}",
+      "laterDone": "«{{name}}» satt på vent",
+      "cancelDone": "«{{name}}» avbrutt"
     }
   },
   "agents": {
