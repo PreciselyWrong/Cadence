@@ -5433,6 +5433,26 @@
       "quick": "Tombol cepat: {{values}}",
       "reminders": "Pengingat: {{times}}",
       "title": "Target dan jadwal"
+    },
+    "patterns": {
+      "title": "Pola",
+      "heatmap": "365 hari terakhir",
+      "cellStatus": "{{date}}: {{status}}",
+      "yearNotEnough": "Belum cukup hari",
+      "year": "Dalam 12 bulan: {{rate}} % ({{done}} dari {{counted}} hari)",
+      "weekdays": "Per hari dalam minggu",
+      "months": "Per bulan",
+      "noRate": "{{name}}: belum cukup hari",
+      "rate": "{{name}}: {{rate}}",
+      "status": {
+        "IDEAL": "Ideal",
+        "MINIMUM": "Minimum",
+        "ACTIVITY": "Aktivitas",
+        "MISSED": "Terlewat",
+        "NO_ACTIVITY": "Tidak ada aktivitas",
+        "PAUSED": "Dijeda",
+        "UNPLANNED": "Tidak direncanakan"
+      }
     }
   },
   "iconPicker": {

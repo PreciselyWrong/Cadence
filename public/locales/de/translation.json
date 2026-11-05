@@ -5442,6 +5442,26 @@
       "quick": "Schnelltasten: {{values}}",
       "reminders": "Erinnerungen: {{times}}",
       "title": "Ziel und Zeitplan"
+    },
+    "patterns": {
+      "title": "Muster",
+      "heatmap": "Letzte 365 Tage",
+      "cellStatus": "{{date}}: {{status}}",
+      "yearNotEnough": "Noch nicht genug Tage",
+      "year": "Über 12 Monate: {{rate}} % ({{done}} von {{counted}} Tagen)",
+      "weekdays": "Nach Wochentag",
+      "months": "Nach Monat",
+      "noRate": "{{name}}: noch nicht genug Tage",
+      "rate": "{{name}}: {{rate}}",
+      "status": {
+        "IDEAL": "Ideal",
+        "MINIMUM": "Minimum",
+        "ACTIVITY": "Aktivität",
+        "MISSED": "Verpasst",
+        "NO_ACTIVITY": "Keine Aktivität",
+        "PAUSED": "Pausiert",
+        "UNPLANNED": "Nicht geplant"
+      }
     }
   },
   "iconPicker": {

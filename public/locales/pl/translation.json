@@ -5487,6 +5487,26 @@
       "quick": "Szybkie przyciski: {{values}}",
       "reminders": "Przypomnienia: {{times}}",
       "title": "Cel i harmonogram"
+    },
+    "patterns": {
+      "title": "Wzorce",
+      "heatmap": "Ostatnie 365 dni",
+      "cellStatus": "{{date}}: {{status}}",
+      "yearNotEnough": "Na razie za mało dni",
+      "year": "Z ostatnich 12 miesięcy: {{rate}} % ({{done}} z {{counted}} dni)",
+      "weekdays": "Według dnia tygodnia",
+      "months": "Według miesiąca",
+      "noRate": "{{name}}: na razie za mało dni",
+      "rate": "{{name}}: {{rate}}",
+      "status": {
+        "IDEAL": "Idealnie",
+        "MINIMUM": "Minimum",
+        "ACTIVITY": "Aktywność",
+        "MISSED": "Pominięte",
+        "NO_ACTIVITY": "Brak aktywności",
+        "PAUSED": "Wstrzymane",
+        "UNPLANNED": "Nie zaplanowane"
+      }
     }
   },
   "iconPicker": {

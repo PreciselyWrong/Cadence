@@ -29,6 +29,15 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
   - « Cocher une fois passé » par agenda : Android seulement, car le web n'a pas d'événements cochables. À reprendre si le web en gagne. Vérif : un événement terminé d'un agenda réglé apparaît fait.
 - Hors périmètre volontaire : limite de projets actifs (compteur seulement). V/E/M/D abandonné le 2026-11-01 : le planificateur Hermès arbitre ; valeurs et grille archivées dans la note Cadence « Archive V/E/M/D » et `~/Documents/cadence-archives/`.
 
+## Statistiques d'habitudes plus riches [cadence:bdad4581-3f5c-4b43-a26e-253fd0ec7731]
+
+Branche `feat/habit-stats-bdad4581`.
+
+- [x] Moteur commun : motifs par jour de la semaine, par mois et sur 12 mois (JS `patterns.js`, Kotlin `HabitPatterns.kt`, cas dorés `patterns.json`, `stats.patterns` dans l'API).
+- [x] Web : section « Patterns » (carte des 365 jours, barres jours et mois), 26 langues, vérifiée à 375 px et en bureau.
+- [x] Android : panneau « Régularité » dans la fiche Statistiques du Bilan.
+- [ ] Vérifier le panneau Android sur le téléphone (aucun appareil le 2026-11-05).
+
 ## Next
 
 - Serveur, pool PostgreSQL bloqué à chaque quart d'heure (vu le 2026-11-05 par le job Hermès `cadence-classify`, une passe sur cinq en `TimeoutError` sur `/api/v1/sync/pull` ; `/api/notifications` touché aussi) : `withJobLock` (`backend/services/jobLock.js`) garde une connexion du pool pendant tout le job, qui en demande une seconde ; ~10 jobs démarrent à :00/:15/:30/:45 plus le verrou Telegram permanent, pool de 10 (`DB_POOL_MAX` non défini) → `SequelizeConnectionAcquireTimeoutError` après 60 s. Correctif : verrou consultatif sur un client `pg` dédié hors pool (`pg_try_advisory_lock` / `pg_advisory_unlock`), ou job exécuté dans la transaction du verrou ; en attendant, `DB_POOL_MAX=25` sur Unraid. Vérif : pool de N, N+1 `withJobLock` en parallèle qui font chacun une requête, aucun délai d'acquisition.

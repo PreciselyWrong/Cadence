@@ -5433,6 +5433,26 @@
       "quick": "クイック入力：{{values}}",
       "reminders": "リマインダー：{{times}}",
       "title": "目標と予定"
+    },
+    "patterns": {
+      "title": "パターン",
+      "heatmap": "過去365日",
+      "cellStatus": "{{date}}：{{status}}",
+      "yearNotEnough": "まだ日数が足りません",
+      "year": "過去12か月：{{rate}} %（{{counted}}日中{{done}}日）",
+      "weekdays": "曜日別",
+      "months": "月別",
+      "noRate": "{{name}}：まだ日数が足りません",
+      "rate": "{{name}}：{{rate}}",
+      "status": {
+        "IDEAL": "理想",
+        "MINIMUM": "最低限",
+        "ACTIVITY": "活動",
+        "MISSED": "未達成",
+        "NO_ACTIVITY": "活動なし",
+        "PAUSED": "一時停止中",
+        "UNPLANNED": "予定なし"
+      }
     }
   },
   "iconPicker": {

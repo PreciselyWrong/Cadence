@@ -112,6 +112,19 @@ export const detail = (
     abstinence_logs: [],
     alcohol_consumptions: [],
     stats: {
+        patterns: {
+            weekdays: [
+                { day: 'MONDAY', done: 0, counted: 0, ratePercent: null },
+                { day: 'TUESDAY', done: 0, counted: 0, ratePercent: null },
+                { day: 'WEDNESDAY', done: 0, counted: 0, ratePercent: null },
+                { day: 'THURSDAY', done: 0, counted: 0, ratePercent: null },
+                { day: 'FRIDAY', done: 0, counted: 0, ratePercent: null },
+                { day: 'SATURDAY', done: 0, counted: 0, ratePercent: null },
+                { day: 'SUNDAY', done: 0, counted: 0, ratePercent: null },
+            ],
+            months: [],
+            year: { done: 0, counted: 0, ratePercent: null },
+        },
         summary: {
             evaluatedPeriods: 10,
             validatedPeriods: 8,

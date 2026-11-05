@@ -5433,6 +5433,26 @@
       "quick": "Snelknoppen: {{values}}",
       "reminders": "Herinneringen: {{times}}",
       "title": "Doel en schema"
+    },
+    "patterns": {
+      "title": "Patronen",
+      "heatmap": "Laatste 365 dagen",
+      "cellStatus": "{{date}}: {{status}}",
+      "yearNotEnough": "Nog niet genoeg dagen",
+      "year": "Afgelopen 12 maanden: {{rate}} % ({{done}} van {{counted}} dagen)",
+      "weekdays": "Per weekdag",
+      "months": "Per maand",
+      "noRate": "{{name}}: nog niet genoeg dagen",
+      "rate": "{{name}}: {{rate}}",
+      "status": {
+        "IDEAL": "Ideaal",
+        "MINIMUM": "Minimum",
+        "ACTIVITY": "Activiteit",
+        "MISSED": "Gemist",
+        "NO_ACTIVITY": "Geen activiteit",
+        "PAUSED": "Gepauzeerd",
+        "UNPLANNED": "Niet gepland"
+      }
     }
   },
   "iconPicker": {

@@ -5450,6 +5450,26 @@
       "quick": "Butoane rapide: {{values}}",
       "reminders": "Mementouri: {{times}}",
       "title": "Obiectiv și program"
+    },
+    "patterns": {
+      "title": "Tipare",
+      "heatmap": "Ultimele 365 de zile",
+      "cellStatus": "{{date}}: {{status}}",
+      "yearNotEnough": "Încă nu sunt suficiente zile",
+      "year": "În ultimele 12 luni: {{rate}} % ({{done}} din {{counted}} zile)",
+      "weekdays": "Pe zi a săptămânii",
+      "months": "Pe lună",
+      "noRate": "{{name}}: încă nu sunt suficiente zile",
+      "rate": "{{name}}: {{rate}}",
+      "status": {
+        "IDEAL": "Ideal",
+        "MINIMUM": "Minim",
+        "ACTIVITY": "Activitate",
+        "MISSED": "Ratat",
+        "NO_ACTIVITY": "Fără activitate",
+        "PAUSED": "În pauză",
+        "UNPLANNED": "Neplanificat"
+      }
     }
   },
   "iconPicker": {

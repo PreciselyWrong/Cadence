@@ -489,3 +489,9 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
   - Vote d'alerte : « Utile · Pas utile » ; après « Pas utile », la carte dit « Tu verras moins ce type d’alerte ». Les votes stockés restent `useful` / `noise`.
   - Écart : annuler « Plus tard » retire l'étiquette #someday seulement. Le serveur a aussi retiré la tâche de la vue, de la semaine et du plan du jour ; l'annulation ne les rétablit pas.
 - **Android à reprendre** : le même menu sur le bilan du soir et le libellé « Pas utile » ; rien d'essayé sur le téléphone.
+
+### 2026-11-05 — Régularité d'une habitude : carte annuelle, jours de la semaine, mois
+
+- **Problème** : la page d'une habitude ne montrait que des chiffres sur 30 jours ; impossible de voir quels jours ou quels mois l'habitude tient.
+- **Décision** : section « Patterns » sous Statistiques (habitudes et activités libres, pas les limites ni l'abstinence) : carte des 365 jours (colonnes = semaines, lundi en haut, défilement horizontal calé sur aujourd'hui), taux sur 12 mois, barres par jour de la semaine et par mois. Les chiffres viennent du moteur commun (`computePatterns` / `HabitPatterns`, cas dorés `fixtures/habits/patterns.json`) ; aujourd'hui ne compte qu'une fois réussi. Logique : `frontend/components/Habits/HabitPatterns.tsx`.
+- **Android** : livré dans la même étape, panneau « Régularité » de la fiche Statistiques du Bilan (le calendrier de 365 jours y existait déjà) ; à vérifier sur le téléphone.

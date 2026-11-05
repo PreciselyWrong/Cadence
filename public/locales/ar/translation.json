@@ -5493,6 +5493,26 @@
       "quick": "أزرار سريعة: {{values}}",
       "reminders": "التذكيرات: {{times}}",
       "title": "الهدف والجدول"
+    },
+    "patterns": {
+      "title": "الأنماط",
+      "heatmap": "آخر 365 يومًا",
+      "cellStatus": "{{date}}: {{status}}",
+      "yearNotEnough": "لا توجد أيام كافية بعد",
+      "year": "خلال آخر 12 شهرًا: {{rate}} % ({{done}} من {{counted}} يومًا)",
+      "weekdays": "حسب يوم الأسبوع",
+      "months": "حسب الشهر",
+      "noRate": "{{name}}: لا توجد أيام كافية بعد",
+      "rate": "{{name}}: {{rate}}",
+      "status": {
+        "IDEAL": "مثالي",
+        "MINIMUM": "الحد الأدنى",
+        "ACTIVITY": "نشاط",
+        "MISSED": "فائت",
+        "NO_ACTIVITY": "لا نشاط",
+        "PAUSED": "متوقف مؤقتًا",
+        "UNPLANNED": "غير مخطط"
+      }
     }
   },
   "iconPicker": {

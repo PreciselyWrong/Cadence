@@ -15,6 +15,7 @@ import FacetGauge from '../Shared/ui/FacetGauge';
 import CadenceBadge from '../Shared/ui/CadenceBadge';
 import ConfirmDialog from '../Shared/ConfirmDialog';
 import HabitCalendar, { CalendarStatus } from './HabitCalendar';
+import HabitPatterns from './HabitPatterns';
 import HabitEditor from './HabitEditor';
 import EntryEditor from './EntryEditor';
 import PauseEditor from './PauseEditor';
@@ -501,6 +502,26 @@ const HabitDetails: React.FC = () => {
                     ))}
                 </dl>
             </section>
+
+            {kind !== 'abstinence' && kind !== 'limit' && (
+                <section aria-labelledby="patterns-title" className={card}>
+                    <h2
+                        id="patterns-title"
+                        className="mb-3 text-title-m text-surface-on"
+                    >
+                        {t('cadenceHabits.patterns.title', 'Patterns')}
+                    </h2>
+                    <HabitPatterns
+                        patterns={habit.stats.patterns}
+                        calendarDays={habit.stats.summary.calendarDays}
+                        color={
+                            habit.color_argb == null
+                                ? undefined
+                                : habitTint(habit)
+                        }
+                    />
+                </section>
+            )}
 
             {kind === 'abstinence' && (
                 <AbstinencePanel

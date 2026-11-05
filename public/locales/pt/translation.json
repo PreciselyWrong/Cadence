@@ -5446,6 +5446,26 @@
       "quick": "Botões rápidos: {{values}}",
       "reminders": "Lembretes: {{times}}",
       "title": "Meta e programação"
+    },
+    "patterns": {
+      "title": "Padrões",
+      "heatmap": "Últimos 365 dias",
+      "cellStatus": "{{date}}: {{status}}",
+      "yearNotEnough": "Ainda não há dias suficientes",
+      "year": "Nos últimos 12 meses: {{rate}} % ({{done}} de {{counted}} dias)",
+      "weekdays": "Por dia da semana",
+      "months": "Por mês",
+      "noRate": "{{name}}: ainda não há dias suficientes",
+      "rate": "{{name}}: {{rate}}",
+      "status": {
+        "IDEAL": "Ideal",
+        "MINIMUM": "Mínimo",
+        "ACTIVITY": "Atividade",
+        "MISSED": "Falhou",
+        "NO_ACTIVITY": "Sem atividade",
+        "PAUSED": "Pausado",
+        "UNPLANNED": "Não planejado"
+      }
     }
   },
   "iconPicker": {

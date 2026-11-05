@@ -5433,6 +5433,26 @@
       "quick": "빠른 버튼: {{values}}",
       "reminders": "알림: {{times}}",
       "title": "목표와 일정"
+    },
+    "patterns": {
+      "title": "패턴",
+      "heatmap": "최근 365일",
+      "cellStatus": "{{date}}: {{status}}",
+      "yearNotEnough": "아직 충분한 날이 없어요",
+      "year": "최근 12개월: {{rate}} % ({{counted}}일 중 {{done}}일)",
+      "weekdays": "요일별",
+      "months": "월별",
+      "noRate": "{{name}}: 아직 충분한 날이 없어요",
+      "rate": "{{name}}: {{rate}}",
+      "status": {
+        "IDEAL": "이상적",
+        "MINIMUM": "최소",
+        "ACTIVITY": "활동",
+        "MISSED": "놓침",
+        "NO_ACTIVITY": "활동 없음",
+        "PAUSED": "일시 중지",
+        "UNPLANNED": "계획 없음"
+      }
     }
   },
   "iconPicker": {
