@@ -47,6 +47,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -160,6 +161,7 @@ fun QuickAddSheet(
     var tagOverrides by remember { mutableStateOf(emptySet<String>()) }
     var pickingDate by remember { mutableStateOf(false) }
     val focus = remember { FocusRequester() }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
     var saving by remember { mutableStateOf(false) }
     var saveError by remember { mutableStateOf<String?>(null) }
@@ -231,7 +233,13 @@ fun QuickAddSheet(
         if (title.isEmpty() || saving) return
         when (target) {
             CaptureTarget.INBOX -> return launchSave { viewModel.captureIdea(title) }
-            CaptureTarget.NOTE -> return launchSave { onNoteCreated(viewModel.createNote(title)) }
+            // La fiche se retire avant que l'éditeur s'ouvre : il reçoit alors la fenêtre et le clavier.
+            CaptureTarget.NOTE -> return launchSave(keepOpen = true) {
+                val uid = viewModel.createNote(title)
+                sheetState.hide()
+                onNoteCreated(uid)
+                onDismiss()
+            }
             CaptureTarget.TASK -> Unit
         }
         val draft = TaskDraft(
@@ -318,6 +326,7 @@ fun QuickAddSheet(
         ),
         dismiss = { if (!saving) onDismiss() },
         modifier = modifier,
+        sheetState = sheetState,
     ) {
         Column(
             Modifier.fillMaxWidth().imePadding(),

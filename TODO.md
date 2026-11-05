@@ -29,6 +29,14 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
   - « Cocher une fois passé » par agenda : Android seulement, car le web n'a pas d'événements cochables. À reprendre si le web en gagne. Vérif : un événement terminé d'un agenda réglé apparaît fait.
 - Hors périmètre volontaire : limite de projets actifs (compteur seulement). V/E/M/D abandonné le 2026-11-01 : le planificateur Hermès arbitre ; valeurs et grille archivées dans la note Cadence « Archive V/E/M/D » et `~/Documents/cadence-archives/`.
 
+## Note de l'ajout rapide Android : focus et fermeture [cadence:c7e743d5-3c37-4ee1-812c-f2e134017ddc]
+
+Branche `fix/note-quickadd-focus-c7e743d5`.
+
+- [x] La fiche d'ajout se retire (animation `sheetState.hide()`) avant l'ouverture de l'éditeur de note.
+- [x] L'éditeur place le clavier dans le contenu quand la note a déjà un titre (`NoteFocus`, test `NoteFocusTest`), puis ouvre le clavier.
+- [ ] Vérifier sur le téléphone (aucun appareil, émulateur bloqué le 2026-11-05) : Tâches › + › Note, titre, Valider → la fiche disparaît, le curseur et le clavier sont dans le contenu.
+
 ## Next
 
 - Web : reprendre la passe de soustraction Android du 2026-11-02 (`docs/fork/ANDROID-UX-NOTES.md`) : Aujourd'hui sans bannière ni jauge sauf journée pleine, fin de journée en ligne après les tâches, un seul signal couleur par ligne, deux gestes par idée dans la Boîte, fiche terminée par sa case, Projets et Étiquettes en lignes sans « 0 », surfaces neutres. Vérif : captures avant/après à 390 px et en bureau.
