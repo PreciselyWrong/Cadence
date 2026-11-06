@@ -5550,7 +5550,8 @@
       "active": "Não descartados",
       "allStatuses": "Todos os status",
       "allTags": "Todas as etiquetas",
-      "allDomains": "Todos os sites"
+      "allDomains": "Todos os sites",
+      "allProjects": "Todos os projetos"
     },
     "sort": {
       "start": "Ordenar links ({{count}})",
@@ -5577,13 +5578,13 @@
       "to_evaluate": "Por avaliar"
     },
     "action": {
-      "attach": "Associar",
       "tested": "Por testar",
       "kept": "Manter",
       "parked": "Depois",
       "dropped": "Arquivar",
       "to_evaluate": "Por avaliar",
-      "task": "Tarefa"
+      "createTask": "Criar uma tarefa",
+      "project": "Projeto"
     },
     "lastCommit": "atualizado {{date}}",
     "fetching": "Lendo a página…",
@@ -5603,7 +5604,17 @@
       "button": "Importar marcadores",
       "result": "{{created}} adicionados, {{existing}} já existentes",
       "error": "Não foi possível importar os marcadores."
-    }
+    },
+    "more": "Mais ações",
+    "field": {
+      "title": "Título",
+      "url": "Endereço",
+      "tags": "Etiquetas"
+    },
+    "editTitle": "Editar o link",
+    "deleteTitle": "Eliminar este link?",
+    "deleteMessage": "Sai dos seus links definitivamente e não volta a ser obtido das tarefas e notas. Para o pôr de lado, escolha Arquivado.",
+    "deleteError": "Não foi possível eliminar o link."
   },
   "dailyBrief": {
     "sectionName": {

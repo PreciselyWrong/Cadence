@@ -8,23 +8,6 @@ export const LINK_KINDS: LinkKind[] = [
     'other',
 ];
 
-// The card actions, in reading order, and the status each one sets.
-export const LINK_ACTIONS: {
-    status: LinkStatus;
-    key: string;
-    fallback: string;
-}[] = [
-    {
-        status: 'to_evaluate',
-        key: 'links.action.to_evaluate',
-        fallback: 'To evaluate',
-    },
-    { status: 'tested', key: 'links.action.tested', fallback: 'To try' },
-    { status: 'kept', key: 'links.action.kept', fallback: 'Keep' },
-    { status: 'parked', key: 'links.action.parked', fallback: 'Later' },
-    { status: 'dropped', key: 'links.action.dropped', fallback: 'Archive' },
-];
-
 export const LINK_STATUSES: LinkStatus[] = [
     'new',
     'to_evaluate',
@@ -66,6 +49,7 @@ export interface LinkFilter {
     // 'active' hides dropped links: the default view stays calm.
     status: LinkStatus | 'active' | 'all';
     tag: string | 'all';
+    project: string | 'all';
     domain: string | 'all';
     sort: 'newest' | 'oldest';
 }
@@ -75,6 +59,7 @@ export const DEFAULT_LINK_FILTER: LinkFilter = {
     kind: 'all',
     status: 'active',
     tag: 'all',
+    project: 'all',
     domain: 'all',
     sort: 'newest',
 };
@@ -91,6 +76,7 @@ const haystack = (link: Link): string =>
             link.note,
             link.readme_excerpt,
             link.site_name,
+            link.project_name,
             ...link.tags.map((t) => t.name),
         ]
             .filter(Boolean)
@@ -109,6 +95,9 @@ export const filterLinks = (links: Link[], filter: LinkFilter): Link[] => {
             filter.status !== 'all' &&
             link.status !== filter.status
         ) {
+            return false;
+        }
+        if (filter.project !== 'all' && link.project_uid !== filter.project) {
             return false;
         }
         if (

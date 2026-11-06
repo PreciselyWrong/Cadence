@@ -12,6 +12,7 @@ enum class LinkDecision { KEEP, TASK, TEST, ATTACH, LATER, DROP }
 sealed interface TriageStep {
     data class CreateTask(val draft: TaskDraft) : TriageStep
     data class SetStatus(val linkUid: String, val status: LinkStatus) : TriageStep
+    data class SetProject(val linkUid: String, val projectUid: String?) : TriageStep
     data class SetReviewDate(val linkUid: String, val date: LocalDate) : TriageStep
     data class ProcessInbox(val entryUid: String) : TriageStep
 }
@@ -20,6 +21,7 @@ sealed interface TriageStep {
 interface TriageSink {
     suspend fun createTask(draft: TaskDraft)
     suspend fun setLinkStatus(uid: String, status: LinkStatus)
+    suspend fun setLinkProject(uid: String, projectUid: String?)
     suspend fun setReviewDate(uid: String, date: LocalDate)
     suspend fun processInboxItem(uid: String)
 }
@@ -49,15 +51,11 @@ object LinkTriage {
     /** « À tester » peut rester sans projet ; « Rattacher » exige d'en choisir un. */
     fun allowsNoProject(decision: LinkDecision): Boolean = decision == LinkDecision.TEST
 
-    /** Pastilles d'une carte de la galerie : Tâche, À tester, Rattacher, Reporter, Archiver. */
-    val GALLERY_DECISIONS = listOf(LinkDecision.TASK, LinkDecision.TEST, LinkDecision.ATTACH, LinkDecision.LATER, LinkDecision.DROP)
-
     /**
      * Ce que fait chaque décision. Le lien change toujours de statut ; l'idée [entryUid] qui le porte, s'il y en a
      * une encore ouverte, est marquée traitée (elle quitte l'Inbox, le lien reste dans la bibliothèque), en dernier
      * pour qu'une écriture qui échoue la laisse visible. « À tester » crée en plus la tâche [testTaskName] ;
-     * « Rattacher » crée dans le projet [projectUid] une tâche au nom du lien, qui garde l'adresse en note
-     * (un lien n'a pas de projet : c'est la tâche qui le range), et marque le lien gardé.
+     * « Rattacher » range le lien lui-même dans le projet [projectUid] et le marque gardé, sans tâche.
      */
     fun steps(
         decision: LinkDecision,
@@ -78,7 +76,7 @@ object LinkTriage {
                 add(TriageStep.SetStatus(link.uid, LinkStatus.TESTED))
             }
             LinkDecision.ATTACH -> {
-                add(TriageStep.CreateTask(TaskDraft(name = link.displayTitle, note = testTaskNote(link), projectUid = projectUid)))
+                add(TriageStep.SetProject(link.uid, projectUid))
                 add(TriageStep.SetStatus(link.uid, LinkStatus.KEPT))
             }
             LinkDecision.LATER -> {
@@ -102,6 +100,7 @@ object LinkTriage {
             when (step) {
                 is TriageStep.CreateTask -> sink.createTask(step.draft)
                 is TriageStep.SetStatus -> sink.setLinkStatus(step.linkUid, step.status)
+                is TriageStep.SetProject -> sink.setLinkProject(step.linkUid, step.projectUid)
                 is TriageStep.SetReviewDate -> sink.setReviewDate(step.linkUid, step.date)
                 is TriageStep.ProcessInbox -> sink.processInboxItem(step.entryUid)
             }

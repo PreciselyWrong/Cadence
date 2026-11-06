@@ -5507,7 +5507,8 @@
       "active": "Not dropped",
       "allStatuses": "All statuses",
       "allTags": "All tags",
-      "allDomains": "All sites"
+      "allDomains": "All sites",
+      "allProjects": "All projects"
     },
     "sort": {
       "done": "No link left to sort.",
@@ -5534,13 +5535,13 @@
       "to_evaluate": "To evaluate"
     },
     "action": {
-      "attach": "Attach",
       "tested": "To try",
       "kept": "Keep",
       "parked": "Later",
       "dropped": "Archive",
       "to_evaluate": "To evaluate",
-      "task": "Task"
+      "createTask": "Create a task",
+      "project": "Project"
     },
     "lastCommit": "updated {{date}}",
     "fetching": "Reading the page…",
@@ -5560,7 +5561,17 @@
       "button": "Import bookmarks",
       "result": "{{created}} added, {{existing}} already there",
       "error": "The bookmarks could not be imported."
-    }
+    },
+    "more": "More actions",
+    "field": {
+      "title": "Title",
+      "url": "Address",
+      "tags": "Tags"
+    },
+    "editTitle": "Edit the link",
+    "deleteTitle": "Delete this link?",
+    "deleteMessage": "It leaves your links for good, and is not taken again from your tasks and notes. To set it aside, choose Archived instead.",
+    "deleteError": "Could not delete the link."
   },
   "dailyBrief": {
     "sectionName": {

@@ -5546,7 +5546,8 @@
       "active": "Nicht verworfen",
       "allStatuses": "Alle Status",
       "allTags": "Alle Schlagwörter",
-      "allDomains": "Alle Websites"
+      "allDomains": "Alle Websites",
+      "allProjects": "Alle Projekte"
     },
     "sort": {
       "start": "Links sortieren ({{count}})",
@@ -5573,13 +5574,13 @@
       "to_evaluate": "Zu bewerten"
     },
     "action": {
-      "attach": "Zuordnen",
       "tested": "Ausprobieren",
       "kept": "Behalten",
       "parked": "Später",
       "dropped": "Archivieren",
       "to_evaluate": "Zu bewerten",
-      "task": "Aufgabe"
+      "createTask": "Aufgabe erstellen",
+      "project": "Projekt"
     },
     "lastCommit": "aktualisiert {{date}}",
     "fetching": "Seite wird gelesen…",
@@ -5599,7 +5600,17 @@
       "button": "Lesezeichen importieren",
       "result": "{{created}} hinzugefügt, {{existing}} schon vorhanden",
       "error": "Die Lesezeichen konnten nicht importiert werden."
-    }
+    },
+    "more": "Weitere Aktionen",
+    "field": {
+      "title": "Titel",
+      "url": "Adresse",
+      "tags": "Tags"
+    },
+    "editTitle": "Link bearbeiten",
+    "deleteTitle": "Diesen Link löschen?",
+    "deleteMessage": "Er verschwindet endgültig aus deinen Links und wird nicht erneut aus Aufgaben und Notizen übernommen. Um ihn nur beiseitezulegen, wähle Archiviert.",
+    "deleteError": "Der Link konnte nicht gelöscht werden."
   },
   "dailyBrief": {
     "sectionName": {

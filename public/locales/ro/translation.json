@@ -5555,7 +5555,8 @@
       "active": "Nearuncate",
       "allStatuses": "Toate stările",
       "allTags": "Toate etichetele",
-      "allDomains": "Toate site-urile"
+      "allDomains": "Toate site-urile",
+      "allProjects": "Toate proiectele"
     },
     "sort": {
       "start": "Sortează linkurile ({{count}})",
@@ -5582,13 +5583,13 @@
       "to_evaluate": "De evaluat"
     },
     "action": {
-      "attach": "Atașează",
       "tested": "De testat",
       "kept": "Păstrează",
       "parked": "Mai târziu",
       "dropped": "Arhivează",
       "to_evaluate": "De evaluat",
-      "task": "Sarcină"
+      "createTask": "Creează o sarcină",
+      "project": "Proiect"
     },
     "lastCommit": "actualizat {{date}}",
     "fetching": "Se citește pagina…",
@@ -5608,7 +5609,17 @@
       "button": "Importă marcaje",
       "result": "{{created}} adăugate, {{existing}} existau deja",
       "error": "Marcajele nu au putut fi importate."
-    }
+    },
+    "more": "Mai multe acțiuni",
+    "field": {
+      "title": "Titlu",
+      "url": "Adresă",
+      "tags": "Etichete"
+    },
+    "editTitle": "Editează linkul",
+    "deleteTitle": "Ștergi acest link?",
+    "deleteMessage": "Dispare definitiv din linkurile tale și nu mai este preluat din sarcini și note. Pentru a-l pune deoparte, alege Arhivat.",
+    "deleteError": "Linkul nu a putut fi șters."
   },
   "dailyBrief": {
     "sectionName": {

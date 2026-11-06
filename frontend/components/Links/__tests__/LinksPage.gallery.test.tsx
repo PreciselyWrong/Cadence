@@ -44,6 +44,8 @@ const link = (uid: string, extra: Partial<Link> = {}): Link => ({
     note: null,
     status: 'new',
     review_at: null,
+    project_uid: null,
+    project_name: null,
     tags: [],
     source_type: 'note',
     source_uid: 'n1',

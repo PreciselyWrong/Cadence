@@ -46,6 +46,19 @@ async function captureFrom(
     ];
     if (normalized.length === 0) return [];
 
+    // A deleted page stays out, unless the user shares it again on purpose.
+    const linksRepository = require('./repository');
+    const shared = fresh && type === 'inbox_item';
+    const excluded = await linksRepository.excludedUrls(
+        userId,
+        normalized.map(([n]) => n)
+    );
+    if (shared) {
+        await Promise.all(
+            [...excluded].map((url) => linksRepository.lift(userId, url))
+        );
+    }
+
     const existing = await Link.findAll({
         where: {
             user_id: userId,
@@ -56,6 +69,7 @@ async function captureFrom(
     const touched = [];
 
     for (const [url, written] of normalized) {
+        if (!shared && excluded.has(url)) continue;
         const found = byUrl.get(url);
         if (found) {
             if (

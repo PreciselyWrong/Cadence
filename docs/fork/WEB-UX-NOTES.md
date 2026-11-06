@@ -519,3 +519,9 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Problème** : le client Linux prévenait 24 h avant une tâche à heure fixe (« due dans 23 heures »), sans rien dire au bon moment.
 - **Décision** : une tâche à heure fixe sonne à son heure, moins l'avance choisie ; plus d'alerte « bientôt due » pour elle. Carte **Tâches à heure fixe** dans Profil › Notifications, enregistrée aussitôt (`/api/notifications/timed-tasks`).
 - **Android à reprendre** : fait dans la même étape : Réglages › Notifications lit et écrit le même réglage.
+
+### 2026-11-06 — Liens : gérer un lien, un seul menu de statut
+
+- **Problème** : impossible de supprimer un lien, d'en corriger le titre ou l'adresse, ou de le ranger dans un projet ; la rangée Tester, Garder, Plus tard, Jeter, Attach mêlait statuts et actions sans le dire.
+- **Décision** : un menu de statut et un menu ⋯ (Modifier, Créer une tâche, Supprimer), aussi en galerie ; une fiche pour le titre, l'adresse, le projet, la note et les étiquettes ; un vrai projet sur le lien, avec un filtre. « Attach » disparaît.
+- **Android à reprendre** : livré dans la même étape (1.12.3).

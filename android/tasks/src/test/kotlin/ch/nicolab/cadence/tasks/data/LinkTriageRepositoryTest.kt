@@ -87,6 +87,50 @@ class LinkTriageRepositoryTest {
     }
 
     @Test
+    fun `a new title and project are written and queued, an empty title goes back to the page`() = runBlocking {
+        database.linkDao().upsert(link("l1"))
+
+        repository.setLinkTitle("l1", "  Mon nom ")
+        repository.setLinkProject("l1", "p1")
+
+        assertEquals("Mon nom", database.linkDao().get("l1")?.title)
+        assertEquals("p1", database.linkDao().get("l1")?.projectUid)
+        assertEquals(listOf(setOf("title"), setOf("project_uid")), pending().map { it.third.keys })
+
+        repository.setLinkTitle("l1", "  ")
+        assertEquals(null, database.linkDao().get("l1")?.title)
+    }
+
+    @Test
+    fun `a new address goes through a deferred call, the same one changes nothing`() = runBlocking {
+        database.linkDao().upsert(link("l1"))
+
+        repository.setLinkUrl("l1", "https://a.io/x", "Adresse")
+        assertTrue(database.deferredCallDao().all().isEmpty())
+
+        repository.setLinkUrl("l1", " https://b.io/y ", "Adresse")
+        assertEquals("https://b.io/y", database.linkDao().get("l1")?.url)
+        val call = database.deferredCallDao().all().single()
+        assertEquals("PATCH", call.method)
+        assertEquals("/api/v1/links/l1", call.path)
+        assertTrue(pending().isEmpty())
+    }
+
+    @Test
+    fun `deleting removes the row, queues the delete and drops a waiting address`() = runBlocking {
+        database.linkDao().upsert(link("l1"))
+        repository.setLinkUrl("l1", "https://b.io/y", "Adresse")
+
+        repository.deleteLink("l1")
+
+        assertEquals(null, database.linkDao().get("l1"))
+        assertTrue(database.deferredCallDao().all().isEmpty())
+        val op = database.outboxDao().pending(100).single()
+        assertEquals("link", op.entity)
+        assertEquals("l1", op.uid)
+    }
+
+    @Test
     fun `tags of an unknown link write nothing`() = runBlocking {
         repository.setLinkTags("ghost", listOf("t1"))
 

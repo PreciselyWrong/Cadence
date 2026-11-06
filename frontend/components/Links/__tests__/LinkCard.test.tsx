@@ -9,11 +9,13 @@ jest.mock('react-i18next', () => ({
     useTranslation: () => ({
         t: (
             _key: string,
-            fallback: string,
+            fallback?: string,
             options?: Record<string, unknown>
         ) =>
-            fallback.replace(/\{\{(\w+)\}\}/g, (_match, name: string) =>
-                String(options?.[name] ?? `{{${name}}}`)
+            (fallback ?? _key).replace(
+                /\{\{(\w+)\}\}/g,
+                (_match, name: string) =>
+                    String(options?.[name] ?? `{{${name}}}`)
             ),
         i18n: { language: 'en' },
     }),
@@ -35,6 +37,8 @@ const link: Link = {
     note: null,
     status: 'new',
     review_at: null,
+    project_uid: null,
+    project_name: null,
     tags: [{ uid: 't', name: 'dev', color: null }],
     source_type: 'task',
     source_uid: 'task1',
@@ -51,6 +55,7 @@ const renderCard = (overrides: Partial<Link> = {}) => {
             <LinkCard
                 link={{ ...link, ...overrides }}
                 onChange={onChange}
+                onDelete={jest.fn()}
                 availableTags={[]}
             />
         </MemoryRouter>
@@ -87,18 +92,19 @@ describe('LinkCard', () => {
         );
     });
 
-    it('sets a status', () => {
-        const onChange = renderCard();
-        fireEvent.click(screen.getByRole('button', { name: 'Keep' }));
+    it('sets a status from one menu', () => {
+        const onChange = renderCard({ status: 'parked' });
+        const status = screen.getByRole('combobox', { name: 'Status' });
+        expect(status).toHaveValue('parked');
+        fireEvent.change(status, { target: { value: 'kept' } });
         expect(onChange).toHaveBeenCalledWith({ status: 'kept' });
     });
 
-    it('unsets the active status', () => {
-        const onChange = renderCard({ status: 'parked' });
-        const later = screen.getByRole('button', { name: 'Later' });
-        expect(later).toHaveAttribute('aria-pressed', 'true');
-        fireEvent.click(later);
-        expect(onChange).toHaveBeenCalledWith({ status: 'new' });
+    it('offers no row of status buttons', () => {
+        renderCard();
+        for (const name of ['Keep', 'Later', 'Archive', 'Attach', 'Task']) {
+            expect(screen.queryByRole('button', { name })).toBeNull();
+        }
     });
 
     it('opens the link in a new tab and offers the source', () => {
@@ -123,35 +129,80 @@ describe('LinkCard', () => {
         expect(screen.queryByText(/Review on/)).not.toBeInTheDocument();
     });
 
-    it('attaches the link to a chosen project', async () => {
-        const onAttach = jest.fn().mockResolvedValue(undefined);
+    const openMenuItem = (name: string) => {
+        fireEvent.click(screen.getByRole('button', { name: 'More actions' }));
+        fireEvent.click(screen.getByRole('menuitem', { name }));
+    };
+
+    const renderWithActions = () => {
+        const onChange = jest.fn().mockResolvedValue(undefined);
+        const onDelete = jest.fn().mockResolvedValue(undefined);
         render(
             <MemoryRouter>
                 <LinkCard
                     link={link}
-                    onChange={jest.fn()}
+                    onChange={onChange}
+                    onDelete={onDelete}
                     availableTags={[]}
                     projects={[{ uid: 'p1', name: 'Tooling' } as never]}
-                    onAttach={onAttach}
                 />
             </MemoryRouter>
         );
+        return { onChange, onDelete };
+    };
 
-        fireEvent.click(screen.getByRole('button', { name: 'Attach' }));
+    it('edits the title, address and project, sending only what changed', async () => {
+        const { onChange } = renderWithActions();
+        openMenuItem('Edit');
+        fireEvent.change(screen.getByLabelText('Title'), {
+            target: { value: 'My tool' },
+        });
+        fireEvent.change(screen.getByLabelText('Address'), {
+            target: { value: 'https://example.com/tool' },
+        });
         fireEvent.change(screen.getByLabelText('Project'), {
             target: { value: 'p1' },
         });
-        fireEvent.click(screen.getByRole('button', { name: 'Create task' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Save' }));
 
-        await waitFor(() => expect(onAttach).toHaveBeenCalledWith('p1'));
         await waitFor(() =>
-            expect(screen.queryByLabelText('Project')).not.toBeInTheDocument()
+            expect(onChange).toHaveBeenCalledWith({
+                title: 'My tool',
+                url: 'https://example.com/tool',
+                project_uid: 'p1',
+            })
+        );
+        await waitFor(() =>
+            expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
         );
     });
 
-    it('offers no Attach without projects', () => {
-        renderCard();
+    it('keeps the form open when the server refuses', async () => {
+        const { onChange } = renderWithActions();
+        onChange.mockRejectedValueOnce(new Error('taken'));
+        openMenuItem('Edit');
+        fireEvent.change(screen.getByLabelText('Title'), {
+            target: { value: 'My tool' },
+        });
+        fireEvent.click(screen.getByRole('button', { name: 'Save' }));
 
-        expect(screen.queryByRole('button', { name: 'Attach' })).toBeNull();
+        await waitFor(() => expect(onChange).toHaveBeenCalled());
+        await waitFor(() =>
+            expect(screen.getByRole('button', { name: 'Save' })).toBeEnabled()
+        );
+        expect(screen.getByLabelText('Title')).toHaveValue('My tool');
+    });
+
+    it('deletes only after confirming', () => {
+        const { onDelete } = renderWithActions();
+        openMenuItem('Delete');
+        expect(onDelete).not.toHaveBeenCalled();
+        fireEvent.click(screen.getByTestId('confirm-dialog-confirm'));
+        expect(onDelete).toHaveBeenCalledTimes(1);
+    });
+
+    it('names the project of the link', () => {
+        renderCard({ project_uid: 'p1', project_name: 'Tooling' });
+        expect(screen.getByText('Tooling')).toBeInTheDocument();
     });
 });

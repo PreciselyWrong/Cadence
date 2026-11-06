@@ -72,6 +72,18 @@ interface TaskRepository {
     /** Étiquettes d'un lien (remplace l'ensemble). Sans effet si le lien est inconnu. */
     suspend fun setLinkTags(uid: String, tagUids: List<String>)
 
+    /** Titre d'un lien ; vide ou null le rend à celui de la page. */
+    suspend fun setLinkTitle(uid: String, title: String?)
+
+    /** Projet d'un lien ; null l'en sort. */
+    suspend fun setLinkProject(uid: String, projectUid: String?)
+
+    /** Nouvelle adresse : le serveur la valide et relit la page, par un appel différé nommé [label] s'il est refusé. */
+    suspend fun setLinkUrl(uid: String, url: String, label: String)
+
+    /** Supprime le lien pour de bon ; son adresse n'est plus reprise des tâches et des notes. */
+    suspend fun deleteLink(uid: String)
+
     /** Jour où revoir un lien mis de côté ; null l'efface. */
     suspend fun setLinkReviewDate(uid: String, date: java.time.LocalDate?)
     fun observeInbox(): Flow<List<InboxEntry>>

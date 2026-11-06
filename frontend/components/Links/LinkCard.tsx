@@ -5,28 +5,26 @@ import {
     ArrowTopRightOnSquareIcon,
     ArrowUturnLeftIcon,
     StarIcon,
-    TagIcon,
 } from '@heroicons/react/24/outline';
-import { Link, LinkStatus } from '../../entities/Link';
+import { Link } from '../../entities/Link';
 import { Tag } from '../../entities/Tag';
-import { LINK_ACTIONS, sourcePath } from '../../utils/linkFilters';
+import { sourcePath } from '../../utils/linkFilters';
 import { toIntlLocale } from '../../utils/intlLocale';
 import { LinkChanges } from '../../utils/linksService';
-import TagInput from '../Tag/TagInput';
 import { Project } from '../../entities/Project';
 import LinkNote from './LinkNote';
-import LinkProjectPicker from './LinkProjectPicker';
+import LinkActions from './LinkActions';
 
 interface LinkCardProps {
     link: Link;
     onChange: (changes: LinkChanges) => Promise<unknown>;
+    // The inline note; its failure is only reported.
+    onNote?: (changes: LinkChanges) => Promise<unknown>;
     availableTags: Tag[];
-    // Attach files a task named after the link in a project (no button
-    // without projects).
     projects?: Project[];
-    onAttach?: (projectUid: string) => Promise<unknown>;
     // One tap: a task that keeps the link's address.
     onTask?: () => Promise<unknown>;
+    onDelete: () => Promise<unknown>;
 }
 
 const compactCount = (value: number, locale: string): string =>
@@ -82,61 +80,24 @@ export const GithubStats: React.FC<{ link: Link }> = ({ link }) => {
     );
 };
 
-const statusLabel = (
-    t: (key: string, fallback: string) => string,
-    status: LinkStatus
-): string | null => {
-    switch (status) {
-        case 'new':
-            return t('links.status.new', 'To read');
-        case 'to_evaluate':
-            return t('links.status.to_evaluate', 'To evaluate');
-        case 'tested':
-            return t('links.status.tested', 'To try');
-        case 'kept':
-            return t('links.status.kept', 'Kept');
-        case 'parked':
-            return t('links.status.parked', 'Later');
-        case 'dropped':
-            return t('links.status.dropped', 'Archived');
-        default:
-            return null;
-    }
-};
-
 // One saved link: what it is (title, two lines of description, domain,
 // kind, GitHub stats, README start), what the user said about it (note,
 // tags) and what to do with it (status, open, go to where it came from).
 const LinkCard: React.FC<LinkCardProps> = ({
     link,
     onChange,
+    onNote,
     availableTags,
     projects = [],
-    onAttach,
     onTask,
+    onDelete,
 }) => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
-    const [editingTags, setEditingTags] = useState(false);
-    const [attaching, setAttaching] = useState(false);
-    const [busy, setBusy] = useState(false);
-    const canAttach = Boolean(onAttach) && projects.length > 0;
-
-    const attach = async (projectUid: string) => {
-        if (!onAttach) return;
-        setBusy(true);
-        try {
-            await onAttach(projectUid);
-            setAttaching(false);
-        } finally {
-            setBusy(false);
-        }
-    };
     const [imageFailed, setImageFailed] = useState(false);
     const title = link.title || link.domain || link.url;
     const description = link.description || link.readme_excerpt;
     const source = sourcePath(link);
-    const status = statusLabel(t, link.status);
 
     return (
         <article
@@ -177,11 +138,6 @@ const LinkCard: React.FC<LinkCardProps> = ({
                 <span className="truncate">{link.domain ?? link.url}</span>
                 <LinkKindBadge kind={link.kind} />
                 <GithubStats link={link} />
-                {status && (
-                    <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-medium text-blue-700 dark:bg-blue-400/10 dark:text-blue-300">
-                        {status}
-                    </span>
-                )}
                 {link.status === 'parked' && link.review_at && (
                     <span>
                         {t('links.reviewOn', 'Review on {{date}}', {
@@ -192,6 +148,11 @@ const LinkCard: React.FC<LinkCardProps> = ({
                                 month: 'short',
                             }),
                         })}
+                    </span>
+                )}
+                {link.project_name && (
+                    <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[11px] text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                        {link.project_name}
                     </span>
                 )}
                 {link.fetch_status === 'pending' && (
@@ -207,90 +168,34 @@ const LinkCard: React.FC<LinkCardProps> = ({
                     </p>
                 )}
 
-            <LinkNote note={link.note} onSave={(note) => onChange({ note })} />
+            <LinkNote
+                note={link.note}
+                onSave={(note) => (onNote ?? onChange)({ note })}
+            />
 
-            {editingTags ? (
-                <div>
-                    <TagInput
-                        initialTags={link.tags.map((tag) => tag.name)}
-                        onTagsChange={(tags) => void onChange({ tags })}
-                        availableTags={availableTags}
-                    />
-                    <button
-                        type="button"
-                        onClick={() => setEditingTags(false)}
-                        className="mt-1 text-[12px] text-gray-500 hover:underline dark:text-gray-400"
-                    >
-                        {t('common.done', 'Done')}
-                    </button>
+            {link.tags.length > 0 && (
+                <div className="flex flex-wrap gap-1">
+                    {link.tags.map((tag) => (
+                        <span
+                            key={tag.uid}
+                            className="rounded-full bg-gray-100 px-2 py-0.5 text-[11px] text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                        >
+                            #{tag.name}
+                        </span>
+                    ))}
                 </div>
-            ) : (
-                link.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1">
-                        {link.tags.map((tag) => (
-                            <span
-                                key={tag.uid}
-                                className="rounded-full bg-gray-100 px-2 py-0.5 text-[11px] text-gray-700 dark:bg-gray-800 dark:text-gray-300"
-                            >
-                                #{tag.name}
-                            </span>
-                        ))}
-                    </div>
-                )
             )}
 
             <div className="mt-auto flex flex-wrap items-center gap-1 pt-1">
-                {LINK_ACTIONS.map((action) => {
-                    const active = link.status === action.status;
-                    return (
-                        <button
-                            key={action.status}
-                            type="button"
-                            aria-pressed={active}
-                            onClick={() =>
-                                void onChange({
-                                    status: active ? 'new' : action.status,
-                                })
-                            }
-                            className={`min-h-[32px] rounded-full px-3 text-[12px] transition-colors ${
-                                active
-                                    ? 'bg-blue-600 text-white dark:bg-blue-500'
-                                    : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
-                            }`}
-                        >
-                            {t(action.key, action.fallback)}
-                        </button>
-                    );
-                })}
-                {onTask && (
-                    <button
-                        type="button"
-                        onClick={() => void onTask()}
-                        className="min-h-[32px] rounded-full px-3 text-[12px] font-medium text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-                    >
-                        {t('links.action.task', 'Task')}
-                    </button>
-                )}
-                {canAttach && (
-                    <button
-                        type="button"
-                        aria-expanded={attaching}
-                        onClick={() => setAttaching((open) => !open)}
-                        className="min-h-[32px] rounded-full px-3 text-[12px] text-gray-600 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-                    >
-                        {t('links.action.attach', 'Attach')}
-                    </button>
-                )}
+                <LinkActions
+                    link={link}
+                    projects={projects}
+                    availableTags={availableTags}
+                    onChange={onChange}
+                    onTask={onTask}
+                    onDelete={onDelete}
+                />
                 <span className="ml-auto flex items-center">
-                    <button
-                        type="button"
-                        onClick={() => setEditingTags((v) => !v)}
-                        className="flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
-                        aria-label={t('links.editTags', 'Edit tags')}
-                        title={t('links.editTags', 'Edit tags')}
-                    >
-                        <TagIcon className="h-4 w-4" />
-                    </button>
                     {source && (
                         <button
                             type="button"
@@ -320,15 +225,6 @@ const LinkCard: React.FC<LinkCardProps> = ({
                     </a>
                 </span>
             </div>
-            {attaching && canAttach && (
-                <LinkProjectPicker
-                    id={`link-attach-project-${link.uid}`}
-                    projects={projects}
-                    allowNone={false}
-                    busy={busy}
-                    onConfirm={(projectUid) => void attach(projectUid)}
-                />
-            )}
         </article>
     );
 };

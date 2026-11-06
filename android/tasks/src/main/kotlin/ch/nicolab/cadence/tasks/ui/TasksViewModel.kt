@@ -334,6 +334,8 @@ internal class TasksViewModel(
 
         override suspend fun setLinkStatus(uid: String, status: LinkStatus) = repository.setLinkStatus(uid, status)
 
+        override suspend fun setLinkProject(uid: String, projectUid: String?) = repository.setLinkProject(uid, projectUid)
+
         override suspend fun setReviewDate(uid: String, date: LocalDate) = repository.setLinkReviewDate(uid, date)
 
         override suspend fun processInboxItem(uid: String) = repository.processInboxItem(uid)

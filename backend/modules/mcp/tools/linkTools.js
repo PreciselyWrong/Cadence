@@ -13,8 +13,8 @@ const text = (payload) => ({
 });
 
 // Links are found by the server in inbox items, tasks and notes, with their
-// page metadata. An assistant reads them and proposes: it may write the
-// note, the tags and the status, never the url or the metadata.
+// page metadata. An assistant reads them and proposes: it may write the title,
+// the project, the note, the tags and the status, never the metadata.
 function registerLinkTools(server, context, tools) {
     tools.push({
         name: 'list_links',
@@ -177,11 +177,24 @@ function registerLinkTools(server, context, tools) {
     tools.push({
         name: 'update_link',
         description:
-            'Update the note, tags, status or review day of a saved link. tags replaces the whole set (tag names; nested tags as paths like "dev/tools"). Only the fields given change.',
+            'Update the title, address, project, note, tags, status or review day of a saved link. tags replaces the whole set (tag names; nested tags as paths like "dev/tools"). Only the fields given change.',
         inputSchema: {
             type: 'object',
             properties: {
                 uid: { type: 'string', description: 'Link UID' },
+                title: {
+                    type: ['string', 'null'],
+                    description: 'Title kept over the page title',
+                },
+                url: {
+                    type: 'string',
+                    description:
+                        'New address; the page is read again. Refused if another link has it',
+                },
+                project_uid: {
+                    type: ['string', 'null'],
+                    description: 'Project of the link; null takes it out',
+                },
                 note: {
                     type: ['string', 'null'],
                     description:
@@ -208,6 +221,9 @@ function registerLinkTools(server, context, tools) {
         },
         handler: async (params) => {
             const body = {};
+            for (const field of ['title', 'url', 'project_uid']) {
+                if (field in params) body[field] = params[field];
+            }
             if ('note' in params) body.note = params.note;
             if ('status' in params) body.status = params.status;
             if ('review_at' in params) body.review_at = params.review_at;
@@ -215,6 +231,21 @@ function registerLinkTools(server, context, tools) {
             const link = await links.update(context.userId, params.uid, body);
             return text({ link });
         },
+    });
+
+    tools.push({
+        name: 'delete_link',
+        description:
+            'Permanently delete a saved link. Its address is no longer captured from tasks and notes. Only do this when the user asks: to set a link aside, use update_link with status dropped.',
+        inputSchema: {
+            type: 'object',
+            properties: {
+                uid: { type: 'string', description: 'Link UID' },
+            },
+            required: ['uid'],
+        },
+        handler: async (params) =>
+            text(await links.remove(context.userId, params.uid)),
     });
 }
 

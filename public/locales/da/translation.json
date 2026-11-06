@@ -5537,7 +5537,8 @@
       "active": "Ikke kasseret",
       "allStatuses": "Alle statusser",
       "allTags": "Alle mærker",
-      "allDomains": "Alle websteder"
+      "allDomains": "Alle websteder",
+      "allProjects": "Alle projekter"
     },
     "sort": {
       "start": "Sortér links ({{count}})",
@@ -5564,13 +5565,13 @@
       "to_evaluate": "At vurdere"
     },
     "action": {
-      "attach": "Tilknyt",
       "tested": "At teste",
       "kept": "Behold",
       "parked": "Senere",
       "dropped": "Arkivér",
       "to_evaluate": "At vurdere",
-      "task": "Opgave"
+      "createTask": "Opret en opgave",
+      "project": "Projekt"
     },
     "lastCommit": "opdateret {{date}}",
     "fetching": "Læser siden…",
@@ -5590,7 +5591,17 @@
       "button": "Importér bogmærker",
       "result": "{{created}} tilføjet, {{existing}} fandtes allerede",
       "error": "Bogmærkerne kunne ikke importeres."
-    }
+    },
+    "more": "Flere handlinger",
+    "field": {
+      "title": "Titel",
+      "url": "Adresse",
+      "tags": "Etiketter"
+    },
+    "editTitle": "Rediger linket",
+    "deleteTitle": "Slet dette link?",
+    "deleteMessage": "Det forsvinder for altid fra dine links og hentes ikke igen fra opgaver og noter. Vælg Arkiveret for at lægge det til side.",
+    "deleteError": "Linket kunne ikke slettes."
   },
   "dailyBrief": {
     "sectionName": {

@@ -209,6 +209,43 @@ internal class RoomTaskRepository(
         writeLink(uid, "tag_uids" to jsonArray(tags)) { it.copy(tagUidsJson = jsonArray(tags).toString()) }
     }
 
+    override suspend fun setLinkTitle(uid: String, title: String?) {
+        val value = title?.trim()?.ifEmpty { null }
+        writeLink(uid, "title" to jsonString(value)) { it.copy(title = value) }
+    }
+
+    override suspend fun setLinkProject(uid: String, projectUid: String?) {
+        writeLink(uid, "project_uid" to jsonString(projectUid)) { it.copy(projectUid = projectUid) }
+    }
+
+    override suspend fun setLinkUrl(uid: String, url: String, label: String) {
+        val value = url.trim()
+        val existing = database.linkDao().get(uid) ?: return
+        if (value == existing.url) return
+        database.linkDao().upsert(existing.copy(url = value, fetchStatus = "pending"))
+        defer(
+            DeferredCall(
+                key = linkUrlCallKey(uid),
+                method = "PATCH",
+                path = "/api/v1/links/$uid",
+                body = JsonObject(mapOf("url" to JsonPrimitive(value))),
+                label = label,
+            ),
+        )
+    }
+
+    override suspend fun deleteLink(uid: String) {
+        val clock = hlc.now()
+        database.withTransaction {
+            database.linkDao().delete(uid)
+            database.deferredCallDao().delete(linkUrlCallKey(uid))
+            outbox.insert(LocalOps.delete("link", uid, clock, nowMs()))
+        }
+        afterLocalWrite()
+    }
+
+    private fun linkUrlCallKey(uid: String) = "link-url:$uid"
+
     private suspend fun writeLink(uid: String, field: Pair<String, JsonElement>, change: (LinkEntity) -> LinkEntity) {
         val clock = hlc.now()
         val written = database.withTransaction {

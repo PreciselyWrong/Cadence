@@ -28,6 +28,8 @@ import androidx.compose.material.icons.automirrored.outlined.ViewList
 import androidx.compose.material.icons.outlined.GridView
 import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
 import ch.nicolab.cadence.tasks.model.LinkDecision
+import ch.nicolab.cadence.tasks.model.LinkEdit
+import ch.nicolab.cadence.tasks.model.ProjectChoices
 import ch.nicolab.cadence.tasks.model.LinkTriage
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
@@ -116,6 +118,24 @@ internal class LinksViewModel(application: Application) : AndroidViewModel(appli
     fun setStatus(uid: String, status: LinkStatus) = viewModelScope.launch { repository.setLinkStatus(uid, status) }
     fun setTags(uid: String, tagUids: List<String>) = viewModelScope.launch { repository.setLinkTags(uid, tagUids) }
 
+    /** Comme « Plus tard » ailleurs : un lien mis de côté revient à une date. */
+    fun chooseStatus(uid: String, status: LinkStatus) = viewModelScope.launch {
+        repository.setLinkStatus(uid, status)
+        if (status == LinkStatus.PARKED) {
+            repository.setLinkReviewDate(uid, LocalDate.now().plusDays(LinkTriage.LATER_DAYS))
+        }
+    }
+
+    /** Écrit seulement ce qui a changé : une adresse inchangée ne fait pas relire la page. */
+    fun edit(link: LinkItem, edit: LinkEdit) = viewModelScope.launch {
+        if (edit.title.trim() != link.title.orEmpty()) repository.setLinkTitle(link.uid, edit.title)
+        if (edit.note.trim() != link.note.orEmpty()) repository.setLinkNote(link.uid, edit.note)
+        if (edit.projectUid != link.projectUid) repository.setLinkProject(link.uid, edit.projectUid)
+        repository.setLinkUrl(link.uid, edit.url, getApplication<Application>().getString(R.string.links_edit_url_call, link.displayTitle))
+    }
+
+    fun delete(uid: String) = viewModelScope.launch { repository.deleteLink(uid) }
+
     val tags: StateFlow<List<TagItem>> = repository.observeTags()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
@@ -126,14 +146,6 @@ internal class LinksViewModel(application: Application) : AndroidViewModel(appli
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
 }
-
-private val ACTIONS = listOf(
-    LinkStatus.TO_EVALUATE to R.string.links_action_to_evaluate,
-    LinkStatus.TESTED to R.string.links_action_tested,
-    LinkStatus.KEPT to R.string.links_action_kept,
-    LinkStatus.PARKED to R.string.links_action_parked,
-    LinkStatus.DROPPED to R.string.links_action_dropped,
-)
 
 /**
  * Écran Liens, ouvert depuis Listes ou l'Inbox : tous les liens enregistrés, lisibles hors ligne, en galerie par thème,
@@ -151,10 +163,12 @@ internal fun LinksScreen(tasks: TasksViewModel, onBack: () -> Unit, onOpenSource
     val context = LocalContext.current
     val layouts = remember(context) { LayoutStore(context) }
     var gallery by rememberSaveable { mutableStateOf(layouts.isLinksGallery()) }
-    var picking by remember { mutableStateOf<Pair<LinkItem, LinkDecision>?>(null) }
-    val decide: (LinkItem, LinkDecision, String?) -> Unit = { link, decision, projectUid ->
-        tasks.decideLink(LinkTriage.openEntry(link, inbox, every), link, decision, projectUid, maskLink = true)
+    val createTask: (LinkItem) -> Unit = { link ->
+        tasks.decideLink(LinkTriage.openEntry(link, inbox, every), link, LinkDecision.TASK, null, maskLink = false)
     }
+    val projects by tasks.projects.collectAsStateWithLifecycle()
+    var editingLink by remember { mutableStateOf<LinkItem?>(null) }
+    var deleting by remember { mutableStateOf<LinkItem?>(null) }
     val total by viewModel.total.collectAsStateWithLifecycle()
     val filter by viewModel.filter.collectAsStateWithLifecycle()
     val tags by viewModel.tags.collectAsStateWithLifecycle()
@@ -196,8 +210,8 @@ internal fun LinksScreen(tasks: TasksViewModel, onBack: () -> Unit, onOpenSource
             ) {
                 ChoiceChip(
                     label = stringResource(R.string.links_filter_all_kinds),
-                    selected = filter.kind == null && filter.status == null && filter.tagUid == null,
-                    onClick = { viewModel.filter.value = filter.copy(kind = null, status = null, tagUid = null) },
+                    selected = filter.kind == null && filter.status == null && filter.tagUid == null && filter.projectUid == null,
+                    onClick = { viewModel.filter.value = filter.copy(kind = null, status = null, tagUid = null, projectUid = null) },
                 )
                 LinkKind.entries.filter { it != LinkKind.OTHER }.forEach { kind ->
                     ChoiceChip(
@@ -247,6 +261,27 @@ internal fun LinksScreen(tasks: TasksViewModel, onBack: () -> Unit, onOpenSource
                     }
                 }
             }
+            val linkProjects = remember(every, projects) {
+                val used = every.mapNotNullTo(HashSet()) { it.projectUid }
+                projects.filter { it.uid in used }
+            }
+            if (linkProjects.isNotEmpty()) {
+                Row(
+                    Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = Space.gutter),
+                    horizontalArrangement = Arrangement.spacedBy(Space.sm),
+                ) {
+                    linkProjects.forEach { project ->
+                        ChoiceChip(
+                            label = project.name,
+                            selected = filter.projectUid == project.uid,
+                            onClick = {
+                                viewModel.filter.value =
+                                    filter.copy(projectUid = if (filter.projectUid == project.uid) null else project.uid)
+                            },
+                        )
+                    }
+                }
+            }
             if (gallery) {
                 LazyVerticalStaggeredGrid(
                     columns = StaggeredGridCells.Adaptive(Size.galleryCell),
@@ -272,13 +307,11 @@ internal fun LinksScreen(tasks: TasksViewModel, onBack: () -> Unit, onOpenSource
                         gridItems(theme.links, key = { it.uid }) { link ->
                             LinkGalleryCard(
                                 link = link,
-                                onDecide = { decision ->
-                                    if (decision == LinkDecision.TEST || decision == LinkDecision.ATTACH) {
-                                        picking = link to decision
-                                    } else {
-                                        decide(link, decision, null)
-                                    }
-                                },
+                                projectName = projects.firstOrNull { it.uid == link.projectUid }?.name,
+                                onStatus = { viewModel.chooseStatus(link.uid, it) },
+                                onEdit = { editingLink = link },
+                                onTask = { createTask(link) },
+                                onDelete = { deleting = link },
                             )
                         }
                     }
@@ -300,23 +333,38 @@ internal fun LinksScreen(tasks: TasksViewModel, onBack: () -> Unit, onOpenSource
                             onTags = { viewModel.setTags(link.uid, it) },
                             onEditNote = { editing = link },
                             onOpenSource = { link.source?.let(onOpenSource) },
-                            onStatus = { status -> viewModel.setStatus(link.uid, if (link.status == status) LinkStatus.NEW else status) },
+                            projectName = projects.firstOrNull { it.uid == link.projectUid }?.name,
+                            onStatus = { viewModel.chooseStatus(link.uid, it) },
+                            onEdit = { editingLink = link },
+                            onTask = { createTask(link) },
+                            onDelete = { deleting = link },
                         )
                     }
                 }
             }
         }
     }
-    picking?.let { (link, decision) ->
-        TestProjectSheet(
-            viewModel = tasks,
-            onPick = { projectUid ->
-                picking = null
-                decide(link, decision, projectUid)
+    editingLink?.let { link ->
+        LinkEditDialog(
+            link = link,
+            projects = ProjectChoices.forTask(projects, link.projectUid),
+            tags = tags,
+            onTags = { viewModel.setTags(link.uid, it) },
+            onSave = {
+                viewModel.edit(link, it)
+                editingLink = null
             },
-            onDismiss = { picking = null },
-            title = if (decision == LinkDecision.ATTACH) R.string.links_attach_project_title else R.string.links_test_project_title,
-            allowNone = decision == LinkDecision.TEST,
+            onDismiss = { editingLink = null },
+        )
+    }
+    deleting?.let { link ->
+        LinkDeleteDialog(
+            link = link,
+            onConfirm = {
+                viewModel.delete(link.uid)
+                deleting = null
+            },
+            onDismiss = { deleting = null },
         )
     }
     editing?.let { link ->
@@ -337,7 +385,11 @@ private fun LinkCard(
     onTags: (List<String>) -> Unit,
     onEditNote: () -> Unit,
     onOpenSource: () -> Unit,
+    projectName: String?,
     onStatus: (LinkStatus) -> Unit,
+    onEdit: () -> Unit,
+    onTask: () -> Unit,
+    onDelete: () -> Unit,
 ) {
     val palette = cadence
     val uriHandler = LocalUriHandler.current
@@ -382,11 +434,8 @@ private fun LinkCard(
         }
         LinkNoteLine(link.note, onEditNote)
         LinkTagLine(link, tags, onTags)
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-            ACTIONS.forEach { (status, label) ->
-                ChoiceChip(label = stringResource(label), selected = link.status == status, onClick = { onStatus(status) })
-            }
-        }
+        projectName?.let { Text(it, style = MaterialTheme.typography.labelMedium, color = palette.primary) }
+        LinkControls(link, onStatus, onEdit, onTask, onDelete)
     }
 }
 

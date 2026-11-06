@@ -5537,7 +5537,8 @@
       "active": "Chưa bỏ",
       "allStatuses": "Mọi trạng thái",
       "allTags": "Mọi thẻ",
-      "allDomains": "Mọi trang web"
+      "allDomains": "Mọi trang web",
+      "allProjects": "Tất cả dự án"
     },
     "sort": {
       "start": "Sắp xếp liên kết ({{count}})",
@@ -5564,13 +5565,13 @@
       "to_evaluate": "Cần đánh giá"
     },
     "action": {
-      "attach": "Gắn vào",
       "tested": "Cần thử",
       "kept": "Giữ",
       "parked": "Để sau",
       "dropped": "Lưu trữ",
       "to_evaluate": "Cần đánh giá",
-      "task": "Công việc"
+      "createTask": "Tạo công việc",
+      "project": "Dự án"
     },
     "lastCommit": "cập nhật {{date}}",
     "fetching": "Đang đọc trang…",
@@ -5590,7 +5591,17 @@
       "button": "Nhập dấu trang",
       "result": "Đã thêm {{created}}, đã có {{existing}}",
       "error": "Không thể nhập dấu trang."
-    }
+    },
+    "more": "Thao tác khác",
+    "field": {
+      "title": "Tiêu đề",
+      "url": "Địa chỉ",
+      "tags": "Thẻ"
+    },
+    "editTitle": "Sửa liên kết",
+    "deleteTitle": "Xóa liên kết này?",
+    "deleteMessage": "Liên kết sẽ rời khỏi danh sách vĩnh viễn và không được lấy lại từ công việc và ghi chú. Để tạm cất, hãy chọn Đã lưu trữ.",
+    "deleteError": "Không thể xóa liên kết."
   },
   "dailyBrief": {
     "sectionName": {

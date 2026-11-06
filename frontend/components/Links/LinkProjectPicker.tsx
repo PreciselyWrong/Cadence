@@ -5,19 +5,21 @@ import { Project } from '../../entities/Project';
 interface LinkProjectPickerProps {
     id: string;
     projects: Project[];
-    // Try may create its task without a project; Attach needs one.
+    // Try may create its task without a project; putting a link in one needs it.
     allowNone: boolean;
     busy: boolean;
     onConfirm: (projectUid: string) => void;
+    confirmLabel?: string;
 }
 
-// The project a link decision files its task in, then "Create task".
+// The project of a link decision, then its confirmation.
 const LinkProjectPicker: React.FC<LinkProjectPickerProps> = ({
     id,
     projects,
     allowNone,
     busy,
     onConfirm,
+    confirmLabel,
 }) => {
     const { t } = useTranslation();
     const [projectUid, setProjectUid] = useState('');
@@ -63,7 +65,7 @@ const LinkProjectPicker: React.FC<LinkProjectPickerProps> = ({
                 }}
                 className="min-h-[32px] rounded-full bg-blue-600 px-3 text-[12px] font-medium text-white hover:bg-blue-700 disabled:opacity-50 dark:bg-blue-500"
             >
-                {t('links.tryCreate', 'Create task')}
+                {confirmLabel ?? t('links.tryCreate', 'Create task')}
             </button>
         </div>
     );

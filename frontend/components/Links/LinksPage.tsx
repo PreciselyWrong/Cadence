@@ -17,10 +17,11 @@ import { useToast } from '../Shared/ToastContext';
 import GalleryCard from '../Shared/GalleryCard';
 import { ViewTypeSwitch } from '../Task/TaskViewBody';
 import { useViewType } from '../../hooks/useViewType';
-import { attachLinkToProject, linkToTask } from '../../utils/linkTriage';
+import { linkToTask } from '../../utils/linkTriage';
 import { inBatches, parseBookmarks } from '../../utils/bookmarksImport';
 import { importLinks } from '../../utils/linksService';
 import { Link } from '../../entities/Link';
+import LinkActions from './LinkActions';
 import LinkCard from './LinkCard';
 
 const FILTER_KEY = 'links.filter';
@@ -48,6 +49,7 @@ const LinksPage: React.FC = () => {
     const loaded = useLinksStore((s) => s.loaded);
     const loadError = useLinksStore((s) => s.error);
     const save = useLinksStore((s) => s.save);
+    const removeLink = useLinksStore((s) => s.remove);
     const load = useLinksStore((s) => s.load);
     const tagsStore = useStore((s) => s.tagsStore);
     const projectsStore = useStore((s) => s.projectsStore);
@@ -127,10 +129,17 @@ const LinksPage: React.FC = () => {
         }
     };
 
-    const attach = (link: Link) => (projectUid: string) =>
-        attachLinkToProject(link, projectUid, save).catch(() =>
-            showErrorToast(t('links.saveError', 'Could not save the link.'))
+    const remove = (uid: string) => () =>
+        removeLink(uid).catch(() =>
+            showErrorToast(t('links.deleteError', 'Could not delete the link.'))
         );
+
+    // Fails on to its caller: the edit form stays open on a refusal.
+    const edit = (uid: string) => (changes: Parameters<typeof save>[1]) =>
+        save(uid, changes).catch((error) => {
+            showErrorToast(t('links.saveError', 'Could not save the link.'));
+            throw error;
+        });
 
     const kindLabel = (kind: string) =>
         ({
@@ -266,6 +275,25 @@ const LinksPage: React.FC = () => {
                             ))}
                         </select>
                     )}
+                    {projectsStore.projects.length > 0 && (
+                        <select
+                            aria-label={t('links.tryProject', 'Project')}
+                            className={`${SELECT} max-w-[180px]`}
+                            value={filter.project}
+                            onChange={(e) =>
+                                setFilter({ project: e.target.value })
+                            }
+                        >
+                            <option value="all">
+                                {t('links.filter.allProjects', 'All projects')}
+                            </option>
+                            {projectsStore.projects.map((project) => (
+                                <option key={project.uid} value={project.uid}>
+                                    {project.name}
+                                </option>
+                            ))}
+                        </select>
+                    )}
                     {domains.length > 1 && (
                         <select
                             aria-label={t('links.filter.domain', 'Site')}
@@ -344,10 +372,27 @@ const LinksPage: React.FC = () => {
                                             link.url
                                         }
                                         image={link.image_url}
-                                        meta={link.site_name || link.domain}
+                                        meta={[
+                                            link.site_name || link.domain,
+                                            link.project_name,
+                                        ]
+                                            .filter(Boolean)
+                                            .join(' · ')}
                                         tags={link.tags}
                                         href={link.url}
                                         dimmed={link.status === 'dropped'}
+                                        footer={
+                                            <LinkActions
+                                                link={link}
+                                                projects={
+                                                    projectsStore.projects
+                                                }
+                                                availableTags={tagsStore.tags}
+                                                onChange={edit(link.uid)}
+                                                onTask={toTask(link)}
+                                                onDelete={remove(link.uid)}
+                                            />
+                                        }
                                     />
                                 ))}
                             </div>
@@ -360,11 +405,12 @@ const LinksPage: React.FC = () => {
                         <LinkCard
                             key={link.uid}
                             link={link}
-                            onChange={change(link.uid)}
+                            onChange={edit(link.uid)}
+                            onNote={change(link.uid)}
                             availableTags={tagsStore.tags}
                             projects={projectsStore.projects}
-                            onAttach={attach(link)}
                             onTask={toTask(link)}
+                            onDelete={remove(link.uid)}
                         />
                     ))}
                 </div>

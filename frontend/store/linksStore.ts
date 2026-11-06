@@ -1,7 +1,12 @@
 import React from 'react';
 import { create } from 'zustand';
 import { Link } from '../entities/Link';
-import { fetchLinks, LinkChanges, updateLink } from '../utils/linksService';
+import {
+    deleteLink,
+    fetchLinks,
+    LinkChanges,
+    updateLink,
+} from '../utils/linksService';
 
 // Saved links, shared by the Links page and the inbox cards. Loaded once,
 // reloaded when a capture may have added one or a fetch is still running.
@@ -11,6 +16,7 @@ interface LinksState {
     error: boolean;
     load: (force?: boolean) => Promise<void>;
     save: (uid: string, changes: LinkChanges) => Promise<Link>;
+    remove: (uid: string) => Promise<void>;
 }
 
 let inflight: Promise<void> | null = null;
@@ -52,6 +58,16 @@ export const useLinksStore = create<LinksState>((set, get) => ({
                 links: get().links.map((l) => (l.uid === uid ? saved : l)),
             });
             return saved;
+        } catch (error) {
+            set({ links: previous });
+            throw error;
+        }
+    },
+    remove: async (uid) => {
+        const previous = get().links;
+        set({ links: previous.filter((l) => l.uid !== uid) });
+        try {
+            await deleteLink(uid);
         } catch (error) {
             set({ links: previous });
             throw error;

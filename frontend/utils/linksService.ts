@@ -32,6 +32,9 @@ export const importLinks = async (
 };
 
 export interface LinkChanges {
+    title?: string | null;
+    url?: string;
+    project_uid?: string | null;
     note?: string | null;
     status?: LinkStatus;
     review_at?: string | null;
@@ -51,4 +54,13 @@ export const updateLink = async (
     await handleAuthResponse(response, 'Failed to update link.');
     const data = await response.json();
     return data.link;
+};
+
+export const deleteLink = async (uid: string): Promise<void> => {
+    const response = await fetch(getApiPath(`links/${uid}`), {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: await getPostHeadersWithCsrf(),
+    });
+    await handleAuthResponse(response, 'Failed to delete link.');
 };

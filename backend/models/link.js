@@ -2,8 +2,8 @@ const { DataTypes } = require('sequelize');
 const { uid } = require('../utils/uid');
 
 // A link found in an inbox item, a task or a note (modules/links). The
-// metadata is fetched by the server; the user owns the note, the status and
-// the tags.
+// metadata is fetched by the server; the user owns the title once given, the
+// address, the note, the status, the project and the tags.
 module.exports = (sequelize) => {
     const Link = sequelize.define(
         'Link',
@@ -56,6 +56,11 @@ module.exports = (sequelize) => {
                 type: DataTypes.STRING,
                 allowNull: false,
                 defaultValue: 'new',
+            },
+            project_id: {
+                type: DataTypes.INTEGER,
+                allowNull: true,
+                references: { model: 'projects', key: 'id' },
             },
             // Where the link was found: inbox_item | task | note, by uid.
             source_type: { type: DataTypes.STRING, allowNull: true },

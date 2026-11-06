@@ -5537,7 +5537,8 @@
       "active": "Atılmamış",
       "allStatuses": "Tüm durumlar",
       "allTags": "Tüm etiketler",
-      "allDomains": "Tüm siteler"
+      "allDomains": "Tüm siteler",
+      "allProjects": "Tüm projeler"
     },
     "sort": {
       "start": "Bağlantıları sırala ({{count}})",
@@ -5564,13 +5565,13 @@
       "to_evaluate": "Değerlendirilecek"
     },
     "action": {
-      "attach": "Bağla",
       "tested": "Denenecek",
       "kept": "Tut",
       "parked": "Sonra",
       "dropped": "Arşivle",
       "to_evaluate": "Değerlendirilecek",
-      "task": "Görev"
+      "createTask": "Görev oluştur",
+      "project": "Proje"
     },
     "lastCommit": "{{date}} güncellendi",
     "fetching": "Sayfa okunuyor…",
@@ -5590,7 +5591,17 @@
       "button": "Yer imlerini içe aktar",
       "result": "{{created}} eklendi, {{existing}} zaten vardı",
       "error": "Yer imleri içe aktarılamadı."
-    }
+    },
+    "more": "Diğer işlemler",
+    "field": {
+      "title": "Başlık",
+      "url": "Adres",
+      "tags": "Etiketler"
+    },
+    "editTitle": "Bağlantıyı düzenle",
+    "deleteTitle": "Bu bağlantı silinsin mi?",
+    "deleteMessage": "Bağlantılarınızdan kalıcı olarak çıkar ve görevlerinizden ve notlarınızdan yeniden alınmaz. Kenara koymak için Arşivlendi'yi seçin.",
+    "deleteError": "Bağlantı silinemedi."
   },
   "dailyBrief": {
     "sectionName": {

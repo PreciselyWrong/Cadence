@@ -5537,7 +5537,8 @@
       "active": "未放弃",
       "allStatuses": "全部状态",
       "allTags": "全部标签",
-      "allDomains": "全部网站"
+      "allDomains": "全部网站",
+      "allProjects": "所有项目"
     },
     "sort": {
       "start": "排序链接（{{count}}）",
@@ -5564,13 +5565,13 @@
       "to_evaluate": "待评估"
     },
     "action": {
-      "attach": "归入项目",
       "tested": "待试用",
       "kept": "保留",
       "parked": "稍后",
       "dropped": "归档",
       "to_evaluate": "待评估",
-      "task": "任务"
+      "createTask": "创建任务",
+      "project": "项目"
     },
     "lastCommit": "更新于 {{date}}",
     "fetching": "正在读取页面…",
@@ -5590,7 +5591,17 @@
       "button": "导入书签",
       "result": "已添加 {{created}} 个，{{existing}} 个已存在",
       "error": "无法导入书签。"
-    }
+    },
+    "more": "更多操作",
+    "field": {
+      "title": "标题",
+      "url": "地址",
+      "tags": "标签"
+    },
+    "editTitle": "编辑链接",
+    "deleteTitle": "删除此链接?",
+    "deleteMessage": "它将从你的链接中永久移除,也不会再从任务和笔记中获取。如只想搁置,请选择“已归档”。",
+    "deleteError": "无法删除链接。"
   },
   "dailyBrief": {
     "sectionName": {

@@ -5542,7 +5542,8 @@
       "active": "Ikke forkastet",
       "allStatuses": "Alle statuser",
       "allTags": "Alle merkelapper",
-      "allDomains": "Alle nettsteder"
+      "allDomains": "Alle nettsteder",
+      "allProjects": "Alle prosjekter"
     },
     "sort": {
       "start": "Sorter lenker ({{count}})",
@@ -5569,13 +5570,13 @@
       "to_evaluate": "Å vurdere"
     },
     "action": {
-      "attach": "Knytt til",
       "tested": "Å teste",
       "kept": "Behold",
       "parked": "Senere",
       "dropped": "Arkiver",
       "to_evaluate": "Å vurdere",
-      "task": "Oppgave"
+      "createTask": "Opprett en oppgave",
+      "project": "Prosjekt"
     },
     "lastCommit": "oppdatert {{date}}",
     "fetching": "Leser siden…",
@@ -5595,7 +5596,17 @@
       "button": "Importer bokmerker",
       "result": "{{created}} lagt til, {{existing}} fantes fra før",
       "error": "Bokmerkene kunne ikke importeres."
-    }
+    },
+    "more": "Flere handlinger",
+    "field": {
+      "title": "Tittel",
+      "url": "Adresse",
+      "tags": "Etiketter"
+    },
+    "editTitle": "Rediger lenken",
+    "deleteTitle": "Slette denne lenken?",
+    "deleteMessage": "Den forsvinner for godt fra lenkene dine og hentes ikke igjen fra oppgaver og notater. Velg Arkivert for å legge den til side.",
+    "deleteError": "Lenken kunne ikke slettes."
   },
   "dailyBrief": {
     "sectionName": {

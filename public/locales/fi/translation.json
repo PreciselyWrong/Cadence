@@ -5537,7 +5537,8 @@
       "active": "Ei hylättyjä",
       "allStatuses": "Kaikki tilat",
       "allTags": "Kaikki tunnisteet",
-      "allDomains": "Kaikki sivustot"
+      "allDomains": "Kaikki sivustot",
+      "allProjects": "Kaikki projektit"
     },
     "sort": {
       "start": "Lajittele linkit ({{count}})",
@@ -5564,13 +5565,13 @@
       "to_evaluate": "Arvioitavana"
     },
     "action": {
-      "attach": "Liitä",
       "tested": "Kokeiltavaksi",
       "kept": "Säilytä",
       "parked": "Myöhemmin",
       "dropped": "Arkistoi",
       "to_evaluate": "Arvioitavaksi",
-      "task": "Tehtävä"
+      "createTask": "Luo tehtävä",
+      "project": "Projekti"
     },
     "lastCommit": "päivitetty {{date}}",
     "fetching": "Luetaan sivua…",
@@ -5590,7 +5591,17 @@
       "button": "Tuo kirjanmerkit",
       "result": "{{created}} lisätty, {{existing}} oli jo",
       "error": "Kirjanmerkkejä ei voitu tuoda."
-    }
+    },
+    "more": "Lisää toimintoja",
+    "field": {
+      "title": "Otsikko",
+      "url": "Osoite",
+      "tags": "Tunnisteet"
+    },
+    "editTitle": "Muokkaa linkkiä",
+    "deleteTitle": "Poistetaanko tämä linkki?",
+    "deleteMessage": "Se poistuu linkeistäsi lopullisesti, eikä sitä oteta uudelleen tehtävistä ja muistiinpanoista. Jos haluat vain siirtää sen syrjään, valitse Arkistoitu.",
+    "deleteError": "Linkkiä ei voitu poistaa."
   },
   "dailyBrief": {
     "sectionName": {

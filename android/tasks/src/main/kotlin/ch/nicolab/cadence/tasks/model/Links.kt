@@ -63,6 +63,7 @@ data class LinkItem(
     val pendingSync: Boolean = false,
     /** Jour où revoir un lien mis de côté ; jamais une échéance. */
     val reviewAt: LocalDate? = null,
+    val projectUid: String? = null,
 ) {
     val domain: String get() = LinkExtractor.domain(url) ?: url
     val displayTitle: String get() = title?.takeIf { it.isNotBlank() } ?: domain
@@ -80,7 +81,11 @@ data class LinkFilter(
     val status: LinkStatus? = null,
     val domain: String? = null,
     val tagUid: String? = null,
+    val projectUid: String? = null,
 )
+
+/** Ce que la fiche d'un lien permet de changer d'un coup. */
+data class LinkEdit(val title: String, val url: String, val note: String, val projectUid: String?)
 
 /** Un thème de la galerie : [name] est null pour les liens sans étiquette. */
 data class LinkTheme(val name: String?, val links: List<LinkItem>)
@@ -105,6 +110,7 @@ object LinkLists {
                 (if (filter.status == null) link.status != LinkStatus.DROPPED else link.status == filter.status) &&
                 (filter.domain == null || link.domain == filter.domain) &&
                 (filter.tagUid == null || filter.tagUid in link.tagUids) &&
+                (filter.projectUid == null || link.projectUid == filter.projectUid) &&
                 (words.isEmpty() || haystack(link, tagNames).let { text -> words.all { it in text } })
         }.sortedWith(compareByDescending<LinkItem> { it.createdAt ?: Instant.EPOCH }.thenBy { it.uid })
     }

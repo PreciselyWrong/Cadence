@@ -1,3 +1,10 @@
+## [1.12.3] — 6 novembre 2026
+
+### Nouveautés
+- Liens : un seul menu de statut et un menu ⋯ (Modifier, Créer une tâche, Supprimer) remplacent la rangée de boutons.
+- Liens : modifier le titre, l'adresse, le projet, la note et les étiquettes ; supprimer pour de bon, avec confirmation.
+- Liens : un lien appartient à un projet, avec un filtre par projet. « Rattacher » range le lien lui-même et ne crée plus de tâche. Il faut un serveur à jour.
+
 ## [1.12.2] — 6 novembre 2026
 
 ### Corrections

@@ -14,6 +14,14 @@ Finding links, reading page metadata and classifying their kind is plain code. A
 
 - **A shared address goes straight to Links**: a new inbox item that is little more than one link (at most 120 characters around it) is marked `processed` as soon as the link is found, on every capture path (Android share, desktop, web, Telegram). The link keeps the rest of the text as its note. An idea that mentions a link stays in the inbox, and so do items that were there before.
 
+## Managing a link
+
+`PATCH /api/links/:uid` takes `title`, `url`, `project_uid`, `note`, `status`, `review_at` and `tags`; only what is given changes. A new address is normalized, refused if invalid (400) or held by another link (409), clears what was read of the old page and reads the new one. `project_uid` (null takes it out) must be a project the user can write to; deleting the project leaves the link without one.
+
+`DELETE /api/links/:uid` deletes for good. The address goes into `link_exclusions`, as does the old address after a move: otherwise the startup rescan and the next save of the text it came from would bring the link back. Saving the page on purpose (`POST /api/links`, import, or sharing it alone to the inbox) lifts the exclusion. Devices write the title and the project through `link` sync fields and delete with a sync `delete`; a new address goes through `PATCH`, as a deferred call. MCP: `update_link`, `delete_link`.
+
+Web and Android show the same controls on a card: **one status menu** (To read, To evaluate, To try, Kept, Later, Archived) and **⋯** (Edit, Create a task, Delete). "Archived" only sets the link aside; a project filter joins the others. In the inbox, the project decision puts the link itself in the project, without a task.
+
 ## Adding a link directly
 
 `POST /api/links` `{ url, title?, note?, status?, tags? }` answers `{ link, created }`: the same page twice is one link and what it holds stays. `POST /api/links/import` `{ items: [...] }`, at most 500 per call, answers `{ created, existing, invalid }`; one bad entry never stops the rest. New links go through the same reading queue, one second apart, so 800 bookmarks take about a quarter of an hour.
@@ -69,7 +77,7 @@ Entity `link` (schema 4): fields `note`, `status`, `review_at`; server fields li
 
 ## Clients
 
-- **Web**: `/links` (`frontend/components/Links/`): search, kind, status (default: not dropped), tag, site and sort filters, remembered per browser; cards with title, two lines of description, domain, kind badge, GitHub stats, README start for repositories, note (click to write, Enter saves), tags, status buttons, Attach to a project (see Web inbox triage), open, go to the source. A **List / Gallery** switch in the header (remembered for the account in `ui_settings.viewTypes.links`) turns the page into a gallery: picture cards (two to four columns) with the page image (`image_url`, else the site's initial), title, site and up to three tags; a card opens the page in a new tab; the filters apply the same way. In the inbox, an item with a link shows the link card and its note; the item's text is shown only when it says more than the note.
+- **Web**: `/links` (`frontend/components/Links/`): search, kind, status (default: not dropped), tag, site and sort filters, remembered per browser; cards with title, two lines of description, domain, kind badge, GitHub stats, README start for repositories, note (click to write, Enter saves), tags, project, the status menu and ⋯, open, go to the source. A **List / Gallery** switch in the header (remembered for the account in `ui_settings.viewTypes.links`) turns the page into a gallery: picture cards (two to four columns) with the page image (`image_url`, else the site's initial), title, site, project and up to three tags, with the same status menu and ⋯ below; a card opens the page in a new tab; the filters apply the same way. In the inbox, an item with a link shows the link card and its note; the item's text is shown only when it says more than the note.
 - **Android**: Links screen from Listes or the Inbox header (search, kind, status and "Archivés" chips, same cards, note in a small dialog, status chips, tag picker); inbox ideas that hold a link are triaged in one tap (below). All writes go through the outbox (`link` note, status, `tag_uids`; `inbox_item` status), so triage works offline.
 
 ### Android inbox triage
@@ -81,7 +89,7 @@ Entity `link` (schema 4): fields `note`, `status`, `review_at`; server fields li
 |---|---|---|
 | Garder | `kept` | |
 | À tester | `tested` | creates the task "Tester : <title>" (note: the URL then the user's note) in the chosen project or none |
-| Rattacher | `kept` | shown when the user has an open project; creates a task named after the link (note: the URL then the user's note) in the chosen project (required), as the gallery and the web's Attach |
+| Rattacher | `kept` | shown when the user has an open project; puts the link itself in the chosen project (required), as the web's Project decision |
 | Plus tard | `parked` | review day `review_at` = today + 30 days, synced (the same on the web) |
 | Jeter | `dropped` | |
 
@@ -98,7 +106,7 @@ Entity `link` (schema 4): fields `note`, `status`, `review_at`; server fields li
 | Chip | Link status | Also |
 |---|---|---|
 | Tester | `tested` | task "Tester : <title>" in the chosen project or none (as in the inbox) |
-| Rattacher | `kept` | task named after the link, with the URL then the note as task note, in the chosen project (a project is required). A link has no project: the task is what files it there |
+| Rattacher | `kept` | the link itself goes in the chosen project (required), without a task |
 | Reporter | `parked` | `review_at` = today + 30 days |
 | Jeter | `dropped` | |
 

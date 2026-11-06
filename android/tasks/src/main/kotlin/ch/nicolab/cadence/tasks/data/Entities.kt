@@ -149,6 +149,7 @@ data class LinkEntity(
     val createdAtRaw: String?,
     /** Jour de revue d'un lien mis de côté (YYYY-MM-DD), écrit par le serveur ou le téléphone. */
     val reviewAtRaw: String? = null,
+    val projectUid: String? = null,
 )
 
 @Entity(tableName = "inbox_items")

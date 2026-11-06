@@ -27,7 +27,7 @@ type Picking = 'tested' | 'attach';
 const DECISIONS: { id: Decision; key: string; fallback: string }[] = [
     { id: 'kept', key: 'links.action.kept', fallback: 'Keep' },
     { id: 'tested', key: 'links.action.tested', fallback: 'Try' },
-    { id: 'attach', key: 'links.action.attach', fallback: 'Attach' },
+    { id: 'attach', key: 'links.action.project', fallback: 'Project' },
     { id: 'parked', key: 'links.action.parked', fallback: 'Later' },
     { id: 'dropped', key: 'links.action.dropped', fallback: 'Drop' },
 ];
@@ -35,8 +35,8 @@ const DECISIONS: { id: Decision; key: string; fallback: string }[] = [
 // The decisions of an inbox link, one tap each, as on Android: the link
 // takes the status, the inbox item is marked processed (it leaves the inbox,
 // the link stays in the library). Try asks for a project first (or none)
-// and creates the task "Try: <title>" with the address and the note; Attach
-// asks for a project and files a task named after the link there.
+// and creates the task "Try: <title>" with the address and the note; "Project"
+// asks for one and puts the link in it.
 const LinkTriageActions: React.FC<LinkTriageActionsProps> = ({
     item,
     link,
@@ -85,10 +85,8 @@ const LinkTriageActions: React.FC<LinkTriageActionsProps> = ({
 
     const attach = (projectUid: string) =>
         finish(async () => {
-            const task = await attachLinkToProject(link, projectUid, save);
-            await processInboxItemWithStore(item.uid, {
-                task_uid: task.uid ?? '',
-            });
+            await attachLinkToProject(link, projectUid, save);
+            await processInboxItemWithStore(item.uid);
         });
 
     return (
@@ -133,6 +131,11 @@ const LinkTriageActions: React.FC<LinkTriageActionsProps> = ({
                     projects={projects}
                     allowNone={picking === 'tested'}
                     busy={busy}
+                    confirmLabel={
+                        picking === 'attach'
+                            ? t('common.save', 'Save')
+                            : undefined
+                    }
                     onConfirm={(projectUid) =>
                         void (picking === 'attach'
                             ? attach(projectUid)

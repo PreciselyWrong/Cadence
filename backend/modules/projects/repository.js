@@ -14,6 +14,7 @@ const {
     UserProjectOrder,
     ProjectSection,
     sequelize,
+    Link,
 } = require('../../models');
 const { projectAttachments } = require('../../services/entityAttachments');
 const permissionSources = require('../../services/permissionSources');
@@ -319,6 +320,15 @@ class ProjectsRepository extends BaseRepository {
     // Removes a project's tasks, attachments and cover image, orphans its
     // notes and finally deletes the project row, inside the given transaction.
     async deleteProjectContents(project, userId, transaction) {
+        // Links outlive their project, one by one so devices learn of it.
+        const links = await Link.findAll({
+            where: { project_id: project.id },
+            transaction,
+        });
+        for (const link of links) {
+            await link.update({ project_id: null }, { transaction });
+        }
+
         // Find all tasks belonging to this project (parent tasks only)
         const tasks = await Task.findAll({
             where: {

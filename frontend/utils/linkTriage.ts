@@ -12,7 +12,7 @@ export const linkTaskNote = (link: Link): string =>
 
 type SaveLink = (
     uid: string,
-    changes: { status: LinkStatus }
+    changes: { status: LinkStatus; project_uid?: string }
 ) => Promise<unknown>;
 
 // One tap: a task named after the link, holding its address. The link counts
@@ -26,19 +26,11 @@ export const linkToTask = async (link: Link, save: SaveLink): Promise<Task> => {
     return task;
 };
 
-// "Attach": a link has no project, so a task named after it, holding its
-// address, files it in the chosen one; the link counts as kept. Same as
-// Android (LinkTriage, LinkDecision.ATTACH).
-export const attachLinkToProject = async (
+// A link belongs to the chosen project itself, and counts as kept. Same as
+// Android (LinkDecision.ATTACH).
+export const attachLinkToProject = (
     link: Link,
     projectUid: string,
     save: SaveLink
-): Promise<Task> => {
-    const task = await createTask({
-        name: linkTitle(link),
-        note: linkTaskNote(link),
-        project_uid: projectUid,
-    } as Task);
-    await save(link.uid, { status: 'kept' });
-    return task;
-};
+): Promise<unknown> =>
+    save(link.uid, { status: 'kept', project_uid: projectUid });

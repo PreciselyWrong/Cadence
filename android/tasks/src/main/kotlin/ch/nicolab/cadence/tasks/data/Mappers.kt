@@ -122,6 +122,7 @@ internal fun LinkRow.toItem() = LinkItem(
     createdAt = parseInstant(link.createdAtRaw),
     pendingSync = pendingSync,
     reviewAt = parseDay(link.reviewAtRaw),
+    projectUid = link.projectUid,
 )
 
 internal fun InboxRow.toEntry() = InboxEntry(

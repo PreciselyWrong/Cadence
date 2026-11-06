@@ -209,7 +209,8 @@
       "active": "Nezahodené",
       "allStatuses": "Všetky stavy",
       "allTags": "Všetky štítky",
-      "allDomains": "Všetky stránky"
+      "allDomains": "Všetky stránky",
+      "allProjects": "Všetky projekty"
     },
     "sort": {
       "start": "Triediť odkazy ({{count}})",
@@ -236,13 +237,13 @@
       "to_evaluate": "Na zhodnotenie"
     },
     "action": {
-      "attach": "Priradiť",
       "tested": "Na vyskúšanie",
       "kept": "Ponechať",
       "parked": "Neskôr",
       "dropped": "Archivovať",
       "to_evaluate": "Na zhodnotenie",
-      "task": "Úloha"
+      "createTask": "Vytvoriť úlohu",
+      "project": "Projekt"
     },
     "lastCommit": "aktualizované {{date}}",
     "fetching": "Čítanie stránky…",
@@ -262,7 +263,17 @@
       "button": "Importovať záložky",
       "result": "Pridané: {{created}}, už boli: {{existing}}",
       "error": "Záložky sa nepodarilo importovať."
-    }
+    },
+    "more": "Ďalšie akcie",
+    "field": {
+      "title": "Názov",
+      "url": "Adresa",
+      "tags": "Štítky"
+    },
+    "editTitle": "Upraviť odkaz",
+    "deleteTitle": "Odstrániť tento odkaz?",
+    "deleteMessage": "Natrvalo zmizne z vašich odkazov a už sa nebude brať z úloh a poznámok. Ak ho chcete odložiť, zvoľte Archivované.",
+    "deleteError": "Odkaz sa nepodarilo odstrániť."
   },
   "dailyBrief": {
     "sectionName": {

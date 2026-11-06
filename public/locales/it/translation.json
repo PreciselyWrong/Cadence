@@ -5550,7 +5550,8 @@
       "active": "Non scartati",
       "allStatuses": "Tutti gli stati",
       "allTags": "Tutte le etichette",
-      "allDomains": "Tutti i siti"
+      "allDomains": "Tutti i siti",
+      "allProjects": "Tutti i progetti"
     },
     "sort": {
       "start": "Ordina i link ({{count}})",
@@ -5577,13 +5578,13 @@
       "to_evaluate": "Da valutare"
     },
     "action": {
-      "attach": "Collega",
       "tested": "Da provare",
       "kept": "Tieni",
       "parked": "Più tardi",
       "dropped": "Archivia",
       "to_evaluate": "Da valutare",
-      "task": "Attività"
+      "createTask": "Crea un'attività",
+      "project": "Progetto"
     },
     "lastCommit": "aggiornato {{date}}",
     "fetching": "Lettura della pagina…",
@@ -5603,7 +5604,17 @@
       "button": "Importa segnalibri",
       "result": "{{created}} aggiunti, {{existing}} già presenti",
       "error": "Impossibile importare i segnalibri."
-    }
+    },
+    "more": "Altre azioni",
+    "field": {
+      "title": "Titolo",
+      "url": "Indirizzo",
+      "tags": "Etichette"
+    },
+    "editTitle": "Modifica il link",
+    "deleteTitle": "Eliminare questo link?",
+    "deleteMessage": "Lascia i tuoi link definitivamente e non viene più ripreso da attività e note. Per metterlo da parte, scegli Archiviato.",
+    "deleteError": "Impossibile eliminare il link."
   },
   "dailyBrief": {
     "sectionName": {

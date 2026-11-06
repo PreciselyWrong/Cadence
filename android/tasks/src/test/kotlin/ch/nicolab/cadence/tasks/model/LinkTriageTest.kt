@@ -68,13 +68,12 @@ class LinkTriageTest {
     }
 
     @Test
-    fun `rattacher crée une tâche au nom du lien dans le projet, garde le lien et traite l'idée`() {
+    fun `rattacher range le lien dans le projet, le garde et traite l'idée, sans tâche`() {
         val result = steps(LinkDecision.ATTACH, projectUid = "p2", item = link.copy(note = "pour le build"))
-        val task = (result[0] as TriageStep.CreateTask).draft
-        assertEquals("a/b", task.name)
-        assertEquals("p2", task.projectUid)
-        assertEquals("https://github.com/a/b\n\npour le build", task.note)
-        assertEquals(listOf(TriageStep.SetStatus("l1", LinkStatus.KEPT), TriageStep.ProcessInbox("e1")), result.drop(1))
+        assertEquals(
+            listOf(TriageStep.SetProject("l1", "p2"), TriageStep.SetStatus("l1", LinkStatus.KEPT), TriageStep.ProcessInbox("e1")),
+            result,
+        )
     }
 
     @Test
@@ -84,11 +83,6 @@ class LinkTriageTest {
             assertTrue(result.none { it is TriageStep.ProcessInbox }, decision.name)
             assertTrue(result.any { it is TriageStep.SetStatus }, decision.name)
         }
-    }
-
-    @Test
-    fun `la galerie propose tâche, tester, rattacher, reporter, archiver`() {
-        assertEquals(listOf(LinkDecision.TASK, LinkDecision.TEST, LinkDecision.ATTACH, LinkDecision.LATER, LinkDecision.DROP), LinkTriage.GALLERY_DECISIONS)
     }
 
     @Test
@@ -122,6 +116,7 @@ class LinkTriageTest {
         val sink = object : TriageSink {
             override suspend fun createTask(draft: TaskDraft) { calls += "task:${draft.name}" }
             override suspend fun setLinkStatus(uid: String, status: LinkStatus) { calls += "status:$uid:${status.wire}" }
+            override suspend fun setLinkProject(uid: String, projectUid: String?) { calls += "project:$uid:$projectUid" }
             override suspend fun setReviewDate(uid: String, date: LocalDate) { calls += "review:$uid:$date" }
             override suspend fun processInboxItem(uid: String) { calls += "inbox:$uid" }
         }

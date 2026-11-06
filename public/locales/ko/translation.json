@@ -5537,7 +5537,8 @@
       "active": "버리지 않음",
       "allStatuses": "모든 상태",
       "allTags": "모든 태그",
-      "allDomains": "모든 사이트"
+      "allDomains": "모든 사이트",
+      "allProjects": "모든 프로젝트"
     },
     "sort": {
       "start": "링크 정리 ({{count}})",
@@ -5564,13 +5565,13 @@
       "to_evaluate": "평가할 항목"
     },
     "action": {
-      "attach": "연결",
       "tested": "시도할 항목",
       "kept": "보관",
       "parked": "나중에",
       "dropped": "보관",
       "to_evaluate": "평가할 항목",
-      "task": "작업"
+      "createTask": "작업 만들기",
+      "project": "프로젝트"
     },
     "lastCommit": "{{date}} 업데이트",
     "fetching": "페이지를 읽는 중…",
@@ -5590,7 +5591,17 @@
       "button": "북마크 가져오기",
       "result": "{{created}}개 추가, {{existing}}개는 이미 있음",
       "error": "북마크를 가져올 수 없습니다."
-    }
+    },
+    "more": "추가 작업",
+    "field": {
+      "title": "제목",
+      "url": "주소",
+      "tags": "태그"
+    },
+    "editTitle": "링크 편집",
+    "deleteTitle": "이 링크를 삭제할까요?",
+    "deleteMessage": "링크 목록에서 완전히 사라지며 작업과 메모에서 다시 가져오지 않습니다. 보관만 하려면 보관됨을 선택하세요.",
+    "deleteError": "링크를 삭제할 수 없습니다."
   },
   "dailyBrief": {
     "sectionName": {

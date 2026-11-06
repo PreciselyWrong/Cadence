@@ -106,6 +106,7 @@ const DailyPlan = require('./daily_plan')(sequelize);
 const DailyPlanItem = require('./daily_plan_item')(sequelize);
 const Goal = require('./goal')(sequelize);
 const Link = require('./link')(sequelize);
+const LinkExclusion = require('./link_exclusion')(sequelize);
 const BriefProposal = require('./brief_proposal')(sequelize);
 const TaskTriage = require('./task_triage')(sequelize);
 const LinkedContext = require('./linked_context')(sequelize);
@@ -309,6 +310,8 @@ Tag.belongsToMany(Note, {
 
 User.hasMany(Link, { foreignKey: 'user_id' });
 Link.belongsTo(User, { foreignKey: 'user_id' });
+Link.belongsTo(Project, { foreignKey: 'project_id' });
+Project.hasMany(Link, { foreignKey: 'project_id' });
 Link.belongsToMany(Tag, {
     through: 'links_tags',
     foreignKey: 'link_id',
@@ -792,6 +795,7 @@ module.exports = {
     BriefProposal,
     TaskTriage,
     LinkedContext,
+    LinkExclusion,
     TodoMdRepo,
     Project,
     Task,

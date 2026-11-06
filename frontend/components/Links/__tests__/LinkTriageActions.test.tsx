@@ -59,6 +59,8 @@ const link: Link = {
     note: 'compare with jq',
     status: 'new',
     review_at: null,
+    project_uid: null,
+    project_name: null,
     tags: [],
     source_type: 'inbox_item',
     source_uid: 'i1',
@@ -89,10 +91,10 @@ describe('LinkTriageActions', () => {
         });
     });
 
-    it('offers Keep, Try, Attach, Later and Drop', () => {
+    it('offers Keep, Try, Project, Later and Drop', () => {
         renderActions();
 
-        for (const label of ['Keep', 'Try', 'Attach', 'Later', 'Drop']) {
+        for (const label of ['Keep', 'Try', 'Project', 'Later', 'Drop']) {
             expect(
                 screen.getByRole('button', { name: label })
             ).toBeInTheDocument();
@@ -159,27 +161,26 @@ describe('LinkTriageActions', () => {
         );
     });
 
-    it('Attach creates a task named after the link in the chosen project and keeps the link', async () => {
+    it('Project puts the link in the chosen project and keeps it, without a task', async () => {
         renderActions();
 
-        fireEvent.click(screen.getByRole('button', { name: 'Attach' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Project' }));
         expect(screen.queryByRole('option', { name: 'No project' })).toBeNull();
-        const create = screen.getByRole('button', { name: 'Create task' });
-        expect(create).toBeDisabled();
+        const confirm = screen.getByRole('button', { name: 'Save' });
+        expect(confirm).toBeDisabled();
         fireEvent.change(screen.getByLabelText('Project'), {
             target: { value: 'p1' },
         });
-        fireEvent.click(create);
+        fireEvent.click(confirm);
 
         await waitFor(() =>
-            expect(mockCreateTask).toHaveBeenCalledWith({
-                name: 'owner/tool',
-                note: 'https://github.com/owner/tool\n\ncompare with jq',
+            expect(mockSave).toHaveBeenCalledWith('l1', {
+                status: 'kept',
                 project_uid: 'p1',
             })
         );
-        expect(mockSave).toHaveBeenCalledWith('l1', { status: 'kept' });
-        expect(mockProcess).toHaveBeenCalledWith('i1', { task_uid: 't1' });
+        expect(mockCreateTask).not.toHaveBeenCalled();
+        await waitFor(() => expect(mockProcess).toHaveBeenCalledWith('i1'));
     });
 
     it('reports a failed decision and leaves the item in the inbox', async () => {

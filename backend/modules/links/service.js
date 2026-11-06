@@ -6,7 +6,12 @@ const { LINK_STATUSES } = require('./core/constants');
 const { classifyKind, domainOf, normalizeUrl } = require('./core/urls');
 const { isDay, laterReviewDay } = require('./core/reviewDate');
 const { validateTagName } = require('../tags/tagsService');
-const { NotFoundError, ValidationError } = require('../../shared/errors');
+const { validateProjectAccess } = require('../tasks/utils/validation');
+const {
+    ConflictError,
+    NotFoundError,
+    ValidationError,
+} = require('../../shared/errors');
 
 const MAX_NOTE = 5000;
 
@@ -33,6 +38,8 @@ function serializeLink(link) {
         readme_excerpt: link.readme_excerpt,
         note: link.note,
         status: link.status,
+        project_uid: link.Project?.uid ?? null,
+        project_name: link.Project?.name ?? null,
         review_at: link.review_at ?? null,
         tags,
         source_type: link.source_type,
@@ -92,6 +99,7 @@ async function addOne(userId, item = {}) {
     if (!url) throw new ValidationError('url must be an http(s) address');
     const existing = await linksRepository.findByUrl(userId, url);
     if (existing) return { link: existing, created: false };
+    await linksRepository.lift(userId, url);
     const status = item.status ?? 'new';
     if (!LINK_STATUSES.includes(status)) {
         throw new ValidationError(
@@ -154,11 +162,56 @@ async function importLinks(userId, items) {
     return result;
 }
 
-// The user's part of a link: note, status and tags.
+// What moving a link to another page resets: the reading was of the old one.
+const UNREAD = {
+    description: null,
+    image_url: null,
+    site_name: null,
+    github_stars: null,
+    github_language: null,
+    github_last_commit: null,
+    readme_excerpt: null,
+    fetch_status: 'pending',
+    fetched_at: null,
+};
+
+async function addressChanges(link, value) {
+    const url = typeof value === 'string' ? normalizeUrl(value) : null;
+    if (!url) throw new ValidationError('url must be an http(s) address');
+    if (url === link.url) return {};
+    if (await linksRepository.findByUrl(link.user_id, url)) {
+        throw new ConflictError('Another link already has this address');
+    }
+    return { ...UNREAD, url, kind: classifyKind(url) };
+}
+
+function titleChange(value) {
+    if (value !== null && typeof value !== 'string') {
+        throw new ValidationError('title must be a string');
+    }
+    return value ? value.trim().slice(0, MAX_TITLE) || null : null;
+}
+
+async function projectChange(userId, uid) {
+    if (uid === null || uid === '') return null;
+    try {
+        return await validateProjectAccess(uid, userId);
+    } catch {
+        throw new ValidationError('project_uid is not a project of yours');
+    }
+}
+
+// The user's part of a link: title, address, note, status, project and tags.
 async function update(userId, uid, body = {}) {
     const link = await linksRepository.findByUid(userId, uid);
     if (!link) throw new NotFoundError('Link not found');
     const changes = {};
+    if ('title' in body) changes.title = titleChange(body.title);
+    if ('project_uid' in body) {
+        changes.project_id = await projectChange(userId, body.project_uid);
+    }
+    if ('url' in body)
+        Object.assign(changes, await addressChanges(link, body.url));
     if ('note' in body) {
         if (body.note !== null && typeof body.note !== 'string') {
             throw new ValidationError('note must be a string');
@@ -192,9 +245,31 @@ async function update(userId, uid, body = {}) {
     }
     const tags =
         'tags' in body ? await resolveTags(body.tags, userId) : undefined;
+    const previousUrl = link.url;
     if (Object.keys(changes).length) await link.update(changes);
     if (tags) await link.setTags(tags);
+    if (changes.url) {
+        // The old address may still be in the text the link came from.
+        await linksRepository.exclude(userId, previousUrl);
+        await linksRepository.lift(userId, changes.url);
+        require('./jobs').enqueueFetch(link.id);
+    }
     return get(userId, uid);
 }
 
-module.exports = { list, get, create, importLinks, update, serializeLink };
+async function remove(userId, uid) {
+    const link = await linksRepository.findByUid(userId, uid);
+    if (!link) throw new NotFoundError('Link not found');
+    await linksRepository.remove(link);
+    return { uid, deleted: true };
+}
+
+module.exports = {
+    list,
+    get,
+    create,
+    importLinks,
+    update,
+    remove,
+    serializeLink,
+};

@@ -1,7 +1,13 @@
 'use strict';
 
 const { Op } = require('sequelize');
-const { Link, Tag, sequelize } = require('../../models');
+const {
+    Link,
+    LinkExclusion,
+    Project,
+    Tag,
+    sequelize,
+} = require('../../models');
 const { ciLike } = require('../../utils/db-dialect');
 
 const MAX_LIMIT = 1000;
@@ -11,6 +17,12 @@ const withTags = {
     model: Tag,
     attributes: ['id', 'uid', 'name', 'color'],
     through: { attributes: [] },
+};
+
+const withProject = {
+    model: Project,
+    attributes: ['uid', 'name'],
+    required: false,
 };
 
 function listOf(value) {
@@ -92,7 +104,7 @@ async function list(userId, filters = {}) {
     const [rows, total] = await Promise.all([
         Link.findAll({
             where,
-            include: [withTags],
+            include: [withTags, withProject],
             order: [
                 ['created_at', direction],
                 ['id', direction],
@@ -108,7 +120,7 @@ async function list(userId, filters = {}) {
 function findByUid(userId, uid) {
     return Link.findOne({
         where: { uid, user_id: userId },
-        include: [withTags],
+        include: [withTags, withProject],
     });
 }
 
@@ -124,4 +136,38 @@ function setTags(link, tags) {
     return link.setTags(tags);
 }
 
-module.exports = { list, findByUid, findByUrl, create, setTags, whereFor };
+function exclude(userId, url) {
+    return LinkExclusion.findOrCreate({ where: { user_id: userId, url } });
+}
+
+function liftExclusion(userId, url) {
+    return LinkExclusion.destroy({ where: { user_id: userId, url } });
+}
+
+async function excludedUrls(userId, urls) {
+    const rows = await LinkExclusion.findAll({
+        where: { user_id: userId, url: { [Op.in]: urls } },
+        attributes: ['url'],
+        raw: true,
+    });
+    return new Set(rows.map((row) => row.url));
+}
+
+// Deleting keeps the page out of capture: its address may still be in a text.
+async function remove(link) {
+    await exclude(link.user_id, link.url);
+    await link.destroy();
+}
+
+module.exports = {
+    list,
+    findByUid,
+    findByUrl,
+    create,
+    setTags,
+    whereFor,
+    exclude,
+    lift: liftExclusion,
+    excludedUrls,
+    remove,
+};

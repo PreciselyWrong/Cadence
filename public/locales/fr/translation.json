@@ -5553,7 +5553,8 @@
       "active": "Sauf jetés",
       "allStatuses": "Tous les statuts",
       "allTags": "Toutes les étiquettes",
-      "allDomains": "Tous les sites"
+      "allDomains": "Tous les sites",
+      "allProjects": "Tous les projets"
     },
     "sort": {
       "done": "Aucun lien à trier.",
@@ -5580,13 +5581,13 @@
       "to_evaluate": "À évaluer"
     },
     "action": {
-      "attach": "Rattacher",
       "tested": "À tester",
       "kept": "Garder",
       "parked": "Plus tard",
       "dropped": "Archiver",
       "to_evaluate": "À évaluer",
-      "task": "Tâche"
+      "createTask": "Créer une tâche",
+      "project": "Projet"
     },
     "lastCommit": "mis à jour {{date}}",
     "fetching": "Lecture de la page…",
@@ -5606,7 +5607,17 @@
       "button": "Importer des favoris",
       "result": "{{created}} ajoutés, {{existing}} déjà là",
       "error": "Les favoris n'ont pas pu être importés."
-    }
+    },
+    "more": "Plus d'actions",
+    "field": {
+      "title": "Titre",
+      "url": "Adresse",
+      "tags": "Étiquettes"
+    },
+    "editTitle": "Modifier le lien",
+    "deleteTitle": "Supprimer ce lien ?",
+    "deleteMessage": "Il quitte vos liens pour de bon et n'est plus repris de vos tâches et notes. Pour le mettre de côté, choisissez plutôt Archivé.",
+    "deleteError": "Le lien n'a pas pu être supprimé."
   },
   "dailyBrief": {
     "sectionName": {

@@ -38,10 +38,9 @@ import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
-import ch.nicolab.cadence.tasks.model.LinkDecision
 import ch.nicolab.cadence.tasks.model.LinkItem
+import ch.nicolab.cadence.tasks.model.LinkStatus
 import ch.nicolab.cadence.tasks.model.LinkKind
-import ch.nicolab.cadence.tasks.model.LinkTriage
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
@@ -67,23 +66,22 @@ internal class LayoutStore(context: Context) {
     }
 }
 
-private fun galleryLabel(decision: LinkDecision): Int = when (decision) {
-    LinkDecision.TASK -> R.string.links_action_task
-    LinkDecision.TEST -> R.string.links_gallery_test
-    LinkDecision.ATTACH -> R.string.links_gallery_attach
-    LinkDecision.LATER -> R.string.links_gallery_later
-    LinkDecision.DROP -> R.string.links_action_dropped
-    LinkDecision.KEEP -> R.string.links_action_kept
-}
-
 /**
  * Carte de la galerie des découvertes : l'image de la page quand le serveur l'a lue, le titre, le site et les
- * étoiles, le début du README pour un dépôt (sinon la description), puis les décisions d'un toucher
- * (Tester, Rattacher, Reporter, Jeter). Toucher la carte ouvre le lien.
+ * étoiles, le début du README pour un dépôt (sinon la description), le projet, puis le statut et « ⋯ ».
+ * Toucher la carte ouvre le lien.
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-internal fun LinkGalleryCard(link: LinkItem, onDecide: (LinkDecision) -> Unit, modifier: Modifier = Modifier) {
+internal fun LinkGalleryCard(
+    link: LinkItem,
+    projectName: String?,
+    onStatus: (LinkStatus) -> Unit,
+    onEdit: () -> Unit,
+    onTask: () -> Unit,
+    onDelete: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val palette = cadence
     val uriHandler = LocalUriHandler.current
     Column(modifier.fillMaxWidth().clip(Radius.Card).background(palette.card)) {
@@ -114,19 +112,17 @@ internal fun LinkGalleryCard(link: LinkItem, onDecide: (LinkDecision) -> Unit, m
                 link.note?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = palette.onSurface, maxLines = 2, overflow = TextOverflow.Ellipsis) }
             }
         }
-        FlowRow(
-            Modifier.fillMaxWidth().padding(Space.md),
-            horizontalArrangement = Arrangement.spacedBy(Space.xs),
-            verticalArrangement = Arrangement.spacedBy(Space.xs),
-        ) {
-            LinkTriage.GALLERY_DECISIONS.forEach { decision ->
-                QuickPill(
-                    label = stringResource(galleryLabel(decision)),
-                    onClick = { onDecide(decision) },
-                    quiet = decision == LinkDecision.LATER || decision == LinkDecision.DROP,
-                )
-            }
+        projectName?.let {
+            Text(
+                it,
+                style = MaterialTheme.typography.labelMedium,
+                color = palette.primary,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.padding(start = Space.md, end = Space.md, top = Space.xs),
+            )
         }
+        LinkControls(link, onStatus, onEdit, onTask, onDelete, Modifier.padding(start = Space.md, end = Space.xs, bottom = Space.xs))
     }
 }
 

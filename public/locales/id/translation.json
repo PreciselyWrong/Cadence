@@ -5537,7 +5537,8 @@
       "active": "Belum dibuang",
       "allStatuses": "Semua status",
       "allTags": "Semua tag",
-      "allDomains": "Semua situs"
+      "allDomains": "Semua situs",
+      "allProjects": "Semua proyek"
     },
     "sort": {
       "start": "Urutkan tautan ({{count}})",
@@ -5564,13 +5565,13 @@
       "to_evaluate": "Untuk dinilai"
     },
     "action": {
-      "attach": "Lampirkan",
       "tested": "Untuk dicoba",
       "kept": "Simpan",
       "parked": "Nanti",
       "dropped": "Arsipkan",
       "to_evaluate": "Untuk dinilai",
-      "task": "Tugas"
+      "createTask": "Buat tugas",
+      "project": "Proyek"
     },
     "lastCommit": "diperbarui {{date}}",
     "fetching": "Membaca halaman…",
@@ -5590,7 +5591,17 @@
       "button": "Impor markah",
       "result": "{{created}} ditambahkan, {{existing}} sudah ada",
       "error": "Markah tidak dapat diimpor."
-    }
+    },
+    "more": "Tindakan lainnya",
+    "field": {
+      "title": "Judul",
+      "url": "Alamat",
+      "tags": "Tag"
+    },
+    "editTitle": "Edit tautan",
+    "deleteTitle": "Hapus tautan ini?",
+    "deleteMessage": "Tautan ini keluar dari daftar Anda untuk selamanya dan tidak diambil lagi dari tugas dan catatan. Untuk menyisihkannya, pilih Diarsipkan.",
+    "deleteError": "Tautan tidak dapat dihapus."
   },
   "dailyBrief": {
     "sectionName": {

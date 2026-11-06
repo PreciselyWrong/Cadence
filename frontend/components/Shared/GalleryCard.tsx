@@ -20,6 +20,8 @@ interface GalleryCardProps {
     href?: string;
     to?: string;
     dimmed?: boolean;
+    // Controls under the card, outside what its click opens.
+    footer?: React.ReactNode;
 }
 
 // One card of a gallery: the picture first, then the title, a quiet line
@@ -33,6 +35,7 @@ const GalleryCard: React.FC<GalleryCardProps> = ({
     href,
     to,
     dimmed = false,
+    footer,
 }) => {
     const [imageFailed, setImageFailed] = useState(false);
     const showImage = !!image && !imageFailed;
@@ -100,6 +103,7 @@ const GalleryCard: React.FC<GalleryCardProps> = ({
                     {body}
                 </Link>
             )}
+            {footer && <div className="px-1 pt-1.5">{footer}</div>}
         </article>
     );
 };

@@ -704,6 +704,187 @@ describe('Links', () => {
         await jobs.drain();
     });
 
+    describe('managing a link', () => {
+        const add = async (url = 'https://example.com/gerer') =>
+            (await agent.post('/api/links').send({ url })).body.link;
+
+        it('deletes a link, and a rescan of the text does not bring it back', async () => {
+            await agent
+                .post('/api/note')
+                .send({ title: 'Refs', content: 'https://example.com/efface' });
+            await jobs.drain();
+            const { body } = await agent.get('/api/links');
+            const link = body.links.find((l) => l.url.endsWith('/efface'));
+
+            const res = await agent.delete(`/api/links/${link.uid}`);
+            expect(res.status).toBe(200);
+            expect((await agent.get(`/api/links/${link.uid}`)).status).toBe(
+                404
+            );
+
+            await jobs.captureExisting();
+            await jobs.drain();
+            expect(
+                await Link.count({ where: { url: link.url, user_id: user.id } })
+            ).toBe(0);
+        });
+
+        it('takes a deleted link back when the user saves it again', async () => {
+            const link = await add();
+            await agent.delete(`/api/links/${link.uid}`);
+            const again = await agent
+                .post('/api/links')
+                .send({ url: link.url });
+            expect(again.body.created).toBe(true);
+            await agent.post('/api/note').send({
+                title: 'Encore',
+                content: link.url,
+            });
+            await jobs.drain();
+            expect(
+                await Link.count({ where: { url: link.url, user_id: user.id } })
+            ).toBe(1);
+        });
+
+        it('cannot touch the link of someone else', async () => {
+            const link = await add();
+            const { agent: other } = await signIn('other-links@example.com');
+            expect((await other.delete(`/api/links/${link.uid}`)).status).toBe(
+                404
+            );
+            expect(await Link.count({ where: { uid: link.uid } })).toBe(1);
+        });
+
+        it('edits the title, which a later reading keeps', async () => {
+            const link = await add();
+            await jobs.drain();
+            const res = await agent
+                .patch(`/api/links/${link.uid}`)
+                .send({ title: '  Mon nom  ' });
+            expect(res.body.link.title).toBe('Mon nom');
+            await jobs.fetchAndStore(
+                (await Link.findOne({ where: { uid: link.uid } })).id
+            );
+            expect(
+                (await Link.findOne({ where: { uid: link.uid } })).title
+            ).toBe('Mon nom');
+        });
+
+        it('moves a link to a new address and reads that page', async () => {
+            const link = await add('https://example.com/ancienne');
+            await jobs.drain();
+            const res = await agent
+                .patch(`/api/links/${link.uid}`)
+                .send({ url: 'https://example.com/nouvelle?utm_source=x' });
+            expect(res.body.link.url).toBe('https://example.com/nouvelle');
+            expect(res.body.link.fetch_status).toBe('pending');
+            await jobs.drain();
+            expect(fetched).toContain('https://example.com/nouvelle');
+            const saved = await Link.findOne({ where: { uid: link.uid } });
+            expect(saved.description).toBe('A description');
+        });
+
+        it('refuses an address that is not valid or already saved', async () => {
+            const link = await add('https://example.com/une');
+            await add('https://example.com/deuxieme');
+            const bad = await agent
+                .patch(`/api/links/${link.uid}`)
+                .send({ url: 'ftp://x' });
+            expect(bad.status).toBe(400);
+            const taken = await agent
+                .patch(`/api/links/${link.uid}`)
+                .send({ url: 'https://example.com/deuxieme' });
+            expect(taken.status).toBe(409);
+        });
+
+        it('puts a link in a project, takes it out, and survives the project', async () => {
+            const { Project } = require('../../models');
+            const project = await Project.create({
+                name: 'Projet fictif',
+                user_id: user.id,
+            });
+            const link = await add();
+            const put = await agent
+                .patch(`/api/links/${link.uid}`)
+                .send({ project_uid: project.uid });
+            expect(put.body.link).toMatchObject({
+                project_uid: project.uid,
+                project_name: 'Projet fictif',
+            });
+            const out = await agent
+                .patch(`/api/links/${link.uid}`)
+                .send({ project_uid: null });
+            expect(out.body.link.project_uid).toBeNull();
+
+            await agent
+                .patch(`/api/links/${link.uid}`)
+                .send({ project_uid: project.uid });
+            await agent.delete(`/api/project/${project.uid}`);
+            const after = await agent.get(`/api/links/${link.uid}`);
+            expect(after.status).toBe(200);
+            expect(after.body.link.project_uid).toBeNull();
+        });
+
+        it('edits and deletes a link from a device', async () => {
+            const { Project } = require('../../models');
+            const project = await Project.create({
+                name: 'Depuis le téléphone',
+                user_id: user.id,
+            });
+            const link = await add('https://example.com/telephone');
+            const edit = await agent.post('/api/v1/sync/push').send({
+                ops: [
+                    upsert(
+                        'op-edit',
+                        link.uid,
+                        { title: 'Renommé', project_uid: project.uid },
+                        hlc(Date.now())
+                    ),
+                ],
+            });
+            expect(edit.body.results[0].status).toBe('applied');
+            const saved = (await agent.get(`/api/links/${link.uid}`)).body.link;
+            expect(saved).toMatchObject({
+                title: 'Renommé',
+                project_uid: project.uid,
+            });
+
+            const removed = await agent.post('/api/v1/sync/push').send({
+                ops: [
+                    {
+                        op_id: 'op-delete',
+                        entity: 'link',
+                        uid: link.uid,
+                        action: 'delete',
+                        hlc: hlc(Date.now() + 1000),
+                    },
+                ],
+            });
+            expect(removed.body.results[0].status).toBe('applied');
+            expect((await agent.get(`/api/links/${link.uid}`)).status).toBe(
+                404
+            );
+            const { LinkExclusion } = require('../../models');
+            expect(
+                await LinkExclusion.count({ where: { url: link.url } })
+            ).toBe(1);
+        });
+
+        it('refuses a project of someone else', async () => {
+            const { Project } = require('../../models');
+            const owner = await createTestUser({ email: 'pro@example.com' });
+            const foreign = await Project.create({
+                name: 'Pas à moi',
+                user_id: owner.id,
+            });
+            const link = await add();
+            const res = await agent
+                .patch(`/api/links/${link.uid}`)
+                .send({ project_uid: foreign.uid });
+            expect(res.status).toBe(400);
+        });
+    });
+
     it('keeps the given title once the page has been read', async () => {
         const { body } = await agent
             .post('/api/links')

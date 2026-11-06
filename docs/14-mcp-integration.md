@@ -1228,6 +1228,10 @@ Puts related links in one theme: adds the tag `theme` to each of `uids`, keeping
 
 Proposes a slot in the agenda for related links. It only waits in the triage queue until the user accepts or refuses it. `link_uids`, `title`, `reason`, `date`, optionally `start_minute`, `duration_minutes`.
 
+#### `delete_link`
+
+Permanently deletes a saved link; its address is no longer captured from tasks and notes. `uid`. Only when the user asks: to set a link aside, use `update_link` with `status: dropped`.
+
 #### `update_link`
 
 | Parameter | Type | Required | Description |

@@ -42,5 +42,9 @@ router.patch(
         link: await links.update(req.currentUser.id, req.params.uid, req.body),
     }))
 );
+router.delete(
+    '/links/:uid',
+    handle((req) => links.remove(req.currentUser.id, req.params.uid))
+);
 
 module.exports = router;

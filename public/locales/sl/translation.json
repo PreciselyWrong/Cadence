@@ -5593,7 +5593,8 @@
       "active": "Neodvržene",
       "allStatuses": "Vsa stanja",
       "allTags": "Vse oznake",
-      "allDomains": "Vsa spletna mesta"
+      "allDomains": "Vsa spletna mesta",
+      "allProjects": "Vsi projekti"
     },
     "sort": {
       "start": "Razvrsti povezave ({{count}})",
@@ -5620,13 +5621,13 @@
       "to_evaluate": "Za oceno"
     },
     "action": {
-      "attach": "Pripni",
       "tested": "Za preizkus",
       "kept": "Shrani",
       "parked": "Pozneje",
       "dropped": "Arhiviraj",
       "to_evaluate": "Za oceno",
-      "task": "Naloga"
+      "createTask": "Ustvari opravilo",
+      "project": "Projekt"
     },
     "lastCommit": "posodobljeno {{date}}",
     "fetching": "Branje strani…",
@@ -5646,7 +5647,17 @@
       "button": "Uvozi zaznamke",
       "result": "Dodano: {{created}}, že obstaja: {{existing}}",
       "error": "Zaznamkov ni bilo mogoče uvoziti."
-    }
+    },
+    "more": "Več dejanj",
+    "field": {
+      "title": "Naslov",
+      "url": "Spletni naslov",
+      "tags": "Oznake"
+    },
+    "editTitle": "Uredi povezavo",
+    "deleteTitle": "Izbrišem to povezavo?",
+    "deleteMessage": "Trajno izgine iz vaših povezav in se ne prevzame več iz opravil in zapiskov. Če jo želite odložiti, izberite Arhivirano.",
+    "deleteError": "Povezave ni bilo mogoče izbrisati."
   },
   "dailyBrief": {
     "sectionName": {

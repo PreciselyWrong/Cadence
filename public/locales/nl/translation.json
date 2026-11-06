@@ -5537,7 +5537,8 @@
       "active": "Niet weggegooid",
       "allStatuses": "Alle statussen",
       "allTags": "Alle labels",
-      "allDomains": "Alle sites"
+      "allDomains": "Alle sites",
+      "allProjects": "Alle projecten"
     },
     "sort": {
       "start": "Links sorteren ({{count}})",
@@ -5564,13 +5565,13 @@
       "to_evaluate": "Te beoordelen"
     },
     "action": {
-      "attach": "Koppelen",
       "tested": "Uitproberen",
       "kept": "Bewaren",
       "parked": "Later",
       "dropped": "Archiveren",
       "to_evaluate": "Te beoordelen",
-      "task": "Taak"
+      "createTask": "Taak maken",
+      "project": "Project"
     },
     "lastCommit": "bijgewerkt {{date}}",
     "fetching": "Pagina wordt gelezen…",
@@ -5590,7 +5591,17 @@
       "button": "Bladwijzers importeren",
       "result": "{{created}} toegevoegd, {{existing}} bestonden al",
       "error": "De bladwijzers konden niet worden geïmporteerd."
-    }
+    },
+    "more": "Meer acties",
+    "field": {
+      "title": "Titel",
+      "url": "Adres",
+      "tags": "Labels"
+    },
+    "editTitle": "Link bewerken",
+    "deleteTitle": "Deze link verwijderen?",
+    "deleteMessage": "Hij verdwijnt definitief uit je links en wordt niet opnieuw uit taken en notities overgenomen. Kies Gearchiveerd om hem opzij te leggen.",
+    "deleteError": "De link kon niet worden verwijderd."
   },
   "dailyBrief": {
     "sectionName": {

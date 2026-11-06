@@ -5593,7 +5593,8 @@
       "active": "Nieodrzucone",
       "allStatuses": "Wszystkie statusy",
       "allTags": "Wszystkie tagi",
-      "allDomains": "Wszystkie witryny"
+      "allDomains": "Wszystkie witryny",
+      "allProjects": "Wszystkie projekty"
     },
     "sort": {
       "start": "Sortuj linki ({{count}})",
@@ -5620,13 +5621,13 @@
       "to_evaluate": "Do oceny"
     },
     "action": {
-      "attach": "Przypisz",
       "tested": "Do przetestowania",
       "kept": "Zachowaj",
       "parked": "Później",
       "dropped": "Archiwizuj",
       "to_evaluate": "Do oceny",
-      "task": "Zadanie"
+      "createTask": "Utwórz zadanie",
+      "project": "Projekt"
     },
     "lastCommit": "zaktualizowano {{date}}",
     "fetching": "Czytanie strony…",
@@ -5646,7 +5647,17 @@
       "button": "Importuj zakładki",
       "result": "Dodano {{created}}, już było {{existing}}",
       "error": "Nie udało się zaimportować zakładek."
-    }
+    },
+    "more": "Więcej działań",
+    "field": {
+      "title": "Tytuł",
+      "url": "Adres",
+      "tags": "Tagi"
+    },
+    "editTitle": "Edytuj link",
+    "deleteTitle": "Usunąć ten link?",
+    "deleteMessage": "Znika z Twoich linków na stałe i nie zostanie ponownie pobrany z zadań i notatek. Aby go odłożyć, wybierz Zarchiwizowany.",
+    "deleteError": "Nie udało się usunąć linku."
   },
   "dailyBrief": {
     "sectionName": {

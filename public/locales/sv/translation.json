@@ -5537,7 +5537,8 @@
       "active": "Ej kasserade",
       "allStatuses": "Alla statusar",
       "allTags": "Alla etiketter",
-      "allDomains": "Alla webbplatser"
+      "allDomains": "Alla webbplatser",
+      "allProjects": "Alla projekt"
     },
     "sort": {
       "start": "Sortera länkar ({{count}})",
@@ -5564,13 +5565,13 @@
       "to_evaluate": "Att utvärdera"
     },
     "action": {
-      "attach": "Koppla",
       "tested": "Att testa",
       "kept": "Behåll",
       "parked": "Senare",
       "dropped": "Arkivera",
       "to_evaluate": "Att utvärdera",
-      "task": "Uppgift"
+      "createTask": "Skapa en uppgift",
+      "project": "Projekt"
     },
     "lastCommit": "uppdaterad {{date}}",
     "fetching": "Läser sidan…",
@@ -5590,7 +5591,17 @@
       "button": "Importera bokmärken",
       "result": "{{created}} tillagda, {{existing}} fanns redan",
       "error": "Bokmärkena kunde inte importeras."
-    }
+    },
+    "more": "Fler åtgärder",
+    "field": {
+      "title": "Titel",
+      "url": "Adress",
+      "tags": "Etiketter"
+    },
+    "editTitle": "Redigera länken",
+    "deleteTitle": "Ta bort den här länken?",
+    "deleteMessage": "Den försvinner för gott från dina länkar och hämtas inte igen från uppgifter och anteckningar. Välj Arkiverad för att lägga den åt sidan.",
+    "deleteError": "Länken kunde inte tas bort."
   },
   "dailyBrief": {
     "sectionName": {

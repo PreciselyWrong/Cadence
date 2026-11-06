@@ -262,9 +262,11 @@ const ENTITIES = {
         refs: {},
     },
     // Links are found by the server in inbox items, tasks and notes; a
-    // device cannot create one, only annotate it.
+    // device cannot create one, only edit or delete it. A new address goes
+    // through PATCH /links/:uid, which reads the new page.
     link: {
         model: 'Link',
+        destroy: (row) => require('../links/repository').remove(row),
         validate: async (row, values) => {
             if (!row) return 'unknown_link';
             const { LINK_STATUSES } = require('../links/core/constants');
@@ -282,10 +284,9 @@ const ENTITIES = {
             return null;
         },
         version: 1,
-        fields: ['note', 'status', 'review_at'],
+        fields: ['title', 'note', 'status', 'review_at'],
         serverFields: [
             'url',
-            'title',
             'description',
             'image_url',
             'site_name',
@@ -299,7 +300,9 @@ const ENTITIES = {
             'fetch_status',
             'fetched_at',
         ],
-        refs: {},
+        refs: {
+            project_uid: { column: 'project_id', entity: 'project' },
+        },
         lists: {
             tag_uids: {
                 through: 'links_tags',

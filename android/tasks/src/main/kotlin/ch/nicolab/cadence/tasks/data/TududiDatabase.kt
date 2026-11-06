@@ -24,7 +24,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         BriefEntity::class,
         EveningEntity::class,
     ],
-    version = 15,
+    version = 16,
     exportSchema = true,
 )
 abstract class TududiDatabase : RoomDatabase() {
@@ -200,6 +200,14 @@ internal val MIGRATION_13_14 = object : Migration(13, 14) {
 }
 
 /** Bannière des projets : le curseur repart de zéro, sinon les images déjà posées n'arriveraient jamais. */
+/** Un lien peut appartenir à un projet ; sans remise à zéro du curseur, ceux déjà rangés n'arriveraient jamais. */
+internal val MIGRATION_15_16 = object : Migration(15, 16) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE links ADD COLUMN projectUid TEXT")
+        db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
+    }
+}
+
 internal val MIGRATION_14_15 = object : Migration(14, 15) {
     override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL("ALTER TABLE projects ADD COLUMN imageUrl TEXT")
