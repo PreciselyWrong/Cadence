@@ -578,12 +578,13 @@ describe('TODO.md projects', () => {
             expect(tasks.every((t) => t.source_key === null)).toBe(true);
             expect(fs.readFileSync(alpha(), 'utf8')).toBe(before);
 
+            const originalName = tasks[0].name;
             const edit = await agent
                 .patch(`/api/task/${tasks[0].uid}`)
                 .send({ name: 'Free again' });
             expect(edit.status).toBe(200);
             await tasks[0].reload();
-            await tasks[0].update({ name: 'Ship the thing' });
+            await tasks[0].update({ name: originalName });
 
             const again = await agent
                 .post(`/api/todo-md/projects/${project.uid}/link`)
