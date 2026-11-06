@@ -11,6 +11,8 @@ tauri-build = { version = "=2.7.4", features = [] }
 
 [dependencies]
 tauri = { version = "=2.12.4", features = ["tray-icon", "image-png"] }
+# KSNI instead of Tauri's libappindicator: only it reports a left click on the tray icon.
+tray-icon = { version = "=0.25.1", default-features = false, features = ["ksni"] }
 tauri-plugin-notification = "=2.8.0"
 tauri-plugin-global-shortcut = "=2.4.1"
 tauri-plugin-single-instance = "=2.5.5"

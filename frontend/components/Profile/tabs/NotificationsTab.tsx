@@ -48,7 +48,7 @@ const DEFAULT_PREFERENCES: NotificationPreferences = {
     overdueProjects: channelsOf(false),
     deferUntil: channelsOf(true),
     taskAssigned: channelsOf(false),
-    taskReminders: channelsOf(false),
+    taskReminders: channelsOf(true),
     habitReminders: channelsOf(false),
     comments: channelsOf(false),
 };

@@ -148,7 +148,7 @@ describe('due time', () => {
                 .mockResolvedValue(1);
             await user.update({
                 notification_preferences: {
-                    taskReminders: { inApp: false, push: true },
+                    taskReminders: { inApp: false, push: true, desktop: false },
                 },
             });
             await Task.create({
@@ -173,7 +173,7 @@ describe('due time', () => {
         it('sends nothing when every channel is off', async () => {
             await user.update({
                 notification_preferences: {
-                    taskReminders: { inApp: false },
+                    taskReminders: { inApp: false, desktop: false },
                 },
             });
             await Task.create({
@@ -196,7 +196,7 @@ describe('due time', () => {
         it('stamps reminder_sent_at as handled even when nothing was sent', async () => {
             await user.update({
                 notification_preferences: {
-                    taskReminders: { inApp: false },
+                    taskReminders: { inApp: false, desktop: false },
                 },
             });
             const task = await Task.create({
@@ -215,9 +215,9 @@ describe('due time', () => {
             ).toBe(0);
         });
 
-        it('keeps task reminders off the desktop unless asked', async () => {
+        it('rings on the desktop too, unless turned off', async () => {
             await Task.create({
-                name: 'Phone only',
+                name: 'Both ring',
                 user_id: user.id,
                 reminder_at: new Date('2026-10-15T09:59:00Z'),
             });
@@ -225,12 +225,12 @@ describe('due time', () => {
             let [notification] = await Notification.findAll({
                 where: { user_id: user.id, type: 'reminder' },
             });
-            expect(notification.sources).not.toContain('desktop');
+            expect(notification.sources).toContain('desktop');
 
             await Notification.destroy({ where: { user_id: user.id } });
             await user.update({
                 notification_preferences: {
-                    taskReminders: { inApp: true, desktop: true },
+                    taskReminders: { inApp: true, desktop: false },
                 },
             });
             await Task.update(
@@ -241,7 +241,7 @@ describe('due time', () => {
             [notification] = await Notification.findAll({
                 where: { user_id: user.id, type: 'reminder' },
             });
-            expect(notification.sources).toContain('desktop');
+            expect(notification.sources).not.toContain('desktop');
         });
 
         it('does not send for a reminder in the future', async () => {

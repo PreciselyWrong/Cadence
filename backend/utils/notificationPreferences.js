@@ -67,7 +67,7 @@ const DEFAULT_PREFERENCES = {
         push: false,
         telegram: false,
         apprise: false,
-        desktop: false,
+        desktop: true,
     },
     // The phone rings habit reminders itself (one voice): the server row is
     // the in-app record, the other channels are opt-in.

@@ -67,7 +67,7 @@ describe('notificationPreferences utils', () => {
                     push: false,
                     telegram: false,
                     apprise: false,
-                    desktop: false,
+                    desktop: true,
                 },
                 habitReminders: {
                     inApp: true,
@@ -541,24 +541,22 @@ describe('desktop channel', () => {
         ensureNotificationPreferences,
     } = require('../../../utils/notificationPreferences');
 
-    it('rings on the desktop by default for due soon and deferred tasks only', () => {
+    it('rings on the desktop by default for reminders, due soon and deferred tasks only', () => {
         const user = { notification_preferences: null };
         expect(shouldSendDesktopNotification(user, 'task_due_soon')).toBe(true);
         expect(shouldSendDesktopNotification(user, 'deferUntil')).toBe(true);
-        expect(shouldSendDesktopNotification(user, 'task_reminder')).toBe(
-            false
-        );
+        expect(shouldSendDesktopNotification(user, 'task_reminder')).toBe(true);
         expect(shouldSendDesktopNotification(user, 'comment_added')).toBe(
             false
         );
     });
 
-    it('keeps task reminders off the desktop unless the user turns them on', () => {
-        const on = {
-            notification_preferences: { taskReminders: { desktop: true } },
+    it('keeps task reminders off the desktop when the user turns them off', () => {
+        const off = {
+            notification_preferences: { taskReminders: { desktop: false } },
         };
-        expect(shouldSendDesktopNotification(on, 'task_reminder')).toBe(true);
-        expect(reminderSources(on, 'task_reminder')).toContain('desktop');
+        expect(shouldSendDesktopNotification(off, 'task_reminder')).toBe(false);
+        expect(reminderSources(off, 'task_reminder')).not.toContain('desktop');
     });
 
     it('honours an explicit off for due soon', () => {
@@ -575,7 +573,7 @@ describe('desktop channel', () => {
             taskReminders: { inApp: true },
         });
         expect(result.dueTasks.desktop).toBe(true);
-        expect(result.taskReminders.desktop).toBe(false);
+        expect(result.taskReminders.desktop).toBe(true);
         expect(result.habitReminders).toEqual({
             inApp: true,
             email: false,

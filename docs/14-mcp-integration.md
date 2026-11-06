@@ -1216,7 +1216,19 @@ Links are found by the server in inbox items, tasks and notes, with their page m
 |-----------|------|----------|-------------|
 | `uid` | string | Yes | Link UID |
 
-#### `create_link`, `group_links`, `propose_link_slot`, `update_link`
+#### `create_link`
+
+Saves a web page as a link; the same page twice is one link. `url`, and optionally `title`, `note`, `status`, `tags`.
+
+#### `group_links`
+
+Puts related links in one theme: adds the tag `theme` to each of `uids`, keeping their other tags.
+
+#### `propose_link_slot`
+
+Proposes a slot in the agenda for related links. It only waits in the triage queue until the user accepts or refuses it. `link_uids`, `title`, `reason`, `date`, optionally `start_minute`, `duration_minutes`.
+
+#### `update_link`
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|

@@ -27,7 +27,7 @@ use std::{
 use sync::Store;
 use tauri::{
     menu::{Menu, MenuItem},
-    tray::TrayIconBuilder,
+    tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
     AppHandle, Manager, RunEvent, State, WebviewUrl, WebviewWindowBuilder,
 };
 use tauri_plugin_global_shortcut::{GlobalShortcutExt, ShortcutState};
@@ -39,6 +39,24 @@ const BACKGROUND_FLAG: &str = "--background";
 const UI_FLAG: &str = "--ui";
 /// Web UI route the main window opens at (`--ui main --path /task/<uid>`).
 const PATH_FLAG: &str = "--path";
+/// Delay between two attempts to show the tray icon while no tray host answers.
+const TRAY_RETRY: Duration = Duration::from_secs(5);
+
+/// Web UI route a left click on the tray icon opens.
+const TODAY_PATH: &str = "/today";
+
+/// A left click on the tray icon, once. The right click stays the menu's.
+fn is_left_click(event: &TrayIconEvent) -> bool {
+    matches!(
+        event,
+        TrayIconEvent::Click {
+            button: MouseButton::Left,
+            button_state: MouseButtonState::Up,
+            ..
+        }
+    )
+}
+
 /// Extra carried by a notification: the web UI route opened when it is clicked.
 const CLICK_PATH_KEY: &str = "path";
 /// Quick-add window (logical px): one input row, 12 px of margin around it.
@@ -413,6 +431,63 @@ fn background_loop(app: AppHandle) {
     }
 }
 
+fn build_tray(app: &AppHandle) -> tauri::Result<()> {
+    let menu = Menu::with_items(
+        app,
+        &[
+            &MenuItem::with_id(app, "open", "Ouvrir", true, None::<&str>)?,
+            &MenuItem::with_id(app, "quick", "Ajout rapide", true, None::<&str>)?,
+            &MenuItem::with_id(app, "settings", "Réglages", true, None::<&str>)?,
+            &MenuItem::with_id(app, "quit", "Quitter", true, None::<&str>)?,
+        ],
+    )?;
+    let mut builder = TrayIconBuilder::new()
+        .tooltip("Cadence")
+        .menu(&menu)
+        .show_menu_on_left_click(false)
+        .on_tray_icon_event(|icon, event| {
+            if is_left_click(&event) {
+                icon.app_handle()
+                    .state::<Tray>()
+                    .open_at("main", Some(TODAY_PATH));
+            }
+        })
+        .on_menu_event(|app, event| {
+            let tray = app.state::<Tray>();
+            match event.id.as_ref() {
+                "open" => tray.open("main"),
+                "quick" => tray.open("quick"),
+                "settings" => tray.open("settings"),
+                "quit" => {
+                    tray.close_all();
+                    app.exit(0);
+                }
+                _ => {}
+            }
+        });
+    if let Some(icon) = app.default_window_icon().cloned() {
+        builder = builder.icon(icon);
+    }
+    builder.build(app)?;
+    Ok(())
+}
+
+/// At login the app can start before the desktop's tray host. Notifications and the
+/// shortcut must not depend on it, so the app stays up and the icon comes when it can.
+fn retry_tray(app: AppHandle) {
+    loop {
+        thread::sleep(TRAY_RETRY);
+        let (done, built) = std::sync::mpsc::channel();
+        let handle = app.clone();
+        let asked = app.run_on_main_thread(move || {
+            let _ = done.send(build_tray(&handle).is_ok());
+        });
+        if asked.is_err() || built.recv().unwrap_or(false) {
+            return;
+        }
+    }
+}
+
 fn run_tray(args: &[String]) {
     let quick_at_start = args.iter().any(|a| a == QUICK_FLAG);
     let background = args.iter().any(|a| a == BACKGROUND_FLAG);
@@ -453,39 +528,12 @@ fn run_tray(args: &[String]) {
                 first_run: Mutex::new(first_run),
             });
 
-            let menu = Menu::with_items(
-                app,
-                &[
-                    &MenuItem::with_id(app, "open", "Ouvrir", true, None::<&str>)?,
-                    &MenuItem::with_id(app, "quick", "Ajout rapide", true, None::<&str>)?,
-                    &MenuItem::with_id(app, "settings", "Réglages", true, None::<&str>)?,
-                    &MenuItem::with_id(app, "quit", "Quitter", true, None::<&str>)?,
-                ],
-            )?;
-            TrayIconBuilder::new()
-                .icon(
-                    app.default_window_icon()
-                        .cloned()
-                        .ok_or("missing app icon")?,
-                )
-                .tooltip("Cadence")
-                .menu(&menu)
-                .on_menu_event(|app, event| {
-                    let tray = app.state::<Tray>();
-                    match event.id.as_ref() {
-                        "open" => tray.open("main"),
-                        "quick" => tray.open("quick"),
-                        "settings" => tray.open("settings"),
-                        "quit" => {
-                            tray.close_all();
-                            app.exit(0);
-                        }
-                        _ => {}
-                    }
-                })
-                .build(app)?;
-
             let handle = app.handle().clone();
+            if let Err(e) = build_tray(&handle) {
+                eprintln!("tray icon not ready, retrying: {e}");
+                let retry = handle.clone();
+                thread::spawn(move || retry_tray(retry));
+            }
             // A click on a notification (the `default` action) opens the related item.
             let on_click = handle.clone();
             handle.notification().on_action(move |performed| {
@@ -514,4 +562,28 @@ fn run_tray(args: &[String]) {
         RunEvent::Exit => app.state::<Tray>().close_all(),
         _ => {}
     });
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use tauri::{PhysicalPosition, Rect};
+
+    fn click(button: MouseButton, button_state: MouseButtonState) -> TrayIconEvent {
+        TrayIconEvent::Click {
+            id: "tray".into(),
+            position: PhysicalPosition::new(0.0, 0.0),
+            rect: Rect::default(),
+            button,
+            button_state,
+        }
+    }
+
+    #[test]
+    fn only_the_release_of_a_left_click_opens_today() {
+        assert!(is_left_click(&click(MouseButton::Left, MouseButtonState::Up)));
+        assert!(!is_left_click(&click(MouseButton::Left, MouseButtonState::Down)));
+        assert!(!is_left_click(&click(MouseButton::Right, MouseButtonState::Up)));
+        assert!(!is_left_click(&click(MouseButton::Middle, MouseButtonState::Up)));
+    }
 }

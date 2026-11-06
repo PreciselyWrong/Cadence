@@ -65,7 +65,7 @@ describe('NotificationsTab', () => {
         ).toBeInTheDocument();
     });
 
-    it('turns the desktop channel on for task reminders', async () => {
+    it('turns the desktop channel off for task reminders', async () => {
         const { onChange } = await renderTab();
 
         fireEvent.click(
@@ -76,7 +76,7 @@ describe('NotificationsTab', () => {
 
         expect(onChange).toHaveBeenCalledWith(
             expect.objectContaining({
-                taskReminders: expect.objectContaining({ desktop: true }),
+                taskReminders: expect.objectContaining({ desktop: false }),
             })
         );
     });

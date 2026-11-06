@@ -13,7 +13,7 @@ Tauri 2 shell around the user's own Cadence server. It adds what a browser tab c
 
 | Feature | How |
 |---|---|
-| Tray icon | Menu: Ouvrir, Ajout rapide, Réglages, Quitter. Closing the window leaves the tray running. |
+| Tray icon | Left click: the tasks of the day (`/today`). Right click: the menu, Ouvrir, Ajout rapide, Réglages, Quitter. Closing the window leaves the tray running. The icon uses the KSNI backend of `tray-icon`, added as a direct dependency: Tauri's default libappindicator never reports a click on Linux. |
 | Quick add | `Ctrl+Alt+Space` (config `shortcut`) opens a small always-on-top field (560 x 76 px); Enter stores the capture and closes. On X11 the key is grabbed by the global-shortcut plugin; under Wayland it is bound through the XDG GlobalShortcuts portal (see below). |
 | Offline captures | The tray process posts the queue to `POST /api/inbox` (`Authorization: Bearer tt_...`, `source: "desktop"`) as soon as it can, then every 60 s while the server is unreachable. Each capture carries an `Idempotency-Key` (a uuid stored in its queue file), the same on every retry, so the server stores it once. |
 | Autostart | Settings checkbox, off by default. On writes `~/.config/autostart/cadence-desktop.desktop` (`Exec=... --background`, the AppImage file when run from one); off removes it. The file is the source of truth. |
@@ -51,7 +51,11 @@ The tray process drives its window processes over their stdin (`focus`, `goto /r
 - **Duplicates:** a capture is sent at least once; the `Idempotency-Key` makes the server (`backend/middleware/idempotency.js`, 24 h window per user) return the first answer for a retry instead of creating a second inbox item. A server without the middleware ignores the header and a lost answer can still duplicate.
 - **Wayland focus:** raising a window uses the toolkit's focus request; the compositor may only flash the taskbar entry instead of focusing (focus-stealing prevention).
 - Strings of the setup and quick-add pages are French/English only, not in the 26 web locales.
-- Tray on GNOME needs the AppIndicator extension.
+- Tray on GNOME needs the AppIndicator extension; without a tray host the app keeps running and retries.
+
+## Verification (2026-11-06, tray icon)
+
+On a private session bus with a mock `StatusNotifierWatcher` (the real KDE panel was not used, so a click on the panel itself remains to be seen): the item registers with `ItemIsMenu` false and a `Menu`; calling `Activate` starts `--ui main --path /today`; the `clicked` event of the menu's Réglages opens the settings. With no watcher at start, the app stays up and the icon registers as soon as one appears (the 5 s retry): KSNI fails where libappindicator waited, and without this the app would crash when it starts before the panel.
 
 ## Verification (2026-11-01, Fedora 44, KDE Plasma 6.7 Wayland)
 
