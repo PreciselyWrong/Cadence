@@ -1,3 +1,11 @@
+## [1.12.2] — 6 novembre 2026
+
+### Corrections
+- À trier : un geste validé part même si vous quittez l'écran avant la fin du délai d'annulation.
+- À trier : une carte dont l'action a été refusée par le serveur revient, au lieu de rester masquée jusqu'au redémarrage de l'app.
+- À trier : convertir une tâche partagée n'est plus accepté, et ne crée plus une note à chaque synchronisation. Il faut un serveur à jour.
+- À trier : accepter un créneau deux fois, ou un créneau qui ne rentre plus dans le plan, ne laisse plus de tâche en double. Il faut un serveur à jour.
+
 ## [1.12.1] — 6 novembre 2026
 
 ### Nouveautés
