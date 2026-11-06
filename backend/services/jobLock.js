@@ -15,6 +15,36 @@ const lockKey = (name) =>
 
 const runningLocally = new Set();
 
+// An advisory lock lives on a connection of its own, outside the pool. Held
+// on a pool connection, every running job would take one while its queries
+// wait for another: with as many jobs as connections, nobody gets any. The
+// session owns the lock, so it also goes away if the process dies mid-job.
+async function acquireLock(name) {
+    const manager = sequelize.connectionManager;
+    const connection = await manager.connect(sequelize.config);
+    try {
+        const { rows } = await connection.query(
+            'SELECT pg_try_advisory_lock($1) AS locked',
+            [lockKey(name)]
+        );
+        if (rows[0].locked) return connection;
+    } catch (error) {
+        await releaseLock(connection);
+        throw error;
+    }
+    await releaseLock(connection);
+    return null;
+}
+
+// Closing the session releases its lock.
+async function releaseLock(connection) {
+    try {
+        await sequelize.connectionManager.disconnect(connection);
+    } catch (error) {
+        logError('Failed to close a job lock connection:', error);
+    }
+}
+
 // Runs `fn` if no other process (or this one) is already running the job
 // named `name`. Returns { ran: true, result } or { ran: false }.
 async function withJobLock(name, fn) {
@@ -31,80 +61,59 @@ async function withJobLock(name, fn) {
         }
     }
 
-    // A transaction-scoped advisory lock releases itself when the
-    // transaction ends, even if the process dies mid-job.
-    const tx = await sequelize.transaction();
-    try {
-        const [[{ locked }]] = await sequelize.query(
-            'SELECT pg_try_advisory_xact_lock(:key) AS locked',
-            { replacements: { key: lockKey(name) }, transaction: tx }
-        );
-        if (!locked) {
-            await tx.rollback();
-            return { ran: false };
-        }
+    const connection = await acquireLock(name);
+    if (!connection) {
+        return { ran: false };
+    }
 
-        runningLocally.add(name);
-        try {
-            const result = await fn();
-            return { ran: true, result };
-        } finally {
-            runningLocally.delete(name);
-            await tx.rollback();
-        }
-    } catch (error) {
-        if (!tx.finished) {
-            await tx.rollback().catch(() => {});
-        }
-        throw error;
+    runningLocally.add(name);
+    try {
+        return { ran: true, result: await fn() };
+    } finally {
+        runningLocally.delete(name);
+        await releaseLock(connection);
     }
 }
 
 // Long-lived leadership for jobs that must not switch processes between
 // runs (the Telegram poller keeps per-bot update offsets in memory). The
-// lock is held by an open transaction for as long as the process lives.
-const leaderTransactions = new Map();
+// lock is held by its own connection for as long as the process lives.
+const leaderConnections = new Map();
 
 async function tryBecomeLeader(name) {
-    if (leaderTransactions.has(name)) {
+    if (leaderConnections.has(name)) {
         return true;
     }
 
     if (!isPostgres()) {
-        leaderTransactions.set(name, null);
+        leaderConnections.set(name, null);
         return true;
     }
 
-    const tx = await sequelize.transaction();
     try {
-        const [[{ locked }]] = await sequelize.query(
-            'SELECT pg_try_advisory_xact_lock(:key) AS locked',
-            { replacements: { key: lockKey(name) }, transaction: tx }
-        );
-        if (!locked) {
-            await tx.rollback();
+        const connection = await acquireLock(name);
+        if (!connection) {
             return false;
         }
-        leaderTransactions.set(name, tx);
+        leaderConnections.set(name, connection);
         logInfo(`This process is now the leader for "${name}"`);
         return true;
     } catch (error) {
-        await tx.rollback().catch(() => {});
         logError(`Failed to acquire leader lock for "${name}":`, error);
         return false;
     }
 }
 
 async function releaseLeadership(name) {
-    const tx = leaderTransactions.get(name);
-    leaderTransactions.delete(name);
-    if (tx && !tx.finished) {
-        await tx.rollback().catch(() => {});
+    const connection = leaderConnections.get(name);
+    leaderConnections.delete(name);
+    if (connection) {
+        await releaseLock(connection);
     }
 }
 
 function isLeader(name) {
-    return leaderTransactions.has(name);
+    return leaderConnections.has(name);
 }
 
 module.exports = {

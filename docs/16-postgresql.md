@@ -109,7 +109,7 @@ Uploads live on disk (`TUDUDI_UPLOAD_PATH`) and need their own backup.
 
 ## Sizing and Tuning
 
-- **Connections**: each app process holds up to `DB_POOL_MAX` connections (default 10). Keep `max_connections` on the server above `DB_POOL_MAX` times the number of app processes, plus headroom for `psql`, backups and the MCP server.
+- **Connections**: each app process holds up to `DB_POOL_MAX` connections (default 10). Keep `max_connections` on the server above `DB_POOL_MAX` times the number of app processes, plus headroom for `psql`, backups and the MCP server. Each running background job also opens one short connection outside the pool for its advisory lock (`services/jobLock.js`), so count about ten more per process.
 - **Timezone**: the app sets the session timezone to UTC and stores every timestamp as `timestamptz`, so date bucketing matches SQLite regardless of the server's timezone setting.
 - **JSON columns** are stored as `json`. They can be moved to `jsonb` in a future migration if query patterns need it.
 - **Case-insensitive search** uses `ILIKE`. A `pg_trgm` index on `tasks.name`, `notes.title` and `projects.name` speeds it up on large datasets; it is not created by default.
