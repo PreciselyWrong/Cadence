@@ -154,7 +154,12 @@ internal class TasksRuntime private constructor(context: Context) {
     val evening = EveningRepository(database.eveningDao(), api::call, accountZone)
     val briefAudio = ch.nicolab.cadence.tasks.brief.audio.BriefAudio(appContext, brief, evening, api::download)
     val briefSettings = BriefSettingsRepository(briefStore, api::call) { call -> repository.defer(call).getOrThrow() }
-    val triage = ch.nicolab.cadence.tasks.triage.TriageRepository(briefStore, api::call) { call -> repository.defer(call).getOrThrow() }
+    val triage = ch.nicolab.cadence.tasks.triage.TriageRepository(
+        store = briefStore,
+        call = api::call,
+        pendingCalls = { database.deferredCallDao().all().map { it.key }.toSet() },
+        defer = { call -> repository.defer(call).getOrThrow() },
+    )
     val briefAgents = BriefAgentsRepository(api::call)
     val briefActions = BriefActions(
         tasks = RepositoryBriefTasks(repository),

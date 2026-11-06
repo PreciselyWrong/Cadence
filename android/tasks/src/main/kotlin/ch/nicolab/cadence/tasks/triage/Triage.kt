@@ -121,6 +121,7 @@ internal fun slotAnswerCall(slotId: String, accept: Boolean, label: String) = De
 class TriageRepository internal constructor(
     private val store: BriefStore,
     private val call: suspend (method: String, path: String, query: Map<String, String>, body: JsonObject?) -> JsonObject,
+    private val pendingCalls: suspend () -> Set<String>,
     private val defer: suspend (DeferredCall) -> Unit,
 ) {
     private val _queue = MutableStateFlow(store.readTriage()?.let(::decode))
@@ -138,6 +139,9 @@ class TriageRepository internal constructor(
     }
 
     internal suspend fun send(call: DeferredCall) = defer(call)
+
+    /** Clés des appels encore gardés pour le prochain passage. */
+    internal suspend fun pendingCallKeys(): Set<String> = pendingCalls()
 
     private fun decode(raw: String): TriageQueueDto? = runCatching { JSON.decodeFromString<TriageQueueDto>(raw) }.getOrNull()
 

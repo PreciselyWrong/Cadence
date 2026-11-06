@@ -8,14 +8,16 @@ import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.brief.BriefRequests
 import ch.nicolab.cadence.tasks.brief.QuestionDto
 import ch.nicolab.cadence.tasks.sync.DeferredCall
+import ch.nicolab.cadence.tasks.triage.TriageHolds
 import ch.nicolab.cadence.tasks.triage.TriageItemDto
 import ch.nicolab.cadence.tasks.triage.TriageQueueDto
 import ch.nicolab.cadence.tasks.triage.TriageRequests
 import ch.nicolab.cadence.tasks.triage.slotAnswerCall
 import java.time.LocalDate
 import java.util.UUID
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -35,20 +37,22 @@ internal class TriageNotice(val message: String, val undo: () -> Unit)
  */
 internal class TriageViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = TasksGraph.triage(application)
-    private val hidden = MutableStateFlow<Set<String>>(emptySet())
+    private val holds = TriageHolds(viewModelScope, UNDO_WINDOW_MS) { call -> repository.send(call) }
     private val skipped = MutableStateFlow<List<String>>(emptyList())
     private val _notices = MutableSharedFlow<TriageNotice>(extraBufferCapacity = 1)
     val notices: SharedFlow<TriageNotice> = _notices
 
     /** Les propositions à traiter ; celles passées reviennent en fin de file. */
-    val items: StateFlow<List<TriageItemDto>> = combine(repository.queue, hidden, skipped) { queue, gone, later ->
+    val items: StateFlow<List<TriageItemDto>> = combine(repository.queue, holds.hidden, skipped) { queue, gone, later ->
         order(queue, gone, later)
     }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     val queue: StateFlow<TriageQueueDto?> = repository.queue
 
     fun refresh() {
-        viewModelScope.launch { repository.refresh() }
+        viewModelScope.launch {
+            if (repository.refresh().isSuccess) holds.settle(repository.pendingCallKeys())
+        }
     }
 
     fun skip(item: TriageItemDto) {
@@ -58,48 +62,47 @@ internal class TriageViewModel(application: Application) : AndroidViewModel(appl
     fun apply(item: TriageItemDto, action: String, payload: JsonElement?) {
         val taskUid = item.taskUid ?: return
         val key = UUID.randomUUID().toString()
-        hold(item, string(R.string.triage_applied)) {
-            TriageRequests.apply(taskUid, action, payload, key, string(R.string.triage_title))
-        }
+        hold(item, string(R.string.triage_applied), TriageRequests.apply(taskUid, action, payload, key, string(R.string.triage_title)))
     }
 
     fun keep(item: TriageItemDto) {
         val taskUid = item.taskUid ?: return
         val key = UUID.randomUUID().toString()
-        hold(item, string(R.string.triage_kept)) { TriageRequests.keep(taskUid, key, string(R.string.triage_title)) }
+        hold(item, string(R.string.triage_kept), TriageRequests.keep(taskUid, key, string(R.string.triage_title)))
     }
 
     fun answerSlot(item: TriageItemDto, slotId: String, accept: Boolean) {
-        hold(item, string(if (accept) R.string.triage_applied else R.string.triage_slot_refused)) {
-            slotAnswerCall(slotId, accept, string(R.string.triage_title))
-        }
+        hold(
+            item,
+            string(if (accept) R.string.triage_applied else R.string.triage_slot_refused),
+            slotAnswerCall(slotId, accept, string(R.string.triage_title)),
+        )
     }
 
     fun answer(item: TriageItemDto, question: QuestionDto, answer: String, date: LocalDate) {
         val key = UUID.randomUUID().toString()
-        hold(item, string(R.string.triage_answered)) {
-            BriefRequests.answer(date, key, question.key, question.target.scope, question.target.ref, answer, string(R.string.triage_title))
-        }
+        hold(
+            item,
+            string(R.string.triage_answered),
+            BriefRequests.answer(date, key, question.key, question.target.scope, question.target.ref, answer, string(R.string.triage_title)),
+        )
     }
 
-    private fun hold(item: TriageItemDto, message: String, call: () -> DeferredCall) {
-        hidden.value = hidden.value + item.key
-        val job: Job = viewModelScope.launch {
-            delay(UNDO_WINDOW_MS)
-            repository.send(call())
-        }
-        _notices.tryEmit(
-            TriageNotice(message) {
-                job.cancel()
-                hidden.value = hidden.value - item.key
-            },
-        )
+    private fun hold(item: TriageItemDto, message: String, call: DeferredCall) {
+        _notices.tryEmit(TriageNotice(message, holds.hold(item.key, call)))
+    }
+
+    /** Quitter l'écran n'annule pas un geste validé : la fenêtre d'annulation s'arrête là et l'appel part. */
+    override fun onCleared() {
+        val calls = holds.takeHeld()
+        if (calls.isNotEmpty()) LEAVING.launch { calls.forEach { repository.send(it) } }
     }
 
     private fun string(id: Int) = getApplication<Application>().getString(id)
 
     companion object {
         private const val UNDO_WINDOW_MS = 4_500L
+        private val LEAVING = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
         internal fun order(queue: TriageQueueDto?, gone: Set<String>, later: List<String>): List<TriageItemDto> {
             val open = queue?.items.orEmpty().filterNot { it.key in gone }
