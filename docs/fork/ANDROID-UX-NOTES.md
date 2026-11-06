@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-06 — « À trier » : une file de propositions
+
+- **Problème** : le résumé posait des questions absurdes (« 💪 Sport est-il un doublon de 💪 Sport ? ») au milieu d'un écran de lecture.
+- **Décision** : une file séparée, une proposition à la fois avec sa raison, valider, corriger, garder telle quelle, passer ; les doublons se déduisent par le code et disent ce qui distingue les tâches. Ma journée n'affiche qu'une entrée « À trier (n) ».
+- **Web** : `/triage`, même logique, sans fenêtre d'annulation (le geste part tout de suite).
+
 ### 2026-11-06 — Habitudes : carte neutre, couleur au prorata
 
 - **Problème** : les cartes étaient entièrement colorées alors que rien n'était fait : tout avait l'air terminé et écrasait l'écran.

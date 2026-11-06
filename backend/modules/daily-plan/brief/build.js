@@ -10,9 +10,6 @@ const {
     overlappingEvents,
     conflictCards,
 } = require('./rules/conflicts');
-const { duplicateCards } = require('./rules/duplicates');
-const { deadlineCards } = require('./rules/noteDeadlines');
-const { postponedCards } = require('./rules/postponed');
 const { moveProposals } = require('./rules/moves');
 const { tonightPicks } = require('./rules/tonight');
 const { isSilenced } = require('./rules/contexts');
@@ -68,7 +65,7 @@ function timelineDay(input, settings, date, load, conflictRefs) {
 }
 
 // Cards in the order the client shows them; a disabled or noisy type or a
-// silenced question is dropped here, the rules never know about settings,
+// silenced alert is dropped here, the rules never know about settings,
 // contexts or feedback.
 function anticipateCards(input, settings, cards) {
     const disabled = new Set(settings.alerts?.disabled || []);
@@ -86,7 +83,8 @@ function anticipateCards(input, settings, cards) {
             text: card.text,
             task_uids: card.task_uids,
             event_refs: card.event_refs,
-            question: card.question,
+            // Questions wait in the triage queue, not in the brief.
+            question: null,
             ...(card.overload ? { overload: card.overload } : {}),
         }));
 }
@@ -117,9 +115,6 @@ function buildBrief(input, settings) {
     const cards = [
         ...conflictCards(input),
         ...overloadCards(dates.map((date) => loads.get(date))),
-        ...deadlineCards(input),
-        ...duplicateCards(input, settings),
-        ...postponedCards(input, settings),
     ];
 
     const tonight = tonightPicks(input, settings, loads.get(today));

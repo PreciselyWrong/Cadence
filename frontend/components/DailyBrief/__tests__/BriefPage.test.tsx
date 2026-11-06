@@ -11,7 +11,6 @@ import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import BriefPage from '../BriefPage';
 import {
-    answerBriefQuestion,
     fetchBriefSettings,
     fetchDailyBrief,
     fetchDailyEvening,
@@ -53,13 +52,15 @@ jest.mock('../../../utils/dateUtils', () => ({
     getTodayDateString: () => '2026-11-04',
     getUserTimezone: () => 'Europe/Paris',
 }));
+jest.mock('../../../utils/triageService', () => ({
+    fetchTriageQueue: jest.fn().mockResolvedValue({ count: 0 }),
+}));
 jest.mock('../../../utils/dailyBriefService', () => ({
     fetchDailyBrief: jest.fn(),
     fetchBriefSettings: jest.fn(),
     fetchDailyEvening: jest.fn(),
     regenerateDailyBrief: jest.fn(),
     recordBriefDecision: jest.fn(),
-    answerBriefQuestion: jest.fn(),
 }));
 jest.mock('../../../utils/dailyPlanService', () => ({
     carryOverTasks: jest.fn(),
@@ -108,7 +109,6 @@ describe('BriefPage', () => {
         (fetchDailyBrief as jest.Mock).mockResolvedValue(RESPONSE);
         (fetchBriefSettings as jest.Mock).mockResolvedValue(SETTINGS);
         (recordBriefDecision as jest.Mock).mockResolvedValue({});
-        (answerBriefQuestion as jest.Mock).mockResolvedValue({});
         (toggleTaskCompletion as jest.Mock).mockResolvedValue({
             ...TASKS.t1,
             status: 'done',
@@ -278,24 +278,6 @@ describe('BriefPage', () => {
                 target_ref: 't2',
                 fingerprint: 'move:t2:2026-11-07',
             })
-        );
-    });
-
-    it('posts the answer to a question', async () => {
-        renderPage();
-        fireEvent.click(await screen.findByRole('button', { name: 'Oui' }));
-        await waitFor(() =>
-            expect(answerBriefQuestion).toHaveBeenCalledWith(
-                TODAY,
-                expect.objectContaining({
-                    question_key: 'garage-same-car',
-                    answer: 'yes',
-                    target: {
-                        scope: 'event',
-                        ref: 'event:f:e2:2026-11-05T08:30',
-                    },
-                })
-            )
         );
     });
 

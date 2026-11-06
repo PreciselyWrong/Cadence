@@ -18,7 +18,6 @@ export interface BriefActions {
     onToggle: (uid: string) => void;
     onOpen: (uid: string) => void;
     onAcceptMove: (move: BriefMove, target?: string) => void;
-    onAnswer: (item: BriefAnticipate, answer: string) => void;
     onFeedback: (
         card: { key: string; type: string },
         vote: 'useful' | 'noise'
@@ -31,7 +30,6 @@ export interface BriefSectionProps {
     locale: string;
     actions: BriefActions;
     hiddenMoves: Set<string>;
-    answered: Record<string, string>;
 }
 
 export const SectionTitle: React.FC<{
@@ -202,23 +200,17 @@ const MoveRow: React.FC<{
 
 const AnticipateItem: React.FC<{
     item: BriefAnticipate;
-    answer: string | undefined;
     actions: BriefActions;
-}> = ({ item, answer, actions }) => {
+}> = ({ item, actions }) => {
     const { t } = useTranslation();
-    const [precising, setPrecising] = useState(false);
-    const [text, setText] = useState('');
     const [voted, setVoted] = useState<'noise' | null>(null);
     const [menuOpen, setMenuOpen] = useState(false);
-    const question = item.question;
-    const answerButton =
-        'h-10 rounded-lg px-3 text-sm font-semibold text-indigo-700 hover:bg-indigo-50 dark:text-indigo-300 dark:hover:bg-indigo-900/30';
 
     return (
         <div className="border-t border-gray-200 py-3 first:border-t-0 dark:border-gray-800">
             <div className="flex items-start gap-2">
                 <p className="min-w-0 flex-1 text-[15px] text-gray-900 dark:text-gray-100">
-                    {question ? question.text : item.text}
+                    {item.text}
                 </p>
                 {voted === null && (
                     <div className="relative flex-none">
@@ -253,67 +245,6 @@ const AnticipateItem: React.FC<{
                     </div>
                 )}
             </div>
-            {question && (
-                <div className="mt-1 flex flex-wrap items-center gap-1">
-                    {answer !== undefined ? (
-                        <span className="px-2 py-2 text-sm text-gray-600 dark:text-gray-300">
-                            {t(
-                                'dailyBrief.anticipate.answered',
-                                'Réponse enregistrée'
-                            )}
-                        </span>
-                    ) : (
-                        <>
-                            <button
-                                type="button"
-                                onClick={() => actions.onAnswer(item, 'yes')}
-                                className={answerButton}
-                            >
-                                {t('dailyBrief.anticipate.yes', 'Oui')}
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => actions.onAnswer(item, 'no')}
-                                className={answerButton}
-                            >
-                                {t('dailyBrief.anticipate.no', 'Non')}
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setPrecising((open) => !open)}
-                                className={answerButton}
-                            >
-                                {t('dailyBrief.anticipate.precise', 'Préciser')}
-                            </button>
-                        </>
-                    )}
-                </div>
-            )}
-            {precising && answer === undefined && question && (
-                <form
-                    className="mt-1 flex gap-2"
-                    onSubmit={(event) => {
-                        event.preventDefault();
-                        if (text.trim()) actions.onAnswer(item, text.trim());
-                    }}
-                >
-                    <input
-                        value={text}
-                        onChange={(event) => setText(event.target.value)}
-                        aria-label={t(
-                            'dailyBrief.anticipate.preciseLabel',
-                            'Précision'
-                        )}
-                        className="min-w-0 flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-900"
-                    />
-                    <button
-                        type="submit"
-                        className="h-10 rounded-lg px-3 text-sm font-semibold text-indigo-700 dark:text-indigo-300"
-                    >
-                        {t('dailyBrief.anticipate.save', 'Enregistrer')}
-                    </button>
-                </form>
-            )}
             {voted === 'noise' && (
                 <p
                     role="status"
@@ -332,7 +263,6 @@ const AnticipateItem: React.FC<{
 export const AnticipateSection: React.FC<BriefSectionProps> = ({
     brief,
     actions,
-    answered,
 }) => {
     const { t } = useTranslation();
     if (brief.anticipate.length === 0) return null;
@@ -344,12 +274,7 @@ export const AnticipateSection: React.FC<BriefSectionProps> = ({
                 title={t('dailyBrief.sectionName.anticipate', 'À anticiper')}
             />
             {brief.anticipate.map((item) => (
-                <AnticipateItem
-                    key={item.key}
-                    item={item}
-                    answer={item.question ? answered[item.key] : undefined}
-                    actions={actions}
-                />
+                <AnticipateItem key={item.key} item={item} actions={actions} />
             ))}
         </section>
     );

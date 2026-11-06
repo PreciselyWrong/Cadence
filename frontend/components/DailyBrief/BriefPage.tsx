@@ -5,16 +5,15 @@ import { toggleTaskCompletion, updateTask } from '../../utils/tasksService';
 import { decideTask } from '../../utils/reviewService';
 import { Task } from '../../entities/Task';
 import { getUserTimezone } from '../../utils/dateUtils';
+import { fetchTriageQueue } from '../../utils/triageService';
 import { openTaskPanel } from '../../store/taskPanelStore';
 import { useToast } from '../Shared/ToastContext';
 import {
-    BriefAnticipate,
     BriefMove,
     BriefSettings,
     BriefTaskState,
     DailyBriefResponse,
     DailyEveningResponse,
-    answerBriefQuestion,
     fetchBriefSettings,
     fetchDailyBrief,
     fetchDailyEvening,
@@ -99,8 +98,13 @@ const BriefPage: React.FC = () => {
     const [overrides, setOverrides] = useState<Record<string, BriefTaskState>>(
         {}
     );
+    const [triageCount, setTriageCount] = useState(0);
+    useEffect(() => {
+        fetchTriageQueue()
+            .then((queue) => setTriageCount(queue.count))
+            .catch(() => setTriageCount(0));
+    }, []);
     const [hiddenMoves, setHiddenMoves] = useState<Set<string>>(new Set());
-    const [answered, setAnswered] = useState<Record<string, string>>({});
 
     const load = useCallback(() => {
         setLoading(true);
@@ -119,7 +123,6 @@ const BriefPage: React.FC = () => {
                 setHandled({});
                 setOverrides({});
                 setHiddenMoves(new Set());
-                setAnswered({});
             })
             .catch((error: Error) =>
                 setLoadError(
@@ -169,7 +172,6 @@ const BriefPage: React.FC = () => {
             setData(next);
             setOverrides({});
             setHiddenMoves(new Set());
-            setAnswered({});
         } catch (error) {
             showErrorToast(
                 (error as Error)?.message ||
@@ -429,32 +431,6 @@ const BriefPage: React.FC = () => {
         );
     };
 
-    const answer = async (item: BriefAnticipate, value: string) => {
-        if (!item.question) return;
-        const question = item.question;
-        setAnswered((prev) => ({ ...prev, [item.key]: value }));
-        try {
-            await answerBriefQuestion(date, {
-                question_key: question.key,
-                target: question.target,
-                answer: value,
-                idempotency_key: newKey('answer'),
-            });
-        } catch {
-            setAnswered((prev) => {
-                const next = { ...prev };
-                delete next[item.key];
-                return next;
-            });
-            showErrorToast(
-                t(
-                    'dailyBrief.decision.error',
-                    'Impossible d’enregistrer la décision.'
-                )
-            );
-        }
-    };
-
     const feedback = async (
         item: { key: string; type: string },
         vote: 'useful' | 'noise'
@@ -491,7 +467,6 @@ const BriefPage: React.FC = () => {
         onToggle: toggle,
         onOpen: (uid) => openTaskPanel(uid),
         onAcceptMove: acceptMove,
-        onAnswer: answer,
         onFeedback: feedback,
     };
 
@@ -537,7 +512,6 @@ const BriefPage: React.FC = () => {
             locale,
             actions,
             hiddenMoves,
-            answered,
         };
         switch (id) {
             case 'timeline':
@@ -675,6 +649,17 @@ const BriefPage: React.FC = () => {
                             t('dailyBrief.regenerate', 'Régénérer')
                         )}
                     </div>
+                )}
+                {triageCount > 0 && (
+                    <Link
+                        to="/triage"
+                        className="mt-3 flex min-h-[44px] items-center justify-between rounded-xl border border-gray-200 px-4 text-[15px] text-gray-900 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-800"
+                    >
+                        {t('triage.entry', 'À trier ({{count}})', {
+                            count: triageCount,
+                        })}
+                        <span aria-hidden="true">›</span>
+                    </Link>
                 )}
                 {(settings?.sections ?? []).map((id) =>
                     renderSection(id, brief)

@@ -1,4 +1,34 @@
 {
+  "triage": {
+    "action": {
+      "habit": "Converti in abitudine",
+      "project": "Converti in progetto",
+      "note": "Converti in nota",
+      "reclass": "Classifica",
+      "delete": "Elimina",
+      "cancel": "Annulla l'attività",
+      "done": "Segna come fatta",
+      "due": "Cambia la scadenza",
+      "split": "Dividi in sottoattività",
+      "rename": "Rinomina"
+    },
+    "splitLabel": "Una sottoattività per riga",
+    "dueOn": "Scadenza: {{date}}",
+    "renameTo": "Rinomina: {{name}}",
+    "recurring": "ricorrente",
+    "error": "Impossibile caricare la coda.",
+    "answered": "Risposta salvata",
+    "kept": "Lasciata così",
+    "applied": "Fatto",
+    "skip": "Salta",
+    "keep": "Lascia così",
+    "correct": "Correggi",
+    "emptyMessage": "Una proposta appare solo se è utile.",
+    "emptyTitle": "Niente da ordinare",
+    "left": "{{count}} da vedere",
+    "entry": "Da ordinare ({{count}})",
+    "title": "Da ordinare"
+  },
   "outline": {
     "saveError": "Could not save that change",
     "hintLocked": "Enter: new line",

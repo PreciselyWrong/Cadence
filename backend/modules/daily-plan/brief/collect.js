@@ -72,6 +72,7 @@ function mapTask(task, { planned, blocks, timezone }) {
         // The recurring parent's uid; a series master is its own series.
         series_uid:
             task.RecurringParent?.uid ?? (isRecurring(task) ? task.uid : null),
+        file_backed: Boolean(task.source_key),
         planned_on: planned,
         blocks_uids: blocks.blocks,
         blocked_by_uids: blocks.blockedBy,
@@ -120,24 +121,26 @@ function mapEvent(event) {
 }
 
 // Due by `dueUntil` (overdue included), in progress, or planned on a day
-// from `today` to `plannedUntil`.
+// from `today` to `plannedUntil`; with `allOpen`, every open task (triage).
 async function readTasks(
     user,
-    { today, dueUntil, plannedUntil, timezone, extraUids = [] }
+    { today, dueUntil, plannedUntil, timezone, extraUids = [], allOpen = false }
 ) {
     const planned = await briefRepository.findPlannedDays(
         user.id,
         today,
         plannedUntil
     );
-    const candidates = await briefRepository.findCandidateTasks(
-        await visibleWhere(user.id),
-        {
-            lastDayEnd: getDayBoundsInUTC(dueUntil, timezone).end,
-            plannedTaskIds: [...planned.keys()],
-            extraUids,
-        }
-    );
+    const candidates = allOpen
+        ? await briefRepository.findOpenTasks(await visibleWhere(user.id))
+        : await briefRepository.findCandidateTasks(
+              await visibleWhere(user.id),
+              {
+                  lastDayEnd: getDayBoundsInUTC(dueUntil, timezone).end,
+                  plannedTaskIds: [...planned.keys()],
+                  extraUids,
+              }
+          );
     const ids = candidates.map((task) => task.id);
     const blocks = blocksByTask(
         await briefRepository.findBlockingLinks(ids),
@@ -163,6 +166,14 @@ async function readClosedTasks(user, { today, timezone, days }) {
         name: task.name || '',
         note: task.note ?? null,
         completed_at: new Date(task.completed_at).toISOString(),
+        due_date: task.due_date
+            ? utcToUserDateString(task.due_date, timezone)
+            : null,
+        parent_uid: task.ParentTask?.uid ?? null,
+        project_name: task.Project?.name ?? null,
+        recurring: isRecurring(task),
+        series_uid:
+            task.RecurringParent?.uid ?? (isRecurring(task) ? task.uid : null),
     }));
 }
 
@@ -279,7 +290,7 @@ async function readMemory(user, settings, { today, timezone, now }) {
 async function collectInput(
     user,
     settings,
-    { today, now = new Date(), extraTaskUids = [] } = {}
+    { today, now = new Date(), extraTaskUids = [], allOpen = false } = {}
 ) {
     const timezone = getSafeTimezone(user.timezone);
     const day = today ?? moment.tz(now, timezone).format('YYYY-MM-DD');
@@ -307,6 +318,7 @@ async function collectInput(
             plannedUntil: lastDay,
             timezone,
             extraUids: extraTaskUids,
+            allOpen,
         }),
         readClosedTasks(user, {
             today: day,

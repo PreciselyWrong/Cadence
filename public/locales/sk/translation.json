@@ -1,4 +1,34 @@
 {
+  "triage": {
+    "action": {
+      "habit": "Premeniť na návyk",
+      "project": "Premeniť na projekt",
+      "note": "Premeniť na poznámku",
+      "reclass": "Zaradiť",
+      "delete": "Odstrániť",
+      "cancel": "Zrušiť úlohu",
+      "done": "Označiť ako hotové",
+      "due": "Zmeniť termín",
+      "split": "Rozdeliť na podúlohy",
+      "rename": "Premenovať"
+    },
+    "splitLabel": "Jedna podúloha na riadok",
+    "dueOn": "Termín: {{date}}",
+    "renameTo": "Premenovať: {{name}}",
+    "recurring": "opakovaná",
+    "error": "Frontu sa nepodarilo načítať.",
+    "answered": "Odpoveď uložená",
+    "kept": "Ponechané tak",
+    "applied": "Hotovo",
+    "skip": "Preskočiť",
+    "keep": "Nechať tak",
+    "correct": "Opraviť",
+    "emptyMessage": "Návrh sa zobrazí, len ak je užitočný.",
+    "emptyTitle": "Nič na roztriedenie",
+    "left": "{{count}} na prezretie",
+    "entry": "Na roztriedenie ({{count}})",
+    "title": "Na roztriedenie"
+  },
   "outline": {
     "saveError": "Could not save that change",
     "hintLocked": "Enter: new line",

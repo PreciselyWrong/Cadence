@@ -1,4 +1,34 @@
 {
+  "triage": {
+    "action": {
+      "habit": "習慣に変換",
+      "project": "プロジェクトに変換",
+      "note": "ノートに変換",
+      "reclass": "分類",
+      "delete": "削除",
+      "cancel": "タスクを取り消す",
+      "done": "完了にする",
+      "due": "期限を変更",
+      "split": "サブタスクに分割",
+      "rename": "名前を変更"
+    },
+    "splitLabel": "1行に1つのサブタスク",
+    "dueOn": "期限: {{date}}",
+    "renameTo": "名前を変更: {{name}}",
+    "recurring": "繰り返し",
+    "error": "キューを読み込めませんでした。",
+    "answered": "回答を保存しました",
+    "kept": "そのままにしました",
+    "applied": "完了",
+    "skip": "スキップ",
+    "keep": "そのままにする",
+    "correct": "修正",
+    "emptyMessage": "提案は役に立つときだけ表示されます。",
+    "emptyTitle": "整理するものはありません",
+    "left": "残り {{count}} 件",
+    "entry": "整理待ち（{{count}}）",
+    "title": "整理待ち"
+  },
   "outline": {
     "saveError": "Could not save that change",
     "hintLocked": "Enter: new line",

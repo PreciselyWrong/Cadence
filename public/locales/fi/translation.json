@@ -1,4 +1,34 @@
 {
+  "triage": {
+    "action": {
+      "habit": "Muunna tavaksi",
+      "project": "Muunna projektiksi",
+      "note": "Muunna muistiinpanoksi",
+      "reclass": "Luokittele",
+      "delete": "Poista",
+      "cancel": "Peru tehtävä",
+      "done": "Merkitse tehdyksi",
+      "due": "Muuta määräaikaa",
+      "split": "Jaa alitehtäviin",
+      "rename": "Nimeä uudelleen"
+    },
+    "splitLabel": "Yksi alitehtävä riviä kohden",
+    "dueOn": "Määräaika: {{date}}",
+    "renameTo": "Nimeä uudelleen: {{name}}",
+    "recurring": "toistuva",
+    "error": "Jonoa ei voitu ladata.",
+    "answered": "Vastaus tallennettu",
+    "kept": "Pidetty sellaisena",
+    "applied": "Valmis",
+    "skip": "Ohita",
+    "keep": "Pidä sellaisena",
+    "correct": "Korjaa",
+    "emptyMessage": "Ehdotus näkyy vain, kun siitä on hyötyä.",
+    "emptyTitle": "Ei lajiteltavaa",
+    "left": "{{count}} katsottavana",
+    "entry": "Lajiteltavat ({{count}})",
+    "title": "Lajiteltavat"
+  },
   "outline": {
     "saveError": "Could not save that change",
     "hintLocked": "Enter: new line",

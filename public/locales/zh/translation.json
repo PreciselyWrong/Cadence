@@ -1,4 +1,34 @@
 {
+  "triage": {
+    "action": {
+      "habit": "转为习惯",
+      "project": "转为项目",
+      "note": "转为笔记",
+      "reclass": "归类",
+      "delete": "删除",
+      "cancel": "取消任务",
+      "done": "标记为完成",
+      "due": "更改截止日期",
+      "split": "拆分为子任务",
+      "rename": "重命名"
+    },
+    "splitLabel": "每行一个子任务",
+    "dueOn": "截止：{{date}}",
+    "renameTo": "重命名：{{name}}",
+    "recurring": "重复",
+    "error": "无法加载队列。",
+    "answered": "回答已保存",
+    "kept": "已保持原样",
+    "applied": "完成",
+    "skip": "跳过",
+    "keep": "保持原样",
+    "correct": "更正",
+    "emptyMessage": "只有在有用时才会出现建议。",
+    "emptyTitle": "没有需要整理的内容",
+    "left": "还有 {{count}} 项",
+    "entry": "待整理（{{count}}）",
+    "title": "待整理"
+  },
   "outline": {
     "saveError": "Could not save that change",
     "hintLocked": "Enter: new line",

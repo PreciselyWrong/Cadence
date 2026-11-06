@@ -1,4 +1,34 @@
 {
+  "triage": {
+    "action": {
+      "habit": "تحويل إلى عادة",
+      "project": "تحويل إلى مشروع",
+      "note": "تحويل إلى ملاحظة",
+      "reclass": "تصنيف",
+      "delete": "حذف",
+      "cancel": "إلغاء المهمة",
+      "done": "وضع علامة منجزة",
+      "due": "تغيير الموعد",
+      "split": "تقسيم إلى مهام فرعية",
+      "rename": "إعادة التسمية"
+    },
+    "splitLabel": "مهمة فرعية في كل سطر",
+    "dueOn": "الموعد: {{date}}",
+    "renameTo": "إعادة التسمية: {{name}}",
+    "recurring": "متكررة",
+    "error": "تعذر تحميل القائمة.",
+    "answered": "تم حفظ الإجابة",
+    "kept": "أُبقيت كما هي",
+    "applied": "تم",
+    "skip": "تخطي",
+    "keep": "إبقاء كما هي",
+    "correct": "تصحيح",
+    "emptyMessage": "لا يظهر الاقتراح إلا إذا كان مفيدًا.",
+    "emptyTitle": "لا شيء للفرز",
+    "left": "{{count}} للمراجعة",
+    "entry": "للفرز ({{count}})",
+    "title": "للفرز"
+  },
   "outline": {
     "saveError": "Could not save that change",
     "hintLocked": "Enter: new line",

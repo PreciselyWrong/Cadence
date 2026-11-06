@@ -1,4 +1,34 @@
 {
+  "triage": {
+    "action": {
+      "habit": "Convertir en habitude",
+      "project": "Convertir en projet",
+      "note": "Convertir en note",
+      "reclass": "Classer",
+      "delete": "Supprimer",
+      "cancel": "Annuler la tâche",
+      "done": "Marquer comme faite",
+      "due": "Changer l'échéance",
+      "split": "Découper en sous-tâches",
+      "rename": "Renommer"
+    },
+    "splitLabel": "Une sous-tâche par ligne",
+    "dueOn": "Échéance : {{date}}",
+    "renameTo": "Renommer : {{name}}",
+    "recurring": "récurrente",
+    "error": "La file n'a pas pu être lue.",
+    "answered": "Réponse enregistrée",
+    "kept": "Gardée telle quelle",
+    "applied": "C'est fait",
+    "skip": "Passer",
+    "keep": "Garder telle quelle",
+    "correct": "Corriger",
+    "emptyMessage": "Une proposition n'apparaît que si elle est utile.",
+    "emptyTitle": "Rien à trier",
+    "left": "{{count}} à voir",
+    "entry": "À trier ({{count}})",
+    "title": "À trier"
+  },
   "outline": {
     "saveError": "Impossible d'enregistrer ce changement",
     "hintLocked": "Entrée : nouvelle ligne",

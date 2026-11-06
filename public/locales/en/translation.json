@@ -1,4 +1,34 @@
 {
+  "triage": {
+    "action": {
+      "habit": "Convert to a habit",
+      "project": "Convert to a project",
+      "note": "Convert to a note",
+      "reclass": "Classify",
+      "delete": "Delete",
+      "cancel": "Cancel the task",
+      "done": "Mark as done",
+      "due": "Change the due date",
+      "split": "Split into subtasks",
+      "rename": "Rename"
+    },
+    "splitLabel": "One subtask per line",
+    "dueOn": "Due: {{date}}",
+    "renameTo": "Rename: {{name}}",
+    "recurring": "recurring",
+    "error": "The queue could not be loaded.",
+    "answered": "Answer saved",
+    "kept": "Kept as it is",
+    "applied": "Done",
+    "skip": "Skip",
+    "keep": "Keep as it is",
+    "correct": "Correct",
+    "emptyMessage": "A proposal only appears when it is useful.",
+    "emptyTitle": "Nothing to sort",
+    "left": "{{count}} to review",
+    "entry": "To sort ({{count}})",
+    "title": "To sort"
+  },
   "outline": {
     "saveError": "Could not save that change",
     "hintLocked": "Enter: new line",

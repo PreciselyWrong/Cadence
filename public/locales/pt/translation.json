@@ -1,4 +1,34 @@
 {
+  "triage": {
+    "action": {
+      "habit": "Converter em hábito",
+      "project": "Converter em projeto",
+      "note": "Converter em nota",
+      "reclass": "Classificar",
+      "delete": "Eliminar",
+      "cancel": "Cancelar a tarefa",
+      "done": "Marcar como feita",
+      "due": "Alterar o prazo",
+      "split": "Dividir em subtarefas",
+      "rename": "Renomear"
+    },
+    "splitLabel": "Uma subtarefa por linha",
+    "dueOn": "Prazo: {{date}}",
+    "renameTo": "Renomear: {{name}}",
+    "recurring": "recorrente",
+    "error": "Não foi possível carregar a fila.",
+    "answered": "Resposta guardada",
+    "kept": "Mantida como está",
+    "applied": "Feito",
+    "skip": "Saltar",
+    "keep": "Manter como está",
+    "correct": "Corrigir",
+    "emptyMessage": "Uma proposta só aparece quando é útil.",
+    "emptyTitle": "Nada para organizar",
+    "left": "{{count}} por ver",
+    "entry": "Por organizar ({{count}})",
+    "title": "Por organizar"
+  },
   "outline": {
     "saveError": "Could not save that change",
     "hintLocked": "Enter: new line",

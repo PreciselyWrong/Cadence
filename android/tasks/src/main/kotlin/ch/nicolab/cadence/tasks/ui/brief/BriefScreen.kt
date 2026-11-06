@@ -92,6 +92,9 @@ import ch.nicolab.cadence.tasks.ui.TaskRow
 import ch.nicolab.cadence.tasks.ui.TasksViewModel
 import ch.nicolab.cadence.tasks.ui.ThisOrThatSheet
 import ch.nicolab.cadence.tasks.ui.rememberProjectNames
+import ch.nicolab.cadence.tasks.ui.triage.TriageEntry
+import ch.nicolab.cadence.tasks.ui.triage.TriageScreen
+import ch.nicolab.cadence.tasks.ui.triage.TriageViewModel
 import ch.nicolab.cadence.tasks.ui.rememberRowDecor
 import java.time.LocalDate
 import java.time.ZoneId
@@ -126,15 +129,22 @@ fun BriefScreen(onBack: () -> Unit) {
     val dayPlan = rememberDayPlan(tasksViewModel, planning, snackbar)
     val projectNames = rememberProjectNames(tasksViewModel)
     var choosing by remember { mutableStateOf(false) }
+    val triage: TriageViewModel = viewModel()
+    val triageItems by triage.items.collectAsStateWithLifecycle()
+    var triageOpen by remember { mutableStateOf(false) }
     val undoLabel = stringResource(R.string.tasks_undo)
     var openedTaskUid by remember { mutableStateOf<String?>(null) }
     var datingTask by remember { mutableStateOf<TaskItem?>(null) }
     var movingTask by remember { mutableStateOf<Pair<TaskItem, MoveDto>?>(null) }
-    var preciseFor by remember { mutableStateOf<QuestionDto?>(null) }
 
     LaunchedEffect(viewModel) {
         viewModel.opened()
         viewModel.refresh()
+        triage.refresh()
+    }
+    if (triageOpen) {
+        TriageScreen(today = today, onBack = { triageOpen = false })
+        return
     }
     LaunchedEffect(viewModel) {
         viewModel.notices.collect { notice ->
@@ -217,6 +227,9 @@ fun BriefScreen(onBack: () -> Unit) {
                         )
                     }
                 }
+                if (triageItems.isNotEmpty()) {
+                    item(key = "triage") { TriageEntry(triageItems.size, onOpen = { triageOpen = true }) }
+                }
                 val planSections: LazyListScope.() -> Unit = {
                     dayPlanSections(
                         plan = dayPlan,
@@ -264,9 +277,7 @@ fun BriefScreen(onBack: () -> Unit) {
                     onComplete = toggle,
                     onMove = { task, move, target -> viewModel.move(date, task, move, target) },
                     onPickMoveDate = { task, move -> movingTask = task to move },
-                    onAnswer = { question, answer -> viewModel.answer(date, question, answer) },
                     onFeedback = { card, vote -> viewModel.feedback(date, card, vote) },
-                    onPrecise = { preciseFor = it },
                     onReopen = { task -> tasksViewModel.toggle(task, hold = false) },
                 )
                 item(key = "header") {
@@ -344,16 +355,6 @@ fun BriefScreen(onBack: () -> Unit) {
     }
     openedTaskUid?.let { uid ->
         TaskDetailSheet(taskUid = uid, viewModel = tasksViewModel, onDismiss = { openedTaskUid = null })
-    }
-    preciseFor?.let { question ->
-        PreciseAnswerSheet(
-            question = question,
-            onSend = { text ->
-                cached?.let { viewModel.answer(it.date, question, text) }
-                preciseFor = null
-            },
-            onDismiss = { preciseFor = null },
-        )
     }
     if (voiceSheet) {
         BriefVoiceSheet(
@@ -449,9 +450,7 @@ internal class BriefContext(
     val onComplete: (TaskItem) -> Unit,
     val onMove: (TaskItem, MoveDto, LocalDate) -> Unit,
     val onPickMoveDate: (TaskItem, MoveDto) -> Unit,
-    val onAnswer: (QuestionDto, String) -> Unit,
     val onFeedback: (AnticipateDto, String) -> Unit,
-    val onPrecise: (QuestionDto) -> Unit,
     val onReopen: (TaskItem) -> Unit,
 )
 
@@ -520,38 +519,18 @@ private fun LazyListScope.briefSection(id: String, context: BriefContext) {
             if (brief.anticipate.isEmpty()) return@item
             BriefSection(stringResource(R.string.brief_anticipate_title), null) {
                 brief.anticipate.forEach { card ->
-                    val answer = card.question?.let { context.pending.answers[it.key] }
                     val vote = context.pending.feedback[card.key]
                     Column(Modifier.padding(bottom = Space.md).animateContentSize()) {
                         Row(verticalAlignment = Alignment.Top) {
                             Text(
-                                card.question?.text ?: card.text,
+                                card.text,
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = cadence.onSurface,
                                 modifier = Modifier.weight(1f),
                             )
                             if (vote == null) CardOptions(onLess = { context.onFeedback(card, "noise") })
                         }
-                        card.question?.let { question ->
-                            AnimatedVisibility(visible = answer == null) {
-                                Row(Modifier.padding(top = Space.xs)) {
-                                    SecondaryAction(stringResource(R.string.brief_answer_yes), onClick = { context.onAnswer(question, "yes") })
-                                    Spacer(Modifier.width(Space.xs))
-                                    SecondaryAction(stringResource(R.string.brief_answer_no), onClick = { context.onAnswer(question, "no") })
-                                    Spacer(Modifier.width(Space.xs))
-                                    TertiaryAction(stringResource(R.string.brief_answer_precise), onClick = { context.onPrecise(question) })
-                                }
-                            }
-                        }
-                        if (answer != null || vote != null) {
-                            Row(Modifier.padding(top = Space.xs), verticalAlignment = Alignment.CenterVertically) {
-                                if (answer != null) {
-                                    DecisionTag(stringResource(R.string.brief_answer_given, answerLabel(answer)))
-                                    Spacer(Modifier.width(Space.xs))
-                                }
-                                if (vote != null) DecisionTag(stringResource(R.string.brief_feedback_less))
-                            }
-                        }
+                        if (vote != null) DecisionTag(stringResource(R.string.brief_feedback_less), Modifier.padding(top = Space.xs))
                     }
                 }
             }
@@ -623,14 +602,6 @@ private fun ResolvedSection(count: Int, content: @Composable () -> Unit) {
         }
         if (open) content()
     }
-}
-
-/** « Oui » et « Non » en toutes lettres ; une réponse libre se lit telle qu'elle a été écrite. */
-@Composable
-private fun answerLabel(answer: String): String = when (answer) {
-    "yes" -> stringResource(R.string.brief_answer_yes)
-    "no" -> stringResource(R.string.brief_answer_no)
-    else -> answer
 }
 
 /** Durée lisible : « 40 min », « 2 h », « 1 h 10 ». */
@@ -727,7 +698,7 @@ private fun BriefTaskRow(
 /** « Préciser » : une réponse libre, envoyée comme un texte d'answer au serveur. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun PreciseAnswerSheet(question: QuestionDto, onSend: (String) -> Unit, onDismiss: () -> Unit) {
+internal fun PreciseAnswerSheet(question: QuestionDto, onSend: (String) -> Unit, onDismiss: () -> Unit) {
     var text by remember { mutableStateOf("") }
     CadenceSheet(
         title = question.text,

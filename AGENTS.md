@@ -43,6 +43,7 @@ Fichiers propres au fork : `AGENTS.md`, `TODO.md`, `README.md`, `docs/fork/`, `a
 | Habitudes | `docs/fork/DECISIONS.md`, `docs/21-habits.md` (section « Cadence habits » = contrat de synchro et d'API), `fixtures/habits/README.md`, `backend/modules/habits/`, `android/domain/` |
 | Aujourd'hui / plan du jour | `docs/02-today-page-sections.md`, `docs/20-daily-plan.md` |
 | Partage, droits, groupes | `docs/08-user-management.md`, `docs/18-user-groups.md`, `docs/19-people-and-roles.md` |
+| File « À trier » | `docs/40-triage.md`, `backend/modules/triage/` |
 | Liens (capture, métadonnées, page Liens) | `docs/37-links.md`, `backend/modules/links/` |
 | Projets depuis des `TODO.md` | `docs/35-todo-md-projects.md`, `backend/modules/todo-md/` |
 | MCP | `docs/14-mcp-integration.md` |
@@ -80,6 +81,7 @@ Tests Postgres : `DATABASE_URL=... npm run backend:test:pg`. Module tâches Andr
 - `backend/middleware/authorize.js` : `hasAccess(level, resourceType, getResourceUid)`, droits hérités du projet.
 - `backend/modules/tasks/` : tâches, récurrence (`recurringTaskService.js`, `taskScheduler.js`, `operations/moveOccurrence.js`).
 - `backend/modules/sync/` : synchro hors ligne (registre d'entités, journal, HLC, compaction quotidienne `compaction.js`, `410 reset_required`) ; `backend/modules/habits/cadence/` : habitudes Cadence (schéma `schema.js`, moteur JS des règles, routes `/api/cadence/*`, import des anciennes) ; les écrans web des habitudes passent déjà par `/api/cadence/*` (`frontend/utils/cadenceHabitsService.ts`) ; l'ancien module des habitudes-tâches (`/api/habits`, moteur, rappels, `habitsService.ts`) est retiré ; les colonnes `tasks.habit_*` restent et les tâches `habit_mode` sont importées au démarrage puis exclues de toutes les listes de tâches. Fixtures partagées avec Android : `fixtures/habits/`.
+- `backend/modules/triage/` : file « À trier » (règles dans `core/items.js`, décisions dans la table `task_triage`, actions par les outils MCP) ; web `frontend/components/Triage/`, Android `ui/triage/`.
 - `backend/modules/links/` : liens trouvés dans idées, tâches et notes (hooks de modèle `capture.js`, file de lecture des pages `jobs.js`, GitHub `core/github.js`, routes `/api/links`, entité de synchro `link`) ; web `frontend/components/Links/`, Android `ui/LinksScreen.kt`.
 - `backend/modules/mcp/` : serveur MCP (`npm run mcp:start`), servi aussi à `/mcp` ; `backend/modules/oauth/` : serveur d'autorisation OAuth intégré pour les connecteurs distants (actif si `TUDUDI_PUBLIC_MCP_URL`, fenêtre d'appairage `pairing.js` ouverte depuis Profil › MCP, `docs/38-remote-mcp.md`).
 - `backend/modules/daily-plan/` : plan du jour, temps de concentration et leurs exceptions (`ui_settings.planning`, règle `slots.js` `focusBlocksOn`, partagés avec Android par `/api/v1/daily-plan/focus-blocks`).

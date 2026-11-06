@@ -116,22 +116,6 @@ class BriefActionsTest {
     }
 
     @Test
-    fun answerQueuesOneCallWithTheTargetAndTheAnswer() = runTest {
-        val question = QuestionDto(key = "q1", text = "Garage ?", target = TargetDto(scope = "event", ref = "event:f:e:2026"))
-
-        actions.answer(today, question, "yes")
-
-        val call = queue.queued.single()
-        assertEquals("/api/v1/daily-plan/2026-11-04/brief/answers", call.path)
-        assertEquals("brief-answer:k1", call.key)
-        assertEquals("q1", call.body.str("question_key"))
-        assertEquals("event", call.body.obj("target").str("scope"))
-        assertEquals("event:f:e:2026", call.body.obj("target").str("ref"))
-        assertEquals("yes", call.body.str("answer"))
-        assertEquals("k1", call.body.str("idempotency_key"))
-    }
-
-    @Test
     fun feedbackCarriesTheCardTypeAndTheVote() = runTest {
         val card = AnticipateDto(key = "k9", type = "overload", text = "Trop")
 

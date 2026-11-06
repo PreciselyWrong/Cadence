@@ -8,7 +8,7 @@ const { settingsWith, task, input } = require('./fixtures');
 describe('postponedCards', () => {
     const tasks = [task({ uid: 'task-a', name: 'Ranger le garage fictif' })];
 
-    it('offers do, drop or later once the threshold is reached', () => {
+    it('proposes dropping it once the threshold is reached', () => {
         const [card] = postponedCards(
             input({
                 tasks,
@@ -24,11 +24,9 @@ describe('postponedCards', () => {
         expect(card).toMatchObject({
             type: 'postponed',
             task_uids: ['task-a'],
-            question: { target: { scope: 'task', ref: 'task-a' } },
+            question: null,
         });
-        expect(card.question.text).toBe(
-            'Faire, abandonner ou reporter « Ranger le garage fictif » ?'
-        );
+        expect(card.text).toBe('Reportée 3 fois récemment : l’abandonner ?');
     });
 
     it('stays silent below the threshold', () => {

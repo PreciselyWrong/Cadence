@@ -69,6 +69,8 @@ internal fun createBriefStore(context: Context): BriefStore = TasksRuntime.get(c
 
 internal fun createEvening(context: Context): EveningRepository = TasksRuntime.get(context).evening
 
+internal fun createTriage(context: Context): ch.nicolab.cadence.tasks.triage.TriageRepository = TasksRuntime.get(context).triage
+
 /** Dernières listes de revue lues, pour la lecture hors ligne ; effacées à la déconnexion. */
 internal fun reviewCacheDir(context: Context): File = File(context.cacheDir, "review")
 
@@ -149,6 +151,7 @@ internal class TasksRuntime private constructor(context: Context) {
     val evening = EveningRepository(database.eveningDao(), api::call, accountZone)
     val briefAudio = ch.nicolab.cadence.tasks.brief.audio.BriefAudio(appContext, brief, evening, api::download)
     val briefSettings = BriefSettingsRepository(briefStore, api::call) { call -> repository.defer(call).getOrThrow() }
+    val triage = ch.nicolab.cadence.tasks.triage.TriageRepository(briefStore, api::call) { call -> repository.defer(call).getOrThrow() }
     val briefAgents = BriefAgentsRepository(api::call)
     val briefActions = BriefActions(
         tasks = RepositoryBriefTasks(repository),

@@ -52,6 +52,11 @@ class BriefStore private constructor(private val prefs: SharedPreferences) {
         }
     }
 
+    /** Dernière file « À trier » lue, pour la lecture hors ligne. */
+    fun readTriage(): String? = prefs.getString(KEY_TRIAGE, null)
+
+    fun writeTriage(json: String) = prefs.edit { putString(KEY_TRIAGE, json) }
+
     private fun readSettings(): JsonObject? = prefs.getString(KEY_SETTINGS, null)?.let { raw ->
         runCatching { Json.parseToJsonElement(raw) as JsonObject }.getOrNull()
     }
@@ -60,6 +65,7 @@ class BriefStore private constructor(private val prefs: SharedPreferences) {
         private const val PREFS = "cadence_brief"
         private const val KEY_SETTINGS = "settings"
         private const val KEY_NOTIFY_READY = "notify_ready"
+        private const val KEY_TRIAGE = "triage"
         private const val DECISIONS = "decisions:"
         private const val DECISION_DAYS = 3L
 

@@ -1,4 +1,34 @@
 {
+  "triage": {
+    "action": {
+      "habit": "Ubah menjadi kebiasaan",
+      "project": "Ubah menjadi proyek",
+      "note": "Ubah menjadi catatan",
+      "reclass": "Klasifikasikan",
+      "delete": "Hapus",
+      "cancel": "Batalkan tugas",
+      "done": "Tandai selesai",
+      "due": "Ubah tenggat",
+      "split": "Pecah menjadi subtugas",
+      "rename": "Ganti nama"
+    },
+    "splitLabel": "Satu subtugas per baris",
+    "dueOn": "Tenggat: {{date}}",
+    "renameTo": "Ganti nama: {{name}}",
+    "recurring": "berulang",
+    "error": "Antrean tidak dapat dimuat.",
+    "answered": "Jawaban disimpan",
+    "kept": "Dibiarkan apa adanya",
+    "applied": "Selesai",
+    "skip": "Lewati",
+    "keep": "Biarkan apa adanya",
+    "correct": "Koreksi",
+    "emptyMessage": "Usulan hanya muncul jika berguna.",
+    "emptyTitle": "Tidak ada yang perlu dipilah",
+    "left": "{{count}} untuk ditinjau",
+    "entry": "Untuk dipilah ({{count}})",
+    "title": "Untuk dipilah"
+  },
   "outline": {
     "saveError": "Could not save that change",
     "hintLocked": "Enter: new line",

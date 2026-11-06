@@ -1,4 +1,34 @@
 {
+  "triage": {
+    "action": {
+      "habit": "Pretvori v navado",
+      "project": "Pretvori v projekt",
+      "note": "Pretvori v zapisek",
+      "reclass": "Razvrsti",
+      "delete": "Izbriši",
+      "cancel": "Prekliči nalogo",
+      "done": "Označi kot opravljeno",
+      "due": "Spremeni rok",
+      "split": "Razdeli na podnaloge",
+      "rename": "Preimenuj"
+    },
+    "splitLabel": "Ena podnaloga v vrstici",
+    "dueOn": "Rok: {{date}}",
+    "renameTo": "Preimenuj: {{name}}",
+    "recurring": "ponavljajoča",
+    "error": "Čakalne vrste ni bilo mogoče naložiti.",
+    "answered": "Odgovor shranjen",
+    "kept": "Ostalo tako",
+    "applied": "Končano",
+    "skip": "Preskoči",
+    "keep": "Pusti tako",
+    "correct": "Popravi",
+    "emptyMessage": "Predlog se pokaže le, če je koristen.",
+    "emptyTitle": "Ničesar ni za razvrstiti",
+    "left": "{{count}} za pregled",
+    "entry": "Za razvrstitev ({{count}})",
+    "title": "Za razvrstitev"
+  },
   "outline": {
     "saveError": "Could not save that change",
     "hintLocked": "Enter: new line",

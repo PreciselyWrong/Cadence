@@ -70,16 +70,19 @@ const texts = {
             due
                 ? `La note de « ${title} » cite le ${formatDay(day)}, avant l’échéance du ${formatDay(due)}.`
                 : `La note de « ${title} » cite le ${formatDay(day)}.`,
-        deadlineQuestion: (title, day) =>
-            `Le ${formatDay(day)} est-il l’échéance de « ${title} » ?`,
-        duplicate: (title, closed) =>
-            `« ${title} » ressemble à « ${closed} », terminée récemment.`,
-        duplicateQuestion: (title, closed) =>
-            `« ${title} » est-elle un doublon de « ${closed} » ?`,
-        postponed: (title, count) =>
-            `« ${title} » a été reportée ${count} fois récemment.`,
-        postponedQuestion: (title) =>
-            `Faire, abandonner ou reporter « ${title} » ?`,
+        postponed: (count) =>
+            `Reportée ${count} fois récemment : l’abandonner ?`,
+    },
+    duplicate: {
+        sameNameClosed: 'Une tâche du même nom vient d’être terminée.',
+        similarClosed: (other) =>
+            `Ressemble à « ${other} », terminée récemment.`,
+        openTwin: 'Une autre tâche ouverte porte le même nom.',
+        thisTask: (description) => `Celle-ci : ${description}`,
+        otherTask: (description) => `L’autre : ${description}`,
+        closedOn: (day) => `terminée le ${formatDay(day)}`,
+        due: (day) => `échéance le ${formatDay(day)}`,
+        project: (name) => `projet ${name}`,
     },
     move: {
         overdue: (day) => `En retard depuis le ${formatDay(day)}.`,

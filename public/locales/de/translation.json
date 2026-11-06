@@ -1,4 +1,34 @@
 {
+  "triage": {
+    "action": {
+      "habit": "In Gewohnheit umwandeln",
+      "project": "In Projekt umwandeln",
+      "note": "In Notiz umwandeln",
+      "reclass": "Einordnen",
+      "delete": "Löschen",
+      "cancel": "Aufgabe abbrechen",
+      "done": "Als erledigt markieren",
+      "due": "Fälligkeit ändern",
+      "split": "In Unteraufgaben aufteilen",
+      "rename": "Umbenennen"
+    },
+    "splitLabel": "Eine Unteraufgabe pro Zeile",
+    "dueOn": "Fällig: {{date}}",
+    "renameTo": "Umbenennen: {{name}}",
+    "recurring": "wiederkehrend",
+    "error": "Die Liste konnte nicht geladen werden.",
+    "answered": "Antwort gespeichert",
+    "kept": "So gelassen",
+    "applied": "Erledigt",
+    "skip": "Überspringen",
+    "keep": "So lassen",
+    "correct": "Korrigieren",
+    "emptyMessage": "Ein Vorschlag erscheint nur, wenn er nützlich ist.",
+    "emptyTitle": "Nichts zu sortieren",
+    "left": "{{count}} zu prüfen",
+    "entry": "Zu sortieren ({{count}})",
+    "title": "Zu sortieren"
+  },
   "outline": {
     "saveError": "Could not save that change",
     "hintLocked": "Enter: new line",

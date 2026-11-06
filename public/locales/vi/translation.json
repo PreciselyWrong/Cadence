@@ -1,4 +1,34 @@
 {
+  "triage": {
+    "action": {
+      "habit": "Chuyển thành thói quen",
+      "project": "Chuyển thành dự án",
+      "note": "Chuyển thành ghi chú",
+      "reclass": "Phân loại",
+      "delete": "Xóa",
+      "cancel": "Hủy công việc",
+      "done": "Đánh dấu đã xong",
+      "due": "Đổi hạn",
+      "split": "Chia thành việc con",
+      "rename": "Đổi tên"
+    },
+    "splitLabel": "Mỗi dòng một việc con",
+    "dueOn": "Hạn: {{date}}",
+    "renameTo": "Đổi tên: {{name}}",
+    "recurring": "lặp lại",
+    "error": "Không thể tải hàng đợi.",
+    "answered": "Đã lưu câu trả lời",
+    "kept": "Đã giữ nguyên",
+    "applied": "Xong",
+    "skip": "Bỏ qua",
+    "keep": "Giữ nguyên",
+    "correct": "Sửa",
+    "emptyMessage": "Đề xuất chỉ xuất hiện khi hữu ích.",
+    "emptyTitle": "Không có gì để phân loại",
+    "left": "Còn {{count}} mục",
+    "entry": "Cần phân loại ({{count}})",
+    "title": "Cần phân loại"
+  },
   "outline": {
     "saveError": "Could not save that change",
     "hintLocked": "Enter: new line",

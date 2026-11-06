@@ -1,4 +1,34 @@
 {
+  "triage": {
+    "action": {
+      "habit": "Zamień na nawyk",
+      "project": "Zamień na projekt",
+      "note": "Zamień na notatkę",
+      "reclass": "Sklasyfikuj",
+      "delete": "Usuń",
+      "cancel": "Anuluj zadanie",
+      "done": "Oznacz jako wykonane",
+      "due": "Zmień termin",
+      "split": "Podziel na podzadania",
+      "rename": "Zmień nazwę"
+    },
+    "splitLabel": "Jedno podzadanie w wierszu",
+    "dueOn": "Termin: {{date}}",
+    "renameTo": "Zmień nazwę: {{name}}",
+    "recurring": "cykliczne",
+    "error": "Nie udało się wczytać kolejki.",
+    "answered": "Odpowiedź zapisana",
+    "kept": "Zostawiono bez zmian",
+    "applied": "Gotowe",
+    "skip": "Pomiń",
+    "keep": "Zostaw bez zmian",
+    "correct": "Popraw",
+    "emptyMessage": "Propozycja pojawia się tylko, gdy jest przydatna.",
+    "emptyTitle": "Nic do uporządkowania",
+    "left": "{{count}} do przejrzenia",
+    "entry": "Do uporządkowania ({{count}})",
+    "title": "Do uporządkowania"
+  },
   "outline": {
     "saveError": "Could not save that change",
     "hintLocked": "Enter: new line",

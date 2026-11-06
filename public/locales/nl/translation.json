@@ -1,4 +1,34 @@
 {
+  "triage": {
+    "action": {
+      "habit": "Omzetten naar gewoonte",
+      "project": "Omzetten naar project",
+      "note": "Omzetten naar notitie",
+      "reclass": "Indelen",
+      "delete": "Verwijderen",
+      "cancel": "Taak annuleren",
+      "done": "Als klaar markeren",
+      "due": "Deadline wijzigen",
+      "split": "Opsplitsen in subtaken",
+      "rename": "Hernoemen"
+    },
+    "splitLabel": "Eén subtaak per regel",
+    "dueOn": "Deadline: {{date}}",
+    "renameTo": "Hernoemen: {{name}}",
+    "recurring": "terugkerend",
+    "error": "De wachtrij kon niet worden geladen.",
+    "answered": "Antwoord opgeslagen",
+    "kept": "Zo gelaten",
+    "applied": "Klaar",
+    "skip": "Overslaan",
+    "keep": "Zo laten",
+    "correct": "Corrigeren",
+    "emptyMessage": "Een voorstel verschijnt alleen als het nuttig is.",
+    "emptyTitle": "Niets te sorteren",
+    "left": "{{count}} te bekijken",
+    "entry": "Te sorteren ({{count}})",
+    "title": "Te sorteren"
+  },
   "outline": {
     "saveError": "Could not save that change",
     "hintLocked": "Enter: new line",

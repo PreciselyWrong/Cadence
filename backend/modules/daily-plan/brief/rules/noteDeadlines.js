@@ -64,13 +64,10 @@ function deadlineCards(input) {
             key,
             type: 'deadline_in_note',
             text: texts.card.deadlineInNote(title, day, task.due_date || null),
+            payload: { due_date: day },
             task_uids: [task.uid],
             event_refs: [],
-            question: {
-                key,
-                text: texts.card.deadlineQuestion(title, day),
-                target: { scope: 'task', ref: task.uid },
-            },
+            question: null,
         });
     }
     return cards;

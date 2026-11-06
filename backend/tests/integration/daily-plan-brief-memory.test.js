@@ -18,6 +18,8 @@ const dailyPlanService = require('../../modules/daily-plan/service');
 const briefService = require('../../modules/daily-plan/brief/service');
 const calendarFeedsService = require('../../modules/calendar-feeds/service');
 const { generateBrief } = require('../../modules/daily-plan/brief/generate');
+const { collectInput } = require('../../modules/daily-plan/brief/collect');
+const { ruleItems } = require('../../modules/triage/core/items');
 const decisions = require('../../modules/daily-plan/brief/decisions');
 const contexts = require('../../modules/daily-plan/brief/contexts');
 const { purgeBriefMemory } = require('../../modules/daily-plan/brief/job');
@@ -99,6 +101,13 @@ describe('daily brief memory', () => {
 
     const generate = async (date, now) =>
         (await generateBrief(user, date, { reason: 'manual', now })).brief;
+
+    // Event questions wait in the triage queue, built from the same input.
+    const questions = async (date, now) => {
+        const settings = await briefService.getBriefSettings(user);
+        const input = await collectInput(user, settings, { today: date, now });
+        return ruleItems(input, settings).filter((item) => item.question);
+    };
 
     async function seed(owner) {
         const overdue = await Task.create({
@@ -353,10 +362,9 @@ describe('daily brief memory', () => {
 
     describe('answers and linked contexts', () => {
         it('answers a series question once, and it stays silent on later occurrences', async () => {
-            const first = await generate(TODAY, NOW);
-            const card = first.anticipate.find(
+            const card = (await questions(TODAY, NOW)).find(
                 (item) =>
-                    item.question?.target?.scope === 'series' &&
+                    item.question.target.scope === 'series' &&
                     item.question.target.ref === seriesRef()
             );
             expect(card).toBeDefined();
@@ -380,11 +388,9 @@ describe('daily brief memory', () => {
                 decision: 'accepted',
             });
 
-            const later = await generate(WEDNESDAY_AFTER, WEDNESDAY_AFTER_NOW);
+            const later = await questions(WEDNESDAY_AFTER, WEDNESDAY_AFTER_NOW);
             expect(
-                later.anticipate.some(
-                    (item) => item.question?.target?.ref === seriesRef()
-                )
+                later.some((item) => item.question.target.ref === seriesRef())
             ).toBe(false);
         });
 
@@ -413,9 +419,8 @@ describe('daily brief memory', () => {
         });
 
         it('keeps an event context until the end of the event day, then purges it', async () => {
-            const first = await generate(TODAY, NOW);
-            const card = first.anticipate.find(
-                (item) => item.question?.target?.scope === 'event'
+            const card = (await questions(TODAY, NOW)).find(
+                (item) => item.question.target.scope === 'event'
             );
             expect(card).toBeDefined();
             const eventRef = card.question.target.ref;
@@ -426,10 +431,9 @@ describe('daily brief memory', () => {
                 answer: 'no',
                 idempotency_key: 'reponse-fictive-3',
             });
-            const again = await generate(TODAY, NOW);
             expect(
-                again.anticipate.some(
-                    (item) => item.question?.target?.ref === eventRef
+                (await questions(TODAY, NOW)).some(
+                    (item) => item.question.target.ref === eventRef
                 )
             ).toBe(false);
 

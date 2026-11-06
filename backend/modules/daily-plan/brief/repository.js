@@ -40,6 +40,7 @@ const CANDIDATE_ATTRIBUTES = [
     'parent_task_id',
     'recurrence_type',
     'recurring_parent_id',
+    'source_key',
 ];
 
 // Each include names a value the brief reads: project and parent names, the
@@ -168,6 +169,23 @@ class DailyBriefRepository {
         });
     }
 
+    // Every open task the user can see, for the triage queue.
+    async findOpenTasks(visibleWhere) {
+        return Task.findAll({
+            where: {
+                [Op.and]: [
+                    visibleWhere,
+                    {
+                        habit_mode: false,
+                        status: { [Op.notIn]: OPEN_STATUSES_EXCLUDED },
+                    },
+                ],
+            },
+            attributes: CANDIDATE_ATTRIBUTES,
+            include: relatedIncludes(),
+        });
+    }
+
     // { task_id: [plan_date, ...] } for the user's plans in [from, to].
     async findPlannedDays(userId, from, to) {
         const plans = await DailyPlan.findAll({
@@ -229,7 +247,16 @@ class DailyBriefRepository {
                     },
                 ],
             },
-            attributes: ['uid', 'name', 'note', 'completed_at'],
+            attributes: [
+                'uid',
+                'name',
+                'note',
+                'completed_at',
+                'due_date',
+                'recurrence_type',
+                'recurring_parent_id',
+            ],
+            include: relatedIncludes(),
             order: [['completed_at', 'DESC']],
             limit: 200,
         });

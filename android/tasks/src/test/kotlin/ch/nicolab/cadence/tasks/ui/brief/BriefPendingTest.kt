@@ -27,14 +27,11 @@ class BriefPendingTest {
     }
 
     @Test
-    fun answersAndFeedbackAreKeptPerCardAndUndone() {
-        val pending = BriefPending().answer("q1", "yes").vote("c1", "noise").vote("c2", "useful")
+    fun feedbackIsKeptPerCardAndUndone() {
+        val voted = BriefPending().vote("c1", "noise")
 
-        assertEquals("yes", pending.answers["q1"])
-        assertEquals(mapOf("c1" to "noise", "c2" to "useful"), pending.feedback)
-        val undone = pending.unanswer("q1").unvote("c1")
-        assertTrue(undone.answers.isEmpty())
-        assertEquals(mapOf("c2" to "useful"), undone.feedback)
+        assertEquals("noise", voted.feedback["c1"])
+        assertEquals(BriefPending(), voted.unvote("c1"))
     }
 
     @Test
@@ -49,7 +46,6 @@ class BriefPendingTest {
         val pending = BriefPending()
             .complete("t1")
             .move("m1", thursday)
-            .answer("q1", "Chez le garagiste")
             .vote("c1", "useful")
             .carry(listOf("t9"))
 
@@ -60,9 +56,9 @@ class BriefPendingTest {
 
     @Test
     fun unreadableStoredEntriesAreIgnored() {
-        val restored = BriefPending.fromLasting(mapOf("move:m1" to "pas une date", "inconnu:x" to "1", "answer:q" to "no"))
+        val restored = BriefPending.fromLasting(mapOf("move:m1" to "pas une date", "inconnu:x" to "1", "feedback:q" to "noise"))
 
-        assertEquals(BriefPending(answers = mapOf("q" to "no")), restored)
+        assertEquals(BriefPending(feedback = mapOf("q" to "noise")), restored)
     }
 
     @Test

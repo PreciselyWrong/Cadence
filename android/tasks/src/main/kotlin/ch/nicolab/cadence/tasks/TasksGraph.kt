@@ -63,6 +63,10 @@ object TasksGraph {
     /** Bilan du soir, lu en ligne et gardé pour le hors ligne. */
     fun evening(context: Context): EveningRepository = createEvening(context.applicationContext)
 
+    /** File « À trier », lue en ligne et gardée pour le hors ligne. */
+    fun triage(context: Context): ch.nicolab.cadence.tasks.triage.TriageRepository =
+        ch.nicolab.cadence.tasks.data.createTriage(context.applicationContext)
+
     /** Réglages du brief (dernière lecture gardée, écriture différée hors ligne). */
     fun briefSettings(context: Context): BriefSettingsRepository = createBriefSettings(context.applicationContext)
 

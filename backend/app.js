@@ -448,6 +448,7 @@ const commentsModule = require('./modules/comments');
 const telegramModule = require('./modules/telegram');
 const urlModule = require('./modules/url');
 const linksModule = require('./modules/links');
+const triageModule = require('./modules/triage');
 const usersModule = require('./modules/users');
 const viewsModule = require('./modules/views');
 const mcpModule = require('./modules/mcp');
@@ -589,6 +590,7 @@ const registerApiRoutes = (basePath) => {
     app.use(basePath, inboxModule.routes);
     app.use(basePath, urlModule.routes);
     app.use(basePath, linksModule.routes);
+    app.use(basePath, triageModule.routes);
     app.use(basePath, telegramModule.routes);
     app.use(basePath, quotesModule.routes);
     app.use(basePath, backupModule.routes);

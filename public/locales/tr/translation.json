@@ -1,4 +1,34 @@
 {
+  "triage": {
+    "action": {
+      "habit": "Alışkanlığa dönüştür",
+      "project": "Projeye dönüştür",
+      "note": "Nota dönüştür",
+      "reclass": "Sınıflandır",
+      "delete": "Sil",
+      "cancel": "Görevi iptal et",
+      "done": "Yapıldı olarak işaretle",
+      "due": "Son tarihi değiştir",
+      "split": "Alt görevlere böl",
+      "rename": "Yeniden adlandır"
+    },
+    "splitLabel": "Satır başına bir alt görev",
+    "dueOn": "Son tarih: {{date}}",
+    "renameTo": "Yeniden adlandır: {{name}}",
+    "recurring": "yinelenen",
+    "error": "Kuyruk yüklenemedi.",
+    "answered": "Yanıt kaydedildi",
+    "kept": "Olduğu gibi bırakıldı",
+    "applied": "Tamam",
+    "skip": "Atla",
+    "keep": "Olduğu gibi bırak",
+    "correct": "Düzelt",
+    "emptyMessage": "Öneri yalnızca faydalı olduğunda görünür.",
+    "emptyTitle": "Ayıklanacak bir şey yok",
+    "left": "Bakılacak: {{count}}",
+    "entry": "Ayıklanacak ({{count}})",
+    "title": "Ayıklanacak"
+  },
   "outline": {
     "saveError": "Could not save that change",
     "hintLocked": "Enter: new line",

@@ -25,7 +25,7 @@ describe('datesInNote', () => {
 });
 
 describe('deadlineCards', () => {
-    it('asks when the note date is earlier than the due date', () => {
+    it('proposes the note date when it is earlier than the due date', () => {
         const [card] = deadlineCards(
             input({
                 tasks: [
@@ -41,11 +41,11 @@ describe('deadlineCards', () => {
         expect(card).toMatchObject({
             type: 'deadline_in_note',
             task_uids: ['task-a'],
-            question: { target: { scope: 'task', ref: 'task-a' } },
+            payload: { due_date: '2026-11-12' },
+            question: null,
         });
         expect(card.text).toContain('12 novembre');
         expect(card.text).toContain('20 novembre');
-        expect(card.question.text).toContain('12 novembre');
     });
 
     it('stays silent when the note date is not earlier than the due date', () => {

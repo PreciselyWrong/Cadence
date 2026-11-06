@@ -73,24 +73,6 @@ internal class BriefActions(
         }
     }
 
-    /** Oui, Non ou un texte libre : le contexte lié et la décision partent ensemble, dans un seul appel. */
-    suspend fun answer(date: LocalDate, question: QuestionDto, answer: String): BriefUndo {
-        val key = newKey()
-        queue.enqueue(
-            BriefRequests.answer(
-                date = date,
-                idempotencyKey = key,
-                questionKey = question.key,
-                scope = question.target.scope,
-                ref = question.target.ref,
-                answer = answer,
-                label = "Résumé : réponse",
-            ),
-        )
-        return { queue.cancel(BriefRequests.answerKey(key)) }
-    }
-
-    /** « Utile » ou « Bruit » : un avis sur un type de carte, qui compte pour la réduction du bruit. */
     suspend fun feedback(date: LocalDate, card: AnticipateDto, vote: String): BriefUndo {
         val key = newKey()
         queue.enqueue(

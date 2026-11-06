@@ -1,4 +1,34 @@
 {
+  "triage": {
+    "action": {
+      "habit": "Transformă în obicei",
+      "project": "Transformă în proiect",
+      "note": "Transformă în notă",
+      "reclass": "Clasifică",
+      "delete": "Șterge",
+      "cancel": "Anulează sarcina",
+      "done": "Marchează ca făcută",
+      "due": "Schimbă termenul",
+      "split": "Împarte în subsarcini",
+      "rename": "Redenumește"
+    },
+    "splitLabel": "O subsarcină pe rând",
+    "dueOn": "Termen: {{date}}",
+    "renameTo": "Redenumește: {{name}}",
+    "recurring": "recurentă",
+    "error": "Coada nu a putut fi încărcată.",
+    "answered": "Răspuns salvat",
+    "kept": "Păstrată așa",
+    "applied": "Gata",
+    "skip": "Sari",
+    "keep": "Păstrează așa",
+    "correct": "Corectează",
+    "emptyMessage": "O propunere apare doar când este utilă.",
+    "emptyTitle": "Nimic de sortat",
+    "left": "{{count}} de văzut",
+    "entry": "De sortat ({{count}})",
+    "title": "De sortat"
+  },
   "outline": {
     "saveError": "Could not save that change",
     "hintLocked": "Enter: new line",

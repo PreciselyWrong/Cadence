@@ -14,8 +14,6 @@ data class BriefPending(
     val completing: Set<String> = emptySet(),
     /** Clé de la proposition de déplacement -> jour choisi. */
     val moved: Map<String, LocalDate> = emptyMap(),
-    /** Clé de la question -> réponse (`yes`, `no` ou texte libre). */
-    val answers: Map<String, String> = emptyMap(),
     /** Clé de la carte -> avis (`useful` ou `noise`). */
     val feedback: Map<String, String> = emptyMap(),
     /** Tâches reportées à demain depuis le bilan du soir. */
@@ -30,9 +28,6 @@ data class BriefPending(
 
     fun move(proposalKey: String, to: LocalDate) = copy(moved = moved + (proposalKey to to))
     fun unmove(proposalKey: String) = copy(moved = moved - proposalKey)
-
-    fun answer(questionKey: String, answer: String) = copy(answers = answers + (questionKey to answer))
-    fun unanswer(questionKey: String) = copy(answers = answers - questionKey)
 
     fun vote(cardKey: String, vote: String) = copy(feedback = feedback + (cardKey to vote))
     fun unvote(cardKey: String) = copy(feedback = feedback - cardKey)
@@ -49,7 +44,6 @@ data class BriefPending(
     /** Les décisions à garder (tout sauf [completing]), à plat : `genre:clé` -> valeur. */
     fun lasting(): Map<String, String> = buildMap {
         moved.forEach { (key, day) -> put("$MOVE$key", day.toString()) }
-        answers.forEach { (key, value) -> put("$ANSWER$key", value) }
         feedback.forEach { (key, value) -> put("$FEEDBACK$key", value) }
         carried.forEach { put("$CARRY$it", "") }
         outcomes.forEach { (uid, outcome) -> put("$OUTCOME$uid", outcome.encode()) }
@@ -57,7 +51,6 @@ data class BriefPending(
 
     companion object {
         private const val MOVE = "move:"
-        private const val ANSWER = "answer:"
         private const val FEEDBACK = "feedback:"
         private const val CARRY = "carry:"
         private const val OUTCOME = "outcome:"
@@ -68,7 +61,6 @@ data class BriefPending(
             entries.forEach { (raw, value) ->
                 when {
                     raw.startsWith(MOVE) -> runCatching { LocalDate.parse(value) }.getOrNull()?.let { pending = pending.move(raw.removePrefix(MOVE), it) }
-                    raw.startsWith(ANSWER) -> pending = pending.answer(raw.removePrefix(ANSWER), value)
                     raw.startsWith(FEEDBACK) -> pending = pending.vote(raw.removePrefix(FEEDBACK), value)
                     raw.startsWith(OUTCOME) -> RowOutcome.decode(value)?.let { pending = pending.decide(raw.removePrefix(OUTCOME), it) }
                     raw.startsWith(CARRY) -> pending = pending.carry(listOf(raw.removePrefix(CARRY)))

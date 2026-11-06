@@ -107,6 +107,7 @@ const DailyPlanItem = require('./daily_plan_item')(sequelize);
 const Goal = require('./goal')(sequelize);
 const Link = require('./link')(sequelize);
 const BriefProposal = require('./brief_proposal')(sequelize);
+const TaskTriage = require('./task_triage')(sequelize);
 const LinkedContext = require('./linked_context')(sequelize);
 const TodoMdRepo = require('./todo_md_repo')(sequelize);
 const UserGoalOrder = require('./user_goal_order')(sequelize);
@@ -789,6 +790,7 @@ module.exports = {
     Goal,
     Link,
     BriefProposal,
+    TaskTriage,
     LinkedContext,
     TodoMdRepo,
     Project,

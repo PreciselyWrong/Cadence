@@ -1,4 +1,34 @@
 {
+  "triage": {
+    "action": {
+      "habit": "Gjør om til vane",
+      "project": "Gjør om til prosjekt",
+      "note": "Gjør om til notat",
+      "reclass": "Klassifiser",
+      "delete": "Slett",
+      "cancel": "Avbryt oppgaven",
+      "done": "Merk som ferdig",
+      "due": "Endre frist",
+      "split": "Del opp i deloppgaver",
+      "rename": "Gi nytt navn"
+    },
+    "splitLabel": "Én deloppgave per linje",
+    "dueOn": "Frist: {{date}}",
+    "renameTo": "Gi nytt navn: {{name}}",
+    "recurring": "gjentakende",
+    "error": "Køen kunne ikke lastes.",
+    "answered": "Svar lagret",
+    "kept": "Beholdt som den er",
+    "applied": "Ferdig",
+    "skip": "Hopp over",
+    "keep": "Behold som den er",
+    "correct": "Rett",
+    "emptyMessage": "Et forslag vises bare når det er nyttig.",
+    "emptyTitle": "Ingenting å sortere",
+    "left": "{{count}} å se på",
+    "entry": "Å sortere ({{count}})",
+    "title": "Å sortere"
+  },
   "outline": {
     "saveError": "Could not save that change",
     "hintLocked": "Enter: new line",

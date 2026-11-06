@@ -60,6 +60,7 @@ import SummaryPage from './components/Insights/SummaryPage';
 import ReviewPage from './components/Review/ReviewPage';
 import LinksPage from './components/Links/LinksPage';
 import BriefPage from './components/DailyBrief/BriefPage';
+import TriagePage from './components/Triage/TriagePage';
 import PeopleList from './components/People/PeopleList';
 import PersonDetails from './components/People/PersonDetails';
 import EveryoneDashboard from './components/Everyone/EveryoneDashboard';
@@ -548,6 +549,7 @@ const App: React.FC = () => {
                                 path="/insights/daily-brief"
                                 element={<BriefPage />}
                             />
+                            <Route path="/triage" element={<TriagePage />} />
                             <Route
                                 path="/insights/productivity"
                                 element={<ProductivityPage />}

@@ -52,6 +52,8 @@ describe('findDuplicates', () => {
                 task_uid: 'open-a',
                 closed_uid: 'closed-a',
                 closed_name: 'payer la facture FICTIVE',
+                closed: true,
+                twin: expect.objectContaining({ uid: 'closed-a' }),
                 kind: 'probable',
                 similarity: 1,
             },
@@ -142,10 +144,16 @@ describe('findDuplicates', () => {
 });
 
 describe('duplicateCards', () => {
-    it('makes a question targeting the open task', () => {
+    it('says what tells the two tasks apart, never "X is a duplicate of X"', () => {
         const [card] = duplicateCards(
             input({
-                tasks: [task({ uid: 'open-a', name: 'Payer la facture' })],
+                tasks: [
+                    task({
+                        uid: 'open-a',
+                        name: 'Payer la facture',
+                        project_name: 'Maison fictive',
+                    }),
+                ],
                 closedTasks: [
                     closed({ uid: 'closed-a', name: 'Payer la facture' }),
                 ],
@@ -156,9 +164,78 @@ describe('duplicateCards', () => {
             key: 'duplicate:open-a:closed-a',
             type: 'duplicate',
             task_uids: ['open-a'],
-            question: { target: { scope: 'task', ref: 'open-a' } },
+            question: null,
         });
-        expect(card.question.text).toContain('Payer la facture');
+        expect(card.text).not.toContain('doublon');
+        expect(card.details.join(' ')).toContain('Maison fictive');
+        expect(card.details.join(' ')).toContain('2 novembre');
+    });
+
+    it('never reports a recurring task or a done occurrence of its series', () => {
+        const found = findDuplicates(
+            input({
+                tasks: [
+                    task({
+                        uid: 'a',
+                        name: 'Sport',
+                        recurring: true,
+                        series_uid: 'a',
+                    }),
+                    task({ uid: 'b', name: 'Lire' }),
+                ],
+                closedTasks: [
+                    closed({
+                        uid: 'c',
+                        name: 'Sport',
+                        recurring: true,
+                        series_uid: 'a',
+                    }),
+                    closed({
+                        uid: 'd',
+                        name: 'Lire',
+                        recurring: true,
+                        series_uid: 'd',
+                    }),
+                ],
+            }),
+            settingsWith()
+        );
+        expect(found).toEqual([]);
+    });
+
+    it('does not take two tasks on different days for the same one', () => {
+        const found = findDuplicates(
+            input({
+                tasks: [
+                    task({ uid: 'a', name: 'Sport', due_date: '2026-11-05' }),
+                    task({ uid: 'b', name: 'Sport', due_date: '2026-11-07' }),
+                ],
+                closedTasks: [
+                    closed({ uid: 'c', name: 'Sport', due_date: '2026-11-02' }),
+                ],
+            }),
+            settingsWith()
+        );
+        expect(found).toEqual([]);
+    });
+
+    it('finds two open tasks with the same name and no day between them', () => {
+        const found = findDuplicates(
+            input({
+                tasks: [
+                    task({ uid: 'a', name: 'Appeler Paul' }),
+                    task({
+                        uid: 'b',
+                        name: 'appeler paul',
+                        due_date: '2026-11-05',
+                    }),
+                ],
+            }),
+            settingsWith()
+        );
+        expect(
+            found.map((match) => [match.task_uid, match.closed_uid])
+        ).toEqual([['b', 'a']]);
     });
 
     it('is empty when nothing matches', () => {

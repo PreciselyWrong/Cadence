@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="triage_title">À trier</string>
+    <string name="triage_entry">À trier (%1$d)</string>
+    <string name="triage_left">%1$d à voir</string>
+    <string name="triage_empty_title">Rien à trier</string>
+    <string name="triage_empty_message">Une proposition n\'apparaît que si elle est utile.</string>
+    <string name="triage_correct">Corriger</string>
+    <string name="triage_keep">Garder telle quelle</string>
+    <string name="triage_skip">Passer</string>
+    <string name="triage_applied">C\'est fait</string>
+    <string name="triage_kept">Gardée telle quelle</string>
+    <string name="triage_answered">Réponse enregistrée</string>
+    <string name="triage_recurring">récurrente</string>
+    <string name="triage_rename_to">Renommer : %1$s</string>
+    <string name="triage_due_on">Échéance : %1$s</string>
+    <string name="triage_split_label">Une sous-tâche par ligne</string>
+    <string name="triage_action_rename">Renommer</string>
+    <string name="triage_action_split">Découper en sous-tâches</string>
+    <string name="triage_action_due">Changer l\'échéance</string>
+    <string name="triage_action_done">Marquer comme faite</string>
+    <string name="triage_action_cancel">Annuler la tâche</string>
+    <string name="triage_action_delete">Supprimer</string>
+    <string name="triage_action_reclass">Classer</string>
+    <string name="triage_action_note">Convertir en note</string>
+    <string name="triage_action_project">Convertir en projet</string>
+    <string name="triage_action_habit">Convertir en habitude</string>
+</resources>

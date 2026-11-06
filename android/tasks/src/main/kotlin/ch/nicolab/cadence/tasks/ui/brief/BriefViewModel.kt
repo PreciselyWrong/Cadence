@@ -13,7 +13,6 @@ import ch.nicolab.cadence.tasks.brief.CachedBrief
 import ch.nicolab.cadence.tasks.brief.CachedEvening
 import ch.nicolab.cadence.tasks.brief.EveningMode
 import ch.nicolab.cadence.tasks.brief.MoveDto
-import ch.nicolab.cadence.tasks.brief.QuestionDto
 import ch.nicolab.cadence.tasks.brief.audio.AudioChoice
 import ch.nicolab.cadence.tasks.brief.audio.AudioSource
 import ch.nicolab.cadence.tasks.brief.audio.AudioTarget
@@ -289,12 +288,6 @@ internal class BriefViewModel(application: Application) : AndroidViewModel(appli
         revert = { it.unmove(move.proposalKey) },
         message = string(R.string.brief_moved_notice, BriefFormat.chip(target)),
     ) { actions.move(date, move, task, target) }
-
-    fun answer(date: LocalDate, question: QuestionDto, answer: String) = change(
-        apply = { it.answer(question.key, answer) },
-        revert = { it.unanswer(question.key) },
-        message = string(R.string.brief_answered_notice),
-    ) { actions.answer(date, question, answer) }
 
     fun feedback(date: LocalDate, card: AnticipateDto, vote: String) = change(
         apply = { it.vote(card.key, vote) },

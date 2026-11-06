@@ -1,4 +1,34 @@
 {
+  "triage": {
+    "action": {
+      "habit": "Lav om til vane",
+      "project": "Lav om til projekt",
+      "note": "Lav om til note",
+      "reclass": "Klassificér",
+      "delete": "Slet",
+      "cancel": "Annuller opgaven",
+      "done": "Markér som færdig",
+      "due": "Skift forfaldsdato",
+      "split": "Opdel i underopgaver",
+      "rename": "Omdøb"
+    },
+    "splitLabel": "Én underopgave pr. linje",
+    "dueOn": "Forfald: {{date}}",
+    "renameTo": "Omdøb: {{name}}",
+    "recurring": "tilbagevendende",
+    "error": "Køen kunne ikke indlæses.",
+    "answered": "Svar gemt",
+    "kept": "Beholdt som den er",
+    "applied": "Færdig",
+    "skip": "Spring over",
+    "keep": "Behold som den er",
+    "correct": "Ret",
+    "emptyMessage": "Et forslag vises kun, når det er nyttigt.",
+    "emptyTitle": "Intet at sortere",
+    "left": "{{count}} at se",
+    "entry": "At sortere ({{count}})",
+    "title": "At sortere"
+  },
   "outline": {
     "saveError": "Could not save that change",
     "hintLocked": "Enter: new line",
