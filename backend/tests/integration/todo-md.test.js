@@ -120,6 +120,34 @@ describe('TODO.md projects', () => {
         expect(first.Tags.map((t) => t.name)).toEqual(['code']);
     });
 
+    it('gives no completion date to a bullet first read closed, but dates a later check', async () => {
+        fs.appendFileSync(alpha(), '\n## Dropped\n- Old idea\n');
+        await agent.post('/api/todo-md/rescan');
+        const closed = await Task.findOne({ where: { name: 'Set up repo' } });
+        const dropped = await Task.findOne({ where: { name: 'Old idea' } });
+        expect(closed.status).toBe(2);
+        expect(closed.completed_at).toBeNull();
+        expect(dropped.status).toBe(3);
+        expect(dropped.completed_at).toBeNull();
+
+        await agent.post('/api/todo-md/rescan');
+        await dropped.reload();
+        expect(dropped.completed_at).toBeNull();
+
+        const text = fs.readFileSync(alpha(), 'utf8');
+        fs.writeFileSync(alpha(), text.replace('- Fix bug', '- [x] Fix bug'));
+        await agent.post('/api/todo-md/rescan');
+        const fix = await Task.findOne({ where: { name: 'Fix bug' } });
+        expect(fix.status).toBe(2);
+        expect(fix.completed_at).not.toBeNull();
+
+        fs.writeFileSync(alpha(), text);
+        await agent.post('/api/todo-md/rescan');
+        await fix.reload();
+        expect(fix.status).toBe(0);
+        expect(fix.completed_at).toBeNull();
+    });
+
     it('does not duplicate anything when it reads the same files again', async () => {
         await agent.post('/api/todo-md/rescan');
         const before = await Task.count();

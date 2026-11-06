@@ -210,10 +210,9 @@ async function reconcile(project, owner, parsed, modifiedAt, adopt) {
                 ...(adopt && adopt.key === item.key ? { uid: adopt.uid } : {}),
                 user_id: owner.id,
                 project_id: project.id,
-                completed_at:
-                    status === STATUS.DONE || status === STATUS.ARCHIVED
-                        ? modifiedAt
-                        : null,
+                // Read closed for the first time: when it closed is unknown,
+                // and the file's date would count it as done today.
+                completed_at: null,
             });
             await ensureCodeTag(created, owner.id);
             stats.created += 1;
@@ -224,12 +223,9 @@ async function reconcile(project, owner, parsed, modifiedAt, adopt) {
         for (const [field, value] of Object.entries(desired)) {
             if ((task.get(field) ?? null) !== value) changes[field] = value;
         }
-        const leavesDone =
-            task.status === STATUS.DONE && status !== STATUS.DONE;
-        const entersDone =
-            task.status !== STATUS.DONE && status === STATUS.DONE;
-        if (leavesDone) changes.completed_at = null;
-        if (entersDone || (status === STATUS.ARCHIVED && !task.completed_at)) {
+        if (status === STATUS.NOT_STARTED) {
+            if (task.completed_at) changes.completed_at = null;
+        } else if (task.status !== status) {
             changes.completed_at = task.completed_at || modifiedAt;
         }
         if (Object.keys(changes).length > 0) {

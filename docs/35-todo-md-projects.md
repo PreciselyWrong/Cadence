@@ -121,7 +121,7 @@ Git runs with no machine or user configuration (`GIT_CONFIG_GLOBAL=/dev/null`, `
 - A `## ` heading starts a section (`Now`, `Next`, `Ideas`, `Done`, `Dropped`, or any other). Text before the first one is ignored. `###` and deeper headings, paragraphs and fenced code blocks are ignored.
 - Each **top-level** bullet (`-`, `*` or `+` at column 0) is a task. Indented lines, nested bullets and blank lines between them belong to the bullet above and become the task's **note**. A bullet with no text is not a task.
 - The **name** is the first line with its Markdown stripped (emphasis, code, links, strikethrough). `- [ ]` / `- [x]` checkboxes are read.
-- **Done** = a checked box, or a bullet in a `## Done` section. A bullet in `## Dropped` becomes archived.
+- **Done** = a checked box, or a bullet in a `## Done` section. A bullet in `## Dropped` becomes archived. A bullet first read closed has no completion date (it is unknown), so it stays out of "done today" and the statistics; a bullet closed later takes the file's date.
 - Each task carries the `code` tag ([Mixed projects](#mixed-projects)); its section is kept in `source_section`.
 - CRLF files, a missing final newline and a UTF-8 BOM are handled. Files in another encoding are left untouched (Cadence refuses to write them).
 

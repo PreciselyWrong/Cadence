@@ -8,9 +8,18 @@ import React, {
 import { Task } from '../../entities/Task';
 import { getApiPath } from '../../config/paths';
 import { getDefaultHeaders } from '../../utils/authUtils';
+import { isTaskCompleted } from '../../constants/taskStatus';
 
 const M = { top: 16, right: 24, bottom: 44, left: 36 };
 const DAYS = 28;
+
+// A task closed without a known date (read closed from a TODO.md) was never
+// open on any day of the chart.
+export function openAtEndOfDay(task: Task, dayEnd: Date): boolean {
+    if (!task.created_at || new Date(task.created_at) > dayEnd) return false;
+    if (task.completed_at) return new Date(task.completed_at) > dayEnd;
+    return !isTaskCompleted(task.status);
+}
 
 function smoothPath(pts: { x: number; y: number }[]): string {
     if (pts.length < 2) return '';
@@ -71,13 +80,9 @@ const BurndownChart: React.FC = () => {
             dayEnd.setDate(dayEnd.getDate() - (DAYS - 1 - i));
             let count: number;
             if (hasCompletedAt) {
-                count = allTasks.filter((t) => {
-                    if (!t.created_at) return false;
-                    if (new Date(t.created_at) > dayEnd) return false;
-                    if (t.completed_at)
-                        return new Date(t.completed_at) > dayEnd;
-                    return true;
-                }).length;
+                count = allTasks.filter((t) =>
+                    openAtEndOfDay(t, dayEnd)
+                ).length;
             } else {
                 count = allTasks.filter(
                     (t) => t.created_at && new Date(t.created_at) <= dayEnd
