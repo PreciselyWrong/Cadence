@@ -4112,7 +4112,8 @@
     "focusExceptionAdd": "Ajouter une exception",
     "showQuote": "Afficher la citation du jour",
     "hideQuote": "Masquer la citation du jour",
-    "orderError": "L'ordre n'a pas pu être enregistré."
+    "orderError": "L'ordre n'a pas pu être enregistré.",
+    "eventReadOnly": "En lecture seule : passe cet agenda en synchronisation dans les deux sens, dans Profil, pour le déplacer d'ici."
   },
   "capture": {
     "add": "Ajouter",

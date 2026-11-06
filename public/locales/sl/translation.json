@@ -4141,7 +4141,8 @@
     "focusExceptionAdd": "Dodaj izjemo",
     "showQuote": "Pokaži dnevni citat",
     "hideQuote": "Skrij dnevni citat",
-    "orderError": "Vrstnega reda ni bilo mogoče shraniti."
+    "orderError": "Vrstnega reda ni bilo mogoče shraniti.",
+    "eventReadOnly": "Samo za branje: v profilu nastavite ta koledar na dvosmerno usklajevanje, da ga boste lahko premikali od tu."
   },
   "capture": {
     "add": "Dodaj",

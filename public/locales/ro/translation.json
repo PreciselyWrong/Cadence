@@ -4112,7 +4112,8 @@
     "focusExceptionAdd": "Adaugă o excepție",
     "showQuote": "Afișează citatul zilei",
     "hideQuote": "Ascunde citatul zilei",
-    "orderError": "Ordinea nu a putut fi salvată."
+    "orderError": "Ordinea nu a putut fi salvată.",
+    "eventReadOnly": "Doar citire: setează acest calendar pe sincronizare bidirecțională în profil pentru a-l muta de aici."
   },
   "capture": {
     "add": "Adaugă",

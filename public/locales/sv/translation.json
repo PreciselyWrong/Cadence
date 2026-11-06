@@ -4103,7 +4103,8 @@
     "focusExceptionAdd": "Lägg till ett undantag",
     "showQuote": "Visa dagens citat",
     "hideQuote": "Dölj dagens citat",
-    "orderError": "Ordningen kunde inte sparas."
+    "orderError": "Ordningen kunde inte sparas.",
+    "eventReadOnly": "Skrivskyddad: ställ in kalendern på tvåvägssynkronisering i profilen för att flytta den härifrån."
   },
   "capture": {
     "add": "Lägg till",

@@ -549,3 +549,9 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Problème** : 17 lignes d'un coup : le jour mêlé à ce qui est prévu pour la semaine ou mis en vue.
 - **Décision** : la liste montre le jour ; Demain, Cette semaine, En vue et Suggérées sont repliées dessous, fermées à chaque visite. « Placer tout » ne prend que le jour.
 - **Android à reprendre** : livré dans la même étape (1.12.4), sous la liste Aujourd'hui.
+
+### 2026-11-06 — Frise du jour : étirer et déplacer
+
+- **Problème** : impossible de changer la durée d'une tâche à heure ou de déplacer un événement d'agenda depuis la frise.
+- **Décision** : le bas de chaque bloc devient une poignée (curseur flèche haut-bas, quart d'heure) ; les événements d'un agenda Google en deux sens se déplacent et s'étirent ; les autres restent fixes et le disent au survol.
+- **Android à reprendre** : pas de frise déplaçable sur Android (`TODO.md` › Now).

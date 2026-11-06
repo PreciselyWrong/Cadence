@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import DayTimeline from '../DayTimeline';
 import { CalendarEvent } from '../../../utils/calendarFeedsService';
@@ -147,5 +147,100 @@ describe('DayTimeline', () => {
             [planned('a', 630)]
         );
         expect(screen.getByTestId('block-a').style.width).toContain('50%');
+    });
+
+    describe('the length and place of a block', () => {
+        const google = (fields: Partial<CalendarEvent> = {}) =>
+            event({
+                uid: 'g1',
+                title: 'Dentist',
+                source: 'google',
+                editable: true,
+                start: '2026-11-06T10:00:00.000Z',
+                end: '2026-11-06T11:00:00.000Z',
+                start_minute: 600,
+                end_minute: 660,
+                ...fields,
+            });
+        const timedTask = event({
+            uid: 'task-1',
+            title: 'Sport',
+            feed_uid: 'tasks',
+            feed_name: 'Sport',
+            task_uid: 'abc',
+            start_minute: 600,
+            end_minute: 660,
+        });
+
+        // jsdom has no PointerEvent, so the clientY is set by hand.
+        const pointer = (type: string, clientY: number) => {
+            const fired = new Event(type, { bubbles: true });
+            Object.defineProperty(fired, 'clientY', { value: clientY });
+            return fired;
+        };
+        const stretch = (handle: Element, px: number) =>
+            act(() => {
+                handle.dispatchEvent(pointer('pointerdown', 0));
+                window.dispatchEvent(pointer('pointermove', px));
+                window.dispatchEvent(pointer('pointerup', px));
+            });
+        const renderWith = (events: CalendarEvent[]) => {
+            const onResizeEvent = jest.fn();
+            render(
+                <DayTimeline
+                    items={[]}
+                    events={events}
+                    range={{ start: 480, end: 1080 }}
+                    now={null}
+                    onResize={jest.fn()}
+                    onResizeEvent={onResizeEvent}
+                    onRemove={jest.fn()}
+                    onReschedule={jest.fn()}
+                />
+            );
+            return onResizeEvent;
+        };
+        const handleOf = (id: string) =>
+            screen
+                .getByTestId(`timed-${id}`)
+                .querySelector('.cursor-ns-resize') as HTMLElement;
+
+        it('stretches a timed task from its bottom edge, on the quarter', () => {
+            const onResizeEvent = renderWith([timedTask]);
+            stretch(handleOf('abc'), 32);
+            expect(onResizeEvent).toHaveBeenCalledWith(timedTask, 90);
+        });
+
+        it('stops at the end of the visible hours', () => {
+            const onResizeEvent = renderWith([timedTask]);
+            stretch(handleOf('abc'), 5000);
+            expect(onResizeEvent).toHaveBeenCalledWith(timedTask, 480);
+        });
+
+        it('stretches and moves an event of a two-way calendar', () => {
+            const movable = google();
+            const onResizeEvent = renderWith([movable]);
+            expect(
+                screen.getByRole('button', { name: 'Move {{name}}' })
+            ).toBeInTheDocument();
+            stretch(handleOf('g1'), 16);
+            expect(onResizeEvent).toHaveBeenCalledWith(movable, 75);
+        });
+
+        it('leaves a read-only event fixed, and says why', () => {
+            renderWith([google({ editable: false })]);
+            expect(screen.queryByTestId('timed-g1')).toBeNull();
+            expect(screen.getByTitle(/two-way/)).toHaveTextContent('Dentist');
+        });
+
+        it('leaves an event over several days fixed', () => {
+            renderWith([
+                google({
+                    start: '2026-11-05T10:00:00.000Z',
+                    start_minute: 0,
+                }),
+            ]);
+            expect(screen.queryByTestId('timed-g1')).toBeNull();
+        });
     });
 });

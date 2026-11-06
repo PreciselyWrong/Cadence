@@ -4112,7 +4112,8 @@
     "focusExceptionAdd": "Ausnahme hinzufügen",
     "showQuote": "Tageszitat anzeigen",
     "hideQuote": "Tageszitat ausblenden",
-    "orderError": "Die Reihenfolge konnte nicht gespeichert werden."
+    "orderError": "Die Reihenfolge konnte nicht gespeichert werden.",
+    "eventReadOnly": "Schreibgeschützt: Stelle diesen Kalender im Profil auf beidseitige Synchronisierung, um ihn von hier zu verschieben."
   },
   "capture": {
     "add": "Hinzufügen",

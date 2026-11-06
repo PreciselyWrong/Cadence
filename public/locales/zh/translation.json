@@ -4103,7 +4103,8 @@
     "focusExceptionAdd": "添加例外",
     "showQuote": "显示每日名言",
     "hideQuote": "隐藏每日名言",
-    "orderError": "无法保存顺序。"
+    "orderError": "无法保存顺序。",
+    "eventReadOnly": "只读:在个人资料中将此日历设为双向同步,即可在此移动。"
   },
   "capture": {
     "add": "添加",

@@ -4103,7 +4103,8 @@
     "focusExceptionAdd": "Lisää poikkeus",
     "showQuote": "Näytä päivän lainaus",
     "hideQuote": "Piilota päivän lainaus",
-    "orderError": "Järjestystä ei voitu tallentaa."
+    "orderError": "Järjestystä ei voitu tallentaa.",
+    "eventReadOnly": "Vain luku: aseta tämä kalenteri profiilissa kaksisuuntaiseksi, niin voit siirtää sen täältä."
   },
   "capture": {
     "add": "Lisää",

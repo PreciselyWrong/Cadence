@@ -4103,7 +4103,8 @@
     "focusExceptionAdd": "例外を追加",
     "showQuote": "今日の名言を表示",
     "hideQuote": "今日の名言を非表示",
-    "orderError": "順序を保存できませんでした。"
+    "orderError": "順序を保存できませんでした。",
+    "eventReadOnly": "読み取り専用です。ここから移動するには、プロフィールでこのカレンダーを双方向同期にしてください。"
   },
   "capture": {
     "add": "追加",

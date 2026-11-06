@@ -4108,7 +4108,8 @@
     "focusExceptionAdd": "Legg til et unntak",
     "showQuote": "Vis dagens sitat",
     "hideQuote": "Skjul dagens sitat",
-    "orderError": "Rekkefølgen kunne ikke lagres."
+    "orderError": "Rekkefølgen kunne ikke lagres.",
+    "eventReadOnly": "Skrivebeskyttet: Sett denne kalenderen til toveissynkronisering i profilen for å flytte den herfra."
   },
   "capture": {
     "add": "Legg til",

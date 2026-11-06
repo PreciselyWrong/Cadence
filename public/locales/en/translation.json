@@ -4121,7 +4121,8 @@
     "focusExceptionAdd": "Add an exception",
     "showQuote": "Show the daily quote",
     "hideQuote": "Hide the daily quote",
-    "orderError": "Could not save the order."
+    "orderError": "Could not save the order.",
+    "eventReadOnly": "Read-only: set this calendar to two-way in Profile to move it from here."
   },
   "relations": {
     "title": "Relations",

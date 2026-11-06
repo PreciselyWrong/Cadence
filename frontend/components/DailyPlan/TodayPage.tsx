@@ -47,6 +47,7 @@ import {
     CalendarEvent,
     fetchCalendarEvents,
 } from '../../utils/calendarFeedsService';
+import { updateGoogleEvent } from '../../utils/googleSyncService';
 import {
     createTask,
     fetchCalendarTasks,
@@ -122,6 +123,7 @@ import {
     CalendarTask,
     dropToDueUpdate,
     taskIdOf,
+    resizeUpdate,
     slotId,
     taskToEvents,
 } from '../Calendar/taskEvents';
@@ -147,6 +149,7 @@ import {
     intlLocale,
     feedEventsToBlocks,
     droppedMinute,
+    shiftedInstants,
     movedInList,
 } from './planUtils';
 import SkeletonRows from '../Shared/SkeletonRows';
@@ -1299,27 +1302,91 @@ const TodayPage: React.FC = () => {
         setReloadToken((count) => count + 1);
     };
 
-    // A timed task dragged along the day keeps its length: its due time follows
-    // the block, as on the calendar.
-    const moveTimedTask = async (event: CalendarEvent, deltaY: number) => {
+    // The task behind a timed block, with the block as the calendar draws it.
+    const timedTaskOf = (event: CalendarEvent) => {
         const task = dayTasks.find((t) => t.uid === event.task_uid);
         const block =
             task &&
             taskToEvents(task as unknown as CalendarTask).find(
                 (b) => `task-${b.id}` === event.uid
             );
-        if (!task || !block) return;
+        return task && block ? { task, block } : null;
+    };
+
+    // Shown at once; a refusal from Google puts the event back as it was.
+    const saveEventTimes = async (
+        event: CalendarEvent,
+        times: { start: string; end: string }
+    ) => {
+        const previous = feedEvents;
+        const minutesFrom = (from: string, to: string) =>
+            (new Date(to).getTime() - new Date(from).getTime()) / 60000;
+        const start =
+            (event.start_minute as number) +
+            minutesFrom(event.start, times.start);
+        setFeedEvents((current) =>
+            current.map((e) =>
+                e.uid === event.uid && e.feed_uid === event.feed_uid
+                    ? {
+                          ...e,
+                          ...times,
+                          start_minute: start,
+                          end_minute:
+                              start + minutesFrom(times.start, times.end),
+                      }
+                    : e
+            )
+        );
+        try {
+            await updateGoogleEvent(
+                event.calendar_uid as string,
+                event.event_id as string,
+                { all_day: false, ...times }
+            );
+        } catch (err) {
+            showErrorToast(
+                err instanceof Error
+                    ? err.message
+                    : t('calendar.google.saveError', 'Could not save the event')
+            );
+            setFeedEvents(previous);
+        }
+    };
+
+    // Dragged along the day, a block keeps its length: a task's due time or an
+    // event's two ends follow it.
+    const moveTimedEvent = async (event: CalendarEvent, deltaY: number) => {
         const start = event.start_minute as number;
-        const length = (event.end_minute as number) - start;
         const minute = droppedMinute(
             start,
             deltaY,
-            length,
+            (event.end_minute as number) - start,
             range,
             PX_PER_MINUTE
         );
-        if (minute !== start) {
-            await dropOnCalendar(task, slotId(minute), block);
+        if (minute === start) return;
+        const timed = timedTaskOf(event);
+        if (timed) {
+            await dropOnCalendar(timed.task, slotId(minute), timed.block);
+        } else if (event.source === 'google') {
+            await saveEventTimes(event, shiftedInstants(event, minute - start));
+        }
+    };
+
+    const resizeTimedEvent = async (event: CalendarEvent, duration: number) => {
+        const timed = timedTaskOf(event);
+        if (timed) {
+            const end = new Date(
+                timed.block.start.getTime() + duration * 60000
+            );
+            await saveTaskChange(timed.task, resizeUpdate(timed.block, end));
+        } else if (event.source === 'google') {
+            await saveEventTimes(event, {
+                start: event.start,
+                end: new Date(
+                    new Date(event.start).getTime() + duration * 60000
+                ).toISOString(),
+            });
         }
     };
 
@@ -1661,13 +1728,13 @@ const TodayPage: React.FC = () => {
             | { type: 'candidate'; task: Task; duration: number }
             | { type: 'item'; item: DailyPlanItem }
             | { type: 'calendar-block'; event: CalendarBlock }
-            | { type: 'timed-task'; event: CalendarEvent }
+            | { type: 'timed-event'; event: CalendarEvent }
             | undefined;
         if (!data || !over) return;
         const overId = String(over.id);
 
-        if (data.type === 'timed-task') {
-            if (overId === 'timeline') void moveTimedTask(data.event, delta.y);
+        if (data.type === 'timed-event') {
+            if (overId === 'timeline') void moveTimedEvent(data.event, delta.y);
             return;
         }
 
@@ -2636,6 +2703,15 @@ const TodayPage: React.FC = () => {
                                                         plannedMap.get(uid)
                                                             ?.start_minute ??
                                                             null,
+                                                        duration
+                                                    )
+                                                }
+                                                onResizeEvent={(
+                                                    event,
+                                                    duration
+                                                ) =>
+                                                    void resizeTimedEvent(
+                                                        event,
                                                         duration
                                                     )
                                                 }

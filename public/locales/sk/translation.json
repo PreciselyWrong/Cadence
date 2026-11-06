@@ -4507,7 +4507,8 @@
     "focusExceptionAdd": "Pridať výnimku",
     "showQuote": "Zobraziť citát dňa",
     "hideQuote": "Skryť citát dňa",
-    "orderError": "Poradie sa nepodarilo uložiť."
+    "orderError": "Poradie sa nepodarilo uložiť.",
+    "eventReadOnly": "Iba na čítanie: v profile nastavte tomuto kalendáru obojsmernú synchronizáciu, aby ste ho mohli presúvať odtiaľto."
   },
   "relations": {
     "title": "Vzťahy",

@@ -4141,7 +4141,8 @@
     "focusExceptionAdd": "Dodaj wyjątek",
     "showQuote": "Pokaż cytat dnia",
     "hideQuote": "Ukryj cytat dnia",
-    "orderError": "Nie udało się zapisać kolejności."
+    "orderError": "Nie udało się zapisać kolejności.",
+    "eventReadOnly": "Tylko do odczytu: ustaw ten kalendarz w profilu na synchronizację dwukierunkową, aby go stąd przenosić."
   },
   "capture": {
     "add": "Dodaj",

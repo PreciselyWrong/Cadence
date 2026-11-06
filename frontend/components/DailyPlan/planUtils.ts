@@ -260,6 +260,16 @@ export const movedInList = (
     return next;
 };
 
+// Both ends of an event, moved by `minutes`: its length stays.
+export const shiftedInstants = (
+    { start, end }: { start: string; end: string },
+    minutes: number
+): { start: string; end: string } => {
+    const at = (value: string) =>
+        new Date(new Date(value).getTime() + minutes * 60000).toISOString();
+    return { start: at(start), end: at(end) };
+};
+
 export interface TimeSpan {
     key: string;
     start: number;

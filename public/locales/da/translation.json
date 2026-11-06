@@ -4103,7 +4103,8 @@
     "focusExceptionAdd": "Tilføj en undtagelse",
     "showQuote": "Vis dagens citat",
     "hideQuote": "Skjul dagens citat",
-    "orderError": "Rækkefølgen kunne ikke gemmes."
+    "orderError": "Rækkefølgen kunne ikke gemmes.",
+    "eventReadOnly": "Skrivebeskyttet: Sæt denne kalender til tovejssynkronisering i profilen for at flytte den herfra."
   },
   "capture": {
     "add": "Tilføj",

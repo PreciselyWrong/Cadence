@@ -8,6 +8,7 @@ import {
     fetchPlanCandidates,
     saveDailyPlanItems,
 } from '../../../utils/dailyPlanService';
+import { updateGoogleEvent } from '../../../utils/googleSyncService';
 import {
     fetchCalendarEvents,
     fetchCalendarFeeds,
@@ -127,6 +128,10 @@ const resizeHandle = (uid: string) =>
         .getByTestId(`block-${uid}`)
         .querySelector('.cursor-ns-resize') as HTMLElement;
 
+jest.mock('../../../utils/googleSyncService', () => ({
+    updateGoogleEvent: jest.fn(),
+}));
+
 describe('TodayPage resize', () => {
     beforeEach(() => {
         jest.clearAllMocks();
@@ -181,5 +186,80 @@ describe('TodayPage resize', () => {
                 }),
             ])
         );
+    });
+
+    describe('an event of a two-way calendar', () => {
+        const pointer = (type: string, clientY: number) => {
+            const event = new Event(type, { bubbles: true });
+            Object.defineProperty(event, 'clientY', { value: clientY });
+            return event;
+        };
+        const google = {
+            uid: 'g1',
+            title: 'Dentist',
+            all_day: false,
+            busy: true,
+            date: TODAY,
+            start: `${TODAY}T10:00:00.000Z`,
+            end: `${TODAY}T11:00:00.000Z`,
+            start_minute: 600,
+            end_minute: 660,
+            feed_uid: 'google-c1',
+            feed_name: 'Family',
+            color: null,
+            source: 'google',
+            calendar_uid: 'c1',
+            event_id: 'e1',
+            editable: true,
+        };
+
+        beforeEach(() => {
+            (fetchCalendarEvents as jest.Mock).mockResolvedValue({
+                date: TODAY,
+                events: [google],
+                errors: [],
+            });
+        });
+
+        const stretchByAnHour = async () => {
+            render(<TodayPage />);
+            const block = await screen.findByTestId('timed-g1');
+            const handle = block.querySelector(
+                '.cursor-ns-resize'
+            ) as HTMLElement;
+            act(() => {
+                handle.dispatchEvent(pointer('pointerdown', 0));
+                window.dispatchEvent(pointer('pointermove', PX_PER_HOUR));
+                window.dispatchEvent(pointer('pointerup', PX_PER_HOUR));
+            });
+        };
+
+        it('saves its new end in Google and shows it at once', async () => {
+            (updateGoogleEvent as jest.Mock).mockResolvedValue({});
+            await stretchByAnHour();
+            await waitFor(() =>
+                expect(updateGoogleEvent).toHaveBeenCalledWith('c1', 'e1', {
+                    all_day: false,
+                    start: google.start,
+                    end: `${TODAY}T12:00:00.000Z`,
+                })
+            );
+            expect(
+                parseInt(screen.getByTestId('timed-g1').style.height, 10)
+            ).toBe(2 * PX_PER_HOUR - 2);
+        });
+
+        it('puts the event back when Google refuses', async () => {
+            (updateGoogleEvent as jest.Mock).mockRejectedValue(
+                new Error('refused')
+            );
+            await stretchByAnHour();
+            await waitFor(() =>
+                expect(
+                    parseInt(screen.getByTestId('timed-g1').style.height, 10)
+                ).toBe(PX_PER_HOUR - 2)
+            );
+            expect(updateGoogleEvent).toHaveBeenCalled();
+        });
     });
 });

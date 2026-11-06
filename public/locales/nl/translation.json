@@ -4103,7 +4103,8 @@
     "focusExceptionAdd": "Uitzondering toevoegen",
     "showQuote": "Dagelijkse quote tonen",
     "hideQuote": "Dagelijkse quote verbergen",
-    "orderError": "De volgorde kon niet worden opgeslagen."
+    "orderError": "De volgorde kon niet worden opgeslagen.",
+    "eventReadOnly": "Alleen-lezen: zet deze agenda in je profiel op tweerichtingssynchronisatie om hem hier te verplaatsen."
   },
   "capture": {
     "add": "Toevoegen",

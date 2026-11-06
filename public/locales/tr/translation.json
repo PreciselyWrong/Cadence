@@ -4103,7 +4103,8 @@
     "focusExceptionAdd": "İstisna ekle",
     "showQuote": "Günün alıntısını göster",
     "hideQuote": "Günün alıntısını gizle",
-    "orderError": "Sıralama kaydedilemedi."
+    "orderError": "Sıralama kaydedilemedi.",
+    "eventReadOnly": "Salt okunur: buradan taşımak için bu takvimi profilde çift yönlü eşitlemeye alın."
   },
   "capture": {
     "add": "Ekle",

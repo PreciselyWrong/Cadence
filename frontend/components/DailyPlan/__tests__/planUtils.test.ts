@@ -10,6 +10,7 @@ import {
     formatMinute,
     freeGaps,
     movedInList,
+    shiftedInstants,
     pickCurrentItem,
     sideBySide,
     taskLength,
@@ -345,5 +346,22 @@ describe('movedInList', () => {
     it('changes nothing on itself or on a row not in the list', () => {
         expect(movedInList(['a', 'b'], 'a', 'a')).toEqual(['a', 'b']);
         expect(movedInList(['a', 'b'], 'a', 'z')).toEqual(['a', 'b']);
+    });
+});
+
+describe('shiftedInstants', () => {
+    it('moves both ends and keeps the length', () => {
+        expect(
+            shiftedInstants(
+                {
+                    start: '2026-11-06T10:00:00.000Z',
+                    end: '2026-11-06T11:00:00.000Z',
+                },
+                30
+            )
+        ).toEqual({
+            start: '2026-11-06T10:30:00.000Z',
+            end: '2026-11-06T11:30:00.000Z',
+        });
     });
 });

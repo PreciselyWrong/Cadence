@@ -4103,7 +4103,8 @@
     "focusExceptionAdd": "예외 추가",
     "showQuote": "오늘의 명언 표시",
     "hideQuote": "오늘의 명언 숨기기",
-    "orderError": "순서를 저장할 수 없습니다."
+    "orderError": "순서를 저장할 수 없습니다.",
+    "eventReadOnly": "읽기 전용입니다. 여기서 옮기려면 프로필에서 이 캘린더를 양방향 동기화로 설정하세요."
   },
   "capture": {
     "add": "추가",

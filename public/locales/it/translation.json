@@ -4109,7 +4109,8 @@
     "focusExceptionAdd": "Aggiungi un'eccezione",
     "showQuote": "Mostra la citazione del giorno",
     "hideQuote": "Nascondi la citazione del giorno",
-    "orderError": "Impossibile salvare l'ordine."
+    "orderError": "Impossibile salvare l'ordine.",
+    "eventReadOnly": "Sola lettura: imposta questo calendario sulla sincronizzazione bidirezionale nel profilo per spostarlo da qui."
   },
   "capture": {
     "add": "Aggiungi",

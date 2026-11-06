@@ -4103,7 +4103,8 @@
     "focusExceptionAdd": "Thêm ngoại lệ",
     "showQuote": "Hiện câu nói trong ngày",
     "hideQuote": "Ẩn câu nói trong ngày",
-    "orderError": "Không thể lưu thứ tự."
+    "orderError": "Không thể lưu thứ tự.",
+    "eventReadOnly": "Chỉ đọc: đặt lịch này sang đồng bộ hai chiều trong Hồ sơ để di chuyển từ đây."
   },
   "capture": {
     "add": "Thêm",

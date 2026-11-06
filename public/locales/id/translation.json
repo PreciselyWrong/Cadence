@@ -4103,7 +4103,8 @@
     "focusExceptionAdd": "Tambah pengecualian",
     "showQuote": "Tampilkan kutipan harian",
     "hideQuote": "Sembunyikan kutipan harian",
-    "orderError": "Urutan tidak dapat disimpan."
+    "orderError": "Urutan tidak dapat disimpan.",
+    "eventReadOnly": "Hanya baca: atur kalender ini ke sinkronisasi dua arah di Profil agar bisa dipindahkan dari sini."
   },
   "capture": {
     "add": "Tambah",

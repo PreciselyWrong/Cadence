@@ -51,6 +51,8 @@ interface DayTimelineProps {
     range: { start: number; end: number };
     now: number | null;
     onResize: (taskUid: string, duration: number) => void;
+    // A timed task or an editable calendar event took a new length.
+    onResizeEvent?: (event: CalendarEvent, duration: number) => void;
     onRemove: (taskUid: string) => void;
     onReschedule: (task: Task, when: RescheduleWhen) => void;
     aiReasons?: Record<string, string>;
@@ -72,6 +74,55 @@ interface BlockProps {
     aiReason?: string;
 }
 
+// Resizing is plain pointer tracking on the bottom edge, snapped to the
+// 15-minute grid and stopped at `maxDuration`.
+const useBottomResize = (
+    duration: number,
+    maxDuration: number,
+    onResize: (duration: number) => void
+) => {
+    const [preview, setPreview] = React.useState<number | null>(null);
+    const startResize = (event: React.PointerEvent) => {
+        event.stopPropagation();
+        event.preventDefault();
+        const startY = event.clientY;
+        let latest = duration;
+        const move = (e: PointerEvent) => {
+            const delta = (e.clientY - startY) / PX_PER_MINUTE;
+            latest = Math.min(
+                maxDuration,
+                Math.max(
+                    SLOT_MINUTES,
+                    Math.round((duration + delta) / SLOT_MINUTES) * SLOT_MINUTES
+                )
+            );
+            setPreview(latest);
+        };
+        const up = () => {
+            window.removeEventListener('pointermove', move);
+            window.removeEventListener('pointerup', up);
+            setPreview(null);
+            if (latest !== duration) onResize(latest);
+        };
+        window.addEventListener('pointermove', move);
+        window.addEventListener('pointerup', up);
+    };
+    return { preview, startResize };
+};
+
+// The bottom edge of a block: the pointer turns into an up-and-down arrow.
+const ResizeEdge: React.FC<{ onPointerDown: React.PointerEventHandler }> = ({
+    onPointerDown,
+}) => (
+    <div
+        onPointerDown={onPointerDown}
+        className="absolute bottom-0 left-0 right-0 flex h-3 cursor-ns-resize justify-center"
+        aria-hidden="true"
+    >
+        <span className="mt-1.5 h-1 w-8 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100" />
+    </div>
+);
+
 const TimelineBlock: React.FC<BlockProps> = ({
     item,
     range,
@@ -87,43 +138,15 @@ const TimelineBlock: React.FC<BlockProps> = ({
             id: `item:${item.task_uid}`,
             data: { type: 'item', item },
         });
-    const [previewDuration, setPreviewDuration] = React.useState<number | null>(
-        null
+    const { preview, startResize } = useBottomResize(
+        item.duration_minutes,
+        maxDuration,
+        onResize
     );
-    const duration = previewDuration ?? item.duration_minutes;
+    const duration = preview ?? item.duration_minutes;
     const top = ((item.start_minute as number) - range.start) * PX_PER_MINUTE;
     const height = Math.max(18, duration * PX_PER_MINUTE - 2);
     const compact = height < 44;
-
-    // Resizing is plain pointer tracking on the bottom edge, snapped to the
-    // 15-minute grid and stopped short of the next planned block.
-    const startResize = (event: React.PointerEvent) => {
-        event.stopPropagation();
-        event.preventDefault();
-        const startY = event.clientY;
-        const startDuration = item.duration_minutes;
-        let latest = startDuration;
-        const move = (e: PointerEvent) => {
-            const delta = (e.clientY - startY) / PX_PER_MINUTE;
-            latest = Math.min(
-                maxDuration,
-                Math.max(
-                    SLOT_MINUTES,
-                    Math.round((startDuration + delta) / SLOT_MINUTES) *
-                        SLOT_MINUTES
-                )
-            );
-            setPreviewDuration(latest);
-        };
-        const up = () => {
-            window.removeEventListener('pointermove', move);
-            window.removeEventListener('pointerup', up);
-            setPreviewDuration(null);
-            if (latest !== startDuration) onResize(latest);
-        };
-        window.addEventListener('pointermove', move);
-        window.addEventListener('pointerup', up);
-    };
 
     return (
         <div
@@ -192,37 +215,54 @@ const TimelineBlock: React.FC<BlockProps> = ({
             >
                 <XMarkIcon className="h-4 w-4" />
             </button>
-            <div
-                onPointerDown={startResize}
-                className="absolute bottom-0 left-0 right-0 flex h-2 cursor-ns-resize justify-center"
-                aria-hidden="true"
-            >
-                <span className="mt-0.5 h-1 w-8 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100" />
-            </div>
+            <ResizeEdge onPointerDown={startResize} />
         </div>
     );
 };
 
-// A timed task that is not in the plan: its time is its own, so moving the
-// block moves the task.
-const TimedTaskBlock: React.FC<{
+// What the page can move and stretch besides the plan: a timed task, whose time
+// is its own, and an event of a two-way calendar held within one day.
+const isMovable = (event: CalendarEvent): boolean => {
+    if (event.task_uid) return true;
+    if (!event.editable || event.source !== 'google') return false;
+    const length =
+        new Date(event.end).getTime() - new Date(event.start).getTime();
+    return (
+        length ===
+        ((event.end_minute ?? 0) - (event.start_minute as number)) * 60000
+    );
+};
+
+const MovableBlock: React.FC<{
     event: CalendarEvent;
     top: number;
-    height: number;
+    maxDuration: number;
     slot?: { lane: number; lanes: number };
-}> = ({ event, top, height, slot }) => {
+    onResize: (duration: number) => void;
+}> = ({ event, top, maxDuration, slot, onResize }) => {
     const { t } = useTranslation();
     const { attributes, listeners, setNodeRef, transform, isDragging } =
         useDraggable({
-            id: `timed:${event.task_uid}`,
-            data: { type: 'timed-task', event },
+            id: `timed:${eventKey(event)}`,
+            data: { type: 'timed-event', event },
         });
+    const start = event.start_minute as number;
+    const { preview, startResize } = useBottomResize(
+        (event.end_minute ?? start) - start,
+        maxDuration,
+        onResize
+    );
+    const height = Math.max(
+        18,
+        (preview ?? (event.end_minute ?? start) - start) * PX_PER_MINUTE - 2
+    );
+    const uid = event.task_uid;
     return (
         <div
             ref={setNodeRef}
-            className={`absolute flex cursor-grab items-start gap-2 overflow-hidden rounded-md bg-gray-100/80 px-2.5 text-[13px] text-gray-600 active:cursor-grabbing dark:bg-gray-800/50 dark:text-gray-300 ${
-                height < 40 ? 'items-center' : 'py-1.5'
-            } ${isDragging ? 'z-20 opacity-80 shadow-lg' : ''}`}
+            className={`group absolute overflow-hidden rounded-md bg-gray-100/80 text-[13px] text-gray-600 dark:bg-gray-800/50 dark:text-gray-300 ${
+                isDragging ? 'z-20 opacity-80 shadow-lg' : 'z-10'
+            }`}
             style={{
                 ...laneStyle(slot),
                 top: top + 1,
@@ -231,24 +271,40 @@ const TimedTaskBlock: React.FC<{
                     ? `translate3d(0, ${transform.y}px, 0)`
                     : undefined,
             }}
-            {...listeners}
-            {...attributes}
-            aria-label={t('dailyPlan.moveBlock', 'Move {{name}}', {
-                name: event.title,
-            })}
-            data-testid={`timed-${event.task_uid}`}
+            data-testid={`timed-${uid ?? event.uid}`}
         >
-            <span className="shrink-0 text-gray-500 dark:text-gray-400">
-                {formatMinute(event.start_minute as number)}
-            </span>
-            <button
-                type="button"
-                draggable={false}
-                onClick={() => openTaskPanel(event.task_uid as string)}
-                className="min-w-0 flex-1 truncate text-left underline-offset-2 hover:underline"
+            <div
+                className={`flex h-full cursor-grab items-start gap-2 px-2.5 active:cursor-grabbing ${
+                    height < 40 ? 'items-center' : 'py-1.5'
+                }`}
+                {...listeners}
+                {...attributes}
+                aria-label={t('dailyPlan.moveBlock', 'Move {{name}}', {
+                    name: event.title,
+                })}
             >
-                {event.title}
-            </button>
+                <span className="shrink-0 text-gray-500 dark:text-gray-400">
+                    {formatMinute(start)}
+                </span>
+                {uid ? (
+                    <button
+                        type="button"
+                        draggable={false}
+                        onClick={() => openTaskPanel(uid)}
+                        className="min-w-0 flex-1 truncate text-left underline-offset-2 hover:underline"
+                    >
+                        {event.title}
+                    </button>
+                ) : (
+                    <span className="min-w-0 flex-1 truncate">
+                        {event.title}
+                    </span>
+                )}
+                {!uid && (slot?.lanes ?? 1) === 1 && (
+                    <CalendarBadge name={event.feed_name} color={event.color} />
+                )}
+            </div>
+            <ResizeEdge onPointerDown={startResize} />
         </div>
     );
 };
@@ -259,6 +315,7 @@ const DayTimeline: React.FC<DayTimelineProps> = ({
     range,
     now,
     onResize,
+    onResizeEvent,
     onRemove,
     onReschedule,
     aiReasons,
@@ -377,20 +434,34 @@ const DayTimeline: React.FC<DayTimelineProps> = ({
                             (end - start) * PX_PER_MINUTE - 2
                         );
                         const slot = slots.get(eventKey(event));
-                        if (event.task_uid) {
+                        if (isMovable(event)) {
                             return (
-                                <TimedTaskBlock
+                                <MovableBlock
                                     key={eventKey(event)}
                                     event={event}
                                     top={top}
-                                    height={blockHeight}
+                                    maxDuration={
+                                        range.end -
+                                        (event.start_minute as number)
+                                    }
                                     slot={slot}
+                                    onResize={(duration) =>
+                                        onResizeEvent?.(event, duration)
+                                    }
                                 />
                             );
                         }
                         return (
                             <div
                                 key={eventKey(event)}
+                                title={
+                                    event.source === 'google' && !event.editable
+                                        ? t(
+                                              'dailyPlan.eventReadOnly',
+                                              'Read-only: set this calendar to two-way in Profile to move it from here.'
+                                          )
+                                        : undefined
+                                }
                                 className={`absolute flex items-start gap-2 overflow-hidden rounded-md px-2.5 text-[13px] ${
                                     event.busy
                                         ? 'bg-gray-100/80 text-gray-600 dark:bg-gray-800/50 dark:text-gray-300'

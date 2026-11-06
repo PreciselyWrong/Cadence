@@ -24,6 +24,8 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
   écran du bilan après `evening.switchTime` (fuseau du profil), `GET /daily-plan/:date/evening`, « Reporter à demain » (annulation par retrait du plan de demain), réglage `Bilan du soir` ; contrat `docs/39-daily-brief.md` § Evening review, écarts web dans `docs/fork/WEB-UX-NOTES.md` (2026-11-04). Vérif : mêmes quatre sections et mêmes compteurs que le web pour une même journée sur le serveur de test, puis passage à 18:00 sur le téléphone.
 - Aujourd'hui sur Android : glisser-déposer pour ranger
   Web : glisser une ligne. Android : seulement Monter et Descendre dans le menu, car le glissé entre en conflit avec le balayage des lignes et ne peut pas se vérifier ici (téléphone en `unauthorized` sur ADB, émulateur en panne). Vérif : sur le téléphone, ranger trois tâches au doigt sans déclencher de balayage ; l'ordre se retrouve sur le web.
+- Frise du jour déplaçable sur Android
+  Web : déplacer et étirer les tâches à heure et les événements d'un agenda en deux sens. Android : la frise de Ma journée reste en lecture. Vérif : sur le téléphone, étirer une tâche ; sa durée se retrouve sur le web.
 - Revue UX du 2026-11-06, à vérifier par toi
   Ma journée et la frise sur le téléphone en noir pur ; une carte d'habitude à moitié faite ; « À trier » sur tes vraies tâches ; importer ton `bookmarks.html` depuis `/links` ; clic gauche sur l'icône dans le panneau KDE après avoir installé le RPM ; charger `integrations/firefox-addon/` dans `about:debugging`. La signature Mozilla de l'add-on demande tes clés AMO.
 - **Quand le besoin se montre.**
