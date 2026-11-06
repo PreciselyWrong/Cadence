@@ -262,4 +262,27 @@ class TaskViewsTest {
         assertEquals(today, occurrences.single().dueDay)
         assertTrue(occurrences.single().virtual)
     }
+
+    @Test
+    fun `ce qui attend sous le jour se range par section, sans doublon ni tâche déjà du jour`() {
+        val week = LocalDate.of(2026, 10, 26)
+        val tomorrow = TaskItem(uid = "demain", name = "demain")
+        val alsoWeek = TaskItem(uid = "les-deux", name = "les-deux", weekOf = week)
+        val thisWeek = TaskItem(uid = "semaine", name = "semaine", weekOf = week)
+        val inView = TaskItem(uid = "vue", name = "vue", inViewAt = now)
+        val next = TaskItem(uid = "prochaine", name = "prochaine")
+        val onToday = TaskItem(uid = "jour", name = "jour", weekOf = week)
+
+        val later = TaskViews.laterSections(
+            suggestions = listOf(next, alsoWeek, thisWeek, inView, onToday),
+            tomorrow = listOf(tomorrow, alsoWeek, onToday),
+            weekStart = week,
+            shown = setOf("jour"),
+        )
+
+        assertEquals(listOf("demain", "les-deux"), later.tomorrow.map { it.uid })
+        assertEquals(listOf("semaine"), later.thisWeek.map { it.uid })
+        assertEquals(listOf("vue"), later.inView.map { it.uid })
+        assertEquals(listOf("prochaine"), later.suggested.map { it.uid })
+    }
 }

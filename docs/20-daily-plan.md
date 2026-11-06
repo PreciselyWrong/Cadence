@@ -243,7 +243,9 @@ Each draft, estimate batch or wrap-up counts as one AI request, and one AI credi
 
 A timed task that is not in the plan is drawn on the grid with its own hour. Dragging it moves its due time (with its start, keeping its length) and its title opens it; calendar events stay fixed. What overlaps shares the width side by side (`planUtils.sideBySide`), and a calendar's name only shows when a block has the full width. The "drag tasks here" hint sits above the grid, never on the hours.
 
-The list shows the day's tasks and what the user chose (In view, This week). What the planner proposes on its own waits behind a "Suggested n" line, and a routine due on another day is not proposed: it comes back by itself.
+Today is for doing: the list shows the day (tagged #today, overdue, due today, in progress). What could come next waits in sections folded under it, closed at each visit: **Tomorrow** (`tomorrow` in `GET /api/daily-plan/candidates`, due tomorrow and not on the day), **This week**, **In view** and **Suggested**. "+" on one of them plans it for today. "Place all" and "Help me choose" work on the day. A routine due later is not suggested: it comes back by itself. Browse still shows each list whole.
+
+Android does the same under its Today list, with what its day shows.
 
 ## Your order of the day
 

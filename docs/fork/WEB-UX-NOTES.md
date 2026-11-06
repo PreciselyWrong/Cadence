@@ -543,3 +543,9 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Problème** : la liste du jour suivait un classement calculé, sans moyen de la ranger soi-même.
 - **Décision** : glisser une tâche sur une autre ligne la met à sa place (`tasks.today_order`, synchronisé) ; ce qui est rangé à la main passe d'abord, le reste suit l'heure puis le classement.
 - **Android à reprendre** : même champ et même ordre, avec Monter et Descendre dans le menu ; le glisser-déposer reste à faire (`TODO.md` › Now).
+
+### 2026-11-06 — Aujourd'hui sert à faire
+
+- **Problème** : 17 lignes d'un coup : le jour mêlé à ce qui est prévu pour la semaine ou mis en vue.
+- **Décision** : la liste montre le jour ; Demain, Cette semaine, En vue et Suggérées sont repliées dessous, fermées à chaque visite. « Placer tout » ne prend que le jour.
+- **Android à reprendre** : livré dans la même étape (1.12.4), sous la liste Aujourd'hui.

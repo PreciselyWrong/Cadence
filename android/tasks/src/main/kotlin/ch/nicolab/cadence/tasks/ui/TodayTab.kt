@@ -38,6 +38,7 @@ import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskItem
+import ch.nicolab.cadence.tasks.model.TaskViews
 import ch.nicolab.cadence.tasks.planning.DayPlans
 import ch.nicolab.cadence.tasks.planning.DayRhythm
 import ch.nicolab.cadence.tasks.planning.PlanningChanges
@@ -115,6 +116,13 @@ internal fun TodayTab(
         settings, today, localNow, closedDay, state.completed.size, unfinished.size,
     )
     val tomorrowTasks = upcoming[today.plusDays(1)].orEmpty()
+    val shownUids = remember(state.overdue, agenda) {
+        state.overdue.mapTo(HashSet()) { it.uid } + agenda.filterIsInstance<TodayItem.Task>().map { it.task.uid }
+    }
+    val later = remember(suggestions, tomorrowTasks, weekStart, shownUids) {
+        TaskViews.laterSections(suggestions, tomorrowTasks, weekStart, shownUids)
+    }
+    var openFolds by rememberSaveable { mutableStateOf(emptyList<String>()) }
 
     /** Applique [changes] puis propose « Annuler » : tout se défait d'un geste, y compris `afterUndo`. */
     fun commit(changes: List<Pair<TaskItem, TaskChange>>, message: String, afterUndo: () -> Unit = {}) {
@@ -215,12 +223,6 @@ internal fun TodayTab(
         }
         if (state.overdue.isEmpty() && agenda.isEmpty() && proposals == null) {
             item(key = "closed") { ClosedDay(state.completed.size) }
-            if (tomorrowTasks.isNotEmpty()) {
-                item(key = "tomorrow-header") {
-                    SectionHeader(title = stringResource(R.string.planning_closed_tomorrow))
-                }
-                taskRows(tomorrowTasks, projectNames, projectColors, moment, viewModel, onOpen, sectionDay = today.plusDays(1), projectIcons = projectIcons)
-            }
         }
         if (state.overdue.isNotEmpty()) {
             item(key = "overdue-header") {
@@ -249,6 +251,23 @@ internal fun TodayTab(
             }
         }
         item(key = "routine") { routineStrip() }
+        // Aujourd'hui sert à faire : ce qui pourrait suivre attend replié, à dérouler une fois le jour fini.
+        listOf(
+            Triple("tomorrow", R.string.planning_closed_tomorrow, later.tomorrow),
+            Triple("week", R.string.funnel_this_week, later.thisWeek),
+            Triple("view", R.string.funnel_in_view, later.inView),
+            Triple("suggested", R.string.today_fold_suggested, later.suggested),
+        ).filter { (_, _, tasks) -> tasks.isNotEmpty() }.forEach { (key, label, tasks) ->
+            val open = key in openFolds
+            item(key = "fold-$key") {
+                FoldHeader(stringResource(label), tasks.size, open) {
+                    openFolds = if (open) openFolds - key else openFolds + key
+                }
+            }
+            if (open) {
+                taskRows(tasks, projectNames, projectColors, moment, viewModel, onOpen, projectIcons = projectIcons)
+            }
+        }
         if (state.completed.isNotEmpty()) {
             item(key = "completed-header") {
                 val toggleLabel = stringResource(if (completedExpanded) R.string.tasks_completed_hide else R.string.tasks_completed_show)
@@ -275,6 +294,22 @@ internal fun TodayTab(
                 taskRows(state.completed, projectNames, projectColors, moment, viewModel, onOpen, projectIcons = projectIcons)
             }
         }
+    }
+}
+
+/** Titre d'une section repliée : son nom, son compte, et la flèche qui dit si elle est ouverte. */
+@Composable
+private fun FoldHeader(title: String, count: Int, open: Boolean, onToggle: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = Size.touch)
+            .clickable(role = Role.Button, onClick = onToggle)
+            .padding(vertical = Space.sm),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(text = "$title $count", style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))
+        Icon(if (open) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore, contentDescription = null)
     }
 }
 

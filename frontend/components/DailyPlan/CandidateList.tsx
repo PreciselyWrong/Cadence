@@ -18,8 +18,10 @@ import TaskCheckCircle from '../Task/TaskCheckCircle';
 import { DEFAULT_DURATION, formatDuration, taskLength } from './planUtils';
 import {
     GROUP_ORDER,
+    LaterSection,
     TaskGroupKey,
-    isProposal,
+    isOnTheDay,
+    laterSection,
     orderedCandidates,
 } from './autoPlace';
 import { openTaskPanel } from '../../store/taskPanelStore';
@@ -67,6 +69,8 @@ interface CandidateCardProps {
     // keeps it to itself instead of printing "30 min" on every row.
     lengthKnown?: boolean;
     isToday?: boolean;
+    // In a folded section, whose title already says what the row would.
+    inSection?: boolean;
     onDurationChange: (minutes: number) => void;
     onAdd: () => void;
     onComplete: () => void;
@@ -85,6 +89,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
     suggested = null,
     lengthKnown = true,
     isToday = true,
+    inSection = false,
     onDurationChange,
     onAdd,
     onComplete,
@@ -130,7 +135,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
     }
     // On Today the page title already says "today"; the row only speaks up
     // for what differs (overdue, in progress, suggested).
-    if (group === 'due_today' && isToday) status = '';
+    if ((group === 'due_today' && isToday) || inSection) status = '';
     const meta = [status, lengthKnown ? formatDuration(duration) : '']
         .filter(Boolean)
         .join(' · ');
@@ -296,7 +301,7 @@ const CandidateList: React.FC<CandidateListProps> = ({
     const { t } = useTranslation();
     const [showFilters, setShowFilters] = useState(false);
     const [choosing, setChoosing] = useState(false);
-    const [showSuggestions, setShowSuggestions] = useState(false);
+    const [openSections, setOpenSections] = useState<string[]>([]);
     // Dropping a planned block back here takes it off the plan.
     const { setNodeRef, isOver } = useDroppable({ id: 'candidates' });
 
@@ -308,13 +313,92 @@ const CandidateList: React.FC<CandidateListProps> = ({
             !planned.has(entry.task.uid as string)
     );
 
-    // What the planner proposes on its own waits behind one line: the day's
-    // tasks and what the user chose (In view, This week) stay in sight.
-    const proposals = entries.filter(isProposal).length;
-    const folded =
-        filter === 'all' && !showSuggestions && proposals > 0
-            ? entries.filter((entry) => !isProposal(entry))
-            : entries;
+    // Today is for doing: the day first, the rest folded under it. A filter
+    // from Browse asks for that list on purpose, so it shows whole.
+    const onTheDay = filter === 'all' ? entries.filter(isOnTheDay) : entries;
+    const later = (section: LaterSection) =>
+        filter === 'all'
+            ? entries.filter(
+                  (entry) =>
+                      !isOnTheDay(entry) && laterSection(entry.task) === section
+              )
+            : [];
+    const sections: {
+        key: string;
+        label: string;
+        entries: typeof entries;
+    }[] = [
+        {
+            key: 'tomorrow',
+            label: t('dailyPlan.tomorrow', 'Tomorrow'),
+            entries:
+                filter === 'all'
+                    ? (candidates.tomorrow ?? [])
+                          .filter((task) => !planned.has(task.uid as string))
+                          .map((task) => ({
+                              task,
+                              group: 'suggested' as const,
+                          }))
+                    : [],
+        },
+        {
+            key: 'this_week',
+            label: t('review.actions.thisWeek', 'This week'),
+            entries: later('this_week'),
+        },
+        {
+            key: 'in_view',
+            label: t('review.actions.inView', 'In view'),
+            entries: later('in_view'),
+        },
+        {
+            key: 'suggested',
+            label: t('dailyPlan.suggested', 'Suggested'),
+            entries: later('suggested'),
+        },
+    ].filter((section) => section.entries.length > 0);
+
+    const toggleSection = (key: string) =>
+        setOpenSections((open) =>
+            open.includes(key)
+                ? open.filter((other) => other !== key)
+                : [...open, key]
+        );
+
+    const renderCard = (
+        { task, group }: (typeof entries)[number],
+        inSection = false
+    ) => (
+        <CandidateCard
+            key={task.uid}
+            task={task}
+            group={group}
+            isToday={isToday}
+            inSection={inSection}
+            duration={
+                durations[task.uid as string] ??
+                taskLength(task) ??
+                aiEstimates[task.uid as string] ??
+                DEFAULT_DURATION
+            }
+            lengthKnown={
+                durations[task.uid as string] !== undefined ||
+                taskLength(task) !== undefined
+            }
+            suggested={
+                task.estimated_minutes
+                    ? null
+                    : (aiEstimates[task.uid as string] ?? null)
+            }
+            onDurationChange={(minutes) =>
+                onDurationChange(task.uid as string, minutes)
+            }
+            onAdd={() => onAdd(task)}
+            onComplete={() => onComplete(task)}
+            onReschedule={(when) => onReschedule(task, when)}
+            onDrop={() => onDrop(task)}
+        />
+    );
 
     type Pill = { key: CandidateFilter; label: string; count: number };
     const pills: Pill[] = [
@@ -393,7 +477,7 @@ const CandidateList: React.FC<CandidateListProps> = ({
 
             {choosing && (
                 <ThisOrThat
-                    tasks={entries
+                    tasks={(onTheDay.length >= 2 ? onTheDay : entries)
                         .slice(0, CHOOSE_FROM)
                         .map((entry) => entry.task)}
                     onClose={() => setChoosing(false)}
@@ -432,66 +516,42 @@ const CandidateList: React.FC<CandidateListProps> = ({
 
             {filter !== 'inbox' && (
                 <>
-                    {entries.length === 0 && (
+                    {onTheDay.length === 0 && (
                         <p className="px-3 text-sm text-gray-600 dark:text-gray-300">
                             {t('dailyPlan.noCandidates', 'Nothing here. Nice.')}
                         </p>
                     )}
                     <div className="-mx-1 flex flex-col">
-                        {folded.map(({ task, group }) => (
-                            <CandidateCard
-                                key={task.uid}
-                                task={task}
-                                group={group}
-                                isToday={isToday}
-                                duration={
-                                    durations[task.uid as string] ??
-                                    taskLength(task) ??
-                                    aiEstimates[task.uid as string] ??
-                                    DEFAULT_DURATION
-                                }
-                                lengthKnown={
-                                    durations[task.uid as string] !==
-                                        undefined ||
-                                    taskLength(task) !== undefined
-                                }
-                                suggested={
-                                    task.estimated_minutes
-                                        ? null
-                                        : (aiEstimates[task.uid as string] ??
-                                          null)
-                                }
-                                onDurationChange={(minutes) =>
-                                    onDurationChange(
-                                        task.uid as string,
-                                        minutes
-                                    )
-                                }
-                                onAdd={() => onAdd(task)}
-                                onComplete={() => onComplete(task)}
-                                onReschedule={(when) =>
-                                    onReschedule(task, when)
-                                }
-                                onDrop={() => onDrop(task)}
-                            />
-                        ))}
+                        {onTheDay.map((entry) => renderCard(entry))}
                     </div>
-                    {filter === 'all' && proposals > 0 && (
-                        <button
-                            type="button"
-                            aria-expanded={showSuggestions}
-                            onClick={() => setShowSuggestions((open) => !open)}
-                            className="flex min-h-[36px] items-center gap-1 self-start px-3 text-[13px] text-gray-600 hover:underline dark:text-gray-300"
-                        >
-                            <ChevronDownIcon
-                                className={`h-4 w-4 transition-transform ${
-                                    showSuggestions ? '' : '-rotate-90'
-                                }`}
-                                aria-hidden="true"
-                            />
-                            {t('dailyPlan.suggested', 'Suggested')} {proposals}
-                        </button>
-                    )}
+                    {sections.map((section) => {
+                        const open = openSections.includes(section.key);
+                        return (
+                            <div key={section.key} className="flex flex-col">
+                                <button
+                                    type="button"
+                                    aria-expanded={open}
+                                    onClick={() => toggleSection(section.key)}
+                                    className="flex min-h-[36px] items-center gap-1 self-start px-3 text-[13px] text-gray-600 hover:underline dark:text-gray-300"
+                                >
+                                    <ChevronDownIcon
+                                        className={`h-4 w-4 transition-transform ${
+                                            open ? '' : '-rotate-90'
+                                        }`}
+                                        aria-hidden="true"
+                                    />
+                                    {section.label} {section.entries.length}
+                                </button>
+                                {open && (
+                                    <div className="-mx-1 flex flex-col">
+                                        {section.entries.map((entry) =>
+                                            renderCard(entry, true)
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })}
                 </>
             )}
 

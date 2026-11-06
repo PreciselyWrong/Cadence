@@ -1,3 +1,8 @@
+## [1.12.4] — 6 novembre 2026
+
+### Nouveautés
+- Aujourd'hui : sous la liste du jour, Demain, Cette semaine, En vue et Suggérées attendent repliées, à dérouler quand tu veux.
+
 ## [1.12.3] — 6 novembre 2026
 
 ### Nouveautés

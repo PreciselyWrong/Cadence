@@ -511,6 +511,29 @@ async function getCandidates(
         });
     }
 
+    // Tomorrow's tasks have their own place, under the day. What is already on
+    // the day stays there; they leave the suggestions.
+    const tomorrowBounds = getDayBoundsInUTC(
+        moment.tz(timezone).add(1, 'day').format('YYYY-MM-DD'),
+        timezone
+    );
+    const onTheDay = new Set(
+        GROUP_ORDER.filter((key) => key !== 'suggested').flatMap((key) =>
+            unique[key].map((task) => task.id)
+        )
+    );
+    const tomorrow = (
+        await repository.findTasksDueBetween(
+            scopeService.withScope(myVisibleWhere, scopeWhere),
+            tomorrowBounds.start,
+            tomorrowBounds.end
+        )
+    ).filter((task) => !onTheDay.has(task.id));
+    const tomorrowIds = new Set(tomorrow.map((task) => task.id));
+    unique.suggested = unique.suggested.filter(
+        (task) => !tomorrowIds.has(task.id)
+    );
+
     // The cap comes last: keep the first suggestions in the final order.
     let ranked = orderCandidates(unique, order, suggestions.tieBreak, {
         weekStart,
@@ -533,6 +556,9 @@ async function getCandidates(
             preserveOriginalName: true,
         });
     }
+    result.tomorrow = await serializeTasks(tomorrow, timezone, {
+        preserveOriginalName: true,
+    });
     result.ranked = todayOrdered(ranked).map(({ task }) => task.uid);
     result.suggested_total = suggestedTotal;
 

@@ -145,16 +145,10 @@ describe('CandidateList', () => {
             ...candidates,
             ranked: ['t-idea', 't-late', 't-started', 't-today'],
         });
-        openSuggestions();
         const names = screen
             .getAllByTestId(/^candidate-open-/)
             .map((link) => link.textContent);
-        expect(names).toEqual([
-            'Sort photos',
-            'Renew insurance',
-            'Draft report',
-            'Pay rent',
-        ]);
+        expect(names).toEqual(['Renew insurance', 'Draft report', 'Pay rent']);
     });
 
     it('puts tasks tagged #today first, labelled as such', () => {
@@ -243,29 +237,92 @@ describe('CandidateList', () => {
         expect(screen.getByRole('tab', { name: 'All' })).toBeInTheDocument();
     });
 
-    describe('what the planner proposes on its own', () => {
+    describe('the rest of the week, folded under the day', () => {
+        const thisWeek = () => {
+            const monday = new Date();
+            monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7));
+            return [
+                monday.getFullYear(),
+                String(monday.getMonth() + 1).padStart(2, '0'),
+                String(monday.getDate()).padStart(2, '0'),
+            ].join('-');
+        };
         const list = (): PlanCandidates => ({
             ...candidates,
             suggested: [
                 task('t-idea', 'Sort photos'),
                 { ...task('t-view', 'Chosen one'), in_view: true } as never,
+                {
+                    ...task('t-week', 'For this week'),
+                    week_of: thisWeek(),
+                } as never,
             ],
+            tomorrow: [task('t-next', 'Due next')],
         });
 
-        it('waits behind one line, while what the user chose stays', () => {
+        it('shows only the day until a section is opened', () => {
             renderList(list());
-            expect(screen.queryByText('Sort photos')).toBeNull();
-            expect(screen.getByText('Chosen one')).toBeInTheDocument();
-
-            fireEvent.click(
-                screen.getByRole('button', { name: 'Suggested 1' })
-            );
-            expect(screen.getByText('Sort photos')).toBeInTheDocument();
+            for (const name of [
+                'Sort photos',
+                'Chosen one',
+                'For this week',
+                'Due next',
+            ]) {
+                expect(screen.queryByText(name)).toBeNull();
+            }
+            expect(screen.getByText('Pay rent')).toBeInTheDocument();
         });
 
-        it('shows at once under the Suggested filter', () => {
+        it('opens one section at a time, each with its count', () => {
+            renderList(list());
+            for (const [section, name] of [
+                ['Tomorrow 1', 'Due next'],
+                ['This week 1', 'For this week'],
+                ['In view 1', 'Chosen one'],
+                ['Suggested 1', 'Sort photos'],
+            ]) {
+                fireEvent.click(screen.getByRole('button', { name: section }));
+                expect(screen.getByText(name)).toBeInTheDocument();
+            }
+        });
+
+        it('leaves out a section with nothing in it', () => {
+            renderList({ ...candidates, suggested: [], tomorrow: [] });
+            expect(
+                screen.queryByRole('button', { name: /^Tomorrow \d+$/ })
+            ).toBeNull();
+            expect(
+                screen.queryByRole('button', { name: /^In view \d+$/ })
+            ).toBeNull();
+        });
+
+        it('takes a planned task out of its section', () => {
+            renderList(list(), {
+                planned: new Map([['t-next', {} as never]]),
+            });
+            expect(
+                screen.queryByRole('button', { name: /^Tomorrow \d+$/ })
+            ).toBeNull();
+        });
+
+        it('says the day is clear while the sections stay there', () => {
+            renderList({
+                ...list(),
+                overdue: [],
+                due_today: [],
+                in_progress: [],
+                tagged_today: [],
+            });
+            expect(screen.getByText('Nothing here. Nice.')).toBeInTheDocument();
+            expect(
+                screen.getByRole('button', { name: 'Tomorrow 1' })
+            ).toBeInTheDocument();
+        });
+
+        it('shows everything at once under the Suggested filter', () => {
             renderList(list(), { filter: 'suggested' });
             expect(screen.getByText('Sort photos')).toBeInTheDocument();
+            expect(screen.getByText('Chosen one')).toBeInTheDocument();
         });
     });
 });

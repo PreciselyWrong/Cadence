@@ -96,7 +96,7 @@ import FocusBlocksDialog from './FocusBlocksDialog';
 import {
     Placement,
     focusBlockEvents,
-    isProposal,
+    isOnTheDay,
     orderedCandidates,
     placeLater,
     planAll,
@@ -1028,6 +1028,7 @@ const TodayPage: React.FC = () => {
                     due_today: apply(current.due_today),
                     in_progress: apply(current.in_progress),
                     suggested: apply(current.suggested),
+                    tomorrow: current.tomorrow && apply(current.tomorrow),
                 };
             }),
         []
@@ -1046,6 +1047,9 @@ const TodayPage: React.FC = () => {
                           (x) => x.uid !== taskUid
                       ),
                       suggested: current.suggested.filter(
+                          (x) => x.uid !== taskUid
+                      ),
+                      tomorrow: current.tomorrow?.filter(
                           (x) => x.uid !== taskUid
                       ),
                       suggested_total: countSuggested(
@@ -1147,6 +1151,7 @@ const TodayPage: React.FC = () => {
     const previewPlaceAll = () => {
         if (!candidates) return;
         const open = orderedCandidates(candidates)
+            .filter(isOnTheDay)
             .map((entry) => entry.task)
             .filter(
                 (task) =>
@@ -1556,6 +1561,7 @@ const TodayPage: React.FC = () => {
                       ...candidates.due_today,
                       ...candidates.in_progress,
                       ...candidates.suggested,
+                      ...(candidates.tomorrow ?? []),
                   ]
                 : [],
         [candidates]
@@ -1625,8 +1631,8 @@ const TodayPage: React.FC = () => {
         }
     };
 
-    // The day's list in the user's order. Proposals they did not touch stay
-    // out of it: they would otherwise climb above what is not placed yet.
+    // The day's list in the user's order. Tasks of the folded sections they
+    // did not touch stay out of it: they would otherwise climb onto the day.
     const reorderCandidates = (activeUid: string, overUid: string) => {
         if (!candidates) return;
         const entries = orderedCandidates(candidates);
@@ -1634,11 +1640,11 @@ const TodayPage: React.FC = () => {
         const next = movedInList(before, activeUid, overUid);
         if (next === before) return;
         setCandidates({ ...candidates, ranked: next });
-        const proposals = new Set(
-            entries.filter(isProposal).map((entry) => entry.task.uid as string)
+        const onTheDay = new Set(
+            entries.filter(isOnTheDay).map((entry) => entry.task.uid as string)
         );
         saveTodayOrder(
-            next.filter((uid) => uid === activeUid || !proposals.has(uid))
+            next.filter((uid) => uid === activeUid || onTheDay.has(uid))
         ).catch(() => {
             setCandidates(candidates);
             showErrorToast(
@@ -1791,6 +1797,7 @@ const TodayPage: React.FC = () => {
     const doneCount = items.filter(isItemDone).length;
     const openToPlace = candidates
         ? orderedCandidates(candidates)
+              .filter(isOnTheDay)
               .map((entry) => entry.task)
               .filter(
                   (task) =>

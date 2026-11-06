@@ -24,16 +24,17 @@ export const GROUP_ORDER: TaskGroupKey[] = [
 // The candidates as one list, in the user's ranking when the server sends
 // it, then the rest in group order. The candidate list and "Place all" share
 // it so both follow the same priority.
-// What the planner proposes on its own: the user chose neither the day nor the
-// week. Their list keeps these apart.
-export const isProposal = ({
-    task,
-    group,
-}: {
-    task: Task;
-    group: TaskGroupKey;
-}): boolean =>
-    group === 'suggested' && !task.in_view && !isCurrentWeek(task.week_of);
+// Today is for doing: the list shows the day. What else could be done waits in
+// sections folded under it, whoever put it there.
+export const isOnTheDay = ({ group }: { group: TaskGroupKey }): boolean =>
+    group !== 'suggested';
+
+export type LaterSection = 'this_week' | 'in_view' | 'suggested';
+
+export const laterSection = (task: Task): LaterSection => {
+    if (isCurrentWeek(task.week_of)) return 'this_week';
+    return task.in_view ? 'in_view' : 'suggested';
+};
 
 export const orderedCandidates = (
     candidates: PlanCandidates

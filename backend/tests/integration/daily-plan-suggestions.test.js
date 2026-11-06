@@ -227,6 +227,47 @@ describe('Plan my day suggestion settings', () => {
         });
     });
 
+    describe("tomorrow's tasks", () => {
+        const dueIn = (days) => ({
+            due_date: moment
+                .tz('Europe/Athens')
+                .add(days, 'day')
+                .hour(12)
+                .toDate(),
+        });
+
+        it('come apart from the suggestions, routines too', async () => {
+            await makeTask({ name: 'Plus tard' });
+            const once = await makeTask({ name: 'Une', ...dueIn(1) });
+            const routine = await makeTask({
+                name: 'Routine',
+                recurrence_type: 'weekly',
+                ...dueIn(1),
+            });
+            await makeTask({ name: 'Après-demain', ...dueIn(2) });
+            const body = await candidates();
+            expect(body.tomorrow.map((task) => task.uid).sort()).toEqual(
+                [once.uid, routine.uid].sort()
+            );
+            expect(body.suggested.map((task) => task.uid)).not.toContain(
+                once.uid
+            );
+            expect(body.ranked).not.toContain(once.uid);
+        });
+
+        it('stay on the day when they are already started', async () => {
+            const started = await makeTask({
+                name: 'Commencée',
+                status: Task.STATUS.IN_PROGRESS,
+                ...dueIn(1),
+            });
+            const body = await candidates();
+            expect(body.tomorrow.map((task) => task.uid)).not.toContain(
+                started.uid
+            );
+        });
+    });
+
     describe('the cap', () => {
         // 60 undated tasks without priority, spread over six projects and
         // created round-robin, so no project is newer than another.

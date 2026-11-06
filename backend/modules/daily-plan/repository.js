@@ -191,6 +191,28 @@ class DailyPlanRepository {
         });
     }
 
+    // Open top-level tasks due between two instants, soonest first.
+    findTasksDueBetween(visibleWhere, start, end) {
+        return Task.findAll({
+            where: {
+                [Op.and]: [
+                    visibleWhere,
+                    {
+                        status: { [Op.notIn]: OPEN_STATUSES_EXCLUDED },
+                        parent_task_id: null,
+                        habit_mode: false,
+                        due_date: { [Op.between]: [start, end] },
+                    },
+                ],
+            },
+            include: getTaskIncludeConfigLight(),
+            order: [
+                ['due_date', 'ASC'],
+                ['id', 'ASC'],
+            ],
+        });
+    }
+
     findOwnTasksByUids(userId, uids) {
         return Task.findAll({ where: { user_id: userId, uid: uids } });
     }

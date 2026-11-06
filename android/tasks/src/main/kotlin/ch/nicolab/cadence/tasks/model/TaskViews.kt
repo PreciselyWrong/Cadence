@@ -5,6 +5,14 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
+/** Les sections repliées sous la liste du jour. */
+data class TodayLater(
+    val tomorrow: List<TaskItem>,
+    val thisWeek: List<TaskItem>,
+    val inView: List<TaskItem>,
+    val suggested: List<TaskItem>,
+)
+
 /**
  * Règles d'affichage partagées par les écrans et le widget, reprises de
  * Tududi : une tâche reportée (defer_until futur) n'apparaît nulle part, une
@@ -29,6 +37,24 @@ object TaskViews {
                 task.status == TaskStatus.PLANNED ||
                 task.status == TaskStatus.WAITING
         }.sortedWith(todayOrder)
+
+    /**
+     * Ce qui attend sous le jour, replié : chaque tâche une seule fois, Demain d'abord, jamais une tâche de [shown],
+     * déjà à l'écran. Les prochaines actions choisies et le reste de [suggestions] finissent dans « Suggérées ».
+     */
+    fun laterSections(
+        suggestions: List<TaskItem>,
+        tomorrow: List<TaskItem>,
+        weekStart: LocalDate,
+        shown: Set<String>,
+    ): TodayLater {
+        val soon = tomorrow.filterNot { it.uid in shown }
+        val taken = shown + soon.map { it.uid }
+        val open = suggestions.filterNot { it.uid in taken }
+        val (thisWeek, notThisWeek) = open.partition { it.weekOf == weekStart }
+        val (inView, others) = notThisWeek.partition { it.inViewAt != null }
+        return TodayLater(soon, thisWeek, inView, others)
+    }
 
     /**
      * Suggestions du jour : la prochaine action choisie de chaque projet, puis les tâches décidées pour la

@@ -107,6 +107,8 @@ export interface PlanCandidates {
     overdue: Task[];
     due_today: Task[];
     suggested: Task[];
+    // Due tomorrow and not on the day: shown apart, never placed by "Place all".
+    tomorrow?: Task[];
     inbox: InboxCandidate[];
     inbox_count: number;
     // Task uids in the user's ranking order (Profile > Planning).
