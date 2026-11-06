@@ -5676,8 +5676,8 @@
     },
     "moves": {
       "acceptAria": "{{date}}(으)로 이동",
-      "refuse": "이 날은 안 함",
-      "moved": "“{{name}}” 이동됨"
+      "moved": "“{{name}}” 이동됨",
+      "otherDate": "다른 날짜"
     },
     "anticipate": {
       "yes": "예",
@@ -5685,15 +5685,15 @@
       "precise": "구체화",
       "preciseLabel": "세부 사항",
       "save": "저장",
-      "answered": "답변 저장됨"
+      "answered": "답변 저장됨",
+      "less": "이런 항목 줄이기",
+      "options": "알림 옵션"
     },
     "feedback": {
       "useful": "유용함",
       "noise": "도움 안 됨",
-      "fewer": "이런 종류의 알림이 줄어듭니다"
-    },
-    "replies": {
-      "sourceNotRead": "소스를 읽지 않음"
+      "fewer": "이런 종류의 알림이 줄어듭니다",
+      "question": "이 화면이 도움이 되었나요?"
     },
     "status": {
       "configured": "설정됨",
@@ -5701,7 +5701,7 @@
       "failing": "실패"
     },
     "card": {
-      "title": "일일 브리핑",
+      "title": "나의 하루",
       "open": "브리핑 보기",
       "error": "브리핑을 사용할 수 없습니다."
     },
@@ -5746,7 +5746,8 @@
       "laterDone": "“{{name}}” 나중으로 미룸",
       "cancelDone": "“{{name}}” 포기함",
       "tonightTitle": "오늘 밤"
-    }
+    },
+    "preparedAt": "{{time}}에 준비됨"
   },
   "agents": {
     "title": "에이전트",

@@ -5689,8 +5689,8 @@
     },
     "moves": {
       "acceptAria": "Sposta al {{date}}",
-      "refuse": "Non in questo giorno",
-      "moved": "«{{name}}» spostata"
+      "moved": "«{{name}}» spostata",
+      "otherDate": "Altra data"
     },
     "anticipate": {
       "yes": "Sì",
@@ -5698,15 +5698,15 @@
       "precise": "Specifica",
       "preciseLabel": "Dettaglio",
       "save": "Salva",
-      "answered": "Risposta salvata"
+      "answered": "Risposta salvata",
+      "less": "Meno di questo tipo",
+      "options": "Opzioni dell'avviso"
     },
     "feedback": {
       "useful": "Utile",
       "noise": "Non utile",
-      "fewer": "Vedrai meno avvisi di questo tipo"
-    },
-    "replies": {
-      "sourceNotRead": "Fonte non letta"
+      "fewer": "Vedrai meno avvisi di questo tipo",
+      "question": "Questa schermata ti ha aiutato?"
     },
     "status": {
       "configured": "Configurato",
@@ -5714,7 +5714,7 @@
       "failing": "In errore"
     },
     "card": {
-      "title": "Briefing giornaliero",
+      "title": "La mia giornata",
       "open": "Vedi il briefing",
       "error": "Il briefing non è disponibile."
     },
@@ -5759,7 +5759,8 @@
       "laterDone": "«{{name}}» rinviata",
       "cancelDone": "«{{name}}» abbandonata",
       "tonightTitle": "Stasera"
-    }
+    },
+    "preparedAt": "preparato alle {{time}}"
   },
   "agents": {
     "title": "Agenti",

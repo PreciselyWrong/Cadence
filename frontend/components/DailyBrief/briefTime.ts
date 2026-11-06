@@ -93,10 +93,6 @@ export const loadLabel = (
     return { text: format.ofCapacity(planned, capacity), over: false };
 };
 
-// Fraction of the evening window already planned, 0 to 1.
-export const eveningFill = (planned: number, capacity: number): number =>
-    capacity > 0 ? clamp(planned / capacity, 0, 1) : 0;
-
 // The day and the minute after midnight of an instant, read in an IANA
 // timezone (the profile's, not the browser's). The evening review depends on it.
 export const localClock = (

@@ -5689,8 +5689,8 @@
     },
     "moves": {
       "acceptAria": "Mover para {{date}}",
-      "refuse": "Não neste dia",
-      "moved": "«{{name}}» movida"
+      "moved": "«{{name}}» movida",
+      "otherDate": "Outra data"
     },
     "anticipate": {
       "yes": "Sim",
@@ -5698,15 +5698,15 @@
       "precise": "Especificar",
       "preciseLabel": "Detalhe",
       "save": "Salvar",
-      "answered": "Resposta salva"
+      "answered": "Resposta salva",
+      "less": "Menos deste tipo",
+      "options": "Opções do alerta"
     },
     "feedback": {
       "useful": "Útil",
       "noise": "Não útil",
-      "fewer": "Você verá menos alertas desse tipo"
-    },
-    "replies": {
-      "sourceNotRead": "Fonte não lida"
+      "fewer": "Você verá menos alertas desse tipo",
+      "question": "Este ecrã ajudou?"
     },
     "status": {
       "configured": "Configurado",
@@ -5714,7 +5714,7 @@
       "failing": "Com falha"
     },
     "card": {
-      "title": "Resumo diário",
+      "title": "O meu dia",
       "open": "Ver o resumo",
       "error": "O resumo não está disponível."
     },
@@ -5759,7 +5759,8 @@
       "laterDone": "«{{name}}» adiada",
       "cancelDone": "«{{name}}» abandonada",
       "tonightTitle": "Esta noite"
-    }
+    },
+    "preparedAt": "preparado às {{time}}"
   },
   "agents": {
     "title": "Agentes",

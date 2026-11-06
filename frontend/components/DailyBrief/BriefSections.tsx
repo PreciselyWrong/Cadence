@@ -4,7 +4,6 @@ import {
     BriefAnticipate,
     BriefMove,
     BriefReply,
-    BriefSource,
     BriefTaskState,
     BriefTonightItem,
     DailyBrief,
@@ -18,10 +17,12 @@ import { minutesText, shortDay } from './briefTime';
 export interface BriefActions {
     onToggle: (uid: string) => void;
     onOpen: (uid: string) => void;
-    onAcceptMove: (move: BriefMove) => void;
-    onRefuseMove: (move: BriefMove) => void;
+    onAcceptMove: (move: BriefMove, target?: string) => void;
     onAnswer: (item: BriefAnticipate, answer: string) => void;
-    onFeedback: (item: BriefAnticipate, vote: 'useful' | 'noise') => void;
+    onFeedback: (
+        card: { key: string; type: string },
+        vote: 'useful' | 'noise'
+    ) => void;
 }
 
 export interface BriefSectionProps {
@@ -32,7 +33,6 @@ export interface BriefSectionProps {
     hiddenMoves: Set<string>;
     answered: Record<string, string>;
 }
-
 
 export const SectionTitle: React.FC<{
     title: string;
@@ -62,17 +62,16 @@ export const TonightSection: React.FC<BriefSectionProps> = ({
     const detail =
         capacity === null
             ? minutesText(planned, t)
-            : t(
-                  'dailyBrief.tonight.ofCapacity',
-                  '{{planned}} / {{capacity}}',
-                  {
-                      planned: minutesText(planned, t),
-                      capacity: minutesText(capacity, t),
-                  }
-              );
+            : t('dailyBrief.tonight.ofCapacity', '{{planned}} / {{capacity}}', {
+                  planned: minutesText(planned, t),
+                  capacity: minutesText(capacity, t),
+              });
     return (
         <section
-            aria-label={t('dailyBrief.sectionName.tonight', 'Priorités du jour')}
+            aria-label={t(
+                'dailyBrief.sectionName.tonight',
+                'Priorités du jour'
+            )}
         >
             <SectionTitle
                 title={t('dailyBrief.sectionName.tonight', 'Priorités du jour')}
@@ -122,47 +121,82 @@ export const MovesSection: React.FC<BriefSectionProps> = ({
             <SectionTitle
                 title={t('dailyBrief.sectionName.moves', 'À déplacer')}
             />
-            {rows.map((move) => {
-                const task = tasks[move.task_uid];
-                const target = shortDay(move.to, locale);
-                return (
-                    <BriefTaskRow
-                        key={move.proposal_key}
-                        name={task.name}
-                        done={isTaskCompleted(task.status)}
-                        onToggle={() => actions.onToggle(move.task_uid)}
-                        onOpen={() => actions.onOpen(move.task_uid)}
-                        meta={move.reason}
-                        trailing={
-                            <div className="flex flex-none items-center gap-1">
-                                <button
-                                    type="button"
-                                    onClick={() => actions.onRefuseMove(move)}
-                                    className="h-8 rounded-full px-2 text-xs text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-                                >
-                                    {t(
-                                        'dailyBrief.moves.refuse',
-                                        'Pas cette date'
-                                    )}
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => actions.onAcceptMove(move)}
-                                    aria-label={t(
-                                        'dailyBrief.moves.acceptAria',
-                                        'Déplacer au {{date}}',
-                                        { date: target }
-                                    )}
-                                    className="flex h-8 items-center gap-1 rounded-full bg-indigo-100 px-3 text-[13px] font-semibold text-indigo-900 hover:bg-indigo-200 dark:bg-indigo-900/50 dark:text-indigo-100 dark:hover:bg-indigo-900"
-                                >
-                                    {target} →
-                                </button>
-                            </div>
-                        }
-                    />
-                );
-            })}
+            {rows.map((move) => (
+                <MoveRow
+                    key={move.proposal_key}
+                    move={move}
+                    task={tasks[move.task_uid]}
+                    locale={locale}
+                    actions={actions}
+                />
+            ))}
         </section>
+    );
+};
+
+// The proposed day stays one click away; "Other date" opens the date field.
+const MoveRow: React.FC<{
+    move: BriefMove;
+    task: BriefTaskState;
+    locale: string;
+    actions: BriefActions;
+}> = ({ move, task, locale, actions }) => {
+    const { t } = useTranslation();
+    const [picking, setPicking] = useState(false);
+    const target = shortDay(move.to, locale);
+    return (
+        <BriefTaskRow
+            name={task.name}
+            done={isTaskCompleted(task.status)}
+            onToggle={() => actions.onToggle(move.task_uid)}
+            onOpen={() => actions.onOpen(move.task_uid)}
+            meta={move.reason}
+            footer={
+                picking ? (
+                    <input
+                        type="date"
+                        aria-label={t(
+                            'dailyBrief.moves.otherDate',
+                            'Autre date'
+                        )}
+                        defaultValue={move.to}
+                        onKeyDown={(event) => {
+                            if (event.key === 'Escape') setPicking(false);
+                        }}
+                        onChange={(event) => {
+                            const date = event.target.value;
+                            if (!date) return;
+                            setPicking(false);
+                            actions.onAcceptMove(move, date);
+                        }}
+                        className="mt-2 rounded-md border border-gray-300 bg-white px-2 py-1 text-[13px] dark:border-gray-600 dark:bg-gray-900"
+                    />
+                ) : undefined
+            }
+            trailing={
+                <div className="flex flex-none items-center gap-1">
+                    <button
+                        type="button"
+                        onClick={() => setPicking((open) => !open)}
+                        className="h-8 rounded-full px-2 text-xs text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                    >
+                        {t('dailyBrief.moves.otherDate', 'Autre date')}
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => actions.onAcceptMove(move)}
+                        aria-label={t(
+                            'dailyBrief.moves.acceptAria',
+                            'Déplacer au {{date}}',
+                            { date: target }
+                        )}
+                        className="flex h-8 items-center gap-1 rounded-full bg-indigo-100 px-3 text-[13px] font-semibold text-indigo-900 hover:bg-indigo-200 dark:bg-indigo-900/50 dark:text-indigo-100 dark:hover:bg-indigo-900"
+                    >
+                        {target} →
+                    </button>
+                </div>
+            }
+        />
     );
 };
 
@@ -174,16 +208,51 @@ const AnticipateItem: React.FC<{
     const { t } = useTranslation();
     const [precising, setPrecising] = useState(false);
     const [text, setText] = useState('');
-    const [voted, setVoted] = useState<'useful' | 'noise' | null>(null);
+    const [voted, setVoted] = useState<'noise' | null>(null);
+    const [menuOpen, setMenuOpen] = useState(false);
     const question = item.question;
     const answerButton =
         'h-10 rounded-lg px-3 text-sm font-semibold text-indigo-700 hover:bg-indigo-50 dark:text-indigo-300 dark:hover:bg-indigo-900/30';
 
     return (
         <div className="border-t border-gray-200 py-3 first:border-t-0 dark:border-gray-800">
-            <p className="text-[15px] text-gray-900 dark:text-gray-100">
-                {question ? question.text : item.text}
-            </p>
+            <div className="flex items-start gap-2">
+                <p className="min-w-0 flex-1 text-[15px] text-gray-900 dark:text-gray-100">
+                    {question ? question.text : item.text}
+                </p>
+                {voted === null && (
+                    <div className="relative flex-none">
+                        <button
+                            type="button"
+                            aria-label={t(
+                                'dailyBrief.anticipate.options',
+                                'Options de cette alerte'
+                            )}
+                            aria-expanded={menuOpen}
+                            onClick={() => setMenuOpen((open) => !open)}
+                            className="h-7 w-7 rounded-full text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                        >
+                            ⋯
+                        </button>
+                        {menuOpen && (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setMenuOpen(false);
+                                    setVoted('noise');
+                                    actions.onFeedback(item, 'noise');
+                                }}
+                                className="absolute right-0 top-8 z-10 whitespace-nowrap rounded-lg bg-white px-3 py-2 text-sm text-gray-900 shadow-lg ring-1 ring-black/5 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700"
+                            >
+                                {t(
+                                    'dailyBrief.anticipate.less',
+                                    'Moins de ce type'
+                                )}
+                            </button>
+                        )}
+                    </div>
+                )}
+            </div>
             {question && (
                 <div className="mt-1 flex flex-wrap items-center gap-1">
                     {answer !== undefined ? (
@@ -245,30 +314,6 @@ const AnticipateItem: React.FC<{
                     </button>
                 </form>
             )}
-            <div className="mt-1 flex gap-3 text-xs text-gray-600 dark:text-gray-300">
-                <button
-                    type="button"
-                    aria-pressed={voted === 'useful'}
-                    onClick={() => {
-                        setVoted('useful');
-                        actions.onFeedback(item, 'useful');
-                    }}
-                    className="py-1 hover:text-gray-900 dark:hover:text-gray-100"
-                >
-                    {t('dailyBrief.feedback.useful', 'Utile')}
-                </button>
-                <button
-                    type="button"
-                    aria-pressed={voted === 'noise'}
-                    onClick={() => {
-                        setVoted('noise');
-                        actions.onFeedback(item, 'noise');
-                    }}
-                    className="py-1 hover:text-gray-900 dark:hover:text-gray-100"
-                >
-                    {t('dailyBrief.feedback.noise', 'Pas utile')}
-                </button>
-            </div>
             {voted === 'noise' && (
                 <p
                     role="status"
@@ -310,17 +355,12 @@ export const AnticipateSection: React.FC<BriefSectionProps> = ({
     );
 };
 
-const sourceOf = (sources: BriefSource[], id: BriefSource['id']) =>
-    sources.find((source) => source.id === id);
-
 export const RepliesSection: React.FC<BriefSectionProps> = ({
     brief,
     locale,
 }) => {
     const { t } = useTranslation();
-    const mail = sourceOf(brief.sources, 'mail');
-    const notRead = mail !== undefined && mail.status !== 'read';
-    if (brief.replies.length === 0 && !notRead) return null;
+    if (brief.replies.length === 0) return null;
     return (
         <section
             aria-label={t(
@@ -334,11 +374,6 @@ export const RepliesSection: React.FC<BriefSectionProps> = ({
                     'Réponses attendues'
                 )}
             />
-            {notRead && (
-                <p className="py-2 text-[13px] text-gray-600 dark:text-gray-300">
-                    {t('dailyBrief.replies.sourceNotRead', 'Source non lue')}
-                </p>
-            )}
             {brief.replies.map((reply: BriefReply) => (
                 <div
                     key={reply.thread_ref}
@@ -391,15 +426,25 @@ export const ResolvedSection: React.FC<BriefSectionProps> = ({
     actions,
 }) => {
     const { t } = useTranslation();
+    const [open, setOpen] = useState(false);
     const rows = brief.resolved.filter((item) => tasks[item.task_uid]);
     if (rows.length === 0) return null;
     return (
         <section aria-label={t('dailyBrief.sectionName.resolved', 'Réglé')}>
-            <SectionTitle
-                title={t('dailyBrief.sectionName.resolved', 'Réglé')}
-                detail={String(rows.length)}
-            />
-            {rows.map((item) => {
+            <h2 className="mb-2 mt-7">
+                <button
+                    type="button"
+                    aria-expanded={open}
+                    onClick={() => setOpen((current) => !current)}
+                    className="flex w-full items-baseline justify-between gap-3 text-sm font-semibold text-gray-900 dark:text-gray-100"
+                >
+                    {t('dailyBrief.sectionName.resolved', 'Réglé')}
+                    <span className="text-[13px] font-normal tabular-nums text-gray-600 dark:text-gray-300">
+                        {rows.length} {open ? '▴' : '▾'}
+                    </span>
+                </button>
+            </h2>
+            {(open ? rows : []).map((item) => {
                 const task = tasks[item.task_uid];
                 return (
                     <BriefTaskRow
@@ -412,5 +457,52 @@ export const ResolvedSection: React.FC<BriefSectionProps> = ({
                 );
             })}
         </section>
+    );
+};
+
+// One discreet feedback on the whole screen, at its foot.
+export const ScreenFeedback: React.FC<{
+    date: string;
+    onFeedback: BriefActions['onFeedback'];
+}> = ({ date, onFeedback }) => {
+    const { t } = useTranslation();
+    const [voted, setVoted] = useState<'useful' | 'noise' | null>(null);
+    const vote = (value: 'useful' | 'noise') => {
+        setVoted(value);
+        onFeedback({ key: `brief:${date}`, type: 'brief' }, value);
+    };
+    return (
+        <div className="mt-8 flex items-center gap-3 text-xs text-gray-600 dark:text-gray-300">
+            {voted ? (
+                <span role="status">
+                    {voted === 'useful'
+                        ? t('dailyBrief.feedback.useful', 'Utile')
+                        : t('dailyBrief.feedback.noise', 'Pas utile')}
+                </span>
+            ) : (
+                <>
+                    <span>
+                        {t(
+                            'dailyBrief.feedback.question',
+                            'Cet écran t’a aidé ?'
+                        )}
+                    </span>
+                    <button
+                        type="button"
+                        onClick={() => vote('useful')}
+                        className="py-1 hover:text-gray-900 dark:hover:text-gray-100"
+                    >
+                        {t('dailyBrief.feedback.useful', 'Utile')}
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => vote('noise')}
+                        className="py-1 hover:text-gray-900 dark:hover:text-gray-100"
+                    >
+                        {t('dailyBrief.feedback.noise', 'Pas utile')}
+                    </button>
+                </>
+            )}
+        </div>
     );
 };

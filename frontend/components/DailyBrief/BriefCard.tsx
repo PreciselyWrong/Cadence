@@ -81,7 +81,7 @@ const BriefCard: React.FC = () => {
         <section
             className="rounded-xl bg-gray-50 p-4 dark:bg-gray-800/60"
             data-testid="brief-card"
-            aria-label={t('dailyBrief.card.title', 'Résumé du jour')}
+            aria-label={t('dailyBrief.card.title', 'Ma journée')}
         >
             <p className="text-xs text-gray-600 dark:text-gray-300">
                 {capitalizeFirst(dateLabel)}

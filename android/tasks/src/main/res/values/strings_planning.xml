@@ -9,7 +9,7 @@
     <string name="planning_capacity_description">%1$d %% du temps disponible est planifié</string>
 
     <!-- Carte du matin et feuille « Planifier la journée » -->
-    <string name="planning_morning_title">Planifier la journée</string>
+    <string name="planning_morning_title">Ma journée</string>
     <string name="planning_morning_action">Planifier</string>
     <string name="planning_dismiss_today">Masquer pour aujourd\'hui</string>
     <plurals name="planning_suggestion_count">
@@ -20,7 +20,6 @@
         <item quantity="one">%d à placer</item>
         <item quantity="other">%d à placer</item>
     </plurals>
-    <string name="planning_sheet_title">Planifier la journée</string>
     <string name="planning_triage_title">Trier les échues</string>
     <!-- « Sans date », pas « Plus tard » : « Plus tard » est la mise de côté de la revue (étiquette someday). -->
     <string name="planning_triage_hint">« Sans date » retire l\'échéance : la tâche reste dans votre liste.</string>

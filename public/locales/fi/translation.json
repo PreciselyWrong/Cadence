@@ -5676,8 +5676,8 @@
     },
     "moves": {
       "acceptAria": "Siirrä {{date}}",
-      "refuse": "Ei tänä päivänä",
-      "moved": "”{{name}}” siirretty"
+      "moved": "”{{name}}” siirretty",
+      "otherDate": "Muu päivä"
     },
     "anticipate": {
       "yes": "Kyllä",
@@ -5685,15 +5685,15 @@
       "precise": "Tarkenna",
       "preciseLabel": "Tarkenne",
       "save": "Tallenna",
-      "answered": "Vastaus tallennettu"
+      "answered": "Vastaus tallennettu",
+      "less": "Vähemmän tällaisia",
+      "options": "Hälytyksen asetukset"
     },
     "feedback": {
       "useful": "Hyödyllinen",
       "noise": "Ei hyödyllinen",
-      "fewer": "Näet vähemmän tämäntyyppisiä ilmoituksia"
-    },
-    "replies": {
-      "sourceNotRead": "Lähdettä ei ole luettu"
+      "fewer": "Näet vähemmän tämäntyyppisiä ilmoituksia",
+      "question": "Auttoiko tämä näkymä?"
     },
     "status": {
       "configured": "Määritetty",
@@ -5701,7 +5701,7 @@
       "failing": "Epäonnistuu"
     },
     "card": {
-      "title": "Päivän yhteenveto",
+      "title": "Minun päiväni",
       "open": "Näytä yhteenveto",
       "error": "Yhteenveto ei ole saatavilla."
     },
@@ -5746,7 +5746,8 @@
       "laterDone": "“{{name}}” siirretty myöhemmäksi",
       "cancelDone": "“{{name}}” hylätty",
       "tonightTitle": "Tänä iltana"
-    }
+    },
+    "preparedAt": "valmisteltu klo {{time}}"
   },
   "agents": {
     "title": "Agentit",

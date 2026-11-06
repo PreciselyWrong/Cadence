@@ -5676,8 +5676,8 @@
     },
     "moves": {
       "acceptAria": "移动到 {{date}}",
-      "refuse": "不是这一天",
-      "moved": "“{{name}}”已移动"
+      "moved": "“{{name}}”已移动",
+      "otherDate": "其他日期"
     },
     "anticipate": {
       "yes": "是",
@@ -5685,15 +5685,15 @@
       "precise": "指定",
       "preciseLabel": "详情",
       "save": "保存",
-      "answered": "回复已保存"
+      "answered": "回复已保存",
+      "less": "减少此类",
+      "options": "提醒选项"
     },
     "feedback": {
       "useful": "有用",
       "noise": "没用",
-      "fewer": "你会减少看到这类提醒"
-    },
-    "replies": {
-      "sourceNotRead": "未读取来源"
+      "fewer": "你会减少看到这类提醒",
+      "question": "这个页面有帮助吗？"
     },
     "status": {
       "configured": "已配置",
@@ -5701,7 +5701,7 @@
       "failing": "失败"
     },
     "card": {
-      "title": "每日简报",
+      "title": "我的一天",
       "open": "查看简报",
       "error": "简报不可用。"
     },
@@ -5746,7 +5746,8 @@
       "laterDone": "“{{name}}” 已稍后处理",
       "cancelDone": "“{{name}}” 已放弃",
       "tonightTitle": "今晚"
-    }
+    },
+    "preparedAt": "准备于 {{time}}"
   },
   "agents": {
     "title": "助手",

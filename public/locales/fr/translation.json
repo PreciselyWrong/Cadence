@@ -5692,8 +5692,8 @@
     },
     "moves": {
       "acceptAria": "Déplacer au {{date}}",
-      "refuse": "Pas cette date",
-      "moved": "« {{name}} » déplacée"
+      "moved": "« {{name}} » déplacée",
+      "otherDate": "Autre date"
     },
     "anticipate": {
       "yes": "Oui",
@@ -5701,15 +5701,15 @@
       "precise": "Préciser",
       "preciseLabel": "Précision",
       "save": "Enregistrer",
-      "answered": "Réponse enregistrée"
+      "answered": "Réponse enregistrée",
+      "less": "Moins de ce type",
+      "options": "Options de cette alerte"
     },
     "feedback": {
       "useful": "Utile",
       "noise": "Pas utile",
-      "fewer": "Tu verras moins ce type d’alerte"
-    },
-    "replies": {
-      "sourceNotRead": "Source non lue"
+      "fewer": "Tu verras moins ce type d’alerte",
+      "question": "Cet écran t'a aidé ?"
     },
     "status": {
       "configured": "Configuré",
@@ -5717,7 +5717,7 @@
       "failing": "En erreur"
     },
     "card": {
-      "title": "Résumé du jour",
+      "title": "Ma journée",
       "open": "Voir le résumé",
       "error": "Le résumé est indisponible."
     },
@@ -5762,7 +5762,8 @@
       "laterDone": "« {{name}} » mise de côté",
       "cancelDone": "« {{name}} » abandonnée",
       "tonightTitle": "Ce soir"
-    }
+    },
+    "preparedAt": "préparé à {{time}}"
   },
   "agents": {
     "title": "Agents",

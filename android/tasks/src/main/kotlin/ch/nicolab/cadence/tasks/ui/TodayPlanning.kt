@@ -1,6 +1,5 @@
 package ch.nicolab.cadence.tasks.ui
 
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,21 +16,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.EventAvailable
-import androidx.compose.material.icons.outlined.NightsStay
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,18 +33,15 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import ch.nicolab.cadence.designsystem.components.BadgeTone
 import ch.nicolab.cadence.designsystem.components.CadenceBadge
-import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.Panel
 import ch.nicolab.cadence.designsystem.components.PrimaryAction
 import ch.nicolab.cadence.designsystem.components.SecondaryAction
 import ch.nicolab.cadence.designsystem.components.TertiaryAction
 import ch.nicolab.cadence.designsystem.theme.Glass
-import ch.nicolab.cadence.designsystem.theme.Motion
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
@@ -93,7 +84,7 @@ internal fun CapacityLine(capacity: Capacity, modifier: Modifier = Modifier) {
 }
 
 /**
- * Carte du matin : un appui ouvre la feuille de planification ; la croix la masque pour la journée.
+ * Carte du matin sans résumé : un appui ouvre Ma journée ; la croix la masque pour la journée.
  * Le résumé ne compte jamais le retard (ton sans culpabilité) : seulement ce qu'il reste à placer et les suggestions.
  */
 @Composable
@@ -276,106 +267,65 @@ internal fun ClosedDay(doneCount: Int, modifier: Modifier = Modifier) {
     }
 }
 
-/**
- * Feuille « Planifier la journée » : trier ce qui est en retard (Aujourd'hui, Demain, Plus tard, une
- * tâche à la fois ou tout d'un coup), puis lancer le placement automatique.
- */
-@OptIn(ExperimentalMaterial3Api::class)
+/** Trier ce qui est en retard : Aujourd'hui, Demain ou Sans date, une tâche à la fois ou toutes d'un coup. */
 @Composable
-internal fun PlanDaySheet(
-    day: LocalDate,
-    today: LocalDate,
-    overdue: List<TaskItem>,
-    capacity: Capacity,
-    toPlaceCount: Int,
-    workday: Boolean,
-    onTriage: (List<TaskItem>, TriageTarget) -> Unit,
-    onPlace: () -> Unit,
-    dismiss: () -> Unit,
-    suggestions: List<TaskItem> = emptyList(),
-    weekStart: LocalDate = today,
-    onAddToday: (TaskItem) -> Unit = {},
-    onChoose: () -> Unit = {},
-) {
-    CadenceSheet(
-        title = stringResource(R.string.planning_sheet_title),
-        subtitle = dayLabel(day, today),
-        dismiss = dismiss,
-    ) {
-        Column(
-            Modifier.weight(1f, fill = false).verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(Space.md),
-        ) {
-            if (overdue.isNotEmpty()) {
-                Text(
-                    stringResource(R.string.planning_triage_title),
-                    style = MaterialTheme.typography.titleSmall,
-                    color = cadence.onSurface,
-                )
-                Text(
-                    stringResource(R.string.planning_triage_hint),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = cadence.onSurfaceVariant,
-                )
-                if (overdue.size > 1) {
-                    Text(
-                        stringResource(R.string.planning_triage_bulk),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = cadence.onSurface,
-                    )
-                    TriageChips { target -> onTriage(overdue, target) }
-                }
-                overdue.forEach { task ->
-                    Column(verticalArrangement = Arrangement.spacedBy(Space.xs)) {
-                        Text(
-                            task.name,
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = cadence.onSurface,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis,
-                        )
-                        task.dueDay?.let {
-                            Text(
-                                dayLabel(it, today, DayLabelStyle.SHORT),
-                                style = MaterialTheme.typography.labelMedium,
-                                color = cadence.onSurfaceVariant,
-                            )
-                        }
-                        TriageChips { target -> onTriage(listOf(task), target) }
-                    }
-                }
-            }
-            if (suggestions.isNotEmpty()) {
-                SuggestionList(suggestions, weekStart, onAddToday, onChoose)
-            }
-            Text(
-                stringResource(R.string.planning_place_title),
-                style = MaterialTheme.typography.titleSmall,
-                color = cadence.onSurfaceVariant,
-                modifier = Modifier.padding(top = Space.sm),
-            )
-            Text(
-                when {
-                    !workday -> stringResource(R.string.planning_place_day_off)
-                    toPlaceCount == 0 -> stringResource(R.string.planning_place_nothing)
-                    else -> stringResource(
-                        R.string.planning_place_summary,
-                        formatMinutes(capacity.freeMinutes),
-                        formatMinutes(capacity.plannedMinutes),
-                    )
-                },
-                style = MaterialTheme.typography.bodyMedium,
-                color = cadence.onSurfaceVariant,
-            )
-        }
-        Spacer(Modifier.height(Space.lg))
-        PrimaryAction(
-            stringResource(R.string.planning_place_auto),
-            Modifier.fillMaxWidth(),
-            enabled = workday && toPlaceCount > 0,
-            onClick = onPlace,
+internal fun OverdueTriage(overdue: List<TaskItem>, today: LocalDate, onTriage: (List<TaskItem>, TriageTarget) -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(Space.md)) {
+        Text(
+            stringResource(R.string.planning_triage_hint),
+            style = MaterialTheme.typography.bodySmall,
+            color = cadence.onSurfaceVariant,
         )
-        Spacer(Modifier.height(Space.lg))
+        if (overdue.size > 1) {
+            Text(
+                stringResource(R.string.planning_triage_bulk),
+                style = MaterialTheme.typography.labelLarge,
+                color = cadence.onSurface,
+            )
+            TriageChips { target -> onTriage(overdue, target) }
+        }
+        overdue.forEach { task ->
+            Column(verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+                Text(
+                    task.name,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = cadence.onSurface,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                task.dueDay?.let {
+                    Text(
+                        dayLabel(it, today, DayLabelStyle.SHORT),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = cadence.onSurfaceVariant,
+                    )
+                }
+                TriageChips { target -> onTriage(listOf(task), target) }
+            }
+        }
+    }
+}
+
+/** Placer les tâches sans heure : le calcul est local, rien n'est écrit avant l'acceptation dans Aujourd'hui. */
+@Composable
+internal fun PlaceInDay(capacity: Capacity, toPlaceCount: Int, workday: Boolean, onPlace: () -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+        Text(
+            when {
+                !workday -> stringResource(R.string.planning_place_day_off)
+                toPlaceCount == 0 -> stringResource(R.string.planning_place_nothing)
+                else -> stringResource(
+                    R.string.planning_place_summary,
+                    formatMinutes(capacity.freeMinutes),
+                    formatMinutes(capacity.plannedMinutes),
+                )
+            },
+            style = MaterialTheme.typography.bodyMedium,
+            color = cadence.onSurfaceVariant,
+        )
+        if (workday && toPlaceCount > 0) {
+            SecondaryAction(stringResource(R.string.planning_place_auto), Modifier.fillMaxWidth(), onClick = onPlace)
+        }
     }
 }
 
@@ -384,18 +334,12 @@ internal fun PlanDaySheet(
  * elle est là ; « Aujourd'hui » lui donne l'échéance du jour, « Aide-moi à choisir » ouvre le duel.
  */
 @Composable
-private fun SuggestionList(
+internal fun SuggestionList(
     suggestions: List<TaskItem>,
     weekStart: LocalDate,
     onAddToday: (TaskItem) -> Unit,
     onChoose: () -> Unit,
 ) {
-    Text(
-        stringResource(R.string.suggestions_title),
-        style = MaterialTheme.typography.titleSmall,
-        color = cadence.onSurfaceVariant,
-        modifier = Modifier.padding(top = Space.sm),
-    )
     if (suggestions.size >= 2) {
         SecondaryAction(stringResource(R.string.choose_open), Modifier.fillMaxWidth(), onClick = onChoose)
     }

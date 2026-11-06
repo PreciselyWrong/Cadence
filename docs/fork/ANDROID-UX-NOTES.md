@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-06 — Ma journée : un seul écran pour le résumé et la planification
+
+- **Problème** : l'en-tête « Résumé du jour » et « Planifier la journée » se répétaient, la frise n'était faite que de pilules grises sans repère, et chaque alerte portait deux boutons de vote.
+- **Décision** : une seule entrée dans Aujourd'hui, un seul écran « Ma journée » ; chaque tâche n'y paraît qu'une fois ; frise graduée toutes les deux heures, travail et soir colorés, événements à leur heure avec leur titre ; lecteur sur une ligne ; un retour discret en bas et « Moins de ce type » dans le ⋯ de chaque alerte ; plus de notes dans les lignes.
+- **Web** : page renommée, frise, retour, « Autre date », heure de préparation, « Réglé » replié repris dans la même étape. La planification du web reste sur sa page Aujourd'hui.
+
 ### 2026-11-06 — Résumé : une seule mention d'échéance, Priorités du jour, surcharge lisible
 
 - **Problème** (revue du 2026-11-06) : « Demain » + « Due demain » sur la même ligne ; « Ce soir » listait des tâches qui n'ont rien du soir ; « 525 min de trop » comparait aussi les événements au seul soir ; « Pas cette date » refusait sans proposer d'autre jour ; « Source non lue » occupait l'écran pour rien ; le lecteur disait « Chapitre 3 sur 3 ».

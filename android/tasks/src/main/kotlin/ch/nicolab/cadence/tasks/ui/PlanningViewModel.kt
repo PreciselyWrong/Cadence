@@ -10,6 +10,9 @@ import ch.nicolab.cadence.tasks.planning.PlanningStore
 import java.time.LocalDate
 import java.time.ZoneId
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 /**
  * Écritures de la planification (triage, propositions acceptées, fin de journée) et état local du
@@ -23,6 +26,18 @@ internal class PlanningViewModel(application: Application) : AndroidViewModel(ap
     val settings = store.settings
     val dismissedDay = store.dismissedDay
     val closedDay = store.closedDay
+
+    private val _placementRequested = MutableStateFlow(false)
+    /** « Placer automatiquement » dans Ma journée : Aujourd'hui montre les créneaux proposés. */
+    val placementRequested: StateFlow<Boolean> = _placementRequested.asStateFlow()
+
+    fun requestPlacement() {
+        _placementRequested.value = true
+    }
+
+    fun placementHandled() {
+        _placementRequested.value = false
+    }
 
     /** Applique les changements ; renvoie les tâches d'origine, à rendre à [restore] pour annuler. */
     suspend fun apply(changes: List<Pair<TaskItem, TaskChange>>): Result<List<TaskItem>> =

@@ -5740,8 +5740,8 @@
     },
     "moves": {
       "acceptAria": "نقل إلى {{date}}",
-      "refuse": "ليس في هذا اليوم",
-      "moved": "تم نقل «{{name}}»"
+      "moved": "تم نقل «{{name}}»",
+      "otherDate": "تاريخ آخر"
     },
     "anticipate": {
       "yes": "نعم",
@@ -5749,15 +5749,15 @@
       "precise": "تحديد",
       "preciseLabel": "التفاصيل",
       "save": "حفظ",
-      "answered": "تم حفظ الرد"
+      "answered": "تم حفظ الرد",
+      "less": "أقل من هذا النوع",
+      "options": "خيارات التنبيه"
     },
     "feedback": {
       "useful": "مفيد",
       "noise": "غير مفيد",
-      "fewer": "سترى تنبيهات أقل من هذا النوع"
-    },
-    "replies": {
-      "sourceNotRead": "لم تُقرأ المصدر"
+      "fewer": "سترى تنبيهات أقل من هذا النوع",
+      "question": "هل ساعدتك هذه الشاشة؟"
     },
     "status": {
       "configured": "مُعدّ",
@@ -5765,7 +5765,7 @@
       "failing": "فشل"
     },
     "card": {
-      "title": "الموجز اليومي",
+      "title": "يومي",
       "open": "عرض الموجز",
       "error": "الموجز غير متاح."
     },
@@ -5810,7 +5810,8 @@
       "laterDone": "«{{name}}» أُجلت",
       "cancelDone": "«{{name}}» أُلغيت",
       "tonightTitle": "الليلة"
-    }
+    },
+    "preparedAt": "أُعدّ في {{time}}"
   },
   "agents": {
     "title": "الوكلاء",

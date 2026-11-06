@@ -5681,8 +5681,8 @@
     },
     "moves": {
       "acceptAria": "Flytt til {{date}}",
-      "refuse": "Ikke denne dagen",
-      "moved": "«{{name}}» flyttet"
+      "moved": "«{{name}}» flyttet",
+      "otherDate": "Annen dato"
     },
     "anticipate": {
       "yes": "Ja",
@@ -5690,15 +5690,15 @@
       "precise": "Spesifiser",
       "preciseLabel": "Detalj",
       "save": "Lagre",
-      "answered": "Svar lagret"
+      "answered": "Svar lagret",
+      "less": "Færre av denne typen",
+      "options": "Varselvalg"
     },
     "feedback": {
       "useful": "Nyttig",
       "noise": "Ikke nyttig",
-      "fewer": "Du ser færre varsler av denne typen"
-    },
-    "replies": {
-      "sourceNotRead": "Kilden er ikke lest"
+      "fewer": "Du ser færre varsler av denne typen",
+      "question": "Hjalp denne skjermen?"
     },
     "status": {
       "configured": "Konfigurert",
@@ -5706,7 +5706,7 @@
       "failing": "Feiler"
     },
     "card": {
-      "title": "Daglig oversikt",
+      "title": "Min dag",
       "open": "Se oversikten",
       "error": "Oversikten er ikke tilgjengelig."
     },
@@ -5751,7 +5751,8 @@
       "laterDone": "«{{name}}» satt på vent",
       "cancelDone": "«{{name}}» avbrutt",
       "tonightTitle": "I kveld"
-    }
+    },
+    "preparedAt": "klargjort kl. {{time}}"
   },
   "agents": {
     "title": "Agenter",

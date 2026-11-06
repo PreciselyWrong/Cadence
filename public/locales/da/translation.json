@@ -5676,8 +5676,8 @@
     },
     "moves": {
       "acceptAria": "Flyt til {{date}}",
-      "refuse": "Ikke denne dag",
-      "moved": "“{{name}}” flyttet"
+      "moved": "“{{name}}” flyttet",
+      "otherDate": "Anden dato"
     },
     "anticipate": {
       "yes": "Ja",
@@ -5685,15 +5685,15 @@
       "precise": "Angiv",
       "preciseLabel": "Detalje",
       "save": "Gem",
-      "answered": "Svar gemt"
+      "answered": "Svar gemt",
+      "less": "Færre af denne slags",
+      "options": "Indstillinger for advarsel"
     },
     "feedback": {
       "useful": "Nyttig",
       "noise": "Ikke nyttig",
-      "fewer": "Du ser færre advarsler af denne type"
-    },
-    "replies": {
-      "sourceNotRead": "Kilde ikke læst"
+      "fewer": "Du ser færre advarsler af denne type",
+      "question": "Hjalp denne skærm?"
     },
     "status": {
       "configured": "Konfigureret",
@@ -5701,7 +5701,7 @@
       "failing": "Fejler"
     },
     "card": {
-      "title": "Dagligt overblik",
+      "title": "Min dag",
       "open": "Se overblikket",
       "error": "Overblikket er ikke tilgængeligt."
     },
@@ -5746,7 +5746,8 @@
       "laterDone": "“{{name}}” lagt til senere",
       "cancelDone": "“{{name}}” opgivet",
       "tonightTitle": "I aften"
-    }
+    },
+    "preparedAt": "klargjort kl. {{time}}"
   },
   "agents": {
     "title": "Agenter",

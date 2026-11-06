@@ -46,6 +46,7 @@ import {
     RepliesSection,
     ResolvedSection,
     SectionTitle,
+    ScreenFeedback,
     TonightSection,
 } from './BriefSections';
 import { isTaskCompleted, TASK_STATUS } from '../../constants/taskStatus';
@@ -371,19 +372,19 @@ const BriefPage: React.FC = () => {
                 }),
         });
 
-    const acceptMove = async (move: BriefMove) => {
+    const acceptMove = async (move: BriefMove, target: string = move.to) => {
         const current = tasks[move.task_uid];
         if (!current) return;
         try {
             await updateTask(move.task_uid, {
-                due_date: move.to,
+                due_date: target,
             } as Partial<Task>);
             await recordBriefDecision(date, {
                 kind: 'move',
                 target_type: 'task',
                 target_ref: move.task_uid,
                 decision: 'accepted',
-                proposal: { from: move.from, to: move.to },
+                proposal: { from: move.from, to: target },
                 fingerprint: move.proposal_key,
                 idempotency_key: newKey('move-accepted'),
             });
@@ -395,7 +396,7 @@ const BriefPage: React.FC = () => {
         }
         setOverrides((prev) => ({
             ...prev,
-            [move.task_uid]: { ...current, due_date: move.to },
+            [move.task_uid]: { ...current, due_date: target },
         }));
         setHiddenMoves((prev) => new Set(prev).add(move.proposal_key));
         showUndoToast(
@@ -428,28 +429,6 @@ const BriefPage: React.FC = () => {
         );
     };
 
-    const refuseMove = async (move: BriefMove) => {
-        try {
-            await recordBriefDecision(date, {
-                kind: 'move',
-                target_type: 'task',
-                target_ref: move.task_uid,
-                decision: 'refused',
-                proposal: { to: move.to },
-                fingerprint: move.proposal_key,
-                idempotency_key: newKey('move-refused'),
-            });
-            setHiddenMoves((prev) => new Set(prev).add(move.proposal_key));
-        } catch {
-            showErrorToast(
-                t(
-                    'dailyBrief.decision.error',
-                    'Impossible d’enregistrer la décision.'
-                )
-            );
-        }
-    };
-
     const answer = async (item: BriefAnticipate, value: string) => {
         if (!item.question) return;
         const question = item.question;
@@ -477,7 +456,7 @@ const BriefPage: React.FC = () => {
     };
 
     const feedback = async (
-        item: BriefAnticipate,
+        item: { key: string; type: string },
         vote: 'useful' | 'noise'
     ) => {
         try {
@@ -512,7 +491,6 @@ const BriefPage: React.FC = () => {
         onToggle: toggle,
         onOpen: (uid) => openTaskPanel(uid),
         onAcceptMove: acceptMove,
-        onRefuseMove: refuseMove,
         onAnswer: answer,
         onFeedback: feedback,
     };
@@ -525,31 +503,25 @@ const BriefPage: React.FC = () => {
             month: 'long',
         }).format(new Date(`${date}T12:00:00`));
         const showVerdict = settings?.sections.includes('verdict') ?? true;
+        const preparedAt = data?.generated_at
+            ? t('dailyBrief.preparedAt', 'préparé à {{time}}', {
+                  time: new Intl.DateTimeFormat(locale, {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                  }).format(new Date(data.generated_at)),
+              })
+            : null;
         return (
             <header className="mb-2">
                 <p className="text-[13px] text-gray-600 dark:text-gray-300">
-                    {capitalizeFirst(dateLabel)}
+                    {[capitalizeFirst(dateLabel), preparedAt]
+                        .filter(Boolean)
+                        .join(' · ')}
                 </p>
                 {brief && showVerdict && (
-                    <h2 className="mt-1 text-[22px] font-semibold leading-7 tracking-tight text-gray-900 dark:text-gray-50">
+                    <h2 className="mt-1 text-[17px] font-semibold leading-6 text-gray-900 dark:text-gray-50">
                         {brief.verdict.text}
                     </h2>
-                )}
-                {brief && (
-                    <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-600 dark:text-gray-300">
-                        <span>
-                            <b className="font-semibold tabular-nums text-gray-900 dark:text-gray-100">
-                                {brief.counters.overdue}
-                            </b>{' '}
-                            {t('dailyBrief.counters.overdue', 'en retard')}
-                        </span>
-                        <span>
-                            <b className="font-semibold tabular-nums text-gray-900 dark:text-gray-100">
-                                {brief.counters.due_today}
-                            </b>{' '}
-                            {t('dailyBrief.counters.today', "aujourd'hui")}
-                        </span>
-                    </div>
                 )}
             </header>
         );
@@ -707,6 +679,7 @@ const BriefPage: React.FC = () => {
                 {(settings?.sections ?? []).map((id) =>
                     renderSection(id, brief)
                 )}
+                <ScreenFeedback date={date} onFeedback={feedback} />
             </>
         );
     }

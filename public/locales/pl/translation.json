@@ -5732,8 +5732,8 @@
     },
     "moves": {
       "acceptAria": "Przenieś na {{date}}",
-      "refuse": "Nie w tym dniu",
-      "moved": "„{{name}}” przeniesiono"
+      "moved": "„{{name}}” przeniesiono",
+      "otherDate": "Inna data"
     },
     "anticipate": {
       "yes": "Tak",
@@ -5741,15 +5741,15 @@
       "precise": "Doprecyzuj",
       "preciseLabel": "Szczegóły",
       "save": "Zapisz",
-      "answered": "Odpowiedź zapisana"
+      "answered": "Odpowiedź zapisana",
+      "less": "Mniej takich",
+      "options": "Opcje alertu"
     },
     "feedback": {
       "useful": "Przydatne",
       "noise": "Nieprzydatne",
-      "fewer": "Zobaczysz mniej alertów tego typu"
-    },
-    "replies": {
-      "sourceNotRead": "Nie przeczytano źródła"
+      "fewer": "Zobaczysz mniej alertów tego typu",
+      "question": "Czy ten ekran pomógł?"
     },
     "status": {
       "configured": "Skonfigurowane",
@@ -5757,7 +5757,7 @@
       "failing": "Błąd"
     },
     "card": {
-      "title": "Dzienne podsumowanie",
+      "title": "Mój dzień",
       "open": "Zobacz podsumowanie",
       "error": "Podsumowanie jest niedostępne."
     },
@@ -5802,7 +5802,8 @@
       "laterDone": "„{{name}}” odłożona",
       "cancelDone": "„{{name}}” porzucona",
       "tonightTitle": "Dziś wieczorem"
-    }
+    },
+    "preparedAt": "przygotowano o {{time}}"
   },
   "agents": {
     "title": "Agenci",

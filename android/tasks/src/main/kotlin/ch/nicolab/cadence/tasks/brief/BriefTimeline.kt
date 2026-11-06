@@ -27,12 +27,6 @@ internal object BriefTimeline {
     /** Un événement est en conflit s'il est marqué comme tel par le moteur, ou s'il tombe dans les heures de travail. */
     fun isConflict(event: EventDto, work: List<WorkDto>): Boolean = event.conflict || overlapsWork(event, work)
 
-    /** Part du créneau du soir occupée par le planifié, bornée à [0, 1] ; 0 sans capacité connue. */
-    fun fill(planned: Int, capacity: Int?): Float {
-        if (capacity == null || capacity <= 0) return 0f
-        return (planned.toFloat() / capacity).coerceIn(0f, 1f)
-    }
-
     /**
      * Charge d'un jour : les tâches seules face au temps libre, car les événements en sont déjà retirés. Un résumé plus
      * ancien n'a pas [LoadDto.taskMinutes] et retombe sur le planifié.

@@ -1,9 +1,13 @@
 package ch.nicolab.cadence.tasks.ui.brief
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Pause
 import androidx.compose.material.icons.outlined.PlayArrow
@@ -16,8 +20,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
-import ch.nicolab.cadence.designsystem.components.SecondaryAction
+import androidx.compose.ui.semantics.Role
+import ch.nicolab.cadence.designsystem.theme.Radius
+import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
@@ -52,13 +59,13 @@ internal fun BriefAudioControls(
     modifier: Modifier = Modifier,
 ) {
     if (ui.preparing) {
-        SecondaryAction(label = stringResource(R.string.brief_audio_preparing), modifier = modifier, enabled = false, onClick = {})
+        ListenButton(stringResource(R.string.brief_audio_preparing), modifier, enabled = false, onClick = {})
         return
     }
     if (ui.player.key != ui.briefKey) {
         val minutes = ui.choice.minutes
         if (ui.choice.source == AudioSource.NONE) return
-        SecondaryAction(
+        ListenButton(
             label = if (minutes != null) stringResource(R.string.brief_audio_listen, minutes) else stringResource(R.string.brief_audio_listen_short),
             modifier = modifier,
             onClick = onPlay,
@@ -91,6 +98,24 @@ internal fun BriefAudioControls(
                 )
             }
         }
+    }
+}
+
+/** Une ligne discrète, pas un gros bouton : l'audio accompagne le résumé sans passer devant lui. */
+@Composable
+private fun ListenButton(label: String, modifier: Modifier, enabled: Boolean = true, onClick: () -> Unit) {
+    val tint = if (enabled) cadence.primary else cadence.onSurfaceVariant
+    Row(
+        modifier
+            .heightIn(min = Size.touch)
+            .clip(Radius.Control)
+            .clickable(enabled = enabled, role = Role.Button, onClick = onClick)
+            .padding(end = Space.sm),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(Icons.Outlined.PlayArrow, contentDescription = null, tint = tint)
+        Spacer(Modifier.width(Space.xs))
+        Text(label, style = MaterialTheme.typography.labelLarge, color = tint)
     }
 }
 

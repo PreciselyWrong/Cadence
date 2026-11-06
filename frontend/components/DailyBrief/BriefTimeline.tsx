@@ -6,7 +6,6 @@ import {
     AXIS_END,
     AXIS_START,
     capitalizeFirst,
-    eveningFill,
     formatClock,
     loadLabel,
     minutesText,
@@ -20,7 +19,13 @@ interface BriefTimelineProps {
     locale: string;
 }
 
-const AXIS_MARKS = [8, 12, 17, 22];
+// A mark every two hours, on the axis and through each day's track.
+const AXIS_MARKS = [8, 10, 12, 14, 16, 18, 20, 22];
+
+const WORK_COLOR = 'bg-gray-400 dark:bg-gray-500';
+const EVENING_COLOR = 'bg-indigo-300 dark:bg-indigo-700';
+const EVENT_COLOR =
+    'bg-indigo-700 text-white dark:bg-indigo-300 dark:text-gray-900';
 
 const weekdayOf = (date: string): number =>
     new Date(`${date}T12:00:00`).getDay();
@@ -102,7 +107,7 @@ const BriefDay: React.FC<{
                     {label.text}
                 </span>
             </div>
-            <div className="relative mt-1.5 h-7 overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
+            <div className="relative mt-1.5 h-9 overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
                 {day.work.map((block, index) => {
                     const span = spanPercent(block.start, block.end);
                     return (
@@ -112,7 +117,7 @@ const BriefDay: React.FC<{
                             className={`absolute inset-y-0 ${
                                 dayNote
                                     ? 'bg-[repeating-linear-gradient(135deg,#d4d4d8_0_6px,transparent_6px_12px)] dark:bg-[repeating-linear-gradient(135deg,#52525b_0_6px,transparent_6px_12px)]'
-                                    : 'bg-gray-300 dark:bg-gray-600'
+                                    : WORK_COLOR
                             }`}
                             style={{
                                 left: `${span.left}%`,
@@ -124,25 +129,23 @@ const BriefDay: React.FC<{
                 {eveningBand && (
                     <div
                         data-testid="brief-band-evening"
-                        className="absolute inset-y-0 border-l border-dashed border-gray-400 dark:border-gray-500"
+                        className={`absolute inset-y-0 ${EVENING_COLOR}`}
                         style={{
                             left: `${eveningBand.left}%`,
                             width: `${eveningBand.width}%`,
                         }}
-                    >
-                        <div
-                            className="absolute inset-y-0 left-0 bg-indigo-100 dark:bg-indigo-900/50"
-                            style={{
-                                width: `${
-                                    eveningFill(
-                                        day.load.planned_minutes,
-                                        evening?.minutes ?? 0
-                                    ) * 100
-                                }%`,
-                            }}
-                        />
-                    </div>
+                    />
                 )}
+                {AXIS_MARKS.map((hour) => (
+                    <div
+                        key={hour}
+                        data-testid="brief-grid-line"
+                        className="absolute inset-y-0 w-px bg-gray-300/80 dark:bg-gray-600/80"
+                        style={{
+                            left: `${spanPercent(hour * 60, hour * 60).left}%`,
+                        }}
+                    />
+                ))}
                 {timedEvents.map((event) => {
                     const span = spanPercent(
                         event.start_minute as number,
@@ -156,16 +159,19 @@ const BriefDay: React.FC<{
                                     ? 'brief-event-conflict'
                                     : 'brief-event'
                             }
-                            className={`absolute top-2 bottom-2 min-w-[6px] rounded-md ${
+                            title={event.title}
+                            className={`absolute inset-y-1 min-w-[6px] overflow-hidden truncate rounded px-1 text-[11px] leading-7 ${
                                 event.conflict
-                                    ? 'bg-red-600'
-                                    : 'bg-gray-700 dark:bg-gray-300'
+                                    ? 'bg-red-600 text-white'
+                                    : EVENT_COLOR
                             }`}
                             style={{
                                 left: `${span.left}%`,
                                 width: `${Math.max(span.width, 1)}%`,
                             }}
-                        />
+                        >
+                            {event.title}
+                        </div>
                     );
                 })}
             </div>
@@ -236,15 +242,15 @@ const BriefTimeline: React.FC<BriefTimelineProps> = ({
             ))}
             <div className="mt-3 flex flex-wrap gap-4 text-xs text-gray-600 dark:text-gray-300">
                 <LegendItem
-                    swatch="bg-gray-300 dark:bg-gray-600"
+                    swatch={WORK_COLOR}
                     label={t('dailyBrief.timeline.legendWork', 'Travail')}
                 />
                 <LegendItem
-                    swatch="bg-indigo-100 dark:bg-indigo-900/50"
+                    swatch={EVENING_COLOR}
                     label={t('dailyBrief.timeline.legendEvening', 'Soir')}
                 />
                 <LegendItem
-                    swatch="bg-gray-700 dark:bg-gray-300"
+                    swatch="bg-indigo-700 dark:bg-indigo-300"
                     label={t('dailyBrief.timeline.legendEvent', 'Événement')}
                 />
                 <LegendItem

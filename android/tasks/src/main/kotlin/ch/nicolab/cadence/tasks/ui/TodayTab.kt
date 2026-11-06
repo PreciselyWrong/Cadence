@@ -19,15 +19,15 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -36,7 +36,6 @@ import ch.nicolab.cadence.designsystem.components.SectionHeader
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.tasks.R
-import ch.nicolab.cadence.tasks.model.EstimateFormat
 import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.planning.DayPlans
@@ -52,7 +51,7 @@ import java.time.format.DateTimeFormatter
 import kotlinx.coroutines.launch
 
 /**
- * Aujourd'hui : charge de la journée, carte du matin (planifier) ou du soir (terminer), puis le retard,
+ * Aujourd'hui : entrée vers Ma journée, charge de la journée, carte du soir (terminer), puis le retard,
  * les tâches et événements du jour mêlés par heure, et les tâches terminées (repliées par défaut).
  */
 @Composable
@@ -86,8 +85,6 @@ internal fun TodayTab(
     val genericError = stringResource(R.string.tasks_error_generic)
     val undoLabel = stringResource(R.string.tasks_undo)
     var completedExpanded by rememberSaveable { mutableStateOf(false) }
-    var planSheetOpen by rememberSaveable { mutableStateOf(false) }
-    var choosing by remember { mutableStateOf(false) }
     var proposals by remember { mutableStateOf<Proposals?>(null) }
 
     val today = moment.today
@@ -136,23 +133,6 @@ internal fun TodayTab(
         }
     }
 
-    fun triage(tasks: List<TaskItem>, target: TriageTarget) {
-        proposals = null
-        val changes = tasks.map { task ->
-            task to when (target) {
-                TriageTarget.TODAY -> PlanningChanges.moveToDay(task, today, zone)
-                TriageTarget.TOMORROW -> PlanningChanges.moveToDay(task, today.plusDays(1), zone)
-                TriageTarget.LATER -> PlanningChanges.later()
-            }
-        }
-        val plural = when (target) {
-            TriageTarget.TODAY -> R.plurals.planning_moved_today
-            TriageTarget.TOMORROW -> R.plurals.planning_moved_tomorrow
-            TriageTarget.LATER -> R.plurals.planning_moved_later
-        }
-        commit(changes, context.resources.getQuantityString(plural, tasks.size, tasks.size))
-    }
-
     fun acceptProposals() {
         val current = proposals ?: return
         val byUid = state.today.associateBy { it.uid }
@@ -161,12 +141,16 @@ internal fun TodayTab(
         commit(changes, context.resources.getQuantityString(R.plurals.planning_placed_message, changes.size, changes.size))
     }
 
-    /** Une suggestion passe à aujourd'hui : elle reçoit l'échéance du jour, annulable. */
-    fun addToday(task: TaskItem) {
-        commit(
-            listOf(task to PlanningChanges.moveToDay(task, today, zone)),
-            context.resources.getQuantityString(R.plurals.planning_moved_today, 1, 1),
-        )
+    val placementRequested by planning.placementRequested.collectAsStateWithLifecycle()
+    LaunchedEffect(placementRequested) {
+        if (placementRequested) {
+            val placement = plan.propose()
+            proposals = Proposals(
+                blocks = placement.blocks,
+                unplaced = plan.toPlace.filter { it.uid in placement.unplaced },
+            )
+            planning.placementHandled()
+        }
     }
 
     fun carryToTomorrow() {
@@ -217,13 +201,13 @@ internal fun TodayTab(
                 }
             }
         }
-        if (morningVisible) {
+        if (morningVisible && briefCard == null) {
             item(key = "morning") {
                 CardSlot {
                     MorningCard(
                         toPlaceCount = plan.toPlace.size,
                         suggestionCount = suggestions.size,
-                        onOpen = { planSheetOpen = true },
+                        onOpen = onOpenBrief,
                         onDismiss = { planning.dismissMorning(today) },
                     )
                 }
@@ -291,48 +275,6 @@ internal fun TodayTab(
                 taskRows(state.completed, projectNames, projectColors, moment, viewModel, onOpen, projectIcons = projectIcons)
             }
         }
-    }
-
-    if (planSheetOpen) {
-        PlanDaySheet(
-            day = today,
-            today = today,
-            overdue = triageable,
-            capacity = plan.capacity,
-            toPlaceCount = plan.toPlace.size,
-            workday = plan.workday,
-            onTriage = ::triage,
-            onPlace = {
-                val placement = plan.propose()
-                proposals = Proposals(
-                    blocks = placement.blocks,
-                    unplaced = plan.toPlace.filter { it.uid in placement.unplaced },
-                )
-                planSheetOpen = false
-            },
-            dismiss = { planSheetOpen = false },
-            suggestions = suggestions,
-            weekStart = weekStart,
-            onAddToday = ::addToday,
-            onChoose = { choosing = true },
-        )
-    }
-    if (choosing) {
-        val byUid = remember(suggestions) { suggestions.associateBy { it.uid } }
-        ThisOrThatSheet(
-            cards = suggestions.map { task ->
-                ChoiceCard(
-                    task.uid,
-                    task.name,
-                    listOfNotNull(task.projectUid?.let { projectNames[it] }, task.estimatedMinutes?.let(EstimateFormat::format)).joinToString(" · "),
-                )
-            },
-            onChoose = { uid ->
-                choosing = false
-                byUid[uid]?.let(::addToday)
-            },
-            dismiss = { choosing = false },
-        )
     }
 }
 

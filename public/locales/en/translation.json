@@ -5646,8 +5646,8 @@
     },
     "moves": {
       "acceptAria": "Move to {{date}}",
-      "refuse": "Not this day",
-      "moved": "“{{name}}” moved"
+      "moved": "“{{name}}” moved",
+      "otherDate": "Other date"
     },
     "anticipate": {
       "yes": "Yes",
@@ -5655,15 +5655,15 @@
       "precise": "Specify",
       "preciseLabel": "Detail",
       "save": "Save",
-      "answered": "Answer saved"
+      "answered": "Answer saved",
+      "less": "Fewer like this",
+      "options": "Alert options"
     },
     "feedback": {
       "useful": "Useful",
       "noise": "Not useful",
-      "fewer": "You'll see fewer alerts of this kind"
-    },
-    "replies": {
-      "sourceNotRead": "Source not read"
+      "fewer": "You'll see fewer alerts of this kind",
+      "question": "Did this screen help?"
     },
     "status": {
       "configured": "Configured",
@@ -5671,7 +5671,7 @@
       "failing": "Failing"
     },
     "card": {
-      "title": "Daily brief",
+      "title": "My day",
       "open": "See the brief",
       "error": "The brief is unavailable."
     },
@@ -5716,7 +5716,8 @@
       "laterDone": "“{{name}}” set aside",
       "cancelDone": "“{{name}}” abandoned",
       "tonightTitle": "Tonight"
-    }
+    },
+    "preparedAt": "prepared at {{time}}"
   },
   "agents": {
     "title": "Agents",

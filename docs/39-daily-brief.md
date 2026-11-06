@@ -127,12 +127,17 @@ All routes exist under `/api` and `/api/v1`.
 - `job.js`: `generateDueBriefs({ now })`, run every 5 minutes by `taskScheduler.js` (`daily_brief`).
 - `sources.js`: configuration checks used by `GET /daily-plan/brief/status`.
 
-### Android brief screen
+### "My day" screen
 
-- A task row already shows its due date: a reason with a date-only `reason_code` is not written under it.
-- A move offers the proposed day in one tap and « Autre date » (the date sheet); the choice is recorded as `accepted` with the chosen day. Android no longer sends `refused`; the web still does ("Not this day").
+The brief's screen is called **Ma journée** on both clients; the morning brief, the day's planning and the evening review live there.
+
+- Android: Today has one entry, the brief's verdict (or, without a brief, what is left to place). The screen reads: date and time prepared, summary, compact player, the timeline, Priorités du jour, then the former "Plan the day" sheet (overdue to triage, suggestions, placing), À déplacer, À anticiper, Réponses, Inbox, Réglé. "Place automatically" goes back to Today, where the proposed slots wait to be accepted, as before. It is on-device code, not AI.
+- A task appears once: a priority is not repeated under À déplacer, and a task with a move is not repeated among the overdue to triage (`ui/brief/MyDay.kt`).
+- The timeline has a mark every two hours through each track, coloured bands (work, evening) and events at their time with their title when it fits (`TimelineColors`: every band at 3:1 against the track). Web: `BriefTimeline.tsx`, same marks and colours.
+- A task row already shows its due date on Android: a reason with a date-only `reason_code` is not written under it, and neither is the note.
+- A move offers the proposed day in one tap and "Autre date"; the choice is recorded as `accepted` with the chosen day. No client sends `refused` any more; the engine keeps honouring old ones.
+- Feedback: one vote at the foot of the screen (`card_type: "brief"`, kept out of the noise rule) and "Moins de ce type" in each alert's ⋯ menu, which feeds the noise rule as before.
 - « Réponses attendues » is hidden while there is no reply; « Réglé » starts folded.
-- Web: the date is not on the row, so the reason stays; these gestures are in `TODO.md`.
 
 ### Rules
 
@@ -232,7 +237,7 @@ The morning brief arbitrates the day; after the switch time the clients show the
 - `audio_script.chapters` ids are `intro`, `done`, `tonight` and `tomorrow` (an empty `done` or `tonight` chapter is left out). The spoken text uses the same helpers as the morning script.
 - Web: the page and the Today card switch at `evening.switchTime` read in the profile's timezone (the browser's clock is not used). The page keeps the morning brief one tap away ("Voir le résumé du matin") and the evening review one tap away from the morning ("Voir le bilan du soir").
 - Actions on every tonight and slipped task, each shown at once on the row, then an undo snackbar: "C'est fait" (existing completion); "Demain" (existing `POST /daily-plan/:date/carry-over`, adds the task to tomorrow's plan, never changes its due date; undo removes it from tomorrow's plan when it was added); "Choisir une date" (date picker, existing task due-date update; undo restores the old date); "Plus tard" (existing `PATCH later: true`, the `#someday` tag; undo removes it); "Abandonner" (existing status cancelled; undo restores the previous status).
-- Feedback on anticipate cards reads "Utile · Pas utile" (stored votes keep `useful` / `noise`); after "Pas utile" the card says "Tu verras moins ce type d'alerte".
+- Stored votes keep `useful` / `noise`; after "Moins de ce type" the card says "Tu verras moins ce type d'alerte".
 - Android keeps the last evening response in the Room table `evening` (tasks DB v13) and renders its four chapters on the phone with the same voice.
 
 ## Mail

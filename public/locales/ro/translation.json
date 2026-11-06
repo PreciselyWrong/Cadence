@@ -5694,8 +5694,8 @@
     },
     "moves": {
       "acceptAria": "Mută pe {{date}}",
-      "refuse": "Nu în această zi",
-      "moved": "„{{name}}” mutată"
+      "moved": "„{{name}}” mutată",
+      "otherDate": "Altă dată"
     },
     "anticipate": {
       "yes": "Da",
@@ -5703,15 +5703,15 @@
       "precise": "Precizează",
       "preciseLabel": "Detaliu",
       "save": "Salvează",
-      "answered": "Răspuns salvat"
+      "answered": "Răspuns salvat",
+      "less": "Mai puține de acest fel",
+      "options": "Opțiuni alertă"
     },
     "feedback": {
       "useful": "Util",
       "noise": "Nu e utilă",
-      "fewer": "Vei vedea mai puține alerte de acest fel"
-    },
-    "replies": {
-      "sourceNotRead": "Sursa nu a fost citită"
+      "fewer": "Vei vedea mai puține alerte de acest fel",
+      "question": "Te-a ajutat acest ecran?"
     },
     "status": {
       "configured": "Configurat",
@@ -5719,7 +5719,7 @@
       "failing": "Eșuează"
     },
     "card": {
-      "title": "Rezumat zilnic",
+      "title": "Ziua mea",
       "open": "Vezi rezumatul",
       "error": "Rezumatul nu este disponibil."
     },
@@ -5764,7 +5764,8 @@
       "laterDone": "„{{name}}” amânată",
       "cancelDone": "„{{name}}” abandonată",
       "tonightTitle": "Diseară"
-    }
+    },
+    "preparedAt": "pregătit la {{time}}"
   },
   "agents": {
     "title": "Agenți",

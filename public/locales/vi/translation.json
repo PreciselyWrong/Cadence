@@ -5676,8 +5676,8 @@
     },
     "moves": {
       "acceptAria": "Chuyển đến {{date}}",
-      "refuse": "Không phải ngày này",
-      "moved": "Đã chuyển “{{name}}”"
+      "moved": "Đã chuyển “{{name}}”",
+      "otherDate": "Ngày khác"
     },
     "anticipate": {
       "yes": "Có",
@@ -5685,15 +5685,15 @@
       "precise": "Chỉ định",
       "preciseLabel": "Chi tiết",
       "save": "Lưu",
-      "answered": "Đã lưu phản hồi"
+      "answered": "Đã lưu phản hồi",
+      "less": "Ít loại này hơn",
+      "options": "Tùy chọn cảnh báo"
     },
     "feedback": {
       "useful": "Hữu ích",
       "noise": "Không hữu ích",
-      "fewer": "Bạn sẽ thấy ít cảnh báo loại này hơn"
-    },
-    "replies": {
-      "sourceNotRead": "Chưa đọc nguồn"
+      "fewer": "Bạn sẽ thấy ít cảnh báo loại này hơn",
+      "question": "Màn hình này có hữu ích không?"
     },
     "status": {
       "configured": "Đã cấu hình",
@@ -5701,7 +5701,7 @@
       "failing": "Lỗi"
     },
     "card": {
-      "title": "Tóm tắt hằng ngày",
+      "title": "Ngày của tôi",
       "open": "Xem bản tóm tắt",
       "error": "Bản tóm tắt không khả dụng."
     },
@@ -5746,7 +5746,8 @@
       "laterDone": "“{{name}}” đã để sau",
       "cancelDone": "“{{name}}” đã bỏ",
       "tonightTitle": "Tối nay"
-    }
+    },
+    "preparedAt": "chuẩn bị lúc {{time}}"
   },
   "agents": {
     "title": "Tác nhân",

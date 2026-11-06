@@ -166,6 +166,20 @@ describe('daily brief memory', () => {
     });
 
     describe('decisions', () => {
+        it('accepts one feedback on the whole screen, not read as an alert type', async () => {
+            const res = await agent
+                .post(`/api/daily-plan/${TODAY}/brief/decisions`)
+                .send({
+                    kind: 'feedback',
+                    target_type: 'card',
+                    target_ref: `brief:${TODAY}`,
+                    proposal: { card_type: 'brief', vote: 'noise' },
+                    decision: 'accepted',
+                    idempotency_key: 'vote-ecran-1',
+                });
+            expect(res.status).toBe(200);
+        });
+
         it('stores a decision once per idempotency key', async () => {
             const body = {
                 kind: 'feedback',

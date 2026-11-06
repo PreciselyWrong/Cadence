@@ -5676,8 +5676,8 @@
     },
     "moves": {
       "acceptAria": "Verplaatsen naar {{date}}",
-      "refuse": "Niet op deze dag",
-      "moved": "«{{name}}» verplaatst"
+      "moved": "«{{name}}» verplaatst",
+      "otherDate": "Andere datum"
     },
     "anticipate": {
       "yes": "Ja",
@@ -5685,15 +5685,15 @@
       "precise": "Specificeren",
       "preciseLabel": "Details",
       "save": "Opslaan",
-      "answered": "Antwoord opgeslagen"
+      "answered": "Antwoord opgeslagen",
+      "less": "Minder van dit soort",
+      "options": "Meldingsopties"
     },
     "feedback": {
       "useful": "Nuttig",
       "noise": "Niet nuttig",
-      "fewer": "Je ziet minder meldingen van dit type"
-    },
-    "replies": {
-      "sourceNotRead": "Bron niet gelezen"
+      "fewer": "Je ziet minder meldingen van dit type",
+      "question": "Had je hier iets aan?"
     },
     "status": {
       "configured": "Ingesteld",
@@ -5701,7 +5701,7 @@
       "failing": "Mislukt"
     },
     "card": {
-      "title": "Dagelijkse briefing",
+      "title": "Mijn dag",
       "open": "Bekijk de briefing",
       "error": "De briefing is niet beschikbaar."
     },
@@ -5746,7 +5746,8 @@
       "laterDone": "“{{name}}” voor later gezet",
       "cancelDone": "“{{name}}” gestopt",
       "tonightTitle": "Vanavond"
-    }
+    },
+    "preparedAt": "voorbereid om {{time}}"
   },
   "agents": {
     "title": "Agents",

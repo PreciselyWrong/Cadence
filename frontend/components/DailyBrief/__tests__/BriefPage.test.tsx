@@ -131,7 +131,6 @@ describe('BriefPage', () => {
             'Priorités du jour',
             'À déplacer',
             'À anticiper',
-            'Réponses attendues',
         ]);
     });
 
@@ -150,7 +149,70 @@ describe('BriefPage', () => {
         renderPage();
         const conflict = await screen.findByTestId('brief-event-conflict');
         expect(conflict).toBeInTheDocument();
-        expect(screen.getByText(/Dentiste/)).toBeInTheDocument();
+        expect(screen.getAllByText(/Dentiste/).length).toBeGreaterThan(0);
+    });
+
+    it('marks every two hours on each day of the timeline', async () => {
+        renderPage();
+        await screen.findByTestId('brief-event-conflict');
+        expect(screen.getAllByTestId('brief-grid-line')).toHaveLength(8);
+    });
+
+    it('has one feedback on the screen and fewer alerts behind a menu', async () => {
+        renderPage();
+        await screen.findByText('À anticiper');
+        expect(screen.getAllByRole('button', { name: 'Utile' })).toHaveLength(
+            1
+        );
+        fireEvent.click(
+            screen.getAllByRole('button', {
+                name: 'Options de cette alerte',
+            })[0]
+        );
+        fireEvent.click(
+            screen.getByRole('button', { name: 'Moins de ce type' })
+        );
+        await waitFor(() =>
+            expect(recordBriefDecision).toHaveBeenCalledWith(
+                TODAY,
+                expect.objectContaining({
+                    kind: 'feedback',
+                    proposal: expect.objectContaining({ vote: 'noise' }),
+                })
+            )
+        );
+    });
+
+    it('moves a task to another date and records that date', async () => {
+        renderPage();
+        fireEvent.click(
+            await screen.findByRole('button', { name: 'Autre date' })
+        );
+        fireEvent.change(screen.getByLabelText('Autre date'), {
+            target: { value: '2026-11-20' },
+        });
+        await waitFor(() =>
+            expect(recordBriefDecision).toHaveBeenCalledWith(
+                TODAY,
+                expect.objectContaining({
+                    kind: 'move',
+                    decision: 'accepted',
+                    proposal: expect.objectContaining({ to: '2026-11-20' }),
+                })
+            )
+        );
+    });
+
+    it('folds what is settled and hides replies when there are none', async () => {
+        (fetchDailyBrief as jest.Mock).mockResolvedValue({
+            ...RESPONSE,
+            brief: { ...BRIEF, replies: [] },
+        });
+        renderPage();
+        await screen.findByText('À anticiper');
+        expect(
+            screen.queryByText('Réponses attendues')
+        ).not.toBeInTheDocument();
     });
 
     it('states an overload as tasks against free time, in hours', async () => {
@@ -237,7 +299,7 @@ describe('BriefPage', () => {
         );
     });
 
-    it('records a feedback vote on a card', async () => {
+    it('records the feedback on the whole screen', async () => {
         renderPage();
         fireEvent.click(
             await screen.findByRole('button', { name: 'Pas utile' })
@@ -247,16 +309,10 @@ describe('BriefPage', () => {
                 TODAY,
                 expect.objectContaining({
                     kind: 'feedback',
-                    proposal: {
-                        card_type: 'event_in_work_hours',
-                        vote: 'noise',
-                    },
+                    proposal: { card_type: 'brief', vote: 'noise' },
                 })
             )
         );
-        expect(
-            screen.getByText('Tu verras moins ce type d’alerte')
-        ).toBeInTheDocument();
     });
 
     it('shows an empty state with a button that generates the brief', async () => {

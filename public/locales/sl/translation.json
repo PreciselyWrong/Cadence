@@ -5732,8 +5732,8 @@
     },
     "moves": {
       "acceptAria": "Premakni na {{date}}",
-      "refuse": "Ne na ta dan",
-      "moved": "»{{name}}« premaknjeno"
+      "moved": "»{{name}}« premaknjeno",
+      "otherDate": "Drug datum"
     },
     "anticipate": {
       "yes": "Da",
@@ -5741,15 +5741,15 @@
       "precise": "Natančneje",
       "preciseLabel": "Podrobnost",
       "save": "Shrani",
-      "answered": "Odgovor shranjen"
+      "answered": "Odgovor shranjen",
+      "less": "Manj takih",
+      "options": "Možnosti opozorila"
     },
     "feedback": {
       "useful": "Uporabno",
       "noise": "Ni uporabno",
-      "fewer": "Videli boste manj opozoril te vrste"
-    },
-    "replies": {
-      "sourceNotRead": "Vir ni prebran"
+      "fewer": "Videli boste manj opozoril te vrste",
+      "question": "Vam je ta zaslon pomagal?"
     },
     "status": {
       "configured": "Nastavljeno",
@@ -5757,7 +5757,7 @@
       "failing": "Ne deluje"
     },
     "card": {
-      "title": "Dnevni povzetek",
+      "title": "Moj dan",
       "open": "Poglej povzetek",
       "error": "Povzetek ni na voljo."
     },
@@ -5802,7 +5802,8 @@
       "laterDone": "»{{name}}« odloženo",
       "cancelDone": "»{{name}}« opuščeno",
       "tonightTitle": "Nocoj"
-    }
+    },
+    "preparedAt": "pripravljeno ob {{time}}"
   },
   "agents": {
     "title": "Agenti",

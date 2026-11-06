@@ -356,8 +356,8 @@
     },
     "moves": {
       "acceptAria": "Presunúť na {{date}}",
-      "refuse": "Nie v tento deň",
-      "moved": "„{{name}}“ presunutá"
+      "moved": "„{{name}}“ presunutá",
+      "otherDate": "Iný dátum"
     },
     "anticipate": {
       "yes": "Áno",
@@ -365,15 +365,15 @@
       "precise": "Upresniť",
       "preciseLabel": "Podrobnosti",
       "save": "Uložiť",
-      "answered": "Odpoveď uložená"
+      "answered": "Odpoveď uložená",
+      "less": "Menej takýchto",
+      "options": "Možnosti upozornenia"
     },
     "feedback": {
       "useful": "Užitočné",
       "noise": "Nie je užitočné",
-      "fewer": "Uvidíš menej upozornení tohto typu"
-    },
-    "replies": {
-      "sourceNotRead": "Zdroj nebol prečítaný"
+      "fewer": "Uvidíš menej upozornení tohto typu",
+      "question": "Pomohla táto obrazovka?"
     },
     "status": {
       "configured": "Nakonfigurované",
@@ -381,7 +381,7 @@
       "failing": "Zlyháva"
     },
     "card": {
-      "title": "Denný prehľad",
+      "title": "Môj deň",
       "open": "Zobraziť prehľad",
       "error": "Prehľad nie je k dispozícii."
     },
@@ -426,7 +426,8 @@
       "laterDone": "„{{name}}“ odložená",
       "cancelDone": "„{{name}}“ zrušená",
       "tonightTitle": "Dnes večer"
-    }
+    },
+    "preparedAt": "pripravené o {{time}}"
   },
   "agents": {
     "title": "Agenti",

@@ -5676,8 +5676,8 @@
     },
     "moves": {
       "acceptAria": "Flytta till {{date}}",
-      "refuse": "Inte denna dag",
-      "moved": "”{{name}}” flyttad"
+      "moved": "”{{name}}” flyttad",
+      "otherDate": "Annat datum"
     },
     "anticipate": {
       "yes": "Ja",
@@ -5685,15 +5685,15 @@
       "precise": "Ange",
       "preciseLabel": "Detalj",
       "save": "Spara",
-      "answered": "Svar sparat"
+      "answered": "Svar sparat",
+      "less": "Färre av denna typ",
+      "options": "Varningsalternativ"
     },
     "feedback": {
       "useful": "Användbart",
       "noise": "Inte användbart",
-      "fewer": "Du ser färre varningar av den här typen"
-    },
-    "replies": {
-      "sourceNotRead": "Källan är inte läst"
+      "fewer": "Du ser färre varningar av den här typen",
+      "question": "Hjälpte den här skärmen?"
     },
     "status": {
       "configured": "Konfigurerad",
@@ -5701,7 +5701,7 @@
       "failing": "Misslyckas"
     },
     "card": {
-      "title": "Daglig sammanfattning",
+      "title": "Min dag",
       "open": "Visa sammanfattningen",
       "error": "Sammanfattningen är inte tillgänglig."
     },
@@ -5746,7 +5746,8 @@
       "laterDone": "“{{name}}” lagd till senare",
       "cancelDone": "“{{name}}” avbruten",
       "tonightTitle": "Ikväll"
-    }
+    },
+    "preparedAt": "förberett kl. {{time}}"
   },
   "agents": {
     "title": "Agenter",

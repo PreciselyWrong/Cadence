@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Résumé du jour : écran, carte d'Aujourd'hui -->
-    <string name="brief_title">Résumé du jour</string>
+    <string name="brief_title">Ma journée</string>
     <string name="brief_back">Retour</string>
     <string name="brief_today">Aujourd\'hui</string>
-    <string name="brief_empty_title">Pas de résumé aujourd\'hui</string>
+    <string name="brief_empty_title">Rien à préparer aujourd\'hui</string>
     <string name="brief_empty_message">Le résumé se prépare chaque matin, quand il est activé dans Réglages › Résumé.</string>
     <string name="brief_failed_message">Le dernier résumé n\'a pas pu être préparé ; l\'ancienne version reste affichée.</string>
     <string name="brief_unreadable_message">Ce résumé ne peut pas être lu sur ce téléphone. Il se relira au prochain passage de synchro.</string>
-    <string name="brief_card_title">Résumé du jour</string>
-    <string name="brief_card_open">Ouvrir le résumé du jour</string>
+    <string name="brief_card_title">Ma journée</string>
+    <string name="brief_card_open">Ouvrir Ma journée</string>
     <string name="brief_overdue_count">échues</string>
     <string name="brief_today_count">aujourd\'hui</string>
 
     <!-- Sections -->
     <string name="brief_timeline_title">Trois jours</string>
-    <string name="brief_timeline_detail">travail, soirs, événements</string>
+    <string name="brief_legend_work">Travail</string>
+    <string name="brief_legend_evening">Soir</string>
+    <string name="brief_legend_event">Événement</string>
+    <string name="brief_legend_conflict">Conflit</string>
     <string name="brief_tonight_title">Priorités du jour</string>
     <string name="brief_tonight_detail">%1$s / %2$s</string>
     <string name="brief_moves_title">À déplacer</string>
@@ -24,6 +27,9 @@
     <string name="brief_answer_yes">Oui</string>
     <string name="brief_answer_no">Non</string>
     <string name="brief_answer_precise">Préciser</string>
+    <string name="brief_card_options">Options de cette alerte</string>
+    <string name="brief_card_less">Moins de ce type</string>
+    <string name="brief_feedback_question">Cet écran t\'a aidé ?</string>
     <string name="brief_feedback_useful">Utile</string>
     <string name="brief_feedback_noise">Pas utile</string>
     <string name="brief_feedback_less">Tu verras moins ce type d\'alerte</string>

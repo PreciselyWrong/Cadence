@@ -5676,8 +5676,8 @@
     },
     "moves": {
       "acceptAria": "{{date}} に移動",
-      "refuse": "この日は除く",
-      "moved": "「{{name}}」を移動しました"
+      "moved": "「{{name}}」を移動しました",
+      "otherDate": "別の日付"
     },
     "anticipate": {
       "yes": "はい",
@@ -5685,15 +5685,15 @@
       "precise": "指定する",
       "preciseLabel": "詳細",
       "save": "保存",
-      "answered": "回答を保存しました"
+      "answered": "回答を保存しました",
+      "less": "この種類を減らす",
+      "options": "アラートのオプション"
     },
     "feedback": {
       "useful": "役に立つ",
       "noise": "役に立たない",
-      "fewer": "この種類の通知は表示が減ります"
-    },
-    "replies": {
-      "sourceNotRead": "ソース未読"
+      "fewer": "この種類の通知は表示が減ります",
+      "question": "この画面は役に立ちましたか？"
     },
     "status": {
       "configured": "設定済み",
@@ -5701,7 +5701,7 @@
       "failing": "失敗"
     },
     "card": {
-      "title": "デイリーブリーフ",
+      "title": "私の一日",
       "open": "ブリーフを見る",
       "error": "ブリーフは利用できません。"
     },
@@ -5746,7 +5746,8 @@
       "laterDone": "「{{name}}」をあとで",
       "cancelDone": "「{{name}}」を中止",
       "tonightTitle": "今夜"
-    }
+    },
+    "preparedAt": "{{time}} に作成"
   },
   "agents": {
     "title": "エージェント",

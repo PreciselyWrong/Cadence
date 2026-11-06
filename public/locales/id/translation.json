@@ -5676,8 +5676,8 @@
     },
     "moves": {
       "acceptAria": "Pindahkan ke {{date}}",
-      "refuse": "Bukan di hari ini",
-      "moved": "“{{name}}” dipindahkan"
+      "moved": "“{{name}}” dipindahkan",
+      "otherDate": "Tanggal lain"
     },
     "anticipate": {
       "yes": "Ya",
@@ -5685,15 +5685,15 @@
       "precise": "Tentukan",
       "preciseLabel": "Detail",
       "save": "Simpan",
-      "answered": "Jawaban disimpan"
+      "answered": "Jawaban disimpan",
+      "less": "Lebih sedikit seperti ini",
+      "options": "Opsi peringatan"
     },
     "feedback": {
       "useful": "Berguna",
       "noise": "Tidak berguna",
-      "fewer": "Anda akan melihat lebih sedikit peringatan jenis ini"
-    },
-    "replies": {
-      "sourceNotRead": "Sumber belum dibaca"
+      "fewer": "Anda akan melihat lebih sedikit peringatan jenis ini",
+      "question": "Apakah layar ini membantu?"
     },
     "status": {
       "configured": "Sudah dikonfigurasi",
@@ -5701,7 +5701,7 @@
       "failing": "Gagal"
     },
     "card": {
-      "title": "Ringkasan harian",
+      "title": "Hari saya",
       "open": "Lihat ringkasan",
       "error": "Ringkasan tidak tersedia."
     },
@@ -5746,7 +5746,8 @@
       "laterDone": "“{{name}}” ditunda",
       "cancelDone": "“{{name}}” dibatalkan",
       "tonightTitle": "Malam ini"
-    }
+    },
+    "preparedAt": "disiapkan pukul {{time}}"
   },
   "agents": {
     "title": "Agen",

@@ -61,7 +61,11 @@ function validateProposal(kind, decision, proposal) {
         throw new ValidationError('proposal is too large');
     }
     if (kind === 'feedback') {
-        if (!ALERT_TYPES.includes(proposal.card_type)) {
+        // `brief` is the single feedback on the whole screen, not an alert type.
+        if (
+            proposal.card_type !== 'brief' &&
+            !ALERT_TYPES.includes(proposal.card_type)
+        ) {
             throw new ValidationError('feedback needs a known card_type');
         }
         if (!VOTES.includes(proposal.vote)) {

@@ -73,11 +73,4 @@ class BriefTimelineTest {
         assertEquals(LoadLabel.Ratio(60, 90), BriefTimeline.load(meetings))
     }
 
-    @Test
-    fun eveningFillIsBoundedAndZeroWithoutCapacity() {
-        assertEquals(0.5f, BriefTimeline.fill(45, 90), 0.0001f)
-        assertEquals(1f, BriefTimeline.fill(200, 90), 0.0001f)
-        assertEquals(0f, BriefTimeline.fill(45, null), 0.0001f)
-        assertEquals(0f, BriefTimeline.fill(45, 0), 0.0001f)
-    }
 }

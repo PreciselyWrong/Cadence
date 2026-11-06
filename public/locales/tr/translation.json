@@ -5676,8 +5676,8 @@
     },
     "moves": {
       "acceptAria": "{{date}} tarihine taşı",
-      "refuse": "Bu gün değil",
-      "moved": "“{{name}}” taşındı"
+      "moved": "“{{name}}” taşındı",
+      "otherDate": "Başka tarih"
     },
     "anticipate": {
       "yes": "Evet",
@@ -5685,15 +5685,15 @@
       "precise": "Belirt",
       "preciseLabel": "Ayrıntı",
       "save": "Kaydet",
-      "answered": "Yanıt kaydedildi"
+      "answered": "Yanıt kaydedildi",
+      "less": "Bunlardan daha az",
+      "options": "Uyarı seçenekleri"
     },
     "feedback": {
       "useful": "Faydalı",
       "noise": "Faydalı değil",
-      "fewer": "Bu türden daha az uyarı göreceksin"
-    },
-    "replies": {
-      "sourceNotRead": "Kaynak okunmadı"
+      "fewer": "Bu türden daha az uyarı göreceksin",
+      "question": "Bu ekran yardımcı oldu mu?"
     },
     "status": {
       "configured": "Yapılandırılmış",
@@ -5701,7 +5701,7 @@
       "failing": "Başarısız"
     },
     "card": {
-      "title": "Günlük özet",
+      "title": "Günüm",
       "open": "Özeti gör",
       "error": "Özet kullanılamıyor."
     },
@@ -5746,7 +5746,8 @@
       "laterDone": "“{{name}}” daha sonraya bırakıldı",
       "cancelDone": "“{{name}}” vazgeçildi",
       "tonightTitle": "Bu akşam"
-    }
+    },
+    "preparedAt": "{{time}} itibarıyla hazırlandı"
   },
   "agents": {
     "title": "Ajanlar",
