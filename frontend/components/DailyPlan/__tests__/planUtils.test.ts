@@ -3,12 +3,14 @@ import {
     busyMinutes,
     clampDayHours,
     dayRange,
+    droppedMinute,
     feedEventsToBlocks,
     findFreeSlot,
     formatDuration,
     formatMinute,
     freeGaps,
     pickCurrentItem,
+    sideBySide,
     taskLength,
     tasksOnDay,
 } from '../planUtils';
@@ -280,5 +282,56 @@ describe('feedEventsToBlocks', () => {
         });
         expect(before.map((b) => b.title)).toEqual(['early']);
         expect(after.map((b) => b.title)).toEqual(['late', 'overnight']);
+    });
+});
+
+describe('sideBySide', () => {
+    const span = (key: string, start: number, end: number) => ({
+        key,
+        start,
+        end,
+    });
+
+    it('leaves what does not overlap at full width', () => {
+        const layout = sideBySide([span('a', 60, 120), span('b', 120, 180)]);
+        expect(layout.get('a')).toEqual({ lane: 0, lanes: 1 });
+        expect(layout.get('b')).toEqual({ lane: 0, lanes: 1 });
+    });
+
+    it('puts what overlaps side by side, whatever the order given', () => {
+        const layout = sideBySide([span('b', 930, 990), span('a', 915, 975)]);
+        expect(layout.get('a')).toEqual({ lane: 0, lanes: 2 });
+        expect(layout.get('b')).toEqual({ lane: 1, lanes: 2 });
+    });
+
+    it('gives a whole overlapping group the same width, and reuses a free lane', () => {
+        const layout = sideBySide([
+            span('a', 0, 100),
+            span('b', 10, 30),
+            span('c', 40, 60),
+        ]);
+        expect(layout.get('a')).toEqual({ lane: 0, lanes: 2 });
+        expect(layout.get('b')).toEqual({ lane: 1, lanes: 2 });
+        expect(layout.get('c')).toEqual({ lane: 1, lanes: 2 });
+    });
+
+    it('starts a new group after a gap', () => {
+        const layout = sideBySide([
+            span('a', 0, 60),
+            span('b', 30, 90),
+            span('c', 120, 180),
+        ]);
+        expect(layout.get('c')).toEqual({ lane: 0, lanes: 1 });
+    });
+});
+
+describe('droppedMinute', () => {
+    const range = { start: 480, end: 1080 };
+    it('lands on the quarter of an hour', () => {
+        expect(droppedMinute(825, 70, 60, range, 64 / 60)).toBe(885);
+    });
+    it('stays within the visible hours', () => {
+        expect(droppedMinute(500, -999, 60, range, 64 / 60)).toBe(480);
+        expect(droppedMinute(1000, 999, 60, range, 64 / 60)).toBe(1020);
     });
 });

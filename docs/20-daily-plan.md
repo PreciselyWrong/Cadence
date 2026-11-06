@@ -238,3 +238,9 @@ Each draft, estimate batch or wrap-up counts as one AI request, and one AI credi
 - Focus exceptions only free blocks; there is no one-off extra block for a single date.
 - Focus blocks and exceptions are saved as one list: two devices editing them at the same time, or a phone edit sent after a long time offline, keep the last save.
 - There are no MCP tools for the plan yet.
+
+## Timed tasks on the day grid
+
+A timed task that is not in the plan is drawn on the grid with its own hour. Dragging it moves its due time (with its start, keeping its length) and its title opens it; calendar events stay fixed. What overlaps shares the width side by side (`planUtils.sideBySide`), and a calendar's name only shows when a block has the full width. The "drag tasks here" hint sits above the grid, never on the hours.
+
+The list shows the day's tasks and what the user chose (In view, This week). What the planner proposes on its own waits behind a "Suggested n" line, and a routine due on another day is not proposed: it comes back by itself.

@@ -16,6 +16,8 @@ import {
     formatDuration,
     formatMinute,
     freeGaps,
+    itemEnd,
+    sideBySide,
 } from './planUtils';
 import CalendarBadge from './CalendarBadge';
 import HiddenHoursBar from '../Calendar/HiddenHoursBar';
@@ -26,6 +28,22 @@ export const PX_PER_HOUR = 64;
 export const PX_PER_MINUTE = PX_PER_HOUR / 60;
 
 type RescheduleWhen = 'tomorrow' | 'next_week';
+
+// The shortest block drawn (18 px): what is shorter still takes that room.
+const MIN_BLOCK_MINUTES = 18 / PX_PER_MINUTE;
+
+const eventKey = (event: CalendarEvent) =>
+    `${event.feed_uid}-${event.uid}-${event.start}`;
+
+// Its share of the width, with the same 4 px margins on each side.
+const laneStyle = (slot?: { lane: number; lanes: number }) => {
+    const { lane, lanes } = slot ?? { lane: 0, lanes: 1 };
+    const share = 100 / lanes;
+    return {
+        left: `calc(${share * lane}% + 4px)`,
+        width: `calc(${share}% - 8px)`,
+    };
+};
 
 interface DayTimelineProps {
     items: DailyPlanItem[];
@@ -48,6 +66,7 @@ interface BlockProps {
     item: DailyPlanItem;
     range: { start: number; end: number };
     maxDuration: number;
+    slot?: { lane: number; lanes: number };
     onResize: (duration: number) => void;
     onRemove: () => void;
     aiReason?: string;
@@ -57,6 +76,7 @@ const TimelineBlock: React.FC<BlockProps> = ({
     item,
     range,
     maxDuration,
+    slot,
     onResize,
     onRemove,
     aiReason,
@@ -108,10 +128,11 @@ const TimelineBlock: React.FC<BlockProps> = ({
     return (
         <div
             ref={setNodeRef}
-            className={`group absolute left-1 right-1 rounded-md bg-blue-100 text-blue-950 dark:bg-blue-900/60 dark:text-blue-50 ${
+            className={`group absolute rounded-md bg-blue-100 text-blue-950 dark:bg-blue-900/60 dark:text-blue-50 ${
                 isDragging ? 'z-20 opacity-80 shadow-lg' : 'z-10'
             }`}
             style={{
+                ...laneStyle(slot),
                 top: top + 1,
                 height,
                 transform: transform
@@ -182,6 +203,56 @@ const TimelineBlock: React.FC<BlockProps> = ({
     );
 };
 
+// A timed task that is not in the plan: its time is its own, so moving the
+// block moves the task.
+const TimedTaskBlock: React.FC<{
+    event: CalendarEvent;
+    top: number;
+    height: number;
+    slot?: { lane: number; lanes: number };
+}> = ({ event, top, height, slot }) => {
+    const { t } = useTranslation();
+    const { attributes, listeners, setNodeRef, transform, isDragging } =
+        useDraggable({
+            id: `timed:${event.task_uid}`,
+            data: { type: 'timed-task', event },
+        });
+    return (
+        <div
+            ref={setNodeRef}
+            className={`absolute flex cursor-grab items-start gap-2 overflow-hidden rounded-md bg-gray-100/80 px-2.5 text-[13px] text-gray-600 active:cursor-grabbing dark:bg-gray-800/50 dark:text-gray-300 ${
+                height < 40 ? 'items-center' : 'py-1.5'
+            } ${isDragging ? 'z-20 opacity-80 shadow-lg' : ''}`}
+            style={{
+                ...laneStyle(slot),
+                top: top + 1,
+                height,
+                transform: transform
+                    ? `translate3d(0, ${transform.y}px, 0)`
+                    : undefined,
+            }}
+            {...listeners}
+            {...attributes}
+            aria-label={t('dailyPlan.moveBlock', 'Move {{name}}', {
+                name: event.title,
+            })}
+            data-testid={`timed-${event.task_uid}`}
+        >
+            <span className="shrink-0 text-gray-500 dark:text-gray-400">
+                {formatMinute(event.start_minute as number)}
+            </span>
+            <button
+                type="button"
+                draggable={false}
+                onClick={() => openTaskPanel(event.task_uid as string)}
+                className="min-w-0 flex-1 truncate text-left underline-offset-2 hover:underline"
+            >
+                {event.title}
+            </button>
+        </div>
+    );
+};
+
 const DayTimeline: React.FC<DayTimelineProps> = ({
     items,
     events,
@@ -219,6 +290,24 @@ const DayTimeline: React.FC<DayTimelineProps> = ({
         (e) => !e.all_day && e.start_minute !== null
     );
     const allDay = events.filter((e) => e.all_day);
+    const slots = sideBySide([
+        ...timedEvents.map((event) => {
+            const start = event.start_minute as number;
+            return {
+                key: eventKey(event),
+                start,
+                end: Math.max(
+                    event.end_minute ?? start,
+                    start + MIN_BLOCK_MINUTES
+                ),
+            };
+        }),
+        ...scheduled.map((item) => ({
+            key: item.task_uid,
+            start: item.start_minute as number,
+            end: itemEnd(item),
+        })),
+    ]);
 
     return (
         <div className="flex flex-col gap-3">
@@ -226,6 +315,15 @@ const DayTimeline: React.FC<DayTimelineProps> = ({
                 <p className="text-xs text-gray-600 dark:text-gray-300">
                     {t('dailyPlan.allDay', 'All day')}:{' '}
                     {allDay.map((e) => e.title).join(', ')}
+                </p>
+            )}
+
+            {scheduled.length === 0 && (
+                <p className="ml-14 text-[13px] text-gray-600 dark:text-gray-300">
+                    {t(
+                        'dailyPlan.timelineEmpty',
+                        'Drag tasks here, or press + to drop them into the next free slot'
+                    )}
                 </p>
             )}
 
@@ -278,15 +376,31 @@ const DayTimeline: React.FC<DayTimelineProps> = ({
                             18,
                             (end - start) * PX_PER_MINUTE - 2
                         );
+                        const slot = slots.get(eventKey(event));
+                        if (event.task_uid) {
+                            return (
+                                <TimedTaskBlock
+                                    key={eventKey(event)}
+                                    event={event}
+                                    top={top}
+                                    height={blockHeight}
+                                    slot={slot}
+                                />
+                            );
+                        }
                         return (
                             <div
-                                key={`${event.feed_uid}-${event.uid}-${event.start}`}
-                                className={`absolute left-1 right-1 flex items-start gap-2 overflow-hidden rounded-md px-2.5 text-[13px] ${
+                                key={eventKey(event)}
+                                className={`absolute flex items-start gap-2 overflow-hidden rounded-md px-2.5 text-[13px] ${
                                     event.busy
                                         ? 'bg-gray-100/80 text-gray-600 dark:bg-gray-800/50 dark:text-gray-300'
                                         : 'bg-gray-50 text-gray-500 dark:bg-gray-800/20 dark:text-gray-400'
                                 } ${blockHeight < 40 ? 'items-center' : 'py-1.5'}`}
-                                style={{ top: top + 1, height: blockHeight }}
+                                style={{
+                                    ...laneStyle(slot),
+                                    top: top + 1,
+                                    height: blockHeight,
+                                }}
                             >
                                 <span className="shrink-0 text-gray-500 dark:text-gray-400">
                                     {formatMinute(event.start_minute as number)}
@@ -294,10 +408,13 @@ const DayTimeline: React.FC<DayTimelineProps> = ({
                                 <span className="min-w-0 flex-1 truncate">
                                     {event.title}
                                 </span>
-                                <CalendarBadge
-                                    name={event.feed_name}
-                                    color={event.color}
-                                />
+                                {/* Side by side, the title needs the room. */}
+                                {(slot?.lanes ?? 1) === 1 && (
+                                    <CalendarBadge
+                                        name={event.feed_name}
+                                        color={event.color}
+                                    />
+                                )}
                             </div>
                         );
                     })}
@@ -351,6 +468,7 @@ const DayTimeline: React.FC<DayTimelineProps> = ({
                                     SLOT_MINUTES,
                                     limit - (item.start_minute as number)
                                 )}
+                                slot={slots.get(item.task_uid)}
                                 onResize={(duration) =>
                                     onResize(item.task_uid, duration)
                                 }
@@ -359,15 +477,6 @@ const DayTimeline: React.FC<DayTimelineProps> = ({
                             />
                         );
                     })}
-
-                    {scheduled.length === 0 && (
-                        <div className="pointer-events-none absolute inset-x-6 top-1/3 rounded-lg bg-blue-50 px-4 py-6 dark:bg-blue-900/20 text-center text-sm text-blue-800 dark:text-blue-300">
-                            {t(
-                                'dailyPlan.timelineEmpty',
-                                'Drag tasks here, or press + to drop them into the next free slot'
-                            )}
-                        </div>
-                    )}
                 </div>
             </div>
 

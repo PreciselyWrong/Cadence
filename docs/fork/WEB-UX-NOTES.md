@@ -525,3 +525,9 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Problème** : impossible de supprimer un lien, d'en corriger le titre ou l'adresse, ou de le ranger dans un projet ; la rangée Tester, Garder, Plus tard, Jeter, Attach mêlait statuts et actions sans le dire.
 - **Décision** : un menu de statut et un menu ⋯ (Modifier, Créer une tâche, Supprimer), aussi en galerie ; une fiche pour le titre, l'adresse, le projet, la note et les étiquettes ; un vrai projet sur le lien, avec un filtre. « Attach » disparaît.
 - **Android à reprendre** : livré dans la même étape (1.12.3).
+
+### 2026-11-06 — Frise du jour : tâches à heure déplaçables, liste plus courte
+
+- **Problème** : une tâche à heure hors du plan restait figée dans la frise, son titre s'affichait deux fois, les blocs proches se recouvraient, l'aide passait sur les heures, et les suggestions automatiques noyaient le jour.
+- **Décision** : le bloc se déplace et change l'heure de la tâche ; ce qui se chevauche passe côte à côte ; l'aide au-dessus de la grille ; suggestions repliées derrière « Suggérées n », routines d'un autre jour exclues.
+- **Android à reprendre** : rien : Aujourd'hui n'y a ni frise déplaçable ni suggestions dans la liste.

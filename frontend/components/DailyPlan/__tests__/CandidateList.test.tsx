@@ -45,7 +45,6 @@ const renderList = (
     render(
         <MemoryRouter initialEntries={['/today']}>
             <CandidateList
-                {...extra}
                 candidates={list}
                 planned={new Map()}
                 filter="all"
@@ -58,9 +57,13 @@ const renderList = (
                 onReschedule={jest.fn()}
                 onDrop={jest.fn()}
                 onAddInbox={jest.fn()}
+                {...extra}
             />
         </MemoryRouter>
     );
+
+const openSuggestions = () =>
+    fireEvent.click(screen.getByRole('button', { name: /^Suggested \d+$/ }));
 
 describe('CandidateList', () => {
     it('labels cards due on another day "Due that day", not "Due today"', () => {
@@ -91,6 +94,7 @@ describe('CandidateList', () => {
 
     it('shows overdue, due today, in progress, then the rest', () => {
         renderList();
+        openSuggestions();
         const names = screen
             .getAllByTestId(/^candidate-open-/)
             .map((link) => link.textContent);
@@ -141,6 +145,7 @@ describe('CandidateList', () => {
             ...candidates,
             ranked: ['t-idea', 't-late', 't-started', 't-today'],
         });
+        openSuggestions();
         const names = screen
             .getAllByTestId(/^candidate-open-/)
             .map((link) => link.textContent);
@@ -172,6 +177,7 @@ describe('CandidateList', () => {
         );
         const all = { ...candidates, suggested, suggested_total: 30 };
         renderList(all);
+        openSuggestions();
         const loaded =
             all.tagged_today.length +
             all.overdue.length +
@@ -235,5 +241,31 @@ describe('CandidateList', () => {
         fireEvent.click(screen.getByRole('button', { name: /Browse/ }));
 
         expect(screen.getByRole('tab', { name: 'All' })).toBeInTheDocument();
+    });
+
+    describe('what the planner proposes on its own', () => {
+        const list = (): PlanCandidates => ({
+            ...candidates,
+            suggested: [
+                task('t-idea', 'Sort photos'),
+                { ...task('t-view', 'Chosen one'), in_view: true } as never,
+            ],
+        });
+
+        it('waits behind one line, while what the user chose stays', () => {
+            renderList(list());
+            expect(screen.queryByText('Sort photos')).toBeNull();
+            expect(screen.getByText('Chosen one')).toBeInTheDocument();
+
+            fireEvent.click(
+                screen.getByRole('button', { name: 'Suggested 1' })
+            );
+            expect(screen.getByText('Sort photos')).toBeInTheDocument();
+        });
+
+        it('shows at once under the Suggested filter', () => {
+            renderList(list(), { filter: 'suggested' });
+            expect(screen.getByText('Sort photos')).toBeInTheDocument();
+        });
     });
 });

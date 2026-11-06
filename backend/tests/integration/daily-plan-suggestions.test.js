@@ -151,6 +151,23 @@ describe('Plan my day suggestion settings', () => {
         });
     });
 
+    it('does not suggest a routine due on another day, it comes back by itself', async () => {
+        await makeTask({
+            name: 'Routine fictive',
+            recurrence_type: 'weekly',
+            due_date: new Date(Date.now() + 2 * DAY),
+        });
+        await makeTask({ name: 'Sans date' });
+        await makeTask({
+            name: 'Une fois',
+            due_date: new Date(Date.now() + 2 * DAY),
+        });
+        const body = await candidates();
+        const names = body.suggested.map((task) => task.name);
+        expect(names).toContain('Une fois');
+        expect(names).not.toContain('Routine fictive');
+    });
+
     describe('the cap', () => {
         // 60 undated tasks without priority, spread over six projects and
         // created round-robin, so no project is newer than another.

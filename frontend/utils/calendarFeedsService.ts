@@ -26,6 +26,8 @@ export interface CalendarEvent {
     end_minute: number | null;
     feed_uid: string;
     feed_name: string;
+    // A timed task drawn on the day: the page can move it, unlike an event.
+    task_uid?: string;
     color: string | null;
     // Set on events of a connected Google calendar (fork).
     source?: 'google';

@@ -284,6 +284,7 @@ const CandidateList: React.FC<CandidateListProps> = ({
     const { t } = useTranslation();
     const [showFilters, setShowFilters] = useState(false);
     const [choosing, setChoosing] = useState(false);
+    const [showSuggestions, setShowSuggestions] = useState(false);
     // Dropping a planned block back here takes it off the plan.
     const { setNodeRef, isOver } = useDroppable({ id: 'candidates' });
 
@@ -294,6 +295,16 @@ const CandidateList: React.FC<CandidateListProps> = ({
             (filter === 'all' || filter === entry.group) &&
             !planned.has(entry.task.uid as string)
     );
+
+    // What the planner proposes on its own waits behind one line: the day's
+    // tasks and what the user chose (In view, This week) stay in sight.
+    const isProposal = ({ task, group }: (typeof entries)[number]) =>
+        group === 'suggested' && !task.in_view && !isCurrentWeek(task.week_of);
+    const proposals = entries.filter(isProposal).length;
+    const folded =
+        filter === 'all' && !showSuggestions && proposals > 0
+            ? entries.filter((entry) => !isProposal(entry))
+            : entries;
 
     type Pill = { key: CandidateFilter; label: string; count: number };
     const pills: Pill[] = [
@@ -417,7 +428,7 @@ const CandidateList: React.FC<CandidateListProps> = ({
                         </p>
                     )}
                     <div className="-mx-1 flex flex-col">
-                        {entries.map(({ task, group }) => (
+                        {folded.map(({ task, group }) => (
                             <CandidateCard
                                 key={task.uid}
                                 task={task}
@@ -455,6 +466,22 @@ const CandidateList: React.FC<CandidateListProps> = ({
                             />
                         ))}
                     </div>
+                    {filter === 'all' && proposals > 0 && (
+                        <button
+                            type="button"
+                            aria-expanded={showSuggestions}
+                            onClick={() => setShowSuggestions((open) => !open)}
+                            className="flex min-h-[36px] items-center gap-1 self-start px-3 text-[13px] text-gray-600 hover:underline dark:text-gray-300"
+                        >
+                            <ChevronDownIcon
+                                className={`h-4 w-4 transition-transform ${
+                                    showSuggestions ? '' : '-rotate-90'
+                                }`}
+                                aria-hidden="true"
+                            />
+                            {t('dailyPlan.suggested', 'Suggested')} {proposals}
+                        </button>
+                    )}
                 </>
             )}
 

@@ -120,6 +120,7 @@ import {
     CalendarTask,
     dropToDueUpdate,
     taskIdOf,
+    slotId,
     taskToEvents,
 } from '../Calendar/taskEvents';
 import { useAiAllowed, useTrialLock } from '../../hooks/useTrialStatus';
@@ -143,6 +144,7 @@ import {
     tasksOnDay,
     intlLocale,
     feedEventsToBlocks,
+    droppedMinute,
 } from './planUtils';
 import SkeletonRows from '../Shared/SkeletonRows';
 
@@ -775,27 +777,31 @@ const TodayPage: React.FC = () => {
                     !plannedMap.has(task.uid as string) &&
                     !isTaskDone(task.status)
             )
-            .flatMap((task) => taskToEvents(task as unknown as CalendarTask))
-            .filter((block) => block.type === 'task' && !block.allDay)
-            .map<CalendarEvent>((block) => ({
-                uid: `task-${block.id}`,
-                title: block.title,
-                all_day: false,
-                busy: true,
-                start: block.start.toISOString(),
-                end: block.end.toISOString(),
-                start_minute: minuteOf(block.start),
-                end_minute:
-                    block.end.toDateString() !== block.start.toDateString()
-                        ? 24 * 60
-                        : Math.max(
-                              minuteOf(block.end),
-                              minuteOf(block.start) + 15
-                          ),
-                feed_uid: 'tasks',
-                feed_name: block.title,
-                color: block.color ?? null,
-            }))
+            .flatMap((task) =>
+                taskToEvents(task as unknown as CalendarTask)
+                    .filter((block) => block.type === 'task' && !block.allDay)
+                    .map<CalendarEvent>((block) => ({
+                        uid: `task-${block.id}`,
+                        title: block.title,
+                        all_day: false,
+                        busy: true,
+                        start: block.start.toISOString(),
+                        end: block.end.toISOString(),
+                        start_minute: minuteOf(block.start),
+                        end_minute:
+                            block.end.toDateString() !==
+                            block.start.toDateString()
+                                ? 24 * 60
+                                : Math.max(
+                                      minuteOf(block.end),
+                                      minuteOf(block.start) + 15
+                                  ),
+                        feed_uid: 'tasks',
+                        feed_name: block.title,
+                        task_uid: task.uid as string,
+                        color: block.color ?? null,
+                    }))
+            )
             // Tasks outside the visible hours stay in the earlier/later bars.
             .filter(
                 (e) =>
@@ -1280,6 +1286,30 @@ const TodayPage: React.FC = () => {
         setReloadToken((count) => count + 1);
     };
 
+    // A timed task dragged along the day keeps its length: its due time follows
+    // the block, as on the calendar.
+    const moveTimedTask = async (event: CalendarEvent, deltaY: number) => {
+        const task = dayTasks.find((t) => t.uid === event.task_uid);
+        const block =
+            task &&
+            taskToEvents(task as unknown as CalendarTask).find(
+                (b) => `task-${b.id}` === event.uid
+            );
+        if (!task || !block) return;
+        const start = event.start_minute as number;
+        const length = (event.end_minute as number) - start;
+        const minute = droppedMinute(
+            start,
+            deltaY,
+            length,
+            range,
+            PX_PER_MINUTE
+        );
+        if (minute !== start) {
+            await dropOnCalendar(task, slotId(minute), block);
+        }
+    };
+
     // A candidate dropped on an hour of the calendar becomes due then.
     // A planned task whose due date moves past this day leaves the day's plan,
     // with an undo that puts it back.
@@ -1595,9 +1625,15 @@ const TodayPage: React.FC = () => {
             | { type: 'candidate'; task: Task; duration: number }
             | { type: 'item'; item: DailyPlanItem }
             | { type: 'calendar-block'; event: CalendarBlock }
+            | { type: 'timed-task'; event: CalendarEvent }
             | undefined;
         if (!data || !over) return;
         const overId = String(over.id);
+
+        if (data.type === 'timed-task') {
+            if (overId === 'timeline') void moveTimedTask(data.event, delta.y);
+            return;
+        }
 
         if (overId === 'candidates') {
             if (data.type === 'item') removeItem(data.item.task_uid);

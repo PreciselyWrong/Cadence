@@ -231,6 +231,59 @@ export const findFreeSlot = (
 
 // Gaps of at least `minLength` minutes with nothing planned and no busy
 // meeting, used to hint where tasks can go.
+// Where a block lands once dragged by `deltaY` pixels at `pxPerMinute`: on the
+// grid, and whole within the visible hours.
+export const droppedMinute = (
+    start: number,
+    deltaY: number,
+    duration: number,
+    range: { start: number; end: number },
+    pxPerMinute: number
+): number => {
+    const moved =
+        Math.round((start + deltaY / pxPerMinute) / SLOT_MINUTES) *
+        SLOT_MINUTES;
+    return Math.max(range.start, Math.min(range.end - duration, moved));
+};
+
+export interface TimeSpan {
+    key: string;
+    start: number;
+    end: number;
+}
+
+// Where each span goes when spans overlap: the first free lane of its group.
+// A group is what overlaps, directly or through another span; all of it shares
+// one width, so that nothing covers anything else.
+export const sideBySide = (
+    spans: TimeSpan[]
+): Map<string, { lane: number; lanes: number }> => {
+    const layout = new Map<string, { lane: number; lanes: number }>();
+    const ordered = [...spans].sort(
+        (a, b) => a.start - b.start || b.end - a.end
+    );
+    let group: { key: string; lane: number }[] = [];
+    let laneEnds: number[] = [];
+    let groupEnd = -Infinity;
+    const close = () => {
+        group.forEach(({ key, lane }) =>
+            layout.set(key, { lane, lanes: laneEnds.length })
+        );
+        group = [];
+        laneEnds = [];
+    };
+    for (const span of ordered) {
+        if (span.start >= groupEnd) close();
+        const free = laneEnds.findIndex((end) => end <= span.start);
+        const lane = free === -1 ? laneEnds.length : free;
+        laneEnds[lane] = span.end;
+        group.push({ key: span.key, lane });
+        groupEnd = group.length === 1 ? span.end : Math.max(groupEnd, span.end);
+    }
+    close();
+    return layout;
+};
+
 export const freeGaps = (
     items: DailyPlanItem[],
     events: CalendarEvent[],

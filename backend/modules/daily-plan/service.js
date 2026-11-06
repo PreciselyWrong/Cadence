@@ -365,6 +365,12 @@ function parseSuggestedLimit(value) {
     return limit;
 }
 
+const isRoutineLater = (task, todayEnd) =>
+    Boolean(task.recurrence_type) &&
+    task.recurrence_type !== 'none' &&
+    Boolean(task.due_date) &&
+    new Date(task.due_date).getTime() > todayEnd;
+
 // The planner's left column: open tasks tagged #today plus the same lists
 // the classic Today page shows, deduplicated so a task appears in the first
 // group it belongs to, and ranked by the rules in ranking.js. The user's
@@ -459,7 +465,10 @@ async function getCandidates(
                     !task.defer_until ||
                     new Date(task.defer_until).getTime() <= now
             ),
-            ...metrics.suggested_tasks,
+            // A routine due on another day comes back by itself.
+            ...metrics.suggested_tasks.filter(
+                (task) => !isRoutineLater(task, todayEnd)
+            ),
             ...fromProjectDates.filter((task) =>
                 isSuggestible(task, suggestions, now)
             ),
