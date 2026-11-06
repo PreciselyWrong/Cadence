@@ -5546,18 +5546,21 @@
       "other": "Otro"
     },
     "status": {
-      "new": "Nuevo",
-      "tested": "Probado",
+      "new": "Por leer",
+      "tested": "Por probar",
       "kept": "Guardado",
       "parked": "Más tarde",
-      "dropped": "Descartado"
+      "dropped": "Archivado",
+      "to_evaluate": "Por evaluar"
     },
     "action": {
       "attach": "Vincular",
-      "tested": "Probar",
+      "tested": "Por probar",
       "kept": "Guardar",
       "parked": "Más tarde",
-      "dropped": "Descartar"
+      "dropped": "Archivar",
+      "to_evaluate": "Por evaluar",
+      "task": "Tarea"
     },
     "lastCommit": "actualizado {{date}}",
     "fetching": "Leyendo la página…",
@@ -5570,7 +5573,14 @@
     "saveError": "No se pudo guardar el enlace.",
     "loadError": "No se pudieron cargar los enlaces.",
     "empty": "Los enlaces que captures en la bandeja, una tarea o una nota aparecen aquí, con lo que la página dice de sí misma.",
-    "noMatch": "Ningún enlace coincide con estos filtros."
+    "noMatch": "Ningún enlace coincide con estos filtros.",
+    "noTheme": "Sin tema",
+    "taskCreated": "Tarea creada: {{name}}",
+    "import": {
+      "button": "Importar marcadores",
+      "result": "{{created}} añadidos, {{existing}} ya estaban",
+      "error": "No se pudieron importar los marcadores."
+    }
   },
   "dailyBrief": {
     "sectionName": {

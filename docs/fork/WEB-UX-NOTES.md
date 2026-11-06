@@ -501,3 +501,9 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Problème** : chaque dossier créait son propre projet, verrouillé en entier : impossible de suivre un fichier dans un projet existant, ni d'y garder du marketing à côté.
 - **Décision** : « Fichier TODO.md » dans « Informations du projet » (liste des fichiers, « Aucun » pour détacher, celui d'un autre projet grisé). Le menu « Ajouter à » du champ d'ajout rapide part sur « Cadence seulement » ; Now, Next et Ideas écrivent dans le fichier. Le verrou et le badge sont par tâche. Un projet lié se renomme.
 - **Android à reprendre** : fait dans la même étape, dans le menu du projet ; le champ d'ajout reste sans section (l'étiquette `code` décide).
+
+### 2026-11-06 — Liens : galerie par thèmes, statuts, import
+
+- **Problème** : les liens restaient noyés dans l'Inbox, et la liste passait avant les aperçus.
+- **Décision** : la galerie est la vue par défaut, groupée par thème (premier segment de la première étiquette). Statuts lisibles : À lire, À évaluer, À tester, Gardé, Plus tard, Archivé. « Tâche » crée une tâche en un clic, qui garde l'adresse. « Importer des favoris » lit un export Firefox dans le navigateur.
+- **Android à reprendre** : même galerie et mêmes statuts, livrés dans la même étape, avec « Liens » dans Listes. L'import reste sur le web : c'est un geste unique, depuis l'ordinateur où est le fichier.

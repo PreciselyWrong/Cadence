@@ -226,18 +226,21 @@
       "other": "Iné"
     },
     "status": {
-      "new": "Nový",
-      "tested": "Vyskúšaný",
+      "new": "Na prečítanie",
+      "tested": "Na vyskúšanie",
       "kept": "Ponechaný",
       "parked": "Neskôr",
-      "dropped": "Zahodený"
+      "dropped": "Archivované",
+      "to_evaluate": "Na zhodnotenie"
     },
     "action": {
       "attach": "Priradiť",
-      "tested": "Vyskúšať",
+      "tested": "Na vyskúšanie",
       "kept": "Ponechať",
       "parked": "Neskôr",
-      "dropped": "Zahodiť"
+      "dropped": "Archivovať",
+      "to_evaluate": "Na zhodnotenie",
+      "task": "Úloha"
     },
     "lastCommit": "aktualizované {{date}}",
     "fetching": "Čítanie stránky…",
@@ -250,7 +253,14 @@
     "saveError": "Odkaz sa nepodarilo uložiť.",
     "loadError": "Odkazy sa nepodarilo načítať.",
     "empty": "Odkazy, ktoré zachytíte v prijatých, v úlohe alebo v poznámke, sa zobrazia tu spolu s tým, čo o sebe hovorí stránka.",
-    "noMatch": "Žiadny odkaz nezodpovedá týmto filtrom."
+    "noMatch": "Žiadny odkaz nezodpovedá týmto filtrom.",
+    "noTheme": "Bez témy",
+    "taskCreated": "Úloha vytvorená: {{name}}",
+    "import": {
+      "button": "Importovať záložky",
+      "result": "Pridané: {{created}}, už boli: {{existing}}",
+      "error": "Záložky sa nepodarilo importovať."
+    }
   },
   "dailyBrief": {
     "sectionName": {

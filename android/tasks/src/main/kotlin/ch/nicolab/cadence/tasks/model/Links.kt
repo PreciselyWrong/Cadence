@@ -8,7 +8,7 @@ import java.time.LocalDate
 
 /** Ce que l'utilisateur a fait d'un lien ; valeur serveur dans [wire]. */
 enum class LinkStatus(val wire: String) {
-    NEW("new"), TESTED("tested"), KEPT("kept"), PARKED("parked"), DROPPED("dropped");
+    NEW("new"), TO_EVALUATE("to_evaluate"), TESTED("tested"), KEPT("kept"), PARKED("parked"), DROPPED("dropped");
 
     companion object {
         fun fromWire(value: String?): LinkStatus = entries.firstOrNull { it.wire == value } ?: NEW
@@ -82,7 +82,21 @@ data class LinkFilter(
     val tagUid: String? = null,
 )
 
+/** Un thème de la galerie : [name] est null pour les liens sans étiquette. */
+data class LinkTheme(val name: String?, val links: List<LinkItem>)
+
 object LinkLists {
+    /**
+     * Les liens par thème, le premier segment de leur première étiquette (`dev/outils` est dans `dev`) : thèmes par
+     * ordre alphabétique, ceux sans étiquette à la fin. L'ordre des liens de chaque thème ne change pas.
+     */
+    fun byTheme(links: List<LinkItem>, tagNames: Map<String, String>): List<LinkTheme> {
+        fun theme(link: LinkItem) = link.tagUids.mapNotNull { tagNames[it] }.minOrNull()?.substringBefore('/')
+        val (named, bare) = links.partition { theme(it) != null }
+        val groups = named.groupBy { theme(it) }.toSortedMap(compareBy { it }).map { (name, items) -> LinkTheme(name, items) }
+        return if (bare.isEmpty()) groups else groups + LinkTheme(null, bare)
+    }
+
     /** Liens qui passent le filtre, du plus récent au plus ancien. [tagNames] : uid → nom, pour la recherche. */
     fun filter(links: List<LinkItem>, filter: LinkFilter, tagNames: Map<String, String> = emptyMap()): List<LinkItem> {
         val words = fold(filter.query).split(Regex("\\s+")).filter { it.isNotEmpty() }

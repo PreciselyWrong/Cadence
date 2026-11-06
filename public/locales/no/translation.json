@@ -5551,18 +5551,21 @@
       "other": "Annet"
     },
     "status": {
-      "new": "Ny",
-      "tested": "Prøvd",
+      "new": "Å lese",
+      "tested": "Å teste",
       "kept": "Beholdt",
       "parked": "Senere",
-      "dropped": "Forkastet"
+      "dropped": "Arkivert",
+      "to_evaluate": "Å vurdere"
     },
     "action": {
       "attach": "Knytt til",
-      "tested": "Prøv",
+      "tested": "Å teste",
       "kept": "Behold",
       "parked": "Senere",
-      "dropped": "Forkast"
+      "dropped": "Arkiver",
+      "to_evaluate": "Å vurdere",
+      "task": "Oppgave"
     },
     "lastCommit": "oppdatert {{date}}",
     "fetching": "Leser siden…",
@@ -5575,7 +5578,14 @@
     "saveError": "Lenken kunne ikke lagres.",
     "loadError": "Lenkene kunne ikke lastes.",
     "empty": "Lenker du lagrer fra innboksen, en oppgave eller et notat vises her, med det siden sier om seg selv.",
-    "noMatch": "Ingen lenker samsvarer med disse filtrene."
+    "noMatch": "Ingen lenker samsvarer med disse filtrene.",
+    "noTheme": "Uten tema",
+    "taskCreated": "Oppgave opprettet: {{name}}",
+    "import": {
+      "button": "Importer bokmerker",
+      "result": "{{created}} lagt til, {{existing}} fantes fra før",
+      "error": "Bokmerkene kunne ikke importeres."
+    }
   },
   "dailyBrief": {
     "sectionName": {

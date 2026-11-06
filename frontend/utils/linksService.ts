@@ -12,6 +12,25 @@ export const fetchLinks = async (): Promise<Link[]> => {
     return data.links;
 };
 
+export interface ImportResult {
+    created: number;
+    existing: number;
+    invalid: number;
+}
+
+export const importLinks = async (
+    items: { url: string; title: string; tags: string[] }[]
+): Promise<ImportResult> => {
+    const response = await fetch(getApiPath('links/import'), {
+        method: 'POST',
+        credentials: 'include',
+        headers: await getPostHeadersWithCsrf(),
+        body: JSON.stringify({ items }),
+    });
+    await handleAuthResponse(response, 'Failed to import the links.');
+    return response.json();
+};
+
 export interface LinkChanges {
     note?: string | null;
     status?: LinkStatus;

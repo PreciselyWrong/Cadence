@@ -5559,18 +5559,21 @@
       "other": "Altro"
     },
     "status": {
-      "new": "Nuovo",
-      "tested": "Provato",
+      "new": "Da leggere",
+      "tested": "Da provare",
       "kept": "Tenuto",
       "parked": "Più tardi",
-      "dropped": "Scartato"
+      "dropped": "Archiviato",
+      "to_evaluate": "Da valutare"
     },
     "action": {
       "attach": "Collega",
-      "tested": "Prova",
+      "tested": "Da provare",
       "kept": "Tieni",
       "parked": "Più tardi",
-      "dropped": "Scarta"
+      "dropped": "Archivia",
+      "to_evaluate": "Da valutare",
+      "task": "Attività"
     },
     "lastCommit": "aggiornato {{date}}",
     "fetching": "Lettura della pagina…",
@@ -5583,7 +5586,14 @@
     "saveError": "Impossibile salvare il link.",
     "loadError": "Impossibile caricare i link.",
     "empty": "I link salvati dalla posta in arrivo, da un'attività o da una nota compaiono qui, con quello che la pagina dice di sé.",
-    "noMatch": "Nessun link corrisponde a questi filtri."
+    "noMatch": "Nessun link corrisponde a questi filtri.",
+    "noTheme": "Senza tema",
+    "taskCreated": "Attività creata: {{name}}",
+    "import": {
+      "button": "Importa segnalibri",
+      "result": "{{created}} aggiunti, {{existing}} già presenti",
+      "error": "Impossibile importare i segnalibri."
+    }
   },
   "dailyBrief": {
     "sectionName": {

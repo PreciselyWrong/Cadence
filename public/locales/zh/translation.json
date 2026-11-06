@@ -5546,18 +5546,21 @@
       "other": "其他"
     },
     "status": {
-      "new": "新",
-      "tested": "已试用",
+      "new": "待阅读",
+      "tested": "待试用",
       "kept": "已保留",
       "parked": "稍后",
-      "dropped": "已放弃"
+      "dropped": "已归档",
+      "to_evaluate": "待评估"
     },
     "action": {
       "attach": "归入项目",
-      "tested": "试用",
+      "tested": "待试用",
       "kept": "保留",
       "parked": "稍后",
-      "dropped": "放弃"
+      "dropped": "归档",
+      "to_evaluate": "待评估",
+      "task": "任务"
     },
     "lastCommit": "更新于 {{date}}",
     "fetching": "正在读取页面…",
@@ -5570,7 +5573,14 @@
     "saveError": "无法保存链接。",
     "loadError": "无法加载链接。",
     "empty": "从收件箱、任务或笔记中保存的链接会显示在这里，并附带页面自身的描述。",
-    "noMatch": "没有符合这些筛选条件的链接。"
+    "noMatch": "没有符合这些筛选条件的链接。",
+    "noTheme": "无主题",
+    "taskCreated": "已创建任务：{{name}}",
+    "import": {
+      "button": "导入书签",
+      "result": "已添加 {{created}} 个，{{existing}} 个已存在",
+      "error": "无法导入书签。"
+    }
   },
   "dailyBrief": {
     "sectionName": {

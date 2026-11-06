@@ -1,6 +1,13 @@
 'use strict';
 
-const LINK_STATUSES = ['new', 'kept', 'tested', 'parked', 'dropped'];
+const LINK_STATUSES = [
+    'new',
+    'to_evaluate',
+    'kept',
+    'tested',
+    'parked',
+    'dropped',
+];
 const LINK_KINDS = ['repo', 'article', 'video', 'tool', 'other'];
 const LINK_SOURCES = ['inbox_item', 'task', 'note'];
 

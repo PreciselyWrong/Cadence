@@ -22,6 +22,14 @@ router.get(
     '/links',
     handle((req) => links.list(req.currentUser.id, req.query))
 );
+router.post(
+    '/links',
+    handle((req) => links.create(req.currentUser.id, req.body))
+);
+router.post(
+    '/links/import',
+    handle((req) => links.importLinks(req.currentUser.id, req.body?.items))
+);
 router.get(
     '/links/:uid',
     handle(async (req) => ({

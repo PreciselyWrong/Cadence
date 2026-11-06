@@ -5546,18 +5546,21 @@
       "other": "Muu"
     },
     "status": {
-      "new": "Uusi",
-      "tested": "Kokeiltu",
+      "new": "Luettavana",
+      "tested": "Kokeiltavana",
       "kept": "Säilytetty",
       "parked": "Myöhemmin",
-      "dropped": "Hylätty"
+      "dropped": "Arkistoitu",
+      "to_evaluate": "Arvioitavana"
     },
     "action": {
       "attach": "Liitä",
-      "tested": "Kokeile",
+      "tested": "Kokeiltavaksi",
       "kept": "Säilytä",
       "parked": "Myöhemmin",
-      "dropped": "Hylkää"
+      "dropped": "Arkistoi",
+      "to_evaluate": "Arvioitavaksi",
+      "task": "Tehtävä"
     },
     "lastCommit": "päivitetty {{date}}",
     "fetching": "Luetaan sivua…",
@@ -5570,7 +5573,14 @@
     "saveError": "Linkkiä ei voitu tallentaa.",
     "loadError": "Linkkejä ei voitu ladata.",
     "empty": "Saapuneista, tehtävästä tai muistiinpanosta tallennetut linkit näkyvät tässä sivun omine kuvauksineen.",
-    "noMatch": "Yksikään linkki ei vastaa näitä suodattimia."
+    "noMatch": "Yksikään linkki ei vastaa näitä suodattimia.",
+    "noTheme": "Ei teemaa",
+    "taskCreated": "Tehtävä luotu: {{name}}",
+    "import": {
+      "button": "Tuo kirjanmerkit",
+      "result": "{{created}} lisätty, {{existing}} oli jo",
+      "error": "Kirjanmerkkejä ei voitu tuoda."
+    }
   },
   "dailyBrief": {
     "sectionName": {

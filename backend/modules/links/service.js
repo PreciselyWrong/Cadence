@@ -3,7 +3,7 @@
 const { Tag } = require('../../models');
 const linksRepository = require('./repository');
 const { LINK_STATUSES } = require('./core/constants');
-const { domainOf } = require('./core/urls');
+const { classifyKind, domainOf, normalizeUrl } = require('./core/urls');
 const { isDay, laterReviewDay } = require('./core/reviewDate');
 const { validateTagName } = require('../tags/tagsService');
 const { NotFoundError, ValidationError } = require('../../shared/errors');
@@ -82,6 +82,68 @@ async function resolveTags(names, userId) {
     return tags;
 }
 
+const MAX_TITLE = 500;
+const IMPORT_MAX = 500;
+
+// A link given directly, without a text to find it in (import, add-on, agents).
+// The same page twice is one link: what it already holds stays.
+async function addOne(userId, item = {}) {
+    const url = typeof item.url === 'string' ? normalizeUrl(item.url) : null;
+    if (!url) throw new ValidationError('url must be an http(s) address');
+    const existing = await linksRepository.findByUrl(userId, url);
+    if (existing) return { link: existing, created: false };
+    const status = item.status ?? 'new';
+    if (!LINK_STATUSES.includes(status)) {
+        throw new ValidationError(
+            `status must be one of ${LINK_STATUSES.join(', ')}`
+        );
+    }
+    const title =
+        typeof item.title === 'string'
+            ? item.title.trim().slice(0, MAX_TITLE)
+            : '';
+    const note = typeof item.note === 'string' ? item.note.trim() : '';
+    const tags = item.tags?.length ? await resolveTags(item.tags, userId) : [];
+    const link = await linksRepository.create({
+        user_id: userId,
+        url,
+        kind: classifyKind(url),
+        title: title || null,
+        note: note.slice(0, MAX_NOTE) || null,
+        status,
+    });
+    if (tags.length) await linksRepository.setTags(link, tags);
+    return { link, created: true };
+}
+
+async function create(userId, body) {
+    const { link, created } = await addOne(userId, body);
+    if (created) require('./jobs').enqueueFetch(link.id);
+    const saved = await linksRepository.findByUid(userId, link.uid);
+    return { link: serializeLink(saved), created };
+}
+
+// Bookmarks read by the client, by batches. One bad entry never stops the rest.
+async function importLinks(userId, items) {
+    if (!Array.isArray(items) || items.length > IMPORT_MAX) {
+        throw new ValidationError(
+            `items must be a list of at most ${IMPORT_MAX} bookmarks`
+        );
+    }
+    const result = { created: 0, existing: 0, invalid: 0 };
+    for (const item of items) {
+        try {
+            const { link, created } = await addOne(userId, item);
+            result[created ? 'created' : 'existing'] += 1;
+            if (created) require('./jobs').enqueueFetch(link.id);
+        } catch (error) {
+            if (!(error instanceof ValidationError)) throw error;
+            result.invalid += 1;
+        }
+    }
+    return result;
+}
+
 // The user's part of a link: note, status and tags.
 async function update(userId, uid, body = {}) {
     const link = await linksRepository.findByUid(userId, uid);
@@ -125,4 +187,4 @@ async function update(userId, uid, body = {}) {
     return get(userId, uid);
 }
 
-module.exports = { list, get, update, serializeLink };
+module.exports = { list, get, create, importLinks, update, serializeLink };

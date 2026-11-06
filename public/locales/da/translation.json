@@ -5546,18 +5546,21 @@
       "other": "Andet"
     },
     "status": {
-      "new": "Ny",
-      "tested": "Prøvet",
+      "new": "At læse",
+      "tested": "At teste",
       "kept": "Gemt",
       "parked": "Senere",
-      "dropped": "Kasseret"
+      "dropped": "Arkiveret",
+      "to_evaluate": "At vurdere"
     },
     "action": {
       "attach": "Tilknyt",
-      "tested": "Prøv",
+      "tested": "At teste",
       "kept": "Behold",
       "parked": "Senere",
-      "dropped": "Kassér"
+      "dropped": "Arkivér",
+      "to_evaluate": "At vurdere",
+      "task": "Opgave"
     },
     "lastCommit": "opdateret {{date}}",
     "fetching": "Læser siden…",
@@ -5570,7 +5573,14 @@
     "saveError": "Linket kunne ikke gemmes.",
     "loadError": "Linkene kunne ikke indlæses.",
     "empty": "Links, du gemmer fra indbakken, en opgave eller en note, vises her sammen med det, siden selv siger.",
-    "noMatch": "Ingen links matcher disse filtre."
+    "noMatch": "Ingen links matcher disse filtre.",
+    "noTheme": "Uden tema",
+    "taskCreated": "Opgave oprettet: {{name}}",
+    "import": {
+      "button": "Importér bogmærker",
+      "result": "{{created}} tilføjet, {{existing}} fandtes allerede",
+      "error": "Bogmærkerne kunne ikke importeres."
+    }
   },
   "dailyBrief": {
     "sectionName": {

@@ -5602,18 +5602,21 @@
       "other": "Drugo"
     },
     "status": {
-      "new": "Novo",
-      "tested": "Preizkušeno",
+      "new": "Za branje",
+      "tested": "Za preizkus",
       "kept": "Shranjeno",
       "parked": "Pozneje",
-      "dropped": "Zavrženo"
+      "dropped": "Arhivirano",
+      "to_evaluate": "Za oceno"
     },
     "action": {
       "attach": "Pripni",
-      "tested": "Preizkusi",
+      "tested": "Za preizkus",
       "kept": "Shrani",
       "parked": "Pozneje",
-      "dropped": "Zavrzi"
+      "dropped": "Arhiviraj",
+      "to_evaluate": "Za oceno",
+      "task": "Naloga"
     },
     "lastCommit": "posodobljeno {{date}}",
     "fetching": "Branje strani…",
@@ -5626,7 +5629,14 @@
     "saveError": "Povezave ni bilo mogoče shraniti.",
     "loadError": "Povezav ni bilo mogoče naložiti.",
     "empty": "Povezave, ki jih zajamete v pladnju, nalogi ali zapisu, se prikažejo tukaj, skupaj z opisom strani.",
-    "noMatch": "Nobena povezava ne ustreza tem filtrom."
+    "noMatch": "Nobena povezava ne ustreza tem filtrom.",
+    "noTheme": "Brez teme",
+    "taskCreated": "Naloga ustvarjena: {{name}}",
+    "import": {
+      "button": "Uvozi zaznamke",
+      "result": "Dodano: {{created}}, že obstaja: {{existing}}",
+      "error": "Zaznamkov ni bilo mogoče uvoziti."
+    }
   },
   "dailyBrief": {
     "sectionName": {

@@ -182,6 +182,7 @@ private fun deletionMessage(context: Context, deletion: PendingDeletion): String
     DeletionKind.Link -> context.getString(
         when (deletion.decision) {
             LinkDecision.KEEP -> R.string.links_decided_kept
+            LinkDecision.TASK -> R.string.links_decided_task
             LinkDecision.TEST -> R.string.links_decided_test
             LinkDecision.ATTACH -> R.string.links_decided_attach
             LinkDecision.LATER -> R.string.links_decided_later

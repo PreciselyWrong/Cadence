@@ -5562,18 +5562,21 @@
       "other": "Autre"
     },
     "status": {
-      "new": "Nouveau",
-      "tested": "Testé",
+      "new": "À lire",
+      "tested": "À tester",
       "kept": "Gardé",
       "parked": "Plus tard",
-      "dropped": "Jeté"
+      "dropped": "Archivé",
+      "to_evaluate": "À évaluer"
     },
     "action": {
       "attach": "Rattacher",
-      "tested": "Tester",
+      "tested": "À tester",
       "kept": "Garder",
       "parked": "Plus tard",
-      "dropped": "Jeter"
+      "dropped": "Archiver",
+      "to_evaluate": "À évaluer",
+      "task": "Tâche"
     },
     "lastCommit": "mis à jour {{date}}",
     "fetching": "Lecture de la page…",
@@ -5586,7 +5589,14 @@
     "saveError": "Impossible d'enregistrer le lien.",
     "loadError": "Impossible de charger les liens.",
     "empty": "Les liens notés dans la boîte de réception, une tâche ou une note arrivent ici, avec ce que la page dit d'elle-même.",
-    "noMatch": "Aucun lien ne correspond à ces filtres."
+    "noMatch": "Aucun lien ne correspond à ces filtres.",
+    "noTheme": "Sans thème",
+    "taskCreated": "Tâche créée : {{name}}",
+    "import": {
+      "button": "Importer des favoris",
+      "result": "{{created}} ajoutés, {{existing}} déjà là",
+      "error": "Les favoris n'ont pas pu être importés."
+    }
   },
   "dailyBrief": {
     "sectionName": {

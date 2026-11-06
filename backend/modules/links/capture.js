@@ -81,7 +81,20 @@ async function captureFrom({ userId, type, uid, texts }) {
             if (!isUniqueViolation(error)) throw error;
         }
     }
+    if (type === 'inbox_item' && normalized.length === 1) {
+        await settleInboxItem(userId, uid);
+    }
     return touched;
+}
+
+// A shared address is a link, not an idea to sort: it goes straight to the
+// Links page. Only an item still waiting moves.
+async function settleInboxItem(userId, uid) {
+    const { InboxItem } = require('../../models');
+    await InboxItem.update(
+        { status: 'processed' },
+        { where: { user_id: userId, uid, status: 'added' } }
+    );
 }
 
 function snapshot(model, row) {

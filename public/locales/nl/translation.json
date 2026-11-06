@@ -5546,18 +5546,21 @@
       "other": "Overig"
     },
     "status": {
-      "new": "Nieuw",
-      "tested": "Uitgeprobeerd",
+      "new": "Te lezen",
+      "tested": "Uit te proberen",
       "kept": "Bewaard",
       "parked": "Later",
-      "dropped": "Weggegooid"
+      "dropped": "Gearchiveerd",
+      "to_evaluate": "Te beoordelen"
     },
     "action": {
       "attach": "Koppelen",
-      "tested": "Proberen",
+      "tested": "Uitproberen",
       "kept": "Bewaren",
       "parked": "Later",
-      "dropped": "Weggooien"
+      "dropped": "Archiveren",
+      "to_evaluate": "Te beoordelen",
+      "task": "Taak"
     },
     "lastCommit": "bijgewerkt {{date}}",
     "fetching": "Pagina wordt gelezen…",
@@ -5570,7 +5573,14 @@
     "saveError": "De link kon niet worden opgeslagen.",
     "loadError": "De links konden niet worden geladen.",
     "empty": "Links die je vastlegt in de inbox, een taak of een notitie verschijnen hier, met wat de pagina over zichzelf zegt.",
-    "noMatch": "Geen link komt overeen met deze filters."
+    "noMatch": "Geen link komt overeen met deze filters.",
+    "noTheme": "Geen thema",
+    "taskCreated": "Taak gemaakt: {{name}}",
+    "import": {
+      "button": "Bladwijzers importeren",
+      "result": "{{created}} toegevoegd, {{existing}} bestonden al",
+      "error": "De bladwijzers konden niet worden geïmporteerd."
+    }
   },
   "dailyBrief": {
     "sectionName": {

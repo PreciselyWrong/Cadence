@@ -3,10 +3,10 @@ package ch.nicolab.cadence.tasks.model
 import java.time.LocalDate
 
 /**
- * Décisions sur un lien : garder, tester, rattacher à un projet, repousser, jeter. L'Inbox les offre toutes
- * ([LinkTriage.inboxDecisions]), la galerie des découvertes toutes sauf garder ([LinkTriage.GALLERY_DECISIONS]).
+ * Décisions sur un lien : garder, en faire une tâche, tester, rattacher à un projet, repousser, archiver. L'Inbox offre
+ * [LinkTriage.inboxDecisions], la galerie [LinkTriage.GALLERY_DECISIONS].
  */
-enum class LinkDecision { KEEP, TEST, ATTACH, LATER, DROP }
+enum class LinkDecision { KEEP, TASK, TEST, ATTACH, LATER, DROP }
 
 /** Une écriture locale d'une décision ; chacune part par la file d'envoi, hors ligne compris. */
 sealed interface TriageStep {
@@ -49,8 +49,8 @@ object LinkTriage {
     /** « À tester » peut rester sans projet ; « Rattacher » exige d'en choisir un. */
     fun allowsNoProject(decision: LinkDecision): Boolean = decision == LinkDecision.TEST
 
-    /** Pastilles d'une carte de la galerie : Tester, Rattacher, Reporter, Jeter. */
-    val GALLERY_DECISIONS = listOf(LinkDecision.TEST, LinkDecision.ATTACH, LinkDecision.LATER, LinkDecision.DROP)
+    /** Pastilles d'une carte de la galerie : Tâche, À tester, Rattacher, Reporter, Archiver. */
+    val GALLERY_DECISIONS = listOf(LinkDecision.TASK, LinkDecision.TEST, LinkDecision.ATTACH, LinkDecision.LATER, LinkDecision.DROP)
 
     /**
      * Ce que fait chaque décision. Le lien change toujours de statut ; l'idée [entryUid] qui le porte, s'il y en a
@@ -69,6 +69,10 @@ object LinkTriage {
     ): List<TriageStep> = buildList {
         when (decision) {
             LinkDecision.KEEP -> add(TriageStep.SetStatus(link.uid, LinkStatus.KEPT))
+            LinkDecision.TASK -> {
+                add(TriageStep.CreateTask(TaskDraft(name = link.displayTitle, note = testTaskNote(link))))
+                add(TriageStep.SetStatus(link.uid, LinkStatus.KEPT))
+            }
             LinkDecision.TEST -> {
                 add(TriageStep.CreateTask(TaskDraft(name = testTaskName, note = testTaskNote(link), projectUid = projectUid)))
                 add(TriageStep.SetStatus(link.uid, LinkStatus.TESTED))

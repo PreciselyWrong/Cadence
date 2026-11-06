@@ -11,12 +11,15 @@ import {
     LINK_STATUSES,
     LinkFilter,
     tagsOf,
+    linksByTheme,
 } from '../../utils/linkFilters';
 import { useToast } from '../Shared/ToastContext';
 import GalleryCard from '../Shared/GalleryCard';
 import { ViewTypeSwitch } from '../Task/TaskViewBody';
 import { useViewType } from '../../hooks/useViewType';
-import { attachLinkToProject } from '../../utils/linkTriage';
+import { attachLinkToProject, linkToTask } from '../../utils/linkTriage';
+import { inBatches, parseBookmarks } from '../../utils/bookmarksImport';
+import { importLinks } from '../../utils/linksService';
 import { Link } from '../../entities/Link';
 import LinkCard from './LinkCard';
 
@@ -39,18 +42,19 @@ const SELECT =
 // Every saved link in one place: search, a few filters, cards.
 const LinksPage: React.FC = () => {
     const { t } = useTranslation();
-    const { showErrorToast } = useToast();
+    const { showErrorToast, showSuccessToast } = useToast();
     useLinksRefresh();
     const links = useLinksStore((s) => s.links);
     const loaded = useLinksStore((s) => s.loaded);
     const loadError = useLinksStore((s) => s.error);
     const save = useLinksStore((s) => s.save);
+    const load = useLinksStore((s) => s.load);
     const tagsStore = useStore((s) => s.tagsStore);
     const projectsStore = useStore((s) => s.projectsStore);
     const [filter, setFilterState] = useState<LinkFilter>(readFilter);
     // List (cards with actions) or Gallery (pictures), remembered in
     // ui_settings.viewTypes.links.
-    const { viewType, setViewType } = useViewType('links');
+    const { viewType, setViewType } = useViewType('links', 'gallery');
     const gallery = viewType === 'gallery';
 
     useEffect(() => {
@@ -78,12 +82,50 @@ const LinksPage: React.FC = () => {
 
     const shown = useMemo(() => filterLinks(links, filter), [links, filter]);
     const domains = useMemo(() => domainsOf(links), [links]);
+    const themes = useMemo(() => linksByTheme(shown), [shown]);
     const tags = useMemo(() => tagsOf(links), [links]);
 
     const change = (uid: string) => (changes: Parameters<typeof save>[1]) =>
         save(uid, changes).catch(() =>
             showErrorToast(t('links.saveError', 'Could not save the link.'))
         );
+
+    const toTask = (link: Link) => () =>
+        linkToTask(link, save).then(
+            (task) =>
+                showSuccessToast(
+                    t('links.taskCreated', 'Task created: {{name}}', {
+                        name: task.name,
+                    })
+                ),
+            () =>
+                showErrorToast(t('links.saveError', 'Could not save the link.'))
+        );
+
+    const importFile = async (file: File) => {
+        const bookmarks = parseBookmarks(await file.text());
+        const total = { created: 0, existing: 0, invalid: 0 };
+        try {
+            for (const batch of inBatches(bookmarks)) {
+                const result = await importLinks(batch);
+                total.created += result.created;
+                total.existing += result.existing;
+                total.invalid += result.invalid;
+            }
+            showSuccessToast(
+                t(
+                    'links.import.result',
+                    '{{created}} added, {{existing}} already there',
+                    total
+                )
+            );
+            void load(true);
+        } catch {
+            showErrorToast(
+                t('links.import.error', 'The bookmarks could not be imported.')
+            );
+        }
+    };
 
     const attach = (link: Link) => (projectUid: string) =>
         attachLinkToProject(link, projectUid, save).catch(() =>
@@ -101,11 +143,12 @@ const LinksPage: React.FC = () => {
 
     const statusLabel = (status: string) =>
         ({
-            new: t('links.status.new', 'New'),
-            tested: t('links.status.tested', 'Tried'),
+            new: t('links.status.new', 'To read'),
+            to_evaluate: t('links.status.to_evaluate', 'To evaluate'),
+            tested: t('links.status.tested', 'To try'),
             kept: t('links.status.kept', 'Kept'),
             parked: t('links.status.parked', 'Later'),
-            dropped: t('links.status.dropped', 'Dropped'),
+            dropped: t('links.status.dropped', 'Archived'),
         })[status] ?? status;
 
     return (
@@ -123,13 +166,28 @@ const LinksPage: React.FC = () => {
                         </p>
                     )}
                 </div>
-                {links.length > 0 && (
-                    <ViewTypeSwitch
-                        value={gallery ? 'gallery' : 'list'}
-                        onChange={setViewType}
-                        keys={['list', 'gallery']}
-                    />
-                )}
+                <div className="flex items-center gap-2">
+                    <label className="cursor-pointer whitespace-nowrap text-[13px] text-gray-600 underline underline-offset-2 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
+                        {t('links.import.button', 'Import bookmarks')}
+                        <input
+                            type="file"
+                            accept=".html,text/html"
+                            className="sr-only"
+                            onChange={(event) => {
+                                const file = event.target.files?.[0];
+                                event.target.value = '';
+                                if (file) void importFile(file);
+                            }}
+                        />
+                    </label>
+                    {links.length > 0 && (
+                        <ViewTypeSwitch
+                            value={gallery ? 'gallery' : 'list'}
+                            onChange={setViewType}
+                            keys={['list', 'gallery']}
+                        />
+                    )}
+                </div>
             </header>
 
             <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
@@ -267,17 +325,33 @@ const LinksPage: React.FC = () => {
             )}
 
             {gallery ? (
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
-                    {shown.map((link) => (
-                        <GalleryCard
-                            key={link.uid}
-                            title={link.title || link.domain || link.url}
-                            image={link.image_url}
-                            meta={link.site_name || link.domain}
-                            tags={link.tags}
-                            href={link.url}
-                            dimmed={link.status === 'dropped'}
-                        />
+                <div className="space-y-6">
+                    {themes.map((theme) => (
+                        <section key={theme.name ?? ''}>
+                            {themes.length > 1 && (
+                                <h2 className="mb-2 text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                    {theme.name ??
+                                        t('links.noTheme', 'No theme')}
+                                </h2>
+                            )}
+                            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
+                                {theme.links.map((link) => (
+                                    <GalleryCard
+                                        key={link.uid}
+                                        title={
+                                            link.title ||
+                                            link.domain ||
+                                            link.url
+                                        }
+                                        image={link.image_url}
+                                        meta={link.site_name || link.domain}
+                                        tags={link.tags}
+                                        href={link.url}
+                                        dimmed={link.status === 'dropped'}
+                                    />
+                                ))}
+                            </div>
+                        </section>
                     ))}
                 </div>
             ) : (
@@ -290,6 +364,7 @@ const LinksPage: React.FC = () => {
                             availableTags={tagsStore.tags}
                             projects={projectsStore.projects}
                             onAttach={attach(link)}
+                            onTask={toTask(link)}
                         />
                     ))}
                 </div>

@@ -1,5 +1,11 @@
 export type LinkKind = 'repo' | 'article' | 'video' | 'tool' | 'other';
-export type LinkStatus = 'new' | 'kept' | 'tested' | 'parked' | 'dropped';
+export type LinkStatus =
+    | 'new'
+    | 'to_evaluate'
+    | 'kept'
+    | 'tested'
+    | 'parked'
+    | 'dropped';
 export type LinkSourceType = 'inbox_item' | 'task' | 'note';
 
 // A link found by the server in an inbox item, a task or a note

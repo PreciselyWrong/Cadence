@@ -1,6 +1,6 @@
 # Links
 
-Every web link written in an inbox item, a task (name or note) or a note becomes a **link**: one row per page and user, with what the page says about itself, the user's own note, a status and tags. The **Links** page (web: sidebar and Ctrl+K; Android: link button in the Inbox header) lists them all; inbox cards show the link, its description and its note.
+Every web link written in an inbox item, a task (name or note) or a note becomes a **link**: one row per page and user, with what the page says about itself, the user's own note, a status and tags. The **Links** page (web: sidebar and Ctrl+K; Android: Listes in Tasks, or the link button in the Inbox header) lists them all; inbox cards show the link, its description and its note.
 
 Nothing here uses AI. Finding links, reading page metadata and classifying them is plain code; an assistant (Hermes, through MCP) may later propose tags, notes and statuses with the same tools as the user.
 
@@ -11,6 +11,18 @@ Nothing here uses AI. Finding links, reading page metadata and classifying them 
 - The URL is normalized (`core/urls.normalizeUrl`): lowercase host, no default port, no fragment, no tracking parameters (`utm_*`, `fbclid`, `gclid`, …), no trailing slash except the root one. The same page saved twice is one link.
 - **Note at capture**: a new link found in an inbox item that holds only that link takes the rest of the text as its note (`https://github.com/x/y - CLI for invoices` → note `CLI for invoices`). Links from tasks and notes start without a note.
 - **Source**: the link remembers where it was first found (`source_type` `inbox_item` | `task` | `note`, `source_uid`). When an inbox link reappears in a task or a note (typically after converting the idea), the source moves there.
+
+- **A shared address goes straight to Links**: an inbox item that holds a single link is marked `processed` as soon as the link is found, on every capture path (Android share, desktop, web, Telegram). The link keeps the rest of the text as its note.
+
+## Adding a link directly
+
+`POST /api/links` `{ url, title?, note?, status?, tags? }` answers `{ link, created }`: the same page twice is one link and what it holds stays. `POST /api/links/import` `{ items: [...] }`, at most 500 per call, answers `{ created, existing, invalid }`; one bad entry never stops the rest. New links go through the same reading queue, one second apart, so 800 bookmarks take about a quarter of an hour.
+
+On the web, **Import bookmarks** on the Links page reads a Firefox export (`bookmarks.html`, Library › Import and Backup › Export) in the browser, `frontend/utils/bookmarksImport.ts`: its tags, plus the folder it sits in as a tag, skipping the browser's own folders. It sends batches of 200.
+
+## Themes
+
+A theme is the first segment of a tag (`dev/tools` is in `dev`). The gallery groups links by the theme of their first tag, with the others under "No theme" at the end; it is the default view on both clients. A link in the gallery or list becomes a task in one tap: the task is named after the link and keeps its address (and note) as its note, and the link counts as kept.
 
 ## Metadata
 
@@ -30,7 +42,7 @@ A background queue (`backend/modules/links/jobs.js`) fetches each new link once,
 |---|---|---|
 | `url`, `title`, `description`, `image_url`, `site_name`, `kind`, `github_stars`, `github_language`, `github_last_commit`, `readme_excerpt`, `fetch_status`, `fetched_at`, `source_type`, `source_uid` | server | read-only for clients |
 | `note` | user | free text, empty clears it |
-| `status` | user | `new`, `tested` (Try), `kept` (Keep), `parked` (Later), `dropped` (Drop); pressing the active one goes back to `new` |
+| `status` | user | `new` (À lire), `to_evaluate` (À évaluer), `tested` (À tester), `kept` (Gardé), `parked` (Plus tard), `dropped` (Archivé); pressing the active one goes back to `new` |
 | `review_at` | user | day to look at a parked link again (`YYYY-MM-DD`, or none); a `parked` status without `review_at` sets today + 30 days (server day). Never a due date |
 | tags | user | the existing tags (`links_tags`), nested paths allowed |
 
@@ -53,7 +65,7 @@ Entity `link` (schema 4): fields `note`, `status`, `review_at`; server fields li
 ## Clients
 
 - **Web**: `/links` (`frontend/components/Links/`): search, kind, status (default: not dropped), tag, site and sort filters, remembered per browser; cards with title, two lines of description, domain, kind badge, GitHub stats, README start for repositories, note (click to write, Enter saves), tags, status buttons, Attach to a project (see Web inbox triage), open, go to the source. A **List / Gallery** switch in the header (remembered for the account in `ui_settings.viewTypes.links`) turns the page into a gallery: picture cards (two to four columns) with the page image (`image_url`, else the site's initial), title, site and up to three tags; a card opens the page in a new tab; the filters apply the same way. In the inbox, an item with a link shows the link card and its note; the item's text is shown only when it says more than the note.
-- **Android**: Links screen from the Inbox header (search, kind and "Jetés" chips, same cards, note in a small dialog, status chips, tag picker); inbox ideas that hold a link are triaged in one tap (below). All writes go through the outbox (`link` note, status, `tag_uids`; `inbox_item` status), so triage works offline.
+- **Android**: Links screen from Listes or the Inbox header (search, kind, status and "Archivés" chips, same cards, note in a small dialog, status chips, tag picker); inbox ideas that hold a link are triaged in one tap (below). All writes go through the outbox (`link` note, status, `tag_uids`; `inbox_item` status), so triage works offline.
 
 ### Android inbox triage
 

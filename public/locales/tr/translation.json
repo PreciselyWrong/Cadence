@@ -5546,18 +5546,21 @@
       "other": "Diğer"
     },
     "status": {
-      "new": "Yeni",
-      "tested": "Denendi",
+      "new": "Okunacak",
+      "tested": "Denenecek",
       "kept": "Tutuldu",
       "parked": "Sonra",
-      "dropped": "Atıldı"
+      "dropped": "Arşivlendi",
+      "to_evaluate": "Değerlendirilecek"
     },
     "action": {
       "attach": "Bağla",
-      "tested": "Dene",
+      "tested": "Denenecek",
       "kept": "Tut",
       "parked": "Sonra",
-      "dropped": "At"
+      "dropped": "Arşivle",
+      "to_evaluate": "Değerlendirilecek",
+      "task": "Görev"
     },
     "lastCommit": "{{date}} güncellendi",
     "fetching": "Sayfa okunuyor…",
@@ -5570,7 +5573,14 @@
     "saveError": "Bağlantı kaydedilemedi.",
     "loadError": "Bağlantılar yüklenemedi.",
     "empty": "Gelen kutusunda, bir görevde ya da notta kaydettiğiniz bağlantılar, sayfanın kendisi hakkında söyledikleriyle birlikte burada görünür.",
-    "noMatch": "Bu filtrelerle eşleşen bağlantı yok."
+    "noMatch": "Bu filtrelerle eşleşen bağlantı yok.",
+    "noTheme": "Temasız",
+    "taskCreated": "Görev oluşturuldu: {{name}}",
+    "import": {
+      "button": "Yer imlerini içe aktar",
+      "result": "{{created}} eklendi, {{existing}} zaten vardı",
+      "error": "Yer imleri içe aktarılamadı."
+    }
   },
   "dailyBrief": {
     "sectionName": {

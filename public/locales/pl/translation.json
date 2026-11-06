@@ -5602,18 +5602,21 @@
       "other": "Inne"
     },
     "status": {
-      "new": "Nowy",
-      "tested": "Wypróbowany",
+      "new": "Do przeczytania",
+      "tested": "Do przetestowania",
       "kept": "Zachowany",
       "parked": "Później",
-      "dropped": "Odrzucony"
+      "dropped": "Zarchiwizowany",
+      "to_evaluate": "Do oceny"
     },
     "action": {
       "attach": "Przypisz",
-      "tested": "Wypróbuj",
+      "tested": "Do przetestowania",
       "kept": "Zachowaj",
       "parked": "Później",
-      "dropped": "Odrzuć"
+      "dropped": "Archiwizuj",
+      "to_evaluate": "Do oceny",
+      "task": "Zadanie"
     },
     "lastCommit": "zaktualizowano {{date}}",
     "fetching": "Czytanie strony…",
@@ -5626,7 +5629,14 @@
     "saveError": "Nie udało się zapisać linku.",
     "loadError": "Nie udało się wczytać linków.",
     "empty": "Linki zapisane z skrzynki, zadania lub notatki pojawią się tutaj, wraz z opisem, jaki podaje sama strona.",
-    "noMatch": "Żaden link nie pasuje do tych filtrów."
+    "noMatch": "Żaden link nie pasuje do tych filtrów.",
+    "noTheme": "Bez tematu",
+    "taskCreated": "Utworzono zadanie: {{name}}",
+    "import": {
+      "button": "Importuj zakładki",
+      "result": "Dodano {{created}}, już było {{existing}}",
+      "error": "Nie udało się zaimportować zakładek."
+    }
   },
   "dailyBrief": {
     "sectionName": {

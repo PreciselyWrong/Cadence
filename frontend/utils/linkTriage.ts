@@ -15,6 +15,17 @@ type SaveLink = (
     changes: { status: LinkStatus }
 ) => Promise<unknown>;
 
+// One tap: a task named after the link, holding its address. The link counts
+// as kept. Same as Android (LinkDecision.TASK).
+export const linkToTask = async (link: Link, save: SaveLink): Promise<Task> => {
+    const task = await createTask({
+        name: linkTitle(link),
+        note: linkTaskNote(link),
+    } as Task);
+    await save(link.uid, { status: 'kept' });
+    return task;
+};
+
 // "Attach": a link has no project, so a task named after it, holding its
 // address, files it in the chosen one; the link counts as kept. Same as
 // Android (LinkTriage, LinkDecision.ATTACH).

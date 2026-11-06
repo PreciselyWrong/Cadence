@@ -5546,18 +5546,21 @@
       "other": "기타"
     },
     "status": {
-      "new": "새로움",
-      "tested": "사용해 봄",
+      "new": "읽을 항목",
+      "tested": "시도할 항목",
       "kept": "보관",
       "parked": "나중에",
-      "dropped": "버림"
+      "dropped": "보관됨",
+      "to_evaluate": "평가할 항목"
     },
     "action": {
       "attach": "연결",
-      "tested": "사용해 보기",
+      "tested": "시도할 항목",
       "kept": "보관",
       "parked": "나중에",
-      "dropped": "버리기"
+      "dropped": "보관",
+      "to_evaluate": "평가할 항목",
+      "task": "작업"
     },
     "lastCommit": "{{date}} 업데이트",
     "fetching": "페이지를 읽는 중…",
@@ -5570,7 +5573,14 @@
     "saveError": "링크를 저장할 수 없습니다.",
     "loadError": "링크를 불러올 수 없습니다.",
     "empty": "받은편지함, 작업, 메모에서 저장한 링크가 페이지 소개와 함께 여기에 표시됩니다.",
-    "noMatch": "이 필터와 일치하는 링크가 없습니다."
+    "noMatch": "이 필터와 일치하는 링크가 없습니다.",
+    "noTheme": "주제 없음",
+    "taskCreated": "작업 생성됨: {{name}}",
+    "import": {
+      "button": "북마크 가져오기",
+      "result": "{{created}}개 추가, {{existing}}개는 이미 있음",
+      "error": "북마크를 가져올 수 없습니다."
+    }
   },
   "dailyBrief": {
     "sectionName": {

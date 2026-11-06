@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../../app');
-const { Link, Tag } = require('../../models');
+const { InboxItem, Link, Tag } = require('../../models');
 const { createTestUser } = require('../helpers/testUtils');
 const jobs = require('../../modules/links/jobs');
 
@@ -534,5 +534,79 @@ describe('Links', () => {
             expect(res.body.results[1].reason).toBe('unknown_link');
             expect(await Link.count()).toBe(1);
         });
+    });
+
+    it('sends a shared address straight to the links, not to the inbox', async () => {
+        await capture('https://example.com/article - à lire ce soir');
+        const item = await InboxItem.findOne({ where: { user_id: user.id } });
+        expect(item.status).toBe('processed');
+        const [link] = (await agent.get('/api/links')).body.links;
+        expect(link.note).toBe('à lire ce soir');
+    });
+
+    it('leaves in the inbox an idea with several links', async () => {
+        await capture('https://example.com/a et https://example.com/b');
+        const item = await InboxItem.findOne({ where: { user_id: user.id } });
+        expect(item.status).toBe('added');
+    });
+
+    it('adds a link directly, once per page', async () => {
+        const first = await agent.post('/api/links').send({
+            url: 'https://example.com/page?utm_source=x',
+            title: 'Une page',
+            tags: ['dev/outils'],
+            status: 'to_evaluate',
+        });
+        expect(first.status).toBe(200);
+        expect(first.body).toMatchObject({
+            created: true,
+            link: {
+                url: 'https://example.com/page',
+                title: 'Une page',
+                status: 'to_evaluate',
+            },
+        });
+        expect(first.body.link.tags.map((t) => t.name)).toContain('dev/outils');
+
+        const again = await agent
+            .post('/api/links')
+            .send({ url: 'https://example.com/page', title: 'Autre titre' });
+        expect(again.body.created).toBe(false);
+        expect(again.body.link.title).not.toBe('Autre titre');
+
+        const bad = await agent.post('/api/links').send({ url: 'ftp://x' });
+        expect(bad.status).toBe(400);
+        await jobs.drain();
+    });
+
+    it('imports bookmarks and counts what happened to each', async () => {
+        await agent.post('/api/links').send({ url: 'https://example.com/a' });
+        const res = await agent.post('/api/links/import').send({
+            items: [
+                { url: 'https://example.com/a', title: 'Déjà là' },
+                {
+                    url: 'https://example.com/b',
+                    title: 'Nouveau',
+                    tags: ['lecture'],
+                },
+                { url: 'pas une adresse' },
+            ],
+        });
+        expect(res.body).toEqual({ created: 1, existing: 1, invalid: 1 });
+        await jobs.drain();
+        const { links } = (await agent.get('/api/links')).body;
+        expect(links.map((l) => l.url).sort()).toEqual([
+            'https://example.com/a',
+            'https://example.com/b',
+        ]);
+    });
+
+    it('refuses too many bookmarks at once', async () => {
+        const res = await agent.post('/api/links/import').send({
+            items: Array.from({ length: 501 }, (_, i) => ({
+                url: `https://example.com/${i}`,
+            })),
+        });
+        expect(res.status).toBe(400);
     });
 });

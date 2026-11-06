@@ -87,8 +87,8 @@ class LinkTriageTest {
     }
 
     @Test
-    fun `la galerie propose tester, rattacher, reporter, jeter`() {
-        assertEquals(listOf(LinkDecision.TEST, LinkDecision.ATTACH, LinkDecision.LATER, LinkDecision.DROP), LinkTriage.GALLERY_DECISIONS)
+    fun `la galerie propose tâche, tester, rattacher, reporter, archiver`() {
+        assertEquals(listOf(LinkDecision.TASK, LinkDecision.TEST, LinkDecision.ATTACH, LinkDecision.LATER, LinkDecision.DROP), LinkTriage.GALLERY_DECISIONS)
     }
 
     @Test

@@ -23,6 +23,7 @@ import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.automirrored.outlined.StickyNote2
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Folder
+import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.TaskAlt
@@ -76,6 +77,7 @@ internal fun ListSwitcherSheet(
     onOpenPinned: (PinnedShortcut) -> Unit,
     onUnpin: (PinnedShortcut) -> Unit,
     onSelectArea: (String?) -> Unit,
+    onOpenLinks: () -> Unit,
     onOpenSettings: () -> Unit,
     onDismiss: () -> Unit,
 ) {
@@ -121,6 +123,11 @@ internal fun ListSwitcherSheet(
                 SheetLabel(stringResource(R.string.tasks_lists_area))
                 AreaFilterRow(areas = areas, selected = areaFilter, onSelect = onSelectArea, contentPadding = PaddingValues())
             }
+            SwitcherRow(
+                label = stringResource(R.string.links_title),
+                leading = { Icon(Icons.Outlined.Link, contentDescription = null, tint = palette.onSurfaceVariant) },
+                onClick = onOpenLinks,
+            )
             HorizontalDivider(Modifier.padding(vertical = Space.sm), color = palette.outlineVariant)
             SwitcherRow(
                 label = stringResource(R.string.tasks_open_settings),

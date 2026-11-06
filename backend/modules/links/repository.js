@@ -106,4 +106,16 @@ function findByUid(userId, uid) {
     });
 }
 
-module.exports = { list, findByUid, whereFor };
+function findByUrl(userId, url) {
+    return Link.findOne({ where: { user_id: userId, url } });
+}
+
+function create(fields) {
+    return Link.create(fields);
+}
+
+function setTags(link, tags) {
+    return link.setTags(tags);
+}
+
+module.exports = { list, findByUid, findByUrl, create, setTags, whereFor };

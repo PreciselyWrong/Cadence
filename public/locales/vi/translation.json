@@ -5546,18 +5546,21 @@
       "other": "Khác"
     },
     "status": {
-      "new": "Mới",
-      "tested": "Đã thử",
+      "new": "Cần đọc",
+      "tested": "Cần thử",
       "kept": "Đã giữ",
       "parked": "Để sau",
-      "dropped": "Đã bỏ"
+      "dropped": "Đã lưu trữ",
+      "to_evaluate": "Cần đánh giá"
     },
     "action": {
       "attach": "Gắn vào",
-      "tested": "Thử",
+      "tested": "Cần thử",
       "kept": "Giữ",
       "parked": "Để sau",
-      "dropped": "Bỏ"
+      "dropped": "Lưu trữ",
+      "to_evaluate": "Cần đánh giá",
+      "task": "Công việc"
     },
     "lastCommit": "cập nhật {{date}}",
     "fetching": "Đang đọc trang…",
@@ -5570,7 +5573,14 @@
     "saveError": "Không thể lưu liên kết.",
     "loadError": "Không thể tải liên kết.",
     "empty": "Liên kết bạn lưu từ hộp thư đến, công việc hoặc ghi chú sẽ hiện ở đây, kèm nội dung trang tự mô tả.",
-    "noMatch": "Không có liên kết nào khớp với bộ lọc này."
+    "noMatch": "Không có liên kết nào khớp với bộ lọc này.",
+    "noTheme": "Không có chủ đề",
+    "taskCreated": "Đã tạo công việc: {{name}}",
+    "import": {
+      "button": "Nhập dấu trang",
+      "result": "Đã thêm {{created}}, đã có {{existing}}",
+      "error": "Không thể nhập dấu trang."
+    }
   },
   "dailyBrief": {
     "sectionName": {

@@ -51,7 +51,7 @@ module.exports = (sequelize) => {
             github_last_commit: { type: DataTypes.DATE, allowNull: true },
             readme_excerpt: { type: DataTypes.TEXT, allowNull: true },
             note: { type: DataTypes.TEXT, allowNull: true },
-            // new | kept | tested | parked | dropped
+            // new | to_evaluate | kept | tested | parked | dropped
             status: {
                 type: DataTypes.STRING,
                 allowNull: false,

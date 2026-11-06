@@ -14,19 +14,51 @@ export const LINK_ACTIONS: {
     key: string;
     fallback: string;
 }[] = [
-    { status: 'tested', key: 'links.action.tested', fallback: 'Try' },
+    {
+        status: 'to_evaluate',
+        key: 'links.action.to_evaluate',
+        fallback: 'To evaluate',
+    },
+    { status: 'tested', key: 'links.action.tested', fallback: 'To try' },
     { status: 'kept', key: 'links.action.kept', fallback: 'Keep' },
     { status: 'parked', key: 'links.action.parked', fallback: 'Later' },
-    { status: 'dropped', key: 'links.action.dropped', fallback: 'Drop' },
+    { status: 'dropped', key: 'links.action.dropped', fallback: 'Archive' },
 ];
 
 export const LINK_STATUSES: LinkStatus[] = [
     'new',
+    'to_evaluate',
     'tested',
     'kept',
     'parked',
     'dropped',
 ];
+
+export interface LinkTheme {
+    // null for links without a tag.
+    name: string | null;
+    links: Link[];
+}
+
+// A theme is the first segment of a link's first tag ("dev/tools" is in "dev").
+// Themes in alphabetical order, links without a tag last, each list in its order.
+export function linksByTheme(links: Link[]): LinkTheme[] {
+    const groups = new Map<string, Link[]>();
+    const bare: Link[] = [];
+    for (const link of links) {
+        const first = link.tags.map((tag) => tag.name).sort()[0];
+        if (!first) {
+            bare.push(link);
+            continue;
+        }
+        const theme = first.split('/')[0];
+        groups.set(theme, [...(groups.get(theme) ?? []), link]);
+    }
+    const themes: LinkTheme[] = [...groups.entries()]
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([name, items]) => ({ name, links: items }));
+    return bare.length > 0 ? [...themes, { name: null, links: bare }] : themes;
+}
 
 export interface LinkFilter {
     query: string;

@@ -104,6 +104,9 @@ internal class LinksViewModel(application: Application) : AndroidViewModel(appli
     val total: StateFlow<Int> = all.map { it.size }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), 0)
 
+    val tagNames: StateFlow<Map<String, String>> = repository.observeTags().map { tags -> tags.associate { it.uid to it.name } }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyMap())
+
     val shown: StateFlow<List<LinkItem>> =
         combine(all, repository.observeTags(), filter) { links, tags, current ->
             LinkLists.filter(links, current, tags.associate { it.uid to it.name })
@@ -125,6 +128,7 @@ internal class LinksViewModel(application: Application) : AndroidViewModel(appli
 }
 
 private val ACTIONS = listOf(
+    LinkStatus.TO_EVALUATE to R.string.links_action_to_evaluate,
     LinkStatus.TESTED to R.string.links_action_tested,
     LinkStatus.KEPT to R.string.links_action_kept,
     LinkStatus.PARKED to R.string.links_action_parked,
@@ -132,8 +136,8 @@ private val ACTIONS = listOf(
 )
 
 /**
- * Écran Liens, ouvert depuis l'en-tête de l'Inbox : tous les liens enregistrés, lisibles hors ligne, avec
- * recherche et filtres par type et « Jetés ». Chaque carte dit ce qu'est le lien et ce qu'on en pense.
+ * Écran Liens, ouvert depuis Listes ou l'Inbox : tous les liens enregistrés, lisibles hors ligne, en galerie par thème,
+ * avec recherche et filtres par type, statut et étiquette. Chaque carte dit ce qu'est le lien et ce qu'on en pense.
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -146,7 +150,7 @@ internal fun LinksScreen(tasks: TasksViewModel, onBack: () -> Unit, onOpenSource
     val links = remember(filtered, masked) { filtered.filterNot { it.uid in masked } }
     val context = LocalContext.current
     val layouts = remember(context) { LayoutStore(context) }
-    var gallery by rememberSaveable { mutableStateOf(layouts.isOn(LayoutStore.LINKS)) }
+    var gallery by rememberSaveable { mutableStateOf(layouts.isLinksGallery()) }
     var picking by remember { mutableStateOf<Pair<LinkItem, LinkDecision>?>(null) }
     val decide: (LinkItem, LinkDecision, String?) -> Unit = { link, decision, projectUid ->
         tasks.decideLink(LinkTriage.openEntry(link, inbox, every), link, decision, projectUid, maskLink = true)
@@ -156,6 +160,8 @@ internal fun LinksScreen(tasks: TasksViewModel, onBack: () -> Unit, onOpenSource
     val tags by viewModel.tags.collectAsStateWithLifecycle()
     val linkTags by viewModel.linkTags.collectAsStateWithLifecycle()
     var editing by remember { mutableStateOf<LinkItem?>(null) }
+    val tagNames by viewModel.tagNames.collectAsStateWithLifecycle()
+    val themes = remember(links, tagNames) { LinkLists.byTheme(links, tagNames) }
     val palette = cadence
     BackHandler(onBack = onBack)
 
@@ -214,6 +220,8 @@ internal fun LinksScreen(tasks: TasksViewModel, onBack: () -> Unit, onOpenSource
                 horizontalArrangement = Arrangement.spacedBy(Space.sm),
             ) {
                 listOf(
+                    LinkStatus.NEW to R.string.links_status_new,
+                    LinkStatus.TO_EVALUATE to R.string.links_status_to_evaluate,
                     LinkStatus.KEPT to R.string.links_filter_kept,
                     LinkStatus.TESTED to R.string.links_filter_tested,
                     LinkStatus.PARKED to R.string.links_filter_parked,
@@ -250,17 +258,29 @@ internal fun LinksScreen(tasks: TasksViewModel, onBack: () -> Unit, onOpenSource
                     if (links.isEmpty()) {
                         item(key = "empty", span = StaggeredGridItemSpan.FullLine) { LinksEmpty(total) }
                     }
-                    gridItems(links, key = { it.uid }) { link ->
-                        LinkGalleryCard(
-                            link = link,
-                            onDecide = { decision ->
-                                if (decision == LinkDecision.TEST || decision == LinkDecision.ATTACH) {
-                                    picking = link to decision
-                                } else {
-                                    decide(link, decision, null)
-                                }
-                            },
-                        )
+                    themes.forEach { theme ->
+                        if (themes.size > 1) {
+                            item(key = "theme:${theme.name}", span = StaggeredGridItemSpan.FullLine) {
+                                Text(
+                                    theme.name ?: stringResource(R.string.links_no_theme),
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = palette.onSurfaceVariant,
+                                    modifier = Modifier.padding(top = Space.sm),
+                                )
+                            }
+                        }
+                        gridItems(theme.links, key = { it.uid }) { link ->
+                            LinkGalleryCard(
+                                link = link,
+                                onDecide = { decision ->
+                                    if (decision == LinkDecision.TEST || decision == LinkDecision.ATTACH) {
+                                        picking = link to decision
+                                    } else {
+                                        decide(link, decision, null)
+                                    }
+                                },
+                            )
+                        }
                     }
                 }
             } else {
@@ -415,7 +435,7 @@ internal fun LinkSummary(link: LinkItem, descriptionLines: Int) {
             val month = DateTimeFormatter.ofPattern("MMM yyyy", Locale.getDefault()).format(pushed.atZone(ZoneId.systemDefault()))
             Text(stringResource(R.string.links_last_commit, month), style = MaterialTheme.typography.labelSmall, color = palette.outline)
         }
-        statusLabel(link.status)?.let {
+        statusLabel(link.status).let {
             Text(stringResource(it), style = MaterialTheme.typography.labelSmall, color = palette.primary)
         }
         if (link.fetching) {
@@ -505,12 +525,13 @@ private fun kindLabel(kind: LinkKind): Int = when (kind) {
     LinkKind.OTHER -> R.string.links_kind_other
 }
 
-internal fun statusLabel(status: LinkStatus): Int? = when (status) {
+internal fun statusLabel(status: LinkStatus): Int = when (status) {
+    LinkStatus.TO_EVALUATE -> R.string.links_status_to_evaluate
     LinkStatus.TESTED -> R.string.links_status_tested
     LinkStatus.KEPT -> R.string.links_status_kept
     LinkStatus.PARKED -> R.string.links_status_parked
     LinkStatus.DROPPED -> R.string.links_status_dropped
-    LinkStatus.NEW -> null
+    LinkStatus.NEW -> R.string.links_status_new
 }
 
 /** Nombre d'étoiles court (« 1,2 k »), dans la langue de l'appareil. */

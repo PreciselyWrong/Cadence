@@ -5546,18 +5546,21 @@
       "other": "Annat"
     },
     "status": {
-      "new": "Ny",
-      "tested": "Testad",
+      "new": "Att läsa",
+      "tested": "Att testa",
       "kept": "Behållen",
       "parked": "Senare",
-      "dropped": "Kasserad"
+      "dropped": "Arkiverad",
+      "to_evaluate": "Att utvärdera"
     },
     "action": {
       "attach": "Koppla",
-      "tested": "Testa",
+      "tested": "Att testa",
       "kept": "Behåll",
       "parked": "Senare",
-      "dropped": "Kassera"
+      "dropped": "Arkivera",
+      "to_evaluate": "Att utvärdera",
+      "task": "Uppgift"
     },
     "lastCommit": "uppdaterad {{date}}",
     "fetching": "Läser sidan…",
@@ -5570,7 +5573,14 @@
     "saveError": "Länken kunde inte sparas.",
     "loadError": "Länkarna kunde inte laddas.",
     "empty": "Länkar du sparar från inkorgen, en uppgift eller en anteckning visas här, med det sidan säger om sig själv.",
-    "noMatch": "Inga länkar matchar de här filtren."
+    "noMatch": "Inga länkar matchar de här filtren.",
+    "noTheme": "Utan tema",
+    "taskCreated": "Uppgift skapad: {{name}}",
+    "import": {
+      "button": "Importera bokmärken",
+      "result": "{{created}} tillagda, {{existing}} fanns redan",
+      "error": "Bokmärkena kunde inte importeras."
+    }
   },
   "dailyBrief": {
     "sectionName": {

@@ -50,6 +50,9 @@ import coil3.request.crossfade
 internal class LayoutStore(context: Context) {
     private val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
+    /** Les liens s'ouvrent en galerie ; la liste reste à un appui, et ce choix se garde. */
+    fun isLinksGallery(): Boolean = prefs.getBoolean(LINKS, true)
+
     fun isOn(screen: String): Boolean = prefs.getBoolean(screen, screen == NOTES)
 
     fun set(screen: String, on: Boolean) = prefs.edit { putBoolean(screen, on) }
@@ -65,6 +68,7 @@ internal class LayoutStore(context: Context) {
 }
 
 private fun galleryLabel(decision: LinkDecision): Int = when (decision) {
+    LinkDecision.TASK -> R.string.links_action_task
     LinkDecision.TEST -> R.string.links_gallery_test
     LinkDecision.ATTACH -> R.string.links_gallery_attach
     LinkDecision.LATER -> R.string.links_gallery_later

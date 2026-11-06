@@ -111,7 +111,7 @@ describe('LinksPage gallery', () => {
 
         renderPage();
 
-        expect(mockViewType).toHaveBeenCalledWith('links');
+        expect(mockViewType).toHaveBeenCalledWith('links', 'gallery');
         expect(screen.getAllByTestId('link-card')).toHaveLength(2);
         fireEvent.click(screen.getByRole('button', { name: 'Gallery' }));
         expect(setViewType).toHaveBeenCalledWith('gallery');

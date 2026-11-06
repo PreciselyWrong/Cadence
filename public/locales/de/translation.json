@@ -5555,18 +5555,21 @@
       "other": "Sonstiges"
     },
     "status": {
-      "new": "Neu",
-      "tested": "Getestet",
+      "new": "Zu lesen",
+      "tested": "Auszuprobieren",
       "kept": "Behalten",
       "parked": "Später",
-      "dropped": "Verworfen"
+      "dropped": "Archiviert",
+      "to_evaluate": "Zu bewerten"
     },
     "action": {
       "attach": "Zuordnen",
-      "tested": "Testen",
+      "tested": "Ausprobieren",
       "kept": "Behalten",
       "parked": "Später",
-      "dropped": "Verwerfen"
+      "dropped": "Archivieren",
+      "to_evaluate": "Zu bewerten",
+      "task": "Aufgabe"
     },
     "lastCommit": "aktualisiert {{date}}",
     "fetching": "Seite wird gelesen…",
@@ -5579,7 +5582,14 @@
     "saveError": "Der Link konnte nicht gespeichert werden.",
     "loadError": "Die Links konnten nicht geladen werden.",
     "empty": "Links, die Sie im Posteingang, in einer Aufgabe oder einer Notiz erfassen, erscheinen hier, mit dem, was die Seite über sich selbst sagt.",
-    "noMatch": "Kein Link passt zu diesen Filtern."
+    "noMatch": "Kein Link passt zu diesen Filtern.",
+    "noTheme": "Ohne Thema",
+    "taskCreated": "Aufgabe erstellt: {{name}}",
+    "import": {
+      "button": "Lesezeichen importieren",
+      "result": "{{created}} hinzugefügt, {{existing}} schon vorhanden",
+      "error": "Die Lesezeichen konnten nicht importiert werden."
+    }
   },
   "dailyBrief": {
     "sectionName": {

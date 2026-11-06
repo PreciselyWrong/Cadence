@@ -5564,18 +5564,21 @@
       "other": "Altul"
     },
     "status": {
-      "new": "Nou",
-      "tested": "Încercat",
+      "new": "De citit",
+      "tested": "De testat",
       "kept": "Păstrat",
       "parked": "Mai târziu",
-      "dropped": "Renunțat"
+      "dropped": "Arhivat",
+      "to_evaluate": "De evaluat"
     },
     "action": {
       "attach": "Atașează",
-      "tested": "Încearcă",
+      "tested": "De testat",
       "kept": "Păstrează",
       "parked": "Mai târziu",
-      "dropped": "Renunță"
+      "dropped": "Arhivează",
+      "to_evaluate": "De evaluat",
+      "task": "Sarcină"
     },
     "lastCommit": "actualizat {{date}}",
     "fetching": "Se citește pagina…",
@@ -5588,7 +5591,14 @@
     "saveError": "Linkul nu a putut fi salvat.",
     "loadError": "Linkurile nu au putut fi încărcate.",
     "empty": "Linkurile salvate din inbox, dintr-o sarcină sau dintr-o notă apar aici, cu ce spune pagina despre ea.",
-    "noMatch": "Niciun link nu se potrivește cu aceste filtre."
+    "noMatch": "Niciun link nu se potrivește cu aceste filtre.",
+    "noTheme": "Fără temă",
+    "taskCreated": "Sarcină creată: {{name}}",
+    "import": {
+      "button": "Importă marcaje",
+      "result": "{{created}} adăugate, {{existing}} existau deja",
+      "error": "Marcajele nu au putut fi importate."
+    }
   },
   "dailyBrief": {
     "sectionName": {

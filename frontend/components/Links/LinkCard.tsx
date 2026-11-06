@@ -25,6 +25,8 @@ interface LinkCardProps {
     // without projects).
     projects?: Project[];
     onAttach?: (projectUid: string) => Promise<unknown>;
+    // One tap: a task that keeps the link's address.
+    onTask?: () => Promise<unknown>;
 }
 
 const compactCount = (value: number, locale: string): string =>
@@ -85,14 +87,18 @@ const statusLabel = (
     status: LinkStatus
 ): string | null => {
     switch (status) {
+        case 'new':
+            return t('links.status.new', 'To read');
+        case 'to_evaluate':
+            return t('links.status.to_evaluate', 'To evaluate');
         case 'tested':
-            return t('links.status.tested', 'Tried');
+            return t('links.status.tested', 'To try');
         case 'kept':
             return t('links.status.kept', 'Kept');
         case 'parked':
             return t('links.status.parked', 'Later');
         case 'dropped':
-            return t('links.status.dropped', 'Dropped');
+            return t('links.status.dropped', 'Archived');
         default:
             return null;
     }
@@ -107,6 +113,7 @@ const LinkCard: React.FC<LinkCardProps> = ({
     availableTags,
     projects = [],
     onAttach,
+    onTask,
 }) => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
@@ -255,6 +262,15 @@ const LinkCard: React.FC<LinkCardProps> = ({
                         </button>
                     );
                 })}
+                {onTask && (
+                    <button
+                        type="button"
+                        onClick={() => void onTask()}
+                        className="min-h-[32px] rounded-full px-3 text-[12px] font-medium text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                    >
+                        {t('links.action.task', 'Task')}
+                    </button>
+                )}
                 {canAttach && (
                     <button
                         type="button"

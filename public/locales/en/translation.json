@@ -5516,18 +5516,21 @@
       "other": "Other"
     },
     "status": {
-      "new": "New",
-      "tested": "Tried",
+      "new": "To read",
+      "tested": "To try",
       "kept": "Kept",
       "parked": "Later",
-      "dropped": "Dropped"
+      "dropped": "Archived",
+      "to_evaluate": "To evaluate"
     },
     "action": {
       "attach": "Attach",
-      "tested": "Try",
+      "tested": "To try",
       "kept": "Keep",
       "parked": "Later",
-      "dropped": "Drop"
+      "dropped": "Archive",
+      "to_evaluate": "To evaluate",
+      "task": "Task"
     },
     "lastCommit": "updated {{date}}",
     "fetching": "Reading the page…",
@@ -5540,7 +5543,14 @@
     "saveError": "Could not save the link.",
     "loadError": "Could not load the links.",
     "empty": "Links you capture in the inbox, a task or a note show up here, with what the page says about itself.",
-    "noMatch": "No link matches these filters."
+    "noMatch": "No link matches these filters.",
+    "noTheme": "No theme",
+    "taskCreated": "Task created: {{name}}",
+    "import": {
+      "button": "Import bookmarks",
+      "result": "{{created}} added, {{existing}} already there",
+      "error": "The bookmarks could not be imported."
+    }
   },
   "dailyBrief": {
     "sectionName": {

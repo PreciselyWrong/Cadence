@@ -5546,18 +5546,21 @@
       "other": "Lainnya"
     },
     "status": {
-      "new": "Baru",
-      "tested": "Dicoba",
+      "new": "Untuk dibaca",
+      "tested": "Untuk dicoba",
       "kept": "Disimpan",
       "parked": "Nanti",
-      "dropped": "Dibuang"
+      "dropped": "Diarsipkan",
+      "to_evaluate": "Untuk dinilai"
     },
     "action": {
       "attach": "Lampirkan",
-      "tested": "Coba",
+      "tested": "Untuk dicoba",
       "kept": "Simpan",
       "parked": "Nanti",
-      "dropped": "Buang"
+      "dropped": "Arsipkan",
+      "to_evaluate": "Untuk dinilai",
+      "task": "Tugas"
     },
     "lastCommit": "diperbarui {{date}}",
     "fetching": "Membaca halaman…",
@@ -5570,7 +5573,14 @@
     "saveError": "Tautan tidak dapat disimpan.",
     "loadError": "Tautan tidak dapat dimuat.",
     "empty": "Tautan yang Anda simpan dari kotak masuk, tugas, atau catatan akan muncul di sini, beserta keterangan dari halaman itu sendiri.",
-    "noMatch": "Tidak ada tautan yang cocok dengan filter ini."
+    "noMatch": "Tidak ada tautan yang cocok dengan filter ini.",
+    "noTheme": "Tanpa tema",
+    "taskCreated": "Tugas dibuat: {{name}}",
+    "import": {
+      "button": "Impor markah",
+      "result": "{{created}} ditambahkan, {{existing}} sudah ada",
+      "error": "Markah tidak dapat diimpor."
+    }
   },
   "dailyBrief": {
     "sectionName": {

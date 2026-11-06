@@ -104,6 +104,7 @@ internal fun rememberNoteDraft(link: LinkItem, onSave: (String?) -> Unit): NoteD
 
 private fun decisionLabel(decision: LinkDecision): Int = when (decision) {
     LinkDecision.KEEP -> R.string.links_action_kept
+    LinkDecision.TASK -> R.string.links_action_task
     LinkDecision.TEST -> R.string.links_decision_test
     LinkDecision.ATTACH -> R.string.links_gallery_attach
     LinkDecision.LATER -> R.string.links_action_parked

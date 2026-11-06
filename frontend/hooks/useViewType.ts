@@ -20,8 +20,8 @@ export const isViewType = (value: unknown): value is ViewType =>
 // `tag:<name>`, `project:<uid>` or `tasks`), or list or gallery for the
 // `links` and `notes` pages, saved in
 // ui_settings.viewTypes. `loaded` turns true once the saved choice is read.
-export const useViewType = (key: string) => {
-    const [viewType, setType] = useState<ViewType>('list');
+export const useViewType = (key: string, fallback: ViewType = 'list') => {
+    const [viewType, setType] = useState<ViewType>(fallback);
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
@@ -31,7 +31,7 @@ export const useViewType = (key: string) => {
             .then((profile) => {
                 if (cancelled) return;
                 const saved = profile.ui_settings?.viewTypes?.[key];
-                setType(isViewType(saved) ? saved : 'list');
+                setType(isViewType(saved) ? saved : fallback);
             })
             .catch(() => {
                 // Without a saved choice the list is shown
@@ -42,7 +42,7 @@ export const useViewType = (key: string) => {
         return () => {
             cancelled = true;
         };
-    }, [key]);
+    }, [key, fallback]);
 
     const setViewType = useCallback(
         (next: ViewType) => {
