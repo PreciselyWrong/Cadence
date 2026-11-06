@@ -39,6 +39,31 @@ const renderHero = (
     );
 
 describe('ProjectHero declutter', () => {
+    it('shows the image as a wide banner and keeps the colored icon', () => {
+        const { container } = renderHero({
+            image_url: '/api/uploads/projects/banner.jpg',
+            icon: 'code',
+            color: '#1d4ed8',
+        });
+
+        const banner = screen.getByTestId('project-banner');
+        expect(banner.querySelector('img')?.getAttribute('src')).toContain(
+            '/api/uploads/projects/banner.jpg'
+        );
+        const iconButton = screen.getByRole('button', {
+            name: 'Project image',
+        });
+        expect(iconButton.querySelector('img')).toBeNull();
+        expect(iconButton.querySelector('svg')).not.toBeNull();
+        expect(container.querySelectorAll('img')).toHaveLength(1);
+    });
+
+    it('has no banner without an image', () => {
+        renderHero({ icon: 'code' });
+
+        expect(screen.queryByTestId('project-banner')).toBeNull();
+    });
+
     it('shows a past due date like any other date, without red', () => {
         renderHero({ due_date_at: '2020-03-01T12:00:00.000Z' });
 

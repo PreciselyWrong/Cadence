@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-06 — Bannière de projet (web et Android)
+
+- **Problème** : l'image d'un projet n'apparaissait qu'en vignette de 56 px dans l'en-tête, et elle remplaçait l'icône et la couleur partout : une fois l'image posée, la liste des projets perdait ses repères. Android ne la recevait pas.
+- **Décision** : la photo devient une bannière pleine largeur en haut de la page projet (112 px sur téléphone, 176 px sur grand écran), sans texte par-dessus ; le carré de l'en-tête et les lignes de la liste gardent toujours l'icône colorée. Le carré ouvre toujours le choix de l'image. Sans image, rien ne change.
+- **Android** : fait dans la même étape (`ui/ProjectBanner.kt`) : bannière de 140 dp entre les actions et le titre, en lecture seule ; rien ne s'affiche si l'image ne se charge pas. La clé d'API n'accompagne que les chemins du serveur (`model/ProjectImage.kt`).
+
 ### 2026-11-04 — Bilan du soir (web)
 
 - **Problème** : après la journée, le résumé du matin ne répond plus à la question utile : qu'est-ce qui est fait, qu'est-ce qui reste ce soir, qu'est-ce qui glisse, et que vaut demain.

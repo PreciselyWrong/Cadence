@@ -47,4 +47,29 @@ class ProjectPageHeaderTest {
         assertTrue("titre sous les actions : $title / $actions", title.top >= actions.bottom)
         assertTrue("titre sur toute la largeur : $title", title.right - title.left >= 300.dp)
     }
+
+    @Test
+    fun bannerSitsBetweenTheActionsAndTheTitle() {
+        val name = "Cadence"
+        compose.setContent {
+            Box(Modifier.width(360.dp)) {
+                ProjectPageHeader(
+                    name = name,
+                    icon = null,
+                    iconColor = Color.Red,
+                    onBack = {},
+                    breadcrumb = {},
+                    banner = { Box(Modifier.size(width = 360.dp, height = 140.dp).testTag("banner")) },
+                ) {
+                    Box(Modifier.size(width = 48.dp, height = 48.dp).testTag("actions"))
+                }
+            }
+        }
+
+        val banner = compose.onNodeWithTag("banner").getUnclippedBoundsInRoot()
+        val actions = compose.onNodeWithTag("actions").getUnclippedBoundsInRoot()
+        val title = compose.onNodeWithText(name).getUnclippedBoundsInRoot()
+        assertTrue("bannière sous les actions : $banner / $actions", banner.top >= actions.bottom)
+        assertTrue("titre sous la bannière : $title / $banner", title.top >= banner.bottom)
+    }
 }

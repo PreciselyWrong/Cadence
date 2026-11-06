@@ -671,6 +671,45 @@ describe('Offline sync API', () => {
         });
     });
 
+    describe('project image', () => {
+        it('sends the image to clients and ignores one pushed by a client', async () => {
+            const image = '/api/uploads/projects/project-1.jpg';
+            await push(agent, [
+                upsert(
+                    'op-img1',
+                    'project',
+                    'clientproj0img1',
+                    { name: 'Banner' },
+                    hlc(1)
+                ),
+            ]);
+            await Project.update(
+                { image_url: image },
+                { where: { uid: 'clientproj0img1' }, individualHooks: true }
+            );
+
+            const pulled = await agent.get('/api/v1/sync/pull?cursor=0');
+            const change = pulled.body.changes
+                .filter((c) => c.uid === 'clientproj0img1')
+                .pop();
+            expect(change.data.image_url).toBe(image);
+
+            await push(agent, [
+                upsert(
+                    'op-img2',
+                    'project',
+                    'clientproj0img1',
+                    { image_url: '/api/uploads/projects/other.jpg' },
+                    hlc(2)
+                ),
+            ]);
+            const row = await Project.findOne({
+                where: { uid: 'clientproj0img1' },
+            });
+            expect(row.image_url).toBe(image);
+        });
+    });
+
     describe('icons', () => {
         it('syncs a project and a tag icon both ways', async () => {
             const res = await push(agent, [

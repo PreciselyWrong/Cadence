@@ -164,8 +164,8 @@ Area: "Personal"
 12. **Banner Image** (optional)
     - Visual header image for the project
     - Uploaded via image picker
-    - Displayed at top of project detail page
-    - Can be edited or removed
+    - Displayed as a wide banner at the top of the project page, on the web and on Android; the project's colored icon stays below it, and the list view shows the icon, not the photo
+    - Android reads the banner through sync (`image_url`) and only shows it; it is uploaded, edited or removed on the web
 
 ### Task Display Preferences
 

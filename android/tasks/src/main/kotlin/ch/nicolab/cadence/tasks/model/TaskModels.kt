@@ -120,6 +120,8 @@ data class ProjectItem(
     val icon: String? = null,
     /** Projet parent (`parent_project_uid`) ; null pour un projet de premier niveau. */
     val parentProjectUid: String? = null,
+    /** Bannière du projet (`image_url`) telle que le serveur l'envoie ; voir [ProjectImage]. */
+    val imageUrl: String? = null,
 ) {
     val isFileBacked: Boolean get() = sourceType == SOURCE_TODO_MD
     val projectStatus: ProjectStatus get() = ProjectStatus.fromWire(status)

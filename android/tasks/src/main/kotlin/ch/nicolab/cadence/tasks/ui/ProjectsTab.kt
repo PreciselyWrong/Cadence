@@ -378,6 +378,7 @@ internal fun ProjectTasksPane(
                 iconColor = headerColor,
                 onBack = onBack,
                 breadcrumb = { if (ancestors.isNotEmpty()) ProjectBreadcrumb(ancestors, onOpenProject) },
+                banner = { ProjectBanner(project?.imageUrl) },
             ) {
                 IconButton(
                     onClick = {
@@ -492,6 +493,7 @@ internal fun ProjectPageHeader(
     iconColor: Color,
     onBack: () -> Unit,
     breadcrumb: @Composable () -> Unit,
+    banner: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit,
 ) {
     Column(Modifier.fillMaxWidth()) {
@@ -505,6 +507,7 @@ internal fun ProjectPageHeader(
             Box(Modifier.weight(1f)) { breadcrumb() }
             actions()
         }
+        banner()
         // Le titre a sa propre ligne : à côté des actions, un nom se coupait en plein mot.
         Row(
             verticalAlignment = Alignment.CenterVertically,

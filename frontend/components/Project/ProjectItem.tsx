@@ -580,7 +580,7 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
                     to={projectPath}
                     className="flex h-9 w-9 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-300"
                     style={
-                        !project.image_url && project.color
+                        project.color
                             ? {
                                   backgroundColor: `color-mix(in srgb, ${project.color} 18%, transparent)`,
                                   color: project.color,
@@ -590,19 +590,11 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
                     tabIndex={-1}
                     aria-hidden="true"
                 >
-                    {project.image_url ? (
-                        <img
-                            src={project.image_url}
-                            alt=""
-                            className="h-full w-full object-cover"
-                        />
-                    ) : (
-                        <EntityIcon
-                            icon={project.icon}
-                            className="h-5 w-5"
-                            fallback={<FolderIcon className="h-5 w-5" />}
-                        />
-                    )}
+                    <EntityIcon
+                        icon={project.icon}
+                        className="h-5 w-5"
+                        fallback={<FolderIcon className="h-5 w-5" />}
+                    />
                 </Link>
                 <div className="min-w-0">
                     <Link

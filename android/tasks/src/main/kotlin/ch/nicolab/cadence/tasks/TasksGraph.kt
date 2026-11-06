@@ -45,6 +45,10 @@ object TasksGraph {
 
     fun linkPreviews(context: Context): LinkPreviews = createLinkPreviews(context.applicationContext)
 
+    /** Adresse et clé du serveur, pour les images qu'il sert ; null si aucun serveur n'est configuré. */
+    internal suspend fun serverSession(context: Context) =
+        ch.nicolab.cadence.tasks.data.currentServerSession(context.applicationContext)
+
     /** Listes de la revue, servies par le serveur (en ligne, dernière lecture hors ligne). */
     fun review(context: Context): ReviewRepository = createReview(context.applicationContext)
 

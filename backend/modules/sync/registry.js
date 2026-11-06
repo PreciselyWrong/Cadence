@@ -145,8 +145,9 @@ const ENTITIES = {
             'next_task_uid',
             'completed_at',
         ],
-        // 'todo_md' for a project that follows a TODO.md file.
-        serverFields: ['source_type'],
+        // 'todo_md' for a project that follows a TODO.md file; the banner is
+        // uploaded on the web, devices only show it.
+        serverFields: ['source_type', 'image_url'],
         refs: {
             area_uid: { column: 'area_id', entity: 'area' },
             goal_uid: { column: 'goal_id', entity: 'goal' },

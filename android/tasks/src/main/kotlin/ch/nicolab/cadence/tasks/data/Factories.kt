@@ -47,6 +47,9 @@ internal fun createLinkPreviews(context: Context): ch.nicolab.cadence.tasks.link
 
 internal fun createServerConnection(context: Context): ServerConnection = TasksRuntime.get(context).connection
 
+internal suspend fun currentServerSession(context: Context): ch.nicolab.cadence.tasks.sync.ServerSession? =
+    TasksRuntime.get(context).connection.currentSession()
+
 internal fun createReview(context: Context): ReviewRepository = TasksRuntime.get(context).review
 
 internal fun createFocus(context: Context): FocusRepository = TasksRuntime.get(context).focus
@@ -78,7 +81,7 @@ internal fun reviewCacheDir(context: Context): File = File(context.cacheDir, "re
 internal class TasksRuntime private constructor(context: Context) {
     private val appContext = context.applicationContext
     private val database: TududiDatabase = Room.databaseBuilder(appContext, TududiDatabase::class.java, "tududi.db")
-        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14)
+        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15)
         .build()
     private val clockState = ClockStateStore(appContext)
     private val hlc = Hlc(node = clockState.node(), initial = clockState.load())

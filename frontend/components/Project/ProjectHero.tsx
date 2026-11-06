@@ -238,6 +238,18 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                     backgroundImage: `linear-gradient(color-mix(in srgb, ${tint} 10%, transparent), color-mix(in srgb, ${tint} 10%, transparent))`,
                 }}
             >
+                {project.image_url && (
+                    <div
+                        className="-mx-3 -mt-3 h-28 overflow-hidden rounded-t-2xl sm:-mx-6 sm:-mt-6 sm:h-44"
+                        data-testid="project-banner"
+                    >
+                        <img
+                            src={getAssetPath(project.image_url)}
+                            alt=""
+                            className="h-full w-full object-cover"
+                        />
+                    </div>
+                )}
                 <div className="flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-start">
                     <button
                         type="button"
@@ -247,29 +259,19 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                         title={t('project.projectImage', 'Project image')}
                         aria-label={t('project.projectImage', 'Project image')}
                     >
-                        {project.image_url ? (
-                            <img
-                                src={getAssetPath(project.image_url)}
-                                alt=""
-                                className="h-full w-full object-cover"
+                        <span
+                            className="flex h-full w-full items-center justify-center"
+                            style={{
+                                backgroundColor: `color-mix(in srgb, ${tint} 18%, transparent)`,
+                                color: tint,
+                            }}
+                        >
+                            <EntityIcon
+                                icon={project.icon}
+                                className="h-7 w-7"
+                                fallback={<FolderIcon className="h-7 w-7" />}
                             />
-                        ) : (
-                            <span
-                                className="flex h-full w-full items-center justify-center"
-                                style={{
-                                    backgroundColor: `color-mix(in srgb, ${tint} 18%, transparent)`,
-                                    color: tint,
-                                }}
-                            >
-                                <EntityIcon
-                                    icon={project.icon}
-                                    className="h-7 w-7"
-                                    fallback={
-                                        <FolderIcon className="h-7 w-7" />
-                                    }
-                                />
-                            </span>
-                        )}
+                        </span>
                         {onEditBannerClick && (
                             <span className="absolute inset-0 flex items-center justify-center bg-black/40 text-white opacity-0 transition-opacity group-hover:opacity-100">
                                 <CameraIcon className="h-5 w-5" />

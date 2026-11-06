@@ -4,7 +4,7 @@ The sync API lets native clients (the Android app, the Linux desktop app) keep a
 
 ## What syncs
 
-`backend/modules/sync/registry.js` lists every syncable entity: its fields and its references. References are exposed by uid, never by numeric id (for example `project_uid`, `parent_task_uid`). `schema_version` 1 covered `task`, `project`, `area`, `tag`, `note` and `inbox_item`; version 2 adds the fifteen Cadence habit entities below; version 3 adds the `goal` entity, a `goal_uid` reference on `task` and `project`, and the project field `next_task_uid`; version 4 adds the `link` entity.
+`backend/modules/sync/registry.js` lists every syncable entity: its fields and its references. References are exposed by uid, never by numeric id (for example `project_uid`, `parent_task_uid`). `schema_version` 1 covered `task`, `project`, `area`, `tag`, `note` and `inbox_item`; version 2 adds the fifteen Cadence habit entities below; version 3 adds the `goal` entity, a `goal_uid` reference on `task` and `project`, and the project field `next_task_uid`; version 4 adds the `link` entity. `project` also sends the server-owned `source_type` and `image_url` (its banner, a path on this server or an outside address): a device reads them and cannot write them.
 
 To add an entity:
 1. Add an entry to the registry.

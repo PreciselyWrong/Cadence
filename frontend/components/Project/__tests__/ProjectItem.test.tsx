@@ -42,6 +42,43 @@ const renderCard = (project: Project) =>
         </MemoryRouter>
     );
 
+describe('ProjectItem list row', () => {
+    beforeEach(() => {
+        (listShares as jest.Mock).mockResolvedValue([]);
+    });
+
+    it('keeps the colored icon when the project has a banner image', async () => {
+        const { container } = render(
+            <MemoryRouter>
+                <ProjectItem
+                    project={{
+                        uid: 'with-banner',
+                        name: 'With banner',
+                        image_url: '/api/uploads/projects/banner.jpg',
+                        icon: 'code',
+                        color: '#1d4ed8',
+                    }}
+                    viewMode="list"
+                    getCompletionPercentage={() => 0}
+                    activeDropdown={null}
+                    setActiveDropdown={jest.fn()}
+                    handleEditProject={jest.fn()}
+                    setProjectToDelete={jest.fn()}
+                    setIsConfirmDialogOpen={jest.fn()}
+                    onOpenShare={jest.fn()}
+                    onStatusChange={jest.fn()}
+                />
+            </MemoryRouter>
+        );
+
+        expect(await screen.findByText('With banner')).toBeInTheDocument();
+        expect(container.querySelector('img')).toBeNull();
+        const badge = container.querySelector('a[aria-hidden="true"]');
+        expect(badge?.querySelector('svg')).not.toBeNull();
+        expect((badge as HTMLElement).style.color).toBe('rgb(29, 78, 216)');
+    });
+});
+
 describe('ProjectItem shares', () => {
     beforeEach(() => {
         jest.clearAllMocks();

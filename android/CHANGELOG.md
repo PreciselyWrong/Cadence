@@ -1,3 +1,8 @@
+## [1.12.1] — 6 novembre 2026
+
+### Nouveautés
+- La page d'un projet affiche sa bannière, posée depuis le web. Il faut un serveur à jour ; sans image, ou hors ligne si elle n'a jamais été lue, la page reste comme avant.
+
 ## [1.12.0] — 6 novembre 2026
 
 ### Nouveautés
