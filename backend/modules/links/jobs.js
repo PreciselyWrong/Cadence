@@ -106,6 +106,8 @@ async function fetchAndStore(linkId) {
     const read = Object.fromEntries(
         Object.entries(meta).filter(([, value]) => value != null)
     );
+    // A title fills a gap only: one given at saving (bookmark, add-on) stays.
+    if (link.title) delete read.title;
     await link.update({ ...read, fetch_status: 'done', fetched_at: now });
 }
 

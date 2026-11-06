@@ -37,6 +37,7 @@ A background queue (`backend/modules/links/jobs.js`) fetches each new link once,
 - **Kind** (`core/urls.classifyKind`): `repo` (GitHub, GitLab, Codeberg, Bitbucket repository paths), `video` (YouTube, Vimeo, … or `og:type` `video.*`), `article` (`og:type` `article`, Medium, Substack, dev.to, …), `tool` (a site's home page), else `other`.
 - `fetch_status` is `pending`, then `done` or `failed`. Pending links are queued again when the server starts.
 - **Rows saved before capture existed**: at each server start, inbox items (except deleted or trashed ones), tasks (except habits) and notes whose text holds `http` are scanned as if just written (`capture.captureExisting`, inbox first). It is idempotent: a link already saved is only found again, and its note is never touched.
+- **Title**: a reading only fills a missing title; one given at saving (bookmark, add-on) or read earlier stays, even when the page changes its title.
 - **Reading again** (`jobs.refreshStale`, daily at 02:00 UTC, at most 25 links per run, oldest reading first, dropped links skipped): a `done` link is read again 30 days after its last reading (stars, last push, README move), a `failed` link 7 days after. A reading never erases a field an earlier one found, and a page that cannot be read this time stays `done` with what it had; only `fetched_at` moves.
 - Only GitHub repositories get stats and a README start; GitLab, Codeberg and Bitbucket repositories get the page metadata only.
 

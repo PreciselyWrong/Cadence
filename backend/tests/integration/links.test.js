@@ -704,6 +704,17 @@ describe('Links', () => {
         await jobs.drain();
     });
 
+    it('keeps the given title once the page has been read', async () => {
+        const { body } = await agent
+            .post('/api/links')
+            .send({ url: 'https://example.com/titre', title: 'Mon titre' });
+        await jobs.drain();
+        const saved = await Link.findOne({ where: { uid: body.link.uid } });
+        expect(saved.title).toBe('Mon titre');
+        expect(saved.fetch_status).toBe('done');
+        expect(saved.description).toBe('A description');
+    });
+
     it('imports bookmarks and counts what happened to each', async () => {
         await agent.post('/api/links').send({ url: 'https://example.com/a' });
         const res = await agent.post('/api/links/import').send({
