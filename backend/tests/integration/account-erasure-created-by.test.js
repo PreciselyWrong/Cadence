@@ -27,6 +27,26 @@ describe('erasing the account that created another', () => {
         expect(after.created_by_user_id).toBeNull();
     });
 
+    it('leaves no trace of the links deleted or triaged by the account', async () => {
+        const { LinkExclusion, TaskTriage } = require('../../models');
+        const user = await createTestUser({ email: 'erased@example.com' });
+        await LinkExclusion.create({
+            user_id: user.id,
+            url: 'https://example.com/efface',
+        });
+        await TaskTriage.create({
+            user_id: user.id,
+            task_uid: 'task-fictive',
+            fingerprint: 'f',
+            state: 'kept',
+        });
+
+        await eraseUserAccount(user.id);
+
+        expect(await LinkExclusion.count()).toBe(0);
+        expect(await TaskTriage.count()).toBe(0);
+    });
+
     it('drops the connection between the two', async () => {
         const creator = await createTestUser({ email: 'creator@example.com' });
         const kid = await User.create({

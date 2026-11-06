@@ -61,6 +61,7 @@ module.exports = (sequelize) => {
                 type: DataTypes.INTEGER,
                 allowNull: true,
                 references: { model: 'projects', key: 'id' },
+                onDelete: 'SET NULL',
             },
             // Where the link was found: inbox_item | task | note, by uid.
             source_type: { type: DataTypes.STRING, allowNull: true },

@@ -11,6 +11,8 @@ const {
     Task,
     Tag,
     Link,
+    LinkExclusion,
+    TaskTriage,
     Note,
     InboxItem,
     TaskEvent,
@@ -416,6 +418,8 @@ async function eraseUserAccount(userId, { beforeErase } = {}) {
             });
         }
         await Link.destroy(byUser);
+        await LinkExclusion.destroy(byUser);
+        await TaskTriage.destroy(byUser);
         await Tag.destroy(byUser);
         await InboxItemAttachment.destroy(byUser);
         await InboxItem.destroy(byUser);

@@ -16,6 +16,7 @@ module.exports = (sequelize) =>
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 references: { model: 'users', key: 'id' },
+                onDelete: 'CASCADE',
             },
             url: { type: DataTypes.STRING(2048), allowNull: false },
         },
