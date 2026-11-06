@@ -5606,6 +5606,8 @@
       "agent": "Agent"
     },
     "settings": {
+      "triageLimit": "Granskade uppgifter per dag",
+      "triageEnabled": "AI-förslag i Att sortera",
       "postponements": "Uppskjutningar före ett kort",
       "maxMoves": "Visade flyttar",
       "maxTonight": "Visade prioriteringar",
@@ -5641,7 +5643,7 @@
       "priorities": "Prioritetsordning",
       "alerts": "Varningar",
       "writing": "Skrivande",
-      "llmEnabled": "Skriv om bedömningen med AI",
+      "llmEnabled": "Sammanfattning och skäl av AI",
       "llmProvider": "AI-leverantör: Profil › AI-assistent",
       "tone": "Ton",
       "signature": "Signatur",

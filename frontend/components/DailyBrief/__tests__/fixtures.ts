@@ -43,6 +43,7 @@ export const SETTINGS: BriefSettings = {
     alerts: { disabled: [], noise: { minVotes: 3, ratio: 0.7 } },
     writing: { tone: 'neutral', signature: '', instructions: '' },
     llm: { enabled: false },
+    triage: { enabled: false, dailyLimit: 20 },
     voice: {
         enabled: false,
         piperUrl: '',

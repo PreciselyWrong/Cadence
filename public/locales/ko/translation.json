@@ -5606,6 +5606,8 @@
       "agent": "에이전트"
     },
     "settings": {
+      "triageLimit": "하루에 살펴볼 작업 수",
+      "triageEnabled": "정리할 항목의 AI 제안",
       "postponements": "카드 전 미루기 횟수",
       "maxMoves": "표시된 이동 제안",
       "maxTonight": "표시할 우선순위",
@@ -5641,7 +5643,7 @@
       "priorities": "우선순위 순서",
       "alerts": "알림",
       "writing": "작성",
-      "llmEnabled": "AI로 판정 다시 쓰기",
+      "llmEnabled": "AI가 작성한 요약과 이유",
       "llmProvider": "AI 제공자: 프로필 › AI 어시스턴트",
       "tone": "어조",
       "signature": "서명",

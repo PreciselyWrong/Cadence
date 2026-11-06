@@ -5624,6 +5624,8 @@
       "agent": "Agent"
     },
     "settings": {
+      "triageLimit": "Sarcini verificate pe zi",
+      "triageEnabled": "Propuneri AI în De sortat",
       "postponements": "Amânări înainte de un card",
       "maxMoves": "Mutări afișate",
       "maxTonight": "Priorități afișate",
@@ -5659,7 +5661,7 @@
       "priorities": "Ordinea priorităților",
       "alerts": "Alerte",
       "writing": "Scriere",
-      "llmEnabled": "Rescrie verdictul cu AI",
+      "llmEnabled": "Rezumat și motive scrise de AI",
       "llmProvider": "Furnizor AI: Profil › Asistent AI",
       "tone": "Ton",
       "signature": "Semnătură",

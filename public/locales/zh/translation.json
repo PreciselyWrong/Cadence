@@ -5606,6 +5606,8 @@
       "agent": "助手"
     },
     "settings": {
+      "triageLimit": "每天查看的任务数",
+      "triageEnabled": "待整理中的 AI 建议",
       "postponements": "卡片前的推迟次数",
       "maxMoves": "显示的移动",
       "maxTonight": "显示的优先事项",
@@ -5641,7 +5643,7 @@
       "priorities": "优先级顺序",
       "alerts": "提醒",
       "writing": "写作",
-      "llmEnabled": "用 AI 改写结论",
+      "llmEnabled": "由 AI 撰写摘要和理由",
       "llmProvider": "AI 提供方：个人资料 › AI 助手",
       "tone": "语气",
       "signature": "签名",

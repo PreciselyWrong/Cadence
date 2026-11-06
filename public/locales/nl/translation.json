@@ -5606,6 +5606,8 @@
       "agent": "Agent"
     },
     "settings": {
+      "triageLimit": "Bekeken taken per dag",
+      "triageEnabled": "AI-voorstellen in Te sorteren",
       "postponements": "Uitstellen voor een kaart",
       "maxMoves": "Getoonde verplaatsingen",
       "maxTonight": "Getoonde prioriteiten",
@@ -5641,7 +5643,7 @@
       "priorities": "Prioriteitsvolgorde",
       "alerts": "Meldingen",
       "writing": "Opstellen",
-      "llmEnabled": "Oordeel herschrijven met AI",
+      "llmEnabled": "Samenvatting en redenen door AI",
       "llmProvider": "AI-aanbieder: Profiel › AI-assistent",
       "tone": "Toon",
       "signature": "Handtekening",

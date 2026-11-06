@@ -5662,6 +5662,8 @@
       "agent": "Agent"
     },
     "settings": {
+      "triageLimit": "Pregledane naloge na dan",
+      "triageEnabled": "Predlogi UI za razvrstitev",
       "postponements": "Odlogi pred kartico",
       "maxMoves": "Prikazani premiki",
       "maxTonight": "Prikazane prednostne naloge",
@@ -5697,7 +5699,7 @@
       "priorities": "Vrstni red prednosti",
       "alerts": "Opozorila",
       "writing": "Pisanje",
-      "llmEnabled": "Prepiši presojo z UI",
+      "llmEnabled": "Povzetek in razlogi UI",
       "llmProvider": "Ponudnik UI: Profil › Pomočnik UI",
       "tone": "Ton",
       "signature": "Podpis",

@@ -2,7 +2,7 @@
 
 Every morning Cadence prepares a short brief that arbitrates the day: what happens in the next three days, the day's priorities, the tasks to move, what to anticipate, the replies waiting and what was just settled. It is shown on the web (`/insights/daily-brief` and the Today card) and on Android, and read aloud by a local Piper voice.
 
-The brief replaces the upstream AI-only Daily Brief. It works **without AI**: timeline, load, conflicts, duplicates and candidate dates are plain code. An LLM is optional and only rewrites the verdict and the reasons.
+The brief replaces the upstream AI-only Daily Brief. It works **without AI**: timeline, load, conflicts, duplicates and candidate dates are plain code. An LLM is optional: it writes the short summary at the top (2 or 3 sentences) and rewrites the reasons.
 
 Plan and decisions: `docs/resume-matinal-plan.md`.
 
@@ -88,7 +88,8 @@ Normalized by `backend/modules/daily-plan/brief/settings.js`; unknown or invalid
 | `retention`             | `{ decisionsDays: 90, audioDays: 7 }`                                                               |                                                                                                           |
 | `alerts`                | `{ disabled: [], noise: { minVotes: 3, ratio: 0.7 } }`                                              | alert types switched off by hand; noise rule below                                                        |
 | `writing`               | `{ tone: "neutral", signature: "", instructions: "" }`                                              | used by the optional LLM only                                                                             |
-| `llm`                   | `{ enabled: false }`                                                                                | provider = Profile › AI Assistant                                                                         |
+| `llm`                   | `{ enabled: false }`                                                                                | summary and reasons by the model; provider = Profile › AI Assistant                                       |
+| `triage`                | `{ enabled: false, dailyLimit: 20 }`                                                                | assistant proposals of the triage queue (`docs/40-triage.md`)                                             |
 | `voice`                 | `{ enabled: false, piperUrl: "", voice: "", speed: 1, dictionary: [] }`                             | dictionary: `[{ from, to }]`                                                                              |
 | `mail`                  | `{ enabled: false, accounts: [], excludedAccounts: [], replyWindowDays: 14 }`                       | read through the mail agent only                                                                          |
 | `options`               | `{ eveningWrapUp: false, telegram: false, sonos: false, weekly: false }`                            | Android "brief ready" notification is an Android setting                                                  |

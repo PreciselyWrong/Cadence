@@ -245,6 +245,19 @@ describe('brief LLM writer', () => {
 });
 
 describe('applyRewrite', () => {
+    it('keeps the summary to three sentences', () => {
+        const brief = briefWithTonight();
+        const rewritten = applyRewrite(brief, {
+            verdict: 'Une. Deux ! Trois ? Quatre. Cinq.',
+            tonight: brief.tonight.map((_, index) => ({
+                index,
+                reason: 'Motif.',
+            })),
+            moves: brief.moves.map((_, index) => ({ index, reason: 'Motif.' })),
+        });
+        expect(rewritten.verdict.text).toBe('Une. Deux ! Trois ?');
+    });
+
     it('refuses an empty verdict', () => {
         const brief = briefWithTonight();
         expect(() =>

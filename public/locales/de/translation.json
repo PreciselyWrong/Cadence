@@ -5615,6 +5615,8 @@
       "agent": "Agent"
     },
     "settings": {
+      "triageLimit": "Geprüfte Aufgaben pro Tag",
+      "triageEnabled": "KI-Vorschläge in „Zu sortieren“",
       "postponements": "Verschiebungen vor einer Karte",
       "maxMoves": "Angezeigte Verschiebungen",
       "maxTonight": "Angezeigte Prioritäten",
@@ -5650,7 +5652,7 @@
       "priorities": "Prioritätsreihenfolge",
       "alerts": "Warnungen",
       "writing": "Verfassen",
-      "llmEnabled": "Ergebnis mit KI umformulieren",
+      "llmEnabled": "Zusammenfassung und Gründe von der KI",
       "llmProvider": "KI-Anbieter: Profil › KI-Assistent",
       "tone": "Ton",
       "signature": "Signatur",

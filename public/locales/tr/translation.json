@@ -5606,6 +5606,8 @@
       "agent": "Ajan"
     },
     "settings": {
+      "triageLimit": "Günlük incelenen görev",
+      "triageEnabled": "Ayıklanacaklarda yapay zekâ önerileri",
       "postponements": "Karttan önceki ertelemeler",
       "maxMoves": "Gösterilen taşımalar",
       "maxTonight": "Gösterilen öncelikler",
@@ -5641,7 +5643,7 @@
       "priorities": "Öncelik sırası",
       "alerts": "Uyarılar",
       "writing": "Yazım",
-      "llmEnabled": "Kararı yapay zekâ ile yeniden yaz",
+      "llmEnabled": "Yapay zekâ özeti ve gerekçeleri",
       "llmProvider": "Yapay zekâ sağlayıcısı: Profil › Yapay zekâ asistanı",
       "tone": "Ton",
       "signature": "İmza",

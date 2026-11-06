@@ -5606,6 +5606,8 @@
       "agent": "Agente"
     },
     "settings": {
+      "triageLimit": "Tareas revisadas por día",
+      "triageEnabled": "Propuestas de la IA en Por ordenar",
       "postponements": "Aplazamientos antes de una tarjeta",
       "maxMoves": "Movimientos mostrados",
       "maxTonight": "Prioridades mostradas",
@@ -5641,7 +5643,7 @@
       "priorities": "Orden de prioridad",
       "alerts": "Alertas",
       "writing": "Redacción",
-      "llmEnabled": "Reescribir el veredicto con IA",
+      "llmEnabled": "Resumen y motivos escritos por la IA",
       "llmProvider": "Proveedor de IA: Perfil › Asistente de IA",
       "tone": "Tono",
       "signature": "Firma",

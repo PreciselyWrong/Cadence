@@ -5606,6 +5606,8 @@
       "agent": "Agentti"
     },
     "settings": {
+      "triageLimit": "Tarkastettuja tehtäviä päivässä",
+      "triageEnabled": "Tekoälyn ehdotukset lajiteltaviin",
       "postponements": "Lykkäykset ennen korttia",
       "maxMoves": "Näytetyt siirrot",
       "maxTonight": "Näytettävät prioriteetit",
@@ -5641,7 +5643,7 @@
       "priorities": "Prioriteettijärjestys",
       "alerts": "Hälytykset",
       "writing": "Kirjoittaminen",
-      "llmEnabled": "Kirjoita arvio uudelleen tekoälyllä",
+      "llmEnabled": "Tekoälyn kirjoittama yhteenveto ja perustelut",
       "llmProvider": "Tekoälypalveluntarjoaja: Profiili › Tekoälyavustaja",
       "tone": "Sävy",
       "signature": "Allekirjoitus",

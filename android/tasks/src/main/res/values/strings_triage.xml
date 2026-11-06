@@ -25,4 +25,6 @@
     <string name="triage_action_note">Convertir en note</string>
     <string name="triage_action_project">Convertir en projet</string>
     <string name="triage_action_habit">Convertir en habitude</string>
+    <string name="brief_triage_enabled">Propositions de l\'IA dans À trier</string>
+    <string name="brief_triage_limit">Tâches regardées par jour</string>
 </resources>

@@ -5606,6 +5606,8 @@
       "agent": "Agen"
     },
     "settings": {
+      "triageLimit": "Tugas yang ditinjau per hari",
+      "triageEnabled": "Usulan AI di Untuk dipilah",
       "postponements": "Penundaan sebelum kartu",
       "maxMoves": "Pemindahan yang ditampilkan",
       "maxTonight": "Prioritas yang ditampilkan",
@@ -5641,7 +5643,7 @@
       "priorities": "Urutan prioritas",
       "alerts": "Peringatan",
       "writing": "Penulisan",
-      "llmEnabled": "Tulis ulang ringkasan dengan AI",
+      "llmEnabled": "Ringkasan dan alasan oleh AI",
       "llmProvider": "Penyedia AI: Profil › Asisten AI",
       "tone": "Nada",
       "signature": "Tanda tangan",

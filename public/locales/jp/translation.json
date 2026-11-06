@@ -5606,6 +5606,8 @@
       "agent": "エージェント"
     },
     "settings": {
+      "triageLimit": "1日に確認するタスク数",
+      "triageEnabled": "整理待ちの AI 提案",
       "postponements": "カードの前の延期",
       "maxMoves": "表示された移動",
       "maxTonight": "表示する優先事項",
@@ -5641,7 +5643,7 @@
       "priorities": "優先順位",
       "alerts": "アラート",
       "writing": "文章作成",
-      "llmEnabled": "判定を AI で書き直す",
+      "llmEnabled": "AI による要約と理由",
       "llmProvider": "AI プロバイダー: プロフィール › AI アシスタント",
       "tone": "トーン",
       "signature": "署名",

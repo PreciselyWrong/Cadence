@@ -5611,6 +5611,8 @@
       "agent": "Agent"
     },
     "settings": {
+      "triageLimit": "Gjennomgåtte oppgaver per dag",
+      "triageEnabled": "KI-forslag i Å sortere",
       "postponements": "Utsettelser før et kort",
       "maxMoves": "Viste flyttinger",
       "maxTonight": "Viste prioriteringer",
@@ -5646,7 +5648,7 @@
       "priorities": "Prioritetsrekkefølge",
       "alerts": "Varsler",
       "writing": "Skriving",
-      "llmEnabled": "Skriv om vurderingen med KI",
+      "llmEnabled": "Sammendrag og begrunnelser av KI",
       "llmProvider": "KI-leverandør: Profil › KI-assistent",
       "tone": "Tone",
       "signature": "Signatur",

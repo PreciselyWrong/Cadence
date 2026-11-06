@@ -788,11 +788,46 @@ const DailyBriefTab: React.FC<DailyBriefTabProps> = ({ isActive }) => {
                 <Check
                     label={t(
                         'dailyBrief.settings.llmEnabled',
-                        'Réécrire le verdict avec l’IA'
+                        'Résumé et motifs écrits par l’IA'
                     )}
                     checked={draft.llm.enabled}
                     onChange={(enabled) => update({ llm: { enabled } })}
                 />
+                <Check
+                    label={t(
+                        'dailyBrief.settings.triageEnabled',
+                        'Propositions de l’IA dans À trier'
+                    )}
+                    checked={draft.triage.enabled}
+                    onChange={(enabled) =>
+                        update({
+                            triage: { ...draft.triage, enabled },
+                        })
+                    }
+                />
+                {draft.triage.enabled && (
+                    <label className="flex flex-col gap-1 text-sm text-gray-800 dark:text-gray-200">
+                        {t(
+                            'dailyBrief.settings.triageLimit',
+                            'Tâches regardées par jour'
+                        )}
+                        <input
+                            type="number"
+                            min={1}
+                            max={200}
+                            value={draft.triage.dailyLimit}
+                            onChange={(event) =>
+                                update({
+                                    triage: {
+                                        ...draft.triage,
+                                        dailyLimit: Number(event.target.value),
+                                    },
+                                })
+                            }
+                            className="rounded-lg border border-gray-300 bg-white px-3 py-2 dark:border-gray-600 dark:bg-gray-900"
+                        />
+                    </label>
+                )}
                 <p className="text-xs text-gray-600 dark:text-gray-300">
                     <Link
                         to="/profile?section=ai-assistant"

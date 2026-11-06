@@ -1,14 +1,15 @@
 'use strict';
 
-// Optional LLM pass: rewrites verdict.text and the reasons of tonight and
-// moves in the requested tone. It never adds or removes an item and never
+// Optional LLM pass: writes the short summary at the top (2 or 3 sentences) and
+// rewrites the reasons of tonight and moves in the requested tone. It never adds or removes an item and never
 // changes a uid or a date. Any failure keeps the rules text (docs/39).
 const ai = require('../../ai-assistant/service');
 const entitlements = require('../../../services/entitlementsService');
 const { logger } = require('../../../services/logService');
 const { llmConfigured } = require('./sources');
 
-const VERDICT_MAX = 300;
+const VERDICT_MAX = 500;
+const SUMMARY_SENTENCES = 3;
 const REASON_MAX = 240;
 const NOTE_MAX = 200;
 const TONE_DEFAULT = 'neutral';
@@ -76,6 +77,14 @@ function dataFor(brief, tasksByUid) {
     };
     return {
         verdict: brief.verdict.text,
+        day: {
+            due_today: brief.counters.due_today,
+            overdue: brief.counters.overdue,
+            alerts: brief.anticipate.map((card) => card.text),
+            events: (brief.timeline[0]?.events ?? []).map(
+                (event) => event.title
+            ),
+        },
         tonight: brief.tonight.map((item, index) => ({
             index,
             ...describe(item),
@@ -94,7 +103,7 @@ function userPrompt(data, tone, instructions) {
     if (instructions) style.push(`Style preferences: ${instructions}`);
     return [
         ...style,
-        'Rewrite "verdict" in one sentence, and each "reason" in one short sentence.',
+        'Write "verdict" as a summary of the day in 2 or 3 short sentences: what matters most and what to do first. Rewrite each "reason" in one short sentence.',
         'Answer with: {"verdict": "...", "tonight": [{"index": 0, "reason": "..."}], "moves": [...]}',
         '<<<DATA',
         JSON.stringify(data),
@@ -126,6 +135,12 @@ function checkItems(rewritten, count) {
     });
 }
 
+// The summary stays short whatever the model wrote.
+function firstSentences(text, count) {
+    const sentences = text.trim().match(/[^.!?…]+(?:[.!?…]+\s*|$)/g) ?? [text];
+    return sentences.slice(0, count).join('').trim();
+}
+
 function applyRewrite(brief, answer) {
     if (
         !answer ||
@@ -138,7 +153,10 @@ function applyRewrite(brief, answer) {
     const moves = checkItems(answer.moves, brief.moves.length);
     return {
         ...brief,
-        verdict: { text: answer.verdict.trim(), by: 'llm' },
+        verdict: {
+            text: firstSentences(answer.verdict, SUMMARY_SENTENCES),
+            by: 'llm',
+        },
         tonight: brief.tonight.map((item, index) => ({
             ...item,
             reason: tonight[index],

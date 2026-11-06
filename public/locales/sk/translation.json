@@ -286,6 +286,8 @@
       "agent": "Agent"
     },
     "settings": {
+      "triageLimit": "Prezreté úlohy za deň",
+      "triageEnabled": "Návrhy AI na roztriedenie",
       "postponements": "Odklady pred kartou",
       "maxMoves": "Zobrazené presuny",
       "maxTonight": "Zobrazené priority",
@@ -321,7 +323,7 @@
       "priorities": "Poradie priorít",
       "alerts": "Upozornenia",
       "writing": "Písanie",
-      "llmEnabled": "Prepísať verdikt pomocou AI",
+      "llmEnabled": "Zhrnutie a dôvody od AI",
       "llmProvider": "Poskytovateľ AI: Profil › Asistent AI",
       "tone": "Tón",
       "signature": "Podpis",

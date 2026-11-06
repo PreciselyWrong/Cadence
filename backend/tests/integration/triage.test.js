@@ -197,6 +197,64 @@ describe('triage queue', () => {
         expect(await Task.findByPk(foreign.id)).not.toBeNull();
     });
 
+    it('stores what the assistant proposes, and does not ask it twice', async () => {
+        const ai = require('../../modules/ai-assistant/service');
+        const entitlements = require('../../services/entitlementsService');
+        const assistant = require('../../modules/triage/assistant');
+        const sources = require('../../modules/daily-plan/brief/sources');
+        const open = await task({ name: 'trucs', status: 0 });
+        const calm = await task({ name: 'Appeler Paul', status: 0 });
+        await user.update({
+            ui_settings: {
+                brief: { triage: { enabled: true, dailyLimit: 5 } },
+            },
+        });
+        jest.spyOn(sources, 'llmConfigured').mockResolvedValue(true);
+        jest.spyOn(ai, 'getOpenAIClient').mockResolvedValue({});
+        jest.spyOn(ai, 'getAIModel').mockResolvedValue('fictif');
+        jest.spyOn(entitlements, 'consumeUsage').mockResolvedValue();
+        jest.spyOn(entitlements, 'consumeMonthlyUsage').mockResolvedValue();
+        const call = jest.spyOn(ai, 'callWithFallback').mockResolvedValue({
+            choices: [
+                {
+                    message: {
+                        content: JSON.stringify({
+                            tasks: [
+                                {
+                                    uid: open.uid,
+                                    action: 'rename',
+                                    name: 'Trier les papiers',
+                                    reason: 'Le titre ne dit pas quoi faire.',
+                                },
+                                { uid: calm.uid, action: 'none' },
+                            ],
+                        }),
+                    },
+                },
+            ],
+        });
+
+        expect(await assistant.reviewForUser(user)).toBe(2);
+        expect((await queue()).items).toEqual([
+            expect.objectContaining({
+                source: 'assistant',
+                task_uid: open.uid,
+                action: 'rename',
+                payload: { name: 'Trier les papiers' },
+            }),
+        ]);
+
+        expect(await assistant.reviewForUser(user)).toBe(0);
+        expect(call).toHaveBeenCalledTimes(1);
+        jest.restoreAllMocks();
+    });
+
+    it('asks no model while the assistant is off', async () => {
+        const assistant = require('../../modules/triage/assistant');
+        await task({ name: 'trucs', status: 0 });
+        expect(await assistant.reviewForUser(user)).toBe(0);
+    });
+
     it('shows a stored assistant proposal only for the state it was made on', async () => {
         const open = await task({ name: 'trucs', status: 0 });
         const {

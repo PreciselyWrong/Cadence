@@ -5576,6 +5576,8 @@
       "agent": "Agent"
     },
     "settings": {
+      "triageLimit": "Tasks looked at per day",
+      "triageEnabled": "Assistant proposals in To sort",
       "postponements": "Postponements before a card",
       "maxMoves": "Moves shown",
       "maxTonight": "Priorities shown",
@@ -5611,7 +5613,7 @@
       "priorities": "Priority order",
       "alerts": "Alerts",
       "writing": "Writing",
-      "llmEnabled": "Rewrite the verdict with AI",
+      "llmEnabled": "Summary and reasons written by AI",
       "llmProvider": "AI provider: Profile › AI Assistant",
       "tone": "Tone",
       "signature": "Signature",

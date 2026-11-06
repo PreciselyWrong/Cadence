@@ -127,6 +127,23 @@ private fun SendingPanel(current: JsonObject, save: (JsonObject) -> Unit) {
 }
 
 /** Bilan du soir : après l'heure de bascule, il remplace le résumé du matin dans Aujourd'hui et dans l'écran du résumé. */
+/** Propositions de l'assistant dans « À trier » : fournisseur dans le profil du serveur, désactivées par défaut. */
+@Composable
+private fun TriageAssistantSetting(current: JsonObject, save: (JsonObject) -> Unit) {
+    val triage = BriefSettingsJson.group(current, "triage")
+    val enabled = (triage["enabled"] as? JsonPrimitive)?.content == "true"
+    ToggleRow(
+        label = stringResource(R.string.brief_triage_enabled),
+        checked = enabled,
+        onChecked = { save(BriefSettingsJson.withNested(current, "triage", "enabled", JsonPrimitive(it))) },
+    )
+    if (enabled) {
+        IntSetting(stringResource(R.string.brief_triage_limit), BriefSettingsJson.int(triage, "dailyLimit", 20), range = 1..200) {
+            save(BriefSettingsJson.withNested(current, "triage", "dailyLimit", JsonPrimitive(it)))
+        }
+    }
+}
+
 @Composable
 private fun EveningReviewPanel(current: JsonObject, save: (JsonObject) -> Unit) {
     val switch = EveningMode.switchOf(current)
@@ -295,6 +312,7 @@ private fun ThresholdsPanel(current: JsonObject, save: (JsonObject) -> Unit) {
         IntSetting(stringResource(R.string.brief_threshold_lookback), BriefSettingsJson.int(thresholds, "closedLookbackDays", 7), range = 1..60) {
             save(BriefSettingsJson.withNested(current, "thresholds", "closedLookbackDays", JsonPrimitive(it)))
         }
+        TriageAssistantSetting(current, save)
         IntSetting(stringResource(R.string.brief_retention_decisions), BriefSettingsJson.int(retention, "decisionsDays", 90), range = 1..365) {
             save(BriefSettingsJson.withNested(current, "retention", "decisionsDays", JsonPrimitive(it)))
         }

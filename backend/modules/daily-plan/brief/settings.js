@@ -328,6 +328,10 @@ const SCHEMA = field.object({
     llm: field.object({
         enabled: field.bool(false),
     }),
+    triage: field.object({
+        enabled: field.bool(false),
+        dailyLimit: field.number(20, 1, 200, true),
+    }),
     voice: field.object({
         enabled: field.bool(false),
         piperUrl: field.url(''),

@@ -41,6 +41,7 @@ const getCronExpression = (frequency) => {
         held_notifications: '* * * * *',
         daily_brief: '*/5 * * * *',
         brief_purge: '30 2 * * *',
+        triage_assistant: '50 3 * * *',
     };
     return expressions[frequency];
 };
@@ -79,6 +80,9 @@ const runJob = async (frequency) => {
     } else if (frequency === 'daily_brief') {
         const { generateDueBriefs } = require('../daily-plan/brief/job');
         await generateDueBriefs();
+    } else if (frequency === 'triage_assistant') {
+        const { runTriageAssistant } = require('../triage/assistant');
+        await runTriageAssistant();
     } else if (frequency === 'brief_purge') {
         const { purgeBriefMemory } = require('../daily-plan/brief/job');
         await purgeBriefMemory();
@@ -116,6 +120,7 @@ const createJobEntries = () => {
         'held_notifications',
         'daily_brief',
         'brief_purge',
+        'triage_assistant',
     ];
 
     return frequencies.map((frequency) => {

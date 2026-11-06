@@ -5662,6 +5662,8 @@
       "agent": "Agent"
     },
     "settings": {
+      "triageLimit": "Przeglądane zadania dziennie",
+      "triageEnabled": "Propozycje AI w Do uporządkowania",
       "postponements": "Odroczenia przed kartą",
       "maxMoves": "Wyświetlane przeniesienia",
       "maxTonight": "Wyświetlane priorytety",
@@ -5697,7 +5699,7 @@
       "priorities": "Kolejność priorytetów",
       "alerts": "Alerty",
       "writing": "Pisanie",
-      "llmEnabled": "Przepisz ocenę przez AI",
+      "llmEnabled": "Podsumowanie i powody pisane przez AI",
       "llmProvider": "Dostawca AI: Profil › Asystent AI",
       "tone": "Ton",
       "signature": "Podpis",

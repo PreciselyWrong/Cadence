@@ -5606,6 +5606,8 @@
       "agent": "Tác nhân"
     },
     "settings": {
+      "triageLimit": "Số việc xem mỗi ngày",
+      "triageEnabled": "Đề xuất AI trong Cần phân loại",
       "postponements": "Số lần hoãn trước một thẻ",
       "maxMoves": "Các lần dời đã hiển thị",
       "maxTonight": "Ưu tiên hiển thị",
@@ -5641,7 +5643,7 @@
       "priorities": "Thứ tự ưu tiên",
       "alerts": "Cảnh báo",
       "writing": "Soạn thảo",
-      "llmEnabled": "Viết lại nhận định bằng AI",
+      "llmEnabled": "Tóm tắt và lý do do AI viết",
       "llmProvider": "Nhà cung cấp AI: Hồ sơ › Trợ lý AI",
       "tone": "Giọng điệu",
       "signature": "Chữ ký",

@@ -21,6 +21,12 @@ A queue of proposals on open tasks, one at a time, each with its reason in one l
 
 `alerts.disabled` applies to these types. These questions no longer appear in the brief, whose `anticipate[].question` is always `null`.
 
+## Assistant
+
+Optional, off by default: Profile › Daily brief (web), Réglages › Résumé (Android), `ui_settings.brief.triage` `{ enabled, dailyLimit }` (default 20, 1 to 200). The provider is Profile › AI Assistant.
+
+The `triage_assistant` job (daily, 03:50 UTC) sends the open tasks the rules left alone, by batches of 10, up to `dailyLimit` tasks per user, and stores one answer per task in `task_triage`: a proposal (`pending`) or nothing to say (`none`). A task looked at is not sent again until it changes. `modules/triage/assistant.js` checks every answer (`validateProposal`): an unknown action, a value out of bounds or a missing reason means no proposal. A recurring task can only be renamed. `reclass` only applies to a task with neither project nor tags, only with existing projects and tags, so what another tool already classified is not proposed again. Task text sent to the model is data, never instructions.
+
 ## Actions
 
 `rename` (`{ name }`), `split` (`{ subtasks: [names] }`), `set_due` (`{ due_date }`), `done`, `cancel`, `delete`, `reclass` (`{ project_id?, area_uid?, tags? }`), `to_note`, `to_project`, `to_habit`. Every action runs through the MCP tools (`modules/triage/actions.js`), which hold the rules of each write. A conversion creates the new thing first, then deletes the task.
