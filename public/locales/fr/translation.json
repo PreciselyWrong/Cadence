@@ -3302,7 +3302,7 @@
       "taskReminders": "Rappels de tâche"
     },
     "descriptions": {
-      "dueTasks": "Tâches qui doivent être effectuées dans les 24 heures",
+      "dueTasks": "Tâches sans heure, dues dans les 24 heures",
       "overdueTasks": "Tâches dont la date limite est dépassée",
       "deferUntil": "Tâches qui sont maintenant disponibles pour travailler",
       "dueProjects": "Projets qui doivent être réalisés dans les 24 heures",
@@ -3438,7 +3438,15 @@
     "loading": "Chargement…",
     "noNotifications": "Aucune notification pour l'instant",
     "markAsRead": "Marquer comme lu",
-    "delete": "Supprimer"
+    "delete": "Supprimer",
+    "timedTasks": {
+      "title": "Tâches à heure fixe",
+      "description": "Une tâche à heure fixe sonne à cette heure, pas la veille. Le téléphone et l'ordinateur partagent ce réglage ; les canaux sont ceux des rappels de tâche.",
+      "enable": "Rappeler les tâches à heure fixe",
+      "lead": "Quand",
+      "atTime": "À l'heure",
+      "minutesBefore": "{{count}} min avant"
+    }
   },
   "projectStatus": {
     "not_started": "Non commencé",

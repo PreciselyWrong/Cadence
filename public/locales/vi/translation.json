@@ -3293,7 +3293,7 @@
       "taskReminders": "Nhắc nhở công việc"
     },
     "descriptions": {
-      "dueTasks": "Công việc đến hạn trong vòng 24 giờ",
+      "dueTasks": "Công việc không có giờ, đến hạn trong 24 giờ",
       "overdueTasks": "Công việc đã qua hạn",
       "deferUntil": "Công việc hiện có sẵn để làm",
       "dueProjects": "Dự án đến hạn trong vòng 24 giờ",
@@ -3429,7 +3429,15 @@
     "loading": "Đang tải...",
     "noNotifications": "Chưa có thông báo",
     "markAsRead": "Đánh dấu đã đọc",
-    "delete": "Xóa"
+    "delete": "Xóa",
+    "timedTasks": {
+      "title": "Công việc có giờ",
+      "description": "Công việc có giờ sẽ báo vào đúng giờ đó, không phải hôm trước. Điện thoại và máy tính dùng chung cài đặt này; các kênh giống như nhắc nhở công việc.",
+      "enable": "Nhắc công việc có giờ",
+      "lead": "Khi nào",
+      "atTime": "Đúng giờ",
+      "minutesBefore": "Trước {{count}} phút"
+    }
   },
   "projectStatus": {
     "not_started": "Chưa bắt đầu",

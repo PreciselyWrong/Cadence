@@ -3301,7 +3301,7 @@
       "taskReminders": "Mementouri pentru sarcini"
     },
     "descriptions": {
-      "dueTasks": "Sarcini care sunt scadente în următoarele 24 de ore",
+      "dueTasks": "Sarcini fără oră, scadente în 24 de ore",
       "overdueTasks": "Sarcini care au depășit data limită",
       "deferUntil": "Sarcini care sunt acum disponibile pentru a fi lucrate",
       "dueProjects": "Proiecte care sunt scadente în următoarele 24 de ore",
@@ -3437,7 +3437,15 @@
     "loading": "Se încarcă...",
     "noNotifications": "Nicio notificare încă",
     "markAsRead": "Marchează ca citită",
-    "delete": "Șterge"
+    "delete": "Șterge",
+    "timedTasks": {
+      "title": "Sarcini cu oră",
+      "description": "O sarcină cu oră sună la acea oră, nu cu o zi înainte. Telefonul și computerul împart această setare; canalele sunt cele ale mementourilor de sarcini.",
+      "enable": "Amintește sarcinile cu oră",
+      "lead": "Când",
+      "atTime": "La oră",
+      "minutesBefore": "Cu {{count}} min înainte"
+    }
   },
   "projectStatus": {
     "not_started": "Nefăcut",

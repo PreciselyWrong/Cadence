@@ -9,6 +9,8 @@ import ch.nicolab.cadence.tasks.review.ReviewRepository
 import ch.nicolab.cadence.tasks.todomd.TodoMdClient
 import ch.nicolab.cadence.tasks.syncstatus.SyncStatusClient
 import ch.nicolab.cadence.tasks.planning.FocusRepository
+import ch.nicolab.cadence.tasks.reminder.TimedRemindersRepository
+import ch.nicolab.cadence.tasks.reminder.TimedRemindersStore
 import ch.nicolab.cadence.tasks.planning.PlanningStore
 import ch.nicolab.cadence.tasks.reminder.PlanSlotsStore
 import ch.nicolab.cadence.tasks.reminder.refreshPlanSlots
@@ -53,6 +55,8 @@ internal suspend fun currentServerSession(context: Context): ch.nicolab.cadence.
 internal fun createReview(context: Context): ReviewRepository = TasksRuntime.get(context).review
 
 internal fun createFocus(context: Context): FocusRepository = TasksRuntime.get(context).focus
+
+internal fun createTimedReminders(context: Context): TimedRemindersRepository = TasksRuntime.get(context).timedReminders
 
 internal fun createTodoMd(context: Context): TodoMdClient = TasksRuntime.get(context).todoMd
 
@@ -118,6 +122,7 @@ internal class TasksRuntime private constructor(context: Context) {
         onSynced = {
             refreshPlanSlots(PlanSlotsStore(appContext), api::call)
             focus.sync()
+            timedReminders.sync()
             brief.refreshToday()
             evening.refreshIfDue(briefStore.settings.value)
             ch.nicolab.cadence.tasks.brief.audio.BriefAudioScheduler.request(appContext)
@@ -147,6 +152,8 @@ internal class TasksRuntime private constructor(context: Context) {
     )
 
     val focus = FocusRepository(PlanningStore.of(appContext), api::call)
+
+    val timedReminders = TimedRemindersRepository(TimedRemindersStore(appContext), api::call)
 
     val briefStore = BriefStore.of(appContext)
     private val accountZone: suspend () -> ZoneId = { connection.observe().first()?.accountZone ?: ZoneId.systemDefault() }

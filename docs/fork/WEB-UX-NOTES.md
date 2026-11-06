@@ -513,3 +513,9 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Problème** : les liens restaient noyés dans l'Inbox, et la liste passait avant les aperçus.
 - **Décision** : la galerie est la vue par défaut, groupée par thème (premier segment de la première étiquette). Statuts lisibles : À lire, À évaluer, À tester, Gardé, Plus tard, Archivé. « Tâche » crée une tâche en un clic, qui garde l'adresse. « Importer des favoris » lit un export Firefox dans le navigateur.
 - **Android à reprendre** : même galerie et mêmes statuts, livrés dans la même étape, avec « Liens » dans Listes. L'import reste sur le web : c'est un geste unique, depuis l'ordinateur où est le fichier.
+
+### 2026-11-06 — Tâches à heure fixe : à l'heure, réglage partagé
+
+- **Problème** : le client Linux prévenait 24 h avant une tâche à heure fixe (« due dans 23 heures »), sans rien dire au bon moment.
+- **Décision** : une tâche à heure fixe sonne à son heure, moins l'avance choisie ; plus d'alerte « bientôt due » pour elle. Carte **Tâches à heure fixe** dans Profil › Notifications, enregistrée aussitôt (`/api/notifications/timed-tasks`).
+- **Android à reprendre** : fait dans la même étape : Réglages › Notifications lit et écrit le même réglage.

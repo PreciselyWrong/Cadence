@@ -17,6 +17,7 @@ jest.mock('react-i18next', () => {
 jest.mock('../PushDeviceCard', () => () => null);
 jest.mock('../AppriseCard', () => () => null);
 jest.mock('../WebhooksCard', () => () => null);
+jest.mock('../TimedRemindersCard', () => () => null);
 jest.mock('../../../../utils/csrfService', () => ({
     getCsrfToken: jest.fn().mockResolvedValue('token'),
 }));

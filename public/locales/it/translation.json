@@ -3299,7 +3299,7 @@
       "taskReminders": "Promemoria delle attività"
     },
     "descriptions": {
-      "dueTasks": "Compiti che scadono entro 24 ore",
+      "dueTasks": "Attività senza orario in scadenza entro 24 ore",
       "overdueTasks": "Compiti che hanno superato la loro data di scadenza",
       "deferUntil": "Compiti che sono ora disponibili per lavorare",
       "dueProjects": "Progetti che scadono entro 24 ore",
@@ -3435,7 +3435,15 @@
     "loading": "Caricamento...",
     "noNotifications": "Nessuna notifica",
     "markAsRead": "Segna come letta",
-    "delete": "Elimina"
+    "delete": "Elimina",
+    "timedTasks": {
+      "title": "Attività con orario",
+      "description": "Un'attività con orario suona a quell'ora, non il giorno prima. Telefono e computer condividono questa impostazione; i canali sono quelli dei promemoria delle attività.",
+      "enable": "Avvisa per le attività con orario",
+      "lead": "Quando",
+      "atTime": "All'ora",
+      "minutesBefore": "{{count}} min prima"
+    }
   },
   "projectStatus": {
     "not_started": "Non Iniziato",

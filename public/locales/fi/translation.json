@@ -3293,7 +3293,7 @@
       "taskReminders": "Tehtävämuistutukset"
     },
     "descriptions": {
-      "dueTasks": "Tehtävät, jotka erääntyvät 24 tunnin sisällä",
+      "dueTasks": "Tehtävät ilman kellonaikaa, jotka erääntyvät 24 tunnin sisällä",
       "overdueTasks": "Tehtävät, joiden eräpäivä on mennyt",
       "deferUntil": "Tehtävät, jotka ovat nyt saatavilla työstettäväksi",
       "dueProjects": "Projektit, jotka erääntyvät 24 tunnin sisällä",
@@ -3429,7 +3429,15 @@
     "loading": "Ladataan...",
     "noNotifications": "Ei vielä ilmoituksia",
     "markAsRead": "Merkitse luetuksi",
-    "delete": "Poista"
+    "delete": "Poista",
+    "timedTasks": {
+      "title": "Kellonajalliset tehtävät",
+      "description": "Kellonajallinen tehtävä hälyttää kyseisenä aikana, ei edellisenä päivänä. Puhelin ja tietokone jakavat tämän asetuksen; kanavat ovat tehtävämuistutusten kanavat.",
+      "enable": "Muistuta kellonajallisista tehtävistä",
+      "lead": "Milloin",
+      "atTime": "Ajallaan",
+      "minutesBefore": "{{count}} min ennen"
+    }
   },
   "projectStatus": {
     "not_started": "Ei aloitettu",

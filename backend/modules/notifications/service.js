@@ -2,8 +2,32 @@
 
 const notificationsRepository = require('./repository');
 const { NotFoundError, ValidationError } = require('../../shared/errors');
+const {
+    normalizeTimedReminders,
+    readTimedReminders,
+} = require('../../utils/timedReminders');
 
 class NotificationsService {
+    async getTimedReminders(userId) {
+        return readTimedReminders(
+            await notificationsRepository.findUiSettings(userId)
+        );
+    }
+
+    async saveTimedReminders(userId, body) {
+        const timedReminders = normalizeTimedReminders(body);
+        if (!timedReminders) {
+            throw new ValidationError(
+                'enabled must be a boolean and lead_minutes one of 0, 5, 10, 15, 30'
+            );
+        }
+        await notificationsRepository.saveTimedReminders(
+            userId,
+            timedReminders
+        );
+        return timedReminders;
+    }
+
     async getAll(userId, options) {
         const { limit = 10, offset = 0, includeRead = 'true', type } = options;
         return notificationsRepository.getUserNotifications(userId, {

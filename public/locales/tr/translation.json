@@ -3293,7 +3293,7 @@
       "taskReminders": "Görev hatırlatıcıları"
     },
     "descriptions": {
-      "dueTasks": "24 saat içinde vadesi gelen görevler",
+      "dueTasks": "24 saat içinde bitecek saatsiz görevler",
       "overdueTasks": "Vade tarihini geçmiş görevler",
       "deferUntil": "Şu anda çalışılabilir olan görevler",
       "dueProjects": "24 saat içinde vadesi gelen projeler",
@@ -3429,7 +3429,15 @@
     "loading": "Yükleniyor...",
     "noNotifications": "Henüz bildirim yok",
     "markAsRead": "Okundu olarak işaretle",
-    "delete": "Sil"
+    "delete": "Sil",
+    "timedTasks": {
+      "title": "Saatli görevler",
+      "description": "Saatli bir görev bir gün önce değil, o saatte çalar. Telefon ve bilgisayar bu ayarı paylaşır; kanallar görev hatırlatıcılarınınkilerdir.",
+      "enable": "Saatli görevleri hatırlat",
+      "lead": "Ne zaman",
+      "atTime": "Saatinde",
+      "minutesBefore": "{{count}} dk önce"
+    }
   },
   "projectStatus": {
     "not_started": "Başlanmadı",

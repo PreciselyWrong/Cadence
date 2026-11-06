@@ -9,6 +9,14 @@ const {
     reminderSources,
 } = require('../../utils/notificationPreferences');
 
+const {
+    MAX_LEAD_MINUTES,
+    readTimedReminders,
+} = require('../../utils/timedReminders');
+
+const MINUTE_MS = 60 * 1000;
+const MAX_LEAD_MS = MAX_LEAD_MINUTES * MINUTE_MS;
+
 // Same catch-up as the phone: a server that was down longer stays silent.
 const TIMED_CATCH_UP_MS = 15 * 60 * 1000;
 
@@ -86,13 +94,17 @@ async function checkTaskReminders(now = new Date()) {
 }
 
 // A task with a due time and no explicit reminder rings once at that time,
-// with the same channels as a reminder. Same exclusions as the phone.
+// ahead by the lead shared with the phone, with the same channels as a
+// reminder. Same exclusions as the phone.
 async function checkTimedTasks(now = new Date()) {
     const since = new Date(now.getTime() - TIMED_CATCH_UP_MS);
     const tasks = await Task.findAll({
         where: {
             due_has_time: true,
-            due_date: { [Op.gt]: since, [Op.lte]: now },
+            due_date: {
+                [Op.gt]: since,
+                [Op.lte]: new Date(now.getTime() + MAX_LEAD_MS),
+            },
             reminder_at: null,
             status: OPEN_STATUS,
             [Op.or]: [
@@ -106,6 +118,7 @@ async function checkTimedTasks(now = new Date()) {
                 attributes: [
                     'id',
                     'notification_preferences',
+                    'ui_settings',
                     'telegram_bot_token',
                     'telegram_chat_id',
                 ],
@@ -115,12 +128,13 @@ async function checkTimedTasks(now = new Date()) {
     });
     if (tasks.length === 0) return { remindersSent: 0 };
 
-    // Read and dismissed rows count too: a due date rings only once.
+    // Read and dismissed rows count too: a due date rings only once, even
+    // when the lead changes after it rang.
     const recent = await Notification.findAll({
         where: {
             user_id: { [Op.in]: [...new Set(tasks.map((t) => t.user_id))] },
             type: 'reminder',
-            created_at: { [Op.gte]: since },
+            created_at: { [Op.gte]: new Date(since.getTime() - MAX_LEAD_MS) },
         },
     });
     const rung = new Set(
@@ -137,6 +151,13 @@ async function checkTimedTasks(now = new Date()) {
             if (task.Tags.some((tag) => tag.name === 'someday')) continue;
 
             const user = task.User;
+            const setting = readTimedReminders(user.ui_settings);
+            if (!setting.enabled) continue;
+            const ringAt =
+                new Date(task.due_date).getTime() -
+                setting.lead_minutes * MINUTE_MS;
+            if (ringAt > now.getTime() || ringAt <= since.getTime()) continue;
+
             const inApp = shouldSendInAppNotification(user, 'task_reminder');
             const telegram =
                 !!(user.telegram_bot_token && user.telegram_chat_id) &&

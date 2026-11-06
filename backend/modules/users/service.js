@@ -564,6 +564,8 @@ class UsersService {
             if (current?.calendar !== undefined)
                 kept.calendar = current.calendar;
             if (current?.everyone) kept.everyone = current.everyone;
+            if (current?.timedReminders !== undefined)
+                kept.timedReminders = current.timedReminders;
             let nextUiSettings =
                 ui_settings && Object.keys(kept).length > 0
                     ? { ...ui_settings, ...kept }

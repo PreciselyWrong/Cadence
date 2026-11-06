@@ -3286,7 +3286,7 @@
       "taskReminders": "Recordatorios de tareas"
     },
     "descriptions": {
-      "dueTasks": "Tareas que vencen en 24 horas",
+      "dueTasks": "Tareas sin hora que vencen en 24 horas",
       "overdueTasks": "Tareas que han pasado su fecha de vencimiento",
       "deferUntil": "Tareas que ahora están disponibles para trabajar",
       "dueProjects": "Proyectos que vencen en 24 horas",
@@ -3422,7 +3422,15 @@
     "loading": "Cargando...",
     "noNotifications": "Aún no hay notificaciones",
     "markAsRead": "Marcar como leída",
-    "delete": "Eliminar"
+    "delete": "Eliminar",
+    "timedTasks": {
+      "title": "Tareas con hora",
+      "description": "Una tarea con hora avisa a esa hora, no el día anterior. El teléfono y el ordenador comparten este ajuste; los canales son los de los recordatorios de tareas.",
+      "enable": "Avisar de las tareas con hora",
+      "lead": "Cuándo",
+      "atTime": "A la hora",
+      "minutesBefore": "{{count}} min antes"
+    }
   },
   "projectStatus": {
     "not_started": "No Iniciado",

@@ -3325,7 +3325,7 @@
       "taskReminders": "Przypomnienia o zadaniach"
     },
     "descriptions": {
-      "dueTasks": "Zadania, które muszą być wykonane w ciągu 24 godzin",
+      "dueTasks": "Zadania bez godziny z terminem w ciągu 24 godzin",
       "overdueTasks": "Zadania, których termin minął",
       "deferUntil": "Zadania, które są teraz dostępne do pracy",
       "dueProjects": "Projekty, które muszą być wykonane w ciągu 24 godzin",
@@ -3461,7 +3461,15 @@
     "loading": "Ładowanie...",
     "noNotifications": "Brak powiadomień",
     "markAsRead": "Oznacz jako przeczytane",
-    "delete": "Usuń"
+    "delete": "Usuń",
+    "timedTasks": {
+      "title": "Zadania z godziną",
+      "description": "Zadanie z godziną dzwoni o tej godzinie, a nie dzień wcześniej. Telefon i komputer współdzielą to ustawienie; kanały są takie jak dla przypomnień o zadaniach.",
+      "enable": "Przypominaj o zadaniach z godziną",
+      "lead": "Kiedy",
+      "atTime": "O czasie",
+      "minutesBefore": "{{count}} min wcześniej"
+    }
   },
   "projectStatus": {
     "not_started": "Nie rozpoczęto",

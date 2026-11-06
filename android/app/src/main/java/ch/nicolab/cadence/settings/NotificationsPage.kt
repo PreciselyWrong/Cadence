@@ -70,6 +70,7 @@ internal fun NotificationsPage() {
     val scope = rememberCoroutineScope()
     val repository = remember(context) { CalendarGraph.repository(context) }
     val taskStore = remember(context) { TimedRemindersStore(context) }
+    val taskSetting = remember(context) { TasksGraph.timedReminders(context) }
     val tasks by remember(taskStore) { taskStore.changes() }.collectAsStateWithLifecycle(initialValue = taskStore.read())
     val events by repository.reminderSettings.collectAsStateWithLifecycle(initialValue = EventReminderSettings())
     val calendarsFlow = remember(repository) { repository.calendars() }
@@ -105,12 +106,12 @@ internal fun NotificationsPage() {
                 title = stringResource(R.string.notifications_tasks_title),
                 subtitle = stringResource(R.string.notifications_tasks_subtitle),
                 checked = tasks.enabled,
-                onCheckedChange = { taskStore.write(tasks.copy(enabled = it)) },
+                onCheckedChange = { taskSetting.edit(tasks.copy(enabled = it)) },
                 icon = Icons.Outlined.Checklist,
             )
         }
         if (tasks.enabled) {
-            LeadChoice(tasks.lead.minutes) { taskStore.write(tasks.copy(lead = ReminderLead.ofMinutes(it, ReminderLead.AT_TIME))) }
+            LeadChoice(tasks.lead.minutes) { taskSetting.edit(tasks.copy(lead = ReminderLead.ofMinutes(it, ReminderLead.AT_TIME))) }
         }
 
         SectionHeader(stringResource(R.string.notifications_events_header))

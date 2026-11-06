@@ -3293,7 +3293,7 @@
       "taskReminders": "Pengingat tugas"
     },
     "descriptions": {
-      "dueTasks": "Tugas yang jatuh tempo dalam 24 jam",
+      "dueTasks": "Tugas tanpa waktu yang jatuh tempo dalam 24 jam",
       "overdueTasks": "Tugas yang telah melewati tanggal jatuh tempo",
       "deferUntil": "Tugas yang sekarang tersedia untuk dikerjakan",
       "dueProjects": "Proyek yang jatuh tempo dalam 24 jam",
@@ -3429,7 +3429,15 @@
     "loading": "Memuat...",
     "noNotifications": "Belum ada notifikasi",
     "markAsRead": "Tandai sudah dibaca",
-    "delete": "Hapus"
+    "delete": "Hapus",
+    "timedTasks": {
+      "title": "Tugas berwaktu",
+      "description": "Tugas berwaktu berbunyi pada waktu itu, bukan sehari sebelumnya. Ponsel dan komputer berbagi pengaturan ini; salurannya sama dengan pengingat tugas.",
+      "enable": "Ingatkan tugas berwaktu",
+      "lead": "Kapan",
+      "atTime": "Tepat waktu",
+      "minutesBefore": "{{count}} mnt sebelumnya"
+    }
   },
   "projectStatus": {
     "not_started": "Belum Dimulai",

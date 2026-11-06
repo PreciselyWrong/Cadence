@@ -3302,7 +3302,7 @@
       "taskReminders": "Aufgabenerinnerungen"
     },
     "descriptions": {
-      "dueTasks": "Aufgaben, die innerhalb von 24 Stunden fällig sind",
+      "dueTasks": "Aufgaben ohne Uhrzeit, die innerhalb von 24 Stunden fällig sind",
       "overdueTasks": "Aufgaben, deren Fälligkeitsdatum überschritten ist",
       "deferUntil": "Aufgaben, die jetzt zur Bearbeitung verfügbar sind",
       "dueProjects": "Projekte, die innerhalb von 24 Stunden fällig sind",
@@ -3438,7 +3438,15 @@
     "loading": "Wird geladen...",
     "noNotifications": "Noch keine Benachrichtigungen",
     "markAsRead": "Als gelesen markieren",
-    "delete": "Löschen"
+    "delete": "Löschen",
+    "timedTasks": {
+      "title": "Aufgaben mit Uhrzeit",
+      "description": "Eine Aufgabe mit Uhrzeit meldet sich zu dieser Zeit, nicht am Vortag. Telefon und Computer teilen diese Einstellung; es gelten die Kanäle der Aufgabenerinnerungen.",
+      "enable": "Bei Aufgaben mit Uhrzeit erinnern",
+      "lead": "Wann",
+      "atTime": "Zur Uhrzeit",
+      "minutesBefore": "{{count}} Min. vorher"
+    }
   },
   "projectStatus": {
     "not_started": "Nicht gestartet",

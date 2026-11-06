@@ -94,6 +94,47 @@ describe('checkTimedTasks', () => {
         expect(await rings()).toHaveLength(0);
     });
 
+    const useSetting = (timedReminders) =>
+        user.update({ ui_settings: { timedReminders } });
+
+    it('rings ahead by the shared lead', async () => {
+        await useSetting({ enabled: true, lead_minutes: 10 });
+        await createTask({ due_date: new Date(now.getTime() + 9 * MINUTE) });
+
+        await checkTimedTasks(now);
+
+        expect(await rings()).toHaveLength(1);
+    });
+
+    it('waits until the shared lead is reached', async () => {
+        await useSetting({ enabled: true, lead_minutes: 10 });
+        await createTask({ due_date: new Date(now.getTime() + 11 * MINUTE) });
+
+        await checkTimedTasks(now);
+
+        expect(await rings()).toHaveLength(0);
+    });
+
+    it('does not ring twice when the lead changes', async () => {
+        await useSetting({ enabled: true, lead_minutes: 30 });
+        await createTask({ due_date: new Date(now.getTime() + 20 * MINUTE) });
+        await checkTimedTasks(now);
+
+        await useSetting({ enabled: true, lead_minutes: 0 });
+        await checkTimedTasks(new Date(now.getTime() + 21 * MINUTE));
+
+        expect(await rings()).toHaveLength(1);
+    });
+
+    it('stays silent when the shared setting is off', async () => {
+        await useSetting({ enabled: false, lead_minutes: 0 });
+        await createTask();
+
+        await checkTimedTasks(now);
+
+        expect(await rings()).toHaveLength(0);
+    });
+
     it('respects the task reminder channels', async () => {
         await user.update({
             notification_preferences: {

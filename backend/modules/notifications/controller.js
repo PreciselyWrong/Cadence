@@ -13,6 +13,29 @@ function requireUserId(req) {
 }
 
 const notificationsController = {
+    async getTimedReminders(req, res, next) {
+        try {
+            res.json(
+                await notificationsService.getTimedReminders(requireUserId(req))
+            );
+        } catch (error) {
+            next(error);
+        }
+    },
+
+    async saveTimedReminders(req, res, next) {
+        try {
+            res.json(
+                await notificationsService.saveTimedReminders(
+                    requireUserId(req),
+                    req.body
+                )
+            );
+        } catch (error) {
+            next(error);
+        }
+    },
+
     async getAll(req, res, next) {
         try {
             const userId = requireUserId(req);

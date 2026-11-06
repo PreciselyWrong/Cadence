@@ -3293,7 +3293,7 @@
       "taskReminders": "タスクのリマインダー"
     },
     "descriptions": {
-      "dueTasks": "24時間以内に期限が来るタスク",
+      "dueTasks": "時刻なしで24時間以内に期限のタスク",
       "overdueTasks": "期限を過ぎたタスク",
       "deferUntil": "作業可能になったタスク",
       "dueProjects": "24時間以内に期限が来るプロジェクト",
@@ -3429,7 +3429,15 @@
     "loading": "読み込み中...",
     "noNotifications": "通知はまだありません",
     "markAsRead": "既読にする",
-    "delete": "削除"
+    "delete": "削除",
+    "timedTasks": {
+      "title": "時刻付きタスク",
+      "description": "時刻付きタスクは前日ではなくその時刻に通知します。スマートフォンとコンピューターはこの設定を共有し、チャネルはタスクリマインダーと同じです。",
+      "enable": "時刻付きタスクを通知",
+      "lead": "タイミング",
+      "atTime": "時刻ちょうど",
+      "minutesBefore": "{{count}} 分前"
+    }
   },
   "projectStatus": {
     "not_started": "未開始",

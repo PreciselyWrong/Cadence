@@ -3293,7 +3293,7 @@
       "taskReminders": "Taakherinneringen"
     },
     "descriptions": {
-      "dueTasks": "Taken die binnen 24 uur vervallen",
+      "dueTasks": "Taken zonder tijd die binnen 24 uur moeten af zijn",
       "overdueTasks": "Taken die hun vervaldatum hebben overschreden",
       "deferUntil": "Taken die nu beschikbaar zijn om aan te werken",
       "dueProjects": "Projecten die binnen 24 uur vervallen",
@@ -3429,7 +3429,15 @@
     "loading": "Laden...",
     "noNotifications": "Nog geen meldingen",
     "markAsRead": "Als gelezen markeren",
-    "delete": "Verwijderen"
+    "delete": "Verwijderen",
+    "timedTasks": {
+      "title": "Taken met een tijd",
+      "description": "Een taak met een tijd meldt zich op die tijd, niet de dag ervoor. Telefoon en computer delen deze instelling; de kanalen zijn die van taakherinneringen.",
+      "enable": "Herinneren aan taken met een tijd",
+      "lead": "Wanneer",
+      "atTime": "Op de tijd",
+      "minutesBefore": "{{count}} min vooraf"
+    }
   },
   "projectStatus": {
     "not_started": "Niet Begonnen",

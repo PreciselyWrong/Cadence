@@ -1,11 +1,32 @@
 'use strict';
 
 const BaseRepository = require('../../shared/database/BaseRepository');
-const { Notification } = require('../../models');
+const { Notification, User } = require('../../models');
 
 class NotificationsRepository extends BaseRepository {
     constructor() {
         super(Notification);
+    }
+
+    async findUiSettings(userId) {
+        const user = await User.findByPk(userId, {
+            attributes: ['id', 'ui_settings'],
+        });
+        const value = user?.ui_settings;
+        if (typeof value !== 'string') return value || {};
+        try {
+            return JSON.parse(value) || {};
+        } catch {
+            return {};
+        }
+    }
+
+    async saveTimedReminders(userId, timedReminders) {
+        const settings = await this.findUiSettings(userId);
+        await User.update(
+            { ui_settings: { ...settings, timedReminders } },
+            { where: { id: userId } }
+        );
     }
 
     async getUserNotifications(userId, options) {

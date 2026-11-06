@@ -3293,7 +3293,7 @@
       "taskReminders": "任务提醒"
     },
     "descriptions": {
-      "dueTasks": "在24小时内到期的任务",
+      "dueTasks": "24 小时内到期的无具体时间任务",
       "overdueTasks": "已过截止日期的任务",
       "deferUntil": "现在可以开始处理的任务",
       "dueProjects": "在24小时内到期的项目",
@@ -3429,7 +3429,15 @@
     "loading": "加载中...",
     "noNotifications": "暂无通知",
     "markAsRead": "标为已读",
-    "delete": "删除"
+    "delete": "删除",
+    "timedTasks": {
+      "title": "定时任务",
+      "description": "定时任务在该时间提醒，而不是提前一天。手机和电脑共用此设置；渠道与任务提醒相同。",
+      "enable": "提醒定时任务",
+      "lead": "何时",
+      "atTime": "准时",
+      "minutesBefore": "提前 {{count}} 分钟"
+    }
   },
   "projectStatus": {
     "not_started": "未开始",

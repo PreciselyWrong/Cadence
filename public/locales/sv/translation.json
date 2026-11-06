@@ -3293,7 +3293,7 @@
       "taskReminders": "Uppgiftspåminnelser"
     },
     "descriptions": {
-      "dueTasks": "Uppgifter som förfaller inom 24 timmar",
+      "dueTasks": "Uppgifter utan tid som förfaller inom 24 timmar",
       "overdueTasks": "Uppgifter som har passerat sitt förfallodatum",
       "deferUntil": "Uppgifter som nu är tillgängliga att arbeta med",
       "dueProjects": "Projekt som förfaller inom 24 timmar",
@@ -3429,7 +3429,15 @@
     "loading": "Laddar...",
     "noNotifications": "Inga aviseringar än",
     "markAsRead": "Markera som läst",
-    "delete": "Ta bort"
+    "delete": "Ta bort",
+    "timedTasks": {
+      "title": "Uppgifter med tid",
+      "description": "En uppgift med tid ringer vid den tiden, inte dagen före. Telefon och dator delar den här inställningen; kanalerna är desamma som för uppgiftspåminnelser.",
+      "enable": "Påminn om uppgifter med tid",
+      "lead": "När",
+      "atTime": "På tiden",
+      "minutesBefore": "{{count}} min före"
+    }
   },
   "projectStatus": {
     "not_started": "Ej påbörjad",

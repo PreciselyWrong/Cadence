@@ -3893,7 +3893,7 @@
       "taskReminders": "Pripomienky úloh"
     },
     "descriptions": {
-      "dueTasks": "Úlohy s termínom do 24 hodín",
+      "dueTasks": "Úlohy bez času s termínom do 24 hodín",
       "overdueTasks": "Úlohy, ktorým uplynul termín",
       "deferUntil": "Úlohy, na ktorých už môžete pracovať",
       "dueProjects": "Projekty s termínom do 24 hodín",
@@ -4029,7 +4029,15 @@
     "loading": "Načítava sa...",
     "noNotifications": "Zatiaľ žiadne upozornenia",
     "markAsRead": "Označiť ako prečítané",
-    "delete": "Odstrániť"
+    "delete": "Odstrániť",
+    "timedTasks": {
+      "title": "Úlohy s časom",
+      "description": "Úloha s časom zazvoní v tom čase, nie deň vopred. Telefón a počítač zdieľajú toto nastavenie; kanály sú rovnaké ako pri pripomienkach úloh.",
+      "enable": "Pripomínať úlohy s časom",
+      "lead": "Kedy",
+      "atTime": "V čase",
+      "minutesBefore": "{{count}} min vopred"
+    }
   },
   "aiAssistant": {
     "title": "Denný AI prehľad",

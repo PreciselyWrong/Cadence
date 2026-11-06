@@ -3325,7 +3325,7 @@
       "taskReminders": "Opomniki za naloge"
     },
     "descriptions": {
-      "dueTasks": "Naloge, ki zapadejo v 24 urah",
+      "dueTasks": "Opravila brez ure z rokom v 24 urah",
       "overdueTasks": "Naloge, ki so prešle rok",
       "deferUntil": "Naloge, ki so zdaj na voljo za delo",
       "dueProjects": "Projekti, ki zapadejo v 24 urah",
@@ -3461,7 +3461,15 @@
     "loading": "Nalaganje...",
     "noNotifications": "Še ni obvestil",
     "markAsRead": "Označi kot prebrano",
-    "delete": "Izbriši"
+    "delete": "Izbriši",
+    "timedTasks": {
+      "title": "Opravila z uro",
+      "description": "Opravilo z uro zazvoni ob tej uri, ne dan prej. Telefon in računalnik si delita to nastavitev; kanali so enaki kot pri opomnikih opravil.",
+      "enable": "Opomni na opravila z uro",
+      "lead": "Kdaj",
+      "atTime": "Ob uri",
+      "minutesBefore": "{{count}} min prej"
+    }
   },
   "projectStatus": {
     "not_started": "Niso začeli",

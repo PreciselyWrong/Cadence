@@ -3522,7 +3522,7 @@
       "taskReminders": "Task reminders"
     },
     "descriptions": {
-      "dueTasks": "Tasks that are due within 24 hours",
+      "dueTasks": "Tasks without a time, due within 24 hours",
       "overdueTasks": "Tasks that have passed their due date",
       "deferUntil": "Tasks that are now available to work on",
       "dueProjects": "Projects that are due within 24 hours",
@@ -3656,7 +3656,15 @@
     "loading": "Loading...",
     "noNotifications": "No notifications yet",
     "markAsRead": "Mark as read",
-    "delete": "Delete"
+    "delete": "Delete",
+    "timedTasks": {
+      "title": "Tasks with a time",
+      "description": "A task with a time rings at that time, not the day before. The phone and the computer share this setting; the channels are those of Task reminders.",
+      "enable": "Ring for tasks with a time",
+      "lead": "When",
+      "atTime": "At the time",
+      "minutesBefore": "{{count}} min before"
+    }
   },
   "aiAssistant": {
     "title": "AI Daily Brief",

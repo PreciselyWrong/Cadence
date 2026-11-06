@@ -3293,7 +3293,7 @@
       "taskReminders": "작업 알림"
     },
     "descriptions": {
-      "dueTasks": "24시간 이내에 기한이 도래하는 작업",
+      "dueTasks": "24시간 내 마감인 시간 없는 작업",
       "overdueTasks": "기한이 지난 작업",
       "deferUntil": "현재 작업할 수 있는 작업",
       "dueProjects": "24시간 이내에 기한이 도래하는 프로젝트",
@@ -3429,7 +3429,15 @@
     "loading": "불러오는 중...",
     "noNotifications": "아직 알림이 없습니다",
     "markAsRead": "읽음 표시",
-    "delete": "삭제"
+    "delete": "삭제",
+    "timedTasks": {
+      "title": "시간이 있는 작업",
+      "description": "시간이 있는 작업은 전날이 아니라 그 시간에 알립니다. 휴대폰과 컴퓨터가 이 설정을 공유하며, 채널은 작업 알림과 같습니다.",
+      "enable": "시간이 있는 작업 알림",
+      "lead": "언제",
+      "atTime": "정시",
+      "minutesBefore": "{{count}}분 전"
+    }
   },
   "projectStatus": {
     "not_started": "시작되지 않음",

@@ -18,6 +18,7 @@ import type {
 import { getCsrfToken } from '../../../utils/csrfService';
 import PushDeviceCard from './PushDeviceCard';
 import AppriseCard from './AppriseCard';
+import TimedRemindersCard from './TimedRemindersCard';
 import WebhooksCard from './WebhooksCard';
 import { PushState, countPushDevices } from '../../../utils/pushService';
 
@@ -407,7 +408,7 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
                             )}
                             description={t(
                                 'notifications.descriptions.dueTasks',
-                                'Tasks that are due within 24 hours'
+                                'Tasks without a time, due within 24 hours'
                             )}
                             preferences={preferences.dueTasks}
                             onToggle={(channel, value) =>
@@ -577,6 +578,8 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
                     {testResult.text}
                 </p>
             )}
+
+            <TimedRemindersCard />
 
             <WebhooksCard />
 

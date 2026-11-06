@@ -3293,7 +3293,7 @@
       "taskReminders": "Opgavepåmindelser"
     },
     "descriptions": {
-      "dueTasks": "Opgaver der forfalder inden for 24 timer",
+      "dueTasks": "Opgaver uden klokkeslæt med frist inden for 24 timer",
       "overdueTasks": "Opgaver der er overskredet deres forfaldsdato",
       "deferUntil": "Opgaver der nu er tilgængelige for arbejde",
       "dueProjects": "Projekter der forfalder inden for 24 timer",
@@ -3429,7 +3429,15 @@
     "loading": "Indlæser...",
     "noNotifications": "Ingen notifikationer endnu",
     "markAsRead": "Markér som læst",
-    "delete": "Slet"
+    "delete": "Slet",
+    "timedTasks": {
+      "title": "Opgaver med klokkeslæt",
+      "description": "En opgave med klokkeslæt ringer på det tidspunkt, ikke dagen før. Telefon og computer deler denne indstilling; kanalerne er dem for opgavepåmindelser.",
+      "enable": "Påmind om opgaver med klokkeslæt",
+      "lead": "Hvornår",
+      "atTime": "På tidspunktet",
+      "minutesBefore": "{{count}} min før"
+    }
   },
   "projectStatus": {
     "not_started": "Ikke startet",

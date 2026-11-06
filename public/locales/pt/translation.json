@@ -3299,7 +3299,7 @@
       "taskReminders": "Lembretes de tarefas"
     },
     "descriptions": {
-      "dueTasks": "Tarefas que vencem em 24 horas",
+      "dueTasks": "Tarefas sem hora com prazo nas próximas 24 horas",
       "overdueTasks": "Tarefas que passaram da data de vencimento",
       "deferUntil": "Tarefas que agora estão disponíveis para trabalhar",
       "dueProjects": "Projetos que vencem em 24 horas",
@@ -3435,7 +3435,15 @@
     "loading": "Carregando...",
     "noNotifications": "Nenhuma notificação ainda",
     "markAsRead": "Marcar como lida",
-    "delete": "Excluir"
+    "delete": "Excluir",
+    "timedTasks": {
+      "title": "Tarefas com hora",
+      "description": "Uma tarefa com hora avisa a essa hora, não na véspera. O telefone e o computador partilham esta definição; os canais são os dos lembretes de tarefas.",
+      "enable": "Avisar das tarefas com hora",
+      "lead": "Quando",
+      "atTime": "À hora",
+      "minutesBefore": "{{count}} min antes"
+    }
   },
   "projectStatus": {
     "not_started": "Não Iniciado",
