@@ -97,7 +97,7 @@
   }
 
   body {
-    font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
     background-color: rgb(var(--color-surface));
     color: rgb(var(--color-on-surface));
   }

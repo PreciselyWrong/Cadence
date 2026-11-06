@@ -531,3 +531,9 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Problème** : une tâche à heure hors du plan restait figée dans la frise, son titre s'affichait deux fois, les blocs proches se recouvraient, l'aide passait sur les heures, et les suggestions automatiques noyaient le jour.
 - **Décision** : le bloc se déplace et change l'heure de la tâche ; ce qui se chevauche passe côte à côte ; l'aide au-dessus de la grille ; suggestions repliées derrière « Suggérées n », routines d'un autre jour exclues.
 - **Android à reprendre** : rien : Aujourd'hui n'y a ni frise déplaçable ni suggestions dans la liste.
+
+### 2026-11-06 — Police web : Inter
+
+- **Problème** : la police du web (Plus Jakarta Sans) ne plaisait pas.
+- **Décision** : Inter, hébergée dans `public/fonts/`, découpée par alphabet.
+- **Android à reprendre** : non demandé, Android garde Plus Jakarta Sans. À changer si l'écart gêne.

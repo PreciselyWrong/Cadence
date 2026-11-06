@@ -2,7 +2,7 @@
 
 Source of truth: `android/designsystem/src/main/java/ch/nicolab/cadence/designsystem/theme/` (`Color.kt`, `Accent.kt`, `Tokens.kt`, `Type.kt`). The web mirrors it. Change a value on both sides in the same commit.
 
-Web definitions: CSS variables in `frontend/styles/tailwind.css` (`:root`, `.dark`, `.dark.pure-black`), exposed as Tailwind colours in `tailwind.config.js`. Runtime accent: `frontend/utils/appearance.ts` (port of `deriveAccentRoles`). Font: Plus Jakarta Sans (OFL), self-hosted as `public/fonts/PlusJakartaSans-Variable.ttf`, the same file as `android/designsystem/src/main/res/font/plus_jakarta_sans.ttf` (the CSP forbids Google Fonts).
+Web definitions: CSS variables in `frontend/styles/tailwind.css` (`:root`, `.dark`, `.dark.pure-black`), exposed as Tailwind colours in `tailwind.config.js`. Runtime accent: `frontend/utils/appearance.ts` (port of `deriveAccentRoles`). Font on the web: Inter (OFL), self-hosted as `public/fonts/Inter-*.woff2` (the CSP forbids Google Fonts); Android keeps Plus Jakarta Sans, `android/designsystem/src/main/res/font/plus_jakarta_sans.ttf`.
 
 ## Colour roles
 
