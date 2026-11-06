@@ -284,20 +284,11 @@ internal class BriefViewModel(application: Application) : AndroidViewModel(appli
         message = string(R.string.brief_done_notice, task.name),
     ) { actions.complete(task.uid) }
 
-    fun move(date: LocalDate, task: TaskItem, move: MoveDto) {
-        val target = runCatching { LocalDate.parse(move.to) }.getOrNull() ?: return
-        change(
-            apply = { it.move(move.proposalKey, target) },
-            revert = { it.unmove(move.proposalKey) },
-            message = string(R.string.brief_moved_notice, BriefFormat.chip(target)),
-        ) { actions.move(date, move, task) }
-    }
-
-    fun refuseMove(date: LocalDate, move: MoveDto) = change(
-        apply = { it.refuse(move.proposalKey) },
-        revert = { it.unrefuse(move.proposalKey) },
-        message = string(R.string.brief_refused_notice),
-    ) { actions.refuseMove(date, move) }
+    fun move(date: LocalDate, task: TaskItem, move: MoveDto, target: LocalDate) = change(
+        apply = { it.move(move.proposalKey, target) },
+        revert = { it.unmove(move.proposalKey) },
+        message = string(R.string.brief_moved_notice, BriefFormat.chip(target)),
+    ) { actions.move(date, move, task, target) }
 
     fun answer(date: LocalDate, question: QuestionDto, answer: String) = change(
         apply = { it.answer(question.key, answer) },

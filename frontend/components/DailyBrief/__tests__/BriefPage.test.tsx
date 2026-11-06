@@ -22,6 +22,7 @@ import { toggleTaskCompletion, updateTask } from '../../../utils/tasksService';
 import { openTaskPanel } from '../../../store/taskPanelStore';
 import {
     EVENING,
+    BRIEF,
     EVENING_RESPONSE,
     RESPONSE,
     SETTINGS,
@@ -127,7 +128,7 @@ describe('BriefPage', () => {
         ).toBeInTheDocument();
         expect(sectionNames()).toEqual([
             'Les prochains jours',
-            'Ce soir',
+            'Priorités du jour',
             'À déplacer',
             'À anticiper',
             'Réponses attendues',
@@ -140,8 +141,8 @@ describe('BriefPage', () => {
             sections: ['tonight', 'moves'],
         });
         renderPage();
-        await screen.findByText('Ce soir');
-        expect(sectionNames()).toEqual(['Ce soir', 'À déplacer']);
+        await screen.findByText('Priorités du jour');
+        expect(sectionNames()).toEqual(['Priorités du jour', 'À déplacer']);
         expect(screen.queryByText('À anticiper')).not.toBeInTheDocument();
     });
 
@@ -150,6 +151,33 @@ describe('BriefPage', () => {
         const conflict = await screen.findByTestId('brief-event-conflict');
         expect(conflict).toBeInTheDocument();
         expect(screen.getByText(/Dentiste/)).toBeInTheDocument();
+    });
+
+    it('states an overload as tasks against free time, in hours', async () => {
+        const day = BRIEF.timeline[0];
+        (fetchDailyBrief as jest.Mock).mockResolvedValue({
+            ...RESPONSE,
+            brief: {
+                ...BRIEF,
+                timeline: [
+                    {
+                        ...day,
+                        load: {
+                            ...day.load,
+                            planned_minutes: 615,
+                            task_minutes: 555,
+                            capacity_minutes: 90,
+                        },
+                    },
+                ],
+            },
+        });
+        renderPage();
+        expect(
+            await screen.findByText(
+                'Surcharge : 9 h 15 de tâches pour 1 h 30 de libre'
+            )
+        ).toBeInTheDocument();
     });
 
     it('completes a task through the task service and offers undo', async () => {

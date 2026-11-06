@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-06 — Résumé : une seule mention d'échéance, Priorités du jour, surcharge lisible
+
+- **Problème** (revue du 2026-11-06) : « Demain » + « Due demain » sur la même ligne ; « Ce soir » listait des tâches qui n'ont rien du soir ; « 525 min de trop » comparait aussi les événements au seul soir ; « Pas cette date » refusait sans proposer d'autre jour ; « Source non lue » occupait l'écran pour rien ; le lecteur disait « Chapitre 3 sur 3 ».
+- **Décision** : la ligne garde sa date et le motif ne la répète plus ; « Priorités du jour » remplace « Ce soir » (être dans un projet ne suffit plus) ; la charge compare les tâches au temps libre de la journée et du soir, en heures ; « Autre date » ouvre le sélecteur ; « Réponses attendues » disparaît sans réponse ; « Réglé » est replié ; l'en-tête dit « préparé à 07:00 » ; le lecteur montre le titre de la partie. Noir pur : `outline` et `outlineVariant` éclaircis (les textes secondaires étaient déjà à 12:1).
+- **Web** : Priorités du jour et surcharge repris ; le reste dans `TODO.md` › Now.
+
 ### 2026-11-04 — Résumé : voix Piper à la demande, retour immédiat, bilan du soir
 
 - **Problème** (essai de la 1.10.1 sur un Pixel) : sans voix Piper installée, « Écouter » lisait avec la voix du système ; toucher la case, la pastille de date, Oui/Non/Préciser ou Utile/Bruit ne changeait rien à l'écran ; la bannière « Annuler » se posait sous les boutons de navigation d'Android (invisible avec 3 boutons) ; rien ne marquait la fin de journée.

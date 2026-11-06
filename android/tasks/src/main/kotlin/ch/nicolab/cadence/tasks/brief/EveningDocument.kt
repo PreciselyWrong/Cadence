@@ -41,7 +41,11 @@ data class EveningCountersDto(
 )
 
 @Serializable
-data class SlippedDto(@SerialName("task_uid") val taskUid: String = "", val reason: String = "")
+data class SlippedDto(
+    @SerialName("task_uid") val taskUid: String = "",
+    val reason: String = "",
+    @SerialName("reason_code") val reasonCode: String? = null,
+)
 
 /** Réponse de `GET /daily-plan/:date/evening` : le bilan reste en JSON brut pour le cache. */
 data class EveningEnvelope(val date: String, val eveningJson: String?)

@@ -109,10 +109,10 @@ export const BriefEvening: React.FC<BriefEveningProps> = ({
             </header>
 
             <section
-                aria-label={t('dailyBrief.sectionName.tonight', 'Ce soir')}
+                aria-label={t('dailyBrief.evening.tonightTitle', 'Ce soir')}
             >
                 <SectionTitle
-                    title={t('dailyBrief.sectionName.tonight', 'Ce soir')}
+                    title={t('dailyBrief.evening.tonightTitle', 'Ce soir')}
                 />
                 {tonight.length === 0
                     ? empty(

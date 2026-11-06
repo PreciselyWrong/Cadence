@@ -95,6 +95,8 @@ data class EventDto(
 @Serializable
 data class LoadDto(
     @SerialName("planned_minutes") val plannedMinutes: Int = 0,
+    /** Tâches seules, ce que le serveur compare à la capacité ; absent d'un résumé plus ancien. */
+    @SerialName("task_minutes") val taskMinutes: Int? = null,
     @SerialName("capacity_minutes") val capacityMinutes: Int? = null,
     val hypothesis: Boolean = false,
     val note: String? = null,
@@ -104,6 +106,7 @@ data class LoadDto(
 data class TonightDto(
     @SerialName("task_uid") val taskUid: String = "",
     val reason: String = "",
+    @SerialName("reason_code") val reasonCode: String? = null,
     val minutes: Int? = null,
 )
 
@@ -114,6 +117,7 @@ data class MoveDto(
     val from: String = "",
     val to: String = "",
     val reason: String = "",
+    @SerialName("reason_code") val reasonCode: String? = null,
 )
 
 @Serializable

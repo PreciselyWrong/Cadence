@@ -58,6 +58,7 @@ function timelineDay(input, settings, date, load, conflictRefs) {
         task_uids: tasksOn(input.tasks, date).map((task) => task.uid),
         load: {
             planned_minutes: load.planned_minutes,
+            task_minutes: load.task_minutes,
             capacity_minutes: load.capacity_minutes,
             hypothesis: true,
             note: dayNote,
@@ -86,6 +87,7 @@ function anticipateCards(input, settings, cards) {
             task_uids: card.task_uids,
             event_refs: card.event_refs,
             question: card.question,
+            ...(card.overload ? { overload: card.overload } : {}),
         }));
 }
 

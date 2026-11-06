@@ -113,6 +113,9 @@ val PureBlackPalette = DarkPalette.copy(
     containerLow = Color(0xFF0A0A0E),
     containerHigh = Color(0xFF1C1C22),
     containerHighest = Color(0xFF26262C),
+    // Sur du noir pur, les libellés discrets et les filets restent nets (filets : 3:1, WCAG 1.4.11).
+    outline = Color(0xFFA8A6B1),
+    outlineVariant = Color(0xFF6E6D78),
 )
 
 /** Fond translucide des boutons et puces inactifs. */

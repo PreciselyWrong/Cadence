@@ -5598,7 +5598,7 @@
     "sectionName": {
       "verdict": "Вердикт",
       "timeline": "Ближайшие дни",
-      "tonight": "Сегодня вечером",
+      "tonight": "Приоритеты дня",
       "moves": "К переносу",
       "anticipate": "К предвосхищению",
       "replies": "Ожидаемые ответы",
@@ -5609,8 +5609,7 @@
       "consequence": "Последствия",
       "blocking": "Блокирует других",
       "money_deadline": "Деньги или срок",
-      "planned_load": "Запланированная нагрузка",
-      "long_term": "Долгосрочные"
+      "planned_load": "Запланированная нагрузка"
     },
     "alertType": {
       "conflict": "Конфликтующие события",
@@ -5631,7 +5630,7 @@
     "settings": {
       "postponements": "Отсрочки перед карточкой",
       "maxMoves": "Показанные переносы",
-      "maxTonight": "Задачи на вечер",
+      "maxTonight": "Показываемые приоритеты",
       "closedLookback": "Проверенные закрытые задачи (дней)",
       "optEvening": "Вечерний итог",
       "optTelegram": "Отправлять в Telegram",
@@ -5716,8 +5715,8 @@
     "timeline": {
       "today": "Сегодня",
       "planned": "{{minutes}} мин",
-      "ofCapacity": "{{planned}} / {{capacity}} мин",
-      "over": "{{minutes}} мин сверх нормы",
+      "ofCapacity": "Задачи на {{planned}}, свободно {{capacity}}",
+      "over": "Перегрузка: задачи на {{planned}}, свободно {{capacity}}",
       "duringWork": "в рабочее время",
       "legendWork": "Работа",
       "legendEvening": "Вечер",
@@ -5725,7 +5724,7 @@
       "legendConflict": "Конфликт"
     },
     "tonight": {
-      "ofCapacity": "{{planned}} из {{capacity}} мин запланировано"
+      "ofCapacity": "{{planned}} / {{capacity}}"
     },
     "moves": {
       "acceptAria": "Перенести на {{date}}",
@@ -5797,7 +5796,8 @@
       },
       "dueDone": "«{{name}}» срок {{date}}",
       "laterDone": "«{{name}}» отложена",
-      "cancelDone": "«{{name}}» отменена"
+      "cancelDone": "«{{name}}» отменена",
+      "tonightTitle": "Сегодня вечером"
     }
   },
   "agents": {

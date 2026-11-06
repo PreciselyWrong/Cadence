@@ -21,7 +21,6 @@ const PRIORITIES = [
     'blocking',
     'money_deadline',
     'planned_load',
-    'long_term',
 ];
 const ALERT_TYPES = [
     'conflict',

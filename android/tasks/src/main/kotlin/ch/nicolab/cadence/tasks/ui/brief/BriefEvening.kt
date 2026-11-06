@@ -94,7 +94,7 @@ internal fun LazyListScope.eveningSections(evening: EveningDto, context: Evening
             BriefSection(stringResource(R.string.evening_slipped_title), evening.counters.slipped.takeIf { it > 0 }?.toString()) {
                 evening.slipped.forEach { entry ->
                     val task = context.tasks[entry.taskUid] ?: return@forEach
-                    EveningTask(task, context, subtitle = entry.reason.ifBlank { null }, actionable = true)
+                    EveningTask(task, context, subtitle = BriefFormat.visibleReason(entry.reason, entry.reasonCode), actionable = true)
                 }
             }
         }

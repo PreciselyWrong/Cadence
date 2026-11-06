@@ -5542,7 +5542,7 @@
     "sectionName": {
       "verdict": "Ringkasan",
       "timeline": "Hari-hari mendatang",
-      "tonight": "Malam ini",
+      "tonight": "Prioritas hari ini",
       "moves": "Perlu dipindahkan",
       "anticipate": "Perlu diantisipasi",
       "replies": "Balasan yang diharapkan",
@@ -5553,8 +5553,7 @@
       "consequence": "Dampak",
       "blocking": "Menghalangi yang lain",
       "money_deadline": "Uang atau tenggat",
-      "planned_load": "Beban terjadwal",
-      "long_term": "Jangka panjang"
+      "planned_load": "Beban terjadwal"
     },
     "alertType": {
       "conflict": "Acara yang bentrok",
@@ -5575,7 +5574,7 @@
     "settings": {
       "postponements": "Penundaan sebelum kartu",
       "maxMoves": "Pemindahan yang ditampilkan",
-      "maxTonight": "Tugas yang ditampilkan malam ini",
+      "maxTonight": "Prioritas yang ditampilkan",
       "closedLookback": "Tugas selesai yang diperiksa (hari)",
       "optEvening": "Rangkuman malam",
       "optTelegram": "Kirim ke Telegram",
@@ -5660,8 +5659,8 @@
     "timeline": {
       "today": "Hari ini",
       "planned": "{{minutes}} mnt",
-      "ofCapacity": "{{planned}} / {{capacity}} mnt",
-      "over": "{{minutes}} mnt lebih",
+      "ofCapacity": "{{planned}} tugas untuk {{capacity}} waktu luang",
+      "over": "Kelebihan beban: {{planned}} tugas untuk {{capacity}} waktu luang",
       "duringWork": "selama jam kerja",
       "legendWork": "Kerja",
       "legendEvening": "Malam",
@@ -5669,7 +5668,7 @@
       "legendConflict": "Konflik"
     },
     "tonight": {
-      "ofCapacity": "{{planned}} dari {{capacity}} mnt direncanakan"
+      "ofCapacity": "{{planned}} / {{capacity}}"
     },
     "moves": {
       "acceptAria": "Pindahkan ke {{date}}",
@@ -5741,7 +5740,8 @@
       },
       "dueDone": "“{{name}}” tenggat {{date}}",
       "laterDone": "“{{name}}” ditunda",
-      "cancelDone": "“{{name}}” dibatalkan"
+      "cancelDone": "“{{name}}” dibatalkan",
+      "tonightTitle": "Malam ini"
     }
   },
   "agents": {

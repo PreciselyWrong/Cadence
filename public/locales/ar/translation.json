@@ -5606,7 +5606,7 @@
     "sectionName": {
       "verdict": "الحكم",
       "timeline": "الأيام القادمة",
-      "tonight": "الليلة",
+      "tonight": "أولويات اليوم",
       "moves": "للنقل",
       "anticipate": "للتوقّع",
       "replies": "الردود المتوقعة",
@@ -5617,8 +5617,7 @@
       "consequence": "العواقب",
       "blocking": "يعطّل الآخرين",
       "money_deadline": "المال أو الموعد النهائي",
-      "planned_load": "الحِمل المخطط",
-      "long_term": "المدى الطويل"
+      "planned_load": "الحِمل المخطط"
     },
     "alertType": {
       "conflict": "أحداث متعارضة",
@@ -5639,7 +5638,7 @@
     "settings": {
       "postponements": "تأجيلات قبل البطاقة",
       "maxMoves": "عمليات النقل المعروضة",
-      "maxTonight": "المهام المعروضة الليلة",
+      "maxTonight": "الأولويات المعروضة",
       "closedLookback": "المهام المنجزة التي جرى فحصها (أيام)",
       "optEvening": "الخلاصة المسائية",
       "optTelegram": "أرسل إلى Telegram",
@@ -5724,8 +5723,8 @@
     "timeline": {
       "today": "اليوم",
       "planned": "{{minutes}} د",
-      "ofCapacity": "{{planned}} / {{capacity}} د",
-      "over": "تجاوز بـ {{minutes}} د",
+      "ofCapacity": "{{planned}} من المهام مقابل {{capacity}} متاحة",
+      "over": "حمل زائد: {{planned}} من المهام مقابل {{capacity}} متاحة",
       "duringWork": "خلال ساعات العمل",
       "legendWork": "العمل",
       "legendEvening": "المساء",
@@ -5733,7 +5732,7 @@
       "legendConflict": "تعارض"
     },
     "tonight": {
-      "ofCapacity": "{{planned}} من {{capacity}} د مخططة"
+      "ofCapacity": "{{planned}} / {{capacity}}"
     },
     "moves": {
       "acceptAria": "نقل إلى {{date}}",
@@ -5805,7 +5804,8 @@
       },
       "dueDone": "«{{name}}» الاستحقاق {{date}}",
       "laterDone": "«{{name}}» أُجلت",
-      "cancelDone": "«{{name}}» أُلغيت"
+      "cancelDone": "«{{name}}» أُلغيت",
+      "tonightTitle": "الليلة"
     }
   },
   "agents": {

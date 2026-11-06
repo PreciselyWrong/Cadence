@@ -50,9 +50,8 @@ internal class BriefActions(
         return { tasks.reopen(uid) }
     }
 
-    /** « Déplacer » : l'échéance change tout de suite, la décision « acceptée » part ensuite. */
-    suspend fun move(date: LocalDate, move: MoveDto, task: TaskItem): BriefUndo {
-        val target = LocalDate.parse(move.to)
+    /** « Déplacer » vers le jour proposé ou choisi : l'échéance change tout de suite, la décision « acceptée » part ensuite. */
+    suspend fun move(date: LocalDate, move: MoveDto, task: TaskItem, target: LocalDate): BriefUndo {
         tasks.write(task.uid, PlanningChanges.moveToDay(task, target, zone()))
         val key = newKey()
         queue.enqueue(
@@ -64,7 +63,7 @@ internal class BriefActions(
                 targetType = "task",
                 targetRef = task.uid,
                 fingerprint = move.proposalKey,
-                proposal = BriefRequests.proposalOf(MoveProposal(move.from, move.to)),
+                proposal = BriefRequests.proposalOf(MoveProposal(move.from, target.toString())),
                 label = "Résumé : déplacement accepté",
             ),
         )
@@ -72,25 +71,6 @@ internal class BriefActions(
             queue.cancel(BriefRequests.decisionKey(key))
             tasks.write(task.uid, PlanningChanges.restore(task, zone()))
         }
-    }
-
-    /** « Pas cette date » : le serveur ne propose plus ce jour pour cette tâche. */
-    suspend fun refuseMove(date: LocalDate, move: MoveDto): BriefUndo {
-        val key = newKey()
-        queue.enqueue(
-            BriefRequests.decision(
-                date = date,
-                idempotencyKey = key,
-                kind = "move",
-                decision = "refused",
-                targetType = "task",
-                targetRef = move.taskUid,
-                fingerprint = move.proposalKey,
-                proposal = BriefRequests.proposalOf(MoveProposal(move.from, move.to)),
-                label = "Résumé : date refusée",
-            ),
-        )
-        return { queue.cancel(BriefRequests.decisionKey(key)) }
     }
 
     /** Oui, Non ou un texte libre : le contexte lié et la décision partent ensemble, dans un seul appel. */

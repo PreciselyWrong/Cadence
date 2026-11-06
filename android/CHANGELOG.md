@@ -1,3 +1,16 @@
+## [1.11.2] — 6 novembre 2026
+
+### Nouveautés
+- Résumé du jour : « Priorités du jour » remplace « Ce soir », et l'en-tête indique l'heure à laquelle le résumé a été préparé.
+- « Autre date » remplace « Pas cette date » : le jour proposé reste à un appui, le sélecteur ouvre tous les autres.
+
+### Corrections
+- Une tâche ne répète plus son échéance (« Demain » + « Due demain »).
+- La charge compare les tâches au temps libre de la journée et du soir : « Surcharge : 9 h 15 de tâches pour 1 h 30 de libre ».
+- « Réponses attendues » n'apparaît que s'il y a des réponses, et « Réglé » est replié.
+- Le lecteur affiche le titre de la partie au lieu de « Chapitre 3 sur 3 ».
+- Noir pur : libellés discrets et filets plus nets.
+
 ## [1.11.1] — 5 novembre 2026
 
 ### Nouveautés

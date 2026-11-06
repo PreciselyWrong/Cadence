@@ -5555,7 +5555,7 @@
     "sectionName": {
       "verdict": "Verdetto",
       "timeline": "Prossimi giorni",
-      "tonight": "Stasera",
+      "tonight": "Priorità del giorno",
       "moves": "Da spostare",
       "anticipate": "Da anticipare",
       "replies": "Risposte attese",
@@ -5566,8 +5566,7 @@
       "consequence": "Conseguenza",
       "blocking": "Blocca altri",
       "money_deadline": "Denaro o scadenza",
-      "planned_load": "Carico pianificato",
-      "long_term": "Lungo termine"
+      "planned_load": "Carico pianificato"
     },
     "alertType": {
       "conflict": "Eventi in conflitto",
@@ -5588,7 +5587,7 @@
     "settings": {
       "postponements": "Rinvii prima di una scheda",
       "maxMoves": "Spostamenti mostrati",
-      "maxTonight": "Attività mostrate stasera",
+      "maxTonight": "Priorità mostrate",
       "closedLookback": "Attività chiuse controllate (giorni)",
       "optEvening": "Riepilogo serale",
       "optTelegram": "Invia su Telegram",
@@ -5673,8 +5672,8 @@
     "timeline": {
       "today": "Oggi",
       "planned": "{{minutes}} min",
-      "ofCapacity": "{{planned}} / {{capacity}} min",
-      "over": "{{minutes}} min in più",
+      "ofCapacity": "{{planned}} di attività per {{capacity}} liberi",
+      "over": "Sovraccarico: {{planned}} di attività per {{capacity}} liberi",
       "duringWork": "durante il lavoro",
       "legendWork": "Lavoro",
       "legendEvening": "Sera",
@@ -5682,7 +5681,7 @@
       "legendConflict": "Conflitto"
     },
     "tonight": {
-      "ofCapacity": "{{planned}} di {{capacity}} pianificati"
+      "ofCapacity": "{{planned}} / {{capacity}}"
     },
     "moves": {
       "acceptAria": "Sposta al {{date}}",
@@ -5754,7 +5753,8 @@
       },
       "dueDone": "«{{name}}» scadenza {{date}}",
       "laterDone": "«{{name}}» rinviata",
-      "cancelDone": "«{{name}}» abbandonata"
+      "cancelDone": "«{{name}}» abbandonata",
+      "tonightTitle": "Stasera"
     }
   },
   "agents": {

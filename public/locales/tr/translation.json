@@ -5542,7 +5542,7 @@
     "sectionName": {
       "verdict": "Karar",
       "timeline": "Yaklaşan günler",
-      "tonight": "Bu akşam",
+      "tonight": "Günün öncelikleri",
       "moves": "Taşınacaklar",
       "anticipate": "Öngörülecekler",
       "replies": "Beklenen yanıtlar",
@@ -5553,8 +5553,7 @@
       "consequence": "Sonuç",
       "blocking": "Diğerlerini engelliyor",
       "money_deadline": "Para veya son tarih",
-      "planned_load": "Planlanmış yük",
-      "long_term": "Uzun vadeli"
+      "planned_load": "Planlanmış yük"
     },
     "alertType": {
       "conflict": "Çakışan etkinlikler",
@@ -5575,7 +5574,7 @@
     "settings": {
       "postponements": "Karttan önceki ertelemeler",
       "maxMoves": "Gösterilen taşımalar",
-      "maxTonight": "Bu akşam gösterilen görevler",
+      "maxTonight": "Gösterilen öncelikler",
       "closedLookback": "Kontrol edilen kapalı görevler (gün)",
       "optEvening": "Akşam özeti",
       "optTelegram": "Telegram'a gönder",
@@ -5660,8 +5659,8 @@
     "timeline": {
       "today": "Bugün",
       "planned": "{{minutes}} dk",
-      "ofCapacity": "{{planned}} / {{capacity}} dk",
-      "over": "{{minutes}} dk fazla",
+      "ofCapacity": "{{planned}} görev, {{capacity}} boş zaman",
+      "over": "Aşırı yük: {{planned}} görev, {{capacity}} boş zaman",
       "duringWork": "mesai sırasında",
       "legendWork": "Çalışma",
       "legendEvening": "Akşam",
@@ -5669,7 +5668,7 @@
       "legendConflict": "Çakışma"
     },
     "tonight": {
-      "ofCapacity": "{{capacity}} dakikadan {{planned}} dakika planlandı"
+      "ofCapacity": "{{planned}} / {{capacity}}"
     },
     "moves": {
       "acceptAria": "{{date}} tarihine taşı",
@@ -5741,7 +5740,8 @@
       },
       "dueDone": "“{{name}}” bitiş {{date}}",
       "laterDone": "“{{name}}” daha sonraya bırakıldı",
-      "cancelDone": "“{{name}}” vazgeçildi"
+      "cancelDone": "“{{name}}” vazgeçildi",
+      "tonightTitle": "Bu akşam"
     }
   },
   "agents": {

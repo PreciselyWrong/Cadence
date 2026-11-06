@@ -28,7 +28,7 @@ describe('verdictText', () => {
                 tonight_minutes: 90,
             })
         ).toBe(
-            '2 tâches en retard, 1 tâche due aujourd’hui, 1 conflit d’agenda, 90 min à caser ce soir.'
+            '2 tâches en retard, 1 tâche due aujourd’hui, 1 conflit d’agenda, 1 h 30 de priorités.'
         );
     });
 

@@ -33,6 +33,7 @@ export interface BriefTimelineDay {
     task_uids: string[];
     load: {
         planned_minutes: number;
+        task_minutes?: number;
         capacity_minutes: number | null;
         hypothesis: boolean;
         note?: string;
@@ -41,6 +42,7 @@ export interface BriefTimelineDay {
 }
 
 export interface BriefTonightItem {
+    reason_code?: string | null;
     task_uid: string;
     reason: string;
     minutes: number;

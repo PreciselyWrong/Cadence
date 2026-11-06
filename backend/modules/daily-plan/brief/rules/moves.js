@@ -27,6 +27,7 @@ function candidates(input, settings) {
             from: task.due_date,
             minutes: taskMinutes(task).minutes,
             reason: texts.move.overdue(task.due_date),
+            reasonCode: 'overdue',
         }));
     const seen = new Set(list.map((c) => c.task.uid));
 
@@ -35,8 +36,7 @@ function candidates(input, settings) {
         .filter((load) => load.overloaded);
     for (const load of overloaded) {
         // Lowest priority leaves first, then the longest tasks: the fewest
-        // moves that make the day fit. If no prefix makes it fit (events
-        // alone overload it), nothing is proposed for that day.
+        // moves that make the day fit.
         const movable = load.tasks
             .filter((task) => !seen.has(task.uid))
             .sort(
@@ -44,7 +44,7 @@ function candidates(input, settings) {
                     priorityOf(a) - priorityOf(b) ||
                     taskMinutes(b).minutes - taskMinutes(a).minutes
             );
-        let remaining = load.planned_minutes;
+        let remaining = load.task_minutes;
         for (let count = 1; count <= movable.length; count++) {
             remaining -= taskMinutes(movable[count - 1]).minutes;
             if (remaining > load.capacity_minutes) continue;
@@ -55,6 +55,7 @@ function candidates(input, settings) {
                     from: load.date,
                     minutes: taskMinutes(task).minutes,
                     reason: texts.move.overloaded(load.date),
+                    reasonCode: 'overloaded',
                 });
             }
             break;
@@ -94,8 +95,10 @@ function findTarget(input, settings, candidate, added) {
         );
         if (ignored) continue;
         const load = dayLoad(input, settings, day);
-        const planned = load.planned_minutes + (added.get(day) || 0);
-        if (fits({ ...load, planned_minutes: planned }, minutes)) return day;
+        const taskMinutesThen = load.task_minutes + (added.get(day) || 0);
+        if (fits({ ...load, task_minutes: taskMinutesThen }, minutes)) {
+            return day;
+        }
     }
     return null;
 }
@@ -115,6 +118,7 @@ function moveProposals(input, settings) {
             from: candidate.from,
             to,
             reason: candidate.reason,
+            reason_code: candidate.reasonCode,
         });
     }
     return proposals;

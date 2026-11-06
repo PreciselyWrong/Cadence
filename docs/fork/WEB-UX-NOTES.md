@@ -489,3 +489,9 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
   - Vote d'alerte : « Utile · Pas utile » ; après « Pas utile », la carte dit « Tu verras moins ce type d’alerte ». Les votes stockés restent `useful` / `noise`.
   - Écart : annuler « Plus tard » retire l'étiquette #someday seulement. Le serveur a aussi retiré la tâche de la vue, de la semaine et du plan du jour ; l'annulation ne les rétablit pas.
 - **Android à reprendre** : le même menu sur le bilan du soir et le libellé « Pas utile » ; rien d'essayé sur le téléphone.
+
+### 2026-11-06 — Résumé : Priorités du jour et surcharge en heures
+
+- **Problème** : la section « Ce soir » ne contenait pas que des tâches du soir, et « 525 min de trop » comparait tâches et événements à la seule capacité du soir.
+- **Décision** : le titre devient « Priorités du jour » (le bilan du soir garde « Ce soir », clé `dailyBrief.evening.tonightTitle`) ; le libellé dit « Surcharge : 9 h 15 de tâches pour 1 h 30 de libre ». Le critère « long terme » disparaît des réglages.
+- **Android à reprendre** : rien, fait dans la même étape.

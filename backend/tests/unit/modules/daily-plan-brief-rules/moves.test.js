@@ -16,6 +16,15 @@ const CAPACITY = {
     },
 };
 
+const CAPACITY_120 = settingsWith({
+    capacity: {
+        evening: {
+            3: { start: '18:00', end: '22:00', minutes: 120 },
+            4: { start: '18:00', end: '22:00', minutes: 120 },
+        },
+    },
+});
+
 describe('moveProposals', () => {
     it('proposes the first later day for an overdue task', () => {
         const tasks = [
@@ -32,6 +41,7 @@ describe('moveProposals', () => {
             from: '2026-11-01',
             to: TODAY,
             reason: 'En retard depuis le 1 novembre.',
+            reason_code: 'overdue',
         });
     });
 
@@ -136,5 +146,44 @@ describe('moveProposals', () => {
         ];
         const [move] = moveProposals(input({ tasks }), settingsWith());
         expect(move.to).toBe('2026-11-05');
+    });
+
+    it('does not count events against the capacity when making a day fit', () => {
+        const tasks = [
+            task({
+                uid: 'big',
+                due_date: TODAY,
+                estimated_minutes: 100,
+            }),
+            task({
+                uid: 'small',
+                due_date: TODAY,
+                estimated_minutes: 40,
+                priority: 2,
+            }),
+        ];
+        const events = [event({ start_minute: 600, end_minute: 900 })];
+        const moves = moveProposals(input({ tasks, events }), CAPACITY_120);
+        expect(moves.map((m) => m.task_uid)).toEqual(['big']);
+    });
+
+    it('keeps track of what it already proposed for a day', () => {
+        const overdue = ['a', 'b'].map((uid) =>
+            task({
+                uid,
+                due_date: '2026-11-02',
+                estimated_minutes: 80,
+            })
+        );
+        const moves = moveProposals(input({ tasks: overdue }), CAPACITY_120);
+        expect(new Set(moves.map((m) => m.to)).size).toBe(2);
+    });
+
+    it('marks an overdue reason as repeating the due date', () => {
+        const [move] = moveProposals(
+            input({ tasks: [task({ due_date: '2026-11-02' })] }),
+            CAPACITY_120
+        );
+        expect(move.reason_code).toBe('overdue');
     });
 });

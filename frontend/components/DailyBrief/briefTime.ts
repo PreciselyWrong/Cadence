@@ -5,6 +5,27 @@ export const AXIS_START = 8 * 60;
 export const AXIS_END = 22 * 60;
 const AXIS_SPAN = AXIS_END - AXIS_START;
 
+type Translate = (
+    key: string,
+    fallback: string,
+    options?: Record<string, unknown>
+) => string;
+
+// "45 min", "2 h", "1 h 05".
+export const minutesText = (minutes: number, t: Translate): string => {
+    if (minutes < 60) {
+        return t('dailyBrief.minutes', '{{count}} min', { count: minutes });
+    }
+    const hours = Math.floor(minutes / 60);
+    const rest = minutes % 60;
+    return rest === 0
+        ? t('dailyBrief.hours', '{{hours}} h', { hours })
+        : t('dailyBrief.hoursMinutes', '{{hours}} h {{rest}}', {
+              hours,
+              rest: String(rest).padStart(2, '0'),
+          });
+};
+
 const clamp = (value: number, min: number, max: number) =>
     Math.min(max, Math.max(min, value));
 
@@ -52,13 +73,13 @@ export interface LoadLabel {
     over: boolean;
 }
 
-// "40 / 90 min", or "15 min de trop" in bold when the planned minutes exceed
-// the capacity. Without a capacity, only the planned minutes.
+// Task minutes against the free time of the day, emphasised when they exceed
+// it. Without a capacity, only the planned minutes.
 export const loadLabel = (
     planned: number,
     capacity: number | null,
     format: {
-        over: (minutes: number) => string;
+        over: (planned: number, capacity: number) => string;
         ofCapacity: (planned: number, capacity: number) => string;
         planned: (minutes: number) => string;
     }
@@ -67,7 +88,7 @@ export const loadLabel = (
         return { text: format.planned(planned), over: false };
     }
     if (planned > capacity) {
-        return { text: format.over(planned - capacity), over: true };
+        return { text: format.over(planned, capacity), over: true };
     }
     return { text: format.ofCapacity(planned, capacity), over: false };
 };

@@ -5598,7 +5598,7 @@
     "sectionName": {
       "verdict": "Ocena",
       "timeline": "Najbliższe dni",
-      "tonight": "Dziś wieczorem",
+      "tonight": "Priorytety dnia",
       "moves": "Do przeniesienia",
       "anticipate": "Do przewidzenia",
       "replies": "Oczekiwane odpowiedzi",
@@ -5609,8 +5609,7 @@
       "consequence": "Konsekwencje",
       "blocking": "Blokuje innych",
       "money_deadline": "Pieniądze lub termin",
-      "planned_load": "Zaplanowane obciążenie",
-      "long_term": "Długoterminowe"
+      "planned_load": "Zaplanowane obciążenie"
     },
     "alertType": {
       "conflict": "Kolidujące wydarzenia",
@@ -5631,7 +5630,7 @@
     "settings": {
       "postponements": "Odroczenia przed kartą",
       "maxMoves": "Wyświetlane przeniesienia",
-      "maxTonight": "Wyświetlane zadania na wieczór",
+      "maxTonight": "Wyświetlane priorytety",
       "closedLookback": "Sprawdzane zamknięte zadania (dni)",
       "optEvening": "Podsumowanie wieczorne",
       "optTelegram": "Wyślij na Telegram",
@@ -5716,8 +5715,8 @@
     "timeline": {
       "today": "Dziś",
       "planned": "{{minutes}} min",
-      "ofCapacity": "{{planned}} / {{capacity}} min",
-      "over": "{{minutes}} min ponad",
+      "ofCapacity": "{{planned}} zadań na {{capacity}} wolnego czasu",
+      "over": "Przeciążenie: {{planned}} zadań na {{capacity}} wolnego czasu",
       "duringWork": "w godzinach pracy",
       "legendWork": "Praca",
       "legendEvening": "Wieczór",
@@ -5725,7 +5724,7 @@
       "legendConflict": "Konflikt"
     },
     "tonight": {
-      "ofCapacity": "{{planned}} z {{capacity}} zaplanowanych"
+      "ofCapacity": "{{planned}} / {{capacity}}"
     },
     "moves": {
       "acceptAria": "Przenieś na {{date}}",
@@ -5797,7 +5796,8 @@
       },
       "dueDone": "„{{name}}” termin {{date}}",
       "laterDone": "„{{name}}” odłożona",
-      "cancelDone": "„{{name}}” porzucona"
+      "cancelDone": "„{{name}}” porzucona",
+      "tonightTitle": "Dziś wieczorem"
     }
   },
   "agents": {

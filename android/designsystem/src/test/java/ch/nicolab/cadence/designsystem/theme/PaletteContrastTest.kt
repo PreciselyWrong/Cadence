@@ -30,6 +30,13 @@ class PaletteContrastTest {
     }
 
     @Test
+    fun `pure black keeps quiet labels and hairlines distinct from the background`() {
+        val black = PureBlackPalette.background.toArgb()
+        assertTrue(contrastRatio(PureBlackPalette.outline.toArgb(), black) >= 8.0, "outline")
+        assertTrue(contrastRatio(PureBlackPalette.outlineVariant.toArgb(), black) >= 3.0, "outlineVariant")
+    }
+
+    @Test
     fun `every accent keeps its on-roles and reads as text on cards`() {
         palettes.forEach { (name, p) ->
             seeds.forEach { seed ->

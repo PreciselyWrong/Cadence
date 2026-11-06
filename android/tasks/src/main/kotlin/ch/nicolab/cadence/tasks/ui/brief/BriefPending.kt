@@ -14,8 +14,6 @@ data class BriefPending(
     val completing: Set<String> = emptySet(),
     /** Clé de la proposition de déplacement -> jour choisi. */
     val moved: Map<String, LocalDate> = emptyMap(),
-    /** Clés des déplacements refusés (« Pas cette date »). */
-    val refused: Set<String> = emptySet(),
     /** Clé de la question -> réponse (`yes`, `no` ou texte libre). */
     val answers: Map<String, String> = emptyMap(),
     /** Clé de la carte -> avis (`useful` ou `noise`). */
@@ -30,11 +28,8 @@ data class BriefPending(
     fun complete(uid: String) = copy(completing = completing + uid)
     fun uncomplete(uid: String) = copy(completing = completing - uid)
 
-    fun move(proposalKey: String, to: LocalDate) = copy(moved = moved + (proposalKey to to), refused = refused - proposalKey)
+    fun move(proposalKey: String, to: LocalDate) = copy(moved = moved + (proposalKey to to))
     fun unmove(proposalKey: String) = copy(moved = moved - proposalKey)
-
-    fun refuse(proposalKey: String) = copy(refused = refused + proposalKey, moved = moved - proposalKey)
-    fun unrefuse(proposalKey: String) = copy(refused = refused - proposalKey)
 
     fun answer(questionKey: String, answer: String) = copy(answers = answers + (questionKey to answer))
     fun unanswer(questionKey: String) = copy(answers = answers - questionKey)
@@ -54,7 +49,6 @@ data class BriefPending(
     /** Les décisions à garder (tout sauf [completing]), à plat : `genre:clé` -> valeur. */
     fun lasting(): Map<String, String> = buildMap {
         moved.forEach { (key, day) -> put("$MOVE$key", day.toString()) }
-        refused.forEach { put("$REFUSE$it", "") }
         answers.forEach { (key, value) -> put("$ANSWER$key", value) }
         feedback.forEach { (key, value) -> put("$FEEDBACK$key", value) }
         carried.forEach { put("$CARRY$it", "") }
@@ -63,7 +57,6 @@ data class BriefPending(
 
     companion object {
         private const val MOVE = "move:"
-        private const val REFUSE = "refuse:"
         private const val ANSWER = "answer:"
         private const val FEEDBACK = "feedback:"
         private const val CARRY = "carry:"
@@ -75,7 +68,6 @@ data class BriefPending(
             entries.forEach { (raw, value) ->
                 when {
                     raw.startsWith(MOVE) -> runCatching { LocalDate.parse(value) }.getOrNull()?.let { pending = pending.move(raw.removePrefix(MOVE), it) }
-                    raw.startsWith(REFUSE) -> pending = pending.refuse(raw.removePrefix(REFUSE))
                     raw.startsWith(ANSWER) -> pending = pending.answer(raw.removePrefix(ANSWER), value)
                     raw.startsWith(FEEDBACK) -> pending = pending.vote(raw.removePrefix(FEEDBACK), value)
                     raw.startsWith(OUTCOME) -> RowOutcome.decode(value)?.let { pending = pending.decide(raw.removePrefix(OUTCOME), it) }

@@ -9,6 +9,7 @@ import {
     eveningFill,
     formatClock,
     loadLabel,
+    minutesText,
     parseClock,
     spanPercent,
 } from './briefTime';
@@ -45,20 +46,25 @@ const BriefDay: React.FC<{
             : null;
 
     const label = loadLabel(
-        day.load.planned_minutes,
+        day.load.task_minutes ?? day.load.planned_minutes,
         day.load.capacity_minutes,
         {
-            over: (minutes) =>
-                t('dailyBrief.timeline.over', '{{minutes}} min de trop', {
-                    minutes,
-                }),
+            over: (planned, capacity) =>
+                t(
+                    'dailyBrief.timeline.over',
+                    'Surcharge : {{planned}} de tâches pour {{capacity}} de libre',
+                    {
+                        planned: minutesText(planned, t),
+                        capacity: minutesText(capacity, t),
+                    }
+                ),
             ofCapacity: (planned, capacity) =>
                 t(
                     'dailyBrief.timeline.ofCapacity',
-                    '{{planned}} / {{capacity}} min',
+                    '{{planned}} de tâches pour {{capacity}} de libre',
                     {
-                        planned,
-                        capacity,
+                        planned: minutesText(planned, t),
+                        capacity: minutesText(capacity, t),
                     }
                 ),
             planned: (minutes) =>

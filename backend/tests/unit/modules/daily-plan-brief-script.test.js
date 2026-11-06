@@ -100,7 +100,7 @@ describe('buildAudioScript', () => {
             SETTINGS
         );
         expect(chapterOf(script, 'intro').text).toBe(
-            "Nous sommes mercredi quatre novembre. Une tâche en retard, deux tâches dues aujourd'hui, un conflit d'agenda, quarante-cinq minutes à caser ce soir."
+            "Nous sommes mercredi quatre novembre. Une tâche en retard, deux tâches dues aujourd'hui, un conflit d'agenda, quarante-cinq minutes de priorités."
         );
     });
 
@@ -131,7 +131,7 @@ describe('buildAudioScript', () => {
             }
         );
         expect(chapterOf(script, 'tonight').text).toBe(
-            'Ce soir, deux tâches à faire. Premièrement, Payer la facture fictive, quinze minutes. Deuxièmement, Ranger le garage fictif, une heure trente.'
+            "Aujourd'hui, deux tâches prioritaires. Premièrement, Payer la facture fictive, quinze minutes. Deuxièmement, Ranger le garage fictif, une heure trente."
         );
     });
 
@@ -302,5 +302,28 @@ describe('buildAudioScript', () => {
 describe('cleanExternal', () => {
     it('collapses whitespace and removes markup', () => {
         expect(cleanExternal('  a \n\t b [[c]] ')).toBe('a b c');
+    });
+
+    it('speaks an overload card without digits', () => {
+        const script = buildAudioScript(
+            brief({
+                anticipate: [
+                    {
+                        key: 'overload:2026-11-04',
+                        type: 'overload',
+                        text: '4 novembre : 9 h 15 de tâches pour 1 h 30 de libre.',
+                        overload: {
+                            date: '2026-11-04',
+                            task_minutes: 555,
+                            capacity_minutes: 90,
+                        },
+                    },
+                ],
+            }),
+            SETTINGS
+        );
+        expect(chapterOf(script, 'anticipate').text).toBe(
+            'Mercredi quatre novembre, neuf heures quinze de tâches pour une heure trente de libre.'
+        );
     });
 });

@@ -5542,7 +5542,7 @@
     "sectionName": {
       "verdict": "Vurdering",
       "timeline": "Kommende dage",
-      "tonight": "I aften",
+      "tonight": "Dagens prioriteter",
       "moves": "Skal flyttes",
       "anticipate": "At forudse",
       "replies": "Forventede svar",
@@ -5553,8 +5553,7 @@
       "consequence": "Konsekvens",
       "blocking": "Blokerer andre",
       "money_deadline": "Penge eller frist",
-      "planned_load": "Planlagt belastning",
-      "long_term": "Langsigtet"
+      "planned_load": "Planlagt belastning"
     },
     "alertType": {
       "conflict": "Modstridende begivenheder",
@@ -5575,7 +5574,7 @@
     "settings": {
       "postponements": "Udskydelser før et kort",
       "maxMoves": "Viste flytninger",
-      "maxTonight": "Viste opgaver i aften",
+      "maxTonight": "Viste prioriteter",
       "closedLookback": "Gennemgåede afsluttede opgaver (dage)",
       "optEvening": "Aftenopsamling",
       "optTelegram": "Send på Telegram",
@@ -5660,8 +5659,8 @@
     "timeline": {
       "today": "I dag",
       "planned": "{{minutes}} min",
-      "ofCapacity": "{{planned}} / {{capacity}} min",
-      "over": "{{minutes}} min over",
+      "ofCapacity": "{{planned}} opgaver til {{capacity}} ledig tid",
+      "over": "Overbelastning: {{planned}} opgaver til {{capacity}} ledig tid",
       "duringWork": "i arbejdstiden",
       "legendWork": "Arbejde",
       "legendEvening": "Aften",
@@ -5669,7 +5668,7 @@
       "legendConflict": "Konflikt"
     },
     "tonight": {
-      "ofCapacity": "{{planned}} af {{capacity}} planlagt"
+      "ofCapacity": "{{planned}} / {{capacity}}"
     },
     "moves": {
       "acceptAria": "Flyt til {{date}}",
@@ -5741,7 +5740,8 @@
       },
       "dueDone": "“{{name}}” forfalder {{date}}",
       "laterDone": "“{{name}}” lagt til senere",
-      "cancelDone": "“{{name}}” opgivet"
+      "cancelDone": "“{{name}}” opgivet",
+      "tonightTitle": "I aften"
     }
   },
   "agents": {

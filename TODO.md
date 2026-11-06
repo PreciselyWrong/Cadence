@@ -21,6 +21,7 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
   - Refonte TickTick, étape 4 (faite le 2026-11-01 sans voir TickTick, accès refusé) : comparer à l'écran avec TickTick 8.0.20 le calendrier de Cadence (ordre des tâches sans heure, Demain / Semaine prochaine dans l'agenda d'Aujourd'hui, dépôt au quart d'heure) et signaler les écarts.
   - Traductions : relecture par des locuteurs natifs des 22 langues hors fr/en/ja/ko (traduites automatiquement le 2026-11-01, pluriels slaves ajoutés).
 - Bilan du soir sur Android (parité du web, 2026-11-04) : écran du bilan après `evening.switchTime` (fuseau du profil), `GET /daily-plan/:date/evening`, « Reporter à demain » (annulation par retrait du plan de demain), réglage `Bilan du soir` ; contrat `docs/39-daily-brief.md` § Evening review, écarts web dans `docs/fork/WEB-UX-NOTES.md` (2026-11-04). Vérif : mêmes quatre sections et mêmes compteurs que le web pour une même journée sur le serveur de test, puis passage à 18:00 sur le téléphone.
+- Revue UX du 2026-11-06, lot 1 sur le web : Android a le sélecteur « Autre date », l'heure de préparation, « Réglé » replié et « Réponses attendues » masqué sans réponse ; le web garde « Pas cette date » et ne montre pas l'heure, car l'usage est d'abord mobile et les lots suivants refont cet écran. Vérif : mêmes gestes sur `/insights/daily-brief` à 390 px et en bureau.
 - **Quand le besoin se montre.**
   - Parité, venus de l'amont et web seulement : quitter un partage, choisir qui reprend les tâches d'un membre retiré ; Android n'a pas d'écran de partage.
   - Fixtures dorées des habitudes : compléter (abstinence, alcool, aperçus, questions apprises, semaine) quand le web en a besoin.
@@ -31,6 +32,14 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
 
 ## Next
 
+- Revue UX du 2026-11-06, lots validés (arbitrages : IA dans Cadence via Profil › Assistant IA ; le triage ne repropose pas ce que `cadence-classify` a traité ; retour global + « Moins de ce type » dans un menu ⋯ ; habitudes à limite, abstinence et suivi simple neutres ; statuts de liens gardés, libellés À lire, À tester, Gardé, Plus tard, Archivé, plus « À évaluer » ; URL seule partagée envoyée dans Liens ; règles sur toutes les tâches et IA sur N par jour) :
+  - Lot 2, « Ma journée » : fusion du résumé et de « Planifier la journée », frise refaite (graduation, blocs colorés, événements à leur heure), lecteur compact, retour global. Vérif : une seule entrée dans Aujourd'hui ; frise lisible en noir pur.
+  - Lot 3, habitudes : carte neutre, couleur au prorata, pleine à l'objectif (app, widgets, web). Vérif : texte à 4,5:1 sur les deux fonds.
+  - Lot 4, « À trier » par règles : doublons corrigés (les tâches fermées n'ont pas de série, `collect.js`, d'où « Sport est-il un doublon de Sport »), questions sorties du résumé et de l'audio. Vérif : aucune question sur deux occurrences d'une même série.
+  - Lot 5, IA de jugement : résumé en 2 ou 3 phrases, propositions de triage.
+  - Lot 6, liens : accès direct et thèmes ; création directe et import des favoris Firefox ; thèmes par IA et créneaux par agents via MCP.
+  - Lot 7, desktop : clic gauche vers `/today` par le backend KSNI de `tray-icon` (l'actuel n'émet pas ce clic sous Linux), à prototyper ; rappels de tâches activés par défaut sur le desktop.
+  - Lot 8, add-on Firefox branché sur Cadence.
 - Web : reprendre la passe de soustraction Android du 2026-11-02 (`docs/fork/ANDROID-UX-NOTES.md`) : Aujourd'hui sans bannière ni jauge sauf journée pleine, fin de journée en ligne après les tâches, un seul signal couleur par ligne, deux gestes par idée dans la Boîte, fiche terminée par sa case, Projets et Étiquettes en lignes sans « 0 », surfaces neutres. Vérif : captures avant/après à 390 px et en bureau.
 - Résumé matinal : plan validé le 2026-11-04 (`docs/resume-matinal-plan.md`), phases 1 à 6 à suivre ; l'outil Gmail restreint d'Hermes (`integrations/hermes-gmail/`) est le prérequis de la phase 5.
 - Résumé du jour, retours du 2026-11-04 sur le téléphone (1.10.1) :

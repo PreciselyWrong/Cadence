@@ -5543,7 +5543,7 @@
     "sectionName": {
       "verdict": "Εκτίμηση",
       "timeline": "Επερχόμενες ημέρες",
-      "tonight": "Απόψε",
+      "tonight": "Προτεραιότητες της ημέρας",
       "moves": "Προς μετακίνηση",
       "anticipate": "Προς πρόβλεψη",
       "replies": "Αναμενόμενες απαντήσεις",
@@ -5554,8 +5554,7 @@
       "consequence": "Συνέπεια",
       "blocking": "Μπλοκάρει άλλες",
       "money_deadline": "Χρήματα ή προθεσμία",
-      "planned_load": "Προγραμματισμένος φόρτος",
-      "long_term": "Μακροπρόθεσμο"
+      "planned_load": "Προγραμματισμένος φόρτος"
     },
     "alertType": {
       "conflict": "Συγκρουόμενα συμβάντα",
@@ -5576,7 +5575,7 @@
     "settings": {
       "postponements": "Αναβολές πριν από μια κάρτα",
       "maxMoves": "Εμφανιζόμενες μετακινήσεις",
-      "maxTonight": "Εμφανιζόμενες εργασίες για απόψε",
+      "maxTonight": "Εμφανιζόμενες προτεραιότητες",
       "closedLookback": "Ελεγμένες κλειστές εργασίες (ημέρες)",
       "optEvening": "Απογευματινή σύνοψη",
       "optTelegram": "Αποστολή στο Telegram",
@@ -5661,8 +5660,8 @@
     "timeline": {
       "today": "Σήμερα",
       "planned": "{{minutes}} λεπ",
-      "ofCapacity": "{{planned}} / {{capacity}} λεπ",
-      "over": "{{minutes}} λεπ παραπάνω",
+      "ofCapacity": "{{planned}} εργασιών για {{capacity}} ελεύθερου χρόνου",
+      "over": "Υπερφόρτωση: {{planned}} εργασιών για {{capacity}} ελεύθερου χρόνου",
       "duringWork": "κατά τη διάρκεια της εργασίας",
       "legendWork": "Εργασία",
       "legendEvening": "Βράδυ",
@@ -5670,7 +5669,7 @@
       "legendConflict": "Σύγκρουση"
     },
     "tonight": {
-      "ofCapacity": "{{planned}} από {{capacity}} λεπ προγραμματισμένα"
+      "ofCapacity": "{{planned}} / {{capacity}}"
     },
     "moves": {
       "acceptAria": "Μετακίνηση στις {{date}}",
@@ -5742,7 +5741,8 @@
       },
       "dueDone": "«{{name}}» προθεσμία {{date}}",
       "laterDone": "«{{name}}» για αργότερα",
-      "cancelDone": "«{{name}}» ακυρώθηκε"
+      "cancelDone": "«{{name}}» ακυρώθηκε",
+      "tonightTitle": "Απόψε"
     }
   },
   "agents": {

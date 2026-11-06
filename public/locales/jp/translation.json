@@ -5542,7 +5542,7 @@
     "sectionName": {
       "verdict": "判定",
       "timeline": "今後の日程",
-      "tonight": "今夜",
+      "tonight": "今日の優先事項",
       "moves": "移動するもの",
       "anticipate": "先回りするもの",
       "replies": "想定される返信",
@@ -5553,8 +5553,7 @@
       "consequence": "影響",
       "blocking": "他をブロック",
       "money_deadline": "お金または期限",
-      "planned_load": "予定の負荷",
-      "long_term": "長期"
+      "planned_load": "予定の負荷"
     },
     "alertType": {
       "conflict": "競合する予定",
@@ -5575,7 +5574,7 @@
     "settings": {
       "postponements": "カードの前の延期",
       "maxMoves": "表示された移動",
-      "maxTonight": "今夜の表示タスク",
+      "maxTonight": "表示する優先事項",
       "closedLookback": "確認済みの完了タスク（日）",
       "optEvening": "夜のまとめ",
       "optTelegram": "Telegram に送信",
@@ -5660,8 +5659,8 @@
     "timeline": {
       "today": "今日",
       "planned": "{{minutes}} 分",
-      "ofCapacity": "{{planned}} / {{capacity}} 分",
-      "over": "{{minutes}} 分超過",
+      "ofCapacity": "タスク {{planned}} に対し空き時間 {{capacity}}",
+      "over": "過負荷: タスク {{planned}} に対し空き時間 {{capacity}}",
       "duringWork": "勤務時間中",
       "legendWork": "勤務",
       "legendEvening": "夜",
@@ -5669,7 +5668,7 @@
       "legendConflict": "競合"
     },
     "tonight": {
-      "ofCapacity": "{{capacity}} 分中 {{planned}} 分を予定"
+      "ofCapacity": "{{planned}} / {{capacity}}"
     },
     "moves": {
       "acceptAria": "{{date}} に移動",
@@ -5741,7 +5740,8 @@
       },
       "dueDone": "「{{name}}」期限 {{date}}",
       "laterDone": "「{{name}}」をあとで",
-      "cancelDone": "「{{name}}」を中止"
+      "cancelDone": "「{{name}}」を中止",
+      "tonightTitle": "今夜"
     }
   },
   "agents": {

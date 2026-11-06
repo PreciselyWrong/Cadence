@@ -2,12 +2,14 @@ package ch.nicolab.cadence.tasks.ui.brief
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,6 +17,8 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.material.icons.outlined.Event
+import androidx.compose.material.icons.outlined.ExpandLess
+import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material.icons.outlined.Inbox
 import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material.icons.outlined.WbSunny
@@ -32,10 +36,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -54,6 +60,7 @@ import ch.nicolab.cadence.designsystem.components.SecondaryAction
 import ch.nicolab.cadence.designsystem.components.TertiaryAction
 import ch.nicolab.cadence.designsystem.components.ChoiceChip
 import ch.nicolab.cadence.designsystem.components.rememberAppSnackbarHostState
+import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
@@ -104,6 +111,7 @@ fun BriefScreen(onBack: () -> Unit) {
     val undoLabel = stringResource(R.string.tasks_undo)
     var openedTaskUid by remember { mutableStateOf<String?>(null) }
     var datingTask by remember { mutableStateOf<TaskItem?>(null) }
+    var movingTask by remember { mutableStateOf<Pair<TaskItem, MoveDto>?>(null) }
     var preciseFor by remember { mutableStateOf<QuestionDto?>(null) }
 
     LaunchedEffect(viewModel) {
@@ -223,8 +231,8 @@ fun BriefScreen(onBack: () -> Unit) {
                     pending = pending,
                     onOpen = { openedTaskUid = it.uid },
                     onComplete = toggle,
-                    onMove = { task, move -> viewModel.move(date, task, move) },
-                    onRefuse = { move -> viewModel.refuseMove(date, move) },
+                    onMove = { task, move, target -> viewModel.move(date, task, move, target) },
+                    onPickMoveDate = { task, move -> movingTask = task to move },
                     onAnswer = { question, answer -> viewModel.answer(date, question, answer) },
                     onFeedback = { card, vote -> viewModel.feedback(date, card, vote) },
                     onPrecise = { preciseFor = it },
@@ -235,6 +243,7 @@ fun BriefScreen(onBack: () -> Unit) {
                         brief = brief,
                         date = date,
                         today = today,
+                        preparedAt = BriefFormat.clockAt(snapshot.generatedAt, zone),
                         audio = audioControls,
                         link = {
                             if (eveningCached?.evening != null) {
@@ -257,6 +266,17 @@ fun BriefScreen(onBack: () -> Unit) {
             // « Aucune échéance » n'est pas un report : seule une vraie date est écrite.
             onApply = { day, _ -> day?.let { viewModel.setDue(task, it) } },
             onDismiss = { datingTask = null },
+        )
+    }
+    movingTask?.let { (task, move) ->
+        TaskDateSheet(
+            title = stringResource(R.string.brief_move_other_date),
+            today = today,
+            date = runCatching { LocalDate.parse(move.to) }.getOrNull(),
+            time = null,
+            // « Aucune échéance » n'est pas un déplacement : seule une vraie date est écrite.
+            onApply = { day, _ -> day?.let { target -> cached?.let { viewModel.move(it.date, task, move, target) } } },
+            onDismiss = { movingTask = null },
         )
     }
     openedTaskUid?.let { uid ->
@@ -297,8 +317,8 @@ internal class BriefContext(
     val pending: BriefPending,
     val onOpen: (TaskItem) -> Unit,
     val onComplete: (TaskItem) -> Unit,
-    val onMove: (TaskItem, MoveDto) -> Unit,
-    val onRefuse: (MoveDto) -> Unit,
+    val onMove: (TaskItem, MoveDto, LocalDate) -> Unit,
+    val onPickMoveDate: (TaskItem, MoveDto) -> Unit,
     val onAnswer: (QuestionDto, String) -> Unit,
     val onFeedback: (AnticipateDto, String) -> Unit,
     val onPrecise: (QuestionDto) -> Unit,
@@ -321,7 +341,7 @@ private fun LazyListScope.briefSection(id: String, context: BriefContext) {
             BriefSection(stringResource(R.string.brief_tonight_title), detail) {
                 brief.tonight.forEach { entry ->
                     val task = context.tasks[entry.taskUid] ?: return@forEach
-                    BriefTaskRow(task, context, subtitle = entry.reason.ifBlank { null }, onToggle = { context.onComplete(task) })
+                    BriefTaskRow(task, context, subtitle = BriefFormat.visibleReason(entry.reason, entry.reasonCode), onToggle = { context.onComplete(task) })
                 }
             }
         }
@@ -333,27 +353,23 @@ private fun LazyListScope.briefSection(id: String, context: BriefContext) {
                     val target = runCatching { LocalDate.parse(move.to) }.getOrNull() ?: return@forEach
                     val movable = PlanningChanges.movable(listOf(task)).isNotEmpty()
                     val moved = context.pending.moved[move.proposalKey]
-                    val refused = move.proposalKey in context.pending.refused
-                    val open = moved == null && !refused
+                    val open = moved == null && movable
                     Column(Modifier.animateContentSize()) {
                         BriefTaskRow(
                             task = task,
                             context = context,
-                            subtitle = move.reason.ifBlank { null },
+                            subtitle = BriefFormat.visibleReason(move.reason, move.reasonCode),
                             onToggle = { context.onComplete(task) },
                             trailing = when {
                                 moved != null -> {
                                     { DecisionTag(stringResource(R.string.brief_move_done, BriefFormat.chip(moved))) }
-                                }
-                                refused -> {
-                                    { DecisionTag(stringResource(R.string.brief_move_refused)) }
                                 }
                                 movable -> {
                                     {
                                         ChoiceChip(
                                             label = BriefFormat.chip(target) + "  →",
                                             selected = false,
-                                            onClick = { context.onMove(task, move) },
+                                            onClick = { context.onMove(task, move, target) },
                                         )
                                     }
                                 }
@@ -362,7 +378,7 @@ private fun LazyListScope.briefSection(id: String, context: BriefContext) {
                         )
                         AnimatedVisibility(visible = open) {
                             Row(Modifier.fillMaxWidth().padding(start = RowContentInset)) {
-                                TertiaryAction(stringResource(R.string.brief_refuse_date), onClick = { context.onRefuse(move) })
+                                TertiaryAction(stringResource(R.string.brief_move_other_date), onClick = { context.onPickMoveDate(task, move) })
                             }
                         }
                     }
@@ -411,13 +427,9 @@ private fun LazyListScope.briefSection(id: String, context: BriefContext) {
             }
         }
         "replies" -> item(key = id) {
-            val mail = context.snapshot.brief?.sources?.firstOrNull { it.id == "mail" }
+            // Sans messagerie branchée ni réponse en attente, le bloc n'a rien à dire.
+            if (brief.replies.isEmpty()) return@item
             BriefSection(stringResource(R.string.brief_replies_title), null) {
-                if (mail?.status != "read") {
-                    Text(stringResource(R.string.brief_source_unread), style = MaterialTheme.typography.bodyMedium, color = cadence.onSurfaceVariant)
-                } else if (brief.replies.isEmpty()) {
-                    Text(stringResource(R.string.brief_replies_empty), style = MaterialTheme.typography.bodyMedium, color = cadence.onSurfaceVariant)
-                }
                 brief.replies.forEach { reply ->
                     val since = reply.date?.let { runCatching { java.time.OffsetDateTime.parse(it).toLocalDate() }.getOrNull() }
                     Column(Modifier.padding(vertical = Space.xs)) {
@@ -447,12 +459,39 @@ private fun LazyListScope.briefSection(id: String, context: BriefContext) {
         "resolved" -> item(key = id) {
             val resolved = brief.resolved.mapNotNull { context.tasks[it.taskUid] }
             if (resolved.isEmpty()) return@item
-            BriefSection(stringResource(R.string.brief_resolved_title), resolved.size.toString()) {
+            ResolvedSection(resolved.size) {
                 resolved.forEach { task ->
                     BriefTaskRow(task, context, subtitle = null, onToggle = { context.onReopen(task) })
                 }
             }
         }
+    }
+}
+
+/** « Réglé » : repliée par défaut, un appui sur le titre l'ouvre. */
+@Composable
+private fun ResolvedSection(count: Int, content: @Composable () -> Unit) {
+    var open by rememberSaveable { mutableStateOf(false) }
+    val title = stringResource(R.string.brief_resolved_title)
+    Column(Modifier.fillMaxWidth().padding(top = Space.xl, bottom = Space.xs).animateContentSize()) {
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .heightIn(min = Size.touch)
+                .clickable(role = Role.Button, onClick = { open = !open }),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(title, style = MaterialTheme.typography.titleSmall, color = cadence.onSurfaceVariant)
+            Spacer(Modifier.width(Space.sm))
+            Text(count.toString(), style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)
+            Spacer(Modifier.weight(1f))
+            Icon(
+                if (open) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
+                contentDescription = stringResource(if (open) R.string.brief_resolved_collapse else R.string.brief_resolved_expand),
+                tint = cadence.onSurfaceVariant,
+            )
+        }
+        if (open) content()
     }
 }
 
@@ -476,10 +515,11 @@ internal fun durationLabel(minutes: Int): String {
 }
 
 @Composable
-private fun BriefHeader(brief: BriefDto, date: LocalDate, today: LocalDate, audio: @Composable () -> Unit, link: @Composable () -> Unit) {
+private fun BriefHeader(brief: BriefDto, date: LocalDate, today: LocalDate, preparedAt: String?, audio: @Composable () -> Unit, link: @Composable () -> Unit) {
     val palette = cadence
     Column(Modifier.fillMaxWidth().padding(bottom = Space.md)) {
-        Text(BriefFormat.longDate(date), style = MaterialTheme.typography.bodyMedium, color = palette.onSurfaceVariant)
+        val dateLine = listOfNotNull(BriefFormat.longDate(date), preparedAt?.let { stringResource(R.string.brief_prepared_at, it) }).joinToString(" · ")
+        Text(dateLine, style = MaterialTheme.typography.bodyMedium, color = palette.onSurfaceVariant)
         Text(
             brief.verdict.text,
             style = MaterialTheme.typography.headlineSmall,

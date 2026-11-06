@@ -5551,7 +5551,7 @@
     "sectionName": {
       "verdict": "Ergebnis",
       "timeline": "Kommende Tage",
-      "tonight": "Heute Abend",
+      "tonight": "Prioritäten des Tages",
       "moves": "Zu verschieben",
       "anticipate": "Vorausschauen",
       "replies": "Erwartete Antworten",
@@ -5562,8 +5562,7 @@
       "consequence": "Auswirkung",
       "blocking": "Blockiert andere",
       "money_deadline": "Geld oder Frist",
-      "planned_load": "Geplante Auslastung",
-      "long_term": "Langfristig"
+      "planned_load": "Geplante Auslastung"
     },
     "alertType": {
       "conflict": "Sich überschneidende Termine",
@@ -5584,7 +5583,7 @@
     "settings": {
       "postponements": "Verschiebungen vor einer Karte",
       "maxMoves": "Angezeigte Verschiebungen",
-      "maxTonight": "Heute Abend angezeigte Aufgaben",
+      "maxTonight": "Angezeigte Prioritäten",
       "closedLookback": "Geprüfte erledigte Aufgaben (Tage)",
       "optEvening": "Abendabschluss",
       "optTelegram": "Auf Telegram senden",
@@ -5669,8 +5668,8 @@
     "timeline": {
       "today": "Heute",
       "planned": "{{minutes}} Min.",
-      "ofCapacity": "{{planned}} / {{capacity}} Min.",
-      "over": "{{minutes}} Min. zu viel",
+      "ofCapacity": "{{planned}} Aufgaben bei {{capacity}} freier Zeit",
+      "over": "Überlastet: {{planned}} Aufgaben bei {{capacity}} freier Zeit",
       "duringWork": "während der Arbeit",
       "legendWork": "Arbeit",
       "legendEvening": "Abend",
@@ -5678,7 +5677,7 @@
       "legendConflict": "Konflikt"
     },
     "tonight": {
-      "ofCapacity": "{{planned}} von {{capacity}} geplant"
+      "ofCapacity": "{{planned}} / {{capacity}}"
     },
     "moves": {
       "acceptAria": "Verschieben auf {{date}}",
@@ -5750,7 +5749,8 @@
       },
       "dueDone": "„{{name}}“ fällig {{date}}",
       "laterDone": "„{{name}}“ auf später gelegt",
-      "cancelDone": "„{{name}}“ verworfen"
+      "cancelDone": "„{{name}}“ verworfen",
+      "tonightTitle": "Heute Abend"
     }
   },
   "agents": {

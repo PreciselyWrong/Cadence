@@ -5512,7 +5512,7 @@
     "sectionName": {
       "verdict": "Verdict",
       "timeline": "Upcoming days",
-      "tonight": "Tonight",
+      "tonight": "Today's priorities",
       "moves": "To move",
       "anticipate": "To anticipate",
       "replies": "Replies expected",
@@ -5523,8 +5523,7 @@
       "consequence": "Consequence",
       "blocking": "Blocks others",
       "money_deadline": "Money or deadline",
-      "planned_load": "Planned load",
-      "long_term": "Long term"
+      "planned_load": "Planned load"
     },
     "alertType": {
       "conflict": "Conflicting events",
@@ -5545,7 +5544,7 @@
     "settings": {
       "postponements": "Postponements before a card",
       "maxMoves": "Moves shown",
-      "maxTonight": "Tasks shown tonight",
+      "maxTonight": "Priorities shown",
       "closedLookback": "Closed tasks checked (days)",
       "optEvening": "Evening wrap-up",
       "optTelegram": "Send on Telegram",
@@ -5630,8 +5629,8 @@
     "timeline": {
       "today": "Today",
       "planned": "{{minutes}} min",
-      "ofCapacity": "{{planned}} / {{capacity}} min",
-      "over": "{{minutes}} min over",
+      "ofCapacity": "{{planned}} of tasks for {{capacity}} free",
+      "over": "Overload: {{planned}} of tasks for {{capacity}} free",
       "duringWork": "during work",
       "legendWork": "Work",
       "legendEvening": "Evening",
@@ -5639,7 +5638,7 @@
       "legendConflict": "Conflict"
     },
     "tonight": {
-      "ofCapacity": "{{planned}} of {{capacity}} planned"
+      "ofCapacity": "{{planned}} / {{capacity}}"
     },
     "moves": {
       "acceptAria": "Move to {{date}}",
@@ -5711,7 +5710,8 @@
       },
       "dueDone": "“{{name}}” due {{date}}",
       "laterDone": "“{{name}}” set aside",
-      "cancelDone": "“{{name}}” abandoned"
+      "cancelDone": "“{{name}}” abandoned",
+      "tonightTitle": "Tonight"
     }
   },
   "agents": {

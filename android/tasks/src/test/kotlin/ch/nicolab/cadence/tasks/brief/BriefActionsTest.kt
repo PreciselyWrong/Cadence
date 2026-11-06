@@ -36,7 +36,7 @@ class BriefActionsTest {
     fun moveChangesTheDueDayAndQueuesAnAcceptedDecision() = runTest {
         val task = TaskItem(uid = "t2", name = "Trier", dueDay = today)
 
-        actions.move(today, move(to = "2026-11-07"), task)
+        actions.move(today, move(to = "2026-11-07"), task, LocalDate.of(2026, 11, 7))
 
         assertEquals(LocalDate.of(2026, 11, 7), tasks.writes.single().second.dueDate)
         val call = queue.queued.single()
@@ -54,7 +54,7 @@ class BriefActionsTest {
     fun undoOfAMoveRestoresTheDayAndCancelsTheQueuedCall() = runTest {
         val task = TaskItem(uid = "t2", name = "Trier", dueDay = today)
 
-        val undo = actions.move(today, move(to = "2026-11-07"), task)
+        val undo = actions.move(today, move(to = "2026-11-07"), task, LocalDate.of(2026, 11, 7))
         undo()
 
         assertEquals(listOf("brief-decision:k1"), queue.cancelled)
@@ -104,13 +104,15 @@ class BriefActionsTest {
     }
 
     @Test
-    fun refusingADateOnlyQueuesARefusedDecision() = runTest {
-        actions.refuseMove(today, move(to = "2026-11-07"))
+    fun movingToAnotherDayWritesThatDayAndRecordsIt() = runTest {
+        val chosen = LocalDate.of(2026, 11, 20)
 
-        assertTrue(tasks.writes.isEmpty())
+        actions.move(today, move(to = "2026-11-07"), TaskItem(uid = "t1", name = "Payer"), chosen)
+
+        assertEquals(listOf("t1"), tasks.writes.map { it.first })
         val call = queue.queued.single()
-        assertEquals("refused", call.body.str("decision"))
-        assertEquals("2026-11-07", call.body.obj("proposal").str("to"))
+        assertEquals("accepted", call.body.str("decision"))
+        assertEquals("2026-11-20", call.body.obj("proposal").str("to"))
     }
 
     @Test
@@ -147,8 +149,9 @@ class BriefActionsTest {
         var next = 0
         val keyed = BriefActions(tasks, queue, { zone }, newKey = { "key${next++}" })
 
-        keyed.refuseMove(today, move(to = "2026-11-07"))
-        keyed.refuseMove(today, move(to = "2026-11-08"))
+        val task = TaskItem(uid = "t1", name = "Payer")
+        keyed.move(today, move(to = "2026-11-07"), task, LocalDate.of(2026, 11, 7))
+        keyed.move(today, move(to = "2026-11-08"), task, LocalDate.of(2026, 11, 8))
 
         assertEquals(listOf("brief-decision:key0", "brief-decision:key1"), queue.queued.map { it.key })
     }

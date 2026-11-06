@@ -27,6 +27,15 @@ function formatDay(day) {
     return `${Number(date)} ${MONTHS[Number(month) - 1]}`;
 }
 
+// 45 -> '45 min', 120 -> '2 h', 555 -> '9 h 15', 65 -> '1 h 05'.
+function formatDuration(minutes) {
+    const total = Math.max(0, Math.round(minutes));
+    if (total < 60) return `${total} min`;
+    const rest = total % 60;
+    const hours = `${Math.floor(total / 60)} h`;
+    return rest === 0 ? hours : `${hours} ${String(rest).padStart(2, '0')}`;
+}
+
 const titleOf = (name) => (name && String(name).trim()) || 'Sans titre';
 
 const texts = {
@@ -45,7 +54,7 @@ const texts = {
             plural(n, '1 conflit d’agenda', `${n} conflits d’agenda`),
         replies: (n) =>
             plural(n, '1 réponse en attente', `${n} réponses en attente`),
-        tonight: (minutes) => `${minutes} min à caser ce soir`,
+        tonight: (minutes) => `${formatDuration(minutes)} de priorités`,
     },
     card: {
         workHours: (title) => `« ${title} » tombe pendant tes heures de focus.`,
@@ -54,7 +63,9 @@ const texts = {
         conflict: (a, b) => `« ${a} » et « ${b} » se chevauchent.`,
         conflictQuestion: (a) => `« ${a} » doit-il être déplacé ?`,
         overload: (day, planned, capacity) =>
-            `${formatDay(day)} : ${planned} min prévues, ${capacity} min disponibles le soir.`,
+            capacity > 0
+                ? `${formatDay(day)} : ${formatDuration(planned)} de tâches pour ${formatDuration(capacity)} de libre. À alléger d’environ ${formatDuration(planned - capacity)}.`
+                : `${formatDay(day)} : ${formatDuration(planned)} de tâches et aucun temps libre.`,
         deadlineInNote: (title, day, due) =>
             due
                 ? `La note de « ${title} » cite le ${formatDay(day)}, avant l’échéance du ${formatDay(due)}.`
@@ -80,9 +91,8 @@ const texts = {
         dueTomorrow: 'Due demain',
         blocking: (n) =>
             plural(n, 'Bloque 1 autre tâche', `Bloque ${n} autres tâches`),
-        money: (day) => `Échéance d’argent le ${formatDay(day)}`,
+        money: 'Échéance d’argent',
         planned: 'Prévue aujourd’hui',
-        project: (name) => `Fait avancer « ${name} »`,
     },
     evening: {
         verdict: {
@@ -106,4 +116,4 @@ const texts = {
     },
 };
 
-module.exports = { texts, formatDay, titleOf };
+module.exports = { texts, formatDay, formatDuration, titleOf };

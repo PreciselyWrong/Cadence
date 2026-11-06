@@ -39,7 +39,7 @@ internal class BriefAudioUi(
 )
 
 /**
- * « Écouter · N min » dans l'en-tête du résumé ; une fois lancée, pause, chapitre précédent/suivant et position.
+ * « Écouter · N min » dans l'en-tête du résumé ; une fois lancée, pause, partie précédente/suivante et position.
  * Masqué quand il n'y a ni fichier, ni MP3 du serveur, ni script que la voix Piper puisse lire.
  */
 @Composable
@@ -66,11 +66,7 @@ internal fun BriefAudioControls(
         return
     }
     val playing = ui.player.playing
-    val chapterLine = if (ui.marks.isNotEmpty()) {
-        stringResource(R.string.brief_audio_chapter, ChapterMarks.indexAt(ui.marks, ui.player.positionMs) + 1, ui.marks.size)
-    } else {
-        null
-    }
+    val chapterLine = ChapterMarks.titleAt(ui.marks, ui.player.positionMs)
     Row(modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         IconButton(onClick = onPrevious) {
             Icon(Icons.Outlined.SkipPrevious, contentDescription = stringResource(R.string.brief_audio_previous), tint = cadence.onSurface)

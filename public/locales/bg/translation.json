@@ -5542,7 +5542,7 @@
     "sectionName": {
       "verdict": "Оценка",
       "timeline": "Предстоящи дни",
-      "tonight": "Тази вечер",
+      "tonight": "Приоритети за деня",
       "moves": "За преместване",
       "anticipate": "За предвиждане",
       "replies": "Очаквани отговори",
@@ -5553,8 +5553,7 @@
       "consequence": "Последствие",
       "blocking": "Блокира други",
       "money_deadline": "Пари или срок",
-      "planned_load": "Планирано натоварване",
-      "long_term": "Дългосрочно"
+      "planned_load": "Планирано натоварване"
     },
     "alertType": {
       "conflict": "Припокриващи се събития",
@@ -5575,7 +5574,7 @@
     "settings": {
       "postponements": "Отлагания преди карта",
       "maxMoves": "Показани премествания",
-      "maxTonight": "Показани задачи за тази вечер",
+      "maxTonight": "Показани приоритети",
       "closedLookback": "Прегледани затворени задачи (дни)",
       "optEvening": "Вечерно обобщение",
       "optTelegram": "Изпращане в Telegram",
@@ -5660,8 +5659,8 @@
     "timeline": {
       "today": "Днес",
       "planned": "{{minutes}} мин",
-      "ofCapacity": "{{planned}} / {{capacity}} мин",
-      "over": "{{minutes}} мин над нормата",
+      "ofCapacity": "{{planned}} задачи при {{capacity}} свободно време",
+      "over": "Претоварване: {{planned}} задачи при {{capacity}} свободно време",
       "duringWork": "по време на работа",
       "legendWork": "Работа",
       "legendEvening": "Вечер",
@@ -5669,7 +5668,7 @@
       "legendConflict": "Конфликт"
     },
     "tonight": {
-      "ofCapacity": "{{planned}} от {{capacity}} мин планирани"
+      "ofCapacity": "{{planned}} / {{capacity}}"
     },
     "moves": {
       "acceptAria": "Преместване на {{date}}",
@@ -5741,7 +5740,8 @@
       },
       "dueDone": "„{{name}}“ срок {{date}}",
       "laterDone": "„{{name}}“ отложена",
-      "cancelDone": "„{{name}}“ отказана"
+      "cancelDone": "„{{name}}“ отказана",
+      "tonightTitle": "Тази вечер"
     }
   },
   "agents": {

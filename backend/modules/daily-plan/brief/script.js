@@ -227,7 +227,7 @@ function introText(brief) {
         );
     }
     if (c.tonight_minutes) {
-        facts.push(`${speakDuration(c.tonight_minutes)} à caser ce soir`);
+        facts.push(`${speakDuration(c.tonight_minutes)} de priorités`);
     }
     const verdict = facts.length
         ? `${capitalize(facts.join(', '))}.`
@@ -245,10 +245,23 @@ function tonightItems(brief, tasksByUid) {
     });
 }
 
+// An overload card's text has digits, which Piper does not read: it is spoken
+// from its numbers.
+function spokenOverload({ date, task_minutes: tasks, capacity_minutes: free }) {
+    const load = `${speakDuration(tasks)} de tâches`;
+    return free > 0
+        ? `${capitalize(spokenDate(date))}, ${load} pour ${speakDuration(free)} de libre.`
+        : `${capitalize(spokenDate(date))}, ${load} et aucun temps libre.`;
+}
+
 function anticipateItems(brief) {
     return (brief.anticipate || [])
         .slice(0, ANTICIPATE_MAX)
-        .map((card) => cleanExternal(card.question?.text || card.text))
+        .map((card) =>
+            card.overload
+                ? spokenOverload(card.overload)
+                : cleanExternal(card.question?.text || card.text)
+        )
         .filter(Boolean);
 }
 
@@ -264,15 +277,15 @@ function renderChapters(brief, state) {
     ];
     const tonightTotal = (brief.tonight || []).length;
     if (tonightTotal > 0) {
-        const lead = `Ce soir, ${counted(
+        const lead = `Aujourd'hui, ${counted(
             Math.min(tonightTotal, TONIGHT_MAX),
-            'tâche à faire',
-            'tâches à faire',
+            'tâche prioritaire',
+            'tâches prioritaires',
             { feminine: true }
         )}.`;
         chapters.push({
             id: 'tonight',
-            title: 'Ce soir',
+            title: 'Priorités du jour',
             text: [lead, ...state.tonight].join(' '),
         });
     }

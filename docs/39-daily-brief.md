@@ -1,6 +1,6 @@
 # Daily brief
 
-Every morning Cadence prepares a short brief that arbitrates the day: what happens in the next three days, the few things worth doing tonight, the tasks to move, what to anticipate, the replies waiting and what was just settled. It is shown on the web (`/insights/daily-brief` and the Today card) and on Android, and read aloud by a local Piper voice.
+Every morning Cadence prepares a short brief that arbitrates the day: what happens in the next three days, the day's priorities, the tasks to move, what to anticipate, the replies waiting and what was just settled. It is shown on the web (`/insights/daily-brief` and the Today card) and on Android, and read aloud by a local Piper voice.
 
 The brief replaces the upstream AI-only Daily Brief. It works **without AI**: timeline, load, conflicts, duplicates and candidate dates are plain code. An LLM is optional and only rewrites the verdict and the reasons.
 
@@ -48,12 +48,12 @@ Creating the row for a brief leaves `started_at` empty, so the day plan is not "
       "work": [{ "start": 480, "end": 1020, "label": "…" }],       // focus blocks of that day, minutes after midnight
       "events": [{ "ref": "event:…", "series_ref": "series:…" | null, "title": "…", "all_day": false, "start_minute": 600, "end_minute": 660, "calendar": "…", "conflict": false }],
       "task_uids": ["…"],            // due that day (or planned on it)
-      "load": { "planned_minutes": 0, "capacity_minutes": null, "hypothesis": true, "note": "…" },
+      "load": { "planned_minutes": 0, "task_minutes": 0, "capacity_minutes": null, "hypothesis": true, "note": "…" },
       "flags": ["overloaded"]
     }
   ],
-  "tonight": [{ "task_uid": "…", "reason": "…", "minutes": 30 }],          // at most thresholds.maxTonight, in order
-  "moves": [{ "proposal_key": "…", "task_uid": "…", "from": "YYYY-MM-DD", "to": "YYYY-MM-DD", "reason": "…" }],
+  "tonight": [{ "task_uid": "…", "reason": "…", "reason_code": "overdue" | "due_today" | "due_tomorrow" | "blocking" | "money" | "planned", "minutes": 30 }],  // the day's priorities (the key stays `tonight`), at most thresholds.maxTonight, in order
+  "moves": [{ "proposal_key": "…", "task_uid": "…", "from": "YYYY-MM-DD", "to": "YYYY-MM-DD", "reason": "…", "reason_code": "overdue" | "overloaded" }],
   "anticipate": [{ "key": "…", "type": "conflict" | "overload" | "duplicate" | "deadline_in_note" | "postponed" | "dependency" | "event_in_work_hours", "text": "…", "task_uids": [], "event_refs": [], "question": { "key": "…", "text": "…?", "target": { "scope": "task" | "event" | "series", "ref": "…" } } | null }],
   "replies": [{ "account": "…", "thread_ref": "…", "from": "…", "subject": "…", "date": "ISO", "summary": "…", "link": "https://…" }],
   "inbox": [{ "uid": "…", "title": "…", "proposal": { "action": "task" | "note" | "later" | "delete", "reason": "…" } }],
@@ -81,9 +81,9 @@ Normalized by `backend/modules/daily-plan/brief/settings.js`; unknown or invalid
 | `timelineDays`          | `3`                                                                                                 | 1–7                                                                                                       |
 | `calendarFeedUids`      | `[]`                                                                                                | `feed_uid` values of ICS feeds and Google calendars read by the brief                                     |
 | `calendarLookaheadDays` | `7`                                                                                                 | 1–14                                                                                                      |
-| `priorities`            | `["consequence","blocking","money_deadline","planned_load","long_term"]`                            | order used by the tonight ranking                                                                         |
+| `priorities`            | `["consequence","blocking","money_deadline","planned_load"]`                                        | order used by the day's priorities                                                                        |
 | `thresholds`            | `{ postponements: 3, duplicateSimilarity: 0.8, maxMoves: 3, maxTonight: 3, closedLookbackDays: 7 }` |                                                                                                           |
-| `capacity.evening`      | `{}`                                                                                                | per weekday `"0"`–`"6"`: `{ start: "HH:mm", end: "HH:mm", minutes }`; missing = no evening capacity shown |
+| `capacity.evening`      | `{}`                                                                                                | per weekday `"0"`–`"6"`: `{ start: "HH:mm", end: "HH:mm", minutes }`; missing = no evening capacity       |
 | `capacity.dayNotes`     | `{}`                                                                                                | per weekday: short text shown on the timeline (e.g. partial remote day)                                   |
 | `retention`             | `{ decisionsDays: 90, audioDays: 7 }`                                                               |                                                                                                           |
 | `alerts`                | `{ disabled: [], noise: { minVotes: 3, ratio: 0.7 } }`                                              | alert types switched off by hand; noise rule below                                                        |
@@ -127,11 +127,19 @@ All routes exist under `/api` and `/api/v1`.
 - `job.js`: `generateDueBriefs({ now })`, run every 5 minutes by `taskScheduler.js` (`daily_brief`).
 - `sources.js`: configuration checks used by `GET /daily-plan/brief/status`.
 
+### Android brief screen
+
+- A task row already shows its due date: a reason with a date-only `reason_code` is not written under it.
+- A move offers the proposed day in one tap and « Autre date » (the date sheet); the choice is recorded as `accepted` with the chosen day. Android no longer sends `refused`; the web still does ("Not this day").
+- « Réponses attendues » is hidden while there is no reply; « Réglé » starts folded.
+- Web: the date is not on the row, so the reason stays; these gestures are in `TODO.md`.
+
 ### Rules
 
-- **Timeline load**: planned minutes of a day = `estimated_minutes` of tasks due or planned that day + timed events. Evening capacity = setting minutes minus the part of the evening window covered by focus blocks and events. Always marked as an hypothesis.
+- **Timeline load**: planned minutes of a day = `estimated_minutes` of tasks due or planned that day + timed events; `task_minutes` is the tasks alone (30 minutes for a task without estimate). Capacity = free daytime (the day hours of Profile › Planning, minus focus blocks, timed busy events and the evening window) + evening capacity (setting minutes minus the part of the evening window covered by focus blocks and events). Always marked as an hypothesis.
+- **Day's priorities** (`rules/tonight.js`): at most `thresholds.maxTonight` open tasks that are overdue or due by tomorrow, block another task, have a money deadline, or are planned today; the total fits the capacity. Being in a project is not a criterion. `reason_code` lets a client that already shows the due date leave out a reason that only repeats it (`overdue`, `due_today`, `due_tomorrow`).
 - **Conflicts**: a timed event overlapping a focus block (work) is `event_in_work_hours`; two overlapping busy events are `conflict`.
-- **Overload**: planned minutes above capacity (when capacity is known), or more than the threshold of due tasks.
+- **Overload**: task minutes above capacity (when capacity is known). The card says it in hours and what to do: "10 novembre : 9 h 15 de tâches pour 1 h 30 de libre. À alléger d'environ 7 h 45."
 - **Closed first**: before an open task is reported as open business, tasks closed in the lookback are checked. An open task whose normalized name equals a recently closed one is a probable duplicate; above `duplicateSimilarity` (token Jaccard) it is a possible duplicate. Closed subtasks never close their open parent.
 - **Deadline in a note**: a date found with `chrono-node` (French and English) in a task note, earlier than `due_date`, wins and is asked as a question.
 - **Candidate dates**: a move target is the first day after today, within the timeline, that is not overloaded, not refused before for that task, and fits the task's minutes.
@@ -147,7 +155,7 @@ The brief is read aloud by a Piper server on the user's network, or by a Piper v
 
 ### Script (`script.js`)
 
-- Four chapters in French, written for the ear: `intro` (date and verdict), `tonight` (ordinal list with durations), `anticipate` (the questions), `replies` (count and senders). An empty chapter is left out.
+- Four chapters in French, written for the ear: `intro` (date and verdict), `tonight` (the day's priorities, ordinal list with durations), `anticipate` (the questions), `replies` (count and senders). An empty chapter is left out.
 - Target 60 to 90 seconds: at most 230 words. Lists are trimmed from the end (`anticipate`, then reply senders, then `tonight`) until the script fits; the leads still state the full counts.
 - Numbers, durations and dates are spelled out in French, because Piper does not normalize digits: `speakDuration(90)` is "une heure trente", `speakTime(630)` is "dix heures trente", `0` and `720` are "minuit" and "midi". The date is "mercredi quatre novembre".
 - The verdict is spoken from the counters, not from `verdict.text`: an LLM rewrite of the verdict is not read.
@@ -193,7 +201,7 @@ The Android app is the default renderer: it speaks `audio_script` itself with a 
 - **Rendering**: after each brief refresh (`SyncEngine.onSynced`) a WorkManager job (`brief-audio`, KEEP so a running render is never restarted) renders today's brief when a voice is installed: each chapter of `audio_script` is synthesized, the clips are joined with 0.8 s of silence like the server render, and the result is one mono 16-bit WAV per brief date and version, `files/brief-audio/<date>-v<version>.wav`, with a `.json` sheet holding the duration, the start offset of every chapter, the voice and the speed. WAV rather than AAC: no encoder to manage, exact seeking, and about 2.6 MB per minute, so under 40 MB for the seven days kept. A render made with another voice or speed is replaced; a failed render leaves nothing behind and the server MP3 takes over.
 - **Retention**: the job deletes audio files older than 7 days (`BriefAudioFiles.RETENTION_DAYS`) and the other versions of the same day; deleting a voice deletes its renders.
 - **Server MP3**: without a usable local voice, the job copies the MP3 of a `ready` audio (`GET /daily-plan/:date/brief/audio`, device API key) next to a sheet built from `audio.chapters[].start_seconds`, so it plays offline. Pressing play with no copy downloads it on the spot.
-- **Playback**: Media3 ExoPlayer in a `MediaSessionService` (foreground service type `mediaPlayback`, channel « Lecture du résumé »): lock-screen and Bluetooth controls, previous/next chapter, and a resume position kept per brief version. The brief header shows « Écouter · N min » (N from the file, or estimated at 150 words per minute for a render not yet made) and, once playing, pause and chapter skip.
+- **Playback**: Media3 ExoPlayer in a `MediaSessionService` (foreground service type `mediaPlayback`, channel « Lecture du résumé »): lock-screen and Bluetooth controls, previous/next part, and a resume position kept per brief version. The brief header shows the date and the time the brief was prepared, then « Écouter · N min » (N from the file, or estimated at 150 words per minute for a render not yet made) and, once playing, pause, part skip and the title of the current part (« Priorités du jour »), never a chapter number.
 - **Voice sheet**: with no voice installed, « Écouter » opens a sheet (Siwis or Tom, size, license), downloads the voice with progress, renders the brief on demand and plays it.
 
 ## Evening review
@@ -220,7 +228,7 @@ The morning brief arbitrates the day; after the switch time the clients show the
 }
 ```
 
-- `counters.done` counts every task completed today; `done` lists the newest ten.
+- `counters.done` counts every task completed today; `done` lists the newest ten. `counters.capacity_minutes` is the evening alone here: the day is over. `slipped[].reason_code` is `overdue`, `due_today` or `planned`.
 - `audio_script.chapters` ids are `intro`, `done`, `tonight` and `tomorrow` (an empty `done` or `tonight` chapter is left out). The spoken text uses the same helpers as the morning script.
 - Web: the page and the Today card switch at `evening.switchTime` read in the profile's timezone (the browser's clock is not used). The page keeps the morning brief one tap away ("Voir le résumé du matin") and the evening review one tap away from the morning ("Voir le bilan du soir").
 - Actions on every tonight and slipped task, each shown at once on the row, then an undo snackbar: "C'est fait" (existing completion); "Demain" (existing `POST /daily-plan/:date/carry-over`, adds the task to tomorrow's plan, never changes its due date; undo removes it from tomorrow's plan when it was added); "Choisir une date" (date picker, existing task due-date update; undo restores the old date); "Plus tard" (existing `PATCH later: true`, the `#someday` tag; undo removes it); "Abandonner" (existing status cancelled; undo restores the previous status).

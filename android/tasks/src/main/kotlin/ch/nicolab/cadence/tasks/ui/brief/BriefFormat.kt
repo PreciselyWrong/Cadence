@@ -1,6 +1,8 @@
 package ch.nicolab.cadence.tasks.ui.brief
 
 import java.time.LocalDate
+import java.time.OffsetDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
@@ -8,6 +10,17 @@ import java.util.Locale
 /** Libellés du résumé, purs : pas de contexte Android, testés sur la JVM. */
 internal object BriefFormat {
     private val longDate = DateTimeFormatter.ofPattern("EEEE d MMMM", Locale.FRENCH)
+    private val clockTime = DateTimeFormatter.ofPattern("HH:mm")
+
+    /** Motifs qui ne font que répéter l'échéance, déjà écrite sur la ligne de tâche. */
+    private val DUE_DATE_REASONS = setOf("overdue", "due_today", "due_tomorrow")
+
+    /** Motif à écrire sous une tâche : rien s'il redit l'échéance. Un résumé plus ancien n'a pas de code et garde son texte. */
+    fun visibleReason(reason: String, code: String?): String? = reason.ifBlank { null }.takeUnless { code in DUE_DATE_REASONS }
+
+    /** Heure locale « 07:05 » d'un instant ISO ; null s'il est illisible. */
+    fun clockAt(instant: String?, zone: ZoneId): String? =
+        instant?.let { runCatching { OffsetDateTime.parse(it).atZoneSameInstant(zone).format(clockTime) }.getOrNull() }
 
     /** « Mercredi 4 novembre ». */
     fun longDate(date: LocalDate): String = capitalize(date.format(longDate))

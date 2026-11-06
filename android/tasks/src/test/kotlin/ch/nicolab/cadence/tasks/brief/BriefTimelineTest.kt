@@ -59,9 +59,18 @@ class BriefTimelineTest {
 
     @Test
     fun loadLabelIsPlainWithoutCapacityRatioWhenFitting_andOverWhenExceeded() {
-        assertEquals(LoadLabel.Plain(40), BriefTimeline.load(40, null))
-        assertEquals(LoadLabel.Ratio(40, 90), BriefTimeline.load(40, 90))
-        assertEquals(LoadLabel.Over(15), BriefTimeline.load(105, 90))
+        assertEquals(LoadLabel.Plain(40), BriefTimeline.load(LoadDto(plannedMinutes = 40)))
+        assertEquals(LoadLabel.Ratio(40, 90), BriefTimeline.load(LoadDto(plannedMinutes = 40, capacityMinutes = 90)))
+        assertEquals(LoadLabel.Over(105, 90), BriefTimeline.load(LoadDto(plannedMinutes = 105, capacityMinutes = 90)))
+    }
+
+    @Test
+    fun loadComparesOnlyTasksWithTheFreeTime() {
+        val busyDay = LoadDto(plannedMinutes = 615, taskMinutes = 555, capacityMinutes = 90)
+        assertEquals(LoadLabel.Over(555, 90), BriefTimeline.load(busyDay))
+
+        val meetings = LoadDto(plannedMinutes = 300, taskMinutes = 60, capacityMinutes = 90)
+        assertEquals(LoadLabel.Ratio(60, 90), BriefTimeline.load(meetings))
     }
 
     @Test

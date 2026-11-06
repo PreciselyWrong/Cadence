@@ -60,11 +60,14 @@ function dayMonth(date) {
 
 function slipReason(task, today) {
     if (task.due_date && task.due_date < today) {
-        return texts.evening.reason.overdue(dayMonth(task.due_date));
+        return {
+            reason: texts.evening.reason.overdue(dayMonth(task.due_date)),
+            reason_code: 'overdue',
+        };
     }
     return task.due_date === today
-        ? texts.evening.reason.dueToday
-        : texts.evening.reason.planned;
+        ? { reason: texts.evening.reason.dueToday, reason_code: 'due_today' }
+        : { reason: texts.evening.reason.planned, reason_code: 'planned' };
 }
 
 // Open tasks overdue, due today or planned today that are not in tonight's
@@ -85,7 +88,7 @@ function slippedToday(input, tonightUids) {
         )
         .map((task) => ({
             task_uid: task.uid,
-            reason: slipReason(task, today),
+            ...slipReason(task, today),
         }));
 }
 
@@ -123,8 +126,7 @@ function buildEvening(input, settings, morningBrief, now) {
         done: doneAll.length,
         slipped: slipped.length,
         tonight_minutes: tonight.reduce((sum, item) => sum + item.minutes, 0),
-        capacity_minutes: dayLoad(input, settings, input.today)
-            .capacity_minutes,
+        capacity_minutes: dayLoad(input, settings, input.today).evening_minutes,
     };
 
     const evening = {

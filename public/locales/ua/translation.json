@@ -5598,7 +5598,7 @@
     "sectionName": {
       "verdict": "Вердикт",
       "timeline": "Найближчі дні",
-      "tonight": "Сьогодні ввечері",
+      "tonight": "Пріоритети дня",
       "moves": "Що перенести",
       "anticipate": "Що передбачити",
       "replies": "Очікувані відповіді",
@@ -5609,8 +5609,7 @@
       "consequence": "Наслідки",
       "blocking": "Блокує інші",
       "money_deadline": "Гроші або дедлайн",
-      "planned_load": "Планове навантаження",
-      "long_term": "Довгостроковий"
+      "planned_load": "Планове навантаження"
     },
     "alertType": {
       "conflict": "Конфліктуючі події",
@@ -5631,7 +5630,7 @@
     "settings": {
       "postponements": "Відкладення перед карткою",
       "maxMoves": "Показані перенесення",
-      "maxTonight": "Завдання на сьогодні ввечері",
+      "maxTonight": "Показані пріоритети",
       "closedLookback": "Перевірені закриті завдання (днів)",
       "optEvening": "Вечірній підсумок",
       "optTelegram": "Надсилати в Telegram",
@@ -5716,8 +5715,8 @@
     "timeline": {
       "today": "Сьогодні",
       "planned": "{{minutes}} хв",
-      "ofCapacity": "{{planned}} / {{capacity}} хв",
-      "over": "{{minutes}} хв понад норму",
+      "ofCapacity": "Завдання на {{planned}}, вільно {{capacity}}",
+      "over": "Перевантаження: завдання на {{planned}}, вільно {{capacity}}",
       "duringWork": "під час роботи",
       "legendWork": "Робота",
       "legendEvening": "Вечір",
@@ -5725,7 +5724,7 @@
       "legendConflict": "Конфлікт"
     },
     "tonight": {
-      "ofCapacity": "{{planned}} з {{capacity}} хв заплановано"
+      "ofCapacity": "{{planned}} / {{capacity}}"
     },
     "moves": {
       "acceptAria": "Перенести на {{date}}",
@@ -5797,7 +5796,8 @@
       },
       "dueDone": "«{{name}}» термін {{date}}",
       "laterDone": "«{{name}}» відкладено",
-      "cancelDone": "«{{name}}» скасовано"
+      "cancelDone": "«{{name}}» скасовано",
+      "tonightTitle": "Сьогодні ввечері"
     }
   },
   "agents": {

@@ -11,7 +11,7 @@ import {
 } from '../../utils/dailyBriefService';
 import { isTaskCompleted } from '../../constants/taskStatus';
 import BriefTaskRow from './BriefTaskRow';
-import { shortDay } from './briefTime';
+import { minutesText, shortDay } from './briefTime';
 
 // The actions of the page, passed down: the page owns the requests and the
 // optimistic task state. Drafts (phase 5) add no action here on purpose.
@@ -33,7 +33,6 @@ export interface BriefSectionProps {
     answered: Record<string, string>;
 }
 
-type Translate = ReturnType<typeof useTranslation>['t'];
 
 export const SectionTitle: React.FC<{
     title: string;
@@ -49,24 +48,11 @@ export const SectionTitle: React.FC<{
     </h2>
 );
 
-const minutesText = (minutes: number, t: Translate) => {
-    if (minutes < 60) {
-        return t('dailyBrief.minutes', '{{count}} min', { count: minutes });
-    }
-    const hours = Math.floor(minutes / 60);
-    const rest = minutes % 60;
-    return rest === 0
-        ? t('dailyBrief.hours', '{{hours}} h', { hours })
-        : t('dailyBrief.hoursMinutes', '{{hours}} h {{rest}}', {
-              hours,
-              rest: String(rest).padStart(2, '0'),
-          });
-};
-
 export const TonightSection: React.FC<BriefSectionProps> = ({
     brief,
     tasks,
     actions,
+    locale,
 }) => {
     const { t } = useTranslation();
     const rows = brief.tonight.filter((item) => tasks[item.task_uid]);
@@ -78,16 +64,18 @@ export const TonightSection: React.FC<BriefSectionProps> = ({
             ? minutesText(planned, t)
             : t(
                   'dailyBrief.tonight.ofCapacity',
-                  '{{planned}} sur {{capacity}} supposées',
+                  '{{planned}} / {{capacity}}',
                   {
                       planned: minutesText(planned, t),
                       capacity: minutesText(capacity, t),
                   }
               );
     return (
-        <section aria-label={t('dailyBrief.sectionName.tonight', 'Ce soir')}>
+        <section
+            aria-label={t('dailyBrief.sectionName.tonight', 'Priorités du jour')}
+        >
             <SectionTitle
-                title={t('dailyBrief.sectionName.tonight', 'Ce soir')}
+                title={t('dailyBrief.sectionName.tonight', 'Priorités du jour')}
                 detail={detail}
             />
             {rows.map((item: BriefTonightItem) => {
@@ -95,7 +83,10 @@ export const TonightSection: React.FC<BriefSectionProps> = ({
                 const meta = [
                     task.project_name,
                     item.reason,
-                    `${item.minutes} min`,
+                    item.reason_code === 'money' && task.due_date
+                        ? shortDay(task.due_date, locale)
+                        : null,
+                    minutesText(item.minutes, t),
                 ]
                     .filter(Boolean)
                     .join(' · ');

@@ -5560,7 +5560,7 @@
     "sectionName": {
       "verdict": "Verdict",
       "timeline": "Zilele următoare",
-      "tonight": "Diseară",
+      "tonight": "Prioritățile zilei",
       "moves": "De mutat",
       "anticipate": "De anticipat",
       "replies": "Răspunsuri așteptate",
@@ -5571,8 +5571,7 @@
       "consequence": "Consecință",
       "blocking": "Blochează alte sarcini",
       "money_deadline": "Bani sau termen limită",
-      "planned_load": "Încărcare planificată",
-      "long_term": "Pe termen lung"
+      "planned_load": "Încărcare planificată"
     },
     "alertType": {
       "conflict": "Evenimente în conflict",
@@ -5593,7 +5592,7 @@
     "settings": {
       "postponements": "Amânări înainte de un card",
       "maxMoves": "Mutări afișate",
-      "maxTonight": "Sarcini afișate diseară",
+      "maxTonight": "Priorități afișate",
       "closedLookback": "Sarcini închise verificate (zile)",
       "optEvening": "Încheiere de seară",
       "optTelegram": "Trimite pe Telegram",
@@ -5678,8 +5677,8 @@
     "timeline": {
       "today": "Azi",
       "planned": "{{minutes}} min",
-      "ofCapacity": "{{planned}} / {{capacity}} min",
-      "over": "{{minutes}} min în plus",
+      "ofCapacity": "{{planned}} de sarcini pentru {{capacity}} libere",
+      "over": "Supraîncărcare: {{planned}} de sarcini pentru {{capacity}} libere",
       "duringWork": "în timpul programului de lucru",
       "legendWork": "Lucru",
       "legendEvening": "Seară",
@@ -5687,7 +5686,7 @@
       "legendConflict": "Conflict"
     },
     "tonight": {
-      "ofCapacity": "{{planned}} din {{capacity}} planificate"
+      "ofCapacity": "{{planned}} / {{capacity}}"
     },
     "moves": {
       "acceptAria": "Mută pe {{date}}",
@@ -5759,7 +5758,8 @@
       },
       "dueDone": "„{{name}}” termen {{date}}",
       "laterDone": "„{{name}}” amânată",
-      "cancelDone": "„{{name}}” abandonată"
+      "cancelDone": "„{{name}}” abandonată",
+      "tonightTitle": "Diseară"
     }
   },
   "agents": {

@@ -24,6 +24,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.withStyle
@@ -84,17 +85,20 @@ private fun BriefAxis() {
 @Composable
 private fun DayHeader(title: String, load: LoadDto) {
     val palette = cadence
-    val label = when (val state = BriefTimeline.load(load.plannedMinutes, load.capacityMinutes)) {
-        is LoadLabel.Plain -> stringResource(R.string.brief_load_plain, state.minutes)
-        is LoadLabel.Ratio -> stringResource(R.string.brief_load_ratio, state.planned, state.capacity)
-        is LoadLabel.Over -> stringResource(R.string.brief_load_over, state.excess)
+    val state = BriefTimeline.load(load)
+    val label = when (state) {
+        is LoadLabel.Plain -> durationLabel(state.minutes)
+        is LoadLabel.Ratio -> stringResource(R.string.brief_load_ratio, durationLabel(state.planned), durationLabel(state.capacity))
+        is LoadLabel.Over -> stringResource(R.string.brief_load_over, durationLabel(state.planned), durationLabel(state.capacity))
     }
-    val over = BriefTimeline.load(load.plannedMinutes, load.capacityMinutes) is LoadLabel.Over
+    val over = state is LoadLabel.Over
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         Text(title, style = MaterialTheme.typography.titleSmall, color = palette.onSurface)
-        Spacer(Modifier.weight(1f))
+        Spacer(Modifier.width(Space.md))
         Text(
             label,
+            modifier = Modifier.weight(1f),
+            textAlign = TextAlign.End,
             style = MaterialTheme.typography.bodySmall,
             color = if (over) palette.error else palette.onSurfaceVariant,
             fontWeight = if (over) FontWeight.Bold else null,

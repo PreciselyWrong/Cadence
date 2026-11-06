@@ -175,3 +175,88 @@ describe('overloadCards', () => {
         });
     });
 });
+
+describe('dayLoad with the free time of the day', () => {
+    const dayHours = { start: 480, end: 1080 }; // 8:00 to 18:00
+
+    it('counts the day hours minus focus blocks and timed busy events', () => {
+        const load = dayLoad(
+            input({
+                dayHours,
+                focusBlocksByDate: {
+                    [TODAY]: [{ start: 540, end: 720, label: 'Travail' }],
+                },
+                events: [event({ start_minute: 780, end_minute: 840 })],
+            }),
+            settingsWith(),
+            TODAY
+        );
+        expect(load.day_free_minutes).toBe(600 - 180 - 60);
+        expect(load.evening_minutes).toBeNull();
+        expect(load.capacity_minutes).toBe(360);
+    });
+
+    it('adds the evening capacity, and counts their overlap once', () => {
+        const load = dayLoad(
+            input({ dayHours: { start: 480, end: 1140 } }), // until 19:00
+            settingsWith(EVENING),
+            TODAY
+        );
+        // 8:00-18:00 by day; 18:00-22:00 belongs to the evening's 120 minutes.
+        expect(load.day_free_minutes).toBe(600);
+        expect(load.evening_minutes).toBe(120);
+        expect(load.capacity_minutes).toBe(720);
+    });
+
+    it('is overloaded only when tasks exceed the day and the evening together', () => {
+        const tasks = [task({ due_date: TODAY, estimated_minutes: 700 })];
+        const fitting = dayLoad(
+            input({ tasks, dayHours }),
+            settingsWith(EVENING),
+            TODAY
+        );
+        expect(fitting.overloaded).toBe(false);
+
+        const longer = [task({ due_date: TODAY, estimated_minutes: 721 })];
+        expect(
+            dayLoad(
+                input({ tasks: longer, dayHours }),
+                settingsWith(EVENING),
+                TODAY
+            ).overloaded
+        ).toBe(true);
+    });
+});
+
+describe('overloadCards wording', () => {
+    const load = (task_minutes, capacity_minutes) => ({
+        date: TODAY,
+        tasks: [],
+        task_minutes,
+        capacity_minutes,
+        overloaded: true,
+    });
+
+    it('states the load and what to do about it, in hours', () => {
+        const [card] = overloadCards([load(555, 90)]);
+        expect(card.text).toBe(
+            '4 novembre : 9 h 15 de tâches pour 1 h 30 de libre. À alléger d’environ 7 h 45.'
+        );
+    });
+
+    it('says so when nothing is free', () => {
+        const [card] = overloadCards([load(45, 0)]);
+        expect(card.text).toBe(
+            '4 novembre : 45 min de tâches et aucun temps libre.'
+        );
+    });
+
+    it('carries the numbers the spoken script needs', () => {
+        const [card] = overloadCards([load(555, 90)]);
+        expect(card.overload).toEqual({
+            date: TODAY,
+            task_minutes: 555,
+            capacity_minutes: 90,
+        });
+    });
+});

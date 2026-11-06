@@ -5542,7 +5542,7 @@
     "sectionName": {
       "verdict": "Nhận định",
       "timeline": "Những ngày sắp tới",
-      "tonight": "Tối nay",
+      "tonight": "Ưu tiên hôm nay",
       "moves": "Cần dời",
       "anticipate": "Cần dự đoán trước",
       "replies": "Phản hồi được mong đợi",
@@ -5553,8 +5553,7 @@
       "consequence": "Hệ quả",
       "blocking": "Chặn việc khác",
       "money_deadline": "Tiền hoặc hạn chót",
-      "planned_load": "Khối lượng đã lên kế hoạch",
-      "long_term": "Dài hạn"
+      "planned_load": "Khối lượng đã lên kế hoạch"
     },
     "alertType": {
       "conflict": "Sự kiện trùng lịch",
@@ -5575,7 +5574,7 @@
     "settings": {
       "postponements": "Số lần hoãn trước một thẻ",
       "maxMoves": "Các lần dời đã hiển thị",
-      "maxTonight": "Việc hiển thị tối nay",
+      "maxTonight": "Ưu tiên hiển thị",
       "closedLookback": "Việc đã xong được kiểm tra (ngày)",
       "optEvening": "Tổng kết buổi tối",
       "optTelegram": "Gửi qua Telegram",
@@ -5660,8 +5659,8 @@
     "timeline": {
       "today": "Hôm nay",
       "planned": "{{minutes}} phút",
-      "ofCapacity": "{{planned}} / {{capacity}} phút",
-      "over": "Vượt {{minutes}} phút",
+      "ofCapacity": "{{planned}} công việc, {{capacity}} thời gian rảnh",
+      "over": "Quá tải: {{planned}} công việc, {{capacity}} thời gian rảnh",
       "duringWork": "trong giờ làm việc",
       "legendWork": "Công việc",
       "legendEvening": "Buổi tối",
@@ -5669,7 +5668,7 @@
       "legendConflict": "Trùng lịch"
     },
     "tonight": {
-      "ofCapacity": "{{planned}} trên {{capacity}} phút đã lên kế hoạch"
+      "ofCapacity": "{{planned}} / {{capacity}}"
     },
     "moves": {
       "acceptAria": "Chuyển đến {{date}}",
@@ -5741,7 +5740,8 @@
       },
       "dueDone": "“{{name}}” hạn {{date}}",
       "laterDone": "“{{name}}” đã để sau",
-      "cancelDone": "“{{name}}” đã bỏ"
+      "cancelDone": "“{{name}}” đã bỏ",
+      "tonightTitle": "Tối nay"
     }
   },
   "agents": {

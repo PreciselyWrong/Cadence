@@ -65,28 +65,57 @@ function coveredMinutes(intervals, from, to) {
     return total;
 }
 
-// settings.capacity.evening[weekday] minus the part of its window taken by
-// focus blocks and timed busy events. Null when no window is configured.
+// The configured evening of a date: its window and useful minutes, or null.
 // A window ending before it starts runs past midnight.
-function eveningCapacity(settings, focusBlocks, timedEvents, date) {
+function eveningWindow(settings, date) {
     const config = settings.capacity?.evening?.[String(weekday(date))];
     if (!config || !Number.isFinite(config.minutes)) return null;
     const from = parseClock(config.start);
     const parsedEnd = parseClock(config.end);
     if (from === null || parsedEnd === null) return null;
-    const to = parsedEnd > from ? parsedEnd : MINUTES_PER_DAY;
-    const intervals = [
-        ...focusBlocks.map((block) => [block.start, block.end]),
-        ...timedEvents.map((event) => [event.start_minute, endOf(event)]),
+    return {
+        from,
+        to: parsedEnd > from ? parsedEnd : MINUTES_PER_DAY,
+        minutes: config.minutes,
+    };
+}
+
+const busyIntervals = (focusBlocks, timedEvents) => [
+    ...focusBlocks.map((block) => [block.start, block.end]),
+    ...timedEvents.map((event) => [event.start_minute, endOf(event)]),
+];
+
+// settings.capacity.evening[weekday] minus the part of its window taken by
+// focus blocks and timed busy events. Null when no window is configured.
+function eveningCapacity(settings, focusBlocks, timedEvents, date) {
+    const evening = eveningWindow(settings, date);
+    if (!evening) return null;
+    const covered = coveredMinutes(
+        busyIntervals(focusBlocks, timedEvents),
+        evening.from,
+        evening.to
+    );
+    return Math.max(0, evening.minutes - covered);
+}
+
+// The day hours (Profile > Planning) minus focus blocks and timed busy events.
+// What overlaps the evening window belongs to the evening. Null when the day
+// hours are unknown.
+function dayFreeMinutes(dayHours, settings, focusBlocks, timedEvents, date) {
+    if (!dayHours) return null;
+    const evening = eveningWindow(settings, date);
+    const taken = [
+        ...busyIntervals(focusBlocks, timedEvents),
+        ...(evening ? [[evening.from, evening.to]] : []),
     ];
-    const covered = coveredMinutes(intervals, from, to);
-    return Math.max(0, config.minutes - covered);
+    const covered = coveredMinutes(taken, dayHours.start, dayHours.end);
+    return dayHours.end - dayHours.start - covered;
 }
 
 // Full load of one day. Planned minutes = tasks on the day + timed busy
 // events, as the brief contract defines them. Only task minutes are set
-// against the evening capacity: evening events are already taken out of it
-// and daytime events are not evening work.
+// against the capacity (free daytime plus evening): events are already taken
+// out of it.
 function dayLoad(input, settings, date) {
     const tasks = tasksOn(input.tasks, date);
     const timedEvents = timedBusyEventsOn(input.events || [], date);
@@ -99,7 +128,18 @@ function dayLoad(input, settings, date) {
         (sum, event) => sum + (endOf(event) - event.start_minute),
         0
     );
-    const capacity = eveningCapacity(settings, focusBlocks, timedEvents, date);
+    const evening = eveningCapacity(settings, focusBlocks, timedEvents, date);
+    const dayFree = dayFreeMinutes(
+        input.dayHours,
+        settings,
+        focusBlocks,
+        timedEvents,
+        date
+    );
+    const capacity =
+        evening === null && dayFree === null
+            ? null
+            : (evening ?? 0) + (dayFree ?? 0);
     const planned = taskTotal + Math.max(0, eventTotal);
     return {
         date,
@@ -108,6 +148,8 @@ function dayLoad(input, settings, date) {
         event_minutes: Math.max(0, eventTotal),
         planned_minutes: planned,
         capacity_minutes: capacity,
+        evening_minutes: evening,
+        day_free_minutes: dayFree,
         overloaded: capacity !== null && taskTotal > capacity,
         hypothesis: true,
     };
@@ -134,6 +176,11 @@ function overloadCards(loads) {
             task_uids: load.tasks.map((task) => task.uid),
             event_refs: [],
             question: null,
+            overload: {
+                date: load.date,
+                task_minutes: load.task_minutes,
+                capacity_minutes: load.capacity_minutes,
+            },
         }));
 }
 

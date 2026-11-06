@@ -37,7 +37,6 @@ describe('normalizeBriefSettings', () => {
                 'blocking',
                 'money_deadline',
                 'planned_load',
-                'long_term',
             ],
             thresholds: {
                 postponements: 3,

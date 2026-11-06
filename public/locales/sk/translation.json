@@ -226,7 +226,7 @@
     "sectionName": {
       "verdict": "Verdikt",
       "timeline": "Nadchádzajúce dni",
-      "tonight": "Dnes večer",
+      "tonight": "Priority dňa",
       "moves": "Na presun",
       "anticipate": "Na predvídanie",
       "replies": "Očakávané odpovede",
@@ -237,8 +237,7 @@
       "consequence": "Dôsledok",
       "blocking": "Blokuje ostatných",
       "money_deadline": "Peniaze alebo termín",
-      "planned_load": "Plánované zaťaženie",
-      "long_term": "Dlhodobé"
+      "planned_load": "Plánované zaťaženie"
     },
     "alertType": {
       "conflict": "Kolidujúce udalosti",
@@ -259,7 +258,7 @@
     "settings": {
       "postponements": "Odklady pred kartou",
       "maxMoves": "Zobrazené presuny",
-      "maxTonight": "Zobrazené úlohy na dnes večer",
+      "maxTonight": "Zobrazené priority",
       "closedLookback": "Kontrolované uzavreté úlohy (dni)",
       "optEvening": "Večerné zhrnutie",
       "optTelegram": "Odoslať cez Telegram",
@@ -344,8 +343,8 @@
     "timeline": {
       "today": "Dnes",
       "planned": "{{minutes}} min",
-      "ofCapacity": "{{planned}} / {{capacity}} min",
-      "over": "{{minutes}} min nad limit",
+      "ofCapacity": "Úlohy na {{planned}}, voľno {{capacity}}",
+      "over": "Preťaženie: úlohy na {{planned}}, voľno {{capacity}}",
       "duringWork": "počas práce",
       "legendWork": "Práca",
       "legendEvening": "Večer",
@@ -353,7 +352,7 @@
       "legendConflict": "Konflikt"
     },
     "tonight": {
-      "ofCapacity": "{{planned}} z {{capacity}} min naplánované"
+      "ofCapacity": "{{planned}} / {{capacity}}"
     },
     "moves": {
       "acceptAria": "Presunúť na {{date}}",
@@ -425,7 +424,8 @@
       },
       "dueDone": "„{{name}}“ termín {{date}}",
       "laterDone": "„{{name}}“ odložená",
-      "cancelDone": "„{{name}}“ zrušená"
+      "cancelDone": "„{{name}}“ zrušená",
+      "tonightTitle": "Dnes večer"
     }
   },
   "agents": {

@@ -5542,7 +5542,7 @@
     "sectionName": {
       "verdict": "Oordeel",
       "timeline": "Komende dagen",
-      "tonight": "Vanavond",
+      "tonight": "Prioriteiten van vandaag",
       "moves": "Te verplaatsen",
       "anticipate": "Vooruit te denken",
       "replies": "Verwachte antwoorden",
@@ -5553,8 +5553,7 @@
       "consequence": "Gevolg",
       "blocking": "Blokkeert anderen",
       "money_deadline": "Geld of deadline",
-      "planned_load": "Geplande belasting",
-      "long_term": "Lange termijn"
+      "planned_load": "Geplande belasting"
     },
     "alertType": {
       "conflict": "Conflicterende afspraken",
@@ -5575,7 +5574,7 @@
     "settings": {
       "postponements": "Uitstellen voor een kaart",
       "maxMoves": "Getoonde verplaatsingen",
-      "maxTonight": "Getoonde taken van vanavond",
+      "maxTonight": "Getoonde prioriteiten",
       "closedLookback": "Gecontroleerde afgeronde taken (dagen)",
       "optEvening": "Avondafsluiting",
       "optTelegram": "Versturen via Telegram",
@@ -5660,8 +5659,8 @@
     "timeline": {
       "today": "Vandaag",
       "planned": "{{minutes}} min",
-      "ofCapacity": "{{planned}} / {{capacity}} min",
-      "over": "{{minutes}} min te veel",
+      "ofCapacity": "{{planned}} aan taken voor {{capacity}} vrije tijd",
+      "over": "Overbelast: {{planned}} aan taken voor {{capacity}} vrije tijd",
       "duringWork": "tijdens werk",
       "legendWork": "Werk",
       "legendEvening": "Avond",
@@ -5669,7 +5668,7 @@
       "legendConflict": "Conflict"
     },
     "tonight": {
-      "ofCapacity": "{{planned}} van {{capacity}} gepland"
+      "ofCapacity": "{{planned}} / {{capacity}}"
     },
     "moves": {
       "acceptAria": "Verplaatsen naar {{date}}",
@@ -5741,7 +5740,8 @@
       },
       "dueDone": "“{{name}}” vervalt {{date}}",
       "laterDone": "“{{name}}” voor later gezet",
-      "cancelDone": "“{{name}}” gestopt"
+      "cancelDone": "“{{name}}” gestopt",
+      "tonightTitle": "Vanavond"
     }
   },
   "agents": {

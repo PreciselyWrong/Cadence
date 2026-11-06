@@ -5542,7 +5542,7 @@
     "sectionName": {
       "verdict": "结论",
       "timeline": "即将到来的日子",
-      "tonight": "今晚",
+      "tonight": "今日优先事项",
       "moves": "待移动",
       "anticipate": "待预判",
       "replies": "预期回复",
@@ -5553,8 +5553,7 @@
       "consequence": "后果",
       "blocking": "阻塞其他事项",
       "money_deadline": "金钱或截止日期",
-      "planned_load": "计划负载",
-      "long_term": "长期"
+      "planned_load": "计划负载"
     },
     "alertType": {
       "conflict": "冲突的事件",
@@ -5575,7 +5574,7 @@
     "settings": {
       "postponements": "卡片前的推迟次数",
       "maxMoves": "显示的移动",
-      "maxTonight": "今晚显示的任务",
+      "maxTonight": "显示的优先事项",
       "closedLookback": "检查的已关闭任务（天）",
       "optEvening": "晚间收尾",
       "optTelegram": "发送到 Telegram",
@@ -5660,8 +5659,8 @@
     "timeline": {
       "today": "今天",
       "planned": "{{minutes}} 分钟",
-      "ofCapacity": "{{planned}} / {{capacity}} 分钟",
-      "over": "超出 {{minutes}} 分钟",
+      "ofCapacity": "任务 {{planned}}，空闲 {{capacity}}",
+      "over": "超负荷：任务 {{planned}}，空闲 {{capacity}}",
       "duringWork": "工作时间内",
       "legendWork": "工作",
       "legendEvening": "晚上",
@@ -5669,7 +5668,7 @@
       "legendConflict": "冲突"
     },
     "tonight": {
-      "ofCapacity": "已计划 {{planned}} / {{capacity}} 分钟"
+      "ofCapacity": "{{planned}} / {{capacity}}"
     },
     "moves": {
       "acceptAria": "移动到 {{date}}",
@@ -5741,7 +5740,8 @@
       },
       "dueDone": "“{{name}}” 截止 {{date}}",
       "laterDone": "“{{name}}” 已稍后处理",
-      "cancelDone": "“{{name}}” 已放弃"
+      "cancelDone": "“{{name}}” 已放弃",
+      "tonightTitle": "今晚"
     }
   },
   "agents": {

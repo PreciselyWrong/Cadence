@@ -77,7 +77,9 @@ describe('buildEvening', () => {
             'planned',
         ]);
         expect(result.slipped[0].reason).toContain('Due aujourd’hui');
+        expect(result.slipped[0].reason_code).toBe('due_today');
         expect(result.slipped[1].reason).toContain('Prévue aujourd’hui');
+        expect(result.slipped[1].reason_code).toBe('planned');
     });
 
     it('also slips the open tasks overdue from earlier days, oldest first', () => {
@@ -94,6 +96,7 @@ describe('buildEvening', () => {
             'today',
         ]);
         expect(result.slipped[0].reason).toContain('28 octobre');
+        expect(result.slipped[0].reason_code).toBe('overdue');
         expect(result.counters.slipped).toBe(3);
         expect(result.carry_over).toEqual(['october', 'monday', 'today']);
     });

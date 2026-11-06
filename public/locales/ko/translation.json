@@ -5542,7 +5542,7 @@
     "sectionName": {
       "verdict": "판정",
       "timeline": "다가오는 날",
-      "tonight": "오늘 밤",
+      "tonight": "오늘의 우선순위",
       "moves": "옮길 일",
       "anticipate": "미리 챙길 일",
       "replies": "예상되는 답장",
@@ -5553,8 +5553,7 @@
       "consequence": "영향",
       "blocking": "다른 일을 막음",
       "money_deadline": "돈 또는 마감",
-      "planned_load": "계획된 작업량",
-      "long_term": "장기"
+      "planned_load": "계획된 작업량"
     },
     "alertType": {
       "conflict": "겹치는 일정",
@@ -5575,7 +5574,7 @@
     "settings": {
       "postponements": "카드 전 미루기 횟수",
       "maxMoves": "표시된 이동 제안",
-      "maxTonight": "오늘 밤 표시된 작업",
+      "maxTonight": "표시할 우선순위",
       "closedLookback": "확인한 완료 작업 (일)",
       "optEvening": "저녁 마무리",
       "optTelegram": "Telegram으로 보내기",
@@ -5660,8 +5659,8 @@
     "timeline": {
       "today": "오늘",
       "planned": "{{minutes}}분",
-      "ofCapacity": "{{planned}} / {{capacity}}분",
-      "over": "{{minutes}}분 초과",
+      "ofCapacity": "작업 {{planned}}, 여유 시간 {{capacity}}",
+      "over": "과부하: 작업 {{planned}}, 여유 시간 {{capacity}}",
       "duringWork": "근무 중",
       "legendWork": "근무",
       "legendEvening": "저녁",
@@ -5669,7 +5668,7 @@
       "legendConflict": "충돌"
     },
     "tonight": {
-      "ofCapacity": "{{capacity}}분 중 {{planned}}분 계획됨"
+      "ofCapacity": "{{planned}} / {{capacity}}"
     },
     "moves": {
       "acceptAria": "{{date}}(으)로 이동",
@@ -5741,7 +5740,8 @@
       },
       "dueDone": "“{{name}}” 마감 {{date}}",
       "laterDone": "“{{name}}” 나중으로 미룸",
-      "cancelDone": "“{{name}}” 포기함"
+      "cancelDone": "“{{name}}” 포기함",
+      "tonightTitle": "오늘 밤"
     }
   },
   "agents": {

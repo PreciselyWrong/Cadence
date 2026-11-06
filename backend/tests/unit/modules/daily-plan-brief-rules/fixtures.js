@@ -20,13 +20,7 @@ const SETTINGS = {
     timelineDays: 3,
     calendarFeedUids: [],
     calendarLookaheadDays: 7,
-    priorities: [
-        'consequence',
-        'blocking',
-        'money_deadline',
-        'planned_load',
-        'long_term',
-    ],
+    priorities: ['consequence', 'blocking', 'money_deadline', 'planned_load'],
     thresholds: {
         postponements: 3,
         duplicateSimilarity: 0.8,

@@ -92,6 +92,16 @@ class BriefAudioMathTest {
     private val marks = listOf(ChapterMark("a", "A", 0), ChapterMark("b", "B", 10_000), ChapterMark("c", "C", 25_000))
 
     @Test
+    fun theCurrentPartIsNamedByItsTitle() {
+        val named = listOf(ChapterMark("intro", "Le point du jour", 0), ChapterMark("tonight", "Priorités du jour", 10_000))
+
+        assertEquals("Le point du jour", ChapterMarks.titleAt(named, 5_000))
+        assertEquals("Priorités du jour", ChapterMarks.titleAt(named, 12_000))
+        assertNull(ChapterMarks.titleAt(emptyList(), 0))
+        assertNull(ChapterMarks.titleAt(listOf(ChapterMark("intro", "", 0)), 0))
+    }
+
+    @Test
     fun findsTheChapterThatContainsAPosition() {
         assertEquals(0, ChapterMarks.indexAt(marks, 0))
         assertEquals(0, ChapterMarks.indexAt(marks, 9_999))

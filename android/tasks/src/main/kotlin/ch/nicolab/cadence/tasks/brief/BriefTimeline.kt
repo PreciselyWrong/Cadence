@@ -33,16 +33,23 @@ internal object BriefTimeline {
         return (planned.toFloat() / capacity).coerceIn(0f, 1f)
     }
 
-    /** Libellé de charge d'un jour : « 40 / 90 min », « 15 min de trop » quand le planifié dépasse la capacité. */
-    fun load(planned: Int, capacity: Int?): LoadLabel = when {
-        capacity == null -> LoadLabel.Plain(planned)
-        planned > capacity -> LoadLabel.Over(planned - capacity)
-        else -> LoadLabel.Ratio(planned, capacity)
+    /**
+     * Charge d'un jour : les tâches seules face au temps libre, car les événements en sont déjà retirés. Un résumé plus
+     * ancien n'a pas [LoadDto.taskMinutes] et retombe sur le planifié.
+     */
+    fun load(load: LoadDto): LoadLabel {
+        val tasks = load.taskMinutes ?: load.plannedMinutes
+        val capacity = load.capacityMinutes
+        return when {
+            capacity == null -> LoadLabel.Plain(load.plannedMinutes)
+            tasks > capacity -> LoadLabel.Over(tasks, capacity)
+            else -> LoadLabel.Ratio(tasks, capacity)
+        }
     }
 }
 
 internal sealed interface LoadLabel {
     data class Plain(val minutes: Int) : LoadLabel
     data class Ratio(val planned: Int, val capacity: Int) : LoadLabel
-    data class Over(val excess: Int) : LoadLabel
+    data class Over(val planned: Int, val capacity: Int) : LoadLabel
 }

@@ -5598,7 +5598,7 @@
     "sectionName": {
       "verdict": "Presoja",
       "timeline": "Prihajajoči dnevi",
-      "tonight": "Nocoj",
+      "tonight": "Prednostne naloge dneva",
       "moves": "Za premik",
       "anticipate": "Za predvidevanje",
       "replies": "Pričakovani odgovori",
@@ -5609,8 +5609,7 @@
       "consequence": "Posledica",
       "blocking": "Blokira druge",
       "money_deadline": "Denar ali rok",
-      "planned_load": "Načrtovana obremenitev",
-      "long_term": "Dolgoročno"
+      "planned_load": "Načrtovana obremenitev"
     },
     "alertType": {
       "conflict": "Dogodki, ki se prekrivajo",
@@ -5631,7 +5630,7 @@
     "settings": {
       "postponements": "Odlogi pred kartico",
       "maxMoves": "Prikazani premiki",
-      "maxTonight": "Prikazane naloge za nocoj",
+      "maxTonight": "Prikazane prednostne naloge",
       "closedLookback": "Pregledane zaključene naloge (dni)",
       "optEvening": "Večerni povzetek",
       "optTelegram": "Pošlji na Telegram",
@@ -5716,8 +5715,8 @@
     "timeline": {
       "today": "Danes",
       "planned": "{{minutes}} min",
-      "ofCapacity": "{{planned}} / {{capacity}} min",
-      "over": "{{minutes}} min nad",
+      "ofCapacity": "Naloge za {{planned}}, prosto {{capacity}}",
+      "over": "Preobremenitev: naloge za {{planned}}, prosto {{capacity}}",
       "duringWork": "med delom",
       "legendWork": "Delo",
       "legendEvening": "Večer",
@@ -5725,7 +5724,7 @@
       "legendConflict": "Konflikt"
     },
     "tonight": {
-      "ofCapacity": "{{planned}} od {{capacity}} min načrtovano"
+      "ofCapacity": "{{planned}} / {{capacity}}"
     },
     "moves": {
       "acceptAria": "Premakni na {{date}}",
@@ -5797,7 +5796,8 @@
       },
       "dueDone": "»{{name}}« rok {{date}}",
       "laterDone": "»{{name}}« odloženo",
-      "cancelDone": "»{{name}}« opuščeno"
+      "cancelDone": "»{{name}}« opuščeno",
+      "tonightTitle": "Nocoj"
     }
   },
   "agents": {

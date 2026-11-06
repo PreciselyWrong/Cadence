@@ -78,6 +78,10 @@ object ChapterMarks {
     fun indexAt(marks: List<ChapterMark>, positionMs: Long): Int =
         marks.indexOfLast { it.startMs <= positionMs }.let { if (it < 0 && marks.isNotEmpty()) 0 else it }
 
+    /** Titre de la partie en cours (« Priorités du jour ») ; null sans partie ou sans titre. */
+    fun titleAt(marks: List<ChapterMark>, positionMs: Long): String? =
+        marks.getOrNull(indexAt(marks, positionMs))?.title?.ifBlank { null }
+
     fun nextStart(marks: List<ChapterMark>, positionMs: Long): Long? {
         val index = indexAt(marks, positionMs)
         return marks.getOrNull(index + 1)?.startMs

@@ -5542,7 +5542,7 @@
     "sectionName": {
       "verdict": "Arvio",
       "timeline": "Tulevat päivät",
-      "tonight": "Tänä iltana",
+      "tonight": "Päivän prioriteetit",
       "moves": "Siirrettävät",
       "anticipate": "Ennakoitavat",
       "replies": "Odotetut vastaukset",
@@ -5553,8 +5553,7 @@
       "consequence": "Seuraus",
       "blocking": "Estää muita",
       "money_deadline": "Raha tai eräpäivä",
-      "planned_load": "Suunniteltu kuormitus",
-      "long_term": "Pitkä aikaväli"
+      "planned_load": "Suunniteltu kuormitus"
     },
     "alertType": {
       "conflict": "Päällekkäiset tapahtumat",
@@ -5575,7 +5574,7 @@
     "settings": {
       "postponements": "Lykkäykset ennen korttia",
       "maxMoves": "Näytetyt siirrot",
-      "maxTonight": "Tänä iltana näytetyt tehtävät",
+      "maxTonight": "Näytettävät prioriteetit",
       "closedLookback": "Tarkistetut suljetut tehtävät (päivää)",
       "optEvening": "Illan yhteenveto",
       "optTelegram": "Lähetä Telegramiin",
@@ -5660,8 +5659,8 @@
     "timeline": {
       "today": "Tänään",
       "planned": "{{minutes}} min",
-      "ofCapacity": "{{planned}} / {{capacity}} min",
-      "over": "{{minutes}} min yli",
+      "ofCapacity": "Tehtäviä {{planned}}, vapaata {{capacity}}",
+      "over": "Ylikuormitus: tehtäviä {{planned}}, vapaata {{capacity}}",
       "duringWork": "työaikana",
       "legendWork": "Työ",
       "legendEvening": "Ilta",
@@ -5669,7 +5668,7 @@
       "legendConflict": "Ristiriita"
     },
     "tonight": {
-      "ofCapacity": "{{planned}} / {{capacity}} min suunniteltu"
+      "ofCapacity": "{{planned}} / {{capacity}}"
     },
     "moves": {
       "acceptAria": "Siirrä {{date}}",
@@ -5741,7 +5740,8 @@
       },
       "dueDone": "“{{name}}” eräpäivä {{date}}",
       "laterDone": "“{{name}}” siirretty myöhemmäksi",
-      "cancelDone": "“{{name}}” hylätty"
+      "cancelDone": "“{{name}}” hylätty",
+      "tonightTitle": "Tänä iltana"
     }
   },
   "agents": {

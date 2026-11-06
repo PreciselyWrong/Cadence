@@ -23,19 +23,7 @@ class BriefPendingTest {
         val moved = BriefPending().move("m1", thursday)
 
         assertEquals(thursday, moved.moved["m1"])
-        assertTrue(moved.refused.isEmpty())
         assertEquals(BriefPending(), moved.unmove("m1"))
-    }
-
-    @Test
-    fun refusingADateReplacesAMoveOnTheSameCardAndTheOtherWayAround() {
-        val refused = BriefPending().move("m1", thursday).refuse("m1")
-
-        assertTrue("m1" in refused.refused)
-        assertTrue(refused.moved.isEmpty())
-        val moved = refused.move("m1", thursday)
-        assertTrue(moved.refused.isEmpty())
-        assertEquals(thursday, moved.moved["m1"])
     }
 
     @Test
@@ -61,7 +49,6 @@ class BriefPendingTest {
         val pending = BriefPending()
             .complete("t1")
             .move("m1", thursday)
-            .refuse("m2")
             .answer("q1", "Chez le garagiste")
             .vote("c1", "useful")
             .carry(listOf("t9"))
