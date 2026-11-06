@@ -129,7 +129,31 @@ function orderCandidates(
     );
 }
 
+// The order the user sees: what they placed by hand first, in their order.
+// Among the rest, the day's tasks with an hour follow the clock, staying in
+// the places the ranking gave them.
+function todayOrdered(entries) {
+    const placed = (entry) => Number.isInteger(entry.task.today_order);
+    const rest = entries.filter((entry) => !placed(entry));
+    const timed = (entry) =>
+        entry.group === 'due_today' && Boolean(entry.task.due_has_time);
+    const byHour = rest
+        .filter(timed)
+        .sort(
+            (a, b) =>
+                new Date(a.task.due_date).getTime() -
+                new Date(b.task.due_date).getTime()
+        );
+    return [
+        ...entries
+            .filter(placed)
+            .sort((a, b) => a.task.today_order - b.task.today_order),
+        ...rest.map((entry) => (timed(entry) ? byHour.shift() : entry)),
+    ];
+}
+
 module.exports = {
+    todayOrdered,
     GROUP_ORDER,
     DEFAULT_ORDER,
     compareCandidates,

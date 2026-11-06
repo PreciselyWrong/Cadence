@@ -4102,7 +4102,8 @@
     "focusExceptionAll": "Tüm bloklar",
     "focusExceptionAdd": "İstisna ekle",
     "showQuote": "Günün alıntısını göster",
-    "hideQuote": "Günün alıntısını gizle"
+    "hideQuote": "Günün alıntısını gizle",
+    "orderError": "Sıralama kaydedilemedi."
   },
   "capture": {
     "add": "Ekle",

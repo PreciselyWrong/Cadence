@@ -4111,7 +4111,8 @@
     "focusExceptionAll": "Alle Blöcke",
     "focusExceptionAdd": "Ausnahme hinzufügen",
     "showQuote": "Tageszitat anzeigen",
-    "hideQuote": "Tageszitat ausblenden"
+    "hideQuote": "Tageszitat ausblenden",
+    "orderError": "Die Reihenfolge konnte nicht gespeichert werden."
   },
   "capture": {
     "add": "Hinzufügen",

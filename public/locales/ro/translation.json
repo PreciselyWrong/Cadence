@@ -4111,7 +4111,8 @@
     "focusExceptionAll": "Toate blocurile",
     "focusExceptionAdd": "Adaugă o excepție",
     "showQuote": "Afișează citatul zilei",
-    "hideQuote": "Ascunde citatul zilei"
+    "hideQuote": "Ascunde citatul zilei",
+    "orderError": "Ordinea nu a putut fi salvată."
   },
   "capture": {
     "add": "Adaugă",

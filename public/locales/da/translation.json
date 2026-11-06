@@ -4102,7 +4102,8 @@
     "focusExceptionAll": "Alle blokke",
     "focusExceptionAdd": "Tilføj en undtagelse",
     "showQuote": "Vis dagens citat",
-    "hideQuote": "Skjul dagens citat"
+    "hideQuote": "Skjul dagens citat",
+    "orderError": "Rækkefølgen kunne ikke gemmes."
   },
   "capture": {
     "add": "Tilføj",

@@ -9,6 +9,7 @@ import {
     formatDuration,
     formatMinute,
     freeGaps,
+    movedInList,
     pickCurrentItem,
     sideBySide,
     taskLength,
@@ -333,5 +334,16 @@ describe('droppedMinute', () => {
     it('stays within the visible hours', () => {
         expect(droppedMinute(500, -999, 60, range, 64 / 60)).toBe(480);
         expect(droppedMinute(1000, 999, 60, range, 64 / 60)).toBe(1020);
+    });
+});
+
+describe('movedInList', () => {
+    it('takes the place of the row it lands on, up or down', () => {
+        expect(movedInList(['a', 'b', 'c'], 'c', 'a')).toEqual(['c', 'a', 'b']);
+        expect(movedInList(['a', 'b', 'c'], 'a', 'c')).toEqual(['b', 'c', 'a']);
+    });
+    it('changes nothing on itself or on a row not in the list', () => {
+        expect(movedInList(['a', 'b'], 'a', 'a')).toEqual(['a', 'b']);
+        expect(movedInList(['a', 'b'], 'a', 'z')).toEqual(['a', 'b']);
     });
 });

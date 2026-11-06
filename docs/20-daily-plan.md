@@ -244,3 +244,7 @@ Each draft, estimate batch or wrap-up counts as one AI request, and one AI credi
 A timed task that is not in the plan is drawn on the grid with its own hour. Dragging it moves its due time (with its start, keeping its length) and its title opens it; calendar events stay fixed. What overlaps shares the width side by side (`planUtils.sideBySide`), and a calendar's name only shows when a block has the full width. The "drag tasks here" hint sits above the grid, never on the hours.
 
 The list shows the day's tasks and what the user chose (In view, This week). What the planner proposes on its own waits behind a "Suggested n" line, and a routine due on another day is not proposed: it comes back by itself.
+
+## Your order of the day
+
+Dragging a task onto another row of the list puts it at that place (`PUT /api/daily-plan/today-order` `{ task_uids }`, stored in the synced `tasks.today_order`). What was placed by hand comes first, in that order; the rest follows the ranking, with the day's tasks that have an hour following the clock. A task of someone else keeps its place. Dragging onto the day grid still gives a time. On Android, the task's menu in Today offers Move up and Move down, which write the same field.

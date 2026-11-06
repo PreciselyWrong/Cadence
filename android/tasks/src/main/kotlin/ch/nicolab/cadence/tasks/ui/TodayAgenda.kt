@@ -3,6 +3,7 @@ package ch.nicolab.cadence.tasks.ui
 import ch.nicolab.cadence.calendar.EventWithDone
 import ch.nicolab.cadence.calendar.localStart
 import ch.nicolab.cadence.tasks.model.TaskItem
+import ch.nicolab.cadence.tasks.model.TodayOrder
 import java.time.Instant
 import java.time.ZoneId
 
@@ -33,11 +34,14 @@ fun mergeTodayItems(
 ): List<TodayItem> {
     fun TaskItem.startMillis(): Long? = planStarts[uid]?.toEpochMilli() ?: dueTimeMillis()
     val allDay = events.filter { it.event.allDay }.map { TodayItem.Event(it) }
+    // Une tâche rangée à la main quitte l'horloge : l'ordre choisi prime sur l'heure.
+    val (placed, free) = tasks.partition { TodayOrder.of(it) != null }
     val timed: List<Pair<TodayItem, Long>> =
         events.filterNot { it.event.allDay }.map { TodayItem.Event(it) to it.event.localStart(zone) } +
-            tasks.mapNotNull { task -> task.startMillis()?.let { TodayItem.Task(task) to it } }
-    val untimed = tasks.filter { it.startMillis() == null }.map { TodayItem.Task(it) }
-    return allDay + timed.sortedBy { it.second }.map { it.first } + untimed
+            free.mapNotNull { task -> task.startMillis()?.let { TodayItem.Task(task) to it } }
+    val untimed = free.filter { it.startMillis() == null }.map { TodayItem.Task(it) }
+    return allDay + timed.sortedBy { it.second }.map { it.first } +
+        TodayOrder.apply(placed).map { TodayItem.Task(it) } + untimed
 }
 
 /** Instant de l'échéance seulement si elle porte une heure : sans heure, le serveur stocke la fin du jour. */

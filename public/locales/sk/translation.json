@@ -4506,7 +4506,8 @@
     "focusExceptionAll": "Všetky bloky",
     "focusExceptionAdd": "Pridať výnimku",
     "showQuote": "Zobraziť citát dňa",
-    "hideQuote": "Skryť citát dňa"
+    "hideQuote": "Skryť citát dňa",
+    "orderError": "Poradie sa nepodarilo uložiť."
   },
   "relations": {
     "title": "Vzťahy",

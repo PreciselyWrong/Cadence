@@ -4102,7 +4102,8 @@
     "focusExceptionAll": "Alle blokken",
     "focusExceptionAdd": "Uitzondering toevoegen",
     "showQuote": "Dagelijkse quote tonen",
-    "hideQuote": "Dagelijkse quote verbergen"
+    "hideQuote": "Dagelijkse quote verbergen",
+    "orderError": "De volgorde kon niet worden opgeslagen."
   },
   "capture": {
     "add": "Toevoegen",

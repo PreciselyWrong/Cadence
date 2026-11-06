@@ -261,6 +261,8 @@ data class TaskChange(
     val clearParent: Boolean = false,
     /** Rang parmi ses sœurs (`order`). */
     val order: Int? = null,
+    /** Rang dans la liste Aujourd'hui, choisi à la main (`today_order`). */
+    val todayOrder: Int? = null,
 )
 
 enum class RecurringScope(val wire: String) { THIS("this"), FOLLOWING("following"), ALL("all") }

@@ -4107,7 +4107,8 @@
     "focusExceptionAll": "Alle blokker",
     "focusExceptionAdd": "Legg til et unntak",
     "showQuote": "Vis dagens sitat",
-    "hideQuote": "Skjul dagens sitat"
+    "hideQuote": "Skjul dagens sitat",
+    "orderError": "Rekkefølgen kunne ikke lagres."
   },
   "capture": {
     "add": "Legg til",

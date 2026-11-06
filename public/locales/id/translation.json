@@ -4102,7 +4102,8 @@
     "focusExceptionAll": "Semua blok",
     "focusExceptionAdd": "Tambah pengecualian",
     "showQuote": "Tampilkan kutipan harian",
-    "hideQuote": "Sembunyikan kutipan harian"
+    "hideQuote": "Sembunyikan kutipan harian",
+    "orderError": "Urutan tidak dapat disimpan."
   },
   "capture": {
     "add": "Tambah",

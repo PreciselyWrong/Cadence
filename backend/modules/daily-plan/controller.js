@@ -60,6 +60,19 @@ const dailyPlanController = {
         }
     },
 
+    async saveTodayOrder(req, res, next) {
+        try {
+            res.json(
+                await dailyPlanService.saveTodayOrder(
+                    requireUser(req),
+                    req.body?.task_uids
+                )
+            );
+        } catch (error) {
+            next(error);
+        }
+    },
+
     async candidates(req, res, next) {
         try {
             const user = requireUser(req);

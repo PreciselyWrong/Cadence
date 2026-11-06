@@ -307,7 +307,7 @@ private fun LazyListScope.agendaRows(
                 onToggle = { viewModel.toggle(item.task, hold = true) },
                 onOpen = { onOpen(item.task) },
                 onSwipeAction = { viewModel.swipe(item.task, it) },
-                onMenu = { viewModel.openMenu(item.task) },
+                onMenu = { viewModel.openMenu(item.task, agenda.filterIsInstance<TodayItem.Task>().map { it.task }) },
                 sectionDay = moment.today,
                 plannedAt = planStarts[item.task.uid],
             )

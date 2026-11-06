@@ -168,6 +168,65 @@ describe('Plan my day suggestion settings', () => {
         expect(names).not.toContain('Routine fictive');
     });
 
+    describe('the order of the Today list', () => {
+        const dueAt = (hour) => {
+            const day = moment.tz('Europe/Athens').hour(hour).minute(0);
+            return { due_date: day.toDate(), due_has_time: true };
+        };
+        const save = (uids) =>
+            agent.put('/api/daily-plan/today-order').send({ task_uids: uids });
+
+        it('follows the clock for tasks with an hour', async () => {
+            const late = await makeTask({ name: 'Tard', ...dueAt(20) });
+            const early = await makeTask({ name: 'Tôt', ...dueAt(6) });
+            const { ranked } = await candidates();
+            expect(ranked.indexOf(early.uid)).toBeLessThan(
+                ranked.indexOf(late.uid)
+            );
+        });
+
+        it('keeps the order set by hand, above what was not placed', async () => {
+            const early = await makeTask({ name: 'Tôt', ...dueAt(6) });
+            const late = await makeTask({ name: 'Tard', ...dueAt(20) });
+            const other = await makeTask({ name: 'Autre', ...dueAt(12) });
+            expect((await save([late.uid, early.uid])).status).toBe(200);
+            const { ranked } = await candidates();
+            expect(ranked.slice(0, 3)).toEqual([
+                late.uid,
+                early.uid,
+                other.uid,
+            ]);
+        });
+
+        it('leaves the task of someone else alone', async () => {
+            const other = await createTestUser({ email: 'o@example.com' });
+            const foreign = await Task.create({
+                name: 'Pas à moi',
+                user_id: other.id,
+            });
+            const mine = await makeTask({ name: 'À moi' });
+            const res = await save([foreign.uid, mine.uid]);
+            expect(res.body.task_uids).toEqual([mine.uid]);
+            await foreign.reload();
+            await mine.reload();
+            expect(foreign.today_order).toBeNull();
+            expect(mine.today_order).toBe(0);
+        });
+
+        it('refuses what is not a list of uids', async () => {
+            expect((await save('x')).status).toBe(400);
+            expect((await save([1])).status).toBe(400);
+        });
+
+        it('reaches the devices through the sync journal', async () => {
+            const task = await makeTask({ name: 'Synchronisée' });
+            await save([task.uid]);
+            const { body } = await agent.get('/api/v1/sync/pull?cursor=0');
+            const change = body.changes.filter((c) => c.uid === task.uid).pop();
+            expect(JSON.stringify(change)).toContain('today_order');
+        });
+    });
+
     describe('the cap', () => {
         // 60 undated tasks without priority, spread over six projects and
         // created round-robin, so no project is newer than another.

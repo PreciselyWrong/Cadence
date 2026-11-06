@@ -4095,7 +4095,8 @@
     "focusExceptionAll": "Todos los bloques",
     "focusExceptionAdd": "Añadir una excepción",
     "showQuote": "Mostrar la cita del día",
-    "hideQuote": "Ocultar la cita del día"
+    "hideQuote": "Ocultar la cita del día",
+    "orderError": "No se pudo guardar el orden."
   },
   "capture": {
     "add": "Añadir",

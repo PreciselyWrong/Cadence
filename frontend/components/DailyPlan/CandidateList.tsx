@@ -16,7 +16,12 @@ import {
 import DurationChips from './DurationChips';
 import TaskCheckCircle from '../Task/TaskCheckCircle';
 import { DEFAULT_DURATION, formatDuration, taskLength } from './planUtils';
-import { GROUP_ORDER, TaskGroupKey, orderedCandidates } from './autoPlace';
+import {
+    GROUP_ORDER,
+    TaskGroupKey,
+    isProposal,
+    orderedCandidates,
+} from './autoPlace';
 import { openTaskPanel } from '../../store/taskPanelStore';
 import { isCurrentWeek } from '../Review/TaskDecisionRow';
 import ThisOrThat from '../Review/ThisOrThat';
@@ -92,6 +97,10 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
         id: `candidate:${task.uid}`,
         data: { type: 'candidate', task, duration },
     });
+    // Landing on a row puts the dragged task at its place in the day's order.
+    const { setNodeRef: setRowRef, isOver: isRowOver } = useDroppable({
+        id: `candidate-row:${task.uid}`,
+    });
 
     const labels: Record<TaskGroupKey, string> = {
         tagged_today: t('dailyPlan.taggedToday', 'Tagged #today'),
@@ -131,10 +140,13 @@ const CandidateCard: React.FC<CandidateCardProps> = ({
 
     return (
         <div
-            ref={setNodeRef}
+            ref={(node) => {
+                setNodeRef(node);
+                setRowRef(node);
+            }}
             className={`group flex flex-col rounded-lg px-3 py-2.5 transition-colors hover:bg-gray-50 focus-within:bg-gray-50 dark:hover:bg-gray-800/60 dark:focus-within:bg-gray-800/60 ${
                 isDragging ? 'opacity-40' : ''
-            }`}
+            } ${isRowOver && !isDragging ? 'ring-2 ring-blue-300' : ''}`}
             data-testid={`candidate-${task.uid}`}
             data-task-row
         >
@@ -298,8 +310,6 @@ const CandidateList: React.FC<CandidateListProps> = ({
 
     // What the planner proposes on its own waits behind one line: the day's
     // tasks and what the user chose (In view, This week) stay in sight.
-    const isProposal = ({ task, group }: (typeof entries)[number]) =>
-        group === 'suggested' && !task.in_view && !isCurrentWeek(task.week_of);
     const proposals = entries.filter(isProposal).length;
     const folded =
         filter === 'all' && !showSuggestions && proposals > 0

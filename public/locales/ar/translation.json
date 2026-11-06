@@ -4130,7 +4130,8 @@
     "focusExceptionAll": "كل الكتل",
     "focusExceptionAdd": "إضافة استثناء",
     "showQuote": "إظهار الاقتباس اليومي",
-    "hideQuote": "إخفاء الاقتباس اليومي"
+    "hideQuote": "إخفاء الاقتباس اليومي",
+    "orderError": "تعذّر حفظ الترتيب."
   },
   "capture": {
     "add": "إضافة",

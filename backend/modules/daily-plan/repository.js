@@ -191,6 +191,10 @@ class DailyPlanRepository {
         });
     }
 
+    findOwnTasksByUids(userId, uids) {
+        return Task.findAll({ where: { user_id: userId, uid: uids } });
+    }
+
     async findOpenInboxItems(userId, limit) {
         const where = { user_id: userId, status: 'added' };
         const [items, count] = await Promise.all([

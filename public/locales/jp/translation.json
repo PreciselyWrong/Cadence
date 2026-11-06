@@ -4102,7 +4102,8 @@
     "focusExceptionAll": "すべてのブロック",
     "focusExceptionAdd": "例外を追加",
     "showQuote": "今日の名言を表示",
-    "hideQuote": "今日の名言を非表示"
+    "hideQuote": "今日の名言を非表示",
+    "orderError": "順序を保存できませんでした。"
   },
   "capture": {
     "add": "追加",

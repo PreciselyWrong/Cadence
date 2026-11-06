@@ -257,6 +257,11 @@ module.exports = (sequelize) => {
                     key: 'id',
                 },
             },
+            // Rank in the Today list, set by the user; null: not placed by hand.
+            today_order: {
+                type: DataTypes.INTEGER,
+                allowNull: true,
+            },
             order: {
                 type: DataTypes.INTEGER,
                 allowNull: true,

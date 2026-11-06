@@ -4102,7 +4102,8 @@
     "focusExceptionAll": "Alla block",
     "focusExceptionAdd": "Lägg till ett undantag",
     "showQuote": "Visa dagens citat",
-    "hideQuote": "Dölj dagens citat"
+    "hideQuote": "Dölj dagens citat",
+    "orderError": "Ordningen kunde inte sparas."
   },
   "capture": {
     "add": "Lägg till",

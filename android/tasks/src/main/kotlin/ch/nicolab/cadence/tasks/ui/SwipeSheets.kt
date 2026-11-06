@@ -12,6 +12,8 @@ import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Event
+import androidx.compose.material.icons.outlined.ArrowDownward
+import androidx.compose.material.icons.outlined.ArrowUpward
 import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material.icons.outlined.EventRepeat
 import androidx.compose.material.icons.outlined.Folder
@@ -67,6 +69,9 @@ internal fun TaskMenuSheet(
     /** null : la tâche ne peut pas être une prochaine action ; sinon, l'est-elle déjà ? */
     nextAction: Boolean? = null,
     onNextAction: () -> Unit = {},
+    /** Dans la liste Aujourd'hui : monter ou descendre d'un rang ; null au bord ou hors de cette liste. */
+    onMoveUp: (() -> Unit)? = null,
+    onMoveDown: (() -> Unit)? = null,
     onDismiss: () -> Unit,
 ) {
     var picking by remember { mutableStateOf(false) }
@@ -89,7 +94,20 @@ internal fun TaskMenuSheet(
                 onDismiss()
             },
         )
-    } else quickDates + listOf(
+    } else listOfNotNull(
+        onMoveUp?.let { move ->
+            Entry(Icons.Outlined.ArrowUpward, R.string.today_move_up) {
+                move()
+                onDismiss()
+            }
+        },
+        onMoveDown?.let { move ->
+            Entry(Icons.Outlined.ArrowDownward, R.string.today_move_down) {
+                move()
+                onDismiss()
+            }
+        },
+    ) + quickDates + listOf(
         Entry(presetIcon(SchedulePreset.PICK), R.string.swipe_menu_pick) { picking = true },
     ) + funnel + listOfNotNull(
         nextAction?.let { on ->

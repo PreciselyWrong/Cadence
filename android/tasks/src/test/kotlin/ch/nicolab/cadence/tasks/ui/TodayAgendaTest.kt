@@ -70,6 +70,15 @@ class TodayAgendaTest {
     }
 
     @Test
+    fun `une tâche rangée à la main suit l'ordre choisi, pas son heure`() {
+        val placed = listOf("b" to 1, "a" to 0).map { (uid, rank) ->
+            TaskItem(uid = uid, name = uid, extras = mapOf("today_order" to rank.toString()))
+        }
+        val items = mergeTodayItems(placed, emptyList(), java.time.ZoneOffset.UTC)
+        assertEquals(listOf("a", "b"), items.map { (it as TodayItem.Task).task.uid })
+    }
+
+    @Test
     fun `une tâche sans heure placée dans le plan du serveur se range à l'heure du plan`() {
         val items = mergeTodayItems(
             tasks = listOf(untimedTask("plan1630"), timedTask("t0900", at(9)), untimedTask("free")),

@@ -4140,7 +4140,8 @@
     "focusExceptionAll": "Vsi bloki",
     "focusExceptionAdd": "Dodaj izjemo",
     "showQuote": "Pokaži dnevni citat",
-    "hideQuote": "Skrij dnevni citat"
+    "hideQuote": "Skrij dnevni citat",
+    "orderError": "Vrstnega reda ni bilo mogoče shraniti."
   },
   "capture": {
     "add": "Dodaj",

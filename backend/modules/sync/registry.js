@@ -56,6 +56,7 @@ const ENTITIES = {
             'recurrence_exdates',
             'completion_based',
             'order',
+            'today_order',
             'completed_at',
         ],
         // Set when the server (or any device) has already notified the

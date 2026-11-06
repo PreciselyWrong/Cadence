@@ -4102,7 +4102,8 @@
     "focusExceptionAll": "全部时段",
     "focusExceptionAdd": "添加例外",
     "showQuote": "显示每日名言",
-    "hideQuote": "隐藏每日名言"
+    "hideQuote": "隐藏每日名言",
+    "orderError": "无法保存顺序。"
   },
   "capture": {
     "add": "添加",

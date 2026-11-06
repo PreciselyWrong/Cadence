@@ -1,3 +1,4 @@
+import { isCurrentWeek } from '../Review/TaskDecisionRow';
 import { TASK_STATUS } from '../../constants/taskStatus';
 import { CalendarEvent } from '../../utils/calendarFeedsService';
 import { Task } from '../../entities/Task';
@@ -23,6 +24,17 @@ export const GROUP_ORDER: TaskGroupKey[] = [
 // The candidates as one list, in the user's ranking when the server sends
 // it, then the rest in group order. The candidate list and "Place all" share
 // it so both follow the same priority.
+// What the planner proposes on its own: the user chose neither the day nor the
+// week. Their list keeps these apart.
+export const isProposal = ({
+    task,
+    group,
+}: {
+    task: Task;
+    group: TaskGroupKey;
+}): boolean =>
+    group === 'suggested' && !task.in_view && !isCurrentWeek(task.week_of);
+
 export const orderedCandidates = (
     candidates: PlanCandidates
 ): { task: Task; group: TaskGroupKey }[] => {

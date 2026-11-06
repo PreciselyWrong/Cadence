@@ -4102,7 +4102,8 @@
     "focusExceptionAll": "Всички блокове",
     "focusExceptionAdd": "Добави изключение",
     "showQuote": "Покажи цитата на деня",
-    "hideQuote": "Скрий цитата на деня"
+    "hideQuote": "Скрий цитата на деня",
+    "orderError": "Редът не можа да бъде запазен."
   },
   "capture": {
     "add": "Добави",

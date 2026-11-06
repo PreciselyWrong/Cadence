@@ -25,6 +25,8 @@
     <string name="swipe_notice_moved">« %1$s » changée de projet</string>
     <string name="swipe_notice_priority">Priorité de « %1$s » modifiée</string>
     <string name="swipe_menu_title">Actions</string>
+    <string name="today_move_up">Monter</string>
+    <string name="today_move_down">Descendre</string>
     <string name="swipe_menu_pick">Choisir une date…</string>
 
     <string name="swipe_settings_title">Gestes</string>

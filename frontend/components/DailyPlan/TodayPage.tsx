@@ -36,6 +36,7 @@ import {
     fetchDailyPlan,
     fetchPlanCandidates,
     saveDailyPlanItems,
+    saveTodayOrder,
     startDailyPlan,
     toPlanItemInputs,
     draftDayWithAi,
@@ -95,6 +96,7 @@ import FocusBlocksDialog from './FocusBlocksDialog';
 import {
     Placement,
     focusBlockEvents,
+    isProposal,
     orderedCandidates,
     placeLater,
     planAll,
@@ -145,6 +147,7 @@ import {
     intlLocale,
     feedEventsToBlocks,
     droppedMinute,
+    movedInList,
 } from './planUtils';
 import SkeletonRows from '../Shared/SkeletonRows';
 
@@ -326,9 +329,14 @@ const useDismiss = (open: boolean, close: () => void) => {
     return ref;
 };
 
+const CANDIDATE_ROW = 'candidate-row:';
+
 const collisionDetection: CollisionDetection = (args) => {
     const hits = pointerWithin(args);
-    return hits.length > 0 ? hits : closestCenter(args);
+    if (hits.length === 0) return closestCenter(args);
+    // A row sits inside the list: the row is what the pointer means.
+    const rows = hits.filter((hit) => String(hit.id).startsWith(CANDIDATE_ROW));
+    return rows.length > 0 ? rows : hits;
 };
 
 const TodayPage: React.FC = () => {
@@ -1617,6 +1625,28 @@ const TodayPage: React.FC = () => {
         }
     };
 
+    // The day's list in the user's order. Proposals they did not touch stay
+    // out of it: they would otherwise climb above what is not placed yet.
+    const reorderCandidates = (activeUid: string, overUid: string) => {
+        if (!candidates) return;
+        const entries = orderedCandidates(candidates);
+        const before = entries.map((entry) => entry.task.uid as string);
+        const next = movedInList(before, activeUid, overUid);
+        if (next === before) return;
+        setCandidates({ ...candidates, ranked: next });
+        const proposals = new Set(
+            entries.filter(isProposal).map((entry) => entry.task.uid as string)
+        );
+        saveTodayOrder(
+            next.filter((uid) => uid === activeUid || !proposals.has(uid))
+        ).catch(() => {
+            setCandidates(candidates);
+            showErrorToast(
+                t('dailyPlan.orderError', 'Could not save the order.')
+            );
+        });
+    };
+
     const handleDragEnd = (event: DragEndEvent) => {
         setDragLabel(null);
         if (sidebarDrop.dragEnd(event, sidebarItem(event))) return;
@@ -1635,7 +1665,14 @@ const TodayPage: React.FC = () => {
             return;
         }
 
-        if (overId === 'candidates') {
+        if (overId.startsWith(CANDIDATE_ROW) && data.type === 'candidate') {
+            reorderCandidates(
+                data.task.uid as string,
+                overId.slice(CANDIDATE_ROW.length)
+            );
+            return;
+        }
+        if (overId === 'candidates' || overId.startsWith(CANDIDATE_ROW)) {
             if (data.type === 'item') removeItem(data.item.task_uid);
             return;
         }

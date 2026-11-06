@@ -246,6 +246,20 @@ export const droppedMinute = (
     return Math.max(range.start, Math.min(range.end - duration, moved));
 };
 
+// A list once `active` took the place of `over`.
+export const movedInList = (
+    list: string[],
+    active: string,
+    over: string
+): string[] => {
+    const from = list.indexOf(active);
+    const to = list.indexOf(over);
+    if (from === -1 || to === -1 || from === to) return list;
+    const next = list.filter((uid) => uid !== active);
+    next.splice(to, 0, active);
+    return next;
+};
+
 export interface TimeSpan {
     key: string;
     start: number;

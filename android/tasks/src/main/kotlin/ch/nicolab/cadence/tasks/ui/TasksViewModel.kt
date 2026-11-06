@@ -55,6 +55,7 @@ import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskDraft
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskViews
+import ch.nicolab.cadence.tasks.model.TodayOrder
 import ch.nicolab.cadence.tasks.model.TriageSink
 import ch.nicolab.cadence.tasks.notes.Autosaver
 import ch.nicolab.cadence.tasks.notes.NoteEditSession
@@ -168,7 +169,8 @@ internal class UndoNotice(val message: String, val undo: () -> Unit)
 internal sealed interface SwipeSheet {
     val task: TaskItem
 
-    data class Menu(override val task: TaskItem) : SwipeSheet
+    /** [todayList] : la liste Aujourd'hui quand le menu vient de là ; on peut alors y déplacer la tâche. */
+    data class Menu(override val task: TaskItem, val todayList: List<TaskItem> = emptyList()) : SwipeSheet
     data class Schedule(override val task: TaskItem) : SwipeSheet
     data class Project(override val task: TaskItem) : SwipeSheet
     data class Priority(override val task: TaskItem) : SwipeSheet
@@ -548,8 +550,17 @@ internal class TasksViewModel(
     }
 
     /** Menu contextuel d'une ligne (appui long). */
-    fun openMenu(task: TaskItem) {
-        _sheet.value = SwipeSheet.Menu(task)
+    fun openMenu(task: TaskItem, todayList: List<TaskItem> = emptyList()) {
+        _sheet.value = SwipeSheet.Menu(task, todayList)
+    }
+
+    /** Monte ou descend la tâche dans la liste Aujourd'hui : l'ordre écrit vaut pour toute la liste, comme sur le web. */
+    fun moveInToday(task: TaskItem, list: List<TaskItem>, delta: Int) {
+        val byUid = list.associateBy { it.uid }
+        val moved = TodayOrder.moved(list.map { it.uid }, task.uid, delta).mapNotNull { byUid[it] }
+        launchAction {
+            TodayOrder.changes(moved).forEach { (uid, rank) -> repository.updateTask(uid, TaskChange(todayOrder = rank)) }
+        }
     }
 
     fun dismissSheet() {

@@ -4140,7 +4140,8 @@
     "focusExceptionAll": "Все блоки",
     "focusExceptionAdd": "Добавить исключение",
     "showQuote": "Показать цитату дня",
-    "hideQuote": "Скрыть цитату дня"
+    "hideQuote": "Скрыть цитату дня",
+    "orderError": "Не удалось сохранить порядок."
   },
   "capture": {
     "add": "Добавить",

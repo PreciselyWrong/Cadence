@@ -4111,7 +4111,8 @@
     "focusExceptionAll": "Tous les blocs",
     "focusExceptionAdd": "Ajouter une exception",
     "showQuote": "Afficher la citation du jour",
-    "hideQuote": "Masquer la citation du jour"
+    "hideQuote": "Masquer la citation du jour",
+    "orderError": "L'ordre n'a pas pu être enregistré."
   },
   "capture": {
     "add": "Ajouter",

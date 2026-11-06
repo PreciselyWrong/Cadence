@@ -4120,7 +4120,8 @@
     "focusExceptionAll": "All blocks",
     "focusExceptionAdd": "Add an exception",
     "showQuote": "Show the daily quote",
-    "hideQuote": "Hide the daily quote"
+    "hideQuote": "Hide the daily quote",
+    "orderError": "Could not save the order."
   },
   "relations": {
     "title": "Relations",

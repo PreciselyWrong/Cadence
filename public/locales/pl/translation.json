@@ -4140,7 +4140,8 @@
     "focusExceptionAll": "Wszystkie bloki",
     "focusExceptionAdd": "Dodaj wyjątek",
     "showQuote": "Pokaż cytat dnia",
-    "hideQuote": "Ukryj cytat dnia"
+    "hideQuote": "Ukryj cytat dnia",
+    "orderError": "Nie udało się zapisać kolejności."
   },
   "capture": {
     "add": "Dodaj",

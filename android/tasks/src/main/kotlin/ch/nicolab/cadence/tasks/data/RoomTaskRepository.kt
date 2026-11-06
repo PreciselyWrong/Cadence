@@ -402,6 +402,7 @@ internal class RoomTaskRepository(
             if (change.clearParent) put("parent_task_uid", JsonNull)
             change.parentTaskUid?.let { put("parent_task_uid", JsonPrimitive(it)) }
             change.order?.let { put("order", JsonPrimitive(it)) }
+            change.todayOrder?.let { put("today_order", JsonPrimitive(it)) }
             if (change.hasDecision()) putAll(decisionFields(uid, change))
         }
     }

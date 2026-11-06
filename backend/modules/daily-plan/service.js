@@ -16,6 +16,7 @@ const {
     DEFAULT_ORDER,
     normalizeOrder,
     orderCandidates,
+    todayOrdered,
     rankCandidates,
 } = require('./ranking');
 const {
@@ -371,6 +372,28 @@ const isRoutineLater = (task, todayEnd) =>
     Boolean(task.due_date) &&
     new Date(task.due_date).getTime() > todayEnd;
 
+// The user's order of the Today list. Written through the model, so the sync
+// journal hands it to every device; a task of someone else keeps its place.
+async function saveTodayOrder(user, taskUids) {
+    if (
+        !Array.isArray(taskUids) ||
+        taskUids.length > MAX_SUGGESTED_LIMIT ||
+        !taskUids.every((uid) => typeof uid === 'string')
+    ) {
+        throw new ValidationError('task_uids must be a list of task uids');
+    }
+    const tasks = await repository.findOwnTasksByUids(user.id, taskUids);
+    const byUid = new Map(tasks.map((task) => [task.uid, task]));
+    let rank = 0;
+    for (const uid of taskUids) {
+        const task = byUid.get(uid);
+        if (!task) continue;
+        if (task.today_order !== rank) await task.update({ today_order: rank });
+        rank += 1;
+    }
+    return { task_uids: taskUids.filter((uid) => byUid.has(uid)) };
+}
+
 // The planner's left column: open tasks tagged #today plus the same lists
 // the classic Today page shows, deduplicated so a task appears in the first
 // group it belongs to, and ranked by the rules in ranking.js. The user's
@@ -510,7 +533,7 @@ async function getCandidates(
             preserveOriginalName: true,
         });
     }
-    result.ranked = ranked.map(({ task }) => task.uid);
+    result.ranked = todayOrdered(ranked).map(({ task }) => task.uid);
     result.suggested_total = suggestedTotal;
 
     const inbox = await repository.findOpenInboxItems(user.id, INBOX_LIMIT);
@@ -801,6 +824,7 @@ async function saveFocusBlocks(user, body) {
 }
 
 module.exports = {
+    saveTodayOrder,
     readFocus,
     getFocusBlocks,
     saveFocusBlocks,

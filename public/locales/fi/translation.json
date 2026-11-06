@@ -4102,7 +4102,8 @@
     "focusExceptionAll": "Kaikki lohkot",
     "focusExceptionAdd": "Lisää poikkeus",
     "showQuote": "Näytä päivän lainaus",
-    "hideQuote": "Piilota päivän lainaus"
+    "hideQuote": "Piilota päivän lainaus",
+    "orderError": "Järjestystä ei voitu tallentaa."
   },
   "capture": {
     "add": "Lisää",

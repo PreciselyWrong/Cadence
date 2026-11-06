@@ -280,6 +280,16 @@ export const saveDayHours = async (hours: DayHours): Promise<DayHours> => {
     return response.json();
 };
 
+export const saveTodayOrder = async (taskUids: string[]): Promise<void> => {
+    const response = await fetch(getApiPath('daily-plan/today-order'), {
+        method: 'PUT',
+        credentials: 'include',
+        headers: await getPostHeadersWithCsrf(),
+        body: JSON.stringify({ task_uids: taskUids }),
+    });
+    await handleAuthResponse(response, 'Failed to save the order.');
+};
+
 export const saveDailyPlanItems = async (
     date: string,
     items: PlanItemInput[]

@@ -537,3 +537,9 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Problème** : la police du web (Plus Jakarta Sans) ne plaisait pas.
 - **Décision** : Inter, hébergée dans `public/fonts/`, découpée par alphabet.
 - **Android à reprendre** : non demandé, Android garde Plus Jakarta Sans. À changer si l'écart gêne.
+
+### 2026-11-06 — Aujourd'hui : ton ordre
+
+- **Problème** : la liste du jour suivait un classement calculé, sans moyen de la ranger soi-même.
+- **Décision** : glisser une tâche sur une autre ligne la met à sa place (`tasks.today_order`, synchronisé) ; ce qui est rangé à la main passe d'abord, le reste suit l'heure puis le classement.
+- **Android à reprendre** : même champ et même ordre, avec Monter et Descendre dans le menu ; le glisser-déposer reste à faire (`TODO.md` › Now).
