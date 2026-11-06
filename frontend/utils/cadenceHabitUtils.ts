@@ -206,7 +206,6 @@ export function argbToHex(argb: number | null | undefined): string | null {
 }
 
 const WHITE = '#ffffff';
-const INK = '#1b1b21';
 const MIN_CONTRAST = 4.5;
 
 const toRgb = (hex: string): [number, number, number] => [
@@ -294,38 +293,41 @@ function readableTint(tint: string, background: string) {
     return towardDark ? '#000000' : WHITE;
 }
 
-export interface HabitCardColors {
-    stops: string[];
-    ink: string;
-    pillFill: string;
+// The filled part of a habit card: its tint, moved just enough for the ink of
+// the theme to read at 4.5:1, so one ink serves the whole card.
+export function habitFillColor(tint: string, ink: string): string {
+    return readableTint(tint, ink);
 }
 
-// Port of habitCardColors (e07): three stops of the tint, an ink that reads on
-// each of them, and a veil for the action pill.
-export function habitCardColors(tint: string): HabitCardColors {
-    const hsl = toHsl(tint);
-    const lightTint = luminance(tint) >= 0.5;
-    const ink = lightTint ? INK : WHITE;
-    const stops = [-0.08, 0, 0.06].map((shift) =>
-        readableTint(
-            fromHsl(hsl.h, hsl.s, Math.min(1, Math.max(0, hsl.l + shift))),
-            ink
-        )
-    );
-    return {
-        stops,
-        ink,
-        pillFill: lightTint ? 'rgba(255,255,255,0.22)' : 'rgba(0,0,0,0.22)',
-    };
+// How much of the card is filled: 0 without a goal to reach (abstinence, limit,
+// tracker) or when archived, 1 only once the goal of the period is reached.
+export function habitFillRatio(
+    kind: string,
+    progressMinor: number,
+    targetMinor: number,
+    completed: boolean,
+    archived: boolean
+): number {
+    if (kind !== 'goal' || archived) return 0;
+    if (completed) return 1;
+    return Math.min(0.95, progressMinor / (targetMinor || 1));
 }
 
 // The accent of the app (Réglages › Apparence), for a habit that has no colour
 // of its own. The CSS variable holds RGB channels ("94 92 230").
 export function accentHex(): string {
-    const fallback = '#5e5ce6';
+    return cssChannelsHex('--color-primary', '#5e5ce6');
+}
+
+// The ink of the current theme, read the same way.
+export function surfaceInkHex(): string {
+    return cssChannelsHex('--color-on-surface', '#1b1b21');
+}
+
+function cssChannelsHex(variable: string, fallback: string): string {
     if (typeof document === 'undefined') return fallback;
     const raw = getComputedStyle(document.documentElement)
-        .getPropertyValue('--color-primary')
+        .getPropertyValue(variable)
         .trim();
     const channels = raw.split(/\s+/).map(Number);
     return channels.length === 3 && channels.every((c) => c >= 0 && c <= 255)

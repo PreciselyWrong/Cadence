@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
-# Two-way sync of chosen TODO.md files between a work folder and the folder
+# Two-way sync of the TODO.md files between a work folder and the folder
 # Cadence reads (docs/35-todo-md-projects.md), so nothing else leaves the machine.
 #
 #   LOCAL_ROOT=~/projects SHARE_ROOT=/mnt/server/cadence-todos todo-md-sync.sh
 #
-# LIST (default ~/.config/todo-md-sync/projects.txt) names one sub-folder per line.
+# Every direct sub-folder of LOCAL_ROOT holding a TODO.md is synced, except those
+# named in EXCLUDE (default ~/.config/todo-md-sync/exclude.txt), one per line.
 # Run it from a timer, about once a minute.
 #
 # Compares contents, not dates: timestamps on a network share are not reliable
@@ -17,7 +18,7 @@ set -uo pipefail
 LOCAL_ROOT=${LOCAL_ROOT:?set LOCAL_ROOT to the work folder}
 SHARE_ROOT=${SHARE_ROOT:?set SHARE_ROOT to the folder Cadence reads}
 STATE=${STATE:-$HOME/.local/state/todo-md-sync}
-LIST=${LIST:-$HOME/.config/todo-md-sync/projects.txt}
+EXCLUDE=${EXCLUDE:-$HOME/.config/todo-md-sync/exclude.txt}
 
 failed=0
 
@@ -85,17 +86,25 @@ sync_one() {
     fi
 }
 
-if [ ! -d "$SHARE_ROOT" ] || [ ! -f "$LIST" ]; then
-    echo "Dossier partagé ou liste des projets introuvable" >&2
+if [ ! -d "$SHARE_ROOT" ] || [ ! -d "$LOCAL_ROOT" ]; then
+    echo "Dossier local ou partagé introuvable" >&2
     exit 1
 fi
 
-while IFS= read -r name || [ -n "$name" ]; do
-    case "$name" in '' | '#'*) continue ;; esac
+excluded() {
+    [ -f "$EXCLUDE" ] && grep -Fxq -- "$1" "$EXCLUDE"
+}
+
+# A folder listed in the state was synced before: keep following it if its local
+# file vanished (a branch without it), so sync_one reports it instead of ignoring it.
+for dir in "$LOCAL_ROOT"/*/; do
+    name=$(basename "$dir")
+    excluded "$name" && continue
+    [ -f "$dir/TODO.md" ] || [ -f "$STATE/base/$name/TODO.md" ] || continue
     sync_one "$name" || {
         echo "$name: échec de la synchro" >&2
         failed=1
     }
-done <"$LIST"
+done
 
 exit "$failed"

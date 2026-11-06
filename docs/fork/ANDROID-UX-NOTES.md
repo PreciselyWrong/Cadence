@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-06 — Habitudes : carte neutre, couleur au prorata
+
+- **Problème** : les cartes étaient entièrement colorées alors que rien n'était fait : tout avait l'air terminé et écrasait l'écran.
+- **Décision** : carte sombre neutre comme « Mes abstinences » ; la couleur se remplit de gauche à droite selon l'objectif de la période (jour ou semaine), pleine seulement une fois l'objectif atteint. Abstinence, plafond et suivi simple restent neutres, sans alerte (arbitrage du 2026-11-06). La teinte est ajustée pour que la même encre se lise sur les deux parties.
+- **Web** : repris dans la même étape (`HabitCard.tsx`). Les widgets n'ont jamais eu de cartes colorées.
+
 ### 2026-11-06 — Ma journée : un seul écran pour le résumé et la planification
 
 - **Problème** : l'en-tête « Résumé du jour » et « Planifier la journée » se répétaient, la frise n'était faite que de pilules grises sans repère, et chaque alerte portait deux boutons de vote.

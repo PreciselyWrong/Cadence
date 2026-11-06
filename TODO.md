@@ -36,7 +36,6 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
 
 - Revue UX du 2026-11-06, lots validés
   (arbitrages : IA dans Cadence via Profil › Assistant IA ; le triage ne repropose pas ce que `cadence-classify` a traité ; retour global + « Moins de ce type » dans un menu ⋯ ; habitudes à limite, abstinence et suivi simple neutres ; statuts de liens gardés, libellés À lire, À tester, Gardé, Plus tard, Archivé, plus « À évaluer » ; URL seule partagée envoyée dans Liens ; règles sur toutes les tâches et IA sur N par jour) :
-  - Lot 3, habitudes : carte neutre, couleur au prorata, pleine à l'objectif (app, widgets, web). Vérif : texte à 4,5:1 sur les deux fonds.
   - Lot 4, « À trier » par règles : doublons corrigés (les tâches fermées n'ont pas de série, `collect.js`, d'où « Sport est-il un doublon de Sport »), questions sorties du résumé et de l'audio. Vérif : aucune question sur deux occurrences d'une même série.
   - Lot 5, IA de jugement : résumé en 2 ou 3 phrases, propositions de triage.
   - Lot 6, liens : accès direct et thèmes ; création directe et import des favoris Firefox ; thèmes par IA et créneaux par agents via MCP.

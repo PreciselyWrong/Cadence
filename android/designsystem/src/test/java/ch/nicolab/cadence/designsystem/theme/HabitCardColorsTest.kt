@@ -1,6 +1,6 @@
 package ch.nicolab.cadence.designsystem.theme
 
-import org.junit.jupiter.api.Assertions.assertEquals
+import androidx.compose.ui.graphics.toArgb
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
@@ -12,27 +12,20 @@ class HabitCardColorsTest {
     )
 
     @Test
-    fun `ink reads at 4_5 on every gradient stop`() {
-        tints.forEach { tint ->
-            val colors = habitCardColors(tint)
-            assertEquals(3, colors.stopsArgb.size)
-            colors.stopsArgb.forEach { stop ->
-                assertTrue(contrastRatio(colors.inkArgb, stop) >= 4.5, "teinte ${tint.toString(16)} arrêt ${stop.toString(16)}")
+    fun `the ink of the theme reads at 4_5 on the filled part, whatever the tint`() {
+        listOf(LightPalette, DarkPalette, PureBlackPalette).forEach { palette ->
+            val ink = palette.onSurface.toArgb()
+            tints.forEach { tint ->
+                assertTrue(contrastRatio(ink, habitFillArgb(tint, ink)) >= 4.5, "teinte ${tint.toString(16)}")
             }
+            assertTrue(contrastRatio(ink, palette.card.toArgb()) >= 4.5, "reste de la carte")
         }
     }
 
     @Test
-    fun `the action pill text reads at 4_5 on the pill`() {
-        tints.forEach { tint ->
-            val colors = habitCardColors(tint)
-            assertTrue(contrastRatio(colors.inkArgb, colors.pillBackdropArgb) >= 4.5, "teinte ${tint.toString(16)}")
-        }
-    }
-
-    @Test
-    fun `a saturated blue gets white ink and a pale yellow gets dark ink`() {
-        assertEquals(0xFFFFFFFF.toInt(), habitCardColors(0xFF1E6FD9.toInt()).inkArgb)
-        assertEquals(0xFF1B1B21.toInt(), habitCardColors(0xFFF5BD52.toInt()).inkArgb)
+    fun `a tint that already reads keeps its colour`() {
+        val white = 0xFFFFFFFF.toInt()
+        val blue = 0xFF1E6FD9.toInt()
+        assertTrue(habitFillArgb(blue, white) == blue)
     }
 }

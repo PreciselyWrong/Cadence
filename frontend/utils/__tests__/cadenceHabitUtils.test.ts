@@ -8,7 +8,8 @@ import {
     formatMinor,
     formatWithUnit,
     groupHabits,
-    habitCardColors,
+    habitFillColor,
+    habitFillRatio,
     hexToArgb,
     instantOnDate,
     kindOf,
@@ -161,15 +162,34 @@ describe('colours', () => {
     };
 
     it.each(['#b91c1c', '#facc15', '#15803d', '#374151', '#2dd4bf', '#ffffff'])(
-        'keeps ink readable on every stop of a card tinted %s',
+        'keeps the ink of both themes readable on a fill tinted %s',
         (tint) => {
-            const colors = habitCardColors(tint);
-            expect(colors.stops).toHaveLength(3);
-            for (const stop of colors.stops) {
-                expect(contrast(colors.ink, stop)).toBeGreaterThanOrEqual(4.5);
+            for (const ink of ['#1b1b21', '#e5e1ec']) {
+                expect(
+                    contrast(ink, habitFillColor(tint, ink))
+                ).toBeGreaterThanOrEqual(4.5);
             }
         }
     );
+});
+
+describe('habitFillRatio', () => {
+    it('stays empty until something is done, then follows the goal', () => {
+        expect(habitFillRatio('goal', 0, 4, false, false)).toBe(0);
+        expect(habitFillRatio('goal', 2, 4, false, false)).toBe(0.5);
+    });
+
+    it('is full only when the goal is reached', () => {
+        expect(habitFillRatio('goal', 4, 4, true, false)).toBe(1);
+        expect(habitFillRatio('goal', 4, 4, false, false)).toBe(0.95);
+    });
+
+    it('stays neutral without a goal to reach or when archived', () => {
+        for (const kind of ['limit', 'abstinence', 'tracker']) {
+            expect(habitFillRatio(kind, 1, 2, false, false)).toBe(0);
+        }
+        expect(habitFillRatio('goal', 4, 4, true, true)).toBe(0);
+    });
 });
 
 describe('groupHabits', () => {

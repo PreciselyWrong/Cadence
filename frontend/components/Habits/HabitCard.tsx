@@ -18,7 +18,9 @@ import {
     accentHex,
     argbToHex,
     formatWithUnit,
-    habitCardColors,
+    habitFillColor,
+    habitFillRatio,
+    surfaceInkHex,
     kindOf,
     unitOfGoal,
 } from '../../utils/cadenceHabitUtils';
@@ -65,9 +67,17 @@ const HabitCard: React.FC<HabitCardProps> = ({
     const paused = !!evaluation?.is_paused;
     const done =
         kind === 'goal' && !!evaluation?.is_completed && !habit.archived;
-    const calm = done || habit.archived;
     const tint = habitTint(habit);
-    const colors = useMemo(() => habitCardColors(tint), [tint]);
+    const ink = surfaceInkHex();
+    const fill = useMemo(() => habitFillColor(tint, ink), [tint, ink]);
+    const fillRatio = habitFillRatio(
+        kind,
+        evaluation?.progress_minor ?? 0,
+        evaluation?.target_minor ?? 0,
+        !!evaluation?.is_completed,
+        !!habit.archived
+    );
+    const filled = fillRatio > 0;
 
     const ratio =
         kind === 'goal' || kind === 'limit'
@@ -99,8 +109,7 @@ const HabitCard: React.FC<HabitCardProps> = ({
         kind !== 'abstinence';
 
     const pillClass =
-        'inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-full px-4 text-label transition-transform duration-[220ms] active:scale-[0.97] focus:outline-none focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-offset-2 disabled:opacity-60';
-    const pillStyle = calm ? undefined : { background: colors.pillFill };
+        'inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-full bg-surface-variant px-4 text-label transition-transform duration-[220ms] active:scale-[0.97] focus:outline-none focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-offset-2 disabled:opacity-60';
 
     let action: React.ReactNode = null;
     if (goal && !paused && !habit.archived) {
@@ -119,7 +128,6 @@ const HabitCard: React.FC<HabitCardProps> = ({
                 <button
                     type="button"
                     disabled={busy}
-                    style={pillStyle}
                     className={pillClass}
                     onClick={() => log(1)}
                     aria-label={t(
@@ -136,7 +144,6 @@ const HabitCard: React.FC<HabitCardProps> = ({
                 <button
                     type="button"
                     disabled={busy}
-                    style={pillStyle}
                     className={`${pillClass} !px-0 w-11`}
                     onClick={() => log(1)}
                     aria-label={t(
@@ -154,7 +161,6 @@ const HabitCard: React.FC<HabitCardProps> = ({
                 <button
                     type="button"
                     disabled={busy}
-                    style={pillStyle}
                     className={pillClass}
                     onClick={() => log(primaryAmount)}
                     aria-label={t(
@@ -172,22 +178,19 @@ const HabitCard: React.FC<HabitCardProps> = ({
     return (
         <article
             data-testid="habit-card"
-            className={`relative overflow-hidden rounded-card border border-outline/35 ${
-                calm ? 'bg-surface-card text-surface-on' : ''
-            }`}
+            className="relative overflow-hidden rounded-card border border-outline/35 bg-surface-card text-surface-on"
             style={
-                calm
-                    ? undefined
-                    : {
-                          backgroundImage: `linear-gradient(90deg, ${colors.stops.join(', ')})`,
-                          color: colors.ink,
+                filled
+                    ? {
+                          backgroundImage: `linear-gradient(90deg, ${fill} ${fillRatio * 100}%, transparent ${fillRatio * 100}%)`,
                       }
+                    : undefined
             }
         >
             <div className="flex min-h-[80px] items-center gap-4 px-4">
                 <FacetGauge
                     progress={ratio}
-                    tint={calm ? 'rgb(var(--color-outline))' : colors.ink}
+                    tint={filled ? ink : tint}
                     size={44}
                     className="opacity-95"
                 >
@@ -206,7 +209,7 @@ const HabitCard: React.FC<HabitCardProps> = ({
                     </h3>
                     <p
                         className={`flex flex-wrap items-center gap-x-2 text-body-m ${
-                            calm ? 'text-surface-on-variant' : ''
+                            filled ? '' : 'text-surface-on-variant'
                         }`}
                     >
                         <span className="min-w-0 break-words">

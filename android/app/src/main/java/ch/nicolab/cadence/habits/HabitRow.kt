@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.pluralStringResource
@@ -46,17 +47,18 @@ import ch.nicolab.cadence.designsystem.components.Panel
 import ch.nicolab.cadence.designsystem.components.TabPill
 import ch.nicolab.cadence.designsystem.components.TabPills
 import ch.nicolab.cadence.designsystem.components.onColorOf
+import ch.nicolab.cadence.designsystem.components.readableTintOf
 import ch.nicolab.cadence.designsystem.components.rememberCadenceHaptic
 import ch.nicolab.cadence.designsystem.theme.Motion
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
-import ch.nicolab.cadence.designsystem.theme.HabitCardColors
 import ch.nicolab.cadence.designsystem.theme.habitAccent
-import ch.nicolab.cadence.designsystem.theme.habitCardColors
+import ch.nicolab.cadence.designsystem.theme.habitFillArgb
 import ch.nicolab.cadence.domain.GoalAttainment
 import ch.nicolab.cadence.domain.GoalType
+import ch.nicolab.cadence.domain.HabitGoal
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.domain.HabitStreak
 import ch.nicolab.cadence.domain.LimitStatus
@@ -64,10 +66,21 @@ import ch.nicolab.cadence.ui.HabitFormatter
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
 
 /**
- * Unité fonctionnelle de l'application : une carte d'habitude de 80 dp (e07), dégradé de trois
- * arrêts de sa teinte, facette de progression, nom, mesure, puis l'action rapide. L'encre et la
- * pastille sont dérivées de la teinte (`habitCardColors`) : le texte atteint 4,5:1 sur chaque
- * arrêt, même pour une teinte claire. Une habitude terminée ou archivée repasse en surface calme.
+ * Part remplie d'une carte : 0 sans objectif à atteindre (abstinence, plafond, simple suivi) ou archivée, 1 seulement
+ * quand l'objectif de la période (jour ou semaine) est atteint ; avant cela, jamais assez pour paraître pleine.
+ */
+internal fun habitFillRatio(goal: HabitGoal, progressMinor: Long, targetMinor: Long, completed: Boolean, archived: Boolean): Float = when {
+    archived || goal.isAbstinence || goal.isLimit || goal.isTracker -> 0f
+    completed -> 1f
+    else -> (progressMinor.toFloat() / (targetMinor.takeIf { it > 0 } ?: 1L)).coerceIn(0f, MAX_UNFINISHED_FILL)
+}
+
+private const val MAX_UNFINISHED_FILL = 0.95f
+
+/**
+ * Unité fonctionnelle de l'application : une carte d'habitude de 80 dp (e07), sombre et neutre comme la carte des
+ * abstinences, où la couleur de l'habitude se remplit à mesure que l'objectif avance. Facette de progression, nom,
+ * mesure, puis l'action rapide ; la même encre se lit sur la part remplie et sur le reste (`habitFillArgb`).
  *
  * [onOptions] ajoute un bouton ⋮ en plus de l'appui long, pour la liste complète où la carte
  * entière ouvre le détail.
@@ -87,15 +100,22 @@ internal fun HabitRow(
     val tint = habitTint(item)
     val target = item.evaluation.targetMinor.takeIf { it > 0 } ?: 1L
     val ratio = if (item.stored.goal.isAbstinence || item.stored.goal.isTracker) 0f else (item.evaluation.progressMinor.toFloat() / target).coerceIn(0f, 1f)
-    val colors = remember(tint) { habitCardColors(tint.toArgb()) }
-    val ink = if (done) palette.onSurface else Color(colors.inkArgb)
-    val secondary = if (done) palette.onSurfaceVariant else ink
-    val facetTint = if (done) palette.outline else ink
-    val gradient = remember(colors) { Brush.horizontalGradient(colors.stopsArgb.map(::Color)) }
+    val ink = palette.onSurface
+    val fillTarget = habitFillRatio(item.stored.goal, item.evaluation.progressMinor, target, item.evaluation.isCompleted, item.stored.archived)
+    val fillRatio by animateFloatAsState(fillTarget, animationSpec = Motion.interactive(), label = "habitFill")
+    val fillColor = remember(tint, ink) { Color(habitFillArgb(tint.toArgb(), ink.toArgb())) }
+    val filled = fillTarget > 0f
+    val secondary = if (filled) ink else palette.onSurfaceVariant
+    val facetTint = if (filled) ink else readableTintOf(tint)
+    val container = when {
+        fillRatio <= 0f -> null
+        fillRatio >= 1f -> SolidColor(fillColor)
+        else -> Brush.horizontalGradient(0f to fillColor, fillRatio to fillColor, fillRatio to palette.card, 1f to palette.card)
+    }
     Panel(
         onClick = onClick,
         onLongClick = onLongClick,
-        container = if (done) null else gradient,
+        container = container,
         contentPadding = PaddingValues(horizontal = Space.lg),
     ) {
         Row(
@@ -107,7 +127,7 @@ internal fun HabitRow(
                 label = HabitIconRegistry.getIcon(item.stored.iconId).labelFr,
                 progress = ratio,
                 tint = facetTint,
-                trackColor = facetTint.copy(alpha = 0.30f),
+                trackColor = if (filled) ink.copy(alpha = 0.30f) else palette.containerHigh,
                 size = Size.badge,
             )
             Spacer(Modifier.width(Space.lg))
@@ -123,7 +143,7 @@ internal fun HabitRow(
             }
             if (actionLabel != null && action != null) {
                 Spacer(Modifier.width(Space.sm))
-                HabitActionPill(item, actionLabel, actionEnabled, colors, action)
+                HabitActionPill(item, actionLabel, actionEnabled, action)
             }
             if (done) {
                 Spacer(Modifier.width(Space.sm))
@@ -148,13 +168,12 @@ internal fun HabitRow(
     }
 }
 
-/** Action rapide : fond voilé opposé à l'encre, texte en encre dérivée de la teinte (4,5:1 sur la pastille). */
+/** Action rapide : fond de surface et encre du thème, lisibles sur la part remplie comme sur le reste. */
 @Composable
 private fun HabitActionPill(
     item: HabitCardState,
     label: String,
     enabled: Boolean,
-    colors: HabitCardColors,
     action: () -> Unit,
 ) {
     val palette = cadence
@@ -167,7 +186,7 @@ private fun HabitActionPill(
         animationSpec = Motion.interactive(),
         label = "habitActionPress",
     )
-    val ink = Color(colors.inkArgb)
+    val ink = palette.onSurface
     val shape = if (item.stored.goal.goalType == GoalType.BINARY) CircleShape else Radius.Pill
     val size = if (item.stored.goal.goalType == GoalType.BINARY) Modifier.size(Size.actionSm) else Modifier.heightIn(min = Size.actionSm).padding(horizontal = Space.md, vertical = Space.xs)
     Box(
@@ -177,7 +196,7 @@ private fun HabitActionPill(
                 scaleY = scale
             }
             .clip(shape)
-            .background(Color(colors.pillFillArgb))
+            .background(palette.containerHigh)
             .clickable(
                 interactionSource = interaction,
                 indication = androidx.compose.foundation.LocalIndication.current,
