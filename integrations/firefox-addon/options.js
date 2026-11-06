@@ -23,9 +23,9 @@ $('form').addEventListener('submit', async (event) => {
         say('options_invalid');
         return;
     }
-    const granted = await browser.permissions.request({
-        origins: [`${new URL(server).origin}/*`],
-    });
+    const granted = await browser.permissions
+        .request({ origins: [CadenceCore.originPattern(server)] })
+        .catch(() => false);
     if (!granted) {
         say('options_denied');
         return;

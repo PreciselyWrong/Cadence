@@ -23,7 +23,11 @@ async function initializeTelegramPolling() {
     const { tryBecomeLeader } = require('../../services/jobLock');
 
     const startWhenLeader = async () => {
-        if (!(await tryBecomeLeader('telegram-poller'))) {
+        const onLost = () => {
+            telegramPoller.stopPolling();
+            setTimeout(startWhenLeader, leaderRetryDelay);
+        };
+        if (!(await tryBecomeLeader('telegram-poller', { onLost }))) {
             setTimeout(startWhenLeader, leaderRetryDelay);
             return;
         }

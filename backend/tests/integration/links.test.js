@@ -544,6 +544,104 @@ describe('Links', () => {
         expect(link.note).toBe('à lire ce soir');
     });
 
+    it('keeps in the inbox a share whose text the saved link does not hold', async () => {
+        await capture('https://example.com/deja');
+        await capture('https://example.com/deja - un avis à ne pas perdre');
+        const items = await InboxItem.findAll({
+            where: { user_id: user.id },
+            order: [['id', 'ASC']],
+        });
+        expect(items.map((item) => item.status)).toEqual([
+            'processed',
+            'added',
+        ]);
+    });
+
+    it('settles a share sent twice with the same text', async () => {
+        await capture('https://example.com/deux - le même titre');
+        await capture('https://example.com/deux - le même titre');
+        const items = await InboxItem.findAll({
+            where: { user_id: user.id },
+        });
+        expect(items.map((item) => item.status)).toEqual([
+            'processed',
+            'processed',
+        ]);
+    });
+
+    it('answers with the existing link when two saves of one address meet', async () => {
+        const repository = require('../../modules/links/repository');
+        const first = await agent
+            .post('/api/links')
+            .send({ url: 'https://example.com/course' });
+        const spy = jest
+            .spyOn(repository, 'findByUrl')
+            .mockResolvedValueOnce(null);
+        const second = await agent
+            .post('/api/links')
+            .send({ url: 'https://example.com/course' });
+        spy.mockRestore();
+        expect(second.status).toBe(200);
+        expect(second.body.created).toBe(false);
+        expect(second.body.link.uid).toBe(first.body.link.uid);
+    });
+
+    it('reads every link still waiting after a restart', async () => {
+        const seen = [];
+        jobs.configure({
+            enabled: true,
+            spacingMs: 0,
+            fetcher: async (url) => {
+                seen.push(url);
+                return { status: 'done' };
+            },
+        });
+        await Link.bulkCreate(
+            Array.from({ length: 205 }, (_, index) => ({
+                user_id: user.id,
+                url: `https://example.com/attente/${index}`,
+                kind: 'web',
+                fetch_status: 'pending',
+            }))
+        );
+        await jobs.initialize();
+        await jobs.drain();
+        expect(seen.length).toBeGreaterThanOrEqual(205);
+    });
+
+    it('leaves dropped and unread links out of what the themes read', async () => {
+        const links = require('../../modules/links/service');
+        await Link.bulkCreate([
+            {
+                user_id: user.id,
+                url: 'https://a.example/1',
+                kind: 'web',
+                fetch_status: 'done',
+            },
+            {
+                user_id: user.id,
+                url: 'https://a.example/2',
+                kind: 'web',
+                fetch_status: 'pending',
+            },
+            {
+                user_id: user.id,
+                url: 'https://a.example/3',
+                kind: 'web',
+                status: 'dropped',
+                fetch_status: 'done',
+            },
+        ]);
+        const found = await links.list(user.id, {
+            untagged: true,
+            readable: true,
+            limit: 1,
+        });
+        expect(found.links.map((link) => link.url)).toEqual([
+            'https://a.example/1',
+        ]);
+    });
+
     it('leaves in the inbox an idea that only mentions a link', async () => {
         await capture(
             `https://example.com/idee ${'une vraie idée à creuser pour le projet, '.repeat(4)}`

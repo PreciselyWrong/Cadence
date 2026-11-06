@@ -33,6 +33,26 @@ describe('taskMinutes', () => {
 });
 
 describe('dayLoad without capacity', () => {
+    it('counts a task and its subtask due the same day once', () => {
+        const tasks = [
+            task({ uid: 'p', due_date: TODAY, estimated_minutes: 60 }),
+            task({
+                uid: 'c',
+                parent_uid: 'p',
+                due_date: TODAY,
+                estimated_minutes: 20,
+            }),
+            task({
+                uid: 'alone',
+                parent_uid: 'elsewhere',
+                due_date: TODAY,
+                estimated_minutes: 15,
+            }),
+        ];
+        const load = dayLoad(input({ tasks }), settingsWith(), TODAY);
+        expect(load.taskMinutes ?? load.task_minutes).toBe(75);
+    });
+
     it('adds tasks due or planned that day and timed busy events', () => {
         const tasks = [
             task({ uid: 'a', due_date: TODAY, estimated_minutes: 45 }),

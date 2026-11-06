@@ -4,7 +4,7 @@ const express = require('express');
 const triage = require('./service');
 const slots = require('./slots');
 const { logError } = require('../../services/logService');
-const { NotFoundError, ValidationError } = require('../../shared/errors');
+const { AppError } = require('../../shared/errors');
 
 const router = express.Router();
 
@@ -12,11 +12,8 @@ const handle = (action) => async (req, res) => {
     try {
         res.json(await action(req));
     } catch (error) {
-        if (error instanceof ValidationError) {
-            return res.status(400).json({ error: error.message });
-        }
-        if (error instanceof NotFoundError) {
-            return res.status(404).json({ error: error.message });
+        if (error instanceof AppError) {
+            return res.status(error.statusCode).json({ error: error.message });
         }
         logError({ error }, 'Triage request failed');
         res.status(500).json({ error: 'Internal server error' });

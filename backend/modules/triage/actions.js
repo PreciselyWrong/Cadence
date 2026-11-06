@@ -4,7 +4,8 @@
 // tools, which already hold the rules of each write (rights, recurrence,
 // file-backed tasks); none is reimplemented here.
 const { registerAllTools } = require('../mcp/toolRegistry');
-const { ValidationError } = require('../../shared/errors');
+const { ForbiddenError, ValidationError } = require('../../shared/errors');
+const repository = require('./repository');
 
 const MAX_SUBTASKS = 20;
 const MAX_NAME = 255;
@@ -12,10 +13,23 @@ const MAX_NAME = 255;
 function toolsFor(user) {
     const tools = [];
     registerAllTools(null, { userId: user.id, user }, tools);
-    return (name, params) => {
+    return async (name, params) => {
         const tool = tools.find((candidate) => candidate.name === name);
-        return tool.handler(params);
+        try {
+            return await tool.handler(params);
+        } catch (error) {
+            throw asRefusal(error);
+        }
     };
+}
+
+// The tools refuse with a plain Error. Told apart from a fault, it answers 4xx:
+// a client queue would otherwise send the same refused order again forever.
+function asRefusal(error) {
+    if (error.constructor !== Error) return error;
+    return error.message === 'Access denied'
+        ? new ForbiddenError(error.message)
+        : new ValidationError(error.message);
 }
 
 const text = (value, field) => {
@@ -73,6 +87,7 @@ const ACTIONS = {
         await run('create_note', {
             title: task.name,
             content: task.note || task.name,
+            tags: task.tags ?? [],
         });
         await run('delete_task', { id: task.uid });
     },
@@ -80,18 +95,47 @@ const ACTIONS = {
         await run('create_project', {
             name: task.name,
             description: task.note || '',
+            tags: task.tags ?? [],
         });
         await run('delete_task', { id: task.uid });
     },
     to_habit: async (run, task) => {
-        await run('create_habit', { name: task.name });
+        await run('create_habit', {
+            name: task.name,
+            description: task.note || '',
+        });
         await run('delete_task', { id: task.uid });
     },
 };
 
+const CONVERSIONS = new Set(['to_note', 'to_project', 'to_habit']);
+
+// What removes the task is checked before anything is written: a conversion
+// that fails on the removal would leave a copy behind each time it is retried.
+async function assertRemovable(task, action) {
+    if (task.owned === false) {
+        throw new ForbiddenError('Only the owner can remove a task');
+    }
+    if (task.file_backed) {
+        throw new ValidationError('This task follows a TODO.md file');
+    }
+    if (task.recurring) {
+        throw new ValidationError('A recurring task stays a series');
+    }
+    if (
+        CONVERSIONS.has(action) &&
+        (await repository.countSubtasks(task.uid)) > 0
+    ) {
+        throw new ValidationError('This task has subtasks');
+    }
+}
+
 async function applyAction(user, task, action, payload = {}) {
     const perform = ACTIONS[action];
     if (!perform) throw new ValidationError(`Unknown action: ${action}`);
+    if (action === 'delete' || CONVERSIONS.has(action)) {
+        await assertRemovable(task, action);
+    }
     await perform(toolsFor(user), task, payload ?? {});
 }
 

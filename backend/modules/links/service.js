@@ -104,14 +104,24 @@ async function addOne(userId, item = {}) {
             : '';
     const note = typeof item.note === 'string' ? item.note.trim() : '';
     const tags = item.tags?.length ? await resolveTags(item.tags, userId) : [];
-    const link = await linksRepository.create({
-        user_id: userId,
-        url,
-        kind: classifyKind(url),
-        title: title || null,
-        note: note.slice(0, MAX_NOTE) || null,
-        status,
-    });
+    let link;
+    try {
+        link = await linksRepository.create({
+            user_id: userId,
+            url,
+            kind: classifyKind(url),
+            title: title || null,
+            note: note.slice(0, MAX_NOTE) || null,
+            status,
+        });
+    } catch (error) {
+        if (error.name !== 'SequelizeUniqueConstraintError') throw error;
+        // Saved meanwhile by another request.
+        return {
+            link: await linksRepository.findByUrl(userId, url),
+            created: false,
+        };
+    }
     if (tags.length) await linksRepository.setTags(link, tags);
     return { link, created: true };
 }

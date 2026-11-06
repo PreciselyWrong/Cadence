@@ -15,6 +15,7 @@ const TITLE_MAX = 255;
 const REASON_MAX = 200;
 const LINKS_MAX = 20;
 const DEFAULT_DURATION = 60;
+const MINUTES_IN_DAY = 1440;
 const FINGERPRINT = 'slot';
 
 const isDay = (value) =>
@@ -42,6 +43,9 @@ async function proposeSlot(user, input = {}) {
     const duration = input.duration_minutes ?? DEFAULT_DURATION;
     if (!inRange(duration, 5, 720)) {
         throw new ValidationError('duration_minutes must be 5 to 720');
+    }
+    if (startMinute !== null && startMinute + duration > MINUTES_IN_DAY) {
+        throw new ValidationError('the slot must end within the day');
     }
     const uids = Array.isArray(input.link_uids) ? input.link_uids : [];
     if (uids.length === 0 || uids.length > LINKS_MAX) {
@@ -94,22 +98,31 @@ function slotItems(rows, today) {
         }));
 }
 
-async function pendingSlot(user, id) {
+const findSlot = async (user, id) => {
     const row = await repository.findOne(user.id, `${PREFIX}${id}`);
-    if (!row || row.state !== 'pending') {
-        throw new NotFoundError('Slot not found');
-    }
+    if (!row) throw new NotFoundError('Slot not found');
     return row;
+};
+
+// The same answer sent again after a lost reply is already done: only the
+// opposite answer to a settled slot is refused.
+function settledAs(row, id, state) {
+    if (row.state === state) return { slot_id: id, state };
+    if (row.state !== 'pending') throw new NotFoundError('Slot not found');
+    return null;
 }
 
 // The task keeps the addresses, so the links stay one tap away from it.
 async function acceptSlot(user, id) {
-    const row = await pendingSlot(user, id);
+    const row = await findSlot(user, id);
+    const settled = settledAs(row, id, 'applied');
+    if (settled) return settled;
     const slot = row.proposal.payload;
     const note = slot.links
         .map((link) => `${link.title}\n${link.url}`)
         .join('\n\n');
-    const answer = await toolsFor(user)('create_task', {
+    const run = toolsFor(user);
+    const answer = await run('create_task', {
         name: slot.title,
         note,
         due_date: slot.date,
@@ -117,26 +130,34 @@ async function acceptSlot(user, id) {
     const created = JSON.parse(answer.content[0].text);
     const taskUid = created.task?.uid ?? created.uid;
 
-    const { plan } = await dailyPlanService.getPlan(user, slot.date);
-    const items = (plan?.items ?? []).map((item) => ({
-        task_uid: item.task_uid ?? item.task?.uid,
-        start_minute: item.start_minute,
-        duration_minutes: item.duration_minutes,
-    }));
-    await dailyPlanService.replaceItems(user, slot.date, [
-        ...items,
-        {
-            task_uid: taskUid,
-            start_minute: slot.start_minute,
-            duration_minutes: slot.duration_minutes,
-        },
-    ]);
+    try {
+        const { plan } = await dailyPlanService.getPlan(user, slot.date);
+        const items = (plan?.items ?? []).map((item) => ({
+            task_uid: item.task_uid ?? item.task?.uid,
+            start_minute: item.start_minute,
+            duration_minutes: item.duration_minutes,
+        }));
+        await dailyPlanService.replaceItems(user, slot.date, [
+            ...items,
+            {
+                task_uid: taskUid,
+                start_minute: slot.start_minute,
+                duration_minutes: slot.duration_minutes,
+            },
+        ]);
+    } catch (error) {
+        // The slot stays open: each new try would otherwise leave a task behind.
+        await run('delete_task', { id: taskUid });
+        throw error;
+    }
     await row.update({ state: 'applied' });
     return { slot_id: id, state: 'applied', task_uid: taskUid };
 }
 
 async function refuseSlot(user, id) {
-    const row = await pendingSlot(user, id);
+    const row = await findSlot(user, id);
+    const settled = settledAs(row, id, 'kept');
+    if (settled) return settled;
     await row.update({ state: 'kept' });
     return { slot_id: id, state: 'kept' };
 }

@@ -16,6 +16,7 @@ const { slotItems } = require('./slots');
 
 const SETTLED = new Set(['kept', 'applied']);
 const NOTE_PREVIEW = 300;
+const KEY_MAX = 150;
 
 async function readInput(user) {
     const settings = await briefService.getBriefSettings(user);
@@ -126,16 +127,37 @@ async function keep(user, taskUid) {
 
 // Runs what the user validated, possibly corrected. The same idempotency key
 // does nothing twice: a call sent again after a lost answer is not a new order.
+// The key is taken before the work, so a resend arriving during it is caught;
+// a crash in between leaves the order undone, and its proposal still queued.
 async function apply(
     user,
     { task_uid: taskUid, action, payload, idempotency_key: key }
 ) {
-    const row = await repository.findOne(user.id, taskUid);
-    if (key && row?.apply_key === key) {
-        return { task_uid: taskUid, state: 'applied', replayed: true };
+    if (
+        key !== undefined &&
+        (typeof key !== 'string' || key.length > KEY_MAX)
+    ) {
+        throw new ValidationError('idempotency_key is not valid');
     }
+    const replayed = { task_uid: taskUid, state: 'applied', replayed: true };
+    const row = await repository.findOne(user.id, taskUid);
+    if (key && row?.apply_key === key) return replayed;
+
     const task = await findOpenTask(user, taskUid);
-    await applyAction(user, task, action, payload);
+    const reserved =
+        !key ||
+        (await repository.reserveKey(user.id, taskUid, key, {
+            fingerprint: taskFingerprint(task),
+            state: 'none',
+            proposal: null,
+        }));
+    if (!reserved) return replayed;
+    try {
+        await applyAction(user, task, action, payload);
+    } catch (error) {
+        if (key) await repository.releaseKey(user.id, taskUid);
+        throw error;
+    }
 
     const after = await readInput(user);
     const changed = after.input.tasks.find((t) => t.uid === taskUid);

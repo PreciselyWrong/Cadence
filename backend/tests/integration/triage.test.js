@@ -4,6 +4,7 @@ const request = require('supertest');
 const app = require('../../app');
 const { Task, Project, Note, TaskTriage } = require('../../models');
 const { createTestUser } = require('../helpers/testUtils');
+const { ForbiddenError, ValidationError } = require('../../shared/errors');
 
 const TOMORROW = () =>
     new Date(Date.now() + 86400000).toISOString().slice(0, 10);
@@ -175,6 +176,117 @@ describe('triage queue', () => {
         ).toBe(1);
     });
 
+    it('keeps the note and the tags of a converted task', async () => {
+        const { Tag } = require('../../models');
+        const open = await task({ name: 'Idée', note: 'Détail', status: 0 });
+        const tag = await Tag.create({ name: 'lecture', user_id: user.id });
+        await open.addTag(tag);
+        await agent
+            .post('/api/triage/apply')
+            .send({ task_uid: open.uid, action: 'to_note' });
+        const res = await agent.get('/api/notes');
+        const notes = res.body.notes ?? res.body;
+        const note = notes.find((n) => n.title === 'Idée');
+        expect(note.content).toBe('Détail');
+        expect((note.Tags ?? note.tags).map((t) => t.name)).toEqual([
+            'lecture',
+        ]);
+
+        const habit = await task({
+            name: 'Marcher',
+            note: 'Dix mille pas',
+            status: 0,
+        });
+        const done = await agent
+            .post('/api/triage/apply')
+            .send({ task_uid: habit.uid, action: 'to_habit' });
+        expect(done.status).toBe(200);
+        const { toolsFor } = require('../../modules/triage/actions');
+        const listed = await toolsFor(user)('list_habits', {});
+        expect(listed.content[0].text).toContain('Dix mille pas');
+    });
+
+    it('refuses to convert a task that has subtasks, and changes nothing', async () => {
+        const parent = await task({ name: 'Parent', status: 0 });
+        await task({
+            name: 'Enfant',
+            status: 0,
+            parent_task_id: parent.id,
+        });
+        const res = await agent
+            .post('/api/triage/apply')
+            .send({ task_uid: parent.uid, action: 'to_note' });
+        expect(res.status).toBe(400);
+        expect(await Task.findByPk(parent.id)).not.toBeNull();
+        expect(await Note.count({ where: { user_id: user.id } })).toBe(0);
+    });
+
+    it('refuses to convert or delete a shared task, and creates nothing', async () => {
+        const { applyAction } = require('../../modules/triage/actions');
+        const other = await createTestUser({ email: 'owner@example.com' });
+        const shared = await Task.create({
+            user_id: other.id,
+            name: 'Partagée',
+            status: 0,
+        });
+        const seen = { uid: shared.uid, name: 'Partagée', owned: false };
+        await expect(applyAction(user, seen, 'to_note')).rejects.toBeInstanceOf(
+            ForbiddenError
+        );
+        await expect(applyAction(user, seen, 'delete')).rejects.toBeInstanceOf(
+            ForbiddenError
+        );
+        expect(await Note.count({ where: { user_id: user.id } })).toBe(0);
+        expect(await Task.findByPk(shared.id)).not.toBeNull();
+    });
+
+    it('refuses to convert a task that follows a TODO.md file', async () => {
+        const { applyAction } = require('../../modules/triage/actions');
+        const open = await task({ name: 'Du fichier', status: 0 });
+        await expect(
+            applyAction(
+                user,
+                {
+                    uid: open.uid,
+                    name: 'Du fichier',
+                    file_backed: true,
+                },
+                'to_note'
+            )
+        ).rejects.toBeInstanceOf(ValidationError);
+        expect(await Note.count({ where: { user_id: user.id } })).toBe(0);
+    });
+
+    it('runs an order once when it is sent again during the first run', async () => {
+        const open = await task({ name: 'À découper', status: 0 });
+        const send = () =>
+            agent.post('/api/triage/apply').send({
+                task_uid: open.uid,
+                action: 'split',
+                payload: { subtasks: ['Un', 'Deux'] },
+                idempotency_key: 'same-order',
+            });
+        const answers = await Promise.all([send(), send()]);
+        expect(answers.map((res) => res.status)).toEqual([200, 200]);
+        expect(await Task.count({ where: { parent_task_id: open.id } })).toBe(
+            2
+        );
+    });
+
+    it('lets an order run again after it failed', async () => {
+        const open = await task({ name: 'Renommer', status: 0 });
+        const send = (name) =>
+            agent.post('/api/triage/apply').send({
+                task_uid: open.uid,
+                action: 'rename',
+                payload: { name },
+                idempotency_key: 'retry-order',
+            });
+        expect((await send('')).status).toBe(400);
+        expect((await send('Nouveau')).status).toBe(200);
+        expect((await Task.findByPk(open.id)).name).toBe('Nouveau');
+    });
+
     it('refuses an unknown action and a task of someone else', async () => {
         const open = await task({ name: 'Tâche', status: 0 });
         const unknown = await agent
@@ -258,11 +370,13 @@ describe('triage queue', () => {
     describe('slots proposed by an agent', () => {
         const day = () =>
             new Date(Date.now() + 2 * 86400000).toISOString().slice(0, 10);
+        let proposed = 0;
         const propose = async () => {
             const { Link } = require('../../models');
+            proposed += 1;
             const link = await Link.create({
                 user_id: user.id,
-                url: 'https://example.com/outil',
+                url: `https://example.com/outil/${proposed}`,
                 title: 'Outil fictif',
             });
             const slots = require('../../modules/triage/slots');
@@ -309,6 +423,52 @@ describe('triage queue', () => {
             expect((await queue()).items).toEqual([]);
             const late = await agent.post(`/api/triage/slots/${id}/accept`);
             expect(late.status).toBe(404);
+        });
+
+        it('answers a repeated answer as done, without doing it twice', async () => {
+            const { slot_id: id } = await propose();
+            await agent.post(`/api/triage/slots/${id}/accept`);
+            const again = await agent.post(`/api/triage/slots/${id}/accept`);
+            expect(again.status).toBe(200);
+            expect(await Task.count({ where: { user_id: user.id } })).toBe(1);
+
+            const { slot_id: refused } = await propose();
+            await agent.post(`/api/triage/slots/${refused}/refuse`);
+            const twice = await agent.post(
+                `/api/triage/slots/${refused}/refuse`
+            );
+            expect(twice.status).toBe(200);
+        });
+
+        it('leaves no task behind when the slot no longer fits the plan', async () => {
+            const { slot_id: first } = await propose();
+            const { slot_id: second } = await propose();
+            await agent.post(`/api/triage/slots/${first}/accept`);
+            const res = await agent.post(`/api/triage/slots/${second}/accept`);
+            expect(res.status).toBe(400);
+            expect(await Task.count({ where: { user_id: user.id } })).toBe(1);
+            expect(
+                (await queue()).items.filter((i) => i.type === 'link_slot')
+            ).toHaveLength(1);
+        });
+
+        it('refuses a slot that runs past midnight', async () => {
+            const { Link } = require('../../models');
+            const link = await Link.create({
+                user_id: user.id,
+                url: 'https://example.com/tard',
+            });
+            const slots = require('../../modules/triage/slots');
+            await expect(
+                slots.proposeSlot(user, {
+                    link_uids: [link.uid],
+                    title: 'T',
+                    reason: 'R',
+                    date: day(),
+                    start_minute: 1380,
+                    duration_minutes: 120,
+                })
+            ).rejects.toThrow('within the day');
         });
 
         it('refuses a slot with a link of someone else', async () => {

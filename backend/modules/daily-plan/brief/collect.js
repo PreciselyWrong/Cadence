@@ -52,12 +52,13 @@ const isRecurring = (task) =>
 
 // A task as the rules read it. `planned` are the plan days of this task in the
 // horizon, `blocks` the uids of its blocking links on each side.
-function mapTask(task, { planned, blocks, timezone }) {
+function mapTask(task, { planned, blocks, timezone, userId }) {
     const tagNames = (task.Tags || []).map((tag) => tag.name);
     const name = task.name || '';
     return {
         uid: task.uid,
         name,
+        owned: task.user_id === userId,
         note: task.note ?? null,
         status: Task.getStatusName(task.status),
         due_date: task.due_date
@@ -151,6 +152,7 @@ async function readTasks(
             planned: planned.get(task.id) || [],
             blocks: blocks.get(task.id),
             timezone,
+            userId: user.id,
         })
     );
 }

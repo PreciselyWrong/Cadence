@@ -35,14 +35,15 @@ async function start() {
     $('form').addEventListener('submit', async (event) => {
         event.preventDefault();
         $('save').disabled = true;
-        const result = await CadenceCore.save(fetch, settings, {
+        const link = {
             url: tab.url,
             title: $('title').value,
             note: $('note').value,
             status: $('status').value,
             tags: $('tags').value,
-        });
-        say(`result_${result}`);
+        };
+        const result = await CadenceCore.save(fetch, settings, link);
+        say(CadenceCore.resultKey(result, link));
         if (result === 'saved' || result === 'already') {
             $('form').hidden = true;
         } else {

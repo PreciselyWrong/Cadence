@@ -87,13 +87,14 @@ async function captureFrom(
             if (!isUniqueViolation(error)) throw error;
         }
     }
-    if (
-        fresh &&
-        type === 'inbox_item' &&
-        normalized.length === 1 &&
-        residualText(raw, normalized[0][1]).length <= SHARED_TEXT_MAX
-    ) {
-        await settleInboxItem(userId, uid);
+    if (fresh && type === 'inbox_item' && normalized.length === 1) {
+        const text = residualText(raw, normalized[0][1]);
+        // Text an already saved link does not hold stays in the inbox: it would
+        // be lost otherwise.
+        const held = !text || touched[0]?.note === text;
+        if (held && text.length <= SHARED_TEXT_MAX) {
+            await settleInboxItem(userId, uid);
+        }
     }
     return touched;
 }

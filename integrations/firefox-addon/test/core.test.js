@@ -61,3 +61,16 @@ test('the answer of the server says what happened', async () => {
     };
     assert.equal(await core.save(offline, settings, link), 'unreachable');
 });
+
+test('the permission asked for a server names its host, never a port', () => {
+    assert.equal(core.originPattern('http://100.64.0.1:3002'), 'http://100.64.0.1/*');
+    assert.equal(core.originPattern('https://cadence.example/app'), 'https://cadence.example/*');
+});
+
+test('saying a page is already saved warns about what was typed for nothing', () => {
+    const typed = { note: 'mon avis', tags: '' };
+    const empty = { note: ' ', tags: '' };
+    assert.equal(core.resultKey('already', typed), 'result_already_not_merged');
+    assert.equal(core.resultKey('already', empty), 'result_already');
+    assert.equal(core.resultKey('saved', typed), 'result_saved');
+});

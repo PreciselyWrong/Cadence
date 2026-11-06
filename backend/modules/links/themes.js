@@ -89,13 +89,11 @@ async function themeLinksFor(user) {
     if (!settings.linkThemes.enabled) return 0;
     if (!(await sources.llmConfigured(user.id))) return 0;
 
-    const { links: untagged } = await links.list(user.id, {
+    const { links: readable } = await links.list(user.id, {
         untagged: true,
+        readable: true,
         limit: PER_RUN,
     });
-    const readable = untagged.filter(
-        (link) => link.fetch_status !== 'pending' && link.status !== 'dropped'
-    );
     if (readable.length === 0) return 0;
 
     const tags = await Tag.findAll({

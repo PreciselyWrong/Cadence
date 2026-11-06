@@ -80,7 +80,9 @@ async function withJobLock(name, fn) {
 // lock is held by its own connection for as long as the process lives.
 const leaderConnections = new Map();
 
-async function tryBecomeLeader(name) {
+// `onLost` runs if the session goes away (database restart, dropped
+// connection): the lock went with it, and another process may hold it already.
+async function tryBecomeLeader(name, { onLost } = {}) {
     if (leaderConnections.has(name)) {
         return true;
     }
@@ -96,6 +98,12 @@ async function tryBecomeLeader(name) {
             return false;
         }
         leaderConnections.set(name, connection);
+        connection.once('end', () => {
+            if (leaderConnections.get(name) !== connection) return;
+            leaderConnections.delete(name);
+            logError(`Lost the leader lock for "${name}"`);
+            onLost?.();
+        });
         logInfo(`This process is now the leader for "${name}"`);
         return true;
     } catch (error) {

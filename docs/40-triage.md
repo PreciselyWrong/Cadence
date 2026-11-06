@@ -33,7 +33,9 @@ The MCP tool `propose_link_slot` (`link_uids`, `title`, `reason`, `date`, `start
 
 ## Actions
 
-`rename` (`{ name }`), `split` (`{ subtasks: [names] }`), `set_due` (`{ due_date }`), `done`, `cancel`, `delete`, `reclass` (`{ project_id?, area_uid?, tags? }`), `to_note`, `to_project`, `to_habit`. Every action runs through the MCP tools (`modules/triage/actions.js`), which hold the rules of each write. A conversion creates the new thing first, then deletes the task.
+`rename` (`{ name }`), `split` (`{ subtasks: [names] }`), `set_due` (`{ due_date }`), `done`, `cancel`, `delete`, `reclass` (`{ project_id?, area_uid?, tags? }`), `to_note`, `to_project`, `to_habit`. Every action runs through the MCP tools (`modules/triage/actions.js`), which hold the rules of each write. A conversion creates the new thing first, then deletes the task; it keeps the note (and the tags, for a note or a project) but not the due date or the comments.
+
+Before writing anything, `delete` and the conversions refuse a task the user does not own (403), a task that follows a `TODO.md` file, a recurring task, and, for a conversion, a task with subtasks (400). The tools' other refusals also answer 4xx, so the Android queue does not send a refused order again. `idempotency_key` is taken before the work starts and freed if the action fails: an order resent during its first run does nothing.
 
 ## API
 

@@ -59,6 +59,9 @@
   "result_already": {
     "message": "Already in Cadence."
   },
+  "result_already_not_merged": {
+    "message": "Already in Cadence: the note and tags you typed were not added."
+  },
   "result_bad_token": {
     "message": "Token refused: check the settings."
   },

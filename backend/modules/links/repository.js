@@ -34,6 +34,12 @@ function whereFor(userId, filters = {}) {
     if (kinds) where.kind = { [Op.in]: kinds };
     if (filters.source_type) where.source_type = filters.source_type;
     if (filters.source_uid) where.source_uid = filters.source_uid;
+    if (filters.readable === true) {
+        and.push(
+            { status: { [Op.ne]: 'dropped' } },
+            { fetch_status: { [Op.ne]: 'pending' } }
+        );
+    }
 
     if (filters.domain) {
         const domain = escapeLike(

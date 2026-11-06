@@ -125,6 +125,7 @@ function candidates(input, settings, rows, limit) {
         .filter(
             (task) =>
                 !task.file_backed &&
+                task.owned !== false &&
                 !byRules.has(task.uid) &&
                 rowOf.get(task.uid)?.fingerprint !== taskFingerprint(task)
         )

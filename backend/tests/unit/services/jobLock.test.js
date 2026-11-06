@@ -147,6 +147,39 @@ describe('jobLock', () => {
             }
         });
 
+        it('notices when the session holding the leadership is gone', async () => {
+            const name = 'unit:leader:lost';
+            const lost = jest.fn();
+            expect(await tryBecomeLeader(name, { onLost: lost })).toBe(true);
+
+            const manager = sequelize.connectionManager;
+            const other = await manager.connect(sequelize.config);
+            try {
+                const objid = _lockKey(name) >>> 0;
+                await other.query(
+                    `SELECT pg_terminate_backend(pid) FROM pg_locks
+                     WHERE locktype = 'advisory' AND objid = $1`,
+                    [objid]
+                );
+            } finally {
+                await manager.disconnect(other);
+            }
+            for (let i = 0; i < 50 && isLeader(name); i += 1) {
+                await sleep(100);
+            }
+            expect(isLeader(name)).toBe(false);
+            expect(lost).toHaveBeenCalledTimes(1);
+        });
+
+        it('does not report a loss when leadership is given up', async () => {
+            const name = 'unit:leader:released';
+            const lost = jest.fn();
+            await tryBecomeLeader(name, { onLost: lost });
+            await releaseLeadership(name);
+            await sleep(50);
+            expect(lost).not.toHaveBeenCalled();
+        });
+
         it('holds leadership without taking a pool connection', async () => {
             const pool = sequelize.connectionManager.pool;
             expect(await tryBecomeLeader('unit:leader:pg')).toBe(true);

@@ -96,8 +96,26 @@
         }
     }
 
+    // Firefox refuses a port in a host pattern; a pattern without one covers
+    // the host on any port.
+    function originPattern(server) {
+        const { protocol, hostname } = new URL(server);
+        return `${protocol}//${hostname}/*`;
+    }
+
+    // The server keeps what a saved page already holds: say so if the user
+    // typed something for nothing.
+    function resultKey(result, { note, tags }) {
+        const typed = (note ?? '').trim() || (tags ?? '').trim();
+        return result === 'already' && typed
+            ? 'result_already_not_merged'
+            : `result_${result}`;
+    }
+
     return {
         STATUSES,
+        originPattern,
+        resultKey,
         normalizeServer,
         isSavable,
         parseTags,

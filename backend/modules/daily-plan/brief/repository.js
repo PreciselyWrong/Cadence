@@ -30,6 +30,7 @@ const OPEN_STATUSES_EXCLUDED = [
 const CANDIDATE_ATTRIBUTES = [
     'id',
     'uid',
+    'user_id',
     'name',
     'note',
     'status',

@@ -11,7 +11,6 @@ const { Op } = require('sequelize');
 const { logError } = require('../../services/logService');
 const { GithubRateLimited } = require('./core/github');
 
-const STARTUP_BATCH = 200;
 const DAY_MS = 24 * 60 * 60 * 1000;
 // A read page is read again after a month (GitHub stars, last push, README
 // move); a page that could not be read is tried again after a week. A few
@@ -144,7 +143,6 @@ async function initialize() {
         where: { fetch_status: 'pending' },
         attributes: ['id'],
         order: [['id', 'ASC']],
-        limit: STARTUP_BATCH,
         raw: true,
     });
     pending.forEach((l) => enqueueFetch(l.id));

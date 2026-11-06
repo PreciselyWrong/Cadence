@@ -29,12 +29,16 @@ function taskMinutes(task) {
 }
 
 // Open tasks that land on `date`: due that day or planned on it. A task
-// both due and planned counts once.
-const tasksOn = (tasks, date) =>
-    tasks.filter(
+// both due and planned counts once, and so does a task with its subtasks: the
+// parent's estimate already covers them.
+const tasksOn = (tasks, date) => {
+    const landing = tasks.filter(
         (task) =>
             task.due_date === date || (task.planned_on || []).includes(date)
     );
+    const uids = new Set(landing.map((task) => task.uid));
+    return landing.filter((task) => !uids.has(task.parent_uid));
+};
 
 const isTimed = (event) =>
     !event.all_day &&
