@@ -544,6 +544,33 @@ describe('Links', () => {
         expect(link.note).toBe('à lire ce soir');
     });
 
+    it('leaves in the inbox an idea that only mentions a link', async () => {
+        await capture(
+            `https://example.com/idee ${'une vraie idée à creuser pour le projet, '.repeat(4)}`
+        );
+        const item = await InboxItem.findOne({ where: { user_id: user.id } });
+        expect(item.status).toBe('added');
+    });
+
+    it('leaves in the inbox what was there before, when links are read again', async () => {
+        const { captureFrom } = require('../../modules/links/capture');
+        // Saved while capture was off, as at a server's first start.
+        jobs.configure({ enabled: false });
+        const item = await InboxItem.create({
+            user_id: user.id,
+            content: 'https://example.com/ancienne',
+            source: 'test',
+        });
+        await captureFrom({
+            userId: user.id,
+            type: 'inbox_item',
+            uid: item.uid,
+            texts: [item.content],
+        });
+        await item.reload();
+        expect(item.status).toBe('added');
+    });
+
     it('leaves in the inbox an idea with several links', async () => {
         await capture('https://example.com/a et https://example.com/b');
         const item = await InboxItem.findOne({ where: { user_id: user.id } });

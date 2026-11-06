@@ -12,7 +12,7 @@ Finding links, reading page metadata and classifying their kind is plain code. A
 - **Note at capture**: a new link found in an inbox item that holds only that link takes the rest of the text as its note (`https://github.com/x/y - CLI for invoices` → note `CLI for invoices`). Links from tasks and notes start without a note.
 - **Source**: the link remembers where it was first found (`source_type` `inbox_item` | `task` | `note`, `source_uid`). When an inbox link reappears in a task or a note (typically after converting the idea), the source moves there.
 
-- **A shared address goes straight to Links**: an inbox item that holds a single link is marked `processed` as soon as the link is found, on every capture path (Android share, desktop, web, Telegram). The link keeps the rest of the text as its note.
+- **A shared address goes straight to Links**: a new inbox item that is little more than one link (at most 120 characters around it) is marked `processed` as soon as the link is found, on every capture path (Android share, desktop, web, Telegram). The link keeps the rest of the text as its note. An idea that mentions a link stays in the inbox, and so do items that were there before.
 
 ## Adding a link directly
 

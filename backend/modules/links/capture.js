@@ -13,6 +13,9 @@ const {
 // At most this many links are taken from one row.
 const MAX_PER_SOURCE = 20;
 
+// Text around the address beyond which an inbox item is an idea, not a share.
+const SHARED_TEXT_MAX = 120;
+
 // Where links are looked for, per model: the source type stored on the
 // link and the text fields read.
 const SOURCES = {
@@ -29,7 +32,10 @@ function isUniqueViolation(error) {
 // link from an inbox item that holds only that link takes the rest of the
 // text as its note: what the user wrote next to it at capture. An existing
 // link first seen in the inbox moves to the task or note it went to.
-async function captureFrom({ userId, type, uid, texts }) {
+async function captureFrom(
+    { userId, type, uid, texts },
+    { fresh = false } = {}
+) {
     const { Link } = require('../../models');
     const raw = texts.filter(Boolean).join('\n');
     const urls = extractUrls(raw).slice(0, MAX_PER_SOURCE);
@@ -81,14 +87,20 @@ async function captureFrom({ userId, type, uid, texts }) {
             if (!isUniqueViolation(error)) throw error;
         }
     }
-    if (type === 'inbox_item' && normalized.length === 1) {
+    if (
+        fresh &&
+        type === 'inbox_item' &&
+        normalized.length === 1 &&
+        residualText(raw, normalized[0][1]).length <= SHARED_TEXT_MAX
+    ) {
         await settleInboxItem(userId, uid);
     }
     return touched;
 }
 
 // A shared address is a link, not an idea to sort: it goes straight to the
-// Links page. Only an item still waiting moves.
+// Links page. Only a new item moves, when it is little more than the address
+// (a share often adds the page title): an idea that mentions a link stays.
 async function settleInboxItem(userId, uid) {
     const { InboxItem } = require('../../models');
     await InboxItem.update(
@@ -163,15 +175,17 @@ function install(models) {
     for (const [name, source] of Object.entries(SOURCES)) {
         const Model = models[name];
         if (!Model) continue;
-        const schedule = (row, options) => {
+        const schedule = (row, options, fresh = false) => {
             if (!jobs.isEnabled() || !row.user_id || !row.uid) return;
             if (name === 'Task' && row.get('habit_mode')) return;
             const data = snapshot(name, row);
             jobs.afterWrite(options && options.transaction, () =>
-                captureFrom(data)
+                captureFrom(data, { fresh })
             );
         };
-        Model.addHook('afterCreate', schedule);
+        Model.addHook('afterCreate', (row, options) =>
+            schedule(row, options, true)
+        );
         Model.addHook('afterUpdate', (row, options) => {
             if (source.fields.some((f) => row.changed(f))) {
                 schedule(row, options);
