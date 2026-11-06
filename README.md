@@ -147,7 +147,7 @@ Cadence builds on [chrisvel/tududi](https://github.com/chrisvel/tududi) (last sy
 
 |  | Upstream | This fork |
 | --- | --- | --- |
-| Tone | Overdue alerts | **No overdue alert.** Due soon is sent once per due date and refreshed in place. [Docs](docs/36-notifications.md) |
+| Tone | Overdue alerts | **No overdue alert.** Due soon is sent once per due date and refreshed in place; a task with a due time rings at that time instead. [Docs](docs/36-notifications.md) |
 | Channels | In-app, push, Telegram, Apprise | Adds a **Desktop** channel per type (Linux client), **quiet hours** (held until they end) and recurring reminders that follow the due date; the task panel has a **Reminder** field. On Android, reminders survive reboots and can be snoozed |
 
 ### Under the hood

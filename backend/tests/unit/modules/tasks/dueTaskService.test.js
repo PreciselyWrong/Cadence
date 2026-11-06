@@ -54,6 +54,12 @@ describe('dueTaskService', () => {
             expect(result.notificationsCreated).toBe(0);
         });
 
+        it('leaves tasks with a due time to the timed reminder', async () => {
+            await createTask({ due_has_time: true });
+            const result = await checkDueTasks();
+            expect(result.notificationsCreated).toBe(0);
+        });
+
         it('never creates an overdue notification', async () => {
             await createTask({ due_date: inHours(-30) });
 

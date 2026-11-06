@@ -61,8 +61,12 @@ const runJob = async (frequency) => {
         } = require('../../services/trialLifecycleService');
         await runAccountLifecycle();
     } else if (frequency === 'task_reminders') {
-        const { checkTaskReminders } = require('./taskReminderService');
+        const {
+            checkTaskReminders,
+            checkTimedTasks,
+        } = require('./taskReminderService');
         await checkTaskReminders();
+        await checkTimedTasks();
     } else if (frequency === 'habit_reminders') {
         const {
             checkHabitReminders,

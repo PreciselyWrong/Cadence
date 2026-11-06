@@ -27,6 +27,9 @@ async function checkDueTasks() {
                     [Op.gt]: now,
                     [Op.lte]: tomorrow,
                 },
+                // A task with a due time rings at that time instead
+                // (checkTimedTasks): a day-ahead warning says nothing useful.
+                due_has_time: false,
                 status: {
                     [Op.notIn]: [
                         Task.STATUS.DONE,
