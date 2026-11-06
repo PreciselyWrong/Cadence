@@ -10,6 +10,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -52,6 +53,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -370,29 +372,13 @@ internal fun ProjectTasksPane(
 
     LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
         item {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = onBack) {
-                    Icon(
-                        Icons.AutoMirrored.Outlined.ArrowBack,
-                        contentDescription = stringResource(R.string.tasks_back),
-                    )
-                }
-                Column(Modifier.weight(1f)) {
-                    if (ancestors.isNotEmpty()) ProjectBreadcrumb(ancestors, onOpenProject)
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        if (headerIcon != null) {
-                            EntityIcon(headerIcon, tint = headerColor, size = Size.iconLarge)
-                            Spacer(Modifier.width(Space.sm))
-                        }
-                        Text(
-                            text = projectName,
-                            style = MaterialTheme.typography.titleLarge,
-                            maxLines = 3,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.weight(1f),
-                        )
-                    }
-                }
+            ProjectPageHeader(
+                name = projectName,
+                icon = headerIcon,
+                iconColor = headerColor,
+                onBack = onBack,
+                breadcrumb = { if (ancestors.isNotEmpty()) ProjectBreadcrumb(ancestors, onOpenProject) },
+            ) {
                 IconButton(
                     onClick = {
                         outline = !outline
@@ -496,6 +482,46 @@ internal fun ProjectTasksPane(
 
     if (editingStatus && project != null) {
         ProjectEditSheets(project = project, viewModel = viewModel, onDismiss = { editingStatus = false })
+    }
+}
+
+@Composable
+internal fun ProjectPageHeader(
+    name: String,
+    icon: ImageVector?,
+    iconColor: Color,
+    onBack: () -> Unit,
+    breadcrumb: @Composable () -> Unit,
+    actions: @Composable RowScope.() -> Unit,
+) {
+    Column(Modifier.fillMaxWidth()) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            IconButton(onClick = onBack) {
+                Icon(
+                    Icons.AutoMirrored.Outlined.ArrowBack,
+                    contentDescription = stringResource(R.string.tasks_back),
+                )
+            }
+            Box(Modifier.weight(1f)) { breadcrumb() }
+            actions()
+        }
+        // Le titre a sa propre ligne : à côté des actions, un nom se coupait en plein mot.
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(start = Space.md, end = Space.md, bottom = Space.xs),
+        ) {
+            if (icon != null) {
+                EntityIcon(icon, tint = iconColor, size = Size.iconLarge)
+                Spacer(Modifier.width(Space.sm))
+            }
+            Text(
+                text = name,
+                style = MaterialTheme.typography.titleLarge,
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f),
+            )
+        }
     }
 }
 
