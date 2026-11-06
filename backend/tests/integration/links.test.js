@@ -601,6 +601,20 @@ describe('Links', () => {
         ]);
     });
 
+    it('takes a link from an API token, as the Firefox add-on sends it', async () => {
+        const created = await agent
+            .post('/api/profile/api-keys')
+            .send({ name: 'Firefox' });
+        expect(created.status).toBe(201);
+        const res = await request(app)
+            .post('/api/links')
+            .set('Authorization', `Bearer ${created.body.token}`)
+            .send({ url: 'https://example.com/depuis-firefox', title: 'Page' });
+        expect(res.status).toBe(200);
+        expect(res.body.created).toBe(true);
+        await jobs.drain();
+    });
+
     it('refuses too many bookmarks at once', async () => {
         const res = await agent.post('/api/links/import').send({
             items: Array.from({ length: 501 }, (_, i) => ({

@@ -20,6 +20,8 @@ Finding links, reading page metadata and classifying their kind is plain code. A
 
 On the web, **Import bookmarks** on the Links page reads a Firefox export (`bookmarks.html`, Library › Import and Backup › Export) in the browser, `frontend/utils/bookmarksImport.ts`: its tags, plus the folder it sits in as a tag, skipping the browser's own folders. It sends batches of 200.
 
+The Firefox add-on (`integrations/firefox-addon/`) saves the current page or a link through `POST /api/links` with an API token; it asks for access to that server only.
+
 ## Themes
 
 A theme is the first segment of a tag (`dev/tools` is in `dev`). The gallery groups links by the theme of their first tag, with the others under "No theme" at the end; it is the default view on both clients. A link in the gallery or list becomes a task in one tap: the task is named after the link and keeps its address (and note) as its note, and the link counts as kept.

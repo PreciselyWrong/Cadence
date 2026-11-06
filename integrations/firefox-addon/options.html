@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="popup.css" />
+    </head>
+    <body>
+        <form id="form">
+            <label><span data-i18n="field_server"></span><input id="server" placeholder="https://cadence.example" /></label>
+            <label><span data-i18n="field_token"></span><input id="token" type="password" autocomplete="off" /></label>
+            <p class="muted" data-i18n="token_help"></p>
+            <button type="submit" data-i18n="action_save_settings"></button>
+        </form>
+        <p id="message" role="status" hidden></p>
+        <script src="core.js"></script>
+        <script src="i18n.js"></script>
+        <script src="options.js"></script>
+    </body>
+</html>

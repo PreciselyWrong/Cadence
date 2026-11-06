@@ -88,6 +88,7 @@ Tests Postgres : `DATABASE_URL=... npm run backend:test:pg`. Module tâches Andr
 - `backend/modules/todo-md/` : un projet suit au choix un fichier `TODO.md` (`TUDUDI_TODO_ROOT`, ou dépôt git) ; seules les tâches `code` y vont et en viennent, le fichier fait foi pour ses lignes (écriture atomique : ajout, case cochée) ; `scripts/todo-md-sync.sh` copie ces seuls fichiers vers le dossier monté.
 - `frontend/components/<Feature>/` : React ; `frontend/store/useStore.ts` (Zustand) ; `frontend/utils/*Service.ts` (appels API).
 - `public/locales/<lang>/` : traductions i18next (26 langues, base `en`).
+- `integrations/firefox-addon/` : add-on Firefox qui enregistre une page dans les liens, par jeton d'API.
 - `desktop/` : client Linux Tauri 2 (`src-tauri/`, coque mince autour du serveur ; `docs/fork/DESKTOP.md`).
 - `android/` : `domain/` (règles des habitudes, Kotlin pur), `data/`, `tasks/` (tâches synchronisées), `app/`.
 - `e2e/` : Playwright ; `scripts/` : dev, Docker, versions, sauvegardes Postgres.

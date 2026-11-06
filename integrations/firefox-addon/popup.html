@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="popup.css" />
+    </head>
+    <body>
+        <form id="form" hidden>
+            <label><span data-i18n="field_title"></span><input id="title" /></label>
+            <p id="url" class="muted"></p>
+            <label>
+                <span data-i18n="field_status"></span>
+                <select id="status">
+                    <option value="new" data-i18n="status_new"></option>
+                    <option value="to_evaluate" data-i18n="status_to_evaluate"></option>
+                    <option value="tested" data-i18n="status_tested"></option>
+                    <option value="kept" data-i18n="status_kept"></option>
+                </select>
+            </label>
+            <label><span data-i18n="field_tags"></span><input id="tags" /></label>
+            <label><span data-i18n="field_note"></span><textarea id="note" rows="2"></textarea></label>
+            <button id="save" type="submit" data-i18n="action_save"></button>
+        </form>
+        <p id="message" role="status" hidden></p>
+        <button id="options" type="button" class="link" data-i18n="action_options"></button>
+        <script src="core.js"></script>
+        <script src="i18n.js"></script>
+        <script src="popup.js"></script>
+    </body>
+</html>

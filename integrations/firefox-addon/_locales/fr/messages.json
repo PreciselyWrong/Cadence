@@ -1,0 +1,89 @@
+{
+  "name": {
+    "message": "Cadence : liens"
+  },
+  "description": {
+    "message": "Enregistre la page ou le lien dans Cadence, sur votre serveur."
+  },
+  "save_page": {
+    "message": "Enregistrer dans Cadence"
+  },
+  "save_link": {
+    "message": "Enregistrer ce lien dans Cadence"
+  },
+  "field_title": {
+    "message": "Titre"
+  },
+  "field_status": {
+    "message": "Statut"
+  },
+  "field_tags": {
+    "message": "Étiquettes, séparées par des virgules"
+  },
+  "field_note": {
+    "message": "Note"
+  },
+  "field_server": {
+    "message": "Adresse du serveur Cadence"
+  },
+  "field_token": {
+    "message": "Jeton d'API"
+  },
+  "token_help": {
+    "message": "À créer dans Cadence : Profil › Jetons d'API."
+  },
+  "status_new": {
+    "message": "À lire"
+  },
+  "status_to_evaluate": {
+    "message": "À évaluer"
+  },
+  "status_tested": {
+    "message": "À tester"
+  },
+  "status_kept": {
+    "message": "Gardé"
+  },
+  "action_save": {
+    "message": "Enregistrer"
+  },
+  "action_options": {
+    "message": "Réglages"
+  },
+  "action_save_settings": {
+    "message": "Enregistrer les réglages"
+  },
+  "result_saved": {
+    "message": "Enregistré dans Cadence."
+  },
+  "result_already": {
+    "message": "Déjà dans Cadence."
+  },
+  "result_bad_token": {
+    "message": "Jeton refusé : vérifiez les réglages."
+  },
+  "result_refused": {
+    "message": "Cette adresse n'a pas été acceptée."
+  },
+  "result_failed": {
+    "message": "Le serveur n'a pas pu enregistrer."
+  },
+  "result_unreachable": {
+    "message": "Serveur injoignable. Rien n'a été enregistré."
+  },
+  "result_not_set": {
+    "message": "Réglez d'abord le serveur et le jeton."
+  },
+  "result_not_a_page": {
+    "message": "Cette page ne peut pas être enregistrée."
+  },
+  "options_invalid": {
+    "message": "Il faut une adresse https (http seulement sur un réseau privé) et un jeton."
+  },
+  "options_denied": {
+    "message": "Sans cette autorisation, l'extension ne peut pas joindre le serveur."
+  },
+  "options_saved": {
+    "message": "Réglages enregistrés."
+  }
+}

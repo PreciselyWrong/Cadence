@@ -1,0 +1,89 @@
+{
+  "name": {
+    "message": "Cadence: links"
+  },
+  "description": {
+    "message": "Saves the page or the link to Cadence, on your own server."
+  },
+  "save_page": {
+    "message": "Save to Cadence"
+  },
+  "save_link": {
+    "message": "Save this link to Cadence"
+  },
+  "field_title": {
+    "message": "Title"
+  },
+  "field_status": {
+    "message": "Status"
+  },
+  "field_tags": {
+    "message": "Tags, separated by commas"
+  },
+  "field_note": {
+    "message": "Note"
+  },
+  "field_server": {
+    "message": "Cadence server address"
+  },
+  "field_token": {
+    "message": "API token"
+  },
+  "token_help": {
+    "message": "Create it in Cadence: Profile › API tokens."
+  },
+  "status_new": {
+    "message": "To read"
+  },
+  "status_to_evaluate": {
+    "message": "To evaluate"
+  },
+  "status_tested": {
+    "message": "To try"
+  },
+  "status_kept": {
+    "message": "Kept"
+  },
+  "action_save": {
+    "message": "Save"
+  },
+  "action_options": {
+    "message": "Settings"
+  },
+  "action_save_settings": {
+    "message": "Save settings"
+  },
+  "result_saved": {
+    "message": "Saved to Cadence."
+  },
+  "result_already": {
+    "message": "Already in Cadence."
+  },
+  "result_bad_token": {
+    "message": "Token refused: check the settings."
+  },
+  "result_refused": {
+    "message": "This address was not accepted."
+  },
+  "result_failed": {
+    "message": "The server could not save it."
+  },
+  "result_unreachable": {
+    "message": "Server unreachable. Nothing was saved."
+  },
+  "result_not_set": {
+    "message": "Set the server and the token first."
+  },
+  "result_not_a_page": {
+    "message": "This page cannot be saved."
+  },
+  "options_invalid": {
+    "message": "An https address (http only on a private network) and a token are needed."
+  },
+  "options_denied": {
+    "message": "Without this permission the add-on cannot reach the server."
+  },
+  "options_saved": {
+    "message": "Settings saved."
+  }
+}
