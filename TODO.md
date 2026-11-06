@@ -22,7 +22,8 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
   - Traductions : relecture par des locuteurs natifs des 22 langues hors fr/en/ja/ko (traduites automatiquement le 2026-11-01, pluriels slaves ajoutés).
 - Bilan du soir sur Android (parité du web, 2026-11-04)
   écran du bilan après `evening.switchTime` (fuseau du profil), `GET /daily-plan/:date/evening`, « Reporter à demain » (annulation par retrait du plan de demain), réglage `Bilan du soir` ; contrat `docs/39-daily-brief.md` § Evening review, écarts web dans `docs/fork/WEB-UX-NOTES.md` (2026-11-04). Vérif : mêmes quatre sections et mêmes compteurs que le web pour une même journée sur le serveur de test, puis passage à 18:00 sur le téléphone.
-  Android a le sélecteur « Autre date », l'heure de préparation, « Réglé » replié et « Réponses attendues » masqué sans réponse ; le web garde « Pas cette date » et ne montre pas l'heure, car l'usage est d'abord mobile et les lots suivants refont cet écran. Vérif : mêmes gestes sur `/insights/daily-brief` à 390 px et en bureau.
+- Revue UX du 2026-11-06, à vérifier par toi
+  Ma journée et la frise sur le téléphone en noir pur ; une carte d'habitude à moitié faite ; « À trier » sur tes vraies tâches ; importer ton `bookmarks.html` depuis `/links` ; clic gauche sur l'icône dans le panneau KDE après avoir installé le RPM ; charger `integrations/firefox-addon/` dans `about:debugging`. La signature Mozilla de l'add-on demande tes clés AMO.
 - **Quand le besoin se montre.**
   - Parité, venus de l'amont et web seulement : quitter un partage, choisir qui reprend les tâches d'un membre retiré ; Android n'a pas d'écran de partage.
   - Fixtures dorées des habitudes : compléter (abstinence, alcool, aperçus, questions apprises, semaine) quand le web en a besoin.
@@ -34,8 +35,6 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
 
 ## Next
 
-- Revue UX du 2026-11-06, lots validés
-  (arbitrages : IA dans Cadence via Profil › Assistant IA ; le triage ne repropose pas ce que `cadence-classify` a traité ; retour global + « Moins de ce type » dans un menu ⋯ ; habitudes à limite, abstinence et suivi simple neutres ; statuts de liens gardés, libellés À lire, À tester, Gardé, Plus tard, Archivé, plus « À évaluer » ; URL seule partagée envoyée dans Liens ; règles sur toutes les tâches et IA sur N par jour) :
 - Web : reprendre la passe de soustraction Android du 2026-11-02 (`docs/fork/ANDROID-UX-NOTES.md`)
   Aujourd'hui sans bannière ni jauge sauf journée pleine, fin de journée en ligne après les tâches, un seul signal couleur par ligne, deux gestes par idée dans la Boîte, fiche terminée par sa case, Projets et Étiquettes en lignes sans « 0 », surfaces neutres. Vérif : captures avant/après à 390 px et en bureau.
 - Résumé matinal

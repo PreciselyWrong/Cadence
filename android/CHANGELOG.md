@@ -1,3 +1,18 @@
+## [1.12.0] — 6 novembre 2026
+
+### Nouveautés
+- « Ma journée » réunit le résumé et « Planifier la journée » : résumé, lecteur compact, frise, priorités, échues à trier, suggestions, placement. Une seule entrée dans Aujourd'hui.
+- Frise graduée toutes les deux heures, travail et soir colorés, événements à leur heure avec leur titre.
+- « À trier » : une proposition à la fois avec sa raison, à valider, corriger, garder telle quelle ou passer. Les questions du résumé y passent.
+- Habitudes : carte neutre, la couleur se remplit avec l'objectif, pleine seulement une fois atteint.
+- Liens : galerie par thèmes par défaut, accessible depuis Listes ; statuts À lire, À évaluer, À tester, Gardé, Plus tard, Archivé ; « Tâche » crée une tâche qui garde l'adresse. Une adresse partagée va directement dans Liens.
+- Réglages › Résumé : propositions de l'IA dans À trier et thèmes des liens par l'IA, désactivés par défaut.
+
+### Corrections
+- Plus de question « Sport est-il un doublon de Sport ? » : les tâches récurrentes ou à des jours différents ne sont plus comparées.
+- Un seul retour discret en bas de Ma journée, et « Moins de ce type » dans le ⋯ d'une alerte.
+- Le texte ne passe plus sous les boutons de navigation dans Ma journée.
+
 ## [1.11.3] — 6 novembre 2026
 
 ### Nouveautés
