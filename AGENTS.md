@@ -108,6 +108,7 @@ Tests Postgres : `DATABASE_URL=... npm run backend:test:pg`. Module tâches Andr
 - ⛔ Lancer toute la suite Jest d'un coup — elle a saturé la mémoire de la machine ; cibler les fichiers avec `-w 2`.
 - ⛔ Basculer la prod vers Postgres par-dessus une base SQLite remplie — le serveur refuse ; passer par export puis import.
 - ⛔ Monter `~/Dev` dans un conteneur pour lire les `TODO.md` — exposerait des secrets ; passer par Git.
+- ⛔ Écrire une référence privée dans un fichier versionné (chemins personnels, noms d'hôtes ou adresses internes, e-mails, identifiants, noms de dépôts privés) — le dépôt est public ; garder ces valeurs dans `.env` ou la base, et utiliser des exemples génériques.
 - ⛔ Emojis, footer « Generated with Claude Code » ou trailer `Co-authored-by` dans une PR ou un commit destiné à l'amont — préférences du mainteneur (`docs/MEMORY.md`).
 
 ## État
