@@ -3,10 +3,6 @@
 ### Nouveautés
 - Menu d'un projet : « Fichier TODO.md » choisit le fichier que ce projet suit, ou aucun.
 - Un même projet peut mêler les tâches du fichier (étiquette `code`) et d'autres tâches, modifiables normalement.
-
-## [1.11.2] — 6 novembre 2026
-
-### Nouveautés
 - Résumé du jour : « Priorités du jour » remplace « Ce soir », et l'en-tête indique l'heure à laquelle le résumé a été préparé.
 - « Autre date » remplace « Pas cette date » : le jour proposé reste à un appui, le sélecteur ouvre tous les autres.
 
