@@ -212,6 +212,22 @@ cp .env.example .env
 docker-compose up -d
 ```
 
+### Keeping TODO.md files in sync without git
+
+[`scripts/todo-md-sync.sh`](scripts/todo-md-sync.sh) copies only the `TODO.md` files of your work folder to the dedicated folder Cadence reads, in both directions, so no push or pull is needed and nothing else leaves the machine. It runs on the machine that holds your projects, not in the container, and needs `bash` and `git`.
+
+```bash
+LOCAL_ROOT=~/projects SHARE_ROOT=/mnt/server/cadence-todos scripts/todo-md-sync.sh
+```
+
+- **What it syncs:** every direct sub-folder of `LOCAL_ROOT` holding a `TODO.md`, except those named one per line in `~/.config/todo-md-sync/exclude.txt` (`EXCLUDE`). A new project needs no setup: its file arrives by itself, then you choose it in the project's settings in Cadence. A file no project follows shows no task.
+- **Edits on both sides:** they are merged line by line against the last synced copy, kept in `~/.local/state/todo-md-sync` (`STATE`). If the same line changed on both, the local file wins and the other version is saved in `STATE/conflicts`, with a desktop notification.
+- **Deletions:** never propagated, so a missing mount or a branch without the file loses nothing.
+- **When to run it:** from a timer, about once a minute (a systemd user timer or cron). Cadence notices a changed file within 30 seconds.
+- **The working copy decides:** the file synced is the one of the branch currently checked out.
+
+See [TODO.md projects](docs/35-todo-md-projects.md) for the Cadence side and the container mount.
+
 ### Reverse Proxy Setup
 
 When running behind a reverse proxy (Caddy, Nginx, Traefik, etc.), set `TUDUDI_TRUST_PROXY` so that Express correctly reads client IPs from `X-Forwarded-For` headers. Without this, `express-rate-limit` will log a validation error.
