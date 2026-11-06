@@ -25,6 +25,8 @@ import { Person } from '../../entities/Person';
 import { avatarTint } from '../../utils/avatarTint';
 import { getApiPath } from '../../config/paths';
 import { canManageProjectShares } from '../../utils/projectShareCache';
+import TodoMdFilePicker from './TodoMdFilePicker';
+import { todoMdRepoSlug } from '../../utils/todoMd';
 
 interface ProjectOverviewRailProps {
     project: Project;
@@ -35,6 +37,7 @@ interface ProjectOverviewRailProps {
     onShareClick: () => void;
     onCreateNote: () => void;
     onOpenNote: (note: Note) => void;
+    onTodoMdChanged?: () => Promise<void> | void;
 }
 
 const slugify = (value: string) =>
@@ -151,6 +154,7 @@ const ProjectOverviewRail: React.FC<ProjectOverviewRailProps> = ({
     onShareClick,
     onCreateNote,
     onOpenNote,
+    onTodoMdChanged,
 }) => {
     const { tagsStore } = useStore();
     const [editing, setEditing] = useState<EditableField>(null);
@@ -350,6 +354,15 @@ const ProjectOverviewRail: React.FC<ProjectOverviewRailProps> = ({
             )}
 
             <Panel title={t('project.info', 'Project info')}>
+                {onTodoMdChanged &&
+                    project.uid &&
+                    !todoMdRepoSlug(project.source_path) && (
+                        <TodoMdFilePicker
+                            projectUid={project.uid}
+                            sourcePath={project.source_path}
+                            onChanged={onTodoMdChanged}
+                        />
+                    )}
                 <dl className={divided}>
                     <EditableRow
                         revealEmpty={revealEmpty}

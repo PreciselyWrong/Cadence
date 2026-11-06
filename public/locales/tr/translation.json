@@ -5118,13 +5118,17 @@
     "badge": "TODO.md",
     "badgeTitle": "Bir TODO.md dosyasından. Burada salt okunur: dosyayı düzenleyin.",
     "readOnly": "Bu, bir TODO.md dosyasından geliyor. Bunun yerine dosyayı düzenleyin.",
-    "projectInfo": "{{path}} yansıtılır. Eklediğiniz görevler dosyaya yazılır, birini işaretlemek ise dosyayı günceller.",
+    "projectInfo": "{{path}} dosyasını izler. code etiketli görevler dosyaya yazılır; diğerleri Cadence'ta kalır.",
     "reread": "Dosyaları yeniden yükle",
     "rereading": "Yeniden yükleniyor...",
     "rereadDone": "TODO.md dosyaları yeniden yüklendi.",
     "rereadFailed": "TODO.md dosyaları yeniden yüklenemedi.",
     "addTo": "Şuraya ekle:",
-    "addFailed": "TODO.md dosyasına yazılamadı."
+    "addFailed": "TODO.md dosyasına yazılamadı.",
+    "fileLabel": "TODO.md dosyası",
+    "fileNone": "Yok",
+    "addToCadence": "Yalnızca Cadence",
+    "linkFailed": "TODO.md dosyası değiştirilemedi."
   },
   "cadenceHabits": {
     "copyName": "{{name}} (kopya)",

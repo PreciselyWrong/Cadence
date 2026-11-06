@@ -37,6 +37,8 @@ data class TaskEntity(
     val reviewOn: String? = null,
     /** Dernière décision prise en revue. */
     val reviewedAtRaw: String? = null,
+    /** Clé de la ligne du TODO.md dont vient la tâche (`source_key`, posé par le serveur) ; seule la case se modifie alors ici. */
+    val sourceKey: String? = null,
 ) {
     val isRecurring: Boolean get() = recurrenceType != null && recurrenceType != "none"
 }

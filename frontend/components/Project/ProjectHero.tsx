@@ -16,7 +16,7 @@ import { Area } from '../../entities/Area';
 import { getAssetPath } from '../../config/paths';
 import { getProjectStatusTint } from './projectStatusStyles';
 import TodoMdProjectNote from './TodoMdProjectNote';
-import { isTodoMdProject } from '../../utils/todoMd';
+import { isTodoMdProject, todoMdRepoSlug } from '../../utils/todoMd';
 import EntityIcon from '../Shared/EntityIcon';
 
 const PROJECT_STATUSES: ProjectStatus[] = [
@@ -77,6 +77,8 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
     nextAction,
 }) => {
     const fileBacked = isTodoMdProject(project);
+    // A repository project takes its name from the slug.
+    const nameLocked = Boolean(todoMdRepoSlug(project.source_path));
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
     const [statusOpen, setStatusOpen] = useState(false);
@@ -384,10 +386,10 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                         ) : (
                             <h1
                                 onClick={() => {
-                                    if (!fileBacked) setEditingName(true);
+                                    if (!nameLocked) setEditingName(true);
                                 }}
                                 title={
-                                    fileBacked
+                                    nameLocked
                                         ? t(
                                               'todoMd.badgeTitle',
                                               'From a TODO.md file. Read-only here: edit the file instead.'

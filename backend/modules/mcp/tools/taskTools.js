@@ -23,6 +23,10 @@ const {
 const { handleCompletionStatus } = require('../../tasks/operations/completion');
 const { Op } = require('sequelize');
 const { sequelize, Task, Project, Tag, Area } = require('../../../models');
+const todoMd = require('../../todo-md/service');
+
+const FROM_TODO_MD =
+    'This task comes from a TODO.md file: edit the file instead. Only complete_task is allowed.';
 const {
     validateProjectAccess,
     validateDeferUntilAndDueDate,
@@ -774,6 +778,10 @@ function registerTaskTools(server, context, tools) {
                 throw new Error('Access denied');
             }
 
+            if (task.source_key) {
+                throw new Error(FROM_TODO_MD);
+            }
+
             const previousAssignedTo = task.assigned_to;
             const updates = {};
             if (params.name !== undefined) updates.name = params.name;
@@ -1088,14 +1096,20 @@ function registerTaskTools(server, context, tools) {
                     : [];
             // recurring tasks advance in place, same as PATCH /api/task/:uid
             const recurringOccurrence =
-                newStatus === 2
+                newStatus === 2 && !task.source_key
                     ? await completeOccurrence(task, {
                           timezone: context.user.timezone,
                           userId: context.userId,
                       })
                     : null;
 
-            if (!recurringOccurrence) {
+            if (task.source_key) {
+                await todoMd.setTaskDone(
+                    task,
+                    await Project.findByPk(task.project_id),
+                    newStatus === 2
+                );
+            } else if (!recurringOccurrence) {
                 await task.update({
                     status: newStatus,
                     completed_at: newStatus === 2 ? new Date() : null,
@@ -1250,6 +1264,10 @@ function registerTaskTools(server, context, tools) {
 
             if (task.user_id !== context.userId) {
                 throw new Error('Access denied');
+            }
+
+            if (task.source_key) {
+                throw new Error(FROM_TODO_MD);
             }
 
             await task.destroy();

@@ -62,6 +62,14 @@ describe('TODO.md projects', () => {
         fs.writeFileSync(path.join(root, 'beta', 'TODO.md'), BETA);
         process.env.TUDUDI_TODO_ROOT = root;
         ({ user, agent } = await signIn('todo@example.com'));
+        for (const name of ['alpha', 'beta']) {
+            await Project.create({
+                name,
+                user_id: user.id,
+                source_type: 'todo_md',
+                source_path: `${name}/TODO.md`,
+            });
+        }
     });
 
     afterEach(() => {
@@ -69,7 +77,7 @@ describe('TODO.md projects', () => {
         fs.rmSync(root, { recursive: true, force: true });
     });
 
-    it('turns each folder with a TODO.md into a project with its tasks', async () => {
+    it('fills each linked project with the tasks of its TODO.md', async () => {
         const res = await agent.post('/api/todo-md/rescan');
 
         expect(res.status).toBe(200);
@@ -103,12 +111,13 @@ describe('TODO.md projects', () => {
             ['Already done', 2],
             ['Open one', 0],
         ]);
-        expect(await Tag.count({ where: { name: 'Next' } })).toBe(1);
+        expect(await Tag.count({ where: { name: 'Next' } })).toBe(0);
+        expect(await Tag.count({ where: { name: 'code' } })).toBe(1);
         const [first] = await Task.findAll({
             where: { name: 'Ship the thing' },
             include: [Tag],
         });
-        expect(first.Tags.map((t) => t.name)).toEqual(['Now']);
+        expect(first.Tags.map((t) => t.name)).toEqual(['code']);
     });
 
     it('does not duplicate anything when it reads the same files again', async () => {
@@ -125,9 +134,11 @@ describe('TODO.md projects', () => {
         const project = await Project.findOne({ where: { name: 'alpha' } });
         const before = fs.readFileSync(alpha(), 'utf8');
 
-        const res = await agent
-            .post('/api/task')
-            .send({ name: 'Brand new', project_uid: project.uid });
+        const res = await agent.post('/api/task').send({
+            name: 'Brand new',
+            project_uid: project.uid,
+            tags: ['code'],
+        });
 
         expect(res.status).toBe(201);
         expect(res.body.name).toBe('Brand new');
@@ -156,9 +167,11 @@ describe('TODO.md projects', () => {
         await agent.post('/api/todo-md/rescan');
         const project = await Project.findOne({ where: { name: 'alpha' } });
 
-        await agent
-            .post('/api/task')
-            .send({ name: 'First next', project_uid: project.uid });
+        await agent.post('/api/task').send({
+            name: 'First next',
+            project_uid: project.uid,
+            tags: ['code'],
+        });
 
         expect(fs.readFileSync(alpha(), 'utf8')).toBe(
             '# Alpha\n\n## Now\n- Only now\n\n## Next\n\n- First next\n'
@@ -206,7 +219,7 @@ describe('TODO.md projects', () => {
         expect(checked.status).toBe(2);
         expect(checked.completed_at).not.toBeNull();
         const [movedTag] = await moved.getTags();
-        expect(movedTag.name).toBe('Now');
+        expect(movedTag.name).toBe('code');
     });
 
     it('keeps everything when the root cannot be read', async () => {
@@ -264,19 +277,22 @@ describe('TODO.md projects', () => {
         );
     });
 
-    it('keeps the project name and refuses to delete it, but allows other settings', async () => {
+    it('lets a linked project be renamed, keeps the name on reread, refuses deleting it', async () => {
         await agent.post('/api/todo-md/rescan');
         const project = await Project.findOne({ where: { name: 'alpha' } });
 
         const rename = await agent
             .patch(`/api/project/${project.uid}`)
             .send({ name: 'Other' });
-        expect(rename.status).toBe(403);
+        expect(rename.status).toBe(200);
+        await agent.post('/api/todo-md/rescan');
+        await project.reload();
+        expect(project.name).toBe('Other');
         const del = await agent.delete(`/api/project/${project.uid}`);
         expect(del.status).toBe(403);
         const pin = await agent
             .patch(`/api/project/${project.uid}`)
-            .send({ name: 'alpha', pin_to_sidebar: true });
+            .send({ pin_to_sidebar: true });
         expect(pin.status).toBe(200);
     });
 
@@ -321,11 +337,13 @@ describe('TODO.md projects', () => {
             await agent.post('/api/todo-md/rescan');
             const project = await Project.findOne({ where: { name: 'alpha' } });
 
+            const code = await Tag.findOne({ where: { name: 'code' } });
             const res = await push([
                 upsert('create-1', 'task', 'devicetask0001', {
                     name: 'From the phone',
                     project_uid: project.uid,
                     priority: 2,
+                    tag_uids: [code.uid],
                 }),
             ]);
 
@@ -392,6 +410,311 @@ describe('TODO.md projects', () => {
         });
     });
 
+    describe('linking a file to a project', () => {
+        const fileOf = (res, folder) =>
+            res.body.files.find((f) => f.folder === folder);
+
+        it('lists the files and the project each one feeds', async () => {
+            fs.mkdirSync(path.join(root, 'gamma'));
+            fs.writeFileSync(path.join(root, 'gamma', 'TODO.md'), '## Next\n');
+            const alphaProject = await Project.findOne({
+                where: { name: 'alpha' },
+            });
+
+            const res = await agent.get('/api/todo-md/files');
+
+            expect(res.status).toBe(200);
+            expect(res.body.files.map((f) => f.folder)).toEqual([
+                'alpha',
+                'beta',
+                'gamma',
+            ]);
+            expect(fileOf(res, 'alpha')).toMatchObject({
+                path: 'alpha/TODO.md',
+                project_uid: alphaProject.uid,
+                project_name: 'alpha',
+            });
+            expect(fileOf(res, 'gamma').project_uid).toBeNull();
+        });
+
+        it('creates nothing for a file no project is linked to', async () => {
+            fs.mkdirSync(path.join(root, 'gamma'));
+            fs.writeFileSync(
+                path.join(root, 'gamma', 'TODO.md'),
+                '## Next\n- Waiting\n'
+            );
+
+            await agent.post('/api/todo-md/rescan');
+
+            expect(await Project.count({ where: { name: 'gamma' } })).toBe(0);
+            expect(await Task.count({ where: { name: 'Waiting' } })).toBe(0);
+        });
+
+        it('links a chosen file to an existing project and reads it at once', async () => {
+            fs.mkdirSync(path.join(root, 'gamma'));
+            fs.writeFileSync(
+                path.join(root, 'gamma', 'TODO.md'),
+                '## Next\n- From the file\n'
+            );
+            const project = await Project.create({
+                name: 'Launch',
+                user_id: user.id,
+            });
+            const marketing = await Task.create({
+                name: 'Write the press kit',
+                user_id: user.id,
+                project_id: project.id,
+            });
+
+            const res = await agent
+                .post(`/api/todo-md/projects/${project.uid}/link`)
+                .send({ folder: 'gamma' });
+
+            expect(res.status).toBe(200);
+            expect(res.body).toMatchObject({
+                project_uid: project.uid,
+                path: 'gamma/TODO.md',
+            });
+            await project.reload();
+            expect(project.name).toBe('Launch');
+            expect(project.source_type).toBe('todo_md');
+            expect(project.source_path).toBe('gamma/TODO.md');
+            const fromFile = await Task.findOne({
+                where: { name: 'From the file' },
+            });
+            expect(fromFile.project_id).toBe(project.id);
+            await marketing.reload();
+            expect(marketing.source_key).toBeNull();
+        });
+
+        it('refuses a file already linked, a linked project, and a bad folder', async () => {
+            const plain = await Project.create({
+                name: 'Plain',
+                user_id: user.id,
+            });
+            const linked = await Project.findOne({ where: { name: 'alpha' } });
+            const taken = await agent
+                .post(`/api/todo-md/projects/${plain.uid}/link`)
+                .send({ folder: 'alpha' });
+            expect(taken.status).toBe(409);
+            const twice = await agent
+                .post(`/api/todo-md/projects/${linked.uid}/link`)
+                .send({ folder: 'empty' });
+            expect(twice.status).toBe(409);
+            for (const folder of ['..', 'empty', 'a/b', '', 7]) {
+                const bad = await agent
+                    .post(`/api/todo-md/projects/${plain.uid}/link`)
+                    .send({ folder });
+                expect(bad.status).toBeGreaterThanOrEqual(400);
+                expect(bad.status).toBeLessThan(500);
+            }
+            await plain.reload();
+            expect(plain.source_type).toBeNull();
+        });
+
+        it('only lets the owning account list or link', async () => {
+            const other = await signIn('other2@example.com');
+            const plain = await Project.create({
+                name: 'Plain',
+                user_id: user.id,
+            });
+            expect((await other.agent.get('/api/todo-md/files')).status).toBe(
+                403
+            );
+            const res = await other.agent
+                .post(`/api/todo-md/projects/${plain.uid}/link`)
+                .send({ folder: 'empty' });
+            expect(res.status).toBe(403);
+        });
+
+        it('unlinks: tasks stay as ordinary ones, the file is untouched, relinking does not duplicate', async () => {
+            await agent.post('/api/todo-md/rescan');
+            const project = await Project.findOne({ where: { name: 'alpha' } });
+            const before = fs.readFileSync(alpha(), 'utf8');
+            const count = await Task.count({
+                where: { project_id: project.id },
+            });
+
+            const res = await agent.post(
+                `/api/todo-md/projects/${project.uid}/unlink`
+            );
+
+            expect(res.status).toBe(200);
+            await project.reload();
+            expect(project.source_type).toBeNull();
+            expect(project.source_path).toBeNull();
+            const tasks = await Task.findAll({
+                where: { project_id: project.id },
+            });
+            expect(tasks).toHaveLength(count);
+            expect(tasks.every((t) => t.source_key === null)).toBe(true);
+            expect(fs.readFileSync(alpha(), 'utf8')).toBe(before);
+
+            const edit = await agent
+                .patch(`/api/task/${tasks[0].uid}`)
+                .send({ name: 'Free again' });
+            expect(edit.status).toBe(200);
+            await tasks[0].reload();
+            await tasks[0].update({ name: 'Ship the thing' });
+
+            const again = await agent
+                .post(`/api/todo-md/projects/${project.uid}/link`)
+                .send({ folder: 'alpha' });
+            expect(again.status).toBe(200);
+            expect(
+                await Task.count({ where: { project_id: project.id } })
+            ).toBe(count);
+            expect(fs.readFileSync(alpha(), 'utf8')).toBe(before);
+        });
+    });
+
+    describe('a project holding file tasks and Cadence tasks', () => {
+        let project;
+        beforeEach(async () => {
+            await agent.post('/api/todo-md/rescan');
+            project = await Project.findOne({ where: { name: 'alpha' } });
+        });
+
+        it('keeps a task without the code tag out of the file, editable', async () => {
+            const before = fs.readFileSync(alpha(), 'utf8');
+
+            const res = await agent.post('/api/task').send({
+                name: 'Plan the campaign',
+                project_uid: project.uid,
+                tags: ['marketing'],
+            });
+
+            expect(res.status).toBe(201);
+            expect(fs.readFileSync(alpha(), 'utf8')).toBe(before);
+            const edit = await agent
+                .patch(`/api/task/${res.body.uid}`)
+                .send({ name: 'Plan the launch', priority: 2 });
+            expect(edit.status).toBe(200);
+            await agent.post('/api/todo-md/rescan');
+            const task = await Task.findOne({
+                where: { name: 'Plan the launch' },
+            });
+            expect(task).not.toBeNull();
+            expect(task.source_key).toBeNull();
+            const removed = await agent.delete(`/api/task/${res.body.uid}`);
+            expect(removed.status).toBe(200);
+        });
+
+        it('keeps a device task without the code tag out of the file', async () => {
+            const before = fs.readFileSync(alpha(), 'utf8');
+            const res = await agent.post('/api/v1/sync/push').send({
+                ops: [
+                    {
+                        op_id: 'plain-1',
+                        entity: 'task',
+                        uid: 'deviceplain001',
+                        action: 'upsert',
+                        fields: {
+                            name: { value: 'Call the printer', hlc: hlc(5000) },
+                            project_uid: {
+                                value: project.uid,
+                                hlc: hlc(5000),
+                            },
+                        },
+                    },
+                ],
+            });
+            expect(res.body.results[0].status).toBe('applied');
+            expect(fs.readFileSync(alpha(), 'utf8')).toBe(before);
+            const task = await Task.findOne({
+                where: { uid: 'deviceplain001' },
+            });
+            expect(task.source_key).toBeNull();
+        });
+
+        it('moves an existing task into Next once it gets the code tag', async () => {
+            const res = await agent.post('/api/task').send({
+                name: 'Fix the export',
+                note: 'seen on Android',
+                project_uid: project.uid,
+            });
+            await agent
+                .patch(`/api/task/${res.body.uid}`)
+                .send({ tags: [{ name: 'code' }] });
+
+            await watcher.scan();
+
+            expect(fs.readFileSync(alpha(), 'utf8')).toContain(
+                '- Fix bug\n- Fix the export\n  seen on Android\n'
+            );
+            const task = await Task.findOne({
+                where: { uid: res.body.uid },
+            });
+            expect(task.source_section).toBe('Next');
+            expect(task.source_key).not.toBeNull();
+            await agent.post('/api/todo-md/rescan');
+            expect(
+                await Task.count({ where: { name: 'Fix the export' } })
+            ).toBe(1);
+            expect(
+                fs.readFileSync(alpha(), 'utf8').split('- Fix the export\n')
+            ).toHaveLength(2);
+            watcher.stop();
+        });
+
+        it('leaves closed tasks and tasks of unlinked projects alone', async () => {
+            const plain = await Project.create({
+                name: 'Plain',
+                user_id: user.id,
+            });
+            const outside = await agent.post('/api/task').send({
+                name: 'Outside task',
+                project_uid: plain.uid,
+                tags: ['code'],
+            });
+            const closed = await agent.post('/api/task').send({
+                name: 'Closed task',
+                project_uid: project.uid,
+            });
+            await agent
+                .patch(`/api/task/${closed.body.uid}`)
+                .send({ tags: [{ name: 'code' }], status: 2 });
+            const before = fs.readFileSync(alpha(), 'utf8');
+
+            await watcher.scan();
+
+            expect(fs.readFileSync(alpha(), 'utf8')).toBe(before);
+            const task = await Task.findOne({
+                where: { uid: outside.body.uid },
+            });
+            expect(task.source_key).toBeNull();
+            watcher.stop();
+        });
+
+        it('puts the code tag back and keeps other tags on a mirrored task', async () => {
+            const [ship] = await tasksOf('alpha');
+            const {
+                updateTaskTags,
+            } = require('../../modules/tasks/operations/tags');
+            await updateTaskTags(ship, ['perso'], user.id);
+
+            await agent.post('/api/todo-md/rescan');
+
+            const again = await Task.findByPk(ship.id, { include: [Tag] });
+            expect(again.Tags.map((t) => t.name).sort()).toEqual([
+                'code',
+                'perso',
+            ]);
+        });
+
+        it('tells devices which tasks come from the file', async () => {
+            const res = await agent.post('/api/task').send({
+                name: 'Only here',
+                project_uid: project.uid,
+            });
+            const snap = await agent.get('/api/v1/sync/snapshot?entity=task');
+            const [ship] = await tasksOf('alpha');
+            const rows = new Map(snap.body.rows.map((r) => [r.uid, r]));
+            expect(rows.get(ship.uid).source_key).toBeTruthy();
+            expect(rows.get(res.body.uid).source_key).toBeNull();
+        });
+    });
+
     it('re-imports a changed file on the next poll, and only then', async () => {
         await watcher.scan({ force: true });
         expect(await Task.count()).toBe(7);
@@ -418,6 +741,7 @@ describe('TODO.md projects', () => {
                 agent.post('/api/task').send({
                     name: `Parallel ${name}`,
                     project_uid: project.uid,
+                    tags: ['code'],
                 })
             ),
             agent.post('/api/todo-md/rescan'),

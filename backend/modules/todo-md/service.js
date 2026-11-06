@@ -10,11 +10,15 @@ const {
 const { parseTodoMd } = require('./parser');
 const { appendTask, setItemDone, TodoEditError } = require('./writer');
 const { editTodoFile, readTodoText } = require('./safeFile');
+const { Op } = require('sequelize');
 const { logInfo, logError } = require('../../services/logService');
 
 const SOURCE_TYPE = 'todo_md';
 const DEFAULT_SECTION = 'Next';
-const STATUS = { NOT_STARTED: 0, DONE: 2, ARCHIVED: 3 };
+// The one tag that ties a task to the file: tasks from the file carry it, and
+// a task given it in a linked project is written to the file.
+const CODE_TAG = 'code';
+const STATUS = { NOT_STARTED: 0, DONE: 2, ARCHIVED: 3, CANCELLED: 5 };
 
 class TodoMdError extends Error {
     constructor(code, message, status = 400) {
@@ -41,6 +45,11 @@ const isGitProject = (project) =>
     isFileBackedProject(project) &&
     String(project.source_path || '').startsWith('git:');
 const isFileBackedTask = (task) => Boolean(task?.source_key);
+// What POST /task receives: tag names, or objects with a name.
+const asksForFile = (tags, section) =>
+    Boolean(section) ||
+    (Array.isArray(tags) &&
+        tags.some((tag) => (tag?.name ?? tag) === CODE_TAG));
 
 // Reads and writes of one project's file never overlap inside this process:
 // an import waits for the write of a task being added, so the row that write
@@ -80,17 +89,40 @@ function desiredStatus(item) {
     return item.done ? STATUS.DONE : STATUS.NOT_STARTED;
 }
 
-async function sectionTag(task, userId, name) {
-    try {
-        const { updateTaskTags } = require('../tasks/operations/tags');
-        await updateTaskTags(task, [name], userId);
-    } catch {
-        // A heading that cannot be a tag name (long, or with characters tags
-        // refuse) simply leaves the task without a section tag.
-    }
+// Adds the code tag, leaving the task's other tags in place.
+async function ensureCodeTag(task, userId) {
+    const tags = await task.getTags({ attributes: ['name'] });
+    const names = tags.map((tag) => tag.name);
+    if (names.includes(CODE_TAG)) return;
+    const { updateTaskTags } = require('../tasks/operations/tags');
+    await updateTaskTags(task, [...names, CODE_TAG], userId);
 }
 
-async function upsertProject(owner, sourcePath, name) {
+// Tasks of a project that have the code tag but no bullet yet.
+function untrackedCodeTasks(project, extraWhere = {}) {
+    const { Task, Tag } = models();
+    return Task.findAll({
+        where: {
+            project_id: project.id,
+            source_key: null,
+            parent_task_id: null,
+            ...extraWhere,
+        },
+        include: [
+            {
+                model: Tag,
+                where: { name: CODE_TAG },
+                attributes: [],
+                through: { attributes: [] },
+            },
+        ],
+        order: [['id', 'ASC']],
+    });
+}
+
+// A git repository makes its own project, named after the slug. A folder's
+// file only feeds the project someone linked it to.
+async function upsertRepoProject(owner, sourcePath, name) {
     const { Project } = models();
     const title = name.slice(0, 150);
     let project = await Project.findOne({
@@ -127,6 +159,7 @@ async function reconcile(project, owner, parsed, modifiedAt, adopt) {
         order: [['id', 'ASC']],
     });
     const owned = existing.filter((t) => t.source_key);
+    const untracked = await untrackedCodeTasks(project);
     const byKey = new Map();
     for (const task of owned) {
         if (!byKey.has(task.source_key)) byKey.set(task.source_key, task);
@@ -143,7 +176,9 @@ async function reconcile(project, owner, parsed, modifiedAt, adopt) {
     }
 
     const spare = new Map();
-    for (const task of owned) {
+    // Tasks already tagged code come last: a bullet with their name is theirs,
+    // so linking again (or a task typed on both sides) never duplicates.
+    for (const task of [...owned, ...untracked]) {
         if (used.has(task.id)) continue;
         if (!spare.has(task.name)) spare.set(task.name, []);
         spare.get(task.name).push(task);
@@ -180,12 +215,11 @@ async function reconcile(project, owner, parsed, modifiedAt, adopt) {
                         ? modifiedAt
                         : null,
             });
-            await sectionTag(created, owner.id, item.section);
+            await ensureCodeTag(created, owner.id);
             stats.created += 1;
             continue;
         }
 
-        const sectionChanged = task.source_section !== desired.source_section;
         const changes = {};
         for (const [field, value] of Object.entries(desired)) {
             if ((task.get(field) ?? null) !== value) changes[field] = value;
@@ -203,9 +237,7 @@ async function reconcile(project, owner, parsed, modifiedAt, adopt) {
             await task.save();
             stats.updated += 1;
         }
-        if (sectionChanged) {
-            await sectionTag(task, owner.id, item.section);
-        }
+        await ensureCodeTag(task, owner.id);
     }
 
     for (const task of owned) {
@@ -219,6 +251,16 @@ async function reconcile(project, owner, parsed, modifiedAt, adopt) {
     return stats;
 }
 
+function linkedProject(owner, sourcePath) {
+    return models().Project.findOne({
+        where: {
+            user_id: owner.id,
+            source_type: SOURCE_TYPE,
+            source_path: sourcePath,
+        },
+    });
+}
+
 // Reconciles the project `sourcePath` with the text of its file. The caller
 // holds the project's queue (`exclusive(sourcePath)`).
 async function importFile(
@@ -226,7 +268,16 @@ async function importFile(
     { sourcePath, name, text, modifiedAt },
     adopt
 ) {
-    const project = await upsertProject(owner, sourcePath, name);
+    const project = sourcePath.startsWith('git:')
+        ? await upsertRepoProject(owner, sourcePath, name)
+        : await linkedProject(owner, sourcePath);
+    if (!project) {
+        throw new TodoMdError(
+            'not_linked',
+            'No project is linked to this file',
+            404
+        );
+    }
     const stats = await reconcile(
         project,
         owner,
@@ -302,7 +353,16 @@ async function importAll() {
         removed: 0,
         errors: [],
     };
+    const linked = new Set(
+        (
+            await models().Project.findAll({
+                where: { user_id: owner.id, source_type: SOURCE_TYPE },
+                attributes: ['source_path'],
+            })
+        ).map((project) => project.source_path)
+    );
     for (const folder of await listProjectFolders(root)) {
+        if (!linked.has(sourcePathFor(folder))) continue;
         try {
             const result = await importFolder(root, owner, folder);
             summary.projects += 1;
@@ -414,6 +474,161 @@ async function setTaskDone(task, project, done) {
     }
 }
 
+// Open tasks that are not in the file yet, in a form this pass can write.
+const openUntracked = (project) =>
+    untrackedCodeTasks(project, {
+        status: {
+            [Op.notIn]: [STATUS.DONE, STATUS.ARCHIVED, STATUS.CANCELLED],
+        },
+        recurrence_type: 'none',
+    });
+
+// A task can get the code tag by any route (web, device, MCP): instead of a
+// hook on each, this pass writes every such task to `## Next` of its file.
+async function exportTagged() {
+    const root = await resolveRoot(settings().root);
+    const owner = root ? await ownerUser() : null;
+    if (!owner) return 0;
+    const { Project } = models();
+    const projects = await Project.findAll({
+        where: { user_id: owner.id, source_type: SOURCE_TYPE },
+    });
+    let written = 0;
+    for (const project of projects) {
+        if (isGitProject(project)) continue;
+        if ((await openUntracked(project)).length === 0) continue;
+        try {
+            const folder = folderFromSourcePath(project.source_path);
+            const file = await resolveTodoFile(root, folder);
+            await exclusive(sourcePathFor(folder), async () => {
+                // A bullet already holding the name adopts its task first.
+                await importFolderLocked(root, owner, folder);
+                for (const task of await openUntracked(project)) {
+                    const edited = await editTodoFile(file, (text) =>
+                        appendTask(text, DEFAULT_SECTION, task.name, {
+                            note: task.note,
+                        })
+                    );
+                    const added = addedItem(edited.text, DEFAULT_SECTION);
+                    await task.update({
+                        source_key: added.key,
+                        source_section: added.section.slice(0, 150),
+                    });
+                    written += 1;
+                }
+                await importFolderLocked(root, owner, folder);
+            });
+        } catch (error) {
+            logError(`TODO.md export failed for ${project.uid}`, error);
+        }
+    }
+    return written;
+}
+
+// The files under the root and the project each one feeds, if any.
+async function listFiles() {
+    const root = await resolveRoot(settings().root);
+    const owner = await ownerUser();
+    if (!root || !owner) return [];
+    const projects = await models().Project.findAll({
+        where: { user_id: owner.id, source_type: SOURCE_TYPE },
+        attributes: ['uid', 'name', 'source_path'],
+    });
+    const byPath = new Map(projects.map((p) => [p.source_path, p]));
+    const folders = await listProjectFolders(root);
+    return folders.map((folder) => {
+        const project = byPath.get(sourcePathFor(folder));
+        return {
+            folder,
+            path: sourcePathFor(folder),
+            project_uid: project?.uid ?? null,
+            project_name: project?.name ?? null,
+        };
+    });
+}
+
+async function ownedProject(uid) {
+    const owner = await ownerUser();
+    const project = owner
+        ? await models().Project.findOne({ where: { uid, user_id: owner.id } })
+        : null;
+    if (!project) {
+        throw new TodoMdError('not_found', 'Project not found', 404);
+    }
+    return { owner, project };
+}
+
+// Makes `folder`'s TODO.md feed an existing project, and reads it at once.
+async function linkProject(uid, folder) {
+    const { owner, project } = await ownedProject(uid);
+    if (isFileBackedProject(project)) {
+        throw new TodoMdError(
+            'already_linked',
+            'This project already follows a TODO.md file',
+            409
+        );
+    }
+    const root = await resolveRoot(settings().root);
+    if (!root) {
+        throw new TodoMdError(
+            'root_unavailable',
+            'The TODO root is not configured or not readable',
+            503
+        );
+    }
+    const sourcePath = sourcePathFor(folder);
+    try {
+        await resolveTodoFile(root, folder);
+        return await exclusive(sourcePath, async () => {
+            if (await linkedProject(owner, sourcePath)) {
+                throw new TodoMdError(
+                    'file_taken',
+                    'Another project already follows this file',
+                    409
+                );
+            }
+            await project.update({
+                source_type: SOURCE_TYPE,
+                source_path: sourcePath,
+            });
+            await importFolderLocked(root, owner, folder);
+            return { project_uid: project.uid, path: sourcePath };
+        });
+    } catch (error) {
+        throw asClientError(error);
+    }
+}
+
+// The project stops following its file. Its tasks stay as ordinary tasks, and
+// the file is not touched.
+async function unlinkProject(uid) {
+    const { project } = await ownedProject(uid);
+    if (!isFileBackedProject(project)) {
+        throw new TodoMdError('not_linked', 'Not a TODO.md project', 409);
+    }
+    if (isGitProject(project)) {
+        throw new TodoMdError(
+            'repo_project',
+            'A repository project follows TUDUDI_TODO_REPOS',
+            409
+        );
+    }
+    return exclusive(project.source_path, async () => {
+        const { Task } = models();
+        const tasks = await Task.findAll({
+            where: {
+                project_id: project.id,
+                source_key: { [Op.ne]: null },
+            },
+        });
+        for (const task of tasks) {
+            await task.update({ source_key: null, source_section: null });
+        }
+        await project.update({ source_type: null, source_path: null });
+        return { project_uid: project.uid };
+    });
+}
+
 async function status({ includeRepos = false } = {}) {
     const result = { enabled: isEnabled(), last_scan: lastScan };
     result.repos = includeRepos ? await require('./repos').statuses() : [];
@@ -423,7 +638,9 @@ async function status({ includeRepos = false } = {}) {
 module.exports = {
     SOURCE_TYPE,
     DEFAULT_SECTION,
+    CODE_TAG,
     TodoMdError,
+    asksForFile,
     isEnabled,
     hasRoot,
     isFileBackedProject,
@@ -439,5 +656,9 @@ module.exports = {
     asClientError,
     createTask,
     setTaskDone,
+    exportTagged,
+    listFiles,
+    linkProject,
+    unlinkProject,
     status,
 };

@@ -20,6 +20,28 @@ data class TodoMdRepo(
     val pending: List<TodoMdPendingEdit>,
 )
 
+/** Un TODO.md du dossier du serveur et le projet qui le suit (`GET /api/todo-md/files`). */
+data class TodoMdFile(val folder: String, val path: String, val projectUid: String?, val projectName: String?)
+
+object TodoMdFiles {
+    fun parse(body: JsonObject): List<TodoMdFile> =
+        (body["files"] as? JsonArray).orEmpty().mapNotNull { entry ->
+            val file = entry as? JsonObject ?: return@mapNotNull null
+            val folder = (file["folder"] as? JsonPrimitive)?.contentOrNull ?: return@mapNotNull null
+            TodoMdFile(
+                folder = folder,
+                path = (file["path"] as? JsonPrimitive)?.contentOrNull ?: folder,
+                projectUid = (file["project_uid"] as? JsonPrimitive)?.contentOrNull,
+                projectName = (file["project_name"] as? JsonPrimitive)?.contentOrNull,
+            )
+        }
+
+    fun currentFolder(files: List<TodoMdFile>, projectUid: String): String? = files.firstOrNull { it.projectUid == projectUid }?.folder
+
+    /** Un fichier suivi par un autre projet se détache d'abord là-bas. */
+    fun selectable(file: TodoMdFile, projectUid: String): Boolean = file.projectUid == null || file.projectUid == projectUid
+}
+
 /** Ligne d'état sous l'en-tête du projet, dans l'ordre de priorité du web (`TodoMdRepoSync.tsx`). */
 sealed interface TodoMdLine {
     /** « Réessayer » et « Abandonner » ne s'offrent que s'il reste des modifications en attente. */

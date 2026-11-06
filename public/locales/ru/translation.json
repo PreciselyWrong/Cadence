@@ -5160,13 +5160,17 @@
     "badge": "TODO.md",
     "badgeTitle": "Из файла TODO.md. Здесь только для чтения: редактируйте файл.",
     "readOnly": "Это из файла TODO.md. Редактируйте файл.",
-    "projectInfo": "Отражает {{path}}. Добавленные задачи записываются в файл, а отметка выполнения обновляет его.",
+    "projectInfo": "Следует за {{path}}. Задачи с тегом code записываются в файл, остальные остаются в Cadence.",
     "reread": "Перечитать файлы",
     "rereading": "Перечитываем...",
     "rereadDone": "Файлы TODO.md перечитаны.",
     "rereadFailed": "Не удалось перечитать файлы TODO.md.",
     "addTo": "Добавить в",
-    "addFailed": "Не удалось записать в файл TODO.md."
+    "addFailed": "Не удалось записать в файл TODO.md.",
+    "fileLabel": "Файл TODO.md",
+    "fileNone": "Нет",
+    "addToCadence": "Только Cadence",
+    "linkFailed": "Не удалось изменить файл TODO.md."
   },
   "cadenceHabits": {
     "copyName": "{{name}} (копия)",

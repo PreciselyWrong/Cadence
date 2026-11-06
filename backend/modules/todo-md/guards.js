@@ -62,21 +62,26 @@ function taskGuard(onToggle) {
     };
 }
 
-// A file-backed project keeps its name (the folder's) and cannot be deleted
-// or completed with its tasks; its area, colour, pin and tags stay editable.
+// A file-backed project cannot be deleted or completed with its tasks: unlink
+// it first. Only a repository project keeps its name (the slug's).
 async function projectGuard(req, res, next) {
     try {
         const { Project } = require('../../models');
         const project = await Project.findOne({
             where: { uid: req.params.uid },
-            attributes: ['id', 'name', 'source_type'],
+            attributes: ['id', 'name', 'source_type', 'source_path'],
         });
         if (!project || !service.isFileBackedProject(project)) return next();
         const renames =
             req.method === 'PATCH' &&
             typeof req.body?.name === 'string' &&
             req.body.name !== project.name;
-        if (req.method === 'PATCH' && !renames) return next();
+        if (
+            req.method === 'PATCH' &&
+            !(renames && service.isGitProject(project))
+        ) {
+            return next();
+        }
         return res.status(403).json(READ_ONLY);
     } catch (error) {
         return next(error);

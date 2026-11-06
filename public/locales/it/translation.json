@@ -5125,13 +5125,17 @@
     "badge": "TODO.md",
     "badgeTitle": "Da un file TODO.md. Sola lettura qui: modifica invece il file.",
     "readOnly": "Questo proviene da un file TODO.md. Modifica invece il file.",
-    "projectInfo": "Riflette {{path}}. Le attività che aggiungi vengono scritte nel file, e spuntarne una lo aggiorna.",
+    "projectInfo": "Segue {{path}}. Le attività con l'etichetta code vengono scritte nel file; le altre restano in Cadence.",
     "reread": "Ricarica i file",
     "rereading": "Ricaricamento...",
     "rereadDone": "File TODO.md ricaricati.",
     "rereadFailed": "Impossibile ricaricare i file TODO.md.",
     "addTo": "Aggiungi a",
-    "addFailed": "Impossibile scrivere nel file TODO.md."
+    "addFailed": "Impossibile scrivere nel file TODO.md.",
+    "fileLabel": "File TODO.md",
+    "fileNone": "Nessuno",
+    "addToCadence": "Solo Cadence",
+    "linkFailed": "Impossibile cambiare il file TODO.md."
   },
   "cadenceHabits": {
     "copyName": "{{name}} (copia)",

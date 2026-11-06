@@ -5118,13 +5118,17 @@
     "badge": "TODO.md",
     "badgeTitle": "От файл TODO.md. Тук е само за четене: редактирайте файла.",
     "readOnly": "Това идва от файл TODO.md. Редактирайте файла.",
-    "projectInfo": "Отразява {{path}}. Добавените задачи се записват във файла, а отметването на една от тях го обновява.",
+    "projectInfo": "Следва {{path}}. Задачите с етикет code се записват във файла, а останалите остават в Cadence.",
     "reread": "Презареди файловете",
     "rereading": "Презареждане...",
     "rereadDone": "Файловете TODO.md са презаредени.",
     "rereadFailed": "Файловете TODO.md не могат да бъдат презаредени.",
     "addTo": "Добави към",
-    "addFailed": "Не може да се записва във файла TODO.md."
+    "addFailed": "Не може да се записва във файла TODO.md.",
+    "fileLabel": "Файл TODO.md",
+    "fileNone": "Няма",
+    "addToCadence": "Само Cadence",
+    "linkFailed": "Файлът TODO.md не можа да бъде сменен."
   },
   "cadenceHabits": {
     "copyName": "{{name}} (копие)",

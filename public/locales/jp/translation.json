@@ -5118,13 +5118,17 @@
     "badge": "TODO.md",
     "badgeTitle": "TODO.mdファイル由来。ここでは読み取り専用です。ファイルを編集してください。",
     "readOnly": "これはTODO.mdファイル由来です。代わりにファイルを編集してください。",
-    "projectInfo": "{{path}}を反映します。追加したタスクはファイルに書き込まれ、完了にするとファイルも更新されます。",
+    "projectInfo": "{{path}} に連動します。code タグのタスクはファイルに書き込まれ、それ以外は Cadence に残ります。",
     "reread": "ファイルを再読み込み",
     "rereading": "再読み込み中...",
     "rereadDone": "TODO.mdファイルを再読み込みしました。",
     "rereadFailed": "TODO.mdファイルを再読み込みできませんでした。",
     "addTo": "追加先:",
-    "addFailed": "TODO.mdファイルに書き込めませんでした。"
+    "addFailed": "TODO.mdファイルに書き込めませんでした。",
+    "fileLabel": "TODO.md ファイル",
+    "fileNone": "なし",
+    "addToCadence": "Cadence のみ",
+    "linkFailed": "TODO.md ファイルを変更できませんでした。"
   },
   "cadenceHabits": {
     "copyName": "{{name}} (copy)",

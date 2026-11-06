@@ -64,7 +64,7 @@ const ProjectTasksSection: React.FC<ProjectTasksSectionProps> = ({
                             placeholder={t('tasks.addTaskInline', '+ Add task')}
                         />
                     </div>
-                    {todoSection && onTodoSectionChange && (
+                    {todoSection !== undefined && onTodoSectionChange && (
                         <label className="flex flex-shrink-0 items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
                             {t('todoMd.addTo', 'Add to')}
                             <select
@@ -75,6 +75,9 @@ const ProjectTasksSection: React.FC<ProjectTasksSectionProps> = ({
                                 className="rounded-md border border-gray-200 bg-white px-1.5 py-1 text-sm text-gray-800 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200"
                                 data-testid="todo-md-section"
                             >
+                                <option value="">
+                                    {t('todoMd.addToCadence', 'Cadence only')}
+                                </option>
                                 {TODO_MD_SECTIONS.map((name) => (
                                     <option key={name} value={name}>
                                         {name}

@@ -188,4 +188,10 @@
     <string name="outline_new_sibling">Nouvelle tâche</string>
     <string name="todo_md_retry">Réessayer</string>
     <string name="todo_md_discard">Abandonner</string>
+    <string name="todo_md_file_title">Fichier TODO.md</string>
+    <string name="todo_md_file_none">Aucun</string>
+    <string name="todo_md_file_taken">suivi par %1$s</string>
+    <string name="todo_md_file_failed">Impossible de changer le fichier TODO.md.</string>
+    <string name="todo_md_file_hint">Les tâches avec l\'étiquette code sont écrites dans le fichier ; les autres restent dans Cadence.</string>
+    <string name="todo_md_file_close">Fermer</string>
 </resources>

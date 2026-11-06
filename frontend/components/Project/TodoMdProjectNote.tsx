@@ -54,7 +54,7 @@ const TodoMdProjectNote: React.FC<TodoMdProjectNoteProps> = ({
                       )
                     : t(
                           'todoMd.projectInfo',
-                          'Mirrors {{path}}. Tasks you add are written to the file, and checking one off updates it.',
+                          'Follows {{path}}. Tasks tagged code are written to the file; the others stay in Cadence.',
                           { path }
                       )}
             </span>

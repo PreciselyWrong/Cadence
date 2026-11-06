@@ -60,7 +60,9 @@ const ENTITIES = {
         ],
         // Set when the server (or any device) has already notified the
         // reminder; a device must not ring one that was sent after it.
-        serverFields: ['reminder_sent_at'],
+        // The key of a task mirrored from a TODO.md bullet: only its check box
+        // can change on a device.
+        serverFields: ['reminder_sent_at', 'source_key'],
         refs: {
             project_uid: { column: 'project_id', entity: 'project' },
             area_uid: { column: 'area_id', entity: 'area' },
@@ -143,8 +145,7 @@ const ENTITIES = {
             'next_task_uid',
             'completed_at',
         ],
-        // 'todo_md' for a project mirrored from a TODO.md file: its tasks
-        // are read-only on the device.
+        // 'todo_md' for a project that follows a TODO.md file.
         serverFields: ['source_type'],
         refs: {
             area_uid: { column: 'area_id', entity: 'area' },

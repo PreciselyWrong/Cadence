@@ -1744,6 +1744,73 @@ describe('MCP Tools Integration', () => {
             });
         });
 
+        describe('a task mirrored from a TODO.md', () => {
+            const fs = require('fs');
+            const os = require('os');
+            const path = require('path');
+            const service = require('../../../modules/todo-md/service');
+            let root;
+            let file;
+            let task;
+
+            beforeEach(async () => {
+                root = fs.realpathSync(
+                    fs.mkdtempSync(path.join(os.tmpdir(), 'todo-mcp-'))
+                );
+                fs.mkdirSync(path.join(root, 'demo'));
+                file = path.join(root, 'demo', 'TODO.md');
+                fs.writeFileSync(file, '## Next\n- Ship it\n');
+                process.env.TUDUDI_TODO_ROOT = root;
+                process.env.TUDUDI_TODO_USER_EMAIL = user.email;
+                await Project.create({
+                    name: 'Demo',
+                    user_id: user.id,
+                    source_type: 'todo_md',
+                    source_path: 'demo/TODO.md',
+                });
+                await service.importAll();
+                task = await Task.findOne({ where: { name: 'Ship it' } });
+            });
+
+            afterEach(() => {
+                delete process.env.TUDUDI_TODO_ROOT;
+                delete process.env.TUDUDI_TODO_USER_EMAIL;
+                fs.rmSync(root, { recursive: true, force: true });
+            });
+
+            it('writes complete_task to the file, and reopening too', async () => {
+                const done = await callMcpTool(apiTokenValue, 'complete_task', {
+                    id: task.uid,
+                });
+                expect(getToolContent(done).content.task.status).toBe(2);
+                expect(fs.readFileSync(file, 'utf8')).toContain(
+                    '- [x] Ship it\n'
+                );
+
+                const open = await callMcpTool(apiTokenValue, 'complete_task', {
+                    id: task.uid,
+                });
+                expect(getToolContent(open).content.task.status).toBe(0);
+                expect(fs.readFileSync(file, 'utf8')).toContain(
+                    '- [ ] Ship it\n'
+                );
+            });
+
+            it('refuses to edit or delete it', async () => {
+                const before = fs.readFileSync(file, 'utf8');
+                for (const [tool, args] of [
+                    ['update_task', { id: task.uid, name: 'Other' }],
+                    ['delete_task', { id: task.uid }],
+                ]) {
+                    const res = await callMcpTool(apiTokenValue, tool, args);
+                    expect(getToolContent(res).isError).toBe(true);
+                }
+                await task.reload();
+                expect(task.name).toBe('Ship it');
+                expect(fs.readFileSync(file, 'utf8')).toBe(before);
+            });
+        });
+
         describe('complete_task', () => {
             it('should mark task as completed', async () => {
                 const task = await Task.create({

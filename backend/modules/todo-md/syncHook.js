@@ -14,16 +14,19 @@ const plainFields = (fields) =>
 
 // Sync pushes that touch TODO.md-backed rows. Returns the op's result when
 // it is handled here, or null when the op is none of this module's business.
-//   - a task created in a file-backed project is written to the file;
+//   - a task created with the code tag in a file-backed project is written
+//     to the file (without it, the task stays in Cadence);
 //   - checking or unchecking a mirrored task is written to the file;
 //   - any other edit or delete of a mirrored task or project is refused.
 async function intercept(userId, op, row) {
-    const { Task, Project } = models();
+    const { Project, Tag } = models();
 
     if (op.entity === 'project') {
         if (!service.isFileBackedProject(row)) return null;
         if (op.action === 'delete') return rejected('read_only');
-        return op.fields && 'name' in op.fields ? rejected('read_only') : null;
+        const renames =
+            service.isGitProject(row) && op.fields && 'name' in op.fields;
+        return renames ? rejected('read_only') : null;
     }
     if (op.entity !== 'task') return null;
 
@@ -53,6 +56,11 @@ async function intercept(userId, op, row) {
     if (!service.isFileBackedProject(project)) return null;
 
     const values = plainFields(op.fields);
+    const codeTag = await Tag.findOne({
+        where: { user_id: userId, name: service.CODE_TAG },
+        attributes: ['uid'],
+    });
+    if (!codeTag || !values.tag_uids?.includes(codeTag.uid)) return null;
     if (typeof values.name !== 'string' || values.name.trim() === '') {
         return rejected('invalid_value');
     }

@@ -24,7 +24,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         BriefEntity::class,
         EveningEntity::class,
     ],
-    version = 13,
+    version = 14,
     exportSchema = true,
 )
 abstract class TududiDatabase : RoomDatabase() {
@@ -192,6 +192,13 @@ internal val MIGRATION_11_12 = object : Migration(11, 12) {
 }
 
 /** Table du bilan du soir, pour la lecture hors ligne. Rien d'existant n'est touché : le curseur reste. */
+/** Le verrou passe du projet à la tâche : un projet peut mêler des lignes de TODO.md et des tâches de Cadence. */
+internal val MIGRATION_13_14 = object : Migration(13, 14) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE tasks ADD COLUMN sourceKey TEXT")
+    }
+}
+
 internal val MIGRATION_12_13 = object : Migration(12, 13) {
     override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL(

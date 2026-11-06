@@ -182,7 +182,8 @@ const ProjectDetails: React.FC = () => {
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [isEditPanelOpen, setIsEditPanelOpen] = useState(false);
     // TODO.md projects: the section a new task is written under.
-    const [todoSection, setTodoSection] = useState<string>('Next');
+    // Empty: the task stays in Cadence, whatever file the project follows.
+    const [todoSection, setTodoSection] = useState<string>('');
     const sortOptions = useMemo(
         () => [
             {
@@ -439,7 +440,9 @@ const ProjectDetails: React.FC = () => {
             project_uid: project.uid,
             status: 'not_started',
             completed_at: null,
-            ...(isTodoMdProject(project) ? { todo_section: todoSection } : {}),
+            ...(isTodoMdProject(project) && todoSection
+                ? { todo_section: todoSection }
+                : {}),
         } as Task);
         setTasks((prev) => [created, ...prev]);
     };
@@ -451,13 +454,17 @@ const ProjectDetails: React.FC = () => {
         setTasks(fresh.tasks || fresh.Tasks || []);
     };
 
-    // TODO.md projects: read the files again, then show what they now hold.
-    const handleRereadTodoMd = async () => {
-        await rescanTodoMd();
+    const reloadProject = async () => {
         if (!uidSlug) return;
         const fresh = await fetchProjectBySlug(uidSlug);
         setProject(fresh);
         setTasks(fresh.tasks || fresh.Tasks || []);
+    };
+
+    // TODO.md projects: read the files again, then show what they now hold.
+    const handleRereadTodoMd = async () => {
+        await rescanTodoMd();
+        await reloadProject();
     };
 
     const handleTaskDelete = async (taskUid: string | undefined) => {
@@ -1293,6 +1300,7 @@ const ProjectDetails: React.FC = () => {
                                                     )
                                                 }
                                                 onOpenNote={setPreviewNote}
+                                                onTodoMdChanged={reloadProject}
                                             />
                                             {attachmentsApi && (
                                                 <ProjectAttachmentsWidget

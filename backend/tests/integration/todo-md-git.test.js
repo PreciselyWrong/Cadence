@@ -5,7 +5,7 @@ const crypto = require('crypto');
 const { execFileSync } = require('child_process');
 const request = require('supertest');
 const app = require('../../app');
-const { Task, Project } = require('../../models');
+const { Task, Project, Tag } = require('../../models');
 const { createTestUser } = require('../helpers/testUtils');
 
 // A TODO.md that lives in a git repository: a local bare repository stands
@@ -166,7 +166,7 @@ describe('TODO.md projects from a git repository', () => {
 
         const added = await agent
             .post('/api/task')
-            .send({ name: 'From Cadence', project_uid: uid });
+            .send({ name: 'From Cadence', project_uid: uid, tags: ['code'] });
         expect(added.status).toBe(201);
         expect(remoteText()).toBe(
             TODO.replace('- Fix bug\n', '- Fix bug\n- From Cadence\n')
@@ -329,7 +329,7 @@ describe('TODO.md projects from a git repository', () => {
 
         const res = await agent
             .post('/api/task')
-            .send({ name: 'Later', project_uid: uid });
+            .send({ name: 'Later', project_uid: uid, tags: ['code'] });
         expect(res.status).toBe(503);
         expect(await taskNamed('Later')).toBeNull();
 
@@ -347,6 +347,7 @@ describe('TODO.md projects from a git repository', () => {
             value,
             hlc: '0000000005000-0000-devA',
         });
+        const code = await Tag.findOne({ where: { name: 'code' } });
 
         const res = await agent.post('/api/v1/sync/push').send({
             ops: [
@@ -358,6 +359,7 @@ describe('TODO.md projects from a git repository', () => {
                     fields: {
                         name: field('From the phone'),
                         project_uid: field(uid),
+                        tag_uids: field([code.uid]),
                     },
                 },
                 {

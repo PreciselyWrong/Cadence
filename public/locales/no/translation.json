@@ -5123,13 +5123,17 @@
     "badge": "TODO.md",
     "badgeTitle": "Fra en TODO.md-fil. Skrivebeskyttet her: rediger filen i stedet.",
     "readOnly": "Dette kommer fra en TODO.md-fil. Rediger filen i stedet.",
-    "projectInfo": "Speiler {{path}}. Oppgaver du legger til, skrives til filen, og avkrysning oppdaterer den.",
+    "projectInfo": "Følger {{path}}. Oppgaver med taggen code skrives til filen; de andre blir i Cadence.",
     "reread": "Last inn filene på nytt",
     "rereading": "Laster inn på nytt...",
     "rereadDone": "TODO.md-filene er lastet inn på nytt.",
     "rereadFailed": "Kunne ikke laste TODO.md-filene på nytt.",
     "addTo": "Legg til i",
-    "addFailed": "Kunne ikke skrive til TODO.md-filen."
+    "addFailed": "Kunne ikke skrive til TODO.md-filen.",
+    "fileLabel": "TODO.md-fil",
+    "fileNone": "Ingen",
+    "addToCadence": "Bare Cadence",
+    "linkFailed": "Kunne ikke endre TODO.md-filen."
   },
   "cadenceHabits": {
     "copyName": "{{name}} (kopi)",

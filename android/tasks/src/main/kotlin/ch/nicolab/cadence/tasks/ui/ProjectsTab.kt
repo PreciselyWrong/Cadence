@@ -26,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.ViewList
 import androidx.compose.material.icons.filled.PushPin
+import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.AccountTree
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.ChevronRight
@@ -352,6 +353,11 @@ internal fun ProjectTasksPane(
     val headerColor = projectRailColor(project?.color)?.let(::Color) ?: cadence.primary
     var editingStatus by remember { mutableStateOf(false) }
     var menuOpen by remember { mutableStateOf(false) }
+    var choosingTodoMd by remember { mutableStateOf(false) }
+    val todoMdFiles = rememberTodoMdFiles(projectUid)
+    if (choosingTodoMd) {
+        TodoMdFileDialog(projectUid, todoMdFiles, onChanged = viewModel::requestSync, onDismiss = { choosingTodoMd = false })
+    }
     val context = LocalContext.current
     val layouts = remember(context) { LayoutStore(context) }
     var outline by rememberSaveable { mutableStateOf(layouts.isOn(LayoutStore.OUTLINE)) }
@@ -416,6 +422,16 @@ internal fun ProjectTasksPane(
                                     viewModel.setProjectPinned(project.uid, !project.pinToSidebar)
                                 },
                             )
+                            if (todoMdFiles.value != null) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.todo_md_file_title)) },
+                                    leadingIcon = { Icon(Icons.Outlined.Description, contentDescription = null) },
+                                    onClick = {
+                                        menuOpen = false
+                                        choosingTodoMd = true
+                                    },
+                                )
+                            }
                         }
                     }
                 }

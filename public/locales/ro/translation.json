@@ -5129,13 +5129,17 @@
     "badge": "TODO.md",
     "badgeTitle": "Dintr-un fișier TODO.md. Doar pentru citire aici: editează fișierul.",
     "readOnly": "Aceasta provine dintr-un fișier TODO.md. Editează fișierul.",
-    "projectInfo": "Reflectă {{path}}. Sarcinile adăugate sunt scrise în fișier, iar bifarea uneia îl actualizează.",
+    "projectInfo": "Urmărește {{path}}. Sarcinile cu eticheta code sunt scrise în fișier; celelalte rămân în Cadence.",
     "reread": "Reîncarcă fișierele",
     "rereading": "Se reîncarcă...",
     "rereadDone": "Fișierele TODO.md au fost reîncărcate.",
     "rereadFailed": "Fișierele TODO.md nu au putut fi reîncărcate.",
     "addTo": "Adaugă în",
-    "addFailed": "Nu s-a putut scrie în fișierul TODO.md."
+    "addFailed": "Nu s-a putut scrie în fișierul TODO.md.",
+    "fileLabel": "Fișier TODO.md",
+    "fileNone": "Niciunul",
+    "addToCadence": "Doar Cadence",
+    "linkFailed": "Fișierul TODO.md nu a putut fi schimbat."
   },
   "cadenceHabits": {
     "copyName": "{{name}} (copie)",

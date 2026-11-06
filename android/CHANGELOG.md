@@ -1,3 +1,9 @@
+## [1.11.3] — 6 novembre 2026
+
+### Nouveautés
+- Menu d'un projet : « Fichier TODO.md » choisit le fichier que ce projet suit, ou aucun.
+- Un même projet peut mêler les tâches du fichier (étiquette `code`) et d'autres tâches, modifiables normalement.
+
 ## [1.11.2] — 6 novembre 2026
 
 ### Nouveautés

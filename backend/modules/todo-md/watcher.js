@@ -78,11 +78,12 @@ function watchFolders(root, folders) {
 async function scan({ force = false } = {}) {
     const root = await resolveRoot(service.settings().root);
     if (!root) return null;
+    const { withJobLock } = require('../../services/jobLock');
+    await withJobLock('todo-md-export', () => service.exportTagged());
     const after = await currentSignatures(root);
     watchFolders(root, [...after.keys()]);
     if (!force && !changed(signatures, after)) return null;
 
-    const { withJobLock } = require('../../services/jobLock');
     const outcome = await withJobLock('todo-md-import', () =>
         service.importAll()
     );
@@ -135,6 +136,7 @@ async function rescanNow() {
         const root = await resolveRoot(service.settings().root);
         if (root) signatures = await currentSignatures(root);
         try {
+            await service.exportTagged();
             summaries.push(await service.importAll());
         } catch (error) {
             failure = error;

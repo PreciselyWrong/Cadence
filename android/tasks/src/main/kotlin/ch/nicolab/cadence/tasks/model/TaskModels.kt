@@ -57,7 +57,7 @@ data class TaskItem(
     val repetition: Repetition = Repetition(RepeatType.NONE),
     /** Champs serveur que l'appareil ne sait pas modifier, lus tels quels (clé serveur, valeur en texte). */
     val extras: Map<String, String> = emptyMap(),
-    /** Le projet de la tâche reflète un fichier TODO.md du serveur : seule la case se modifie ici. */
+    /** La tâche vient d'une ligne d'un TODO.md du serveur : seule la case se modifie ici. */
     val fileBacked: Boolean = false,
     /** Entonnoir (docs/34-review.md) : en vue depuis cet instant ; jamais une priorité ni une épingle. */
     val inViewAt: Instant? = null,

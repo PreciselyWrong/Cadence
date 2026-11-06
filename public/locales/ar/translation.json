@@ -5154,13 +5154,17 @@
     "badge": "TODO.md",
     "badgeTitle": "من ملف TODO.md. للقراءة فقط هنا: عدّل الملف بدلاً من ذلك.",
     "readOnly": "هذا آتٍ من ملف TODO.md. عدّل الملف بدلاً من ذلك.",
-    "projectInfo": "يعكس {{path}}. تُكتب المهام التي تضيفها في الملف، وتحديدها كمنجزة يحدّثه.",
+    "projectInfo": "يتبع {{path}}. تُكتب المهام ذات الوسم code في الملف، وتبقى المهام الأخرى في Cadence.",
     "reread": "إعادة تحميل الملفات",
     "rereading": "جارٍ إعادة التحميل...",
     "rereadDone": "تمت إعادة تحميل ملفات TODO.md.",
     "rereadFailed": "تعذرت إعادة تحميل ملفات TODO.md.",
     "addTo": "إضافة إلى",
-    "addFailed": "تعذرت الكتابة في ملف TODO.md."
+    "addFailed": "تعذرت الكتابة في ملف TODO.md.",
+    "fileLabel": "ملف TODO.md",
+    "fileNone": "بدون",
+    "addToCadence": "Cadence فقط",
+    "linkFailed": "تعذر تغيير ملف TODO.md."
   },
   "cadenceHabits": {
     "copyName": "{{name}} (نسخة)",

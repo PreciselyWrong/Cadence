@@ -31,6 +31,19 @@ class TodoMdClientTest {
     }
 
     @Test
+    fun `lister, rattacher et détacher passent par les routes du serveur`() = runTest {
+        val listed = client { """{"files":[{"folder":"a b","path":"a b/TODO.md"}]}""" }.files().getOrThrow()
+        assertEquals("a b", listed.single().folder)
+        assertTrue(client { "{}" }.link("p 1", "a b").isSuccess)
+        assertTrue(client { "{}" }.unlink("p 1").isSuccess)
+
+        assertEquals(
+            listOf("GET /api/v1/todo-md/files", "POST /api/v1/todo-md/projects/p%201/link", "POST /api/v1/todo-md/projects/p%201/unlink"),
+            calls,
+        )
+    }
+
+    @Test
     fun `hors ligne, l'état est un échec et non un plantage`() = runTest {
         val offline = TodoMdClient { _, _, _, _ -> throw IOException("hors ligne") }
         assertTrue(offline.status().isFailure)

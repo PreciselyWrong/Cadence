@@ -5160,13 +5160,17 @@
     "badge": "TODO.md",
     "badgeTitle": "Iz datoteke TODO.md. Tu samo za branje: uredite datoteko.",
     "readOnly": "To prihaja iz datoteke TODO.md. Uredite datoteko.",
-    "projectInfo": "Zrcali {{path}}. Dodane naloge se zapišejo v datoteko, označevanje opravljenega pa jo posodobi.",
+    "projectInfo": "Sledi {{path}}. Opravila z oznako code se zapišejo v datoteko, druga ostanejo v Cadence.",
     "reread": "Ponovno naloži datoteke",
     "rereading": "Ponovno nalaganje...",
     "rereadDone": "Datoteke TODO.md so ponovno naložene.",
     "rereadFailed": "Datotek TODO.md ni bilo mogoče ponovno naložiti.",
     "addTo": "Dodaj v",
-    "addFailed": "V datoteko TODO.md ni bilo mogoče pisati."
+    "addFailed": "V datoteko TODO.md ni bilo mogoče pisati.",
+    "fileLabel": "Datoteka TODO.md",
+    "fileNone": "Brez",
+    "addToCadence": "Samo Cadence",
+    "linkFailed": "Datoteke TODO.md ni bilo mogoče spremeniti."
   },
   "cadenceHabits": {
     "copyName": "{{name}} (kopija)",

@@ -495,3 +495,9 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Problème** : la section « Ce soir » ne contenait pas que des tâches du soir, et « 525 min de trop » comparait tâches et événements à la seule capacité du soir.
 - **Décision** : le titre devient « Priorités du jour » (le bilan du soir garde « Ce soir », clé `dailyBrief.evening.tonightTitle`) ; le libellé dit « Surcharge : 9 h 15 de tâches pour 1 h 30 de libre ». Le critère « long terme » disparaît des réglages.
 - **Android à reprendre** : rien, fait dans la même étape.
+
+### 2026-11-06 — Choisir le TODO.md d'un projet, projets mixtes
+
+- **Problème** : chaque dossier créait son propre projet, verrouillé en entier : impossible de suivre un fichier dans un projet existant, ni d'y garder du marketing à côté.
+- **Décision** : « Fichier TODO.md » dans « Informations du projet » (liste des fichiers, « Aucun » pour détacher, celui d'un autre projet grisé). Le menu « Ajouter à » du champ d'ajout rapide part sur « Cadence seulement » ; Now, Next et Ideas écrivent dans le fichier. Le verrou et le badge sont par tâche. Un projet lié se renomme.
+- **Android à reprendre** : fait dans la même étape, dans le menu du projet ; le champ d'ajout reste sans section (l'étiquette `code` décide).

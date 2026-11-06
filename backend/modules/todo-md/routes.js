@@ -58,6 +58,24 @@ router.post(
     ownerOnly('rescan', () => watcher.rescanNow())
 );
 
+// The TODO.md files under the root, and which project follows each.
+router.get(
+    '/todo-md/files',
+    ownerOnly('files', async () => ({ files: await service.listFiles() }))
+);
+
+router.post(
+    '/todo-md/projects/:uid/link',
+    ownerOnly('link', (req) =>
+        service.linkProject(req.params.uid, req.body?.folder)
+    )
+);
+
+router.post(
+    '/todo-md/projects/:uid/unlink',
+    ownerOnly('unlink', (req) => service.unlinkProject(req.params.uid))
+);
+
 // Pending edits of a repository: push them again, or forget them.
 router.post(
     '/todo-md/repos/:slug/retry',

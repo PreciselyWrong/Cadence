@@ -5125,13 +5125,17 @@
     "badge": "TODO.md",
     "badgeTitle": "De um arquivo TODO.md. Somente leitura aqui: edite o arquivo.",
     "readOnly": "Isto vem de um arquivo TODO.md. Edite o arquivo.",
-    "projectInfo": "Espelha {{path}}. As tarefas que você adiciona são gravadas no arquivo, e marcá-las como concluídas o atualiza.",
+    "projectInfo": "Segue {{path}}. As tarefas com a etiqueta code são escritas no ficheiro; as outras ficam no Cadence.",
     "reread": "Recarregar arquivos",
     "rereading": "Recarregando...",
     "rereadDone": "Arquivos TODO.md recarregados.",
     "rereadFailed": "Não foi possível recarregar os arquivos TODO.md.",
     "addTo": "Adicionar a",
-    "addFailed": "Não foi possível gravar no arquivo TODO.md."
+    "addFailed": "Não foi possível gravar no arquivo TODO.md.",
+    "fileLabel": "Ficheiro TODO.md",
+    "fileNone": "Nenhum",
+    "addToCadence": "Apenas Cadence",
+    "linkFailed": "Não foi possível alterar o ficheiro TODO.md."
   },
   "cadenceHabits": {
     "copyName": "{{name}} (cópia)",

@@ -21,6 +21,47 @@ export const rescanTodoMd = async (): Promise<TodoMdRescanResult> => {
     return response.json();
 };
 
+export interface TodoMdFile {
+    folder: string;
+    path: string;
+    project_uid: string | null;
+    project_name: string | null;
+}
+
+export const fetchTodoMdFiles = async (): Promise<TodoMdFile[]> => {
+    const response = await fetch(getApiPath('todo-md/files'), {
+        credentials: 'include',
+        headers: { Accept: 'application/json' },
+    });
+    await handleAuthResponse(response, 'Failed to list the TODO.md files.');
+    return (await response.json()).files;
+};
+
+const projectFileAction = async (
+    projectUid: string,
+    action: 'link' | 'unlink',
+    body?: { folder: string }
+): Promise<void> => {
+    const response = await fetch(
+        getApiPath(
+            `todo-md/projects/${encodeURIComponent(projectUid)}/${action}`
+        ),
+        {
+            method: 'POST',
+            credentials: 'include',
+            headers: await getPostHeadersWithCsrf(),
+            ...(body ? { body: JSON.stringify(body) } : {}),
+        }
+    );
+    await handleAuthResponse(response, 'Failed to change the TODO.md file.');
+};
+
+export const linkTodoMdFile = (projectUid: string, folder: string) =>
+    projectFileAction(projectUid, 'link', { folder });
+
+export const unlinkTodoMdFile = (projectUid: string) =>
+    projectFileAction(projectUid, 'unlink');
+
 export interface TodoMdPendingEdit {
     id: string;
     op: 'add' | 'done';

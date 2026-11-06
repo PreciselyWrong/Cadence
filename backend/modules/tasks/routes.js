@@ -597,9 +597,12 @@ router.post(
                 ? await Project.findByPk(taskAttributes.project_id)
                 : null;
             let task;
-            if (todoMd.service.isFileBackedProject(fileProject)) {
-                // The bullet goes into the project's TODO.md; tags and
-                // subtasks have no place in that file.
+            if (
+                todoMd.service.isFileBackedProject(fileProject) &&
+                todoMd.service.asksForFile(tagsData, req.body.todo_section)
+            ) {
+                // The bullet goes into the project's TODO.md; subtasks have
+                // no place in that file.
                 try {
                     task = await todoMd.service.createTask(fileProject, {
                         name: req.body.name,

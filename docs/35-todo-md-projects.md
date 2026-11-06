@@ -1,6 +1,6 @@
 # TODO.md projects (fork)
 
-Folders on the server hold projects: each sub-folder is one project, and its `TODO.md` is that project's task list. A `TODO.md` can also live in a **git repository** (Gitea, GitHub): the server clones it, and edits are committed and pushed ([Git repositories](#git-repositories)). Cadence shows them (web and Android) and lets you add tasks and check them off; the **file stays the source of truth**, so it can be edited anywhere (`git pull`, an editor) at any time. Module: `backend/modules/todo-md/`.
+A folder on the server holds `TODO.md` files, one per sub-folder, and you choose which project follows which file (web: project info; Android: the project's menu). A `TODO.md` can also live in a **git repository** (Gitea, GitHub): the server clones it, and edits are committed and pushed ([Git repositories](#git-repositories)). The **file stays the source of truth** for its lines, so it can be edited anywhere at any time. The project stays an ordinary project: only tasks tagged `code` go to and come from the file, and every other task lives in Cadence alone ([Mixed projects](#mixed-projects)). Module: `backend/modules/todo-md/`.
 
 **Related:** [Offline sync](30-offline-sync.md), [Projects](06-projects.md), [Backups](backups.md)
 
@@ -10,7 +10,7 @@ Off unless `TUDUDI_TODO_ROOT` is set to a directory the server can read and writ
 
 | Variable                 | Meaning                                                                                              |
 | ------------------------ | ---------------------------------------------------------------------------------------------------- |
-| `TUDUDI_TODO_ROOT`       | Root folder, for example `/app/todo-projects`. Each direct sub-folder with a `TODO.md` is a project. |
+| `TUDUDI_TODO_ROOT`       | Root folder, for example `/app/todo-projects`. Each direct sub-folder with a `TODO.md` can be linked. |
 | `TUDUDI_TODO_USER_EMAIL` | Account the projects belong to. Default: the first administrator, else the first account.            |
 
 In Docker, bind-mount a **dedicated** folder read-write (see the commented example in `docker-compose.yml`):
@@ -22,11 +22,35 @@ environment:
     - TUDUDI_TODO_ROOT=/app/todo-projects
 ```
 
-**Never mount `~/Dev` or any folder that holds secrets** (`.env` files, keys, credentials). The server only ever reads and writes files named `TODO.md`, but a mount exposes everything in it to the container. For a repository, use [Git repositories](#git-repositories) instead: the server clones it itself and nothing is mounted.
+**Never mount `~/Dev` or any folder that holds secrets** (`.env` files, keys, credentials). The server only ever reads and writes files named `TODO.md`, but a mount exposes everything in it to the container. Two ways to fill the dedicated folder:
+
+- **A two-way sync of just those files**, for working copies that are not always pushed: [`scripts/todo-md-sync.sh`](../scripts/todo-md-sync.sh) (see its header) copies a list of `TODO.md` files between a work folder and the mounted folder, merging edits line by line.
+- **[Git repositories](#git-repositories)**: the server clones each one itself and nothing is mounted.
+
+Mount the folder, never a single file: a write replaces the file, which a single-file bind mount cannot follow.
+
+## Choosing which project follows which file
+
+A file feeds nothing until a project follows it: Cadence creates no project by itself.
+
+| Call (account that owns the files)         | Result                                                                                                                                            |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET /api/todo-md/files`                   | `{ files: [{ folder, path, project_uid, project_name }] }`                                                                                        |
+| `POST /api/todo-md/projects/<uid>/link`    | Body `{ "folder": "..." }`. The project follows that file, which is read at once. `409` if the project or the file is already taken.              |
+| `POST /api/todo-md/projects/<uid>/unlink`  | The project stops following it. Its tasks stay as ordinary tasks and the file is not touched. Linking again matches them back by name.            |
+
+## Mixed projects
+
+- Tasks read from the file carry the tag **`code`**, added to their other tags and put back if removed. The section (`Now`, `Next`, ...) is kept on the task (`source_section`), not as a tag.
+- A task without `code` stays in Cadence: nothing reaches the file and it is edited as usual.
+- A task that gets `code`, by any route (web, device, MCP), is written to `## Next` by the next pass, at most 30 seconds later, and then follows the file. Closed and recurring tasks are not written. Its note moves to the file with it.
+- A task from the file is read-only here, whichever client or MCP asks; only its check box can change. The lock is per task, on the server, the web and Android.
+- A linked project can be renamed. It cannot be deleted or completed with its tasks: unlink it first.
+- The outline view of a linked project stays read-only for all its tasks; the list view edits Cadence tasks normally.
 
 ## Git repositories
 
-Each repository listed in `TUDUDI_TODO_REPOS` is one project, named after its slug (`source_path = 'git:<slug>'`). The server clones it, reads its `TODO.md` like a folder's, and turns a task added or checked off in Cadence (web, Android) into a commit **by `Cadence <cadence@localhost>`** pushed to the branch. A push to the repository is read back through a webhook, and every **5 minutes** in any case. Module: `backend/modules/todo-md/repos.js`, `git.js`, `webhook.js`.
+Each repository listed in `TUDUDI_TODO_REPOS` creates and follows one project, named after its slug and keeping that name (`source_path = 'git:<slug>'`). The server clones it, reads its `TODO.md` like a folder's, and turns a task added or checked off in Cadence (web, Android) into a commit **by `Cadence <cadence@localhost>`** pushed to the branch. A push to the repository is read back through a webhook, and every **5 minutes** in any case. Module: `backend/modules/todo-md/repos.js`, `git.js`, `webhook.js`.
 
 | Variable                                 | Meaning                                                                                                                       |
 | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
@@ -98,10 +122,10 @@ Git runs with no machine or user configuration (`GIT_CONFIG_GLOBAL=/dev/null`, `
 - Each **top-level** bullet (`-`, `*` or `+` at column 0) is a task. Indented lines, nested bullets and blank lines between them belong to the bullet above and become the task's **note**. A bullet with no text is not a task.
 - The **name** is the first line with its Markdown stripped (emphasis, code, links, strikethrough). `- [ ]` / `- [x]` checkboxes are read.
 - **Done** = a checked box, or a bullet in a `## Done` section. A bullet in `## Dropped` becomes archived.
-- The section name becomes a **tag** on the task (`Now`, `Next`, ...), so it can be filtered like any tag, on the web and on Android.
+- Each task carries the `code` tag ([Mixed projects](#mixed-projects)); its section is kept in `source_section`.
 - CRLF files, a missing final newline and a UTF-8 BOM are handled. Files in another encoding are left untouched (Cadence refuses to write them).
 
-Each folder gives one project, named after the folder, marked `source_type = 'todo_md'` with `source_path = '<folder>/TODO.md'`. Folders whose name starts with `.`, folders without a `TODO.md`, and sub-folders deeper than one level are ignored.
+A project following a file is marked `source_type = 'todo_md'` with `source_path = '<folder>/TODO.md'`. Folders whose name starts with `.`, folders without a `TODO.md`, and sub-folders deeper than one level are ignored.
 
 ## How tasks keep their identity
 
@@ -110,7 +134,8 @@ A task is matched to its bullet by section + normalised first line + occurrence 
 - reordering, editing the note, checking a box or adding unrelated lines keeps every task;
 - a bullet **moved to another section** keeps its row when its text is unique among the unmatched bullets (the section tag follows);
 - a bullet whose **text is edited** is a new task and the old one is removed;
-- a task whose bullet is gone from the file is **removed** from Cadence (with its Cadence-side links).
+- a task whose bullet is gone from the file is **removed** from Cadence (with its Cadence-side links);
+- a bullet with the same name as an open or closed task tagged `code` and not yet in the file adopts that task.
 
 Nothing is deleted because a file is unreachable: if the root is missing or a file cannot be read, that pass is skipped and reported.
 
@@ -125,10 +150,11 @@ Nothing is deleted because a file is unreachable: if the root is missing or a fi
 
 | Action                                   | Result                                                                                                                                                                                                                      |
 | ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Add a task to the project (web, Android) | Appended as a `- ` bullet at the end of `## Next` (section created when missing). The web "+ Add task" field has a **Add to** menu (Now / Next / Ideas); the API takes `todo_section`. A note is written as indented lines. |
+| Add a task tagged `code` (web, Android)  | Appended as a `- ` bullet at the end of `## Next` (section created when missing). The web "+ Add task" field has an **Add to** menu (Cadence only / Now / Next / Ideas); the API takes `todo_section`. A note is written as indented lines. |
+| Add a task without `code`                | Stays in Cadence.                                                                                                                                                                                                           |
 | Check a task off                         | Writes `[x]` on the bullet (adds `[x] ` when it had no box). Unchecking writes `[ ]`. A task in `## Done` or `## Dropped` cannot be reopened from Cadence: move it in the file.                                             |
 | Anything else on a task                  | Refused (`403`, `todo_md_read_only`; sync ops are rejected as `read_only`). The web hides edit controls and shows a **TODO.md** badge.                                                                                      |
-| Project: rename, delete, complete        | Refused. Area, colour, pin and tags stay editable (they are not in the file).                                                                                                                                               |
+| Project: delete, complete                | Refused while it follows a file. Rename is allowed, except for a repository project. Area, colour, pin and tags stay editable.                                                                                              |
 
 Today-plan membership, comments, relations and attachments are Cadence-side data and are not blocked.
 
@@ -146,15 +172,15 @@ The file is re-read just before writing, the new content goes to a temp file in 
 
 These are ordinary projects and tasks, so they reach devices through `/api/v1/sync`. The project carries a server-written field `source_type` (listed under `server_fields` in `/sync/meta`; a push that names it is rejected as `unknown_field`).
 
-A task created on a device inside a TODO.md project goes through the same server path: the bullet is written to the file and the row keeps the uid the device chose. Other edits and deletes of mirrored rows (and deleting or renaming the project) are rejected as `read_only`; checking a task is accepted and written to the file.
+A task created on a device with the `code` tag inside a TODO.md project goes through the same server path: the bullet is written to the file and the row keeps the uid the device chose. Without the tag it is an ordinary task. Other edits and deletes of mirrored rows (and deleting the project, or renaming a repository project) are rejected as `read_only`; checking a task is accepted and written to the file.
 
-Android reads `source_type` (Room `projects.sourceType`, base v5): a task whose project is a TODO.md project shows a **TODO.md** badge, its detail sheet is read-only, and swipe, long-press menu and the check box only offer done / reopen. The task rows keep a `fileBacked` flag computed in the query, so it follows the project after a sync.
+Tasks carry a server-written `source_key` (Room `tasks.sourceKey`, base v14): a task with one shows a **TODO.md** badge, its detail sheet is read-only, and swipe, long-press menu and the check box only offer done / reopen. The project's menu has **Fichier TODO.md** while the server offers files to the account (`ui/TodoMdFileDialog.kt`, read online).
 
 On a sync push, a check or an added task that cannot reach a git repository is answered `rejected` with reason `todo_md_conflict` (the bullet changed in the repository) or `todo_md_repo_unreachable` (the edit stays pending on the server). Android says so in the sync line ("La ligne a changé dans le dépôt : rien n'a été écrit (TODO.md)." / "Dépôt injoignable : la modification attend sur le serveur (TODO.md).") and in Settings › Synchronisation, instead of a bare count. The project page of a repository project shows the same status line as the web, read online from `GET /api/v1/todo-md/status` every 30 s (matched by `project_uid`), with **Réessayer** / **Abandonner** while edits are pending (`model/TodoMdRepos.kt`, `todomd/TodoMdClient.kt`, `ui/TodoMdRepoLine.kt`); offline or for another account nothing is shown.
 
 ## Known limits
 
-- A folder renamed or removed leaves its old project in place (nothing is deleted while a file is missing); remove it by hand.
+- A folder renamed or removed leaves its project linked, with its tasks (nothing is deleted while a file is missing); choose another file or none.
 - Editing a bullet's text creates a new task, so Cadence-side data on the old one is lost.
 - A TODO.md that is mounted as a single file (not a folder) cannot be replaced atomically; mount the folder.
 - Repositories: only adding a task and checking / unchecking one are written. Editing a task's text or moving it to another section from Cadence is not offered: the bullet's text is its identity key, so a rename would replace the task (and lose its Cadence-side data); edit those in the repository.

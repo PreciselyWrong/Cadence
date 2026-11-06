@@ -5128,13 +5128,17 @@
     "badge": "TODO.md",
     "badgeTitle": "Issu d'un fichier TODO.md. Lecture seule ici : modifiez le fichier.",
     "readOnly": "Ceci provient d'un fichier TODO.md. Modifiez plutôt le fichier.",
-    "projectInfo": "Reflète {{path}}. Les tâches que vous ajoutez sont écrites dans le fichier, et les cocher le met à jour.",
+    "projectInfo": "Suit {{path}}. Les tâches avec l'étiquette code sont écrites dans le fichier ; les autres restent dans Cadence.",
     "reread": "Recharger les fichiers",
     "rereading": "Rechargement...",
     "rereadDone": "Fichiers TODO.md rechargés.",
     "rereadFailed": "Impossible de recharger les fichiers TODO.md.",
     "addTo": "Ajouter à",
-    "addFailed": "Impossible d'écrire dans le fichier TODO.md."
+    "addFailed": "Impossible d'écrire dans le fichier TODO.md.",
+    "fileLabel": "Fichier TODO.md",
+    "fileNone": "Aucun",
+    "addToCadence": "Cadence seulement",
+    "linkFailed": "Impossible de changer le fichier TODO.md."
   },
   "cadenceHabits": {
     "copyName": "{{name}} (copie)",

@@ -12,7 +12,7 @@ data class TaskRow(
     @Embedded val task: TaskEntity,
     /** Une opération d'envoi attend pour cette tâche. */
     val pendingSync: Boolean,
-    /** Le projet de la tâche reflète un fichier TODO.md (`source_type`). */
+    /** La tâche vient d'une ligne d'un fichier TODO.md (`source_key`). */
     val fileBacked: Boolean = false,
     /** La tâche porte l'étiquette système `someday` : « Plus tard ». */
     val someday: Boolean = false,
@@ -27,7 +27,7 @@ data class InboxRow(
 interface TaskDao {
     @Query(
         """SELECT tasks.*, EXISTS(SELECT 1 FROM outbox WHERE outbox.entity = 'task' AND outbox.uid = tasks.uid) AS pendingSync,
-        EXISTS(SELECT 1 FROM projects WHERE projects.uid = tasks.projectUid AND projects.sourceType = 'todo_md') AS fileBacked,
+        tasks.sourceKey IS NOT NULL AS fileBacked,
         EXISTS(SELECT 1 FROM tags WHERE tags.name = 'someday' AND tasks.tagUidsJson LIKE '%"' || tags.uid || '"%') AS someday
         FROM tasks WHERE parentTaskUid IS NULL""",
     )
@@ -35,7 +35,7 @@ interface TaskDao {
 
     @Query(
         """SELECT tasks.*, EXISTS(SELECT 1 FROM outbox WHERE outbox.entity = 'task' AND outbox.uid = tasks.uid) AS pendingSync,
-        EXISTS(SELECT 1 FROM projects WHERE projects.uid = tasks.projectUid AND projects.sourceType = 'todo_md') AS fileBacked,
+        tasks.sourceKey IS NOT NULL AS fileBacked,
         EXISTS(SELECT 1 FROM tags WHERE tags.name = 'someday' AND tasks.tagUidsJson LIKE '%"' || tags.uid || '"%') AS someday
         FROM tasks""",
     )
@@ -43,7 +43,7 @@ interface TaskDao {
 
     @Query(
         """SELECT tasks.*, EXISTS(SELECT 1 FROM outbox WHERE outbox.entity = 'task' AND outbox.uid = tasks.uid) AS pendingSync,
-        EXISTS(SELECT 1 FROM projects WHERE projects.uid = tasks.projectUid AND projects.sourceType = 'todo_md') AS fileBacked,
+        tasks.sourceKey IS NOT NULL AS fileBacked,
         EXISTS(SELECT 1 FROM tags WHERE tags.name = 'someday' AND tasks.tagUidsJson LIKE '%"' || tags.uid || '"%') AS someday
         FROM tasks WHERE uid = :uid""",
     )
@@ -51,7 +51,7 @@ interface TaskDao {
 
     @Query(
         """SELECT tasks.*, EXISTS(SELECT 1 FROM outbox WHERE outbox.entity = 'task' AND outbox.uid = tasks.uid) AS pendingSync,
-        EXISTS(SELECT 1 FROM projects WHERE projects.uid = tasks.projectUid AND projects.sourceType = 'todo_md') AS fileBacked,
+        tasks.sourceKey IS NOT NULL AS fileBacked,
         EXISTS(SELECT 1 FROM tags WHERE tags.name = 'someday' AND tasks.tagUidsJson LIKE '%"' || tags.uid || '"%') AS someday
         FROM tasks WHERE parentTaskUid = :parentUid""",
     )
