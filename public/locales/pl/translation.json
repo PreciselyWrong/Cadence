@@ -1,5 +1,7 @@
 {
   "triage": {
+    "slotRefuse": "Odrzuć",
+    "slotAccept": "Zaplanuj",
     "action": {
       "habit": "Zamień na nawyk",
       "project": "Zamień na projekt",
@@ -5672,6 +5674,7 @@
       "agent": "Agent"
     },
     "settings": {
+      "linkThemes": "Tematy linków przez AI",
       "triageLimit": "Przeglądane zadania dziennie",
       "triageEnabled": "Propozycje AI w Do uporządkowania",
       "postponements": "Odroczenia przed kartą",

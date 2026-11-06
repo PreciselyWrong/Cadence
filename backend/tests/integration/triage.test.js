@@ -255,6 +255,81 @@ describe('triage queue', () => {
         expect(await assistant.reviewForUser(user)).toBe(0);
     });
 
+    describe('slots proposed by an agent', () => {
+        const day = () =>
+            new Date(Date.now() + 2 * 86400000).toISOString().slice(0, 10);
+        const propose = async () => {
+            const { Link } = require('../../models');
+            const link = await Link.create({
+                user_id: user.id,
+                url: 'https://example.com/outil',
+                title: 'Outil fictif',
+            });
+            const slots = require('../../modules/triage/slots');
+            return slots.proposeSlot(user, {
+                link_uids: [link.uid],
+                title: 'Tester les outils',
+                reason: 'Trois outils sur le même sujet.',
+                date: day(),
+                start_minute: 840,
+                duration_minutes: 60,
+            });
+        };
+
+        it('plans nothing before the user accepts', async () => {
+            await propose();
+            const { items } = await queue();
+            expect(items[0]).toMatchObject({
+                type: 'link_slot',
+                action: 'accept_slot',
+                details: ['Outil fictif'],
+            });
+            expect(await Task.count({ where: { user_id: user.id } })).toBe(0);
+        });
+
+        it('creates the task with its address and places it when accepted', async () => {
+            const { slot_id: id } = await propose();
+            const res = await agent.post(`/api/triage/slots/${id}/accept`);
+            expect(res.status).toBe(200);
+
+            const created = await Task.findOne({
+                where: { user_id: user.id, uid: res.body.task_uid },
+            });
+            expect(created.name).toBe('Tester les outils');
+            expect(created.note).toContain('https://example.com/outil');
+
+            const plan = await agent.get(`/api/daily-plan?date=${day()}`);
+            expect(JSON.stringify(plan.body)).toContain(res.body.task_uid);
+            expect((await queue()).items).toEqual([]);
+        });
+
+        it('forgets a refused slot, and cannot accept it afterwards', async () => {
+            const { slot_id: id } = await propose();
+            await agent.post(`/api/triage/slots/${id}/refuse`);
+            expect((await queue()).items).toEqual([]);
+            const late = await agent.post(`/api/triage/slots/${id}/accept`);
+            expect(late.status).toBe(404);
+        });
+
+        it('refuses a slot with a link of someone else', async () => {
+            const { Link } = require('../../models');
+            const other = await createTestUser({ email: 'o@example.com' });
+            const foreign = await Link.create({
+                user_id: other.id,
+                url: 'https://example.com/autre',
+            });
+            const slots = require('../../modules/triage/slots');
+            await expect(
+                slots.proposeSlot(user, {
+                    link_uids: [foreign.uid],
+                    title: 'T',
+                    reason: 'R',
+                    date: day(),
+                })
+            ).rejects.toThrow('Link not found');
+        });
+    });
+
     it('shows a stored assistant proposal only for the state it was made on', async () => {
         const open = await task({ name: 'trucs', status: 0 });
         const {

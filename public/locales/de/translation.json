@@ -1,5 +1,7 @@
 {
   "triage": {
+    "slotRefuse": "Ablehnen",
+    "slotAccept": "Planen",
     "action": {
       "habit": "In Gewohnheit umwandeln",
       "project": "In Projekt umwandeln",
@@ -5625,6 +5627,7 @@
       "agent": "Agent"
     },
     "settings": {
+      "linkThemes": "Linkthemen durch KI",
       "triageLimit": "Geprüfte Aufgaben pro Tag",
       "triageEnabled": "KI-Vorschläge in „Zu sortieren“",
       "postponements": "Verschiebungen vor einer Karte",

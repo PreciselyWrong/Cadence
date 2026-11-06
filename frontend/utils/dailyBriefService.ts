@@ -235,6 +235,7 @@ export interface BriefSettings {
     writing: { tone: string; signature: string; instructions: string };
     llm: { enabled: boolean };
     triage: { enabled: boolean; dailyLimit: number };
+    linkThemes: { enabled: boolean };
     voice: {
         enabled: boolean;
         piperUrl: string;

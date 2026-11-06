@@ -1,5 +1,7 @@
 {
   "triage": {
+    "slotRefuse": "Từ chối",
+    "slotAccept": "Lên lịch",
     "action": {
       "habit": "Chuyển thành thói quen",
       "project": "Chuyển thành dự án",
@@ -5616,6 +5618,7 @@
       "agent": "Tác nhân"
     },
     "settings": {
+      "linkThemes": "Chủ đề liên kết bằng AI",
       "triageLimit": "Số việc xem mỗi ngày",
       "triageEnabled": "Đề xuất AI trong Cần phân loại",
       "postponements": "Số lần hoãn trước một thẻ",

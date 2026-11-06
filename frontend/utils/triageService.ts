@@ -30,7 +30,7 @@ export interface TriageItem {
     type: string;
     source: string;
     task_uid: string | null;
-    action: TriageAction | 'question';
+    action: TriageAction | 'question' | 'accept_slot';
     payload: Record<string, unknown> | null;
     reason: string;
     details: string[];
@@ -74,6 +74,9 @@ export const fetchTriageQueue = async (): Promise<TriageQueue> => {
     await handleAuthResponse(response, 'Failed to load the triage queue.');
     return response.json();
 };
+
+export const answerSlot = (slotId: string, accept: boolean): Promise<void> =>
+    post(`triage/slots/${slotId}/${accept ? 'accept' : 'refuse'}`, {});
 
 export const keepTask = (taskUid: string): Promise<void> =>
     post('triage/keep', { task_uid: taskUid });

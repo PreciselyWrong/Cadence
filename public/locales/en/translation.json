@@ -1,5 +1,7 @@
 {
   "triage": {
+    "slotRefuse": "Refuse",
+    "slotAccept": "Plan",
     "action": {
       "habit": "Convert to a habit",
       "project": "Convert to a project",
@@ -5586,6 +5588,7 @@
       "agent": "Agent"
     },
     "settings": {
+      "linkThemes": "Link themes by AI",
       "triageLimit": "Tasks looked at per day",
       "triageEnabled": "Assistant proposals in To sort",
       "postponements": "Postponements before a card",

@@ -36,7 +36,6 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
 
 - Revue UX du 2026-11-06, lots validés
   (arbitrages : IA dans Cadence via Profil › Assistant IA ; le triage ne repropose pas ce que `cadence-classify` a traité ; retour global + « Moins de ce type » dans un menu ⋯ ; habitudes à limite, abstinence et suivi simple neutres ; statuts de liens gardés, libellés À lire, À tester, Gardé, Plus tard, Archivé, plus « À évaluer » ; URL seule partagée envoyée dans Liens ; règles sur toutes les tâches et IA sur N par jour) :
-  - Lot 6c, liens : thèmes par IA et créneaux proposés par des agents via MCP.
   - Lot 7, desktop : clic gauche vers `/today` par le backend KSNI de `tray-icon` (l'actuel n'émet pas ce clic sous Linux), à prototyper ; rappels de tâches activés par défaut sur le desktop.
   - Lot 8, add-on Firefox branché sur Cadence.
 - Web : reprendre la passe de soustraction Android du 2026-11-02 (`docs/fork/ANDROID-UX-NOTES.md`)

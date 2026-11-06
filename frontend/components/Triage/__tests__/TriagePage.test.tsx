@@ -6,12 +6,14 @@ import {
     applyTriage,
     fetchTriageQueue,
     keepTask,
+    answerSlot,
 } from '../../../utils/triageService';
 
 jest.mock('../../../utils/triageService', () => ({
     fetchTriageQueue: jest.fn(),
     keepTask: jest.fn(),
     applyTriage: jest.fn(),
+    answerSlot: jest.fn(),
 }));
 jest.mock('../../../utils/dateUtils', () => ({
     getTodayDateString: () => '2026-11-06',
@@ -147,6 +149,36 @@ describe('TriagePage', () => {
             await screen.findByRole('button', { name: 'Garder telle quelle' })
         );
         await waitFor(() => expect(keepTask).toHaveBeenCalledWith('a'));
+    });
+
+    it('plans an agent slot only when accepted', async () => {
+        (answerSlot as jest.Mock).mockResolvedValue(undefined);
+        (fetchTriageQueue as jest.Mock).mockResolvedValue({
+            count: 1,
+            tasks: {},
+            items: [
+                {
+                    key: 'slot:1',
+                    type: 'link_slot',
+                    source: 'agent',
+                    task_uid: null,
+                    action: 'accept_slot',
+                    payload: {
+                        slot_id: '1',
+                        title: 'Tester les outils',
+                        date: '2026-11-08',
+                    },
+                    reason: 'Trois outils sur le même sujet.',
+                    details: ['Outil fictif'],
+                    question: null,
+                },
+            ],
+        });
+        render(<TriagePage />);
+        fireEvent.click(
+            await screen.findByRole('button', { name: 'Planifier' })
+        );
+        await waitFor(() => expect(answerSlot).toHaveBeenCalledWith('1', true));
     });
 
     it('says when there is nothing to sort', async () => {

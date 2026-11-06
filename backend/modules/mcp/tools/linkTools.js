@@ -89,6 +89,92 @@ function registerLinkTools(server, context, tools) {
     });
 
     tools.push({
+        name: 'create_link',
+        description:
+            'Save a web page as a link. The same page twice is one link. The server reads its title, description and picture.',
+        inputSchema: {
+            type: 'object',
+            properties: {
+                url: { type: 'string', description: 'http(s) address' },
+                title: { type: 'string' },
+                note: { type: 'string' },
+                status: { type: 'string', enum: LINK_STATUSES },
+                tags: { type: 'array', items: { type: 'string' } },
+            },
+            required: ['url'],
+        },
+        handler: async (params) =>
+            text(
+                await links.create(context.userId, {
+                    ...params,
+                    tags: 'tags' in params ? decodeTagsInput(params.tags) : [],
+                })
+            ),
+    });
+
+    tools.push({
+        name: 'group_links',
+        description:
+            'Put related links in one theme by adding the same tag to each, keeping their other tags.',
+        inputSchema: {
+            type: 'object',
+            properties: {
+                uids: { type: 'array', items: { type: 'string' } },
+                theme: {
+                    type: 'string',
+                    description:
+                        'Tag name; nested tags as paths like "dev/tools"',
+                },
+            },
+            required: ['uids', 'theme'],
+        },
+        handler: async (params) => {
+            const grouped = [];
+            for (const uid of params.uids) {
+                const link = await links.get(context.userId, uid);
+                const names = link.tags.map((tag) => tag.name);
+                grouped.push(
+                    await links.update(context.userId, uid, {
+                        tags: [...new Set([...names, params.theme])],
+                    })
+                );
+            }
+            return text({ links: grouped });
+        },
+    });
+
+    tools.push({
+        name: 'propose_link_slot',
+        description:
+            'Propose a slot in the agenda for related links, for example several tools to try on one subject. It only waits in the triage queue: the user accepts or refuses it. Nothing is planned until then.',
+        inputSchema: {
+            type: 'object',
+            properties: {
+                link_uids: { type: 'array', items: { type: 'string' } },
+                title: { type: 'string', description: 'What the slot is for' },
+                reason: {
+                    type: 'string',
+                    description: 'Why, in one short sentence',
+                },
+                date: { type: 'string', description: 'YYYY-MM-DD' },
+                start_minute: {
+                    type: 'integer',
+                    description: 'Minutes after midnight; omit for no set time',
+                },
+                duration_minutes: { type: 'integer' },
+            },
+            required: ['link_uids', 'title', 'reason', 'date'],
+        },
+        handler: async (params) =>
+            text(
+                await require('../../triage/slots').proposeSlot(
+                    context.user,
+                    params
+                )
+            ),
+    });
+
+    tools.push({
         name: 'update_link',
         description:
             'Update the note, tags, status or review day of a saved link. tags replaces the whole set (tag names; nested tags as paths like "dev/tools"). Only the fields given change.',
@@ -110,7 +196,7 @@ function registerLinkTools(server, context, tools) {
                     type: 'string',
                     enum: LINK_STATUSES,
                     description:
-                        'new, kept (keep), tested (tried), parked (later), dropped',
+                        'new (to read), to_evaluate, tested (to try), kept, parked (later), dropped (archived)',
                 },
                 review_at: {
                     type: ['string', 'null'],

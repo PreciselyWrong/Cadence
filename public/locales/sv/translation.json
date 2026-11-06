@@ -1,5 +1,7 @@
 {
   "triage": {
+    "slotRefuse": "Avböj",
+    "slotAccept": "Planera",
     "action": {
       "habit": "Gör om till vana",
       "project": "Gör om till projekt",
@@ -5616,6 +5618,7 @@
       "agent": "Agent"
     },
     "settings": {
+      "linkThemes": "Länkteman med AI",
       "triageLimit": "Granskade uppgifter per dag",
       "triageEnabled": "AI-förslag i Att sortera",
       "postponements": "Uppskjutningar före ett kort",

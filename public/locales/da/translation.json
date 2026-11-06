@@ -1,5 +1,7 @@
 {
   "triage": {
+    "slotRefuse": "Afvis",
+    "slotAccept": "Planlæg",
     "action": {
       "habit": "Lav om til vane",
       "project": "Lav om til projekt",
@@ -5616,6 +5618,7 @@
       "agent": "Agent"
     },
     "settings": {
+      "linkThemes": "Linktemaer med AI",
       "triageLimit": "Gennemgåede opgaver pr. dag",
       "triageEnabled": "AI-forslag i At sortere",
       "postponements": "Udskydelser før et kort",

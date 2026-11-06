@@ -1,5 +1,7 @@
 {
   "triage": {
+    "slotRefuse": "拒绝",
+    "slotAccept": "安排",
     "action": {
       "habit": "转为习惯",
       "project": "转为项目",
@@ -5616,6 +5618,7 @@
       "agent": "助手"
     },
     "settings": {
+      "linkThemes": "由 AI 归类链接主题",
       "triageLimit": "每天查看的任务数",
       "triageEnabled": "待整理中的 AI 建议",
       "postponements": "卡片前的推迟次数",

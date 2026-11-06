@@ -142,6 +142,9 @@ internal fun TriageScreen(today: LocalDate, onBack: () -> Unit) {
                         onSkip = { viewModel.skip(item) },
                         onAnswer = { question, answer -> viewModel.answer(item, question, answer, today) },
                         onPrecise = { question -> precise = item to question },
+                        onSlot = { accept ->
+                            viewModel.answerSlot(item, TriageActions.field(item.payload, "slot_id"), accept)
+                        },
                     )
                 }
             }
@@ -187,6 +190,7 @@ private fun TriageCard(
     onSkip: () -> Unit,
     onAnswer: (QuestionDto, String) -> Unit,
     onPrecise: (QuestionDto) -> Unit,
+    onSlot: (Boolean) -> Unit,
 ) {
     val question = item.question
     Panel(modifier = Modifier.fillMaxWidth(), onClick = task?.let { { onOpenTask(it.uid) } }) {
@@ -202,6 +206,19 @@ private fun TriageCard(
                 Text(line, style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)
             }
         }
+    }
+    if (item.action == TriageActions.ACCEPT_SLOT) {
+        Text(
+            listOf(TriageActions.field(item.payload, "title"), TriageActions.field(item.payload, "date")).joinToString(" · "),
+            style = MaterialTheme.typography.bodySmall,
+            color = cadence.onSurfaceVariant,
+        )
+        PrimaryAction(stringResource(R.string.triage_slot_accept), Modifier.fillMaxWidth(), onClick = { onSlot(true) })
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+            SecondaryAction(stringResource(R.string.triage_slot_refuse), onClick = { onSlot(false) })
+            TertiaryAction(stringResource(R.string.triage_skip), onClick = onSkip)
+        }
+        return
     }
     if (question != null) {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {

@@ -1216,7 +1216,7 @@ Links are found by the server in inbox items, tasks and notes, with their page m
 |-----------|------|----------|-------------|
 | `uid` | string | Yes | Link UID |
 
-#### `update_link`
+#### `create_link`, `group_links`, `propose_link_slot`, `update_link`
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|

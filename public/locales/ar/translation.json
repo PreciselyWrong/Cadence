@@ -1,5 +1,7 @@
 {
   "triage": {
+    "slotRefuse": "رفض",
+    "slotAccept": "جدولة",
     "action": {
       "habit": "تحويل إلى عادة",
       "project": "تحويل إلى مشروع",
@@ -5680,6 +5682,7 @@
       "agent": "الوكيل"
     },
     "settings": {
+      "linkThemes": "مواضيع الروابط بالذكاء الاصطناعي",
       "triageLimit": "المهام المراجعة يوميًا",
       "triageEnabled": "اقتراحات الذكاء الاصطناعي في الفرز",
       "postponements": "تأجيلات قبل البطاقة",

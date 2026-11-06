@@ -1,5 +1,7 @@
 {
   "triage": {
+    "slotRefuse": "Avslå",
+    "slotAccept": "Planlegg",
     "action": {
       "habit": "Gjør om til vane",
       "project": "Gjør om til prosjekt",
@@ -5621,6 +5623,7 @@
       "agent": "Agent"
     },
     "settings": {
+      "linkThemes": "Lenketemaer med KI",
       "triageLimit": "Gjennomgåtte oppgaver per dag",
       "triageEnabled": "KI-forslag i Å sortere",
       "postponements": "Utsettelser før et kort",

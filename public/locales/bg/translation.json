@@ -1,5 +1,7 @@
 {
   "triage": {
+    "slotRefuse": "Откажи",
+    "slotAccept": "Планирай",
     "action": {
       "habit": "Превърни в навик",
       "project": "Превърни в проект",
@@ -5616,6 +5618,7 @@
       "agent": "Агент"
     },
     "settings": {
+      "linkThemes": "Теми на връзките от ИИ",
       "triageLimit": "Прегледани задачи на ден",
       "triageEnabled": "Предложения от ИИ за подреждане",
       "postponements": "Отлагания преди карта",

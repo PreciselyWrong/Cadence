@@ -95,4 +95,4 @@ async function applyAction(user, task, action, payload = {}) {
     await perform(toolsFor(user), task, payload ?? {});
 }
 
-module.exports = { applyAction, ACTIONS };
+module.exports = { applyAction, ACTIONS, toolsFor };

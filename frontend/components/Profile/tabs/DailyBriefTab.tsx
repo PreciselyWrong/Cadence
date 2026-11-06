@@ -805,6 +805,14 @@ const DailyBriefTab: React.FC<DailyBriefTabProps> = ({ isActive }) => {
                         })
                     }
                 />
+                <Check
+                    label={t(
+                        'dailyBrief.settings.linkThemes',
+                        'Thèmes des liens par l’IA'
+                    )}
+                    checked={draft.linkThemes.enabled}
+                    onChange={(enabled) => update({ linkThemes: { enabled } })}
+                />
                 {draft.triage.enabled && (
                     <label className="flex flex-col gap-1 text-sm text-gray-800 dark:text-gray-200">
                         {t(

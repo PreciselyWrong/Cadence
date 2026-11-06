@@ -1,5 +1,7 @@
 {
   "triage": {
+    "slotRefuse": "Zavrni",
+    "slotAccept": "Načrtuj",
     "action": {
       "habit": "Pretvori v navado",
       "project": "Pretvori v projekt",
@@ -5672,6 +5674,7 @@
       "agent": "Agent"
     },
     "settings": {
+      "linkThemes": "Teme povezav z UI",
       "triageLimit": "Pregledane naloge na dan",
       "triageEnabled": "Predlogi UI za razvrstitev",
       "postponements": "Odlogi pred kartico",

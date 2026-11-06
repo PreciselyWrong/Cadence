@@ -2,6 +2,7 @@
 
 const express = require('express');
 const triage = require('./service');
+const slots = require('./slots');
 const { logError } = require('../../services/logService');
 const { NotFoundError, ValidationError } = require('../../shared/errors');
 
@@ -33,6 +34,15 @@ router.post(
 router.post(
     '/triage/apply',
     handle((req) => triage.apply(req.currentUser, req.body ?? {}))
+);
+
+router.post(
+    '/triage/slots/:id/accept',
+    handle((req) => slots.acceptSlot(req.currentUser, req.params.id))
+);
+router.post(
+    '/triage/slots/:id/refuse',
+    handle((req) => slots.refuseSlot(req.currentUser, req.params.id))
 );
 
 module.exports = router;

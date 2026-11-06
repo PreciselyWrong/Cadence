@@ -2,7 +2,7 @@
 
 Every web link written in an inbox item, a task (name or note) or a note becomes a **link**: one row per page and user, with what the page says about itself, the user's own note, a status and tags. The **Links** page (web: sidebar and Ctrl+K; Android: Listes in Tasks, or the link button in the Inbox header) lists them all; inbox cards show the link, its description and its note.
 
-Nothing here uses AI. Finding links, reading page metadata and classifying them is plain code; an assistant (Hermes, through MCP) may later propose tags, notes and statuses with the same tools as the user.
+Finding links, reading page metadata and classifying their kind is plain code. AI is optional and only gives themes (below); agents use the same tools as the user through MCP.
 
 ## How a link is captured
 
@@ -23,6 +23,8 @@ On the web, **Import bookmarks** on the Links page reads a Firefox export (`book
 ## Themes
 
 A theme is the first segment of a tag (`dev/tools` is in `dev`). The gallery groups links by the theme of their first tag, with the others under "No theme" at the end; it is the default view on both clients. A link in the gallery or list becomes a task in one tap: the task is named after the link and keeps its address (and note) as its note, and the link counts as kept.
+
+**Themes by AI** are optional, off by default: Profile › Daily brief (web), Réglages › Résumé (Android), `ui_settings.brief.linkThemes.enabled`. After the triage job each night, up to 40 links without a tag get one theme, a plain tag (`modules/links/themes.js`). A tagged link is never touched, and a tag is removed like any other.
 
 ## Metadata
 
@@ -60,7 +62,7 @@ Entity `link` (schema 4): fields `note`, `status`, `review_at`; server fields li
 
 ## MCP
 
-`list_links` (same filters, `query` for the text search, `untagged` to find links still to tag), `get_link`, `update_link` (`note`, `tags`, `status`, `review_at`). They never change the URL or the metadata.
+`create_link` (same as `POST /api/links`), `group_links` (`uids`, `theme`: adds one tag to each, keeping the others), `propose_link_slot` (a slot in the agenda, waiting for the user in the triage queue, `docs/40-triage.md`), `list_links` (same filters, `query` for the text search, `untagged` to find links still to tag), `get_link`, `update_link` (`note`, `tags`, `status`, `review_at`). They never change the URL or the metadata.
 
 ## Clients
 

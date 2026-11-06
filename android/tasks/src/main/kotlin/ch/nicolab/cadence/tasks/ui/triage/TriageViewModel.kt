@@ -11,6 +11,7 @@ import ch.nicolab.cadence.tasks.sync.DeferredCall
 import ch.nicolab.cadence.tasks.triage.TriageItemDto
 import ch.nicolab.cadence.tasks.triage.TriageQueueDto
 import ch.nicolab.cadence.tasks.triage.TriageRequests
+import ch.nicolab.cadence.tasks.triage.slotAnswerCall
 import java.time.LocalDate
 import java.util.UUID
 import kotlinx.coroutines.Job
@@ -66,6 +67,12 @@ internal class TriageViewModel(application: Application) : AndroidViewModel(appl
         val taskUid = item.taskUid ?: return
         val key = UUID.randomUUID().toString()
         hold(item, string(R.string.triage_kept)) { TriageRequests.keep(taskUid, key, string(R.string.triage_title)) }
+    }
+
+    fun answerSlot(item: TriageItemDto, slotId: String, accept: Boolean) {
+        hold(item, string(if (accept) R.string.triage_applied else R.string.triage_slot_refused)) {
+            slotAnswerCall(slotId, accept, string(R.string.triage_title))
+        }
     }
 
     fun answer(item: TriageItemDto, question: QuestionDto, answer: String, date: LocalDate) {

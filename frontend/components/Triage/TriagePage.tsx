@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { answerBriefQuestion } from '../../utils/dailyBriefService';
 import { getTodayDateString } from '../../utils/dateUtils';
 import {
+    answerSlot,
     applyTriage,
     fetchTriageQueue,
     keepTask,
@@ -154,7 +155,13 @@ const TriagePage: React.FC = () => {
     };
 
     const primaryLabel = () => {
-        if (!item || item.action === 'question') return '';
+        if (
+            !item ||
+            item.action === 'question' ||
+            item.action === 'accept_slot'
+        ) {
+            return '';
+        }
         const name = item.payload?.name;
         if (item.action === 'rename' && typeof name === 'string') {
             return t('triage.renameTo', 'Renommer : {{name}}', { name });
@@ -228,7 +235,53 @@ const TriagePage: React.FC = () => {
                         </p>
                     ))}
 
-                    {item.question ? (
+                    {item.action === 'accept_slot' && (
+                        <>
+                            <p className="mt-1 text-[13px] text-gray-600 dark:text-gray-300">
+                                {String(item.payload?.title)} ·{' '}
+                                {String(item.payload?.date)}
+                            </p>
+                            <div className="mt-3 flex flex-wrap gap-2">
+                                <button
+                                    type="button"
+                                    className={primary}
+                                    onClick={() =>
+                                        settle(
+                                            () =>
+                                                answerSlot(
+                                                    String(
+                                                        item.payload?.slot_id
+                                                    ),
+                                                    true
+                                                ),
+                                            applied
+                                        )
+                                    }
+                                >
+                                    {t('triage.slotAccept', 'Planifier')}
+                                </button>
+                                <button
+                                    type="button"
+                                    className={secondary}
+                                    onClick={() =>
+                                        settle(
+                                            () =>
+                                                answerSlot(
+                                                    String(
+                                                        item.payload?.slot_id
+                                                    ),
+                                                    false
+                                                ),
+                                            applied
+                                        )
+                                    }
+                                >
+                                    {t('triage.slotRefuse', 'Refuser')}
+                                </button>
+                            </div>
+                        </>
+                    )}
+                    {item.action === 'accept_slot' ? null : item.question ? (
                         <div className="mt-3 flex flex-wrap gap-2">
                             <button
                                 type="button"

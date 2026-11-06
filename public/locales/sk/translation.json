@@ -1,5 +1,7 @@
 {
   "triage": {
+    "slotRefuse": "Odmietnuť",
+    "slotAccept": "Naplánovať",
     "action": {
       "habit": "Premeniť na návyk",
       "project": "Premeniť na projekt",
@@ -296,6 +298,7 @@
       "agent": "Agent"
     },
     "settings": {
+      "linkThemes": "Témy odkazov cez AI",
       "triageLimit": "Prezreté úlohy za deň",
       "triageEnabled": "Návrhy AI na roztriedenie",
       "postponements": "Odklady pred kartou",

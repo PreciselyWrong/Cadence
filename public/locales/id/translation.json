@@ -1,5 +1,7 @@
 {
   "triage": {
+    "slotRefuse": "Tolak",
+    "slotAccept": "Jadwalkan",
     "action": {
       "habit": "Ubah menjadi kebiasaan",
       "project": "Ubah menjadi proyek",
@@ -5616,6 +5618,7 @@
       "agent": "Agen"
     },
     "settings": {
+      "linkThemes": "Tema tautan oleh AI",
       "triageLimit": "Tugas yang ditinjau per hari",
       "triageEnabled": "Usulan AI di Untuk dipilah",
       "postponements": "Penundaan sebelum kartu",

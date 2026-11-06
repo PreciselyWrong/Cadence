@@ -1,5 +1,7 @@
 {
   "triage": {
+    "slotRefuse": "Hylkää",
+    "slotAccept": "Suunnittele",
     "action": {
       "habit": "Muunna tavaksi",
       "project": "Muunna projektiksi",
@@ -5616,6 +5618,7 @@
       "agent": "Agentti"
     },
     "settings": {
+      "linkThemes": "Linkkien teemat tekoälyllä",
       "triageLimit": "Tarkastettuja tehtäviä päivässä",
       "triageEnabled": "Tekoälyn ehdotukset lajiteltaviin",
       "postponements": "Lykkäykset ennen korttia",

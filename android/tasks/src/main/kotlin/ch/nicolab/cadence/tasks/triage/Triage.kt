@@ -60,6 +60,7 @@ internal object TriageActions {
     const val TO_NOTE = "to_note"
     const val TO_PROJECT = "to_project"
     const val TO_HABIT = "to_habit"
+    const val ACCEPT_SLOT = "accept_slot"
 
     /** Une tâche récurrente reste une série : on ne la convertit ni ne la supprime d'ici. */
     fun choices(task: TriageTaskDto): List<String> = buildList {
@@ -106,6 +107,15 @@ internal object TriageRequests {
         label = label,
     )
 }
+
+/** Répondre à un créneau proposé par un agent : le serveur crée la tâche et la place seulement si on accepte. */
+internal fun slotAnswerCall(slotId: String, accept: Boolean, label: String) = DeferredCall(
+    key = "triage-slot:$slotId",
+    method = "POST",
+    path = "/api/v1/triage/slots/$slotId/${if (accept) "accept" else "refuse"}",
+    body = buildJsonObject { },
+    label = label,
+)
 
 /** File « À trier » : lue en ligne, gardée pour le hors ligne ; les décisions partent par la file d'appels différés. */
 class TriageRepository internal constructor(

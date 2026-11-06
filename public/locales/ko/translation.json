@@ -1,5 +1,7 @@
 {
   "triage": {
+    "slotRefuse": "거절",
+    "slotAccept": "계획하기",
     "action": {
       "habit": "습관으로 변환",
       "project": "프로젝트로 변환",
@@ -5616,6 +5618,7 @@
       "agent": "에이전트"
     },
     "settings": {
+      "linkThemes": "AI 링크 주제",
       "triageLimit": "하루에 살펴볼 작업 수",
       "triageEnabled": "정리할 항목의 AI 제안",
       "postponements": "카드 전 미루기 횟수",

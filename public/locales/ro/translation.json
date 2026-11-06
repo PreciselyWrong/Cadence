@@ -1,5 +1,7 @@
 {
   "triage": {
+    "slotRefuse": "Refuză",
+    "slotAccept": "Planifică",
     "action": {
       "habit": "Transformă în obicei",
       "project": "Transformă în proiect",
@@ -5634,6 +5636,7 @@
       "agent": "Agent"
     },
     "settings": {
+      "linkThemes": "Teme de linkuri prin AI",
       "triageLimit": "Sarcini verificate pe zi",
       "triageEnabled": "Propuneri AI în De sortat",
       "postponements": "Amânări înainte de un card",

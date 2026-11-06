@@ -27,6 +27,10 @@ Optional, off by default: Profile › Daily brief (web), Réglages › Résumé 
 
 The `triage_assistant` job (daily, 03:50 UTC) sends the open tasks the rules left alone, by batches of 10, up to `dailyLimit` tasks per user, and stores one answer per task in `task_triage`: a proposal (`pending`) or nothing to say (`none`). A task looked at is not sent again until it changes. `modules/triage/assistant.js` checks every answer (`validateProposal`): an unknown action, a value out of bounds or a missing reason means no proposal. A recurring task can only be renamed. `reclass` only applies to a task with neither project nor tags, only with existing projects and tags, so what another tool already classified is not proposed again. Task text sent to the model is data, never instructions.
 
+## Slots proposed by agents
+
+The MCP tool `propose_link_slot` (`link_uids`, `title`, `reason`, `date`, `start_minute?`, `duration_minutes?`) stores a proposal for related links: the only planning an AI may suggest. It appears in the queue as a `link_slot` item (`action: accept_slot`, details: the links). `POST /triage/slots/:id/accept` creates the task, with the addresses in its note, and places it in that day's plan; `POST /triage/slots/:id/refuse` forgets it. Nothing happens before that tap. A slot whose day has passed is no longer shown.
+
 ## Actions
 
 `rename` (`{ name }`), `split` (`{ subtasks: [names] }`), `set_due` (`{ due_date }`), `done`, `cancel`, `delete`, `reclass` (`{ project_id?, area_uid?, tags? }`), `to_note`, `to_project`, `to_habit`. Every action runs through the MCP tools (`modules/triage/actions.js`), which hold the rules of each write. A conversion creates the new thing first, then deletes the task.

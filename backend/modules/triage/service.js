@@ -12,6 +12,7 @@ const repository = require('./repository');
 const { ruleItems } = require('./core/items');
 const { taskFingerprint } = require('./core/fingerprint');
 const { applyAction } = require('./actions');
+const { slotItems } = require('./slots');
 
 const SETTLED = new Set(['kept', 'applied']);
 const NOTE_PREVIEW = 300;
@@ -82,6 +83,8 @@ function buildQueue(input, settings, rows) {
             });
         }
     }
+
+    items.push(...slotItems(rows, input.today));
 
     const tasks = {};
     for (const item of items) {

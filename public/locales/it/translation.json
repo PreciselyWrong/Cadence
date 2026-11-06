@@ -1,5 +1,7 @@
 {
   "triage": {
+    "slotRefuse": "Rifiuta",
+    "slotAccept": "Pianifica",
     "action": {
       "habit": "Converti in abitudine",
       "project": "Converti in progetto",
@@ -5629,6 +5631,7 @@
       "agent": "Agente"
     },
     "settings": {
+      "linkThemes": "Temi dei link con l'IA",
       "triageLimit": "Attività esaminate al giorno",
       "triageEnabled": "Proposte dell'IA in Da ordinare",
       "postponements": "Rinvii prima di una scheda",

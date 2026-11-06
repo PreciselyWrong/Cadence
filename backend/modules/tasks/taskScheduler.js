@@ -83,6 +83,8 @@ const runJob = async (frequency) => {
     } else if (frequency === 'triage_assistant') {
         const { runTriageAssistant } = require('../triage/assistant');
         await runTriageAssistant();
+        const { runLinkThemes } = require('../links/themes');
+        await runLinkThemes();
     } else if (frequency === 'brief_purge') {
         const { purgeBriefMemory } = require('../daily-plan/brief/job');
         await purgeBriefMemory();
