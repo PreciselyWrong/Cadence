@@ -21,6 +21,11 @@ router.post(
 );
 router.post('/telegram/stop-polling', telegramController.stopPolling);
 router.get('/telegram/polling-status', telegramController.getPollingStatus);
+router.get(
+    '/telegram/bot-info',
+    requireFeature('telegram'),
+    telegramController.getBotInfo
+);
 router.post(
     '/telegram/setup',
     requireFeature('telegram'),

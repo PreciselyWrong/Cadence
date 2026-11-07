@@ -54,6 +54,17 @@ function maskAiSettings(user) {
     };
 }
 
+// The bot token never leaves the server: the profile only says whether one
+// is saved and how it ends, so the user can recognise it.
+function maskTelegramToken(profile) {
+    const token = profile.telegram_bot_token || '';
+    delete profile.telegram_bot_token;
+    profile.telegram_bot_token_set = token.length > 0;
+    profile.telegram_bot_token_last4 =
+        token.length >= 4 ? token.slice(-4) : null;
+    return profile;
+}
+
 const usersRepository = require('./repository');
 const {
     validateFirstDayOfWeek,
@@ -461,7 +472,7 @@ class UsersService {
         const profile = user.toJSON();
         profile.has_password = !!user.password_digest;
         delete profile.password_digest;
-        return profile;
+        return maskTelegramToken(profile);
     }
 
     /**
@@ -659,7 +670,7 @@ class UsersService {
                 }
             }
         }
-        return updated;
+        return updated ? maskTelegramToken(updated.toJSON()) : updated;
     }
 
     /**

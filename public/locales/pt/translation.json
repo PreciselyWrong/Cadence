@@ -918,6 +918,7 @@
     },
     "aiApiKey": "Chave de API",
     "aiApiKeyClear": "Limpar",
+    "telegramBotTokenClear": "Limpar",
     "aiAssistantDescription": "Ativar resumos diários e análises de tarefas e projetos com IA.",
     "aiAssistantLabel": "Assistente de IA (análises)",
     "aiAssistantTab": "Assistente de IA",

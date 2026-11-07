@@ -66,6 +66,23 @@ async function sendWelcomeMessage(token, chatId) {
     });
 }
 
+// Skips the Telegram API in tests.
+async function lookupBot(token) {
+    if (process.env.NODE_ENV === 'test') {
+        return {
+            id: 123456789,
+            is_bot: true,
+            first_name: 'Test Bot',
+            username: 'testbot',
+        };
+    }
+    const botInfo = await getBotInfo(token);
+    if (!botInfo) {
+        throw new ValidationError('Invalid bot token or bot not accessible.');
+    }
+    return botInfo;
+}
+
 class TelegramService {
     async startPolling(userId) {
         const user = await User.findByPk(userId);
@@ -120,25 +137,7 @@ class TelegramService {
             throw new ValidationError('Invalid Telegram bot token format.');
         }
 
-        // Get bot info from Telegram API
-        // Skip actual API call in test environment
-        let botInfo;
-        if (process.env.NODE_ENV === 'test') {
-            // Mock response for tests
-            botInfo = {
-                id: 123456789,
-                is_bot: true,
-                first_name: 'Test Bot',
-                username: 'testbot',
-            };
-        } else {
-            botInfo = await getBotInfo(token);
-            if (!botInfo) {
-                throw new ValidationError(
-                    'Invalid bot token or bot not accessible.'
-                );
-            }
-        }
+        const botInfo = await lookupBot(token);
 
         // Update user's telegram bot token
         await user.update({ telegram_bot_token: token });
@@ -148,6 +147,15 @@ class TelegramService {
             message: 'Telegram bot token updated successfully',
             bot: botInfo,
         };
+    }
+
+    // Describes the saved bot so the browser never has to hold the token.
+    async getSavedBotInfo(userId) {
+        const user = await User.findByPk(userId);
+        if (!user || !user.telegram_bot_token) {
+            throw new ValidationError('Telegram bot token not set.');
+        }
+        return { success: true, bot: await lookupBot(user.telegram_bot_token) };
     }
 
     async sendWelcome(userId, chatId) {

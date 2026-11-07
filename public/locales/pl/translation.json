@@ -921,6 +921,7 @@
     },
     "aiApiKey": "Klucz API",
     "aiApiKeyClear": "Wyczyść",
+    "telegramBotTokenClear": "Wyczyść",
     "aiAssistantDescription": "Włącz codzienne podsumowania oraz analizy zadań i projektów oparte na AI.",
     "aiAssistantLabel": "Asystent AI (analizy)",
     "aiAssistantTab": "Asystent AI",

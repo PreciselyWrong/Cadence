@@ -917,6 +917,7 @@
     },
     "aiApiKey": "API-sleutel",
     "aiApiKeyClear": "Wissen",
+    "telegramBotTokenClear": "Wissen",
     "aiAssistantDescription": "Schakel AI-samenvattingen per dag en inzichten in taken en projecten in.",
     "aiAssistantLabel": "AI-assistent (inzichten)",
     "aiAssistantTab": "AI-assistent",

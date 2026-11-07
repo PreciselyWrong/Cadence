@@ -917,6 +917,7 @@
     },
     "aiApiKey": "API ключ",
     "aiApiKeyClear": "Изчисти",
+    "telegramBotTokenClear": "Изчисти",
     "aiAssistantDescription": "Включи ежедневни обобщения и анализи на задачи и проекти с AI.",
     "aiAssistantLabel": "AI асистент (анализи)",
     "aiAssistantTab": "AI асистент",

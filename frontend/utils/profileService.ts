@@ -35,7 +35,8 @@ interface Profile {
     timezone: string;
     first_day_of_week: number;
     avatar_image: string | null;
-    telegram_bot_token: string | null;
+    telegram_bot_token_set?: boolean;
+    telegram_bot_token_last4?: string | null;
     telegram_chat_id: string | null;
     task_summary_enabled: boolean;
     task_summary_frequency: string;

@@ -1,6 +1,8 @@
 const { DataTypes } = require('sequelize');
 const bcrypt = require('bcrypt');
 const { uid } = require('../utils/uid');
+const secretCipher = require('../shared/crypto/secretCipher');
+const { logError } = require('../services/logService');
 
 module.exports = (sequelize) => {
     const User = sequelize.define(
@@ -91,9 +93,35 @@ module.exports = (sequelize) => {
                 type: DataTypes.STRING,
                 allowNull: true,
             },
+            // Encrypted at rest with secretCipher; readers get the plaintext.
+            // Without key material the token stays as typed, and rows
+            // written before encryption read back unchanged.
             telegram_bot_token: {
                 type: DataTypes.STRING,
                 allowNull: true,
+                get() {
+                    const stored = this.getDataValue('telegram_bot_token');
+                    if (!stored) return stored;
+                    try {
+                        return secretCipher.decrypt(stored);
+                    } catch (error) {
+                        logError(
+                            { error, userId: this.getDataValue('id') },
+                            'Failed to decrypt Telegram bot token'
+                        );
+                        return null;
+                    }
+                },
+                set(value) {
+                    const encrypt =
+                        value &&
+                        !secretCipher.isEncrypted(value) &&
+                        secretCipher.hasKeyMaterial();
+                    this.setDataValue(
+                        'telegram_bot_token',
+                        encrypt ? secretCipher.encrypt(value) : value
+                    );
+                },
             },
             telegram_chat_id: {
                 type: DataTypes.STRING,

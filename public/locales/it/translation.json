@@ -974,6 +974,7 @@
     "aiProviderDescription": "Usa la tua chiave API con qualsiasi fornitore compatibile con OpenAI. Lascia vuoto per usare quello del server, se configurato.",
     "aiApiKey": "Chiave API",
     "aiApiKeyClear": "Cancella",
+    "telegramBotTokenClear": "Cancella",
     "aiApiKeyPlaceholder": "sk-...",
     "aiBaseUrl": "URL di base",
     "aiBaseUrlPlaceholder": "https://api.openai.com/v1 (predefinito)",

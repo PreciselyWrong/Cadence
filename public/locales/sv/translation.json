@@ -917,6 +917,7 @@
     },
     "aiApiKey": "API-nyckel",
     "aiApiKeyClear": "Rensa",
+    "telegramBotTokenClear": "Rensa",
     "aiAssistantDescription": "Aktivera AI-drivna dagliga sammanfattningar och insikter om uppgifter och projekt.",
     "aiAssistantLabel": "AI-assistent (insikter)",
     "aiAssistantTab": "AI-assistent",

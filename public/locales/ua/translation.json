@@ -1587,6 +1587,7 @@
     },
     "aiApiKey": "API-ключ",
     "aiApiKeyClear": "Очистити",
+    "telegramBotTokenClear": "Очистити",
     "aiAssistantDescription": "Увімкнути щоденні зведення, аналітику завдань і проєктів на основі ШІ.",
     "aiAssistantLabel": "ШІ-асистент (аналітика)",
     "aiAssistantTab": "ШІ-асистент",

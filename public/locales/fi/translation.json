@@ -917,6 +917,7 @@
     },
     "aiApiKey": "API-avain",
     "aiApiKeyClear": "Tyhjennä",
+    "telegramBotTokenClear": "Tyhjennä",
     "aiAssistantDescription": "Ota käyttöön tekoälyn päivittäiset katsaukset sekä tehtävä- ja projektianalyysit.",
     "aiAssistantLabel": "AI-avustaja (analyysit)",
     "aiAssistantTab": "AI-avustaja",

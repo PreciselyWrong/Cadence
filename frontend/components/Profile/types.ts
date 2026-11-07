@@ -116,7 +116,9 @@ export interface Profile {
     first_day_of_week: number;
     avatar_image: string | null;
     has_password: boolean;
-    telegram_bot_token: string | null;
+    // The server never returns the token itself.
+    telegram_bot_token_set?: boolean;
+    telegram_bot_token_last4?: string | null;
     telegram_chat_id: string | null;
     telegram_allowed_users: string | null;
     task_summary_enabled: boolean;
@@ -149,5 +151,7 @@ export type ProfileFormData = Partial<
         // Write-only: a new key to set on save. Never populated from a GET
         // response (the server never returns the plaintext key).
         ai_api_key: string;
+        // Write-only as well: undefined keeps the saved token, '' clears it.
+        telegram_bot_token: string;
     }
 >;

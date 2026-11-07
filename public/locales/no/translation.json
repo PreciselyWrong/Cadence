@@ -918,6 +918,7 @@
     },
     "aiApiKey": "API-nøkkel",
     "aiApiKeyClear": "Tøm",
+    "telegramBotTokenClear": "Tøm",
     "aiAssistantDescription": "Slå på AI-drevne daglige sammendrag og innsikt i oppgaver og prosjekter.",
     "aiAssistantLabel": "AI-assistent (innsikt)",
     "aiAssistantTab": "AI-assistent",

@@ -101,6 +101,8 @@ See [PWA & Offline Support](15-pwa.md) for the manifest configuration and limita
 
 Telegram is off by default. Set `TELEGRAM_ENABLED=true` on the server to turn it on; until then the Telegram settings tab and sidebar icon are hidden.
 
+The bot token is encrypted in the database (`secretCipher`, key from `TUDUDI_SESSION_SECRET` or `TUDUDI_OIDC_SECRET_ENCRYPTION_KEY`) and never sent back to the browser: `GET /api/profile` only returns `telegram_bot_token_set` and `telegram_bot_token_last4`, and the settings tab shows the saved token as `••••••••` plus its last four characters with a Clear button. A profile save that leaves `telegram_bot_token` out keeps the saved token; an empty one clears it. `GET /api/telegram/bot-info` describes the saved bot from the server side. Without key material the token is stored as typed; the migration `20261107100000-encrypt-telegram-bot-token` encrypts tokens saved before, and any left in plaintext are encrypted on their next save. Data exports still contain the token in plaintext so a restore keeps the bot.
+
 Send messages to your Cadence bot:
 - Each message creates an inbox item
 - Source is marked as `telegram`

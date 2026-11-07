@@ -43,7 +43,7 @@ export const TelegramStatusProvider: React.FC<{
 
                 const profileData = await profileResponse.json();
 
-                if (!profileData.telegram_bot_token) {
+                if (!profileData.telegram_bot_token_set) {
                     return 'none';
                 }
 

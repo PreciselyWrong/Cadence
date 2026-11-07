@@ -921,6 +921,7 @@
     },
     "aiApiKey": "API ključ",
     "aiApiKeyClear": "Počisti",
+    "telegramBotTokenClear": "Počisti",
     "aiAssistantDescription": "Omogoči dnevne povzetke ter vpoglede v opravila in projekte z umetno inteligenco.",
     "aiAssistantLabel": "AI pomočnik (vpogledi)",
     "aiAssistantTab": "AI pomočnik",
