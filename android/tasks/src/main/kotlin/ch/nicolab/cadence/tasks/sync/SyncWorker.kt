@@ -3,6 +3,7 @@ package ch.nicolab.cadence.tasks.sync
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import ch.nicolab.cadence.tasks.autoclassify.notifyAutoClassify
 import ch.nicolab.cadence.tasks.data.TasksRuntime
 
 class SyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
@@ -13,6 +14,7 @@ class SyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(c
         val kind = inputData.getString(KEY_KIND)?.let { runCatching { PassKind.valueOf(it) }.getOrNull() }
             ?: if (inputData.getBoolean(KEY_PERIODIC, false)) PassKind.PERIODIC else PassKind.NOW
         val result = runtime.engine.sync()
+        if (result == SyncResult.Synced) notifyAutoClassify(applicationContext)
         if (result == SyncResult.Synced && kind != PassKind.RETRY) SyncScheduler.cancelRetry(applicationContext)
         return when (workerOutcome(result, kind)) {
             WorkerOutcome.DONE -> Result.success()

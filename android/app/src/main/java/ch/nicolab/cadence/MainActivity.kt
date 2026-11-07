@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import ch.nicolab.cadence.designsystem.theme.CadenceTheme
+import ch.nicolab.cadence.tasks.autoclassify.EXTRA_OPEN_TRIAGE
 import ch.nicolab.cadence.tasks.widget.EXTRA_OPEN_TASK_UID
 
 class MainActivity : ComponentActivity() {
@@ -34,6 +35,7 @@ class MainActivity : ComponentActivity() {
                     intent.getStringExtra(EXTRA_OPEN_QUESTION_HABIT_ID),
                     intent.getBooleanExtra(EXTRA_OPEN_QUESTION_AMOUNT, false),
                     intent.getBooleanExtra(EXTRA_OPEN_AGENDA, false),
+                    intent.getBooleanExtra(EXTRA_OPEN_TRIAGE, false),
                 )
             }
         }

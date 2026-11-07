@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.AutoFixHigh
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.CloudUpload
 import androidx.compose.material.icons.outlined.EventAvailable
@@ -132,6 +133,14 @@ internal fun settingsPages(deps: SettingsDeps): List<SettingsPage> = listOf(
         title = ch.nicolab.cadence.tasks.R.string.brief_settings_title,
         subtitle = { null },
         content = { ch.nicolab.cadence.tasks.ui.settings.BriefSettingsPage() },
+    ),
+    SettingsPage(
+        id = "classify",
+        section = SettingsSection.ORGANISATION,
+        icon = Icons.Outlined.AutoFixHigh,
+        title = ch.nicolab.cadence.tasks.R.string.auto_classify_settings_title,
+        subtitle = { null },
+        content = { ch.nicolab.cadence.tasks.ui.settings.AutoClassifySettingsPage() },
     ),
     SettingsPage(
         id = "agents",

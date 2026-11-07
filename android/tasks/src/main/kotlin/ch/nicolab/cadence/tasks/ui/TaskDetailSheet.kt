@@ -23,6 +23,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import ch.nicolab.cadence.tasks.ui.autoclassify.AutoClassifyMarkLine
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.CalendarMonth
@@ -228,6 +229,7 @@ internal fun TaskDetailSheet(
                 verticalArrangement = Arrangement.spacedBy(Space.md),
             ) {
                 if (readOnly) FileBackedNotice()
+                AutoClassifyMarkLine(entity = "task", uid = current.uid)
                 DetailBadges(
                     task = current,
                     enabled = !readOnly,

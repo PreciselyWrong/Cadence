@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.tasks.ui
 
+import ch.nicolab.cadence.tasks.ui.autoclassify.AutoClassifyMarkLine
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -161,6 +162,7 @@ internal fun LinkEditDialog(
                     modifier = Modifier.fillMaxWidth(),
                 )
                 LinkTagLine(link, tags, onTags)
+                AutoClassifyMarkLine(entity = "link", uid = link.uid)
             }
         },
         confirmButton = {

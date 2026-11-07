@@ -125,6 +125,10 @@
         </service>
 
         <receiver
+            android:name=".autoclassify.AutoClassifyReceiver"
+            android:exported="false" />
+
+        <receiver
             android:name=".reminder.TaskReminderReceiver"
             android:exported="false" />
 

@@ -86,6 +86,7 @@ import ch.nicolab.cadence.tasks.search.SearchEntry
 import ch.nicolab.cadence.tasks.search.SearchKind
 import ch.nicolab.cadence.tasks.ui.GoalsScreen
 import ch.nicolab.cadence.tasks.ui.InboxScreen
+import ch.nicolab.cadence.tasks.ui.triage.TriageRoute
 import ch.nicolab.cadence.tasks.ui.LocalEntityIconPicker
 import ch.nicolab.cadence.tasks.ui.LocalEntityIcons
 import ch.nicolab.cadence.tasks.ui.SearchScreen
@@ -115,6 +116,7 @@ internal fun CadenceAppScreen(
     openQuestionHabitId: String? = null,
     openQuestionForAmount: Boolean = false,
     openAgenda: Boolean = false,
+    openTriage: Boolean = false,
 ) {
     val habits by viewModel.habits.collectAsStateWithLifecycle()
     val groups by viewModel.groups.collectAsStateWithLifecycle()
@@ -128,6 +130,7 @@ internal fun CadenceAppScreen(
     var searchOpen by rememberSaveable { mutableStateOf(false) }
     var reviewOpen by rememberSaveable { mutableStateOf(false) }
     var briefOpen by rememberSaveable { mutableStateOf(false) }
+    var triageOpen by rememberSaveable { mutableStateOf(false) }
     var goalsOpen by rememberSaveable { mutableStateOf(false) }
     var projectToShow by rememberSaveable { mutableStateOf<String?>(null) }
     // Tâche à ouvrir (widget ou rappel) ; effacée dès que Tâches l'a ouverte pour ne pas la rouvrir.
@@ -147,6 +150,13 @@ internal fun CadenceAppScreen(
     androidx.compose.runtime.LaunchedEffect(openAgenda) {
         if (openAgenda) {
             tab = Tab.AGENDA
+            settingsOpen = false
+        }
+    }
+    // Une notification du classement ouvre « À trier », quel que soit l'onglet restauré.
+    androidx.compose.runtime.LaunchedEffect(openTriage) {
+        if (openTriage) {
+            triageOpen = true
             settingsOpen = false
         }
     }
@@ -328,8 +338,9 @@ internal fun CadenceAppScreen(
             )
             if (goalsOpen) GoalsScreen(onBack = { goalsOpen = false })
             if (briefOpen) BriefScreen(onBack = { briefOpen = false })
+            if (triageOpen) TriageRoute(onBack = { triageOpen = false })
             NavigationBarScrim()
-            if (!settingsOpen && !searchOpen && !reviewOpen && !goalsOpen && !briefOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop) { index ->
+            if (!settingsOpen && !searchOpen && !reviewOpen && !goalsOpen && !briefOpen && !triageOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop) { index ->
                 tab = Tab.entries[index]
                 opening = opening.consumed()
             }
@@ -337,7 +348,7 @@ internal fun CadenceAppScreen(
                 snackbar,
                 Modifier.align(Alignment.BottomCenter).padding(
                     // Sans barre flottante, la bannière s'arrête quand même au-dessus des boutons du système (3 boutons ou gestes).
-                    bottom = if (settingsOpen || searchOpen || reviewOpen || goalsOpen || briefOpen) {
+                    bottom = if (settingsOpen || searchOpen || reviewOpen || goalsOpen || briefOpen || triageOpen) {
                         WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + Space.lg
                     } else {
                         navigationClearance() + Space.sm
