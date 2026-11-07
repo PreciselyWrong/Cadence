@@ -451,6 +451,8 @@ docker run -d -p 5432:5432 -e POSTGRES_USER=tududi -e POSTGRES_PASSWORD=tududi -
 DATABASE_URL=postgres://tududi:tududi@localhost:5432/tududi_test npm run backend:test:pg
 ```
 
+On PostgreSQL, `tests/integration/postgres-fresh-migrate.test.js` also creates its own empty database, runs `scripts/db-prepare.js` then `scripts/db-migrate.js` (`npm run db:migrate`) twice, and checks that nothing replays, that `SequelizeMeta` lists every migration file and that `sequelize-cli db:migrate:status` shows them all `up`; a migration removed from `SequelizeMeta` then runs once. Skipped on SQLite.
+
 CI runs both: `test-sqlite` and `test-postgres` in `.github/workflows/ci.yml`. When a test encodes engine-specific behaviour, branch on `isPostgres()` from `utils/db-dialect.js` rather than skipping the file.
 
 ### Upgrade suite

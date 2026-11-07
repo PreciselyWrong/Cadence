@@ -19,7 +19,11 @@ const umzug = new Umzug({
         params: [sequelize.getQueryInterface(), Sequelize],
     },
     storage: 'sequelize',
-    storageOptions: { sequelize },
+    // The table sequelize-cli and db-prepare.js record migrations in. Without
+    // it umzug derives the name from the global `underscored` option and
+    // reads `sequelize_meta`, which misses the PostgreSQL baseline and
+    // replays every historical migration.
+    storageOptions: { sequelize, tableName: 'SequelizeMeta' },
 });
 
 async function migrateDatabase() {
