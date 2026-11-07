@@ -5535,6 +5535,8 @@
     "viewTag": "Aller à l'étiquette"
   },
   "links": {
+    "addToLinks": "Ajouter aux liens",
+    "inLinks": "Dans les liens",
     "attachPick": "Choisir un projet",
     "tryTaskName": "Tester : {{title}}",
     "tryProject": "Projet",

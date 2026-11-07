@@ -8,6 +8,7 @@ const {
     normalizeUrl,
     residualText,
     classifyKind,
+    isContextUrl,
 } = require('./core/urls');
 
 // At most this many links are taken from one row.
@@ -16,8 +17,25 @@ const MAX_PER_SOURCE = 20;
 // Text around the address beyond which an inbox item is an idea, not a share.
 const SHARED_TEXT_MAX = 120;
 
+// Hosts of this server's own sites and services, comma separated: like the
+// built-in context addresses, they never become links.
+function ignoredHosts() {
+    return (process.env.TUDUDI_LINKS_IGNORE_HOSTS || '')
+        .split(',')
+        .map((h) =>
+            h
+                .trim()
+                .toLowerCase()
+                .replace(/^\*?\./, '')
+        )
+        .filter(Boolean);
+}
+
 // Where links are looked for, per model: the source type stored on the
-// link and the text fields read.
+// link and the text fields read. Only the inbox creates links: an address in
+// a task or a note is its context, and joins the library only on purpose
+// (`POST /api/links` with the task or note as source). Tasks and notes still
+// take over a link the inbox already saved.
 const SOURCES = {
     InboxItem: { type: 'inbox_item', fields: ['content'] },
     Task: { type: 'task', fields: ['name', 'note'] },
@@ -28,7 +46,8 @@ function isUniqueViolation(error) {
     return error && error.name === 'SequelizeUniqueConstraintError';
 }
 
-// Finds the links of one saved row and makes sure each has a Link. A new
+// Finds the links of one saved row and makes sure each has a Link. Only an
+// inbox item creates one, never for a context address. A new
 // link from an inbox item that holds only that link takes the rest of the
 // text as its note: what the user wrote next to it at capture. An existing
 // link first seen in the inbox moves to the task or note it went to.
@@ -67,6 +86,8 @@ async function captureFrom(
     });
     const byUrl = new Map(existing.map((l) => [l.url, l]));
     const touched = [];
+    const creates = type === 'inbox_item';
+    const hosts = ignoredHosts();
 
     for (const [url, written] of normalized) {
         if (!shared && excluded.has(url)) continue;
@@ -81,6 +102,7 @@ async function captureFrom(
             touched.push(found);
             continue;
         }
+        if (!creates || isContextUrl(url, hosts)) continue;
         const note =
             type === 'inbox_item' && normalized.length === 1
                 ? residualText(raw, written) || null
@@ -105,7 +127,8 @@ async function captureFrom(
         const text = residualText(raw, normalized[0][1]);
         // Text an already saved link does not hold stays in the inbox: it would
         // be lost otherwise.
-        const held = !text || touched[0]?.note === text;
+        // An address that made no link stays too.
+        const held = touched.length > 0 && (!text || touched[0].note === text);
         if (held && text.length <= SHARED_TEXT_MAX) {
             await settleInboxItem(userId, uid);
         }
@@ -142,24 +165,20 @@ function existingRowsWhere(name, fields) {
     const conditions = [
         { [Op.or]: fields.map((f) => ({ [f]: ciLike('%http%') })) },
     ];
-    if (name === 'Task') {
-        conditions.push({
-            [Op.or]: [{ habit_mode: false }, { habit_mode: null }],
-        });
-    }
     if (name === 'InboxItem') {
         conditions.push({ status: { [Op.notIn]: DISCARDED_INBOX } });
     }
     return { [Op.and]: conditions };
 }
 
-// Rows saved before links were captured (or while capture was off): their
-// links are found as if the rows had just been written. Inbox items first,
-// so a link later turned into a task or a note moves there as usual.
-// Idempotent: a link already saved is only found again.
+// Inbox items saved before links were captured (or while capture was off):
+// their links are found as if the items had just been written. Tasks and
+// notes create no link, so they are not read. Idempotent: a link already
+// saved is only found again.
 async function captureExisting() {
     const models = require('../../models');
     for (const [name, source] of Object.entries(SOURCES)) {
+        if (source.type !== 'inbox_item') continue;
         const Model = models[name];
         if (!Model) continue;
         let lastId = 0;
@@ -209,4 +228,10 @@ function install(models) {
     }
 }
 
-module.exports = { install, captureFrom, captureExisting, SOURCES };
+module.exports = {
+    install,
+    captureFrom,
+    captureExisting,
+    ignoredHosts,
+    SOURCES,
+};

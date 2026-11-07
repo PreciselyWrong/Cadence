@@ -5532,6 +5532,8 @@
     "viewTag": "Vai al tag"
   },
   "links": {
+    "addToLinks": "Aggiungi ai link",
+    "inLinks": "Nei link",
     "attachPick": "Scegli un progetto",
     "tryTaskName": "Provare: {{title}}",
     "tryProject": "Progetto",

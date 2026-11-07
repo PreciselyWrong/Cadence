@@ -5519,6 +5519,8 @@
     "viewTag": "前往标签"
   },
   "links": {
+    "addToLinks": "添加到链接",
+    "inLinks": "已在链接中",
     "attachPick": "选择项目",
     "tryTaskName": "尝试：{{title}}",
     "tryProject": "项目",

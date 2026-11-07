@@ -5519,6 +5519,8 @@
     "viewTag": "Gå til mærke"
   },
   "links": {
+    "addToLinks": "Føj til links",
+    "inLinks": "I links",
     "attachPick": "Vælg et projekt",
     "tryTaskName": "Test: {{title}}",
     "tryProject": "Projekt",

@@ -4,6 +4,7 @@ const {
     residualText,
     domainOf,
     classifyKind,
+    isContextUrl,
 } = require('../../../../modules/links/core/urls');
 
 describe('links/core/urls', () => {
@@ -112,6 +113,52 @@ describe('links/core/urls', () => {
         it('treats a site home page as a tool', () => {
             expect(classifyKind('https://excalidraw.com/')).toBe('tool');
             expect(classifyKind('https://x.io/docs/page')).toBe('other');
+        });
+    });
+
+    describe('isContextUrl', () => {
+        it('flags internal hosts, personal apps, searches and CI runs', () => {
+            for (const url of [
+                'http://nas.lan/x',
+                'http://tower.local/Main',
+                'https://box.tail1234.ts.net/',
+                'https://router.home.arpa/',
+                'http://192.168.1.10/admin',
+                'https://mail.google.com/mail/u/0/#inbox/abc',
+                'https://gemini.google.com/app/123',
+                'https://www.google.com/search?q=x',
+                'https://www.google.ch/search?q=x',
+                'https://www.linkedin.com/feed/',
+                'https://www.linkedin.com/messaging/thread/1/',
+                'https://github.com/a/b/actions/runs/42',
+                'https://gitlab.com/a/b/-/pipelines/7',
+                'https://chatgpt.com/c/abc',
+                'https://claude.ai/chat/abc',
+            ]) {
+                expect([url, isContextUrl(url)]).toEqual([url, true]);
+            }
+        });
+
+        it('keeps pages worth reading or trying', () => {
+            for (const url of [
+                'https://github.com/a/b',
+                'https://www.linkedin.com/pulse/some-article',
+                'https://blog.example.com/post',
+                'https://www.google.com/',
+                'https://developers.google.com/docs',
+            ]) {
+                expect([url, isContextUrl(url)]).toEqual([url, false]);
+            }
+        });
+
+        it('adds the hosts of the server setting, with their subdomains', () => {
+            const hosts = ['example.net', 'intra.example.org'];
+            expect(isContextUrl('https://git.example.net/x', hosts)).toBe(true);
+            expect(isContextUrl('https://example.net/', hosts)).toBe(true);
+            expect(isContextUrl('https://intra.example.org/a', hosts)).toBe(
+                true
+            );
+            expect(isContextUrl('https://example.org/a', hosts)).toBe(false);
         });
     });
 });

@@ -148,6 +148,7 @@ async function initialize() {
         raw: true,
     });
     pending.forEach((l) => enqueueFetch(l.id));
+    await require('./prune').pruneContextLinks();
     await captureExisting();
     scheduleRefresh();
 }

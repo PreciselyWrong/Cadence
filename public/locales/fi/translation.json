@@ -5519,6 +5519,8 @@
     "viewTag": "Siirry tunnisteeseen"
   },
   "links": {
+    "addToLinks": "Lisää linkkeihin",
+    "inLinks": "Linkeissä",
     "attachPick": "Valitse projekti",
     "tryTaskName": "Kokeile: {{title}}",
     "tryProject": "Projekti",

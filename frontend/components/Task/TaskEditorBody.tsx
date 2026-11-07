@@ -15,6 +15,7 @@ import TaskSubtasksCard from './TaskDetails/TaskSubtasksCard';
 import TaskAttachmentsCard from './TaskDetails/TaskAttachmentsCard';
 import TaskComments from './TaskComments';
 import TaskContexts from './TaskContexts';
+import AddToLinks from '../Links/AddToLinks';
 import TaskChipRow from './TaskChipRow';
 import { SaveState } from './useTaskAutosave';
 import { TaskEditor } from './useTaskEditor';
@@ -268,6 +269,14 @@ export const TaskEditorBody: React.FC<{ ed: TaskEditor }> = ({ ed }) => {
                     </div>
                 )}
             </div>
+
+            {task.uid && !readOnly && (
+                <AddToLinks
+                    sourceType="task"
+                    sourceUid={task.uid}
+                    texts={[task.name, note]}
+                />
+            )}
 
             {task.uid && (
                 <>

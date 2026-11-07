@@ -104,7 +104,7 @@ describe('Links', () => {
         expect(fetched).toHaveLength(1);
     });
 
-    it('captures links from a note and from a task note', async () => {
+    it('leaves the links written in tasks and notes out of the library', async () => {
         await agent
             .post('/api/note')
             .send({ title: 'Refs', content: 'See https://a.example.org/x' });
@@ -113,16 +113,88 @@ describe('Links', () => {
             .send({ name: 'Plain', note: 'Docs: https://b.example.org/y' });
         await jobs.drain();
 
-        const urls = (
-            await Link.findAll({
-                where: { user_id: user.id },
-                order: [['url', 'ASC']],
-            })
-        ).map((l) => [l.url, l.source_type, l.note]);
-        expect(urls).toEqual([
-            ['https://a.example.org/x', 'note', null],
-            ['https://b.example.org/y', 'task', null],
-        ]);
+        expect(await Link.count({ where: { user_id: user.id } })).toBe(0);
+        expect(fetched).toEqual([]);
+    });
+
+    it('never makes a link of a context address, and keeps the idea', async () => {
+        const res = await capture('https://mail.google.com/mail/u/0/#inbox/x');
+        await capture('Search https://www.google.com/search?q=cadence later');
+
+        expect(await Link.count({ where: { user_id: user.id } })).toBe(0);
+        const item = await InboxItem.findOne({ where: { uid: res.body.uid } });
+        expect(item.status).toBe('added');
+    });
+
+    it('treats the hosts of TUDUDI_LINKS_IGNORE_HOSTS as context', async () => {
+        const previous = process.env.TUDUDI_LINKS_IGNORE_HOSTS;
+        process.env.TUDUDI_LINKS_IGNORE_HOSTS =
+            ' Example.net , intra.example.org';
+        try {
+            await capture('https://git.example.net/me/repo');
+            await capture('https://example.org/kept');
+        } finally {
+            if (previous === undefined) {
+                delete process.env.TUDUDI_LINKS_IGNORE_HOSTS;
+            } else {
+                process.env.TUDUDI_LINKS_IGNORE_HOSTS = previous;
+            }
+        }
+
+        const urls = (await Link.findAll({ where: { user_id: user.id } })).map(
+            (l) => l.url
+        );
+        expect(urls).toEqual(['https://example.org/kept']);
+    });
+
+    it('adds a link from a task on purpose, with the task as its source', async () => {
+        const task = await agent
+            .post('/api/task')
+            .send({ name: 'Try https://github.com/a/tool' });
+        const res = await agent.post('/api/links').send({
+            url: 'https://github.com/a/tool',
+            source_type: 'task',
+            source_uid: task.body.uid,
+        });
+        await jobs.drain();
+
+        expect(res.status).toBe(200);
+        expect(res.body.created).toBe(true);
+        expect(res.body.link.source_type).toBe('task');
+        expect(res.body.link.source_uid).toBe(task.body.uid);
+
+        const note = await agent
+            .post('/api/note')
+            .send({ title: 'N', content: 'https://mail.google.com/x' });
+        const context = await agent.post('/api/links').send({
+            url: 'https://mail.google.com/x',
+            source_type: 'note',
+            source_uid: note.body.uid,
+        });
+        expect(context.status).toBe(200);
+        expect(context.body.link.source_type).toBe('note');
+    });
+
+    it('refuses a source that is not a task or note of the user', async () => {
+        const other = await signIn('links-source@example.com');
+        const task = await other.agent
+            .post('/api/task')
+            .send({ name: 'Theirs' });
+
+        const foreign = await agent.post('/api/links').send({
+            url: 'https://example.com/a',
+            source_type: 'task',
+            source_uid: task.body.uid,
+        });
+        const kind = await agent.post('/api/links').send({
+            url: 'https://example.com/b',
+            source_type: 'project',
+            source_uid: 'x',
+        });
+
+        expect(foreign.status).toBe(404);
+        expect(kind.status).toBe(400);
+        expect(await Link.count({ where: { user_id: user.id } })).toBe(0);
     });
 
     it('lists links with filters', async () => {
@@ -282,7 +354,7 @@ describe('Links', () => {
     });
 
     describe('rows written before links were captured', () => {
-        it('captures their links once, skipping thrown-away ideas and habits', async () => {
+        it('captures the links of inbox ideas once, skipping thrown-away ones', async () => {
             jobs.configure({ enabled: false });
             const { InboxItem, Task, Note } = require('../../models');
             const idea = await InboxItem.create({
@@ -325,8 +397,8 @@ describe('Links', () => {
                     order: [['url', 'ASC']],
                 })
             ).map((l) => [l.url, l.source_type, l.source_uid, l.note]);
+            expect(task.uid).toBeTruthy();
             expect(links).toEqual([
-                ['https://example.com/article', 'task', task.uid, null],
                 [
                     'https://github.com/old/repo',
                     'inbox_item',
@@ -334,10 +406,96 @@ describe('Links', () => {
                     'old idea',
                 ],
             ]);
-            expect(fetched.sort()).toEqual([
-                'https://example.com/article',
-                'https://github.com/old/repo',
+            expect(fetched).toEqual(['https://github.com/old/repo']);
+        });
+    });
+
+    describe('clean-up of links found in texts', () => {
+        const { pruneContextLinks } = require('../../modules/links/prune');
+
+        it('deletes once the untouched links of tasks, notes and context addresses', async () => {
+            jobs.configure({ enabled: false });
+            const {
+                SyncChange,
+                LinkExclusion,
+                Project,
+                Setting,
+            } = require('../../models');
+            const make = (url, fields = {}) =>
+                Link.create({
+                    user_id: user.id,
+                    url,
+                    source_type: 'task',
+                    source_uid: 'x',
+                    ...fields,
+                });
+            const project = await Project.create({
+                user_id: user.id,
+                name: 'P',
+            });
+            const fromTask = await make('https://example.com/task');
+            await make('https://example.com/note', {
+                source_type: 'note',
+                note: 'worth it',
+            });
+            const tagged = await make('https://example.com/tagged');
+            const tag = await Tag.create({ user_id: user.id, name: 'dev' });
+            await tagged.setTags([tag]);
+            await make('https://example.com/kept', { status: 'kept' });
+            await make('https://example.com/project', {
+                project_id: project.id,
+            });
+            await make('https://example.com/parked', {
+                review_at: '2026-12-01',
+            });
+            const context = await make('https://mail.google.com/x', {
+                source_type: 'inbox_item',
+            });
+            await make('https://example.com/shared', {
+                source_type: 'inbox_item',
+            });
+            await make('https://example.com/added', {
+                source_type: null,
+                source_uid: null,
+            });
+
+            expect(await pruneContextLinks()).toBe(2);
+
+            const left = (
+                await Link.findAll({
+                    where: { user_id: user.id },
+                    order: [['url', 'ASC']],
+                })
+            ).map((l) => l.url);
+            expect(left).toEqual([
+                'https://example.com/added',
+                'https://example.com/kept',
+                'https://example.com/note',
+                'https://example.com/parked',
+                'https://example.com/project',
+                'https://example.com/shared',
+                'https://example.com/tagged',
             ]);
+            const deletes = await SyncChange.findAll({
+                where: { user_id: user.id, entity: 'link', op: 'delete' },
+            });
+            expect(deletes.map((d) => d.uid).sort()).toEqual(
+                [fromTask.uid, context.uid].sort()
+            );
+            expect(
+                await LinkExclusion.count({ where: { user_id: user.id } })
+            ).toBe(2);
+            expect(
+                await Setting.count({ where: { key: 'links_context_pruned' } })
+            ).toBe(1);
+
+            await make('https://example.com/later');
+            expect(await pruneContextLinks()).toBe(0);
+            expect(
+                await Link.count({
+                    where: { url: 'https://example.com/later' },
+                })
+            ).toBe(1);
         });
     });
 
@@ -709,10 +867,7 @@ describe('Links', () => {
             (await agent.post('/api/links').send({ url })).body.link;
 
         it('deletes a link, and a rescan of the text does not bring it back', async () => {
-            await agent
-                .post('/api/note')
-                .send({ title: 'Refs', content: 'https://example.com/efface' });
-            await jobs.drain();
+            await capture('An idea about https://example.com/efface to keep');
             const { body } = await agent.get('/api/links');
             const link = body.links.find((l) => l.url.endsWith('/efface'));
 

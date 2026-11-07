@@ -186,6 +186,8 @@
     "task": "Úloha"
   },
   "links": {
+    "addToLinks": "Pridať do odkazov",
+    "inLinks": "V odkazoch",
     "attachPick": "Vyberte projekt",
     "tryTaskName": "Vyskúšať: {{title}}",
     "tryProject": "Projekt",

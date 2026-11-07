@@ -5524,6 +5524,8 @@
     "viewTag": "Gå til merkelapp"
   },
   "links": {
+    "addToLinks": "Legg til i lenker",
+    "inLinks": "I lenker",
     "attachPick": "Velg et prosjekt",
     "tryTaskName": "Prøv: {{title}}",
     "tryProject": "Prosjekt",

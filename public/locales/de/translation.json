@@ -5528,6 +5528,8 @@
     "viewTag": "Zum Tag wechseln"
   },
   "links": {
+    "addToLinks": "Zu Links hinzufügen",
+    "inLinks": "In Links",
     "attachPick": "Projekt wählen",
     "tryTaskName": "Testen: {{title}}",
     "tryProject": "Projekt",

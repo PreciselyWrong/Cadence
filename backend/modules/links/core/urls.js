@@ -159,6 +159,65 @@ function classifyKind(url, ogType = null) {
     return 'other';
 }
 
+// Addresses that only give a task its context: a home server, a mailbox, a
+// chat, a search, a CI run. They are never a page to read or try, so a
+// captured text does not make them links. Hosts match with their subdomains.
+const CONTEXT_SUFFIXES = [
+    'lan',
+    'local',
+    'localhost',
+    'localdomain',
+    'internal',
+    'intranet',
+    'home.arpa',
+    'ts.net',
+];
+const CONTEXT_HOSTS = [
+    'mail.google.com',
+    'calendar.google.com',
+    'meet.google.com',
+    'gemini.google.com',
+    'chatgpt.com',
+    'chat.openai.com',
+    'claude.ai',
+    'outlook.live.com',
+    'outlook.office.com',
+    'web.whatsapp.com',
+];
+const CONTEXT_PATHS = [
+    { host: /^(www\.)?google\.[a-z.]+$/, path: /^\/search(\/|$)/ },
+    {
+        host: /^linkedin\.com$/,
+        path: /^\/(feed|messaging|notifications)(\/|$)/,
+    },
+    { host: /^github\.com$/, path: /^\/[^/]+\/[^/]+\/actions(\/|$)/ },
+    { host: /^gitlab\.com$/, path: /\/-\/(pipelines|jobs)(\/|$)/ },
+];
+const IP_HOST = /^(\d{1,3}(\.\d{1,3}){3}|\[[0-9a-f:.]+\])$/i;
+
+function underHost(domain, host) {
+    return domain === host || domain.endsWith(`.${host}`);
+}
+
+// True when `url` is context, not a link worth keeping. `extraHosts` are the
+// server's own (TUDUDI_LINKS_IGNORE_HOSTS): its domains are private.
+function isContextUrl(url, extraHosts = []) {
+    const parsed = parse(url);
+    if (!parsed) return false;
+    const host = parsed.hostname.toLowerCase();
+    if (IP_HOST.test(host)) return true;
+    const domain = host.replace(/^www\./, '');
+    if (CONTEXT_SUFFIXES.some((suffix) => underHost(domain, suffix))) {
+        return true;
+    }
+    if ([...CONTEXT_HOSTS, ...extraHosts].some((h) => underHost(domain, h))) {
+        return true;
+    }
+    return CONTEXT_PATHS.some(
+        (rule) => rule.host.test(domain) && rule.path.test(parsed.pathname)
+    );
+}
+
 module.exports = {
     extractUrls,
     normalizeUrl,
@@ -166,4 +225,5 @@ module.exports = {
     domainOf,
     repoPath,
     classifyKind,
+    isContextUrl,
 };

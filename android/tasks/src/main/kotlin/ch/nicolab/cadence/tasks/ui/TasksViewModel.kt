@@ -317,6 +317,11 @@ internal class TasksViewModel(
 
     fun setLinkNote(uid: String, note: String?) = launchAction { repository.setLinkNote(uid, note) }
 
+    /** Met dans les liens une adresse d'une tâche ou d'une note (`task`, `note`), par un appel différé. */
+    fun addLinkFrom(url: String, sourceType: String, sourceUid: String) = launchAction {
+        repository.addLinkFrom(url, sourceType, sourceUid, getApplication<Application>().getString(R.string.links_add_call))
+    }
+
     fun setLinkTags(uid: String, tagUids: List<String>) = launchAction { repository.setLinkTags(uid, tagUids) }
 
     private val linkTriage = LinkTriageStore(application)

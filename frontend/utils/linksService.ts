@@ -64,3 +64,24 @@ export const deleteLink = async (uid: string): Promise<void> => {
     });
     await handleAuthResponse(response, 'Failed to delete link.');
 };
+
+// Puts a page written in a task or a note into the library, on purpose: the
+// server keeps the task or note as its source. The same page twice is one
+// link (`created` false).
+export const addLinkFrom = async (
+    url: string,
+    source: { type: 'task' | 'note'; uid: string }
+): Promise<{ link: Link; created: boolean }> => {
+    const response = await fetch(getApiPath('links'), {
+        method: 'POST',
+        credentials: 'include',
+        headers: await getPostHeadersWithCsrf(),
+        body: JSON.stringify({
+            url,
+            source_type: source.type,
+            source_uid: source.uid,
+        }),
+    });
+    await handleAuthResponse(response, 'Failed to add the link.');
+    return response.json();
+};

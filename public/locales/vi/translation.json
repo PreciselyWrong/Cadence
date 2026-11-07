@@ -5519,6 +5519,8 @@
     "viewTag": "Đến thẻ"
   },
   "links": {
+    "addToLinks": "Thêm vào liên kết",
+    "inLinks": "Trong liên kết",
     "attachPick": "Chọn dự án",
     "tryTaskName": "Thử: {{title}}",
     "tryProject": "Dự án",
