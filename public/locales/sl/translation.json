@@ -1,4 +1,115 @@
 {
+  "autoClassify": {
+    "number": {
+      "maxTokens": "Največ žetonov odgovora",
+      "summaryMax": "Dolžina povzetka (znaki)",
+      "maxTags": "Oznake na element",
+      "retention": "Hramba dnevnika (dnevi)",
+      "dailyLimit": "Predlogi na dan (0 = brez omejitve)",
+      "ttl": "Veljavnost predloga (dnevi)",
+      "cache": "Predpomnilnik konteksta (minute)",
+      "batch": "Elementi na klic",
+      "attempts": "Ponovitve ob napaki",
+      "fetchWait": "Čakanje pred branjem povezave (minute)",
+      "grace": "Obdobje prizanesljivosti (sekunde)"
+    },
+    "threshold": {
+      "ask": "Vprašaj od",
+      "priority": "Prioriteta (samo predlog)",
+      "duration": "Trajanje",
+      "tags": "Oznake",
+      "project": "Projekt ali področje"
+    },
+    "field": {
+      "summary": "povzetek",
+      "duration": "trajanje",
+      "tags": "oznake",
+      "area": "področje",
+      "project": "projekt"
+    },
+    "entity": {
+      "task": "Opravilo",
+      "link": "Povezava",
+      "note": "Zapisek"
+    },
+    "history": {
+      "undoRun": "Razveljavi zagon",
+      "dry": "preizkus",
+      "empty": "Še ni zagonov.",
+      "title": "Nedavni zagoni"
+    },
+    "dryRun": {
+      "report": "Pregledanih elementov: {{considered}}, {{changed}} bi jih bilo razvrščenih.",
+      "run": "Zaženi preizkus",
+      "days": "Dni",
+      "description": "Razvrsti elemente, ustvarjene v zadnjih dneh, brez zapisovanja, da vidite, kaj bi se spremenilo.",
+      "title": "Preizkus",
+      "error": "Preizkus ni uspel"
+    },
+    "settings": {
+      "save": "Shrani",
+      "excluded": "Oznake, ki se nikoli ne dodelijo (ločene z vejico)",
+      "limits": "Zakasnitve in omejitve",
+      "default": "Privzeto: {{value}}",
+      "thresholds": "Pragovi zaupanja",
+      "effortHint": "Končna točka Anthropic, združljiva z OpenAI, to prezre.",
+      "effortNone": "Ne pošlji",
+      "effort": "Napor sklepanja",
+      "modelName": "Model (prazno: model UI pomočnika)",
+      "model": "Model",
+      "notify": "Obvestila o predlogih v Androidu",
+      "dry": "Preizkus (nič se ne zapiše)",
+      "write": "Dejansko pisanje",
+      "mode": "Način",
+      "enabled": "Omogočeno",
+      "state": "Stanje",
+      "noAi": "Ni ponudnika UI: nastavite Profil › UI pomočnik, da vklopite razvrščanje.",
+      "description": "Izpolni prazna polja novih opravil, zapiskov in povezav: projekt ali področje, oznake, trajanje, povzetek povezave. Ob dvomu se kartica prikaže pod „Za razvrstitev“.",
+      "title": "Samodejno razvrščanje",
+      "saveError": "Shranjevanje ni mogoče",
+      "saved": "Nastavitve shranjene",
+      "loadError": "Nastavitev ni mogoče prebrati"
+    },
+    "mark": {
+      "undone": "Razvrščanje razveljavljeno",
+      "undo": "Razveljavi",
+      "label": "Samodejno razvrščeno",
+      "error": "Razveljavitev ni mogoča",
+      "changed": "Element se je od takrat spremenil: razveljavitev ni mogoča"
+    },
+    "duplicate": {
+      "keepBoth": "Obdrži oba",
+      "keepNew": "Obdrži novo",
+      "merge": "Združi s starim",
+      "dropNew": "Zavrzi novo",
+      "title": "Isti naslov na istem spletnem mestu",
+      "video": "Isti videoposnetek",
+      "repository": "Isti repozitorij",
+      "address": "Ista stran",
+      "reason": "Je povezava že shranjena?",
+      "original": "Že shranjeno:",
+      "new": "Novo:"
+    },
+    "card": {
+      "reason": "Razvrstitev za potrditev",
+      "dismiss": "Brez",
+      "acceptAll": "Sprejmi vse",
+      "apply": "Uporabi",
+      "medium": "Srednja",
+      "high": "Visoka",
+      "priority": "Prioriteta",
+      "newTag": "Nova oznaka: #{{name}}",
+      "tags": "Oznake",
+      "none": "Brez",
+      "pickProject": "Izberi projekt",
+      "other": "Drugo…",
+      "inArea": "V {{name}}",
+      "newProjectName": "Ime novega projekta",
+      "newProject": "Nov projekt",
+      "area": "Področje: {{name}}",
+      "project": "Projekt"
+    }
+  },
   "triage": {
     "slotRefuse": "Zavrni",
     "slotAccept": "Načrtuj",
@@ -613,6 +724,7 @@
     "nextTaskSuggestion": "Predlog naslednje naloge",
     "enableNextTaskSuggestion": "Omogoči predloge naslednjih nalog",
     "tabs": {
+      "classify": "Razvrstitev",
       "sync": "Sinhronizacija",
       "general": "Splošno",
       "security": "Varnost",

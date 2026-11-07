@@ -1,4 +1,115 @@
 {
+  "autoClassify": {
+    "number": {
+      "maxTokens": "Maksymalna liczba tokenów odpowiedzi",
+      "summaryMax": "Długość podsumowania (znaki)",
+      "maxTags": "Tagi na element",
+      "retention": "Przechowywanie dziennika (dni)",
+      "dailyLimit": "Sugestie dziennie (0 = bez limitu)",
+      "ttl": "Ważność sugestii (dni)",
+      "cache": "Pamięć podręczna kontekstu (minuty)",
+      "batch": "Elementy na wywołanie",
+      "attempts": "Ponowienia przy błędzie",
+      "fetchWait": "Czas oczekiwania przed odczytem linku (minuty)",
+      "grace": "Okres karencji (sekundy)"
+    },
+    "threshold": {
+      "ask": "Pytaj od",
+      "priority": "Priorytet (tylko sugestia)",
+      "duration": "Czas trwania",
+      "tags": "Tagi",
+      "project": "Projekt lub obszar"
+    },
+    "field": {
+      "summary": "podsumowanie",
+      "duration": "czas trwania",
+      "tags": "tagi",
+      "area": "obszar",
+      "project": "projekt"
+    },
+    "entity": {
+      "task": "Zadanie",
+      "link": "Link",
+      "note": "Notatka"
+    },
+    "history": {
+      "undoRun": "Cofnij uruchomienie",
+      "dry": "próba",
+      "empty": "Brak uruchomień.",
+      "title": "Ostatnie uruchomienia"
+    },
+    "dryRun": {
+      "report": "Sprawdzono {{considered}} elementów, {{changed}} zostałoby sklasyfikowanych.",
+      "run": "Uruchom próbę",
+      "days": "Dni",
+      "description": "Klasyfikuje elementy utworzone w ostatnich dniach bez zapisywania czegokolwiek, aby zobaczyć, co by się zmieniło.",
+      "title": "Próba",
+      "error": "Próba nie powiodła się"
+    },
+    "settings": {
+      "save": "Zapisz",
+      "excluded": "Tagi, których nigdy nie ustawiać (oddzielone przecinkami)",
+      "limits": "Opóźnienia i limity",
+      "default": "Domyślnie: {{value}}",
+      "thresholds": "Progi pewności",
+      "effortHint": "Ignorowane przez zgodny z OpenAI punkt dostępu Anthropic.",
+      "effortNone": "Nie wysyłaj",
+      "effort": "Wysiłek rozumowania",
+      "modelName": "Model (puste: model Asystenta AI)",
+      "model": "Model",
+      "notify": "Powiadomienia o sugestiach na Androidzie",
+      "dry": "Próba (nic nie zostanie zapisane)",
+      "write": "Zapis rzeczywisty",
+      "mode": "Tryb",
+      "enabled": "Włączone",
+      "state": "Stan",
+      "noAi": "Brak dostawcy AI: skonfiguruj Profil › Asystent AI, aby włączyć klasyfikację.",
+      "description": "Uzupełnia puste pola nowych zadań, notatek i linków: projekt lub obszar, tagi, czas trwania, podsumowanie linku. Gdy nie jest pewne, w „Do posortowania” pojawia się karta.",
+      "title": "Automatyczna klasyfikacja",
+      "saveError": "Nie można zapisać",
+      "saved": "Ustawienia zapisane",
+      "loadError": "Ustawienia nieczytelne"
+    },
+    "mark": {
+      "undone": "Cofnięto klasyfikację",
+      "undo": "Cofnij",
+      "label": "Sklasyfikowano automatycznie",
+      "error": "Nie można cofnąć",
+      "changed": "Element zmienił się od tego czasu: nie można cofnąć"
+    },
+    "duplicate": {
+      "keepBoth": "Zachowaj oba",
+      "keepNew": "Zachowaj nowe",
+      "merge": "Scal ze starym",
+      "dropNew": "Odrzuć nowe",
+      "title": "Ten sam tytuł na tej samej stronie",
+      "video": "To samo wideo",
+      "repository": "To samo repozytorium",
+      "address": "Ta sama strona",
+      "reason": "Link już zapisany?",
+      "original": "Już zachowane:",
+      "new": "Nowe:"
+    },
+    "card": {
+      "reason": "Klasyfikacja do potwierdzenia",
+      "dismiss": "Brak",
+      "acceptAll": "Zaakceptuj wszystko",
+      "apply": "Zastosuj",
+      "medium": "Średni",
+      "high": "Wysoki",
+      "priority": "Priorytet",
+      "newTag": "Nowy tag: #{{name}}",
+      "tags": "Tagi",
+      "none": "Brak",
+      "pickProject": "Wybierz projekt",
+      "other": "Inne…",
+      "inArea": "W {{name}}",
+      "newProjectName": "Nazwa nowego projektu",
+      "newProject": "Nowy projekt",
+      "area": "Obszar: {{name}}",
+      "project": "Projekt"
+    }
+  },
   "triage": {
     "slotRefuse": "Odrzuć",
     "slotAccept": "Zaplanuj",
@@ -613,6 +724,7 @@
     "nextTaskSuggestion": "Sugestia Następnego Zadania",
     "enableNextTaskSuggestion": "Włącz sugestie następnych zadań",
     "tabs": {
+      "classify": "Klasyfikacja",
       "sync": "Synchronizacja",
       "general": "Ogólne",
       "security": "Bezpieczeństwo",

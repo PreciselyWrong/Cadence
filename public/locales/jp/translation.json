@@ -1,4 +1,115 @@
 {
+  "autoClassify": {
+    "number": {
+      "maxTokens": "応答の最大トークン数",
+      "summaryMax": "要約の長さ（文字）",
+      "maxTags": "項目あたりのタグ数",
+      "retention": "ログの保持期間（日）",
+      "dailyLimit": "1 日あたりの提案数（0 = 無制限）",
+      "ttl": "提案の有効期間（日）",
+      "cache": "コンテキストのキャッシュ（分）",
+      "batch": "1 回の呼び出しあたりの項目数",
+      "attempts": "失敗時の再試行回数",
+      "fetchWait": "リンクを読み取るまでの待ち時間（分）",
+      "grace": "猶予期間（秒）"
+    },
+    "threshold": {
+      "ask": "この確信度から質問",
+      "priority": "優先度（提案のみ）",
+      "duration": "所要時間",
+      "tags": "タグ",
+      "project": "プロジェクトまたはエリア"
+    },
+    "field": {
+      "summary": "要約",
+      "duration": "所要時間",
+      "tags": "タグ",
+      "area": "エリア",
+      "project": "プロジェクト"
+    },
+    "entity": {
+      "task": "タスク",
+      "link": "リンク",
+      "note": "メモ"
+    },
+    "history": {
+      "undoRun": "実行を取り消す",
+      "dry": "試行",
+      "empty": "まだ実行履歴がありません。",
+      "title": "最近の実行"
+    },
+    "dryRun": {
+      "report": "{{considered}} 件を確認し、{{changed}} 件が分類されます。",
+      "run": "試行を実行",
+      "days": "日",
+      "description": "直近数日に作成された項目を、何も書き込まずに分類し、変更内容を確認します。",
+      "title": "試行",
+      "error": "試行に失敗しました"
+    },
+    "settings": {
+      "save": "保存",
+      "excluded": "一度も付けないタグ（カンマ区切り）",
+      "limits": "遅延と上限",
+      "default": "既定値：{{value}}",
+      "thresholds": "信頼度のしきい値",
+      "effortHint": "Anthropic の OpenAI 互換エンドポイントでは無視されます。",
+      "effortNone": "送信しない",
+      "effort": "推論の強度",
+      "modelName": "モデル（空欄：AI アシスタントのモデル）",
+      "model": "モデル",
+      "notify": "Android での提案の通知",
+      "dry": "試行（何も書き込みません）",
+      "write": "実際に書き込む",
+      "mode": "モード",
+      "enabled": "有効",
+      "state": "状態",
+      "noAi": "AI プロバイダーがありません：プロフィール › AI アシスタントを設定すると分類が有効になります。",
+      "description": "新しいタスク、メモ、リンクの空の項目を埋めます：プロジェクトまたはエリア、タグ、所要時間、リンクの要約。判断に迷う場合は「仕分け」にカードを表示します。",
+      "title": "自動分類",
+      "saveError": "保存できません",
+      "saved": "設定を保存しました",
+      "loadError": "設定を読み込めません"
+    },
+    "mark": {
+      "undone": "分類を取り消しました",
+      "undo": "元に戻す",
+      "label": "自動で分類しました",
+      "error": "元に戻せません",
+      "changed": "その後に項目が変更されました：元に戻せません"
+    },
+    "duplicate": {
+      "keepBoth": "両方残す",
+      "keepNew": "新しい方を残す",
+      "merge": "古い方に統合",
+      "dropNew": "新しい方を破棄",
+      "title": "同じサイトの同じタイトル",
+      "video": "同じ動画",
+      "repository": "同じリポジトリ",
+      "address": "同じページ",
+      "reason": "リンクは既に保存されていますか？",
+      "original": "既に保持：",
+      "new": "新規："
+    },
+    "card": {
+      "reason": "分類の確認が必要",
+      "dismiss": "なし",
+      "acceptAll": "すべて承認",
+      "apply": "適用",
+      "medium": "中",
+      "high": "高",
+      "priority": "優先度",
+      "newTag": "新しいタグ：#{{name}}",
+      "tags": "タグ",
+      "none": "なし",
+      "pickProject": "プロジェクトを選択",
+      "other": "その他…",
+      "inArea": "{{name}} 内",
+      "newProjectName": "新しいプロジェクトの名前",
+      "newProject": "新しいプロジェクト",
+      "area": "エリア：{{name}}",
+      "project": "プロジェクト"
+    }
+  },
   "triage": {
     "slotRefuse": "断る",
     "slotAccept": "予定に入れる",
@@ -515,6 +626,7 @@
     "nextTaskSuggestion": "次のタスクの提案",
     "enableNextTaskSuggestion": "次のタスク提案を有効にする",
     "tabs": {
+      "classify": "分類",
       "sync": "Sync",
       "general": "一般",
       "security": "セキュリティ",

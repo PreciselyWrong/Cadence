@@ -1,4 +1,115 @@
 {
+  "autoClassify": {
+    "number": {
+      "maxTokens": "Maximale Antwort-Tokens",
+      "summaryMax": "Länge einer Zusammenfassung (Zeichen)",
+      "maxTags": "Tags pro Element",
+      "retention": "Aufbewahrung des Protokolls (Tage)",
+      "dailyLimit": "Vorschläge pro Tag (0 = unbegrenzt)",
+      "ttl": "Gültigkeit eines Vorschlags (Tage)",
+      "cache": "Kontext-Cache (Minuten)",
+      "batch": "Elemente pro Aufruf",
+      "attempts": "Wiederholungen bei Fehlern",
+      "fetchWait": "Wartezeit vor dem Lesen eines Links (Minuten)",
+      "grace": "Nachfrist (Sekunden)"
+    },
+    "threshold": {
+      "ask": "Frage stellen ab",
+      "priority": "Priorität (nur als Vorschlag)",
+      "duration": "Dauer",
+      "tags": "Tags",
+      "project": "Projekt oder Bereich"
+    },
+    "field": {
+      "summary": "Zusammenfassung",
+      "duration": "Dauer",
+      "tags": "Tags",
+      "area": "Bereich",
+      "project": "Projekt"
+    },
+    "entity": {
+      "task": "Aufgabe",
+      "link": "Link",
+      "note": "Notiz"
+    },
+    "history": {
+      "undoRun": "Durchlauf rückgängig machen",
+      "dry": "Probelauf",
+      "empty": "Noch keine Durchläufe.",
+      "title": "Letzte Durchläufe"
+    },
+    "dryRun": {
+      "report": "{{considered}} Elemente geprüft, {{changed}} würden eingeordnet.",
+      "run": "Probelauf starten",
+      "days": "Tage",
+      "description": "Ordnet Elemente der letzten Tage ein, ohne etwas zu schreiben, um zu sehen, was sich ändern würde.",
+      "title": "Probelauf",
+      "error": "Probelauf fehlgeschlagen"
+    },
+    "settings": {
+      "save": "Speichern",
+      "excluded": "Tags, die nie gesetzt werden (durch Kommas getrennt)",
+      "limits": "Verzögerungen und Grenzen",
+      "default": "Standard: {{value}}",
+      "thresholds": "Konfidenzschwellen",
+      "effortHint": "Wird vom OpenAI-kompatiblen Endpunkt von Anthropic ignoriert.",
+      "effortNone": "Nicht gesendet",
+      "effort": "Denkaufwand",
+      "modelName": "Modell (leer: das des KI-Assistenten)",
+      "model": "Modell",
+      "notify": "Benachrichtigungen für Vorschläge auf Android",
+      "dry": "Probelauf (es wird nichts geschrieben)",
+      "write": "Echtes Schreiben",
+      "mode": "Modus",
+      "enabled": "Aktiviert",
+      "state": "Status",
+      "noAi": "Kein KI-Anbieter: Richte Profil › KI-Assistent ein, um die Einordnung zu aktivieren.",
+      "description": "Füllt die leeren Felder neuer Aufgaben, Notizen und Links: Projekt oder Bereich, Tags, Dauer, Link-Zusammenfassung. Bei Unsicherheit erscheint eine Karte unter „Zu sortieren“.",
+      "title": "Automatische Einordnung",
+      "saveError": "Speichern nicht möglich",
+      "saved": "Einstellungen gespeichert",
+      "loadError": "Einstellungen nicht lesbar"
+    },
+    "mark": {
+      "undone": "Einordnung rückgängig gemacht",
+      "undo": "Rückgängig",
+      "label": "Automatisch eingeordnet",
+      "error": "Rückgängig nicht möglich",
+      "changed": "Das Element wurde seitdem geändert: Rückgängig nicht möglich"
+    },
+    "duplicate": {
+      "keepBoth": "Beide behalten",
+      "keepNew": "Neues behalten",
+      "merge": "In das alte zusammenführen",
+      "dropNew": "Neues verwerfen",
+      "title": "Gleicher Titel auf derselben Website",
+      "video": "Gleiches Video",
+      "repository": "Gleiches Repository",
+      "address": "Gleiche Seite",
+      "reason": "Link bereits gespeichert?",
+      "original": "Bereits behalten:",
+      "new": "Neu:"
+    },
+    "card": {
+      "reason": "Einordnung zu bestätigen",
+      "dismiss": "Keines",
+      "acceptAll": "Alle übernehmen",
+      "apply": "Anwenden",
+      "medium": "Mittel",
+      "high": "Hoch",
+      "priority": "Priorität",
+      "newTag": "Neuer Tag: #{{name}}",
+      "tags": "Tags",
+      "none": "Keines",
+      "pickProject": "Projekt auswählen",
+      "other": "Andere…",
+      "inArea": "In {{name}}",
+      "newProjectName": "Name des neuen Projekts",
+      "newProject": "Neues Projekt",
+      "area": "Bereich: {{name}}",
+      "project": "Projekt"
+    }
+  },
   "triage": {
     "slotRefuse": "Ablehnen",
     "slotAccept": "Planen",
@@ -1043,6 +1154,7 @@
     "nextTaskSuggestion": "Nächste Aufgabenvorschlag",
     "enableNextTaskSuggestion": "Nächste Aufgabenvorschläge aktivieren",
     "tabs": {
+      "classify": "Einordnung",
       "sync": "Synchronisation",
       "general": "Allgemein",
       "security": "Sicherheit",

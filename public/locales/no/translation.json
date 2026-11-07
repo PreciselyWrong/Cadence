@@ -1,4 +1,115 @@
 {
+  "autoClassify": {
+    "number": {
+      "maxTokens": "Maks antall svartokener",
+      "summaryMax": "Lengde på sammendrag (tegn)",
+      "maxTags": "Tagger per element",
+      "retention": "Oppbevaring av logg (dager)",
+      "dailyLimit": "Forslag per dag (0 = ingen grense)",
+      "ttl": "Levetid for et forslag (dager)",
+      "cache": "Kontekstbuffer (minutter)",
+      "batch": "Elementer per kall",
+      "attempts": "Nye forsøk ved feil",
+      "fetchWait": "Ventetid før lesing av lenke (minutter)",
+      "grace": "Frist før sortering (sekunder)"
+    },
+    "threshold": {
+      "ask": "Still spørsmålet fra",
+      "priority": "Prioritet (kun forslag)",
+      "duration": "Varighet",
+      "tags": "Tagger",
+      "project": "Prosjekt eller område"
+    },
+    "field": {
+      "summary": "sammendrag",
+      "duration": "varighet",
+      "tags": "tagger",
+      "area": "område",
+      "project": "prosjekt"
+    },
+    "entity": {
+      "task": "Oppgave",
+      "link": "Lenke",
+      "note": "Notat"
+    },
+    "history": {
+      "undoRun": "Angre kjøring",
+      "dry": "prøvekjøring",
+      "empty": "Ingen kjøringer ennå.",
+      "title": "Siste kjøringer"
+    },
+    "dryRun": {
+      "report": "{{considered}} elementer sjekket, {{changed}} ville blitt sortert.",
+      "run": "Start prøvekjøring",
+      "days": "Dager",
+      "description": "Sorterer elementer opprettet de siste dagene uten å skrive noe, for å vise hva som ville endret seg.",
+      "title": "Prøvekjøring",
+      "error": "Prøvekjøringen mislyktes"
+    },
+    "settings": {
+      "save": "Lagre",
+      "excluded": "Tagger som aldri settes (kommaseparert)",
+      "limits": "Forsinkelser og grenser",
+      "default": "Standard: {{value}}",
+      "thresholds": "Sikkerhetsterskler",
+      "effortHint": "Ignoreres av Anthropics OpenAI-kompatible endepunkt.",
+      "effortNone": "Sendes ikke",
+      "effort": "Resonneringsinnsats",
+      "modelName": "Modell (tom: KI-assistentens)",
+      "model": "Modell",
+      "notify": "Varsler om forslag på Android",
+      "dry": "Prøvekjøring (ingenting skrives)",
+      "write": "Faktisk skriving",
+      "mode": "Modus",
+      "enabled": "Aktivert",
+      "state": "Status",
+      "noAi": "Ingen KI-leverandør: sett opp Profil › KI-assistent for å slå på sortering.",
+      "description": "Fyller de tomme feltene i nye oppgaver, notater og lenker: prosjekt eller område, tagger, varighet, lenkesammendrag. Når det er usikkert, vises et kort i «Å sortere».",
+      "title": "Automatisk sortering",
+      "saveError": "Kan ikke lagre",
+      "saved": "Innstillinger lagret",
+      "loadError": "Innstillingene kan ikke leses"
+    },
+    "mark": {
+      "undone": "Sortering angret",
+      "undo": "Angre",
+      "label": "Sortert automatisk",
+      "error": "Kan ikke angres",
+      "changed": "Elementet er endret siden: kan ikke angres"
+    },
+    "duplicate": {
+      "keepBoth": "Behold begge",
+      "keepNew": "Behold den nye",
+      "merge": "Slå sammen med den gamle",
+      "dropNew": "Forkast den nye",
+      "title": "Samme tittel på samme nettsted",
+      "video": "Samme video",
+      "repository": "Samme depot",
+      "address": "Samme side",
+      "reason": "Lenken er allerede lagret?",
+      "original": "Allerede beholdt:",
+      "new": "Ny:"
+    },
+    "card": {
+      "reason": "Sortering å bekrefte",
+      "dismiss": "Ingen",
+      "acceptAll": "Godta alle",
+      "apply": "Bruk",
+      "medium": "Middels",
+      "high": "Høy",
+      "priority": "Prioritet",
+      "newTag": "Ny tagg: #{{name}}",
+      "tags": "Tagger",
+      "none": "Ingen",
+      "pickProject": "Velg et prosjekt",
+      "other": "Annet…",
+      "inArea": "I {{name}}",
+      "newProjectName": "Navn på nytt prosjekt",
+      "newProject": "Nytt prosjekt",
+      "area": "Område: {{name}}",
+      "project": "Prosjekt"
+    }
+  },
   "triage": {
     "slotRefuse": "Avslå",
     "slotAccept": "Planlegg",
@@ -610,6 +721,7 @@
     "nextTaskSuggestion": "Neste oppgaveforslag",
     "enableNextTaskSuggestion": "Aktiver forslag til neste oppgave",
     "tabs": {
+      "classify": "Sortering",
       "sync": "Synk",
       "general": "Generelt",
       "security": "Sikkerhet",

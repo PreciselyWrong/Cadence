@@ -1,4 +1,115 @@
 {
+  "autoClassify": {
+    "number": {
+      "maxTokens": "Vastauksen enimmäistokenit",
+      "summaryMax": "Tiivistelmän pituus (merkkiä)",
+      "maxTags": "Tunnisteita per kohde",
+      "retention": "Lokin säilytysaika (päivää)",
+      "dailyLimit": "Ehdotuksia päivässä (0 = ei rajaa)",
+      "ttl": "Ehdotuksen voimassaoloaika (päivää)",
+      "cache": "Kontekstivälimuisti (minuuttia)",
+      "batch": "Kohteita per kutsu",
+      "attempts": "Uudet yritykset virheen sattuessa",
+      "fetchWait": "Odotus ennen linkin lukemista (minuuttia)",
+      "grace": "Armonaika (sekuntia)"
+    },
+    "threshold": {
+      "ask": "Kysy alkaen",
+      "priority": "Prioriteetti (vain ehdotus)",
+      "duration": "Kesto",
+      "tags": "Tunnisteet",
+      "project": "Projekti tai alue"
+    },
+    "field": {
+      "summary": "tiivistelmä",
+      "duration": "kesto",
+      "tags": "tunnisteet",
+      "area": "alue",
+      "project": "projekti"
+    },
+    "entity": {
+      "task": "Tehtävä",
+      "link": "Linkki",
+      "note": "Muistiinpano"
+    },
+    "history": {
+      "undoRun": "Kumoa ajo",
+      "dry": "kokeilu",
+      "empty": "Ajoja ei vielä ole.",
+      "title": "Viimeisimmät ajot"
+    },
+    "dryRun": {
+      "report": "Tarkistettiin {{considered}} kohdetta, {{changed}} lajiteltaisiin.",
+      "run": "Käynnistä kokeilu",
+      "days": "Päivää",
+      "description": "Lajittelee viime päivinä luodut kohteet kirjoittamatta mitään, jotta näet, mitä muuttuisi.",
+      "title": "Kokeilu",
+      "error": "Kokeilu ei onnistunut"
+    },
+    "settings": {
+      "save": "Tallenna",
+      "excluded": "Tunnisteet, joita ei koskaan aseteta (pilkulla erotettuna)",
+      "limits": "Viiveet ja rajat",
+      "default": "Oletus: {{value}}",
+      "thresholds": "Luottamuskynnykset",
+      "effortHint": "Anthropicin OpenAI-yhteensopiva päätepiste ohittaa tämän.",
+      "effortNone": "Ei lähetetä",
+      "effort": "Päättelyn ponnistus",
+      "modelName": "Malli (tyhjä: tekoälyavustajan malli)",
+      "model": "Malli",
+      "notify": "Ehdotusilmoitukset Androidilla",
+      "dry": "Kokeilu (mitään ei kirjoiteta)",
+      "write": "Oikea kirjoitus",
+      "mode": "Tila",
+      "enabled": "Käytössä",
+      "state": "Tila",
+      "noAi": "Tekoälypalvelua ei ole: määritä Profiili › Tekoälyavustaja, jotta lajittelu toimii.",
+      "description": "Täyttää uusien tehtävien, muistiinpanojen ja linkkien tyhjät kentät: projekti tai alue, tunnisteet, kesto, linkin tiivistelmä. Epävarmuuden tapauksessa kortti näkyy kohdassa ”Lajiteltava”.",
+      "title": "Automaattinen lajittelu",
+      "saveError": "Tallennus ei onnistu",
+      "saved": "Asetukset tallennettu",
+      "loadError": "Asetuksia ei voi lukea"
+    },
+    "mark": {
+      "undone": "Lajittelu kumottu",
+      "undo": "Kumoa",
+      "label": "Lajiteltu automaattisesti",
+      "error": "Kumoaminen ei onnistu",
+      "changed": "Kohde on muuttunut sen jälkeen: kumoaminen ei onnistu"
+    },
+    "duplicate": {
+      "keepBoth": "Säilytä molemmat",
+      "keepNew": "Säilytä uusi",
+      "merge": "Yhdistä vanhaan",
+      "dropNew": "Hylkää uusi",
+      "title": "Sama otsikko samalla sivustolla",
+      "video": "Sama video",
+      "repository": "Sama tietovarasto",
+      "address": "Sama sivu",
+      "reason": "Onko linkki jo tallennettu?",
+      "original": "Jo tallennettu:",
+      "new": "Uusi:"
+    },
+    "card": {
+      "reason": "Lajittelu vahvistettavana",
+      "dismiss": "Ei mitään",
+      "acceptAll": "Hyväksy kaikki",
+      "apply": "Käytä",
+      "medium": "Keskitaso",
+      "high": "Korkea",
+      "priority": "Prioriteetti",
+      "newTag": "Uusi tunniste: #{{name}}",
+      "tags": "Tunnisteet",
+      "none": "Ei mitään",
+      "pickProject": "Valitse projekti",
+      "other": "Muu…",
+      "inArea": "Alueessa {{name}}",
+      "newProjectName": "Uuden projektin nimi",
+      "newProject": "Uusi projekti",
+      "area": "Alue: {{name}}",
+      "project": "Projekti"
+    }
+  },
   "triage": {
     "slotRefuse": "Hylkää",
     "slotAccept": "Suunnittele",
@@ -609,6 +720,7 @@
     "nextTaskSuggestion": "Seuraava tehtäväehdotus",
     "enableNextTaskSuggestion": "Ota käyttöön seuraavien tehtävien ehdotukset",
     "tabs": {
+      "classify": "Lajittelu",
       "sync": "Synkronointi",
       "general": "Yleinen",
       "security": "Turvallisuus",

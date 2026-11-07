@@ -1,4 +1,115 @@
 {
+  "autoClassify": {
+    "number": {
+      "maxTokens": "Højst antal svartokens",
+      "summaryMax": "Resumélængde (tegn)",
+      "maxTags": "Tags pr. element",
+      "retention": "Logens opbevaring (dage)",
+      "dailyLimit": "Forslag pr. dag (0 = ingen grænse)",
+      "ttl": "Forslags levetid (dage)",
+      "cache": "Kontekst-cache (minutter)",
+      "batch": "Elementer pr. kald",
+      "attempts": "Forsøg ved fejl",
+      "fetchWait": "Ventetid før læsning af link (minutter)",
+      "grace": "Karensperiode (sekunder)"
+    },
+    "threshold": {
+      "ask": "Stil spørgsmålet fra",
+      "priority": "Prioritet (kun foreslået)",
+      "duration": "Varighed",
+      "tags": "Tags",
+      "project": "Projekt eller område"
+    },
+    "field": {
+      "summary": "resumé",
+      "duration": "varighed",
+      "tags": "tags",
+      "area": "område",
+      "project": "projekt"
+    },
+    "entity": {
+      "task": "Opgave",
+      "link": "Link",
+      "note": "Note"
+    },
+    "history": {
+      "undoRun": "Fortryd kørsel",
+      "dry": "prøvekørsel",
+      "empty": "Ingen kørsler endnu.",
+      "title": "Seneste kørsler"
+    },
+    "dryRun": {
+      "report": "{{considered}} elementer gennemgået, {{changed}} ville blive sorteret.",
+      "run": "Start prøvekørsel",
+      "days": "Dage",
+      "description": "Sorterer elementer oprettet de seneste dage uden at skrive noget, så du kan se, hvad der ville ændre sig.",
+      "title": "Prøvekørsel",
+      "error": "Prøvekørsel mislykkedes"
+    },
+    "settings": {
+      "save": "Gem",
+      "excluded": "Tags der aldrig sættes (kommasepareret)",
+      "limits": "Forsinkelser og grænser",
+      "default": "Standard: {{value}}",
+      "thresholds": "Konfidenstærskler",
+      "effortHint": "Ignoreres af Anthropics OpenAI-kompatible endpoint.",
+      "effortNone": "Sendes ikke",
+      "effort": "Ræsonnementsindsats",
+      "modelName": "Model (tom: AI-assistentens)",
+      "model": "Model",
+      "notify": "Notifikationer om forslag på Android",
+      "dry": "Prøvekørsel (intet skrives)",
+      "write": "Skriv rigtigt",
+      "mode": "Tilstand",
+      "enabled": "Aktiveret",
+      "state": "Status",
+      "noAi": "Ingen AI-udbyder: opsæt Profil › AI-assistent for at aktivere sortering.",
+      "description": "Udfylder de tomme felter på nye opgaver, noter og links: projekt eller område, tags, varighed og linkresumé. Ved tvivl vises et kort i „Til sortering“.",
+      "title": "Automatisk sortering",
+      "saveError": "Kan ikke gemme",
+      "saved": "Indstillinger gemt",
+      "loadError": "Indstillingerne kan ikke læses"
+    },
+    "mark": {
+      "undone": "Sortering fortrudt",
+      "undo": "Fortryd",
+      "label": "Sorteret automatisk",
+      "error": "Kan ikke fortrydes",
+      "changed": "Elementet er ændret siden: kan ikke fortrydes"
+    },
+    "duplicate": {
+      "keepBoth": "Behold begge",
+      "keepNew": "Behold den nye",
+      "merge": "Flet ind i den gamle",
+      "dropNew": "Kassér den nye",
+      "title": "Samme titel på samme websted",
+      "video": "Samme video",
+      "repository": "Samme repository",
+      "address": "Samme side",
+      "reason": "Link allerede gemt?",
+      "original": "Allerede gemt:",
+      "new": "Nyt:"
+    },
+    "card": {
+      "reason": "Sortering skal bekræftes",
+      "dismiss": "Ingen",
+      "acceptAll": "Accepter alle",
+      "apply": "Anvend",
+      "medium": "Mellem",
+      "high": "Høj",
+      "priority": "Prioritet",
+      "newTag": "Nyt tag: #{{name}}",
+      "tags": "Tags",
+      "none": "Ingen",
+      "pickProject": "Vælg et projekt",
+      "other": "Andet…",
+      "inArea": "I {{name}}",
+      "newProjectName": "Navn på nyt projekt",
+      "newProject": "Nyt projekt",
+      "area": "Område: {{name}}",
+      "project": "Projekt"
+    }
+  },
   "triage": {
     "slotRefuse": "Afvis",
     "slotAccept": "Planlæg",
@@ -609,6 +720,7 @@
     "nextTaskSuggestion": "Næste Opgaveforslag",
     "enableNextTaskSuggestion": "Aktivér forslag til næste opgave",
     "tabs": {
+      "classify": "Sortering",
       "sync": "Synkronisering",
       "general": "Generelt",
       "security": "Sikkerhed",

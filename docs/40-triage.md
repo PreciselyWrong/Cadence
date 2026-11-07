@@ -27,6 +27,10 @@ Optional, off by default: Profile › Daily brief (web), Réglages › Résumé 
 
 The `triage_assistant` job (daily, 03:50 UTC) sends the open tasks the rules left alone, by batches of 10, up to `dailyLimit` tasks per user, and stores one answer per task in `task_triage`: a proposal (`pending`) or nothing to say (`none`). A task looked at is not sent again until it changes. `modules/triage/assistant.js` checks every answer (`validateProposal`): an unknown action, a value out of bounds or a missing reason means no proposal. A recurring task can only be renamed. `reclass` only applies to a task with neither project nor tags, only with existing projects and tags, so what another tool already classified is not proposed again. Task text sent to the model is data, never instructions.
 
+## Cards of the classifier
+
+The automatic classifier (`docs/41-auto-classify.md`) adds its own cards to the queue, at most one per task, note or link: `type: classify` (action `classify`: project, tags and priority it was unsure about) and `type: link_duplicate` (action `resolve_duplicate`). They carry `source: classify`, `task_uid` when the item is a task, and their options in `payload` (`suggestion_uid`, `entity`, `item_uid`, `title`, …). They are answered through `POST /auto-classify/suggestions/:uid/apply` or `/dismiss`, not `/triage/apply`. While the classifier is enabled the assistant no longer proposes `reclass`.
+
 ## Slots proposed by agents
 
 The MCP tool `propose_link_slot` (`link_uids`, `title`, `reason`, `date`, `start_minute?`, `duration_minutes?`) stores a proposal for related links: the only planning an AI may suggest. It appears in the queue as a `link_slot` item (`action: accept_slot`, details: the links). `POST /triage/slots/:id/accept` creates the task, with the addresses in its note, and places it in that day's plan; `POST /triage/slots/:id/refuse` forgets it. Nothing happens before that tap. A slot whose day has passed is no longer shown.

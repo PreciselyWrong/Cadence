@@ -555,3 +555,10 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Problème** : impossible de changer la durée d'une tâche à heure ou de déplacer un événement d'agenda depuis la frise.
 - **Décision** : le bas de chaque bloc devient une poignée (curseur flèche haut-bas, quart d'heure) ; les événements d'un agenda Google en deux sens se déplacent et s'étirent ; les autres restent fixes et le disent au survol.
 - **Android à reprendre** : pas de frise déplaçable sur Android (`TODO.md` › Now).
+
+### 2026-11-07 — Classement automatique : cartes, mention, réglages
+
+- **Problème** : le classement des nouveaux éléments vivait dans Hermes et posait ses questions sur Telegram, hors de Cadence.
+- **Décision** : une carte par élément dans « À trier », trois rangées affichées seulement en cas de doute (Projet : options, Domaine, Nouveau projet prérempli, Autre…, Aucun ; Tags à cocher et un nouveau tag décoché ; Priorité), les meilleures réponses précochées pour qu'« Appliquer » d'emblée vaille « Tout accepter » ; doublon de lien : quatre choix, rien jeté sans un toucher. Sur une tâche, une note ou un lien : « Classé automatiquement · Annuler » tant qu'il n'a pas été modifié. Profil › Classement : tous les réglages, un essai à blanc, les passes récentes avec annulation.
+- **Android à reprendre** : livré dans la même étape (cartes, notifications à boutons, mention, Réglages › Classement).
+

@@ -1,4 +1,115 @@
 {
+  "autoClassify": {
+    "number": {
+      "maxTokens": "Maximalt antal svarstoken",
+      "summaryMax": "Sammanfattningens längd (tecken)",
+      "maxTags": "Taggar per objekt",
+      "retention": "Loggens lagringstid (dagar)",
+      "dailyLimit": "Förslag per dag (0 = ingen gräns)",
+      "ttl": "Livslängd för ett förslag (dagar)",
+      "cache": "Kontextcache (minuter)",
+      "batch": "Objekt per anrop",
+      "attempts": "Nya försök vid fel",
+      "fetchWait": "Väntetid före läsning av länk (minuter)",
+      "grace": "Karenstid (sekunder)"
+    },
+    "threshold": {
+      "ask": "Fråga från",
+      "priority": "Prioritet (endast förslag)",
+      "duration": "Varaktighet",
+      "tags": "Taggar",
+      "project": "Projekt eller område"
+    },
+    "field": {
+      "summary": "sammanfattning",
+      "duration": "varaktighet",
+      "tags": "taggar",
+      "area": "område",
+      "project": "projekt"
+    },
+    "entity": {
+      "task": "Uppgift",
+      "link": "Länk",
+      "note": "Anteckning"
+    },
+    "history": {
+      "undoRun": "Ångra körning",
+      "dry": "testkörning",
+      "empty": "Inga körningar än.",
+      "title": "Senaste körningarna"
+    },
+    "dryRun": {
+      "report": "{{considered}} objekt granskade, {{changed}} skulle sorteras.",
+      "run": "Starta testkörning",
+      "days": "Dagar",
+      "description": "Sorterar objekt som skapats de senaste dagarna utan att skriva något, så att du ser vad som skulle ändras.",
+      "title": "Testkörning",
+      "error": "Testkörningen misslyckades"
+    },
+    "settings": {
+      "save": "Spara",
+      "excluded": "Taggar som aldrig sätts (kommaseparerade)",
+      "limits": "Fördröjningar och gränser",
+      "default": "Standard: {{value}}",
+      "thresholds": "Konfidensgränser",
+      "effortHint": "Ignoreras av Anthropics OpenAI-kompatibla slutpunkt.",
+      "effortNone": "Skickas inte",
+      "effort": "Resonemangsansträngning",
+      "modelName": "Modell (tomt: AI-assistentens)",
+      "model": "Modell",
+      "notify": "Aviseringar om förslag på Android",
+      "dry": "Testkörning (inget skrivs)",
+      "write": "Verklig skrivning",
+      "mode": "Läge",
+      "enabled": "Aktiverad",
+      "state": "Status",
+      "noAi": "Ingen AI-leverantör: ställ in Profil › AI-assistent för att aktivera sorteringen.",
+      "description": "Fyller i de tomma fälten för nya uppgifter, anteckningar och länkar: projekt eller område, taggar, varaktighet, länksammanfattning. Vid osäkerhet visas ett kort under ”Att sortera”.",
+      "title": "Automatisk sortering",
+      "saveError": "Det gick inte att spara",
+      "saved": "Inställningarna sparade",
+      "loadError": "Inställningarna går inte att läsa"
+    },
+    "mark": {
+      "undone": "Sortering ångrad",
+      "undo": "Ångra",
+      "label": "Sorterades automatiskt",
+      "error": "Går inte att ångra",
+      "changed": "Objektet har ändrats sedan dess: det går inte att ångra"
+    },
+    "duplicate": {
+      "keepBoth": "Behåll båda",
+      "keepNew": "Behåll den nya",
+      "merge": "Slå ihop med den gamla",
+      "dropNew": "Kasta den nya",
+      "title": "Samma titel på samma webbplats",
+      "video": "Samma video",
+      "repository": "Samma förråd",
+      "address": "Samma sida",
+      "reason": "Redan sparad länk?",
+      "original": "Redan sparat:",
+      "new": "Nytt:"
+    },
+    "card": {
+      "reason": "Sortering att bekräfta",
+      "dismiss": "Ingen",
+      "acceptAll": "Acceptera alla",
+      "apply": "Använd",
+      "medium": "Medel",
+      "high": "Hög",
+      "priority": "Prioritet",
+      "newTag": "Ny tagg: #{{name}}",
+      "tags": "Taggar",
+      "none": "Ingen",
+      "pickProject": "Välj ett projekt",
+      "other": "Annat…",
+      "inArea": "I {{name}}",
+      "newProjectName": "Namn på nytt projekt",
+      "newProject": "Nytt projekt",
+      "area": "Område: {{name}}",
+      "project": "Projekt"
+    }
+  },
   "triage": {
     "slotRefuse": "Avböj",
     "slotAccept": "Planera",
@@ -609,6 +720,7 @@
     "nextTaskSuggestion": "Förslag på nästa uppgift",
     "enableNextTaskSuggestion": "Aktivera förslag på nästa uppgift",
     "tabs": {
+      "classify": "Sortering",
       "sync": "Synk",
       "general": "Allmänt",
       "security": "Säkerhet",

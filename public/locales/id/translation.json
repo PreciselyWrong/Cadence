@@ -1,4 +1,115 @@
 {
+  "autoClassify": {
+    "number": {
+      "maxTokens": "Token respons maksimum",
+      "summaryMax": "Panjang ringkasan (karakter)",
+      "maxTags": "Tag per item",
+      "retention": "Retensi log (hari)",
+      "dailyLimit": "Saran per hari (0 = tanpa batas)",
+      "ttl": "Masa berlaku saran (hari)",
+      "cache": "Cache konteks (menit)",
+      "batch": "Item per panggilan",
+      "attempts": "Percobaan ulang saat gagal",
+      "fetchWait": "Waktu tunggu sebelum membaca tautan (menit)",
+      "grace": "Masa tenggang (detik)"
+    },
+    "threshold": {
+      "ask": "Tanya mulai dari",
+      "priority": "Prioritas (hanya saran)",
+      "duration": "Durasi",
+      "tags": "Tag",
+      "project": "Proyek atau area"
+    },
+    "field": {
+      "summary": "ringkasan",
+      "duration": "durasi",
+      "tags": "tag",
+      "area": "area",
+      "project": "proyek"
+    },
+    "entity": {
+      "task": "Tugas",
+      "link": "Tautan",
+      "note": "Catatan"
+    },
+    "history": {
+      "undoRun": "Batalkan proses",
+      "dry": "uji coba",
+      "empty": "Belum ada proses.",
+      "title": "Proses terbaru"
+    },
+    "dryRun": {
+      "report": "{{considered}} item diperiksa, {{changed}} akan diklasifikasikan.",
+      "run": "Jalankan uji coba",
+      "days": "Hari",
+      "description": "Mengklasifikasikan item yang dibuat beberapa hari terakhir tanpa menulis apa pun, untuk melihat apa yang akan berubah.",
+      "title": "Uji coba",
+      "error": "Uji coba gagal"
+    },
+    "settings": {
+      "save": "Simpan",
+      "excluded": "Tag yang tidak pernah diberikan (dipisah koma)",
+      "limits": "Jeda dan batas",
+      "default": "Default: {{value}}",
+      "thresholds": "Ambang keyakinan",
+      "effortHint": "Diabaikan oleh endpoint kompatibel OpenAI dari Anthropic.",
+      "effortNone": "Tidak dikirim",
+      "effort": "Usaha penalaran",
+      "modelName": "Model (kosong: milik Asisten AI)",
+      "model": "Model",
+      "notify": "Notifikasi saran di Android",
+      "dry": "Uji coba (tidak ada yang ditulis)",
+      "write": "Tulis sungguhan",
+      "mode": "Mode",
+      "enabled": "Aktif",
+      "state": "Status",
+      "noAi": "Tidak ada penyedia AI: atur Profil › Asisten AI untuk mengaktifkan klasifikasi.",
+      "description": "Mengisi kolom kosong pada tugas, catatan, dan tautan baru: proyek atau area, tag, durasi, ringkasan tautan. Jika ragu, kartu muncul di “Perlu dipilah”.",
+      "title": "Klasifikasi otomatis",
+      "saveError": "Tidak dapat menyimpan",
+      "saved": "Pengaturan disimpan",
+      "loadError": "Pengaturan tidak dapat dibaca"
+    },
+    "mark": {
+      "undone": "Klasifikasi dibatalkan",
+      "undo": "Batalkan",
+      "label": "Diklasifikasikan otomatis",
+      "error": "Tidak dapat dibatalkan",
+      "changed": "Item sudah berubah sejak itu: tidak dapat dibatalkan"
+    },
+    "duplicate": {
+      "keepBoth": "Simpan keduanya",
+      "keepNew": "Simpan yang baru",
+      "merge": "Gabung ke yang lama",
+      "dropNew": "Buang yang baru",
+      "title": "Judul sama di situs yang sama",
+      "video": "Video sama",
+      "repository": "Repositori sama",
+      "address": "Halaman sama",
+      "reason": "Tautan sudah tersimpan?",
+      "original": "Sudah disimpan:",
+      "new": "Baru:"
+    },
+    "card": {
+      "reason": "Klasifikasi perlu dikonfirmasi",
+      "dismiss": "Tidak ada",
+      "acceptAll": "Terima semua",
+      "apply": "Terapkan",
+      "medium": "Sedang",
+      "high": "Tinggi",
+      "priority": "Prioritas",
+      "newTag": "Tag baru: #{{name}}",
+      "tags": "Tag",
+      "none": "Tidak ada",
+      "pickProject": "Pilih proyek",
+      "other": "Lainnya…",
+      "inArea": "Di {{name}}",
+      "newProjectName": "Nama proyek baru",
+      "newProject": "Proyek baru",
+      "area": "Area: {{name}}",
+      "project": "Proyek"
+    }
+  },
   "triage": {
     "slotRefuse": "Tolak",
     "slotAccept": "Jadwalkan",
@@ -601,6 +712,7 @@
     "nextTaskSuggestion": "Saran Tugas Berikutnya",
     "enableNextTaskSuggestion": "Aktifkan Saran Tugas Berikutnya",
     "tabs": {
+      "classify": "Klasifikasi",
       "sync": "Sinkronisasi",
       "general": "Umum",
       "security": "Keamanan",

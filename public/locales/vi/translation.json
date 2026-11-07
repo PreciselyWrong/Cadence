@@ -1,4 +1,115 @@
 {
+  "autoClassify": {
+    "number": {
+      "maxTokens": "Số token tối đa của phản hồi",
+      "summaryMax": "Độ dài tóm tắt (ký tự)",
+      "maxTags": "Số thẻ cho mỗi mục",
+      "retention": "Thời gian giữ nhật ký (ngày)",
+      "dailyLimit": "Số gợi ý mỗi ngày (0 = không giới hạn)",
+      "ttl": "Thời hạn của gợi ý (ngày)",
+      "cache": "Bộ nhớ đệm ngữ cảnh (phút)",
+      "batch": "Mục mỗi lần gọi",
+      "attempts": "Số lần thử lại khi lỗi",
+      "fetchWait": "Thời gian chờ trước khi đọc liên kết (phút)",
+      "grace": "Thời gian ân hạn (giây)"
+    },
+    "threshold": {
+      "ask": "Hỏi bắt đầu từ",
+      "priority": "Ưu tiên (chỉ gợi ý)",
+      "duration": "Thời lượng",
+      "tags": "Thẻ",
+      "project": "Dự án hoặc lĩnh vực"
+    },
+    "field": {
+      "summary": "tóm tắt",
+      "duration": "thời lượng",
+      "tags": "thẻ",
+      "area": "lĩnh vực",
+      "project": "dự án"
+    },
+    "entity": {
+      "task": "Tác vụ",
+      "link": "Liên kết",
+      "note": "Ghi chú"
+    },
+    "history": {
+      "undoRun": "Hoàn tác lần chạy",
+      "dry": "chạy thử",
+      "empty": "Chưa có lần chạy nào.",
+      "title": "Các lần chạy gần đây"
+    },
+    "dryRun": {
+      "report": "Đã xem {{considered}} mục, {{changed}} mục sẽ được phân loại.",
+      "run": "Chạy thử",
+      "days": "Ngày",
+      "description": "Phân loại các mục tạo trong vài ngày gần đây mà không ghi gì, để xem điều gì sẽ thay đổi.",
+      "title": "Chạy thử",
+      "error": "Chạy thử không thành công"
+    },
+    "settings": {
+      "save": "Lưu",
+      "excluded": "Thẻ không bao giờ được gán (phân tách bằng dấu phẩy)",
+      "limits": "Độ trễ và giới hạn",
+      "default": "Mặc định: {{value}}",
+      "thresholds": "Ngưỡng tin cậy",
+      "effortHint": "Bị bỏ qua bởi điểm cuối tương thích OpenAI của Anthropic.",
+      "effortNone": "Không gửi",
+      "effort": "Mức độ suy luận",
+      "modelName": "Mô hình (để trống: của Trợ lý AI)",
+      "model": "Mô hình",
+      "notify": "Thông báo gợi ý trên Android",
+      "dry": "Chạy thử (không ghi gì cả)",
+      "write": "Ghi thật",
+      "mode": "Chế độ",
+      "enabled": "Đang bật",
+      "state": "Trạng thái",
+      "noAi": "Chưa có nhà cung cấp AI: hãy thiết lập Hồ sơ › Trợ lý AI để bật phân loại.",
+      "description": "Điền các trường trống của tác vụ, ghi chú và liên kết mới: dự án hoặc lĩnh vực, thẻ, thời lượng, tóm tắt liên kết. Khi không chắc, một thẻ sẽ hiện trong “Cần phân loại”.",
+      "title": "Phân loại tự động",
+      "saveError": "Không thể lưu",
+      "saved": "Đã lưu cài đặt",
+      "loadError": "Không đọc được cài đặt"
+    },
+    "mark": {
+      "undone": "Đã hoàn tác phân loại",
+      "undo": "Hoàn tác",
+      "label": "Đã tự động phân loại",
+      "error": "Không thể hoàn tác",
+      "changed": "Mục đã thay đổi từ đó: không thể hoàn tác"
+    },
+    "duplicate": {
+      "keepBoth": "Giữ cả hai",
+      "keepNew": "Giữ mục mới",
+      "merge": "Gộp vào mục cũ",
+      "dropNew": "Bỏ mục mới",
+      "title": "Cùng tiêu đề trên cùng trang web",
+      "video": "Cùng video",
+      "repository": "Cùng kho lưu trữ",
+      "address": "Cùng trang",
+      "reason": "Liên kết đã được lưu chưa?",
+      "original": "Đã giữ trước đó:",
+      "new": "Mới:"
+    },
+    "card": {
+      "reason": "Phân loại cần xác nhận",
+      "dismiss": "Không có",
+      "acceptAll": "Chấp nhận tất cả",
+      "apply": "Áp dụng",
+      "medium": "Trung bình",
+      "high": "Cao",
+      "priority": "Ưu tiên",
+      "newTag": "Thẻ mới: #{{name}}",
+      "tags": "Thẻ",
+      "none": "Không có",
+      "pickProject": "Chọn một dự án",
+      "other": "Khác…",
+      "inArea": "Trong {{name}}",
+      "newProjectName": "Tên dự án mới",
+      "newProject": "Dự án mới",
+      "area": "Lĩnh vực: {{name}}",
+      "project": "Dự án"
+    }
+  },
   "triage": {
     "slotRefuse": "Từ chối",
     "slotAccept": "Lên lịch",
@@ -601,6 +712,7 @@
     "nextTaskSuggestion": "Gợi ý Nhiệm vụ Tiếp theo",
     "enableNextTaskSuggestion": "Bật Gợi ý Nhiệm vụ Tiếp theo",
     "tabs": {
+      "classify": "Phân loại",
       "sync": "Đồng bộ",
       "general": "Chung",
       "security": "Bảo mật",

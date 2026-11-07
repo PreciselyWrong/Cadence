@@ -1,4 +1,115 @@
 {
+  "autoClassify": {
+    "number": {
+      "maxTokens": "En fazla yanıt token sayısı",
+      "summaryMax": "Özet uzunluğu (karakter)",
+      "maxTags": "Öğe başına etiket",
+      "retention": "Günlük saklama süresi (gün)",
+      "dailyLimit": "Günlük öneri sayısı (0 = sınırsız)",
+      "ttl": "Öneri geçerlilik süresi (gün)",
+      "cache": "Bağlam önbelleği (dakika)",
+      "batch": "Çağrı başına öğe",
+      "attempts": "Hata durumunda yeniden deneme",
+      "fetchWait": "Bağlantı okunmadan önce bekleme (dakika)",
+      "grace": "Tolerans süresi (saniye)"
+    },
+    "threshold": {
+      "ask": "Şu noktadan sor",
+      "priority": "Öncelik (yalnızca öneri)",
+      "duration": "Süre",
+      "tags": "Etiketler",
+      "project": "Proje veya alan"
+    },
+    "field": {
+      "summary": "özet",
+      "duration": "süre",
+      "tags": "etiketler",
+      "area": "alan",
+      "project": "proje"
+    },
+    "entity": {
+      "task": "Görev",
+      "link": "Bağlantı",
+      "note": "Not"
+    },
+    "history": {
+      "undoRun": "Çalıştırmayı geri al",
+      "dry": "deneme",
+      "empty": "Henüz çalıştırma yok.",
+      "title": "Son çalıştırmalar"
+    },
+    "dryRun": {
+      "report": "{{considered}} öğe incelendi, {{changed}} öğe sınıflandırılacaktı.",
+      "run": "Denemeyi başlat",
+      "days": "Gün",
+      "description": "Son günlerde oluşturulan öğeleri hiçbir şey yazmadan sınıflandırır, neyin değişeceğini gösterir.",
+      "title": "Deneme",
+      "error": "Deneme çalıştırması başarısız"
+    },
+    "settings": {
+      "save": "Kaydet",
+      "excluded": "Hiçbir zaman atanmayacak etiketler (virgülle ayrılmış)",
+      "limits": "Gecikmeler ve sınırlar",
+      "default": "Varsayılan: {{value}}",
+      "thresholds": "Güven eşikleri",
+      "effortHint": "Anthropic’in OpenAI uyumlu uç noktası tarafından yok sayılır.",
+      "effortNone": "Gönderilmez",
+      "effort": "Akıl yürütme çabası",
+      "modelName": "Model (boş: Yapay Zekâ Asistanı’nınki)",
+      "model": "Model",
+      "notify": "Android’de öneri bildirimleri",
+      "dry": "Deneme çalıştırması (hiçbir şey yazılmaz)",
+      "write": "Gerçek yazma",
+      "mode": "Mod",
+      "enabled": "Etkin",
+      "state": "Durum",
+      "noAi": "Yapay zekâ sağlayıcısı yok: sınıflandırmayı açmak için Profil › Yapay Zekâ Asistanı’nı ayarlayın.",
+      "description": "Yeni görevlerin, notların ve bağlantıların boş alanlarını doldurur: proje veya alan, etiketler, süre, bağlantı özeti. Emin olmadığında “Ayıklanacaklar” bölümünde bir kart gösterir.",
+      "title": "Otomatik sınıflandırma",
+      "saveError": "Kaydedilemedi",
+      "saved": "Ayarlar kaydedildi",
+      "loadError": "Ayarlar okunamıyor"
+    },
+    "mark": {
+      "undone": "Sınıflandırma geri alındı",
+      "undo": "Geri al",
+      "label": "Otomatik olarak sınıflandırıldı",
+      "error": "Geri alınamaz",
+      "changed": "Öğe o zamandan beri değişti: geri alınamaz"
+    },
+    "duplicate": {
+      "keepBoth": "İkisini de tut",
+      "keepNew": "Yeniyi tut",
+      "merge": "Eskisine birleştir",
+      "dropNew": "Yenisini at",
+      "title": "Aynı sitede aynı başlık",
+      "video": "Aynı video",
+      "repository": "Aynı depo",
+      "address": "Aynı sayfa",
+      "reason": "Bağlantı zaten kayıtlı mı?",
+      "original": "Zaten tutulan:",
+      "new": "Yeni:"
+    },
+    "card": {
+      "reason": "Onaylanacak sınıflandırma",
+      "dismiss": "Yok",
+      "acceptAll": "Tümünü kabul et",
+      "apply": "Uygula",
+      "medium": "Orta",
+      "high": "Yüksek",
+      "priority": "Öncelik",
+      "newTag": "Yeni etiket: #{{name}}",
+      "tags": "Etiketler",
+      "none": "Yok",
+      "pickProject": "Bir proje seç",
+      "other": "Diğer…",
+      "inArea": "{{name}} içinde",
+      "newProjectName": "Yeni projenin adı",
+      "newProject": "Yeni proje",
+      "area": "Alan: {{name}}",
+      "project": "Proje"
+    }
+  },
   "triage": {
     "slotRefuse": "Reddet",
     "slotAccept": "Planla",
@@ -601,6 +712,7 @@
     "nextTaskSuggestion": "Sonraki Görev Önerisi",
     "enableNextTaskSuggestion": "Sonraki Görev Önerilerini Etkinleştir",
     "tabs": {
+      "classify": "Sınıflandırma",
       "sync": "Senkronizasyon",
       "general": "Genel",
       "security": "Güvenlik",
