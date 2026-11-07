@@ -37,7 +37,10 @@ data class DryRunResult(val considered: Int, val wouldChange: Int, val error: St
     companion object {
         fun of(body: JsonObject): DryRunResult = DryRunResult(
             considered = (body["considered"] as? JsonPrimitive)?.content?.toIntOrNull() ?: 0,
-            wouldChange = (body["results"] as? JsonArray)?.size ?: 0,
+            // Seuls les résultats `dry_run` seraient écrits ; `nothing`, `changed` et `error` non.
+            wouldChange = (body["results"] as? JsonArray).orEmpty().count {
+                ((it as? JsonObject)?.get("outcome") as? JsonPrimitive)?.content == "dry_run"
+            },
             error = (body["error"] as? JsonPrimitive)?.content,
         )
     }
