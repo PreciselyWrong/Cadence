@@ -57,6 +57,7 @@ import ch.nicolab.cadence.R
 import ch.nicolab.cadence.designsystem.components.HeaderButtonStyle
 import ch.nicolab.cadence.tasks.ui.RecurringAction
 import ch.nicolab.cadence.tasks.ui.QuickAddSheet
+import ch.nicolab.cadence.tasks.ui.TaskSheetHost
 import ch.nicolab.cadence.tasks.ui.RecurringScopeDialog
 import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
 import ch.nicolab.cadence.designsystem.components.SegmentedTabs
@@ -101,11 +102,13 @@ fun AgendaScreen(modifier: Modifier = Modifier, onOpenHabit: (String) -> Unit = 
     val snackbar = rememberAppSnackbarHostState()
     var eventSheet by remember { mutableStateOf<AgendaEventSheet?>(null) }
     var slotAt by remember { mutableStateOf<LocalDateTime?>(null) }
+    var openedTaskUid by rememberSaveable { mutableStateOf<String?>(null) }
     val eventActions = remember {
         AgendaEventActions(
             open = { eventSheet = AgendaEventSheet.Detail(it.eventKey) },
             menu = { eventSheet = AgendaEventSheet.Menu(it.eventKey) },
             toggleTask = viewModel::toggleTask,
+            openTask = { openedTaskUid = it.uid },
             openHabit = { onOpenHabit(it.habitId) },
         )
     }
@@ -233,6 +236,8 @@ fun AgendaScreen(modifier: Modifier = Modifier, onOpenHabit: (String) -> Unit = 
             initialTime = at.toLocalTime(),
         )
     }
+
+    TaskSheetHost(openTaskUid = openedTaskUid, onDismiss = { openedTaskUid = null })
 
     val pendingScope by viewModel.pendingScope.collectAsStateWithLifecycle()
     if (pendingScope != null) {

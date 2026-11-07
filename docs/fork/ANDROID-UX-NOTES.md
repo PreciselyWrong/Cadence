@@ -387,3 +387,9 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Problème** : le bilan du soir n'offrait que « Reporter à demain » ; une tâche qui glisse se décale, se range ou s'abandonne aussi.
 - **Décision** : chaque tâche du soir et chaque tâche qui a glissé garde sa case et gagne un bouton « … » : Demain (ajout au plan de demain, échéance inchangée), Choisir une date (feuille de date, échéance écrite), Plus tard (étiquette `#someday`), Abandonner (statut annulé). La ligne le dit aussitôt (« Demain », « Échéance : jeu 6 », « Plus tard », « Abandonnée » barrée) et le message « Annuler » rend l'état d'avant (ancienne échéance, étiquette retirée, ancien statut, tâche retirée du plan de demain ou appel retiré de la file). « Bruit » devient « Pas utile » ; la carte répond « Tu verras moins ce type d'alerte » (valeurs `useful` / `noise` inchangées).
 - **Web** : à reprendre pareil (contrat dans `docs/39-daily-brief.md`, « Evening review »). Reste : rien d'essayé sur le téléphone.
+
+### 2026-11-07 — Agenda : toucher une tâche ouvre sa fiche
+
+- **Problème** : dans l'Agenda, toucher une tâche (bloc horaire, journée entière, liste) ne faisait rien ; seule sa case réagissait.
+- **Décision** : toucher le corps d'une tâche ouvre sa fiche, la même que dans Tâches, par-dessus l'Agenda ; une occurrence à venir ouvre la tâche enregistrée de sa série. La case coche toujours, l'appui long glisse toujours.
+- **Web** : rien à reprendre, le calendrier web ouvre déjà la tâche. Reste : rien d'essayé sur le téléphone.
