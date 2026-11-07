@@ -917,6 +917,7 @@
     },
     "aiApiKey": "API anahtarı",
     "aiApiKeyClear": "Temizle",
+    "telegramBotTokenClear": "Temizle",
     "aiAssistantDescription": "Yapay zeka destekli günlük özetleri, görev ve proje içgörülerini etkinleştir.",
     "aiAssistantLabel": "Yapay zeka asistanı (içgörüler)",
     "aiAssistantTab": "Yapay zeka asistanı",

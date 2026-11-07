@@ -920,6 +920,7 @@
     },
     "aiApiKey": "Cheie API",
     "aiApiKeyClear": "Golește",
+    "telegramBotTokenClear": "Golește",
     "aiAssistantDescription": "Activează rezumatele zilnice și analizele sarcinilor și proiectelor cu AI.",
     "aiAssistantLabel": "Asistent AI (analize)",
     "aiAssistantTab": "Asistent AI",

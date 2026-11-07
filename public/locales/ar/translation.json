@@ -921,6 +921,7 @@
     },
     "aiApiKey": "مفتاح API",
     "aiApiKeyClear": "مسح",
+    "telegramBotTokenClear": "مسح",
     "aiAssistantDescription": "تفعيل الملخصات اليومية ورؤى المهام والمشاريع المدعومة بالذكاء الاصطناعي.",
     "aiAssistantLabel": "مساعد الذكاء الاصطناعي (الرؤى)",
     "aiAssistantTab": "مساعد الذكاء الاصطناعي",

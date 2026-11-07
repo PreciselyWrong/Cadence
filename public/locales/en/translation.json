@@ -997,6 +997,7 @@
     "aiProviderDescription": "Bring your own API key for any OpenAI-compatible provider. Leave blank to use the server default, if one is configured.",
     "aiApiKey": "API Key",
     "aiApiKeyClear": "Clear",
+    "telegramBotTokenClear": "Clear",
     "aiApiKeyPlaceholder": "sk-...",
     "aiBaseUrl": "Base URL",
     "aiBaseUrlPlaceholder": "https://api.openai.com/v1 (default)",

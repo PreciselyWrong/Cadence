@@ -917,6 +917,7 @@
     },
     "aiApiKey": "Khóa API",
     "aiApiKeyClear": "Xóa",
+    "telegramBotTokenClear": "Xóa",
     "aiAssistantDescription": "Bật bản tóm tắt hằng ngày và thông tin chi tiết về công việc, dự án bằng AI.",
     "aiAssistantLabel": "Trợ lý AI (thông tin chi tiết)",
     "aiAssistantTab": "Trợ lý AI",

@@ -917,6 +917,7 @@
     },
     "aiApiKey": "Kunci API",
     "aiApiKeyClear": "Hapus",
+    "telegramBotTokenClear": "Hapus",
     "aiAssistantDescription": "Aktifkan ringkasan harian serta wawasan tugas dan proyek berbasis AI.",
     "aiAssistantLabel": "Asisten AI (wawasan)",
     "aiAssistantTab": "Asisten AI",

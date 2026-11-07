@@ -161,7 +161,6 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
         timezone: 'UTC',
         first_day_of_week: 1,
         avatar_image: '',
-        telegram_bot_token: '',
         telegram_allowed_users: '',
         task_summary_enabled: false,
         task_summary_frequency: 'daily',
@@ -565,7 +564,6 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                             ? data.first_day_of_week
                             : 1,
                     avatar_image: data.avatar_image || '',
-                    telegram_bot_token: data.telegram_bot_token || '',
                     telegram_allowed_users: data.telegram_allowed_users || '',
                     task_summary_enabled:
                         data.task_summary_enabled !== undefined
@@ -635,7 +633,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                     },
                 });
 
-                if (flags.telegram && data.telegram_bot_token) {
+                if (flags.telegram && data.telegram_bot_token_set) {
                     fetchPollingStatus();
                 }
             } catch (error) {
@@ -675,19 +673,13 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 
     useEffect(() => {
         const fetchTelegramInfo = async () => {
-            if (featureFlags.telegram && profile?.telegram_bot_token) {
+            if (featureFlags.telegram && profile?.telegram_bot_token_set) {
                 try {
                     const setupResponse = await fetch(
-                        getApiPath('telegram/setup'),
+                        getApiPath('telegram/bot-info'),
                         {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'x-csrf-token': await getCsrfToken(),
-                            },
-                            body: JSON.stringify({
-                                token: profile.telegram_bot_token,
-                            }),
+                            credentials: 'include',
+                            headers: { Accept: 'application/json' },
                         }
                     );
 
@@ -732,7 +724,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
         };
 
         fetchTelegramInfo();
-    }, [featureFlags.telegram, profile?.telegram_bot_token]);
+    }, [featureFlags.telegram, profile?.telegram_bot_token_set]);
 
     useEffect(() => {}, [updateKey, i18n.language]);
 
@@ -1239,10 +1231,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                     updatedProfile.avatar_image !== undefined
                         ? updatedProfile.avatar_image
                         : prev.avatar_image || '',
-                telegram_bot_token:
-                    updatedProfile.telegram_bot_token !== undefined
-                        ? updatedProfile.telegram_bot_token
-                        : prev.telegram_bot_token || '',
+                telegram_bot_token: undefined,
                 telegram_allowed_users:
                     updatedProfile.telegram_allowed_users !== undefined
                         ? updatedProfile.telegram_allowed_users
@@ -2016,6 +2005,12 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                                         }
                                         onChange={handleChange}
                                         onSetup={handleSetupTelegram}
+                                        onClearToken={() =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                telegram_bot_token: '',
+                                            }))
+                                        }
                                         onStartPolling={handleStartPolling}
                                         onStopPolling={handleStopPolling}
                                         onToggleSummary={() =>

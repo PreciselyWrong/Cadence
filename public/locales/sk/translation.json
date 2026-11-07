@@ -1494,6 +1494,7 @@
     "aiProviderDescription": "Použite vlastný API kľúč pre ľubovoľného poskytovateľa kompatibilného s OpenAI. Ak pole necháte prázdne, použije sa predvolené nastavenie servera (ak je nakonfigurované).",
     "aiApiKey": "API kľúč",
     "aiApiKeyClear": "Vymazať",
+    "telegramBotTokenClear": "Vymazať",
     "aiApiKeyPlaceholder": "sk-...",
     "aiBaseUrl": "Základná URL",
     "aiBaseUrlPlaceholder": "https://api.openai.com/v1 (predvolené)",

@@ -235,7 +235,7 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
 
     // Check if Telegram is configured
     const telegramConfigured = !!(
-        profile?.telegram_bot_token && profile?.telegram_chat_id
+        profile?.telegram_bot_token_set && profile?.telegram_chat_id
     );
 
     // Push toggles work once any device of this account can receive push,

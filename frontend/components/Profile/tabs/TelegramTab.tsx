@@ -4,6 +4,7 @@ import {
     InformationCircleIcon,
     CogIcon,
     ClipboardDocumentListIcon,
+    XMarkIcon,
 } from '@heroicons/react/24/outline';
 import TelegramIcon from '../../Shared/Icons/TelegramIcon';
 import type { Profile, ProfileFormData, TelegramBotInfo } from '../types';
@@ -17,6 +18,7 @@ interface TelegramTabProps {
     telegramSetupStatus: 'idle' | 'loading' | 'success' | 'error';
     onChange: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
     onSetup: () => void;
+    onClearToken: () => void;
     onStartPolling: () => void;
     onStopPolling: () => void;
     onToggleSummary: () => void;
@@ -34,6 +36,7 @@ const TelegramTab: React.FC<TelegramTabProps> = ({
     telegramSetupStatus,
     onChange,
     onSetup,
+    onClearToken,
     onStartPolling,
     onStopPolling,
     onToggleSummary,
@@ -76,14 +79,38 @@ const TelegramTab: React.FC<TelegramTabProps> = ({
                                 'Telegram Bot Token'
                             )}
                         </label>
-                        <input
-                            type="text"
-                            name="telegram_bot_token"
-                            value={formData.telegram_bot_token || ''}
-                            onChange={onChange}
-                            placeholder={t('profile.telegramTokenPlaceholder')}
-                            className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-md shadow-sm px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                        />
+                        {profile?.telegram_bot_token_set &&
+                        formData.telegram_bot_token === undefined ? (
+                            <div className="mt-1 flex items-center justify-between rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50 px-3 py-2">
+                                <span className="text-sm font-mono text-gray-600 dark:text-gray-300">
+                                    ••••••••
+                                    {profile.telegram_bot_token_last4 || ''}
+                                </span>
+                                <button
+                                    type="button"
+                                    onClick={onClearToken}
+                                    className="flex items-center gap-1 text-xs font-medium text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300"
+                                >
+                                    <XMarkIcon className="w-4 h-4" />
+                                    {t(
+                                        'profile.telegramBotTokenClear',
+                                        'Clear'
+                                    )}
+                                </button>
+                            </div>
+                        ) : (
+                            <input
+                                type="password"
+                                name="telegram_bot_token"
+                                autoComplete="off"
+                                value={formData.telegram_bot_token || ''}
+                                onChange={onChange}
+                                placeholder={t(
+                                    'profile.telegramTokenPlaceholder'
+                                )}
+                                className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-md shadow-sm px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                            />
+                        )}
                         <p className="mt-2 text-xs text-gray-600 dark:text-gray-300">
                             {t(
                                 'profile.telegramTokenDescription',
@@ -101,7 +128,9 @@ const TelegramTab: React.FC<TelegramTabProps> = ({
                             name="telegram_allowed_users"
                             value={formData.telegram_allowed_users || ''}
                             onChange={onChange}
-                            placeholder={t('profile.telegramAllowedUsersPlaceholder')}
+                            placeholder={t(
+                                'profile.telegramAllowedUsersPlaceholder'
+                            )}
                             className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-md shadow-sm px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                         />
                         <div className="mt-2 text-xs text-gray-600 dark:text-gray-300 space-y-1">
@@ -162,7 +191,7 @@ const TelegramTab: React.FC<TelegramTabProps> = ({
                         </div>
                     )}
 
-                    {(telegramBotInfo || profile?.telegram_bot_token) && (
+                    {(telegramBotInfo || profile?.telegram_bot_token_set) && (
                         <div className="p-2 bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-800 rounded text-blue-800 dark:text-blue-200">
                             <p className="font-medium mb-2">
                                 {t(
@@ -174,7 +203,10 @@ const TelegramTab: React.FC<TelegramTabProps> = ({
                                 {telegramBotInfo?.first_name && (
                                     <p>
                                         <span className="font-semibold">
-                                            {t('profile.telegram.botName', 'Bot Name:')}{' '}
+                                            {t(
+                                                'profile.telegram.botName',
+                                                'Bot Name:'
+                                            )}{' '}
                                         </span>
                                         {telegramBotInfo.first_name}
                                     </p>
@@ -401,11 +433,11 @@ const TelegramTab: React.FC<TelegramTabProps> = ({
                     <button
                         type="button"
                         disabled={
-                            !profile?.telegram_bot_token ||
+                            !profile?.telegram_bot_token_set ||
                             !profile?.telegram_chat_id
                         }
                         className={`px-4 py-2 rounded-md ${
-                            !profile?.telegram_bot_token ||
+                            !profile?.telegram_bot_token_set ||
                             !profile?.telegram_chat_id
                                 ? 'bg-gray-300 dark:bg-gray-700 text-gray-600 dark:text-gray-300 cursor-not-allowed'
                                 : 'bg-primary text-primary-on hover:bg-primary/90 dark:hover:bg-primary/90'
@@ -414,7 +446,7 @@ const TelegramTab: React.FC<TelegramTabProps> = ({
                     >
                         {t('profile.sendTestSummary', 'Send Test Summary')}
                     </button>
-                    {(!profile?.telegram_bot_token ||
+                    {(!profile?.telegram_bot_token_set ||
                         !profile?.telegram_chat_id) && (
                         <p className="mt-2 text-xs text-red-500">
                             {t(

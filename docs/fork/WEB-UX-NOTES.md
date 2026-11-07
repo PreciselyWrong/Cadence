@@ -555,3 +555,9 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Problème** : impossible de changer la durée d'une tâche à heure ou de déplacer un événement d'agenda depuis la frise.
 - **Décision** : le bas de chaque bloc devient une poignée (curseur flèche haut-bas, quart d'heure) ; les événements d'un agenda Google en deux sens se déplacent et s'étirent ; les autres restent fixes et le disent au survol.
 - **Android à reprendre** : pas de frise déplaçable sur Android (`TODO.md` › Now).
+
+### 2026-11-07 — Jeton du bot Telegram masqué
+
+- **Problème** : le jeton du bot Telegram s'affichait en clair dans Profil › Telegram et voyageait en entier dans chaque réponse du profil.
+- **Décision** : une fois enregistré, le champ montre `••••••••` et les 4 derniers caractères avec un bouton Effacer, comme la clé de l'assistant IA ; un nouveau jeton se tape dans un champ masqué.
+- **Android à reprendre** : rien, Android n'a pas de réglage Telegram.

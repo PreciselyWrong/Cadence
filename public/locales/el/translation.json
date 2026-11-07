@@ -774,6 +774,7 @@
     },
     "aiApiKey": "Κλειδί API",
     "aiApiKeyClear": "Εκκαθάριση",
+    "telegramBotTokenClear": "Εκκαθάριση",
     "aiAssistantDescription": "Ενεργοποίηση ημερήσιων ενημερώσεων, αναλύσεων εργασιών και έργων με τεχνητή νοημοσύνη.",
     "aiAssistantLabel": "Βοηθός AI (Αναλύσεις)",
     "aiAssistantTab": "Βοηθός AI",

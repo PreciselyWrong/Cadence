@@ -917,6 +917,7 @@
     },
     "aiApiKey": "APIキー",
     "aiApiKeyClear": "クリア",
+    "telegramBotTokenClear": "クリア",
     "aiAssistantDescription": "AIによるデイリーブリーフ、タスクとプロジェクトのインサイトを有効にします。",
     "aiAssistantLabel": "AIアシスタント(インサイト)",
     "aiAssistantTab": "AIアシスタント",

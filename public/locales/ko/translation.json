@@ -917,6 +917,7 @@
     },
     "aiApiKey": "API 키",
     "aiApiKeyClear": "지우기",
+    "telegramBotTokenClear": "지우기",
     "aiAssistantDescription": "AI 기반 일일 브리핑과 작업 및 프로젝트 인사이트를 사용합니다.",
     "aiAssistantLabel": "AI 어시스턴트 (인사이트)",
     "aiAssistantTab": "AI 어시스턴트",

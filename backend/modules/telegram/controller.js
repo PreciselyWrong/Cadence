@@ -58,6 +58,24 @@ const telegramController = {
         }
     },
 
+    async getBotInfo(req, res, next) {
+        try {
+            const userId = getAuthenticatedUserId(req);
+            if (!userId) {
+                return res
+                    .status(401)
+                    .json({ error: 'Authentication required' });
+            }
+            res.json(await telegramService.getSavedBotInfo(userId));
+        } catch (error) {
+            if (error.statusCode === 400) {
+                return res.status(400).json({ error: error.message });
+            }
+            logError('Error getting Telegram bot info:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    },
+
     async setup(req, res, next) {
         try {
             const userId = getAuthenticatedUserId(req);

@@ -921,6 +921,7 @@
     },
     "aiApiKey": "API-ключ",
     "aiApiKeyClear": "Очистить",
+    "telegramBotTokenClear": "Очистить",
     "aiAssistantDescription": "Включить ежедневные сводки, аналитику задач и проектов на основе ИИ.",
     "aiAssistantLabel": "ИИ-ассистент (аналитика)",
     "aiAssistantTab": "ИИ-ассистент",

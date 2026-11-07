@@ -34,8 +34,12 @@
  *                   type: integer
  *                 avatar_image:
  *                   type: string
- *                 telegram_bot_token:
+ *                 telegram_bot_token_set:
+ *                   type: boolean
+ *                   description: Whether a bot token is saved (the token itself is never returned)
+ *                 telegram_bot_token_last4:
  *                   type: string
+ *                   nullable: true
  *                 telegram_chat_id:
  *                   type: string
  *                 task_summary_enabled:
@@ -90,7 +94,7 @@
  *                 description: Avatar image URL
  *               telegram_bot_token:
  *                 type: string
- *                 description: Telegram bot token
+ *                 description: Telegram bot token, stored encrypted. Omit to keep the saved one, send an empty string to clear it
  *               telegram_allowed_users:
  *                 type: string
  *                 description: Comma-separated list of allowed Telegram users

@@ -917,6 +917,7 @@
     },
     "aiApiKey": "API 密钥",
     "aiApiKeyClear": "清除",
+    "telegramBotTokenClear": "清除",
     "aiAssistantDescription": "启用 AI 生成的每日简报、任务洞察和项目洞察。",
     "aiAssistantLabel": "AI 助手(洞察)",
     "aiAssistantTab": "AI 助手",

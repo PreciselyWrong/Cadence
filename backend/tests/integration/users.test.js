@@ -31,7 +31,8 @@ describe('Users Routes', () => {
             expect(response.body).toHaveProperty('language');
             expect(response.body).toHaveProperty('timezone');
             expect(response.body).toHaveProperty('avatar_image');
-            expect(response.body).toHaveProperty('telegram_bot_token');
+            expect(response.body).not.toHaveProperty('telegram_bot_token');
+            expect(response.body).toHaveProperty('telegram_bot_token_set');
             expect(response.body).toHaveProperty('telegram_chat_id');
             expect(response.body).toHaveProperty('task_summary_enabled');
             expect(response.body).toHaveProperty('task_summary_frequency');
@@ -94,9 +95,8 @@ describe('Users Routes', () => {
             expect(response.body.appearance).toBe(updateData.appearance);
             expect(response.body.language).toBe(updateData.language);
             expect(response.body.timezone).toBe(updateData.timezone);
-            expect(response.body.telegram_bot_token).toBe(
-                updateData.telegram_bot_token
-            );
+            expect(response.body.telegram_bot_token_set).toBe(true);
+            expect(response.body.telegram_bot_token_last4).toBe('oken');
         });
 
         describe('avatar_image', () => {

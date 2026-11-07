@@ -917,6 +917,7 @@
     },
     "aiApiKey": "API-nøgle",
     "aiApiKeyClear": "Ryd",
+    "telegramBotTokenClear": "Ryd",
     "aiAssistantDescription": "Aktivér AI-drevne daglige opsummeringer samt indsigter i opgaver og projekter.",
     "aiAssistantLabel": "AI-assistent (indsigter)",
     "aiAssistantTab": "AI-assistent",

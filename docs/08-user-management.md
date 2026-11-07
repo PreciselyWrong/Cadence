@@ -178,7 +178,7 @@ to an account, so it cannot be used to discover who has signed up - Declining re
     - Pomodoro timer
 
 19. **Telegram integration settings:**
-    - Bot token for personal Telegram bot
+    - Bot token for personal Telegram bot (encrypted at rest, never returned by the API: the profile shows whether one is saved and its last four characters, see [04-inbox-page.md](04-inbox-page.md#telegram-integration))
     - Chat ID for receiving messages
     - Allowed users list (comma-separated usernames/IDs)
     - Task summary enabled/disabled
