@@ -37,6 +37,14 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
 - Hors périmètre volontaire
   limite de projets actifs (compteur seulement). V/E/M/D abandonné le 2026-11-01 : le planificateur Hermès arbitre ; valeurs et grille archivées dans la note Cadence « Archive V/E/M/D » et `~/Documents/cadence-archives/`.
 
+## Note de l'ajout rapide Android : focus et fermeture [cadence:c7e743d5-3c37-4ee1-812c-f2e134017ddc]
+
+Branche `fix/note-quickadd-focus-c7e743d5`.
+
+- [x] La fiche d'ajout se retire (animation `sheetState.hide()`) avant l'ouverture de l'éditeur de note.
+- [x] L'éditeur place le clavier dans le contenu quand la note a déjà un titre (`NoteFocus`, test `NoteFocusTest`), puis ouvre le clavier.
+- [ ] Vérifier sur le téléphone (aucun appareil, émulateur bloqué le 2026-11-05) : Tâches › + › Note, titre, Valider → la fiche disparaît, le curseur et le clavier sont dans le contenu.
+
 ## Next
 
 - Web : reprendre la passe de soustraction Android du 2026-11-02 (`docs/fork/ANDROID-UX-NOTES.md`)

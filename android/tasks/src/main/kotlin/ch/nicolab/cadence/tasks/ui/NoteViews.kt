@@ -63,6 +63,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -73,6 +74,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -103,6 +105,7 @@ import ch.nicolab.cadence.tasks.notes.Markdown
 import ch.nicolab.cadence.tasks.notes.MarkdownCheckbox
 import ch.nicolab.cadence.tasks.notes.MarkdownEditing
 import ch.nicolab.cadence.tasks.notes.NoteFields
+import ch.nicolab.cadence.tasks.notes.NoteFocus
 import ch.nicolab.cadence.tasks.notes.TextEdit
 import ch.nicolab.cadence.tasks.notes.WikiLinks
 import java.time.ZoneId
@@ -256,6 +259,7 @@ private fun NoteEditor(viewModel: TasksViewModel, uid: String, note: NoteItem?, 
     val context = LocalContext.current
     val allNotes by viewModel.notes.collectAsStateWithLifecycle()
     val focus = LocalFocusManager.current
+    val keyboard = LocalSoftwareKeyboardController.current
     val session = remember(uid) { viewModel.noteSession(uid, NoteFields(note?.title.orEmpty(), note?.content.orEmpty())) }
     var title by remember(uid) { mutableStateOf(TextFieldValue(session.current.title)) }
     var body by remember(uid) { mutableStateOf(TextFieldValue(session.current.content)) }
@@ -267,8 +271,16 @@ private fun NoteEditor(viewModel: TasksViewModel, uid: String, note: NoteItem?, 
     val projects by viewModel.projects.collectAsStateWithLifecycle()
 
     DisposableEffect(uid) { onDispose { viewModel.closeNote(uid) } }
-    LaunchedEffect(uid) { if (note == null) titleFocus.requestFocus() }
-    LaunchedEffect(editing) { if (editing && note != null) bodyFocus.requestFocus() }
+    var focusedOnce by remember(uid) { mutableStateOf(false) }
+    LaunchedEffect(editing) {
+        if (!editing) return@LaunchedEffect
+        // Une image plus tard : la fiche d'ajout rapide a rendu la fenêtre, le clavier peut s'ouvrir ici.
+        withFrameNanos {}
+        val target = NoteFocus.onOpen(exists = note != null, title = title.text, firstFocus = !focusedOnce)
+        focusedOnce = true
+        (if (target == NoteFocus.TITLE) titleFocus else bodyFocus).requestFocus()
+        keyboard?.show()
+    }
     LaunchedEffect(note?.title, note?.content) {
         note ?: return@LaunchedEffect
         val shown = session.merge(NoteFields(note.title, note.content))
