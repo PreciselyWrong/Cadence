@@ -53,7 +53,11 @@ import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
+import ch.nicolab.cadence.tasks.autoclassify.AUTO_CLASSIFY_TYPE
+import ch.nicolab.cadence.tasks.autoclassify.AutoClassifyPayload
+import ch.nicolab.cadence.tasks.autoclassify.LINK_DUPLICATE_TYPE
 import ch.nicolab.cadence.tasks.brief.QuestionDto
+import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.triage.TriageActions
 import ch.nicolab.cadence.tasks.triage.TriageItemDto
 import ch.nicolab.cadence.tasks.triage.TriageTaskDto
@@ -87,11 +91,16 @@ internal fun TriageEntry(count: Int, onOpen: () -> Unit) {
     }
 }
 
+/** « À trier » ouvert directement (notification du classement). Même écran que depuis Ma journée. */
+@Composable
+fun TriageRoute(onBack: () -> Unit) = TriageScreen(today = LocalDate.now(), onBack = onBack)
+
 /** Une proposition à la fois, avec sa raison en une ligne : valider, corriger, garder telle quelle ou passer. */
 @Composable
 internal fun TriageScreen(today: LocalDate, onBack: () -> Unit) {
     val viewModel: TriageViewModel = viewModel()
     val tasksViewModel: TasksViewModel = viewModel()
+    val projects by tasksViewModel.projects.collectAsStateWithLifecycle()
     val items by viewModel.items.collectAsStateWithLifecycle()
     val queue by viewModel.queue.collectAsStateWithLifecycle()
     val snackbar = rememberAppSnackbarHostState()
@@ -132,20 +141,28 @@ internal fun TriageScreen(today: LocalDate, onBack: () -> Unit) {
                     Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = Space.gutter, vertical = Space.md),
                     verticalArrangement = Arrangement.spacedBy(Space.md),
                 ) {
-                    TriageCard(
+                    AutoClassifyItem(
                         item = item,
-                        task = task,
-                        onOpenTask = { uid -> opened = uid },
-                        onValidate = { action, payload -> viewModel.apply(item, action, payload) },
-                        onCorrect = { correcting = item },
-                        onKeep = { viewModel.keep(item) },
+                        projects = projects,
+                        onAnswer = { choice -> viewModel.answerSuggestion(item, choice) },
+                        onDismiss = { viewModel.dismissSuggestion(item) },
                         onSkip = { viewModel.skip(item) },
-                        onAnswer = { question, answer -> viewModel.answer(item, question, answer, today) },
-                        onPrecise = { question -> precise = item to question },
-                        onSlot = { accept ->
-                            viewModel.answerSlot(item, TriageActions.field(item.payload, "slot_id"), accept)
-                        },
-                    )
+                    ) {
+                        TriageCard(
+                            item = item,
+                            task = task,
+                            onOpenTask = { uid -> opened = uid },
+                            onValidate = { action, payload -> viewModel.apply(item, action, payload) },
+                            onCorrect = { correcting = item },
+                            onKeep = { viewModel.keep(item) },
+                            onSkip = { viewModel.skip(item) },
+                            onAnswer = { question, answer -> viewModel.answer(item, question, answer, today) },
+                            onPrecise = { question -> precise = item to question },
+                            onSlot = { accept ->
+                                viewModel.answerSlot(item, TriageActions.field(item.payload, "slot_id"), accept)
+                            },
+                        )
+                    }
                 }
             }
         }
@@ -176,6 +193,27 @@ internal fun TriageScreen(today: LocalDate, onBack: () -> Unit) {
         )
     }
     opened?.let { uid -> TaskDetailSheet(taskUid = uid, viewModel = tasksViewModel, onDismiss = { opened = null }) }
+}
+
+/** Carte du classement automatique, ou la carte habituelle pour tout autre élément (ou une charge illisible). */
+@Composable
+private fun AutoClassifyItem(
+    item: TriageItemDto,
+    projects: List<ProjectItem>,
+    onAnswer: (JsonElement) -> Unit,
+    onDismiss: () -> Unit,
+    onSkip: () -> Unit,
+    fallback: @Composable () -> Unit,
+) {
+    when (item.type) {
+        AUTO_CLASSIFY_TYPE -> AutoClassifyPayload.classify(item.payload)?.let { card ->
+            ClassifyCardView(card, projects, onAnswer, onDismiss, onSkip)
+        } ?: fallback()
+        LINK_DUPLICATE_TYPE -> AutoClassifyPayload.duplicate(item.payload)?.let { card ->
+            DuplicateCardView(card, onAnswer, onSkip)
+        } ?: fallback()
+        else -> fallback()
+    }
 }
 
 @OptIn(ExperimentalLayoutApi::class)

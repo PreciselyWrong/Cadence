@@ -34,6 +34,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import ch.nicolab.cadence.tasks.ui.autoclassify.AutoClassifyMarkLine
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.filled.Check
@@ -353,6 +354,7 @@ private fun NoteEditor(viewModel: TasksViewModel, uid: String, note: NoteItem?, 
             )
             if (note != null) {
                 NoteMeta(note, projects.firstOrNull { it.uid == note.projectUid }?.name, tags.filter { it.uid in note.tagUids }.map { it.name }, remember(tags) { tagBadgeColorsByName(tags) })
+                AutoClassifyMarkLine(entity = "note", uid = note.uid)
             }
             if (editing) {
                 PlainField(

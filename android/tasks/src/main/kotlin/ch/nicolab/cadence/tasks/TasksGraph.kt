@@ -79,6 +79,10 @@ object TasksGraph {
     /** Réglages du brief (dernière lecture gardée, écriture différée hors ligne). */
     fun briefSettings(context: Context): BriefSettingsRepository = createBriefSettings(context.applicationContext)
 
+    /** Classement automatique : réglages, marques et annulation (en ligne), réponses aux suggestions (file différée). */
+    fun autoClassify(context: Context): ch.nicolab.cadence.tasks.autoclassify.AutoClassifyRepository =
+        ch.nicolab.cadence.tasks.autoclassify.autoClassifyRepository(context)
+
     /** Réglages de l'agent (en ligne seulement). */
     fun briefAgents(context: Context): BriefAgentsRepository = createBriefAgents(context.applicationContext)
 

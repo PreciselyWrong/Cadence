@@ -1,5 +1,7 @@
 package ch.nicolab.cadence.tasks.ui
 
+import ch.nicolab.cadence.tasks.ui.autoclassify.AutoClassifyMarkLine
+
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -293,6 +295,7 @@ internal fun LinkDetails(link: LinkItem, tags: List<TagItem>, draft: NoteDraft, 
         }
         NoteField(draft)
         LinkTagLine(link, tags, onTags)
+        AutoClassifyMarkLine(entity = "link", uid = link.uid)
     }
 }
 

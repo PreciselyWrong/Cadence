@@ -5,9 +5,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
+import ch.nicolab.cadence.tasks.autoclassify.AutoClassifyRequests
 import ch.nicolab.cadence.tasks.brief.BriefRequests
 import ch.nicolab.cadence.tasks.brief.QuestionDto
 import ch.nicolab.cadence.tasks.sync.DeferredCall
+import ch.nicolab.cadence.tasks.triage.TriageActions
 import ch.nicolab.cadence.tasks.triage.TriageHolds
 import ch.nicolab.cadence.tasks.triage.TriageItemDto
 import ch.nicolab.cadence.tasks.triage.TriageQueueDto
@@ -87,6 +89,21 @@ internal class TriageViewModel(application: Application) : AndroidViewModel(appl
             BriefRequests.answer(date, key, question.key, question.target.scope, question.target.ref, answer, string(R.string.triage_title)),
         )
     }
+
+    /** Réponse à une carte du classement automatique (`choice` : `all`, ou un objet projet/tags/priorité, ou un doublon). */
+    fun answerSuggestion(item: TriageItemDto, choice: JsonElement) {
+        val suggestion = suggestionOf(item) ?: return
+        hold(item, string(R.string.auto_classify_applied), AutoClassifyRequests.apply(suggestion, choice, string(R.string.triage_title)))
+    }
+
+    /** « Aucun » : la suggestion est classée sans rien changer. */
+    fun dismissSuggestion(item: TriageItemDto) {
+        val suggestion = suggestionOf(item) ?: return
+        hold(item, string(R.string.auto_classify_applied), AutoClassifyRequests.dismiss(suggestion, string(R.string.triage_title)))
+    }
+
+    private fun suggestionOf(item: TriageItemDto): String? =
+        TriageActions.field(item.payload, "suggestion_uid").takeIf { it.isNotBlank() }
 
     private fun hold(item: TriageItemDto, message: String, call: DeferredCall) {
         _notices.tryEmit(TriageNotice(message, holds.hold(item.key, call)))
