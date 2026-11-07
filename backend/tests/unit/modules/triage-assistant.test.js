@@ -3,6 +3,7 @@
 const {
     validateProposal,
     candidates,
+    systemPrompt,
 } = require('../../../modules/triage/assistant');
 const { taskFingerprint } = require('../../../modules/triage/core/fingerprint');
 const {
@@ -113,6 +114,28 @@ describe('validateProposal', () => {
                 catalog
             )
         ).toBeNull();
+    });
+
+    it('leaves classification to the classifier when it is on', () => {
+        const bare = task({ project_name: null, tags: [] });
+        expect(
+            validateProposal(
+                { action: 'reclass', project: 'Maison', reason },
+                bare,
+                catalog,
+                { reclass: false }
+            )
+        ).toBeNull();
+        expect(
+            validateProposal(
+                { action: 'rename', name: 'Appeler le garage', reason },
+                bare,
+                catalog,
+                { reclass: false }
+            ).action
+        ).toBe('rename');
+        expect(systemPrompt({ reclass: false })).not.toContain('reclass');
+        expect(systemPrompt({ reclass: true })).toContain('reclass');
     });
 });
 
