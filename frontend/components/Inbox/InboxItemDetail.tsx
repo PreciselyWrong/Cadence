@@ -6,10 +6,12 @@ import { Task } from '../../entities/Task';
 import { Project } from '../../entities/Project';
 import { Note } from '../../entities/Note';
 import InboxItemAttachments from './InboxItemAttachments';
-import InboxLinkPreview from '../Links/InboxLinkPreview';
-import LinkTriageActions from '../Links/LinkTriageActions';
-import { useLinksStore } from '../../store/linksStore';
-import { firstUrl, linkForItem, residualText } from '../../utils/linkFilters';
+import LinkPreviewCard from '../Links/LinkPreviewCard';
+import TagInput from '../Tag/TagInput';
+import { firstUrl } from '../../utils/linkFilters';
+import { LinkDraft, linkTaskDraft, wordsAround } from '../../utils/linkTriage';
+import { urlPreviewWithin } from '../../utils/urlService';
+import { useUrlPreview } from '../../hooks/useUrlPreview';
 import { useStore } from '../../store/useStore';
 import {
     focusAreaIdForTask,
@@ -35,6 +37,8 @@ interface InboxItemDetailProps {
     openTaskModal: (task: Task, inboxItemUid?: string) => void;
     openProjectModal: (project: Project | null, inboxItemUid?: string) => void;
     openNoteModal: (note: Note | null, inboxItemUid?: string) => void;
+    // The "Links" decision, offered when the item holds an address.
+    onSaveToLinks?: (inboxItemUid: string, draft: LinkDraft) => Promise<void>;
     projects: Project[];
     isNew?: boolean;
     onEditingChange?: (editing: boolean) => void;
@@ -47,6 +51,7 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
     openTaskModal,
     openProjectModal,
     openNoteModal,
+    onSaveToLinks,
     projects,
     isNew = false,
     onEditingChange,
@@ -62,6 +67,9 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
     // removed words are carried: shown as badges and kept when saved.
     const [cleanedEditText, setCleanedEditText] = useState<string | null>(null);
     const [carriedEditText, setCarriedEditText] = useState('');
+    // Chosen in the panel, added to what the text says at the decision.
+    const [pickedTags, setPickedTags] = useState<string[]>([]);
+    const [pickedProject, setPickedProject] = useState('');
     const containerRef = useRef<HTMLDivElement>(null);
     const composerRef = useRef<QuickCaptureInputHandle>(null);
 
@@ -265,16 +273,11 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
     // placeholder the row renders as an invisible strip that cannot be clicked.
     const isBlank = displayText.trim().length === 0;
 
-    // A captured link shows as a card with its note; the text itself is kept
-    // only when it says more than the link and its note.
-    const savedLinks = useLinksStore((state) => state.links);
-    const link = linkForItem(savedLinks, item.uid, fullContent);
-    const textAroundLink = link
-        ? residualText(fullContent, firstUrl(fullContent) ?? '')
-        : '';
-    const showText =
-        !link ||
-        (textAroundLink !== '' && textAroundLink !== (link.note ?? ''));
+    // An item holding an address shows what the page is, under the words
+    // written with it (the address itself is in the preview).
+    const url = firstUrl(fullContent);
+    const preview = useUrlPreview(url);
+    const showText = !url || wordsAround(fullContent, url) !== '';
 
     const extraLineCount =
         displayText.split('\n').filter((l) => l.trim().length > 0).length - 1;
@@ -420,15 +423,25 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
             cleanTextFromTagsAndProjects(sourceText) ??
             sourceText;
 
-        const tagObjects = sourceHashtags.map((hashtagName) => {
+        const tagNames = [
+            ...sourceHashtags,
+            ...pickedTags.filter(
+                (name) =>
+                    !sourceHashtags.some(
+                        (h) => h.toLowerCase() === name.toLowerCase()
+                    )
+            ),
+        ];
+        const tagObjects = tagNames.map((hashtagName) => {
             const existingTag = tags.find(
                 (tag) => tag.name.toLowerCase() === hashtagName.toLowerCase()
             );
             return existingTag || { name: hashtagName };
         });
 
-        let projectUid: string | undefined;
-        if (sourceProjectRefs.length > 0) {
+        // The project chosen in the panel wins over the one in the text.
+        let projectUid: string | undefined = pickedProject || undefined;
+        if (!projectUid && sourceProjectRefs.length > 0) {
             const matchingProject = projects.find(
                 (p) =>
                     p.name.toLowerCase() === sourceProjectRefs[0].toLowerCase()
@@ -446,8 +459,21 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
             tagObjects,
             projectUid,
             projectRefsList: sourceProjectRefs,
-            hashtagsList: sourceHashtags,
+            hashtagsList: tagNames,
+            projectChosen:
+                Boolean(pickedProject) || sourceProjectRefs.length > 0,
         };
+    };
+
+    // The page title, if the server reads it soon enough.
+    const pageTitle = async (address: string): Promise<string | null> => {
+        if (preview?.url === address) return preview.title;
+        setLoading(true);
+        try {
+            return (await urlPreviewWithin(address))?.title ?? null;
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleConvertToTask = async (
@@ -475,17 +501,26 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
             console.error('Failed to analyze inbox item:', error);
         }
         // A ~area in the text means the task is not for the Focus, so the
-        // Focus project is dropped unless the text named a project itself.
+        // Focus project is dropped unless a project was named or chosen.
         const projectUid =
-            analysis?.parsed_area && payload.projectRefsList.length === 0
+            analysis?.parsed_area && !payload.projectChosen
                 ? undefined
                 : payload.projectUid;
+        let name =
+            analysis?.cleaned_content || payload.cleanedContent || displayText;
+        let note: string | undefined;
+        const address = firstUrl(payload.sourceText);
+        if (address) {
+            ({ name, note } = linkTaskDraft({
+                url: address,
+                title: await pageTitle(address),
+                text: wordsAround(name, address),
+            }));
+        }
         const newTask: Task = applyAnalysisToTask(
             {
-                name:
-                    analysis?.cleaned_content ||
-                    payload.cleanedContent ||
-                    displayText,
+                name,
+                note,
                 status: 'not_started',
                 priority: null,
                 tags: mergeFocusTags(
@@ -528,6 +563,37 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
         openProjectModal(newProject, item.uid);
     };
 
+    const handleSaveToLinks = async (context?: InboxComposerFooterContext) => {
+        if (!onSaveToLinks || !item.uid) return;
+        const payload = buildConversionPayload(
+            context?.text,
+            context?.hashtags,
+            context?.projectRefs,
+            context?.cleanedText
+        );
+        const address = firstUrl(payload.sourceText);
+        if (!address) return;
+        const title = await pageTitle(address);
+        const words = wordsAround(payload.cleanedContent, address);
+        setLoading(true);
+        try {
+            await onSaveToLinks(item.uid, {
+                url: address,
+                ...(title ? { title } : {}),
+                ...(words ? { note: words } : {}),
+                ...(payload.hashtagsList.length > 0
+                    ? { tags: payload.hashtagsList }
+                    : {}),
+                // The Focus project is not a reason to file a link.
+                ...(payload.projectChosen && payload.projectUid
+                    ? { project_uid: payload.projectUid }
+                    : {}),
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleConvertToNote = async (
         context?: InboxComposerFooterContext
     ) => {
@@ -535,30 +601,11 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
         let title = sourceText.split('\n')[0] || sourceText.substring(0, 50);
         let isBookmark = false;
 
-        try {
-            const { isUrl: detectUrl, extractUrlTitle } =
-                await import('../../utils/urlService');
-            if (detectUrl(sourceText.trim())) {
-                setLoading(true);
-                try {
-                    const result = (await Promise.race([
-                        extractUrlTitle(sourceText.trim()),
-                        new Promise((_, reject) =>
-                            setTimeout(() => reject(new Error('Timeout')), 3000)
-                        ),
-                    ])) as any;
-                    if (result?.title) {
-                        title = result.title;
-                        isBookmark = true;
-                    }
-                } catch {
-                    isBookmark = true;
-                } finally {
-                    setLoading(false);
-                }
-            }
-        } catch {
-            setLoading(false);
+        const { isUrl: detectUrl } = await import('../../utils/urlService');
+        if (detectUrl(sourceText.trim())) {
+            isBookmark = true;
+            const found = await pageTitle(sourceText.trim());
+            if (found) title = found;
         }
 
         const payload = buildConversionPayload(
@@ -602,56 +649,120 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
         if (item.uid !== undefined) onDelete(item.uid);
     };
 
-    // ── Edit-mode footer ──────────────────────────────────────────────────────
+    // ── Edit-mode footer: the triage panel ───────────────────────────────────
+    // What the page is, tags and project, then one decision.
 
-    const renderComposerFooter = (context: InboxComposerFooterContext) => (
-        <>
-            {item.uid && item.attachments && (
-                <InboxItemAttachments
-                    itemUid={item.uid}
-                    attachments={item.attachments}
-                />
-            )}
-            <div className="mt-2 flex items-center justify-between gap-2 flex-wrap h-5">
-                <div className="flex items-center gap-3.5">
-                    {loading && (
-                        <div className="h-3.5 w-3.5 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin" />
+    const decisionClass =
+        'text-[12px] hover:underline transition-colors disabled:opacity-50';
+
+    const renderComposerFooter = (context: InboxComposerFooterContext) => {
+        const address = firstUrl(context.text);
+        return (
+            <>
+                {address && (
+                    <LinkPreviewCard
+                        url={address}
+                        title={preview?.url === address ? preview.title : null}
+                        description={
+                            preview?.url === address
+                                ? preview.description
+                                : null
+                        }
+                        image={preview?.url === address ? preview.image : null}
+                        pending={preview?.url !== address}
+                    />
+                )}
+                {item.uid && item.attachments && (
+                    <InboxItemAttachments
+                        itemUid={item.uid}
+                        attachments={item.attachments}
+                    />
+                )}
+                <div
+                    className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-end"
+                    data-testid="inbox-panel-fields"
+                >
+                    <div className="min-w-0 flex-1">
+                        <TagInput
+                            initialTags={pickedTags}
+                            onTagsChange={setPickedTags}
+                            availableTags={tags}
+                        />
+                    </div>
+                    {projects.length > 0 && (
+                        <select
+                            aria-label={t('links.tryProject', 'Project')}
+                            value={pickedProject}
+                            onChange={(e) => setPickedProject(e.target.value)}
+                            className="min-h-[40px] max-w-full rounded-md border border-gray-300 bg-white pl-2 pr-8 text-sm text-gray-700 dark:border-gray-900 dark:bg-gray-900 dark:text-gray-200 sm:max-w-[220px]"
+                        >
+                            <option value="">
+                                {t('links.tryProject', 'Project')}
+                            </option>
+                            {projects.map((project) => (
+                                <option key={project.uid} value={project.uid}>
+                                    {project.name}
+                                </option>
+                            ))}
+                        </select>
                     )}
-                    <span className="text-[12px] text-gray-500 dark:text-gray-400">
-                        {t('inbox.saveAs', 'Save as')}
-                    </span>
+                </div>
+                <div className="mt-3 flex items-center justify-between gap-2 flex-wrap min-h-5">
+                    <div className="flex items-center gap-3.5">
+                        {loading && (
+                            <div className="h-3.5 w-3.5 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin" />
+                        )}
+                        <span className="text-[12px] text-gray-500 dark:text-gray-400">
+                            {t('inbox.saveAs', 'Save as')}
+                        </span>
+                        <button
+                            type="button"
+                            disabled={loading}
+                            onClick={() => void handleConvertToTask(context)}
+                            className={`${decisionClass} text-blue-600 dark:text-blue-400`}
+                        >
+                            {t('inbox.createTask', 'Task')}
+                        </button>
+                        {address && onSaveToLinks && (
+                            <button
+                                type="button"
+                                disabled={loading}
+                                onClick={() => void handleSaveToLinks(context)}
+                                className={`${decisionClass} text-teal-600 dark:text-teal-400`}
+                            >
+                                {t('links.title', 'Links')}
+                            </button>
+                        )}
+                        <button
+                            type="button"
+                            disabled={loading}
+                            onClick={() => void handleConvertToNote(context)}
+                            className={`${decisionClass} text-purple-600 dark:text-purple-400`}
+                        >
+                            {t('inbox.createNote', 'Note')}
+                        </button>
+                        {!address && (
+                            <button
+                                type="button"
+                                disabled={loading}
+                                onClick={() => handleConvertToProject(context)}
+                                className={`${decisionClass} text-green-600 dark:text-green-400`}
+                            >
+                                {t('inbox.createProject', 'Project')}
+                            </button>
+                        )}
+                    </div>
                     <button
                         type="button"
-                        onClick={() => void handleConvertToTask(context)}
-                        className="text-[12px] text-blue-600 dark:text-blue-400 hover:underline transition-colors "
+                        onClick={handleDelete}
+                        className={`${decisionClass} text-red-500 dark:text-red-400`}
                     >
-                        {t('inbox.createTask', 'Task')}
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => void handleConvertToNote(context)}
-                        className="text-[12px] text-purple-600 dark:text-purple-400 hover:underline transition-colors "
-                    >
-                        {t('inbox.createNote', 'Note')}
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => handleConvertToProject(context)}
-                        className="text-[12px] text-green-600 dark:text-green-400 hover:underline transition-colors "
-                    >
-                        {t('inbox.createProject', 'Project')}
+                        {t('common.delete', 'Delete')}
                     </button>
                 </div>
-                <button
-                    type="button"
-                    onClick={handleDelete}
-                    className="text-[12px] text-red-500 dark:text-red-400 hover:underline transition-colors "
-                >
-                    {t('common.delete', 'Delete')}
-                </button>
-            </div>
-        </>
-    );
+            </>
+        );
+    };
 
     // ── Render ────────────────────────────────────────────────────────────────
 
@@ -675,6 +786,7 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                     openNoteModal={openNoteModal}
                     cardClassName="mb-0 !rounded-none !shadow-none"
                     multiline={true}
+                    plainLinks
                 />
             ) : (
                 /* ── Flat row (no card, no shadow) ─────────────────────────── */
@@ -699,7 +811,11 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                                         {t('inbox.emptyItem', '(Empty item)')}
                                     </span>
                                 ) : (
-                                    renderInlineSegments(displayText)
+                                    renderInlineSegments(
+                                        url
+                                            ? wordsAround(displayText, url)
+                                            : displayText
+                                    )
                                 )}
                                 {extraLineCount > 0 && (
                                     <span className="ml-2 text-xs font-normal text-gray-500 dark:text-gray-400">
@@ -711,12 +827,13 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                                 )}
                             </p>
                         )}
-                        {link && <InboxLinkPreview link={link} />}
-                        {link && (
-                            <LinkTriageActions
-                                item={item}
-                                link={link}
-                                projects={projects}
+                        {url && (
+                            <LinkPreviewCard
+                                url={url}
+                                title={preview?.title}
+                                description={preview?.description}
+                                image={preview?.image}
+                                pending={!preview}
                             />
                         )}
                         {item.uid && item.attachments && (

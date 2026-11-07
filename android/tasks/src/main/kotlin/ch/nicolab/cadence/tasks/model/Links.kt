@@ -6,12 +6,15 @@ import java.text.Normalizer
 import java.time.Instant
 import java.time.LocalDate
 
-/** Ce que l'utilisateur a fait d'un lien ; valeur serveur dans [wire]. */
+/**
+ * Deux statuts : « À voir » ([NEW]) et « Archivé » ([DROPPED], gardé mais caché par défaut). Les anciennes valeurs
+ * (`to_evaluate`, `tested`, `kept`, `parked`) et toute valeur inconnue, du serveur ou de Room, se lisent [NEW].
+ */
 enum class LinkStatus(val wire: String) {
-    NEW("new"), TO_EVALUATE("to_evaluate"), TESTED("tested"), KEPT("kept"), PARKED("parked"), DROPPED("dropped");
+    NEW("new"), DROPPED("dropped");
 
     companion object {
-        fun fromWire(value: String?): LinkStatus = entries.firstOrNull { it.wire == value } ?: NEW
+        fun fromWire(value: String?): LinkStatus = if (value == DROPPED.wire) DROPPED else NEW
     }
 }
 
@@ -74,15 +77,32 @@ data class LinkItem(
     }
 }
 
-/** Filtre de l'écran Liens ; [status] null montre tout sauf les liens jetés, [tagUid] garde les liens qui portent l'étiquette. */
+/** Filtre de l'écran Liens ; [archived] montre les seuls liens archivés, sinon tous les autres. */
 data class LinkFilter(
     val query: String = "",
-    val kind: LinkKind? = null,
-    val status: LinkStatus? = null,
+    val archived: Boolean = false,
     val domain: String? = null,
     val tagUid: String? = null,
     val projectUid: String? = null,
 )
+
+/**
+ * Un lien à enregistrer par l'appareil (`POST /api/v1/links`, appel différé) : le serveur relit la page. [tagNames] sont
+ * des noms (le serveur crée ceux qui manquent) ; [sourceType]/[sourceUid] : l'idée, la tâche ou la note d'où il vient.
+ */
+data class LinkDraft(
+    val url: String,
+    val title: String? = null,
+    val note: String? = null,
+    val tagNames: List<String> = emptyList(),
+    val projectUid: String? = null,
+    val sourceType: String? = null,
+    val sourceUid: String? = null,
+) {
+    /** Clé de l'appel différé : un même lien depuis une même source n'est envoyé qu'une fois. */
+    val callKey: String
+        get() = if (sourceType != null && sourceUid != null) "link-add:$sourceType:$sourceUid:$url" else "link-add:$url"
+}
 
 /** Ce que la fiche d'un lien permet de changer d'un coup. */
 data class LinkEdit(val title: String, val url: String, val note: String, val projectUid: String?)
@@ -106,8 +126,7 @@ object LinkLists {
     fun filter(links: List<LinkItem>, filter: LinkFilter, tagNames: Map<String, String> = emptyMap()): List<LinkItem> {
         val words = fold(filter.query).split(Regex("\\s+")).filter { it.isNotEmpty() }
         return links.filter { link ->
-            (filter.kind == null || link.kind == filter.kind) &&
-                (if (filter.status == null) link.status != LinkStatus.DROPPED else link.status == filter.status) &&
+            (link.status == LinkStatus.DROPPED) == filter.archived &&
                 (filter.domain == null || link.domain == filter.domain) &&
                 (filter.tagUid == null || filter.tagUid in link.tagUids) &&
                 (filter.projectUid == null || link.projectUid == filter.projectUid) &&

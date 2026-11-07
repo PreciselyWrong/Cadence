@@ -49,9 +49,10 @@ Inbox, Triage button (or `/inbox?triage=1`, or "Triage the inbox" in the palette
 | Key | Action |
 |---|---|
 | `t` | Make a task (date, tags, project read from the text) |
-| `p` | Make a project |
+| `p` | Make a project (items without an address) |
+| `l` | Save to Links (items with an address) |
 | `n` | Make a note |
-| `l` | Later: keep it in the inbox and move to the next |
+| `s` | Later: keep it in the inbox and move to the next |
 | `Delete` | Delete |
 | `Enter` | Accept the suggestion |
 | `Esc` | Leave |

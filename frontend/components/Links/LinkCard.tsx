@@ -9,6 +9,7 @@ import {
 import { Link } from '../../entities/Link';
 import { Tag } from '../../entities/Tag';
 import { sourcePath } from '../../utils/linkFilters';
+import { addressLabel } from '../../utils/linkTriage';
 import { toIntlLocale } from '../../utils/intlLocale';
 import { LinkChanges } from '../../utils/linksService';
 import { Project } from '../../entities/Project';
@@ -22,7 +23,7 @@ interface LinkCardProps {
     onNote?: (changes: LinkChanges) => Promise<unknown>;
     availableTags: Tag[];
     projects?: Project[];
-    // One tap: a task that keeps the link's address.
+    // A task that keeps the link's address; the link stays.
     onTask?: () => Promise<unknown>;
     onDelete: () => Promise<unknown>;
 }
@@ -33,24 +34,8 @@ const compactCount = (value: number, locale: string): string =>
         maximumFractionDigits: 1,
     }).format(value);
 
-export const LinkKindBadge: React.FC<{ kind: Link['kind'] }> = ({ kind }) => {
-    const { t } = useTranslation();
-    if (kind === 'other') return null;
-    const labels: Record<string, string> = {
-        repo: t('links.kind.repo', 'Repo'),
-        article: t('links.kind.article', 'Article'),
-        video: t('links.kind.video', 'Video'),
-        tool: t('links.kind.tool', 'Tool'),
-    };
-    return (
-        <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-medium text-gray-600 dark:bg-gray-700/60 dark:text-gray-300">
-            {labels[kind]}
-        </span>
-    );
-};
-
 // Stars, language and last push of a GitHub repository, on one line.
-export const GithubStats: React.FC<{ link: Link }> = ({ link }) => {
+const GithubStats: React.FC<{ link: Link }> = ({ link }) => {
     const { t, i18n } = useTranslation();
     const locale = toIntlLocale(i18n.language);
     if (link.github_stars === null && !link.github_language) return null;
@@ -81,8 +66,8 @@ export const GithubStats: React.FC<{ link: Link }> = ({ link }) => {
 };
 
 // One saved link: what it is (title, two lines of description, domain,
-// kind, GitHub stats, README start), what the user said about it (note,
-// tags) and what to do with it (status, open, go to where it came from).
+// GitHub stats), what the user said about it (note, tags, project) and what
+// to do with it (⋯, open, go to the task or note it came from).
 const LinkCard: React.FC<LinkCardProps> = ({
     link,
     onChange,
@@ -95,7 +80,7 @@ const LinkCard: React.FC<LinkCardProps> = ({
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const [imageFailed, setImageFailed] = useState(false);
-    const title = link.title || link.domain || link.url;
+    const title = link.title || addressLabel(link.url);
     const description = link.description || link.readme_excerpt;
     const source = sourcePath(link);
 
@@ -136,9 +121,8 @@ const LinkCard: React.FC<LinkCardProps> = ({
 
             <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-[12px] text-gray-500 dark:text-gray-400">
                 <span className="truncate">{link.domain ?? link.url}</span>
-                <LinkKindBadge kind={link.kind} />
                 <GithubStats link={link} />
-                {link.status === 'parked' && link.review_at && (
+                {link.review_at && (
                     <span>
                         {t('links.reviewOn', 'Review on {{date}}', {
                             date: new Date(
@@ -159,14 +143,6 @@ const LinkCard: React.FC<LinkCardProps> = ({
                     <span>{t('links.fetching', 'Reading the page…')}</span>
                 )}
             </div>
-
-            {link.kind === 'repo' &&
-                link.readme_excerpt &&
-                link.readme_excerpt !== description && (
-                    <p className="line-clamp-3 break-words text-[12px] leading-snug text-gray-500 dark:text-gray-400">
-                        {link.readme_excerpt}
-                    </p>
-                )}
 
             <LinkNote
                 note={link.note}

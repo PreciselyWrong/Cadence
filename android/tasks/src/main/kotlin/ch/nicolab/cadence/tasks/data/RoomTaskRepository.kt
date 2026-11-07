@@ -16,6 +16,7 @@ import ch.nicolab.cadence.tasks.model.GoalItem
 import ch.nicolab.cadence.tasks.model.GoalStatus
 import ch.nicolab.cadence.tasks.model.IconIds
 import ch.nicolab.cadence.tasks.model.InboxEntry
+import ch.nicolab.cadence.tasks.model.LinkDraft
 import ch.nicolab.cadence.tasks.model.LinkItem
 import ch.nicolab.cadence.tasks.model.LinkStatus
 import ch.nicolab.cadence.tasks.model.NoteChange
@@ -234,23 +235,33 @@ internal class RoomTaskRepository(
         )
     }
 
-    override suspend fun addLinkFrom(url: String, sourceType: String, sourceUid: String, label: String) {
-        val value = url.trim()
-        defer(
-            DeferredCall(
-                key = "link-add:$sourceType:$sourceUid:$value",
-                method = "POST",
-                path = "/api/v1/links",
-                body = JsonObject(
-                    mapOf(
-                        "url" to JsonPrimitive(value),
-                        "source_type" to JsonPrimitive(sourceType),
-                        "source_uid" to JsonPrimitive(sourceUid),
-                    ),
-                ),
-                label = label,
-            ),
-        )
+    override suspend fun addLinkFrom(url: String, sourceType: String, sourceUid: String, label: String) =
+        addLink(LinkDraft(url = url.trim(), sourceType = sourceType, sourceUid = sourceUid), label)
+
+    override suspend fun addLink(draft: LinkDraft, label: String) {
+        val value = draft.copy(url = draft.url.trim())
+        val body = buildMap<String, JsonElement> {
+            put("url", JsonPrimitive(value.url))
+            value.title?.let { put("title", JsonPrimitive(it)) }
+            value.note?.let { put("note", JsonPrimitive(it)) }
+            if (value.tagNames.isNotEmpty()) put("tags", jsonArray(value.tagNames))
+            value.projectUid?.let { put("project_uid", JsonPrimitive(it)) }
+            if (value.sourceType != null && value.sourceUid != null) {
+                put("source_type", JsonPrimitive(value.sourceType))
+                put("source_uid", JsonPrimitive(value.sourceUid))
+            }
+        }
+        defer(DeferredCall(key = value.callKey, method = "POST", path = "/api/v1/links", body = JsonObject(body), label = label))
+    }
+
+    override suspend fun withdrawLink(draft: LinkDraft): Boolean {
+        val value = draft.copy(url = draft.url.trim())
+        if (database.deferredCallDao().delete(value.callKey) > 0) return true
+        val type = value.sourceType ?: return false
+        val source = value.sourceUid ?: return false
+        val link = database.linkDao().bySource(type, source) ?: return false
+        deleteLink(link.uid)
+        return true
     }
 
     override suspend fun deleteLink(uid: String) {
@@ -810,6 +821,17 @@ internal class RoomTaskRepository(
             val existing = inboxDao.get(uid) ?: return@withTransaction false
             inboxDao.upsert(existing.copy(status = INBOX_PROCESSED))
             outbox.insert(LocalOps.upsert("inbox_item", uid, mapOf("status" to JsonPrimitive(INBOX_PROCESSED)), clock, nowMs()))
+            true
+        }
+        if (written) afterLocalWrite()
+    }
+
+    override suspend fun reopenInboxItem(uid: String) {
+        val clock = hlc.now()
+        val written = database.withTransaction {
+            val existing = inboxDao.get(uid) ?: return@withTransaction false
+            inboxDao.upsert(existing.copy(status = INBOX_STATUS))
+            outbox.insert(LocalOps.upsert("inbox_item", uid, mapOf("status" to JsonPrimitive(INBOX_STATUS)), clock, nowMs()))
             true
         }
         if (written) afterLocalWrite()

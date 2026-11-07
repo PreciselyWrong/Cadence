@@ -117,9 +117,6 @@
     <string name="tasks_note_pinned_badge">Épinglée</string>
     <string name="tasks_links_section">Liens</string>
     <string name="tasks_link_open">Ouvrir le lien %1$s</string>
-    <string name="tasks_idea_today">Aujourd\'hui</string>
-    <string name="tasks_idea_schedule">Planifier</string>
-    <string name="tasks_idea_project">Projet</string>
     <string name="tasks_idea_note">Note</string>
     <string name="tasks_idea_edit">Modifier</string>
     <string name="tasks_idea_show_more">Afficher tout</string>
@@ -127,6 +124,13 @@
     <string name="tasks_idea_more">Autres actions</string>
     <string name="tasks_idea_edit_title">Modifier l\'idée</string>
     <string name="tasks_idea_edit_save">Enregistrer</string>
-    <string name="tasks_idea_project_title">Ranger dans un projet</string>
     <string name="tasks_idea_swipe_delete">Supprimer l\'idée</string>
+    <string name="tasks_idea_to_task">Tâche</string>
+    <string name="tasks_idea_to_links">Liens</string>
+    <string name="tasks_idea_delete">Supprimer</string>
+    <string name="tasks_idea_links_title">Enregistrer dans les liens</string>
+    <string name="tasks_idea_to_task_notice">« %1$s » : tâche créée</string>
+    <string name="tasks_idea_to_note_notice">Idée changée en note</string>
+    <string name="tasks_idea_to_links_notice">« %1$s » ajouté aux liens</string>
+    <string name="tasks_idea_link_already_sent">Le lien est déjà parti : supprimez-le depuis Liens.</string>
 </resources>

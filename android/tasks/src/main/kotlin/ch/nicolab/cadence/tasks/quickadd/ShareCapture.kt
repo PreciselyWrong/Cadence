@@ -4,17 +4,33 @@ import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 import ch.nicolab.cadence.tasks.R
+import ch.nicolab.cadence.tasks.TaskRepository
 import ch.nicolab.cadence.tasks.TasksGraph
+import ch.nicolab.cadence.tasks.model.IdeaTasks
+import ch.nicolab.cadence.tasks.model.LinkDraft
+import ch.nicolab.cadence.tasks.model.TaskDraft
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+/** Où va un texte partagé : l'Inbox (d'office), une tâche, ou les liens quand il porte une adresse. */
+enum class ShareAction { INBOX, TASK, LINK }
+
+/** L'écriture d'un partage ; [text] reste disponible pour le ranger dans l'Inbox si l'écriture choisie échoue. */
+sealed interface ShareWrite {
+    val text: String
+
+    data class Inbox(override val text: String) : ShareWrite
+    data class Task(override val text: String, val draft: TaskDraft) : ShareWrite
+    data class Link(override val text: String, val draft: LinkDraft) : ShareWrite
+}
+
 /**
- * Texte partagé, sélectionné ou dicté vers l'Inbox. L'écran qui le reçoit se ferme tout de suite et rend la main
- * à l'application d'origine : l'écriture (Room et file d'envoi, jamais le réseau) continue hors de l'activité,
- * puis le toast la confirme. La synchro part plus tard, par WorkManager.
+ * Texte partagé, sélectionné ou dicté : une feuille au-dessus de l'appli d'origine le range dans l'Inbox, en fait une
+ * tâche ou l'enregistre dans les liens. L'écriture (Room, file d'envoi ou appel différé, jamais le réseau) continue
+ * hors de l'activité, puis un toast la confirme ; la synchro part plus tard, par WorkManager.
  */
 internal object ShareCapture {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -31,14 +47,62 @@ internal object ShareCapture {
         return raw?.trim()?.ifEmpty { null }
     }
 
-    /** Range [text] dans l'Inbox sans retenir l'appelant ; un échec est dit par un toast plutôt que perdu en silence. */
-    fun save(context: Context, text: String) {
+    /**
+     * Ce qu'écrit [action] : la tâche suit la règle de nom de [IdeaTasks] (titre de la page [pageTitle] s'il est connu),
+     * avec l'adresse et le reste du texte en note ; « Liens » sans adresse retombe sur l'Inbox.
+     */
+    fun plan(
+        action: ShareAction,
+        text: String,
+        pageTitle: String?,
+        tagUids: List<String>,
+        tagNames: List<String>,
+        projectUid: String?,
+    ): ShareWrite = when (action) {
+        ShareAction.INBOX -> ShareWrite.Inbox(text)
+        ShareAction.TASK -> ShareWrite.Task(
+            text,
+            TaskDraft(
+                name = IdeaTasks.taskName(text, pageTitle),
+                note = IdeaTasks.taskNote(text),
+                projectUid = projectUid,
+                tagUids = tagUids.distinct(),
+            ),
+        )
+        ShareAction.LINK -> IdeaTasks.linkDraft(text, pageTitle, tagNames, projectUid)
+            ?.let { ShareWrite.Link(text, it) }
+            ?: ShareWrite.Inbox(text)
+    }
+
+    /** Écrit [write] hors ligne ; l'appel des liens est nommé [linkLabel] dans la liste des refus. */
+    suspend fun write(repository: TaskRepository, write: ShareWrite, linkLabel: String) {
+        when (write) {
+            is ShareWrite.Inbox -> repository.captureInbox(write.text)
+            is ShareWrite.Task -> repository.createTask(write.draft)
+            is ShareWrite.Link -> repository.addLink(write.draft, linkLabel)
+        }
+    }
+
+    /**
+     * Écrit [chosen] sans retenir l'appelant. Une tâche ou un lien qui ne s'écrit pas part dans l'Inbox : un partage
+     * n'est jamais perdu ; seul un échec de l'Inbox elle-même est dit comme tel.
+     */
+    fun save(context: Context, chosen: ShareWrite) {
         val app = context.applicationContext
         scope.launch {
-            val saved = runCatching { TasksGraph.repository(app).captureInbox(text) }.isSuccess
-            withContext(Dispatchers.Main) {
-                Toast.makeText(app, if (saved) R.string.tasks_share_saved else R.string.tasks_share_failed, Toast.LENGTH_SHORT).show()
+            val repository = TasksGraph.repository(app)
+            val message = when {
+                runCatching { write(repository, chosen, app.getString(R.string.links_add_call)) }.isSuccess -> saved(chosen)
+                chosen !is ShareWrite.Inbox && runCatching { repository.captureInbox(chosen.text) }.isSuccess -> R.string.tasks_share_saved
+                else -> R.string.tasks_share_failed
             }
+            withContext(Dispatchers.Main) { Toast.makeText(app, message, Toast.LENGTH_SHORT).show() }
         }
+    }
+
+    private fun saved(write: ShareWrite): Int = when (write) {
+        is ShareWrite.Inbox -> R.string.tasks_share_saved
+        is ShareWrite.Task -> R.string.tasks_share_task_saved
+        is ShareWrite.Link -> R.string.tasks_share_link_saved
     }
 }

@@ -33,6 +33,15 @@ import {
 } from '../../utils/inboxTriage';
 import { isEditableTarget } from '../../utils/shortcutDispatcher';
 import { isAuthError } from '../../utils/authUtils';
+import { firstUrl } from '../../utils/linkFilters';
+import {
+    keepInLinks,
+    linkTaskDraft,
+    wordsAround,
+} from '../../utils/linkTriage';
+import { urlPreviewWithin } from '../../utils/urlService';
+import { useUrlPreview } from '../../hooks/useUrlPreview';
+import LinkPreviewCard from '../Links/LinkPreviewCard';
 
 interface InboxTriageProps {
     projects: Project[];
@@ -78,7 +87,11 @@ const reasonText = (t: TFunction, suggestion: TriageSuggestion): string => {
     }
 };
 
-// Keyboard-first pass over the inbox: one item at a time, one key each.
+type TriageAction = TriageKind | 'later' | 'delete';
+
+// Keyboard-first pass over the inbox: one item at a time, one key each, the
+// same decisions as the inbox panel (Links instead of Project for an item
+// holding an address). "Later" only passes the item for this pass.
 const InboxTriage: React.FC<InboxTriageProps> = ({
     projects,
     onExit,
@@ -98,10 +111,16 @@ const InboxTriage: React.FC<InboxTriageProps> = ({
         [inboxItems, skipped]
     );
     const current: InboxItem | undefined = queue[0];
-    const suggestion = useMemo(
-        () => (current ? suggestTriage(current.content) : null),
-        [current]
-    );
+    const url = current ? firstUrl(current.content) : null;
+    const suggestion = useMemo((): TriageSuggestion | null => {
+        if (!current) return null;
+        const found = suggestTriage(current.content);
+        // Project is not offered for an address.
+        return url && found.kind === 'project'
+            ? { ...found, kind: 'link' }
+            : found;
+    }, [current, url]);
+    const preview = useUrlPreview(url);
 
     const convert = useCallback(
         async (item: InboxItem, kind: TriageKind) => {
@@ -124,14 +143,39 @@ const InboxTriage: React.FC<InboxTriageProps> = ({
             const project = projectName
                 ? matchProjectName(projects, projectName)
                 : undefined;
+            const address = firstUrl(item.content);
+            const pageTitle = address
+                ? ((await urlPreviewWithin(address))?.title ?? null)
+                : null;
+            const words = address
+                ? wordsAround([title, rest].filter(Boolean).join(' '), address)
+                : '';
+
+            if (kind === 'link') {
+                if (!address) return;
+                await keepInLinks(item.uid as string, {
+                    url: address,
+                    ...(pageTitle ? { title: pageTitle } : {}),
+                    ...(words ? { note: words } : {}),
+                    ...(tags.length > 0
+                        ? { tags: tags.map((tag) => tag.name) }
+                        : {}),
+                    ...(project?.uid ? { project_uid: project.uid } : {}),
+                });
+                return;
+            }
+
+            const draft = address
+                ? linkTaskDraft({ url: address, title: pageTitle, text: words })
+                : { name: title, note: rest };
 
             let into: ProcessedInto;
             if (kind === 'task') {
                 const created = await createTask(
                     applyAnalysisToTask(
                         {
-                            name: title,
-                            note: rest || undefined,
+                            name: draft.name,
+                            note: draft.note || undefined,
                             priority: priorityFromText(first) ?? 'low',
                             status: 'not_started',
                             tags,
@@ -168,8 +212,11 @@ const InboxTriage: React.FC<InboxTriageProps> = ({
     );
 
     const act = useCallback(
-        async (action: TriageKind | 'later' | 'delete') => {
+        async (action: TriageAction) => {
             if (!current?.uid || busy) return;
+            // Links needs an address; Project is not offered with one.
+            if (action === 'link' && !url) return;
+            if (action === 'project' && url) return;
             const uid = current.uid;
             if (action === 'later') {
                 setSkipped((list) => [...list, uid]);
@@ -186,11 +233,15 @@ const InboxTriage: React.FC<InboxTriageProps> = ({
                 } else {
                     await convert(current, action);
                     showSuccessToast(
-                        action === 'task'
-                            ? t('inbox.triage.madeTask', 'Task created')
-                            : action === 'project'
-                              ? t('inbox.triage.madeProject', 'Project created')
-                              : t('inbox.triage.madeNote', 'Note created')
+                        {
+                            task: t('inbox.triage.madeTask', 'Task created'),
+                            link: t('inbox.triage.madeLink', 'Added to Links'),
+                            project: t(
+                                'inbox.triage.madeProject',
+                                'Project created'
+                            ),
+                            note: t('inbox.triage.madeNote', 'Note created'),
+                        }[action]
                     );
                 }
                 setHandled((count) => count + 1);
@@ -208,7 +259,7 @@ const InboxTriage: React.FC<InboxTriageProps> = ({
                 setBusy(false);
             }
         },
-        [current, busy, convert, showErrorToast, showSuccessToast, t]
+        [current, busy, url, convert, showErrorToast, showSuccessToast, t]
     );
 
     useEffect(() => {
@@ -225,9 +276,10 @@ const InboxTriage: React.FC<InboxTriageProps> = ({
             const key = event.key.toLowerCase();
             const handlers: Record<string, () => void> = {
                 t: () => void act('task'),
+                l: () => void act('link'),
                 p: () => void act('project'),
                 n: () => void act('note'),
-                l: () => void act('later'),
+                s: () => void act('later'),
                 delete: () => void act('delete'),
                 backspace: () => void act('delete'),
                 enter: () => suggestion && void act(suggestion.kind),
@@ -247,17 +299,30 @@ const InboxTriage: React.FC<InboxTriageProps> = ({
 
     const actions: Array<{
         key: string;
-        action: TriageKind | 'later' | 'delete';
+        action: TriageAction;
         label: string;
     }> = [
         { key: 'T', action: 'task', label: t('inbox.triage.task', 'Task') },
-        {
-            key: 'P',
-            action: 'project',
-            label: t('inbox.triage.project', 'Project'),
-        },
+        ...(url
+            ? [
+                  {
+                      key: 'L',
+                      action: 'link' as const,
+                      label: t('inbox.triage.link', 'Links'),
+                  },
+              ]
+            : []),
         { key: 'N', action: 'note', label: t('inbox.triage.note', 'Note') },
-        { key: 'L', action: 'later', label: t('inbox.triage.later', 'Later') },
+        ...(url
+            ? []
+            : [
+                  {
+                      key: 'P',
+                      action: 'project' as const,
+                      label: t('inbox.triage.project', 'Project'),
+                  },
+              ]),
+        { key: 'S', action: 'later', label: t('inbox.triage.later', 'Later') },
         {
             key: 'Del',
             action: 'delete',
@@ -329,6 +394,15 @@ const InboxTriage: React.FC<InboxTriageProps> = ({
                     >
                         {current.content}
                     </p>
+                    {url && (
+                        <LinkPreviewCard
+                            url={url}
+                            title={preview?.title}
+                            description={preview?.description}
+                            image={preview?.image}
+                            pending={!preview}
+                        />
+                    )}
                     {suggestion && (
                         <p
                             data-testid="inbox-triage-suggestion"

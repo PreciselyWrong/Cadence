@@ -3,6 +3,20 @@
 const { Op } = require('sequelize');
 const { isContextUrl } = require('./core/urls');
 
+// Hosts of this server's own sites and services, comma separated: like the
+// built-in context addresses, they are never links.
+function ignoredHosts() {
+    return (process.env.TUDUDI_LINKS_IGNORE_HOSTS || '')
+        .split(',')
+        .map((h) =>
+            h
+                .trim()
+                .toLowerCase()
+                .replace(/^\*?\./, '')
+        )
+        .filter(Boolean);
+}
+
 // Done once per server: before 2026-11, every address written in a task or a
 // note became a link, and so did context addresses (mail, chats, home server).
 // Those the user never touched are deleted, through the model so devices
@@ -23,7 +37,6 @@ function untouched(link) {
 async function pruneContextLinks() {
     const { Link, Setting, Tag } = require('../../models');
     const linksRepository = require('./repository');
-    const { ignoredHosts } = require('./capture');
     if (await Setting.findOne({ where: { key: MARKER } })) return 0;
 
     const hosts = ignoredHosts();

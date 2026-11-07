@@ -12,6 +12,16 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-07 — Inbox : un seul panneau de tri ; Liens : la bibliothèque (web)
+
+- **Problème** : un lien partagé partait tout seul dans Liens ; dans l'Inbox, sa carte proposait cinq décisions de lien (Garder, À tester, Projet, Plus tard, Jeter) à côté du « Enregistrer comme » habituel, plus un mode « Trier les liens » à part : impossible d'y mettre une étiquette, un projet ou d'en faire une tâche simplement.
+- **Décision (Inbox)** : un lien partagé est une idée avec un aperçu. Ligne fermée : l'aperçu (titre, une ligne de description, domaine, vignette) remplace l'adresse brute ; le texte reste seulement s'il dit plus que l'adresse. Ouverte, la même carte pour toute idée : le texte modifiable, l'aperçu s'il y a une adresse (lu par `GET /api/url/title`, aucun lien n'existe encore), une ligne étiquettes (champ avec les étiquettes fréquentes en puces, un clic chacune) et projet (liste « Projet »), puis « Enregistrer comme : Tâche · Liens · Note » et « Supprimer » à droite. « Liens » n'existe qu'avec une adresse ; « Projet » seulement sans adresse. L'idée quitte l'Inbox dès la décision prise (toast ; « Supprimer » garde son annulation).
+- **Règle de la tâche** : nom = titre de la page s'il est connu, sinon le texte sans l'adresse, sinon le domaine (sans `www.`) ; note = l'adresse, puis le reste du texte s'il n'a pas servi de nom. Étiquettes et projet choisis s'ajoutent à ceux écrits dans le texte (`#`, `+`) ; le projet choisi l'emporte.
+- **Liens** : `POST /api/links` (titre de la page, texte sans l'adresse en note, étiquettes, projet, source = l'idée), puis `process { link_uid }`. Le projet du Focus n'est pas appliqué à un lien.
+- **Tri au clavier** : mêmes décisions : T tâche, L liens (avec adresse, suggérée pour une adresse seule), N note, P projet (sans adresse), S « Plus tard » (passe l'idée pour ce tri seulement), Suppr. Le mode « Trier les liens » disparaît.
+- **Page Liens** : liste par défaut (galerie toujours au choix) ; filtres : recherche, étiquette, projet, bouton « Archivés » (montre seulement l'archive). Carte : titre (ouvre la page), description, domaine, note, étiquettes, projet, ⋯ = Modifier, Créer une tâche (même règle de nom, note = adresse + note du lien, le lien ne change pas), Archiver ou Désarchiver, Supprimer (confirmation). Plus de liste de statuts, de badge de type ni d'extrait de README.
+- **À reprendre sur Android** : le même panneau (aperçu, étiquettes, projet, Tâche / Liens / Note / Supprimer), la même règle de nom, Projet absent pour une adresse, la page Liens à quatre filtres et le menu ⋯ à quatre entrées.
+
 ### 2026-11-07 — Liens : seulement ceux qui portent une action (web et Android)
 
 - **Problème** : la bibliothèque de liens se remplissait de chaque adresse écrite dans une tâche ou une note (serveur maison, boîte mail, recherche, fil LinkedIn, run de CI) : du bruit.

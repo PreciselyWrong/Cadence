@@ -1646,12 +1646,14 @@
       "doneLater": "{{count}} zostawiono na później. Reszta jest posortowana.",
       "suggested": "Sugestia: {{kind}}",
       "task": "Zadanie",
+      "link": "Linki",
       "project": "Projekt",
       "note": "Notatka",
       "later": "Później",
       "delete": "Usuń",
       "keptLater": "Zostawiono w skrzynce na później",
       "madeTask": "Utworzono zadanie",
+      "madeLink": "Dodano do Linków",
       "madeProject": "Utworzono projekt",
       "madeNote": "Utworzono notatkę",
       "error": "Nie udało się przetworzyć tego elementu. Nadal jest w skrzynce odbiorczej.",
@@ -5142,6 +5144,7 @@
       "taskDelete": "Usuń zadanie (z cofnięciem)",
       "createAlt": "Utwórz element skrzynki, zadanie, projekt, notatkę, obszar lub tag (z Alt+Shift)",
       "triageTask": "Przegląd: zamień w zadanie",
+      "triageLink": "Przegląd: zachowaj adres w Linkach",
       "triageProject": "Przegląd: zamień w projekt",
       "triageNote": "Przegląd: zamień w notatkę",
       "triageLater": "Przegląd: później (zostaw w skrzynce)",
@@ -5575,12 +5578,8 @@
   "links": {
     "addToLinks": "Dodaj do linków",
     "inLinks": "W linkach",
-    "attachPick": "Wybierz projekt",
-    "tryTaskName": "Wypróbuj: {{title}}",
     "tryProject": "Projekt",
     "tryNoProject": "Bez projektu",
-    "tryCreate": "Utwórz zadanie",
-    "triageError": "Nie udało się zapisać decyzji.",
     "reviewOn": "Do ponownego przejrzenia: {{date}}",
     "title": "Linki",
     "count_one": "{{count}} link",
@@ -5589,50 +5588,18 @@
     "count_many": "{{count}} linków",
     "search": "Szukaj w linkach",
     "filter": {
-      "kind": "Rodzaj",
-      "status": "Status",
       "tag": "Tag",
-      "domain": "Witryna",
-      "sort": "Sortowanie",
-      "allKinds": "Wszystkie rodzaje",
-      "active": "Nieodrzucone",
-      "allStatuses": "Wszystkie statusy",
+      "archived": "Zarchiwizowane",
       "allTags": "Wszystkie tagi",
-      "allDomains": "Wszystkie witryny",
       "allProjects": "Wszystkie projekty"
     },
-    "sort": {
-      "start": "Sortuj linki ({{count}})",
-      "left": "Pozostało: {{count}}",
-      "exit": "Wróć do skrzynki",
-      "skip": "Pomiń",
-      "done": "Brak linków do posortowania.",
-      "newest": "Najpierw najnowsze",
-      "oldest": "Najpierw najstarsze"
-    },
-    "kind": {
-      "repo": "Repozytorium",
-      "article": "Artykuł",
-      "video": "Wideo",
-      "tool": "Narzędzie",
-      "other": "Inne"
-    },
     "status": {
-      "new": "Do przeczytania",
-      "tested": "Do przetestowania",
-      "kept": "Zachowany",
-      "parked": "Później",
-      "dropped": "Zarchiwizowany",
-      "to_evaluate": "Do oceny"
+      "dropped": "Zarchiwizowany"
     },
     "action": {
-      "tested": "Do przetestowania",
-      "kept": "Zachowaj",
-      "parked": "Później",
       "dropped": "Archiwizuj",
-      "to_evaluate": "Do oceny",
-      "createTask": "Utwórz zadanie",
-      "project": "Projekt"
+      "restore": "Przywróć z archiwum",
+      "createTask": "Utwórz zadanie"
     },
     "lastCommit": "zaktualizowano {{date}}",
     "fetching": "Czytanie strony…",
@@ -5644,7 +5611,7 @@
     "addNote": "Dodaj notatkę",
     "saveError": "Nie udało się zapisać linku.",
     "loadError": "Nie udało się wczytać linków.",
-    "empty": "Linki zapisane z skrzynki, zadania lub notatki pojawią się tutaj, wraz z opisem, jaki podaje sama strona.",
+    "empty": "Linki zachowane ze skrzynki odbiorczej pojawiają się tutaj, razem z tym, co strona mówi o sobie.",
     "noMatch": "Żaden link nie pasuje do tych filtrów.",
     "noTheme": "Bez tematu",
     "taskCreated": "Utworzono zadanie: {{name}}",
@@ -5661,7 +5628,7 @@
     },
     "editTitle": "Edytuj link",
     "deleteTitle": "Usunąć ten link?",
-    "deleteMessage": "Znika z Twoich linków na stałe i nie zostanie ponownie pobrany z zadań i notatek. Aby go odłożyć, wybierz Zarchiwizowany.",
+    "deleteMessage": "Znika z Twoich linków na dobre. Aby go odłożyć, zarchiwizuj go zamiast tego.",
     "deleteError": "Nie udało się usunąć linku."
   },
   "dailyBrief": {

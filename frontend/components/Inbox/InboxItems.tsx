@@ -26,9 +26,7 @@ import { createProject } from '../../utils/projectsService';
 import { createNote } from '../../utils/notesService';
 import { OfflineQueuedError } from '../../utils/authUtils';
 import { isUrl } from '../../utils/urlService';
-import { useLinksRefresh, useLinksStore } from '../../store/linksStore';
-import { linkForItem } from '../../utils/linkFilters';
-import LinkSorter from '../Links/LinkSorter';
+import { keepInLinks, LinkDraft } from '../../utils/linkTriage';
 import { takeSharedText } from '../../utils/shareTargetService';
 import { fetchAreas } from '../../utils/areasService';
 import { fetchProjects } from '../../utils/projectsService';
@@ -64,14 +62,6 @@ const InboxItems: React.FC = () => {
         hasLoaded: tagsHasLoaded,
         isLoading: tagsLoading,
     } = useStore((state) => state.tagsStore);
-
-    // Links are found by the server after a capture: reload them when an
-    // item holding a link appears or changes.
-    const linkedItemsKey = inboxItems
-        .filter((item) => /https?:\/\//i.test(item.content || ''))
-        .map((item) => `${item.uid}:${item.content}`)
-        .join('|');
-    useLinksRefresh(linkedItemsKey);
 
     const [projects, setProjects] = useState<Project[]>([]);
 
@@ -360,6 +350,20 @@ const InboxItems: React.FC = () => {
         }
     };
 
+    // The "Links" decision: the link is created, the item leaves the inbox.
+    const handleSaveToLinks = async (
+        inboxItemUid: string,
+        draft: LinkDraft
+    ): Promise<void> => {
+        try {
+            await keepInLinks(inboxItemUid, draft);
+            showSuccessToast(t('inbox.triage.madeLink', 'Added to Links'));
+        } catch (error) {
+            console.error('Failed to keep the link:', error);
+            showErrorToast(t('links.saveError', 'Could not save the link.'));
+        }
+    };
+
     const handleOpenProjectModal = async (
         project: Project | null,
         inboxItemUid?: string
@@ -506,9 +510,6 @@ const InboxItems: React.FC = () => {
         }
     };
 
-    const savedLinks = useLinksStore((state) => state.links);
-    const [sortingLinks, setSortingLinks] = useState(false);
-
     if (isLoading && inboxItems.length === 0) {
         return <LoadingScreen />;
     }
@@ -524,21 +525,6 @@ const InboxItems: React.FC = () => {
         else next.delete('triage');
         setSearchParams(next);
     };
-
-    const linkItems = inboxItems.filter((item) =>
-        linkForItem(savedLinks, item.uid, item.content || '')
-    );
-    if (sortingLinks && linkItems.length > 0) {
-        return (
-            <div className="w-full px-4 sm:px-6 lg:px-8 pt-4 pb-8">
-                <LinkSorter
-                    items={linkItems}
-                    projects={projects}
-                    onExit={() => setSortingLinks(false)}
-                />
-            </div>
-        );
-    }
 
     if (isTriage) {
         return (
@@ -565,22 +551,6 @@ const InboxItems: React.FC = () => {
                         {t('inbox.title')}
                     </h1>
                     <div className="flex items-center gap-2">
-                        {linkItems.length > 1 && (
-                            <button
-                                type="button"
-                                data-testid="inbox-sort-links"
-                                onClick={() => setSortingLinks(true)}
-                                className="rounded-lg px-3 py-1.5 text-sm font-medium text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-                            >
-                                {t(
-                                    'links.sort.start',
-                                    'Sort links ({{count}})',
-                                    {
-                                        count: linkItems.length,
-                                    }
-                                )}
-                            </button>
-                        )}
                         {inboxItems.length > 0 && (
                             <button
                                 type="button"
@@ -680,6 +650,9 @@ const InboxItems: React.FC = () => {
                                                 }
                                                 openNoteModal={
                                                     handleOpenNoteModal
+                                                }
+                                                onSaveToLinks={
+                                                    handleSaveToLinks
                                                 }
                                                 projects={projects}
                                                 isNew={

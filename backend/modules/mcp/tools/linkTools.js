@@ -3,6 +3,7 @@
 const links = require('../../links/service');
 const {
     LINK_STATUSES,
+    LINK_STATUS_INPUTS,
     LINK_KINDS,
     LINK_SOURCES,
 } = require('../../links/core/constants');
@@ -19,13 +20,13 @@ function registerLinkTools(server, context, tools) {
     tools.push({
         name: 'list_links',
         description:
-            'List saved links (found in inbox items, tasks and notes) with their page title, description, kind, GitHub stats, note, status and tags. Newest first. Use untagged=true to find links still to tag.',
+            'List saved links with their page title, description, kind, GitHub stats, note, status, review day and tags. Newest first. Use untagged=true to find links still to tag.',
         inputSchema: {
             type: 'object',
             properties: {
                 status: {
                     type: 'string',
-                    description: `Comma-separated statuses: ${LINK_STATUSES.join(', ')}`,
+                    description: `Comma-separated statuses: ${LINK_STATUSES.join(', ')} (dropped is archived)`,
                 },
                 kind: {
                     type: 'string',
@@ -91,14 +92,14 @@ function registerLinkTools(server, context, tools) {
     tools.push({
         name: 'create_link',
         description:
-            'Save a web page as a link. The same page twice is one link. The server reads its title, description and picture.',
+            'Save a web page as a link on purpose. The same page twice is one link. The server reads its title, description and picture. Status: new (default) or dropped.',
         inputSchema: {
             type: 'object',
             properties: {
                 url: { type: 'string', description: 'http(s) address' },
                 title: { type: 'string' },
                 note: { type: 'string' },
-                status: { type: 'string', enum: LINK_STATUSES },
+                status: { type: 'string', enum: LINK_STATUS_INPUTS },
                 tags: { type: 'array', items: { type: 'string' } },
             },
             required: ['url'],
@@ -207,9 +208,9 @@ function registerLinkTools(server, context, tools) {
                 },
                 status: {
                     type: 'string',
-                    enum: LINK_STATUSES,
+                    enum: LINK_STATUS_INPUTS,
                     description:
-                        'new (to read), to_evaluate, tested (to try), kept, parked (later), dropped (archived)',
+                        'new (to read) or dropped (archived). The former to_evaluate, tested, kept and parked are read as new; parked also sets the review day',
                 },
                 review_at: {
                     type: ['string', 'null'],
@@ -236,7 +237,7 @@ function registerLinkTools(server, context, tools) {
     tools.push({
         name: 'delete_link',
         description:
-            'Permanently delete a saved link. Its address is no longer captured from tasks and notes. Only do this when the user asks: to set a link aside, use update_link with status dropped.',
+            'Permanently delete a saved link. Its address stays out of the library until the user saves it again. Only do this when the user asks: to set a link aside, use update_link with status dropped.',
         inputSchema: {
             type: 'object',
             properties: {

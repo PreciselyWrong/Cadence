@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -23,7 +24,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Send
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.MoreHoriz
-import androidx.compose.material.icons.outlined.TaskAlt
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -50,7 +50,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.Role
@@ -61,6 +60,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.HeaderButtonStyle
+import ch.nicolab.cadence.designsystem.components.PrimaryAction
 import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
 import ch.nicolab.cadence.designsystem.components.SectionHeader
 import ch.nicolab.cadence.designsystem.components.readableTintOf
@@ -70,27 +70,24 @@ import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.links.LinkPreviews
+import ch.nicolab.cadence.tasks.links.LinkExtractor
+import ch.nicolab.cadence.tasks.model.IdeaTasks
 import ch.nicolab.cadence.tasks.model.InboxEntry
-import ch.nicolab.cadence.tasks.model.LinkItem
 import ch.nicolab.cadence.tasks.model.LinkLists
 import ch.nicolab.cadence.tasks.model.ProjectChoices
-import ch.nicolab.cadence.tasks.model.TaskDraft
 import ch.nicolab.cadence.tasks.model.TaskItem
 
-private const val TRIAGE_MIN_LINKS = 2
-
 /**
- * Capture rapide : le champ en tête envoie la saisie à la boîte de réception.
- * « Convertir en tâche » ouvre l'ajout rapide pré-rempli, puis supprime l'entrée.
- * Sous les entrées, « Tâches à classer » liste les tâches sans échéance ni projet,
- * qu'aucun autre onglet n'affiche.
+ * Capture rapide : le champ en tête envoie la saisie à la boîte de réception. Chaque idée, lien ou non, se trie d'une
+ * seule rangée : Tâche (saisie pré-remplie, projet et étiquettes visibles), Liens (idée qui porte une adresse), Note ;
+ * glisser à gauche supprime. Une décision s'écrit tout de suite, « Annuler » écrit l'inverse.
+ * Sous les entrées, « Tâches à classer » liste les tâches sans échéance ni projet, qu'aucun autre onglet n'affiche.
  */
 @Composable
 internal fun InboxTab(
     viewModel: TasksViewModel,
     captureFocus: FocusRequester,
     onOpen: (TaskItem) -> Unit,
-    onTriage: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val entries by viewModel.inbox.collectAsStateWithLifecycle()
@@ -101,9 +98,8 @@ internal fun InboxTab(
     val projectColors = rememberProjectColors(viewModel)
     val projectIcons = rememberProjectIcons(viewModel)
     var capture by rememberSaveable { mutableStateOf("") }
-    var converting by remember { mutableStateOf<InboxEntry?>(null) }
-    var scheduling by remember { mutableStateOf<InboxEntry?>(null) }
-    var filing by remember { mutableStateOf<InboxEntry?>(null) }
+    var converting by remember { mutableStateOf<IdeaChoice?>(null) }
+    var linking by remember { mutableStateOf<IdeaChoice?>(null) }
     var editing by remember { mutableStateOf<InboxEntry?>(null) }
     val submit = {
         val text = capture.trim()
@@ -112,8 +108,6 @@ internal fun InboxTab(
             capture = ""
         }
     }
-
-    val linkCount = remember(entries, links) { entries.count { LinkLists.forEntry(links, it.uid, it.content) != null } }
 
     LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
         item(key = "capture") {
@@ -127,36 +121,20 @@ internal fun InboxTab(
         if (entries.isEmpty()) {
             item { EmptyState(R.string.tasks_inbox_empty) }
         }
-        if (linkCount >= TRIAGE_MIN_LINKS) {
-            item(key = "triage") { TriageEntry(linkCount, onTriage, Modifier.padding(bottom = Space.md)) }
-        }
         items(entries, key = { it.uid }) { entry ->
-            val link = remember(links, entry) { LinkLists.forEntry(links, entry.uid, entry.content) }
-            val onToday = { viewModel.convertIdea(entry, TaskDraft(name = entry.content, dueDate = moment.today)) }
-            if (link != null) {
-                LinkIdeaCard(
-                    entry = entry,
-                    link = link,
-                    viewModel = viewModel,
-                    onToday = onToday,
-                    onSchedule = { scheduling = entry },
-                    onProject = { filing = entry },
-                    modifier = Modifier.padding(bottom = Space.sm),
-                )
-            } else {
-                IdeaRow(
-                    modifier = Modifier.padding(bottom = Space.sm),
-                    entry = entry,
-                    previews = viewModel.linkPreviews,
-                    onOpen = { converting = entry },
-                    onToday = onToday,
-                    onSchedule = { scheduling = entry },
-                    onProject = { filing = entry },
-                    onNote = { viewModel.convertIdeaToNote(entry) },
-                    onEdit = { editing = entry },
-                    onDelete = { viewModel.deleteIdeaWithUndo(entry.uid) },
-                )
-            }
+            // Une page déjà enregistrée dans les liens donne son titre ; sinon celui de l'aperçu lu par le serveur.
+            val saved = remember(links, entry) { LinkLists.forEntry(links, entry.uid, entry.content)?.title }
+            IdeaRow(
+                modifier = Modifier.padding(bottom = Space.sm),
+                entry = entry,
+                previews = viewModel.linkPreviews,
+                savedTitle = saved,
+                onTask = { title -> converting = IdeaChoice(entry, title) },
+                onLinks = { title -> linking = IdeaChoice(entry, title) },
+                onNote = { viewModel.convertIdeaToNote(entry) },
+                onEdit = { editing = entry },
+                onDelete = { viewModel.deleteIdeaWithUndo(entry.uid) },
+            )
         }
         if (unsorted.isNotEmpty()) {
             item { SectionHeader(title = stringResource(R.string.tasks_section_unsorted)) }
@@ -164,26 +142,6 @@ internal fun InboxTab(
         }
     }
 
-    scheduling?.let { entry ->
-        TaskDatePickerDialog(
-            initial = moment.today,
-            onConfirm = { date ->
-                viewModel.convertIdea(entry, TaskDraft(name = entry.content, dueDate = date))
-                scheduling = null
-            },
-            onDismiss = { scheduling = null },
-        )
-    }
-    filing?.let { entry ->
-        IdeaProjectSheet(
-            viewModel = viewModel,
-            onPick = { projectUid ->
-                viewModel.convertIdea(entry, TaskDraft(name = entry.content, projectUid = projectUid))
-                filing = null
-            },
-            onDismiss = { filing = null },
-        )
-    }
     editing?.let { entry ->
         IdeaTextDialog(
             initial = entry.content,
@@ -194,14 +152,30 @@ internal fun InboxTab(
             onDismiss = { editing = null },
         )
     }
-    converting?.let { entry ->
+    converting?.let { choice ->
         QuickAddSheet(
             onDismiss = { converting = null },
-            initialName = entry.content,
-            onSave = { draft -> viewModel.saveConversion(entry, draft) },
+            initialName = IdeaTasks.taskName(choice.entry.content, choice.pageTitle),
+            initialNote = IdeaTasks.taskNote(choice.entry.content),
+            expanded = true,
+            onSave = { draft -> viewModel.saveConversion(choice.entry, draft) },
+        )
+    }
+    linking?.let { choice ->
+        IdeaLinkSheet(
+            viewModel = viewModel,
+            url = IdeaTasks.address(choice.entry.content) ?: return@let,
+            onSave = { tagUids, projectUid ->
+                viewModel.saveIdeaToLinks(choice.entry, choice.pageTitle, tagUids, projectUid)
+                linking = null
+            },
+            onDismiss = { linking = null },
         )
     }
 }
+
+/** L'idée à trier et le titre de sa page s'il est connu à l'appui. */
+private data class IdeaChoice(val entry: InboxEntry, val pageTitle: String?)
 
 /** Champ de capture rempli et arrondi, avec un bouton d'envoi rond : le clavier valide aussi. */
 @Composable
@@ -249,25 +223,26 @@ private fun CaptureField(
 }
 
 /**
- * Idée de la boîte sans lien enregistré : carte arrondie, texte (avec l'aperçu d'un lien pas encore lu par
- * le serveur) et trois actions en pastilles de texte. Une idée au lien enregistré est une [LinkIdeaCard]. Glisser vers la gauche supprime, avec « Annuler » ; toucher le texte
- * ouvre l'ajout complet.
+ * Une idée de la boîte : carte arrondie, texte (caché quand il n'est qu'une adresse), aperçu de la page s'il y en a
+ * une, puis la rangée de décisions : Tâche, Liens (avec une adresse), Note, et « … » (Modifier, Supprimer).
+ * Glisser vers la gauche supprime, avec « Annuler » ; toucher le texte ouvre la tâche pré-remplie.
  */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 private fun IdeaRow(
     entry: InboxEntry,
     previews: LinkPreviews,
-    onOpen: () -> Unit,
-    onToday: () -> Unit,
-    onSchedule: () -> Unit,
-    onProject: () -> Unit,
+    savedTitle: String?,
+    onTask: (String?) -> Unit,
+    onLinks: (String?) -> Unit,
     onNote: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val palette = cadence
+    val url = remember(entry.content) { IdeaTasks.address(entry.content) }
+    val pageTitle = savedTitle ?: rememberPageTitle(url, previews)
     val deleteLabel = stringResource(R.string.tasks_idea_swipe_delete)
     val state = rememberSwipeToDismissBoxState(
         confirmValueChange = { target ->
@@ -301,36 +276,39 @@ private fun IdeaRow(
             verticalArrangement = Arrangement.spacedBy(Space.md),
         ) {
             Column(
-                Modifier.fillMaxWidth().clickable(onClick = onOpen),
+                Modifier.fillMaxWidth().clickable { onTask(pageTitle) },
                 verticalArrangement = Arrangement.spacedBy(Space.sm),
             ) {
-                // Trois lignes au repos ; « Afficher tout » déplie une idée longue sans quitter la liste.
-                var expanded by rememberSaveable(entry.uid) { mutableStateOf(false) }
-                var overflows by remember(entry.content) { mutableStateOf(false) }
-                Text(
-                    text = entry.content,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = palette.onSurface,
-                    maxLines = if (expanded) Int.MAX_VALUE else IDEA_COLLAPSED_LINES,
-                    overflow = TextOverflow.Ellipsis,
-                    onTextLayout = { if (!expanded) overflows = it.hasVisualOverflow },
-                )
-                if (overflows || expanded) {
+                if (url == null || !LinkExtractor.isOnlyLink(entry.content)) {
+                    // Trois lignes au repos ; « Afficher tout » déplie une idée longue sans quitter la liste.
+                    var expanded by rememberSaveable(entry.uid) { mutableStateOf(false) }
+                    var overflows by remember(entry.content) { mutableStateOf(false) }
                     Text(
-                        stringResource(if (expanded) R.string.tasks_idea_show_less else R.string.tasks_idea_show_more),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = readableTintOf(palette.primary, palette.card),
-                        modifier = Modifier
-                            .clip(Radius.Pill)
-                            .clickable { expanded = !expanded }
-                            .padding(vertical = Space.xs),
+                        text = entry.content,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = palette.onSurface,
+                        maxLines = if (expanded) Int.MAX_VALUE else IDEA_COLLAPSED_LINES,
+                        overflow = TextOverflow.Ellipsis,
+                        onTextLayout = { if (!expanded) overflows = it.hasVisualOverflow },
                     )
+                    if (overflows || expanded) {
+                        Text(
+                            stringResource(if (expanded) R.string.tasks_idea_show_less else R.string.tasks_idea_show_more),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = readableTintOf(palette.primary, palette.card),
+                            modifier = Modifier
+                                .clip(Radius.Pill)
+                                .clickable { expanded = !expanded }
+                                .padding(vertical = Space.xs),
+                        )
+                    }
                 }
                 LinkPreviewList(entry.content, previews, limit = 1)
             }
-            // Deux gestes visibles : le plus courant (Aujourd'hui) et « … » pour le reste, jamais une rangée de pastilles.
             Row(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalAlignment = Alignment.CenterVertically) {
-                QuickPill(stringResource(R.string.tasks_idea_today), onToday)
+                QuickPill(stringResource(R.string.tasks_idea_to_task), onClick = { onTask(pageTitle) })
+                if (url != null) QuickPill(stringResource(R.string.tasks_idea_to_links), onClick = { onLinks(pageTitle) })
+                QuickPill(stringResource(R.string.tasks_idea_note), onNote, quiet = true)
                 var menu by remember { mutableStateOf(false) }
                 Box {
                     IconButton(onClick = { menu = true }) {
@@ -342,10 +320,8 @@ private fun IdeaRow(
                     }
                     DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
                         listOf(
-                            R.string.tasks_idea_schedule to onSchedule,
-                            R.string.tasks_idea_project to onProject,
-                            R.string.tasks_idea_note to onNote,
                             R.string.tasks_idea_edit to onEdit,
+                            R.string.tasks_idea_delete to onDelete,
                         ).forEach { (label, action) ->
                             DropdownMenuItem(
                                 text = { Text(stringResource(label)) },
@@ -416,23 +392,36 @@ internal fun QuickPill(
     }
 }
 
+/** « Liens » sur une idée : l'aperçu, le projet et les étiquettes du lien, puis Enregistrer. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun IdeaProjectSheet(viewModel: TasksViewModel, onPick: (String?) -> Unit, onDismiss: () -> Unit) {
+private fun IdeaLinkSheet(
+    viewModel: TasksViewModel,
+    url: String,
+    onSave: (List<String>, String?) -> Unit,
+    onDismiss: () -> Unit,
+) {
     val projects by viewModel.projects.collectAsStateWithLifecycle()
-    CadenceSheet(title = stringResource(R.string.tasks_idea_project_title), subtitle = null, dismiss = onDismiss) {
-        Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(bottom = Space.xl)) {
-            ProjectChoices.forTask(projects, null).forEach { project ->
-                Text(
-                    project.name,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = cadence.onSurface,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = Size.touch)
-                        .clickable(role = Role.Button) { onPick(project.uid) }
-                        .padding(vertical = Space.md),
-                )
+    val tags by viewModel.tags.collectAsStateWithLifecycle()
+    var tagUids by remember { mutableStateOf(emptyList<String>()) }
+    var projectUid by remember { mutableStateOf<String?>(null) }
+    CadenceSheet(title = stringResource(R.string.tasks_idea_links_title), subtitle = null, dismiss = onDismiss) {
+        Column(
+            Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(bottom = Space.md),
+            verticalArrangement = Arrangement.spacedBy(Space.md),
+        ) {
+            LinkPreviewCard(url, viewModel.linkPreviews)
+            ProjectAndTagFields(
+                projects = ProjectChoices.forTask(projects, null),
+                projectUid = projectUid,
+                onProject = { projectUid = it },
+                tags = tags,
+                tagUids = tagUids,
+                onTag = { uid -> tagUids = if (uid in tagUids) tagUids - uid else tagUids + uid },
+            )
+            Row(Modifier.fillMaxWidth()) {
+                Spacer(Modifier.weight(1f))
+                PrimaryAction(stringResource(R.string.links_save)) { onSave(tagUids, projectUid) }
             }
         }
     }

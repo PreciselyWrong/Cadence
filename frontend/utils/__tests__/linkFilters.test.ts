@@ -1,7 +1,6 @@
 import { Link } from '../../entities/Link';
 import {
     DEFAULT_LINK_FILTER,
-    domainsOf,
     filterLinks,
     firstUrl,
     linkForItem,
@@ -55,7 +54,7 @@ const links = [
         domain: 'blog.example.com',
         kind: 'article',
         note: 'Idée pour le café',
-        status: 'kept',
+        project_uid: 'p1',
         created_at: '2026-10-02T00:00:00.000Z',
     }),
     link({
@@ -84,29 +83,20 @@ describe('filterLinks', () => {
         expect(by('dev')).toEqual(['repo']);
     });
 
-    it('filters by kind, status, tag and domain, and sorts oldest first', () => {
+    it('filters by tag and project, and shows the archive on its own', () => {
         const run = (f: Partial<typeof DEFAULT_LINK_FILTER>) =>
             filterLinks(links, { ...DEFAULT_LINK_FILTER, ...f }).map(
                 (l) => l.uid
             );
-        expect(run({ kind: 'article' })).toEqual(['post']);
-        expect(run({ status: 'dropped' })).toEqual(['gone']);
-        expect(run({ status: 'all', sort: 'oldest' })).toEqual([
-            'gone',
-            'post',
-            'repo',
-        ]);
         expect(run({ tag: 'dev' })).toEqual(['repo']);
-        expect(run({ domain: 'github.com', status: 'all' })).toEqual([
-            'repo',
-            'gone',
-        ]);
+        expect(run({ project: 'p1' })).toEqual(['post']);
+        expect(run({ archived: true })).toEqual(['gone']);
+        expect(run({ archived: true, tag: 'dev' })).toEqual([]);
     });
 });
 
 describe('link helpers', () => {
-    it('lists domains by use and tags alphabetically', () => {
-        expect(domainsOf(links)).toEqual(['github.com', 'blog.example.com']);
+    it('lists tags alphabetically', () => {
         expect(tagsOf(links)).toEqual(['dev']);
     });
 
@@ -143,5 +133,9 @@ describe('link helpers', () => {
             '/notes/n'
         );
         expect(sourcePath(link({}))).toBeNull();
+        // A kept inbox item has left the inbox: nothing to go back to.
+        expect(
+            sourcePath(link({ source_type: 'inbox_item', source_uid: 'i' }))
+        ).toBeNull();
     });
 });

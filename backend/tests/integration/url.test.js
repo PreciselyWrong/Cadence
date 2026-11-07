@@ -92,6 +92,38 @@ describe('URL Routes', () => {
             expect(response.body.error).toBe('Authentication required');
         });
 
+        it('returns the description, image and site name the page declares', async () => {
+            serveHtml(
+                '<html><head><title>Titre</title><meta property="og:description" content="Une description"><meta property="og:image" content="https://img.example.com/a.png"><meta property="og:site_name" content="Example Site"></head></html>'
+            );
+
+            const response = await agent
+                .get('/api/url/title')
+                .query({ url: 'https://example.com/page' });
+
+            expect(response.body).toMatchObject({
+                title: 'Titre',
+                description: 'Une description',
+                image: 'https://img.example.com/a.png',
+                site_name: 'Example Site',
+            });
+        });
+
+        it('decodes the HTML entities of the title and description', async () => {
+            serveHtml(
+                '<html><head><title>Tom&#39;s &#x26; Jerry&apos;s</title><meta property="og:description" content="It&#39;s &quot;fast&quot; &#8212; really &amp; truly"></head></html>'
+            );
+
+            const response = await agent
+                .get('/api/url/title')
+                .query({ url: 'https://example.com/entities' });
+
+            expect(response.body).toMatchObject({
+                title: "Tom's & Jerry's",
+                description: 'It\'s "fast" — really & truly',
+            });
+        });
+
         it('should require url parameter', async () => {
             const response = await agent.get('/api/url/title');
 

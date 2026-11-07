@@ -169,6 +169,14 @@ export const SHORTCUT_DEFS: ShortcutDef[] = [
         global: false,
     },
     {
+        id: 'triage-link',
+        keys: ['l'],
+        group: 'triage',
+        labelKey: 'commandCenter.shortcuts.triageLink',
+        defaultLabel: 'Triage: keep the address in Links',
+        global: false,
+    },
+    {
         id: 'triage-project',
         keys: ['p'],
         group: 'triage',
@@ -186,7 +194,7 @@ export const SHORTCUT_DEFS: ShortcutDef[] = [
     },
     {
         id: 'triage-later',
-        keys: ['l'],
+        keys: ['s'],
         group: 'triage',
         labelKey: 'commandCenter.shortcuts.triageLater',
         defaultLabel: 'Triage: later (keep it in the inbox)',

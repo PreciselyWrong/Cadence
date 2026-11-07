@@ -1192,13 +1192,13 @@ Permanently delete a person/contact.
 
 ### Links Tools (3)
 
-Links are found by the server in inbox items, tasks and notes, with their page metadata ([37-links.md](37-links.md)). An assistant may write the note, the tags and the status, never the URL or the metadata.
+Links are made on purpose, never by the server, and carry their page metadata ([37-links.md](37-links.md)). Status is `new` (to read) or `dropped` (archived); "later" is the review day `review_at`. An assistant may write the note, the tags, the status and the review day, never the URL or the metadata.
 
 #### `list_links`
 
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
-| `status` | string | No | — | Comma list of `new`, `kept`, `tested`, `parked`, `dropped` |
+| `status` | string | No | — | Comma list of `new`, `dropped` |
 | `kind` | string | No | — | Comma list of `repo`, `article`, `video`, `tool`, `other` |
 | `tag` | string | No | — | Exact tag name |
 | `untagged` | boolean | No | `false` | Only links without any tag (to tag them) |
@@ -1218,7 +1218,7 @@ Links are found by the server in inbox items, tasks and notes, with their page m
 
 #### `create_link`
 
-Saves a web page as a link; the same page twice is one link. `url`, and optionally `title`, `note`, `status`, `tags`.
+Saves a web page as a link; the same page twice is one link. `url`, and optionally `title`, `note`, `status` (`new` or `dropped`), `tags`. The former statuses (`to_evaluate`, `tested`, `kept`, `parked`) are read as `new`.
 
 #### `group_links`
 
@@ -1230,7 +1230,7 @@ Proposes a slot in the agenda for related links. It only waits in the triage que
 
 #### `delete_link`
 
-Permanently deletes a saved link; its address is no longer captured from tasks and notes. `uid`. Only when the user asks: to set a link aside, use `update_link` with `status: dropped`.
+Permanently deletes a saved link; its address stays out of the library until the user saves it again. `uid`. Only when the user asks: to set a link aside, use `update_link` with `status: dropped`.
 
 #### `update_link`
 
@@ -1239,8 +1239,8 @@ Permanently deletes a saved link; its address is no longer captured from tasks a
 | `uid` | string | Yes | Link UID |
 | `note` | string or null | No | Free text; `null` or `""` clears it |
 | `tags` | string[] | No | Replaces the whole set; nested tags as paths (`dev/tools`); `[]` removes all |
-| `status` | string | No | `new`, `kept`, `tested`, `parked`, `dropped` |
-| `review_at` | string or null | No | Day to look at a link again (`YYYY-MM-DD`, or `null`); a `parked` link without it gets today + 30 days |
+| `status` | string | No | `new` or `dropped`; a former status is read as `new`, and `parked` also sets `review_at` to today + 30 days when none is given |
+| `review_at` | string or null | No | Day to look at a link again (`YYYY-MM-DD`, or `null`) |
 
 ---
 

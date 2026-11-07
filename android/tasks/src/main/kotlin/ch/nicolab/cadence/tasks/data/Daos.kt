@@ -218,6 +218,10 @@ interface LinkDao {
     @Query("SELECT * FROM links WHERE uid = :uid")
     suspend fun get(uid: String): LinkEntity?
 
+    /** Le lien enregistré depuis une idée, une tâche ou une note : « Annuler » le retrouve sans connaître son uid. */
+    @Query("SELECT * FROM links WHERE sourceType = :type AND sourceUid = :uid LIMIT 1")
+    suspend fun bySource(type: String, uid: String): LinkEntity?
+
     @Upsert
     suspend fun upsert(link: LinkEntity)
 

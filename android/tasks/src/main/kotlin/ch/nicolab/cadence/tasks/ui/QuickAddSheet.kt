@@ -132,6 +132,12 @@ fun QuickAddSheet(
     /** Créneau d'où la saisie est ouverte (agenda) : date et heure proposées d'office. */
     initialDate: LocalDate? = null,
     initialTime: LocalTime? = null,
+    /** Note de la tâche (une idée de l'Inbox : son adresse et le reste du texte) ; non montrée dans la saisie. */
+    initialNote: String? = null,
+    /** Étiquettes proposées d'office (un lien qui devient une tâche). */
+    initialTagUids: List<String> = emptyList(),
+    /** Ouvre la saisie avec le projet et les étiquettes visibles : trier une idée, c'est d'abord les choisir. */
+    expanded: Boolean = false,
 ) {
     val viewModel: TasksViewModel = viewModel()
     val projects by viewModel.projects.collectAsStateWithLifecycle()
@@ -148,7 +154,7 @@ fun QuickAddSheet(
     var target by rememberSaveable { mutableStateOf(targets.firstOrNull() ?: CaptureTarget.TASK) }
     val isTask = target == CaptureTarget.TASK
     var ignored by rememberSaveable { mutableStateOf(emptyList<String>()) }
-    var moreOptions by rememberSaveable { mutableStateOf(false) }
+    var moreOptions by rememberSaveable { mutableStateOf(expanded) }
     val initialSlot = initialDate?.let { it to initialTime }
     var dateOverride by remember { mutableStateOf(initialSlot) }
     var priorityOverride by remember { mutableStateOf<Int?>(null) }
@@ -158,7 +164,7 @@ fun QuickAddSheet(
     var series by remember { mutableStateOf(QuickAddSeries()) }
     var lastCreatedUid by remember { mutableStateOf<String?>(null) }
     var dismissedSuggestionAt by remember { mutableStateOf<Int?>(null) }
-    var tagOverrides by remember { mutableStateOf(emptySet<String>()) }
+    var tagOverrides by remember { mutableStateOf(initialTagUids.toSet()) }
     var pickingDate by remember { mutableStateOf(false) }
     val focus = remember { FocusRequester() }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -244,6 +250,7 @@ fun QuickAddSheet(
         }
         val draft = TaskDraft(
             name = title,
+            note = initialNote,
             dueDate = date,
             dueTime = time?.let(::wireTime),
             priority = priority,
@@ -384,8 +391,7 @@ fun QuickAddSheet(
                         priorityOverride = picked
                         if (picked == null) ignore(TokenKind.PRIORITY)
                     },
-                    projects = projects.map { it.uid to it.name },
-                    projectIcons = projects.associate { it.uid to it.icon },
+                    projects = projects,
                     projectUid = projectUid,
                     onProject = { picked ->
                         projectOverride = picked
@@ -395,9 +401,7 @@ fun QuickAddSheet(
                             ignore(TokenKind.PROJECT)
                         }
                     },
-                    tags = tags.map { it.uid to it.name },
-                    tagIcons = tags.associate { it.uid to it.icon },
-                    tagColors = tagColors,
+                    tags = tags,
                     tagUids = tagUids,
                     onTag = { uid ->
                         if (uid in tagUids) {
@@ -617,13 +621,10 @@ private fun DateShortcuts(
 private fun MoreOptions(
     priority: Int?,
     onPriority: (Int?) -> Unit,
-    projects: List<Pair<String, String>>,
-    projectIcons: Map<String, String?>,
+    projects: List<ProjectItem>,
     projectUid: String?,
     onProject: (String?) -> Unit,
-    tags: List<Pair<String, String>>,
-    tagIcons: Map<String, String?>,
-    tagColors: Map<String, Color>,
+    tags: List<TagItem>,
     tagUids: List<String>,
     onTag: (String) -> Unit,
 ) {
@@ -642,19 +643,43 @@ private fun MoreOptions(
                 onSelect = { onPriority(levels[it]) },
             )
         }
+        ProjectAndTagFields(projects, projectUid, onProject, tags, tagUids, onTag)
+    }
+}
+
+/**
+ * Projet (« Aucun projet » d'abord) et étiquettes en pastilles qui défilent : le même choix dans la saisie rapide,
+ * la feuille de partage et l'enregistrement d'un lien.
+ */
+@Composable
+internal fun ProjectAndTagFields(
+    projects: List<ProjectItem>,
+    projectUid: String?,
+    onProject: (String?) -> Unit,
+    tags: List<TagItem>,
+    tagUids: List<String>,
+    onTag: (String) -> Unit,
+) {
+    val tagColors = remember(tags) { tagBadgeColors(tags) }
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Space.md)) {
         FieldGroup(stringResource(R.string.tasks_field_project)) {
             Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
                 ChoiceChip(stringResource(R.string.tasks_no_project), selected = projectUid == null) { onProject(null) }
-                projects.forEach { (uid, name) ->
-                    ChoiceChip(name, selected = projectUid == uid, leadingIcon = entityIcon(projectIcons[uid])) { onProject(uid) }
+                projects.forEach { project ->
+                    ChoiceChip(project.name, selected = projectUid == project.uid, leadingIcon = entityIcon(project.icon)) { onProject(project.uid) }
                 }
             }
         }
         if (tags.isNotEmpty()) {
             FieldGroup(stringResource(R.string.tasks_field_tags)) {
                 Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
-                    tags.forEach { (uid, name) ->
-                        ChoiceChip("#$name", selected = uid in tagUids, leadingIcon = entityIcon(tagIcons[uid]), dotColor = tagColors[uid]) { onTag(uid) }
+                    tags.forEach { tag ->
+                        ChoiceChip(
+                            "#${tag.name}",
+                            selected = tag.uid in tagUids,
+                            leadingIcon = entityIcon(tag.icon),
+                            dotColor = tagColors[tag.uid],
+                        ) { onTag(tag.uid) }
                     }
                 }
             }

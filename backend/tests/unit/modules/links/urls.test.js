@@ -1,42 +1,11 @@
 const {
-    extractUrls,
     normalizeUrl,
-    residualText,
     domainOf,
     classifyKind,
     isContextUrl,
 } = require('../../../../modules/links/core/urls');
 
 describe('links/core/urls', () => {
-    describe('extractUrls', () => {
-        it('finds http(s) links and trims sentence punctuation', () => {
-            expect(
-                extractUrls(
-                    'See https://example.com/a. And (http://foo.org/b) too!'
-                )
-            ).toEqual(['https://example.com/a', 'http://foo.org/b']);
-        });
-
-        it('keeps balanced parentheses and drops a markdown closer', () => {
-            expect(
-                extractUrls('[x](https://en.wikipedia.org/wiki/Foo_(bar)) end')
-            ).toEqual(['https://en.wikipedia.org/wiki/Foo_(bar)']);
-        });
-
-        it('ignores hosts without a dot, other schemes and duplicates', () => {
-            expect(
-                extractUrls(
-                    'http://localhost/x ftp://a.b/c https://a.io https://a.io'
-                )
-            ).toEqual(['https://a.io']);
-        });
-
-        it('returns nothing for empty text', () => {
-            expect(extractUrls(null)).toEqual([]);
-            expect(extractUrls('no link here')).toEqual([]);
-        });
-    });
-
     describe('normalizeUrl', () => {
         it('lowercases the host, drops the fragment and tracking params', () => {
             expect(
@@ -58,21 +27,6 @@ describe('links/core/urls', () => {
         it('returns null for a non-http url', () => {
             expect(normalizeUrl('javascript:alert(1)')).toBeNull();
             expect(normalizeUrl('not a url')).toBeNull();
-        });
-    });
-
-    describe('residualText', () => {
-        it('is the text around the link, trimmed', () => {
-            expect(
-                residualText(
-                    'https://a.io/x  - good for invoices',
-                    'https://a.io/x'
-                )
-            ).toBe('good for invoices');
-        });
-
-        it('is empty when the text is only the link', () => {
-            expect(residualText(' https://a.io ', 'https://a.io')).toBe('');
         });
     });
 

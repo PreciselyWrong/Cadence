@@ -86,13 +86,13 @@ class OfflineWritesRepositoryTest {
         val idea = repository.captureInbox("Lire https://a.io")
         repository.processInboxItem(idea)
         repository.setLinkNote("l1", "à tester")
-        repository.setLinkStatus("l1", LinkStatus.KEPT)
+        repository.setLinkStatus("l1", LinkStatus.DROPPED)
         repository.createArea("Perso")
         repository.deleteTask(task)
 
         val entities = queued().map { it.first }.toSet()
         assertEquals(setOf("task", "project", "note", "inbox_item", "link", "area"), entities)
-        assertEquals("kept", database.linkDao().get("l1")!!.status)
+        assertEquals("dropped", database.linkDao().get("l1")!!.status)
         assertEquals(null, database.taskDao().get(task))
     }
 

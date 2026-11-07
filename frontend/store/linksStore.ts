@@ -8,8 +8,8 @@ import {
     updateLink,
 } from '../utils/linksService';
 
-// Saved links, shared by the Links page and the inbox cards. Loaded once,
-// reloaded when a capture may have added one or a fetch is still running.
+// Saved links, shared by the Links page and the review. Loaded once,
+// reloaded while the server still reads a page.
 interface LinksState {
     links: Link[];
     loaded: boolean;
@@ -17,6 +17,8 @@ interface LinksState {
     load: (force?: boolean) => Promise<void>;
     save: (uid: string, changes: LinkChanges) => Promise<Link>;
     remove: (uid: string) => Promise<void>;
+    // A link just created (from the inbox): first in the list.
+    add: (link: Link) => void;
 }
 
 let inflight: Promise<void> | null = null;
@@ -63,6 +65,10 @@ export const useLinksStore = create<LinksState>((set, get) => ({
             throw error;
         }
     },
+    add: (link) =>
+        set({
+            links: [link, ...get().links.filter((l) => l.uid !== link.uid)],
+        }),
     remove: async (uid) => {
         const previous = get().links;
         set({ links: previous.filter((l) => l.uid !== uid) });

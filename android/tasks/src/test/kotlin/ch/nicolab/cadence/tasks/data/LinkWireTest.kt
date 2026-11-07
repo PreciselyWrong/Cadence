@@ -32,7 +32,8 @@ class LinkWireTest {
         assertEquals(42, item.githubStars)
         assertEquals(Instant.parse("2026-10-30T10:00:00Z"), item.githubLastCommit)
         assertEquals("pour Q1", item.note)
-        assertEquals(LinkStatus.PARKED, item.status)
+        // « parked » n'est plus un statut : il se lit « À voir ».
+        assertEquals(LinkStatus.NEW, item.status)
         assertEquals(listOf("t1"), item.tagUids)
         assertEquals("i1", item.sourceUid)
         assertFalse(item.fetching)

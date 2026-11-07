@@ -45,14 +45,29 @@ function metaContent(html, key) {
     return match ? decodeEntities(match[1].trim()) : null;
 }
 
+const NAMED_ENTITIES = {
+    lt: '<',
+    gt: '>',
+    quot: '"',
+    apos: "'",
+    amp: '&',
+    nbsp: ' ',
+};
+
+// Named and numeric (&#39; &#x27;) entities, in one pass so "&amp;lt;" stays "&lt;".
 function decodeEntities(text) {
-    return text
-        .replace(/&lt;/g, '<')
-        .replace(/&gt;/g, '>')
-        .replace(/&quot;/g, '"')
-        .replace(/&#39;/g, "'")
-        .replace(/&#x27;/g, "'")
-        .replace(/&amp;/g, '&');
+    return text.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (whole, code) => {
+        if (code[0] === '#') {
+            const point =
+                code[1].toLowerCase() === 'x'
+                    ? parseInt(code.slice(2), 16)
+                    : parseInt(code.slice(1), 10);
+            return point > 0 && point <= 0x10ffff
+                ? String.fromCodePoint(point)
+                : whole;
+        }
+        return NAMED_ENTITIES[code.toLowerCase()] ?? whole;
+    });
 }
 
 // Fast regex-based metadata extraction (much faster than cheerio for head content)
@@ -85,12 +100,7 @@ function extractMetadataFromHtml(html) {
 
         if (title) {
             title = title.trim();
-            title = title
-                .replace(/&lt;/g, '<')
-                .replace(/&gt;/g, '>')
-                .replace(/&quot;/g, '"')
-                .replace(/&#39;/g, "'")
-                .replace(/&amp;/g, '&');
+            title = decodeEntities(title);
 
             if (title.length > 100) {
                 title = title.substring(0, 100) + '...';
@@ -136,6 +146,7 @@ function extractMetadataFromHtml(html) {
             }
         }
 
+        if (description) description = decodeEntities(description);
         if (description && description.length > 150) {
             description = description.substring(0, 150) + '...';
         }
@@ -464,8 +475,9 @@ class UrlService {
             return {
                 url,
                 title: metadata.title,
-                image: metadata.image,
-                description: metadata.description,
+                image: metadata.image ?? null,
+                description: metadata.description ?? null,
+                site_name: metadata.siteName ?? null,
             };
         } else {
             return {
@@ -473,6 +485,7 @@ class UrlService {
                 title: null,
                 image: null,
                 description: null,
+                site_name: null,
                 error: 'Could not extract metadata',
             };
         }

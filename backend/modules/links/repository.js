@@ -2,6 +2,7 @@
 
 const { Op } = require('sequelize');
 const {
+    InboxItem,
     Link,
     LinkExclusion,
     Note,
@@ -11,6 +12,10 @@ const {
     sequelize,
 } = require('../../models');
 const { ciLike } = require('../../utils/db-dialect');
+const { foldLinkStatus } = require('./core/constants');
+
+// An idea the user threw away cannot be the source of a link.
+const DISCARDED_INBOX = ['deleted', 'trashed'];
 
 const MAX_LIMIT = 1000;
 const DEFAULT_LIMIT = 500;
@@ -43,7 +48,11 @@ function whereFor(userId, filters = {}) {
     const where = { user_id: userId };
     const and = [];
     const statuses = listOf(filters.status);
-    if (statuses) where.status = { [Op.in]: statuses };
+    if (statuses) {
+        where.status = {
+            [Op.in]: [...new Set(statuses.map(foldLinkStatus))],
+        };
+    }
     const kinds = listOf(filters.kind);
     if (kinds) where.kind = { [Op.in]: kinds };
     if (filters.source_type) where.source_type = filters.source_type;
@@ -155,10 +164,15 @@ async function excludedUrls(userId, urls) {
     return new Set(rows.map((row) => row.url));
 }
 
+const SOURCE_MODELS = { inbox_item: InboxItem, task: Task, note: Note };
+
 async function sourceExists(userId, type, uid) {
-    const Model = type === 'task' ? Task : Note;
-    const row = await Model.findOne({
-        where: { user_id: userId, uid },
+    const where = { user_id: userId, uid };
+    if (type === 'inbox_item') {
+        where.status = { [Op.notIn]: DISCARDED_INBOX };
+    }
+    const row = await SOURCE_MODELS[type].findOne({
+        where,
         attributes: ['id'],
     });
     return Boolean(row);

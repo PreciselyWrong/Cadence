@@ -46,7 +46,7 @@ import {
 import { Link as SavedLink } from '../../entities/Link';
 import { useLinksStore } from '../../store/linksStore';
 import { firstUrl, linkForItem, residualText } from '../../utils/linkFilters';
-import InboxLinkPreview from '../Links/InboxLinkPreview';
+import LinkPreviewCard from '../Links/LinkPreviewCard';
 
 type Step = ReviewCategory | 'week';
 
@@ -843,7 +843,15 @@ const ReviewPage: React.FC = () => {
                     <DecisionChips options={options(row)} />
                 </div>
                 {found && (
-                    <InboxLinkPreview link={found.link} withNote={false} />
+                    <LinkPreviewCard
+                        url={found.link.url}
+                        title={found.link.title}
+                        description={
+                            found.link.description || found.link.readme_excerpt
+                        }
+                        image={found.link.image_url}
+                        pending={found.link.fetch_status === 'pending'}
+                    />
                 )}
                 {nextTaskInput(row)}
             </li>
@@ -948,7 +956,15 @@ const ReviewPage: React.FC = () => {
                     </span>
                 )}
                 {found && (
-                    <InboxLinkPreview link={found.link} withNote={false} />
+                    <LinkPreviewCard
+                        url={found.link.url}
+                        title={found.link.title}
+                        description={
+                            found.link.description || found.link.readme_excerpt
+                        }
+                        image={found.link.image_url}
+                        pending={found.link.fetch_status === 'pending'}
+                    />
                 )}
                 {nextTaskInput(row)}
             </>

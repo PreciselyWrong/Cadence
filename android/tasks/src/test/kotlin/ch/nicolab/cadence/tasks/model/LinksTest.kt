@@ -14,7 +14,7 @@ class LinksTest {
     )
     private val post = LinkItem(
         uid = "post", url = "https://blog.example.com/p", kind = LinkKind.ARTICLE, note = "Idée pour le café",
-        status = LinkStatus.KEPT, createdAt = Instant.parse("2026-10-02T00:00:00Z"),
+        createdAt = Instant.parse("2026-10-02T00:00:00Z"),
     )
     private val gone = LinkItem(
         uid = "gone", url = "https://github.com/c/d", status = LinkStatus.DROPPED,
@@ -37,22 +37,25 @@ class LinksTest {
     }
 
     @Test
-    fun `filtre par type, statut et site`() {
-        assertEquals(listOf("post"), uids(LinkFilter(kind = LinkKind.ARTICLE)))
-        assertEquals(listOf("gone"), uids(LinkFilter(status = LinkStatus.DROPPED)))
+    fun `« Archivés » ne montre que les liens archivés, et le filtre par site reste`() {
+        assertEquals(listOf("gone"), uids(LinkFilter(archived = true)))
         assertEquals(listOf("repo"), uids(LinkFilter(domain = "github.com")))
         assertEquals(listOf("github.com", "blog.example.com"), LinkLists.domains(links))
     }
 
     @Test
-    fun `le filtre par statut ne garde que ce statut, gardés, à tester ou plus tard`() {
-        val tested = LinkItem(uid = "try", url = "https://b.io/y", status = LinkStatus.TESTED, createdAt = Instant.parse("2026-10-05T00:00:00Z"))
-        val parked = LinkItem(uid = "later", url = "https://a.io/x", status = LinkStatus.PARKED, createdAt = Instant.parse("2026-10-04T00:00:00Z"))
-        val pool = listOf(parked, tested, post)
+    fun `deux statuts, les anciennes valeurs et l'inconnu se lisent À voir`() {
+        listOf("new", "to_evaluate", "tested", "kept", "parked", "archived", "", null).forEach {
+            assertEquals(LinkStatus.NEW, LinkStatus.fromWire(it), "$it")
+        }
+        assertEquals(LinkStatus.DROPPED, LinkStatus.fromWire("dropped"))
+        assertEquals(listOf("new", "dropped"), LinkStatus.entries.map { it.wire })
+    }
 
-        assertEquals(listOf("try"), LinkLists.filter(pool, LinkFilter(status = LinkStatus.TESTED)).map { it.uid })
-        assertEquals(listOf("later"), LinkLists.filter(pool, LinkFilter(status = LinkStatus.PARKED)).map { it.uid })
-        assertEquals(listOf("post"), LinkLists.filter(pool, LinkFilter(status = LinkStatus.KEPT)).map { it.uid })
+    @Test
+    fun `le filtre par projet garde les liens du projet`() {
+        val filed = repo.copy(uid = "filed", projectUid = "p1")
+        assertEquals(listOf("filed"), LinkLists.filter(listOf(filed, post), LinkFilter(projectUid = "p1")).map { it.uid })
     }
 
     @Test

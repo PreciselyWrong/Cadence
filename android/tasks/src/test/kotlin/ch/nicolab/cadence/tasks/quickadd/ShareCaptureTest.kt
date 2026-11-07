@@ -33,8 +33,9 @@ import org.robolectric.Shadows.shadowOf
 import org.robolectric.shadows.ShadowToast
 
 /**
- * Partage vers l'Inbox : l'écran se ferme dès sa création, sans attendre l'écriture ni le réseau ; l'idée
- * arrive ensuite dans Room et dans la file d'envoi, puis le toast « Ajouté à l'Inbox » la confirme.
+ * Partage : la feuille s'ouvre au-dessus de l'appli d'origine sans rien écrire ; la quitter range le texte dans
+ * l'Inbox (Room et file d'envoi, jamais le réseau), puis le toast « Ajouté à l'Inbox » le confirme. Tâche et Liens
+ * s'écrivent hors ligne, une seule fois par partage.
  */
 @RunWith(AndroidJUnit4::class)
 class ShareCaptureTest {
@@ -93,28 +94,81 @@ class ShareCaptureTest {
         shadowOf(Looper.getMainLooper()).idle()
     }
 
+    private fun ops() = runBlocking { database.outboxDao().pending(10) }
+
     @Test
-    fun `a shared link closes the screen at once, then lands in the inbox and the outbox without the network`() {
-        val started = System.nanoTime()
-        val activity = Robolectric.buildActivity(TaskQuickAddActivity::class.java, share("https://github.com/a/b")).create().get()
-        val elapsedMs = (System.nanoTime() - started) / 1_000_000
+    fun `a share opens the sheet without writing, leaving it saves to the inbox without the network`() {
+        val controller = Robolectric.buildActivity(TaskQuickAddActivity::class.java, share("https://github.com/a/b")).create().start().resume()
+        val activity = controller.get()
 
-        assertTrue("l'écran se ferme sans attendre l'écriture", activity.isFinishing)
-        assertTrue("fermé en moins d'une seconde ($elapsedMs ms)", elapsedMs < 1_000)
+        assertTrue("la feuille reste ouverte", !activity.isFinishing)
+        assertTrue(inbox().isEmpty())
 
+        controller.pause().stop()
+
+        assertTrue(activity.isFinishing)
         awaitUntil { ShadowToast.getTextOfLatestToast() != null }
         assertEquals(listOf("https://github.com/a/b"), inbox().map { it.content })
-        val ops = runBlocking { database.outboxDao().pending(10) }
-        assertEquals(listOf("inbox_item"), ops.map { it.entity })
+        assertEquals(listOf("inbox_item"), ops().map { it.entity })
         assertEquals("Ajouté à l'Inbox", ShadowToast.getTextOfLatestToast())
         assertEquals(emptyList<String>(), networkCalls.toList())
     }
 
     @Test
-    fun `a share without text keeps its subject`() {
-        val activity = Robolectric.buildActivity(TaskQuickAddActivity::class.java, share(null, subject = "  Idée du jour ")).create().get()
+    fun `a decision is written once, leaving afterwards adds nothing to the inbox`() {
+        val controller = Robolectric.buildActivity(TaskQuickAddActivity::class.java, share("https://github.com/a/b pour les logs")).create().start().resume()
+        val session = controller.get().share
 
-        assertTrue(activity.isFinishing)
+        assertTrue(session.settle(ShareAction.TASK, pageTitle = "a/b"))
+        controller.pause().stop()
+
+        awaitUntil { ShadowToast.getTextOfLatestToast() != null }
+        assertTrue(inbox().isEmpty())
+        val task = runBlocking { database.taskDao().get(ops().single().uid) }!!
+        assertEquals("a/b", task.name)
+        assertEquals("https://github.com/a/b\n\npour les logs", task.note)
+        assertEquals(listOf("task"), ops().map { it.entity })
+        assertEquals("Tâche créée", ShadowToast.getTextOfLatestToast())
+        assertTrue(!session.settle(ShareAction.INBOX, null))
+    }
+
+    @Test
+    fun `Liens queues one deferred POST and writes no row`() = runBlocking {
+        val repository = TasksGraph.repository(context)
+        val write = ShareCapture.plan(ShareAction.LINK, "https://a.io/x", "A", listOf("t1"), listOf("dev"), "p1")
+
+        ShareCapture.write(repository, write, "Ajouter aux liens")
+
+        val call = database.deferredCallDao().all().single()
+        assertEquals("POST" to "/api/v1/links", call.method to call.path)
+        assertTrue(call.bodyJson!!.contains("\"tags\":[\"dev\"]"))
+        assertTrue(call.bodyJson!!.contains("\"project_uid\":\"p1\""))
+        assertTrue(ops().isEmpty())
+        assertTrue(inbox().isEmpty())
+        assertEquals(emptyList<String>(), networkCalls.toList())
+    }
+
+    @Test
+    fun `Tâche keeps the chosen tags and project`() = runBlocking {
+        val repository = TasksGraph.repository(context)
+
+        ShareCapture.write(repository, ShareCapture.plan(ShareAction.TASK, "Acheter du pain", null, listOf("t1"), listOf("dev"), "p1"), "")
+
+        val task = database.taskDao().get(ops().single().uid)!!
+        assertEquals("Acheter du pain", task.name)
+        assertEquals("p1", task.projectUid)
+        assertEquals(null, task.note)
+        val fields = ops().single().payloadJson
+        assertTrue(fields.contains("\"tag_uids\""))
+        assertTrue(fields.contains("t1"))
+    }
+
+    @Test
+    fun `a share without text keeps its subject`() {
+        val controller = Robolectric.buildActivity(TaskQuickAddActivity::class.java, share(null, subject = "  Idée du jour ")).create().start().resume()
+
+        assertEquals("Idée du jour", controller.get().share.text)
+        controller.pause().stop()
         awaitUntil { inbox().isNotEmpty() }
         assertEquals(listOf("Idée du jour"), inbox().map { it.content })
     }

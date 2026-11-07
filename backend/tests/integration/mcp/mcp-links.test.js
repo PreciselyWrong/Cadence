@@ -78,7 +78,7 @@ describe('MCP link tools', () => {
             'rust',
         ]);
         expect(updated.link.note).toBe('JSON CLI');
-        expect(updated.link.status).toBe('kept');
+        expect(updated.link.status).toBe('new');
 
         const byTag = json(await call('list_links', { tag: 'rust' }));
         expect(byTag.links.map((l) => l.uid)).toEqual([repo.uid]);
@@ -95,6 +95,11 @@ describe('MCP link tools', () => {
         expect(json(await call('get_link', { uid: link.uid })).link.title).toBe(
             'A post'
         );
+
+        const dropped = json(
+            await call('update_link', { uid: link.uid, status: 'dropped' })
+        );
+        expect(dropped.link.status).toBe('dropped');
 
         const bad = await call('update_link', { uid: link.uid, status: 'x' });
         expect(bad.isError).toBe(true);

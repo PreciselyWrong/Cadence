@@ -1646,12 +1646,14 @@
       "doneLater": "{{count}} shranjenih za pozneje. Vse ostalo je razvrščeno.",
       "suggested": "Predlagano: {{kind}}",
       "task": "Opravilo",
+      "link": "Povezave",
       "project": "Projekt",
       "note": "Opomba",
       "later": "Pozneje",
       "delete": "Izbriši",
       "keptLater": "Shranjeno v prejetem za pozneje",
       "madeTask": "Opravilo ustvarjeno",
+      "madeLink": "Dodano v Povezave",
       "madeProject": "Projekt ustvarjen",
       "madeNote": "Opomba ustvarjena",
       "error": "Elementa ni bilo mogoče obdelati. Še vedno je v prejetem.",
@@ -5142,6 +5144,7 @@
       "taskDelete": "Izbriši opravilo (z razveljavitvijo)",
       "createAlt": "Ustvari element prejetega, opravilo, projekt, opombo, območje ali oznako (z Alt+Shift)",
       "triageTask": "Razvrsti: naredi opravilo",
+      "triageLink": "Razvrsti: obdrži naslov v Povezavah",
       "triageProject": "Razvrsti: naredi projekt",
       "triageNote": "Razvrsti: naredi opombo",
       "triageLater": "Razvrsti: pozneje (ohrani v prejetem)",
@@ -5575,12 +5578,8 @@
   "links": {
     "addToLinks": "Dodaj med povezave",
     "inLinks": "Med povezavami",
-    "attachPick": "Izberite projekt",
-    "tryTaskName": "Preizkusi: {{title}}",
     "tryProject": "Projekt",
     "tryNoProject": "Brez projekta",
-    "tryCreate": "Ustvari nalogo",
-    "triageError": "Odločitve ni bilo mogoče shraniti.",
     "reviewOn": "Pregled {{date}}",
     "title": "Povezave",
     "count_one": "{{count}} povezava",
@@ -5589,50 +5588,18 @@
     "count_few": "{{count}} povezave",
     "search": "Iskanje povezav",
     "filter": {
-      "kind": "Vrsta",
-      "status": "Stanje",
       "tag": "Oznaka",
-      "domain": "Spletno mesto",
-      "sort": "Razvrsti",
-      "allKinds": "Vse vrste",
-      "active": "Neodvržene",
-      "allStatuses": "Vsa stanja",
+      "archived": "Arhivirane",
       "allTags": "Vse oznake",
-      "allDomains": "Vsa spletna mesta",
       "allProjects": "Vsi projekti"
     },
-    "sort": {
-      "start": "Razvrsti povezave ({{count}})",
-      "left": "Še {{count}}",
-      "exit": "Nazaj v prejeto",
-      "skip": "Preskoči",
-      "done": "Ni več povezav za razvrščanje.",
-      "newest": "Najprej novejše",
-      "oldest": "Najprej starejše"
-    },
-    "kind": {
-      "repo": "Repozitorij",
-      "article": "Članek",
-      "video": "Video",
-      "tool": "Orodje",
-      "other": "Drugo"
-    },
     "status": {
-      "new": "Za branje",
-      "tested": "Za preizkus",
-      "kept": "Shranjeno",
-      "parked": "Pozneje",
-      "dropped": "Arhivirano",
-      "to_evaluate": "Za oceno"
+      "dropped": "Arhivirano"
     },
     "action": {
-      "tested": "Za preizkus",
-      "kept": "Shrani",
-      "parked": "Pozneje",
       "dropped": "Arhiviraj",
-      "to_evaluate": "Za oceno",
-      "createTask": "Ustvari opravilo",
-      "project": "Projekt"
+      "restore": "Odarhiviraj",
+      "createTask": "Ustvari opravilo"
     },
     "lastCommit": "posodobljeno {{date}}",
     "fetching": "Branje strani…",
@@ -5644,7 +5611,7 @@
     "addNote": "Dodaj zapis",
     "saveError": "Povezave ni bilo mogoče shraniti.",
     "loadError": "Povezav ni bilo mogoče naložiti.",
-    "empty": "Povezave, ki jih zajamete v pladnju, nalogi ali zapisu, se prikažejo tukaj, skupaj z opisom strani.",
+    "empty": "Povezave, ki jih obdržite iz prejetih, se prikažejo tukaj, s tem, kar stran pove o sebi.",
     "noMatch": "Nobena povezava ne ustreza tem filtrom.",
     "noTheme": "Brez teme",
     "taskCreated": "Naloga ustvarjena: {{name}}",
@@ -5661,7 +5628,7 @@
     },
     "editTitle": "Uredi povezavo",
     "deleteTitle": "Izbrišem to povezavo?",
-    "deleteMessage": "Trajno izgine iz vaših povezav in se ne prevzame več iz opravil in zapiskov. Če jo želite odložiti, izberite Arhivirano.",
+    "deleteMessage": "Za vedno izgine iz vaših povezav. Če jo želite le odložiti, jo raje arhivirajte.",
     "deleteError": "Povezave ni bilo mogoče izbrisati."
   },
   "dailyBrief": {

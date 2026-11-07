@@ -1634,12 +1634,14 @@
       "doneLater": "{{count}} păstrate pentru mai târziu. Restul sunt sortate.",
       "suggested": "Sugerat: {{kind}}",
       "task": "Sarcină",
+      "link": "Linkuri",
       "project": "Proiect",
       "note": "Notiță",
       "later": "Mai târziu",
       "delete": "Șterge",
       "keptLater": "Păstrat în inbox pentru mai târziu",
       "madeTask": "Sarcină creată",
+      "madeLink": "Adăugat la Linkuri",
       "madeProject": "Proiect creat",
       "madeNote": "Notiță creată",
       "error": "Elementul nu a putut fi procesat. Este încă în inbox.",
@@ -5111,6 +5113,7 @@
       "taskDelete": "Șterge sarcina (cu anulare)",
       "createAlt": "Creează element inbox, sarcină, proiect, notiță, zonă sau etichetă (cu Alt+Shift)",
       "triageTask": "Triere: transformă în sarcină",
+      "triageLink": "Triere: păstrează adresa în Linkuri",
       "triageProject": "Triere: transformă în proiect",
       "triageNote": "Triere: transformă în notiță",
       "triageLater": "Triere: mai târziu (păstrează în inbox)",
@@ -5538,12 +5541,8 @@
   "links": {
     "addToLinks": "Adaugă la linkuri",
     "inLinks": "În linkuri",
-    "attachPick": "Alege un proiect",
-    "tryTaskName": "Încearcă: {{title}}",
     "tryProject": "Proiect",
     "tryNoProject": "Fără proiect",
-    "tryCreate": "Creează sarcina",
-    "triageError": "Nu s-a putut salva decizia.",
     "reviewOn": "De revizuit pe {{date}}",
     "title": "Linkuri",
     "count_one": "{{count}} link",
@@ -5551,50 +5550,18 @@
     "count_few": "{{count}} linkuri",
     "search": "Caută în linkuri",
     "filter": {
-      "kind": "Tip",
-      "status": "Stare",
       "tag": "Etichetă",
-      "domain": "Site",
-      "sort": "Sortare",
-      "allKinds": "Toate tipurile",
-      "active": "Nearuncate",
-      "allStatuses": "Toate stările",
+      "archived": "Arhivate",
       "allTags": "Toate etichetele",
-      "allDomains": "Toate site-urile",
       "allProjects": "Toate proiectele"
     },
-    "sort": {
-      "start": "Sortează linkurile ({{count}})",
-      "left": "{{count}} rămase",
-      "exit": "Înapoi la inbox",
-      "skip": "Omite",
-      "done": "Nu mai există linkuri de sortat.",
-      "newest": "Cele mai noi întâi",
-      "oldest": "Cele mai vechi întâi"
-    },
-    "kind": {
-      "repo": "Depozit",
-      "article": "Articol",
-      "video": "Video",
-      "tool": "Unealtă",
-      "other": "Altul"
-    },
     "status": {
-      "new": "De citit",
-      "tested": "De testat",
-      "kept": "Păstrat",
-      "parked": "Mai târziu",
-      "dropped": "Arhivat",
-      "to_evaluate": "De evaluat"
+      "dropped": "Arhivat"
     },
     "action": {
-      "tested": "De testat",
-      "kept": "Păstrează",
-      "parked": "Mai târziu",
       "dropped": "Arhivează",
-      "to_evaluate": "De evaluat",
-      "createTask": "Creează o sarcină",
-      "project": "Proiect"
+      "restore": "Dezarhivează",
+      "createTask": "Creează o sarcină"
     },
     "lastCommit": "actualizat {{date}}",
     "fetching": "Se citește pagina…",
@@ -5606,7 +5573,7 @@
     "addNote": "Adaugă o notă",
     "saveError": "Linkul nu a putut fi salvat.",
     "loadError": "Linkurile nu au putut fi încărcate.",
-    "empty": "Linkurile salvate din inbox, dintr-o sarcină sau dintr-o notă apar aici, cu ce spune pagina despre ea.",
+    "empty": "Linkurile pe care le păstrezi din inbox apar aici, cu ce spune pagina despre ea însăși.",
     "noMatch": "Niciun link nu se potrivește cu aceste filtre.",
     "noTheme": "Fără temă",
     "taskCreated": "Sarcină creată: {{name}}",
@@ -5623,7 +5590,7 @@
     },
     "editTitle": "Editează linkul",
     "deleteTitle": "Ștergi acest link?",
-    "deleteMessage": "Dispare definitiv din linkurile tale și nu mai este preluat din sarcini și note. Pentru a-l pune deoparte, alege Arhivat.",
+    "deleteMessage": "Iese definitiv din linkurile tale. Ca să-l pui deoparte, arhivează-l în schimb.",
     "deleteError": "Linkul nu a putut fi șters."
   },
   "dailyBrief": {

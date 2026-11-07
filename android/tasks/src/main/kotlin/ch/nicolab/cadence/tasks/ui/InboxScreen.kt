@@ -30,7 +30,6 @@ import androidx.compose.ui.Modifier
 import android.content.Context
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
-import ch.nicolab.cadence.tasks.model.LinkDecision
 import ch.nicolab.cadence.tasks.model.LinkSourceKind
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -58,7 +57,6 @@ fun InboxScreen(modifier: Modifier = Modifier, onOpenSearch: () -> Unit = {}, on
     var selectedNoteUid by rememberSaveable { mutableStateOf<String?>(null) }
     var captureOpen by rememberSaveable { mutableStateOf(false) }
     var linksOpen by rememberSaveable { mutableStateOf(false) }
-    var triageOpen by rememberSaveable { mutableStateOf(false) }
     val ideas by viewModel.inbox.collectAsStateWithLifecycle()
     val syncStatus by viewModel.syncStatus.collectAsStateWithLifecycle()
     DeletionUndoEffect(viewModel, snackbar)
@@ -105,7 +103,6 @@ fun InboxScreen(modifier: Modifier = Modifier, onOpenSearch: () -> Unit = {}, on
                         viewModel = viewModel,
                         captureFocus = captureFocus,
                         onOpen = { selectedTaskUid = it.uid },
-                        onTriage = { triageOpen = true },
                         modifier = Modifier.fillMaxSize(),
                     )
                 }
@@ -152,10 +149,9 @@ fun InboxScreen(modifier: Modifier = Modifier, onOpenSearch: () -> Unit = {}, on
             },
         )
     }
-    if (triageOpen) LinkTriageScreen(viewModel, onBack = { triageOpen = false })
 }
 
-/** Bandeau « Annuler » des suppressions de notes et d'idées et des décisions sur un lien, sur l'écran qui les montre. */
+/** Bandeau « Annuler » des suppressions de notes, d'idées et d'objectifs, sur l'écran qui les montre. */
 @Composable
 internal fun DeletionUndoEffect(viewModel: TasksViewModel, snackbar: SnackbarHostState) {
     val context = LocalContext.current
@@ -179,15 +175,4 @@ private fun deletionMessage(context: Context, deletion: PendingDeletion): String
     DeletionKind.Note -> context.getString(R.string.tasks_note_deleted)
     DeletionKind.Idea -> context.getString(R.string.tasks_idea_deleted)
     DeletionKind.Goal -> context.getString(R.string.goals_deleted, deletion.title.orEmpty())
-    DeletionKind.Link -> context.getString(
-        when (deletion.decision) {
-            LinkDecision.KEEP -> R.string.links_decided_kept
-            LinkDecision.TASK -> R.string.links_decided_task
-            LinkDecision.TEST -> R.string.links_decided_test
-            LinkDecision.ATTACH -> R.string.links_decided_attach
-            LinkDecision.LATER -> R.string.links_decided_later
-            LinkDecision.DROP, null -> R.string.links_decided_dropped
-        },
-        deletion.title.orEmpty(),
-    )
 }

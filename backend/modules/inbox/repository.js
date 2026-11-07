@@ -1,7 +1,7 @@
 'use strict';
 
 const { Op, fn, col, where } = require('sequelize');
-const { Area, InboxItem, Project } = require('../../models');
+const { Area, InboxItem, Link, Project } = require('../../models');
 const {
     getAccess,
     ownershipOrPermissionWhere,
@@ -81,6 +81,13 @@ class InboxRepository extends BaseRepository {
     async markProcessed(item) {
         await item.update({ status: 'processed' });
         return item;
+    }
+
+    findOwnLink(userId, uid) {
+        return Link.findOne({
+            where: { uid, user_id: userId },
+            attributes: ['id'],
+        });
     }
 
     // A project the user owns or has been shared, matched by name the way

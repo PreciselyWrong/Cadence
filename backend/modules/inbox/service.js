@@ -139,7 +139,12 @@ class InboxService {
             throw new NotFoundError('Inbox item not found.');
         }
 
-        if (target) {
+        if (target?.kind === 'link') {
+            validateUid(target.uid);
+            if (!(await inboxRepository.findOwnLink(userId, target.uid))) {
+                throw new NotFoundError('Link not found');
+            }
+        } else if (target) {
             validateUid(target.uid);
             const row = await attachments.findWritableTarget(
                 userId,

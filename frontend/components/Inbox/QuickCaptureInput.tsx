@@ -141,6 +141,9 @@ interface QuickCaptureInputProps {
     openNoteModal?: (note: Note | null, inboxItemUid?: string) => void;
     cardClassName?: string;
     multiline?: boolean;
+    // The inbox panel shows the page and picks the tags itself: no preview
+    // box and no automatic #bookmark here.
+    plainLinks?: boolean;
     // One box for everything: an explicit "Add to Inbox | Task | Note |
     // Project" choice decides what the text becomes, and every target reads
     // dates, #tags, +projects and @people the same way.
@@ -300,6 +303,7 @@ const QuickCaptureInput = React.forwardRef<
             openNoteModal,
             cardClassName,
             multiline = true,
+            plainLinks = false,
             unified = false,
             defaultTarget = 'inbox',
             lockTarget = false,
@@ -756,7 +760,9 @@ const QuickCaptureInput = React.forwardRef<
         );
 
         useEffect(() => {
-            const detectedUrl = extractFirstUrlFromText(inputText);
+            const detectedUrl = plainLinks
+                ? null
+                : extractFirstUrlFromText(inputText);
 
             if (!detectedUrl) {
                 if (urlPreview) {
@@ -778,7 +784,7 @@ const QuickCaptureInput = React.forwardRef<
             }
 
             fetchUrlPreview(detectedUrl, detectedUrl);
-        }, [inputText, fetchUrlPreview, urlPreview]);
+        }, [inputText, fetchUrlPreview, urlPreview, plainLinks]);
 
         useEffect(() => {
             if (!urlPreview) {
@@ -1312,8 +1318,9 @@ const QuickCaptureInput = React.forwardRef<
                 const explicitTags = analysisResult.parsed_tags;
 
                 const isUrlContent =
-                    isUrl(text.trim()) ||
-                    analysisResult.suggested_reason === 'url_detected';
+                    !plainLinks &&
+                    (isUrl(text.trim()) ||
+                        analysisResult.suggested_reason === 'url_detected');
                 if (isUrlContent) {
                     const hasBookmarkTag = explicitTags.some(
                         (tag) => tag.toLowerCase() === 'bookmark'
@@ -1328,7 +1335,7 @@ const QuickCaptureInput = React.forwardRef<
 
             const explicitTags = parseHashtags(text);
 
-            if (isUrl(text.trim())) {
+            if (!plainLinks && isUrl(text.trim())) {
                 const hasBookmarkTag = explicitTags.some(
                     (tag) => tag.toLowerCase() === 'bookmark'
                 );

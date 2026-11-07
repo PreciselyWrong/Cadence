@@ -188,12 +188,8 @@
   "links": {
     "addToLinks": "Pridať do odkazov",
     "inLinks": "V odkazoch",
-    "attachPick": "Vyberte projekt",
-    "tryTaskName": "Vyskúšať: {{title}}",
     "tryProject": "Projekt",
     "tryNoProject": "Bez projektu",
-    "tryCreate": "Vytvoriť úlohu",
-    "triageError": "Rozhodnutie sa nepodarilo uložiť.",
     "reviewOn": "Preskúmať {{date}}",
     "title": "Odkazy",
     "count_one": "{{count}} odkaz",
@@ -202,50 +198,18 @@
     "count_many": "{{count}} odkazu",
     "search": "Hľadať v odkazoch",
     "filter": {
-      "kind": "Typ",
-      "status": "Stav",
       "tag": "Štítok",
-      "domain": "Stránka",
-      "sort": "Radenie",
-      "allKinds": "Všetky typy",
-      "active": "Nezahodené",
-      "allStatuses": "Všetky stavy",
+      "archived": "Archivované",
       "allTags": "Všetky štítky",
-      "allDomains": "Všetky stránky",
       "allProjects": "Všetky projekty"
     },
-    "sort": {
-      "start": "Triediť odkazy ({{count}})",
-      "left": "Zostáva {{count}}",
-      "exit": "Späť do schránky",
-      "skip": "Preskočiť",
-      "done": "Nezostali žiadne odkazy na triedenie.",
-      "newest": "Najnovšie prvé",
-      "oldest": "Najstaršie prvé"
-    },
-    "kind": {
-      "repo": "Repozitár",
-      "article": "Článok",
-      "video": "Video",
-      "tool": "Nástroj",
-      "other": "Iné"
-    },
     "status": {
-      "new": "Na prečítanie",
-      "tested": "Na vyskúšanie",
-      "kept": "Ponechaný",
-      "parked": "Neskôr",
-      "dropped": "Archivované",
-      "to_evaluate": "Na zhodnotenie"
+      "dropped": "Archivované"
     },
     "action": {
-      "tested": "Na vyskúšanie",
-      "kept": "Ponechať",
-      "parked": "Neskôr",
       "dropped": "Archivovať",
-      "to_evaluate": "Na zhodnotenie",
-      "createTask": "Vytvoriť úlohu",
-      "project": "Projekt"
+      "restore": "Obnoviť z archívu",
+      "createTask": "Vytvoriť úlohu"
     },
     "lastCommit": "aktualizované {{date}}",
     "fetching": "Čítanie stránky…",
@@ -257,7 +221,7 @@
     "addNote": "Pridať poznámku",
     "saveError": "Odkaz sa nepodarilo uložiť.",
     "loadError": "Odkazy sa nepodarilo načítať.",
-    "empty": "Odkazy, ktoré zachytíte v prijatých, v úlohe alebo v poznámke, sa zobrazia tu spolu s tým, čo o sebe hovorí stránka.",
+    "empty": "Odkazy, ktoré si ponecháte z doručenej pošty, sa zobrazia tu, spolu s tým, čo stránka hovorí sama o sebe.",
     "noMatch": "Žiadny odkaz nezodpovedá týmto filtrom.",
     "noTheme": "Bez témy",
     "taskCreated": "Úloha vytvorená: {{name}}",
@@ -274,7 +238,7 @@
     },
     "editTitle": "Upraviť odkaz",
     "deleteTitle": "Odstrániť tento odkaz?",
-    "deleteMessage": "Natrvalo zmizne z vašich odkazov a už sa nebude brať z úloh a poznámok. Ak ho chcete odložiť, zvoľte Archivované.",
+    "deleteMessage": "Natrvalo zmizne z vašich odkazov. Ak ho chcete len odložiť, radšej ho archivujte.",
     "deleteError": "Odkaz sa nepodarilo odstrániť."
   },
   "dailyBrief": {
@@ -2173,12 +2137,14 @@
       "doneLater": "{{count}} ponechaných na neskôr. Všetko ostatné je vytriedené.",
       "suggested": "Navrhnuté: {{kind}}",
       "task": "Úloha",
+      "link": "Odkazy",
       "project": "Projekt",
       "note": "Poznámka",
       "later": "Neskôr",
       "delete": "Odstrániť",
       "keptLater": "Ponechané v doručenej pošte na neskôr",
       "madeTask": "Úloha vytvorená",
+      "madeLink": "Pridané do Odkazov",
       "madeProject": "Projekt vytvorený",
       "madeNote": "Poznámka vytvorená",
       "error": "Túto položku sa nepodarilo spracovať. Stále je v doručenej pošte.",
@@ -5468,6 +5434,7 @@
       "taskDelete": "Odstrániť úlohu (s možnosťou vrátenia)",
       "createAlt": "Vytvoriť položku doručenej pošty, úlohu, projekt, poznámku, oblasť alebo štítok (s Alt+Shift)",
       "triageTask": "Triediť: urobiť úlohou",
+      "triageLink": "Triediť: ponechať adresu v Odkazoch",
       "triageProject": "Triediť: urobiť projektom",
       "triageNote": "Triediť: urobiť poznámkou",
       "triageLater": "Triediť: neskôr (ponechať v doručenej pošte)",

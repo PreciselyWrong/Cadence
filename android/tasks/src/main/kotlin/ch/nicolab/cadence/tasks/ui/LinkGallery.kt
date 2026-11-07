@@ -45,12 +45,9 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 
-/** Disposition choisie par écran, sur l'appareil seulement : galerie (notes, par défaut ; liens), outliner (page d'un projet). */
+/** Disposition choisie par écran, sur l'appareil seulement : galerie (notes, par défaut ; liens, en liste par défaut), outliner (page d'un projet). */
 internal class LayoutStore(context: Context) {
     private val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-
-    /** Les liens s'ouvrent en galerie ; la liste reste à un appui, et ce choix se garde. */
-    fun isLinksGallery(): Boolean = prefs.getBoolean(LINKS, true)
 
     fun isOn(screen: String): Boolean = prefs.getBoolean(screen, screen == NOTES)
 
@@ -68,7 +65,7 @@ internal class LayoutStore(context: Context) {
 
 /**
  * Carte de la galerie des découvertes : l'image de la page quand le serveur l'a lue, le titre, le site et les
- * étoiles, le début du README pour un dépôt (sinon la description), le projet, puis le statut et « ⋯ ».
+ * étoiles, le début du README pour un dépôt (sinon la description), le projet, puis « ⋯ ».
  * Toucher la carte ouvre le lien.
  */
 @OptIn(ExperimentalLayoutApi::class)
@@ -76,7 +73,7 @@ internal class LayoutStore(context: Context) {
 internal fun LinkGalleryCard(
     link: LinkItem,
     projectName: String?,
-    onStatus: (LinkStatus) -> Unit,
+    onArchive: (Boolean) -> Unit,
     onEdit: () -> Unit,
     onTask: () -> Unit,
     onDelete: () -> Unit,
@@ -122,13 +119,13 @@ internal fun LinkGalleryCard(
                 modifier = Modifier.padding(start = Space.md, end = Space.md, top = Space.xs),
             )
         }
-        LinkControls(link, onStatus, onEdit, onTask, onDelete, Modifier.padding(start = Space.md, end = Space.xs, bottom = Space.xs))
+        LinkControls(link, onArchive, onEdit, onTask, onDelete, Modifier.padding(start = Space.md, end = Space.xs, bottom = Space.xs))
     }
 }
 
 private const val EXCERPT_LINES = 4
 
-/** Site, étoiles GitHub et statut déjà choisi, sur une ligne qui passe à la ligne si la colonne est étroite. */
+/** Site, étoiles GitHub et « Archivé », sur une ligne qui passe à la ligne si la colonne est étroite. */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun GalleryMeta(link: LinkItem) {
@@ -145,7 +142,9 @@ private fun GalleryMeta(link: LinkItem) {
                 Text(starsText(stars), style = MaterialTheme.typography.labelSmall, color = palette.outline)
             }
         }
-        statusLabel(link.status)?.let { Text(stringResource(it), style = MaterialTheme.typography.labelSmall, color = palette.primary) }
+        if (link.status == LinkStatus.DROPPED) {
+            Text(stringResource(R.string.links_status_dropped), style = MaterialTheme.typography.labelSmall, color = palette.primary)
+        }
     }
 }
 

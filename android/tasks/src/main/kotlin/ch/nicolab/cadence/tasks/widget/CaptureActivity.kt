@@ -25,6 +25,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import ch.nicolab.cadence.designsystem.theme.CadenceTheme
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.quickadd.ShareCapture
+import ch.nicolab.cadence.tasks.quickadd.ShareWrite
 
 /** Capture vers la boîte depuis la barre de capture : idée saisie ou texte dicté. */
 class CaptureActivity : ComponentActivity() {
@@ -56,7 +57,7 @@ class CaptureActivity : ComponentActivity() {
     }
 
     private fun save(text: String) {
-        text.trim().takeIf { it.isNotEmpty() }?.let { ShareCapture.save(this, it) }
+        text.trim().takeIf { it.isNotEmpty() }?.let { ShareCapture.save(this, ShareWrite.Inbox(it)) }
         finish()
     }
 

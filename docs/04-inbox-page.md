@@ -413,6 +413,11 @@ Each inbox item can be converted to three types:
 - Happens automatically on conversion
 - No "Mark as processed" button needed
 
+**Idea that holds a link:**
+- An idea is never turned into a link on its own: an item that is only an address (or holds one) stays `added` until the user decides, the same as any other idea
+- Decision **Links**: the link is saved first (`POST /api/links` with `source_type: inbox_item` and the item's `uid`), then `PATCH /api/inbox/:uid/process` with `{ link_uid }` marks the item `processed`; the link stays in the library ([Links](37-links.md))
+- Decision **Task**: `PATCH /api/inbox/:uid/process` with `{ task_uid }`, as for any idea
+
 ---
 
 ## Editing Inbox Items

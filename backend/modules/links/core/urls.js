@@ -1,31 +1,10 @@
 'use strict';
 
-// Finding, normalizing and classifying links in free text. Pure functions:
-// the same rules decide what a link is on every write path.
+// Normalizing and classifying links. Pure functions: the same rules decide
+// what a link is on every write path.
 
-const CANDIDATE = /https?:\/\/[^\s<>"'`]+/gi;
-const TRAILING = new Set([...'.,;:!?\'"»…*_']);
 const TRACKING_PARAMS =
     /^(utm_[a-z]+|fbclid|gclid|mc_cid|mc_eid|igshid|ref_src)$/i;
-const MAX_URL_LENGTH = 2000;
-
-function count(text, char) {
-    return text.split(char).length - 1;
-}
-
-function trimEnd(raw) {
-    let end = raw;
-    while (end.length > 0) {
-        const last = end[end.length - 1];
-        const drop =
-            TRAILING.has(last) ||
-            (last === ')' && count(end, ')') > count(end, '(')) ||
-            (last === ']' && count(end, ']') > count(end, '['));
-        if (!drop) break;
-        end = end.slice(0, -1);
-    }
-    return end;
-}
 
 function parse(url) {
     try {
@@ -38,18 +17,6 @@ function parse(url) {
     } catch {
         return null;
     }
-}
-
-// Distinct links of `text`, in order of appearance, as written.
-function extractUrls(text) {
-    if (typeof text !== 'string' || text.length === 0) return [];
-    const found = [];
-    for (const match of text.matchAll(CANDIDATE)) {
-        const url = trimEnd(match[0]);
-        if (url.length > MAX_URL_LENGTH || !parse(url)) continue;
-        if (!found.includes(url)) found.push(url);
-    }
-    return found;
 }
 
 // One spelling per page: lowercase host, no default port, no fragment, no
@@ -67,16 +34,6 @@ function normalizeUrl(url) {
     let href = parsed.href;
     if (parsed.search === '' && href.endsWith('?')) href = href.slice(0, -1);
     return href;
-}
-
-// What the user wrote around the link: the note captured with it.
-function residualText(text, url) {
-    if (typeof text !== 'string') return '';
-    return text
-        .replace(url, ' ')
-        .replace(/^[\s\-–—:|]+|[\s\-–—:|]+$/g, '')
-        .replace(/\s{2,}/g, ' ')
-        .trim();
 }
 
 function domainOf(url) {
@@ -219,9 +176,7 @@ function isContextUrl(url, extraHosts = []) {
 }
 
 module.exports = {
-    extractUrls,
     normalizeUrl,
-    residualText,
     domainOf,
     repoPath,
     classifyKind,

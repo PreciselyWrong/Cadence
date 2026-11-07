@@ -1,21 +1,4 @@
-import { Link, LinkKind, LinkStatus } from '../entities/Link';
-
-export const LINK_KINDS: LinkKind[] = [
-    'repo',
-    'article',
-    'video',
-    'tool',
-    'other',
-];
-
-export const LINK_STATUSES: LinkStatus[] = [
-    'new',
-    'to_evaluate',
-    'tested',
-    'kept',
-    'parked',
-    'dropped',
-];
+import { Link } from '../entities/Link';
 
 export interface LinkTheme {
     // null for links without a tag.
@@ -45,23 +28,17 @@ export function linksByTheme(links: Link[]): LinkTheme[] {
 
 export interface LinkFilter {
     query: string;
-    kind: LinkKind | 'all';
-    // 'active' hides dropped links: the default view stays calm.
-    status: LinkStatus | 'active' | 'all';
     tag: string | 'all';
     project: string | 'all';
-    domain: string | 'all';
-    sort: 'newest' | 'oldest';
+    // Off: the links to see; on: only the archived ones.
+    archived: boolean;
 }
 
 export const DEFAULT_LINK_FILTER: LinkFilter = {
     query: '',
-    kind: 'all',
-    status: 'active',
     tag: 'all',
     project: 'all',
-    domain: 'all',
-    sort: 'newest',
+    archived: false,
 };
 
 const fold = (value: string): string =>
@@ -83,20 +60,11 @@ const haystack = (link: Link): string =>
             .join(' ')
     );
 
+// Newest first, always.
 export const filterLinks = (links: Link[], filter: LinkFilter): Link[] => {
     const words = fold(filter.query).split(/\s+/).filter(Boolean);
     const kept = links.filter((link) => {
-        if (filter.kind !== 'all' && link.kind !== filter.kind) return false;
-        if (filter.status === 'active' && link.status === 'dropped') {
-            return false;
-        }
-        if (
-            filter.status !== 'active' &&
-            filter.status !== 'all' &&
-            link.status !== filter.status
-        ) {
-            return false;
-        }
+        if ((link.status === 'dropped') !== filter.archived) return false;
         if (filter.project !== 'all' && link.project_uid !== filter.project) {
             return false;
         }
@@ -106,29 +74,11 @@ export const filterLinks = (links: Link[], filter: LinkFilter): Link[] => {
         ) {
             return false;
         }
-        if (filter.domain !== 'all' && link.domain !== filter.domain) {
-            return false;
-        }
         if (words.length === 0) return true;
         const text = haystack(link);
         return words.every((w) => text.includes(w));
     });
-    const sign = filter.sort === 'oldest' ? 1 : -1;
-    return kept.sort((a, b) => sign * a.created_at.localeCompare(b.created_at));
-};
-
-// Domains seen more than once first, then alphabetical: the filter offers
-// the places the user actually saves from.
-export const domainsOf = (links: Link[]): string[] => {
-    const counts = new Map<string, number>();
-    for (const link of links) {
-        if (link.domain) {
-            counts.set(link.domain, (counts.get(link.domain) ?? 0) + 1);
-        }
-    }
-    return [...counts.entries()]
-        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-        .map(([domain]) => domain);
+    return kept.sort((a, b) => b.created_at.localeCompare(a.created_at));
 };
 
 export const tagsOf = (links: Link[]): string[] =>
@@ -171,8 +121,8 @@ const comparable = (url: string): string => {
     }
 };
 
-// The saved link of an inbox item (or of another source type): the one
-// found in it, else the same page.
+// The saved link of an item (an inbox item, a task): the one taken from it,
+// else the same page.
 export const linkForItem = (
     links: Link[],
     itemUid: string | undefined,
@@ -196,8 +146,7 @@ export const sourcePath = (link: Link): string | null => {
             return `/task/${link.source_uid}`;
         case 'note':
             return `/notes/${link.source_uid}`;
-        case 'inbox_item':
-            return '/inbox';
+        // An inbox item kept in Links has left the inbox.
         default:
             return null;
     }

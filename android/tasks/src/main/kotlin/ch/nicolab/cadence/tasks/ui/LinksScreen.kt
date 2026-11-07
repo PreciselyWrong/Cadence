@@ -27,10 +27,8 @@ import androidx.compose.foundation.lazy.staggeredgrid.items as gridItems
 import androidx.compose.material.icons.automirrored.outlined.ViewList
 import androidx.compose.material.icons.outlined.GridView
 import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
-import ch.nicolab.cadence.tasks.model.LinkDecision
 import ch.nicolab.cadence.tasks.model.LinkEdit
 import ch.nicolab.cadence.tasks.model.ProjectChoices
-import ch.nicolab.cadence.tasks.model.LinkTriage
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
@@ -81,7 +79,6 @@ import ch.nicolab.cadence.tasks.model.LinkSource
 import ch.nicolab.cadence.tasks.model.LinkStatus
 import ch.nicolab.cadence.tasks.model.ShareText
 import ch.nicolab.cadence.tasks.model.TagItem
-import java.time.LocalDate
 import android.icu.text.CompactDecimalFormat
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -115,15 +112,11 @@ internal class LinksViewModel(application: Application) : AndroidViewModel(appli
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
     fun setNote(uid: String, note: String?) = viewModelScope.launch { repository.setLinkNote(uid, note) }
-    fun setStatus(uid: String, status: LinkStatus) = viewModelScope.launch { repository.setLinkStatus(uid, status) }
     fun setTags(uid: String, tagUids: List<String>) = viewModelScope.launch { repository.setLinkTags(uid, tagUids) }
 
-    /** Comme « Plus tard » ailleurs : un lien mis de côté revient à une date. */
-    fun chooseStatus(uid: String, status: LinkStatus) = viewModelScope.launch {
-        repository.setLinkStatus(uid, status)
-        if (status == LinkStatus.PARKED) {
-            repository.setLinkReviewDate(uid, LocalDate.now().plusDays(LinkTriage.LATER_DAYS))
-        }
+    /** Archiver garde le lien, caché par défaut ; désarchiver le rend « À voir ». */
+    fun setArchived(uid: String, archived: Boolean) = viewModelScope.launch {
+        repository.setLinkStatus(uid, if (archived) LinkStatus.DROPPED else LinkStatus.NEW)
     }
 
     /** Écrit seulement ce qui a changé : une adresse inchangée ne fait pas relire la page. */
@@ -148,24 +141,20 @@ internal class LinksViewModel(application: Application) : AndroidViewModel(appli
 }
 
 /**
- * Écran Liens, ouvert depuis Listes ou l'Inbox : tous les liens enregistrés, lisibles hors ligne, en galerie par thème,
- * avec recherche et filtres par type, statut et étiquette. Chaque carte dit ce qu'est le lien et ce qu'on en pense.
+ * Écran Liens, ouvert depuis l'Inbox : la bibliothèque de ce que l'utilisateur a gardé, lisible hors ligne, en liste
+ * (galerie par thème à un appui), avec recherche et filtres par étiquette, projet et « Archivés ».
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun LinksScreen(tasks: TasksViewModel, onBack: () -> Unit, onOpenSource: (LinkSource) -> Unit) {
     val viewModel: LinksViewModel = viewModel()
-    val masked by tasks.masked.collectAsStateWithLifecycle()
-    val inbox by tasks.inbox.collectAsStateWithLifecycle()
     val every by tasks.links.collectAsStateWithLifecycle()
-    val filtered by viewModel.shown.collectAsStateWithLifecycle()
-    val links = remember(filtered, masked) { filtered.filterNot { it.uid in masked } }
+    val links by viewModel.shown.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val layouts = remember(context) { LayoutStore(context) }
-    var gallery by rememberSaveable { mutableStateOf(layouts.isLinksGallery()) }
-    val createTask: (LinkItem) -> Unit = { link ->
-        tasks.decideLink(LinkTriage.openEntry(link, inbox, every), link, LinkDecision.TASK, null, maskLink = false)
-    }
+    var gallery by rememberSaveable { mutableStateOf(layouts.isOn(LayoutStore.LINKS)) }
+    var taskFrom by remember { mutableStateOf<LinkItem?>(null) }
+    val createTask: (LinkItem) -> Unit = { taskFrom = it }
     val projects by tasks.projects.collectAsStateWithLifecycle()
     var editingLink by remember { mutableStateOf<LinkItem?>(null) }
     var deleting by remember { mutableStateOf<LinkItem?>(null) }
@@ -210,42 +199,14 @@ internal fun LinksScreen(tasks: TasksViewModel, onBack: () -> Unit, onOpenSource
             ) {
                 ChoiceChip(
                     label = stringResource(R.string.links_filter_all_kinds),
-                    selected = filter.kind == null && filter.status == null && filter.tagUid == null && filter.projectUid == null,
-                    onClick = { viewModel.filter.value = filter.copy(kind = null, status = null, tagUid = null, projectUid = null) },
+                    selected = !filter.archived && filter.tagUid == null && filter.projectUid == null,
+                    onClick = { viewModel.filter.value = filter.copy(archived = false, tagUid = null, projectUid = null) },
                 )
-                LinkKind.entries.filter { it != LinkKind.OTHER }.forEach { kind ->
-                    ChoiceChip(
-                        label = stringResource(kindLabel(kind)),
-                        selected = filter.kind == kind,
-                        onClick = { viewModel.filter.value = filter.copy(kind = if (filter.kind == kind) null else kind) },
-                    )
-                }
                 ChoiceChip(
                     label = stringResource(R.string.links_show_dropped),
-                    selected = filter.status == LinkStatus.DROPPED,
-                    onClick = {
-                        viewModel.filter.value =
-                            filter.copy(status = if (filter.status == LinkStatus.DROPPED) null else LinkStatus.DROPPED)
-                    },
+                    selected = filter.archived,
+                    onClick = { viewModel.filter.value = filter.copy(archived = !filter.archived) },
                 )
-            }
-            Row(
-                Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = Space.gutter),
-                horizontalArrangement = Arrangement.spacedBy(Space.sm),
-            ) {
-                listOf(
-                    LinkStatus.NEW to R.string.links_status_new,
-                    LinkStatus.TO_EVALUATE to R.string.links_status_to_evaluate,
-                    LinkStatus.KEPT to R.string.links_filter_kept,
-                    LinkStatus.TESTED to R.string.links_filter_tested,
-                    LinkStatus.PARKED to R.string.links_filter_parked,
-                ).forEach { (status, label) ->
-                    ChoiceChip(
-                        label = stringResource(label),
-                        selected = filter.status == status,
-                        onClick = { viewModel.filter.value = filter.copy(status = if (filter.status == status) null else status) },
-                    )
-                }
             }
             if (linkTags.isNotEmpty()) {
                 Row(
@@ -308,7 +269,7 @@ internal fun LinksScreen(tasks: TasksViewModel, onBack: () -> Unit, onOpenSource
                             LinkGalleryCard(
                                 link = link,
                                 projectName = projects.firstOrNull { it.uid == link.projectUid }?.name,
-                                onStatus = { viewModel.chooseStatus(link.uid, it) },
+                                onArchive = { viewModel.setArchived(link.uid, it) },
                                 onEdit = { editingLink = link },
                                 onTask = { createTask(link) },
                                 onDelete = { deleting = link },
@@ -329,12 +290,11 @@ internal fun LinksScreen(tasks: TasksViewModel, onBack: () -> Unit, onOpenSource
                         LinkCard(
                             link = link,
                             tags = tags,
-                            reviewOn = if (link.status == LinkStatus.PARKED) link.reviewAt else null,
                             onTags = { viewModel.setTags(link.uid, it) },
                             onEditNote = { editing = link },
                             onOpenSource = { link.source?.let(onOpenSource) },
                             projectName = projects.firstOrNull { it.uid == link.projectUid }?.name,
-                            onStatus = { viewModel.chooseStatus(link.uid, it) },
+                            onArchive = { viewModel.setArchived(link.uid, it) },
                             onEdit = { editingLink = link },
                             onTask = { createTask(link) },
                             onDelete = { deleting = link },
@@ -367,6 +327,17 @@ internal fun LinksScreen(tasks: TasksViewModel, onBack: () -> Unit, onOpenSource
             onDismiss = { deleting = null },
         )
     }
+    taskFrom?.let { link ->
+        QuickAddSheet(
+            onDismiss = { taskFrom = null },
+            initialName = link.displayTitle,
+            initialNote = listOfNotNull(link.url, link.note?.takeIf { it.isNotBlank() }).joinToString("\n\n"),
+            initialProjectUid = link.projectUid,
+            initialTagUids = link.tagUids,
+            expanded = true,
+            onSave = { draft -> tasks.saveNewTask(draft) },
+        )
+    }
     editing?.let { link ->
         LinkNoteDialog(
             initial = link.note,
@@ -381,12 +352,11 @@ internal fun LinksScreen(tasks: TasksViewModel, onBack: () -> Unit, onOpenSource
 private fun LinkCard(
     link: LinkItem,
     tags: List<TagItem>,
-    reviewOn: LocalDate?,
     onTags: (List<String>) -> Unit,
     onEditNote: () -> Unit,
     onOpenSource: () -> Unit,
     projectName: String?,
-    onStatus: (LinkStatus) -> Unit,
+    onArchive: (Boolean) -> Unit,
     onEdit: () -> Unit,
     onTask: () -> Unit,
     onDelete: () -> Unit,
@@ -413,14 +383,6 @@ private fun LinkCard(
                 overflow = TextOverflow.Ellipsis,
             )
         }
-        reviewOn?.let { date ->
-            val today = LocalDate.now()
-            Text(
-                if (date > today) stringResource(R.string.links_review_on, compactDate(date, today)) else stringResource(R.string.links_review_due),
-                style = MaterialTheme.typography.labelMedium,
-                color = palette.primary,
-            )
-        }
         if (link.source != null) {
             TextButton(onClick = onOpenSource) { Text(stringResource(R.string.links_go_to_source)) }
         }
@@ -435,7 +397,7 @@ private fun LinkCard(
         LinkNoteLine(link.note, onEditNote)
         LinkTagLine(link, tags, onTags)
         projectName?.let { Text(it, style = MaterialTheme.typography.labelMedium, color = palette.primary) }
-        LinkControls(link, onStatus, onEdit, onTask, onDelete)
+        LinkControls(link, onArchive, onEdit, onTask, onDelete)
     }
 }
 
@@ -484,8 +446,8 @@ internal fun LinkSummary(link: LinkItem, descriptionLines: Int) {
             val month = DateTimeFormatter.ofPattern("MMM yyyy", Locale.getDefault()).format(pushed.atZone(ZoneId.systemDefault()))
             Text(stringResource(R.string.links_last_commit, month), style = MaterialTheme.typography.labelSmall, color = palette.outline)
         }
-        statusLabel(link.status).let {
-            Text(stringResource(it), style = MaterialTheme.typography.labelSmall, color = palette.primary)
+        if (link.status == LinkStatus.DROPPED) {
+            Text(stringResource(R.string.links_status_dropped), style = MaterialTheme.typography.labelSmall, color = palette.primary)
         }
         if (link.fetching) {
             Text(stringResource(R.string.links_fetching), style = MaterialTheme.typography.labelSmall, color = palette.outline)
@@ -572,15 +534,6 @@ private fun kindLabel(kind: LinkKind): Int = when (kind) {
     LinkKind.VIDEO -> R.string.links_kind_video
     LinkKind.TOOL -> R.string.links_kind_tool
     LinkKind.OTHER -> R.string.links_kind_other
-}
-
-internal fun statusLabel(status: LinkStatus): Int = when (status) {
-    LinkStatus.TO_EVALUATE -> R.string.links_status_to_evaluate
-    LinkStatus.TESTED -> R.string.links_status_tested
-    LinkStatus.KEPT -> R.string.links_status_kept
-    LinkStatus.PARKED -> R.string.links_status_parked
-    LinkStatus.DROPPED -> R.string.links_status_dropped
-    LinkStatus.NEW -> R.string.links_status_new
 }
 
 /** Nombre d'étoiles court (« 1,2 k »), dans la langue de l'appareil. */

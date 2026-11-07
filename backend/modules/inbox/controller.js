@@ -14,9 +14,9 @@ function requireUserId(req) {
 }
 
 // The one thing the item became, if the client says: { task_uid } or
-// { project_uid } or { note_uid }.
+// { project_uid } or { note_uid } or { link_uid }.
 function processTarget(body = {}) {
-    for (const kind of ['task', 'project', 'note']) {
+    for (const kind of ['task', 'project', 'note', 'link']) {
         const uid = body?.[`${kind}_uid`];
         if (uid) return { kind, uid };
     }

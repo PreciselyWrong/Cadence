@@ -8,6 +8,7 @@ import ch.nicolab.cadence.tasks.model.GoalBucket
 import ch.nicolab.cadence.tasks.model.GoalChange
 import ch.nicolab.cadence.tasks.model.GoalItem
 import ch.nicolab.cadence.tasks.model.InboxEntry
+import ch.nicolab.cadence.tasks.model.LinkDraft
 import ch.nicolab.cadence.tasks.model.LinkItem
 import ch.nicolab.cadence.tasks.model.LinkStatus
 import ch.nicolab.cadence.tasks.model.NoteChange
@@ -60,13 +61,13 @@ interface TaskRepository {
      */
     suspend fun createWish(title: String, bucket: GoalBucket): String?
 
-    /** Liens trouvés par le serveur, lisibles hors ligne, les plus récents d'abord. */
+    /** Liens enregistrés, lisibles hors ligne, les plus récents d'abord. */
     fun observeLinks(): Flow<List<LinkItem>>
 
     /** Note d'un lien ; vide ou null l'efface. Sans effet si le lien est inconnu. */
     suspend fun setLinkNote(uid: String, note: String?)
 
-    /** Statut d'un lien (Tester, Garder, Plus tard, Jeter, ou Nouveau). Sans effet si le lien est inconnu. */
+    /** Statut d'un lien (À voir ou Archivé). Sans effet si le lien est inconnu. */
     suspend fun setLinkStatus(uid: String, status: LinkStatus)
 
     /** Étiquettes d'un lien (remplace l'ensemble). Sans effet si le lien est inconnu. */
@@ -86,6 +87,18 @@ interface TaskRepository {
      * le serveur ne prend plus seul celles des tâches et des notes. Appel différé nommé [label].
      */
     suspend fun addLinkFrom(url: String, sourceType: String, sourceUid: String, label: String)
+
+    /**
+     * Enregistre [draft] dans les liens par l'appel différé `POST /api/v1/links` nommé [label] : un appareil ne crée pas
+     * de ligne `link`, elle revient par la synchro une fois le serveur passé.
+     */
+    suspend fun addLink(draft: LinkDraft, label: String)
+
+    /**
+     * Défait [addLink] : retire l'appel s'il attend encore, sinon supprime le lien revenu de la synchro pour la même
+     * source. Rend false quand rien n'a pu être défait (appel parti, lien pas encore revenu).
+     */
+    suspend fun withdrawLink(draft: LinkDraft): Boolean
 
     /** Supprime le lien pour de bon ; son adresse n'est plus reprise des tâches et des notes. */
     suspend fun deleteLink(uid: String)
@@ -200,6 +213,9 @@ interface TaskRepository {
 
     /** Marque une idée traitée : elle quitte l'Inbox sans être supprimée (un lien reste dans la bibliothèque). */
     suspend fun processInboxItem(uid: String)
+
+    /** Remet dans l'Inbox une idée traitée : « Annuler » d'une décision. Une idée inconnue n'écrit rien. */
+    suspend fun reopenInboxItem(uid: String)
 
     /** Demande une synchronisation au plus tôt (sans attendre la fin). */
     fun requestSync()

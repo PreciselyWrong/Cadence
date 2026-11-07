@@ -17,6 +17,7 @@ import ch.nicolab.cadence.calendar.toHidden
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.data.UnsupportedRecurrence
+import ch.nicolab.cadence.tasks.links.LinkExtractor
 import ch.nicolab.cadence.tasks.links.LinkPreviews
 import ch.nicolab.cadence.tasks.model.AreaFilter
 import ch.nicolab.cadence.tasks.model.AreaItem
@@ -32,11 +33,9 @@ import ch.nicolab.cadence.tasks.model.GoalOverview
 import ch.nicolab.cadence.tasks.model.GoalStatus
 import ch.nicolab.cadence.tasks.model.Goals
 import ch.nicolab.cadence.tasks.model.IdeaNotes
+import ch.nicolab.cadence.tasks.model.IdeaTasks
 import ch.nicolab.cadence.tasks.model.InboxEntry
-import ch.nicolab.cadence.tasks.model.LinkDecision
 import ch.nicolab.cadence.tasks.model.LinkItem
-import ch.nicolab.cadence.tasks.model.LinkStatus
-import ch.nicolab.cadence.tasks.model.LinkTriage
 import ch.nicolab.cadence.tasks.model.NextAction
 import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.NoteItem
@@ -56,7 +55,6 @@ import ch.nicolab.cadence.tasks.model.TaskDraft
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskViews
 import ch.nicolab.cadence.tasks.model.TodayOrder
-import ch.nicolab.cadence.tasks.model.TriageSink
 import ch.nicolab.cadence.tasks.notes.Autosaver
 import ch.nicolab.cadence.tasks.notes.NoteEditSession
 import ch.nicolab.cadence.tasks.notes.NoteFields
@@ -136,19 +134,13 @@ internal data class TodayState(
     val plan: List<PlanEntry> = emptyList(),
 )
 
-internal enum class DeletionKind { Note, Idea, Link, Goal }
+internal enum class DeletionKind { Note, Idea, Goal }
 
-/**
- * Suppression en attente de confirmation, annulable par [TasksViewModel.undoDeletion]. Pour [DeletionKind.Link],
- * [decision] et [title] disent quelle décision sur quel lien l'écran annonce. [masked] : tout ce qui est masqué
- * pendant l'attente (l'idée et, depuis la galerie, la carte du lien), que « Annuler » fait revenir.
- */
+/** Suppression en attente de confirmation, annulable par [TasksViewModel.undoDeletion] ; [title] nomme un objectif. */
 internal data class PendingDeletion(
     val kind: DeletionKind,
     val uid: String,
-    val decision: LinkDecision? = null,
     val title: String? = null,
-    val masked: Set<String> = setOf(uid),
 )
 
 /**
@@ -311,7 +303,7 @@ internal class TasksViewModel(
         entries.filterNot { it.uid in gone }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
-    /** Liens enregistrés : l'Inbox montre celui de chaque idée, sa description et sa note. */
+    /** Liens enregistrés : l'Inbox y lit le titre d'une page déjà enregistrée. */
     val links: StateFlow<List<LinkItem>> = repository.observeLinks()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
@@ -324,65 +316,25 @@ internal class TasksViewModel(
 
     fun setLinkTags(uid: String, tagUids: List<String>) = launchAction { repository.setLinkTags(uid, tagUids) }
 
-    private val linkTriage = LinkTriageStore(application)
-    private val _skippedLinks = MutableStateFlow(linkTriage.skipped())
-
-    /** Idées de lien passées en tri en série, dans l'ordre : elles repartent au bout de la file. */
-    val skippedLinks: StateFlow<List<String>> = _skippedLinks.asStateFlow()
-
-    fun skipLink(entryUid: String) {
-        _skippedLinks.value = LinkTriage.skip(_skippedLinks.value, entryUid).also(linkTriage::saveSkipped)
-    }
-
-    private val triageSink = object : TriageSink {
-        override suspend fun createTask(draft: TaskDraft) {
-            repository.createTask(draft)
-        }
-
-        override suspend fun setLinkStatus(uid: String, status: LinkStatus) = repository.setLinkStatus(uid, status)
-
-        override suspend fun setLinkProject(uid: String, projectUid: String?) = repository.setLinkProject(uid, projectUid)
-
-        override suspend fun setReviewDate(uid: String, date: LocalDate) = repository.setLinkReviewDate(uid, date)
-
-        override suspend fun processInboxItem(uid: String) = repository.processInboxItem(uid)
-    }
-
-    /** Éléments masqués en attendant la fin d'une fenêtre d'annulation ; la galerie des liens y lit ses cartes décidées. */
-    val masked: StateFlow<Set<String>> = hidden.asStateFlow()
-
     /**
-     * Décider d'un lien : le garder, le tester, le rattacher à un projet, le repousser ou le jeter. L'idée [entry]
-     * qui le porte (s'il y en a une encore ouverte) disparaît tout de suite, comme la carte du lien si [maskLink]
-     * (galerie) ; les écritures partent après la fenêtre d'annulation (« Annuler » les abandonne), hors ligne comme
-     * en ligne. [projectUid] range la tâche d'un [LinkDecision.TEST] (null : sans projet) ou d'un [LinkDecision.ATTACH].
+     * Range une idée qui porte une adresse dans les liens, avec les étiquettes et le projet choisis : appel différé
+     * `POST /api/v1/links` (source : l'idée), puis l'idée passe en traitée, tout de suite et hors ligne compris.
+     * « Annuler » retire l'appel (ou le lien revenu de la synchro) et rend l'idée à l'Inbox.
      */
-    fun decideLink(entry: InboxEntry?, link: LinkItem, decision: LinkDecision, projectUid: String? = null, maskLink: Boolean = false) {
-        val steps = LinkTriage.steps(
-            decision = decision,
-            entryUid = entry?.uid,
-            link = link,
-            today = moment.value.today,
-            projectUid = projectUid,
-            testTaskName = getApplication<Application>().getString(R.string.links_test_task_name, link.displayTitle),
+    fun saveIdeaToLinks(entry: InboxEntry, pageTitle: String?, tagUids: List<String>, projectUid: String?) = launchAction {
+        val names = IdeaTasks.tagNames(tagUids, tags.value)
+        val draft = IdeaTasks.linkDraft(entry.content, pageTitle, names, projectUid, sourceUid = entry.uid) ?: return@launchAction
+        repository.addLink(draft, getString(R.string.links_add_call))
+        repository.processInboxItem(entry.uid)
+        val name = draft.title ?: LinkExtractor.domain(draft.url) ?: draft.url
+        _notices.tryEmit(
+            UndoNotice(getString(R.string.tasks_idea_to_links_notice, name)) {
+                launchAction {
+                    if (!repository.withdrawLink(draft)) _messages.tryEmit(getString(R.string.tasks_idea_link_already_sent))
+                    repository.reopenInboxItem(entry.uid)
+                }
+            },
         )
-        val key = entry?.uid ?: link.uid
-        val masks = setOfNotNull(entry?.uid, link.uid.takeIf { maskLink || entry == null })
-        hidden.value = hidden.value + masks
-        _deletions.tryEmit(PendingDeletion(DeletionKind.Link, key, decision, link.displayTitle, masks))
-        launchAction {
-            delay(UNDO_WINDOW_MS)
-            if (key !in hidden.value) return@launchAction
-            try {
-                LinkTriage.run(steps, triageSink)
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                hidden.value = hidden.value - masks
-                throw e
-            }
-            // Tout reste masqué : l'idée traitée ne revient pas, et la carte décidée quitte la galerie de la session.
-        }
     }
 
     val notes: StateFlow<List<NoteItem>> = combine(repository.observeNotes(), hidden) { all, gone ->
@@ -698,9 +650,21 @@ internal class TasksViewModel(
         return uid
     }
 
+    /**
+     * Une idée devient une tâche : la tâche est créée et l'idée passe en traitée (jamais supprimée), tout de suite.
+     * « Annuler » supprime la tâche et rend l'idée à l'Inbox.
+     */
     suspend fun saveConversion(entry: InboxEntry, draft: TaskDraft) {
-        repository.createTask(draft)
-        repository.deleteInboxItem(entry.uid)
+        val uid = repository.createTask(draft)
+        repository.processInboxItem(entry.uid)
+        _notices.tryEmit(
+            UndoNotice(getString(R.string.tasks_idea_to_task_notice, draft.name)) {
+                launchAction {
+                    repository.deleteTask(uid)
+                    repository.reopenInboxItem(entry.uid)
+                }
+            },
+        )
     }
 
     private val noteSessions = HashMap<String, NoteEditSession>()
@@ -795,10 +759,14 @@ internal class TasksViewModel(
     fun deleteIdeaWithUndo(uid: String) = deleteWithUndo(PendingDeletion(DeletionKind.Idea, uid)) { repository.deleteInboxItem(uid) }
 
     fun undoDeletion(deletion: PendingDeletion) {
-        hidden.value = hidden.value - deletion.masked
+        hidden.value = hidden.value - deletion.uid
     }
 
-    /** Masque l'élément tout de suite ; la suppression réelle attend la fin de la fenêtre d'annulation. */
+    /**
+     * Masque l'élément tout de suite ; la suppression réelle attend la fin de la fenêtre d'annulation, car le serveur
+     * refuse de recréer un uid supprimé : une suppression ne se défait pas en réécrivant l'élément. Si l'app est tuée
+     * pendant la fenêtre, rien n'est perdu : l'élément revient.
+     */
     private fun deleteWithUndo(deletion: PendingDeletion, commit: suspend () -> Unit) {
         hidden.value = hidden.value + deletion.uid
         _deletions.tryEmit(deletion)
@@ -830,13 +798,22 @@ internal class TasksViewModel(
         }
     }
 
-    /** Une idée devient une tâche (échéance ou projet choisis) : l'idée est retirée de la boîte. */
-    fun convertIdea(entry: InboxEntry, draft: TaskDraft) = launchAction { saveConversion(entry, draft) }
-
-    /** Une idée devient une note (créée par la voie d'écriture des notes) ; l'idée est retirée de la boîte. */
+    /**
+     * Une idée devient une note (créée par la voie d'écriture des notes) et passe en traitée, tout de suite.
+     * « Annuler » supprime la note et rend l'idée à l'Inbox.
+     */
     fun convertIdeaToNote(entry: InboxEntry) = launchAction {
-        repository.saveNote(UUID.randomUUID().toString(), IdeaNotes.change(entry.content))
+        val uid = UUID.randomUUID().toString()
+        repository.saveNote(uid, IdeaNotes.change(entry.content))
         repository.processInboxItem(entry.uid)
+        _notices.tryEmit(
+            UndoNotice(getString(R.string.tasks_idea_to_note_notice)) {
+                launchAction {
+                    repository.deleteNote(uid)
+                    repository.reopenInboxItem(entry.uid)
+                }
+            },
+        )
     }
 
     fun renameIdea(uid: String, text: String) = launchAction { repository.renameInboxItem(uid, text) }

@@ -1,10 +1,9 @@
 'use strict';
 
-// Background work for links: capture (find links in a saved row) and the
-// metadata fetch. Neither ever runs inside the request that saved the row,
-// so a slow or broken site cannot delay or fail a capture. One fetch at a
-// time, spaced, so a burst of links does not hammer anyone; the GitHub API
-// rate limit pauses only the GitHub lookups.
+// Background work for links: the metadata fetch. It never runs inside the
+// request that saved the link, so a slow or broken site cannot delay or fail
+// the save. One fetch at a time, spaced, so a burst of links does not hammer
+// anyone; the GitHub API rate limit pauses only the GitHub lookups.
 
 const cron = require('node-cron');
 const { Op } = require('sequelize');
@@ -50,23 +49,6 @@ function track(promise) {
     state.inflight.add(promise);
     promise.finally(() => state.inflight.delete(promise));
     return promise;
-}
-
-// Runs `task` after the transaction commits (or on the next tick without
-// one); failures are logged, never thrown at the writer.
-function afterWrite(transaction, task) {
-    if (!state.enabled) return;
-    const run = () =>
-        track(
-            new Promise((resolve) => setImmediate(resolve))
-                .then(task)
-                .catch((error) => logError({ error }, 'Link capture failed'))
-        );
-    if (transaction && typeof transaction.afterCommit === 'function') {
-        transaction.afterCommit(run);
-    } else {
-        run();
-    }
 }
 
 const sleep = (ms) =>
@@ -149,7 +131,6 @@ async function initialize() {
     });
     pending.forEach((l) => enqueueFetch(l.id));
     await require('./prune').pruneContextLinks();
-    await captureExisting();
     scheduleRefresh();
 }
 
@@ -187,10 +168,6 @@ async function refreshStale(now = new Date()) {
     return stale.length;
 }
 
-function captureExisting() {
-    return require('./capture').captureExisting();
-}
-
 function scheduleRefresh() {
     const { getConfig } = require('../../config/config');
     const config = getConfig();
@@ -221,11 +198,9 @@ async function drain() {
 module.exports = {
     configure,
     isEnabled,
-    afterWrite,
     enqueueFetch,
     fetchAndStore,
     initialize,
-    captureExisting,
     refreshStale,
     drain,
 };

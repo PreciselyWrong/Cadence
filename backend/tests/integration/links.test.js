@@ -17,6 +17,16 @@ const upsert = (opId, uid, fields, clock) => ({
     ),
 });
 
+const plusDays = (offset) => {
+    const d = new Date();
+    d.setDate(d.getDate() + offset);
+    return [
+        d.getFullYear(),
+        String(d.getMonth() + 1).padStart(2, '0'),
+        String(d.getDate()).padStart(2, '0'),
+    ].join('-');
+};
+
 const signIn = async (email) => {
     const user = await createTestUser({ email });
     const agent = request.agent(app);
@@ -64,43 +74,59 @@ describe('Links', () => {
         return res;
     };
 
-    it('captures a link from an inbox item with the text around it as note', async () => {
+    const addLink = (body) => agent.post('/api/links').send(body);
+
+    it('never makes a link from an inbox item: the idea stays in the inbox', async () => {
         const res = await capture(
             'https://github.com/owner/repo?utm_source=x - invoices CLI'
         );
 
         expect(res.status).toBe(201);
+        expect(await Link.count({ where: { user_id: user.id } })).toBe(0);
+        expect(fetched).toEqual([]);
+        const item = await InboxItem.findOne({ where: { uid: res.body.uid } });
+        expect(item.status).toBe('added');
+    });
+
+    it('keeps a link made from an idea, with the idea as its source, and reads its page', async () => {
+        const idea = await capture('https://github.com/owner/repo');
+        const res = await addLink({
+            url: 'https://github.com/owner/repo?utm_source=x',
+            note: 'invoices CLI',
+            source_type: 'inbox_item',
+            source_uid: idea.body.uid,
+        });
+        await jobs.drain();
+
+        expect(res.body.created).toBe(true);
         const link = await Link.findOne({ where: { user_id: user.id } });
         expect(link.url).toBe('https://github.com/owner/repo');
         expect(link.note).toBe('invoices CLI');
         expect(link.source_type).toBe('inbox_item');
-        expect(link.source_uid).toBe(res.body.uid);
+        expect(link.source_uid).toBe(idea.body.uid);
         expect(link.kind).toBe('repo');
         expect(link.fetch_status).toBe('done');
         expect(link.github_stars).toBe(42);
         expect(fetched).toEqual(['https://github.com/owner/repo']);
     });
 
-    it('marks a link whose page cannot be read as failed, keeping the capture', async () => {
-        const res = await capture('https://broken.example.com/x');
+    it('marks a link whose page cannot be read as failed, keeping the link', async () => {
+        const res = await addLink({ url: 'https://broken.example.com/x' });
+        await jobs.drain();
 
-        expect(res.status).toBe(201);
+        expect(res.status).toBe(200);
         const link = await Link.findOne({ where: { user_id: user.id } });
         expect(link.fetch_status).toBe('failed');
         expect(link.fetched_at).not.toBeNull();
     });
 
-    it('keeps one link per page and moves it from the inbox to the task', async () => {
-        await capture('https://example.com/post');
-        const task = await agent
-            .post('/api/task')
-            .send({ name: 'Read https://example.com/post#intro' });
+    it('keeps one link per page, however often it is saved', async () => {
+        await addLink({ url: 'https://example.com/post' });
+        const again = await addLink({ url: 'https://example.com/post#intro' });
         await jobs.drain();
 
-        const links = await Link.findAll({ where: { user_id: user.id } });
-        expect(links).toHaveLength(1);
-        expect(links[0].source_type).toBe('task');
-        expect(links[0].source_uid).toBe(task.body.uid);
+        expect(again.body.created).toBe(false);
+        expect(await Link.count({ where: { user_id: user.id } })).toBe(1);
         expect(fetched).toHaveLength(1);
     });
 
@@ -124,27 +150,6 @@ describe('Links', () => {
         expect(await Link.count({ where: { user_id: user.id } })).toBe(0);
         const item = await InboxItem.findOne({ where: { uid: res.body.uid } });
         expect(item.status).toBe('added');
-    });
-
-    it('treats the hosts of TUDUDI_LINKS_IGNORE_HOSTS as context', async () => {
-        const previous = process.env.TUDUDI_LINKS_IGNORE_HOSTS;
-        process.env.TUDUDI_LINKS_IGNORE_HOSTS =
-            ' Example.net , intra.example.org';
-        try {
-            await capture('https://git.example.net/me/repo');
-            await capture('https://example.org/kept');
-        } finally {
-            if (previous === undefined) {
-                delete process.env.TUDUDI_LINKS_IGNORE_HOSTS;
-            } else {
-                process.env.TUDUDI_LINKS_IGNORE_HOSTS = previous;
-            }
-        }
-
-        const urls = (await Link.findAll({ where: { user_id: user.id } })).map(
-            (l) => l.url
-        );
-        expect(urls).toEqual(['https://example.org/kept']);
     });
 
     it('adds a link from a task on purpose, with the task as its source', async () => {
@@ -198,14 +203,14 @@ describe('Links', () => {
     });
 
     it('lists links with filters', async () => {
-        await capture('https://github.com/a/b');
-        await capture('https://blog.example.com/post');
+        await addLink({ url: 'https://github.com/a/b' });
+        await addLink({ url: 'https://blog.example.com/post' });
         const blog = await Link.findOne({
             where: { url: 'https://blog.example.com/post' },
         });
         await agent
             .patch(`/api/links/${blog.uid}`)
-            .send({ status: 'kept', tags: ['reading'] });
+            .send({ status: 'dropped', tags: ['reading'] });
 
         const all = await agent.get('/api/links');
         expect(all.status).toBe(200);
@@ -217,7 +222,7 @@ describe('Links', () => {
         expect(byKind.body.links.map((l) => l.url)).toEqual([
             'https://github.com/a/b',
         ]);
-        const byStatus = await agent.get('/api/links?status=kept');
+        const byStatus = await agent.get('/api/links?status=dropped');
         expect(byStatus.body.links).toHaveLength(1);
         const byTag = await agent.get('/api/links?tag=reading');
         expect(byTag.body.links[0].tags.map((t) => t.name)).toEqual([
@@ -236,17 +241,17 @@ describe('Links', () => {
     });
 
     it('edits the note, status and tags, and refuses a bad status', async () => {
-        await capture('https://example.com/tool');
+        await addLink({ url: 'https://example.com/tool' });
         const link = await Link.findOne({ where: { user_id: user.id } });
 
         const res = await agent.patch(`/api/links/${link.uid}`).send({
             note: '  try for Q1  ',
-            status: 'tested',
+            status: 'dropped',
             tags: ['dev/tools'],
         });
         expect(res.status).toBe(200);
         expect(res.body.link.note).toBe('try for Q1');
-        expect(res.body.link.status).toBe('tested');
+        expect(res.body.link.status).toBe('dropped');
         expect(res.body.link.tags.map((t) => t.name)).toEqual(['dev/tools']);
 
         const bad = await agent
@@ -261,22 +266,53 @@ describe('Links', () => {
         expect(cleared.body.link.tags).toEqual([]);
     });
 
-    it('sets a review day for a parked link, 30 days out unless one is given', async () => {
-        await capture('https://example.com/later');
+    it('reads the former statuses as new on every input path', async () => {
+        const created = await addLink({
+            url: 'https://example.com/ancien',
+            status: 'kept',
+        });
+        const link = created.body.link;
+        expect(link.status).toBe('new');
+
+        for (const status of ['to_evaluate', 'tested', 'kept']) {
+            const res = await agent
+                .patch(`/api/links/${link.uid}`)
+                .send({ status });
+            expect(res.body.link.status).toBe('new');
+        }
+
+        const imported = await agent.post('/api/links/import').send({
+            items: [{ url: 'https://example.com/importe', status: 'tested' }],
+        });
+        expect(imported.body.created).toBe(1);
+        const fromImport = await Link.findOne({
+            where: { url: 'https://example.com/importe' },
+        });
+        expect(fromImport.status).toBe('new');
+
+        const filtered = await agent.get('/api/links?status=kept');
+        expect(filtered.body.total).toBe(2);
+    });
+
+    it('refuses a status that is neither a current nor a former one', async () => {
+        const link = (await addLink({ url: 'https://example.com/inconnu' }))
+            .body.link;
+
+        const res = await agent
+            .patch(`/api/links/${link.uid}`)
+            .send({ status: 'archived' });
+
+        expect(res.status).toBe(400);
+    });
+
+    it('turns a parked link into a new one with a review day 30 days out, unless one is given', async () => {
+        await addLink({ url: 'https://example.com/later' });
         const link = await Link.findOne({ where: { user_id: user.id } });
-        const plusDays = (offset) => {
-            const d = new Date();
-            d.setDate(d.getDate() + offset);
-            return [
-                d.getFullYear(),
-                String(d.getMonth() + 1).padStart(2, '0'),
-                String(d.getDate()).padStart(2, '0'),
-            ].join('-');
-        };
 
         const parked = await agent
             .patch(`/api/links/${link.uid}`)
             .send({ status: 'parked' });
+        expect(parked.body.link.status).toBe('new');
         expect(parked.body.link.review_at).toBe(plusDays(30));
 
         const dated = await agent
@@ -291,7 +327,7 @@ describe('Links', () => {
     });
 
     it('refuses a review day that is not a date', async () => {
-        await capture('https://example.com/date');
+        await addLink({ url: 'https://example.com/date' });
         const link = await Link.findOne({ where: { user_id: user.id } });
 
         const res = await agent
@@ -302,7 +338,7 @@ describe('Links', () => {
     });
 
     it('drops a deleted tag from its links', async () => {
-        await capture('https://example.com/tagged');
+        await addLink({ url: 'https://example.com/tagged' });
         const link = await Link.findOne({ where: { user_id: user.id } });
         await agent.patch(`/api/links/${link.uid}`).send({ tags: ['gone'] });
         const tag = await Tag.findOne({ where: { name: 'gone' } });
@@ -316,11 +352,10 @@ describe('Links', () => {
 
     it('erases links and their tags with the account', async () => {
         const member = await signIn('links-erased@example.com');
-        await member.agent
-            .post('/api/inbox')
-            .send({ content: 'https://example.com/erased' });
-        await jobs.drain();
-        const link = await Link.findOne({ where: { user_id: member.user.id } });
+        const created = await member.agent
+            .post('/api/links')
+            .send({ url: 'https://example.com/erased' });
+        const link = created.body.link;
         await member.agent
             .patch(`/api/links/${link.uid}`)
             .send({ tags: ['keep'] });
@@ -340,7 +375,7 @@ describe('Links', () => {
     });
 
     it("hides another user's links", async () => {
-        await capture('https://example.com/mine');
+        await addLink({ url: 'https://example.com/mine' });
         const link = await Link.findOne({ where: { user_id: user.id } });
         const other = await signIn('links-other@example.com');
 
@@ -351,63 +386,6 @@ describe('Links', () => {
             .send({ note: 'x' });
         expect(patch.status).toBe(404);
         expect((await other.agent.get('/api/links')).body.total).toBe(0);
-    });
-
-    describe('rows written before links were captured', () => {
-        it('captures the links of inbox ideas once, skipping thrown-away ones', async () => {
-            jobs.configure({ enabled: false });
-            const { InboxItem, Task, Note } = require('../../models');
-            const idea = await InboxItem.create({
-                user_id: user.id,
-                content: 'HTTPS://github.com/old/repo - old idea',
-                source: 'android',
-            });
-            await InboxItem.create({
-                user_id: user.id,
-                content: 'https://example.com/thrown-away',
-                source: 'android',
-                status: 'deleted',
-            });
-            const task = await Task.create({
-                user_id: user.id,
-                name: 'Read',
-                note: 'https://example.com/article',
-            });
-            await Task.create({
-                user_id: user.id,
-                name: 'Habit https://example.com/habit',
-                habit_mode: true,
-            });
-            await Note.create({
-                user_id: user.id,
-                title: 'Refs',
-                content: 'See https://example.com/article and no other',
-            });
-            await Task.create({ user_id: user.id, name: 'No link here' });
-            expect(await Link.count({ where: { user_id: user.id } })).toBe(0);
-            jobs.configure({ enabled: true });
-
-            await jobs.captureExisting();
-            await jobs.captureExisting();
-            await jobs.drain();
-
-            const links = (
-                await Link.findAll({
-                    where: { user_id: user.id },
-                    order: [['url', 'ASC']],
-                })
-            ).map((l) => [l.url, l.source_type, l.source_uid, l.note]);
-            expect(task.uid).toBeTruthy();
-            expect(links).toEqual([
-                [
-                    'https://github.com/old/repo',
-                    'inbox_item',
-                    idea.uid,
-                    'old idea',
-                ],
-            ]);
-            expect(fetched).toEqual(['https://github.com/old/repo']);
-        });
     });
 
     describe('clean-up of links found in texts', () => {
@@ -441,7 +419,7 @@ describe('Links', () => {
             const tagged = await make('https://example.com/tagged');
             const tag = await Tag.create({ user_id: user.id, name: 'dev' });
             await tagged.setTags([tag]);
-            await make('https://example.com/kept', { status: 'kept' });
+            await make('https://example.com/kept', { status: 'dropped' });
             await make('https://example.com/project', {
                 project_id: project.id,
             });
@@ -496,6 +474,42 @@ describe('Links', () => {
                     where: { url: 'https://example.com/later' },
                 })
             ).toBe(1);
+        });
+
+        it('treats the hosts of TUDUDI_LINKS_IGNORE_HOSTS as context', async () => {
+            jobs.configure({ enabled: false });
+            const { Setting } = require('../../models');
+            await Setting.destroy({ where: { key: 'links_context_pruned' } });
+            const previous = process.env.TUDUDI_LINKS_IGNORE_HOSTS;
+            process.env.TUDUDI_LINKS_IGNORE_HOSTS =
+                ' Example.net , intra.example.org';
+            try {
+                await Link.create({
+                    user_id: user.id,
+                    url: 'https://git.example.net/me/repo',
+                    source_type: 'inbox_item',
+                    source_uid: 'x',
+                });
+                await Link.create({
+                    user_id: user.id,
+                    url: 'https://example.org/kept',
+                    source_type: 'inbox_item',
+                    source_uid: 'x',
+                });
+
+                expect(await pruneContextLinks()).toBe(1);
+            } finally {
+                if (previous === undefined) {
+                    delete process.env.TUDUDI_LINKS_IGNORE_HOSTS;
+                } else {
+                    process.env.TUDUDI_LINKS_IGNORE_HOSTS = previous;
+                }
+            }
+            expect(
+                (await Link.findAll({ where: { user_id: user.id } })).map(
+                    (l) => l.url
+                )
+            ).toEqual(['https://example.org/kept']);
         });
     });
 
@@ -579,7 +593,7 @@ describe('Links', () => {
 
     describe('offline sync', () => {
         it('sends links to devices with their metadata', async () => {
-            await capture('https://github.com/o/r');
+            await addLink({ url: 'https://github.com/o/r' });
 
             const meta = await agent.get('/api/v1/sync/meta');
             expect(meta.body.entities.map((e) => e.name)).toContain('link');
@@ -601,7 +615,7 @@ describe('Links', () => {
         });
 
         it('applies a note, status and tags pushed by a device', async () => {
-            await capture('https://example.com/x');
+            await addLink({ url: 'https://example.com/x' });
             const link = await Link.findOne({ where: { user_id: user.id } });
             const tag = await Tag.create({ name: 'later', user_id: user.id });
 
@@ -612,7 +626,7 @@ describe('Links', () => {
                         link.uid,
                         {
                             note: 'from phone',
-                            status: 'parked',
+                            status: 'dropped',
                             tag_uids: [tag.uid],
                         },
                         hlc(Date.now())
@@ -623,12 +637,42 @@ describe('Links', () => {
             expect(res.body.results[0].status).toBe('applied');
             const fresh = await agent.get(`/api/links/${link.uid}`);
             expect(fresh.body.link.note).toBe('from phone');
-            expect(fresh.body.link.status).toBe('parked');
+            expect(fresh.body.link.status).toBe('dropped');
             expect(fresh.body.link.tags.map((t) => t.name)).toEqual(['later']);
         });
 
+        it('reads a former status pushed by a device as new, a parked one with a review day', async () => {
+            await addLink({ url: 'https://example.com/ancien-tel' });
+            const link = await Link.findOne({ where: { user_id: user.id } });
+
+            const res = await agent.post('/api/v1/sync/push').send({
+                ops: [
+                    upsert(
+                        'op-k',
+                        link.uid,
+                        { status: 'kept' },
+                        hlc(Date.now())
+                    ),
+                    upsert(
+                        'op-p',
+                        link.uid,
+                        { status: 'parked' },
+                        hlc(Date.now() + 1)
+                    ),
+                ],
+            });
+
+            expect(res.body.results.map((r) => r.status)).toEqual([
+                'applied',
+                'applied',
+            ]);
+            const fresh = await agent.get(`/api/links/${link.uid}`);
+            expect(fresh.body.link.status).toBe('new');
+            expect(fresh.body.link.review_at).toBe(plusDays(30));
+        });
+
         it('applies a review day pushed by a device and refuses a bad one', async () => {
-            await capture('https://example.com/review');
+            await addLink({ url: 'https://example.com/review' });
             const link = await Link.findOne({ where: { user_id: user.id } });
 
             const res = await agent.post('/api/v1/sync/push').send({
@@ -658,7 +702,7 @@ describe('Links', () => {
         });
 
         it('refuses server fields, unknown links and bad statuses', async () => {
-            await capture('https://example.com/y');
+            await addLink({ url: 'https://example.com/y' });
             const link = await Link.findOne({ where: { user_id: user.id } });
 
             const res = await agent.post('/api/v1/sync/push').send({
@@ -690,41 +734,9 @@ describe('Links', () => {
                 'rejected',
             ]);
             expect(res.body.results[1].reason).toBe('unknown_link');
+            expect(res.body.results[2].reason).toBe('invalid_status');
             expect(await Link.count()).toBe(1);
         });
-    });
-
-    it('sends a shared address straight to the links, not to the inbox', async () => {
-        await capture('https://example.com/article - à lire ce soir');
-        const item = await InboxItem.findOne({ where: { user_id: user.id } });
-        expect(item.status).toBe('processed');
-        const [link] = (await agent.get('/api/links')).body.links;
-        expect(link.note).toBe('à lire ce soir');
-    });
-
-    it('keeps in the inbox a share whose text the saved link does not hold', async () => {
-        await capture('https://example.com/deja');
-        await capture('https://example.com/deja - un avis à ne pas perdre');
-        const items = await InboxItem.findAll({
-            where: { user_id: user.id },
-            order: [['id', 'ASC']],
-        });
-        expect(items.map((item) => item.status)).toEqual([
-            'processed',
-            'added',
-        ]);
-    });
-
-    it('settles a share sent twice with the same text', async () => {
-        await capture('https://example.com/deux - le même titre');
-        await capture('https://example.com/deux - le même titre');
-        const items = await InboxItem.findAll({
-            where: { user_id: user.id },
-        });
-        expect(items.map((item) => item.status)).toEqual([
-            'processed',
-            'processed',
-        ]);
     });
 
     it('answers with the existing link when two saves of one address meet', async () => {
@@ -800,45 +812,12 @@ describe('Links', () => {
         ]);
     });
 
-    it('leaves in the inbox an idea that only mentions a link', async () => {
-        await capture(
-            `https://example.com/idee ${'une vraie idée à creuser pour le projet, '.repeat(4)}`
-        );
-        const item = await InboxItem.findOne({ where: { user_id: user.id } });
-        expect(item.status).toBe('added');
-    });
-
-    it('leaves in the inbox what was there before, when links are read again', async () => {
-        const { captureFrom } = require('../../modules/links/capture');
-        // Saved while capture was off, as at a server's first start.
-        jobs.configure({ enabled: false });
-        const item = await InboxItem.create({
-            user_id: user.id,
-            content: 'https://example.com/ancienne',
-            source: 'test',
-        });
-        await captureFrom({
-            userId: user.id,
-            type: 'inbox_item',
-            uid: item.uid,
-            texts: [item.content],
-        });
-        await item.reload();
-        expect(item.status).toBe('added');
-    });
-
-    it('leaves in the inbox an idea with several links', async () => {
-        await capture('https://example.com/a et https://example.com/b');
-        const item = await InboxItem.findOne({ where: { user_id: user.id } });
-        expect(item.status).toBe('added');
-    });
-
     it('adds a link directly, once per page', async () => {
         const first = await agent.post('/api/links').send({
             url: 'https://example.com/page?utm_source=x',
             title: 'Une page',
             tags: ['dev/outils'],
-            status: 'to_evaluate',
+            status: 'dropped',
         });
         expect(first.status).toBe(200);
         expect(first.body).toMatchObject({
@@ -846,7 +825,7 @@ describe('Links', () => {
             link: {
                 url: 'https://example.com/page',
                 title: 'Une page',
-                status: 'to_evaluate',
+                status: 'dropped',
             },
         });
         expect(first.body.link.tags.map((t) => t.name)).toContain('dev/outils');
@@ -866,10 +845,8 @@ describe('Links', () => {
         const add = async (url = 'https://example.com/gerer') =>
             (await agent.post('/api/links').send({ url })).body.link;
 
-        it('deletes a link, and a rescan of the text does not bring it back', async () => {
-            await capture('An idea about https://example.com/efface to keep');
-            const { body } = await agent.get('/api/links');
-            const link = body.links.find((l) => l.url.endsWith('/efface'));
+        it('deletes a link, and an idea holding its address does not bring it back', async () => {
+            const link = await add('https://example.com/efface');
 
             const res = await agent.delete(`/api/links/${link.uid}`);
             expect(res.status).toBe(200);
@@ -877,8 +854,7 @@ describe('Links', () => {
                 404
             );
 
-            await jobs.captureExisting();
-            await jobs.drain();
+            await capture('An idea about https://example.com/efface to keep');
             expect(
                 await Link.count({ where: { url: link.url, user_id: user.id } })
             ).toBe(0);
@@ -891,14 +867,70 @@ describe('Links', () => {
                 .post('/api/links')
                 .send({ url: link.url });
             expect(again.body.created).toBe(true);
-            await agent.post('/api/note').send({
-                title: 'Encore',
-                content: link.url,
-            });
-            await jobs.drain();
             expect(
                 await Link.count({ where: { url: link.url, user_id: user.id } })
             ).toBe(1);
+        });
+
+        it('puts a new link in a project of the user, and refuses a foreign one', async () => {
+            const { Project } = require('../../models');
+            const mine = await Project.create({
+                name: 'Mon projet',
+                user_id: user.id,
+            });
+            const owner = await createTestUser({
+                email: 'pro-create@example.com',
+            });
+            const foreign = await Project.create({
+                name: 'Pas à moi',
+                user_id: owner.id,
+            });
+
+            const res = await addLink({
+                url: 'https://example.com/projet',
+                project_uid: mine.uid,
+            });
+            expect(res.status).toBe(200);
+            expect(res.body.link).toMatchObject({
+                project_uid: mine.uid,
+                project_name: 'Mon projet',
+            });
+
+            const refused = await addLink({
+                url: 'https://example.com/projet-etranger',
+                project_uid: foreign.uid,
+            });
+            expect(refused.status).toBe(400);
+            expect(
+                await Link.count({
+                    where: { url: 'https://example.com/projet-etranger' },
+                })
+            ).toBe(0);
+        });
+
+        it('adds a link from an idea of the user, and refuses an idea of someone else', async () => {
+            const idea = await capture('une idée à garder');
+            const ok = await addLink({
+                url: 'https://example.com/depuis-idee',
+                source_type: 'inbox_item',
+                source_uid: idea.body.uid,
+            });
+            expect(ok.status).toBe(200);
+            expect(ok.body.link).toMatchObject({
+                source_type: 'inbox_item',
+                source_uid: idea.body.uid,
+            });
+
+            const other = await signIn('idea-other@example.com');
+            const foreign = await other.agent
+                .post('/api/inbox')
+                .send({ content: 'pas à toi' });
+            const refused = await addLink({
+                url: 'https://example.com/idee-etrangere',
+                source_type: 'inbox_item',
+                source_uid: foreign.body.uid,
+            });
+            expect(refused.status).toBe(404);
         });
 
         it('cannot touch the link of someone else', async () => {

@@ -1,10 +1,17 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import {
+    render,
+    screen,
+    fireEvent,
+    waitFor,
+    within,
+} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import LinksPage from '../LinksPage';
 import { Link } from '../../../entities/Link';
 import { useViewType } from '../../../hooks/useViewType';
+import { createTask } from '../../../utils/tasksService';
 
 jest.mock('react-i18next', () => ({
     useTranslation: () => ({
@@ -21,7 +28,14 @@ jest.mock('react-i18next', () => ({
 }));
 
 jest.mock('../../Shared/ToastContext', () => ({
-    useToast: () => ({ showErrorToast: jest.fn() }),
+    useToast: () => ({
+        showErrorToast: jest.fn(),
+        showSuccessToast: jest.fn(),
+    }),
+}));
+
+jest.mock('../../../utils/tasksService', () => ({
+    createTask: jest.fn(),
 }));
 
 jest.mock('../../../hooks/useViewType', () => ({
@@ -61,8 +75,11 @@ const links = [
         image_url: 'https://img.example.com/one.png',
         tags: [{ uid: 'tg', name: 'reading', color: null }],
     }),
-    link('two'),
+    link('two', { title: null, note: 'Read before the trip' }),
+    link('old', { status: 'dropped', title: 'Title old' }),
 ];
+
+const mockSave = jest.fn();
 
 jest.mock('../../../store/linksStore', () => ({
     useLinksRefresh: jest.fn(),
@@ -71,7 +88,7 @@ jest.mock('../../../store/linksStore', () => ({
             links,
             loaded: true,
             error: false,
-            save: jest.fn(),
+            save: mockSave,
         }),
 }));
 
@@ -113,7 +130,7 @@ describe('LinksPage gallery', () => {
 
         renderPage();
 
-        expect(mockViewType).toHaveBeenCalledWith('links', 'gallery');
+        expect(mockViewType).toHaveBeenCalledWith('links', 'list');
         expect(screen.getAllByTestId('link-card')).toHaveLength(2);
         fireEvent.click(screen.getByRole('button', { name: 'Gallery' }));
         expect(setViewType).toHaveBeenCalledWith('gallery');
@@ -136,11 +153,74 @@ describe('LinksPage gallery', () => {
             'https://img.example.com/one.png'
         );
         expect(screen.getByText('Title one')).toBeInTheDocument();
+        expect(screen.queryByText('Title old')).toBeNull();
         expect(cards[0]).toHaveTextContent('reading');
         expect(cards[1]).toHaveTextContent('two.example.com');
         expect(cards[0].querySelector('a')).toHaveAttribute(
             'href',
             'https://one.example.com/page'
         );
+    });
+});
+
+describe('LinksPage list', () => {
+    beforeEach(() => {
+        localStorage.clear();
+        jest.clearAllMocks();
+        mockViewType.mockReturnValue({
+            viewType: 'list',
+            setViewType: jest.fn(),
+            loaded: true,
+        });
+    });
+
+    it('filters by search, tag and the archive only', () => {
+        renderPage();
+
+        expect(screen.getByRole('searchbox')).toBeInTheDocument();
+        expect(
+            screen.getByRole('combobox', { name: 'Tag' })
+        ).toBeInTheDocument();
+        for (const name of ['Kind', 'Status', 'Site', 'Sort']) {
+            expect(screen.queryByRole('combobox', { name })).toBeNull();
+        }
+        expect(screen.queryByText('Title old')).toBeNull();
+
+        fireEvent.click(screen.getByRole('button', { name: 'Archived' }));
+
+        expect(screen.getAllByTestId('link-card')).toHaveLength(1);
+        expect(screen.getByText('Title old')).toBeInTheDocument();
+    });
+
+    it('ignores an older saved filter it no longer has', () => {
+        localStorage.setItem(
+            'links.filter',
+            JSON.stringify({ kind: 'repo', status: 'kept', domain: 'x.io' })
+        );
+
+        renderPage();
+
+        expect(screen.getAllByTestId('link-card')).toHaveLength(2);
+    });
+
+    it('makes a task named after the link, keeping the link as it is', async () => {
+        (createTask as jest.Mock).mockResolvedValue({ name: 'x' });
+        renderPage();
+
+        const card = screen.getAllByTestId('link-card')[1];
+        fireEvent.click(
+            within(card).getByRole('button', { name: 'More actions' })
+        );
+        fireEvent.click(
+            screen.getByRole('menuitem', { name: 'Create a task' })
+        );
+
+        await waitFor(() =>
+            expect(createTask).toHaveBeenCalledWith({
+                name: 'Read before the trip',
+                note: 'https://two.example.com/page',
+            })
+        );
+        expect(mockSave).not.toHaveBeenCalled();
     });
 });

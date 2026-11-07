@@ -64,19 +64,20 @@ const renderCard = (overrides: Partial<Link> = {}) => {
 };
 
 describe('LinkCard', () => {
-    it('says what the link is: title, description, kind, stats, README, tags', () => {
+    it('says what the link is: title, description, site, stats, tags', () => {
         renderCard();
 
         expect(screen.getByText('owner/tool')).toBeInTheDocument();
         expect(screen.getByText('A fast JSON CLI')).toBeInTheDocument();
         expect(screen.getByText('github.com')).toBeInTheDocument();
-        expect(screen.getByText('Repo')).toBeInTheDocument();
         expect(screen.getByText('Rust')).toBeInTheDocument();
         expect(screen.getByText('1.2K')).toBeInTheDocument();
-        expect(
-            screen.getByText('Tool reads JSON and prints tables.')
-        ).toBeInTheDocument();
         expect(screen.getByText('#dev')).toBeInTheDocument();
+        // No kind badge, no README start: one line says what the page is.
+        expect(screen.queryByText('Repo')).toBeNull();
+        expect(
+            screen.queryByText('Tool reads JSON and prints tables.')
+        ).toBeNull();
     });
 
     it('writes a note and saves it on Enter', async () => {
@@ -92,12 +93,19 @@ describe('LinkCard', () => {
         );
     });
 
-    it('sets a status from one menu', () => {
-        const onChange = renderCard({ status: 'parked' });
-        const status = screen.getByRole('combobox', { name: 'Status' });
-        expect(status).toHaveValue('parked');
-        fireEvent.change(status, { target: { value: 'kept' } });
-        expect(onChange).toHaveBeenCalledWith({ status: 'kept' });
+    it('archives from the menu, with no status select', () => {
+        const onChange = renderCard();
+        expect(screen.queryByRole('combobox')).toBeNull();
+        fireEvent.click(screen.getByRole('button', { name: 'More actions' }));
+        fireEvent.click(screen.getByRole('menuitem', { name: 'Archive' }));
+        expect(onChange).toHaveBeenCalledWith({ status: 'dropped' });
+    });
+
+    it('unarchives an archived link', () => {
+        const onChange = renderCard({ status: 'dropped' });
+        fireEvent.click(screen.getByRole('button', { name: 'More actions' }));
+        fireEvent.click(screen.getByRole('menuitem', { name: 'Unarchive' }));
+        expect(onChange).toHaveBeenCalledWith({ status: 'new' });
     });
 
     it('offers no row of status buttons', () => {
@@ -117,14 +125,14 @@ describe('LinkCard', () => {
         ).toBeInTheDocument();
     });
 
-    it('says when a parked link comes back for review', () => {
-        renderCard({ status: 'parked', review_at: '2026-12-01' });
+    it('says when a link comes back for review', () => {
+        renderCard({ review_at: '2026-12-01' });
 
         expect(screen.getByText('Review on Dec 1')).toBeInTheDocument();
     });
 
-    it('shows no review day for a link that is not parked', () => {
-        renderCard({ status: 'kept', review_at: '2026-12-01' });
+    it('shows no review day without one', () => {
+        renderCard();
 
         expect(screen.queryByText(/Review on/)).not.toBeInTheDocument();
     });

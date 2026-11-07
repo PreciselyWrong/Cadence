@@ -2,9 +2,9 @@
 
 const { Tag } = require('../../models');
 const linksRepository = require('./repository');
-const { LINK_STATUSES } = require('./core/constants');
+const { LINK_STATUSES, normalizeLinkStatus } = require('./core/constants');
 const { classifyKind, domainOf, normalizeUrl } = require('./core/urls');
-const { isDay, laterReviewDay } = require('./core/reviewDate');
+const { isDay } = require('./core/reviewDate');
 const { validateTagName } = require('../tags/tagsService');
 const { validateProjectAccess } = require('../tasks/utils/validation');
 const {
@@ -91,9 +91,9 @@ async function resolveTags(names, userId) {
 
 const MAX_TITLE = 500;
 const IMPORT_MAX = 500;
-const SOURCE_TYPES = ['task', 'note'];
+const SOURCE_TYPES = ['inbox_item', 'task', 'note'];
 
-// The task or note a link is added from on purpose: one of the user's own.
+// The idea, task or note a link is added from on purpose: one of the user's own.
 async function sourceOf(userId, item) {
     if (item.source_type === undefined && item.source_uid === undefined) {
         return {};
@@ -126,12 +126,15 @@ async function addOne(userId, item = {}) {
     const existing = await linksRepository.findByUrl(userId, url);
     if (existing) return { link: existing, created: false };
     await linksRepository.lift(userId, url);
-    const status = item.status ?? 'new';
-    if (!LINK_STATUSES.includes(status)) {
+    const { fields: state, invalid } = normalizeLinkStatus({
+        status: item.status ?? 'new',
+    });
+    if (invalid) {
         throw new ValidationError(
             `status must be one of ${LINK_STATUSES.join(', ')}`
         );
     }
+    const projectId = await projectChange(userId, item.project_uid);
     const title =
         typeof item.title === 'string'
             ? item.title.trim().slice(0, MAX_TITLE)
@@ -146,7 +149,9 @@ async function addOne(userId, item = {}) {
             kind: classifyKind(url),
             title: title || null,
             note: note.slice(0, MAX_NOTE) || null,
-            status,
+            status: state.status,
+            review_at: state.review_at ?? null,
+            project_id: projectId,
             ...source,
         });
     } catch (error) {
@@ -229,9 +234,15 @@ async function projectChange(userId, uid) {
 }
 
 // The user's part of a link: title, address, note, status, project and tags.
-async function update(userId, uid, body = {}) {
+async function update(userId, uid, input = {}) {
     const link = await linksRepository.findByUid(userId, uid);
     if (!link) throw new NotFoundError('Link not found');
+    const { fields: body, invalid } = normalizeLinkStatus(input);
+    if (invalid) {
+        throw new ValidationError(
+            `status must be one of ${LINK_STATUSES.join(', ')}`
+        );
+    }
     const changes = {};
     if ('title' in body) changes.title = titleChange(body.title);
     if ('project_uid' in body) {
@@ -247,16 +258,7 @@ async function update(userId, uid, body = {}) {
         changes.note = note || null;
     }
     if ('status' in body) {
-        if (!LINK_STATUSES.includes(body.status)) {
-            throw new ValidationError(
-                `status must be one of ${LINK_STATUSES.join(', ')}`
-            );
-        }
         changes.status = body.status;
-        // Parked for a later look: a fresh review day unless one is given.
-        if (body.status === 'parked' && !('review_at' in body)) {
-            changes.review_at = laterReviewDay();
-        }
     }
     if ('review_at' in body) {
         if (

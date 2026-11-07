@@ -5,10 +5,7 @@ import { useStore } from '../../store/useStore';
 import { useLinksRefresh, useLinksStore } from '../../store/linksStore';
 import {
     DEFAULT_LINK_FILTER,
-    domainsOf,
     filterLinks,
-    LINK_KINDS,
-    LINK_STATUSES,
     LinkFilter,
     tagsOf,
     linksByTheme,
@@ -26,12 +23,16 @@ import LinkCard from './LinkCard';
 
 const FILTER_KEY = 'links.filter';
 
+// Only the tag and the project are remembered; older saved filters (kind,
+// status, site, sort) are ignored.
 const readFilter = (): LinkFilter => {
     try {
         const saved = JSON.parse(localStorage.getItem(FILTER_KEY) || 'null');
-        return saved
-            ? { ...DEFAULT_LINK_FILTER, ...saved, query: '' }
-            : DEFAULT_LINK_FILTER;
+        return {
+            ...DEFAULT_LINK_FILTER,
+            tag: typeof saved?.tag === 'string' ? saved.tag : 'all',
+            project: typeof saved?.project === 'string' ? saved.project : 'all',
+        };
     } catch {
         return DEFAULT_LINK_FILTER;
     }
@@ -40,7 +41,7 @@ const readFilter = (): LinkFilter => {
 const SELECT =
     'min-h-[36px] max-w-full rounded-lg border border-gray-200 bg-white pl-2 pr-8 text-[13px] text-gray-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200';
 
-// Every saved link in one place: search, a few filters, cards.
+// Every kept link in one place: search, tag, project, the archive.
 const LinksPage: React.FC = () => {
     const { t } = useTranslation();
     const { showErrorToast, showSuccessToast } = useToast();
@@ -54,9 +55,9 @@ const LinksPage: React.FC = () => {
     const tagsStore = useStore((s) => s.tagsStore);
     const projectsStore = useStore((s) => s.projectsStore);
     const [filter, setFilterState] = useState<LinkFilter>(readFilter);
-    // List (cards with actions) or Gallery (pictures), remembered in
-    // ui_settings.viewTypes.links.
-    const { viewType, setViewType } = useViewType('links', 'gallery');
+    // List (cards with actions, the default) or Gallery (pictures),
+    // remembered in ui_settings.viewTypes.links.
+    const { viewType, setViewType } = useViewType('links', 'list');
     const gallery = viewType === 'gallery';
 
     useEffect(() => {
@@ -75,7 +76,7 @@ const LinksPage: React.FC = () => {
         try {
             localStorage.setItem(
                 FILTER_KEY,
-                JSON.stringify({ ...next, query: '' })
+                JSON.stringify({ tag: next.tag, project: next.project })
             );
         } catch {
             // Remembering the filter is a convenience.
@@ -83,7 +84,6 @@ const LinksPage: React.FC = () => {
     };
 
     const shown = useMemo(() => filterLinks(links, filter), [links, filter]);
-    const domains = useMemo(() => domainsOf(links), [links]);
     const themes = useMemo(() => linksByTheme(shown), [shown]);
     const tags = useMemo(() => tagsOf(links), [links]);
 
@@ -93,7 +93,7 @@ const LinksPage: React.FC = () => {
         );
 
     const toTask = (link: Link) => () =>
-        linkToTask(link, save).then(
+        linkToTask(link).then(
             (task) =>
                 showSuccessToast(
                     t('links.taskCreated', 'Task created: {{name}}', {
@@ -140,25 +140,6 @@ const LinksPage: React.FC = () => {
             showErrorToast(t('links.saveError', 'Could not save the link.'));
             throw error;
         });
-
-    const kindLabel = (kind: string) =>
-        ({
-            repo: t('links.kind.repo', 'Repo'),
-            article: t('links.kind.article', 'Article'),
-            video: t('links.kind.video', 'Video'),
-            tool: t('links.kind.tool', 'Tool'),
-            other: t('links.kind.other', 'Other'),
-        })[kind] ?? kind;
-
-    const statusLabel = (status: string) =>
-        ({
-            new: t('links.status.new', 'To read'),
-            to_evaluate: t('links.status.to_evaluate', 'To evaluate'),
-            tested: t('links.status.tested', 'To try'),
-            kept: t('links.status.kept', 'Kept'),
-            parked: t('links.status.parked', 'Later'),
-            dropped: t('links.status.dropped', 'Archived'),
-        })[status] ?? status;
 
     return (
         <div className="mx-auto w-full max-w-6xl px-4 pb-10 pt-4 sm:px-6">
@@ -216,48 +197,7 @@ const LinksPage: React.FC = () => {
                         className={`${SELECT} w-full pl-8`}
                     />
                 </label>
-                <div className="flex flex-wrap gap-2">
-                    <select
-                        aria-label={t('links.filter.kind', 'Kind')}
-                        className={SELECT}
-                        value={filter.kind}
-                        onChange={(e) =>
-                            setFilter({
-                                kind: e.target.value as LinkFilter['kind'],
-                            })
-                        }
-                    >
-                        <option value="all">
-                            {t('links.filter.allKinds', 'All kinds')}
-                        </option>
-                        {LINK_KINDS.map((kind) => (
-                            <option key={kind} value={kind}>
-                                {kindLabel(kind)}
-                            </option>
-                        ))}
-                    </select>
-                    <select
-                        aria-label={t('links.filter.status', 'Status')}
-                        className={SELECT}
-                        value={filter.status}
-                        onChange={(e) =>
-                            setFilter({
-                                status: e.target.value as LinkFilter['status'],
-                            })
-                        }
-                    >
-                        <option value="active">
-                            {t('links.filter.active', 'Not dropped')}
-                        </option>
-                        <option value="all">
-                            {t('links.filter.allStatuses', 'All statuses')}
-                        </option>
-                        {LINK_STATUSES.map((status) => (
-                            <option key={status} value={status}>
-                                {statusLabel(status)}
-                            </option>
-                        ))}
-                    </select>
+                <div className="flex flex-wrap items-center gap-2">
                     {tags.length > 0 && (
                         <select
                             aria-label={t('links.filter.tag', 'Tag')}
@@ -294,42 +234,20 @@ const LinksPage: React.FC = () => {
                             ))}
                         </select>
                     )}
-                    {domains.length > 1 && (
-                        <select
-                            aria-label={t('links.filter.domain', 'Site')}
-                            className={`${SELECT} max-w-[180px]`}
-                            value={filter.domain}
-                            onChange={(e) =>
-                                setFilter({ domain: e.target.value })
-                            }
-                        >
-                            <option value="all">
-                                {t('links.filter.allDomains', 'All sites')}
-                            </option>
-                            {domains.map((domain) => (
-                                <option key={domain} value={domain}>
-                                    {domain}
-                                </option>
-                            ))}
-                        </select>
-                    )}
-                    <select
-                        aria-label={t('links.filter.sort', 'Sort')}
-                        className={SELECT}
-                        value={filter.sort}
-                        onChange={(e) =>
-                            setFilter({
-                                sort: e.target.value as LinkFilter['sort'],
-                            })
+                    <button
+                        type="button"
+                        aria-pressed={filter.archived}
+                        onClick={() =>
+                            setFilter({ archived: !filter.archived })
                         }
+                        className={`min-h-[36px] rounded-lg border px-3 text-[13px] ${
+                            filter.archived
+                                ? 'border-gray-900 bg-gray-900 text-white dark:border-gray-100 dark:bg-gray-100 dark:text-gray-900'
+                                : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800'
+                        }`}
                     >
-                        <option value="newest">
-                            {t('links.sort.newest', 'Newest first')}
-                        </option>
-                        <option value="oldest">
-                            {t('links.sort.oldest', 'Oldest first')}
-                        </option>
-                    </select>
+                        {t('links.filter.archived', 'Archived')}
+                    </button>
                 </div>
             </div>
 
@@ -342,7 +260,7 @@ const LinksPage: React.FC = () => {
                 <p className="max-w-md text-sm text-gray-600 dark:text-gray-300">
                     {t(
                         'links.empty',
-                        'Links you capture in the inbox, a task or a note show up here, with what the page says about itself.'
+                        'Links you keep from the inbox show up here, with what the page says about itself.'
                     )}
                 </p>
             )}

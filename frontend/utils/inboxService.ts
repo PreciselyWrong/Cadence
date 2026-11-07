@@ -192,7 +192,10 @@ export const updateInboxItem = async (
 
 // What an item became when it was processed. The item's files move onto it.
 export type ProcessedInto =
-    { task_uid: string } | { project_uid: string } | { note_uid: string };
+    | { task_uid: string }
+    | { project_uid: string }
+    | { note_uid: string }
+    | { link_uid: string };
 
 export const processInboxItem = async (
     itemUid: string,
