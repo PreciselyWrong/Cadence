@@ -449,6 +449,7 @@ const telegramModule = require('./modules/telegram');
 const urlModule = require('./modules/url');
 const linksModule = require('./modules/links');
 const triageModule = require('./modules/triage');
+const autoClassifyModule = require('./modules/auto-classify');
 const usersModule = require('./modules/users');
 const viewsModule = require('./modules/views');
 const mcpModule = require('./modules/mcp');
@@ -591,6 +592,7 @@ const registerApiRoutes = (basePath) => {
     app.use(basePath, urlModule.routes);
     app.use(basePath, linksModule.routes);
     app.use(basePath, triageModule.routes);
+    app.use(basePath, autoClassifyModule.routes);
     app.use(basePath, telegramModule.routes);
     app.use(basePath, quotesModule.routes);
     app.use(basePath, backupModule.routes);
@@ -686,6 +688,10 @@ async function startServer() {
 
         // Links still waiting for their page metadata.
         await linksModule.jobs.initialize();
+
+        // New tasks, notes and links classified from the sync journal.
+        autoClassifyModule.worker.install(require('./models'));
+        autoClassifyModule.worker.initialize();
 
         // Initialize CalDAV sync scheduler
         const caldavSyncScheduler = require('./modules/caldav/services/sync-scheduler');
