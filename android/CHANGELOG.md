@@ -1,3 +1,16 @@
+## [1.13.0] — 7 novembre 2026
+
+### Nouveautés
+- Partage : partager une adresse ou un texte vers Cadence ouvre une petite fiche avec l'aperçu, le projet et les étiquettes, puis Inbox, Tâche ou Liens. La fermer range dans l'Inbox.
+- Inbox : une adresse partagée reste dans l'Inbox avec son aperçu. Chaque idée a les mêmes choix : Tâche, Liens, Note, Supprimer.
+- Liens : deux états seulement, À voir et Archivé. La page s'ouvre en liste, avec recherche, étiquettes, projets et Archivés ; un seul menu ⋯ (Modifier, Créer une tâche, Archiver, Supprimer).
+- Inbox : un choix est enregistré tout de suite, et « Annuler » le défait.
+
+### Retiré
+- Les boutons Garder, À tester, Rattacher et Plus tard, et l'écran « Trier les liens ».
+
+Il faut un serveur à jour.
+
 ## [1.12.5] — 7 novembre 2026
 
 ### Nouveautés
