@@ -32,6 +32,8 @@ internal class AgendaEventActions(
     val open: (AgendaEntry.Event) -> Unit,
     val menu: (AgendaEntry.Event) -> Unit,
     val toggleTask: (AgendaEntry.Task) -> Unit = {},
+    /** Ouvre la fiche de la tâche ; une occurrence à venir ouvre la tâche enregistrée de sa série. */
+    val openTask: (AgendaEntry.Task) -> Unit = {},
     /** Ouvre la saisie de l'habitude : c'est là qu'on la note faite, avec sa quantité éventuelle. */
     val openHabit: (AgendaEntry.Habit) -> Unit = {},
 ) {
@@ -40,21 +42,29 @@ internal class AgendaEventActions(
     }
 }
 
+/** Toucher le corps d'un élément : fiche d'événement, fiche de tâche ou saisie d'habitude. */
+internal fun AgendaEventActions.tap(entry: AgendaEntry) {
+    when (entry) {
+        is AgendaEntry.Event -> open(entry)
+        is AgendaEntry.Task -> openTask(entry)
+        is AgendaEntry.Habit -> openHabit(entry)
+    }
+}
+
 internal val LocalAgendaEventActions = staticCompositionLocalOf { AgendaEventActions.None }
 
 /**
- * Rend un événement touchable (fiche) et appuyable longtemps (menu), une habitude touchable (saisie) ;
- * une tâche reste inchangée.
+ * Rend un événement touchable (fiche) et appuyable longtemps (menu), une tâche touchable (sa fiche ;
+ * l'appui long reste le glisser), une habitude touchable (saisie).
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun Modifier.eventTouch(entry: AgendaEntry): Modifier {
     val actions = LocalAgendaEventActions.current
-    if (entry is AgendaEntry.Habit) return clickable(role = Role.Button) { actions.openHabit(entry) }
-    if (entry !is AgendaEntry.Event) return this
+    if (entry !is AgendaEntry.Event) return clickable(role = Role.Button) { actions.tap(entry) }
     val haptic = rememberCadenceHaptic()
     return combinedClickable(
-        onClick = { actions.open(entry) },
+        onClick = { actions.tap(entry) },
         onLongClick = {
             haptic.longPress()
             actions.menu(entry)
