@@ -5572,6 +5572,8 @@
     "viewTag": "Перейти до мітки"
   },
   "links": {
+    "addToLinks": "Додати до посилань",
+    "inLinks": "У посиланнях",
     "attachPick": "Виберіть проєкт",
     "tryTaskName": "Спробувати: {{title}}",
     "tryProject": "Проєкт",

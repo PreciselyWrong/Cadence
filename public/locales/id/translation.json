@@ -5518,6 +5518,8 @@
     "viewTag": "Buka tag"
   },
   "links": {
+    "addToLinks": "Tambahkan ke tautan",
+    "inLinks": "Di tautan",
     "attachPick": "Pilih proyek",
     "tryTaskName": "Coba: {{title}}",
     "tryProject": "Proyek",

@@ -5518,6 +5518,8 @@
     "viewTag": "Gå till tagg"
   },
   "links": {
+    "addToLinks": "Lägg till i länkar",
+    "inLinks": "I länkar",
     "attachPick": "Välj ett projekt",
     "tryTaskName": "Testa: {{title}}",
     "tryProject": "Projekt",

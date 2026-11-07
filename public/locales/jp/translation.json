@@ -5518,6 +5518,8 @@
     "viewTag": "タグへ移動"
   },
   "links": {
+    "addToLinks": "リンクに追加",
+    "inLinks": "リンクに保存済み",
     "attachPick": "プロジェクトを選択",
     "tryTaskName": "試す: {{title}}",
     "tryProject": "プロジェクト",

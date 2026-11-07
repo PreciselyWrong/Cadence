@@ -5535,6 +5535,8 @@
     "viewTag": "Mergi la etichetă"
   },
   "links": {
+    "addToLinks": "Adaugă la linkuri",
+    "inLinks": "În linkuri",
     "attachPick": "Alege un proiect",
     "tryTaskName": "Încearcă: {{title}}",
     "tryProject": "Proiect",

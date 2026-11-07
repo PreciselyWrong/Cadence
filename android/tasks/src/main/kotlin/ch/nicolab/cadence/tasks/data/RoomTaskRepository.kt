@@ -234,6 +234,25 @@ internal class RoomTaskRepository(
         )
     }
 
+    override suspend fun addLinkFrom(url: String, sourceType: String, sourceUid: String, label: String) {
+        val value = url.trim()
+        defer(
+            DeferredCall(
+                key = "link-add:$sourceType:$sourceUid:$value",
+                method = "POST",
+                path = "/api/v1/links",
+                body = JsonObject(
+                    mapOf(
+                        "url" to JsonPrimitive(value),
+                        "source_type" to JsonPrimitive(sourceType),
+                        "source_uid" to JsonPrimitive(sourceUid),
+                    ),
+                ),
+                label = label,
+            ),
+        )
+    }
+
     override suspend fun deleteLink(uid: String) {
         val clock = hlc.now()
         database.withTransaction {

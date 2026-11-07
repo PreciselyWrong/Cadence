@@ -5572,6 +5572,8 @@
     "viewTag": "Pojdi na oznako"
   },
   "links": {
+    "addToLinks": "Dodaj med povezave",
+    "inLinks": "Med povezavami",
     "attachPick": "Izberite projekt",
     "tryTaskName": "Preizkusi: {{title}}",
     "tryProject": "Projekt",

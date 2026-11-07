@@ -5572,6 +5572,8 @@
     "viewTag": "Перейти к метке"
   },
   "links": {
+    "addToLinks": "Добавить в ссылки",
+    "inLinks": "В ссылках",
     "attachPick": "Выберите проект",
     "tryTaskName": "Попробовать: {{title}}",
     "tryProject": "Проект",

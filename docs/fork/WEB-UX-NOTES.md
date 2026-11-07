@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-07 — Liens : seulement ceux qui portent une action (web et Android)
+
+- **Problème** : la bibliothèque de liens se remplissait de chaque adresse écrite dans une tâche ou une note (serveur maison, boîte mail, recherche, fil LinkedIn, run de CI) : du bruit.
+- **Décision** : seule l'Inbox crée des liens, jamais pour une adresse de contexte. Sous la description d'une tâche (panneau) et sous l'éditeur d'une note, une ligne discrète « + Ajouter aux liens · domaine » par adresse (trois au plus sur Android, cinq sur le web) ; touchée, elle devient « ✓ Dans les liens · domaine ». Rien ne s'affiche sans adresse ni en lecture seule. Les anciens liens jamais touchés venus des tâches et des notes sont supprimés une fois.
+- **Android** : fait dans la même étape (`ui/AddToLinks.kt`, sous les aperçus de lien de la fiche de tâche et de la note).
+
 ### 2026-11-06 — Bannière de projet (web et Android)
 
 - **Problème** : l'image d'un projet n'apparaissait qu'en vignette de 56 px dans l'en-tête, et elle remplaçait l'icône et la couleur partout : une fois l'image posée, la liste des projets perdait ses repères. Android ne la recevait pas.

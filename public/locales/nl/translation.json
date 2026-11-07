@@ -5518,6 +5518,8 @@
     "viewTag": "Ga naar tag"
   },
   "links": {
+    "addToLinks": "Toevoegen aan links",
+    "inLinks": "In links",
     "attachPick": "Kies een project",
     "tryTaskName": "Uitproberen: {{title}}",
     "tryProject": "Project",

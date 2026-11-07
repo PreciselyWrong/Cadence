@@ -5518,6 +5518,8 @@
     "viewTag": "Etikete git"
   },
   "links": {
+    "addToLinks": "Bağlantılara ekle",
+    "inLinks": "Bağlantılarda",
     "attachPick": "Bir proje seçin",
     "tryTaskName": "Dene: {{title}}",
     "tryProject": "Proje",

@@ -5488,6 +5488,8 @@
     "viewTag": "Go to tag"
   },
   "links": {
+    "addToLinks": "Add to links",
+    "inLinks": "In links",
     "attachPick": "Choose a project",
     "tryTaskName": "Try: {{title}}",
     "tryProject": "Project",

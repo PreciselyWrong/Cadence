@@ -117,6 +117,21 @@ class LinkTriageRepositoryTest {
     }
 
     @Test
+    fun `adding an address of a task queues one call with the task as source`() = runBlocking {
+        repository.addLinkFrom(" https://github.com/a/tool ", "task", "t1", "Ajouter aux liens")
+        repository.addLinkFrom("https://github.com/a/tool", "task", "t1", "Ajouter aux liens")
+
+        val call = database.deferredCallDao().all().single()
+        assertEquals("POST", call.method)
+        assertEquals("/api/v1/links", call.path)
+        val body = Json.parseToJsonElement(call.bodyJson!!).jsonObject
+        assertEquals("https://github.com/a/tool", body["url"]?.jsonPrimitive?.content)
+        assertEquals("task", body["source_type"]?.jsonPrimitive?.content)
+        assertEquals("t1", body["source_uid"]?.jsonPrimitive?.content)
+        assertTrue(pending().isEmpty())
+    }
+
+    @Test
     fun `deleting removes the row, queues the delete and drops a waiting address`() = runBlocking {
         database.linkDao().upsert(link("l1"))
         repository.setLinkUrl("l1", "https://b.io/y", "Adresse")

@@ -5518,6 +5518,8 @@
     "viewTag": "태그로 이동"
   },
   "links": {
+    "addToLinks": "링크에 추가",
+    "inLinks": "링크에 있음",
     "attachPick": "프로젝트 선택",
     "tryTaskName": "체험: {{title}}",
     "tryProject": "프로젝트",

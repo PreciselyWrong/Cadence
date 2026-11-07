@@ -91,12 +91,38 @@ async function resolveTags(names, userId) {
 
 const MAX_TITLE = 500;
 const IMPORT_MAX = 500;
+const SOURCE_TYPES = ['task', 'note'];
 
-// A link given directly, without a text to find it in (import, add-on, agents).
-// The same page twice is one link: what it already holds stays.
+// The task or note a link is added from on purpose: one of the user's own.
+async function sourceOf(userId, item) {
+    if (item.source_type === undefined && item.source_uid === undefined) {
+        return {};
+    }
+    if (
+        !SOURCE_TYPES.includes(item.source_type) ||
+        typeof item.source_uid !== 'string' ||
+        !item.source_uid
+    ) {
+        throw new ValidationError(
+            `source_type must be one of ${SOURCE_TYPES.join(', ')}, with a source_uid`
+        );
+    }
+    const found = await linksRepository.sourceExists(
+        userId,
+        item.source_type,
+        item.source_uid
+    );
+    if (!found) throw new NotFoundError('Source not found');
+    return { source_type: item.source_type, source_uid: item.source_uid };
+}
+
+// A link given directly, without a text to find it in (import, add-on, agents,
+// or a task or note on purpose). The same page twice is one link: what it
+// already holds stays.
 async function addOne(userId, item = {}) {
     const url = typeof item.url === 'string' ? normalizeUrl(item.url) : null;
     if (!url) throw new ValidationError('url must be an http(s) address');
+    const source = await sourceOf(userId, item);
     const existing = await linksRepository.findByUrl(userId, url);
     if (existing) return { link: existing, created: false };
     await linksRepository.lift(userId, url);
@@ -121,6 +147,7 @@ async function addOne(userId, item = {}) {
             title: title || null,
             note: note.slice(0, MAX_NOTE) || null,
             status,
+            ...source,
         });
     } catch (error) {
         if (error.name !== 'SequelizeUniqueConstraintError') throw error;

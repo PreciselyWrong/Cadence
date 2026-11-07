@@ -5578,6 +5578,8 @@
     "viewTag": "الانتقال إلى الوسم"
   },
   "links": {
+    "addToLinks": "أضف إلى الروابط",
+    "inLinks": "في الروابط",
     "attachPick": "اختر مشروعًا",
     "tryTaskName": "تجربة: {{title}}",
     "tryProject": "المشروع",

@@ -5518,6 +5518,8 @@
     "viewTag": "Към етикета"
   },
   "links": {
+    "addToLinks": "Добави към връзките",
+    "inLinks": "Във връзките",
     "attachPick": "Изберете проект",
     "tryTaskName": "Пробвай: {{title}}",
     "tryProject": "Проект",

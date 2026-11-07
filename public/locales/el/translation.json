@@ -5519,6 +5519,8 @@
     "viewTag": "Μετάβαση στην ετικέτα"
   },
   "links": {
+    "addToLinks": "Προσθήκη στους συνδέσμους",
+    "inLinks": "Στους συνδέσμους",
     "attachPick": "Επιλέξτε έργο",
     "tryTaskName": "Δοκίμασε: {{title}}",
     "tryProject": "Έργο",

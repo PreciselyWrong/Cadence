@@ -4,8 +4,10 @@ const { Op } = require('sequelize');
 const {
     Link,
     LinkExclusion,
+    Note,
     Project,
     Tag,
+    Task,
     sequelize,
 } = require('../../models');
 const { ciLike } = require('../../utils/db-dialect');
@@ -153,6 +155,15 @@ async function excludedUrls(userId, urls) {
     return new Set(rows.map((row) => row.url));
 }
 
+async function sourceExists(userId, type, uid) {
+    const Model = type === 'task' ? Task : Note;
+    const row = await Model.findOne({
+        where: { user_id: userId, uid },
+        attributes: ['id'],
+    });
+    return Boolean(row);
+}
+
 // Deleting keeps the page out of capture: its address may still be in a text.
 async function remove(link) {
     await exclude(link.user_id, link.url);
@@ -169,5 +180,6 @@ module.exports = {
     exclude,
     lift: liftExclusion,
     excludedUrls,
+    sourceExists,
     remove,
 };

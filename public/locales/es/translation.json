@@ -5518,6 +5518,8 @@
     "viewTag": "Ir a la etiqueta"
   },
   "links": {
+    "addToLinks": "Añadir a enlaces",
+    "inLinks": "En enlaces",
     "attachPick": "Elige un proyecto",
     "tryTaskName": "Probar: {{title}}",
     "tryProject": "Proyecto",

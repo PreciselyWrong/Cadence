@@ -2,6 +2,9 @@
 <resources>
     <string name="links_title">Liens</string>
     <string name="links_open_screen">Voir tous les liens</string>
+    <string name="links_add_to_links">Ajouter aux liens · %1$s</string>
+    <string name="links_in_links">Dans les liens · %1$s</string>
+    <string name="links_add_call">Ajouter aux liens</string>
     <string name="links_go_to_source">Aller à la source</string>
     <string name="links_back">Retour à l\'Inbox</string>
     <plurals name="links_count">

@@ -81,6 +81,12 @@ interface TaskRepository {
     /** Nouvelle adresse : le serveur la valide et relit la page, par un appel différé nommé [label] s'il est refusé. */
     suspend fun setLinkUrl(uid: String, url: String, label: String)
 
+    /**
+     * Met dans les liens, exprès, une adresse écrite dans une tâche ou une note ([sourceType] `task` ou `note`) :
+     * le serveur ne prend plus seul celles des tâches et des notes. Appel différé nommé [label].
+     */
+    suspend fun addLinkFrom(url: String, sourceType: String, sourceUid: String, label: String)
+
     /** Supprime le lien pour de bon ; son adresse n'est plus reprise des tâches et des notes. */
     suspend fun deleteLink(uid: String)
 
