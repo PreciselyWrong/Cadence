@@ -71,17 +71,23 @@ const REASONS = {
     title: 'title',
 };
 
+const byAge = (a, b) =>
+    new Date(a.created_at) - new Date(b.created_at) || a.id - b.id;
+
 // The oldest link among `others` that `link` duplicates, with the reason, or
-// null. Dropped links and the link itself never count.
+// null. Only older links count: the first one saved is the original. Dropped
+// links and the link itself never count.
 function findDuplicate(link, others) {
     const keys = new Set(keysOf(link));
     if (keys.size === 0) return null;
     const older = others
-        .filter((other) => other.uid !== link.uid && other.status !== 'dropped')
-        .sort(
-            (a, b) =>
-                new Date(a.created_at) - new Date(b.created_at) || a.id - b.id
-        );
+        .filter(
+            (other) =>
+                other.uid !== link.uid &&
+                other.status !== 'dropped' &&
+                byAge(other, link) < 0
+        )
+        .sort(byAge);
     for (const other of older) {
         const shared = keysOf(other).find((key) => keys.has(key));
         if (shared) {

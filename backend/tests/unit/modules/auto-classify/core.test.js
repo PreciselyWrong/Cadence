@@ -447,6 +447,14 @@ describe('duplicates', () => {
         ).toBeNull();
     });
 
+    it('never reports a link as a duplicate of a newer one', () => {
+        expect(
+            findDuplicate(link(1, 'https://example.org/a'), [
+                link(2, 'https://www.example.org/a'),
+            ])
+        ).toBeNull();
+    });
+
     it('reports the oldest, never a dropped one or itself', () => {
         const found = findDuplicate(link(9, 'https://example.org/a'), [
             link(9, 'https://example.org/a'),
