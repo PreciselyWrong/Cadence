@@ -1,3 +1,12 @@
+## [1.14.0] — 7 novembre 2026
+
+### Nouveautés
+- Classement automatique : une nouvelle tâche, note ou lien reçoit son projet ou son domaine, ses étiquettes, sa durée et, pour un lien, un résumé, seulement dans les champs vides. Il faut un serveur à jour et un fournisseur d'IA dans Profil › Assistant IA.
+- À trier : quand le classement hésite, une carte propose le projet (ou le domaine, un nouveau projet, un autre), les étiquettes et la priorité, avec Appliquer, Tout accepter ou Aucun. Un lien enregistré deux fois propose Jeter le nouveau, Fusionner, Garder le nouveau ou Garder les deux.
+- Une notification annonce chaque nouvelle carte, avec Tout accepter, Aucun et Ouvrir (Jeter, Fusionner et Ouvrir pour un doublon), en dehors des heures calmes.
+- Une tâche, une note ou un lien classé automatiquement affiche « Classé automatiquement · Annuler » tant que vous ne l'avez pas modifié.
+- Réglages › Organisation › Classement : tous les réglages du classement et un essai à blanc sur 7 jours.
+
 ## [1.13.0] — 7 novembre 2026
 
 ### Nouveautés
