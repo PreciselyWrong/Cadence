@@ -4,6 +4,7 @@
     <string name="auto_classify_channel_name">Classement</string>
     <string name="auto_classify_notif_classify">Projet, tags ou priorité à confirmer</string>
     <string name="auto_classify_notif_duplicate">Ce lien ressemble à un lien déjà enregistré</string>
+    <string name="auto_classify_action_open">Ouvrir</string>
     <string name="auto_classify_action_accept_all">Tout accepter</string>
     <string name="auto_classify_action_dismiss">Aucun</string>
     <string name="auto_classify_action_drop">Jeter</string>

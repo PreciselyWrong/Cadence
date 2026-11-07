@@ -99,4 +99,21 @@ class AutoClassifyPayloadTest {
         assertEquals(false, parsed.isDuplicate)
         assertNull(PendingSuggestion.parse(json.parseToJsonElement("""{"kind":"classify"}""")))
     }
+
+    @Test
+    fun aDryRunCountsOnlyWhatWouldBeWritten() {
+        val result = DryRunResult.of(
+            payload(
+                """
+                {"run_id":"r","considered":4,"results":[
+                  {"uid":"a","outcome":"dry_run"},{"uid":"b","outcome":"nothing"},
+                  {"uid":"c","outcome":"changed"},{"uid":"d","outcome":"dry_run"}]}
+                """,
+            ),
+        )
+
+        assertEquals(4, result.considered)
+        assertEquals(2, result.wouldChange)
+        assertNull(result.error)
+    }
 }

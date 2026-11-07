@@ -71,7 +71,7 @@ class AutoClassifyStore private constructor(private val prefs: SharedPreferences
 
 /**
  * Notifie les suggestions nouvelles après chaque synchro réussie. Une notification par suggestion, actions
- * « Tout accepter », « Aucun » ou « Jeter », « Fusionner », et « Ouvrir » (la file « À trier »).
+ * « Tout accepter », « Aucun » ou « Jeter », « Fusionner », puis « Ouvrir » (la file « À trier »).
  */
 class AutoClassifyNotifier(
     private val context: Context,
@@ -110,10 +110,13 @@ class AutoClassifyNotifier(
             .setContentText(text)
             .setCategory(NotificationCompat.CATEGORY_RECOMMENDATION)
             .setAutoCancel(true)
-        openTriagePendingIntent(context)?.let(builder::setContentIntent)
+        val open = openTriagePendingIntent(context)
+        open?.let(builder::setContentIntent)
         actionsOf(suggestion).forEach { (label, action) ->
             builder.addAction(0, context.getString(label), actionPendingIntent(context, action, suggestion.uid))
         }
+        // Troisième bouton : la carte dans « À trier », pour un autre choix que les deux proposés.
+        open?.let { builder.addAction(0, context.getString(R.string.auto_classify_action_open), it) }
         NotificationManagerCompat.from(context).notify(TAG, suggestion.uid.hashCode(), builder.build())
     }
 
