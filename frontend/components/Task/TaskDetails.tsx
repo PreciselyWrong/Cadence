@@ -1,3 +1,4 @@
+import AutoClassifiedMark from '../AutoClassify/AutoClassifiedMark';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -1846,6 +1847,7 @@ const TaskDetails: React.FC = () => {
                     }}
                     onTogglePin={handleTogglePin}
                 />
+                <AutoClassifiedMark entity="task" uid={task.uid} />
 
                 {aiAssistantEnabled && (
                     <div className="mb-4 mt-6">

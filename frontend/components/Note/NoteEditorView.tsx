@@ -1,3 +1,4 @@
+import AutoClassifiedMark from '../AutoClassify/AutoClassifiedMark';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -235,6 +236,9 @@ const NoteEditorView: React.FC<NoteEditorViewProps> = ({
                                     </span>
                                 )}
                             </div>
+                        )}
+                        {saveStatus === 'saved' && (
+                            <AutoClassifiedMark entity="note" uid={note.uid} />
                         )}
                     </div>
                 </div>

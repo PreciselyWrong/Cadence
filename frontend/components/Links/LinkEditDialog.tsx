@@ -1,3 +1,4 @@
+import AutoClassifiedMark from '../AutoClassify/AutoClassifiedMark';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from '../../entities/Link';
@@ -76,6 +77,7 @@ const LinkEditDialog: React.FC<LinkEditDialogProps> = ({
                 <h2 className="text-base font-semibold text-gray-900 dark:text-white">
                     {t('links.editTitle', 'Edit the link')}
                 </h2>
+                <AutoClassifiedMark entity="link" uid={link.uid} />
                 <label className={LABEL}>
                     {t('links.field.title', 'Title')}
                     <input

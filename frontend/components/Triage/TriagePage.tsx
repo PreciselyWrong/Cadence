@@ -13,6 +13,14 @@ import {
     TriageTask,
 } from '../../utils/triageService';
 import { useToast } from '../Shared/ToastContext';
+import ClassifyCard from '../AutoClassify/ClassifyCard';
+import DuplicateCard from '../AutoClassify/DuplicateCard';
+import {
+    applyClassifySuggestion,
+    ClassifyPayload,
+    dismissClassifySuggestion,
+    DuplicatePayload,
+} from '../../utils/autoClassifyService';
 
 const ACTION_LABELS: Record<TriageAction, [string, string]> = {
     rename: ['triage.action.rename', 'Renommer'],
@@ -85,6 +93,14 @@ const TriagePage: React.FC = () => {
     );
     const item: TriageItem | undefined = items[0];
     const task = item?.task_uid ? queue?.tasks[item.task_uid] : undefined;
+    // A card of the classifier (modules/auto-classify): a task, note or link.
+    const classifier = item?.source === 'classify';
+    const entityLabel = (entity: unknown) =>
+        entity === 'note'
+            ? t('autoClassify.entity.note', 'Note')
+            : entity === 'link'
+              ? t('autoClassify.entity.link', 'Lien')
+              : t('autoClassify.entity.task', 'Tâche');
 
     const reset = () => {
         setCorrecting(false);
@@ -204,6 +220,16 @@ const TriagePage: React.FC = () => {
                     className="mt-4 rounded-xl border border-gray-200 p-4 dark:border-gray-700"
                     data-testid="triage-card"
                 >
+                    {classifier && !task && (
+                        <>
+                            <h2 className="text-[17px] font-semibold text-gray-900 dark:text-gray-50">
+                                {String(item.payload?.title ?? '')}
+                            </h2>
+                            <p className="mt-0.5 text-[13px] text-gray-600 dark:text-gray-300">
+                                {entityLabel(item.payload?.entity)}
+                            </p>
+                        </>
+                    )}
                     {task && (
                         <>
                             <h2 className="text-[17px] font-semibold text-gray-900 dark:text-gray-50">
@@ -224,7 +250,17 @@ const TriagePage: React.FC = () => {
                         </>
                     )}
                     <p className="mt-2 text-[15px] text-gray-900 dark:text-gray-100">
-                        {item.question?.text ?? item.reason}
+                        {item.type === 'classify'
+                            ? t(
+                                  'autoClassify.card.reason',
+                                  'Classement à confirmer'
+                              )
+                            : item.type === 'link_duplicate'
+                              ? t(
+                                    'autoClassify.duplicate.reason',
+                                    'Lien déjà enregistré ?'
+                                )
+                              : (item.question?.text ?? item.reason)}
                     </p>
                     {item.details.map((line) => (
                         <p
@@ -281,7 +317,54 @@ const TriagePage: React.FC = () => {
                             </div>
                         </>
                     )}
-                    {item.action === 'accept_slot' ? null : item.question ? (
+                    {item.type === 'classify' && (
+                        <ClassifyCard
+                            key={item.key}
+                            payload={item.payload as unknown as ClassifyPayload}
+                            onApply={(choice) =>
+                                settle(
+                                    () =>
+                                        applyClassifySuggestion(
+                                            String(
+                                                item.payload?.suggestion_uid
+                                            ),
+                                            choice
+                                        ),
+                                    applied
+                                )
+                            }
+                            onDismiss={() =>
+                                settle(
+                                    () =>
+                                        dismissClassifySuggestion(
+                                            String(item.payload?.suggestion_uid)
+                                        ),
+                                    t('triage.kept', 'Gardée telle quelle')
+                                )
+                            }
+                        />
+                    )}
+                    {item.type === 'link_duplicate' && (
+                        <DuplicateCard
+                            payload={
+                                item.payload as unknown as DuplicatePayload
+                            }
+                            onChoose={(action) =>
+                                settle(
+                                    () =>
+                                        applyClassifySuggestion(
+                                            String(
+                                                item.payload?.suggestion_uid
+                                            ),
+                                            { action }
+                                        ),
+                                    applied
+                                )
+                            }
+                        />
+                    )}
+                    {item.action === 'accept_slot' ||
+                    classifier ? null : item.question ? (
                         <div className="mt-3 flex flex-wrap gap-2">
                             <button
                                 type="button"
@@ -348,7 +431,7 @@ const TriagePage: React.FC = () => {
                         {t('triage.skip', 'Passer')}
                     </button>
 
-                    {correcting && task && !editing && (
+                    {correcting && task && !classifier && !editing && (
                         <div className="mt-3 flex flex-col items-start border-t border-gray-200 pt-2 dark:border-gray-700">
                             {choicesFor(task).map((action) => (
                                 <button
