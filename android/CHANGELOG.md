@@ -1,3 +1,12 @@
+## [1.12.5] — 7 novembre 2026
+
+### Nouveautés
+- Liens : une adresse écrite dans une tâche ou une note n'entre plus seule dans les liens ; « Ajouter aux liens » sous la tâche ou la note l'y met exprès. Il faut un serveur à jour.
+
+### Corrections
+- Agenda : toucher une tâche ouvre sa fiche.
+- Ajout rapide d'une note : la fiche se ferme et le curseur va dans le contenu.
+
 ## [1.12.4] — 6 novembre 2026
 
 ### Nouveautés
