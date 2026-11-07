@@ -1,3 +1,4 @@
+import AutoClassifiedMark from '../AutoClassify/AutoClassifiedMark';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -135,6 +136,7 @@ export const TaskEditorBody: React.FC<{ ed: TaskEditor }> = ({ ed }) => {
                     />
                 )}
             </div>
+            {!readOnly && <AutoClassifiedMark entity="task" uid={task.uid} />}
 
             <TaskChipRow
                 readOnly={readOnly}

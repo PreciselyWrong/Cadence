@@ -30,7 +30,12 @@ export interface TriageItem {
     type: string;
     source: string;
     task_uid: string | null;
-    action: TriageAction | 'question' | 'accept_slot';
+    action:
+        | TriageAction
+        | 'question'
+        | 'accept_slot'
+        | 'classify'
+        | 'resolve_duplicate';
     payload: Record<string, unknown> | null;
     reason: string;
     details: string[];

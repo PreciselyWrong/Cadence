@@ -21,6 +21,7 @@ import {
     ChatBubbleLeftRightIcon,
     CpuChipIcon,
     NewspaperIcon,
+    TagIcon,
     CalendarIcon,
     CalendarDaysIcon,
     SparklesIcon,
@@ -73,6 +74,7 @@ import AIAssistantTab from './tabs/AIAssistantTab';
 import BillingTab from './tabs/BillingTab';
 import PlanningTab from './tabs/PlanningTab';
 import DailyBriefTab from './tabs/DailyBriefTab';
+import ClassifyTab from './tabs/ClassifyTab';
 import AgentsTab from './tabs/AgentsTab';
 import ImportExportTab from './tabs/ImportExportTab';
 import SyncTab from './tabs/SyncTab';
@@ -132,6 +134,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
             'calendars',
             'planning',
             'daily-brief',
+            'classify',
             'agents',
             'mcp',
             'ai-assistant',
@@ -1492,6 +1495,12 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
             icon: <NewspaperIcon className="w-5 h-5" />,
         },
         {
+            id: 'classify',
+            group: 'planning',
+            name: t('profile.tabs.classify', 'Classement'),
+            icon: <TagIcon className="w-5 h-5" />,
+        },
+        {
             id: 'sync',
             group: 'integrations',
             name: t('profile.tabs.sync', 'Sync'),
@@ -2064,6 +2073,10 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 
                                     <DailyBriefTab
                                         isActive={activeTab === 'daily-brief'}
+                                    />
+
+                                    <ClassifyTab
+                                        isActive={activeTab === 'classify'}
                                     />
 
                                     <AgentsTab
