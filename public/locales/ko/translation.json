@@ -1,4 +1,115 @@
 {
+  "autoClassify": {
+    "number": {
+      "maxTokens": "응답 최대 토큰 수",
+      "summaryMax": "요약 길이 (글자)",
+      "maxTags": "항목당 태그 수",
+      "retention": "로그 보관 기간 (일)",
+      "dailyLimit": "하루 제안 수 (0 = 제한 없음)",
+      "ttl": "제안 유효 기간 (일)",
+      "cache": "컨텍스트 캐시 (분)",
+      "batch": "호출당 항목 수",
+      "attempts": "실패 시 재시도 횟수",
+      "fetchWait": "링크 읽기 전 대기 시간 (분)",
+      "grace": "유예 시간 (초)"
+    },
+    "threshold": {
+      "ask": "다음 값부터 질문",
+      "priority": "우선순위 (제안만)",
+      "duration": "기간",
+      "tags": "태그",
+      "project": "프로젝트 또는 영역"
+    },
+    "field": {
+      "summary": "요약",
+      "duration": "기간",
+      "tags": "태그",
+      "area": "영역",
+      "project": "프로젝트"
+    },
+    "entity": {
+      "task": "작업",
+      "link": "링크",
+      "note": "메모"
+    },
+    "history": {
+      "undoRun": "실행 취소",
+      "dry": "시험 실행",
+      "empty": "아직 실행 기록이 없습니다.",
+      "title": "최근 실행"
+    },
+    "dryRun": {
+      "report": "{{considered}}개 항목 검토, {{changed}}개가 분류될 예정입니다.",
+      "run": "시험 실행",
+      "days": "일",
+      "description": "최근 며칠 동안 만든 항목을 아무것도 쓰지 않고 분류해 무엇이 바뀔지 보여줍니다.",
+      "title": "시험 실행",
+      "error": "시험 실행 실패"
+    },
+    "settings": {
+      "save": "저장",
+      "excluded": "절대 붙이지 않을 태그 (쉼표로 구분)",
+      "limits": "지연 및 한도",
+      "default": "기본값: {{value}}",
+      "thresholds": "신뢰도 임계값",
+      "effortHint": "Anthropic의 OpenAI 호환 엔드포인트에서는 무시됩니다.",
+      "effortNone": "전송 안 함",
+      "effort": "추론 노력",
+      "modelName": "모델 (비움: AI 어시스턴트의 모델)",
+      "model": "모델",
+      "notify": "Android에서 제안 알림",
+      "dry": "시험 실행 (아무것도 기록되지 않음)",
+      "write": "실제 쓰기",
+      "mode": "모드",
+      "enabled": "사용",
+      "state": "상태",
+      "noAi": "AI 제공자가 없습니다: 프로필 › AI 어시스턴트를 설정하면 분류가 켜집니다.",
+      "description": "새 작업, 메모, 링크의 빈 항목을 채웁니다: 프로젝트 또는 영역, 태그, 기간, 링크 요약. 확실하지 않으면 「분류 대기」에 카드가 나타납니다.",
+      "title": "자동 분류",
+      "saveError": "저장할 수 없음",
+      "saved": "설정 저장됨",
+      "loadError": "설정을 읽을 수 없음"
+    },
+    "mark": {
+      "undone": "분류 실행 취소됨",
+      "undo": "실행 취소",
+      "label": "자동으로 분류됨",
+      "error": "실행 취소할 수 없음",
+      "changed": "그 이후 항목이 변경됨: 실행 취소할 수 없음"
+    },
+    "duplicate": {
+      "keepBoth": "둘 다 유지",
+      "keepNew": "새 항목 유지",
+      "merge": "기존 항목에 병합",
+      "dropNew": "새 항목 버리기",
+      "title": "같은 사이트의 같은 제목",
+      "video": "같은 동영상",
+      "repository": "같은 저장소",
+      "address": "같은 페이지",
+      "reason": "이미 저장된 링크인가요?",
+      "original": "이미 보관됨:",
+      "new": "새로:"
+    },
+    "card": {
+      "reason": "분류 확인 필요",
+      "dismiss": "없음",
+      "acceptAll": "모두 수락",
+      "apply": "적용",
+      "medium": "보통",
+      "high": "높음",
+      "priority": "우선순위",
+      "newTag": "새 태그: #{{name}}",
+      "tags": "태그",
+      "none": "없음",
+      "pickProject": "프로젝트 선택",
+      "other": "기타…",
+      "inArea": "{{name}} 안",
+      "newProjectName": "새 프로젝트 이름",
+      "newProject": "새 프로젝트",
+      "area": "영역: {{name}}",
+      "project": "프로젝트"
+    }
+  },
   "triage": {
     "slotRefuse": "거절",
     "slotAccept": "계획하기",
@@ -601,6 +712,7 @@
     "nextTaskSuggestion": "다음 작업 제안",
     "enableNextTaskSuggestion": "다음 작업 제안 활성화",
     "tabs": {
+      "classify": "분류",
       "sync": "Sync",
       "general": "일반",
       "security": "보안",

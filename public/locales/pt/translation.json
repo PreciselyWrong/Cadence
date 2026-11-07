@@ -1,4 +1,115 @@
 {
+  "autoClassify": {
+    "number": {
+      "maxTokens": "Tokens máximos de resposta",
+      "summaryMax": "Tamanho de um resumo (caracteres)",
+      "maxTags": "Etiquetas por item",
+      "retention": "Retenção do registo (dias)",
+      "dailyLimit": "Sugestões por dia (0 = sem limite)",
+      "ttl": "Validade de uma sugestão (dias)",
+      "cache": "Cache de contexto (minutos)",
+      "batch": "Itens por chamada",
+      "attempts": "Tentativas em caso de falha",
+      "fetchWait": "Espera antes de ler um link (minutos)",
+      "grace": "Período de tolerância (segundos)"
+    },
+    "threshold": {
+      "ask": "Perguntar a partir de",
+      "priority": "Prioridade (só sugerida)",
+      "duration": "Duração",
+      "tags": "Etiquetas",
+      "project": "Projeto ou área"
+    },
+    "field": {
+      "summary": "resumo",
+      "duration": "duração",
+      "tags": "etiquetas",
+      "area": "área",
+      "project": "projeto"
+    },
+    "entity": {
+      "task": "Tarefa",
+      "link": "Link",
+      "note": "Nota"
+    },
+    "history": {
+      "undoRun": "Desfazer execução",
+      "dry": "teste",
+      "empty": "Ainda não há execuções.",
+      "title": "Execuções recentes"
+    },
+    "dryRun": {
+      "report": "{{considered}} itens analisados, {{changed}} seriam classificados.",
+      "run": "Executar teste",
+      "days": "Dias",
+      "description": "Classifica os itens criados nos últimos dias sem escrever nada, para ver o que mudaria.",
+      "title": "Teste",
+      "error": "Teste não concluído"
+    },
+    "settings": {
+      "save": "Guardar",
+      "excluded": "Etiquetas nunca atribuídas (separadas por vírgulas)",
+      "limits": "Atrasos e limites",
+      "default": "Predefinição: {{value}}",
+      "thresholds": "Limiares de confiança",
+      "effortHint": "Ignorado pelo endpoint compatível com OpenAI da Anthropic.",
+      "effortNone": "Não enviado",
+      "effort": "Esforço de raciocínio",
+      "modelName": "Modelo (vazio: o do Assistente de IA)",
+      "model": "Modelo",
+      "notify": "Notificações de sugestões no Android",
+      "dry": "Teste (nada é escrito)",
+      "write": "Escrita real",
+      "mode": "Modo",
+      "enabled": "Ativado",
+      "state": "Estado",
+      "noAi": "Sem fornecedor de IA: configure Perfil › Assistente de IA para ativar a classificação.",
+      "description": "Preenche os campos vazios de novas tarefas, notas e links: projeto ou área, etiquetas, duração, resumo do link. Em caso de dúvida, um cartão aparece em «Para organizar».",
+      "title": "Classificação automática",
+      "saveError": "Não foi possível guardar",
+      "saved": "Configurações guardadas",
+      "loadError": "Configurações ilegíveis"
+    },
+    "mark": {
+      "undone": "Classificação desfeita",
+      "undo": "Desfazer",
+      "label": "Classificado automaticamente",
+      "error": "Não é possível desfazer",
+      "changed": "O item mudou desde então: não é possível desfazer"
+    },
+    "duplicate": {
+      "keepBoth": "Manter os dois",
+      "keepNew": "Manter o novo",
+      "merge": "Fundir no antigo",
+      "dropNew": "Descartar o novo",
+      "title": "Mesmo título no mesmo site",
+      "video": "Mesmo vídeo",
+      "repository": "Mesmo repositório",
+      "address": "Mesma página",
+      "reason": "Link já guardado?",
+      "original": "Já mantido:",
+      "new": "Novo:"
+    },
+    "card": {
+      "reason": "Classificação a confirmar",
+      "dismiss": "Nenhum",
+      "acceptAll": "Aceitar tudo",
+      "apply": "Aplicar",
+      "medium": "Média",
+      "high": "Alta",
+      "priority": "Prioridade",
+      "newTag": "Nova etiqueta: #{{name}}",
+      "tags": "Etiquetas",
+      "none": "Nenhum",
+      "pickProject": "Escolher um projeto",
+      "other": "Outro…",
+      "inArea": "Em {{name}}",
+      "newProjectName": "Nome do novo projeto",
+      "newProject": "Novo projeto",
+      "area": "Área: {{name}}",
+      "project": "Projeto"
+    }
+  },
   "triage": {
     "slotRefuse": "Recusar",
     "slotAccept": "Planear",
@@ -602,6 +713,7 @@
     "nextTaskSuggestion": "Sugestão da Próxima Tarefa",
     "enableNextTaskSuggestion": "Ativar Sugestões de Próxima Tarefa",
     "tabs": {
+      "classify": "Classificação",
       "sync": "Sincronização",
       "general": "Geral",
       "security": "Segurança",

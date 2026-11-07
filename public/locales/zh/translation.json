@@ -1,4 +1,115 @@
 {
+  "autoClassify": {
+    "number": {
+      "maxTokens": "响应的最大令牌数",
+      "summaryMax": "摘要长度（字符）",
+      "maxTags": "每个条目的标签数",
+      "retention": "日志保留时长（天）",
+      "dailyLimit": "每天的建议数（0 = 不限）",
+      "ttl": "建议的有效期（天）",
+      "cache": "上下文缓存（分钟）",
+      "batch": "每次调用的条目数",
+      "attempts": "失败时的重试次数",
+      "fetchWait": "读取链接前的等待时间（分钟）",
+      "grace": "宽限期（秒）"
+    },
+    "threshold": {
+      "ask": "从此置信度起提问",
+      "priority": "优先级（仅建议）",
+      "duration": "时长",
+      "tags": "标签",
+      "project": "项目或领域"
+    },
+    "field": {
+      "summary": "摘要",
+      "duration": "时长",
+      "tags": "标签",
+      "area": "领域",
+      "project": "项目"
+    },
+    "entity": {
+      "task": "任务",
+      "link": "链接",
+      "note": "笔记"
+    },
+    "history": {
+      "undoRun": "撤销运行",
+      "dry": "试运行",
+      "empty": "暂无运行记录。",
+      "title": "最近的运行"
+    },
+    "dryRun": {
+      "report": "已检查 {{considered}} 项，其中 {{changed}} 项将被归类。",
+      "run": "运行试运行",
+      "days": "天",
+      "description": "对最近几天创建的条目进行归类，但不写入任何内容，以查看会有哪些变化。",
+      "title": "试运行",
+      "error": "试运行失败"
+    },
+    "settings": {
+      "save": "保存",
+      "excluded": "永不添加的标签（用逗号分隔）",
+      "limits": "延迟与限制",
+      "default": "默认值：{{value}}",
+      "thresholds": "置信度阈值",
+      "effortHint": "Anthropic 的 OpenAI 兼容端点会忽略此设置。",
+      "effortNone": "不发送",
+      "effort": "推理力度",
+      "modelName": "模型（留空：使用 AI 助手的模型）",
+      "model": "模型",
+      "notify": "Android 上的建议通知",
+      "dry": "试运行（不写入任何内容）",
+      "write": "实际写入",
+      "mode": "模式",
+      "enabled": "已启用",
+      "state": "状态",
+      "noAi": "未配置 AI 服务商：请设置 个人资料 › AI 助手 以启用归类。",
+      "description": "为新任务、笔记和链接填充空白字段：项目或领域、标签、时长、链接摘要。不确定时，会在「待整理」中显示一张卡片。",
+      "title": "自动归类",
+      "saveError": "无法保存",
+      "saved": "设置已保存",
+      "loadError": "无法读取设置"
+    },
+    "mark": {
+      "undone": "已撤销归类",
+      "undo": "撤销",
+      "label": "已自动归类",
+      "error": "无法撤销",
+      "changed": "此后该条目已更改：无法撤销"
+    },
+    "duplicate": {
+      "keepBoth": "两者都保留",
+      "keepNew": "保留新的",
+      "merge": "合并到旧的",
+      "dropNew": "丢弃新的",
+      "title": "同一网站上的相同标题",
+      "video": "同一视频",
+      "repository": "同一仓库",
+      "address": "同一页面",
+      "reason": "该链接是否已保存？",
+      "original": "已保留：",
+      "new": "新："
+    },
+    "card": {
+      "reason": "归类待确认",
+      "dismiss": "无",
+      "acceptAll": "全部接受",
+      "apply": "应用",
+      "medium": "中",
+      "high": "高",
+      "priority": "优先级",
+      "newTag": "新标签：#{{name}}",
+      "tags": "标签",
+      "none": "无",
+      "pickProject": "选择项目",
+      "other": "其他…",
+      "inArea": "在 {{name}} 中",
+      "newProjectName": "新项目名称",
+      "newProject": "新项目",
+      "area": "领域：{{name}}",
+      "project": "项目"
+    }
+  },
   "triage": {
     "slotRefuse": "拒绝",
     "slotAccept": "安排",
@@ -601,6 +712,7 @@
     "nextTaskSuggestion": "下一个任务建议",
     "enableNextTaskSuggestion": "启用下一个任务建议",
     "tabs": {
+      "classify": "归类",
       "sync": "同步",
       "general": "常规",
       "security": "安全",

@@ -1,4 +1,115 @@
 {
+  "autoClassify": {
+    "number": {
+      "maxTokens": "Token massimi della risposta",
+      "summaryMax": "Lunghezza del riepilogo (caratteri)",
+      "maxTags": "Tag per elemento",
+      "retention": "Conservazione del registro (giorni)",
+      "dailyLimit": "Suggerimenti al giorno (0 = nessun limite)",
+      "ttl": "Validità di un suggerimento (giorni)",
+      "cache": "Cache del contesto (minuti)",
+      "batch": "Elementi per chiamata",
+      "attempts": "Tentativi in caso di errore",
+      "fetchWait": "Attesa prima di leggere un link (minuti)",
+      "grace": "Periodo di tolleranza (secondi)"
+    },
+    "threshold": {
+      "ask": "Chiedi a partire da",
+      "priority": "Priorità (solo suggerita)",
+      "duration": "Durata",
+      "tags": "Tag",
+      "project": "Progetto o area"
+    },
+    "field": {
+      "summary": "riepilogo",
+      "duration": "durata",
+      "tags": "tag",
+      "area": "area",
+      "project": "progetto"
+    },
+    "entity": {
+      "task": "Attività",
+      "link": "Link",
+      "note": "Nota"
+    },
+    "history": {
+      "undoRun": "Annulla esecuzione",
+      "dry": "prova",
+      "empty": "Nessuna esecuzione per ora.",
+      "title": "Esecuzioni recenti"
+    },
+    "dryRun": {
+      "report": "{{considered}} elementi esaminati, {{changed}} verrebbero classificati.",
+      "run": "Avvia prova",
+      "days": "Giorni",
+      "description": "Classifica gli elementi creati negli ultimi giorni senza scrivere nulla, per vedere cosa cambierebbe.",
+      "title": "Prova",
+      "error": "Prova non riuscita"
+    },
+    "settings": {
+      "save": "Salva",
+      "excluded": "Tag da non assegnare mai (separati da virgole)",
+      "limits": "Ritardi e limiti",
+      "default": "Predefinito: {{value}}",
+      "thresholds": "Soglie di confidenza",
+      "effortHint": "Ignorato dall’endpoint compatibile OpenAI di Anthropic.",
+      "effortNone": "Non inviato",
+      "effort": "Sforzo di ragionamento",
+      "modelName": "Modello (vuoto: quello dell’Assistente IA)",
+      "model": "Modello",
+      "notify": "Notifiche dei suggerimenti su Android",
+      "dry": "Prova (non scrive nulla)",
+      "write": "Scrittura reale",
+      "mode": "Modalità",
+      "enabled": "Attivo",
+      "state": "Stato",
+      "noAi": "Nessun provider IA: configura Profilo › Assistente IA per attivare la classificazione.",
+      "description": "Compila i campi vuoti di nuove attività, note e link: progetto o area, tag, durata, riepilogo del link. In caso di dubbio, una scheda compare in «Da smistare».",
+      "title": "Classificazione automatica",
+      "saveError": "Impossibile salvare",
+      "saved": "Impostazioni salvate",
+      "loadError": "Impostazioni illeggibili"
+    },
+    "mark": {
+      "undone": "Classificazione annullata",
+      "undo": "Annulla",
+      "label": "Classificato automaticamente",
+      "error": "Impossibile annullare",
+      "changed": "L’elemento è cambiato da allora: impossibile annullare"
+    },
+    "duplicate": {
+      "keepBoth": "Tieni entrambi",
+      "keepNew": "Tieni il nuovo",
+      "merge": "Unisci nel vecchio",
+      "dropNew": "Scarta il nuovo",
+      "title": "Stesso titolo sullo stesso sito",
+      "video": "Stesso video",
+      "repository": "Stesso repository",
+      "address": "Stessa pagina",
+      "reason": "Link già salvato?",
+      "original": "Già mantenuto:",
+      "new": "Nuovo:"
+    },
+    "card": {
+      "reason": "Classificazione da confermare",
+      "dismiss": "Nessuno",
+      "acceptAll": "Accetta tutto",
+      "apply": "Applica",
+      "medium": "Media",
+      "high": "Alta",
+      "priority": "Priorità",
+      "newTag": "Nuovo tag: #{{name}}",
+      "tags": "Tag",
+      "none": "Nessuno",
+      "pickProject": "Scegli un progetto",
+      "other": "Altro…",
+      "inArea": "In {{name}}",
+      "newProjectName": "Nome del nuovo progetto",
+      "newProject": "Nuovo progetto",
+      "area": "Area: {{name}}",
+      "project": "Progetto"
+    }
+  },
   "triage": {
     "slotRefuse": "Rifiuta",
     "slotAccept": "Pianifica",
@@ -591,6 +702,7 @@
     "nextTaskSuggestion": "Suggerimento Prossima Attività",
     "enableNextTaskSuggestion": "Abilita Suggerimenti Prossima Attività",
     "tabs": {
+      "classify": "Classificazione",
       "sync": "Sincronizzazione",
       "general": "Generale",
       "security": "Sicurezza",

@@ -1,4 +1,115 @@
 {
+  "autoClassify": {
+    "number": {
+      "maxTokens": "Numărul maxim de tokeni de răspuns",
+      "summaryMax": "Lungimea rezumatului (caractere)",
+      "maxTags": "Etichete per element",
+      "retention": "Păstrarea jurnalului (zile)",
+      "dailyLimit": "Sugestii pe zi (0 = fără limită)",
+      "ttl": "Durata de viață a unei sugestii (zile)",
+      "cache": "Cache de context (minute)",
+      "batch": "Elemente per apel",
+      "attempts": "Reîncercări la eșec",
+      "fetchWait": "Așteptare înainte de citirea unui link (minute)",
+      "grace": "Perioadă de grație (secunde)"
+    },
+    "threshold": {
+      "ask": "Întreabă de la",
+      "priority": "Prioritate (doar sugerată)",
+      "duration": "Durată",
+      "tags": "Etichete",
+      "project": "Proiect sau zonă"
+    },
+    "field": {
+      "summary": "rezumat",
+      "duration": "durată",
+      "tags": "etichete",
+      "area": "zonă",
+      "project": "proiect"
+    },
+    "entity": {
+      "task": "Sarcină",
+      "link": "Link",
+      "note": "Notă"
+    },
+    "history": {
+      "undoRun": "Anulează rularea",
+      "dry": "încercare",
+      "empty": "Încă nu există rulări.",
+      "title": "Rulări recente"
+    },
+    "dryRun": {
+      "report": "{{considered}} elemente verificate, {{changed}} ar fi clasificate.",
+      "run": "Pornește încercarea",
+      "days": "Zile",
+      "description": "Clasifică elementele create în ultimele zile fără să scrie nimic, ca să vezi ce s-ar schimba.",
+      "title": "Încercare",
+      "error": "Încercarea a eșuat"
+    },
+    "settings": {
+      "save": "Salvează",
+      "excluded": "Etichete care nu se atribuie niciodată (separate prin virgulă)",
+      "limits": "Întârzieri și limite",
+      "default": "Implicit: {{value}}",
+      "thresholds": "Praguri de încredere",
+      "effortHint": "Ignorat de endpointul compatibil OpenAI al Anthropic.",
+      "effortNone": "Nu se trimite",
+      "effort": "Efort de raționament",
+      "modelName": "Model (gol: cel al Asistentului AI)",
+      "model": "Model",
+      "notify": "Notificări pentru sugestii pe Android",
+      "dry": "Încercare (nu se scrie nimic)",
+      "write": "Scriere reală",
+      "mode": "Mod",
+      "enabled": "Activat",
+      "state": "Stare",
+      "noAi": "Niciun furnizor AI: configurează Profil › Asistent AI pentru a activa clasificarea.",
+      "description": "Completează câmpurile goale ale sarcinilor, notelor și linkurilor noi: proiect sau zonă, etichete, durată, rezumatul linkului. Când nu e sigur, apare un card în „De sortat”.",
+      "title": "Clasificare automată",
+      "saveError": "Nu se poate salva",
+      "saved": "Setări salvate",
+      "loadError": "Setări ilizibile"
+    },
+    "mark": {
+      "undone": "Clasificare anulată",
+      "undo": "Anulează",
+      "label": "Clasat automat",
+      "error": "Nu se poate anula",
+      "changed": "Elementul s-a schimbat între timp: nu se poate anula"
+    },
+    "duplicate": {
+      "keepBoth": "Păstrează ambele",
+      "keepNew": "Păstrează cel nou",
+      "merge": "Îmbină în cel vechi",
+      "dropNew": "Renunță la cel nou",
+      "title": "Același titlu pe același site",
+      "video": "Același video",
+      "repository": "Același depozit",
+      "address": "Aceeași pagină",
+      "reason": "Linkul e deja salvat?",
+      "original": "Deja păstrat:",
+      "new": "Nou:"
+    },
+    "card": {
+      "reason": "Clasificare de confirmat",
+      "dismiss": "Niciunul",
+      "acceptAll": "Acceptă tot",
+      "apply": "Aplică",
+      "medium": "Medie",
+      "high": "Mare",
+      "priority": "Prioritate",
+      "newTag": "Etichetă nouă: #{{name}}",
+      "tags": "Etichete",
+      "none": "Niciunul",
+      "pickProject": "Alege un proiect",
+      "other": "Altul…",
+      "inArea": "În {{name}}",
+      "newProjectName": "Numele noului proiect",
+      "newProject": "Proiect nou",
+      "area": "Zonă: {{name}}",
+      "project": "Proiect"
+    }
+  },
   "triage": {
     "slotRefuse": "Refuză",
     "slotAccept": "Planifică",
@@ -602,6 +713,7 @@
     "nextTaskSuggestion": "Sugestie pentru Următoarea Sarcină",
     "enableNextTaskSuggestion": "Activează Sugestiile pentru Următoarea Sarcină",
     "tabs": {
+      "classify": "Clasificare",
       "sync": "Sincronizare",
       "general": "General",
       "security": "Securitate",

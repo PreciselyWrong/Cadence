@@ -577,3 +577,10 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Problème** : le jeton du bot Telegram s'affichait en clair dans Profil › Telegram et voyageait en entier dans chaque réponse du profil.
 - **Décision** : une fois enregistré, le champ montre `••••••••` et les 4 derniers caractères avec un bouton Effacer, comme la clé de l'assistant IA ; un nouveau jeton se tape dans un champ masqué.
 - **Android à reprendre** : rien, Android n'a pas de réglage Telegram.
+
+### 2026-11-07 — Classement automatique : cartes, mention, réglages
+
+- **Problème** : le classement des nouveaux éléments vivait dans Hermes et posait ses questions sur Telegram, hors de Cadence.
+- **Décision** : une carte par élément dans « À trier », trois rangées affichées seulement en cas de doute (Projet : options, Domaine, Nouveau projet prérempli, Autre…, Aucun ; Tags à cocher et un nouveau tag décoché ; Priorité), les meilleures réponses précochées pour qu'« Appliquer » d'emblée vaille « Tout accepter » ; doublon de lien : quatre choix, rien jeté sans un toucher. Sur une tâche, une note ou un lien : « Classé automatiquement · Annuler » tant qu'il n'a pas été modifié. Profil › Classement : tous les réglages, un essai à blanc, les passes récentes avec annulation.
+- **Android à reprendre** : livré dans la même étape (cartes, notifications à boutons, mention, Réglages › Classement).
+

@@ -1,4 +1,115 @@
 {
+  "autoClassify": {
+    "number": {
+      "maxTokens": "Maximale antwoordtokens",
+      "summaryMax": "Lengte van een samenvatting (tekens)",
+      "maxTags": "Tags per item",
+      "retention": "Bewaartermijn logboek (dagen)",
+      "dailyLimit": "Suggesties per dag (0 = geen limiet)",
+      "ttl": "Levensduur van een suggestie (dagen)",
+      "cache": "Contextcache (minuten)",
+      "batch": "Items per aanroep",
+      "attempts": "Nieuwe pogingen bij fout",
+      "fetchWait": "Wachttijd voor het lezen van een link (minuten)",
+      "grace": "Coulanceperiode (seconden)"
+    },
+    "threshold": {
+      "ask": "Vraag stellen vanaf",
+      "priority": "Prioriteit (alleen voorgesteld)",
+      "duration": "Duur",
+      "tags": "Tags",
+      "project": "Project of gebied"
+    },
+    "field": {
+      "summary": "samenvatting",
+      "duration": "duur",
+      "tags": "tags",
+      "area": "gebied",
+      "project": "project"
+    },
+    "entity": {
+      "task": "Taak",
+      "link": "Link",
+      "note": "Notitie"
+    },
+    "history": {
+      "undoRun": "Run ongedaan maken",
+      "dry": "proefrun",
+      "empty": "Nog geen runs.",
+      "title": "Recente runs"
+    },
+    "dryRun": {
+      "report": "{{considered}} items bekeken, {{changed}} zouden worden ingedeeld.",
+      "run": "Proefrun starten",
+      "days": "Dagen",
+      "description": "Deelt items van de afgelopen dagen in zonder iets te schrijven, zodat je ziet wat er zou veranderen.",
+      "title": "Proefrun",
+      "error": "Proefrun mislukt"
+    },
+    "settings": {
+      "save": "Opslaan",
+      "excluded": "Tags die nooit worden toegekend (kommagescheiden)",
+      "limits": "Vertragingen en limieten",
+      "default": "Standaard: {{value}}",
+      "thresholds": "Vertrouwensdrempels",
+      "effortHint": "Wordt genegeerd door het OpenAI-compatibele eindpunt van Anthropic.",
+      "effortNone": "Niet verzonden",
+      "effort": "Redeneerinspanning",
+      "modelName": "Model (leeg: dat van de AI-assistent)",
+      "model": "Model",
+      "notify": "Meldingen voor suggesties op Android",
+      "dry": "Proefrun (er wordt niets geschreven)",
+      "write": "Echt schrijven",
+      "mode": "Modus",
+      "enabled": "Ingeschakeld",
+      "state": "Status",
+      "noAi": "Geen AI-aanbieder: stel Profiel › AI-assistent in om indelen in te schakelen.",
+      "description": "Vult de lege velden van nieuwe taken, notities en links in: project of gebied, tags, duur, linksamenvatting. Bij twijfel verschijnt een kaart onder “Te sorteren”.",
+      "title": "Automatisch indelen",
+      "saveError": "Opslaan niet mogelijk",
+      "saved": "Instellingen opgeslagen",
+      "loadError": "Instellingen onleesbaar"
+    },
+    "mark": {
+      "undone": "Indeling ongedaan gemaakt",
+      "undo": "Ongedaan maken",
+      "label": "Automatisch ingedeeld",
+      "error": "Ongedaan maken niet mogelijk",
+      "changed": "Het item is sindsdien gewijzigd: ongedaan maken niet mogelijk"
+    },
+    "duplicate": {
+      "keepBoth": "Beide bewaren",
+      "keepNew": "Het nieuwe bewaren",
+      "merge": "Samenvoegen met het oude",
+      "dropNew": "Het nieuwe weggooien",
+      "title": "Dezelfde titel op dezelfde site",
+      "video": "Dezelfde video",
+      "repository": "Dezelfde repository",
+      "address": "Dezelfde pagina",
+      "reason": "Link al opgeslagen?",
+      "original": "Al bewaard:",
+      "new": "Nieuw:"
+    },
+    "card": {
+      "reason": "Indeling te bevestigen",
+      "dismiss": "Geen",
+      "acceptAll": "Alles accepteren",
+      "apply": "Toepassen",
+      "medium": "Gemiddeld",
+      "high": "Hoog",
+      "priority": "Prioriteit",
+      "newTag": "Nieuwe tag: #{{name}}",
+      "tags": "Tags",
+      "none": "Geen",
+      "pickProject": "Kies een project",
+      "other": "Andere…",
+      "inArea": "In {{name}}",
+      "newProjectName": "Naam van het nieuwe project",
+      "newProject": "Nieuw project",
+      "area": "Gebied: {{name}}",
+      "project": "Project"
+    }
+  },
   "triage": {
     "slotRefuse": "Weigeren",
     "slotAccept": "Inplannen",
@@ -601,6 +712,7 @@
     "nextTaskSuggestion": "Volgende Taak Suggestie",
     "enableNextTaskSuggestion": "Schakel Volgende Taak Suggesties in",
     "tabs": {
+      "classify": "Indeling",
       "sync": "Synchronisatie",
       "general": "Algemeen",
       "security": "Beveiliging",

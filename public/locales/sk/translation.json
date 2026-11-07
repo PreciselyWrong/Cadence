@@ -1,4 +1,115 @@
 {
+  "autoClassify": {
+    "number": {
+      "maxTokens": "Maximum tokenov odpovede",
+      "summaryMax": "Dĺžka zhrnutia (znaky)",
+      "maxTags": "Štítky na položku",
+      "retention": "Uchovávanie denníka (dni)",
+      "dailyLimit": "Návrhy za deň (0 = bez limitu)",
+      "ttl": "Platnosť návrhu (dni)",
+      "cache": "Cache kontextu (minúty)",
+      "batch": "Položky na volanie",
+      "attempts": "Opakovania pri chybe",
+      "fetchWait": "Čakanie pred čítaním odkazu (minúty)",
+      "grace": "Odklad (sekundy)"
+    },
+    "threshold": {
+      "ask": "Pýtať sa od",
+      "priority": "Priorita (len návrh)",
+      "duration": "Trvanie",
+      "tags": "Štítky",
+      "project": "Projekt alebo oblasť"
+    },
+    "field": {
+      "summary": "zhrnutie",
+      "duration": "trvanie",
+      "tags": "štítky",
+      "area": "oblasť",
+      "project": "projekt"
+    },
+    "entity": {
+      "task": "Úloha",
+      "link": "Odkaz",
+      "note": "Poznámka"
+    },
+    "history": {
+      "undoRun": "Vrátiť beh",
+      "dry": "skúšobný beh",
+      "empty": "Zatiaľ žiadne behy.",
+      "title": "Posledné behy"
+    },
+    "dryRun": {
+      "report": "Skontrolovaných položiek: {{considered}}, {{changed}} by sa zaradilo.",
+      "run": "Spustiť skúšobný beh",
+      "days": "Dni",
+      "description": "Zaradí položky vytvorené v posledných dňoch bez zápisu, aby ste videli, čo by sa zmenilo.",
+      "title": "Skúšobný beh",
+      "error": "Skúšobný beh zlyhal"
+    },
+    "settings": {
+      "save": "Uložiť",
+      "excluded": "Štítky, ktoré sa nikdy nepridajú (oddelené čiarkami)",
+      "limits": "Oneskorenia a limity",
+      "default": "Predvolené: {{value}}",
+      "thresholds": "Prahy istoty",
+      "effortHint": "Koncový bod Anthropic kompatibilný s OpenAI to ignoruje.",
+      "effortNone": "Neodosielať",
+      "effort": "Úsilie uvažovania",
+      "modelName": "Model (prázdne: model AI asistenta)",
+      "model": "Model",
+      "notify": "Upozornenia na návrhy v Androide",
+      "dry": "Skúšobný beh (nič sa nezapíše)",
+      "write": "Ostrý zápis",
+      "mode": "Režim",
+      "enabled": "Zapnuté",
+      "state": "Stav",
+      "noAi": "Žiadny poskytovateľ AI: nastavte Profil › AI asistent, aby sa zaraďovanie zapnulo.",
+      "description": "Dopĺňa prázdne polia nových úloh, poznámok a odkazov: projekt alebo oblasť, štítky, trvanie, zhrnutie odkazu. Pri neistote sa karta zobrazí v „Na triedenie“.",
+      "title": "Automatické zaraďovanie",
+      "saveError": "Nepodarilo sa uložiť",
+      "saved": "Nastavenia uložené",
+      "loadError": "Nastavenia sa nedajú načítať"
+    },
+    "mark": {
+      "undone": "Zaradenie vrátené",
+      "undo": "Späť",
+      "label": "Automaticky zaradené",
+      "error": "Vrátenie nie je možné",
+      "changed": "Položka sa od toho času zmenila: vrátenie nie je možné"
+    },
+    "duplicate": {
+      "keepBoth": "Ponechať obe",
+      "keepNew": "Ponechať nové",
+      "merge": "Zlúčiť so starým",
+      "dropNew": "Zahodiť nové",
+      "title": "Rovnaký názov na rovnakom webe",
+      "video": "Rovnaké video",
+      "repository": "Rovnaký repozitár",
+      "address": "Rovnaká stránka",
+      "reason": "Odkaz je už uložený?",
+      "original": "Už zachované:",
+      "new": "Nové:"
+    },
+    "card": {
+      "reason": "Zaradenie na potvrdenie",
+      "dismiss": "Žiadny",
+      "acceptAll": "Prijať všetko",
+      "apply": "Použiť",
+      "medium": "Stredná",
+      "high": "Vysoká",
+      "priority": "Priorita",
+      "newTag": "Nový štítok: #{{name}}",
+      "tags": "Štítky",
+      "none": "Žiadny",
+      "pickProject": "Vyberte projekt",
+      "other": "Iné…",
+      "inArea": "V {{name}}",
+      "newProjectName": "Názov nového projektu",
+      "newProject": "Nový projekt",
+      "area": "Oblasť: {{name}}",
+      "project": "Projekt"
+    }
+  },
   "triage": {
     "slotRefuse": "Odmietnuť",
     "slotAccept": "Naplánovať",
@@ -1130,6 +1241,7 @@
     "enableNextTaskSuggestion": "Povoliť návrhy ďalších úloh",
     "featuresAddons": "Funkcie a doplnky",
     "tabs": {
+      "classify": "Zaradenie",
       "ai": "Funkcie AI",
       "sync": "Synchronizácia",
       "billing": "Plán a fakturácia",

@@ -1,4 +1,115 @@
 {
+  "autoClassify": {
+    "number": {
+      "maxTokens": "Maximum response tokens",
+      "summaryMax": "Summary length (characters)",
+      "maxTags": "Tags per item",
+      "retention": "Log retention (days)",
+      "dailyLimit": "Suggestions per day (0 = no limit)",
+      "ttl": "Suggestion lifetime (days)",
+      "cache": "Context cache (minutes)",
+      "batch": "Items per call",
+      "attempts": "Retries on failure",
+      "fetchWait": "Wait before reading a link (minutes)",
+      "grace": "Grace period (seconds)"
+    },
+    "threshold": {
+      "ask": "Ask starting at",
+      "priority": "Priority (suggested only)",
+      "duration": "Duration",
+      "tags": "Tags",
+      "project": "Project or area"
+    },
+    "field": {
+      "summary": "summary",
+      "duration": "duration",
+      "tags": "tags",
+      "area": "area",
+      "project": "project"
+    },
+    "entity": {
+      "task": "Task",
+      "link": "Link",
+      "note": "Note"
+    },
+    "history": {
+      "undoRun": "Undo run",
+      "dry": "dry run",
+      "empty": "No runs yet.",
+      "title": "Recent runs"
+    },
+    "dryRun": {
+      "report": "{{considered}} items checked, {{changed}} would be filed.",
+      "run": "Run dry run",
+      "days": "Days",
+      "description": "Files items created in recent days without writing anything, to show what would change.",
+      "title": "Dry run",
+      "error": "Dry run failed"
+    },
+    "settings": {
+      "save": "Save",
+      "excluded": "Tags never set (comma-separated)",
+      "limits": "Delays and limits",
+      "default": "Default: {{value}}",
+      "thresholds": "Confidence thresholds",
+      "effortHint": "Ignored by Anthropic's OpenAI-compatible endpoint.",
+      "effortNone": "Not sent",
+      "effort": "Reasoning effort",
+      "modelName": "Model (empty: the AI Assistant's)",
+      "model": "Model",
+      "notify": "Suggestion notifications on Android",
+      "dry": "Dry run (nothing is written)",
+      "write": "Live writing",
+      "mode": "Mode",
+      "enabled": "Enabled",
+      "state": "Status",
+      "noAi": "No AI provider: set up Profile › AI Assistant to turn on filing.",
+      "description": "Fills the empty fields of new tasks, notes and links: project or area, tags, duration, link summary. When unsure, a card appears in “To sort”.",
+      "title": "Automatic filing",
+      "saveError": "Can't save",
+      "saved": "Settings saved",
+      "loadError": "Settings unreadable"
+    },
+    "mark": {
+      "undone": "Filing undone",
+      "undo": "Undo",
+      "label": "Filed automatically",
+      "error": "Can't undo",
+      "changed": "The item changed since: can't undo"
+    },
+    "duplicate": {
+      "keepBoth": "Keep both",
+      "keepNew": "Keep the new one",
+      "merge": "Merge into the old one",
+      "dropNew": "Drop the new one",
+      "title": "Same title on the same site",
+      "video": "Same video",
+      "repository": "Same repository",
+      "address": "Same page",
+      "reason": "Link already saved?",
+      "original": "Already kept:",
+      "new": "New:"
+    },
+    "card": {
+      "reason": "Filing to confirm",
+      "dismiss": "None",
+      "acceptAll": "Accept all",
+      "apply": "Apply",
+      "medium": "Medium",
+      "high": "High",
+      "priority": "Priority",
+      "newTag": "New tag: #{{name}}",
+      "tags": "Tags",
+      "none": "None",
+      "pickProject": "Choose a project",
+      "other": "Other…",
+      "inArea": "In {{name}}",
+      "newProjectName": "New project name",
+      "newProject": "New project",
+      "area": "Area: {{name}}",
+      "project": "Project"
+    }
+  },
   "triage": {
     "slotRefuse": "Refuse",
     "slotAccept": "Plan",
@@ -665,6 +776,7 @@
     "enableNextTaskSuggestion": "Enable Next Task Suggestions",
     "featuresAddons": "Features & Add-ons",
     "tabs": {
+      "classify": "Filing",
       "sync": "Sync",
       "ai": "AI features",
       "billing": "Plan & Billing",
