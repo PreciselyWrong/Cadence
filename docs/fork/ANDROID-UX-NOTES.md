@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-08 — Liens dans les tâches et les notes
+
+- **Problème** : une adresse dans le titre d’une tâche ou d’une note et dans la note d’une tâche se comportait comme du texte à éditer.
+- **Décision** : hors édition, les adresses, e-mails et numéros reconnus sont soulignés et s’ouvrent au toucher ; le bouton Modifier à côté du champ permet de changer son texte. Le corps des notes conserve ses liens Markdown.
+- **Web** : les liens du texte y sont déjà ouvrables ; conserver l’édition distincte de l’ouverture.
+
 ### 2026-11-06 — « À trier » : une file de propositions
 
 - **Problème** : le résumé posait des questions absurdes (« 💪 Sport est-il un doublon de 💪 Sport ? ») au milieu d'un écran de lecture.

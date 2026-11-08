@@ -93,6 +93,7 @@ Tests Postgres : `DATABASE_URL=... npm run backend:test:pg`. Module tâches Andr
 - `integrations/firefox-addon/` : add-on Firefox qui enregistre une page dans les liens, par jeton d'API.
 - `desktop/` : client Linux Tauri 2 (`src-tauri/`, coque mince autour du serveur ; `docs/fork/DESKTOP.md`).
 - `android/` : `domain/` (règles des habitudes, Kotlin pur), `data/`, `tasks/` (tâches synchronisées), `app/`.
+- Android `tasks/ui/LinkedText.kt` : liens ouvrables dans les titres et notes de tâches et les titres de notes, avec édition explicite.
 - `e2e/` : Playwright ; `scripts/` : dev, Docker, versions, sauvegardes Postgres.
 
 ## ⛔ Interdits

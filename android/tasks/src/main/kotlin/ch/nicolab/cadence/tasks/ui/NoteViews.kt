@@ -41,6 +41,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.PushPin
 import androidx.compose.material.icons.outlined.Checklist
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.FormatBold
 import androidx.compose.material.icons.outlined.FormatListBulleted
 import androidx.compose.material.icons.outlined.PushPin
@@ -363,6 +364,7 @@ private fun NoteEditor(viewModel: TasksViewModel, uid: String, note: NoteItem?, 
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.focusRequester(titleFocus),
                 singleLine = true,
+                linkable = true,
             )
             if (note != null) {
                 NoteMeta(note, projects.firstOrNull { it.uid == note.projectUid }?.name, tags.filter { it.uid in note.tagUids }.map { it.name }, remember(tags) { tagBadgeColorsByName(tags) })
@@ -452,8 +454,23 @@ private fun PlainField(
     style: TextStyle,
     modifier: Modifier = Modifier,
     singleLine: Boolean,
+    linkable: Boolean = false,
 ) {
     val palette = cadence
+    var editingLinks by remember { mutableStateOf(false) }
+    if (linkable && !editingLinks && ch.nicolab.cadence.tasks.links.TextLinks.matches(value.text).isNotEmpty()) {
+        Row(modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            ClickableLinkText(
+                text = value.text,
+                style = style,
+                modifier = Modifier.weight(1f),
+            )
+            IconButton(onClick = { editingLinks = true }) {
+                Icon(Icons.Outlined.Edit, contentDescription = stringResource(R.string.tasks_idea_edit))
+            }
+        }
+        return
+    }
     Box(modifier.fillMaxWidth()) {
         if (value.text.isEmpty()) Text(hint, style = style, color = palette.outline)
         BasicTextField(
