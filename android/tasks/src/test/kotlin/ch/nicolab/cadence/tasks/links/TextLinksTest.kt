@@ -37,4 +37,23 @@ class TextLinksTest {
         val match = TextLinks.matches("Tel +41 79 123 45 67").single()
         assertEquals(4 until 20, match.range)
     }
+
+    @Test
+    fun `un titre avec telephone et tiret typographique garde aussi son lien web`() {
+        val title = "Contacter le club au 079 123 45 67. Lien : https://club‑sport.example.ch"
+        val matches = TextLinks.matches(title)
+
+        assertEquals(listOf("tel:0791234567", "https://club-sport.example.ch"), matches.map { it.url })
+        assertEquals("https://club‑sport.example.ch", title.substring(matches.last().range))
+    }
+
+    @Test
+    fun `le titre transmis avec un separateur invisible garde son lien`() {
+        val title = "Contacter le club pour un cours collectif débutant. " +
+            "Lien du club : https://club.example.ch\u2060"
+
+        val match = TextLinks.matches(title).single()
+        assertEquals("https://club.example.ch", match.url)
+        assertEquals("https://club.example.ch", title.substring(match.range))
+    }
 }

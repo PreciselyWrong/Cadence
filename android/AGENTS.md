@@ -123,6 +123,8 @@ Dans les fiches, `ui/LinkedText.kt` rend les liens du titre et de la note de tâ
 - Le minuteur de concentration (`tasks/focus/PomodoroState`) est local et dérivé de l'horloge, comme `HabitTimer` : on ne stocke que l'instant de reprise et le reste figé.
 
 ## ⛔ Interdits
+- ⛔ Rejeter un lien seulement parce que son domaine contient un tiret typographique — les titres copiés ou générés en contiennent ; `LinkExtractor` normalise le domaine avant la validation URI, en conservant la plage du texte affiché.
+- ⛔ Inclure un caractère de format invisible final dans la cible d’un lien — `U+2060` collé après `.ch` fait échouer la validation URI ; retirer ces caractères à la fin du candidat sans élargir la plage cliquable.
 - ⛔ Envoyer le texte du résumé hors de l'appareil pour le lire — le script audio ne va qu'au moteur local (Sherpa) ; seul le téléchargement du modèle de voix, à la demande, utilise le réseau.
 - ⛔ Charger une bibliothèque native depuis `:tasks` ou ses tests — le moteur passe par l'interface `VoiceSynthesizer` ; l'implémentation Sherpa reste dans `:app`.
 - ⛔ Lire le résumé avec `TextToSpeech` d'Android ou tout autre repli que la voix Piper du téléphone ou le MP3 du serveur — la voix du système n'est pas celle du produit ; sans voix installée, « Écouter » propose Siwis ou Tom (`BriefVoiceSheet`) puis rend et lit.

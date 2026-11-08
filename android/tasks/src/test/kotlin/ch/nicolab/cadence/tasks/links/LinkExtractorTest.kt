@@ -18,6 +18,7 @@ class LinkExtractorTest {
         assertEquals(listOf("https://a.example/page"), LinkExtractor.urls("Lire https://a.example/page, merci."))
         assertEquals(listOf("https://a.example/p?q=1"), LinkExtractor.urls("(https://a.example/p?q=1)"))
         assertEquals(listOf("https://a.example/p"), LinkExtractor.urls("regarde https://a.example/p !"))
+        assertEquals(listOf("https://a.example/p"), LinkExtractor.urls("regarde https://a.example/p\u2060."))
     }
 
     @Test
@@ -31,6 +32,15 @@ class LinkExtractorTest {
     @Test
     fun `la cible d'un lien markdown est extraite sans la parenthese fermante`() {
         assertEquals(listOf("https://a.example/doc"), LinkExtractor.urls("[la doc](https://a.example/doc)"))
+    }
+
+    @Test
+    fun `seul le tiret du domaine est normalise`() {
+        assertEquals(
+            listOf("https://club-sport.example.ch/cours‑enfant"),
+            LinkExtractor.urls("Voir https://club‑sport.example.ch/cours‑enfant"),
+        )
+        assertEquals("club-sport.example.ch", LinkExtractor.domain("https://club‑sport.example.ch/cours‑enfant"))
     }
 
     @Test
@@ -60,6 +70,7 @@ class LinkExtractorTest {
     @Test
     fun `isOnlyLink est vrai seulement pour un texte reduit a un lien`() {
         assertTrue(LinkExtractor.isOnlyLink("  https://a.example/x  "))
+        assertTrue(LinkExtractor.isOnlyLink("https://a.example/x\u2060"))
         assertFalse(LinkExtractor.isOnlyLink("Lire https://a.example/x"))
     }
 }

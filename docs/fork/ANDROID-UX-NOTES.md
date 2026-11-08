@@ -8,6 +8,8 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 - **Problème** : une adresse dans le titre d’une tâche ou d’une note et dans la note d’une tâche se comportait comme du texte à éditer.
 - **Décision** : hors édition, les adresses, e-mails et numéros reconnus sont soulignés et s’ouvrent au toucher ; le bouton Modifier à côté du champ permet de changer son texte. Le corps des notes conserve ses liens Markdown.
+- **Correction du 2026-11-08** : dans un nom de domaine, un tiret typographique copié depuis du texte est converti en tiret ordinaire pour ouvrir l’adresse ; l’affichage et la sélection conservent le texte saisi. Les chemins d’URL ne sont pas modifiés.
+- **Correction complémentaire du 2026-11-08** : un caractère de format invisible collé après l’adresse (notamment `U+2060`) ne fait plus rejeter le lien ; sa plage et la cible s’arrêtent avant ce caractère.
 - **Web** : les liens du texte y sont déjà ouvrables ; conserver l’édition distincte de l’ouverture.
 
 ### 2026-11-06 — « À trier » : une file de propositions
