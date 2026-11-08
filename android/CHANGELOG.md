@@ -1,3 +1,8 @@
+## [1.14.1] — 8 novembre 2026
+
+### Nouveautés
+- Réglages › Classement : un bandeau rouge affiche la dernière erreur de l'IA (par exemple une clé refusée) tant qu'aucun appel n'a réussi depuis, avec le nombre d'éléments en échec et un bouton Réessayer. Il faut un serveur à jour.
+
 ## [1.14.0] — 7 novembre 2026
 
 ### Nouveautés
