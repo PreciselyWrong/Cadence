@@ -54,6 +54,7 @@ export interface Task {
     in_view?: boolean;
     in_view_at?: string | null;
     week_of?: string | null;
+    needs_when?: boolean;
     review_on?: string | null;
     reviewed_at?: string | null;
     note?: string;

@@ -1680,6 +1680,14 @@
     "projectNameTooLong": "프로젝트 이름은 {{max}}자 이하여야 합니다"
   },
   "inbox": {
+    "unsorted": {
+      "noDate": "날짜 없음",
+      "later": "나중에",
+      "date": "날짜 선택",
+      "thisWeek": "이번 주",
+      "when": "언제?",
+      "title": "정리할 작업"
+    },
     "title": "받은 편지함",
     "empty": "받은 편지함이 비어 있습니다.",
     "emptyDescription": "상단 내비게이션 바의 ⚡ 아이콘이나 사이드바의 + 버튼을 사용하여 생각과 아이디어를 빠르게 캡처하세요.",

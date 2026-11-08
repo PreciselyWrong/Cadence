@@ -1680,6 +1680,14 @@
     "projectNameTooLong": "Projektin nimen enimmäispituus on {{max}} merkkiä"
   },
   "inbox": {
+    "unsorted": {
+      "noDate": "Ilman päivää",
+      "later": "Myöhemmin",
+      "date": "Päivämäärä",
+      "thisWeek": "Tällä viikolla",
+      "when": "Milloin?",
+      "title": "Lajiteltavat tehtävät"
+    },
     "title": "Saapuneet",
     "empty": "Saapuneet-kansiosi on tyhjää",
     "emptyDescription": "Tallenna ajatuksia ja ideoita nopeasti käyttämällä ⚡-ikonia ylävalikossa tai +-painiketta sivupalkissa",

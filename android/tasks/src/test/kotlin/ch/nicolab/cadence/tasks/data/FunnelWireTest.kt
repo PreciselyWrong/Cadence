@@ -4,6 +4,7 @@ import ch.nicolab.cadence.tasks.model.TaskChange
 import java.time.LocalDate
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -97,5 +98,21 @@ class FunnelWireTest {
         val fields = TaskFields.decision(TaskChange(later = true), inViewAtRaw = null, tagUids = listOf("s"), somedayUid = "s", nowIso = now)
         assertNull(fields["tag_uids"])
         assertEquals(JsonNull, fields.getValue("in_view_at"))
+    }
+
+    @Test
+    fun `needs_when is read from the wire and written back, false included`() {
+        val wire = Json.parseToJsonElement("""{"uid":"t1","name":"Facture","area_uid":"a1","needs_when":true}""").jsonObject
+        val row = WireCodec.taskFromWire(wire)
+        assertTrue(row.needsWhen)
+        assertFalse("needs_when" in TaskExtras.parse(row.extrasJson))
+        assertEquals(JsonPrimitive(true), WireCodec.taskToWire(row).getValue("needs_when"))
+
+        val cleared = WireCodec.taskFromWire(Json.parseToJsonElement("""{"uid":"t1","needs_when":false}""").jsonObject)
+        assertFalse(cleared.needsWhen)
+        assertEquals(JsonPrimitive(false), WireCodec.taskToWire(cleared).getValue("needs_when"))
+
+        val absent = WireCodec.taskFromWire(Json.parseToJsonElement("""{"uid":"t2"}""").jsonObject)
+        assertFalse(absent.needsWhen)
     }
 }

@@ -122,6 +122,34 @@ class TaskViewsTest {
     }
 
     @Test
+    fun `à classer garde une tâche rangée dans un domaine qui attend son quand`() {
+        val tasks = listOf(
+            task("range-sans-quand").copy(areaUid = "domaine", needsWhen = true),
+            task("range-avec-quand").copy(areaUid = "domaine", needsWhen = false),
+        )
+
+        assertEquals(listOf("range-sans-quand"), TaskViews.unsorted(tasks, now).map { it.uid })
+    }
+
+    @Test
+    fun `à classer garde une tâche dans un projet qui attend son quand`() {
+        val tasks = listOf(task("projet-sans-quand").copy(projectUid = "projet", needsWhen = true))
+
+        assertEquals(listOf("projet-sans-quand"), TaskViews.unsorted(tasks, now).map { it.uid })
+    }
+
+    @Test
+    fun `à classer exclut un quand déjà choisi même si la tâche attend son quand`() {
+        val tasks = listOf(
+            task("date").copy(areaUid = "domaine", needsWhen = true, dueDay = today),
+            task("semaine").copy(areaUid = "domaine", needsWhen = true, weekOf = LocalDate.of(2026, 10, 26)),
+            task("plus-tard").copy(areaUid = "domaine", needsWhen = true, someday = true),
+        )
+
+        assertTrue(TaskViews.unsorted(tasks, now).isEmpty())
+    }
+
+    @Test
     fun `à classer garde une tâche sans répétition explicite`() {
         val tasks = listOf(task("aucune").copy(recurrenceType = "none"))
 

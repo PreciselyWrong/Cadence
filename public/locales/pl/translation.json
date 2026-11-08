@@ -1696,6 +1696,14 @@
     "projectNameTooLong": "Nazwa projektu może mieć maksymalnie {{max}} znaków"
   },
   "inbox": {
+    "unsorted": {
+      "noDate": "Bez daty",
+      "later": "Później",
+      "date": "Data",
+      "thisWeek": "W tym tygodniu",
+      "when": "Kiedy?",
+      "title": "Zadania do uporządkowania"
+    },
     "title": "Skrzynka odbiorcza",
     "empty": "Twoja skrzynka odbiorcza jest pusta",
     "emptyDescription": "Szybko zapisuj myśli i pomysły, używając ikony ⚡ w górnym pasku nawigacyjnym lub przycisku + w pasku bocznym",

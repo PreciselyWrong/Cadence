@@ -1680,6 +1680,14 @@
     "projectNameTooLong": "Projektnamnet får vara högst {{max}} tecken"
   },
   "inbox": {
+    "unsorted": {
+      "noDate": "Utan datum",
+      "later": "Senare",
+      "date": "Ett datum",
+      "thisWeek": "Den här veckan",
+      "when": "När?",
+      "title": "Uppgifter att sortera"
+    },
     "title": "Inkorg",
     "empty": "Inkorgen är tom",
     "emptyDescription": "Ta tillvara på dina tankar och idéer med ⚡-ikonen i övre navigeringsfältet eller +-knappen i sidofältet",

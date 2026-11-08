@@ -2009,6 +2009,14 @@
     "nextMonth": "el próximo mes"
   },
   "inbox": {
+    "unsorted": {
+      "noDate": "Sin fecha",
+      "later": "Más tarde",
+      "date": "Una fecha",
+      "thisWeek": "Esta semana",
+      "when": "¿Cuándo?",
+      "title": "Tareas por ordenar"
+    },
     "title": "Bandeja de Entrada",
     "empty": "Su bandeja de entrada está vacía",
     "emptyDescription": "Capture rápidamente pensamientos e ideas usando el icono ⚡ en la barra superior o el botón + en la barra lateral",

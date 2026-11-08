@@ -1696,6 +1696,14 @@
     "projectNameTooLong": "Ime projekta sme imeti največ {{max}} znakov"
   },
   "inbox": {
+    "unsorted": {
+      "noDate": "Brez datuma",
+      "later": "Pozneje",
+      "date": "Datum",
+      "thisWeek": "Ta teden",
+      "when": "Kdaj?",
+      "title": "Naloge za razvrstitev"
+    },
     "title": "Prejeto",
     "empty": "Vaša prejeta sporočila so prazna",
     "emptyDescription": "Hitro zabeležite misli in ideje z uporabo ikone ⚡ v zgornji navigacijski vrstici ali gumba + v stranski vrstici",

@@ -236,6 +236,9 @@ async function applyClassify(user, suggestion, choice) {
         };
         await run(tool[item.entity], params);
     }
+    if (isTask && (params.project_id || params.area_uid)) {
+        await repository.askWhen(user.id, item.uid);
+    }
     if (newTag) forgetCatalog(user.id);
 }
 

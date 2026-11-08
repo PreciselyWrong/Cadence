@@ -1680,6 +1680,14 @@
     "projectNameTooLong": "Tên dự án phải có tối đa {{max}} ký tự"
   },
   "inbox": {
+    "unsorted": {
+      "noDate": "Không có ngày",
+      "later": "Để sau",
+      "date": "Một ngày",
+      "thisWeek": "Tuần này",
+      "when": "Khi nào?",
+      "title": "Việc cần sắp xếp"
+    },
     "title": "Hộp thư đến",
     "empty": "Hộp thư đến của bạn trống",
     "emptyDescription": "Ghi lại suy nghĩ và ý tưởng nhanh chóng bằng cách sử dụng biểu tượng ⚡ ở thanh điều hướng trên cùng hoặc nút + ở thanh bên",

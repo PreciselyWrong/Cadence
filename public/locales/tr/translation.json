@@ -1680,6 +1680,14 @@
     "projectNameTooLong": "Proje adı en fazla {{max}} karakter olabilir"
   },
   "inbox": {
+    "unsorted": {
+      "noDate": "Tarihsiz",
+      "later": "Daha sonra",
+      "date": "Bir tarih",
+      "thisWeek": "Bu hafta",
+      "when": "Ne zaman?",
+      "title": "Sıralanacak görevler"
+    },
     "title": "Gelen Kutusu",
     "empty": "Gelen kutunuz boş",
     "emptyDescription": "Düşüncelerinizi ve fikirlerinizi hızlıca yakalamak için üst menü çubuğundaki ⚡ simgesini veya yan çubuktaki + butonunu kullanın.",

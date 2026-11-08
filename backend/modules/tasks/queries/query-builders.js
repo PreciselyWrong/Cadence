@@ -295,6 +295,56 @@ async function filterTasksByParams(
             whereClause[Op.or] = [{ due_date: null }, { project_id: null }];
             whereClause.status = { [Op.notIn]: [Task.STATUS.DONE] };
             break;
+        // « Tâches à classer » (docs/41-auto-classify.md): open top-level
+        // tasks with no moment decided, either filed nowhere or filed for the
+        // user and still waiting for « Quand ? ». #someday is excluded below.
+        case 'unsorted': {
+            const now = new Date();
+            delete whereClause[Op.or];
+            whereClause.recurring_parent_id = null;
+            whereClause.due_date = null;
+            whereClause.week_of = null;
+            whereClause.in_view_at = null;
+            whereClause.status = {
+                [Op.notIn]: [
+                    Task.STATUS.DONE,
+                    Task.STATUS.ARCHIVED,
+                    Task.STATUS.CANCELLED,
+                ],
+            };
+            whereClause[Op.and] = [
+                {
+                    [Op.or]: [
+                        { recurrence_type: null },
+                        { recurrence_type: 'none' },
+                    ],
+                },
+                {
+                    [Op.or]: [
+                        { defer_until: null },
+                        { defer_until: { [Op.lte]: now } },
+                    ],
+                },
+                {
+                    [Op.or]: [
+                        { project_id: null, area_id: null },
+                        { needs_when: true },
+                    ],
+                },
+            ];
+            const parked = await sequelize.query(
+                `SELECT DISTINCT tasks_tags.task_id FROM tasks_tags
+                 JOIN tags ON tasks_tags.tag_id = tags.id
+                 WHERE tags.name = 'someday' AND tags.user_id = :userId`,
+                { replacements: { userId }, type: QueryTypes.SELECT }
+            );
+            if (parked.length > 0) {
+                whereClause.id = {
+                    [Op.notIn]: parked.map((row) => row.task_id),
+                };
+            }
+            break;
+        }
         case 'someday':
             whereClause.recurring_parent_id = null;
             whereClause.due_date = null;

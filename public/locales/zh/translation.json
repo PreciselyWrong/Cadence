@@ -1680,6 +1680,14 @@
     "projectNameTooLong": "项目名称不能超过 {{max}} 个字符"
   },
   "inbox": {
+    "unsorted": {
+      "noDate": "无日期",
+      "later": "以后",
+      "date": "选择日期",
+      "thisWeek": "本周",
+      "when": "什么时候？",
+      "title": "待整理的任务"
+    },
     "title": "收件箱",
     "empty": "您的收件箱是空的",
     "emptyDescription": "使用顶部导航栏中的 ⚡ 图标或侧边栏中的 + 按钮快速捕捉想法和创意",

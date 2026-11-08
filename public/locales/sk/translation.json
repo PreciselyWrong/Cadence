@@ -2187,6 +2187,14 @@
     "projectNameTooLong": "Názov projektu môže mať najviac {{max}} znakov"
   },
   "inbox": {
+    "unsorted": {
+      "noDate": "Bez dátumu",
+      "later": "Neskôr",
+      "date": "Dátum",
+      "thisWeek": "Tento týždeň",
+      "when": "Kedy?",
+      "title": "Úlohy na roztriedenie"
+    },
     "title": "Schránka",
     "empty": "Vaša schránka je prázdna",
     "emptyItem": "(Prázdna položka)",

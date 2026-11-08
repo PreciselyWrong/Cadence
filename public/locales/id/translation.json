@@ -1680,6 +1680,14 @@
     "projectNameTooLong": "Nama proyek maksimal {{max}} karakter"
   },
   "inbox": {
+    "unsorted": {
+      "noDate": "Tanpa tanggal",
+      "later": "Nanti",
+      "date": "Sebuah tanggal",
+      "thisWeek": "Minggu ini",
+      "when": "Kapan?",
+      "title": "Tugas untuk dipilah"
+    },
     "title": "Kotak Masuk",
     "empty": "Kotak masuk Anda kosong",
     "emptyDescription": "Tangkap pikiran dan ide dengan cepat menggunakan ikon ⚡ di navbar atas atau tombol + di sidebar",

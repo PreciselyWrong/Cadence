@@ -2,6 +2,7 @@ package ch.nicolab.cadence.tasks.ui
 
 import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskItem
+import ch.nicolab.cadence.tasks.model.TaskViews
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
@@ -24,7 +25,7 @@ internal object TaskEdits {
         val change = when {
             dateChanged && date == null -> TaskChange(clearDue = true)
             moveDate != null -> TaskChange(dueTime = if (timeChanged) time?.let(::wireTime) else null)
-            else -> TaskChange(dueDate = date, dueTime = time?.let(::wireTime))
+            else -> TaskChange(dueDate = date, dueTime = time?.let(::wireTime), needsWhen = if (date != null) TaskViews.whenSettled(task) else null)
         }
         return EditResult(change, moveDate)
     }

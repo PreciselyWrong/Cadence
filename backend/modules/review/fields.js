@@ -79,10 +79,14 @@ function applyDecisionFields(attrs, body, task, user) {
     if (body.reviewed !== undefined && asBoolean(body.reviewed, 'reviewed')) {
         attrs.reviewed_at = new Date();
     }
+    if (body.needs_when !== undefined) {
+        attrs.needs_when = asBoolean(body.needs_when, 'needs_when');
+    }
     // Parking wins over anything sent with it.
     if (body.later !== undefined && asBoolean(body.later, 'later')) {
         attrs.in_view_at = null;
         attrs.week_of = null;
+        attrs.needs_when = false;
     }
 }
 

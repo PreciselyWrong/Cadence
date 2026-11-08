@@ -21,6 +21,7 @@ import ProjectModal from '../Project/ProjectModal';
 import NoteModal from '../Note/NoteModal';
 import QuickCaptureInput from './QuickCaptureInput';
 import InboxTriage from './InboxTriage';
+import UnsortedTasks from './UnsortedTasks';
 import { createTask } from '../../utils/tasksService';
 import { createProject } from '../../utils/projectsService';
 import { createNote } from '../../utils/notesService';
@@ -579,6 +580,8 @@ const InboxItems: React.FC = () => {
                         }
                     }}
                 />
+
+                <UnsortedTasks />
 
                 {/* ── Item list ────────────────────────────────────────────── */}
                 {inboxItems.length > 0 && (

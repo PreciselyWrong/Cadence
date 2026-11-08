@@ -33,6 +33,8 @@ data class TaskEntity(
     val inViewAtRaw: String? = null,
     /** « Cette semaine » : premier jour (`YYYY-MM-DD`) de la semaine choisie. */
     val weekOf: String? = null,
+    /** « Quand ? » : tâche classée sans moment choisi (`needs_when`, posé par le serveur). */
+    @ColumnInfo(defaultValue = "0") val needsWhen: Boolean = false,
     /** Date de réexamen d'une idée mise de côté (`YYYY-MM-DD`) ; jamais une échéance. */
     val reviewOn: String? = null,
     /** Dernière décision prise en revue. */

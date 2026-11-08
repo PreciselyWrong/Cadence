@@ -107,6 +107,9 @@ export interface TaskDecision {
     review_on?: string | null;
     later?: boolean;
     reviewed?: boolean;
+    // « Quand ? »: a due date settles it, false keeps the task without one.
+    due_date?: string;
+    needs_when?: boolean;
     status?: string;
     today?: boolean;
 }

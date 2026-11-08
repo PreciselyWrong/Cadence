@@ -5,6 +5,7 @@
 // write reaches the devices through the sync journal like any other.
 const { toolsFor } = require('../triage/actions');
 const { SUMMARY_PREFIX } = require('./core/summary');
+const repository = require('./repository');
 
 const TOOLS = { task: 'update_task', note: 'update_note', link: 'update_link' };
 const idParam = (entity, uid) => (entity === 'task' ? { id: uid } : { uid });
@@ -48,6 +49,9 @@ async function applyDecision(user, item, apply) {
     if (Object.keys(plan.after).length > 0) {
         await toolsFor(user)(plan.tool, plan.params);
     }
+    if (item.entity === 'task' && (apply.project_uid || apply.area_uid)) {
+        await repository.askWhen(user.id, item.uid);
+    }
     return { before: plan.before, after: plan.after };
 }
 
@@ -65,6 +69,9 @@ async function undoChange(user, change) {
     if ('estimated_minutes' in before) params.estimated_minutes = null;
     if ('note' in before) params.note = before.note;
     await toolsFor(user)(TOOLS[change.entity], params);
+    if (change.entity === 'task') {
+        await repository.settleWhen(user.id, change.item_uid);
+    }
 }
 
 module.exports = { planWrite, applyDecision, undoChange };

@@ -187,6 +187,7 @@ async function serializeTask(
             : null,
         pinned: Boolean(taskJson.pinned_at),
         in_view: Boolean(taskJson.in_view_at),
+        needs_when: Boolean(taskJson.needs_when),
         today_move_count: todayMoveCount,
         parent_task: parentTaskInfo,
         blocked_by_count: blockedByCount,

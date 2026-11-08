@@ -1684,6 +1684,14 @@
     "projectNameTooLong": "Numele proiectului trebuie să aibă cel mult {{max}} caractere"
   },
   "inbox": {
+    "unsorted": {
+      "noDate": "Fără dată",
+      "later": "Mai târziu",
+      "date": "O dată",
+      "thisWeek": "Săptămâna aceasta",
+      "when": "Când?",
+      "title": "Sarcini de sortat"
+    },
     "title": "Căsuța de primire",
     "empty": "Căsuța ta de primire este goală",
     "emptyDescription": "Capturează rapid gânduri și idei folosind iconița ⚡ din bara de navigare de sus sau butonul + din bara laterală",

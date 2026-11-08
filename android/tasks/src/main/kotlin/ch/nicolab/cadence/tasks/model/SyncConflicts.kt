@@ -88,6 +88,7 @@ object SyncConflictText {
         "recurrence_type" to "Répétition",
         "estimated_minutes" to "Durée",
         "week_of" to "Semaine",
+        "needs_when" to "Quand ?",
         "in_view_at" to "En vue",
         "review_on" to "À revoir le",
     )

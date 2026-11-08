@@ -78,6 +78,14 @@ module.exports = (sequelize) => {
                 type: DataTypes.DATE,
                 allowNull: true,
             },
+            // Filed for the user (project or domain set by the classifier or a
+            // card) with no moment yet: it stays in « Tâches à classer » until
+            // a due date, a week, In view, Later, a defer or « Sans date ».
+            needs_when: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: false,
+            },
             // First day (user's week start) of the week the user committed
             // to doing the task in.
             week_of: {
@@ -551,6 +559,21 @@ module.exports = (sequelize) => {
         };
         return statuses[statusName] !== undefined ? statuses[statusName] : 0;
     };
+
+    // Any moment chosen settles « Quand ? », whatever path wrote it.
+    const CLOSED = [2, 3, 5];
+    Task.addHook('beforeSave', 'settleNeedsWhen', (task) => {
+        if (!task.needs_when) return;
+        if (
+            task.due_date ||
+            task.week_of ||
+            task.in_view_at ||
+            task.defer_until ||
+            CLOSED.includes(Number(task.status))
+        ) {
+            task.needs_when = false;
+        }
+    });
 
     Task.getPriorityName = getPriorityName;
     Task.getStatusName = getStatusName;

@@ -590,3 +590,9 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Problème** : un appel à l'IA refusé (clé fausse, modèle inconnu) ne se voyait que dans les logs du serveur ; les éléments en échec restaient perdus.
 - **Décision** : bandeau rouge en tête de Profil › Classement, avec la dernière erreur (statut : message, date) tant qu'aucun appel n'a réussi depuis, et « N éléments en échec · Réessayer » qui les remet en file.
 - **Android à reprendre** : livré dans la même étape (Réglages › Classement).
+
+### 2026-11-08 — Inbox : « Tâches à classer » et « Quand ? »
+
+- **Problème** : une tâche rangée par le classement automatique (projet ou domaine) quittait l'Inbox sans date et n'était plus jamais revue ; le web n'avait d'ailleurs aucune section « Tâches à classer ».
+- **Décision** : section « Tâches à classer » sous la saisie de l'Inbox web, même règle qu'Android (`GET /tasks?type=unsorted`) ; une tâche classée sans moment y reste avec « Quand ? » : Cette semaine, Une date, Plus tard, Sans date.
+- **Android à reprendre** : livré dans la même étape.

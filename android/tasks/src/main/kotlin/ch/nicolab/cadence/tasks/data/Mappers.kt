@@ -49,6 +49,7 @@ internal fun TaskRow.toItem(accountZone: ZoneId, deviceZone: ZoneId): TaskItem =
         fileBacked = fileBacked,
         inViewAt = parseInstant(inViewAtRaw),
         weekOf = parseDay(weekOf),
+        needsWhen = needsWhen,
         reviewOn = parseDay(reviewOn),
         reviewedAt = parseInstant(reviewedAtRaw),
         someday = someday,

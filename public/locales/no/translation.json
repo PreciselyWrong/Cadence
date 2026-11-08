@@ -1681,6 +1681,14 @@
     "projectNameTooLong": "Prosjektnavnet kan være høyst {{max}} tegn"
   },
   "inbox": {
+    "unsorted": {
+      "noDate": "Uten dato",
+      "later": "Senere",
+      "date": "En dato",
+      "thisWeek": "Denne uken",
+      "when": "Når?",
+      "title": "Oppgaver å sortere"
+    },
     "title": "Innboks",
     "empty": "Innboksen din er tom",
     "emptyDescription": "Fang tanker og ideer raskt ved å bruke ⚡-ikonet i den øverste navigasjonslinjen eller +-knappen i sidepanelet",

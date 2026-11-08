@@ -328,6 +328,28 @@ async function areaIdOf(userId, uid) {
     return area?.id ?? null;
 }
 
+// A task just filed for the user with no moment yet asks « Quand ? »; the
+// Task hook clears it as soon as one is chosen. Subtasks, recurring and
+// #someday tasks never ask.
+async function askWhen(userId, uid) {
+    const task = await Task.findOne({
+        where: { uid, user_id: userId },
+        include: [
+            { model: Tag, attributes: ['name'], through: { attributes: [] } },
+        ],
+    });
+    if (!task || task.parent_task_id || task.recurring_parent_id) return;
+    if (task.recurrence_type && task.recurrence_type !== 'none') return;
+    if ((task.Tags || []).some((tag) => tag.name === 'someday')) return;
+    task.needs_when = true;
+    await task.save();
+}
+
+async function settleWhen(userId, uid) {
+    const task = await Task.findOne({ where: { uid, user_id: userId } });
+    if (task?.needs_when) await task.update({ needs_when: false });
+}
+
 const NOT_CONFIGURED = 'AI_NOT_CONFIGURED';
 const retryableWhere = (userId) => ({
     user_id: userId,
@@ -386,6 +408,8 @@ async function requeueFailed(userId, now) {
 
 module.exports = {
     ENTITIES,
+    askWhen,
+    settleWhen,
     classifyHealth,
     requeueFailed,
     loadItem,

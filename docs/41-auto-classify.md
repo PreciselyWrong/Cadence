@@ -19,6 +19,10 @@ Never touched: closed tasks (done, archived, cancelled), recurring tasks and the
 
 Items that existed before the classifier was installed are never classified: there is no backlog pass.
 
+## « Quand ? »
+
+The classifier files, it never decides when. A task it gives a project or a domain (written directly or through **Apply** on a card) gets `tasks.needs_when = true`, unless it is a subtask, recurring or `#someday`. Such a task stays in Inbox › **Tâches à classer** (web and Android, `GET /tasks?type=unsorted`) with a **Quand ?** row: **Cette semaine**, **Une date**, **Plus tard**, **Sans date**. Any moment settles it, on whatever path it is written (a `beforeSave` hook on `Task`): a due date, `week_of`, `in_view_at`, `defer_until`, `later`, or closing the task; **Sans date** sends `needs_when: false` and keeps the task where it was filed. Undoing the classification clears it. `needs_when` is a synced task field. The migration flags the tasks already filed without a moment.
+
 ## Duplicate links
 
 Found by code, without the model (`core/duplicates.js`): the same address under another spelling (scheme, `www.`, tracking parameters, trailing slash), the same GitHub, GitLab, Codeberg or Bitbucket repository, the same YouTube video, or the same title (8 characters at least) on the same site. Only an **older** link counts as the original. The new link gets a card, nothing is dropped automatically, and the model is not asked about it.

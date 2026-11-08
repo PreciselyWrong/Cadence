@@ -500,6 +500,13 @@ internal class TasksViewModel(
         changeWithUndo(task, ReviewDecisions.toggle(stage, task, ctx), UndoChanges.restoreFunnel(task), message)
     }
 
+    /** « Quand ? » → « Sans date » : la tâche garde son projet ou son domaine et sort de « À classer » ; annulable. */
+    fun clearWhen(task: TaskItem) {
+        if (!FileBackedActions.canEdit(task)) return
+        val message = getString(R.string.swipe_notice_unscheduled, task.name)
+        changeWithUndo(task, TaskChange(needsWhen = false), TaskChange(needsWhen = true), message)
+    }
+
     /** Date de réexamen d'une idée mise de côté ; null la retire. Ni rappel ni agenda. */
     fun reviewOn(task: TaskItem, day: LocalDate?) {
         if (!FileBackedActions.canEdit(task)) return

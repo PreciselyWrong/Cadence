@@ -92,4 +92,13 @@ class FunnelTest {
         assertEquals(true, ReviewDecisions.toggle(FunnelStage.LATER, TaskItem("q", "q"), ctx).later)
         assertEquals(false, ReviewDecisions.toggle(FunnelStage.IN_VIEW, TaskItem("v", "v", inViewAt = Instant.EPOCH), ctx).inView)
     }
+
+    @Test
+    fun `choosing this week settles a task that waits for its when`() {
+        val waiting = TaskItem("w", "w", areaUid = "domaine", needsWhen = true)
+
+        assertEquals(false, ReviewDecisions.toggle(FunnelStage.THIS_WEEK, waiting, ctx).needsWhen)
+        assertEquals(false, ReviewDecisions.change(Decision.ThisWeek, waiting, ctx).needsWhen)
+        assertEquals(false, ReviewDecisions.toggle(FunnelStage.LATER, waiting, ctx).needsWhen)
+    }
 }

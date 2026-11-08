@@ -875,6 +875,14 @@
     "saturday": "Sa"
   },
   "inbox": {
+    "unsorted": {
+      "noDate": "Ohne Datum",
+      "later": "Später",
+      "date": "Ein Datum",
+      "thisWeek": "Diese Woche",
+      "when": "Wann?",
+      "title": "Zu sortierende Aufgaben"
+    },
     "title": "Posteingang",
     "empty": "Ihr Posteingang ist leer",
     "emptyDescription": "Erfassen Sie schnell Gedanken und Ideen mit dem ⚡ Symbol in der oberen Navigationsleiste oder dem + Button in der Seitenleiste",

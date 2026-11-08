@@ -24,7 +24,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         BriefEntity::class,
         EveningEntity::class,
     ],
-    version = 16,
+    version = 17,
     exportSchema = true,
 )
 abstract class TududiDatabase : RoomDatabase() {
@@ -204,6 +204,14 @@ internal val MIGRATION_13_14 = object : Migration(13, 14) {
 internal val MIGRATION_15_16 = object : Migration(15, 16) {
     override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL("ALTER TABLE links ADD COLUMN projectUid TEXT")
+        db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
+    }
+}
+
+/** Tâche classée sans quand choisi (`needs_when`). Le curseur est retiré : le prochain instantané remplit la colonne. */
+internal val MIGRATION_16_17 = object : Migration(16, 17) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE tasks ADD COLUMN needsWhen INTEGER NOT NULL DEFAULT 0")
         db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
     }
 }

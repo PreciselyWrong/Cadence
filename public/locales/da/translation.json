@@ -1680,6 +1680,14 @@
     "projectNameTooLong": "Projektnavnet må højst være {{max}} tegn"
   },
   "inbox": {
+    "unsorted": {
+      "noDate": "Uden dato",
+      "later": "Senere",
+      "date": "En dato",
+      "thisWeek": "Denne uge",
+      "when": "Hvornår?",
+      "title": "Opgaver at sortere"
+    },
     "title": "Indbakke",
     "empty": "Din indbakke er tom",
     "emptyDescription": "Fang tanker og idéer hurtigt ved at bruge ⚡ ikonet i den øverste navigationslinje eller + knappen i sidepanelet",

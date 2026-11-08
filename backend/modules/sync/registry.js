@@ -43,6 +43,7 @@ const ENTITIES = {
             'pinned_at',
             'in_view_at',
             'week_of',
+            'needs_when',
             'review_on',
             'reviewed_at',
             'estimated_minutes',

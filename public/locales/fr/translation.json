@@ -1685,6 +1685,14 @@
     "projectNameTooLong": "Le nom du projet ne doit pas dépasser {{max}} caractères"
   },
   "inbox": {
+    "unsorted": {
+      "noDate": "Sans date",
+      "later": "Plus tard",
+      "date": "Une date",
+      "thisWeek": "Cette semaine",
+      "when": "Quand ?",
+      "title": "Tâches à classer"
+    },
     "title": "Boîte de réception",
     "empty": "Votre boîte de réception est vide",
     "emptyDescription": "Capturez rapidement vos pensées et idées en utilisant l'icône ⚡ dans la barre de navigation supérieure ou le bouton + dans la barre latérale",

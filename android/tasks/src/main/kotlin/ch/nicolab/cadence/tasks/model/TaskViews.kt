@@ -126,14 +126,22 @@ object TaskViews {
             .flatMap { RecurrenceExpansion.expand(it, today, today, zone) }
 
     /**
-     * À classer : tâches ouvertes de premier niveau que rien ne range encore, sans échéance, projet ni
-     * domaine, hors « Plus tard », hors vue et semaine décidée, ni reportées ni récurrentes.
+     * À classer : tâches ouvertes de premier niveau que rien ne range encore, sans échéance, hors « Plus tard »,
+     * hors vue et semaine décidée, ni reportées ni récurrentes. Une tâche sans projet ni domaine s'y trouve ; une
+     * tâche rangée s'y trouve aussi tant qu'elle attend son quand ([TaskItem.needsWhen], « Quand ? » dans la file).
      */
     fun unsorted(tasks: List<TaskItem>, now: Instant): List<TaskItem> =
         tasks.filter {
-            visibleNow(it, now) && it.dueDate == null && it.dueDay == null && it.projectUid == null &&
-                it.areaUid == null && !it.someday && it.inViewAt == null && it.weekOf == null && !it.isRecurring
+            visibleNow(it, now) && it.dueDate == null && it.dueDay == null &&
+                (it.projectUid == null && it.areaUid == null || it.needsWhen) &&
+                !it.someday && it.inViewAt == null && it.weekOf == null && !it.isRecurring
         }
+
+    /**
+     * Valeur de `needs_when` qui accompagne un quand choisi (date, semaine, vue, « Plus tard », report) : elle
+     * retombe seulement si la tâche attendait son quand, comme le serveur qui la remet à faux.
+     */
+    fun whenSettled(task: TaskItem): Boolean? = if (task.needsWhen) false else null
 
     fun ofProject(tasks: List<TaskItem>, projectUid: String, now: Instant): List<TaskItem> =
         tasks.filter { it.projectUid == projectUid && visibleNow(it, now) }
@@ -145,7 +153,7 @@ object TaskViews {
      */
     fun postponeChange(task: TaskItem, day: LocalDate, zone: ZoneId): TaskChange {
         val time = task.dueDate?.takeIf { task.dueHasTime }?.atZone(zone)?.toLocalTime()
-        return TaskChange(dueDate = day, dueTime = time?.format(hourMinute))
+        return TaskChange(dueDate = day, dueTime = time?.format(hourMinute), needsWhen = whenSettled(task))
     }
 
     fun completedToday(tasks: List<TaskItem>, today: LocalDate, zone: ZoneId): List<TaskItem> =

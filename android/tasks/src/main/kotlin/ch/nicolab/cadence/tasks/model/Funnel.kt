@@ -64,11 +64,11 @@ object ReviewDecisions {
         val base = when (decision) {
             // Une tâche mise de côté ressort de « Plus tard » : sinon elle resterait hors des suggestions du jour.
             Decision.Today -> TaskViews.postponeChange(task, ctx.today, ctx.zone).let { if (task.someday) it.copy(later = false) else it }
-            Decision.ThisWeek -> TaskChange(later = false, weekOf = ctx.weekStart, clearReviewOn = true)
+            Decision.ThisWeek -> TaskChange(later = false, weekOf = ctx.weekStart, clearReviewOn = true, needsWhen = TaskViews.whenSettled(task))
             Decision.NotThisWeek -> TaskChange(clearWeek = true)
-            Decision.InView -> TaskChange(later = false, inView = true, clearReviewOn = true)
+            Decision.InView -> TaskChange(later = false, inView = true, clearReviewOn = true, needsWhen = TaskViews.whenSettled(task))
             Decision.OutOfView -> TaskChange(inView = false)
-            Decision.Later -> TaskChange(later = true)
+            Decision.Later -> TaskChange(later = true, needsWhen = TaskViews.whenSettled(task))
             Decision.KeepParked -> TaskChange(clearReviewOn = true)
             Decision.ReviewIn30Days -> TaskChange(reviewOn = ctx.today.plusDays(REVIEW_AFTER_DAYS))
             is Decision.ReviewOn -> TaskChange(reviewOn = decision.day)
@@ -82,9 +82,9 @@ object ReviewDecisions {
     fun toggle(stage: FunnelStage, task: TaskItem, ctx: DecisionContext): TaskChange {
         val on = !Funnel.has(task, stage, ctx.weekStart)
         return when (stage) {
-            FunnelStage.IN_VIEW -> if (on) TaskChange(inView = true, later = false) else TaskChange(inView = false)
-            FunnelStage.THIS_WEEK -> if (on) TaskChange(weekOf = ctx.weekStart, later = false) else TaskChange(clearWeek = true)
-            FunnelStage.LATER -> TaskChange(later = on)
+            FunnelStage.IN_VIEW -> if (on) TaskChange(inView = true, later = false, needsWhen = TaskViews.whenSettled(task)) else TaskChange(inView = false)
+            FunnelStage.THIS_WEEK -> if (on) TaskChange(weekOf = ctx.weekStart, later = false, needsWhen = TaskViews.whenSettled(task)) else TaskChange(clearWeek = true)
+            FunnelStage.LATER -> if (on) TaskChange(later = true, needsWhen = TaskViews.whenSettled(task)) else TaskChange(later = false)
         }
     }
 }

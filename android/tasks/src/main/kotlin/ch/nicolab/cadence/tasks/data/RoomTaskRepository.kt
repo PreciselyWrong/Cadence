@@ -434,6 +434,7 @@ internal class RoomTaskRepository(
             change.order?.let { put("order", JsonPrimitive(it)) }
             change.todayOrder?.let { put("today_order", JsonPrimitive(it)) }
             if (change.hasDecision()) putAll(decisionFields(uid, change))
+            change.needsWhen?.let { put("needs_when", JsonPrimitive(it)) }
         }
     }
 

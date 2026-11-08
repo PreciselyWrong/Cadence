@@ -1708,6 +1708,14 @@
     "projectNameTooLong": "Project name must be {{max}} characters or less"
   },
   "inbox": {
+    "unsorted": {
+      "noDate": "No date",
+      "later": "Later",
+      "date": "A date",
+      "thisWeek": "This week",
+      "when": "When?",
+      "title": "Tasks to sort"
+    },
     "title": "Inbox",
     "empty": "Your inbox is empty",
     "emptyItem": "(Empty item)",

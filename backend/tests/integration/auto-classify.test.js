@@ -131,6 +131,7 @@ describe('auto-classify', () => {
         await task.reload();
         expect(task.project_id).toBe(garden.id);
         expect(task.estimated_minutes).toBe(60);
+        expect(task.needs_when).toBe(true);
         expect(await tagsOf(Task, task.uid)).toEqual(['extérieur']);
 
         const change = await AutoClassifyChange.findOne({
@@ -158,6 +159,53 @@ describe('auto-classify', () => {
         // Seen once: a later pass leaves it alone.
         await worker.runOnce(later(200));
         expect(calls).toHaveLength(1);
+    });
+
+    it('leaves a dated task out of the « When? » step, and asks it on a card choice', async () => {
+        const dated = await Task.create({
+            user_id: user.id,
+            name: 'Vidange',
+            status: 0,
+            due_date: new Date('2026-12-01T00:00:00Z'),
+        });
+        const loose = await Task.create({
+            user_id: user.id,
+            name: 'Pneus neige',
+            status: 0,
+        });
+        model.configure({
+            ask: answering({
+                Vidange: {
+                    project: {
+                        uid: car.uid,
+                        confidence: 0.95,
+                        alternatives: [],
+                    },
+                },
+                'Pneus neige': {
+                    project: {
+                        uid: car.uid,
+                        confidence: 0.6,
+                        alternatives: [],
+                    },
+                },
+            }).ask,
+        });
+        await worker.runOnce(later(91));
+        await dated.reload();
+        expect(dated.project_id).toBe(car.id);
+        expect(dated.needs_when).toBe(false);
+
+        const card = await AutoClassifySuggestion.findOne({
+            where: { item_uid: loose.uid },
+        });
+        const applied = await agent
+            .post(`/api/auto-classify/suggestions/${card.uid}/apply`)
+            .send({ choice: 'all' });
+        expect(applied.status).toBe(200);
+        await loose.reload();
+        expect(loose.project_id).toBe(car.id);
+        expect(loose.needs_when).toBe(true);
     });
 
     it('never touches a field the user filled during the grace period', async () => {
@@ -572,6 +620,7 @@ describe('auto-classify', () => {
         await first.reload();
         await second.reload();
         expect(first.project_id).toBeNull();
+        expect(first.needs_when).toBe(false);
         expect(second.project_id).toBe(garden.id);
         expect(
             (

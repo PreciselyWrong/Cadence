@@ -1,6 +1,7 @@
 package ch.nicolab.cadence.tasks.ui
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -235,21 +236,25 @@ internal fun LazyListScope.taskRows(
     onOpen: (TaskItem) -> Unit,
     sectionDay: LocalDate? = null,
     projectIcons: Map<String, String> = emptyMap(),
+    /** Contenu posé sous la ligne d'une tâche (ex. « Quand ? » à classer) ; rien par défaut. */
+    belowRow: (@Composable (TaskItem) -> Unit)? = null,
 ) {
     items(tasks, key = { it.rowKey }) { task ->
-        TaskRow(
-            modifier = Modifier.animateItem(),
-            task = task,
-            projectName = task.projectUid?.let { projectNames[it] },
-            projectIcon = task.projectUid?.let { projectIcons[it] },
-            projectColor = task.projectUid?.let { projectColors[it] },
-            today = moment.today,
-            zone = moment.zone,
-            onToggle = { viewModel.toggle(task, hold = true) },
-            onOpen = { onOpen(task) },
-            onSwipeAction = { viewModel.swipe(task, it) },
-            onMenu = { viewModel.openMenu(task) },
-            sectionDay = sectionDay,
-        )
+        Column(Modifier.fillMaxWidth().animateItem()) {
+            TaskRow(
+                task = task,
+                projectName = task.projectUid?.let { projectNames[it] },
+                projectIcon = task.projectUid?.let { projectIcons[it] },
+                projectColor = task.projectUid?.let { projectColors[it] },
+                today = moment.today,
+                zone = moment.zone,
+                onToggle = { viewModel.toggle(task, hold = true) },
+                onOpen = { onOpen(task) },
+                onSwipeAction = { viewModel.swipe(task, it) },
+                onMenu = { viewModel.openMenu(task) },
+                sectionDay = sectionDay,
+            )
+            belowRow?.invoke(task)
+        }
     }
 }

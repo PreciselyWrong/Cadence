@@ -1680,6 +1680,14 @@
     "projectNameTooLong": "Projectnaam mag maximaal {{max}} tekens bevatten"
   },
   "inbox": {
+    "unsorted": {
+      "noDate": "Zonder datum",
+      "later": "Later",
+      "date": "Een datum",
+      "thisWeek": "Deze week",
+      "when": "Wanneer?",
+      "title": "Taken om te sorteren"
+    },
     "title": "Inbox",
     "empty": "Je inbox is leeg",
     "emptyDescription": "Leg snel gedachten en ideeën vast met het ⚡-icoon in de bovenste navigatiebalk of de + knop in de zijbalk",

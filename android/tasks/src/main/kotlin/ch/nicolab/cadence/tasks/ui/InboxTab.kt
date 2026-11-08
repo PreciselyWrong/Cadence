@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -71,6 +72,7 @@ import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.links.LinkPreviews
 import ch.nicolab.cadence.tasks.links.LinkExtractor
+import ch.nicolab.cadence.tasks.model.FunnelStage
 import ch.nicolab.cadence.tasks.model.IdeaTasks
 import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.model.LinkLists
@@ -81,7 +83,8 @@ import ch.nicolab.cadence.tasks.model.TaskItem
  * Capture rapide : le champ en tête envoie la saisie à la boîte de réception. Chaque idée, lien ou non, se trie d'une
  * seule rangée : Tâche (saisie pré-remplie, projet et étiquettes visibles), Liens (idée qui porte une adresse), Note ;
  * glisser à gauche supprime. Une décision s'écrit tout de suite, « Annuler » écrit l'inverse.
- * Sous les entrées, « Tâches à classer » liste les tâches sans échéance ni projet, qu'aucun autre onglet n'affiche.
+ * Sous les entrées, « Tâches à classer » liste les tâches sans échéance, qu'aucun autre onglet n'affiche : sans projet
+ * ni domaine, ou classées mais sans quand choisi (« Quand ? » sous la ligne : cette semaine, une date, plus tard, sans date).
  */
 @Composable
 internal fun InboxTab(
@@ -138,7 +141,16 @@ internal fun InboxTab(
         }
         if (unsorted.isNotEmpty()) {
             item { SectionHeader(title = stringResource(R.string.tasks_section_unsorted)) }
-            taskRows(unsorted, projectNames, projectColors, moment, viewModel, onOpen, projectIcons = projectIcons)
+            taskRows(
+                unsorted,
+                projectNames,
+                projectColors,
+                moment,
+                viewModel,
+                onOpen,
+                projectIcons = projectIcons,
+                belowRow = { task -> if (task.needsWhen) WhenChoices(task, viewModel) },
+            )
         }
     }
 
@@ -170,6 +182,40 @@ internal fun InboxTab(
                 linking = null
             },
             onDismiss = { linking = null },
+        )
+    }
+}
+
+/**
+ * « Quand ? » sous une tâche classée sans moment choisi. Chaque choix passe par le ViewModel, donc part en file hors
+ * ligne ; la tâche sort de la liste dès qu'un moment est posé.
+ */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun WhenChoices(task: TaskItem, viewModel: TasksViewModel) {
+    val moment by viewModel.moment.collectAsStateWithLifecycle()
+    var picking by remember(task.uid) { mutableStateOf(false) }
+    FlowRow(
+        Modifier.fillMaxWidth().padding(start = Space.lg, end = Space.lg, bottom = Space.sm),
+        horizontalArrangement = Arrangement.spacedBy(Space.sm),
+        verticalArrangement = Arrangement.spacedBy(Space.sm),
+    ) {
+        Text(
+            stringResource(R.string.tasks_when_label),
+            style = MaterialTheme.typography.labelLarge,
+            color = cadence.onSurfaceVariant,
+            modifier = Modifier.padding(end = Space.xs),
+        )
+        QuickPill(stringResource(R.string.funnel_this_week), onClick = { viewModel.funnel(task, FunnelStage.THIS_WEEK) }, quiet = true)
+        QuickPill(stringResource(R.string.tasks_when_pick_date), onClick = { picking = true }, quiet = true)
+        QuickPill(stringResource(R.string.funnel_later), onClick = { viewModel.funnel(task, FunnelStage.LATER) }, quiet = true)
+        QuickPill(stringResource(R.string.tasks_no_due_date), onClick = { viewModel.clearWhen(task) }, quiet = true)
+    }
+    if (picking) {
+        TaskDatePickerDialog(
+            initial = moment.today,
+            onConfirm = { picking = false; viewModel.reschedule(task, it) },
+            onDismiss = { picking = false },
         )
     }
 }

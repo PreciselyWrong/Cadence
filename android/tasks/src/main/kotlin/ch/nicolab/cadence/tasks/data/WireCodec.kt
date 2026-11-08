@@ -23,7 +23,7 @@ internal object WireCodec {
     private val taskKeys = setOf(
         "uid", "name", "note", "status", "priority", "due_date", "due_has_time", "defer_until",
         "reminder_at", "recurrence_type", "project_uid", "area_uid", "parent_task_uid", "tag_uids",
-        "completed_at", "pinned_at", "field_clocks", "in_view_at", "week_of", "review_on", "reviewed_at", "source_key",
+        "completed_at", "pinned_at", "field_clocks", "in_view_at", "week_of", "needs_when", "review_on", "reviewed_at", "source_key",
     )
 
     private val json = Json { ignoreUnknownKeys = true }
@@ -50,6 +50,7 @@ internal object WireCodec {
         sourceKey = wire.string("source_key"),
         inViewAtRaw = wire.string("in_view_at"),
         weekOf = wire.string("week_of"),
+        needsWhen = wire.bool("needs_when"),
         reviewOn = wire.string("review_on"),
         reviewedAtRaw = wire.string("reviewed_at"),
     )
@@ -75,6 +76,7 @@ internal object WireCodec {
             put("field_clocks", json.parseToJsonElement(task.fieldClocksJson))
             put("in_view_at", task.inViewAtRaw)
             put("week_of", task.weekOf)
+            put("needs_when", task.needsWhen)
             put("review_on", task.reviewOn)
             put("reviewed_at", task.reviewedAtRaw)
             put("source_key", task.sourceKey)
