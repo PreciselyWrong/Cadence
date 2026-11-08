@@ -78,6 +78,7 @@ import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.model.LinkLists
 import ch.nicolab.cadence.tasks.model.ProjectChoices
 import ch.nicolab.cadence.tasks.model.TaskItem
+import ch.nicolab.cadence.tasks.ui.triage.TriageEntry
 
 /**
  * Capture rapide : le champ en tête envoie la saisie à la boîte de réception. Chaque idée, lien ou non, se trie d'une
@@ -85,12 +86,15 @@ import ch.nicolab.cadence.tasks.model.TaskItem
  * glisser à gauche supprime. Une décision s'écrit tout de suite, « Annuler » écrit l'inverse.
  * Sous les entrées, « Tâches à classer » liste les tâches sans échéance, qu'aucun autre onglet n'affiche : sans projet
  * ni domaine, ou classées mais sans quand choisi (« Quand ? » sous la ligne : cette semaine, une date, plus tard, sans date).
+ * Quand la file « À trier » attend, une entrée « À trier (N) » s'affiche au-dessus de la saisie.
  */
 @Composable
 internal fun InboxTab(
     viewModel: TasksViewModel,
     captureFocus: FocusRequester,
     onOpen: (TaskItem) -> Unit,
+    triageCount: Int = 0,
+    onOpenTriage: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val entries by viewModel.inbox.collectAsStateWithLifecycle()
@@ -113,6 +117,9 @@ internal fun InboxTab(
     }
 
     LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
+        if (triageCount > 0) {
+            item(key = "triage") { TriageEntry(triageCount, onOpen = onOpenTriage) }
+        }
         item(key = "capture") {
             CaptureField(
                 value = capture,
@@ -121,7 +128,8 @@ internal fun InboxTab(
                 modifier = Modifier.padding(bottom = Space.md).focusRequester(captureFocus),
             )
         }
-        if (entries.isEmpty()) {
+        // L'Inbox vide ne se dit que si rien n'attend non plus dans « Tâches à classer ».
+        if (entries.isEmpty() && unsorted.isEmpty()) {
             item { EmptyState(R.string.tasks_inbox_empty) }
         }
         items(entries, key = { it.uid }) { entry ->

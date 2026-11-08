@@ -34,10 +34,11 @@ fun selectWidgetTasks(
     zone: ZoneId,
     now: Instant = Instant.now(),
     tags: List<TagItem> = emptyList(),
+    weekStart: LocalDate,
 ): TodaySelection {
     // Filtrer par une étiquette parente inclut ses sous-étiquettes, comme sur le web.
     val tagScope = TagPaths.withDescendants(tags, config.tagUids)
-    val candidates = scopeTasks(tasks, config.taskScope, today, now, zone)
+    val candidates = scopeTasks(tasks, config.taskScope, today, now, zone, weekStart)
         .filter { !config.highPriorityOnly || it.priority == TaskPriority.HIGH }
         .filter { config.projectUids.isEmpty() || it.projectUid in config.projectUids }
         .filter { tagScope.isEmpty() || it.tagUids.any(tagScope::contains) }
@@ -114,7 +115,14 @@ object TodayListIds {
     fun day(day: LocalDate): Long = DAYS + day.toEpochDay()
 }
 
-private fun scopeTasks(tasks: List<TaskItem>, scope: TaskScope, today: LocalDate, now: Instant, zone: ZoneId): List<TaskItem> =
+private fun scopeTasks(
+    tasks: List<TaskItem>,
+    scope: TaskScope,
+    today: LocalDate,
+    now: Instant,
+    zone: ZoneId,
+    weekStart: LocalDate,
+): List<TaskItem> =
     when (scope) {
         TaskScope.OVERDUE_AND_TODAY -> TaskViews.today(tasks, today, now)
         // Une série en retard est exclue d'« aujourd'hui seulement » par son occurrence enregistrée ; son occurrence du jour y reste.
@@ -128,7 +136,7 @@ private fun scopeTasks(tasks: List<TaskItem>, scope: TaskScope, today: LocalDate
             task.parentTaskUid == null && !task.isClosed && task.dueDate == null && task.dueDay == null &&
                 (deferredUntil == null || !deferredUntil.isAfter(now))
         }
-        TaskScope.INBOX -> TaskViews.unsorted(tasks, now)
+        TaskScope.INBOX -> TaskViews.unsorted(tasks, now, weekStart)
     }
 
 private fun TaskItem.isOverdue(today: LocalDate): Boolean = dueDay?.isBefore(today) == true

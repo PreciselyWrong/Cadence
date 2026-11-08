@@ -88,7 +88,7 @@
       "keepBoth": "둘 다 유지",
       "keepNew": "새 항목 유지",
       "merge": "기존 항목에 병합",
-      "dropNew": "새 항목 버리기",
+      "dropNew": "새 링크 보관",
       "title": "같은 사이트의 같은 제목",
       "video": "같은 동영상",
       "repository": "같은 저장소",
@@ -99,7 +99,7 @@
     },
     "card": {
       "reason": "분류 확인 필요",
-      "dismiss": "없음",
+      "dismiss": "무시",
       "acceptAll": "모두 수락",
       "apply": "적용",
       "medium": "보통",
@@ -118,6 +118,16 @@
     }
   },
   "triage": {
+    "linkLater": "30일 후",
+    "linkArchive": "보관",
+    "linkKeep": "유지",
+    "linkPostponed": "30일 후 다시 보기",
+    "linkArchived": "링크를 보관했습니다",
+    "linkKept": "링크를 유지했습니다",
+    "linkReview": "다시 볼 링크",
+    "deleted": "작업을 삭제했습니다",
+    "actionError": "할 수 없습니다. 다시 시도하세요.",
+    "alreadySettled": "이미 다른 곳에서 처리되었습니다.",
     "slotRefuse": "거절",
     "slotAccept": "계획하기",
     "action": {
@@ -1680,6 +1690,7 @@
     "projectNameTooLong": "프로젝트 이름은 {{max}}자 이하여야 합니다"
   },
   "inbox": {
+    "toSort": "정리할 항목 ({{count}})",
     "unsorted": {
       "noDate": "날짜 없음",
       "later": "나중에",

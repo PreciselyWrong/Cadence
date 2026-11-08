@@ -88,7 +88,7 @@
       "keepBoth": "Behåll båda",
       "keepNew": "Behåll den nya",
       "merge": "Slå ihop med den gamla",
-      "dropNew": "Kasta den nya",
+      "dropNew": "Arkivera den nya",
       "title": "Samma titel på samma webbplats",
       "video": "Samma video",
       "repository": "Samma förråd",
@@ -99,7 +99,7 @@
     },
     "card": {
       "reason": "Sortering att bekräfta",
-      "dismiss": "Ingen",
+      "dismiss": "Ignorera",
       "acceptAll": "Acceptera alla",
       "apply": "Använd",
       "medium": "Medel",
@@ -118,6 +118,16 @@
     }
   },
   "triage": {
+    "linkLater": "Om 30 dagar",
+    "linkArchive": "Arkivera",
+    "linkKeep": "Behåll",
+    "linkPostponed": "Se över om 30 dagar",
+    "linkArchived": "Länk arkiverad",
+    "linkKept": "Länk behållen",
+    "linkReview": "Länk att se över",
+    "deleted": "Uppgift borttagen",
+    "actionError": "Gick inte, försök igen.",
+    "alreadySettled": "Redan hanterat på annat håll.",
     "slotRefuse": "Avböj",
     "slotAccept": "Planera",
     "action": {
@@ -1680,6 +1690,7 @@
     "projectNameTooLong": "Projektnamnet får vara högst {{max}} tecken"
   },
   "inbox": {
+    "toSort": "Att sortera ({{count}})",
     "unsorted": {
       "noDate": "Utan datum",
       "later": "Senare",

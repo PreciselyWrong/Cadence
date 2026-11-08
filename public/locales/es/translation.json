@@ -88,7 +88,7 @@
       "keepBoth": "Conservar ambos",
       "keepNew": "Conservar el nuevo",
       "merge": "Fusionar en el antiguo",
-      "dropNew": "Descartar el nuevo",
+      "dropNew": "Archivar el nuevo",
       "title": "Mismo título en el mismo sitio",
       "video": "Mismo vídeo",
       "repository": "Mismo repositorio",
@@ -99,7 +99,7 @@
     },
     "card": {
       "reason": "Clasificación por confirmar",
-      "dismiss": "Ninguno",
+      "dismiss": "Ignorar",
       "acceptAll": "Aceptar todo",
       "apply": "Aplicar",
       "medium": "Media",
@@ -118,6 +118,16 @@
     }
   },
   "triage": {
+    "linkLater": "En 30 días",
+    "linkArchive": "Archivar",
+    "linkKeep": "Conservar",
+    "linkPostponed": "Revisar en 30 días",
+    "linkArchived": "Enlace archivado",
+    "linkKept": "Enlace conservado",
+    "linkReview": "Enlace para revisar",
+    "deleted": "Tarea eliminada",
+    "actionError": "No se pudo hacer, inténtalo de nuevo.",
+    "alreadySettled": "Ya resuelto en otro lugar.",
     "slotRefuse": "Rechazar",
     "slotAccept": "Planificar",
     "action": {
@@ -2009,6 +2019,7 @@
     "nextMonth": "el próximo mes"
   },
   "inbox": {
+    "toSort": "Por ordenar ({{count}})",
     "unsorted": {
       "noDate": "Sin fecha",
       "later": "Más tarde",

@@ -88,7 +88,7 @@
       "keepBoth": "Behold begge",
       "keepNew": "Behold den nye",
       "merge": "Flet ind i den gamle",
-      "dropNew": "Kassér den nye",
+      "dropNew": "Arkivér det nye",
       "title": "Samme titel på samme websted",
       "video": "Samme video",
       "repository": "Samme repository",
@@ -99,7 +99,7 @@
     },
     "card": {
       "reason": "Sortering skal bekræftes",
-      "dismiss": "Ingen",
+      "dismiss": "Ignorer",
       "acceptAll": "Accepter alle",
       "apply": "Anvend",
       "medium": "Mellem",
@@ -118,6 +118,16 @@
     }
   },
   "triage": {
+    "linkLater": "Om 30 dage",
+    "linkArchive": "Arkivér",
+    "linkKeep": "Behold",
+    "linkPostponed": "Gennemse igen om 30 dage",
+    "linkArchived": "Link arkiveret",
+    "linkKept": "Link beholdt",
+    "linkReview": "Link til gennemsyn",
+    "deleted": "Opgave slettet",
+    "actionError": "Kunne ikke gøres, prøv igen.",
+    "alreadySettled": "Allerede håndteret et andet sted.",
     "slotRefuse": "Afvis",
     "slotAccept": "Planlæg",
     "action": {
@@ -1680,6 +1690,7 @@
     "projectNameTooLong": "Projektnavnet må højst være {{max}} tegn"
   },
   "inbox": {
+    "toSort": "At sortere ({{count}})",
     "unsorted": {
       "noDate": "Uden dato",
       "later": "Senere",

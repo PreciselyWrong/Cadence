@@ -88,7 +88,7 @@
       "keepBoth": "Beide behalten",
       "keepNew": "Neues behalten",
       "merge": "In das alte zusammenführen",
-      "dropNew": "Neues verwerfen",
+      "dropNew": "Den neuen archivieren",
       "title": "Gleicher Titel auf derselben Website",
       "video": "Gleiches Video",
       "repository": "Gleiches Repository",
@@ -99,7 +99,7 @@
     },
     "card": {
       "reason": "Einordnung zu bestätigen",
-      "dismiss": "Keines",
+      "dismiss": "Ignorieren",
       "acceptAll": "Alle übernehmen",
       "apply": "Anwenden",
       "medium": "Mittel",
@@ -118,6 +118,16 @@
     }
   },
   "triage": {
+    "linkLater": "In 30 Tagen",
+    "linkArchive": "Archivieren",
+    "linkKeep": "Behalten",
+    "linkPostponed": "In 30 Tagen erneut ansehen",
+    "linkArchived": "Link archiviert",
+    "linkKept": "Link behalten",
+    "linkReview": "Link zum Überprüfen",
+    "deleted": "Aufgabe gelöscht",
+    "actionError": "Nicht möglich, bitte erneut versuchen.",
+    "alreadySettled": "Bereits anderswo erledigt.",
     "slotRefuse": "Ablehnen",
     "slotAccept": "Planen",
     "action": {
@@ -875,6 +885,7 @@
     "saturday": "Sa"
   },
   "inbox": {
+    "toSort": "Zu sortieren ({{count}})",
     "unsorted": {
       "noDate": "Ohne Datum",
       "later": "Später",

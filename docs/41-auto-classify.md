@@ -41,10 +41,10 @@ In **dry run** mode (`mode: dry_run`) steps 1 to 4 run, the change rows are writ
 
 ## Cards
 
-One card per item, ever (`auto_classify_suggestions`, unique per item), shown in the triage queue as `type: classify` or `type: link_duplicate`, expired after `suggestion_ttl_days`. No limit per day by default (`daily_suggestion_limit`, 0 = none).
+One card per item, ever (`auto_classify_suggestions`, unique per item), shown in the triage queue as `type: classify` or `type: link_duplicate`, expired after `suggestion_ttl_days`, or as soon as it no longer asks anything: its item gone or closed, or every row it asks filled by hand (a duplicate card: either link archived). Applying a card only writes fields still empty, so a project or priority set by hand meanwhile is never overwritten. No limit per day by default (`daily_suggestion_limit`, 0 = none).
 
 - **Classify**: up to three rows, each only when in doubt. *Project*: 1 to 3 projects, the domain (tasks), *New project* (name and domain proposed by the model, editable, created only on your tap), *Other…* (any project), *None*. *Tags*: the doubtful tags to tick, plus at most one *new tag*, unticked. *Priority*. Buttons: *Apply* (the best answers are preselected), *Accept all* (best project or domain, every tag offered, the priority; never a new project or tag), *None* (dismiss).
-- **Duplicate link**: *Drop the new one*, *Merge into the old one* (its tags and note added, then the new one dropped), *Keep the new one* (the old one dropped), *Keep both*.
+- **Duplicate link**: *Archive the new one* (« Archiver le nouveau »), *Merge into the old one* (its tags and note added, then the new one dropped), *Keep the new one* (the old one dropped), *Keep both*.
 - **Android notifications**: after each sync, one notification per new card, quiet hours respected, off with `notify: false`. Buttons: *Accept all* / *None* / *Open* for a classify card, *Drop* / *Merge* / *Open* for a duplicate. Answers go through the deferred-call queue (offline safe).
 
 ## Marks and undo

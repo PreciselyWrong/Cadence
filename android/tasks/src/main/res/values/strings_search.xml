@@ -130,7 +130,7 @@
     <string name="tasks_idea_delete">Supprimer</string>
     <string name="tasks_idea_links_title">Enregistrer dans les liens</string>
     <string name="tasks_idea_to_task_notice">« %1$s » : tâche créée</string>
-    <string name="tasks_idea_to_note_notice">Idée changée en note</string>
+    <string name="tasks_idea_to_note_notice">« %1$s » : note créée</string>
     <string name="tasks_idea_to_links_notice">« %1$s » ajouté aux liens</string>
     <string name="tasks_idea_link_already_sent">Le lien est déjà parti : supprimez-le depuis Liens.</string>
 </resources>

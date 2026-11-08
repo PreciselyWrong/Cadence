@@ -128,6 +128,23 @@ async function list(userId, filters = {}) {
     return { rows, total };
 }
 
+// Links still to read whose review day has come, oldest day first.
+function dueForReview(userId, today) {
+    return Link.findAll({
+        where: {
+            user_id: userId,
+            status: { [Op.ne]: 'dropped' },
+            review_at: { [Op.lte]: today },
+        },
+        attributes: ['uid', 'url', 'title', 'review_at'],
+        order: [
+            ['review_at', 'ASC'],
+            ['id', 'ASC'],
+        ],
+        raw: true,
+    });
+}
+
 function findByUid(userId, uid) {
     return Link.findOne({
         where: { uid, user_id: userId },
@@ -185,6 +202,7 @@ async function remove(link) {
 }
 
 module.exports = {
+    dueForReview,
     list,
     findByUid,
     findByUrl,

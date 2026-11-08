@@ -88,7 +88,7 @@
       "keepBoth": "İkisini de tut",
       "keepNew": "Yeniyi tut",
       "merge": "Eskisine birleştir",
-      "dropNew": "Yenisini at",
+      "dropNew": "Yenisini arşivle",
       "title": "Aynı sitede aynı başlık",
       "video": "Aynı video",
       "repository": "Aynı depo",
@@ -99,7 +99,7 @@
     },
     "card": {
       "reason": "Onaylanacak sınıflandırma",
-      "dismiss": "Yok",
+      "dismiss": "Yok say",
       "acceptAll": "Tümünü kabul et",
       "apply": "Uygula",
       "medium": "Orta",
@@ -118,6 +118,16 @@
     }
   },
   "triage": {
+    "linkLater": "30 gün sonra",
+    "linkArchive": "Arşivle",
+    "linkKeep": "Tut",
+    "linkPostponed": "30 gün sonra tekrar bak",
+    "linkArchived": "Bağlantı arşivlendi",
+    "linkKept": "Bağlantı tutuldu",
+    "linkReview": "Gözden geçirilecek bağlantı",
+    "deleted": "Görev silindi",
+    "actionError": "Yapılamadı, tekrar deneyin.",
+    "alreadySettled": "Başka yerde zaten halledildi.",
     "slotRefuse": "Reddet",
     "slotAccept": "Planla",
     "action": {
@@ -1680,6 +1690,7 @@
     "projectNameTooLong": "Proje adı en fazla {{max}} karakter olabilir"
   },
   "inbox": {
+    "toSort": "Sıralanacak ({{count}})",
     "unsorted": {
       "noDate": "Tarihsiz",
       "later": "Daha sonra",

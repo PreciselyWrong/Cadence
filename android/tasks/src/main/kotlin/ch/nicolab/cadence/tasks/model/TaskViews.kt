@@ -129,13 +129,18 @@ object TaskViews {
      * À classer : tâches ouvertes de premier niveau que rien ne range encore, sans échéance, hors « Plus tard »,
      * hors vue et semaine décidée, ni reportées ni récurrentes. Une tâche sans projet ni domaine s'y trouve ; une
      * tâche rangée s'y trouve aussi tant qu'elle attend son quand ([TaskItem.needsWhen], « Quand ? » dans la file).
+     * Une semaine décidée passée ne compte plus : la tâche redevient à classer.
      */
-    fun unsorted(tasks: List<TaskItem>, now: Instant): List<TaskItem> =
+    fun unsorted(tasks: List<TaskItem>, now: Instant, weekStart: LocalDate): List<TaskItem> =
         tasks.filter {
             visibleNow(it, now) && it.dueDate == null && it.dueDay == null &&
                 (it.projectUid == null && it.areaUid == null || it.needsWhen) &&
-                !it.someday && it.inViewAt == null && it.weekOf == null && !it.isRecurring
+                !it.someday && it.inViewAt == null && !it.isWeekDecided(weekStart) && !it.isRecurring
         }
+
+    /** Semaine décidée pour la semaine en cours ou une suivante ; une semaine passée ne compte pas. */
+    private fun TaskItem.isWeekDecided(weekStart: LocalDate): Boolean =
+        weekOf != null && !weekOf.isBefore(weekStart)
 
     /**
      * Valeur de `needs_when` qui accompagne un quand choisi (date, semaine, vue, « Plus tard », report) : elle

@@ -46,4 +46,69 @@ class ClassifyNotifyPlanTest {
 
         assertEquals(setOf("s1"), remembered)
     }
+
+    @Test
+    fun aNotificationWhoseSuggestionIsNoLongerPendingIsCancelled() {
+        val stale = ClassifyNotifyPlan.stale(shown = setOf("s1", "s0", "s9"), pendingUids = setOf("s1"))
+
+        assertEquals(setOf("s0", "s9"), stale)
+    }
+
+    @Test
+    fun nothingIsCancelledWhileEveryShownSuggestionIsPending() {
+        assertTrue(ClassifyNotifyPlan.stale(shown = setOf("s1"), pendingUids = setOf("s1", "s2")).isEmpty())
+    }
+
+    private fun card(
+        project: ProjectOffer? = null,
+        tags: List<String> = emptyList(),
+        priority: Int? = null,
+    ) = ClassifyCard(
+        suggestionUid = "s1",
+        entity = "task",
+        itemUid = "t1",
+        title = "Acheter du pain",
+        project = project,
+        tags = if (tags.isEmpty()) null else TagOffer(tags, newTag = null),
+        priority = priority,
+    )
+
+    private fun summary(card: ClassifyCard) = AcceptAllText.summary(
+        card,
+        projectLabel = { "Projet : $it" },
+        priorityLabel = { if (it == 2) "Priorité haute" else "Priorité moyenne" },
+    )
+
+    @Test
+    fun theNotificationNamesWhatAcceptAllWillApply() {
+        val offer = ProjectOffer(
+            options = listOf(ProjectOption("p1", "Maison", "Foyer"), ProjectOption("p2", "Bureau", null)),
+            area = null,
+            newProject = null,
+        )
+
+        assertEquals(
+            "Projet : Maison · #achats #extérieur · Priorité haute",
+            summary(card(project = offer, tags = listOf("achats", "extérieur"), priority = 2)),
+        )
+    }
+
+    @Test
+    fun withoutProjectOptionTheAreaNameStandsForTheProject() {
+        val offer = ProjectOffer(options = emptyList(), area = AreaOffer("a1", "Maison"), newProject = null)
+
+        assertEquals("Projet : Maison", summary(card(project = offer)))
+    }
+
+    @Test
+    fun aNewProjectOrANewTagIsNeverNamedAsApplied() {
+        val offer = ProjectOffer(options = emptyList(), area = null, newProject = NewProjectOffer("Neuf", "a1", "Maison"))
+
+        assertEquals(null, summary(card(project = offer)))
+    }
+
+    @Test
+    fun onlyTheTagsAndPriorityThatArePresentAreNamed() {
+        assertEquals("#achats · Priorité moyenne", summary(card(tags = listOf("achats"), priority = 1)))
+    }
 }

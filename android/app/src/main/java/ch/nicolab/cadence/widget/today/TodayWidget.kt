@@ -69,6 +69,7 @@ import ch.nicolab.cadence.designsystem.theme.readableTint
 import ch.nicolab.cadence.domain.WidgetGroupMode
 import ch.nicolab.cadence.domain.WidgetGroupSelection
 import ch.nicolab.cadence.tasks.TasksGraph
+import ch.nicolab.cadence.tasks.model.Funnel
 import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.model.TagColor
 import ch.nicolab.cadence.tasks.model.TagColors
@@ -83,6 +84,7 @@ import ch.nicolab.cadence.widget.WidgetHabit
 import ch.nicolab.cadence.widget.WidgetHabitPresentation
 import ch.nicolab.cadence.widget.pendingWidgetHabits
 import ch.nicolab.cadence.widget.renderHabitFacet
+import java.time.DayOfWeek
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
@@ -153,7 +155,9 @@ class TodayWidget : GlanceAppWidget() {
         val tagList = tasksRepository.observeTags().first()
         val tagNames = tagList.associate { it.uid to it.name }
         val tagColors = TagColors.byUid(tagList)
-        val selection = selectWidgetTasks(tasks, eventsOf(app, config, today, zone), config, today, zone, now, tagList)
+        val firstDayOfWeek = TasksGraph.connection(app).observe().first()?.firstDayOfWeek ?: DayOfWeek.MONDAY
+        val weekStart = Funnel.weekStart(today, firstDayOfWeek)
+        val selection = selectWidgetTasks(tasks, eventsOf(app, config, today, zone), config, today, zone, now, tagList, weekStart)
         val facets = if (config.habitPlacement == HabitPlacement.HIDDEN) {
             emptyList()
         } else {

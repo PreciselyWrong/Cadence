@@ -35,8 +35,33 @@ object ClassifyNotifyPlan {
         return pending.filter { it.uid !in notified }
     }
 
+    /** Notifications affichées dont la suggestion n'est plus en attente (classée ailleurs, ignorée ou expirée). */
+    fun stale(shown: Set<String>, pendingUids: Set<String>): Set<String> = shown - pendingUids
+
     /** La mémoire ne garde que les suggestions encore en attente : une suggestion résolue ou expirée s'oublie. */
     fun remembered(pendingUids: Set<String>, notified: Set<String>): Set<String> = notified.filterTo(mutableSetOf()) { it in pendingUids }
+}
+
+/** Texte d'une notification de classement : ce que « Tout accepter » appliquera, rien de plus. */
+object AcceptAllText {
+    /**
+     * Projet (meilleure option, sinon le domaine), tags proposés, priorité, séparés par « · », seulement ceux présents ;
+     * null si « Tout accepter » ne changerait rien. Ni nouveau projet ni nouveau tag, comme le serveur.
+     */
+    fun summary(card: ClassifyCard, projectLabel: (String) -> String, priorityLabel: (Int) -> String): String? {
+        val parts = buildList {
+            projectName(card.project)?.let { add(projectLabel(it)) }
+            card.tags?.options?.takeIf { it.isNotEmpty() }?.let { names -> add(names.joinToString(" ") { "#$it" }) }
+            card.priority?.let { add(priorityLabel(it)) }
+        }
+        return parts.takeIf { it.isNotEmpty() }?.joinToString(" · ")
+    }
+
+    private fun projectName(offer: ProjectOffer?): String? {
+        offer ?: return null
+        return offer.options.firstOrNull()?.name?.takeIf(String::isNotBlank)
+            ?: offer.area?.name?.takeIf(String::isNotBlank)
+    }
 }
 
 /** Mémoire locale : uids déjà notifiés, et le réglage « notifier » lu depuis le serveur (gardé une heure). */
@@ -84,9 +109,11 @@ class AutoClassifyNotifier(
         if (notifyEnabled() != true) return
         val pending = repository.suggestions().getOrNull() ?: return
         val notified = store.notified()
+        val pendingUids = pending.mapTo(mutableSetOf()) { it.uid }
+        ClassifyNotifyPlan.stale(notified, pendingUids).forEach(::cancel)
         val due = ClassifyNotifyPlan.due(pending, notified, notify = true, now = clock(), quiet = quiet())
         due.forEach(::post)
-        store.saveNotified(ClassifyNotifyPlan.remembered(pending.map { it.uid }.toSet(), notified + due.map { it.uid }))
+        store.saveNotified(ClassifyNotifyPlan.remembered(pendingUids, notified + due.map { it.uid }))
     }
 
     /** Le réglage du serveur, relu au plus une fois par heure ; hors ligne, la dernière valeur connue. */
@@ -103,7 +130,17 @@ class AutoClassifyNotifier(
         // Sans permission, rien ne s'affiche ; la suggestion est tout de même notée pour ne pas la reposer plus tard.
         if (!TaskReminderScheduler.notificationsAllowed(context)) return
         ensureChannel()
-        val text = context.getString(if (suggestion.isDuplicate) R.string.auto_classify_notif_duplicate else R.string.auto_classify_notif_classify)
+        val text = if (suggestion.isDuplicate) {
+            context.getString(R.string.auto_classify_notif_duplicate)
+        } else {
+            AutoClassifyPayload.classify(suggestion.payload)?.let { card ->
+                AcceptAllText.summary(
+                    card,
+                    projectLabel = { context.getString(R.string.auto_classify_notif_project, it) },
+                    priorityLabel = { context.getString(if (it == 2) R.string.auto_classify_notif_priority_high else R.string.auto_classify_notif_priority_medium) },
+                )
+            } ?: context.getString(R.string.auto_classify_notif_classify)
+        }
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.tasks_ic_notification)
             .setContentTitle(suggestion.headline.ifBlank { context.getString(R.string.auto_classify_title) })
@@ -118,6 +155,11 @@ class AutoClassifyNotifier(
         // Troisième bouton : la carte dans « À trier », pour un autre choix que les deux proposés.
         open?.let { builder.addAction(0, context.getString(R.string.auto_classify_action_open), it) }
         NotificationManagerCompat.from(context).notify(TAG, suggestion.uid.hashCode(), builder.build())
+    }
+
+    /** Retire la notification d'une suggestion résolue ailleurs ; sans effet si elle n'est plus affichée. */
+    private fun cancel(uid: String) {
+        NotificationManagerCompat.from(context).cancel(TAG, uid.hashCode())
     }
 
     private fun ensureChannel() {

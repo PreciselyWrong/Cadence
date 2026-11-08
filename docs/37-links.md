@@ -26,7 +26,7 @@ Finding links, reading page metadata and classifying their kind is plain code. A
 
 - A former status (`to_evaluate`, `tested`, `kept`, `parked`) is read as `new` on every input path (REST, import, sync, MCP). A former `parked` also sets `review_at` to today + 30 days when the write gives none.
 - Migration `20261107120000-links-two-statuses`: `UPDATE links SET status = 'new'` for the former statuses. Idempotent, SQLite and PostgreSQL.
-- "Later" is no status: it is the review day `review_at`. A link with a review day is looked at again that day.
+- "Later" is no status: it is the review day `review_at`. A link still to read comes back on that day as a card « Lien à revoir » in « À trier » (`docs/40-triage.md`): **Garder** (no more review day), **Archiver**, **Dans 30 jours**.
 
 ## Managing a link
 

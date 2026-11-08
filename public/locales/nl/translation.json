@@ -88,7 +88,7 @@
       "keepBoth": "Beide bewaren",
       "keepNew": "Het nieuwe bewaren",
       "merge": "Samenvoegen met het oude",
-      "dropNew": "Het nieuwe weggooien",
+      "dropNew": "De nieuwe archiveren",
       "title": "Dezelfde titel op dezelfde site",
       "video": "Dezelfde video",
       "repository": "Dezelfde repository",
@@ -99,7 +99,7 @@
     },
     "card": {
       "reason": "Indeling te bevestigen",
-      "dismiss": "Geen",
+      "dismiss": "Negeren",
       "acceptAll": "Alles accepteren",
       "apply": "Toepassen",
       "medium": "Gemiddeld",
@@ -118,6 +118,16 @@
     }
   },
   "triage": {
+    "linkLater": "Over 30 dagen",
+    "linkArchive": "Archiveren",
+    "linkKeep": "Bewaren",
+    "linkPostponed": "Over 30 dagen opnieuw bekijken",
+    "linkArchived": "Link gearchiveerd",
+    "linkKept": "Link bewaard",
+    "linkReview": "Link om te herzien",
+    "deleted": "Taak verwijderd",
+    "actionError": "Niet gelukt, probeer opnieuw.",
+    "alreadySettled": "Elders al afgehandeld.",
     "slotRefuse": "Weigeren",
     "slotAccept": "Inplannen",
     "action": {
@@ -1680,6 +1690,7 @@
     "projectNameTooLong": "Projectnaam mag maximaal {{max}} tekens bevatten"
   },
   "inbox": {
+    "toSort": "Te sorteren ({{count}})",
     "unsorted": {
       "noDate": "Zonder datum",
       "later": "Later",

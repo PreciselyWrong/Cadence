@@ -9,6 +9,9 @@ import ch.nicolab.cadence.tasks.autoclassify.AutoClassifyRequests
 import ch.nicolab.cadence.tasks.brief.BriefRequests
 import ch.nicolab.cadence.tasks.brief.QuestionDto
 import ch.nicolab.cadence.tasks.sync.DeferredCall
+import ch.nicolab.cadence.tasks.triage.LinkReviewDecision
+import ch.nicolab.cadence.tasks.triage.LinkReviewPayload
+import ch.nicolab.cadence.tasks.triage.LinkReviewRequests
 import ch.nicolab.cadence.tasks.triage.TriageActions
 import ch.nicolab.cadence.tasks.triage.TriageHolds
 import ch.nicolab.cadence.tasks.triage.TriageItemDto
@@ -23,6 +26,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -51,9 +55,16 @@ internal class TriageViewModel(application: Application) : AndroidViewModel(appl
 
     val queue: StateFlow<TriageQueueDto?> = repository.queue
 
+    private val _online = MutableStateFlow(false)
+
+    /** Vrai après une lecture réussie de la file ; hors ligne, la file gardée n'est pas montrée comme à jour. */
+    val online: StateFlow<Boolean> = _online.asStateFlow()
+
     fun refresh() {
         viewModelScope.launch {
-            if (repository.refresh().isSuccess) holds.settle(repository.pendingCallKeys())
+            val result = repository.refresh()
+            _online.value = result.isSuccess
+            if (result.isSuccess) holds.settle(repository.pendingCallKeys())
         }
     }
 
@@ -88,6 +99,19 @@ internal class TriageViewModel(application: Application) : AndroidViewModel(appl
             string(R.string.triage_answered),
             BriefRequests.answer(date, key, question.key, question.target.scope, question.target.ref, answer, string(R.string.triage_title)),
         )
+    }
+
+    /** Décision sur un lien à revoir : la carte disparaît, la décision part à la synchro (hors ligne compris). */
+    fun decideLink(item: TriageItemDto, decision: LinkReviewDecision) {
+        val card = LinkReviewPayload.parse(item.payload) ?: return
+        val message = string(
+            when (decision) {
+                LinkReviewDecision.KEEP -> R.string.triage_link_kept
+                LinkReviewDecision.ARCHIVE -> R.string.triage_link_archived
+                LinkReviewDecision.LATER -> R.string.triage_link_postponed
+            },
+        )
+        hold(item, message, LinkReviewRequests.decide(card.linkUid, decision, string(R.string.triage_title)))
     }
 
     /** Réponse à une carte du classement automatique (`choice` : `all`, ou un objet projet/tags/priorité, ou un doublon). */

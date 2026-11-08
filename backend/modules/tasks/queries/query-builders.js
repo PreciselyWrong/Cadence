@@ -1,4 +1,7 @@
+const moment = require('moment-timezone');
+const { weekStart } = require('../../review/fields');
 const {
+    User,
     Task,
     Tag,
     Project,
@@ -303,8 +306,17 @@ async function filterTasksByParams(
             delete whereClause[Op.or];
             whereClause.recurring_parent_id = null;
             whereClause.due_date = null;
-            whereClause.week_of = null;
             whereClause.in_view_at = null;
+            // A « This week » from a past week decided nothing any more.
+            const owner = await User.findByPk(userId, {
+                attributes: ['timezone', 'first_day_of_week'],
+            });
+            const currentWeek = weekStart(
+                moment
+                    .tz(getSafeTimezone(owner?.timezone))
+                    .format('YYYY-MM-DD'),
+                owner?.first_day_of_week ?? 1
+            );
             whereClause.status = {
                 [Op.notIn]: [
                     Task.STATUS.DONE,
@@ -329,6 +341,12 @@ async function filterTasksByParams(
                     [Op.or]: [
                         { project_id: null, area_id: null },
                         { needs_when: true },
+                    ],
+                },
+                {
+                    [Op.or]: [
+                        { week_of: null },
+                        { week_of: { [Op.lt]: currentWeek } },
                     ],
                 },
             ];

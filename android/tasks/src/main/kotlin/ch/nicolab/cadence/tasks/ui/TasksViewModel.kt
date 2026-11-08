@@ -269,8 +269,8 @@ internal class TasksViewModel(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyMap())
 
     /** Tâches sans échéance ni projet : sans cette liste, elles n'apparaîtraient dans aucun onglet. */
-    val unsorted: StateFlow<List<TaskItem>> = combine(scopedTasks, moment) { all, m ->
-        TaskViews.unsorted(all, m.now)
+    val unsorted: StateFlow<List<TaskItem>> = combine(scopedTasks, moment, weekStart) { all, m, week ->
+        TaskViews.unsorted(all, m.now, week)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
     /** Projets du domaine filtré : la liste de l'onglet Projets ; les sélecteurs gardent [projects]. */
@@ -811,10 +811,11 @@ internal class TasksViewModel(
      */
     fun convertIdeaToNote(entry: InboxEntry) = launchAction {
         val uid = UUID.randomUUID().toString()
-        repository.saveNote(uid, IdeaNotes.change(entry.content))
+        val change = IdeaNotes.change(entry.content)
+        repository.saveNote(uid, change)
         repository.processInboxItem(entry.uid)
         _notices.tryEmit(
-            UndoNotice(getString(R.string.tasks_idea_to_note_notice)) {
+            UndoNotice(getString(R.string.tasks_idea_to_note_notice, change.title.orEmpty())) {
                 launchAction {
                     repository.deleteNote(uid)
                     repository.reopenInboxItem(entry.uid)

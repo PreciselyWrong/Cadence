@@ -42,6 +42,9 @@ import ch.nicolab.cadence.designsystem.components.navigationClearance
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.SyncStatus
+import ch.nicolab.cadence.tasks.ui.triage.TriageScreen
+import ch.nicolab.cadence.tasks.ui.triage.TriageViewModel
+import java.time.LocalDate
 import kotlinx.coroutines.launch
 
 /**
@@ -59,6 +62,11 @@ fun InboxScreen(modifier: Modifier = Modifier, onOpenSearch: () -> Unit = {}, on
     var linksOpen by rememberSaveable { mutableStateOf(false) }
     val ideas by viewModel.inbox.collectAsStateWithLifecycle()
     val syncStatus by viewModel.syncStatus.collectAsStateWithLifecycle()
+    val triage: TriageViewModel = viewModel()
+    val triageItems by triage.items.collectAsStateWithLifecycle()
+    val triageOnline by triage.online.collectAsStateWithLifecycle()
+    var triageOpen by rememberSaveable { mutableStateOf(false) }
+    LaunchedEffect(triage) { triage.refresh() }
     DeletionUndoEffect(viewModel, snackbar)
 
     Scaffold(
@@ -103,6 +111,8 @@ fun InboxScreen(modifier: Modifier = Modifier, onOpenSearch: () -> Unit = {}, on
                         viewModel = viewModel,
                         captureFocus = captureFocus,
                         onOpen = { selectedTaskUid = it.uid },
+                        triageCount = if (triageOnline) triageItems.size else 0,
+                        onOpenTriage = { triageOpen = true },
                         modifier = Modifier.fillMaxSize(),
                     )
                 }
@@ -124,6 +134,9 @@ fun InboxScreen(modifier: Modifier = Modifier, onOpenSearch: () -> Unit = {}, on
         selectedTaskUid = selectedTaskUid,
         onCloseTask = { selectedTaskUid = null },
     )
+    if (triageOpen) {
+        TriageScreen(today = LocalDate.now(), onBack = { triageOpen = false })
+    }
     if (captureOpen) {
         QuickAddSheet(
             onDismiss = { captureOpen = false },

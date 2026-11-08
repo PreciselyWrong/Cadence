@@ -17,6 +17,7 @@ class TodayWidgetSelectionTest {
     private val today = LocalDate.of(2026, 10, 30)
     private val zone = ZoneOffset.UTC
     private val now = Instant.parse("2026-10-30T10:00:00Z")
+    private val weekStart = LocalDate.of(2026, 10, 26)
 
     @Test
     fun `la portee Aujourd'hui exclut les retards et demain`() {
@@ -83,6 +84,18 @@ class TodayWidgetSelectionTest {
         val selection = select(tasks, TodayWidgetConfig(taskScope = TaskScope.INBOX))
 
         assertEquals(listOf("loose"), selection.tasks.map { it.uid })
+    }
+
+    @Test
+    fun `la boite de reception garde une tache planifiee pour une semaine passee`() {
+        val tasks = listOf(
+            task("past-week").copy(weekOf = LocalDate.of(2026, 10, 19)),
+            task("this-week").copy(weekOf = weekStart),
+        )
+
+        val selection = select(tasks, TodayWidgetConfig(taskScope = TaskScope.INBOX))
+
+        assertEquals(listOf("past-week"), selection.tasks.map { it.uid })
     }
 
     @Test
@@ -244,7 +257,7 @@ class TodayWidgetSelectionTest {
         config: TodayWidgetConfig,
         events: List<EventWithDone> = emptyList(),
         tags: List<ch.nicolab.cadence.tasks.model.TagItem> = emptyList(),
-    ) = selectWidgetTasks(tasks, events, config, today, zone, now, tags)
+    ) = selectWidgetTasks(tasks, events, config, today, zone, now, tags, weekStart)
 
     private fun task(
         uid: String,

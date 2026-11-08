@@ -12,6 +12,7 @@ const {
     ConflictError,
 } = require('../../shared/errors');
 const repository = require('./repository');
+const { slotsOf, cardStillAsks } = require('./core/eligibility');
 const { forgetCatalog } = require('./model');
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -121,7 +122,27 @@ function serialize(suggestion) {
     };
 }
 
-// Pending cards whose item still exists, newest first.
+// A card retires when its item is gone, closed, or filed by hand meanwhile;
+// a duplicate card when either link is gone or already archived.
+async function stillAsks(userId, row) {
+    const item = await repository.loadItem(userId, row.entity, row.item_uid);
+    if (!item) return false;
+    if (row.kind === 'duplicate') {
+        const original = await repository.loadItem(
+            userId,
+            'link',
+            row.payload?.original?.uid
+        );
+        return (
+            Boolean(original) &&
+            item.status !== 'dropped' &&
+            original.status !== 'dropped'
+        );
+    }
+    return cardStillAsks(item, row.payload);
+}
+
+// Pending cards that still ask something, newest first.
 async function listPending(userId, now = new Date()) {
     await expire(now);
     const rows = await repository.Suggestion.findAll({
@@ -130,7 +151,7 @@ async function listPending(userId, now = new Date()) {
     });
     const alive = [];
     for (const row of rows) {
-        if (await repository.loadItem(userId, row.entity, row.item_uid)) {
+        if (await stillAsks(userId, row)) {
             alive.push(serialize(row));
         } else {
             await row.update({ state: 'expired', decided_at: now });
@@ -198,7 +219,12 @@ async function applyClassify(user, suggestion, choice) {
     if (!item) throw new NotFoundError('Item not found');
     const isTask = item.entity === 'task';
     const params = isTask ? { id: item.uid } : { uid: item.uid };
-    const project = choice.project ?? { type: 'none' };
+    // Only what is still empty is written: a field the user filled by hand
+    // since the card was made wins over the card.
+    const slots = slotsOf(item) ?? {};
+    const project = slots.project
+        ? (choice.project ?? { type: 'none' })
+        : { type: 'none' };
     if (project.type === 'project' || project.type === 'new_project') {
         const uid =
             project.type === 'project'
@@ -222,7 +248,11 @@ async function applyClassify(user, suggestion, choice) {
     if (added.length > 0) {
         params.tags = [...new Set([...item.tags, ...added])];
     }
-    if (choice.priority !== undefined && choice.priority !== null) {
+    if (
+        slots.priority &&
+        choice.priority !== undefined &&
+        choice.priority !== null
+    ) {
         if (!isTask || ![1, 2].includes(choice.priority)) {
             throw new ValidationError('priority must be 1 or 2, on a task');
         }

@@ -124,7 +124,22 @@ async function snapshot(userId, entity, after, limit, startCursor = null) {
     };
 }
 
-async function resolveRefs(def, userId, fields, transaction) {
+// A task or note written offline keeps its content when what it points to
+// (project, area, goal, parent task, tags) was deleted meanwhile: the dead
+// reference is dropped and the item lands loose, in « Tâches à classer » for
+// a task. Other entities (a habit completion without its habit) still refuse.
+const LOOSE_ENTITIES = new Set(['task', 'note']);
+
+async function existsForAnyone(entity, uid, transaction) {
+    const row = await models()[ENTITIES[entity].model].findOne({
+        where: { uid },
+        attributes: ['id'],
+        transaction,
+    });
+    return Boolean(row);
+}
+
+async function resolveRefs(def, userId, fields, transaction, loose = false) {
     const columns = {};
     for (const [key, ref] of Object.entries(def.refs)) {
         if (!(key in fields)) continue;
@@ -138,24 +153,44 @@ async function resolveRefs(def, userId, fields, transaction) {
             attributes: ['id'],
             transaction,
         });
-        if (!target) return { error: `invalid_reference:${key}` };
+        if (!target) {
+            // Someone else's row is refused; only a row gone for good drops.
+            if (
+                loose &&
+                !(await existsForAnyone(ref.entity, uid, transaction))
+            ) {
+                columns[key] = null;
+                continue;
+            }
+            return { error: `invalid_reference:${key}` };
+        }
         columns[key] = target.id;
     }
     return { columns };
 }
 
-async function resolveLists(def, userId, fields, transaction) {
+async function resolveLists(def, userId, fields, transaction, loose = false) {
     const ids = {};
     for (const [key, list] of Object.entries(def.lists || {})) {
         if (!(key in fields)) continue;
         const uids = [...new Set(fields[key].value)];
         const found = await models()[ENTITIES[list.entity].model].findAll({
             where: { uid: uids, user_id: userId },
-            attributes: ['id'],
+            attributes: ['id', 'uid'],
             transaction,
         });
         if (found.length !== uids.length) {
-            return { error: `invalid_reference:${key}` };
+            const missing = uids.filter(
+                (uid) => !found.some((row) => row.uid === uid)
+            );
+            const foreign = await Promise.all(
+                missing.map((uid) =>
+                    existsForAnyone(list.entity, uid, transaction)
+                )
+            );
+            if (!loose || foreign.some(Boolean)) {
+                return { error: `invalid_reference:${key}` };
+            }
         }
         ids[key] = found.map((r) => r.id);
     }
@@ -311,9 +346,16 @@ async function mergeUpsert(userId, op, { transaction, lock }, lastTry) {
     const refused = await refuseUpsert(userId, op, row, transaction);
     if (refused) throw new Refusal(refused.reason);
 
-    const refs = await resolveRefs(def, userId, op.fields, transaction);
+    const loose = LOOSE_ENTITIES.has(op.entity);
+    const refs = await resolveRefs(def, userId, op.fields, transaction, loose);
     if (refs.error) throw new Refusal(refs.error);
-    const lists = await resolveLists(def, userId, op.fields, transaction);
+    const lists = await resolveLists(
+        def,
+        userId,
+        op.fields,
+        transaction,
+        loose
+    );
     if (lists.error) throw new Refusal(lists.error);
 
     const clocks = { ...(row?.field_clocks || {}) };

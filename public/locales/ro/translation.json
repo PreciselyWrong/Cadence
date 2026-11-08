@@ -88,7 +88,7 @@
       "keepBoth": "Păstrează ambele",
       "keepNew": "Păstrează cel nou",
       "merge": "Îmbină în cel vechi",
-      "dropNew": "Renunță la cel nou",
+      "dropNew": "Arhivează-l pe cel nou",
       "title": "Același titlu pe același site",
       "video": "Același video",
       "repository": "Același depozit",
@@ -99,7 +99,7 @@
     },
     "card": {
       "reason": "Clasificare de confirmat",
-      "dismiss": "Niciunul",
+      "dismiss": "Ignoră",
       "acceptAll": "Acceptă tot",
       "apply": "Aplică",
       "medium": "Medie",
@@ -118,6 +118,16 @@
     }
   },
   "triage": {
+    "linkLater": "Peste 30 de zile",
+    "linkArchive": "Arhivează",
+    "linkKeep": "Păstrează",
+    "linkPostponed": "De revăzut peste 30 de zile",
+    "linkArchived": "Link arhivat",
+    "linkKept": "Link păstrat",
+    "linkReview": "Link de revăzut",
+    "deleted": "Sarcină ștearsă",
+    "actionError": "Nu s-a putut, încercați din nou.",
+    "alreadySettled": "Deja rezolvat în altă parte.",
     "slotRefuse": "Refuză",
     "slotAccept": "Planifică",
     "action": {
@@ -1684,6 +1694,7 @@
     "projectNameTooLong": "Numele proiectului trebuie să aibă cel mult {{max}} caractere"
   },
   "inbox": {
+    "toSort": "De sortat ({{count}})",
     "unsorted": {
       "noDate": "Fără dată",
       "later": "Mai târziu",

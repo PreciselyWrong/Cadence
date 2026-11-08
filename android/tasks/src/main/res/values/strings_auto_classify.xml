@@ -3,16 +3,19 @@
     <string name="auto_classify_title">Classement</string>
     <string name="auto_classify_channel_name">Classement</string>
     <string name="auto_classify_notif_classify">Projet, tags ou priorité à confirmer</string>
+    <string name="auto_classify_notif_project">Projet : %1$s</string>
+    <string name="auto_classify_notif_priority_high">Priorité haute</string>
+    <string name="auto_classify_notif_priority_medium">Priorité moyenne</string>
     <string name="auto_classify_notif_duplicate">Ce lien ressemble à un lien déjà enregistré</string>
     <string name="auto_classify_action_open">Ouvrir</string>
     <string name="auto_classify_action_accept_all">Tout accepter</string>
-    <string name="auto_classify_action_dismiss">Aucun</string>
-    <string name="auto_classify_action_drop">Jeter</string>
+    <string name="auto_classify_action_dismiss">Ignorer</string>
+    <string name="auto_classify_action_drop">Archiver le nouveau</string>
     <string name="auto_classify_action_merge">Fusionner</string>
 
     <string name="auto_classify_apply">Appliquer</string>
     <string name="auto_classify_accept_all">Tout accepter</string>
-    <string name="auto_classify_dismiss">Aucun</string>
+    <string name="auto_classify_dismiss">Ignorer</string>
     <string name="auto_classify_applied">C\'est fait</string>
     <string name="auto_classify_project_row">Projet</string>
     <string name="auto_classify_area">Domaine : %1$s</string>
@@ -35,7 +38,7 @@
     <string name="auto_classify_reason_video">Même vidéo</string>
     <string name="auto_classify_reason_title">Même titre</string>
     <string name="auto_classify_reason_other">Lien proche</string>
-    <string name="auto_classify_dup_drop">Jeter le nouveau</string>
+    <string name="auto_classify_dup_drop">Archiver le nouveau</string>
     <string name="auto_classify_dup_merge">Fusionner dans l\'ancien</string>
     <string name="auto_classify_dup_keep_new">Garder le nouveau</string>
     <string name="auto_classify_dup_keep_both">Garder les deux</string>

@@ -269,7 +269,7 @@ const ClassifyCard: React.FC<ClassifyCardProps> = ({
                     {t('autoClassify.card.acceptAll', 'Tout accepter')}
                 </button>
                 <button type="button" className={secondary} onClick={onDismiss}>
-                    {t('autoClassify.card.dismiss', 'Aucun')}
+                    {t('autoClassify.card.dismiss', 'Ignorer')}
                 </button>
             </div>
         </div>

@@ -88,7 +88,7 @@
       "keepBoth": "Giữ cả hai",
       "keepNew": "Giữ mục mới",
       "merge": "Gộp vào mục cũ",
-      "dropNew": "Bỏ mục mới",
+      "dropNew": "Lưu trữ cái mới",
       "title": "Cùng tiêu đề trên cùng trang web",
       "video": "Cùng video",
       "repository": "Cùng kho lưu trữ",
@@ -99,7 +99,7 @@
     },
     "card": {
       "reason": "Phân loại cần xác nhận",
-      "dismiss": "Không có",
+      "dismiss": "Bỏ qua",
       "acceptAll": "Chấp nhận tất cả",
       "apply": "Áp dụng",
       "medium": "Trung bình",
@@ -118,6 +118,16 @@
     }
   },
   "triage": {
+    "linkLater": "Sau 30 ngày",
+    "linkArchive": "Lưu trữ",
+    "linkKeep": "Giữ",
+    "linkPostponed": "Xem lại sau 30 ngày",
+    "linkArchived": "Đã lưu trữ liên kết",
+    "linkKept": "Đã giữ liên kết",
+    "linkReview": "Liên kết cần xem lại",
+    "deleted": "Đã xóa việc",
+    "actionError": "Không thực hiện được, hãy thử lại.",
+    "alreadySettled": "Đã xử lý ở nơi khác.",
     "slotRefuse": "Từ chối",
     "slotAccept": "Lên lịch",
     "action": {
@@ -1680,6 +1690,7 @@
     "projectNameTooLong": "Tên dự án phải có tối đa {{max}} ký tự"
   },
   "inbox": {
+    "toSort": "Cần sắp xếp ({{count}})",
     "unsorted": {
       "noDate": "Không có ngày",
       "later": "Để sau",

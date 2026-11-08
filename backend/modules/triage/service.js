@@ -14,6 +14,7 @@ const { taskFingerprint } = require('./core/fingerprint');
 const { applyAction } = require('./actions');
 const { slotItems } = require('./slots');
 const autoClassify = require('../auto-classify/service');
+const linkReviews = require('./linkReviews');
 
 const SETTLED = new Set(['kept', 'applied']);
 const NOTE_PREVIEW = 300;
@@ -105,6 +106,7 @@ async function getQueue(user) {
         await repository.findAllForUser(user.id)
     );
     const byUid = new Map(input.tasks.map((task) => [task.uid, task]));
+    queue.items.push(...(await linkReviews.reviewItems(user.id, input.today)));
     for (const item of await autoClassify.queueItems(user)) {
         queue.items.push(item);
         const task = item.task_uid && byUid.get(item.task_uid);

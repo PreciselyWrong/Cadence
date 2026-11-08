@@ -88,7 +88,7 @@
       "keepBoth": "两者都保留",
       "keepNew": "保留新的",
       "merge": "合并到旧的",
-      "dropNew": "丢弃新的",
+      "dropNew": "归档新的",
       "title": "同一网站上的相同标题",
       "video": "同一视频",
       "repository": "同一仓库",
@@ -99,7 +99,7 @@
     },
     "card": {
       "reason": "归类待确认",
-      "dismiss": "无",
+      "dismiss": "忽略",
       "acceptAll": "全部接受",
       "apply": "应用",
       "medium": "中",
@@ -118,6 +118,16 @@
     }
   },
   "triage": {
+    "linkLater": "30 天后",
+    "linkArchive": "归档",
+    "linkKeep": "保留",
+    "linkPostponed": "30 天后复查",
+    "linkArchived": "已归档链接",
+    "linkKept": "已保留链接",
+    "linkReview": "待复查的链接",
+    "deleted": "任务已删除",
+    "actionError": "无法完成，请重试。",
+    "alreadySettled": "已在别处处理。",
     "slotRefuse": "拒绝",
     "slotAccept": "安排",
     "action": {
@@ -1680,6 +1690,7 @@
     "projectNameTooLong": "项目名称不能超过 {{max}} 个字符"
   },
   "inbox": {
+    "toSort": "待整理 ({{count}})",
     "unsorted": {
       "noDate": "无日期",
       "later": "以后",

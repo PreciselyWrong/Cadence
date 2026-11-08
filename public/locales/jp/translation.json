@@ -88,7 +88,7 @@
       "keepBoth": "両方残す",
       "keepNew": "新しい方を残す",
       "merge": "古い方に統合",
-      "dropNew": "新しい方を破棄",
+      "dropNew": "新しい方をアーカイブ",
       "title": "同じサイトの同じタイトル",
       "video": "同じ動画",
       "repository": "同じリポジトリ",
@@ -99,7 +99,7 @@
     },
     "card": {
       "reason": "分類の確認が必要",
-      "dismiss": "なし",
+      "dismiss": "無視",
       "acceptAll": "すべて承認",
       "apply": "適用",
       "medium": "中",
@@ -118,6 +118,16 @@
     }
   },
   "triage": {
+    "linkLater": "30日後",
+    "linkArchive": "アーカイブ",
+    "linkKeep": "残す",
+    "linkPostponed": "30日後に見直す",
+    "linkArchived": "リンクをアーカイブしました",
+    "linkKept": "リンクを残しました",
+    "linkReview": "見直すリンク",
+    "deleted": "タスクを削除しました",
+    "actionError": "実行できません。もう一度お試しください。",
+    "alreadySettled": "他の場所で処理済みです。",
     "slotRefuse": "断る",
     "slotAccept": "予定に入れる",
     "action": {
@@ -1984,6 +1994,7 @@
     "sunday": "日"
   },
   "inbox": {
+    "toSort": "整理する項目（{{count}}）",
     "unsorted": {
       "noDate": "日付なし",
       "later": "あとで",

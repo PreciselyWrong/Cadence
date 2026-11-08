@@ -67,8 +67,21 @@ function slotsOf(item) {
     return Object.values(slots).some(Boolean) ? slots : null;
 }
 
+// A classify card still asks something while one of its rows is still empty
+// on the item; once the user filed it by hand, or closed it, it retires.
+function cardStillAsks(item, payload) {
+    const slots = slotsOf(item);
+    if (!slots) return false;
+    return Boolean(
+        (payload?.project && slots.project) ||
+        (payload?.tags && slots.tags) ||
+        (payload?.priority && slots.priority)
+    );
+}
+
 module.exports = {
     slotsOf,
+    cardStillAsks,
     isProjectOffLimits,
     CLOSED_TASK_STATUSES,
     CLOSED_PROJECT_STATUSES,

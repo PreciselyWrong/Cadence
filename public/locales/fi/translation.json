@@ -88,7 +88,7 @@
       "keepBoth": "Säilytä molemmat",
       "keepNew": "Säilytä uusi",
       "merge": "Yhdistä vanhaan",
-      "dropNew": "Hylkää uusi",
+      "dropNew": "Arkistoi uusi",
       "title": "Sama otsikko samalla sivustolla",
       "video": "Sama video",
       "repository": "Sama tietovarasto",
@@ -99,7 +99,7 @@
     },
     "card": {
       "reason": "Lajittelu vahvistettavana",
-      "dismiss": "Ei mitään",
+      "dismiss": "Ohita",
       "acceptAll": "Hyväksy kaikki",
       "apply": "Käytä",
       "medium": "Keskitaso",
@@ -118,6 +118,16 @@
     }
   },
   "triage": {
+    "linkLater": "30 päivän päästä",
+    "linkArchive": "Arkistoi",
+    "linkKeep": "Säilytä",
+    "linkPostponed": "Tarkista 30 päivän päästä",
+    "linkArchived": "Linkki arkistoitu",
+    "linkKept": "Linkki säilytetty",
+    "linkReview": "Tarkistettava linkki",
+    "deleted": "Tehtävä poistettu",
+    "actionError": "Ei onnistunut, yritä uudelleen.",
+    "alreadySettled": "Hoidettu jo muualla.",
     "slotRefuse": "Hylkää",
     "slotAccept": "Suunnittele",
     "action": {
@@ -1680,6 +1690,7 @@
     "projectNameTooLong": "Projektin nimen enimmäispituus on {{max}} merkkiä"
   },
   "inbox": {
+    "toSort": "Lajiteltavaa ({{count}})",
     "unsorted": {
       "noDate": "Ilman päivää",
       "later": "Myöhemmin",

@@ -22,6 +22,7 @@ import NoteModal from '../Note/NoteModal';
 import QuickCaptureInput from './QuickCaptureInput';
 import InboxTriage from './InboxTriage';
 import UnsortedTasks from './UnsortedTasks';
+import TriageEntry from './TriageEntry';
 import { createTask } from '../../utils/tasksService';
 import { createProject } from '../../utils/projectsService';
 import { createNote } from '../../utils/notesService';
@@ -552,6 +553,7 @@ const InboxItems: React.FC = () => {
                         {t('inbox.title')}
                     </h1>
                     <div className="flex items-center gap-2">
+                        <TriageEntry />
                         {inboxItems.length > 0 && (
                             <button
                                 type="button"

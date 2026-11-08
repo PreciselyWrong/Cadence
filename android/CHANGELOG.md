@@ -1,3 +1,17 @@
+## [1.14.2] — 8 novembre 2026
+
+### Nouveautés
+- Inbox : une tâche rangée par le classement automatique dans un projet ou un domaine reste dans « Tâches à classer » avec « Quand ? » : Cette semaine, Une date, Plus tard ou Sans date. Elle ne disparaît plus sans date.
+- Inbox : « À trier (N) » en tête quand des cartes attendent.
+- À trier : un lien revient le jour où il devait être revu, avec Garder, Archiver ou Dans 30 jours.
+- La notification de classement dit ce que « Tout accepter » posera (projet, étiquettes, priorité).
+
+### Corrections
+- Une tâche « Cette semaine » d'une semaine passée revient dans « Tâches à classer » au lieu de disparaître.
+- Une tâche ou une note créée hors ligne dans un projet supprimé entre-temps est gardée, sans projet, au lieu d'être effacée (serveur à jour).
+- Une notification de classement tranchée ailleurs est retirée ; une carte ne remplace plus un projet ou une priorité posés à la main.
+- Libellés : « Ignorer » pour écarter une carte, « Archiver le nouveau » pour un doublon. « L'Inbox est vide » ne s'affiche plus au-dessus de tâches à classer. Une idée changée en note est nommée dans le message.
+
 ## [1.14.1] — 8 novembre 2026
 
 ### Nouveautés

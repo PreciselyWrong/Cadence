@@ -7,6 +7,7 @@ import {
     fetchTriageQueue,
     keepTask,
     answerSlot,
+    reviewLink,
 } from '../../../utils/triageService';
 
 jest.mock('../../../utils/triageService', () => ({
@@ -14,6 +15,7 @@ jest.mock('../../../utils/triageService', () => ({
     keepTask: jest.fn(),
     applyTriage: jest.fn(),
     answerSlot: jest.fn(),
+    reviewLink: jest.fn(),
 }));
 jest.mock('../../../utils/dateUtils', () => ({
     getTodayDateString: () => '2026-11-06',
@@ -21,7 +23,11 @@ jest.mock('../../../utils/dateUtils', () => ({
 jest.mock('../../../utils/dailyBriefService', () => ({
     answerBriefQuestion: jest.fn(),
 }));
-const mockToasts = { showErrorToast: jest.fn(), showSuccessToast: jest.fn() };
+const mockToasts = {
+    showErrorToast: jest.fn(),
+    showSuccessToast: jest.fn(),
+    showUndoToast: jest.fn(),
+};
 jest.mock('../../Shared/ToastContext', () => ({
     useToast: () => mockToasts,
 }));
@@ -189,5 +195,75 @@ describe('TriagePage', () => {
         });
         render(<TriagePage />);
         expect(await screen.findByTestId('triage-empty')).toBeInTheDocument();
+    });
+
+    it('brings back a link on its review day', async () => {
+        (fetchTriageQueue as jest.Mock).mockResolvedValue({
+            count: 1,
+            tasks: {},
+            items: [
+                {
+                    key: 'link_review:l1',
+                    type: 'link_review',
+                    source: 'links',
+                    task_uid: null,
+                    action: 'review_link',
+                    payload: {
+                        link_uid: 'l1',
+                        title: 'Un article',
+                        url: 'https://example.com/a',
+                        review_at: '2026-11-01',
+                    },
+                    reason: 'Lien à revoir',
+                    details: [],
+                    question: null,
+                },
+            ],
+        });
+        (reviewLink as jest.Mock).mockResolvedValue(undefined);
+        render(<TriagePage />);
+        expect(await screen.findByText('Un article')).toBeInTheDocument();
+        expect(
+            screen.queryByRole('button', { name: 'Corriger' })
+        ).not.toBeInTheDocument();
+        fireEvent.click(screen.getByRole('button', { name: 'Archiver' }));
+        await waitFor(() =>
+            expect(reviewLink).toHaveBeenCalledWith('l1', 'archive')
+        );
+        expect(await screen.findByTestId('triage-empty')).toBeInTheDocument();
+    });
+
+    it('drops a card already settled elsewhere, with a message of its own', async () => {
+        (applyTriage as jest.Mock).mockRejectedValue(
+            Object.assign(new Error('Conflict'), { status: 409 })
+        );
+        render(<TriagePage />);
+        fireEvent.click(
+            await screen.findByRole('button', { name: 'Annuler la tâche' })
+        );
+        expect(await screen.findByText('Dossier')).toBeInTheDocument();
+        expect(mockToasts.showErrorToast).toHaveBeenCalledWith(
+            'Déjà traité ailleurs.'
+        );
+    });
+
+    it('waits before deleting, and can take the delete back', async () => {
+        jest.useFakeTimers();
+        (fetchTriageQueue as jest.Mock).mockResolvedValue({
+            ...QUEUE,
+            items: [{ ...QUEUE.items[0], action: 'delete' }],
+        });
+        render(<TriagePage />);
+        fireEvent.click(
+            await screen.findByRole('button', { name: 'Supprimer' })
+        );
+        expect(applyTriage).not.toHaveBeenCalled();
+        expect(mockToasts.showUndoToast).toHaveBeenCalled();
+        const undo = mockToasts.showUndoToast.mock.calls[0][1];
+        undo();
+        jest.advanceTimersByTime(6000);
+        expect(applyTriage).not.toHaveBeenCalled();
+        expect(await screen.findByText('Payer')).toBeInTheDocument();
+        jest.useRealTimers();
     });
 });

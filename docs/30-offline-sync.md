@@ -86,6 +86,7 @@ A pushed op:
   - An older value comes back as `conflict` with `rejected_fields`, and is kept in `sync_conflicts`.
   - A web edit stamps its fields with the server clock, which stays ahead of every clock it has accepted. So a web edit wins over an older offline edit.
   - A clock more than 24 h in the future is rejected.
+- **Dead references.** A task or note pushed with a project, area, goal, parent task or tag that no longer exists keeps its content: the dead reference is dropped (a task lands in « Tâches à classer »). A reference to another user's row is still refused (`invalid_reference:<field>`), as is any dead reference on other entities.
 - **Delete wins.** An edit to a deleted row is rejected (`deleted`) and does not bring it back.
 - **Echo.** A pulled change carries the `op_id` that produced it, so a device can skip its own writes.
 - **Isolation.** Each user pulls only their own journal, and a reference must point to one of their own rows. `scope_key` is kept for sharing projects later.

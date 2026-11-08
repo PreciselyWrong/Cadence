@@ -88,7 +88,7 @@
       "keepBoth": "Ponechať obe",
       "keepNew": "Ponechať nové",
       "merge": "Zlúčiť so starým",
-      "dropNew": "Zahodiť nové",
+      "dropNew": "Archivovať nový",
       "title": "Rovnaký názov na rovnakom webe",
       "video": "Rovnaké video",
       "repository": "Rovnaký repozitár",
@@ -99,7 +99,7 @@
     },
     "card": {
       "reason": "Zaradenie na potvrdenie",
-      "dismiss": "Žiadny",
+      "dismiss": "Ignorovať",
       "acceptAll": "Prijať všetko",
       "apply": "Použiť",
       "medium": "Stredná",
@@ -118,6 +118,16 @@
     }
   },
   "triage": {
+    "linkLater": "O 30 dní",
+    "linkArchive": "Archivovať",
+    "linkKeep": "Ponechať",
+    "linkPostponed": "Skontrolovať o 30 dní",
+    "linkArchived": "Odkaz archivovaný",
+    "linkKept": "Odkaz ponechaný",
+    "linkReview": "Odkaz na kontrolu",
+    "deleted": "Úloha odstránená",
+    "actionError": "Nepodarilo sa, skúste znova.",
+    "alreadySettled": "Už vybavené inde.",
     "slotRefuse": "Odmietnuť",
     "slotAccept": "Naplánovať",
     "action": {
@@ -2187,6 +2197,7 @@
     "projectNameTooLong": "Názov projektu môže mať najviac {{max}} znakov"
   },
   "inbox": {
+    "toSort": "Na roztriedenie ({{count}})",
     "unsorted": {
       "noDate": "Bez dátumu",
       "later": "Neskôr",

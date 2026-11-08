@@ -81,6 +81,22 @@ describe('needs_when', () => {
         expect(filed.needs_when).toBe(true);
     });
 
+    it('brings back a task whose « This week » week has passed', async () => {
+        await Task.create({
+            user_id: user.id,
+            name: 'Semaine passée',
+            status: 0,
+            week_of: '2020-01-06',
+        });
+        await Task.create({
+            user_id: user.id,
+            name: 'Semaine prochaine',
+            status: 0,
+            week_of: '2099-01-05',
+        });
+        expect(await unsortedNames()).toEqual(['Semaine passée']);
+    });
+
     it('is settled by any moment chosen, or by keeping it without one', async () => {
         const week = await pending('Semaine');
         const view = await pending('En vue');

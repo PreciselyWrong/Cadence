@@ -185,7 +185,7 @@ describe('classifier cards in the triage queue', () => {
         );
     });
 
-    it('sends "all" and dismisses with Aucun', async () => {
+    it('sends "all" and dismisses with Ignorer', async () => {
         (fetchTriageQueue as jest.Mock).mockResolvedValue(
             queueWith({
                 type: 'classify',
@@ -196,7 +196,7 @@ describe('classifier cards in the triage queue', () => {
         (dismissClassifySuggestion as jest.Mock).mockResolvedValue({});
         render(<TriagePage />);
         fireEvent.click(
-            await screen.findByText('Aucun', { selector: 'button' })
+            await screen.findByText('Ignorer', { selector: 'button' })
         );
         await waitFor(() =>
             expect(dismissClassifySuggestion).toHaveBeenCalledWith('s1')
@@ -229,7 +229,7 @@ describe('classifier cards in the triage queue', () => {
         render(<TriagePage />);
         expect(await screen.findByText('Même dépôt')).toBeInTheDocument();
         for (const label of [
-            'Jeter le nouveau',
+            'Archiver le nouveau',
             'Garder le nouveau',
             'Garder les deux',
         ]) {

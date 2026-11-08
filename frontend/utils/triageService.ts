@@ -35,7 +35,8 @@ export interface TriageItem {
         | 'question'
         | 'accept_slot'
         | 'classify'
-        | 'resolve_duplicate';
+        | 'resolve_duplicate'
+        | 'review_link';
     payload: Record<string, unknown> | null;
     reason: string;
     details: string[];
@@ -97,3 +98,12 @@ export const applyTriage = (
         payload,
         idempotency_key: newKey(),
     });
+
+// A link back on its review day: keep it, archive it, or see it in 30 days.
+export type LinkReviewDecision = 'keep' | 'archive' | 'later';
+
+export const reviewLink = (
+    linkUid: string,
+    decision: LinkReviewDecision
+): Promise<void> =>
+    post(`triage/links/${encodeURIComponent(linkUid)}/review`, { decision });

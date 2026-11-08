@@ -3,6 +3,7 @@
 const express = require('express');
 const triage = require('./service');
 const slots = require('./slots');
+const linkReviews = require('./linkReviews');
 const { logError } = require('../../services/logService');
 const { AppError } = require('../../shared/errors');
 
@@ -40,6 +41,13 @@ router.post(
 router.post(
     '/triage/slots/:id/refuse',
     handle((req) => slots.refuseSlot(req.currentUser, req.params.id))
+);
+
+router.post(
+    '/triage/links/:uid/review',
+    handle((req) =>
+        linkReviews.decide(req.currentUser, req.params.uid, req.body?.decision)
+    )
 );
 
 module.exports = router;

@@ -473,6 +473,66 @@ describe('auto-classify', () => {
         expect(await tagsOf(Note, note.uid)).toEqual(['bois']);
     });
 
+    it('retires a card once its item is filed by hand, and never overwrites it', async () => {
+        const task = await Task.create({
+            user_id: user.id,
+            name: 'Changer les essuie-glaces',
+            status: 0,
+        });
+        model.configure({
+            ask: answering({
+                'Changer les essuie-glaces': {
+                    project: {
+                        uid: car.uid,
+                        confidence: 0.5,
+                        alternatives: [],
+                    },
+                },
+            }).ask,
+        });
+        await worker.runOnce(later(91));
+        const card = await AutoClassifySuggestion.findOne({
+            where: { item_uid: task.uid },
+        });
+        await task.update({ project_id: garden.id, priority: 2 });
+
+        const applied = await agent
+            .post(`/api/auto-classify/suggestions/${card.uid}/apply`)
+            .send({
+                choice: {
+                    project: { type: 'project', uid: car.uid },
+                    priority: 1,
+                },
+            });
+        expect(applied.status).toBe(200);
+        await task.reload();
+        expect(task.project_id).toBe(garden.id);
+        expect(task.priority).toBe(2);
+
+        const other = await Task.create({
+            user_id: user.id,
+            name: 'Laver la voiture',
+            status: 0,
+        });
+        model.configure({
+            ask: answering({
+                'Laver la voiture': {
+                    project: {
+                        uid: car.uid,
+                        confidence: 0.5,
+                        alternatives: [],
+                    },
+                },
+            }).ask,
+        });
+        await worker.runOnce(later(92));
+        await other.update({ status: 2 });
+        const list = await agent.get('/api/auto-classify/suggestions');
+        expect(list.body.suggestions.map((s) => s.item_uid)).not.toContain(
+            other.uid
+        );
+    });
+
     it('dismisses a card without changing anything', async () => {
         const task = await Task.create({
             user_id: user.id,

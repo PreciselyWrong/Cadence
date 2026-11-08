@@ -47,7 +47,7 @@ const DuplicateCard: React.FC<DuplicateCardProps> = ({ payload, onChoose }) => {
     const { t } = useTranslation();
     const [reasonKey, reasonFallback] = REASONS[payload.reason];
     const choices: [DuplicateAction, string, string][] = [
-        ['drop_new', 'autoClassify.duplicate.dropNew', 'Jeter le nouveau'],
+        ['drop_new', 'autoClassify.duplicate.dropNew', 'Archiver le nouveau'],
         ['merge', 'autoClassify.duplicate.merge', 'Fusionner dans l’ancien'],
         ['keep_new', 'autoClassify.duplicate.keepNew', 'Garder le nouveau'],
         ['keep_both', 'autoClassify.duplicate.keepBoth', 'Garder les deux'],

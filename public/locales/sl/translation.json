@@ -88,7 +88,7 @@
       "keepBoth": "Obdrži oba",
       "keepNew": "Obdrži novo",
       "merge": "Združi s starim",
-      "dropNew": "Zavrzi novo",
+      "dropNew": "Arhiviraj novo",
       "title": "Isti naslov na istem spletnem mestu",
       "video": "Isti videoposnetek",
       "repository": "Isti repozitorij",
@@ -99,7 +99,7 @@
     },
     "card": {
       "reason": "Razvrstitev za potrditev",
-      "dismiss": "Brez",
+      "dismiss": "Prezri",
       "acceptAll": "Sprejmi vse",
       "apply": "Uporabi",
       "medium": "Srednja",
@@ -118,6 +118,16 @@
     }
   },
   "triage": {
+    "linkLater": "Čez 30 dni",
+    "linkArchive": "Arhiviraj",
+    "linkKeep": "Ohrani",
+    "linkPostponed": "Ponovno pregledati čez 30 dni",
+    "linkArchived": "Povezava arhivirana",
+    "linkKept": "Povezava ohranjena",
+    "linkReview": "Povezava za pregled",
+    "deleted": "Naloga izbrisana",
+    "actionError": "Ni uspelo, poskusite znova.",
+    "alreadySettled": "Že urejeno drugje.",
     "slotRefuse": "Zavrni",
     "slotAccept": "Načrtuj",
     "action": {
@@ -1696,6 +1706,7 @@
     "projectNameTooLong": "Ime projekta sme imeti največ {{max}} znakov"
   },
   "inbox": {
+    "toSort": "Za razvrstitev ({{count}})",
     "unsorted": {
       "noDate": "Brez datuma",
       "later": "Pozneje",

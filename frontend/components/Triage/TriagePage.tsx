@@ -7,12 +7,15 @@ import {
     applyTriage,
     fetchTriageQueue,
     keepTask,
+    LinkReviewDecision,
+    reviewLink,
     TriageAction,
     TriageItem,
     TriageQueue,
     TriageTask,
 } from '../../utils/triageService';
 import { useToast } from '../Shared/ToastContext';
+import { deferDelete } from '../../utils/deferredDelete';
 import ClassifyCard from '../AutoClassify/ClassifyCard';
 import DuplicateCard from '../AutoClassify/DuplicateCard';
 import {
@@ -64,7 +67,7 @@ const field =
 // One proposal at a time with its reason: validate, correct, keep or skip.
 const TriagePage: React.FC = () => {
     const { t } = useTranslation();
-    const { showErrorToast, showSuccessToast } = useToast();
+    const { showErrorToast, showSuccessToast, showUndoToast } = useToast();
     const [queue, setQueue] = useState<TriageQueue | null>(null);
     const [gone, setGone] = useState<Set<string>>(new Set());
     const [skipped, setSkipped] = useState<string[]>([]);
@@ -95,6 +98,7 @@ const TriagePage: React.FC = () => {
     const task = item?.task_uid ? queue?.tasks[item.task_uid] : undefined;
     // A card of the classifier (modules/auto-classify): a task, note or link.
     const classifier = item?.source === 'classify';
+    const linkReview = item?.type === 'link_review';
     const entityLabel = (entity: unknown) =>
         entity === 'note'
             ? t('autoClassify.entity.note', 'Note')
@@ -115,20 +119,67 @@ const TriagePage: React.FC = () => {
             setGone((prev) => new Set(prev).add(item.key));
             reset();
             showSuccessToast(message);
-        } catch {
-            showErrorToast(t('triage.error', 'La file n’a pas pu être lue.'));
+        } catch (error) {
+            // Settled on another device meanwhile: the card has nothing left
+            // to ask.
+            if ((error as { status?: number })?.status === 409) {
+                setGone((prev) => new Set(prev).add(item.key));
+                reset();
+                showErrorToast(
+                    t('triage.alreadySettled', 'Déjà traité ailleurs.')
+                );
+                return;
+            }
+            showErrorToast(
+                t('triage.actionError', 'Action impossible, réessayez.')
+            );
         }
     };
+
+    // A delete waits for the undo window, like everywhere else.
+    const deleteLater = () => {
+        if (!item?.task_uid) return;
+        const { key, task_uid: taskUid } = item;
+        const restore = () =>
+            setGone((prev) => {
+                const next = new Set(prev);
+                next.delete(key);
+                return next;
+            });
+        setGone((prev) => new Set(prev).add(key));
+        reset();
+        const undo = deferDelete(
+            `triage:${taskUid}`,
+            () => applyTriage(taskUid, 'delete', null),
+            () => {
+                restore();
+                showErrorToast(
+                    t('triage.actionError', 'Action impossible, réessayez.')
+                );
+            }
+        );
+        showUndoToast(t('triage.deleted', 'Tâche supprimée'), () => {
+            if (undo()) restore();
+        });
+    };
+
+    const review = (decision: LinkReviewDecision, message: string) =>
+        settle(
+            () => reviewLink(String(item?.payload?.link_uid), decision),
+            message
+        );
 
     const applied = t('triage.applied', 'C’est fait');
     const apply = (
         action: TriageAction,
         payload: Record<string, unknown> | null
     ) =>
-        settle(
-            () => applyTriage(item?.task_uid as string, action, payload),
-            applied
-        );
+        action === 'delete'
+            ? deleteLater()
+            : settle(
+                  () => applyTriage(item?.task_uid as string, action, payload),
+                  applied
+              );
 
     const answer = (text: string) =>
         settle(
@@ -220,6 +271,23 @@ const TriagePage: React.FC = () => {
                     className="mt-4 rounded-xl border border-gray-200 p-4 dark:border-gray-700"
                     data-testid="triage-card"
                 >
+                    {linkReview && (
+                        <>
+                            <h2 className="text-[17px] font-semibold text-gray-900 dark:text-gray-50">
+                                {String(
+                                    item.payload?.title || item.payload?.url
+                                )}
+                            </h2>
+                            <a
+                                href={String(item.payload?.url)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="mt-0.5 block break-all text-[13px] text-indigo-600 hover:underline dark:text-indigo-300"
+                            >
+                                {String(item.payload?.url)}
+                            </a>
+                        </>
+                    )}
                     {classifier && !task && (
                         <>
                             <h2 className="text-[17px] font-semibold text-gray-900 dark:text-gray-50">
@@ -260,7 +328,9 @@ const TriagePage: React.FC = () => {
                                     'autoClassify.duplicate.reason',
                                     'Lien déjà enregistré ?'
                                 )
-                              : (item.question?.text ?? item.reason)}
+                              : linkReview
+                                ? t('triage.linkReview', 'Lien à revoir')
+                                : (item.question?.text ?? item.reason)}
                     </p>
                     {item.details.map((line) => (
                         <p
@@ -363,8 +433,52 @@ const TriagePage: React.FC = () => {
                             }
                         />
                     )}
+                    {linkReview && (
+                        <div className="mt-3 flex flex-wrap gap-2">
+                            <button
+                                type="button"
+                                className={primary}
+                                onClick={() =>
+                                    review(
+                                        'keep',
+                                        t('triage.linkKept', 'Lien gardé')
+                                    )
+                                }
+                            >
+                                {t('triage.linkKeep', 'Garder')}
+                            </button>
+                            <button
+                                type="button"
+                                className={secondary}
+                                onClick={() =>
+                                    review(
+                                        'archive',
+                                        t('triage.linkArchived', 'Lien archivé')
+                                    )
+                                }
+                            >
+                                {t('triage.linkArchive', 'Archiver')}
+                            </button>
+                            <button
+                                type="button"
+                                className={secondary}
+                                onClick={() =>
+                                    review(
+                                        'later',
+                                        t(
+                                            'triage.linkPostponed',
+                                            'À revoir dans 30 jours'
+                                        )
+                                    )
+                                }
+                            >
+                                {t('triage.linkLater', 'Dans 30 jours')}
+                            </button>
+                        </div>
+                    )}
                     {item.action === 'accept_slot' ||
-                    classifier ? null : item.question ? (
+                    classifier ||
+                    linkReview ? null : item.question ? (
                         <div className="mt-3 flex flex-wrap gap-2">
                             <button
                                 type="button"

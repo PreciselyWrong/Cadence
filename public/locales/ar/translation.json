@@ -88,7 +88,7 @@
       "keepBoth": "الاحتفاظ بالاثنين",
       "keepNew": "الاحتفاظ بالجديد",
       "merge": "دمج في القديم",
-      "dropNew": "تجاهل الجديد",
+      "dropNew": "أرشفة الجديد",
       "title": "العنوان نفسه على الموقع نفسه",
       "video": "الفيديو نفسه",
       "repository": "المستودع نفسه",
@@ -99,7 +99,7 @@
     },
     "card": {
       "reason": "تصنيف يحتاج تأكيدًا",
-      "dismiss": "لا شيء",
+      "dismiss": "تجاهل",
       "acceptAll": "قبول الكل",
       "apply": "تطبيق",
       "medium": "متوسطة",
@@ -118,6 +118,16 @@
     }
   },
   "triage": {
+    "linkLater": "بعد 30 يومًا",
+    "linkArchive": "أرشفة",
+    "linkKeep": "احتفاظ",
+    "linkPostponed": "مراجعة بعد 30 يومًا",
+    "linkArchived": "تمت أرشفة الرابط",
+    "linkKept": "تم الاحتفاظ بالرابط",
+    "linkReview": "رابط للمراجعة",
+    "deleted": "تم حذف المهمة",
+    "actionError": "تعذر التنفيذ، حاول مرة أخرى.",
+    "alreadySettled": "تمت معالجته في مكان آخر.",
     "slotRefuse": "رفض",
     "slotAccept": "جدولة",
     "action": {
@@ -1688,6 +1698,7 @@
     "projectNameTooLong": "يجب ألا يتجاوز اسم المشروع {{max}} حرفًا"
   },
   "inbox": {
+    "toSort": "للفرز ({{count}})",
     "unsorted": {
       "noDate": "بدون تاريخ",
       "later": "لاحقًا",

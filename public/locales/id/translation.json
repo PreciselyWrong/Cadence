@@ -88,7 +88,7 @@
       "keepBoth": "Simpan keduanya",
       "keepNew": "Simpan yang baru",
       "merge": "Gabung ke yang lama",
-      "dropNew": "Buang yang baru",
+      "dropNew": "Arsipkan yang baru",
       "title": "Judul sama di situs yang sama",
       "video": "Video sama",
       "repository": "Repositori sama",
@@ -99,7 +99,7 @@
     },
     "card": {
       "reason": "Klasifikasi perlu dikonfirmasi",
-      "dismiss": "Tidak ada",
+      "dismiss": "Abaikan",
       "acceptAll": "Terima semua",
       "apply": "Terapkan",
       "medium": "Sedang",
@@ -118,6 +118,16 @@
     }
   },
   "triage": {
+    "linkLater": "Dalam 30 hari",
+    "linkArchive": "Arsipkan",
+    "linkKeep": "Simpan",
+    "linkPostponed": "Tinjau lagi dalam 30 hari",
+    "linkArchived": "Tautan diarsipkan",
+    "linkKept": "Tautan disimpan",
+    "linkReview": "Tautan untuk ditinjau",
+    "deleted": "Tugas dihapus",
+    "actionError": "Tidak bisa, coba lagi.",
+    "alreadySettled": "Sudah ditangani di tempat lain.",
     "slotRefuse": "Tolak",
     "slotAccept": "Jadwalkan",
     "action": {
@@ -1680,6 +1690,7 @@
     "projectNameTooLong": "Nama proyek maksimal {{max}} karakter"
   },
   "inbox": {
+    "toSort": "Untuk dipilah ({{count}})",
     "unsorted": {
       "noDate": "Tanpa tanggal",
       "later": "Nanti",

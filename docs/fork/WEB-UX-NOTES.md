@@ -596,3 +596,9 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Problème** : une tâche rangée par le classement automatique (projet ou domaine) quittait l'Inbox sans date et n'était plus jamais revue ; le web n'avait d'ailleurs aucune section « Tâches à classer ».
 - **Décision** : section « Tâches à classer » sous la saisie de l'Inbox web, même règle qu'Android (`GET /tasks?type=unsorted`) ; une tâche classée sans moment y reste avec « Quand ? » : Cette semaine, Une date, Plus tard, Sans date.
 - **Android à reprendre** : livré dans la même étape.
+
+### 2026-11-08 — Passe « rien ne se perd »
+
+- **Problème** : des éléments sortaient sans bruit de tout ce que l'on regarde : cartes du classement cachées derrière Ma journée, liens « à revoir » jamais revus, « Supprimer » d'« À trier » immédiat, erreurs génériques, libellés ambigus (« Aucun » deux fois, « Jeter » qui archive).
+- **Décision** : « À trier (n) » dans l'en-tête de l'Inbox ; carte « Lien à revoir » (Garder, Archiver, Dans 30 jours) ; suppression avec fenêtre d'annulation ; « Déjà traité ailleurs. » retire la carte ; « Ignorer » pour écarter une carte, « Archiver le nouveau » pour un doublon.
+- **Android à reprendre** : livré dans la même étape (plus : notifications périmées retirées, texte de notification qui dit ce que « Tout accepter » pose, état vide de l'Inbox).

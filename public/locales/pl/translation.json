@@ -88,7 +88,7 @@
       "keepBoth": "Zachowaj oba",
       "keepNew": "Zachowaj nowe",
       "merge": "Scal ze starym",
-      "dropNew": "Odrzuć nowe",
+      "dropNew": "Archiwizuj nowy",
       "title": "Ten sam tytuł na tej samej stronie",
       "video": "To samo wideo",
       "repository": "To samo repozytorium",
@@ -99,7 +99,7 @@
     },
     "card": {
       "reason": "Klasyfikacja do potwierdzenia",
-      "dismiss": "Brak",
+      "dismiss": "Pomiń",
       "acceptAll": "Zaakceptuj wszystko",
       "apply": "Zastosuj",
       "medium": "Średni",
@@ -118,6 +118,16 @@
     }
   },
   "triage": {
+    "linkLater": "Za 30 dni",
+    "linkArchive": "Archiwizuj",
+    "linkKeep": "Zachowaj",
+    "linkPostponed": "Przejrzyj za 30 dni",
+    "linkArchived": "Link zarchiwizowany",
+    "linkKept": "Link zachowany",
+    "linkReview": "Link do przejrzenia",
+    "deleted": "Zadanie usunięte",
+    "actionError": "Nie udało się, spróbuj ponownie.",
+    "alreadySettled": "Już załatwione gdzie indziej.",
     "slotRefuse": "Odrzuć",
     "slotAccept": "Zaplanuj",
     "action": {
@@ -1696,6 +1706,7 @@
     "projectNameTooLong": "Nazwa projektu może mieć maksymalnie {{max}} znaków"
   },
   "inbox": {
+    "toSort": "Do uporządkowania ({{count}})",
     "unsorted": {
       "noDate": "Bez daty",
       "later": "Później",

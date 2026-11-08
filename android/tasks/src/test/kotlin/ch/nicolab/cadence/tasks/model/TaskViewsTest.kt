@@ -12,6 +12,7 @@ class TaskViewsTest {
     private val today = LocalDate.of(2026, 10, 30)
     private val now: Instant = Instant.parse("2026-10-30T09:00:00Z")
     private val utc: ZoneId = ZoneId.of("UTC")
+    private val weekStart = LocalDate.of(2026, 10, 26)
 
     private fun series(uid: String, type: String, due: LocalDate, rule: RecurrenceRule = RecurrenceRule(), status: Int = TaskStatus.NOT_STARTED) =
         TaskItem(
@@ -103,7 +104,7 @@ class TaskViewsTest {
             task("sous-tache", parent = "retard"),
         )
 
-        assertEquals(listOf("sans-rien"), TaskViews.unsorted(tasks, now).map { it.uid })
+        assertEquals(listOf("sans-rien"), TaskViews.unsorted(tasks, now, weekStart).map { it.uid })
     }
 
     @Test
@@ -118,7 +119,7 @@ class TaskViewsTest {
             task("reportee").copy(deferUntil = Instant.parse("2026-11-05T00:00:00Z")),
         )
 
-        assertEquals(listOf("sans-rien"), TaskViews.unsorted(tasks, now).map { it.uid })
+        assertEquals(listOf("sans-rien"), TaskViews.unsorted(tasks, now, weekStart).map { it.uid })
     }
 
     @Test
@@ -128,14 +129,14 @@ class TaskViewsTest {
             task("range-avec-quand").copy(areaUid = "domaine", needsWhen = false),
         )
 
-        assertEquals(listOf("range-sans-quand"), TaskViews.unsorted(tasks, now).map { it.uid })
+        assertEquals(listOf("range-sans-quand"), TaskViews.unsorted(tasks, now, weekStart).map { it.uid })
     }
 
     @Test
     fun `à classer garde une tâche dans un projet qui attend son quand`() {
         val tasks = listOf(task("projet-sans-quand").copy(projectUid = "projet", needsWhen = true))
 
-        assertEquals(listOf("projet-sans-quand"), TaskViews.unsorted(tasks, now).map { it.uid })
+        assertEquals(listOf("projet-sans-quand"), TaskViews.unsorted(tasks, now, weekStart).map { it.uid })
     }
 
     @Test
@@ -146,14 +147,31 @@ class TaskViewsTest {
             task("plus-tard").copy(areaUid = "domaine", needsWhen = true, someday = true),
         )
 
-        assertTrue(TaskViews.unsorted(tasks, now).isEmpty())
+        assertTrue(TaskViews.unsorted(tasks, now, weekStart).isEmpty())
+    }
+
+    @Test
+    fun `à classer garde une tâche planifiée pour une semaine passée`() {
+        val tasks = listOf(task("semaine-passee").copy(weekOf = LocalDate.of(2026, 10, 19)))
+
+        assertEquals(listOf("semaine-passee"), TaskViews.unsorted(tasks, now, weekStart).map { it.uid })
+    }
+
+    @Test
+    fun `à classer exclut une tâche planifiée pour la semaine en cours ou une suivante`() {
+        val tasks = listOf(
+            task("semaine-courante").copy(weekOf = LocalDate.of(2026, 10, 26)),
+            task("semaine-suivante").copy(weekOf = LocalDate.of(2026, 11, 2)),
+        )
+
+        assertTrue(TaskViews.unsorted(tasks, now, weekStart).isEmpty())
     }
 
     @Test
     fun `à classer garde une tâche sans répétition explicite`() {
         val tasks = listOf(task("aucune").copy(recurrenceType = "none"))
 
-        assertEquals(listOf("aucune"), TaskViews.unsorted(tasks, now).map { it.uid })
+        assertEquals(listOf("aucune"), TaskViews.unsorted(tasks, now, weekStart).map { it.uid })
     }
 
     @Test

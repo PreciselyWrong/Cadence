@@ -855,6 +855,44 @@ describe('Offline sync API', () => {
         });
     });
 
+    it('keeps an offline task or note whose project or tag was deleted meanwhile', async () => {
+        const res = await push(agent, [
+            upsert(
+                'op-g1',
+                'task',
+                'clienttask00031',
+                {
+                    name: 'Written offline',
+                    note: 'Long body',
+                    project_uid: 'goneproject0001',
+                    area_uid: 'goneareaxxxx001',
+                    tag_uids: ['gonetagxxxxx001'],
+                },
+                hlc(1)
+            ),
+            upsert(
+                'op-g2',
+                'note',
+                'clientnote00031',
+                {
+                    title: 'Offline note',
+                    content: 'Body',
+                    project_uid: 'goneproject0001',
+                },
+                hlc(1)
+            ),
+        ]);
+
+        expect(res.body.results.map((r) => r.status)).toEqual([
+            'applied',
+            'applied',
+        ]);
+        const task = await Task.findOne({ where: { uid: 'clienttask00031' } });
+        expect(task.note).toBe('Long body');
+        expect(task.project_id).toBeNull();
+        expect(task.area_id).toBeNull();
+    });
+
     it('rejects unknown entities and fields without failing the batch', async () => {
         const res = await push(agent, [
             upsert(

@@ -88,7 +88,7 @@
       "keepBoth": "Keep both",
       "keepNew": "Keep the new one",
       "merge": "Merge into the old one",
-      "dropNew": "Drop the new one",
+      "dropNew": "Archive the new one",
       "title": "Same title on the same site",
       "video": "Same video",
       "repository": "Same repository",
@@ -99,7 +99,7 @@
     },
     "card": {
       "reason": "Filing to confirm",
-      "dismiss": "None",
+      "dismiss": "Ignore",
       "acceptAll": "Accept all",
       "apply": "Apply",
       "medium": "Medium",
@@ -118,6 +118,16 @@
     }
   },
   "triage": {
+    "linkLater": "In 30 days",
+    "linkArchive": "Archive",
+    "linkKeep": "Keep",
+    "linkPostponed": "Review again in 30 days",
+    "linkArchived": "Link archived",
+    "linkKept": "Link kept",
+    "linkReview": "Link to review",
+    "deleted": "Task deleted",
+    "actionError": "Could not do it, try again.",
+    "alreadySettled": "Already settled elsewhere.",
     "slotRefuse": "Refuse",
     "slotAccept": "Plan",
     "action": {
@@ -1708,6 +1718,7 @@
     "projectNameTooLong": "Project name must be {{max}} characters or less"
   },
   "inbox": {
+    "toSort": "To sort ({{count}})",
     "unsorted": {
       "noDate": "No date",
       "later": "Later",
