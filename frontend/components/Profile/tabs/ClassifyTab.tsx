@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { FORM } from '../../../constants/formClasses';
 import { useToast } from '../../Shared/ToastContext';
 import {
+    ClassifyHealth,
     ClassifyRequestError,
     ClassifyRun,
     ClassifySettings,
@@ -10,6 +11,7 @@ import {
     DryRunReport,
     fetchClassifyRuns,
     fetchClassifySettings,
+    retryClassifyFailed,
     runClassifyDryRun,
     saveClassifySettings,
     undoClassifyChange,
@@ -105,6 +107,7 @@ const ClassifyTab: React.FC<ClassifyTabProps> = ({ isActive }) => {
     const [draft, setDraft] = useState<ClassifySettings | null>(null);
     const [defaults, setDefaults] = useState<ClassifySettings | null>(null);
     const [aiConfigured, setAiConfigured] = useState(true);
+    const [health, setHealth] = useState<ClassifyHealth | null>(null);
     const [excluded, setExcluded] = useState('');
     const [runs, setRuns] = useState<ClassifyRun[]>([]);
     const [days, setDays] = useState(7);
@@ -126,6 +129,7 @@ const ClassifyTab: React.FC<ClassifyTabProps> = ({ isActive }) => {
                 setDraft(response.settings);
                 setDefaults(response.defaults);
                 setAiConfigured(response.ai_configured);
+                setHealth(response.health ?? null);
                 setExcluded(response.settings.excluded_tags.join(', '));
             })
             .catch(() =>
@@ -135,6 +139,29 @@ const ClassifyTab: React.FC<ClassifyTabProps> = ({ isActive }) => {
             );
         loadRuns();
     }, [isActive, loadRuns, showErrorToast, t]);
+
+    const retry = async () => {
+        setBusy(true);
+        try {
+            const { requeued } = await retryClassifyFailed();
+            setHealth({ last_error: null, retryable: 0 });
+            showSuccessToast(
+                t(
+                    'autoClassify.health.requeued',
+                    '{{count}} éléments relancés',
+                    {
+                        count: requeued,
+                    }
+                )
+            );
+        } catch {
+            showErrorToast(
+                t('autoClassify.health.retryError', 'Relance impossible')
+            );
+        } finally {
+            setBusy(false);
+        }
+    };
 
     if (!draft) {
         return (
@@ -248,6 +275,51 @@ const ClassifyTab: React.FC<ClassifyTabProps> = ({ isActive }) => {
                         'Aucun fournisseur d’IA : configurez Profil › Assistant IA pour activer le classement.'
                     )}
                 </p>
+            )}
+
+            {health && (health.last_error || health.retryable > 0) && (
+                <div
+                    role="alert"
+                    className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-900 dark:bg-red-900/30 dark:text-red-100"
+                >
+                    {health.last_error && (
+                        <>
+                            <p className="font-semibold">
+                                {t(
+                                    'autoClassify.health.title',
+                                    'Le dernier appel à l’IA a échoué'
+                                )}
+                            </p>
+                            <p className="mt-1 break-words font-mono text-xs">
+                                {health.last_error.message}
+                            </p>
+                            <p className="mt-1 text-xs opacity-80">
+                                {new Date(
+                                    health.last_error.at
+                                ).toLocaleString()}
+                            </p>
+                        </>
+                    )}
+                    {health.retryable > 0 && (
+                        <div className="mt-2 flex flex-wrap items-center gap-3">
+                            <span>
+                                {t(
+                                    'autoClassify.health.failed',
+                                    '{{count}} éléments en échec',
+                                    { count: health.retryable }
+                                )}
+                            </span>
+                            <button
+                                type="button"
+                                className={secondary}
+                                disabled={busy}
+                                onClick={retry}
+                            >
+                                {t('autoClassify.health.retry', 'Réessayer')}
+                            </button>
+                        </div>
+                    )}
+                </div>
             )}
 
             <section className={card}>

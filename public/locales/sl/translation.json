@@ -1,5 +1,12 @@
 {
   "autoClassify": {
+    "health": {
+      "retryError": "Ponovni poskus ni uspel",
+      "requeued": "Znova v čakalni vrsti: {{count}}",
+      "retry": "Poskusi znova",
+      "failed": "Neuspeli elementi: {{count}}",
+      "title": "Zadnji klic UI ni uspel"
+    },
     "number": {
       "maxTokens": "Največ žetonov odgovora",
       "summaryMax": "Dolžina povzetka (znaki)",

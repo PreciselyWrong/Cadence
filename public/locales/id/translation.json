@@ -1,5 +1,12 @@
 {
   "autoClassify": {
+    "health": {
+      "retryError": "Tidak dapat mencoba lagi",
+      "requeued": "{{count}} item diantrekan lagi",
+      "retry": "Coba lagi",
+      "failed": "{{count}} item gagal",
+      "title": "Panggilan AI terakhir gagal"
+    },
     "number": {
       "maxTokens": "Token respons maksimum",
       "summaryMax": "Panjang ringkasan (karakter)",

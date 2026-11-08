@@ -1,5 +1,12 @@
 {
   "autoClassify": {
+    "health": {
+      "retryError": "Opnieuw proberen mislukt",
+      "requeued": "{{count}} items opnieuw in de wachtrij",
+      "retry": "Opnieuw proberen",
+      "failed": "{{count}} items mislukt",
+      "title": "De laatste AI-aanroep is mislukt"
+    },
     "number": {
       "maxTokens": "Maximale antwoordtokens",
       "summaryMax": "Lengte van een samenvatting (tekens)",

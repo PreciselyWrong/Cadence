@@ -116,4 +116,28 @@ class AutoClassifyPayloadTest {
         assertEquals(2, result.wouldChange)
         assertNull(result.error)
     }
+
+    @Test
+    fun theSettingsCarryTheLastApiErrorAndTheFailedCount() {
+        val settings = ClassifySettings.of(
+            payload(
+                """
+                {"settings":{},"defaults":{},"ai_configured":true,
+                 "health":{"last_error":{"message":"401: invalid x-api-key","at":"2026-11-08T07:30:00.000Z"},"retryable":3}}
+                """,
+            ),
+        )
+
+        assertEquals(ClassifyHealth("401: invalid x-api-key", "2026-11-08T07:30:00.000Z", 3), settings.health)
+        assertEquals(true, settings.health.shown)
+    }
+
+    @Test
+    fun aHealthyServerShowsNoBanner() {
+        val quiet = ClassifySettings.of(payload("""{"health":{"last_error":null,"retryable":0}}"""))
+        val older = ClassifySettings.of(payload("""{"settings":{}}"""))
+
+        assertEquals(false, quiet.health.shown)
+        assertEquals(false, older.health.shown)
+    }
 }

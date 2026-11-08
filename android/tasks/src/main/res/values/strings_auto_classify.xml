@@ -83,6 +83,11 @@
     <string name="auto_classify_saved">Réglages enregistrés</string>
     <string name="auto_classify_invalid">Valeur invalide : %1$s</string>
     <string name="auto_classify_refused">Réglages refusés : %1$s</string>
+    <string name="auto_classify_health_title">Le dernier appel à l’IA a échoué</string>
+    <string name="auto_classify_health_failed">%1$d éléments en échec</string>
+    <string name="auto_classify_health_retry">Réessayer</string>
+    <string name="auto_classify_health_requeued">%1$d éléments relancés</string>
+    <string name="auto_classify_health_retry_error">Relance impossible</string>
     <string name="auto_classify_offline">Réglages indisponibles hors ligne</string>
     <string name="auto_classify_dry_run">Essai à blanc (7 jours)</string>
     <string name="auto_classify_dry_result">%1$d élément(s) sur %2$d seraient classés. Rien n\'est écrit.</string>

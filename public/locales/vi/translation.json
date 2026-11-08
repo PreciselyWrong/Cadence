@@ -1,5 +1,12 @@
 {
   "autoClassify": {
+    "health": {
+      "retryError": "Không thể thử lại",
+      "requeued": "Đã xếp lại {{count}} mục",
+      "retry": "Thử lại",
+      "failed": "{{count}} mục thất bại",
+      "title": "Lần gọi AI gần nhất đã thất bại"
+    },
     "number": {
       "maxTokens": "Số token tối đa của phản hồi",
       "summaryMax": "Độ dài tóm tắt (ký tự)",

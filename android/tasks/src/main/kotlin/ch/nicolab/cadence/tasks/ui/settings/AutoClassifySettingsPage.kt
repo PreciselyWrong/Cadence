@@ -107,6 +107,30 @@ fun AutoClassifySettingsPage(modifier: Modifier = Modifier) {
             return@Column
         }
         val defaults = loaded?.defaults
+        loaded?.health?.takeIf { it.shown }?.let { health ->
+            Panel {
+                health.error?.let { error ->
+                    Text(stringResource(R.string.auto_classify_health_title), style = MaterialTheme.typography.labelLarge, color = cadence.error)
+                    Text(error, style = MaterialTheme.typography.bodySmall, color = cadence.onSurface)
+                    health.errorAt?.let { at -> Text(at.replace('T', ' ').take(16) + " UTC", style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant) }
+                }
+                if (health.retryable > 0) {
+                    Text(stringResource(R.string.auto_classify_health_failed, health.retryable), style = MaterialTheme.typography.bodyMedium, color = cadence.onSurface)
+                    SecondaryAction(stringResource(R.string.auto_classify_health_retry), enabled = !busy) {
+                        busy = true
+                        scope.launch {
+                            repository.retry()
+                                .onSuccess { count ->
+                                    loaded = loaded?.let { ClassifySettings(it.values, it.defaults, it.aiConfigured) }
+                                    message = context.getString(R.string.auto_classify_health_requeued, count)
+                                }
+                                .onFailure { message = context.getString(R.string.auto_classify_health_retry_error) }
+                            busy = false
+                        }
+                    }
+                }
+            }
+        }
         Panel {
             ToggleRow(stringResource(R.string.auto_classify_enabled), current.enabled) { value -> edit { it.copy(enabled = value) } }
             ToggleRow(stringResource(R.string.auto_classify_notify), current.notify) { value -> edit { it.copy(notify = value) } }

@@ -1,5 +1,12 @@
 {
   "autoClassify": {
+    "health": {
+      "retryError": "Não foi possível tentar novamente",
+      "requeued": "{{count}} itens de volta à fila",
+      "retry": "Tentar novamente",
+      "failed": "{{count}} itens com falha",
+      "title": "A última chamada à IA falhou"
+    },
     "number": {
       "maxTokens": "Tokens máximos de resposta",
       "summaryMax": "Tamanho de um resumo (caracteres)",

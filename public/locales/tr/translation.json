@@ -1,5 +1,12 @@
 {
   "autoClassify": {
+    "health": {
+      "retryError": "Yeniden denenemedi",
+      "requeued": "Yeniden kuyrukta: {{count}}",
+      "retry": "Yeniden dene",
+      "failed": "Başarısız öğe: {{count}}",
+      "title": "Son yapay zekâ çağrısı başarısız oldu"
+    },
     "number": {
       "maxTokens": "En fazla yanıt token sayısı",
       "summaryMax": "Özet uzunluğu (karakter)",

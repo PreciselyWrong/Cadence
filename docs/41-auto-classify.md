@@ -30,7 +30,8 @@ Found by code, without the model (`core/duplicates.js`): the same address under 
 3. **Model call**: batches of `batch_size` items, through the provider of Profile › AI Assistant (OpenAI-compatible; Anthropic's endpoint works), with the classifier's own `model` if set. The answer is a strict JSON Schema whose enums are the item uids of the batch, the uids of open projects and domains and the names of tags (minus excluded ones): the model cannot invent one. The catalog (domains, projects with description and 4 open tasks each, tags with their use count) is cached `context_cache_minutes` per user. The system prompt says item and page text is data, never instructions. Anthropic's OpenAI-compatible endpoint has no prompt caching and ignores `reasoning_effort`.
 4. **Validation** (`core/validate.js`): a known uid or tag, a field still empty, a confidence at or above its threshold (`project` 0.8, `tags` 0.8, `duration` 0.6). Between `ask` (0.4) and the threshold, the field goes on a card instead. A priority goes on a card at `priority` (0.8) or above. Anything else is dropped; `null` is a normal answer.
 5. **Write**: the item is read again just before; if anything changed since step 2 (`core/fingerprint.js`) nothing is written (state `changed`). Writes go through the MCP tools (`update_task`, `update_note`, `update_link`), so the devices get them through the journal like any edit. Each written item gets one row in `auto_classify_changes`: pass (`run_id`), before, after, confidences, what was asked, and the item's state after the write.
-6. **Failure**: a failed call or write is tried again after 1, 2, 4… minutes (60 at most), up to `max_attempts`; then the item is `failed`. Without an AI provider the items are `skipped` (`AI_NOT_CONFIGURED`); duplicate cards still work.
+6. **Failure**: a failed call or write is tried again after 1, 2, 4… minutes (60 at most), up to `max_attempts`; then the item is `failed`. Without an AI provider the items are `skipped` (`AI_NOT_CONFIGURED`); duplicate cards still work. The error kept on the item reads `status or code: message` (`401: invalid x-api-key`).
+7. **Errors shown**: Profile › Classement and Android Réglages › Classement show a red banner with the newest API error until a later call succeeds, and the number of items `failed` or skipped for want of a provider, with **Réessayer**: they go back to the queue with their attempts reset.
 
 In **dry run** mode (`mode: dry_run`) steps 1 to 4 run, the change rows are written with `dry_run: true`, and nothing else: no write, no card.
 
@@ -79,7 +80,8 @@ All under `/api` and `/api/v1`.
 
 | Route | |
 |---|---|
-| `GET /auto-classify/settings` | `{ settings, defaults, ai_configured }` |
+| `GET /auto-classify/settings` | `{ settings, defaults, ai_configured, health: { last_error: { message, at } \| null, retryable } }` |
+| `POST /auto-classify/retry` | puts the `failed` items, and those skipped with `AI_NOT_CONFIGURED`, back in the queue; `{ requeued }` |
 | `PUT /auto-classify/settings` | partial settings; 400 when a value is invalid |
 | `GET /auto-classify/suggestions` | pending cards `{ suggestions: [{ uid, kind, entity, item_uid, payload, created_at, expires_at }] }` (also in `GET /triage`) |
 | `POST /auto-classify/suggestions/:uid/apply` | `{ choice }`: `'all'`, `'none'`, `{ project: { type: project \| area \| new_project \| none, … }, tags, new_tag, priority }`, or `{ action }` for a duplicate (`drop_new`, `merge`, `keep_new`, `keep_both`); 409 once decided |

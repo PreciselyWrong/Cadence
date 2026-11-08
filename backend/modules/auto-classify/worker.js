@@ -49,8 +49,12 @@ function configure(options = {}) {
 const newRunId = () =>
     `run_${Date.now().toString(36)}_${crypto.randomBytes(4).toString('hex')}`;
 
-const errorText = (error) =>
-    String(error?.code || error?.message || error).slice(0, 255);
+// Status or code first, then the message: "401: invalid x-api-key".
+const errorText = (error) => {
+    const head = error?.status ?? error?.code;
+    const message = error?.message ?? String(error);
+    return (head ? `${head}: ${message}` : message).slice(0, 255);
+};
 
 // A journal row was committed; a burst of them makes one pass.
 function wake() {

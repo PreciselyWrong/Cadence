@@ -29,7 +29,15 @@ async function getSettings(user) {
         settings: resolveSettings(ui),
         defaults: serverDefaults(),
         ai_configured: await model.isConfigured(user.id),
+        health: await repository.classifyHealth(user.id),
     };
+}
+
+// Puts the items that gave up, or waited for a provider, back in the queue.
+async function retryFailed(user, now = new Date()) {
+    const requeued = await repository.requeueFailed(user.id, now);
+    if (requeued > 0) require('./worker').wake();
+    return { requeued };
 }
 
 async function updateSettings(user, body) {
@@ -251,6 +259,7 @@ module.exports = {
     undoChange,
     undoRun,
     dryRun,
+    retryFailed,
     queueItems,
     listSuggestions: (user) => suggestions.listPending(user.id),
     applySuggestion: (user, uid, choice) =>

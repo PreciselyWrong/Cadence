@@ -1,5 +1,12 @@
 {
   "autoClassify": {
+    "health": {
+      "retryError": "Impossibile riprovare",
+      "requeued": "{{count}} elementi rimessi in coda",
+      "retry": "Riprova",
+      "failed": "{{count}} elementi non riusciti",
+      "title": "L’ultima chiamata all’IA non è riuscita"
+    },
     "number": {
       "maxTokens": "Token massimi della risposta",
       "summaryMax": "Lunghezza del riepilogo (caratteri)",

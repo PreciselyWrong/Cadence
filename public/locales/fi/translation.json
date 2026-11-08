@@ -1,5 +1,12 @@
 {
   "autoClassify": {
+    "health": {
+      "retryError": "Uudelleenyritys ei onnistunut",
+      "requeued": "{{count}} kohdetta jonossa uudelleen",
+      "retry": "Yritä uudelleen",
+      "failed": "{{count}} kohdetta epäonnistui",
+      "title": "Viimeisin tekoälykutsu epäonnistui"
+    },
     "number": {
       "maxTokens": "Vastauksen enimmäistokenit",
       "summaryMax": "Tiivistelmän pituus (merkkiä)",

@@ -1,5 +1,12 @@
 {
   "autoClassify": {
+    "health": {
+      "retryError": "Relance impossible",
+      "requeued": "{{count}} éléments relancés",
+      "retry": "Réessayer",
+      "failed": "{{count}} éléments en échec",
+      "title": "Le dernier appel à l’IA a échoué"
+    },
     "number": {
       "maxTokens": "Jetons de réponse au plus",
       "summaryMax": "Longueur d’un résumé (caractères)",

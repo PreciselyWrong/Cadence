@@ -1,5 +1,12 @@
 {
   "autoClassify": {
+    "health": {
+      "retryError": "Could not retry",
+      "requeued": "{{count}} items queued again",
+      "retry": "Retry",
+      "failed": "{{count}} items failed",
+      "title": "The last AI call failed"
+    },
     "number": {
       "maxTokens": "Maximum response tokens",
       "summaryMax": "Summary length (characters)",

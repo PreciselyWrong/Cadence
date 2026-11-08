@@ -1,5 +1,12 @@
 {
   "autoClassify": {
+    "health": {
+      "retryError": "Nie udało się ponowić",
+      "requeued": "Ponownie w kolejce: {{count}}",
+      "retry": "Ponów",
+      "failed": "Nieudane elementy: {{count}}",
+      "title": "Ostatnie wywołanie AI nie powiodło się"
+    },
     "number": {
       "maxTokens": "Maksymalna liczba tokenów odpowiedzi",
       "summaryMax": "Długość podsumowania (znaki)",

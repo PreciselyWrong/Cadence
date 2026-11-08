@@ -1,5 +1,12 @@
 {
   "autoClassify": {
+    "health": {
+      "retryError": "다시 시도할 수 없습니다",
+      "requeued": "{{count}}개 항목을 다시 대기열에 넣었습니다",
+      "retry": "다시 시도",
+      "failed": "실패한 항목 {{count}}개",
+      "title": "마지막 AI 호출이 실패했습니다"
+    },
     "number": {
       "maxTokens": "응답 최대 토큰 수",
       "summaryMax": "요약 길이 (글자)",

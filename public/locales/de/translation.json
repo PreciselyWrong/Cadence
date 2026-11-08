@@ -1,5 +1,12 @@
 {
   "autoClassify": {
+    "health": {
+      "retryError": "Erneuter Versuch nicht möglich",
+      "requeued": "{{count}} Elemente erneut eingereiht",
+      "retry": "Erneut versuchen",
+      "failed": "{{count}} Elemente fehlgeschlagen",
+      "title": "Der letzte KI-Aufruf ist fehlgeschlagen"
+    },
     "number": {
       "maxTokens": "Maximale Antwort-Tokens",
       "summaryMax": "Länge einer Zusammenfassung (Zeichen)",

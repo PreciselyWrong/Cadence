@@ -1,5 +1,12 @@
 {
   "autoClassify": {
+    "health": {
+      "retryError": "Reîncercarea a eșuat",
+      "requeued": "Din nou în coadă: {{count}}",
+      "retry": "Reîncearcă",
+      "failed": "Elemente eșuate: {{count}}",
+      "title": "Ultimul apel către IA a eșuat"
+    },
     "number": {
       "maxTokens": "Numărul maxim de tokeni de răspuns",
       "summaryMax": "Lungimea rezumatului (caractere)",

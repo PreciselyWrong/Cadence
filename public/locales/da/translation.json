@@ -1,5 +1,12 @@
 {
   "autoClassify": {
+    "health": {
+      "retryError": "Kunne ikke prøve igen",
+      "requeued": "{{count}} elementer sat i kø igen",
+      "retry": "Prøv igen",
+      "failed": "{{count}} elementer mislykkedes",
+      "title": "Det seneste AI-kald mislykkedes"
+    },
     "number": {
       "maxTokens": "Højst antal svartokens",
       "summaryMax": "Resumélængde (tegn)",

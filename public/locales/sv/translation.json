@@ -1,5 +1,12 @@
 {
   "autoClassify": {
+    "health": {
+      "retryError": "Kunde inte försöka igen",
+      "requeued": "{{count}} objekt köade igen",
+      "retry": "Försök igen",
+      "failed": "{{count}} objekt misslyckades",
+      "title": "Det senaste AI-anropet misslyckades"
+    },
     "number": {
       "maxTokens": "Maximalt antal svarstoken",
       "summaryMax": "Sammanfattningens längd (tecken)",

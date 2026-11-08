@@ -305,7 +305,7 @@ describe('auto-classify', () => {
         });
         expect(row.state).toBe('queued');
         expect(row.attempts).toBe(1);
-        expect(row.last_error).toBe('ETIMEDOUT');
+        expect(row.last_error).toBe('ETIMEDOUT: timeout');
         expect(new Date(row.next_attempt_at).getTime()).toBeGreaterThan(
             later(91).getTime()
         );
@@ -580,6 +580,60 @@ describe('auto-classify', () => {
                 )
             ).body.marks
         ).toEqual([]);
+    });
+
+    it('reports the last API error until a call succeeds, and retries failed items', async () => {
+        await agent
+            .put('/api/auto-classify/settings')
+            .send({ max_attempts: 1 });
+        const first = await Task.create({
+            user_id: user.id,
+            name: 'Facture',
+            status: 0,
+        });
+        model.configure({
+            ask: async () => {
+                throw Object.assign(new Error('invalid x-api-key'), {
+                    status: 401,
+                });
+            },
+        });
+        await worker.runOnce(later(91));
+
+        let res = await agent.get('/api/auto-classify/settings');
+        expect(res.body.health.last_error.message).toBe(
+            '401: invalid x-api-key'
+        );
+        expect(res.body.health.last_error.at).toBeTruthy();
+        expect(res.body.health.retryable).toBe(1);
+
+        const { ask } = answering({});
+        model.configure({ ask });
+        const retried = await agent.post('/api/auto-classify/retry');
+        expect(retried.status).toBe(200);
+        expect(retried.body.requeued).toBe(1);
+        const row = await AutoClassifyItem.findOne({
+            where: { item_uid: first.uid },
+        });
+        expect(row.state).toBe('queued');
+        expect(row.attempts).toBe(0);
+
+        await worker.runOnce(later(92));
+        res = await agent.get('/api/auto-classify/settings');
+        expect(res.body.health).toEqual({ last_error: null, retryable: 0 });
+    });
+
+    it('offers to retry items skipped while no provider was set', async () => {
+        await AutoClassifyItem.create({
+            user_id: user.id,
+            entity: 'task',
+            item_uid: 'skipped-1',
+            state: 'skipped',
+            last_error: 'AI_NOT_CONFIGURED',
+            item_created_at: new Date(),
+        });
+        const res = await agent.get('/api/auto-classify/settings');
+        expect(res.body.health).toEqual({ last_error: null, retryable: 1 });
     });
 
     it('validates and stores the settings', async () => {

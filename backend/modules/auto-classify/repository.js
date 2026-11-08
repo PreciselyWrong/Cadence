@@ -328,8 +328,66 @@ async function areaIdOf(userId, uid) {
     return area?.id ?? null;
 }
 
+const NOT_CONFIGURED = 'AI_NOT_CONFIGURED';
+const retryableWhere = (userId) => ({
+    user_id: userId,
+    [Op.or]: [
+        { state: 'failed' },
+        { state: 'skipped', last_error: NOT_CONFIGURED },
+    ],
+});
+
+// The newest API error, unless a call succeeded after it, and how many items
+// gave up or were skipped for want of a provider.
+async function classifyHealth(userId) {
+    const failing = await AutoClassifyItem.findOne({
+        where: {
+            user_id: userId,
+            state: { [Op.in]: ['queued', 'failed'] },
+            last_error: {
+                [Op.and]: [{ [Op.ne]: null }, { [Op.ne]: NOT_CONFIGURED }],
+            },
+        },
+        order: [['updated_at', 'DESC']],
+        attributes: ['last_error', 'updated_at'],
+    });
+    const lastOk = failing
+        ? await AutoClassifyItem.max('updated_at', {
+              where: {
+                  user_id: userId,
+                  state: { [Op.in]: ['done', 'changed'] },
+              },
+          })
+        : null;
+    const current =
+        failing && (!lastOk || new Date(failing.updated_at) > new Date(lastOk));
+    return {
+        last_error: current
+            ? { message: failing.last_error, at: failing.updated_at }
+            : null,
+        retryable: await AutoClassifyItem.count({
+            where: retryableWhere(userId),
+        }),
+    };
+}
+
+async function requeueFailed(userId, now) {
+    const [count] = await AutoClassifyItem.update(
+        {
+            state: 'queued',
+            attempts: 0,
+            next_attempt_at: now,
+            last_error: null,
+        },
+        { where: retryableWhere(userId) }
+    );
+    return count;
+}
+
 module.exports = {
     ENTITIES,
+    classifyHealth,
+    requeueFailed,
     loadItem,
     itemTitle,
     linksOfUser,

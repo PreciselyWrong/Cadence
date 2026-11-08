@@ -93,10 +93,17 @@ export interface ClassifySettings {
     excluded_tags: string[];
 }
 
+// The newest API error, until a call succeeds, and how many items gave up.
+export interface ClassifyHealth {
+    last_error: { message: string; at: string } | null;
+    retryable: number;
+}
+
 export interface ClassifySettingsResponse {
     settings: ClassifySettings;
     defaults: ClassifySettings;
     ai_configured: boolean;
+    health: ClassifyHealth;
 }
 
 export interface ClassifyChange {
@@ -220,6 +227,9 @@ export const dismissClassifySuggestion = (uid: string) =>
         `auto-classify/suggestions/${encodeURIComponent(uid)}/dismiss`,
         {}
     );
+
+export const retryClassifyFailed = () =>
+    request<{ requeued: number }>('POST', 'auto-classify/retry', {});
 
 export const runClassifyDryRun = (days: number) =>
     request<DryRunReport>('POST', 'auto-classify/dry-run', { days });

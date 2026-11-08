@@ -584,3 +584,9 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Décision** : une carte par élément dans « À trier », trois rangées affichées seulement en cas de doute (Projet : options, Domaine, Nouveau projet prérempli, Autre…, Aucun ; Tags à cocher et un nouveau tag décoché ; Priorité), les meilleures réponses précochées pour qu'« Appliquer » d'emblée vaille « Tout accepter » ; doublon de lien : quatre choix, rien jeté sans un toucher. Sur une tâche, une note ou un lien : « Classé automatiquement · Annuler » tant qu'il n'a pas été modifié. Profil › Classement : tous les réglages, un essai à blanc, les passes récentes avec annulation.
 - **Android à reprendre** : livré dans la même étape (cartes, notifications à boutons, mention, Réglages › Classement).
 
+
+### 2026-11-08 — Classement automatique : erreur d'API visible
+
+- **Problème** : un appel à l'IA refusé (clé fausse, modèle inconnu) ne se voyait que dans les logs du serveur ; les éléments en échec restaient perdus.
+- **Décision** : bandeau rouge en tête de Profil › Classement, avec la dernière erreur (statut : message, date) tant qu'aucun appel n'a réussi depuis, et « N éléments en échec · Réessayer » qui les remet en file.
+- **Android à reprendre** : livré dans la même étape (Réglages › Classement).

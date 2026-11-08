@@ -67,6 +67,10 @@ router.post(
     handle((req) => service.dismissSuggestion(user(req), req.params.uid))
 );
 router.post(
+    '/auto-classify/retry',
+    handle((req) => service.retryFailed(user(req)))
+);
+router.post(
     '/auto-classify/dry-run',
     handle((req) => service.dryRun(user(req), req.body ?? {}))
 );

@@ -14,12 +14,30 @@ private const val DRY_RUN = "/api/v1/auto-classify/dry-run"
 private const val MARKS = "/api/v1/auto-classify/marks"
 private const val CHANGES = "/api/v1/auto-classify/changes"
 private const val SUGGESTIONS = "/api/v1/auto-classify/suggestions"
+private const val RETRY = "/api/v1/auto-classify/retry"
+
+/** Dernière erreur d'appel à l'IA (effacée par un appel réussi) et nombre d'éléments en échec. */
+data class ClassifyHealth(val error: String?, val errorAt: String?, val retryable: Int) {
+    val shown: Boolean get() = error != null || retryable > 0
+
+    companion object {
+        fun of(body: JsonObject?): ClassifyHealth {
+            val last = body?.get("last_error") as? JsonObject
+            return ClassifyHealth(
+                error = (last?.get("message") as? JsonPrimitive)?.content,
+                errorAt = (last?.get("at") as? JsonPrimitive)?.content,
+                retryable = (body?.get("retryable") as? JsonPrimitive)?.content?.toIntOrNull() ?: 0,
+            )
+        }
+    }
+}
 
 /** Réglages du classement tels que le serveur les renvoie, avec ses valeurs par défaut. */
 class ClassifySettings(
     val values: JsonObject,
     val defaults: JsonObject,
     val aiConfigured: Boolean,
+    val health: ClassifyHealth = ClassifyHealth(null, null, 0),
 ) {
     val notify: Boolean get() = values.boolean("notify") ?: true
 
@@ -28,6 +46,7 @@ class ClassifySettings(
             values = body["settings"] as? JsonObject ?: JsonObject(emptyMap()),
             defaults = body["defaults"] as? JsonObject ?: JsonObject(emptyMap()),
             aiConfigured = body.boolean("ai_configured") == true,
+            health = ClassifyHealth.of(body["health"] as? JsonObject),
         )
     }
 }
@@ -98,6 +117,12 @@ class AutoClassifyRepository internal constructor(
 
     suspend fun dryRun(days: Int = DRY_RUN_DAYS): Result<DryRunResult> = runCatchingIo {
         DryRunResult.of(call("POST", DRY_RUN, emptyMap(), buildJsonObject { put("days", days) }))
+    }
+
+    /** Remet en file les éléments en échec ou sautés faute de fournisseur ; renvoie leur nombre. */
+    suspend fun retry(): Result<Int> = runCatchingIo {
+        val body = call("POST", RETRY, emptyMap(), JsonObject(emptyMap()))
+        (body["requeued"] as? JsonPrimitive)?.content?.toIntOrNull() ?: 0
     }
 
     suspend fun marks(entity: String, uid: String): Result<List<ClassifyMark>> = runCatchingIo {

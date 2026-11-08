@@ -1,5 +1,12 @@
 {
   "autoClassify": {
+    "health": {
+      "retryError": "再試行できませんでした",
+      "requeued": "{{count}}件を再キューしました",
+      "retry": "再試行",
+      "failed": "失敗した項目：{{count}}件",
+      "title": "直近のAI呼び出しが失敗しました"
+    },
     "number": {
       "maxTokens": "応答の最大トークン数",
       "summaryMax": "要約の長さ（文字）",

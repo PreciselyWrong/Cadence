@@ -1,5 +1,12 @@
 {
   "autoClassify": {
+    "health": {
+      "retryError": "无法重试",
+      "requeued": "已重新排队 {{count}} 个项目",
+      "retry": "重试",
+      "failed": "失败项目：{{count}}",
+      "title": "最近一次 AI 调用失败"
+    },
     "number": {
       "maxTokens": "响应的最大令牌数",
       "summaryMax": "摘要长度（字符）",

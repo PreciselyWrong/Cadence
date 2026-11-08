@@ -1,5 +1,12 @@
 {
   "autoClassify": {
+    "health": {
+      "retryError": "Η επανάληψη δεν ήταν δυνατή",
+      "requeued": "Ξανά στην ουρά: {{count}}",
+      "retry": "Επανάληψη",
+      "failed": "Αποτυχημένα στοιχεία: {{count}}",
+      "title": "Η τελευταία κλήση ΤΝ απέτυχε"
+    },
     "number": {
       "maxTokens": "Μέγιστα tokens απάντησης",
       "summaryMax": "Μήκος περίληψης (χαρακτήρες)",

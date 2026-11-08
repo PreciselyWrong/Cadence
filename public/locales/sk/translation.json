@@ -1,5 +1,12 @@
 {
   "autoClassify": {
+    "health": {
+      "retryError": "Opakovanie zlyhalo",
+      "requeued": "Znova vo fronte: {{count}}",
+      "retry": "Skúsiť znova",
+      "failed": "Neúspešné položky: {{count}}",
+      "title": "Posledné volanie AI zlyhalo"
+    },
     "number": {
       "maxTokens": "Maximum tokenov odpovede",
       "summaryMax": "Dĺžka zhrnutia (znaky)",
