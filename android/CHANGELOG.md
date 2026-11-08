@@ -1,4 +1,4 @@
-## Non publié
+## [1.14.3] — 8 novembre 2026
 
 - Les liens dans le titre d’une tâche ou d’une note et dans la note d’une tâche s’ouvrent au toucher ; « Modifier » permet toujours de changer le texte.
 
