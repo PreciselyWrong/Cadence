@@ -1,3 +1,11 @@
+## [1.14.5] — 8 novembre 2026
+
+- Une adresse suivie d’un caractère invisible collé au texte est désormais reconnue comme lien dans les tâches et les notes.
+
+## [1.14.4] — 8 novembre 2026
+
+- Les adresses avec un tiret typographique dans le nom de domaine sont maintenant reconnues et ouvrent l’adresse avec un tiret normal.
+
 ## [1.14.3] — 8 novembre 2026
 
 - Les liens dans le titre d’une tâche ou d’une note et dans la note d’une tâche s’ouvrent au toucher ; « Modifier » permet toujours de changer le texte.
