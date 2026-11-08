@@ -20,11 +20,11 @@ $uploader = Join-Path $root 'scripts/dev-publish/upload-release.ps1'
 # wrapper jar with the JDK directly there.
 function Invoke-Gradle([string[]]$Arguments) {
     if ($IsWindows) {
-        & (Join-Path $root 'gradlew.bat') @Arguments
+        & (Join-Path $root 'gradlew.bat') -p $root @Arguments
     } else {
         if (-not $env:ANDROID_HOME) { $env:ANDROID_HOME = Join-Path $HOME 'Android/Sdk' }
         $wrapper = Join-Path $root 'gradle/wrapper/gradle-wrapper.jar'
-        & (Join-Path $javaHome 'bin/java') '-Dorg.gradle.jvmargs=-Xmx3g' -cp $wrapper org.gradle.wrapper.GradleWrapperMain --max-workers=4 @Arguments
+        & (Join-Path $javaHome 'bin/java') '-Dorg.gradle.jvmargs=-Xmx3g' -cp $wrapper org.gradle.wrapper.GradleWrapperMain -p $root --max-workers=4 @Arguments
     }
 }
 
