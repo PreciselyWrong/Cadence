@@ -1,6 +1,8 @@
 ## Non publié
 
 - Les liens dans le titre d’une tâche ou d’une note et dans la note d’une tâche s’ouvrent au toucher ; « Modifier » permet toujours de changer le texte.
+- Les adresses avec un tiret typographique dans le nom de domaine sont reconnues et ouvrent l’adresse avec un tiret normal.
+- Une adresse suivie d’un caractère invisible collé au texte est reconnue comme lien dans les tâches et les notes.
 
 ## [1.13.0] — 7 novembre 2026
 

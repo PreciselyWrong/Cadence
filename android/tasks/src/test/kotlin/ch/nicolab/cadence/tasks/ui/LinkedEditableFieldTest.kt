@@ -33,4 +33,28 @@ class LinkedEditableFieldTest {
         compose.onNodeWithText(value).performTextReplacement("Voir https://example.org")
         assertEquals("Voir https://example.org", value)
     }
+
+    @Test
+    fun typographicHyphenInAddressShowsLinkMode() {
+        compose.setContent {
+            CadenceTheme {
+                LinkedEditableField("https://club‑sport.example.ch", {}, MaterialTheme.typography.bodyLarge)
+            }
+        }
+
+        compose.onNodeWithText("https://club‑sport.example.ch").assertExists()
+        compose.onNodeWithContentDescription("Modifier").assertExists()
+    }
+
+    @Test
+    fun invisibleCharacterAfterAddressShowsLinkMode() {
+        compose.setContent {
+            CadenceTheme {
+                LinkedEditableField("Lien : https://club.example.ch\u2060", {}, MaterialTheme.typography.bodyLarge)
+            }
+        }
+
+        compose.onNodeWithText("Lien : https://club.example.ch\u2060").assertExists()
+        compose.onNodeWithContentDescription("Modifier").assertExists()
+    }
 }
