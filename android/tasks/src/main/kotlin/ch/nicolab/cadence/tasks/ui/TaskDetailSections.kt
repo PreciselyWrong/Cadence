@@ -189,13 +189,19 @@ internal fun InlineTextField(
 @Composable
 internal fun NoteCard(note: String, onNoteChange: (String) -> Unit, readOnly: Boolean = false) {
     Panel(Modifier.fillMaxWidth()) {
-        InlineTextField(
-            value = note,
-            onValueChange = onNoteChange,
-            readOnly = readOnly,
-            placeholder = stringResource(R.string.tasks_detail_note_hint),
-            modifier = Modifier.fillMaxWidth().heightIn(min = Size.touch),
-        )
+        Box(Modifier.fillMaxWidth().heightIn(min = Size.touch), contentAlignment = Alignment.CenterStart) {
+            if (note.isEmpty()) Text(
+                stringResource(R.string.tasks_detail_note_hint),
+                style = MaterialTheme.typography.bodyLarge,
+                color = cadence.outline,
+            )
+            LinkedEditableField(
+                value = note,
+                onValueChange = onNoteChange,
+                readOnly = readOnly,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+        }
     }
 }
 
