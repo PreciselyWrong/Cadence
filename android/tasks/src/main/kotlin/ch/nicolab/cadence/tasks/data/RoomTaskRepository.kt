@@ -366,7 +366,7 @@ internal class RoomTaskRepository(
     override suspend fun clearRefused() = database.failedOpDao().clear()
 
     override suspend fun createTask(draft: TaskDraft): String {
-        val uid = UUID.randomUUID().toString()
+        val uid = draft.uid ?: UUID.randomUUID().toString()
         val fields = buildMap<String, JsonElement> {
             put("name", JsonPrimitive(draft.name))
             put("note", jsonString(draft.note))
