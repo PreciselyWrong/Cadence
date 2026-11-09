@@ -1,3 +1,7 @@
+## [1.15.0] — 9 novembre 2026
+
+- Proches peut confier une tâche à Cadence : une proposition acceptée dans Proches devient une tâche Cadence avec son échéance.
+
 ## [1.14.6] — 9 novembre 2026
 
 - Le « + » des widgets ouvre directement le clavier dans l’ajout rapide.
