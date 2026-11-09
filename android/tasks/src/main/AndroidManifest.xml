@@ -143,6 +143,12 @@
                 <action android:name="android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED" />
             </intent-filter>
         </receiver>
+        <!-- Remise d'une tâche par Proches : seul appelant accepté, vérifié par signature dans ProchesCaller. -->
+        <provider
+            android:name=".handoff.ProchesHandoffProvider"
+            android:authorities="ch.nicolab.cadence.handoff"
+            android:exported="true" />
+
     </application>
 
 </manifest>

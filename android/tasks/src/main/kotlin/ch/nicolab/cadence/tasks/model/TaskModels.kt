@@ -217,6 +217,8 @@ data class TaskDraft(
     val goalUid: String? = null,
     /** Rang parmi ses sœurs (`order`, outliner) ; null le laisse au serveur. */
     val order: Int? = null,
+    /** Uid imposé (remise depuis Proches, uid stable) ; null en tire un au hasard. */
+    val uid: String? = null,
 )
 
 /**
