@@ -1,3 +1,7 @@
+## [1.14.6] — 9 novembre 2026
+
+- Le « + » des widgets ouvre directement le clavier dans l’ajout rapide.
+
 ## [1.14.5] — 8 novembre 2026
 
 - Une adresse suivie d’un caractère invisible collé au texte est désormais reconnue comme lien dans les tâches et les notes.
