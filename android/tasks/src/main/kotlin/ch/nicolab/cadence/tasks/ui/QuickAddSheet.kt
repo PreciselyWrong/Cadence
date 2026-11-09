@@ -61,6 +61,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -199,7 +201,6 @@ fun QuickAddSheet(
         ignored = (ignored + keys).distinct()
     }
 
-    LaunchedEffect(Unit) { focus.requestFocus() }
     // Taper garde la série en vie ; deux minutes de pause la terminent.
     LaunchedEffect(field.text) { series = series.touched(System.currentTimeMillis()) }
     LaunchedEffect(series) {
@@ -319,6 +320,18 @@ fun QuickAddSheet(
         dismiss = { if (!saving) onDismiss() },
         modifier = modifier,
     ) {
+        // La feuille a sa propre fenêtre : un focus demandé avant qu'elle l'ait n'ouvre pas le clavier
+        // (ajout rapide des widgets, au-dessus d'une activité vide).
+        val window = LocalWindowInfo.current
+        val keyboard = LocalSoftwareKeyboardController.current
+        var keyboardOpened by remember { mutableStateOf(false) }
+        LaunchedEffect(window.isWindowFocused) {
+            if (window.isWindowFocused && !keyboardOpened) {
+                keyboardOpened = true
+                focus.requestFocus()
+                keyboard?.show()
+            }
+        }
         Column(
             Modifier.fillMaxWidth().imePadding(),
             verticalArrangement = Arrangement.spacedBy(Space.md),
