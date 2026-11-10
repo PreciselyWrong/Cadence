@@ -1,3 +1,7 @@
+## [1.15.2] — 10 novembre 2026
+
+- Un lien Gmail ouvre directement le mail (ou la recherche) dans le navigateur, sur la version mobile de Gmail.
+
 ## [1.15.1] — 10 novembre 2026
 
 - Toucher un lien Gmail copie sa recherche et ouvre Gmail : il suffit de la coller pour retrouver le mail, que Gmail sur téléphone ne sait pas ouvrir depuis un lien.

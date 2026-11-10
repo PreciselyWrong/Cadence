@@ -11,9 +11,13 @@
     <!-- Rappels à l'heure près ; sans cette permission accordée, les alarmes gardent une fenêtre de ±1 minute. -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
-    <!-- Liens Gmail : ouvrir l'appli Gmail après avoir copié la recherche du lien. -->
+    <!-- Liens Gmail : trouver le navigateur par défaut pour y ouvrir le site mobile de Gmail. -->
     <queries>
-        <package android:name="com.google.android.gm" />
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" />
+        </intent>
     </queries>
 
     <application>

@@ -5,35 +5,48 @@ import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 
 class GmailLinksTest {
+    private val mobile = "https://mail.google.com/mail/mu/mp/"
+
     @Test
-    fun `un lien de recherche Gmail donne sa recherche decodee`() {
+    fun `un lien vers un fil ouvre ce fil dans Gmail mobile`() {
         assertEquals(
-            GmailLink("rfc822msgid:abc.123@exemple.ch"),
-            GmailLinks.parse("https://mail.google.com/mail/u/0/#search/rfc822msgid%3Aabc.123%40exemple.ch"),
+            "$mobile?authuser=moi@exemple.ch#cv/priority/%5Esmartlabel_personal/1a08a6bbd756318a",
+            GmailLinks.mobileUrl("https://mail.google.com/mail/?authuser=moi@exemple.ch#all/1a08a6bbd756318a"),
         )
         assertEquals(
-            GmailLink("from:ajerco tarifaire"),
-            GmailLinks.parse("https://mail.google.com/mail/?authuser=moi@exemple.ch#search/from%3Aajerco+tarifaire"),
+            "$mobile#cv/priority/%5Esmartlabel_personal/18f2c0ffee123456",
+            GmailLinks.mobileUrl("https://mail.google.com/mail/u/0/#inbox/18f2c0ffee123456"),
         )
     }
 
     @Test
-    fun `un lien vers un fil Gmail n'a pas de recherche`() {
-        assertEquals(GmailLink(null), GmailLinks.parse("https://mail.google.com/mail/?authuser=moi@exemple.ch#all/1a08a6bbd756318a"))
-        assertEquals(GmailLink(null), GmailLinks.parse("https://mail.google.com/mail/u/0/#inbox"))
+    fun `un lien de recherche ouvre la recherche dans Gmail mobile`() {
+        assertEquals(
+            "$mobile#tl/search/from%3Aajerco+tarifaire",
+            GmailLinks.mobileUrl("https://mail.google.com/mail/u/0/#search/from%3Aajerco+tarifaire"),
+        )
+    }
+
+    @Test
+    fun `un autre lien Gmail ouvre Gmail mobile`() {
+        assertEquals(mobile, GmailLinks.mobileUrl("https://mail.google.com/mail/u/0/#inbox"))
+        assertEquals(mobile, GmailLinks.mobileUrl("https://mail.google.com/mail/u/0/#inbox/FMfcgzQXJWDsKmLtbcxyz"))
     }
 
     @Test
     fun `les autres liens ne sont pas Gmail`() {
-        assertNull(GmailLinks.parse("https://exemple.ch/#search/x"))
-        assertNull(GmailLinks.parse("https://calendar.google.com/calendar/u/0/r"))
-        assertNull(GmailLinks.parse("mailto:anna@exemple.ch"))
+        assertNull(GmailLinks.mobileUrl("https://exemple.ch/#all/1a08a6bbd756318a"))
+        assertNull(GmailLinks.mobileUrl("https://calendar.google.com/calendar/u/0/r"))
+        assertNull(GmailLinks.mobileUrl("mailto:anna@exemple.ch"))
     }
 
     @Test
-    fun `un lien de recherche dans une note markdown est reconnu en entier`() {
-        val note = "[Fil d'origine](https://mail.google.com/mail/u/0/#search/rfc822msgid%3Aabc%40exemple.ch)"
+    fun `un lien Gmail dans une note markdown est reconnu en entier`() {
+        val note = "[Fil d'origine](https://mail.google.com/mail/?authuser=moi@exemple.ch#all/1a08a6bbd756318a)"
         val url = TextLinks.matches(note).single().url
-        assertEquals(GmailLink("rfc822msgid:abc@exemple.ch"), GmailLinks.parse(url))
+        assertEquals(
+            "$mobile?authuser=moi@exemple.ch#cv/priority/%5Esmartlabel_personal/1a08a6bbd756318a",
+            GmailLinks.mobileUrl(url),
+        )
     }
 }

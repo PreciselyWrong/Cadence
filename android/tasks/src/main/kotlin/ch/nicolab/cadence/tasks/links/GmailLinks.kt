@@ -1,27 +1,32 @@
 package ch.nicolab.cadence.tasks.links
 
 import java.net.URI
-import java.net.URLDecoder
-
-/** A Gmail web link; [query] is its search, when the link is a search. */
-data class GmailLink(val query: String?)
 
 /**
- * Gmail on a phone (app or mobile web) ignores the `#…` part of a Gmail address, so a link to a
- * thread opens the inbox. A search link still carries something usable: its query, pasted into
- * Gmail's search, finds the mail.
+ * Gmail on a phone ignores the `#…` route of a desktop Gmail address (the app opens its inbox, the
+ * browser redirects to the mobile site's inbox). The mobile site still opens a thread or a search
+ * from its own routes, so a desktop link is rewritten to them. Verified on Firefox Android, 2026-11-10.
  */
 object GmailLinks {
+    private const val MOBILE = "https://mail.google.com/mail/mu/mp/"
     private const val SEARCH = "search/"
 
-    fun parse(url: String): GmailLink? {
+    /** Legacy thread ids, the ones the Gmail API and old desktop links use. */
+    private val threadId = Regex("^[0-9a-f]{16}$")
+
+    /** The mobile-site address for a Gmail link, or null when [url] is not a Gmail link. */
+    fun mobileUrl(url: String): String? {
         val uri = runCatching { URI(url) }.getOrNull() ?: return null
         if (uri.scheme?.lowercase() !in setOf("http", "https") || uri.host?.lowercase() != "mail.google.com") return null
+        val account = uri.rawQuery.orEmpty().split('&').firstOrNull { it.startsWith("authuser=") }
+        val base = MOBILE + (account?.let { "?$it" } ?: "")
         val fragment = uri.rawFragment.orEmpty()
-        val query = fragment.takeIf { it.startsWith(SEARCH) }
-            ?.removePrefix(SEARCH)
-            ?.let { URLDecoder.decode(it, Charsets.UTF_8) }
-            ?.takeIf { it.isNotBlank() }
-        return GmailLink(query)
+        val thread = fragment.substringAfterLast('/', "").takeIf { threadId.matches(it) }
+        val search = fragment.takeIf { it.startsWith(SEARCH) }?.removePrefix(SEARCH)?.takeIf { it.isNotBlank() }
+        return when {
+            thread != null -> "$base#cv/priority/%5Esmartlabel_personal/$thread"
+            search != null -> "$base#tl/search/$search"
+            else -> base
+        }
     }
 }
