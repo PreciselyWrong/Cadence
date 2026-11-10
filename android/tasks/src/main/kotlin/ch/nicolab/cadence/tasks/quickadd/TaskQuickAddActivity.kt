@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.tasks.quickadd
 
+import ch.nicolab.cadence.tasks.links.ProvideCadenceUriHandler
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -30,7 +31,7 @@ class TaskQuickAddActivity : ComponentActivity() {
                 }
                 share.start(text)
                 sharing = true
-                setContent { CadenceTheme { ShareSheet(share, onDone = { finish() }) } }
+                setContent { CadenceTheme { ProvideCadenceUriHandler { ShareSheet(share, onDone = { finish() }) } } }
             }
             else -> showQuickAdd(QuickAddTarget.fromAction(intent.action))
         }

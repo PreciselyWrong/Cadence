@@ -1,3 +1,7 @@
+## [1.15.1] — 10 novembre 2026
+
+- Toucher un lien Gmail copie sa recherche et ouvre Gmail : il suffit de la coller pour retrouver le mail, que Gmail sur téléphone ne sait pas ouvrir depuis un lien.
+
 ## [1.15.0] — 9 novembre 2026
 
 - Proches peut confier une tâche à Cadence : une proposition acceptée dans Proches devient une tâche Cadence avec son échéance.

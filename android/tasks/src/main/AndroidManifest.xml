@@ -11,6 +11,11 @@
     <!-- Rappels à l'heure près ; sans cette permission accordée, les alarmes gardent une fenêtre de ±1 minute. -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
+    <!-- Liens Gmail : ouvrir l'appli Gmail après avoir copié la recherche du lien. -->
+    <queries>
+        <package android:name="com.google.android.gm" />
+    </queries>
+
     <application>
         <receiver
             android:name=".widget.TasksWidgetReceiver"

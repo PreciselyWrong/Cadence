@@ -117,6 +117,8 @@
     <string name="tasks_note_pinned_badge">Épinglée</string>
     <string name="tasks_links_section">Liens</string>
     <string name="tasks_link_open">Ouvrir le lien %1$s</string>
+    <string name="tasks_gmail_search_copied">Recherche copiée : colle-la dans Gmail (%1$s)</string>
+    <string name="tasks_gmail_no_search">Gmail ne sait pas ouvrir ce mail sur téléphone : cherche-le par son expéditeur</string>
     <string name="tasks_idea_note">Note</string>
     <string name="tasks_idea_edit">Modifier</string>
     <string name="tasks_idea_show_more">Afficher tout</string>
