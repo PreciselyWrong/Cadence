@@ -69,7 +69,7 @@ describe('ProjectTasksSection in minimal mode', () => {
             />
         );
 
-        const input = screen.getByPlaceholderText('+ Add task');
+        const input = screen.getByPlaceholderText('Add a task');
         fireEvent.change(input, { target: { value: 'New item' } });
         fireEvent.keyDown(input, { key: 'Enter' });
 
@@ -127,7 +127,7 @@ describe('ProjectTasksSection in dense mode', () => {
         );
 
         expect(
-            screen.queryByPlaceholderText('+ Add task')
+            screen.queryByPlaceholderText('Add a task')
         ).not.toBeInTheDocument();
         expect(
             screen.queryByTestId('completed-tasks-section')
