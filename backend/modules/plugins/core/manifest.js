@@ -6,7 +6,7 @@ const { ALL_EVENTS } = require('../../webhooks/events');
 // asks for a higher one needs a newer Cadence.
 const PLUGIN_API_VERSION = 1;
 
-const PERMISSIONS = ['events', 'routes', 'brief'];
+const PERMISSIONS = ['events', 'routes', 'brief', 'notify'];
 const SETTING_TYPES = ['string', 'secret', 'boolean', 'number', 'select'];
 const ID_PATTERN = /^[a-z][a-z0-9-]{1,31}$/;
 const VERSION_PATTERN = /^\d+\.\d+\.\d+$/;

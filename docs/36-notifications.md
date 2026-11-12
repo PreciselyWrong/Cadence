@@ -33,6 +33,10 @@ Each type has its own switches: **In-app, Push, Telegram, Apprise, Desktop**. Em
 - **Test buttons.** Profile › Notifications has a **Test** button per column (`POST /api/test-notifications/trigger` `{ channel }`). The Desktop test creates an unread row routed only to `desktop`, outside quiet hours (a test rings now); the computer shows it at its next poll (60 s by default) if the Cadence desktop app is running. It also appears in the in-app list, since that row is what the desktop client reads.
 - Telegram receives due-soon items as one batch per run; push and Apprise send per notification. A channel is not repeated for the same notification within 24 hours.
 
+## Live stream
+
+`GET /api/notifications/stream` (session or API key) is a server-sent events stream for the clients that ring on their own: one `notification` event (`id` = uid, `data` = `{ uid, type, title, message, data, level, sources, created_at }`) each time a notification routed to `desktop` or `mobile` is released, at once or when its quiet hours end, plus a `ready` event on connect and a comment every 25 s. The stream is a wake-up signal: clients still read `GET /api/notifications` to decide what to show, so nothing is lost while disconnected. Code: `backend/utils/notificationStream.js` (in-process hub, one server process). The desktop client polls as soon as an event arrives ([DESKTOP.md](fork/DESKTOP.md)); Android keeps the stream open in a foreground service.
+
 ## Timed tasks setting
 
 One setting per account decides whether tasks with a time ring and how early: `{ "enabled": true, "lead_minutes": 0 }`, `lead_minutes` one of 0, 5, 10, 15, 30. It lives in `ui_settings.timedReminders` (a profile save keeps it), behind `GET` and `PUT /api/notifications/timed-tasks`. Web: Profile › Notifications, **Tasks with a time**. Android: **Réglages › Notifications**; the phone keeps its last reading, sends a change at once or at the next sync when offline, and reads the server's value after each sync. A value chosen on the phone before this setting was shared is sent once. The channels stay those of `taskReminders`.

@@ -108,6 +108,14 @@ describe('PluginPage', () => {
         ).toBeInTheDocument();
     });
 
+    it('hands the page its query, so a notification can open one message', () => {
+        menu();
+        renderAt('/plugins/hermes?msg=m1&view=inbox');
+        expect(screen.getByTitle('Hermes').getAttribute('src')).toMatch(
+            /\/api\/plugins\/hermes\/ui\/index\.html\?msg=m1&view=inbox$/
+        );
+    });
+
     it('says so when the plugin is unknown or turned off', () => {
         act(() => {
             usePluginMenuStore.setState({ items: [], loaded: true });

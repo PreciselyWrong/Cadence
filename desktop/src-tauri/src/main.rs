@@ -62,6 +62,8 @@ fn is_left_click(event: &TrayIconEvent) -> bool {
 const QUICK_SIZE: (f64, f64) = (560.0, 76.0);
 const TICK: Duration = Duration::from_secs(2);
 const FLUSH_RETRY: Duration = Duration::from_secs(60);
+/// Pause before the notification stream reconnects, doubled up to the maximum.
+const STREAM_BACKOFF: (u64, u64) = (5, 60);
 
 struct Paths {
     /// `~/.config`, home of the autostart entry.
@@ -399,10 +401,17 @@ fn reload_config(app: &AppHandle, tray: &Tray) {
 /// the tray.
 fn background_loop(app: AppHandle) {
     let tray = app.state::<Tray>();
+    // The stream thread sends a wake-up per live notification; the poll still decides what to show.
+    let (poke, woken) = std::sync::mpsc::channel::<()>();
+    {
+        let tray_app = app.clone();
+        thread::spawn(move || stream_loop(tray_app, poke));
+    }
     let mut config_mtime = modified(&tray.paths.config);
     let mut last_attempt = Instant::now() - FLUSH_RETRY;
     let mut last_pending = 0;
     let mut last_poll = Instant::now() - Duration::from_secs(3600);
+    let mut woke = false;
     loop {
         tray.reap();
         let mtime = modified(&tray.paths.config);
@@ -419,7 +428,9 @@ fn background_loop(app: AppHandle) {
             last_pending = sync::pending(&tray.paths.queue).len();
         }
 
-        if last_poll.elapsed() >= Duration::from_secs(config.poll_seconds) {
+        let live = woke || woken.try_iter().count() > 0;
+        woke = false;
+        if live || last_poll.elapsed() >= Duration::from_secs(config.poll_seconds) {
             last_poll = Instant::now();
             for alert in sync::poll_notifications(&tray.store, &config) {
                 present(&app, alert);
@@ -428,7 +439,34 @@ fn background_loop(app: AppHandle) {
         for alert in tray.store.take_due(sync::unix_now()) {
             present(&app, alert);
         }
-        thread::sleep(TICK);
+        // A live notification cuts the wait short and is polled on the next pass.
+        match woken.recv_timeout(TICK) {
+            Ok(()) => woke = true,
+            Err(std::sync::mpsc::RecvTimeoutError::Timeout) => {}
+            Err(std::sync::mpsc::RecvTimeoutError::Disconnected) => thread::sleep(TICK),
+        }
+    }
+}
+
+/// Keeps the server's notification stream open (docs/36-notifications.md) and reconnects with a
+/// growing pause. Without an API key, or while the server is unreachable, the poll alone runs.
+fn stream_loop(app: AppHandle, poke: std::sync::mpsc::Sender<()>) {
+    let mut pause = STREAM_BACKOFF.0;
+    loop {
+        let config = app.state::<Tray>().config();
+        let started = Instant::now();
+        let outcome = sync::watch_stream(&config, &poke);
+        if let Err(e) = &outcome {
+            if e != "no API key" {
+                eprintln!("notification stream ended: {e}");
+            }
+        }
+        // A connection that held for a while was healthy: start the pauses over.
+        if started.elapsed() > Duration::from_secs(120) {
+            pause = STREAM_BACKOFF.0;
+        }
+        thread::sleep(Duration::from_secs(pause));
+        pause = (pause * 2).min(STREAM_BACKOFF.1);
     }
 }
 

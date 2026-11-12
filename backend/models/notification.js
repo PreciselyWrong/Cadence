@@ -1,6 +1,7 @@
 const { DataTypes, Op } = require('sequelize');
 const { getQuietUntil } = require('../utils/quietHours');
 const { randomUUID } = require('crypto');
+const notificationStream = require('../utils/notificationStream');
 
 module.exports = (sequelize) => {
     const Notification = sequelize.define(
@@ -194,6 +195,7 @@ module.exports = (sequelize) => {
 
         if (!deliverAfter) {
             await deliverExternal(notification);
+            notificationStream.publish(notification);
         }
 
         await Notification.emitWebhook(notification, {
@@ -279,6 +281,7 @@ module.exports = (sequelize) => {
                 // Release first so a failing channel is not retried forever.
                 await notification.update({ deliver_after: null });
                 await deliverExternal(notification);
+                notificationStream.publish(notification);
                 delivered++;
             } catch (error) {
                 console.error('Failed to deliver held notification:', error);

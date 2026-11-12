@@ -157,6 +157,48 @@ function decryptedSettings(manifest, stored) {
     return values;
 }
 
+const NOTIFY_SOURCES = ['desktop', 'mobile'];
+const OPEN_PATH = /^\/[A-Za-z0-9\-._~!$&'()*+,;=:@%/?#[\]]*$/;
+
+// Validated here so a plugin cannot put a foreign link, an unknown channel or
+// an empty title into the user's notification list.
+async function notifyUser(pluginId, input = {}) {
+    const { userId, title, message, level, sources } = input;
+    if (!Number.isInteger(userId)) throw new Error('notify needs a userId');
+    const cleanTitle = String(title ?? '').trim();
+    if (!cleanTitle) throw new Error('notify needs a title');
+    const channels = sources ?? NOTIFY_SOURCES;
+    if (
+        !Array.isArray(channels) ||
+        channels.length === 0 ||
+        channels.some((source) => !NOTIFY_SOURCES.includes(source))
+    ) {
+        throw new Error(
+            `notify sources can only be: ${NOTIFY_SOURCES.join(', ')}`
+        );
+    }
+    const data =
+        input.data && typeof input.data === 'object' ? { ...input.data } : {};
+    if (data.openPath !== undefined) {
+        const path = String(data.openPath);
+        if (!OPEN_PATH.test(path) || path.startsWith('//')) {
+            throw new Error('openPath must be a path inside Cadence');
+        }
+    }
+    const { Notification } = require('../../models');
+    return Notification.createNotification({
+        userId,
+        type: 'system',
+        title: cleanTitle.slice(0, 255),
+        message: message == null ? null : String(message).slice(0, 2000),
+        level: ['info', 'warning', 'error', 'success'].includes(level)
+            ? level
+            : 'info',
+        data: { ...data, pluginId },
+        sources: channels,
+    });
+}
+
 function buildContext(plugin, entry, row) {
     const { manifest } = entry;
     const log = (level) => (data, message) =>
@@ -226,6 +268,11 @@ function buildContext(plugin, entry, row) {
                 plugin.briefWriter = fn;
             },
         };
+    }
+    if (manifest.permissions.includes('notify')) {
+        // A notification for one user, shown by the app and sent live to the
+        // desktop client and the phone (docs/46-plugins.md, "Notifications").
+        ctx.notify = (input) => notifyUser(manifest.id, input);
     }
     if (manifest.permissions.includes('routes')) {
         plugin.router = express.Router();

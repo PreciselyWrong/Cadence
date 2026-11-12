@@ -18,7 +18,7 @@ const os = require('os');
 const path = require('path');
 const request = require('supertest');
 const app = require('../../app');
-const { Role, Plugin } = require('../../models');
+const { Role, Plugin, Notification } = require('../../models');
 const { safeRequest } = require('../../modules/caldav/services/safe-request');
 const dispatcher = require('../../modules/webhooks/dispatcher');
 const registry = require('../../modules/plugins/registry');
@@ -825,6 +825,91 @@ describe('Plugins', () => {
                 .send({ enabled: true });
             expect(globalThis.__hasBrief).toBe('undefined');
             expect(registry.briefWriter()).toBeNull();
+        });
+    });
+
+    describe('notifications', () => {
+        const notifier = (permissions) =>
+            writePlugin(
+                'herald',
+                manifestOf('herald', { permissions, events: [] }),
+                `module.exports = { activate(ctx) {
+                    globalThis.__hasNotify = typeof ctx.notify;
+                    if (!ctx.notify) return;
+                    ctx.router.post('/ping', async (req, res) => {
+                        try {
+                            const n = await ctx.notify({
+                                userId: req.currentUser.id,
+                                title: req.body.title,
+                                message: req.body.message,
+                                data: req.body.data,
+                                sources: req.body.sources,
+                            });
+                            res.json({ uid: n.uid });
+                        } catch (error) {
+                            res.status(400).json({ error: error.message });
+                        }
+                    });
+                } };`
+            );
+
+        it('withholds ctx.notify without the permission', async () => {
+            notifier(['routes']);
+            await adminAgent
+                .patch('/api/plugins/herald')
+                .send({ enabled: true });
+            expect(globalThis.__hasNotify).toBe('undefined');
+        });
+
+        it('creates a notification for the desktop and the phone, tagged with the plugin', async () => {
+            notifier(['routes', 'notify']);
+            await adminAgent
+                .patch('/api/plugins/herald')
+                .send({ enabled: true });
+            expect(globalThis.__hasNotify).toBe('function');
+            const res = await adminAgent
+                .post('/api/plugins/herald/x/ping')
+                .send({
+                    title: 'Résumé du week-end',
+                    message: 'Prêt',
+                    data: { openPath: '/p/herald?agent=weekend' },
+                });
+            expect(res.status).toBe(200);
+            const row = await Notification.findOne({
+                where: { uid: res.body.uid },
+            });
+            expect(row).toMatchObject({
+                user_id: admin.id,
+                type: 'system',
+                title: 'Résumé du week-end',
+                message: 'Prêt',
+                sources: ['desktop', 'mobile'],
+            });
+            expect(row.data).toMatchObject({
+                pluginId: 'herald',
+                openPath: '/p/herald?agent=weekend',
+            });
+        });
+
+        it('refuses a missing title, unknown channels and an openPath outside the app', async () => {
+            notifier(['routes', 'notify']);
+            await adminAgent
+                .patch('/api/plugins/herald')
+                .send({ enabled: true });
+            const post = (body) =>
+                adminAgent.post('/api/plugins/herald/x/ping').send(body);
+            expect((await post({ message: 'x' })).status).toBe(400);
+            expect(
+                (await post({ title: 't', sources: ['email'] })).status
+            ).toBe(400);
+            expect(
+                (
+                    await post({
+                        title: 't',
+                        data: { openPath: 'https://evil.example/x' },
+                    })
+                ).status
+            ).toBe(400);
         });
     });
 

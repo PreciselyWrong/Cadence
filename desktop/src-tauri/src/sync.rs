@@ -356,6 +356,15 @@ fn is_plain_uid(uid: &str) -> bool {
             .all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_')
 }
 
+/// A path inside the Cadence web UI: starts with a single `/`, no spaces or control
+/// characters, so it can only ever navigate the main window within the server.
+fn is_app_path(path: &str) -> bool {
+    path.starts_with('/')
+        && !path.starts_with("//")
+        && path.len() <= 300
+        && path.chars().all(|c| c.is_ascii_graphic())
+}
+
 impl ServerNotification {
     /// Web UI route of the item this notification is about (`/task/<uid>`, `/project/<uid>`).
     fn target_path(&self) -> Option<String> {
@@ -367,8 +376,14 @@ impl ServerNotification {
         };
         if let Some(uid) = uid_of("taskUid") {
             Some(format!("/task/{uid}"))
+        } else if let Some(uid) = uid_of("projectUid") {
+            Some(format!("/project/{uid}"))
         } else {
-            uid_of("projectUid").map(|uid| format!("/project/{uid}"))
+            // A plugin names the page it wants opened (`/plugins/hermes?msg=...`).
+            data.get("openPath")
+                .and_then(serde_json::Value::as_str)
+                .filter(|path| is_app_path(path))
+                .map(str::to_string)
         }
     }
 
@@ -473,6 +488,37 @@ fn now_iso() -> String {
         .unwrap_or_default()
         .as_secs();
     iso_utc(secs)
+}
+
+/// Holds the server's notification stream open and sends one wake-up on `poke` for every
+/// `notification` event, so the poll that follows shows it at once instead of up to
+/// `poll_seconds` later. The poll stays the source of truth (baseline, seen uids, quiet
+/// hours): the stream only says "look now". Returns when the connection ends or fails; the
+/// caller reconnects after a pause.
+pub fn watch_stream(cfg: &Config, poke: &std::sync::mpsc::Sender<()>) -> Result<(), String> {
+    use std::io::{BufRead, BufReader};
+    if cfg.api_token.is_empty() {
+        return Err("no API key".to_string());
+    }
+    let url = format!("{}/api/notifications/stream", cfg.server_url);
+    // The server sends a comment every 25 s: a minute of silence means a dead connection.
+    let response = ureq::AgentBuilder::new()
+        .timeout_connect(Duration::from_secs(10))
+        .timeout_read(Duration::from_secs(60))
+        .user_agent("cadence-desktop")
+        .build()
+        .get(&url)
+        .set("Authorization", &bearer(cfg))
+        .set("Accept", "text/event-stream")
+        .call()
+        .map_err(|e| e.to_string())?;
+    for line in BufReader::new(response.into_reader()).lines() {
+        let line = line.map_err(|e| e.to_string())?;
+        if line.trim_end() == "event: notification" && poke.send(()).is_err() {
+            return Ok(());
+        }
+    }
+    Ok(())
 }
 
 /// Unread notifications the server routed to the desktop, shown once each. The first
@@ -1003,5 +1049,69 @@ mod tests {
             idempotency_key(&path, &legacy)
         );
         let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn opens_a_path_a_plugin_notification_names() {
+        let with = |data: serde_json::Value| ServerNotification {
+            data: Some(data),
+            ..notification("a", &["desktop"], None)
+        };
+        assert_eq!(
+            with(serde_json::json!({ "openPath": "/plugins/hermes?msg=m1" })).target_path(),
+            Some("/plugins/hermes?msg=m1".to_string())
+        );
+        for bad in ["https://evil.example/x", "//evil.example/x", "plugins/x", "/a b", "/a\nb"] {
+            assert_eq!(
+                with(serde_json::json!({ "openPath": bad })).target_path(),
+                None,
+                "{bad}"
+            );
+        }
+        // An item the notification is about wins over a path.
+        assert_eq!(
+            with(serde_json::json!({ "taskUid": "t1", "openPath": "/plugins/x" })).target_path(),
+            Some("/task/t1".to_string())
+        );
+    }
+
+    #[test]
+    fn a_stream_event_wakes_the_poll_once_per_notification() {
+        use std::io::{Read, Write};
+        let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        let url = format!("http://{}", listener.local_addr().unwrap());
+        let server = std::thread::spawn(move || {
+            let (mut stream, _) = listener.accept().unwrap();
+            let mut request = [0u8; 2048];
+            let n = stream.read(&mut request).unwrap();
+            let body = "retry: 5000\nevent: ready\ndata: {}\n\n\
+                : ping\n\n\
+                event: notification\nid: a\ndata: {\"uid\":\"a\"}\n\n\
+                event: notification\nid: b\ndata: {\"uid\":\"b\"}\n\n";
+            write!(
+                stream,
+                "HTTP/1.1 200 OK\r\nContent-Type: text/event-stream\r\nConnection: close\r\n\r\n{body}"
+            )
+            .unwrap();
+            String::from_utf8_lossy(&request[..n]).to_lowercase()
+        });
+        let (tx, rx) = std::sync::mpsc::channel();
+        // The server closes after its events: the call returns instead of hanging.
+        let outcome = watch_stream(&token_cfg(url), &tx);
+        assert!(outcome.is_ok(), "{outcome:?}");
+        assert_eq!(rx.try_iter().count(), 2);
+        let request = server.join().unwrap();
+        assert!(request.starts_with("get /api/notifications/stream "));
+        assert!(request.contains("authorization: bearer tt_test"), "{request}");
+        assert!(request.contains("accept: text/event-stream"));
+    }
+
+    #[test]
+    fn the_stream_needs_a_token_and_a_reachable_server() {
+        let (tx, _rx) = std::sync::mpsc::channel();
+        let mut cfg = token_cfg("http://127.0.0.1:9".into());
+        assert!(watch_stream(&cfg, &tx).is_err());
+        cfg.api_token = String::new();
+        assert_eq!(watch_stream(&cfg, &tx), Err("no API key".to_string()));
     }
 }

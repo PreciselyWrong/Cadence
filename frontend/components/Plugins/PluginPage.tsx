@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getApiPath } from '../../config/paths';
 import { usePluginMenuStore } from '../../store/pluginMenuStore';
 import { resolvePluginOpen } from './pluginOpen';
@@ -11,6 +11,8 @@ const PluginPage: React.FC = () => {
     const { t } = useTranslation();
     const { id = '' } = useParams();
     const navigate = useNavigate();
+    // The page's own query (`?msg=…` from a notification) is handed to the plugin page.
+    const { search } = useLocation();
     const frameRef = useRef<HTMLIFrameElement>(null);
     const loaded = usePluginMenuStore((state) => state.loaded);
     const item = usePluginMenuStore((state) =>
@@ -59,9 +61,10 @@ const PluginPage: React.FC = () => {
         );
     }
 
-    const src = getApiPath(
-        `plugins/${encodeURIComponent(item.id)}/ui/${encodeURIComponent(item.file)}`
-    );
+    const src =
+        getApiPath(
+            `plugins/${encodeURIComponent(item.id)}/ui/${encodeURIComponent(item.file)}`
+        ) + search;
 
     return (
         <div className="flex h-full min-h-[70vh] flex-col">

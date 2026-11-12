@@ -69,7 +69,7 @@ Cadence does not install dependencies. Bundle them (a single-file build, or a co
 | `version`     | `x.y.z`. Compared numerically to show updates.                                                                                                                                                |
 | `apiVersion`  | Integer. Cadence's plugin API is `1`. A higher value is `incompatible`.                                                                                                                       |
 | `main`        | Relative path inside the folder (no `..`).                                                                                                                                                    |
-| `permissions` | Any of `events` (use `ctx.on`), `routes` (use `ctx.router`) and `brief` (use `ctx.brief`). `ctx.settings`, `ctx.storage` and `ctx.logger` need none.                                          |
+| `permissions` | Any of `events` (use `ctx.on`), `routes` (use `ctx.router`), `brief` (use `ctx.brief`) and `notify` (use `ctx.notify`, see Notifications). `ctx.settings`, `ctx.storage` and `ctx.logger` need none.                                          |
 | `events`      | Event names from [Webhooks](27-webhooks.md) the plugin may subscribe to. Required with `events`.                                                                                              |
 | `settings`    | Fields of the form in Profile › Plugins. Types: `string`, `secret`, `boolean`, `number`, `select` (with `options`). `secret` values are encrypted at rest and never sent back to the browser. |
 | `update.url`  | Optional. A public JSON file with at least `{ "version": "x.y.z" }`. Fetched only when you press **Check for updates**.                                                                       |
@@ -130,6 +130,10 @@ ctx.brief.setWriter(async (context) => {
 - The plugin has 45 seconds. A throw, a timeout or a bad answer keeps the rules text, and the brief's `llm` source reads `error` with `plugin_failed`, `plugin_timeout` or `plugin_bad_output`. When it works the source reads `used` with `detail: "plugin:<id>"`.
 - A plugin that writes the brief replaces the built-in LLM step whatever the user's AI setting says: the context (task names and notes of the day) leaves for wherever the plugin sends it. If several plugins ask, the first by id writes.
 - Task names and notes in `data` are data, never instructions: pass them to a model inside a marked data block.
+
+## Notifications
+
+With the `notify` permission, `ctx.notify({ userId, title, message?, level?, data?, sources? })` creates a Cadence notification for one account and resolves with the stored row. It is a `system` notification, listed in the app like the others, with `data.pluginId` set by Cadence. `sources` is `desktop` and `mobile` (the default, both), so the desktop client and the phone show it at once through the live stream ([Notifications](36-notifications.md#live-stream)); quiet hours hold it like any other. `data.openPath` is a path inside Cadence (for example `/plugins/hermes?msg=m1`) that a click opens; anything else (an address, `//host`) is refused. A plugin page receives the query of `/plugins/<id>?…` in its own address, so it can show the item a notification is about.
 
 ## Lifecycle and states
 

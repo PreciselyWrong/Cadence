@@ -3,6 +3,9 @@
 const notificationsService = require('./service');
 const { UnauthorizedError } = require('../../shared/errors');
 const { getAuthenticatedUserId } = require('../../utils/request-utils');
+const notificationStream = require('../../utils/notificationStream');
+
+const HEARTBEAT_MS = 25_000;
 
 function requireUserId(req) {
     const userId = getAuthenticatedUserId(req);
@@ -13,6 +16,35 @@ function requireUserId(req) {
 }
 
 const notificationsController = {
+    // Server-sent events: one `notification` event per notification released
+    // for the desktop or the phone. A comment every 25 s keeps proxies and
+    // the phone's radio from closing an idle connection.
+    stream(req, res) {
+        const userId = requireUserId(req);
+        res.status(200).set({
+            'Content-Type': 'text/event-stream; charset=utf-8',
+            'Cache-Control': 'no-cache, no-transform',
+            Connection: 'keep-alive',
+            'X-Accel-Buffering': 'no',
+        });
+        res.flushHeaders();
+        res.write('retry: 5000\nevent: ready\ndata: {}\n\n');
+
+        const off = notificationStream.subscribe(userId, (payload) => {
+            res.write(
+                `event: notification\nid: ${payload.uid}\ndata: ${JSON.stringify(payload)}\n\n`
+            );
+        });
+        const heartbeat = setInterval(
+            () => res.write(': ping\n\n'),
+            HEARTBEAT_MS
+        );
+        req.on('close', () => {
+            clearInterval(heartbeat);
+            off();
+        });
+    },
+
     async getTimedReminders(req, res, next) {
         try {
             res.json(
