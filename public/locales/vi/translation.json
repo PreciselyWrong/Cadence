@@ -1,4 +1,14 @@
 {
+    "taskSource": {
+        "gmail": "Gmail",
+        "telegram": "Telegram",
+        "mcp": "MCP",
+        "android": "Android",
+        "desktop": "Máy tính",
+        "link": "Liên kết",
+        "openSource": "Mở nguồn",
+        "fromSource": "Đến từ {{source}}"
+    },
   "autoClassify": {
     "health": {
       "retryError": "Không thể thử lại",

@@ -1,4 +1,14 @@
 {
+    "taskSource": {
+        "gmail": "Gmail",
+        "telegram": "Telegram",
+        "mcp": "MCP",
+        "android": "Android",
+        "desktop": "Masaüstü",
+        "link": "Bağlantı",
+        "openSource": "Kaynağı aç",
+        "fromSource": "Kaynak: {{source}}"
+    },
   "autoClassify": {
     "health": {
       "retryError": "Yeniden denenemedi",

@@ -1,4 +1,14 @@
 {
+    "taskSource": {
+        "gmail": "Gmail",
+        "telegram": "Telegram",
+        "mcp": "MCP",
+        "android": "Android",
+        "desktop": "Υπολογιστής",
+        "link": "Σύνδεσμος",
+        "openSource": "Άνοιγμα πηγής",
+        "fromSource": "Προέρχεται από {{source}}"
+    },
   "autoClassify": {
     "health": {
       "retryError": "Η επανάληψη δεν ήταν δυνατή",

@@ -1,4 +1,14 @@
 {
+    "taskSource": {
+        "gmail": "Gmail",
+        "telegram": "Telegram",
+        "mcp": "MCP",
+        "android": "Android",
+        "desktop": "Computador",
+        "link": "Link",
+        "openSource": "Abrir a origem",
+        "fromSource": "Vem de {{source}}"
+    },
   "autoClassify": {
     "health": {
       "retryError": "Não foi possível tentar novamente",

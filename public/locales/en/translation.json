@@ -1,4 +1,14 @@
 {
+    "taskSource": {
+        "gmail": "Gmail",
+        "telegram": "Telegram",
+        "mcp": "MCP",
+        "android": "Android",
+        "desktop": "Desktop",
+        "link": "Link",
+        "openSource": "Open the source",
+        "fromSource": "Came from {{source}}"
+    },
   "autoClassify": {
     "health": {
       "retryError": "Could not retry",

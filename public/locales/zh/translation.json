@@ -1,4 +1,14 @@
 {
+    "taskSource": {
+        "gmail": "Gmail",
+        "telegram": "Telegram",
+        "mcp": "MCP",
+        "android": "Android",
+        "desktop": "桌面",
+        "link": "链接",
+        "openSource": "打开来源",
+        "fromSource": "来自{{source}}"
+    },
   "autoClassify": {
     "health": {
       "retryError": "无法重试",

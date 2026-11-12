@@ -1,4 +1,14 @@
 {
+    "taskSource": {
+        "gmail": "Gmail",
+        "telegram": "Telegram",
+        "mcp": "MCP",
+        "android": "Android",
+        "desktop": "Настолен компютър",
+        "link": "Връзка",
+        "openSource": "Отвори източника",
+        "fromSource": "Идва от {{source}}"
+    },
   "autoClassify": {
     "health": {
       "retryError": "Повторният опит не бе възможен",
