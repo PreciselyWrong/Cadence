@@ -65,6 +65,9 @@ data class TaskItem(
     val weekOf: LocalDate? = null,
     /** Premier jour du mois décidé (« Ce mois-ci », « Mois prochain ») ; jamais une échéance. */
     val monthOf: LocalDate? = null,
+    /** Origine (`source`) et page d'origine (`source_url`) : le badge de la ligne et de la fiche. */
+    val source: String? = null,
+    val sourceUrl: String? = null,
     /** Classé par le serveur sans quand choisi : reste à classer tant qu'aucune date, semaine, vue ou « Plus tard » ne le range. */
     val needsWhen: Boolean = false,
     /** Date où revoir une idée mise de côté ; ni rappel ni agenda. */

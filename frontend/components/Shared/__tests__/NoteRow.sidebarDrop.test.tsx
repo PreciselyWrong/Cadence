@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import NoteCard from '../NoteCard';
+import NoteRow from '../NoteRow';
 import { updateNote, fetchNoteBySlug } from '../../../utils/notesService';
 import { useStore } from '../../../store/useStore';
 
@@ -45,9 +45,9 @@ beforeEach(() => {
     }));
 });
 
-describe('NoteCard dragged onto the sidebar', () => {
+describe('NoteRow dragged onto the sidebar', () => {
     it('tags the note with the tag it is dropped on', async () => {
-        render(<NoteCard note={note} />);
+        render(<NoteRow note={note} />);
         const card = screen
             .getByText('Trip ideas')
             .closest('[draggable="true"]') as HTMLElement;
@@ -67,13 +67,5 @@ describe('NoteCard dragged onto the sidebar', () => {
             })
         );
         tag.remove();
-    });
-});
-
-describe('NoteCard preview', () => {
-    it('says an empty note is empty through the translations', () => {
-        render(<NoteCard note={{ ...note, content: '' }} />);
-        expect(screen.getByText('Empty note')).toBeInTheDocument();
-        expect(screen.queryByText(/No content preview/)).toBeNull();
     });
 });

@@ -6,12 +6,14 @@ import {
     applyTriage,
     fetchTriageQueue,
     keepTask,
+    decideMail,
 } from '../../../utils/triageService';
 
 jest.mock('../../../utils/triageService', () => ({
     fetchTriageQueue: jest.fn(),
     keepTask: jest.fn(),
     applyTriage: jest.fn(),
+    decideMail: jest.fn(),
 }));
 jest.mock('../../../utils/dateUtils', () => ({
     getTodayDateString: () => '2026-11-06',
@@ -161,6 +163,69 @@ describe('TriagePage', () => {
         });
         render(<TriagePage />);
         expect(await screen.findByTestId('triage-empty')).toBeInTheDocument();
+    });
+
+    const MAIL_QUEUE = {
+        count: 1,
+        tasks: {},
+        mail_archive: false,
+        items: [
+            {
+                key: 'mail:m1',
+                type: 'mail',
+                source: 'mail',
+                task_uid: null,
+                action: 'decide_mail',
+                payload: {
+                    mail_uid: 'm1',
+                    account: 'perso',
+                    from_name: 'Alice',
+                    from_address: 'alice@example.com',
+                    subject: 'Devis cuisine',
+                    received_at: '2026-11-10T09:00:00Z',
+                    summary: 'Demande de valider le devis',
+                    suggestion: null,
+                    draft_excerpt: null,
+                    gmail_url: 'https://mail.google.com/mail/u/0/#inbox/abc',
+                },
+                reason: 'Demande de valider le devis',
+                details: [],
+                question: null,
+            },
+        ],
+    };
+
+    it('decides a mail card and moves on', async () => {
+        (fetchTriageQueue as jest.Mock).mockResolvedValue(MAIL_QUEUE);
+        (decideMail as jest.Mock).mockResolvedValue(undefined);
+        render(<TriagePage />);
+        expect(
+            await screen.findByText('Demande de valider le devis')
+        ).toBeInTheDocument();
+        expect(
+            screen.queryByRole('button', { name: 'Corriger' })
+        ).not.toBeInTheDocument();
+        fireEvent.click(screen.getByRole('button', { name: 'Ignorer' }));
+        await waitFor(() =>
+            expect(decideMail).toHaveBeenCalledWith('m1', 'dismiss', {}, false)
+        );
+        expect(await screen.findByTestId('triage-empty')).toBeInTheDocument();
+    });
+
+    it('says so when the mail was not archived in Gmail', async () => {
+        (fetchTriageQueue as jest.Mock).mockResolvedValue({
+            ...MAIL_QUEUE,
+            mail_archive: true,
+        });
+        (decideMail as jest.Mock).mockResolvedValue({ archived: false });
+        render(<TriagePage />);
+        fireEvent.click(await screen.findByLabelText('Archiver dans Gmail'));
+        fireEvent.click(screen.getByRole('button', { name: 'Ignorer' }));
+        await waitFor(() =>
+            expect(mockToasts.showErrorToast).toHaveBeenCalledWith(
+                'Pas archivé dans Gmail'
+            )
+        );
     });
 
     it('drops a card already settled elsewhere, with a message of its own', async () => {

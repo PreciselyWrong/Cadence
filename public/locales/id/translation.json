@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}} catatan",
+        "notes_one": "{{count}} catatan",
+        "tasks_other": "{{count}} tugas",
+        "tasks_one": "{{count}} tugas",
+        "goals_other": "{{count}} tujuan",
+        "goals_one": "{{count}} tujuan",
+        "projects_other": "{{count}} proyek",
+        "projects_one": "{{count}} proyek"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -128,6 +138,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(tanpa subjek)",
+      "draft": "Draf siap:",
+      "task": "Tugas",
+      "reply": "Balas",
+      "later": "Nanti",
+      "dismiss": "Abaikan",
+      "archive": "Arsipkan di Gmail",
+      "taskName": "Nama tugas",
+      "taskDue": "Tenggat",
+      "createTask": "Buat tugas",
+      "taskCreated": "Tugas dibuat",
+      "replied": "Balasan dibuka di Gmail",
+      "postponed": "Kembali besok",
+      "dismissed": "Email diabaikan",
+      "notArchived": "Tidak diarsipkan di Gmail"
+    },
     "linkLater": "Dalam 30 hari",
     "linkArchive": "Arsipkan",
     "linkKeep": "Simpan",
@@ -499,7 +526,7 @@
     "assignedTo": "Ditetapkan untuk",
     "subtasks": "Subtugas",
     "openFullPage": "Buka tampilan penuh",
-    "openPanel": "Buka di panel samping",
+    "openPanel": "Buka detail",
     "quickEdit": {
       "setPriority": "Atur prioritas",
       "setDueDate": "Atur tanggal jatuh tempo"
@@ -2331,6 +2358,15 @@
     "linkedNoteNotNow": "Nanti saja",
     "linkedNoteCreate": "Buat catatan",
     "linkedNoteCreateFailed": "Catatan tidak dapat dibuat.",
+    "outlineZoomIn": "Perbesar",
+    "outlineExpand": "Bentangkan",
+    "outlineCollapse": "Ciutkan",
+    "outlineMakeTask": "Buat tugas",
+    "outlineTaskCreated": "Tugas dibuat: {{name}}",
+    "outlineTaskFailed": "Tidak dapat membuat tugas.",
+    "outlinePath": "Jalur kerangka",
+    "outlineAll": "Semua",
+    "outlineBulletMenu": "Butir",
     "backgroundImage": "Latar",
     "noBackground": "Tanpa latar",
     "openInNotes": "Buka di Catatan",
@@ -4283,12 +4319,14 @@
     "task": "Tugas",
     "note": "Catatan",
     "project": "Proyek",
+    "link": "Tautan",
     "addTo": "Tambahkan ke",
     "filesLabel": "File untuk dilampirkan",
     "removeFile": "Hapus {{name}}",
     "fileTooLarge": "{{name}} lebih besar dari {{limit}} MB, jadi tidak ditambahkan.",
     "tooManyFiles": "Maksimal {{max}} file dapat ditambahkan sekaligus.",
     "savedInbox": "\"{{title}}\" disimpan ke Kotak Masuk.",
+    "savedLink": "\"{{title}}\" disimpan ke Tautan.",
     "savedInboxMany": "{{total}} item disimpan ke Kotak Masuk.",
     "createdTask": "Tugas \"{{title}}\" dibuat.",
     "createdTasks": "{{total}} tugas dibuat.",

@@ -56,6 +56,9 @@ import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.autoclassify.AUTO_CLASSIFY_TYPE
 import ch.nicolab.cadence.tasks.autoclassify.AutoClassifyPayload
 import ch.nicolab.cadence.tasks.brief.QuestionDto
+import ch.nicolab.cadence.tasks.triage.MAIL_TYPE
+import ch.nicolab.cadence.tasks.triage.MailDecision
+import ch.nicolab.cadence.tasks.triage.MailPayload
 import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.triage.TriageActions
 import ch.nicolab.cadence.tasks.triage.TriageItemDto
@@ -69,6 +72,7 @@ import java.time.LocalDate
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
@@ -146,6 +150,9 @@ internal fun TriageScreen(today: LocalDate, onBack: () -> Unit) {
                         onAnswer = { choice -> viewModel.answerSuggestion(item, choice) },
                         onDismiss = { viewModel.dismissSuggestion(item) },
                         onSkip = { viewModel.skip(item) },
+                        archiveAvailable = queue?.mailArchive == true,
+                        today = today,
+                        onMailDecision = { decision, payload, archive -> viewModel.decideMail(item, decision, payload, archive) },
                     ) {
                         TriageCard(
                             item = item,
@@ -202,11 +209,17 @@ private fun AutoClassifyItem(
     onAnswer: (JsonElement) -> Unit,
     onDismiss: () -> Unit,
     onSkip: () -> Unit,
+    archiveAvailable: Boolean,
+    today: LocalDate,
+    onMailDecision: (MailDecision, JsonObject, Boolean) -> Unit,
     fallback: @Composable () -> Unit,
 ) {
     when (item.type) {
         AUTO_CLASSIFY_TYPE -> AutoClassifyPayload.classify(item.payload)?.let { card ->
             ClassifyCardView(card, projects, onAnswer, onDismiss, onSkip)
+        } ?: fallback()
+        MAIL_TYPE -> MailPayload.parse(item.payload)?.let { card ->
+            MailCardView(card, archiveAvailable, today, onMailDecision, onSkip)
         } ?: fallback()
         else -> fallback()
     }

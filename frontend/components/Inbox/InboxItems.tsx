@@ -15,7 +15,13 @@ import InboxItemDetail from './InboxItemDetail';
 import { useToast } from '../Shared/ToastContext';
 import { deferDelete } from '../../utils/deferredDelete';
 import { useTranslation } from 'react-i18next';
-import { InboxIcon } from '@heroicons/react/24/outline';
+import {
+    ChevronDownIcon,
+    ChevronRightIcon,
+    InboxIcon,
+} from '@heroicons/react/24/outline';
+import PageHeader from '../Shared/ui/PageHeader';
+import Button from '../Shared/ui/Button';
 import LoadingScreen from '../Shared/LoadingScreen';
 import ProjectModal from '../Project/ProjectModal';
 import NoteModal from '../Note/NoteModal';
@@ -560,7 +566,7 @@ const InboxItems: React.FC = () => {
 
     if (isTriage) {
         return (
-            <div className="w-full px-4 sm:px-6 lg:px-8 pt-4 pb-8">
+            <div className="mx-auto w-full max-w-4xl px-6 pb-8 pt-6 max-sm:px-4">
                 <InboxTriage
                     projects={projects}
                     onExit={() => setTriage(false)}
@@ -575,28 +581,24 @@ const InboxItems: React.FC = () => {
     }
 
     return (
-        <div className="w-full px-4 sm:px-6 lg:px-8 pt-4 pb-8">
-            <div className="w-full max-w-7xl mx-auto">
-                {/* ── Page header ─────────────────────────────────────────── */}
-                <div className="flex items-center justify-between mb-6">
-                    <h1 className="text-2xl font-light text-gray-900 dark:text-gray-100">
-                        {t('inbox.title')}
-                    </h1>
-                    <div className="flex items-center gap-2">
+        <div className="mx-auto w-full max-w-4xl pb-8">
+            <PageHeader
+                title={t('inbox.title')}
+                actions={
+                    <>
                         <TriageEntry />
                         {inboxItems.length > 0 && (
-                            <button
-                                type="button"
+                            <Button
                                 data-testid="inbox-triage-start"
                                 onClick={() => setTriage(true)}
-                                className="rounded-lg px-3 py-1.5 text-sm font-medium text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                             >
                                 {t('inbox.triage.start', 'Triage')}
-                            </button>
+                            </Button>
                         )}
-                    </div>
-                </div>
-
+                    </>
+                }
+            />
+            <div className="px-4 max-sm:px-2">
                 {/* ── Quick capture ────────────────────────────────────────── */}
                 <QuickCaptureInput
                     unified
@@ -618,49 +620,45 @@ const InboxItems: React.FC = () => {
                 {/* ── Item list ────────────────────────────────────────────── */}
                 {inboxItems.length > 0 && (
                     <div
-                        className={`w-full task-list-container overflow-visible ${TASK_SHEET_CLASS} task-sheet-rails`}
+                        className={`w-full overflow-visible ${TASK_SHEET_CLASS}`}
                     >
-                        {/* Recently captured – collapsible header */}
-                        <div>
-                            <button
-                                onClick={() =>
-                                    setInboxListExpanded((prev) => {
-                                        const next = !prev;
-                                        updateUiSettings({
-                                            inbox: {
-                                                recentlyCapturedExpanded: next,
-                                            },
-                                        }).catch(() => {});
-                                        return next;
-                                    })
-                                }
-                                className="flex items-center gap-2.5 w-full px-4 py-2.5 rounded-lg text-left hover:bg-gray-100/60 dark:hover:bg-white/[0.04] transition-colors"
-                            >
-                                <span className="text-[12px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">
-                                    {t(
-                                        'inbox.recentlyCaptured',
-                                        'Recently captured'
-                                    )}
-                                </span>
-                                <span className="text-[12px] text-gray-500 dark:text-gray-400">
-                                    {inboxItems.length}
-                                </span>
-
-                                <span className="flex-1" />
-
-                                <svg
-                                    className={`w-3 h-3 text-gray-500 dark:text-gray-400 transition-transform duration-150 ${inboxListExpanded ? 'rotate-90' : ''}`}
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    strokeWidth={2}
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                >
-                                    <path d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                                </svg>
-                            </button>
-                        </div>
+                        <button
+                            type="button"
+                            aria-expanded={inboxListExpanded}
+                            onClick={() =>
+                                setInboxListExpanded((prev) => {
+                                    const next = !prev;
+                                    updateUiSettings({
+                                        inbox: {
+                                            recentlyCapturedExpanded: next,
+                                        },
+                                    }).catch(() => {});
+                                    return next;
+                                })
+                            }
+                            className="flex h-8 w-full items-center gap-1.5 rounded-lg px-2 text-left text-xs font-medium text-surface-on-variant outline-none hover:text-surface-on focus-visible:ring-2 focus-visible:ring-primary/60"
+                        >
+                            {inboxListExpanded ? (
+                                <ChevronDownIcon
+                                    className="h-3 w-3 shrink-0"
+                                    aria-hidden="true"
+                                />
+                            ) : (
+                                <ChevronRightIcon
+                                    className="h-3 w-3 shrink-0"
+                                    aria-hidden="true"
+                                />
+                            )}
+                            <span>
+                                {t(
+                                    'inbox.recentlyCaptured',
+                                    'Recently captured'
+                                )}
+                            </span>
+                            <span className="tabular-nums">
+                                {inboxItems.length}
+                            </span>
+                        </button>
 
                         {inboxListExpanded && (
                             <>
@@ -714,10 +712,10 @@ const InboxItems: React.FC = () => {
                                     {/* Load more */}
                                     {pagination.hasMore && (
                                         <div className="flex justify-center pt-5">
-                                            <button
+                                            <Button
+                                                variant="ghost"
                                                 onClick={handleLoadMore}
                                                 disabled={isLoading}
-                                                className="inline-flex items-center gap-2 px-5 py-2 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-200 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-white/[0.04] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                             >
                                                 {isLoading ? (
                                                     <>
@@ -755,7 +753,7 @@ const InboxItems: React.FC = () => {
                                                         )}
                                                     </>
                                                 )}
-                                            </button>
+                                            </Button>
                                         </div>
                                     )}
 
@@ -763,7 +761,7 @@ const InboxItems: React.FC = () => {
                                         header already counts a full list. */}
                                     {inboxItems.length < pagination.total && (
                                         <div
-                                            className="text-center text-xs text-gray-500 dark:text-gray-400 pt-4 pb-2"
+                                            className="pb-2 pt-4 text-center text-xs text-surface-on-variant"
                                             data-testid="inbox-showing-count"
                                         >
                                             {t(

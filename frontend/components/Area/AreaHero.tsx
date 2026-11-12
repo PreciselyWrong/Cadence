@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { TFunction } from 'i18next';
 import {
     ArrowRightStartOnRectangleIcon,
@@ -12,9 +11,6 @@ import { Area } from '../../entities/Area';
 interface AreaHeroProps {
     area: Area;
     t: TFunction;
-    projectsCount: number;
-    goalsCount: number;
-    tasksCount: number;
     doneCount: number;
     totalCount: number;
     onShareClick: () => void;
@@ -28,9 +24,6 @@ interface AreaHeroProps {
 const AreaHero: React.FC<AreaHeroProps> = ({
     area,
     t,
-    projectsCount,
-    goalsCount,
-    tasksCount,
     doneCount,
     totalCount,
     onShareClick,
@@ -38,20 +31,12 @@ const AreaHero: React.FC<AreaHeroProps> = ({
     onLeaveClick,
 }) => {
     const tint = area.color || '#3b82f6';
-    const percent =
-        totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 0;
     const actionClass =
-        'inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800';
-    const statClass = 'hover:underline text-gray-600 dark:text-gray-300';
+        'inline-flex h-7 items-center gap-1.5 rounded-lg px-2.5 text-body-m font-medium text-surface-on ring-1 ring-inset ring-outline-variant transition-colors hover:bg-surface-high max-sm:min-h-[44px]';
 
     return (
         <div className="mb-6 space-y-3">
-            <div
-                className="space-y-5 rounded-2xl bg-white p-5 sm:p-6 dark:bg-gray-900"
-                style={{
-                    backgroundImage: `linear-gradient(color-mix(in srgb, ${tint} 10%, transparent), color-mix(in srgb, ${tint} 10%, transparent))`,
-                }}
-            >
+            <div className="space-y-3 pt-6">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
                     <span
                         className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-white shadow-sm ring-4 ring-white dark:bg-gray-800 dark:ring-gray-900"
@@ -64,29 +49,8 @@ const AreaHero: React.FC<AreaHeroProps> = ({
                     </span>
 
                     <div className="min-w-0 flex-1 space-y-2">
-                        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-gray-600 dark:text-gray-300">
-                            <span className="rounded-md px-2 py-0.5 font-medium bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300">
-                                {t('areas.singular', 'Area')}
-                            </span>
-                            <Link
-                                to={`/projects?area=${area.uid}`}
-                                className={statClass}
-                            >
-                                {projectsCount}{' '}
-                                {t('areas.projects', 'projects')}
-                            </Link>
-                            <span>·</span>
-                            <span>
-                                {goalsCount} {t('areas.goals', 'goals')}
-                            </span>
-                            <span>·</span>
-                            <span>
-                                {tasksCount} {t('areas.tasks', 'tasks')}
-                            </span>
-                        </div>
-
                         <h1
-                            className="line-clamp-2 text-xl font-semibold uppercase leading-tight tracking-wide text-gray-900 sm:text-2xl dark:text-gray-100"
+                            className="line-clamp-2 text-headline font-extrabold leading-tight tracking-tight text-surface-on"
                             data-testid="area-name"
                         >
                             {area.name}
@@ -129,34 +93,15 @@ const AreaHero: React.FC<AreaHeroProps> = ({
                     </div>
                 </div>
 
-                <div className="space-y-2">
-                    <div className="flex items-baseline justify-between gap-3 text-xs text-gray-600 tabular-nums dark:text-gray-300">
-                        <span>
-                            {t(
-                                'areas.progressSummary',
-                                'Area progress · {{done}} of {{total}} tasks done',
-                                { done: doneCount, total: totalCount }
-                            )}
-                        </span>
-                        <span className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-                            {percent}
-                            <span className="ml-0.5 text-xs font-medium text-gray-600 dark:text-gray-300">
-                                %
-                            </span>
-                        </span>
-                    </div>
-                    <div
-                        className="relative h-1.5 rounded-full"
-                        style={{
-                            backgroundColor: `color-mix(in srgb, ${tint} 20%, transparent)`,
-                        }}
-                    >
-                        <div
-                            className="absolute inset-y-0 left-0 rounded-full bg-blue-500 transition-all duration-300"
-                            style={{ width: `${percent}%` }}
-                        />
-                    </div>
-                </div>
+                {doneCount > 0 && (
+                    <p className="text-body-m tabular-nums text-surface-on-variant">
+                        {t(
+                            'areas.progressSummary',
+                            'Area progress · {{done}} of {{total}} tasks done',
+                            { done: doneCount, total: totalCount }
+                        )}
+                    </p>
+                )}
             </div>
         </div>
     );

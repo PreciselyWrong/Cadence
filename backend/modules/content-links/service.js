@@ -54,6 +54,9 @@ async function backlinks(userId, type, uid) {
 }
 
 // The task each [[task:Name]] opens: { tasks: { "<name, lowercased>": uid } }.
+// Done, and done then archived.
+const DONE_STATUSES = [2, 3];
+
 async function resolve(userId, body) {
     const names = Array.isArray(body?.tasks) ? body.tasks : [];
     if (
@@ -64,14 +67,19 @@ async function resolve(userId, body) {
     }
     const wanted = [...new Set(names.map(normalizeTitle).filter(Boolean))];
     const tasks = {};
+    // The names whose task is done: an outline checkbox linked to the task
+    // reads as checked.
+    const done = [];
     if (wanted.length > 0) {
         const rows = await repository.findTasksByName(userId, wanted);
         for (const row of rows) {
             const key = normalizeTitle(row.name || '');
-            if (wanted.includes(key) && !tasks[key]) tasks[key] = row.uid;
+            if (!wanted.includes(key) || tasks[key]) continue;
+            tasks[key] = row.uid;
+            if (DONE_STATUSES.includes(row.status)) done.push(key);
         }
     }
-    return { tasks };
+    return { tasks, done };
 }
 
 module.exports = { backlinks, resolve };

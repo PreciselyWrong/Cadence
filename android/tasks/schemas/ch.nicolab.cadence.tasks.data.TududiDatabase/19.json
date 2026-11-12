@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 19,
-    "identityHash": "8e5e1dd9ef632d8bbac1618295972c51",
+    "identityHash": "8507e9f798c2b3379fa1ced26769aed0",
     "entities": [
       {
         "tableName": "tasks",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` TEXT NOT NULL, `name` TEXT NOT NULL, `note` TEXT, `status` INTEGER NOT NULL, `priority` INTEGER, `dueDateRaw` TEXT, `dueHasTime` INTEGER NOT NULL, `deferUntilRaw` TEXT, `reminderAtRaw` TEXT, `recurrenceType` TEXT, `projectUid` TEXT, `areaUid` TEXT, `parentTaskUid` TEXT, `tagUidsJson` TEXT NOT NULL, `completedAtRaw` TEXT, `pinnedAtRaw` TEXT, `fieldClocksJson` TEXT NOT NULL, `extrasJson` TEXT NOT NULL, `inViewAtRaw` TEXT, `weekOf` TEXT, `monthOf` TEXT, `needsWhen` INTEGER NOT NULL DEFAULT 0, `reviewOn` TEXT, `reviewedAtRaw` TEXT, `sourceKey` TEXT, PRIMARY KEY(`uid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` TEXT NOT NULL, `name` TEXT NOT NULL, `note` TEXT, `status` INTEGER NOT NULL, `priority` INTEGER, `dueDateRaw` TEXT, `dueHasTime` INTEGER NOT NULL, `deferUntilRaw` TEXT, `reminderAtRaw` TEXT, `recurrenceType` TEXT, `projectUid` TEXT, `areaUid` TEXT, `parentTaskUid` TEXT, `tagUidsJson` TEXT NOT NULL, `completedAtRaw` TEXT, `pinnedAtRaw` TEXT, `fieldClocksJson` TEXT NOT NULL, `extrasJson` TEXT NOT NULL, `inViewAtRaw` TEXT, `weekOf` TEXT, `monthOf` TEXT, `source` TEXT, `sourceUrl` TEXT, `needsWhen` INTEGER NOT NULL DEFAULT 0, `reviewOn` TEXT, `reviewedAtRaw` TEXT, `sourceKey` TEXT, PRIMARY KEY(`uid`))",
         "fields": [
           {
             "fieldPath": "uid",
@@ -118,6 +118,16 @@
           {
             "fieldPath": "monthOf",
             "columnName": "monthOf",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "source",
+            "columnName": "source",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "sourceUrl",
+            "columnName": "sourceUrl",
             "affinity": "TEXT"
           },
           {
@@ -422,7 +432,7 @@
       },
       {
         "tableName": "link_previews",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`url` TEXT NOT NULL, `title` TEXT, `description` TEXT, `imageUrl` TEXT, `fetchedAtMs` INTEGER NOT NULL, `failed` INTEGER NOT NULL, `siteName` TEXT, `kind` TEXT, `githubStars` INTEGER, `githubLanguage` TEXT, `githubLastCommit` TEXT, PRIMARY KEY(`url`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`url` TEXT NOT NULL, `title` TEXT, `description` TEXT, `imageUrl` TEXT, `fetchedAtMs` INTEGER NOT NULL, `failed` INTEGER NOT NULL, PRIMARY KEY(`url`))",
         "fields": [
           {
             "fieldPath": "url",
@@ -456,31 +466,6 @@
             "columnName": "failed",
             "affinity": "INTEGER",
             "notNull": true
-          },
-          {
-            "fieldPath": "siteName",
-            "columnName": "siteName",
-            "affinity": "TEXT"
-          },
-          {
-            "fieldPath": "kind",
-            "columnName": "kind",
-            "affinity": "TEXT"
-          },
-          {
-            "fieldPath": "githubStars",
-            "columnName": "githubStars",
-            "affinity": "INTEGER"
-          },
-          {
-            "fieldPath": "githubLanguage",
-            "columnName": "githubLanguage",
-            "affinity": "TEXT"
-          },
-          {
-            "fieldPath": "githubLastCommit",
-            "columnName": "githubLastCommit",
-            "affinity": "TEXT"
           }
         ],
         "primaryKey": {
@@ -976,7 +961,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8e5e1dd9ef632d8bbac1618295972c51')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8507e9f798c2b3379fa1ced26769aed0')"
     ]
   }
 }

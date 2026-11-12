@@ -24,7 +24,7 @@ interface OverflowMenuProps {
 }
 
 const ITEM_CLASS =
-    'flex w-full items-center gap-2 rounded-chip px-3 min-h-[44px] sm:min-h-[36px] text-left text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-700';
+    'flex w-full items-center gap-2.5 rounded-lg px-2.5 min-h-[44px] sm:min-h-[32px] text-left text-body-m text-surface-on hover:bg-surface-high focus-visible:bg-surface-high outline-none';
 
 // A "more" menu for secondary toolbar actions.
 const OverflowMenu: React.FC<OverflowMenuProps> = ({
@@ -64,14 +64,14 @@ const OverflowMenu: React.FC<OverflowMenuProps> = ({
                 aria-label={label}
                 title={label}
                 data-testid={testId}
-                className="flex items-center justify-center rounded-lg bg-gray-100 p-1.5 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 sm:p-2 max-sm:min-h-[44px] max-sm:min-w-[44px]"
+                className="inline-flex h-7 w-7 items-center justify-center rounded-lg text-surface-on-variant transition-colors duration-150 hover:bg-surface-high hover:text-surface-on max-sm:h-11 max-sm:w-11"
             >
-                <EllipsisHorizontalIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+                <EllipsisHorizontalIcon className="h-4 w-4" />
             </button>
             {open && (
                 <div
                     role="menu"
-                    className={`absolute top-full z-50 mt-1 min-w-48 rounded-card bg-white p-1 shadow-lg ring-1 ring-gray-900/5 dark:bg-gray-800 dark:ring-white/10 ${
+                    className={`absolute top-full z-50 mt-1 min-w-48 rounded-chip bg-surface p-1 shadow-lg ring-1 ring-outline-variant/70 dark:bg-surface-card ${
                         align === 'right' ? 'right-0' : 'left-0'
                     }`}
                 >
@@ -110,7 +110,7 @@ const OverflowMenu: React.FC<OverflowMenuProps> = ({
                                 {item.icon}
                                 <span className="flex-1">{item.label}</span>
                                 {item.checked && (
-                                    <CheckIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                                    <CheckIcon className="h-4 w-4 text-primary" />
                                 )}
                             </button>
                         )

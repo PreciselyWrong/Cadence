@@ -14,6 +14,9 @@ import { DayLine, dayLines } from '../Today/dayModel';
 import TaskCard, { cardId } from './TaskCard';
 import { progressOf } from './planOps';
 import { IconButton } from '../Shared/ui/Button';
+import EmptyState from '../Shared/ui/EmptyState';
+import { FIELD_CLASS } from '../Shared/ui/controlSizes';
+import { weekdayTitle } from './dayLabel';
 import { cardTaskKeys, dayLoad, groupCards, sortCards } from './groupCards';
 import type { GroupBy, SortBy } from './viewOptions';
 
@@ -142,9 +145,7 @@ const DayColumn: React.FC<DayColumnProps> = ({
           : null;
     // Line 1 names the day; line 2 dates it, with the weekday too when line 1
     // is a relative name (line 1 "Today", line 2 "jeu. 12 nov." in French).
-    const label =
-        relative ??
-        new Intl.DateTimeFormat(locale, { weekday: 'long' }).format(at);
+    const label = relative ?? weekdayTitle(at, locale);
     const dateText = new Intl.DateTimeFormat(
         locale,
         relative
@@ -294,7 +295,7 @@ const DayColumn: React.FC<DayColumnProps> = ({
                         }}
                         placeholder={addLabel}
                         aria-label={addLabel}
-                        className="h-9 w-full rounded-lg bg-surface px-3 text-body-m text-surface-on placeholder:text-surface-on-variant ring-1 ring-inset ring-outline-variant/60 focus:outline-none focus:ring-2 focus:ring-primary/60"
+                        className={FIELD_CLASS}
                     />
                 </form>
             )}
@@ -350,9 +351,10 @@ const DayColumn: React.FC<DayColumnProps> = ({
                     )}
                 </SortableContext>
                 {lines && progress.total === 0 && (
-                    <p className="px-1 pt-2 text-body-m text-surface-on-variant">
-                        {t('upcoming.empty', 'Nothing planned.')}
-                    </p>
+                    <EmptyState
+                        className="py-6"
+                        title={t('upcoming.empty', 'Nothing planned.')}
+                    />
                 )}
             </div>
         </section>

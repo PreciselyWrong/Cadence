@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}} note",
+        "notes_one": "{{count}} nota",
+        "tasks_other": "{{count}} attività",
+        "tasks_one": "{{count}} attività",
+        "goals_other": "{{count}} obiettivi",
+        "goals_one": "{{count}} obiettivo",
+        "projects_other": "{{count}} progetti",
+        "projects_one": "{{count}} progetto"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -128,6 +138,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(nessun oggetto)",
+      "draft": "Bozza pronta:",
+      "task": "Attività",
+      "reply": "Rispondi",
+      "later": "Più tardi",
+      "dismiss": "Ignora",
+      "archive": "Archivia in Gmail",
+      "taskName": "Nome dell'attività",
+      "taskDue": "Scadenza",
+      "createTask": "Crea l'attività",
+      "taskCreated": "Attività creata",
+      "replied": "Risposta aperta in Gmail",
+      "postponed": "Torna domani",
+      "dismissed": "Mail ignorata",
+      "notArchived": "Non archiviata in Gmail"
+    },
     "linkLater": "Tra 30 giorni",
     "linkArchive": "Archivia",
     "linkKeep": "Tieni",
@@ -500,7 +527,7 @@
     "assignedTo": "Assegnato a",
     "subtasks": "Sottoattività",
     "openFullPage": "Apri vista completa",
-    "openPanel": "Apri nel pannello laterale",
+    "openPanel": "Apri dettagli",
     "quickEdit": {
       "setPriority": "Imposta priorità",
       "setDueDate": "Imposta scadenza"
@@ -2334,6 +2361,15 @@
     "linkedNoteNotNow": "Non ora",
     "linkedNoteCreate": "Crea nota",
     "linkedNoteCreateFailed": "Impossibile creare la nota.",
+    "outlineZoomIn": "Ingrandisci",
+    "outlineExpand": "Espandi",
+    "outlineCollapse": "Comprimi",
+    "outlineMakeTask": "Crea un'attività",
+    "outlineTaskCreated": "Attività creata: {{name}}",
+    "outlineTaskFailed": "Impossibile creare l'attività.",
+    "outlinePath": "Percorso dello schema",
+    "outlineAll": "Tutto",
+    "outlineBulletMenu": "Punto elenco",
     "backgroundImage": "Sfondo",
     "noBackground": "Nessuno sfondo",
     "openInNotes": "Apri in Note",
@@ -4289,12 +4325,14 @@
     "task": "Attività",
     "note": "Nota",
     "project": "Progetto",
+    "link": "Link",
     "addTo": "Aggiungi a",
     "filesLabel": "File da allegare",
     "removeFile": "Rimuovi {{name}}",
     "fileTooLarge": "{{name}} supera {{limit}} MB, quindi non è stato aggiunto.",
     "tooManyFiles": "Puoi aggiungere fino a {{max}} file alla volta.",
     "savedInbox": "«{{title}}» salvato nell'Inbox.",
+    "savedLink": "«{{title}}» salvato nei Link.",
     "savedInboxMany": "{{total}} elementi salvati nell'Inbox.",
     "createdTask": "Attività «{{title}}» creata.",
     "createdTasks": "{{total}} attività create.",

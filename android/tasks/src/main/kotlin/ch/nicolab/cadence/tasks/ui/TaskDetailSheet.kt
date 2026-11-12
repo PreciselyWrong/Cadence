@@ -60,6 +60,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import ch.nicolab.cadence.tasks.notes.ContentTargets
+import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -93,6 +96,7 @@ import ch.nicolab.cadence.tasks.model.TaskExtraRows
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskPriority
 import ch.nicolab.cadence.tasks.model.TaskStatus
+import ch.nicolab.cadence.tasks.model.TaskSources
 import ch.nicolab.cadence.tasks.model.TaskViews
 import ch.nicolab.cadence.tasks.swipe.FileBackedActions
 import ch.nicolab.cadence.tasks.swipe.FileOwnedField
@@ -173,6 +177,16 @@ internal fun TaskDetailSheet(
     var confirmProject by remember { mutableStateOf(false) }
     // Une sous-tâche ouverte s'affiche par-dessus : sa fiche est une fiche de tâche comme une autre.
     var openedSubtask by rememberSaveable(current.uid) { mutableStateOf<String?>(null) }
+    var openedNote by rememberSaveable(current.uid) { mutableStateOf<String?>(null) }
+    val allNotes by viewModel.notes.collectAsStateWithLifecycle()
+    val openRef = rememberContentRefOpener(viewModel, onOpenNote = { openedNote = it }, onOpenTask = { openedSubtask = it })
+    val openWiki = rememberWikiOpener(viewModel, allNotes, onOpenNote = { openedNote = it })
+    val everyTask by viewModel.allTasks.collectAsStateWithLifecycle()
+    val targets = remember(allNotes, everyTask) { ContentTargets(allNotes, everyTask) }
+    var noteEditing by remember(current.uid) { mutableStateOf(false) }
+    val noteOutline = rememberOutlineEditorState(current.uid, note, "task:${current.uid}") { note = it }
+    LaunchedEffect(noteEditing) { if (noteEditing) noteOutline.reloadFolds() }
+    val focusManager = LocalFocusManager.current
     var moreFields by rememberSaveable(current.uid) { mutableStateOf(false) }
     val notifications = rememberNotificationPermission()
     val hasReminder = current.reminderAt != null
@@ -266,9 +280,24 @@ internal fun TaskDetailSheet(
                     )
                 }
                 PostponementLine(taskUid = current.uid, version = current.dueDay)
-                NoteCard(note = note, onNoteChange = { note = it }, readOnly = textLocked)
+                NoteCard(
+                    state = noteOutline,
+                    editing = noteEditing,
+                    onEditingChange = { noteEditing = it },
+                    outlineScope = "task:${current.uid}",
+                    readOnly = textLocked,
+                    onRef = openRef,
+                    onWikiLink = openWiki,
+                    targets = targets,
+                    onToggleTask = { viewModel.toggle(it) },
+                )
                 LinkPreviewList("$title\n$note", viewModel.linkPreviews)
                 if (!current.fileBacked) SubtasksCard(parentUid = current.uid, viewModel = viewModel, onOpen = { openedSubtask = it.uid })
+                BacklinksSection(
+                    type = "task",
+                    uid = current.uid,
+                    onOpen = { link -> if (link.type == "note") openedNote = link.uid else openedSubtask = link.uid },
+                )
                 val keyedFields = detailFields(
                         task = current,
                         today = today,
@@ -310,6 +339,17 @@ internal fun TaskDetailSheet(
                 }
                 if (moreFields) ReadOnlyDetails(current)
                 Spacer(Modifier.height(Space.xl))
+            }
+            if (noteEditing && !textLocked) {
+                OutlineToolbar(
+                    state = noteOutline,
+                    noteTitles = remember(allNotes) { allNotes.map { it.title } },
+                    onMakeTask = { name -> viewModel.createLinkedTask(name, current.projectUid) },
+                    onDone = {
+                        focusManager.clearFocus()
+                        noteEditing = false
+                    },
+                )
             }
         }
     }
@@ -462,6 +502,19 @@ internal fun TaskDetailSheet(
             onDismiss = { confirmProject = false },
         )
     }
+    openedNote?.let { noteUid ->
+        // Une note liée depuis la description s'ouvre en plein écran par-dessus la fiche.
+        Dialog(onDismissRequest = { openedNote = null }, properties = DialogProperties(usePlatformDefaultWidth = false)) {
+            NoteScreen(
+                viewModel = viewModel,
+                noteUid = noteUid,
+                isNew = false,
+                onBack = { openedNote = null },
+                onOpenNote = { openedNote = it },
+                onOpenTask = { openedSubtask = it },
+            )
+        }
+    }
     if (confirmDelete) {
         AlertDialog(
             onDismissRequest = { confirmDelete = false },
@@ -611,6 +664,7 @@ private fun DetailBadges(
                 CadenceBadge(text = it, tone = BadgeTone.Neutral, color = projectColor, icon = entityIcon(projectIcon))
             }
         }
+        TaskSources.of(task)?.let { SourceMark(it, Modifier.padding(horizontal = Space.xs).heightIn(min = Size.touch)) }
         if (task.isClosed) {
             CadenceBadge(text = stringResource(R.string.tasks_detail_done), tone = BadgeTone.Success)
         } else if (task.status != TaskStatus.NOT_STARTED) {

@@ -3,9 +3,8 @@ import { useTranslation } from 'react-i18next';
 import UpgradeModal from './components/Billing/UpgradeModal';
 import TrialBanner from './components/Billing/TrialBanner';
 import { SidebarProvider } from './contexts/SidebarContext';
-import { TaskPaneProvider, canShowTaskPane } from './contexts/TaskPaneContext';
+import { TaskPaneProvider } from './contexts/TaskPaneContext';
 import TaskPane from './components/Task/TaskPane';
-import { useIsMinimal } from './hooks/useUiDensity';
 import Navbar from './components/Navbar';
 import Breadcrumbs from './components/Shared/Breadcrumbs';
 import CaptureHost from './components/Capture/CaptureHost';
@@ -66,15 +65,10 @@ const Layout: React.FC<LayoutProps> = ({
     const { t } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
-    // The right-hand task pane is a minimal-mode feature.
-    const isMinimal = useIsMinimal();
-    const showTaskPane =
-        isMinimal && canShowTaskPane(location.pathname, location.search);
-    // Today and Plan keep their right side for the calendar: the task opens
-    // as a wide sheet over the page instead of a narrow side panel.
-    const paneBelow =
+    // Today and Plan scroll their own columns; other pages scroll here. The
+    // task sheet floats over every page, so no page keeps a side column.
+    const ownScroll =
         location.pathname === '/today' || location.pathname === '/upcoming';
-    const isUpcomingView = location.pathname === '/upcoming';
     // Notes fill the content area edge to edge.
     const isNotesView = /^\/notes?(\/|$)/.test(location.pathname);
     const [isSidebarOpen, setIsSidebarOpen] = useState(
@@ -475,7 +469,7 @@ const Layout: React.FC<LayoutProps> = ({
                 <div
                     className={`transition-all duration-300 ease-in-out ${mainContentMarginLeft} h-screen flex flex-col sm:p-2 sm:pl-0`}
                 >
-                    <div className="relative flex flex-col flex-1 min-h-0 overflow-hidden bg-gray-100 dark:bg-surface text-gray-900 dark:text-gray-100 pt-[env(safe-area-inset-top)] sm:rounded-2xl sm:shadow-sm sm:pt-0">
+                    <div className="relative flex flex-col flex-1 min-h-0 overflow-hidden bg-surface text-gray-900 dark:text-gray-100 pt-[env(safe-area-inset-top)] sm:rounded-2xl sm:shadow-sm sm:pt-0">
                         {background}
                         <Navbar
                             transparent={!!background}
@@ -512,64 +506,50 @@ const Layout: React.FC<LayoutProps> = ({
                 {renderShell(
                     <div className="relative flex flex-col flex-1 min-h-0 overflow-hidden">
                         <div
-                            className={
-                                showTaskPane
-                                    ? `flex min-h-0 flex-1 overflow-hidden ${
-                                          paneBelow ? 'flex-col' : ''
-                                      }`
-                                    : 'contents'
-                            }
+                            className={`relative flex-1 flex flex-col py-0 px-0 transition-all duration-300 ${
+                                isNotesView ? 'pt-0' : 'pt-4'
+                            } ${
+                                // Every page, Plan included, gets the same
+                                // gutter (PageShell's PAGE_GUTTER adds the rest).
+                                isNotesView ? '' : 'md:px-4'
+                            } overflow-hidden`}
                         >
                             <div
-                                className={`relative flex-1 flex flex-col py-0 px-0 transition-all duration-300 ${showTaskPane ? 'min-w-0 ' : ''}${
-                                    isNotesView ? 'pt-0' : 'pt-4'
-                                } ${
-                                    isUpcomingView
-                                        ? 'md:px-6 lg:px-8'
-                                        : isNotesView
-                                          ? ''
-                                          : 'md:px-4'
-                                } overflow-hidden`}
+                                className={`w-full h-full max-md:pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] ${
+                                    isNotesView
+                                        ? 'flex flex-col overflow-hidden'
+                                        : ownScroll
+                                          ? 'overflow-hidden max-md:overflow-auto'
+                                          : 'overflow-auto pb-24 lg:pb-0'
+                                }`}
                             >
-                                <div
-                                    className={`w-full h-full max-md:pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] ${
-                                        isNotesView
-                                            ? 'flex flex-col overflow-hidden'
-                                            : paneBelow
-                                              ? 'overflow-hidden max-md:overflow-auto'
-                                              : 'overflow-auto pb-24 lg:pb-0'
-                                    }`}
-                                >
-                                    {isError && (
-                                        <div
-                                            role="alert"
-                                            className="mx-4 mb-3 flex items-center justify-between gap-3 rounded-lg bg-red-50 px-4 py-2.5 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-300"
-                                        >
-                                            <span>
-                                                {t('errors.somethingWentWrong')}
-                                            </span>
-                                            <button
-                                                type="button"
-                                                onClick={retryFailedLoads}
-                                                className="flex-shrink-0 rounded-md px-2.5 py-1 font-medium hover:bg-red-100 dark:hover:bg-red-900/40"
-                                            >
-                                                {t('common.retry')}
-                                            </button>
-                                        </div>
-                                    )}
-                                    <TrialBanner />
-                                    <Breadcrumbs />
-                                    <TaskRowExpansionProvider
-                                        key={location.pathname}
+                                {isError && (
+                                    <div
+                                        role="alert"
+                                        className="mx-4 mb-3 flex items-center justify-between gap-3 rounded-lg bg-red-50 px-4 py-2.5 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-300"
                                     >
-                                        {children}
-                                    </TaskRowExpansionProvider>
-                                </div>
+                                        <span>
+                                            {t('errors.somethingWentWrong')}
+                                        </span>
+                                        <button
+                                            type="button"
+                                            onClick={retryFailedLoads}
+                                            className="flex-shrink-0 rounded-md px-2.5 py-1 font-medium hover:bg-red-100 dark:hover:bg-red-900/40"
+                                        >
+                                            {t('common.retry')}
+                                        </button>
+                                    </div>
+                                )}
+                                <TrialBanner />
+                                <Breadcrumbs />
+                                <TaskRowExpansionProvider
+                                    key={location.pathname}
+                                >
+                                    {children}
+                                </TaskRowExpansionProvider>
                             </div>
-                            <TaskPane
-                                placement={paneBelow ? 'bottom' : 'side'}
-                            />
                         </div>
+                        <TaskPane />
                     </div>,
                     <>
                         {isProjectModalOpen && (

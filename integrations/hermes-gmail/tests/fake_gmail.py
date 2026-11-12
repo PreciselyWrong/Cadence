@@ -105,6 +105,10 @@ class FakeGoogle:
                 fmt = query.get("format", ["full"])[0]
                 messages = [self._format(m, fmt, query.get("metadataHeaders")) for m in self._with_drafts(parts[1])]
                 return self._json({"id": parts[1], "messages": messages})
+            if method == "POST" and parts[2:] == ["trash"]:
+                for message in thread:
+                    message["labelIds"] = [l for l in message["labelIds"] if l != "INBOX"] + ["TRASH"]
+                return self._json({"id": parts[1], "messages": [{"id": m["id"], "labelIds": m["labelIds"]} for m in thread]})
             if method == "POST" and parts[2:] == ["modify"]:
                 for message in thread:
                     labels = [l for l in message["labelIds"] if l not in payload.get("removeLabelIds", [])]

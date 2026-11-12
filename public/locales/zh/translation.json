@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}}条笔记",
+        "notes_one": "{{count}}条笔记",
+        "tasks_other": "{{count}}个任务",
+        "tasks_one": "{{count}}个任务",
+        "goals_other": "{{count}}个目标",
+        "goals_one": "{{count}}个目标",
+        "projects_other": "{{count}}个项目",
+        "projects_one": "{{count}}个项目"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -128,6 +138,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(无主题)",
+      "draft": "草稿已就绪：",
+      "task": "任务",
+      "reply": "回复",
+      "later": "稍后",
+      "dismiss": "忽略",
+      "archive": "在 Gmail 中归档",
+      "taskName": "任务名称",
+      "taskDue": "截止日期",
+      "createTask": "创建任务",
+      "taskCreated": "任务已创建",
+      "replied": "已在 Gmail 中打开回复",
+      "postponed": "明天再显示",
+      "dismissed": "已忽略邮件",
+      "notArchived": "未在 Gmail 中归档"
+    },
     "linkLater": "30 天后",
     "linkArchive": "归档",
     "linkKeep": "保留",
@@ -499,7 +526,7 @@
     "assignedTo": "分配给",
     "subtasks": "子任务",
     "openFullPage": "打开完整视图",
-    "openPanel": "在侧边栏中打开",
+    "openPanel": "打开详情",
     "quickEdit": {
       "setPriority": "设置优先级",
       "setDueDate": "设置截止日期"
@@ -2331,6 +2358,15 @@
     "linkedNoteNotNow": "暂不",
     "linkedNoteCreate": "创建笔记",
     "linkedNoteCreateFailed": "无法创建笔记。",
+    "outlineZoomIn": "放大",
+    "outlineExpand": "展开",
+    "outlineCollapse": "折叠",
+    "outlineMakeTask": "创建任务",
+    "outlineTaskCreated": "已创建任务：{{name}}",
+    "outlineTaskFailed": "无法创建任务。",
+    "outlinePath": "大纲路径",
+    "outlineAll": "全部",
+    "outlineBulletMenu": "项目符号",
     "backgroundImage": "背景",
     "noBackground": "无背景",
     "openInNotes": "在笔记中打开",
@@ -4283,12 +4319,14 @@
     "task": "任务",
     "note": "笔记",
     "project": "项目",
+    "link": "链接",
     "addTo": "添加到",
     "filesLabel": "要附加的文件",
     "removeFile": "移除 {{name}}",
     "fileTooLarge": "{{name}} 超过 {{limit}} MB，因此未添加。",
     "tooManyFiles": "一次最多可添加 {{max}} 个文件。",
     "savedInbox": "已将“{{title}}”保存到收件箱。",
+    "savedLink": "已将“{{title}}”保存到链接。",
     "savedInboxMany": "已将 {{total}} 项保存到收件箱。",
     "createdTask": "已创建任务“{{title}}”。",
     "createdTasks": "已创建 {{total}} 个任务。",

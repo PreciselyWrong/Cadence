@@ -475,6 +475,10 @@ const NoteEditorView: React.FC<NoteEditorViewProps> = ({
             <div className="flex-1 overflow-y-auto pl-0 pr-6 md:pl-2 md:pr-8 py-4">
                 <MarkdownEditor
                     noteUid={note.uid}
+                    outlineKey={note.uid ? `note:${note.uid}` : undefined}
+                    taskProjectId={
+                        note.project?.id ?? note.Project?.id ?? note.project_id
+                    }
                     value={note.content || ''}
                     onChange={(val) => onChange({ content: val })}
                     onClick={(e) => e.stopPropagation()}

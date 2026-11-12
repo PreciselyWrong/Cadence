@@ -24,7 +24,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         BriefEntity::class,
         EveningEntity::class,
     ],
-    version = 20,
+    version = 21,
     exportSchema = true,
 )
 abstract class TududiDatabase : RoomDatabase() {
@@ -224,11 +224,20 @@ internal val MIGRATION_17_18 = object : Migration(17, 18) {
     }
 }
 
+/** Origine des tâches (`source`, `source_url`). Le curseur est retiré : le prochain instantané remplit les colonnes. */
+internal val MIGRATION_18_19 = object : Migration(18, 19) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE tasks ADD COLUMN source TEXT")
+        db.execSQL("ALTER TABLE tasks ADD COLUMN sourceUrl TEXT")
+        db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
+    }
+}
+
 /**
  * Aperçus enrichis : nom du site, genre, et pour un dépôt GitHub étoiles, langage et dernier commit. Le cache
  * n'a pas de curseur à retirer : les aperçus existants gardent leur contenu et se complètent au prochain rafraîchissement.
  */
-internal val MIGRATION_18_19 = object : Migration(18, 19) {
+internal val MIGRATION_19_20 = object : Migration(19, 20) {
     override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL("ALTER TABLE link_previews ADD COLUMN siteName TEXT")
         db.execSQL("ALTER TABLE link_previews ADD COLUMN kind TEXT")
@@ -243,7 +252,7 @@ internal val MIGRATION_18_19 = object : Migration(18, 19) {
  * jour de revue, étiquettes ni origine. Les appels hors protocole des anciens liens (`POST /api/v1/links` sans projet,
  * `PATCH` d'adresse) ne passent plus : ils sont retirés. Le curseur est retiré : le prochain instantané renvoie les pages.
  */
-internal val MIGRATION_19_20 = object : Migration(19, 20) {
+internal val MIGRATION_20_21 = object : Migration(20, 21) {
     override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL(
             "CREATE TABLE IF NOT EXISTS `links_pages` (`uid` TEXT NOT NULL, `url` TEXT NOT NULL, `title` TEXT, `description` TEXT, " +

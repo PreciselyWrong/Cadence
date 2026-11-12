@@ -1,6 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import PageHeader from '../Shared/ui/PageHeader';
+import Button from '../Shared/ui/Button';
+import Segmented from '../Shared/ui/Segmented';
 import { Task } from '../../entities/Task';
 import {
     createWeeklyRoutine,
@@ -28,8 +31,6 @@ import {
 import { updateProject } from '../../utils/projectsService';
 import { useToast } from '../Shared/ToastContext';
 import { useTaskPane } from '../../contexts/TaskPaneContext';
-import { openTaskPanel } from '../../store/taskPanelStore';
-import { useIsMinimal } from '../../hooks/useUiDensity';
 import DecisionChips, { DecisionOption } from './DecisionChips';
 import WeekStep from './WeekStep';
 import QuickReview from './QuickReview';
@@ -152,13 +153,13 @@ const LaterSorter: React.FC<LaterSorterProps> = ({
     if (!current) {
         return (
             <div className="space-y-3 py-10 text-center">
-                <p className="text-sm text-gray-600 dark:text-gray-300">
+                <p className="text-sm text-surface-on-variant">
                     {t('review.later.sorted', 'Nothing left to sort.')}
                 </p>
                 <button
                     type="button"
                     onClick={onStop}
-                    className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400"
+                    className="text-body-m font-medium text-primary hover:underline"
                 >
                     {t('review.later.backToList', 'Back to the list')}
                 </button>
@@ -168,7 +169,7 @@ const LaterSorter: React.FC<LaterSorterProps> = ({
 
     return (
         <div className="space-y-4 py-4">
-            <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-300">
+            <div className="flex items-center justify-between text-xs text-surface-on-variant">
                 <span>
                     {t('review.later.left', '{{count}} left', {
                         count: queue.length,
@@ -190,7 +191,7 @@ const LaterSorter: React.FC<LaterSorterProps> = ({
                 >
                     {title(current)}
                 </button>
-                <span className="block text-sm text-gray-600 dark:text-gray-300">
+                <span className="block text-sm text-surface-on-variant">
                     {meta(current)}
                 </span>
             </div>
@@ -214,7 +215,6 @@ const ReviewPage: React.FC = () => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const { showErrorToast, showSuccessToast, showUndoToast } = useToast();
-    const isMinimal = useIsMinimal();
     const { openTask } = useTaskPane();
     const [step, setStepState] = useState<Step>(readStep);
     const [summary, setSummary] = useState<ReviewSummary | null>(null);
@@ -313,10 +313,8 @@ const ReviewPage: React.FC = () => {
 
     useEffect(refreshSummary, [refreshSummary]);
 
-    const openTaskDetails = (uid: string) => {
-        if (isMinimal) openTask(uid);
-        else openTaskPanel(uid);
-    };
+    // Every page opens a task in the same floating sheet.
+    const openTaskDetails = (uid: string) => openTask(uid);
 
     // Takes the row off at once, then runs the decision; a failed save puts
     // the row back where it was and says so.
@@ -791,17 +789,17 @@ const ReviewPage: React.FC = () => {
     const renderRow = (row: Row, grouped = false) => {
         const key = rowKey(row);
         return (
-            <li key={key} className="py-2.5">
+            <li key={key} className="py-2.5" data-task-row="">
                 <div className="flex items-start gap-3">
                     <button
                         type="button"
                         onClick={() => openRow(row)}
                         className="min-w-0 flex-1 text-left"
                     >
-                        <span className="block truncate text-sm text-gray-900 dark:text-gray-100">
+                        <span className="block truncate text-sm text-surface-on">
                             {title(row)}
                         </span>
-                        <span className="block truncate text-xs text-gray-600 dark:text-gray-300">
+                        <span className="block truncate text-xs text-surface-on-variant">
                             {meta(row, grouped)}
                         </span>
                     </button>
@@ -890,7 +888,7 @@ const ReviewPage: React.FC = () => {
                     {title(row)}
                 </button>
                 {meta(row) && (
-                    <span className="block text-sm text-gray-600 dark:text-gray-300">
+                    <span className="block text-sm text-surface-on-variant">
                         {meta(row)}
                     </span>
                 )}
@@ -900,281 +898,269 @@ const ReviewPage: React.FC = () => {
     };
 
     return (
-        <div className="mx-auto w-full max-w-3xl px-4 pb-10 pt-4 sm:px-6">
-            <header className="mb-4">
-                <h2 className="text-2xl font-light text-gray-900 dark:text-gray-100">
-                    {t('review.title', 'Review')}
-                </h2>
-                {summary && (
-                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
-                        {summary.attention_total === 0
-                            ? t('review.calmClear', 'All up to date')
-                            : t(
-                                  'review.calm',
-                                  summary.attention_total === 1
-                                      ? '{{count}} thing to look at, at your own pace'
-                                      : '{{count}} things to look at, at your own pace',
-                                  { count: summary.attention_total }
-                              )}
-                    </p>
-                )}
-                {routineMissing && (
-                    <button
-                        type="button"
-                        onClick={planWeeklyRoutine}
-                        className="mt-2 text-xs text-gray-600 underline-offset-2 hover:underline dark:text-gray-300"
-                    >
-                        {t(
-                            'review.routine.offer',
-                            'Plan a weekly review on Fridays'
-                        )}
-                    </button>
-                )}
-            </header>
-
-            {quick ? (
-                <QuickReview
-                    loading={quick.loading}
-                    kind={quickCurrent ? kindOf(quickCurrent) : null}
-                    card={quickCurrent ? quickCard(quickCurrent) : null}
-                    itemKey={quickCurrent ? rowKey(quickCurrent) : null}
-                    options={quickCurrent ? options(quickCurrent, true) : []}
-                    position={quick.total - quick.queue.length + 1}
-                    total={quick.total}
-                    onSkip={skipQuick}
-                    onStop={stopQuick}
-                    onOpen={() => quickCurrent && openRow(quickCurrent)}
-                    onAgain={() => void startQuick(quick.skipped)}
-                />
-            ) : (
-                <>
-                    <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-gray-200 px-4 py-3 dark:border-gray-800">
-                        <div className="min-w-0">
-                            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                {t('review.quick.title', 'Quick review')}
-                            </p>
-                            <p className="text-sm text-gray-600 dark:text-gray-300">
-                                {t(
-                                    'review.quick.pitch',
-                                    'About 5 minutes, one thing at a time. Stop whenever you like.'
-                                )}
-                            </p>
-                        </div>
-                        <button
-                            type="button"
-                            onClick={() => void startQuick()}
-                            className="rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
-                        >
-                            {t('review.quick.start', 'Start')}
-                        </button>
-                    </div>
-
-                    <nav
-                        role="tablist"
-                        aria-label={t('review.title', 'Review')}
-                        className="-mx-4 mb-4 flex gap-1 overflow-x-auto border-b border-gray-200 px-4 dark:border-gray-800 sm:mx-0 sm:px-0"
-                    >
-                        {STEPS.map((s) => {
-                            const count = countOf(s);
-                            const active = s === step;
-                            return (
+        <div className="mx-auto w-full max-w-3xl pb-10">
+            <PageHeader
+                title={t('review.title', 'Review')}
+                meta={
+                    summary || routineMissing ? (
+                        <span className="flex flex-wrap items-baseline gap-x-3">
+                            {summary && (
+                                <span>
+                                    {summary.attention_total === 0
+                                        ? t(
+                                              'review.calmClear',
+                                              'All up to date'
+                                          )
+                                        : t(
+                                              'review.calm',
+                                              summary.attention_total === 1
+                                                  ? '{{count}} thing to look at, at your own pace'
+                                                  : '{{count}} things to look at, at your own pace',
+                                              { count: summary.attention_total }
+                                          )}
+                                </span>
+                            )}
+                            {routineMissing && (
                                 <button
-                                    key={s}
                                     type="button"
-                                    role="tab"
-                                    aria-selected={active}
-                                    onClick={() => setStep(s)}
-                                    className={`-mb-px flex-shrink-0 whitespace-nowrap border-b-2 px-2.5 py-2 text-sm ${
-                                        active
-                                            ? 'border-blue-500 text-gray-900 dark:text-gray-100'
-                                            : 'border-transparent text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200'
-                                    }`}
+                                    onClick={planWeeklyRoutine}
+                                    className="text-xs underline-offset-2 hover:text-surface-on hover:underline"
                                 >
-                                    {label(s)}
-                                    {count !== null && count > 0 && (
-                                        <span className="ml-1.5 text-xs text-gray-500">
-                                            {count}
-                                        </span>
+                                    {t(
+                                        'review.routine.offer',
+                                        'Plan a weekly review on Fridays'
                                     )}
                                 </button>
-                            );
-                        })}
-                    </nav>
-
-                    {step === 'week' ? (
-                        <WeekStep onOpenTask={openTaskDetails} />
-                    ) : (
-                        <section aria-live="polite">
-                            {step === 'undecided' && total > 0 && (
-                                <p className="mb-2 text-xs text-gray-600 dark:text-gray-300">
-                                    <Link
-                                        to="/inbox"
-                                        className="underline-offset-2 hover:underline"
-                                    >
-                                        {t(
-                                            'review.actions.openInbox',
-                                            'Open the Inbox'
-                                        )}
-                                    </Link>
-                                </p>
                             )}
-                            {loading && rows.length === 0 && (
-                                <p className="py-10 text-center text-sm text-gray-500 dark:text-gray-400">
-                                    {t('review.loading', 'Loading…')}
-                                </p>
+                        </span>
+                    ) : undefined
+                }
+                actions={
+                    quick ? undefined : (
+                        <Button
+                            variant="primary"
+                            onClick={() => void startQuick()}
+                            title={t(
+                                'review.quick.pitch',
+                                'About 5 minutes, one thing at a time. Stop whenever you like.'
                             )}
-                            {!loading && rows.length === 0 && (
-                                <p className="py-10 text-center text-sm text-gray-600 dark:text-gray-300">
-                                    {emptyText(step)}
-                                </p>
-                            )}
-                            {step === 'later' && rows.length > 0 && sorting ? (
-                                <LaterSorter
-                                    queue={laterQueue()}
-                                    onSkip={(key) =>
-                                        setSkipped((keys) => [...keys, key])
-                                    }
-                                    onStop={() => setSorting(false)}
-                                    options={options}
-                                    title={title}
-                                    meta={meta}
-                                    onOpen={openRow}
-                                />
-                            ) : step === 'later' && rows.length > 0 ? (
-                                <div className="space-y-3">
-                                    <div className="flex justify-end">
-                                        <button
-                                            type="button"
-                                            onClick={() => setSorting(true)}
-                                            className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400"
+                        >
+                            {t('review.quick.title', 'Quick review')}
+                        </Button>
+                    )
+                }
+            >
+                {!quick && (
+                    <Segmented
+                        aria-label={t('review.title', 'Review')}
+                        selected={step}
+                        onSelect={(id) => setStep(id as typeof step)}
+                        options={STEPS.map((s) => ({
+                            id: s,
+                            label: label(s),
+                            count: countOf(s) ?? undefined,
+                        }))}
+                    />
+                )}
+            </PageHeader>
+            <div className="px-6 max-sm:px-4">
+                {quick ? (
+                    <QuickReview
+                        loading={quick.loading}
+                        kind={quickCurrent ? kindOf(quickCurrent) : null}
+                        card={quickCurrent ? quickCard(quickCurrent) : null}
+                        itemKey={quickCurrent ? rowKey(quickCurrent) : null}
+                        options={
+                            quickCurrent ? options(quickCurrent, true) : []
+                        }
+                        position={quick.total - quick.queue.length + 1}
+                        total={quick.total}
+                        onSkip={skipQuick}
+                        onStop={stopQuick}
+                        onOpen={() => quickCurrent && openRow(quickCurrent)}
+                        onAgain={() => void startQuick(quick.skipped)}
+                    />
+                ) : (
+                    <>
+                        {step === 'week' ? (
+                            <WeekStep onOpenTask={openTaskDetails} />
+                        ) : (
+                            <section aria-live="polite">
+                                {step === 'undecided' && total > 0 && (
+                                    <p className="mb-2 text-xs text-surface-on-variant">
+                                        <Link
+                                            to="/inbox"
+                                            className="underline-offset-2 hover:underline"
                                         >
                                             {t(
-                                                'review.later.sortOneByOne',
-                                                'Sort one by one'
+                                                'review.actions.openInbox',
+                                                'Open the Inbox'
                                             )}
-                                        </button>
-                                    </div>
-                                    <input
-                                        type="search"
-                                        value={laterQuery}
-                                        onChange={(e) =>
-                                            setLaterQuery(e.target.value)
+                                        </Link>
+                                    </p>
+                                )}
+                                {loading && rows.length === 0 && (
+                                    <p className="py-10 text-center text-sm text-surface-on-variant">
+                                        {t('review.loading', 'Loading…')}
+                                    </p>
+                                )}
+                                {!loading && rows.length === 0 && (
+                                    <p className="py-10 text-center text-sm text-surface-on-variant">
+                                        {emptyText(step)}
+                                    </p>
+                                )}
+                                {step === 'later' &&
+                                rows.length > 0 &&
+                                sorting ? (
+                                    <LaterSorter
+                                        queue={laterQueue()}
+                                        onSkip={(key) =>
+                                            setSkipped((keys) => [...keys, key])
                                         }
-                                        placeholder={t(
-                                            'review.later.filter',
-                                            'Filter'
-                                        )}
-                                        aria-label={t(
-                                            'review.later.filter',
-                                            'Filter'
-                                        )}
-                                        className="w-full rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
+                                        onStop={() => setSorting(false)}
+                                        options={options}
+                                        title={title}
+                                        meta={meta}
+                                        onOpen={openRow}
                                     />
-                                    {laterGroups.length === 0 && (
-                                        <p className="py-6 text-center text-sm text-gray-600 dark:text-gray-300">
-                                            {t(
-                                                'review.later.noMatch',
-                                                'Nothing matches.'
-                                            )}
-                                        </p>
-                                    )}
-                                    {laterGroups.map((group) => {
-                                        const isOpen =
-                                            laterQuery.trim() !== '' ||
-                                            opened.has(group.key);
-                                        return (
-                                            <section key={group.key}>
-                                                <button
-                                                    type="button"
-                                                    aria-expanded={isOpen}
-                                                    onClick={() =>
-                                                        toggleGroup(group.key)
-                                                    }
-                                                    className="flex w-full items-center gap-2 py-1.5 text-left text-sm font-medium text-gray-800 dark:text-gray-100"
-                                                >
-                                                    <span
-                                                        aria-hidden="true"
-                                                        className="h-2 w-2 flex-shrink-0 rounded-full bg-gray-300 dark:bg-gray-600"
-                                                        style={
-                                                            group.color
-                                                                ? {
-                                                                      backgroundColor:
-                                                                          group.color,
-                                                                  }
-                                                                : undefined
-                                                        }
-                                                    />
-                                                    <span className="truncate">
-                                                        {group.name ??
-                                                            t(
-                                                                'review.later.noProject',
-                                                                'No project'
-                                                            )}
-                                                    </span>
-                                                    <span className="text-xs font-normal text-gray-500">
-                                                        {group.items.length}
-                                                    </span>
-                                                    <span
-                                                        aria-hidden="true"
-                                                        className="ml-auto text-xs text-gray-500"
-                                                    >
-                                                        {isOpen ? '▾' : '▸'}
-                                                    </span>
-                                                </button>
-                                                {isOpen && (
-                                                    <ul className="divide-y divide-gray-100 dark:divide-gray-800">
-                                                        {group.items.map(
-                                                            (item) =>
-                                                                renderRow(
-                                                                    {
-                                                                        kind: 'task',
-                                                                        item,
-                                                                        category:
-                                                                            'later',
-                                                                    },
-                                                                    true
-                                                                )
-                                                        )}
-                                                    </ul>
+                                ) : step === 'later' && rows.length > 0 ? (
+                                    <div className="space-y-3">
+                                        <div className="flex justify-end">
+                                            <button
+                                                type="button"
+                                                onClick={() => setSorting(true)}
+                                                className="text-body-m font-medium text-primary hover:underline"
+                                            >
+                                                {t(
+                                                    'review.later.sortOneByOne',
+                                                    'Sort one by one'
                                                 )}
-                                            </section>
-                                        );
-                                    })}
-                                </div>
-                            ) : (
-                                <ul className="divide-y divide-gray-100 dark:divide-gray-800">
-                                    {rows.map((row) => renderRow(row))}
-                                </ul>
-                            )}
-                            {rows.length < total && (
+                                            </button>
+                                        </div>
+                                        <input
+                                            type="search"
+                                            value={laterQuery}
+                                            onChange={(e) =>
+                                                setLaterQuery(e.target.value)
+                                            }
+                                            placeholder={t(
+                                                'review.later.filter',
+                                                'Filter'
+                                            )}
+                                            aria-label={t(
+                                                'review.later.filter',
+                                                'Filter'
+                                            )}
+                                            className="w-full rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
+                                        />
+                                        {laterGroups.length === 0 && (
+                                            <p className="py-6 text-center text-sm text-surface-on-variant">
+                                                {t(
+                                                    'review.later.noMatch',
+                                                    'Nothing matches.'
+                                                )}
+                                            </p>
+                                        )}
+                                        {laterGroups.map((group) => {
+                                            const isOpen =
+                                                laterQuery.trim() !== '' ||
+                                                opened.has(group.key);
+                                            return (
+                                                <section key={group.key}>
+                                                    <button
+                                                        type="button"
+                                                        aria-expanded={isOpen}
+                                                        onClick={() =>
+                                                            toggleGroup(
+                                                                group.key
+                                                            )
+                                                        }
+                                                        className="flex w-full items-center gap-2 py-1.5 text-left text-sm font-medium text-surface-on"
+                                                    >
+                                                        <span
+                                                            aria-hidden="true"
+                                                            className="h-2 w-2 flex-shrink-0 rounded-full bg-gray-300 dark:bg-gray-600"
+                                                            style={
+                                                                group.color
+                                                                    ? {
+                                                                          backgroundColor:
+                                                                              group.color,
+                                                                      }
+                                                                    : undefined
+                                                            }
+                                                        />
+                                                        <span className="truncate">
+                                                            {group.name ??
+                                                                t(
+                                                                    'review.later.noProject',
+                                                                    'No project'
+                                                                )}
+                                                        </span>
+                                                        <span className="text-xs font-normal text-gray-500">
+                                                            {group.items.length}
+                                                        </span>
+                                                        <span
+                                                            aria-hidden="true"
+                                                            className="ml-auto text-xs text-gray-500"
+                                                        >
+                                                            {isOpen ? '▾' : '▸'}
+                                                        </span>
+                                                    </button>
+                                                    {isOpen && (
+                                                        <ul className="divide-y divide-outline-variant/60">
+                                                            {group.items.map(
+                                                                (item) =>
+                                                                    renderRow(
+                                                                        {
+                                                                            kind: 'task',
+                                                                            item,
+                                                                            category:
+                                                                                'later',
+                                                                        },
+                                                                        true
+                                                                    )
+                                                            )}
+                                                        </ul>
+                                                    )}
+                                                </section>
+                                            );
+                                        })}
+                                    </div>
+                                ) : (
+                                    <ul className="divide-y divide-outline-variant/60">
+                                        {rows.map((row) => renderRow(row))}
+                                    </ul>
+                                )}
+                                {rows.length < total && (
+                                    <button
+                                        type="button"
+                                        disabled={loading}
+                                        onClick={() => void load(rows.length)}
+                                        className="mt-3 text-sm text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200"
+                                    >
+                                        {t('review.loadMore', 'Show more')}
+                                    </button>
+                                )}
+                            </section>
+                        )}
+
+                        {nextStep && (
+                            <div className="mt-8 flex justify-end">
                                 <button
                                     type="button"
-                                    disabled={loading}
-                                    onClick={() => void load(rows.length)}
-                                    className="mt-3 text-sm text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200"
+                                    onClick={() => setStep(nextStep)}
+                                    className="text-body-m font-medium text-primary hover:underline"
                                 >
-                                    {t('review.loadMore', 'Show more')}
+                                    {t('review.next', 'Next: {{name}}', {
+                                        name: label(nextStep),
+                                    })}{' '}
+                                    →
                                 </button>
-                            )}
-                        </section>
-                    )}
-
-                    {nextStep && (
-                        <div className="mt-8 flex justify-end">
-                            <button
-                                type="button"
-                                onClick={() => setStep(nextStep)}
-                                className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400"
-                            >
-                                {t('review.next', 'Next: {{name}}', {
-                                    name: label(nextStep),
-                                })}{' '}
-                                →
-                            </button>
-                        </div>
-                    )}
-                </>
-            )}
+                            </div>
+                        )}
+                    </>
+                )}
+            </div>
         </div>
     );
 };

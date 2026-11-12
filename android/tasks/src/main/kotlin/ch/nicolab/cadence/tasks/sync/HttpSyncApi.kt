@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.booleanOrNull
@@ -68,6 +69,10 @@ class HttpSyncApi(private val session: suspend () -> ServerSession) : SyncApi {
     internal suspend fun call(method: String, path: String, query: Map<String, String> = emptyMap(), body: JsonObject? = null): JsonObject =
         request(method, path, query, body)
 
+    /** Comme [call], pour une réponse qui peut être une liste (rétroliens). */
+    internal suspend fun callJson(method: String, path: String, query: Map<String, String> = emptyMap()): JsonElement =
+        shaped { Json.parseToJsonElement(requestText(method, path, query, null)) }
+
     /**
      * Copie une réponse binaire (MP3 du résumé) dans [target], avec la clé API de l'appareil. Le fichier s'écrit
      * d'abord à côté ([target].part) : un échec ne laisse jamais un fichier tronqué sous le nom final.
@@ -114,7 +119,14 @@ class HttpSyncApi(private val session: suspend () -> ServerSession) : SyncApi {
         path: String,
         query: Map<String, String> = emptyMap(),
         body: JsonObject? = null,
-    ): JsonObject = withContext(Dispatchers.IO) {
+    ): JsonObject = parseResponse(requestText(method, path, query, body))
+
+    private suspend fun requestText(
+        method: String,
+        path: String,
+        query: Map<String, String>,
+        body: JsonObject?,
+    ): String = withContext(Dispatchers.IO) {
         val server = session()
         val queryString = query.entries.joinToString("&") { (key, value) -> "${encode(key)}=${encode(value)}" }
         val url = URL(server.baseUrl + path + if (queryString.isEmpty()) "" else "?$queryString")
@@ -138,8 +150,7 @@ class HttpSyncApi(private val session: suspend () -> ServerSession) : SyncApi {
                 val errorBody = runCatching { connection.errorStream?.bufferedReader(Charsets.UTF_8)?.use { it.readText() } }.getOrNull()
                 throw httpFailure(code, errorBody)
             }
-            val text = connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
-            parseResponse(text)
+            connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
         } finally {
             connection.disconnect()
         }

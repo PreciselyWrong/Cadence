@@ -73,13 +73,12 @@ const AllDayOverflow: React.FC<AllDayOverflowProps> = ({
                                 setOpen(false);
                                 onEventClick?.(event);
                             }}
+                            data-calendar-block=""
                             className="flex w-full items-center gap-2 rounded-chip px-2 py-1.5 text-left text-sm text-gray-800 hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-700"
                         >
                             <span
-                                className="h-2.5 w-2.5 shrink-0 rounded-full"
-                                style={{
-                                    backgroundColor: event.color || '#3b82f6',
-                                }}
+                                className={`h-2.5 w-2.5 shrink-0 rounded-full ${event.color ? '' : 'bg-primary-container'}`}
+                                style={{ backgroundColor: event.color }}
                             />
                             <span className="truncate">{event.title}</span>
                         </button>

@@ -60,4 +60,36 @@ describe('TaskCheckCircle', () => {
         expect(onToggle).toHaveBeenCalledTimes(1);
         expect(screen.getByTestId('row').style.opacity).toBe('');
     });
+
+    it('is round and strokes only a high priority in red', () => {
+        const { rerender } = render(
+            <TaskCheckCircle
+                task={{ ...task, priority: 'high' }}
+                onToggle={jest.fn()}
+            />
+        );
+        const box = () =>
+            screen.getByTestId('task-check-circle').firstElementChild!;
+        expect(box()).toHaveClass('rounded-full', 'border-danger');
+        rerender(
+            <TaskCheckCircle
+                task={{ ...task, priority: 'medium' }}
+                onToggle={jest.fn()}
+            />
+        );
+        expect(box()).toHaveClass('border-outline');
+        expect(box().className).not.toMatch(/orange|blue/);
+    });
+
+    it('toggles at once when not delayed and reads an explicit done state', () => {
+        setReducedMotion(false);
+        const onToggle = jest.fn();
+        const { rerender } = render(
+            <TaskCheckCircle task={task} onToggle={onToggle} delayed={false} />
+        );
+        fireEvent.click(screen.getByTestId('task-check-circle'));
+        expect(onToggle).toHaveBeenCalledTimes(1);
+        rerender(<TaskCheckCircle task={task} onToggle={onToggle} checked />);
+        expect(screen.getByRole('checkbox')).toBeChecked();
+    });
 });

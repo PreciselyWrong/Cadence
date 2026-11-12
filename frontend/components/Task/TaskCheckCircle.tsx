@@ -2,16 +2,19 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Task } from '../../entities/Task';
 import { isTaskCompleted } from '../../constants/taskStatus';
-import { PriorityLevel, toPriorityLevel } from '../Shared/PriorityBadge';
+import { checkStrokeClass } from '../Shared/task/checkStroke';
 
-// Same look as the Android TaskCheckbox: rounded square, 2px outline stroke,
-// primary fill when done, error stroke for high priority.
-const STROKE: Record<PriorityLevel | 'none', string> = {
-    high: 'border-danger',
-    medium: 'border-outline',
-    low: 'border-outline',
-    none: 'border-outline',
-};
+// The one task checkbox (rows, cards, calendar blocks): a round 2px outline,
+// primary fill when done, red stroke for high priority only (CHECK_STROKE).
+const SIZE = {
+    row: { box: 'h-[22px] w-[22px]', tick: 'h-4 w-4', hit: '-m-3 p-3' },
+    card: { box: 'h-[18px] w-[18px]', tick: 'h-3 w-3', hit: '-m-1.5 p-1.5' },
+    subtask: {
+        box: 'h-[14px] w-[14px]',
+        tick: 'h-2.5 w-2.5',
+        hit: '-m-1.5 p-1.5',
+    },
+} as const;
 
 // Tick animation (CSS, 180ms), then the row fades and collapses, then the
 // task is toggled so the undo toast lands after the motion.
@@ -47,17 +50,28 @@ function resetRow(row: HTMLElement | null) {
 interface TaskCheckCircleProps {
     task: Task;
     onToggle: () => void;
+    testId?: string;
+    size?: keyof typeof SIZE;
+    // Overrides the done state read from the task (a day's occurrence).
+    checked?: boolean;
+    // False toggles at once, without the tick-then-leave motion: for cards
+    // that stay in place once done.
+    delayed?: boolean;
 }
 
 const TaskCheckCircle: React.FC<TaskCheckCircleProps> = ({
     task,
     onToggle,
+    testId,
+    size = 'row',
+    checked,
+    delayed = true,
 }) => {
     const { t } = useTranslation();
     const [checking, setChecking] = useState(false);
     const timers = useRef<number[]>([]);
     const rowRef = useRef<HTMLElement | null>(null);
-    const done = isTaskCompleted(task.status);
+    const done = checked ?? isTaskCompleted(task.status);
     const shown = done || checking;
 
     const clearTimers = () => {
@@ -75,12 +89,12 @@ const TaskCheckCircle: React.FC<TaskCheckCircleProps> = ({
     useEffect(() => {
         setChecking(false);
         resetRow(rowRef.current);
-    }, [task.status]);
+    }, [task.status, checked]);
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();
         if (checking) return;
-        if (done) {
+        if (done || !delayed) {
             onToggle();
             return;
         }
@@ -101,7 +115,8 @@ const TaskCheckCircle: React.FC<TaskCheckCircleProps> = ({
 
     const box = shown
         ? 'border-primary bg-primary'
-        : `${STROKE[toPriorityLevel(task.priority) ?? 'none']} hover:bg-primary/10`;
+        : `${checkStrokeClass(task.priority)} hover:bg-primary/10`;
+    const dims = SIZE[size];
 
     return (
         <button
@@ -115,17 +130,17 @@ const TaskCheckCircle: React.FC<TaskCheckCircleProps> = ({
             }
             onClick={handleClick}
             onKeyDown={(e) => e.stopPropagation()}
-            className="group/check -m-3 flex-shrink-0 p-3 rounded-control focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-primary"
-            data-testid="task-check-circle"
+            className={`group/check ${dims.hit} flex-shrink-0 rounded-full focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-primary`}
+            data-testid={testId ?? 'task-check-circle'}
         >
             <span
-                className={`flex h-[22px] w-[22px] items-center justify-center rounded-checkbox border-2 transition-colors duration-[220ms] ${box} ${
+                className={`flex ${dims.box} items-center justify-center rounded-full border-2 transition-colors duration-[220ms] ${box} ${
                     checking && !done ? 'animate-check-pop' : ''
                 }`}
             >
                 <svg
                     viewBox="0 0 24 24"
-                    className={`h-4 w-4 fill-none stroke-primary-on stroke-[3.2] [stroke-linecap:round] [stroke-linejoin:round] ${
+                    className={`${dims.tick} fill-none stroke-primary-on stroke-[3.2] [stroke-linecap:round] [stroke-linejoin:round] ${
                         shown ? 'opacity-100' : 'opacity-0'
                     } ${checking && !done ? 'animate-check-draw' : ''}`}
                     style={{ strokeDasharray: 24 }}

@@ -106,16 +106,6 @@ class TaskOverviewsTest {
     }
 
     @Test
-    fun `week strip starts today and counts tasks per day`() {
-        val upcoming = mapOf(friday.plusDays(1) to listOf(open("a"), open("b")), friday.plusDays(9) to listOf(open("far")))
-        val strip = TaskOverviews.weekStrip(friday, todayCount = 3, upcoming = upcoming)
-        assertEquals(7, strip.size)
-        assertEquals(StripDay(friday, 3), strip[0])
-        assertEquals(2, strip[1].count)
-        assertEquals(0, strip[6].count)
-    }
-
-    @Test
     fun `task stats count this week from monday, last week, and overdue`() {
         val monday = LocalDate.of(2026, 10, 26)
         val tasks = listOf(

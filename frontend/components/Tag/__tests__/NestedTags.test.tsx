@@ -15,7 +15,11 @@ import {
 jest.mock('react-i18next', () => ({
     useTranslation: () => ({
         t: (key: string, fallback?: any) =>
-            typeof fallback === 'string' ? fallback : key,
+            typeof fallback === 'string'
+                ? fallback
+                : typeof fallback?.count === 'number'
+                  ? `${fallback.count} ${key.split('.').pop()}`
+                  : key,
     }),
 }));
 
@@ -198,6 +202,33 @@ describe('Tags page grouping', () => {
 
         fireEvent.click(screen.getByTestId('tag-toggle-work1'));
         expect(screen.getByText('calls')).toBeInTheDocument();
+    });
+});
+
+describe('Tags page order and counts', () => {
+    beforeEach(() => {
+        mockTags = [
+            { uid: 'a1', name: 'alpha', tasks_count: 0, notes_count: 0 },
+            { uid: 'b1', name: 'beta', tasks_count: 5, notes_count: 0 },
+            { uid: 'c1', name: 'gamma', tasks_count: 1, pinned: true },
+        ];
+    });
+
+    it('lists pinned tags first, then the most used, and hides zero counts', () => {
+        render(
+            <MemoryRouter>
+                <Tags />
+            </MemoryRouter>
+        );
+        const rows = screen.getAllByTestId(/^tag-row-/);
+        expect(rows.map((row) => row.getAttribute('data-testid'))).toEqual([
+            'tag-row-c1',
+            'tag-row-b1',
+            'tag-row-a1',
+        ]);
+        expect(rows[1]).toHaveTextContent('5 tasks');
+        expect(rows[1]).not.toHaveTextContent('0 notes');
+        expect(rows[2]).not.toHaveTextContent('0');
     });
 });
 

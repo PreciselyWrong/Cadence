@@ -58,13 +58,23 @@ import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskDraft
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.project.canBecomeProject
+import ch.nicolab.cadence.tasks.model.TaskSources
 import ch.nicolab.cadence.tasks.model.TaskViews
-import ch.nicolab.cadence.tasks.model.TodayOrder
 import ch.nicolab.cadence.tasks.notes.Autosaver
 import ch.nicolab.cadence.tasks.notes.NoteEditSession
 import ch.nicolab.cadence.tasks.notes.NoteFields
 import ch.nicolab.cadence.tasks.notes.NotePatch
+import ch.nicolab.cadence.tasks.planning.AddTask
+import kotlinx.coroutines.flow.first
+import ch.nicolab.cadence.tasks.notes.WikiLinks
+import ch.nicolab.cadence.tasks.planning.Horizon
+import ch.nicolab.cadence.tasks.planning.PlanBoard
+import ch.nicolab.cadence.tasks.planning.PlanCard
+import ch.nicolab.cadence.tasks.planning.PlanEdit
+import ch.nicolab.cadence.tasks.planning.PlanDay
 import ch.nicolab.cadence.tasks.planning.PlanEntry
+import ch.nicolab.cadence.tasks.planning.PlanHorizons
+import ch.nicolab.cadence.tasks.planning.TodayReorder
 import ch.nicolab.cadence.tasks.planning.ServerPlan
 import ch.nicolab.cadence.tasks.reminder.PlanSlotsStore
 import ch.nicolab.cadence.tasks.swipe.FileBackedActions
@@ -163,6 +173,13 @@ internal sealed interface PendingScope {
 
 /** Bandeau avec « Annuler » pour un geste qui déplace ou supprime une tâche. */
 internal class UndoNotice(val message: String, val undo: () -> Unit)
+
+/** Page Planifier, calculée depuis les tâches et le plan gardé sur l'appareil. */
+internal data class PlanBoardState(
+    val days: List<PlanDay> = emptyList(),
+    val overdue: List<TaskItem> = emptyList(),
+    val horizons: PlanHorizons = PlanHorizons(emptyMap(), emptyList()),
+)
 
 /** Feuille ouverte par un balayage ; porte la tâche visée. */
 internal sealed interface SwipeSheet {
@@ -565,13 +582,26 @@ internal class TasksViewModel(
         _sheet.value = SwipeSheet.Menu(task, todayList)
     }
 
-    /** Monte ou descend la tâche dans la liste Aujourd'hui : l'ordre écrit vaut pour toute la liste, comme sur le web. */
+    /**
+     * Monte ou descend la tâche parmi les tâches sans heure d'Aujourd'hui : l'ordre est celui du plan du jour, comme le
+     * glisser de la poignée et le web.
+     */
     fun moveInToday(task: TaskItem, list: List<TaskItem>, delta: Int) {
-        val byUid = list.associateBy { it.uid }
-        val moved = TodayOrder.moved(list.map { it.uid }, task.uid, delta).mapNotNull { byUid[it] }
-        launchAction {
-            TodayOrder.changes(moved).forEach { (uid, rank) -> repository.updateTask(uid, TaskChange(todayOrder = rank)) }
-        }
+        val untimed = todayUntimed(list)
+        val from = untimed.indexOf(task.uid)
+        if (from != -1) reorderToday(task, untimed, from + delta)
+    }
+
+    /** Pose [task] au rang [toIndex] des tâches sans heure [untimed] (uids dans l'ordre affiché), avec « Annuler ». */
+    fun reorderToday(task: TaskItem, untimed: List<String>, toIndex: Int) {
+        val planned = today.value.plan.mapTo(HashSet()) { it.uid }
+        applyPlan(TodayReorder.writes(moment.value.today, untimed, planned, task.uid, toIndex), getString(R.string.today_reordered_notice, task.name))
+    }
+
+    /** Les tâches d'Aujourd'hui que l'on range à la main : ni à heure (créneau ou échéance horaire) ni occurrence à venir. */
+    fun todayUntimed(list: List<TaskItem>): List<String> {
+        val starts = today.value.planStarts
+        return list.filter { !it.virtual && !it.dueHasTime && it.uid !in starts }.map { it.uid }
     }
 
     fun dismissSheet() {
@@ -684,6 +714,8 @@ internal class TasksViewModel(
 
     private fun getString(res: Int, arg: String): String = getApplication<Application>().getString(res, arg)
 
+    private fun format(res: Int, vararg args: Any): String = getApplication<Application>().getString(res, *args)
+
     // Écritures des formulaires : suspendues, pour que l'écran ne se ferme qu'après succès.
     // Les erreurs remontent à l'appelant, qui garde les valeurs saisies.
     suspend fun saveChange(uid: String, change: TaskChange) = repository.updateTask(uid, change)
@@ -707,7 +739,7 @@ internal class TasksViewModel(
      * « Annuler » supprime la tâche et rend l'idée à l'Inbox.
      */
     suspend fun saveConversion(entry: InboxEntry, draft: TaskDraft) {
-        val uid = repository.createTask(draft)
+        val uid = repository.createTask(withIdeaOrigin(draft, entry))
         repository.processInboxItem(entry.uid)
         _notices.tryEmit(
             UndoNotice(getString(R.string.tasks_idea_to_task_notice, draft.name)) {
@@ -913,6 +945,123 @@ internal class TasksViewModel(
 
     /** Coche ou décoche un événement, dans Cadence seulement : le fournisseur d'agendas n'est jamais modifié. */
     fun toggleEvent(key: EventInstanceKey) = launchAction { calendar.toggleDone(key) }
+
+    private val planEdits = TasksGraph.planEdits(application)
+
+    /** Page Planifier : les jours (plan du jour + échéances), le retard et les horizons. */
+    val planBoard: StateFlow<PlanBoardState> =
+        combine(scopedTasks, today, moment, weekStart, PlanSlotsStore(application).entryChanges()) { all, state, m, week, plan ->
+            val dueByDay = TaskViews.upcoming(all, m.today, m.now, m.zone, days = (PlanBoard.DAYS - 1).toLong())
+            PlanBoardState(
+                days = PlanBoard.days(all, plan, m.today, state.today, dueByDay, m.zone),
+                overdue = PlanBoard.overdue(state.overdue, plan, m.today),
+                horizons = PlanBoard.horizons(all, plan, m.today, week),
+            )
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), PlanBoardState())
+
+    /** Pose [card] sur [to] par le plan du jour (jamais l'échéance), avec « Annuler ». */
+    fun planMove(card: PlanCard, to: LocalDate) =
+        applyPlan(PlanBoard.moveWrites(card, to), format(R.string.plan_moved_notice, card.task.name, dayLabel(to)))
+
+    /** Retire [card] du plan de son jour, avec « Annuler ». */
+    fun planRemove(card: PlanCard) =
+        applyPlan(PlanBoard.removeWrites(card), getString(R.string.plan_removed_notice, card.task.name))
+
+    /** Prévoit [tasks] le jour [day] (le retard ramené à aujourd'hui), avec « Annuler ». */
+    fun planOn(tasks: List<TaskItem>, day: LocalDate) {
+        val message = if (tasks.size == 1) format(R.string.plan_moved_notice, tasks.single().name, dayLabel(day))
+        else getApplication<Application>().resources.getQuantityString(R.plurals.plan_moved_many, tasks.size, tasks.size, dayLabel(day))
+        applyPlan(tasks.filterNot { it.virtual }.map { AddTask(day, it.uid) }, message)
+    }
+
+    /** Pose [task] dans l'horizon [to] (`week_of`, `month_of` ou `#someday`, jamais l'échéance), avec « Annuler ». */
+    fun moveToHorizon(task: TaskItem, to: Horizon) {
+        val m = moment.value
+        val from = planBoard.value.horizons.of(task.uid)
+        val change = PlanBoard.horizonChange(task, from, to, m.today, weekStart.value) ?: return
+        changeWithUndo(task, change, UndoChanges.restoreFunnel(task), format(R.string.plan_horizon_notice, task.name, getString(horizonLabel(to))))
+    }
+
+    /**
+     * Une puce devenue tâche liée (`docs/45-outliner.md`) : la tâche est créée dans le projet de la note ou de la
+     * tâche décrite ; le texte, lui, est déjà remplacé par `[[task:Nom]]`. Un échec est annoncé.
+     */
+    fun createLinkedTask(name: String, projectUid: String?) {
+        viewModelScope.launch {
+            try {
+                repository.createTask(TaskDraft(name = name, projectUid = projectUid))
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                _messages.tryEmit(format(R.string.note_outline_task_failed, name))
+            }
+        }
+    }
+
+    /** Une puce `[[task:Nom]]` sans tâche : la tâche est créée avec ce nom (sans projet, comme le web) ; son uid revient. */
+    suspend fun createTaskNamed(name: String): String = repository.createTask(TaskDraft(name = name))
+
+    /** La tâche d'un lien `[[task:Nom]]`, cherchée parmi toutes les tâches de l'appareil. */
+    suspend fun taskNamed(name: String): TaskItem? = WikiLinks.findTask(name, repository.observeTasks().first())
+
+    /** « + » d'un jour : la tâche est créée sans échéance puis prévue ce jour. */
+    suspend fun addToDay(draft: TaskDraft, day: LocalDate) {
+        val uid = repository.createTask(draft)
+        planEdits.apply(listOf(AddTask(day, uid)))
+    }
+
+    /** « + » d'un horizon : la tâche est créée puis engagée dans l'horizon. */
+    suspend fun addToHorizon(draft: TaskDraft, horizon: Horizon) {
+        val uid = repository.createTask(draft)
+        val created = TaskItem(uid = uid, name = draft.name)
+        PlanBoard.horizonChange(created, null, horizon, moment.value.today, weekStart.value)?.let { repository.updateTask(uid, it) }
+    }
+
+    /**
+     * Une idée de l'Inbox planifiée depuis Planifier : elle devient une tâche (nom et note comme « Tâche » de l'Inbox),
+     * l'idée passe en traitée, puis la tâche est prévue le jour [day] ou engagée dans [horizon]. « Annuler » supprime la
+     * tâche et rend l'idée.
+     */
+    fun planIdea(entry: InboxEntry, day: LocalDate? = null, horizon: Horizon? = null) = launchAction {
+        val draft = TaskDraft(name = IdeaTasks.taskName(entry.content, null, ShareCapture.verbs(getApplication())), note = IdeaTasks.taskNote(entry.content))
+        val uid = repository.createTask(withIdeaOrigin(draft, entry))
+        repository.processInboxItem(entry.uid)
+        if (day != null) planEdits.apply(listOf(AddTask(day, uid)))
+        if (horizon != null) {
+            PlanBoard.horizonChange(TaskItem(uid = uid, name = draft.name), null, horizon, moment.value.today, weekStart.value)
+                ?.let { repository.updateTask(uid, it) }
+        }
+        val where = day?.let(::dayLabel) ?: horizon?.let { getString(horizonLabel(it)) }.orEmpty()
+        _notices.tryEmit(
+            UndoNotice(format(R.string.plan_moved_notice, draft.name, where)) {
+                launchAction {
+                    repository.deleteTask(uid)
+                    repository.reopenInboxItem(entry.uid)
+                }
+            },
+        )
+    }
+
+    /** Une tâche née d'une idée qui n'est qu'une adresse garde cette adresse comme origine (`link`), comme le serveur. */
+    private fun withIdeaOrigin(draft: TaskDraft, entry: InboxEntry): TaskDraft {
+        if (draft.source != null) return draft
+        val (source, url) = TaskSources.fromIdea(entry.content) ?: return draft
+        return draft.copy(source = source, sourceUrl = url)
+    }
+
+    private fun applyPlan(edits: List<PlanEdit>, message: String) {
+        if (edits.isEmpty()) return
+        launchAction {
+            val undo = planEdits.apply(edits)
+            _notices.tryEmit(UndoNotice(message) { launchAction { undo() } })
+        }
+    }
+
+    private fun dayLabel(day: LocalDate): String = dayLabelOf(
+        day,
+        moment.value.today,
+        DayWords(getString(R.string.tasks_day_today), getString(R.string.tasks_day_tomorrow), getString(R.string.tasks_day_yesterday)),
+    )
 
     /** À appeler après l'octroi de READ_CALENDAR, pour relire les agendas sans attendre le prochain changement. */
     fun refreshCalendar() = calendar.refresh()

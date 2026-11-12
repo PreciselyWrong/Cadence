@@ -6,6 +6,8 @@ import { CAPTURE_TARGETS, CaptureTarget } from '../../utils/captureText';
 interface CaptureDestinationsProps {
     value: CaptureTarget;
     onChange: (target: CaptureTarget) => void;
+    // The choices offered; a link alone gets no Project.
+    targets?: CaptureTarget[];
     // Shows only the chosen target, plus scopeLabel, with no way to switch
     locked?: boolean;
     scopeLabel?: string;
@@ -18,11 +20,13 @@ const LABELS: Record<CaptureTarget, { key: string; fallback: string }> = {
     project: { key: 'capture.project', fallback: 'Project' },
 };
 
-// "Add to  Inbox | Task | Note | Project": what the text becomes is always
+// "Add to  Inbox | Task | Note | Project" (or "Inbox | Task | Note" for a
+// link alone): what the text becomes is always
 // visible next to the button that saves it.
 const CaptureDestinations: React.FC<CaptureDestinationsProps> = ({
     value,
     onChange,
+    targets = CAPTURE_TARGETS,
     locked = false,
     scopeLabel,
 }) => {
@@ -69,7 +73,7 @@ const CaptureDestinations: React.FC<CaptureDestinationsProps> = ({
                 aria-label={t('capture.addTo', 'Add to')}
                 className="inline-flex flex-wrap max-w-full rounded-lg bg-gray-100 dark:bg-black/30 p-0.5 gap-0.5"
             >
-                {CAPTURE_TARGETS.map((target) => {
+                {targets.map((target) => {
                     const selected = target === value;
                     return (
                         <button

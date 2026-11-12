@@ -1,6 +1,16 @@
 package ch.nicolab.cadence.tasks.ui
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectVerticalDragGestures
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.outlined.DragIndicator
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.zIndex
+import ch.nicolab.cadence.designsystem.theme.cadence
+import kotlin.math.abs
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -64,6 +74,8 @@ internal fun TodayTab(
     modifier: Modifier = Modifier,
     routineStrip: @Composable () -> Unit = {},
     onOpenBrief: () -> Unit = {},
+    /** « Masquer les terminées » : la section Terminées disparaît (réglage d'Aujourd'hui, gardé sur l'appareil). */
+    hideDone: Boolean = false,
 ) {
     val planning: PlanningViewModel = viewModel()
     val briefViewModel: BriefViewModel = viewModel()
@@ -105,7 +117,29 @@ internal fun TodayTab(
     }
     val proposedUids = proposals?.uids.orEmpty()
     val agenda = remember(state.today, state.planStarts, proposedUids, events, zone) {
-        mergeTodayItems(state.today.filterNot { it.uid in proposedUids }, events, zone, state.planStarts)
+        mergeTodayItems(state.today.filterNot { it.uid in proposedUids }, events, zone, state.planStarts, state.plan.map { it.uid })
+    }
+    val agendaTasks = remember(agenda) { agenda.filterIsInstance<TodayItem.Task>().map { it.task } }
+    val reorderable = remember(agendaTasks, state.planStarts) { viewModel.todayUntimed(agendaTasks) }
+    val listState = rememberLazyListState()
+    var dragUid by remember { mutableStateOf<String?>(null) }
+    var dragOffset by remember { mutableFloatStateOf(0f) }
+
+    /** Fin d'un glisser de poignée : la tâche prend le rang de la ligne rangeable la plus proche de son centre. */
+    fun finishDrag() {
+        val uid = dragUid
+        val offset = dragOffset
+        dragUid = null
+        dragOffset = 0f
+        if (uid == null) return
+        val visible = listState.layoutInfo.visibleItemsInfo
+        val dragged = visible.firstOrNull { it.key == "task:$uid" } ?: return
+        val center = dragged.offset + dragged.size / 2f + offset
+        val target = visible
+            .filter { (it.key as? String)?.removePrefix("task:") in reorderable }
+            .minByOrNull { abs(it.offset + it.size / 2f - center) } ?: return
+        val toIndex = reorderable.indexOf((target.key as String).removePrefix("task:"))
+        agendaTasks.firstOrNull { it.uid == uid }?.let { viewModel.reorderToday(it, reorderable, toIndex) }
     }
     val plannedToday = remember(state.plan) { state.plan.mapTo(HashSet()) { it.uid } }
     val triageable = remember(state.overdue) { PlanningChanges.movable(state.overdue) }
@@ -179,7 +213,7 @@ internal fun TodayTab(
         )
     }
 
-    LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
+    LazyColumn(modifier = modifier, state = listState, contentPadding = tasksListPadding()) {
         briefCard?.let { card ->
             item(key = "brief") { CardSlot { BriefCard(card = card, onOpen = onOpenBrief) } }
         }
@@ -242,7 +276,22 @@ internal fun TodayTab(
             if (state.overdue.isNotEmpty()) {
                 item(key = "today-header") { SectionHeader(title = stringResource(R.string.tasks_section_today)) }
             }
-            agendaRows(agenda, projectNames, projectColors, moment, viewModel, onOpen, calendarSettings.checkEvents, projectIcons = projectIcons, planStarts = state.planStarts)
+            agendaRows(
+                agenda, projectNames, projectColors, moment, viewModel, onOpen, calendarSettings.checkEvents,
+                projectIcons = projectIcons,
+                planStarts = state.planStarts,
+                drag = TodayDrag(
+                    reorderable = reorderable.toSet(),
+                    uid = dragUid,
+                    offset = { dragOffset },
+                    onStart = {
+                        dragUid = it
+                        dragOffset = 0f
+                    },
+                    onMove = { dragOffset += it },
+                    onEnd = ::finishDrag,
+                ),
+            )
         }
         if (eveningVisible) {
             item(key = "evening") {
@@ -274,7 +323,7 @@ internal fun TodayTab(
                 taskRows(tasks, projectNames, projectColors, moment, viewModel, onOpen, projectIcons = projectIcons)
             }
         }
-        if (state.completed.isNotEmpty()) {
+        if (!hideDone && state.completed.isNotEmpty()) {
             item(key = "completed-header") {
                 val toggleLabel = stringResource(if (completedExpanded) R.string.tasks_completed_hide else R.string.tasks_completed_show)
                 Row(
@@ -334,11 +383,17 @@ private fun LazyListScope.agendaRows(
     checkEvents: Boolean,
     projectIcons: Map<String, String> = emptyMap(),
     planStarts: Map<String, Instant> = emptyMap(),
+    drag: TodayDrag? = null,
 ) {
     items(agenda, key = { it.key }) { item ->
         when (item) {
             is TodayItem.Task -> TaskRow(
-                modifier = Modifier.animateItem(),
+                modifier = if (drag != null && drag.uid == item.task.uid) {
+                    Modifier.zIndex(1f).graphicsLayer { translationY = drag.offset() }
+                } else {
+                    Modifier.animateItem()
+                },
+                trailing = drag?.takeIf { item.task.uid in it.reorderable }?.let { { DragHandle(item.task.uid, it) } },
                 task = item.task,
                 projectName = item.task.projectUid?.let { projectNames[it] },
                 projectIcon = item.task.projectUid?.let { projectIcons[it] },
@@ -364,4 +419,41 @@ private fun LazyListScope.agendaRows(
             )
         }
     }
+}
+
+/** Glisser d'Aujourd'hui : les tâches rangeables (sans heure), la ligne tenue et son décalage, les rappels du geste. */
+private class TodayDrag(
+    val reorderable: Set<String>,
+    val uid: String?,
+    val offset: () -> Float,
+    val onStart: (String) -> Unit,
+    val onMove: (Float) -> Unit,
+    val onEnd: () -> Unit,
+)
+
+/**
+ * Poignée de rangement : un glisser vertical sur elle seule range la ligne. Elle ne réagit qu'à la verticale, donc ne
+ * gêne ni les balayages horizontaux de la ligne ni l'appui long du menu ; Monter et Descendre restent dans le menu.
+ */
+@Composable
+private fun DragHandle(uid: String, drag: TodayDrag) {
+    Icon(
+        Icons.Outlined.DragIndicator,
+        contentDescription = stringResource(R.string.today_drag_handle),
+        tint = cadence.onSurfaceVariant,
+        modifier = Modifier
+            .size(Size.touch)
+            .pointerInput(uid) {
+                detectVerticalDragGestures(
+                    onDragStart = { drag.onStart(uid) },
+                    onVerticalDrag = { change, amount ->
+                        change.consume()
+                        drag.onMove(amount)
+                    },
+                    onDragEnd = drag.onEnd,
+                    onDragCancel = drag.onEnd,
+                )
+            }
+            .padding(Space.md),
+    )
 }

@@ -8,6 +8,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import ch.nicolab.cadence.tasks.notes.ContentTargets
+import ch.nicolab.cadence.tasks.notes.MarkdownCheckbox
+import ch.nicolab.cadence.tasks.notes.ContentRef
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.material3.IconButton
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -187,21 +195,62 @@ internal fun InlineTextField(
     }
 }
 
-/** Note de la tâche : zone libre dans une carte, enregistrée au fil de la saisie par la fiche. */
+/**
+ * Description de la tâche : lue rendue (Markdown, plan, liens, puces, cases) ; le crayon ou un toucher sur une
+ * description vide l'édite en plan ([OutlineField], barre posée par la fiche au-dessus du clavier).
+ */
 @Composable
-internal fun NoteCard(note: String, onNoteChange: (String) -> Unit, readOnly: Boolean = false) {
+internal fun NoteCard(
+    state: OutlineEditorState,
+    editing: Boolean,
+    onEditingChange: (Boolean) -> Unit,
+    outlineScope: String,
+    readOnly: Boolean = false,
+    /** Toucher une puce de tâche ou un lien vers une note dans la description rendue. */
+    onRef: ((ContentRef) -> Unit)? = null,
+    onWikiLink: (String) -> Unit = {},
+    targets: ContentTargets? = null,
+    onToggleTask: ((TaskItem) -> Unit)? = null,
+) {
+    val focusRequester = remember { FocusRequester() }
+    var focused by remember { mutableStateOf(false) }
+    LaunchedEffect(editing) { if (editing) focusRequester.requestFocus() }
     Panel(Modifier.fillMaxWidth()) {
-        Box(Modifier.fillMaxWidth().heightIn(min = Size.touch), contentAlignment = Alignment.CenterStart) {
-            if (note.isEmpty()) Text(
-                stringResource(R.string.tasks_detail_note_hint),
+        if (state.doc.isNotBlank() && (readOnly || !editing)) {
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
+                MarkdownView(
+                    content = state.doc,
+                    onToggleCheckbox = { line -> if (!readOnly) state.edit(MarkdownCheckbox.toggle(state.doc, line)) },
+                    modifier = Modifier.weight(1f),
+                    onWikiLink = onWikiLink,
+                    onRef = onRef,
+                    outlineScope = outlineScope,
+                    targets = targets,
+                    onToggleTask = onToggleTask,
+                )
+                if (!readOnly) {
+                    IconButton(onClick = {
+                        state.caretToEnd()
+                        onEditingChange(true)
+                    }) {
+                        Icon(Icons.Outlined.Edit, contentDescription = stringResource(R.string.tasks_idea_edit))
+                    }
+                }
+            }
+        } else {
+            OutlineField(
+                state = state,
+                hint = stringResource(R.string.tasks_detail_note_hint),
                 style = MaterialTheme.typography.bodyLarge,
-                color = cadence.outline,
-            )
-            LinkedEditableField(
-                value = note,
-                onValueChange = onNoteChange,
                 readOnly = readOnly,
-                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier
+                    .heightIn(min = Size.touch)
+                    .focusRequester(focusRequester)
+                    .onFocusChanged { focus ->
+                        if (focus.isFocused && !editing && !readOnly) onEditingChange(true)
+                        if (focused && !focus.isFocused) onEditingChange(false)
+                        focused = focus.isFocused
+                    },
             )
         }
     }

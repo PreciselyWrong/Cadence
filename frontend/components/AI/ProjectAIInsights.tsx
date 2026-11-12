@@ -192,7 +192,7 @@ const ProjectAIInsights = forwardRef<
         return (
             <div className="rounded-lg shadow-sm bg-white dark:bg-gray-900 border-2 border-gray-50 dark:border-gray-800 overflow-hidden">
                 <div className="flex items-center gap-2 px-4 py-2">
-                    <SparklesIcon className="h-3.5 w-3.5 text-indigo-500 flex-shrink-0" />
+                    <SparklesIcon className="h-3.5 w-3.5 text-primary flex-shrink-0" />
                     <span className="text-xs font-semibold uppercase text-gray-600 dark:text-gray-300">
                         {t('aiAssistant.projectInsightsTitle', 'AI Insights')}
                     </span>
@@ -207,14 +207,14 @@ const ProjectAIInsights = forwardRef<
             <div className="rounded-lg shadow-sm bg-white dark:bg-gray-900 border-2 border-gray-50 dark:border-gray-800 overflow-hidden">
                 <div className="flex items-center justify-between px-4 py-2">
                     <div className="flex items-center gap-2">
-                        <SparklesIcon className="h-3.5 w-3.5 text-indigo-500 flex-shrink-0" />
+                        <SparklesIcon className="h-3.5 w-3.5 text-primary flex-shrink-0" />
                         <span className="text-xs font-semibold uppercase text-gray-600 dark:text-gray-300">
                             {t('aiAssistant.projectInsightsTitle', 'AI Insights')}
                         </span>
                     </div>
                     <button
                         onClick={generate}
-                        className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors"
+                        className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded bg-primary-container text-primary hover:bg-primary/20 transition-colors"
                     >
                         <SparklesIcon className="h-3 w-3" />
                         {t('aiAssistant.generate', 'Generate Brief')}
@@ -233,7 +233,7 @@ const ProjectAIInsights = forwardRef<
         <div className="rounded-lg shadow-sm bg-white dark:bg-gray-900 border-2 border-gray-50 dark:border-gray-800 overflow-hidden">
             <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 dark:border-gray-800">
                 <div className="flex items-center gap-2">
-                    <SparklesIcon className="h-3.5 w-3.5 text-indigo-500 flex-shrink-0" />
+                    <SparklesIcon className="h-3.5 w-3.5 text-primary flex-shrink-0" />
                     <span className="text-xs font-semibold uppercase text-gray-600 dark:text-gray-300">
                         {t('aiAssistant.projectInsightsTitle', 'AI Insights')}
                     </span>
@@ -250,7 +250,7 @@ const ProjectAIInsights = forwardRef<
                     <button
                         onClick={generate}
                         disabled={isLoading}
-                        className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded bg-primary-container text-primary hover:bg-primary/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {isLoading ? (
                             <>
@@ -310,7 +310,7 @@ const ProjectAIInsights = forwardRef<
                                 icon={LightBulbIcon}
                                 label={t('aiAssistant.projectInsight', 'About this project')}
                                 text={insights.insight}
-                                colorClass="bg-indigo-50 dark:bg-indigo-900/20 border-indigo-100 dark:border-indigo-800/40 text-indigo-500 dark:text-indigo-400 [&_p:last-child]:text-indigo-900 [&_p:last-child]:dark:text-indigo-100"
+                                colorClass="bg-primary-container border-primary/20 text-primary [&_p:last-child]:text-primary-on-container"
                                 delay={0}
                             />
                         )}

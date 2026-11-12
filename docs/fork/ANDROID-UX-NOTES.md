@@ -4,6 +4,36 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-12 — Plan des notes et descriptions, barre au-dessus du clavier
+
+- **Problème** : un téléphone n'a ni Tab, ni Alt+↑/↓, ni Ctrl ; le clavier n'envoie que des textes successifs ; la barre de mise en forme n'avait que cases, puces, titre et gras ; pas de choix `@`, une puce vers une cible inconnue ne faisait qu'un message.
+- **Décision** : mêmes règles de texte que le web (Entrée et retour arrière reconnus dans la saisie) ; une seule barre défilante au-dessus du clavier, plan d'abord (sortir, décaler, monter, descendre, replier, zoomer, case, tâche liée) puis mise en forme (gras, italique, barré, titre, listes, citation, code, lien, `[[`, `@`, tableau par tailles toutes faites), « Terminé » fixe à droite ; une puce repliée se lit « … » dans le champ, un curseur qui y entre la déplie ; le zoom de l'éditeur montre le seul sous-arbre avec « Tout › … » au-dessus. Les propositions `@` et `[[` s'affichent en pastilles au-dessus de la barre. En lecture, chevron à gauche de chaque puce repliable (place réservée pour l'alignement) et point qui zoome. Une case liée sans tâche connue sur l'appareil se coche dans le texte, comme une case ordinaire.
+- **Web** : rien à reprendre.
+
+### 2026-11-12 — Un lien seul dans l'ajout rapide, origine des tâches
+
+- **Problème** : une adresse collée dans l'ajout rapide n'avait que Inbox / Tâche / Note (la tâche prenait l'adresse brute pour nom) ; une tâche née d'un lien proposait encore « Ajouter aux liens » ; l'origine d'une tâche (Gmail, MCP…) n'apparaissait pas.
+- **Décision** : comme le web, une adresse seule propose Inbox · Tâche · Liens · Note ; « Dans les liens » d'emblée quand l'adresse est déjà gardée ; badge d'origine neutre (lettre et nom) sur la ligne et la fiche, sans couleur de marque (aucune couleur littérale sur Android).
+- **Web** : rien à reprendre ; la marque colorée du web reste un écart volontaire.
+
+### 2026-11-12 — Markdown, puces de liens et rétroliens
+
+- **Problème** : une description de tâche s'affichait en texte brut ; `[[task:…]]`, les mentions et les tableaux du web n'étaient pas rendus ; aucun rétrolien.
+- **Décision** : la description d'une tâche se lit rendue comme une note (crayon pour éditer le texte brut) ; puces pour les notes, tâches et personnes (une personne ne s'ouvre pas : pas de fiche sur Android) ; « Rétroliens » en bas des notes et des fiches, seulement s'il y en a et en ligne.
+- **Web** : rien à reprendre.
+
+### 2026-11-12 — Ranger Aujourd'hui au doigt, frise déplaçable
+
+- **Problème** : ranger demandait Monter / Descendre, un rang à la fois, et l'ordre (`today_order`) n'était pas celui du web (plan du jour) ; la frise de Ma journée était en lecture.
+- **Décision** : une poignée à droite des tâches sans heure ; seul un glisser vertical sur elle range, donc ni le balayage ni l'appui long de la ligne ne se déclenchent. L'ordre écrit est celui du plan du jour. Sur la frise, appui long sur un créneau puis glisser pour le déplacer, depuis son bord droit pour l'étirer, au quart d'heure, avec « Annuler ».
+- **Web** : rien à reprendre ; l'ordre est déjà le même.
+
+### 2026-11-12 — Planifier sur le téléphone
+
+- **Problème** : « À venir » ne montrait que les échéances des 7 jours ; le web a une page « Planifier » (Inbox, 14 jours, horizons) qui écrit le plan, jamais l'échéance.
+- **Décision** : même page en une colonne (Jours | Horizons) au lieu de 14 colonnes ; déplacer = appui long puis feuille « Planifier » (un jour, un horizon, retirer du jour) plutôt qu'un glisser à travers 14 sections ; les cartes gardent la ligne de tâche d'Android (case carrée, balayages), pas la carte ronde du web. Le retard s'appelle « Échues », comme ailleurs sur Android.
+- **Web** : rien à reprendre ; la feuille pourrait servir au web mobile (390 px), où glisser entre colonnes est pénible.
+
 ### 2026-11-12 — Planifier écrit le plan, jamais l'échéance
 
 - **Problème** : « Reporter » et « Placer » écrivaient l'échéance (heure comprise) ; « Plus tard » effaçait la vraie échéance. Un créneau ou un report déplaçait donc en silence un rappel ou une échéance.

@@ -52,7 +52,10 @@ jest.mock('../../../utils/tasksService', () => ({
     createTask: jest.fn(async () => ({ uid: 't-new' })),
 }));
 jest.mock('../../../utils/contentLinksService', () => ({
-    resolveTaskLinks: jest.fn(async () => ({ 'call bank': 't-1' })),
+    resolveTaskLinkStatus: jest.fn(async () => ({
+        uids: { 'call bank': 't-1' },
+        done: [],
+    })),
 }));
 const mockOpenTaskPanel = jest.fn();
 jest.mock('../../../store/taskPanelStore', () => ({

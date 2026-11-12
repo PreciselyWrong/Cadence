@@ -40,7 +40,7 @@ import EntityIcon from '../Shared/EntityIcon';
 
 // One place for the chip colours, so they can follow the shared tokens.
 const FILLED =
-    'bg-indigo-50 text-indigo-800 hover:bg-indigo-100 dark:bg-indigo-500/15 dark:text-indigo-200 dark:hover:bg-indigo-500/25';
+    'bg-primary-container text-primary-on-container hover:bg-primary/20';
 const EMPTY =
     'bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-gray-700/60 dark:text-gray-400 dark:hover:bg-gray-700';
 
@@ -62,7 +62,7 @@ const Chip = forwardRef<HTMLButtonElement, ChipProps>(
                 type="button"
                 {...rest}
                 disabled={readOnly || rest.disabled}
-                className={`inline-flex h-8 max-w-full items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:cursor-default disabled:opacity-60 ${
+                className={`inline-flex h-8 max-w-full items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-default disabled:opacity-60 ${
                     filled ? FILLED : EMPTY
                 } ${className}`}
             >
@@ -205,7 +205,7 @@ const TaskChipRow: React.FC<TaskChipRowProps> = ({
         {
             value: TASK_STATUS.PLANNED,
             label: t('task.status.planned', 'Planned'),
-            icon: <CalendarIcon className="h-4 w-4 text-purple-500" />,
+            icon: <CalendarIcon className="h-4 w-4 text-primary" />,
         },
         {
             value: TASK_STATUS.IN_PROGRESS,

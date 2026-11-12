@@ -5,6 +5,7 @@ import {
     format,
 } from 'date-fns';
 
+import { PALETTE, hashColor } from '../../constants/colorPalette';
 import type { FeedEventDetail } from './FeedEventPopover';
 
 export interface CalendarEvent {
@@ -13,7 +14,10 @@ export interface CalendarEvent {
     start: Date;
     end: Date;
     type: 'task' | 'event';
+    // Undefined: the block takes its token fill.
     color?: string;
+    // A finished task: drawn faded.
+    done?: boolean;
     feedUid?: string;
     // Whole-day item, drawn as a bar in the all-day row. `end` is the
     // exclusive midnight after the last day.
@@ -82,44 +86,36 @@ export interface CalendarTask {
 
 export type CalendarColorBy = 'default' | 'project' | 'priority' | 'tag';
 
-const PALETTE = [
-    '#3b82f6',
-    '#8b5cf6',
-    '#ec4899',
-    '#14b8a6',
-    '#f97316',
-    '#84cc16',
-    '#06b6d4',
-    '#a855f7',
-];
+// Named colours come from the shared palette, never from local hex values.
+const colorOf = (key: string): string => {
+    const color = PALETTE.find((c) => c.key === key);
+    if (!color) throw new Error(`Unknown palette colour: ${key}`);
+    return color.value;
+};
 const PRIORITY_COLORS: Record<string, string> = {
-    high: '#ef4444',
-    medium: '#f59e0b',
-    low: '#3b82f6',
+    high: colorOf('red'),
+    medium: colorOf('orange'),
+    low: colorOf('blue'),
 };
 const PRIORITY_NAMES = ['low', 'medium', 'high'];
-const NEUTRAL = '#6b7280';
-export const HABIT_COLOR = '#8b5cf6';
-
-const paletteColor = (key: string) => {
-    let hash = 0;
-    for (let i = 0; i < key.length; i++)
-        hash = (hash * 31 + key.charCodeAt(i)) | 0;
-    return PALETTE[Math.abs(hash) % PALETTE.length];
-};
+const DONE_COLOR = colorOf('green');
+const DEFERRED_COLOR = colorOf('orange');
+const NEUTRAL = colorOf('gray');
+export const HABIT_COLOR = colorOf('purple');
 
 // Block colour: green once done; otherwise by the chosen key, with the
-// project's or tag's own colour when it has one.
+// project's or tag's own colour when it has one. Undefined (no colour-by)
+// means the block takes its token fill.
 export const taskColor = (
     task: CalendarTask,
     colorBy: CalendarColorBy = 'default'
-) => {
-    if (task.completed_at) return '#22c55e';
+): string | undefined => {
+    if (task.completed_at) return DONE_COLOR;
     if (colorBy === 'project') {
         const project = task.Project;
         if (!project) return NEUTRAL;
         return (
-            project.color || paletteColor(String(project.id ?? project.name))
+            project.color || hashColor(String(project.id ?? project.name)).value
         );
     }
     if (colorBy === 'priority') {
@@ -132,9 +128,9 @@ export const taskColor = (
     if (colorBy === 'tag') {
         const tag = task.tags?.[0];
         if (!tag) return NEUTRAL;
-        return tag.color || paletteColor(tag.name);
+        return tag.color || hashColor(tag.name).value;
     }
-    return '#3b82f6';
+    return undefined;
 };
 
 // YYYY-MM-DD plus optional HH:mm, read as local time.
@@ -172,6 +168,7 @@ const dueEvent = (
         title: taskName(task),
         type: 'task' as const,
         color,
+        done: Boolean(task.completed_at),
     };
     const dueDay = localDateTime(task.due_date);
     if (!dueDay) return null;
@@ -256,7 +253,8 @@ export const taskToEvents = (
                 start: deferDate,
                 end: addMinutes(deferDate, DEFAULT_TASK_MINUTES),
                 type: 'task',
-                color: task.completed_at ? '#22c55e' : '#f59e0b',
+                color: task.completed_at ? DONE_COLOR : DEFERRED_COLOR,
+                done: Boolean(task.completed_at),
             });
         }
     }

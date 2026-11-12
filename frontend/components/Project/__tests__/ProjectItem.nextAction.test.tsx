@@ -41,7 +41,6 @@ const renderItem = (project: Partial<Project>, viewMode: 'cards' | 'list') =>
                     ...project,
                 }}
                 viewMode={viewMode}
-                getCompletionPercentage={() => 25}
                 activeDropdown={null}
                 setActiveDropdown={jest.fn()}
                 handleEditProject={jest.fn()}

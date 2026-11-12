@@ -55,7 +55,10 @@ export const getCsrfToken = async (): Promise<string> => {
         .catch((error) => {
             tokenPromise = null;
             lastFailureAt = Date.now();
-            console.warn('Unable to fetch CSRF token, proceeding without one:', error);
+            console.warn(
+                'Unable to fetch CSRF token, proceeding without one:',
+                error
+            );
             return '';
         });
 

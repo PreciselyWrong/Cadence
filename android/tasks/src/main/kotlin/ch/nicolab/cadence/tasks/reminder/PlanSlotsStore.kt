@@ -3,11 +3,15 @@ package ch.nicolab.cadence.tasks.reminder
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import ch.nicolab.cadence.tasks.planning.PlanBoard
 import ch.nicolab.cadence.tasks.planning.PlanEntry
 import ch.nicolab.cadence.tasks.planning.ServerPlan
 import java.time.LocalDate
 import java.time.ZoneId
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -15,8 +19,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.JsonObject
 
 /**
- * Dernière lecture du plan du jour du serveur pour aujourd'hui et demain, gardée sur l'appareil : les alarmes en lisent
- * les placements à heure, Aujourd'hui les tâches placées.
+ * Dernière lecture du plan du jour du serveur pour les [PLAN_DAYS] jours à partir d'aujourd'hui, gardée sur
+ * l'appareil : les alarmes en lisent les placements à heure, Aujourd'hui et Planifier les tâches placées.
  */
 class PlanSlotsStore(context: Context) {
     private val preferences: SharedPreferences =
@@ -55,9 +59,13 @@ class PlanSlotsStore(context: Context) {
     }
 }
 
+/** Jours du plan gardés sur l'appareil : ceux de la page Planifier. */
+internal const val PLAN_DAYS = PlanBoard.DAYS
+
 /**
- * Relit les plans d'aujourd'hui et de demain après chaque synchro réussie : un placement ajouté, déplacé ou retiré
- * sur le web y arrive au passage suivant. Une lecture qui échoue garde la précédente.
+ * Relit les plans des [PLAN_DAYS] jours à partir d'aujourd'hui après chaque synchro réussie, en parallèle : un
+ * placement ajouté, déplacé ou retiré sur le web y arrive au passage suivant. Une lecture qui échoue garde la
+ * précédente (tous les jours ou aucun).
  */
 internal suspend fun refreshPlanSlots(
     store: PlanSlotsStore,
@@ -66,8 +74,11 @@ internal suspend fun refreshPlanSlots(
 ) {
     val today = LocalDate.now(zone)
     val entries = runCatching {
-        listOf(today, today.plusDays(1)).flatMap { day ->
-            ServerPlan.parse(call("GET", "/api/v1/daily-plan", mapOf("date" to day.toString()), null))
+        coroutineScope {
+            (0 until PLAN_DAYS).map { offset ->
+                val day = today.plusDays(offset.toLong())
+                async { ServerPlan.parse(call("GET", "/api/v1/daily-plan", mapOf("date" to day.toString()), null)) }
+            }.awaitAll().flatten()
         }
     }.getOrNull() ?: return
     store.write(entries)

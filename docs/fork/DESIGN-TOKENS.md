@@ -108,9 +108,12 @@ The root font size is 90 %, so 1 rem is 14.4 px: rem = px / 14.4.
 
 | Android                    | Web                                                                                                    |
 | -------------------------- | ------------------------------------------------------------------------------------------------------ |
-| `TabPills`                 | `frontend/components/Shared/ui/TabPills.tsx`                                                           |
+| `TabPills`                 | `frontend/components/Shared/ui/Segmented.tsx` on the desktop (the Plan switch look)                    |
 | `SegmentedTabs`            | `frontend/components/Shared/ui/SegmentedTabs.tsx` (calendar view switch on phones, to adopt elsewhere) |
 | `CadenceBadge`             | `frontend/components/Shared/ui/CadenceBadge.tsx`                                                       |
 | `TaskCheckbox`             | `frontend/components/Task/TaskCheckCircle.tsx`                                                         |
 | `FacetGauge` (habits only) | `frontend/components/Shared/ui/FacetGauge.tsx`                                                         |
 | glass buttons and chips    | `bg-surface-variant/60` plus `border-outline/35`                                                       |
+| page header                | `frontend/components/Shared/ui/PageHeader.tsx` (800 title, one action row, summary line)               |
+| list row                   | `frontend/components/Shared/ui/ListRow.tsx` (two levels, `countsLine` without zeros, `ColorDot`)       |
+| search field               | `frontend/components/Shared/ui/SearchField.tsx`                                                        |

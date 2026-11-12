@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}} notas",
+        "notes_one": "{{count}} nota",
+        "tasks_other": "{{count}} tarefas",
+        "tasks_one": "{{count}} tarefa",
+        "goals_other": "{{count}} objetivos",
+        "goals_one": "{{count}} objetivo",
+        "projects_other": "{{count}} projetos",
+        "projects_one": "{{count}} projeto"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -128,6 +138,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(sem assunto)",
+      "draft": "Rascunho pronto:",
+      "task": "Tarefa",
+      "reply": "Responder",
+      "later": "Mais tarde",
+      "dismiss": "Ignorar",
+      "archive": "Arquivar no Gmail",
+      "taskName": "Nome da tarefa",
+      "taskDue": "Prazo",
+      "createTask": "Criar a tarefa",
+      "taskCreated": "Tarefa criada",
+      "replied": "Resposta aberta no Gmail",
+      "postponed": "Volta amanhã",
+      "dismissed": "E-mail ignorado",
+      "notArchived": "Não arquivado no Gmail"
+    },
     "linkLater": "Em 30 dias",
     "linkArchive": "Arquivar",
     "linkKeep": "Manter",
@@ -500,7 +527,7 @@
     "assignedTo": "Atribuído a",
     "subtasks": "Subtarefas",
     "openFullPage": "Abrir visualização completa",
-    "openPanel": "Abrir no painel lateral",
+    "openPanel": "Abrir detalhes",
     "quickEdit": {
       "setPriority": "Definir prioridade",
       "setDueDate": "Definir data de vencimento"
@@ -2334,6 +2361,15 @@
     "linkedNoteNotNow": "Agora não",
     "linkedNoteCreate": "Criar nota",
     "linkedNoteCreateFailed": "Não foi possível criar a nota.",
+    "outlineZoomIn": "Ampliar",
+    "outlineExpand": "Expandir",
+    "outlineCollapse": "Recolher",
+    "outlineMakeTask": "Criar uma tarefa",
+    "outlineTaskCreated": "Tarefa criada: {{name}}",
+    "outlineTaskFailed": "Não foi possível criar a tarefa.",
+    "outlinePath": "Caminho do esquema",
+    "outlineAll": "Tudo",
+    "outlineBulletMenu": "Marcador",
     "backgroundImage": "Fundo",
     "noBackground": "Sem fundo",
     "openInNotes": "Abrir em Notas",
@@ -4289,12 +4325,14 @@
     "task": "Tarefa",
     "note": "Nota",
     "project": "Projeto",
+    "link": "Links",
     "addTo": "Adicionar a",
     "filesLabel": "Arquivos para anexar",
     "removeFile": "Remover {{name}}",
     "fileTooLarge": "{{name}} tem mais de {{limit}} MB, então não foi adicionado.",
     "tooManyFiles": "É possível adicionar até {{max}} arquivos de uma vez.",
     "savedInbox": "\"{{title}}\" salvo na Caixa de Entrada.",
+    "savedLink": "\"{{title}}\" salvo em Links.",
     "savedInboxMany": "{{total}} itens salvos na Caixa de Entrada.",
     "createdTask": "Tarefa \"{{title}}\" criada.",
     "createdTasks": "{{total}} tarefas criadas.",

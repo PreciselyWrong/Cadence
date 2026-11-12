@@ -4,15 +4,9 @@ import { CalendarIcon, FlagIcon } from '@heroicons/react/24/outline';
 import { Task, PriorityType } from '../../../entities/Task';
 import PriorityDropdown from '../../Shared/PriorityDropdown';
 import DateTimePicker from '../../Shared/DateTimePicker';
-import { toPriorityLevel, PriorityLevel } from '../../Shared/PriorityBadge';
+import { toPriorityLevel } from '../../Shared/PriorityBadge';
 import { fromDueParts, toDueParts } from '../../../utils/dueDateTime';
 import { useTaskRowSave } from './useTaskRowSave';
-
-const FLAG_TONE: Record<PriorityLevel, string> = {
-    high: 'text-red-500 dark:text-red-400',
-    medium: 'text-orange-500 dark:text-orange-400',
-    low: 'text-blue-500 dark:text-blue-400',
-};
 
 // Hidden until the row is hovered or focused, always shown on touch screens.
 const HOVER_ONLY =
@@ -62,8 +56,10 @@ export const MinimalPriorityEdit: React.FC<MinimalQuickEditProps> = ({
                         aria-haspopup="menu"
                         aria-expanded={isOpen}
                         className={`flex flex-shrink-0 items-center transition-opacity ${
+                            // One colour per row: a high priority is the red
+                            // check circle; the flag only says one is set.
                             level
-                                ? FLAG_TONE[level]
+                                ? 'text-surface-on-variant'
                                 : `text-gray-500 dark:text-gray-400 ${HOVER_ONLY}`
                         }`}
                     >

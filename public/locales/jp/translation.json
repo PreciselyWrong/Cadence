@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}}件のノート",
+        "notes_one": "{{count}}件のノート",
+        "tasks_other": "{{count}}件のタスク",
+        "tasks_one": "{{count}}件のタスク",
+        "goals_other": "{{count}}件の目標",
+        "goals_one": "{{count}}件の目標",
+        "projects_other": "{{count}}件のプロジェクト",
+        "projects_one": "{{count}}件のプロジェクト"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -128,6 +138,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(件名なし)",
+      "draft": "下書きあり:",
+      "task": "タスク",
+      "reply": "返信",
+      "later": "後で",
+      "dismiss": "無視",
+      "archive": "Gmail でアーカイブ",
+      "taskName": "タスク名",
+      "taskDue": "期限",
+      "createTask": "タスクを作成",
+      "taskCreated": "タスクを作成しました",
+      "replied": "Gmail で返信を開きました",
+      "postponed": "明日また表示",
+      "dismissed": "メールを無視しました",
+      "notArchived": "Gmail でアーカイブされていません"
+    },
     "linkLater": "30日後",
     "linkArchive": "アーカイブ",
     "linkKeep": "残す",
@@ -499,7 +526,7 @@
     "assignedTo": "割り当て先",
     "subtasks": "サブタスク",
     "openFullPage": "全画面表示を開く",
-    "openPanel": "サイドパネルで開く",
+    "openPanel": "詳細を開く",
     "quickEdit": {
       "setPriority": "優先度を設定",
       "setDueDate": "期限日を設定"
@@ -1903,6 +1930,15 @@
     "linkedNoteNotNow": "今はしない",
     "linkedNoteCreate": "ノートを作成",
     "linkedNoteCreateFailed": "ノートを作成できませんでした。",
+    "outlineZoomIn": "ズームイン",
+    "outlineExpand": "展開",
+    "outlineCollapse": "折りたたむ",
+    "outlineMakeTask": "タスクを作成",
+    "outlineTaskCreated": "タスクを作成しました: {{name}}",
+    "outlineTaskFailed": "タスクを作成できませんでした。",
+    "outlinePath": "アウトラインのパス",
+    "outlineAll": "すべて",
+    "outlineBulletMenu": "箇条書き",
     "backgroundImage": "背景",
     "noBackground": "背景なし",
     "openInNotes": "ノートで開く",
@@ -4283,12 +4319,14 @@
     "task": "タスク",
     "note": "ノート",
     "project": "プロジェクト",
+    "link": "リンク",
     "addTo": "追加先",
     "filesLabel": "添付するファイル",
     "removeFile": "{{name}} を削除",
     "fileTooLarge": "{{name}} は {{limit}} MB を超えているため追加されませんでした。",
     "tooManyFiles": "一度に追加できるファイルは {{max}} 個までです。",
     "savedInbox": "「{{title}}」を受信箱に保存しました。",
+    "savedLink": "「{{title}}」をリンクに保存しました。",
     "savedInboxMany": "{{total}} 件を受信箱に保存しました。",
     "createdTask": "タスク「{{title}}」を作成しました。",
     "createdTasks": "{{total}} 件のタスクを作成しました。",

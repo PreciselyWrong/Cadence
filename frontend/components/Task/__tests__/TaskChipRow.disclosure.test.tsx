@@ -122,6 +122,6 @@ describe('TaskChipRow progressive disclosure', () => {
 
         const due = screen.getByTestId('chip-due');
         expect(due.className).not.toMatch(/red/);
-        expect(due).toHaveClass('bg-indigo-50');
+        expect(due).toHaveClass('bg-primary-container');
     });
 });

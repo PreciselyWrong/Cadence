@@ -8,8 +8,8 @@ export const DAY_COLUMN_WIDTH = 264;
 export const COLUMN_GAP = 12;
 export const INBOX_WIDTH = 260;
 export const INBOX_COLLAPSED_WIDTH = 44;
-// Left and right padding of the board pane, around the inbox and the strip.
-const BOARD_PADDING = 32;
+// Left and right padding of the board pane (pl-5 pr-2) and of the strip (p-1).
+const BOARD_PADDING = 36;
 export const CALENDAR_MIN = 280;
 export const CALENDAR_MAX = 600;
 // Below this window width the calendar is a drawer over the board.

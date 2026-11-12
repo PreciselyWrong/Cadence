@@ -632,13 +632,14 @@ Update an existing inbox item.
 
 #### `process_inbox_item`
 
-Convert an inbox item into a task, note, or project.
+Marks an inbox item as processed, once what it became exists (same as `PATCH /api/inbox/:uid/process`). Its files move to the task, project or note given.
 
 **Parameters:**
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `id` | number | Yes | Inbox item ID |
-| `type` | string | Yes | `task`, `note`, or `project` |
+| `uid` | string | Yes | Inbox item UID |
+| `task_uid`, `project_uid`, `note_uid` | string | No | What the item became (one of them); must be the user's |
+| `link_uid` | string | No | The link made from it with `create_link`; a link of someone else is an error and the item stays open |
 
 ---
 
@@ -1227,6 +1228,24 @@ Permanently deletes a saved link; its address stays out of the library until the
 | `tags` | string[] | No | Replaces the whole set; nested tags as paths (`dev/tools`); `[]` removes all |
 | `status` | string | No | `new` or `dropped`; a former status is read as `new`, and `parked` also sets `review_at` to today + 30 days when none is given |
 | `review_at` | string or null | No | Day to look at a link again (`YYYY-MM-DD`, or `null`) |
+
+---
+
+### Mail Tools (3)
+
+Mail cards in the triage queue (`docs/43-mail-triage.md`). The agent proposes, the user decides in Cadence; no tool decides.
+
+#### `propose_mail`
+
+One card per thread: `account`, `thread_id`, `received_at`, `summary` (at most 200 characters), `gmail_url` (must open `https://mail.google.com/`), optionally `from_name`, `from_address`, `subject`, `suggestion` (`{ kind: task | reply | read, task_name?, due_date?, project_uid? }`), `draft_excerpt` (cut at 280 characters). A newer message updates a waiting card, or reopens a decided one.
+
+#### `resolve_mail`
+
+Closes the waiting card of a thread handled in Gmail. `account`, `thread_id`.
+
+#### `list_mail_cards`
+
+Pending, put-off and recently decided cards (30 days), newest first, with their decision.
 
 ---
 

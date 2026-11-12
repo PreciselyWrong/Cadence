@@ -34,9 +34,6 @@ data class ProjectOverview(
 
 data class TagCard(val tag: TagItem, val openCount: Int)
 
-/** Jour de la bande « À venir » : [count] tâches prévues, représentées par au plus trois points. */
-data class StripDay(val date: LocalDate, val count: Int)
-
 /** Chiffres du Bilan pour les tâches. */
 data class TaskStats(val doneThisWeek: Int, val doneLastWeek: Int, val overdue: Int)
 
@@ -52,7 +49,6 @@ data class WeekReview(
 
 /** Vues dérivées de la liste de tâches pour Projets, Étiquettes, Terminées, À venir et le Bilan. */
 object TaskOverviews {
-    private const val STRIP_DAYS = 7
     private const val DONE_LIMIT = 200
 
     fun projectGroups(
@@ -120,13 +116,6 @@ object TaskOverviews {
             .take(DONE_LIMIT)
             .groupBy { it.completedAt!!.atZone(zone).toLocalDate() }
             .toList()
-
-    /** Aujourd'hui puis les six jours suivants, avec le nombre de tâches de chacun. */
-    fun weekStrip(today: LocalDate, todayCount: Int, upcoming: Map<LocalDate, List<TaskItem>>): List<StripDay> =
-        (0 until STRIP_DAYS).map { offset ->
-            val date = today.plusDays(offset.toLong())
-            StripDay(date, if (offset == 0) todayCount else upcoming[date]?.size ?: 0)
-        }
 
     fun weekReview(tasks: List<TaskItem>, today: LocalDate, now: Instant, zone: ZoneId): WeekReview {
         val weekStart = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))

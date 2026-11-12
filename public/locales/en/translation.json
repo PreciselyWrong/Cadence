@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}} notes",
+        "notes_one": "{{count}} note",
+        "tasks_other": "{{count}} tasks",
+        "tasks_one": "{{count}} task",
+        "goals_other": "{{count}} goals",
+        "goals_one": "{{count}} goal",
+        "projects_other": "{{count}} projects",
+        "projects_one": "{{count}} project"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -128,6 +138,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(no subject)",
+      "draft": "Draft ready:",
+      "task": "Task",
+      "reply": "Reply",
+      "later": "Later",
+      "dismiss": "Ignore",
+      "archive": "Archive in Gmail",
+      "taskName": "Task name",
+      "taskDue": "Due date",
+      "createTask": "Create the task",
+      "taskCreated": "Task created",
+      "replied": "Reply opened in Gmail",
+      "postponed": "Back tomorrow",
+      "dismissed": "Mail ignored",
+      "notArchived": "Not archived in Gmail"
+    },
     "linkLater": "In 30 days",
     "linkArchive": "Archive",
     "linkKeep": "Keep",
@@ -499,7 +526,7 @@
     "assignedTo": "Assigned to",
     "subtasks": "Subtasks",
     "openFullPage": "Open full view",
-    "openPanel": "Open in side panel",
+    "openPanel": "Open details",
     "quickEdit": {
       "setPriority": "Set priority",
       "setDueDate": "Set due date"
@@ -2316,6 +2343,15 @@
     "linkedNoteNotNow": "Not now",
     "linkedNoteCreate": "Create note",
     "linkedNoteCreateFailed": "Could not create the note.",
+    "outlineZoomIn": "Zoom in",
+    "outlineExpand": "Expand",
+    "outlineCollapse": "Collapse",
+    "outlineMakeTask": "Make a task",
+    "outlineTaskCreated": "Task created: {{name}}",
+    "outlineTaskFailed": "Could not create the task.",
+    "outlinePath": "Outline path",
+    "outlineAll": "All",
+    "outlineBulletMenu": "Bullet",
     "loading": "Loading notes...",
     "error": "Error loading notes",
     "searchPlaceholder": "Search notes...",
@@ -4320,6 +4356,7 @@
     "task": "Task",
     "note": "Note",
     "project": "Project",
+    "link": "Links",
     "add": "Add",
     "addN": "Add {{total}}",
     "addTitle": "Add to Inbox, Task, Note or Project",
@@ -4336,6 +4373,7 @@
     "undoError": "Could not remove it. Find it in its list and delete it there.",
     "saveError": "Could not save. Your text is still here.",
     "savedInbox": "Saved \"{{title}}\" to Inbox.",
+    "savedLink": "Saved \"{{title}}\" to Links.",
     "savedInboxMany": "Saved {{total}} items to Inbox.",
     "createdTask": "Created task \"{{title}}\".",
     "createdTasks": "Created {{total}} tasks.",

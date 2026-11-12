@@ -2,7 +2,7 @@
 
 Le contenu d'une note et la description d'une tâche sont du Markdown complet, rendu par un seul composant web (`frontend/components/Shared/MarkdownRenderer.tsx`, react-markdown + remark-gfm) : titres, gras, italique, barré, listes, cases à cocher (cliquables), tableaux, code (coloré), citations et encadrés `> [!NOTE]`, images et vidéos, liens et adresses nues (autoliens GFM), numéros de téléphone et e-mails.
 
-**Liens :** [Notes](05-notes-system.md), [Liens](37-links.md), [Personnes](19-people-and-roles.md)
+**Liens :** [Notes](05-notes-system.md), [Liens](37-links.md), [Personnes](19-people-and-roles.md), [Plan (outliner)](45-outliner.md)
 
 ## Sécurité
 
@@ -38,7 +38,7 @@ Le contenu d'une note et la description d'une tâche sont du Markdown complet, r
 
 ## Édition : barre de mise en forme et mentions
 
-Notes et descriptions de tâches s'éditent dans le même éditeur (`frontend/components/Note/MarkdownEditor.tsx`, CodeMirror avec aperçu en direct) : la description d'une tâche s'y ouvre au clic et s'enregistre quand le focus quitte l'éditeur, sa barre et ses menus.
+Notes et descriptions de tâches s'éditent dans le même éditeur (`frontend/components/Note/MarkdownEditor.tsx`, CodeMirror avec aperçu en direct), en plan par défaut (`docs/45-outliner.md`) : la description d'une tâche s'y ouvre au clic et s'enregistre quand le focus quitte l'éditeur, sa barre et ses menus.
 
 - **Barre en bas de l'éditeur** (collée en bas pendant le défilement) : gras (Ctrl/⌘+B), italique (Ctrl/⌘+I), barré (Ctrl/⌘+Maj+X), titre (cycle H1 → H2 → H3 → texte ; Ctrl/⌘+1/2/3), liste à puces, numérotée, à cases, citation, code (Ctrl/⌘+E : en ligne sur une ligne, bloc ``` ``` sur plusieurs lignes), lien (Ctrl/⌘+K), `[[ ]]` (ouvre le choix de note), `@` (ouvre le choix de personne), tableau (grille lignes × colonnes, flèches et Entrée au clavier). Le curseur dans un tableau ajoute « ajouter / supprimer une ligne, une colonne ». Chaque bouton a son `aria-label` et son raccourci dans l'infobulle ; un clic garde la sélection.
 - Les commandes sont des fonctions pures sur le texte Markdown (`frontend/components/Note/editor/markdownFormat.ts` : texte + sélection → un remplacement + nouvelle sélection) ; elles marchent dans un élément de liste (retrait et puce gardés, tableau et code retirés sous la puce). `textCommands.runEdit` les applique à CodeMirror ; une autre surface (par exemple un éditeur en plan) peut les appliquer avec `applyEdit`.
@@ -47,4 +47,12 @@ Notes et descriptions de tâches s'éditent dans le même éditeur (`frontend/co
 
 ## Android
 
-Le rendu Markdown, les puces de liens, les rétroliens, la barre de mise en forme et le choix `@` sont à reprendre (`TODO.md`) ; rien à synchroniser : les rétroliens sont calculés par le serveur depuis le texte déjà synchronisé.
+Rien à synchroniser : les rétroliens sont calculés par le serveur depuis le texte déjà synchronisé.
+
+- Rendu (`notes/Markdown.kt`, pur et testé, `ui/MarkdownView.kt`) : titres, listes et cases (cocher réécrit le texte), citations, code (rien n'y est un lien), filets, tableaux GFM, gras, italique, barré, liens et adresses nues ; la description d'une tâche se lit rendue dans sa fiche, le crayon l'édite (texte brut).
+- Puces : `[[Titre]]` ouvre la note (sinon un message), `[[task:Nom]]` la tâche de ce nom sur l'appareil (une ouverte d'abord, `WikiLinks.findTask`), `[texte](/note|task/<uid>)` l'élément ; `@[Nom](person:uid)` et `/person/<uid>` se lisent en puce sans s'ouvrir (pas de personnes sur Android).
+- Rétroliens : section « Rétroliens » en bas d'une note et d'une fiche de tâche, lue en ligne à l'ouverture (`contentlinks/BacklinksClient`), absente hors ligne ou sans lien ; toucher ouvre la note ou la tâche.
+- Cible inconnue : `[[Titre]]` sans note et `[[task:Nom]]` sans tâche sur l'appareil se lisent en puce estompée « + » ; le toucher crée la note (et l'ouvre) ou la tâche (sans projet, et ouvre sa fiche), par la file d'envoi.
+- Édition (`ui/OutlineEditor.kt`, en plan, `docs/45-outliner.md`) : barre au-dessus du clavier avec les commandes du web (`notes/MarkdownFormat.kt`, mêmes cas de test) ; tableau par tailles toutes faites (2 × 2 à 4 × 3), sans ajout ni retrait de ligne ou de colonne.
+- Choix `@` : les personnes ne sont pas synchronisées sur Android ; la liste se lit en ligne à la première ouverture (`GET /api/v1/people?archived=false`, `contentlinks/PeopleClient`) et la dernière lue reste sur l'appareil (préférences `cadence_people`) pour écrire une mention hors ligne ; jamais lue, le choix le dit. `[[` propose les titres des notes de l'appareil.
+- Rétroliens d'une personne : web seulement, Android n'a pas de fiche de personne (une mention se lit en puce sans s'ouvrir).

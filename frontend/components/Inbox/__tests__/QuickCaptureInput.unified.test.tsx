@@ -12,6 +12,7 @@ import {
     deleteProject,
     fetchProjects,
 } from '../../../utils/projectsService';
+import { createLink, deleteLink } from '../../../utils/linksService';
 import {
     createInboxItemWithStore,
     deleteInboxItemWithStore,
@@ -74,6 +75,15 @@ jest.mock('../../../utils/projectsService', () => ({
     createProject: jest.fn(),
     deleteProject: jest.fn(),
     fetchProjects: jest.fn(),
+}));
+jest.mock('../../../utils/urlService', () => ({
+    ...jest.requireActual('../../../utils/urlService'),
+    extractUrlTitle: jest.fn(async () => ({ title: 'A post' })),
+    urlPreviewWithin: jest.fn(async () => ({ title: 'A post' })),
+}));
+jest.mock('../../../utils/linksService', () => ({
+    createLink: jest.fn(),
+    deleteLink: jest.fn(),
 }));
 jest.mock('../../../utils/inboxService', () => ({
     ...jest.requireActual('../../../utils/inboxService'),
@@ -154,6 +164,15 @@ describe('QuickCaptureInput unified capture', () => {
             .mockResolvedValue({ uid: 'project-1' });
         (deleteProject as jest.Mock).mockReset().mockResolvedValue(undefined);
         (fetchProjects as jest.Mock).mockReset().mockResolvedValue([]);
+        (createLink as jest.Mock).mockReset().mockResolvedValue({
+            link: {
+                uid: 'link-1',
+                url: 'https://example.com/post',
+                title: 'A post',
+            },
+            created: true,
+        });
+        (deleteLink as jest.Mock).mockReset().mockResolvedValue(undefined);
     });
 
     afterEach(() => {
@@ -230,6 +249,55 @@ describe('QuickCaptureInput unified capture', () => {
         expect(screen.getByTestId('capture-status')).toHaveTextContent(
             'Enter saves. Shift+Enter starts a new line.'
         );
+    });
+
+    describe('an idea that is only a link', () => {
+        const typeLink = async (value: string) => {
+            await act(async () => {
+                type(value);
+            });
+        };
+
+        it('offers Inbox, Task and Note, never Links nor Project', async () => {
+            renderBox();
+            await typeLink('https://example.com/post #dev +Website');
+
+            expect(screen.queryByTestId('capture-target-project')).toBeNull();
+            expect(screen.queryByTestId('capture-target-link')).toBeNull();
+            expect(
+                screen.getByTestId('capture-target-task')
+            ).toBeInTheDocument();
+        });
+
+        it('stays in the Inbox by default', async () => {
+            renderBox();
+            await typeLink('https://example.com/post');
+            await clickAdd();
+
+            expect(createInboxItemWithStore).toHaveBeenCalledWith(
+                'https://example.com/post'
+            );
+            expect(createLink).not.toHaveBeenCalled();
+        });
+
+        it('becomes a task named after the page, the address in its note', async () => {
+            renderBox();
+            await typeLink('https://example.com/post');
+            chooseTarget('task');
+            await clickAdd();
+
+            // Named by its kind of page (an article: « Lire : … »), waiting
+            // for « Quand ? » (docs/37-links.md).
+            expect(createTaskInStore).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    name: 'A post',
+                    note: 'https://example.com/post',
+                    needs_when: true,
+                    source: 'link',
+                    source_url: 'https://example.com/post',
+                })
+            );
+        });
     });
 
     it('reads the date, tags and project for a task', async () => {

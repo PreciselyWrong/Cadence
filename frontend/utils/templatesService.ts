@@ -1,4 +1,9 @@
-import { Template, MarketplaceTemplate, CloneTemplateOptions, SaveAsTemplateOptions } from '../entities/Template';
+import {
+    Template,
+    MarketplaceTemplate,
+    CloneTemplateOptions,
+    SaveAsTemplateOptions,
+} from '../entities/Template';
 import { Project } from '../entities/Project';
 import { handleAuthResponse } from './authUtils';
 import { getApiPath } from '../config/paths';
@@ -23,24 +28,37 @@ export const fetchTemplate = async (uid: string): Promise<Template> => {
     return await response.json();
 };
 
-export const createTemplate = async (data: Partial<Template>): Promise<Template> => {
+export const createTemplate = async (
+    data: Partial<Template>
+): Promise<Template> => {
     const token = await getCsrfToken();
     const response = await fetch(getApiPath('template'), {
         method: 'POST',
         credentials: 'include',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'x-csrf-token': token },
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            'x-csrf-token': token,
+        },
         body: JSON.stringify(data),
     });
     await handleAuthResponse(response, 'Failed to create template.');
     return await response.json();
 };
 
-export const updateTemplate = async (uid: string, data: Partial<Template>): Promise<Template> => {
+export const updateTemplate = async (
+    uid: string,
+    data: Partial<Template>
+): Promise<Template> => {
     const token = await getCsrfToken();
     const response = await fetch(getApiPath(`template/${uid}`), {
         method: 'PATCH',
         credentials: 'include',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'x-csrf-token': token },
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            'x-csrf-token': token,
+        },
         body: JSON.stringify(data),
     });
     await handleAuthResponse(response, 'Failed to update template.');
@@ -62,12 +80,19 @@ export const saveProjectAsTemplate = async (
     options: SaveAsTemplateOptions = {}
 ): Promise<Template> => {
     const token = await getCsrfToken();
-    const response = await fetch(getApiPath(`project/${projectUid}/save-as-template`), {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'x-csrf-token': token },
-        body: JSON.stringify(options),
-    });
+    const response = await fetch(
+        getApiPath(`project/${projectUid}/save-as-template`),
+        {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'x-csrf-token': token,
+            },
+            body: JSON.stringify(options),
+        }
+    );
     await handleAuthResponse(response, 'Failed to save project as template.');
     return await response.json();
 };
@@ -80,7 +105,11 @@ export const cloneTemplate = async (
     const response = await fetch(getApiPath(`template/${templateUid}/clone`), {
         method: 'POST',
         credentials: 'include',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'x-csrf-token': token },
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            'x-csrf-token': token,
+        },
         body: JSON.stringify(options),
     });
     await handleAuthResponse(response, 'Failed to clone template.');
@@ -96,12 +125,17 @@ export const fetchMarketplaceTemplates = async (
         credentials: 'include',
         headers: { Accept: 'application/json' },
     });
-    await handleAuthResponse(response, 'Failed to fetch marketplace templates.');
+    await handleAuthResponse(
+        response,
+        'Failed to fetch marketplace templates.'
+    );
     const data = await response.json();
     return data.templates || [];
 };
 
-export const fetchMarketplaceTemplate = async (uid: string): Promise<MarketplaceTemplate> => {
+export const fetchMarketplaceTemplate = async (
+    uid: string
+): Promise<MarketplaceTemplate> => {
     const response = await fetch(getApiPath(`marketplace/templates/${uid}`), {
         credentials: 'include',
         headers: { Accept: 'application/json' },
@@ -110,14 +144,26 @@ export const fetchMarketplaceTemplate = async (uid: string): Promise<Marketplace
     return await response.json();
 };
 
-export const installMarketplaceTemplate = async (uid: string): Promise<Template> => {
+export const installMarketplaceTemplate = async (
+    uid: string
+): Promise<Template> => {
     const token = await getCsrfToken();
-    const response = await fetch(getApiPath(`marketplace/templates/${uid}/install`), {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'x-csrf-token': token },
-        body: JSON.stringify({}),
-    });
-    await handleAuthResponse(response, 'Failed to install marketplace template.');
+    const response = await fetch(
+        getApiPath(`marketplace/templates/${uid}/install`),
+        {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'x-csrf-token': token,
+            },
+            body: JSON.stringify({}),
+        }
+    );
+    await handleAuthResponse(
+        response,
+        'Failed to install marketplace template.'
+    );
     return await response.json();
 };

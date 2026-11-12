@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FORM } from '../../../constants/formClasses';
 import { useToast } from '../../Shared/ToastContext';
+import Button from '../../Shared/ui/Button';
 import {
     ClassifyHealth,
     ClassifyRequestError,
@@ -75,12 +76,8 @@ const FIELD_LABELS: Record<string, [string, string]> = {
 
 const card = 'mb-6 rounded-xl border border-gray-200 p-4 dark:border-gray-700';
 const heading =
-    'mb-3 text-[15px] font-semibold text-gray-900 dark:text-gray-50';
-const hint = 'mt-0.5 text-[13px] text-gray-600 dark:text-gray-300';
-const buttonBase =
-    'min-h-[40px] rounded-lg px-3 text-sm font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:opacity-50';
-const primary = `${buttonBase} bg-indigo-600 text-white hover:bg-indigo-700`;
-const secondary = `${buttonBase} text-gray-800 hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-800`;
+    'mb-3 text-body-m font-semibold text-gray-900 dark:text-gray-50';
+const hint = 'mt-0.5 text-body-m text-gray-600 dark:text-gray-300';
 
 // Profile › Classement: every setting of automatic classification, a dry run
 // on the last days, and the passes with their undo (docs/41-auto-classify.md).
@@ -292,14 +289,15 @@ const ClassifyTab: React.FC<ClassifyTabProps> = ({ isActive }) => {
                                     { count: health.retryable }
                                 )}
                             </span>
-                            <button
+                            <Button
                                 type="button"
-                                className={secondary}
+                                variant="secondary"
+                                size="md"
                                 disabled={busy}
                                 onClick={retry}
                             >
                                 {t('autoClassify.health.retry', 'Réessayer')}
-                            </button>
+                            </Button>
                         </div>
                     )}
                 </div>
@@ -499,14 +497,15 @@ const ClassifyTab: React.FC<ClassifyTabProps> = ({ isActive }) => {
             </section>
 
             <div className="mb-8">
-                <button
+                <Button
                     type="button"
-                    className={primary}
+                    variant="primary"
+                    size="md"
                     disabled={busy}
                     onClick={() => void save()}
                 >
                     {t('autoClassify.settings.save', 'Enregistrer')}
-                </button>
+                </Button>
             </div>
 
             <section className={card}>
@@ -533,14 +532,15 @@ const ClassifyTab: React.FC<ClassifyTabProps> = ({ isActive }) => {
                             }
                         />
                     </label>
-                    <button
+                    <Button
                         type="button"
-                        className={secondary}
+                        variant="secondary"
+                        size="md"
                         disabled={busy}
                         onClick={() => void dryRun()}
                     >
                         {t('autoClassify.dryRun.run', 'Lancer l’essai')}
-                    </button>
+                    </Button>
                 </div>
                 {report && (
                     <p
@@ -591,9 +591,10 @@ const ClassifyTab: React.FC<ClassifyTabProps> = ({ isActive }) => {
                                         : ''}
                                 </span>
                                 {run.undoable > 0 && (
-                                    <button
+                                    <Button
                                         type="button"
-                                        className={secondary}
+                                        variant="secondary"
+                                        size="md"
                                         onClick={() =>
                                             void undo(() =>
                                                 undoClassifyRun(run.run_id)
@@ -604,14 +605,14 @@ const ClassifyTab: React.FC<ClassifyTabProps> = ({ isActive }) => {
                                             'autoClassify.history.undoRun',
                                             'Annuler la passe'
                                         )}
-                                    </button>
+                                    </Button>
                                 )}
                             </div>
                             <ul className="mt-1 space-y-1">
                                 {run.changes.map((change) => (
                                     <li
                                         key={change.id}
-                                        className="flex flex-wrap items-center justify-between gap-2 text-[13px] text-gray-700 dark:text-gray-200"
+                                        className="flex flex-wrap items-center justify-between gap-2 text-body-m text-gray-700 dark:text-gray-200"
                                     >
                                         <span
                                             className={
@@ -626,7 +627,7 @@ const ClassifyTab: React.FC<ClassifyTabProps> = ({ isActive }) => {
                                         {change.undoable && (
                                             <button
                                                 type="button"
-                                                className="min-h-[32px] font-semibold text-indigo-600 hover:underline dark:text-indigo-400"
+                                                className="min-h-[32px] font-semibold text-primary hover:underline"
                                                 onClick={() =>
                                                     void undo(() =>
                                                         undoClassifyChange(

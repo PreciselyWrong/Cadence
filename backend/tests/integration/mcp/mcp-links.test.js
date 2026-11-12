@@ -2,7 +2,7 @@
 
 const request = require('supertest');
 const app = require('../../../app');
-const { Link } = require('../../../models');
+const { InboxItem, Link, Project } = require('../../../models');
 const { createTestUser } = require('../../helpers/testUtils');
 const {
     createApiToken: createApiTokenFromService,
@@ -118,5 +118,27 @@ describe('MCP link tools', () => {
             expect(task.needs_when).toBe(true);
             expect(task.source).toBe('link');
         });
+    });
+
+    it('leaves an idea open when the link it is said to have become is not the user’s', async () => {
+        const item = await InboxItem.create({
+            user_id: user.id,
+            content: 'https://example.com/autre',
+            status: 'added',
+            source: 'mcp',
+        });
+        const other = await createTestUser({ email: 'mcp-other@example.com' });
+        const foreign = await Link.create({
+            user_id: other.id,
+            url: 'https://example.com/autre',
+        });
+
+        const refused = await call('process_inbox_item', {
+            uid: item.uid,
+            link_uid: foreign.uid,
+        });
+        expect(refused.isError).toBe(true);
+        await item.reload();
+        expect(item.status).toBe('added');
     });
 });

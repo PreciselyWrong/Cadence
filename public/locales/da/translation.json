@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}} noter",
+        "notes_one": "{{count}} note",
+        "tasks_other": "{{count}} opgaver",
+        "tasks_one": "{{count}} opgave",
+        "goals_other": "{{count}} mål",
+        "goals_one": "{{count}} mål",
+        "projects_other": "{{count}} projekter",
+        "projects_one": "{{count}} projekt"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -128,6 +138,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(intet emne)",
+      "draft": "Kladde klar:",
+      "task": "Opgave",
+      "reply": "Svar",
+      "later": "Senere",
+      "dismiss": "Ignorer",
+      "archive": "Arkivér i Gmail",
+      "taskName": "Opgavens navn",
+      "taskDue": "Forfaldsdato",
+      "createTask": "Opret opgaven",
+      "taskCreated": "Opgave oprettet",
+      "replied": "Svar åbnet i Gmail",
+      "postponed": "Kommer igen i morgen",
+      "dismissed": "Mail ignoreret",
+      "notArchived": "Ikke arkiveret i Gmail"
+    },
     "linkLater": "Om 30 dage",
     "linkArchive": "Arkivér",
     "linkKeep": "Behold",
@@ -499,7 +526,7 @@
     "assignedTo": "Tildelt til",
     "subtasks": "Underopgaver",
     "openFullPage": "Åbn fuld visning",
-    "openPanel": "Åbn i sidepanelet",
+    "openPanel": "Åbn detaljer",
     "quickEdit": {
       "setPriority": "Angiv prioritet",
       "setDueDate": "Angiv forfaldsdato"
@@ -2331,6 +2358,15 @@
     "linkedNoteNotNow": "Ikke nu",
     "linkedNoteCreate": "Opret note",
     "linkedNoteCreateFailed": "Noten kunne ikke oprettes.",
+    "outlineZoomIn": "Zoom ind",
+    "outlineExpand": "Fold ud",
+    "outlineCollapse": "Fold sammen",
+    "outlineMakeTask": "Opret en opgave",
+    "outlineTaskCreated": "Opgave oprettet: {{name}}",
+    "outlineTaskFailed": "Kunne ikke oprette opgaven.",
+    "outlinePath": "Dispositionssti",
+    "outlineAll": "Alt",
+    "outlineBulletMenu": "Punkt",
     "backgroundImage": "Baggrund",
     "noBackground": "Ingen baggrund",
     "openInNotes": "Åbn i Noter",
@@ -4283,12 +4319,14 @@
     "task": "Opgave",
     "note": "Note",
     "project": "Projekt",
+    "link": "Links",
     "addTo": "Tilføj til",
     "filesLabel": "Filer der skal vedhæftes",
     "removeFile": "Fjern {{name}}",
     "fileTooLarge": "{{name}} er større end {{limit}} MB, så den blev ikke tilføjet.",
     "tooManyFiles": "Der kan højst tilføjes {{max}} filer ad gangen.",
     "savedInbox": "\"{{title}}\" gemt i indbakken.",
+    "savedLink": "\"{{title}}\" gemt i Links.",
     "savedInboxMany": "{{total}} elementer gemt i indbakken.",
     "createdTask": "Opgaven \"{{title}}\" er oprettet.",
     "createdTasks": "{{total}} opgaver oprettet.",

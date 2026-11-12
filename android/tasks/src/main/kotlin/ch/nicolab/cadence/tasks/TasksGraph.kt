@@ -70,6 +70,14 @@ object TasksGraph {
     /** État des dépôts git des projets TODO.md, servi par le serveur (en ligne seulement). */
     fun todoMd(context: Context): TodoMdClient = createTodoMd(context.applicationContext)
 
+    /** Rétroliens des notes et des tâches, lus en ligne. */
+    fun backlinks(context: Context): ch.nicolab.cadence.tasks.contentlinks.BacklinksClient =
+        ch.nicolab.cadence.tasks.data.createBacklinks(context.applicationContext)
+
+    /** Personnes du choix `@`, lues en ligne et gardées pour le hors ligne. */
+    fun people(context: Context): ch.nicolab.cadence.tasks.contentlinks.PeopleClient =
+        ch.nicolab.cadence.tasks.data.createPeople(context.applicationContext)
+
     /** Appareils et conflits vus du serveur (en ligne seulement). */
     fun syncStatus(context: Context): SyncStatusClient = createSyncStatus(context.applicationContext)
 

@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}} Notizen",
+        "notes_one": "{{count}} Notiz",
+        "tasks_other": "{{count}} Aufgaben",
+        "tasks_one": "{{count}} Aufgabe",
+        "goals_other": "{{count}} Ziele",
+        "goals_one": "{{count}} Ziel",
+        "projects_other": "{{count}} Projekte",
+        "projects_one": "{{count}} Projekt"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -128,6 +138,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(kein Betreff)",
+      "draft": "Entwurf bereit:",
+      "task": "Aufgabe",
+      "reply": "Antworten",
+      "later": "Später",
+      "dismiss": "Ignorieren",
+      "archive": "In Gmail archivieren",
+      "taskName": "Name der Aufgabe",
+      "taskDue": "Fälligkeit",
+      "createTask": "Aufgabe erstellen",
+      "taskCreated": "Aufgabe erstellt",
+      "replied": "Antwort in Gmail geöffnet",
+      "postponed": "Kommt morgen wieder",
+      "dismissed": "Mail ignoriert",
+      "notArchived": "Nicht in Gmail archiviert"
+    },
     "linkLater": "In 30 Tagen",
     "linkArchive": "Archivieren",
     "linkKeep": "Behalten",
@@ -499,7 +526,7 @@
     "assignedTo": "Zugewiesen an",
     "subtasks": "Unteraufgaben",
     "openFullPage": "Vollansicht öffnen",
-    "openPanel": "Im Seitenbereich öffnen",
+    "openPanel": "Details öffnen",
     "quickEdit": {
       "setPriority": "Priorität setzen",
       "setDueDate": "Fälligkeitsdatum setzen"
@@ -840,6 +867,15 @@
     "linkedNoteNotNow": "Nicht jetzt",
     "linkedNoteCreate": "Notiz erstellen",
     "linkedNoteCreateFailed": "Die Notiz konnte nicht erstellt werden.",
+    "outlineZoomIn": "Hineinzoomen",
+    "outlineExpand": "Ausklappen",
+    "outlineCollapse": "Einklappen",
+    "outlineMakeTask": "Aufgabe erstellen",
+    "outlineTaskCreated": "Aufgabe erstellt: {{name}}",
+    "outlineTaskFailed": "Die Aufgabe konnte nicht erstellt werden.",
+    "outlinePath": "Gliederungspfad",
+    "outlineAll": "Alles",
+    "outlineBulletMenu": "Aufzählungspunkt",
     "backgroundImage": "Hintergrund",
     "noBackground": "Kein Hintergrund",
     "openInNotes": "In Notizen öffnen",
@@ -4292,12 +4328,14 @@
     "task": "Aufgabe",
     "note": "Notiz",
     "project": "Projekt",
+    "link": "Links",
     "addTo": "Hinzufügen zu",
     "filesLabel": "Anzuhängende Dateien",
     "removeFile": "{{name}} entfernen",
     "fileTooLarge": "{{name}} ist größer als {{limit}} MB und wurde nicht hinzugefügt.",
     "tooManyFiles": "Es können höchstens {{max}} Dateien auf einmal hinzugefügt werden.",
     "savedInbox": "„{{title}}“ im Eingang gespeichert.",
+    "savedLink": "„{{title}}“ in Links gespeichert.",
     "savedInboxMany": "{{total}} Einträge im Eingang gespeichert.",
     "createdTask": "Aufgabe „{{title}}“ erstellt.",
     "createdTasks": "{{total}} Aufgaben erstellt.",

@@ -22,6 +22,8 @@ ROUTES = (
     ("GET", re.compile(r"^/threads$"), frozenset({"q", "maxResults"}), None),
     ("GET", re.compile(rf"^/threads/{_ID}$"), frozenset({"format", "metadataHeaders"}), None),
     ("POST", re.compile(rf"^/threads/{_ID}/modify$"), frozenset(), "inbox_label"),
+    # Corbeille d'un fil entier, récupérable 30 jours dans Gmail. Jamais de suppression définitive.
+    ("POST", re.compile(rf"^/threads/{_ID}/trash$"), frozenset(), None),
     ("GET", re.compile(r"^/drafts$"), frozenset({"maxResults", "pageToken"}), None),
     ("GET", re.compile(rf"^/drafts/{_ID}$"), frozenset({"format"}), None),
     ("POST", re.compile(r"^/drafts$"), frozenset(), "draft_create"),
@@ -29,7 +31,7 @@ ROUTES = (
 )
 # Path segments that name Gmail actions this server must never reach, even as an id value.
 REFUSED_SEGMENTS = frozenset(
-    s.lower() for s in ("send", "trash", "untrash", "delete", "batchDelete", "batchModify", "import", "insert",
+    s.lower() for s in ("send", "untrash", "delete", "batchDelete", "batchModify", "import", "insert",
                         "watch", "stop", "settings", "labels", "messages", "attachments", "history")
 )
 FORMATS = frozenset({"full", "metadata", "minimal"})
@@ -156,6 +158,9 @@ class GmailClient:
     def set_inbox(self, thread_id, in_inbox):
         body = {"addLabelIds": ["INBOX"]} if in_inbox else {"removeLabelIds": ["INBOX"]}
         return self._call("POST", f"/threads/{thread_id}/modify", body=body)
+
+    def trash_thread(self, thread_id):
+        return self._call("POST", f"/threads/{thread_id}/trash")
 
     def list_drafts(self, page_token=None):
         query = {"maxResults": 100}

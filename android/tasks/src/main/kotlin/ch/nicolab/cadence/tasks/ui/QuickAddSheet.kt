@@ -28,6 +28,7 @@ import kotlinx.coroutines.delay
 import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.model.TagItem
 import ch.nicolab.cadence.tasks.quickadd.QuickAddSeries
+import ch.nicolab.cadence.tasks.quickadd.ShareCapture
 import ch.nicolab.cadence.tasks.quickadd.QuickAddSuggestions
 import ch.nicolab.cadence.tasks.quickadd.SuggestionKind
 import ch.nicolab.cadence.tasks.quickadd.TokenAtCursor
@@ -94,6 +95,8 @@ import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
+import ch.nicolab.cadence.tasks.model.IdeaTasks
+import kotlinx.coroutines.flow.flowOf
 import ch.nicolab.cadence.tasks.model.TaskDraft
 import ch.nicolab.cadence.tasks.model.TaskPriority
 import ch.nicolab.cadence.tasks.quickadd.NamedRef
@@ -108,6 +111,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 /** Destination d'une saisie : l'Inbox (à trier), une tâche, ou une note. */
+/** Destination d'une saisie. Une adresse seule devient une tâche nommée par le genre de page (`docs/37-links.md`). */
 enum class CaptureTarget { INBOX, TASK, NOTE }
 
 private class ParsedChip(val icon: ImageVector, val label: String, val tint: Color? = null, val onRemove: () -> Unit)
@@ -148,13 +152,30 @@ fun QuickAddSheet(
     val moment by viewModel.moment.collectAsStateWithLifecycle()
     val today = moment.today
     val clock = remember(moment.zone) { Clock.system(moment.zone) }
+    val context = androidx.compose.ui.platform.LocalContext.current
 
     var field by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue(initialName, TextRange(initialName.length)))
     }
     val text = field.text
     var target by rememberSaveable { mutableStateOf(targets.firstOrNull() ?: CaptureTarget.TASK) }
+    // Un lien seul (web : `linkOnlyAddress`) propose Inbox, Tâche et Note, Inbox d'office ; un mot de plus les retire.
+    val linkOnly = remember(field.text) { IdeaTasks.linkOnly(field.text) }
+    val shownTargets = if (linkOnly != null && CaptureTarget.INBOX in targets) {
+        listOf(CaptureTarget.INBOX, CaptureTarget.TASK, CaptureTarget.NOTE).filter { it in targets }
+    } else {
+        targets
+    }
+    var targetChosen by rememberSaveable { mutableStateOf(false) }
+    // Titre de la page du lien seul, lu par le serveur (jamais l'appareil vers le site) : nom de la tâche ou du lien.
+    val pageTitle by remember(linkOnly) { linkOnly?.let { viewModel.linkPreviews.observe(it) } ?: flowOf(null) }
+        .collectAsStateWithLifecycle(null)
+    LaunchedEffect(linkOnly) { linkOnly?.let { viewModel.linkPreviews.ensure(it) } }
+    LaunchedEffect(linkOnly != null) {
+        if (linkOnly != null && !targetChosen && CaptureTarget.INBOX in targets) target = CaptureTarget.INBOX
+    }
     val isTask = target == CaptureTarget.TASK
+    val readsTokens = isTask
     var ignored by rememberSaveable { mutableStateOf(emptyList<String>()) }
     var moreOptions by rememberSaveable { mutableStateOf(expanded) }
     val initialSlot = initialDate?.let { it to initialTime }
@@ -179,10 +200,10 @@ fun QuickAddSheet(
     val tagRefs = remember(tags) { tags.map { NamedRef(it.uid, it.name) } }
     val areaRefs = remember(areas) { areas.map { NamedRef(it.uid, it.name) } }
     val tagColors = remember(tags) { tagBadgeColors(tags) }
-    val parsed = remember(text, ignored, projectRefs, tagRefs, areaRefs, clock, isTask) {
+    val parsed = remember(text, ignored, projectRefs, tagRefs, areaRefs, clock, readsTokens) {
         val result = QuickAddParser.parse(text, clock, projectRefs, tagRefs, ignored.toSet(), areaRefs)
-        // Une idée ou une note garde le texte tel quel : rien n'y est reconnu.
-        if (isTask) result else result.copy(title = text.trim(), tokens = emptyList())
+        // Une idée ou une note garde le texte tel quel : rien n'y est reconnu (un lien garde ses étiquettes et son projet).
+        if (readsTokens) result else result.copy(title = text.trim(), tokens = emptyList())
     }
     val date = dateOverride?.first ?: parsed.date
     val time = if (dateOverride != null) dateOverride?.second else parsed.time
@@ -249,9 +270,15 @@ fun QuickAddSheet(
             }
             CaptureTarget.TASK -> Unit
         }
+        // Un lien seul devient une tâche nommée par le genre de page (« Essayer : … »), l'adresse en note et en
+        // origine ; sans projet, elle attend « Quand ? » (`docs/37-links.md`).
+        val fromLink = linkOnly?.takeIf { initialNote == null }
         val draft = TaskDraft(
-            name = title,
-            note = initialNote,
+            name = fromLink?.let { IdeaTasks.taskName(it, pageTitle?.title, ShareCapture.verbs(context)) } ?: title,
+            needsWhen = fromLink != null && projectUid == null,
+            note = fromLink ?: initialNote,
+            source = fromLink?.let { "link" },
+            sourceUrl = fromLink,
             dueDate = date,
             dueTime = time?.let(::wireTime),
             priority = priority,
@@ -286,7 +313,7 @@ fun QuickAddSheet(
 
     val priorityBadgeText = priority?.let { stringResource(priorityBadge(it)) }
     val dateText = date?.let { compactDateTime(it, time, today) }
-    val chips = if (!isTask) emptyList() else buildList {
+    val chips = if (!readsTokens) emptyList() else buildList {
         projects.firstOrNull { it.uid == projectUid }?.let { project ->
             add(ParsedChip(Icons.Outlined.Folder, project.name) {
                 projectOverride = null
@@ -352,11 +379,14 @@ fun QuickAddSheet(
             Modifier.fillMaxWidth().imePadding(),
             verticalArrangement = Arrangement.spacedBy(Space.md),
         ) {
-            if (targets.size > 1) {
+            if (shownTargets.size > 1) {
                 SegmentedTabs(
-                    labels = targets.map { stringResource(it.label) },
-                    selected = targets.indexOf(target),
-                    onSelect = { target = targets[it] },
+                    labels = shownTargets.map { stringResource(it.label) },
+                    selected = shownTargets.indexOf(target),
+                    onSelect = {
+                        target = shownTargets[it]
+                        targetChosen = true
+                    },
                 )
             }
             CaptureBox(

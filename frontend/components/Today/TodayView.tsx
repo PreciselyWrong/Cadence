@@ -42,7 +42,11 @@ import {
     Bars3BottomLeftIcon,
     CalendarDaysIcon,
     ChevronDoubleRightIcon,
+    XMarkIcon,
 } from '@heroicons/react/24/outline';
+import { useViewportWidth } from '../../hooks/useViewportWidth';
+import { weekdayTitle } from '../Upcoming/dayLabel';
+import { todayCalendarPlacement } from './calendarPlacement';
 import TodayPage from '../DailyPlan/TodayPage';
 import PaneSplitter, {
     PANE_MIN,
@@ -175,6 +179,9 @@ const NewToday: React.FC = () => {
         writeHideCompleted(hide);
     };
     const [mobileView, setMobileView] = useState<'list' | 'calendar'>('list');
+    // The calendar as a drawer (narrow desktop windows) opens on demand only.
+    const [drawerOpen, setDrawerOpen] = useState(false);
+    const viewport = useViewportWidth();
     const panesRef = useRef<HTMLDivElement>(null);
     const gridRef = useRef<HTMLDivElement>(null);
     // Its own key: the earlier page stored a narrower candidates column.
@@ -858,9 +865,7 @@ const NewToday: React.FC = () => {
           ? t('today.tomorrow', 'Tomorrow')
           : date === format(addDays(parseISO(today), -1), 'yyyy-MM-dd')
             ? t('today.yesterday', 'Yesterday')
-            : new Intl.DateTimeFormat(locale, { weekday: 'long' }).format(
-                  dateObj
-              );
+            : weekdayTitle(dateObj, locale);
     // Beside the heavy title, as in Sorted³ ("Today Tue Sep 1").
     const subtitle = new Intl.DateTimeFormat(locale, {
         weekday: 'short',
@@ -879,7 +884,12 @@ const NewToday: React.FC = () => {
               .filter(Boolean)
               .join(' · ');
 
-    const showCalendar = narrow ? mobileView === 'calendar' : calendarOpen;
+    const placement = todayCalendarPlacement(viewport, pane.fits);
+    const showCalendar = narrow
+        ? mobileView === 'calendar'
+        : placement === 'split'
+          ? calendarOpen
+          : drawerOpen;
     const setCalendar = (open: boolean) => {
         setCalendarOpen(open);
         try {
@@ -1054,7 +1064,9 @@ const NewToday: React.FC = () => {
                             onClick={() =>
                                 narrow
                                     ? setMobileView('calendar')
-                                    : setCalendar(true)
+                                    : placement === 'drawer'
+                                      ? setDrawerOpen(true)
+                                      : setCalendar(true)
                             }
                         >
                             {t('today.calendarButton', 'Calendar')}
@@ -1201,6 +1213,16 @@ const NewToday: React.FC = () => {
                     >
                         {t('today.backToList', 'List')}
                     </Button>
+                ) : placement === 'drawer' ? (
+                    <IconButton
+                        label={t(
+                            'upcoming.closeCalendar',
+                            'Close the calendar'
+                        )}
+                        onClick={() => setDrawerOpen(false)}
+                    >
+                        <XMarkIcon />
+                    </IconButton>
                 ) : (
                     <IconButton
                         label={t('today.hideCalendar', 'Hide the calendar')}
@@ -1274,7 +1296,8 @@ const NewToday: React.FC = () => {
     );
 
     const showList = !narrow || mobileView === 'list';
-    const sideBySide = !narrow && showCalendar && pane.fits;
+    const sideBySide = !narrow && showCalendar && placement === 'split';
+    const asDrawer = !narrow && showCalendar && placement === 'drawer';
 
     return (
         <DndContext
@@ -1292,7 +1315,7 @@ const NewToday: React.FC = () => {
             <div
                 ref={panesRef}
                 data-testid="today-view"
-                className="flex h-full min-h-0 w-full bg-surface max-md:h-auto max-md:min-h-[calc(100dvh-3.5rem)] max-md:pb-24"
+                className="relative flex h-full min-h-0 w-full bg-surface max-md:h-auto max-md:min-h-[calc(100dvh-3.5rem)] max-md:pb-24"
             >
                 {showList && (
                     <section
@@ -1317,7 +1340,7 @@ const NewToday: React.FC = () => {
                         onChange={pane.update}
                     />
                 )}
-                {showCalendar && (
+                {showCalendar && !asDrawer && (
                     <section
                         aria-label={t('today.calendar', 'Day calendar')}
                         className={`flex min-h-0 min-w-0 flex-1 flex-col ${
@@ -1325,6 +1348,20 @@ const NewToday: React.FC = () => {
                                 ? 'border-l border-outline-variant/60'
                                 : ''
                         }`}
+                    >
+                        {calendar}
+                    </section>
+                )}
+                {asDrawer && (
+                    <section
+                        aria-label={t('today.calendar', 'Day calendar')}
+                        data-drawer="true"
+                        onKeyDown={(event) => {
+                            if (event.key === 'Escape' && !dragging) {
+                                setDrawerOpen(false);
+                            }
+                        }}
+                        className="absolute inset-y-0 right-0 z-30 flex w-[min(400px,100%)] flex-col border-l border-outline-variant/60 bg-surface shadow-xl"
                     >
                         {calendar}
                     </section>

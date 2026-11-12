@@ -13,6 +13,7 @@ import { ResizeHandle, useEventResize } from './useEventResize';
 import { DragBlock, DropTarget } from './DndCalendarParts';
 import AllDayOverflow from './AllDayOverflow';
 import { dropMinuteOfDay, pointerOffsetIn } from './dropTime';
+import { blockTone } from './blockTone';
 import { VisibleHours, WHOLE_DAY, countOutside } from './visibleHours';
 import HiddenHoursBar, {
     HIDDEN_HOURS_STRIPES,
@@ -191,7 +192,7 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
     );
 
     const blockStyle = (event: CalendarEvent): React.CSSProperties => ({
-        backgroundColor: event.color || '#3b82f6',
+        ...blockTone(event).style,
         opacity: event.readOnly ? 0.6 : undefined,
     });
 
@@ -205,10 +206,10 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                 className={`p-5 border-b border-gray-200 dark:border-gray-600 text-center ${todayClass ? 'bg-blue-50 dark:bg-blue-900/15' : 'bg-gray-50 dark:bg-gray-800'}`}
             >
                 <div
-                    className={`text-xs font-semibold tracking-widest uppercase mb-2 ${
+                    className={`text-xs font-medium mb-2 ${
                         todayClass
                             ? 'text-blue-500 dark:text-blue-400'
-                            : 'text-gray-500 dark:text-gray-400'
+                            : 'text-surface-on-variant'
                     }`}
                 >
                     {format(currentDate, 'EEEE', {
@@ -250,8 +251,7 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                     <div className="space-y-1">
                         {allDayEvents.slice(0, 3).map((event) => {
                             const body = event.title;
-                            const className =
-                                'text-xs px-2.5 py-1.5 rounded-lg text-white cursor-pointer hover:opacity-90 transition-opacity font-medium';
+                            const className = `text-xs px-2.5 py-1.5 rounded-lg cursor-pointer hover:opacity-90 transition-opacity font-medium ${blockTone(event).className}`;
                             const click = (e: React.MouseEvent) => {
                                 e.stopPropagation();
                                 onEventClick?.(event);
@@ -278,6 +278,7 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                                     }
                                     onDragEnd={handleDragEnd}
                                     onClick={click}
+                                    data-calendar-block=""
                                     className={className}
                                     style={blockStyle(event)}
                                     title={event.title}
@@ -366,7 +367,7 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                     <div className="absolute inset-y-0 left-20 right-0 pointer-events-none">
                         {shownEvents.map((event) => {
                             const layout = layoutEvent(event);
-                            const className = `absolute text-xs px-2.5 py-1.5 rounded-lg text-white z-10 font-medium overflow-hidden cursor-pointer hover:opacity-90 transition-opacity pointer-events-auto ${
+                            const className = `absolute text-xs px-2.5 py-1.5 rounded-lg z-10 font-medium overflow-hidden cursor-pointer hover:opacity-90 transition-opacity pointer-events-auto ${blockTone(event).className} ${
                                 event.type === 'task' ? 'cursor-move' : ''
                             } ${draggedEventId === event.id ? 'opacity-40' : ''}`;
                             const style: React.CSSProperties = {
@@ -410,6 +411,7 @@ const CalendarDayView: React.FC<CalendarDayViewProps> = ({
                                     }
                                     onDragEnd={handleDragEnd}
                                     onClick={click}
+                                    data-calendar-block=""
                                     className={className}
                                     style={style}
                                     title={title}

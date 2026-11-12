@@ -61,6 +61,7 @@ const CLEANUP_TABLES = [
     'project_attachments',
     'note_attachments',
     'brief_proposals',
+    'mail_items',
     'auto_classify_suggestions',
     'auto_classify_changes',
     'auto_classify_items',

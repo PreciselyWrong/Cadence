@@ -5,6 +5,8 @@ import { fetchTaskByUid } from '../../utils/tasksService';
 import { useToast } from '../Shared/ToastContext';
 import { useTaskPanel } from '../../store/taskPanelStore';
 import TaskModal from './TaskModal';
+import { useLocation } from 'react-router-dom';
+import { canShowTaskPane, useTaskPane } from '../../contexts/TaskPaneContext';
 
 const TaskPanelHost: React.FC = () => {
     const { t } = useTranslation();
@@ -13,9 +15,24 @@ const TaskPanelHost: React.FC = () => {
     const occurrenceDate = useTaskPanel((state) => state.occurrenceDate);
     const close = useTaskPanel((state) => state.close);
     const [task, setTask] = useState<Task | null>(null);
+    const location = useLocation();
+    const { openTask } = useTaskPane();
+    // One sheet for every page: a task opened by uid goes to the floating
+    // sheet. A later occurrence of a series (edited alone) and the task and
+    // habit pages, where the sheet does not show, keep the dialog.
+    const toSheet =
+        !!uid &&
+        !occurrenceDate &&
+        canShowTaskPane(location.pathname, `?task=${uid}`);
 
     useEffect(() => {
-        if (!uid) {
+        if (!toSheet || !uid) return;
+        openTask(uid);
+        close();
+    }, [toSheet, uid]);
+
+    useEffect(() => {
+        if (!uid || toSheet) {
             setTask(null);
             return;
         }
@@ -41,7 +58,7 @@ const TaskPanelHost: React.FC = () => {
         return () => {
             cancelled = true;
         };
-    }, [uid, occurrenceDate]);
+    }, [uid, occurrenceDate, toSheet]);
 
     if (!uid || !task || task.uid !== uid) return null;
 

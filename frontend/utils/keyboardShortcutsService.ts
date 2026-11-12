@@ -1,7 +1,8 @@
 // Keyboard Shortcuts Service
 // Provides types, defaults, and utility functions for keyboard shortcuts
 
-export type ShortcutAction = 'inbox' | 'task' | 'project' | 'note' | 'area' | 'tag';
+export type ShortcutAction =
+    'inbox' | 'task' | 'project' | 'note' | 'area' | 'tag';
 
 export interface KeyboardShortcut {
     action: ShortcutAction;
@@ -21,21 +22,66 @@ export interface KeyboardShortcutsConfig {
 
 // Default shortcuts using Alt+Shift to avoid browser conflicts
 export const DEFAULT_SHORTCUTS: KeyboardShortcut[] = [
-    { action: 'inbox', key: 'i', modifiers: { alt: true, shift: true, ctrl: false, meta: false } },
-    { action: 'task', key: 't', modifiers: { alt: true, shift: true, ctrl: false, meta: false } },
-    { action: 'project', key: 'p', modifiers: { alt: true, shift: true, ctrl: false, meta: false } },
-    { action: 'note', key: 'n', modifiers: { alt: true, shift: true, ctrl: false, meta: false } },
-    { action: 'area', key: 'a', modifiers: { alt: true, shift: true, ctrl: false, meta: false } },
-    { action: 'tag', key: 'g', modifiers: { alt: true, shift: true, ctrl: false, meta: false } },
+    {
+        action: 'inbox',
+        key: 'i',
+        modifiers: { alt: true, shift: true, ctrl: false, meta: false },
+    },
+    {
+        action: 'task',
+        key: 't',
+        modifiers: { alt: true, shift: true, ctrl: false, meta: false },
+    },
+    {
+        action: 'project',
+        key: 'p',
+        modifiers: { alt: true, shift: true, ctrl: false, meta: false },
+    },
+    {
+        action: 'note',
+        key: 'n',
+        modifiers: { alt: true, shift: true, ctrl: false, meta: false },
+    },
+    {
+        action: 'area',
+        key: 'a',
+        modifiers: { alt: true, shift: true, ctrl: false, meta: false },
+    },
+    {
+        action: 'tag',
+        key: 'g',
+        modifiers: { alt: true, shift: true, ctrl: false, meta: false },
+    },
 ];
 
-export const SHORTCUT_LABELS: Record<ShortcutAction, { labelKey: string; defaultLabel: string }> = {
-    inbox: { labelKey: 'profile.shortcuts.actions.inbox', defaultLabel: 'Create new Inbox item' },
-    task: { labelKey: 'profile.shortcuts.actions.task', defaultLabel: 'Create new Task' },
-    project: { labelKey: 'profile.shortcuts.actions.project', defaultLabel: 'Create new Project' },
-    note: { labelKey: 'profile.shortcuts.actions.note', defaultLabel: 'Create new Note' },
-    area: { labelKey: 'profile.shortcuts.actions.area', defaultLabel: 'Create new Area' },
-    tag: { labelKey: 'profile.shortcuts.actions.tag', defaultLabel: 'Create new Tag' },
+export const SHORTCUT_LABELS: Record<
+    ShortcutAction,
+    { labelKey: string; defaultLabel: string }
+> = {
+    inbox: {
+        labelKey: 'profile.shortcuts.actions.inbox',
+        defaultLabel: 'Create new Inbox item',
+    },
+    task: {
+        labelKey: 'profile.shortcuts.actions.task',
+        defaultLabel: 'Create new Task',
+    },
+    project: {
+        labelKey: 'profile.shortcuts.actions.project',
+        defaultLabel: 'Create new Project',
+    },
+    note: {
+        labelKey: 'profile.shortcuts.actions.note',
+        defaultLabel: 'Create new Note',
+    },
+    area: {
+        labelKey: 'profile.shortcuts.actions.area',
+        defaultLabel: 'Create new Area',
+    },
+    tag: {
+        labelKey: 'profile.shortcuts.actions.tag',
+        defaultLabel: 'Create new Tag',
+    },
 };
 
 /**
@@ -121,7 +167,9 @@ export const isInputElement = (element: EventTarget | null): boolean => {
  * Validates shortcuts for duplicates
  * Returns an array of conflict descriptions
  */
-export const validateShortcuts = (shortcuts: KeyboardShortcut[]): {
+export const validateShortcuts = (
+    shortcuts: KeyboardShortcut[]
+): {
     valid: boolean;
     duplicates: string[];
 } => {
@@ -167,7 +215,7 @@ export const getShortcutByAction = (
     shortcuts: KeyboardShortcut[],
     action: ShortcutAction
 ): KeyboardShortcut | undefined => {
-    return shortcuts.find(s => s.action === action);
+    return shortcuts.find((s) => s.action === action);
 };
 
 /**

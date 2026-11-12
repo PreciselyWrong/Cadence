@@ -19,12 +19,12 @@ class LinkPreviewsMigrationTest {
 
     @Test
     fun migrationKeepsCachedPreviewsAndLeavesTheNewFieldsEmpty() {
-        helper.createDatabase("link-previews", 18).apply {
+        helper.createDatabase("link-previews", 19).apply {
             execSQL("INSERT INTO link_previews (url, title, description, imageUrl, fetchedAtMs, failed) VALUES ('https://a.example', 'Titre', NULL, NULL, 1000, 0)")
             close()
         }
 
-        helper.runMigrationsAndValidate("link-previews", 19, true, MIGRATION_18_19).use { db ->
+        helper.runMigrationsAndValidate("link-previews", 20, true, MIGRATION_19_20).use { db ->
             db.query("SELECT title, siteName, kind, githubStars, githubLanguage, githubLastCommit FROM link_previews WHERE url = 'https://a.example'").use {
                 assertTrue(it.moveToFirst())
                 assertEquals("Titre", it.getString(0))

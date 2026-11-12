@@ -20,7 +20,7 @@ class LinkPagesMigrationTest {
 
     @Test
     fun migrationKeepsOnlyTheProjectPagesAndDropsTheRestOfTheLinks() {
-        helper.createDatabase("link-pages", 19).apply {
+        helper.createDatabase("link-pages", 20).apply {
             execSQL(
                 "INSERT INTO links (uid, url, title, note, tagUidsJson, status, reviewAtRaw, sourceType, sourceUid, projectUid, fetchStatus, createdAtRaw) " +
                     "VALUES ('page', 'https://a.io/x', 'Guide', 'à relire', '[\"t1\"]', 'dropped', '2027-01-02', 'task', 't1', 'p1', 'done', '2026-10-01T00:00:00Z')",
@@ -41,7 +41,7 @@ class LinkPagesMigrationTest {
             close()
         }
 
-        helper.runMigrationsAndValidate("link-pages", 20, true, MIGRATION_19_20).use { db ->
+        helper.runMigrationsAndValidate("link-pages", 21, true, MIGRATION_20_21).use { db ->
             db.query("SELECT uid, url, title, note, projectUid, fetchStatus, createdAtRaw FROM links").use {
                 assertTrue(it.moveToFirst())
                 assertEquals("page", it.getString(0))

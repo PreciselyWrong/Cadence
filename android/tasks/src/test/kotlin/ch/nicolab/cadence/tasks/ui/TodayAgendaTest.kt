@@ -161,4 +161,15 @@ class TodayAgendaTest {
             labels(mergeTodayItems(listOf(untimedTask("a"), untimedTask("b")), emptyList(), zone)),
         )
     }
+
+    @Test
+    fun `les tâches sans heure du plan suivent son ordre, devant les autres`() {
+        val items = mergeTodayItems(
+            listOf(untimedTask("libre"), untimedTask("b"), untimedTask("a")),
+            emptyList(),
+            zone,
+            planOrder = listOf("a", "b"),
+        )
+        assertEquals(listOf("a", "b", "libre"), labels(items))
+    }
 }

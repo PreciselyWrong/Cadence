@@ -2,6 +2,7 @@
 
 const express = require('express');
 const triage = require('./service');
+const mail = require('./mail');
 const { logError } = require('../../services/logService');
 const { AppError } = require('../../shared/errors');
 
@@ -30,6 +31,13 @@ router.post(
 router.post(
     '/triage/apply',
     handle((req) => triage.apply(req.currentUser, req.body ?? {}))
+);
+
+router.post(
+    '/triage/mail/:uid/decide',
+    handle((req) =>
+        mail.decide(req.currentUser, req.params.uid, req.body ?? {})
+    )
 );
 
 module.exports = router;

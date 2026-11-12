@@ -327,11 +327,11 @@ describe('UpcomingBoard', () => {
         expect(
             await screen.findByRole('heading', { level: 1, name: 'Plan' })
         ).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: 'Days' })).toHaveAttribute(
-            'aria-pressed',
+        expect(screen.getByRole('tab', { name: 'Days' })).toHaveAttribute(
+            'aria-selected',
             'true'
         );
-        expect(screen.getByRole('button', { name: 'Horizons' })).toBeEnabled();
+        expect(screen.getByRole('tab', { name: 'Horizons' })).toBeEnabled();
     });
 
     it('switches to Horizons: four columns from one task fetch, remembered', async () => {
@@ -347,9 +347,7 @@ describe('UpcomingBoard', () => {
             metrics: {} as never,
         });
         renderBoard();
-        fireEvent.click(
-            await screen.findByRole('button', { name: 'Horizons' })
-        );
+        fireEvent.click(await screen.findByRole('tab', { name: 'Horizons' }));
 
         const columns = await screen.findAllByTestId('horizon-column');
         expect(columns.map((c) => c.getAttribute('data-horizon'))).toEqual([
@@ -365,7 +363,7 @@ describe('UpcomingBoard', () => {
             within(columns[3]).getByText('Learn the cello')
         ).toBeInTheDocument();
         expect(
-            within(columns[1]).getByText('Nothing here yet.')
+            within(columns[1]).getByText('Nothing planned.')
         ).toBeInTheDocument();
         expect(screen.queryAllByTestId('upcoming-column')).toHaveLength(0);
         expect(mockFetchTasks).toHaveBeenCalledWith('?status=active');
@@ -1096,9 +1094,7 @@ describe('UpcomingBoard', () => {
         renderBoard();
         const week = (await screen.findAllByTestId('horizon-column'))[0];
         expect(
-            await within(week).findByText(
-                'Nothing without a fixed day · 1 planned on a day'
-            )
+            await within(week).findByText('1 planned on a day')
         ).toBeInTheDocument();
         const toggle = within(week).getByRole('button', {
             name: /Planned on a day/,

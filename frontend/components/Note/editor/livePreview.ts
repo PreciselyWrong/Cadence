@@ -17,6 +17,7 @@ import {
     selectionTouches,
     setPointerDown,
 } from './blockWidgets';
+import { outlineMode } from './outlineMode';
 import {
     BulletWidget,
     CalloutTitleWidget,
@@ -61,6 +62,7 @@ export function buildLivePreview(
     const codeRanges: TextRange[] = [];
     const seenLines = new Set<string>();
     const doc = state.doc;
+    const outline = state.facet(outlineMode);
 
     const touches = (from: number, to: number) =>
         selectionTouches(state, from, to);
@@ -243,7 +245,11 @@ export function buildLivePreview(
                     const isTask = !!ref.node.getChild('Task');
                     const isBullet = ref.node.parent?.name === 'BulletList';
 
-                    if (lineTouched(mark.from)) {
+                    // In the outliner a bullet stays a dot under the caret.
+                    if (
+                        lineTouched(mark.from) &&
+                        !(outline && (isBullet || isTask))
+                    ) {
                         addMark(mark.from, mark.to, 'cm-md-marker');
                         return;
                     }
@@ -358,12 +364,18 @@ export function buildLivePreview(
             const show = touches(from, to);
             marker(from, from + 2, show);
             marker(to - 2, to, show);
+            // [[task:Name]] reads as a TASK chip without its prefix.
+            const taskPrefix = /^\s*task:\s*/i.exec(match[1]);
+            const textFrom = from + 2 + (taskPrefix ? taskPrefix[0].length : 0);
+            if (taskPrefix) marker(from + 2, textFrom, show);
             // Away from the caret the link reads as a chip and opens on a
             // plain click; with the caret on it, it is ordinary editable text.
             addMark(
-                from + 2,
+                textFrom,
                 to - 2,
-                show ? 'cm-md-wikilink' : 'cm-md-wikilink cm-md-wikilink-chip',
+                show
+                    ? 'cm-md-wikilink'
+                    : `cm-md-wikilink cm-md-wikilink-chip${taskPrefix ? ' cm-md-wikilink-task' : ''}`,
                 { 'data-wikilink': match[1].trim() }
             );
         }

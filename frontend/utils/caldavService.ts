@@ -15,7 +15,8 @@ export interface CalDAVCalendar {
     sync_interval_minutes: number;
     last_sync_at: string | null;
     last_sync_status: string | null;
-    conflict_resolution: 'last_write_wins' | 'local_wins' | 'remote_wins' | 'manual';
+    conflict_resolution:
+        'last_write_wins' | 'local_wins' | 'remote_wins' | 'manual';
     created_at: string;
     updated_at: string;
     stats?: {
@@ -137,7 +138,12 @@ export const createCalendar = async (data: {
 
 export const updateCalendar = async (
     id: number,
-    data: Partial<Omit<CalDAVCalendar, 'id' | 'uid' | 'user_id' | 'created_at' | 'updated_at'>>
+    data: Partial<
+        Omit<
+            CalDAVCalendar,
+            'id' | 'uid' | 'user_id' | 'created_at' | 'updated_at'
+        >
+    >
 ): Promise<CalDAVCalendar> => {
     const csrfToken = await getCsrfToken();
     const response = await fetch(getApiPath(`/caldav/calendars/${id}`), {
@@ -210,7 +216,9 @@ export const createRemoteCalendar = async (data: {
 
 export const updateRemoteCalendar = async (
     id: number,
-    data: Partial<Omit<RemoteCalendar, 'id' | 'user_id' | 'created_at' | 'updated_at'>>
+    data: Partial<
+        Omit<RemoteCalendar, 'id' | 'user_id' | 'created_at' | 'updated_at'>
+    >
 ): Promise<RemoteCalendar> => {
     const csrfToken = await getCsrfToken();
     const response = await fetch(getApiPath(`/caldav/remote-calendars/${id}`), {
@@ -257,15 +265,18 @@ export const testConnection = async (data: {
     message: string;
 }> => {
     const csrfToken = await getCsrfToken();
-    const response = await fetch(getApiPath('/caldav/remote-calendars/test-connection'), {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-Token': csrfToken,
-        },
-        credentials: 'include',
-        body: JSON.stringify(data),
-    });
+    const response = await fetch(
+        getApiPath('/caldav/remote-calendars/test-connection'),
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': csrfToken,
+            },
+            credentials: 'include',
+            body: JSON.stringify(data),
+        }
+    );
     if (!response.ok) {
         const error = await response.json();
         throw new Error(error.error || 'Connection test failed');
@@ -325,7 +336,9 @@ export const getSyncStatus = async (id: number): Promise<SyncStatus> => {
     return response.json();
 };
 
-export const fetchConflicts = async (calendarId?: number): Promise<ConflictDetail[]> => {
+export const fetchConflicts = async (
+    calendarId?: number
+): Promise<ConflictDetail[]> => {
     const url = calendarId
         ? getApiPath(`/caldav/conflicts?calendarId=${calendarId}`)
         : getApiPath('/caldav/conflicts');
@@ -344,15 +357,18 @@ export const resolveConflict = async (
     resolution: 'local' | 'remote'
 ): Promise<any> => {
     const csrfToken = await getCsrfToken();
-    const response = await fetch(getApiPath(`/caldav/conflicts/${taskId}/resolve`), {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-Token': csrfToken,
-        },
-        credentials: 'include',
-        body: JSON.stringify({ calendarId, resolution }),
-    });
+    const response = await fetch(
+        getApiPath(`/caldav/conflicts/${taskId}/resolve`),
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': csrfToken,
+            },
+            credentials: 'include',
+            body: JSON.stringify({ calendarId, resolution }),
+        }
+    );
     if (!response.ok) {
         const error = await response.json();
         throw new Error(error.error || 'Failed to resolve conflict');

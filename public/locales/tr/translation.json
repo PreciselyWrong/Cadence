@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}} not",
+        "notes_one": "{{count}} not",
+        "tasks_other": "{{count}} görev",
+        "tasks_one": "{{count}} görev",
+        "goals_other": "{{count}} hedef",
+        "goals_one": "{{count}} hedef",
+        "projects_other": "{{count}} proje",
+        "projects_one": "{{count}} proje"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -128,6 +138,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(konu yok)",
+      "draft": "Taslak hazır:",
+      "task": "Görev",
+      "reply": "Yanıtla",
+      "later": "Sonra",
+      "dismiss": "Yok say",
+      "archive": "Gmail'de arşivle",
+      "taskName": "Görev adı",
+      "taskDue": "Son tarih",
+      "createTask": "Görevi oluştur",
+      "taskCreated": "Görev oluşturuldu",
+      "replied": "Yanıt Gmail'de açıldı",
+      "postponed": "Yarın geri gelir",
+      "dismissed": "E-posta yok sayıldı",
+      "notArchived": "Gmail'de arşivlenmedi"
+    },
     "linkLater": "30 gün sonra",
     "linkArchive": "Arşivle",
     "linkKeep": "Tut",
@@ -499,7 +526,7 @@
     "assignedTo": "Atanan",
     "subtasks": "Alt görevler",
     "openFullPage": "Tam görünümü aç",
-    "openPanel": "Yan panelde aç",
+    "openPanel": "Ayrıntıları aç",
     "quickEdit": {
       "setPriority": "Öncelik ayarla",
       "setDueDate": "Bitiş tarihi ayarla"
@@ -2331,6 +2358,15 @@
     "linkedNoteNotNow": "Şimdi değil",
     "linkedNoteCreate": "Not oluştur",
     "linkedNoteCreateFailed": "Not oluşturulamadı.",
+    "outlineZoomIn": "Yakınlaştır",
+    "outlineExpand": "Genişlet",
+    "outlineCollapse": "Daralt",
+    "outlineMakeTask": "Görev oluştur",
+    "outlineTaskCreated": "Görev oluşturuldu: {{name}}",
+    "outlineTaskFailed": "Görev oluşturulamadı.",
+    "outlinePath": "Ana hat yolu",
+    "outlineAll": "Tümü",
+    "outlineBulletMenu": "Madde işareti",
     "backgroundImage": "Arka plan",
     "noBackground": "Arka plan yok",
     "openInNotes": "Notlar'da aç",
@@ -4283,12 +4319,14 @@
     "task": "Görev",
     "note": "Not",
     "project": "Proje",
+    "link": "Bağlantılar",
     "addTo": "Şuraya ekle",
     "filesLabel": "Eklenecek dosyalar",
     "removeFile": "{{name}} kaldır",
     "fileTooLarge": "{{name}} {{limit}} MB'tan büyük olduğu için eklenmedi.",
     "tooManyFiles": "Tek seferde en fazla {{max}} dosya eklenebilir.",
     "savedInbox": "\"{{title}}\" Gelen Kutusu'na kaydedildi.",
+    "savedLink": "\"{{title}}\" Bağlantılar'a kaydedildi.",
     "savedInboxMany": "{{total}} öğe Gelen Kutusu'na kaydedildi.",
     "createdTask": "\"{{title}}\" görevi oluşturuldu.",
     "createdTasks": "{{total}} görev oluşturuldu.",

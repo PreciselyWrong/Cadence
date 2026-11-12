@@ -130,4 +130,13 @@ class FunnelWireTest {
         val later = TaskFields.decision(TaskChange(later = true), inViewAtRaw = null, tagUids = emptyList(), somedayUid = "s", nowIso = now)
         assertEquals(JsonNull, later.getValue("month_of"))
     }
+
+    @Test
+    fun `source and source_url have their own columns and go back to the wire`() {
+        val row = WireCodec.taskFromWire(Json.parseToJsonElement("""{"uid":"t1","name":"Mail","source":"gmail","source_url":"https://mail.google.com/x"}""").jsonObject)
+        assertEquals("gmail", row.source)
+        assertEquals("https://mail.google.com/x", row.sourceUrl)
+        assertFalse("source" in TaskExtras.parse(row.extrasJson))
+        assertEquals("gmail", WireCodec.taskToWire(row).getValue("source").jsonPrimitive.content)
+    }
 }

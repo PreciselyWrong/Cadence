@@ -49,6 +49,7 @@ export const livePreviewTheme = EditorView.baseTheme({
         background: 'rgba(128,128,128,0.12)',
     },
     '.cm-md-wikilink-chip *': { textDecoration: 'none !important' },
+    '.cm-md-wikilink-chip.cm-md-wikilink-task::before': { content: '"TASK:"' },
     '.cm-md-wikilink-chip::before': {
         content: '"NOTE:"',
         fontSize: '0.72em',

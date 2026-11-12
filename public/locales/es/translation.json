@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}} notas",
+        "notes_one": "{{count}} nota",
+        "tasks_other": "{{count}} tareas",
+        "tasks_one": "{{count}} tarea",
+        "goals_other": "{{count}} objetivos",
+        "goals_one": "{{count}} objetivo",
+        "projects_other": "{{count}} proyectos",
+        "projects_one": "{{count}} proyecto"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -128,6 +138,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(sin asunto)",
+      "draft": "Borrador listo:",
+      "task": "Tarea",
+      "reply": "Responder",
+      "later": "Más tarde",
+      "dismiss": "Ignorar",
+      "archive": "Archivar en Gmail",
+      "taskName": "Nombre de la tarea",
+      "taskDue": "Vencimiento",
+      "createTask": "Crear la tarea",
+      "taskCreated": "Tarea creada",
+      "replied": "Respuesta abierta en Gmail",
+      "postponed": "Vuelve mañana",
+      "dismissed": "Correo ignorado",
+      "notArchived": "No archivado en Gmail"
+    },
     "linkLater": "En 30 días",
     "linkArchive": "Archivar",
     "linkKeep": "Conservar",
@@ -1357,7 +1384,7 @@
     "assignedTo": "Asignado a",
     "subtasks": "Subtareas",
     "openFullPage": "Abrir vista completa",
-    "openPanel": "Abrir en el panel lateral",
+    "openPanel": "Abrir detalles",
     "quickEdit": {
       "setPriority": "Establecer prioridad",
       "setDueDate": "Establecer fecha límite"
@@ -2265,6 +2292,15 @@
     "linkedNoteNotNow": "Ahora no",
     "linkedNoteCreate": "Crear nota",
     "linkedNoteCreateFailed": "No se pudo crear la nota.",
+    "outlineZoomIn": "Acercar",
+    "outlineExpand": "Desplegar",
+    "outlineCollapse": "Plegar",
+    "outlineMakeTask": "Crear una tarea",
+    "outlineTaskCreated": "Tarea creada: {{name}}",
+    "outlineTaskFailed": "No se pudo crear la tarea.",
+    "outlinePath": "Ruta del esquema",
+    "outlineAll": "Todo",
+    "outlineBulletMenu": "Viñeta",
     "backgroundImage": "Fondo",
     "noBackground": "Sin fondo",
     "openInNotes": "Abrir en Notas",
@@ -4276,12 +4312,14 @@
     "task": "Tarea",
     "note": "Nota",
     "project": "Proyecto",
+    "link": "Enlaces",
     "addTo": "Añadir a",
     "filesLabel": "Archivos para adjuntar",
     "removeFile": "Quitar {{name}}",
     "fileTooLarge": "{{name}} supera los {{limit}} MB, así que no se añadió.",
     "tooManyFiles": "Se pueden añadir hasta {{max}} archivos a la vez.",
     "savedInbox": "«{{title}}» guardado en la bandeja de entrada.",
+    "savedLink": "«{{title}}» guardado en Enlaces.",
     "savedInboxMany": "{{total}} elementos guardados en la bandeja de entrada.",
     "createdTask": "Tarea «{{title}}» creada.",
     "createdTasks": "{{total}} tareas creadas.",

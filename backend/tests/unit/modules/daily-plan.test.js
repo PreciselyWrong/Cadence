@@ -13,13 +13,13 @@ describe('validateItems', () => {
         expect(items.map((i) => i.start_minute)).toEqual([480, 540, null]);
     });
 
-    it('rejects overlaps using the default length when none is given', () => {
-        expect(() =>
-            validateItems([
-                { task_uid: 'a', start_minute: 480 },
-                { task_uid: 'b', start_minute: 500, duration_minutes: 15 },
-            ])
-        ).toThrow(/overlap/);
+    // Slots may overlap, as on a calendar (docs/20-daily-plan.md).
+    it('accepts overlapping slots', () => {
+        const items = validateItems([
+            { task_uid: 'a', start_minute: 480 },
+            { task_uid: 'b', start_minute: 500, duration_minutes: 15 },
+        ]);
+        expect(items.map((i) => i.start_minute)).toEqual([480, 500]);
     });
 
     it('rejects out-of-range values', () => {

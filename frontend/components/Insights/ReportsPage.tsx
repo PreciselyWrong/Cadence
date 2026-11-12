@@ -166,7 +166,7 @@ function BarChart({ weeks }: { weeks: WeekData[] }) {
                                 rx={2}
                                 className={
                                     isRecent
-                                        ? 'fill-indigo-500 dark:fill-indigo-400'
+                                        ? 'fill-primary'
                                         : 'fill-gray-200 dark:fill-gray-700'
                                 }
                                 opacity={barH === 0 ? 0.3 : 1}
@@ -181,7 +181,7 @@ function BarChart({ weeks }: { weeks: WeekData[] }) {
                                     fill="currentColor"
                                     className={
                                         isRecent
-                                            ? 'text-indigo-600 dark:text-indigo-300'
+                                            ? 'text-primary'
                                             : 'text-gray-500 dark:text-gray-400'
                                     }
                                 >
@@ -282,7 +282,7 @@ function AreaBalanceChart({ areas }: { areas: AreaBalance[] }) {
                                 style={{ width: `${completedPct}%` }}
                             />
                             <div
-                                className="bg-indigo-200 dark:bg-indigo-800 transition-all"
+                                className="bg-primary-container transition-all"
                                 style={{ width: `${openPct}%` }}
                             />
                         </div>
@@ -315,7 +315,7 @@ const ReportsPage: React.FC = () => {
     if (loading) {
         return (
             <div className="flex items-center justify-center py-24">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500" />
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
             </div>
         );
     }
@@ -363,7 +363,7 @@ const ReportsPage: React.FC = () => {
                 <h2 className="text-2xl font-light">
                     {t('sidebar.reports', 'Reports')}
                 </h2>
-                <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-500 dark:text-indigo-400">
+                <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-primary-container text-primary">
                     {t('common.beta', 'beta')}
                 </span>
             </div>
@@ -375,7 +375,7 @@ const ReportsPage: React.FC = () => {
                         onClick={() => setActiveTab(tab.id)}
                         className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
                             activeTab === tab.id
-                                ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
+                                ? 'border-primary text-primary'
                                 : 'border-transparent text-gray-600 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200'
                         }`}
                     >
@@ -679,7 +679,7 @@ const ReportsPage: React.FC = () => {
                                         </div>
                                         {bestWeek.count > 0 && (
                                             <div>
-                                                <p className="text-xl font-semibold text-indigo-500 dark:text-indigo-400">
+                                                <p className="text-xl font-semibold text-primary">
                                                     {bestWeek.count}
                                                 </p>
                                                 <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -725,7 +725,7 @@ const ReportsPage: React.FC = () => {
                                             )}
                                         </span>
                                         <span className="flex items-center gap-1">
-                                            <span className="inline-block w-3 h-2 rounded bg-indigo-200 dark:bg-indigo-800" />
+                                            <span className="inline-block w-3 h-2 rounded bg-primary-container" />
                                             {t('reports.open', 'Open')}
                                         </span>
                                         <span className="flex items-center gap-1 ml-auto">

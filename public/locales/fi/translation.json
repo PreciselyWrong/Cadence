@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}} muistiinpanoa",
+        "notes_one": "{{count}} muistiinpano",
+        "tasks_other": "{{count}} tehtävää",
+        "tasks_one": "{{count}} tehtävä",
+        "goals_other": "{{count}} tavoitetta",
+        "goals_one": "{{count}} tavoite",
+        "projects_other": "{{count}} projektia",
+        "projects_one": "{{count}} projekti"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -128,6 +138,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(ei aihetta)",
+      "draft": "Luonnos valmiina:",
+      "task": "Tehtävä",
+      "reply": "Vastaa",
+      "later": "Myöhemmin",
+      "dismiss": "Ohita",
+      "archive": "Arkistoi Gmailiin",
+      "taskName": "Tehtävän nimi",
+      "taskDue": "Määräpäivä",
+      "createTask": "Luo tehtävä",
+      "taskCreated": "Tehtävä luotu",
+      "replied": "Vastaus avattu Gmailissa",
+      "postponed": "Palaa huomenna",
+      "dismissed": "Viesti ohitettu",
+      "notArchived": "Ei arkistoitu Gmailiin"
+    },
     "linkLater": "30 päivän päästä",
     "linkArchive": "Arkistoi",
     "linkKeep": "Säilytä",
@@ -499,7 +526,7 @@
     "assignedTo": "Osoitettu",
     "subtasks": "Ala-tehtävät",
     "openFullPage": "Avaa koko näkymä",
-    "openPanel": "Avaa sivupaneelissa",
+    "openPanel": "Avaa tiedot",
     "quickEdit": {
       "setPriority": "Aseta prioriteetti",
       "setDueDate": "Aseta eräpäivä"
@@ -2331,6 +2358,15 @@
     "linkedNoteNotNow": "Ei nyt",
     "linkedNoteCreate": "Luo muistiinpano",
     "linkedNoteCreateFailed": "Muistiinpanoa ei voitu luoda.",
+    "outlineZoomIn": "Lähennä",
+    "outlineExpand": "Laajenna",
+    "outlineCollapse": "Supista",
+    "outlineMakeTask": "Luo tehtävä",
+    "outlineTaskCreated": "Tehtävä luotu: {{name}}",
+    "outlineTaskFailed": "Tehtävää ei voitu luoda.",
+    "outlinePath": "Jäsennyksen polku",
+    "outlineAll": "Kaikki",
+    "outlineBulletMenu": "Luettelomerkki",
     "backgroundImage": "Tausta",
     "noBackground": "Ei taustaa",
     "openInNotes": "Avaa Muistiinpanoissa",
@@ -4283,12 +4319,14 @@
     "task": "Tehtävä",
     "note": "Muistiinpano",
     "project": "Projekti",
+    "link": "Linkit",
     "addTo": "Lisää kohteeseen",
     "filesLabel": "Liitettävät tiedostot",
     "removeFile": "Poista {{name}}",
     "fileTooLarge": "{{name}} on suurempi kuin {{limit}} Mt, joten sitä ei lisätty.",
     "tooManyFiles": "Kerralla voi lisätä enintään {{max}} tiedostoa.",
     "savedInbox": "”{{title}}” tallennettiin saapuneisiin.",
+    "savedLink": "”{{title}}” tallennettiin linkkeihin.",
     "savedInboxMany": "{{total}} kohdetta tallennettiin saapuneisiin.",
     "createdTask": "Tehtävä ”{{title}}” luotiin.",
     "createdTasks": "{{total}} tehtävää luotiin.",

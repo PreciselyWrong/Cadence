@@ -31,9 +31,9 @@ The `triage_assistant` job (daily, 03:50 UTC) sends the open tasks the rules lef
 
 The automatic classifier (`docs/41-auto-classify.md`) adds its own cards to the queue, at most one per task or note: `type: classify` (action `classify`: project, tags and priority it was unsure about). They carry `source: classify`, `task_uid` when the item is a task, and their options in `payload` (`suggestion_uid`, `entity`, `item_uid`, `title`, …). They are answered through `POST /auto-classify/suggestions/:uid/apply` or `/dismiss`, not `/triage/apply`. While the classifier is enabled the assistant no longer proposes `reclass`.
 
-## Mail cards (planned)
+## Mail cards
 
-Mail that asks for an action, proposed by the mail-sorting agent and decided here: `docs/43-mail-triage.md` (spec, not built).
+Mail that asks for an action, proposed by an agent through the MCP tool `propose_mail`, is a card `type: mail` (`action: decide_mail`, `source: mail`, `payload`: sender, subject, summary, suggestion, draft excerpt, `gmail_url`), decided through `POST /triage/mail/:uid/decide`. Contract: `docs/43-mail-triage.md` (server, web and Android cards built).
 
 ## Actions
 
@@ -47,9 +47,10 @@ All under `/api` and `/api/v1`.
 
 | Route | |
 |---|---|
-| `GET /triage` | `{ items, tasks, count }`; each item: `key`, `type`, `source`, `task_uid`, `action`, `payload`, `reason`, `details`, `question` |
+| `GET /triage` | `{ items, tasks, count, mail_archive }`; each item: `key`, `type`, `source`, `task_uid`, `action`, `payload`, `reason`, `details`, `question` |
 | `POST /triage/keep` | `{ task_uid }` |
 | `POST /triage/apply` | `{ task_uid, action, payload?, idempotency_key? }`; the same key does nothing twice |
+| `POST /triage/mail/:uid/decide` | `{ decision: task \| reply \| later \| dismiss, payload?, archive?, idempotency_key? }` |
 
 ## Clients
 

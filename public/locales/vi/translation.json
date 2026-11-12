@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}} ghi chú",
+        "notes_one": "{{count}} ghi chú",
+        "tasks_other": "{{count}} công việc",
+        "tasks_one": "{{count}} công việc",
+        "goals_other": "{{count}} mục tiêu",
+        "goals_one": "{{count}} mục tiêu",
+        "projects_other": "{{count}} dự án",
+        "projects_one": "{{count}} dự án"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -128,6 +138,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(không có tiêu đề)",
+      "draft": "Bản nháp đã sẵn sàng:",
+      "task": "Công việc",
+      "reply": "Trả lời",
+      "later": "Để sau",
+      "dismiss": "Bỏ qua",
+      "archive": "Lưu trữ trong Gmail",
+      "taskName": "Tên công việc",
+      "taskDue": "Hạn chót",
+      "createTask": "Tạo công việc",
+      "taskCreated": "Đã tạo công việc",
+      "replied": "Đã mở thư trả lời trong Gmail",
+      "postponed": "Quay lại vào ngày mai",
+      "dismissed": "Đã bỏ qua thư",
+      "notArchived": "Chưa lưu trữ trong Gmail"
+    },
     "linkLater": "Sau 30 ngày",
     "linkArchive": "Lưu trữ",
     "linkKeep": "Giữ",
@@ -499,7 +526,7 @@
     "assignedTo": "Giao cho",
     "subtasks": "Công việc con",
     "openFullPage": "Mở chế độ xem đầy đủ",
-    "openPanel": "Mở trong bảng bên",
+    "openPanel": "Mở chi tiết",
     "quickEdit": {
       "setPriority": "Đặt độ ưu tiên",
       "setDueDate": "Đặt ngày đến hạn"
@@ -2331,6 +2358,15 @@
     "linkedNoteNotNow": "Để sau",
     "linkedNoteCreate": "Tạo ghi chú",
     "linkedNoteCreateFailed": "Không thể tạo ghi chú.",
+    "outlineZoomIn": "Phóng to",
+    "outlineExpand": "Mở rộng",
+    "outlineCollapse": "Thu gọn",
+    "outlineMakeTask": "Tạo việc",
+    "outlineTaskCreated": "Đã tạo việc: {{name}}",
+    "outlineTaskFailed": "Không thể tạo việc.",
+    "outlinePath": "Đường dẫn dàn ý",
+    "outlineAll": "Tất cả",
+    "outlineBulletMenu": "Dấu đầu dòng",
     "backgroundImage": "Hình nền",
     "noBackground": "Không có hình nền",
     "openInNotes": "Mở trong Ghi chú",
@@ -4283,12 +4319,14 @@
     "task": "Công việc",
     "note": "Ghi chú",
     "project": "Dự án",
+    "link": "Liên kết",
     "addTo": "Thêm vào",
     "filesLabel": "Tệp đính kèm",
     "removeFile": "Xóa {{name}}",
     "fileTooLarge": "{{name}} lớn hơn {{limit}} MB nên không được thêm.",
     "tooManyFiles": "Có thể thêm tối đa {{max}} tệp mỗi lần.",
     "savedInbox": "Đã lưu \"{{title}}\" vào Hộp thư đến.",
+    "savedLink": "Đã lưu \"{{title}}\" vào Liên kết.",
     "savedInboxMany": "Đã lưu {{total}} mục vào Hộp thư đến.",
     "createdTask": "Đã tạo công việc \"{{title}}\".",
     "createdTasks": "Đã tạo {{total}} công việc.",

@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}}개 노트",
+        "notes_one": "{{count}}개 노트",
+        "tasks_other": "{{count}}개 작업",
+        "tasks_one": "{{count}}개 작업",
+        "goals_other": "{{count}}개 목표",
+        "goals_one": "{{count}}개 목표",
+        "projects_other": "{{count}}개 프로젝트",
+        "projects_one": "{{count}}개 프로젝트"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -128,6 +138,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(제목 없음)",
+      "draft": "초안 준비됨:",
+      "task": "할 일",
+      "reply": "답장",
+      "later": "나중에",
+      "dismiss": "무시",
+      "archive": "Gmail에 보관",
+      "taskName": "할 일 이름",
+      "taskDue": "마감일",
+      "createTask": "할 일 만들기",
+      "taskCreated": "할 일을 만들었습니다",
+      "replied": "Gmail에서 답장을 열었습니다",
+      "postponed": "내일 다시 표시",
+      "dismissed": "메일을 무시했습니다",
+      "notArchived": "Gmail에 보관되지 않음"
+    },
     "linkLater": "30일 후",
     "linkArchive": "보관",
     "linkKeep": "유지",
@@ -499,7 +526,7 @@
     "assignedTo": "할당됨",
     "subtasks": "하위 작업",
     "openFullPage": "전체 보기 열기",
-    "openPanel": "사이드 패널에서 열기",
+    "openPanel": "세부 정보 열기",
     "quickEdit": {
       "setPriority": "우선순위 설정",
       "setDueDate": "마감일 설정"
@@ -2331,6 +2358,15 @@
     "linkedNoteNotNow": "나중에",
     "linkedNoteCreate": "노트 만들기",
     "linkedNoteCreateFailed": "노트를 만들 수 없습니다.",
+    "outlineZoomIn": "확대",
+    "outlineExpand": "펼치기",
+    "outlineCollapse": "접기",
+    "outlineMakeTask": "작업 만들기",
+    "outlineTaskCreated": "작업을 만들었습니다: {{name}}",
+    "outlineTaskFailed": "작업을 만들 수 없습니다.",
+    "outlinePath": "개요 경로",
+    "outlineAll": "전체",
+    "outlineBulletMenu": "글머리 기호",
     "backgroundImage": "배경",
     "noBackground": "배경 없음",
     "openInNotes": "노트에서 열기",
@@ -4283,12 +4319,14 @@
     "task": "작업",
     "note": "노트",
     "project": "프로젝트",
+    "link": "링크",
     "addTo": "추가 위치",
     "filesLabel": "첨부할 파일",
     "removeFile": "{{name}} 제거",
     "fileTooLarge": "{{name}}이(가) {{limit}}MB보다 커서 추가되지 않았습니다.",
     "tooManyFiles": "한 번에 최대 {{max}}개의 파일을 추가할 수 있습니다.",
     "savedInbox": "\"{{title}}\"을(를) 받은 편지함에 저장했습니다.",
+    "savedLink": "\"{{title}}\"을(를) 링크에 저장했습니다.",
     "savedInboxMany": "받은 편지함에 {{total}}개 항목을 저장했습니다.",
     "createdTask": "작업 \"{{title}}\"을(를) 만들었습니다.",
     "createdTasks": "작업 {{total}}개를 만들었습니다.",

@@ -87,6 +87,7 @@ const BoardTaskRow: React.FC<BoardTaskRowProps> = ({
                     : 'hover:bg-gray-50 dark:hover:bg-gray-800'
             } ${isDragging ? 'opacity-30' : ''}`}
             onClick={open}
+            data-task-row=""
             data-testid={overlay ? undefined : 'board-task-row'}
         >
             <button

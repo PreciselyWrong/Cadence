@@ -1,4 +1,11 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, {
+    createContext,
+    useContext,
+    useEffect,
+    useRef,
+    useState,
+    useMemo,
+} from 'react';
 import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -20,13 +27,63 @@ import {
     preprocessContentLinks,
     taskLinkNames,
 } from '../../utils/markdownLinks';
-import { resolveTaskLinks } from '../../utils/contentLinksService';
+import { resolveTaskLinkStatus } from '../../utils/contentLinksService';
+import { toggleTaskCompletion } from '../../utils/tasksService';
+import { isTaskDone } from '../../constants/taskStatus';
+import {
+    ancestorLines,
+    itemAtLine,
+    itemKeys,
+    parseOutline,
+    replaceSubtree,
+    subtreeText,
+} from '../Note/editor/outline';
+import { loadFolds, saveFolds } from '../Note/editor/outlineFolds';
 import {
     LinkBadge,
     MentionChip,
     MissingLinkButton,
     NoteBadge,
 } from './ContentLinkChips';
+
+// The [[task:Name]] a checkbox item links to: its box follows the task.
+const TaskBoxContext = createContext<string | null>(null);
+const TASK_ITEM_LINK = /^\s*\[\[\s*task:\s*([^[\]\n]+?)\s*\]\]/i;
+
+// Children that make up an outline item's body (shown unless folded); the
+// text before them is its first line.
+const ITEM_BODY_TAGS = new Set([
+    'ul',
+    'ol',
+    'pre',
+    'table',
+    'blockquote',
+    'hr',
+    'h1',
+    'h2',
+    'h3',
+    'h4',
+    'h5',
+    'h6',
+]);
+
+const splitItemChildren = (children: React.ReactNode) => {
+    const all = React.Children.toArray(children);
+    let paragraphs = 0;
+    const at = all.findIndex((child) => {
+        if (!React.isValidElement(child)) return false;
+        const tag = (child.props as { node?: { tagName?: string } }).node
+            ?.tagName;
+        if (tag === 'p') return ++paragraphs > 1;
+        return !!tag && ITEM_BODY_TAGS.has(tag);
+    });
+    if (at < 0) return { head: all, body: [] as React.ReactNode[] };
+    const body = all.slice(at);
+    const filled = body.some(
+        (child) => typeof child !== 'string' || child.trim() !== ''
+    );
+    return { head: all.slice(0, at), body: filled ? body : [] };
+};
 
 // Image syntax that points at a video file renders a player instead.
 const VIDEO_SRC = /\.(mp4|webm)(?:[?#]|$)/i;
@@ -135,6 +192,9 @@ interface MarkdownRendererProps {
     publicNoteLinks?: PublicNoteLink[];
     // Where a public linked note opens; its public link page by default.
     publicNoteHref?: (link: PublicNoteLink) => string;
+    // Shows lists as an outline (fold carets, zoom on a bullet); this
+    // viewer's folds are remembered under this key ("note:<uid>").
+    outlineKey?: string;
 }
 
 export interface PublicNoteLink {
@@ -145,6 +205,52 @@ export interface PublicNoteLink {
 
 const publicLinkPage = (link: PublicNoteLink) => `/public/notes/${link.token}`;
 
+const CHECKBOX_CLASS =
+    'w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600';
+
+// A list checkbox: it toggles its "[ ]" in the text, or, when the item
+// links a task ([[task:Name]] first), shows and toggles that task.
+const OutlineCheckbox: React.FC<{
+    inputProps: React.InputHTMLAttributes<HTMLInputElement>;
+    checked: boolean;
+    editable: boolean;
+    taskUids: Record<string, string> | null;
+    doneTasks: Set<string>;
+    onToggleText: () => void;
+    onToggleTask: (name: string) => void;
+}> = ({
+    inputProps,
+    checked,
+    editable,
+    taskUids,
+    doneTasks,
+    onToggleText,
+    onToggleTask,
+}) => {
+    const linked = useContext(TaskBoxContext);
+    const key = linked?.trim().toLowerCase();
+    const uid = key ? taskUids?.[key] : undefined;
+    const followsTask = !!linked && !!taskUids;
+    const enabled = followsTask ? !!uid : editable;
+    return (
+        <input
+            {...inputProps}
+            type="checkbox"
+            checked={followsTask && key ? doneTasks.has(key) : checked}
+            disabled={!enabled}
+            data-follows-task={followsTask ? 'true' : undefined}
+            onClick={(e) => e.stopPropagation()}
+            onChange={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (followsTask && linked) onToggleTask(linked);
+                else onToggleText();
+            }}
+            className={`${CHECKBOX_CLASS} ${enabled ? 'cursor-pointer' : 'cursor-not-allowed'}`}
+        />
+    );
+};
+
 const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     content,
     className = '',
@@ -153,7 +259,9 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     noteColor,
     publicNoteLinks,
     publicNoteHref = publicLinkPage,
+    outlineKey,
 }) => {
+    const { t } = useTranslation();
     const storeNotes = useStore((state) => state.notesStore.notes);
     const notesLoaded = useStore((state) => state.notesStore.hasLoaded);
     const loadNotes = useStore((state) => state.notesStore.loadNotes);
@@ -179,9 +287,45 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
         return map;
     }, [storeNotes]);
 
+    const outline = useMemo(() => parseOutline(content), [content]);
+    const outlineKeys = useMemo(() => itemKeys(outline), [outline]);
+    const outlined = !!outlineKey && !summaryMode;
+
+    // Folds are this viewer's, per note or task, shared with the editor.
+    const [folds, setFolds] = useState<Set<string>>(
+        () => new Set(outlineKey ? loadFolds(outlineKey) : [])
+    );
+    useEffect(() => {
+        setFolds(new Set(outlineKey ? loadFolds(outlineKey) : []));
+    }, [outlineKey]);
+    const toggleFold = (key: string) => {
+        setFolds((current) => {
+            const next = new Set(current);
+            if (next.has(key)) next.delete(key);
+            else next.add(key);
+            if (outlineKey) saveFolds(outlineKey, [...next]);
+            return next;
+        });
+    };
+
+    // Zoomed in on one item: only it and its children show.
+    const [zoomLine, setZoomLine] = useState<number | null>(null);
+    const zoomed =
+        outlined && zoomLine !== null && itemAtLine(outline, zoomLine) >= 0
+            ? zoomLine
+            : null;
+    const shown = useMemo(
+        () =>
+            zoomed === null
+                ? content
+                : (subtreeText(content, zoomed) ?? content),
+        [content, zoomed]
+    );
+    const lineOffset = zoomed ?? 0;
+
     const processedContent = useMemo(
-        () => preprocessContentLinks(content),
-        [content]
+        () => preprocessContentLinks(shown),
+        [shown]
     );
 
     // [[task:Name]] links open the task of that name, looked up on the
@@ -194,11 +338,16 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     const [taskUids, setTaskUids] = useState<Record<string, string> | null>(
         null
     );
+    const [doneTasks, setDoneTasks] = useState<Set<string>>(new Set());
     useEffect(() => {
         if (!taskNamesKey) return;
         let live = true;
-        resolveTaskLinks(taskNamesKey.split('\n'))
-            .then((found) => live && setTaskUids(found))
+        resolveTaskLinkStatus(taskNamesKey.split('\n'))
+            .then((found) => {
+                if (!live) return;
+                setTaskUids(found.uids);
+                setDoneTasks(new Set(found.done));
+            })
             .catch(() => live && setTaskUids({}));
         return () => {
             live = false;
@@ -259,12 +408,73 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
     const toggleCheckbox = (checkboxIndex: number) => {
         if (!onContentChange) return;
-        const next = toggleTaskListItem(content, checkboxIndex);
-        if (next !== content) onContentChange(next);
+        const next = toggleTaskListItem(shown, checkboxIndex);
+        if (next === shown) return;
+        onContentChange(
+            zoomed === null ? next : replaceSubtree(content, zoomed, next)
+        );
     };
+
+    // A box linked to a task follows the task; clicking it completes or
+    // reopens the task (the note's text is not rewritten).
+    const toggleLinkedTask = async (name: string) => {
+        const key = name.trim().toLowerCase();
+        const uid = taskUids?.[key];
+        if (!uid) return;
+        try {
+            const updated = await toggleTaskCompletion(uid);
+            setDoneTasks((current) => {
+                const next = new Set(current);
+                if (isTaskDone(updated.status)) next.add(key);
+                else next.delete(key);
+                return next;
+            });
+        } catch {
+            // The box keeps the task's last known state.
+        }
+    };
+
+    const zoomCrumbs =
+        zoomed === null
+            ? null
+            : ancestorLines(outline, zoomed)
+                  .slice(0, -1)
+                  .map((line) => ({
+                      line,
+                      text: outline.items[itemAtLine(outline, line)].text,
+                  }));
 
     return (
         <div className={`markdown-content ${className}`}>
+            {zoomCrumbs && (
+                <nav
+                    aria-label={t('notes.outlinePath', 'Outline path')}
+                    data-testid="outline-breadcrumb"
+                    className="not-prose mb-2 flex flex-wrap items-center gap-1 text-sm text-gray-500 dark:text-gray-400"
+                >
+                    <button
+                        type="button"
+                        className="rounded px-1 hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+                        onClick={() => setZoomLine(null)}
+                    >
+                        {t('notes.outlineAll', 'All')}
+                    </button>
+                    {zoomCrumbs.map((crumb) => (
+                        <React.Fragment key={crumb.line}>
+                            <span aria-hidden="true">›</span>
+                            <button
+                                type="button"
+                                className="max-w-[12rem] truncate rounded px-1 hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+                                onClick={() => setZoomLine(crumb.line)}
+                            >
+                                {preprocessContentLinks(crumb.text)
+                                    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+                                    .trim() || '•'}
+                            </button>
+                        </React.Fragment>
+                    ))}
+                </nav>
+            )}
             <ReactMarkdown
                 remarkPlugins={[remarkGfm, remarkContactLinks]}
                 urlTransform={contactUrlTransform}
@@ -394,13 +604,20 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
                     ),
 
                     // Customize list styles
-                    ul: ({ ...props }) => (
+                    ul: ({ className: listClass, ...props }) => (
                         <ul
-                            className={`mb-3 list-disc ml-4 pl-5 space-y-1 ${!noteColor ? 'text-gray-700 dark:text-gray-300' : ''}`}
+                            {...props}
+                            className={
+                                // An outline keeps its indent even with
+                                // checkbox items (GFM's contains-task-list).
+                                outlined
+                                    ? `mb-3 list-none ml-4 pl-5 space-y-1 ${listClass ?? ''} ${!noteColor ? 'text-gray-700 dark:text-gray-300' : ''}`
+                                    : (listClass ??
+                                      `mb-3 list-disc ml-4 pl-5 space-y-1 ${!noteColor ? 'text-gray-700 dark:text-gray-300' : ''}`)
+                            }
                             style={{
                                 color: textColor,
                             }}
-                            {...props}
                         />
                     ),
                     ol: ({ ...props }) => (
@@ -412,19 +629,105 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
                             {...props}
                         />
                     ),
-                    li: ({ ...props }) => (
-                        <li
-                            className={
-                                !noteColor
-                                    ? 'text-gray-700 dark:text-gray-300'
-                                    : ''
-                            }
-                            style={{
-                                color: textColor,
-                            }}
-                            {...props}
-                        />
-                    ),
+                    li: ({ node, children, className: liClass, ...props }) => {
+                        const start = node?.position?.start.line;
+                        const line =
+                            start === undefined ? -1 : start - 1 + lineOffset;
+                        const index = line < 0 ? -1 : itemAtLine(outline, line);
+                        const item = index >= 0 ? outline.items[index] : null;
+                        const linkedTask =
+                            item?.box && !summaryMode && !publicNoteLinks
+                                ? (TASK_ITEM_LINK.exec(item.text)?.[1] ?? null)
+                                : null;
+                        const base = `${liClass ?? ''} ${!noteColor ? 'text-gray-700 dark:text-gray-300' : ''}`;
+                        if (!outlined || !item) {
+                            return (
+                                <TaskBoxContext.Provider value={linkedTask}>
+                                    <li
+                                        className={base}
+                                        style={{ color: textColor }}
+                                        {...props}
+                                    >
+                                        {children}
+                                    </li>
+                                </TaskBoxContext.Provider>
+                            );
+                        }
+                        const key = outlineKeys.get(item.line) ?? '';
+                        const { head, body } = splitItemChildren(children);
+                        const folded = body.length > 0 && folds.has(key);
+                        const isBullet = !/\d/.test(item.marker);
+                        return (
+                            <TaskBoxContext.Provider value={linkedTask}>
+                                <li
+                                    className={`${base} relative`}
+                                    style={{ color: textColor }}
+                                    data-outline-line={item.line}
+                                    {...props}
+                                >
+                                    {body.length > 0 && (
+                                        <button
+                                            type="button"
+                                            className="outline-fold-caret absolute -left-8 top-0 w-4 select-none text-xs leading-7 text-gray-400 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-200"
+                                            aria-expanded={!folded}
+                                            aria-label={
+                                                folded
+                                                    ? t(
+                                                          'notes.outlineExpand',
+                                                          'Expand'
+                                                      )
+                                                    : t(
+                                                          'notes.outlineCollapse',
+                                                          'Collapse'
+                                                      )
+                                            }
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                toggleFold(key);
+                                            }}
+                                        >
+                                            {folded ? '▸' : '▾'}
+                                        </button>
+                                    )}
+                                    {isBullet && !item.box && (
+                                        <button
+                                            type="button"
+                                            className="absolute -left-4 top-0 w-3 select-none leading-7 text-gray-400 hover:text-gray-800 dark:text-gray-500 dark:hover:text-gray-100"
+                                            aria-label={t(
+                                                'notes.outlineZoomIn',
+                                                'Zoom in'
+                                            )}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setZoomLine(item.line);
+                                            }}
+                                        >
+                                            •
+                                        </button>
+                                    )}
+                                    {head}
+                                    {folded ? (
+                                        <button
+                                            type="button"
+                                            className="ml-1 rounded-full bg-gray-200 px-1.5 text-xs text-gray-600 dark:bg-gray-700 dark:text-gray-300"
+                                            aria-label={t(
+                                                'notes.outlineExpand',
+                                                'Expand'
+                                            )}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                toggleFold(key);
+                                            }}
+                                        >
+                                            …
+                                        </button>
+                                    ) : (
+                                        body
+                                    )}
+                                </li>
+                            </TaskBoxContext.Provider>
+                        );
+                    },
 
                     // Cadence links read as chips; in-app paths stay in the
                     // app; other web links open in a new tab.
@@ -747,26 +1050,21 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
                         if (type === 'checkbox') {
                             checkboxIndexRef.current++;
                             const currentIndex = checkboxIndexRef.current;
-
+                            // eslint-disable-next-line @typescript-eslint/no-unused-vars, react/prop-types
+                            const { node: _node, ...inputProps } = props as any;
                             return (
-                                <input
-                                    {...props}
-                                    type="checkbox"
-                                    checked={checked}
-                                    disabled={!onContentChange}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                    }}
-                                    onChange={(e) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        toggleCheckbox(currentIndex);
-                                    }}
-                                    className={`w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 ${
-                                        onContentChange
-                                            ? 'cursor-pointer'
-                                            : 'cursor-not-allowed'
-                                    }`}
+                                <OutlineCheckbox
+                                    inputProps={inputProps}
+                                    checked={!!checked}
+                                    editable={!!onContentChange}
+                                    taskUids={taskUids}
+                                    doneTasks={doneTasks}
+                                    onToggleText={() =>
+                                        toggleCheckbox(currentIndex)
+                                    }
+                                    onToggleTask={(name) =>
+                                        void toggleLinkedTask(name)
+                                    }
                                 />
                             );
                         }

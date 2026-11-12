@@ -1,4 +1,22 @@
 {
+    "counts": {
+        "notes_many": "{{count}} poznámok",
+        "tasks_many": "{{count}} úloh",
+        "goals_many": "{{count}} cieľov",
+        "projects_many": "{{count}} projektov",
+        "notes_few": "{{count}} poznámky",
+        "tasks_few": "{{count}} úlohy",
+        "goals_few": "{{count}} ciele",
+        "projects_few": "{{count}} projekty",
+        "notes_other": "{{count}} poznámok",
+        "notes_one": "{{count}} poznámka",
+        "tasks_other": "{{count}} úloh",
+        "tasks_one": "{{count}} úloha",
+        "goals_other": "{{count}} cieľov",
+        "goals_one": "{{count}} cieľ",
+        "projects_other": "{{count}} projektov",
+        "projects_one": "{{count}} projekt"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -128,6 +146,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(bez predmetu)",
+      "draft": "Koncept pripravený:",
+      "task": "Úloha",
+      "reply": "Odpovedať",
+      "later": "Neskôr",
+      "dismiss": "Ignorovať",
+      "archive": "Archivovať v Gmaile",
+      "taskName": "Názov úlohy",
+      "taskDue": "Termín",
+      "createTask": "Vytvoriť úlohu",
+      "taskCreated": "Úloha vytvorená",
+      "replied": "Odpoveď otvorená v Gmaile",
+      "postponed": "Vráti sa zajtra",
+      "dismissed": "Pošta ignorovaná",
+      "notArchived": "Nearchivované v Gmaile"
+    },
     "linkLater": "O 30 dní",
     "linkArchive": "Archivovať",
     "linkKeep": "Ponechať",
@@ -979,7 +1014,7 @@
     "assignedTo": "Priradené",
     "subtasks": "Podúlohy",
     "openFullPage": "Otvoriť celé zobrazenie",
-    "openPanel": "Otvoriť v bočnom paneli",
+    "openPanel": "Otvoriť podrobnosti",
     "quickEdit": {
       "setPriority": "Nastaviť prioritu",
       "setDueDate": "Nastaviť termín"
@@ -2865,6 +2900,15 @@
     "linkedNoteNotNow": "Teraz nie",
     "linkedNoteCreate": "Vytvoriť poznámku",
     "linkedNoteCreateFailed": "Poznámku sa nepodarilo vytvoriť.",
+    "outlineZoomIn": "Priblížiť",
+    "outlineExpand": "Rozbaliť",
+    "outlineCollapse": "Zbaliť",
+    "outlineMakeTask": "Vytvoriť úlohu",
+    "outlineTaskCreated": "Úloha vytvorená: {{name}}",
+    "outlineTaskFailed": "Úlohu sa nepodarilo vytvoriť.",
+    "outlinePath": "Cesta v osnove",
+    "outlineAll": "Všetko",
+    "outlineBulletMenu": "Odrážka",
     "openInNotes": "Otvoriť v Poznámkach",
     "sidebar": {
       "recent": "Nedávne",
@@ -4689,6 +4733,7 @@
     "task": "Úloha",
     "note": "Poznámka",
     "project": "Projekt",
+    "link": "Odkazy",
     "add": "Pridať",
     "addN": "Pridať {{total}}",
     "addTitle": "Pridať do Schránky, ako úlohu, poznámku alebo projekt",
@@ -4705,6 +4750,7 @@
     "undoError": "Nepodarilo sa to odstrániť. Nájdite položku v jej zozname a odstráňte ju tam.",
     "saveError": "Nepodarilo sa uložiť. Váš text tu stále je.",
     "savedInbox": "„{{title}}“ bolo uložené do Schránky.",
+    "savedLink": "„{{title}}“ bolo uložené do Odkazov.",
     "savedInboxMany": "Položky uložené do Schránky: {{total}}.",
     "createdTask": "Úloha „{{title}}“ bola vytvorená.",
     "createdTasks": "Vytvorené úlohy: {{total}}.",

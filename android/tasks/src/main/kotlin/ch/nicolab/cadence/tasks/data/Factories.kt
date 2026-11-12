@@ -65,6 +65,10 @@ internal fun createTodoMd(context: Context): TodoMdClient = TasksRuntime.get(con
 
 internal fun createPageChecks(context: Context): PageCheckClient = TasksRuntime.get(context).pageChecks
 
+internal fun createBacklinks(context: Context): ch.nicolab.cadence.tasks.contentlinks.BacklinksClient = TasksRuntime.get(context).backlinks
+
+internal fun createPeople(context: Context): ch.nicolab.cadence.tasks.contentlinks.PeopleClient = TasksRuntime.get(context).people
+
 internal fun createSyncStatus(context: Context): SyncStatusClient = TasksRuntime.get(context).syncStatus
 
 internal fun createBrief(context: Context): BriefRepository = TasksRuntime.get(context).brief
@@ -92,7 +96,7 @@ internal fun reviewCacheDir(context: Context): File = File(context.cacheDir, "re
 internal class TasksRuntime private constructor(context: Context) {
     private val appContext = context.applicationContext
     private val database: TududiDatabase = Room.databaseBuilder(appContext, TududiDatabase::class.java, "tududi.db")
-        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19, MIGRATION_19_20)
+        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19, MIGRATION_19_20, MIGRATION_20_21)
         .build()
     private val clockState = ClockStateStore(appContext)
     private val hlc = Hlc(node = clockState.node(), initial = clockState.load())
@@ -151,6 +155,11 @@ internal class TasksRuntime private constructor(context: Context) {
     )
     val todoMd = TodoMdClient(api::call)
     val pageChecks = PageCheckClient(api::call)
+    val backlinks = ch.nicolab.cadence.tasks.contentlinks.BacklinksClient { method, path, query -> api.callJson(method, path, query) }
+    val people = ch.nicolab.cadence.tasks.contentlinks.PeopleClient(
+        { method, path, query -> api.callJson(method, path, query) },
+        appContext.getSharedPreferences("cadence_people", Context.MODE_PRIVATE),
+    )
     val syncStatus = SyncStatusClient(api::call)
 
     val review = ReviewRepository(

@@ -3,13 +3,18 @@ import { isSafeLinkUrl } from './inlineMarkdown';
 
 export interface LinkClickOptions {
     onOpenWikilink?: (title: string, event: MouseEvent) => void;
+    // A page of the app (a person mention, /note/…, /task/…).
+    onOpenPath?: (path: string) => void;
 }
 
 // Plain clicks place the caret (so links stay editable); Cmd/Ctrl-click
 // follows them, as in Obsidian. A note link shown as a chip (caret away
 // from it) also opens on a plain click, and so does any link in a note
 // open for reading, where there is no caret to place.
-export const linkClickHandlers = ({ onOpenWikilink }: LinkClickOptions) =>
+export const linkClickHandlers = ({
+    onOpenWikilink,
+    onOpenPath,
+}: LinkClickOptions) =>
     EditorView.domEventHandlers({
         mousedown(event, view) {
             if (event.button !== 0) return false;
@@ -32,6 +37,16 @@ export const linkClickHandlers = ({ onOpenWikilink }: LinkClickOptions) =>
             }
 
             const href = el.getAttribute('data-href') ?? '';
+            const person = /^person:([0-9a-z-]+)$/.exec(href);
+            const path = person ? `/person/${person[1]}` : href;
+            if (
+                onOpenPath &&
+                /^\/(note|notes|task|person)\/[0-9a-z-]+/i.test(path)
+            ) {
+                event.preventDefault();
+                onOpenPath(path);
+                return true;
+            }
             if (isSafeLinkUrl(href)) {
                 event.preventDefault();
                 window.open(href, '_blank', 'noopener,noreferrer');

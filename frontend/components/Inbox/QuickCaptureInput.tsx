@@ -30,8 +30,10 @@ import { noteLinksFor } from '../../utils/noteAttachmentLinks';
 import { withCarried } from '../../utils/carriedTokens';
 import { createNote, deleteNote, updateNote } from '../../utils/notesService';
 import {
+    CAPTURE_TARGETS,
     CaptureTarget,
     CapturedItem,
+    LINK_CAPTURE_TARGETS,
     nonEmptyLines,
     splitCaptureText,
     splitFirstLine,
@@ -84,7 +86,13 @@ import {
     XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { useStore } from '../../store/useStore';
-import { isUrl, extractUrlTitle } from '../../utils/urlService';
+import {
+    isUrl,
+    extractUrlTitle,
+    urlPreviewWithin,
+} from '../../utils/urlService';
+import { linkOnlyAddress } from '../../utils/linkTriage';
+import { capturedTask, VERB_FALLBACKS } from '../../utils/linkTaskName';
 import InboxSelectedChips from './InboxSelectedChips';
 import SuggestionsDropdown from './SuggestionsDropdown';
 import SlashItemRow from './SlashItemRow';
@@ -1964,6 +1972,22 @@ const QuickCaptureInput = React.forwardRef<
             return cleaned || line.trim();
         };
 
+        // The page title of a link, from the preview already shown or, if it
+        // has not come yet, read for a few seconds at most.
+        const pageTitleOf = async (url: string): Promise<string | null> => {
+            if (
+                urlPreview?.url === normalizeUrl(url) &&
+                !urlPreview.isLoading
+            ) {
+                return urlPreview.title;
+            }
+            try {
+                return (await urlPreviewWithin(url))?.title ?? null;
+            } catch {
+                return null;
+            }
+        };
+
         // Create one item of the chosen kind from one raw text. The first
         // line is the title (dates, @people, #tags and +projects are read
         // from it) and the other lines are its notes or body.
@@ -1980,6 +2004,7 @@ const QuickCaptureInput = React.forwardRef<
                 return { target: destination, uid: item.uid, title: first };
             }
 
+            const linkAddress = linkOnlyAddress(itemText);
             // Only tasks and projects have dates (and tasks an assignee), so
             // a note keeps its whole title apart from #tags and +project.
             let analysis: InboxAnalysis | null = null;
@@ -2066,10 +2091,23 @@ const QuickCaptureInput = React.forwardRef<
                 : {};
 
             if (destination === 'task') {
+                // A link alone: named by its kind of page (« Essayer : … »),
+                // the address in the note, waiting for « Quand ? » without a
+                // project (docs/37-links.md).
+                const named = linkAddress
+                    ? capturedTask(
+                          {
+                              url: linkAddress,
+                              title: await pageTitleOf(linkAddress),
+                          },
+                          (key, pageName) =>
+                              t(key, VERB_FALLBACKS[key], { title: pageName })
+                      )
+                    : { name: title, note: rest || undefined };
                 const task = applyAnalysisToTask(
                     {
-                        name: title,
-                        note: rest || undefined,
+                        name: named.name,
+                        note: named.note,
                         priority: priorityFromText(first) ?? 'low',
                         status: 'not_started',
                         tags: tagObjects,
@@ -2080,6 +2118,13 @@ const QuickCaptureInput = React.forwardRef<
                             useStore.getState().areasStore?.areas ?? []
                         ),
                         ...(defaultGoal ? { goal_id: defaultGoal.id } : {}),
+                        ...(linkAddress
+                            ? {
+                                  needs_when: !projectUid,
+                                  source: 'link',
+                                  source_url: linkAddress,
+                              }
+                            : {}),
                         completed_at: null,
                     },
                     analysis
@@ -2090,7 +2135,7 @@ const QuickCaptureInput = React.forwardRef<
                 return {
                     target: destination,
                     uid: created.uid,
-                    title,
+                    title: named.name,
                     ...chosenProject,
                 };
             }
@@ -2328,6 +2373,18 @@ const QuickCaptureInput = React.forwardRef<
             return toUpload.length - failed.length;
         };
 
+        // An idea that is only a link can go straight to the Links; Project
+        // is not offered for an address. A choice the text no longer allows
+        // falls back to the Inbox (docs/04-inbox-page.md).
+        const linkOnly =
+            unified &&
+            !lockTarget &&
+            files.length === 0 &&
+            linkOnlyAddress(inputText) !== null;
+        const shownTargets = linkOnly ? LINK_CAPTURE_TARGETS : CAPTURE_TARGETS;
+        const destinationNow: CaptureTarget =
+            lockTarget || shownTargets.includes(target) ? target : 'inbox';
+
         const handleUnifiedSubmit = async () => {
             const withFiles = files.length > 0;
             // A pasted screenshot on its own is enough; the file name
@@ -2339,7 +2396,7 @@ const QuickCaptureInput = React.forwardRef<
 
             const texts = splitCaptureText(raw, captureSettings.oneItemPerLine);
             const captured: CapturedItem[] = [];
-            const destination = target;
+            const destination = destinationNow;
 
             const finish = (
                 items: CapturedItem[],
@@ -2493,7 +2550,7 @@ const QuickCaptureInput = React.forwardRef<
         const slashItemsNow =
             slash && slashQueryNow !== null
                 ? slashItems(slash.stage, slashQueryNow, {
-                      target,
+                      target: destinationNow,
                       labels: slashLabels,
                       tags: tags.map((tag) => ({
                           name: tag.name,
@@ -2951,7 +3008,7 @@ const QuickCaptureInput = React.forwardRef<
                     first: t('capture.wordName', 'name'),
                     rest: t('capture.wordDescription', 'description'),
                 },
-            }[target];
+            }[destinationNow];
             if (captureSettings.oneItemPerLine) {
                 return {
                     text: t(
@@ -2966,7 +3023,7 @@ const QuickCaptureInput = React.forwardRef<
             }
             return {
                 text:
-                    target === 'inbox'
+                    destinationNow === 'inbox'
                         ? t(
                               'capture.multiInbox',
                               'This will be 1 Inbox item. All {{lines}} lines are kept as typed.',
@@ -3021,12 +3078,13 @@ const QuickCaptureInput = React.forwardRef<
                 <div className="flex flex-wrap items-center gap-2">
                     <div className="w-full sm:w-auto sm:flex-1 min-w-0">
                         <CaptureDestinations
-                            value={target}
+                            value={destinationNow}
+                            targets={shownTargets}
                             onChange={setTarget}
                             locked={lockTarget}
                             scopeLabel={scopeLabel}
                         />
-                        {defaultGoal && target === 'task' && (
+                        {defaultGoal && destinationNow === 'task' && (
                             <p
                                 className="mt-1.5 text-[13px] text-gray-600 dark:text-gray-300 truncate"
                                 data-testid="capture-goal"
@@ -3320,8 +3378,10 @@ const QuickCaptureInput = React.forwardRef<
 
         return (
             <div
-                className={`relative w-full bg-white dark:bg-gray-900 rounded-2xl ${
-                    isEditMode ? '' : 'shadow-sm'
+                className={`relative w-full rounded-2xl ${
+                    isEditMode
+                        ? 'bg-surface-low'
+                        : 'bg-surface-low ring-1 ring-inset ring-outline-variant/60'
                 } overflow-hidden ${cardClasses}`}
             >
                 <div className={compact ? 'p-5' : 'p-[30px]'}>

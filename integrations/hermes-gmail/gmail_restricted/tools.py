@@ -100,6 +100,13 @@ TOOLS = [
         "annotations": dict(WRITE, idempotentHint=True),
     },
     {
+        "name": "trash_thread",
+        "description": "Met un fil entier à la corbeille (récupérable 30 jours dans Gmail). Uniquement sur choix "
+                       "explicite de Nicolas ; jamais de suppression définitive.",
+        "inputSchema": _schema({"account": ACCOUNT, "thread_id": THREAD}, ["account", "thread_id"]),
+        "annotations": dict(WRITE, destructiveHint=True, idempotentHint=True),
+    },
+    {
         "name": "unarchive_thread",
         "description": "Remet un fil dans la boîte de réception (ajoute seulement le libellé Boîte de réception).",
         "inputSchema": _schema({"account": ACCOUNT, "thread_id": THREAD}, ["account", "thread_id"]),
@@ -458,3 +465,10 @@ class GmailTools:
 
     def _unarchive_thread(self, client, args):
         return self._set_inbox(client, args, True)
+
+    def _trash_thread(self, client, args):
+        thread_id = _check_id(args["thread_id"], "thread_id")
+        thread = client.trash_thread(thread_id)
+        labels = {label for m in thread.get("messages") or [] for label in (m.get("labelIds") or [])}
+        # Gmail retire INBOX en mettant à la corbeille : on le vérifie sans nommer le libellé de corbeille.
+        return {"thread_id": thread_id, "in_trash": "INBOX" not in labels}

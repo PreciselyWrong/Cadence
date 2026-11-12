@@ -59,7 +59,13 @@ const MentionMenu: React.FC<MentionMenuProps> = ({
                 onClose();
                 return;
             }
-            if (matches.length === 0) return;
+            if (matches.length === 0) {
+                // While people load, Enter must not end up in the text.
+                if (people === null && (e.key === 'Enter' || e.key === 'Tab')) {
+                    e.preventDefault();
+                }
+                return;
+            }
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
                 setActive((i) => (i + 1) % matches.length);
@@ -73,7 +79,7 @@ const MentionMenu: React.FC<MentionMenuProps> = ({
         };
         window.addEventListener('keydown', handler, true);
         return () => window.removeEventListener('keydown', handler, true);
-    }, [matches, index, onPick, onClose]);
+    }, [matches, index, people, onPick, onClose]);
 
     if (people && people.length === 0 && !filter) return null;
 

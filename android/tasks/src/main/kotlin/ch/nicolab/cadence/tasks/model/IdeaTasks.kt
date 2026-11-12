@@ -19,6 +19,20 @@ object IdeaTasks {
     /** La première adresse du texte, s'il y en a une. */
     fun address(text: String): String? = LinkExtractor.urls(text, 1).firstOrNull()
 
+    /**
+     * L'adresse d'une saisie qui n'est qu'un lien (web : `linkOnlyAddress`) : une seule ligne, l'adresse, au plus des
+     * `#étiquettes` et un `+projet` ou `~domaine` ; sinon null. Seule une telle saisie propose « Liens ».
+     */
+    fun linkOnly(text: String): String? {
+        if (text.trim().contains('\n')) return null
+        val url = address(text) ?: return null
+        val rest = LinkLists.textAround(text, url)
+            .replace(Regex("""(^|\s)#[^\s#]+"""), " ")
+            .replace(Regex("""(^|\s)[+~](?:"[^"]+"|\S+)"""), " ")
+            .trim()
+        return if (rest.isEmpty()) url else null
+    }
+
     /** Le texte sans son adresse ; tout le texte rogné quand il n'en a pas. */
     fun rest(text: String): String {
         val url = address(text) ?: return text.trim()

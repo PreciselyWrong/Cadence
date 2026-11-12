@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
     Bars3Icon,
-    ChevronUpDownIcon,
     MagnifyingGlassIcon,
     Squares2X2Icon,
-} from '@heroicons/react/24/solid';
+} from '@heroicons/react/24/outline';
 import ConfirmDialog from './Shared/ConfirmDialog';
 import ProjectModal from './Project/ProjectModal';
 import FilterDropdown, { FilterOption } from './Shared/FilterDropdown';
@@ -44,10 +43,11 @@ import {
 import ProjectItem from './Project/ProjectItem';
 import DormantProjects from './Project/DormantProjects';
 import BookmarksImportDialog from './Project/BookmarksImportDialog';
-import { PROJECT_TABLE_GRID } from './Project/projectTableLayout';
 import SortableItem from './Shared/SortableItem';
 import { useSidebarDrop } from './Sidebar/sidebarDrop';
-import NewItemButton from './Shared/NewItemButton';
+import PageHeader from './Shared/ui/PageHeader';
+import Button, { IconButton } from './Shared/ui/Button';
+import SearchField from './Shared/ui/SearchField';
 import ImportWizard from './Spreadsheet/ImportWizard';
 import BlankSlate from './Shared/BlankSlate';
 import { projectMatchesFocus, useFocus } from '../utils/focus';
@@ -203,12 +203,13 @@ const Projects: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [viewMode, setViewMode] = useState<'cards' | 'list'>(() => {
         const saved = localStorage.getItem('projectsViewMode');
-        return saved === 'list' || saved === 'cards' ? saved : 'cards';
+        return saved === 'list' || saved === 'cards' ? saved : 'list';
     });
     const [isSearchExpanded, setIsSearchExpanded] = useState<boolean>(false);
     const [orderBy, setOrderBy] = useState<string>(() => {
         const saved = localStorage.getItem('projectsSortOrder');
-        return saved || 'created_at:desc';
+        // Most useful first: the projects touched last.
+        return saved || 'updated_at:desc';
     });
 
     const [searchParams, setSearchParams] = useSearchParams();
@@ -572,11 +573,6 @@ const Projects: React.FC = () => {
         }
     };
 
-    const getCompletionPercentage = (project: Project) => {
-        // Now the completion percentage comes directly from the backend
-        return (project as any).completion_percentage || 0;
-    };
-
     const handleStatusFilterChange = (value: string) => {
         const params = new URLSearchParams(searchParams);
 
@@ -775,7 +771,6 @@ const Projects: React.FC = () => {
         <ProjectItem
             project={project}
             viewMode={viewMode}
-            getCompletionPercentage={() => getCompletionPercentage(project)}
             activeDropdown={activeDropdown}
             setActiveDropdown={setActiveDropdown}
             handleEditProject={handleEditProject}
@@ -792,54 +787,14 @@ const Projects: React.FC = () => {
     const projectsContainerClass =
         viewMode === 'cards'
             ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'
-            : 'flex flex-col rounded-lg bg-gray-50 dark:bg-gray-900 shadow-sm p-1.5';
-
-    const sortHeader = (label: string, value: string) => (
-        <button
-            type="button"
-            onClick={() => handleSortChange(value)}
-            className={`flex items-center gap-1 uppercase tracking-wide hover:text-gray-800 dark:hover:text-gray-200 transition-colors ${
-                orderBy === value ? 'text-gray-800 dark:text-gray-200' : ''
-            }`}
-            aria-pressed={orderBy === value}
-        >
-            {label}
-            <ChevronUpDownIcon className="h-3.5 w-3.5" />
-        </button>
-    );
-
-    const tableHeader =
-        viewMode === 'list' ? (
-            <div
-                className={`${PROJECT_TABLE_GRID} px-4 py-2.5 mb-1 rounded-md bg-gray-100 dark:bg-gray-800/60 text-[12px] font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300`}
-                role="row"
-            >
-                {sortHeader(t('projects.table.name', 'Name'), 'name:asc')}
-                <span>{t('projects.table.status', 'Status')}</span>
-                <span className="hidden xl:block">
-                    {t('projects.table.summary', 'Summary')}
-                </span>
-                <span className="hidden lg:block">
-                    {t('projects.table.members', 'Members')}
-                </span>
-                <span className="hidden md:block">
-                    {sortHeader(
-                        t('projects.table.due', 'Due'),
-                        'due_date_at:asc'
-                    )}
-                </span>
-                <span className="hidden md:block">
-                    {t('projects.table.progress', 'Progress')}
-                </span>
-                <span />
-            </div>
-        ) : null;
+            : 'flex flex-col';
 
     if (isLoading) {
         return (
-            <div className="w-full px-4 sm:px-6 lg:px-8 pt-4 pb-8">
-                <div className="w-full max-w-7xl mx-auto">
-                    <SkeletonRows variant="card" rows={7} />
+            <div className="mx-auto w-full max-w-4xl pb-8">
+                <PageHeader title={t('projects.title')} />
+                <div className="px-3">
+                    <SkeletonRows rows={7} />
                 </div>
             </div>
         );
@@ -847,98 +802,86 @@ const Projects: React.FC = () => {
 
     if (isError) {
         return (
-            <div className="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
-                <div className="text-red-500 text-lg">
-                    {t('projects.error')}
-                </div>
+            <div className="p-8 text-body-m text-danger">
+                {t('projects.error')}
             </div>
         );
     }
 
     return (
-        <div className="w-full px-4 sm:px-6 lg:px-8 pt-4 pb-8">
-            <div className="w-full max-w-7xl mx-auto">
-                {/* The tools drop to their own line on a phone instead of
-                    squeezing the counts into a column. */}
-                <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
-                    <div className="flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-1">
-                        <h2 className="text-2xl font-light">
-                            {t('projects.title')}
-                        </h2>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                            {t('projects.counts.active', '{{n}} active', {
-                                n: liveProjectCount,
-                            })}
-                            {stashProjectCount > 0 && (
-                                <>
-                                    {' · '}
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            handleStatusFilterChange('paused')
-                                        }
-                                        className="underline-offset-2 hover:underline focus:outline-none focus-visible:underline"
-                                    >
-                                        {t(
-                                            'projects.counts.stash',
-                                            '{{n}} in the stash',
-                                            { n: stashProjectCount }
-                                        )}
-                                    </button>
-                                </>
-                            )}
-                        </p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <button
-                            onClick={() =>
-                                setIsSearchExpanded(!isSearchExpanded)
-                            }
-                            className={`flex items-center transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset rounded-lg p-1.5 sm:p-2 ${
-                                isSearchExpanded
-                                    ? 'bg-blue-50/70 dark:bg-blue-900/20'
-                                    : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'
-                            }`}
+        <div
+            className={`mx-auto w-full pb-8 ${
+                viewMode === 'list' ? 'max-w-4xl' : 'max-w-7xl'
+            }`}
+        >
+            <PageHeader
+                title={t('projects.title')}
+                meta={
+                    <>
+                        {t('projects.counts.active', '{{n}} active', {
+                            n: liveProjectCount,
+                        })}
+                        {stashProjectCount > 0 && (
+                            <>
+                                {' · '}
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        handleStatusFilterChange('paused')
+                                    }
+                                    className="underline-offset-2 hover:underline focus:outline-none focus-visible:underline"
+                                >
+                                    {t(
+                                        'projects.counts.stash',
+                                        '{{n}} in the stash',
+                                        { n: stashProjectCount }
+                                    )}
+                                </button>
+                            </>
+                        )}
+                    </>
+                }
+                actions={
+                    <>
+                        <IconButton
+                            label={t('common.search', 'Search')}
+                            active={isSearchExpanded}
                             aria-expanded={isSearchExpanded}
-                            aria-label={t('common.search', 'Search')}
-                            title={t('common.search', 'Search')}
+                            onClick={() => {
+                                if (isSearchExpanded) setSearchQuery('');
+                                setIsSearchExpanded(!isSearchExpanded);
+                            }}
                         >
-                            <MagnifyingGlassIcon className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600 dark:text-gray-200" />
-                        </button>
+                            <MagnifyingGlassIcon />
+                        </IconButton>
                         <div
-                            className="flex items-center rounded-lg bg-gray-100 dark:bg-gray-800 p-0.5"
+                            className="flex items-center gap-0.5"
                             role="group"
                             aria-label={t('projects.viewAs', 'View')}
                         >
                             {(
                                 [
                                     [
-                                        'cards',
-                                        Squares2X2Icon,
-                                        t('projects.cardViewAriaLabel'),
-                                    ],
-                                    [
                                         'list',
                                         Bars3Icon,
                                         t('projects.listViewAriaLabel'),
                                     ],
+                                    [
+                                        'cards',
+                                        Squares2X2Icon,
+                                        t('projects.cardViewAriaLabel'),
+                                    ],
                                 ] as const
                             ).map(([mode, Icon, label]) => (
-                                <button
+                                <IconButton
                                     key={mode}
-                                    type="button"
-                                    onClick={() => setViewMode(mode)}
-                                    className={`p-1 sm:p-1.5 rounded-md transition-colors ${
-                                        viewMode === mode
-                                            ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
-                                            : 'text-gray-600 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200'
-                                    }`}
-                                    aria-label={label}
+                                    label={label}
+                                    active={viewMode === mode}
                                     aria-pressed={viewMode === mode}
-                                    title={label}
+                                    onClick={() => setViewMode(mode)}
                                 >
-                                    <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
-                                </button>
+                                    <Icon />
+                                </IconButton>
                             ))}
                         </div>
                         <OverflowMenu
@@ -1049,17 +992,19 @@ const Projects: React.FC = () => {
                             ]}
                         />
                         {canCreateProjects && (
-                            <NewItemButton
-                                label={t('projects.new', 'New Project')}
+                            <Button
+                                variant="primary"
+                                icon={<PlusIcon className="h-4 w-4" />}
                                 onClick={handleNewProject}
-                                testId="new-project-button"
-                            />
+                                data-testid="new-project-button"
+                            >
+                                {t('projects.new', 'New Project')}
+                            </Button>
                         )}
-                    </div>
-                </div>
-
-                {/* Status and area filters: one row, sharing it on phones */}
-                <div className="flex items-center gap-3 mb-6 sm:justify-end">
+                    </>
+                }
+            >
+                <div className="flex flex-wrap items-center gap-2">
                     <FilterDropdown
                         options={statusOptions}
                         value={statusFilter}
@@ -1090,28 +1035,18 @@ const Projects: React.FC = () => {
                             fill
                         />
                     )}
-                </div>
-
-                {/* Collapsible Search Bar */}
-                <div
-                    className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                        isSearchExpanded
-                            ? 'max-h-20 opacity-100 mb-4'
-                            : 'max-h-0 opacity-0 mb-0'
-                    }`}
-                >
-                    <div className="flex items-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm p-2">
-                        <MagnifyingGlassIcon className="h-5 w-5 text-gray-600 dark:text-gray-300 mr-2" />
-                        <input
-                            type="text"
-                            placeholder={t('projects.searchPlaceholder')}
+                    {isSearchExpanded && (
+                        <SearchField
+                            className="min-w-[12rem] flex-1"
                             value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full bg-transparent border-none focus:ring-0 focus:outline-none dark:text-white"
+                            onChange={setSearchQuery}
+                            placeholder={t('projects.searchPlaceholder')}
                         />
-                    </div>
+                    )}
                 </div>
+            </PageHeader>
 
+            <div className="px-3 max-sm:px-1">
                 {/* Projects Grid/List */}
                 {displayProjects.length === 0 ? (
                     projects.length === 0 ? (
@@ -1221,8 +1156,7 @@ const Projects: React.FC = () => {
                                     : verticalListSortingStrategy
                             }
                         >
-                            <div className={projectsContainerClass}>
-                                {tableHeader}
+                            <div role="list" className={projectsContainerClass}>
                                 {displayProjects.map((project) => (
                                     <SortableItem
                                         key={project.id}
@@ -1241,8 +1175,7 @@ const Projects: React.FC = () => {
                         </SortableContext>
                     </DndContext>
                 ) : (
-                    <div className={projectsContainerClass}>
-                        {tableHeader}
+                    <div role="list" className={projectsContainerClass}>
                         {displayProjects.map((project) => (
                             <React.Fragment key={project.id}>
                                 {renderProjectRow(project)}

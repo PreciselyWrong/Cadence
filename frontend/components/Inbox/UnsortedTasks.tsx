@@ -3,11 +3,15 @@ import { useTranslation } from 'react-i18next';
 import { Task } from '../../entities/Task';
 import { fetchTasks } from '../../utils/tasksService';
 import { decideTask, TaskDecision } from '../../utils/reviewService';
-import { openTaskPanel } from '../../store/taskPanelStore';
+import { useTaskPane } from '../../contexts/TaskPaneContext';
 import { useToast } from '../Shared/ToastContext';
 
 const chip =
-    'min-h-[32px] rounded-full border border-gray-200 px-3 text-xs text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:opacity-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800';
+    'h-7 rounded-lg px-2.5 text-xs font-medium text-surface-on ring-1 ring-inset ring-outline-variant hover:bg-surface-high focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 disabled:opacity-50 max-sm:min-h-[44px]';
+
+// A long backlog would push the ideas out of sight: the first few, then
+// "Show all".
+const VISIBLE = 5;
 
 // « Tâches à classer » (docs/41-auto-classify.md): open tasks with no moment
 // decided, filed nowhere or filed for the user (needs_when). A filed one asks
@@ -19,6 +23,8 @@ const UnsortedTasks: React.FC<{ reloadKey?: number }> = ({ reloadKey = 0 }) => {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [busy, setBusy] = useState<string | null>(null);
     const [picking, setPicking] = useState<string | null>(null);
+    const [showAll, setShowAll] = useState(false);
+    const { openTaskUid, openTask, closeTask } = useTaskPane();
 
     const load = useCallback(
         () =>
@@ -51,29 +57,41 @@ const UnsortedTasks: React.FC<{ reloadKey?: number }> = ({ reloadKey = 0 }) => {
     if (tasks.length === 0) return null;
 
     return (
-        <section className="mb-5" aria-labelledby="unsorted-tasks-title">
+        <section className="mb-4" aria-labelledby="unsorted-tasks-title">
             <h2
                 id="unsorted-tasks-title"
-                className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200"
+                className="flex h-8 items-center gap-1.5 px-2 text-xs font-medium text-surface-on-variant"
             >
                 {t('inbox.unsorted.title', 'Tâches à classer')}
+                <span className="tabular-nums">{tasks.length}</span>
             </h2>
-            <ul className="divide-y divide-gray-100 rounded-xl bg-white dark:divide-gray-800 dark:bg-gray-900">
-                {tasks.map((task) => {
+            <ul>
+                {(showAll ? tasks : tasks.slice(0, VISIBLE)).map((task) => {
                     const place = task.Project?.name || task.Area?.name;
                     return (
-                        <li key={task.uid} className="px-3 py-2">
+                        <li
+                            key={task.uid}
+                            data-task-row=""
+                            className={`rounded-xl px-3 py-2 ${
+                                openTaskUid === task.uid
+                                    ? 'bg-surface-highest'
+                                    : 'hover:bg-surface-high/60'
+                            }`}
+                        >
                             <button
                                 type="button"
-                                className="w-full text-left text-sm text-gray-900 hover:underline dark:text-gray-100"
+                                className="block w-full truncate text-left text-body font-medium leading-6 text-surface-on outline-none focus-visible:underline"
                                 onClick={() =>
-                                    task.uid && openTaskPanel(task.uid)
+                                    task.uid &&
+                                    (openTaskUid === task.uid
+                                        ? closeTask()
+                                        : openTask(task.uid))
                                 }
                             >
                                 {task.name}
                             </button>
                             {place && (
-                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                <p className="truncate text-xs text-surface-on-variant">
                                     {place}
                                 </p>
                             )}
@@ -84,9 +102,9 @@ const UnsortedTasks: React.FC<{ reloadKey?: number }> = ({ reloadKey = 0 }) => {
                                         'inbox.unsorted.when',
                                         'Quand ?'
                                     )}
-                                    className="mt-2 flex flex-wrap items-center gap-2"
+                                    className="mt-1.5 flex flex-wrap items-center gap-1.5"
                                 >
-                                    <span className="text-xs font-medium text-gray-600 dark:text-gray-300">
+                                    <span className="mr-1 text-xs text-surface-on-variant">
                                         {t('inbox.unsorted.when', 'Quand ?')}
                                     </span>
                                     <button
@@ -112,7 +130,7 @@ const UnsortedTasks: React.FC<{ reloadKey?: number }> = ({ reloadKey = 0 }) => {
                                                 'inbox.unsorted.date',
                                                 'Une date'
                                             )}
-                                            className="min-h-[32px] rounded-lg border border-gray-200 px-2 text-xs dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+                                            className="h-7 rounded-lg border-0 bg-surface-high px-2 text-xs text-surface-on"
                                             onChange={(event) =>
                                                 event.target.value &&
                                                 decide(task, {
@@ -165,6 +183,15 @@ const UnsortedTasks: React.FC<{ reloadKey?: number }> = ({ reloadKey = 0 }) => {
                     );
                 })}
             </ul>
+            {!showAll && tasks.length > VISIBLE && (
+                <button
+                    type="button"
+                    onClick={() => setShowAll(true)}
+                    className="mt-1 h-7 rounded-lg px-3 text-xs font-medium text-surface-on-variant hover:bg-surface-high hover:text-surface-on"
+                >
+                    {t('common.showAll', 'Show All')}
+                </button>
+            )}
         </section>
     );
 };

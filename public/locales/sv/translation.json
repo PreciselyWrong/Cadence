@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}} anteckningar",
+        "notes_one": "{{count}} anteckning",
+        "tasks_other": "{{count}} uppgifter",
+        "tasks_one": "{{count}} uppgift",
+        "goals_other": "{{count}} mål",
+        "goals_one": "{{count}} mål",
+        "projects_other": "{{count}} projekt",
+        "projects_one": "{{count}} projekt"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -128,6 +138,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(inget ämne)",
+      "draft": "Utkast klart:",
+      "task": "Uppgift",
+      "reply": "Svara",
+      "later": "Senare",
+      "dismiss": "Ignorera",
+      "archive": "Arkivera i Gmail",
+      "taskName": "Uppgiftens namn",
+      "taskDue": "Förfallodatum",
+      "createTask": "Skapa uppgiften",
+      "taskCreated": "Uppgift skapad",
+      "replied": "Svar öppnat i Gmail",
+      "postponed": "Kommer tillbaka i morgon",
+      "dismissed": "Mejl ignorerat",
+      "notArchived": "Inte arkiverat i Gmail"
+    },
     "linkLater": "Om 30 dagar",
     "linkArchive": "Arkivera",
     "linkKeep": "Behåll",
@@ -499,7 +526,7 @@
     "assignedTo": "Tilldelat till",
     "subtasks": "Deluppgifter",
     "openFullPage": "Öppna fullständig vy",
-    "openPanel": "Öppna i sidopanelen",
+    "openPanel": "Öppna detaljer",
     "quickEdit": {
       "setPriority": "Ange prioritet",
       "setDueDate": "Ange förfallodatum"
@@ -2331,6 +2358,15 @@
     "linkedNoteNotNow": "Inte nu",
     "linkedNoteCreate": "Skapa anteckning",
     "linkedNoteCreateFailed": "Det gick inte att skapa anteckningen.",
+    "outlineZoomIn": "Zooma in",
+    "outlineExpand": "Fäll ut",
+    "outlineCollapse": "Fäll ihop",
+    "outlineMakeTask": "Skapa en uppgift",
+    "outlineTaskCreated": "Uppgift skapad: {{name}}",
+    "outlineTaskFailed": "Kunde inte skapa uppgiften.",
+    "outlinePath": "Dispositionssökväg",
+    "outlineAll": "Allt",
+    "outlineBulletMenu": "Punkt",
     "backgroundImage": "Bakgrund",
     "noBackground": "Ingen bakgrund",
     "openInNotes": "Öppna i Anteckningar",
@@ -4283,12 +4319,14 @@
     "task": "Uppgift",
     "note": "Anteckning",
     "project": "Projekt",
+    "link": "Länkar",
     "addTo": "Lägg till i",
     "filesLabel": "Filer att bifoga",
     "removeFile": "Ta bort {{name}}",
     "fileTooLarge": "{{name}} är större än {{limit}} MB, så den lades inte till.",
     "tooManyFiles": "Du kan lägga till upp till {{max}} filer åt gången.",
     "savedInbox": "”{{title}}” sparades i inkorgen.",
+    "savedLink": "”{{title}}” sparades i Länkar.",
     "savedInboxMany": "{{total}} objekt sparades i inkorgen.",
     "createdTask": "Uppgiften ”{{title}}” skapades.",
     "createdTasks": "{{total}} uppgifter skapades.",

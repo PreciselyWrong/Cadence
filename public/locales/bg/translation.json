@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}} бележки",
+        "notes_one": "{{count}} бележка",
+        "tasks_other": "{{count}} задачи",
+        "tasks_one": "{{count}} задача",
+        "goals_other": "{{count}} цели",
+        "goals_one": "{{count}} цел",
+        "projects_other": "{{count}} проекта",
+        "projects_one": "{{count}} проект"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -128,6 +138,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(без тема)",
+      "draft": "Черновата е готова:",
+      "task": "Задача",
+      "reply": "Отговори",
+      "later": "По-късно",
+      "dismiss": "Пренебрегни",
+      "archive": "Архивирай в Gmail",
+      "taskName": "Име на задачата",
+      "taskDue": "Краен срок",
+      "createTask": "Създай задачата",
+      "taskCreated": "Задачата е създадена",
+      "replied": "Отговорът е отворен в Gmail",
+      "postponed": "Връща се утре",
+      "dismissed": "Писмото е пренебрегнато",
+      "notArchived": "Не е архивирано в Gmail"
+    },
     "linkLater": "След 30 дни",
     "linkArchive": "Архивирай",
     "linkKeep": "Запази",
@@ -499,7 +526,7 @@
     "assignedTo": "Назначено на",
     "subtasks": "Подзадачи",
     "openFullPage": "Отвори пълен изглед",
-    "openPanel": "Отвори в страничния панел",
+    "openPanel": "Отвори подробностите",
     "quickEdit": {
       "setPriority": "Задай приоритет",
       "setDueDate": "Задай срок"
@@ -2331,6 +2358,15 @@
     "linkedNoteNotNow": "Не сега",
     "linkedNoteCreate": "Създай бележка",
     "linkedNoteCreateFailed": "Бележката не можа да бъде създадена.",
+    "outlineZoomIn": "Приближи",
+    "outlineExpand": "Разгъни",
+    "outlineCollapse": "Сгъни",
+    "outlineMakeTask": "Създай задача",
+    "outlineTaskCreated": "Задачата е създадена: {{name}}",
+    "outlineTaskFailed": "Задачата не можа да бъде създадена.",
+    "outlinePath": "Път в структурата",
+    "outlineAll": "Всичко",
+    "outlineBulletMenu": "Водещ символ",
     "backgroundImage": "Фон",
     "noBackground": "Без фон",
     "openInNotes": "Отвори в Бележки",
@@ -4283,12 +4319,14 @@
     "task": "Задача",
     "note": "Бележка",
     "project": "Проект",
+    "link": "Връзки",
     "addTo": "Добави към",
     "filesLabel": "Файлове за прикачване",
     "removeFile": "Премахни {{name}}",
     "fileTooLarge": "{{name}} е по-голям от {{limit}} MB, затова не беше добавен.",
     "tooManyFiles": "Наведнъж могат да се добавят до {{max}} файла.",
     "savedInbox": "„{{title}}“ е запазено във Входящи.",
+    "savedLink": "„{{title}}“ е запазено във Връзки.",
     "savedInboxMany": "{{total}} елемента са запазени във Входящи.",
     "createdTask": "Задачата „{{title}}“ е създадена.",
     "createdTasks": "Създадени са {{total}} задачи.",

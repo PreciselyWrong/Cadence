@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Page Planifier (ex « À venir ») -->
+    <string name="plan_mode_days">Jours</string>
+    <string name="plan_mode_horizons">Horizons</string>
+    <string name="plan_inbox">Inbox</string>
+    <string name="plan_inbox_empty">Rien à planifier.</string>
+    <string name="plan_overdue">Échues</string>
+    <string name="plan_overdue_to_today">Tout à aujourd\'hui</string>
+    <string name="plan_add">Ajouter</string>
+    <string name="plan_day_empty">Rien de prévu.</string>
+    <string name="plan_done_count">Terminées (%d)</string>
+    <string name="plan_horizon_week">Cette semaine</string>
+    <string name="plan_horizon_this_month">Ce mois-ci</string>
+    <string name="plan_horizon_next_month">Mois prochain</string>
+    <string name="plan_horizon_someday">Un jour</string>
+    <string name="plan_horizon_empty">Rien ici.</string>
+    <string name="plan_planned_on_day">Prévues un jour</string>
+    <string name="plan_sheet_title">Planifier</string>
+    <string name="plan_sheet_days">Jour</string>
+    <string name="plan_sheet_horizons">Horizon</string>
+    <string name="plan_sheet_remove">Retirer de ce jour</string>
+    <string name="plan_sheet_more">Plus d\'actions</string>
+    <string name="plan_sheet_open">Ouvrir la tâche</string>
+    <string name="plan_moved_notice">« %1$s » → %2$s</string>
+    <string name="plan_removed_notice">« %1$s » retirée du jour</string>
+    <string name="plan_horizon_notice">« %1$s » → %2$s</string>
+    <plurals name="plan_moved_many">
+        <item quantity="one">%1$d tâche → %2$s</item>
+        <item quantity="other">%1$d tâches → %2$s</item>
+    </plurals>
+    <string name="today_reordered_notice">« %1$s » rangée</string>
+    <string name="today_drag_handle">Glisser pour ranger</string>
+    <string name="timeline_moved_notice">« %1$s » à %2$s</string>
+    <string name="timeline_resized_notice">« %1$s » : %2$s</string>
+    <string name="backlinks_title">Rétroliens</string>
+    <string name="backlinks_note">Note : %1$s</string>
+    <string name="backlinks_task">Tâche : %1$s</string>
+    <string name="content_task_not_found">Aucune tâche « %1$s »</string>
+    <string name="tasks_source_description">Origine : %1$s</string>
+    <string name="plan_hide_done">Masquer les terminées</string>
+    <string name="plan_show_done">Afficher les terminées</string>
+</resources>

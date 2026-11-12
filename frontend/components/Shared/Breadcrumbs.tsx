@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { useStore } from '../../store/useStore';
 import { createUidSlug, extractUidFromSlug } from '../../utils/slugUtils';
+import { PAGE_GUTTER } from './ui/PageShell';
 
 interface Crumb {
     label: string;
@@ -182,7 +183,9 @@ const Breadcrumbs: React.FC = () => {
     return (
         <nav
             aria-label={t('common.breadcrumb', 'Breadcrumb')}
-            className="w-full px-2 sm:px-4 lg:px-6 pt-2"
+            // The gutter of page headers, so the trail starts where the
+            // title does.
+            className={`w-full ${PAGE_GUTTER} pt-2`}
         >
             <ol className="flex items-center gap-1 min-w-0 text-xs text-gray-600 dark:text-gray-300">
                 {crumbs.map((crumb, index) => {

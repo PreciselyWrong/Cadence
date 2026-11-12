@@ -30,7 +30,7 @@ export interface TriageItem {
     type: string;
     source: string;
     task_uid: string | null;
-    action: TriageAction | 'question' | 'classify';
+    action: TriageAction | 'question' | 'classify' | 'decide_mail';
     payload: Record<string, unknown> | null;
     reason: string;
     details: string[];
@@ -51,12 +51,14 @@ export interface TriageQueue {
     items: TriageItem[];
     tasks: Record<string, TriageTask>;
     count: number;
+    // The Gmail gateway is set: a mail card may archive its thread.
+    mail_archive?: boolean;
 }
 
 const newKey = () =>
     `triage:${Date.now()}:${Math.random().toString(36).slice(2, 10)}`;
 
-async function post(path: string, body: unknown): Promise<void> {
+async function send(path: string, body: unknown): Promise<Response> {
     const response = await fetch(getApiPath(path), {
         method: 'POST',
         credentials: 'include',
@@ -64,6 +66,11 @@ async function post(path: string, body: unknown): Promise<void> {
         body: JSON.stringify(body),
     });
     await handleAuthResponse(response, 'Failed to update the triage queue.');
+    return response;
+}
+
+async function post(path: string, body: unknown): Promise<void> {
+    await send(path, body);
 }
 
 export const fetchTriageQueue = async (): Promise<TriageQueue> => {
@@ -89,3 +96,42 @@ export const applyTriage = (
         payload,
         idempotency_key: newKey(),
     });
+
+// A mail thread an agent proposed (docs/43-mail-triage.md). Every text field
+// comes from a mail: shown as plain text only.
+export interface MailPayload {
+    mail_uid: string;
+    account: string;
+    from_name: string | null;
+    from_address: string | null;
+    subject: string | null;
+    received_at: string;
+    summary: string;
+    suggestion: {
+        kind: 'task' | 'reply' | 'read';
+        task_name?: string;
+        due_date?: string;
+        project_uid?: string;
+    } | null;
+    draft_excerpt: string | null;
+    gmail_url: string;
+}
+
+export type MailDecision = 'task' | 'reply' | 'later' | 'dismiss';
+
+export interface MailOutcome {
+    archived?: boolean;
+}
+
+export const decideMail = async (
+    mailUid: string,
+    decision: MailDecision,
+    payload: Record<string, unknown>,
+    archive: boolean
+): Promise<MailOutcome> => {
+    const response = await send(
+        `triage/mail/${encodeURIComponent(mailUid)}/decide`,
+        { decision, payload, archive, idempotency_key: newKey() }
+    );
+    return response.json();
+};

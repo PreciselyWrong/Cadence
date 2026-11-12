@@ -44,6 +44,10 @@ import { useTaskPane } from '../../contexts/TaskPaneContext';
 import { useStore } from '../../store/useStore';
 import { useToast } from '../Shared/ToastContext';
 import Button, { IconButton } from '../Shared/ui/Button';
+import Segmented from '../Shared/ui/Segmented';
+import { useViewportWidth } from '../../hooks/useViewportWidth';
+import { PAGE_TITLE_CLASS } from '../Shared/ui/PageHeader';
+import { PAGE_GUTTER } from '../Shared/ui/PageShell';
 import {
     createTask,
     toggleTaskCompletion,
@@ -105,8 +109,10 @@ import {
     HORIZON_KEYS,
     HorizonKey,
     bucketHorizons,
+    horizonColumns,
     horizonOf,
     horizonPatch,
+    horizonRowsFill,
     plannedThisWeek,
     weekDates,
 } from './horizons';
@@ -247,18 +253,6 @@ const writeStored = (key: string, value: string) => {
     }
 };
 
-const useViewportWidth = (): number => {
-    const [width, setWidth] = useState(() =>
-        typeof window === 'undefined' ? 0 : window.innerWidth
-    );
-    useEffect(() => {
-        const update = () => setWidth(window.innerWidth);
-        window.addEventListener('resize', update);
-        return () => window.removeEventListener('resize', update);
-    }, []);
-    return width;
-};
-
 const useElementWidth = (ref: React.RefObject<HTMLElement>): number => {
     const [width, setWidth] = useState(0);
     useEffect(() => {
@@ -271,13 +265,6 @@ const useElementWidth = (ref: React.RefObject<HTMLElement>): number => {
         return () => observer.disconnect();
     }, [ref]);
     return width;
-};
-
-// Horizons side by side when they get 200 px each, else two by two (all
-// four stay in view), one under the other on a phone.
-const horizonColumns = (width: number): number => {
-    if (width === 0 || width >= 4 * 200 + 3 * 12) return 4;
-    return width >= 2 * 200 + 12 ? 2 : 1;
 };
 
 const filterTasks = (tasks: Task[], filters: PlanFilters): Task[] =>
@@ -1641,13 +1628,6 @@ const UpcomingBoard: React.FC = () => {
         );
     };
 
-    const segment = (active: boolean) =>
-        `h-7 rounded-md px-3 text-body-m font-medium transition-colors duration-150 ${
-            active
-                ? 'bg-surface text-surface-on shadow-sm'
-                : 'text-surface-on-variant hover:text-surface-on'
-        }`;
-
     const filterProjects = projects
         .filter((project) => project.id !== undefined)
         .map((project) => ({
@@ -1756,32 +1736,28 @@ const UpcomingBoard: React.FC = () => {
                 data-testid="upcoming-board"
                 className="flex h-full min-h-0 w-full flex-col bg-surface max-md:h-auto max-md:min-h-[calc(100dvh-3.5rem)] max-md:pb-24"
             >
-                <header className="flex flex-wrap items-center gap-x-3 gap-y-2 px-5 pb-2 pt-4">
-                    <h1 className="text-title font-semibold text-surface-on">
+                <header
+                    className={`flex flex-wrap items-center gap-x-3 gap-y-2 ${PAGE_GUTTER} pb-3 pt-6`}
+                >
+                    <h1 className={`mr-1 ${PAGE_TITLE_CLASS}`}>
                         {t('upcoming.title', 'Plan')}
                     </h1>
-                    <div
-                        role="group"
+                    <Segmented
                         aria-label={t('upcoming.layout', 'Layout')}
-                        className="inline-flex rounded-lg bg-surface-high p-0.5"
-                    >
-                        <button
-                            type="button"
-                            aria-pressed={!horizonsMode}
-                            onClick={() => patchOptions({ mode: 'days' })}
-                            className={segment(!horizonsMode)}
-                        >
-                            {t('upcoming.days', 'Days')}
-                        </button>
-                        <button
-                            type="button"
-                            aria-pressed={horizonsMode}
-                            onClick={() => patchOptions({ mode: 'horizons' })}
-                            className={segment(horizonsMode)}
-                        >
-                            {t('upcoming.horizons', 'Horizons')}
-                        </button>
-                    </div>
+                        selected={horizonsMode ? 'horizons' : 'days'}
+                        onSelect={(mode) =>
+                            patchOptions({
+                                mode: mode === 'horizons' ? 'horizons' : 'days',
+                            })
+                        }
+                        options={[
+                            { id: 'days', label: t('upcoming.days', 'Days') },
+                            {
+                                id: 'horizons',
+                                label: t('upcoming.horizons', 'Horizons'),
+                            },
+                        ]}
+                    />
                     {!horizonsMode && (
                         <nav
                             aria-label={t('upcoming.dateNav', 'Dates')}
@@ -1870,7 +1846,7 @@ const UpcomingBoard: React.FC = () => {
                 {(error || (horizonsMode && horizon.error)) && (
                     <p
                         role="status"
-                        className="px-5 pb-2 text-body-m text-danger"
+                        className={`${PAGE_GUTTER} pb-2 text-body-m text-danger`}
                     >
                         {t('upcoming.loadFailed', 'Could not load the days.')}
                     </p>
@@ -1881,7 +1857,7 @@ const UpcomingBoard: React.FC = () => {
                     className="relative flex min-h-0 flex-1 flex-col md:flex-row"
                 >
                     <div
-                        className="flex min-h-0 min-w-0 flex-1 flex-col gap-2 pb-3 pl-4 pr-2 pt-1"
+                        className="flex min-h-0 min-w-0 flex-1 flex-col gap-2 pb-3 pl-5 pr-2 pt-1"
                         onKeyDown={onBoardKeyDown}
                     >
                         {overdueCards.length > 0 && (
@@ -1996,7 +1972,13 @@ const UpcomingBoard: React.FC = () => {
                                 }
                                 className={
                                     horizonsMode
-                                        ? 'grid min-h-0 min-w-0 flex-1 auto-rows-[minmax(0,1fr)] gap-3 overflow-y-auto p-1'
+                                        ? `grid min-h-0 min-w-0 flex-1 gap-3 overflow-y-auto p-1 ${
+                                              horizonRowsFill(
+                                                  horizonColumns(boardWidth)
+                                              )
+                                                  ? 'auto-rows-[minmax(0,1fr)]'
+                                                  : 'content-start auto-rows-auto'
+                                          }`
                                         : 'flex min-h-0 min-w-0 flex-1 snap-x snap-proximity scroll-px-1 gap-3 overflow-x-auto p-1'
                                 }
                             >
@@ -2021,6 +2003,9 @@ const UpcomingBoard: React.FC = () => {
                                               onAdd={(name) =>
                                                   void addToHorizon(key, name)
                                               }
+                                              fill={horizonRowsFill(
+                                                  horizonColumns(boardWidth)
+                                              )}
                                           />
                                       ))
                                     : dates.map((date) => {

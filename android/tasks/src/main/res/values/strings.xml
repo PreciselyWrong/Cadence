@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="tasks_tab_today">Aujourd\'hui</string>
-    <string name="tasks_tab_upcoming">À venir</string>
+    <string name="tasks_tab_upcoming">Planifier</string>
     <string name="tasks_title">Tâches</string>
     <string name="tasks_inbox_title">Inbox</string>
     <string name="tasks_open_settings">Réglages</string>
@@ -22,7 +22,6 @@
     <string name="tasks_section_completed">Terminées aujourd\'hui (%1$d)</string>
     <string name="tasks_completed_show">Afficher les tâches terminées</string>
     <string name="tasks_completed_hide">Masquer les tâches terminées</string>
-    <string name="tasks_upcoming_empty">Aucune échéance dans les 7 prochains jours.</string>
     <string name="tasks_recurring">Tâche récurrente</string>
     <string name="tasks_pending_sync">Modification non synchronisée</string>
     <string name="tasks_completed_message">Tâche terminée</string>

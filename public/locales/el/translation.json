@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}} σημειώσεις",
+        "notes_one": "{{count}} σημείωση",
+        "tasks_other": "{{count}} εργασίες",
+        "tasks_one": "{{count}} εργασία",
+        "goals_other": "{{count}} στόχοι",
+        "goals_one": "{{count}} στόχος",
+        "projects_other": "{{count}} έργα",
+        "projects_one": "{{count}} έργο"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -128,6 +138,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(χωρίς θέμα)",
+      "draft": "Πρόχειρο έτοιμο:",
+      "task": "Εργασία",
+      "reply": "Απάντηση",
+      "later": "Αργότερα",
+      "dismiss": "Παράβλεψη",
+      "archive": "Αρχειοθέτηση στο Gmail",
+      "taskName": "Όνομα εργασίας",
+      "taskDue": "Προθεσμία",
+      "createTask": "Δημιουργία εργασίας",
+      "taskCreated": "Η εργασία δημιουργήθηκε",
+      "replied": "Η απάντηση άνοιξε στο Gmail",
+      "postponed": "Επιστρέφει αύριο",
+      "dismissed": "Το μήνυμα παραβλέφθηκε",
+      "notArchived": "Δεν αρχειοθετήθηκε στο Gmail"
+    },
     "linkLater": "Σε 30 ημέρες",
     "linkArchive": "Αρχειοθέτηση",
     "linkKeep": "Κράτησε",
@@ -1356,7 +1383,7 @@
     "assignedTo": "Ανατεθειμένο σε",
     "subtasks": "Υποκαθήκοντα",
     "openFullPage": "Άνοιγμα πλήρους προβολής",
-    "openPanel": "Άνοιγμα στο πλαϊνό πάνελ",
+    "openPanel": "Άνοιγμα λεπτομερειών",
     "quickEdit": {
       "setPriority": "Ορισμός προτεραιότητας",
       "setDueDate": "Ορισμός ημερομηνίας λήξης"
@@ -1628,6 +1655,15 @@
     "linkedNoteNotNow": "Όχι τώρα",
     "linkedNoteCreate": "Δημιουργία σημείωσης",
     "linkedNoteCreateFailed": "Δεν ήταν δυνατή η δημιουργία της σημείωσης.",
+    "outlineZoomIn": "Μεγέθυνση",
+    "outlineExpand": "Ανάπτυξη",
+    "outlineCollapse": "Σύμπτυξη",
+    "outlineMakeTask": "Δημιουργία εργασίας",
+    "outlineTaskCreated": "Η εργασία δημιουργήθηκε: {{name}}",
+    "outlineTaskFailed": "Δεν ήταν δυνατή η δημιουργία της εργασίας.",
+    "outlinePath": "Διαδρομή διάρθρωσης",
+    "outlineAll": "Όλα",
+    "outlineBulletMenu": "Κουκκίδα",
     "backgroundImage": "Φόντο",
     "noBackground": "Χωρίς φόντο",
     "openInNotes": "Άνοιγμα στις Σημειώσεις",
@@ -4284,12 +4320,14 @@
     "task": "Εργασία",
     "note": "Σημείωση",
     "project": "Έργο",
+    "link": "Σύνδεσμοι",
     "addTo": "Προσθήκη σε",
     "filesLabel": "Αρχεία για επισύναψη",
     "removeFile": "Αφαίρεση {{name}}",
     "fileTooLarge": "Το {{name}} είναι μεγαλύτερο από {{limit}} MB, οπότε δεν προστέθηκε.",
     "tooManyFiles": "Μπορείτε να προσθέσετε έως {{max}} αρχεία κάθε φορά.",
     "savedInbox": "Το «{{title}}» αποθηκεύτηκε στα Εισερχόμενα.",
+    "savedLink": "Το «{{title}}» αποθηκεύτηκε στους Συνδέσμους.",
     "savedInboxMany": "Αποθηκεύτηκαν {{total}} στοιχεία στα Εισερχόμενα.",
     "createdTask": "Δημιουργήθηκε η εργασία «{{title}}».",
     "createdTasks": "Δημιουργήθηκαν {{total}} εργασίες.",

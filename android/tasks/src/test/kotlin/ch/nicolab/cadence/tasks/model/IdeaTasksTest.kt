@@ -76,4 +76,19 @@ class IdeaTasksTest {
         assertFalse(IdeaTasks.isOnlyAddress("voir https://a.io/x"))
         assertFalse(IdeaTasks.isOnlyAddress("Appeler le garage"))
     }
+
+    @Test
+    fun `une saisie qui n'est qu'une adresse, avec étiquettes et projet, est un lien seul`() {
+        org.junit.jupiter.api.Assertions.assertEquals("https://exemple.org/page", IdeaTasks.linkOnly("https://exemple.org/page #lecture +Veille"))
+        org.junit.jupiter.api.Assertions.assertEquals("https://exemple.org/page", IdeaTasks.linkOnly("  https://exemple.org/page  "))
+        org.junit.jupiter.api.Assertions.assertNull(IdeaTasks.linkOnly("Lire https://exemple.org/page"))
+        org.junit.jupiter.api.Assertions.assertNull(IdeaTasks.linkOnly("https://exemple.org/page\nautre"))
+        org.junit.jupiter.api.Assertions.assertNull(IdeaTasks.linkOnly("pas de lien #x"))
+    }
+
+    @Test
+    fun `deux écritures d'une même adresse ont la même clé`() {
+        org.junit.jupiter.api.Assertions.assertEquals(LinkKeys.of("https://exemple.org/page"), LinkKeys.of("https://EXEMPLE.org/page/#titre"))
+        org.junit.jupiter.api.Assertions.assertNotEquals(LinkKeys.of("https://exemple.org/page?a=1"), LinkKeys.of("https://exemple.org/page"))
+    }
 }
