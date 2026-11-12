@@ -9,6 +9,8 @@ import ConfirmDialog from './Shared/ConfirmDialog';
 import TagModal from './Tag/TagModal';
 import TagRow, { tagUseCount } from './Tag/TagRow';
 import PageHeader from './Shared/ui/PageHeader';
+import PageShell from './Shared/ui/PageShell';
+import EmptyState from './Shared/ui/EmptyState';
 import Button, { IconButton } from './Shared/ui/Button';
 import SearchField from './Shared/ui/SearchField';
 import { Tag } from '../entities/Tag';
@@ -211,7 +213,7 @@ const Tags: React.FC = () => {
     }
 
     return (
-        <div className="mx-auto w-full max-w-4xl pb-8">
+        <PageShell template="list">
             <PageHeader
                 title={t('tags.title', 'Tags')}
                 actions={
@@ -262,9 +264,9 @@ const Tags: React.FC = () => {
 
             <div className="px-3 max-sm:px-1">
                 {sortedTree.length === 0 ? (
-                    <p className="px-3 py-6 text-body-m text-surface-on-variant">
-                        {t('tags.noTagsFound', 'No tags found.')}
-                    </p>
+                    <EmptyState
+                        title={t('tags.noTagsFound', 'No tags found.')}
+                    />
                 ) : (
                     <div role="list">
                         {sortedTree.map((node) => renderNode(node))}
@@ -307,7 +309,7 @@ const Tags: React.FC = () => {
                     />
                 )}
             </div>
-        </div>
+        </PageShell>
     );
 };
 

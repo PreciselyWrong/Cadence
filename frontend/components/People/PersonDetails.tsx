@@ -5,9 +5,9 @@ import {
     PencilSquareIcon,
     TrashIcon,
     ArchiveBoxIcon,
+    EllipsisHorizontalIcon,
     EnvelopeIcon,
     PhoneIcon,
-    UserIcon,
     LinkIcon,
 } from '@heroicons/react/24/outline';
 import { Person } from '../../entities/Person';
@@ -29,6 +29,10 @@ import ConfirmDialog from '../Shared/ConfirmDialog';
 import TaskList from '../Task/TaskList';
 import { useStore } from '../../store/useStore';
 import { memberRoleLabel } from './memberRoleLabel';
+import PageShell, { PAGE_GUTTER } from '../Shared/ui/PageShell';
+import Button, { IconButton } from '../Shared/ui/Button';
+import Menu, { MenuEntry, MenuItem } from '../Shared/ui/Menu';
+import EmptyState from '../Shared/ui/EmptyState';
 
 const RELATIONSHIP_LABELS: Record<string, string> = {
     family: 'Family',
@@ -161,193 +165,191 @@ const PersonDetails: React.FC = () => {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center h-64 text-gray-600 dark:text-gray-300">
-                Loading...
+            <div className="flex h-64 items-center justify-center text-surface-on-variant">
+                {t('common.loading', 'Loading...')}
             </div>
         );
     }
 
     if (!person) {
-        return (
-            <div className="flex items-center justify-center h-64 text-gray-600 dark:text-gray-300">
-                Person not found.
-            </div>
-        );
+        return <EmptyState title={t('people.notFound', 'Person not found.')} />;
     }
 
-    const pillClass =
-        'inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800';
+    const canEdit = person.can_edit !== false;
+    const canArchive = canEdit && person.kind !== 'member';
+    const signInLink: MenuItem | null = person.can_sign_in_link
+        ? {
+              key: 'sign-in-link',
+              label: t('people.signInLink', 'Sign-in link'),
+              icon: <LinkIcon />,
+              onSelect: () => setSignInLinkOpen(true),
+              testId: 'person-sign-in-link',
+          }
+        : null;
+    // One action on the header (Edit, else the sign-in link), the rest in ⋯.
+    const menu: MenuEntry[] = [
+        ...(canEdit && signInLink ? [signInLink] : []),
+        ...(managesMember
+            ? [
+                  {
+                      key: 'member-edit',
+                      label: t('members.editTitle', 'Edit member'),
+                      icon: <PencilSquareIcon />,
+                      onSelect: () => setMemberEditOpen(true),
+                      testId: 'member-edit',
+                  },
+                  {
+                      key: 'member-remove',
+                      label: t('members.remove', 'Remove member'),
+                      icon: <TrashIcon />,
+                      danger: true,
+                      onSelect: () => setMemberRemoveOpen(true),
+                      testId: 'member-remove',
+                  },
+              ]
+            : []),
+        ...(canArchive
+            ? [
+                  {
+                      key: 'archive',
+                      label: person.archived
+                          ? t('people.unarchive', 'Unarchive')
+                          : t('people.archive', 'Archive'),
+                      icon: <ArchiveBoxIcon />,
+                      onSelect: handleArchive,
+                      testId: 'person-archive',
+                  },
+                  'separator' as const,
+                  {
+                      key: 'delete',
+                      label: t('common.delete', 'Delete'),
+                      icon: <TrashIcon />,
+                      danger: true,
+                      onSelect: () => setIsConfirmDialogOpen(true),
+                      testId: 'person-delete',
+                  },
+              ]
+            : []),
+    ];
+
+    const meta = [
+        person.kind === 'member'
+            ? memberRoleLabel(person, t)
+            : t('people.contact', 'Contact'),
+        RELATIONSHIP_LABELS[person.relationship_type ?? 'other'],
+        person.linked_user_id != null
+            ? t('people.linkedAccount', 'Linked to a user account')
+            : null,
+        assignedTasks.length > 0
+            ? t('counts.tasks', { count: assignedTasks.length })
+            : null,
+        person.archived ? t('people.archivedBadge', 'archived') : null,
+    ]
+        .filter(Boolean)
+        .join(' · ');
+
+    const contact = (person.email || person.phone || person.notes) && (
+        <div className="space-y-1.5">
+            {(person.email || person.phone) && (
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-body-m text-surface-on-variant">
+                    {person.email && (
+                        <a
+                            href={`mailto:${person.email}`}
+                            className="inline-flex items-center gap-1.5 hover:text-surface-on hover:underline"
+                        >
+                            <EnvelopeIcon className="h-4 w-4" />
+                            {person.email}
+                        </a>
+                    )}
+                    {person.phone && (
+                        <a
+                            href={`tel:${person.phone}`}
+                            className="inline-flex items-center gap-1.5 hover:text-surface-on hover:underline"
+                        >
+                            <PhoneIcon className="h-4 w-4" />
+                            {person.phone}
+                        </a>
+                    )}
+                </div>
+            )}
+            {person.notes && (
+                <p className="max-w-3xl whitespace-pre-line text-body-m leading-relaxed text-surface-on-variant">
+                    {person.notes}
+                </p>
+            )}
+        </div>
+    );
 
     return (
-        <div className="w-full px-2 sm:px-4 lg:px-6 pt-4 pb-12">
-            {/* Person header, same card as the other detail pages */}
+        <PageShell template="board">
             <PersonHero
                 name={person.name}
-                tint={person.color || '#3b82f6'}
-                doneCount={
-                    assignedTasks.filter((task) =>
-                        [2, 3, 'done', 'archived'].includes(task.status as any)
-                    ).length
-                }
-                totalCount={assignedTasks.length}
-                meta={
-                    <>
-                        <span className="rounded-md bg-gray-100 px-2 py-0.5 font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-300">
-                            {person.kind === 'member'
-                                ? memberRoleLabel(person, t)
-                                : t('people.contact', 'Contact')}
-                        </span>
-                        <span>
-                            {
-                                RELATIONSHIP_LABELS[
-                                    person.relationship_type ?? 'other'
-                                ]
-                            }
-                        </span>
-                        {person.linked_user_id != null && (
-                            <span className="flex items-center gap-1">
-                                <UserIcon className="h-3.5 w-3.5" />
-                                Linked account
-                            </span>
-                        )}
-                        {assignedTasks.length > 0 && (
-                            <span>
-                                {assignedTasks.length} assigned{' '}
-                                {assignedTasks.length === 1 ? 'task' : 'tasks'}
-                            </span>
-                        )}
-                        {person.archived && (
-                            <span className="text-amber-600 dark:text-amber-400">
-                                Archived
-                            </span>
-                        )}
-                    </>
-                }
-                description={
-                    <div className="space-y-2">
-                        {person.email && (
-                            <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
-                                <EnvelopeIcon className="h-4 w-4 text-gray-500" />
-                                <a
-                                    href={`mailto:${person.email}`}
-                                    className="hover:underline"
-                                >
-                                    {person.email}
-                                </a>
-                            </div>
-                        )}
-                        {person.phone && (
-                            <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
-                                <PhoneIcon className="h-4 w-4 text-gray-500" />
-                                <a
-                                    href={`tel:${person.phone}`}
-                                    className="hover:underline"
-                                >
-                                    {person.phone}
-                                </a>
-                            </div>
-                        )}
-                        {person.notes && (
-                            <p className="max-w-3xl whitespace-pre-line text-sm leading-relaxed text-gray-600 dark:text-gray-300">
-                                {person.notes}
-                            </p>
-                        )}
-                    </div>
-                }
+                color={person.color}
+                meta={meta}
+                description={contact || undefined}
                 actions={
                     <>
-                        {person.can_sign_in_link && (
-                            <button
-                                type="button"
-                                onClick={() => setSignInLinkOpen(true)}
-                                className={pillClass}
-                                data-testid="person-sign-in-link"
-                            >
-                                <LinkIcon className="h-4 w-4" />
-                                Sign-in link
-                            </button>
-                        )}
-                        {managesMember && (
-                            <>
-                                <button
-                                    type="button"
-                                    onClick={() => setMemberEditOpen(true)}
-                                    className={pillClass}
-                                    data-testid="member-edit"
-                                >
-                                    <PencilSquareIcon className="h-4 w-4" />
-                                    {t('members.editTitle', 'Edit member')}
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => setMemberRemoveOpen(true)}
-                                    className={pillClass}
-                                    data-testid="member-remove"
-                                >
-                                    <TrashIcon className="h-4 w-4" />
-                                    {t('members.remove', 'Remove member')}
-                                </button>
-                            </>
-                        )}
-                        {person.can_edit !== false && (
-                            <button
-                                type="button"
+                        {canEdit ? (
+                            <Button
+                                size="sm"
+                                variant="secondary"
+                                icon={<PencilSquareIcon className="h-4 w-4" />}
                                 onClick={() => setModalOpen(true)}
-                                className={pillClass}
-                                title="Edit person"
+                                title={t('people.editPerson', 'Edit person')}
                             >
-                                <PencilSquareIcon className="h-4 w-4" />
                                 {t('common.edit', 'Edit')}
-                            </button>
+                            </Button>
+                        ) : (
+                            signInLink && (
+                                <Button
+                                    size="sm"
+                                    variant="secondary"
+                                    icon={<LinkIcon className="h-4 w-4" />}
+                                    onClick={signInLink.onSelect}
+                                    data-testid="person-sign-in-link"
+                                >
+                                    {signInLink.label}
+                                </Button>
+                            )
                         )}
-                        {person.can_edit !== false &&
-                            person.kind !== 'member' && (
-                                <>
-                                    <button
-                                        type="button"
-                                        onClick={handleArchive}
-                                        className={pillClass}
-                                        title={
-                                            person.archived
-                                                ? 'Unarchive'
-                                                : 'Archive'
-                                        }
+                        {menu.length > 0 && (
+                            <Menu
+                                entries={menu}
+                                testId="person-actions-menu"
+                                trigger={(triggerProps) => (
+                                    <IconButton
+                                        {...triggerProps}
+                                        label={t(
+                                            'project.moreOptions',
+                                            'More options'
+                                        )}
                                     >
-                                        <ArchiveBoxIcon className="h-4 w-4" />
-                                        {person.archived
-                                            ? 'Unarchive'
-                                            : 'Archive'}
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            setIsConfirmDialogOpen(true)
-                                        }
-                                        className={pillClass}
-                                        title="Delete person"
-                                    >
-                                        <TrashIcon className="h-4 w-4" />
-                                        {t('common.delete', 'Delete')}
-                                    </button>
-                                </>
-                            )}
+                                        <EllipsisHorizontalIcon />
+                                    </IconButton>
+                                )}
+                            />
+                        )}
                     </>
                 }
             />
 
-            {/* Tabs */}
-            <div className="mb-4 flex items-center min-h-[2.5rem] gap-4 sm:gap-6 pl-2 sm:pl-3">
-                <span className="relative flex items-center self-stretch py-2.5 text-sm font-medium text-gray-900 dark:text-gray-100 after:absolute after:bottom-0 after:left-px after:right-px after:h-0.5 after:rounded-full after:bg-gray-900 dark:after:bg-gray-100">
-                    {t('tasks.title', 'Tasks')} ({assignedTasks.length})
-                </span>
-            </div>
-
             {/* Assigned Tasks */}
-            <div>
+            <section className={PAGE_GUTTER}>
+                <h2 className="mb-2 text-body font-semibold text-surface-on">
+                    {t('tasks.title', 'Tasks')}
+                    {assignedTasks.length > 0 && (
+                        <span className="ml-2 font-normal tabular-nums text-surface-on-variant">
+                            {assignedTasks.length}
+                        </span>
+                    )}
+                </h2>
                 {assignedTasks.length === 0 ? (
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                        No tasks assigned to {person.name}.
-                    </p>
+                    <EmptyState
+                        title={t('people.noAssignedTasks', {
+                            name: person.name,
+                            defaultValue: 'No tasks assigned to {{name}}.',
+                        })}
+                    />
                 ) : (
                     <TaskList
                         tasks={assignedTasks}
@@ -356,10 +358,14 @@ const PersonDetails: React.FC = () => {
                         onTaskDelete={handleTaskDelete}
                     />
                 )}
-            </div>
+            </section>
 
             {person.uid && (
-                <Backlinks type="person" uid={person.uid} className="mt-6" />
+                <Backlinks
+                    type="person"
+                    uid={person.uid}
+                    className={`mt-6 ${PAGE_GUTTER}`}
+                />
             )}
 
             {modalOpen && (
@@ -404,13 +410,17 @@ const PersonDetails: React.FC = () => {
 
             {isConfirmDialogOpen && (
                 <ConfirmDialog
-                    title="Delete Person"
-                    message={`Are you sure you want to delete "${person.name}"? This cannot be undone.`}
+                    title={t('people.deletePerson', 'Delete Person')}
+                    message={t('people.deleteConfirm', {
+                        name: person.name,
+                        defaultValue:
+                            'Are you sure you want to delete "{{name}}"? This cannot be undone.',
+                    })}
                     onConfirm={handleDelete}
                     onCancel={() => setIsConfirmDialogOpen(false)}
                 />
             )}
-        </div>
+        </PageShell>
     );
 };
 

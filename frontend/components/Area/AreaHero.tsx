@@ -2,11 +2,15 @@ import React from 'react';
 import { TFunction } from 'i18next';
 import {
     ArrowRightStartOnRectangleIcon,
-    FolderIcon,
+    EllipsisHorizontalIcon,
     PencilSquareIcon,
     ShareIcon,
 } from '@heroicons/react/24/outline';
 import { Area } from '../../entities/Area';
+import PageHeader from '../Shared/ui/PageHeader';
+import Button, { IconButton } from '../Shared/ui/Button';
+import Menu, { MenuEntry } from '../Shared/ui/Menu';
+import EntityMark from '../Shared/ui/EntityMark';
 
 interface AreaHeroProps {
     area: Area;
@@ -19,8 +23,8 @@ interface AreaHeroProps {
     onLeaveClick?: () => void;
 }
 
-// Same card as the project and goal headers: tinted surface, icon tile,
-// title, actions, and a progress bar for the tasks in the area.
+// The shared page header, as on a project: the area icon of the sidebar,
+// the name, the progress line, Edit, and Share or Leave under ⋯.
 const AreaHero: React.FC<AreaHeroProps> = ({
     area,
     t,
@@ -30,80 +34,79 @@ const AreaHero: React.FC<AreaHeroProps> = ({
     onEditClick,
     onLeaveClick,
 }) => {
-    const tint = area.color || '#3b82f6';
-    const actionClass =
-        'inline-flex h-7 items-center gap-1.5 rounded-lg px-2.5 text-body-m font-medium text-surface-on ring-1 ring-inset ring-outline-variant transition-colors hover:bg-surface-high max-sm:min-h-[44px]';
+    const menu: MenuEntry[] = [
+        {
+            key: 'share',
+            label: t('projectItem.share', 'Share'),
+            icon: <ShareIcon />,
+            onSelect: onShareClick,
+            testId: 'area-share',
+        },
+        ...(onLeaveClick && area.can_leave
+            ? [
+                  {
+                      key: 'leave',
+                      label: t('shares.leave.action', 'Leave'),
+                      icon: <ArrowRightStartOnRectangleIcon />,
+                      danger: true,
+                      onSelect: onLeaveClick,
+                      testId: 'area-leave',
+                  },
+              ]
+            : []),
+    ];
 
     return (
-        <div className="mb-6 space-y-3">
-            <div className="space-y-3 pt-6">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
-                    <span
-                        className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-white shadow-sm ring-4 ring-white dark:bg-gray-800 dark:ring-gray-900"
-                        style={{
-                            backgroundColor: `color-mix(in srgb, ${tint} 18%, transparent)`,
-                            color: tint,
-                        }}
+        <PageHeader
+            className="mb-2"
+            leading={
+                <EntityMark
+                    kind="area"
+                    color={area.color}
+                    className="h-6 w-6"
+                />
+            }
+            title={<span data-testid="area-name">{area.name}</span>}
+            meta={
+                doneCount > 0
+                    ? t(
+                          'areas.progressSummary',
+                          'Area progress · {{done}} of {{total}} tasks done',
+                          { done: doneCount, total: totalCount }
+                      )
+                    : undefined
+            }
+            actions={
+                <>
+                    <Button
+                        size="sm"
+                        variant="secondary"
+                        icon={<PencilSquareIcon className="h-4 w-4" />}
+                        onClick={onEditClick}
                     >
-                        <FolderIcon className="h-7 w-7" />
-                    </span>
-
-                    <div className="min-w-0 flex-1 space-y-2">
-                        <h1
-                            className="line-clamp-2 text-headline font-extrabold leading-tight tracking-tight text-surface-on"
-                            data-testid="area-name"
-                        >
-                            {area.name}
-                        </h1>
-                        {area.description && (
-                            <p className="max-w-3xl whitespace-pre-wrap text-sm leading-relaxed text-gray-600 dark:text-gray-300">
-                                {area.description}
-                            </p>
-                        )}
-                    </div>
-
-                    <div className="flex flex-shrink-0 flex-wrap items-center gap-2">
-                        <button
-                            type="button"
-                            onClick={onShareClick}
-                            className={actionClass}
-                        >
-                            <ShareIcon className="h-4 w-4" />
-                            {t('projectItem.share', 'Share')}
-                        </button>
-                        <button
-                            type="button"
-                            onClick={onEditClick}
-                            className={actionClass}
-                        >
-                            <PencilSquareIcon className="h-4 w-4" />
-                            {t('common.edit', 'Edit')}
-                        </button>
-                        {onLeaveClick && area.can_leave && (
-                            <button
-                                type="button"
-                                onClick={onLeaveClick}
-                                className={actionClass}
-                                data-testid="area-leave"
+                        {t('common.edit', 'Edit')}
+                    </Button>
+                    <Menu
+                        entries={menu}
+                        testId="area-actions-menu"
+                        trigger={(triggerProps) => (
+                            <IconButton
+                                {...triggerProps}
+                                label={t('project.moreOptions', 'More options')}
                             >
-                                <ArrowRightStartOnRectangleIcon className="h-4 w-4" />
-                                {t('shares.leave.action', 'Leave')}
-                            </button>
+                                <EllipsisHorizontalIcon />
+                            </IconButton>
                         )}
-                    </div>
-                </div>
-
-                {doneCount > 0 && (
-                    <p className="text-body-m tabular-nums text-surface-on-variant">
-                        {t(
-                            'areas.progressSummary',
-                            'Area progress · {{done}} of {{total}} tasks done',
-                            { done: doneCount, total: totalCount }
-                        )}
-                    </p>
-                )}
-            </div>
-        </div>
+                    />
+                </>
+            }
+        >
+            {area.description && (
+                <p className="max-w-3xl whitespace-pre-wrap text-body-m leading-relaxed text-surface-on-variant">
+                    {area.description}
+                </p>
+            )}
+        </PageHeader>
     );
 };
 

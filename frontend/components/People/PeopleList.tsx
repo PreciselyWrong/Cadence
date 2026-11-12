@@ -3,6 +3,8 @@ import { PlusIcon } from '@heroicons/react/24/outline';
 import PersonModal from './PersonModal';
 import PersonRow from './PersonRow';
 import PageHeader from '../Shared/ui/PageHeader';
+import PageShell from '../Shared/ui/PageShell';
+import EmptyState from '../Shared/ui/EmptyState';
 import Button from '../Shared/ui/Button';
 import Segmented from '../Shared/ui/Segmented';
 import { Person } from '../../entities/Person';
@@ -127,7 +129,7 @@ const PeopleList: React.FC = () => {
     });
 
     return (
-        <div className="mx-auto w-full max-w-4xl pb-8">
+        <PageShell template="list">
             <PageHeader
                 title={t('people.title', 'People')}
                 actions={
@@ -189,17 +191,22 @@ const PeopleList: React.FC = () => {
                         {t('common.loading', 'Loading...')}
                     </div>
                 ) : displayPeople.length === 0 ? (
-                    <div className="px-3 py-6">
-                        <p className="text-body-m text-surface-on-variant">
-                            {t(
-                                'people.empty',
-                                'No people yet. Add family, colleagues, or friends.'
-                            )}
-                        </p>
-                        <Button className="mt-3" onClick={openCreate}>
-                            {t('people.addFirst', 'Add your first person')}
-                        </Button>
-                    </div>
+                    <EmptyState
+                        title={t(
+                            'people.empty',
+                            'No people yet. Add family, colleagues, or friends.'
+                        )}
+                        action={
+                            canCreatePeople ? (
+                                <Button size="md" onClick={openCreate}>
+                                    {t(
+                                        'people.addFirst',
+                                        'Add your first person'
+                                    )}
+                                </Button>
+                            ) : undefined
+                        }
+                    />
                 ) : (
                     <div role="list">
                         {sortedGroupKeys.flatMap((letter) =>
@@ -228,7 +235,7 @@ const PeopleList: React.FC = () => {
                     />
                 )}
             </div>
-        </div>
+        </PageShell>
     );
 };
 
