@@ -114,6 +114,15 @@ describe('InboxItemDetail - a shared link', () => {
         expect(screen.queryByText('https://example.com/rust')).toBeNull();
     });
 
+    it('lists a lone link as a row with a link icon, not a bordered card', async () => {
+        renderItem('https://example.com/rust');
+
+        const line = await screen.findByTestId('inbox-link-line');
+        expect(line).toHaveTextContent('Rust patterns');
+        expect(line.querySelector('svg')).toBeInTheDocument();
+        expect(screen.queryByTestId('link-preview')).toBeNull();
+    });
+
     it('offers tags, a project and the decisions Task, Links, Note, Delete', async () => {
         renderItem('https://example.com/rust');
         await open();

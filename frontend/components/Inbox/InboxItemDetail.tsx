@@ -7,6 +7,16 @@ import { Project } from '../../entities/Project';
 import { Note } from '../../entities/Note';
 import InboxItemAttachments from './InboxItemAttachments';
 import LinkPreviewCard from '../Links/LinkPreviewCard';
+import { LinkIcon } from '@heroicons/react/24/outline';
+
+// "example.com" of an address, or the address when it does not parse.
+const linkHost = (address: string): string => {
+    try {
+        return new URL(address).hostname.replace(/^www\./, '');
+    } catch {
+        return address;
+    }
+};
 import TagInput from '../Tag/TagInput';
 import { firstUrl } from '../../utils/linkFilters';
 import { LinkDraft, linkTaskDraft, wordsAround } from '../../utils/linkTriage';
@@ -829,14 +839,31 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                                 )}
                             </p>
                         )}
+                        {/* A link reads as a row like the others: its icon,
+                            what the page is, then the site; the full preview
+                            card waits for the open item. */}
                         {url && (
-                            <LinkPreviewCard
-                                url={url}
-                                title={preview?.title}
-                                description={preview?.description}
-                                image={preview?.image}
-                                pending={!preview}
-                            />
+                            <span
+                                className={`flex min-w-0 items-center gap-1.5 ${
+                                    showText
+                                        ? 'mt-0.5 text-body-m text-surface-on-variant'
+                                        : 'text-body leading-6 text-surface-on'
+                                }`}
+                                data-testid="inbox-link-line"
+                            >
+                                <LinkIcon
+                                    aria-hidden="true"
+                                    className="h-4 w-4 shrink-0 text-surface-on-variant"
+                                />
+                                <span className="min-w-0 truncate">
+                                    {preview?.title || linkHost(url)}
+                                </span>
+                                {preview?.title && (
+                                    <span className="shrink-0 text-xs text-surface-on-variant">
+                                        {linkHost(url)}
+                                    </span>
+                                )}
+                            </span>
                         )}
                         {item.uid && item.attachments && (
                             <InboxItemAttachments
