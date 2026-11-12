@@ -626,6 +626,62 @@
     }
   },
   "profile": {
+        "plugins": {
+            "title": "Plugins",
+            "description": "Plugins add your own integrations to the server. Only an admin sees them. A plugin stays off until you turn it on.",
+            "notConfigured": "Plugins are off. Set TUDUDI_PLUGINS_DIR to a folder that holds plugin folders, then restart the server.",
+            "reloadAll": "Reload all",
+            "reload": "Reload",
+            "reloadPending": "Reload to load {{version}}",
+            "updatedFrom": "updated from {{version}}",
+            "version": "Version {{version}}",
+            "state": {
+                "disabled": "Off",
+                "active": "Running",
+                "error": "Error",
+                "invalid": "Invalid",
+                "incompatible": "Incompatible",
+                "needs_approval": "Needs approval",
+                "missing": "Missing"
+            },
+            "permissions": "Permissions",
+            "events": "Events",
+            "permission": {
+                "events": "Listens to events",
+                "routes": "Serves its own routes"
+            },
+            "enabled": "Enabled",
+            "needsApproval": "This version asks for more than before. Turn it on again to approve its permissions and events.",
+            "checkUpdate": "Check for updates",
+            "updateAvailable": "Update available: {{version}}",
+            "upToDate": "Up to date",
+            "updateError": "Could not read the update address",
+            "settings": "Settings",
+            "saveSettings": "Save settings",
+            "saved": "Settings saved",
+            "secretSaved": "Saved",
+            "clearSecret": "Clear",
+            "required": "required",
+            "reloaded": "Plugins reloaded",
+            "loadError": "Could not load plugins",
+            "none": "No plugin found in the plugins folder.",
+            "errorLabel": "Error",
+            "saveError": "Could not save the plugin",
+            "installLabel": "Plugin Git address",
+            "install": "Add",
+            "installing": "Adding...",
+            "installHint": "This downloads code that runs in the server. Read what it asks for before you turn it on.",
+            "installed": "Plugin added. Read what it asks for, then turn it on.",
+            "installError": "Could not add the plugin",
+            "pull": "Update",
+            "pulled": "Plugin updated",
+            "remove": "Delete",
+            "removeTitle": "Delete this plugin?",
+            "removeMessage": "Its folder and its settings are deleted from the server. This cannot be undone.",
+            "page": {
+                "notFound": "Plugin not found or turned off"
+            }
+        },
     "sync": {
       "field": {
         "review_at": "Review on",
@@ -839,6 +895,7 @@
     "enableNextTaskSuggestion": "Enable Next Task Suggestions",
     "featuresAddons": "Features & Add-ons",
     "tabs": {
+            "plugins": "Plugins",
       "classify": "Filing",
       "sync": "Sync",
       "ai": "AI features",

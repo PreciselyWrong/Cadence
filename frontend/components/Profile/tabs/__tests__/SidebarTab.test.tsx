@@ -3,6 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import SidebarTab from '../SidebarTab';
 import { useStore } from '../../../../store/useStore';
+import { usePluginMenuStore } from '../../../../store/pluginMenuStore';
 import {
     DEFAULT_LINK_ORDER,
     DEFAULT_SECTION_ORDER,
@@ -108,5 +109,28 @@ describe('SidebarTab', () => {
         fireEvent.click(screen.getByRole('switch', { name: 'Show Projects' }));
 
         expect(onToggleSection).toHaveBeenCalledWith('projects');
+    });
+
+    it('lists a running plugin in the preview and reports its switch', () => {
+        usePluginMenuStore.setState({
+            items: [
+                {
+                    id: 'hermes',
+                    label: 'Hermes',
+                    path: '/plugins/hermes',
+                    file: 'index.html',
+                },
+            ],
+            loaded: true,
+        });
+        const { onToggleSection } = renderTab();
+
+        expect(
+            screen.getByTestId('sidebar-preview-row-plugin:hermes')
+        ).toBeInTheDocument();
+        fireEvent.click(screen.getByRole('switch', { name: 'Show Hermes' }));
+        expect(onToggleSection).toHaveBeenCalledWith('plugin:hermes');
+
+        usePluginMenuStore.setState({ items: [], loaded: true });
     });
 });

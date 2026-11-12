@@ -1,6 +1,8 @@
 import {
     DEFAULT_LINK_ORDER,
     DEFAULT_SECTION_ORDER,
+    isPluginEntryId,
+    pluginEntryId,
     resolveOrder,
     sortByOrder,
 } from '../sidebarLayout';
@@ -64,5 +66,34 @@ describe('sortByOrder', () => {
 
         expect(sortByOrder(items, ['a']).map((i) => i.id)).toEqual(['a', 'z']);
         expect(items.map((i) => i.id)).toEqual(['z', 'a']);
+    });
+});
+
+describe('plugin entries in the sidebar order', () => {
+    it('keeps a plugin entry in its saved place', () => {
+        const result = resolveOrder(
+            ['inbox', 'plugin:hermes', 'today'],
+            DEFAULT_LINK_ORDER
+        );
+
+        expect(result.slice(0, 3)).toEqual(['inbox', 'plugin:hermes', 'today']);
+        expect(result).toHaveLength(DEFAULT_LINK_ORDER.length + 1);
+    });
+
+    it('drops malformed plugin keys', () => {
+        const result = resolveOrder(
+            ['plugin:', 'plugin:hermes', 'plugin:hermes', 7],
+            DEFAULT_LINK_ORDER
+        );
+
+        expect(result.filter((id) => id.startsWith('plugin:'))).toEqual([
+            'plugin:hermes',
+        ]);
+    });
+
+    it('recognises the keys it builds', () => {
+        expect(isPluginEntryId(pluginEntryId('hermes'))).toBe(true);
+        expect(isPluginEntryId('plugin:')).toBe(false);
+        expect(isPluginEntryId('inbox')).toBe(false);
     });
 });

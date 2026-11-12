@@ -7,18 +7,32 @@ import {
     ListBulletIcon,
     ClockIcon,
     CalendarIcon,
+    PuzzlePieceIcon,
     UserIcon,
     UsersIcon,
 } from '@heroicons/react/24/outline';
 import { useStore } from '../../store/useStore';
 import { useDailyPlanProgress } from '../../store/dailyPlanStore';
+import { usePluginMenuStore } from '../../store/pluginMenuStore';
 import { loadInboxItemsToStore } from '../../utils/inboxService';
-import { SidebarLinkId, sortByOrder } from '../../utils/sidebarLayout';
+import {
+    SidebarLinkId,
+    pluginEntryId,
+    sortByOrder,
+} from '../../utils/sidebarLayout';
 import {
     DROP_HIGHLIGHT_CLASS,
     dropTargetAttrs,
     useDropHover,
 } from './sidebarDrop';
+
+interface NavLink {
+    id: string;
+    path: string;
+    title: string;
+    icon: JSX.Element;
+    query?: string;
+}
 
 interface SidebarNavProps {
     handleNavClick: (path: string, title: string, icon: JSX.Element) => void;
@@ -52,6 +66,7 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
 
     const inboxItemsCount = store.inboxStore.pagination.total;
     const planProgress = useDailyPlanProgress((state) => state.progress);
+    const pluginItems = usePluginMenuStore((state) => state.items);
 
     useEffect(() => {
         loadInboxItemsToStore(false).catch(console.error);
@@ -105,8 +120,16 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
         },
     ];
 
+    // Running plugins add an entry each; their page is /plugins/<id>.
+    const pluginLinks: NavLink[] = pluginItems.map((item) => ({
+        id: pluginEntryId(item.id),
+        path: `/plugins/${item.id}`,
+        title: item.label,
+        icon: <PuzzlePieceIcon className="h-[15px] w-[15px]" />,
+    }));
+
     const navLinks = sortByOrder(
-        allNavLinks.filter((link) => {
+        [...allNavLinks, ...pluginLinks].filter((link) => {
             if (link.id === 'calendar' && !calendarEnabled) return false;
             if (link.id === 'everyone' && !hasCollaborators) return false;
             return visibleSections[link.id as SidebarLinkId] !== false;
@@ -124,6 +147,9 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
             return location.pathname.startsWith('/today');
         }
         if (path === '/inbox' || path === '/calendar' || path === '/everyone') {
+            return location.pathname === path;
+        }
+        if (path.startsWith('/plugins/')) {
             return location.pathname === path;
         }
         if (path.startsWith('/upcoming')) {

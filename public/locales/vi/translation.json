@@ -602,6 +602,62 @@
     "noActivity": "Chưa có hoạt động nào"
   },
   "profile": {
+        "plugins": {
+            "title": "Tiện ích mở rộng",
+            "description": "Tiện ích mở rộng thêm các tích hợp riêng vào máy chủ. Chỉ quản trị viên mới thấy. Tiện ích vẫn tắt cho đến khi bạn bật.",
+            "notConfigured": "Tiện ích mở rộng đang tắt. Đặt TUDUDI_PLUGINS_DIR thành thư mục chứa các thư mục tiện ích, rồi khởi động lại máy chủ.",
+            "reloadAll": "Tải lại tất cả",
+            "reload": "Tải lại",
+            "reloadPending": "Tải lại để nạp {{version}}",
+            "updatedFrom": "đã cập nhật từ {{version}}",
+            "version": "Phiên bản {{version}}",
+            "state": {
+                "disabled": "Đã tắt",
+                "active": "Đang chạy",
+                "error": "Lỗi",
+                "invalid": "Không hợp lệ",
+                "incompatible": "Không tương thích",
+                "needs_approval": "Cần phê duyệt",
+                "missing": "Thiếu"
+            },
+            "permissions": "Quyền",
+            "events": "Sự kiện",
+            "permission": {
+                "events": "Lắng nghe sự kiện",
+                "routes": "Cung cấp đường dẫn riêng"
+            },
+            "enabled": "Đã bật",
+            "needsApproval": "Phiên bản này yêu cầu nhiều hơn trước. Bật lại để phê duyệt quyền và sự kiện của nó.",
+            "checkUpdate": "Kiểm tra cập nhật",
+            "updateAvailable": "Có bản cập nhật: {{version}}",
+            "upToDate": "Đã cập nhật",
+            "updateError": "Không đọc được địa chỉ cập nhật",
+            "settings": "Cài đặt",
+            "saveSettings": "Lưu cài đặt",
+            "saved": "Đã lưu cài đặt",
+            "secretSaved": "Đã lưu",
+            "clearSecret": "Xóa",
+            "required": "bắt buộc",
+            "reloaded": "Đã tải lại tiện ích mở rộng",
+            "loadError": "Không thể tải tiện ích mở rộng",
+            "none": "Không tìm thấy tiện ích nào trong thư mục tiện ích.",
+            "errorLabel": "Lỗi",
+            "saveError": "Không thể lưu tiện ích mở rộng",
+            "installLabel": "Địa chỉ Git của plugin",
+            "install": "Thêm",
+            "installing": "Đang thêm...",
+            "installHint": "Thao tác này tải mã chạy trên máy chủ. Hãy đọc những gì plugin yêu cầu trước khi bật.",
+            "installed": "Đã thêm plugin. Hãy đọc những gì plugin yêu cầu rồi bật.",
+            "installError": "Không thể thêm plugin",
+            "pull": "Cập nhật",
+            "pulled": "Đã cập nhật plugin",
+            "remove": "Xóa",
+            "removeTitle": "Xóa plugin này?",
+            "removeMessage": "Thư mục và cài đặt của plugin sẽ bị xóa khỏi máy chủ. Không thể hoàn tác.",
+            "page": {
+                "notFound": "Không tìm thấy plugin hoặc plugin đã tắt"
+            }
+        },
     "showTaskDescription": "Hiện mô tả dưới tiêu đề",
     "sync": {
       "field": {
@@ -772,6 +828,7 @@
     "nextTaskSuggestion": "Gợi ý Nhiệm vụ Tiếp theo",
     "enableNextTaskSuggestion": "Bật Gợi ý Nhiệm vụ Tiếp theo",
     "tabs": {
+            "plugins": "Tiện ích mở rộng",
       "classify": "Phân loại",
       "sync": "Đồng bộ",
       "general": "Chung",

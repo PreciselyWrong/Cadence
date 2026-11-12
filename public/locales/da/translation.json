@@ -604,6 +604,62 @@
     "noActivity": "Ingen aktivitet endnu"
   },
   "profile": {
+        "plugins": {
+            "title": "Plugins",
+            "description": "Plugins tilføjer dine egne integrationer til serveren. Kun en administrator ser dem. Et plugin er slået fra, indtil du slår det til.",
+            "notConfigured": "Plugins er slået fra. Sæt TUDUDI_PLUGINS_DIR til en mappe med plugin-mapper, og genstart serveren.",
+            "reloadAll": "Genindlæs alle",
+            "reload": "Genindlæs",
+            "reloadPending": "Genindlæs for at indlæse {{version}}",
+            "updatedFrom": "opdateret fra {{version}}",
+            "version": "Version {{version}}",
+            "state": {
+                "disabled": "Fra",
+                "active": "Kører",
+                "error": "Fejl",
+                "invalid": "Ugyldig",
+                "incompatible": "Inkompatibel",
+                "needs_approval": "Kræver godkendelse",
+                "missing": "Mangler"
+            },
+            "permissions": "Tilladelser",
+            "events": "Hændelser",
+            "permission": {
+                "events": "Lytter på hændelser",
+                "routes": "Leverer egne ruter"
+            },
+            "enabled": "Aktiveret",
+            "needsApproval": "Denne version kræver mere end før. Slå den til igen for at godkende dens tilladelser og hændelser.",
+            "checkUpdate": "Tjek for opdateringer",
+            "updateAvailable": "Opdatering tilgængelig: {{version}}",
+            "upToDate": "Opdateret",
+            "updateError": "Kunne ikke læse opdateringsadressen",
+            "settings": "Indstillinger",
+            "saveSettings": "Gem indstillinger",
+            "saved": "Indstillinger gemt",
+            "secretSaved": "Gemt",
+            "clearSecret": "Ryd",
+            "required": "påkrævet",
+            "reloaded": "Plugins genindlæst",
+            "loadError": "Kunne ikke indlæse plugins",
+            "none": "Ingen plugin fundet i plugin-mappen.",
+            "errorLabel": "Fejl",
+            "saveError": "Kunne ikke gemme plugin'et",
+            "installLabel": "Git-adresse til pluginet",
+            "install": "Tilføj",
+            "installing": "Tilføjer...",
+            "installHint": "Dette henter kode, der kører i serveren. Læs hvad den beder om, før du slår den til.",
+            "installed": "Pluginet er tilføjet. Læs hvad det beder om, og slå det så til.",
+            "installError": "Pluginet kunne ikke tilføjes",
+            "pull": "Opdater",
+            "pulled": "Plugin opdateret",
+            "remove": "Slet",
+            "removeTitle": "Slet dette plugin?",
+            "removeMessage": "Dets mappe og indstillinger slettes fra serveren. Det kan ikke fortrydes.",
+            "page": {
+                "notFound": "Pluginet blev ikke fundet eller er slået fra"
+            }
+        },
     "showTaskDescription": "Vis beskrivelsen under titlen",
     "sync": {
       "field": {
@@ -782,6 +838,7 @@
     "nextTaskSuggestion": "Næste Opgaveforslag",
     "enableNextTaskSuggestion": "Aktivér forslag til næste opgave",
     "tabs": {
+            "plugins": "Plugins",
       "classify": "Sortering",
       "sync": "Synkronisering",
       "general": "Generelt",

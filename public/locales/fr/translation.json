@@ -606,6 +606,62 @@
     "noActivity": "Aucune activité pour le moment"
   },
   "profile": {
+        "plugins": {
+            "title": "Plugins",
+            "description": "Les plugins ajoutent vos propres intégrations au serveur. Seul un administrateur les voit. Un plugin reste désactivé tant que vous ne l'activez pas.",
+            "notConfigured": "Les plugins sont désactivés. Renseignez TUDUDI_PLUGINS_DIR avec un dossier qui contient les dossiers de plugins, puis redémarrez le serveur.",
+            "reloadAll": "Tout recharger",
+            "reload": "Recharger",
+            "reloadPending": "Recharger pour charger {{version}}",
+            "updatedFrom": "mis à jour depuis {{version}}",
+            "version": "Version {{version}}",
+            "state": {
+                "disabled": "Désactivé",
+                "active": "Actif",
+                "error": "Erreur",
+                "invalid": "Invalide",
+                "incompatible": "Incompatible",
+                "needs_approval": "Approbation requise",
+                "missing": "Introuvable"
+            },
+            "permissions": "Permissions",
+            "events": "Événements",
+            "permission": {
+                "events": "Écoute les événements",
+                "routes": "Expose ses propres routes"
+            },
+            "enabled": "Activé",
+            "needsApproval": "Cette version demande plus qu'avant. Réactivez-le pour approuver ses permissions et ses événements.",
+            "checkUpdate": "Vérifier les mises à jour",
+            "updateAvailable": "Mise à jour disponible : {{version}}",
+            "upToDate": "À jour",
+            "updateError": "Impossible de lire l'adresse de mise à jour",
+            "settings": "Réglages",
+            "saveSettings": "Enregistrer les réglages",
+            "saved": "Réglages enregistrés",
+            "secretSaved": "Enregistré",
+            "clearSecret": "Effacer",
+            "required": "obligatoire",
+            "reloaded": "Plugins rechargés",
+            "loadError": "Impossible de charger les plugins",
+            "none": "Aucun plugin trouvé dans le dossier des plugins.",
+            "errorLabel": "Erreur",
+            "saveError": "Impossible d'enregistrer le plugin",
+            "installLabel": "Adresse Git du plugin",
+            "install": "Ajouter",
+            "installing": "Ajout en cours...",
+            "installHint": "Télécharge du code qui s'exécute dans le serveur. Lisez ce qu'il demande avant de l'activer.",
+            "installed": "Plugin ajouté. Lisez ce qu'il demande, puis activez-le.",
+            "installError": "Impossible d'ajouter le plugin",
+            "pull": "Mettre à jour",
+            "pulled": "Plugin mis à jour",
+            "remove": "Supprimer",
+            "removeTitle": "Supprimer ce plugin ?",
+            "removeMessage": "Son dossier et ses réglages sont supprimés du serveur. Action irréversible.",
+            "page": {
+                "notFound": "Plugin introuvable ou désactivé"
+            }
+        },
     "sync": {
       "field": {
         "review_at": "À revoir le",
@@ -776,6 +832,7 @@
     "nextTaskSuggestion": "Suggestion de prochaine tâche",
     "enableNextTaskSuggestion": "Activer les suggestions de prochaine tâche",
     "tabs": {
+            "plugins": "Plugins",
       "classify": "Classement",
       "sync": "Synchronisation",
       "general": "Général",

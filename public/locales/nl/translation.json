@@ -604,6 +604,62 @@
     "noActivity": "Nog geen activiteit"
   },
   "profile": {
+        "plugins": {
+            "title": "Plug-ins",
+            "description": "Plug-ins voegen je eigen integraties toe aan de server. Alleen een beheerder ziet ze. Een plug-in blijft uit tot je hem aanzet.",
+            "notConfigured": "Plug-ins staan uit. Zet TUDUDI_PLUGINS_DIR op een map met plug-inmappen en start de server opnieuw.",
+            "reloadAll": "Alles opnieuw laden",
+            "reload": "Opnieuw laden",
+            "reloadPending": "Opnieuw laden om {{version}} te laden",
+            "updatedFrom": "bijgewerkt vanaf {{version}}",
+            "version": "Versie {{version}}",
+            "state": {
+                "disabled": "Uit",
+                "active": "Actief",
+                "error": "Fout",
+                "invalid": "Ongeldig",
+                "incompatible": "Niet compatibel",
+                "needs_approval": "Goedkeuring nodig",
+                "missing": "Ontbreekt"
+            },
+            "permissions": "Rechten",
+            "events": "Gebeurtenissen",
+            "permission": {
+                "events": "Luistert naar gebeurtenissen",
+                "routes": "Biedt eigen routes aan"
+            },
+            "enabled": "Aan",
+            "needsApproval": "Deze versie vraagt meer dan voorheen. Zet hem opnieuw aan om de rechten en gebeurtenissen goed te keuren.",
+            "checkUpdate": "Controleren op updates",
+            "updateAvailable": "Update beschikbaar: {{version}}",
+            "upToDate": "Up-to-date",
+            "updateError": "Het updateadres kon niet worden gelezen",
+            "settings": "Instellingen",
+            "saveSettings": "Instellingen opslaan",
+            "saved": "Instellingen opgeslagen",
+            "secretSaved": "Opgeslagen",
+            "clearSecret": "Wissen",
+            "required": "verplicht",
+            "reloaded": "Plug-ins opnieuw geladen",
+            "loadError": "Plug-ins konden niet worden geladen",
+            "none": "Geen plug-in gevonden in de plug-inmap.",
+            "errorLabel": "Fout",
+            "saveError": "De plug-in kon niet worden opgeslagen",
+            "installLabel": "Git-adres van de plugin",
+            "install": "Toevoegen",
+            "installing": "Bezig met toevoegen...",
+            "installHint": "Dit downloadt code die in de server draait. Lees wat hij vraagt voordat je hem aanzet.",
+            "installed": "Plugin toegevoegd. Lees wat hij vraagt en zet hem dan aan.",
+            "installError": "De plugin kon niet worden toegevoegd",
+            "pull": "Bijwerken",
+            "pulled": "Plugin bijgewerkt",
+            "remove": "Verwijderen",
+            "removeTitle": "Deze plugin verwijderen?",
+            "removeMessage": "De map en de instellingen worden van de server verwijderd. Dit kan niet ongedaan worden gemaakt.",
+            "page": {
+                "notFound": "Plugin niet gevonden of uitgeschakeld"
+            }
+        },
     "showTaskDescription": "Beschrijving onder de titel tonen",
     "sync": {
       "field": {
@@ -774,6 +830,7 @@
     "nextTaskSuggestion": "Volgende Taak Suggestie",
     "enableNextTaskSuggestion": "Schakel Volgende Taak Suggesties in",
     "tabs": {
+            "plugins": "Plug-ins",
       "classify": "Indeling",
       "sync": "Synchronisatie",
       "general": "Algemeen",

@@ -8,6 +8,7 @@ const { safeRequest } = require('../caldav/services/safe-request');
 const { hasFeature } = require('../../services/entitlementsService');
 const { logError } = require('../../services/logService');
 const { uid } = require('../../utils/uid');
+const pluginEvents = require('../plugins/eventBus');
 
 const TIMEOUT_MS = 10000;
 const MAX_ATTEMPTS = 5;
@@ -97,6 +98,11 @@ async function emit(
     } = {}
 ) {
     try {
+        // Plugins hear every real event, with or without a webhook
+        // (docs/46-plugins.md); the test message is not one.
+        if (!anyEvent && !webhookIds) {
+            pluginEvents.publish({ name: event, userId, text, data });
+        }
         if (!userId || knownToHaveNone(userId)) return [];
         let hooks = (await enabledHooks(userId)).filter(
             (hook) => anyEvent || hook.events.includes(event)

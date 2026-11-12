@@ -11,6 +11,7 @@ import {
     FolderIcon,
     InboxIcon,
     ListBulletIcon,
+    PuzzlePieceIcon,
     QueueListIcon,
     RectangleGroupIcon,
     RectangleStackIcon,
@@ -39,6 +40,8 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import PushPinIcon from '../Shared/Icons/PushPinIcon';
 import { useStore } from '../../store/useStore';
+import { usePluginMenuStore } from '../../store/pluginMenuStore';
+import { pluginEntryId } from '../../utils/sidebarLayout';
 import type { SidebarVisibleSections } from './types';
 
 export type SidebarOrderGroup = 'links' | 'sections';
@@ -236,13 +239,22 @@ const SortableGroup: React.FC<SortableGroupProps> = ({
         })
     );
     const byId = new Map(rows.map((row) => [row.id, row]));
+    // A row the saved order lacks (a plugin just turned on) goes last. A saved
+    // id with no row (a plugin that is off) keeps its slot when saving.
+    const full = [
+        ...order,
+        ...rows.map((row) => row.id).filter((id) => !order.includes(id)),
+    ];
+    const shown = full.filter((id) => byId.has(id));
 
     const handleDragEnd = ({ active, over }: DragEndEvent) => {
         if (!over || active.id === over.id) return;
-        const from = order.indexOf(String(active.id));
-        const to = order.indexOf(String(over.id));
+        const from = shown.indexOf(String(active.id));
+        const to = shown.indexOf(String(over.id));
         if (from === -1 || to === -1) return;
-        onReorder(arrayMove(order, from, to));
+        const moved = arrayMove(shown, from, to);
+        let next = 0;
+        onReorder(full.map((id) => (byId.has(id) ? moved[next++] : id)));
     };
 
     return (
@@ -252,10 +264,10 @@ const SortableGroup: React.FC<SortableGroupProps> = ({
             onDragEnd={handleDragEnd}
         >
             <SortableContext
-                items={order}
+                items={shown}
                 strategy={verticalListSortingStrategy}
             >
-                {order.map((id) => {
+                {shown.map((id) => {
                     const row = byId.get(id);
                     if (!row) return null;
                     return (
@@ -312,6 +324,7 @@ const SidebarLayoutEditor: React.FC<SidebarLayoutEditorProps> = ({
     );
 
     const featureOff = t('profile.sidebarFeatureOff', 'Off in Features');
+    const pluginItems = usePluginMenuStore((state) => state.items);
 
     const linkRows: Row[] = [
         { id: 'inbox', label: t('sidebar.inbox', 'Inbox'), Icon: InboxIcon },
@@ -350,6 +363,13 @@ const SidebarLayoutEditor: React.FC<SidebarLayoutEditorProps> = ({
                 : t('profile.sidebarNoCollaborators', 'No collaborators'),
         },
     ];
+
+    // One row per running plugin, after the built-in links by default.
+    const pluginRows: Row[] = pluginItems.map((item) => ({
+        id: pluginEntryId(item.id),
+        label: item.label,
+        Icon: PuzzlePieceIcon,
+    }));
 
     // Pinned items always open the sidebar: they can be hidden, not moved.
     const pinnedRow: Row = {
@@ -442,7 +462,7 @@ const SidebarLayoutEditor: React.FC<SidebarLayoutEditorProps> = ({
 
             <SortableGroup
                 variant="link"
-                rows={linkRows}
+                rows={[...linkRows, ...pluginRows]}
                 order={linkOrder}
                 visibleSections={visibleSections}
                 onToggleSection={onToggleSection}

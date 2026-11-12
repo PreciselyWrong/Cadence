@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-12 — Plugins (web et Android)
+
+- **Problème** : un plugin du serveur (`docs/46-plugins.md`) se gérait seulement depuis Profil › Plugins du web, et sa page n'existait pas sur le téléphone.
+- **Décision** : Android a la même gestion dans Réglages › Plugins (administrateur seulement : rubrique masquée quand `GET /api/plugins` répond 403) : ajout par adresse Git, Tout recharger, et par plugin état, version, description, permissions, événements, dernière erreur, interrupteur, réglages générés (secret masqué, « Enregistré », « Effacer »), Vérifier les mises à jour, Mettre à jour, Recharger, Supprimer avec confirmation ; erreurs du serveur affichées telles quelles. Les entrées de menu vont dans le sélecteur de listes sous « Plugins » (dernière réponse gardée hors ligne) ; un toucher ouvre la page dans une WebView plein écran, jeton ajouté aux GET de même origine seulement.
+- **Limite** : depuis la page Android, une écriture (POST…) part sans jeton ; une page de plugin doit lire en GET (`docs/fork/PLUGIN-GUIDE.md`).
+
 ### 2026-11-12 — Notes et descriptions en plan (outliner) (web)
 
 - **Problème** : une note ou une description se rédigeait comme un document ; réorganiser des idées imbriquées demandait de couper-coller des lignes et de compter les espaces ; impossible de replier une branche ou de se concentrer sur une seule ; une case écrite dans une note ne devenait jamais une vraie tâche.

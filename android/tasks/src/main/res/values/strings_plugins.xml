@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Plugins du serveur (docs/46-plugins.md) ; libellés repris de profile.plugins.* du web. -->
+<resources>
+    <string name="plugins_title">Plugins</string>
+    <string name="plugins_description">Les plugins ajoutent vos propres intégrations au serveur. Seul un administrateur les voit. Un plugin reste désactivé tant que vous ne l\'activez pas.</string>
+    <string name="plugins_not_configured">Les plugins sont désactivés. Renseignez TUDUDI_PLUGINS_DIR avec un dossier qui contient les dossiers de plugins, puis redémarrez le serveur.</string>
+    <string name="plugins_none">Aucun plugin trouvé dans le dossier des plugins.</string>
+    <string name="plugins_load_error">Impossible de charger les plugins</string>
+    <string name="plugins_offline">Plugins indisponibles hors ligne</string>
+    <string name="plugins_save_error">Impossible d\'enregistrer le plugin</string>
+    <string name="plugins_reload_all">Tout recharger</string>
+    <string name="plugins_reloaded">Plugins rechargés</string>
+    <string name="plugins_install_label">Adresse Git du plugin</string>
+    <string name="plugins_install">Ajouter</string>
+    <string name="plugins_installing">Ajout en cours…</string>
+    <string name="plugins_install_hint">Télécharge du code qui s\'exécute dans le serveur. Lisez ce qu\'il demande avant de l\'activer.</string>
+    <string name="plugins_installed">Plugin ajouté. Lisez ce qu\'il demande, puis activez-le.</string>
+    <string name="plugins_install_error">Impossible d\'ajouter le plugin</string>
+    <string name="plugins_enabled">Activé</string>
+    <string name="plugins_version">Version %1$s</string>
+    <string name="plugins_updated_from">mis à jour depuis %1$s</string>
+    <string name="plugins_reload_pending">Recharger pour charger %1$s</string>
+    <string name="plugins_state_disabled">Désactivé</string>
+    <string name="plugins_state_active">Actif</string>
+    <string name="plugins_state_error">Erreur</string>
+    <string name="plugins_state_invalid">Invalide</string>
+    <string name="plugins_state_incompatible">Incompatible</string>
+    <string name="plugins_state_needs_approval">Approbation requise</string>
+    <string name="plugins_state_missing">Introuvable</string>
+    <string name="plugins_needs_approval">Cette version demande plus qu\'avant. Réactivez-le pour approuver ses permissions et ses événements.</string>
+    <string name="plugins_error_label">Erreur : %1$s</string>
+    <string name="plugins_permissions">Permissions</string>
+    <string name="plugins_permission_events">Écoute les événements</string>
+    <string name="plugins_permission_routes">Expose ses propres routes</string>
+    <string name="plugins_events">Événements</string>
+    <string name="plugins_settings">Réglages</string>
+    <string name="plugins_required">obligatoire</string>
+    <string name="plugins_secret_saved">Enregistré</string>
+    <string name="plugins_clear_secret">Effacer</string>
+    <string name="plugins_save_settings">Enregistrer les réglages</string>
+    <string name="plugins_saved">Réglages enregistrés</string>
+    <string name="plugins_invalid_number">%1$s doit être un nombre</string>
+    <string name="plugins_reload">Recharger</string>
+    <string name="plugins_pull">Mettre à jour</string>
+    <string name="plugins_pulled">Plugin mis à jour</string>
+    <string name="plugins_check_update">Vérifier les mises à jour</string>
+    <string name="plugins_up_to_date">À jour</string>
+    <string name="plugins_update_available">Mise à jour disponible : %1$s</string>
+    <string name="plugins_remove">Supprimer</string>
+    <string name="plugins_remove_title">Supprimer ce plugin ?</string>
+    <string name="plugins_remove_message">Son dossier et ses réglages sont supprimés du serveur. Action irréversible.</string>
+    <string name="plugins_page_not_found">Plugin introuvable ou désactivé</string>
+    <string name="plugins_page_offline">Page indisponible hors ligne</string>
+</resources>

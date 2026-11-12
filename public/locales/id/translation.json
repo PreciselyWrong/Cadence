@@ -602,6 +602,62 @@
     "noActivity": "Belum ada aktivitas"
   },
   "profile": {
+        "plugins": {
+            "title": "Plugin",
+            "description": "Plugin menambahkan integrasi buatan Anda ke server. Hanya admin yang melihatnya. Plugin tetap mati sampai Anda mengaktifkannya.",
+            "notConfigured": "Plugin dinonaktifkan. Atur TUDUDI_PLUGINS_DIR ke folder yang berisi folder plugin, lalu mulai ulang server.",
+            "reloadAll": "Muat ulang semua",
+            "reload": "Muat ulang",
+            "reloadPending": "Muat ulang untuk memuat {{version}}",
+            "updatedFrom": "diperbarui dari {{version}}",
+            "version": "Versi {{version}}",
+            "state": {
+                "disabled": "Mati",
+                "active": "Berjalan",
+                "error": "Galat",
+                "invalid": "Tidak valid",
+                "incompatible": "Tidak kompatibel",
+                "needs_approval": "Perlu persetujuan",
+                "missing": "Hilang"
+            },
+            "permissions": "Izin",
+            "events": "Peristiwa",
+            "permission": {
+                "events": "Mendengarkan peristiwa",
+                "routes": "Menyediakan rute sendiri"
+            },
+            "enabled": "Aktif",
+            "needsApproval": "Versi ini meminta lebih dari sebelumnya. Aktifkan lagi untuk menyetujui izin dan peristiwanya.",
+            "checkUpdate": "Periksa pembaruan",
+            "updateAvailable": "Pembaruan tersedia: {{version}}",
+            "upToDate": "Sudah terbaru",
+            "updateError": "Alamat pembaruan tidak dapat dibaca",
+            "settings": "Pengaturan",
+            "saveSettings": "Simpan pengaturan",
+            "saved": "Pengaturan disimpan",
+            "secretSaved": "Tersimpan",
+            "clearSecret": "Hapus",
+            "required": "wajib",
+            "reloaded": "Plugin dimuat ulang",
+            "loadError": "Plugin tidak dapat dimuat",
+            "none": "Tidak ada plugin di folder plugin.",
+            "errorLabel": "Galat",
+            "saveError": "Plugin tidak dapat disimpan",
+            "installLabel": "Alamat Git plugin",
+            "install": "Tambah",
+            "installing": "Menambahkan...",
+            "installHint": "Ini mengunduh kode yang berjalan di server. Baca apa yang diminta sebelum mengaktifkannya.",
+            "installed": "Plugin ditambahkan. Baca apa yang diminta, lalu aktifkan.",
+            "installError": "Plugin tidak dapat ditambahkan",
+            "pull": "Perbarui",
+            "pulled": "Plugin diperbarui",
+            "remove": "Hapus",
+            "removeTitle": "Hapus plugin ini?",
+            "removeMessage": "Foldernya dan pengaturannya dihapus dari server. Tindakan ini tidak dapat dibatalkan.",
+            "page": {
+                "notFound": "Plugin tidak ditemukan atau dimatikan"
+            }
+        },
     "showTaskDescription": "Tampilkan deskripsi di bawah judul",
     "sync": {
       "field": {
@@ -772,6 +828,7 @@
     "nextTaskSuggestion": "Saran Tugas Berikutnya",
     "enableNextTaskSuggestion": "Aktifkan Saran Tugas Berikutnya",
     "tabs": {
+            "plugins": "Plugin",
       "classify": "Klasifikasi",
       "sync": "Sinkronisasi",
       "general": "Umum",

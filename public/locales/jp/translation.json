@@ -602,6 +602,62 @@
     "noActivity": "まだアクティビティはありません"
   },
   "profile": {
+        "plugins": {
+            "title": "プラグイン",
+            "description": "プラグインは独自の連携をサーバーに追加します。管理者だけが見ることができます。有効にするまでプラグインはオフのままです。",
+            "notConfigured": "プラグインはオフです。TUDUDI_PLUGINS_DIR にプラグインフォルダーを含むフォルダーを設定し、サーバーを再起動してください。",
+            "reloadAll": "すべて再読み込み",
+            "reload": "再読み込み",
+            "reloadPending": "{{version}} を読み込むには再読み込みしてください",
+            "updatedFrom": "{{version}} から更新済み",
+            "version": "バージョン {{version}}",
+            "state": {
+                "disabled": "オフ",
+                "active": "実行中",
+                "error": "エラー",
+                "invalid": "無効",
+                "incompatible": "非対応",
+                "needs_approval": "承認が必要",
+                "missing": "見つかりません"
+            },
+            "permissions": "権限",
+            "events": "イベント",
+            "permission": {
+                "events": "イベントを受け取る",
+                "routes": "独自のルートを提供"
+            },
+            "enabled": "有効",
+            "needsApproval": "この版は以前より多くを要求しています。権限とイベントを承認するにはもう一度有効にしてください。",
+            "checkUpdate": "更新を確認",
+            "updateAvailable": "更新があります: {{version}}",
+            "upToDate": "最新です",
+            "updateError": "更新先アドレスを読み取れませんでした",
+            "settings": "設定",
+            "saveSettings": "設定を保存",
+            "saved": "設定を保存しました",
+            "secretSaved": "保存済み",
+            "clearSecret": "消去",
+            "required": "必須",
+            "reloaded": "プラグインを再読み込みしました",
+            "loadError": "プラグインを読み込めませんでした",
+            "none": "プラグインフォルダーにプラグインが見つかりません。",
+            "errorLabel": "エラー",
+            "saveError": "プラグインを保存できませんでした",
+            "installLabel": "プラグインの Git アドレス",
+            "install": "追加",
+            "installing": "追加中...",
+            "installHint": "サーバーで動くコードをダウンロードします。オンにする前に、何を求めるかを確認してください。",
+            "installed": "プラグインを追加しました。求めている内容を確認してから、オンにしてください。",
+            "installError": "プラグインを追加できませんでした",
+            "pull": "更新",
+            "pulled": "プラグインを更新しました",
+            "remove": "削除",
+            "removeTitle": "このプラグインを削除しますか？",
+            "removeMessage": "フォルダと設定がサーバーから削除されます。元に戻せません。",
+            "page": {
+                "notFound": "プラグインが見つからないか、オフです"
+            }
+        },
     "showTaskDescription": "タイトルの下に説明を表示",
     "sync": {
       "field": {
@@ -686,6 +742,7 @@
     "nextTaskSuggestion": "次のタスクの提案",
     "enableNextTaskSuggestion": "次のタスク提案を有効にする",
     "tabs": {
+            "plugins": "プラグイン",
       "classify": "分類",
       "sync": "Sync",
       "general": "一般",

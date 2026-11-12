@@ -12,6 +12,7 @@ import androidx.compose.material.icons.outlined.AutoFixHigh
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.CloudUpload
 import androidx.compose.material.icons.outlined.EventAvailable
+import androidx.compose.material.icons.outlined.Extension
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Flight
 import androidx.compose.material.icons.outlined.Notifications
@@ -39,7 +40,9 @@ import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.designsystem.theme.rememberStoredAppearance
 import ch.nicolab.cadence.domain.HabitGroup
 import ch.nicolab.cadence.health.HealthConnectSettingsPanel
+import ch.nicolab.cadence.tasks.ui.settings.PluginsSettingsPage
 import ch.nicolab.cadence.tasks.ui.settings.SwipeSettings
+import ch.nicolab.cadence.tasks.ui.settings.rememberPluginsAdmin
 import ch.nicolab.cadence.tasks.ui.settings.SyncSettingsSection
 import ch.nicolab.cadence.tasks.ui.settings.syncSettingsSummary
 import ch.nicolab.cadence.tasks.ui.settings.TududiConnectionSection
@@ -85,7 +88,7 @@ internal class SettingsDeps(
 
 /** Seul point d'ajout d'une rubrique de Réglages : une entrée ici suffit à l'afficher. */
 @Composable
-internal fun settingsPages(deps: SettingsDeps): List<SettingsPage> = listOf(
+internal fun settingsPages(deps: SettingsDeps): List<SettingsPage> = listOfNotNull(
     SettingsPage(
         id = "appearance",
         section = SettingsSection.HOME_SCREEN,
@@ -246,4 +249,17 @@ internal fun settingsPages(deps: SettingsDeps): List<SettingsPage> = listOf(
         subtitle = { syncSettingsSummary() },
         content = { Panel { SyncSettingsSection() } },
     ),
+    // Réglages du serveur : seul un administrateur voit la rubrique.
+    if (rememberPluginsAdmin()) {
+        SettingsPage(
+            id = "plugins",
+            section = SettingsSection.DATA,
+            icon = Icons.Outlined.Extension,
+            title = ch.nicolab.cadence.tasks.R.string.plugins_title,
+            subtitle = { null },
+            content = { PluginsSettingsPage() },
+        )
+    } else {
+        null
+    },
 )

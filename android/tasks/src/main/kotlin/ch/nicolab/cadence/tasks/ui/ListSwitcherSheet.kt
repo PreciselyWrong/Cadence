@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.automirrored.outlined.StickyNote2
 import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.Extension
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.outlined.Settings
@@ -62,10 +63,12 @@ import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.AreaFilter
 import ch.nicolab.cadence.tasks.model.AreaItem
 import ch.nicolab.cadence.tasks.model.PinnedShortcut
+import ch.nicolab.cadence.tasks.plugins.PluginMenuItem
 
 /**
  * Sélecteur de liste, ouvert par le titre de Tâches : il remplace les rangées de pastilles (épinglés, onglets,
- * domaines). Les épinglés d'abord, comme en tête de la barre latérale du web, puis les listes, le domaine et Réglages.
+ * domaines). Les épinglés d'abord, comme en tête de la barre latérale du web, puis les listes, le domaine, les pages
+ * des plugins actifs et Réglages.
  */
 @Composable
 internal fun ListSwitcherSheet(
@@ -83,6 +86,8 @@ internal fun ListSwitcherSheet(
     onOpenMyDay: () -> Unit,
     onOpenSettings: () -> Unit,
     onDismiss: () -> Unit,
+    plugins: List<PluginMenuItem> = emptyList(),
+    onOpenPlugin: (PluginMenuItem) -> Unit = {},
 ) {
     val palette = cadence
     CadenceSheet(title = stringResource(R.string.tasks_lists_title), subtitle = null, dismiss = onDismiss) {
@@ -138,6 +143,17 @@ internal fun ListSwitcherSheet(
                 leading = { Icon(Icons.Outlined.Today, contentDescription = null, tint = palette.onSurfaceVariant) },
                 onClick = onOpenMyDay,
             )
+            if (plugins.isNotEmpty()) {
+                HorizontalDivider(Modifier.padding(vertical = Space.sm), color = palette.outlineVariant)
+                SheetLabel(stringResource(R.string.plugins_title))
+                plugins.forEach { item ->
+                    SwitcherRow(
+                        label = item.label,
+                        leading = { Icon(Icons.Outlined.Extension, contentDescription = null, tint = palette.onSurfaceVariant, modifier = Modifier.size(Size.icon)) },
+                        onClick = { onOpenPlugin(item) },
+                    )
+                }
+            }
             HorizontalDivider(Modifier.padding(vertical = Space.sm), color = palette.outlineVariant)
             SwitcherRow(
                 label = stringResource(R.string.tasks_open_settings),

@@ -63,6 +63,8 @@ export interface SidebarVisibleSections {
     calendar?: boolean;
     templates?: boolean;
     access?: boolean;
+    // A plugin's sidebar entry (utils/sidebarLayout.ts pluginEntryId)
+    [pluginEntry: `plugin:${string}`]: boolean | undefined;
 }
 
 export interface SidebarSettings {

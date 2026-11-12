@@ -605,6 +605,62 @@
     "noActivity": "Nessuna attività ancora"
   },
   "profile": {
+        "plugins": {
+            "title": "Plugin",
+            "description": "I plugin aggiungono al server le tue integrazioni. Li vede solo un amministratore. Un plugin resta disattivato finché non lo attivi.",
+            "notConfigured": "I plugin sono disattivati. Imposta TUDUDI_PLUGINS_DIR su una cartella che contiene le cartelle dei plugin, poi riavvia il server.",
+            "reloadAll": "Ricarica tutti",
+            "reload": "Ricarica",
+            "reloadPending": "Ricarica per caricare {{version}}",
+            "updatedFrom": "aggiornato da {{version}}",
+            "version": "Versione {{version}}",
+            "state": {
+                "disabled": "Disattivato",
+                "active": "Attivo",
+                "error": "Errore",
+                "invalid": "Non valido",
+                "incompatible": "Non compatibile",
+                "needs_approval": "Serve approvazione",
+                "missing": "Mancante"
+            },
+            "permissions": "Permessi",
+            "events": "Eventi",
+            "permission": {
+                "events": "Ascolta gli eventi",
+                "routes": "Espone le proprie rotte"
+            },
+            "enabled": "Attivo",
+            "needsApproval": "Questa versione chiede più di prima. Riattivala per approvare i suoi permessi ed eventi.",
+            "checkUpdate": "Controlla aggiornamenti",
+            "updateAvailable": "Aggiornamento disponibile: {{version}}",
+            "upToDate": "Aggiornato",
+            "updateError": "Impossibile leggere l'indirizzo degli aggiornamenti",
+            "settings": "Impostazioni",
+            "saveSettings": "Salva impostazioni",
+            "saved": "Impostazioni salvate",
+            "secretSaved": "Salvato",
+            "clearSecret": "Cancella",
+            "required": "obbligatorio",
+            "reloaded": "Plugin ricaricati",
+            "loadError": "Impossibile caricare i plugin",
+            "none": "Nessun plugin trovato nella cartella dei plugin.",
+            "errorLabel": "Errore",
+            "saveError": "Impossibile salvare il plugin",
+            "installLabel": "Indirizzo Git del plugin",
+            "install": "Aggiungi",
+            "installing": "Aggiunta in corso...",
+            "installHint": "Scarica codice che viene eseguito nel server. Leggi cosa chiede prima di attivarlo.",
+            "installed": "Plugin aggiunto. Leggi cosa chiede, poi attivalo.",
+            "installError": "Impossibile aggiungere il plugin",
+            "pull": "Aggiorna",
+            "pulled": "Plugin aggiornato",
+            "remove": "Elimina",
+            "removeTitle": "Eliminare questo plugin?",
+            "removeMessage": "La sua cartella e le sue impostazioni vengono eliminate dal server. Non si può annullare.",
+            "page": {
+                "notFound": "Plugin non trovato o disattivato"
+            }
+        },
     "showTaskDescription": "Mostra la descrizione sotto il titolo",
     "sync": {
       "field": {
@@ -764,6 +820,7 @@
     "nextTaskSuggestion": "Suggerimento Prossima Attività",
     "enableNextTaskSuggestion": "Abilita Suggerimenti Prossima Attività",
     "tabs": {
+            "plugins": "Plugin",
       "classify": "Classificazione",
       "sync": "Sincronizzazione",
       "general": "Generale",

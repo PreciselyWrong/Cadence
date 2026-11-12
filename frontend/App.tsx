@@ -41,6 +41,7 @@ import BackupRestore from './components/Backup/BackupRestore';
 import Layout from './Layout';
 import SubscriptionGate from './components/Billing/SubscriptionGate';
 import DemoEntry from './components/DemoEntry';
+import { usePluginMenuStore } from './store/pluginMenuStore';
 const SubscriptionRequired = lazy(
     () => import('./components/Billing/SubscriptionRequired')
 );
@@ -99,6 +100,7 @@ const AdminUsersPage = lazy(() => import('./components/Admin/AdminUsersPage'));
 const AdminMfaRequired = lazy(
     () => import('./components/Admin/AdminMfaRequired')
 );
+const PluginPage = lazy(() => import('./components/Plugins/PluginPage'));
 
 // Waits before each automatic retry of the first user read while the server
 // answers 429 and no user is known yet. After the last one, Retry is manual.
@@ -335,6 +337,12 @@ const App: React.FC = () => {
 
     // A share handed over while the session was expired lands on /login, so
     // send the user to the Inbox composer once they're authenticated again
+    // Plugin entries in the sidebar: one load per sign-in.
+    const isSignedIn = currentUser !== null;
+    useEffect(() => {
+        if (isSignedIn) void usePluginMenuStore.getState().load();
+    }, [isSignedIn]);
+
     useEffect(() => {
         if (!currentUser) return;
         if (location.pathname === '/inbox') return;
@@ -650,6 +658,10 @@ const App: React.FC = () => {
                             <Route path="/review" element={<ReviewPage />} />
                             <Route path="/inbox" element={<InboxItems />} />
                             <Route path="/habits" element={<Habits />} />
+                            <Route
+                                path="/plugins/:id"
+                                element={<PluginPage />}
+                            />
                             <Route
                                 path="/habit/new"
                                 element={<Navigate to="/habits" replace />}

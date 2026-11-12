@@ -472,6 +472,7 @@ const webhooksModule = require('./modules/webhooks');
 const spreadsheetsModule = require('./modules/spreadsheets');
 const mfaModule = require('./modules/mfa');
 const agentsModule = require('./modules/agents');
+const pluginsModule = require('./modules/plugins');
 
 // Swagger documentation - enabled by default, protected by authentication
 // Mounted on /api-docs to avoid conflicts with API routes
@@ -623,6 +624,7 @@ const registerApiRoutes = (basePath) => {
     app.use(basePath, spreadsheetsModule.routes);
     app.use(basePath, mfaModule.routes);
     app.use(basePath, agentsModule.routes);
+    app.use(basePath, pluginsModule.routes);
 };
 
 // Register routes at both /api and /api/v1 (if versioned) to maintain backwards compatibility
@@ -699,6 +701,12 @@ async function startServer() {
         // New tasks, notes and links classified from the sync journal.
         autoClassifyModule.worker.install(require('./models'));
         autoClassifyModule.worker.initialize();
+
+        // Plugins left on at the last shutdown (off without TUDUDI_PLUGINS_DIR).
+        // A broken plugin never stops the server.
+        await pluginsModule.registry.start().catch((error) => {
+            logError('Failed to start plugins:', error);
+        });
 
         // Initialize CalDAV sync scheduler
         const caldavSyncScheduler = require('./modules/caldav/services/sync-scheduler');

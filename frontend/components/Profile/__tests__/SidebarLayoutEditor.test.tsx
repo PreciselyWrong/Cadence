@@ -3,6 +3,7 @@ import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import SidebarLayoutEditor from '../SidebarLayoutEditor';
 import { useStore } from '../../../store/useStore';
+import { usePluginMenuStore } from '../../../store/pluginMenuStore';
 import {
     DEFAULT_LINK_ORDER,
     DEFAULT_SECTION_ORDER,
@@ -69,6 +70,7 @@ const renderedIds = () =>
 describe('SidebarLayoutEditor', () => {
     beforeEach(() => {
         dropHandlers = [];
+        usePluginMenuStore.setState({ items: [], loaded: true });
         setFeatures({
             calendarEnabled: true,
             habitsEnabled: true,
@@ -288,6 +290,91 @@ describe('SidebarLayoutEditor', () => {
             });
 
             expect(onReorder).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('plugin entries', () => {
+        beforeEach(() => {
+            usePluginMenuStore.setState({
+                items: [
+                    {
+                        id: 'hermes',
+                        label: 'Hermes',
+                        path: '/plugins/hermes',
+                        file: 'index.html',
+                    },
+                ],
+                loaded: true,
+            });
+        });
+
+        it('lists each running plugin after the built-in links', () => {
+            renderEditor();
+
+            expect(renderedIds().slice(0, 9)).toEqual([
+                'favorites',
+                ...DEFAULT_LINK_ORDER,
+                'plugin:hermes',
+            ]);
+        });
+
+        it('reports a plugin switch under its entry key', () => {
+            const { onToggleSection } = renderEditor();
+
+            fireEvent.click(
+                screen.getByRole('switch', { name: 'Show Hermes' })
+            );
+
+            expect(onToggleSection).toHaveBeenCalledWith('plugin:hermes');
+        });
+
+        it('keeps a saved place for a plugin entry when a link is dragged', () => {
+            const { onReorder } = renderEditor({
+                linkOrder: ['plugin:hermes', ...DEFAULT_LINK_ORDER],
+            });
+
+            act(() => {
+                dropHandlers[0]({
+                    active: { id: 'inbox' },
+                    over: { id: 'upcomingTasks' },
+                });
+            });
+
+            expect(onReorder).toHaveBeenCalledWith('links', [
+                'plugin:hermes',
+                'today',
+                'upcomingTasks',
+                'inbox',
+                'calendar',
+                'allTasks',
+                'assignedToMe',
+                'everyone',
+            ]);
+        });
+
+        it('keeps the slot of a plugin that is off when saving the order', () => {
+            const { onReorder } = renderEditor({
+                linkOrder: ['plugin:gone', ...DEFAULT_LINK_ORDER],
+            });
+
+            act(() => {
+                dropHandlers[0]({
+                    active: { id: 'inbox' },
+                    over: { id: 'upcomingTasks' },
+                });
+            });
+
+            expect(onReorder).toHaveBeenCalledWith('links', [
+                'plugin:gone',
+                'today',
+                'upcomingTasks',
+                'inbox',
+                'calendar',
+                'allTasks',
+                'assignedToMe',
+                'everyone',
+                'plugin:hermes',
+            ]);
         });
     });
 });

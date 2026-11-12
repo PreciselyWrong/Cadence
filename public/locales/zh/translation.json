@@ -602,6 +602,62 @@
     "noActivity": "还没有活动"
   },
   "profile": {
+        "plugins": {
+            "title": "插件",
+            "description": "插件会为服务器添加你自己的集成。只有管理员能看到。插件在你开启之前保持关闭。",
+            "notConfigured": "插件已关闭。请将 TUDUDI_PLUGINS_DIR 设为包含插件文件夹的目录，然后重启服务器。",
+            "reloadAll": "全部重新加载",
+            "reload": "重新加载",
+            "reloadPending": "重新加载以载入 {{version}}",
+            "updatedFrom": "已从 {{version}} 更新",
+            "version": "版本 {{version}}",
+            "state": {
+                "disabled": "已关闭",
+                "active": "运行中",
+                "error": "错误",
+                "invalid": "无效",
+                "incompatible": "不兼容",
+                "needs_approval": "需要批准",
+                "missing": "缺失"
+            },
+            "permissions": "权限",
+            "events": "事件",
+            "permission": {
+                "events": "监听事件",
+                "routes": "提供自有路由"
+            },
+            "enabled": "已启用",
+            "needsApproval": "此版本请求的权限比以前多。请重新开启以批准其权限和事件。",
+            "checkUpdate": "检查更新",
+            "updateAvailable": "有可用更新：{{version}}",
+            "upToDate": "已是最新",
+            "updateError": "无法读取更新地址",
+            "settings": "设置",
+            "saveSettings": "保存设置",
+            "saved": "设置已保存",
+            "secretSaved": "已保存",
+            "clearSecret": "清除",
+            "required": "必填",
+            "reloaded": "插件已重新加载",
+            "loadError": "无法加载插件",
+            "none": "插件文件夹中没有找到插件。",
+            "errorLabel": "错误",
+            "saveError": "无法保存插件",
+            "installLabel": "插件的 Git 地址",
+            "install": "添加",
+            "installing": "正在添加...",
+            "installHint": "这会下载在服务器中运行的代码。开启前请先阅读它的权限请求。",
+            "installed": "插件已添加。请先阅读它的权限请求，然后再开启。",
+            "installError": "无法添加插件",
+            "pull": "更新",
+            "pulled": "插件已更新",
+            "remove": "删除",
+            "removeTitle": "删除此插件？",
+            "removeMessage": "其文件夹和设置将从服务器中删除，且无法撤销。",
+            "page": {
+                "notFound": "插件未找到或已关闭"
+            }
+        },
     "showTaskDescription": "在标题下方显示描述",
     "sync": {
       "field": {
@@ -772,6 +828,7 @@
     "nextTaskSuggestion": "下一个任务建议",
     "enableNextTaskSuggestion": "启用下一个任务建议",
     "tabs": {
+            "plugins": "插件",
       "classify": "归类",
       "sync": "同步",
       "general": "常规",

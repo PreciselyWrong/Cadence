@@ -602,6 +602,62 @@
     "noActivity": "Henüz etkinlik yok"
   },
   "profile": {
+        "plugins": {
+            "title": "Eklentiler",
+            "description": "Eklentiler sunucuya kendi entegrasyonlarınızı ekler. Yalnızca yönetici bunları görür. Bir eklenti, siz açana kadar kapalı kalır.",
+            "notConfigured": "Eklentiler kapalı. TUDUDI_PLUGINS_DIR değişkenini eklenti klasörlerini içeren bir klasöre ayarlayın ve sunucuyu yeniden başlatın.",
+            "reloadAll": "Tümünü yeniden yükle",
+            "reload": "Yeniden yükle",
+            "reloadPending": "{{version}} sürümünü yüklemek için yeniden yükleyin",
+            "updatedFrom": "{{version}} sürümünden güncellendi",
+            "version": "Sürüm {{version}}",
+            "state": {
+                "disabled": "Kapalı",
+                "active": "Çalışıyor",
+                "error": "Hata",
+                "invalid": "Geçersiz",
+                "incompatible": "Uyumsuz",
+                "needs_approval": "Onay gerekiyor",
+                "missing": "Eksik"
+            },
+            "permissions": "İzinler",
+            "events": "Olaylar",
+            "permission": {
+                "events": "Olayları dinler",
+                "routes": "Kendi yollarını sunar"
+            },
+            "enabled": "Açık",
+            "needsApproval": "Bu sürüm öncekinden daha fazla şey istiyor. İzinlerini ve olaylarını onaylamak için yeniden açın.",
+            "checkUpdate": "Güncellemeleri denetle",
+            "updateAvailable": "Güncelleme var: {{version}}",
+            "upToDate": "Güncel",
+            "updateError": "Güncelleme adresi okunamadı",
+            "settings": "Ayarlar",
+            "saveSettings": "Ayarları kaydet",
+            "saved": "Ayarlar kaydedildi",
+            "secretSaved": "Kaydedildi",
+            "clearSecret": "Temizle",
+            "required": "zorunlu",
+            "reloaded": "Eklentiler yeniden yüklendi",
+            "loadError": "Eklentiler yüklenemedi",
+            "none": "Eklenti klasöründe eklenti bulunamadı.",
+            "errorLabel": "Hata",
+            "saveError": "Eklenti kaydedilemedi",
+            "installLabel": "Eklentinin Git adresi",
+            "install": "Ekle",
+            "installing": "Ekleniyor...",
+            "installHint": "Bu, sunucuda çalışan kodu indirir. Açmadan önce neyi istediğini okuyun.",
+            "installed": "Eklenti eklendi. Neyi istediğini okuyun, sonra açın.",
+            "installError": "Eklenti eklenemedi",
+            "pull": "Güncelle",
+            "pulled": "Eklenti güncellendi",
+            "remove": "Sil",
+            "removeTitle": "Bu eklenti silinsin mi?",
+            "removeMessage": "Klasörü ve ayarları sunucudan silinir. Bu geri alınamaz.",
+            "page": {
+                "notFound": "Eklenti bulunamadı veya kapalı"
+            }
+        },
     "showTaskDescription": "Açıklamayı başlığın altında göster",
     "sync": {
       "field": {
@@ -772,6 +828,7 @@
     "nextTaskSuggestion": "Sonraki Görev Önerisi",
     "enableNextTaskSuggestion": "Sonraki Görev Önerilerini Etkinleştir",
     "tabs": {
+            "plugins": "Eklentiler",
       "classify": "Sınıflandırma",
       "sync": "Senkronizasyon",
       "general": "Genel",

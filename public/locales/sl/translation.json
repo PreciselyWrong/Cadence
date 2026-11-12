@@ -612,6 +612,62 @@
     }
   },
   "profile": {
+        "plugins": {
+            "title": "Vtičniki",
+            "description": "Vtičniki v strežnik dodajajo lastne integracije. Vidi jih le skrbnik. Vtičnik ostane izklopljen, dokler ga ne vklopite.",
+            "notConfigured": "Vtičniki so izklopljeni. Nastavite TUDUDI_PLUGINS_DIR na mapo, ki vsebuje mape vtičnikov, in znova zaženite strežnik.",
+            "reloadAll": "Znova naloži vse",
+            "reload": "Znova naloži",
+            "reloadPending": "Znova naložite, da se naloži {{version}}",
+            "updatedFrom": "posodobljeno iz različice {{version}}",
+            "version": "Različica {{version}}",
+            "state": {
+                "disabled": "Izklopljen",
+                "active": "Deluje",
+                "error": "Napaka",
+                "invalid": "Neveljaven",
+                "incompatible": "Nezdružljiv",
+                "needs_approval": "Potrebna odobritev",
+                "missing": "Manjka"
+            },
+            "permissions": "Dovoljenja",
+            "events": "Dogodki",
+            "permission": {
+                "events": "Posluša dogodke",
+                "routes": "Ponuja lastne poti"
+            },
+            "enabled": "Vklopljen",
+            "needsApproval": "Ta različica zahteva več kot prej. Znova ga vklopite, da odobrite njegova dovoljenja in dogodke.",
+            "checkUpdate": "Preveri posodobitve",
+            "updateAvailable": "Na voljo je posodobitev: {{version}}",
+            "upToDate": "Posodobljeno",
+            "updateError": "Naslova za posodobitve ni mogoče prebrati",
+            "settings": "Nastavitve",
+            "saveSettings": "Shrani nastavitve",
+            "saved": "Nastavitve shranjene",
+            "secretSaved": "Shranjeno",
+            "clearSecret": "Izbriši",
+            "required": "obvezno",
+            "reloaded": "Vtičniki znova naloženi",
+            "loadError": "Vtičnikov ni mogoče naložiti",
+            "none": "V mapi vtičnikov ni nobenega vtičnika.",
+            "errorLabel": "Napaka",
+            "saveError": "Vtičnika ni mogoče shraniti",
+            "installLabel": "Git naslov vtičnika",
+            "install": "Dodaj",
+            "installing": "Dodajanje...",
+            "installHint": "To prenese kodo, ki se izvaja na strežniku. Preberite, kaj zahteva, preden ga vklopite.",
+            "installed": "Vtičnik je dodan. Preberite, kaj zahteva, nato ga vklopite.",
+            "installError": "Vtičnika ni bilo mogoče dodati",
+            "pull": "Posodobi",
+            "pulled": "Vtičnik posodobljen",
+            "remove": "Izbriši",
+            "removeTitle": "Izbrišem ta vtičnik?",
+            "removeMessage": "Njegova mapa in nastavitve se izbrišejo s strežnika. Tega ni mogoče razveljaviti.",
+            "page": {
+                "notFound": "Vtičnik ni najden ali je izklopljen"
+            }
+        },
     "showTaskDescription": "Prikaži opis pod naslovom",
     "sync": {
       "pending_few": "{{count}} spremembe, narejene brez povezave v tem brskalniku, čakajo na pošiljanje.",
@@ -792,6 +848,7 @@
     "nextTaskSuggestion": "Predlog naslednje naloge",
     "enableNextTaskSuggestion": "Omogoči predloge naslednjih nalog",
     "tabs": {
+            "plugins": "Vtičniki",
       "classify": "Razvrstitev",
       "sync": "Sinhronizacija",
       "general": "Splošno",

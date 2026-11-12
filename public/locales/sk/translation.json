@@ -1111,6 +1111,62 @@
     }
   },
   "profile": {
+        "plugins": {
+            "title": "Doplnky",
+            "description": "Doplnky pridávajú na server vlastné integrácie. Vidí ich iba správca. Doplnok zostáva vypnutý, kým ho nezapnete.",
+            "notConfigured": "Doplnky sú vypnuté. Nastavte TUDUDI_PLUGINS_DIR na priečinok, ktorý obsahuje priečinky doplnkov, a reštartujte server.",
+            "reloadAll": "Znova načítať všetko",
+            "reload": "Znova načítať",
+            "reloadPending": "Znova načítajte, aby sa načítala verzia {{version}}",
+            "updatedFrom": "aktualizované z verzie {{version}}",
+            "version": "Verzia {{version}}",
+            "state": {
+                "disabled": "Vypnutý",
+                "active": "Beží",
+                "error": "Chyba",
+                "invalid": "Neplatný",
+                "incompatible": "Nekompatibilný",
+                "needs_approval": "Vyžaduje schválenie",
+                "missing": "Chýba"
+            },
+            "permissions": "Oprávnenia",
+            "events": "Udalosti",
+            "permission": {
+                "events": "Počúva udalosti",
+                "routes": "Poskytuje vlastné trasy"
+            },
+            "enabled": "Zapnutý",
+            "needsApproval": "Táto verzia žiada viac než predtým. Zapnite ju znova, aby ste schválili jej oprávnenia a udalosti.",
+            "checkUpdate": "Skontrolovať aktualizácie",
+            "updateAvailable": "Dostupná aktualizácia: {{version}}",
+            "upToDate": "Aktuálne",
+            "updateError": "Adresu aktualizácií sa nepodarilo prečítať",
+            "settings": "Nastavenia",
+            "saveSettings": "Uložiť nastavenia",
+            "saved": "Nastavenia uložené",
+            "secretSaved": "Uložené",
+            "clearSecret": "Vymazať",
+            "required": "povinné",
+            "reloaded": "Doplnky znova načítané",
+            "loadError": "Doplnky sa nepodarilo načítať",
+            "none": "V priečinku doplnkov sa nenašiel žiadny doplnok.",
+            "errorLabel": "Chyba",
+            "saveError": "Doplnok sa nepodarilo uložiť",
+            "installLabel": "Git adresa pluginu",
+            "install": "Pridať",
+            "installing": "Pridáva sa...",
+            "installHint": "Toto stiahne kód, ktorý beží na serveri. Pred zapnutím si prečítajte, čo žiada.",
+            "installed": "Plugin bol pridaný. Prečítajte si, čo žiada, a potom ho zapnite.",
+            "installError": "Plugin sa nepodarilo pridať",
+            "pull": "Aktualizovať",
+            "pulled": "Plugin aktualizovaný",
+            "remove": "Odstrániť",
+            "removeTitle": "Odstrániť tento plugin?",
+            "removeMessage": "Jeho priečinok a nastavenia sa odstránia zo servera. Nedá sa to vrátiť späť.",
+            "page": {
+                "notFound": "Plugin sa nenašiel alebo je vypnutý"
+            }
+        },
     "showTaskDescription": "Zobraziť popis pod názvom",
     "sync": {
       "pending_many": "{{count}} zmien urobených offline v tomto prehliadači čaká na odoslanie.",
@@ -1326,6 +1382,7 @@
     "enableNextTaskSuggestion": "Povoliť návrhy ďalších úloh",
     "featuresAddons": "Funkcie a doplnky",
     "tabs": {
+            "plugins": "Doplnky",
       "classify": "Zaradenie",
       "ai": "Funkcie AI",
       "sync": "Synchronizácia",

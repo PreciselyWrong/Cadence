@@ -607,6 +607,62 @@
     "noActivity": "Nicio activitate încă"
   },
   "profile": {
+        "plugins": {
+            "title": "Pluginuri",
+            "description": "Pluginurile adaugă integrări proprii la server. Doar un administrator le vede. Un plugin rămâne oprit până îl activezi.",
+            "notConfigured": "Pluginurile sunt oprite. Setează TUDUDI_PLUGINS_DIR la un dosar care conține dosarele pluginurilor și repornește serverul.",
+            "reloadAll": "Reîncarcă tot",
+            "reload": "Reîncarcă",
+            "reloadPending": "Reîncarcă pentru a încărca {{version}}",
+            "updatedFrom": "actualizat din {{version}}",
+            "version": "Versiunea {{version}}",
+            "state": {
+                "disabled": "Oprit",
+                "active": "Activ",
+                "error": "Eroare",
+                "invalid": "Nevalid",
+                "incompatible": "Incompatibil",
+                "needs_approval": "Necesită aprobare",
+                "missing": "Lipsă"
+            },
+            "permissions": "Permisiuni",
+            "events": "Evenimente",
+            "permission": {
+                "events": "Ascultă evenimente",
+                "routes": "Oferă propriile rute"
+            },
+            "enabled": "Activat",
+            "needsApproval": "Această versiune cere mai mult decât înainte. Activează-l din nou pentru a aproba permisiunile și evenimentele.",
+            "checkUpdate": "Verifică actualizările",
+            "updateAvailable": "Actualizare disponibilă: {{version}}",
+            "upToDate": "La zi",
+            "updateError": "Nu s-a putut citi adresa de actualizare",
+            "settings": "Setări",
+            "saveSettings": "Salvează setările",
+            "saved": "Setări salvate",
+            "secretSaved": "Salvat",
+            "clearSecret": "Șterge",
+            "required": "obligatoriu",
+            "reloaded": "Pluginurile au fost reîncărcate",
+            "loadError": "Pluginurile nu au putut fi încărcate",
+            "none": "Niciun plugin găsit în dosarul pluginurilor.",
+            "errorLabel": "Eroare",
+            "saveError": "Pluginul nu a putut fi salvat",
+            "installLabel": "Adresa Git a pluginului",
+            "install": "Adaugă",
+            "installing": "Se adaugă...",
+            "installHint": "Aceasta descarcă cod care rulează pe server. Citește ce cere înainte să îl activezi.",
+            "installed": "Pluginul a fost adăugat. Citește ce cere, apoi activează-l.",
+            "installError": "Pluginul nu a putut fi adăugat",
+            "pull": "Actualizează",
+            "pulled": "Plugin actualizat",
+            "remove": "Șterge",
+            "removeTitle": "Ștergi acest plugin?",
+            "removeMessage": "Dosarul și setările lui sunt șterse de pe server. Nu se poate anula.",
+            "page": {
+                "notFound": "Pluginul nu a fost găsit sau este oprit"
+            }
+        },
     "showTaskDescription": "Afișează descrierea sub titlu",
     "sync": {
       "field": {
@@ -777,6 +833,7 @@
     "nextTaskSuggestion": "Sugestie pentru Următoarea Sarcină",
     "enableNextTaskSuggestion": "Activează Sugestiile pentru Următoarea Sarcină",
     "tabs": {
+            "plugins": "Pluginuri",
       "classify": "Clasificare",
       "sync": "Sincronizare",
       "general": "General",

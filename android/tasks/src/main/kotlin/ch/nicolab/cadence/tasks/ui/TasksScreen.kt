@@ -24,6 +24,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.material.icons.automirrored.outlined.ViewList
 import androidx.compose.material.icons.outlined.GridView
 import androidx.compose.ui.platform.LocalContext
+import ch.nicolab.cadence.tasks.plugins.PluginPageActivity
+import ch.nicolab.cadence.tasks.plugins.rememberPluginMenu
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -276,8 +278,15 @@ fun TasksScreen(
         }
     }
 
+    val pluginMenu = rememberPluginMenu(switcherOpen)
     if (switcherOpen) {
+        val context = LocalContext.current
         ListSwitcherSheet(
+            plugins = pluginMenu,
+            onOpenPlugin = { item ->
+                switcherOpen = false
+                PluginPageActivity.start(context, item)
+            },
             onOpenMyDay = {
                 switcherOpen = false
                 onOpenBrief()

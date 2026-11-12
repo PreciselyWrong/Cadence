@@ -1142,6 +1142,62 @@
     "views": "Projektansichten"
   },
   "profile": {
+        "plugins": {
+            "title": "Plugins",
+            "description": "Plugins fügen eigene Integrationen zum Server hinzu. Nur ein Administrator sieht sie. Ein Plugin bleibt aus, bis Sie es einschalten.",
+            "notConfigured": "Plugins sind aus. Setzen Sie TUDUDI_PLUGINS_DIR auf einen Ordner mit Plugin-Ordnern und starten Sie den Server neu.",
+            "reloadAll": "Alle neu laden",
+            "reload": "Neu laden",
+            "reloadPending": "Zum Laden von {{version}} neu laden",
+            "updatedFrom": "aktualisiert von {{version}}",
+            "version": "Version {{version}}",
+            "state": {
+                "disabled": "Aus",
+                "active": "Aktiv",
+                "error": "Fehler",
+                "invalid": "Ungültig",
+                "incompatible": "Inkompatibel",
+                "needs_approval": "Freigabe nötig",
+                "missing": "Fehlt"
+            },
+            "permissions": "Berechtigungen",
+            "events": "Ereignisse",
+            "permission": {
+                "events": "Hört auf Ereignisse",
+                "routes": "Stellt eigene Routen bereit"
+            },
+            "enabled": "Aktiviert",
+            "needsApproval": "Diese Version verlangt mehr als zuvor. Schalten Sie sie erneut ein, um Berechtigungen und Ereignisse zu bestätigen.",
+            "checkUpdate": "Nach Updates suchen",
+            "updateAvailable": "Update verfügbar: {{version}}",
+            "upToDate": "Aktuell",
+            "updateError": "Die Update-Adresse konnte nicht gelesen werden",
+            "settings": "Einstellungen",
+            "saveSettings": "Einstellungen speichern",
+            "saved": "Einstellungen gespeichert",
+            "secretSaved": "Gespeichert",
+            "clearSecret": "Leeren",
+            "required": "erforderlich",
+            "reloaded": "Plugins neu geladen",
+            "loadError": "Plugins konnten nicht geladen werden",
+            "none": "Im Plugin-Ordner wurde kein Plugin gefunden.",
+            "errorLabel": "Fehler",
+            "saveError": "Das Plugin konnte nicht gespeichert werden",
+            "installLabel": "Git-Adresse des Plugins",
+            "install": "Hinzufügen",
+            "installing": "Wird hinzugefügt...",
+            "installHint": "Hier wird Code heruntergeladen, der im Server läuft. Lies vor dem Einschalten, was er verlangt.",
+            "installed": "Plugin hinzugefügt. Lies, was es verlangt, und schalte es dann ein.",
+            "installError": "Das Plugin konnte nicht hinzugefügt werden",
+            "pull": "Aktualisieren",
+            "pulled": "Plugin aktualisiert",
+            "remove": "Löschen",
+            "removeTitle": "Dieses Plugin löschen?",
+            "removeMessage": "Sein Ordner und seine Einstellungen werden vom Server gelöscht. Das lässt sich nicht rückgängig machen.",
+            "page": {
+                "notFound": "Plugin nicht gefunden oder ausgeschaltet"
+            }
+        },
     "showTaskDescription": "Beschreibung unter dem Titel anzeigen",
     "sync": {
       "field": {
@@ -1254,6 +1310,7 @@
     "nextTaskSuggestion": "Nächste Aufgabenvorschlag",
     "enableNextTaskSuggestion": "Nächste Aufgabenvorschläge aktivieren",
     "tabs": {
+            "plugins": "Plugins",
       "classify": "Einordnung",
       "sync": "Synchronisation",
       "general": "Allgemein",

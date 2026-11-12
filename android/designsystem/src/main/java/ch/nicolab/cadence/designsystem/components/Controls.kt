@@ -43,6 +43,8 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ch.nicolab.cadence.designsystem.theme.Motion
@@ -297,6 +299,7 @@ fun CadenceField(
     enabled: Boolean = true,
     fieldModifier: Modifier = Modifier,
     onDone: (() -> Unit)? = null,
+    secret: Boolean = false,
 ) {
     val palette = cadence
     val fill = accent ?: palette.primary
@@ -323,9 +326,11 @@ fun CadenceField(
                     interactionSource = interaction,
                     textStyle = LocalTextStyle.current.merge(MaterialTheme.typography.bodyLarge).copy(color = palette.onSurface),
                     cursorBrush = SolidColor(fill),
+                    visualTransformation = if (secret) PasswordVisualTransformation() else VisualTransformation.None,
                     keyboardOptions = KeyboardOptions(
-                        capitalization = if (numeric || decimal) KeyboardCapitalization.None else KeyboardCapitalization.Sentences,
+                        capitalization = if (numeric || decimal || secret) KeyboardCapitalization.None else KeyboardCapitalization.Sentences,
                         keyboardType = when {
+                            secret -> KeyboardType.Password
                             decimal -> KeyboardType.Decimal
                             numeric -> KeyboardType.Number
                             else -> KeyboardType.Text

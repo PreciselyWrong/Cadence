@@ -132,6 +132,7 @@ const Feedback = require('./feedback')(sequelize);
 const PushSubscription = require('./push_subscription')(sequelize);
 const Webhook = require('./webhook')(sequelize);
 const WebhookDelivery = require('./webhook_delivery')(sequelize);
+const Plugin = require('./plugin')(sequelize);
 const ImportJob = require('./import_job')(sequelize);
 const UserMfa = require('./user_mfa')(sequelize);
 const UserRecoveryCode = require('./user_recovery_code')(sequelize);
@@ -859,6 +860,7 @@ module.exports = {
     PushSubscription,
     Webhook,
     WebhookDelivery,
+    Plugin,
     ImportJob,
     UserMfa,
     UserRecoveryCode,

@@ -466,6 +466,62 @@
     "sign_up": "Registrarse"
   },
   "profile": {
+        "plugins": {
+            "title": "Plugins",
+            "description": "Los plugins añaden integraciones propias al servidor. Solo los ve un administrador. Un plugin permanece desactivado hasta que lo actives.",
+            "notConfigured": "Los plugins están desactivados. Define TUDUDI_PLUGINS_DIR con una carpeta que contenga las carpetas de plugins y reinicia el servidor.",
+            "reloadAll": "Recargar todo",
+            "reload": "Recargar",
+            "reloadPending": "Recarga para cargar {{version}}",
+            "updatedFrom": "actualizado desde {{version}}",
+            "version": "Versión {{version}}",
+            "state": {
+                "disabled": "Desactivado",
+                "active": "Activo",
+                "error": "Error",
+                "invalid": "No válido",
+                "incompatible": "Incompatible",
+                "needs_approval": "Requiere aprobación",
+                "missing": "No encontrado"
+            },
+            "permissions": "Permisos",
+            "events": "Eventos",
+            "permission": {
+                "events": "Escucha eventos",
+                "routes": "Sirve sus propias rutas"
+            },
+            "enabled": "Activado",
+            "needsApproval": "Esta versión pide más que la anterior. Vuelve a activarlo para aprobar sus permisos y eventos.",
+            "checkUpdate": "Buscar actualizaciones",
+            "updateAvailable": "Actualización disponible: {{version}}",
+            "upToDate": "Al día",
+            "updateError": "No se pudo leer la dirección de actualización",
+            "settings": "Ajustes",
+            "saveSettings": "Guardar ajustes",
+            "saved": "Ajustes guardados",
+            "secretSaved": "Guardado",
+            "clearSecret": "Borrar",
+            "required": "obligatorio",
+            "reloaded": "Plugins recargados",
+            "loadError": "No se pudieron cargar los plugins",
+            "none": "No se encontró ningún plugin en la carpeta de plugins.",
+            "errorLabel": "Error",
+            "saveError": "No se pudo guardar el plugin",
+            "installLabel": "Dirección Git del plugin",
+            "install": "Añadir",
+            "installing": "Añadiendo...",
+            "installHint": "Esto descarga código que se ejecuta en el servidor. Lee lo que pide antes de activarlo.",
+            "installed": "Plugin añadido. Lee lo que pide y luego actívalo.",
+            "installError": "No se pudo añadir el plugin",
+            "pull": "Actualizar",
+            "pulled": "Plugin actualizado",
+            "remove": "Eliminar",
+            "removeTitle": "¿Eliminar este plugin?",
+            "removeMessage": "Su carpeta y sus ajustes se eliminan del servidor. No se puede deshacer.",
+            "page": {
+                "notFound": "Plugin no encontrado o desactivado"
+            }
+        },
     "showTaskDescription": "Mostrar la descripción debajo del título",
     "sync": {
       "field": {
@@ -568,6 +624,7 @@
     "nextTaskSuggestion": "Sugerencia de Próxima Tarea",
     "enableNextTaskSuggestion": "Habilitar Sugerencias de Próxima Tarea",
     "tabs": {
+            "plugins": "Plugins",
       "classify": "Clasificación",
       "sync": "Sincronización",
       "general": "General",

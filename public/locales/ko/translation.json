@@ -602,6 +602,62 @@
     "noActivity": "아직 활동이 없습니다"
   },
   "profile": {
+        "plugins": {
+            "title": "플러그인",
+            "description": "플러그인은 서버에 직접 만든 연동을 추가합니다. 관리자만 볼 수 있습니다. 켜기 전까지 플러그인은 꺼진 상태로 남습니다.",
+            "notConfigured": "플러그인이 꺼져 있습니다. TUDUDI_PLUGINS_DIR을 플러그인 폴더들이 들어 있는 폴더로 설정한 뒤 서버를 다시 시작하세요.",
+            "reloadAll": "모두 다시 불러오기",
+            "reload": "다시 불러오기",
+            "reloadPending": "{{version}}을(를) 불러오려면 다시 불러오세요",
+            "updatedFrom": "{{version}}에서 업데이트됨",
+            "version": "버전 {{version}}",
+            "state": {
+                "disabled": "꺼짐",
+                "active": "실행 중",
+                "error": "오류",
+                "invalid": "잘못됨",
+                "incompatible": "호환되지 않음",
+                "needs_approval": "승인 필요",
+                "missing": "없음"
+            },
+            "permissions": "권한",
+            "events": "이벤트",
+            "permission": {
+                "events": "이벤트 수신",
+                "routes": "자체 경로 제공"
+            },
+            "enabled": "사용",
+            "needsApproval": "이 버전은 이전보다 더 많은 것을 요청합니다. 권한과 이벤트를 승인하려면 다시 켜세요.",
+            "checkUpdate": "업데이트 확인",
+            "updateAvailable": "업데이트 있음: {{version}}",
+            "upToDate": "최신 상태",
+            "updateError": "업데이트 주소를 읽을 수 없습니다",
+            "settings": "설정",
+            "saveSettings": "설정 저장",
+            "saved": "설정을 저장했습니다",
+            "secretSaved": "저장됨",
+            "clearSecret": "지우기",
+            "required": "필수",
+            "reloaded": "플러그인을 다시 불러왔습니다",
+            "loadError": "플러그인을 불러올 수 없습니다",
+            "none": "플러그인 폴더에서 플러그인을 찾지 못했습니다.",
+            "errorLabel": "오류",
+            "saveError": "플러그인을 저장할 수 없습니다",
+            "installLabel": "플러그인 Git 주소",
+            "install": "추가",
+            "installing": "추가하는 중...",
+            "installHint": "서버에서 실행되는 코드를 내려받습니다. 켜기 전에 요청하는 내용을 읽어 보세요.",
+            "installed": "플러그인을 추가했습니다. 요청하는 내용을 읽은 뒤 켜세요.",
+            "installError": "플러그인을 추가할 수 없습니다",
+            "pull": "업데이트",
+            "pulled": "플러그인을 업데이트했습니다",
+            "remove": "삭제",
+            "removeTitle": "이 플러그인을 삭제할까요?",
+            "removeMessage": "폴더와 설정이 서버에서 삭제됩니다. 되돌릴 수 없습니다.",
+            "page": {
+                "notFound": "플러그인을 찾을 수 없거나 꺼져 있습니다"
+            }
+        },
     "showTaskDescription": "제목 아래에 설명 표시",
     "sync": {
       "field": {
@@ -772,6 +828,7 @@
     "nextTaskSuggestion": "다음 작업 제안",
     "enableNextTaskSuggestion": "다음 작업 제안 활성화",
     "tabs": {
+            "plugins": "플러그인",
       "classify": "분류",
       "sync": "Sync",
       "general": "일반",

@@ -604,6 +604,62 @@
     "noActivity": "Ei vielä aktiivisuutta"
   },
   "profile": {
+        "plugins": {
+            "title": "Liitännäiset",
+            "description": "Liitännäiset lisäävät palvelimeen omia integraatioitasi. Vain ylläpitäjä näkee ne. Liitännäinen pysyy pois päältä, kunnes käynnistät sen.",
+            "notConfigured": "Liitännäiset ovat pois käytöstä. Aseta TUDUDI_PLUGINS_DIR kansioon, jossa on liitännäiskansiot, ja käynnistä palvelin uudelleen.",
+            "reloadAll": "Lataa kaikki uudelleen",
+            "reload": "Lataa uudelleen",
+            "reloadPending": "Lataa uudelleen, jotta {{version}} latautuu",
+            "updatedFrom": "päivitetty versiosta {{version}}",
+            "version": "Versio {{version}}",
+            "state": {
+                "disabled": "Pois päältä",
+                "active": "Käynnissä",
+                "error": "Virhe",
+                "invalid": "Virheellinen",
+                "incompatible": "Yhteensopimaton",
+                "needs_approval": "Hyväksyntä tarvitaan",
+                "missing": "Puuttuu"
+            },
+            "permissions": "Oikeudet",
+            "events": "Tapahtumat",
+            "permission": {
+                "events": "Kuuntelee tapahtumia",
+                "routes": "Tarjoaa omat reitit"
+            },
+            "enabled": "Käytössä",
+            "needsApproval": "Tämä versio vaatii enemmän kuin ennen. Käynnistä se uudelleen hyväksyäksesi sen oikeudet ja tapahtumat.",
+            "checkUpdate": "Tarkista päivitykset",
+            "updateAvailable": "Päivitys saatavilla: {{version}}",
+            "upToDate": "Ajan tasalla",
+            "updateError": "Päivitysosoitetta ei voitu lukea",
+            "settings": "Asetukset",
+            "saveSettings": "Tallenna asetukset",
+            "saved": "Asetukset tallennettu",
+            "secretSaved": "Tallennettu",
+            "clearSecret": "Tyhjennä",
+            "required": "pakollinen",
+            "reloaded": "Liitännäiset ladattu uudelleen",
+            "loadError": "Liitännäisiä ei voitu ladata",
+            "none": "Liitännäiskansiosta ei löytynyt liitännäisiä.",
+            "errorLabel": "Virhe",
+            "saveError": "Liitännäisen tallentaminen ei onnistunut",
+            "installLabel": "Liitännäisen Git-osoite",
+            "install": "Lisää",
+            "installing": "Lisätään...",
+            "installHint": "Tämä lataa palvelimessa suoritettavaa koodia. Lue, mitä se pyytää, ennen kuin otat sen käyttöön.",
+            "installed": "Liitännäinen lisätty. Lue, mitä se pyytää, ja ota se sitten käyttöön.",
+            "installError": "Liitännäistä ei voitu lisätä",
+            "pull": "Päivitä",
+            "pulled": "Liitännäinen päivitetty",
+            "remove": "Poista",
+            "removeTitle": "Poistetaanko tämä liitännäinen?",
+            "removeMessage": "Sen kansio ja asetukset poistetaan palvelimelta. Tätä ei voi peruuttaa.",
+            "page": {
+                "notFound": "Liitännäistä ei löydy tai se on pois päältä"
+            }
+        },
     "showTaskDescription": "Näytä kuvaus otsikon alla",
     "sync": {
       "field": {
@@ -782,6 +838,7 @@
     "nextTaskSuggestion": "Seuraava tehtäväehdotus",
     "enableNextTaskSuggestion": "Ota käyttöön seuraavien tehtävien ehdotukset",
     "tabs": {
+            "plugins": "Liitännäiset",
       "classify": "Lajittelu",
       "sync": "Synkronointi",
       "general": "Yleinen",

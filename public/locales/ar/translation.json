@@ -622,6 +622,62 @@
     "noActivity": "لا توجد أنشطة حتى الآن"
   },
   "profile": {
+        "plugins": {
+            "title": "الإضافات",
+            "description": "تضيف الإضافات تكاملات خاصة بك إلى الخادم. يراها المسؤول فقط. تبقى الإضافة متوقفة حتى تفعّلها.",
+            "notConfigured": "الإضافات متوقفة. اضبط TUDUDI_PLUGINS_DIR على مجلد يحتوي على مجلدات الإضافات، ثم أعد تشغيل الخادم.",
+            "reloadAll": "إعادة تحميل الكل",
+            "reload": "إعادة تحميل",
+            "reloadPending": "أعد التحميل لتحميل {{version}}",
+            "updatedFrom": "محدّثة من {{version}}",
+            "version": "الإصدار {{version}}",
+            "state": {
+                "disabled": "متوقفة",
+                "active": "تعمل",
+                "error": "خطأ",
+                "invalid": "غير صالحة",
+                "incompatible": "غير متوافقة",
+                "needs_approval": "بحاجة إلى موافقة",
+                "missing": "مفقودة"
+            },
+            "permissions": "الأذونات",
+            "events": "الأحداث",
+            "permission": {
+                "events": "تستمع إلى الأحداث",
+                "routes": "تقدّم مساراتها الخاصة"
+            },
+            "enabled": "مفعّلة",
+            "needsApproval": "هذا الإصدار يطلب أكثر من قبل. فعّلها مرة أخرى للموافقة على أذوناتها وأحداثها.",
+            "checkUpdate": "التحقق من التحديثات",
+            "updateAvailable": "تحديث متاح: {{version}}",
+            "upToDate": "محدّثة",
+            "updateError": "تعذّر قراءة عنوان التحديث",
+            "settings": "الإعدادات",
+            "saveSettings": "حفظ الإعدادات",
+            "saved": "تم حفظ الإعدادات",
+            "secretSaved": "محفوظ",
+            "clearSecret": "مسح",
+            "required": "مطلوب",
+            "reloaded": "أُعيد تحميل الإضافات",
+            "loadError": "تعذّر تحميل الإضافات",
+            "none": "لم يُعثر على أي إضافة في مجلد الإضافات.",
+            "errorLabel": "خطأ",
+            "saveError": "تعذّر حفظ الإضافة",
+            "installLabel": "عنوان Git للإضافة",
+            "install": "إضافة",
+            "installing": "جارٍ الإضافة...",
+            "installHint": "يقوم هذا بتنزيل شيفرة تعمل على الخادم. اقرأ ما تطلبه قبل تفعيلها.",
+            "installed": "تمت إضافة الإضافة. اقرأ ما تطلبه ثم فعّلها.",
+            "installError": "تعذرت إضافة الإضافة",
+            "pull": "تحديث",
+            "pulled": "تم تحديث الإضافة",
+            "remove": "حذف",
+            "removeTitle": "حذف هذه الإضافة؟",
+            "removeMessage": "سيتم حذف مجلدها وإعداداتها من الخادم. لا يمكن التراجع عن ذلك.",
+            "page": {
+                "notFound": "الإضافة غير موجودة أو متوقفة"
+            }
+        },
     "showTaskDescription": "إظهار الوصف أسفل العنوان",
     "sync": {
       "field": {
@@ -792,6 +848,7 @@
     "nextTaskSuggestion": "اقتراح المهمة التالية",
     "enableNextTaskSuggestion": "تفعيل اقتراحات المهمة التالية",
     "tabs": {
+            "plugins": "الإضافات",
       "classify": "التصنيف",
       "sync": "المزامنة",
       "general": "عام",

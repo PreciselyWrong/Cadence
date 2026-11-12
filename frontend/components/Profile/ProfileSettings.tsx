@@ -32,6 +32,7 @@ import {
     QueueListIcon,
     TableCellsIcon,
     ArrowPathIcon,
+    PuzzlePieceIcon,
 } from '@heroicons/react/24/outline';
 import { Squares2X2Icon } from '@heroicons/react/24/solid';
 import TelegramIcon from '../Shared/Icons/TelegramIcon';
@@ -77,6 +78,7 @@ import PlanningTab from './tabs/PlanningTab';
 import DailyBriefTab from './tabs/DailyBriefTab';
 import ClassifyTab from './tabs/ClassifyTab';
 import AgentsTab from './tabs/AgentsTab';
+import PluginsTab from './tabs/PluginsTab';
 import ImportExportTab from './tabs/ImportExportTab';
 import SyncTab from './tabs/SyncTab';
 import { getDefaultConfig } from '../../utils/keyboardShortcutsService';
@@ -138,6 +140,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
             'daily-brief',
             'classify',
             'agents',
+            'plugins',
             'mcp',
             'ai-assistant',
             'features',
@@ -1526,6 +1529,17 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
             name: t('profile.tabs.agents', 'Agents'),
             icon: <ChatBubbleLeftRightIcon className="w-5 h-5" />,
         },
+        // Server plugins run code in the server: admins only.
+        ...(currentUser?.is_admin === true
+            ? [
+                  {
+                      id: 'plugins',
+                      group: 'integrations',
+                      name: t('profile.tabs.plugins', 'Plugins'),
+                      icon: <PuzzlePieceIcon className="w-5 h-5" />,
+                  },
+              ]
+            : []),
         {
             id: 'ai-assistant',
             group: 'integrations',
@@ -2082,6 +2096,12 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                                     <AgentsTab
                                         isActive={activeTab === 'agents'}
                                     />
+
+                                    {currentUser?.is_admin === true && (
+                                        <PluginsTab
+                                            isActive={activeTab === 'plugins'}
+                                        />
+                                    )}
 
                                     <BillingTab
                                         isActive={activeTab === 'billing'}

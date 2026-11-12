@@ -612,6 +612,62 @@
     "noActivity": "Brak aktywności"
   },
   "profile": {
+        "plugins": {
+            "title": "Wtyczki",
+            "description": "Wtyczki dodają do serwera własne integracje. Widzi je tylko administrator. Wtyczka pozostaje wyłączona, dopóki jej nie włączysz.",
+            "notConfigured": "Wtyczki są wyłączone. Ustaw TUDUDI_PLUGINS_DIR na folder zawierający foldery wtyczek i uruchom ponownie serwer.",
+            "reloadAll": "Przeładuj wszystkie",
+            "reload": "Przeładuj",
+            "reloadPending": "Przeładuj, aby wczytać {{version}}",
+            "updatedFrom": "zaktualizowano z {{version}}",
+            "version": "Wersja {{version}}",
+            "state": {
+                "disabled": "Wyłączona",
+                "active": "Działa",
+                "error": "Błąd",
+                "invalid": "Nieprawidłowa",
+                "incompatible": "Niezgodna",
+                "needs_approval": "Wymaga zatwierdzenia",
+                "missing": "Brak"
+            },
+            "permissions": "Uprawnienia",
+            "events": "Zdarzenia",
+            "permission": {
+                "events": "Nasłuchuje zdarzeń",
+                "routes": "Udostępnia własne trasy"
+            },
+            "enabled": "Włączona",
+            "needsApproval": "Ta wersja wymaga więcej niż poprzednia. Włącz ją ponownie, aby zatwierdzić jej uprawnienia i zdarzenia.",
+            "checkUpdate": "Sprawdź aktualizacje",
+            "updateAvailable": "Dostępna aktualizacja: {{version}}",
+            "upToDate": "Aktualna",
+            "updateError": "Nie udało się odczytać adresu aktualizacji",
+            "settings": "Ustawienia",
+            "saveSettings": "Zapisz ustawienia",
+            "saved": "Ustawienia zapisane",
+            "secretSaved": "Zapisano",
+            "clearSecret": "Wyczyść",
+            "required": "wymagane",
+            "reloaded": "Wtyczki przeładowane",
+            "loadError": "Nie udało się wczytać wtyczek",
+            "none": "Nie znaleziono wtyczki w folderze wtyczek.",
+            "errorLabel": "Błąd",
+            "saveError": "Nie udało się zapisać wtyczki",
+            "installLabel": "Adres Git wtyczki",
+            "install": "Dodaj",
+            "installing": "Dodawanie...",
+            "installHint": "To pobiera kod, który działa na serwerze. Przeczytaj, o co prosi, zanim ją włączysz.",
+            "installed": "Wtyczka dodana. Przeczytaj, o co prosi, a potem ją włącz.",
+            "installError": "Nie udało się dodać wtyczki",
+            "pull": "Aktualizuj",
+            "pulled": "Wtyczka zaktualizowana",
+            "remove": "Usuń",
+            "removeTitle": "Usunąć tę wtyczkę?",
+            "removeMessage": "Jej folder i ustawienia zostaną usunięte z serwera. Tej operacji nie można cofnąć.",
+            "page": {
+                "notFound": "Nie znaleziono wtyczki lub jest wyłączona"
+            }
+        },
     "showTaskDescription": "Pokaż opis pod tytułem",
     "sync": {
       "pending_many": "{{count}} zmian wykonanych offline w tej przeglądarce czeka na wysłanie.",
@@ -792,6 +848,7 @@
     "nextTaskSuggestion": "Sugestia Następnego Zadania",
     "enableNextTaskSuggestion": "Włącz sugestie następnych zadań",
     "tabs": {
+            "plugins": "Wtyczki",
       "classify": "Klasyfikacja",
       "sync": "Synchronizacja",
       "general": "Ogólne",

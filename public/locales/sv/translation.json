@@ -604,6 +604,62 @@
     }
   },
   "profile": {
+        "plugins": {
+            "title": "Tillägg",
+            "description": "Tillägg lägger till egna integrationer på servern. Bara en administratör ser dem. Ett tillägg är av tills du slår på det.",
+            "notConfigured": "Tillägg är av. Ange TUDUDI_PLUGINS_DIR till en mapp med tilläggsmappar och starta om servern.",
+            "reloadAll": "Läs in alla igen",
+            "reload": "Läs in igen",
+            "reloadPending": "Läs in igen för att läsa in {{version}}",
+            "updatedFrom": "uppdaterad från {{version}}",
+            "version": "Version {{version}}",
+            "state": {
+                "disabled": "Av",
+                "active": "Igång",
+                "error": "Fel",
+                "invalid": "Ogiltig",
+                "incompatible": "Inkompatibel",
+                "needs_approval": "Kräver godkännande",
+                "missing": "Saknas"
+            },
+            "permissions": "Behörigheter",
+            "events": "Händelser",
+            "permission": {
+                "events": "Lyssnar på händelser",
+                "routes": "Tillhandahåller egna rutter"
+            },
+            "enabled": "På",
+            "needsApproval": "Den här versionen begär mer än tidigare. Slå på den igen för att godkänna dess behörigheter och händelser.",
+            "checkUpdate": "Sök efter uppdateringar",
+            "updateAvailable": "Uppdatering finns: {{version}}",
+            "upToDate": "Uppdaterad",
+            "updateError": "Kunde inte läsa uppdateringsadressen",
+            "settings": "Inställningar",
+            "saveSettings": "Spara inställningar",
+            "saved": "Inställningarna sparades",
+            "secretSaved": "Sparad",
+            "clearSecret": "Rensa",
+            "required": "obligatorisk",
+            "reloaded": "Tillägg lästa in igen",
+            "loadError": "Kunde inte läsa in tillägg",
+            "none": "Inget tillägg hittades i tilläggsmappen.",
+            "errorLabel": "Fel",
+            "saveError": "Kunde inte spara tillägget",
+            "installLabel": "Git-adress till pluginet",
+            "install": "Lägg till",
+            "installing": "Lägger till...",
+            "installHint": "Det här laddar ner kod som körs i servern. Läs vad den begär innan du slår på den.",
+            "installed": "Pluginet har lagts till. Läs vad det begär och slå sedan på det.",
+            "installError": "Pluginet kunde inte läggas till",
+            "pull": "Uppdatera",
+            "pulled": "Pluginet har uppdaterats",
+            "remove": "Ta bort",
+            "removeTitle": "Ta bort det här pluginet?",
+            "removeMessage": "Dess mapp och inställningar tas bort från servern. Detta kan inte ångras.",
+            "page": {
+                "notFound": "Pluginet hittades inte eller är avstängt"
+            }
+        },
     "showTaskDescription": "Visa beskrivningen under rubriken",
     "sync": {
       "field": {
@@ -782,6 +838,7 @@
     "nextTaskSuggestion": "Förslag på nästa uppgift",
     "enableNextTaskSuggestion": "Aktivera förslag på nästa uppgift",
     "tabs": {
+            "plugins": "Tillägg",
       "classify": "Sortering",
       "sync": "Synk",
       "general": "Allmänt",

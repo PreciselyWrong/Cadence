@@ -605,6 +605,62 @@
     "noActivity": "Ingen aktivitet ennå"
   },
   "profile": {
+        "plugins": {
+            "title": "Tillegg",
+            "description": "Tillegg legger til egne integrasjoner på serveren. Bare en administrator ser dem. Et tillegg er av til du slår det på.",
+            "notConfigured": "Tillegg er av. Sett TUDUDI_PLUGINS_DIR til en mappe med tilleggsmapper, og start serveren på nytt.",
+            "reloadAll": "Last alle på nytt",
+            "reload": "Last på nytt",
+            "reloadPending": "Last på nytt for å laste {{version}}",
+            "updatedFrom": "oppdatert fra {{version}}",
+            "version": "Versjon {{version}}",
+            "state": {
+                "disabled": "Av",
+                "active": "Kjører",
+                "error": "Feil",
+                "invalid": "Ugyldig",
+                "incompatible": "Ikke kompatibel",
+                "needs_approval": "Må godkjennes",
+                "missing": "Mangler"
+            },
+            "permissions": "Tillatelser",
+            "events": "Hendelser",
+            "permission": {
+                "events": "Lytter etter hendelser",
+                "routes": "Tilbyr egne ruter"
+            },
+            "enabled": "På",
+            "needsApproval": "Denne versjonen ber om mer enn før. Slå den på igjen for å godkjenne tillatelsene og hendelsene.",
+            "checkUpdate": "Se etter oppdateringer",
+            "updateAvailable": "Oppdatering tilgjengelig: {{version}}",
+            "upToDate": "Oppdatert",
+            "updateError": "Kunne ikke lese oppdateringsadressen",
+            "settings": "Innstillinger",
+            "saveSettings": "Lagre innstillinger",
+            "saved": "Innstillingene er lagret",
+            "secretSaved": "Lagret",
+            "clearSecret": "Tøm",
+            "required": "påkrevd",
+            "reloaded": "Tillegg lastet på nytt",
+            "loadError": "Kunne ikke laste tillegg",
+            "none": "Fant ingen tillegg i tilleggsmappen.",
+            "errorLabel": "Feil",
+            "saveError": "Kunne ikke lagre tillegget",
+            "installLabel": "Git-adresse til pluginen",
+            "install": "Legg til",
+            "installing": "Legger til...",
+            "installHint": "Dette laster ned kode som kjøres i serveren. Les hva den ber om før du slår den på.",
+            "installed": "Pluginen er lagt til. Les hva den ber om, og slå den deretter på.",
+            "installError": "Pluginen kunne ikke legges til",
+            "pull": "Oppdater",
+            "pulled": "Plugin oppdatert",
+            "remove": "Slett",
+            "removeTitle": "Slette denne pluginen?",
+            "removeMessage": "Mappen og innstillingene slettes fra serveren. Dette kan ikke angres.",
+            "page": {
+                "notFound": "Pluginen ble ikke funnet eller er slått av"
+            }
+        },
     "showTaskDescription": "Vis beskrivelsen under tittelen",
     "sync": {
       "field": {
@@ -783,6 +839,7 @@
     "nextTaskSuggestion": "Neste oppgaveforslag",
     "enableNextTaskSuggestion": "Aktiver forslag til neste oppgave",
     "tabs": {
+            "plugins": "Tillegg",
       "classify": "Sortering",
       "sync": "Synk",
       "general": "Generelt",
