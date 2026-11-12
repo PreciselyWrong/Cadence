@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { InboxItem } from '../../entities/InboxItem';
 import { useTranslation } from 'react-i18next';
-import { XMarkIcon } from '@heroicons/react/24/outline';
+
 import { Task } from '../../entities/Task';
 import { Project } from '../../entities/Project';
 import { Note } from '../../entities/Note';
@@ -652,9 +652,6 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
     // ── Edit-mode footer: the triage panel ───────────────────────────────────
     // What the page is, tags and project, then one decision.
 
-    const decisionClass =
-        'text-[12px] hover:underline transition-colors disabled:opacity-50';
-
     const renderComposerFooter = (context: InboxComposerFooterContext) => {
         const address = firstUrl(context.text);
         return (
@@ -708,18 +705,18 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                     )}
                 </div>
                 <div className="mt-3 flex items-center justify-between gap-2 flex-wrap min-h-5">
-                    <div className="flex items-center gap-3.5">
+                    <div className="flex flex-wrap items-center gap-1.5">
                         {loading && (
                             <div className="h-3.5 w-3.5 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin" />
                         )}
-                        <span className="text-[12px] text-gray-500 dark:text-gray-400">
+                        <span className="mr-1 text-xs text-surface-on-variant">
                             {t('inbox.saveAs', 'Save as')}
                         </span>
                         <button
                             type="button"
                             disabled={loading}
                             onClick={() => void handleConvertToTask(context)}
-                            className={`${decisionClass} text-blue-600 dark:text-blue-400`}
+                            className="h-7 rounded-lg px-2.5 text-body-m font-medium text-surface-on ring-1 ring-inset ring-outline-variant transition-colors hover:bg-surface-high disabled:opacity-50"
                         >
                             {t('inbox.createTask', 'Task')}
                         </button>
@@ -728,7 +725,7 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                                 type="button"
                                 disabled={loading}
                                 onClick={() => void handleSaveToLinks(context)}
-                                className={`${decisionClass} text-teal-600 dark:text-teal-400`}
+                                className="h-7 rounded-lg px-2.5 text-body-m font-medium text-surface-on ring-1 ring-inset ring-outline-variant transition-colors hover:bg-surface-high disabled:opacity-50"
                             >
                                 {t('links.title', 'Links')}
                             </button>
@@ -737,7 +734,7 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                             type="button"
                             disabled={loading}
                             onClick={() => void handleConvertToNote(context)}
-                            className={`${decisionClass} text-purple-600 dark:text-purple-400`}
+                            className="h-7 rounded-lg px-2.5 text-body-m font-medium text-surface-on ring-1 ring-inset ring-outline-variant transition-colors hover:bg-surface-high disabled:opacity-50"
                         >
                             {t('inbox.createNote', 'Note')}
                         </button>
@@ -746,7 +743,7 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                                 type="button"
                                 disabled={loading}
                                 onClick={() => handleConvertToProject(context)}
-                                className={`${decisionClass} text-green-600 dark:text-green-400`}
+                                className="h-7 rounded-lg px-2.5 text-body-m font-medium text-surface-on ring-1 ring-inset ring-outline-variant transition-colors hover:bg-surface-high disabled:opacity-50"
                             >
                                 {t('inbox.createProject', 'Project')}
                             </button>
@@ -755,7 +752,7 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                     <button
                         type="button"
                         onClick={handleDelete}
-                        className={`${decisionClass} text-red-500 dark:text-red-400`}
+                        className="h-7 rounded-lg px-2.5 text-body-m font-medium text-danger transition-colors hover:bg-danger-container/60"
                     >
                         {t('common.delete', 'Delete')}
                     </button>
@@ -791,7 +788,7 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
             ) : (
                 /* ── Flat row (no card, no shadow) ─────────────────────────── */
                 <div
-                    className={`group flex items-start gap-2.5 px-4 py-3 cursor-pointer${isNew ? ' animate-inbox-row-in' : ''}`}
+                    className={`flex cursor-pointer items-start gap-2.5 rounded-xl px-3 py-2.5 outline-none hover:bg-surface-high/60 focus-visible:ring-2 focus-visible:ring-primary/60${isNew ? ' animate-inbox-row-in' : ''}`}
                     onClick={startEditing}
                     role="button"
                     tabIndex={0}
@@ -799,13 +796,18 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                         if (e.key === 'Enter' || e.key === ' ') {
                             e.preventDefault();
                             startEditing();
+                        } else if (e.key === 'Delete') {
+                            // Open is one gesture; delete stays a key away,
+                            // never a button that only shows on hover.
+                            e.preventDefault();
+                            handleDelete();
                         }
                     }}
                 >
                     {/* Text content */}
                     <div className="flex-1 min-w-0">
                         {showText && (
-                            <p className="text-[15px] font-normal tracking-tight text-gray-900 dark:text-gray-100 leading-snug break-words">
+                            <p className="break-words text-body leading-6 text-surface-on">
                                 {isBlank ? (
                                     <span className="italic text-gray-500 dark:text-gray-400">
                                         {t('inbox.emptyItem', '(Empty item)')}
@@ -843,19 +845,6 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                             />
                         )}
                     </div>
-
-                    {/* Delete button – visible only on hover */}
-                    <button
-                        type="button"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            handleDelete();
-                        }}
-                        className="flex-shrink-0 mt-0.5 flex items-center justify-center w-5 h-5 rounded text-gray-300 dark:text-gray-600 hover:text-red-400 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 opacity-0 group-hover:opacity-100 transition-all"
-                        aria-label={t('common.delete', 'Delete')}
-                    >
-                        <XMarkIcon className="h-3.5 w-3.5" />
-                    </button>
                 </div>
             )}
         </div>
