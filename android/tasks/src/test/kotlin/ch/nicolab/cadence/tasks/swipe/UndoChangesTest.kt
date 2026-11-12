@@ -45,12 +45,13 @@ class UndoChangesTest {
     fun `restaurer l'étape de l'entonnoir`() {
         val week = LocalDate.of(2026, 10, 26)
         assertEquals(
-            TaskChange(inView = true, weekOf = week, clearReviewOn = true, later = false),
+            TaskChange(inView = true, weekOf = week, clearMonth = true, clearReviewOn = true, later = false),
             UndoChanges.restoreFunnel(TaskItem(uid = "t", name = "t", inViewAt = Instant.EPOCH, weekOf = week)),
         )
         assertEquals(
-            TaskChange(inView = false, clearWeek = true, reviewOn = day, later = true),
+            TaskChange(inView = false, clearWeek = true, clearMonth = true, reviewOn = day, later = true),
             UndoChanges.restoreFunnel(TaskItem(uid = "t", name = "t", someday = true, reviewOn = day)),
         )
+        assertEquals(LocalDate.of(2026, 12, 1), UndoChanges.restoreFunnel(TaskItem(uid = "t", name = "t", monthOf = LocalDate.of(2026, 12, 1))).monthOf)
     }
 }

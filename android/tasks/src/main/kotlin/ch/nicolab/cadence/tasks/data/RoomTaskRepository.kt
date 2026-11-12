@@ -927,7 +927,7 @@ internal fun dueInstant(date: LocalDate, time: String?, accountZone: ZoneId, dev
 private val END_OF_DAY = LocalTime.of(23, 59, 59, 999_000_000)
 
 private fun TaskChange.hasDecision(): Boolean =
-    inView != null || weekOf != null || clearWeek || reviewOn != null || clearReviewOn || later != null || reviewed
+    inView != null || weekOf != null || clearWeek || monthOf != null || clearMonth || reviewOn != null || clearReviewOn || later != null || reviewed
 
 private fun jsonString(value: String?): JsonElement = value?.let { JsonPrimitive(it) } ?: JsonNull
 

@@ -11,7 +11,7 @@ import kotlinx.serialization.json.JsonPrimitive
  */
 internal object TaskCopy {
     private val notCopied = setOf(
-        "uid", "parent_task_uid", "pinned_at", "in_view_at", "week_of", "needs_when", "review_on", "reviewed_at",
+        "uid", "parent_task_uid", "pinned_at", "in_view_at", "week_of", "month_of", "needs_when", "review_on", "reviewed_at",
         "reminder_at", "recurrence_exdates", "field_clocks", "completed_at", "status", "created_at", "updated_at",
     )
 

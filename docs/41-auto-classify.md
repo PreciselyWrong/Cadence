@@ -29,7 +29,7 @@ The classifier files, it never decides when. A task it gives a project or a doma
 - `month_of` of next month or later keeps it out. A month is a horizon, not a day: from the 1st of its month a task of that month comes back to be planned, and stays until it gets a day (plan line or due date), a week, is parked or is done. A past month brings it back likewise.
 - A daily-plan line of the user on today or a later day is a moment decided: the task stays out. A line on a past day is not: a task planned yesterday and not done comes back.
 
-Android (`TaskViews.unsorted`) does not yet apply the `month_of` and plan-line rules (`TODO.md`).
+Android applies the same rules (`TaskViews.unsorted`, plan lines from the day plans it keeps, `ServerPlan.plannedFrom`); its Today widget's Inbox scope does not read the plan.
 
 ## Duplicate links
 

@@ -114,6 +114,10 @@ internal object TaskFields {
             change.weekOf != null -> put("week_of", JsonPrimitive(change.weekOf.toString()))
         }
         when {
+            change.clearMonth -> put("month_of", JsonNull)
+            change.monthOf != null -> put("month_of", JsonPrimitive(change.monthOf.withDayOfMonth(1).toString()))
+        }
+        when {
             change.clearReviewOn -> put("review_on", JsonNull)
             change.reviewOn != null -> put("review_on", JsonPrimitive(change.reviewOn.toString()))
         }
@@ -121,6 +125,7 @@ internal object TaskFields {
         if (change.later == true) {
             put("in_view_at", JsonNull)
             put("week_of", JsonNull)
+            put("month_of", JsonNull)
         }
         val tags = when {
             change.later == null || somedayUid == null || change.tagUids != null -> null

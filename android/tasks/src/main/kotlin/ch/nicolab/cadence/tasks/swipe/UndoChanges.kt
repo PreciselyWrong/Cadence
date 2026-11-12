@@ -26,6 +26,8 @@ object UndoChanges {
         inView = task.inViewAt != null,
         weekOf = task.weekOf,
         clearWeek = task.weekOf == null,
+        monthOf = task.monthOf,
+        clearMonth = task.monthOf == null,
         reviewOn = task.reviewOn,
         clearReviewOn = task.reviewOn == null,
         later = task.someday,

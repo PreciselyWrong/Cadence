@@ -50,6 +50,10 @@ object ServerPlan {
         PlanEntry(parts[0], day, parts[2].toIntOrNull(), parts[3].toIntOrNull())
     }.toList()
 
+    /** Tâches au plan de [today] ou d'un jour suivant : elles sont rangées (un plan passé ne range rien). */
+    fun plannedFrom(entries: List<PlanEntry>, today: LocalDate): Set<String> =
+        entries.filterNot { it.day.isBefore(today) }.mapTo(HashSet()) { it.uid }
+
     /** Heure de chaque placement à heure, dans le fuseau [zone]. */
     fun timedStarts(entries: List<PlanEntry>, zone: ZoneId): List<Pair<String, Instant>> = entries.mapNotNull { entry ->
         entry.startMinute?.let { entry.uid to start(entry.day, it, zone) }

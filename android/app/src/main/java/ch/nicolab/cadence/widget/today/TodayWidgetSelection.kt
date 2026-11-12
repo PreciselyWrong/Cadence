@@ -136,7 +136,7 @@ private fun scopeTasks(
             task.parentTaskUid == null && !task.isClosed && task.dueDate == null && task.dueDay == null &&
                 (deferredUntil == null || !deferredUntil.isAfter(now))
         }
-        TaskScope.INBOX -> TaskViews.unsorted(tasks, now, weekStart)
+        TaskScope.INBOX -> TaskViews.unsorted(tasks, now, weekStart, today.withDayOfMonth(1))
     }
 
 private fun TaskItem.isOverdue(today: LocalDate): Boolean = dueDay?.isBefore(today) == true

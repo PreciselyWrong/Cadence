@@ -168,6 +168,24 @@ class TaskViewsTest {
     }
 
     @Test
+    fun `à classer exclut un mois décidé à venir, le mois en cours et un mois passé reviennent`() {
+        val tasks = listOf(
+            task("ce-mois").copy(monthOf = today.withDayOfMonth(1)),
+            task("mois-prochain").copy(monthOf = today.withDayOfMonth(1).plusMonths(1)),
+            task("mois-passe").copy(monthOf = today.withDayOfMonth(1).minusMonths(1)),
+        )
+
+        assertEquals(listOf("ce-mois", "mois-passe"), TaskViews.unsorted(tasks, now, weekStart, monthStart = today.withDayOfMonth(1)).map { it.uid })
+    }
+
+    @Test
+    fun `à classer exclut une tâche au plan d'aujourd'hui ou d'un jour à venir`() {
+        val tasks = listOf(task("au-plan"), task("libre"))
+
+        assertEquals(listOf("libre"), TaskViews.unsorted(tasks, now, weekStart, planned = setOf("au-plan")).map { it.uid })
+    }
+
+    @Test
     fun `à classer garde une tâche sans répétition explicite`() {
         val tasks = listOf(task("aucune").copy(recurrenceType = "none"))
 

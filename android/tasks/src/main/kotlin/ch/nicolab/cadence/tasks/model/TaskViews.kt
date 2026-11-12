@@ -129,14 +129,28 @@ object TaskViews {
      * À classer : tâches ouvertes de premier niveau que rien ne range encore, sans échéance, hors « Plus tard »,
      * hors vue et semaine décidée, ni reportées ni récurrentes. Une tâche sans projet ni domaine s'y trouve ; une
      * tâche rangée s'y trouve aussi tant qu'elle attend son quand ([TaskItem.needsWhen], « Quand ? » dans la file).
-     * Une semaine décidée passée ne compte plus : la tâche redevient à classer.
+     * Une semaine passée ne compte plus : la tâche redevient à classer. Un mois décidé n'écarte la tâche qu'avant ce
+     * mois : dès le 1er, elle revient pour être planifiée (comme le serveur, `docs/41-auto-classify.md`). Une tâche au
+     * plan d'aujourd'hui ou d'un jour à venir ([planned], uids des lignes du plan à partir d'aujourd'hui) est rangée ;
+     * une ligne d'un jour passé ne range rien. [monthStart] : premier jour du mois en cours.
      */
-    fun unsorted(tasks: List<TaskItem>, now: Instant, weekStart: LocalDate): List<TaskItem> =
+    fun unsorted(
+        tasks: List<TaskItem>,
+        now: Instant,
+        weekStart: LocalDate,
+        monthStart: LocalDate = weekStart.withDayOfMonth(1),
+        planned: Set<String> = emptySet(),
+    ): List<TaskItem> =
         tasks.filter {
             visibleNow(it, now) && it.dueDate == null && it.dueDay == null &&
                 (it.projectUid == null && it.areaUid == null || it.needsWhen) &&
-                !it.someday && it.inViewAt == null && !it.isWeekDecided(weekStart) && !it.isRecurring
+                !it.someday && it.inViewAt == null && !it.isWeekDecided(weekStart) && !it.isMonthDecided(monthStart) &&
+                !it.isRecurring && it.uid !in planned
         }
+
+    /** Mois décidé pour un mois suivant ; le mois en cours et un mois passé ne rangent plus la tâche. */
+    private fun TaskItem.isMonthDecided(monthStart: LocalDate): Boolean =
+        monthOf != null && monthOf.isAfter(monthStart)
 
     /** Semaine décidée pour la semaine en cours ou une suivante ; une semaine passée ne compte pas. */
     private fun TaskItem.isWeekDecided(weekStart: LocalDate): Boolean =

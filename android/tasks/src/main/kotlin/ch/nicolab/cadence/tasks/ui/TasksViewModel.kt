@@ -276,8 +276,8 @@ internal class TasksViewModel(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyMap())
 
     /** Tâches sans échéance ni projet : sans cette liste, elles n'apparaîtraient dans aucun onglet. */
-    val unsorted: StateFlow<List<TaskItem>> = combine(scopedTasks, moment, weekStart) { all, m, week ->
-        TaskViews.unsorted(all, m.now, week)
+    val unsorted: StateFlow<List<TaskItem>> = combine(scopedTasks, moment, weekStart, PlanSlotsStore(application).entryChanges()) { all, m, week, plan ->
+        TaskViews.unsorted(all, m.now, week, m.today.withDayOfMonth(1), ServerPlan.plannedFrom(plan, m.today))
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
     /** Projets du domaine filtré : la liste de l'onglet Projets ; les sélecteurs gardent [projects]. */

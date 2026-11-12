@@ -115,4 +115,19 @@ class FunnelWireTest {
         val absent = WireCodec.taskFromWire(Json.parseToJsonElement("""{"uid":"t2"}""").jsonObject)
         assertFalse(absent.needsWhen)
     }
+
+    @Test
+    fun `month_of has its own column, is written as the month's first day and cleared by later`() {
+        val row = WireCodec.taskFromWire(Json.parseToJsonElement("""{"uid":"t1","name":"Idée","month_of":"2026-12-01"}""").jsonObject)
+        assertEquals("2026-12-01", row.monthOf)
+        assertFalse("month_of" in TaskExtras.parse(row.extrasJson))
+        assertEquals("2026-12-01", WireCodec.taskToWire(row).getValue("month_of").jsonPrimitive.content)
+
+        val set = TaskFields.decision(TaskChange(monthOf = LocalDate.of(2026, 12, 17)), inViewAtRaw = null, tagUids = emptyList(), somedayUid = null, nowIso = now)
+        assertEquals("2026-12-01", set.getValue("month_of").jsonPrimitive.content)
+        val cleared = TaskFields.decision(TaskChange(clearMonth = true), inViewAtRaw = null, tagUids = emptyList(), somedayUid = null, nowIso = now)
+        assertEquals(JsonNull, cleared.getValue("month_of"))
+        val later = TaskFields.decision(TaskChange(later = true), inViewAtRaw = null, tagUids = emptyList(), somedayUid = "s", nowIso = now)
+        assertEquals(JsonNull, later.getValue("month_of"))
+    }
 }

@@ -112,11 +112,11 @@ class ReviewBacklogTest {
     fun `undo puts back what the decision changed and nothing else`() {
         val parked = TaskItem("a", "a", someday = true, reviewOn = LocalDate.of(2026, 10, 1))
         assertEquals(
-            TaskChange(inView = false, clearWeek = true, reviewOn = LocalDate.of(2026, 10, 1), later = true, clearDue = true),
+            TaskChange(inView = false, clearWeek = true, clearMonth = true, reviewOn = LocalDate.of(2026, 10, 1), later = true, clearDue = true),
             ReviewBacklog.undo(Decision.Today, parked, ctx.zone),
         )
         assertEquals(
-            TaskChange(inView = false, clearWeek = true, reviewOn = LocalDate.of(2026, 10, 1), later = true),
+            TaskChange(inView = false, clearWeek = true, clearMonth = true, reviewOn = LocalDate.of(2026, 10, 1), later = true),
             ReviewBacklog.undo(Decision.ReviewIn30Days, parked, ctx.zone),
         )
         assertEquals(TaskChange(status = TaskStatus.NOT_STARTED), ReviewBacklog.undo(Decision.Drop, parked, ctx.zone))

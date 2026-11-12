@@ -63,6 +63,8 @@ data class TaskItem(
     val inViewAt: Instant? = null,
     /** Premier jour de la semaine décidée ; jamais une échéance. */
     val weekOf: LocalDate? = null,
+    /** Premier jour du mois décidé (« Ce mois-ci », « Mois prochain ») ; jamais une échéance. */
+    val monthOf: LocalDate? = null,
     /** Classé par le serveur sans quand choisi : reste à classer tant qu'aucune date, semaine, vue ou « Plus tard » ne le range. */
     val needsWhen: Boolean = false,
     /** Date où revoir une idée mise de côté ; ni rappel ni agenda. */
@@ -252,6 +254,9 @@ data class TaskChange(
     /** Premier jour de la semaine décidée ; [clearWeek] retire la semaine. */
     val weekOf: LocalDate? = null,
     val clearWeek: Boolean = false,
+    /** Mois décidé (n'importe quel jour du mois, envoyé comme son premier jour) ; [clearMonth] retire le mois. */
+    val monthOf: LocalDate? = null,
+    val clearMonth: Boolean = false,
     /** Écrit `needs_when` : false quand un quand est choisi, true pour remettre une tâche à classer (annulation). */
     val needsWhen: Boolean? = null,
     val reviewOn: LocalDate? = null,
