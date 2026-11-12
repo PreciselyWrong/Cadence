@@ -120,7 +120,7 @@ La page s'exécute dans l'origine de Cadence, connectée comme l'utilisateur. El
 </script>
 ```
 
-Écris-la pour un petit écran (elle s'ouvre aussi dans une WebView Android), sans dépendance externe. Charge `<script src="/api/plugins/sdk.js"></script>` : `cadence.json(chemin, options)` appelle l'API de Cadence en ton nom (jeton CSRF sur le web, jeton d'API sur Android, ajoutés pour toi) et `cadence.open('task'|'note'|'project'|'url', ref)` ouvre un élément ou une adresse http(s). Les écritures depuis une page Android ne sont pas encore vérifiées sur un appareil. **N'intègre jamais d'iframe tierce dans une page de plugin** : sur Android le pont (jeton d'API) est exposé à toute la page, iframes comprises.
+Écris-la pour un petit écran (elle s'ouvre aussi dans une WebView Android), sans dépendance externe. Charge `<script src="/api/plugins/sdk.js"></script>` : `cadence.json(chemin, options)` appelle l'API de Cadence en ton nom (jeton CSRF sur le web, jeton d'API sur Android, ajoutés pour toi) et `cadence.open('task'|'note'|'project'|'url', ref)` ouvre un élément ou une adresse http(s). Les écritures depuis une page Android ne sont pas encore vérifiées sur un appareil. **Les iframes sont bloquées par conception** (en-tête CSP `frame-src 'none'`, comme `object` et `<base>`) : sur Android le pont (jeton d'API) est exposé à toute la page, donc aucune page tierce ne doit pouvoir s'y intégrer.
 
 ## Un exemple complet : l'interface d'agents Hermes
 

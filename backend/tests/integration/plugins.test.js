@@ -764,6 +764,9 @@ describe('Plugins', () => {
             expect(page.status).toBe(200);
             expect(page.text).toContain('Hermes page');
             expect(page.headers['x-content-type-options']).toBe('nosniff');
+            expect(page.headers['content-security-policy']).toContain(
+                "frame-src 'none'"
+            );
         });
 
         it('does not serve files outside the page folder', async () => {

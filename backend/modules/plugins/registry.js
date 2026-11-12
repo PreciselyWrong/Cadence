@@ -279,7 +279,7 @@ async function activate(entry, row) {
                           // routes; nothing outside this server.
                           res.setHeader(
                               'Content-Security-Policy',
-                              "default-src 'self' 'unsafe-inline' data:; frame-ancestors 'self'"
+                              "default-src 'self' 'unsafe-inline' data:; frame-src 'none'; child-src 'none'; object-src 'none'; base-uri 'none'; frame-ancestors 'self'"
                           );
                       },
                   }
