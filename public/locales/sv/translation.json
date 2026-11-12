@@ -1524,7 +1524,11 @@
     "registration_closed_title": "Registreringen är stängd",
     "registration_closed_message": "Registrering av nya konton är för närvarande inaktiverad. Kontakta din administratör för åtkomst.",
     "confirm_password": "Bekräfta lösenord",
-    "already_have_account": "Har du redan ett konto?"
+    "already_have_account": "Har du redan ett konto?",
+    "rateLimitedRetrying": "För många förfrågningar, försöker igen…",
+    "rateLimitedGaveUp": "För många förfrågningar. Sessionen är fortfarande aktiv; ladda om om en stund.",
+    "serverBusyRetrying": "Servern är upptagen, försöker igen…",
+    "serverBusyRetry": "Försök igen"
   },
   "dropdown": {
     "createNew": "Skapa ny",
@@ -4943,7 +4947,8 @@
     "loadError": "Den här uppgiften kunde inte laddas.",
     "expand": "Förstora",
     "shrink": "Förminska",
-    "goTo": "Gå till"
+    "goTo": "Gå till",
+    "planned": "Planerad {{when}}"
   },
   "review": {
     "quick": {
@@ -6049,7 +6054,9 @@
     "widen": "Bredda",
     "yesterday": "Igår",
     "hideCompleted": "Dölj slutförda",
-    "showCompletedTasks": "Visa slutförda"
+    "showCompletedTasks": "Visa slutförda",
+    "dropOverlaps": "Överlappningar",
+    "dropPast": "Tidigare"
   },
   "upcoming": {
     "title": "Planera",
@@ -6058,8 +6065,6 @@
     "horizonsSoon": "Kommer snart",
     "addTask": "Lägg till en uppgift",
     "empty": "Inget planerat.",
-    "previous": "Föregående dag",
-    "next": "Nästa dag",
     "today": "Idag",
     "showCalendar": "Visa kalender",
     "hideCalendar": "Dölj kalender",
@@ -6112,6 +6117,50 @@
     "someday": "Någon gång",
     "showDayInCalendar": "Visa i kalendern",
     "hideCompleted": "Dölj slutförda",
-    "showCompletedTasks": "Visa slutförda"
+    "showCompletedTasks": "Visa slutförda",
+    "resizeCalendar": "Kalenderns bredd",
+    "thisWeekHint": "Planerad för den här veckan, utan fast dag",
+    "thisMonthHint": "Någon gång den här månaden, utan fast dag",
+    "nextMonthHint": "Planerad för nästa månad",
+    "somedayHint": "Kanske senare, lagd åt sidan",
+    "calendarOn": "kalendern, {{day}}",
+    "overdue": "Försenad",
+    "a11yPicked": "”{{name}}” plockad",
+    "a11yOver": "”{{name}}” flyttad över {{day}}",
+    "a11yOverNothing": "”{{name}}” är inte längre över en dag",
+    "a11yDropped": "”{{name}}” släppt på {{day}}",
+    "a11yReturned": "”{{name}}” lagd tillbaka",
+    "a11yCancelled": "Flytt av ”{{name}}” avbröts",
+    "closeCalendar": "Stäng kalendern",
+    "overdueTaken": "Försenade uppgifter planerade idag",
+    "a11yInstructions": "För att flytta en uppgift, tryck M, flytta den med piltangenterna och tryck Enter eller mellanslag för att släppa den, eller Escape för att avbryta. På en vald uppgift: piltangenterna eller H, J, K, L växlar mellan uppgifter och dagar; Skift med vänster eller höger flyttar uppgiften en dag; T planerar den för idag, Skift+T för imorgon; Enter öppnar den.",
+    "dateNav": "Datum",
+    "previousWeek": "Föregående vecka",
+    "nextWeek": "Nästa vecka",
+    "overdueCount": "Försenade ({{count}})",
+    "rescheduleAll": "Flytta alla till idag",
+    "hideInbox": "Fäll ihop inkorgen",
+    "plannedOnDay": "Planerade på en dag ({{count}})",
+    "goToDate": "Gå till datum",
+    "expandInbox": "Visa inkorgen ({{count}})",
+    "filter": "Filter",
+    "filterProjects": "Projekt",
+    "filterTags": "Taggar",
+    "filterPriority": "Prioritet",
+    "filterHigh": "Hög",
+    "filterMedium": "Medel",
+    "filterLow": "Låg",
+    "clearFilters": "Rensa filter",
+    "tomorrow": "Imorgon",
+    "week": "Vecka {{number}}",
+    "load": "{{planned}} / {{available}}",
+    "done": "Klara ({{n}})",
+    "subtaskOf": "↳ {{parent}}",
+    "addToInbox": "Lägg till i inkorgen",
+    "inboxNewItem": "Nytt inkorgsobjekt",
+    "addToInboxFailed": "Det gick inte att lägga till. Försök igen.",
+    "addEmptyName": "Ge uppgiften ett namn",
+    "addTaskIn": "Lägg till en uppgift i {{name}}",
+    "thisWeekOnlyPlanned": "Inget utan fast dag · {{count}} planerade på en dag"
   }
 }

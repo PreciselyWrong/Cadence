@@ -2406,7 +2406,11 @@
     "registration_closed_title": "Реєстрацію закрито",
     "registration_closed_message": "Реєстрація нових облікових записів наразі вимкнена. Для доступу зверніться до адміністратора.",
     "confirm_password": "Підтвердіть пароль",
-    "already_have_account": "Вже маєте обліковий запис?"
+    "already_have_account": "Вже маєте обліковий запис?",
+    "rateLimitedRetrying": "Забагато запитів, повторна спроба…",
+    "rateLimitedGaveUp": "Забагато запитів. Сеанс усе ще активний; оновіть сторінку трохи згодом.",
+    "serverBusyRetrying": "Сервер зайнятий, повторна спроба…",
+    "serverBusyRetry": "Повторити"
   },
   "dropdown": {
     "createNew": "Створити новий",
@@ -4985,7 +4989,8 @@
     "loadError": "Не вдалося завантажити це завдання.",
     "expand": "Розгорнути",
     "shrink": "Згорнути",
-    "goTo": "Перейти"
+    "goTo": "Перейти",
+    "planned": "Заплановано {{when}}"
   },
   "review": {
     "quick": {
@@ -6109,7 +6114,9 @@
     "widen": "Розширити",
     "yesterday": "Вчора",
     "hideCompleted": "Приховати виконані",
-    "showCompletedTasks": "Показати виконані"
+    "showCompletedTasks": "Показати виконані",
+    "dropOverlaps": "Перетини",
+    "dropPast": "У минулому"
   },
   "upcoming": {
     "title": "План",
@@ -6118,8 +6125,6 @@
     "horizonsSoon": "Незабаром",
     "addTask": "Додати завдання",
     "empty": "Нічого не заплановано.",
-    "previous": "Попередній день",
-    "next": "Наступний день",
     "today": "Сьогодні",
     "showCalendar": "Показати календар",
     "hideCalendar": "Приховати календар",
@@ -6172,6 +6177,50 @@
     "someday": "Колись",
     "showDayInCalendar": "Показувати в календарі",
     "hideCompleted": "Приховати виконані",
-    "showCompletedTasks": "Показати виконані"
+    "showCompletedTasks": "Показати виконані",
+    "resizeCalendar": "Ширина календаря",
+    "thisWeekHint": "Заплановано на цей тиждень, без конкретного дня",
+    "thisMonthHint": "Колись цього місяця, без конкретного дня",
+    "nextMonthHint": "Заплановано на наступний місяць",
+    "somedayHint": "Можливо пізніше, відкладено",
+    "calendarOn": "календар, {{day}}",
+    "overdue": "Прострочено",
+    "a11yPicked": "«{{name}}» взято",
+    "a11yOver": "«{{name}}» переміщено на {{day}}",
+    "a11yOverNothing": "«{{name}}» більше не над днем",
+    "a11yDropped": "«{{name}}» скинуто на {{day}}",
+    "a11yReturned": "«{{name}}» повернуто на місце",
+    "a11yCancelled": "Переміщення «{{name}}» скасовано",
+    "closeCalendar": "Закрити календар",
+    "overdueTaken": "Прострочені завдання, заплановані на сьогодні",
+    "a11yInstructions": "Щоб перемістити завдання, натисніть M, перемістіть його стрілками, а потім натисніть Enter або Пробіл, щоб опустити, або Escape, щоб скасувати. Для вибраного завдання: стрілки або H, J, K, L перемикають між завданнями й днями; Shift із стрілкою вліво або вправо зсуває завдання на день; T планує його на сьогодні, Shift+T на завтра; Enter відкриває його.",
+    "dateNav": "Дати",
+    "previousWeek": "Попередній тиждень",
+    "nextWeek": "Наступний тиждень",
+    "overdueCount": "Прострочено ({{count}})",
+    "rescheduleAll": "Перенести всі на сьогодні",
+    "hideInbox": "Згорнути вхідні",
+    "plannedOnDay": "Заплановано на день ({{count}})",
+    "goToDate": "Перейти до дати",
+    "expandInbox": "Показати вхідні ({{count}})",
+    "filter": "Фільтр",
+    "filterProjects": "Проєкти",
+    "filterTags": "Теги",
+    "filterPriority": "Пріоритет",
+    "filterHigh": "Високий",
+    "filterMedium": "Середній",
+    "filterLow": "Низький",
+    "clearFilters": "Скинути фільтри",
+    "tomorrow": "Завтра",
+    "week": "Тиждень {{number}}",
+    "load": "{{planned}} / {{available}}",
+    "done": "Готово ({{n}})",
+    "subtaskOf": "↳ {{parent}}",
+    "addToInbox": "Додати до вхідних",
+    "inboxNewItem": "Новий елемент у вхідних",
+    "addToInboxFailed": "Не вдалося додати. Спробуйте ще раз.",
+    "addEmptyName": "Дайте назву завданню",
+    "addTaskIn": "Додати завдання до {{name}}",
+    "thisWeekOnlyPlanned": "Немає без фіксованого дня · {{count}} заплановано на день"
   }
 }

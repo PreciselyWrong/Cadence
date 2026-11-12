@@ -1524,7 +1524,11 @@
     "registration_closed_title": "Đã đóng đăng ký",
     "registration_closed_message": "Hiện đang tắt đăng ký tài khoản mới. Liên hệ quản trị viên để được cấp quyền truy cập.",
     "confirm_password": "Xác nhận mật khẩu",
-    "already_have_account": "Đã có tài khoản?"
+    "already_have_account": "Đã có tài khoản?",
+    "rateLimitedRetrying": "Quá nhiều yêu cầu, đang thử lại…",
+    "rateLimitedGaveUp": "Quá nhiều yêu cầu. Phiên vẫn đang hoạt động; hãy tải lại sau ít phút.",
+    "serverBusyRetrying": "Máy chủ đang bận, đang thử lại…",
+    "serverBusyRetry": "Thử lại"
   },
   "dropdown": {
     "createNew": "Tạo mới",
@@ -4943,7 +4947,8 @@
     "loadError": "Không thể tải công việc này.",
     "expand": "Mở rộng",
     "shrink": "Thu nhỏ",
-    "goTo": "Đi tới"
+    "goTo": "Đi tới",
+    "planned": "Đã lên kế hoạch {{when}}"
   },
   "review": {
     "quick": {
@@ -6047,7 +6052,9 @@
     "widen": "Mở rộng",
     "yesterday": "Hôm qua",
     "hideCompleted": "Ẩn việc đã xong",
-    "showCompletedTasks": "Hiện việc đã xong"
+    "showCompletedTasks": "Hiện việc đã xong",
+    "dropOverlaps": "Trùng lặp",
+    "dropPast": "Đã qua"
   },
   "upcoming": {
     "title": "Kế hoạch",
@@ -6056,8 +6063,6 @@
     "horizonsSoon": "Sắp ra mắt",
     "addTask": "Thêm việc",
     "empty": "Chưa có việc nào được lên kế hoạch.",
-    "previous": "Ngày trước",
-    "next": "Ngày sau",
     "today": "Hôm nay",
     "showCalendar": "Hiện lịch",
     "hideCalendar": "Ẩn lịch",
@@ -6110,6 +6115,50 @@
     "someday": "Một lúc nào đó",
     "showDayInCalendar": "Hiện trên lịch",
     "hideCompleted": "Ẩn việc đã xong",
-    "showCompletedTasks": "Hiện việc đã xong"
+    "showCompletedTasks": "Hiện việc đã xong",
+    "resizeCalendar": "Chiều rộng lịch",
+    "thisWeekHint": "Đã cam kết cho tuần này, không có ngày cố định",
+    "thisMonthHint": "Lúc nào đó trong tháng này, không có ngày cố định",
+    "nextMonthHint": "Đã lên kế hoạch cho tháng sau",
+    "somedayHint": "Có thể sau này, để sang một bên",
+    "calendarOn": "lịch, {{day}}",
+    "overdue": "Quá hạn",
+    "a11yPicked": "Đã nhấc “{{name}}”",
+    "a11yOver": "Đã chuyển “{{name}}” sang {{day}}",
+    "a11yOverNothing": "“{{name}}” không còn nằm trên ngày nào",
+    "a11yDropped": "Đã thả “{{name}}” vào {{day}}",
+    "a11yReturned": "Đã đặt “{{name}}” về chỗ cũ",
+    "a11yCancelled": "Đã hủy việc chuyển “{{name}}”",
+    "closeCalendar": "Đóng lịch",
+    "overdueTaken": "Việc quá hạn được lên kế hoạch hôm nay",
+    "a11yInstructions": "Để di chuyển việc, nhấn M, dùng phím mũi tên để di chuyển, rồi nhấn Enter hoặc Dấu cách để thả, hoặc Escape để hủy. Khi đang chọn một việc: phím mũi tên hoặc H, J, K, L để chuyển giữa các việc và ngày; Shift cùng Trái hoặc Phải để dời việc một ngày; T lên kế hoạch cho hôm nay, Shift+T cho ngày mai; Enter để mở.",
+    "dateNav": "Ngày",
+    "previousWeek": "Tuần trước",
+    "nextWeek": "Tuần sau",
+    "overdueCount": "Quá hạn ({{count}})",
+    "rescheduleAll": "Lên lại lịch tất cả cho hôm nay",
+    "hideInbox": "Thu gọn hộp thư đến",
+    "plannedOnDay": "Đã lên kế hoạch cho một ngày ({{count}})",
+    "goToDate": "Đến ngày",
+    "expandInbox": "Hiện hộp thư đến ({{count}})",
+    "filter": "Bộ lọc",
+    "filterProjects": "Dự án",
+    "filterTags": "Thẻ",
+    "filterPriority": "Mức ưu tiên",
+    "filterHigh": "Cao",
+    "filterMedium": "Trung bình",
+    "filterLow": "Thấp",
+    "clearFilters": "Xóa bộ lọc",
+    "tomorrow": "Ngày mai",
+    "week": "Tuần {{number}}",
+    "load": "{{planned}} / {{available}}",
+    "done": "Đã xong ({{n}})",
+    "subtaskOf": "↳ {{parent}}",
+    "addToInbox": "Thêm vào hộp thư đến",
+    "inboxNewItem": "Mục mới trong hộp thư đến",
+    "addToInboxFailed": "Không thể thêm. Hãy thử lại.",
+    "addEmptyName": "Đặt tên cho công việc",
+    "addTaskIn": "Thêm công việc vào {{name}}",
+    "thisWeekOnlyPlanned": "Không có việc nào không có ngày cố định · {{count}} việc đã lên lịch trong một ngày"
   }
 }

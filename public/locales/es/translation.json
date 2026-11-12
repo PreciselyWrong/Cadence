@@ -419,7 +419,11 @@
     "registration_closed_title": "Registro cerrado",
     "registration_closed_message": "El registro de nuevas cuentas está desactivado actualmente. Contacta con tu administrador para obtener acceso.",
     "confirm_password": "Confirmar contraseña",
-    "already_have_account": "¿Ya tienes una cuenta?"
+    "already_have_account": "¿Ya tienes una cuenta?",
+    "rateLimitedRetrying": "Demasiadas solicitudes, reintentando…",
+    "rateLimitedGaveUp": "Demasiadas solicitudes. La sesión sigue activa; recarga en un momento.",
+    "serverBusyRetrying": "Servidor ocupado, nuevo intento…",
+    "serverBusyRetry": "Reintentar"
   },
   "profile": {
     "showTaskDescription": "Mostrar la descripción debajo del título",
@@ -4937,7 +4941,8 @@
     "loadError": "No se pudo cargar esta tarea.",
     "expand": "Ampliar",
     "shrink": "Reducir",
-    "goTo": "Ir a"
+    "goTo": "Ir a",
+    "planned": "Planificada {{when}}"
   },
   "review": {
     "quick": {
@@ -6051,7 +6056,9 @@
     "widen": "Ampliar",
     "yesterday": "Ayer",
     "hideCompleted": "Ocultar completadas",
-    "showCompletedTasks": "Mostrar completadas"
+    "showCompletedTasks": "Mostrar completadas",
+    "dropOverlaps": "Solapamientos",
+    "dropPast": "En el pasado"
   },
   "upcoming": {
     "title": "Planificar",
@@ -6060,8 +6067,6 @@
     "horizonsSoon": "Próximamente",
     "addTask": "Añadir una tarea",
     "empty": "Nada planificado.",
-    "previous": "Día anterior",
-    "next": "Día siguiente",
     "today": "Hoy",
     "showCalendar": "Mostrar calendario",
     "hideCalendar": "Ocultar calendario",
@@ -6114,6 +6119,50 @@
     "someday": "Algún día",
     "showDayInCalendar": "Mostrar en el calendario",
     "hideCompleted": "Ocultar completadas",
-    "showCompletedTasks": "Mostrar completadas"
+    "showCompletedTasks": "Mostrar completadas",
+    "resizeCalendar": "Ancho del calendario",
+    "thisWeekHint": "Comprometida esta semana, sin día fijo",
+    "thisMonthHint": "Algún día de este mes, sin día fijo",
+    "nextMonthHint": "Prevista para el próximo mes",
+    "somedayHint": "Quizá más adelante, apartada",
+    "calendarOn": "el calendario, {{day}}",
+    "overdue": "Vencida",
+    "a11yPicked": "“{{name}}” recogida",
+    "a11yOver": "“{{name}}” movida sobre {{day}}",
+    "a11yOverNothing": "“{{name}}” ya no está sobre un día",
+    "a11yDropped": "“{{name}}” soltada el {{day}}",
+    "a11yReturned": "“{{name}}” devuelta a su sitio",
+    "a11yCancelled": "Movimiento de “{{name}}” cancelado",
+    "closeCalendar": "Cerrar el calendario",
+    "overdueTaken": "Tareas vencidas planificadas hoy",
+    "a11yInstructions": "Para mover una tarea, pulsa M, muévela con las flechas y pulsa Intro o Espacio para soltarla, o Escape para cancelar. Con una tarea seleccionada: las flechas o H, J, K, L se mueven entre tareas y días; Mayús con Izquierda o Derecha mueve la tarea un día; T la planifica para hoy, Mayús+T para mañana; Intro la abre.",
+    "dateNav": "Fechas",
+    "previousWeek": "Semana anterior",
+    "nextWeek": "Semana siguiente",
+    "overdueCount": "Vencidas ({{count}})",
+    "rescheduleAll": "Reprogramar todas para hoy",
+    "hideInbox": "Contraer la bandeja de entrada",
+    "plannedOnDay": "Planificadas en un día ({{count}})",
+    "goToDate": "Ir a la fecha",
+    "expandInbox": "Mostrar la bandeja de entrada ({{count}})",
+    "filter": "Filtrar",
+    "filterProjects": "Proyectos",
+    "filterTags": "Etiquetas",
+    "filterPriority": "Prioridad",
+    "filterHigh": "Alta",
+    "filterMedium": "Media",
+    "filterLow": "Baja",
+    "clearFilters": "Quitar filtros",
+    "tomorrow": "Mañana",
+    "week": "Semana {{number}}",
+    "load": "{{planned}} / {{available}}",
+    "done": "Hechas ({{n}})",
+    "subtaskOf": "↳ {{parent}}",
+    "addToInbox": "Añadir a la bandeja de entrada",
+    "inboxNewItem": "Nuevo elemento de la bandeja",
+    "addToInboxFailed": "No se pudo añadir. Inténtalo de nuevo.",
+    "addEmptyName": "Pon un nombre a la tarea",
+    "addTaskIn": "Añadir una tarea a {{name}}",
+    "thisWeekOnlyPlanned": "Nada sin día fijo · {{count}} planificadas en un día"
   }
 }

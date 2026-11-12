@@ -1527,7 +1527,11 @@
     "registration_closed_title": "Înregistrare închisă",
     "registration_closed_message": "Înregistrarea conturilor noi este dezactivată momentan. Contactează administratorul pentru acces.",
     "confirm_password": "Confirmă parola",
-    "already_have_account": "Ai deja un cont?"
+    "already_have_account": "Ai deja un cont?",
+    "rateLimitedRetrying": "Prea multe cereri, se reîncearcă…",
+    "rateLimitedGaveUp": "Prea multe cereri. Sesiunea este încă activă; reîncarcă pagina peste puțin timp.",
+    "serverBusyRetrying": "Server ocupat, se reîncearcă…",
+    "serverBusyRetry": "Reîncearcă"
   },
   "dropdown": {
     "createNew": "Creează Nou",
@@ -4954,7 +4958,8 @@
     "loadError": "Nu s-a putut încărca această sarcină.",
     "expand": "Mărește",
     "shrink": "Micșorează",
-    "goTo": "Mergi la"
+    "goTo": "Mergi la",
+    "planned": "Programată {{when}}"
   },
   "review": {
     "quick": {
@@ -6069,7 +6074,9 @@
     "widen": "Lărgește",
     "yesterday": "Ieri",
     "hideCompleted": "Ascunde finalizate",
-    "showCompletedTasks": "Afișează finalizate"
+    "showCompletedTasks": "Afișează finalizate",
+    "dropOverlaps": "Suprapuneri",
+    "dropPast": "În trecut"
   },
   "upcoming": {
     "title": "Planificare",
@@ -6078,8 +6085,6 @@
     "horizonsSoon": "În curând",
     "addTask": "Adaugă o sarcină",
     "empty": "Nimic planificat.",
-    "previous": "Ziua precedentă",
-    "next": "Ziua următoare",
     "today": "Azi",
     "showCalendar": "Arată calendarul",
     "hideCalendar": "Ascunde calendarul",
@@ -6132,6 +6137,50 @@
     "someday": "Cândva",
     "showDayInCalendar": "Afișează în calendar",
     "hideCompleted": "Ascunde finalizate",
-    "showCompletedTasks": "Afișează finalizate"
+    "showCompletedTasks": "Afișează finalizate",
+    "resizeCalendar": "Lățimea calendarului",
+    "thisWeekHint": "Angajată pentru săptămâna aceasta, fără zi fixă",
+    "thisMonthHint": "Cândva în luna aceasta, fără zi fixă",
+    "nextMonthHint": "Programată pentru luna viitoare",
+    "somedayHint": "Poate mai târziu, pusă deoparte",
+    "calendarOn": "calendarul, {{day}}",
+    "overdue": "Restante",
+    "a11yPicked": "„{{name}}” ridicată",
+    "a11yOver": "„{{name}}” mutată peste {{day}}",
+    "a11yOverNothing": "„{{name}}” nu mai este peste nicio zi",
+    "a11yDropped": "„{{name}}” lăsată pe {{day}}",
+    "a11yReturned": "„{{name}}” pusă la loc",
+    "a11yCancelled": "Mutarea „{{name}}” a fost anulată",
+    "closeCalendar": "Închide calendarul",
+    "overdueTaken": "Sarcini restante programate astăzi",
+    "a11yInstructions": "Pentru a muta o sarcină, apasă M, mut-o cu tastele săgeți, apoi apasă Enter sau Spațiu pentru a o lăsa, sau Escape pentru a anula. Pe o sarcină selectată: săgețile sau H, J, K, L trec între sarcini și zile; Shift cu Stânga sau Dreapta mută sarcina o zi; T o programează pentru azi, Shift+T pentru mâine; Enter o deschide.",
+    "dateNav": "Date",
+    "previousWeek": "Săptămâna anterioară",
+    "nextWeek": "Săptămâna următoare",
+    "overdueCount": "Restante ({{count}})",
+    "rescheduleAll": "Reprogramează toate pentru azi",
+    "hideInbox": "Restrânge inbox-ul",
+    "plannedOnDay": "Programate într-o zi ({{count}})",
+    "goToDate": "Mergi la data",
+    "expandInbox": "Afișează inbox-ul ({{count}})",
+    "filter": "Filtru",
+    "filterProjects": "Proiecte",
+    "filterTags": "Etichete",
+    "filterPriority": "Prioritate",
+    "filterHigh": "Ridicată",
+    "filterMedium": "Medie",
+    "filterLow": "Scăzută",
+    "clearFilters": "Șterge filtrele",
+    "tomorrow": "Mâine",
+    "week": "Săptămâna {{number}}",
+    "load": "{{planned}} / {{available}}",
+    "done": "Gata ({{n}})",
+    "subtaskOf": "↳ {{parent}}",
+    "addToInbox": "Adaugă în Inbox",
+    "inboxNewItem": "Element nou în Inbox",
+    "addToInboxFailed": "Nu s-a putut adăuga. Încearcă din nou.",
+    "addEmptyName": "Dă un nume sarcinii",
+    "addTaskIn": "Adaugă o sarcină în {{name}}",
+    "thisWeekOnlyPlanned": "Nimic fără zi fixă · {{count}} planificate într-o zi"
   }
 }

@@ -75,14 +75,63 @@ export interface DropPreview {
     minute: number;
     duration: number;
     title: string;
+    // The task being dragged: its own slot is not a conflict.
+    uid?: string;
 }
+
+export interface DropWarnings {
+    overlaps: boolean;
+    past: boolean;
+}
+
+const todayIso = (now: Date): string =>
+    `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+/**
+ * Whether a drop preview would sit on a timed block already in the column
+ * (task slots and timed calendar events, the dragged task excluded) or fall
+ * in the past: before the now line, or on a day before today.
+ * Overlaps stay allowed; the preview only says so.
+ */
+export const dropWarnings = (
+    column: Pick<DayColumnData, 'date' | 'now' | 'lines' | 'events'>,
+    drop: Pick<DropPreview, 'minute' | 'duration' | 'uid'>
+): DropWarnings => {
+    const end = drop.minute + drop.duration;
+    const busy = [
+        ...column.lines.flatMap((line) =>
+            line.start === null || line.uid === drop.uid
+                ? []
+                : [{ start: line.start, end: line.start + line.duration }]
+        ),
+        ...column.events.flatMap((event) => {
+            if (event.all_day || event.start_minute === null) return [];
+            return [
+                {
+                    start: event.start_minute,
+                    end:
+                        event.end_minute ??
+                        event.start_minute + DEFAULT_MINUTES,
+                },
+            ];
+        }),
+    ];
+    return {
+        overlaps: busy.some(
+            (block) => block.start < end && drop.minute < block.end
+        ),
+        past:
+            column.date < todayIso(new Date()) ||
+            (column.now !== null && drop.minute < column.now),
+    };
+};
 
 export interface DayCalendarProps {
     range: { start: number; end: number };
     columns: DayColumnData[];
     header?: React.ReactNode;
     onToggle(line: DayLine): void;
-    onOpen(line: DayLine): void;
+    onOpen(line: DayLine, date: string): void;
     onResize(date: string, uid: string, duration: number): void;
     onMove(date: string, uid: string, start: number): void;
     onUnslot(date: string, uid: string): void;
@@ -335,7 +384,7 @@ interface DayColumnProps {
     gridRef?: React.Ref<HTMLDivElement>;
     drop?: DropPreview | null;
     onToggle(line: DayLine): void;
-    onOpen(line: DayLine): void;
+    onOpen(line: DayLine, date: string): void;
     onResize(date: string, uid: string, duration: number): void;
     onMove(date: string, uid: string, start: number): void;
     onUnslot(date: string, uid: string): void;
@@ -360,6 +409,10 @@ const DayColumn: React.FC<DayColumnProps> = ({
 }) => {
     const { t } = useTranslation();
     const { date, lines, events, focus, now } = column;
+    const openOnDay = useCallback(
+        (line: DayLine) => onOpen(line, date),
+        [onOpen, date]
+    );
     const { setNodeRef: setDrop, isOver } = useDroppable({
         id: `grid:${date}`,
         data: { kind: 'grid', date, rangeStart: range.start },
@@ -428,6 +481,12 @@ const DayColumn: React.FC<DayColumnProps> = ({
     ]);
     const place = (key: string) => laneStyle(layout.get(key));
     const showDrop = drop && drop.date === date;
+    const warnings = showDrop ? dropWarnings(column, drop) : null;
+    const warningLabels = [
+        warnings?.overlaps && t('today.dropOverlaps', 'Overlaps'),
+        warnings?.past && t('today.dropPast', 'In the past'),
+    ].filter(Boolean) as string[];
+    const warned = warningLabels.length > 0;
 
     return (
         <div
@@ -493,7 +552,7 @@ const DayColumn: React.FC<DayColumnProps> = ({
                     rangeEnd={range.end}
                     style={place(`line:${line.uid}`)}
                     onToggle={onToggle}
-                    onOpen={onOpen}
+                    onOpen={openOnDay}
                     onResize={(uid, duration) => onResize(date, uid, duration)}
                     onMove={(uid, start) => onMove(date, uid, start)}
                     onUnslot={(uid) => onUnslot(date, uid)}
@@ -512,7 +571,7 @@ const DayColumn: React.FC<DayColumnProps> = ({
                     rangeEnd={range.end}
                     style={place(`appt:${line.uid}`)}
                     onToggle={onToggle}
-                    onOpen={onOpen}
+                    onOpen={openOnDay}
                     onResize={(uid, duration) => onResize(date, uid, duration)}
                     onMove={(uid, start) => onMove(date, uid, start)}
                     onUnslot={(uid) => onUnslot(date, uid)}
@@ -538,15 +597,30 @@ const DayColumn: React.FC<DayColumnProps> = ({
             {showDrop && (
                 <div
                     aria-hidden="true"
-                    className="pointer-events-none absolute inset-x-1 z-40 overflow-hidden rounded-md ring-2 ring-primary"
+                    data-testid="drop-preview"
+                    data-warned={warned ? 'true' : undefined}
+                    className={`pointer-events-none absolute inset-x-1 z-40 overflow-hidden rounded-md ring-2 ${
+                        warned
+                            ? 'bg-warning-container/70 ring-warning dark:bg-warning/20'
+                            : 'ring-primary'
+                    }`}
                     style={{
                         top: offset(drop.minute),
                         height: drop.duration * PX_PER_MINUTE,
                     }}
                 >
-                    <span className="block truncate px-2 py-1 text-xs font-medium tabular-nums text-primary">
+                    <span
+                        className={`block truncate px-2 py-1 text-xs font-medium tabular-nums ${
+                            warned ? 'text-warning' : 'text-primary'
+                        }`}
+                    >
                         {formatMinute(drop.minute)}
                         {drop.title ? ` · ${drop.title}` : ''}
+                        {warningLabels.map((label) => (
+                            <span key={label} className="ml-1.5 font-semibold">
+                                {label}
+                            </span>
+                        ))}
                     </span>
                 </div>
             )}

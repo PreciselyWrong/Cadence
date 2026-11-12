@@ -8,6 +8,7 @@ import { isTaskDone } from '../../constants/taskStatus';
 import { toPriorityLevel } from '../Shared/PriorityBadge';
 import { formatDuration, formatMinute } from '../DailyPlan/planUtils';
 import { DayLine, lineAt } from '../Today/dayModel';
+import { subtasksWithoutCard } from './groupCards';
 
 export const cardId = (date: string, uid: string): string =>
     `card:${date}:${uid}`;
@@ -92,6 +93,9 @@ export interface TaskCardProps {
     date: string;
     // Its detail is open in the side pane.
     selected: boolean;
+    // Keys of the tasks that have a card of their own in the column; such a
+    // subtask is not listed under its parent.
+    ownCardKeys?: ReadonlySet<string>;
     onToggle(line: DayLine): void;
     onOpen(line: DayLine): void;
     onToggleSubtask(subtask: Task): void;
@@ -99,21 +103,24 @@ export interface TaskCardProps {
 
 /**
  * One task of a day as a card, Todoist-style: a round check and the title on
- * the first line; below, a meta line (time, duration, then project and tag on
- * the right). The first line of the note is greyed. Nothing appears on hover.
- * Space toggles, Enter opens; open cards can be dragged.
+ * the first line; a subtask also names its parent; below, a meta line (time,
+ * duration, then project and tag on the right). The first line of the note is
+ * greyed. Nothing appears on hover. Enter opens; only the check toggles, and
+ * open cards can be dragged (Space picks one up from the keyboard).
  */
 const TaskCard: React.FC<TaskCardProps> = ({
     line,
     date,
     selected,
+    ownCardKeys = new Set<string>(),
     onToggle,
     onOpen,
     onToggleSubtask,
 }) => {
     const { t } = useTranslation();
     const { task, uid } = line;
-    const subtasks = task.subtasks ?? [];
+    const subtasks = subtasksWithoutCard(task.subtasks ?? [], ownCardKeys);
+    const parentName = task.parent_task?.name;
     const at = lineAt(line);
     const project = task.Project;
     const tag = task.tags?.[0];
@@ -142,11 +149,6 @@ const TaskCard: React.FC<TaskCardProps> = ({
 
     const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
         if (event.target !== event.currentTarget) return;
-        if (event.key === ' ') {
-            event.preventDefault();
-            onToggle(line);
-            return;
-        }
         if (event.key === 'Enter') {
             event.preventDefault();
             onOpen(line);
@@ -201,6 +203,14 @@ const TaskCard: React.FC<TaskCardProps> = ({
                     {task.name}
                 </span>
             </div>
+
+            {parentName && (
+                <p className="ml-[26px] mt-0.5 truncate text-xs text-surface-on-variant">
+                    {t('upcoming.subtaskOf', '↳ {{parent}}', {
+                        parent: parentName,
+                    })}
+                </p>
+            )}
 
             {note && (
                 <p className="ml-[26px] mt-0.5 truncate text-xs text-surface-on-variant">

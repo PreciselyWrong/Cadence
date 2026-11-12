@@ -1524,7 +1524,11 @@
     "registration_closed_title": "Регистрацията е затворена",
     "registration_closed_message": "Регистрацията на нови профили е временно деактивирана. Свържете се с администратора за достъп.",
     "confirm_password": "Потвърдете паролата",
-    "already_have_account": "Вече имате профил?"
+    "already_have_account": "Вече имате профил?",
+    "rateLimitedRetrying": "Твърде много заявки, опит отново…",
+    "rateLimitedGaveUp": "Твърде много заявки. Сесията е още активна; презаредете след малко.",
+    "serverBusyRetrying": "Сървърът е зает, нов опит…",
+    "serverBusyRetry": "Опитай отново"
   },
   "dropdown": {
     "createNew": "Създай ново",
@@ -4943,7 +4947,8 @@
     "loadError": "Задачата не можа да се зареди.",
     "expand": "Разгъване",
     "shrink": "Свиване",
-    "goTo": "Отиди на"
+    "goTo": "Отиди на",
+    "planned": "Планирана {{when}}"
   },
   "review": {
     "quick": {
@@ -6049,7 +6054,9 @@
     "widen": "Разшири",
     "yesterday": "Вчера",
     "hideCompleted": "Скрий завършените",
-    "showCompletedTasks": "Покажи завършените"
+    "showCompletedTasks": "Покажи завършените",
+    "dropOverlaps": "Припокривания",
+    "dropPast": "В миналото"
   },
   "upcoming": {
     "title": "План",
@@ -6058,8 +6065,6 @@
     "horizonsSoon": "Скоро",
     "addTask": "Добавете задача",
     "empty": "Нищо не е планирано.",
-    "previous": "Предишен ден",
-    "next": "Следващ ден",
     "today": "Днес",
     "showCalendar": "Показване на календара",
     "hideCalendar": "Скриване на календара",
@@ -6112,6 +6117,50 @@
     "someday": "Някога",
     "showDayInCalendar": "Показвай в календара",
     "hideCompleted": "Скрий завършените",
-    "showCompletedTasks": "Покажи завършените"
+    "showCompletedTasks": "Покажи завършените",
+    "resizeCalendar": "Ширина на календара",
+    "thisWeekHint": "Ангажирано за тази седмица, без определен ден",
+    "thisMonthHint": "Някога този месец, без определен ден",
+    "nextMonthHint": "Планирано за следващия месец",
+    "somedayHint": "Може би по-късно, отстрани",
+    "calendarOn": "календарът, {{day}}",
+    "overdue": "Просрочено",
+    "a11yPicked": "„{{name}}“ е взета",
+    "a11yOver": "„{{name}}“ е преместена над {{day}}",
+    "a11yOverNothing": "„{{name}}“ вече не е над ден",
+    "a11yDropped": "„{{name}}“ е пусната на {{day}}",
+    "a11yReturned": "„{{name}}“ е върната на мястото си",
+    "a11yCancelled": "Преместването на „{{name}}“ е отменено",
+    "closeCalendar": "Затвори календара",
+    "overdueTaken": "Просрочени задачи, планирани за днес",
+    "a11yInstructions": "За да преместите задача, натиснете M, преместете я със стрелките и натиснете Enter или Интервал, за да я пуснете, или Escape, за да отмените. При избрана задача: стрелките или H, J, K, L се движат между задачи и дни; Shift с наляво или надясно премества задачата с един ден; T я планира за днес, Shift+T за утре; Enter я отваря.",
+    "dateNav": "Дати",
+    "previousWeek": "Предишна седмица",
+    "nextWeek": "Следваща седмица",
+    "overdueCount": "Просрочени ({{count}})",
+    "rescheduleAll": "Пренасрочи всички за днес",
+    "hideInbox": "Свий входящите",
+    "plannedOnDay": "Планирани за ден ({{count}})",
+    "goToDate": "Към дата",
+    "expandInbox": "Покажи входящите ({{count}})",
+    "filter": "Филтър",
+    "filterProjects": "Проекти",
+    "filterTags": "Етикети",
+    "filterPriority": "Приоритет",
+    "filterHigh": "Висок",
+    "filterMedium": "Среден",
+    "filterLow": "Нисък",
+    "clearFilters": "Изчисти филтрите",
+    "tomorrow": "Утре",
+    "week": "Седмица {{number}}",
+    "load": "{{planned}} / {{available}}",
+    "done": "Готово ({{n}})",
+    "subtaskOf": "↳ {{parent}}",
+    "addToInbox": "Добави във входящите",
+    "inboxNewItem": "Нов елемент във входящите",
+    "addToInboxFailed": "Не може да се добави. Опитай отново.",
+    "addEmptyName": "Въведи име за задачата",
+    "addTaskIn": "Добави задача в {{name}}",
+    "thisWeekOnlyPlanned": "Нищо без фиксиран ден · {{count}} планирани за ден"
   }
 }

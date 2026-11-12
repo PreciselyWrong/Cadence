@@ -5,6 +5,16 @@ import { useLocation, useNavigate } from 'react-router-dom';
 export const TASK_UPDATED_EVENT = 'tududi:task-updated';
 
 const TASK_PARAM = 'task';
+// The day a task is planned on and its start, set by the opener that knows
+// them (a calendar block or a planned line). Dropped with the task.
+const PLANNED_DAY_PARAM = 'on';
+const PLANNED_START_PARAM = 'at';
+
+// Where the task sits in the day it was opened from.
+export interface PlannedOpen {
+    date: string;
+    startMinute?: number;
+}
 
 // Task and habit detail pages already show the task, so the pane stays shut there.
 const DETAIL_PAGE = /^\/(task|habit)\//;
@@ -15,7 +25,7 @@ export const canShowTaskPane = (pathname: string, search: string): boolean =>
 
 interface TaskPaneValue {
     openTaskUid: string | null;
-    openTask: (uid: string) => void;
+    openTask: (uid: string, planned?: PlannedOpen) => void;
     closeTask: () => void;
 }
 
@@ -36,11 +46,26 @@ export const TaskPaneProvider: React.FC<{ children: React.ReactNode }> = ({
     const navigate = useNavigate();
     const openTaskUid = new URLSearchParams(location.search).get(TASK_PARAM);
 
+    // Sets the open task and its planned day together, so a planned day from
+    // one task never labels another. Opening without one, or closing, drops it.
     const setTaskParam = useCallback(
-        (uid: string | null) => {
+        (uid: string | null, planned?: PlannedOpen) => {
             const params = new URLSearchParams(location.search);
-            if (uid) params.set(TASK_PARAM, uid);
-            else params.delete(TASK_PARAM);
+            params.delete(TASK_PARAM);
+            params.delete(PLANNED_DAY_PARAM);
+            params.delete(PLANNED_START_PARAM);
+            if (uid) {
+                params.set(TASK_PARAM, uid);
+                if (planned) {
+                    params.set(PLANNED_DAY_PARAM, planned.date);
+                    if (planned.startMinute !== undefined) {
+                        params.set(
+                            PLANNED_START_PARAM,
+                            String(planned.startMinute)
+                        );
+                    }
+                }
+            }
             const search = params.toString();
             navigate(
                 {
@@ -57,7 +82,7 @@ export const TaskPaneProvider: React.FC<{ children: React.ReactNode }> = ({
     const value = useMemo<TaskPaneValue>(
         () => ({
             openTaskUid,
-            openTask: (uid) => setTaskParam(uid),
+            openTask: (uid, planned) => setTaskParam(uid, planned),
             closeTask: () => setTaskParam(null),
         }),
         [openTaskUid, setTaskParam]

@@ -9,7 +9,10 @@ import { Task } from '../../../entities/Task';
 
 jest.mock('react-i18next', () => ({
     useTranslation: () => ({
-        t: (_key: string, fallback: string) => fallback,
+        t: (_key: string, fallback: string, values?: Record<string, unknown>) =>
+            fallback.replace(/{{(\w+)}}/g, (_m, name) =>
+                String(values?.[name] ?? '')
+            ),
         i18n: { language: 'en' },
     }),
 }));
@@ -140,14 +143,52 @@ describe('TaskCard', () => {
         );
     });
 
-    it('opens the card with Enter and toggles it with Space', () => {
+    it('opens the card with Enter', () => {
         const h = renderCard({ line: line({ task: {} }) });
-        const card = screen.getByTestId('upcoming-card');
 
-        fireEvent.keyDown(card, { key: 'Enter' });
-        fireEvent.keyDown(card, { key: ' ' });
+        fireEvent.keyDown(screen.getByTestId('upcoming-card'), {
+            key: 'Enter',
+        });
 
         expect(h.onOpen).toHaveBeenCalledTimes(1);
-        expect(h.onToggle).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not toggle the task when Space is pressed on the card', () => {
+        const h = renderCard({ line: line({ task: {} }) });
+
+        fireEvent.keyDown(screen.getByTestId('upcoming-card'), { key: ' ' });
+
+        expect(h.onToggle).not.toHaveBeenCalled();
+        expect(h.onOpen).not.toHaveBeenCalled();
+    });
+
+    it('lists its subtasks, except those with a card of their own', () => {
+        renderCard({
+            line: line({
+                task: {
+                    subtasks: [
+                        { uid: 's1', name: 'Own step', status: 0 } as Task,
+                        { uid: 's2', name: 'Listed step', status: 0 } as Task,
+                    ],
+                },
+            }),
+            ownCardKeys: new Set(['s1']),
+        });
+
+        expect(screen.queryByText('Own step')).not.toBeInTheDocument();
+        expect(screen.getByText('Listed step')).toBeInTheDocument();
+    });
+
+    it('names the parent of a subtask card', () => {
+        renderCard({
+            line: line({
+                task: {
+                    name: 'Child step',
+                    parent_task: { id: 1, uid: 'p', name: 'Parent task' },
+                } as Partial<Task>,
+            }),
+        });
+
+        expect(screen.getByText('↳ Parent task')).toBeInTheDocument();
     });
 });

@@ -2014,7 +2014,11 @@
     "registration_closed_title": "Registrácia uzavretá",
     "registration_closed_message": "Registrácia nových účtov je momentálne vypnutá. Na získanie prístupu kontaktujte správcu.",
     "confirm_password": "Potvrdiť heslo",
-    "already_have_account": "Už máte účet?"
+    "already_have_account": "Už máte účet?",
+    "rateLimitedRetrying": "Príliš veľa požiadaviek, opakovanie…",
+    "rateLimitedGaveUp": "Príliš veľa požiadaviek. Relácia zostáva aktívna; o chvíľu obnovte stránku.",
+    "serverBusyRetrying": "Server je zaneprázdnený, opakuje sa…",
+    "serverBusyRetry": "Skúsiť znova"
   },
   "dropdown": {
     "createNew": "Vytvoriť nové",
@@ -5333,7 +5337,8 @@
     "loadError": "Túto úlohu sa nepodarilo načítať.",
     "expand": "Zväčšiť",
     "shrink": "Zmenšiť",
-    "goTo": "Prejsť na"
+    "goTo": "Prejsť na",
+    "planned": "Naplánované {{when}}"
   },
   "review": {
     "quick": {
@@ -6085,7 +6090,9 @@
     "widen": "Rozšíriť",
     "yesterday": "Včera",
     "hideCompleted": "Skryť dokončené",
-    "showCompletedTasks": "Zobraziť dokončené"
+    "showCompletedTasks": "Zobraziť dokončené",
+    "dropOverlaps": "Prekrytia",
+    "dropPast": "V minulosti"
   },
   "upcoming": {
     "title": "Plánovať",
@@ -6094,8 +6101,6 @@
     "horizonsSoon": "Čoskoro",
     "addTask": "Pridať úlohu",
     "empty": "Nič naplánované.",
-    "previous": "Predchádzajúci deň",
-    "next": "Nasledujúci deň",
     "today": "Dnes",
     "showCalendar": "Zobraziť kalendár",
     "hideCalendar": "Skryť kalendár",
@@ -6148,6 +6153,50 @@
     "someday": "Niekedy",
     "showDayInCalendar": "Zobraziť v kalendári",
     "hideCompleted": "Skryť dokončené",
-    "showCompletedTasks": "Zobraziť dokončené"
+    "showCompletedTasks": "Zobraziť dokončené",
+    "resizeCalendar": "Šírka kalendára",
+    "thisWeekHint": "Naplánované na tento týždeň, bez pevného dňa",
+    "thisMonthHint": "Niekedy tento mesiac, bez pevného dňa",
+    "nextMonthHint": "Naplánované na budúci mesiac",
+    "somedayHint": "Možno neskôr, odložené bokom",
+    "calendarOn": "kalendár, {{day}}",
+    "overdue": "Po termíne",
+    "a11yPicked": "„{{name}}“ zdvihnutá",
+    "a11yOver": "„{{name}}“ presunutá nad {{day}}",
+    "a11yOverNothing": "„{{name}}“ už nie je nad žiadnym dňom",
+    "a11yDropped": "„{{name}}“ pustená na {{day}}",
+    "a11yReturned": "„{{name}}“ vrátená späť",
+    "a11yCancelled": "Presun „{{name}}“ zrušený",
+    "closeCalendar": "Zavrieť kalendár",
+    "overdueTaken": "Úlohy po termíne naplánované na dnes",
+    "a11yInstructions": "Ak chcete presunúť úlohu, stlačte M, presuňte ju šípkami a potom stlačte Enter alebo Medzerník, aby ste ju pustili, alebo Escape na zrušenie. Pri označenej úlohe: šípky alebo H, J, K, L prechádzajú medzi úlohami a dňami; Shift s Vľavo alebo Vpravo posunie úlohu o deň; T ju naplánuje na dnes, Shift+T na zajtra; Enter ju otvorí.",
+    "dateNav": "Dátumy",
+    "previousWeek": "Predchádzajúci týždeň",
+    "nextWeek": "Nasledujúci týždeň",
+    "overdueCount": "Po termíne ({{count}})",
+    "rescheduleAll": "Všetky preplánovať na dnes",
+    "hideInbox": "Zbaliť doručenú poštu",
+    "plannedOnDay": "Naplánované na deň ({{count}})",
+    "goToDate": "Prejsť na dátum",
+    "expandInbox": "Zobraziť doručenú poštu ({{count}})",
+    "filter": "Filter",
+    "filterProjects": "Projekty",
+    "filterTags": "Štítky",
+    "filterPriority": "Priorita",
+    "filterHigh": "Vysoká",
+    "filterMedium": "Stredná",
+    "filterLow": "Nízka",
+    "clearFilters": "Zrušiť filtre",
+    "tomorrow": "Zajtra",
+    "week": "Týždeň {{number}}",
+    "load": "{{planned}} / {{available}}",
+    "done": "Hotové ({{n}})",
+    "subtaskOf": "↳ {{parent}}",
+    "addToInbox": "Pridať do došlej pošty",
+    "inboxNewItem": "Nová položka došlej pošty",
+    "addToInboxFailed": "Nepodarilo sa pridať. Skúste to znova.",
+    "addEmptyName": "Zadajte názov úlohy",
+    "addTaskIn": "Pridať úlohu do {{name}}",
+    "thisWeekOnlyPlanned": "Nič bez pevného dňa · {{count}} naplánované na deň"
   }
 }

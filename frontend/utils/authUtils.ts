@@ -57,6 +57,12 @@ export const handleAuthResponse = async (
         throw new OfflineQueuedError();
     }
     if (!response.ok) {
+        if (response.status === 429) {
+            const retryAfter = response.headers.get('Retry-After');
+            throw new RateLimitError(
+                retryAfter === null ? null : rateLimitDelayMs(retryAfter, 0)
+            );
+        }
         if (response.status === 401) {
             if (window.location.pathname !== '/login' && !isRedirecting) {
                 isRedirecting = true;
@@ -115,6 +121,63 @@ export const handleAuthResponse = async (
         (error as any).status = response.status;
         (error as any).code = code;
         throw error;
+    }
+    return response;
+};
+
+// A 429 is a rate limit, not a session end: it never signs the user out.
+export class RateLimitError extends Error {
+    status = 429;
+    retryAfterMs: number | null;
+
+    constructor(retryAfterMs: number | null) {
+        super('Too many requests');
+        this.name = 'RateLimitError';
+        this.retryAfterMs = retryAfterMs;
+    }
+}
+
+export const isRateLimitError = (error: unknown): error is RateLimitError =>
+    error instanceof RateLimitError;
+
+const RATE_LIMIT_RETRIES = 4;
+const RATE_LIMIT_MAX_WAIT_MS = 30_000;
+
+// Retry-After (seconds) when the server sends one, else 1s, 2s, 4s, ...
+export const rateLimitDelayMs = (
+    retryAfter: string | null,
+    retry: number
+): number => {
+    const seconds = retryAfter === null ? NaN : Number(retryAfter);
+    const base =
+        Number.isFinite(seconds) && seconds >= 0
+            ? seconds * 1000
+            : 1000 * 2 ** retry;
+    return Math.min(base, RATE_LIMIT_MAX_WAIT_MS);
+};
+
+/**
+ * Sends the request again after each 429, waiting with backoff. Returns the
+ * last response: still a 429 once the retries are spent. `onRetry` runs
+ * before each wait with the retry number (1 for the first).
+ */
+export const fetchRetryingOnRateLimit = async (
+    request: () => Promise<Response>,
+    onRetry?: (retry: number) => void,
+    wait: (ms: number) => Promise<void> = (ms) =>
+        new Promise((resolve) => setTimeout(resolve, ms))
+): Promise<Response> => {
+    let response = await request();
+    for (
+        let retry = 0;
+        response.status === 429 && retry < RATE_LIMIT_RETRIES;
+        retry++
+    ) {
+        onRetry?.(retry + 1);
+        await wait(
+            rateLimitDelayMs(response.headers.get('Retry-After'), retry)
+        );
+        response = await request();
     }
     return response;
 };

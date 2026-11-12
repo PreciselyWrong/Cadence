@@ -1524,7 +1524,11 @@
     "registration_closed_title": "가입 마감",
     "registration_closed_message": "현재 신규 계정 가입이 중지되어 있습니다. 액세스 권한이 필요하면 관리자에게 문의하세요.",
     "confirm_password": "비밀번호 확인",
-    "already_have_account": "이미 계정이 있으신가요?"
+    "already_have_account": "이미 계정이 있으신가요?",
+    "rateLimitedRetrying": "요청이 너무 많습니다. 다시 시도하는 중…",
+    "rateLimitedGaveUp": "요청이 너무 많습니다. 세션은 아직 활성 상태입니다. 잠시 후 새로고침하세요.",
+    "serverBusyRetrying": "서버가 바쁩니다. 다시 시도하는 중…",
+    "serverBusyRetry": "다시 시도"
   },
   "dropdown": {
     "createNew": "새로 만들기",
@@ -4943,7 +4947,8 @@
     "loadError": "이 작업을 불러올 수 없습니다.",
     "expand": "확대",
     "shrink": "축소",
-    "goTo": "이동"
+    "goTo": "이동",
+    "planned": "{{when}} 계획됨"
   },
   "review": {
     "quick": {
@@ -6047,7 +6052,9 @@
     "widen": "넓히기",
     "yesterday": "어제",
     "hideCompleted": "완료 항목 숨기기",
-    "showCompletedTasks": "완료 항목 표시"
+    "showCompletedTasks": "완료 항목 표시",
+    "dropOverlaps": "겹침",
+    "dropPast": "지난 시간"
   },
   "upcoming": {
     "title": "계획",
@@ -6056,8 +6063,6 @@
     "horizonsSoon": "곧 공개",
     "addTask": "작업 추가",
     "empty": "계획된 항목이 없습니다.",
-    "previous": "이전 날",
-    "next": "다음 날",
     "today": "오늘",
     "showCalendar": "캘린더 표시",
     "hideCalendar": "캘린더 숨기기",
@@ -6110,6 +6115,50 @@
     "someday": "언젠가",
     "showDayInCalendar": "캘린더에 표시",
     "hideCompleted": "완료 항목 숨기기",
-    "showCompletedTasks": "완료 항목 표시"
+    "showCompletedTasks": "완료 항목 표시",
+    "resizeCalendar": "캘린더 너비",
+    "thisWeekHint": "이번 주에 확정, 정해진 요일 없음",
+    "thisMonthHint": "이번 달 중 언제든, 정해진 요일 없음",
+    "nextMonthHint": "다음 달에 예정됨",
+    "somedayHint": "나중에 언젠가, 한쪽으로 치워 둠",
+    "calendarOn": "캘린더, {{day}}",
+    "overdue": "기한 지남",
+    "a11yPicked": "“{{name}}” 집어 올림",
+    "a11yOver": "“{{name}}”을(를) {{day}} 위로 옮김",
+    "a11yOverNothing": "“{{name}}”이(가) 더 이상 날짜 위에 있지 않음",
+    "a11yDropped": "“{{name}}”을(를) {{day}}에 놓음",
+    "a11yReturned": "“{{name}}” 원래 자리로 돌려놓음",
+    "a11yCancelled": "“{{name}}” 이동 취소됨",
+    "closeCalendar": "캘린더 닫기",
+    "overdueTaken": "오늘로 계획된 기한 지난 작업",
+    "a11yInstructions": "작업을 옮기려면 M을 누르고, 화살표 키로 이동한 뒤 Enter 또는 스페이스로 놓거나 Esc로 취소합니다. 포커스된 작업에서는 화살표 키 또는 H, J, K, L로 작업과 날짜 사이를 이동하고, Shift와 왼쪽/오른쪽 키로 작업을 하루씩 옮깁니다. T는 오늘로, Shift+T는 내일로 계획하며, Enter는 작업을 엽니다.",
+    "dateNav": "날짜",
+    "previousWeek": "이전 주",
+    "nextWeek": "다음 주",
+    "overdueCount": "기한 지남 ({{count}})",
+    "rescheduleAll": "모두 오늘로 다시 계획",
+    "hideInbox": "받은 편지함 접기",
+    "plannedOnDay": "요일에 계획됨 ({{count}})",
+    "goToDate": "날짜로 이동",
+    "expandInbox": "받은 편지함 보기 ({{count}})",
+    "filter": "필터",
+    "filterProjects": "프로젝트",
+    "filterTags": "태그",
+    "filterPriority": "우선순위",
+    "filterHigh": "높음",
+    "filterMedium": "보통",
+    "filterLow": "낮음",
+    "clearFilters": "필터 지우기",
+    "tomorrow": "내일",
+    "week": "{{number}}주차",
+    "load": "{{planned}} / {{available}}",
+    "done": "완료 ({{n}})",
+    "subtaskOf": "↳ {{parent}}",
+    "addToInbox": "받은편지함에 추가",
+    "inboxNewItem": "새 받은편지함 항목",
+    "addToInboxFailed": "추가하지 못했습니다. 다시 시도하세요.",
+    "addEmptyName": "작업 이름을 입력하세요",
+    "addTaskIn": "{{name}}에 작업 추가",
+    "thisWeekOnlyPlanned": "고정된 날짜가 없는 항목 없음 · 하루에 예정된 항목 {{count}}개"
   }
 }

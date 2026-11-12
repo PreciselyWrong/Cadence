@@ -2239,7 +2239,11 @@
     "registration_closed_title": "Registrierung geschlossen",
     "registration_closed_message": "Die Registrierung neuer Konten ist derzeit deaktiviert. Wende dich für Zugang an deinen Administrator.",
     "confirm_password": "Passwort bestätigen",
-    "already_have_account": "Schon ein Konto?"
+    "already_have_account": "Schon ein Konto?",
+    "rateLimitedRetrying": "Zu viele Anfragen, neuer Versuch…",
+    "rateLimitedGaveUp": "Zu viele Anfragen. Die Sitzung bleibt aktiv; bitte gleich neu laden.",
+    "serverBusyRetrying": "Server ausgelastet, neuer Versuch…",
+    "serverBusyRetry": "Erneut versuchen"
   },
   "dropdown": {
     "createNew": "Neu erstellen",
@@ -4952,7 +4956,8 @@
     "loadError": "Diese Aufgabe konnte nicht geladen werden.",
     "expand": "Vergrößern",
     "shrink": "Verkleinern",
-    "goTo": "Gehe zu"
+    "goTo": "Gehe zu",
+    "planned": "Geplant {{when}}"
   },
   "review": {
     "quick": {
@@ -6058,7 +6063,9 @@
     "widen": "Verbreitern",
     "yesterday": "Gestern",
     "hideCompleted": "Erledigte ausblenden",
-    "showCompletedTasks": "Erledigte anzeigen"
+    "showCompletedTasks": "Erledigte anzeigen",
+    "dropOverlaps": "Überschneidungen",
+    "dropPast": "In der Vergangenheit"
   },
   "upcoming": {
     "title": "Planen",
@@ -6067,8 +6074,6 @@
     "horizonsSoon": "Demnächst",
     "addTask": "Aufgabe hinzufügen",
     "empty": "Nichts geplant.",
-    "previous": "Vorheriger Tag",
-    "next": "Nächster Tag",
     "today": "Heute",
     "showCalendar": "Kalender anzeigen",
     "hideCalendar": "Kalender ausblenden",
@@ -6121,6 +6126,50 @@
     "someday": "Irgendwann",
     "showDayInCalendar": "Im Kalender anzeigen",
     "hideCompleted": "Erledigte ausblenden",
-    "showCompletedTasks": "Erledigte anzeigen"
+    "showCompletedTasks": "Erledigte anzeigen",
+    "resizeCalendar": "Kalenderbreite",
+    "thisWeekHint": "Für diese Woche vorgesehen, ohne festen Tag",
+    "thisMonthHint": "Irgendwann in diesem Monat, ohne festen Tag",
+    "nextMonthHint": "Für nächsten Monat eingeplant",
+    "somedayHint": "Vielleicht später, aus dem Weg",
+    "calendarOn": "der Kalender, {{day}}",
+    "overdue": "Überfällig",
+    "a11yPicked": "„{{name}}“ aufgenommen",
+    "a11yOver": "„{{name}}“ über {{day}} verschoben",
+    "a11yOverNothing": "„{{name}}“ liegt nicht mehr über einem Tag",
+    "a11yDropped": "„{{name}}“ am {{day}} abgelegt",
+    "a11yReturned": "„{{name}}“ zurückgelegt",
+    "a11yCancelled": "Verschieben von „{{name}}“ abgebrochen",
+    "closeCalendar": "Kalender schließen",
+    "overdueTaken": "Überfällige Aufgaben für heute geplant",
+    "a11yInstructions": "Zum Verschieben einer Aufgabe M drücken, mit den Pfeiltasten bewegen, dann Enter oder Leertaste zum Ablegen oder Escape zum Abbrechen. Bei fokussierter Aufgabe: Pfeile oder H, J, K, L wechseln zwischen Aufgaben und Tagen; Umschalt mit Links oder Rechts verschiebt die Aufgabe um einen Tag; T plant sie für heute, Umschalt+T für morgen; Enter öffnet sie.",
+    "dateNav": "Daten",
+    "previousWeek": "Vorherige Woche",
+    "nextWeek": "Nächste Woche",
+    "overdueCount": "Überfällig ({{count}})",
+    "rescheduleAll": "Alle auf heute verschieben",
+    "hideInbox": "Posteingang einklappen",
+    "plannedOnDay": "An einem Tag geplant ({{count}})",
+    "goToDate": "Zu Datum springen",
+    "expandInbox": "Posteingang anzeigen ({{count}})",
+    "filter": "Filter",
+    "filterProjects": "Projekte",
+    "filterTags": "Tags",
+    "filterPriority": "Priorität",
+    "filterHigh": "Hoch",
+    "filterMedium": "Mittel",
+    "filterLow": "Niedrig",
+    "clearFilters": "Filter zurücksetzen",
+    "tomorrow": "Morgen",
+    "week": "Woche {{number}}",
+    "load": "{{planned}} / {{available}}",
+    "done": "Erledigt ({{n}})",
+    "subtaskOf": "↳ {{parent}}",
+    "addToInbox": "Zum Posteingang hinzufügen",
+    "inboxNewItem": "Neuer Posteingangseintrag",
+    "addToInboxFailed": "Hinzufügen fehlgeschlagen. Bitte erneut versuchen.",
+    "addEmptyName": "Gib der Aufgabe einen Namen",
+    "addTaskIn": "Aufgabe zu {{name}} hinzufügen",
+    "thisWeekOnlyPlanned": "Nichts ohne festen Tag · {{count}} an einem Tag geplant"
   }
 }

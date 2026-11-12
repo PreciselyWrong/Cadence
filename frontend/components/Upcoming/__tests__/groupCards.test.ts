@@ -1,5 +1,13 @@
 import type { Task } from '../../../entities/Task';
-import { CardLike, groupCards, sortCards, Translate } from '../groupCards';
+import {
+    cardTaskKeys,
+    CardLike,
+    dayLoad,
+    groupCards,
+    sortCards,
+    subtasksWithoutCard,
+    Translate,
+} from '../groupCards';
 
 const t: Translate = (_key, fallback) => fallback;
 
@@ -223,5 +231,98 @@ describe('groupCards', () => {
         const groups = groupCards(cards, 'project', t);
 
         expect(names(groups[0].cards)).toEqual(['second', 'third']);
+    });
+});
+
+// A subtask whose parent is another card of the same list.
+const subtaskCard = (name: string, parent: string): CardLike => ({
+    task: {
+        uid: name,
+        name,
+        status: 0,
+        parent_task: { id: 1, uid: parent, name: `Parent ${parent}` },
+    } as unknown as Task,
+    start: null,
+    dueMinute: null,
+});
+
+describe('dayLoad', () => {
+    it('sums the durations of the open lines only', () => {
+        expect(
+            dayLoad([
+                { duration: 60, done: false },
+                { duration: 30, done: true },
+                { duration: 45, done: false },
+            ])
+        ).toBe(105);
+    });
+
+    it('is zero for a day without open lines', () => {
+        expect(dayLoad([])).toBe(0);
+        expect(dayLoad([{ duration: 30, done: true }])).toBe(0);
+    });
+});
+
+describe('subtasksWithoutCard', () => {
+    it('drops the subtasks that have a card of their own in the list', () => {
+        const subtasks = [
+            { uid: 's1', name: 's1' },
+            { uid: 's2', name: 's2' },
+        ] as Task[];
+
+        expect(
+            subtasksWithoutCard(subtasks, new Set(['s2'])).map((s) => s.name)
+        ).toEqual(['s1']);
+    });
+
+    it('keeps every subtask when none has a card', () => {
+        const subtasks = [{ uid: 's1', name: 's1' }] as Task[];
+
+        expect(subtasksWithoutCard(subtasks, new Set())).toHaveLength(1);
+    });
+});
+
+describe('cardTaskKeys', () => {
+    it('collects the uid of each card task', () => {
+        expect(cardTaskKeys([card('a'), card('b')])).toEqual(
+            new Set(['a', 'b'])
+        );
+    });
+});
+
+describe('subtask cards and projects', () => {
+    it("groups a subtask under its parent's project when the parent has a card", () => {
+        const cards = [
+            card('parent', { project: 'Work' }),
+            subtaskCard('child', 'parent'),
+        ];
+
+        const groups = groupCards(cards, 'project', t);
+
+        expect(groups.map((g) => g.label)).toEqual(['Work']);
+        expect(names(groups[0].cards)).toEqual(['parent', 'child']);
+    });
+
+    it('keeps the own project of a subtask whose parent is not in the list', () => {
+        const child = subtaskCard('child', 'elsewhere');
+        child.task = { ...child.task, Project: { name: 'Home' } } as Task;
+
+        const groups = groupCards([child], 'project', t);
+
+        expect(groups.map((g) => g.label)).toEqual(['Home']);
+    });
+
+    it("sorts a subtask by its parent's project", () => {
+        const cards = [
+            card('zeta', { project: 'Zeta' }),
+            card('alpha', { project: 'Alpha' }),
+            subtaskCard('child', 'alpha'),
+        ];
+
+        expect(names(sortCards(cards, 'project'))).toEqual([
+            'alpha',
+            'child',
+            'zeta',
+        ]);
     });
 });

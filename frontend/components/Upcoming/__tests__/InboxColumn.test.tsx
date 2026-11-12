@@ -1,9 +1,22 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
-import InboxColumn from '../InboxColumn';
+import InboxColumn, {
+    inboxCollapsed,
+    loadInboxCollapsed,
+    saveInboxCollapsed,
+} from '../InboxColumn';
 import { InboxItem } from '../../../entities/InboxItem';
+import { createInboxItemWithStore } from '../../../utils/inboxService';
+
+jest.mock('../../../utils/inboxService', () => ({
+    createInboxItemWithStore: jest.fn(),
+}));
+
+const createMock = createInboxItemWithStore as jest.MockedFunction<
+    typeof createInboxItemWithStore
+>;
 
 jest.mock('react-i18next', () => ({
     useTranslation: () => ({
@@ -40,6 +53,92 @@ const renderColumn = (items: InboxItem[], loading = false) =>
             </Routes>
         </MemoryRouter>
     );
+
+describe('InboxColumn adding', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+        createMock.mockResolvedValue(item({ uid: 'new' }));
+    });
+
+    it('shows the + button when the inbox is empty', () => {
+        renderColumn([]);
+
+        expect(
+            screen.getByRole('button', { name: 'Add to inbox' })
+        ).toBeInTheDocument();
+    });
+
+    it('shows the + button on the collapsed bar and expands the column from it', () => {
+        const onChange = jest.fn();
+        render(
+            <MemoryRouter>
+                <InboxColumn
+                    items={[]}
+                    loading={false}
+                    collapsed
+                    onCollapsedChange={onChange}
+                />
+            </MemoryRouter>
+        );
+
+        fireEvent.click(screen.getByRole('button', { name: 'Add to inbox' }));
+
+        expect(onChange).toHaveBeenCalledWith(false);
+    });
+
+    it('adds the typed text through the inbox service on Enter', async () => {
+        renderColumn([]);
+
+        fireEvent.click(screen.getByRole('button', { name: 'Add to inbox' }));
+        const input = screen.getByRole('textbox', { name: 'New inbox item' });
+        expect(input).toHaveFocus();
+        fireEvent.change(input, { target: { value: '  Pick up parcel  ' } });
+        fireEvent.keyDown(input, { key: 'Enter' });
+
+        expect(createMock).toHaveBeenCalledWith('Pick up parcel');
+        await waitFor(() => expect(input).toHaveValue(''));
+    });
+
+    it('closes on Escape without adding', () => {
+        renderColumn([]);
+
+        fireEvent.click(screen.getByRole('button', { name: 'Add to inbox' }));
+        const input = screen.getByRole('textbox', { name: 'New inbox item' });
+        fireEvent.change(input, { target: { value: 'Half typed' } });
+        fireEvent.keyDown(input, { key: 'Escape' });
+
+        expect(
+            screen.queryByRole('textbox', { name: 'New inbox item' })
+        ).not.toBeInTheDocument();
+        expect(createMock).not.toHaveBeenCalled();
+    });
+
+    it('closes when left empty', () => {
+        renderColumn([]);
+
+        fireEvent.click(screen.getByRole('button', { name: 'Add to inbox' }));
+        fireEvent.blur(screen.getByRole('textbox', { name: 'New inbox item' }));
+
+        expect(
+            screen.queryByRole('textbox', { name: 'New inbox item' })
+        ).not.toBeInTheDocument();
+    });
+
+    it('keeps the text and shows an error when adding fails', async () => {
+        createMock.mockRejectedValueOnce(new Error('offline'));
+        renderColumn([]);
+
+        fireEvent.click(screen.getByRole('button', { name: 'Add to inbox' }));
+        const input = screen.getByRole('textbox', { name: 'New inbox item' });
+        fireEvent.change(input, { target: { value: 'Keep me' } });
+        fireEvent.keyDown(input, { key: 'Enter' });
+
+        expect(await screen.findByRole('alert')).toHaveTextContent(
+            'Could not add it. Try again.'
+        );
+        expect(input).toHaveValue('Keep me');
+    });
+});
 
 describe('InboxColumn', () => {
     it('shows each open item as a card with its title', () => {
@@ -110,5 +209,60 @@ describe('InboxColumn', () => {
         fireEvent.click(screen.getByTestId('inbox-card'));
 
         expect(screen.getByTestId('location')).toHaveTextContent('/inbox');
+    });
+});
+
+describe('InboxColumn collapsed', () => {
+    beforeEach(() => localStorage.clear());
+
+    it('is collapsed when empty, whatever was chosen', () => {
+        expect(inboxCollapsed(0, null)).toBe(true);
+        expect(inboxCollapsed(0, false)).toBe(true);
+        expect(inboxCollapsed(3, null)).toBe(false);
+        expect(inboxCollapsed(3, true)).toBe(true);
+    });
+
+    it('remembers the viewer choice', () => {
+        expect(loadInboxCollapsed()).toBeNull();
+        saveInboxCollapsed(true);
+        expect(loadInboxCollapsed()).toBe(true);
+        saveInboxCollapsed(false);
+        expect(loadInboxCollapsed()).toBe(false);
+    });
+
+    it('shows a bar with the count that expands the column', () => {
+        const onChange = jest.fn();
+        render(
+            <MemoryRouter>
+                <InboxColumn
+                    items={[item({ uid: 'a' }), item({ uid: 'b' })]}
+                    loading={false}
+                    collapsed
+                    onCollapsedChange={onChange}
+                />
+            </MemoryRouter>
+        );
+        expect(screen.queryByTestId('inbox-card')).not.toBeInTheDocument();
+        fireEvent.click(
+            screen.getByRole('button', { name: 'Show the inbox (2)' })
+        );
+        expect(onChange).toHaveBeenCalledWith(false);
+    });
+
+    it('collapses from its header', () => {
+        const onChange = jest.fn();
+        render(
+            <MemoryRouter>
+                <InboxColumn
+                    items={[item({ uid: 'a' })]}
+                    loading={false}
+                    onCollapsedChange={onChange}
+                />
+            </MemoryRouter>
+        );
+        fireEvent.click(
+            screen.getByRole('button', { name: 'Collapse the inbox' })
+        );
+        expect(onChange).toHaveBeenCalledWith(true);
     });
 });

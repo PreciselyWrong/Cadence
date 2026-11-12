@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Suspense, lazy } from 'react';
+import React, { useEffect, useRef, useState, Suspense, lazy } from 'react';
 import {
     Routes,
     Route,
@@ -15,6 +15,7 @@ const NoteRedirect: React.FC = () => {
     return <Navigate to={`/notes/${uid}`} replace />;
 };
 import { useTranslation } from 'react-i18next';
+import { useToast } from './components/Shared/ToastContext';
 import Login from './components/Login';
 import Register from './components/Register';
 import ForgotPassword from './components/Auth/ForgotPassword';
@@ -44,6 +45,7 @@ const SubscriptionRequired = lazy(
     () => import('./components/Billing/SubscriptionRequired')
 );
 import { User } from './entities/User';
+import { fetchRetryingOnRateLimit } from './utils/authUtils';
 import { canOpenAccess } from './entities/Role';
 import TodayView from './components/Today/TodayView';
 import TaskDetails from './components/Task/TaskDetails';
@@ -99,27 +101,87 @@ const AdminMfaRequired = lazy(
     () => import('./components/Admin/AdminMfaRequired')
 );
 
+// Waits before each automatic retry of the first user read while the server
+// answers 429 and no user is known yet. After the last one, Retry is manual.
+const BOOT_RETRY_DELAYS_MS = [2000, 4000, 8000, 16000, 30000];
+
 const App: React.FC = () => {
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
+    const { showErrorToast } = useToast();
     const navigate = useNavigate();
     const location = useLocation();
     const [currentUser, setCurrentUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
+    const [serverBusy, setServerBusy] = useState(false);
+    // Read by the fetch, which may outlive the render that started it.
+    const currentUserRef = useRef<User | null>(null);
+    const bootRetry = useRef<{ attempt: number; timer?: number }>({
+        attempt: 0,
+    });
     // The hosted superadmin sees a setup prompt instead of the admin panel
     // until two-factor sign-in is on.
     const adminElement = (element: React.ReactElement) =>
         currentUser?.admin_mfa_required ? <AdminMfaRequired /> : element;
 
+    const scheduleBootRetry = () => {
+        setServerBusy(true);
+        const delay = BOOT_RETRY_DELAYS_MS[bootRetry.current.attempt];
+        if (delay === undefined) return;
+        bootRetry.current.attempt += 1;
+        bootRetry.current.timer = window.setTimeout(() => {
+            bootRetry.current.timer = undefined;
+            void fetchCurrentUser();
+        }, delay);
+    };
+
+    const retryBoot = () => {
+        window.clearTimeout(bootRetry.current.timer);
+        bootRetry.current = { attempt: 0 };
+        void fetchCurrentUser();
+    };
+
     const fetchCurrentUser = async () => {
+        // A 429 with no user yet keeps the loading state: the app must not
+        // fall through to the logged-out routes.
+        let waitingForServer = false;
         try {
-            const response = await fetch(getApiPath('current_user'), {
-                credentials: 'include',
-                headers: {
-                    Accept: 'application/json',
-                },
-            });
+            const response = await fetchRetryingOnRateLimit(
+                () =>
+                    fetch(getApiPath('current_user'), {
+                        credentials: 'include',
+                        headers: {
+                            Accept: 'application/json',
+                        },
+                    }),
+                (retry) => {
+                    if (retry === 1) {
+                        showErrorToast(
+                            t(
+                                'auth.rateLimitedRetrying',
+                                'Too many requests, retrying…'
+                            )
+                        );
+                    }
+                }
+            );
 
             if (!response.ok) {
+                // Still rate limited after the retries: the session is not
+                // over, so keep the current user and say so.
+                if (response.status === 429) {
+                    if (currentUserRef.current) {
+                        showErrorToast(
+                            t(
+                                'auth.rateLimitedGaveUp',
+                                'Too many requests. Your session is still active; reload in a moment.'
+                            )
+                        );
+                        return;
+                    }
+                    waitingForServer = true;
+                    scheduleBootRetry();
+                    return;
+                }
                 if (response.status === 401) {
                     invalidateProfileCache();
                     notifySwClearCache();
@@ -223,13 +285,18 @@ const App: React.FC = () => {
         } catch {
             setCurrentUser(null);
         } finally {
-            setLoading(false);
+            if (!waitingForServer) setLoading(false);
         }
     };
 
     useEffect(() => {
+        currentUserRef.current = currentUser;
+    }, [currentUser]);
+
+    useEffect(() => {
         // Fetch user on mount
         fetchCurrentUser();
+        return () => window.clearTimeout(bootRetry.current.timer);
     }, []);
 
     // Listen for login events to update user state
@@ -382,7 +449,25 @@ const App: React.FC = () => {
     }
 
     if (loading) {
-        return <LoadingComponent />;
+        return serverBusy ? (
+            <div
+                role="status"
+                className="flex h-screen flex-col items-center justify-center gap-4 bg-gray-100 p-4 text-center dark:bg-gray-900"
+            >
+                <p className="text-xl font-semibold text-gray-700 dark:text-gray-200">
+                    {t('auth.serverBusyRetrying', 'Server busy, retrying…')}
+                </p>
+                <button
+                    type="button"
+                    onClick={retryBoot}
+                    className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-on focus-visible:outline-2 focus-visible:outline-primary"
+                >
+                    {t('auth.serverBusyRetry', 'Retry')}
+                </button>
+            </div>
+        ) : (
+            <LoadingComponent />
+        );
     }
 
     return (

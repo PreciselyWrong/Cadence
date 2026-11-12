@@ -49,7 +49,19 @@ export const SaveIndicator: React.FC<{ state: SaveState }> = ({ state }) => {
     );
 };
 
-export const TaskEditorBody: React.FC<{ ed: TaskEditor }> = ({ ed }) => {
+interface TaskEditorBodyProps {
+    ed: TaskEditor;
+    // The sheet names itself after the title: this id labels it.
+    titleId?: string;
+    // "Planned Thu 12 Nov · 10:00", shown under the chips.
+    plannedLabel?: string | null;
+}
+
+export const TaskEditorBody: React.FC<TaskEditorBodyProps> = ({
+    ed,
+    titleId,
+    plannedLabel,
+}) => {
     const {
         t,
         task,
@@ -104,6 +116,11 @@ export const TaskEditorBody: React.FC<{ ed: TaskEditor }> = ({ ed }) => {
                         </p>
                     )}
                 </div>
+            )}
+            {titleId && (
+                <h2 id={titleId} className="sr-only">
+                    {task.name}
+                </h2>
             )}
             <div
                 data-testid="task-name-field"
@@ -201,6 +218,14 @@ export const TaskEditorBody: React.FC<{ ed: TaskEditor }> = ({ ed }) => {
                 }
                 onOpenParent={openTaskPanel}
             />
+            {plannedLabel && (
+                <p
+                    data-testid="task-planned-label"
+                    className="-mt-2 text-sm tabular-nums text-gray-600 dark:text-gray-300"
+                >
+                    {plannedLabel}
+                </p>
+            )}
 
             <div data-testid="task-note-field">
                 {readOnly ? (

@@ -4,6 +4,7 @@ import '@testing-library/jest-dom';
 import DayCalendar, {
     DayCalendarProps,
     DayColumnData,
+    dropWarnings,
     minuteFromOffset,
     PX_PER_MINUTE,
 } from '../DayCalendar';
@@ -188,5 +189,174 @@ describe('minuteFromOffset', () => {
     it('stays inside the range', () => {
         expect(minuteFromOffset(-100, RANGE)).toBe(480);
         expect(minuteFromOffset(100000, RANGE)).toBe(1080);
+    });
+});
+
+describe('dropWarnings', () => {
+    // The column is DAY: keep "today" fixed so the past-day rule is stable.
+    beforeEach(() => {
+        jest.useFakeTimers().setSystemTime(new Date(2026, 10, 12, 9, 0));
+    });
+    afterEach(() => {
+        jest.useRealTimers();
+    });
+
+    const column = (
+        fields: Partial<
+            Pick<DayColumnData, 'date' | 'now' | 'lines' | 'events'>
+        > = {}
+    ) => ({
+        date: DAY,
+        now: null,
+        lines: [] as DayLine[],
+        events: [] as CalendarEvent[],
+        ...fields,
+    });
+
+    it('flags nothing for a drop on free time', () => {
+        expect(
+            dropWarnings(column({ lines: [lineOf('a', { start: 600 })] }), {
+                minute: 720,
+                duration: 30,
+            })
+        ).toEqual({ overlaps: false, past: false });
+    });
+
+    it('flags an overlap with a slotted block, touching edges excluded', () => {
+        const lines = [lineOf('a', { start: 600, duration: 60 })];
+        expect(
+            dropWarnings(column({ lines }), { minute: 630, duration: 30 })
+                .overlaps
+        ).toBe(true);
+        // Starts exactly when the block ends: no overlap.
+        expect(
+            dropWarnings(column({ lines }), { minute: 660, duration: 30 })
+                .overlaps
+        ).toBe(false);
+    });
+
+    it('flags an overlap with a timed calendar event', () => {
+        expect(
+            dropWarnings(
+                column({
+                    events: [event({ start_minute: 540, end_minute: 570 })],
+                }),
+                { minute: 560, duration: 30 }
+            ).overlaps
+        ).toBe(true);
+    });
+
+    it('ignores appointments and all-day events', () => {
+        expect(
+            dropWarnings(
+                column({
+                    lines: [lineOf('r', { dueMinute: 600 })],
+                    events: [event({ all_day: true, start_minute: null })],
+                }),
+                { minute: 600, duration: 30 }
+            )
+        ).toEqual({ overlaps: false, past: false });
+    });
+
+    it('ignores the dragged task itself when the preview names its uid', () => {
+        const lines = [lineOf('a', { start: 600, duration: 60 })];
+        expect(
+            dropWarnings(column({ lines }), {
+                minute: 630,
+                duration: 30,
+                uid: 'a',
+            }).overlaps
+        ).toBe(false);
+        expect(
+            dropWarnings(column({ lines }), {
+                minute: 630,
+                duration: 30,
+                uid: 'other',
+            }).overlaps
+        ).toBe(true);
+    });
+
+    it('flags every drop on a day before today as in the past', () => {
+        jest.useFakeTimers().setSystemTime(new Date(2026, 10, 12, 9, 0));
+        try {
+            expect(
+                dropWarnings(column({ date: '2026-11-11' }), {
+                    minute: 1000,
+                    duration: 30,
+                }).past
+            ).toBe(true);
+            expect(
+                dropWarnings(column({ date: '2026-11-13' }), {
+                    minute: 480,
+                    duration: 30,
+                }).past
+            ).toBe(false);
+        } finally {
+            jest.useRealTimers();
+        }
+    });
+
+    it('flags a drop that starts before the now line', () => {
+        expect(
+            dropWarnings(column({ now: 620 }), { minute: 600, duration: 30 })
+                .past
+        ).toBe(true);
+        expect(
+            dropWarnings(column({ now: 620 }), { minute: 620, duration: 30 })
+                .past
+        ).toBe(false);
+    });
+});
+
+describe('DayCalendar drop preview warnings', () => {
+    beforeEach(() => {
+        jest.useFakeTimers().setSystemTime(new Date(2026, 10, 12, 9, 0));
+    });
+    afterEach(() => {
+        jest.useRealTimers();
+    });
+
+    it('tints the preview and labels an overlap', () => {
+        renderCalendar({
+            lines: [lineOf('a', { start: 600, duration: 60 })],
+            drop: { date: DAY, minute: 630, duration: 30, title: 'New' },
+        });
+        const preview = screen.getByTestId('drop-preview');
+        expect(preview).toHaveAttribute('data-warned', 'true');
+        expect(preview).toHaveTextContent('Overlaps');
+    });
+
+    it('leaves a preview on free time plain', () => {
+        renderCalendar({
+            lines: [lineOf('a', { start: 600, duration: 30 })],
+            drop: { date: DAY, minute: 720, duration: 30, title: 'New' },
+        });
+        const preview = screen.getByTestId('drop-preview');
+        expect(preview).not.toHaveAttribute('data-warned');
+        expect(preview).not.toHaveTextContent('Overlaps');
+        expect(preview).not.toHaveTextContent('In the past');
+    });
+
+    it('labels a drop before the now line as in the past', () => {
+        renderCalendar({
+            now: 700,
+            drop: { date: DAY, minute: 600, duration: 30, title: 'New' },
+        });
+        expect(screen.getByTestId('drop-preview')).toHaveTextContent(
+            'In the past'
+        );
+    });
+});
+
+describe('DayCalendar opening a block', () => {
+    it('reports the column day with the line', () => {
+        const h = renderCalendar({
+            lines: [lineOf('a', { start: 540, duration: 30 })],
+        });
+        fireEvent.click(screen.getByTestId('block-a'));
+        expect(h.onOpen).toHaveBeenCalledWith(
+            expect.objectContaining({ uid: 'a' }),
+            DAY
+        );
     });
 });

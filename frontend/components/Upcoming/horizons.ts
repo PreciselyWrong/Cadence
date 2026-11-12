@@ -100,3 +100,44 @@ export const horizonPatch = (
     if (from === 'someday') patch.later = false;
     return patch;
 };
+
+// The days of the week holding `today`, first day first.
+export const weekDates = (today: string, firstDayOfWeek: number): string[] => {
+    const start = parseISO(weekStartOf(today, firstDayOfWeek));
+    return Array.from({ length: 7 }, (_, i) =>
+        format(addDays(start, i), 'yyyy-MM-dd')
+    );
+};
+
+/**
+ * Open tasks planned on a day of this week, for the collapsed "Planned on a
+ * day" list of This week: each task once, by day then plan order, without
+ * the ones already in the week bucket.
+ */
+export const plannedThisWeek = (
+    days: Record<string, { plan: { items: PlannedItem[] } | null }>,
+    today: string,
+    firstDayOfWeek: number,
+    exclude: Task[] = []
+): { task: Task; date: string }[] => {
+    const seen = new Set(exclude.map((task) => task.uid));
+    const result: { task: Task; date: string }[] = [];
+    weekDates(today, firstDayOfWeek).forEach((date) => {
+        [...(days[date]?.plan?.items ?? [])]
+            .sort((a, b) => a.position - b.position)
+            .forEach((item) => {
+                const task = item.task;
+                if (!task?.uid || seen.has(task.uid)) return;
+                if (item.occurrence_done || isTaskDone(task.status)) return;
+                seen.add(task.uid);
+                result.push({ task, date });
+            });
+    });
+    return result;
+};
+
+interface PlannedItem {
+    task: Task;
+    position: number;
+    occurrence_done?: boolean;
+}

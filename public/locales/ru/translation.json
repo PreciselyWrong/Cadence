@@ -1530,7 +1530,11 @@
     "registration_closed_title": "Регистрация закрыта",
     "registration_closed_message": "Регистрация новых аккаунтов сейчас отключена. Для получения доступа обратитесь к администратору.",
     "confirm_password": "Подтвердите пароль",
-    "already_have_account": "Уже есть аккаунт?"
+    "already_have_account": "Уже есть аккаунт?",
+    "rateLimitedRetrying": "Слишком много запросов, повтор…",
+    "rateLimitedGaveUp": "Слишком много запросов. Сессия всё ещё активна; обновите страницу немного позже.",
+    "serverBusyRetrying": "Сервер занят, повтор…",
+    "serverBusyRetry": "Повторить"
   },
   "dropdown": {
     "createNew": "Создать новый",
@@ -4985,7 +4989,8 @@
     "loadError": "Не удалось загрузить задачу.",
     "expand": "Развернуть",
     "shrink": "Свернуть",
-    "goTo": "Перейти"
+    "goTo": "Перейти",
+    "planned": "Запланировано {{when}}"
   },
   "review": {
     "quick": {
@@ -6109,7 +6114,9 @@
     "widen": "Расширить",
     "yesterday": "Вчера",
     "hideCompleted": "Скрыть выполненные",
-    "showCompletedTasks": "Показать выполненные"
+    "showCompletedTasks": "Показать выполненные",
+    "dropOverlaps": "Пересечения",
+    "dropPast": "В прошлом"
   },
   "upcoming": {
     "title": "План",
@@ -6118,8 +6125,6 @@
     "horizonsSoon": "Скоро",
     "addTask": "Добавить задачу",
     "empty": "Ничего не запланировано.",
-    "previous": "Предыдущий день",
-    "next": "Следующий день",
     "today": "Сегодня",
     "showCalendar": "Показать календарь",
     "hideCalendar": "Скрыть календарь",
@@ -6172,6 +6177,50 @@
     "someday": "Когда-нибудь",
     "showDayInCalendar": "Показывать в календаре",
     "hideCompleted": "Скрыть выполненные",
-    "showCompletedTasks": "Показать выполненные"
+    "showCompletedTasks": "Показать выполненные",
+    "resizeCalendar": "Ширина календаря",
+    "thisWeekHint": "Запланировано на эту неделю, без конкретного дня",
+    "thisMonthHint": "Когда-нибудь в этом месяце, без конкретного дня",
+    "nextMonthHint": "Запланировано на следующий месяц",
+    "somedayHint": "Может быть позже, отложено",
+    "calendarOn": "календарь, {{day}}",
+    "overdue": "Просрочено",
+    "a11yPicked": "«{{name}}» взято",
+    "a11yOver": "«{{name}}» перенесено на {{day}}",
+    "a11yOverNothing": "«{{name}}» больше не над днём",
+    "a11yDropped": "«{{name}}» перемещено на {{day}}",
+    "a11yReturned": "«{{name}}» возвращено на место",
+    "a11yCancelled": "Перенос «{{name}}» отменён",
+    "closeCalendar": "Закрыть календарь",
+    "overdueTaken": "Просроченные задачи, запланированные на сегодня",
+    "a11yInstructions": "Чтобы переместить задачу, нажмите M, переместите её стрелками и нажмите Enter или Пробел, чтобы опустить, либо Escape, чтобы отменить. Для выбранной задачи: стрелки или H, J, K, L переходят между задачами и днями; Shift с Влево или Вправо сдвигает задачу на день; T планирует её на сегодня, Shift+T на завтра; Enter открывает её.",
+    "dateNav": "Даты",
+    "previousWeek": "Предыдущая неделя",
+    "nextWeek": "Следующая неделя",
+    "overdueCount": "Просрочено ({{count}})",
+    "rescheduleAll": "Перенести все на сегодня",
+    "hideInbox": "Свернуть входящие",
+    "plannedOnDay": "Запланировано на день ({{count}})",
+    "goToDate": "Перейти к дате",
+    "expandInbox": "Показать входящие ({{count}})",
+    "filter": "Фильтр",
+    "filterProjects": "Проекты",
+    "filterTags": "Теги",
+    "filterPriority": "Приоритет",
+    "filterHigh": "Высокий",
+    "filterMedium": "Средний",
+    "filterLow": "Низкий",
+    "clearFilters": "Сбросить фильтры",
+    "tomorrow": "Завтра",
+    "week": "Неделя {{number}}",
+    "load": "{{planned}} / {{available}}",
+    "done": "Готово ({{n}})",
+    "subtaskOf": "↳ {{parent}}",
+    "addToInbox": "Добавить во входящие",
+    "inboxNewItem": "Новый элемент во входящих",
+    "addToInboxFailed": "Не удалось добавить. Попробуйте ещё раз.",
+    "addEmptyName": "Введите название задачи",
+    "addTaskIn": "Добавить задачу в «{{name}}»",
+    "thisWeekOnlyPlanned": "Нет задач без фиксированного дня · {{count}} запланированы на день"
   }
 }

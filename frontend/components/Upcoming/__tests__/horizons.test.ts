@@ -3,6 +3,8 @@ import {
     horizonOf,
     horizonPatch,
     monthStartOf,
+    plannedThisWeek,
+    weekDates,
     weekStartOf,
 } from '../horizons';
 import type { Task } from '../../../entities/Task';
@@ -123,5 +125,58 @@ describe('horizonPatch', () => {
 
     it('writes nothing for a drop on its own horizon', () => {
         expect(horizonPatch('week', 'week')).toBeNull();
+    });
+});
+
+describe('plannedThisWeek', () => {
+    const item = (t: Task, position: number, done = false) => ({
+        task_uid: t.uid,
+        task: t,
+        position,
+        occurrence_done: done,
+    });
+    const plan = (...items: ReturnType<typeof item>[]) => ({
+        plan: { items },
+    });
+
+    it('lists open tasks planned on the days of this week, once each', () => {
+        const a = task('a');
+        const b = task('b');
+        const days = {
+            '2026-11-09': plan(item(b, 1), item(a, 0)),
+            '2026-11-13': plan(item(a, 0)),
+            // Next week: not this week.
+            '2026-11-16': plan(item(task('c'), 0)),
+        };
+        expect(
+            plannedThisWeek(days, TODAY, 1).map(({ task: t, date }) => [
+                t.uid,
+                date,
+            ])
+        ).toEqual([
+            ['a', '2026-11-09'],
+            ['b', '2026-11-09'],
+        ]);
+    });
+
+    it('skips done tasks and those already committed to the week', () => {
+        const days = {
+            '2026-11-12': plan(
+                item(task('done', { status: 2 }), 0),
+                item(task('occ'), 1, true),
+                item(task('week'), 2),
+                item(task('open'), 3)
+            ),
+        };
+        expect(
+            plannedThisWeek(days, TODAY, 1, [task('week')]).map(
+                ({ task: t }) => t.uid
+            )
+        ).toEqual(['open']);
+    });
+
+    it('lists the seven days of the week from the first day', () => {
+        expect(weekDates(TODAY, 1)[0]).toBe('2026-11-09');
+        expect(weekDates(TODAY, 0)[6]).toBe('2026-11-14');
     });
 });

@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    act,
     fireEvent,
     render,
     screen,
@@ -10,7 +11,14 @@ import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import UpcomingBoard from '../UpcomingBoard';
 import { useStore } from '../../../store/useStore';
-import { applyPlanOps, fetchDay } from '../../../utils/dayService';
+import {
+    PlanChangedError,
+    applyPlanOps,
+    fetchDay,
+    restorePlan,
+} from '../../../utils/dayService';
+import { applyOpsLocally } from '../../Today/dayModel';
+import type { DailyPlanItem } from '../../../utils/dailyPlanService';
 import {
     createTask,
     fetchTasks,
@@ -21,6 +29,7 @@ import { Task } from '../../../entities/Task';
 
 const TODAY = new Date().toISOString().slice(0, 10);
 
+let mockOpenTaskUid: string | null = null;
 const mockOpenTask = jest.fn();
 const mockCloseTask = jest.fn();
 
@@ -41,8 +50,9 @@ jest.mock('../../../utils/dateUtils', () => ({
 }));
 
 jest.mock('../../../contexts/TaskPaneContext', () => ({
+    TASK_UPDATED_EVENT: 'tududi:task-updated',
     useTaskPane: () => ({
-        openTaskUid: null,
+        openTaskUid: mockOpenTaskUid,
         openTask: mockOpenTask,
         closeTask: mockCloseTask,
     }),
@@ -130,6 +140,102 @@ const mockApply = applyPlanOps as jest.MockedFunction<typeof applyPlanOps>;
 const mockCreate = createTask as jest.MockedFunction<typeof createTask>;
 const mockFetchTasks = fetchTasks as jest.MockedFunction<typeof fetchTasks>;
 const mockUpdate = updateTask as jest.MockedFunction<typeof updateTask>;
+const mockRestore = restorePlan as jest.MockedFunction<typeof restorePlan>;
+
+type Line = { task: Task; start: number | null; duration: number };
+
+/**
+ * A server holding each day's plan, as backend/modules/daily-plan does: the
+ * etag changes on every write to a day (a move writes its target day too)
+ * and a write with a stale If-Match is refused.
+ */
+const fakeServer = (
+    plans: Record<string, Line[]>,
+    due: Record<string, Task[]> = {}
+) => {
+    const items: Record<string, DailyPlanItem[]> = {};
+    const versions: Record<string, number> = {};
+    const tasks = new Map<string, Task>();
+    Object.entries(plans).forEach(([date, lines]) => {
+        items[date] = lines.map((line, position) => ({
+            task_uid: line.task.uid as string,
+            task: line.task,
+            position,
+            start_minute: line.start,
+            duration_minutes: line.duration,
+        }));
+        lines.forEach((line) => tasks.set(line.task.uid as string, line.task));
+    });
+    Object.values(due)
+        .flat()
+        .forEach((t) => tasks.set(t.uid as string, t));
+    const etagOf = (date: string) => `${date}@${versions[date] ?? 0}`;
+    const bump = (date: string) => {
+        versions[date] = (versions[date] ?? 0) + 1;
+    };
+    const planned = (uid?: string) =>
+        Object.values(items).some((list) =>
+            list.some((item) => item.task_uid === uid)
+        );
+    mockFetchDay.mockImplementation(async (date?: string) => {
+        const on = date as string;
+        const day = dayWith(
+            on,
+            [],
+            (due[on] ?? []).filter((t) => !planned(t.uid))
+        );
+        return {
+            ...day,
+            plan: {
+                ...(day.plan as NonNullable<DayResponse['plan']>),
+                items: [...(items[on] ?? [])],
+            },
+            etag: etagOf(on),
+        };
+    });
+    mockApply.mockImplementation(async (date, ops, etag) => {
+        if (etag !== undefined && etag !== etagOf(date)) {
+            throw new PlanChangedError();
+        }
+        for (const op of ops) {
+            const before = items[date] ?? [];
+            items[date] = applyOpsLocally(before, [op], tasks);
+            if (op.op === 'move') {
+                const line = before.find(
+                    (item) => item.task_uid === op.task_uid
+                );
+                const target = items[op.to_date] ?? [];
+                if (
+                    line &&
+                    !target.some((item) => item.task_uid === op.task_uid)
+                ) {
+                    items[op.to_date] = [
+                        ...target,
+                        {
+                            ...line,
+                            position: target.length,
+                            start_minute: null,
+                        },
+                    ];
+                }
+                bump(op.to_date);
+            }
+        }
+        bump(date);
+        return { plan: null, etag: etagOf(date) };
+    });
+    const uids = (date: string) =>
+        (items[date] ?? []).map((item) => item.task_uid);
+    return { items, tasks, uids };
+};
+
+// Lets the pending loads and writes answer.
+const settle = () =>
+    act(() => new Promise((resolve) => setTimeout(resolve, 20)));
+
+const CARD = '[data-testid="upcoming-card"]';
+const cardIn = (date: string, name: string) =>
+    within(column(date)).getByText(name).closest(CARD) as HTMLElement;
 
 const isoWeekStart = (date: string): string => {
     const at = new Date(`${date}T00:00:00`);
@@ -145,9 +251,24 @@ const renderBoard = () =>
         </MemoryRouter>
     );
 
+const shift = (n: number) => {
+    const at = new Date(`${TODAY}T00:00:00Z`);
+    at.setUTCDate(at.getUTCDate() + n);
+    return at.toISOString().slice(0, 10);
+};
+const TOMORROW = shift(1);
+
+const column = (date: string) =>
+    screen
+        .getAllByTestId('upcoming-column')
+        .find((el) => el.getAttribute('data-date') === date) as HTMLElement;
+
 beforeEach(() => {
     jest.clearAllMocks();
+    mockOpenTaskUid = null;
     localStorage.clear();
+    // A desktop window: the calendar sits beside the board.
+    window.innerWidth = 1440;
     mockFetchDay.mockImplementation(async (date?: string) => {
         if (date === TODAY) {
             return dayWith(
@@ -175,11 +296,12 @@ beforeEach(() => {
 });
 
 describe('UpcomingBoard', () => {
-    it('shows one column per day, with the day cards from fetchDay', async () => {
+    it('shows two weeks of day columns, with the day cards from fetchDay', async () => {
         renderBoard();
         const columns = await screen.findAllByTestId('upcoming-column');
-        expect(columns).toHaveLength(3);
+        expect(columns).toHaveLength(14);
         expect(columns[0]).toHaveAttribute('data-date', TODAY);
+        expect(columns[13]).toHaveAttribute('data-date', shift(13));
 
         const today = within(columns[0]);
         expect(await today.findByText('Write report')).toBeInTheDocument();
@@ -195,7 +317,7 @@ describe('UpcomingBoard', () => {
         const calls = mockFetchDay.mock.calls.length;
         await new Promise((resolve) => setTimeout(resolve, 300));
         expect(mockFetchDay.mock.calls.length).toBe(calls);
-        expect(calls).toBeLessThanOrEqual(4);
+        expect(calls).toBe(14);
     });
 
     it('titles the page Plan, with Days selected', async () => {
@@ -267,31 +389,266 @@ describe('UpcomingBoard', () => {
         expect(screen.getByTestId('upcoming-calendar')).toBeInTheDocument();
     });
 
-    it('fetches every day of a 3-day calendar, which moves on its own', async () => {
+    it('moves by weeks from one nav bar; the calendar follows the selected day', async () => {
         localStorage.setItem(
             'upcoming.viewOptions',
             JSON.stringify({ calendarSpan: 3 })
         );
         renderBoard();
         await screen.findAllByTestId('upcoming-column');
-        const calendar = screen.getByTestId('upcoming-calendar');
-        const next = within(calendar).getByRole('button', { name: 'Next day' });
-        fireEvent.click(next);
-        const shift = (n: number) => {
-            const at = new Date(`${TODAY}T00:00:00Z`);
-            at.setUTCDate(at.getUTCDate() + n);
-            return at.toISOString().slice(0, 10);
-        };
+        // One navigation only: the calendar has no arrows of its own.
+        expect(
+            within(screen.getByTestId('upcoming-calendar')).queryByRole(
+                'button',
+                { name: /previous|next/i }
+            )
+        ).not.toBeInTheDocument();
+        expect(
+            screen.queryByRole('button', { name: 'Next day' })
+        ).not.toBeInTheDocument();
+
+        fireEvent.click(screen.getByRole('button', { name: 'Next week' }));
+        await waitFor(() =>
+            expect(screen.getAllByTestId('upcoming-column')[0]).toHaveAttribute(
+                'data-date',
+                shift(7)
+            )
+        );
+        // Only the week that came into view is fetched.
         await waitFor(() => {
             const asked = mockFetchDay.mock.calls.map(([date]) => date);
-            expect(asked).toEqual(
-                expect.arrayContaining([shift(3), shift(4), shift(5)])
-            );
+            expect(asked).toEqual(expect.arrayContaining([shift(20)]));
+            expect(asked.filter((date) => date === shift(8))).toHaveLength(1);
         });
-        // The board did not move.
-        expect(screen.getAllByTestId('upcoming-column')[0]).toHaveAttribute(
-            'data-date',
-            TODAY
+
+        // A click on a column moves the calendar there.
+        fireEvent.click(column(shift(12)));
+        expect(
+            within(screen.getByTestId('upcoming-calendar')).getByText(/–/)
+                .textContent
+        ).toContain(String(Number(shift(12).slice(8))));
+
+        fireEvent.click(screen.getByRole('button', { name: 'Today' }));
+        await waitFor(() =>
+            expect(screen.getAllByTestId('upcoming-column')[0]).toHaveAttribute(
+                'data-date',
+                TODAY
+            )
+        );
+    });
+
+    it('clamps a stale calendar width and reports it on the splitter', async () => {
+        localStorage.setItem('upcoming.calendarWidth', '1077');
+        renderBoard();
+        const splitter = await screen.findByRole('separator');
+        expect(splitter).toHaveAttribute('aria-valuenow', '600');
+        expect(splitter).toHaveAttribute('aria-valuemin', '280');
+        expect(screen.getByTestId('upcoming-calendar')).toHaveStyle({
+            width: '600px',
+        });
+    });
+
+    it('shows the calendar as a drawer on a narrow window', async () => {
+        window.innerWidth = 1024;
+        renderBoard();
+        await screen.findAllByTestId('upcoming-column');
+        expect(
+            screen.queryByTestId('upcoming-calendar')
+        ).not.toBeInTheDocument();
+        fireEvent.click(screen.getByRole('button', { name: 'Show calendar' }));
+        expect(screen.getByTestId('upcoming-calendar')).toHaveAttribute(
+            'data-drawer',
+            'true'
+        );
+        expect(screen.queryByRole('separator')).not.toBeInTheDocument();
+        fireEvent.click(
+            screen.getByRole('button', { name: 'Close the calendar' })
+        );
+        expect(
+            screen.queryByTestId('upcoming-calendar')
+        ).not.toBeInTheDocument();
+    });
+
+    it('lists overdue tasks above the board and plans them all today', async () => {
+        const late = task('late', 'Renew passport', {
+            due_date: shift(-3),
+        } as Partial<Task>);
+        const base = mockFetchDay.getMockImplementation() as typeof fetchDay;
+        mockFetchDay.mockImplementation(async (date?: string) => {
+            const day = await base(date);
+            return date === TODAY ? { ...day, overdue: [late] } : day;
+        });
+        renderBoard();
+        const strip = await screen.findByTestId('upcoming-overdue');
+        expect(within(strip).getByText('Overdue (1)')).toBeInTheDocument();
+        expect(within(strip).getByText('Renew passport')).toBeInTheDocument();
+
+        fireEvent.click(
+            within(strip).getByRole('button', {
+                name: 'Reschedule all to today',
+            })
+        );
+        // At once: the strip empties, the task is on today.
+        expect(
+            screen.queryByTestId('upcoming-overdue')
+        ).not.toBeInTheDocument();
+        expect(
+            within(column(TODAY)).getByText('Renew passport')
+        ).toBeInTheDocument();
+        await waitFor(() =>
+            expect(mockApply).toHaveBeenCalledWith(
+                TODAY,
+                [{ op: 'add', task_uid: 'late' }],
+                'etag-1'
+            )
+        );
+        expect(mockUpdate).not.toHaveBeenCalled();
+    });
+
+    // The review saw a moved card vanish from both columns until a reload.
+    // Seen in the browser: a slotted card lost its time on its new day.
+    it('shows a slotted card moved to tomorrow there at once, at its time, and refreshes both days', async () => {
+        renderBoard();
+        const card = await within(column(TODAY)).findByText('Write report');
+        await settle();
+        const before = mockFetchDay.mock.calls.length;
+        let release: () => void = () => undefined;
+        mockApply.mockImplementationOnce(
+            () =>
+                new Promise((resolve) => {
+                    release = () => resolve({ plan: null, etag: 'etag-2' });
+                })
+        );
+        fireEvent.keyDown(card.closest(CARD) as HTMLElement, {
+            key: 'T',
+            shiftKey: true,
+        });
+        // Before the server answers.
+        const moved = within(column(TOMORROW));
+        expect(moved.getByText('Write report')).toBeInTheDocument();
+        expect(moved.getByText('10:00')).toBeInTheDocument();
+        expect(
+            within(column(TODAY)).queryByText('Write report')
+        ).not.toBeInTheDocument();
+        await waitFor(() => expect(mockApply).toHaveBeenCalled());
+        expect(mockApply).toHaveBeenCalledWith(
+            TOMORROW,
+            [
+                {
+                    op: 'slot',
+                    task_uid: 't1',
+                    start_minute: 600,
+                    duration_minutes: 45,
+                },
+            ],
+            'etag-1'
+        );
+        await act(async () => release());
+        await waitFor(() =>
+            expect(mockApply).toHaveBeenCalledWith(
+                TODAY,
+                [{ op: 'remove', task_uid: 't1' }],
+                'etag-1'
+            )
+        );
+        await waitFor(() => {
+            const asked = mockFetchDay.mock.calls
+                .slice(before)
+                .map(([date]) => date);
+            expect(asked).toEqual(expect.arrayContaining([TODAY, TOMORROW]));
+            expect(asked.length).toBeLessThanOrEqual(2);
+        });
+    });
+
+    it('puts the card back and says so when the move fails', async () => {
+        renderBoard();
+        const card = await within(column(TODAY)).findByText('Write report');
+        mockApply.mockRejectedValueOnce(new Error('boom'));
+        fireEvent.keyDown(
+            card.closest('[data-testid="upcoming-card"]') as HTMLElement,
+            { key: 'T', shiftKey: true }
+        );
+        await waitFor(() => expect(mockShowErrorToast).toHaveBeenCalled());
+        expect(
+            within(column(TODAY)).getByText('Write report')
+        ).toBeInTheDocument();
+        expect(
+            within(column(TOMORROW)).queryByText('Write report')
+        ).not.toBeInTheDocument();
+    });
+
+    it('moves the keyboard focus between days and cards', async () => {
+        renderBoard();
+        const report = (
+            await within(column(TODAY)).findByText('Write report')
+        ).closest('[data-testid="upcoming-card"]') as HTMLElement;
+        report.focus();
+        fireEvent.keyDown(report, { key: 'j' });
+        expect(document.activeElement).toHaveTextContent('Pay bill');
+        fireEvent.keyDown(document.activeElement as HTMLElement, {
+            key: 'ArrowRight',
+        });
+        // Tomorrow has no card: its first button takes the focus.
+        expect(column(TOMORROW)).toContainElement(
+            document.activeElement as HTMLElement
+        );
+        expect(mockApply).not.toHaveBeenCalled();
+    });
+
+    it('collapses an empty inbox into a bar', async () => {
+        useStore.getState().inboxStore.setInboxItems([]);
+        renderBoard();
+        await screen.findAllByTestId('upcoming-column');
+        expect(screen.getByTestId('inbox-column')).toHaveAttribute(
+            'data-collapsed',
+            'true'
+        );
+    });
+
+    it('refreshes only the days showing a task saved in the side pane', async () => {
+        renderBoard();
+        await within(column(TODAY)).findByText('Write report');
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        const before = mockFetchDay.mock.calls.length;
+        window.dispatchEvent(
+            new CustomEvent('tududi:task-updated', {
+                detail: { uid: 't1', name: 'Write report' },
+            })
+        );
+        await waitFor(() =>
+            expect(mockFetchDay.mock.calls.length).toBeGreaterThan(before)
+        );
+        expect(
+            mockFetchDay.mock.calls.slice(before).map(([date]) => date)
+        ).toEqual([TODAY]);
+    });
+
+    it('adds a task to a horizon: created, then committed to it', async () => {
+        mockFetchTasks.mockResolvedValue({ tasks: [], metrics: {} as never });
+        mockCreate.mockResolvedValue(task('h1', 'Book flights'));
+        mockUpdate.mockResolvedValue(task('h1', 'Book flights'));
+        localStorage.setItem(
+            'upcoming.viewOptions',
+            JSON.stringify({ mode: 'horizons' })
+        );
+        renderBoard();
+        const columns = await screen.findAllByTestId('horizon-column');
+        expect(
+            within(columns[3]).getByText('Maybe later, out of the way')
+        ).toBeInTheDocument();
+        fireEvent.click(
+            within(columns[2]).getByRole('button', {
+                name: 'Add a task to Next month',
+            })
+        );
+        const input = within(columns[2]).getByLabelText('Add a task');
+        fireEvent.change(input, { target: { value: 'Book flights' } });
+        fireEvent.submit(input.closest('form') as HTMLFormElement);
+        await waitFor(() =>
+            expect(mockUpdate).toHaveBeenCalledWith('h1', {
+                month_of: 'next_month',
+                week_of: null,
+            })
         );
     });
 
@@ -319,7 +676,11 @@ describe('UpcomingBoard', () => {
                 card.textContent?.includes('Write report')
             ) as HTMLElement
         );
-        expect(mockOpenTask).toHaveBeenCalledWith('t1');
+        // The sheet shows the day and slot the card is planned on.
+        expect(mockOpenTask).toHaveBeenCalledWith('t1', {
+            date: TODAY,
+            startMinute: 600,
+        });
     });
 
     it('adds a task to its day: createTask, then an add op on that day', async () => {
@@ -345,5 +706,264 @@ describe('UpcomingBoard', () => {
         expect(mockCreate).toHaveBeenCalledWith(
             expect.objectContaining({ name: 'Buy milk' })
         );
+    });
+
+    it('sends a second move of the same card after the first, with the fresh etag', async () => {
+        const D1 = shift(1);
+        const D2 = shift(2);
+        const server = fakeServer({
+            [TODAY]: [
+                { task: task('m1', 'Water plants'), start: null, duration: 30 },
+            ],
+        });
+        renderBoard();
+        await within(column(TODAY)).findByText('Water plants');
+        await settle();
+        fireEvent.keyDown(cardIn(TODAY, 'Water plants'), {
+            key: 'ArrowRight',
+            shiftKey: true,
+        });
+        // At once, before the first write is answered.
+        fireEvent.keyDown(cardIn(D1, 'Water plants'), {
+            key: 'ArrowRight',
+            shiftKey: true,
+        });
+        await waitFor(() => expect(mockApply).toHaveBeenCalledTimes(2));
+        await settle();
+        expect(mockShowErrorToast).not.toHaveBeenCalled();
+        expect(
+            mockApply.mock.calls.map(([date, , etag]) => [date, etag])
+        ).toEqual([
+            [TODAY, `${TODAY}@0`],
+            [D1, `${D1}@1`],
+        ]);
+        expect(server.uids(D2)).toEqual(['m1']);
+        expect(server.uids(D1)).toEqual([]);
+        expect(
+            within(column(D2)).getByText('Water plants')
+        ).toBeInTheDocument();
+    });
+
+    it('sends two adds on today one after the other', async () => {
+        const server = fakeServer({ [TODAY]: [] });
+        mockCreate.mockImplementation(async (input: Task) => {
+            const created = task(`new-${input.name}`, input.name as string);
+            server.tasks.set(created.uid as string, created);
+            return created;
+        });
+        renderBoard();
+        await settle();
+        fireEvent.click(
+            within(column(TODAY)).getByRole('button', { name: 'Add a task' })
+        );
+        const input = within(column(TODAY)).getByLabelText('Add a task');
+        fireEvent.change(input, { target: { value: 'Buy milk' } });
+        fireEvent.submit(input.closest('form') as HTMLFormElement);
+        fireEvent.change(input, { target: { value: 'Buy bread' } });
+        fireEvent.submit(input.closest('form') as HTMLFormElement);
+        await waitFor(() => expect(mockApply).toHaveBeenCalledTimes(2));
+        await settle();
+        expect(mockShowErrorToast).not.toHaveBeenCalled();
+        expect(mockApply.mock.calls.map(([, , etag]) => etag)).toEqual([
+            `${TODAY}@0`,
+            `${TODAY}@1`,
+        ]);
+        expect(server.uids(TODAY)).toEqual(['new-Buy milk', 'new-Buy bread']);
+    });
+
+    it('undoes a move without taking back a later one', async () => {
+        const server = fakeServer({
+            [TODAY]: [
+                { task: task('t1', 'Write report'), start: 600, duration: 45 },
+                { task: task('t3', 'Call mom'), start: null, duration: 30 },
+            ],
+        });
+        renderBoard();
+        await within(column(TODAY)).findByText('Call mom');
+        await settle();
+        // A: Call mom to tomorrow. B: Write report to tomorrow.
+        fireEvent.keyDown(cardIn(TODAY, 'Call mom'), {
+            key: 'T',
+            shiftKey: true,
+        });
+        await settle();
+        fireEvent.keyDown(cardIn(TODAY, 'Write report'), {
+            key: 'T',
+            shiftKey: true,
+        });
+        await settle();
+        expect(server.uids(TOMORROW)).toEqual(['t3', 't1']);
+        const undoA = mockShowUndoToast.mock.calls[0][1] as () => void;
+        act(() => undoA());
+        await settle();
+        expect(mockShowErrorToast).not.toHaveBeenCalled();
+        expect(mockRestore).not.toHaveBeenCalled();
+        expect(server.uids(TODAY)).toEqual(['t3']);
+        expect(server.uids(TOMORROW)).toEqual(['t1']);
+        expect(server.items[TOMORROW][0].start_minute).toBe(600);
+        expect(within(column(TODAY)).getByText('Call mom')).toBeInTheDocument();
+        expect(
+            within(column(TOMORROW)).getByText('Write report')
+        ).toBeInTheDocument();
+    });
+
+    it('moves a horizon card already planned on a day instead of planning it twice', async () => {
+        mockFetchTasks.mockResolvedValue({
+            tasks: [
+                task('w1', 'Plan the offsite', {
+                    week_of: isoWeekStart(TODAY),
+                }),
+            ],
+            metrics: {} as never,
+        });
+        const server = fakeServer({
+            [TODAY]: [
+                {
+                    task: task('w1', 'Plan the offsite', {
+                        week_of: isoWeekStart(TODAY),
+                    }),
+                    start: null,
+                    duration: 30,
+                },
+            ],
+        });
+        localStorage.setItem(
+            'upcoming.viewOptions',
+            JSON.stringify({ mode: 'horizons' })
+        );
+        renderBoard();
+        const week = (await screen.findAllByTestId('horizon-column'))[0];
+        const card = (
+            await within(week).findByText('Plan the offsite')
+        ).closest(CARD) as HTMLElement;
+        await settle();
+        fireEvent.keyDown(card, { key: 'T', shiftKey: true });
+        await settle();
+        expect(mockApply).toHaveBeenCalledWith(
+            TODAY,
+            [{ op: 'move', task_uid: 'w1', to_date: TOMORROW }],
+            `${TODAY}@0`
+        );
+        expect(mockApply).toHaveBeenCalledTimes(1);
+        expect(server.uids(TODAY)).toEqual([]);
+        expect(server.uids(TOMORROW)).toEqual(['w1']);
+    });
+
+    it.each(['Semicolon', 'KeyM'])(
+        'picks a card up with the M key whatever the layout (code %s)',
+        async (code) => {
+            renderBoard();
+            const card = (
+                await within(column(TODAY)).findByText('Write report')
+            ).closest(CARD) as HTMLElement;
+            card.focus();
+            fireEvent.keyDown(card, { key: 'm', code });
+            expect(
+                await screen.findByText('“Write report” picked up')
+            ).toBeInTheDocument();
+        }
+    );
+
+    it('reschedules only the overdue tasks the filters show', async () => {
+        localStorage.setItem(
+            'upcoming.viewOptions',
+            JSON.stringify({
+                filters: { projectIds: [], tagNames: [], priorities: ['high'] },
+            })
+        );
+        const urgent = task('late1', 'Renew passport', {
+            due_date: shift(-3),
+            priority: 'high',
+        } as Partial<Task>);
+        const minor = task('late2', 'Sort photos', {
+            due_date: shift(-2),
+            priority: 'low',
+        } as Partial<Task>);
+        const base = mockFetchDay.getMockImplementation() as typeof fetchDay;
+        mockFetchDay.mockImplementation(async (date?: string) => {
+            const day = await base(date);
+            return date === TODAY ? { ...day, overdue: [urgent, minor] } : day;
+        });
+        renderBoard();
+        const strip = await screen.findByTestId('upcoming-overdue');
+        expect(within(strip).getByText('Overdue (1)')).toBeInTheDocument();
+        fireEvent.click(
+            within(strip).getByRole('button', {
+                name: 'Reschedule all to today',
+            })
+        );
+        await waitFor(() =>
+            expect(mockApply).toHaveBeenCalledWith(
+                TODAY,
+                [{ op: 'add', task_uid: 'late1' }],
+                'etag-1'
+            )
+        );
+    });
+
+    it('keeps the typed line and says so when it names no task', async () => {
+        renderBoard();
+        await settle();
+        fireEvent.click(
+            within(column(TODAY)).getByRole('button', { name: 'Add a task' })
+        );
+        const input = within(column(TODAY)).getByLabelText('Add a task');
+        fireEvent.change(input, { target: { value: 'tomorrow' } });
+        fireEvent.submit(input.closest('form') as HTMLFormElement);
+        await waitFor(() =>
+            expect(mockShowErrorToast).toHaveBeenCalledWith(
+                'Add a name for the task'
+            )
+        );
+        expect(mockCreate).not.toHaveBeenCalled();
+        expect(input).toHaveValue('tomorrow');
+    });
+
+    it('tells the open sheet the day its task moved to', async () => {
+        mockOpenTaskUid = 't1';
+        fakeServer({
+            [TODAY]: [
+                { task: task('t1', 'Write report'), start: 600, duration: 45 },
+            ],
+        });
+        renderBoard();
+        await within(column(TODAY)).findByText('Write report');
+        await settle();
+        fireEvent.keyDown(cardIn(TODAY, 'Write report'), {
+            key: 'T',
+            shiftKey: true,
+        });
+        await settle();
+        expect(mockOpenTask).toHaveBeenLastCalledWith('t1', {
+            date: TOMORROW,
+            startMinute: 600,
+        });
+    });
+
+    it('opens This week on its planned tasks when nothing else is in it', async () => {
+        mockFetchTasks.mockResolvedValue({ tasks: [], metrics: {} as never });
+        fakeServer({
+            [TODAY]: [
+                { task: task('p1', 'Dentist'), start: null, duration: 30 },
+            ],
+        });
+        localStorage.setItem(
+            'upcoming.viewOptions',
+            JSON.stringify({ mode: 'horizons' })
+        );
+        renderBoard();
+        const week = (await screen.findAllByTestId('horizon-column'))[0];
+        expect(
+            await within(week).findByText(
+                'Nothing without a fixed day · 1 planned on a day'
+            )
+        ).toBeInTheDocument();
+        const toggle = within(week).getByRole('button', {
+            name: /Planned on a day/,
+        });
+        expect(toggle).toHaveAttribute('aria-expanded', 'true');
+        expect(within(week).getByText('Dentist')).toBeInTheDocument();
+        fireEvent.click(toggle);
+        expect(toggle).toHaveAttribute('aria-expanded', 'false');
     });
 });

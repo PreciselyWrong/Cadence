@@ -1524,7 +1524,11 @@
     "registration_closed_title": "Pendaftaran Ditutup",
     "registration_closed_message": "Pendaftaran akun baru saat ini dinonaktifkan. Hubungi administrator Anda untuk meminta akses.",
     "confirm_password": "Konfirmasi Kata Sandi",
-    "already_have_account": "Sudah punya akun?"
+    "already_have_account": "Sudah punya akun?",
+    "rateLimitedRetrying": "Terlalu banyak permintaan, mencoba lagi…",
+    "rateLimitedGaveUp": "Terlalu banyak permintaan. Sesi masih aktif; muat ulang sebentar lagi.",
+    "serverBusyRetrying": "Server sibuk, mencoba lagi…",
+    "serverBusyRetry": "Coba lagi"
   },
   "dropdown": {
     "createNew": "Buat Baru",
@@ -4943,7 +4947,8 @@
     "loadError": "Tugas ini tidak dapat dimuat.",
     "expand": "Perbesar",
     "shrink": "Perkecil",
-    "goTo": "Buka"
+    "goTo": "Buka",
+    "planned": "Dijadwalkan {{when}}"
   },
   "review": {
     "quick": {
@@ -6047,7 +6052,9 @@
     "widen": "Lebarkan",
     "yesterday": "Kemarin",
     "hideCompleted": "Sembunyikan yang selesai",
-    "showCompletedTasks": "Tampilkan yang selesai"
+    "showCompletedTasks": "Tampilkan yang selesai",
+    "dropOverlaps": "Tumpang tindih",
+    "dropPast": "Sudah lewat"
   },
   "upcoming": {
     "title": "Rencana",
@@ -6056,8 +6063,6 @@
     "horizonsSoon": "Segera",
     "addTask": "Tambah tugas",
     "empty": "Belum ada yang direncanakan.",
-    "previous": "Hari sebelumnya",
-    "next": "Hari berikutnya",
     "today": "Hari ini",
     "showCalendar": "Tampilkan kalender",
     "hideCalendar": "Sembunyikan kalender",
@@ -6110,6 +6115,50 @@
     "someday": "Suatu saat",
     "showDayInCalendar": "Tampilkan di kalender",
     "hideCompleted": "Sembunyikan yang selesai",
-    "showCompletedTasks": "Tampilkan yang selesai"
+    "showCompletedTasks": "Tampilkan yang selesai",
+    "resizeCalendar": "Lebar kalender",
+    "thisWeekHint": "Dijadwalkan untuk minggu ini, tanpa hari tetap",
+    "thisMonthHint": "Kapan saja bulan ini, tanpa hari tetap",
+    "nextMonthHint": "Sudah disiapkan untuk bulan depan",
+    "somedayHint": "Mungkin nanti, disisihkan dulu",
+    "calendarOn": "kalender, {{day}}",
+    "overdue": "Terlambat",
+    "a11yPicked": "“{{name}}” diambil",
+    "a11yOver": "“{{name}}” dipindah ke {{day}}",
+    "a11yOverNothing": "“{{name}}” tidak lagi di atas hari",
+    "a11yDropped": "“{{name}}” dilepas pada {{day}}",
+    "a11yReturned": "“{{name}}” dikembalikan",
+    "a11yCancelled": "Pemindahan “{{name}}” dibatalkan",
+    "closeCalendar": "Tutup kalender",
+    "overdueTaken": "Tugas terlambat yang dijadwalkan hari ini",
+    "a11yInstructions": "Untuk memindahkan tugas, tekan M, pindahkan dengan tombol panah, lalu tekan Enter atau Spasi untuk melepasnya, atau Escape untuk membatalkan. Pada tugas yang dipilih: panah atau H, J, K, L berpindah antar tugas dan hari; Shift dengan Kiri atau Kanan memindahkan tugas satu hari; T menjadwalkannya hari ini, Shift+T besok; Enter membukanya.",
+    "dateNav": "Tanggal",
+    "previousWeek": "Minggu sebelumnya",
+    "nextWeek": "Minggu berikutnya",
+    "overdueCount": "Terlambat ({{count}})",
+    "rescheduleAll": "Jadwalkan ulang semua ke hari ini",
+    "hideInbox": "Ciutkan kotak masuk",
+    "plannedOnDay": "Dijadwalkan pada hari ({{count}})",
+    "goToDate": "Buka tanggal",
+    "expandInbox": "Tampilkan kotak masuk ({{count}})",
+    "filter": "Filter",
+    "filterProjects": "Proyek",
+    "filterTags": "Tag",
+    "filterPriority": "Prioritas",
+    "filterHigh": "Tinggi",
+    "filterMedium": "Sedang",
+    "filterLow": "Rendah",
+    "clearFilters": "Hapus filter",
+    "tomorrow": "Besok",
+    "week": "Minggu {{number}}",
+    "load": "{{planned}} / {{available}}",
+    "done": "Selesai ({{n}})",
+    "subtaskOf": "↳ {{parent}}",
+    "addToInbox": "Tambahkan ke kotak masuk",
+    "inboxNewItem": "Item kotak masuk baru",
+    "addToInboxFailed": "Gagal menambahkan. Coba lagi.",
+    "addEmptyName": "Beri nama tugasnya",
+    "addTaskIn": "Tambahkan tugas ke {{name}}",
+    "thisWeekOnlyPlanned": "Tidak ada tanpa hari tetap · {{count}} direncanakan pada suatu hari"
   }
 }

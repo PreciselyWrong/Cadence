@@ -1524,7 +1524,11 @@
     "registration_closed_title": "Registratie gesloten",
     "registration_closed_message": "Registratie van nieuwe accounts is momenteel uitgeschakeld. Neem contact op met je beheerder voor toegang.",
     "confirm_password": "Wachtwoord bevestigen",
-    "already_have_account": "Al een account?"
+    "already_have_account": "Al een account?",
+    "rateLimitedRetrying": "Te veel verzoeken, opnieuw proberen…",
+    "rateLimitedGaveUp": "Te veel verzoeken. De sessie is nog actief; laad zo dadelijk opnieuw.",
+    "serverBusyRetrying": "Server bezet, opnieuw proberen…",
+    "serverBusyRetry": "Opnieuw proberen"
   },
   "dropdown": {
     "createNew": "Nieuw Aanmaken",
@@ -4943,7 +4947,8 @@
     "loadError": "Deze taak kon niet worden geladen.",
     "expand": "Vergroten",
     "shrink": "Verkleinen",
-    "goTo": "Ga naar"
+    "goTo": "Ga naar",
+    "planned": "Gepland {{when}}"
   },
   "review": {
     "quick": {
@@ -6049,7 +6054,9 @@
     "widen": "Verbreden",
     "yesterday": "Gisteren",
     "hideCompleted": "Voltooide verbergen",
-    "showCompletedTasks": "Voltooide tonen"
+    "showCompletedTasks": "Voltooide tonen",
+    "dropOverlaps": "Overlappingen",
+    "dropPast": "In het verleden"
   },
   "upcoming": {
     "title": "Plannen",
@@ -6058,8 +6065,6 @@
     "horizonsSoon": "Binnenkort",
     "addTask": "Taak toevoegen",
     "empty": "Niets gepland.",
-    "previous": "Vorige dag",
-    "next": "Volgende dag",
     "today": "Vandaag",
     "showCalendar": "Agenda tonen",
     "hideCalendar": "Agenda verbergen",
@@ -6112,6 +6117,50 @@
     "someday": "Op een dag",
     "showDayInCalendar": "Tonen in agenda",
     "hideCompleted": "Voltooide verbergen",
-    "showCompletedTasks": "Voltooide tonen"
+    "showCompletedTasks": "Voltooide tonen",
+    "resizeCalendar": "Breedte van de agenda",
+    "thisWeekHint": "Vastgelegd voor deze week, zonder vaste dag",
+    "thisMonthHint": "Ergens deze maand, zonder vaste dag",
+    "nextMonthHint": "Ingepland voor volgende maand",
+    "somedayHint": "Misschien later, even opzij",
+    "calendarOn": "de agenda, {{day}}",
+    "overdue": "Te laat",
+    "a11yPicked": "“{{name}}” opgepakt",
+    "a11yOver": "“{{name}}” verplaatst naar {{day}}",
+    "a11yOverNothing": "“{{name}}” staat niet meer op een dag",
+    "a11yDropped": "“{{name}}” neergezet op {{day}}",
+    "a11yReturned": "“{{name}}” teruggezet",
+    "a11yCancelled": "Verplaatsen van “{{name}}” geannuleerd",
+    "closeCalendar": "Agenda sluiten",
+    "overdueTaken": "Taken die te laat zijn, vandaag gepland",
+    "a11yInstructions": "Om een taak te verplaatsen: druk op M, verplaats met de pijltjestoetsen en druk op Enter of Spatie om hem neer te zetten, of op Escape om te annuleren. Op een geselecteerde taak: pijltjes of H, J, K, L schakelen tussen taken en dagen; Shift met Links of Rechts verplaatst de taak een dag; T plant hem voor vandaag, Shift+T voor morgen; Enter opent hem.",
+    "dateNav": "Datums",
+    "previousWeek": "Vorige week",
+    "nextWeek": "Volgende week",
+    "overdueCount": "Te laat ({{count}})",
+    "rescheduleAll": "Alles naar vandaag verplaatsen",
+    "hideInbox": "Inbox inklappen",
+    "plannedOnDay": "Gepland op een dag ({{count}})",
+    "goToDate": "Naar datum gaan",
+    "expandInbox": "Inbox tonen ({{count}})",
+    "filter": "Filter",
+    "filterProjects": "Projecten",
+    "filterTags": "Tags",
+    "filterPriority": "Prioriteit",
+    "filterHigh": "Hoog",
+    "filterMedium": "Gemiddeld",
+    "filterLow": "Laag",
+    "clearFilters": "Filters wissen",
+    "tomorrow": "Morgen",
+    "week": "Week {{number}}",
+    "load": "{{planned}} / {{available}}",
+    "done": "Klaar ({{n}})",
+    "subtaskOf": "↳ {{parent}}",
+    "addToInbox": "Toevoegen aan inbox",
+    "inboxNewItem": "Nieuw inboxitem",
+    "addToInboxFailed": "Toevoegen mislukt. Probeer het opnieuw.",
+    "addEmptyName": "Geef de taak een naam",
+    "addTaskIn": "Een taak toevoegen aan {{name}}",
+    "thisWeekOnlyPlanned": "Niets zonder vaste dag · {{count}} gepland op een dag"
   }
 }

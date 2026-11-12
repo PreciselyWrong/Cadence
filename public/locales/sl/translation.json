@@ -1530,7 +1530,11 @@
     "registration_closed_title": "Registracija zaprta",
     "registration_closed_message": "Registracija novih računov je trenutno onemogočena. Za dostop se obrnite na skrbnika.",
     "confirm_password": "Potrdi geslo",
-    "already_have_account": "Že imate račun?"
+    "already_have_account": "Že imate račun?",
+    "rateLimitedRetrying": "Preveč zahtevkov, ponovni poskus…",
+    "rateLimitedGaveUp": "Preveč zahtevkov. Seja je še vedno aktivna; čez trenutek osvežite stran.",
+    "serverBusyRetrying": "Strežnik je zaseden, ponovno poskušam…",
+    "serverBusyRetry": "Poskusi znova"
   },
   "dropdown": {
     "createNew": "Ustvari novo",
@@ -4985,7 +4989,8 @@
     "loadError": "Te naloge ni bilo mogoče naložiti.",
     "expand": "Povečaj",
     "shrink": "Pomanjšaj",
-    "goTo": "Pojdi na"
+    "goTo": "Pojdi na",
+    "planned": "Načrtovano {{when}}"
   },
   "review": {
     "quick": {
@@ -6109,7 +6114,9 @@
     "widen": "Razširi",
     "yesterday": "Včeraj",
     "hideCompleted": "Skrij opravljene",
-    "showCompletedTasks": "Prikaži opravljene"
+    "showCompletedTasks": "Prikaži opravljene",
+    "dropOverlaps": "Prekrivanja",
+    "dropPast": "V preteklosti"
   },
   "upcoming": {
     "title": "Načrtovanje",
@@ -6118,8 +6125,6 @@
     "horizonsSoon": "Kmalu",
     "addTask": "Dodaj nalogo",
     "empty": "Ničesar ni načrtovanega.",
-    "previous": "Prejšnji dan",
-    "next": "Naslednji dan",
     "today": "Danes",
     "showCalendar": "Pokaži koledar",
     "hideCalendar": "Skrij koledar",
@@ -6172,6 +6177,50 @@
     "someday": "Nekoč",
     "showDayInCalendar": "Prikaži v koledarju",
     "hideCompleted": "Skrij opravljene",
-    "showCompletedTasks": "Prikaži opravljene"
+    "showCompletedTasks": "Prikaži opravljene",
+    "resizeCalendar": "Širina koledarja",
+    "thisWeekHint": "Načrtovano za ta teden, brez določenega dne",
+    "thisMonthHint": "Nekoč v tem mesecu, brez določenega dne",
+    "nextMonthHint": "Načrtovano za naslednji mesec",
+    "somedayHint": "Morda kasneje, odloženo",
+    "calendarOn": "koledar, {{day}}",
+    "overdue": "Zamujeno",
+    "a11yPicked": "„{{name}}“ dvignjeno",
+    "a11yOver": "„{{name}}“ premaknjeno nad {{day}}",
+    "a11yOverNothing": "„{{name}}“ ni več nad dnevom",
+    "a11yDropped": "„{{name}}“ spuščeno na {{day}}",
+    "a11yReturned": "„{{name}}“ vrnjeno nazaj",
+    "a11yCancelled": "Premik „{{name}}“ preklican",
+    "closeCalendar": "Zapri koledar",
+    "overdueTaken": "Zamujene naloge, načrtovane za danes",
+    "a11yInstructions": "Za premik naloge pritisnite M, premaknite jo s puščicami in pritisnite Enter ali preslednico, da jo spustite, ali Escape za preklic. Pri izbrani nalogi: puščice ali H, J, K, L premikajo med nalogami in dnevi; Shift z levo ali desno puščico premakne nalogo za en dan; T jo načrtuje za danes, Shift+T za jutri; Enter jo odpre.",
+    "dateNav": "Datumi",
+    "previousWeek": "Prejšnji teden",
+    "nextWeek": "Naslednji teden",
+    "overdueCount": "Zamujeno ({{count}})",
+    "rescheduleAll": "Vse preloži na danes",
+    "hideInbox": "Strni prejeto pošto",
+    "plannedOnDay": "Načrtovano na dan ({{count}})",
+    "goToDate": "Pojdi na datum",
+    "expandInbox": "Pokaži prejeto pošto ({{count}})",
+    "filter": "Filter",
+    "filterProjects": "Projekti",
+    "filterTags": "Oznake",
+    "filterPriority": "Prioriteta",
+    "filterHigh": "Visoka",
+    "filterMedium": "Srednja",
+    "filterLow": "Nizka",
+    "clearFilters": "Počisti filtre",
+    "tomorrow": "Jutri",
+    "week": "Teden {{number}}",
+    "load": "{{planned}} / {{available}}",
+    "done": "Opravljeno ({{n}})",
+    "subtaskOf": "↳ {{parent}}",
+    "addToInbox": "Dodaj v prejete",
+    "inboxNewItem": "Nov element v prejemniku",
+    "addToInboxFailed": "Dodajanje ni uspelo. Poskusi znova.",
+    "addEmptyName": "Vnesi ime opravila",
+    "addTaskIn": "Dodaj opravilo v {{name}}",
+    "thisWeekOnlyPlanned": "Nič brez fiksnega dneva · {{count}} načrtovanih na dan"
   }
 }

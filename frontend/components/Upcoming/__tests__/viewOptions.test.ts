@@ -39,6 +39,35 @@ describe('sanitizeViewOptions', () => {
         expect(result).not.toHaveProperty('extra');
     });
 
+    it('keeps only string values in the filter lists', () => {
+        const result = sanitizeViewOptions({
+            filters: {
+                projectIds: ['1', 2, null, 'home', '1'],
+                tagNames: 'urgent',
+                priorities: ['high', { level: 'low' }],
+            },
+        });
+
+        expect(result.filters).toEqual({
+            projectIds: ['1', 'home'],
+            tagNames: [],
+            priorities: ['high'],
+        });
+    });
+
+    it('defaults the filters when they are missing or not an object', () => {
+        expect(sanitizeViewOptions({ mode: 'days' }).filters).toEqual({
+            projectIds: [],
+            tagNames: [],
+            priorities: [],
+        });
+        expect(sanitizeViewOptions({ filters: 'urgent' }).filters).toEqual({
+            projectIds: [],
+            tagNames: [],
+            priorities: [],
+        });
+    });
+
     it('accepts the numeric calendar spans', () => {
         expect(sanitizeViewOptions({ calendarSpan: 7 }).calendarSpan).toBe(7);
         expect(sanitizeViewOptions({ calendarSpan: '7' }).calendarSpan).toBe(1);

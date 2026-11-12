@@ -1524,7 +1524,11 @@
     "registration_closed_title": "注册已关闭",
     "registration_closed_message": "目前已禁用新账号注册，如需访问请联系管理员。",
     "confirm_password": "确认密码",
-    "already_have_account": "已有账号？"
+    "already_have_account": "已有账号？",
+    "rateLimitedRetrying": "请求过多，正在重试…",
+    "rateLimitedGaveUp": "请求过多。会话仍然有效；请稍后刷新。",
+    "serverBusyRetrying": "服务器繁忙，正在重试…",
+    "serverBusyRetry": "重试"
   },
   "dropdown": {
     "createNew": "创建新项",
@@ -4943,7 +4947,8 @@
     "loadError": "无法加载此任务。",
     "expand": "放大",
     "shrink": "缩小",
-    "goTo": "前往"
+    "goTo": "前往",
+    "planned": "计划于{{when}}"
   },
   "review": {
     "quick": {
@@ -6047,7 +6052,9 @@
     "widen": "加宽",
     "yesterday": "昨天",
     "hideCompleted": "隐藏已完成",
-    "showCompletedTasks": "显示已完成"
+    "showCompletedTasks": "显示已完成",
+    "dropOverlaps": "重叠",
+    "dropPast": "已过去"
   },
   "upcoming": {
     "title": "计划",
@@ -6056,8 +6063,6 @@
     "horizonsSoon": "即将推出",
     "addTask": "添加任务",
     "empty": "暂无计划。",
-    "previous": "前一天",
-    "next": "后一天",
     "today": "今天",
     "showCalendar": "显示日历",
     "hideCalendar": "隐藏日历",
@@ -6110,6 +6115,50 @@
     "someday": "将来某天",
     "showDayInCalendar": "在日历中显示",
     "hideCompleted": "隐藏已完成",
-    "showCompletedTasks": "显示已完成"
+    "showCompletedTasks": "显示已完成",
+    "resizeCalendar": "日历宽度",
+    "thisWeekHint": "本周已安排，无固定日期",
+    "thisMonthHint": "本月某天，无固定日期",
+    "nextMonthHint": "已安排在下个月",
+    "somedayHint": "以后再说，先放一边",
+    "calendarOn": "日历，{{day}}",
+    "overdue": "已逾期",
+    "a11yPicked": "已拾起“{{name}}”",
+    "a11yOver": "“{{name}}”已移到{{day}}上方",
+    "a11yOverNothing": "“{{name}}”已不在某一天上方",
+    "a11yDropped": "“{{name}}”已放到{{day}}",
+    "a11yReturned": "“{{name}}”已放回原位",
+    "a11yCancelled": "已取消移动“{{name}}”",
+    "closeCalendar": "关闭日历",
+    "overdueTaken": "今天已安排的逾期任务",
+    "a11yInstructions": "移动任务：按 M，用方向键移动，然后按 Enter 或空格放下，或按 Esc 取消。在选中的任务上：方向键或 H、J、K、L 在任务和日期之间移动；Shift 加左右键把任务移动一天；T 安排到今天，Shift+T 安排到明天；Enter 打开任务。",
+    "dateNav": "日期",
+    "previousWeek": "上一周",
+    "nextWeek": "下一周",
+    "overdueCount": "已逾期（{{count}}）",
+    "rescheduleAll": "全部改到今天",
+    "hideInbox": "收起收件箱",
+    "plannedOnDay": "已安排到某天（{{count}}）",
+    "goToDate": "转到日期",
+    "expandInbox": "显示收件箱（{{count}}）",
+    "filter": "筛选",
+    "filterProjects": "项目",
+    "filterTags": "标签",
+    "filterPriority": "优先级",
+    "filterHigh": "高",
+    "filterMedium": "中",
+    "filterLow": "低",
+    "clearFilters": "清除筛选",
+    "tomorrow": "明天",
+    "week": "第 {{number}} 周",
+    "load": "{{planned}} / {{available}}",
+    "done": "已完成（{{n}}）",
+    "subtaskOf": "↳ {{parent}}",
+    "addToInbox": "添加到收件箱",
+    "inboxNewItem": "新收件箱项目",
+    "addToInboxFailed": "添加失败，请重试。",
+    "addEmptyName": "请为任务命名",
+    "addTaskIn": "为“{{name}}”添加任务",
+    "thisWeekOnlyPlanned": "没有无固定日的任务 · {{count}} 项已安排在某天"
   }
 }

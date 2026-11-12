@@ -9,12 +9,13 @@ import {
 } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TaskRow from '../TaskRow';
-import TaskPane from '../TaskPane';
+import TaskPane, { formatPlannedWhen, parsePlannedOn } from '../TaskPane';
 import { RecurringScopeDialogHost } from '../RecurringScopeDialog';
 import { TaskRowExpansionProvider } from '../TaskRow/TaskRowExpansionContext';
 import {
     TaskPaneProvider,
     TASK_UPDATED_EVENT,
+    useTaskPane,
 } from '../../../contexts/TaskPaneContext';
 import { Task } from '../../../entities/Task';
 import * as tasksService from '../../../utils/tasksService';
@@ -22,7 +23,11 @@ import { useIsMinimal } from '../../../hooks/useUiDensity';
 
 jest.mock('react-i18next', () => ({
     useTranslation: () => ({
-        t: (_key: string, fallback?: string) => fallback ?? _key,
+        t: (_key: string, fallback?: string, values?: Record<string, string>) =>
+            (fallback ?? _key).replace(/{{(\w+)}}/g, (_m, name) =>
+                String(values?.[name] ?? '')
+            ),
+        i18n: { language: 'en-GB' },
     }),
     initReactI18next: { type: '3rdParty', init: () => {} },
 }));
@@ -355,5 +360,119 @@ describe('Task row in dense mode', () => {
         expect(container.querySelector('[data-task-expanded]')).not.toBeNull();
         expect(titleInput()).toBeNull();
         expect(screen.getByTestId('location-search')).toHaveTextContent(/^$/);
+    });
+});
+
+describe('parsePlannedOn', () => {
+    it('reads the day and an optional start minute', () => {
+        expect(parsePlannedOn('?task=uid-1&on=2026-11-12&at=600')).toEqual({
+            date: '2026-11-12',
+            minute: 600,
+        });
+        expect(parsePlannedOn('?task=uid-1&on=2026-11-12')).toEqual({
+            date: '2026-11-12',
+            minute: null,
+        });
+    });
+
+    it('ignores a malformed day or an out-of-range minute', () => {
+        expect(parsePlannedOn('?on=12-11-2026')).toBeNull();
+        expect(parsePlannedOn('?on=2026-02-31x')).toBeNull();
+        expect(parsePlannedOn('?task=uid-1')).toBeNull();
+        expect(parsePlannedOn('?on=2026-11-12&at=1440')).toEqual({
+            date: '2026-11-12',
+            minute: null,
+        });
+    });
+});
+
+describe('formatPlannedWhen', () => {
+    it('gives the weekday, day, month and start time', () => {
+        expect(
+            formatPlannedWhen({ date: '2026-11-12', minute: 600 }, 'en-GB')
+        ).toBe('Thu 12 Nov · 10:00');
+    });
+
+    it('omits the time when the plan has no start', () => {
+        expect(
+            formatPlannedWhen({ date: '2026-11-12', minute: null }, 'en-GB')
+        ).toBe('Thu 12 Nov');
+    });
+});
+
+describe('TaskPane as a floating sheet', () => {
+    const Opener = () => {
+        const { openTask } = useTaskPane();
+        return (
+            <button type="button" onClick={() => openTask('uid-1')}>
+                Open task
+            </button>
+        );
+    };
+
+    const renderSheet = (path: string) =>
+        render(
+            <MemoryRouter initialEntries={[path]}>
+                <TaskPaneProvider>
+                    <Opener />
+                    <TaskPane placement="bottom" />
+                    <LocationProbe />
+                </TaskPaneProvider>
+            </MemoryRouter>
+        );
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        mockedUseIsMinimal.mockReturnValue(true);
+        mockedFetchTaskByUid.mockResolvedValue(baseTask);
+    });
+
+    it('is a non-modal dialog named after the task title', async () => {
+        renderSheet('/today?task=uid-1');
+
+        const dialog = await screen.findByRole('dialog', {
+            name: 'Write report',
+        });
+        expect(dialog).toHaveAttribute('aria-modal', 'false');
+    });
+
+    it('moves focus into the sheet and returns it to the opener on Escape', async () => {
+        renderSheet('/today');
+        const opener = screen.getByRole('button', { name: 'Open task' });
+        opener.focus();
+        fireEvent.click(opener);
+
+        const dialog = await screen.findByRole('dialog', {
+            name: 'Write report',
+        });
+        await waitFor(() => expect(dialog).toHaveFocus());
+
+        fireEvent.keyDown(document, { key: 'Escape' });
+
+        await waitFor(() =>
+            expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+        );
+        expect(opener).toHaveFocus();
+    });
+
+    it('shows the planned day and time from the calendar that opened it', async () => {
+        renderSheet('/today?task=uid-1&on=2026-11-12&at=600');
+
+        expect(
+            await screen.findByTestId('task-planned-label')
+        ).toHaveTextContent('Planned Thu 12 Nov · 10:00');
+    });
+
+    it('drops the planned day when the sheet closes', async () => {
+        renderSheet('/today?task=uid-1&on=2026-11-12&at=600');
+        await screen.findByTestId('task-planned-label');
+
+        fireEvent.click(screen.getByRole('button', { name: 'Close' }));
+
+        await waitFor(() =>
+            expect(screen.getByTestId('location-search')).toHaveTextContent(
+                /^$/
+            )
+        );
     });
 });

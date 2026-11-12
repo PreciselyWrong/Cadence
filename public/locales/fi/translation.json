@@ -1524,7 +1524,11 @@
     "registration_closed_title": "Rekisteröinti suljettu",
     "registration_closed_message": "Uusien tilien rekisteröinti on tällä hetkellä poissa käytöstä. Pyydä käyttöoikeus ylläpitäjältä.",
     "confirm_password": "Vahvista salasana",
-    "already_have_account": "Onko sinulla jo tili?"
+    "already_have_account": "Onko sinulla jo tili?",
+    "rateLimitedRetrying": "Liian monta pyyntöä, yritetään uudelleen…",
+    "rateLimitedGaveUp": "Liian monta pyyntöä. Istunto on yhä voimassa; lataa sivu hetken päästä uudelleen.",
+    "serverBusyRetrying": "Palvelin on varattu, yritetään uudelleen…",
+    "serverBusyRetry": "Yritä uudelleen"
   },
   "dropdown": {
     "createNew": "Luo uusi",
@@ -4943,7 +4947,8 @@
     "loadError": "Tehtävää ei voitu ladata.",
     "expand": "Suurenna",
     "shrink": "Pienennä",
-    "goTo": "Siirry"
+    "goTo": "Siirry",
+    "planned": "Suunniteltu {{when}}"
   },
   "review": {
     "quick": {
@@ -6049,7 +6054,9 @@
     "widen": "Levennä",
     "yesterday": "Eilen",
     "hideCompleted": "Piilota valmiit",
-    "showCompletedTasks": "Näytä valmiit"
+    "showCompletedTasks": "Näytä valmiit",
+    "dropOverlaps": "Päällekkäisyydet",
+    "dropPast": "Menneisyydessä"
   },
   "upcoming": {
     "title": "Suunnittelu",
@@ -6058,8 +6065,6 @@
     "horizonsSoon": "Pian",
     "addTask": "Lisää tehtävä",
     "empty": "Ei suunniteltuja.",
-    "previous": "Edellinen päivä",
-    "next": "Seuraava päivä",
     "today": "Tänään",
     "showCalendar": "Näytä kalenteri",
     "hideCalendar": "Piilota kalenteri",
@@ -6112,6 +6117,50 @@
     "someday": "Joskus",
     "showDayInCalendar": "Näytä kalenterissa",
     "hideCompleted": "Piilota valmiit",
-    "showCompletedTasks": "Näytä valmiit"
+    "showCompletedTasks": "Näytä valmiit",
+    "resizeCalendar": "Kalenterin leveys",
+    "thisWeekHint": "Tämän viikon tehtävä, ei kiinteää päivää",
+    "thisMonthHint": "Jokin päivä tässä kuussa, ei kiinteää päivää",
+    "nextMonthHint": "Suunniteltu ensi kuulle",
+    "somedayHint": "Ehkä myöhemmin, syrjässä",
+    "calendarOn": "kalenteri, {{day}}",
+    "overdue": "Myöhässä",
+    "a11yPicked": "”{{name}}” otettu mukaan",
+    "a11yOver": "”{{name}}” siirretty päivän {{day}} päälle",
+    "a11yOverNothing": "”{{name}}” ei ole enää päivän päällä",
+    "a11yDropped": "”{{name}}” pudotettu {{day}}",
+    "a11yReturned": "”{{name}}” palautettu paikalleen",
+    "a11yCancelled": "”{{name}}”-siirto peruttu",
+    "closeCalendar": "Sulje kalenteri",
+    "overdueTaken": "Myöhässä olevat tehtävät suunniteltu tälle päivälle",
+    "a11yInstructions": "Siirrä tehtävä painamalla M, siirrä nuolinäppäimillä ja pudota Enterillä tai Välilyönnillä, tai peruuta Escapella. Kohdistetulla tehtävällä: nuolet tai H, J, K, L liikkuvat tehtävien ja päivien välillä; Shift + vasen tai oikea siirtää tehtävää päivän; T suunnittelee sen tälle päivälle, Shift+T huomiselle; Enter avaa sen.",
+    "dateNav": "Päivämäärät",
+    "previousWeek": "Edellinen viikko",
+    "nextWeek": "Seuraava viikko",
+    "overdueCount": "Myöhässä ({{count}})",
+    "rescheduleAll": "Siirrä kaikki tälle päivälle",
+    "hideInbox": "Piilota saapuneet",
+    "plannedOnDay": "Suunniteltu päivälle ({{count}})",
+    "goToDate": "Siirry päivään",
+    "expandInbox": "Näytä saapuneet ({{count}})",
+    "filter": "Suodatin",
+    "filterProjects": "Projektit",
+    "filterTags": "Tunnisteet",
+    "filterPriority": "Prioriteetti",
+    "filterHigh": "Korkea",
+    "filterMedium": "Keskitaso",
+    "filterLow": "Matala",
+    "clearFilters": "Tyhjennä suodattimet",
+    "tomorrow": "Huomenna",
+    "week": "Viikko {{number}}",
+    "load": "{{planned}} / {{available}}",
+    "done": "Valmiit ({{n}})",
+    "subtaskOf": "↳ {{parent}}",
+    "addToInbox": "Lisää saapuneisiin",
+    "inboxNewItem": "Uusi saapuneiden kohde",
+    "addToInboxFailed": "Lisääminen epäonnistui. Yritä uudelleen.",
+    "addEmptyName": "Anna tehtävälle nimi",
+    "addTaskIn": "Lisää tehtävä kohteeseen {{name}}",
+    "thisWeekOnlyPlanned": "Ei kiinteää päivää · {{count}} suunniteltu päivälle"
   }
 }

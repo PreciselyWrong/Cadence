@@ -1525,7 +1525,11 @@
     "registration_closed_title": "Cadastro encerrado",
     "registration_closed_message": "O cadastro de novas contas está desativado no momento. Entre em contato com o administrador para obter acesso.",
     "confirm_password": "Confirmar senha",
-    "already_have_account": "Já tem uma conta?"
+    "already_have_account": "Já tem uma conta?",
+    "rateLimitedRetrying": "Muitas solicitações, tentando novamente…",
+    "rateLimitedGaveUp": "Muitas solicitações. A sessão continua ativa; recarregue em instantes.",
+    "serverBusyRetrying": "Servidor ocupado, tentando novamente…",
+    "serverBusyRetry": "Tentar novamente"
   },
   "dropdown": {
     "createNew": "Criar Novo",
@@ -4950,7 +4954,8 @@
     "loadError": "Não foi possível carregar esta tarefa.",
     "expand": "Ampliar",
     "shrink": "Reduzir",
-    "goTo": "Ir para"
+    "goTo": "Ir para",
+    "planned": "Planejada {{when}}"
   },
   "review": {
     "quick": {
@@ -6064,7 +6069,9 @@
     "widen": "Alargar",
     "yesterday": "Ontem",
     "hideCompleted": "Ocultar concluídas",
-    "showCompletedTasks": "Mostrar concluídas"
+    "showCompletedTasks": "Mostrar concluídas",
+    "dropOverlaps": "Sobreposições",
+    "dropPast": "No passado"
   },
   "upcoming": {
     "title": "Planejar",
@@ -6073,8 +6080,6 @@
     "horizonsSoon": "Em breve",
     "addTask": "Adicionar uma tarefa",
     "empty": "Nada planejado.",
-    "previous": "Dia anterior",
-    "next": "Próximo dia",
     "today": "Hoje",
     "showCalendar": "Mostrar calendário",
     "hideCalendar": "Ocultar calendário",
@@ -6127,6 +6132,50 @@
     "someday": "Algum dia",
     "showDayInCalendar": "Mostrar no calendário",
     "hideCompleted": "Ocultar concluídas",
-    "showCompletedTasks": "Mostrar concluídas"
+    "showCompletedTasks": "Mostrar concluídas",
+    "resizeCalendar": "Largura do calendário",
+    "thisWeekHint": "Comprometida para esta semana, sem dia fixo",
+    "thisMonthHint": "Em algum dia deste mês, sem dia fixo",
+    "nextMonthHint": "Agendada para o próximo mês",
+    "somedayHint": "Talvez depois, de lado",
+    "calendarOn": "o calendário, {{day}}",
+    "overdue": "Atrasada",
+    "a11yPicked": "“{{name}}” retirada",
+    "a11yOver": "“{{name}}” movida para {{day}}",
+    "a11yOverNothing": "“{{name}}” já não está sobre um dia",
+    "a11yDropped": "“{{name}}” solta em {{day}}",
+    "a11yReturned": "“{{name}}” devolvida ao lugar",
+    "a11yCancelled": "Movimento de “{{name}}” cancelado",
+    "closeCalendar": "Fechar o calendário",
+    "overdueTaken": "Tarefas atrasadas planejadas para hoje",
+    "a11yInstructions": "Para mover uma tarefa, pressione M, mova-a com as setas e pressione Enter ou Espaço para soltá-la, ou Escape para cancelar. Com uma tarefa em foco: as setas ou H, J, K, L alternam entre tarefas e dias; Shift com Esquerda ou Direita move a tarefa um dia; T a planeja para hoje, Shift+T para amanhã; Enter a abre.",
+    "dateNav": "Datas",
+    "previousWeek": "Semana anterior",
+    "nextWeek": "Próxima semana",
+    "overdueCount": "Atrasadas ({{count}})",
+    "rescheduleAll": "Reagendar todas para hoje",
+    "hideInbox": "Recolher a caixa de entrada",
+    "plannedOnDay": "Planejadas em um dia ({{count}})",
+    "goToDate": "Ir para a data",
+    "expandInbox": "Mostrar a caixa de entrada ({{count}})",
+    "filter": "Filtrar",
+    "filterProjects": "Projetos",
+    "filterTags": "Tags",
+    "filterPriority": "Prioridade",
+    "filterHigh": "Alta",
+    "filterMedium": "Média",
+    "filterLow": "Baixa",
+    "clearFilters": "Limpar filtros",
+    "tomorrow": "Amanhã",
+    "week": "Semana {{number}}",
+    "load": "{{planned}} / {{available}}",
+    "done": "Feitas ({{n}})",
+    "subtaskOf": "↳ {{parent}}",
+    "addToInbox": "Adicionar à caixa de entrada",
+    "inboxNewItem": "Novo item da caixa de entrada",
+    "addToInboxFailed": "Não foi possível adicionar. Tente novamente.",
+    "addEmptyName": "Dê um nome à tarefa",
+    "addTaskIn": "Adicionar uma tarefa a {{name}}",
+    "thisWeekOnlyPlanned": "Nada sem dia fixo · {{count}} planejadas em um dia"
   }
 }

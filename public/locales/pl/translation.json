@@ -1530,7 +1530,11 @@
     "registration_closed_title": "Rejestracja zamknięta",
     "registration_closed_message": "Rejestracja nowych kont jest obecnie wyłączona. Skontaktuj się z administratorem, aby uzyskać dostęp.",
     "confirm_password": "Potwierdź hasło",
-    "already_have_account": "Masz już konto?"
+    "already_have_account": "Masz już konto?",
+    "rateLimitedRetrying": "Zbyt wiele żądań, ponawianie…",
+    "rateLimitedGaveUp": "Zbyt wiele żądań. Sesja jest nadal aktywna; odśwież stronę za chwilę.",
+    "serverBusyRetrying": "Serwer zajęty, ponawianie…",
+    "serverBusyRetry": "Ponów"
   },
   "dropdown": {
     "createNew": "Utwórz Nowy",
@@ -4985,7 +4989,8 @@
     "loadError": "Nie udało się wczytać tego zadania.",
     "expand": "Powiększ",
     "shrink": "Zmniejsz",
-    "goTo": "Przejdź do"
+    "goTo": "Przejdź do",
+    "planned": "Zaplanowane {{when}}"
   },
   "review": {
     "quick": {
@@ -6109,7 +6114,9 @@
     "widen": "Poszerz",
     "yesterday": "Wczoraj",
     "hideCompleted": "Ukryj ukończone",
-    "showCompletedTasks": "Pokaż ukończone"
+    "showCompletedTasks": "Pokaż ukończone",
+    "dropOverlaps": "Nakładanie się",
+    "dropPast": "W przeszłości"
   },
   "upcoming": {
     "title": "Planuj",
@@ -6118,8 +6125,6 @@
     "horizonsSoon": "Wkrótce",
     "addTask": "Dodaj zadanie",
     "empty": "Nic nie zaplanowano.",
-    "previous": "Poprzedni dzień",
-    "next": "Następny dzień",
     "today": "Dziś",
     "showCalendar": "Pokaż kalendarz",
     "hideCalendar": "Ukryj kalendarz",
@@ -6172,6 +6177,50 @@
     "someday": "Kiedyś",
     "showDayInCalendar": "Pokaż w kalendarzu",
     "hideCompleted": "Ukryj ukończone",
-    "showCompletedTasks": "Pokaż ukończone"
+    "showCompletedTasks": "Pokaż ukończone",
+    "resizeCalendar": "Szerokość kalendarza",
+    "thisWeekHint": "Zaplanowane na ten tydzień, bez stałego dnia",
+    "thisMonthHint": "Kiedyś w tym miesiącu, bez stałego dnia",
+    "nextMonthHint": "Zaplanowane na przyszły miesiąc",
+    "somedayHint": "Może później, odłożone na bok",
+    "calendarOn": "kalendarz, {{day}}",
+    "overdue": "Zaległe",
+    "a11yPicked": "„{{name}}” podniesiono",
+    "a11yOver": "„{{name}}” przeniesiono na {{day}}",
+    "a11yOverNothing": "„{{name}}” nie jest już nad żadnym dniem",
+    "a11yDropped": "„{{name}}” upuszczono na {{day}}",
+    "a11yReturned": "„{{name}}” odłożono z powrotem",
+    "a11yCancelled": "Anulowano przenoszenie „{{name}}”",
+    "closeCalendar": "Zamknij kalendarz",
+    "overdueTaken": "Zaległe zadania zaplanowane na dziś",
+    "a11yInstructions": "Aby przenieść zadanie, naciśnij M, przesuń je strzałkami, a następnie naciśnij Enter lub Spację, aby upuścić, albo Escape, aby anulować. Przy zaznaczonym zadaniu: strzałki lub H, J, K, L przechodzą między zadaniami i dniami; Shift z lewą lub prawą strzałką przesuwa zadanie o dzień; T planuje je na dziś, Shift+T na jutro; Enter otwiera zadanie.",
+    "dateNav": "Daty",
+    "previousWeek": "Poprzedni tydzień",
+    "nextWeek": "Następny tydzień",
+    "overdueCount": "Zaległe ({{count}})",
+    "rescheduleAll": "Przenieś wszystkie na dziś",
+    "hideInbox": "Zwiń skrzynkę odbiorczą",
+    "plannedOnDay": "Zaplanowane na dzień ({{count}})",
+    "goToDate": "Przejdź do daty",
+    "expandInbox": "Pokaż skrzynkę odbiorczą ({{count}})",
+    "filter": "Filtr",
+    "filterProjects": "Projekty",
+    "filterTags": "Tagi",
+    "filterPriority": "Priorytet",
+    "filterHigh": "Wysoki",
+    "filterMedium": "Średni",
+    "filterLow": "Niski",
+    "clearFilters": "Wyczyść filtry",
+    "tomorrow": "Jutro",
+    "week": "Tydzień {{number}}",
+    "load": "{{planned}} / {{available}}",
+    "done": "Gotowe ({{n}})",
+    "subtaskOf": "↳ {{parent}}",
+    "addToInbox": "Dodaj do skrzynki odbiorczej",
+    "inboxNewItem": "Nowy element skrzynki",
+    "addToInboxFailed": "Nie udało się dodać. Spróbuj ponownie.",
+    "addEmptyName": "Nadaj zadaniu nazwę",
+    "addTaskIn": "Dodaj zadanie do: {{name}}",
+    "thisWeekOnlyPlanned": "Nic bez stałego dnia · {{count}} zaplanowanych na dzień"
   }
 }

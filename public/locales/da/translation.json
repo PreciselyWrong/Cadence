@@ -1524,7 +1524,11 @@
     "registration_closed_title": "Registrering er lukket",
     "registration_closed_message": "Registrering af nye konti er i øjeblikket deaktiveret. Kontakt din administrator for adgang.",
     "confirm_password": "Bekræft adgangskode",
-    "already_have_account": "Har du allerede en konto?"
+    "already_have_account": "Har du allerede en konto?",
+    "rateLimitedRetrying": "For mange anmodninger, prøver igen…",
+    "rateLimitedGaveUp": "For mange anmodninger. Sessionen er stadig aktiv; genindlæs om et øjeblik.",
+    "serverBusyRetrying": "Serveren er optaget, prøver igen…",
+    "serverBusyRetry": "Prøv igen"
   },
   "dropdown": {
     "createNew": "Opret Ny",
@@ -4943,7 +4947,8 @@
     "loadError": "Opgaven kunne ikke indlæses.",
     "expand": "Udvid",
     "shrink": "Formindsk",
-    "goTo": "Gå til"
+    "goTo": "Gå til",
+    "planned": "Planlagt {{when}}"
   },
   "review": {
     "quick": {
@@ -6049,7 +6054,9 @@
     "widen": "Udvid",
     "yesterday": "I går",
     "hideCompleted": "Skjul udførte",
-    "showCompletedTasks": "Vis udførte"
+    "showCompletedTasks": "Vis udførte",
+    "dropOverlaps": "Overlap",
+    "dropPast": "I fortiden"
   },
   "upcoming": {
     "title": "Planlæg",
@@ -6058,8 +6065,6 @@
     "horizonsSoon": "Kommer snart",
     "addTask": "Tilføj en opgave",
     "empty": "Intet planlagt.",
-    "previous": "Forrige dag",
-    "next": "Næste dag",
     "today": "I dag",
     "showCalendar": "Vis kalender",
     "hideCalendar": "Skjul kalender",
@@ -6112,6 +6117,50 @@
     "someday": "En dag",
     "showDayInCalendar": "Vis i kalender",
     "hideCompleted": "Skjul udførte",
-    "showCompletedTasks": "Vis udførte"
+    "showCompletedTasks": "Vis udførte",
+    "resizeCalendar": "Kalenderens bredde",
+    "thisWeekHint": "Planlagt til denne uge, uden fast dag",
+    "thisMonthHint": "Et sted i denne måned, uden fast dag",
+    "nextMonthHint": "Planlagt til næste måned",
+    "somedayHint": "Måske senere, lagt til side",
+    "calendarOn": "kalenderen, {{day}}",
+    "overdue": "Forfalden",
+    "a11yPicked": "”{{name}}” taget op",
+    "a11yOver": "”{{name}}” flyttet over {{day}}",
+    "a11yOverNothing": "”{{name}}” er ikke længere over en dag",
+    "a11yDropped": "”{{name}}” sluppet på {{day}}",
+    "a11yReturned": "”{{name}}” lagt tilbage",
+    "a11yCancelled": "Flytning af ”{{name}}” annulleret",
+    "closeCalendar": "Luk kalenderen",
+    "overdueTaken": "Forfaldne opgaver planlagt til i dag",
+    "a11yInstructions": "Tryk M for at flytte en opgave, flyt den med piletasterne, og tryk Enter eller mellemrum for at slippe den, eller Escape for at annullere. På en valgt opgave: piletasterne eller H, J, K, L skifter mellem opgaver og dage; Shift med venstre eller højre flytter opgaven en dag; T planlægger den til i dag, Shift+T til i morgen; Enter åbner den.",
+    "dateNav": "Datoer",
+    "previousWeek": "Forrige uge",
+    "nextWeek": "Næste uge",
+    "overdueCount": "Forfalden ({{count}})",
+    "rescheduleAll": "Flyt alle til i dag",
+    "hideInbox": "Skjul indbakken",
+    "plannedOnDay": "Planlagt på en dag ({{count}})",
+    "goToDate": "Gå til dato",
+    "expandInbox": "Vis indbakken ({{count}})",
+    "filter": "Filter",
+    "filterProjects": "Projekter",
+    "filterTags": "Tags",
+    "filterPriority": "Prioritet",
+    "filterHigh": "Høj",
+    "filterMedium": "Mellem",
+    "filterLow": "Lav",
+    "clearFilters": "Ryd filtre",
+    "tomorrow": "I morgen",
+    "week": "Uge {{number}}",
+    "load": "{{planned}} / {{available}}",
+    "done": "Udført ({{n}})",
+    "subtaskOf": "↳ {{parent}}",
+    "addToInbox": "Tilføj til indbakken",
+    "inboxNewItem": "Nyt indbakkepunkt",
+    "addToInboxFailed": "Kunne ikke tilføje. Prøv igen.",
+    "addEmptyName": "Giv opgaven et navn",
+    "addTaskIn": "Tilføj en opgave til {{name}}",
+    "thisWeekOnlyPlanned": "Intet uden fast dag · {{count}} planlagt på en dag"
   }
 }

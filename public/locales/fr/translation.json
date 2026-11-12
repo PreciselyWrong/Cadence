@@ -1528,7 +1528,11 @@
     "registration_closed_title": "Inscriptions fermées",
     "registration_failed": "L'inscription a échoué. Veuillez réessayer.",
     "verification_expired": "Le lien de vérification a expiré. Veuillez vous réinscrire.",
-    "verification_failed": "La vérification de l'e-mail a échoué. Veuillez réessayer."
+    "verification_failed": "La vérification de l'e-mail a échoué. Veuillez réessayer.",
+    "rateLimitedRetrying": "Trop de requêtes, nouvel essai…",
+    "rateLimitedGaveUp": "Trop de requêtes. La session reste active ; rechargez dans un instant.",
+    "serverBusyRetrying": "Serveur occupé, nouvel essai…",
+    "serverBusyRetry": "Réessayer"
   },
   "dropdown": {
     "createNew": "Créer nouveau",
@@ -4953,7 +4957,8 @@
     "loadError": "Impossible de charger cette tâche.",
     "expand": "Agrandir",
     "shrink": "Réduire",
-    "goTo": "Aller à"
+    "goTo": "Aller à",
+    "planned": "Planifiée {{when}}"
   },
   "review": {
     "quick": {
@@ -6065,7 +6070,9 @@
     "widen": "Élargir",
     "yesterday": "Hier",
     "hideCompleted": "Masquer les terminées",
-    "showCompletedTasks": "Afficher les terminées"
+    "showCompletedTasks": "Afficher les terminées",
+    "dropOverlaps": "Chevauche",
+    "dropPast": "Dans le passé"
   },
   "upcoming": {
     "title": "Planifier",
@@ -6074,8 +6081,6 @@
     "horizonsSoon": "Bientôt",
     "addTask": "Ajouter une tâche",
     "empty": "Rien de prévu.",
-    "previous": "Jour précédent",
-    "next": "Jour suivant",
     "today": "Aujourd’hui",
     "showCalendar": "Afficher le calendrier",
     "hideCalendar": "Masquer le calendrier",
@@ -6128,6 +6133,50 @@
     "someday": "Un jour",
     "showDayInCalendar": "Afficher dans le calendrier",
     "hideCompleted": "Masquer les terminées",
-    "showCompletedTasks": "Afficher les terminées"
+    "showCompletedTasks": "Afficher les terminées",
+    "resizeCalendar": "Largeur du calendrier",
+    "thisWeekHint": "Engagée cette semaine, sans jour fixe",
+    "thisMonthHint": "Un jour ce mois-ci, sans jour fixe",
+    "nextMonthHint": "Prévue pour le mois prochain",
+    "somedayHint": "Peut-être plus tard, à l'écart",
+    "calendarOn": "le calendrier, {{day}}",
+    "overdue": "En retard",
+    "a11yPicked": "« {{name}} » saisie",
+    "a11yOver": "« {{name}} » déplacée sur {{day}}",
+    "a11yOverNothing": "« {{name}} » n'est plus sur un jour",
+    "a11yDropped": "« {{name}} » déposée le {{day}}",
+    "a11yReturned": "« {{name}} » remise en place",
+    "a11yCancelled": "Déplacement de « {{name}} » annulé",
+    "closeCalendar": "Fermer le calendrier",
+    "overdueTaken": "Tâches en retard planifiées aujourd'hui",
+    "a11yInstructions": "Pour déplacer une tâche : M, la déplacer avec les flèches, puis Entrée ou Espace pour la déposer, ou Échap pour annuler. Sur une tâche sélectionnée : les flèches ou H, J, K, L passent d'une tâche à l'autre et d'un jour à l'autre ; Maj avec Gauche ou Droite décale la tâche d'un jour ; T la planifie aujourd'hui, Maj+T demain ; Entrée l'ouvre.",
+    "dateNav": "Dates",
+    "previousWeek": "Semaine précédente",
+    "nextWeek": "Semaine suivante",
+    "overdueCount": "En retard ({{count}})",
+    "rescheduleAll": "Tout replanifier aujourd'hui",
+    "hideInbox": "Replier la boîte de réception",
+    "plannedOnDay": "Planifiées sur un jour ({{count}})",
+    "goToDate": "Aller à la date",
+    "expandInbox": "Afficher la boîte de réception ({{count}})",
+    "filter": "Filtrer",
+    "filterProjects": "Projets",
+    "filterTags": "Étiquettes",
+    "filterPriority": "Priorité",
+    "filterHigh": "Haute",
+    "filterMedium": "Moyenne",
+    "filterLow": "Basse",
+    "clearFilters": "Effacer les filtres",
+    "tomorrow": "Demain",
+    "week": "Semaine {{number}}",
+    "load": "{{planned}} / {{available}}",
+    "done": "Faites ({{n}})",
+    "subtaskOf": "↳ {{parent}}",
+    "addToInbox": "Ajouter à la boîte de réception",
+    "inboxNewItem": "Nouvelle idée",
+    "addToInboxFailed": "Ajout impossible. Réessayer.",
+    "addEmptyName": "Donner un nom à la tâche",
+    "addTaskIn": "Ajouter une tâche à {{name}}",
+    "thisWeekOnlyPlanned": "Rien sans jour fixe · {{count}} planifiées sur un jour"
   }
 }

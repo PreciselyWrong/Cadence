@@ -1,5 +1,6 @@
 import type { Task } from '../../entities/Task';
 import { toPriorityLevel } from '../Shared/PriorityBadge';
+import type { DayLine } from '../Today/dayModel';
 import type { GroupBy, SortBy } from './viewOptions';
 
 // What the board sorts and groups: a card's task and its reserved slot and due
@@ -42,12 +43,45 @@ const compareNames = (a: string, b: string): number =>
 const projectName = (card: CardLike): string | null =>
     card.task.Project?.name || null;
 
+// The key a task is known by on the board: its uid, else its id.
+export const taskKey = (task: Pick<Task, 'uid' | 'id'>): string =>
+    String(task.uid ?? task.id);
+
+export const cardTaskKeys = (cards: CardLike[]): Set<string> =>
+    new Set(cards.map((card) => taskKey(card.task)));
+
+// The subtasks a parent card lists, minus those that have a card of their own
+// in the same list (they are shown once, on that card).
+export const subtasksWithoutCard = (
+    subtasks: Task[],
+    ownCardKeys: ReadonlySet<string>
+): Task[] => subtasks.filter((sub) => !ownCardKeys.has(taskKey(sub)));
+
+// Minutes planned on the open lines of a day. Done lines do not count.
+export const dayLoad = (lines: Pick<DayLine, 'duration' | 'done'>[]): number =>
+    lines.reduce((sum, line) => (line.done ? sum : sum + line.duration), 0);
+
+// A subtask whose parent has a card in the same list groups under the parent's
+// project, so the pair stays together; otherwise it keeps its own project.
+const projectLookup = (
+    cards: CardLike[]
+): ((card: CardLike) => string | null) => {
+    const byKey = new Map(cards.map((card) => [taskKey(card.task), card]));
+    return (card) => {
+        const parent = card.task.parent_task
+            ? byKey.get(taskKey(card.task.parent_task))
+            : undefined;
+        return projectName(parent ?? card);
+    };
+};
+
 // Stable: cards that tie keep the order they came in.
 export const sortCards = <T extends CardLike>(
     cards: T[],
     sortBy: SortBy
 ): T[] => {
     const copy = [...cards];
+    const projectOf = projectLookup(cards);
     switch (sortBy) {
         case 'plan':
             return copy;
@@ -67,8 +101,8 @@ export const sortCards = <T extends CardLike>(
             return copy.sort((a, b) => compareNames(a.task.name, b.task.name));
         case 'project':
             return copy.sort((a, b) => {
-                const pa = projectName(a);
-                const pb = projectName(b);
+                const pa = projectOf(a);
+                const pb = projectOf(b);
                 if (pa === pb) return 0;
                 if (pa === null) return 1;
                 if (pb === null) return -1;
@@ -97,12 +131,17 @@ interface GroupKey {
 
 const NO_GROUP: GroupKey = { key: 'none', label: '', rank: null };
 
-const keyOf = (card: CardLike, groupBy: GroupBy, t: Translate): GroupKey => {
+const keyOf = (
+    card: CardLike,
+    groupBy: GroupBy,
+    t: Translate,
+    projectOf: (card: CardLike) => string | null
+): GroupKey => {
     switch (groupBy) {
         case 'none':
             return NO_GROUP;
         case 'project': {
-            const name = projectName(card);
+            const name = projectOf(card);
             if (name === null) {
                 return {
                     key: 'project:none',
@@ -159,8 +198,9 @@ export const groupCards = <T extends CardLike>(
         return cards.length > 0 ? [{ key: 'none', label: '', cards }] : [];
     }
     const groups = new Map<string, CardGroup<T> & { rank: string | null }>();
+    const projectOf = projectLookup(cards);
     cards.forEach((card) => {
-        const { key, label, rank } = keyOf(card, groupBy, t);
+        const { key, label, rank } = keyOf(card, groupBy, t, projectOf);
         const existing = groups.get(key);
         if (existing) {
             existing.cards.push(card);

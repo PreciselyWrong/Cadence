@@ -1524,7 +1524,11 @@
     "registration_closed_title": "Kayıt Kapalı",
     "registration_closed_message": "Yeni hesap kaydı şu anda devre dışı. Erişim için yöneticinizle iletişime geçin.",
     "confirm_password": "Parolayı Onayla",
-    "already_have_account": "Zaten hesabınız var mı?"
+    "already_have_account": "Zaten hesabınız var mı?",
+    "rateLimitedRetrying": "Çok fazla istek, yeniden deneniyor…",
+    "rateLimitedGaveUp": "Çok fazla istek. Oturum hâlâ etkin; birazdan sayfayı yenileyin.",
+    "serverBusyRetrying": "Sunucu meşgul, yeniden deneniyor…",
+    "serverBusyRetry": "Yeniden dene"
   },
   "dropdown": {
     "createNew": "Yeni Oluştur",
@@ -4943,7 +4947,8 @@
     "loadError": "Bu görev yüklenemedi.",
     "expand": "Büyüt",
     "shrink": "Küçült",
-    "goTo": "Git"
+    "goTo": "Git",
+    "planned": "{{when}} planlandı"
   },
   "review": {
     "quick": {
@@ -6047,7 +6052,9 @@
     "widen": "Genişlet",
     "yesterday": "Dün",
     "hideCompleted": "Tamamlananları gizle",
-    "showCompletedTasks": "Tamamlananları göster"
+    "showCompletedTasks": "Tamamlananları göster",
+    "dropOverlaps": "Çakışmalar",
+    "dropPast": "Geçmişte"
   },
   "upcoming": {
     "title": "Planla",
@@ -6056,8 +6063,6 @@
     "horizonsSoon": "Yakında",
     "addTask": "Görev ekle",
     "empty": "Planlanmış bir şey yok.",
-    "previous": "Önceki gün",
-    "next": "Sonraki gün",
     "today": "Bugün",
     "showCalendar": "Takvimi göster",
     "hideCalendar": "Takvimi gizle",
@@ -6110,6 +6115,50 @@
     "someday": "Bir gün",
     "showDayInCalendar": "Takvimde göster",
     "hideCompleted": "Tamamlananları gizle",
-    "showCompletedTasks": "Tamamlananları göster"
+    "showCompletedTasks": "Tamamlananları göster",
+    "resizeCalendar": "Takvim genişliği",
+    "thisWeekHint": "Bu haftaya ayrıldı, sabit gün yok",
+    "thisMonthHint": "Bu ay bir gün, sabit gün yok",
+    "nextMonthHint": "Gelecek ay için planlandı",
+    "somedayHint": "Belki sonra, bir kenara ayrıldı",
+    "calendarOn": "takvim, {{day}}",
+    "overdue": "Gecikmiş",
+    "a11yPicked": "“{{name}}” alındı",
+    "a11yOver": "“{{name}}” {{day}} üzerine taşındı",
+    "a11yOverNothing": "“{{name}}” artık bir günün üzerinde değil",
+    "a11yDropped": "“{{name}}” {{day}} gününe bırakıldı",
+    "a11yReturned": "“{{name}}” yerine geri konuldu",
+    "a11yCancelled": "“{{name}}” taşıma işlemi iptal edildi",
+    "closeCalendar": "Takvimi kapat",
+    "overdueTaken": "Bugüne planlanan gecikmiş görevler",
+    "a11yInstructions": "Bir görevi taşımak için M tuşuna basın, ok tuşlarıyla taşıyın, sonra bırakmak için Enter veya Boşluk, iptal için Escape tuşuna basın. Seçili görevde: ok tuşları veya H, J, K, L görevler ve günler arasında gezinir; Shift ile Sol veya Sağ görevi bir gün kaydırır; T görevi bugüne, Shift+T yarına planlar; Enter görevi açar.",
+    "dateNav": "Tarihler",
+    "previousWeek": "Önceki hafta",
+    "nextWeek": "Sonraki hafta",
+    "overdueCount": "Gecikmiş ({{count}})",
+    "rescheduleAll": "Tümünü bugüne ertele",
+    "hideInbox": "Gelen kutusunu daralt",
+    "plannedOnDay": "Bir güne planlananlar ({{count}})",
+    "goToDate": "Tarihe git",
+    "expandInbox": "Gelen kutusunu göster ({{count}})",
+    "filter": "Filtre",
+    "filterProjects": "Projeler",
+    "filterTags": "Etiketler",
+    "filterPriority": "Öncelik",
+    "filterHigh": "Yüksek",
+    "filterMedium": "Orta",
+    "filterLow": "Düşük",
+    "clearFilters": "Filtreleri temizle",
+    "tomorrow": "Yarın",
+    "week": "{{number}}. hafta",
+    "load": "{{planned}} / {{available}}",
+    "done": "Tamamlananlar ({{n}})",
+    "subtaskOf": "↳ {{parent}}",
+    "addToInbox": "Gelen kutusuna ekle",
+    "inboxNewItem": "Yeni gelen kutusu öğesi",
+    "addToInboxFailed": "Eklenemedi. Yeniden deneyin.",
+    "addEmptyName": "Göreve bir ad verin",
+    "addTaskIn": "{{name}} için bir görev ekle",
+    "thisWeekOnlyPlanned": "Sabit günü olmayan yok · Bir günde {{count}} planlanmış"
   }
 }

@@ -565,8 +565,25 @@ const NewToday: React.FC = () => {
     const { openTaskUid, openTask } = useTaskPane();
     // A second click on the open task closes its detail.
     const { closeTask } = useTaskPane();
-    const openLine = (line: DayLine) =>
-        openTaskUid === line.uid ? closeTask() : openTask(line.uid);
+    // A planned line tells the sheet its day (the viewed day, or the
+    // calendar column it was clicked on) and its start, if it has one.
+    const openLine = (line: DayLine, onDate: string = date) => {
+        if (openTaskUid === line.uid) {
+            closeTask();
+            return;
+        }
+        openTask(
+            line.uid,
+            line.planned
+                ? {
+                      date: onDate,
+                      ...(line.start !== null
+                          ? { startMinute: line.start }
+                          : {}),
+                  }
+                : undefined
+        );
+    };
 
     // A recurring task done for this day has already moved on to its next
     // date: toggling it here would complete that next occurrence.

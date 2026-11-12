@@ -1525,7 +1525,11 @@
     "registration_closed_title": "Registrazione chiusa",
     "registration_closed_message": "La registrazione di nuovi account è attualmente disattivata. Contatta l'amministratore per ottenere l'accesso.",
     "confirm_password": "Conferma password",
-    "already_have_account": "Hai già un account?"
+    "already_have_account": "Hai già un account?",
+    "rateLimitedRetrying": "Troppe richieste, nuovo tentativo…",
+    "rateLimitedGaveUp": "Troppe richieste. La sessione resta attiva; ricarica tra poco.",
+    "serverBusyRetrying": "Server occupato, nuovo tentativo…",
+    "serverBusyRetry": "Riprova"
   },
   "dropdown": {
     "createNew": "Crea Nuovo",
@@ -4950,7 +4954,8 @@
     "loadError": "Impossibile caricare questa attività.",
     "expand": "Ingrandisci",
     "shrink": "Riduci",
-    "goTo": "Vai a"
+    "goTo": "Vai a",
+    "planned": "Pianificata {{when}}"
   },
   "review": {
     "quick": {
@@ -6064,7 +6069,9 @@
     "widen": "Allarga",
     "yesterday": "Ieri",
     "hideCompleted": "Nascondi completate",
-    "showCompletedTasks": "Mostra completate"
+    "showCompletedTasks": "Mostra completate",
+    "dropOverlaps": "Sovrapposizioni",
+    "dropPast": "Nel passato"
   },
   "upcoming": {
     "title": "Pianifica",
@@ -6073,8 +6080,6 @@
     "horizonsSoon": "Prossimamente",
     "addTask": "Aggiungi un’attività",
     "empty": "Niente di pianificato.",
-    "previous": "Giorno precedente",
-    "next": "Giorno successivo",
     "today": "Oggi",
     "showCalendar": "Mostra calendario",
     "hideCalendar": "Nascondi calendario",
@@ -6127,6 +6132,50 @@
     "someday": "Prima o poi",
     "showDayInCalendar": "Mostra nel calendario",
     "hideCompleted": "Nascondi completate",
-    "showCompletedTasks": "Mostra completate"
+    "showCompletedTasks": "Mostra completate",
+    "resizeCalendar": "Larghezza del calendario",
+    "thisWeekHint": "Impegnata questa settimana, senza giorno fisso",
+    "thisMonthHint": "Un giorno di questo mese, senza giorno fisso",
+    "nextMonthHint": "Programmata per il mese prossimo",
+    "somedayHint": "Forse più avanti, messa da parte",
+    "calendarOn": "il calendario, {{day}}",
+    "overdue": "In ritardo",
+    "a11yPicked": "«{{name}}» sollevata",
+    "a11yOver": "«{{name}}» spostata su {{day}}",
+    "a11yOverNothing": "«{{name}}» non è più su un giorno",
+    "a11yDropped": "«{{name}}» rilasciata il {{day}}",
+    "a11yReturned": "«{{name}}» rimessa a posto",
+    "a11yCancelled": "Spostamento di «{{name}}» annullato",
+    "closeCalendar": "Chiudi il calendario",
+    "overdueTaken": "Attività in ritardo pianificate oggi",
+    "a11yInstructions": "Per spostare un'attività premi M, spostala con le frecce, poi premi Invio o Spazio per rilasciarla, oppure Esc per annullare. Su un'attività selezionata: frecce o H, J, K, L passano tra attività e giorni; Maiusc con Sinistra o Destra sposta l'attività di un giorno; T la pianifica per oggi, Maiusc+T per domani; Invio la apre.",
+    "dateNav": "Date",
+    "previousWeek": "Settimana precedente",
+    "nextWeek": "Settimana successiva",
+    "overdueCount": "In ritardo ({{count}})",
+    "rescheduleAll": "Riprogramma tutte per oggi",
+    "hideInbox": "Comprimi l'inbox",
+    "plannedOnDay": "Pianificate in un giorno ({{count}})",
+    "goToDate": "Vai alla data",
+    "expandInbox": "Mostra l'inbox ({{count}})",
+    "filter": "Filtra",
+    "filterProjects": "Progetti",
+    "filterTags": "Tag",
+    "filterPriority": "Priorità",
+    "filterHigh": "Alta",
+    "filterMedium": "Media",
+    "filterLow": "Bassa",
+    "clearFilters": "Rimuovi filtri",
+    "tomorrow": "Domani",
+    "week": "Settimana {{number}}",
+    "load": "{{planned}} / {{available}}",
+    "done": "Fatte ({{n}})",
+    "subtaskOf": "↳ {{parent}}",
+    "addToInbox": "Aggiungi alla casella di posta",
+    "inboxNewItem": "Nuovo elemento in arrivo",
+    "addToInboxFailed": "Impossibile aggiungere. Riprova.",
+    "addEmptyName": "Dai un nome all'attività",
+    "addTaskIn": "Aggiungi un'attività a {{name}}",
+    "thisWeekOnlyPlanned": "Nessuna senza giorno fisso · {{count}} pianificate in un giorno"
   }
 }

@@ -1545,7 +1545,11 @@
     "registration_closed_title": "Registration Closed",
     "registration_closed_message": "New account registration is currently disabled. Contact your administrator for access.",
     "confirm_password": "Confirm Password",
-    "already_have_account": "Already have an account?"
+    "already_have_account": "Already have an account?",
+    "rateLimitedRetrying": "Too many requests, retrying…",
+    "rateLimitedGaveUp": "Too many requests. Your session is still active; reload in a moment.",
+    "serverBusyRetrying": "Server busy, retrying…",
+    "serverBusyRetry": "Retry"
   },
   "dropdown": {
     "createNew": "Create New",
@@ -5009,7 +5013,8 @@
     "loadError": "Could not load this task.",
     "expand": "Expand",
     "shrink": "Shrink",
-    "goTo": "Go to"
+    "goTo": "Go to",
+    "planned": "Planned {{when}}"
   },
   "review": {
     "quick": {
@@ -6019,7 +6024,9 @@
     "widen": "Widen",
     "yesterday": "Yesterday",
     "hideCompleted": "Hide completed",
-    "showCompletedTasks": "Show completed"
+    "showCompletedTasks": "Show completed",
+    "dropOverlaps": "Overlaps",
+    "dropPast": "In the past"
   },
   "upcoming": {
     "title": "Plan",
@@ -6028,8 +6035,6 @@
     "horizonsSoon": "Coming next",
     "addTask": "Add a task",
     "empty": "Nothing planned.",
-    "previous": "Previous day",
-    "next": "Next day",
     "today": "Today",
     "showCalendar": "Show calendar",
     "hideCalendar": "Hide calendar",
@@ -6082,6 +6087,50 @@
     "someday": "Someday",
     "showDayInCalendar": "Show in calendar",
     "hideCompleted": "Hide completed",
-    "showCompletedTasks": "Show completed"
+    "showCompletedTasks": "Show completed",
+    "resizeCalendar": "Calendar width",
+    "thisWeekHint": "Committed to this week, no fixed day",
+    "thisMonthHint": "Sometime this month, no fixed day",
+    "nextMonthHint": "Lined up for next month",
+    "somedayHint": "Maybe later, out of the way",
+    "calendarOn": "the calendar, {{day}}",
+    "overdue": "Overdue",
+    "a11yPicked": "“{{name}}” picked up",
+    "a11yOver": "“{{name}}” moved over {{day}}",
+    "a11yOverNothing": "“{{name}}” is no longer over a day",
+    "a11yDropped": "“{{name}}” dropped on {{day}}",
+    "a11yReturned": "“{{name}}” put back",
+    "a11yCancelled": "Move of “{{name}}” cancelled",
+    "closeCalendar": "Close the calendar",
+    "overdueTaken": "Overdue tasks planned today",
+    "a11yInstructions": "To move a task, press M, move it with the arrow keys, then press Enter or Space to drop it, or Escape to cancel. On a focused task: arrows or H, J, K, L move between tasks and days; Shift with Left or Right moves the task a day; T plans it today, Shift+T tomorrow; Enter opens it.",
+    "dateNav": "Dates",
+    "previousWeek": "Previous week",
+    "nextWeek": "Next week",
+    "overdueCount": "Overdue ({{count}})",
+    "rescheduleAll": "Reschedule all to today",
+    "hideInbox": "Collapse the inbox",
+    "plannedOnDay": "Planned on a day ({{count}})",
+    "goToDate": "Go to date",
+    "expandInbox": "Show the inbox ({{count}})",
+    "filter": "Filter",
+    "filterProjects": "Projects",
+    "filterTags": "Tags",
+    "filterPriority": "Priority",
+    "filterHigh": "High",
+    "filterMedium": "Medium",
+    "filterLow": "Low",
+    "clearFilters": "Clear filters",
+    "tomorrow": "Tomorrow",
+    "week": "Week {{number}}",
+    "load": "{{planned}} / {{available}}",
+    "done": "Done ({{n}})",
+    "subtaskOf": "↳ {{parent}}",
+    "addToInbox": "Add to inbox",
+    "inboxNewItem": "New inbox item",
+    "addToInboxFailed": "Could not add it. Try again.",
+    "addEmptyName": "Add a name for the task",
+    "addTaskIn": "Add a task to {{name}}",
+    "thisWeekOnlyPlanned": "Nothing without a fixed day · {{count}} planned on a day"
   }
 }

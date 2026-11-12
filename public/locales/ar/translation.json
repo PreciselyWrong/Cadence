@@ -1528,7 +1528,11 @@
     "registration_closed_title": "التسجيل مغلق",
     "registration_closed_message": "التسجيل في الحسابات الجديدة معطّل حاليًا. تواصل مع المسؤول للحصول على الوصول.",
     "confirm_password": "تأكيد كلمة المرور",
-    "already_have_account": "لديك حساب بالفعل؟"
+    "already_have_account": "لديك حساب بالفعل؟",
+    "rateLimitedRetrying": "طلبات كثيرة جداً، جارٍ إعادة المحاولة…",
+    "rateLimitedGaveUp": "طلبات كثيرة جداً. الجلسة ما زالت نشطة؛ أعد التحميل بعد لحظات.",
+    "serverBusyRetrying": "الخادم مشغول، جارٍ إعادة المحاولة…",
+    "serverBusyRetry": "إعادة المحاولة"
   },
   "dropdown": {
     "createNew": "إنشاء جديد",
@@ -4979,7 +4983,8 @@
     "loadError": "تعذّر تحميل هذه المهمة.",
     "expand": "توسيع",
     "shrink": "تصغير",
-    "goTo": "انتقل إلى"
+    "goTo": "انتقل إلى",
+    "planned": "مجدولة {{when}}"
   },
   "review": {
     "quick": {
@@ -6121,7 +6126,9 @@
     "widen": "توسيع",
     "yesterday": "أمس",
     "hideCompleted": "إخفاء المكتملة",
-    "showCompletedTasks": "إظهار المكتملة"
+    "showCompletedTasks": "إظهار المكتملة",
+    "dropOverlaps": "تداخلات",
+    "dropPast": "في الماضي"
   },
   "upcoming": {
     "title": "التخطيط",
@@ -6130,8 +6137,6 @@
     "horizonsSoon": "قريبًا",
     "addTask": "أضف مهمة",
     "empty": "لا شيء مخطط له.",
-    "previous": "اليوم السابق",
-    "next": "اليوم التالي",
     "today": "اليوم",
     "showCalendar": "إظهار التقويم",
     "hideCalendar": "إخفاء التقويم",
@@ -6184,6 +6189,50 @@
     "someday": "يوماً ما",
     "showDayInCalendar": "إظهار في التقويم",
     "hideCompleted": "إخفاء المكتملة",
-    "showCompletedTasks": "إظهار المكتملة"
+    "showCompletedTasks": "إظهار المكتملة",
+    "resizeCalendar": "عرض التقويم",
+    "thisWeekHint": "مخطط لهذا الأسبوع دون يوم محدد",
+    "thisMonthHint": "في وقت ما من هذا الشهر دون يوم محدد",
+    "nextMonthHint": "مجدول للشهر القادم",
+    "somedayHint": "ربما لاحقاً، مؤجلة جانباً",
+    "calendarOn": "التقويم، {{day}}",
+    "overdue": "متأخرة",
+    "a11yPicked": "تم التقاط «{{name}}»",
+    "a11yOver": "تم نقل «{{name}}» فوق {{day}}",
+    "a11yOverNothing": "«{{name}}» لم تعد فوق أي يوم",
+    "a11yDropped": "تم إفلات «{{name}}» في {{day}}",
+    "a11yReturned": "أُعيدت «{{name}}» إلى مكانها",
+    "a11yCancelled": "أُلغي نقل «{{name}}»",
+    "closeCalendar": "إغلاق التقويم",
+    "overdueTaken": "المهام المتأخرة المجدولة لهذا اليوم",
+    "a11yInstructions": "لنقل مهمة، اضغط M، ثم انقلها بمفاتيح الأسهم، واضغط إدخال أو المسافة لإفلاتها، أو Esc للإلغاء. على مهمة محددة: الأسهم أو H، J، K، L للتنقل بين المهام والأيام؛ Shift مع اليسار أو اليمين ينقل المهمة يوماً واحداً؛ T لجدولتها لليوم، وShift+T للغد؛ إدخال لفتحها.",
+    "dateNav": "التواريخ",
+    "previousWeek": "الأسبوع السابق",
+    "nextWeek": "الأسبوع التالي",
+    "overdueCount": "متأخرة ({{count}})",
+    "rescheduleAll": "إعادة جدولة الكل لليوم",
+    "hideInbox": "طيّ صندوق الوارد",
+    "plannedOnDay": "مجدولة في يوم ({{count}})",
+    "goToDate": "الانتقال إلى التاريخ",
+    "expandInbox": "إظهار صندوق الوارد ({{count}})",
+    "filter": "تصفية",
+    "filterProjects": "المشاريع",
+    "filterTags": "الوسوم",
+    "filterPriority": "الأولوية",
+    "filterHigh": "عالية",
+    "filterMedium": "متوسطة",
+    "filterLow": "منخفضة",
+    "clearFilters": "مسح المرشحات",
+    "tomorrow": "غداً",
+    "week": "الأسبوع {{number}}",
+    "load": "{{planned}} / {{available}}",
+    "done": "منجزة ({{n}})",
+    "subtaskOf": "↳ {{parent}}",
+    "addToInbox": "إضافة إلى صندوق الوارد",
+    "inboxNewItem": "عنصر جديد في الوارد",
+    "addToInboxFailed": "تعذّرت الإضافة. حاول مرة أخرى.",
+    "addEmptyName": "أضف اسماً للمهمة",
+    "addTaskIn": "أضف مهمة إلى {{name}}",
+    "thisWeekOnlyPlanned": "لا شيء بدون يوم محدد · {{count}} مخططة في يوم"
   }
 }

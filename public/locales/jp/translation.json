@@ -1498,7 +1498,11 @@
     "registration_closed_title": "登録は終了しました",
     "registration_closed_message": "現在、新規アカウントの登録は無効になっています。アクセスについては管理者にお問い合わせください。",
     "confirm_password": "パスワード（確認）",
-    "already_have_account": "すでにアカウントをお持ちですか？"
+    "already_have_account": "すでにアカウントをお持ちですか？",
+    "rateLimitedRetrying": "リクエストが多すぎます。再試行しています…",
+    "rateLimitedGaveUp": "リクエストが多すぎます。セッションは有効なままです。少し待ってから再読み込みしてください。",
+    "serverBusyRetrying": "サーバーが混雑しています。再試行中…",
+    "serverBusyRetry": "再試行"
   },
   "dropdown": {
     "createNew": "新規作成",
@@ -4943,7 +4947,8 @@
     "loadError": "このタスクを読み込めませんでした。",
     "expand": "拡大",
     "shrink": "縮小",
-    "goTo": "移動"
+    "goTo": "移動",
+    "planned": "{{when}}に予定"
   },
   "review": {
     "quick": {
@@ -6047,7 +6052,9 @@
     "widen": "広げる",
     "yesterday": "昨日",
     "hideCompleted": "完了を非表示",
-    "showCompletedTasks": "完了を表示"
+    "showCompletedTasks": "完了を表示",
+    "dropOverlaps": "重複",
+    "dropPast": "過去"
   },
   "upcoming": {
     "title": "計画",
@@ -6056,8 +6063,6 @@
     "horizonsSoon": "近日公開",
     "addTask": "タスクを追加",
     "empty": "予定はありません。",
-    "previous": "前の日",
-    "next": "次の日",
     "today": "今日",
     "showCalendar": "カレンダーを表示",
     "hideCalendar": "カレンダーを隠す",
@@ -6110,6 +6115,50 @@
     "someday": "いつか",
     "showDayInCalendar": "カレンダーに表示",
     "hideCompleted": "完了を非表示",
-    "showCompletedTasks": "完了を表示"
+    "showCompletedTasks": "完了を表示",
+    "resizeCalendar": "カレンダーの幅",
+    "thisWeekHint": "今週に予定済み、曜日は未定",
+    "thisMonthHint": "今月のいずれか、曜日は未定",
+    "nextMonthHint": "来月に予定済み",
+    "somedayHint": "いつか、脇に置いておく",
+    "calendarOn": "カレンダー、{{day}}",
+    "overdue": "期限切れ",
+    "a11yPicked": "「{{name}}」を取り上げました",
+    "a11yOver": "「{{name}}」を{{day}}の上に移動しました",
+    "a11yOverNothing": "「{{name}}」はもう日付の上にありません",
+    "a11yDropped": "「{{name}}」を{{day}}に配置しました",
+    "a11yReturned": "「{{name}}」を元に戻しました",
+    "a11yCancelled": "「{{name}}」の移動をキャンセルしました",
+    "closeCalendar": "カレンダーを閉じる",
+    "overdueTaken": "今日に予定した期限切れのタスク",
+    "a11yInstructions": "タスクを移動するには M を押し、矢印キーで移動してから、Enter または スペース で配置、Esc でキャンセルします。フォーカス中のタスクでは、矢印キーまたは H、J、K、L でタスクと日付を移動、Shift と左右キーでタスクを1日ずらします。T で今日に予定、Shift+T で明日に予定、Enter で開きます。",
+    "dateNav": "日付",
+    "previousWeek": "前の週",
+    "nextWeek": "次の週",
+    "overdueCount": "期限切れ（{{count}}）",
+    "rescheduleAll": "すべて今日に再予定",
+    "hideInbox": "受信箱を折りたたむ",
+    "plannedOnDay": "日付に予定済み（{{count}}）",
+    "goToDate": "日付へ移動",
+    "expandInbox": "受信箱を表示（{{count}}）",
+    "filter": "フィルター",
+    "filterProjects": "プロジェクト",
+    "filterTags": "タグ",
+    "filterPriority": "優先度",
+    "filterHigh": "高",
+    "filterMedium": "中",
+    "filterLow": "低",
+    "clearFilters": "フィルターをクリア",
+    "tomorrow": "明日",
+    "week": "第{{number}}週",
+    "load": "{{planned}} / {{available}}",
+    "done": "完了（{{n}}）",
+    "subtaskOf": "↳ {{parent}}",
+    "addToInbox": "受信トレイに追加",
+    "inboxNewItem": "受信トレイの新しい項目",
+    "addToInboxFailed": "追加できませんでした。もう一度お試しください。",
+    "addEmptyName": "タスクの名前を入力してください",
+    "addTaskIn": "{{name}} にタスクを追加",
+    "thisWeekOnlyPlanned": "固定日のないものはありません · {{count}} 件が特定の日に予定されています"
   }
 }
