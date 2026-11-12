@@ -290,7 +290,7 @@ Natural key, unique per user: `habit_uid` + `local_date`; a second row with the 
 
 `habitAt(date)` returns the habit as it was on that date (see Versions), so a changed goal never rewrites the past. Dates are `YYYY-MM-DD` strings and all arithmetic is on civil days.
 
-The fixtures in `fixtures/habits/*.json` (169 cases transcribed from the Kotlin tests: evaluation, limits and free activities, minimum and ideal, progressions, pauses and trips, streaks, statistics, activity, timers, groups) are replayed by `backend/tests/unit/habits/goldenFixtures.test.js` and by `android/domain/.../GoldenFixturesTest.kt`. A rule changed on one side only fails one of them. A new rule starts with a new fixture, red on both sides.
+The fixtures in `fixtures/habits/*.json` (172 cases: evaluation, limits and free activities, minimum and ideal, progressions, pauses and trips, streaks, statistics, patterns, activity, timers, groups) are replayed by `backend/tests/unit/habits/goldenFixtures.test.js` and by `android/domain/.../GoldenFixturesTest.kt`. A rule changed on one side only fails one of them. A new rule starts with a new fixture, red on both sides.
 
 Not mirrored yet (Kotlin only): abstinence and alcohol statistics (`AbstinenceStats`, `AlcoholStats`, savings, elapsed time), habit insights, learned-question planning, week outlook and widget logic.
 
@@ -302,7 +302,7 @@ For the web UI. Same data and field names as the sync; every route needs a signe
 |---|---|---|
 | GET | `/cadence/habits?archived=&date=` | Habits with `goal` and `schedule` in force on `date` (default today in the user's zone) and `status`: `{date, evaluation, streak}` |
 | POST | `/cadence/habits` | Create a habit with its first versions: `{uid?, name, starts_on?, group_uid?, ..., goal: {target_minor, period, ...}, schedule?: {schedule_mode, active_days, ...}, effective_from?}` (`effective_from` defaults to `starts_on`, which defaults to today). `201`, or `200` for a known uid |
-| GET | `/cadence/habits/:uid?date=` | The habit with `goals`, `schedules`, `pauses`, `quick_values`, `reminders`, `timer`, `health_connect_rule`, `health_connect_imports`, `abstinence_logs`, `alcohol_consumptions`, `learned_question_settings`, `learned_question_records`, and `stats: {summary, activity}` (engine output, camelCase, see the fixtures README) |
+| GET | `/cadence/habits/:uid?date=` | The habit with `goals`, `schedules`, `pauses`, `quick_values`, `reminders`, `timer`, `health_connect_rule`, `health_connect_imports`, `abstinence_logs`, `alcohol_consumptions`, `learned_question_settings`, `learned_question_records`, and `stats: {summary, patterns, activity}` (engine output, camelCase, see the fixtures README; `patterns` = `{weekdays: [{day, done, counted, ratePercent}], months: [{month: "YYYY-MM", …}], year: {done, counted, ratePercent}}` over the 365 `summary.calendarDays`: done = MINIMUM, IDEAL, ACTIVITY; counted adds MISSED, NO_ACTIVITY; today counts only once done) |
 | PATCH | `/cadence/habits/:uid` | Change habit fields, including `group_uid` and `archived` |
 | DELETE | `/cadence/habits/:uid` | Delete the habit and everything under it |
 | GET | `/cadence/habits/:uid/{collection}` | List a collection (`entries` also takes `?from=&to=` on `local_date`) |

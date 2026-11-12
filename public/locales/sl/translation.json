@@ -5866,6 +5866,26 @@
       "quick": "Hitri gumbi: {{values}}",
       "reminders": "Opomniki: {{times}}",
       "title": "Cilj in urnik"
+    },
+    "patterns": {
+      "title": "Vzorci",
+      "heatmap": "Zadnjih 365 dni",
+      "cellStatus": "{{date}}: {{status}}",
+      "yearNotEnough": "Še ni dovolj dni",
+      "year": "V zadnjih 12 mesecih: {{rate}} % ({{done}} od {{counted}} dni)",
+      "weekdays": "Po dnevu v tednu",
+      "months": "Po mesecu",
+      "noRate": "{{name}}: še ni dovolj dni",
+      "rate": "{{name}}: {{rate}}",
+      "status": {
+        "IDEAL": "Idealno",
+        "MINIMUM": "Minimum",
+        "ACTIVITY": "Aktivnost",
+        "MISSED": "Zamujeno",
+        "NO_ACTIVITY": "Brez aktivnosti",
+        "PAUSED": "Zaustavljeno",
+        "UNPLANNED": "Ni načrtovano"
+      }
     }
   },
   "iconPicker": {

@@ -5863,6 +5863,26 @@
       "quick": "Быстрые кнопки: {{values}}",
       "reminders": "Напоминания: {{times}}",
       "title": "Цель и расписание"
+    },
+    "patterns": {
+      "title": "Закономерности",
+      "heatmap": "Последние 365 дней",
+      "cellStatus": "{{date}}: {{status}}",
+      "yearNotEnough": "Пока недостаточно дней",
+      "year": "За последние 12 месяцев: {{rate}} % ({{done}} из {{counted}} дней)",
+      "weekdays": "По дню недели",
+      "months": "По месяцам",
+      "noRate": "{{name}}: пока недостаточно дней",
+      "rate": "{{name}}: {{rate}}",
+      "status": {
+        "IDEAL": "Идеально",
+        "MINIMUM": "Минимум",
+        "ACTIVITY": "Активность",
+        "MISSED": "Пропущено",
+        "NO_ACTIVITY": "Нет активности",
+        "PAUSED": "На паузе",
+        "UNPLANNED": "Не запланировано"
+      }
     }
   },
   "iconPicker": {

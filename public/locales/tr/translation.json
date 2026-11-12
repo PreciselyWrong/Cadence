@@ -5797,6 +5797,26 @@
       "quick": "Hızlı düğmeler: {{values}}",
       "reminders": "Hatırlatıcılar: {{times}}",
       "title": "Hedef ve program"
+    },
+    "patterns": {
+      "title": "Örüntüler",
+      "heatmap": "Son 365 gün",
+      "cellStatus": "{{date}}: {{status}}",
+      "yearNotEnough": "Henüz yeterli gün yok",
+      "year": "Son 12 ay: {{rate}} % ({{counted}} günden {{done}} tanesi)",
+      "weekdays": "Haftanın gününe göre",
+      "months": "Aya göre",
+      "noRate": "{{name}}: henüz yeterli gün yok",
+      "rate": "{{name}}: {{rate}}",
+      "status": {
+        "IDEAL": "İdeal",
+        "MINIMUM": "Minimum",
+        "ACTIVITY": "Etkinlik",
+        "MISSED": "Kaçırıldı",
+        "NO_ACTIVITY": "Etkinlik yok",
+        "PAUSED": "Duraklatıldı",
+        "UNPLANNED": "Planlanmadı"
+      }
     }
   },
   "iconPicker": {

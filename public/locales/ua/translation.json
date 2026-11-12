@@ -5863,6 +5863,26 @@
       "quick": "Швидкі кнопки: {{values}}",
       "reminders": "Нагадування: {{times}}",
       "title": "Ціль і розклад"
+    },
+    "patterns": {
+      "title": "Закономірності",
+      "heatmap": "Останні 365 днів",
+      "cellStatus": "{{date}}: {{status}}",
+      "yearNotEnough": "Поки що недостатньо днів",
+      "year": "За останні 12 місяців: {{rate}} % ({{done}} з {{counted}} днів)",
+      "weekdays": "За днем тижня",
+      "months": "За місяцем",
+      "noRate": "{{name}}: поки що недостатньо днів",
+      "rate": "{{name}}: {{rate}}",
+      "status": {
+        "IDEAL": "Ідеально",
+        "MINIMUM": "Мінімум",
+        "ACTIVITY": "Активність",
+        "MISSED": "Пропущено",
+        "NO_ACTIVITY": "Немає активності",
+        "PAUSED": "На паузі",
+        "UNPLANNED": "Не заплановано"
+      }
     }
   },
   "iconPicker": {

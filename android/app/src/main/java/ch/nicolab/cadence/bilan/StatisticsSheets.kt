@@ -43,7 +43,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import ch.nicolab.cadence.HabitCardState
 import ch.nicolab.cadence.R
 import ch.nicolab.cadence.designsystem.components.tintedSurface
@@ -63,6 +65,7 @@ import ch.nicolab.cadence.domain.AbstinenceStatisticsDayStatus
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitActivityStats
 import ch.nicolab.cadence.domain.HabitEntry
+import ch.nicolab.cadence.domain.HabitPatterns
 import ch.nicolab.cadence.domain.HabitStatisticsDay
 import ch.nicolab.cadence.domain.HabitStatisticsDayStatus
 import ch.nicolab.cadence.domain.HabitStatisticsSummary
@@ -84,6 +87,9 @@ import ch.nicolab.cadence.ui.components.CalendarPeriod
 import ch.nicolab.cadence.ui.components.CalendarPeriodSelector
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -751,6 +757,109 @@ internal fun StatisticsCalendar(days: List<HabitStatisticsDay>) {
         )
     }
 }
+
+@Composable
+internal fun HabitPatternsPanel(patterns: HabitPatterns, tint: Color, modifier: Modifier = Modifier) {
+    val palette = cadence
+    val year = patterns.year
+    val yearRate = year.ratePercent
+    Column(modifier, verticalArrangement = Arrangement.spacedBy(Space.md)) {
+        Text(stringResource(R.string.habit_patterns_title), style = MaterialTheme.typography.titleMedium, color = palette.onSurface)
+        Text(
+            text = if (yearRate == null) {
+                stringResource(R.string.habit_patterns_not_enough_days)
+            } else {
+                stringResource(R.string.habit_patterns_year_rate, yearRate, year.done, year.counted)
+            },
+            style = MaterialTheme.typography.bodySmall,
+            color = palette.onSurfaceVariant,
+        )
+        Text(stringResource(R.string.habit_patterns_weekday_title), style = MaterialTheme.typography.labelLarge, color = palette.onSurfaceVariant)
+        Row(Modifier.fillMaxWidth()) {
+            patterns.weekdays.forEach { (day, tally) ->
+                PatternBar(
+                    name = day.getDisplayName(TextStyle.FULL, Locale.FRENCH),
+                    label = day.getDisplayName(TextStyle.NARROW, Locale.FRENCH),
+                    rate = tally.ratePercent,
+                    tint = tint,
+                    modifier = Modifier.weight(1f),
+                )
+            }
+        }
+        Text(stringResource(R.string.habit_patterns_month_title), style = MaterialTheme.typography.labelLarge, color = palette.onSurfaceVariant)
+        Row(Modifier.fillMaxWidth()) {
+            patterns.months.takeLast(PATTERN_MONTHS).forEach { (month, tally) ->
+                PatternBar(
+                    name = month.format(PATTERN_MONTH_FORMAT),
+                    label = month.month.getDisplayName(TextStyle.NARROW, Locale.FRENCH),
+                    rate = tally.ratePercent,
+                    tint = tint,
+                    modifier = Modifier.weight(1f),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun PatternBar(name: String, label: String, rate: Int?, tint: Color, modifier: Modifier) {
+    val palette = cadence
+    val valueText = if (rate == null) {
+        stringResource(R.string.habit_patterns_no_rate)
+    } else {
+        stringResource(R.string.habit_patterns_percent_short, rate)
+    }
+    val rateText = if (rate == null) {
+        stringResource(R.string.habit_patterns_no_counted_day)
+    } else {
+        stringResource(R.string.habit_patterns_percent, rate)
+    }
+    val description = stringResource(R.string.habit_patterns_bar_description, name, rateText)
+    Column(
+        modifier.semantics(mergeDescendants = true) { contentDescription = description },
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(Space.xs),
+    ) {
+        Box(
+            Modifier
+                .fillMaxWidth(PATTERN_BAR_WIDTH_FRACTION)
+                .height(PATTERN_BAR_MAX_HEIGHT)
+                .clip(Radius.Pill)
+                .background(palette.containerHigh),
+            contentAlignment = Alignment.BottomCenter,
+        ) {
+            val fraction = ((rate ?: 0) / 100f).coerceIn(0f, 1f)
+            if (fraction > 0f) {
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(fraction)
+                        .clip(Radius.Pill)
+                        .background(tint),
+                )
+            }
+        }
+        Text(
+            label,
+            style = MaterialTheme.typography.labelSmall,
+            color = palette.onSurface,
+            maxLines = 1,
+            softWrap = false,
+        )
+        Text(
+            valueText,
+            style = MaterialTheme.typography.labelSmall,
+            color = palette.onSurfaceVariant,
+            maxLines = 1,
+            softWrap = false,
+        )
+    }
+}
+
+private const val PATTERN_MONTHS = 12
+private const val PATTERN_BAR_WIDTH_FRACTION = 0.6f
+private val PATTERN_BAR_MAX_HEIGHT = 64.dp
+private val PATTERN_MONTH_FORMAT: DateTimeFormatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.FRENCH)
 
 private fun statisticsDayLabel(status: HabitStatisticsDayStatus): Int = when (status) {
     HabitStatisticsDayStatus.UNPLANNED -> R.string.habit_stats_unplanned

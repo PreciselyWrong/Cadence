@@ -5815,6 +5815,26 @@
       "quick": "Hurtigknapper: {{values}}",
       "reminders": "Påmindelser: {{times}}",
       "title": "Mål og plan"
+    },
+    "patterns": {
+      "title": "Mønstre",
+      "heatmap": "Sidste 365 dage",
+      "cellStatus": "{{date}}: {{status}}",
+      "yearNotEnough": "Ikke nok dage endnu",
+      "year": "Seneste 12 måneder: {{rate}} % ({{done}} af {{counted}} dage)",
+      "weekdays": "Efter ugedag",
+      "months": "Efter måned",
+      "noRate": "{{name}}: ikke nok dage endnu",
+      "rate": "{{name}}: {{rate}}",
+      "status": {
+        "IDEAL": "Ideel",
+        "MINIMUM": "Minimum",
+        "ACTIVITY": "Aktivitet",
+        "MISSED": "Misset",
+        "NO_ACTIVITY": "Ingen aktivitet",
+        "PAUSED": "Pauset",
+        "UNPLANNED": "Ikke planlagt"
+      }
     }
   },
   "iconPicker": {

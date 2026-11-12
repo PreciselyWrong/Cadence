@@ -30,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -56,6 +57,7 @@ import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.domain.GoalType
 import ch.nicolab.cadence.domain.HabitActivityStats
 import ch.nicolab.cadence.domain.HabitEntry
+import ch.nicolab.cadence.domain.HabitPatterns
 import ch.nicolab.cadence.domain.MeasurementUnit
 import ch.nicolab.cadence.domain.PeriodType
 import ch.nicolab.cadence.domain.StatisticsConfidence
@@ -161,6 +163,13 @@ internal fun HabitStatisticsDetailSheet(
             item { Hairline() }
             if (isTracker) item { TrackerActivityCalendar(item) }
             else item { item.statistics?.let { StatisticsCalendar(it.calendarDays) } }
+            if (!item.stored.goal.isLimit && !isTracker) {
+                item {
+                    item.statistics?.let { s ->
+                        HabitPatternsPanel(remember(s) { HabitPatterns.compute(s.calendarDays, s.untilExclusive) }, tint, Modifier.fillMaxWidth())
+                    }
+                }
+            }
             if (!item.stored.goal.isLimit && !isTracker) {
                 item { HabitInsightsPanel(item.insights, item.stored.goal, Modifier.fillMaxWidth()) }
             }

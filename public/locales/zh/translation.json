@@ -5797,6 +5797,26 @@
       "quick": "快捷按钮：{{values}}",
       "reminders": "提醒：{{times}}",
       "title": "目标与计划"
+    },
+    "patterns": {
+      "title": "规律",
+      "heatmap": "最近 365 天",
+      "cellStatus": "{{date}}：{{status}}",
+      "yearNotEnough": "天数还不够",
+      "year": "近 12 个月：{{rate}} %（{{done}}/{{counted}} 天）",
+      "weekdays": "按星期",
+      "months": "按月",
+      "noRate": "{{name}}：天数还不够",
+      "rate": "{{name}}：{{rate}}",
+      "status": {
+        "IDEAL": "理想",
+        "MINIMUM": "最低",
+        "ACTIVITY": "活动",
+        "MISSED": "未完成",
+        "NO_ACTIVITY": "无活动",
+        "PAUSED": "暂停",
+        "UNPLANNED": "未计划"
+      }
     }
   },
   "iconPicker": {

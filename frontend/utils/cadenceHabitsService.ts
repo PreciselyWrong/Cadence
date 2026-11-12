@@ -195,6 +195,33 @@ export interface CadenceSummary {
     calendarDays: CadenceDayEntry[];
 }
 
+export interface CadencePatternTally {
+    done: number;
+    counted: number;
+    ratePercent: number | null;
+}
+
+export interface CadenceWeekdayPattern extends CadencePatternTally {
+    day:
+        | 'MONDAY'
+        | 'TUESDAY'
+        | 'WEDNESDAY'
+        | 'THURSDAY'
+        | 'FRIDAY'
+        | 'SATURDAY'
+        | 'SUNDAY';
+}
+
+export interface CadenceMonthPattern extends CadencePatternTally {
+    month: string;
+}
+
+export interface CadencePatterns {
+    weekdays: CadenceWeekdayPattern[];
+    months: CadenceMonthPattern[];
+    year: CadencePatternTally;
+}
+
 export interface CadenceActivity {
     entries30: number;
     activeDays30: number;
@@ -218,7 +245,11 @@ export interface CadenceHabitDetail extends CadenceHabit {
     reminders: CadenceReminder[];
     abstinence_logs: AbstinenceLog[];
     alcohol_consumptions: AlcoholConsumption[];
-    stats: { summary: CadenceSummary; activity: CadenceActivity };
+    stats: {
+        summary: CadenceSummary;
+        patterns: CadencePatterns;
+        activity: CadenceActivity;
+    };
 }
 
 export interface CadenceHabitList {

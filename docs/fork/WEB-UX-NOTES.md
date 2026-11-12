@@ -121,6 +121,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 - **Décision** : la photo devient une bannière pleine largeur en haut de la page projet (112 px sur téléphone, 176 px sur grand écran), sans texte par-dessus ; le carré de l'en-tête et les lignes de la liste gardent toujours l'icône colorée. Le carré ouvre toujours le choix de l'image. Sans image, rien ne change.
 - **Android** : fait dans la même étape (`ui/ProjectBanner.kt`) : bannière de 140 dp entre les actions et le titre, en lecture seule ; rien ne s'affiche si l'image ne se charge pas. La clé d'API n'accompagne que les chemins du serveur (`model/ProjectImage.kt`).
 
+### 2026-11-05 — Régularité d'une habitude : carte annuelle, jours de la semaine, mois
+
+- **Problème** : la page d'une habitude ne montrait que des chiffres sur 30 jours ; impossible de voir quels jours ou quels mois l'habitude tient.
+- **Décision** : section « Patterns » sous Statistiques (habitudes et activités libres, pas les limites ni l'abstinence) : carte des 365 jours (colonnes = semaines, lundi en haut, défilement horizontal calé sur aujourd'hui), taux sur 12 mois, barres par jour de la semaine et par mois. Les chiffres viennent du moteur commun (`computePatterns` / `HabitPatterns`, cas dorés `fixtures/habits/patterns.json`) ; aujourd'hui ne compte qu'une fois réussi. Logique : `frontend/components/Habits/HabitPatterns.tsx`.
+- **Android** : livré dans la même étape, panneau « Régularité » de la fiche Statistiques du Bilan (le calendrier de 365 jours y existait déjà) ; à vérifier sur le téléphone.
+
 ### 2026-11-04 — Bilan du soir (web)
 
 - **Problème** : après la journée, le résumé du matin ne répond plus à la question utile : qu'est-ce qui est fait, qu'est-ce qui reste ce soir, qu'est-ce qui glisse, et que vaut demain.

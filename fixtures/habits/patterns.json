@@ -1,0 +1,71 @@
+{
+  "suite": "patterns",
+  "cases": [
+    {
+      "kind": "patterns",
+      "name": "weekdays months and year count done over evaluated days, today only once done",
+      "source": "HabitPatternsTest.kt: weekdays months and year count done over evaluated days",
+      "today": "2026-11-05",
+      "days": [
+        { "date": "2026-10-26", "status": "MISSED" },
+        { "date": "2026-10-27", "status": "UNPLANNED" },
+        { "date": "2026-10-28", "status": "PAUSED" },
+        { "date": "2026-11-02", "status": "IDEAL" },
+        { "date": "2026-11-03", "status": "MISSED" },
+        { "date": "2026-11-04", "status": "MINIMUM" },
+        { "date": "2026-11-05", "status": "MISSED" }
+      ],
+      "expect": {
+        "weekdays": [
+          { "day": "MONDAY", "done": 1, "counted": 2, "ratePercent": 50 },
+          { "day": "TUESDAY", "done": 0, "counted": 1, "ratePercent": 0 },
+          { "day": "WEDNESDAY", "done": 1, "counted": 1, "ratePercent": 100 },
+          { "day": "THURSDAY", "done": 0, "counted": 0, "ratePercent": null },
+          { "day": "FRIDAY", "done": 0, "counted": 0, "ratePercent": null },
+          { "day": "SATURDAY", "done": 0, "counted": 0, "ratePercent": null },
+          { "day": "SUNDAY", "done": 0, "counted": 0, "ratePercent": null }
+        ],
+        "months": [
+          { "month": "2026-10", "done": 0, "counted": 1, "ratePercent": 0 },
+          { "month": "2026-11", "done": 2, "counted": 3, "ratePercent": 67 }
+        ],
+        "year": { "done": 2, "counted": 4, "ratePercent": 50 }
+      }
+    },
+    {
+      "kind": "patterns",
+      "name": "a tracker counts activity days, today included once logged",
+      "source": "HabitPatternsTest.kt: a tracker counts activity days",
+      "today": "2026-11-05",
+      "days": [
+        { "date": "2026-11-03", "status": "NO_ACTIVITY" },
+        { "date": "2026-11-04", "status": "NO_ACTIVITY" },
+        { "date": "2026-11-05", "status": "ACTIVITY" }
+      ],
+      "expect": {
+        "weekdays": [
+          { "day": "MONDAY", "counted": 0 },
+          { "day": "TUESDAY", "done": 0, "counted": 1 },
+          { "day": "WEDNESDAY", "done": 0, "counted": 1 },
+          { "day": "THURSDAY", "done": 1, "counted": 1, "ratePercent": 100 },
+          { "day": "FRIDAY", "counted": 0 },
+          { "day": "SATURDAY", "counted": 0 },
+          { "day": "SUNDAY", "counted": 0 }
+        ],
+        "months": [{ "month": "2026-11", "done": 1, "counted": 3, "ratePercent": 33 }],
+        "year": { "done": 1, "counted": 3, "ratePercent": 33 }
+      }
+    },
+    {
+      "kind": "patterns",
+      "name": "no evaluated day gives no rate",
+      "source": "HabitPatternsTest.kt: no evaluated day gives no rate",
+      "today": "2026-11-05",
+      "days": [{ "date": "2026-11-04", "status": "UNPLANNED" }],
+      "expect": {
+        "months": [{ "month": "2026-11", "done": 0, "counted": 0, "ratePercent": null }],
+        "year": { "done": 0, "counted": 0, "ratePercent": null }
+      }
+    }
+  ]
+}

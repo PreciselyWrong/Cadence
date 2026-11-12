@@ -5787,6 +5787,26 @@
       "quick": "Quick buttons: {{values}}",
       "reminders": "Reminders: {{times}}",
       "title": "Goal and schedule"
+    },
+    "patterns": {
+      "title": "Patterns",
+      "heatmap": "Last 365 days",
+      "cellStatus": "{{date}}: {{status}}",
+      "yearNotEnough": "Not enough days yet",
+      "year": "Over 12 months: {{rate}} % ({{done}} of {{counted}} days)",
+      "weekdays": "By weekday",
+      "months": "By month",
+      "noRate": "{{name}}: not enough days",
+      "rate": "{{name}}: {{rate}}",
+      "status": {
+        "IDEAL": "Ideal",
+        "MINIMUM": "Minimum",
+        "ACTIVITY": "Activity",
+        "MISSED": "Missed",
+        "NO_ACTIVITY": "No activity",
+        "PAUSED": "Paused",
+        "UNPLANNED": "Not planned"
+      }
     }
   },
   "iconPicker": {

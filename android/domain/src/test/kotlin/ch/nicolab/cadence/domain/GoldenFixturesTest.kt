@@ -153,6 +153,18 @@ class GoldenFixturesTest {
 
     // --- Exécution ------------------------------------------------------------------------
 
+    private fun tally(tally: HabitPatternTally) = buildJsonObject {
+        put("done", tally.done)
+        put("counted", tally.counted)
+        put("ratePercent", tally.ratePercent)
+    }
+
+    private fun patterns(patterns: HabitPatterns) = buildJsonObject {
+        put("weekdays", JsonArray(patterns.weekdays.map { (day, t) -> JsonObject(mapOf("day" to JsonPrimitive(day.name)) + tally(t)) }))
+        put("months", JsonArray(patterns.months.map { (month, t) -> JsonObject(mapOf("month" to JsonPrimitive(month.toString())) + tally(t)) }))
+        put("year", tally(patterns.year))
+    }
+
     private fun run(case: JsonObject): JsonElement {
         fun date(key: String) = LocalDate.parse(case.str(key)!!)
         return when (val kind = case.getValue("kind").jsonPrimitive.content) {
@@ -180,6 +192,13 @@ class GoldenFixturesTest {
             "activity" -> {
                 val id = case.str("habitId")!!
                 activity(HabitActivityStats.compute(id, date("startsOn"), date("today"), entries(case, id)))
+            }
+            "patterns" -> {
+                val days = case.getValue("days").jsonArray.map {
+                    val day = it.jsonObject
+                    HabitStatisticsDay(LocalDate.parse(day.str("date")!!), HabitStatisticsDayStatus.valueOf(day.str("status")!!))
+                }
+                patterns(HabitPatterns.compute(days, date("today")))
             }
             "target_at" -> buildJsonObject {
                 put("targetMinor", goal(case.getValue("goal").jsonObject).targetAt(date("date")))

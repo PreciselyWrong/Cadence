@@ -5797,6 +5797,26 @@
       "quick": "Nút nhanh: {{values}}",
       "reminders": "Nhắc nhở: {{times}}",
       "title": "Mục tiêu và lịch"
+    },
+    "patterns": {
+      "title": "Xu hướng",
+      "heatmap": "365 ngày gần đây",
+      "cellStatus": "{{date}}: {{status}}",
+      "yearNotEnough": "Chưa đủ số ngày",
+      "year": "Trong 12 tháng: {{rate}} % ({{done}} trên {{counted}} ngày)",
+      "weekdays": "Theo thứ trong tuần",
+      "months": "Theo tháng",
+      "noRate": "{{name}}: chưa đủ số ngày",
+      "rate": "{{name}}: {{rate}}",
+      "status": {
+        "IDEAL": "Lý tưởng",
+        "MINIMUM": "Tối thiểu",
+        "ACTIVITY": "Hoạt động",
+        "MISSED": "Bỏ lỡ",
+        "NO_ACTIVITY": "Không hoạt động",
+        "PAUSED": "Tạm dừng",
+        "UNPLANNED": "Chưa lên kế hoạch"
+      }
     }
   },
   "iconPicker": {

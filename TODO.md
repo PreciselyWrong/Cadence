@@ -94,6 +94,15 @@ Branche `fix/note-quickadd-focus-c7e743d5`.
 - [x] Android : création d'une cible inconnue depuis sa puce, choix `@` des personnes, barre de mise en forme complète (lien, code, tableau), rétroliens d'une personne
   Rétroliens d'une personne : web seulement (pas de fiche de personne sur Android, `docs/44-notes-links.md`).
 
+## Statistiques d'habitudes plus riches [cadence:bdad4581-3f5c-4b43-a26e-253fd0ec7731]
+
+Branche `feat/habit-stats-bdad4581`.
+
+- [x] Moteur commun : motifs par jour de la semaine, par mois et sur 12 mois (JS `patterns.js`, Kotlin `HabitPatterns.kt`, cas dorés `patterns.json`, `stats.patterns` dans l'API).
+- [x] Web : section « Patterns » (carte des 365 jours, barres jours et mois), 26 langues, vérifiée à 375 px et en bureau.
+- [x] Android : panneau « Régularité » dans la fiche Statistiques du Bilan.
+- [ ] Vérifier le panneau Android sur le téléphone (aucun appareil le 2026-11-05).
+
 ## Next
 
 - Add-on Firefox Cadence signé en non listé (web-ext sign --channel=unlisted, clés AMO dans .env, gecko.id fixe, script publish.ps1 -Sign) pour une installation permanente sans le site de Mozilla.

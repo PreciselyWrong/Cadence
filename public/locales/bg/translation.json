@@ -5812,6 +5812,26 @@
       "quick": "Бързи бутони: {{values}}",
       "reminders": "Напомняния: {{times}}",
       "title": "Цел и график"
+    },
+    "patterns": {
+      "title": "Модели",
+      "heatmap": "Последните 365 дни",
+      "cellStatus": "{{date}}: {{status}}",
+      "yearNotEnough": "Още няма достатъчно дни",
+      "year": "През последните 12 месеца: {{rate}} % ({{done}} от {{counted}} дни)",
+      "weekdays": "По ден от седмицата",
+      "months": "По месец",
+      "noRate": "{{name}}: още няма достатъчно дни",
+      "rate": "{{name}}: {{rate}}",
+      "status": {
+        "IDEAL": "Идеално",
+        "MINIMUM": "Минимум",
+        "ACTIVITY": "Активност",
+        "MISSED": "Пропуснато",
+        "NO_ACTIVITY": "Без активност",
+        "PAUSED": "На пауза",
+        "UNPLANNED": "Не е планирано"
+      }
     }
   },
   "iconPicker": {

@@ -6169,6 +6169,26 @@
       "quick": "Rýchle tlačidlá: {{values}}",
       "reminders": "Pripomienky: {{times}}",
       "title": "Cieľ a plán"
+    },
+    "patterns": {
+      "title": "Vzory",
+      "heatmap": "Posledných 365 dní",
+      "cellStatus": "{{date}}: {{status}}",
+      "yearNotEnough": "Zatiaľ nie je dostatok dní",
+      "year": "Za posledných 12 mesiacov: {{rate}} % ({{done}} z {{counted}} dní)",
+      "weekdays": "Podľa dňa v týždni",
+      "months": "Podľa mesiaca",
+      "noRate": "{{name}}: zatiaľ nie je dostatok dní",
+      "rate": "{{name}}: {{rate}}",
+      "status": {
+        "IDEAL": "Ideálne",
+        "MINIMUM": "Minimum",
+        "ACTIVITY": "Aktivita",
+        "MISSED": "Zmeškané",
+        "NO_ACTIVITY": "Žiadna aktivita",
+        "PAUSED": "Pozastavené",
+        "UNPLANNED": "Neplánované"
+      }
     }
   },
   "iconPicker": {

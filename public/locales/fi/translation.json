@@ -5812,6 +5812,26 @@
       "quick": "Pikapainikkeet: {{values}}",
       "reminders": "Muistutukset: {{times}}",
       "title": "Tavoite ja aikataulu"
+    },
+    "patterns": {
+      "title": "Kaavat",
+      "heatmap": "Viimeiset 365 päivää",
+      "cellStatus": "{{date}}: {{status}}",
+      "yearNotEnough": "Ei vielä tarpeeksi päiviä",
+      "year": "Viimeiset 12 kuukautta: {{rate}} % ({{done}}/{{counted}} päivää)",
+      "weekdays": "Viikonpäivittäin",
+      "months": "Kuukausittain",
+      "noRate": "{{name}}: ei vielä tarpeeksi päiviä",
+      "rate": "{{name}}: {{rate}}",
+      "status": {
+        "IDEAL": "Ihanteellinen",
+        "MINIMUM": "Minimi",
+        "ACTIVITY": "Aktiivisuus",
+        "MISSED": "Väliin jäänyt",
+        "NO_ACTIVITY": "Ei aktiivisuutta",
+        "PAUSED": "Tauolla",
+        "UNPLANNED": "Ei suunniteltu"
+      }
     }
   },
   "iconPicker": {

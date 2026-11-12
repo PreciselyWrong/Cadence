@@ -5815,6 +5815,26 @@
       "quick": "Snabbknappar: {{values}}",
       "reminders": "Påminnelser: {{times}}",
       "title": "Mål och schema"
+    },
+    "patterns": {
+      "title": "Mönster",
+      "heatmap": "Senaste 365 dagarna",
+      "cellStatus": "{{date}}: {{status}}",
+      "yearNotEnough": "Inte tillräckligt med dagar ännu",
+      "year": "Senaste 12 månaderna: {{rate}} % ({{done}} av {{counted}} dagar)",
+      "weekdays": "Per veckodag",
+      "months": "Per månad",
+      "noRate": "{{name}}: inte tillräckligt med dagar ännu",
+      "rate": "{{name}}: {{rate}}",
+      "status": {
+        "IDEAL": "Idealisk",
+        "MINIMUM": "Minimum",
+        "ACTIVITY": "Aktivitet",
+        "MISSED": "Missad",
+        "NO_ACTIVITY": "Ingen aktivitet",
+        "PAUSED": "Pausad",
+        "UNPLANNED": "Inte planerad"
+      }
     }
   },
   "iconPicker": {

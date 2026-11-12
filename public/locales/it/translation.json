@@ -5827,6 +5827,26 @@
       "quick": "Pulsanti rapidi: {{values}}",
       "reminders": "Promemoria: {{times}}",
       "title": "Obiettivo e programmazione"
+    },
+    "patterns": {
+      "title": "Schemi",
+      "heatmap": "Ultimi 365 giorni",
+      "cellStatus": "{{date}}: {{status}}",
+      "yearNotEnough": "Non ci sono ancora abbastanza giorni",
+      "year": "Negli ultimi 12 mesi: {{rate}} % ({{done}} giorni su {{counted}})",
+      "weekdays": "Per giorno della settimana",
+      "months": "Per mese",
+      "noRate": "{{name}}: non ci sono ancora abbastanza giorni",
+      "rate": "{{name}}: {{rate}}",
+      "status": {
+        "IDEAL": "Ideale",
+        "MINIMUM": "Minimo",
+        "ACTIVITY": "Attività",
+        "MISSED": "Mancato",
+        "NO_ACTIVITY": "Nessuna attività",
+        "PAUSED": "In pausa",
+        "UNPLANNED": "Non previsto"
+      }
     }
   },
   "iconPicker": {
