@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
@@ -133,10 +134,9 @@ private fun LinkTexts(title: String, subtitle: String?, domain: String?, stats: 
     }
 }
 
-/** Image du serveur sur une pastille à l'initiale du domaine : elle reste visible si l'image manque. */
+/** Pastille d'un domaine : son initiale sur une teinte stable par domaine ; [overlay] (une image) se pose par-dessus. */
 @Composable
-private fun Thumbnail(preview: CachedPreview?, domain: String, modifier: Modifier, shape: Shape) {
-    val context = LocalContext.current
+internal fun DomainPastille(domain: String, modifier: Modifier, shape: Shape, overlay: @Composable BoxScope.() -> Unit = {}) {
     val tint = remember(domain) { Color(HabitColorChoices[(domain.hashCode() and Int.MAX_VALUE) % HabitColorChoices.size]) }
     Box(modifier.clip(shape).background(tint.copy(alpha = 0.18f)), contentAlignment = Alignment.Center) {
         Text(
@@ -144,6 +144,15 @@ private fun Thumbnail(preview: CachedPreview?, domain: String, modifier: Modifie
             style = MaterialTheme.typography.titleLarge,
             color = readableTintOf(tint, tintedSurface(tint, 0.18f, cadence.containerHigh)),
         )
+        overlay()
+    }
+}
+
+/** Image du serveur sur une pastille à l'initiale du domaine : elle reste visible si l'image manque. */
+@Composable
+private fun Thumbnail(preview: CachedPreview?, domain: String, modifier: Modifier, shape: Shape) {
+    val context = LocalContext.current
+    DomainPastille(domain, modifier, shape) {
         preview?.imageUrl?.let { image ->
             AsyncImage(
                 model = ImageRequest.Builder(context).data(image).crossfade(true).build(),

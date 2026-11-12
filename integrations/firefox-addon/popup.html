@@ -14,6 +14,14 @@
             <p id="url" class="muted"></p>
             <button id="save" type="submit" data-i18n="action_task"></button>
         </form>
+        <section id="projects" hidden>
+            <label><span data-i18n="field_project"></span><select id="project"></select></label>
+            <div class="row">
+                <button id="send-tab" type="button" data-i18n="action_send_tab"></button>
+                <button id="send-group" type="button" data-i18n="action_send_group" hidden></button>
+                <button id="open-project" type="button" data-i18n="action_open_project"></button>
+            </div>
+        </section>
         <p id="message" role="status" hidden></p>
         <button id="options" type="button" class="link" data-i18n="action_options"></button>
         <script src="core.js"></script>

@@ -475,10 +475,39 @@ function registerTaskTools(server, context, tools) {
                         'Page the task points to (http or https), opened from its source badge.',
                 },
                 ...recurrenceInputSchemaProperties,
+                url: {
+                    type: 'string',
+                    description:
+                        'A web address the task is about: it goes first in the note, and without a name the task is named from the kind of page (« Try: owner/repo », « Read: … », « Watch: … »). Without a project the task waits in Tasks to sort.',
+                },
             },
-            required: ['name'],
+            required: [],
         },
         handler: async (params) => {
+            // An address makes the task the way a capture does
+            // (docs/37-links.md): named by its kind unless named, the
+            // address first in the note, waiting for « Quand ? ».
+            if (params.url !== undefined) {
+                const { normalizeUrl } = require('../../links/core/urls');
+                const url = normalizeUrl(String(params.url).trim());
+                if (!url) throw new Error('url must be an http(s) address');
+                const words = (params.note ?? params.description ?? '').trim();
+                params = {
+                    ...params,
+                    name:
+                        params.name?.trim() ||
+                        require('../../links/service').taskName(context.user, {
+                            url,
+                        }),
+                    note: [url, words].filter(Boolean).join('\n\n'),
+                    source: params.source ?? 'link',
+                    source_url: params.source_url ?? url,
+                    needs_when: !params.project_id,
+                };
+            }
+            if (!params.name || !String(params.name).trim()) {
+                throw new Error('name is required (or a url)');
+            }
             // Validate project access before creating task
             const resolvedProjectId = params.project_id
                 ? await validateProjectAccess(params.project_id, context.userId)
@@ -577,6 +606,7 @@ function registerTaskTools(server, context, tools) {
                         ? 'mcp'
                         : parseTaskSource(params.source),
                 source_url: parseTaskSourceUrl(params.source_url) ?? null,
+                ...(params.needs_when ? { needs_when: true } : {}),
             };
 
             if (params.estimated_minutes !== undefined) {

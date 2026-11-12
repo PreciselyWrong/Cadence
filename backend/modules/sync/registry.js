@@ -266,14 +266,24 @@ const ENTITIES = {
         fields: ['content', 'title', 'status', 'source'],
         refs: {},
     },
-    // Links are made on purpose (POST /links), never by the server or a
-    // device: a device only edits or deletes one. A new address goes through
-    // PATCH /links/:uid, which reads the new page.
+    // A project's pages (docs/37-links.md): a device adds one to a project
+    // (address and project required), renames it, notes it or removes it.
+    // A new address of an existing page goes through PATCH /links/:uid,
+    // which reads the new page.
     link: {
         model: 'Link',
         destroy: (row) => require('../links/repository').remove(row),
         validate: async (row, values) => {
-            if (!row) return 'unknown_link';
+            const { normalizeUrl } = require('../links/core/urls');
+            if (!row) {
+                if (!values.project_id) return 'project_required';
+                if (!normalizeUrl(values.url ?? '')) return 'invalid_url';
+            } else if (
+                'url' in values &&
+                normalizeUrl(values.url ?? '') !== row.url
+            ) {
+                return 'url_readonly';
+            }
             const { normalizeLinkStatus } = require('../links/core/constants');
             if (normalizeLinkStatus(values).invalid) return 'invalid_status';
             const { isDay } = require('../links/core/reviewDate');
@@ -289,12 +299,27 @@ const ENTITIES = {
         // A former status is read as new, and a parked one gets its review day.
         prepareValues: (row, values) => {
             const { normalizeLinkStatus } = require('../links/core/constants');
+            const {
+                normalizeUrl,
+                classifyKind,
+            } = require('../links/core/urls');
             Object.assign(values, normalizeLinkStatus(values).fields);
+            if (row) {
+                delete values.url;
+            } else {
+                values.url = normalizeUrl(values.url);
+                values.kind = classifyKind(values.url);
+            }
+        },
+        // A page added by a device is read like any new page.
+        afterApply: async ({ row, previous }) => {
+            if (!previous && row.fetch_status === 'pending') {
+                require('../links/jobs').enqueueFetch(row.id);
+            }
         },
         version: 1,
-        fields: ['title', 'note', 'status', 'review_at'],
+        fields: ['url', 'title', 'note', 'status', 'review_at'],
         serverFields: [
-            'url',
             'description',
             'image_url',
             'site_name',

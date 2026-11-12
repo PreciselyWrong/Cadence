@@ -2,6 +2,7 @@
 
 package ch.nicolab.cadence.tasks.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -72,6 +73,7 @@ import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.tasks.model.ProjectNotes
+import ch.nicolab.cadence.tasks.model.ProjectPages
 import ch.nicolab.cadence.tasks.model.NoteItem
 import androidx.compose.foundation.lazy.items
 import ch.nicolab.cadence.designsystem.theme.cadence
@@ -343,6 +345,9 @@ internal fun ProjectTasksPane(
     val allNotes by viewModel.notes.collectAsStateWithLifecycle()
     val notes = remember(allNotes, projectUid) { ProjectNotes.of(allNotes, projectUid) }
     val allTasks by viewModel.allTasks.collectAsStateWithLifecycle()
+    val allLinks by viewModel.links.collectAsStateWithLifecycle()
+    val pages = remember(allLinks, projectUid) { ProjectPages.of(allLinks, projectUid) }
+    var pageDialog by remember(projectUid) { mutableStateOf<ProjectPageDialog?>(null) }
     val tasks by remember(projectUid) { viewModel.observeProjectTasks(projectUid) }
         .collectAsStateWithLifecycle(initialValue = emptyList())
     val moment by viewModel.moment.collectAsStateWithLifecycle()
@@ -419,6 +424,30 @@ internal fun ProjectTasksPane(
                                     },
                                 )
                             }
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.project_pages_add)) },
+                                onClick = {
+                                    menuOpen = false
+                                    pageDialog = ProjectPageDialog.Add
+                                },
+                            )
+                            if (pages.isNotEmpty()) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.project_pages_copy_markdown)) },
+                                    onClick = {
+                                        menuOpen = false
+                                        context.copyText(projectName, ProjectPages.markdown(pages))
+                                        Toast.makeText(context, R.string.project_pages_copied, Toast.LENGTH_SHORT).show()
+                                    },
+                                )
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.project_pages_check)) },
+                                    onClick = {
+                                        menuOpen = false
+                                        pageDialog = ProjectPageDialog.Check
+                                    },
+                                )
+                            }
                         }
                     }
                 }
@@ -451,7 +480,7 @@ internal fun ProjectTasksPane(
                 SubProjectRow(sub, rowGroupShape(index, subProjects.size)) { onOpenProject(sub.project.uid) }
             }
         }
-        if (tasks.isEmpty() && subProjects.isEmpty() && notes.isEmpty()) {
+        if (tasks.isEmpty() && subProjects.isEmpty() && notes.isEmpty() && pages.isEmpty()) {
             item { EmptyState(R.string.tasks_project_empty) }
         }
         if (outline) {
@@ -473,6 +502,7 @@ internal fun ProjectTasksPane(
             // L'en-tête porte déjà le projet : les lignes ne répètent pas son nom.
             taskRows(tasks, emptyMap(), projectColors, moment, viewModel, onOpen)
         }
+        projectPageItems(pages, onMenu = { pageDialog = it })
         if (notes.isNotEmpty()) {
             item(key = "notes") { SectionHeader(title = stringResource(R.string.tasks_inbox_segment_notes), count = notes.size) }
             items(notes, key = { "note-${it.uid}" }) { note ->
@@ -483,6 +513,9 @@ internal fun ProjectTasksPane(
 
     if (editingStatus && project != null) {
         ProjectEditSheets(project = project, viewModel = viewModel, onDismiss = { editingStatus = false })
+    }
+    pageDialog?.let { dialog ->
+        ProjectPageDialogs(dialog, projectUid, pages, viewModel, onDismiss = { pageDialog = null })
     }
 }
 

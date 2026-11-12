@@ -76,28 +76,4 @@ class IdeaTasksTest {
         assertFalse(IdeaTasks.isOnlyAddress("voir https://a.io/x"))
         assertFalse(IdeaTasks.isOnlyAddress("Appeler le garage"))
     }
-
-    @Test
-    fun `une idée avec adresse donne un lien avec titre, reste du texte en note et idée en source`() {
-        val draft = IdeaTasks.linkDraft("https://a.io/x - pour les factures", "A", listOf("dev", "dev", "outils"), "p1", sourceUid = "e1")
-        assertEquals(
-            LinkDraft("https://a.io/x", "A", "pour les factures", listOf("dev", "outils"), "p1", "inbox_item", "e1"),
-            draft,
-        )
-        assertEquals("link-add:inbox_item:e1:https://a.io/x", draft?.callKey)
-    }
-
-    @Test
-    fun `un partage direct n'a pas de source, et un texte sans adresse pas de lien`() {
-        val draft = IdeaTasks.linkDraft("https://a.io/x", null, emptyList(), null)
-        assertEquals(LinkDraft("https://a.io/x"), draft)
-        assertEquals("link-add:https://a.io/x", draft?.callKey)
-        assertNull(IdeaTasks.linkDraft("rien à garder", "Titre", emptyList(), null))
-    }
-
-    @Test
-    fun `les étiquettes partent par leur nom, dans l'ordre du choix`() {
-        val tags = listOf(TagItem("t1", "dev"), TagItem("t2", "perso/sport"))
-        assertEquals(listOf("perso/sport", "dev"), IdeaTasks.tagNames(listOf("t2", "ghost", "t1"), tags))
-    }
 }

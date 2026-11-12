@@ -6,6 +6,7 @@ import ch.nicolab.cadence.tasks.ServerConnection
 import ch.nicolab.cadence.tasks.TaskRepository
 import ch.nicolab.cadence.tasks.review.ReviewCache
 import ch.nicolab.cadence.tasks.review.ReviewRepository
+import ch.nicolab.cadence.tasks.links.PageCheckClient
 import ch.nicolab.cadence.tasks.todomd.TodoMdClient
 import ch.nicolab.cadence.tasks.syncstatus.SyncStatusClient
 import ch.nicolab.cadence.tasks.planning.FocusRepository
@@ -61,6 +62,8 @@ internal fun createFocus(context: Context): FocusRepository = TasksRuntime.get(c
 internal fun createTimedReminders(context: Context): TimedRemindersRepository = TasksRuntime.get(context).timedReminders
 
 internal fun createTodoMd(context: Context): TodoMdClient = TasksRuntime.get(context).todoMd
+
+internal fun createPageChecks(context: Context): PageCheckClient = TasksRuntime.get(context).pageChecks
 
 internal fun createSyncStatus(context: Context): SyncStatusClient = TasksRuntime.get(context).syncStatus
 
@@ -147,6 +150,7 @@ internal class TasksRuntime private constructor(context: Context) {
         habitPending = habitPending,
     )
     val todoMd = TodoMdClient(api::call)
+    val pageChecks = PageCheckClient(api::call)
     val syncStatus = SyncStatusClient(api::call)
 
     val review = ReviewRepository(

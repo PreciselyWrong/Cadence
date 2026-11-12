@@ -87,7 +87,6 @@ internal class ShareSession(application: Application) : AndroidViewModel(applica
             content,
             pageTitle,
             tagUids,
-            IdeaTasks.tagNames(tagUids, tags.value),
             projectUid,
             ShareCapture.verbs(getApplication()),
             taskName,

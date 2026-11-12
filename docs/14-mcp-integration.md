@@ -224,7 +224,7 @@ Get a single task by ID (number) or UID (string).
 
 #### `create_task`
 
-Create a new task.
+Create a new task. With `url` (a web address), the name may be left out: the task is named from the kind of page (« Try: owner/repo », « Read: … », « Watch: … », in the user's language), the address goes first in the note, `source` is `link` and, without a project, it waits in Tasks to sort for « Quand ? » (`docs/37-links.md`).
 
 **Parameters:**
 | Parameter | Type | Required | Description |
@@ -1217,6 +1217,14 @@ Links are made on purpose, never by the server, and carry their page metadata ([
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `uid` | string | Yes | Link UID |
+
+#### `add_project_page`
+
+Adds a web page to a project's pages; the same address twice in a project is one page. `project_uid`, `url`, optionally `title`, `note`. Returns `{ page, created }`.
+
+#### `list_project_pages`
+
+`project_uid`. Returns `{ pages }`: each page has the link fields above plus `project_uid`.
 
 #### `create_link`
 

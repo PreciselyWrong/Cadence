@@ -229,6 +229,10 @@ interface LinkDao {
     @Query("SELECT * FROM links WHERE projectUid IS NOT NULL AND instr(lower(url), :needle) > 0")
     suspend fun withProjectMentioning(needle: String): List<LinkEntity>
 
+    /** Les pages d'un projet, toutes adresses confondues : la même adresse normalisée se décide dans le repository. */
+    @Query("SELECT * FROM links WHERE projectUid = :projectUid")
+    suspend fun inProject(projectUid: String): List<LinkEntity>
+
     /** Le lien enregistré depuis une idée, une tâche ou une note : « Annuler » le retrouve sans connaître son uid. */
     @Query("SELECT * FROM links WHERE sourceType = :type AND sourceUid = :uid LIMIT 1")
     suspend fun bySource(type: String, uid: String): LinkEntity?

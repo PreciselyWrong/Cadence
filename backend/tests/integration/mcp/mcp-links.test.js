@@ -106,4 +106,47 @@ describe('MCP link tools', () => {
         const missing = await call('get_link', { uid: 'nope' });
         expect(missing.isError).toBe(true);
     });
+
+    describe('project pages', () => {
+        it('adds a page to a project and lists its pages', async () => {
+            const { Project } = require('../../../models');
+            const project = await Project.create({
+                name: 'Fusée',
+                user_id: user.id,
+            });
+            const added = json(
+                await call('add_project_page', {
+                    project_uid: project.uid,
+                    url: 'https://example.com/engine/',
+                    title: 'Engine',
+                })
+            );
+            expect(added).toMatchObject({
+                created: true,
+                page: { url: 'https://example.com/engine', title: 'Engine' },
+            });
+            const listed = json(
+                await call('list_project_pages', { project_uid: project.uid })
+            );
+            expect(listed.pages.map((p) => p.url)).toEqual([
+                'https://example.com/engine',
+            ]);
+        });
+
+        it('makes a task from an address, named by its kind', async () => {
+            const { Task } = require('../../../models');
+            const result = json(
+                await call('create_task', {
+                    url: 'https://github.com/acme/rocket',
+                })
+            );
+            expect(result.task.name).toBe('Try: acme/rocket');
+            const task = await Task.findOne({
+                where: { uid: result.task.uid },
+            });
+            expect(task.note).toBe('https://github.com/acme/rocket');
+            expect(task.needs_when).toBe(true);
+            expect(task.source).toBe('link');
+        });
+    });
 });

@@ -60,31 +60,4 @@ object IdeaTasks {
         val url = address(text) ?: return null
         return listOf(url, rest(text)).filter { it.isNotEmpty() }.joinToString("\n\n")
     }
-
-    /**
-     * L'entrée des liens d'un texte qui porte une adresse : titre de la page s'il est connu, le reste du texte en note.
-     * [sourceUid] : l'idée de l'Inbox d'où il vient (`source_type` `inbox_item`), null pour un partage direct.
-     */
-    fun linkDraft(
-        text: String,
-        pageTitle: String?,
-        tagNames: List<String>,
-        projectUid: String?,
-        sourceUid: String? = null,
-    ): LinkDraft? {
-        val url = address(text) ?: return null
-        return LinkDraft(
-            url = url,
-            title = pageTitle?.trim()?.takeIf { it.isNotEmpty() },
-            note = rest(text).ifEmpty { null },
-            tagNames = tagNames.distinct(),
-            projectUid = projectUid,
-            sourceType = sourceUid?.let { LinkSourceKind.INBOX_ITEM.wire },
-            sourceUid = sourceUid,
-        )
-    }
-
-    /** Noms des étiquettes choisies, dans l'ordre du choix : le serveur reçoit des noms (`tags`), pas des uid. */
-    fun tagNames(tagUids: List<String>, tags: List<TagItem>): List<String> =
-        tagUids.mapNotNull { uid -> tags.firstOrNull { it.uid == uid }?.name }
 }

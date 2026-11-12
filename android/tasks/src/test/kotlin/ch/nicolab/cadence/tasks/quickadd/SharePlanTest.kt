@@ -1,6 +1,5 @@
 package ch.nicolab.cadence.tasks.quickadd
 
-import ch.nicolab.cadence.tasks.model.LinkDraft
 import ch.nicolab.cadence.tasks.model.LinkKind
 import ch.nicolab.cadence.tasks.model.TaskDraft
 import ch.nicolab.cadence.tasks.model.TaskVerbs
@@ -19,7 +18,7 @@ class SharePlanTest {
     }
 
     private fun plan(action: ShareAction, shared: String = text, title: String? = "jq", project: String? = "p1", taskName: String? = null) =
-        ShareCapture.plan(action, shared, title, listOf("t1", "t1"), listOf("dev"), project, verbs, taskName)
+        ShareCapture.plan(action, shared, title, listOf("t1", "t1"), project, verbs, taskName)
 
     @Test
     fun `Inbox garde le texte tel quel`() {
@@ -54,16 +53,17 @@ class SharePlanTest {
     }
 
     @Test
-    fun `Liens envoie l'adresse, le titre, les noms d'étiquettes et le projet, sans source`() {
+    fun `Projet fait une page avec adresse, titre de la page, note et projet, sans étiquettes ni source`() {
         assertEquals(
-            ShareWrite.Link(text, LinkDraft("https://github.com/jqlang/jq", "jq", "pour les logs", listOf("dev"), "p1")),
+            ShareWrite.Page(text, "https://github.com/jqlang/jq", "jq", "pour les logs", "p1"),
             plan(ShareAction.LINK),
         )
     }
 
     @Test
-    fun `Liens sans adresse retombe sur l'Inbox`() {
+    fun `Projet sans adresse ou sans projet retombe sur l'Inbox`() {
         assertEquals(ShareWrite.Inbox("Une idée"), plan(ShareAction.LINK, shared = "Une idée"))
+        assertEquals(ShareWrite.Inbox(text), plan(ShareAction.LINK, project = null))
     }
 
     @Test

@@ -196,7 +196,7 @@ internal fun InboxTab(
         LinkProjectSheet(
             projects = ProjectChoices.forTask(projects, null),
             onPick = { projectUid ->
-                viewModel.saveIdeaToLinks(choice.entry, choice.pageTitle, emptyList(), projectUid)
+                viewModel.saveIdeaToPage(choice.entry, choice.pageTitle, projectUid)
                 linking = null
             },
             onDismiss = { linking = null },

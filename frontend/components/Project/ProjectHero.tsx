@@ -46,6 +46,8 @@ interface ProjectHeroProps {
     // Offered when the project is shared with the viewer (can_leave)
     onLeaveClick?: () => void;
     onSaveAsTemplate?: () => void;
+    // The pages' actions: Markdown copy and check (docs/37-links.md).
+    pageActions?: { key: string; label: string; onSelect: () => void }[];
     onEditBannerClick?: () => void;
     onEditClick?: () => void;
     onTogglePin?: () => void;
@@ -69,6 +71,7 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
     onShareClick,
     onLeaveClick,
     onSaveAsTemplate,
+    pageActions,
     onEditBannerClick,
     onEditClick,
     onTogglePin,
@@ -559,6 +562,19 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                                             {t('common.edit', 'Edit')}
                                         </button>
                                     )}
+                                    {pageActions?.map((action) => (
+                                        <button
+                                            key={action.key}
+                                            type="button"
+                                            className={menuItemClass}
+                                            onClick={() => {
+                                                setMenuOpen(false);
+                                                action.onSelect();
+                                            }}
+                                        >
+                                            {action.label}
+                                        </button>
+                                    ))}
                                     {onSaveAsTemplate && (
                                         <button
                                             type="button"

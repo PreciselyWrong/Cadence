@@ -94,3 +94,46 @@ test('the permission asked for a server names its host, never a port', () => {
     assert.equal(core.originPattern('http://100.64.0.1:3002'), 'http://100.64.0.1/*');
     assert.equal(core.originPattern('https://cadence.example/app'), 'https://cadence.example/*');
 });
+
+test('a tab or a whole tab group goes to a project as its pages', () => {
+    const { url, options } = core.sendPagesRequest(
+        { server: 'https://c.example', token: 't' },
+        'p1',
+        [
+            { url: 'https://a.example/1', title: ' One ' },
+            { url: 'about:blank', title: 'skip' },
+            { url: 'https://a.example/2', title: '' },
+        ]
+    );
+    assert.equal(url, 'https://c.example/api/projects/p1/pages');
+    assert.equal(options.method, 'POST');
+    assert.deepEqual(JSON.parse(options.body), {
+        pages: [{ url: 'https://a.example/1', title: 'One' }, { url: 'https://a.example/2' }],
+    });
+});
+
+test('open projects are offered, by name; done and archived ones are not', () => {
+    assert.deepEqual(
+        core.openProjects({
+            projects: [
+                { uid: 'b', name: 'Beta', status: 'in_progress' },
+                { uid: 'x', name: 'Old', status: 'done' },
+                { uid: 'a', name: 'alpha', status: 'planned' },
+                { uid: 'z', name: 'Gone', status: 'archived' },
+            ],
+        }),
+        [
+            { uid: 'a', name: 'alpha' },
+            { uid: 'b', name: 'Beta' },
+        ]
+    );
+});
+
+test('the pages of a project are read to open them', () => {
+    const { url } = core.pagesRequest({ server: 'https://c.example', token: 't' }, 'p1');
+    assert.equal(url, 'https://c.example/api/projects/p1/pages');
+    assert.deepEqual(core.pageUrls({ pages: [{ url: 'https://a' }, { url: 'https://b' }] }), [
+        'https://a',
+        'https://b',
+    ]);
+});

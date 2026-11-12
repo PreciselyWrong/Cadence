@@ -11,7 +11,9 @@ import ch.nicolab.cadence.tasks.planning.FocusRepository
 import ch.nicolab.cadence.tasks.planning.PlanEdits
 import ch.nicolab.cadence.tasks.reminder.TimedRemindersRepository
 import ch.nicolab.cadence.tasks.data.createServerConnection
+import ch.nicolab.cadence.tasks.data.createPageChecks
 import ch.nicolab.cadence.tasks.data.createTodoMd
+import ch.nicolab.cadence.tasks.links.PageCheckClient
 import ch.nicolab.cadence.tasks.todomd.TodoMdClient
 import ch.nicolab.cadence.tasks.data.createSyncStatus
 import ch.nicolab.cadence.tasks.syncstatus.SyncStatusClient
@@ -61,6 +63,9 @@ object TasksGraph {
 
     /** Réglage des rappels à heure fixe, partagé avec le serveur (dernière lecture gardée, envoi différé hors ligne). */
     fun timedReminders(context: Context): TimedRemindersRepository = createTimedReminders(context.applicationContext)
+
+    /** « Vérifier les pages » d'un projet, en ligne seulement ; rien n'est supprimé. */
+    fun pageChecks(context: Context): PageCheckClient = createPageChecks(context.applicationContext)
 
     /** État des dépôts git des projets TODO.md, servi par le serveur (en ligne seulement). */
     fun todoMd(context: Context): TodoMdClient = createTodoMd(context.applicationContext)

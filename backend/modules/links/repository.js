@@ -153,8 +153,30 @@ function findByUid(userId, uid) {
     });
 }
 
-function findByUrl(userId, url) {
-    return Link.findOne({ where: { user_id: userId, url } });
+// The link of an address: in a project (its page there), or among the
+// user's links without a project.
+function findByUrl(userId, url, projectId = null) {
+    return Link.findOne({
+        where: projectId
+            ? { project_id: projectId, url }
+            : { user_id: userId, url, project_id: null },
+    });
+}
+
+function findProject(uid) {
+    return Project.findOne({ where: { uid } });
+}
+
+// The pages of a project, in the order they came.
+function pagesOf(projectId) {
+    return Link.findAll({
+        where: { project_id: projectId },
+        include: [withTags, withProject],
+        order: [
+            ['created_at', 'ASC'],
+            ['id', 'ASC'],
+        ],
+    });
 }
 
 function create(fields) {
@@ -238,6 +260,8 @@ module.exports = {
     list,
     findByUid,
     findByUrl,
+    findProject,
+    pagesOf,
     create,
     setTags,
     whereFor,

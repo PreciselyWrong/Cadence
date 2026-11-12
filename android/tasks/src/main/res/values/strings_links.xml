@@ -53,4 +53,22 @@
     <string name="links_edit_url_call">Changer l\'adresse : %1$s</string>
     <string name="links_show_gallery">Afficher en galerie</string>
     <string name="links_show_list">Afficher en liste</string>
+    <string name="project_pages_title">Pages</string>
+    <string name="project_pages_add">Ajouter une page</string>
+    <string name="project_pages_add_title">Ajouter une page</string>
+    <string name="project_pages_add_confirm">Ajouter</string>
+    <string name="project_pages_copy_markdown">Copier les pages en Markdown</string>
+    <string name="project_pages_copied">Pages copiées</string>
+    <string name="project_pages_check">Vérifier les pages</string>
+    <string name="project_pages_check_title">Vérifier les pages</string>
+    <string name="project_pages_check_running">Vérification en cours…</string>
+    <string name="project_pages_check_ok">Toutes les pages répondent.</string>
+    <string name="project_pages_check_offline">Vérifier les pages demande le réseau et le serveur. Rien n\'a été changé.</string>
+    <string name="project_pages_dead_code">Introuvable (%1$d)</string>
+    <string name="project_pages_dead_unreachable">Injoignable</string>
+    <string name="project_pages_more">Plus d\'actions sur la page</string>
+    <string name="project_pages_edit_title">Modifier la page</string>
+    <string name="project_pages_remove">Retirer</string>
+    <string name="project_pages_remove_title">Retirer cette page ?</string>
+    <string name="project_pages_remove_message">« %1$s » quitte le projet. Le site n\'est pas touché, et le projet reste tel quel.</string>
 </resources>

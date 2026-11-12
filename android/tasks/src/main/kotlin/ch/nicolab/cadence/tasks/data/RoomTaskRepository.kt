@@ -278,6 +278,55 @@ internal class RoomTaskRepository(
         afterLocalWrite()
     }
 
+    override suspend fun projectPageUid(projectUid: String, url: String): String? {
+        val key = addressKey(url) ?: return null
+        return database.linkDao().inProject(projectUid).firstOrNull { addressKey(it.url) == key }?.uid
+    }
+
+    override suspend fun addProjectPage(projectUid: String, url: String, title: String?, note: String?): String {
+        val address = url.trim()
+        require(addressKey(address) != null) { "Adresse web attendue" }
+        projectPageUid(projectUid, address)?.let { return it }
+        val uid = UUID.randomUUID().toString()
+        val cleanTitle = title?.trim()?.ifEmpty { null }
+        val cleanNote = note?.trim()?.ifEmpty { null }
+        val fields = buildMap<String, JsonElement> {
+            put("url", JsonPrimitive(address))
+            put("project_uid", JsonPrimitive(projectUid))
+            cleanTitle?.let { put("title", JsonPrimitive(it)) }
+            cleanNote?.let { put("note", JsonPrimitive(it)) }
+        }
+        val clock = hlc.now()
+        database.withTransaction {
+            database.linkDao().upsert(
+                LinkEntity(
+                    uid = uid,
+                    url = address,
+                    title = cleanTitle,
+                    description = null,
+                    imageUrl = null,
+                    siteName = null,
+                    kind = null,
+                    githubStars = null,
+                    githubLanguage = null,
+                    githubLastCommitRaw = null,
+                    readmeExcerpt = null,
+                    note = cleanNote,
+                    status = LinkStatus.NEW.wire,
+                    tagUidsJson = "[]",
+                    sourceType = null,
+                    sourceUid = null,
+                    fetchStatus = "pending",
+                    createdAtRaw = Instant.ofEpochMilli(nowMs()).toString(),
+                    projectUid = projectUid,
+                ),
+            )
+            outbox.insert(LocalOps.upsert("link", uid, fields, clock, nowMs()))
+        }
+        afterLocalWrite()
+        return uid
+    }
+
     private fun linkUrlCallKey(uid: String) = "link-url:$uid"
 
     private suspend fun writeLink(uid: String, field: Pair<String, JsonElement>, change: (LinkEntity) -> LinkEntity) {

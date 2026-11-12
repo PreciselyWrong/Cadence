@@ -21,6 +21,24 @@ Every address written in a task note, a note or a project description shows a ca
 - **Server cache by address** (`modules/links/previews.js`, table `link_previews`, one row per normalized address without `www.`, shared by all users: public page metadata only). `GET /api/url/title?url=` reads the row, or reads the page once (same reader as links: SSRF guard, direct request only, no reading proxy; GitHub API for a repository) and stores it. A page is read again after 30 days, a failed read after an hour; a new read never erases what an earlier one found. Concurrent asks for one address share one read. Context addresses (IP, `.lan`, …) are never read.
 - Answer: `url`, `title`, `description`, `image`, `site_name`, `kind`, `github_stars`, `github_language`, `github_last_commit`, and `error` when nothing could be read.
 
+## Project pages
+
+A project gathers its pages: the material it works from (`links` rows with a `project_id`; one row per address and project, unique `links_project_url_unique`; the same address may be in two projects). A page keeps its address, title, the user's short note and what the page says about itself (read in the background like any link).
+
+- **Web**: a « Pages » section under the project's tasks (domain initial, title, site, note; « Not found » after a check), **⋯** per page: Create a task (in the project, named by the capture rule, the address in its note), Edit (title and note), Remove. Project **⋯**: « Copy the pages as Markdown » (`- [Title](url) — note`, `frontend/utils/projectPages.ts`) and « Check the pages ». Inbox › Projet… adds the page.
+- **Android**: the same section and menus on the project screen; Projet… from the share sheet and the Inbox adds the page offline (sync).
+- **Firefox add-on**: « Envoyer au projet » (this tab) or « Envoyer le groupe » (every tab of its tab group), « Ouvrir le projet » (its pages in new tabs gathered in a tab group named like the project; Firefox 139+, `tabGroups`).
+- **Check** (`modules/links/check.js`): each address asked once through the SSRF guard (HEAD, GET when HEAD is refused, redirects followed). 404, 410 and a host that does not answer are dead; 401 and 403 are pages behind a sign-in, never dead; anything else unknown. Nothing is deleted.
+
+API (under `/api` and `/api/v1`):
+
+- `GET /projects/:uid/pages` → `{ pages }` (read access).
+- `POST /projects/:uid/pages` `{ url, title?, note? }` → `201 { page, created: true }` or `200 { created: false }` for an address already there; `{ pages: [...] }` (at most 100, a tab group) → `{ created, existing, invalid }`. Write access.
+- `POST /projects/:uid/pages/check` → `{ results: [{ uid, url, state: ok | dead | unknown, code }] }`.
+- `PATCH /links/:uid` (title, note, new address) and `DELETE /links/:uid` (remove) as before.
+- Sync `link`: a device adds a page with a new uid, `url` and `project_uid` (else `project_required`; a bad address `invalid_url`); the address of an existing page does not change by sync (`url_readonly`). The server normalizes the address and reads the page.
+- MCP: `add_project_page` (`project_uid`, `url`, `title?`, `note?`), `list_project_pages` (`project_uid`), and `create_task` takes `url` (named by the capture rule when no name is given, the address first in the note, `source: link`, waiting for « Quand ? » without a project).
+
 ## How a link is made
 
 - **Nothing is captured automatically.** Saving an inbox item, a task or a note never creates a link, on any path (web, Android sync, MCP, Telegram, imports). An inbox item that is only an address, or holds one, stays `added` in the Inbox until the user decides.

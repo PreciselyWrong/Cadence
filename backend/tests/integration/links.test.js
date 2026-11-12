@@ -733,23 +733,31 @@ describe('Links', () => {
                 'rejected',
                 'rejected',
             ]);
-            expect(res.body.results[1].reason).toBe('unknown_link');
+            expect(res.body.results[0].reason).toBe('url_readonly');
+            expect(res.body.results[1].reason).toBe('project_required');
             expect(res.body.results[2].reason).toBe('invalid_status');
             expect(await Link.count()).toBe(1);
         });
     });
 
-    it('answers with the existing link when two saves of one address meet', async () => {
+    it('answers with the existing page when two saves of one address in a project meet', async () => {
         const repository = require('../../modules/links/repository');
-        const first = await agent
-            .post('/api/links')
-            .send({ url: 'https://example.com/course' });
+        const { Project } = require('../../models');
+        const project = await Project.create({
+            name: 'Cours',
+            user_id: user.id,
+        });
+        const first = await agent.post('/api/links').send({
+            url: 'https://example.com/course',
+            project_uid: project.uid,
+        });
         const spy = jest
             .spyOn(repository, 'findByUrl')
             .mockResolvedValueOnce(null);
-        const second = await agent
-            .post('/api/links')
-            .send({ url: 'https://example.com/course' });
+        const second = await agent.post('/api/links').send({
+            url: 'https://example.com/course',
+            project_uid: project.uid,
+        });
         spy.mockRestore();
         expect(second.status).toBe(200);
         expect(second.body.created).toBe(false);

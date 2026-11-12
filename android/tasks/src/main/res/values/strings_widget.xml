@@ -15,7 +15,7 @@
     <string name="tasks_share_saved">Ajouté à l\'Inbox</string>
     <string name="tasks_share_failed">Impossible d\'ajouter à l\'Inbox</string>
     <string name="tasks_share_task_saved">Tâche créée</string>
-    <string name="tasks_share_link_saved">Ajouté aux liens</string>
+    <string name="tasks_share_page_saved">Page ajoutée au projet</string>
     <string name="tasks_share_title">Ajouter à Cadence</string>
     <string name="tasks_share_to_inbox">Inbox</string>
     <string name="tasks_share_to_task">Tâche</string>

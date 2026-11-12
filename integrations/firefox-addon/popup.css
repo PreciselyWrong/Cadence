@@ -8,3 +8,6 @@ button[type='submit'] { width: 100%; min-height: 36px; border: 0; border-radius:
 .link { margin-top: 8px; padding: 0; border: 0; background: none; color: inherit; font: inherit; font-size: 12px; text-decoration: underline; cursor: pointer; }
 .already { margin: 0 0 8px; padding: 6px 8px; border-radius: 6px; background: #f59e0b22; font-size: 12px; }
 .already a { margin-left: 6px; color: inherit; font-weight: 600; }
+#projects { margin-top: 12px; padding-top: 8px; border-top: 1px solid #8884; }
+.row { display: flex; flex-wrap: wrap; gap: 6px; }
+.row button { flex: 1 1 auto; min-height: 30px; border: 1px solid #8888; border-radius: 8px; background: transparent; color: inherit; font: inherit; font-size: 12px; cursor: pointer; }

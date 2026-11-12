@@ -75,5 +75,31 @@
         "content": "$1"
       }
     }
+  },
+  "field_project": {
+    "message": "Projet"
+  },
+  "action_send_tab": {
+    "message": "Envoyer au projet"
+  },
+  "action_send_group": {
+    "message": "Envoyer le groupe"
+  },
+  "action_open_project": {
+    "message": "Ouvrir le projet"
+  },
+  "result_pages": {
+    "message": "Pages ajoutées : $NEW$ (déjà là : $OLD$).",
+    "placeholders": {
+      "new": {
+        "content": "$1"
+      },
+      "old": {
+        "content": "$2"
+      }
+    }
+  },
+  "result_no_pages": {
+    "message": "Ce projet n'a pas encore de pages."
   }
 }

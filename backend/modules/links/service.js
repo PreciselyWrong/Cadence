@@ -16,8 +16,10 @@ const entitlements = require('../../services/entitlementsService');
 const { isDay } = require('./core/reviewDate');
 const { validateTagName } = require('../tags/tagsService');
 const { validateProjectAccess } = require('../tasks/utils/validation');
+const permissionsService = require('../../services/permissionsService');
 const {
     ConflictError,
+    ForbiddenError,
     NotFoundError,
     ValidationError,
 } = require('../../shared/errors');
@@ -132,7 +134,8 @@ async function addOne(userId, item = {}) {
     const url = typeof item.url === 'string' ? normalizeUrl(item.url) : null;
     if (!url) throw new ValidationError('url must be an http(s) address');
     const source = await sourceOf(userId, item);
-    const existing = await linksRepository.findByUrl(userId, url);
+    const projectId = await projectChange(userId, item.project_uid);
+    const existing = await linksRepository.findByUrl(userId, url, projectId);
     if (existing) return { link: existing, created: false };
     await linksRepository.lift(userId, url);
     const { fields: state, invalid } = normalizeLinkStatus({
@@ -143,7 +146,6 @@ async function addOne(userId, item = {}) {
             `status must be one of ${LINK_STATUSES.join(', ')}`
         );
     }
-    const projectId = await projectChange(userId, item.project_uid);
     const title =
         typeof item.title === 'string'
             ? item.title.trim().slice(0, MAX_TITLE)
@@ -167,7 +169,7 @@ async function addOne(userId, item = {}) {
         if (error.name !== 'SequelizeUniqueConstraintError') throw error;
         // Saved meanwhile by another request.
         return {
-            link: await linksRepository.findByUrl(userId, url),
+            link: await linksRepository.findByUrl(userId, url, projectId),
             created: false,
         };
     }
@@ -220,7 +222,7 @@ async function addressChanges(link, value) {
     const url = typeof value === 'string' ? normalizeUrl(value) : null;
     if (!url) throw new ValidationError('url must be an http(s) address');
     if (url === link.url) return {};
-    if (await linksRepository.findByUrl(link.user_id, url)) {
+    if (await linksRepository.findByUrl(link.user_id, url, link.project_id)) {
         throw new ConflictError('Another link already has this address');
     }
     return { ...UNREAD, url, kind: classifyKind(url) };
@@ -234,7 +236,7 @@ function titleChange(value) {
 }
 
 async function projectChange(userId, uid) {
-    if (uid === null || uid === '') return null;
+    if (uid === null || uid === '' || uid === undefined) return null;
     try {
         return await validateProjectAccess(uid, userId);
     } catch {
@@ -387,7 +389,81 @@ async function captureTask(user, body = {}) {
     return { task: { uid: task.uid, name: task.name, note: task.note } };
 }
 
+const PAGES_MAX = 100;
+
+// The project of a pages request; reading needs access, writing needs
+// write access.
+async function projectFor(user, uid, write) {
+    const project = await linksRepository.findProject(uid);
+    if (!project) throw new NotFoundError('Project not found');
+    const access = await permissionsService.getAccess(user.id, 'project', uid);
+    if (access === 'none' || (write && access === 'ro')) {
+        throw new ForbiddenError('Forbidden');
+    }
+    return project;
+}
+
+async function listPages(user, projectUid) {
+    const project = await projectFor(user, projectUid, false);
+    const rows = await linksRepository.pagesOf(project.id);
+    return { pages: rows.map(serializeLink) };
+}
+
+// One page (`{ url, title?, note? }`, 201 when new) or a tab group
+// (`{ pages: [...] }`, counted). The same address twice is one page.
+async function addPages(user, projectUid, body = {}) {
+    const project = await projectFor(user, projectUid, true);
+    const asPage = (item) => ({
+        url: item?.url,
+        title: item?.title,
+        note: item?.note,
+        project_uid: project.uid,
+    });
+    if (Array.isArray(body.pages)) {
+        if (body.pages.length > PAGES_MAX) {
+            throw new ValidationError(
+                `pages must be a list of at most ${PAGES_MAX} pages`
+            );
+        }
+        const result = { created: 0, existing: 0, invalid: 0 };
+        for (const item of body.pages) {
+            try {
+                const { link, created } = await addOne(user.id, asPage(item));
+                result[created ? 'created' : 'existing'] += 1;
+                if (created) require('./jobs').enqueueFetch(link.id);
+            } catch (error) {
+                if (!(error instanceof ValidationError)) throw error;
+                result.invalid += 1;
+            }
+        }
+        return { status: 200, body: result };
+    }
+    const { link, created } = await addOne(user.id, asPage(body));
+    if (created) require('./jobs').enqueueFetch(link.id);
+    const saved = await linksRepository.findByUid(link.user_id, link.uid);
+    return {
+        status: created ? 201 : 200,
+        body: { page: serializeLink(saved), created },
+    };
+}
+
+// « Vérifier les pages »: ok, dead or unknown for each page; nothing is
+// deleted.
+async function checkPages(user, projectUid) {
+    const project = await projectFor(user, projectUid, false);
+    const rows = await linksRepository.pagesOf(project.id);
+    const results = [];
+    for (const row of rows) {
+        const { state, code } = await require('./check').checkUrl(row.url);
+        results.push({ uid: row.uid, url: row.url, state, code });
+    }
+    return { results };
+}
+
 module.exports = {
+    listPages,
+    addPages,
+    checkPages,
     lookup,
     captureTask,
     taskName,

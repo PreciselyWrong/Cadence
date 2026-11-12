@@ -104,6 +104,19 @@ interface TaskRepository {
     /** Supprime le lien pour de bon ; son adresse n'est plus reprise des tâches et des notes. */
     suspend fun deleteLink(uid: String)
 
+    /**
+     * Uid de la page de [projectUid] pour l'adresse [url] (même adresse normalisée, sans « www. » ni « / » final), ou
+     * null. Lecture locale.
+     */
+    suspend fun projectPageUid(projectUid: String, url: String): String?
+
+    /**
+     * Ajoute [url] comme page du projet [projectUid] (uid choisi par l'appareil) : ligne Room et envoi `upsert` hors
+     * ligne, comme une tâche. Une page déjà là pour cette adresse dans ce projet n'ajoute rien et rend son uid.
+     * [url] doit être une adresse web (`http` ou `https`).
+     */
+    suspend fun addProjectPage(projectUid: String, url: String, title: String?, note: String?): String
+
     /** Jour où revoir un lien mis de côté ; null l'efface. */
     suspend fun setLinkReviewDate(uid: String, date: java.time.LocalDate?)
     fun observeInbox(): Flow<List<InboxEntry>>

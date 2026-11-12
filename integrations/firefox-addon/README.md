@@ -4,6 +4,7 @@ Makes the current page or a link a Cadence task, through `POST /api/links/task` 
 
 - Toolbar button or Alt+Shift+K: the proposed task name (editable), « Déjà dans … » with Open when the page is already in an open task or a project (`GET /api/links/lookup`), then « Créer la tâche ».
 - Right click on a page or a link: a task in one click, the button shows a mark.
+- Project (in the popup): « Envoyer au projet » adds the tab to a project's pages, « Envoyer le groupe » every tab of its tab group, « Ouvrir le projet » opens the project's pages in a tab group named like it (Firefox 139+).
 - Settings: the server address and an API token (Cadence: Profile › API tokens). The add-on asks for access to that server only, and reads no page beyond the tab you save.
 
 ```bash

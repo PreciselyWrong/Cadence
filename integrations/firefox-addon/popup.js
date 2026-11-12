@@ -69,4 +69,70 @@ async function start() {
     });
 }
 
-start();
+// « Envoyer au projet » (this tab or its whole group) and « Ouvrir le
+// projet » (its pages in a tab group named like the project).
+async function projects(settings, tab) {
+    const request = CadenceCore.projectsRequest(settings);
+    let list = [];
+    try {
+        const response = await fetch(request.url, request.options);
+        if (response.status === 200) {
+            list = CadenceCore.openProjects(await response.json());
+        }
+    } catch {
+        return;
+    }
+    if (list.length === 0) return;
+    for (const project of list) {
+        const option = document.createElement('option');
+        option.value = project.uid;
+        option.textContent = project.name;
+        $('project').append(option);
+    }
+    $('projects').hidden = false;
+    const grouped = typeof tab.groupId === 'number' && tab.groupId >= 0;
+    $('send-group').hidden = !grouped || !browser.tabs.group;
+
+    const send = async (tabs) => {
+        const request = CadenceCore.sendPagesRequest(settings, $('project').value, tabs);
+        try {
+            const response = await fetch(request.url, request.options);
+            const body = await response.json().catch(() => null);
+            if (response.status !== 200) return say(`result_${CadenceCore.outcome(response.status)}`);
+            $('message').textContent = message('result_pages', String(body.created), String(body.existing));
+            $('message').hidden = false;
+        } catch {
+            say('result_unreachable');
+        }
+    };
+    $('send-tab').addEventListener('click', () => send([tab]));
+    $('send-group').addEventListener('click', async () =>
+        send(await browser.tabs.query({ groupId: tab.groupId }))
+    );
+    $('open-project').addEventListener('click', async () => {
+        const request = CadenceCore.pagesRequest(settings, $('project').value);
+        let urls = [];
+        try {
+            const response = await fetch(request.url, request.options);
+            urls = response.status === 200 ? CadenceCore.pageUrls(await response.json()) : [];
+        } catch {
+            return say('result_unreachable');
+        }
+        if (urls.length === 0) return say('result_no_pages');
+        const opened = [];
+        for (const url of urls) opened.push((await browser.tabs.create({ url, active: false })).id);
+        if (browser.tabs.group) {
+            const groupId = await browser.tabs.group({ tabIds: opened });
+            await browser.tabGroups.update(groupId, {
+                title: $('project').selectedOptions[0].textContent,
+            });
+        }
+        window.close();
+    });
+}
+
+start().then(async () => {
+    const settings = await browser.storage.local.get(['server', 'token']);
+    const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
+    if (settings.server && settings.token && tab) await projects(settings, tab);
+});

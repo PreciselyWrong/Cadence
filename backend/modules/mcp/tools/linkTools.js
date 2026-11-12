@@ -90,6 +90,45 @@ function registerLinkTools(server, context, tools) {
     });
 
     tools.push({
+        name: 'add_project_page',
+        description:
+            "Add a web page to a project's pages (material for the project). The same address twice in a project is one page. The server reads its title, picture and GitHub stats.",
+        inputSchema: {
+            type: 'object',
+            properties: {
+                project_uid: { type: 'string' },
+                url: { type: 'string', description: 'http(s) address' },
+                title: { type: 'string' },
+                note: { type: 'string', description: 'Short note' },
+            },
+            required: ['project_uid', 'url'],
+        },
+        handler: async (params) =>
+            text(
+                (
+                    await links.addPages(context.user, params.project_uid, {
+                        url: params.url,
+                        title: params.title,
+                        note: params.note,
+                    })
+                ).body
+            ),
+    });
+
+    tools.push({
+        name: 'list_project_pages',
+        description:
+            "The pages of a project: address, title, site, the user's note and what the page says about itself.",
+        inputSchema: {
+            type: 'object',
+            properties: { project_uid: { type: 'string' } },
+            required: ['project_uid'],
+        },
+        handler: async (params) =>
+            text(await links.listPages(context.user, params.project_uid)),
+    });
+
+    tools.push({
         name: 'create_link',
         description:
             'Save a web page as a link on purpose. The same page twice is one link. The server reads its title, description and picture. Status: new (default) or dropped.',

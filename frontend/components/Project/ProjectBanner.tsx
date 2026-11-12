@@ -53,18 +53,26 @@ const ProjectBanner: React.FC<ProjectBannerProps> = ({
                 justOpenedRef.current = false;
                 return;
             }
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target as Node)
+            ) {
                 setDropdownOpen(false);
             }
         };
         if (dropdownOpen) {
-            const id = setTimeout(() => document.addEventListener('mousedown', handleClickOutside), 100);
+            const id = setTimeout(
+                () =>
+                    document.addEventListener('mousedown', handleClickOutside),
+                100
+            );
             return () => {
                 clearTimeout(id);
                 document.removeEventListener('mousedown', handleClickOutside);
             };
         }
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        return () =>
+            document.removeEventListener('mousedown', handleClickOutside);
     }, [dropdownOpen]);
 
     const creatorName =
@@ -101,7 +109,11 @@ const ProjectBanner: React.FC<ProjectBannerProps> = ({
                 ) : (
                     <div
                         className={`w-full h-[282px] ${!project.color ? 'bg-gradient-to-br from-blue-500 to-purple-600 dark:from-blue-600 dark:to-purple-700' : ''}`}
-                        style={project.color ? { backgroundColor: project.color } : undefined}
+                        style={
+                            project.color
+                                ? { backgroundColor: project.color }
+                                : undefined
+                        }
                     />
                 )}
                 {project.color && (
@@ -272,32 +284,41 @@ const ProjectBanner: React.FC<ProjectBannerProps> = ({
                                     {t('projectItem.share', 'Share')}
                                 </button>
                                 {onSaveAsTemplate && (
-                                <button
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        onSaveAsTemplate();
-                                        setDropdownOpen(false);
-                                    }}
-                                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 w-full text-left"
-                                >
-                                    {t('projectItem.saveAsTemplate', 'Save as Template')}
-                                </button>
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            onSaveAsTemplate();
+                                            setDropdownOpen(false);
+                                        }}
+                                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 w-full text-left"
+                                    >
+                                        {t(
+                                            'projectItem.saveAsTemplate',
+                                            'Save as Template'
+                                        )}
+                                    </button>
                                 )}
                                 {onTogglePin && (
-                                <button
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        onTogglePin();
-                                        setDropdownOpen(false);
-                                    }}
-                                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 w-full text-left"
-                                >
-                                    {project.pin_to_sidebar
-                                        ? t('projectItem.unpinFromSidebar', 'Unpin from sidebar')
-                                        : t('projectItem.pinToSidebar', 'Pin to sidebar')}
-                                </button>
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            onTogglePin();
+                                            setDropdownOpen(false);
+                                        }}
+                                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 w-full text-left"
+                                    >
+                                        {project.pin_to_sidebar
+                                            ? t(
+                                                  'projectItem.unpinFromSidebar',
+                                                  'Unpin from sidebar'
+                                              )
+                                            : t(
+                                                  'projectItem.pinToSidebar',
+                                                  'Pin to sidebar'
+                                              )}
+                                    </button>
                                 )}
                                 <button
                                     onClick={(e) => {

@@ -116,6 +116,51 @@
         }
     }
 
+    // A tab, or every tab of a group, becomes a page of a project.
+    function sendPagesRequest(settings, projectUid, tabs) {
+        const pages = tabs
+            .filter((tab) => isSavable(tab.url))
+            .map((tab) => {
+                const page = { url: tab.url };
+                if (tab.title && tab.title.trim()) page.title = tab.title.trim();
+                return page;
+            });
+        return {
+            url: `${settings.server}/api/projects/${encodeURIComponent(projectUid)}/pages`,
+            options: {
+                method: 'POST',
+                headers: authHeaders(settings),
+                body: JSON.stringify({ pages }),
+            },
+        };
+    }
+
+    function projectsRequest(settings) {
+        return {
+            url: `${settings.server}/api/projects`,
+            options: { headers: authHeaders(settings) },
+        };
+    }
+
+    function pagesRequest(settings, projectUid) {
+        return {
+            url: `${settings.server}/api/projects/${encodeURIComponent(projectUid)}/pages`,
+            options: { headers: authHeaders(settings) },
+        };
+    }
+
+    const CLOSED = ['done', 'cancelled', 'archived'];
+
+    // The projects a page can go to: open ones, by name.
+    function openProjects(answer) {
+        return (answer?.projects ?? [])
+            .filter((project) => !CLOSED.includes(project.status))
+            .map(({ uid, name }) => ({ uid, name }))
+            .sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    const pageUrls = (answer) => (answer?.pages ?? []).map((page) => page.url);
+
     // Firefox refuses a port in a host pattern; a pattern without one covers
     // the host on any port.
     function originPattern(server) {
@@ -134,5 +179,10 @@
         outcome,
         addTask,
         lookup,
+        sendPagesRequest,
+        projectsRequest,
+        pagesRequest,
+        openProjects,
+        pageUrls,
     };
 });

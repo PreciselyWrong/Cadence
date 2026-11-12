@@ -121,3 +121,38 @@ export const lookupAddress = async (
     await handleAuthResponse(response, 'Failed to look up the address.');
     return response.json();
 };
+
+// The pages of a project (docs/37-links.md, Project pages).
+export const fetchProjectPages = async (
+    projectUid: string
+): Promise<Link[]> => {
+    const response = await fetch(getApiPath(`projects/${projectUid}/pages`), {
+        credentials: 'include',
+        headers: { Accept: 'application/json' },
+    });
+    await handleAuthResponse(response, 'Failed to fetch the pages.');
+    return (await response.json()).pages;
+};
+
+export interface PageCheckResult {
+    uid: string;
+    url: string;
+    state: 'ok' | 'dead' | 'unknown';
+    code: number | null;
+}
+
+// « Vérifier les pages »: nothing is deleted.
+export const checkProjectPages = async (
+    projectUid: string
+): Promise<PageCheckResult[]> => {
+    const response = await fetch(
+        getApiPath(`projects/${projectUid}/pages/check`),
+        {
+            method: 'POST',
+            credentials: 'include',
+            headers: await getPostHeadersWithCsrf(),
+        }
+    );
+    await handleAuthResponse(response, 'Failed to check the pages.');
+    return (await response.json()).results;
+};

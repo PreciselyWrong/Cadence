@@ -7,7 +7,6 @@ import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TaskRepository
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.model.IdeaTasks
-import ch.nicolab.cadence.tasks.model.LinkDraft
 import ch.nicolab.cadence.tasks.model.LinkKind
 import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.TaskDraft
@@ -20,8 +19,8 @@ import kotlinx.coroutines.withContext
 import java.util.UUID
 
 /**
- * Où va un texte partagé : l'Inbox (d'office), une tâche, une note, ou les liens (« Projet… ») quand il porte une
- * adresse.
+ * Où va un texte partagé : l'Inbox (d'office), une tâche, une note, ou une page de projet (« Projet… ») quand il porte
+ * une adresse.
  */
 enum class ShareAction { INBOX, TASK, LINK, NOTE }
 
@@ -31,7 +30,7 @@ sealed interface ShareWrite {
 
     data class Inbox(override val text: String) : ShareWrite
     data class Task(override val text: String, val draft: TaskDraft) : ShareWrite
-    data class Link(override val text: String, val draft: LinkDraft) : ShareWrite
+    data class Page(override val text: String, val url: String, val title: String?, val note: String?, val projectUid: String) : ShareWrite
     data class Note(override val text: String, val title: String, val content: String) : ShareWrite
 }
 
@@ -78,7 +77,6 @@ internal object ShareCapture {
         text: String,
         pageTitle: String?,
         tagUids: List<String>,
-        tagNames: List<String>,
         projectUid: String?,
         verbs: TaskVerbs,
         taskName: String? = null,
@@ -99,9 +97,14 @@ internal object ShareCapture {
                 ),
             )
         }
-        ShareAction.LINK -> IdeaTasks.linkDraft(text, pageTitle, tagNames, projectUid)
-            ?.let { ShareWrite.Link(text, it) }
-            ?: ShareWrite.Inbox(text)
+        ShareAction.LINK -> {
+            val url = IdeaTasks.address(text)
+            if (url == null || projectUid == null) {
+                ShareWrite.Inbox(text)
+            } else {
+                ShareWrite.Page(text, url, pageTitle?.trim()?.ifEmpty { null }, IdeaTasks.rest(text).ifEmpty { null }, projectUid)
+            }
+        }
         ShareAction.NOTE -> {
             val url = IdeaTasks.address(text) ?: return ShareWrite.Inbox(text)
             val title = pageTitle?.trim()?.takeIf { it.isNotEmpty() }
@@ -111,12 +114,12 @@ internal object ShareCapture {
         }
     }
 
-    /** Écrit [write] hors ligne ; l'appel des liens est nommé [linkLabel] dans la liste des refus. */
-    suspend fun write(repository: TaskRepository, write: ShareWrite, linkLabel: String) {
+    /** Écrit [write] hors ligne, sans appel réseau : une page est une ligne du projet et une écriture de la synchro. */
+    suspend fun write(repository: TaskRepository, write: ShareWrite) {
         when (write) {
             is ShareWrite.Inbox -> repository.captureInbox(write.text)
             is ShareWrite.Task -> repository.createTask(write.draft)
-            is ShareWrite.Link -> repository.addLink(write.draft, linkLabel)
+            is ShareWrite.Page -> repository.addProjectPage(write.projectUid, write.url, write.title, write.note)
             is ShareWrite.Note -> repository.saveNote(UUID.randomUUID().toString(), NoteChange(title = write.title, content = write.content))
         }
     }
@@ -130,7 +133,7 @@ internal object ShareCapture {
         scope.launch {
             val repository = TasksGraph.repository(app)
             val message = when {
-                runCatching { write(repository, chosen, app.getString(R.string.links_add_call)) }.isSuccess -> saved(chosen)
+                runCatching { write(repository, chosen) }.isSuccess -> saved(chosen)
                 chosen !is ShareWrite.Inbox && runCatching { repository.captureInbox(chosen.text) }.isSuccess -> R.string.tasks_share_saved
                 else -> R.string.tasks_share_failed
             }
@@ -141,7 +144,7 @@ internal object ShareCapture {
     private fun saved(write: ShareWrite): Int = when (write) {
         is ShareWrite.Inbox -> R.string.tasks_share_saved
         is ShareWrite.Task -> R.string.tasks_share_task_saved
-        is ShareWrite.Link -> R.string.tasks_share_link_saved
+        is ShareWrite.Page -> R.string.tasks_share_page_saved
         is ShareWrite.Note -> R.string.tasks_share_note_saved
     }
 }

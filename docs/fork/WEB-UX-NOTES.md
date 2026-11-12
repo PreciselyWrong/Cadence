@@ -674,3 +674,9 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Problème** : une adresse dans la note d'une tâche n'était qu'un lien bleu ; seul Android montrait ce qu'était la page.
 - **Décision** : une carte par adresse (image, titre, description, site, et pour un dépôt GitHub « ★ étoiles · langage · dernière mise à jour ») sous la note du panneau de tâche, sous une note et sous la description d'un projet ; lue par le serveur et gardée par adresse.
 - **Android à reprendre** : fait dans la même étape (statistiques GitHub, notes et projets).
+
+### 2026-11-12 — Pages d'un projet (refonte des liens, étape 3)
+
+- **Problème** : 0 lien rangé dans un projet ; les pages d'une recherche vivaient dans Bookmark Tagger, à côté des projets de Cadence.
+- **Décision** : section « Pages » sous les tâches du projet (initiale du site, titre, site, note courte), « ⋯ » par page : Créer une tâche, Modifier, Retirer ; « ⋯ » du projet : Copier les pages en Markdown, Vérifier les pages (« Introuvable » sur la ligne, rien supprimé). Inbox › Projet… y ajoute la page.
+- **Android à reprendre** : fait dans la même étape.

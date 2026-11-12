@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
@@ -21,27 +20,21 @@ import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.ProjectItem
 
 /**
- * Feuille « Projet… » d'une adresse qu'on enregistre dans les liens : « Aucun projet » en tête, puis les projets
- * ouverts. Choisir une ligne range le lien tout de suite ([onPick]).
+ * Feuille « Projet… » d'une adresse qu'on garde comme page : les projets ouverts, la page n'existe pas hors projet.
+ * Choisir une ligne range la page tout de suite ([onPick]).
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun LinkProjectSheet(projects: List<ProjectItem>, onPick: (String?) -> Unit, onDismiss: () -> Unit) {
+internal fun LinkProjectSheet(projects: List<ProjectItem>, onPick: (String) -> Unit, onDismiss: () -> Unit) {
     CadenceSheet(title = stringResource(R.string.links_project_pick_title), subtitle = null, dismiss = onDismiss) {
-        val count = projects.size + 1
+        val count = projects.size
         Column(Modifier.verticalScroll(rememberScrollState())) {
             RowGroup {
-                SettingRow(
-                    title = stringResource(R.string.tasks_no_project),
-                    icon = Icons.Outlined.Block,
-                    shape = rowGroupShape(0, count),
-                    onClick = { onPick(null) },
-                )
                 projects.forEachIndexed { index, project ->
                     SettingRow(
                         title = project.name,
                         icon = Icons.Outlined.Folder,
-                        shape = rowGroupShape(index + 1, count),
+                        shape = rowGroupShape(index, count),
                         onClick = { onPick(project.uid) },
                     )
                 }

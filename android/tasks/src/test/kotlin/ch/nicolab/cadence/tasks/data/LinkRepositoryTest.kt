@@ -243,6 +243,41 @@ class LinkRepositoryTest {
     }
 
     @Test
+    fun `adding a project page writes the row and one upsert with url, project, title and note`() = runBlocking {
+        val uid = repository.addProjectPage("p1", " https://a.io/x ", "Guide", "à relire")
+
+        val row = database.linkDao().get(uid)!!
+        assertEquals("p1", row.projectUid)
+        assertEquals("https://a.io/x", row.url)
+        assertEquals("pending", row.fetchStatus)
+        val (entity, opUid, fields) = pending().single()
+        assertEquals("link" to uid, entity to opUid)
+        assertEquals(setOf("url", "project_uid", "title", "note"), fields.keys)
+        assertEquals("https://a.io/x", fields.getValue("url").jsonPrimitive.content)
+        assertEquals("p1", fields.getValue("project_uid").jsonPrimitive.content)
+        assertTrue(database.deferredCallDao().all().isEmpty())
+    }
+
+    @Test
+    fun `a page already in the project is not added twice, whatever its www or trailing slash`() = runBlocking {
+        val first = repository.addProjectPage("p1", "https://example.com/a", null, null)
+        val again = repository.addProjectPage("p1", "https://www.example.com/a/", null, null)
+
+        assertEquals(first, again)
+        assertEquals(1, database.linkDao().inProject("p1").size)
+        assertEquals(1, pending().size)
+    }
+
+    @Test
+    fun `the same address in another project is another page`() = runBlocking {
+        val first = repository.addProjectPage("p1", "https://example.com/a", null, null)
+        val other = repository.addProjectPage("p2", "https://example.com/a", null, null)
+
+        assertTrue(first != other)
+        assertEquals("p2", database.linkDao().get(other)?.projectUid)
+    }
+
+    @Test
     fun `withdrawing a link still queued drops the call`() = runBlocking {
         val draft = LinkDraft("https://a.io/x", sourceType = "inbox_item", sourceUid = "e1")
         repository.addLink(draft, "Ajouter aux liens")

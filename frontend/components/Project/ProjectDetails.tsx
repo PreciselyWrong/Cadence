@@ -61,6 +61,8 @@ import BannerEditModal from './BannerEditModal';
 import ProjectShareModal from './ProjectShareModal';
 import ProjectModal from './ProjectModal';
 import ProjectTasksSection from './ProjectTasksSection';
+import ProjectPages from './ProjectPages';
+import { useProjectPages } from './useProjectPages';
 import ProjectTimeline from './Timeline/ProjectTimeline';
 import ProjectOutline from './ProjectOutline';
 import ProjectBoard from './Board/ProjectBoard';
@@ -244,6 +246,9 @@ const ProjectDetails: React.FC = () => {
     const [reloadKey, setReloadKey] = useState(0);
     const [isImportOpen, setIsImportOpen] = useState(false);
     const { requestComplete, completeDialog } = useCompleteProject();
+    const projectPages = useProjectPages(project?.uid, () =>
+        setReloadKey((key) => key + 1)
+    );
     useEffect(
         () =>
             onCaptureSaved(() => {
@@ -956,6 +961,29 @@ const ProjectDetails: React.FC = () => {
                     onSaveAsTemplate={
                         templatesEnabled ? handleSaveAsTemplate : undefined
                     }
+                    pageActions={
+                        projectPages.pages.length > 0
+                            ? [
+                                  {
+                                      key: 'pages-markdown',
+                                      label: t(
+                                          'projectPages.copyMarkdown',
+                                          'Copy the pages as Markdown'
+                                      ),
+                                      onSelect: () =>
+                                          void projectPages.copyMarkdown(),
+                                  },
+                                  {
+                                      key: 'pages-check',
+                                      label: t(
+                                          'projectPages.check',
+                                          'Check the pages'
+                                      ),
+                                      onSelect: () => void projectPages.check(),
+                                  },
+                              ]
+                            : undefined
+                    }
                     onEditBannerClick={handleEditBannerClick}
                     onEditClick={() => setIsEditPanelOpen(true)}
                     onTogglePin={handleTogglePin}
@@ -1281,6 +1309,21 @@ const ProjectDetails: React.FC = () => {
                                                 completedTasks={tasks}
                                                 completedListKey={`project:${project.uid}`}
                                                 t={t}
+                                            />
+                                            <ProjectPages
+                                                pages={projectPages.pages}
+                                                checks={projectPages.checks}
+                                                onCreateTask={(page) =>
+                                                    void projectPages.createTaskFrom(
+                                                        page
+                                                    )
+                                                }
+                                                onEdit={projectPages.edit}
+                                                onRemove={(page) =>
+                                                    void projectPages.remove(
+                                                        page
+                                                    )
+                                                }
                                             />
                                         </div>
 

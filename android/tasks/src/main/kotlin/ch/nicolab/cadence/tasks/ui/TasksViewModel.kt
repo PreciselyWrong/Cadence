@@ -327,36 +327,49 @@ internal class TasksViewModel(
     fun setLinkTags(uid: String, tagUids: List<String>) = launchAction { repository.setLinkTags(uid, tagUids) }
 
     /**
-     * Range une idée qui porte une adresse dans les liens, avec les étiquettes et le projet choisis : appel différé
-     * `POST /api/v1/links` (source : l'idée), puis l'idée passe en traitée, tout de suite et hors ligne compris.
-     * « Annuler » retire l'appel (ou le lien revenu de la synchro) et rend l'idée à l'Inbox.
-     */
-    /**
      * Une idée qui n'est qu'une adresse devient tout de suite une tâche, nommée comme un partage (« Essayer : … », à
      * classer). « Annuler » fonctionne comme pour toute idée transformée en tâche.
      */
     fun saveLinkIdeaAsTask(entry: InboxEntry, pageTitle: String?) = launchAction {
         val write = ShareCapture.plan(
-            ShareAction.TASK, entry.content, pageTitle, emptyList(), emptyList(), null, ShareCapture.verbs(getApplication()),
+            ShareAction.TASK, entry.content, pageTitle, emptyList(), null, ShareCapture.verbs(getApplication()),
         ) as? ShareWrite.Task ?: return@launchAction
         saveConversion(entry, write.draft)
     }
 
-    fun saveIdeaToLinks(entry: InboxEntry, pageTitle: String?, tagUids: List<String>, projectUid: String?) = launchAction {
-        val names = IdeaTasks.tagNames(tagUids, tags.value)
-        val draft = IdeaTasks.linkDraft(entry.content, pageTitle, names, projectUid, sourceUid = entry.uid) ?: return@launchAction
-        repository.addLink(draft, getString(R.string.links_add_call))
+    /**
+     * Range une idée qui porte une adresse comme page de [projectUid], puis l'idée passe en traitée, hors ligne compris.
+     * « Annuler » retire la page (si elle vient d'être ajoutée, pas si elle y était déjà) et rend l'idée à l'Inbox.
+     */
+    fun saveIdeaToPage(entry: InboxEntry, pageTitle: String?, projectUid: String) = launchAction {
+        val url = IdeaTasks.address(entry.content) ?: return@launchAction
+        val alreadyThere = repository.projectPageUid(projectUid, url) != null
+        val uid = repository.addProjectPage(projectUid, url, pageTitle, IdeaTasks.rest(entry.content).ifEmpty { null })
         repository.processInboxItem(entry.uid)
-        val name = draft.title ?: LinkExtractor.domain(draft.url) ?: draft.url
+        val name = pageTitle ?: LinkExtractor.domain(url) ?: url
         _notices.tryEmit(
-            UndoNotice(getString(R.string.tasks_idea_to_links_notice, name)) {
+            UndoNotice(getString(R.string.tasks_idea_to_page_notice, name)) {
                 launchAction {
-                    if (!repository.withdrawLink(draft)) _messages.tryEmit(getString(R.string.tasks_idea_link_already_sent))
+                    if (!alreadyThere) repository.deleteLink(uid)
                     repository.reopenInboxItem(entry.uid)
                 }
             },
         )
     }
+
+    /** Ajoute [url] comme page de [projectUid] (« ⋯ » du projet) ; une page déjà là ne fait rien. */
+    fun addProjectPage(projectUid: String, url: String) = launchAction {
+        repository.addProjectPage(projectUid, url, null, null)
+    }
+
+    /** Titre et note d'une page, seulement ce qui a changé. */
+    fun editProjectPage(page: LinkItem, title: String, note: String) = launchAction {
+        if (title.trim() != page.title.orEmpty()) repository.setLinkTitle(page.uid, title)
+        if (note.trim() != page.note.orEmpty()) repository.setLinkNote(page.uid, note)
+    }
+
+    /** Retire la page du projet : suppression par la synchro, le projet et les tâches ne bougent pas. */
+    fun removeProjectPage(uid: String) = launchAction { repository.deleteLink(uid) }
 
     val notes: StateFlow<List<NoteItem>> = combine(repository.observeNotes(), hidden) { all, gone ->
         all.filterNot { it.uid in gone }

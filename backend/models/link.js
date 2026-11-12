@@ -79,11 +79,13 @@ module.exports = (sequelize) => {
         {
             tableName: 'links',
             indexes: [
+                // A page is in a project once (docs/37-links.md).
                 {
-                    fields: ['user_id', 'url'],
+                    fields: ['project_id', 'url'],
                     unique: true,
-                    name: 'links_user_url_unique',
+                    name: 'links_project_url_unique',
                 },
+                { fields: ['user_id', 'url'], name: 'links_user_url_idx' },
                 { fields: ['fetch_status'], name: 'links_fetch_status_idx' },
             ],
         }

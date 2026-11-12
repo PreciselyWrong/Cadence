@@ -131,6 +131,5 @@
     <string name="links_project_pick_title">Enregistrer dans un projet</string>
     <string name="tasks_idea_to_task_notice">« %1$s » : tâche créée</string>
     <string name="tasks_idea_to_note_notice">« %1$s » : note créée</string>
-    <string name="tasks_idea_to_links_notice">« %1$s » ajouté aux liens</string>
-    <string name="tasks_idea_link_already_sent">Le lien est déjà parti : supprimez-le depuis Liens.</string>
+    <string name="tasks_idea_to_page_notice">« %1$s » ajouté au projet</string>
 </resources>
