@@ -33,11 +33,12 @@ import {
 } from '../constants/contentBackgrounds';
 import NoteFocusMode from './Note/NoteFocusMode';
 import NoteEditorView from './Note/NoteEditorView';
-import NoteCard from './Shared/NoteCard';
+import NoteRow from './Shared/NoteRow';
+import PageHeader from './Shared/ui/PageHeader';
+import Button from './Shared/ui/Button';
 import NoteGallery from './Note/NoteGallery';
 import { ViewTypeSwitch } from './Task/TaskViewBody';
 import { useViewType } from '../hooks/useViewType';
-import NewItemButton from './Shared/NewItemButton';
 import BlankSlate from './Shared/BlankSlate';
 import { noteMatchesFocus, useFocus } from '../utils/focus';
 import FocusEmptyHint from './Focus/FocusEmptyHint';
@@ -558,38 +559,42 @@ const Notes: React.FC = () => {
 
     if ((isLoading || (!hasLoaded && !isError)) && !previewNote && !isEditing) {
         return (
-            <div className="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
-                <div className="text-xl font-semibold text-gray-700 dark:text-gray-200">
-                    {t('notes.loading')}
-                </div>
+            <div className="p-8 text-body-m text-surface-on-variant">
+                {t('notes.loading')}
             </div>
         );
     }
 
     if (isError) {
         return (
-            <div className="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
-                <div className="text-red-500 text-lg">{t('notes.error')}</div>
+            <div className="p-8 text-body-m text-danger">
+                {t('notes.error')}
             </div>
         );
     }
 
     const notesHeader = (
-        <div className="flex items-center justify-between gap-2 mb-6">
-            <h2 className="text-2xl font-light">{t('notes.title', 'Notes')}</h2>
-            <div className="flex items-center gap-3">
-                <ViewTypeSwitch
-                    value={notesGallery ? 'gallery' : 'list'}
-                    onChange={setNotesView}
-                    keys={['list', 'gallery']}
-                />
-                <NewItemButton
-                    label={t('notes.new', 'New Note')}
-                    onClick={startNewNote}
-                    testId="new-note-button"
-                />
-            </div>
-        </div>
+        <PageHeader
+            className="!px-0 !pt-0"
+            title={t('notes.title', 'Notes')}
+            actions={
+                <>
+                    <ViewTypeSwitch
+                        value={notesGallery ? 'gallery' : 'list'}
+                        onChange={setNotesView}
+                        keys={['list', 'gallery']}
+                    />
+                    <Button
+                        variant="primary"
+                        icon={<PlusIcon className="h-4 w-4" />}
+                        onClick={startNewNote}
+                        data-testid="new-note-button"
+                    >
+                        {t('notes.new', 'New Note')}
+                    </Button>
+                </>
+            }
+        />
     );
 
     return (
@@ -638,24 +643,27 @@ const Notes: React.FC = () => {
                             // and desktop briefly does too before that
                             // effect runs). Show every note to pick from
                             // instead of a dead-end placeholder (#1527).
-                            <div className="flex-1 overflow-y-auto p-6">
-                                {notesHeader}
-                                {notesGallery ? (
-                                    <NoteGallery notes={sortedNotes} />
-                                ) : (
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-                                        {sortedNotes.map((note) => (
-                                            <NoteCard
-                                                key={note.uid}
-                                                note={note}
-                                                showActions={false}
-                                            />
-                                        ))}
-                                    </div>
-                                )}
+                            <div className="flex-1 overflow-y-auto px-6 pb-6 pt-6 max-sm:px-4">
+                                <div
+                                    className={`mx-auto w-full ${notesGallery ? 'max-w-6xl' : 'max-w-4xl'}`}
+                                >
+                                    {notesHeader}
+                                    {notesGallery ? (
+                                        <NoteGallery notes={sortedNotes} />
+                                    ) : (
+                                        <div role="list" className="-mx-3">
+                                            {sortedNotes.map((note) => (
+                                                <NoteRow
+                                                    key={note.uid}
+                                                    note={note}
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         ) : hasLoaded ? (
-                            <div className="flex-1 overflow-y-auto p-6">
+                            <div className="flex-1 overflow-y-auto px-6 pb-6 pt-6 max-sm:px-4">
                                 {notesHeader}
                                 <BlankSlate
                                     title={t(
