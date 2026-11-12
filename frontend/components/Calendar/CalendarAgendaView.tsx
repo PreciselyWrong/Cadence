@@ -84,6 +84,7 @@ const CalendarAgendaView: React.FC<CalendarAgendaViewProps> = ({
                                 <button
                                     type="button"
                                     onClick={() => onEventClick?.(event)}
+                                    data-calendar-block=""
                                     className={`w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-600 ${
                                         event.readOnly ? 'opacity-60' : ''
                                     }`}
@@ -94,11 +95,8 @@ const CalendarAgendaView: React.FC<CalendarAgendaViewProps> = ({
                                             : `${format(event.start, 'HH:mm')} – ${format(event.end, 'HH:mm')}`}
                                     </span>
                                     <span
-                                        className="h-2.5 w-2.5 shrink-0 rounded-full"
-                                        style={{
-                                            backgroundColor:
-                                                event.color || '#3b82f6',
-                                        }}
+                                        className={`h-2.5 w-2.5 shrink-0 rounded-full ${event.color ? '' : 'bg-primary-container'}`}
+                                        style={{ backgroundColor: event.color }}
                                     />
                                     <span className="truncate text-gray-700 dark:text-gray-200">
                                         {event.title}

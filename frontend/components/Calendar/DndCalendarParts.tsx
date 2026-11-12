@@ -79,6 +79,7 @@ export const DragBlock: React.FC<DragBlockProps> = ({
             ref={setNodeRef}
             {...attributes}
             {...listeners}
+            data-calendar-block=""
             title={title}
             onClick={onClick}
             className={`${className} ${isDragging ? 'opacity-40' : ''}`}

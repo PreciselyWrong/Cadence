@@ -1,6 +1,5 @@
 import SegmentedTabs from './Shared/ui/SegmentedTabs';
-import { ACCENT, accentVars } from '../constants/colorPalette';
-import { useTagColor } from '../utils/tagColor';
+import { PALETTE } from '../constants/colorPalette';
 import OverflowMenu from './Shared/OverflowMenu';
 import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -45,11 +44,7 @@ import {
     ChevronRightIcon,
     XMarkIcon,
     Cog6ToothIcon,
-    ArrowTopRightOnSquareIcon,
-    CalendarDaysIcon,
     ClockIcon,
-    FolderIcon,
-    TagIcon,
     PrinterIcon,
 } from '@heroicons/react/24/outline';
 import {
@@ -62,6 +57,11 @@ import {
     subDays,
     startOfYear,
     endOfYear,
+    differenceInCalendarDays,
+    isSameDay,
+    isSameMonth,
+    isSameWeek,
+    isSameYear,
 } from 'date-fns';
 import CalendarMonthView from './Calendar/CalendarMonthView';
 import CalendarWeekView from './Calendar/CalendarWeekView';
@@ -69,15 +69,20 @@ import CalendarDayView from './Calendar/CalendarDayView';
 import CalendarAgendaView from './Calendar/CalendarAgendaView';
 import CalendarYearView, { MonthGrid } from './Calendar/CalendarYearView';
 import { getApiPath } from '../config/paths';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
     CalendarEvent,
     moveUpdate,
     resizeUpdate,
-    taskIdOf,
     taskToEvents,
 } from './Calendar/taskEvents';
-import { getDateFnsLocale, parseDateString } from '../utils/dateUtils';
+import {
+    findOccurrence as findOccurrenceIn,
+    findPlainTask,
+    taskClickAction,
+} from './Calendar/taskClick';
+import { useTaskPane } from '../contexts/TaskPaneContext';
+import { getDateFnsLocale } from '../utils/dateUtils';
 import { Holiday, fetchHolidays } from '../utils/holidaysService';
 import { fetchCadenceCalendar } from '../utils/cadenceHabitsService';
 import { habitsToEvents } from './Calendar/habitEvents';
@@ -103,6 +108,10 @@ import { openTaskPanel } from '../store/taskPanelStore';
 
 const getLocale = getDateFnsLocale;
 
+// A named colour of the shared palette (constants/colorPalette.ts).
+const paletteColour = (key: string) =>
+    PALETTE.find((c) => c.key === key)?.value;
+
 const localDate = (day: string, minute = 0) => {
     const [year, month, date] = day.split('-').map(Number);
     return new Date(year, month - 1, date, 0, minute);
@@ -119,7 +128,7 @@ const feedEventToCalendarEvent = (event: CalendarRangeEvent): CalendarEvent => {
         start,
         end,
         type: 'event',
-        color: event.color || '#6b7280',
+        color: event.color || undefined,
         feedUid: event.feed_uid,
         allDay: !!event.all_day,
     };
@@ -205,7 +214,7 @@ const focusToEvent = (session: FocusSession, label: string): CalendarEvent => ({
     start: new Date(session.started_at),
     end: new Date(session.ended_at),
     type: 'event',
-    color: '#f97316',
+    color: paletteColour('orange'),
     readOnly: true,
 });
 
@@ -217,17 +226,28 @@ const holidayToEvent = (holiday: Holiday): CalendarEvent => {
         start,
         end: addDays(start, 1),
         type: 'event',
-        color: '#ef4444',
+        color: paletteColour('red'),
         allDay: true,
         readOnly: true,
     };
 };
+
+// The swatch of a feed or calendar in the filter row: its own colour, or the
+// token fill when it has none; hidden calendars show as an outline only.
+const swatchProps = (color: string | null | undefined, shown: boolean) => ({
+    className: `h-2.5 w-2.5 rounded-full ${color ? '' : 'ring-2 ring-inset ring-surface-high'} ${shown && !color ? 'bg-surface-high' : ''}`,
+    style: {
+        backgroundColor: shown ? color || undefined : 'transparent',
+        boxShadow: color ? `inset 0 0 0 2px ${color}` : undefined,
+    },
+});
 
 const Calendar: React.FC = () => {
     const { t, i18n } = useTranslation();
     const { showErrorToast, showSuccessToast } = useToast();
     const navigate = useNavigate();
     const location = useLocation();
+    const { openTaskUid, openTask, closeTask } = useTaskPane();
     const [currentDate, setCurrentDate] = useState(new Date());
     const [view, setView] = useState<
         'year' | 'month' | 'week' | 'multi' | 'day' | 'agenda'
@@ -235,10 +255,8 @@ const Calendar: React.FC = () => {
     const [firstDayOfWeek, setFirstDayOfWeek] = useState(1);
     const [miniMonth, setMiniMonth] = useState(new Date());
     const [isLoadingTasks, setIsLoadingTasks] = useState(false);
-    const [selectedTask, setSelectedTask] = useState<Task | null>(null);
     const [allTasks, setAllTasks] = useState<any[]>([]);
     const [, setProjects] = useState<Project[]>([]);
-    const [isEventDetailModalOpen, setIsEventDetailModalOpen] = useState(false);
     const [feeds, setFeeds] = useState<CalendarFeed[]>([]);
     const [feedsLoading, setFeedsLoading] = useState(true);
     const [feedEvents, setFeedEvents] = useState<CalendarRangeEvent[]>([]);
@@ -669,6 +687,50 @@ const Calendar: React.FC = () => {
 
     const goToToday = () => setCurrentDate(new Date());
 
+    // Labels of the previous and next period of the shown view.
+    const periodNames = {
+        year: {
+            prev: t('calendar.previousYear', 'Previous year'),
+            next: t('calendar.nextYear', 'Next year'),
+        },
+        month: {
+            prev: t('calendar.previousMonth', 'Previous month'),
+            next: t('calendar.nextMonth', 'Next month'),
+        },
+        week: {
+            prev: t('calendar.previousWeek', 'Previous week'),
+            next: t('calendar.nextWeek', 'Next week'),
+        },
+        multi: {
+            prev: t('calendar.previousDays', 'Previous days'),
+            next: t('calendar.nextDays', 'Next days'),
+        },
+        day: {
+            prev: t('calendar.previousDay', 'Previous day'),
+            next: t('calendar.nextDay', 'Next day'),
+        },
+    };
+    const navLabels = periodNames[view === 'agenda' ? 'month' : view];
+
+    // Whether the shown period already contains today (then no Today button).
+    const periodHasToday = () => {
+        const now = new Date();
+        if (view === 'year') return isSameYear(currentDate, now);
+        if (view === 'month' || view === 'agenda')
+            return isSameMonth(currentDate, now);
+        if (view === 'week')
+            return isSameWeek(currentDate, now, {
+                weekStartsOn: firstDayOfWeek as 0 | 1 | 2 | 3 | 4 | 5 | 6,
+            });
+        if (view === 'multi')
+            return (
+                differenceInCalendarDays(now, currentDate) >= 0 &&
+                differenceInCalendarDays(now, currentDate) <
+                    options.multiDayCount
+            );
+        return isSameDay(currentDate, now);
+    };
+
     // Prints only the shown view (see the print rules in tailwind.css).
     const printCalendar = () => {
         document.body.classList.add('printing-calendar');
@@ -725,30 +787,13 @@ const Calendar: React.FC = () => {
             setFeedDetail(event.feedDetail);
             return;
         }
-        if (event.type === 'task') {
-            // A later occurrence opens on its own day.
-            const task = findOccurrence(event.id) ?? findTask(event.id);
-            if (task) {
-                const taskEntity: Task = {
-                    ...task,
-                    name:
-                        task.original_name ||
-                        task.name ||
-                        task.title ||
-                        `Task ${task.id}`,
-                    priority: task.priority || 'low',
-                    status: task.status || 'not_started',
-                    tags: task.tags || [],
-                    note: task.note || task.description || '',
-                    due_date: task.due_date,
-                    created_at: task.created_at,
-                    completed_at: task.completed_at,
-                    project_id: task.project_id,
-                };
-                setSelectedTask(taskEntity);
-                setIsEventDetailModalOpen(true);
-            }
-        }
+        // A task block opens the task directly, no intermediate popover.
+        const action = taskClickAction(event, allTasks, openTaskUid);
+        if (!action) return;
+        if (action.kind === 'close') closeTask();
+        else if (action.kind === 'occurrence')
+            openTaskPanel(action.uid, action.date);
+        else openTask(action.uid, { date: action.date });
     };
 
     // An empty hour clicked: a task due then, or a one-hour Google event.
@@ -782,37 +827,9 @@ const Calendar: React.FC = () => {
         await loadTasks();
     };
 
-    const handleEditTask = () => {
-        if (selectedTask?.uid) {
-            setIsEventDetailModalOpen(false);
-            const targetUid = selectedTask.uid;
-            const occurrenceDate = selectedTask.is_virtual_occurrence
-                ? selectedTask.due_date?.slice(0, 10)
-                : undefined;
-            setSelectedTask(null);
-            openTaskPanel(targetUid, occurrenceDate);
-        }
-    };
-
-    const findTask = (eventId: string) => {
-        const taskId = taskIdOf(eventId);
-        return allTasks.find(
-            (t) => t.id.toString() === taskId && !t.is_virtual_occurrence
-        );
-    };
-
-    // A virtual occurrence's event id ends in its occurrence index.
-    const findOccurrence = (eventId: string) => {
-        const index = eventId.match(/-occ-(\d+)$/)?.[1];
-        if (index === undefined) return undefined;
-        const taskId = taskIdOf(eventId);
-        return allTasks.find(
-            (t) =>
-                t.id.toString() === taskId &&
-                !!t.is_virtual_occurrence &&
-                (t.occurrence_index ?? 0) === Number(index)
-        );
-    };
+    const findTask = (eventId: string) => findPlainTask(eventId, allTasks);
+    const findOccurrence = (eventId: string) =>
+        findOccurrenceIn(eventId, allTasks);
 
     // Shows the change at once, saves it, then keeps what the server
     // returns (or reloads everything if the save fails).
@@ -988,19 +1005,25 @@ const Calendar: React.FC = () => {
 
                             <IconButton
                                 onClick={() => navigateView('prev')}
-                                label={t('common.previous', 'Previous')}
+                                label={navLabels.prev}
                             >
                                 <ChevronLeftIcon />
                             </IconButton>
-                            <Button onClick={goToToday}>
-                                {t('calendar.today')}
-                            </Button>
                             <IconButton
                                 onClick={() => navigateView('next')}
-                                label={t('common.next', 'Next')}
+                                label={navLabels.next}
                             >
                                 <ChevronRightIcon />
                             </IconButton>
+                            {!periodHasToday() && (
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={goToToday}
+                                >
+                                    {t('calendar.today', 'Today')}
+                                </Button>
+                            )}
                         </>
                     }
                 >
@@ -1074,13 +1097,10 @@ const Calendar: React.FC = () => {
                                 }`}
                             >
                                 <span
-                                    className="h-2.5 w-2.5 rounded-full"
-                                    style={{
-                                        backgroundColor: feed.show_on_calendar
-                                            ? feed.color || '#6b7280'
-                                            : 'transparent',
-                                        boxShadow: `inset 0 0 0 2px ${feed.color || '#6b7280'}`,
-                                    }}
+                                    {...swatchProps(
+                                        feed.color,
+                                        feed.show_on_calendar
+                                    )}
                                 />
                                 {feed.name}
                             </button>
@@ -1118,14 +1138,10 @@ const Calendar: React.FC = () => {
                                 }`}
                             >
                                 <span
-                                    className="h-2.5 w-2.5 rounded-full"
-                                    style={{
-                                        backgroundColor:
-                                            calendar.show_on_calendar
-                                                ? calendar.color || '#6b7280'
-                                                : 'transparent',
-                                        boxShadow: `inset 0 0 0 2px ${calendar.color || '#6b7280'}`,
-                                    }}
+                                    {...swatchProps(
+                                        calendar.color,
+                                        calendar.show_on_calendar
+                                    )}
                                 />
                                 {calendar.name}
                             </button>
@@ -1386,18 +1402,6 @@ const Calendar: React.FC = () => {
                             }
                         />
                     )}
-
-                    {selectedTask && (
-                        <TaskEventModal
-                            isOpen={isEventDetailModalOpen}
-                            onClose={() => {
-                                setIsEventDetailModalOpen(false);
-                                setSelectedTask(null);
-                            }}
-                            task={selectedTask}
-                            onEditTask={handleEditTask}
-                        />
-                    )}
                 </div>
             </div>
         </div>
@@ -1472,176 +1476,6 @@ const CalendarsModal: React.FC<CalendarsModalProps> = ({
                         googleStatus={googleStatus}
                         onGoogleStatusChange={onGoogleStatusChange}
                     />
-                </div>
-            </div>
-        </div>
-    );
-};
-
-interface TaskEventModalProps {
-    isOpen: boolean;
-    task: Task;
-    onClose: () => void;
-    onEditTask: () => void;
-}
-
-const TaskEventModal: React.FC<TaskEventModalProps> = ({
-    isOpen,
-    task,
-    onClose,
-    onEditTask,
-}) => {
-    const { t, i18n } = useTranslation();
-    const tagColor = useTagColor();
-    const locale = getLocale(i18n.language);
-
-    if (!isOpen) return null;
-
-    const priorityConfig = {
-        high: {
-            label: t('calendar.high', 'High'),
-            className:
-                'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300',
-        },
-        medium: {
-            label: t('calendar.medium', 'Medium'),
-            className:
-                'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300',
-        },
-        low: {
-            label: t('calendar.low', 'Low'),
-            className:
-                'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300',
-        },
-    };
-
-    return (
-        <div
-            className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4"
-            onClick={onClose}
-        >
-            <div
-                role="dialog"
-                aria-modal="true"
-                className="bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 w-full max-w-sm max-h-[90vh] flex flex-col"
-                onClick={(event) => event.stopPropagation()}
-            >
-                {/* Header */}
-                <div className="shrink-0 flex items-start justify-between p-5 pb-4">
-                    <div className="flex-1 min-w-0 pr-3">
-                        <p className="text-xs font-semibold tracking-widest uppercase text-gray-500 dark:text-gray-400 mb-1.5">
-                            {t('calendar.task', 'Task')}
-                        </p>
-                        <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 leading-snug break-words line-clamp-4">
-                            {task.name || `Task ${task.id}`}
-                        </h3>
-                    </div>
-                    <button
-                        aria-label={t('common.close', 'Close')}
-                        title={t('common.close', 'Close')}
-                        onClick={onClose}
-                        className="shrink-0 p-1 rounded-lg text-gray-500 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    >
-                        <XMarkIcon className="w-4 h-4" />
-                    </button>
-                </div>
-
-                <div className="min-h-0 overflow-y-auto">
-                    {/* Pills row */}
-                    <div className="flex items-center gap-2 px-5 pb-4 flex-wrap">
-                        <span
-                            className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
-                                task.completed_at
-                                    ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
-                                    : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
-                            }`}
-                        >
-                            {task.completed_at
-                                ? t('calendar.completed', 'Completed')
-                                : t('calendar.pending', 'Pending')}
-                        </span>
-                        {task.priority && task.priority in priorityConfig && (
-                            <span
-                                className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${priorityConfig[task.priority as keyof typeof priorityConfig].className}`}
-                            >
-                                {
-                                    priorityConfig[
-                                        task.priority as keyof typeof priorityConfig
-                                    ].label
-                                }
-                            </span>
-                        )}
-                    </div>
-
-                    {/* Metadata */}
-                    <div className="px-5 pb-4 space-y-3">
-                        {task.due_date && parseDateString(task.due_date) && (
-                            <div className="flex items-center gap-2.5 text-sm text-gray-600 dark:text-gray-300">
-                                <CalendarDaysIcon className="w-4 h-4 text-gray-500 dark:text-gray-400 shrink-0" />
-                                <span>
-                                    {format(
-                                        parseDateString(task.due_date) as Date,
-                                        'PPP',
-                                        { locale }
-                                    )}
-                                </span>
-                            </div>
-                        )}
-                        {task.defer_until && (
-                            <div className="flex items-center gap-2.5 text-sm text-gray-600 dark:text-gray-300">
-                                <ClockIcon className="w-4 h-4 text-gray-500 dark:text-gray-400 shrink-0" />
-                                <span>
-                                    {format(new Date(task.defer_until), 'PPP', {
-                                        locale,
-                                    })}
-                                </span>
-                            </div>
-                        )}
-                        {task.Project?.name && (
-                            <div className="flex items-center gap-2.5 text-sm text-gray-600 dark:text-gray-300">
-                                <FolderIcon className="w-4 h-4 text-gray-500 dark:text-gray-400 shrink-0" />
-                                <span>{task.Project.name}</span>
-                            </div>
-                        )}
-                        {task.tags && task.tags.length > 0 && (
-                            <div className="flex items-start gap-2.5 text-sm text-gray-600 dark:text-gray-300">
-                                <TagIcon className="w-4 h-4 text-gray-500 dark:text-gray-400 shrink-0 mt-0.5" />
-                                <span className="flex flex-wrap gap-1">
-                                    {task.tags.map((tag: any) => (
-                                        <span
-                                            key={tag.id || tag.name}
-                                            style={accentVars(tagColor(tag))}
-                                            className={`text-xs ${ACCENT.softBg} ${ACCENT.chipText} px-1.5 py-0.5 rounded`}
-                                        >
-                                            {tag.name}
-                                        </span>
-                                    ))}
-                                </span>
-                            </div>
-                        )}
-                        {task.note && (
-                            <p className="text-sm text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 leading-relaxed whitespace-pre-wrap break-words">
-                                {task.note}
-                            </p>
-                        )}
-                    </div>
-                </div>
-
-                {/* Footer */}
-                <div className="shrink-0 flex items-center justify-between px-5 py-4 border-t border-gray-100 dark:border-gray-700">
-                    <Link
-                        to="/tasks"
-                        className="inline-flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-                    >
-                        <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5" />
-                        {t('calendar.goToTasks', 'All tasks')}
-                    </Link>
-                    <button
-                        onClick={onEditTask}
-                        className="px-4 py-1.5 text-sm font-medium bg-primary text-primary-on rounded-lg hover:bg-primary/90 transition-colors"
-                    >
-                        {t('calendar.editTask', 'Open task')}
-                    </button>
                 </div>
             </div>
         </div>

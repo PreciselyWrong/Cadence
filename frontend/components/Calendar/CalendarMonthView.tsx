@@ -24,6 +24,7 @@ import {
     layoutAllDayWeek,
     isMovable,
 } from './taskEvents';
+import { blockTone } from './blockTone';
 
 interface CalendarMonthViewProps {
     currentDate: Date;
@@ -134,7 +135,7 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                 {getWeekDays().map((day) => (
                     <div
                         key={day}
-                        className="py-3 text-center text-xs font-semibold tracking-widest uppercase text-gray-500 dark:text-gray-400"
+                        className="py-3 text-center text-xs font-medium text-surface-on-variant"
                     >
                         {day}
                     </div>
@@ -241,10 +242,9 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                                     .map((event) => (
                                         <span
                                             key={event.id}
-                                            className="h-1.5 w-1.5 rounded-full"
+                                            className={`h-1.5 w-1.5 rounded-full ${event.color ? '' : 'bg-primary-container'}`}
                                             style={{
-                                                backgroundColor:
-                                                    event.color || '#3b82f6',
+                                                backgroundColor: event.color,
                                             }}
                                         />
                                     ))}
@@ -275,7 +275,8 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                                                 e.stopPropagation();
                                                 onEventClick?.(event);
                                             }}
-                                            className={`text-xs px-1.5 py-1 rounded text-white truncate font-medium cursor-pointer hover:opacity-90 transition-opacity ${
+                                            data-calendar-block=""
+                                            className={`text-xs px-1.5 py-1 rounded truncate font-medium cursor-pointer hover:opacity-90 transition-opacity ${blockTone(event).className} ${
                                                 draggedEventId === event.id
                                                     ? 'opacity-40'
                                                     : ''
@@ -291,8 +292,7 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                                                     : ''
                                             }`}
                                             style={{
-                                                backgroundColor:
-                                                    event.color || '#3b82f6',
+                                                ...blockTone(event).style,
                                                 opacity: event.readOnly
                                                     ? 0.6
                                                     : undefined,
@@ -347,14 +347,12 @@ const CalendarMonthView: React.FC<CalendarMonthViewProps> = ({
                                 <button
                                     type="button"
                                     onClick={() => onEventClick?.(event)}
+                                    data-calendar-block=""
                                     className="flex min-h-[44px] w-full items-center gap-3 rounded-chip px-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-600/40"
                                 >
                                     <span
-                                        className="h-8 w-1 shrink-0 rounded-full"
-                                        style={{
-                                            backgroundColor:
-                                                event.color || '#3b82f6',
-                                        }}
+                                        className={`h-8 w-1 shrink-0 rounded-full ${event.color ? '' : 'bg-primary-container'}`}
+                                        style={{ backgroundColor: event.color }}
                                     />
                                     <span className="truncate">
                                         {event.title}

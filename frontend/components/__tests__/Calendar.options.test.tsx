@@ -29,17 +29,17 @@ describe('taskColor', () => {
     it('keeps done tasks green whatever the key', () => {
         expect(
             taskColor({ ...task, completed_at: '2026-10-01' }, 'project')
-        ).toBe('#22c55e');
+        ).toBe('#15803d');
     });
 
     it('uses the project colour, the priority, or a stable tag colour', () => {
         expect(taskColor(task, 'project')).toBe('#123456');
-        expect(taskColor(task, 'priority')).toBe('#ef4444');
-        expect(taskColor({ ...task, priority: 1 }, 'priority')).toBe('#f59e0b');
+        expect(taskColor(task, 'priority')).toBe('#b91c1c');
+        expect(taskColor({ ...task, priority: 1 }, 'priority')).toBe('#c2410c');
         expect(taskColor(task, 'tag')).toBe(
             taskColor({ id: 2, tags: [{ name: 'deep' }] }, 'tag')
         );
-        expect(taskColor({ id: 4 }, 'project')).toBe('#6b7280');
+        expect(taskColor({ id: 4 }, 'project')).toBe('#374151');
     });
 });
 

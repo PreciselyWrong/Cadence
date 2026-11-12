@@ -48,10 +48,10 @@ describe('ProjectTimeline colour by', () => {
         fireEvent.change(screen.getByLabelText('Colour by'), {
             target: { value: 'priority' },
         });
-        expect(bar().style.backgroundColor).toBe('rgb(239, 68, 68)');
+        expect(bar().style.backgroundColor).toBe('rgb(185, 28, 28)');
 
         unmount();
         renderTimeline();
-        expect(bar().style.backgroundColor).toBe('rgb(239, 68, 68)');
+        expect(bar().style.backgroundColor).toBe('rgb(185, 28, 28)');
     });
 });

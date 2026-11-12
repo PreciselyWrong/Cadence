@@ -27,6 +27,7 @@ import {
 import { ResizeHandle, useEventResize } from './useEventResize';
 import AllDayOverflow from './AllDayOverflow';
 import { dropMinuteOfDay, pointerOffsetIn } from './dropTime';
+import { blockTone } from './blockTone';
 import { VisibleHours, WHOLE_DAY, countOutside } from './visibleHours';
 import HiddenHoursBar, {
     HIDDEN_HOURS_STRIPES,
@@ -271,10 +272,10 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                         }`}
                     >
                         <div
-                            className={`text-xs font-semibold tracking-widest uppercase mb-1 ${
+                            className={`text-xs font-medium mb-1 ${
                                 isToday(day)
                                     ? 'text-blue-500 dark:text-blue-400'
-                                    : 'text-gray-500 dark:text-gray-400'
+                                    : 'text-surface-on-variant'
                             }`}
                         >
                             {format(day, 'EEE', { locale: getCurrentLocale() })}
@@ -324,11 +325,12 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                                 e.stopPropagation();
                                 onEventClick?.(event);
                             }}
-                            className={`mx-1 text-xs px-2 py-1 rounded text-white truncate font-medium cursor-pointer hover:opacity-90 ${
+                            data-calendar-block=""
+                            className={`mx-1 text-xs px-2 py-1 rounded truncate font-medium cursor-pointer hover:opacity-90 ${blockTone(event).className} ${
                                 draggedEventId === event.id ? 'opacity-40' : ''
                             }`}
                             style={{
-                                backgroundColor: event.color || '#3b82f6',
+                                ...blockTone(event).style,
                                 opacity: event.readOnly ? 0.6 : undefined,
                                 gridColumn: `${from + 2} / ${to + 2}`,
                                 gridRow: (allDayRows.get(event.id) ?? 0) + 1,
@@ -446,14 +448,14 @@ const CalendarWeekView: React.FC<CalendarWeekViewProps> = ({
                                                     return;
                                                 onEventClick?.(event);
                                             }}
-                                            className={`text-xs px-2 py-1.5 rounded-lg text-white absolute z-10 font-medium overflow-hidden cursor-pointer hover:opacity-90 transition-opacity ${
+                                            data-calendar-block=""
+                                            className={`text-xs px-2 py-1.5 rounded-lg absolute z-10 font-medium overflow-hidden cursor-pointer hover:opacity-90 transition-opacity ${blockTone(event).className} ${
                                                 isMovable(event)
                                                     ? 'cursor-move'
                                                     : ''
                                             } ${draggedEventId === event.id ? 'opacity-40' : ''}`}
                                             style={{
-                                                backgroundColor:
-                                                    event.color || '#3b82f6',
+                                                ...blockTone(event).style,
                                                 opacity: event.readOnly
                                                     ? 0.6
                                                     : undefined,
