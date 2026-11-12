@@ -1,4 +1,8 @@
 {
+    "agentBanner": {
+        "dismiss": "Segna come letto",
+        "open": "Apri"
+    },
     "counts": {
         "notes_other": "{{count}} note",
         "notes_one": "{{count}} nota",

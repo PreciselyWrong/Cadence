@@ -1,4 +1,8 @@
 {
+    "agentBanner": {
+        "dismiss": "Mark as read",
+        "open": "Open"
+    },
     "counts": {
         "notes_few": "{{count}} note",
         "tasks_few": "{{count}} sarcini",

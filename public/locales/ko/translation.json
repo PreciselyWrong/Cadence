@@ -1,4 +1,8 @@
 {
+    "agentBanner": {
+        "dismiss": "Mark as read",
+        "open": "Open"
+    },
     "counts": {
         "notes_other": "{{count}}개 노트",
         "notes_one": "{{count}}개 노트",

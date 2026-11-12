@@ -1,4 +1,8 @@
 {
+    "agentBanner": {
+        "dismiss": "Mark as read",
+        "open": "Open"
+    },
     "counts": {
         "notes_many": "{{count}} заметок",
         "tasks_many": "{{count}} задач",

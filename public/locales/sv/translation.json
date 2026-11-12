@@ -1,4 +1,8 @@
 {
+    "agentBanner": {
+        "dismiss": "Mark as read",
+        "open": "Open"
+    },
     "counts": {
         "notes_other": "{{count}} anteckningar",
         "notes_one": "{{count}} anteckning",

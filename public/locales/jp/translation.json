@@ -1,4 +1,8 @@
 {
+    "agentBanner": {
+        "dismiss": "Mark as read",
+        "open": "Open"
+    },
     "counts": {
         "notes_other": "{{count}}件のノート",
         "notes_one": "{{count}}件のノート",

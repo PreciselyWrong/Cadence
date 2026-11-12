@@ -1,4 +1,8 @@
 {
+    "agentBanner": {
+        "dismiss": "Als gelesen markieren",
+        "open": "Öffnen"
+    },
     "counts": {
         "notes_other": "{{count}} Notizen",
         "notes_one": "{{count}} Notiz",

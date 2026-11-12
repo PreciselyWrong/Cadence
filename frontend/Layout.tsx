@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import UpgradeModal from './components/Billing/UpgradeModal';
 import TrialBanner from './components/Billing/TrialBanner';
+import AgentMessageBanner from './components/Notifications/AgentMessageBanner';
 import { SidebarProvider } from './contexts/SidebarContext';
 import { TaskPaneProvider } from './contexts/TaskPaneContext';
 import TaskPane from './components/Task/TaskPane';
@@ -507,6 +508,7 @@ const Layout: React.FC<LayoutProps> = ({
                                     </div>
                                 )}
                                 <TrialBanner />
+                                <AgentMessageBanner />
                                 <Breadcrumbs />
                                 <TaskRowExpansionProvider
                                     key={location.pathname}

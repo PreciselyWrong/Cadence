@@ -807,3 +807,6 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Décision** : un chevron à gauche de chaque projet qui a des sous-projets les replie ou les déplie, à toute profondeur ; le choix est gardé sur l'appareil. Un sous-projet ouvert reste visible même si son parent est replié. Règle pure `foldProjectTree` (`frontend/utils/projectTree.ts`), état `hooks/useFoldedProjects.ts`.
 - **Android à reprendre** : rien ; la liste des projets d'Android n'affiche pas d'arbre (les sous-projets sont dans la page du projet parent).
 
+### 2026-11-12 — Bandeau des messages d'agents non lus
+
+Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (notification d'un plugin, `data.pluginId`) n'est pas lu : icône, titre en gras, début du message (masqué sur mobile), « +N » s'il y en a d'autres, **Ouvrir** (marque lu et ouvre `data.openPath`, la page du message dans le plugin) et **×** (marque lu). Rafraîchi par le flux live, au retour sur l'onglet et chaque minute. Code : `frontend/components/Notifications/AgentMessageBanner.tsx`, `frontend/utils/agentMessagesService.ts`. À reprendre sur Android : même bandeau en tête des écrans principaux.

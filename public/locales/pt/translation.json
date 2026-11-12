@@ -1,4 +1,8 @@
 {
+    "agentBanner": {
+        "dismiss": "Marcar como lido",
+        "open": "Abrir"
+    },
     "counts": {
         "notes_other": "{{count}} notas",
         "notes_one": "{{count}} nota",
