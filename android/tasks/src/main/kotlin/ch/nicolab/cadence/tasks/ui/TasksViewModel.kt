@@ -53,6 +53,7 @@ import ch.nicolab.cadence.tasks.model.TagItem
 import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskDraft
 import ch.nicolab.cadence.tasks.model.TaskItem
+import ch.nicolab.cadence.tasks.model.TaskSources
 import ch.nicolab.cadence.tasks.model.TaskViews
 import ch.nicolab.cadence.tasks.notes.Autosaver
 import ch.nicolab.cadence.tasks.notes.NoteEditSession
@@ -699,7 +700,7 @@ internal class TasksViewModel(
      * « Annuler » supprime la tâche et rend l'idée à l'Inbox.
      */
     suspend fun saveConversion(entry: InboxEntry, draft: TaskDraft) {
-        val uid = repository.createTask(draft)
+        val uid = repository.createTask(withIdeaOrigin(draft, entry))
         repository.processInboxItem(entry.uid)
         _notices.tryEmit(
             UndoNotice(getString(R.string.tasks_idea_to_task_notice, draft.name)) {
@@ -965,7 +966,7 @@ internal class TasksViewModel(
      */
     fun planIdea(entry: InboxEntry, day: LocalDate? = null, horizon: Horizon? = null) = launchAction {
         val draft = TaskDraft(name = IdeaTasks.taskName(entry.content, null), note = IdeaTasks.taskNote(entry.content))
-        val uid = repository.createTask(draft)
+        val uid = repository.createTask(withIdeaOrigin(draft, entry))
         repository.processInboxItem(entry.uid)
         if (day != null) planEdits.apply(listOf(AddTask(day, uid)))
         if (horizon != null) {
@@ -981,6 +982,13 @@ internal class TasksViewModel(
                 }
             },
         )
+    }
+
+    /** Une tâche née d'une idée qui n'est qu'une adresse garde cette adresse comme origine (`link`), comme le serveur. */
+    private fun withIdeaOrigin(draft: TaskDraft, entry: InboxEntry): TaskDraft {
+        if (draft.source != null) return draft
+        val (source, url) = TaskSources.fromIdea(entry.content) ?: return draft
+        return draft.copy(source = source, sourceUrl = url)
     }
 
     private fun applyPlan(edits: List<PlanEdit>, message: String) {

@@ -1,5 +1,12 @@
 package ch.nicolab.cadence.tasks.ui
 
+import ch.nicolab.cadence.designsystem.theme.cadence
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.semantics.Role
+import androidx.compose.foundation.clickable
+import ch.nicolab.cadence.tasks.model.TaskSources
+import ch.nicolab.cadence.tasks.model.TaskSourceBadge
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -305,6 +312,7 @@ private fun TaskMeta(
                 modifier = Modifier.semantics { contentDescription = fileDescription },
             )
         }
+        TaskSources.of(task)?.let { SourceMark(it) }
         if (task.isRecurring) {
             Icon(
                 Icons.Outlined.Repeat,
@@ -367,5 +375,33 @@ private fun TaskMeta(
                     .semantics { contentDescription = pendingText },
             )
         }
+    }
+}
+
+/**
+ * Origine d'une tâche (Gmail, Telegram, MCP…) : une lettre dans un petit carré et le nom, neutres. Avec une page
+ * d'origine, un toucher l'ouvre sans ouvrir la tâche.
+ */
+@Composable
+internal fun SourceMark(badge: TaskSourceBadge, modifier: Modifier = Modifier) {
+    val uriHandler = LocalUriHandler.current
+    val palette = cadence
+    val description = stringResource(R.string.tasks_source_description, badge.label)
+    Row(
+        modifier
+            .then(
+                badge.url?.let { url -> Modifier.clickable(role = Role.Button) { runCatching { uriHandler.openUri(url) } } } ?: Modifier,
+            )
+            .semantics(mergeDescendants = true) { contentDescription = description },
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(3.dp),
+    ) {
+        Box(
+            Modifier.size(14.dp).clip(RoundedCornerShape(3.dp)).background(palette.containerHigh),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(badge.letter, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = palette.onSurfaceVariant, maxLines = 1)
+        }
+        Text(badge.label, style = MaterialTheme.typography.labelMedium, color = palette.onSurfaceVariant, maxLines = 1)
     }
 }

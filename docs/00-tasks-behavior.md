@@ -686,6 +686,8 @@ Who sets the origin:
 
 Code: `backend/modules/tasks/core/source.js` (values and validation), `frontend/utils/taskSource.ts` (what the badge shows), `frontend/components/Shared/TaskSourceBadge.tsx`.
 
+Android keeps `source` and `source_url` in Room (synced both ways) and shows the same letter mark and name, neutral, on task rows and the task sheet; a tap opens the page (`model/TaskSources.kt`, `ui/TaskRow.kt` `SourceMark`). A task the phone makes from an inbox idea that is only a web address gets `link` and that address, like the server.
+
 ---
 
 **Document Version:** 1.1.0

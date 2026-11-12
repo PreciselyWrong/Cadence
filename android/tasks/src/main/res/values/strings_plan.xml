@@ -37,6 +37,7 @@
     <string name="backlinks_note">Note : %1$s</string>
     <string name="backlinks_task">Tâche : %1$s</string>
     <string name="content_task_not_found">Aucune tâche « %1$s »</string>
+    <string name="tasks_source_description">Origine : %1$s</string>
     <string name="plan_hide_done">Masquer les terminées</string>
     <string name="plan_show_done">Afficher les terminées</string>
 </resources>

@@ -377,6 +377,8 @@ internal class RoomTaskRepository(
             draft.parentTaskUid?.let { put("parent_task_uid", JsonPrimitive(it)) }
             draft.goalUid?.let { put("goal_uid", JsonPrimitive(it)) }
             draft.order?.let { put("order", JsonPrimitive(it)) }
+            draft.source?.let { put("source", JsonPrimitive(it)) }
+            draft.sourceUrl?.let { put("source_url", JsonPrimitive(it)) }
             putAll(dueFields(draft.dueDate, draft.dueTime))
         }
         writeFields(uid, fields)

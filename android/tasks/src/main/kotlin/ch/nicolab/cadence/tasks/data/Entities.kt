@@ -35,6 +35,9 @@ data class TaskEntity(
     val weekOf: String? = null,
     /** « Ce mois-ci » / « Mois prochain » : premier jour (`YYYY-MM-01`) du mois choisi (`month_of`) ; jamais une échéance. */
     val monthOf: String? = null,
+    /** Origine de la tâche (`source` : gmail, telegram, mcp, android, desktop, link, web…) et sa page (`source_url`). */
+    val source: String? = null,
+    val sourceUrl: String? = null,
     /** « Quand ? » : tâche classée sans moment choisi (`needs_when`, posé par le serveur). */
     @ColumnInfo(defaultValue = "0") val needsWhen: Boolean = false,
     /** Date de réexamen d'une idée mise de côté (`YYYY-MM-DD`) ; jamais une échéance. */

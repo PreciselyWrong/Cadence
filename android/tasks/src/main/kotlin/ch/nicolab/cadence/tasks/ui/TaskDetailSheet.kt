@@ -95,6 +95,7 @@ import ch.nicolab.cadence.tasks.model.TaskExtraRows
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskPriority
 import ch.nicolab.cadence.tasks.model.TaskStatus
+import ch.nicolab.cadence.tasks.model.TaskSources
 import ch.nicolab.cadence.tasks.model.TaskViews
 import ch.nicolab.cadence.tasks.swipe.FileBackedActions
 import ch.nicolab.cadence.tasks.swipe.FileOwnedField
@@ -627,6 +628,7 @@ private fun DetailBadges(
                 CadenceBadge(text = it, tone = BadgeTone.Neutral, color = projectColor, icon = entityIcon(projectIcon))
             }
         }
+        TaskSources.of(task)?.let { SourceMark(it, Modifier.padding(horizontal = Space.xs).heightIn(min = Size.touch)) }
         if (task.isClosed) {
             CadenceBadge(text = stringResource(R.string.tasks_detail_done), tone = BadgeTone.Success)
         } else if (task.status != TaskStatus.NOT_STARTED) {

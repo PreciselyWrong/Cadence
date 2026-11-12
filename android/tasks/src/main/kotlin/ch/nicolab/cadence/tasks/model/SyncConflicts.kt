@@ -89,6 +89,8 @@ object SyncConflictText {
         "estimated_minutes" to "Durée",
         "week_of" to "Semaine",
         "month_of" to "Mois",
+        "source" to "Origine",
+        "source_url" to "Page d'origine",
         "needs_when" to "Quand ?",
         "in_view_at" to "En vue",
         "review_on" to "À revoir le",
