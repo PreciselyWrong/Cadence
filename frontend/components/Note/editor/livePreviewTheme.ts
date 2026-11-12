@@ -39,8 +39,11 @@ export const livePreviewTheme = EditorView.baseTheme({
     // Matches the NOTE: badge note links get in read-only markdown.
     // inline-block stops an underline from a surrounding syntax-highlight
     // span reaching the chip; the rule below clears it on nested spans.
+    // An inline-block takes the list line's hanging indent as its own, which
+    // pulled the chip back over the words before it.
     '.cm-md-wikilink-chip': {
         display: 'inline-block',
+        textIndent: '0',
         lineHeight: '1.4',
         cursor: 'pointer',
         textDecoration: 'none !important',
