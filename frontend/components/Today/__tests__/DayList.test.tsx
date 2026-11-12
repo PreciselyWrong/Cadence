@@ -221,3 +221,28 @@ describe('DayList hide completed', () => {
         ).toBeInTheDocument();
     });
 });
+
+describe('DayList habits', () => {
+    beforeEach(() => window.localStorage.clear());
+
+    it('shows the day habits open by default, with their open count', () => {
+        render(
+            <DayList
+                {...baseProps({
+                    habits: { count: 2, content: <div>Drink water</div> },
+                })}
+            />
+        );
+        expect(
+            screen.getByRole('button', { name: /Habits · 2/ })
+        ).toHaveAttribute('aria-expanded', 'true');
+        expect(screen.getByText('Drink water')).toBeInTheDocument();
+    });
+
+    it('has no habits section when none is due', () => {
+        render(<DayList {...baseProps()} />);
+        expect(
+            screen.queryByRole('button', { name: /Habits/ })
+        ).not.toBeInTheDocument();
+    });
+});

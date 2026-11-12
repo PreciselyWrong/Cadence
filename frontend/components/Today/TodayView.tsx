@@ -47,6 +47,8 @@ import {
 import { useViewportWidth } from '../../hooks/useViewportWidth';
 import { weekdayTitle } from '../Upcoming/dayLabel';
 import { todayCalendarPlacement } from './calendarPlacement';
+import { useDayHabits } from './useDayHabits';
+import { DayHabitsSection } from './HabitLine';
 import TodayPage from '../DailyPlan/TodayPage';
 import PaneSplitter, {
     PANE_MIN,
@@ -367,6 +369,18 @@ const NewToday: React.FC = () => {
         };
     }, [extraKey, revision, calendarEnabled]);
 
+    const habitsEnabled = useStore(
+        (state) => state.userSettingsStore.habitsEnabled
+    );
+    const dayHabitList = useDayHabits(date, habitsEnabled);
+    const habitMarksShown = useMemo(
+        () =>
+            hideCompleted
+                ? dayHabitList.marks.filter((mark) => !mark.done)
+                : dayHabitList.marks,
+        [dayHabitList.marks, hideCompleted]
+    );
+
     const columns = useMemo<DayColumnData[]>(
         () =>
             shownDates.map((d) => {
@@ -386,6 +400,7 @@ const NewToday: React.FC = () => {
                         lines: calendarLines,
                         events,
                         focus,
+                        habits: habitMarksShown,
                     };
                 }
                 const extra = extras[d];
@@ -432,6 +447,7 @@ const NewToday: React.FC = () => {
             focus,
             extras,
             hideCompleted,
+            habitMarksShown,
         ]
     );
 
@@ -1137,6 +1153,28 @@ const NewToday: React.FC = () => {
                                       )
                                   ),
                           },
+                      }
+                    : null
+            }
+            habits={
+                dayHabitList.open.length + dayHabitList.done.length > 0 &&
+                !(hideCompleted && dayHabitList.open.length === 0)
+                    ? {
+                          count: dayHabitList.open.length,
+                          content: (
+                              <DayHabitsSection
+                                  open={dayHabitList.open}
+                                  done={dayHabitList.done}
+                                  hideCompleted={hideCompleted}
+                                  minuteOf={(uid) =>
+                                      dayHabitList.marks.find(
+                                          (mark) => mark.uid === uid
+                                      )?.minute ?? null
+                                  }
+                                  amountOf={dayHabitList.amountOf}
+                                  onLog={dayHabitList.log}
+                              />
+                          ),
                       }
                     : null
             }

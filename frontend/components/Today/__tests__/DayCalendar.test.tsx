@@ -1,6 +1,7 @@
 import React from 'react';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { MemoryRouter } from 'react-router-dom';
 import DayCalendar, {
     DayCalendarProps,
     DayColumnData,
@@ -358,5 +359,52 @@ describe('DayCalendar opening a block', () => {
             expect.objectContaining({ uid: 'a' }),
             DAY
         );
+    });
+});
+
+describe('DayCalendar habits', () => {
+    it('marks a habit at its time, linking to the habit', () => {
+        render(
+            <MemoryRouter>
+                <DayCalendar
+                    range={RANGE}
+                    columns={[
+                        {
+                            date: DAY,
+                            weekday: 'Thu',
+                            dayNumber: 12,
+                            isToday: false,
+                            now: null,
+                            lines: [],
+                            events: [],
+                            focus: [],
+                            habits: [
+                                {
+                                    uid: 'h1',
+                                    name: 'Stretch',
+                                    minute: 540,
+                                    color: '#ff0000',
+                                    done: false,
+                                },
+                                {
+                                    uid: 'h2',
+                                    name: 'Night walk',
+                                    minute: 1320,
+                                    color: null,
+                                    done: false,
+                                },
+                            ],
+                        },
+                    ]}
+                    {...handlers()}
+                />
+            </MemoryRouter>
+        );
+        const marks = screen.getAllByTestId('calendar-habit');
+        // The one outside the shown hours is left out.
+        expect(marks).toHaveLength(1);
+        expect(marks[0]).toHaveTextContent('Stretch');
+        expect(marks[0]).toHaveAttribute('href', '/habit/h1');
+        expect(marks[0].style.top).toBe(`${60 * PX_PER_MINUTE}px`);
     });
 });

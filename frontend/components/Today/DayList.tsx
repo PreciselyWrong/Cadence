@@ -22,10 +22,12 @@ import { DayLine, DayLines, visibleLines } from './dayModel';
 
 const SECTIONS_KEY = 'today.sections';
 
-type SectionKey = 'overdue' | 'suggestions' | 'done';
+type SectionKey = 'overdue' | 'habits' | 'suggestions' | 'done';
 
+// How the sections start; only the day's habits start open.
 const CLOSED: Record<SectionKey, boolean> = {
     overdue: false,
+    habits: true,
     suggestions: false,
     done: false,
 };
@@ -91,6 +93,8 @@ export interface DayListProps {
         action?: { label: string; onClick(): void };
     } | null;
     suggestions: { count: number; content: React.ReactNode } | null;
+    // The day's habits (open count, rows); absent when none is due.
+    habits?: { count: number; content: React.ReactNode } | null;
     emptyText: string;
 }
 
@@ -169,6 +173,7 @@ const DayList: React.FC<DayListProps> = ({
     onOpen,
     overdue,
     suggestions,
+    habits = null,
     emptyText,
 }) => {
     const { t } = useTranslation();
@@ -365,6 +370,21 @@ const DayList: React.FC<DayListProps> = ({
                 </div>
 
                 {!hasOpen && <EmptyState title={emptyText} />}
+
+                {habits && (
+                    <div className="py-1">
+                        <SectionHead
+                            label={t('today.habitsCount', 'Habits · {{n}}', {
+                                n: habits.count,
+                            })}
+                            open={sections.habits}
+                            onToggle={() => toggle('habits')}
+                        />
+                        {sections.habits && (
+                            <div className="px-2">{habits.content}</div>
+                        )}
+                    </div>
+                )}
 
                 {suggestions && (
                     <div className="py-1">

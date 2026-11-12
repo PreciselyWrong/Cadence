@@ -7,6 +7,8 @@ import TaskCheckCircle from '../Task/TaskCheckCircle';
 import { CalendarEvent } from '../../utils/calendarFeedsService';
 import { formatMinute, SLOT_MINUTES, sideBySide } from '../DailyPlan/planUtils';
 import { DayLine } from './dayModel';
+import type { HabitMark } from './dayHabits';
+import { Link } from 'react-router-dom';
 
 export const PX_PER_HOUR = 56;
 export const PX_PER_MINUTE = PX_PER_HOUR / 60;
@@ -68,6 +70,8 @@ export interface DayColumnData {
     lines: DayLine[];
     events: CalendarEvent[];
     focus: FocusSpan[];
+    // Habits with a time that day (Today only): small markers, not blocks.
+    habits?: HabitMark[];
 }
 
 export interface DropPreview {
@@ -408,7 +412,7 @@ const DayColumn: React.FC<DayColumnProps> = ({
     selectedUid,
 }) => {
     const { t } = useTranslation();
-    const { date, lines, events, focus, now } = column;
+    const { date, lines, events, focus, now, habits = [] } = column;
     const openOnDay = useCallback(
         (line: DayLine) => onOpen(line, date),
         [onOpen, date]
@@ -511,6 +515,35 @@ const DayColumn: React.FC<DayColumnProps> = ({
                     {block.label ?? t('today.protectedTime', 'Protected time')}
                 </div>
             ))}
+
+            {/* A habit's time: a slim marker on the right edge that opens
+                the habit (logging stays on the list, one tap away). Not
+                draggable: the time is the habit's reminder. */}
+            {habits
+                .filter(
+                    (mark) =>
+                        mark.minute >= range.start && mark.minute < range.end
+                )
+                .map((mark) => (
+                    <Link
+                        key={`habit:${mark.uid}`}
+                        to={`/habit/${mark.uid}`}
+                        data-testid="calendar-habit"
+                        aria-label={t('today.habitAt', '{{name}} at {{time}}', {
+                            name: mark.name,
+                            time: formatMinute(mark.minute),
+                        })}
+                        className={`absolute right-1 z-[5] flex h-5 max-w-[60%] -translate-y-1/2 items-center gap-1 truncate rounded-full border-l-[3px] bg-surface-high px-1.5 text-[11px] leading-none text-surface-on shadow-sm hover:bg-surface-highest ${
+                            mark.done ? 'opacity-60 line-through' : ''
+                        }`}
+                        style={{
+                            top: offset(mark.minute),
+                            borderLeftColor: mark.color ?? undefined,
+                        }}
+                    >
+                        <span className="truncate">{mark.name}</span>
+                    </Link>
+                ))}
 
             {eventBlocks.map(({ key, event, start, end }) => (
                 <button
