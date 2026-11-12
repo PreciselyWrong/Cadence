@@ -91,6 +91,11 @@ internal class BriefActions(
         return { queue.cancel(BriefRequests.decisionKey(key)) }
     }
 
+    /** La vue [view] de [date] vient d'être ouverte : les autres clients cessent de l'annoncer. */
+    suspend fun seen(date: LocalDate, view: BriefView) {
+        queue.enqueue(BriefRequests.seen(date, view))
+    }
+
     /**
      * « Reporter à demain » (bilan du soir) : ajoute les tâches au plan de demain, sans toucher à leur échéance.
      * Annuler retire l'appel s'il n'est pas parti, sinon retire les tâches du plan de demain (en ligne).

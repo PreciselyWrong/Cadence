@@ -48,7 +48,7 @@ data class SlippedDto(
 )
 
 /** Réponse de `GET /daily-plan/:date/evening` : le bilan reste en JSON brut pour le cache. */
-data class EveningEnvelope(val date: String, val eveningJson: String?)
+data class EveningEnvelope(val date: String, val eveningJson: String?, val seenAt: String? = null)
 
 object EveningCodec {
     private val json = Json {
@@ -56,10 +56,11 @@ object EveningCodec {
         coerceInputValues = true
     }
 
-    /** Lit `{ date, evening, tasks }` ; `tasks` est ignoré (l'état des tâches vient de Room). */
+    /** Lit `{ date, evening, seen_at, tasks }` ; `tasks` est ignoré (l'état des tâches vient de Room). */
     fun envelope(root: JsonObject): EveningEnvelope = EveningEnvelope(
         date = (root["date"] as? JsonPrimitive)?.takeUnless { it is JsonNull }?.content.orEmpty(),
         eveningJson = root["evening"]?.takeUnless { it is JsonNull }?.toString(),
+        seenAt = (root["seen_at"] as? JsonPrimitive)?.takeUnless { it is JsonNull }?.content,
     )
 
     fun decode(raw: String): EveningDto = json.decodeFromString(EveningDto.serializer(), raw)

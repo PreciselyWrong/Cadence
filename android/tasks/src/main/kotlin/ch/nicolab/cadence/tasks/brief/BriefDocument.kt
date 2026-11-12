@@ -166,6 +166,8 @@ data class BriefEnvelope(
     val version: Int,
     val status: String,
     val generatedAt: String?,
+    /** Première ouverture, sur n'importe quel client ; null tant que personne ne l'a ouvert. */
+    val seenAt: String? = null,
 )
 
 /** Décodage du JSON du brief et de l'enveloppe, tolérant aux clés inconnues. */
@@ -175,7 +177,7 @@ object BriefCodec {
         coerceInputValues = true
     }
 
-    /** Lit l'enveloppe `{ brief, version, status, generated_at, tasks }` ; `tasks` est ignoré (l'état vient de Room). */
+    /** Lit l'enveloppe `{ brief, version, status, generated_at, seen_at, tasks }` ; `tasks` est ignoré (l'état vient de Room). */
     fun envelope(root: JsonObject): BriefEnvelope {
         val brief = root["brief"]?.takeUnless { it is JsonNull }
         return BriefEnvelope(
@@ -183,6 +185,7 @@ object BriefCodec {
             version = root.int("version") ?: 0,
             status = root.string("status") ?: "",
             generatedAt = root.string("generated_at"),
+            seenAt = root.string("seen_at"),
         )
     }
 

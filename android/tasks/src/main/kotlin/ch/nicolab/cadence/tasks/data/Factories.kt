@@ -37,6 +37,7 @@ import ch.nicolab.cadence.tasks.brief.BriefRequests
 import ch.nicolab.cadence.tasks.brief.BriefRepository
 import ch.nicolab.cadence.tasks.brief.BriefSettingsRepository
 import ch.nicolab.cadence.tasks.brief.BriefStore
+import ch.nicolab.cadence.tasks.brief.BriefView
 import ch.nicolab.cadence.tasks.brief.EveningRepository
 import ch.nicolab.cadence.tasks.brief.DeferredBriefQueue
 import ch.nicolab.cadence.tasks.brief.RepositoryBriefTasks
@@ -167,8 +168,8 @@ internal class TasksRuntime private constructor(context: Context) {
 
     val briefStore = BriefStore.of(appContext)
     private val accountZone: suspend () -> ZoneId = { connection.observe().first()?.accountZone ?: ZoneId.systemDefault() }
-    val brief = BriefRepository(database.briefDao(), api::call, accountZone)
-    val evening = EveningRepository(database.eveningDao(), api::call, accountZone)
+    val brief = BriefRepository(database.briefDao(), api::call, accountZone, onSeen = { briefStore.markSeen(it, BriefView.MORNING) })
+    val evening = EveningRepository(database.eveningDao(), api::call, accountZone, onSeen = { briefStore.markSeen(it, BriefView.EVENING) })
     val briefAudio = ch.nicolab.cadence.tasks.brief.audio.BriefAudio(appContext, brief, evening, api::download)
     val briefSettings = BriefSettingsRepository(briefStore, api::call) { call -> repository.defer(call).getOrThrow() }
     val triage = ch.nicolab.cadence.tasks.triage.TriageRepository(

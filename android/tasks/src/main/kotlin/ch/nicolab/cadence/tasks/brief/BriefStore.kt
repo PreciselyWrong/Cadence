@@ -52,6 +52,21 @@ class BriefStore private constructor(private val prefs: SharedPreferences) {
         }
     }
 
+    private val _seen = MutableStateFlow(prefs.getStringSet(KEY_SEEN, null).orEmpty().toSet())
+    /** Vues déjà ouvertes ([seenKey]) sur un client : Aujourd'hui ne les annonce plus. */
+    val seen: StateFlow<Set<String>> = _seen.asStateFlow()
+
+    /** Note l'ouverture de [view] pour [day] et oublie les jours anciens ; faux si elle était déjà connue. */
+    fun markSeen(day: LocalDate, view: BriefView): Boolean {
+        val key = seenKey(day, view)
+        if (key in _seen.value) return false
+        val limit = day.minusDays(DECISION_DAYS).toString()
+        val next = _seen.value.filterTo(HashSet()) { it >= limit } + key
+        prefs.edit { putStringSet(KEY_SEEN, next) }
+        _seen.value = next
+        return true
+    }
+
     /** Dernière file « À trier » lue, pour la lecture hors ligne. */
     fun readTriage(): String? = prefs.getString(KEY_TRIAGE, null)
 
@@ -68,6 +83,9 @@ class BriefStore private constructor(private val prefs: SharedPreferences) {
         private const val KEY_TRIAGE = "triage"
         private const val DECISIONS = "decisions:"
         private const val DECISION_DAYS = 3L
+        private const val KEY_SEEN = "seen"
+
+        fun seenKey(day: LocalDate, view: BriefView): String = "$day|${view.name}"
 
         fun of(context: Context): BriefStore = BriefStore(context.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE))
     }

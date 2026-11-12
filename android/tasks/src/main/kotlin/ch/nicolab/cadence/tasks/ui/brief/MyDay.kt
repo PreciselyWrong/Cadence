@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.tasks.ui.brief
 
+import ch.nicolab.cadence.tasks.brief.BriefView
 import ch.nicolab.cadence.tasks.brief.MoveDto
 import ch.nicolab.cadence.tasks.brief.TonightDto
 import ch.nicolab.cadence.tasks.model.TaskItem
@@ -18,5 +19,13 @@ internal object MyDay {
         val shownMoves = moves.filterNot { it.taskUid in priorityUids }
         val handled = priorityUids + shownMoves.map { it.taskUid }
         return MyDayLists(priorities, shownMoves, overdue.filterNot { it.uid in handled })
+    }
+
+    /** Ce qu'Aujourd'hui annonce : la vue du moment tant qu'elle n'a pas été ouverte, puis rien. */
+    fun card(view: BriefView, morningVerdict: String?, eveningVerdict: String?, morningSeen: Boolean, eveningSeen: Boolean): BriefCardState? {
+        val evening = view == BriefView.EVENING
+        if (if (evening) eveningSeen else morningSeen) return null
+        val verdict = (if (evening) eveningVerdict else morningVerdict)?.takeIf { it.isNotBlank() } ?: return null
+        return BriefCardState(evening, verdict)
     }
 }

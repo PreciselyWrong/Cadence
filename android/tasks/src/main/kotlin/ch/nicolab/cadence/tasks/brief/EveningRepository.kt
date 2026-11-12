@@ -21,6 +21,7 @@ class EveningRepository internal constructor(
     private val call: suspend (method: String, path: String, query: Map<String, String>, body: JsonObject?) -> JsonObject,
     private val zone: suspend () -> ZoneId,
     private val clock: () -> Long = System::currentTimeMillis,
+    private val onSeen: (LocalDate) -> Unit = {},
 ) {
     fun observe(date: LocalDate): Flow<CachedEvening?> = dao.observe(date.toString()).map { row -> row?.let(::cached) }
 
@@ -31,6 +32,7 @@ class EveningRepository internal constructor(
     suspend fun refresh(date: LocalDate): Result<Unit> = try {
         val envelope = EveningCodec.envelope(call("GET", "/api/v1/daily-plan/$date/evening", emptyMap(), null))
         val json = envelope.eveningJson
+        if (envelope.seenAt != null) onSeen(date)
         if (json == null) {
             dao.delete(date.toString())
         } else {

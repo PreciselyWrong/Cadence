@@ -271,6 +271,10 @@ fun TasksScreen(
     }
     if (switcherOpen) {
         ListSwitcherSheet(
+            onOpenMyDay = {
+                switcherOpen = false
+                onOpenBrief()
+            },
             onOpenLinks = {
                 switcherOpen = false
                 linksOpen = true

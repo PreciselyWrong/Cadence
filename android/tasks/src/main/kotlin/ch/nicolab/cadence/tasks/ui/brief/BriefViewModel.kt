@@ -1,12 +1,14 @@
 package ch.nicolab.cadence.tasks.ui.brief
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkManager
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.brief.AnticipateDto
+import ch.nicolab.cadence.tasks.brief.BriefStore
 import ch.nicolab.cadence.tasks.brief.BriefUndo
 import ch.nicolab.cadence.tasks.brief.BriefView
 import ch.nicolab.cadence.tasks.brief.CachedBrief
@@ -130,14 +132,20 @@ internal class BriefViewModel(application: Application) : AndroidViewModel(appli
         EveningMode.view(due, night?.evening != null, morning?.brief != null, forced)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_MS), BriefView.MORNING)
 
-    /** Verdict de la carte d'Aujourd'hui ; null tant qu'aucun résumé du jour n'est lisible. */
-    val card: StateFlow<BriefCardState?> = combine(view, brief, evening) { shown, morning, night ->
-        if (shown == BriefView.EVENING) {
-            night?.evening?.verdict?.text?.takeIf { it.isNotBlank() }?.let { BriefCardState(evening = true, verdict = it) }
-        } else {
-            morning?.brief?.verdict?.text?.takeIf { it.isNotBlank() }?.let { BriefCardState(evening = false, verdict = it) }
-        }
+    /** Carte d'Aujourd'hui ; null sans résumé du jour lisible, ou une fois la vue du moment ouverte (ici ou sur le web). */
+    val card: StateFlow<BriefCardState?> = combine(view, brief, evening, store.seen, today) { shown, morning, night, seen, day ->
+        MyDay.card(
+            view = shown,
+            morningVerdict = morning?.brief?.verdict?.text,
+            eveningVerdict = night?.evening?.verdict?.text,
+            morningSeen = BriefStore.seenKey(day, BriefView.MORNING) in seen,
+            eveningSeen = BriefStore.seenKey(day, BriefView.EVENING) in seen,
+        )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_MS), null)
+
+    /** Le jour a un résumé ou un bilan : Ma journée a déjà sa carte, inutile d'y ajouter celle du matin. */
+    val hasBrief: StateFlow<Boolean> = combine(brief, evening) { morning, night -> morning?.brief != null || night?.evening != null }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_MS), false)
 
     private val _pending = MutableStateFlow(BriefPending())
     /** Gestes montrés avant que Room ou le serveur ne les rattrape. */
@@ -200,6 +208,24 @@ internal class BriefViewModel(application: Application) : AndroidViewModel(appli
     /** À l'ouverture de l'écran : le bilan du soir redevient l'écran par défaut. */
     fun opened() {
         forcedMorning.value = false
+    }
+
+    /** La vue affichée est lue : Aujourd'hui cesse de l'annoncer, ici tout de suite et ailleurs à la prochaine synchro. */
+    fun markSeen() {
+        val shown = view.value
+        val day = today.value
+        val exists = if (shown == BriefView.EVENING) evening.value?.evening != null else brief.value?.brief != null
+        if (!exists || !store.markSeen(day, shown)) return
+        viewModelScope.launch {
+            try {
+                actions.seen(day, shown)
+            } catch (error: CancellationException) {
+                throw error
+            } catch (error: Exception) {
+                // Sans l'appel, seul l'autre client continue d'annoncer cette vue : rien à montrer ici.
+                Log.w(TAG, "Brief seen call not queued", error)
+            }
+        }
     }
 
     fun showMorning() {
@@ -391,6 +417,7 @@ internal class BriefViewModel(application: Application) : AndroidViewModel(appli
     private fun string(res: Int, vararg args: Any): String = getApplication<Application>().getString(res, *args)
 
     private companion object {
+        const val TAG = "BriefViewModel"
         const val STOP_MS = 5_000L
         const val RESUME_END_MS = 2_000L
     }

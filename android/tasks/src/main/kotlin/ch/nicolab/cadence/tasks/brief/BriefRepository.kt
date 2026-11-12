@@ -34,6 +34,7 @@ class BriefRepository internal constructor(
     private val call: suspend (method: String, path: String, query: Map<String, String>, body: JsonObject?) -> JsonObject,
     private val zone: suspend () -> ZoneId,
     private val clock: () -> Long = System::currentTimeMillis,
+    private val onSeen: (LocalDate) -> Unit = {},
 ) {
     fun observe(date: LocalDate): Flow<CachedBrief?> = dao.observe(date.toString()).map { row -> row?.let(::cached) }
 
@@ -41,6 +42,7 @@ class BriefRepository internal constructor(
     suspend fun refresh(date: LocalDate): Result<Unit> = try {
         val envelope = BriefCodec.envelope(call("GET", "/api/v1/daily-plan/$date/brief", emptyMap(), null))
         val json = envelope.briefJson
+        if (envelope.seenAt != null) onSeen(date)
         if (json == null) {
             dao.delete(date.toString())
         } else {

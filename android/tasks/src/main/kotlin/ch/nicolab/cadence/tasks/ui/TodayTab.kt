@@ -68,6 +68,7 @@ internal fun TodayTab(
     val planning: PlanningViewModel = viewModel()
     val briefViewModel: BriefViewModel = viewModel()
     val briefCard by briefViewModel.card.collectAsStateWithLifecycle()
+    val hasBrief by briefViewModel.hasBrief.collectAsStateWithLifecycle()
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { briefViewModel.refresh() }
     val state by viewModel.today.collectAsStateWithLifecycle()
     val moment by viewModel.moment.collectAsStateWithLifecycle()
@@ -214,7 +215,7 @@ internal fun TodayTab(
                 }
             }
         }
-        if (morningVisible && briefCard == null) {
+        if (morningVisible && !hasBrief) {
             item(key = "morning") {
                 CardSlot {
                     MorningCard(

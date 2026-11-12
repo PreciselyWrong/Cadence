@@ -23,6 +23,16 @@ class BriefActionsTest {
     private val actions = BriefActions(tasks, queue, { zone }, plan, newKey = { "k1" })
 
     @Test
+    fun openingAViewTellsTheServerWhichOne() = runTest {
+        actions.seen(today, BriefView.EVENING)
+
+        val call = queue.queued.single()
+        assertEquals("POST", call.method)
+        assertEquals("/api/v1/daily-plan/2026-11-04/brief/seen", call.path)
+        assertEquals("evening", call.body.str("view"))
+    }
+
+    @Test
     fun completeWritesTheTaskAndUndoReopensIt() = runTest {
         val undo = actions.complete("t1")
 

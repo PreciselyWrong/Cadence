@@ -27,6 +27,7 @@ import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.TaskAlt
+import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -77,6 +78,7 @@ internal fun ListSwitcherSheet(
     onOpenPinned: (PinnedShortcut) -> Unit,
     onUnpin: (PinnedShortcut) -> Unit,
     onSelectArea: (String?) -> Unit,
+    onOpenMyDay: () -> Unit,
     onOpenLinks: () -> Unit,
     onOpenSettings: () -> Unit,
     onDismiss: () -> Unit,
@@ -123,6 +125,11 @@ internal fun ListSwitcherSheet(
                 SheetLabel(stringResource(R.string.tasks_lists_area))
                 AreaFilterRow(areas = areas, selected = areaFilter, onSelect = onSelectArea, contentPadding = PaddingValues())
             }
+            SwitcherRow(
+                label = stringResource(R.string.brief_card_title),
+                leading = { Icon(Icons.Outlined.Today, contentDescription = null, tint = palette.onSurfaceVariant) },
+                onClick = onOpenMyDay,
+            )
             SwitcherRow(
                 label = stringResource(R.string.links_title),
                 leading = { Icon(Icons.Outlined.Link, contentDescription = null, tint = palette.onSurfaceVariant) },

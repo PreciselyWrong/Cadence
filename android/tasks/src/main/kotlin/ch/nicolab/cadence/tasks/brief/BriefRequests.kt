@@ -23,6 +23,15 @@ internal object BriefRequests {
     fun answerKey(idempotencyKey: String) = "$ANSWER_PREFIX:$idempotencyKey"
     fun carryKey(idempotencyKey: String) = "$CARRY_PREFIX:$idempotencyKey"
 
+    /** Première ouverture d'une vue (`POST /daily-plan/:date/brief/seen`) : le serveur garde la première heure reçue. */
+    fun seen(date: LocalDate, view: BriefView) = DeferredCall(
+        key = "brief-seen:$date:${view.name}",
+        method = "POST",
+        path = "/api/v1/daily-plan/$date/brief/seen",
+        body = buildJsonObject { put("view", view.name.lowercase()) },
+        label = "Résumé : ouvert",
+    )
+
     /**
      * Ajoute des tâches au plan de [day] (`POST /daily-plan/:date/carry-over`). Le serveur saute celles déjà au plan :
      * un deuxième envoi ne change rien, la clé sert à retirer l'appel tant qu'il n'est pas parti.

@@ -142,6 +142,7 @@ fun BriefScreen(onBack: () -> Unit) {
         viewModel.refresh()
         triage.refresh()
     }
+    LaunchedEffect(view, cached?.brief != null, eveningCached?.evening != null) { viewModel.markSeen() }
     if (triageOpen) {
         TriageScreen(today = today, onBack = { triageOpen = false })
         return
