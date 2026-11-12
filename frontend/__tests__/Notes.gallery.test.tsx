@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import { MemoryRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Notes from '../components/Notes';
 import { useViewType } from '../hooks/useViewType';
 
@@ -81,6 +81,23 @@ jest.mock('../store/useStore', () => {
 });
 
 const mockViewType = useViewType as jest.Mock;
+
+// Layout keys the page by pathname, so leaving /notes/:uid remounts it.
+const KeyedByPath: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+    <React.Fragment key={useLocation().pathname}>{children}</React.Fragment>
+);
+
+const renderInLayout = (path: string) =>
+    render(
+        <MemoryRouter initialEntries={[path]}>
+            <KeyedByPath>
+                <Routes>
+                    <Route path="/notes" element={<Notes />} />
+                    <Route path="/notes/:uid" element={<Notes />} />
+                </Routes>
+            </KeyedByPath>
+        </MemoryRouter>
+    );
 
 const renderAt = (path: string) =>
     render(
@@ -186,6 +203,29 @@ describe('Notes gallery', () => {
                 screen.getByRole('tab', { name: 'Gallery' })
             ).toBeInTheDocument()
         );
+        expect(screen.queryByDisplayValue('Trip ideas')).toBeNull();
+    });
+
+    it('stays on the overview when the page remounts on the new path', async () => {
+        mockViewType.mockReturnValue({
+            viewType: 'list',
+            setViewType: jest.fn(),
+            loaded: true,
+        });
+
+        renderInLayout('/notes/note-a');
+
+        expect(
+            await screen.findByDisplayValue('Trip ideas')
+        ).toBeInTheDocument();
+        fireEvent.click(
+            screen.getByRole('button', { name: 'notes.noteOptions' })
+        );
+        fireEvent.click(screen.getByRole('button', { name: /All notes/ }));
+
+        expect(
+            await screen.findByRole('tab', { name: 'Gallery' })
+        ).toBeInTheDocument();
         expect(screen.queryByDisplayValue('Trip ideas')).toBeNull();
     });
 });

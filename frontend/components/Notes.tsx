@@ -90,8 +90,12 @@ const Notes: React.FC = () => {
         loaded: notesViewLoaded,
     } = useViewType('notes');
     const notesGallery = notesView === 'gallery';
-    // "All notes" from a note's menu: stay on the overview this visit.
-    const [showOverview, setShowOverview] = useState(false);
+    // "All notes" from a note's menu: stay on the overview this visit. The
+    // page remounts when the path changes (Layout keys it by pathname), so
+    // the choice also travels in the navigation state.
+    const [showOverview, setShowOverview] = useState(() =>
+        Boolean((location.state as { overview?: boolean } | null)?.overview)
+    );
     const currentUidRef = useRef(uid);
     const [urlNoteMissing, setUrlNoteMissing] = useState(false);
     // Timestamp flag attached to the /notes navigation state by Layout's
@@ -223,7 +227,7 @@ const Notes: React.FC = () => {
         if (note?.uid) {
             navigate(`/notes/${note.uid}`, { replace: true });
         } else {
-            navigate('/notes', { replace: true });
+            navigate('/notes', { replace: true, state: { overview: true } });
         }
     };
 
