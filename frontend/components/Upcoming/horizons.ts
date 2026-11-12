@@ -3,7 +3,8 @@ import type { Task } from '../../entities/Task';
 import { isTaskDone } from '../../constants/taskStatus';
 
 // The Horizons layout of the Plan page: open tasks by the moment the user
-// committed them to (week_of, month_of, #someday), never by due date.
+// committed them to (week_of, month_of, #someday) or, failing that, by the
+// day they are planned on or due (derived, never written back).
 export type HorizonKey = 'week' | 'this_month' | 'next_month' | 'someday';
 
 export const HORIZON_KEYS: HorizonKey[] = [
@@ -37,36 +38,88 @@ const day = (value: string | null | undefined): string | null =>
 const isSomeday = (task: Task): boolean =>
     (task.tags ?? []).some((tag) => tag.name?.toLowerCase() === SOMEDAY);
 
+const isRecurring = (task: Task): boolean =>
+    !!task.recurrence_type && task.recurrence_type !== 'none';
+
+// The plan days the board holds, as useDays returns them.
+export type PlanDays = Record<
+    string,
+    { plan: { items: PlannedItem[] } | null }
+>;
+
+// Each task's earliest open plan line on `from` or later.
+const firstPlannedDays = (
+    days: PlanDays,
+    from: string
+): Map<string, string> => {
+    const first = new Map<string, string>();
+    Object.entries(days).forEach(([date, day]) => {
+        if (date < from) return;
+        (day?.plan?.items ?? []).forEach((item) => {
+            const uid = item.task?.uid;
+            if (!uid || item.occurrence_done) return;
+            const known = first.get(uid);
+            if (!known || date < known) first.set(uid, date);
+        });
+    });
+    return first;
+};
+
 /**
- * Open top-level tasks into the four horizons. #someday wins (the tag parks
- * the task whatever else it holds), then the week, then the month: the
- * narrower commitment is the one the user acts on. A week or month that has
- * passed decides nothing, so those tasks appear nowhere.
+ * Open top-level tasks into the four horizons, first rule that applies:
+ * 1. #someday (the tag parks the task whatever else it holds);
+ * 2. a commitment that still holds: week_of this week, then month_of this
+ *    month or next month (the narrower one is the one the user acts on);
+ * 3. the task's date, derived and never written: its earliest plan line
+ *    from the start of this week on, else its due day from today on
+ *    (recurring tasks excepted: their due date is the next occurrence).
+ *    A day of this week gives This week, a later day of this month This
+ *    month, a day of next month Next month. A task planned on a day of this
+ *    week is left out of the buckets: This week lists it under « Planned on
+ *    a day » (plannedThisWeek).
+ * A past week or month, a past due day or a plan on a past week decides
+ * nothing, so such tasks appear nowhere. `days` are the plan days the board
+ * has loaded; without them only due dates are derived.
  */
 export const bucketHorizons = (
     tasks: Task[],
     today: string,
-    firstDayOfWeek: number
+    firstDayOfWeek: number,
+    days: PlanDays = {}
 ): HorizonBuckets => {
     const week = weekStartOf(today, firstDayOfWeek);
+    const weekEnd = format(addDays(parseISO(week), 6), 'yyyy-MM-dd');
     const thisMonth = monthStartOf(today);
     const nextMonth = monthStartOf(today, 1);
+    const planned = firstPlannedDays(days, week);
     const buckets: HorizonBuckets = {
         week: [],
         this_month: [],
         next_month: [],
         someday: [],
     };
+    const byDate = (date: string): HorizonKey | null => {
+        if (date <= weekEnd) return 'week';
+        const month = monthStartOf(date);
+        if (month === thisMonth) return 'this_month';
+        if (month === nextMonth) return 'next_month';
+        return null;
+    };
     (tasks as HorizonTask[]).forEach((task) => {
         if (!task.uid || isTaskDone(task.status) || task.parent_task_id) {
             return;
         }
-        if (isSomeday(task)) buckets.someday.push(task);
-        else if (day(task.week_of) === week) buckets.week.push(task);
-        else if (day(task.month_of) === thisMonth)
-            buckets.this_month.push(task);
-        else if (day(task.month_of) === nextMonth)
-            buckets.next_month.push(task);
+        if (isSomeday(task)) return void buckets.someday.push(task);
+        if (day(task.week_of) === week) return void buckets.week.push(task);
+        const month = day(task.month_of);
+        if (month === thisMonth) return void buckets.this_month.push(task);
+        if (month === nextMonth) return void buckets.next_month.push(task);
+        const plannedOn = planned.get(task.uid);
+        if (plannedOn && plannedOn <= weekEnd) return;
+        const due = isRecurring(task) ? null : day(task.due_date);
+        const date = plannedOn ?? (due && due >= today ? due : null);
+        const key = date ? byDate(date) : null;
+        if (key) buckets[key].push(task);
     });
     return buckets;
 };
@@ -115,7 +168,7 @@ export const weekDates = (today: string, firstDayOfWeek: number): string[] => {
  * the ones already in the week bucket.
  */
 export const plannedThisWeek = (
-    days: Record<string, { plan: { items: PlannedItem[] } | null }>,
+    days: PlanDays,
     today: string,
     firstDayOfWeek: number,
     exclude: Task[] = []

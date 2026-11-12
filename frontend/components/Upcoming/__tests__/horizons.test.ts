@@ -95,6 +95,154 @@ describe('bucketHorizons', () => {
     });
 });
 
+describe('bucketHorizons: horizon derived from the date', () => {
+    const planDays = (entries: Record<string, Task[]>) =>
+        Object.fromEntries(
+            Object.entries(entries).map(([date, tasks]) => [
+                date,
+                {
+                    plan: {
+                        items: tasks.map((t, position) => ({
+                            task: t,
+                            position,
+                        })),
+                    },
+                },
+            ])
+        );
+
+    it('places a task due from today on in the week or month of its due day', () => {
+        const buckets = bucketHorizons(
+            [
+                task('dueToday', { due_date: '2026-11-12' }),
+                task('dueSunday', { due_date: '2026-11-15T18:00:00' }),
+                task('dueLater', { due_date: '2026-11-25' }),
+                task('dueDecember', { due_date: '2026-12-03' }),
+                task('dueJanuary', { due_date: '2027-01-04' }),
+            ],
+            TODAY,
+            1
+        );
+        expect(buckets.week.map((t) => t.uid)).toEqual([
+            'dueToday',
+            'dueSunday',
+        ]);
+        expect(buckets.this_month.map((t) => t.uid)).toEqual(['dueLater']);
+        expect(buckets.next_month.map((t) => t.uid)).toEqual(['dueDecember']);
+    });
+
+    it('takes the week first, across a month end', () => {
+        // Friday 27 November 2026: the week runs to Sunday 29.
+        const buckets = bucketHorizons(
+            [
+                task('mon', { due_date: '2026-11-30' }),
+                task('tue', { due_date: '2026-12-01' }),
+            ],
+            '2026-11-27',
+            1
+        );
+        expect(buckets.this_month.map((t) => t.uid)).toEqual(['mon']);
+        expect(buckets.next_month.map((t) => t.uid)).toEqual(['tue']);
+        // Thursday 29 October: Sunday 1 November is still this week.
+        const sameWeek = bucketHorizons(
+            [task('sun', { due_date: '2026-11-01' })],
+            '2026-10-29',
+            1
+        );
+        expect(sameWeek.week.map((t) => t.uid)).toEqual(['sun']);
+    });
+
+    it('derives nothing from a past due date or a recurring due date', () => {
+        const buckets = bucketHorizons(
+            [
+                task('late', { due_date: '2026-11-10' }),
+                task('routine', {
+                    due_date: '2026-11-13',
+                    recurrence_type: 'daily',
+                }),
+            ],
+            TODAY,
+            1
+        );
+        expect(Object.values(buckets).flat()).toEqual([]);
+    });
+
+    it('places a task planned after this week by its planned day, before its due day', () => {
+        const planned = task('planned', { due_date: '2026-12-10' });
+        const buckets = bucketHorizons(
+            [planned, task('decPlan')],
+            TODAY,
+            1,
+            planDays({
+                '2026-11-20': [planned],
+                '2026-12-02': [task('decPlan')],
+            })
+        );
+        expect(buckets.this_month.map((t) => t.uid)).toEqual(['planned']);
+        expect(buckets.next_month.map((t) => t.uid)).toEqual(['decPlan']);
+    });
+
+    it('leaves a task planned on a day of this week to « Planned on a day »', () => {
+        const planned = task('planned', { due_date: '2026-11-25' });
+        const days = planDays({ '2026-11-10': [planned] });
+        const buckets = bucketHorizons([planned], TODAY, 1, days);
+        expect(Object.values(buckets).flat()).toEqual([]);
+        expect(
+            plannedThisWeek(days, TODAY, 1, buckets.week).map(
+                ({ task: t }) => t.uid
+            )
+        ).toEqual(['planned']);
+    });
+
+    it('ignores plans on past weeks and done plan lines', () => {
+        const old = task('old', { due_date: '2026-11-25' });
+        const done = task('doneLine');
+        const buckets = bucketHorizons([old, done], TODAY, 1, {
+            '2026-11-02': { plan: { items: [{ task: old, position: 0 }] } },
+            '2026-11-20': {
+                plan: {
+                    items: [{ task: done, position: 0, occurrence_done: true }],
+                },
+            },
+        });
+        expect(buckets.this_month.map((t) => t.uid)).toEqual(['old']);
+        expect(buckets.week).toEqual([]);
+    });
+
+    it('lets an explicit week or month that still holds win over the date', () => {
+        const buckets = bucketHorizons(
+            [
+                task('weekDueDec', {
+                    week_of: '2026-11-09',
+                    due_date: '2026-12-03',
+                }),
+                task('nextMonthDueToday', {
+                    month_of: '2026-12-01',
+                    due_date: '2026-11-12',
+                }),
+                task('staleWeekDueLater', {
+                    week_of: '2026-11-02',
+                    due_date: '2026-11-25',
+                }),
+                task('parkedDue', {
+                    due_date: '2026-11-13',
+                    tags: [{ name: 'someday' }],
+                }),
+            ],
+            TODAY,
+            1
+        );
+        expect(buckets.week.map((t) => t.uid)).toEqual(['weekDueDec']);
+        expect(buckets.next_month.map((t) => t.uid)).toEqual([
+            'nextMonthDueToday',
+        ]);
+        expect(buckets.this_month.map((t) => t.uid)).toEqual([
+            'staleWeekDueLater',
+        ]);
+        expect(buckets.someday.map((t) => t.uid)).toEqual(['parkedDue']);
+    });
+});
+
 describe('horizonPatch', () => {
     it('commits to the week and clears the month', () => {
         expect(horizonPatch('this_month', 'week')).toEqual({
