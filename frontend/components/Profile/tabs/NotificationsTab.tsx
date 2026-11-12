@@ -16,6 +16,7 @@ import type {
     QuietHours,
 } from '../types';
 import { getCsrfToken } from '../../../utils/csrfService';
+import { INLINE_FIELD_CLASS } from '../../Shared/ui/controlSizes';
 import PushDeviceCard from './PushDeviceCard';
 import AppriseCard from './AppriseCard';
 import TimedRemindersCard from './TimedRemindersCard';
@@ -621,7 +622,7 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
                                     start: e.target.value,
                                 })
                             }
-                            className="px-2 py-1 text-sm rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 disabled:opacity-50"
+                            className={`${INLINE_FIELD_CLASS} disabled:opacity-50`}
                         />
                     </label>
                     <label className="inline-flex items-center gap-2 text-sm text-gray-800 dark:text-gray-200">
@@ -636,7 +637,7 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
                                     end: e.target.value,
                                 })
                             }
-                            className="px-2 py-1 text-sm rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 disabled:opacity-50"
+                            className={`${INLINE_FIELD_CLASS} disabled:opacity-50`}
                         />
                     </label>
                 </div>

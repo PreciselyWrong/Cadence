@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ClockIcon } from '@heroicons/react/24/outline';
+import { INLINE_FIELD_CLASS } from '../../Shared/ui/controlSizes';
 import {
     TIMED_LEAD_MINUTES,
     TimedReminders,
@@ -69,7 +70,7 @@ const TimedRemindersCard: React.FC = () => {
                                     lead_minutes: Number(e.target.value),
                                 })
                             }
-                            className="rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 py-1"
+                            className={`${INLINE_FIELD_CLASS} pr-9`}
                         >
                             {TIMED_LEAD_MINUTES.map((minutes) => (
                                 <option key={minutes} value={minutes}>

@@ -48,7 +48,7 @@ const CaptureDestinations: React.FC<CaptureDestinationsProps> = ({
                 {chips.map((label) => (
                     <span
                         key={label}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 text-[13px] rounded-md max-w-full truncate bg-blue-100 dark:bg-blue-900/50 text-gray-900 dark:text-white font-semibold"
+                        className="inline-flex items-center gap-1 px-2.5 py-1 text-[13px] rounded-md max-w-full truncate bg-surface-high text-surface-on font-semibold"
                     >
                         {label}
                     </span>
@@ -71,7 +71,7 @@ const CaptureDestinations: React.FC<CaptureDestinationsProps> = ({
             <div
                 role="radiogroup"
                 aria-label={t('capture.addTo', 'Add to')}
-                className="inline-flex flex-wrap max-w-full rounded-lg bg-gray-100 dark:bg-black/30 p-0.5 gap-0.5"
+                className="inline-flex flex-wrap max-w-full rounded-lg bg-surface-high p-0.5 gap-0.5"
             >
                 {targets.map((target) => {
                     const selected = target === value;
@@ -83,10 +83,10 @@ const CaptureDestinations: React.FC<CaptureDestinationsProps> = ({
                             aria-checked={selected}
                             data-testid={`capture-target-${target}`}
                             onClick={() => onChange(target)}
-                            className={`px-2 sm:px-2.5 py-1 text-[13px] whitespace-nowrap rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+                            className={`px-2 sm:px-2.5 py-1 text-[13px] whitespace-nowrap rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ${
                                 selected
-                                    ? 'bg-blue-100 dark:bg-blue-900/50 text-gray-900 dark:text-white font-semibold'
-                                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-200'
+                                    ? 'bg-surface text-surface-on font-semibold shadow-sm'
+                                    : 'text-surface-on-variant hover:text-surface-on'
                             }`}
                         >
                             {t(LABELS[target].key, LABELS[target].fallback)}

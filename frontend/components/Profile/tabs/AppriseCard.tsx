@@ -6,13 +6,11 @@ import {
     removeAppriseConfig,
     saveAppriseConfig,
 } from '../../../utils/appriseService';
+import { FIELD_CLASS } from '../../Shared/ui/controlSizes';
 
 interface AppriseCardProps {
     onStateChange: (configured: boolean) => void;
 }
-
-const inputClass =
-    'w-full rounded-md bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500';
 
 const AppriseCard: React.FC<AppriseCardProps> = ({ onStateChange }) => {
     const { t } = useTranslation();
@@ -132,7 +130,7 @@ const AppriseCard: React.FC<AppriseCardProps> = ({ onStateChange }) => {
                         )}
                         autoComplete="off"
                         onKeyDown={saveOnEnter}
-                        className={inputClass}
+                        className={FIELD_CLASS}
                     />
                     <input
                         type="password"
@@ -148,7 +146,7 @@ const AppriseCard: React.FC<AppriseCardProps> = ({ onStateChange }) => {
                         )}
                         autoComplete="off"
                         onKeyDown={saveOnEnter}
-                        className={inputClass}
+                        className={FIELD_CLASS}
                     />
                     <input
                         type="text"
@@ -164,7 +162,7 @@ const AppriseCard: React.FC<AppriseCardProps> = ({ onStateChange }) => {
                         )}
                         autoComplete="off"
                         onKeyDown={saveOnEnter}
-                        className={inputClass}
+                        className={FIELD_CLASS}
                     />
                     <div className="sm:col-span-3 flex items-center justify-between gap-3">
                         <p className="text-xs text-gray-600 dark:text-gray-300">

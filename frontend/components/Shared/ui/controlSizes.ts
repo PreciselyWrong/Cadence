@@ -15,5 +15,8 @@ export const CONTROL_HEIGHT: Record<ControlSize, string> = {
 /** The one height of text fields and selects: an md button. */
 export const FIELD_HEIGHT = CONTROL_HEIGHT.md;
 
+/** A field sized by its content, inline with text (a time, a short select). */
+export const INLINE_FIELD_CLASS = `${FIELD_HEIGHT} min-w-0 rounded-lg bg-surface px-3 text-body-m text-surface-on ring-1 ring-inset ring-outline-variant placeholder:text-surface-on-variant focus:outline-none focus:ring-2 focus:ring-primary/50 max-sm:min-h-[44px]`;
+
 /** A text field or select of the design system. */
-export const FIELD_CLASS = `${FIELD_HEIGHT} w-full min-w-0 rounded-lg bg-surface px-3 text-body-m text-surface-on ring-1 ring-inset ring-outline-variant placeholder:text-surface-on-variant focus:outline-none focus:ring-2 focus:ring-primary/50 max-sm:min-h-[44px]`;
+export const FIELD_CLASS = `${INLINE_FIELD_CLASS} w-full`;
