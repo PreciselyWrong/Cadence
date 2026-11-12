@@ -172,6 +172,17 @@ describe('TaskRowCollapsed in minimal mode', () => {
         expect(meta).not.toContainElement(screen.getByText('Write report'));
     });
 
+    it('keeps the priority flag on the details line instead of wrapping it alone', () => {
+        renderRow(baseTask(), { onFieldUpdate: jest.fn() });
+
+        const meta = screen.getByTestId('task-row-meta');
+        expect(
+            meta.querySelector('[data-quick-edit="priority"]')
+        ).not.toBeNull();
+        expect(meta).toHaveClass('flex-nowrap');
+        expect(meta).not.toHaveClass('flex-wrap');
+    });
+
     it('shows its menu only on the selected row, never on hover alone', () => {
         const { rerender } = renderRow(baseTask(), { onEdit: jest.fn() });
         const menu = screen.getByTestId('task-actions-menu-button');

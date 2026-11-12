@@ -6392,6 +6392,7 @@
     "dateNav": "Datumi",
     "previousWeek": "Prejšnji teden",
     "nextWeek": "Naslednji teden",
+    "horizonNextWeek": "Prihajajoči teden",
     "overdueCount": "Zamujeno ({{count}})",
     "rescheduleAll": "Vse preloži na danes",
     "hideInbox": "Strni prejeto pošto",
@@ -6438,6 +6439,8 @@
     "dismiss": "V redu"
   },
   "contentLinks": {
+    "note": "Zapisek",
+    "task": "Naloga",
     "backlinks": "Povratne povezave",
     "untitled": "Brez naslova",
     "createNote": "Ustvari zapisek »{{title}}«",

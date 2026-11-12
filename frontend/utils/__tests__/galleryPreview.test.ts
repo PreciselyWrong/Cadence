@@ -51,4 +51,8 @@ describe('plainExcerpt', () => {
         expect(excerpt.length).toBeLessThanOrEqual(41);
         expect(excerpt.endsWith('…')).toBe(true);
     });
+
+    it('shows a checked task link as its plain name', () => {
+        expect(plainExcerpt('- [x] [[task:Call hotel]]')).toBe('Call hotel');
+    });
 });

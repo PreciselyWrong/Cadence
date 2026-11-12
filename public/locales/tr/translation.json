@@ -6315,6 +6315,7 @@
     "dateNav": "Tarihler",
     "previousWeek": "Önceki hafta",
     "nextWeek": "Sonraki hafta",
+    "horizonNextWeek": "Gelecek hafta",
     "overdueCount": "Gecikmiş ({{count}})",
     "rescheduleAll": "Tümünü bugüne ertele",
     "hideInbox": "Gelen kutusunu daralt",
@@ -6359,6 +6360,8 @@
     "dismiss": "Tamam"
   },
   "contentLinks": {
+    "note": "Not",
+    "task": "Görev",
     "backlinks": "Geri bağlantılar",
     "untitled": "Başlıksız",
     "createNote": "\"{{title}}\" notunu oluştur",

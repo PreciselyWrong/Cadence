@@ -6340,6 +6340,7 @@
     "dateNav": "Datoer",
     "previousWeek": "Forrige uke",
     "nextWeek": "Neste uke",
+    "horizonNextWeek": "Kommende uke",
     "overdueCount": "Forfalt ({{count}})",
     "rescheduleAll": "Flytt alle til i dag",
     "hideInbox": "Skjul innboksen",
@@ -6384,6 +6385,8 @@
     "dismiss": "OK"
   },
   "contentLinks": {
+    "note": "Notat",
+    "task": "Oppgave",
     "backlinks": "Tilbakekoblinger",
     "untitled": "Uten tittel",
     "createNote": "Opprett notatet «{{title}}»",

@@ -678,7 +678,11 @@ const TaskDetailsHeader: React.FC<TaskDetailsHeaderProps> = ({
                                                 <ArrowUpIcon className="h-3 w-3" />
                                             </span>
                                             <span className="hidden sm:flex items-center px-1.5 text-[0.72em] font-bold uppercase tracking-wide text-blue-800 dark:text-blue-200 bg-blue-200/70 dark:bg-blue-700/60 select-none whitespace-nowrap flex-shrink-0">
-                                                PARENT TASK:
+                                                {t(
+                                                    'task.parentTask',
+                                                    'Parent task'
+                                                )}
+                                                :
                                             </span>
                                             <span className="flex items-center gap-1 px-1.5 bg-blue-50/80 dark:bg-blue-900/30 overflow-hidden min-w-0">
                                                 {chain.map((ancestor, i) => (

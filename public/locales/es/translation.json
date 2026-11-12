@@ -6337,6 +6337,7 @@
     "dateNav": "Fechas",
     "previousWeek": "Semana anterior",
     "nextWeek": "Semana siguiente",
+    "horizonNextWeek": "Semana que viene",
     "overdueCount": "Vencidas ({{count}})",
     "rescheduleAll": "Reprogramar todas para hoy",
     "hideInbox": "Contraer la bandeja de entrada",
@@ -6381,6 +6382,8 @@
     "dismiss": "OK"
   },
   "contentLinks": {
+    "note": "Nota",
+    "task": "Tarea",
     "backlinks": "Retroenlaces",
     "untitled": "Sin título",
     "createNote": "Crear la nota «{{title}}»",

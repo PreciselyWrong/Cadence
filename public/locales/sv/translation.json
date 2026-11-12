@@ -6335,6 +6335,7 @@
     "dateNav": "Datum",
     "previousWeek": "Föregående vecka",
     "nextWeek": "Nästa vecka",
+    "horizonNextWeek": "Kommande vecka",
     "overdueCount": "Försenade ({{count}})",
     "rescheduleAll": "Flytta alla till idag",
     "hideInbox": "Fäll ihop inkorgen",
@@ -6379,6 +6380,8 @@
     "dismiss": "OK"
   },
   "contentLinks": {
+    "note": "Anteckning",
+    "task": "Uppgift",
     "backlinks": "Bakåtlänkar",
     "untitled": "Namnlös",
     "createNote": "Skapa anteckningen \"{{title}}\"",

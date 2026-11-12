@@ -6364,6 +6364,7 @@
     "dateNav": "Dátumy",
     "previousWeek": "Predchádzajúci týždeň",
     "nextWeek": "Nasledujúci týždeň",
+    "horizonNextWeek": "Budúci týždeň",
     "overdueCount": "Po termíne ({{count}})",
     "rescheduleAll": "Všetky preplánovať na dnes",
     "hideInbox": "Zbaliť doručenú poštu",
@@ -6410,6 +6411,8 @@
     "dismiss": "OK"
   },
   "contentLinks": {
+    "note": "Poznámka",
+    "task": "Úloha",
     "backlinks": "Spätné odkazy",
     "untitled": "Bez názvu",
     "createNote": "Vytvoriť poznámku „{{title}}“",

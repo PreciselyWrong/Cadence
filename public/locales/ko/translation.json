@@ -6315,6 +6315,7 @@
     "dateNav": "날짜",
     "previousWeek": "이전 주",
     "nextWeek": "다음 주",
+    "horizonNextWeek": "차주",
     "overdueCount": "기한 지남 ({{count}})",
     "rescheduleAll": "모두 오늘로 다시 계획",
     "hideInbox": "받은 편지함 접기",
@@ -6358,6 +6359,8 @@
     "dismiss": "확인"
   },
   "contentLinks": {
+    "note": "노트",
+    "task": "작업",
     "backlinks": "백링크",
     "untitled": "제목 없음",
     "createNote": "노트 \"{{title}}\" 만들기",

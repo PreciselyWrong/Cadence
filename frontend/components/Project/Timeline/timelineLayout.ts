@@ -236,3 +236,13 @@ export const shiftDates = (
         due_date: fromDay(due + delta),
     };
 };
+
+// A month label fits when its text ends inside the chart. The label at the
+// left edge always stays; one that would run past the right edge is left out
+// rather than cut mid-word.
+export const monthLabelFits = (
+    x: number,
+    label: string,
+    width: number,
+    charWidth = 8
+): boolean => x === 0 || x + label.length * charWidth + 12 <= width;

@@ -6389,6 +6389,7 @@
     "dateNav": "Daty",
     "previousWeek": "Poprzedni tydzień",
     "nextWeek": "Następny tydzień",
+    "horizonNextWeek": "Przyszły tydzień",
     "overdueCount": "Zaległe ({{count}})",
     "rescheduleAll": "Przenieś wszystkie na dziś",
     "hideInbox": "Zwiń skrzynkę odbiorczą",
@@ -6435,6 +6436,8 @@
     "dismiss": "OK"
   },
   "contentLinks": {
+    "note": "Notatka",
+    "task": "Zadanie",
     "backlinks": "Linki zwrotne",
     "untitled": "Bez tytułu",
     "createNote": "Utwórz notatkę „{{title}}”",

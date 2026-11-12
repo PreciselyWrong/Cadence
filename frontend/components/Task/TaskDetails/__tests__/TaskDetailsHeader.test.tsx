@@ -96,3 +96,22 @@ describe('TaskDetailsHeader copy link', () => {
         });
     });
 });
+
+describe('TaskDetailsHeader parent label', () => {
+    it('labels the parent chip with the translated label, not a fixed English one', () => {
+        render(
+            <TaskDetailsHeader
+                task={{ ...task, parent_task: { uid: 'p-1', name: 'Launch' } }}
+                onTitleUpdate={jest.fn()}
+                onStatusUpdate={jest.fn()}
+                onPriorityUpdate={jest.fn()}
+                onDelete={jest.fn()}
+                activePill="overview"
+                onPillChange={jest.fn()}
+            />
+        );
+
+        expect(screen.getByText('Parent task:')).toBeInTheDocument();
+        expect(screen.queryByText('PARENT TASK:')).not.toBeInTheDocument();
+    });
+});

@@ -6344,6 +6344,7 @@
     "dateNav": "Daten",
     "previousWeek": "Vorherige Woche",
     "nextWeek": "Nächste Woche",
+    "horizonNextWeek": "Kommende Woche",
     "overdueCount": "Überfällig ({{count}})",
     "rescheduleAll": "Alle auf heute verschieben",
     "hideInbox": "Posteingang einklappen",
@@ -6388,6 +6389,8 @@
     "dismiss": "OK"
   },
   "contentLinks": {
+    "note": "Notiz",
+    "task": "Aufgabe",
     "backlinks": "Rückverweise",
     "untitled": "Ohne Titel",
     "createNote": "Notiz \"{{title}}\" erstellen",

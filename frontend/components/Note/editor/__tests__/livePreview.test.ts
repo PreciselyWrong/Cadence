@@ -364,4 +364,21 @@ describe('selecting text keeps the rendered note (#1667)', () => {
         view.destroy();
         parent.remove();
     });
+
+    it('labels note and task chips with their translated kind', () => {
+        const state = stateFor('[[Note]] and [[task: Call bank]]\ntail');
+        const set = buildLivePreview(state, [
+            { from: 0, to: state.doc.length },
+        ]).decorations;
+        const labels: string[] = [];
+        const iter = set.iter();
+        while (iter.value) {
+            const spec: any = iter.value.spec;
+            if (spec.class?.includes('cm-md-wikilink-chip')) {
+                labels.push(spec.attributes['data-kind-label']);
+            }
+            iter.next();
+        }
+        expect(labels).toEqual(['Note', 'Task']);
+    });
 });

@@ -750,7 +750,12 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
                         if (target.kind === 'task-title') {
                             const { title } = target;
                             if (summaryMode || publicNoteLinks) {
-                                return <LinkBadge label="TASK" title={title} />;
+                                return (
+                                    <LinkBadge
+                                        label={t('contentLinks.task', 'Task')}
+                                        title={title}
+                                    />
+                                );
                             }
                             const uid = taskUids?.[title.trim().toLowerCase()];
                             if (uid) {
@@ -759,7 +764,13 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
                                         to={`/task/${uid}`}
                                         className="!no-underline hover:!no-underline"
                                     >
-                                        <LinkBadge label="TASK" title={title} />
+                                        <LinkBadge
+                                            label={t(
+                                                'contentLinks.task',
+                                                'Task'
+                                            )}
+                                            title={title}
+                                        />
                                     </Link>
                                 );
                             }
@@ -776,7 +787,10 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
                                     }
                                 />
                             ) : (
-                                <LinkBadge label="TASK" title={title} />
+                                <LinkBadge
+                                    label={t('contentLinks.task', 'Task')}
+                                    title={title}
+                                />
                             );
                         }
                         if (target.kind === 'note-title') {

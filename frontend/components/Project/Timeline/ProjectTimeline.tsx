@@ -10,6 +10,7 @@ import {
     dateOf,
     findPath,
     fromDay,
+    monthLabelFits,
     shiftDates,
     spareDays,
     toDay,
@@ -499,15 +500,19 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
                             className="relative"
                             style={{ height: HEADER_HEIGHT }}
                         >
-                            {months.map((m) => (
-                                <div
-                                    key={`m-${m.x}`}
-                                    className="absolute top-1 whitespace-nowrap pl-1.5 text-xs font-semibold text-gray-700 dark:text-gray-300"
-                                    style={{ left: m.x }}
-                                >
-                                    {m.label}
-                                </div>
-                            ))}
+                            {months
+                                .filter((m) =>
+                                    monthLabelFits(m.x, m.label, width)
+                                )
+                                .map((m) => (
+                                    <div
+                                        key={`m-${m.x}`}
+                                        className="absolute top-1 whitespace-nowrap pl-1.5 text-xs font-semibold text-gray-700 dark:text-gray-300"
+                                        style={{ left: m.x }}
+                                    >
+                                        {m.label}
+                                    </div>
+                                ))}
                             {ticks.map((tick) => (
                                 <div
                                     key={`t-${tick.x}`}

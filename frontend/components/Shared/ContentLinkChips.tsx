@@ -43,7 +43,16 @@ export const LinkBadge: React.FC<{
 export const NoteBadge: React.FC<{ title: string; locked?: boolean }> = ({
     title,
     locked,
-}) => <LinkBadge label="NOTE" title={title} locked={locked} />;
+}) => {
+    const { t } = useTranslation();
+    return (
+        <LinkBadge
+            label={t('contentLinks.note', 'Note')}
+            title={title}
+            locked={locked}
+        />
+    );
+};
 
 // A [[link]] to a note or task that does not exist yet: clicking creates
 // it with that title and opens it.

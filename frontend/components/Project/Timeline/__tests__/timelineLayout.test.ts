@@ -3,6 +3,7 @@ import {
     buildRange,
     findPath,
     fromDay,
+    monthLabelFits,
     shiftDates,
     spareDays,
     toDay,
@@ -89,5 +90,16 @@ describe('timelineLayout', () => {
         expect(shiftDates(dueOnly, -1, 'move')).toEqual({
             due_date: '2026-11-08',
         });
+    });
+});
+
+describe('monthLabelFits', () => {
+    it('keeps the label at the left edge and one that ends inside the chart', () => {
+        expect(monthLabelFits(0, 'November 2026', 100)).toBe(true);
+        expect(monthLabelFits(60, 'déc. 2026', 200)).toBe(true);
+    });
+
+    it('leaves out a label that would run past the right edge', () => {
+        expect(monthLabelFits(180, 'déc. 2026', 200)).toBe(false);
     });
 });

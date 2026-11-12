@@ -52,9 +52,11 @@ export const livePreviewTheme = EditorView.baseTheme({
         background: 'rgba(128,128,128,0.12)',
     },
     '.cm-md-wikilink-chip *': { textDecoration: 'none !important' },
-    '.cm-md-wikilink-chip.cm-md-wikilink-task::before': { content: '"TASK:"' },
+    // The kind label is translated: it comes from data-kind-label, set on the
+    // chip from i18n when the decorations are built.
     '.cm-md-wikilink-chip::before': {
-        content: '"NOTE:"',
+        content: 'attr(data-kind-label) ":"',
+        textTransform: 'uppercase',
         fontSize: '0.72em',
         fontWeight: '700',
         letterSpacing: '0.025em',

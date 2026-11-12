@@ -6350,6 +6350,7 @@
     "dateNav": "Datas",
     "previousWeek": "Semana anterior",
     "nextWeek": "Próxima semana",
+    "horizonNextWeek": "Semana que vem",
     "overdueCount": "Atrasadas ({{count}})",
     "rescheduleAll": "Reagendar todas para hoje",
     "hideInbox": "Recolher a caixa de entrada",
@@ -6394,6 +6395,8 @@
     "dismiss": "OK"
   },
   "contentLinks": {
+    "note": "Nota",
+    "task": "Tarefa",
     "backlinks": "Backlinks",
     "untitled": "Sem título",
     "createNote": "Criar a nota \"{{title}}\"",

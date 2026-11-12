@@ -6315,6 +6315,7 @@
     "dateNav": "Ngày",
     "previousWeek": "Tuần trước",
     "nextWeek": "Tuần sau",
+    "horizonNextWeek": "Tuần tới",
     "overdueCount": "Quá hạn ({{count}})",
     "rescheduleAll": "Lên lại lịch tất cả cho hôm nay",
     "hideInbox": "Thu gọn hộp thư đến",
@@ -6358,6 +6359,8 @@
     "dismiss": "OK"
   },
   "contentLinks": {
+    "note": "Ghi chú",
+    "task": "Nhiệm vụ",
     "backlinks": "Liên kết ngược",
     "untitled": "Không có tiêu đề",
     "createNote": "Tạo ghi chú \"{{title}}\"",

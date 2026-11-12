@@ -6332,6 +6332,7 @@
     "dateNav": "Päivämäärät",
     "previousWeek": "Edellinen viikko",
     "nextWeek": "Seuraava viikko",
+    "horizonNextWeek": "Ensi viikko",
     "overdueCount": "Myöhässä ({{count}})",
     "rescheduleAll": "Siirrä kaikki tälle päivälle",
     "hideInbox": "Piilota saapuneet",
@@ -6376,6 +6377,8 @@
     "dismiss": "OK"
   },
   "contentLinks": {
+    "note": "Muistiinpano",
+    "task": "Tehtävä",
     "backlinks": "Takaisinlinkit",
     "untitled": "Nimetön",
     "createNote": "Luo muistiinpano \"{{title}}\"",

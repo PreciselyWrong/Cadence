@@ -6405,6 +6405,7 @@
     "dateNav": "التواريخ",
     "previousWeek": "الأسبوع السابق",
     "nextWeek": "الأسبوع التالي",
+    "horizonNextWeek": "الأسبوع القادم",
     "overdueCount": "متأخرة ({{count}})",
     "rescheduleAll": "إعادة جدولة الكل لليوم",
     "hideInbox": "طيّ صندوق الوارد",
@@ -6453,6 +6454,8 @@
     "dismiss": "حسنًا"
   },
   "contentLinks": {
+    "note": "ملاحظة",
+    "task": "مهمة",
     "backlinks": "الروابط الواردة",
     "untitled": "بلا عنوان",
     "createNote": "إنشاء الملاحظة \"{{title}}\"",

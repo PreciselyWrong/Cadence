@@ -6357,6 +6357,7 @@
     "dateNav": "Date",
     "previousWeek": "Săptămâna anterioară",
     "nextWeek": "Săptămâna următoare",
+    "horizonNextWeek": "Săptămâna viitoare",
     "overdueCount": "Restante ({{count}})",
     "rescheduleAll": "Reprogramează toate pentru azi",
     "hideInbox": "Restrânge inbox-ul",
@@ -6402,6 +6403,8 @@
     "dismiss": "OK"
   },
   "contentLinks": {
+    "note": "Notă",
+    "task": "Sarcină",
     "backlinks": "Legături inverse",
     "untitled": "Fără titlu",
     "createNote": "Creează nota „{{title}}”",

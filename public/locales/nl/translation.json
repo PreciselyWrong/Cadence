@@ -6333,6 +6333,7 @@
     "dateNav": "Datums",
     "previousWeek": "Vorige week",
     "nextWeek": "Volgende week",
+    "horizonNextWeek": "Komende week",
     "overdueCount": "Te laat ({{count}})",
     "rescheduleAll": "Alles naar vandaag verplaatsen",
     "hideInbox": "Inbox inklappen",
@@ -6377,6 +6378,8 @@
     "dismiss": "OK"
   },
   "contentLinks": {
+    "note": "Notitie",
+    "task": "Taak",
     "backlinks": "Terugverwijzingen",
     "untitled": "Naamloos",
     "createNote": "Notitie \"{{title}}\" aanmaken",

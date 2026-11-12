@@ -8,6 +8,7 @@ import {
     WidgetType,
 } from '@codemirror/view';
 import { ensureSyntaxTree, syntaxTree } from '@codemirror/language';
+import i18n from '../../../i18n';
 import { CALLOUT_MARKER_REGEX } from '../../../utils/calloutParser';
 import type { CalloutType } from '../../Shared/CalloutBlock';
 import {
@@ -376,7 +377,12 @@ export function buildLivePreview(
                 show
                     ? 'cm-md-wikilink'
                     : `cm-md-wikilink cm-md-wikilink-chip${taskPrefix ? ' cm-md-wikilink-task' : ''}`,
-                { 'data-wikilink': match[1].trim() }
+                {
+                    'data-wikilink': match[1].trim(),
+                    'data-kind-label': taskPrefix
+                        ? i18n.t('contentLinks.task', 'Task')
+                        : i18n.t('contentLinks.note', 'Note'),
+                }
             );
         }
     }

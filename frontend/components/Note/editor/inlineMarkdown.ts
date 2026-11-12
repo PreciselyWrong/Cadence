@@ -1,3 +1,5 @@
+import i18n from '../../../i18n';
+
 // Web and mail links, and paths on this site such as a note's own files.
 export const isSafeLinkUrl = (url: string): boolean => {
     const trimmed = url.trim();
@@ -42,6 +44,7 @@ export function renderInline(text: string): DocumentFragment {
             const el = document.createElement('span');
             el.className = 'cm-md-wikilink cm-md-wikilink-chip';
             el.dataset.wikilink = token.slice(2, -2).trim();
+            el.dataset.kindLabel = i18n.t('contentLinks.note', 'Note');
             el.textContent = token.slice(2, -2);
             fragment.append(el);
         } else if (token.startsWith('[')) {

@@ -751,7 +751,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                 {/* The details sit under the title, as on Today. */}
                 {isMinimal && (
                     <div
-                        className="mt-1 flex min-w-0 flex-wrap items-center gap-1.5 text-xs text-surface-on-variant empty:hidden"
+                        className="mt-1 flex min-w-0 flex-nowrap items-center gap-1.5 overflow-hidden text-xs text-surface-on-variant empty:hidden"
                         data-testid="task-row-meta"
                     >
                         {rowFields

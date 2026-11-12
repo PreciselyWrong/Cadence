@@ -6315,6 +6315,7 @@
     "dateNav": "日期",
     "previousWeek": "上一周",
     "nextWeek": "下一周",
+    "horizonNextWeek": "下周",
     "overdueCount": "已逾期（{{count}}）",
     "rescheduleAll": "全部改到今天",
     "hideInbox": "收起收件箱",
@@ -6358,6 +6359,8 @@
     "dismiss": "好"
   },
   "contentLinks": {
+    "note": "笔记",
+    "task": "任务",
     "backlinks": "反向链接",
     "untitled": "无标题",
     "createNote": "创建笔记“{{title}}”",

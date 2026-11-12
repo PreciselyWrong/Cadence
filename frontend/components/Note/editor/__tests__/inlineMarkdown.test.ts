@@ -30,7 +30,7 @@ describe('renderInline', () => {
 
     it('marks wikilinks', () => {
         expect(html('[[Note]]')).toBe(
-            '<span class="cm-md-wikilink cm-md-wikilink-chip" data-wikilink="Note">Note</span>'
+            '<span class="cm-md-wikilink cm-md-wikilink-chip" data-wikilink="Note" data-kind-label="Note">Note</span>'
         );
     });
 });

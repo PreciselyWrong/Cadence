@@ -6307,6 +6307,7 @@
     "dateNav": "Dates",
     "previousWeek": "Previous week",
     "nextWeek": "Next week",
+    "horizonNextWeek": "Next week",
     "overdueCount": "Overdue ({{count}})",
     "rescheduleAll": "Reschedule all to today",
     "hideInbox": "Collapse the inbox",
@@ -6351,6 +6352,8 @@
     "dismiss": "OK"
   },
   "contentLinks": {
+    "note": "Note",
+    "task": "Task",
     "backlinks": "Backlinks",
     "untitled": "Untitled",
     "createNote": "Create note \"{{title}}\"",

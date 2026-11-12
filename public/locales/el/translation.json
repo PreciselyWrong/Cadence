@@ -6334,6 +6334,7 @@
     "dateNav": "Ημερομηνίες",
     "previousWeek": "Προηγούμενη εβδομάδα",
     "nextWeek": "Επόμενη εβδομάδα",
+    "horizonNextWeek": "Εβδομάδα που έρχεται",
     "overdueCount": "Εκπρόθεσμες ({{count}})",
     "rescheduleAll": "Μετάθεση όλων για σήμερα",
     "hideInbox": "Σύμπτυξη εισερχομένων",
@@ -6378,6 +6379,8 @@
     "dismiss": "OK"
   },
   "contentLinks": {
+    "note": "Σημείωση",
+    "task": "Εργασία",
     "backlinks": "Αντίστροφοι σύνδεσμοι",
     "untitled": "Χωρίς τίτλο",
     "createNote": "Δημιουργία σημείωσης «{{title}}»",

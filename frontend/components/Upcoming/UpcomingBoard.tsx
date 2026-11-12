@@ -1172,7 +1172,7 @@ const UpcomingBoard: React.FC = () => {
 
     const horizonTitles: Record<HorizonKey, string> = {
         week: t('upcoming.thisWeek', 'This week'),
-        next_week: t('upcoming.nextWeek', 'Next week'),
+        next_week: t('upcoming.horizonNextWeek', 'Next week'),
         this_month: t('upcoming.thisMonth', 'This month'),
         next_month: t('upcoming.nextMonth', 'Next month'),
         someday: t('upcoming.someday', 'Someday'),

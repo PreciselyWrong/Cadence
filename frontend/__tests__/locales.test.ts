@@ -40,6 +40,11 @@ describe('French translation', () => {
         expect(missing).toEqual([]);
     });
 
+    it('names the next-week horizon apart from the next-week arrow', () => {
+        expect(fr['upcoming.horizonNextWeek']).toBe('Semaine prochaine');
+        expect(fr['upcoming.nextWeek']).toBe('Semaine suivante');
+    });
+
     it('keeps the interpolation placeholders of the English text', () => {
         const mismatched = Object.keys(en).filter(
             (key) =>

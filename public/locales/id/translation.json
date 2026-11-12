@@ -6315,6 +6315,7 @@
     "dateNav": "Tanggal",
     "previousWeek": "Minggu sebelumnya",
     "nextWeek": "Minggu berikutnya",
+    "horizonNextWeek": "Pekan depan",
     "overdueCount": "Terlambat ({{count}})",
     "rescheduleAll": "Jadwalkan ulang semua ke hari ini",
     "hideInbox": "Ciutkan kotak masuk",
@@ -6358,6 +6359,8 @@
     "dismiss": "OK"
   },
   "contentLinks": {
+    "note": "Catatan",
+    "task": "Tugas",
     "backlinks": "Tautan balik",
     "untitled": "Tanpa judul",
     "createNote": "Buat catatan \"{{title}}\"",

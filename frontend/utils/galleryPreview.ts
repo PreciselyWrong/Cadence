@@ -1,6 +1,8 @@
 // Picture and text a gallery card shows for a note: the first image the
 // note holds, and its words without the Markdown marks.
 
+import { plainText } from '../components/Shared/task/plainText';
+
 const MARKDOWN_IMAGE = /!\[[^\]]*\]\(\s*<?([^)\s>]+)>?(?:\s+"[^"]*")?\s*\)/g;
 const HTML_IMAGE = /<img\b[^>]*\bsrc\s*=\s*["']([^"']+)["']/gi;
 
@@ -32,17 +34,7 @@ export const plainExcerpt = (
     content: string | null | undefined,
     limit = 200
 ): string => {
-    if (!content) return '';
-    const text = content
-        .replace(/```[\s\S]*?```/g, ' ')
-        .replace(MARKDOWN_IMAGE, ' ')
-        .replace(/<[^>]+>/g, ' ')
-        .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
-        .replace(/\[\[([^\]]+)\]\]/g, '$1')
-        .replace(/^\s{0,3}(#{1,6}|>|[-*+]|\d+\.)\s+/gm, '')
-        .replace(/[*_~`]+/g, '')
-        .replace(/\s+/g, ' ')
-        .trim();
+    const text = plainText(content);
     if (text.length <= limit) return text;
     return `${text.slice(0, limit).replace(/\s+\S*$/, '')}…`;
 };

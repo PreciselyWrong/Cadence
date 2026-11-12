@@ -20,12 +20,17 @@ const stripLine = (line: string): string =>
         .replace(/\s+/g, ' ')
         .trim();
 
-export const plainPreview = (text: string | null | undefined): string => {
-    if (!text) return '';
-    for (const line of text.split('\n')) {
-        if (/^\s*(```|---+\s*$|\|)/.test(line)) continue;
-        const plain = stripLine(line);
-        if (plain) return plain;
-    }
-    return '';
-};
+// The text's lines as plain words, skipping fences, tables and rules.
+const plainLineList = (text: string): string[] =>
+    text
+        .split('\n')
+        .filter((line) => !/^\s*(```|---+\s*$|\|)/.test(line))
+        .map(stripLine)
+        .filter(Boolean);
+
+export const plainPreview = (text: string | null | undefined): string =>
+    (text && plainLineList(text)[0]) || '';
+
+// The whole text as one line of plain words, for an excerpt.
+export const plainText = (text: string | null | undefined): string =>
+    text ? plainLineList(text).join(' ') : '';
