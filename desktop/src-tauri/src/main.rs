@@ -267,9 +267,32 @@ struct Tray {
     ui: Mutex<HashMap<&'static str, Child>>,
     /// True until a config file exists: saving the first settings opens the main window.
     first_run: Mutex<bool>,
+    /// Server uid -> D-Bus id of the notifications on screen, so a read elsewhere closes them.
+    shown: Mutex<HashMap<String, u32>>,
 }
 
+/// Notifications remembered for closing; older ones have long expired.
+const SHOWN_LIMIT: usize = 200;
+
 impl Tray {
+    fn remember_shown(&self, uid: String, id: u32) {
+        let mut shown = self.shown.lock().unwrap();
+        if shown.len() >= SHOWN_LIMIT {
+            shown.clear();
+        }
+        shown.insert(uid, id);
+    }
+
+    fn close_shown(&self, uids: &[String]) {
+        let ids: Vec<u32> = {
+            let mut shown = self.shown.lock().unwrap();
+            uids.iter().filter_map(|uid| shown.remove(uid)).collect()
+        };
+        for id in ids {
+            notify::close(id);
+        }
+    }
+
     fn config(&self) -> Config {
         self.config.lock().unwrap().clone()
     }
@@ -402,7 +425,7 @@ fn reload_config(app: &AppHandle, tray: &Tray) {
 fn background_loop(app: AppHandle) {
     let tray = app.state::<Tray>();
     // The stream thread sends a wake-up per live notification; the poll still decides what to show.
-    let (poke, woken) = std::sync::mpsc::channel::<()>();
+    let (poke, woken) = std::sync::mpsc::channel::<sync::Live>();
     {
         let tray_app = app.clone();
         thread::spawn(move || stream_loop(tray_app, poke));
@@ -428,7 +451,13 @@ fn background_loop(app: AppHandle) {
             last_pending = sync::pending(&tray.paths.queue).len();
         }
 
-        let live = woke || woken.try_iter().count() > 0;
+        let mut live = woke;
+        for event in woken.try_iter() {
+            match event {
+                sync::Live::New => live = true,
+                sync::Live::Read(uids) => tray.close_shown(&uids),
+            }
+        }
         woke = false;
         if live || last_poll.elapsed() >= Duration::from_secs(config.poll_seconds) {
             last_poll = Instant::now();
@@ -441,7 +470,8 @@ fn background_loop(app: AppHandle) {
         }
         // A live notification cuts the wait short and is polled on the next pass.
         match woken.recv_timeout(TICK) {
-            Ok(()) => woke = true,
+            Ok(sync::Live::New) => woke = true,
+            Ok(sync::Live::Read(uids)) => tray.close_shown(&uids),
             Err(std::sync::mpsc::RecvTimeoutError::Timeout) => {}
             Err(std::sync::mpsc::RecvTimeoutError::Disconnected) => thread::sleep(TICK),
         }
@@ -450,7 +480,7 @@ fn background_loop(app: AppHandle) {
 
 /// Keeps the server's notification stream open (docs/36-notifications.md) and reconnects with a
 /// growing pause. Without an API key, or while the server is unreachable, the poll alone runs.
-fn stream_loop(app: AppHandle, poke: std::sync::mpsc::Sender<()>) {
+fn stream_loop(app: AppHandle, poke: std::sync::mpsc::Sender<sync::Live>) {
     let mut pause = STREAM_BACKOFF.0;
     loop {
         let config = app.state::<Tray>().config();
@@ -481,6 +511,7 @@ fn present(app: &AppHandle, alert: sync::Alert) {
         let tray = handle.state::<Tray>();
         match choice {
             notify::Choice::Open => tray.open_at("main", kept.path.as_deref()),
+            notify::Choice::Reply => tray.open_at("main", kept.reply.as_deref()),
             notify::Choice::Snooze => tray
                 .store
                 .snooze(kept, sync::unix_now() + sync::SNOOZE_SECS),
@@ -501,8 +532,13 @@ fn present(app: &AppHandle, alert: sync::Alert) {
             }
         }
     });
-    if let Err(e) = shown {
-        eprintln!("notification not shown: {e}");
+    match shown {
+        Ok(id) => {
+            if let Some(uid) = alert.server_uid {
+                tray.remember_shown(uid, id);
+            }
+        }
+        Err(e) => eprintln!("notification not shown: {e}"),
     }
 }
 
@@ -599,6 +635,7 @@ fn run_tray(args: &[String]) {
                 config: Mutex::new(config),
                 store,
                 ui: Mutex::new(HashMap::new()),
+                shown: Mutex::new(HashMap::new()),
                 first_run: Mutex::new(first_run),
             });
 
@@ -646,9 +683,21 @@ mod tests {
 
     #[test]
     fn only_the_release_of_a_left_click_opens_today() {
-        assert!(is_left_click(&click(MouseButton::Left, MouseButtonState::Up)));
-        assert!(!is_left_click(&click(MouseButton::Left, MouseButtonState::Down)));
-        assert!(!is_left_click(&click(MouseButton::Right, MouseButtonState::Up)));
-        assert!(!is_left_click(&click(MouseButton::Middle, MouseButtonState::Up)));
+        assert!(is_left_click(&click(
+            MouseButton::Left,
+            MouseButtonState::Up
+        )));
+        assert!(!is_left_click(&click(
+            MouseButton::Left,
+            MouseButtonState::Down
+        )));
+        assert!(!is_left_click(&click(
+            MouseButton::Right,
+            MouseButtonState::Up
+        )));
+        assert!(!is_left_click(&click(
+            MouseButton::Middle,
+            MouseButtonState::Up
+        )));
     }
 }

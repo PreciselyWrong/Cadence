@@ -214,6 +214,9 @@ struct ServerNotification {
     /// Free-form payload (`taskUid`, `projectUid`, ...) used to open the related item.
     #[serde(default)]
     data: Option<serde_json::Value>,
+    /// `info`, `success`, `warning` or `error`: sets the desktop urgency.
+    #[serde(default)]
+    level: Option<String>,
 }
 
 /// What the desktop shows for one server notification. Kept in `state.json` while snoozed.
@@ -233,6 +236,14 @@ pub struct Alert {
     pub sticky: bool,
     /// The task's time, project and note, read from the server when the alert is made.
     pub details: Option<Details>,
+    /// Server notification uid, so a read elsewhere can close it.
+    pub server_uid: Option<String>,
+    /// Name of the agent that wrote it (`Agent` when the plugin gave none).
+    pub agent: Option<String>,
+    /// Page that opens the message with its reply field focused ("Répondre").
+    pub reply: Option<String>,
+    /// Server level: `info` (default), `success`, `warning`, `error`.
+    pub level: String,
 }
 
 /// What a task reminder adds under its title.
@@ -425,10 +436,28 @@ impl ServerNotification {
             .and_then(serde_json::Value::as_str)
             .filter(|uid| is_reminder && reason != Some("habit_reminder") && is_plain_uid(uid))
             .map(str::to_string);
+        let from_agent = data
+            .and_then(|d| d.get("pluginId"))
+            .and_then(serde_json::Value::as_str)
+            .is_some();
+        let path = self.target_path();
+        let reply = path
+            .as_ref()
+            .filter(|_| from_agent && text("replyPath").is_some_and(is_app_path));
         Alert {
+            reply: reply.map(|p| format!("{p}{}reply=1", if p.contains('?') { '&' } else { '?' })),
+            server_uid: Some(self.uid.clone()),
+            agent: from_agent.then(|| {
+                text("agentLabel")
+                    .map(str::trim)
+                    .filter(|l| !l.is_empty())
+                    .unwrap_or("Agent")
+                    .to_string()
+            }),
+            level: self.level.clone().unwrap_or_else(|| "info".into()),
             title,
             body,
-            path: self.target_path(),
+            path,
             task_uid,
             snoozable: is_reminder,
             sticky: matches!(reason, Some("task_reminder" | "timed_task")) && is_reminder,
@@ -495,7 +524,7 @@ fn now_iso() -> String {
 /// `poll_seconds` later. The poll stays the source of truth (baseline, seen uids, quiet
 /// hours): the stream only says "look now". Returns when the connection ends or fails; the
 /// caller reconnects after a pause.
-pub fn watch_stream(cfg: &Config, poke: &std::sync::mpsc::Sender<()>) -> Result<(), String> {
+pub fn watch_stream(cfg: &Config, poke: &std::sync::mpsc::Sender<Live>) -> Result<(), String> {
     use std::io::{BufRead, BufReader};
     if cfg.api_token.is_empty() {
         return Err("no API key".to_string());
@@ -512,13 +541,39 @@ pub fn watch_stream(cfg: &Config, poke: &std::sync::mpsc::Sender<()>) -> Result<
         .set("Accept", "text/event-stream")
         .call()
         .map_err(|e| e.to_string())?;
+    let mut event = String::new();
     for line in BufReader::new(response.into_reader()).lines() {
         let line = line.map_err(|e| e.to_string())?;
-        if line.trim_end() == "event: notification" && poke.send(()).is_err() {
-            return Ok(());
+        let line = line.trim_end();
+        if let Some(name) = line.strip_prefix("event: ") {
+            event = name.to_string();
+            if event == "notification" && poke.send(Live::New).is_err() {
+                return Ok(());
+            }
+        } else if let Some(data) = line.strip_prefix("data: ") {
+            if event == "notification_read" {
+                let uids = serde_json::from_str::<serde_json::Value>(data)
+                    .ok()
+                    .and_then(|v| v.get("uids").cloned())
+                    .and_then(|v| serde_json::from_value::<Vec<String>>(v).ok())
+                    .unwrap_or_default();
+                if !uids.is_empty() && poke.send(Live::Read(uids)).is_err() {
+                    return Ok(());
+                }
+            }
+        } else if line.is_empty() {
+            event.clear();
         }
     }
     Ok(())
+}
+
+/// What the live stream tells the tray: look for new notifications now, or close the
+/// ones read elsewhere (phone, web, the plugin's page).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Live {
+    New,
+    Read(Vec<String>),
 }
 
 /// Unread notifications the server routed to the desktop, shown once each. The first
@@ -597,7 +652,53 @@ mod tests {
             sources: sources.iter().map(|s| s.to_string()).collect(),
             deliver_after: deliver_after.map(str::to_string),
             data: None,
+            level: None,
         }
+    }
+
+    fn agent_note(level: &str, data: serde_json::Value) -> ServerNotification {
+        ServerNotification {
+            title: "3 mails attendent une décision".into(),
+            message: Some("Orange attend un paiement".into()),
+            level: Some(level.into()),
+            data: Some(data),
+            ..notification("n1", &["desktop"], None)
+        }
+    }
+
+    #[test]
+    fn an_agent_message_names_its_agent_and_offers_a_reply() {
+        let alert = agent_note(
+            "warning",
+            serde_json::json!({
+                "pluginId": "hermes", "agentLabel": "Trieur",
+                "openPath": "/plugins/hermes?msg=m1",
+                "replyPath": "/plugins/hermes/x/inbox/m1/reply"
+            }),
+        )
+        .alert();
+        assert_eq!(alert.agent.as_deref(), Some("Trieur"));
+        assert_eq!(alert.path.as_deref(), Some("/plugins/hermes?msg=m1"));
+        assert_eq!(
+            alert.reply.as_deref(),
+            Some("/plugins/hermes?msg=m1&reply=1")
+        );
+        assert_eq!(alert.server_uid.as_deref(), Some("n1"));
+        assert_eq!(alert.level, "warning");
+    }
+
+    #[test]
+    fn an_agent_without_label_is_agent_and_no_reply_without_a_reply_path() {
+        let alert = agent_note(
+            "info",
+            serde_json::json!({ "pluginId": "hermes", "openPath": "/plugins/hermes?msg=m1" }),
+        )
+        .alert();
+        assert_eq!(alert.agent.as_deref(), Some("Agent"));
+        assert_eq!(alert.reply, None);
+        let plain = notification("p", &["desktop"], None).alert();
+        assert_eq!(plain.agent, None);
+        assert_eq!(plain.level, "info");
     }
 
     const NOW: &str = "2026-11-01T12:00:00.000Z";
@@ -1061,7 +1162,13 @@ mod tests {
             with(serde_json::json!({ "openPath": "/plugins/hermes?msg=m1" })).target_path(),
             Some("/plugins/hermes?msg=m1".to_string())
         );
-        for bad in ["https://evil.example/x", "//evil.example/x", "plugins/x", "/a b", "/a\nb"] {
+        for bad in [
+            "https://evil.example/x",
+            "//evil.example/x",
+            "plugins/x",
+            "/a b",
+            "/a\nb",
+        ] {
             assert_eq!(
                 with(serde_json::json!({ "openPath": bad })).target_path(),
                 None,
@@ -1087,6 +1194,7 @@ mod tests {
             let body = "retry: 5000\nevent: ready\ndata: {}\n\n\
                 : ping\n\n\
                 event: notification\nid: a\ndata: {\"uid\":\"a\"}\n\n\
+                event: notification_read\ndata: {\"uids\":[\"x\",\"y\"]}\n\n\
                 event: notification\nid: b\ndata: {\"uid\":\"b\"}\n\n";
             write!(
                 stream,
@@ -1099,10 +1207,20 @@ mod tests {
         // The server closes after its events: the call returns instead of hanging.
         let outcome = watch_stream(&token_cfg(url), &tx);
         assert!(outcome.is_ok(), "{outcome:?}");
-        assert_eq!(rx.try_iter().count(), 2);
+        assert_eq!(
+            rx.try_iter().collect::<Vec<_>>(),
+            vec![
+                Live::New,
+                Live::Read(vec!["x".into(), "y".into()]),
+                Live::New
+            ]
+        );
         let request = server.join().unwrap();
         assert!(request.starts_with("get /api/notifications/stream "));
-        assert!(request.contains("authorization: bearer tt_test"), "{request}");
+        assert!(
+            request.contains("authorization: bearer tt_test"),
+            "{request}"
+        );
         assert!(request.contains("accept: text/event-stream"));
     }
 

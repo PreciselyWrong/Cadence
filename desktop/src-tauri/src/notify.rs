@@ -21,6 +21,8 @@ const DONE_ACTION: &str = "done";
 const SNOOZE_ACTION: &str = "snooze";
 const OPEN_ACTION: &str = "open";
 const OPEN_LABEL: &str = "Ouvrir";
+const REPLY_ACTION: &str = "reply";
+const REPLY_LABEL: &str = "Répondre";
 
 /// What the user did with a notification.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -28,6 +30,8 @@ pub enum Choice {
     Open,
     Done,
     Snooze,
+    /// Opens the agent's message with its reply field focused.
+    Reply,
 }
 
 fn choice(action: &str) -> Option<Choice> {
@@ -35,6 +39,7 @@ fn choice(action: &str) -> Option<Choice> {
         DEFAULT_ACTION | OPEN_ACTION => Some(Choice::Open),
         DONE_ACTION => Some(Choice::Done),
         SNOOZE_ACTION => Some(Choice::Snooze),
+        REPLY_ACTION => Some(Choice::Reply),
         _ => None,
     }
 }
@@ -58,6 +63,9 @@ fn duration(minutes: u32) -> String {
 /// `Rappel · 14:30 · <b>Admin</b> · 25 min`, then the note's first line in italics.
 fn body_markup(alert: &Alert) -> String {
     let mut first: Vec<String> = Vec::new();
+    if let Some(agent) = &alert.agent {
+        first.push(format!("<b>{}</b>", escape(agent)));
+    }
     if !alert.body.is_empty() {
         first.push(escape(&alert.body));
     }
@@ -96,13 +104,22 @@ fn project_ring(icon_dir: &Path, details: &Details) -> Option<PathBuf> {
     Some(path)
 }
 
+/// An error from an agent or a job stays until seen; a success does not interrupt.
+fn urgency(level: &str) -> Urgency {
+    match level {
+        "error" => Urgency::Critical,
+        "success" => Urgency::Low,
+        _ => Urgency::Normal,
+    }
+}
+
 fn build(alert: &Alert, image: Option<&Path>) -> Notification {
     let mut notification = Notification::new();
     notification
         .appname(APP_NAME)
         .icon(ICON)
         .hint(Hint::DesktopEntry(DESKTOP_ENTRY.to_string()))
-        .urgency(Urgency::Normal)
+        .urgency(urgency(&alert.level))
         .summary(&alert.title)
         .action(DEFAULT_ACTION, OPEN_LABEL);
     let body = body_markup(alert);
@@ -121,6 +138,9 @@ fn build(alert: &Alert, image: Option<&Path>) -> Notification {
     if alert.path.is_some() {
         notification.action(OPEN_ACTION, OPEN_LABEL);
     }
+    if alert.reply.is_some() {
+        notification.action(REPLY_ACTION, REPLY_LABEL);
+    }
     if alert.sticky {
         notification.timeout(Timeout::Never);
     }
@@ -134,7 +154,7 @@ pub fn show(
     alert: &Alert,
     icon_dir: &Path,
     on_choice: impl FnOnce(Choice) + Send + 'static,
-) -> Result<(), String> {
+) -> Result<u32, String> {
     let image = alert
         .details
         .as_ref()
@@ -142,6 +162,7 @@ pub fn show(
     let handle = build(alert, image.as_deref())
         .show()
         .map_err(|e| e.to_string())?;
+    let id = handle.id();
     thread::spawn(move || {
         handle.wait_for_action(|action| {
             if let Some(choice) = choice(action) {
@@ -149,7 +170,30 @@ pub fn show(
             }
         });
     });
-    Ok(())
+    Ok(id)
+}
+
+/// Takes a notification off the screen (read on another device). `gdbus` ships with
+/// GLib, which every Linux desktop has; the id is the one `show` returned.
+pub fn close(id: u32) {
+    let outcome = std::process::Command::new("gdbus")
+        .args([
+            "call",
+            "--session",
+            "--dest",
+            "org.freedesktop.Notifications",
+            "--object-path",
+            "/org/freedesktop/Notifications",
+            "--method",
+            "org.freedesktop.Notifications.CloseNotification",
+            &id.to_string(),
+        ])
+        .stdout(std::process::Stdio::null())
+        .stderr(std::process::Stdio::null())
+        .status();
+    if let Err(e) = outcome {
+        eprintln!("notification not closed: {e}");
+    }
 }
 
 #[cfg(test)]
@@ -171,7 +215,47 @@ mod tests {
                 minutes: Some(90),
                 note: Some("Relevé <novembre>".into()),
             }),
+            ..Alert::default()
         }
+    }
+
+    fn agent_alert(level: &str) -> Alert {
+        Alert {
+            title: "3 mails attendent une décision".into(),
+            body: "Orange <attend>".into(),
+            path: Some("/plugins/hermes?msg=m1".into()),
+            reply: Some("/plugins/hermes?msg=m1&reply=1".into()),
+            agent: Some("Trieur & co".into()),
+            level: level.into(),
+            ..Alert::default()
+        }
+    }
+
+    #[test]
+    fn an_agent_message_names_the_agent_and_offers_open_and_reply() {
+        let n = build(&agent_alert("warning"), None);
+        assert_eq!(
+            n.actions,
+            ["default", "Ouvrir", "open", "Ouvrir", "reply", "Répondre"]
+        );
+        assert_eq!(
+            body_markup(&agent_alert("info")),
+            "<b>Trieur &amp; co</b> · Orange &lt;attend&gt;"
+        );
+        assert_eq!(choice("reply"), Some(Choice::Reply));
+    }
+
+    #[test]
+    fn the_level_sets_the_urgency() {
+        assert!(build(&agent_alert("error"), None)
+            .hints
+            .contains(&Hint::Urgency(Urgency::Critical)));
+        assert!(build(&agent_alert("success"), None)
+            .hints
+            .contains(&Hint::Urgency(Urgency::Low)));
+        assert!(build(&agent_alert("info"), None)
+            .hints
+            .contains(&Hint::Urgency(Urgency::Normal)));
     }
 
     #[test]
