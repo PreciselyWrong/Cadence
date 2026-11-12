@@ -415,10 +415,6 @@ const TagDetails: React.FC = () => {
         );
     };
 
-    const getCompletionPercentage = (project: Project) => {
-        return (project as any).completion_percentage || 0;
-    };
-
     const handleEditProject = (project: Project) => {
         if (project.uid) {
             const slug = project.name
@@ -1110,9 +1106,6 @@ const TagDetails: React.FC = () => {
                                     key={project.id}
                                     project={project}
                                     viewMode="cards"
-                                    getCompletionPercentage={() =>
-                                        getCompletionPercentage(project)
-                                    }
                                     activeDropdown={activeDropdown}
                                     setActiveDropdown={setActiveDropdown}
                                     handleEditProject={handleEditProject}

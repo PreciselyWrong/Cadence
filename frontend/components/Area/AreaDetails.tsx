@@ -129,9 +129,6 @@ const AreaDetails: React.FC = () => {
             key={project.id}
             project={project}
             viewMode="cards"
-            getCompletionPercentage={() =>
-                (project as any).completion_percentage || 0
-            }
             {...cardActions}
         />
     );

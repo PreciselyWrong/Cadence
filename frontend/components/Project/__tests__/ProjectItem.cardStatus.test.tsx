@@ -48,7 +48,6 @@ const renderCard = (project: Partial<Project>) =>
                     ...project,
                 }}
                 viewMode="cards"
-                getCompletionPercentage={() => 0}
                 activeDropdown={null}
                 setActiveDropdown={jest.fn()}
                 handleEditProject={jest.fn()}
@@ -61,7 +60,7 @@ const renderCard = (project: Partial<Project>) =>
     );
 
 // The default status is not news on a card: it stays reachable by icon, but
-// its label and a one-task or empty progress line are not shown.
+// its label is not shown. No progress line (subtraction pass, 2026-11-02).
 describe('ProjectItem card status and progress', () => {
     it('hides the label of the default in-progress status but keeps the status control', () => {
         renderCard({ status: 'in_progress' });
@@ -81,15 +80,11 @@ describe('ProjectItem card status and progress', () => {
     it.each([
         ['an empty project', 0, 0],
         ['a project with one task', 0, 1],
-    ])('hides progress for %s', (_label, done, total) => {
+        ['a project with several tasks', 1, 4],
+    ])('shows no progress for %s', (_label, done, total) => {
         renderCard({ task_status: taskCounts(done, total) });
 
         expect(screen.queryByText(`${done}/${total}`)).toBeNull();
-    });
-
-    it('shows progress once a project has two or more tasks', () => {
-        renderCard({ task_status: taskCounts(1, 4) });
-
-        expect(screen.getByText('1/4')).toBeInTheDocument();
+        expect(screen.queryByRole('progressbar')).toBeNull();
     });
 });
