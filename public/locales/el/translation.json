@@ -122,8 +122,6 @@
       "dismiss": "Αγνόηση",
       "acceptAll": "Αποδοχή όλων",
       "apply": "Εφαρμογή",
-      "medium": "Μεσαία",
-      "high": "Υψηλή",
       "priority": "Προτεραιότητα",
       "newTag": "Νέα ετικέτα: #{{name}}",
       "tags": "Ετικέτες",
@@ -248,7 +246,7 @@
     "preview": "Προεπισκόπηση",
     "download": "Λήψη",
     "exitFocusMode": "Έξοδος από τη λειτουργία εστίασης",
-    "searchTimezones": "Αναζήτηση ζωνών ώρας...",
+    "searchTimezones": "Αναζήτηση…",
     "dismiss": "Απόρριψη",
     "search": "Αναζήτηση",
     "previous": "Προηγούμενο",
@@ -277,7 +275,10 @@
     "resolving": "Επίλυση...",
     "showLess": "Εμφάνιση λιγότερων",
     "breadcrumb": "Διαδρομή πλοήγησης",
-    "undo": "Αναίρεση"
+    "undo": "Αναίρεση",
+    "copyCode": "Αντιγραφή κώδικα",
+    "copy": "Αντιγραφή",
+    "copied": "Αντιγράφηκε"
   },
   "sidebar": {
     "links": "Σύνδεσμοι",
@@ -333,7 +334,6 @@
     "collapseViews": "Σύμπτυξη λίστας προβολών",
     "expandViews": "Ανάπτυξη λίστας προβολών",
     "summary": "Σύνοψη",
-    "tomorrow": "Αύριο",
     "next7Days": "Επόμενες 7 ημέρες",
     "more": "Περισσότερα",
     "toggleFolder": "Εμφάνιση ή απόκρυψη έργων",
@@ -459,7 +459,8 @@
     "rateLimitedRetrying": "Πάρα πολλά αιτήματα, νέα προσπάθεια…",
     "rateLimitedGaveUp": "Πάρα πολλά αιτήματα. Η συνεδρία παραμένει ενεργή· ανανεώστε σε λίγο.",
     "serverBusyRetrying": "Ο διακομιστής είναι απασχολημένος, νέα προσπάθεια…",
-    "serverBusyRetry": "Νέα προσπάθεια"
+    "serverBusyRetry": "Νέα προσπάθεια",
+    "sign_up": "Εγγραφή"
   },
   "profile": {
     "showTaskDescription": "Εμφάνιση της περιγραφής κάτω από τον τίτλο",
@@ -945,7 +946,8 @@
       "hoursTitle": "Η μέρα σου",
       "hoursTo": "έως",
       "taggedToday": "Με ετικέτα #today",
-      "taggedTodayDetail": "Ανοιχτές εργασίες με ετικέτα #today, ανεξάρτητα από τις ημερομηνίες τους."
+      "taggedTodayDetail": "Ανοιχτές εργασίες με ετικέτα #today, ανεξάρτητα από τις ημερομηνίες τους.",
+      "maxOption_one": "{{count}} εργασία"
     },
     "aiApiKey": "Κλειδί API",
     "aiApiKeyClear": "Εκκαθάριση",
@@ -1271,7 +1273,7 @@
     "taskCompleted": "εργασία ολοκληρώθηκε",
     "tasksCompleted": "εργασίες ολοκληρώθηκαν",
     "noTasksAvailable": "Δεν υπάρχουν διαθέσιμες εργασίες.",
-    "searchPlaceholder": "Αναζήτηση εργασιών...",
+    "searchPlaceholder": "Αναζήτηση…",
     "addNewTask": "Προσθήκη Νέας Εργασίας",
     "addTaskInline": "+ Προσθήκη εργασίας",
     "metrics": "Μετρήσεις Εργασιών",
@@ -1465,7 +1467,7 @@
     "areaFollowsParent": "Ο τομέας ακολουθεί το γονικό έργο",
     "loading": "Φόρτωση έργων...",
     "error": "Σφάλμα φόρτωσης έργων",
-    "searchPlaceholder": "Αναζήτηση έργων...",
+    "searchPlaceholder": "Αναζήτηση…",
     "title": "Έργα",
     "noProjectsFound": "Δεν βρέθηκαν έργα",
     "cardViewAriaLabel": "Προβολή Καρτών",
@@ -1600,7 +1602,7 @@
     "emptyPreview": "Κενή σημείωση",
     "loading": "Φόρτωση σημειώσεων...",
     "error": "Σφάλμα φόρτωσης σημειώσεων",
-    "searchPlaceholder": "Αναζήτηση σημειώσεων...",
+    "searchPlaceholder": "Αναζήτηση…",
     "noNotesFound": "Δεν βρέθηκαν σημειώσεις",
     "title": "Σημειώσεις",
     "deleteNoteAriaLabel": "Διαγραφή σημείωσης {{noteTitle}}",
@@ -1680,7 +1682,12 @@
     "fileUploadError": "Δεν ήταν δυνατή η μεταφόρτωση του {{name}}",
     "slashFile": "Εικόνα ή αρχείο",
     "slashFileHint": "Μεταφορτώστε και τοποθετήστε το εδώ",
-    "toggleDropdownMenu": "Εναλλαγή μενού"
+    "toggleDropdownMenu": "Εναλλαγή μενού",
+    "saved": "Αποθηκεύτηκε",
+    "unsaved": "Μη αποθηκευμένες αλλαγές",
+    "backgroundColor": "Χρώμα φόντου",
+    "selectProject": "Επιλογή έργου",
+    "noMatchingNotes": "Δεν βρέθηκαν σημειώσεις"
   },
   "projectItem": {
     "edit": "Επεξεργασία",
@@ -2076,7 +2083,13 @@
     "noUpcomingOccurrences": "Δεν υπάρχουν επερχόμενες εμφανίσεις.",
     "turnIntoProject": "Μετατροπή σε έργο",
     "turnIntoProjectError": "Δεν ήταν δυνατή η μετατροπή σε έργο.",
-    "turnIntoProjectMessage": "Μετατροπή του « {{name}} » σε έργο; Οι υποεργασίες του θα γίνουν εργασίες του έργου και οι διευθύνσεις της σημείωσής του θα γίνουν σελίδες του."
+    "turnIntoProjectMessage": "Μετατροπή του « {{name}} » σε έργο; Οι υποεργασίες του θα γίνουν εργασίες του έργου και οι διευθύνσεις της σημείωσής του θα γίνουν σελίδες του.",
+    "inDays_one": "σε {{count}} ημέρα",
+    "daysAgo_one": "{{count}} ημέρα πριν",
+    "hoursAgo_one": "πριν από {{count}} ώρα",
+    "minutesAgo_one": "πριν από {{count}} λεπτό",
+    "inMinutes_one": "σε {{count}} λεπτό",
+    "inHours_one": "σε {{count}} ώρα"
   },
   "dateFormats": {
     "long": "EEEE, d MMMM yyyy",
@@ -2205,6 +2218,18 @@
       "reasonKeyword": "Ξεκινά με «{{detail}}»",
       "reasonLong": "Είναι μακρύ, σαν σημείωση",
       "reasonDefault": "Σύντομο κείμενο, συνήθως εργασία"
+    },
+    "sources": {
+      "telegram": "Telegram",
+      "gmail": "Gmail",
+      "mcp": "MCP",
+      "android": "Android",
+      "api": "API",
+      "email": "Email",
+      "mail": "Αλληλογραφία",
+      "desktop": "Υπολογιστής",
+      "link": "Σύνδεσμος",
+      "share": "Κοινοποίηση"
     }
   },
   "success": {
@@ -2259,7 +2284,7 @@
     "presetWork": "Δουλειά",
     "presetHealth": "Υγεία",
     "presetFamily": "Οικογένεια",
-    "suggestDomains": "Πρότεινε 5 τομείς",
+    "suggestDomains": "Πρότεινε 5 περιοχές",
     "domains": {
       "business": "Επιχειρήσεις & Χρήμα",
       "tech": "Τεχνολογία & Συστήματα",
@@ -2291,7 +2316,7 @@
   },
   "tags": {
     "loading": "Φόρτωση ετικετών...",
-    "searchPlaceholder": "Αναζήτηση ετικετών...",
+    "searchPlaceholder": "Αναζήτηση…",
     "title": "Ετικέτες",
     "noTagsFound": "Δεν βρέθηκαν ετικέτες",
     "editTagAriaLabel": "Επεξεργασία ετικέτας {{tagName}}",
@@ -2481,7 +2506,8 @@
     "noTasks": "Δεν υπάρχουν εργασίες.",
     "nextAction": "Επόμενη ενέργεια",
     "nextActionLine": "Επόμενη ενέργεια: {{name}}",
-    "noCompletedTasks": "Δεν υπάρχουν ολοκληρωμένες εργασίες."
+    "noCompletedTasks": "Δεν υπάρχουν ολοκληρωμένες εργασίες.",
+    "views": "Προβολές έργου"
   },
   "pomodoro": {
     "play": "Αναπαραγωγή",
@@ -2587,8 +2613,6 @@
     "connectionError": "Αποτυχία σύνδεσης με Google Calendar. Παρακαλώ δοκιμάστε ξανά.",
     "disconnectionError": "Αποτυχία αποσύνδεσης από Google Calendar. Παρακαλώ δοκιμάστε ξανά.",
     "taskDetails": "Λεπτομέρειες Εργασίας",
-    "editTask": "Επεξεργασία Εργασίας",
-    "goToTasks": "Μετάβαση στις Εργασίες",
     "close": "Κλείσιμο",
     "title": "Τίτλος",
     "status": "Κατάσταση",
@@ -2599,11 +2623,6 @@
     "area": "Περιοχή",
     "description": "Περιγραφή",
     "created": "Δημιουργήθηκε",
-    "completed": "Ολοκληρώθηκε",
-    "pending": "Εκκρεμεί",
-    "high": "Υψηλή",
-    "medium": "Μέση",
-    "low": "Χαμηλή",
     "time": "Ώρα",
     "allDay": "Όλη μέρα",
     "google": {
@@ -2635,7 +2654,14 @@
     "moreViews": "Περισσότερες προβολές",
     "openDay": "Άνοιγμα ημέρας",
     "noEventsThisDay": "Τίποτα προγραμματισμένο.",
-    "task": "Εργασία"
+    "previousYear": "Προηγούμενο έτος",
+    "nextYear": "Επόμενο έτος",
+    "previousWeek": "Προηγούμενη εβδομάδα",
+    "nextWeek": "Επόμενη εβδομάδα",
+    "previousDays": "Προηγούμενες ημέρες",
+    "nextDays": "Επόμενες ημέρες",
+    "previousDay": "Προηγούμενη ημέρα",
+    "nextDay": "Επόμενη ημέρα"
   },
   "pages": {
     "notFound": {
@@ -2654,9 +2680,9 @@
     "uploading": "Ανέβασμα..."
   },
   "searchPlaceholders": {
-    "searchProjects": "Αναζήτηση έργων...",
-    "searchTags": "Αναζήτηση ετικετών...",
-    "searchTasks": "Αναζήτηση εργασιών..."
+    "searchProjects": "Αναζήτηση…",
+    "searchTags": "Αναζήτηση…",
+    "searchTasks": "Αναζήτηση…"
   },
   "ariaLabels": {
     "hideInfo": "Απόκρυψη πληροφοριών",
@@ -3312,7 +3338,7 @@
   "views": {
     "title": "Έξυπνες Προβολές",
     "loading": "Φόρτωση προβολών...",
-    "searchPlaceholder": "Αναζήτηση προβολών...",
+    "searchPlaceholder": "Αναζήτηση…",
     "noViewsFound": "Δεν βρέθηκαν προβολές. Δημιουργήστε μια προβολή κάνοντας αναζήτηση και κάνοντας κλικ στο \"Αποθήκευση ως Έξυπνη Προβολή\".",
     "deleteView": "Διαγραφή Προβολής",
     "confirmDelete": "Είστε σίγουροι ότι θέλετε να διαγράψετε την προβολή \"{{viewName}}\";",
@@ -3349,7 +3375,7 @@
     "filters": "φίλτρα"
   },
   "search": {
-    "placeholder": "Αναζήτηση εργασιών, έργων, σημειώσεων...",
+    "placeholder": "Αναζήτηση…",
     "searchingFor": "Αναζητάτε",
     "allItems": "όλα τα στοιχεία",
     "containingText": ", περιέχοντας το κείμενο",
@@ -4039,7 +4065,26 @@
     "archivedBadge": "αρχειοθετημένο",
     "deletePerson": "Διαγραφή ατόμου",
     "deleteConfirm": "Θέλετε σίγουρα να διαγράψετε το «{{name}}»; Δεν μπορεί να αναιρεθεί.",
-    "contact": "Επαφή"
+    "contact": "Επαφή",
+    "editPerson": "Επεξεργασία ατόμου",
+    "newPerson": "Νέο άτομο",
+    "noAssignedTasks": "Δεν έχουν ανατεθεί εργασίες στον/στην {{name}}.",
+    "notFound": "Το άτομο δεν βρέθηκε.",
+    "relationship": "Σχέση",
+    "phone": "Τηλέφωνο",
+    "namePlaceholder": "Μπαμπάς, σύντροφος, Αλίκη…",
+    "notesPlaceholder": "Σημειώσεις για αυτό το άτομο…",
+    "relationships": {
+      "family": "Οικογένεια",
+      "work": "Εργασία",
+      "friend": "Φίλος",
+      "other": "Άλλο"
+    },
+    "noPeopleYet": "Δεν υπάρχουν ακόμη άτομα",
+    "clearAssignment": "Κατάργηση ανάθεσης",
+    "nameRequired": "Το όνομα είναι υποχρεωτικό",
+    "saveError": "Δεν ήταν δυνατή η αποθήκευση του ατόμου",
+    "signInLink": "Σύνδεσμος σύνδεσης"
   },
   "members": {
     "addTitle": "Προσθήκη μέλους",
@@ -4195,7 +4240,8 @@
       "addToTomorrow": "Προσθήκη στο αύριο",
       "regenerate": "Ξανά",
       "draftTitle": "Προσχέδιο AI",
-      "skippedCount": "Εκτός πλάνου ({{count}})"
+      "skippedCount": "Εκτός πλάνου ({{count}})",
+      "carried_one": "{{count}} εργασία προστέθηκε στο αύριο"
     },
     "lateWarning": "Η ώρα πέρασε και δεν έχει ολοκληρωθεί",
     "movedOffPlan": "Το '{{name}}' δεν λήγει πλέον σήμερα, γι' αυτό αφαιρέθηκε από το πρόγραμμα της ημέρας.",
@@ -4310,7 +4356,8 @@
     "showQuote": "Εμφάνιση της καθημερινής φράσης",
     "hideQuote": "Απόκρυψη της καθημερινής φράσης",
     "orderError": "Δεν ήταν δυνατή η αποθήκευση της σειράς.",
-    "eventReadOnly": "Μόνο για ανάγνωση: ορίστε αμφίδρομη συγχρονισμό για αυτό το ημερολόγιο στο προφίλ για να το μετακινείτε από εδώ."
+    "eventReadOnly": "Μόνο για ανάγνωση: ορίστε αμφίδρομη συγχρονισμό για αυτό το ημερολόγιο στο προφίλ για να το μετακινείτε από εδώ.",
+    "placeAllDone_one": "Τοποθετήθηκε {{count}} εργασία."
   },
   "capture": {
     "add": "Προσθήκη",
@@ -4468,7 +4515,7 @@
     "targetDate": "Προθεσμία",
     "noProjects": "Δεν υπάρχουν έργα συνδεδεμένα με αυτόν τον στόχο.",
     "noTasks": "Δεν υπάρχουν εργασίες για αυτόν τον στόχο.",
-    "searchGoals": "Αναζήτηση στόχων…",
+    "searchGoals": "Αναζήτηση…",
     "clearGoal": "Αφαίρεση στόχου",
     "noGoalsFound": "Δεν βρέθηκαν στόχοι",
     "inactive": "Ανενεργός",
@@ -4507,7 +4554,8 @@
     "noAvailableGoals": "Δεν υπάρχουν διαθέσιμοι στόχοι",
     "progressHint": "Μπάρα: ολοκληρωμένες εργασίες και έργα. Γραμμή: χρόνος που πέρασε από τη δημιουργία έως την ημερομηνία στόχου.",
     "removeFromArea": "Αφαίρεση από περιοχή",
-    "createTask": "Δημιουργία εργασίας"
+    "createTask": "Δημιουργία εργασίας",
+    "noGoal": "Χωρίς στόχο"
   },
   "templates": {
     "new": "Νέο πρότυπο",
@@ -4528,7 +4576,7 @@
       "empty": "Δεν υπάρχουν ακόμα πρότυπα στη συλλογή.",
       "title": "Συλλογή",
       "subtitle": "Περιηγηθείτε και εγκαταστήστε έτοιμα πρότυπα από την κοινότητα",
-      "search": "Αναζήτηση στη συλλογή..."
+      "search": "Αναζήτηση…"
     },
     "taskList": "Εργασίες",
     "noTasks": "Δεν υπάρχουν εργασίες σε αυτό το πρότυπο",
@@ -4832,7 +4880,13 @@
       "hierarchy_wbs": "αριθμούς WBS (1, 1.1, 1.2)",
       "hierarchy_indent": "γραμμές με εσοχή",
       "hierarchy_flat": "χωρίς υποεργασίες",
-      "hierarchy_auto": "αυτόματη ανίχνευση"
+      "hierarchy_auto": "αυτόματη ανίχνευση",
+      "countCreate_one": "{{count}} νέα εργασία",
+      "countProjects_one": "{{count}} νέο έργο",
+      "countAreas_one": "{{count}} νέα περιοχή",
+      "countTags_one": "{{count}} νέα ετικέτα",
+      "doneTitle_one": "Εισήχθη {{count}} εργασία",
+      "rowCount_one": "{{count}} γραμμή"
     },
     "issues": {
       "too_many_tags": "Διατηρούνται μόνο οι πρώτες 20 ετικέτες.",
@@ -5084,7 +5138,7 @@
       "reviewIn30": "Ανασκόπηση σε 30 ημέρες",
       "reviewOn": "Ανασκόπηση στις…",
       "keepLater": "Κράτα σε αναμονή",
-      "toTask": "Κάνε το εργασία",
+      "toTask": "Δημιουργία εργασίας",
       "toLater": "Άφησέ το για αργότερα",
       "discard": "Απόρριψη",
       "openInbox": "Άνοιγμα εισερχομένων",
@@ -5159,7 +5213,8 @@
     "dislike": "Δεν μου αρέσει",
     "failedToReact": "Δεν ήταν δυνατή η ενημέρωση της αντίδρασης",
     "uploadingImage": "Ανέβασμα εικόνας...",
-    "imageUploadFailed": "Δεν ήταν δυνατό το ανέβασμα της εικόνας"
+    "imageUploadFailed": "Δεν ήταν δυνατό το ανέβασμα της εικόνας",
+    "count_one": "{{count}} σχόλιο"
   },
   "sortable": {
     "move": "Μετακίνηση",
@@ -5178,7 +5233,7 @@
     "title": "Σχέσεις",
     "add": "Προσθήκη σχέσης",
     "remove": "Αφαίρεση σχέσης",
-    "searchPlaceholder": "Αναζήτηση εργασίας...",
+    "searchPlaceholder": "Αναζήτηση…",
     "addFailed": "Δεν ήταν δυνατή η προσθήκη σχέσης.",
     "removeFailed": "Δεν ήταν δυνατή η αφαίρεση σχέσης.",
     "blocked": "Μπλοκαρισμένη",
@@ -6131,7 +6186,11 @@
     "hideCompleted": "Απόκρυψη ολοκληρωμένων",
     "showCompletedTasks": "Εμφάνιση ολοκληρωμένων",
     "dropOverlaps": "Επικαλύψεις",
-    "dropPast": "Στο παρελθόν"
+    "dropPast": "Στο παρελθόν",
+    "habitsCount": "Συνήθειες · {{n}}",
+    "habitsDone": "Ολοκληρωμένες · {{n}}",
+    "habitAt": "{{name}} στις {{time}}",
+    "habitLogFailed": "Δεν ήταν δυνατή η καταγραφή της συνήθειας."
   },
   "upcoming": {
     "title": "Σχεδίαση",
@@ -6180,12 +6239,8 @@
     "noProject": "Χωρίς έργο",
     "noTag": "Χωρίς ετικέτα",
     "priority": {
-      "high": "Υψηλή",
-      "medium": "Μεσαία",
-      "low": "Χαμηλή",
       "none": "Χωρίς προτεραιότητα"
     },
-    "horizonsEmpty": "Τίποτα εδώ ακόμα.",
     "thisWeek": "Αυτή την εβδομάδα",
     "thisMonth": "Αυτόν τον μήνα",
     "nextMonth": "Τον επόμενο μήνα",
@@ -6231,14 +6286,17 @@
     "load": "{{planned}} / {{available}}",
     "done": "Ολοκληρωμένες ({{n}})",
     "subtaskOf": "↳ {{parent}}",
-    "addToInbox": "Προσθήκη στα Εισερχόμενα",
-    "inboxNewItem": "Νέο στοιχείο εισερχομένων",
     "addToInboxFailed": "Δεν ήταν δυνατή η προσθήκη. Δοκιμάστε ξανά.",
     "addEmptyName": "Δώστε όνομα στην εργασία",
     "addTaskIn": "Προσθήκη εργασίας στο {{name}}",
-    "thisWeekOnlyPlanned": "Τίποτα χωρίς σταθερή ημέρα · {{count}} προγραμματισμένα σε μία ημέρα",
     "previous": "Προηγούμενη ημέρα",
-    "next": "Επόμενη ημέρα"
+    "next": "Επόμενη ημέρα",
+    "nextWeekHint": "Δεσμευμένη για την επόμενη εβδομάδα, χωρίς συγκεκριμένη μέρα",
+    "stripLabel": "Αποστολή σε ορίζοντα",
+    "stripOpen": "Άνοιγμα {{name}} στους Ορίζοντες",
+    "sentToHorizon": "Στάλθηκε σε {{name}}",
+    "plannedOnDayHint_one": "{{count}} προγραμματισμένη σε μέρα",
+    "plannedOnDayHint_other": "{{count}} προγραμματισμένες σε μέρα"
   },
   "offline": {
     "offline": "Εκτός σύνδεσης",

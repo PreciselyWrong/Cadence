@@ -33,7 +33,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
     className = '',
     renderTrigger,
 }) => {
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
     const displayLocale = useMemo(
         () => resolveUserLocale(i18n?.language),
         [i18n?.language]
@@ -406,7 +406,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
                                 onClick={() => handleDateSelect(new Date())}
                                 className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
                             >
-                                Today
+                                {t('calendar.today', 'Today')}
                             </button>
                             {value && (
                                 <button
@@ -414,7 +414,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
                                     onClick={handleClear}
                                     className="text-xs text-gray-600 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-300"
                                 >
-                                    Clear
+                                    {t('common.clear', 'Clear')}
                                 </button>
                             )}
                         </div>

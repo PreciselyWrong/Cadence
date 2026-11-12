@@ -122,8 +122,6 @@
       "dismiss": "Yok say",
       "acceptAll": "Tümünü kabul et",
       "apply": "Uygula",
-      "medium": "Orta",
-      "high": "Yüksek",
       "priority": "Öncelik",
       "newTag": "Yeni etiket: #{{name}}",
       "tags": "Etiketler",
@@ -148,7 +146,7 @@
       "archive": "Gmail'de arşivle",
       "taskName": "Görev adı",
       "taskDue": "Son tarih",
-      "createTask": "Görevi oluştur",
+      "createTask": "Görev oluştur",
       "taskCreated": "Görev oluşturuldu",
       "replied": "Yanıt Gmail'de açıldı",
       "postponed": "Yarın geri gelir",
@@ -248,7 +246,7 @@
     "preview": "Önizleme",
     "download": "İndir",
     "exitFocusMode": "Odak modundan çık",
-    "searchTimezones": "Saat dilimlerini ara...",
+    "searchTimezones": "Ara…",
     "dismiss": "Kapat",
     "search": "Ara",
     "previous": "Önceki",
@@ -277,7 +275,10 @@
     "resolving": "Çözümleniyor...",
     "showLess": "Daha azını göster",
     "breadcrumb": "Gezinti yolu",
-    "undo": "Geri al"
+    "undo": "Geri al",
+    "copyCode": "Kodu kopyala",
+    "copy": "Kopyala",
+    "copied": "Kopyalandı"
   },
   "sidebar": {
     "links": "Bağlantılar",
@@ -333,7 +334,6 @@
     "collapseViews": "Görünüm listesini daralt",
     "expandViews": "Görünüm listesini genişlet",
     "summary": "Özet",
-    "tomorrow": "Yarın",
     "next7Days": "Sonraki 7 gün",
     "more": "Daha fazla",
     "toggleFolder": "Projeleri göster veya gizle",
@@ -414,7 +414,7 @@
     "taskCompleted": "görev tamamlandı",
     "tasksCompleted": "görevler tamamlandı",
     "noTasksAvailable": "Mevcut görev yok.",
-    "searchPlaceholder": "Görevleri ara...",
+    "searchPlaceholder": "Ara…",
     "addNewTask": "Yeni Görev Ekle",
     "addTaskInline": "+ Görev ekle",
     "metrics": "Metrikler",
@@ -1566,7 +1566,8 @@
     "rateLimitedRetrying": "Çok fazla istek, yeniden deneniyor…",
     "rateLimitedGaveUp": "Çok fazla istek. Oturum hâlâ etkin; birazdan sayfayı yenileyin.",
     "serverBusyRetrying": "Sunucu meşgul, yeniden deneniyor…",
-    "serverBusyRetry": "Yeniden dene"
+    "serverBusyRetry": "Yeniden dene",
+    "sign_up": "Üye Ol"
   },
   "dropdown": {
     "createNew": "Yeni Oluştur",
@@ -1688,7 +1689,8 @@
     "noTasks": "Görev yok.",
     "nextAction": "Sonraki eylem",
     "nextActionLine": "Sonraki eylem: {{name}}",
-    "noCompletedTasks": "Tamamlanmış görev yok."
+    "noCompletedTasks": "Tamamlanmış görev yok.",
+    "views": "Proje görünümleri"
   },
   "errors": {
     "required": "Bu alan gereklidir",
@@ -1832,6 +1834,18 @@
       "reasonKeyword": "“{{detail}}” ile başlıyor",
       "reasonLong": "Not gibi uzun",
       "reasonDefault": "Kısa metin, çoğunlukla görev"
+    },
+    "sources": {
+      "telegram": "Telegram",
+      "gmail": "Gmail",
+      "mcp": "MCP",
+      "android": "Android",
+      "api": "API",
+      "email": "E-posta",
+      "mail": "Posta",
+      "desktop": "Masaüstü",
+      "link": "Bağlantı",
+      "share": "Paylaşım"
     }
   },
   "dateFormats": {
@@ -2085,7 +2099,7 @@
     "areaFollowsParent": "Alan üst projeyi izler",
     "loading": "Projeler yükleniyor...",
     "error": "Projeleri yüklerken hata",
-    "searchPlaceholder": "Projeleri ara...",
+    "searchPlaceholder": "Ara…",
     "title": "Projeler",
     "noProjectsFound": "Hiç proje bulunamadı",
     "cardViewAriaLabel": "Kart Görünümü",
@@ -2303,7 +2317,7 @@
     "emptyPreview": "Boş not",
     "loading": "Notlar yükleniyor...",
     "error": "Notlar yüklenirken hata",
-    "searchPlaceholder": "Notları ara...",
+    "searchPlaceholder": "Ara…",
     "noNotesFound": "Hiç not bulunamadı",
     "title": "Notlar",
     "deleteNoteAriaLabel": "Notu sil {{noteTitle}}",
@@ -2383,11 +2397,16 @@
     "fileUploadError": "{{name}} yüklenemedi",
     "slashFile": "Görsel veya Dosya",
     "slashFileHint": "Yükleyin ve buraya yerleştirin",
-    "toggleDropdownMenu": "Açılır menüyü aç/kapat"
+    "toggleDropdownMenu": "Açılır menüyü aç/kapat",
+    "saved": "Kaydedildi",
+    "unsaved": "Kaydedilmemiş değişiklikler",
+    "backgroundColor": "Arka plan rengi",
+    "selectProject": "Proje seç",
+    "noMatchingNotes": "Eşleşen not yok"
   },
   "tags": {
     "loading": "Etiketler yükleniyor...",
-    "searchPlaceholder": "Etiketleri ara...",
+    "searchPlaceholder": "Ara…",
     "title": "Etiketler",
     "noTagsFound": "Hiç etiket bulunamadı",
     "editTagAriaLabel": "Etiquet düzenle {{tagName}}",
@@ -2586,8 +2605,6 @@
     "connectionError": "Google Takvimine bağlanılamadı. Lütfen tekrar deneyin.",
     "disconnectionError": "Google Takviminden ayrılamadı. Lütfen tekrar deneyin.",
     "taskDetails": "Görev Detayları",
-    "editTask": "Görevi Düzenle",
-    "goToTasks": "Görevlere Git",
     "close": "Kapat",
     "title": "Başlık",
     "status": "Durum",
@@ -2598,11 +2615,6 @@
     "area": "Alan",
     "description": "Açıklama",
     "created": "Oluşturuldu",
-    "completed": "Tamamlandı",
-    "pending": "Beklemede",
-    "high": "Yüksek",
-    "medium": "Orta",
-    "low": "Düşük",
     "time": "Zaman",
     "allDay": "Tüm gün",
     "google": {
@@ -2634,7 +2646,14 @@
     "moreViews": "Diğer görünümler",
     "openDay": "Günü aç",
     "noEventsThisDay": "Planlanmış bir şey yok.",
-    "task": "Görev"
+    "previousYear": "Önceki yıl",
+    "nextYear": "Sonraki yıl",
+    "previousWeek": "Önceki hafta",
+    "nextWeek": "Sonraki hafta",
+    "previousDays": "Önceki günler",
+    "nextDays": "Sonraki günler",
+    "previousDay": "Önceki gün",
+    "nextDay": "Sonraki gün"
   },
   "pages": {
     "notFound": {
@@ -2653,9 +2672,9 @@
     "uploading": "Yükleniyor..."
   },
   "searchPlaceholders": {
-    "searchProjects": "Projeleri Ara...",
-    "searchTags": "Etiketleri ara...",
-    "searchTasks": "Görevleri ara..."
+    "searchProjects": "Ara…",
+    "searchTags": "Ara…",
+    "searchTasks": "Ara…"
   },
   "ariaLabels": {
     "hideInfo": "Bilgiyi gizle",
@@ -3311,7 +3330,7 @@
   "views": {
     "title": "Akıllı Görünümler",
     "loading": "Görünümler yükleniyor...",
-    "searchPlaceholder": "Görünümleri ara...",
+    "searchPlaceholder": "Ara…",
     "noViewsFound": "Hiçbir görünüm bulunamadı. Bir arama yaparak ve \"Akıllı Görünüm Olarak Kaydet\" butonuna tıklayarak bir görünüm oluşturun.",
     "deleteView": "Görünümü Sil",
     "confirmDelete": "\"{{viewName}}\" görünümünü silmek istediğinizden emin misiniz?",
@@ -3348,7 +3367,7 @@
     "filters": "filtreler"
   },
   "search": {
-    "placeholder": "Görevleri, projeleri, notları ara...",
+    "placeholder": "Ara…",
     "searchingFor": "Aradığınız",
     "allItems": "tüm öğeler",
     "containingText": ", içeren metin",
@@ -4038,7 +4057,26 @@
     "archivedBadge": "arşivlendi",
     "deletePerson": "Kişiyi sil",
     "deleteConfirm": "\"{{name}}\" kişisini silmek istediğinizden emin misiniz? Bu geri alınamaz.",
-    "contact": "Kişi"
+    "contact": "Kişi",
+    "editPerson": "Kişiyi düzenle",
+    "newPerson": "Yeni kişi",
+    "noAssignedTasks": "{{name}} kişisine atanmış görev yok.",
+    "notFound": "Kişi bulunamadı.",
+    "relationship": "İlişki",
+    "phone": "Telefon",
+    "namePlaceholder": "Babam, eşim, Ayşe…",
+    "notesPlaceholder": "Bu kişiyle ilgili notlar…",
+    "relationships": {
+      "family": "Aile",
+      "work": "İş",
+      "friend": "Arkadaş",
+      "other": "Diğer"
+    },
+    "noPeopleYet": "Henüz kimse yok",
+    "clearAssignment": "Atamayı kaldır",
+    "nameRequired": "Ad gerekli",
+    "saveError": "Kişi kaydedilemedi",
+    "signInLink": "Oturum açma bağlantısı"
   },
   "members": {
     "addTitle": "Üye ekle",
@@ -4467,7 +4505,7 @@
     "targetDate": "Hedef",
     "noProjects": "Bu hedefe bağlı proje yok.",
     "noTasks": "Bu hedefe atanmış görev yok.",
-    "searchGoals": "Hedef ara…",
+    "searchGoals": "Ara…",
     "clearGoal": "Hedefi kaldır",
     "noGoalsFound": "Hedef bulunamadı",
     "inactive": "Etkin değil",
@@ -4506,7 +4544,8 @@
     "noAvailableGoals": "Kullanılabilir hedef yok",
     "progressHint": "Çubuk: tamamlanan görevler ve projeler. Çizgi: oluşturma ile hedef tarih arasında geçen süre.",
     "removeFromArea": "Alandan kaldır",
-    "createTask": "Görev oluştur"
+    "createTask": "Görev oluştur",
+    "noGoal": "Hedef yok"
   },
   "templates": {
     "new": "Yeni Şablon",
@@ -4527,7 +4566,7 @@
       "empty": "Pazar yerinde henüz şablon yok.",
       "title": "Pazar yeri",
       "subtitle": "Topluluğun hazır şablonlarına göz atın ve yükleyin",
-      "search": "Pazar yerinde ara..."
+      "search": "Ara…"
     },
     "taskList": "Görevler",
     "noTasks": "Bu şablonda görev yok",
@@ -5083,7 +5122,7 @@
       "reviewIn30": "30 gün sonra gözden geçir",
       "reviewOn": "Şu tarihte gözden geçir…",
       "keepLater": "Beklemede tut",
-      "toTask": "Görev yap",
+      "toTask": "Görev oluştur",
       "toLater": "Sonraya bırak",
       "discard": "At",
       "openInbox": "Gelen kutusunu aç",
@@ -5177,7 +5216,7 @@
     "title": "İlişkiler",
     "add": "İlişki ekle",
     "remove": "İlişkiyi kaldır",
-    "searchPlaceholder": "Görev ara...",
+    "searchPlaceholder": "Ara…",
     "addFailed": "İlişki eklenemedi.",
     "removeFailed": "İlişki kaldırılamadı.",
     "blocked": "Engellendi",
@@ -6128,7 +6167,11 @@
     "hideCompleted": "Tamamlananları gizle",
     "showCompletedTasks": "Tamamlananları göster",
     "dropOverlaps": "Çakışmalar",
-    "dropPast": "Geçmişte"
+    "dropPast": "Geçmişte",
+    "habitsCount": "Alışkanlıklar · {{n}}",
+    "habitsDone": "Yapılanlar · {{n}}",
+    "habitAt": "{{time}} saatinde {{name}}",
+    "habitLogFailed": "Alışkanlık kaydedilemedi."
   },
   "upcoming": {
     "title": "Planla",
@@ -6177,12 +6220,8 @@
     "noProject": "Proje yok",
     "noTag": "Etiket yok",
     "priority": {
-      "high": "Yüksek",
-      "medium": "Orta",
-      "low": "Düşük",
       "none": "Öncelik yok"
     },
-    "horizonsEmpty": "Henüz burada bir şey yok.",
     "thisWeek": "Bu hafta",
     "thisMonth": "Bu ay",
     "nextMonth": "Gelecek ay",
@@ -6228,14 +6267,17 @@
     "load": "{{planned}} / {{available}}",
     "done": "Tamamlananlar ({{n}})",
     "subtaskOf": "↳ {{parent}}",
-    "addToInbox": "Gelen kutusuna ekle",
-    "inboxNewItem": "Yeni gelen kutusu öğesi",
     "addToInboxFailed": "Eklenemedi. Yeniden deneyin.",
     "addEmptyName": "Göreve bir ad verin",
     "addTaskIn": "{{name}} için bir görev ekle",
-    "thisWeekOnlyPlanned": "Sabit günü olmayan yok · Bir günde {{count}} planlanmış",
     "previous": "Önceki gün",
-    "next": "Sonraki gün"
+    "next": "Sonraki gün",
+    "nextWeekHint": "Gelecek haftaya ayrıldı, sabit gün yok",
+    "stripLabel": "Bir ufka gönder",
+    "stripOpen": "{{name}} ögesini Ufuklar'da aç",
+    "sentToHorizon": "{{name}} ufkuna gönderildi",
+    "plannedOnDayHint_one": "{{count}} tanesi bir güne planlandı",
+    "plannedOnDayHint_other": "{{count}} tanesi bir güne planlandı"
   },
   "offline": {
     "offline": "Çevrimdışı",

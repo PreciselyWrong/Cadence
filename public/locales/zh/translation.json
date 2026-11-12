@@ -122,8 +122,6 @@
       "dismiss": "忽略",
       "acceptAll": "全部接受",
       "apply": "应用",
-      "medium": "中",
-      "high": "高",
       "priority": "优先级",
       "newTag": "新标签：#{{name}}",
       "tags": "标签",
@@ -248,7 +246,7 @@
     "preview": "预览",
     "download": "下载",
     "exitFocusMode": "退出专注模式",
-    "searchTimezones": "搜索时区...",
+    "searchTimezones": "搜索…",
     "dismiss": "关闭",
     "search": "搜索",
     "previous": "上一个",
@@ -277,7 +275,10 @@
     "resolving": "正在解决...",
     "showLess": "收起",
     "breadcrumb": "面包屑",
-    "undo": "撤销"
+    "undo": "撤销",
+    "copyCode": "复制代码",
+    "copy": "复制",
+    "copied": "已复制"
   },
   "sidebar": {
     "links": "链接",
@@ -333,7 +334,6 @@
     "collapseViews": "收起视图列表",
     "expandViews": "展开视图列表",
     "summary": "摘要",
-    "tomorrow": "明天",
     "next7Days": "未来7天",
     "more": "更多",
     "toggleFolder": "显示或隐藏项目",
@@ -414,7 +414,7 @@
     "taskCompleted": "任务已完成",
     "tasksCompleted": "任务已完成",
     "noTasksAvailable": "没有可用的任务。",
-    "searchPlaceholder": "搜索任务...",
+    "searchPlaceholder": "搜索…",
     "addNewTask": "添加新任务",
     "addTaskInline": "+ 添加任务",
     "metrics": "指标",
@@ -1566,7 +1566,8 @@
     "rateLimitedRetrying": "请求过多，正在重试…",
     "rateLimitedGaveUp": "请求过多。会话仍然有效；请稍后刷新。",
     "serverBusyRetrying": "服务器繁忙，正在重试…",
-    "serverBusyRetry": "重试"
+    "serverBusyRetry": "重试",
+    "sign_up": "注册账户"
   },
   "dropdown": {
     "createNew": "创建新项",
@@ -1688,7 +1689,8 @@
     "noTasks": "没有任务。",
     "nextAction": "下一步行动",
     "nextActionLine": "下一步行动：{{name}}",
-    "noCompletedTasks": "没有已完成的任务。"
+    "noCompletedTasks": "没有已完成的任务。",
+    "views": "项目视图"
   },
   "errors": {
     "required": "此字段为必填项",
@@ -1832,6 +1834,18 @@
       "reasonKeyword": "以“{{detail}}”开头",
       "reasonLong": "内容较长，像一条笔记",
       "reasonDefault": "短文本，通常是任务"
+    },
+    "sources": {
+      "telegram": "Telegram",
+      "gmail": "Gmail",
+      "mcp": "MCP",
+      "android": "Android",
+      "api": "API",
+      "email": "邮件",
+      "mail": "邮件",
+      "desktop": "桌面端",
+      "link": "链接",
+      "share": "分享"
     }
   },
   "dateFormats": {
@@ -2085,7 +2099,7 @@
     "areaFollowsParent": "区域跟随父项目",
     "loading": "加载项目中...",
     "error": "加载项目时出错",
-    "searchPlaceholder": "搜索项目...",
+    "searchPlaceholder": "搜索…",
     "title": "项目",
     "noProjectsFound": "未找到项目",
     "cardViewAriaLabel": "卡片视图",
@@ -2268,7 +2282,7 @@
     "presetWork": "工作",
     "presetHealth": "健康",
     "presetFamily": "家人",
-    "suggestDomains": "建议 5 个领域",
+    "suggestDomains": "建议 5 个区域",
     "domains": {
       "business": "商业与财务",
       "tech": "技术与系统",
@@ -2303,7 +2317,7 @@
     "emptyPreview": "空笔记",
     "loading": "加载笔记...",
     "error": "加载笔记时出错",
-    "searchPlaceholder": "搜索笔记...",
+    "searchPlaceholder": "搜索…",
     "noNotesFound": "未找到笔记",
     "title": "笔记",
     "deleteNoteAriaLabel": "删除笔记 {{noteTitle}}",
@@ -2383,11 +2397,16 @@
     "fileUploadError": "无法上传 {{name}}",
     "slashFile": "图片或文件",
     "slashFileHint": "上传并放置到此处",
-    "toggleDropdownMenu": "切换下拉菜单"
+    "toggleDropdownMenu": "切换下拉菜单",
+    "saved": "已保存",
+    "unsaved": "有未保存的更改",
+    "backgroundColor": "背景颜色",
+    "selectProject": "选择项目",
+    "noMatchingNotes": "没有匹配的笔记"
   },
   "tags": {
     "loading": "加载标签...",
-    "searchPlaceholder": "搜索标签...",
+    "searchPlaceholder": "搜索…",
     "title": "标签",
     "noTagsFound": "未找到标签",
     "editTagAriaLabel": "编辑标签 {{tagName}}",
@@ -2586,8 +2605,6 @@
     "connectionError": "连接谷歌日历失败。请重试。",
     "disconnectionError": "断开谷歌日历失败。请重试。",
     "taskDetails": "任务详情",
-    "editTask": "编辑任务",
-    "goToTasks": "前往任务",
     "close": "关闭",
     "title": "标题",
     "status": "状态",
@@ -2598,11 +2615,6 @@
     "area": "区域",
     "description": "描述",
     "created": "创建时间",
-    "completed": "已完成",
-    "pending": "待处理",
-    "high": "高",
-    "medium": "中",
-    "low": "低",
     "time": "时间",
     "allDay": "全天",
     "google": {
@@ -2634,7 +2646,14 @@
     "moreViews": "更多视图",
     "openDay": "打开当天",
     "noEventsThisDay": "没有安排。",
-    "task": "任务"
+    "previousYear": "上一年",
+    "nextYear": "下一年",
+    "previousWeek": "上一周",
+    "nextWeek": "下一周",
+    "previousDays": "前几天",
+    "nextDays": "后几天",
+    "previousDay": "前一天",
+    "nextDay": "后一天"
   },
   "pages": {
     "notFound": {
@@ -2653,9 +2672,9 @@
     "uploading": "上传中..."
   },
   "searchPlaceholders": {
-    "searchProjects": "搜索项目...",
-    "searchTags": "搜索标签...",
-    "searchTasks": "搜索任务..."
+    "searchProjects": "搜索…",
+    "searchTags": "搜索…",
+    "searchTasks": "搜索…"
   },
   "ariaLabels": {
     "hideInfo": "隐藏信息",
@@ -3311,7 +3330,7 @@
   "views": {
     "title": "智能视图",
     "loading": "加载视图中...",
-    "searchPlaceholder": "搜索视图...",
+    "searchPlaceholder": "搜索…",
     "noViewsFound": "未找到视图。通过执行搜索并点击 \"保存为智能视图\" 来创建视图。",
     "deleteView": "删除视图",
     "confirmDelete": "您确定要删除视图 \"{{viewName}}\" 吗？",
@@ -3348,7 +3367,7 @@
     "filters": "筛选器"
   },
   "search": {
-    "placeholder": "搜索任务、项目、笔记...",
+    "placeholder": "搜索…",
     "searchingFor": "您正在搜索",
     "allItems": "所有项目",
     "containingText": "，包含文本",
@@ -4038,7 +4057,26 @@
     "archivedBadge": "已归档",
     "deletePerson": "删除人员",
     "deleteConfirm": "确定要删除“{{name}}”吗？此操作无法撤销。",
-    "contact": "联系人"
+    "contact": "联系人",
+    "editPerson": "编辑人员",
+    "newPerson": "新人员",
+    "noAssignedTasks": "没有分配给{{name}}的任务。",
+    "notFound": "未找到该人员。",
+    "relationship": "关系",
+    "phone": "电话",
+    "namePlaceholder": "爸爸、伴侣、爱丽丝…",
+    "notesPlaceholder": "关于此人的备注…",
+    "relationships": {
+      "family": "家人",
+      "work": "工作",
+      "friend": "朋友",
+      "other": "其他"
+    },
+    "noPeopleYet": "还没有人员",
+    "clearAssignment": "取消分配",
+    "nameRequired": "名称为必填项",
+    "saveError": "无法保存该人员",
+    "signInLink": "登录链接"
   },
   "members": {
     "addTitle": "添加成员",
@@ -4467,7 +4505,7 @@
     "targetDate": "期限",
     "noProjects": "没有关联到此目标的项目。",
     "noTasks": "此目标下没有任务。",
-    "searchGoals": "搜索目标…",
+    "searchGoals": "搜索…",
     "clearGoal": "移除目标",
     "noGoalsFound": "未找到目标",
     "inactive": "未启用",
@@ -4506,7 +4544,8 @@
     "noAvailableGoals": "没有可用目标",
     "progressHint": "柱状图：已完成的任务和项目。折线：从创建到目标日期所经过的时间。",
     "removeFromArea": "从领域中移除",
-    "createTask": "创建任务"
+    "createTask": "创建任务",
+    "noGoal": "无目标"
   },
   "templates": {
     "new": "新建模板",
@@ -4527,7 +4566,7 @@
       "empty": "模板市场中还没有模板。",
       "title": "模板市场",
       "subtitle": "浏览并安装社区提供的现成模板",
-      "search": "搜索模板市场..."
+      "search": "搜索…"
     },
     "taskList": "任务",
     "noTasks": "此模板中没有任务",
@@ -5083,7 +5122,7 @@
       "reviewIn30": "30 天后回顾",
       "reviewOn": "回顾日期…",
       "keepLater": "继续搁置",
-      "toTask": "转为任务",
+      "toTask": "创建任务",
       "toLater": "搁置到以后",
       "discard": "丢弃",
       "openInbox": "打开收件箱",
@@ -5177,7 +5216,7 @@
     "title": "关系",
     "add": "添加关系",
     "remove": "移除关系",
-    "searchPlaceholder": "搜索任务…",
+    "searchPlaceholder": "搜索…",
     "addFailed": "无法添加关系。",
     "removeFailed": "无法移除关系。",
     "blocked": "受阻",
@@ -6128,7 +6167,11 @@
     "hideCompleted": "隐藏已完成",
     "showCompletedTasks": "显示已完成",
     "dropOverlaps": "重叠",
-    "dropPast": "已过去"
+    "dropPast": "已过去",
+    "habitsCount": "习惯 · {{n}}",
+    "habitsDone": "已完成 · {{n}}",
+    "habitAt": "{{time}} {{name}}",
+    "habitLogFailed": "无法记录该习惯。"
   },
   "upcoming": {
     "title": "计划",
@@ -6177,12 +6220,8 @@
     "noProject": "无项目",
     "noTag": "无标签",
     "priority": {
-      "high": "高",
-      "medium": "中",
-      "low": "低",
       "none": "无优先级"
     },
-    "horizonsEmpty": "这里还没有内容。",
     "thisWeek": "本周",
     "thisMonth": "本月",
     "nextMonth": "下个月",
@@ -6228,14 +6267,16 @@
     "load": "{{planned}} / {{available}}",
     "done": "已完成（{{n}}）",
     "subtaskOf": "↳ {{parent}}",
-    "addToInbox": "添加到收件箱",
-    "inboxNewItem": "新收件箱项目",
     "addToInboxFailed": "添加失败，请重试。",
     "addEmptyName": "请为任务命名",
     "addTaskIn": "为“{{name}}”添加任务",
-    "thisWeekOnlyPlanned": "没有无固定日的任务 · {{count}} 项已安排在某天",
     "previous": "前一天",
-    "next": "后一天"
+    "next": "后一天",
+    "nextWeekHint": "下周已安排，无固定日期",
+    "stripLabel": "发送到展望",
+    "stripOpen": "在展望中打开{{name}}",
+    "sentToHorizon": "已发送到{{name}}",
+    "plannedOnDayHint_other": "{{count}} 项已安排到某天"
   },
   "offline": {
     "offline": "离线",

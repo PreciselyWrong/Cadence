@@ -198,10 +198,9 @@ describe('groupCards', () => {
             'Low',
             'No priority',
         ]);
-        expect(translate).toHaveBeenCalledWith(
-            'upcoming.priority.high',
-            'High'
-        );
+        // Levels share the app-wide priority labels; only the empty group
+        // has its own heading.
+        expect(translate).toHaveBeenCalledWith('priority.high', 'High');
         expect(translate).toHaveBeenCalledWith(
             'upcoming.priority.none',
             'No priority'

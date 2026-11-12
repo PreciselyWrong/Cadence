@@ -122,8 +122,6 @@
       "dismiss": "무시",
       "acceptAll": "모두 수락",
       "apply": "적용",
-      "medium": "보통",
-      "high": "높음",
       "priority": "우선순위",
       "newTag": "새 태그: #{{name}}",
       "tags": "태그",
@@ -148,7 +146,7 @@
       "archive": "Gmail에 보관",
       "taskName": "할 일 이름",
       "taskDue": "마감일",
-      "createTask": "할 일 만들기",
+      "createTask": "작업 만들기",
       "taskCreated": "할 일을 만들었습니다",
       "replied": "Gmail에서 답장을 열었습니다",
       "postponed": "내일 다시 표시",
@@ -248,7 +246,7 @@
     "preview": "미리보기",
     "download": "다운로드",
     "exitFocusMode": "포커스 모드 종료",
-    "searchTimezones": "시간대 검색...",
+    "searchTimezones": "검색…",
     "dismiss": "해제",
     "search": "검색",
     "previous": "이전",
@@ -277,7 +275,10 @@
     "resolving": "해결 중...",
     "showLess": "간략히 보기",
     "breadcrumb": "경로 표시",
-    "undo": "실행 취소"
+    "undo": "실행 취소",
+    "copyCode": "코드 복사",
+    "copy": "복사",
+    "copied": "복사됨"
   },
   "sidebar": {
     "links": "링크",
@@ -333,7 +334,6 @@
     "collapseViews": "뷰 목록 접기",
     "expandViews": "뷰 목록 펼치기",
     "summary": "요약",
-    "tomorrow": "내일",
     "next7Days": "다음 7일",
     "more": "더보기",
     "toggleFolder": "프로젝트 표시 또는 숨기기",
@@ -414,7 +414,7 @@
     "taskCompleted": "작업 완료",
     "tasksCompleted": "작업 완료",
     "noTasksAvailable": "사용 가능한 작업이 없습니다.",
-    "searchPlaceholder": "작업 검색...",
+    "searchPlaceholder": "검색…",
     "addNewTask": "새 작업 추가",
     "addTaskInline": "+ 작업 추가",
     "metrics": "지표",
@@ -1566,7 +1566,8 @@
     "rateLimitedRetrying": "요청이 너무 많습니다. 다시 시도하는 중…",
     "rateLimitedGaveUp": "요청이 너무 많습니다. 세션은 아직 활성 상태입니다. 잠시 후 새로고침하세요.",
     "serverBusyRetrying": "서버가 바쁩니다. 다시 시도하는 중…",
-    "serverBusyRetry": "다시 시도"
+    "serverBusyRetry": "다시 시도",
+    "sign_up": "가입하기"
   },
   "dropdown": {
     "createNew": "새로 만들기",
@@ -1688,7 +1689,8 @@
     "noTasks": "작업이 없습니다.",
     "nextAction": "다음 작업",
     "nextActionLine": "다음 작업: {{name}}",
-    "noCompletedTasks": "완료된 작업이 없습니다."
+    "noCompletedTasks": "완료된 작업이 없습니다.",
+    "views": "프로젝트 보기"
   },
   "errors": {
     "required": "이 필드는 필수입니다",
@@ -1832,6 +1834,18 @@
       "reasonKeyword": "“{{detail}}”(으)로 시작합니다",
       "reasonLong": "노트처럼 깁니다",
       "reasonDefault": "짧은 텍스트, 대개 작업"
+    },
+    "sources": {
+      "telegram": "Telegram",
+      "gmail": "Gmail",
+      "mcp": "MCP",
+      "android": "Android",
+      "api": "API",
+      "email": "이메일",
+      "mail": "메일",
+      "desktop": "데스크톱",
+      "link": "링크",
+      "share": "공유"
     }
   },
   "dateFormats": {
@@ -2085,7 +2099,7 @@
     "areaFollowsParent": "영역은 상위 프로젝트를 따릅니다",
     "loading": "프로젝트 로딩 중...",
     "error": "프로젝트 로딩 오류",
-    "searchPlaceholder": "프로젝트 검색...",
+    "searchPlaceholder": "검색…",
     "title": "프로젝트",
     "noProjectsFound": "찾은 프로젝트가 없습니다",
     "cardViewAriaLabel": "카드 보기",
@@ -2303,7 +2317,7 @@
     "emptyPreview": "빈 메모",
     "loading": "노트 로딩 중...",
     "error": "노트 로딩 오류",
-    "searchPlaceholder": "노트 검색...",
+    "searchPlaceholder": "검색…",
     "noNotesFound": "발견된 노트가 없습니다",
     "title": "노트",
     "deleteNoteAriaLabel": "노트 {{noteTitle}} 삭제",
@@ -2383,11 +2397,16 @@
     "fileUploadError": "{{name}}을(를) 업로드할 수 없습니다",
     "slashFile": "이미지 또는 파일",
     "slashFileHint": "여기에 업로드하여 배치",
-    "toggleDropdownMenu": "드롭다운 메뉴 전환"
+    "toggleDropdownMenu": "드롭다운 메뉴 전환",
+    "saved": "저장됨",
+    "unsaved": "저장되지 않은 변경 사항",
+    "backgroundColor": "배경색",
+    "selectProject": "프로젝트 선택",
+    "noMatchingNotes": "일치하는 노트가 없습니다"
   },
   "tags": {
     "loading": "태그 로딩 중...",
-    "searchPlaceholder": "태그 검색...",
+    "searchPlaceholder": "검색…",
     "title": "태그",
     "noTagsFound": "찾은 태그가 없습니다",
     "editTagAriaLabel": "태그 {{tagName}} 편집",
@@ -2586,8 +2605,6 @@
     "connectionError": "구글 캘린더에 연결하지 못했습니다. 다시 시도해 주세요.",
     "disconnectionError": "구글 캘린더의 연결을 해제하지 못했습니다. 다시 시도해 주세요.",
     "taskDetails": "작업 세부정보",
-    "editTask": "작업 편집",
-    "goToTasks": "작업으로 이동",
     "close": "닫기",
     "title": "제목",
     "status": "상태",
@@ -2598,11 +2615,6 @@
     "area": "영역",
     "description": "설명",
     "created": "생성됨",
-    "completed": "완료됨",
-    "pending": "대기 중",
-    "high": "높음",
-    "medium": "보통",
-    "low": "낮음",
     "time": "시간",
     "allDay": "종일",
     "google": {
@@ -2634,7 +2646,14 @@
     "moreViews": "더 많은 보기",
     "openDay": "날짜 열기",
     "noEventsThisDay": "예정된 일정이 없습니다.",
-    "task": "작업"
+    "previousYear": "이전 연도",
+    "nextYear": "다음 연도",
+    "previousWeek": "이전 주",
+    "nextWeek": "다음 주",
+    "previousDays": "이전 날짜",
+    "nextDays": "다음 날짜",
+    "previousDay": "이전 날",
+    "nextDay": "다음 날"
   },
   "pages": {
     "notFound": {
@@ -2653,9 +2672,9 @@
     "uploading": "업로드 중..."
   },
   "searchPlaceholders": {
-    "searchProjects": "프로젝트 검색...",
-    "searchTags": "태그 검색...",
-    "searchTasks": "작업 검색..."
+    "searchProjects": "검색…",
+    "searchTags": "검색…",
+    "searchTasks": "검색…"
   },
   "ariaLabels": {
     "hideInfo": "정보 숨기기",
@@ -3311,7 +3330,7 @@
   "views": {
     "title": "스마트 뷰",
     "loading": "뷰 로딩 중...",
-    "searchPlaceholder": "뷰 검색...",
+    "searchPlaceholder": "검색…",
     "noViewsFound": "찾을 수 있는 뷰가 없습니다. 검색을 수행하고 \"스마트 뷰로 저장\"을 클릭하여 뷰를 생성하세요.",
     "deleteView": "뷰 삭제",
     "confirmDelete": "뷰 \"{{viewName}}\"를 삭제하시겠습니까?",
@@ -3348,7 +3367,7 @@
     "filters": "필터"
   },
   "search": {
-    "placeholder": "작업, 프로젝트, 노트 검색...",
+    "placeholder": "검색…",
     "searchingFor": "검색 중입니다",
     "allItems": "모든 항목",
     "containingText": ", 텍스트 포함",
@@ -4038,7 +4057,26 @@
     "archivedBadge": "보관됨",
     "deletePerson": "사람 삭제",
     "deleteConfirm": "\"{{name}}\"을(를) 삭제하시겠습니까? 되돌릴 수 없습니다.",
-    "contact": "연락처"
+    "contact": "연락처",
+    "editPerson": "사람 편집",
+    "newPerson": "새 사람",
+    "noAssignedTasks": "{{name}}에게 할당된 작업이 없습니다.",
+    "notFound": "사람을 찾을 수 없습니다.",
+    "relationship": "관계",
+    "phone": "전화",
+    "namePlaceholder": "아빠, 파트너, 앨리스…",
+    "notesPlaceholder": "이 사람에 대한 메모…",
+    "relationships": {
+      "family": "가족",
+      "work": "직장",
+      "friend": "친구",
+      "other": "기타"
+    },
+    "noPeopleYet": "아직 사람이 없습니다",
+    "clearAssignment": "할당 해제",
+    "nameRequired": "이름은 필수입니다",
+    "saveError": "사람을 저장하지 못했습니다",
+    "signInLink": "로그인 링크"
   },
   "members": {
     "addTitle": "멤버 추가",
@@ -4467,7 +4505,7 @@
     "targetDate": "기한",
     "noProjects": "이 목표에 연결된 프로젝트가 없습니다.",
     "noTasks": "이 목표에 할당된 작업이 없습니다.",
-    "searchGoals": "목표 검색…",
+    "searchGoals": "검색…",
     "clearGoal": "목표 제거",
     "noGoalsFound": "목표를 찾을 수 없습니다",
     "inactive": "비활성",
@@ -4506,7 +4544,8 @@
     "noAvailableGoals": "사용 가능한 목표가 없습니다",
     "progressHint": "막대: 완료된 작업과 프로젝트. 선: 생성일부터 목표일까지 지난 시간.",
     "removeFromArea": "영역에서 제거",
-    "createTask": "작업 만들기"
+    "createTask": "작업 만들기",
+    "noGoal": "목표 없음"
   },
   "templates": {
     "new": "새 템플릿",
@@ -4527,7 +4566,7 @@
       "empty": "마켓플레이스에 아직 템플릿이 없습니다.",
       "title": "마켓플레이스",
       "subtitle": "커뮤니티의 기성 템플릿을 둘러보고 설치하세요",
-      "search": "마켓플레이스 검색..."
+      "search": "검색…"
     },
     "taskList": "작업",
     "noTasks": "이 템플릿에 작업이 없습니다",
@@ -5083,7 +5122,7 @@
       "reviewIn30": "30일 후 검토",
       "reviewOn": "검토 날짜 선택…",
       "keepLater": "보류 유지",
-      "toTask": "작업으로 만들기",
+      "toTask": "작업 만들기",
       "toLater": "나중으로 보류",
       "discard": "버리기",
       "openInbox": "받은편지함 열기",
@@ -5177,7 +5216,7 @@
     "title": "관계",
     "add": "관계 추가",
     "remove": "관계 제거",
-    "searchPlaceholder": "작업 검색...",
+    "searchPlaceholder": "검색…",
     "addFailed": "관계를 추가하지 못했습니다.",
     "removeFailed": "관계를 제거하지 못했습니다.",
     "blocked": "차단됨",
@@ -6128,7 +6167,11 @@
     "hideCompleted": "완료 항목 숨기기",
     "showCompletedTasks": "완료 항목 표시",
     "dropOverlaps": "겹침",
-    "dropPast": "지난 시간"
+    "dropPast": "지난 시간",
+    "habitsCount": "습관 · {{n}}",
+    "habitsDone": "완료 · {{n}}",
+    "habitAt": "{{time}}에 {{name}}",
+    "habitLogFailed": "습관을 기록하지 못했습니다."
   },
   "upcoming": {
     "title": "계획",
@@ -6177,12 +6220,8 @@
     "noProject": "프로젝트 없음",
     "noTag": "태그 없음",
     "priority": {
-      "high": "높음",
-      "medium": "보통",
-      "low": "낮음",
       "none": "우선순위 없음"
     },
-    "horizonsEmpty": "아직 아무것도 없습니다.",
     "thisWeek": "이번 주",
     "thisMonth": "이번 달",
     "nextMonth": "다음 달",
@@ -6228,14 +6267,16 @@
     "load": "{{planned}} / {{available}}",
     "done": "완료 ({{n}})",
     "subtaskOf": "↳ {{parent}}",
-    "addToInbox": "받은편지함에 추가",
-    "inboxNewItem": "새 받은편지함 항목",
     "addToInboxFailed": "추가하지 못했습니다. 다시 시도하세요.",
     "addEmptyName": "작업 이름을 입력하세요",
     "addTaskIn": "{{name}}에 작업 추가",
-    "thisWeekOnlyPlanned": "고정된 날짜가 없는 항목 없음 · 하루에 예정된 항목 {{count}}개",
     "previous": "이전 날",
-    "next": "다음 날"
+    "next": "다음 날",
+    "nextWeekHint": "다음 주에 확정, 정해진 요일 없음",
+    "stripLabel": "기간으로 보내기",
+    "stripOpen": "기간에서 {{name}} 열기",
+    "sentToHorizon": "{{name}}(으)로 보냄",
+    "plannedOnDayHint_other": "{{count}}개는 특정 날에 계획됨"
   },
   "offline": {
     "offline": "오프라인",

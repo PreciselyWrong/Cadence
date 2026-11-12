@@ -221,17 +221,18 @@ const NoteEditorView: React.FC<NoteEditorViewProps> = ({
                             <div className="flex items-center">
                                 {saveStatus === 'saving' && (
                                     <span className="text-blue-500 dark:text-blue-400 italic">
-                                        Saving...
+                                        {t('common.saving', 'Saving...')}
                                     </span>
                                 )}
                                 {saveStatus === 'saved' && (
                                     <span className="text-green-600 dark:text-green-400">
-                                        ✓ Saved
+                                        ✓ {t('notes.saved', 'Saved')}
                                     </span>
                                 )}
                                 {saveStatus === 'unsaved' && (
                                     <span className="text-amber-600 dark:text-amber-400">
-                                        • Unsaved changes
+                                        •{' '}
+                                        {t('notes.unsaved', 'Unsaved changes')}
                                     </span>
                                 )}
                             </div>
@@ -287,7 +288,10 @@ const NoteEditorView: React.FC<NoteEditorViewProps> = ({
                             <div className="absolute right-0 mt-1 w-56 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-50">
                                 <div className="px-3 py-3 border-b border-gray-200 dark:border-gray-700">
                                     <div className="text-xs font-semibold text-gray-600 dark:text-gray-300 mb-2">
-                                        Background Color
+                                        {t(
+                                            'notes.backgroundColor',
+                                            'Background color'
+                                        )}
                                     </div>
                                     <div className="grid grid-cols-5 gap-2">
                                         {COLORS.map((colorOption) => (
@@ -397,7 +401,7 @@ const NoteEditorView: React.FC<NoteEditorViewProps> = ({
             {showProjectPicker && (
                 <div className="mb-3 mx-4 p-3 bg-gray-50 dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 flex-shrink-0">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Select Project
+                        {t('notes.selectProject', 'Select project')}
                     </label>
                     <select
                         value={note.project_uid || ''}
@@ -427,7 +431,7 @@ const NoteEditorView: React.FC<NoteEditorViewProps> = ({
             {showTagsInput && (
                 <div className="mb-3 mx-4 p-3 bg-gray-50 dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 flex-shrink-0">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Tags
+                        {t('forms.tags', 'Tags')}
                     </label>
                     <TagInput
                         initialTags={(note.tags || note.Tags || []).map(

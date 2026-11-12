@@ -130,8 +130,6 @@
       "dismiss": "Prezri",
       "acceptAll": "Sprejmi vse",
       "apply": "Uporabi",
-      "medium": "Srednja",
-      "high": "Visoka",
       "priority": "Prioriteta",
       "newTag": "Nova oznaka: #{{name}}",
       "tags": "Oznake",
@@ -258,7 +256,7 @@
     "preview": "Predogled",
     "download": "Prenesi",
     "exitFocusMode": "Izhod iz načina osredotočenja",
-    "searchTimezones": "Išči časovne pasove...",
+    "searchTimezones": "Išči…",
     "dismiss": "Zavrni",
     "search": "Iskanje",
     "previous": "Prejšnji",
@@ -287,7 +285,10 @@
     "resolving": "Reševanje...",
     "showLess": "Pokaži manj",
     "breadcrumb": "Drobtinična pot",
-    "undo": "Razveljavi"
+    "undo": "Razveljavi",
+    "copyCode": "Kopiraj kodo",
+    "copy": "Kopiraj",
+    "copied": "Kopirano"
   },
   "sidebar": {
     "links": "Povezave",
@@ -343,7 +344,6 @@
     "collapseViews": "Strni seznam pogledov",
     "expandViews": "Razširi seznam pogledov",
     "summary": "Povzetek",
-    "tomorrow": "Jutri",
     "next7Days": "Naslednjih 7 dni",
     "more": "Več",
     "toggleFolder": "Prikaži ali skrij projekte",
@@ -424,7 +424,7 @@
     "taskCompleted": "naloga zaključena",
     "tasksCompleted": "naloge zaključene",
     "noTasksAvailable": "Ni na voljo nalog.",
-    "searchPlaceholder": "Išči naloge...",
+    "searchPlaceholder": "Išči…",
     "addNewTask": "Dodaj novo nalogo",
     "addTaskInline": "+ Dodaj nalogo",
     "metrics": "Metrike",
@@ -1097,7 +1097,8 @@
       "hoursTitle": "Tvoj dan",
       "hoursTo": "do",
       "taggedToday": "Označeno #danes",
-      "taggedTodayDetail": "Odprte naloge, ki ste jih označili z #danes, ne glede na datume."
+      "taggedTodayDetail": "Odprte naloge, ki ste jih označili z #danes, ne glede na datume.",
+      "maxOption_one": "{{count}} opravilo"
     },
     "aiApiKey": "API ključ",
     "aiApiKeyClear": "Počisti",
@@ -1580,7 +1581,8 @@
     "rateLimitedRetrying": "Preveč zahtevkov, ponovni poskus…",
     "rateLimitedGaveUp": "Preveč zahtevkov. Seja je še vedno aktivna; čez trenutek osvežite stran.",
     "serverBusyRetrying": "Strežnik je zaseden, ponovno poskušam…",
-    "serverBusyRetry": "Poskusi znova"
+    "serverBusyRetry": "Poskusi znova",
+    "sign_up": "Prijavite se"
   },
   "dropdown": {
     "createNew": "Ustvari novo",
@@ -1712,7 +1714,8 @@
     "noTasks": "Ni nalog.",
     "nextAction": "Naslednje dejanje",
     "nextActionLine": "Naslednje dejanje: {{name}}",
-    "noCompletedTasks": "Ni dokončanih nalog."
+    "noCompletedTasks": "Ni dokončanih nalog.",
+    "views": "Pogledi projekta"
   },
   "errors": {
     "required": "To polje je obvezno",
@@ -1856,6 +1859,18 @@
       "reasonKeyword": "Začne se z »{{detail}}«",
       "reasonLong": "Je dolgo, kot opomba",
       "reasonDefault": "Kratko besedilo, pogosto opravilo"
+    },
+    "sources": {
+      "telegram": "Telegram",
+      "gmail": "Gmail",
+      "mcp": "MCP",
+      "android": "Android",
+      "api": "API",
+      "email": "E-pošta",
+      "mail": "Pošta",
+      "desktop": "Namizje",
+      "link": "Povezava",
+      "share": "Deljenje"
     }
   },
   "dateFormats": {
@@ -2100,7 +2115,12 @@
     "noUpcomingOccurrences": "Ni prihajajočih ponovitev.",
     "turnIntoProject": "Spremeni v projekt",
     "turnIntoProjectError": "Ni bilo mogoče spremeniti v projekt.",
-    "turnIntoProjectMessage": "Spremeniti »{{name}}« v projekt? Njegova podopravila postanejo opravila projekta, naslovi iz njegove opombe pa strani projekta."
+    "turnIntoProjectMessage": "Spremeniti »{{name}}« v projekt? Njegova podopravila postanejo opravila projekta, naslovi iz njegove opombe pa strani projekta.",
+    "inDays_one": "v {{count}} dnevu",
+    "daysAgo_one": "{{count}} dan nazaj",
+    "hoursAgo_one": "pred {{count}} uro",
+    "minutesAgo_one": "pred {{count}} minuto",
+    "inHours_one": "čez {{count}} uro"
   },
   "projects": {
     "parentProject": "Nadrejeni projekt",
@@ -2109,7 +2129,7 @@
     "areaFollowsParent": "Območje sledi nadrejenemu projektu",
     "loading": "Nalagam projekte...",
     "error": "Napaka pri nalaganju projektov",
-    "searchPlaceholder": "Išči projekte...",
+    "searchPlaceholder": "Išči…",
     "title": "Projekti",
     "noProjectsFound": "Ni najdenih projektov",
     "cardViewAriaLabel": "Pogled kartic",
@@ -2294,7 +2314,7 @@
     "presetWork": "Delo",
     "presetHealth": "Zdravje",
     "presetFamily": "Družina",
-    "suggestDomains": "Predlagaj 5 področij",
+    "suggestDomains": "Predlagaj 5 območij",
     "domains": {
       "business": "Posel in denar",
       "tech": "Tehnologija in sistemi",
@@ -2329,7 +2349,7 @@
     "emptyPreview": "Prazna opomba",
     "loading": "Nalaganje opomb...",
     "error": "Napaka pri nalaganju opomb",
-    "searchPlaceholder": "Išči opombe...",
+    "searchPlaceholder": "Išči…",
     "noNotesFound": "Nobene opombe niso bile najdene",
     "title": "Opombe",
     "deleteNoteAriaLabel": "Izbriši opombo {{noteTitle}}",
@@ -2409,11 +2429,16 @@
     "fileUploadError": "Datoteke {{name}} ni bilo mogoče naložiti",
     "slashFile": "Slika ali datoteka",
     "slashFileHint": "Naloži in postavi sem",
-    "toggleDropdownMenu": "Preklopi spustni meni"
+    "toggleDropdownMenu": "Preklopi spustni meni",
+    "saved": "Shranjeno",
+    "unsaved": "Neshranjene spremembe",
+    "backgroundColor": "Barva ozadja",
+    "selectProject": "Izberi projekt",
+    "noMatchingNotes": "Ni ustreznih opomb"
   },
   "tags": {
     "loading": "Nalagam oznake...",
-    "searchPlaceholder": "Išči oznake...",
+    "searchPlaceholder": "Išči…",
     "title": "Oznake",
     "noTagsFound": "Nobene oznake niso bile najdene",
     "editTagAriaLabel": "Uredi oznako {{tagName}}",
@@ -2616,8 +2641,6 @@
     "connectionError": "Povezava z Google Koledarjem ni uspela. Poskusite znova.",
     "disconnectionError": "Prekinitev povezave z Google Koledarjem ni uspela. Poskusite znova.",
     "taskDetails": "Podrobnosti naloge",
-    "editTask": "Uredi nalogo",
-    "goToTasks": "Pojdi na naloge",
     "close": "Zapri",
     "title": "Naslov",
     "status": "Status",
@@ -2628,11 +2651,6 @@
     "area": "Območje",
     "description": "Opis",
     "created": "Ustvarjeno",
-    "completed": "Dokončano",
-    "pending": "Čaka",
-    "high": "Visoko",
-    "medium": "Srednje",
-    "low": "Nizko",
     "time": "Čas",
     "allDay": "Ves dan",
     "google": {
@@ -2664,7 +2682,14 @@
     "moreViews": "Več pogledov",
     "openDay": "Odpri dan",
     "noEventsThisDay": "Nič načrtovanega.",
-    "task": "Naloga"
+    "previousYear": "Prejšnje leto",
+    "nextYear": "Naslednje leto",
+    "previousWeek": "Prejšnji teden",
+    "nextWeek": "Naslednji teden",
+    "previousDays": "Prejšnji dnevi",
+    "nextDays": "Naslednji dnevi",
+    "previousDay": "Prejšnji dan",
+    "nextDay": "Naslednji dan"
   },
   "pages": {
     "notFound": {
@@ -2683,9 +2708,9 @@
     "uploading": "Nalaganje..."
   },
   "searchPlaceholders": {
-    "searchProjects": "Išči projekte...",
-    "searchTags": "Išči oznake...",
-    "searchTasks": "Išči naloge..."
+    "searchProjects": "Išči…",
+    "searchTags": "Išči…",
+    "searchTasks": "Išči…"
   },
   "ariaLabels": {
     "hideInfo": "Skrij informacije",
@@ -3349,7 +3374,7 @@
   "views": {
     "title": "Pametni pogledi",
     "loading": "Nalagam poglede...",
-    "searchPlaceholder": "Išči poglede...",
+    "searchPlaceholder": "Išči…",
     "noViewsFound": "Noben pogled ni bil najden. Ustvarite pogled tako, da izvedete iskanje in kliknete \"Shrani kot pameten pogled\".",
     "deleteView": "Izbriši pogled",
     "confirmDelete": "Ali ste prepričani, da želite izbrisati pogled \"{{viewName}}\"?",
@@ -3386,7 +3411,7 @@
     "filters": "filtri"
   },
   "search": {
-    "placeholder": "Išči naloge, projekte, zapiske...",
+    "placeholder": "Išči…",
     "searchingFor": "Iščete",
     "allItems": "vse elemente",
     "containingText": ", ki vsebuje besedilo",
@@ -4082,7 +4107,26 @@
     "archivedBadge": "arhivirana",
     "deletePerson": "Izbriši osebo",
     "deleteConfirm": "Ali res želite izbrisati »{{name}}«? Tega ni mogoče razveljaviti.",
-    "contact": "Stik"
+    "contact": "Stik",
+    "editPerson": "Uredi osebo",
+    "newPerson": "Nova oseba",
+    "noAssignedTasks": "Ni opravil, dodeljenih: {{name}}.",
+    "notFound": "Osebe ni mogoče najti.",
+    "relationship": "Odnos",
+    "phone": "Telefon",
+    "namePlaceholder": "Oče, partner, Alenka…",
+    "notesPlaceholder": "Opombe o tej osebi…",
+    "relationships": {
+      "family": "Družina",
+      "work": "Delo",
+      "friend": "Prijatelj",
+      "other": "Drugo"
+    },
+    "noPeopleYet": "Še ni oseb",
+    "clearAssignment": "Odstrani dodelitev",
+    "nameRequired": "Ime je obvezno",
+    "saveError": "Osebe ni bilo mogoče shraniti",
+    "signInLink": "Povezava za prijavo"
   },
   "members": {
     "addTitle": "Dodaj člana",
@@ -4238,7 +4282,8 @@
       "addToTomorrow": "Dodaj za jutri",
       "regenerate": "Ustvari znova",
       "draftTitle": "Osnutek UI",
-      "skippedCount": "Izpuščeno ({{count}})"
+      "skippedCount": "Izpuščeno ({{count}})",
+      "carried_one": "{{count}} opravilo dodano za jutri"
     },
     "lateWarning": "Čas je minil, opravilo pa ni opravljeno",
     "movedOffPlan": "'{{name}}' ni več zapadla danes, zato je izstopila iz današnjega načrta.",
@@ -4515,7 +4560,7 @@
     "targetDate": "Rok",
     "noProjects": "S tem ciljem ni povezanih projektov.",
     "noTasks": "Temu cilju ni dodeljenih nalog.",
-    "searchGoals": "Išči cilje…",
+    "searchGoals": "Išči…",
     "clearGoal": "Odstrani cilj",
     "noGoalsFound": "Ni najdenih ciljev",
     "inactive": "Neaktiven",
@@ -4554,7 +4599,8 @@
     "noAvailableGoals": "Ni razpoložljivih ciljev",
     "progressHint": "Vrstica: opravljene naloge in projekti. Črta: pretečen čas med ustvarjanjem in ciljnim datumom.",
     "removeFromArea": "Odstrani s področja",
-    "createTask": "Ustvari opravilo"
+    "createTask": "Ustvari opravilo",
+    "noGoal": "Brez cilja"
   },
   "templates": {
     "new": "Nova predloga",
@@ -4575,7 +4621,7 @@
       "empty": "V katalogu še ni predlog.",
       "title": "Katalog",
       "subtitle": "Brskajte po pripravljenih predlogah skupnosti in jih namestite",
-      "search": "Išči v katalogu..."
+      "search": "Išči…"
     },
     "taskList": "Naloge",
     "noTasks": "V tej predlogi ni nalog",
@@ -5227,7 +5273,7 @@
     "title": "Povezave med nalogami",
     "add": "Dodaj povezavo",
     "remove": "Odstrani povezavo",
-    "searchPlaceholder": "Iščite nalogo ...",
+    "searchPlaceholder": "Išči…",
     "addFailed": "Povezave ni bilo mogoče dodati.",
     "removeFailed": "Povezave ni bilo mogoče odstraniti.",
     "blocked": "Blokirano",
@@ -6198,7 +6244,11 @@
     "hideCompleted": "Skrij opravljene",
     "showCompletedTasks": "Prikaži opravljene",
     "dropOverlaps": "Prekrivanja",
-    "dropPast": "V preteklosti"
+    "dropPast": "V preteklosti",
+    "habitsCount": "Navade · {{n}}",
+    "habitsDone": "Opravljeno · {{n}}",
+    "habitAt": "{{name}} ob {{time}}",
+    "habitLogFailed": "Navade ni bilo mogoče zabeležiti."
   },
   "upcoming": {
     "title": "Načrtovanje",
@@ -6247,12 +6297,8 @@
     "noProject": "Brez projekta",
     "noTag": "Brez oznake",
     "priority": {
-      "high": "Visoka",
-      "medium": "Srednja",
-      "low": "Nizka",
       "none": "Brez prednosti"
     },
-    "horizonsEmpty": "Tu še ni ničesar.",
     "thisWeek": "Ta teden",
     "thisMonth": "Ta mesec",
     "nextMonth": "Naslednji mesec",
@@ -6298,14 +6344,19 @@
     "load": "{{planned}} / {{available}}",
     "done": "Opravljeno ({{n}})",
     "subtaskOf": "↳ {{parent}}",
-    "addToInbox": "Dodaj v prejete",
-    "inboxNewItem": "Nov element v prejemniku",
     "addToInboxFailed": "Dodajanje ni uspelo. Poskusi znova.",
     "addEmptyName": "Vnesi ime opravila",
     "addTaskIn": "Dodaj opravilo v {{name}}",
-    "thisWeekOnlyPlanned": "Nič brez fiksnega dneva · {{count}} načrtovanih na dan",
     "previous": "Prejšnji dan",
-    "next": "Naslednji dan"
+    "next": "Naslednji dan",
+    "nextWeekHint": "Načrtovano za naslednji teden, brez določenega dne",
+    "stripLabel": "Pošlji v obzorje",
+    "stripOpen": "Odpri {{name}} v Obzorjih",
+    "sentToHorizon": "Poslano v: {{name}}",
+    "plannedOnDayHint_one": "Načrtovano za dan: {{count}}",
+    "plannedOnDayHint_two": "Načrtovano za dan: {{count}}",
+    "plannedOnDayHint_few": "Načrtovano za dan: {{count}}",
+    "plannedOnDayHint_other": "Načrtovano za dan: {{count}}"
   },
   "offline": {
     "offline": "Brez povezave",

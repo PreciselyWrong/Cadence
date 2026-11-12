@@ -138,8 +138,6 @@
       "dismiss": "تجاهل",
       "acceptAll": "قبول الكل",
       "apply": "تطبيق",
-      "medium": "متوسطة",
-      "high": "عالية",
       "priority": "الأولوية",
       "newTag": "وسم جديد: #{{name}}",
       "tags": "الوسوم",
@@ -164,7 +162,7 @@
       "archive": "أرشفة في Gmail",
       "taskName": "اسم المهمة",
       "taskDue": "تاريخ الاستحقاق",
-      "createTask": "إنشاء المهمة",
+      "createTask": "إنشاء مهمة",
       "taskCreated": "تم إنشاء المهمة",
       "replied": "فُتح الرد في Gmail",
       "postponed": "يعود غدًا",
@@ -268,7 +266,7 @@
     "preview": "معاينة",
     "download": "تنزيل",
     "exitFocusMode": "الخروج من وضع التركيز",
-    "searchTimezones": "بحث عن المناطق الزمنية...",
+    "searchTimezones": "بحث…",
     "dismiss": "إلغاء",
     "search": "بحث",
     "previous": "السابق",
@@ -297,7 +295,10 @@
     "resolving": "جارٍ الحل...",
     "showLess": "عرض أقل",
     "breadcrumb": "مسار التنقل",
-    "undo": "تراجع"
+    "undo": "تراجع",
+    "copyCode": "نسخ الشيفرة",
+    "copy": "نسخ",
+    "copied": "تم النسخ"
   },
   "sidebar": {
     "links": "الروابط",
@@ -353,7 +354,6 @@
     "collapseViews": "طي قائمة العروض",
     "expandViews": "توسيع قائمة العروض",
     "summary": "الملخص",
-    "tomorrow": "غداً",
     "next7Days": "الأيام السبعة القادمة",
     "more": "المزيد",
     "toggleFolder": "إظهار المشاريع أو إخفاؤها",
@@ -434,7 +434,7 @@
     "taskCompleted": "تم إكمال المهمة",
     "tasksCompleted": "تم إكمال المهام",
     "noTasksAvailable": "لا توجد مهام متاحة.",
-    "searchPlaceholder": "ابحث عن المهام...",
+    "searchPlaceholder": "بحث…",
     "addNewTask": "إضافة مهمة جديدة",
     "addTaskInline": "+ إضافة مهمة",
     "metrics": "المقاييس",
@@ -1586,7 +1586,8 @@
     "rateLimitedRetrying": "طلبات كثيرة جداً، جارٍ إعادة المحاولة…",
     "rateLimitedGaveUp": "طلبات كثيرة جداً. الجلسة ما زالت نشطة؛ أعد التحميل بعد لحظات.",
     "serverBusyRetrying": "الخادم مشغول، جارٍ إعادة المحاولة…",
-    "serverBusyRetry": "إعادة المحاولة"
+    "serverBusyRetry": "إعادة المحاولة",
+    "sign_up": "إنشاء حساب"
   },
   "dropdown": {
     "createNew": "إنشاء جديد",
@@ -1712,7 +1713,8 @@
     "noTasks": "لا توجد مهام.",
     "nextAction": "الإجراء التالي",
     "nextActionLine": "الإجراء التالي: {{name}}",
-    "noCompletedTasks": "لا توجد مهام مكتملة."
+    "noCompletedTasks": "لا توجد مهام مكتملة.",
+    "views": "عروض المشروع"
   },
   "errors": {
     "required": "هذا الحقل مطلوب",
@@ -1856,6 +1858,18 @@
       "reasonKeyword": "يبدأ بـ “{{detail}}”",
       "reasonLong": "إنه طويل، مثل ملاحظة",
       "reasonDefault": "نص قصير، غالبًا مهمة"
+    },
+    "sources": {
+      "telegram": "Telegram",
+      "gmail": "Gmail",
+      "mcp": "MCP",
+      "android": "Android",
+      "api": "API",
+      "email": "البريد الإلكتروني",
+      "mail": "البريد",
+      "desktop": "سطح المكتب",
+      "link": "رابط",
+      "share": "مشاركة"
     }
   },
   "dateFormats": {
@@ -2109,7 +2123,7 @@
     "areaFollowsParent": "المنطقة تتبع المشروع الأب",
     "loading": "جارٍ تحميل المشاريع...",
     "error": "خطأ في تحميل المشاريع",
-    "searchPlaceholder": "ابحث عن المشاريع...",
+    "searchPlaceholder": "بحث…",
     "title": "المشاريع",
     "noProjectsFound": "لم يتم العثور على مشاريع",
     "cardViewAriaLabel": "عرض البطاقة",
@@ -2296,7 +2310,7 @@
     "presetWork": "العمل",
     "presetHealth": "الصحة",
     "presetFamily": "العائلة",
-    "suggestDomains": "اقتراح 5 مجالات",
+    "suggestDomains": "اقتراح 5 مناطق",
     "domains": {
       "business": "الأعمال والمال",
       "tech": "التقنية والأنظمة",
@@ -2331,7 +2345,7 @@
     "emptyPreview": "ملاحظة فارغة",
     "loading": "جارٍ تحميل الملاحظات...",
     "error": "خطأ في تحميل الملاحظات",
-    "searchPlaceholder": "ابحث في الملاحظات...",
+    "searchPlaceholder": "بحث…",
     "noNotesFound": "لم يتم العثور على ملاحظات",
     "title": "الملاحظات",
     "deleteNoteAriaLabel": "حذف الملاحظة {{noteTitle}}",
@@ -2411,11 +2425,16 @@
     "fileUploadError": "تعذّر رفع {{name}}",
     "slashFile": "صورة أو ملف",
     "slashFileHint": "ارفعه وضعه هنا",
-    "toggleDropdownMenu": "تبديل قائمة السحب المنسدلة"
+    "toggleDropdownMenu": "تبديل قائمة السحب المنسدلة",
+    "saved": "تم الحفظ",
+    "unsaved": "تغييرات غير محفوظة",
+    "backgroundColor": "لون الخلفية",
+    "selectProject": "اختر مشروعًا",
+    "noMatchingNotes": "لا توجد ملاحظات مطابقة"
   },
   "tags": {
     "loading": "جاري تحميل العلامات...",
-    "searchPlaceholder": "ابحث عن العلامات...",
+    "searchPlaceholder": "بحث…",
     "title": "العلامات",
     "noTagsFound": "لم يتم العثور على علامات",
     "editTagAriaLabel": "تعديل العلامة {{tagName}}",
@@ -2622,8 +2641,6 @@
     "connectionError": "فشل الاتصال بتقويم جوجل. يرجى المحاولة مرة أخرى.",
     "disconnectionError": "فشل فصل الاتصال بتقويم جوجل. يرجى المحاولة مرة أخرى.",
     "taskDetails": "تفاصيل المهمة",
-    "editTask": "تعديل المهمة",
-    "goToTasks": "اذهب إلى المهام",
     "close": "إغلاق",
     "title": "العنوان",
     "status": "الحالة",
@@ -2634,11 +2651,6 @@
     "area": "المنطقة",
     "description": "الوصف",
     "created": "تم الإنشاء",
-    "completed": "مكتمل",
-    "pending": "معلق",
-    "high": "عالي",
-    "medium": "متوسط",
-    "low": "منخفض",
     "time": "الوقت",
     "allDay": "طوال اليوم",
     "google": {
@@ -2670,7 +2682,14 @@
     "moreViews": "عروض أخرى",
     "openDay": "فتح اليوم",
     "noEventsThisDay": "لا شيء مُخطَّط.",
-    "task": "مهمة"
+    "previousYear": "السنة السابقة",
+    "nextYear": "السنة التالية",
+    "previousWeek": "الأسبوع السابق",
+    "nextWeek": "الأسبوع التالي",
+    "previousDays": "الأيام السابقة",
+    "nextDays": "الأيام التالية",
+    "previousDay": "اليوم السابق",
+    "nextDay": "اليوم التالي"
   },
   "pages": {
     "notFound": {
@@ -2689,9 +2708,9 @@
     "uploading": "جارٍ التحميل..."
   },
   "searchPlaceholders": {
-    "searchProjects": "البحث عن المشاريع...",
-    "searchTags": "ابحث عن العلامات...",
-    "searchTasks": "ابحث عن المهام..."
+    "searchProjects": "بحث…",
+    "searchTags": "بحث…",
+    "searchTasks": "بحث…"
   },
   "ariaLabels": {
     "hideInfo": "إخفاء المعلومات",
@@ -3351,7 +3370,7 @@
   "views": {
     "title": "عرض ذكي",
     "loading": "جارٍ تحميل العروض...",
-    "searchPlaceholder": "ابحث عن العروض...",
+    "searchPlaceholder": "بحث…",
     "noViewsFound": "لم يتم العثور على أي عروض. أنشئ عرضًا من خلال إجراء بحث والنقر على \"حفظ كعرض ذكي\".",
     "deleteView": "حذف العرض",
     "confirmDelete": "هل أنت متأكد أنك تريد حذف العرض \"{{viewName}}\"؟",
@@ -3388,7 +3407,7 @@
     "filters": "مرشحات"
   },
   "search": {
-    "placeholder": "ابحث عن المهام، المشاريع، الملاحظات...",
+    "placeholder": "بحث…",
     "searchingFor": "أنت تبحث عن",
     "allItems": "جميع العناصر",
     "containingText": "، التي تحتوي على النص",
@@ -4082,7 +4101,26 @@
     "archivedBadge": "مؤرشف",
     "deletePerson": "حذف الشخص",
     "deleteConfirm": "هل أنت متأكد من حذف \"{{name}}\"؟ لا يمكن التراجع عن ذلك.",
-    "contact": "جهة الاتصال"
+    "contact": "جهة الاتصال",
+    "editPerson": "تعديل الشخص",
+    "newPerson": "شخص جديد",
+    "noAssignedTasks": "لا توجد مهام مسندة إلى {{name}}.",
+    "notFound": "الشخص غير موجود.",
+    "relationship": "العلاقة",
+    "phone": "الهاتف",
+    "namePlaceholder": "أبي، الشريك، أليس…",
+    "notesPlaceholder": "أي ملاحظات عن هذا الشخص…",
+    "relationships": {
+      "family": "العائلة",
+      "work": "العمل",
+      "friend": "صديق",
+      "other": "أخرى"
+    },
+    "noPeopleYet": "لا يوجد أشخاص بعد",
+    "clearAssignment": "إزالة الإسناد",
+    "nameRequired": "الاسم مطلوب",
+    "saveError": "تعذّر حفظ الشخص",
+    "signInLink": "رابط تسجيل الدخول"
   },
   "members": {
     "addTitle": "إضافة عضو",
@@ -4515,7 +4553,7 @@
     "targetDate": "الموعد",
     "noProjects": "لا توجد مشاريع مرتبطة بهذا الهدف.",
     "noTasks": "لا توجد مهام لهذا الهدف.",
-    "searchGoals": "ابحث في الأهداف…",
+    "searchGoals": "بحث…",
     "clearGoal": "إزالة الهدف",
     "noGoalsFound": "لم يتم العثور على أهداف",
     "inactive": "غير نشط",
@@ -4554,7 +4592,8 @@
     "noAvailableGoals": "لا توجد أهداف متاحة",
     "progressHint": "شريط: المهام والمشاريع المنجزة. خط: الوقت المنقضي بين الإنشاء وتاريخ الهدف.",
     "removeFromArea": "إزالة من المنطقة",
-    "createTask": "إنشاء مهمة"
+    "createTask": "إنشاء مهمة",
+    "noGoal": "بلا هدف"
   },
   "templates": {
     "new": "قالب جديد",
@@ -4575,7 +4614,7 @@
       "empty": "لا توجد قوالب في المتجر بعد.",
       "title": "المتجر",
       "subtitle": "تصفح وثبّت قوالب جاهزة من المجتمع",
-      "search": "ابحث في المتجر..."
+      "search": "بحث…"
     },
     "taskList": "المهام",
     "noTasks": "لا توجد مهام في هذا القالب",
@@ -5135,7 +5174,7 @@
       "reviewIn30": "راجع بعد 30 يومًا",
       "reviewOn": "راجع في…",
       "keepLater": "أبقِها مركونة",
-      "toTask": "اجعلها مهمة",
+      "toTask": "إنشاء مهمة",
       "toLater": "اركنها لوقت لاحق",
       "discard": "تجاهل",
       "openInbox": "افتح صندوق الوارد",
@@ -5229,7 +5268,7 @@
     "title": "العلاقات",
     "add": "إضافة علاقة",
     "remove": "إزالة العلاقة",
-    "searchPlaceholder": "ابحث عن مهمة…",
+    "searchPlaceholder": "بحث…",
     "addFailed": "تعذّر إضافة العلاقة.",
     "removeFailed": "تعذّر إزالة العلاقة.",
     "blocked": "معطّلة",
@@ -6218,7 +6257,11 @@
     "hideCompleted": "إخفاء المكتملة",
     "showCompletedTasks": "إظهار المكتملة",
     "dropOverlaps": "تداخلات",
-    "dropPast": "في الماضي"
+    "dropPast": "في الماضي",
+    "habitsCount": "العادات · {{n}}",
+    "habitsDone": "المنجزة · {{n}}",
+    "habitAt": "{{name}} عند {{time}}",
+    "habitLogFailed": "تعذّر تسجيل العادة."
   },
   "upcoming": {
     "title": "التخطيط",
@@ -6267,12 +6310,8 @@
     "noProject": "بدون مشروع",
     "noTag": "بدون وسم",
     "priority": {
-      "high": "عالية",
-      "medium": "متوسطة",
-      "low": "منخفضة",
       "none": "بدون أولوية"
     },
-    "horizonsEmpty": "لا شيء هنا بعد.",
     "thisWeek": "هذا الأسبوع",
     "thisMonth": "هذا الشهر",
     "nextMonth": "الشهر القادم",
@@ -6318,14 +6357,21 @@
     "load": "{{planned}} / {{available}}",
     "done": "منجزة ({{n}})",
     "subtaskOf": "↳ {{parent}}",
-    "addToInbox": "إضافة إلى صندوق الوارد",
-    "inboxNewItem": "عنصر جديد في الوارد",
     "addToInboxFailed": "تعذّرت الإضافة. حاول مرة أخرى.",
     "addEmptyName": "أضف اسماً للمهمة",
     "addTaskIn": "أضف مهمة إلى {{name}}",
-    "thisWeekOnlyPlanned": "لا شيء بدون يوم محدد · {{count}} مخططة في يوم",
     "previous": "اليوم السابق",
-    "next": "اليوم التالي"
+    "next": "اليوم التالي",
+    "nextWeekHint": "مخطط للأسبوع القادم دون يوم محدد",
+    "stripLabel": "إرسال إلى أفق",
+    "stripOpen": "فتح {{name}} في الآفاق",
+    "sentToHorizon": "أُرسلت إلى {{name}}",
+    "plannedOnDayHint_zero": "{{count}} مخططة في يوم",
+    "plannedOnDayHint_one": "{{count}} مخططة في يوم",
+    "plannedOnDayHint_two": "{{count}} مخططة في يوم",
+    "plannedOnDayHint_few": "{{count}} مخططة في يوم",
+    "plannedOnDayHint_many": "{{count}} مخططة في يوم",
+    "plannedOnDayHint_other": "{{count}} مخططة في يوم"
   },
   "offline": {
     "offline": "غير متصل",

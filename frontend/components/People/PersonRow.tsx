@@ -3,15 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { UserIcon } from '@heroicons/react/24/outline';
 import { Person } from '../../entities/Person';
 import { memberRoleLabel } from './memberRoleLabel';
+import { relationshipLabel } from './relationshipLabel';
 import ListRow from '../Shared/ui/ListRow';
 import EntityMark from '../Shared/ui/EntityMark';
-
-const RELATIONSHIP_LABELS: Record<string, string> = {
-    family: 'Family',
-    work: 'Work',
-    friend: 'Friend',
-    other: 'Other',
-};
 
 interface PersonRowProps {
     person: Person;
@@ -27,7 +21,7 @@ const PersonRow: React.FC<PersonRowProps> = ({ person }) => {
         ? person.account_status === 'no_sign_in'
             ? t('people.memberNoSignIn', "Member, can't sign in yet")
             : memberRoleLabel(person, t)
-        : RELATIONSHIP_LABELS[person.relationship_type ?? 'other'];
+        : relationshipLabel(person.relationship_type, t);
 
     return (
         <ListRow

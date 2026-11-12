@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import { ChevronDownIcon, FlagIcon } from '@heroicons/react/24/outline';
 import { Goal } from '../../entities/Goal';
 import { goalLabel } from '../../utils/goalLabel';
@@ -17,6 +18,7 @@ const GoalDropdown: React.FC<GoalDropdownProps> = ({
     goals,
     onChange,
 }) => {
+    const { t } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
     const [position, setPosition] = useState({
         top: 0,
@@ -33,9 +35,9 @@ const GoalDropdown: React.FC<GoalDropdownProps> = ({
     const selectedGoal = goals.find((g) => g.id === goalId);
 
     const getLabel = () => {
-        if (isMaintenance) return 'Maintenance';
+        if (isMaintenance) return t('goals.maintenance', 'Maintenance');
         if (selectedGoal) return goalLabel(selectedGoal, goals);
-        return 'No goal';
+        return t('goals.noGoal', 'No goal');
     };
 
     const handleToggle = () => {
@@ -116,13 +118,13 @@ const GoalDropdown: React.FC<GoalDropdownProps> = ({
                             onClick={() => handleSelect(null, false)}
                             className="flex items-center px-4 py-2 text-sm text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-600 w-full first:rounded-t-md"
                         >
-                            No goal
+                            {t('goals.noGoal', 'No goal')}
                         </button>
                         <button
                             onClick={() => handleSelect(null, true)}
                             className="flex items-center px-4 py-2 text-sm text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-600 w-full"
                         >
-                            Maintenance
+                            {t('goals.maintenance', 'Maintenance')}
                         </button>
                         {activeGoals.map((g) => (
                             <button
@@ -138,7 +140,7 @@ const GoalDropdown: React.FC<GoalDropdownProps> = ({
                         {inactiveGoals.length > 0 && (
                             <>
                                 <div className="px-4 py-1 text-xs text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-gray-600 mt-1">
-                                    Inactive
+                                    {t('goals.inactive', 'Inactive')}
                                 </div>
                                 {inactiveGoals.map((g) => (
                                     <button

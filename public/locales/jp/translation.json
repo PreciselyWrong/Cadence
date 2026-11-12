@@ -122,8 +122,6 @@
       "dismiss": "無視",
       "acceptAll": "すべて承認",
       "apply": "適用",
-      "medium": "中",
-      "high": "高",
       "priority": "優先度",
       "newTag": "新しいタグ：#{{name}}",
       "tags": "タグ",
@@ -248,7 +246,7 @@
     "preview": "プレビュー",
     "download": "ダウンロード",
     "exitFocusMode": "フォーカスモードを終了",
-    "searchTimezones": "タイムゾーンを検索...",
+    "searchTimezones": "検索…",
     "dismiss": "閉じる",
     "search": "検索",
     "previous": "前へ",
@@ -277,7 +275,10 @@
     "resolving": "解決中...",
     "showLess": "簡易表示",
     "breadcrumb": "パンくず",
-    "undo": "元に戻す"
+    "undo": "元に戻す",
+    "copyCode": "コードをコピー",
+    "copy": "コピー",
+    "copied": "コピーしました"
   },
   "sidebar": {
     "links": "リンク",
@@ -333,7 +334,6 @@
     "collapseViews": "ビュー一覧を閉じる",
     "expandViews": "ビュー一覧を開く",
     "summary": "サマリー",
-    "tomorrow": "明日",
     "next7Days": "今後7日間",
     "more": "その他",
     "toggleFolder": "プロジェクトの表示・非表示",
@@ -411,7 +411,7 @@
     "suggested": "おすすめ",
     "completedToday": "今日完了",
     "noTasksAvailable": "今日のタスクはありません。",
-    "searchPlaceholder": "タスクを検索...",
+    "searchPlaceholder": "検索…",
     "addNewTask": "新しいタスクを追加",
     "addTaskInline": "+ タスクを追加",
     "myPlanToday": "今日の私の計画",
@@ -1540,7 +1540,8 @@
     "rateLimitedRetrying": "リクエストが多すぎます。再試行しています…",
     "rateLimitedGaveUp": "リクエストが多すぎます。セッションは有効なままです。少し待ってから再読み込みしてください。",
     "serverBusyRetrying": "サーバーが混雑しています。再試行中…",
-    "serverBusyRetry": "再試行"
+    "serverBusyRetry": "再試行",
+    "sign_up": "サインアップ"
   },
   "dropdown": {
     "createNew": "新規作成",
@@ -1657,7 +1658,7 @@
     "areaFollowsParent": "エリアは親プロジェクトに従います",
     "loading": "プロジェクトを読み込み中...",
     "error": "プロジェクトの読み込みエラー",
-    "searchPlaceholder": "プロジェクトを検索...",
+    "searchPlaceholder": "検索…",
     "title": "プロジェクト",
     "noProjectsFound": "プロジェクトが見つかりません",
     "cardViewAriaLabel": "カードビュー",
@@ -1840,7 +1841,7 @@
     "presetWork": "仕事",
     "presetHealth": "健康",
     "presetFamily": "家族",
-    "suggestDomains": "5つの領域を提案",
+    "suggestDomains": "5つのエリアを提案",
     "domains": {
       "business": "ビジネスとお金",
       "tech": "テクノロジーとシステム",
@@ -1881,7 +1882,7 @@
     "editNoteAriaLabel": "ノート {{noteTitle}} を編集",
     "editNoteTitle": "ノート {{noteTitle}} の編集",
     "error": "ノートの読み込みエラー",
-    "searchPlaceholder": "ノートを検索...",
+    "searchPlaceholder": "検索…",
     "titlePlaceholder": "ノートタイトル...",
     "contentPlaceholder": "ノートの内容をここに書いてください...（Markdown対応）",
     "focusMode": "フォーカスモード",
@@ -1955,11 +1956,16 @@
     "fileUploadError": "{{name}} をアップロードできませんでした",
     "slashFile": "画像またはファイル",
     "slashFileHint": "ここにアップロードして配置",
-    "toggleDropdownMenu": "ドロップダウンメニューを切り替え"
+    "toggleDropdownMenu": "ドロップダウンメニューを切り替え",
+    "saved": "保存しました",
+    "unsaved": "未保存の変更",
+    "backgroundColor": "背景色",
+    "selectProject": "プロジェクトを選択",
+    "noMatchingNotes": "一致するノートはありません"
   },
   "tags": {
     "loading": "タグを読み込み中...",
-    "searchPlaceholder": "タグを検索...",
+    "searchPlaceholder": "検索…",
     "title": "タグ",
     "noTagsFound": "タグが見つかりませんでした",
     "editTagAriaLabel": "タグ {{tagName}} を編集",
@@ -2150,6 +2156,18 @@
       "reasonKeyword": "「{{detail}}」で始まります",
       "reasonLong": "長文なので、メモ向けです",
       "reasonDefault": "短いテキスト、多くはタスク"
+    },
+    "sources": {
+      "telegram": "Telegram",
+      "gmail": "Gmail",
+      "mcp": "MCP",
+      "android": "Android",
+      "api": "API",
+      "email": "メール",
+      "mail": "メール",
+      "desktop": "デスクトップ",
+      "link": "リンク",
+      "share": "共有"
     }
   },
   "project": {
@@ -2237,7 +2255,8 @@
     "noTasks": "タスクはありません。",
     "nextAction": "次のアクション",
     "nextActionLine": "次のアクション: {{name}}",
-    "noCompletedTasks": "完了したタスクはありません。"
+    "noCompletedTasks": "完了したタスクはありません。",
+    "views": "プロジェクトの表示"
   },
   "task": {
     "duplicateError": "Could not duplicate the task.",
@@ -2517,8 +2536,6 @@
     "connectionError": "Googleカレンダーへの接続に失敗しました。もう一度お試しください。",
     "disconnectionError": "Googleカレンダーからの切断に失敗しました。もう一度お試しください。",
     "taskDetails": "タスクの詳細",
-    "editTask": "タスクを編集",
-    "goToTasks": "タスクへ移動",
     "close": "閉じる",
     "title": "タイトル",
     "status": "ステータス",
@@ -2529,11 +2546,6 @@
     "area": "エリア",
     "description": "説明",
     "created": "作成日",
-    "completed": "完了",
-    "pending": "保留中",
-    "high": "高",
-    "medium": "中",
-    "low": "低",
     "time": "時刻",
     "allDay": "終日",
     "google": {
@@ -2565,7 +2577,14 @@
     "moreViews": "他の表示",
     "openDay": "この日を開く",
     "noEventsThisDay": "予定はありません。",
-    "task": "タスク"
+    "previousYear": "前の年",
+    "nextYear": "次の年",
+    "previousWeek": "前の週",
+    "nextWeek": "次の週",
+    "previousDays": "前の日々",
+    "nextDays": "次の日々",
+    "previousDay": "前の日",
+    "nextDay": "次の日"
   },
   "productivity": {
     "stalledProjects": "停滞しているプロジェクト",
@@ -2653,9 +2672,9 @@
     "uploading": "アップロード中..."
   },
   "searchPlaceholders": {
-    "searchProjects": "プロジェクトを検索...",
-    "searchTags": "タグを検索...",
-    "searchTasks": "タスクを検索..."
+    "searchProjects": "検索…",
+    "searchTags": "検索…",
+    "searchTasks": "検索…"
   },
   "ariaLabels": {
     "hideInfo": "情報を隠す",
@@ -3311,7 +3330,7 @@
   "views": {
     "title": "スマートビュー",
     "loading": "ビューを読み込んでいます...",
-    "searchPlaceholder": "ビューを検索...",
+    "searchPlaceholder": "検索…",
     "noViewsFound": "ビューが見つかりませんでした。検索を行い、「スマートビューとして保存」をクリックしてビューを作成してください。",
     "deleteView": "ビューを削除",
     "confirmDelete": "ビュー「{{viewName}}」を削除してもよろしいですか？",
@@ -3348,7 +3367,7 @@
     "filters": "フィルター"
   },
   "search": {
-    "placeholder": "タスク、プロジェクト、ノートを検索...",
+    "placeholder": "検索…",
     "searchingFor": "検索中",
     "allItems": "すべてのアイテム",
     "containingText": "、テキストを含む",
@@ -4038,7 +4057,26 @@
     "archivedBadge": "アーカイブ済み",
     "deletePerson": "人を削除",
     "deleteConfirm": "「{{name}}」を削除してもよろしいですか？元に戻せません。",
-    "contact": "連絡先"
+    "contact": "連絡先",
+    "editPerson": "人物を編集",
+    "newPerson": "新しい人物",
+    "noAssignedTasks": "{{name}}に割り当てられたタスクはありません。",
+    "notFound": "人物が見つかりません。",
+    "relationship": "関係",
+    "phone": "電話",
+    "namePlaceholder": "父、パートナー、アリス…",
+    "notesPlaceholder": "この人物についてのメモ…",
+    "relationships": {
+      "family": "家族",
+      "work": "仕事",
+      "friend": "友人",
+      "other": "その他"
+    },
+    "noPeopleYet": "まだ人物がいません",
+    "clearAssignment": "割り当てを解除",
+    "nameRequired": "名前は必須です",
+    "saveError": "人物を保存できませんでした",
+    "signInLink": "サインインリンク"
   },
   "members": {
     "addTitle": "メンバーを追加",
@@ -4467,7 +4505,7 @@
     "targetDate": "期限",
     "noProjects": "この目標に紐づくプロジェクトはありません。",
     "noTasks": "この目標に割り当てられたタスクはありません。",
-    "searchGoals": "目標を検索…",
+    "searchGoals": "検索…",
     "clearGoal": "目標を外す",
     "noGoalsFound": "目標が見つかりません",
     "inactive": "非アクティブ",
@@ -4506,7 +4544,8 @@
     "noAvailableGoals": "利用可能な目標がありません",
     "progressHint": "バー：完了したタスクとプロジェクト。線：作成から目標日までの経過時間。",
     "removeFromArea": "エリアから削除",
-    "createTask": "タスクを作成"
+    "createTask": "タスクを作成",
+    "noGoal": "目標なし"
   },
   "templates": {
     "new": "新しいテンプレート",
@@ -4527,7 +4566,7 @@
       "empty": "マーケットプレイスにはまだテンプレートがありません。",
       "title": "マーケットプレイス",
       "subtitle": "コミュニティの既製テンプレートを探してインストール",
-      "search": "マーケットプレイスを検索..."
+      "search": "検索…"
     },
     "taskList": "タスク",
     "noTasks": "このテンプレートにはタスクがありません",
@@ -5083,7 +5122,7 @@
       "reviewIn30": "30 日後に見直す",
       "reviewOn": "見直す日を選ぶ…",
       "keepLater": "保留のままにする",
-      "toTask": "タスクにする",
+      "toTask": "タスクを作成",
       "toLater": "あとで考える",
       "discard": "破棄",
       "openInbox": "受信箱を開く",
@@ -5177,7 +5216,7 @@
     "title": "関連",
     "add": "関連を追加",
     "remove": "関連を削除",
-    "searchPlaceholder": "タスクを検索...",
+    "searchPlaceholder": "検索…",
     "addFailed": "関連を追加できませんでした。",
     "removeFailed": "関連を削除できませんでした。",
     "blocked": "ブロック中",
@@ -6128,7 +6167,11 @@
     "hideCompleted": "完了を非表示",
     "showCompletedTasks": "完了を表示",
     "dropOverlaps": "重複",
-    "dropPast": "過去"
+    "dropPast": "過去",
+    "habitsCount": "習慣 · {{n}}",
+    "habitsDone": "完了 · {{n}}",
+    "habitAt": "{{time}}に{{name}}",
+    "habitLogFailed": "習慣を記録できませんでした。"
   },
   "upcoming": {
     "title": "計画",
@@ -6177,12 +6220,8 @@
     "noProject": "プロジェクトなし",
     "noTag": "タグなし",
     "priority": {
-      "high": "高",
-      "medium": "中",
-      "low": "低",
       "none": "優先度なし"
     },
-    "horizonsEmpty": "まだ何もありません。",
     "thisWeek": "今週",
     "thisMonth": "今月",
     "nextMonth": "来月",
@@ -6228,14 +6267,16 @@
     "load": "{{planned}} / {{available}}",
     "done": "完了（{{n}}）",
     "subtaskOf": "↳ {{parent}}",
-    "addToInbox": "受信トレイに追加",
-    "inboxNewItem": "受信トレイの新しい項目",
     "addToInboxFailed": "追加できませんでした。もう一度お試しください。",
     "addEmptyName": "タスクの名前を入力してください",
     "addTaskIn": "{{name}} にタスクを追加",
-    "thisWeekOnlyPlanned": "固定日のないものはありません · {{count}} 件が特定の日に予定されています",
     "previous": "前の日",
-    "next": "次の日"
+    "next": "次の日",
+    "nextWeekHint": "来週に予定済み、曜日は未定",
+    "stripLabel": "期間へ送る",
+    "stripOpen": "期間で{{name}}を開く",
+    "sentToHorizon": "{{name}}に送りました",
+    "plannedOnDayHint_other": "{{count}}件は日付に予定済み"
   },
   "offline": {
     "offline": "オフライン",

@@ -130,8 +130,6 @@
       "dismiss": "Pomiń",
       "acceptAll": "Zaakceptuj wszystko",
       "apply": "Zastosuj",
-      "medium": "Średni",
-      "high": "Wysoki",
       "priority": "Priorytet",
       "newTag": "Nowy tag: #{{name}}",
       "tags": "Tagi",
@@ -258,7 +256,7 @@
     "preview": "Podgląd",
     "download": "Pobierz",
     "exitFocusMode": "Wyjdź z trybu skupienia",
-    "searchTimezones": "Szukaj stref czasowych...",
+    "searchTimezones": "Szukaj…",
     "dismiss": "Odrzuć",
     "search": "Szukaj",
     "previous": "Poprzedni",
@@ -287,7 +285,10 @@
     "resolving": "Rozwiązywanie...",
     "showLess": "Pokaż mniej",
     "breadcrumb": "Ścieżka nawigacji",
-    "undo": "Cofnij"
+    "undo": "Cofnij",
+    "copyCode": "Kopiuj kod",
+    "copy": "Kopiuj",
+    "copied": "Skopiowano"
   },
   "sidebar": {
     "links": "Linki",
@@ -343,7 +344,6 @@
     "collapseViews": "Zwiń listę widoków",
     "expandViews": "Rozwiń listę widoków",
     "summary": "Podsumowanie",
-    "tomorrow": "Jutro",
     "next7Days": "Następne 7 dni",
     "more": "Więcej",
     "toggleFolder": "Pokaż lub ukryj projekty",
@@ -424,7 +424,7 @@
     "taskCompleted": "zadanie ukończone",
     "tasksCompleted": "zadania ukończone",
     "noTasksAvailable": "Brak dostępnych zadań.",
-    "searchPlaceholder": "Szukaj zadań...",
+    "searchPlaceholder": "Szukaj…",
     "addNewTask": "Dodaj nowe zadanie",
     "addTaskInline": "+ Dodaj zadanie",
     "metrics": "Metryki",
@@ -1097,7 +1097,8 @@
       "hoursTitle": "Twój dzień",
       "hoursTo": "do",
       "taggedToday": "Oznaczone #today",
-      "taggedTodayDetail": "Otwarte zadania oznaczone #today, niezależnie od terminów."
+      "taggedTodayDetail": "Otwarte zadania oznaczone #today, niezależnie od terminów.",
+      "maxOption_one": "{{count}} zadanie"
     },
     "aiApiKey": "Klucz API",
     "aiApiKeyClear": "Wyczyść",
@@ -1580,7 +1581,8 @@
     "rateLimitedRetrying": "Zbyt wiele żądań, ponawianie…",
     "rateLimitedGaveUp": "Zbyt wiele żądań. Sesja jest nadal aktywna; odśwież stronę za chwilę.",
     "serverBusyRetrying": "Serwer zajęty, ponawianie…",
-    "serverBusyRetry": "Ponów"
+    "serverBusyRetry": "Ponów",
+    "sign_up": "Zarejestruj się"
   },
   "dropdown": {
     "createNew": "Utwórz Nowy",
@@ -1712,7 +1714,8 @@
     "noTasks": "Brak zadań.",
     "nextAction": "Następne działanie",
     "nextActionLine": "Następne działanie: {{name}}",
-    "noCompletedTasks": "Brak ukończonych zadań."
+    "noCompletedTasks": "Brak ukończonych zadań.",
+    "views": "Widoki projektu"
   },
   "errors": {
     "required": "To pole jest wymagane",
@@ -1856,6 +1859,18 @@
       "reasonKeyword": "Zaczyna się od „{{detail}}”",
       "reasonLong": "Jest długi, jak notatka",
       "reasonDefault": "Krótki tekst, najczęściej zadanie"
+    },
+    "sources": {
+      "telegram": "Telegram",
+      "gmail": "Gmail",
+      "mcp": "MCP",
+      "android": "Android",
+      "api": "API",
+      "email": "E-mail",
+      "mail": "Poczta",
+      "desktop": "Komputer",
+      "link": "Link",
+      "share": "Udostępnienie"
     }
   },
   "dateFormats": {
@@ -2100,7 +2115,9 @@
     "noUpcomingOccurrences": "Brak nadchodzących wystąpień.",
     "turnIntoProject": "Zamień w projekt",
     "turnIntoProjectError": "Nie udało się zamienić w projekt.",
-    "turnIntoProjectMessage": "Zamienić „{{name}}” w projekt? Jego podzadania staną się zadaniami projektu, a adresy z jego notatki – stronami projektu."
+    "turnIntoProjectMessage": "Zamienić „{{name}}” w projekt? Jego podzadania staną się zadaniami projektu, a adresy z jego notatki – stronami projektu.",
+    "inDays_one": "za {{count}} dzień",
+    "daysAgo_one": "{{count}} dzień temu"
   },
   "projects": {
     "parentProject": "Projekt nadrzędny",
@@ -2109,7 +2126,7 @@
     "areaFollowsParent": "Obszar podąża za projektem nadrzędnym",
     "loading": "Ładowanie projektów...",
     "error": "Błąd podczas ładowania projektów",
-    "searchPlaceholder": "Szukaj projektów...",
+    "searchPlaceholder": "Szukaj…",
     "title": "Projekty",
     "noProjectsFound": "Nie znaleziono projektów",
     "cardViewAriaLabel": "Widok kart",
@@ -2329,7 +2346,7 @@
     "emptyPreview": "Pusta notatka",
     "loading": "Ładowanie notatek...",
     "error": "Błąd podczas ładowania notatek",
-    "searchPlaceholder": "Szukaj notatek...",
+    "searchPlaceholder": "Szukaj…",
     "noNotesFound": "Nie znaleziono notatek",
     "title": "Notatki",
     "deleteNoteAriaLabel": "Usuń notatkę {{noteTitle}}",
@@ -2409,11 +2426,16 @@
     "fileUploadError": "Nie udało się przesłać: {{name}}",
     "slashFile": "Obraz lub plik",
     "slashFileHint": "Prześlij i umieść tutaj",
-    "toggleDropdownMenu": "Przełącz menu rozwijane"
+    "toggleDropdownMenu": "Przełącz menu rozwijane",
+    "saved": "Zapisano",
+    "unsaved": "Niezapisane zmiany",
+    "backgroundColor": "Kolor tła",
+    "selectProject": "Wybierz projekt",
+    "noMatchingNotes": "Brak pasujących notatek"
   },
   "tags": {
     "loading": "Ładowanie tagów...",
-    "searchPlaceholder": "Szukaj tagów...",
+    "searchPlaceholder": "Szukaj…",
     "title": "Tagi",
     "noTagsFound": "Nie znaleziono tagów",
     "editTagAriaLabel": "Edytuj tag {{tagName}}",
@@ -2616,8 +2638,6 @@
     "connectionError": "Nie udało się połączyć z Kalendarzem Google. Proszę spróbować ponownie.",
     "disconnectionError": "Nie udało się odłączyć od Kalendarza Google. Proszę spróbować ponownie.",
     "taskDetails": "Szczegóły zadania",
-    "editTask": "Edytuj zadanie",
-    "goToTasks": "Przejdź do zadań",
     "close": "Zamknij",
     "title": "Tytuł",
     "status": "Status",
@@ -2628,11 +2648,6 @@
     "area": "Obszar",
     "description": "Opis",
     "created": "Utworzono",
-    "completed": "Zakończono",
-    "pending": "Oczekujące",
-    "high": "Wysoki",
-    "medium": "Średni",
-    "low": "Niski",
     "time": "Czas",
     "allDay": "Cały dzień",
     "google": {
@@ -2664,7 +2679,14 @@
     "moreViews": "Więcej widoków",
     "openDay": "Otwórz dzień",
     "noEventsThisDay": "Nic nie zaplanowano.",
-    "task": "Zadanie"
+    "previousYear": "Poprzedni rok",
+    "nextYear": "Następny rok",
+    "previousWeek": "Poprzedni tydzień",
+    "nextWeek": "Następny tydzień",
+    "previousDays": "Poprzednie dni",
+    "nextDays": "Następne dni",
+    "previousDay": "Poprzedni dzień",
+    "nextDay": "Następny dzień"
   },
   "pages": {
     "notFound": {
@@ -2683,9 +2705,9 @@
     "uploading": "Przesyłanie..."
   },
   "searchPlaceholders": {
-    "searchProjects": "Szukaj projektów...",
-    "searchTags": "Szukaj tagów...",
-    "searchTasks": "Szukaj zadań..."
+    "searchProjects": "Szukaj…",
+    "searchTags": "Szukaj…",
+    "searchTasks": "Szukaj…"
   },
   "ariaLabels": {
     "hideInfo": "Ukryj informacje",
@@ -3349,7 +3371,7 @@
   "views": {
     "title": "Inteligentne Widoki",
     "loading": "Ładowanie widoków...",
-    "searchPlaceholder": "Szukaj widoków...",
+    "searchPlaceholder": "Szukaj…",
     "noViewsFound": "Nie znaleziono widoków. Utwórz widok, wykonując wyszukiwanie i klikając \"Zapisz jako Inteligentny Widok\".",
     "deleteView": "Usuń Widok",
     "confirmDelete": "Czy na pewno chcesz usunąć widok \"{{viewName}}\"?",
@@ -3386,7 +3408,7 @@
     "filters": "filtry"
   },
   "search": {
-    "placeholder": "Szukaj zadań, projektów, notatek...",
+    "placeholder": "Szukaj…",
     "searchingFor": "Szukasz",
     "allItems": "wszystkich elementów",
     "containingText": ", zawierających tekst",
@@ -4082,7 +4104,26 @@
     "archivedBadge": "zarchiwizowana",
     "deletePerson": "Usuń osobę",
     "deleteConfirm": "Czy na pewno chcesz usunąć „{{name}}”? Tego nie można cofnąć.",
-    "contact": "Kontakt"
+    "contact": "Kontakt",
+    "editPerson": "Edytuj osobę",
+    "newPerson": "Nowa osoba",
+    "noAssignedTasks": "Brak zadań przypisanych do: {{name}}.",
+    "notFound": "Nie znaleziono osoby.",
+    "relationship": "Relacja",
+    "phone": "Telefon",
+    "namePlaceholder": "Tata, partner, Alicja…",
+    "notesPlaceholder": "Notatki o tej osobie…",
+    "relationships": {
+      "family": "Rodzina",
+      "work": "Praca",
+      "friend": "Przyjaciel",
+      "other": "Inne"
+    },
+    "noPeopleYet": "Brak osób",
+    "clearAssignment": "Usuń przypisanie",
+    "nameRequired": "Imię jest wymagane",
+    "saveError": "Nie udało się zapisać osoby",
+    "signInLink": "Link do logowania"
   },
   "members": {
     "addTitle": "Dodaj członka",
@@ -4238,7 +4279,8 @@
       "addToTomorrow": "Dodaj do jutra",
       "regenerate": "Wygeneruj ponownie",
       "draftTitle": "Propozycja AI",
-      "skippedCount": "Pominięte ({{count}})"
+      "skippedCount": "Pominięte ({{count}})",
+      "carried_one": "Dodano {{count}} zadanie do jutra"
     },
     "lateWarning": "Czas minął, a zadanie nie jest zrobione",
     "movedOffPlan": "'{{name}}' nie ma już terminu na dziś, więc została usunięta z dzisiejszego planu.",
@@ -4515,7 +4557,7 @@
     "targetDate": "Termin",
     "noProjects": "Brak projektów powiązanych z tym celem.",
     "noTasks": "Brak zadań przypisanych do tego celu.",
-    "searchGoals": "Szukaj celów…",
+    "searchGoals": "Szukaj…",
     "clearGoal": "Usuń cel",
     "noGoalsFound": "Nie znaleziono celów",
     "inactive": "Nieaktywny",
@@ -4554,7 +4596,8 @@
     "noAvailableGoals": "Brak dostępnych celów",
     "progressHint": "Słupek: ukończone zadania i projekty. Linia: czas między utworzeniem a datą docelową.",
     "removeFromArea": "Usuń z obszaru",
-    "createTask": "Utwórz zadanie"
+    "createTask": "Utwórz zadanie",
+    "noGoal": "Bez celu"
   },
   "templates": {
     "new": "Nowy szablon",
@@ -4575,7 +4618,7 @@
       "empty": "W katalogu nie ma jeszcze szablonów.",
       "title": "Katalog",
       "subtitle": "Przeglądaj i instaluj gotowe szablony od społeczności",
-      "search": "Szukaj w katalogu..."
+      "search": "Szukaj…"
     },
     "taskList": "Zadania",
     "noTasks": "Brak zadań w tym szablonie",
@@ -5227,7 +5270,7 @@
     "title": "Relacje",
     "add": "Dodaj relację",
     "remove": "Usuń relację",
-    "searchPlaceholder": "Szukaj zadania...",
+    "searchPlaceholder": "Szukaj…",
     "addFailed": "Nie udało się dodać relacji.",
     "removeFailed": "Nie udało się usunąć relacji.",
     "blocked": "Zablokowane",
@@ -6198,7 +6241,11 @@
     "hideCompleted": "Ukryj ukończone",
     "showCompletedTasks": "Pokaż ukończone",
     "dropOverlaps": "Nakładanie się",
-    "dropPast": "W przeszłości"
+    "dropPast": "W przeszłości",
+    "habitsCount": "Nawyki · {{n}}",
+    "habitsDone": "Wykonane · {{n}}",
+    "habitAt": "{{name}} o {{time}}",
+    "habitLogFailed": "Nie udało się zapisać nawyku."
   },
   "upcoming": {
     "title": "Planuj",
@@ -6247,12 +6294,8 @@
     "noProject": "Brak projektu",
     "noTag": "Brak etykiety",
     "priority": {
-      "high": "Wysoki",
-      "medium": "Średni",
-      "low": "Niski",
       "none": "Brak priorytetu"
     },
-    "horizonsEmpty": "Na razie nic tu nie ma.",
     "thisWeek": "Ten tydzień",
     "thisMonth": "Ten miesiąc",
     "nextMonth": "Przyszły miesiąc",
@@ -6298,14 +6341,19 @@
     "load": "{{planned}} / {{available}}",
     "done": "Gotowe ({{n}})",
     "subtaskOf": "↳ {{parent}}",
-    "addToInbox": "Dodaj do skrzynki odbiorczej",
-    "inboxNewItem": "Nowy element skrzynki",
     "addToInboxFailed": "Nie udało się dodać. Spróbuj ponownie.",
     "addEmptyName": "Nadaj zadaniu nazwę",
     "addTaskIn": "Dodaj zadanie do: {{name}}",
-    "thisWeekOnlyPlanned": "Nic bez stałego dnia · {{count}} zaplanowanych na dzień",
     "previous": "Poprzedni dzień",
-    "next": "Następny dzień"
+    "next": "Następny dzień",
+    "nextWeekHint": "Zaplanowane na przyszły tydzień, bez stałego dnia",
+    "stripLabel": "Wyślij do horyzontu",
+    "stripOpen": "Otwórz {{name}} w Horyzontach",
+    "sentToHorizon": "Wysłano do: {{name}}",
+    "plannedOnDayHint_one": "Zaplanowane na dzień: {{count}}",
+    "plannedOnDayHint_few": "Zaplanowane na dzień: {{count}}",
+    "plannedOnDayHint_many": "Zaplanowane na dzień: {{count}}",
+    "plannedOnDayHint_other": "Zaplanowane na dzień: {{count}}"
   },
   "offline": {
     "offline": "Offline",

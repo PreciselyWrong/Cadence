@@ -126,8 +126,6 @@
       "dismiss": "Ignoră",
       "acceptAll": "Acceptă tot",
       "apply": "Aplică",
-      "medium": "Medie",
-      "high": "Mare",
       "priority": "Prioritate",
       "newTag": "Etichetă nouă: #{{name}}",
       "tags": "Etichete",
@@ -152,7 +150,7 @@
       "archive": "Arhivează în Gmail",
       "taskName": "Numele sarcinii",
       "taskDue": "Termen",
-      "createTask": "Creează sarcina",
+      "createTask": "Creează o sarcină",
       "taskCreated": "Sarcină creată",
       "replied": "Răspuns deschis în Gmail",
       "postponed": "Revine mâine",
@@ -253,7 +251,7 @@
     "preview": "Previzualizare",
     "download": "Descarcă",
     "exitFocusMode": "Ieși din modul de concentrare",
-    "searchTimezones": "Caută fusuri orare...",
+    "searchTimezones": "Caută…",
     "dismiss": "Respinge",
     "search": "Caută",
     "previous": "Anterior",
@@ -282,7 +280,10 @@
     "resolving": "Se rezolvă...",
     "showLess": "Arată mai puțin",
     "breadcrumb": "Cale de navigare",
-    "undo": "Anulează"
+    "undo": "Anulează",
+    "copyCode": "Copiază codul",
+    "copy": "Copiază",
+    "copied": "Copiat"
   },
   "sidebar": {
     "links": "Linkuri",
@@ -338,7 +339,6 @@
     "collapseViews": "Restrânge lista de vizualizări",
     "expandViews": "Extinde lista de vizualizări",
     "summary": "Rezumat",
-    "tomorrow": "Mâine",
     "next7Days": "Următoarele 7 zile",
     "more": "Mai multe",
     "toggleFolder": "Afișează sau ascunde proiectele",
@@ -419,7 +419,7 @@
     "taskCompleted": "task finalizat",
     "tasksCompleted": "tasks finalizate",
     "noTasksAvailable": "Nu sunt disponibile taskuri.",
-    "searchPlaceholder": "Caută taskuri...",
+    "searchPlaceholder": "Caută…",
     "addNewTask": "Adaugă un nou task",
     "addTaskInline": "+ Adaugă sarcină",
     "metrics": "Metri",
@@ -1092,7 +1092,8 @@
       "maxOption_few": "{{count}} sarcini",
       "maxOption_other": "{{count}} de sarcini",
       "taggedToday": "Etichetat #today",
-      "taggedTodayDetail": "Sarcini deschise etichetate #today, indiferent de date."
+      "taggedTodayDetail": "Sarcini deschise etichetate #today, indiferent de date.",
+      "maxOption_one": "{{count}} sarcină"
     },
     "aiApiKey": "Cheie API",
     "aiApiKeyClear": "Golește",
@@ -1573,7 +1574,8 @@
     "rateLimitedRetrying": "Prea multe cereri, se reîncearcă…",
     "rateLimitedGaveUp": "Prea multe cereri. Sesiunea este încă activă; reîncarcă pagina peste puțin timp.",
     "serverBusyRetrying": "Server ocupat, se reîncearcă…",
-    "serverBusyRetry": "Reîncearcă"
+    "serverBusyRetry": "Reîncearcă",
+    "sign_up": "Înscriere"
   },
   "dropdown": {
     "createNew": "Creează Nou",
@@ -1696,7 +1698,8 @@
     "noTasks": "Nicio sarcină.",
     "nextAction": "Următoarea acțiune",
     "nextActionLine": "Următoarea acțiune: {{name}}",
-    "noCompletedTasks": "Nicio sarcină finalizată."
+    "noCompletedTasks": "Nicio sarcină finalizată.",
+    "views": "Vizualizări proiect"
   },
   "errors": {
     "required": "Acest câmp este obligatoriu",
@@ -1840,6 +1843,18 @@
       "reasonKeyword": "Începe cu „{{detail}}”",
       "reasonLong": "Este lung, ca o notiță",
       "reasonDefault": "Text scurt, de obicei o sarcină"
+    },
+    "sources": {
+      "telegram": "Telegram",
+      "gmail": "Gmail",
+      "mcp": "MCP",
+      "android": "Android",
+      "api": "API",
+      "email": "E-mail",
+      "mail": "Mail",
+      "desktop": "Desktop",
+      "link": "Link",
+      "share": "Partajare"
     }
   },
   "dateFormats": {
@@ -2084,7 +2099,13 @@
     "noUpcomingOccurrences": "Nicio apariție viitoare.",
     "turnIntoProject": "Transformă în proiect",
     "turnIntoProjectError": "Nu a putut fi transformat în proiect.",
-    "turnIntoProjectMessage": "Transformi „{{name}}” în proiect? Subsarcinile devin sarcinile proiectului, iar adresele din nota sa devin paginile proiectului."
+    "turnIntoProjectMessage": "Transformi „{{name}}” în proiect? Subsarcinile devin sarcinile proiectului, iar adresele din nota sa devin paginile proiectului.",
+    "inDays_one": "în {{count}} zi",
+    "daysAgo_one": "{{count}} zi în urmă",
+    "hoursAgo_one": "acum {{count}} oră",
+    "minutesAgo_one": "acum {{count}} minut",
+    "inMinutes_one": "în {{count}} minut",
+    "inHours_one": "în {{count}} oră"
   },
   "projects": {
     "parentProject": "Proiect părinte",
@@ -2093,7 +2114,7 @@
     "areaFollowsParent": "Aria urmează proiectul părinte",
     "loading": "Se încarcă proiectele...",
     "error": "Eroare la încărcarea proiectelor",
-    "searchPlaceholder": "Căutați proiecte...",
+    "searchPlaceholder": "Caută…",
     "title": "Proiecte",
     "noProjectsFound": "Nu s-au găsit proiecte",
     "cardViewAriaLabel": "Vizualizare card",
@@ -2277,7 +2298,7 @@
     "presetWork": "Muncă",
     "presetHealth": "Sănătate",
     "presetFamily": "Familie",
-    "suggestDomains": "Sugerează 5 domenii",
+    "suggestDomains": "Sugerează 5 arii",
     "domains": {
       "business": "Afaceri și bani",
       "tech": "Tehnologie și sisteme",
@@ -2312,7 +2333,7 @@
     "emptyPreview": "Notă goală",
     "loading": "Se încarcă notițele...",
     "error": "Eroare la încărcarea notițelor",
-    "searchPlaceholder": "Caută notițe...",
+    "searchPlaceholder": "Caută…",
     "noNotesFound": "Nu au fost găsite notițe",
     "title": "Notițe",
     "deleteNoteAriaLabel": "Șterge nota {{noteTitle}}",
@@ -2392,11 +2413,16 @@
     "fileUploadError": "Nu s-a putut încărca {{name}}",
     "slashFile": "Imagine sau fișier",
     "slashFileHint": "Încarcă și plasează aici",
-    "toggleDropdownMenu": "Comutare meniu derulant"
+    "toggleDropdownMenu": "Comutare meniu derulant",
+    "saved": "Salvat",
+    "unsaved": "Modificări nesalvate",
+    "backgroundColor": "Culoare de fundal",
+    "selectProject": "Alege proiectul",
+    "noMatchingNotes": "Nicio notiță potrivită"
   },
   "tags": {
     "loading": "Se încarcă etichetele...",
-    "searchPlaceholder": "Caută etichete...",
+    "searchPlaceholder": "Caută…",
     "title": "Etichete",
     "noTagsFound": "Nu au fost găsite etichete",
     "editTagAriaLabel": "Editează eticheta {{tagName}}",
@@ -2597,8 +2623,6 @@
     "connectionError": "Conectarea la Google Calendar a eșuat. Te rugăm să încerci din nou.",
     "disconnectionError": "Deconectarea de la Google Calendar a eșuat. Te rugăm să încerci din nou.",
     "taskDetails": "Detalii Sarcină",
-    "editTask": "Editează Sarcina",
-    "goToTasks": "Mergi la Sarcini",
     "close": "Închide",
     "title": "Titlu",
     "status": "Stare",
@@ -2609,11 +2633,6 @@
     "area": "Domeniu",
     "description": "Descriere",
     "created": "Creat",
-    "completed": "Finalizat",
-    "pending": "În așteptare",
-    "high": "Ridicat",
-    "medium": "Medie",
-    "low": "Scăzut",
     "time": "Timp",
     "allDay": "Toată ziua",
     "google": {
@@ -2645,7 +2664,14 @@
     "moreViews": "Mai multe vizualizări",
     "openDay": "Deschide ziua",
     "noEventsThisDay": "Nimic planificat.",
-    "task": "Sarcină"
+    "previousYear": "Anul anterior",
+    "nextYear": "Anul următor",
+    "previousWeek": "Săptămâna anterioară",
+    "nextWeek": "Săptămâna următoare",
+    "previousDays": "Zilele anterioare",
+    "nextDays": "Zilele următoare",
+    "previousDay": "Ziua anterioară",
+    "nextDay": "Ziua următoare"
   },
   "pages": {
     "notFound": {
@@ -2664,9 +2690,9 @@
     "uploading": "Se Încarcă..."
   },
   "searchPlaceholders": {
-    "searchProjects": "Caută proiecte...",
-    "searchTags": "Caută etichete...",
-    "searchTasks": "Caută sarcini..."
+    "searchProjects": "Caută…",
+    "searchTags": "Caută…",
+    "searchTasks": "Caută…"
   },
   "ariaLabels": {
     "hideInfo": "Ascunde informațiile",
@@ -3323,7 +3349,7 @@
   "views": {
     "title": "Vizualizări inteligente",
     "loading": "Se încarcă vizualizările...",
-    "searchPlaceholder": "Caută vizualizări...",
+    "searchPlaceholder": "Caută…",
     "noViewsFound": "Nu au fost găsite vizualizări. Creează o vizualizare efectuând o căutare și făcând clic pe \"Salvează ca Vizualizare Inteligentă\".",
     "deleteView": "Șterge Vizualizarea",
     "confirmDelete": "Ești sigur că vrei să ștergi vizualizarea \"{{viewName}}\"?",
@@ -3360,7 +3386,7 @@
     "filters": "filtre"
   },
   "search": {
-    "placeholder": "Caută sarcini, proiecte, note...",
+    "placeholder": "Caută…",
     "searchingFor": "Cauți",
     "allItems": "toate elementele",
     "containingText": ", conținând textul",
@@ -4051,7 +4077,26 @@
     "archivedBadge": "arhivată",
     "deletePerson": "Șterge persoana",
     "deleteConfirm": "Sigur vrei să ștergi „{{name}}”? Acțiunea nu poate fi anulată.",
-    "contact": "Contact"
+    "contact": "Contact",
+    "editPerson": "Editează persoana",
+    "newPerson": "Persoană nouă",
+    "noAssignedTasks": "Nicio sarcină atribuită lui {{name}}.",
+    "notFound": "Persoana nu a fost găsită.",
+    "relationship": "Relație",
+    "phone": "Telefon",
+    "namePlaceholder": "Tata, partener, Alice…",
+    "notesPlaceholder": "Notițe despre această persoană…",
+    "relationships": {
+      "family": "Familie",
+      "work": "Muncă",
+      "friend": "Prieten",
+      "other": "Altele"
+    },
+    "noPeopleYet": "Încă nu există persoane",
+    "clearAssignment": "Elimină atribuirea",
+    "nameRequired": "Numele este obligatoriu",
+    "saveError": "Persoana nu a putut fi salvată",
+    "signInLink": "Link de autentificare"
   },
   "members": {
     "addTitle": "Adaugă membru",
@@ -4207,7 +4252,8 @@
       "addToTomorrow": "Adaugă pentru mâine",
       "regenerate": "Generează din nou",
       "draftTitle": "Schiță AI",
-      "skippedCount": "Lăsate deoparte ({{count}})"
+      "skippedCount": "Lăsate deoparte ({{count}})",
+      "carried_one": "{{count}} sarcină adăugată pentru mâine"
     },
     "lateWarning": "Timpul a trecut și nu e gata",
     "movedOffPlan": "'{{name}}' nu mai are termen azi, așa că a ieșit din planul de azi.",
@@ -4322,7 +4368,8 @@
     "showQuote": "Afișează citatul zilei",
     "hideQuote": "Ascunde citatul zilei",
     "orderError": "Ordinea nu a putut fi salvată.",
-    "eventReadOnly": "Doar citire: setează acest calendar pe sincronizare bidirecțională în profil pentru a-l muta de aici."
+    "eventReadOnly": "Doar citire: setează acest calendar pe sincronizare bidirecțională în profil pentru a-l muta de aici.",
+    "placeAllDone_one": "{{count}} sarcină plasată."
   },
   "capture": {
     "add": "Adaugă",
@@ -4481,7 +4528,7 @@
     "targetDate": "Țintă",
     "noProjects": "Niciun proiect legat de acest obiectiv.",
     "noTasks": "Nicio sarcină atribuită acestui obiectiv.",
-    "searchGoals": "Caută obiective…",
+    "searchGoals": "Caută…",
     "clearGoal": "Elimină obiectivul",
     "noGoalsFound": "Nu s-au găsit obiective",
     "inactive": "Inactiv",
@@ -4520,7 +4567,8 @@
     "noAvailableGoals": "Niciun obiectiv disponibil",
     "progressHint": "Bară: sarcini și proiecte finalizate. Linie: timpul trecut între creare și data țintă.",
     "removeFromArea": "Elimină din zonă",
-    "createTask": "Creează o sarcină"
+    "createTask": "Creează o sarcină",
+    "noGoal": "Fără obiectiv"
   },
   "templates": {
     "new": "Șablon nou",
@@ -4541,7 +4589,7 @@
       "empty": "Încă nu există șabloane în catalog.",
       "title": "Catalog",
       "subtitle": "Răsfoiește și instalează șabloane gata făcute din comunitate",
-      "search": "Caută în catalog..."
+      "search": "Caută…"
     },
     "taskList": "Sarcini",
     "noTasks": "Nicio sarcină în acest șablon",
@@ -4845,7 +4893,13 @@
       "hierarchy_wbs": "numere WBS (1, 1.1, 1.2)",
       "hierarchy_indent": "rânduri indentate",
       "hierarchy_flat": "fără subsarcini",
-      "hierarchy_auto": "detectează"
+      "hierarchy_auto": "detectează",
+      "countCreate_one": "{{count}} sarcină nouă",
+      "countProjects_one": "{{count}} proiect nou",
+      "countAreas_one": "{{count}} zonă nouă",
+      "countTags_one": "{{count}} etichetă nouă",
+      "doneTitle_one": "{{count}} sarcină importată",
+      "rowCount_one": "{{count}} rând"
     },
     "issues": {
       "too_many_tags": "Se păstrează doar primele 20 de etichete.",
@@ -5098,7 +5152,7 @@
       "reviewIn30": "Revizuiește peste 30 de zile",
       "reviewOn": "Revizuiește pe…",
       "keepLater": "Păstrează parcată",
-      "toTask": "Fă o sarcină",
+      "toTask": "Creează o sarcină",
       "toLater": "Parchează pentru mai târziu",
       "discard": "Aruncă",
       "openInbox": "Deschide Inboxul",
@@ -5173,7 +5227,8 @@
     "dislike": "Nu îmi place",
     "failedToReact": "Reacția nu a putut fi actualizată",
     "uploadingImage": "Se încarcă imaginea...",
-    "imageUploadFailed": "Imaginea nu a putut fi încărcată"
+    "imageUploadFailed": "Imaginea nu a putut fi încărcată",
+    "count_one": "{{count}} comentariu"
   },
   "sortable": {
     "move": "Mută",
@@ -5192,7 +5247,7 @@
     "title": "Relații",
     "add": "Adaugă relație",
     "remove": "Elimină relația",
-    "searchPlaceholder": "Caută o sarcină...",
+    "searchPlaceholder": "Caută…",
     "addFailed": "Relația nu a putut fi adăugată.",
     "removeFailed": "Relația nu a putut fi eliminată.",
     "blocked": "Blocat",
@@ -6154,7 +6209,11 @@
     "hideCompleted": "Ascunde finalizate",
     "showCompletedTasks": "Afișează finalizate",
     "dropOverlaps": "Suprapuneri",
-    "dropPast": "În trecut"
+    "dropPast": "În trecut",
+    "habitsCount": "Obiceiuri · {{n}}",
+    "habitsDone": "Făcute · {{n}}",
+    "habitAt": "{{name}} la {{time}}",
+    "habitLogFailed": "Obiceiul nu a putut fi înregistrat."
   },
   "upcoming": {
     "title": "Planificare",
@@ -6203,12 +6262,8 @@
     "noProject": "Fără proiect",
     "noTag": "Fără etichetă",
     "priority": {
-      "high": "Ridicată",
-      "medium": "Medie",
-      "low": "Scăzută",
       "none": "Fără prioritate"
     },
-    "horizonsEmpty": "Nimic aici încă.",
     "thisWeek": "Săptămâna aceasta",
     "thisMonth": "Luna aceasta",
     "nextMonth": "Luna viitoare",
@@ -6254,14 +6309,18 @@
     "load": "{{planned}} / {{available}}",
     "done": "Gata ({{n}})",
     "subtaskOf": "↳ {{parent}}",
-    "addToInbox": "Adaugă în Inbox",
-    "inboxNewItem": "Element nou în Inbox",
     "addToInboxFailed": "Nu s-a putut adăuga. Încearcă din nou.",
     "addEmptyName": "Dă un nume sarcinii",
     "addTaskIn": "Adaugă o sarcină în {{name}}",
-    "thisWeekOnlyPlanned": "Nimic fără zi fixă · {{count}} planificate într-o zi",
     "previous": "Ziua precedentă",
-    "next": "Ziua următoare"
+    "next": "Ziua următoare",
+    "nextWeekHint": "Angajată pentru săptămâna viitoare, fără zi fixă",
+    "stripLabel": "Trimite către un orizont",
+    "stripOpen": "Deschide {{name}} în Orizonturi",
+    "sentToHorizon": "Trimisă către {{name}}",
+    "plannedOnDayHint_one": "{{count}} planificată într-o zi",
+    "plannedOnDayHint_few": "{{count}} planificate într-o zi",
+    "plannedOnDayHint_other": "{{count}} planificate într-o zi"
   },
   "offline": {
     "offline": "Offline",

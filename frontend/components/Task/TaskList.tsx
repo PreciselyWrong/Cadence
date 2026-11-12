@@ -94,7 +94,7 @@ const TaskList: React.FC<TaskListProps> = ({
         return (
             <div className="task-list-container space-y-1.5 overflow-visible">
                 <p className="text-gray-600 dark:text-gray-300 text-center mt-4">
-                    No tasks available.
+                    {t('tasks.noTasksAvailable', 'No tasks available.')}
                 </p>
             </div>
         );

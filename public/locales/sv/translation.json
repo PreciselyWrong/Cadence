@@ -25,7 +25,9 @@
       "requeued": "{{count}} objekt köade igen",
       "retry": "Försök igen",
       "failed": "{{count}} objekt misslyckades",
-      "title": "Det senaste AI-anropet misslyckades"
+      "title": "Det senaste AI-anropet misslyckades",
+      "requeued_one": "{{count}} objekt köat igen",
+      "failed_one": "{{count}} objekt misslyckades"
     },
     "number": {
       "maxTokens": "Maximalt antal svarstoken",
@@ -122,8 +124,6 @@
       "dismiss": "Ignorera",
       "acceptAll": "Acceptera alla",
       "apply": "Använd",
-      "medium": "Medel",
-      "high": "Hög",
       "priority": "Prioritet",
       "newTag": "Ny tagg: #{{name}}",
       "tags": "Taggar",
@@ -148,7 +148,7 @@
       "archive": "Arkivera i Gmail",
       "taskName": "Uppgiftens namn",
       "taskDue": "Förfallodatum",
-      "createTask": "Skapa uppgiften",
+      "createTask": "Skapa en uppgift",
       "taskCreated": "Uppgift skapad",
       "replied": "Svar öppnat i Gmail",
       "postponed": "Kommer tillbaka i morgon",
@@ -248,7 +248,7 @@
     "preview": "Förhandsgranska",
     "download": "Ladda ner",
     "exitFocusMode": "Avsluta fokusläge",
-    "searchTimezones": "Sök tidszoner...",
+    "searchTimezones": "Sök…",
     "dismiss": "Avfärda",
     "search": "Sök",
     "previous": "Föregående",
@@ -277,7 +277,10 @@
     "resolving": "Löser...",
     "showLess": "Visa mindre",
     "breadcrumb": "Brödsmula",
-    "undo": "Ångra"
+    "undo": "Ångra",
+    "copyCode": "Kopiera kod",
+    "copy": "Kopiera",
+    "copied": "Kopierad"
   },
   "sidebar": {
     "links": "Länkar",
@@ -333,7 +336,6 @@
     "collapseViews": "Fäll ihop listan med vyer",
     "expandViews": "Fäll ut listan med vyer",
     "summary": "Sammanfattning",
-    "tomorrow": "I morgon",
     "next7Days": "Nästa 7 dagar",
     "more": "Mer",
     "toggleFolder": "Visa eller dölj projekt",
@@ -414,7 +416,7 @@
     "taskCompleted": "uppgift slutförd",
     "tasksCompleted": "uppgifter slutförda",
     "noTasksAvailable": "Inga tillgängliga uppgifter.",
-    "searchPlaceholder": "Sök uppgifter...",
+    "searchPlaceholder": "Sök…",
     "addNewTask": "Lägg till ny uppgift",
     "addTaskInline": "+ Lägg till uppgift",
     "metrics": "Mätvärden",
@@ -1085,7 +1087,8 @@
       "hoursTitle": "Din dag",
       "hoursTo": "till",
       "taggedToday": "Taggad #today",
-      "taggedTodayDetail": "Öppna uppgifter du taggade #today, oavsett datum."
+      "taggedTodayDetail": "Öppna uppgifter du taggade #today, oavsett datum.",
+      "maxOption_one": "{{count}} uppgift"
     },
     "aiApiKey": "API-nyckel",
     "aiApiKeyClear": "Rensa",
@@ -1566,7 +1569,8 @@
     "rateLimitedRetrying": "För många förfrågningar, försöker igen…",
     "rateLimitedGaveUp": "För många förfrågningar. Sessionen är fortfarande aktiv; ladda om om en stund.",
     "serverBusyRetrying": "Servern är upptagen, försöker igen…",
-    "serverBusyRetry": "Försök igen"
+    "serverBusyRetry": "Försök igen",
+    "sign_up": "Skapa konto"
   },
   "dropdown": {
     "createNew": "Skapa ny",
@@ -1688,7 +1692,8 @@
     "noTasks": "Inga uppgifter.",
     "nextAction": "Nästa åtgärd",
     "nextActionLine": "Nästa åtgärd: {{name}}",
-    "noCompletedTasks": "Inga slutförda uppgifter."
+    "noCompletedTasks": "Inga slutförda uppgifter.",
+    "views": "Projektvyer"
   },
   "errors": {
     "required": "Detta fält är obligatoriskt",
@@ -1832,6 +1837,18 @@
       "reasonKeyword": "Det börjar med “{{detail}}”",
       "reasonLong": "Den är lång, som en anteckning",
       "reasonDefault": "Kort text, oftast en uppgift"
+    },
+    "sources": {
+      "telegram": "Telegram",
+      "gmail": "Gmail",
+      "mcp": "MCP",
+      "android": "Android",
+      "api": "API",
+      "email": "E-post",
+      "mail": "Mejl",
+      "desktop": "Dator",
+      "link": "Länk",
+      "share": "Delning"
     }
   },
   "dateFormats": {
@@ -2076,7 +2093,13 @@
     "noUpcomingOccurrences": "Inga kommande förekomster.",
     "turnIntoProject": "Gör om till ett projekt",
     "turnIntoProjectError": "Kunde inte göras om till ett projekt.",
-    "turnIntoProjectMessage": "Gör « {{name}} » till ett projekt? Dess deluppgifter blir projektets uppgifter, och adresserna i dess anteckning blir projektets sidor."
+    "turnIntoProjectMessage": "Gör « {{name}} » till ett projekt? Dess deluppgifter blir projektets uppgifter, och adresserna i dess anteckning blir projektets sidor.",
+    "inDays_one": "om {{count}} dag",
+    "daysAgo_one": "{{count}} dag sedan",
+    "hoursAgo_one": "för {{count}} timme sedan",
+    "minutesAgo_one": "för {{count}} minut sedan",
+    "inMinutes_one": "om {{count}} minut",
+    "inHours_one": "om {{count}} timme"
   },
   "projects": {
     "parentProject": "Överordnat projekt",
@@ -2085,7 +2108,7 @@
     "areaFollowsParent": "Området följer det överordnade projektet",
     "loading": "Laddar projekt...",
     "error": "Fel vid inläsning av projekt",
-    "searchPlaceholder": "Sök projekt...",
+    "searchPlaceholder": "Sök…",
     "title": "Projekt",
     "noProjectsFound": "Inga projekt hittades",
     "cardViewAriaLabel": "Kortvy",
@@ -2268,7 +2291,7 @@
     "presetWork": "Jobb",
     "presetHealth": "Hälsa",
     "presetFamily": "Familj",
-    "suggestDomains": "Föreslå 5 domäner",
+    "suggestDomains": "Föreslå 5 områden",
     "domains": {
       "business": "Affär & Pengar",
       "tech": "Teknik & System",
@@ -2303,7 +2326,7 @@
     "emptyPreview": "Tom anteckning",
     "loading": "Laddar anteckningar...",
     "error": "Fel vid inläsning av anteckningar",
-    "searchPlaceholder": "Sök anteckningar...",
+    "searchPlaceholder": "Sök…",
     "noNotesFound": "Inga anteckningar hittades",
     "title": "Anteckningar",
     "deleteNoteAriaLabel": "Ta bort anteckning {{noteTitle}}",
@@ -2383,11 +2406,16 @@
     "fileUploadError": "Kunde inte ladda upp {{name}}",
     "slashFile": "Bild eller fil",
     "slashFileHint": "Ladda upp och placera här",
-    "toggleDropdownMenu": "Växla rullgardinsmeny"
+    "toggleDropdownMenu": "Växla rullgardinsmeny",
+    "saved": "Sparat",
+    "unsaved": "Osparade ändringar",
+    "backgroundColor": "Bakgrundsfärg",
+    "selectProject": "Välj projekt",
+    "noMatchingNotes": "Inga matchande anteckningar"
   },
   "tags": {
     "loading": "Laddar taggar...",
-    "searchPlaceholder": "Sök taggar...",
+    "searchPlaceholder": "Sök…",
     "title": "Taggar",
     "noTagsFound": "Inga taggar hittades",
     "editTagAriaLabel": "Ändra tagg {{tagName}}",
@@ -2516,7 +2544,7 @@
     "miniCalendar": "Minikalender",
     "previousMonth": "Föregående månad",
     "nextMonth": "Nästa månad",
-    "multiDay_one": "{{count}} dagar",
+    "multiDay_one": "{{count}} dag",
     "multiDay_other": "{{count}} dagar",
     "agendaEmpty": "Inget planerat",
     "agenda": "Agenda",
@@ -2586,8 +2614,6 @@
     "connectionError": "Kunde inte ansluta till Google Kalender. Vänligen försök igen.",
     "disconnectionError": "Kunde inte koppla bort från Google Kalender. Vänligen försök igen.",
     "taskDetails": "Uppgiftsdetaljer",
-    "editTask": "Ändra uppgift",
-    "goToTasks": "Gå till uppgifter",
     "close": "Stäng",
     "title": "Titel",
     "status": "Status",
@@ -2598,11 +2624,6 @@
     "area": "Område",
     "description": "Beskrivning",
     "created": "Skapad",
-    "completed": "Slutförd",
-    "pending": "Avvaktande",
-    "high": "Hög",
-    "medium": "Medel",
-    "low": "Låg",
     "time": "Tid",
     "allDay": "Hela dagen",
     "google": {
@@ -2634,7 +2655,14 @@
     "moreViews": "Fler vyer",
     "openDay": "Öppna dag",
     "noEventsThisDay": "Inget planerat.",
-    "task": "Uppgift"
+    "previousYear": "Föregående år",
+    "nextYear": "Nästa år",
+    "previousWeek": "Föregående vecka",
+    "nextWeek": "Nästa vecka",
+    "previousDays": "Föregående dagar",
+    "nextDays": "Nästa dagar",
+    "previousDay": "Föregående dag",
+    "nextDay": "Nästa dag"
   },
   "pages": {
     "notFound": {
@@ -2653,9 +2681,9 @@
     "uploading": "Laddar upp..."
   },
   "searchPlaceholders": {
-    "searchProjects": "Sök projekt...",
-    "searchTags": "Sök taggar...",
-    "searchTasks": "Sök uppgifter..."
+    "searchProjects": "Sök…",
+    "searchTags": "Sök…",
+    "searchTasks": "Sök…"
   },
   "ariaLabels": {
     "hideInfo": "Dölj information",
@@ -3311,7 +3339,7 @@
   "views": {
     "title": "Smart Vyer",
     "loading": "Laddar vyer...",
-    "searchPlaceholder": "Sök vyer...",
+    "searchPlaceholder": "Sök…",
     "noViewsFound": "Inga vyer hittades. Skapa en vy genom att utföra en sökning och klicka på \"Spara som Smart Vy\".",
     "deleteView": "Ta bort vy",
     "confirmDelete": "Är du säker på att du vill ta bort vyn \"{{viewName}}\"?",
@@ -3348,7 +3376,7 @@
     "filters": "filter"
   },
   "search": {
-    "placeholder": "Sök uppgifter, projekt, anteckningar...",
+    "placeholder": "Sök…",
     "searchingFor": "Du söker efter",
     "allItems": "alla objekt",
     "containingText": ", som innehåller texten",
@@ -4038,7 +4066,26 @@
     "archivedBadge": "arkiverad",
     "deletePerson": "Ta bort person",
     "deleteConfirm": "Vill du verkligen ta bort ”{{name}}”? Det går inte att ångra.",
-    "contact": "Kontakt"
+    "contact": "Kontakt",
+    "editPerson": "Redigera person",
+    "newPerson": "Ny person",
+    "noAssignedTasks": "Inga uppgifter tilldelade {{name}}.",
+    "notFound": "Personen hittades inte.",
+    "relationship": "Relation",
+    "phone": "Telefon",
+    "namePlaceholder": "Pappa, partner, Alice…",
+    "notesPlaceholder": "Anteckningar om personen…",
+    "relationships": {
+      "family": "Familj",
+      "work": "Arbete",
+      "friend": "Vän",
+      "other": "Annat"
+    },
+    "noPeopleYet": "Inga personer än",
+    "clearAssignment": "Ta bort tilldelning",
+    "nameRequired": "Namn krävs",
+    "saveError": "Det gick inte att spara personen",
+    "signInLink": "Inloggningslänk"
   },
   "members": {
     "addTitle": "Lägg till medlem",
@@ -4194,7 +4241,8 @@
       "addToTomorrow": "Lägg till imorgon",
       "regenerate": "Generera igen",
       "draftTitle": "AI-utkast",
-      "skippedCount": "Utelämnade ({{count}})"
+      "skippedCount": "Utelämnade ({{count}})",
+      "carried_one": "{{count}} uppgift tillagd imorgon"
     },
     "lateWarning": "Tiden har passerat och det är inte klart",
     "movedOffPlan": "'{{name}}' har inte längre förfallodag idag, så den togs bort från dagens plan.",
@@ -4309,7 +4357,8 @@
     "showQuote": "Visa dagens citat",
     "hideQuote": "Dölj dagens citat",
     "orderError": "Ordningen kunde inte sparas.",
-    "eventReadOnly": "Skrivskyddad: ställ in kalendern på tvåvägssynkronisering i profilen för att flytta den härifrån."
+    "eventReadOnly": "Skrivskyddad: ställ in kalendern på tvåvägssynkronisering i profilen för att flytta den härifrån.",
+    "placeAllDone_one": "{{count}} uppgift placerad."
   },
   "capture": {
     "add": "Lägg till",
@@ -4467,7 +4516,7 @@
     "targetDate": "Mål",
     "noProjects": "Inga projekt kopplade till det här målet.",
     "noTasks": "Inga uppgifter kopplade till det här målet.",
-    "searchGoals": "Sök mål…",
+    "searchGoals": "Sök…",
     "clearGoal": "Ta bort mål",
     "noGoalsFound": "Inga mål hittades",
     "inactive": "Inaktivt",
@@ -4506,7 +4555,8 @@
     "noAvailableGoals": "Inga tillgängliga mål",
     "progressHint": "Stapel: klara uppgifter och projekt. Linje: tid som gått mellan skapande och måldatum.",
     "removeFromArea": "Ta bort från område",
-    "createTask": "Skapa en uppgift"
+    "createTask": "Skapa en uppgift",
+    "noGoal": "Inget mål"
   },
   "templates": {
     "new": "Ny mall",
@@ -4527,7 +4577,7 @@
       "empty": "Det finns inga mallar på marknadsplatsen än.",
       "title": "Marknadsplats",
       "subtitle": "Bläddra bland och installera färdiga mallar från gemenskapen",
-      "search": "Sök på marknadsplatsen..."
+      "search": "Sök…"
     },
     "taskList": "Uppgifter",
     "noTasks": "Inga uppgifter i den här mallen",
@@ -4831,7 +4881,13 @@
       "hierarchy_wbs": "WBS-nummer (1, 1.1, 1.2)",
       "hierarchy_indent": "indragna rader",
       "hierarchy_flat": "inga deluppgifter",
-      "hierarchy_auto": "upptäck automatiskt"
+      "hierarchy_auto": "upptäck automatiskt",
+      "countCreate_one": "{{count}} ny uppgift",
+      "countProjects_one": "{{count}} nytt projekt",
+      "countAreas_one": "{{count}} nytt område",
+      "countTags_one": "{{count}} ny tagg",
+      "doneTitle_one": "Importerade {{count}} uppgift",
+      "rowCount_one": "{{count}} rad"
     },
     "issues": {
       "too_many_tags": "Bara de första 20 taggarna behålls.",
@@ -5083,7 +5139,7 @@
       "reviewIn30": "Gå igenom om 30 dagar",
       "reviewOn": "Gå igenom den…",
       "keepLater": "Behåll parkerad",
-      "toTask": "Gör en uppgift",
+      "toTask": "Skapa en uppgift",
       "toLater": "Parkera till senare",
       "discard": "Kasta",
       "openInbox": "Öppna inkorgen",
@@ -5158,7 +5214,8 @@
     "dislike": "Gilla inte",
     "failedToReact": "Det gick inte att uppdatera reaktionen",
     "uploadingImage": "Laddar upp bild...",
-    "imageUploadFailed": "Det gick inte att ladda upp bilden"
+    "imageUploadFailed": "Det gick inte att ladda upp bilden",
+    "count_one": "{{count}} kommentar"
   },
   "sortable": {
     "move": "Flytta",
@@ -5177,7 +5234,7 @@
     "title": "Relationer",
     "add": "Lägg till relation",
     "remove": "Ta bort relation",
-    "searchPlaceholder": "Sök efter en uppgift...",
+    "searchPlaceholder": "Sök…",
     "addFailed": "Det gick inte att lägga till relationen.",
     "removeFailed": "Det gick inte att ta bort relationen.",
     "blocked": "Blockerad",
@@ -6130,7 +6187,11 @@
     "hideCompleted": "Dölj slutförda",
     "showCompletedTasks": "Visa slutförda",
     "dropOverlaps": "Överlappningar",
-    "dropPast": "Tidigare"
+    "dropPast": "Tidigare",
+    "habitsCount": "Vanor · {{n}}",
+    "habitsDone": "Klara · {{n}}",
+    "habitAt": "{{name}} kl. {{time}}",
+    "habitLogFailed": "Det gick inte att registrera vanan."
   },
   "upcoming": {
     "title": "Planera",
@@ -6179,12 +6240,8 @@
     "noProject": "Inget projekt",
     "noTag": "Ingen etikett",
     "priority": {
-      "high": "Hög",
-      "medium": "Medel",
-      "low": "Låg",
       "none": "Ingen prioritet"
     },
-    "horizonsEmpty": "Inget här än.",
     "thisWeek": "Den här veckan",
     "thisMonth": "Den här månaden",
     "nextMonth": "Nästa månad",
@@ -6230,14 +6287,17 @@
     "load": "{{planned}} / {{available}}",
     "done": "Klara ({{n}})",
     "subtaskOf": "↳ {{parent}}",
-    "addToInbox": "Lägg till i inkorgen",
-    "inboxNewItem": "Nytt inkorgsobjekt",
     "addToInboxFailed": "Det gick inte att lägga till. Försök igen.",
     "addEmptyName": "Ge uppgiften ett namn",
     "addTaskIn": "Lägg till en uppgift i {{name}}",
-    "thisWeekOnlyPlanned": "Inget utan fast dag · {{count}} planerade på en dag",
     "previous": "Föregående dag",
-    "next": "Nästa dag"
+    "next": "Nästa dag",
+    "nextWeekHint": "Planerad för nästa vecka, utan fast dag",
+    "stripLabel": "Skicka till en horisont",
+    "stripOpen": "Öppna {{name}} i Horisonter",
+    "sentToHorizon": "Skickad till {{name}}",
+    "plannedOnDayHint_one": "{{count}} planerad på en dag",
+    "plannedOnDayHint_other": "{{count}} planerade på en dag"
   },
   "offline": {
     "offline": "Offline",

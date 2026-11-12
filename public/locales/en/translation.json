@@ -25,7 +25,9 @@
       "requeued": "{{count}} items queued again",
       "retry": "Retry",
       "failed": "{{count}} items failed",
-      "title": "The last AI call failed"
+      "title": "The last AI call failed",
+      "requeued_one": "{{count}} item queued again",
+      "failed_one": "{{count}} item failed"
     },
     "number": {
       "maxTokens": "Maximum response tokens",
@@ -122,8 +124,6 @@
       "dismiss": "Ignore",
       "acceptAll": "Accept all",
       "apply": "Apply",
-      "medium": "Medium",
-      "high": "High",
       "priority": "Priority",
       "newTag": "New tag: #{{name}}",
       "tags": "Tags",
@@ -148,7 +148,7 @@
       "archive": "Archive in Gmail",
       "taskName": "Task name",
       "taskDue": "Due date",
-      "createTask": "Create the task",
+      "createTask": "Create a task",
       "taskCreated": "Task created",
       "replied": "Reply opened in Gmail",
       "postponed": "Back tomorrow",
@@ -248,7 +248,7 @@
     "preview": "Preview",
     "download": "Download",
     "exitFocusMode": "Exit focus mode",
-    "searchTimezones": "Search timezones...",
+    "searchTimezones": "Search…",
     "dismiss": "Dismiss",
     "search": "Search",
     "previous": "Previous",
@@ -277,7 +277,10 @@
     "resolving": "Resolving...",
     "showLess": "Show less",
     "breadcrumb": "Breadcrumb",
-    "undo": "Undo"
+    "undo": "Undo",
+    "copyCode": "Copy code",
+    "copy": "Copy",
+    "copied": "Copied"
   },
   "sidebar": {
     "links": "Links",
@@ -332,7 +335,6 @@
     "collapseViews": "Collapse views list",
     "expandViews": "Expand views list",
     "summary": "Summary",
-    "tomorrow": "Tomorrow",
     "next7Days": "Next 7 days",
     "more": "More",
     "toggleFolder": "Show or hide projects",
@@ -418,7 +420,7 @@
     "taskCompleted": "task completed",
     "tasksCompleted": "tasks completed",
     "noTasksAvailable": "No tasks available.",
-    "searchPlaceholder": "Search tasks...",
+    "searchPlaceholder": "Search…",
     "addNewTask": "Add New Task",
     "addTaskInline": "+ Add task",
     "metrics": "Metrics",
@@ -576,7 +578,8 @@
     "dislike": "Dislike",
     "failedToReact": "Failed to update reaction",
     "uploadingImage": "Uploading image...",
-    "imageUploadFailed": "Could not upload image"
+    "imageUploadFailed": "Could not upload image",
+    "count_one": "{{count}} comment"
   },
   "timeline": {
     "activityTimeline": "Activity Timeline",
@@ -1114,7 +1117,8 @@
       "maxOption": "{{count}} tasks",
       "intro": "How Plan my day lays out your day and which tasks it offers you.",
       "suggestedTitle": "What gets suggested",
-      "suggestedDescription": "Which open tasks can show up under Everything else, and how many. Overdue, due today and in progress tasks always show."
+      "suggestedDescription": "Which open tasks can show up under Everything else, and how many. Overdue, due today and in progress tasks always show.",
+      "maxOption_one": "{{count}} task"
     },
     "apiKeys": {
       "nameRequired": "API key name is required.",
@@ -1587,7 +1591,8 @@
     "rateLimitedRetrying": "Too many requests, retrying…",
     "rateLimitedGaveUp": "Too many requests. Your session is still active; reload in a moment.",
     "serverBusyRetrying": "Server busy, retrying…",
-    "serverBusyRetry": "Retry"
+    "serverBusyRetry": "Retry",
+    "sign_up": "Sign Up"
   },
   "dropdown": {
     "createNew": "Create New",
@@ -1716,7 +1721,8 @@
     "noTasks": "No tasks.",
     "nextAction": "Next action",
     "nextActionLine": "Next action: {{name}}",
-    "noCompletedTasks": "No completed tasks."
+    "noCompletedTasks": "No completed tasks.",
+    "views": "Project views"
   },
   "errors": {
     "required": "This field is required",
@@ -1860,6 +1866,18 @@
       "reasonKeyword": "It starts with \"{{detail}}\"",
       "reasonLong": "It is long, like a note",
       "reasonDefault": "Short text, most often a task"
+    },
+    "sources": {
+      "telegram": "Telegram",
+      "gmail": "Gmail",
+      "mcp": "MCP",
+      "android": "Android",
+      "api": "API",
+      "email": "Email",
+      "mail": "Mail",
+      "desktop": "Desktop",
+      "link": "Link",
+      "share": "Share"
     }
   },
   "dateFormats": {
@@ -2101,7 +2119,13 @@
     "noUpcomingOccurrences": "No upcoming occurrences.",
     "turnIntoProject": "Turn into a project",
     "turnIntoProjectError": "Could not turn it into a project.",
-    "turnIntoProjectMessage": "Turn « {{name}} » into a project? Its subtasks become the project’s tasks and the addresses of its note its pages."
+    "turnIntoProjectMessage": "Turn « {{name}} » into a project? Its subtasks become the project’s tasks and the addresses of its note its pages.",
+    "inDays_one": "in {{count}} day",
+    "daysAgo_one": "{{count}} day ago",
+    "hoursAgo_one": "{{count}} hour ago",
+    "minutesAgo_one": "{{count}} minute ago",
+    "inMinutes_one": "in {{count}} minute",
+    "inHours_one": "in {{count}} hour"
   },
   "subtasks": {
     "placeholder": "Add a subtask...",
@@ -2123,7 +2147,7 @@
     "addProject": "Add Project",
     "loading": "Loading projects...",
     "error": "Error loading projects",
-    "searchPlaceholder": "Search projects...",
+    "searchPlaceholder": "Search…",
     "title": "Projects",
     "noProjectsFound": "No projects found",
     "new": "New Project",
@@ -2302,7 +2326,7 @@
     "presetHealth": "Health",
     "presetFamily": "Family",
     "finishedProjects": "Finished ({{count}})",
-    "suggestDomains": "Suggest 5 domains",
+    "suggestDomains": "Suggest 5 areas",
     "domains": {
       "business": "Business & Money",
       "tech": "Tech & Systems",
@@ -2354,7 +2378,7 @@
     "outlineBulletMenu": "Bullet",
     "loading": "Loading notes...",
     "error": "Error loading notes",
-    "searchPlaceholder": "Search notes...",
+    "searchPlaceholder": "Search…",
     "noNotesFound": "No notes found",
     "new": "New Note",
     "noNotesYet": "No notes yet.",
@@ -2417,13 +2441,18 @@
     "fileUploadError": "Could not upload {{name}}",
     "slashFile": "Image or File",
     "slashFileHint": "Upload and place it here",
-    "toggleDropdownMenu": "Toggle dropdown menu"
+    "toggleDropdownMenu": "Toggle dropdown menu",
+    "saved": "Saved",
+    "unsaved": "Unsaved changes",
+    "backgroundColor": "Background color",
+    "selectProject": "Select project",
+    "noMatchingNotes": "No matching notes"
   },
   "tags": {
     "addTag": "Add Tag",
     "new": "New Tag",
     "loading": "Loading tags...",
-    "searchPlaceholder": "Search tags...",
+    "searchPlaceholder": "Search…",
     "title": "Tags",
     "noTagsFound": "No tags found",
     "systemTag": "System Tag",
@@ -2698,7 +2727,7 @@
     "miniCalendar": "Mini calendar",
     "previousMonth": "Previous month",
     "nextMonth": "Next month",
-    "multiDay_one": "{{count}} days",
+    "multiDay_one": "{{count}} day",
     "multiDay_other": "{{count}} days",
     "agendaEmpty": "Nothing scheduled",
     "agenda": "Agenda",
@@ -2767,8 +2796,6 @@
     "connectionError": "Failed to connect to Google Calendar. Please try again.",
     "disconnectionError": "Failed to disconnect from Google Calendar. Please try again.",
     "taskDetails": "Task Details",
-    "editTask": "Edit Task",
-    "goToTasks": "Go to Tasks",
     "close": "Close",
     "title": "Title",
     "status": "Status",
@@ -2778,11 +2805,6 @@
     "area": "Area",
     "description": "Description",
     "created": "Created",
-    "completed": "Completed",
-    "pending": "Pending",
-    "high": "high",
-    "medium": "medium",
-    "low": "low",
     "time": "Time",
     "allDay": "All day",
     "manageCalendars": "Calendars",
@@ -2814,7 +2836,14 @@
     "moreViews": "More views",
     "openDay": "Open day",
     "noEventsThisDay": "Nothing planned.",
-    "task": "Task"
+    "previousYear": "Previous year",
+    "nextYear": "Next year",
+    "previousWeek": "Previous week",
+    "nextWeek": "Next week",
+    "previousDays": "Previous days",
+    "nextDays": "Next days",
+    "previousDay": "Previous day",
+    "nextDay": "Next day"
   },
   "pages": {
     "notFound": {
@@ -2833,9 +2862,9 @@
     "uploading": "Uploading..."
   },
   "searchPlaceholders": {
-    "searchProjects": "Search projects...",
-    "searchTags": "Search tags...",
-    "searchTasks": "Search tasks..."
+    "searchProjects": "Search…",
+    "searchTags": "Search…",
+    "searchTasks": "Search…"
   },
   "ariaLabels": {
     "hideInfo": "Hide info",
@@ -3551,7 +3580,7 @@
   "views": {
     "title": "Smart Views",
     "loading": "Loading views...",
-    "searchPlaceholder": "Search views...",
+    "searchPlaceholder": "Search…",
     "noViewsFound": "No views found. Create a view by performing a search and clicking \"Save as Smart View\".",
     "new": "New View",
     "noViewsYet": "No smart views yet.",
@@ -3587,7 +3616,7 @@
     "filters": "filters"
   },
   "search": {
-    "placeholder": "Search tasks, projects, notes...",
+    "placeholder": "Search…",
     "searchingFor": "You are searching for",
     "allItems": "all items",
     "containingText": ", containing the text",
@@ -4043,7 +4072,26 @@
     "archivedBadge": "archived",
     "deletePerson": "Delete Person",
     "deleteConfirm": "Are you sure you want to delete \"{{name}}\"? This cannot be undone.",
-    "contact": "Contact"
+    "contact": "Contact",
+    "editPerson": "Edit person",
+    "newPerson": "New person",
+    "noAssignedTasks": "No tasks assigned to {{name}}.",
+    "notFound": "Person not found.",
+    "relationship": "Relationship",
+    "phone": "Phone",
+    "namePlaceholder": "Dad, Partner, Alice…",
+    "notesPlaceholder": "Any notes about this person…",
+    "relationships": {
+      "family": "Family",
+      "work": "Work",
+      "friend": "Friend",
+      "other": "Other"
+    },
+    "noPeopleYet": "No people yet",
+    "clearAssignment": "Clear assignment",
+    "nameRequired": "Name is required",
+    "saveError": "Failed to save person",
+    "signInLink": "Sign-in link"
   },
   "members": {
     "addTitle": "Add member",
@@ -4214,7 +4262,8 @@
       "addToTomorrow": "Add to tomorrow",
       "regenerate": "Regenerate",
       "draftTitle": "AI draft",
-      "skippedCount": "Left out ({{count}})"
+      "skippedCount": "Left out ({{count}})",
+      "carried_one": "{{count}} task added to tomorrow"
     },
     "lateWarning": "Time passed and not done yet",
     "doneForToday": "Done for today",
@@ -4327,13 +4376,15 @@
     "showQuote": "Show the daily quote",
     "hideQuote": "Hide the daily quote",
     "orderError": "Could not save the order.",
-    "eventReadOnly": "Read-only: set this calendar to two-way in Profile to move it from here."
+    "eventReadOnly": "Read-only: set this calendar to two-way in Profile to move it from here.",
+    "placeAllHint_one": "{{count}} task goes into the next free slot.",
+    "placeAllDone_one": "{{count}} task placed."
   },
   "relations": {
     "title": "Relations",
     "add": "Add relation",
     "remove": "Remove relation",
-    "searchPlaceholder": "Search for a task...",
+    "searchPlaceholder": "Search…",
     "addFailed": "Failed to add relation.",
     "removeFailed": "Failed to remove relation.",
     "blocked": "Blocked",
@@ -4527,7 +4578,7 @@
     "targetDate": "Target",
     "noProjects": "No projects linked to this goal.",
     "noTasks": "No tasks assigned to this goal.",
-    "searchGoals": "Search goals…",
+    "searchGoals": "Search…",
     "clearGoal": "Remove goal",
     "noGoalsFound": "No goals found",
     "inactive": "Inactive",
@@ -4566,7 +4617,8 @@
     "noAvailableGoals": "No available goals",
     "progressHint": "Bar: tasks and projects done. Line: time passed between creation and target date.",
     "removeFromArea": "Remove from area",
-    "createTask": "Create a task"
+    "createTask": "Create a task",
+    "noGoal": "No goal"
   },
   "templates": {
     "new": "New Template",
@@ -4587,7 +4639,7 @@
       "empty": "No templates available in the marketplace yet.",
       "title": "Marketplace",
       "subtitle": "Browse and install ready-made templates from the community",
-      "search": "Search marketplace..."
+      "search": "Search…"
     },
     "taskList": "Tasks",
     "noTasks": "No tasks in this template",
@@ -4897,7 +4949,14 @@
       "hierarchy_flat": "no subtasks",
       "hierarchy_auto": "detect it",
       "encodingHint": "Letters look wrong? Read the file as:",
-      "undoneKept": "The import was undone. {{count}} tasks changed since then were kept."
+      "undoneKept": "The import was undone. {{count}} tasks changed since then were kept.",
+      "undoneKept_one": "The import was undone. {{count}} task changed since then was kept.",
+      "countCreate_one": "{{count}} new task",
+      "countProjects_one": "{{count}} new project",
+      "countAreas_one": "{{count}} new area",
+      "countTags_one": "{{count}} new tag",
+      "doneTitle_one": "Imported {{count}} task",
+      "rowCount_one": "{{count}} row"
     },
     "issues": {
       "name_column_required": "Pick the column that holds the task names.",
@@ -5149,7 +5208,7 @@
       "reviewIn30": "Review in 30 days",
       "reviewOn": "Review on…",
       "keepLater": "Keep parked",
-      "toTask": "Make a task",
+      "toTask": "Create a task",
       "toLater": "Park for later",
       "discard": "Discard",
       "openInbox": "Open the Inbox",
@@ -6100,7 +6159,11 @@
     "hideCompleted": "Hide completed",
     "showCompletedTasks": "Show completed",
     "dropOverlaps": "Overlaps",
-    "dropPast": "In the past"
+    "dropPast": "In the past",
+    "habitsCount": "Habits · {{n}}",
+    "habitsDone": "Done · {{n}}",
+    "habitAt": "{{name}} at {{time}}",
+    "habitLogFailed": "Could not log the habit."
   },
   "upcoming": {
     "title": "Plan",
@@ -6149,12 +6212,8 @@
     "noProject": "No project",
     "noTag": "No tag",
     "priority": {
-      "high": "High",
-      "medium": "Medium",
-      "low": "Low",
       "none": "No priority"
     },
-    "horizonsEmpty": "Nothing here yet.",
     "thisWeek": "This week",
     "thisMonth": "This month",
     "nextMonth": "Next month",
@@ -6200,14 +6259,17 @@
     "load": "{{planned}} / {{available}}",
     "done": "Done ({{n}})",
     "subtaskOf": "↳ {{parent}}",
-    "addToInbox": "Add to inbox",
-    "inboxNewItem": "New inbox item",
     "addToInboxFailed": "Could not add it. Try again.",
     "addEmptyName": "Add a name for the task",
     "addTaskIn": "Add a task to {{name}}",
-    "thisWeekOnlyPlanned": "Nothing without a fixed day · {{count}} planned on a day",
     "previous": "Previous day",
-    "next": "Next day"
+    "next": "Next day",
+    "nextWeekHint": "Committed to next week, no fixed day",
+    "stripLabel": "Send to a horizon",
+    "stripOpen": "Open {{name}} in Horizons",
+    "sentToHorizon": "Sent to {{name}}",
+    "plannedOnDayHint_one": "{{count}} planned on a day",
+    "plannedOnDayHint_other": "{{count}} planned on a day"
   },
   "offline": {
     "offline": "Offline",

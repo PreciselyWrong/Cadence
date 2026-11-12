@@ -130,8 +130,6 @@
       "dismiss": "Пропустити",
       "acceptAll": "Прийняти все",
       "apply": "Застосувати",
-      "medium": "Середній",
-      "high": "Високий",
       "priority": "Пріоритет",
       "newTag": "Новий тег: #{{name}}",
       "tags": "Теги",
@@ -258,7 +256,7 @@
     "preview": "Попередній перегляд",
     "download": "Завантажити",
     "exitFocusMode": "Вийти з режиму фокусування",
-    "searchTimezones": "Шукати часові пояси...",
+    "searchTimezones": "Пошук…",
     "dismiss": "Відхилити",
     "search": "Пошук",
     "previous": "Попередній",
@@ -287,7 +285,10 @@
     "resolving": "Вирішення...",
     "showLess": "Показати менше",
     "breadcrumb": "Навігаційний ланцюжок",
-    "undo": "Скасувати"
+    "undo": "Скасувати",
+    "copyCode": "Копіювати код",
+    "copy": "Копіювати",
+    "copied": "Скопійовано"
   },
   "sidebar": {
     "links": "Посилання",
@@ -343,7 +344,6 @@
     "collapseViews": "Згорнути список переглядів",
     "expandViews": "Розгорнути список переглядів",
     "summary": "Підсумок",
-    "tomorrow": "Завтра",
     "next7Days": "Наступні 7 днів",
     "more": "Ще",
     "toggleFolder": "Показати або приховати проєкти",
@@ -421,7 +421,7 @@
     "suggested": "Запропоновані",
     "completedToday": "Завершено сьогодні",
     "noTasksAvailable": "Немає доступних завдань.",
-    "searchPlaceholder": "Пошук завдань...",
+    "searchPlaceholder": "Пошук…",
     "addNewTask": "Додати нове завдання",
     "addTaskInline": "+ Додати завдання",
     "myPlanToday": "Мій План на Сьогодні",
@@ -618,7 +618,7 @@
     "areaFollowsParent": "Область слідує за батьківським проєктом",
     "loading": "Завантаження проектів...",
     "error": "Помилка завантаження проектів",
-    "searchPlaceholder": "Пошук проектів...",
+    "searchPlaceholder": "Пошук…",
     "title": "Проекти",
     "noProjectsFound": "Проектів не знайдено",
     "cardViewAriaLabel": "Вигляд картками",
@@ -983,7 +983,7 @@
     "emptyPreview": "Порожня нотатка",
     "loading": "Завантаження нотаток...",
     "error": "Помилка завантаження нотаток",
-    "searchPlaceholder": "Пошук нотаток...",
+    "searchPlaceholder": "Пошук…",
     "noNotesFound": "Нотаток не знайдено",
     "title": "Нотатки",
     "deleteNoteAriaLabel": "Видалити нотатку {{noteTitle}}",
@@ -1063,7 +1063,12 @@
     "fileUploadError": "Не вдалося завантажити {{name}}",
     "slashFile": "Зображення або файл",
     "slashFileHint": "Завантажте та розмістіть тут",
-    "toggleDropdownMenu": "Перемкнути меню"
+    "toggleDropdownMenu": "Перемкнути меню",
+    "saved": "Збережено",
+    "unsaved": "Незбережені зміни",
+    "backgroundColor": "Колір тла",
+    "selectProject": "Виберіть проєкт",
+    "noMatchingNotes": "Немає відповідних нотаток"
   },
   "recurrence": {
     "none": "Немає",
@@ -1203,6 +1208,18 @@
       "reasonKeyword": "Починається з «{{detail}}»",
       "reasonLong": "Довгий, як нотатка",
       "reasonDefault": "Короткий текст, зазвичай завдання"
+    },
+    "sources": {
+      "telegram": "Telegram",
+      "gmail": "Gmail",
+      "mcp": "MCP",
+      "android": "Android",
+      "api": "API",
+      "email": "Ел. пошта",
+      "mail": "Пошта",
+      "desktop": "Комп'ютер",
+      "link": "Посилання",
+      "share": "Поширення"
     }
   },
   "project": {
@@ -1300,7 +1317,8 @@
     "noTasks": "Задач немає.",
     "nextAction": "Наступна дія",
     "nextActionLine": "Наступна дія: {{name}}",
-    "noCompletedTasks": "Немає виконаних завдань."
+    "noCompletedTasks": "Немає виконаних завдань.",
+    "views": "Подання проєкту"
   },
   "profile": {
     "showTaskDescription": "Показувати опис під заголовком",
@@ -1788,7 +1806,8 @@
       "hoursTitle": "Ваш день",
       "hoursTo": "до",
       "taggedToday": "Позначено #today",
-      "taggedTodayDetail": "Відкриті задачі, позначені #today, незалежно від їхніх дат."
+      "taggedTodayDetail": "Відкриті задачі, позначені #today, незалежно від їхніх дат.",
+      "maxOption_one": "{{count}} завдання"
     },
     "aiApiKey": "API-ключ",
     "aiApiKeyClear": "Очистити",
@@ -2225,7 +2244,9 @@
     "noUpcomingOccurrences": "Немає найближчих повторів.",
     "turnIntoProject": "Перетворити на проєкт",
     "turnIntoProjectError": "Не вдалося перетворити на проєкт.",
-    "turnIntoProjectMessage": "Перетворити «{{name}}» на проєкт? Його підзавдання стануть завданнями проєкту, а адреси з його нотатки — сторінками проєкту."
+    "turnIntoProjectMessage": "Перетворити «{{name}}» на проєкт? Його підзавдання стануть завданнями проєкту, а адреси з його нотатки — сторінками проєкту.",
+    "inDays_one": "через {{count}} день",
+    "daysAgo_one": "{{count}} день тому"
   },
   "calendar": {
     "feed": {
@@ -2326,8 +2347,6 @@
     "connectionError": "Помилка підключення до Google Calendar. Спробуйте ще раз.",
     "disconnectionError": "Помилка відключення від Google Calendar. Спробуйте ще раз.",
     "taskDetails": "Деталі завдання",
-    "editTask": "Редагувати завдання",
-    "goToTasks": "Перейти до завдань",
     "close": "Закрити",
     "title": "Назва",
     "status": "Статус",
@@ -2338,11 +2357,6 @@
     "area": "Область",
     "description": "Опис",
     "created": "Створено",
-    "completed": "Завершено",
-    "pending": "В очікуванні",
-    "high": "Високий",
-    "medium": "Середній",
-    "low": "Низький",
     "time": "Час",
     "allDay": "Весь день",
     "google": {
@@ -2374,7 +2388,14 @@
     "moreViews": "Інші вигляди",
     "openDay": "Відкрити день",
     "noEventsThisDay": "Нічого не заплановано.",
-    "task": "Завдання"
+    "previousYear": "Попередній рік",
+    "nextYear": "Наступний рік",
+    "previousWeek": "Попередній тиждень",
+    "nextWeek": "Наступний тиждень",
+    "previousDays": "Попередні дні",
+    "nextDays": "Наступні дні",
+    "previousDay": "Попередній день",
+    "nextDay": "Наступний день"
   },
   "dateFormats": {
     "long": "EEEE, d MMMM yyyy",
@@ -2473,7 +2494,8 @@
     "rateLimitedRetrying": "Забагато запитів, повторна спроба…",
     "rateLimitedGaveUp": "Забагато запитів. Сеанс усе ще активний; оновіть сторінку трохи згодом.",
     "serverBusyRetrying": "Сервер зайнятий, повторна спроба…",
-    "serverBusyRetry": "Повторити"
+    "serverBusyRetry": "Повторити",
+    "sign_up": "Зареєструватися"
   },
   "dropdown": {
     "createNew": "Створити новий",
@@ -2572,7 +2594,7 @@
     "presetWork": "Робота",
     "presetHealth": "Здоров’я",
     "presetFamily": "Родина",
-    "suggestDomains": "Запропонувати 5 сфер",
+    "suggestDomains": "Запропонувати 5 областей",
     "domains": {
       "business": "Бізнес і гроші",
       "tech": "Технології та системи",
@@ -2604,7 +2626,7 @@
   },
   "tags": {
     "loading": "Завантаження тегів...",
-    "searchPlaceholder": "Пошук тегів...",
+    "searchPlaceholder": "Пошук…",
     "title": "Теги",
     "noTagsFound": "Тегів не знайдено",
     "editTagAriaLabel": "Редагувати тег {{tagName}}",
@@ -2683,9 +2705,9 @@
     "uploading": "Завантаження..."
   },
   "searchPlaceholders": {
-    "searchProjects": "Шукати проєкти...",
-    "searchTags": "Пошук тегів...",
-    "searchTasks": "Пошук завдань..."
+    "searchProjects": "Пошук…",
+    "searchTags": "Пошук…",
+    "searchTasks": "Пошук…"
   },
   "ariaLabels": {
     "hideInfo": "Сховати інформацію",
@@ -3349,7 +3371,7 @@
   "views": {
     "title": "Розумні перегляди",
     "loading": "Завантаження переглядів...",
-    "searchPlaceholder": "Пошук переглядів...",
+    "searchPlaceholder": "Пошук…",
     "noViewsFound": "Переглядів не знайдено. Створіть перегляд, виконавши пошук і натиснувши \"Зберегти як розумний перегляд\".",
     "deleteView": "Видалити перегляд",
     "confirmDelete": "Ви впевнені, що хочете видалити перегляд \"{{viewName}}\"?",
@@ -3386,7 +3408,7 @@
     "filters": "фільтри"
   },
   "search": {
-    "placeholder": "Шукати завдання, проекти, нотатки...",
+    "placeholder": "Пошук…",
     "searchingFor": "Ви шукаєте",
     "allItems": "всі елементи",
     "containingText": ", що містять текст",
@@ -4082,7 +4104,26 @@
     "archivedBadge": "в архіві",
     "deletePerson": "Видалити людину",
     "deleteConfirm": "Ви справді хочете видалити «{{name}}»? Цю дію не можна скасувати.",
-    "contact": "Контакт"
+    "contact": "Контакт",
+    "editPerson": "Редагувати людину",
+    "newPerson": "Нова людина",
+    "noAssignedTasks": "Немає завдань, призначених: {{name}}.",
+    "notFound": "Людину не знайдено.",
+    "relationship": "Стосунок",
+    "phone": "Телефон",
+    "namePlaceholder": "Тато, партнер, Аліса…",
+    "notesPlaceholder": "Нотатки про цю людину…",
+    "relationships": {
+      "family": "Родина",
+      "work": "Робота",
+      "friend": "Друг",
+      "other": "Інше"
+    },
+    "noPeopleYet": "Поки немає людей",
+    "clearAssignment": "Зняти призначення",
+    "nameRequired": "Вкажіть ім'я",
+    "saveError": "Не вдалося зберегти людину",
+    "signInLink": "Посилання для входу"
   },
   "members": {
     "addTitle": "Додати учасника",
@@ -4238,7 +4279,8 @@
       "addToTomorrow": "Додати на завтра",
       "regenerate": "Згенерувати знову",
       "draftTitle": "Чернетка ШІ",
-      "skippedCount": "Не ввійшло ({{count}})"
+      "skippedCount": "Не ввійшло ({{count}})",
+      "carried_one": "{{count}} завдання додано на завтра"
     },
     "lateWarning": "Час минув, а задачу не виконано",
     "movedOffPlan": "'{{name}}' більше не має терміну на сьогодні, тому її прибрано з плану на день.",
@@ -4515,7 +4557,7 @@
     "targetDate": "Термін",
     "noProjects": "До цієї цілі не прив'язано проектів.",
     "noTasks": "Ця ціль не має завдань.",
-    "searchGoals": "Пошук цілей…",
+    "searchGoals": "Пошук…",
     "clearGoal": "Прибрати ціль",
     "noGoalsFound": "Цілей не знайдено",
     "inactive": "Неактивна",
@@ -4554,7 +4596,8 @@
     "noAvailableGoals": "Немає доступних цілей",
     "progressHint": "Стовпчик: виконані завдання та проєкти. Лінія: час між створенням і цільовою датою.",
     "removeFromArea": "Вилучити з області",
-    "createTask": "Створити завдання"
+    "createTask": "Створити завдання",
+    "noGoal": "Без мети"
   },
   "templates": {
     "new": "Новий шаблон",
@@ -4575,7 +4618,7 @@
       "empty": "У каталозі поки немає шаблонів.",
       "title": "Каталог",
       "subtitle": "Переглядайте та встановлюйте готові шаблони від спільноти",
-      "search": "Пошук у каталозі..."
+      "search": "Пошук…"
     },
     "taskList": "Завдання",
     "noTasks": "У цьому шаблоні немає завдань",
@@ -5133,7 +5176,7 @@
       "reviewIn30": "Переглянути через 30 днів",
       "reviewOn": "Переглянути…",
       "keepLater": "Залишити відкладеним",
-      "toTask": "Зробити завданням",
+      "toTask": "Створити завдання",
       "toLater": "Відкласти на потім",
       "discard": "Відкинути",
       "openInbox": "Відкрити вхідні",
@@ -5227,7 +5270,7 @@
     "title": "Зв’язки",
     "add": "Додати зв’язок",
     "remove": "Видалити зв’язок",
-    "searchPlaceholder": "Пошук задачі...",
+    "searchPlaceholder": "Пошук…",
     "addFailed": "Не вдалося додати зв’язок.",
     "removeFailed": "Не вдалося видалити зв’язок.",
     "blocked": "Заблоковано",
@@ -6198,7 +6241,11 @@
     "hideCompleted": "Приховати виконані",
     "showCompletedTasks": "Показати виконані",
     "dropOverlaps": "Перетини",
-    "dropPast": "У минулому"
+    "dropPast": "У минулому",
+    "habitsCount": "Звички · {{n}}",
+    "habitsDone": "Виконано · {{n}}",
+    "habitAt": "{{name}} о {{time}}",
+    "habitLogFailed": "Не вдалося відмітити звичку."
   },
   "upcoming": {
     "title": "План",
@@ -6247,12 +6294,8 @@
     "noProject": "Без проєкту",
     "noTag": "Без мітки",
     "priority": {
-      "high": "Високий",
-      "medium": "Середній",
-      "low": "Низький",
       "none": "Без пріоритету"
     },
-    "horizonsEmpty": "Поки що тут порожньо.",
     "thisWeek": "Цього тижня",
     "thisMonth": "Цього місяця",
     "nextMonth": "Наступного місяця",
@@ -6298,14 +6341,19 @@
     "load": "{{planned}} / {{available}}",
     "done": "Готово ({{n}})",
     "subtaskOf": "↳ {{parent}}",
-    "addToInbox": "Додати до вхідних",
-    "inboxNewItem": "Новий елемент у вхідних",
     "addToInboxFailed": "Не вдалося додати. Спробуйте ще раз.",
     "addEmptyName": "Дайте назву завданню",
     "addTaskIn": "Додати завдання до {{name}}",
-    "thisWeekOnlyPlanned": "Немає без фіксованого дня · {{count}} заплановано на день",
     "previous": "Попередній день",
-    "next": "Наступний день"
+    "next": "Наступний день",
+    "nextWeekHint": "Заплановано на наступний тиждень, без конкретного дня",
+    "stripLabel": "Надіслати на горизонт",
+    "stripOpen": "Відкрити {{name}} у Горизонтах",
+    "sentToHorizon": "Надіслано: {{name}}",
+    "plannedOnDayHint_one": "Заплановано на день: {{count}}",
+    "plannedOnDayHint_few": "Заплановано на день: {{count}}",
+    "plannedOnDayHint_many": "Заплановано на день: {{count}}",
+    "plannedOnDayHint_other": "Заплановано на день: {{count}}"
   },
   "offline": {
     "offline": "Немає зв’язку",

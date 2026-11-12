@@ -47,21 +47,8 @@ import SkeletonRows from './Shared/SkeletonRows';
 
 const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
-const getSearchPlaceholder = (language: string): string => {
-    const placeholders: Record<string, string> = {
-        en: 'Search tasks...',
-        el: 'Αναζήτηση εργασιών...',
-        es: 'Buscar tareas...',
-        de: 'Aufgaben suchen...',
-        jp: 'タスクを検索...',
-        ua: 'Пошук завдань...',
-    };
-
-    return placeholders[language] || 'Search tasks...';
-};
-
 const Tasks: React.FC = () => {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const activeFocus = useFocus();
     const focusId = focusKey(activeFocus);
     const { showSuccessToast, showErrorToast } = useToast();
@@ -1396,8 +1383,9 @@ const Tasks: React.FC = () => {
                             <MagnifyingGlassIcon className="h-5 w-5 text-gray-600 dark:text-gray-300 mr-2" />
                             <input
                                 type="text"
-                                placeholder={getSearchPlaceholder(
-                                    i18n.language
+                                placeholder={t(
+                                    'tasks.searchPlaceholder',
+                                    'Search…'
                                 )}
                                 value={taskSearchQuery}
                                 onChange={(e) =>

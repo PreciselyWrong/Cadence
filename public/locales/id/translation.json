@@ -122,8 +122,6 @@
       "dismiss": "Abaikan",
       "acceptAll": "Terima semua",
       "apply": "Terapkan",
-      "medium": "Sedang",
-      "high": "Tinggi",
       "priority": "Prioritas",
       "newTag": "Tag baru: #{{name}}",
       "tags": "Tag",
@@ -248,7 +246,7 @@
     "preview": "Pratonton",
     "download": "Unduh",
     "exitFocusMode": "Keluar dari mode fokus",
-    "searchTimezones": "Cari zona waktu...",
+    "searchTimezones": "Cari…",
     "dismiss": "Tutup",
     "search": "Cari",
     "previous": "Sebelumnya",
@@ -277,7 +275,10 @@
     "resolving": "Menyelesaikan...",
     "showLess": "Tampilkan lebih sedikit",
     "breadcrumb": "Breadcrumb",
-    "undo": "Batalkan"
+    "undo": "Batalkan",
+    "copyCode": "Salin kode",
+    "copy": "Salin",
+    "copied": "Disalin"
   },
   "sidebar": {
     "links": "Tautan",
@@ -333,7 +334,6 @@
     "collapseViews": "Ciutkan daftar tampilan",
     "expandViews": "Luaskan daftar tampilan",
     "summary": "Ringkasan",
-    "tomorrow": "Besok",
     "next7Days": "7 hari ke depan",
     "more": "Lainnya",
     "toggleFolder": "Tampilkan atau sembunyikan proyek",
@@ -414,7 +414,7 @@
     "taskCompleted": "tugas selesai",
     "tasksCompleted": "tugas selesai",
     "noTasksAvailable": "Tidak ada tugas yang tersedia.",
-    "searchPlaceholder": "Cari tugas...",
+    "searchPlaceholder": "Cari…",
     "addNewTask": "Tambahkan Tugas Baru",
     "addTaskInline": "+ Tambah tugas",
     "metrics": "Metrik",
@@ -1566,7 +1566,8 @@
     "rateLimitedRetrying": "Terlalu banyak permintaan, mencoba lagi…",
     "rateLimitedGaveUp": "Terlalu banyak permintaan. Sesi masih aktif; muat ulang sebentar lagi.",
     "serverBusyRetrying": "Server sibuk, mencoba lagi…",
-    "serverBusyRetry": "Coba lagi"
+    "serverBusyRetry": "Coba lagi",
+    "sign_up": "Daftar"
   },
   "dropdown": {
     "createNew": "Buat Baru",
@@ -1688,7 +1689,8 @@
     "noTasks": "Tidak ada tugas.",
     "nextAction": "Tindakan berikutnya",
     "nextActionLine": "Tindakan berikutnya: {{name}}",
-    "noCompletedTasks": "Tidak ada tugas yang selesai."
+    "noCompletedTasks": "Tidak ada tugas yang selesai.",
+    "views": "Tampilan proyek"
   },
   "errors": {
     "required": "Kolom ini diperlukan",
@@ -1832,6 +1834,18 @@
       "reasonKeyword": "Dimulai dengan “{{detail}}”",
       "reasonLong": "Teksnya panjang, seperti catatan",
       "reasonDefault": "Teks pendek, biasanya tugas"
+    },
+    "sources": {
+      "telegram": "Telegram",
+      "gmail": "Gmail",
+      "mcp": "MCP",
+      "android": "Android",
+      "api": "API",
+      "email": "Email",
+      "mail": "Surat",
+      "desktop": "Desktop",
+      "link": "Tautan",
+      "share": "Bagikan"
     }
   },
   "dateFormats": {
@@ -2085,7 +2099,7 @@
     "areaFollowsParent": "Area mengikuti proyek induk",
     "loading": "Memuat proyek...",
     "error": "Kesalahan memuat proyek",
-    "searchPlaceholder": "Cari proyek...",
+    "searchPlaceholder": "Cari…",
     "title": "Proyek",
     "noProjectsFound": "Tidak ada proyek ditemukan",
     "cardViewAriaLabel": "Tampilan Kartu",
@@ -2303,7 +2317,7 @@
     "emptyPreview": "Catatan kosong",
     "loading": "Memuat catatan...",
     "error": "Kesalahan memuat catatan",
-    "searchPlaceholder": "Cari catatan...",
+    "searchPlaceholder": "Cari…",
     "noNotesFound": "Tidak ada catatan ditemukan",
     "title": "Catatan",
     "deleteNoteAriaLabel": "Hapus catatan {{noteTitle}}",
@@ -2383,11 +2397,16 @@
     "fileUploadError": "Tidak dapat mengunggah {{name}}",
     "slashFile": "Gambar atau File",
     "slashFileHint": "Unggah dan letakkan di sini",
-    "toggleDropdownMenu": "Buka atau tutup menu tarik-turun"
+    "toggleDropdownMenu": "Buka atau tutup menu tarik-turun",
+    "saved": "Tersimpan",
+    "unsaved": "Perubahan belum disimpan",
+    "backgroundColor": "Warna latar",
+    "selectProject": "Pilih proyek",
+    "noMatchingNotes": "Tidak ada catatan yang cocok"
   },
   "tags": {
     "loading": "Memuat tag...",
-    "searchPlaceholder": "Cari tag...",
+    "searchPlaceholder": "Cari…",
     "title": "Tag",
     "noTagsFound": "Tidak ada tag ditemukan",
     "editTagAriaLabel": "Ubah tag {{tagName}}",
@@ -2586,8 +2605,6 @@
     "connectionError": "Gagal terhubung ke Google Calendar. Silakan coba lagi.",
     "disconnectionError": "Gagal memutuskan sambungan dari Google Calendar. Silakan coba lagi.",
     "taskDetails": "Detail Tugas",
-    "editTask": "Edit Tugas",
-    "goToTasks": "Pergi ke Tugas",
     "close": "Tutup",
     "title": "Judul",
     "status": "Status",
@@ -2598,11 +2615,6 @@
     "area": "Area",
     "description": "Deskripsi",
     "created": "Dibuat",
-    "completed": "Selesai",
-    "pending": "Tertunda",
-    "high": "Tinggi",
-    "medium": "Sedang",
-    "low": "Rendah",
     "time": "Waktu",
     "allDay": "Sepanjang hari",
     "google": {
@@ -2634,7 +2646,14 @@
     "moreViews": "Tampilan lainnya",
     "openDay": "Buka hari",
     "noEventsThisDay": "Tidak ada yang direncanakan.",
-    "task": "Tugas"
+    "previousYear": "Tahun sebelumnya",
+    "nextYear": "Tahun berikutnya",
+    "previousWeek": "Minggu sebelumnya",
+    "nextWeek": "Minggu berikutnya",
+    "previousDays": "Hari-hari sebelumnya",
+    "nextDays": "Hari-hari berikutnya",
+    "previousDay": "Hari sebelumnya",
+    "nextDay": "Hari berikutnya"
   },
   "pages": {
     "notFound": {
@@ -2653,9 +2672,9 @@
     "uploading": "Mengunggah..."
   },
   "searchPlaceholders": {
-    "searchProjects": "Cari proyek...",
-    "searchTags": "Cari tag...",
-    "searchTasks": "Cari tugas..."
+    "searchProjects": "Cari…",
+    "searchTags": "Cari…",
+    "searchTasks": "Cari…"
   },
   "ariaLabels": {
     "hideInfo": "Sembunyikan info",
@@ -3311,7 +3330,7 @@
   "views": {
     "title": "Tampilan Cerdas",
     "loading": "Memuat tampilan...",
-    "searchPlaceholder": "Cari tampilan...",
+    "searchPlaceholder": "Cari…",
     "noViewsFound": "Tidak ada tampilan yang ditemukan. Buat tampilan dengan melakukan pencarian dan mengklik \"Simpan sebagai Tampilan Cerdas\".",
     "deleteView": "Hapus Tampilan",
     "confirmDelete": "Apakah Anda yakin ingin menghapus tampilan \"{{viewName}}\"?",
@@ -3348,7 +3367,7 @@
     "filters": "filter"
   },
   "search": {
-    "placeholder": "Cari tugas, proyek, catatan...",
+    "placeholder": "Cari…",
     "searchingFor": "Anda sedang mencari",
     "allItems": "semua item",
     "containingText": ", yang mengandung teks",
@@ -4038,7 +4057,26 @@
     "archivedBadge": "diarsipkan",
     "deletePerson": "Hapus orang",
     "deleteConfirm": "Yakin ingin menghapus \"{{name}}\"? Tindakan ini tidak dapat dibatalkan.",
-    "contact": "Kontak"
+    "contact": "Kontak",
+    "editPerson": "Edit orang",
+    "newPerson": "Orang baru",
+    "noAssignedTasks": "Tidak ada tugas yang ditugaskan ke {{name}}.",
+    "notFound": "Orang tidak ditemukan.",
+    "relationship": "Hubungan",
+    "phone": "Telepon",
+    "namePlaceholder": "Ayah, pasangan, Alice…",
+    "notesPlaceholder": "Catatan tentang orang ini…",
+    "relationships": {
+      "family": "Keluarga",
+      "work": "Pekerjaan",
+      "friend": "Teman",
+      "other": "Lainnya"
+    },
+    "noPeopleYet": "Belum ada orang",
+    "clearAssignment": "Hapus penugasan",
+    "nameRequired": "Nama wajib diisi",
+    "saveError": "Gagal menyimpan orang",
+    "signInLink": "Tautan masuk"
   },
   "members": {
     "addTitle": "Tambah anggota",
@@ -4467,7 +4505,7 @@
     "targetDate": "Target",
     "noProjects": "Tidak ada proyek yang terhubung ke tujuan ini.",
     "noTasks": "Tidak ada tugas untuk tujuan ini.",
-    "searchGoals": "Cari tujuan…",
+    "searchGoals": "Cari…",
     "clearGoal": "Hapus tujuan",
     "noGoalsFound": "Tujuan tidak ditemukan",
     "inactive": "Tidak aktif",
@@ -4506,7 +4544,8 @@
     "noAvailableGoals": "Tidak ada tujuan yang tersedia",
     "progressHint": "Batang: tugas dan proyek selesai. Garis: waktu yang berlalu antara pembuatan dan tanggal target.",
     "removeFromArea": "Hapus dari area",
-    "createTask": "Buat tugas"
+    "createTask": "Buat tugas",
+    "noGoal": "Tanpa tujuan"
   },
   "templates": {
     "new": "Templat Baru",
@@ -4527,7 +4566,7 @@
       "empty": "Belum ada templat di marketplace.",
       "title": "Pasar",
       "subtitle": "Jelajahi dan pasang templat siap pakai dari komunitas",
-      "search": "Cari di marketplace..."
+      "search": "Cari…"
     },
     "taskList": "Tugas",
     "noTasks": "Tidak ada tugas di templat ini",
@@ -5083,7 +5122,7 @@
       "reviewIn30": "Tinjau dalam 30 hari",
       "reviewOn": "Tinjau pada…",
       "keepLater": "Tetap diparkir",
-      "toTask": "Jadikan tugas",
+      "toTask": "Buat tugas",
       "toLater": "Parkir untuk nanti",
       "discard": "Buang",
       "openInbox": "Buka kotak masuk",
@@ -5177,7 +5216,7 @@
     "title": "Relasi",
     "add": "Tambahkan relasi",
     "remove": "Hapus relasi",
-    "searchPlaceholder": "Cari tugas...",
+    "searchPlaceholder": "Cari…",
     "addFailed": "Gagal menambahkan relasi.",
     "removeFailed": "Gagal menghapus relasi.",
     "blocked": "Terhalang",
@@ -6128,7 +6167,11 @@
     "hideCompleted": "Sembunyikan yang selesai",
     "showCompletedTasks": "Tampilkan yang selesai",
     "dropOverlaps": "Tumpang tindih",
-    "dropPast": "Sudah lewat"
+    "dropPast": "Sudah lewat",
+    "habitsCount": "Kebiasaan · {{n}}",
+    "habitsDone": "Selesai · {{n}}",
+    "habitAt": "{{name}} pukul {{time}}",
+    "habitLogFailed": "Kebiasaan tidak dapat dicatat."
   },
   "upcoming": {
     "title": "Rencana",
@@ -6177,12 +6220,8 @@
     "noProject": "Tanpa proyek",
     "noTag": "Tanpa label",
     "priority": {
-      "high": "Tinggi",
-      "medium": "Sedang",
-      "low": "Rendah",
       "none": "Tanpa prioritas"
     },
-    "horizonsEmpty": "Belum ada apa-apa di sini.",
     "thisWeek": "Minggu ini",
     "thisMonth": "Bulan ini",
     "nextMonth": "Bulan depan",
@@ -6228,14 +6267,16 @@
     "load": "{{planned}} / {{available}}",
     "done": "Selesai ({{n}})",
     "subtaskOf": "↳ {{parent}}",
-    "addToInbox": "Tambahkan ke kotak masuk",
-    "inboxNewItem": "Item kotak masuk baru",
     "addToInboxFailed": "Gagal menambahkan. Coba lagi.",
     "addEmptyName": "Beri nama tugasnya",
     "addTaskIn": "Tambahkan tugas ke {{name}}",
-    "thisWeekOnlyPlanned": "Tidak ada tanpa hari tetap · {{count}} direncanakan pada suatu hari",
     "previous": "Hari sebelumnya",
-    "next": "Hari berikutnya"
+    "next": "Hari berikutnya",
+    "nextWeekHint": "Dijadwalkan untuk minggu depan, tanpa hari tetap",
+    "stripLabel": "Kirim ke horizon",
+    "stripOpen": "Buka {{name}} di Horizon",
+    "sentToHorizon": "Dikirim ke {{name}}",
+    "plannedOnDayHint_other": "{{count}} direncanakan pada suatu hari"
   },
   "offline": {
     "offline": "Offline",

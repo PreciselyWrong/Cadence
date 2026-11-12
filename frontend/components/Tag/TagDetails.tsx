@@ -848,8 +848,8 @@ const TagDetails: React.FC = () => {
                             <NewTask
                                 onTaskCreate={handleInlineCreate}
                                 placeholder={t(
-                                    'tasks.addTaskInline',
-                                    '+ Add task'
+                                    'today.addPlaceholder',
+                                    'Add a task'
                                 )}
                             />
                         </div>

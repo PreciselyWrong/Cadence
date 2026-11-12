@@ -122,8 +122,6 @@
       "dismiss": "Пропусни",
       "acceptAll": "Приеми всички",
       "apply": "Приложи",
-      "medium": "Среден",
-      "high": "Висок",
       "priority": "Приоритет",
       "newTag": "Нов етикет: #{{name}}",
       "tags": "Етикети",
@@ -148,7 +146,7 @@
       "archive": "Архивирай в Gmail",
       "taskName": "Име на задачата",
       "taskDue": "Краен срок",
-      "createTask": "Създай задачата",
+      "createTask": "Създай задача",
       "taskCreated": "Задачата е създадена",
       "replied": "Отговорът е отворен в Gmail",
       "postponed": "Връща се утре",
@@ -248,7 +246,7 @@
     "preview": "Преглед",
     "download": "Изтегляне",
     "exitFocusMode": "Излез от режим на фокус",
-    "searchTimezones": "Търсене на часови зони...",
+    "searchTimezones": "Търсене…",
     "dismiss": "Отхвърли",
     "search": "Търсене",
     "previous": "Предишен",
@@ -277,7 +275,10 @@
     "resolving": "Разрешаване...",
     "showLess": "Показване на по-малко",
     "breadcrumb": "Навигационна пътека",
-    "undo": "Отмяна"
+    "undo": "Отмяна",
+    "copyCode": "Копирай кода",
+    "copy": "Копиране",
+    "copied": "Копирано"
   },
   "sidebar": {
     "links": "Връзки",
@@ -333,7 +334,6 @@
     "collapseViews": "Свий списъка с изгледи",
     "expandViews": "Разгъни списъка с изгледи",
     "summary": "Обобщение",
-    "tomorrow": "Утре",
     "next7Days": "Следващите 7 дни",
     "more": "Още",
     "toggleFolder": "Показване или скриване на проектите",
@@ -414,7 +414,7 @@
     "taskCompleted": "задача завършена",
     "tasksCompleted": "задачи завършени",
     "noTasksAvailable": "Няма налични задачи.",
-    "searchPlaceholder": "Търсене на задачи...",
+    "searchPlaceholder": "Търсене…",
     "addNewTask": "Добави нова задача",
     "addTaskInline": "+ Добави задача",
     "metrics": "Метрики",
@@ -1085,7 +1085,8 @@
       "hoursTitle": "Твоят ден",
       "hoursTo": "до",
       "taggedToday": "С етикет #today",
-      "taggedTodayDetail": "Отворени задачи с етикет #today, независимо от датите им."
+      "taggedTodayDetail": "Отворени задачи с етикет #today, независимо от датите им.",
+      "maxOption_one": "{{count}} задача"
     },
     "aiApiKey": "API ключ",
     "aiApiKeyClear": "Изчисти",
@@ -1566,7 +1567,8 @@
     "rateLimitedRetrying": "Твърде много заявки, опит отново…",
     "rateLimitedGaveUp": "Твърде много заявки. Сесията е още активна; презаредете след малко.",
     "serverBusyRetrying": "Сървърът е зает, нов опит…",
-    "serverBusyRetry": "Опитай отново"
+    "serverBusyRetry": "Опитай отново",
+    "sign_up": "Регистрирайте се"
   },
   "dropdown": {
     "createNew": "Създай ново",
@@ -1688,7 +1690,8 @@
     "noTasks": "Няма задачи.",
     "nextAction": "Следващо действие",
     "nextActionLine": "Следващо действие: {{name}}",
-    "noCompletedTasks": "Няма завършени задачи."
+    "noCompletedTasks": "Няма завършени задачи.",
+    "views": "Изгледи на проекта"
   },
   "errors": {
     "required": "Това поле е задължително",
@@ -1832,6 +1835,18 @@
       "reasonKeyword": "Започва с “{{detail}}”",
       "reasonLong": "Дълъг е, като бележка",
       "reasonDefault": "Кратък текст, най-често задача"
+    },
+    "sources": {
+      "telegram": "Telegram",
+      "gmail": "Gmail",
+      "mcp": "MCP",
+      "android": "Android",
+      "api": "API",
+      "email": "Имейл",
+      "mail": "Поща",
+      "desktop": "Настолно приложение",
+      "link": "Връзка",
+      "share": "Споделяне"
     }
   },
   "dateFormats": {
@@ -2076,7 +2091,13 @@
     "noUpcomingOccurrences": "Няма предстоящи повторения.",
     "turnIntoProject": "Превърни в проект",
     "turnIntoProjectError": "Не можа да бъде превърнато в проект.",
-    "turnIntoProjectMessage": "Да превърна ли „{{name}}“ в проект? Подзадачите му стават задачи на проекта, а адресите от бележката – страниците му."
+    "turnIntoProjectMessage": "Да превърна ли „{{name}}“ в проект? Подзадачите му стават задачи на проекта, а адресите от бележката – страниците му.",
+    "inDays_one": "в {{count}} ден",
+    "daysAgo_one": "{{count}} ден назад",
+    "hoursAgo_one": "преди {{count}} час",
+    "minutesAgo_one": "преди {{count}} минута",
+    "inMinutes_one": "след {{count}} минута",
+    "inHours_one": "след {{count}} час"
   },
   "projects": {
     "parentProject": "Родителски проект",
@@ -2085,7 +2106,7 @@
     "areaFollowsParent": "Областта следва родителския проект",
     "loading": "Зареждане на проекти...",
     "error": "Грешка при зареждане на проектите",
-    "searchPlaceholder": "Търсене на проекти...",
+    "searchPlaceholder": "Търсене…",
     "title": "Проекти",
     "noProjectsFound": "Не са намерени проекти",
     "cardViewAriaLabel": "Визуализация на карти",
@@ -2303,7 +2324,7 @@
     "emptyPreview": "Празна бележка",
     "loading": "Зареждане на бележки...",
     "error": "Грешка при зареждане на бележки",
-    "searchPlaceholder": "Търсене на бележки...",
+    "searchPlaceholder": "Търсене…",
     "noNotesFound": "Не са намерени бележки",
     "title": "Бележки",
     "deleteNoteAriaLabel": "Изтрий бележка {{noteTitle}}",
@@ -2383,11 +2404,16 @@
     "fileUploadError": "Файлът {{name}} не можа да бъде качен",
     "slashFile": "Изображение или файл",
     "slashFileHint": "Качете го и го поставете тук",
-    "toggleDropdownMenu": "Превключване на падащото меню"
+    "toggleDropdownMenu": "Превключване на падащото меню",
+    "saved": "Запазено",
+    "unsaved": "Незапазени промени",
+    "backgroundColor": "Цвят на фона",
+    "selectProject": "Изберете проект",
+    "noMatchingNotes": "Няма съвпадащи бележки"
   },
   "tags": {
     "loading": "Зареждане на тагове...",
-    "searchPlaceholder": "Търсене на тагове...",
+    "searchPlaceholder": "Търсене…",
     "title": "Тагове",
     "noTagsFound": "Не са намерени тагове",
     "editTagAriaLabel": "Редактирай таг {{tagName}}",
@@ -2586,8 +2612,6 @@
     "connectionError": "Неуспешно свързване с Google Календар. Моля, опитайте отново.",
     "disconnectionError": "Неуспешно прекратяване на връзката с Google Календар. Моля, опитайте отново.",
     "taskDetails": "Детайли на задачата",
-    "editTask": "Редактиране на задачата",
-    "goToTasks": "Отидете на задачите",
     "close": "Затвори",
     "title": "Заглавие",
     "status": "Статус",
@@ -2598,11 +2622,6 @@
     "area": "Област",
     "description": "Описание",
     "created": "Създадено",
-    "completed": "Завършено",
-    "pending": "В очакване",
-    "high": "Високо",
-    "medium": "Средно",
-    "low": "Ниско",
     "time": "Време",
     "allDay": "Цял ден",
     "google": {
@@ -2634,7 +2653,14 @@
     "moreViews": "Още изгледи",
     "openDay": "Отвори деня",
     "noEventsThisDay": "Нищо не е планирано.",
-    "task": "Задача"
+    "previousYear": "Предишна година",
+    "nextYear": "Следваща година",
+    "previousWeek": "Предишна седмица",
+    "nextWeek": "Следваща седмица",
+    "previousDays": "Предишни дни",
+    "nextDays": "Следващи дни",
+    "previousDay": "Предишен ден",
+    "nextDay": "Следващ ден"
   },
   "pages": {
     "notFound": {
@@ -2653,9 +2679,9 @@
     "uploading": "Качване..."
   },
   "searchPlaceholders": {
-    "searchProjects": "Търсене на проекти...",
-    "searchTags": "Търсене на тагове...",
-    "searchTasks": "Търсене на задачи..."
+    "searchProjects": "Търсене…",
+    "searchTags": "Търсене…",
+    "searchTasks": "Търсене…"
   },
   "ariaLabels": {
     "hideInfo": "Скрий информация",
@@ -3311,7 +3337,7 @@
   "views": {
     "title": "Умни прегледи",
     "loading": "Зареждане на прегледи...",
-    "searchPlaceholder": "Търсене на прегледи...",
+    "searchPlaceholder": "Търсене…",
     "noViewsFound": "Не са намерени прегледи. Създайте преглед, като извършите търсене и кликнете \"Запази като Умен преглед\".",
     "deleteView": "Изтриване на преглед",
     "confirmDelete": "Сигурни ли сте, че искате да изтриете прегледа \"{{viewName}}\"?",
@@ -3348,7 +3374,7 @@
     "filters": "филтри"
   },
   "search": {
-    "placeholder": "Търсене на задачи, проекти, бележки...",
+    "placeholder": "Търсене…",
     "searchingFor": "Търсите",
     "allItems": "всички елементи",
     "containingText": ", съдържащ текста",
@@ -4038,7 +4064,26 @@
     "archivedBadge": "архивиран",
     "deletePerson": "Изтрий човека",
     "deleteConfirm": "Сигурни ли сте, че искате да изтриете „{{name}}“? Това не може да се отмени.",
-    "contact": "Контакт"
+    "contact": "Контакт",
+    "editPerson": "Редактиране на човек",
+    "newPerson": "Нов човек",
+    "noAssignedTasks": "Няма задачи, възложени на {{name}}.",
+    "notFound": "Човекът не е намерен.",
+    "relationship": "Връзка",
+    "phone": "Телефон",
+    "namePlaceholder": "Татко, партньор, Алис…",
+    "notesPlaceholder": "Бележки за този човек…",
+    "relationships": {
+      "family": "Семейство",
+      "work": "Работа",
+      "friend": "Приятел",
+      "other": "Друго"
+    },
+    "noPeopleYet": "Още няма хора",
+    "clearAssignment": "Премахни възлагането",
+    "nameRequired": "Името е задължително",
+    "saveError": "Човекът не можа да бъде запазен",
+    "signInLink": "Връзка за вход"
   },
   "members": {
     "addTitle": "Добави член",
@@ -4194,7 +4239,8 @@
       "addToTomorrow": "Добави за утре",
       "regenerate": "Генерирай отново",
       "draftTitle": "Чернова на ИИ",
-      "skippedCount": "Пропуснати ({{count}})"
+      "skippedCount": "Пропуснати ({{count}})",
+      "carried_one": "{{count}} задача добавена за утре"
     },
     "lateWarning": "Времето мина, а задачата не е готова",
     "movedOffPlan": "'{{name}}' вече не е със срок днес, затова беше премахната от плана за деня.",
@@ -4467,7 +4513,7 @@
     "targetDate": "Срок",
     "noProjects": "Няма проекти, свързани с тази цел.",
     "noTasks": "Няма задачи към тази цел.",
-    "searchGoals": "Търсене на цели…",
+    "searchGoals": "Търсене…",
     "clearGoal": "Премахни целта",
     "noGoalsFound": "Не са намерени цели",
     "inactive": "Неактивна",
@@ -4506,7 +4552,8 @@
     "noAvailableGoals": "Няма налични цели",
     "progressHint": "Лента: изпълнени задачи и проекти. Линия: изминало време между създаването и целевата дата.",
     "removeFromArea": "Премахване от областта",
-    "createTask": "Създай задача"
+    "createTask": "Създай задача",
+    "noGoal": "Без цел"
   },
   "templates": {
     "new": "Нов шаблон",
@@ -4527,7 +4574,7 @@
       "empty": "В каталога все още няма шаблони.",
       "title": "Каталог",
       "subtitle": "Разгледайте и инсталирайте готови шаблони от общността",
-      "search": "Търсене в каталога..."
+      "search": "Търсене…"
     },
     "taskList": "Задачи",
     "noTasks": "Няма задачи в този шаблон",
@@ -4831,7 +4878,13 @@
       "hierarchy_wbs": "WBS номера (1, 1.1, 1.2)",
       "hierarchy_indent": "редове с отстъп",
       "hierarchy_flat": "без подзадачи",
-      "hierarchy_auto": "разпознай ги"
+      "hierarchy_auto": "разпознай ги",
+      "countCreate_one": "{{count}} нова задача",
+      "countProjects_one": "{{count}} нов проект",
+      "countAreas_one": "{{count}} нова област",
+      "countTags_one": "{{count}} нов етикет",
+      "doneTitle_one": "Импортирана е {{count}} задача",
+      "rowCount_one": "{{count}} ред"
     },
     "issues": {
       "too_many_tags": "Запазват се само първите 20 етикета.",
@@ -5083,7 +5136,7 @@
       "reviewIn30": "Прегледай след 30 дни",
       "reviewOn": "Прегледай на…",
       "keepLater": "Остави паркирана",
-      "toTask": "Направи задача",
+      "toTask": "Създай задача",
       "toLater": "Паркирай за по-късно",
       "discard": "Отхвърли",
       "openInbox": "Отвори входящите",
@@ -5158,7 +5211,8 @@
     "dislike": "Не харесвам",
     "failedToReact": "Реакцията не можа да се обнови",
     "uploadingImage": "Качване на изображение...",
-    "imageUploadFailed": "Изображението не можа да се качи"
+    "imageUploadFailed": "Изображението не можа да се качи",
+    "count_one": "{{count}} коментар"
   },
   "sortable": {
     "move": "Премести",
@@ -5177,7 +5231,7 @@
     "title": "Свързани задачи",
     "add": "Добави връзка",
     "remove": "Премахни връзката",
-    "searchPlaceholder": "Търсене на задача...",
+    "searchPlaceholder": "Търсене…",
     "addFailed": "Връзката не можа да се добави.",
     "removeFailed": "Връзката не можа да се премахне.",
     "blocked": "Блокирана",
@@ -6130,7 +6184,11 @@
     "hideCompleted": "Скрий завършените",
     "showCompletedTasks": "Покажи завършените",
     "dropOverlaps": "Припокривания",
-    "dropPast": "В миналото"
+    "dropPast": "В миналото",
+    "habitsCount": "Навици · {{n}}",
+    "habitsDone": "Изпълнени · {{n}}",
+    "habitAt": "{{name}} в {{time}}",
+    "habitLogFailed": "Навикът не можа да бъде отбелязан."
   },
   "upcoming": {
     "title": "План",
@@ -6179,12 +6237,8 @@
     "noProject": "Без проект",
     "noTag": "Без етикет",
     "priority": {
-      "high": "Висок",
-      "medium": "Среден",
-      "low": "Нисък",
       "none": "Без приоритет"
     },
-    "horizonsEmpty": "Още нищо няма.",
     "thisWeek": "Тази седмица",
     "thisMonth": "Този месец",
     "nextMonth": "Следващият месец",
@@ -6230,14 +6284,17 @@
     "load": "{{planned}} / {{available}}",
     "done": "Готово ({{n}})",
     "subtaskOf": "↳ {{parent}}",
-    "addToInbox": "Добави във входящите",
-    "inboxNewItem": "Нов елемент във входящите",
     "addToInboxFailed": "Не може да се добави. Опитай отново.",
     "addEmptyName": "Въведи име за задачата",
     "addTaskIn": "Добави задача в {{name}}",
-    "thisWeekOnlyPlanned": "Нищо без фиксиран ден · {{count}} планирани за ден",
     "previous": "Предишен ден",
-    "next": "Следващ ден"
+    "next": "Следващ ден",
+    "nextWeekHint": "Ангажирано за следващата седмица, без определен ден",
+    "stripLabel": "Изпрати към хоризонт",
+    "stripOpen": "Отвори {{name}} в Хоризонти",
+    "sentToHorizon": "Изпратена към {{name}}",
+    "plannedOnDayHint_one": "{{count}} планирана за ден",
+    "plannedOnDayHint_other": "{{count}} планирани за ден"
   },
   "offline": {
     "offline": "Офлайн",

@@ -122,8 +122,6 @@
       "dismiss": "Bỏ qua",
       "acceptAll": "Chấp nhận tất cả",
       "apply": "Áp dụng",
-      "medium": "Trung bình",
-      "high": "Cao",
       "priority": "Ưu tiên",
       "newTag": "Thẻ mới: #{{name}}",
       "tags": "Thẻ",
@@ -248,7 +246,7 @@
     "preview": "Xem trước",
     "download": "Tải xuống",
     "exitFocusMode": "Thoát chế độ tập trung",
-    "searchTimezones": "Tìm kiếm múi giờ...",
+    "searchTimezones": "Tìm kiếm…",
     "dismiss": "Bỏ qua",
     "search": "Tìm kiếm",
     "previous": "Trước",
@@ -277,7 +275,10 @@
     "resolving": "Đang xử lý...",
     "showLess": "Thu gọn",
     "breadcrumb": "Đường dẫn",
-    "undo": "Hoàn tác"
+    "undo": "Hoàn tác",
+    "copyCode": "Sao chép mã",
+    "copy": "Sao chép",
+    "copied": "Đã sao chép"
   },
   "sidebar": {
     "links": "Liên kết",
@@ -333,7 +334,6 @@
     "collapseViews": "Thu gọn danh sách chế độ xem",
     "expandViews": "Mở rộng danh sách chế độ xem",
     "summary": "Tóm tắt",
-    "tomorrow": "Ngày mai",
     "next7Days": "7 ngày tới",
     "more": "Thêm",
     "toggleFolder": "Hiện hoặc ẩn dự án",
@@ -414,7 +414,7 @@
     "taskCompleted": "công việc đã hoàn thành",
     "tasksCompleted": "các công việc đã hoàn thành",
     "noTasksAvailable": "Không có công việc nào khả dụng.",
-    "searchPlaceholder": "Tìm kiếm công việc...",
+    "searchPlaceholder": "Tìm kiếm…",
     "addNewTask": "Thêm Công Việc Mới",
     "addTaskInline": "+ Thêm việc",
     "metrics": "Chỉ số",
@@ -1566,7 +1566,8 @@
     "rateLimitedRetrying": "Quá nhiều yêu cầu, đang thử lại…",
     "rateLimitedGaveUp": "Quá nhiều yêu cầu. Phiên vẫn đang hoạt động; hãy tải lại sau ít phút.",
     "serverBusyRetrying": "Máy chủ đang bận, đang thử lại…",
-    "serverBusyRetry": "Thử lại"
+    "serverBusyRetry": "Thử lại",
+    "sign_up": "Đăng Ký"
   },
   "dropdown": {
     "createNew": "Tạo mới",
@@ -1688,7 +1689,8 @@
     "noTasks": "Không có nhiệm vụ.",
     "nextAction": "Hành động tiếp theo",
     "nextActionLine": "Hành động tiếp theo: {{name}}",
-    "noCompletedTasks": "Chưa có công việc hoàn thành."
+    "noCompletedTasks": "Chưa có công việc hoàn thành.",
+    "views": "Chế độ xem dự án"
   },
   "errors": {
     "required": "Trường này là bắt buộc",
@@ -1832,6 +1834,18 @@
       "reasonKeyword": "Bắt đầu bằng “{{detail}}”",
       "reasonLong": "Dài, giống một ghi chú",
       "reasonDefault": "Văn bản ngắn, thường là công việc"
+    },
+    "sources": {
+      "telegram": "Telegram",
+      "gmail": "Gmail",
+      "mcp": "MCP",
+      "android": "Android",
+      "api": "API",
+      "email": "Email",
+      "mail": "Thư",
+      "desktop": "Máy tính",
+      "link": "Liên kết",
+      "share": "Chia sẻ"
     }
   },
   "dateFormats": {
@@ -2085,7 +2099,7 @@
     "areaFollowsParent": "Khu vực theo dự án cha",
     "loading": "Đang tải dự án...",
     "error": "Lỗi khi tải dự án",
-    "searchPlaceholder": "Tìm kiếm dự án...",
+    "searchPlaceholder": "Tìm kiếm…",
     "title": "Dự án",
     "noProjectsFound": "Không tìm thấy dự án nào",
     "cardViewAriaLabel": "Chế độ xem thẻ",
@@ -2268,7 +2282,7 @@
     "presetWork": "Công việc",
     "presetHealth": "Sức khỏe",
     "presetFamily": "Gia đình",
-    "suggestDomains": "Gợi ý 5 lĩnh vực",
+    "suggestDomains": "Gợi ý 5 khu vực",
     "domains": {
       "business": "Kinh doanh & Tài chính",
       "tech": "Công nghệ & Hệ thống",
@@ -2303,7 +2317,7 @@
     "emptyPreview": "Ghi chú trống",
     "loading": "Đang tải ghi chú...",
     "error": "Lỗi khi tải ghi chú",
-    "searchPlaceholder": "Tìm kiếm ghi chú...",
+    "searchPlaceholder": "Tìm kiếm…",
     "noNotesFound": "Không tìm thấy ghi chú nào",
     "title": "Ghi chú",
     "deleteNoteAriaLabel": "Xóa ghi chú {{noteTitle}}",
@@ -2383,11 +2397,16 @@
     "fileUploadError": "Không thể tải lên {{name}}",
     "slashFile": "Hình ảnh hoặc tệp",
     "slashFileHint": "Tải lên và đặt tại đây",
-    "toggleDropdownMenu": "Bật/tắt menu thả xuống"
+    "toggleDropdownMenu": "Bật/tắt menu thả xuống",
+    "saved": "Đã lưu",
+    "unsaved": "Thay đổi chưa lưu",
+    "backgroundColor": "Màu nền",
+    "selectProject": "Chọn dự án",
+    "noMatchingNotes": "Không có ghi chú phù hợp"
   },
   "tags": {
     "loading": "Đang tải thẻ...",
-    "searchPlaceholder": "Tìm kiếm thẻ...",
+    "searchPlaceholder": "Tìm kiếm…",
     "title": "Thẻ",
     "noTagsFound": "Không tìm thấy thẻ nào",
     "editTagAriaLabel": "Chỉnh sửa thẻ {{tagName}}",
@@ -2586,8 +2605,6 @@
     "connectionError": "Không thể kết nối với Lịch Google. Vui lòng thử lại.",
     "disconnectionError": "Không thể ngắt kết nối với Lịch Google. Vui lòng thử lại.",
     "taskDetails": "Chi tiết nhiệm vụ",
-    "editTask": "Chỉnh sửa nhiệm vụ",
-    "goToTasks": "Đi đến Nhiệm vụ",
     "close": "Đóng",
     "title": "Tiêu đề",
     "status": "Trạng thái",
@@ -2598,11 +2615,6 @@
     "area": "Khu vực",
     "description": "Mô tả",
     "created": "Đã tạo",
-    "completed": "Đã hoàn thành",
-    "pending": "Đang chờ",
-    "high": "Cao",
-    "medium": "Trung bình",
-    "low": "Thấp",
     "time": "Thời gian",
     "allDay": "Cả ngày",
     "google": {
@@ -2634,7 +2646,14 @@
     "moreViews": "Thêm chế độ xem",
     "openDay": "Mở ngày",
     "noEventsThisDay": "Chưa có gì được lên kế hoạch.",
-    "task": "Công việc"
+    "previousYear": "Năm trước",
+    "nextYear": "Năm sau",
+    "previousWeek": "Tuần trước",
+    "nextWeek": "Tuần sau",
+    "previousDays": "Những ngày trước",
+    "nextDays": "Những ngày sau",
+    "previousDay": "Ngày trước",
+    "nextDay": "Ngày sau"
   },
   "pages": {
     "notFound": {
@@ -2653,9 +2672,9 @@
     "uploading": "Đang tải lên..."
   },
   "searchPlaceholders": {
-    "searchProjects": "Tìm kiếm dự án...",
-    "searchTags": "Tìm kiếm thẻ...",
-    "searchTasks": "Tìm kiếm nhiệm vụ..."
+    "searchProjects": "Tìm kiếm…",
+    "searchTags": "Tìm kiếm…",
+    "searchTasks": "Tìm kiếm…"
   },
   "ariaLabels": {
     "hideInfo": "Ẩn thông tin",
@@ -3311,7 +3330,7 @@
   "views": {
     "title": "Chế độ xem thông minh",
     "loading": "Đang tải chế độ xem...",
-    "searchPlaceholder": "Tìm kiếm chế độ xem...",
+    "searchPlaceholder": "Tìm kiếm…",
     "noViewsFound": "Không tìm thấy chế độ xem nào. Tạo một chế độ xem bằng cách thực hiện tìm kiếm và nhấp vào \"Lưu dưới dạng Chế độ xem Thông minh\".",
     "deleteView": "Xóa Chế độ xem",
     "confirmDelete": "Bạn có chắc chắn muốn xóa chế độ xem \"{{viewName}}\" không?",
@@ -3348,7 +3367,7 @@
     "filters": "bộ lọc"
   },
   "search": {
-    "placeholder": "Tìm kiếm nhiệm vụ, dự án, ghi chú...",
+    "placeholder": "Tìm kiếm…",
     "searchingFor": "Bạn đang tìm kiếm",
     "allItems": "tất cả các mục",
     "containingText": ", chứa văn bản",
@@ -4038,7 +4057,26 @@
     "archivedBadge": "đã lưu trữ",
     "deletePerson": "Xóa người",
     "deleteConfirm": "Bạn có chắc muốn xóa \"{{name}}\" không? Không thể hoàn tác.",
-    "contact": "Liên hệ"
+    "contact": "Liên hệ",
+    "editPerson": "Sửa người",
+    "newPerson": "Người mới",
+    "noAssignedTasks": "Không có công việc nào được giao cho {{name}}.",
+    "notFound": "Không tìm thấy người này.",
+    "relationship": "Mối quan hệ",
+    "phone": "Điện thoại",
+    "namePlaceholder": "Bố, người yêu, Alice…",
+    "notesPlaceholder": "Ghi chú về người này…",
+    "relationships": {
+      "family": "Gia đình",
+      "work": "Công việc",
+      "friend": "Bạn bè",
+      "other": "Khác"
+    },
+    "noPeopleYet": "Chưa có ai",
+    "clearAssignment": "Bỏ giao việc",
+    "nameRequired": "Cần nhập tên",
+    "saveError": "Không thể lưu người này",
+    "signInLink": "Liên kết đăng nhập"
   },
   "members": {
     "addTitle": "Thêm thành viên",
@@ -4467,7 +4505,7 @@
     "targetDate": "Hạn",
     "noProjects": "Chưa có dự án nào liên kết với mục tiêu này.",
     "noTasks": "Chưa có công việc nào cho mục tiêu này.",
-    "searchGoals": "Tìm mục tiêu…",
+    "searchGoals": "Tìm kiếm…",
     "clearGoal": "Bỏ mục tiêu",
     "noGoalsFound": "Không tìm thấy mục tiêu",
     "inactive": "Không hoạt động",
@@ -4506,7 +4544,8 @@
     "noAvailableGoals": "Không có mục tiêu khả dụng",
     "progressHint": "Thanh: công việc và dự án đã hoàn thành. Đường: thời gian từ lúc tạo đến ngày đích.",
     "removeFromArea": "Xóa khỏi khu vực",
-    "createTask": "Tạo công việc"
+    "createTask": "Tạo công việc",
+    "noGoal": "Không có mục tiêu"
   },
   "templates": {
     "new": "Mẫu mới",
@@ -4527,7 +4566,7 @@
       "empty": "Kho mẫu chưa có mẫu nào.",
       "title": "Kho mẫu",
       "subtitle": "Duyệt và cài đặt mẫu có sẵn từ cộng đồng",
-      "search": "Tìm trong kho mẫu..."
+      "search": "Tìm kiếm…"
     },
     "taskList": "Công việc",
     "noTasks": "Mẫu này không có công việc",
@@ -5083,7 +5122,7 @@
       "reviewIn30": "Xem lại sau 30 ngày",
       "reviewOn": "Xem lại vào…",
       "keepLater": "Tiếp tục gác lại",
-      "toTask": "Tạo thành việc",
+      "toTask": "Tạo công việc",
       "toLater": "Gác lại để sau",
       "discard": "Loại bỏ",
       "openInbox": "Mở hộp thư đến",
@@ -5177,7 +5216,7 @@
     "title": "Quan hệ",
     "add": "Thêm quan hệ",
     "remove": "Gỡ quan hệ",
-    "searchPlaceholder": "Tìm nhiệm vụ...",
+    "searchPlaceholder": "Tìm kiếm…",
     "addFailed": "Không thể thêm quan hệ.",
     "removeFailed": "Không thể gỡ quan hệ.",
     "blocked": "Bị chặn",
@@ -6128,7 +6167,11 @@
     "hideCompleted": "Ẩn việc đã xong",
     "showCompletedTasks": "Hiện việc đã xong",
     "dropOverlaps": "Trùng lặp",
-    "dropPast": "Đã qua"
+    "dropPast": "Đã qua",
+    "habitsCount": "Thói quen · {{n}}",
+    "habitsDone": "Đã xong · {{n}}",
+    "habitAt": "{{name}} lúc {{time}}",
+    "habitLogFailed": "Không thể ghi nhận thói quen."
   },
   "upcoming": {
     "title": "Kế hoạch",
@@ -6177,12 +6220,8 @@
     "noProject": "Không có dự án",
     "noTag": "Không có thẻ",
     "priority": {
-      "high": "Cao",
-      "medium": "Trung bình",
-      "low": "Thấp",
       "none": "Không ưu tiên"
     },
-    "horizonsEmpty": "Chưa có gì ở đây.",
     "thisWeek": "Tuần này",
     "thisMonth": "Tháng này",
     "nextMonth": "Tháng sau",
@@ -6228,14 +6267,16 @@
     "load": "{{planned}} / {{available}}",
     "done": "Đã xong ({{n}})",
     "subtaskOf": "↳ {{parent}}",
-    "addToInbox": "Thêm vào hộp thư đến",
-    "inboxNewItem": "Mục mới trong hộp thư đến",
     "addToInboxFailed": "Không thể thêm. Hãy thử lại.",
     "addEmptyName": "Đặt tên cho công việc",
     "addTaskIn": "Thêm công việc vào {{name}}",
-    "thisWeekOnlyPlanned": "Không có việc nào không có ngày cố định · {{count}} việc đã lên lịch trong một ngày",
     "previous": "Ngày trước",
-    "next": "Ngày sau"
+    "next": "Ngày sau",
+    "nextWeekHint": "Đã cam kết cho tuần sau, không có ngày cố định",
+    "stripLabel": "Gửi đến một tầm nhìn",
+    "stripOpen": "Mở {{name}} trong Tầm nhìn",
+    "sentToHorizon": "Đã gửi đến {{name}}",
+    "plannedOnDayHint_other": "{{count}} đã lên lịch vào một ngày"
   },
   "offline": {
     "offline": "Ngoại tuyến",

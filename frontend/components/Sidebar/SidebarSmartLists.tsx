@@ -102,7 +102,10 @@ const SidebarSmartLists: React.FC<SidebarSmartListsProps> = ({
         }));
 
     return (
-        <ul className="flex flex-col gap-px" aria-label="Smart lists">
+        <ul
+            className="flex flex-col gap-px"
+            aria-label={t('profile.sidebarSmartListsTitle', 'Smart lists')}
+        >
             {rows.map((row) => (
                 <li key={row.id}>
                     <button

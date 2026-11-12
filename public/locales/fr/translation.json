@@ -25,7 +25,9 @@
       "requeued": "{{count}} éléments relancés",
       "retry": "Réessayer",
       "failed": "{{count}} éléments en échec",
-      "title": "Le dernier appel à l’IA a échoué"
+      "title": "Le dernier appel à l’IA a échoué",
+      "requeued_one": "{{count}} élément relancé",
+      "failed_one": "{{count}} élément en échec"
     },
     "number": {
       "maxTokens": "Jetons de réponse au plus",
@@ -45,13 +47,13 @@
       "priority": "Priorité (proposée seulement)",
       "duration": "Durée",
       "tags": "Tags",
-      "project": "Projet ou domaine"
+      "project": "Projet ou zone"
     },
     "field": {
       "summary": "résumé",
       "duration": "durée",
       "tags": "tags",
-      "area": "domaine",
+      "area": "zone",
       "project": "projet"
     },
     "entity": {
@@ -91,7 +93,7 @@
       "enabled": "Activé",
       "state": "Fonctionnement",
       "noAi": "Aucun fournisseur d’IA : configurez Profil › Assistant IA pour activer le classement.",
-      "description": "Remplit les champs vides des nouvelles tâches, notes et liens : projet ou domaine, tags, durée, résumé d’un lien. En cas de doute, une carte dans « À trier ».",
+      "description": "Remplit les champs vides des nouvelles tâches, notes et liens : projet ou zone, tags, durée, résumé d’un lien. En cas de doute, une carte dans « À trier ».",
       "title": "Classement automatique",
       "saveError": "Enregistrement impossible",
       "saved": "Réglages enregistrés",
@@ -122,8 +124,6 @@
       "dismiss": "Ignorer",
       "acceptAll": "Tout accepter",
       "apply": "Appliquer",
-      "medium": "Moyenne",
-      "high": "Haute",
       "priority": "Priorité",
       "newTag": "Nouveau tag : #{{name}}",
       "tags": "Tags",
@@ -133,7 +133,7 @@
       "inArea": "Dans {{name}}",
       "newProjectName": "Nom du nouveau projet",
       "newProject": "Nouveau projet",
-      "area": "Domaine : {{name}}",
+      "area": "Zone : {{name}}",
       "project": "Projet"
     }
   },
@@ -148,7 +148,7 @@
       "archive": "Archiver dans Gmail",
       "taskName": "Nom de la tâche",
       "taskDue": "Échéance",
-      "createTask": "Créer la tâche",
+      "createTask": "Créer une tâche",
       "taskCreated": "Tâche créée",
       "replied": "Réponse ouverte dans Gmail",
       "postponed": "Revient demain",
@@ -249,7 +249,7 @@
     "preview": "Aperçu",
     "download": "Télécharger",
     "exitFocusMode": "Quitter le mode focus",
-    "searchTimezones": "Rechercher des fuseaux horaires...",
+    "searchTimezones": "Rechercher…",
     "dismiss": "Ignorer",
     "search": "Rechercher",
     "previous": "Précédent",
@@ -278,7 +278,10 @@
     "resolving": "Résolution…",
     "showLess": "Afficher moins",
     "undo": "Annuler",
-    "untitled": "Sans titre"
+    "untitled": "Sans titre",
+    "copyCode": "Copier le code",
+    "copy": "Copier",
+    "copied": "Copié"
   },
   "sidebar": {
     "links": "Liens",
@@ -334,7 +337,6 @@
     "collapseViews": "Replier la liste des vues",
     "expandViews": "Déplier la liste des vues",
     "summary": "Résumé",
-    "tomorrow": "Demain",
     "next7Days": "7 prochains jours",
     "more": "Plus",
     "toggleFolder": "Afficher ou masquer les projets",
@@ -418,7 +420,7 @@
     "taskCompleted": "tâche terminée",
     "tasksCompleted": "tâches terminées",
     "noTasksAvailable": "Aucune tâche disponible.",
-    "searchPlaceholder": "Rechercher des tâches...",
+    "searchPlaceholder": "Rechercher…",
     "addNewTask": "Ajouter une nouvelle tâche",
     "addTaskInline": "+ Ajouter une tâche",
     "metrics": "Métriques",
@@ -489,9 +491,9 @@
         "priorities": "Priorité (au moins une)",
         "priority": {
           "none": "Aucune",
-          "low": "Faible",
+          "low": "Basse",
           "medium": "Moyenne",
-          "high": "Élevée"
+          "high": "Haute"
         },
         "due": "Échéance",
         "dueType": {
@@ -618,7 +620,7 @@
         "next_task_uid": "Prochaine action",
         "parent_task_uid": "Tâche parente",
         "goal_uid": "Objectif",
-        "area_uid": "Domaine",
+        "area_uid": "Zone",
         "parent_project_uid": "Projet parent",
         "project_uid": "Projet",
         "completed_at": "Terminée le",
@@ -638,7 +640,7 @@
         "note": "Note",
         "tag": "Étiquette",
         "goal": "Objectif",
-        "area": "Domaine",
+        "area": "Zone",
         "project": "Projet",
         "task": "Tâche"
       },
@@ -1089,7 +1091,8 @@
       "suggestedTitle": "Ce qui est suggéré",
       "suggestedDescription": "Quelles tâches ouvertes peuvent apparaître dans Tout le reste, et combien. Les tâches en retard, dues aujourd'hui et en cours s'affichent toujours.",
       "taggedToday": "Étiquetées #today",
-      "taggedTodayDetail": "Tâches ouvertes étiquetées #today, quelles que soient leurs dates."
+      "taggedTodayDetail": "Tâches ouvertes étiquetées #today, quelles que soient leurs dates.",
+      "maxOption_one": "{{count}} tâche"
     },
     "apiKeys": {
       "nameRequired": "Le nom de la clé API est obligatoire.",
@@ -1570,7 +1573,8 @@
     "rateLimitedRetrying": "Trop de requêtes, nouvel essai…",
     "rateLimitedGaveUp": "Trop de requêtes. La session reste active ; rechargez dans un instant.",
     "serverBusyRetrying": "Serveur occupé, nouvel essai…",
-    "serverBusyRetry": "Réessayer"
+    "serverBusyRetry": "Réessayer",
+    "sign_up": "S'inscrire"
   },
   "dropdown": {
     "createNew": "Créer nouveau",
@@ -1591,10 +1595,10 @@
     "completed_at": "Terminée le"
   },
   "priority": {
-    "low": "Faible",
+    "low": "Basse",
     "medium": "Moyenne",
-    "high": "Élevée",
-    "none": "Aucun"
+    "high": "Haute",
+    "none": "Aucune"
   },
   "status": {
     "notStarted": "Non commencé",
@@ -1642,8 +1646,8 @@
     "info": "Infos du projet",
     "clickToEdit": "Cliquer pour modifier",
     "addDescription": "Ajouter une description",
-    "changeArea": "Changer de domaine",
-    "setArea": "Définir un domaine",
+    "changeArea": "Changer de zone",
+    "setArea": "Définir une zone",
     "changeGoal": "Changer d'objectif",
     "setGoal": "Définir un objectif",
     "changePriority": "Changer la priorité",
@@ -1693,7 +1697,8 @@
     "noTasks": "Aucune tâche.",
     "nextAction": "Prochaine action",
     "nextActionLine": "Prochaine action : {{name}}",
-    "noCompletedTasks": "Aucune tâche terminée."
+    "noCompletedTasks": "Aucune tâche terminée.",
+    "views": "Vues du projet"
   },
   "errors": {
     "required": "Ce champ est requis",
@@ -1810,7 +1815,7 @@
     "shortcutTag": "pour ajouter une étiquette",
     "shortcutProject": "pour l'associer à un projet",
     "attachments": "Pièces jointes",
-    "removeArea": "Retirer le domaine",
+    "removeArea": "Retirer la zone",
     "triage": {
       "start": "Trier",
       "title": "Trier la boîte de réception",
@@ -1837,6 +1842,18 @@
       "reasonKeyword": "Il commence par « {{detail}} »",
       "reasonLong": "Il est long, comme une note",
       "reasonDefault": "Texte court, le plus souvent une tâche"
+    },
+    "sources": {
+      "telegram": "Telegram",
+      "gmail": "Gmail",
+      "mcp": "MCP",
+      "android": "Android",
+      "api": "API",
+      "email": "E-mail",
+      "mail": "Mail",
+      "desktop": "Bureau",
+      "link": "Lien",
+      "share": "Partage"
     }
   },
   "dateFormats": {
@@ -2081,7 +2098,13 @@
     "pastDue": "En retard",
     "turnIntoProject": "Transformer en projet",
     "turnIntoProjectError": "Impossible de le transformer en projet.",
-    "turnIntoProjectMessage": "Transformer « {{name}} » en projet ? Ses sous-tâches deviennent les tâches du projet et les adresses de sa note ses pages."
+    "turnIntoProjectMessage": "Transformer « {{name}} » en projet ? Ses sous-tâches deviennent les tâches du projet et les adresses de sa note ses pages.",
+    "inDays_one": "dans {{count}} jour",
+    "daysAgo_one": "{{count}} jour auparavant",
+    "hoursAgo_one": "il y a {{count}} heure",
+    "minutesAgo_one": "il y a {{count}} minute",
+    "inMinutes_one": "dans {{count}} minute",
+    "inHours_one": "dans {{count}} heure"
   },
   "projects": {
     "parentProject": "Projet parent",
@@ -2090,7 +2113,7 @@
     "areaFollowsParent": "La zone suit le projet parent",
     "loading": "Chargement des projets...",
     "error": "Erreur lors du chargement des projets",
-    "searchPlaceholder": "Rechercher des projets...",
+    "searchPlaceholder": "Rechercher…",
     "title": "Projets",
     "noProjectsFound": "Aucun projet trouvé",
     "cardViewAriaLabel": "Vue en carte",
@@ -2274,7 +2297,7 @@
     "presetWork": "Travail",
     "presetHealth": "Santé",
     "presetFamily": "Famille",
-    "suggestDomains": "Suggérer 5 domaines",
+    "suggestDomains": "Suggérer 5 zones",
     "domains": {
       "business": "Business et Argent",
       "tech": "Tech et Systèmes",
@@ -2309,7 +2332,7 @@
     "emptyPreview": "Note vide",
     "loading": "Chargement des notes...",
     "error": "Erreur lors du chargement des notes",
-    "searchPlaceholder": "Rechercher des notes...",
+    "searchPlaceholder": "Rechercher…",
     "noNotesFound": "Aucune note trouvée",
     "title": "Notes",
     "deleteNoteAriaLabel": "Supprimer la note {{noteTitle}}",
@@ -2389,11 +2412,16 @@
     "saveBeforeFiles": "Donnez d'abord un titre ou du texte à la note, puis ajoutez des fichiers.",
     "slashFile": "Image ou fichier",
     "slashFileHint": "Envoyer et placer ici",
-    "toggleDropdownMenu": "Afficher ou masquer le menu"
+    "toggleDropdownMenu": "Afficher ou masquer le menu",
+    "saved": "Enregistré",
+    "unsaved": "Modifications non enregistrées",
+    "backgroundColor": "Couleur de fond",
+    "selectProject": "Choisir un projet",
+    "noMatchingNotes": "Aucune note correspondante"
   },
   "tags": {
     "loading": "Chargement des étiquettes...",
-    "searchPlaceholder": "Rechercher des étiquettes...",
+    "searchPlaceholder": "Rechercher…",
     "title": "Étiquettes",
     "noTagsFound": "Aucune étiquette trouvée",
     "editTagAriaLabel": "Modifier l'étiquette {{tagName}}",
@@ -2523,7 +2551,7 @@
     "miniCalendar": "Mini-calendrier",
     "previousMonth": "Mois précédent",
     "nextMonth": "Mois suivant",
-    "multiDay_one": "{{count}} jours",
+    "multiDay_one": "{{count}} jour",
     "multiDay_many": "{{count}} jours",
     "multiDay_other": "{{count}} jours",
     "agendaEmpty": "Rien de prévu",
@@ -2594,8 +2622,6 @@
     "connectionError": "Échec de la connexion à Google Calendar. Veuillez réessayer.",
     "disconnectionError": "Échec de la déconnexion de Google Calendar. Veuillez réessayer.",
     "taskDetails": "Détails de la tâche",
-    "editTask": "Modifier la tâche",
-    "goToTasks": "Aller aux tâches",
     "close": "Fermer",
     "title": "Titre",
     "status": "Statut",
@@ -2606,11 +2632,6 @@
     "area": "Zone",
     "description": "Description",
     "created": "Créé",
-    "completed": "Terminé",
-    "pending": "En attente",
-    "high": "Élevé",
-    "medium": "Moyen",
-    "low": "Bas",
     "time": "Temps",
     "allDay": "Toute la journée",
     "google": {
@@ -2642,7 +2663,14 @@
     "moreViews": "Autres vues",
     "openDay": "Ouvrir le jour",
     "noEventsThisDay": "Rien de prévu.",
-    "task": "Tâche"
+    "previousYear": "Année précédente",
+    "nextYear": "Année suivante",
+    "previousWeek": "Semaine précédente",
+    "nextWeek": "Semaine suivante",
+    "previousDays": "Jours précédents",
+    "nextDays": "Jours suivants",
+    "previousDay": "Jour précédent",
+    "nextDay": "Jour suivant"
   },
   "pages": {
     "notFound": {
@@ -2661,9 +2689,9 @@
     "uploading": "Téléchargement..."
   },
   "searchPlaceholders": {
-    "searchProjects": "Rechercher des projets...",
-    "searchTags": "Rechercher des étiquettes...",
-    "searchTasks": "Rechercher des tâches..."
+    "searchProjects": "Rechercher…",
+    "searchTags": "Rechercher…",
+    "searchTasks": "Rechercher…"
   },
   "ariaLabels": {
     "hideInfo": "Masquer les informations",
@@ -2921,7 +2949,7 @@
       "failedToLoadList": "Échec du chargement des groupes",
       "failedToRemoveMember": "Échec du retrait du membre",
       "failedToSave": "Échec de l'enregistrement du groupe",
-      "intro": "Les groupes permettent de partager un projet, un domaine, un objectif, une note ou une tâche avec plusieurs utilisateurs à la fois. Les membres sont invités à tout ce qui est partagé avec le groupe.",
+      "intro": "Les groupes permettent de partager un projet, une zone, un objectif, une note ou une tâche avec plusieurs utilisateurs à la fois. Les membres sont invités à tout ce qui est partagé avec le groupe.",
       "loading": "Chargement des groupes...",
       "manageMembers": "Gérer les membres",
       "memberAdded": "{{name}} ajouté au groupe",
@@ -2974,12 +3002,12 @@
       "capabilities": {
         "createPeople": "Ajouter des personnes",
         "inviteMembers": "Inviter des membres",
-        "createProjects": "Créer des projets, domaines et objectifs"
+        "createProjects": "Créer des projets, zones et objectifs"
       },
       "capabilityHints": {
         "createPeople": "Ajouter des contacts et des membres à la liste des personnes",
         "inviteMembers": "Créer des comptes, envoyer des invitations ou inscrire des personnes",
-        "createProjects": "Démarrer de nouveaux projets, domaines et objectifs"
+        "createProjects": "Démarrer de nouveaux projets, zones et objectifs"
       },
       "permissionsFromRole": "Ce que ce rôle permet."
     },
@@ -3071,7 +3099,7 @@
         "habits": "Habitudes",
         "projects": "Projets",
         "notes": "Notes",
-        "areas": "Domaines",
+        "areas": "Zones",
         "goals": "Objectifs",
         "tags": "Étiquettes",
         "people": "Personnes",
@@ -3285,7 +3313,7 @@
     "leave": {
       "action": "Quitter",
       "projectTitle": "Quitter le projet",
-      "areaTitle": "Quitter le domaine",
+      "areaTitle": "Quitter la zone",
       "projectMessage": "Vous ne verrez plus \"{{name}}\" ni ses tâches, et vos tâches ouvertes ne vous seront plus attribuées. La personne qui l'a partagé sera prévenue.",
       "areaMessage": "Vous ne verrez plus \"{{name}}\" ni les projets partagés avec lui, et vos tâches ouvertes ne vous seront plus attribuées. La personne qui l'a partagé sera prévenue.",
       "left": "Vous avez quitté \"{{name}}\"",
@@ -3320,7 +3348,7 @@
   "views": {
     "title": "Vues intelligentes",
     "loading": "Chargement des vues...",
-    "searchPlaceholder": "Rechercher des vues...",
+    "searchPlaceholder": "Rechercher…",
     "noViewsFound": "Aucune vue trouvée. Créez une vue en effectuant une recherche et en cliquant sur \"Enregistrer en tant que vue intelligente\".",
     "deleteView": "Supprimer la vue",
     "confirmDelete": "Êtes-vous sûr de vouloir supprimer la vue \"{{viewName}}\" ?",
@@ -3357,7 +3385,7 @@
     "view": "Vue"
   },
   "search": {
-    "placeholder": "Rechercher des tâches, des projets, des notes...",
+    "placeholder": "Rechercher…",
     "searchingFor": "Vous recherchez",
     "allItems": "tous les éléments",
     "containingText": ", contenant le texte",
@@ -4012,7 +4040,7 @@
     "upcoming": "Cette semaine",
     "noDate": "Pas de date",
     "nothing": "Rien en ce moment",
-    "empty": "Rien de partagé n'est en cours en ce moment. Partagez un domaine, un projet ou un objectif, ou assignez une tâche à quelqu'un pour le voir ici.",
+    "empty": "Rien de partagé n'est en cours en ce moment. Partagez une zone, un projet ou un objectif, ou assignez une tâche à quelqu'un pour le voir ici.",
     "sortableColumn": "colonne triable",
     "reorderFailed": "Impossible d'enregistrer l'ordre des colonnes.",
     "dropHere": "Déposer pour assigner",
@@ -4047,7 +4075,26 @@
     "archivedBadge": "archivée",
     "deletePerson": "Supprimer la personne",
     "deleteConfirm": "Voulez-vous vraiment supprimer « {{name}} » ? Cette action est irréversible.",
-    "contact": "Contact"
+    "contact": "Contact",
+    "editPerson": "Modifier la personne",
+    "newPerson": "Nouvelle personne",
+    "noAssignedTasks": "Aucune tâche assignée à {{name}}.",
+    "notFound": "Personne introuvable.",
+    "relationship": "Relation",
+    "phone": "Téléphone",
+    "namePlaceholder": "Papa, conjoint, Alice…",
+    "notesPlaceholder": "Des notes sur cette personne…",
+    "relationships": {
+      "family": "Famille",
+      "work": "Travail",
+      "friend": "Ami",
+      "other": "Autre"
+    },
+    "noPeopleYet": "Aucune personne pour l'instant",
+    "clearAssignment": "Retirer l'assignation",
+    "nameRequired": "Le nom est obligatoire",
+    "saveError": "Impossible d'enregistrer la personne",
+    "signInLink": "Lien de connexion"
   },
   "members": {
     "addTitle": "Ajouter un membre",
@@ -4203,7 +4250,8 @@
       "addToTomorrow": "Ajouter à demain",
       "regenerate": "Régénérer",
       "draftTitle": "Proposition de l'IA",
-      "skippedCount": "Laissées de côté ({{count}})"
+      "skippedCount": "Laissées de côté ({{count}})",
+      "carried_one": "{{count}} tâche ajoutée à demain"
     },
     "lateWarning": "L'heure est passée et ce n'est pas encore fait",
     "movedOffPlan": "« {{name}} » n'est plus due aujourd'hui, elle a donc quitté le plan du jour.",
@@ -4318,7 +4366,9 @@
     "showQuote": "Afficher la citation du jour",
     "hideQuote": "Masquer la citation du jour",
     "orderError": "L'ordre n'a pas pu être enregistré.",
-    "eventReadOnly": "En lecture seule : passe cet agenda en synchronisation dans les deux sens, dans Profil, pour le déplacer d'ici."
+    "eventReadOnly": "En lecture seule : passe cet agenda en synchronisation dans les deux sens, dans Profil, pour le déplacer d'ici.",
+    "placeAllHint_one": "{{count}} tâche prend le prochain créneau libre.",
+    "placeAllDone_one": "{{count}} tâche placée."
   },
   "capture": {
     "add": "Ajouter",
@@ -4393,9 +4443,9 @@
     "syntaxHint": "#étiquette  +projet  !1 à !3 priorité  demain 15h pour une date",
     "chainCount": "Ajoutées à {{project}} : {{total}}",
     "slash": {
-      "priorityHigh": "Élevée",
+      "priorityHigh": "Haute",
       "priorityMedium": "Moyenne",
-      "priorityLow": "Faible",
+      "priorityLow": "Basse",
       "tag": "Étiquette",
       "project": "Projet",
       "person": "Personne",
@@ -4476,7 +4526,7 @@
     "targetDate": "Cible",
     "noProjects": "Aucun projet lié à cet objectif.",
     "noTasks": "Aucune tâche associée à cet objectif.",
-    "searchGoals": "Rechercher des objectifs…",
+    "searchGoals": "Rechercher…",
     "clearGoal": "Retirer l'objectif",
     "noGoalsFound": "Aucun objectif trouvé",
     "inactive": "Inactif",
@@ -4515,7 +4565,8 @@
     "noGoalsSelected": "Aucun objectif sélectionné",
     "progressHint": "Barre : tâches et projets terminés. Trait : temps écoulé entre la création et la date cible.",
     "removeFromArea": "Retirer de la zone",
-    "createTask": "Créer une tâche"
+    "createTask": "Créer une tâche",
+    "noGoal": "Aucun objectif"
   },
   "templates": {
     "new": "Nouveau modèle",
@@ -4536,7 +4587,7 @@
       "empty": "La bibliothèque ne contient encore aucun modèle.",
       "title": "Bibliothèque",
       "subtitle": "Parcourez et installez des modèles prêts à l'emploi de la communauté",
-      "search": "Rechercher dans la bibliothèque..."
+      "search": "Rechercher…"
     },
     "taskList": "Tâches",
     "noTasks": "Aucune tâche dans ce modèle",
@@ -4621,8 +4672,8 @@
     "chip": "Focus",
     "title": "Se concentrer sur",
     "activeTitle": "Focus : {{label}}",
-    "area": "Domaine",
-    "anyArea": "Tous les domaines",
+    "area": "Zone",
+    "anyArea": "Toutes les zones",
     "project": "Projet",
     "anyProject": "Tous les projets",
     "tags": "Étiquettes",
@@ -4709,7 +4760,7 @@
       "no_rows_to_import": "Il n'y a aucune ligne à importer.",
       "undo_expired": "Cet import ne peut plus être annulé.",
       "project_not_found": "Projet introuvable.",
-      "area_not_found": "Domaine introuvable.",
+      "area_not_found": "Zone introuvable.",
       "bad_format": "Choisissez Excel ou CSV.",
       "export_failed": "Impossible d'exporter les tâches. Réessayez.",
       "read_failed": "Impossible de lire le fichier. Réessayez.",
@@ -4739,7 +4790,7 @@
       "uid": "UID",
       "name": "Nom",
       "project": "Projet",
-      "area": "Domaine",
+      "area": "Zone",
       "parent": "Tâche parente",
       "parentUid": "UID du parent",
       "wbs": "WBS",
@@ -4810,7 +4861,7 @@
       "countUpdate": "{{count}} mises à jour",
       "countSkip": "{{count}} ignorées",
       "countProjects": "{{count}} nouveaux projets",
-      "countAreas": "{{count}} nouveaux domaines",
+      "countAreas": "{{count}} nouvelles zones",
       "countTags": "{{count}} nouvelles étiquettes",
       "newProjectsList": "Nouveaux projets : {{names}}",
       "subtasksFrom": "Les sous-tâches viennent de",
@@ -4840,12 +4891,19 @@
       "hierarchy_wbs": "les numéros WBS (1, 1.1, 1.2)",
       "hierarchy_indent": "les lignes en retrait",
       "hierarchy_flat": "aucune sous-tâche",
-      "hierarchy_auto": "les détecter"
+      "hierarchy_auto": "les détecter",
+      "undoneKept_one": "L'import a été annulé. {{count}} tâche modifiée depuis a été conservée.",
+      "countCreate_one": "{{count}} nouvelle tâche",
+      "countProjects_one": "{{count}} nouveau projet",
+      "countAreas_one": "{{count}} nouvelle zone",
+      "countTags_one": "{{count}} nouvelle étiquette",
+      "doneTitle_one": "{{count}} tâche importée",
+      "rowCount_one": "{{count}} ligne"
     },
     "issues": {
       "too_many_tags": "Seules les 20 premières étiquettes sont conservées.",
       "too_many_new_projects": "Cela créerait plus de {{value}} projets. Vérifiez que la colonne Projet est la bonne.",
-      "too_many_new_areas": "Cela créerait plus de {{value}} domaines. Vérifiez que la colonne Domaine est la bonne.",
+      "too_many_new_areas": "Cela créerait plus de {{value}} zones. Vérifiez que la colonne Zone est la bonne.",
       "too_many_new_tags": "Cela créerait plus de {{value}} étiquettes. Vérifiez que la colonne Étiquettes est la bonne.",
       "name_column_required": "Choisissez la colonne qui contient les noms des tâches.",
       "target_project_invalid": "Choisissez un projet auquel vous pouvez ajouter des tâches.",
@@ -5168,7 +5226,8 @@
     "dislike": "Je n'aime pas",
     "failedToReact": "Échec de la mise à jour de la réaction",
     "uploadingImage": "Envoi de l'image…",
-    "imageUploadFailed": "Impossible d'envoyer l'image"
+    "imageUploadFailed": "Impossible d'envoyer l'image",
+    "count_one": "{{count}} commentaire"
   },
   "sortable": {
     "move": "Déplacer",
@@ -5187,7 +5246,7 @@
     "title": "Relations",
     "add": "Ajouter une relation",
     "remove": "Retirer la relation",
-    "searchPlaceholder": "Rechercher une tâche…",
+    "searchPlaceholder": "Rechercher…",
     "addFailed": "Échec de l'ajout de la relation.",
     "removeFailed": "Échec de la suppression de la relation.",
     "blocked": "Bloquée",
@@ -6146,7 +6205,11 @@
     "hideCompleted": "Masquer les terminées",
     "showCompletedTasks": "Afficher les terminées",
     "dropOverlaps": "Chevauche",
-    "dropPast": "Dans le passé"
+    "dropPast": "Dans le passé",
+    "habitsCount": "Habitudes · {{n}}",
+    "habitsDone": "Faites · {{n}}",
+    "habitAt": "{{name}} à {{time}}",
+    "habitLogFailed": "Impossible d'enregistrer l'habitude."
   },
   "upcoming": {
     "title": "Planifier",
@@ -6195,12 +6258,8 @@
     "noProject": "Aucun projet",
     "noTag": "Aucune étiquette",
     "priority": {
-      "high": "Haute",
-      "medium": "Moyenne",
-      "low": "Basse",
       "none": "Aucune priorité"
     },
-    "horizonsEmpty": "Rien ici pour l’instant.",
     "thisWeek": "Cette semaine",
     "thisMonth": "Ce mois-ci",
     "nextMonth": "Le mois prochain",
@@ -6246,14 +6305,17 @@
     "load": "{{planned}} / {{available}}",
     "done": "Faites ({{n}})",
     "subtaskOf": "↳ {{parent}}",
-    "addToInbox": "Ajouter à la boîte de réception",
-    "inboxNewItem": "Nouvelle idée",
     "addToInboxFailed": "Ajout impossible. Réessayer.",
     "addEmptyName": "Donner un nom à la tâche",
     "addTaskIn": "Ajouter une tâche à {{name}}",
-    "thisWeekOnlyPlanned": "Rien sans jour fixe · {{count}} planifiées sur un jour",
     "previous": "Jour précédent",
-    "next": "Jour suivant"
+    "next": "Jour suivant",
+    "nextWeekHint": "Prévu pour la semaine prochaine, sans jour fixe",
+    "stripLabel": "Envoyer vers un horizon",
+    "stripOpen": "Ouvrir {{name}} dans Horizons",
+    "sentToHorizon": "Envoyée vers {{name}}",
+    "plannedOnDayHint_one": "{{count}} planifiée un jour",
+    "plannedOnDayHint_other": "{{count}} planifiées un jour"
   },
   "offline": {
     "offline": "Hors ligne",

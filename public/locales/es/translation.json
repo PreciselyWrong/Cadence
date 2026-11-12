@@ -25,7 +25,9 @@
       "requeued": "{{count}} elementos en cola de nuevo",
       "retry": "Reintentar",
       "failed": "{{count}} elementos fallidos",
-      "title": "La última llamada a la IA falló"
+      "title": "La última llamada a la IA falló",
+      "requeued_one": "{{count}} elemento en cola de nuevo",
+      "failed_one": "{{count}} elemento fallido"
     },
     "number": {
       "maxTokens": "Tokens máximos de respuesta",
@@ -122,8 +124,6 @@
       "dismiss": "Ignorar",
       "acceptAll": "Aceptar todo",
       "apply": "Aplicar",
-      "medium": "Media",
-      "high": "Alta",
       "priority": "Prioridad",
       "newTag": "Nueva etiqueta: #{{name}}",
       "tags": "Etiquetas",
@@ -148,7 +148,7 @@
       "archive": "Archivar en Gmail",
       "taskName": "Nombre de la tarea",
       "taskDue": "Vencimiento",
-      "createTask": "Crear la tarea",
+      "createTask": "Crear una tarea",
       "taskCreated": "Tarea creada",
       "replied": "Respuesta abierta en Gmail",
       "postponed": "Vuelve mañana",
@@ -249,7 +249,7 @@
     "preview": "Vista previa",
     "download": "Descargar",
     "exitFocusMode": "Salir del modo de enfoque",
-    "searchTimezones": "Buscar zonas horarias...",
+    "searchTimezones": "Buscar…",
     "dismiss": "Descartar",
     "search": "Buscar",
     "previous": "Anterior",
@@ -278,7 +278,10 @@
     "resolving": "Resolviendo...",
     "showLess": "Mostrar menos",
     "breadcrumb": "Ruta de navegación",
-    "undo": "Deshacer"
+    "undo": "Deshacer",
+    "copyCode": "Copiar código",
+    "copy": "Copiar",
+    "copied": "Copiado"
   },
   "sidebar": {
     "links": "Enlaces",
@@ -334,7 +337,6 @@
     "collapseViews": "Contraer la lista de vistas",
     "expandViews": "Expandir la lista de vistas",
     "summary": "Resumen",
-    "tomorrow": "Mañana",
     "next7Days": "Próximos 7 días",
     "more": "Más",
     "toggleFolder": "Mostrar u ocultar proyectos",
@@ -460,7 +462,8 @@
     "rateLimitedRetrying": "Demasiadas solicitudes, reintentando…",
     "rateLimitedGaveUp": "Demasiadas solicitudes. La sesión sigue activa; recarga en un momento.",
     "serverBusyRetrying": "Servidor ocupado, nuevo intento…",
-    "serverBusyRetry": "Reintentar"
+    "serverBusyRetry": "Reintentar",
+    "sign_up": "Registrarse"
   },
   "profile": {
     "showTaskDescription": "Mostrar la descripción debajo del título",
@@ -946,7 +949,8 @@
       "suggestedTitle": "Qué se sugiere",
       "suggestedDescription": "Qué tareas abiertas pueden aparecer en Todo lo demás, y cuántas. Las vencidas, las que vencen hoy y las que están en curso siempre aparecen.",
       "taggedToday": "Con etiqueta #today",
-      "taggedTodayDetail": "Tareas abiertas que etiquetaste #today, con cualquier fecha."
+      "taggedTodayDetail": "Tareas abiertas que etiquetaste #today, con cualquier fecha.",
+      "maxOption_one": "{{count}} tarea"
     },
     "apiKeys": {
       "nameRequired": "El nombre de la clave API es obligatorio.",
@@ -1271,7 +1275,7 @@
     "suggested": "Sugeridos",
     "completedToday": "Completadas",
     "noTasksAvailable": "No hay tareas disponibles para hoy.",
-    "searchPlaceholder": "Buscar tareas...",
+    "searchPlaceholder": "Buscar…",
     "addNewTask": "Añadir Nueva Tarea",
     "addTaskInline": "+ Añadir tarea",
     "myPlanToday": "Mi Plan para Hoy",
@@ -1466,7 +1470,7 @@
     "areaFollowsParent": "El área sigue al proyecto principal",
     "loading": "Cargando proyectos...",
     "error": "Error al cargar proyectos",
-    "searchPlaceholder": "Buscar proyectos...",
+    "searchPlaceholder": "Buscar…",
     "title": "Proyectos",
     "noProjectsFound": "No se encontraron proyectos",
     "cardViewAriaLabel": "Vista de Tarjetas",
@@ -1880,7 +1884,8 @@
     "noTasks": "Sin tareas.",
     "nextAction": "Siguiente acción",
     "nextActionLine": "Siguiente acción: {{name}}",
-    "noCompletedTasks": "No hay tareas completadas."
+    "noCompletedTasks": "No hay tareas completadas.",
+    "views": "Vistas del proyecto"
   },
   "task": {
     "duplicateError": "No se pudo duplicar la tarea.",
@@ -2063,7 +2068,13 @@
     "noUpcomingOccurrences": "No hay próximas ocurrencias.",
     "turnIntoProject": "Convertir en proyecto",
     "turnIntoProjectError": "No se pudo convertir en proyecto.",
-    "turnIntoProjectMessage": "¿Convertir « {{name}} » en proyecto? Sus subtareas pasan a ser las tareas del proyecto y las direcciones de su nota, sus páginas."
+    "turnIntoProjectMessage": "¿Convertir « {{name}} » en proyecto? Sus subtareas pasan a ser las tareas del proyecto y las direcciones de su nota, sus páginas.",
+    "inDays_one": "en {{count}} día",
+    "daysAgo_one": "{{count}} día atrás",
+    "hoursAgo_one": "hace {{count}} hora",
+    "minutesAgo_one": "hace {{count}} minuto",
+    "inMinutes_one": "en {{count}} minuto",
+    "inHours_one": "en {{count}} hora"
   },
   "dateIndicators": {
     "today": "HOY",
@@ -2169,6 +2180,18 @@
       "reasonKeyword": "Empieza por “{{detail}}”",
       "reasonLong": "Es largo, como una nota",
       "reasonDefault": "Texto corto, casi siempre una tarea"
+    },
+    "sources": {
+      "telegram": "Telegram",
+      "gmail": "Gmail",
+      "mcp": "MCP",
+      "android": "Android",
+      "api": "API",
+      "email": "Correo",
+      "mail": "Correo",
+      "desktop": "Escritorio",
+      "link": "Enlace",
+      "share": "Compartir"
     }
   },
   "areas": {
@@ -2202,7 +2225,7 @@
     "presetWork": "Trabajo",
     "presetHealth": "Salud",
     "presetFamily": "Familia",
-    "suggestDomains": "Sugerir 5 ámbitos",
+    "suggestDomains": "Sugerir 5 áreas",
     "domains": {
       "business": "Negocio y Dinero",
       "tech": "Tecnología y Sistemas",
@@ -2237,7 +2260,7 @@
     "emptyPreview": "Nota vacía",
     "loading": "Cargando notas...",
     "error": "Error al cargar notas",
-    "searchPlaceholder": "Buscar notas...",
+    "searchPlaceholder": "Buscar…",
     "noNotesFound": "No se encontraron notas",
     "title": "Notas",
     "deleteNoteAriaLabel": "Eliminar nota {{noteTitle}}",
@@ -2317,11 +2340,16 @@
     "fileUploadError": "No se pudo subir {{name}}",
     "slashFile": "Imagen o archivo",
     "slashFileHint": "Súbelo y colócalo aquí",
-    "toggleDropdownMenu": "Alternar menú desplegable"
+    "toggleDropdownMenu": "Alternar menú desplegable",
+    "saved": "Guardado",
+    "unsaved": "Cambios sin guardar",
+    "backgroundColor": "Color de fondo",
+    "selectProject": "Seleccionar proyecto",
+    "noMatchingNotes": "No hay notas que coincidan"
   },
   "tags": {
     "loading": "Cargando etiquetas...",
-    "searchPlaceholder": "Buscar etiquetas...",
+    "searchPlaceholder": "Buscar…",
     "title": "Etiquetas",
     "noTagsFound": "No se encontraron etiquetas",
     "editTagAriaLabel": "Editar etiqueta {{tagName}}",
@@ -2481,7 +2509,7 @@
     "miniCalendar": "Minicalendario",
     "previousMonth": "Mes anterior",
     "nextMonth": "Mes siguiente",
-    "multiDay_one": "{{count}} días",
+    "multiDay_one": "{{count}} día",
     "multiDay_many": "{{count}} días",
     "multiDay_other": "{{count}} días",
     "agendaEmpty": "Nada programado",
@@ -2552,8 +2580,6 @@
     "connectionError": "Error al conectar con Google Calendar. Inténtalo de nuevo.",
     "disconnectionError": "Error al desconectar de Google Calendar. Inténtalo de nuevo.",
     "taskDetails": "Detalles de la Tarea",
-    "editTask": "Editar Tarea",
-    "goToTasks": "Ir a Tareas",
     "close": "Cerrar",
     "title": "Título",
     "status": "Estado",
@@ -2564,11 +2590,6 @@
     "area": "Área",
     "description": "Descripción",
     "created": "Creado",
-    "completed": "Completado",
-    "pending": "Pendiente",
-    "high": "Alta",
-    "medium": "Media",
-    "low": "Baja",
     "time": "Tiempo",
     "allDay": "Todo el día",
     "google": {
@@ -2600,7 +2621,14 @@
     "moreViews": "Más vistas",
     "openDay": "Abrir día",
     "noEventsThisDay": "Nada planificado.",
-    "task": "Tarea"
+    "previousYear": "Año anterior",
+    "nextYear": "Año siguiente",
+    "previousWeek": "Semana anterior",
+    "nextWeek": "Semana siguiente",
+    "previousDays": "Días anteriores",
+    "nextDays": "Días siguientes",
+    "previousDay": "Día anterior",
+    "nextDay": "Día siguiente"
   },
   "productivity": {
     "stalledProjects": "Proyectos Estancados",
@@ -2645,9 +2673,9 @@
     "uploading": "Subiendo..."
   },
   "searchPlaceholders": {
-    "searchProjects": "Buscar proyectos...",
-    "searchTags": "Buscar etiquetas...",
-    "searchTasks": "Buscar tareas..."
+    "searchProjects": "Buscar…",
+    "searchTags": "Buscar…",
+    "searchTasks": "Buscar…"
   },
   "ariaLabels": {
     "hideInfo": "Ocultar información",
@@ -3304,7 +3332,7 @@
   "views": {
     "title": "Vistas Inteligentes",
     "loading": "Cargando vistas...",
-    "searchPlaceholder": "Buscar vistas...",
+    "searchPlaceholder": "Buscar…",
     "noViewsFound": "No se encontraron vistas. Crea una vista realizando una búsqueda y haciendo clic en \"Guardar como Vista Inteligente\".",
     "deleteView": "Eliminar Vista",
     "confirmDelete": "¿Estás seguro de que deseas eliminar la vista \"{{viewName}}\"?",
@@ -3341,7 +3369,7 @@
     "filters": "filtros"
   },
   "search": {
-    "placeholder": "Buscar tareas, proyectos, notas...",
+    "placeholder": "Buscar…",
     "searchingFor": "Estás buscando",
     "allItems": "todos los elementos",
     "containingText": ", que contiene el texto",
@@ -4031,7 +4059,26 @@
     "archivedBadge": "archivada",
     "deletePerson": "Eliminar persona",
     "deleteConfirm": "¿Seguro que quieres eliminar a «{{name}}»? No se puede deshacer.",
-    "contact": "Contacto"
+    "contact": "Contacto",
+    "editPerson": "Editar persona",
+    "newPerson": "Nueva persona",
+    "noAssignedTasks": "No hay tareas asignadas a {{name}}.",
+    "notFound": "Persona no encontrada.",
+    "relationship": "Relación",
+    "phone": "Teléfono",
+    "namePlaceholder": "Papá, pareja, Alicia…",
+    "notesPlaceholder": "Notas sobre esta persona…",
+    "relationships": {
+      "family": "Familia",
+      "work": "Trabajo",
+      "friend": "Amistad",
+      "other": "Otro"
+    },
+    "noPeopleYet": "Aún no hay personas",
+    "clearAssignment": "Quitar asignación",
+    "nameRequired": "El nombre es obligatorio",
+    "saveError": "No se pudo guardar la persona",
+    "signInLink": "Enlace de acceso"
   },
   "members": {
     "addTitle": "Añadir miembro",
@@ -4187,7 +4234,8 @@
       "addToTomorrow": "Añadir a mañana",
       "regenerate": "Regenerar",
       "draftTitle": "Propuesta de la IA",
-      "skippedCount": "Fuera del plan ({{count}})"
+      "skippedCount": "Fuera del plan ({{count}})",
+      "carried_one": "{{count}} tarea añadida a mañana"
     },
     "lateWarning": "Ya pasó la hora y aún no está hecha",
     "movedOffPlan": "'{{name}}' ya no vence hoy, así que salió del plan de hoy.",
@@ -4302,7 +4350,8 @@
     "showQuote": "Mostrar la cita del día",
     "hideQuote": "Ocultar la cita del día",
     "orderError": "No se pudo guardar el orden.",
-    "eventReadOnly": "Solo lectura: pon este calendario en sincronización bidireccional en el perfil para moverlo desde aquí."
+    "eventReadOnly": "Solo lectura: pon este calendario en sincronización bidireccional en el perfil para moverlo desde aquí.",
+    "placeAllDone_one": "{{count}} tarea colocada."
   },
   "capture": {
     "add": "Añadir",
@@ -4460,7 +4509,7 @@
     "targetDate": "Objetivo",
     "noProjects": "No hay proyectos vinculados a esta meta.",
     "noTasks": "No hay tareas asignadas a esta meta.",
-    "searchGoals": "Buscar metas…",
+    "searchGoals": "Buscar…",
     "clearGoal": "Quitar meta",
     "noGoalsFound": "No se encontraron metas",
     "inactive": "Inactiva",
@@ -4499,7 +4548,8 @@
     "noAvailableGoals": "No hay objetivos disponibles",
     "progressHint": "Barra: tareas y proyectos completados. Línea: tiempo transcurrido entre la creación y la fecha objetivo.",
     "removeFromArea": "Quitar del área",
-    "createTask": "Crear una tarea"
+    "createTask": "Crear una tarea",
+    "noGoal": "Sin objetivo"
   },
   "templates": {
     "new": "Nueva plantilla",
@@ -4520,7 +4570,7 @@
       "empty": "Todavía no hay plantillas en el catálogo.",
       "title": "Catálogo",
       "subtitle": "Explora e instala plantillas listas de la comunidad",
-      "search": "Buscar en el catálogo..."
+      "search": "Buscar…"
     },
     "taskList": "Tareas",
     "noTasks": "No hay tareas en esta plantilla",
@@ -4824,7 +4874,13 @@
       "hierarchy_wbs": "números WBS (1, 1.1, 1.2)",
       "hierarchy_indent": "filas con sangría",
       "hierarchy_flat": "sin subtareas",
-      "hierarchy_auto": "detectarlo"
+      "hierarchy_auto": "detectarlo",
+      "countCreate_one": "{{count}} tarea nueva",
+      "countProjects_one": "{{count}} proyecto nuevo",
+      "countAreas_one": "{{count}} área nueva",
+      "countTags_one": "{{count}} etiqueta nueva",
+      "doneTitle_one": "Se importó {{count}} tarea",
+      "rowCount_one": "{{count}} fila"
     },
     "issues": {
       "too_many_tags": "Solo se conservan las primeras 20 etiquetas.",
@@ -5077,7 +5133,7 @@
       "reviewIn30": "Revisar en 30 días",
       "reviewOn": "Revisar el…",
       "keepLater": "Mantener aparcada",
-      "toTask": "Convertir en tarea",
+      "toTask": "Crear una tarea",
       "toLater": "Aparcar para más tarde",
       "discard": "Descartar",
       "openInbox": "Abrir la bandeja de entrada",
@@ -5152,7 +5208,8 @@
     "dislike": "No me gusta",
     "failedToReact": "No se pudo actualizar la reacción",
     "uploadingImage": "Subiendo imagen...",
-    "imageUploadFailed": "No se pudo subir la imagen"
+    "imageUploadFailed": "No se pudo subir la imagen",
+    "count_one": "{{count}} comentario"
   },
   "sortable": {
     "move": "Mover",
@@ -5171,7 +5228,7 @@
     "title": "Relaciones",
     "add": "Añadir relación",
     "remove": "Quitar relación",
-    "searchPlaceholder": "Buscar una tarea...",
+    "searchPlaceholder": "Buscar…",
     "addFailed": "No se pudo añadir la relación.",
     "removeFailed": "No se pudo quitar la relación.",
     "blocked": "Bloqueada",
@@ -6132,7 +6189,11 @@
     "hideCompleted": "Ocultar completadas",
     "showCompletedTasks": "Mostrar completadas",
     "dropOverlaps": "Solapamientos",
-    "dropPast": "En el pasado"
+    "dropPast": "En el pasado",
+    "habitsCount": "Hábitos · {{n}}",
+    "habitsDone": "Hechos · {{n}}",
+    "habitAt": "{{name}} a las {{time}}",
+    "habitLogFailed": "No se pudo registrar el hábito."
   },
   "upcoming": {
     "title": "Planificar",
@@ -6181,12 +6242,8 @@
     "noProject": "Sin proyecto",
     "noTag": "Sin etiqueta",
     "priority": {
-      "high": "Alta",
-      "medium": "Media",
-      "low": "Baja",
       "none": "Sin prioridad"
     },
-    "horizonsEmpty": "Todavía no hay nada.",
     "thisWeek": "Esta semana",
     "thisMonth": "Este mes",
     "nextMonth": "Próximo mes",
@@ -6232,14 +6289,17 @@
     "load": "{{planned}} / {{available}}",
     "done": "Hechas ({{n}})",
     "subtaskOf": "↳ {{parent}}",
-    "addToInbox": "Añadir a la bandeja de entrada",
-    "inboxNewItem": "Nuevo elemento de la bandeja",
     "addToInboxFailed": "No se pudo añadir. Inténtalo de nuevo.",
     "addEmptyName": "Pon un nombre a la tarea",
     "addTaskIn": "Añadir una tarea a {{name}}",
-    "thisWeekOnlyPlanned": "Nada sin día fijo · {{count}} planificadas en un día",
     "previous": "Día anterior",
-    "next": "Día siguiente"
+    "next": "Día siguiente",
+    "nextWeekHint": "Comprometida para la próxima semana, sin día fijo",
+    "stripLabel": "Enviar a un horizonte",
+    "stripOpen": "Abrir {{name}} en Horizontes",
+    "sentToHorizon": "Enviada a {{name}}",
+    "plannedOnDayHint_one": "{{count}} planificada en un día",
+    "plannedOnDayHint_other": "{{count}} planificadas en un día"
   },
   "offline": {
     "offline": "Sin conexión",

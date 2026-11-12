@@ -25,7 +25,9 @@
       "requeued": "{{count}} elementer satt i kø igjen",
       "retry": "Prøv igjen",
       "failed": "{{count}} elementer mislyktes",
-      "title": "Det siste AI-kallet mislyktes"
+      "title": "Det siste AI-kallet mislyktes",
+      "requeued_one": "{{count}} element satt i kø igjen",
+      "failed_one": "{{count}} element mislyktes"
     },
     "number": {
       "maxTokens": "Maks antall svartokener",
@@ -122,8 +124,6 @@
       "dismiss": "Ignorer",
       "acceptAll": "Godta alle",
       "apply": "Bruk",
-      "medium": "Middels",
-      "high": "Høy",
       "priority": "Prioritet",
       "newTag": "Ny tagg: #{{name}}",
       "tags": "Tagger",
@@ -148,7 +148,7 @@
       "archive": "Arkiver i Gmail",
       "taskName": "Navn på oppgaven",
       "taskDue": "Frist",
-      "createTask": "Opprett oppgaven",
+      "createTask": "Opprett en oppgave",
       "taskCreated": "Oppgave opprettet",
       "replied": "Svar åpnet i Gmail",
       "postponed": "Kommer tilbake i morgen",
@@ -248,7 +248,7 @@
     "preview": "Forhåndsvisning",
     "download": "Last ned",
     "exitFocusMode": "Avslutt fokusmodus",
-    "searchTimezones": "Søk etter tidssoner...",
+    "searchTimezones": "Søk…",
     "dismiss": "Avvis",
     "search": "Søk",
     "previous": "Forrige",
@@ -277,7 +277,10 @@
     "resolving": "Løser...",
     "showLess": "Vis mindre",
     "breadcrumb": "Brødsmuler",
-    "undo": "Angre"
+    "undo": "Angre",
+    "copyCode": "Kopier kode",
+    "copy": "Kopier",
+    "copied": "Kopiert"
   },
   "sidebar": {
     "links": "Lenker",
@@ -333,7 +336,6 @@
     "collapseViews": "Skjul listen over visninger",
     "expandViews": "Vis listen over visninger",
     "summary": "Oppsummering",
-    "tomorrow": "I morgen",
     "next7Days": "Neste 7 dager",
     "more": "Mer",
     "toggleFolder": "Vis eller skjul prosjekter",
@@ -415,7 +417,7 @@
     "taskCompleted": "oppgave fullført",
     "tasksCompleted": "oppgaver fullført",
     "noTasksAvailable": "Ingen oppgaver tilgjengelig.",
-    "searchPlaceholder": "Søk etter oppgaver...",
+    "searchPlaceholder": "Søk…",
     "addNewTask": "Legg til ny oppgave",
     "addTaskInline": "+ Legg til oppgave",
     "metrics": "Metrikker",
@@ -1086,7 +1088,8 @@
       "hoursTitle": "Dagen din",
       "hoursTo": "til",
       "taggedToday": "Merket #today",
-      "taggedTodayDetail": "Åpne oppgaver du har merket #today, uansett datoene deres."
+      "taggedTodayDetail": "Åpne oppgaver du har merket #today, uansett datoene deres.",
+      "maxOption_one": "{{count}} oppgave"
     },
     "aiApiKey": "API-nøkkel",
     "aiApiKeyClear": "Tøm",
@@ -1567,7 +1570,8 @@
     "rateLimitedRetrying": "For mange forespørsler, prøver igjen…",
     "rateLimitedGaveUp": "For mange forespørsler. Økten er fortsatt aktiv; last inn på nytt om litt.",
     "serverBusyRetrying": "Serveren er opptatt, prøver på nytt…",
-    "serverBusyRetry": "Prøv igjen"
+    "serverBusyRetry": "Prøv igjen",
+    "sign_up": "Registrer deg"
   },
   "dropdown": {
     "createNew": "Opprett ny",
@@ -1689,7 +1693,8 @@
     "noTasks": "Ingen oppgaver.",
     "nextAction": "Neste handling",
     "nextActionLine": "Neste handling: {{name}}",
-    "noCompletedTasks": "Ingen fullførte oppgaver."
+    "noCompletedTasks": "Ingen fullførte oppgaver.",
+    "views": "Prosjektvisninger"
   },
   "errors": {
     "required": "Dette feltet er påkrevd",
@@ -1833,6 +1838,18 @@
       "reasonKeyword": "Det starter med “{{detail}}”",
       "reasonLong": "Det er langt, som et notat",
       "reasonDefault": "Kort tekst, oftest en oppgave"
+    },
+    "sources": {
+      "telegram": "Telegram",
+      "gmail": "Gmail",
+      "mcp": "MCP",
+      "android": "Android",
+      "api": "API",
+      "email": "E-post",
+      "mail": "E-post",
+      "desktop": "Datamaskin",
+      "link": "Lenke",
+      "share": "Deling"
     }
   },
   "dateFormats": {
@@ -2077,7 +2094,13 @@
     "noUpcomingOccurrences": "Ingen kommende forekomster.",
     "turnIntoProject": "Gjør om til et prosjekt",
     "turnIntoProjectError": "Kunne ikke gjøres om til et prosjekt.",
-    "turnIntoProjectMessage": "Gjøre « {{name}} » om til et prosjekt? Deloppgavene blir prosjektets oppgaver, og adressene i notatet blir prosjektets sider."
+    "turnIntoProjectMessage": "Gjøre « {{name}} » om til et prosjekt? Deloppgavene blir prosjektets oppgaver, og adressene i notatet blir prosjektets sider.",
+    "inDays_one": "om {{count}} dag",
+    "daysAgo_one": "{{count}} dag siden",
+    "hoursAgo_one": "for {{count}} time siden",
+    "minutesAgo_one": "for {{count}} minutt siden",
+    "inMinutes_one": "om {{count}} minutt",
+    "inHours_one": "om {{count}} time"
   },
   "projects": {
     "parentProject": "Overordnet prosjekt",
@@ -2086,7 +2109,7 @@
     "areaFollowsParent": "Området følger det overordnede prosjektet",
     "loading": "Laster prosjekter...",
     "error": "Feil ved lasting av prosjekter",
-    "searchPlaceholder": "Søk prosjekter...",
+    "searchPlaceholder": "Søk…",
     "title": "Prosjekter",
     "noProjectsFound": "Ingen prosjekter funnet",
     "cardViewAriaLabel": "Kortvisning",
@@ -2269,7 +2292,7 @@
     "presetWork": "Jobb",
     "presetHealth": "Helse",
     "presetFamily": "Familie",
-    "suggestDomains": "Foreslå 5 domener",
+    "suggestDomains": "Foreslå 5 områder",
     "domains": {
       "business": "Business og penger",
       "tech": "Teknologi og systemer",
@@ -2304,7 +2327,7 @@
     "emptyPreview": "Tom notat",
     "loading": "Laster notater...",
     "error": "Feil ved lasting av notater",
-    "searchPlaceholder": "Søk notater...",
+    "searchPlaceholder": "Søk…",
     "noNotesFound": "Ingen notater funnet",
     "title": "Notater",
     "deleteNoteAriaLabel": "Slett notat {{noteTitle}}",
@@ -2384,11 +2407,16 @@
     "fileUploadError": "Kunne ikke laste opp {{name}}",
     "slashFile": "Bilde eller fil",
     "slashFileHint": "Last opp og legg inn her",
-    "toggleDropdownMenu": "Veksle rullegardinmeny"
+    "toggleDropdownMenu": "Veksle rullegardinmeny",
+    "saved": "Lagret",
+    "unsaved": "Ulagrede endringer",
+    "backgroundColor": "Bakgrunnsfarge",
+    "selectProject": "Velg prosjekt",
+    "noMatchingNotes": "Ingen samsvarende notater"
   },
   "tags": {
     "loading": "Laster etiketter...",
-    "searchPlaceholder": "Søk etiketter...",
+    "searchPlaceholder": "Søk…",
     "title": "Etiketter",
     "noTagsFound": "Ingen etiketter funnet",
     "editTagAriaLabel": "Rediger etikett {{tagName}}",
@@ -2517,7 +2545,7 @@
     "miniCalendar": "Minikalender",
     "previousMonth": "Forrige måned",
     "nextMonth": "Neste måned",
-    "multiDay_one": "{{count}} dager",
+    "multiDay_one": "{{count}} dag",
     "multiDay_other": "{{count}} dager",
     "agendaEmpty": "Ingenting planlagt",
     "agenda": "Agenda",
@@ -2587,8 +2615,6 @@
     "connectionError": "Kunne ikke koble til Google Kalender. Vennligst prøv igjen.",
     "disconnectionError": "Kunne ikke koble fra Google Kalender. Vennligst prøv igjen.",
     "taskDetails": "Oppgave Detaljer",
-    "editTask": "Rediger oppgave",
-    "goToTasks": "Gå til oppgaver",
     "close": "Lukk",
     "title": "Tittel",
     "status": "Status",
@@ -2599,11 +2625,6 @@
     "area": "Område",
     "description": "Beskrivelse",
     "created": "Opprettet",
-    "completed": "Fullført",
-    "pending": "Venter",
-    "high": "Høy",
-    "medium": "Moderat",
-    "low": "Lav",
     "time": "Tid",
     "allDay": "Hele dagen",
     "google": {
@@ -2635,7 +2656,14 @@
     "moreViews": "Flere visninger",
     "openDay": "Åpne dag",
     "noEventsThisDay": "Ingenting planlagt.",
-    "task": "Oppgave"
+    "previousYear": "Forrige år",
+    "nextYear": "Neste år",
+    "previousWeek": "Forrige uke",
+    "nextWeek": "Neste uke",
+    "previousDays": "Forrige dager",
+    "nextDays": "Neste dager",
+    "previousDay": "Forrige dag",
+    "nextDay": "Neste dag"
   },
   "pages": {
     "notFound": {
@@ -2654,9 +2682,9 @@
     "uploading": "Laster opp..."
   },
   "searchPlaceholders": {
-    "searchProjects": "Søk prosjekter...",
-    "searchTags": "Søk etter merkelapper...",
-    "searchTasks": "Søk oppgaver..."
+    "searchProjects": "Søk…",
+    "searchTags": "Søk…",
+    "searchTasks": "Søk…"
   },
   "ariaLabels": {
     "hideInfo": "Skjul info",
@@ -3312,7 +3340,7 @@
   "views": {
     "title": "Smarte Visninger",
     "loading": "Laster visninger...",
-    "searchPlaceholder": "Søk etter visninger...",
+    "searchPlaceholder": "Søk…",
     "noViewsFound": "Ingen visninger funnet. Opprett en visning ved å utføre et søk og klikke \"Lagre som Smart Visning\".",
     "deleteView": "Slett Visning",
     "confirmDelete": "Er du sikker på at du vil slette visningen \"{{viewName}}\"?",
@@ -3349,7 +3377,7 @@
     "filters": "filtre"
   },
   "search": {
-    "placeholder": "Søk etter oppgaver, prosjekter, notater...",
+    "placeholder": "Søk…",
     "searchingFor": "Du søker etter",
     "allItems": "alle elementer",
     "containingText": ", som inneholder teksten",
@@ -4043,7 +4071,26 @@
     "archivedBadge": "arkivert",
     "deletePerson": "Slett person",
     "deleteConfirm": "Er du sikker på at du vil slette «{{name}}»? Dette kan ikke angres.",
-    "contact": "Kontakt"
+    "contact": "Kontakt",
+    "editPerson": "Rediger person",
+    "newPerson": "Ny person",
+    "noAssignedTasks": "Ingen oppgaver tildelt {{name}}.",
+    "notFound": "Fant ikke personen.",
+    "relationship": "Relasjon",
+    "phone": "Telefon",
+    "namePlaceholder": "Pappa, partner, Alice…",
+    "notesPlaceholder": "Notater om denne personen…",
+    "relationships": {
+      "family": "Familie",
+      "work": "Jobb",
+      "friend": "Venn",
+      "other": "Annet"
+    },
+    "noPeopleYet": "Ingen personer ennå",
+    "clearAssignment": "Fjern tildeling",
+    "nameRequired": "Navn er påkrevd",
+    "saveError": "Kunne ikke lagre personen",
+    "signInLink": "Innloggingslenke"
   },
   "members": {
     "addTitle": "Legg til medlem",
@@ -4199,7 +4246,8 @@
       "addToTomorrow": "Legg til i morgen",
       "regenerate": "Generer på nytt",
       "draftTitle": "KI-utkast",
-      "skippedCount": "Utelatt ({{count}})"
+      "skippedCount": "Utelatt ({{count}})",
+      "carried_one": "{{count}} oppgave lagt til i morgen"
     },
     "lateWarning": "Tiden har gått, og det er ikke gjort",
     "movedOffPlan": "'{{name}}' har ikke lenger frist i dag, så den ble fjernet fra dagens plan.",
@@ -4314,7 +4362,8 @@
     "showQuote": "Vis dagens sitat",
     "hideQuote": "Skjul dagens sitat",
     "orderError": "Rekkefølgen kunne ikke lagres.",
-    "eventReadOnly": "Skrivebeskyttet: Sett denne kalenderen til toveissynkronisering i profilen for å flytte den herfra."
+    "eventReadOnly": "Skrivebeskyttet: Sett denne kalenderen til toveissynkronisering i profilen for å flytte den herfra.",
+    "placeAllDone_one": "{{count}} oppgave plassert."
   },
   "capture": {
     "add": "Legg til",
@@ -4472,7 +4521,7 @@
     "targetDate": "Mål",
     "noProjects": "Ingen prosjekter knyttet til dette målet.",
     "noTasks": "Ingen oppgaver knyttet til dette målet.",
-    "searchGoals": "Søk etter mål…",
+    "searchGoals": "Søk…",
     "clearGoal": "Fjern mål",
     "noGoalsFound": "Fant ingen mål",
     "inactive": "Inaktiv",
@@ -4511,7 +4560,8 @@
     "noAvailableGoals": "Ingen tilgjengelige mål",
     "progressHint": "Søyle: fullførte oppgaver og prosjekter. Linje: tid mellom opprettelse og måldato.",
     "removeFromArea": "Fjern fra området",
-    "createTask": "Opprett en oppgave"
+    "createTask": "Opprett en oppgave",
+    "noGoal": "Intet mål"
   },
   "templates": {
     "new": "Ny mal",
@@ -4532,7 +4582,7 @@
       "empty": "Det finnes ingen maler på markedsplassen ennå.",
       "title": "Markedsplass",
       "subtitle": "Bla gjennom og installer ferdige maler fra fellesskapet",
-      "search": "Søk på markedsplassen..."
+      "search": "Søk…"
     },
     "taskList": "Oppgaver",
     "noTasks": "Ingen oppgaver i denne malen",
@@ -4836,7 +4886,13 @@
       "hierarchy_wbs": "WBS-numre (1, 1.1, 1.2)",
       "hierarchy_indent": "innrykkede rader",
       "hierarchy_flat": "ingen deloppgaver",
-      "hierarchy_auto": "finn det automatisk"
+      "hierarchy_auto": "finn det automatisk",
+      "countCreate_one": "{{count}} ny oppgave",
+      "countProjects_one": "{{count}} nytt prosjekt",
+      "countAreas_one": "{{count}} nytt område",
+      "countTags_one": "{{count}} ny merkelapp",
+      "doneTitle_one": "Importerte {{count}} oppgave",
+      "rowCount_one": "{{count}} rad"
     },
     "issues": {
       "too_many_tags": "Bare de første 20 merkelappene beholdes.",
@@ -5088,7 +5144,7 @@
       "reviewIn30": "Gå gjennom om 30 dager",
       "reviewOn": "Gå gjennom den…",
       "keepLater": "Behold parkert",
-      "toTask": "Lag en oppgave",
+      "toTask": "Opprett en oppgave",
       "toLater": "Parker til senere",
       "discard": "Forkast",
       "openInbox": "Åpne innboksen",
@@ -5163,7 +5219,8 @@
     "dislike": "Lik ikke",
     "failedToReact": "Kunne ikke oppdatere reaksjonen",
     "uploadingImage": "Laster opp bilde…",
-    "imageUploadFailed": "Kunne ikke laste opp bildet"
+    "imageUploadFailed": "Kunne ikke laste opp bildet",
+    "count_one": "{{count}} kommentar"
   },
   "sortable": {
     "move": "Flytt",
@@ -5182,7 +5239,7 @@
     "title": "Relasjoner",
     "add": "Legg til relasjon",
     "remove": "Fjern relasjon",
-    "searchPlaceholder": "Søk etter en oppgave …",
+    "searchPlaceholder": "Søk…",
     "addFailed": "Kunne ikke legge til relasjonen.",
     "removeFailed": "Kunne ikke fjerne relasjonen.",
     "blocked": "Blokkert",
@@ -6135,7 +6192,11 @@
     "hideCompleted": "Skjul fullførte",
     "showCompletedTasks": "Vis fullførte",
     "dropOverlaps": "Overlapper",
-    "dropPast": "Tidligere"
+    "dropPast": "Tidligere",
+    "habitsCount": "Vaner · {{n}}",
+    "habitsDone": "Utført · {{n}}",
+    "habitAt": "{{name}} kl. {{time}}",
+    "habitLogFailed": "Kunne ikke registrere vanen."
   },
   "upcoming": {
     "title": "Planlegg",
@@ -6184,12 +6245,8 @@
     "noProject": "Ingen prosjekt",
     "noTag": "Ingen etikett",
     "priority": {
-      "high": "Høy",
-      "medium": "Middels",
-      "low": "Lav",
       "none": "Ingen prioritet"
     },
-    "horizonsEmpty": "Ingenting her ennå.",
     "thisWeek": "Denne uken",
     "thisMonth": "Denne måneden",
     "nextMonth": "Neste måned",
@@ -6235,14 +6292,17 @@
     "load": "{{planned}} / {{available}}",
     "done": "Ferdige ({{n}})",
     "subtaskOf": "↳ {{parent}}",
-    "addToInbox": "Legg til i innboksen",
-    "inboxNewItem": "Nytt innbokselement",
     "addToInboxFailed": "Kunne ikke legge til. Prøv igjen.",
     "addEmptyName": "Gi oppgaven et navn",
     "addTaskIn": "Legg til en oppgave i {{name}}",
-    "thisWeekOnlyPlanned": "Ingenting uten fast dag · {{count}} planlagt på en dag",
     "previous": "Forrige dag",
-    "next": "Neste dag"
+    "next": "Neste dag",
+    "nextWeekHint": "Planlagt for neste uke, uten fast dag",
+    "stripLabel": "Send til en horisont",
+    "stripOpen": "Åpne {{name}} i Horisonter",
+    "sentToHorizon": "Sendt til {{name}}",
+    "plannedOnDayHint_one": "{{count}} planlagt på en dag",
+    "plannedOnDayHint_other": "{{count}} planlagt på en dag"
   },
   "offline": {
     "offline": "Frakoblet",

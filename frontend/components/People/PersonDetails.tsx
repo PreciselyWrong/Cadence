@@ -29,17 +29,11 @@ import ConfirmDialog from '../Shared/ConfirmDialog';
 import TaskList from '../Task/TaskList';
 import { useStore } from '../../store/useStore';
 import { memberRoleLabel } from './memberRoleLabel';
+import { relationshipLabel } from './relationshipLabel';
 import PageShell, { PAGE_GUTTER } from '../Shared/ui/PageShell';
 import Button, { IconButton } from '../Shared/ui/Button';
 import Menu, { MenuEntry, MenuItem } from '../Shared/ui/Menu';
 import EmptyState from '../Shared/ui/EmptyState';
-
-const RELATIONSHIP_LABELS: Record<string, string> = {
-    family: 'Family',
-    work: 'Work',
-    friend: 'Friend',
-    other: 'Other',
-};
 
 const PersonDetails: React.FC = () => {
     const { uid } = useParams<{ uid: string }>();
@@ -236,7 +230,7 @@ const PersonDetails: React.FC = () => {
         person.kind === 'member'
             ? memberRoleLabel(person, t)
             : t('people.contact', 'Contact'),
-        RELATIONSHIP_LABELS[person.relationship_type ?? 'other'],
+        relationshipLabel(person.relationship_type, t),
         person.linked_user_id != null
             ? t('people.linkedAccount', 'Linked to a user account')
             : null,

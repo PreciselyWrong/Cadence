@@ -40,6 +40,12 @@ describe('plural forms in locales', () => {
         ['sl', 'project.fileCount', 2, '2 datoteki'],
         ['sl', 'project.fileCount', 3, '3 datoteke'],
         ['sl', 'project.fileCount', 5, '5 datotek'],
+        // Count keys that once had a single plural text ("1 tâches").
+        ['fr', 'spreadsheet.import.countCreate', 1, '1 nouvelle tâche'],
+        ['fr', 'spreadsheet.import.countCreate', 3, '3 nouvelles tâches'],
+        ['en', 'comments.count', 1, '1 comment'],
+        ['fr', 'upcoming.plannedOnDayHint', 1, '1 planifiée un jour'],
+        ['ru', 'profile.planning.maxOption', 1, '1 задача'],
     ];
 
     it.each(cases)(

@@ -25,7 +25,9 @@
       "requeued": "{{count}} Elemente erneut eingereiht",
       "retry": "Erneut versuchen",
       "failed": "{{count}} Elemente fehlgeschlagen",
-      "title": "Der letzte KI-Aufruf ist fehlgeschlagen"
+      "title": "Der letzte KI-Aufruf ist fehlgeschlagen",
+      "requeued_one": "{{count}} Element erneut eingereiht",
+      "failed_one": "{{count}} Element fehlgeschlagen"
     },
     "number": {
       "maxTokens": "Maximale Antwort-Tokens",
@@ -122,8 +124,6 @@
       "dismiss": "Ignorieren",
       "acceptAll": "Alle übernehmen",
       "apply": "Anwenden",
-      "medium": "Mittel",
-      "high": "Hoch",
       "priority": "Priorität",
       "newTag": "Neuer Tag: #{{name}}",
       "tags": "Tags",
@@ -248,7 +248,7 @@
     "preview": "Vorschau",
     "download": "Herunterladen",
     "exitFocusMode": "Fokusmodus beenden",
-    "searchTimezones": "Zeitzonen suchen...",
+    "searchTimezones": "Suchen…",
     "dismiss": "Schließen",
     "search": "Suche",
     "previous": "Vorherige",
@@ -277,7 +277,10 @@
     "resolving": "Wird aufgelöst...",
     "showLess": "Weniger anzeigen",
     "breadcrumb": "Navigationspfad",
-    "undo": "Rückgängig"
+    "undo": "Rückgängig",
+    "copyCode": "Code kopieren",
+    "copy": "Kopieren",
+    "copied": "Kopiert"
   },
   "sidebar": {
     "links": "Links",
@@ -333,7 +336,6 @@
     "collapseViews": "Ansichtenliste einklappen",
     "expandViews": "Ansichtenliste ausklappen",
     "summary": "Zusammenfassung",
-    "tomorrow": "Morgen",
     "next7Days": "Nächste 7 Tage",
     "more": "Mehr",
     "toggleFolder": "Projekte ein- oder ausblenden",
@@ -422,7 +424,7 @@
     "taskCompleted": "Aufgabe abgeschlossen",
     "tasksCompleted": "Aufgaben abgeschlossen",
     "noTasksAvailable": "Keine Aufgaben verfügbar.",
-    "searchPlaceholder": "Aufgaben suchen...",
+    "searchPlaceholder": "Suchen…",
     "addNewTask": "Neue Aufgabe hinzufügen",
     "addTaskInline": "+ Aufgabe hinzufügen",
     "metrics": "Metriken",
@@ -814,7 +816,7 @@
     "loading": "Notizen werden geladen...",
     "error": "Fehler beim Laden der Notizen",
     "noNotesFound": "Keine Notizen gefunden",
-    "searchPlaceholder": "Notizen durchsuchen...",
+    "searchPlaceholder": "Suchen…",
     "deleteNoteAriaLabel": "Notiz {{noteTitle}} löschen",
     "deleteNoteTitle": "Notiz {{noteTitle}} löschen",
     "editNoteAriaLabel": "Notiz {{noteTitle}} bearbeiten",
@@ -892,7 +894,12 @@
     "fileUploadError": "{{name}} konnte nicht hochgeladen werden",
     "slashFile": "Bild oder Datei",
     "slashFileHint": "Hier hochladen und platzieren",
-    "toggleDropdownMenu": "Dropdown-Menü umschalten"
+    "toggleDropdownMenu": "Dropdown-Menü umschalten",
+    "saved": "Gespeichert",
+    "unsaved": "Ungespeicherte Änderungen",
+    "backgroundColor": "Hintergrundfarbe",
+    "selectProject": "Projekt auswählen",
+    "noMatchingNotes": "Keine passenden Notizen"
   },
   "recurrence": {
     "none": "Keine",
@@ -1032,6 +1039,18 @@
       "reasonKeyword": "Es beginnt mit „{{detail}}“",
       "reasonLong": "Es ist lang, wie eine Notiz",
       "reasonDefault": "Kurzer Text, meist eine Aufgabe"
+    },
+    "sources": {
+      "telegram": "Telegram",
+      "gmail": "Gmail",
+      "mcp": "MCP",
+      "android": "Android",
+      "api": "API",
+      "email": "E-Mail",
+      "mail": "Mail",
+      "desktop": "Desktop",
+      "link": "Link",
+      "share": "Teilen"
     }
   },
   "project": {
@@ -1119,7 +1138,8 @@
     "noTasks": "Keine Aufgaben.",
     "nextAction": "Nächste Aktion",
     "nextActionLine": "Nächste Aktion: {{name}}",
-    "noCompletedTasks": "Keine abgeschlossenen Aufgaben."
+    "noCompletedTasks": "Keine abgeschlossenen Aufgaben.",
+    "views": "Projektansichten"
   },
   "profile": {
     "showTaskDescription": "Beschreibung unter dem Titel anzeigen",
@@ -1605,7 +1625,8 @@
       "suggestedTitle": "Was vorgeschlagen wird",
       "suggestedDescription": "Welche offenen Aufgaben unter Alles andere erscheinen können und wie viele. Überfällige, heute fällige und laufende Aufgaben werden immer angezeigt.",
       "taggedToday": "Mit #heute markiert",
-      "taggedTodayDetail": "Offene Aufgaben mit #heute markiert, unabhängig von ihren Terminen."
+      "taggedTodayDetail": "Offene Aufgaben mit #heute markiert, unabhängig von ihren Terminen.",
+      "maxOption_one": "{{count}} Aufgabe"
     },
     "apiKeys": {
       "nameRequired": "Ein Name für den API-Schlüssel ist erforderlich.",
@@ -2042,7 +2063,13 @@
     "noUpcomingOccurrences": "Keine anstehenden Termine.",
     "turnIntoProject": "In ein Projekt umwandeln",
     "turnIntoProjectError": "Konnte nicht in ein Projekt umgewandelt werden.",
-    "turnIntoProjectMessage": "„{{name}}“ in ein Projekt umwandeln? Die Unteraufgaben werden zu Aufgaben des Projekts, und die Adressen seiner Notiz werden zu seinen Seiten."
+    "turnIntoProjectMessage": "„{{name}}“ in ein Projekt umwandeln? Die Unteraufgaben werden zu Aufgaben des Projekts, und die Adressen seiner Notiz werden zu seinen Seiten.",
+    "inDays_one": "in {{count}} Tag",
+    "daysAgo_one": "{{count}} Tag her",
+    "hoursAgo_one": "vor {{count}} Stunde",
+    "minutesAgo_one": "vor {{count}} Minute",
+    "inMinutes_one": "in {{count}} Minute",
+    "inHours_one": "in {{count}} Stunde"
   },
   "calendar": {
     "feed": {
@@ -2069,7 +2096,7 @@
     "miniCalendar": "Minikalender",
     "previousMonth": "Vorheriger Monat",
     "nextMonth": "Nächster Monat",
-    "multiDay_one": "{{count}} Tage",
+    "multiDay_one": "{{count}} Tag",
     "multiDay_other": "{{count}} Tage",
     "agendaEmpty": "Nichts geplant",
     "agenda": "Agenda",
@@ -2139,8 +2166,6 @@
     "connectionError": "Fehler beim Verbinden mit Google Calendar. Bitte versuchen Sie es erneut.",
     "disconnectionError": "Fehler beim Trennen von Google Calendar. Bitte versuchen Sie es erneut.",
     "taskDetails": "Aufgabendetails",
-    "editTask": "Aufgabe bearbeiten",
-    "goToTasks": "Zu Aufgaben",
     "close": "Schließen",
     "title": "Titel",
     "status": "Status",
@@ -2151,11 +2176,6 @@
     "area": "Bereich",
     "description": "Beschreibung",
     "created": "Erstellt",
-    "completed": "Abgeschlossen",
-    "pending": "Ausstehend",
-    "high": "Hoch",
-    "medium": "Mittel",
-    "low": "Niedrig",
     "time": "Zeit",
     "allDay": "Ganztägig",
     "google": {
@@ -2187,7 +2207,14 @@
     "moreViews": "Weitere Ansichten",
     "openDay": "Tag öffnen",
     "noEventsThisDay": "Nichts geplant.",
-    "task": "Aufgabe"
+    "previousYear": "Vorheriges Jahr",
+    "nextYear": "Nächstes Jahr",
+    "previousWeek": "Vorherige Woche",
+    "nextWeek": "Nächste Woche",
+    "previousDays": "Vorherige Tage",
+    "nextDays": "Nächste Tage",
+    "previousDay": "Vorheriger Tag",
+    "nextDay": "Nächster Tag"
   },
   "weekdaysShort": {
     "monday": "Mo",
@@ -2293,7 +2320,8 @@
     "rateLimitedRetrying": "Zu viele Anfragen, neuer Versuch…",
     "rateLimitedGaveUp": "Zu viele Anfragen. Die Sitzung bleibt aktiv; bitte gleich neu laden.",
     "serverBusyRetrying": "Server ausgelastet, neuer Versuch…",
-    "serverBusyRetry": "Erneut versuchen"
+    "serverBusyRetry": "Erneut versuchen",
+    "sign_up": "Anmelden"
   },
   "dropdown": {
     "createNew": "Neu erstellen",
@@ -2368,7 +2396,7 @@
     "areaFollowsParent": "Der Bereich folgt dem übergeordneten Projekt",
     "loading": "Projekte laden...",
     "error": "Fehler beim Laden der Projekte",
-    "searchPlaceholder": "Projekte suchen...",
+    "searchPlaceholder": "Suchen…",
     "title": "Projekte",
     "noProjectsFound": "Keine Projekte gefunden",
     "cardViewAriaLabel": "Kartenansicht",
@@ -2583,7 +2611,7 @@
   },
   "tags": {
     "loading": "Tags laden...",
-    "searchPlaceholder": "Tags suchen...",
+    "searchPlaceholder": "Suchen…",
     "title": "Schlagworte",
     "noTagsFound": "Keine Tags gefunden",
     "editTagAriaLabel": "Tag {{tagName}} bearbeiten",
@@ -2662,9 +2690,9 @@
     "uploading": "Hochladen..."
   },
   "searchPlaceholders": {
-    "searchProjects": "Projekte suchen...",
-    "searchTags": "Tags suchen...",
-    "searchTasks": "Aufgaben suchen..."
+    "searchProjects": "Suchen…",
+    "searchTags": "Suchen…",
+    "searchTasks": "Suchen…"
   },
   "ariaLabels": {
     "hideInfo": "Info ausblenden",
@@ -3320,7 +3348,7 @@
   "views": {
     "title": "Intelligente Ansichten",
     "loading": "Ansichten werden geladen...",
-    "searchPlaceholder": "Ansichten suchen...",
+    "searchPlaceholder": "Suchen…",
     "noViewsFound": "Keine Ansichten gefunden. Erstellen Sie eine Ansicht, indem Sie eine Suche durchführen und auf \"Als intelligente Ansicht speichern\" klicken.",
     "deleteView": "Ansicht löschen",
     "confirmDelete": "Sind Sie sicher, dass Sie die Ansicht \"{{viewName}}\" löschen möchten?",
@@ -3357,7 +3385,7 @@
     "filters": "Filter"
   },
   "search": {
-    "placeholder": "Aufgaben, Projekte, Notizen suchen...",
+    "placeholder": "Suchen…",
     "searchingFor": "Sie suchen nach",
     "allItems": "alle Elemente",
     "containingText": ", die den Text enthalten",
@@ -4047,7 +4075,26 @@
     "archivedBadge": "archiviert",
     "deletePerson": "Person löschen",
     "deleteConfirm": "Möchtest du „{{name}}“ wirklich löschen? Das lässt sich nicht rückgängig machen.",
-    "contact": "Kontakt"
+    "contact": "Kontakt",
+    "editPerson": "Person bearbeiten",
+    "newPerson": "Neue Person",
+    "noAssignedTasks": "Keine Aufgaben an {{name}} zugewiesen.",
+    "notFound": "Person nicht gefunden.",
+    "relationship": "Beziehung",
+    "phone": "Telefon",
+    "namePlaceholder": "Papa, Partner, Alice…",
+    "notesPlaceholder": "Notizen zu dieser Person…",
+    "relationships": {
+      "family": "Familie",
+      "work": "Arbeit",
+      "friend": "Freund",
+      "other": "Sonstiges"
+    },
+    "noPeopleYet": "Noch keine Personen",
+    "clearAssignment": "Zuweisung entfernen",
+    "nameRequired": "Name ist erforderlich",
+    "saveError": "Person konnte nicht gespeichert werden",
+    "signInLink": "Anmeldelink"
   },
   "members": {
     "addTitle": "Mitglied hinzufügen",
@@ -4203,7 +4250,8 @@
       "addToTomorrow": "Zu morgen hinzufügen",
       "regenerate": "Neu erstellen",
       "draftTitle": "KI-Entwurf",
-      "skippedCount": "Ausgelassen ({{count}})"
+      "skippedCount": "Ausgelassen ({{count}})",
+      "carried_one": "{{count}} Aufgabe zu morgen hinzugefügt"
     },
     "lateWarning": "Zeit vorbei und noch nicht erledigt",
     "movedOffPlan": "„{{name}}“ ist heute nicht mehr fällig und wurde aus dem Tagesplan entfernt.",
@@ -4318,7 +4366,8 @@
     "showQuote": "Tageszitat anzeigen",
     "hideQuote": "Tageszitat ausblenden",
     "orderError": "Die Reihenfolge konnte nicht gespeichert werden.",
-    "eventReadOnly": "Schreibgeschützt: Stelle diesen Kalender im Profil auf beidseitige Synchronisierung, um ihn von hier zu verschieben."
+    "eventReadOnly": "Schreibgeschützt: Stelle diesen Kalender im Profil auf beidseitige Synchronisierung, um ihn von hier zu verschieben.",
+    "placeAllDone_one": "{{count}} Aufgabe eingeplant."
   },
   "capture": {
     "add": "Hinzufügen",
@@ -4476,7 +4525,7 @@
     "targetDate": "Ziel",
     "noProjects": "Keine Projekte mit diesem Ziel verknüpft.",
     "noTasks": "Diesem Ziel sind keine Aufgaben zugeordnet.",
-    "searchGoals": "Ziele suchen…",
+    "searchGoals": "Suchen…",
     "clearGoal": "Ziel entfernen",
     "noGoalsFound": "Keine Ziele gefunden",
     "inactive": "Inaktiv",
@@ -4515,7 +4564,8 @@
     "noAvailableGoals": "Keine verfügbaren Ziele",
     "progressHint": "Balken: erledigte Aufgaben und Projekte. Linie: vergangene Zeit zwischen Erstellung und Zieldatum.",
     "removeFromArea": "Aus Bereich entfernen",
-    "createTask": "Aufgabe erstellen"
+    "createTask": "Aufgabe erstellen",
+    "noGoal": "Kein Ziel"
   },
   "templates": {
     "new": "Neue Vorlage",
@@ -4536,7 +4586,7 @@
       "empty": "Im Marktplatz gibt es noch keine Vorlagen.",
       "title": "Marktplatz",
       "subtitle": "Fertige Vorlagen aus der Community durchsuchen und installieren",
-      "search": "Marktplatz durchsuchen..."
+      "search": "Suchen…"
     },
     "taskList": "Aufgaben",
     "noTasks": "Keine Aufgaben in dieser Vorlage",
@@ -4840,7 +4890,13 @@
       "hierarchy_wbs": "WBS-Nummern (1, 1.1, 1.2)",
       "hierarchy_indent": "eingerückte Zeilen",
       "hierarchy_flat": "keine Unteraufgaben",
-      "hierarchy_auto": "automatisch erkennen"
+      "hierarchy_auto": "automatisch erkennen",
+      "countCreate_one": "{{count}} neue Aufgabe",
+      "countProjects_one": "{{count}} neues Projekt",
+      "countAreas_one": "{{count}} neuer Bereich",
+      "countTags_one": "{{count}} neuer Tag",
+      "doneTitle_one": "{{count}} Aufgabe importiert",
+      "rowCount_one": "{{count}} Zeile"
     },
     "issues": {
       "too_many_tags": "Nur die ersten 20 Tags werden übernommen.",
@@ -5092,7 +5148,7 @@
       "reviewIn30": "In 30 Tagen überprüfen",
       "reviewOn": "Überprüfen am…",
       "keepLater": "Geparkt lassen",
-      "toTask": "Als Aufgabe anlegen",
+      "toTask": "Aufgabe erstellen",
       "toLater": "Für später parken",
       "discard": "Verwerfen",
       "openInbox": "Eingang öffnen",
@@ -5167,7 +5223,8 @@
     "dislike": "Gefällt mir nicht",
     "failedToReact": "Reaktion konnte nicht aktualisiert werden",
     "uploadingImage": "Bild wird hochgeladen …",
-    "imageUploadFailed": "Bild konnte nicht hochgeladen werden"
+    "imageUploadFailed": "Bild konnte nicht hochgeladen werden",
+    "count_one": "{{count}} Kommentar"
   },
   "sortable": {
     "move": "Verschieben",
@@ -5186,7 +5243,7 @@
     "title": "Beziehungen",
     "add": "Beziehung hinzufügen",
     "remove": "Beziehung entfernen",
-    "searchPlaceholder": "Aufgabe suchen …",
+    "searchPlaceholder": "Suchen…",
     "addFailed": "Beziehung konnte nicht hinzugefügt werden.",
     "removeFailed": "Beziehung konnte nicht entfernt werden.",
     "blocked": "Blockiert",
@@ -6139,7 +6196,11 @@
     "hideCompleted": "Erledigte ausblenden",
     "showCompletedTasks": "Erledigte anzeigen",
     "dropOverlaps": "Überschneidungen",
-    "dropPast": "In der Vergangenheit"
+    "dropPast": "In der Vergangenheit",
+    "habitsCount": "Gewohnheiten · {{n}}",
+    "habitsDone": "Erledigt · {{n}}",
+    "habitAt": "{{name}} um {{time}}",
+    "habitLogFailed": "Die Gewohnheit konnte nicht eingetragen werden."
   },
   "upcoming": {
     "title": "Planen",
@@ -6188,12 +6249,8 @@
     "noProject": "Kein Projekt",
     "noTag": "Kein Tag",
     "priority": {
-      "high": "Hoch",
-      "medium": "Mittel",
-      "low": "Niedrig",
       "none": "Keine Priorität"
     },
-    "horizonsEmpty": "Hier ist noch nichts.",
     "thisWeek": "Diese Woche",
     "thisMonth": "Dieser Monat",
     "nextMonth": "Nächster Monat",
@@ -6239,14 +6296,17 @@
     "load": "{{planned}} / {{available}}",
     "done": "Erledigt ({{n}})",
     "subtaskOf": "↳ {{parent}}",
-    "addToInbox": "Zum Posteingang hinzufügen",
-    "inboxNewItem": "Neuer Posteingangseintrag",
     "addToInboxFailed": "Hinzufügen fehlgeschlagen. Bitte erneut versuchen.",
     "addEmptyName": "Gib der Aufgabe einen Namen",
     "addTaskIn": "Aufgabe zu {{name}} hinzufügen",
-    "thisWeekOnlyPlanned": "Nichts ohne festen Tag · {{count}} an einem Tag geplant",
     "previous": "Vorheriger Tag",
-    "next": "Nächster Tag"
+    "next": "Nächster Tag",
+    "nextWeekHint": "Für nächste Woche vorgesehen, ohne festen Tag",
+    "stripLabel": "An einen Horizont senden",
+    "stripOpen": "{{name}} in Horizonte öffnen",
+    "sentToHorizon": "Nach {{name}} verschoben",
+    "plannedOnDayHint_one": "{{count}} an einem Tag geplant",
+    "plannedOnDayHint_other": "{{count}} an einem Tag geplant"
   },
   "offline": {
     "offline": "Offline",

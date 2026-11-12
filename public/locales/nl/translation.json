@@ -25,7 +25,9 @@
       "requeued": "{{count}} items opnieuw in de wachtrij",
       "retry": "Opnieuw proberen",
       "failed": "{{count}} items mislukt",
-      "title": "De laatste AI-aanroep is mislukt"
+      "title": "De laatste AI-aanroep is mislukt",
+      "requeued_one": "{{count}} item opnieuw in de wachtrij",
+      "failed_one": "{{count}} item mislukt"
     },
     "number": {
       "maxTokens": "Maximale antwoordtokens",
@@ -122,8 +124,6 @@
       "dismiss": "Negeren",
       "acceptAll": "Alles accepteren",
       "apply": "Toepassen",
-      "medium": "Gemiddeld",
-      "high": "Hoog",
       "priority": "Prioriteit",
       "newTag": "Nieuwe tag: #{{name}}",
       "tags": "Tags",
@@ -148,7 +148,7 @@
       "archive": "Archiveren in Gmail",
       "taskName": "Naam van de taak",
       "taskDue": "Deadline",
-      "createTask": "Taak aanmaken",
+      "createTask": "Taak maken",
       "taskCreated": "Taak aangemaakt",
       "replied": "Antwoord geopend in Gmail",
       "postponed": "Komt morgen terug",
@@ -248,7 +248,7 @@
     "preview": "Voorbeeld",
     "download": "Downloaden",
     "exitFocusMode": "Verlaat de focusmodus",
-    "searchTimezones": "Zoek tijdzones...",
+    "searchTimezones": "Zoeken…",
     "dismiss": "Afwijzen",
     "search": "Zoeken",
     "previous": "Vorige",
@@ -277,7 +277,10 @@
     "resolving": "Bezig met oplossen...",
     "showLess": "Minder tonen",
     "breadcrumb": "Kruimelpad",
-    "undo": "Ongedaan maken"
+    "undo": "Ongedaan maken",
+    "copyCode": "Code kopiëren",
+    "copy": "Kopiëren",
+    "copied": "Gekopieerd"
   },
   "sidebar": {
     "links": "Links",
@@ -333,7 +336,6 @@
     "collapseViews": "Lijst met weergaven inklappen",
     "expandViews": "Lijst met weergaven uitklappen",
     "summary": "Samenvatting",
-    "tomorrow": "Morgen",
     "next7Days": "Komende 7 dagen",
     "more": "Meer",
     "toggleFolder": "Projecten tonen of verbergen",
@@ -414,7 +416,7 @@
     "taskCompleted": "taak voltooid",
     "tasksCompleted": "taken voltooid",
     "noTasksAvailable": "Geen taken beschikbaar.",
-    "searchPlaceholder": "Zoek taken...",
+    "searchPlaceholder": "Zoeken…",
     "addNewTask": "Nieuwe Taak Toevoegen",
     "addTaskInline": "+ Taak toevoegen",
     "metrics": "Statistieken",
@@ -1085,7 +1087,8 @@
       "hoursTitle": "Jouw dag",
       "hoursTo": "tot",
       "taggedToday": "Getagd #vandaag",
-      "taggedTodayDetail": "Open taken die je met #vandaag hebt getagd, ongeacht hun datums."
+      "taggedTodayDetail": "Open taken die je met #vandaag hebt getagd, ongeacht hun datums.",
+      "maxOption_one": "{{count}} taak"
     },
     "aiApiKey": "API-sleutel",
     "aiApiKeyClear": "Wissen",
@@ -1566,7 +1569,8 @@
     "rateLimitedRetrying": "Te veel verzoeken, opnieuw proberen…",
     "rateLimitedGaveUp": "Te veel verzoeken. De sessie is nog actief; laad zo dadelijk opnieuw.",
     "serverBusyRetrying": "Server bezet, opnieuw proberen…",
-    "serverBusyRetry": "Opnieuw proberen"
+    "serverBusyRetry": "Opnieuw proberen",
+    "sign_up": "Aanmelden"
   },
   "dropdown": {
     "createNew": "Nieuw Aanmaken",
@@ -1688,7 +1692,8 @@
     "noTasks": "Geen taken.",
     "nextAction": "Volgende actie",
     "nextActionLine": "Volgende actie: {{name}}",
-    "noCompletedTasks": "Geen voltooide taken."
+    "noCompletedTasks": "Geen voltooide taken.",
+    "views": "Projectweergaven"
   },
   "errors": {
     "required": "Dit veld is verplicht",
@@ -1832,6 +1837,18 @@
       "reasonKeyword": "Het begint met “{{detail}}”",
       "reasonLong": "Het is lang, zoals een notitie",
       "reasonDefault": "Korte tekst, meestal een taak"
+    },
+    "sources": {
+      "telegram": "Telegram",
+      "gmail": "Gmail",
+      "mcp": "MCP",
+      "android": "Android",
+      "api": "API",
+      "email": "E-mail",
+      "mail": "Mail",
+      "desktop": "Desktop",
+      "link": "Link",
+      "share": "Delen"
     }
   },
   "dateFormats": {
@@ -2076,7 +2093,11 @@
     "noUpcomingOccurrences": "Geen aankomende herhalingen.",
     "turnIntoProject": "Omzetten naar project",
     "turnIntoProjectError": "Kon niet naar een project worden omgezet.",
-    "turnIntoProjectMessage": "« {{name}} » omzetten naar een project? De subtaken worden taken van het project en de adressen in de notitie worden de pagina's ervan."
+    "turnIntoProjectMessage": "« {{name}} » omzetten naar een project? De subtaken worden taken van het project en de adressen in de notitie worden de pagina's ervan.",
+    "inDays_one": "in {{count}} dag",
+    "daysAgo_one": "{{count}} dag geleden",
+    "minutesAgo_one": "{{count}} minuut geleden",
+    "inMinutes_one": "over {{count}} minuut"
   },
   "projects": {
     "parentProject": "Hoofdproject",
@@ -2085,7 +2106,7 @@
     "areaFollowsParent": "Het gebied volgt het hoofdproject",
     "loading": "Projecten laden...",
     "error": "Fout bij het laden van projecten",
-    "searchPlaceholder": "Zoek projecten...",
+    "searchPlaceholder": "Zoeken…",
     "title": "Projecten",
     "noProjectsFound": "Geen projecten gevonden",
     "cardViewAriaLabel": "Kaartweergave",
@@ -2268,7 +2289,7 @@
     "presetWork": "Werk",
     "presetHealth": "Gezondheid",
     "presetFamily": "Gezin",
-    "suggestDomains": "5 domeinen voorstellen",
+    "suggestDomains": "5 gebieden voorstellen",
     "domains": {
       "business": "Business & Geld",
       "tech": "Tech & Systemen",
@@ -2303,7 +2324,7 @@
     "emptyPreview": "Lege notitie",
     "loading": "Bezig met het laden van notities...",
     "error": "Fout bij het laden van notities",
-    "searchPlaceholder": "Zoek notities...",
+    "searchPlaceholder": "Zoeken…",
     "noNotesFound": "Geen notities gevonden",
     "title": "Notities",
     "deleteNoteAriaLabel": "Verwijder notitie {{noteTitle}}",
@@ -2383,11 +2404,16 @@
     "fileUploadError": "{{name}} kon niet worden geüpload",
     "slashFile": "Afbeelding of bestand",
     "slashFileHint": "Hier uploaden en plaatsen",
-    "toggleDropdownMenu": "Vervolgkeuzemenu wisselen"
+    "toggleDropdownMenu": "Vervolgkeuzemenu wisselen",
+    "saved": "Opgeslagen",
+    "unsaved": "Niet-opgeslagen wijzigingen",
+    "backgroundColor": "Achtergrondkleur",
+    "selectProject": "Project kiezen",
+    "noMatchingNotes": "Geen overeenkomende notities"
   },
   "tags": {
     "loading": "Tags laden...",
-    "searchPlaceholder": "Zoek tags...",
+    "searchPlaceholder": "Zoeken…",
     "title": "Tags",
     "noTagsFound": "Geen tags gevonden",
     "editTagAriaLabel": "Bewerk tag {{tagName}}",
@@ -2516,7 +2542,7 @@
     "miniCalendar": "Minikalender",
     "previousMonth": "Vorige maand",
     "nextMonth": "Volgende maand",
-    "multiDay_one": "{{count}} dagen",
+    "multiDay_one": "{{count}} dag",
     "multiDay_other": "{{count}} dagen",
     "agendaEmpty": "Niets gepland",
     "agenda": "Agenda",
@@ -2586,8 +2612,6 @@
     "connectionError": "Verbinden met Google Agenda is mislukt. Probeer het opnieuw.",
     "disconnectionError": "Verbreken van Google Agenda is mislukt. Probeer het opnieuw.",
     "taskDetails": "Taakdetails",
-    "editTask": "Taak Bewerken",
-    "goToTasks": "Ga naar Taken",
     "close": "Sluiten",
     "title": "Titel",
     "status": "Status",
@@ -2598,11 +2622,6 @@
     "area": "Gebied",
     "description": "Beschrijving",
     "created": "Aangemaakt",
-    "completed": "Voltooid",
-    "pending": "In afwachting",
-    "high": "Hoog",
-    "medium": "Gemiddeld",
-    "low": "Laag",
     "time": "Tijd",
     "allDay": "De hele dag",
     "google": {
@@ -2634,7 +2653,14 @@
     "moreViews": "Meer weergaven",
     "openDay": "Dag openen",
     "noEventsThisDay": "Niets gepland.",
-    "task": "Taak"
+    "previousYear": "Vorig jaar",
+    "nextYear": "Volgend jaar",
+    "previousWeek": "Vorige week",
+    "nextWeek": "Volgende week",
+    "previousDays": "Vorige dagen",
+    "nextDays": "Volgende dagen",
+    "previousDay": "Vorige dag",
+    "nextDay": "Volgende dag"
   },
   "pages": {
     "notFound": {
@@ -2653,9 +2679,9 @@
     "uploading": "Uploaden..."
   },
   "searchPlaceholders": {
-    "searchProjects": "Zoek projecten...",
-    "searchTags": "Zoek tags...",
-    "searchTasks": "Zoek taken..."
+    "searchProjects": "Zoeken…",
+    "searchTags": "Zoeken…",
+    "searchTasks": "Zoeken…"
   },
   "ariaLabels": {
     "hideInfo": "Verberg info",
@@ -3311,7 +3337,7 @@
   "views": {
     "title": "Slimme Weergaven",
     "loading": "Weergaven laden...",
-    "searchPlaceholder": "Zoek weergaven...",
+    "searchPlaceholder": "Zoeken…",
     "noViewsFound": "Geen weergaven gevonden. Maak een weergave door een zoekopdracht uit te voeren en op \"Opslaan als Slimme Weergave\" te klikken.",
     "deleteView": "Weergave Verwijderen",
     "confirmDelete": "Weet je zeker dat je de weergave \"{{viewName}}\" wilt verwijderen?",
@@ -3348,7 +3374,7 @@
     "filters": "filters"
   },
   "search": {
-    "placeholder": "Zoek taken, projecten, notities...",
+    "placeholder": "Zoeken…",
     "searchingFor": "Je bent op zoek naar",
     "allItems": "alle items",
     "containingText": ", met de tekst",
@@ -4038,7 +4064,26 @@
     "archivedBadge": "gearchiveerd",
     "deletePerson": "Persoon verwijderen",
     "deleteConfirm": "Weet je zeker dat je \"{{name}}\" wilt verwijderen? Dit kan niet ongedaan worden gemaakt.",
-    "contact": "Contact"
+    "contact": "Contact",
+    "editPerson": "Persoon bewerken",
+    "newPerson": "Nieuwe persoon",
+    "noAssignedTasks": "Geen taken toegewezen aan {{name}}.",
+    "notFound": "Persoon niet gevonden.",
+    "relationship": "Relatie",
+    "phone": "Telefoon",
+    "namePlaceholder": "Papa, partner, Alice…",
+    "notesPlaceholder": "Notities over deze persoon…",
+    "relationships": {
+      "family": "Familie",
+      "work": "Werk",
+      "friend": "Vriend",
+      "other": "Overig"
+    },
+    "noPeopleYet": "Nog geen personen",
+    "clearAssignment": "Toewijzing wissen",
+    "nameRequired": "Naam is verplicht",
+    "saveError": "Persoon opslaan mislukt",
+    "signInLink": "Inloglink"
   },
   "members": {
     "addTitle": "Lid toevoegen",
@@ -4194,7 +4239,8 @@
       "addToTomorrow": "Aan morgen toevoegen",
       "regenerate": "Opnieuw genereren",
       "draftTitle": "AI-voorstel",
-      "skippedCount": "Weggelaten ({{count}})"
+      "skippedCount": "Weggelaten ({{count}})",
+      "carried_one": "{{count}} taak aan morgen toegevoegd"
     },
     "lateWarning": "Tijd voorbij en nog niet klaar",
     "movedOffPlan": "'{{name}}' staat niet meer voor vandaag en is uit het plan van vandaag gehaald.",
@@ -4309,7 +4355,8 @@
     "showQuote": "Dagelijkse quote tonen",
     "hideQuote": "Dagelijkse quote verbergen",
     "orderError": "De volgorde kon niet worden opgeslagen.",
-    "eventReadOnly": "Alleen-lezen: zet deze agenda in je profiel op tweerichtingssynchronisatie om hem hier te verplaatsen."
+    "eventReadOnly": "Alleen-lezen: zet deze agenda in je profiel op tweerichtingssynchronisatie om hem hier te verplaatsen.",
+    "placeAllDone_one": "{{count}} taak geplaatst."
   },
   "capture": {
     "add": "Toevoegen",
@@ -4467,7 +4514,7 @@
     "targetDate": "Streefdatum",
     "noProjects": "Geen projecten gekoppeld aan dit doel.",
     "noTasks": "Geen taken toegewezen aan dit doel.",
-    "searchGoals": "Doelen zoeken…",
+    "searchGoals": "Zoeken…",
     "clearGoal": "Doel verwijderen",
     "noGoalsFound": "Geen doelen gevonden",
     "inactive": "Inactief",
@@ -4506,7 +4553,8 @@
     "noAvailableGoals": "Geen beschikbare doelen",
     "progressHint": "Balk: voltooide taken en projecten. Lijn: verstreken tijd tussen aanmaak en streefdatum.",
     "removeFromArea": "Verwijderen uit gebied",
-    "createTask": "Taak maken"
+    "createTask": "Taak maken",
+    "noGoal": "Geen doel"
   },
   "templates": {
     "new": "Nieuw sjabloon",
@@ -4527,7 +4575,7 @@
       "empty": "Er staan nog geen sjablonen in de marktplaats.",
       "title": "Marktplaats",
       "subtitle": "Blader door kant-en-klare sjablonen uit de community en installeer ze",
-      "search": "Marktplaats doorzoeken..."
+      "search": "Zoeken…"
     },
     "taskList": "Taken",
     "noTasks": "Geen taken in dit sjabloon",
@@ -4831,7 +4879,13 @@
       "hierarchy_wbs": "WBS-nummers (1, 1.1, 1.2)",
       "hierarchy_indent": "ingesprongen rijen",
       "hierarchy_flat": "geen subtaken",
-      "hierarchy_auto": "automatisch herkennen"
+      "hierarchy_auto": "automatisch herkennen",
+      "countCreate_one": "{{count}} nieuwe taak",
+      "countProjects_one": "{{count}} nieuw project",
+      "countAreas_one": "{{count}} nieuw gebied",
+      "countTags_one": "{{count}} nieuwe tag",
+      "doneTitle_one": "{{count}} taak geïmporteerd",
+      "rowCount_one": "{{count}} rij"
     },
     "issues": {
       "too_many_tags": "Alleen de eerste 20 tags worden bewaard.",
@@ -5083,7 +5137,7 @@
       "reviewIn30": "Over 30 dagen herzien",
       "reviewOn": "Herzien op…",
       "keepLater": "Geparkeerd laten",
-      "toTask": "Er een taak van maken",
+      "toTask": "Taak maken",
       "toLater": "Parkeren voor later",
       "discard": "Weggooien",
       "openInbox": "Inbox openen",
@@ -5158,7 +5212,8 @@
     "dislike": "Vind ik niet leuk",
     "failedToReact": "Reactie bijwerken mislukt",
     "uploadingImage": "Afbeelding uploaden...",
-    "imageUploadFailed": "Afbeelding kon niet worden geüpload"
+    "imageUploadFailed": "Afbeelding kon niet worden geüpload",
+    "count_one": "{{count}} reactie"
   },
   "sortable": {
     "move": "Verplaatsen",
@@ -5177,7 +5232,7 @@
     "title": "Relaties",
     "add": "Relatie toevoegen",
     "remove": "Relatie verwijderen",
-    "searchPlaceholder": "Zoek een taak...",
+    "searchPlaceholder": "Zoeken…",
     "addFailed": "Relatie toevoegen mislukt.",
     "removeFailed": "Relatie verwijderen mislukt.",
     "blocked": "Geblokkeerd",
@@ -6130,7 +6185,11 @@
     "hideCompleted": "Voltooide verbergen",
     "showCompletedTasks": "Voltooide tonen",
     "dropOverlaps": "Overlappingen",
-    "dropPast": "In het verleden"
+    "dropPast": "In het verleden",
+    "habitsCount": "Gewoonten · {{n}}",
+    "habitsDone": "Gedaan · {{n}}",
+    "habitAt": "{{name}} om {{time}}",
+    "habitLogFailed": "De gewoonte kon niet worden vastgelegd."
   },
   "upcoming": {
     "title": "Plannen",
@@ -6179,12 +6238,8 @@
     "noProject": "Geen project",
     "noTag": "Geen label",
     "priority": {
-      "high": "Hoog",
-      "medium": "Gemiddeld",
-      "low": "Laag",
       "none": "Geen prioriteit"
     },
-    "horizonsEmpty": "Hier staat nog niets.",
     "thisWeek": "Deze week",
     "thisMonth": "Deze maand",
     "nextMonth": "Volgende maand",
@@ -6230,14 +6285,17 @@
     "load": "{{planned}} / {{available}}",
     "done": "Klaar ({{n}})",
     "subtaskOf": "↳ {{parent}}",
-    "addToInbox": "Toevoegen aan inbox",
-    "inboxNewItem": "Nieuw inboxitem",
     "addToInboxFailed": "Toevoegen mislukt. Probeer het opnieuw.",
     "addEmptyName": "Geef de taak een naam",
     "addTaskIn": "Een taak toevoegen aan {{name}}",
-    "thisWeekOnlyPlanned": "Niets zonder vaste dag · {{count}} gepland op een dag",
     "previous": "Vorige dag",
-    "next": "Volgende dag"
+    "next": "Volgende dag",
+    "nextWeekHint": "Vastgelegd voor volgende week, zonder vaste dag",
+    "stripLabel": "Naar een horizon sturen",
+    "stripOpen": "{{name}} openen in Horizonnen",
+    "sentToHorizon": "Verplaatst naar {{name}}",
+    "plannedOnDayHint_one": "{{count}} ingepland op een dag",
+    "plannedOnDayHint_other": "{{count}} ingepland op een dag"
   },
   "offline": {
     "offline": "Offline",

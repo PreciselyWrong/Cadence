@@ -251,8 +251,8 @@ const ClassifyCard: React.FC<ClassifyCardProps> = ({
                         />
                         <span>
                             {payload.priority.value === 2
-                                ? t('autoClassify.card.high', 'Haute')
-                                : t('autoClassify.card.medium', 'Moyenne')}
+                                ? t('priority.high', 'High')
+                                : t('priority.medium', 'Medium')}
                         </span>
                     </label>
                 </fieldset>

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Person, RelationshipType } from '../../entities/Person';
+import { RELATIONSHIP_TYPES, relationshipLabel } from './relationshipLabel';
 import ColorPicker from '../Shared/ColorPicker';
 import EntitySidePanel from '../SidePanel/EntitySidePanel';
 import {
@@ -13,13 +15,6 @@ interface PersonModalProps {
     onSave: (data: Partial<Person>) => Promise<void>;
     onClose: () => void;
 }
-
-const RELATIONSHIP_TYPES: { value: RelationshipType; label: string }[] = [
-    { value: 'family', label: 'Family' },
-    { value: 'work', label: 'Work' },
-    { value: 'friend', label: 'Friend' },
-    { value: 'other', label: 'Other' },
-];
 
 interface PersonFormState {
     name: string;
@@ -46,6 +41,7 @@ const PersonModal: React.FC<PersonModalProps> = ({
     onSave,
     onClose,
 }) => {
+    const { t } = useTranslation();
     const [form, setForm] = useState<PersonFormState>(() =>
         toFormState(person)
     );
@@ -71,7 +67,7 @@ const PersonModal: React.FC<PersonModalProps> = ({
 
     const handleSubmit = async () => {
         if (!form.name.trim()) {
-            setError('Name is required');
+            setError(t('people.nameRequired', 'Name is required'));
             return;
         }
         setSaving(true);
@@ -88,7 +84,9 @@ const PersonModal: React.FC<PersonModalProps> = ({
             onClose();
         } catch (err: unknown) {
             setError(
-                err instanceof Error ? err.message : 'Failed to save person'
+                err instanceof Error
+                    ? err.message
+                    : t('people.saveError', 'Failed to save person')
             );
         } finally {
             setSaving(false);
@@ -99,16 +97,25 @@ const PersonModal: React.FC<PersonModalProps> = ({
         <EntitySidePanel
             isOpen
             onClose={onClose}
-            eyebrow="People"
-            title={person ? 'Edit Person' : 'New Person'}
-            submitLabel={person ? 'Save Changes' : 'Create Person'}
+            eyebrow={t('people.title', 'People')}
+            title={
+                person
+                    ? t('people.editPerson', 'Edit person')
+                    : t('people.newPerson', 'New person')
+            }
+            submitLabel={
+                person ? t('common.save', 'Save') : t('common.create', 'Create')
+            }
             isSubmitting={saving}
             isDirty={hasUnsavedChanges()}
             error={error}
             onSubmit={handleSubmit}
             testId="person-panel"
         >
-            <SidePanelField label="Name" htmlFor="personName">
+            <SidePanelField
+                label={t('forms.name', 'Name')}
+                htmlFor="personName"
+            >
                 <input
                     id="personName"
                     type="text"
@@ -116,11 +123,17 @@ const PersonModal: React.FC<PersonModalProps> = ({
                     onChange={(e) => setField('name', e.target.value)}
                     required
                     className={sidePanelInputClass}
-                    placeholder="Dad, Partner, Alice..."
+                    placeholder={t(
+                        'people.namePlaceholder',
+                        'Dad, Partner, Alice…'
+                    )}
                 />
             </SidePanelField>
 
-            <SidePanelField label="Relationship" htmlFor="personRelationship">
+            <SidePanelField
+                label={t('people.relationship', 'Relationship')}
+                htmlFor="personRelationship"
+            >
                 <select
                     id="personRelationship"
                     value={form.relationshipType}
@@ -132,15 +145,18 @@ const PersonModal: React.FC<PersonModalProps> = ({
                     }
                     className={sidePanelInputClass}
                 >
-                    {RELATIONSHIP_TYPES.map((rt) => (
-                        <option key={rt.value} value={rt.value}>
-                            {rt.label}
+                    {RELATIONSHIP_TYPES.map((type) => (
+                        <option key={type} value={type}>
+                            {relationshipLabel(type, t)}
                         </option>
                     ))}
                 </select>
             </SidePanelField>
 
-            <SidePanelField label="Email" htmlFor="personEmail">
+            <SidePanelField
+                label={t('members.email', 'Email')}
+                htmlFor="personEmail"
+            >
                 <input
                     id="personEmail"
                     type="email"
@@ -151,7 +167,10 @@ const PersonModal: React.FC<PersonModalProps> = ({
                 />
             </SidePanelField>
 
-            <SidePanelField label="Phone" htmlFor="personPhone">
+            <SidePanelField
+                label={t('people.phone', 'Phone')}
+                htmlFor="personPhone"
+            >
                 <input
                     id="personPhone"
                     type="tel"
@@ -162,18 +181,24 @@ const PersonModal: React.FC<PersonModalProps> = ({
                 />
             </SidePanelField>
 
-            <SidePanelField label="Notes" htmlFor="personNotes">
+            <SidePanelField
+                label={t('notes.title', 'Notes')}
+                htmlFor="personNotes"
+            >
                 <textarea
                     id="personNotes"
                     value={form.notes}
                     onChange={(e) => setField('notes', e.target.value)}
                     rows={3}
                     className={`${sidePanelInputClass} resize-none`}
-                    placeholder="Any notes about this person..."
+                    placeholder={t(
+                        'people.notesPlaceholder',
+                        'Any notes about this person…'
+                    )}
                 />
             </SidePanelField>
 
-            <SidePanelSection title="Color">
+            <SidePanelSection title={t('forms.color', 'Color')}>
                 <ColorPicker
                     value={form.color}
                     onChange={(color) => setField('color', color)}

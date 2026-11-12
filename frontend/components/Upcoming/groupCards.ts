@@ -171,7 +171,9 @@ const keyOf = (
             return {
                 key: `priority:${level}`,
                 label: t(
-                    `upcoming.priority.${level}`,
+                    level === 'none'
+                        ? 'upcoming.priority.none'
+                        : `priority.${level}`,
                     PRIORITY_FALLBACK[level]
                 ),
                 rank: String(PRIORITY_RANK[level]).padStart(2, '0'),

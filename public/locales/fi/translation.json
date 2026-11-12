@@ -25,7 +25,9 @@
       "requeued": "{{count}} kohdetta jonossa uudelleen",
       "retry": "Yritä uudelleen",
       "failed": "{{count}} kohdetta epäonnistui",
-      "title": "Viimeisin tekoälykutsu epäonnistui"
+      "title": "Viimeisin tekoälykutsu epäonnistui",
+      "requeued_one": "{{count}} kohde jonossa uudelleen",
+      "failed_one": "{{count}} kohde epäonnistui"
     },
     "number": {
       "maxTokens": "Vastauksen enimmäistokenit",
@@ -122,8 +124,6 @@
       "dismiss": "Ohita",
       "acceptAll": "Hyväksy kaikki",
       "apply": "Käytä",
-      "medium": "Keskitaso",
-      "high": "Korkea",
       "priority": "Prioriteetti",
       "newTag": "Uusi tunniste: #{{name}}",
       "tags": "Tunnisteet",
@@ -248,7 +248,7 @@
     "preview": "Esikatselu",
     "download": "Lataa",
     "exitFocusMode": "Poistu keskittymistilasta",
-    "searchTimezones": "Etsi aikavyöhykkeitä...",
+    "searchTimezones": "Hae…",
     "dismiss": "Hylkää",
     "search": "Haku",
     "previous": "Edellinen",
@@ -277,7 +277,10 @@
     "resolving": "Ratkaistaan...",
     "showLess": "Näytä vähemmän",
     "breadcrumb": "Murupolku",
-    "undo": "Kumoa"
+    "undo": "Kumoa",
+    "copyCode": "Kopioi koodi",
+    "copy": "Kopioi",
+    "copied": "Kopioitu"
   },
   "sidebar": {
     "links": "Linkit",
@@ -333,7 +336,6 @@
     "collapseViews": "Pienennä näkymäluettelo",
     "expandViews": "Laajenna näkymäluettelo",
     "summary": "Yhteenveto",
-    "tomorrow": "Huomenna",
     "next7Days": "Seuraavat 7 päivää",
     "more": "Lisää",
     "toggleFolder": "Näytä tai piilota projektit",
@@ -414,7 +416,7 @@
     "taskCompleted": "tehtävä suoritettu",
     "tasksCompleted": "tehtävää suoritettu",
     "noTasksAvailable": "Ei saatavilla olevia tehtäviä.",
-    "searchPlaceholder": "Hae tehtäviä...",
+    "searchPlaceholder": "Hae…",
     "addNewTask": "Lisää uusi tehtävä",
     "addTaskInline": "+ Lisää tehtävä",
     "metrics": "Metrikat",
@@ -1085,7 +1087,8 @@
       "hoursTitle": "Päiväsi",
       "hoursTo": "–",
       "taggedToday": "Merkitty #today",
-      "taggedTodayDetail": "Avoimet tehtävät, jotka olet merkinnyt #today-tunnisteella, päivämääristä riippumatta."
+      "taggedTodayDetail": "Avoimet tehtävät, jotka olet merkinnyt #today-tunnisteella, päivämääristä riippumatta.",
+      "maxOption_one": "{{count}} tehtävä"
     },
     "aiApiKey": "API-avain",
     "aiApiKeyClear": "Tyhjennä",
@@ -1566,7 +1569,8 @@
     "rateLimitedRetrying": "Liian monta pyyntöä, yritetään uudelleen…",
     "rateLimitedGaveUp": "Liian monta pyyntöä. Istunto on yhä voimassa; lataa sivu hetken päästä uudelleen.",
     "serverBusyRetrying": "Palvelin on varattu, yritetään uudelleen…",
-    "serverBusyRetry": "Yritä uudelleen"
+    "serverBusyRetry": "Yritä uudelleen",
+    "sign_up": "Rekisteröidy"
   },
   "dropdown": {
     "createNew": "Luo uusi",
@@ -1688,7 +1692,8 @@
     "noTasks": "Ei tehtäviä.",
     "nextAction": "Seuraava toimi",
     "nextActionLine": "Seuraava toimi: {{name}}",
-    "noCompletedTasks": "Ei valmiita tehtäviä."
+    "noCompletedTasks": "Ei valmiita tehtäviä.",
+    "views": "Projektin näkymät"
   },
   "errors": {
     "required": "Tämä kenttä on pakollinen",
@@ -1832,6 +1837,18 @@
       "reasonKeyword": "Se alkaa sanalla “{{detail}}”",
       "reasonLong": "Se on pitkä, kuten muistiinpano",
       "reasonDefault": "Lyhyt teksti, useimmiten tehtävä"
+    },
+    "sources": {
+      "telegram": "Telegram",
+      "gmail": "Gmail",
+      "mcp": "MCP",
+      "android": "Android",
+      "api": "API",
+      "email": "Sähköposti",
+      "mail": "Posti",
+      "desktop": "Työpöytä",
+      "link": "Linkki",
+      "share": "Jako"
     }
   },
   "dateFormats": {
@@ -2076,7 +2093,10 @@
     "noUpcomingOccurrences": "Ei tulevia toistoja.",
     "turnIntoProject": "Muuta projektiksi",
     "turnIntoProjectError": "Projektiksi muuttaminen ei onnistunut.",
-    "turnIntoProjectMessage": "Muutetaanko « {{name}} » projektiksi? Sen alitehtävistä tulee projektin tehtäviä, ja sen muistiinpanon osoitteista tulee projektin sivut."
+    "turnIntoProjectMessage": "Muutetaanko « {{name}} » projektiksi? Sen alitehtävistä tulee projektin tehtäviä, ja sen muistiinpanon osoitteista tulee projektin sivut.",
+    "daysAgo_one": "{{count}} päivä sitten",
+    "hoursAgo_one": "{{count}} tunti sitten",
+    "minutesAgo_one": "{{count}} minuutti sitten"
   },
   "projects": {
     "parentProject": "Pääprojekti",
@@ -2085,7 +2105,7 @@
     "areaFollowsParent": "Alue seuraa pääprojektia",
     "loading": "Ladataan projekteja...",
     "error": "Virhe projekteja ladattaessa",
-    "searchPlaceholder": "Hae projekteja...",
+    "searchPlaceholder": "Hae…",
     "title": "Projektit",
     "noProjectsFound": "Ei projekteja löytynyt",
     "cardViewAriaLabel": "Korttinäkymä",
@@ -2303,7 +2323,7 @@
     "emptyPreview": "Tyhjä muistiinpano",
     "loading": "Ladataan muistiinpanoja...",
     "error": "Virhe muistiinpanojen lataamisessa",
-    "searchPlaceholder": "Etsi muistiinpanoja...",
+    "searchPlaceholder": "Hae…",
     "noNotesFound": "Ei muistiinpanoja löytynyt",
     "title": "Muistiinpanot",
     "deleteNoteAriaLabel": "Poista muistiinpano {{noteTitle}}",
@@ -2383,11 +2403,16 @@
     "fileUploadError": "Tiedoston {{name}} lataaminen epäonnistui",
     "slashFile": "Kuva tai tiedosto",
     "slashFileHint": "Lataa ja sijoita tähän",
-    "toggleDropdownMenu": "Avaa tai sulje pudotusvalikko"
+    "toggleDropdownMenu": "Avaa tai sulje pudotusvalikko",
+    "saved": "Tallennettu",
+    "unsaved": "Tallentamattomia muutoksia",
+    "backgroundColor": "Taustaväri",
+    "selectProject": "Valitse projekti",
+    "noMatchingNotes": "Ei vastaavia muistiinpanoja"
   },
   "tags": {
     "loading": "Ladataan tageja...",
-    "searchPlaceholder": "Etsi tageja...",
+    "searchPlaceholder": "Hae…",
     "title": "Tageja",
     "noTagsFound": "Ei tageja löytynyt",
     "editTagAriaLabel": "Muokkaa tagia {{tagName}}",
@@ -2516,7 +2541,7 @@
     "miniCalendar": "Minikalenteri",
     "previousMonth": "Edellinen kuukausi",
     "nextMonth": "Seuraava kuukausi",
-    "multiDay_one": "{{count}} päivää",
+    "multiDay_one": "{{count}} päivä",
     "multiDay_other": "{{count}} päivää",
     "agendaEmpty": "Ei mitään aikataulutettuna",
     "agenda": "Aikataulu",
@@ -2586,8 +2611,6 @@
     "connectionError": "Yhteyden muodostaminen Google Kalenteriin epäonnistui. Yritä uudelleen.",
     "disconnectionError": "Yhteyden irrottaminen Google Kalenterista epäonnistui. Yritä uudelleen.",
     "taskDetails": "Tehtävän tiedot",
-    "editTask": "Muokkaa tehtävää",
-    "goToTasks": "Siirry tehtäviin",
     "close": "Sulje",
     "title": "Otsikko",
     "status": "Tila",
@@ -2598,11 +2621,6 @@
     "area": "Alue",
     "description": "Kuvaus",
     "created": "Luotu",
-    "completed": "Valmis",
-    "pending": "Odottaa",
-    "high": "Korkea",
-    "medium": "Keskitaso",
-    "low": "Matala",
     "time": "Aika",
     "allDay": "Koko päivä",
     "google": {
@@ -2634,7 +2652,14 @@
     "moreViews": "Lisää näkymiä",
     "openDay": "Avaa päivä",
     "noEventsThisDay": "Ei suunnitelmia.",
-    "task": "Tehtävä"
+    "previousYear": "Edellinen vuosi",
+    "nextYear": "Seuraava vuosi",
+    "previousWeek": "Edellinen viikko",
+    "nextWeek": "Seuraava viikko",
+    "previousDays": "Edelliset päivät",
+    "nextDays": "Seuraavat päivät",
+    "previousDay": "Edellinen päivä",
+    "nextDay": "Seuraava päivä"
   },
   "pages": {
     "notFound": {
@@ -2653,9 +2678,9 @@
     "uploading": "Ladataan..."
   },
   "searchPlaceholders": {
-    "searchProjects": "Hae projekteja...",
-    "searchTags": "Hae tageja...",
-    "searchTasks": "Hae tehtäviä..."
+    "searchProjects": "Hae…",
+    "searchTags": "Hae…",
+    "searchTasks": "Hae…"
   },
   "ariaLabels": {
     "hideInfo": "Piilota tiedot",
@@ -3311,7 +3336,7 @@
   "views": {
     "title": "Älykkäät näkymät",
     "loading": "Ladataan näkymiä...",
-    "searchPlaceholder": "Etsi näkymiä...",
+    "searchPlaceholder": "Hae…",
     "noViewsFound": "Näkymiä ei löytynyt. Luo näkymä suorittamalla haku ja napsauttamalla \"Tallenna älykkäänä näkymänä\".",
     "deleteView": "Poista näkymä",
     "confirmDelete": "Oletko varma, että haluat poistaa näkymän \"{{viewName}}\"?",
@@ -3348,7 +3373,7 @@
     "filters": "suodattimet"
   },
   "search": {
-    "placeholder": "Hae tehtäviä, projekteja, muistiinpanoja...",
+    "placeholder": "Hae…",
     "searchingFor": "Etsit",
     "allItems": "kaikkia kohteita",
     "containingText": ", joka sisältää tekstin",
@@ -4038,7 +4063,26 @@
     "archivedBadge": "arkistoitu",
     "deletePerson": "Poista henkilö",
     "deleteConfirm": "Haluatko varmasti poistaa henkilön ”{{name}}”? Tätä ei voi perua.",
-    "contact": "Yhteystieto"
+    "contact": "Yhteystieto",
+    "editPerson": "Muokkaa henkilöä",
+    "newPerson": "Uusi henkilö",
+    "noAssignedTasks": "Henkilölle {{name}} ei ole osoitettu tehtäviä.",
+    "notFound": "Henkilöä ei löytynyt.",
+    "relationship": "Suhde",
+    "phone": "Puhelin",
+    "namePlaceholder": "Isä, kumppani, Alice…",
+    "notesPlaceholder": "Muistiinpanoja tästä henkilöstä…",
+    "relationships": {
+      "family": "Perhe",
+      "work": "Työ",
+      "friend": "Ystävä",
+      "other": "Muu"
+    },
+    "noPeopleYet": "Ei vielä henkilöitä",
+    "clearAssignment": "Poista osoitus",
+    "nameRequired": "Nimi vaaditaan",
+    "saveError": "Henkilön tallennus epäonnistui",
+    "signInLink": "Kirjautumislinkki"
   },
   "members": {
     "addTitle": "Lisää jäsen",
@@ -4194,7 +4238,8 @@
       "addToTomorrow": "Lisää huomiselle",
       "regenerate": "Luo uudelleen",
       "draftTitle": "Tekoälyn luonnos",
-      "skippedCount": "Jätetty pois ({{count}})"
+      "skippedCount": "Jätetty pois ({{count}})",
+      "carried_one": "{{count}} tehtävä lisätty huomiselle"
     },
     "lateWarning": "Aika meni ohi, eikä tehtävä ole valmis",
     "movedOffPlan": "'{{name}}' ei ole enää tänään eräpäivä, joten se poistui tämän päivän suunnitelmasta.",
@@ -4309,7 +4354,8 @@
     "showQuote": "Näytä päivän lainaus",
     "hideQuote": "Piilota päivän lainaus",
     "orderError": "Järjestystä ei voitu tallentaa.",
-    "eventReadOnly": "Vain luku: aseta tämä kalenteri profiilissa kaksisuuntaiseksi, niin voit siirtää sen täältä."
+    "eventReadOnly": "Vain luku: aseta tämä kalenteri profiilissa kaksisuuntaiseksi, niin voit siirtää sen täältä.",
+    "placeAllDone_one": "{{count}} tehtävä sijoitettu."
   },
   "capture": {
     "add": "Lisää",
@@ -4467,7 +4513,7 @@
     "targetDate": "Tavoite",
     "noProjects": "Tähän tavoitteeseen ei ole liitetty projekteja.",
     "noTasks": "Tähän tavoitteeseen ei ole liitetty tehtäviä.",
-    "searchGoals": "Hae tavoitteita…",
+    "searchGoals": "Hae…",
     "clearGoal": "Poista tavoite",
     "noGoalsFound": "Tavoitteita ei löytynyt",
     "inactive": "Ei aktiivinen",
@@ -4506,7 +4552,8 @@
     "noAvailableGoals": "Tavoitteita ei ole saatavilla",
     "progressHint": "Palkki: valmiit tehtävät ja projektit. Viiva: luomisen ja kohdepäivän välinen aika.",
     "removeFromArea": "Poista alueelta",
-    "createTask": "Luo tehtävä"
+    "createTask": "Luo tehtävä",
+    "noGoal": "Ei tavoitetta"
   },
   "templates": {
     "new": "Uusi malli",
@@ -4527,7 +4574,7 @@
       "empty": "Kauppapaikassa ei ole vielä malleja.",
       "title": "Kauppapaikka",
       "subtitle": "Selaa ja asenna yhteisön valmiita malleja",
-      "search": "Hae kauppapaikasta..."
+      "search": "Hae…"
     },
     "taskList": "Tehtävät",
     "noTasks": "Tässä mallissa ei ole tehtäviä",
@@ -4831,7 +4878,13 @@
       "hierarchy_wbs": "WBS-numeroista (1, 1.1, 1.2)",
       "hierarchy_indent": "sisennetyistä riveistä",
       "hierarchy_flat": "ei alatehtäviä",
-      "hierarchy_auto": "tunnista"
+      "hierarchy_auto": "tunnista",
+      "countCreate_one": "{{count}} uusi tehtävä",
+      "countProjects_one": "{{count}} uusi projekti",
+      "countAreas_one": "{{count}} uusi alue",
+      "countTags_one": "{{count}} uusi tunniste",
+      "doneTitle_one": "Tuotiin {{count}} tehtävä",
+      "rowCount_one": "{{count}} rivi"
     },
     "issues": {
       "too_many_tags": "Vain 20 ensimmäistä tunnistetta säilytetään.",
@@ -5083,7 +5136,7 @@
       "reviewIn30": "Katselmoi 30 päivän päästä",
       "reviewOn": "Katselmoi…",
       "keepLater": "Pidä pysäköitynä",
-      "toTask": "Tee tehtäväksi",
+      "toTask": "Luo tehtävä",
       "toLater": "Pysäköi myöhemmäksi",
       "discard": "Hylkää",
       "openInbox": "Avaa Saapuneet",
@@ -5158,7 +5211,8 @@
     "dislike": "En tykkää",
     "failedToReact": "Reaktion päivittäminen epäonnistui",
     "uploadingImage": "Lähetetään kuvaa...",
-    "imageUploadFailed": "Kuvan lataaminen epäonnistui"
+    "imageUploadFailed": "Kuvan lataaminen epäonnistui",
+    "count_one": "{{count}} kommentti"
   },
   "sortable": {
     "move": "Siirrä",
@@ -5177,7 +5231,7 @@
     "title": "Suhteet",
     "add": "Lisää suhde",
     "remove": "Poista suhde",
-    "searchPlaceholder": "Hae tehtävää...",
+    "searchPlaceholder": "Hae…",
     "addFailed": "Suhteen lisääminen epäonnistui.",
     "removeFailed": "Suhteen poistaminen epäonnistui.",
     "blocked": "Estetty",
@@ -6130,7 +6184,11 @@
     "hideCompleted": "Piilota valmiit",
     "showCompletedTasks": "Näytä valmiit",
     "dropOverlaps": "Päällekkäisyydet",
-    "dropPast": "Menneisyydessä"
+    "dropPast": "Menneisyydessä",
+    "habitsCount": "Tavat · {{n}}",
+    "habitsDone": "Tehty · {{n}}",
+    "habitAt": "{{name}} klo {{time}}",
+    "habitLogFailed": "Tapaa ei voitu kirjata."
   },
   "upcoming": {
     "title": "Suunnittelu",
@@ -6179,12 +6237,8 @@
     "noProject": "Ei projektia",
     "noTag": "Ei tunnistetta",
     "priority": {
-      "high": "Korkea",
-      "medium": "Keskitaso",
-      "low": "Matala",
       "none": "Ei prioriteettia"
     },
-    "horizonsEmpty": "Ei vielä mitään.",
     "thisWeek": "Tämä viikko",
     "thisMonth": "Tämä kuukausi",
     "nextMonth": "Ensi kuu",
@@ -6230,14 +6284,17 @@
     "load": "{{planned}} / {{available}}",
     "done": "Valmiit ({{n}})",
     "subtaskOf": "↳ {{parent}}",
-    "addToInbox": "Lisää saapuneisiin",
-    "inboxNewItem": "Uusi saapuneiden kohde",
     "addToInboxFailed": "Lisääminen epäonnistui. Yritä uudelleen.",
     "addEmptyName": "Anna tehtävälle nimi",
     "addTaskIn": "Lisää tehtävä kohteeseen {{name}}",
-    "thisWeekOnlyPlanned": "Ei kiinteää päivää · {{count}} suunniteltu päivälle",
     "previous": "Edellinen päivä",
-    "next": "Seuraava päivä"
+    "next": "Seuraava päivä",
+    "nextWeekHint": "Ensi viikon tehtävä, ei kiinteää päivää",
+    "stripLabel": "Siirrä näkymään",
+    "stripOpen": "Avaa {{name}} Näkymissä",
+    "sentToHorizon": "Siirretty: {{name}}",
+    "plannedOnDayHint_one": "{{count}} suunniteltu päivälle",
+    "plannedOnDayHint_other": "{{count}} suunniteltu päivälle"
   },
   "offline": {
     "offline": "Offline-tilassa",

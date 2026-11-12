@@ -123,7 +123,7 @@ const WikilinkMenu: React.FC<WikilinkMenuProps> = ({
         >
             {itemCount === 0 && (
                 <div className="px-3 py-2.5 text-sm text-gray-500 dark:text-gray-400">
-                    No matching notes
+                    {t('notes.noMatchingNotes', 'No matching notes')}
                 </div>
             )}
             {matches.map((note, i) => (

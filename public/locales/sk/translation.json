@@ -130,8 +130,6 @@
       "dismiss": "Ignorovať",
       "acceptAll": "Prijať všetko",
       "apply": "Použiť",
-      "medium": "Stredná",
-      "high": "Vysoká",
       "priority": "Priorita",
       "newTag": "Nový štítok: #{{name}}",
       "tags": "Štítky",
@@ -309,8 +307,6 @@
     "connectionError": "Pripojenie k Google Kalendáru zlyhalo. Skúste to znova.",
     "disconnectionError": "Odpojenie od Google Kalendára zlyhalo. Skúste to znova.",
     "taskDetails": "Podrobnosti úlohy",
-    "editTask": "Upraviť úlohu",
-    "goToTasks": "Prejsť na úlohy",
     "close": "Zavrieť",
     "title": "Názov",
     "status": "Stav",
@@ -320,11 +316,6 @@
     "area": "Oblasť",
     "description": "Popis",
     "created": "Vytvorené",
-    "completed": "Dokončené",
-    "pending": "Čakajúce",
-    "high": "vysoká",
-    "medium": "stredná",
-    "low": "nízka",
     "time": "Čas",
     "allDay": "Celý deň",
     "manageCalendars": "Kalendáre",
@@ -356,7 +347,14 @@
     "moreViews": "Ďalšie zobrazenia",
     "openDay": "Otvoriť deň",
     "noEventsThisDay": "Nič nie je naplánované.",
-    "task": "Úloha"
+    "previousYear": "Predchádzajúci rok",
+    "nextYear": "Nasledujúci rok",
+    "previousWeek": "Predchádzajúci týždeň",
+    "nextWeek": "Nasledujúci týždeň",
+    "previousDays": "Predchádzajúce dni",
+    "nextDays": "Nasledujúce dni",
+    "previousDay": "Predchádzajúci deň",
+    "nextDay": "Nasledujúci deň"
   },
   "links": {
     "addToLinks": "Pridať do odkazov",
@@ -735,7 +733,7 @@
     "preview": "Náhľad",
     "download": "Stiahnuť",
     "exitFocusMode": "Ukončiť režim sústredenia",
-    "searchTimezones": "Hľadať časové pásma...",
+    "searchTimezones": "Hľadať…",
     "dismiss": "Zavrieť",
     "search": "Hľadať",
     "previous": "Predchádzajúce",
@@ -765,7 +763,10 @@
     "resolving": "Rieši sa...",
     "showLess": "Zobraziť menej",
     "breadcrumb": "Drobčeková navigácia",
-    "undo": "Späť"
+    "undo": "Späť",
+    "copyCode": "Kopírovať kód",
+    "copy": "Kopírovať",
+    "copied": "Skopírované"
   },
   "sidebar": {
     "links": "Odkazy",
@@ -820,7 +821,6 @@
     "collapseViews": "Zbaliť zoznam zobrazení",
     "expandViews": "Rozbaliť zoznam zobrazení",
     "summary": "Súhrn",
-    "tomorrow": "Zajtra",
     "next7Days": "Najbližších 7 dní",
     "more": "Viac",
     "toggleFolder": "Zobraziť alebo skryť projekty",
@@ -906,7 +906,7 @@
     "taskCompleted": "úloha dokončená",
     "tasksCompleted": "úloh dokončených",
     "noTasksAvailable": "Žiadne úlohy.",
-    "searchPlaceholder": "Hľadať úlohy...",
+    "searchPlaceholder": "Hľadať…",
     "addNewTask": "Pridať novú úlohu",
     "addTaskInline": "+ Pridať úlohu",
     "metrics": "Metriky",
@@ -1602,7 +1602,8 @@
       "maxOption": "{{count}} úloh",
       "intro": "Ako Naplánovať môj deň rozvrhne váš deň a ktoré úlohy vám ponúkne.",
       "suggestedTitle": "Čo sa navrhuje",
-      "suggestedDescription": "Ktoré otvorené úlohy sa môžu zobraziť v časti Všetko ostatné a koľko. Úlohy po termíne, s dnešným termínom a prebiehajúce sa zobrazujú vždy."
+      "suggestedDescription": "Ktoré otvorené úlohy sa môžu zobraziť v časti Všetko ostatné a koľko. Úlohy po termíne, s dnešným termínom a prebiehajúce sa zobrazujú vždy.",
+      "maxOption_one": "{{count}} úloha"
     },
     "apiKeys": {
       "nameRequired": "Názov API kľúča je povinný.",
@@ -2081,7 +2082,8 @@
     "rateLimitedRetrying": "Príliš veľa požiadaviek, opakovanie…",
     "rateLimitedGaveUp": "Príliš veľa požiadaviek. Relácia zostáva aktívna; o chvíľu obnovte stránku.",
     "serverBusyRetrying": "Server je zaneprázdnený, opakuje sa…",
-    "serverBusyRetry": "Skúsiť znova"
+    "serverBusyRetry": "Skúsiť znova",
+    "sign_up": "Zaregistrovať sa"
   },
   "dropdown": {
     "createNew": "Vytvoriť nové",
@@ -2220,7 +2222,8 @@
     "noTasks": "Žiadne úlohy.",
     "nextAction": "Ďalšia akcia",
     "nextActionLine": "Ďalšia akcia: {{name}}",
-    "noCompletedTasks": "Žiadne dokončené úlohy."
+    "noCompletedTasks": "Žiadne dokončené úlohy.",
+    "views": "Zobrazenia projektu"
   },
   "errors": {
     "required": "Toto pole je povinné",
@@ -2364,6 +2367,18 @@
       "reasonKeyword": "Začína na „{{detail}}“",
       "reasonLong": "Je dlhé, ako poznámka",
       "reasonDefault": "Krátky text, zvyčajne úloha"
+    },
+    "sources": {
+      "telegram": "Telegram",
+      "gmail": "Gmail",
+      "mcp": "MCP",
+      "android": "Android",
+      "api": "API",
+      "email": "E-mail",
+      "mail": "Pošta",
+      "desktop": "Počítač",
+      "link": "Odkaz",
+      "share": "Zdieľanie"
     }
   },
   "dateFormats": {
@@ -2605,7 +2620,9 @@
     "noUpcomingOccurrences": "Žiadne nadchádzajúce výskyty.",
     "turnIntoProject": "Premeniť na projekt",
     "turnIntoProjectError": "Nepodarilo sa premeniť na projekt.",
-    "turnIntoProjectMessage": "Premeniť „{{name}}“ na projekt? Jeho podúlohy sa stanú úlohami projektu a adresy z jeho poznámky jeho stránkami."
+    "turnIntoProjectMessage": "Premeniť „{{name}}“ na projekt? Jeho podúlohy sa stanú úlohami projektu a adresy z jeho poznámky jeho stránkami.",
+    "inDays_one": "o {{count}} deň",
+    "daysAgo_one": "pred {{count}} dňom"
   },
   "subtasks": {
     "placeholder": "Pridajte podúlohu...",
@@ -2619,7 +2636,7 @@
     "addProject": "Pridať projekt",
     "loading": "Načítavajú sa projekty...",
     "error": "Chyba pri načítaní projektov",
-    "searchPlaceholder": "Hľadať projekty...",
+    "searchPlaceholder": "Hľadať…",
     "title": "Projekty",
     "noProjectsFound": "Nenašli sa žiadne projekty",
     "new": "Nový projekt",
@@ -2844,7 +2861,7 @@
     "addNote": "Pridať poznámku",
     "loading": "Načítavajú sa poznámky...",
     "error": "Chyba pri načítaní poznámok",
-    "searchPlaceholder": "Hľadať poznámky...",
+    "searchPlaceholder": "Hľadať…",
     "noNotesFound": "Nenašli sa žiadne poznámky",
     "new": "Nová poznámka",
     "noNotesYet": "Zatiaľ žiadne poznámky.",
@@ -2923,13 +2940,18 @@
     "fileUploadError": "Nepodarilo sa nahrať {{name}}",
     "slashFile": "Obrázok alebo súbor",
     "slashFileHint": "Nahrajte a vložte sem",
-    "toggleDropdownMenu": "Prepnúť rozbaľovaciu ponuku"
+    "toggleDropdownMenu": "Prepnúť rozbaľovaciu ponuku",
+    "saved": "Uložené",
+    "unsaved": "Neuložené zmeny",
+    "backgroundColor": "Farba pozadia",
+    "selectProject": "Vybrať projekt",
+    "noMatchingNotes": "Žiadne zodpovedajúce poznámky"
   },
   "tags": {
     "addTag": "Pridať štítok",
     "new": "Nový štítok",
     "loading": "Načítavajú sa štítky...",
-    "searchPlaceholder": "Hľadať štítky...",
+    "searchPlaceholder": "Hľadať…",
     "title": "Štítky",
     "noTagsFound": "Nenašli sa žiadne štítky",
     "systemTag": "Systémový štítok",
@@ -3196,9 +3218,9 @@
     "uploading": "Nahráva sa..."
   },
   "searchPlaceholders": {
-    "searchProjects": "Hľadať projekty...",
-    "searchTags": "Hľadať štítky...",
-    "searchTasks": "Hľadať úlohy..."
+    "searchProjects": "Hľadať…",
+    "searchTags": "Hľadať…",
+    "searchTasks": "Hľadať…"
   },
   "ariaLabels": {
     "hideInfo": "Skryť informácie",
@@ -3922,7 +3944,7 @@
   "views": {
     "title": "Inteligentné zobrazenia",
     "loading": "Načítavajú sa zobrazenia...",
-    "searchPlaceholder": "Hľadať zobrazenia...",
+    "searchPlaceholder": "Hľadať…",
     "noViewsFound": "Nenašli sa žiadne zobrazenia. Zobrazenie vytvoríte vyhľadávaním a kliknutím na „Uložiť ako inteligentné zobrazenie“.",
     "new": "Nové zobrazenie",
     "noViewsYet": "Zatiaľ žiadne inteligentné zobrazenia.",
@@ -3958,7 +3980,7 @@
     "filters": "filtre"
   },
   "search": {
-    "placeholder": "Hľadať úlohy, projekty, poznámky...",
+    "placeholder": "Hľadať…",
     "searchingFor": "Hľadáte",
     "allItems": "všetky položky",
     "containingText": ", obsahujúce text",
@@ -4416,7 +4438,26 @@
     "archivedBadge": "archivované",
     "deletePerson": "Odstrániť osobu",
     "deleteConfirm": "Naozaj chcete odstrániť „{{name}}“? Túto akciu nie je možné vrátiť späť.",
-    "contact": "Kontakt"
+    "contact": "Kontakt",
+    "editPerson": "Upraviť osobu",
+    "newPerson": "Nová osoba",
+    "noAssignedTasks": "Žiadne úlohy priradené: {{name}}.",
+    "notFound": "Osoba sa nenašla.",
+    "relationship": "Vzťah",
+    "phone": "Telefón",
+    "namePlaceholder": "Otec, partner, Alica…",
+    "notesPlaceholder": "Poznámky o tejto osobe…",
+    "relationships": {
+      "family": "Rodina",
+      "work": "Práca",
+      "friend": "Priateľ",
+      "other": "Iné"
+    },
+    "noPeopleYet": "Zatiaľ žiadne osoby",
+    "clearAssignment": "Zrušiť priradenie",
+    "nameRequired": "Meno je povinné",
+    "saveError": "Osobu sa nepodarilo uložiť",
+    "signInLink": "Prihlasovací odkaz"
   },
   "members": {
     "addTitle": "Pridať člena",
@@ -4710,7 +4751,7 @@
     "title": "Vzťahy",
     "add": "Pridať vzťah",
     "remove": "Odstrániť vzťah",
-    "searchPlaceholder": "Hľadať úlohu...",
+    "searchPlaceholder": "Hľadať…",
     "addFailed": "Vzťah sa nepodarilo pridať.",
     "removeFailed": "Vzťah sa nepodarilo odstrániť.",
     "blocked": "Blokované",
@@ -4906,7 +4947,7 @@
     "targetDate": "Cieľový dátum",
     "noProjects": "S týmto cieľom nie sú prepojené žiadne projekty.",
     "noTasks": "K tomuto cieľu nie sú priradené žiadne úlohy.",
-    "searchGoals": "Hľadať ciele…",
+    "searchGoals": "Hľadať…",
     "clearGoal": "Odstrániť cieľ",
     "noGoalsFound": "Nenašli sa žiadne ciele",
     "inactive": "Neaktívne",
@@ -4945,7 +4986,8 @@
     "noAvailableGoals": "Nie sú dostupné žiadne ciele",
     "progressHint": "Stĺpec: dokončené úlohy a projekty. Čiara: čas medzi vytvorením a cieľovým dátumom.",
     "removeFromArea": "Odstrániť z oblasti",
-    "createTask": "Vytvoriť úlohu"
+    "createTask": "Vytvoriť úlohu",
+    "noGoal": "Bez cieľa"
   },
   "templates": {
     "new": "Nová šablóna",
@@ -4966,7 +5008,7 @@
       "empty": "V obchode zatiaľ nie sú dostupné žiadne šablóny.",
       "title": "Obchod so šablónami",
       "subtitle": "Prehliadajte a inštalujte hotové šablóny od komunity",
-      "search": "Hľadať v obchode..."
+      "search": "Hľadať…"
     },
     "taskList": "Úlohy",
     "noTasks": "Táto šablóna neobsahuje žiadne úlohy",
@@ -6174,7 +6216,11 @@
     "hideCompleted": "Skryť dokončené",
     "showCompletedTasks": "Zobraziť dokončené",
     "dropOverlaps": "Prekrytia",
-    "dropPast": "V minulosti"
+    "dropPast": "V minulosti",
+    "habitsCount": "Návyky · {{n}}",
+    "habitsDone": "Hotové · {{n}}",
+    "habitAt": "{{name}} o {{time}}",
+    "habitLogFailed": "Návyk sa nepodarilo zaznamenať."
   },
   "upcoming": {
     "title": "Plánovať",
@@ -6223,12 +6269,8 @@
     "noProject": "Žiadny projekt",
     "noTag": "Žiadny štítok",
     "priority": {
-      "high": "Vysoká",
-      "medium": "Stredná",
-      "low": "Nízka",
       "none": "Bez priority"
     },
-    "horizonsEmpty": "Zatiaľ tu nič nie je.",
     "thisWeek": "Tento týždeň",
     "thisMonth": "Tento mesiac",
     "nextMonth": "Budúci mesiac",
@@ -6274,14 +6316,19 @@
     "load": "{{planned}} / {{available}}",
     "done": "Hotové ({{n}})",
     "subtaskOf": "↳ {{parent}}",
-    "addToInbox": "Pridať do došlej pošty",
-    "inboxNewItem": "Nová položka došlej pošty",
     "addToInboxFailed": "Nepodarilo sa pridať. Skúste to znova.",
     "addEmptyName": "Zadajte názov úlohy",
     "addTaskIn": "Pridať úlohu do {{name}}",
-    "thisWeekOnlyPlanned": "Nič bez pevného dňa · {{count}} naplánované na deň",
     "previous": "Predchádzajúci deň",
-    "next": "Nasledujúci deň"
+    "next": "Nasledujúci deň",
+    "nextWeekHint": "Naplánované na budúci týždeň, bez pevného dňa",
+    "stripLabel": "Poslať do horizontu",
+    "stripOpen": "Otvoriť {{name}} v Horizontoch",
+    "sentToHorizon": "Odoslané do: {{name}}",
+    "plannedOnDayHint_one": "Naplánované na deň: {{count}}",
+    "plannedOnDayHint_few": "Naplánované na deň: {{count}}",
+    "plannedOnDayHint_many": "Naplánované na deň: {{count}}",
+    "plannedOnDayHint_other": "Naplánované na deň: {{count}}"
   },
   "offline": {
     "offline": "Offline",

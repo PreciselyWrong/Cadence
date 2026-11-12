@@ -122,7 +122,7 @@ const NoteFocusMode: React.FC<NoteFocusModeProps> = ({
                                             : undefined
                                     }
                                 >
-                                    Saving...
+                                    {t('common.saving', 'Saving...')}
                                 </span>
                             )}
                             {saveStatus === 'saved' && (
@@ -134,7 +134,7 @@ const NoteFocusMode: React.FC<NoteFocusModeProps> = ({
                                             : undefined
                                     }
                                 >
-                                    Saved
+                                    {t('notes.saved', 'Saved')}
                                 </span>
                             )}
                             {saveStatus === 'unsaved' && (
@@ -146,7 +146,7 @@ const NoteFocusMode: React.FC<NoteFocusModeProps> = ({
                                             : undefined
                                     }
                                 >
-                                    Unsaved
+                                    {t('notes.unsaved', 'Unsaved changes')}
                                 </span>
                             )}
                         </>

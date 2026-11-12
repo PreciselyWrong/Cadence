@@ -130,8 +130,6 @@
       "dismiss": "Пропустить",
       "acceptAll": "Принять все",
       "apply": "Применить",
-      "medium": "Средний",
-      "high": "Высокий",
       "priority": "Приоритет",
       "newTag": "Новый тег: #{{name}}",
       "tags": "Теги",
@@ -258,7 +256,7 @@
     "preview": "Предварительный просмотр",
     "download": "Скачать",
     "exitFocusMode": "Выйти из режима фокуса",
-    "searchTimezones": "Поиск часовых поясов...",
+    "searchTimezones": "Поиск…",
     "dismiss": "Закрыть",
     "search": "Поиск",
     "previous": "Предыдущий",
@@ -287,7 +285,10 @@
     "resolving": "Разрешение...",
     "showLess": "Свернуть",
     "breadcrumb": "Хлебные крошки",
-    "undo": "Отменить"
+    "undo": "Отменить",
+    "copyCode": "Копировать код",
+    "copy": "Копировать",
+    "copied": "Скопировано"
   },
   "sidebar": {
     "links": "Ссылки",
@@ -343,7 +344,6 @@
     "collapseViews": "Свернуть список представлений",
     "expandViews": "Развернуть список представлений",
     "summary": "Сводка",
-    "tomorrow": "Завтра",
     "next7Days": "Следующие 7 дней",
     "more": "Ещё",
     "toggleFolder": "Показать или скрыть проекты",
@@ -424,7 +424,7 @@
     "taskCompleted": "задача выполнена",
     "tasksCompleted": "задачи выполнены",
     "noTasksAvailable": "Нет доступных задач.",
-    "searchPlaceholder": "Поиск задач...",
+    "searchPlaceholder": "Поиск…",
     "addNewTask": "Добавить новую задачу",
     "addTaskInline": "+ Добавить задачу",
     "metrics": "Метрики",
@@ -1097,7 +1097,8 @@
       "hoursTitle": "Ваш день",
       "hoursTo": "до",
       "taggedToday": "С меткой #today",
-      "taggedTodayDetail": "Открытые задачи с меткой #today, с любыми датами."
+      "taggedTodayDetail": "Открытые задачи с меткой #today, с любыми датами.",
+      "maxOption_one": "{{count}} задача"
     },
     "aiApiKey": "API-ключ",
     "aiApiKeyClear": "Очистить",
@@ -1580,7 +1581,8 @@
     "rateLimitedRetrying": "Слишком много запросов, повтор…",
     "rateLimitedGaveUp": "Слишком много запросов. Сессия всё ещё активна; обновите страницу немного позже.",
     "serverBusyRetrying": "Сервер занят, повтор…",
-    "serverBusyRetry": "Повторить"
+    "serverBusyRetry": "Повторить",
+    "sign_up": "Зарегистрироваться"
   },
   "dropdown": {
     "createNew": "Создать новый",
@@ -1712,7 +1714,8 @@
     "noTasks": "Задач нет.",
     "nextAction": "Следующее действие",
     "nextActionLine": "Следующее действие: {{name}}",
-    "noCompletedTasks": "Нет выполненных задач."
+    "noCompletedTasks": "Нет выполненных задач.",
+    "views": "Представления проекта"
   },
   "errors": {
     "required": "Это поле обязательно для заполнения",
@@ -1856,6 +1859,18 @@
       "reasonKeyword": "Начинается с «{{detail}}»",
       "reasonLong": "Длинный текст, как заметка",
       "reasonDefault": "Короткий текст, обычно задача"
+    },
+    "sources": {
+      "telegram": "Telegram",
+      "gmail": "Gmail",
+      "mcp": "MCP",
+      "android": "Android",
+      "api": "API",
+      "email": "Эл. почта",
+      "mail": "Почта",
+      "desktop": "Компьютер",
+      "link": "Ссылка",
+      "share": "Поделиться"
     }
   },
   "dateFormats": {
@@ -2100,7 +2115,9 @@
     "noUpcomingOccurrences": "Нет предстоящих повторений.",
     "turnIntoProject": "Сделать проектом",
     "turnIntoProjectError": "Не удалось сделать проектом.",
-    "turnIntoProjectMessage": "Сделать «{{name}}» проектом? Его подзадачи станут задачами проекта, а адреса из его заметки — страницами проекта."
+    "turnIntoProjectMessage": "Сделать «{{name}}» проектом? Его подзадачи станут задачами проекта, а адреса из его заметки — страницами проекта.",
+    "inDays_one": "через {{count}} день",
+    "daysAgo_one": "{{count}} день назад"
   },
   "projects": {
     "parentProject": "Родительский проект",
@@ -2109,7 +2126,7 @@
     "areaFollowsParent": "Область следует за родительским проектом",
     "loading": "Загрузка проектов...",
     "error": "Ошибка загрузки проектов",
-    "searchPlaceholder": "Поиск проектов...",
+    "searchPlaceholder": "Поиск…",
     "title": "Проекты",
     "noProjectsFound": "Проекты не найдены",
     "cardViewAriaLabel": "Карточный вид",
@@ -2294,7 +2311,7 @@
     "presetWork": "Работа",
     "presetHealth": "Здоровье",
     "presetFamily": "Семья",
-    "suggestDomains": "Предложить 5 сфер",
+    "suggestDomains": "Предложить 5 областей",
     "domains": {
       "business": "Бизнес и деньги",
       "tech": "Технологии и системы",
@@ -2329,7 +2346,7 @@
     "emptyPreview": "Пустая заметка",
     "loading": "Загрузка заметок...",
     "error": "Ошибка загрузки заметок",
-    "searchPlaceholder": "Поиск заметок...",
+    "searchPlaceholder": "Поиск…",
     "noNotesFound": "Заметки не найдены",
     "title": "Заметки",
     "deleteNoteAriaLabel": "Удалить заметку {{noteTitle}}",
@@ -2409,11 +2426,16 @@
     "fileUploadError": "Не удалось загрузить {{name}}",
     "slashFile": "Изображение или файл",
     "slashFileHint": "Загрузить и вставить здесь",
-    "toggleDropdownMenu": "Переключить выпадающее меню"
+    "toggleDropdownMenu": "Переключить выпадающее меню",
+    "saved": "Сохранено",
+    "unsaved": "Несохранённые изменения",
+    "backgroundColor": "Цвет фона",
+    "selectProject": "Выберите проект",
+    "noMatchingNotes": "Нет подходящих заметок"
   },
   "tags": {
     "loading": "Загрузка тегов...",
-    "searchPlaceholder": "Поиск тегов...",
+    "searchPlaceholder": "Поиск…",
     "title": "Теги",
     "noTagsFound": "Теги не найдены",
     "editTagAriaLabel": "Редактировать тег {{tagName}}",
@@ -2616,8 +2638,6 @@
     "connectionError": "Не удалось подключиться к Google Календарю. Пожалуйста, попробуйте снова.",
     "disconnectionError": "Не удалось отключиться от Google Календаря. Пожалуйста, попробуйте снова.",
     "taskDetails": "Детали задачи",
-    "editTask": "Редактировать задачу",
-    "goToTasks": "Перейти к задачам",
     "close": "Закрыть",
     "title": "Название",
     "status": "Статус",
@@ -2628,11 +2648,6 @@
     "area": "Область",
     "description": "Описание",
     "created": "Создано",
-    "completed": "Завершено",
-    "pending": "В ожидании",
-    "high": "Высокий",
-    "medium": "Средний",
-    "low": "Низкий",
     "time": "Время",
     "allDay": "Весь день",
     "google": {
@@ -2664,7 +2679,14 @@
     "moreViews": "Другие виды",
     "openDay": "Открыть день",
     "noEventsThisDay": "Ничего не запланировано.",
-    "task": "Задача"
+    "previousYear": "Предыдущий год",
+    "nextYear": "Следующий год",
+    "previousWeek": "Предыдущая неделя",
+    "nextWeek": "Следующая неделя",
+    "previousDays": "Предыдущие дни",
+    "nextDays": "Следующие дни",
+    "previousDay": "Предыдущий день",
+    "nextDay": "Следующий день"
   },
   "pages": {
     "notFound": {
@@ -2683,9 +2705,9 @@
     "uploading": "Загрузка..."
   },
   "searchPlaceholders": {
-    "searchProjects": "Поиск проектов...",
-    "searchTags": "Поиск тегов...",
-    "searchTasks": "Поиск задач..."
+    "searchProjects": "Поиск…",
+    "searchTags": "Поиск…",
+    "searchTasks": "Поиск…"
   },
   "ariaLabels": {
     "hideInfo": "Скрыть информацию",
@@ -3349,7 +3371,7 @@
   "views": {
     "title": "Умные представления",
     "loading": "Загрузка представлений...",
-    "searchPlaceholder": "Поиск представлений...",
+    "searchPlaceholder": "Поиск…",
     "noViewsFound": "Представления не найдены. Создайте представление, выполнив поиск и нажав \"Сохранить как умное представление\".",
     "deleteView": "Удалить представление",
     "confirmDelete": "Вы уверены, что хотите удалить представление \"{{viewName}}\"?",
@@ -3386,7 +3408,7 @@
     "filters": "фильтры"
   },
   "search": {
-    "placeholder": "Поиск задач, проектов, заметок...",
+    "placeholder": "Поиск…",
     "searchingFor": "Вы ищете",
     "allItems": "все элементы",
     "containingText": ", содержащие текст",
@@ -4082,7 +4104,26 @@
     "archivedBadge": "в архиве",
     "deletePerson": "Удалить человека",
     "deleteConfirm": "Вы действительно хотите удалить «{{name}}»? Это нельзя отменить.",
-    "contact": "Контакт"
+    "contact": "Контакт",
+    "editPerson": "Изменить человека",
+    "newPerson": "Новый человек",
+    "noAssignedTasks": "Нет задач, назначенных: {{name}}.",
+    "notFound": "Человек не найден.",
+    "relationship": "Отношение",
+    "phone": "Телефон",
+    "namePlaceholder": "Папа, партнёр, Алиса…",
+    "notesPlaceholder": "Заметки об этом человеке…",
+    "relationships": {
+      "family": "Семья",
+      "work": "Работа",
+      "friend": "Друг",
+      "other": "Другое"
+    },
+    "noPeopleYet": "Пока нет людей",
+    "clearAssignment": "Снять назначение",
+    "nameRequired": "Укажите имя",
+    "saveError": "Не удалось сохранить человека",
+    "signInLink": "Ссылка для входа"
   },
   "members": {
     "addTitle": "Добавить участника",
@@ -4238,7 +4279,8 @@
       "addToTomorrow": "Добавить на завтра",
       "regenerate": "Сгенерировать заново",
       "draftTitle": "Черновик ИИ",
-      "skippedCount": "Не вошло ({{count}})"
+      "skippedCount": "Не вошло ({{count}})",
+      "carried_one": "{{count}} задача добавлена на завтра"
     },
     "lateWarning": "Время прошло, а задача не выполнена",
     "movedOffPlan": "«{{name}}» больше не со сроком на сегодня, поэтому она убрана из плана на день.",
@@ -4515,7 +4557,7 @@
     "targetDate": "Срок",
     "noProjects": "К этой цели не привязаны проекты.",
     "noTasks": "У этой цели нет задач.",
-    "searchGoals": "Поиск целей…",
+    "searchGoals": "Поиск…",
     "clearGoal": "Убрать цель",
     "noGoalsFound": "Цели не найдены",
     "inactive": "Неактивна",
@@ -4554,7 +4596,8 @@
     "noAvailableGoals": "Нет доступных целей",
     "progressHint": "Столбец: выполненные задачи и проекты. Линия: время между созданием и целевой датой.",
     "removeFromArea": "Убрать из области",
-    "createTask": "Создать задачу"
+    "createTask": "Создать задачу",
+    "noGoal": "Без цели"
   },
   "templates": {
     "new": "Новый шаблон",
@@ -4575,7 +4618,7 @@
       "empty": "В каталоге пока нет шаблонов.",
       "title": "Каталог",
       "subtitle": "Просматривайте и устанавливайте готовые шаблоны от сообщества",
-      "search": "Поиск в каталоге..."
+      "search": "Поиск…"
     },
     "taskList": "Задачи",
     "noTasks": "В этом шаблоне нет задач",
@@ -5133,7 +5176,7 @@
       "reviewIn30": "Пересмотреть через 30 дней",
       "reviewOn": "Пересмотреть…",
       "keepLater": "Оставить отложенной",
-      "toTask": "Сделать задачей",
+      "toTask": "Создать задачу",
       "toLater": "Отложить на потом",
       "discard": "Отбросить",
       "openInbox": "Открыть входящие",
@@ -5227,7 +5270,7 @@
     "title": "Связи",
     "add": "Добавить связь",
     "remove": "Удалить связь",
-    "searchPlaceholder": "Найти задачу...",
+    "searchPlaceholder": "Поиск…",
     "addFailed": "Не удалось добавить связь.",
     "removeFailed": "Не удалось удалить связь.",
     "blocked": "Заблокировано",
@@ -6198,7 +6241,11 @@
     "hideCompleted": "Скрыть выполненные",
     "showCompletedTasks": "Показать выполненные",
     "dropOverlaps": "Пересечения",
-    "dropPast": "В прошлом"
+    "dropPast": "В прошлом",
+    "habitsCount": "Привычки · {{n}}",
+    "habitsDone": "Выполнено · {{n}}",
+    "habitAt": "{{name}} в {{time}}",
+    "habitLogFailed": "Не удалось отметить привычку."
   },
   "upcoming": {
     "title": "План",
@@ -6247,12 +6294,8 @@
     "noProject": "Без проекта",
     "noTag": "Без метки",
     "priority": {
-      "high": "Высокий",
-      "medium": "Средний",
-      "low": "Низкий",
       "none": "Без приоритета"
     },
-    "horizonsEmpty": "Пока ничего нет.",
     "thisWeek": "Эта неделя",
     "thisMonth": "Этот месяц",
     "nextMonth": "Следующий месяц",
@@ -6298,14 +6341,19 @@
     "load": "{{planned}} / {{available}}",
     "done": "Готово ({{n}})",
     "subtaskOf": "↳ {{parent}}",
-    "addToInbox": "Добавить во входящие",
-    "inboxNewItem": "Новый элемент во входящих",
     "addToInboxFailed": "Не удалось добавить. Попробуйте ещё раз.",
     "addEmptyName": "Введите название задачи",
     "addTaskIn": "Добавить задачу в «{{name}}»",
-    "thisWeekOnlyPlanned": "Нет задач без фиксированного дня · {{count}} запланированы на день",
     "previous": "Предыдущий день",
-    "next": "Следующий день"
+    "next": "Следующий день",
+    "nextWeekHint": "Запланировано на следующую неделю, без конкретного дня",
+    "stripLabel": "Отправить на горизонт",
+    "stripOpen": "Открыть {{name}} в Горизонтах",
+    "sentToHorizon": "Отправлено: {{name}}",
+    "plannedOnDayHint_one": "Запланировано на день: {{count}}",
+    "plannedOnDayHint_few": "Запланировано на день: {{count}}",
+    "plannedOnDayHint_many": "Запланировано на день: {{count}}",
+    "plannedOnDayHint_other": "Запланировано на день: {{count}}"
   },
   "offline": {
     "offline": "Нет связи",

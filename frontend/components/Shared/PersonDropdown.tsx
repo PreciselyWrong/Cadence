@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import { ChevronDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Person } from '../../entities/Person';
+import { relationshipLabel } from '../People/relationshipLabel';
 
 interface PersonDropdownProps {
     personUid: string | null;
@@ -42,6 +44,7 @@ const PersonDropdown: React.FC<PersonDropdownProps> = ({
     placeholder = 'Unassigned',
     renderTrigger,
 }) => {
+    const { t } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
     const [position, setPosition] = useState({ top: 0, left: 0, width: 0 });
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -142,7 +145,10 @@ const PersonDropdown: React.FC<PersonDropdownProps> = ({
                                     }
                                 }}
                                 className="text-gray-500 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer"
-                                aria-label="Clear assignment"
+                                aria-label={t(
+                                    'people.clearAssignment',
+                                    'Clear assignment'
+                                )}
                             >
                                 <XMarkIcon className="w-4 h-4" />
                             </span>
@@ -187,14 +193,17 @@ const PersonDropdown: React.FC<PersonDropdownProps> = ({
                                     p.relationship_type &&
                                     p.relationship_type !== 'other' && (
                                         <span className="ml-1 text-xs text-gray-500 dark:text-gray-400">
-                                            {p.relationship_type}
+                                            {relationshipLabel(
+                                                p.relationship_type,
+                                                t
+                                            )}
                                         </span>
                                     )}
                             </button>
                         ))}
                         {activePeople.length === 0 && (
                             <div className="px-4 py-2 text-sm text-gray-500 dark:text-gray-400">
-                                No people yet
+                                {t('people.noPeopleYet', 'No people yet')}
                             </div>
                         )}
                     </div>,
