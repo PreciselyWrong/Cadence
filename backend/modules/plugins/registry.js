@@ -199,6 +199,19 @@ async function notifyUser(pluginId, input = {}) {
     });
 }
 
+async function readPluginNotification(pluginId, { userId, uid } = {}) {
+    if (!Number.isInteger(userId) || typeof uid !== 'string' || !uid) {
+        return false;
+    }
+    const { Notification } = require('../../models');
+    const row = await Notification.findOne({
+        where: { uid, user_id: userId },
+    });
+    if (!row || row.data?.pluginId !== pluginId) return false;
+    if (!row.read_at) await row.update({ read_at: new Date() });
+    return true;
+}
+
 function buildContext(plugin, entry, row) {
     const { manifest } = entry;
     const log = (level) => (data, message) =>
@@ -273,6 +286,9 @@ function buildContext(plugin, entry, row) {
         // A notification for one user, shown by the app and sent live to the
         // desktop client and the phone (docs/46-plugins.md, "Notifications").
         ctx.notify = (input) => notifyUser(manifest.id, input);
+        // Marks read a notification this plugin created, once the person has
+        // seen the item in the plugin's own page. Resolves false otherwise.
+        ctx.notify.read = (input) => readPluginNotification(manifest.id, input);
     }
     if (manifest.permissions.includes('routes')) {
         plugin.router = express.Router();

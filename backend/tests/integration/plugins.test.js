@@ -891,6 +891,47 @@ describe('Plugins', () => {
             });
         });
 
+        it('marks read only its own notifications', async () => {
+            writePlugin(
+                'herald',
+                manifestOf('herald', {
+                    permissions: ['routes', 'notify'],
+                    events: [],
+                }),
+                `module.exports = { activate(ctx) {
+                    ctx.router.post('/ping', async (req, res) => {
+                        const n = await ctx.notify({ userId: req.currentUser.id, title: 'T' });
+                        res.json({ uid: n.uid });
+                    });
+                    ctx.router.post('/read', async (req, res) => {
+                        res.json({ read: await ctx.notify.read({ userId: req.currentUser.id, uid: req.body.uid }) });
+                    });
+                } };`
+            );
+            await adminAgent
+                .patch('/api/plugins/herald')
+                .send({ enabled: true });
+            const { uid } = (
+                await adminAgent.post('/api/plugins/herald/x/ping').send({})
+            ).body;
+            const foreign = await Notification.createNotification({
+                userId: admin.id,
+                type: 'system',
+                title: 'Not the plugin',
+                data: { pluginId: 'other' },
+            });
+            const read = (body) =>
+                adminAgent.post('/api/plugins/herald/x/read').send(body);
+            expect((await read({ uid: foreign.uid })).body.read).toBe(false);
+            expect((await read({ uid })).body.read).toBe(true);
+            const row = await Notification.findOne({ where: { uid } });
+            expect(row.read_at).not.toBeNull();
+            const other = await Notification.findOne({
+                where: { uid: foreign.uid },
+            });
+            expect(other.read_at).toBeNull();
+        });
+
         it('refuses a missing title, unknown channels and an openPath outside the app', async () => {
             notifier(['routes', 'notify']);
             await adminAgent
