@@ -11,6 +11,7 @@
 
 mod autostart;
 mod config;
+mod links;
 mod notify;
 mod shortcut;
 mod sync;
@@ -167,10 +168,15 @@ fn run_ui(kind: String, path: Option<String>) {
             match (kind.as_str(), config) {
                 ("main", Some(config)) => {
                     let url = route_url(&config.server_url, path.as_deref())?;
-                    WebviewWindowBuilder::new(handle, "main", WebviewUrl::External(url))
-                        .title("Cadence")
-                        .inner_size(1280.0, 840.0)
-                        .build()?;
+                    let server = route_url(&config.server_url, None)?;
+                    // Opened blank: the link policy and user agent are set before Cadence loads.
+                    let blank = "about:blank".parse()?;
+                    let window =
+                        WebviewWindowBuilder::new(handle, "main", WebviewUrl::External(blank))
+                            .title("Cadence")
+                            .inner_size(1280.0, 840.0)
+                            .build()?;
+                    links::attach(&window, server, url)?;
                 }
                 ("quick", _) => {
                     WebviewWindowBuilder::new(

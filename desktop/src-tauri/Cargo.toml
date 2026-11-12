@@ -25,6 +25,10 @@ uuid = { version = "=1.29.0", features = ["v4"] }
 ashpd = { version = "=0.13.13", default-features = false, features = ["async-io", "global_shortcuts"] }
 futures-lite = "=2.6.1"
 
+[target.'cfg(target_os = "linux")'.dependencies]
+# Same crate wry uses: the link policy needs WebKit's navigation type, which Tauri does not pass on.
+webkit2gtk = { version = "=2.0.2", features = ["v2_6"] }
+
 [profile.release]
 opt-level = "s"
 lto = true

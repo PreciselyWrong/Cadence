@@ -393,6 +393,7 @@ dependencies = [
  "tray-icon",
  "ureq",
  "uuid",
+ "webkit2gtk",
 ]
 
 [[package]]

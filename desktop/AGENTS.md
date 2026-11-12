@@ -2,7 +2,7 @@
 
 Thin Linux shell around the Cadence web UI. Read `docs/fork/DESKTOP.md` first (decisions, limits).
 
-- `src-tauri/src/main.rs`: tray process and UI process (`--ui`); `sync.rs`: capture queue, inbox flush, notification polling and wording; `notify.rs`: native notifications over D-Bus (`notify-rust`, desktop-entry hint, body markup, project ring image, buttons Terminé / +10 min / Ouvrir; mock server `src-tauri/tests/notifd.py`); `config.rs`: config file; `shortcut.rs`: Wayland global shortcut through the XDG portal; `autostart.rs`: XDG autostart entry. `ui/`: local setup and quick-add pages.
+- `src-tauri/src/main.rs`: tray process and UI process (`--ui`); `sync.rs`: capture queue, inbox flush, notification polling and wording; `notify.rs`: native notifications over D-Bus (`notify-rust`, desktop-entry hint, body markup, project ring image, buttons Terminé / +10 min / Ouvrir; mock server `src-tauri/tests/notifd.py`); `links.rs`: main window link policy (other origins to the default app) and user agent marker; `config.rs`: config file; `shortcut.rs`: Wayland global shortcut through the XDG portal; `autostart.rs`: XDG autostart entry. `ui/`: local setup and quick-add pages.
 - Build: `npm install && npm run build` (set `CARGO_BUILD_JOBS=6` on a busy machine).
 
 ## ⛔ Interdits
@@ -14,3 +14,5 @@ Thin Linux shell around the Cadence web UI. Read `docs/fork/DESKTOP.md` first (d
 - ⛔ Write one shared file from both processes: UI processes only add queue files, the tray process only deletes them; `state.json` (seen uids, snoozes) and `notify-icons/` are the tray's alone.
 - ⛔ Put server text into a notification body unescaped: the body is markup, a task name with `<` would break or inject it.
 - ⛔ Add a fourth notification button: GNOME shows three.
+- ⛔ Hand `xdg-open` a URL from the page outside `http`, `https`, `mailto`, `tel`: `file:` or a custom scheme would run local handlers on the server page's say.
+- ⛔ Decide the main window's navigations with Tauri's `on_navigation`: it gets only the URL, so it cannot tell a link click from an iframe or a sign-in redirect (`links.rs` handles WebKit's `decide-policy` instead).
