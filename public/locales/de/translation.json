@@ -4950,7 +4950,8 @@
     "subtasks": "Unteraufgaben",
     "loadError": "Diese Aufgabe konnte nicht geladen werden.",
     "expand": "Vergrößern",
-    "shrink": "Verkleinern"
+    "shrink": "Verkleinern",
+    "goTo": "Gehe zu"
   },
   "review": {
     "quick": {

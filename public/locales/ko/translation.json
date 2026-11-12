@@ -4941,7 +4941,8 @@
     "subtasks": "하위 작업",
     "loadError": "이 작업을 불러올 수 없습니다.",
     "expand": "확대",
-    "shrink": "축소"
+    "shrink": "축소",
+    "goTo": "이동"
   },
   "review": {
     "quick": {

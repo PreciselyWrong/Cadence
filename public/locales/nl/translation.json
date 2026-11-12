@@ -4941,7 +4941,8 @@
     "subtasks": "Subtaken",
     "loadError": "Deze taak kon niet worden geladen.",
     "expand": "Vergroten",
-    "shrink": "Verkleinen"
+    "shrink": "Verkleinen",
+    "goTo": "Ga naar"
   },
   "review": {
     "quick": {

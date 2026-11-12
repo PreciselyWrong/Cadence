@@ -4941,7 +4941,8 @@
     "subtasks": "Deluppgifter",
     "loadError": "Den här uppgiften kunde inte laddas.",
     "expand": "Förstora",
-    "shrink": "Förminska"
+    "shrink": "Förminska",
+    "goTo": "Gå till"
   },
   "review": {
     "quick": {

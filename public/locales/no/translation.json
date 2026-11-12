@@ -4946,7 +4946,8 @@
     "subtasks": "Underoppgaver",
     "loadError": "Kunne ikke laste denne oppgaven.",
     "expand": "Utvid",
-    "shrink": "Forminsk"
+    "shrink": "Forminsk",
+    "goTo": "Gå til"
   },
   "review": {
     "quick": {

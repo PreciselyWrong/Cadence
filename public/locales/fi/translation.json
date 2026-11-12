@@ -4941,7 +4941,8 @@
     "subtasks": "Alitehtävät",
     "loadError": "Tehtävää ei voitu ladata.",
     "expand": "Suurenna",
-    "shrink": "Pienennä"
+    "shrink": "Pienennä",
+    "goTo": "Siirry"
   },
   "review": {
     "quick": {

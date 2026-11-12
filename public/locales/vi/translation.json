@@ -4941,7 +4941,8 @@
     "subtasks": "Công việc con",
     "loadError": "Không thể tải công việc này.",
     "expand": "Mở rộng",
-    "shrink": "Thu nhỏ"
+    "shrink": "Thu nhỏ",
+    "goTo": "Đi tới"
   },
   "review": {
     "quick": {

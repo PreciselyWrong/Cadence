@@ -4941,7 +4941,8 @@
     "subtasks": "Underopgaver",
     "loadError": "Opgaven kunne ikke indlæses.",
     "expand": "Udvid",
-    "shrink": "Formindsk"
+    "shrink": "Formindsk",
+    "goTo": "Gå til"
   },
   "review": {
     "quick": {

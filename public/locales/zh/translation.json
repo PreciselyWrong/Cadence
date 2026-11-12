@@ -4941,7 +4941,8 @@
     "subtasks": "子任务",
     "loadError": "无法加载此任务。",
     "expand": "放大",
-    "shrink": "缩小"
+    "shrink": "缩小",
+    "goTo": "前往"
   },
   "review": {
     "quick": {

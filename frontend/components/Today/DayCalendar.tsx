@@ -93,6 +93,8 @@ export interface DayCalendarProps {
     onOpenEvent?(event: CalendarEvent, date: string): void;
     // Called from the "too narrow" notice to give the calendar more room.
     onWiden?(): void;
+    // The task whose detail is open.
+    selectedUid?: string | null;
 }
 
 // Under this width per day, blocks are unreadable: the view says so.
@@ -112,6 +114,8 @@ interface LineBlockProps {
     onUnslot(uid: string): void;
     // The day the block sits on: drag ids stay unique across columns.
     date: string;
+    // Its detail is open: the block shows it was the one clicked.
+    selected?: boolean;
 }
 
 /**
@@ -131,6 +135,7 @@ const LineBlock: React.FC<LineBlockProps> = ({
     onMove,
     onUnslot,
     date,
+    selected = false,
 }) => {
     const { t } = useTranslation();
     const { uid, task } = line;
@@ -143,6 +148,12 @@ const LineBlock: React.FC<LineBlockProps> = ({
 
     const [preview, setPreview] = useState<number | null>(null);
     const detach = useRef<(() => void) | null>(null);
+    // A drag or a resize ends with a click on the block: it must not open
+    // the task. Only a plain click opens it.
+    const moved = useRef(false);
+    useEffect(() => {
+        if (isDragging) moved.current = true;
+    }, [isDragging]);
     useEffect(() => () => detach.current?.(), []);
 
     const resizable = kind === 'block';
@@ -160,6 +171,7 @@ const LineBlock: React.FC<LineBlockProps> = ({
     );
 
     const startResize = (event: React.PointerEvent) => {
+        moved.current = true;
         event.stopPropagation();
         event.preventDefault();
         const startY = event.clientY;
@@ -233,13 +245,23 @@ const LineBlock: React.FC<LineBlockProps> = ({
         <div
             ref={setNodeRef}
             data-testid={`${kind}-${uid}`}
+            data-calendar-block
             {...attributes}
             {...dragListeners}
             role="group"
             tabIndex={0}
             aria-label={label}
             onKeyDown={onKeyDown}
-            onClick={() => onOpen(line)}
+            onPointerDownCapture={() => {
+                moved.current = false;
+            }}
+            onClick={() => {
+                if (moved.current) {
+                    moved.current = false;
+                    return;
+                }
+                onOpen(line);
+            }}
             className={`group absolute cursor-grab overflow-hidden rounded-md outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                 kind === 'appointment'
                     ? 'bg-surface-high text-surface-on'
@@ -248,7 +270,7 @@ const LineBlock: React.FC<LineBlockProps> = ({
                       : 'bg-primary-container text-primary-on-container'
             } ${line.done ? 'opacity-50' : ''} ${
                 isDragging ? 'z-30 opacity-80 shadow-lg' : 'z-20'
-            }`}
+            } ${selected ? 'shadow-md ring-2 ring-primary' : ''}`}
             style={{
                 ...style,
                 backgroundColor: kind === 'block' ? fill : undefined,
@@ -318,6 +340,7 @@ interface DayColumnProps {
     onMove(date: string, uid: string, start: number): void;
     onUnslot(date: string, uid: string): void;
     onOpenEvent?(event: CalendarEvent, date: string): void;
+    selectedUid?: string | null;
 }
 
 /** The blocks of one day; the lane is the drop target of that day. */
@@ -333,6 +356,7 @@ const DayColumn: React.FC<DayColumnProps> = ({
     onMove,
     onUnslot,
     onOpenEvent,
+    selectedUid,
 }) => {
     const { t } = useTranslation();
     const { date, lines, events, focus, now } = column;
@@ -474,6 +498,7 @@ const DayColumn: React.FC<DayColumnProps> = ({
                     onMove={(uid, start) => onMove(date, uid, start)}
                     onUnslot={(uid) => onUnslot(date, uid)}
                     date={date}
+                    selected={line.uid === selectedUid}
                 />
             ))}
 
@@ -492,6 +517,7 @@ const DayColumn: React.FC<DayColumnProps> = ({
                     onMove={(uid, start) => onMove(date, uid, start)}
                     onUnslot={(uid) => onUnslot(date, uid)}
                     date={date}
+                    selected={line.uid === selectedUid}
                 />
             ))}
 
@@ -562,6 +588,7 @@ const DayCalendar: React.FC<DayCalendarProps> = ({
     gridRef,
     onOpenEvent,
     onWiden,
+    selectedUid,
 }) => {
     const { t } = useTranslation();
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -751,6 +778,7 @@ const DayCalendar: React.FC<DayCalendarProps> = ({
                                 onMove={onMove}
                                 onUnslot={onUnslot}
                                 onOpenEvent={onOpenEvent}
+                                selectedUid={selectedUid}
                             />
                         ))}
                     </div>

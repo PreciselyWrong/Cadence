@@ -4983,7 +4983,8 @@
     "subtasks": "Podzadania",
     "loadError": "Nie udało się wczytać tego zadania.",
     "expand": "Powiększ",
-    "shrink": "Zmniejsz"
+    "shrink": "Zmniejsz",
+    "goTo": "Przejdź do"
   },
   "review": {
     "quick": {

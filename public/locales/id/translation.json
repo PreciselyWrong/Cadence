@@ -4941,7 +4941,8 @@
     "subtasks": "Subtugas",
     "loadError": "Tugas ini tidak dapat dimuat.",
     "expand": "Perbesar",
-    "shrink": "Perkecil"
+    "shrink": "Perkecil",
+    "goTo": "Buka"
   },
   "review": {
     "quick": {

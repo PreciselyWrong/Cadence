@@ -4951,7 +4951,8 @@
     "subtasks": "Sous-tâches",
     "loadError": "Impossible de charger cette tâche.",
     "expand": "Agrandir",
-    "shrink": "Réduire"
+    "shrink": "Réduire",
+    "goTo": "Aller à"
   },
   "review": {
     "quick": {

@@ -4948,7 +4948,8 @@
     "subtasks": "Sottoattività",
     "loadError": "Impossibile caricare questa attività.",
     "expand": "Ingrandisci",
-    "shrink": "Riduci"
+    "shrink": "Riduci",
+    "goTo": "Vai a"
   },
   "review": {
     "quick": {

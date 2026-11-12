@@ -4983,7 +4983,8 @@
     "subtasks": "Podnaloge",
     "loadError": "Te naloge ni bilo mogoče naložiti.",
     "expand": "Povečaj",
-    "shrink": "Pomanjšaj"
+    "shrink": "Pomanjšaj",
+    "goTo": "Pojdi na"
   },
   "review": {
     "quick": {

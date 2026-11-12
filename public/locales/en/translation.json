@@ -5007,7 +5007,8 @@
     "subtasks": "Subtasks",
     "loadError": "Could not load this task.",
     "expand": "Expand",
-    "shrink": "Shrink"
+    "shrink": "Shrink",
+    "goTo": "Go to"
   },
   "review": {
     "quick": {

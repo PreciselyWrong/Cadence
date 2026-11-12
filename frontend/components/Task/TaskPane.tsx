@@ -1,10 +1,12 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
     ArrowTopRightOnSquareIcon,
     ArrowsPointingInIcon,
     ArrowsPointingOutIcon,
+    FolderIcon,
+    TagIcon,
     XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { Task } from '../../entities/Task';
@@ -15,6 +17,7 @@ import {
     useTaskPane,
 } from '../../contexts/TaskPaneContext';
 import { useIsMinimal } from '../../hooks/useUiDensity';
+import { createProjectUrl, createTagUrl } from '../../utils/slugUtils';
 import TaskDecisionRow from '../Review/TaskDecisionRow';
 import PostponementHistory from '../Review/PostponementHistory';
 import { useTaskEditor } from './useTaskEditor';
@@ -109,6 +112,28 @@ const TaskPane: React.FC<TaskPaneProps> = ({ placement = 'side' }) => {
         return () => document.removeEventListener('keydown', onKeyDown);
     }, [openTaskUid, closeTask]);
 
+    // A click outside the floating sheet closes it, except on a task row or
+    // a calendar block (they open another task or toggle this one) and on
+    // menus and dialogs drawn in portals.
+    const sheetRef = useRef<HTMLElement | null>(null);
+    useEffect(() => {
+        if (!openTaskUid || placement !== 'bottom') return;
+        const onPointerDown = (event: PointerEvent) => {
+            const target = event.target as Element | null;
+            if (!target || sheetRef.current?.contains(target)) return;
+            if (
+                target.closest(
+                    '[data-task-row],[data-calendar-block],[role="menu"],[role="dialog"],[role="listbox"]'
+                )
+            ) {
+                return;
+            }
+            closeTask();
+        };
+        document.addEventListener('pointerdown', onPointerDown);
+        return () => document.removeEventListener('pointerdown', onPointerDown);
+    }, [openTaskUid, placement, closeTask]);
+
     // The editor keeps its own copy of the task; rows learn of each save
     const handleSaved = useCallback((saved: Task) => {
         window.dispatchEvent(
@@ -125,11 +150,15 @@ const TaskPane: React.FC<TaskPaneProps> = ({ placement = 'side' }) => {
 
     const fullPagePath = `/task/${encodeURIComponent(openTaskUid)}`;
     const floating = placement === 'bottom';
+    // Jump to the task's project or tag: their pages list the other tasks.
+    const jumpClass =
+        'inline-flex h-7 max-w-[14rem] items-center gap-1.5 rounded-lg bg-gray-100 px-2.5 text-sm text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700';
     const iconButton =
         'rounded-md p-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100';
 
     return (
         <aside
+            ref={sheetRef}
             aria-label={t('taskPane.label', 'Task details')}
             className={`flex min-h-0 flex-col bg-white dark:bg-gray-900 max-md:fixed max-md:inset-0 max-md:z-40 md:flex-shrink-0 ${
                 floating
@@ -165,6 +194,42 @@ const TaskPane: React.FC<TaskPaneProps> = ({ placement = 'side' }) => {
                         <ArrowTopRightOnSquareIcon className="h-4 w-4" />
                         {t('taskPane.openFullPage', 'Open full page')}
                     </Link>
+                )}
+                {task && (
+                    <nav
+                        aria-label={t('taskPane.goTo', 'Go to')}
+                        className="ml-auto flex min-w-0 flex-wrap items-center justify-end gap-1.5"
+                    >
+                        {task.Project?.uid && task.Project.name && (
+                            <Link
+                                to={createProjectUrl({
+                                    uid: task.Project.uid,
+                                    name: task.Project.name,
+                                })}
+                                className={jumpClass}
+                            >
+                                <FolderIcon className="h-4 w-4 shrink-0" />
+                                <span className="truncate">
+                                    {task.Project.name}
+                                </span>
+                            </Link>
+                        )}
+                        {(task.tags ?? []).slice(0, 3).map((tag) =>
+                            tag.uid ? (
+                                <Link
+                                    key={tag.uid}
+                                    to={createTagUrl({
+                                        uid: tag.uid,
+                                        name: tag.name,
+                                    })}
+                                    className={jumpClass}
+                                >
+                                    <TagIcon className="h-4 w-4 shrink-0" />
+                                    <span className="truncate">{tag.name}</span>
+                                </Link>
+                            ) : null
+                        )}
+                    </nav>
                 )}
                 <button
                     type="button"

@@ -1169,6 +1169,7 @@ const NewToday: React.FC = () => {
             columns={columns}
             gridRef={gridRef}
             header={calendarHeader}
+            selectedUid={openTaskUid}
             onWiden={() => pane.update(PANE_MIN, true)}
             onToggle={toggleLine}
             onOpen={openLine}

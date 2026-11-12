@@ -4941,7 +4941,8 @@
     "subtasks": "Alt görevler",
     "loadError": "Bu görev yüklenemedi.",
     "expand": "Büyüt",
-    "shrink": "Küçült"
+    "shrink": "Küçült",
+    "goTo": "Git"
   },
   "review": {
     "quick": {

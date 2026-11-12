@@ -4941,7 +4941,8 @@
     "subtasks": "サブタスク",
     "loadError": "このタスクを読み込めませんでした。",
     "expand": "拡大",
-    "shrink": "縮小"
+    "shrink": "縮小",
+    "goTo": "移動"
   },
   "review": {
     "quick": {

@@ -4948,7 +4948,8 @@
     "subtasks": "Subtarefas",
     "loadError": "Não foi possível carregar esta tarefa.",
     "expand": "Ampliar",
-    "shrink": "Reduzir"
+    "shrink": "Reduzir",
+    "goTo": "Ir para"
   },
   "review": {
     "quick": {
