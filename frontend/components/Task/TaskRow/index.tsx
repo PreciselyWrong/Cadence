@@ -585,15 +585,24 @@ const TaskRow: React.FC<TaskRowProps> = ({
             }`}
         >
             <div
-                className={`rounded-lg shadow-sm ${
-                    isPaneOpen
-                        ? 'bg-blue-50 dark:bg-blue-950/40'
-                        : 'bg-white dark:bg-gray-900'
-                } relative overflow-visible transition-colors duration-200 ease-in-out hover:ring-1 hover:ring-gray-200 dark:hover:ring-gray-700 [.task-sheet_&]:rounded-[10px] [.task-sheet_&]:bg-transparent [.task-sheet_&]:shadow-none [.task-sheet_&]:border-l-0 [.task-sheet_&]:ring-0 [.task-sheet_&]:hover:ring-0 dark:[.task-sheet_&]:bg-transparent ${priorityBorderClass} ${
-                    isExpanded
-                        ? 'ring-1 ring-blue-400/70 dark:ring-blue-600/70'
-                        : ''
-                } ${isAnimatingOut ? 'opacity-0' : 'opacity-100'}`}
+                className={
+                    isMinimal
+                        ? // As Today's line: no card, no coloured edge (the
+                          // check carries a high priority), the open task
+                          // on a raised surface.
+                          `relative overflow-visible rounded-xl transition-colors duration-150 ${
+                              isPaneOpen
+                                  ? 'bg-surface-highest'
+                                  : 'hover:bg-surface-high/60'
+                          } ${
+                              isExpanded ? 'ring-1 ring-primary/50' : ''
+                          } ${isAnimatingOut ? 'opacity-0' : 'opacity-100'}`
+                        : `rounded-lg shadow-sm bg-white dark:bg-gray-900 relative overflow-visible transition-colors duration-200 ease-in-out hover:ring-1 hover:ring-gray-200 dark:hover:ring-gray-700 [.task-sheet_&]:rounded-[10px] [.task-sheet_&]:bg-transparent [.task-sheet_&]:shadow-none [.task-sheet_&]:border-l-0 [.task-sheet_&]:ring-0 [.task-sheet_&]:hover:ring-0 dark:[.task-sheet_&]:bg-transparent ${priorityBorderClass} ${
+                              isExpanded
+                                  ? 'ring-1 ring-blue-400/70 dark:ring-blue-600/70'
+                                  : ''
+                          } ${isAnimatingOut ? 'opacity-0' : 'opacity-100'}`
+                }
             >
                 <TaskRowCollapsed
                     task={displayTask}
@@ -637,6 +646,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
                     onContextMenu={
                         isMinimal && task.uid ? openContextMenu : undefined
                     }
+                    selected={isPaneOpen}
                 />
 
                 {panelMounted && (

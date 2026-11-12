@@ -13,6 +13,7 @@ import {
     ChatBubbleLeftIcon,
     NoSymbolIcon,
     EllipsisVerticalIcon,
+    EllipsisHorizontalIcon,
     PencilIcon,
     TrashIcon,
     MapPinIcon,
@@ -65,6 +66,10 @@ import PriorityBadge, {
 import { openTaskPanel } from '../../../store/taskPanelStore';
 import { ACCENT, accentVars } from '../../../constants/colorPalette';
 import { useTagColor } from '../../../utils/tagColor';
+import TaskChip from '../../Shared/task/TaskChip';
+import TaskNotePreview from '../../Shared/task/TaskNotePreview';
+import { dueDayLabel, isDueLate } from '../../Shared/task/dueLabel';
+import { ROW_GROUP, rowMenuClass } from '../../Shared/task/rowMenu';
 
 interface TaskRowCollapsedProps {
     task: Task;
@@ -97,6 +102,8 @@ interface TaskRowCollapsedProps {
     onActionsMenuOpenChange?: (open: boolean) => void;
     // Right click on a minimal row, when it is not expanded.
     onContextMenu?: (e: React.MouseEvent) => void;
+    // Its task is open in the sheet: the minimal row shows its menu.
+    selected?: boolean;
 }
 
 // In quiet-sheet lists the card's colored edge is hidden, so priority shows
@@ -182,8 +189,9 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
     onTogglePin,
     onActionsMenuOpenChange,
     onContextMenu,
+    selected = false,
 }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const tagColor = useTagColor();
     const isMinimal = useIsMinimal();
     const showDescription = useShowTaskDescription();
@@ -252,7 +260,12 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
         }
     };
 
-    const formatDue = (d: string) => formatDueLabel(d, t);
+    const today = getTodayDateString();
+    // Minimal rows name the day as Today does ("Today", "Tue 1 Dec").
+    const formatDue = (d: string) =>
+        isMinimal
+            ? dueDayLabel(d, today, i18n?.language ?? 'en', t)
+            : formatDueLabel(d, t);
     const dueTime = task.due_has_time && task.due_time ? task.due_time : '';
     // A column that already names the day shows only the time of day.
     const dueText = !task.due_date
@@ -368,7 +381,14 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
         }
     };
 
-    const dueClass = dueToneClass(task);
+    // Minimal: the due day is a chip like Today's, late in the warning tone.
+    const dueClass = isMinimal
+        ? `inline-flex h-5 items-center rounded-md px-1.5 tabular-nums ${
+              isDueLate(task.due_date, today, isTaskCompleted(task.status))
+                  ? 'bg-warning-container/70 text-warning'
+                  : 'bg-surface-high text-surface-on-variant'
+          }`
+        : dueToneClass(task);
     const isRecurring =
         (!!task.recurrence_type && task.recurrence_type !== 'none') ||
         !!task.recurring_parent_id;
@@ -450,20 +470,17 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
             !compact && task.tags && task.tags.length > 0 ? (
                 <span className="flex items-center gap-1.5">
                     {task.tags.slice(0, 2).map((tag) => (
-                        <span
-                            key={tag.uid || tag.name}
-                            className="inline-flex items-center gap-0.5"
-                        >
+                        <TaskChip key={tag.uid || tag.name}>
                             <EntityIcon icon={tag.icon} className="h-3 w-3" />
-                            {`#${tag.name}`}
-                        </span>
+                            <span className="truncate">{`#${tag.name}`}</span>
+                        </TaskChip>
                     ))}
                     {task.tags.length > 2 && (
-                        <span>
+                        <TaskChip>
                             {t('tasks.moreTags', '+{{count}}', {
                                 count: task.tags.length - 2,
                             })}
-                        </span>
+                        </TaskChip>
                     )}
                 </span>
             ) : null,
@@ -472,7 +489,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                 <Link
                     to={projectHref}
                     onClick={stop}
-                    className="inline-flex max-w-[10rem] items-center gap-0.5 hover:underline"
+                    className="inline-flex h-5 max-w-[12rem] items-center gap-1 rounded-md bg-surface-high px-1.5 text-surface-on-variant hover:text-surface-on"
                 >
                     <EntityIcon icon={project!.icon} className="h-3 w-3" />
                     <span className="truncate">{project!.name}</span>
@@ -505,7 +522,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
             {...(isMinimal ? { [MINIMAL_ROW_ATTRIBUTE]: '' } : {})}
             className={
                 isMinimal
-                    ? 'group flex items-center gap-3 px-4 py-2 min-h-[40px] cursor-pointer'
+                    ? `group ${ROW_GROUP} flex items-start gap-3 px-3 py-2 min-h-[40px] cursor-default rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-primary/60`
                     : `group flex items-center gap-3 px-4 ${
                           hasMeta ? 'py-2' : 'py-3'
                       } cursor-pointer`
@@ -532,10 +549,20 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                 }
             }}
         >
-            {isMinimal && subtasksToggle}
+            {isMinimal && subtasksToggle && (
+                <span className="mt-0.5 flex h-6 items-center">
+                    {subtasksToggle}
+                </span>
+            )}
             {showCheck && onToggleCompletion && (
                 <div
-                    className={hasMeta && !isMinimal ? 'self-start mt-0.5' : ''}
+                    className={
+                        isMinimal
+                            ? 'pt-0.5'
+                            : hasMeta
+                              ? 'self-start mt-0.5'
+                              : ''
+                    }
                 >
                     <TaskCheckCircle
                         task={task}
@@ -544,16 +571,12 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                 </div>
             )}
             <div
-                className={
-                    isMinimal
-                        ? 'flex flex-1 min-w-0 flex-wrap items-center gap-x-3 gap-y-0.5'
-                        : 'flex flex-1 min-w-0 flex-col'
-                }
+                className="flex flex-1 min-w-0 flex-col"
                 data-testid={isMinimal ? 'task-row-minimal-line' : undefined}
             >
                 <div
                     className={`flex items-center gap-1.5 min-w-0 ${
-                        isMinimal ? 'flex-1 basis-40' : ''
+                        isMinimal ? 'min-h-6' : ''
                     }`}
                 >
                     {task.pinned && (
@@ -610,7 +633,11 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                         </div>
                     ) : (
                         <span
-                            className={`text-[15px] font-normal tracking-tight ${
+                            className={`${
+                                isMinimal
+                                    ? 'text-body font-medium leading-6'
+                                    : 'text-[15px] font-normal tracking-tight'
+                            } ${
                                 isMinimal
                                     ? 'min-w-0 truncate'
                                     : condenseStatusControl
@@ -618,8 +645,12 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                                       : 'max-sm:line-clamp-2 max-sm:break-words sm:truncate'
                             } ${
                                 isTaskCompleted(task.status)
-                                    ? 'text-gray-500 dark:text-gray-400 line-through'
-                                    : 'text-gray-900 dark:text-gray-200'
+                                    ? isMinimal
+                                        ? 'text-surface-on-variant line-through'
+                                        : 'text-gray-500 dark:text-gray-400 line-through'
+                                    : isMinimal
+                                      ? 'text-surface-on'
+                                      : 'text-gray-900 dark:text-gray-200'
                             } ${sheetTitleWeightClass(
                                 toPriorityLevel(task.priority),
                                 isTaskCompleted(task.status)
@@ -696,7 +727,13 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                     )}
                 </div>
 
-                {descriptionText && (
+                {isMinimal && descriptionText && task.note && (
+                    <span data-testid="task-row-description">
+                        <TaskNotePreview note={task.note} className="mt-1" />
+                    </span>
+                )}
+
+                {!isMinimal && descriptionText && (
                     <p
                         className={`line-clamp-2 whitespace-pre-line text-xs leading-relaxed text-gray-500 dark:text-gray-400 ${
                             isMinimal ? 'w-full basis-full' : 'mt-0.5'
@@ -710,8 +747,12 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                 {/* The chips may give way on a narrow row: they clip from
                     the left so the time at the end stays readable, and the
                     row never grows wider than the list. */}
+                {/* The details sit under the title, as on Today. */}
                 {isMinimal && (
-                    <div className="flex min-w-0 max-w-[60%] shrink justify-end items-center gap-2 overflow-hidden whitespace-nowrap text-xs text-gray-600 dark:text-gray-300 sm:max-w-none">
+                    <div
+                        className="mt-1 flex min-w-0 flex-wrap items-center gap-1.5 text-xs text-surface-on-variant empty:hidden"
+                        data-testid="task-row-meta"
+                    >
                         {rowFields
                             .filter((field) => field.visible)
                             .map((field) => (
@@ -832,12 +873,18 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                         title={t('common.moreActions', 'More actions')}
                         data-testid="task-actions-menu-button"
                         className={`flex items-center justify-center rounded-md p-1 max-sm:-m-2.5 max-sm:min-h-[44px] max-sm:min-w-[44px] text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-opacity focus-visible:opacity-100 ${
-                            isActionsMenuOpen
-                                ? 'opacity-100'
-                                : '[@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100'
+                            isMinimal
+                                ? rowMenuClass(selected || isActionsMenuOpen)
+                                : isActionsMenuOpen
+                                  ? 'opacity-100'
+                                  : '[@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100'
                         }`}
                     >
-                        <EllipsisVerticalIcon className="h-4 w-4" />
+                        {isMinimal ? (
+                            <EllipsisHorizontalIcon className="h-5 w-5" />
+                        ) : (
+                            <EllipsisVerticalIcon className="h-4 w-4" />
+                        )}
                     </button>
                     {isActionsMenuOpen && (
                         <div

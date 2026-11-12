@@ -12,12 +12,20 @@ const shiftDay = (day: string, by: number): string => {
     return `${date.getFullYear()}-${mm}-${dd}`;
 };
 
-export const shortDayLabel = (day: string, language: string): string => {
+// The year shows only when it is not the given one (this year).
+export const shortDayLabel = (
+    day: string,
+    language: string,
+    currentYear?: number
+): string => {
     const [y, m, d] = day.split('-').map(Number);
     return new Intl.DateTimeFormat(language, {
         weekday: 'short',
         day: 'numeric',
         month: 'short',
+        ...(currentYear !== undefined && y !== currentYear
+            ? { year: 'numeric' as const }
+            : {}),
     }).format(new Date(y, m - 1, d));
 };
 
@@ -31,7 +39,7 @@ export const dueDayLabel = (
     if (day === today) return t('tasks.today', 'Today');
     if (day === shiftDay(today, 1)) return t('today.tomorrow', 'Tomorrow');
     if (day === shiftDay(today, -1)) return t('today.yesterday', 'Yesterday');
-    return shortDayLabel(day, language);
+    return shortDayLabel(day, language, Number(today.slice(0, 4)));
 };
 
 export const isDueLate = (

@@ -18,6 +18,12 @@ describe('dueDayLabel', () => {
             'Tue 1 Dec'
         );
     });
+
+    it('adds the year for another year', () => {
+        expect(dueDayLabel('2030-01-15', '2026-11-12', 'en-GB', t)).toMatch(
+            /2030/
+        );
+    });
 });
 
 describe('isDueLate', () => {
