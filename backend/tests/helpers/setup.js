@@ -49,6 +49,7 @@ const CLEANUP_TABLES = [
     'habit_groups',
     'tasks_tags',
     'notes_tags',
+    'link_previews',
     'link_exclusions',
     'links_tags',
     'links',
