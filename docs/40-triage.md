@@ -39,6 +39,10 @@ A link still to read whose review day (`review_at`) has come is a card `type: li
 
 The MCP tool `propose_link_slot` (`link_uids`, `title`, `reason`, `date`, `start_minute?`, `duration_minutes?`) stores a proposal for related links: the only planning an AI may suggest. It appears in the queue as a `link_slot` item (`action: accept_slot`, details: the links). `POST /triage/slots/:id/accept` creates the task, with the addresses in its note, and places it in that day's plan; `POST /triage/slots/:id/refuse` forgets it. Nothing happens before that tap. A slot whose day has passed is no longer shown.
 
+## Mail cards (planned)
+
+Mail that asks for an action, proposed by the mail-sorting agent and decided here: `docs/43-mail-triage.md` (spec, not built).
+
 ## Actions
 
 `rename` (`{ name }`), `split` (`{ subtasks: [names] }`), `set_due` (`{ due_date }`), `done`, `cancel`, `delete`, `reclass` (`{ project_id?, area_uid?, tags? }`), `to_note`, `to_project`, `to_habit`. Every action runs through the MCP tools (`modules/triage/actions.js`), which hold the rules of each write. A conversion creates the new thing first, then deletes the task; it keeps the note (and the tags, for a note or a project) but not the due date or the comments.

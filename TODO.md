@@ -72,6 +72,8 @@ Branche `fix/note-quickadd-focus-c7e743d5`.
 
 ## Next
 
+- Cartes « Mail » dans « À trier » (web et Android)
+  Spec : `docs/43-mail-triage.md`. L'agent de tri des mails propose par MCP (`propose_mail`) les fils qui demandent une action ; on décide dans « À trier » : Tâche, Répondre (brouillon dans Gmail), Plus tard, Ignorer, archivage Gmail optionnel par l'outil Gmail restreint. Pas de corps de mail stocké, pas d'envoi. Étapes : serveur (table `mail_items`, entité de synchro, outils MCP, route), carte web, carte Android + Room, consigne de l'agent dans Hermes. Vérif : voir « Checks once built » de la spec.
 - Web : reprendre la passe de soustraction Android du 2026-11-02 (`docs/fork/ANDROID-UX-NOTES.md`)
   Aujourd'hui sans bannière ni jauge sauf journée pleine, fin de journée en ligne après les tâches, un seul signal couleur par ligne, deux gestes par idée dans la Boîte, fiche terminée par sa case, Projets et Étiquettes en lignes sans « 0 », surfaces neutres. Vérif : captures avant/après à 390 px et en bureau.
 - Résumé matinal
