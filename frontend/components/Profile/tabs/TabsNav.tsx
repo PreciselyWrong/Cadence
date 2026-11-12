@@ -44,7 +44,7 @@ export const groupTabs = (
 
 const Badge: React.FC<{ text?: string }> = ({ text }) =>
     text ? (
-        <span className="ml-2 rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+        <span className="ml-2 rounded-full bg-surface-high px-2 py-0.5 text-xs font-medium text-surface-on-variant">
             {text}
         </span>
     ) : null;
@@ -122,10 +122,10 @@ const TabsNav: React.FC<TabsNavProps> = ({ tabs, activeTab, onChange }) => {
             <div className="hidden lg:block space-y-4">
                 {groups.map((group) => (
                     <section key={group.id}>
-                        <h3 className="px-4 pb-1 text-xs font-medium text-gray-500 dark:text-gray-400">
+                        <h3 className="px-3 pb-1 text-xs font-medium text-surface-on-variant">
                             {group.label}
                         </h3>
-                        <div className="flex flex-col gap-1">
+                        <div className="flex flex-col gap-0.5">
                             {group.tabs.map((tab) => (
                                 <button
                                     key={tab.id}
@@ -136,10 +136,10 @@ const TabsNav: React.FC<TabsNavProps> = ({ tabs, activeTab, onChange }) => {
                                             ? 'page'
                                             : undefined
                                     }
-                                    className={`flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors whitespace-nowrap w-full ${
+                                    className={`flex h-9 w-full items-center whitespace-nowrap rounded-lg px-3 text-body-m font-medium transition-colors ${
                                         activeTab === tab.id
-                                            ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
-                                            : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700/50'
+                                            ? 'bg-surface-highest text-surface-on'
+                                            : 'text-surface-on-variant hover:bg-surface-high hover:text-surface-on'
                                     }`}
                                 >
                                     <span className="mr-3 flex-shrink-0">

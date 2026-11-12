@@ -6,6 +6,7 @@ import React, {
     useCallback,
 } from 'react';
 import { useTranslation } from 'react-i18next';
+import PageHeader from '../Shared/ui/PageHeader';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getLocalesPath, getApiPath } from '../../config/paths';
 import { useStore } from '../../store/useStore';
@@ -1582,17 +1583,15 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
         <>
             {reverifyModal}
             <div
-                className="w-full p-4 sm:p-6"
+                className="mx-auto w-full max-w-6xl pb-8"
                 key={`profile-settings-${updateKey}`}
             >
-                <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4 sm:mb-6">
-                    {t('profile.title')}
-                </h2>
+                <PageHeader title={t('profile.title')} />
 
-                <div className="flex flex-col lg:flex-row gap-4 sm:gap-8">
+                <div className="flex flex-col gap-4 px-6 max-sm:px-4 lg:flex-row sm:gap-8">
                     {/* Left Sidebar */}
-                    <aside className="w-full lg:w-80 lg:flex-shrink-0">
-                        <div className="lg:sticky lg:top-6 bg-white dark:bg-gray-900 rounded-lg shadow-md p-4">
+                    <aside className="w-full lg:w-64 lg:flex-shrink-0">
+                        <div className="lg:sticky lg:top-6">
                             <TabsNav
                                 tabs={visibleTabs}
                                 activeTab={activeTab}
@@ -1603,7 +1602,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 
                     {/* Main Content */}
                     <div className="flex-1 min-w-0">
-                        <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 sm:p-6">
+                        <div>
                             <form onSubmit={handleSubmit} className="space-y-8">
                                 <SettingsErrorBoundary resetKey={activeTab}>
                                     <GeneralTab
