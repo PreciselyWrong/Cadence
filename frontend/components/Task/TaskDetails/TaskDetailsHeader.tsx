@@ -292,7 +292,7 @@ const TaskDetailsHeader: React.FC<TaskDetailsHeaderProps> = ({
                                 }}
                                 onBlur={handleTitleBlur}
                             >
-                                <div className="text-2xl font-normal text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 border-2 border-blue-500 dark:border-blue-400 rounded px-2 py-1 w-full">
+                                <div className="w-full rounded-lg bg-surface-high/70 px-2 py-1 text-headline font-extrabold tracking-tight text-surface-on ring-2 ring-primary/40">
                                     <QuickCaptureInput
                                         mode="edit"
                                         bare
@@ -316,7 +316,7 @@ const TaskDetailsHeader: React.FC<TaskDetailsHeaderProps> = ({
                                 <div className="flex items-center gap-3 flex-wrap min-w-0">
                                     <h2
                                         onClick={handleStartTitleEdit}
-                                        className="text-2xl font-normal text-gray-900 dark:text-gray-100 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded px-2 py-1 -mx-2 transition-colors truncate min-w-0"
+                                        className="-mx-2 min-w-0 cursor-pointer truncate rounded-lg px-2 py-1 text-headline font-extrabold tracking-tight text-surface-on transition-colors hover:bg-surface-high/60"
                                         title={t(
                                             'task.clickToEditTitle',
                                             'Click to edit title'

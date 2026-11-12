@@ -119,25 +119,19 @@ const renderPage = () =>
         </ToastProvider>
     );
 
-describe('AreaDetails header stats', () => {
-    it('shows the total task count (active + completed), matching the tasks list below', async () => {
+describe('AreaDetails counts', () => {
+    // The counts live on the tabs only (no second stat line in the header),
+    // and a zero count is not shown.
+    it('counts every task of the area (active + completed) on the Tasks tab', async () => {
         renderPage();
 
-        await waitFor(() => {
-            expect(screen.getByText('3 tasks')).toBeInTheDocument();
-        });
-
-        expect(screen.getByText('2 goals')).toBeInTheDocument();
-    });
-
-    it('links the projects stat to the projects list filtered by this area', async () => {
-        renderPage();
-
-        const projectsLink = await screen.findByText('2 projects');
-        expect(projectsLink.closest('a')).toHaveAttribute(
-            'href',
-            '/projects?area=areauid1'
-        );
+        expect(
+            await screen.findByRole('tab', { name: /Tasks\s*3/ })
+        ).toBeInTheDocument();
+        expect(
+            screen.getByRole('tab', { name: /Goals\s*2/ })
+        ).toBeInTheDocument();
+        expect(screen.queryByText('3 tasks')).toBeNull();
     });
 });
 
@@ -178,6 +172,8 @@ describe('AreaDetails leaving a shared area', () => {
         await waitFor(() =>
             expect(mockLeaveShare).toHaveBeenCalledWith('area', 'areauid1')
         );
-        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/areas'));
+        await waitFor(() =>
+            expect(mockNavigate).toHaveBeenCalledWith('/areas')
+        );
     });
 });
