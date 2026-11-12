@@ -610,12 +610,6 @@ const TagDetails: React.FC = () => {
                 tasksCount={tasks.length}
                 notesCount={notes.length}
                 projectsCount={projects.length}
-                doneCount={
-                    tasks.filter((task) =>
-                        [2, 3, 'done', 'archived'].includes(task.status as any)
-                    ).length
-                }
-                totalCount={tasks.length}
                 editButtonRef={editButtonRef}
                 onSearchToggle={() => setIsSearchExpanded((v) => !v)}
                 onTogglePin={handleTogglePin}

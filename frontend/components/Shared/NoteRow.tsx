@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { DocumentTextIcon } from '@heroicons/react/24/outline';
 import { Note } from '../../entities/Note';
 import ListRow, { ColorDot } from './ui/ListRow';
+import { MenuEntry } from './ui/Menu';
 import { useSidebarDrop } from '../Sidebar/sidebarDrop';
 
 // The first words of a note, without Markdown marks, for its row.
@@ -34,7 +35,10 @@ export const notePath = (note: Note): string => {
  * One note in a list: its colour (or a note icon), the title, then its first
  * line and project in grey. Drags onto a sidebar project or tag like a card.
  */
-const NoteRow: React.FC<{ note: Note }> = ({ note }) => {
+const NoteRow: React.FC<{ note: Note; menu?: MenuEntry[] }> = ({
+    note,
+    menu,
+}) => {
     const { t } = useTranslation();
     const { nativeSource } = useSidebarDrop();
     const project = note.project || note.Project;
@@ -56,6 +60,7 @@ const NoteRow: React.FC<{ note: Note }> = ({ note }) => {
                 }
                 title={note.title || t('notes.untitled', 'Untitled Note')}
                 meta={meta || undefined}
+                menu={menu}
             />
         </div>
     );
