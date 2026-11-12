@@ -509,7 +509,7 @@
     "assignedTo": "Tilldelat till",
     "subtasks": "Deluppgifter",
     "openFullPage": "Öppna fullständig vy",
-    "openPanel": "Öppna i sidopanelen",
+    "openPanel": "Öppna detaljer",
     "quickEdit": {
       "setPriority": "Ange prioritet",
       "setDueDate": "Ange förfallodatum"

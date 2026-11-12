@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Task } from '../../entities/Task';
 import { fetchTasks } from '../../utils/tasksService';
 import { decideTask, TaskDecision } from '../../utils/reviewService';
-import { openTaskPanel } from '../../store/taskPanelStore';
+import { useTaskPane } from '../../contexts/TaskPaneContext';
 import { useToast } from '../Shared/ToastContext';
 
 const chip =
@@ -23,6 +23,7 @@ const UnsortedTasks: React.FC = () => {
     const [busy, setBusy] = useState<string | null>(null);
     const [picking, setPicking] = useState<string | null>(null);
     const [showAll, setShowAll] = useState(false);
+    const { openTaskUid, openTask, closeTask } = useTaskPane();
 
     const load = useCallback(
         () =>
@@ -69,13 +70,21 @@ const UnsortedTasks: React.FC = () => {
                     return (
                         <li
                             key={task.uid}
-                            className="rounded-xl px-3 py-2 hover:bg-surface-high/60"
+                            data-task-row=""
+                            className={`rounded-xl px-3 py-2 ${
+                                openTaskUid === task.uid
+                                    ? 'bg-surface-highest'
+                                    : 'hover:bg-surface-high/60'
+                            }`}
                         >
                             <button
                                 type="button"
                                 className="block w-full truncate text-left text-body font-medium leading-6 text-surface-on outline-none focus-visible:underline"
                                 onClick={() =>
-                                    task.uid && openTaskPanel(task.uid)
+                                    task.uid &&
+                                    (openTaskUid === task.uid
+                                        ? closeTask()
+                                        : openTask(task.uid))
                                 }
                             >
                                 {task.name}

@@ -28,8 +28,6 @@ import {
 import { updateProject } from '../../utils/projectsService';
 import { useToast } from '../Shared/ToastContext';
 import { useTaskPane } from '../../contexts/TaskPaneContext';
-import { openTaskPanel } from '../../store/taskPanelStore';
-import { useIsMinimal } from '../../hooks/useUiDensity';
 import DecisionChips, { DecisionOption } from './DecisionChips';
 import WeekStep from './WeekStep';
 import QuickReview from './QuickReview';
@@ -219,7 +217,6 @@ const ReviewPage: React.FC = () => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const { showErrorToast, showSuccessToast, showUndoToast } = useToast();
-    const isMinimal = useIsMinimal();
     const { openTask } = useTaskPane();
     const [step, setStepState] = useState<Step>(readStep);
     const [summary, setSummary] = useState<ReviewSummary | null>(null);
@@ -324,10 +321,8 @@ const ReviewPage: React.FC = () => {
 
     useEffect(refreshSummary, [refreshSummary]);
 
-    const openTaskDetails = (uid: string) => {
-        if (isMinimal) openTask(uid);
-        else openTaskPanel(uid);
-    };
+    // Every page opens a task in the same floating sheet.
+    const openTaskDetails = (uid: string) => openTask(uid);
 
     // Takes the row off at once, then runs the decision; a failed save puts
     // the row back where it was and says so.
@@ -822,7 +817,7 @@ const ReviewPage: React.FC = () => {
         const showTitle =
             !found || (around !== '' && around !== (found.link.note ?? ''));
         return (
-            <li key={key} className="py-2.5">
+            <li key={key} className="py-2.5" data-task-row="">
                 <div className="flex items-start gap-3">
                     <button
                         type="button"

@@ -519,7 +519,7 @@
     "assignedTo": "Przypisane do",
     "subtasks": "Podzadania",
     "openFullPage": "Otwórz pełny widok",
-    "openPanel": "Otwórz w panelu bocznym",
+    "openPanel": "Otwórz szczegóły",
     "quickEdit": {
       "setPriority": "Ustaw priorytet",
       "setDueDate": "Ustaw termin"

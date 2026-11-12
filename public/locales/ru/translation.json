@@ -519,7 +519,7 @@
     "assignedTo": "Назначено",
     "subtasks": "Подзадачи",
     "openFullPage": "Открыть полный вид",
-    "openPanel": "Открыть в боковой панели",
+    "openPanel": "Открыть подробности",
     "quickEdit": {
       "setPriority": "Задать приоритет",
       "setDueDate": "Задать срок"

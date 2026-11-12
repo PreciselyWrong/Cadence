@@ -509,7 +509,7 @@
     "assignedTo": "割り当て先",
     "subtasks": "サブタスク",
     "openFullPage": "全画面表示を開く",
-    "openPanel": "サイドパネルで開く",
+    "openPanel": "詳細を開く",
     "quickEdit": {
       "setPriority": "優先度を設定",
       "setDueDate": "期限日を設定"

@@ -211,7 +211,11 @@ const TaskRow: React.FC<TaskRowProps> = ({
     const fileBacked = isTodoMdTask(task);
     const canExpand = !disableExpand && !task.habit_mode && !!task.uid;
     const isMinimal = useIsMinimal();
-    const { openTask: openPane, openTaskUid } = useTaskPane();
+    const {
+        openTask: openPane,
+        closeTask: closePane,
+        openTaskUid,
+    } = useTaskPane();
     const isPaneOpen = isMinimal && !!task.uid && openTaskUid === task.uid;
     // Virtual occurrences of a recurring task share the parent's uid, so
     // expansion is keyed by the per-occurrence id when there is one.
@@ -295,9 +299,11 @@ const TaskRow: React.FC<TaskRowProps> = ({
 
     const handleActivate = () => {
         if (canExpand) {
-            // Minimal rows open the task in the right-hand pane instead.
+            // Minimal rows open the task in the floating sheet; a second
+            // click on the same row closes it.
             if (isMinimal) {
-                openPane(task.uid);
+                if (isPaneOpen) closePane();
+                else openPane(task.uid);
                 return;
             }
             toggle();

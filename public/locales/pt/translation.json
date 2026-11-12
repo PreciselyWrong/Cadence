@@ -510,7 +510,7 @@
     "assignedTo": "Atribuído a",
     "subtasks": "Subtarefas",
     "openFullPage": "Abrir visualização completa",
-    "openPanel": "Abrir no painel lateral",
+    "openPanel": "Abrir detalhes",
     "quickEdit": {
       "setPriority": "Definir prioridade",
       "setDueDate": "Definir data de vencimento"

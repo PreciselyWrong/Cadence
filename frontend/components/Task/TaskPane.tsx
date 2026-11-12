@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
-    ArrowTopRightOnSquareIcon,
     ArrowsPointingInIcon,
     ArrowsPointingOutIcon,
     FolderIcon,
@@ -16,7 +15,6 @@ import {
     TASK_UPDATED_EVENT,
     useTaskPane,
 } from '../../contexts/TaskPaneContext';
-import { useIsMinimal } from '../../hooks/useUiDensity';
 import { createProjectUrl, createTagUrl } from '../../utils/slugUtils';
 import { formatMinute } from '../DailyPlan/planUtils';
 import TaskDecisionRow from '../Review/TaskDecisionRow';
@@ -116,21 +114,18 @@ const TaskPaneBody: React.FC<TaskPaneBodyProps> = ({
     );
 };
 
-// The task's detail beside the list (minimal mode), or under the page where
-// the right side is taken (Today's calendar). Full width sheet below md.
-interface TaskPaneProps {
-    placement?: 'side' | 'bottom';
-}
-
-const TaskPane: React.FC<TaskPaneProps> = ({ placement = 'side' }) => {
+// The task's detail, on every page: a wide sheet floating over the lower
+// part of the page (Today, Plan and every list alike), "Expand" fills the
+// page; full screen below md. Opened by `?task=`; a click outside, Escape or
+// a second click on the same row closes it.
+const TaskPane: React.FC = () => {
     const { t, i18n } = useTranslation();
-    const isMinimal = useIsMinimal();
     const location = useLocation();
     const titleId = useId();
     const { openTaskUid, closeTask } = useTaskPane();
     const [task, setTask] = useState<Task | null>(null);
     const [loadFailed, setLoadFailed] = useState(false);
-    // The floating sheet (placement bottom) can fill the page instead.
+    // The sheet can fill the page instead.
     const [expanded, setExpanded] = useState(false);
 
     useEffect(() => {
@@ -153,11 +148,8 @@ const TaskPane: React.FC<TaskPaneProps> = ({ placement = 'side' }) => {
         };
     }, [openTaskUid]);
 
-    const floating = placement === 'bottom';
     const shown =
-        isMinimal &&
-        !!openTaskUid &&
-        canShowTaskPane(location.pathname, location.search);
+        !!openTaskUid && canShowTaskPane(location.pathname, location.search);
 
     useEffect(() => {
         if (!openTaskUid) return;
@@ -172,7 +164,7 @@ const TaskPane: React.FC<TaskPaneProps> = ({ placement = 'side' }) => {
     // element that opened it when it closes.
     const sheetRef = useRef<HTMLElement | null>(null);
     useEffect(() => {
-        if (!shown || !floating) return;
+        if (!shown) return;
         const opener =
             document.activeElement instanceof HTMLElement
                 ? document.activeElement
@@ -181,13 +173,13 @@ const TaskPane: React.FC<TaskPaneProps> = ({ placement = 'side' }) => {
         return () => {
             if (opener?.isConnected) opener.focus();
         };
-    }, [shown, floating]);
+    }, [shown]);
 
-    // A click outside the floating sheet closes it, except on a task row or
+    // A click outside the sheet closes it, except on a task row or
     // a calendar block (they open another task or toggle this one) and on
     // menus and dialogs drawn in portals.
     useEffect(() => {
-        if (!openTaskUid || placement !== 'bottom') return;
+        if (!openTaskUid) return;
         const onPointerDown = (event: PointerEvent) => {
             const target = event.target as Element | null;
             if (!target || sheetRef.current?.contains(target)) return;
@@ -202,7 +194,7 @@ const TaskPane: React.FC<TaskPaneProps> = ({ placement = 'side' }) => {
         };
         document.addEventListener('pointerdown', onPointerDown);
         return () => document.removeEventListener('pointerdown', onPointerDown);
-    }, [openTaskUid, placement, closeTask]);
+    }, [openTaskUid, closeTask]);
 
     // The editor keeps its own copy of the task; rows learn of each save
     const handleSaved = useCallback((saved: Task) => {
@@ -213,7 +205,6 @@ const TaskPane: React.FC<TaskPaneProps> = ({ placement = 'side' }) => {
 
     if (!shown || !openTaskUid) return null;
 
-    const fullPagePath = `/task/${encodeURIComponent(openTaskUid)}`;
     const planned = parsePlannedOn(location.search);
     const plannedLabel = planned
         ? t('taskPane.planned', 'Planned {{when}}', {
@@ -222,55 +213,37 @@ const TaskPane: React.FC<TaskPaneProps> = ({ placement = 'side' }) => {
         : null;
     // Jump to the task's project or tag: their pages list the other tasks.
     const jumpClass =
-        'inline-flex h-7 max-w-[14rem] items-center gap-1.5 rounded-lg bg-gray-100 px-2.5 text-sm text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700';
+        'inline-flex h-7 max-w-[14rem] items-center gap-1.5 rounded-lg bg-surface-high px-2.5 text-body-m text-surface-on hover:bg-surface-highest';
     const iconButton =
-        'rounded-md p-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100';
+        'rounded-lg p-1.5 text-surface-on-variant hover:bg-surface-high hover:text-surface-on';
 
     return (
         <aside
             ref={sheetRef}
-            role={floating ? 'dialog' : undefined}
-            aria-modal={floating ? 'false' : undefined}
-            aria-labelledby={floating ? titleId : undefined}
-            aria-label={
-                floating ? undefined : t('taskPane.label', 'Task details')
-            }
-            tabIndex={floating ? -1 : undefined}
-            className={`flex min-h-0 flex-col bg-white outline-none dark:bg-gray-900 max-md:fixed max-md:inset-0 max-md:z-40 md:flex-shrink-0 ${
-                floating
-                    ? // A sheet over the page: the page shows on the sides and below.
-                      `md:absolute md:inset-x-3 md:bottom-3 md:z-40 md:overflow-hidden md:rounded-2xl md:shadow-2xl md:ring-1 md:ring-black/10 dark:md:ring-white/10 ${
-                          expanded ? 'md:top-3' : 'md:h-[46%] md:min-h-[300px]'
-                      }`
-                    : 'border-l border-gray-200 dark:border-gray-800 md:w-[420px]'
+            role="dialog"
+            aria-modal="false"
+            aria-labelledby={titleId}
+            tabIndex={-1}
+            className={`flex min-h-0 flex-col bg-surface outline-none max-md:fixed max-md:inset-0 max-md:z-40 md:absolute md:inset-x-3 md:bottom-3 md:z-40 md:overflow-hidden md:rounded-2xl md:shadow-2xl md:ring-1 md:ring-black/10 dark:bg-surface-card dark:md:ring-white/10 ${
+                expanded ? 'md:top-3' : 'md:h-[46%] md:min-h-[300px]'
             }`}
         >
-            <div className="flex flex-shrink-0 items-center justify-between gap-2 border-b border-gray-200 px-4 py-2 dark:border-gray-800">
-                {floating ? (
-                    <button
-                        type="button"
-                        onClick={() => setExpanded((value) => !value)}
-                        aria-pressed={expanded}
-                        className="inline-flex items-center gap-1.5 rounded-md px-1.5 py-1 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100"
-                    >
-                        {expanded ? (
-                            <ArrowsPointingInIcon className="h-4 w-4" />
-                        ) : (
-                            <ArrowsPointingOutIcon className="h-4 w-4" />
-                        )}
-                        {expanded
-                            ? t('taskPane.shrink', 'Shrink')
-                            : t('taskPane.expand', 'Expand')}
-                    </button>
-                ) : (
-                    <Link
-                        to={fullPagePath}
-                        className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
-                    >
-                        <ArrowTopRightOnSquareIcon className="h-4 w-4" />
-                        {t('taskPane.openFullPage', 'Open full page')}
-                    </Link>
-                )}
+            <div className="flex flex-shrink-0 items-center justify-between gap-2 border-b border-outline-variant/60 px-4 py-2">
+                <button
+                    type="button"
+                    onClick={() => setExpanded((value) => !value)}
+                    aria-pressed={expanded}
+                    className="inline-flex items-center gap-1.5 rounded-lg px-1.5 py-1 text-body-m text-surface-on-variant hover:bg-surface-high hover:text-surface-on"
+                >
+                    {expanded ? (
+                        <ArrowsPointingInIcon className="h-4 w-4" />
+                    ) : (
+                        <ArrowsPointingOutIcon className="h-4 w-4" />
+                    )}
+                    {expanded
+                        ? t('taskPane.shrink', 'Shrink')
+                        : t('taskPane.expand', 'Expand')}
+                </button>
                 {task && (
                     <nav
                         aria-label={t('taskPane.goTo', 'Go to')}

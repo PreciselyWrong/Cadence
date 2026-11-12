@@ -519,7 +519,7 @@
     "assignedTo": "Dodeljeno",
     "subtasks": "Podnaloge",
     "openFullPage": "Odpri celoten pogled",
-    "openPanel": "Odpri v stranski plošči",
+    "openPanel": "Odpri podrobnosti",
     "quickEdit": {
       "setPriority": "Nastavi prioriteto",
       "setDueDate": "Nastavi rok"

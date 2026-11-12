@@ -509,7 +509,7 @@
     "assignedTo": "할당됨",
     "subtasks": "하위 작업",
     "openFullPage": "전체 보기 열기",
-    "openPanel": "사이드 패널에서 열기",
+    "openPanel": "세부 정보 열기",
     "quickEdit": {
       "setPriority": "우선순위 설정",
       "setDueDate": "마감일 설정"

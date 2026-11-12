@@ -509,7 +509,7 @@
     "assignedTo": "Zugewiesen an",
     "subtasks": "Unteraufgaben",
     "openFullPage": "Vollansicht öffnen",
-    "openPanel": "Im Seitenbereich öffnen",
+    "openPanel": "Details öffnen",
     "quickEdit": {
       "setPriority": "Priorität setzen",
       "setDueDate": "Fälligkeitsdatum setzen"

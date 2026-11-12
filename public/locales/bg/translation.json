@@ -509,7 +509,7 @@
     "assignedTo": "Назначено на",
     "subtasks": "Подзадачи",
     "openFullPage": "Отвори пълен изглед",
-    "openPanel": "Отвори в страничния панел",
+    "openPanel": "Отвори подробностите",
     "quickEdit": {
       "setPriority": "Задай приоритет",
       "setDueDate": "Задай срок"

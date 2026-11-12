@@ -192,7 +192,7 @@ const renderPage = (initial: Task = baseTask) =>
     );
 
 const titleInput = () => {
-    const pane = screen.queryByRole('complementary', { name: 'Task details' });
+    const pane = screen.queryByRole('dialog');
     return pane ? (within(pane).queryAllByRole('textbox')[0] ?? null) : null;
 };
 
@@ -263,16 +263,40 @@ describe('TaskPane in minimal mode', () => {
         expect(screen.getByTestId('location-search')).toHaveTextContent(/^$/);
     });
 
-    it('links to the full task page', async () => {
+    it('opens as the floating sheet, never a side column', async () => {
         renderPage();
         fireEvent.click(screen.getByText('Write report'));
-        const pane = await screen.findByRole('complementary', {
-            name: 'Task details',
-        });
 
+        const sheet = await screen.findByRole('dialog');
+        expect(sheet.className).toContain('md:absolute');
+        expect(sheet.className).not.toContain('md:w-[420px]');
         expect(
-            within(pane).getByRole('link', { name: 'Open full page' })
-        ).toHaveAttribute('href', '/task/uid-1');
+            within(sheet).getByRole('button', { name: 'Expand' })
+        ).toBeInTheDocument();
+    });
+
+    it('closes on a second click on the same row', async () => {
+        renderPage();
+        fireEvent.click(screen.getByText('Write report'));
+        await waitFor(() => expect(titleInput()).not.toBeNull());
+
+        fireEvent.click(screen.getAllByText('Write report')[0]);
+
+        await waitFor(() => expect(titleInput()).toBeNull());
+        expect(screen.getByTestId('location-search')).toHaveTextContent(/^$/);
+    });
+
+    it('closes on a click outside the sheet, not on a task row', async () => {
+        renderPage();
+        fireEvent.click(screen.getByText('Write report'));
+        await waitFor(() => expect(titleInput()).not.toBeNull());
+
+        const row = document.querySelector('[data-task-row]') as Element;
+        fireEvent.pointerDown(row);
+        expect(titleInput()).not.toBeNull();
+
+        fireEvent.pointerDown(document.body);
+        await waitFor(() => expect(titleInput()).toBeNull());
     });
 
     describe('on a recurring task', () => {
@@ -346,6 +370,17 @@ describe('TaskPane in minimal mode', () => {
 });
 
 describe('Task row in dense mode', () => {
+    it('still shows the sheet for a task opened by ?task=', async () => {
+        render(
+            <MemoryRouter initialEntries={['/inbox?task=uid-1']}>
+                <TaskPaneProvider>
+                    <TaskPane />
+                </TaskPaneProvider>
+            </MemoryRouter>
+        );
+        expect(await screen.findByRole('dialog')).toBeInTheDocument();
+    });
+
     beforeEach(() => {
         jest.clearAllMocks();
         mockedUseIsMinimal.mockReturnValue(false);
@@ -415,7 +450,7 @@ describe('TaskPane as a floating sheet', () => {
             <MemoryRouter initialEntries={[path]}>
                 <TaskPaneProvider>
                     <Opener />
-                    <TaskPane placement="bottom" />
+                    <TaskPane />
                     <LocationProbe />
                 </TaskPaneProvider>
             </MemoryRouter>

@@ -509,7 +509,7 @@
     "assignedTo": "Osoitettu",
     "subtasks": "Ala-tehtävät",
     "openFullPage": "Avaa koko näkymä",
-    "openPanel": "Avaa sivupaneelissa",
+    "openPanel": "Avaa tiedot",
     "quickEdit": {
       "setPriority": "Aseta prioriteetti",
       "setDueDate": "Aseta eräpäivä"

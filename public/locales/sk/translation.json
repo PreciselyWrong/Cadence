@@ -980,7 +980,7 @@
     "assignedTo": "Priradené",
     "subtasks": "Podúlohy",
     "openFullPage": "Otvoriť celé zobrazenie",
-    "openPanel": "Otvoriť v bočnom paneli",
+    "openPanel": "Otvoriť podrobnosti",
     "quickEdit": {
       "setPriority": "Nastaviť prioritu",
       "setDueDate": "Nastaviť termín"
