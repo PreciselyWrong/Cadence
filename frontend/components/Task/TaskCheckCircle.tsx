@@ -47,11 +47,13 @@ function resetRow(row: HTMLElement | null) {
 interface TaskCheckCircleProps {
     task: Task;
     onToggle: () => void;
+    testId?: string;
 }
 
 const TaskCheckCircle: React.FC<TaskCheckCircleProps> = ({
     task,
     onToggle,
+    testId,
 }) => {
     const { t } = useTranslation();
     const [checking, setChecking] = useState(false);
@@ -116,7 +118,7 @@ const TaskCheckCircle: React.FC<TaskCheckCircleProps> = ({
             onClick={handleClick}
             onKeyDown={(e) => e.stopPropagation()}
             className="group/check -m-3 flex-shrink-0 p-3 rounded-control focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-primary"
-            data-testid="task-check-circle"
+            data-testid={testId ?? 'task-check-circle'}
         >
             <span
                 className={`flex h-[22px] w-[22px] items-center justify-center rounded-checkbox border-2 transition-colors duration-[220ms] ${box} ${

@@ -23,6 +23,7 @@ import AddToLinks from '../Links/AddToLinks';
 import TaskChipRow from './TaskChipRow';
 import { SaveState } from './useTaskAutosave';
 import { TaskEditor } from './useTaskEditor';
+import TaskCheckCircle from './TaskCheckCircle';
 import { openTaskPanel } from '../../store/taskPanelStore';
 
 export const SaveIndicator: React.FC<{ state: SaveState }> = ({ state }) => {
@@ -126,36 +127,48 @@ export const TaskEditorBody: React.FC<TaskEditorBodyProps> = ({
                     {task.name}
                 </h2>
             )}
-            <div
-                data-testid="task-name-field"
-                aria-label={t('taskPanel.titleLabel', 'Task title')}
-                className="pt-1 text-xl font-semibold text-gray-900 dark:text-white"
-                onBlur={(event) => {
-                    if (
-                        !event.currentTarget.contains(
-                            event.relatedTarget as Node
-                        )
-                    ) {
-                        void commitTitle();
-                    }
-                }}
-            >
-                {readOnly ? (
-                    <h2 className="break-words">{task.name}</h2>
-                ) : (
-                    <QuickCaptureInput
-                        mode="edit"
-                        bare
-                        multiline={false}
-                        hidePrimaryButton
-                        initialValue={nameSeed}
-                        projects={projects}
-                        onTextChange={(text) => {
-                            draftName.current = text;
-                        }}
-                        onSubmitOverride={(text) => commitTitle(text)}
+            <div className="flex items-start gap-3">
+                {/* The task is done by its check circle, as on a row (Android
+                passe de soustraction): no Complete button to mistake for
+                Save. */}
+                <span className="pt-2">
+                    <TaskCheckCircle
+                        task={task}
+                        onToggle={ed.handleComplete}
+                        testId="task-complete-button"
                     />
-                )}
+                </span>
+                <div
+                    data-testid="task-name-field"
+                    aria-label={t('taskPanel.titleLabel', 'Task title')}
+                    className="min-w-0 flex-1 pt-1 text-xl font-semibold text-surface-on"
+                    onBlur={(event) => {
+                        if (
+                            !event.currentTarget.contains(
+                                event.relatedTarget as Node
+                            )
+                        ) {
+                            void commitTitle();
+                        }
+                    }}
+                >
+                    {readOnly ? (
+                        <h2 className="break-words">{task.name}</h2>
+                    ) : (
+                        <QuickCaptureInput
+                            mode="edit"
+                            bare
+                            multiline={false}
+                            hidePrimaryButton
+                            initialValue={nameSeed}
+                            projects={projects}
+                            onTextChange={(text) => {
+                                draftName.current = text;
+                            }}
+                            onSubmitOverride={(text) => commitTitle(text)}
+                        />
+                    )}
+                </div>
             </div>
             {!readOnly && <AutoClassifiedMark entity="task" uid={task.uid} />}
 
@@ -409,29 +422,18 @@ export const TaskEditorFooter: React.FC<{
     ed: TaskEditor;
     withStatus?: boolean;
 }> = ({ ed, withStatus = false }) => {
-    const { t, done, postponeToTomorrow, handleComplete } = ed;
+    const { t, done, postponeToTomorrow } = ed;
     return (
-        <footer className="flex flex-shrink-0 items-center justify-end gap-3 bg-gray-50 px-5 py-3 dark:bg-gray-900/40">
+        <footer className="flex flex-shrink-0 items-center justify-end gap-3 border-t border-outline-variant/60 px-5 py-2.5">
             {withStatus && <SaveIndicator state={ed.state} />}
             <button
                 type="button"
                 onClick={postponeToTomorrow}
                 disabled={done}
                 data-testid="task-postpone-button"
-                className="rounded-full bg-gray-200/70 px-5 py-2 text-sm font-medium text-gray-800 transition-colors hover:bg-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:opacity-50 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600"
+                className="h-7 rounded-lg px-2.5 text-body-m font-medium text-surface-on ring-1 ring-inset ring-outline-variant transition-colors hover:bg-surface-high focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 disabled:opacity-50 max-sm:min-h-[44px]"
             >
                 {t('datePopover.tomorrow', 'Tomorrow')}
-            </button>
-            <button
-                type="button"
-                onClick={handleComplete}
-                data-testid="task-complete-button"
-                className="inline-flex items-center gap-1.5 rounded-full bg-indigo-600 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-600"
-            >
-                <CheckIcon className="h-4 w-4" />
-                {done
-                    ? t('taskPanel.reopen', 'Reopen')
-                    : t('taskPanel.complete', 'Complete')}
             </button>
         </footer>
     );

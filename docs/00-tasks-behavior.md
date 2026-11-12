@@ -41,7 +41,7 @@ This document explains how tasks work in Cadence from a user behavior perspectiv
 - Every edit saves on its own (blur, Enter, a choice in a popover) and shows "Saved" in the footer. A failed save puts the value back and shows an error; nothing is kept half-saved. Closing with Escape saves what was typed but not yet blurred.
 - The description is Markdown, edited in place: click it to type, leave it to save. Ticking a task-list box saves too.
 - The due and start chips refuse a start after the due date; the defer chip refuses a date after the due date. A recurring task still asks which occurrences a new due date moves.
-- The footer has "Tomorrow" (moves the due date to tomorrow, keeping the time) and "Complete" / "Reopen".
+- The task is done (or reopened) with the check circle beside its title, as on a row; there is no Complete button. The footer keeps "Tomorrow" (moves the due date to tomorrow, keeping the time) and the save state.
 - Subtasks, attachments and comments save as soon as they change. Relations stay on the full task page, which is at `/task/:uid/details`.
 - With a popover or dropdown open, Escape or a click outside closes it; the panel stays open. Up and Down move inside a list popover, Enter picks.
 
