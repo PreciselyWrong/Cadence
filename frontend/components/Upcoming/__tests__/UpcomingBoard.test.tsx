@@ -334,7 +334,7 @@ describe('UpcomingBoard', () => {
         expect(screen.getByRole('tab', { name: 'Horizons' })).toBeEnabled();
     });
 
-    it('switches to Horizons: four columns from one task fetch, remembered', async () => {
+    it('switches to Horizons: five columns from one task fetch, remembered', async () => {
         mockFetchTasks.mockResolvedValue({
             tasks: [
                 task('w1', 'Plan the offsite', {
@@ -352,6 +352,7 @@ describe('UpcomingBoard', () => {
         const columns = await screen.findAllByTestId('horizon-column');
         expect(columns.map((c) => c.getAttribute('data-horizon'))).toEqual([
             'week',
+            'next_week',
             'this_month',
             'next_month',
             'someday',
@@ -360,10 +361,10 @@ describe('UpcomingBoard', () => {
             await within(columns[0]).findByText('Plan the offsite')
         ).toBeInTheDocument();
         expect(
-            within(columns[3]).getByText('Learn the cello')
+            within(columns[4]).getByText('Learn the cello')
         ).toBeInTheDocument();
         expect(
-            within(columns[1]).getByText('Nothing planned.')
+            within(columns[2]).getByText('Nothing planned.')
         ).toBeInTheDocument();
         expect(screen.queryAllByTestId('upcoming-column')).toHaveLength(0);
         expect(mockFetchTasks).toHaveBeenCalledWith('?status=active');
@@ -634,14 +635,14 @@ describe('UpcomingBoard', () => {
         renderBoard();
         const columns = await screen.findAllByTestId('horizon-column');
         expect(
-            within(columns[3]).getByText('Maybe later, out of the way')
+            within(columns[4]).getByText('Maybe later, out of the way')
         ).toBeInTheDocument();
         fireEvent.click(
-            within(columns[2]).getByRole('button', {
+            within(columns[3]).getByRole('button', {
                 name: 'Add a task to Next month',
             })
         );
-        const input = within(columns[2]).getByLabelText('Add a task');
+        const input = within(columns[3]).getByLabelText('Add a task');
         fireEvent.change(input, { target: { value: 'Book flights' } });
         fireEvent.submit(input.closest('form') as HTMLFormElement);
         await waitFor(() =>
@@ -1103,5 +1104,102 @@ describe('UpcomingBoard', () => {
         expect(within(week).getByText('Dentist')).toBeInTheDocument();
         fireEvent.click(toggle);
         expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    describe('horizon strip of the Days layout', () => {
+        it('shows the horizons past this week with their counts', async () => {
+            mockFetchTasks.mockResolvedValue({
+                tasks: [
+                    task('s1', 'Learn the cello', {
+                        tags: [{ name: 'someday' }],
+                    } as Partial<Task>),
+                ],
+                metrics: {} as never,
+            });
+            renderBoard();
+            const strip = await screen.findByTestId('horizon-strip');
+            const targets = within(strip).getAllByTestId(
+                'horizon-strip-target'
+            );
+            expect(targets.map((el) => el.dataset.horizon)).toEqual([
+                'next_week',
+                'this_month',
+                'next_month',
+                'someday',
+            ]);
+            await waitFor(() =>
+                expect(targets[3]).toHaveTextContent('Someday1')
+            );
+        });
+
+        it('opens Horizons when a target is clicked', async () => {
+            renderBoard();
+            const strip = await screen.findByTestId('horizon-strip');
+            fireEvent.click(
+                within(strip).getAllByTestId('horizon-strip-target')[1]
+            );
+            expect(await screen.findAllByTestId('horizon-column')).toHaveLength(
+                5
+            );
+            expect(screen.queryByTestId('horizon-strip')).toBeNull();
+        });
+
+        it('sends a planned card to next week: off its day, committed, one undo', async () => {
+            const server = fakeServer({
+                [TODAY]: [
+                    { task: task('p1', 'Dentist'), start: null, duration: 30 },
+                ],
+            });
+            mockUpdate.mockResolvedValue({} as Task);
+            renderBoard();
+            await within(column(TODAY)).findByText('Dentist');
+            await settle();
+            fireEvent.keyDown(cardIn(TODAY, 'Dentist'), {
+                key: 'W',
+                shiftKey: true,
+            });
+            await settle();
+            expect(mockUpdate).toHaveBeenCalledWith('p1', {
+                week_of: 'next_week',
+                month_of: null,
+            });
+            expect(mockApply).toHaveBeenCalledWith(
+                TODAY,
+                [{ op: 'remove', task_uid: 'p1' }],
+                `${TODAY}@0`
+            );
+            expect(server.uids(TODAY)).toEqual([]);
+            expect(mockShowUndoToast).toHaveBeenCalledTimes(1);
+
+            const undo = mockShowUndoToast.mock.calls[0][1] as () => void;
+            act(() => undo());
+            await settle();
+            expect(server.uids(TODAY)).toEqual(['p1']);
+            expect(mockUpdate).toHaveBeenLastCalledWith('p1', {
+                week_of: null,
+                month_of: null,
+            });
+        });
+
+        it('sends a card to a horizon from its right-click menu', async () => {
+            fakeServer({
+                [TODAY]: [
+                    { task: task('p1', 'Dentist'), start: null, duration: 30 },
+                ],
+            });
+            mockUpdate.mockResolvedValue({} as Task);
+            renderBoard();
+            await within(column(TODAY)).findByText('Dentist');
+            await settle();
+            fireEvent.contextMenu(cardIn(TODAY, 'Dentist'));
+            fireEvent.click(await screen.findByTestId('card-send-someday'));
+            await settle();
+            expect(mockUpdate).toHaveBeenCalledWith('p1', { later: true });
+            expect(mockApply).toHaveBeenCalledWith(
+                TODAY,
+                [{ op: 'remove', task_uid: 'p1' }],
+                `${TODAY}@0`
+            );
+        });
     });
 });

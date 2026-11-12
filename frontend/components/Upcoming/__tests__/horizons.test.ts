@@ -4,6 +4,8 @@ import {
     horizonOf,
     horizonPatch,
     horizonRowsFill,
+    leaveDayWrites,
+    STRIP_KEYS,
     monthStartOf,
     plannedThisWeek,
     weekDates,
@@ -332,16 +334,76 @@ describe('plannedThisWeek', () => {
 });
 
 describe('horizon grid', () => {
-    it('puts the four horizons side by side when they get 200 px each', () => {
-        expect(horizonColumns(0)).toBe(4);
-        expect(horizonColumns(836)).toBe(4);
-        expect(horizonColumns(700)).toBe(2);
+    it('puts the five horizons side by side when they get 200 px each', () => {
+        expect(horizonColumns(0)).toBe(5);
+        expect(horizonColumns(1048)).toBe(5);
+        expect(horizonColumns(900)).toBe(3);
+        expect(horizonColumns(500)).toBe(2);
         expect(horizonColumns(300)).toBe(1);
     });
 
     it('fills the page height only on one row; wrapped rows follow their cards', () => {
-        expect(horizonRowsFill(4)).toBe(true);
-        expect(horizonRowsFill(2)).toBe(false);
+        expect(horizonRowsFill(5)).toBe(true);
+        expect(horizonRowsFill(3)).toBe(false);
         expect(horizonRowsFill(1)).toBe(false);
+    });
+});
+
+describe('next week horizon', () => {
+    it('holds tasks committed to next week, never derived from a date', () => {
+        const nextWeekStart = '2026-11-16';
+        const buckets = bucketHorizons(
+            [
+                task('nw', { week_of: nextWeekStart }),
+                task('due', { due_date: '2026-11-18' }),
+            ],
+            TODAY,
+            1
+        );
+        expect(buckets.next_week.map((t) => t.uid)).toEqual(['nw']);
+        expect(buckets.this_month.map((t) => t.uid)).toEqual(['due']);
+    });
+
+    it('patches week_of next_week and clears the month', () => {
+        expect(horizonPatch('this_month', 'next_week')).toEqual({
+            week_of: 'next_week',
+            month_of: null,
+        });
+        expect(horizonPatch('someday', 'next_week')).toEqual({
+            week_of: 'next_week',
+            month_of: null,
+            later: false,
+        });
+    });
+
+    it('offers the horizons past this week on the Days strip', () => {
+        expect(STRIP_KEYS).toEqual([
+            'next_week',
+            'this_month',
+            'next_month',
+            'someday',
+        ]);
+    });
+});
+
+describe('leaveDayWrites', () => {
+    it('removes a planned card from its day', () => {
+        expect(
+            leaveDayWrites({ uid: 'a', date: '2026-11-13', planned: true })
+        ).toEqual([
+            { date: '2026-11-13', ops: [{ op: 'remove', task_uid: 'a' }] },
+        ]);
+    });
+
+    it('writes nothing for a due-only, overdue or horizon card', () => {
+        expect(
+            leaveDayWrites({ uid: 'a', date: '2026-11-13', planned: false })
+        ).toEqual([]);
+        expect(
+            leaveDayWrites({ uid: 'a', date: 'overdue', planned: true })
+        ).toEqual([]);
+        expect(
+            leaveDayWrites({ uid: 'a', date: 'horizon:week', planned: true })
+        ).toEqual([]);
     });
 });

@@ -1,14 +1,17 @@
 import { addDays, addMonths, format, parseISO } from 'date-fns';
 import type { Task } from '../../entities/Task';
 import { isTaskDone } from '../../constants/taskStatus';
+import type { PlanWrite } from './planOps';
 
 // The Horizons layout of the Plan page: open tasks by the moment the user
 // committed them to (week_of, month_of, #someday) or, failing that, by the
 // day they are planned on or due (derived, never written back).
-export type HorizonKey = 'week' | 'this_month' | 'next_month' | 'someday';
+export type HorizonKey =
+    'week' | 'next_week' | 'this_month' | 'next_month' | 'someday';
 
 export const HORIZON_KEYS: HorizonKey[] = [
     'week',
+    'next_week',
     'this_month',
     'next_month',
     'someday',
@@ -68,7 +71,8 @@ const firstPlannedDays = (
 /**
  * Open top-level tasks into the four horizons, first rule that applies:
  * 1. #someday (the tag parks the task whatever else it holds);
- * 2. a commitment that still holds: week_of this week, then month_of this
+ * 2. a commitment that still holds: week_of this week or next week (only
+ *    ever set by hand, never derived), then month_of this
  *    month or next month (the narrower one is the one the user acts on);
  * 3. the task's date, derived and never written: its earliest plan line
  *    from the start of this week on, else its due day from today on
@@ -88,12 +92,14 @@ export const bucketHorizons = (
     days: PlanDays = {}
 ): HorizonBuckets => {
     const week = weekStartOf(today, firstDayOfWeek);
+    const nextWeek = format(addDays(parseISO(week), 7), 'yyyy-MM-dd');
     const weekEnd = format(addDays(parseISO(week), 6), 'yyyy-MM-dd');
     const thisMonth = monthStartOf(today);
     const nextMonth = monthStartOf(today, 1);
     const planned = firstPlannedDays(days, week);
     const buckets: HorizonBuckets = {
         week: [],
+        next_week: [],
         this_month: [],
         next_month: [],
         someday: [],
@@ -111,6 +117,9 @@ export const bucketHorizons = (
         }
         if (isSomeday(task)) return void buckets.someday.push(task);
         if (day(task.week_of) === week) return void buckets.week.push(task);
+        if (day(task.week_of) === nextWeek) {
+            return void buckets.next_week.push(task);
+        }
         const month = day(task.month_of);
         if (month === thisMonth) return void buckets.this_month.push(task);
         if (month === nextMonth) return void buckets.next_month.push(task);
@@ -135,7 +144,7 @@ export const horizonOf = (
 // modules/review/fields.js). The other commitment is cleared so the task
 // lands where it was dropped; leaving Someday removes the tag.
 export interface HorizonPatch {
-    week_of?: 'this_week' | null;
+    week_of?: 'this_week' | 'next_week' | null;
     month_of?: 'this_month' | 'next_month' | null;
     later?: boolean;
 }
@@ -149,7 +158,9 @@ export const horizonPatch = (
     const patch: HorizonPatch =
         to === 'week'
             ? { week_of: 'this_week', month_of: null }
-            : { month_of: to, week_of: null };
+            : to === 'next_week'
+              ? { week_of: 'next_week', month_of: null }
+              : { month_of: to, week_of: null };
     if (from === 'someday') patch.later = false;
     return patch;
 };
@@ -195,15 +206,45 @@ interface PlannedItem {
     occurrence_done?: boolean;
 }
 
-// Horizons side by side when they get 200 px each, else two by two, one
-// under the other on a phone.
+// Horizons side by side when they get 200 px each, else on two rows (three
+// then two), two by two, one under the other on a phone.
+const fitsColumns = (width: number, columns: number): boolean =>
+    width >= columns * 200 + (columns - 1) * 12;
+
 export const horizonColumns = (width: number): number => {
-    if (width === 0 || width >= 4 * 200 + 3 * 12) return 4;
-    return width >= 2 * 200 + 12 ? 2 : 1;
+    if (width === 0 || fitsColumns(width, HORIZON_KEYS.length)) {
+        return HORIZON_KEYS.length;
+    }
+    if (fitsColumns(width, 3)) return 3;
+    return fitsColumns(width, 2) ? 2 : 1;
 };
 
 // Side by side, each horizon fills the page height and scrolls its own
 // cards. Once they wrap, a fixed share of the height cut "This week" to one
 // card while room was left below: each row then takes its cards' height and
 // the page scrolls instead.
-export const horizonRowsFill = (columns: number): boolean => columns >= 4;
+export const horizonRowsFill = (columns: number): boolean =>
+    columns >= HORIZON_KEYS.length;
+
+// The drop strip of the Days layout: the horizons past this week (this
+// week is the days on screen).
+export const STRIP_KEYS: HorizonKey[] = [
+    'next_week',
+    'this_month',
+    'next_month',
+    'someday',
+];
+
+/**
+ * The plan writes that take a day card off its day when it is sent to a
+ * horizon: a line of that day's plan is removed; a due-only, overdue,
+ * inbox or horizon card has no line to remove (its due date stays).
+ */
+export const leaveDayWrites = (card: {
+    uid: string;
+    date: string;
+    planned: boolean;
+}): PlanWrite[] =>
+    card.planned && /^\d{4}-\d{2}-\d{2}$/.test(card.date)
+        ? [{ date: card.date, ops: [{ op: 'remove', task_uid: card.uid }] }]
+        : [];
