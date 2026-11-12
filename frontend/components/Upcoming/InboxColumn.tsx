@@ -3,18 +3,28 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useDraggable } from '@dnd-kit/core';
 import {
+    SortableContext,
+    verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import {
     ChevronDoubleLeftIcon,
     InboxIcon,
     PlusIcon,
 } from '@heroicons/react/24/outline';
 import { InboxItem } from '../../entities/InboxItem';
-import { createInboxItemWithStore } from '../../utils/inboxService';
+import { Task } from '../../entities/Task';
+import { DayLine, lineFromDue } from '../Today/dayModel';
+import TaskCard, { cardId } from './TaskCard';
 
 export interface InboxDragData {
     kind: 'inbox';
     uid: string;
     title: string;
 }
+
+// The pseudo-day an unsorted task card carries in its drag data: planned
+// nowhere, so a drop plans it rather than moves it.
+export const INBOX_CARD_DATE = 'inbox';
 
 // Open inbox items only: processed, deleted and trashed ones are not waiting.
 export const openInboxItems = (items: InboxItem[]): InboxItem[] =>
@@ -80,22 +90,33 @@ const InboxCard: React.FC<{ item: InboxItem; onOpen(): void }> = ({
 
 export interface InboxColumnProps {
     items: InboxItem[];
+    // Inbox › « Tâches à classer »: open tasks with no moment decided.
+    tasks?: Task[];
+    today: string;
     loading: boolean;
+    openTaskUid?: string | null;
+    // Creates a task from the typed line; false keeps the text to retry.
+    onAdd(text: string): Promise<boolean>;
+    onOpenTask?(line: DayLine): void;
+    onToggleTask?(line: DayLine): void;
+    onToggleSubtask?(subtask: Task): void;
     // A thin bar with the inbox icon and the count instead of the column.
     collapsed?: boolean;
     onCollapsedChange?(collapsed: boolean): void;
 }
 
-const AddToInboxButton: React.FC<{ onClick(): void; className: string }> = ({
-    onClick,
-    className,
-}) => {
+const AddTaskButton: React.FC<{
+    name: string;
+    onClick(): void;
+    className: string;
+}> = ({ name, onClick, className }) => {
     const { t } = useTranslation();
+    const label = t('upcoming.addTaskIn', 'Add a task to {{name}}', { name });
     return (
         <button
             type="button"
-            aria-label={t('upcoming.addToInbox', 'Add to inbox')}
-            title={t('upcoming.addToInbox', 'Add to inbox')}
+            aria-label={label}
+            title={label}
             onClick={onClick}
             className={className}
         >
@@ -131,30 +152,38 @@ export const inboxCollapsed = (
     choice: boolean | null
 ): boolean => openCount === 0 || (choice ?? false);
 
+const noop = () => undefined;
+
 /**
- * The inbox, pinned at the left of the board: its cards are dragged onto a
- * day to become that day's tasks. A click opens the inbox page. Collapsed,
- * it is a 44 px bar that expands it again.
+ * The inbox, pinned at the left of the board: the unsorted tasks first, as
+ * task cards (a click opens the sheet), then the open ideas (a click opens
+ * the inbox page). Both are dragged onto a day or a horizon to plan them.
+ * Its + creates a task. Collapsed, it is a 44 px bar that expands it again.
  */
 const InboxColumn: React.FC<InboxColumnProps> = ({
     items,
+    tasks = [],
+    today,
     loading,
+    openTaskUid = null,
+    onAdd,
+    onOpenTask = noop,
+    onToggleTask = noop,
+    onToggleSubtask = noop,
     collapsed = false,
     onCollapsedChange,
 }) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const open = openInboxItems(items);
+    const lines = tasks.map((task) => lineFromDue(task, today));
+    const count = lines.length + open.length;
     const title = t('sidebar.inbox', 'Inbox');
     const [adding, setAdding] = useState(false);
     const [draft, setDraft] = useState('');
     const [saving, setSaving] = useState(false);
     const [failed, setFailed] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
-
-    useEffect(() => {
-        if (adding) inputRef.current?.focus();
-    }, [adding]);
 
     const startAdding = () => {
         setAdding(true);
@@ -170,21 +199,22 @@ const InboxColumn: React.FC<InboxColumnProps> = ({
         if (!content || saving) return;
         setSaving(true);
         setFailed(false);
-        try {
-            await createInboxItemWithStore(content);
-            setDraft('');
-        } catch {
-            // The text stays so the viewer can retry.
-            setFailed(true);
-        } finally {
-            setSaving(false);
-        }
+        const added = await onAdd(content).catch(() => false);
+        setSaving(false);
+        // The text stays so the viewer can retry.
+        if (added) setDraft('');
+        else setFailed(true);
     };
+
+    // The field is disabled while saving, which drops its focus.
+    useEffect(() => {
+        if (adding && !saving) inputRef.current?.focus();
+    }, [adding, saving]);
 
     // An empty inbox stays collapsed on the board; while the viewer is
     // typing a new item the column must be open, or the field never shows.
     if (collapsed && !adding) {
-        const empty = open.length === 0;
+        const empty = count === 0;
         return (
             <section
                 aria-label={title}
@@ -205,7 +235,7 @@ const InboxColumn: React.FC<InboxColumnProps> = ({
                         'upcoming.expandInbox',
                         'Show the inbox ({{count}})',
                         {
-                            count: open.length,
+                            count,
                         }
                     )}
                     onClick={() => onCollapsedChange?.(false)}
@@ -213,10 +243,11 @@ const InboxColumn: React.FC<InboxColumnProps> = ({
                 >
                     <InboxIcon aria-hidden="true" className="h-5 w-5" />
                     <span className="text-xs font-semibold tabular-nums">
-                        {loading && empty ? '' : open.length}
+                        {loading && empty ? '' : count}
                     </span>
                 </button>
-                <AddToInboxButton
+                <AddTaskButton
+                    name={title}
                     onClick={startAdding}
                     className="mt-1 flex h-8 w-9 items-center justify-center rounded-lg text-surface-on-variant hover:bg-surface-high hover:text-surface-on focus-visible:outline-2 focus-visible:outline-primary"
                 />
@@ -235,7 +266,8 @@ const InboxColumn: React.FC<InboxColumnProps> = ({
                         {title}
                     </h2>
                     <div className="flex shrink-0 gap-0.5">
-                        <AddToInboxButton
+                        <AddTaskButton
+                            name={title}
                             onClick={startAdding}
                             className="flex h-7 w-7 items-center justify-center rounded-lg text-surface-on-variant hover:bg-surface-high hover:text-surface-on focus-visible:outline-2 focus-visible:outline-primary"
                         />
@@ -271,14 +303,8 @@ const InboxColumn: React.FC<InboxColumnProps> = ({
                         <input
                             ref={inputRef}
                             type="text"
-                            aria-label={t(
-                                'upcoming.inboxNewItem',
-                                'New inbox item'
-                            )}
-                            placeholder={t(
-                                'upcoming.addToInbox',
-                                'Add to inbox'
-                            )}
+                            aria-label={t('upcoming.addTask', 'Add a task')}
+                            placeholder={t('upcoming.addTask', 'Add a task')}
                             value={draft}
                             disabled={saving}
                             onChange={(event) => {
@@ -309,6 +335,31 @@ const InboxColumn: React.FC<InboxColumnProps> = ({
                         )}
                     </div>
                 )}
+                {lines.length > 0 && (
+                    <div
+                        data-card-date={INBOX_CARD_DATE}
+                        className="flex flex-col gap-2"
+                    >
+                        <SortableContext
+                            items={lines.map((line) =>
+                                cardId(INBOX_CARD_DATE, line.uid)
+                            )}
+                            strategy={verticalListSortingStrategy}
+                        >
+                            {lines.map((line) => (
+                                <TaskCard
+                                    key={line.uid}
+                                    line={line}
+                                    date={INBOX_CARD_DATE}
+                                    selected={openTaskUid === line.uid}
+                                    onToggle={onToggleTask}
+                                    onOpen={onOpenTask}
+                                    onToggleSubtask={onToggleSubtask}
+                                />
+                            ))}
+                        </SortableContext>
+                    </div>
+                )}
                 {open.map((item) => (
                     <InboxCard
                         key={item.uid}
@@ -316,7 +367,7 @@ const InboxColumn: React.FC<InboxColumnProps> = ({
                         onOpen={() => navigate('/inbox')}
                     />
                 ))}
-                {!loading && open.length === 0 && (
+                {!loading && count === 0 && (
                     <p className="px-1 pt-2 text-body-m text-surface-on-variant">
                         {t('upcoming.inboxEmpty', 'Inbox is empty.')}
                     </p>

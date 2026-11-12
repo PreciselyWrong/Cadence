@@ -288,6 +288,8 @@ beforeEach(() => {
         return dayWith(date as string, []);
     });
     mockApply.mockResolvedValue({ plan: null, etag: 'etag-2' });
+    // No unsorted task unless a test says so.
+    mockFetchTasks.mockResolvedValue({ tasks: [], metrics: {} as never });
     useStore
         .getState()
         .inboxStore.setInboxItems([
@@ -690,7 +692,9 @@ describe('UpcomingBoard', () => {
             'Write report'
         );
         fireEvent.click(
-            screen.getAllByRole('button', { name: /^Add a task to / })[0]
+            within(column(TODAY)).getByRole('button', {
+                name: /^Add a task to /,
+            })
         );
         const input = screen.getByLabelText('Add a task');
         fireEvent.change(input, { target: { value: 'Buy milk' } });
@@ -942,6 +946,140 @@ describe('UpcomingBoard', () => {
             date: TOMORROW,
             startMinute: 600,
         });
+    });
+
+    it('adds a task, not an inbox item, from the + of the inbox column', async () => {
+        useStore.getState().inboxStore.setInboxItems([]);
+        useStore
+            .getState()
+            .projectsStore.setProjects([{ id: 7, name: 'Home' } as never]);
+        let unsorted: Task[] = [];
+        mockFetchTasks.mockImplementation(async (query?: string) => ({
+            tasks: query === '?type=unsorted' ? unsorted : [],
+            metrics: {} as never,
+        }));
+        mockCreate.mockImplementation(async (data: Task) => {
+            const created = task('n1', data.name, data);
+            unsorted = [created];
+            return created;
+        });
+        mockUpdate.mockResolvedValue(task('n1', 'Fix the tap'));
+        renderBoard();
+        await screen.findAllByTestId('upcoming-column');
+        fireEvent.click(
+            screen.getByRole('button', { name: 'Add a task to Inbox' })
+        );
+        const input = screen.getByRole('textbox', { name: 'Add a task' });
+        fireEvent.change(input, { target: { value: 'Fix the tap #Home' } });
+        fireEvent.keyDown(input, { key: 'Enter' });
+
+        await waitFor(() =>
+            expect(mockCreate).toHaveBeenCalledWith(
+                expect.objectContaining({ name: 'Fix the tap', project_id: 7 })
+            )
+        );
+        expect(mockCreate.mock.calls[0][0]).not.toHaveProperty('due_date');
+        // Filed in a project, it still waits in « Tâches à classer ».
+        await waitFor(() =>
+            expect(mockUpdate).toHaveBeenCalledWith('n1', { needs_when: true })
+        );
+        const inbox = screen.getByTestId('inbox-column');
+        expect(
+            await within(inbox).findByText('Fix the tap')
+        ).toBeInTheDocument();
+        expect(mockApply).not.toHaveBeenCalled();
+        expect(input).toHaveValue('');
+        expect(input).toBeInTheDocument();
+    });
+
+    it('plans a task typed in the inbox with a date on that day', async () => {
+        mockFetchTasks.mockResolvedValue({ tasks: [], metrics: {} as never });
+        mockCreate.mockResolvedValue(task('n2', 'Call mum'));
+        renderBoard();
+        await within(column(TODAY)).findByText('Write report');
+        fireEvent.click(
+            screen.getByRole('button', { name: 'Add a task to Inbox' })
+        );
+        const input = screen.getByRole('textbox', { name: 'Add a task' });
+        fireEvent.change(input, { target: { value: 'Call mum tomorrow' } });
+        fireEvent.keyDown(input, { key: 'Enter' });
+
+        await waitFor(() =>
+            expect(mockApply).toHaveBeenCalledWith(
+                TOMORROW,
+                [{ op: 'add', task_uid: 'n2' }],
+                'etag-1'
+            )
+        );
+        expect(mockCreate.mock.calls[0][0]).toMatchObject({ name: 'Call mum' });
+        expect(mockCreate.mock.calls[0][0]).not.toHaveProperty('due_date');
+    });
+
+    it('lists unsorted tasks in the inbox column and plans one from there', async () => {
+        const loose = task('u1', 'Renew the car insurance');
+        mockFetchTasks.mockImplementation(async (query?: string) => ({
+            tasks: query === '?type=unsorted' ? [loose] : [],
+            metrics: {} as never,
+        }));
+        const server = fakeServer({ [TODAY]: [] });
+        server.tasks.set('u1', loose);
+        renderBoard();
+        const inbox = screen.getByTestId('inbox-column');
+        const card = (
+            await within(inbox).findByText('Renew the car insurance')
+        ).closest(CARD) as HTMLElement;
+        // Tasks first, then the ideas.
+        expect(
+            Array.from(
+                inbox.querySelectorAll(
+                    '[data-testid="upcoming-card"], [data-testid="inbox-card"]'
+                )
+            ).map((el) => el.textContent)
+        ).toEqual([
+            expect.stringContaining('Renew the car insurance'),
+            expect.stringContaining('Call the dentist'),
+        ]);
+        await settle();
+        fireEvent.keyDown(card, { key: 'T', shiftKey: true });
+        await settle();
+
+        expect(mockApply).toHaveBeenCalledWith(
+            TOMORROW,
+            [{ op: 'add', task_uid: 'u1' }],
+            `${TOMORROW}@0`
+        );
+        expect(server.uids(TOMORROW)).toEqual(['u1']);
+        // Planned on a day, it leaves the inbox column.
+        expect(
+            within(inbox).queryByText('Renew the car insurance')
+        ).not.toBeInTheDocument();
+        expect(
+            within(column(TOMORROW)).getByText('Renew the car insurance')
+        ).toBeInTheDocument();
+    });
+
+    it('counts unsorted tasks with the ideas on the collapsed bar', async () => {
+        useStore.getState().inboxStore.setInboxItems([]);
+        mockFetchTasks.mockImplementation(async (query?: string) => ({
+            tasks: query === '?type=unsorted' ? [task('u1', 'Loose task')] : [],
+            metrics: {} as never,
+        }));
+        localStorage.setItem('upcoming.inboxCollapsed', '1');
+        renderBoard();
+        expect(
+            await screen.findByRole('button', { name: 'Show the inbox (1)' })
+        ).toBeEnabled();
+    });
+
+    it('opens an unsorted task of the inbox column in the side pane', async () => {
+        mockFetchTasks.mockImplementation(async (query?: string) => ({
+            tasks: query === '?type=unsorted' ? [task('u1', 'Loose task')] : [],
+            metrics: {} as never,
+        }));
+        renderBoard();
+        const inbox = screen.getByTestId('inbox-column');
+        fireEvent.click(await within(inbox).findByText('Loose task'));
+        expect(mockOpenTask).toHaveBeenCalledWith('u1', undefined);
     });
 
     it('opens This week on its planned tasks when nothing else is in it', async () => {

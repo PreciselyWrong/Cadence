@@ -61,6 +61,8 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
 - [x] Tâches venues d'un TODO.md : se comportent comme de vraies tâches, sur le web et sur Android
 - [ ] Style des apps de référence repris sur tout le desktop, pas seulement Aujourd'hui
 - [ ] Cases `- [ ]` écrites dans une note : deviennent des tâches liées à la note
+- [ ] Android : Inbox de Planifier à reprendre avec Planifier : « + » crée une tâche, tâches à classer listées avant les idées et glissables sur un jour
+  Raison : web d'abord (2026-11-12). Vérif : une tâche ajoutée par le « + » de l'Inbox apparaît dans « Tâches à classer » sur le téléphone.
 
 ## Note de l'ajout rapide Android : focus et fermeture [cadence:c7e743d5-3c37-4ee1-812c-f2e134017ddc]
 

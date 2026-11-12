@@ -217,3 +217,36 @@ export const useHorizonTasks = (enabled: boolean) => {
 
     return { tasks, firstDayOfWeek, error, reload };
 };
+
+/**
+ * The tasks of Inbox › « Tâches à classer » (`GET /tasks?type=unsorted`,
+ * docs/41-auto-classify.md), for the board's inbox column: fetched while
+ * `enabled`, again after a write or a save in the side pane. Null until the
+ * first answer; a failed first load shows none.
+ */
+export const useUnsortedTasks = (enabled: boolean) => {
+    const [tasks, setTasks] = useState<Task[] | null>(null);
+    const seq = useRef(0);
+
+    const reload = useCallback(async () => {
+        const mine = ++seq.current;
+        try {
+            const result = await fetchTasks('?type=unsorted');
+            if (seq.current !== mine) return;
+            setTasks(result.tasks);
+        } catch {
+            if (seq.current !== mine) return;
+            setTasks((current) => current ?? []);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (enabled) void reload();
+    }, [enabled, reload]);
+
+    useTaskUpdatedEvent(() => {
+        if (enabled) void reload();
+    });
+
+    return { tasks, reload };
+};

@@ -75,8 +75,14 @@ import DayCalendar, {
 } from '../Today/DayCalendar';
 import { useIsNarrow } from '../../hooks/useIsNarrow';
 import { parseQuickAdd } from '../../utils/quickAddParse';
-import { useCalendarEvents, useDays, useHorizonTasks } from './useDays';
+import {
+    useCalendarEvents,
+    useDays,
+    useHorizonTasks,
+    useUnsortedTasks,
+} from './useDays';
 import InboxColumn, {
+    INBOX_CARD_DATE,
     inboxCollapsed,
     loadInboxCollapsed,
     openInboxItems,
@@ -157,7 +163,7 @@ const OVERDUE = 'overdue';
 const CARD = '[data-testid="upcoming-card"]';
 const COLUMN =
     '[data-testid="upcoming-column"], [data-testid="horizon-column"]';
-const CONTAINER = `${COLUMN}, [data-testid="upcoming-overdue"]`;
+const CONTAINER = `${COLUMN}, [data-testid="upcoming-overdue"], [data-testid="inbox-column"]`;
 
 // Pointer first, rectangles when the pointer is between targets (keyboard).
 const collision: CollisionDetection = (args) => {
@@ -427,9 +433,25 @@ const UpcomingBoard: React.FC = () => {
 
     const inboxItems = useStore((state) => state.inboxStore.inboxItems);
     const inboxLoading = useStore((state) => state.inboxStore.isLoading);
-    const openInboxCount = openInboxItems(inboxItems).length;
+    const unsorted = useUnsortedTasks(options.showInbox);
+    // Tasks planned on a loaded day from today on: the server still counts
+    // them unsorted (a plan line is no moment), the inbox column does not.
+    // Read from the days after they load, hence state.
+    const [plannedSoon, setPlannedSoon] = useState('');
+    const inboxTasks = useMemo(() => {
+        const planned = new Set(plannedSoon.split(','));
+        return (unsorted.tasks ?? []).filter(
+            (task) => !planned.has(task.uid as string)
+        );
+    }, [unsorted.tasks, plannedSoon]);
+    const inboxTasksRef = useRef(inboxTasks);
+    inboxTasksRef.current = inboxTasks;
+    const openInboxCount =
+        openInboxItems(inboxItems).length + inboxTasks.length;
     const inboxIsCollapsed =
-        !inboxLoading && inboxCollapsed(openInboxCount, inboxChoice);
+        !inboxLoading &&
+        unsorted.tasks !== null &&
+        inboxCollapsed(openInboxCount, inboxChoice);
     const inboxWidth = options.showInbox
         ? inboxIsCollapsed
             ? INBOX_COLLAPSED_WIDTH
@@ -469,6 +491,17 @@ const UpcomingBoard: React.FC = () => {
         mutate,
         reload: reloadDays,
     } = useDays(fetchDates);
+    useEffect(() => {
+        setPlannedSoon(
+            Object.entries(days)
+                .filter(([date]) => date >= today)
+                .flatMap(([, day]) =>
+                    (day.plan?.items ?? []).map((item) => item.task_uid)
+                )
+                .sort()
+                .join(',')
+        );
+    }, [days, today]);
     const shownDays = useMemo(
         () =>
             Object.fromEntries(
@@ -525,15 +558,33 @@ const UpcomingBoard: React.FC = () => {
         }
     }, [pendingFocus, days]);
 
-    const reloadHorizons = horizon.reload;
+    // The task lists beside the days: the horizons and the inbox's tasks.
+    const reloadHorizonTasks = horizon.reload;
+    const reloadUnsorted = unsorted.reload;
+    const showInbox = options.showInbox;
+    const reloadHorizons = useCallback(
+        () =>
+            Promise.all([
+                reloadHorizonTasks(),
+                showInbox ? reloadUnsorted() : undefined,
+            ]),
+        [reloadHorizonTasks, reloadUnsorted, showInbox]
+    );
     const reload = useCallback(
         async (only?: string[]) => {
             await Promise.all([
                 reloadDays(only),
-                horizonsMode ? reloadHorizons() : Promise.resolve(),
+                horizonsMode ? reloadHorizonTasks() : undefined,
+                showInbox ? reloadUnsorted() : undefined,
             ]);
         },
-        [reloadDays, reloadHorizons, horizonsMode]
+        [
+            reloadDays,
+            reloadHorizonTasks,
+            reloadUnsorted,
+            horizonsMode,
+            showInbox,
+        ]
     );
 
     const fail = useCallback(
@@ -802,15 +853,9 @@ const UpcomingBoard: React.FC = () => {
         [fail, reloadHorizons, showUndoToast, t]
     );
 
-    /**
-     * "+ Add a task" of a day: the typed line is read for a date, a time, a
-     * duration, a project, tags and a priority (never a due date). The task
-     * is planned on the date it names, else on the column's day, slotted at
-     * the time it names.
-     */
-    const addTask = useCallback(
-        async (date: string, text: string) => {
-            const parsed = parseQuickAdd(text, {
+    const parseLine = useCallback(
+        (text: string) =>
+            parseQuickAdd(text, {
                 // Today in the user's timezone, not the browser's.
                 now: parseISO(today),
                 locale,
@@ -820,9 +865,42 @@ const UpcomingBoard: React.FC = () => {
                         id: project.id as number,
                         name: project.name,
                     })),
-            });
-            const name = parsed.name.trim();
-            if (!name) {
+            }),
+        [locale, projects, today]
+    );
+
+    // The task a typed line describes: its project, tags, priority and
+    // duration, never a due date.
+    const createFromLine = useCallback(
+        (parsed: ReturnType<typeof parseQuickAdd>) =>
+            createTask({
+                name: parsed.name.trim(),
+                status: TASK_STATUS.NOT_STARTED,
+                completed_at: null,
+                ...(parsed.projectId !== undefined
+                    ? { project_id: parsed.projectId }
+                    : {}),
+                ...(parsed.tags.length > 0
+                    ? { tags: parsed.tags.map((tag) => ({ name: tag })) }
+                    : {}),
+                ...(parsed.priority ? { priority: parsed.priority } : {}),
+                ...(parsed.durationMinutes
+                    ? { estimated_minutes: parsed.durationMinutes }
+                    : {}),
+            } as unknown as Task),
+        []
+    );
+
+    /**
+     * "+ Add a task" of a day: the typed line is read for a date, a time, a
+     * duration, a project, tags and a priority (never a due date). The task
+     * is planned on the date it names, else on the column's day, slotted at
+     * the time it names.
+     */
+    const addTask = useCallback(
+        async (date: string, text: string) => {
+            const parsed = parseLine(text);
+            if (!parsed.name.trim()) {
                 showErrorToast(
                     t('upcoming.addEmptyName', 'Add a name for the task')
                 );
@@ -830,21 +908,7 @@ const UpcomingBoard: React.FC = () => {
             }
             const on = parsed.date ?? date;
             try {
-                const task = await createTask({
-                    name,
-                    status: TASK_STATUS.NOT_STARTED,
-                    completed_at: null,
-                    ...(parsed.projectId !== undefined
-                        ? { project_id: parsed.projectId }
-                        : {}),
-                    ...(parsed.tags.length > 0
-                        ? { tags: parsed.tags.map((tag) => ({ name: tag })) }
-                        : {}),
-                    ...(parsed.priority ? { priority: parsed.priority } : {}),
-                    ...(parsed.durationMinutes
-                        ? { estimated_minutes: parsed.durationMinutes }
-                        : {}),
-                } as unknown as Task);
+                const task = await createFromLine(parsed);
                 if (!task.uid) return false;
                 const op: PlanOp = {
                     op: 'add',
@@ -867,7 +931,39 @@ const UpcomingBoard: React.FC = () => {
                 return false;
             }
         },
-        [commit, fail, locale, projects, showErrorToast, t, today]
+        [commit, createFromLine, fail, parseLine, showErrorToast, t]
+    );
+
+    /**
+     * The + of the inbox column: a task, read like a day's line. A date (or
+     * a time, today) plans it on that day; without one it waits unsorted in
+     * the inbox (« Tâches à classer »), even when filed in a project.
+     */
+    const addToInbox = useCallback(
+        async (text: string) => {
+            const parsed = parseLine(text);
+            // The column keeps the text and says it could not add it.
+            if (!parsed.name.trim()) return false;
+            const on =
+                parsed.date ??
+                (parsed.startMinute !== undefined ? today : undefined);
+            if (on) return addTask(on, text);
+            try {
+                const task = await createFromLine(parsed);
+                if (!task.uid) return false;
+                // Filed, it would leave « Tâches à classer » without its moment.
+                if (parsed.projectId !== undefined) {
+                    await updateTask(task.uid, {
+                        needs_when: true,
+                    } as Partial<Task>);
+                }
+                await reloadUnsorted();
+                return true;
+            } catch {
+                return false;
+            }
+        },
+        [addTask, createFromLine, parseLine, reloadUnsorted, today]
     );
 
     // "+ Add a task" of a horizon: created, then committed to it.
@@ -1055,6 +1151,12 @@ const UpcomingBoard: React.FC = () => {
 
     const nameOf = (data: DragData): string => {
         if (data.kind === 'inbox') return data.title;
+        if (data.date === INBOX_CARD_DATE) {
+            return (
+                inboxTasksRef.current.find((task) => task.uid === data.uid)
+                    ?.name ?? ''
+            );
+        }
         const key = horizonFromCardDate(data.date);
         if (key) {
             return (
@@ -1102,6 +1204,8 @@ const UpcomingBoard: React.FC = () => {
             });
         }
         if (over.date === OVERDUE) return t('upcoming.overdue', 'Overdue');
+        // An inbox card takes no drop: the card is over no day.
+        if (over.date === INBOX_CARD_DATE) return null;
         const key = horizonFromCardDate(over.date);
         return key ? horizonTitles[key] : longDay(over.date);
     };
@@ -1186,7 +1290,11 @@ const UpcomingBoard: React.FC = () => {
         over: Exclude<OverData, HorizonDropData>
     ): { writes: PlanWrite[]; message?: string } => {
         // The overdue strip takes nothing: overdue is a due date, not a plan.
-        if (over.kind !== 'grid' && over.date === OVERDUE)
+        // Nor does the inbox: a plan line is taken back by undo, not a drop.
+        if (
+            over.kind !== 'grid' &&
+            (over.date === OVERDUE || over.date === INBOX_CARD_DATE)
+        )
             return { writes: [] };
         const fromHorizon = horizonFromCardDate(data.date) !== null;
         // An overdue card sits on no day's plan.
@@ -1264,9 +1372,15 @@ const UpcomingBoard: React.FC = () => {
     const sourceDays = (data: Exclude<DragData, InboxDragData>): string[] =>
         data.date === OVERDUE
             ? [today]
-            : horizonFromCardDate(data.date)
+            : horizonFromCardDate(data.date) || data.date === INBOX_CARD_DATE
               ? []
               : [data.date];
+
+    // An inbox task is on no loaded day yet: the local plan needs it.
+    const inboxTaskOf = (data: Exclude<DragData, InboxDragData>): Task[] =>
+        data.date === INBOX_CARD_DATE
+            ? inboxTasksRef.current.filter((task) => task.uid === data.uid)
+            : [];
 
     const onDragEnd = (event: DragEndEvent) => {
         endDrag();
@@ -1286,7 +1400,7 @@ const UpcomingBoard: React.FC = () => {
         }
         if (over.kind === 'horizon') return;
         const { writes, message } = dropWrites(event, data, over);
-        void commit(writes, message, sourceDays(data));
+        void commit(writes, message, sourceDays(data), inboxTaskOf(data));
     };
 
     // Keyboard drags start on M only: Enter opens a card, and Space must not
@@ -1350,7 +1464,8 @@ const UpcomingBoard: React.FC = () => {
         void commit(
             writes,
             t('upcoming.moved', 'Task moved'),
-            sourceDays(card)
+            sourceDays(card),
+            inboxTaskOf(card)
         ).finally(() => {
             if (focus) {
                 setPendingFocus((current) =>
@@ -1852,7 +1967,17 @@ const UpcomingBoard: React.FC = () => {
                                 <div className="flex min-h-0 shrink-0 p-1">
                                     <InboxColumn
                                         items={inboxItems}
-                                        loading={inboxLoading}
+                                        tasks={inboxTasks}
+                                        today={today}
+                                        loading={
+                                            inboxLoading ||
+                                            unsorted.tasks === null
+                                        }
+                                        openTaskUid={openTaskUid}
+                                        onAdd={addToInbox}
+                                        onOpenTask={(line) => openLine(line)}
+                                        onToggleTask={toggle}
+                                        onToggleSubtask={toggleSubtask}
                                         collapsed={inboxIsCollapsed}
                                         onCollapsedChange={setInboxCollapsed}
                                     />
