@@ -26,6 +26,23 @@ router.post(
     '/links',
     handle((req) => links.create(req.currentUser.id, req.body))
 );
+router.get(
+    '/links/lookup',
+    handle((req) => links.lookup(req.currentUser, req.query))
+);
+router.post('/links/task', async (req, res) => {
+    try {
+        res.status(201).json(
+            await links.captureTask(req.currentUser, req.body)
+        );
+    } catch (error) {
+        if (error.statusCode) {
+            return res.status(error.statusCode).json({ error: error.message });
+        }
+        logError({ error }, 'Link task capture failed');
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 router.post(
     '/links/import',
     handle((req) => links.importLinks(req.currentUser.id, req.body?.items))

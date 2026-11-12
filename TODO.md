@@ -77,6 +77,8 @@ Branche `fix/note-quickadd-focus-c7e743d5`.
 
 ## Next
 
+- Add-on Firefox Cadence signé en non listé (web-ext sign --channel=unlisted, clés AMO dans .env, gecko.id fixe, script publish.ps1 -Sign) pour une installation permanente sans le site de Mozilla.
+
 - Cartes « Mail » dans « À trier » (web et Android)
   Spec : `docs/43-mail-triage.md`. L'agent de tri des mails propose par MCP (`propose_mail`) les fils qui demandent une action ; on décide dans « À trier » : Tâche, Répondre (brouillon dans Gmail), Plus tard, Ignorer, archivage Gmail optionnel par l'outil Gmail restreint. Pas de corps de mail stocké, pas d'envoi. Étapes : serveur (table `mail_items`, entité de synchro, outils MCP, route), carte web, carte Android + Room, consigne de l'agent dans Hermes. Vérif : voir « Checks once built » de la spec.
 - Web : reprendre la passe de soustraction Android du 2026-11-02 (`docs/fork/ANDROID-UX-NOTES.md`)

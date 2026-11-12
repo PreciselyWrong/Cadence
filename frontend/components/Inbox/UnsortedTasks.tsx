@@ -12,7 +12,8 @@ const chip =
 // « Tâches à classer » (docs/41-auto-classify.md): open tasks with no moment
 // decided, filed nowhere or filed for the user (needs_when). A filed one asks
 // « Quand ? » until a moment is chosen, so it cannot be forgotten in its area.
-const UnsortedTasks: React.FC = () => {
+// `reloadKey` changes when the Inbox made a task here (an address captured).
+const UnsortedTasks: React.FC<{ reloadKey?: number }> = ({ reloadKey = 0 }) => {
     const { t } = useTranslation();
     const { showErrorToast } = useToast();
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -29,7 +30,7 @@ const UnsortedTasks: React.FC = () => {
 
     useEffect(() => {
         load();
-    }, [load]);
+    }, [load, reloadKey]);
 
     const decide = async (task: Task, decision: TaskDecision) => {
         if (!task.uid) return;

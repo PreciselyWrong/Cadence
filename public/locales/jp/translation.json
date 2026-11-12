@@ -5734,7 +5734,24 @@
     "editTitle": "リンクを編集",
     "deleteTitle": "このリンクを削除しますか?",
     "deleteMessage": "リンクから完全に削除されます。脇に置いておくだけなら、代わりにアーカイブしてください。",
-    "deleteError": "リンクを削除できませんでした。"
+    "deleteError": "リンクを削除できませんでした。",
+    "taskVerb": {
+      "try": "試す: {{title}}",
+      "read": "読む: {{title}}",
+      "watch": "見る: {{title}}"
+    },
+    "capture": {
+      "taskName": "タスク名",
+      "alreadyIn": "「{{name}}」にすでにあります",
+      "more": "+{{count}}",
+      "open": "開く",
+      "addAnyway": "それでも追加",
+      "toProject": "プロジェクト…",
+      "keepInInbox": "受信箱",
+      "taskAdded": "タスクを追加しました",
+      "taskToSort": "「整理するタスク」にタスクを追加しました",
+      "addedToProject": "プロジェクトに追加しました"
+    }
   },
   "dailyBrief": {
     "sectionName": {

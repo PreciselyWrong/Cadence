@@ -36,6 +36,13 @@ function normalizeUrl(url) {
     return href;
 }
 
+// Two spellings of one page compare equal: the normalized address without
+// "www.". Null when it is not a web address.
+function addressKey(url) {
+    const normalized = normalizeUrl(url);
+    return normalized ? normalized.replace(/^(https?:\/\/)www\./i, '$1') : null;
+}
+
 function domainOf(url) {
     const parsed = parse(url);
     return parsed ? parsed.hostname.toLowerCase().replace(/^www\./, '') : null;
@@ -176,6 +183,7 @@ function isContextUrl(url, extraHosts = []) {
 }
 
 module.exports = {
+    addressKey,
     normalizeUrl,
     domainOf,
     repoPath,

@@ -5734,7 +5734,24 @@
     "editTitle": "Muokkaa linkkiä",
     "deleteTitle": "Poistetaanko tämä linkki?",
     "deleteMessage": "Se poistuu linkeistäsi lopullisesti. Jos haluat vain siirtää sen syrjään, arkistoi se.",
-    "deleteError": "Linkkiä ei voitu poistaa."
+    "deleteError": "Linkkiä ei voitu poistaa.",
+    "taskVerb": {
+      "try": "Kokeile: {{title}}",
+      "read": "Lue: {{title}}",
+      "watch": "Katso: {{title}}"
+    },
+    "capture": {
+      "taskName": "Tehtävän nimi",
+      "alreadyIn": "On jo kohteessa « {{name}} »",
+      "more": "+{{count}}",
+      "open": "Avaa",
+      "addAnyway": "Lisää silti",
+      "toProject": "Projekti…",
+      "keepInInbox": "Saapuneet",
+      "taskAdded": "Tehtävä lisätty",
+      "taskToSort": "Tehtävä lisätty kohtaan « Lajiteltavat tehtävät »",
+      "addedToProject": "Lisätty projektiin"
+    }
   },
   "dailyBrief": {
     "sectionName": {

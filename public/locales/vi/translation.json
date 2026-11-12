@@ -5734,7 +5734,24 @@
     "editTitle": "Sửa liên kết",
     "deleteTitle": "Xóa liên kết này?",
     "deleteMessage": "Liên kết sẽ rời khỏi danh sách của bạn vĩnh viễn. Để tạm cất đi, hãy lưu trữ nó thay vào đó.",
-    "deleteError": "Không thể xóa liên kết."
+    "deleteError": "Không thể xóa liên kết.",
+    "taskVerb": {
+      "try": "Thử: {{title}}",
+      "read": "Đọc: {{title}}",
+      "watch": "Xem: {{title}}"
+    },
+    "capture": {
+      "taskName": "Tên việc",
+      "alreadyIn": "Đã có trong « {{name}} »",
+      "more": "+{{count}}",
+      "open": "Mở",
+      "addAnyway": "Vẫn thêm",
+      "toProject": "Dự án…",
+      "keepInInbox": "Hộp thư đến",
+      "taskAdded": "Đã thêm việc",
+      "taskToSort": "Đã thêm việc vào « Việc cần sắp xếp »",
+      "addedToProject": "Đã thêm vào dự án"
+    }
   },
   "dailyBrief": {
     "sectionName": {

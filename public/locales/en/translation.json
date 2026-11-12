@@ -5704,7 +5704,24 @@
     "editTitle": "Edit the link",
     "deleteTitle": "Delete this link?",
     "deleteMessage": "It leaves your links for good. To set it aside, archive it instead.",
-    "deleteError": "Could not delete the link."
+    "deleteError": "Could not delete the link.",
+    "taskVerb": {
+      "try": "Try: {{title}}",
+      "read": "Read: {{title}}",
+      "watch": "Watch: {{title}}"
+    },
+    "capture": {
+      "taskName": "Task name",
+      "alreadyIn": "Already in « {{name}} »",
+      "more": "+{{count}}",
+      "open": "Open",
+      "addAnyway": "Add anyway",
+      "toProject": "Project…",
+      "keepInInbox": "Inbox",
+      "taskAdded": "Task added",
+      "taskToSort": "Task added to Tasks to sort",
+      "addedToProject": "Added to the project"
+    }
   },
   "dailyBrief": {
     "sectionName": {

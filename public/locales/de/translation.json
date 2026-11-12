@@ -5743,7 +5743,24 @@
     "editTitle": "Link bearbeiten",
     "deleteTitle": "Diesen Link löschen?",
     "deleteMessage": "Er verschwindet endgültig aus deinen Links. Um ihn nur beiseitezulegen, archiviere ihn stattdessen.",
-    "deleteError": "Der Link konnte nicht gelöscht werden."
+    "deleteError": "Der Link konnte nicht gelöscht werden.",
+    "taskVerb": {
+      "try": "Ausprobieren: {{title}}",
+      "read": "Lesen: {{title}}",
+      "watch": "Ansehen: {{title}}"
+    },
+    "capture": {
+      "taskName": "Aufgabenname",
+      "alreadyIn": "Bereits in « {{name}} »",
+      "more": "+{{count}}",
+      "open": "Öffnen",
+      "addAnyway": "Trotzdem hinzufügen",
+      "toProject": "Projekt…",
+      "keepInInbox": "Posteingang",
+      "taskAdded": "Aufgabe hinzugefügt",
+      "taskToSort": "Aufgabe zu « Zu sortierende Aufgaben » hinzugefügt",
+      "addedToProject": "Zum Projekt hinzugefügt"
+    }
   },
   "dailyBrief": {
     "sectionName": {

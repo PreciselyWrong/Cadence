@@ -5752,7 +5752,24 @@
     "editTitle": "Editează linkul",
     "deleteTitle": "Ștergi acest link?",
     "deleteMessage": "Iese definitiv din linkurile tale. Ca să-l pui deoparte, arhivează-l în schimb.",
-    "deleteError": "Linkul nu a putut fi șters."
+    "deleteError": "Linkul nu a putut fi șters.",
+    "taskVerb": {
+      "try": "Încearcă: {{title}}",
+      "read": "Citește: {{title}}",
+      "watch": "Urmărește: {{title}}"
+    },
+    "capture": {
+      "taskName": "Numele sarcinii",
+      "alreadyIn": "Există deja în « {{name}} »",
+      "more": "+{{count}}",
+      "open": "Deschide",
+      "addAnyway": "Adaugă oricum",
+      "toProject": "Proiect…",
+      "keepInInbox": "Căsuța de primire",
+      "taskAdded": "Sarcină adăugată",
+      "taskToSort": "Sarcină adăugată la « Sarcini de sortat »",
+      "addedToProject": "Adăugat la proiect"
+    }
   },
   "dailyBrief": {
     "sectionName": {

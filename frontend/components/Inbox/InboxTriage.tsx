@@ -5,6 +5,11 @@ import React, {
     useRef,
     useState,
 } from 'react';
+import {
+    capturedTask,
+    isOnlyAddress,
+    VERB_FALLBACKS,
+} from '../../utils/linkTaskName';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { InboxIcon } from '@heroicons/react/24/outline';
@@ -165,9 +170,19 @@ const InboxTriage: React.FC<InboxTriageProps> = ({
                 return;
             }
 
-            const draft = address
-                ? linkTaskDraft({ url: address, title: pageTitle, text: words })
-                : { name: title, note: rest };
+            // An idea that is only an address: named by its kind of page.
+            const onlyAddress = address && isOnlyAddress(item.content);
+            const draft = onlyAddress
+                ? capturedTask({ url: address, title: pageTitle }, (key, t2) =>
+                      t(key, VERB_FALLBACKS[key], { title: t2 })
+                  )
+                : address
+                  ? linkTaskDraft({
+                        url: address,
+                        title: pageTitle,
+                        text: words,
+                    })
+                  : { name: title, note: rest };
 
             let into: ProcessedInto;
             if (kind === 'task') {
@@ -181,6 +196,13 @@ const InboxTriage: React.FC<InboxTriageProps> = ({
                             tags,
                             project_uid: project?.uid,
                             completed_at: null,
+                            ...(onlyAddress
+                                ? {
+                                      needs_when: !project?.uid,
+                                      source: 'link',
+                                      source_url: address,
+                                  }
+                                : {}),
                         },
                         analysis
                     )

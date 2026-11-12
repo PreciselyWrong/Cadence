@@ -97,3 +97,27 @@ export const addLinkFrom = (
     source: { type: 'task' | 'note'; uid: string }
 ): Promise<{ link: Link; created: boolean }> =>
     createLink({ url, source_type: source.type, source_uid: source.uid });
+
+// Where an address already is, before it is captured again: open tasks
+// holding it and projects that hold it (docs/37-links.md, Capture).
+export interface AddressPlaces {
+    url: string;
+    kind: string;
+    task_name: string;
+    tasks: { uid: string; name: string }[];
+    projects: { uid: string; name: string }[];
+}
+
+export const lookupAddress = async (
+    url: string,
+    title?: string | null
+): Promise<AddressPlaces> => {
+    const query = new URLSearchParams({ url });
+    if (title) query.set('title', title);
+    const response = await fetch(getApiPath(`links/lookup?${query}`), {
+        credentials: 'include',
+        headers: { Accept: 'application/json' },
+    });
+    await handleAuthResponse(response, 'Failed to look up the address.');
+    return response.json();
+};

@@ -377,7 +377,24 @@
     "editTitle": "Upraviť odkaz",
     "deleteTitle": "Odstrániť tento odkaz?",
     "deleteMessage": "Natrvalo zmizne z vašich odkazov. Ak ho chcete len odložiť, radšej ho archivujte.",
-    "deleteError": "Odkaz sa nepodarilo odstrániť."
+    "deleteError": "Odkaz sa nepodarilo odstrániť.",
+    "taskVerb": {
+      "try": "Vyskúšať: {{title}}",
+      "read": "Prečítať: {{title}}",
+      "watch": "Pozrieť: {{title}}"
+    },
+    "capture": {
+      "taskName": "Názov úlohy",
+      "alreadyIn": "Už je v « {{name}} »",
+      "more": "+{{count}}",
+      "open": "Otvoriť",
+      "addAnyway": "Pridať napriek tomu",
+      "toProject": "Projekt…",
+      "keepInInbox": "Schránka",
+      "taskAdded": "Úloha pridaná",
+      "taskToSort": "Úloha pridaná do « Úlohy na roztriedenie »",
+      "addedToProject": "Pridané do projektu"
+    }
   },
   "dailyBrief": {
     "sectionName": {

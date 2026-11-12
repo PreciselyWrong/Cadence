@@ -39,7 +39,8 @@ Native Kotlin app (Jetpack Compose, Room, Glance widgets), merged from the forme
 - **Capture and reminders:** share text from any app into the inbox, and get reminders with _Complete_ and _Later_ actions, shifted out of your quiet hours.
 - **Habits:** synced with the server, so they can be seen and edited on the web.
 - **Review, goals, Stash:** the weekly review, the Stash of paused projects, next actions and goals, as on the web.
-- **Links:** every link you capture, with what the page is, GitHub stats, your note and a status (Try, Keep, Later, Drop), readable offline.
+- **Links become tasks:** share or capture an address and it becomes a task named by its kind (« Essayer / Lire / Regarder : … »), the address in its note, with « Déjà dans … » when you already have it.
+- **Links:** every link you keep, with what the page is, GitHub stats, your note and a status, readable offline.
 - **Links in text:** addresses in task titles, task notes and note titles open on tap; use the edit button beside linked text to change it.
 
 Build and install a debug APK with `cd android && ./dev.sh` (JDK 21). See [android/AGENTS.md](android/AGENTS.md).

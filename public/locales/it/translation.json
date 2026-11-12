@@ -5747,7 +5747,24 @@
     "editTitle": "Modifica il link",
     "deleteTitle": "Eliminare questo link?",
     "deleteMessage": "Lascia i tuoi link per sempre. Per metterlo da parte, archivialo invece.",
-    "deleteError": "Impossibile eliminare il link."
+    "deleteError": "Impossibile eliminare il link.",
+    "taskVerb": {
+      "try": "Prova: {{title}}",
+      "read": "Leggi: {{title}}",
+      "watch": "Guarda: {{title}}"
+    },
+    "capture": {
+      "taskName": "Nome dell'attività",
+      "alreadyIn": "Già in « {{name}} »",
+      "more": "+{{count}}",
+      "open": "Apri",
+      "addAnyway": "Aggiungi comunque",
+      "toProject": "Progetto…",
+      "keepInInbox": "Inbox",
+      "taskAdded": "Attività aggiunta",
+      "taskToSort": "Attività aggiunta a « Attività da ordinare »",
+      "addedToProject": "Aggiunto al progetto"
+    }
   },
   "dailyBrief": {
     "sectionName": {

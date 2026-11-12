@@ -276,6 +276,10 @@ function buildTaskAttributes(body, userId, timezone, isUpdate = false) {
 
     if (!isUpdate) {
         attrs.user_id = userId;
+        // A captured address waits for « Quand ? » (docs/37-links.md).
+        if (body.needs_when !== undefined) {
+            attrs.needs_when = body.needs_when === true;
+        }
     }
 
     if (body.estimated_minutes !== undefined) {

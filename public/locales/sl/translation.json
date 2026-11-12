@@ -5790,7 +5790,24 @@
     "editTitle": "Uredi povezavo",
     "deleteTitle": "Izbrišem to povezavo?",
     "deleteMessage": "Za vedno izgine iz vaših povezav. Če jo želite le odložiti, jo raje arhivirajte.",
-    "deleteError": "Povezave ni bilo mogoče izbrisati."
+    "deleteError": "Povezave ni bilo mogoče izbrisati.",
+    "taskVerb": {
+      "try": "Preizkusi: {{title}}",
+      "read": "Preberi: {{title}}",
+      "watch": "Oglej si: {{title}}"
+    },
+    "capture": {
+      "taskName": "Ime naloge",
+      "alreadyIn": "Že v « {{name}} »",
+      "more": "+{{count}}",
+      "open": "Odpri",
+      "addAnyway": "Vseeno dodaj",
+      "toProject": "Projekt…",
+      "keepInInbox": "Prejeto",
+      "taskAdded": "Naloga dodana",
+      "taskToSort": "Naloga dodana v « Naloge za razvrstitev »",
+      "addedToProject": "Dodano v projekt"
+    }
   },
   "dailyBrief": {
     "sectionName": {

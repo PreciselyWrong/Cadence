@@ -5750,7 +5750,24 @@
     "editTitle": "Modifier le lien",
     "deleteTitle": "Supprimer ce lien ?",
     "deleteMessage": "Il quitte vos liens pour de bon. Pour le mettre de côté, archivez-le plutôt.",
-    "deleteError": "Le lien n'a pas pu être supprimé."
+    "deleteError": "Le lien n'a pas pu être supprimé.",
+    "taskVerb": {
+      "try": "Essayer : {{title}}",
+      "read": "Lire : {{title}}",
+      "watch": "Regarder : {{title}}"
+    },
+    "capture": {
+      "taskName": "Nom de la tâche",
+      "alreadyIn": "Déjà dans « {{name}} »",
+      "more": "+{{count}}",
+      "open": "Ouvrir",
+      "addAnyway": "Ajouter quand même",
+      "toProject": "Projet…",
+      "keepInInbox": "Inbox",
+      "taskAdded": "Tâche ajoutée",
+      "taskToSort": "Tâche ajoutée à « Tâches à classer »",
+      "addedToProject": "Ajouté au projet"
+    }
   },
   "dailyBrief": {
     "sectionName": {

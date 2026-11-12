@@ -34,6 +34,9 @@ import ch.nicolab.cadence.tasks.model.GoalStatus
 import ch.nicolab.cadence.tasks.model.Goals
 import ch.nicolab.cadence.tasks.model.IdeaNotes
 import ch.nicolab.cadence.tasks.model.IdeaTasks
+import ch.nicolab.cadence.tasks.quickadd.ShareAction
+import ch.nicolab.cadence.tasks.quickadd.ShareCapture
+import ch.nicolab.cadence.tasks.quickadd.ShareWrite
 import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.model.LinkItem
 import ch.nicolab.cadence.tasks.model.NextAction
@@ -328,6 +331,17 @@ internal class TasksViewModel(
      * `POST /api/v1/links` (source : l'idée), puis l'idée passe en traitée, tout de suite et hors ligne compris.
      * « Annuler » retire l'appel (ou le lien revenu de la synchro) et rend l'idée à l'Inbox.
      */
+    /**
+     * Une idée qui n'est qu'une adresse devient tout de suite une tâche, nommée comme un partage (« Essayer : … », à
+     * classer). « Annuler » fonctionne comme pour toute idée transformée en tâche.
+     */
+    fun saveLinkIdeaAsTask(entry: InboxEntry, pageTitle: String?) = launchAction {
+        val write = ShareCapture.plan(
+            ShareAction.TASK, entry.content, pageTitle, emptyList(), emptyList(), null, ShareCapture.verbs(getApplication()),
+        ) as? ShareWrite.Task ?: return@launchAction
+        saveConversion(entry, write.draft)
+    }
+
     fun saveIdeaToLinks(entry: InboxEntry, pageTitle: String?, tagUids: List<String>, projectUid: String?) = launchAction {
         val names = IdeaTasks.tagNames(tagUids, tags.value)
         val draft = IdeaTasks.linkDraft(entry.content, pageTitle, names, projectUid, sourceUid = entry.uid) ?: return@launchAction

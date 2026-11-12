@@ -63,6 +63,13 @@ interface TaskDao {
     @Upsert
     suspend fun upsert(task: TaskEntity)
 
+    /** Tâches dont le nom ou la note contient [needle] (en minuscules, sans schéma) et qui ne sont pas closes. */
+    @Query(
+        """SELECT * FROM tasks WHERE status NOT IN (:closed)
+        AND (instr(lower(name), :needle) > 0 OR instr(lower(COALESCE(note, '')), :needle) > 0) LIMIT :limit""",
+    )
+    suspend fun openMentioning(needle: String, closed: List<Int>, limit: Int): List<TaskEntity>
+
     @Query("DELETE FROM tasks WHERE uid = :uid")
     suspend fun delete(uid: String)
 
@@ -217,6 +224,10 @@ interface LinkDao {
 
     @Query("SELECT * FROM links WHERE uid = :uid")
     suspend fun get(uid: String): LinkEntity?
+
+    /** Liens rangés dans un projet dont l'adresse contient [needle] ; le genre exact se vérifie après. */
+    @Query("SELECT * FROM links WHERE projectUid IS NOT NULL AND instr(lower(url), :needle) > 0")
+    suspend fun withProjectMentioning(needle: String): List<LinkEntity>
 
     /** Le lien enregistré depuis une idée, une tâche ou une note : « Annuler » le retrouve sans connaître son uid. */
     @Query("SELECT * FROM links WHERE sourceType = :type AND sourceUid = :uid LIMIT 1")

@@ -5734,7 +5734,24 @@
     "editTitle": "Edit tautan",
     "deleteTitle": "Hapus tautan ini?",
     "deleteMessage": "Tautan ini keluar dari daftar Anda untuk selamanya. Untuk menyisihkannya, arsipkan saja.",
-    "deleteError": "Tautan tidak dapat dihapus."
+    "deleteError": "Tautan tidak dapat dihapus.",
+    "taskVerb": {
+      "try": "Coba: {{title}}",
+      "read": "Baca: {{title}}",
+      "watch": "Tonton: {{title}}"
+    },
+    "capture": {
+      "taskName": "Nama tugas",
+      "alreadyIn": "Sudah ada di « {{name}} »",
+      "more": "+{{count}}",
+      "open": "Buka",
+      "addAnyway": "Tetap tambahkan",
+      "toProject": "Proyek…",
+      "keepInInbox": "Kotak Masuk",
+      "taskAdded": "Tugas ditambahkan",
+      "taskToSort": "Tugas ditambahkan ke « Tugas untuk dipilah »",
+      "addedToProject": "Ditambahkan ke proyek"
+    }
   },
   "dailyBrief": {
     "sectionName": {

@@ -1,9 +1,9 @@
 # Cadence links for Firefox
 
-Saves the current page or a link to your Cadence server, through `POST /api/links`. The AI Bookmark Tagger add-on stays separate: this one holds no AI and no bookmarks of its own.
+Makes the current page or a link a Cadence task, through `POST /api/links/task` (the server names it « Essayer / Lire / Regarder : … » from the kind of page, `docs/37-links.md`). The AI Bookmark Tagger add-on stays separate: this one holds no AI and no bookmarks of its own.
 
-- Toolbar button: title, status, tags and note, then save.
-- Right click on a page or a link: saved in one click, the button shows a mark.
+- Toolbar button or Alt+Shift+K: the proposed task name (editable), « Déjà dans … » with Open when the page is already in an open task or a project (`GET /api/links/lookup`), then « Créer la tâche ».
+- Right click on a page or a link: a task in one click, the button shows a mark.
 - Settings: the server address and an API token (Cadence: Profile › API tokens). The add-on asks for access to that server only, and reads no page beyond the tab you save.
 
 ```bash

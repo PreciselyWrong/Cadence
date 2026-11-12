@@ -3,7 +3,16 @@
 const { Tag } = require('../../models');
 const linksRepository = require('./repository');
 const { LINK_STATUSES, normalizeLinkStatus } = require('./core/constants');
-const { classifyKind, domainOf, normalizeUrl } = require('./core/urls');
+const {
+    addressKey,
+    classifyKind,
+    domainOf,
+    normalizeUrl,
+} = require('./core/urls');
+const { taskNameFor, urlsIn } = require('./core/taskName');
+const { translate } = require('../spreadsheets/core/locales');
+const taskRepository = require('../tasks/repository');
+const entitlements = require('../../services/entitlementsService');
 const { isDay } = require('./core/reviewDate');
 const { validateTagName } = require('../tags/tagsService');
 const { validateProjectAccess } = require('../tasks/utils/validation');
@@ -293,7 +302,95 @@ async function remove(userId, uid) {
     return { uid, deleted: true };
 }
 
+function validAddress(value) {
+    const url = typeof value === 'string' ? normalizeUrl(value.trim()) : null;
+    if (!url) throw new ValidationError('url must be an http(s) address');
+    return url;
+}
+
+// The name of the task an address becomes, in the user's language.
+function taskName(user, { url, title, kind }) {
+    return taskNameFor({ url, title, kind }, (key) =>
+        translate(user?.language || 'en', key)
+    );
+}
+
+// The prefilter of a task text: host without www. and path, as written.
+function needleOf(url) {
+    const parsed = new URL(url);
+    const host = parsed.hostname.replace(/^www\./, '');
+    const path = parsed.pathname === '/' ? '' : parsed.pathname;
+    return `${host}${path}`;
+}
+
+// The address with and without "www.", as pages may be stored.
+function spellingsOf(url) {
+    const bare = url.replace(/^(https?:\/\/)www\./i, '$1');
+    return [...new Set([url, bare, bare.replace(/^(https?:\/\/)/i, '$1www.')])];
+}
+
+// Where an address already is, before it is captured again: the open tasks
+// whose name or note holds it (same normalized address) and the projects
+// that hold it. With the name the new task would get.
+async function lookup(user, { url: raw, title } = {}) {
+    const url = validAddress(raw);
+    const candidates = await linksRepository.openTasksMentioning(
+        user.id,
+        needleOf(url)
+    );
+    const key = addressKey(url);
+    const tasks = candidates
+        .filter((task) =>
+            urlsIn(`${task.name ?? ''}\n${task.note ?? ''}`).some(
+                (found) => addressKey(found) === key
+            )
+        )
+        .map((task) => ({ uid: task.uid, name: task.name }));
+    const projects = (
+        await linksRepository.projectsHolding(user.id, spellingsOf(url))
+    ).map((project) => ({ uid: project.uid, name: project.name }));
+    const kind = classifyKind(url);
+    return {
+        url,
+        kind,
+        task_name: taskName(user, { url, title, kind }),
+        tasks,
+        projects,
+    };
+}
+
+// An address made a task in one gesture (add-on, agents): named by its kind
+// unless a name is given, the address in the note, waiting in « Tâches à
+// classer » for « Quand ? » unless a project is given.
+async function captureTask(user, body = {}) {
+    const url = validAddress(body.url);
+    const projectId = body.project_uid
+        ? await projectChange(user.id, body.project_uid)
+        : null;
+    const typed = typeof body.name === 'string' ? body.name.trim() : '';
+    const name = (typed || taskName(user, { url, title: body.title })).slice(
+        0,
+        MAX_TITLE
+    );
+    const words = typeof body.note === 'string' ? body.note.trim() : '';
+    await entitlements.assertCanCreate(user.id, 'task');
+    const task = await taskRepository.create({
+        user_id: user.id,
+        name,
+        note: [url, words].filter(Boolean).join('\n\n').slice(0, MAX_NOTE),
+        status: 0,
+        project_id: projectId,
+        needs_when: !projectId,
+        source: 'link',
+        source_url: url,
+    });
+    return { task: { uid: task.uid, name: task.name, note: task.note } };
+}
+
 module.exports = {
+    lookup,
+    captureTask,
+    taskName,
     list,
     get,
     create,

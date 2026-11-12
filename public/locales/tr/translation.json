@@ -5734,7 +5734,24 @@
     "editTitle": "Bağlantıyı düzenle",
     "deleteTitle": "Bu bağlantı silinsin mi?",
     "deleteMessage": "Bağlantılarınızdan kalıcı olarak çıkar. Kenara koymak için bunun yerine arşivleyin.",
-    "deleteError": "Bağlantı silinemedi."
+    "deleteError": "Bağlantı silinemedi.",
+    "taskVerb": {
+      "try": "Dene: {{title}}",
+      "read": "Oku: {{title}}",
+      "watch": "İzle: {{title}}"
+    },
+    "capture": {
+      "taskName": "Görev adı",
+      "alreadyIn": "« {{name}} » içinde zaten var",
+      "more": "+{{count}}",
+      "open": "Aç",
+      "addAnyway": "Yine de ekle",
+      "toProject": "Proje…",
+      "keepInInbox": "Gelen Kutusu",
+      "taskAdded": "Görev eklendi",
+      "taskToSort": "Görev « Sıralanacak görevler » listesine eklendi",
+      "addedToProject": "Projeye eklendi"
+    }
   },
   "dailyBrief": {
     "sectionName": {

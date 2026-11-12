@@ -51,6 +51,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.Role
@@ -73,6 +74,7 @@ import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.links.LinkPreviews
 import ch.nicolab.cadence.tasks.links.LinkExtractor
 import ch.nicolab.cadence.tasks.model.FunnelStage
+import ch.nicolab.cadence.tasks.quickadd.ShareCapture
 import ch.nicolab.cadence.tasks.model.IdeaTasks
 import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.model.LinkLists
@@ -82,7 +84,8 @@ import ch.nicolab.cadence.tasks.ui.triage.TriageEntry
 
 /**
  * Capture rapide : le champ en tête envoie la saisie à la boîte de réception. Chaque idée, lien ou non, se trie d'une
- * seule rangée : Tâche (saisie pré-remplie, projet et étiquettes visibles), Liens (idée qui porte une adresse), Note ;
+ * seule rangée : Tâche (saisie pré-remplie, projet et étiquettes visibles ; une simple adresse devient tout de suite une
+ * tâche), Projet… (idée qui porte une adresse, enregistrée dans les liens), Note ;
  * glisser à gauche supprime. Une décision s'écrit tout de suite, « Annuler » écrit l'inverse.
  * Sous les entrées, « Tâches à classer » liste les tâches sans échéance, qu'aucun autre onglet n'affiche : sans projet
  * ni domaine, ou classées mais sans quand choisi (« Quand ? » sous la ligne : cette semaine, une date, plus tard, sans date).
@@ -101,6 +104,8 @@ internal fun InboxTab(
     val links by viewModel.links.collectAsStateWithLifecycle()
     val unsorted by viewModel.unsorted.collectAsStateWithLifecycle()
     val moment by viewModel.moment.collectAsStateWithLifecycle()
+    val projects by viewModel.projects.collectAsStateWithLifecycle()
+    val verbs = ShareCapture.verbs(LocalContext.current)
     val projectNames = rememberProjectNames(viewModel)
     val projectColors = rememberProjectColors(viewModel)
     val projectIcons = rememberProjectIcons(viewModel)
@@ -140,8 +145,14 @@ internal fun InboxTab(
                 entry = entry,
                 previews = viewModel.linkPreviews,
                 savedTitle = saved,
-                onTask = { title -> converting = IdeaChoice(entry, title) },
-                onLinks = { title -> linking = IdeaChoice(entry, title) },
+                onTask = { title ->
+                    if (IdeaTasks.isOnlyAddress(entry.content)) {
+                        viewModel.saveLinkIdeaAsTask(entry, title)
+                    } else {
+                        converting = IdeaChoice(entry, title)
+                    }
+                },
+                onProject = { title -> linking = IdeaChoice(entry, title) },
                 onNote = { viewModel.convertIdeaToNote(entry) },
                 onEdit = { editing = entry },
                 onDelete = { viewModel.deleteIdeaWithUndo(entry.uid) },
@@ -175,18 +186,17 @@ internal fun InboxTab(
     converting?.let { choice ->
         QuickAddSheet(
             onDismiss = { converting = null },
-            initialName = IdeaTasks.taskName(choice.entry.content, choice.pageTitle),
+            initialName = IdeaTasks.taskName(choice.entry.content, choice.pageTitle, verbs),
             initialNote = IdeaTasks.taskNote(choice.entry.content),
             expanded = true,
             onSave = { draft -> viewModel.saveConversion(choice.entry, draft) },
         )
     }
     linking?.let { choice ->
-        IdeaLinkSheet(
-            viewModel = viewModel,
-            url = IdeaTasks.address(choice.entry.content) ?: return@let,
-            onSave = { tagUids, projectUid ->
-                viewModel.saveIdeaToLinks(choice.entry, choice.pageTitle, tagUids, projectUid)
+        LinkProjectSheet(
+            projects = ProjectChoices.forTask(projects, null),
+            onPick = { projectUid ->
+                viewModel.saveIdeaToLinks(choice.entry, choice.pageTitle, emptyList(), projectUid)
                 linking = null
             },
             onDismiss = { linking = null },
@@ -288,7 +298,7 @@ private fun IdeaRow(
     previews: LinkPreviews,
     savedTitle: String?,
     onTask: (String?) -> Unit,
-    onLinks: (String?) -> Unit,
+    onProject: (String?) -> Unit,
     onNote: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
@@ -361,7 +371,7 @@ private fun IdeaRow(
             }
             Row(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalAlignment = Alignment.CenterVertically) {
                 QuickPill(stringResource(R.string.tasks_idea_to_task), onClick = { onTask(pageTitle) })
-                if (url != null) QuickPill(stringResource(R.string.tasks_idea_to_links), onClick = { onLinks(pageTitle) })
+                if (url != null) QuickPill(stringResource(R.string.tasks_idea_to_project), onClick = { onProject(pageTitle) })
                 QuickPill(stringResource(R.string.tasks_idea_note), onNote, quiet = true)
                 var menu by remember { mutableStateOf(false) }
                 Box {
@@ -443,41 +453,6 @@ internal fun QuickPill(
             style = MaterialTheme.typography.labelLarge,
             color = if (quiet) palette.onSurfaceVariant else palette.onPrimaryContainer,
         )
-    }
-}
-
-/** « Liens » sur une idée : l'aperçu, le projet et les étiquettes du lien, puis Enregistrer. */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun IdeaLinkSheet(
-    viewModel: TasksViewModel,
-    url: String,
-    onSave: (List<String>, String?) -> Unit,
-    onDismiss: () -> Unit,
-) {
-    val projects by viewModel.projects.collectAsStateWithLifecycle()
-    val tags by viewModel.tags.collectAsStateWithLifecycle()
-    var tagUids by remember { mutableStateOf(emptyList<String>()) }
-    var projectUid by remember { mutableStateOf<String?>(null) }
-    CadenceSheet(title = stringResource(R.string.tasks_idea_links_title), subtitle = null, dismiss = onDismiss) {
-        Column(
-            Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(bottom = Space.md),
-            verticalArrangement = Arrangement.spacedBy(Space.md),
-        ) {
-            LinkPreviewCard(url, viewModel.linkPreviews)
-            ProjectAndTagFields(
-                projects = ProjectChoices.forTask(projects, null),
-                projectUid = projectUid,
-                onProject = { projectUid = it },
-                tags = tags,
-                tagUids = tagUids,
-                onTag = { uid -> tagUids = if (uid in tagUids) tagUids - uid else tagUids + uid },
-            )
-            Row(Modifier.fillMaxWidth()) {
-                Spacer(Modifier.weight(1f))
-                PrimaryAction(stringResource(R.string.links_save)) { onSave(tagUids, projectUid) }
-            }
-        }
     }
 }
 

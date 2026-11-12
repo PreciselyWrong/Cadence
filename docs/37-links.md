@@ -4,6 +4,16 @@ A **link** is a web page the user chose to keep: one row per page and user, with
 
 Finding links, reading page metadata and classifying their kind is plain code. AI is optional and only gives themes (below); agents use the same tools as the user through MCP.
 
+## Capture: an address becomes a task
+
+A link lives in a task (something to do) or in a project's pages (material for a project); anything else is a note (`docs/fork/PLAN-links.md`).
+
+- **Name, by code** (`modules/links/core/taskName.js`, mirrored by `frontend/utils/linkTaskName.ts` and Android `model/IdeaTasks`, `links/LinkKinds.kt`): repository or tool → « Essayer : <title> », article → « Lire : <title> », video → « Regarder : <title> », any other page → the title alone. The verbs are translations (`links.taskVerb.*`, Android `link_task_*`); the server reads the user's language. Without a page title: the repository (`owner/repo`), else the site, else the address. The kind comes from the address (`classifyKind`), and from `og:type` when the server read it (`GET /api/url/title` answers `kind`).
+- **The task**: the address in the note (then the words written with it), `source: link`, `source_url`, and `needs_when: true` unless a project is chosen, so it waits in Inbox › « Tâches à classer » with « Quand ? » (`docs/41-auto-classify.md`). `POST /api/task` accepts `needs_when` on creation.
+- **Where**: the Android share sheet (one tap on « Tâche », name editable above), an Inbox idea that is only an address (web panel: editable name and « Tâche »; Android: « Tâche » creates it at once, with « Annuler »), the Firefox add-on (toolbar button or Alt+Shift+K: editable name, « Créer la tâche »; right click: one click). Secondary choices on the same sheet: **Projet…** (the page goes to a project), **Note**, **Inbox**.
+- **« Déjà dans … »**: `GET /api/links/lookup?url=&title=` answers `{ url, kind, task_name, tasks, projects }`: the open tasks whose name or note holds the same address (normalized, `www.` ignored, `core/urls.addressKey`) and the projects that hold it. Shown above the name with **Ouvrir**; the main button becomes **Ajouter quand même**. Android reads the same from Room, offline (`TaskRepository.placesOf`).
+- `POST /api/links/task { url, title?, name?, note?, project_uid? }` makes the task in one call (add-on, agents): `201 { task: { uid, name, note } }`, `400` for an address that is not a web page.
+
 ## How a link is made
 
 - **Nothing is captured automatically.** Saving an inbox item, a task or a note never creates a link, on any path (web, Android sync, MCP, Telegram, imports). An inbox item that is only an address, or holds one, stays `added` in the Inbox until the user decides.

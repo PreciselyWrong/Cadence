@@ -5734,7 +5734,24 @@
     "editTitle": "링크 편집",
     "deleteTitle": "이 링크를 삭제할까요?",
     "deleteMessage": "링크에서 완전히 사라집니다. 잠시 치워 두려면 대신 보관하세요.",
-    "deleteError": "링크를 삭제할 수 없습니다."
+    "deleteError": "링크를 삭제할 수 없습니다.",
+    "taskVerb": {
+      "try": "시도: {{title}}",
+      "read": "읽기: {{title}}",
+      "watch": "보기: {{title}}"
+    },
+    "capture": {
+      "taskName": "작업 이름",
+      "alreadyIn": "« {{name}} »에 이미 있음",
+      "more": "+{{count}}",
+      "open": "열기",
+      "addAnyway": "그래도 추가",
+      "toProject": "프로젝트…",
+      "keepInInbox": "받은 편지함",
+      "taskAdded": "작업을 추가했습니다",
+      "taskToSort": "« 정리할 작업 »에 작업을 추가했습니다",
+      "addedToProject": "프로젝트에 추가했습니다"
+    }
   },
   "dailyBrief": {
     "sectionName": {

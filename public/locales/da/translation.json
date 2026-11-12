@@ -5734,7 +5734,24 @@
     "editTitle": "Rediger linket",
     "deleteTitle": "Slet dette link?",
     "deleteMessage": "Det forsvinder fra dine links for altid. For at lægge det til side, så arkivér det i stedet.",
-    "deleteError": "Linket kunne ikke slettes."
+    "deleteError": "Linket kunne ikke slettes.",
+    "taskVerb": {
+      "try": "Prøv: {{title}}",
+      "read": "Læs: {{title}}",
+      "watch": "Se: {{title}}"
+    },
+    "capture": {
+      "taskName": "Opgavens navn",
+      "alreadyIn": "Findes allerede i « {{name}} »",
+      "more": "+{{count}}",
+      "open": "Åbn",
+      "addAnyway": "Tilføj alligevel",
+      "toProject": "Projekt…",
+      "keepInInbox": "Indbakke",
+      "taskAdded": "Opgave tilføjet",
+      "taskToSort": "Opgave tilføjet til « Opgaver at sortere »",
+      "addedToProject": "Tilføjet til projektet"
+    }
   },
   "dailyBrief": {
     "sectionName": {

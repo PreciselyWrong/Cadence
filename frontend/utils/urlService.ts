@@ -7,6 +7,7 @@ export interface UrlTitleResult {
     image?: string | null;
     description?: string | null;
     site_name?: string | null;
+    kind?: string | null;
     found?: boolean;
     error?: string;
 }
@@ -38,6 +39,8 @@ export interface UrlPreview {
     description: string | null;
     image: string | null;
     siteName: string | null;
+    // repo | article | video | tool | other, from the address and og:type.
+    kind?: string | null;
 }
 
 const previews = new Map<string, Promise<UrlPreview>>();
@@ -65,6 +68,7 @@ export const fetchUrlPreview = (url: string): Promise<UrlPreview> => {
             description: result.description?.trim() || null,
             image: result.image || null,
             siteName: result.site_name || null,
+            kind: result.kind || null,
         };
     });
     previews.set(url, preview);

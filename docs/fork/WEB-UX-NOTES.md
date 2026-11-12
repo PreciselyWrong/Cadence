@@ -662,3 +662,9 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Problème** : une tâche venue de Gmail, de Telegram ou de Claude ne le montrait nulle part ; le « TODO.md » était le seul badge d'origine.
 - **Décision** : petite marque en lettre (« M » rouge pour Gmail, sans logo) avec le nom, sur la ligne de Aujourd'hui, la carte de Planifier, la ligne de tâche et la fiche. Avec un lien, un clic l'ouvre dans un nouvel onglet sans ouvrir la tâche. Une tâche web n'a pas de badge.
 - **Android à reprendre** : `TODO.md` › Now (badge de source et champs `source` / `source_url` dans Room).
+
+### 2026-11-12 — Une adresse devient une tâche (refonte des liens, étape 1)
+
+- **Problème** : chaque lien utile finissait en tâche « À regarder : … » à la main ; le choix « Tâche ou Liens » à chaque partage nourrissait une bibliothèque que personne ne relisait (`docs/fork/PLAN-links.md`).
+- **Décision** : dans le panneau de l'Inbox, une idée qui n'est qu'une adresse montre l'aperçu, « Déjà dans « … » » avec Ouvrir si l'adresse est déjà dans une tâche ouverte ou un projet, un champ « Nom de la tâche » prérempli par le verbe du genre de page (Essayer, Lire, Regarder) et le bouton « Tâche » (« Ajouter quand même ») qui la crée d'un clic dans « Tâches à classer » avec « Quand ? ». À côté : Projet… (menu des projets), Note, Inbox, Supprimer. « Liens » disparaît des décisions.
+- **Android à reprendre** : fait dans la même étape (fiche de partage, Inbox).

@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.tasks
 
+import ch.nicolab.cadence.tasks.model.AddressPlaces
 import ch.nicolab.cadence.tasks.model.AreaItem
 import ch.nicolab.cadence.tasks.model.Delivery
 import ch.nicolab.cadence.tasks.model.RefusedItem
@@ -127,6 +128,9 @@ interface TaskRepository {
 
     /** Retourne l'uid de la tâche créée. */
     suspend fun createTask(draft: TaskDraft): String
+
+    /** Tâches ouvertes qui citent [url] et projets qui l'ont enregistrée : lecture locale, hors ligne. */
+    suspend fun placesOf(url: String): AddressPlaces
 
     /** Copie une tâche (contenu, dates, durée, liens) sous un nouvel uid ; null si elle n'existe plus. */
     suspend fun duplicateTask(uid: String): String?

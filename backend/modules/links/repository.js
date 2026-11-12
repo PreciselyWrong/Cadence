@@ -13,6 +13,7 @@ const {
 } = require('../../models');
 const { ciLike } = require('../../utils/db-dialect');
 const { foldLinkStatus } = require('./core/constants');
+const { CLOSED_STATUSES } = require('../projects/nextAction');
 
 // An idea the user threw away cannot be the source of a link.
 const DISCARDED_INBOX = ['deleted', 'trashed'];
@@ -195,6 +196,37 @@ async function sourceExists(userId, type, uid) {
     return Boolean(row);
 }
 
+// Open tasks of the user whose name or note may hold an address: a cheap
+// prefilter on its host and path; the caller checks the exact address.
+function openTasksMentioning(userId, needle) {
+    const pattern = `%${escapeLike(needle)}%`;
+    return Task.findAll({
+        where: {
+            user_id: userId,
+            status: { [Op.notIn]: CLOSED_STATUSES },
+            habit_mode: { [Op.not]: true },
+            [Op.or]: [{ note: ciLike(pattern) }, { name: ciLike(pattern) }],
+        },
+        attributes: ['id', 'uid', 'name', 'note'],
+        order: [['id', 'ASC']],
+        limit: 50,
+    });
+}
+
+// The projects of the user that hold one of these spellings of an address.
+async function projectsHolding(userId, urls) {
+    const rows = await Link.findAll({
+        where: {
+            user_id: userId,
+            url: { [Op.in]: urls },
+            project_id: { [Op.ne]: null },
+        },
+        include: [{ ...withProject, required: true }],
+        order: [['id', 'ASC']],
+    });
+    return rows.map((row) => row.Project);
+}
+
 // Deleting keeps the page out of capture: its address may still be in a text.
 async function remove(link) {
     await exclude(link.user_id, link.url);
@@ -213,5 +245,7 @@ module.exports = {
     lift: liftExclusion,
     excludedUrls,
     sourceExists,
+    openTasksMentioning,
+    projectsHolding,
     remove,
 };

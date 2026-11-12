@@ -5734,7 +5734,24 @@
     "editTitle": "Redigera länken",
     "deleteTitle": "Ta bort den här länken?",
     "deleteMessage": "Den försvinner från dina länkar för gott. För att lägga den åt sidan, arkivera den i stället.",
-    "deleteError": "Länken kunde inte tas bort."
+    "deleteError": "Länken kunde inte tas bort.",
+    "taskVerb": {
+      "try": "Prova: {{title}}",
+      "read": "Läs: {{title}}",
+      "watch": "Titta: {{title}}"
+    },
+    "capture": {
+      "taskName": "Uppgiftens namn",
+      "alreadyIn": "Finns redan i « {{name}} »",
+      "more": "+{{count}}",
+      "open": "Öppna",
+      "addAnyway": "Lägg till ändå",
+      "toProject": "Projekt…",
+      "keepInInbox": "Inkorg",
+      "taskAdded": "Uppgift tillagd",
+      "taskToSort": "Uppgift tillagd i « Uppgifter att sortera »",
+      "addedToProject": "Tillagd i projektet"
+    }
   },
   "dailyBrief": {
     "sectionName": {

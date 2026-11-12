@@ -5739,7 +5739,24 @@
     "editTitle": "Rediger lenken",
     "deleteTitle": "Slette denne lenken?",
     "deleteMessage": "Den forsvinner fra lenkene dine for godt. For å legge den til side, arkiver den i stedet.",
-    "deleteError": "Lenken kunne ikke slettes."
+    "deleteError": "Lenken kunne ikke slettes.",
+    "taskVerb": {
+      "try": "Prøv: {{title}}",
+      "read": "Les: {{title}}",
+      "watch": "Se: {{title}}"
+    },
+    "capture": {
+      "taskName": "Oppgavenavn",
+      "alreadyIn": "Finnes allerede i « {{name}} »",
+      "more": "+{{count}}",
+      "open": "Åpne",
+      "addAnyway": "Legg til likevel",
+      "toProject": "Prosjekt…",
+      "keepInInbox": "Innboks",
+      "taskAdded": "Oppgave lagt til",
+      "taskToSort": "Oppgave lagt til i « Oppgaver å sortere »",
+      "addedToProject": "Lagt til i prosjektet"
+    }
   },
   "dailyBrief": {
     "sectionName": {

@@ -5734,7 +5734,24 @@
     "editTitle": "编辑链接",
     "deleteTitle": "删除此链接?",
     "deleteMessage": "它将从你的链接中永久移除。若只想暂时搁置，请改为归档。",
-    "deleteError": "无法删除链接。"
+    "deleteError": "无法删除链接。",
+    "taskVerb": {
+      "try": "尝试：{{title}}",
+      "read": "阅读：{{title}}",
+      "watch": "观看：{{title}}"
+    },
+    "capture": {
+      "taskName": "任务名称",
+      "alreadyIn": "已在「{{name}}」中",
+      "more": "+{{count}}",
+      "open": "打开",
+      "addAnyway": "仍然添加",
+      "toProject": "项目…",
+      "keepInInbox": "收件箱",
+      "taskAdded": "已添加任务",
+      "taskToSort": "已添加到「待整理的任务」",
+      "addedToProject": "已添加到项目"
+    }
   },
   "dailyBrief": {
     "sectionName": {

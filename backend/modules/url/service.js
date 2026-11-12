@@ -5,6 +5,7 @@ const http = require('http');
 const { URL } = require('url');
 const { logError } = require('../../services/logService');
 const { assertSafeUrl, publicOnlyLookup } = require('./ssrfGuard');
+const { classifyKind } = require('../links/core/urls');
 
 const MAX_REDIRECTS = 5;
 
@@ -470,6 +471,8 @@ class UrlService {
         }
 
         const metadata = await fetchUrlMetadata(url);
+        // The kind names the task an address becomes (docs/37-links.md).
+        const kind = classifyKind(url, metadata?.type);
 
         if (metadata && metadata.title) {
             return {
@@ -478,6 +481,7 @@ class UrlService {
                 image: metadata.image ?? null,
                 description: metadata.description ?? null,
                 site_name: metadata.siteName ?? null,
+                kind,
             };
         } else {
             return {
@@ -486,6 +490,7 @@ class UrlService {
                 image: null,
                 description: null,
                 site_name: null,
+                kind,
                 error: 'Could not extract metadata',
             };
         }

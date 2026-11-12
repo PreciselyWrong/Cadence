@@ -5798,7 +5798,24 @@
     "editTitle": "تعديل الرابط",
     "deleteTitle": "هل تريد حذف هذا الرابط؟",
     "deleteMessage": "يغادر روابطك نهائيًا. لتنحيته جانبًا، قم بأرشفته بدلًا من ذلك.",
-    "deleteError": "تعذّر حذف الرابط."
+    "deleteError": "تعذّر حذف الرابط.",
+    "taskVerb": {
+      "try": "جرّب: {{title}}",
+      "read": "اقرأ: {{title}}",
+      "watch": "شاهد: {{title}}"
+    },
+    "capture": {
+      "taskName": "اسم المهمة",
+      "alreadyIn": "موجودة بالفعل في « {{name}} »",
+      "more": "+{{count}}",
+      "open": "فتح",
+      "addAnyway": "إضافتها على أي حال",
+      "toProject": "المشروع…",
+      "keepInInbox": "صندوق الوارد",
+      "taskAdded": "تمت إضافة المهمة",
+      "taskToSort": "تمت إضافة المهمة إلى « مهام للفرز »",
+      "addedToProject": "أُضيفت إلى المشروع"
+    }
   },
   "dailyBrief": {
     "sectionName": {

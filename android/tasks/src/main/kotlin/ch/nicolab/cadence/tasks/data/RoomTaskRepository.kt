@@ -4,6 +4,9 @@ import android.content.Context
 import androidx.room.withTransaction
 import ch.nicolab.cadence.tasks.ServerConnection
 import ch.nicolab.cadence.tasks.TaskRepository
+import ch.nicolab.cadence.tasks.links.LinkExtractor
+import ch.nicolab.cadence.tasks.links.addressKey
+import ch.nicolab.cadence.tasks.model.AddressPlaces
 import ch.nicolab.cadence.tasks.model.AreaItem
 import ch.nicolab.cadence.tasks.model.Delivery
 import ch.nicolab.cadence.tasks.model.RefusedItem
@@ -21,6 +24,7 @@ import ch.nicolab.cadence.tasks.model.LinkItem
 import ch.nicolab.cadence.tasks.model.LinkStatus
 import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.OccurrenceFields
+import ch.nicolab.cadence.tasks.model.PlaceRef
 import ch.nicolab.cadence.tasks.model.NoteItem
 import ch.nicolab.cadence.tasks.model.ProjectHierarchy
 import ch.nicolab.cadence.tasks.model.ProjectItem
@@ -378,9 +382,31 @@ internal class RoomTaskRepository(
             draft.goalUid?.let { put("goal_uid", JsonPrimitive(it)) }
             draft.order?.let { put("order", JsonPrimitive(it)) }
             putAll(dueFields(draft.dueDate, draft.dueTime))
+            // Un lien capturé attend « Quand ? » : le serveur ne reçoit le drapeau que quand il est vrai.
+            if (draft.needsWhen) put("needs_when", JsonPrimitive(true))
+            draft.source?.let { put("source", JsonPrimitive(it)) }
+            draft.sourceUrl?.let { put("source_url", JsonPrimitive(it)) }
         }
         writeFields(uid, fields)
         return uid
+    }
+
+    /**
+     * Les tâches ouvertes qui citent la page et les projets qui l'ont enregistrée. Le LIKE large de Room ne fait que
+     * réduire les lignes : la même adresse normalisée (`addressKey`) décide, donc `rocket-launcher` ne compte pas.
+     */
+    override suspend fun placesOf(url: String): AddressPlaces {
+        val key = addressKey(url) ?: return AddressPlaces(emptyList(), emptyList())
+        val needle = key.substringAfter("://").lowercase()
+        val tasks = taskDao.openMentioning(needle, CLOSED_TASK_STATUSES, PLACES_LIMIT)
+            .filter { row -> listOf(row.name, row.note.orEmpty()).any { text -> LinkExtractor.urls(text).any { addressKey(it) == key } } }
+            .map { PlaceRef(it.uid, it.name) }
+        val projects = database.linkDao().withProjectMentioning(needle)
+            .filter { addressKey(it.url) == key }
+            .mapNotNull { it.projectUid }
+            .distinct()
+            .mapNotNull { uid -> projectDao.get(uid)?.let { PlaceRef(it.uid, it.name) } }
+        return AddressPlaces(tasks, projects)
     }
 
     override suspend fun duplicateTask(uid: String): String? {
@@ -907,6 +933,8 @@ internal class RoomTaskRepository(
         const val ACTION_SKIP_OCCURRENCE = "skip_occurrence"
         const val INBOX_STATUS = "added"
         const val INBOX_SOURCE = "android"
+        private val CLOSED_TASK_STATUSES = listOf(TaskStatus.DONE, TaskStatus.ARCHIVED, TaskStatus.CANCELLED)
+        private const val PLACES_LIMIT = 50
         const val INBOX_PROCESSED = "processed"
         /** Étiquette système de « Plus tard », comme `review/repository.js` du serveur. */
         const val SOMEDAY_TAG = TagPaths.SOMEDAY

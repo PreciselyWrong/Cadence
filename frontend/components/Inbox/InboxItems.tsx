@@ -28,7 +28,12 @@ import { createProject } from '../../utils/projectsService';
 import { createNote } from '../../utils/notesService';
 import { OfflineQueuedError } from '../../utils/authUtils';
 import { isUrl } from '../../utils/urlService';
-import { keepInLinks, LinkDraft } from '../../utils/linkTriage';
+import {
+    captureAsTask,
+    CaptureDraft,
+    keepInLinks,
+    LinkDraft,
+} from '../../utils/linkTriage';
 import { takeSharedText } from '../../utils/shareTargetService';
 import { fetchAreas } from '../../utils/areasService';
 import { fetchProjects } from '../../utils/projectsService';
@@ -352,14 +357,39 @@ const InboxItems: React.FC = () => {
         }
     };
 
-    // The "Links" decision: the link is created, the item leaves the inbox.
-    const handleSaveToLinks = async (
+    // An idea that is only an address becomes a task in one click.
+    const [unsortedReload, setUnsortedReload] = useState(0);
+    const handleCaptureTask = async (
+        inboxItemUid: string,
+        draft: CaptureDraft
+    ): Promise<void> => {
+        try {
+            await captureAsTask(inboxItemUid, draft);
+            setUnsortedReload((key) => key + 1);
+            showSuccessToast(
+                draft.project_uid
+                    ? t('links.capture.taskAdded', 'Task added')
+                    : t(
+                          'links.capture.taskToSort',
+                          'Task added to Tasks to sort'
+                      )
+            );
+        } catch (error) {
+            console.error('Failed to capture the task:', error);
+            showErrorToast(t('task.createError', 'Could not create the task.'));
+        }
+    };
+
+    // "Project…": the page goes to the project, the item leaves the inbox.
+    const handleAddToProject = async (
         inboxItemUid: string,
         draft: LinkDraft
     ): Promise<void> => {
         try {
             await keepInLinks(inboxItemUid, draft);
-            showSuccessToast(t('inbox.triage.madeLink', 'Added to Links'));
+            showSuccessToast(
+                t('links.capture.addedToProject', 'Added to the project')
+            );
         } catch (error) {
             console.error('Failed to keep the link:', error);
             showErrorToast(t('links.saveError', 'Could not save the link.'));
@@ -583,7 +613,7 @@ const InboxItems: React.FC = () => {
                     }}
                 />
 
-                <UnsortedTasks />
+                <UnsortedTasks reloadKey={unsortedReload} />
 
                 {/* ── Item list ────────────────────────────────────────────── */}
                 {inboxItems.length > 0 && (
@@ -656,8 +686,11 @@ const InboxItems: React.FC = () => {
                                                 openNoteModal={
                                                     handleOpenNoteModal
                                                 }
-                                                onSaveToLinks={
-                                                    handleSaveToLinks
+                                                onCaptureTask={
+                                                    handleCaptureTask
+                                                }
+                                                onAddToProject={
+                                                    handleAddToProject
                                                 }
                                                 projects={projects}
                                                 isNew={

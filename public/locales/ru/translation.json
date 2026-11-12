@@ -5790,7 +5790,24 @@
     "editTitle": "Изменить ссылку",
     "deleteTitle": "Удалить эту ссылку?",
     "deleteMessage": "Ссылка навсегда исчезнет из списка. Чтобы отложить её, лучше отправьте в архив.",
-    "deleteError": "Не удалось удалить ссылку."
+    "deleteError": "Не удалось удалить ссылку.",
+    "taskVerb": {
+      "try": "Попробовать: {{title}}",
+      "read": "Прочитать: {{title}}",
+      "watch": "Посмотреть: {{title}}"
+    },
+    "capture": {
+      "taskName": "Название задачи",
+      "alreadyIn": "Уже в «{{name}}»",
+      "more": "+{{count}}",
+      "open": "Открыть",
+      "addAnyway": "Всё равно добавить",
+      "toProject": "Проект…",
+      "keepInInbox": "Входящие",
+      "taskAdded": "Задача добавлена",
+      "taskToSort": "Задача добавлена в «Задачи для разбора»",
+      "addedToProject": "Добавлено в проект"
+    }
   },
   "dailyBrief": {
     "sectionName": {

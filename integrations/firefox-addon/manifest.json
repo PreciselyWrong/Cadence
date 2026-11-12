@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "__MSG_name__",
   "description": "__MSG_description__",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "default_locale": "fr",
   "browser_specific_settings": {
     "gecko": {
@@ -45,5 +45,13 @@
   "optional_host_permissions": [
     "http://*/*",
     "https://*/*"
-  ]
+  ],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+K"
+      },
+      "description": "__MSG_save_page__"
+    }
+  }
 }

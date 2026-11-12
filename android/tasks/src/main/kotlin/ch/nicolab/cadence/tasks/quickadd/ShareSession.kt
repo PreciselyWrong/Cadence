@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import ch.nicolab.cadence.tasks.TasksGraph
+import ch.nicolab.cadence.tasks.model.AddressPlaces
 import ch.nicolab.cadence.tasks.model.IdeaTasks
 import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.model.TagItem
@@ -32,6 +33,11 @@ internal class ShareSession(application: Application) : AndroidViewModel(applica
         private set
     var projectUid by mutableStateOf<String?>(null)
 
+    /** Nom de la tâche proposé par la feuille ; il suit le titre de la page tant que l'utilisateur ne l'a pas modifié. */
+    var taskName by mutableStateOf("")
+        private set
+
+    private var nameEdited = false
     private var original = ""
 
     /** Vrai dès qu'un texte est reçu ; une session vide n'écrit rien. */
@@ -49,6 +55,22 @@ internal class ShareSession(application: Application) : AndroidViewModel(applica
         text = shared
     }
 
+    /** Le nom saisi à la main : le titre de la page ne le remplace plus. */
+    fun renameTask(value: String) {
+        nameEdited = true
+        taskName = value
+    }
+
+    /** Reprend le nom suggéré du texte et du titre de la page, sauf si l'utilisateur l'a écrit. */
+    fun followSuggestedName(pageTitle: String?) {
+        if (!nameEdited) taskName = suggestedName(pageTitle)
+    }
+
+    private fun suggestedName(pageTitle: String?): String = IdeaTasks.taskName(content, pageTitle, ShareCapture.verbs(getApplication()))
+
+    /** Les adresses déjà connues : tâches et projets (lecture locale). */
+    suspend fun placesOf(url: String): AddressPlaces = repository.placesOf(url)
+
     fun toggleTag(uid: String) {
         tagUids = if (uid in tagUids) tagUids - uid else tagUids + uid
     }
@@ -60,7 +82,16 @@ internal class ShareSession(application: Application) : AndroidViewModel(applica
     fun settle(action: ShareAction, pageTitle: String?): Boolean {
         if (!started || settled) return false
         settled = true
-        val write = ShareCapture.plan(action, content, pageTitle, tagUids, IdeaTasks.tagNames(tagUids, tags.value), projectUid)
+        val write = ShareCapture.plan(
+            action,
+            content,
+            pageTitle,
+            tagUids,
+            IdeaTasks.tagNames(tagUids, tags.value),
+            projectUid,
+            ShareCapture.verbs(getApplication()),
+            taskName,
+        )
         ShareCapture.save(getApplication(), write)
         return true
     }

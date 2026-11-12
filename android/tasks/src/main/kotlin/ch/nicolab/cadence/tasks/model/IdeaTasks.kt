@@ -1,6 +1,14 @@
 package ch.nicolab.cadence.tasks.model
 
 import ch.nicolab.cadence.tasks.links.LinkExtractor
+import ch.nicolab.cadence.tasks.links.classifyKind
+import ch.nicolab.cadence.tasks.links.repoPath
+
+/**
+ * Le verbe d'un nom de tâche selon le genre de page : un gabarit `%1$s` (« Essayer : %1$s »), ou null pour le titre seul.
+ * Les chaînes de l'appli le fournissent ; les tests le fournissent aussi, sans Android.
+ */
+typealias TaskVerbs = (LinkKind) -> String?
 
 /**
  * Ce que devient une idée de l'Inbox ou un texte partagé (`../docs/37-links.md`, le web fait foi) : une tâche nommée
@@ -17,11 +25,34 @@ object IdeaTasks {
         return LinkLists.textAround(text, url)
     }
 
-    /** Nom de la tâche : le titre de la page s'il est connu, sinon le texte sans l'adresse, sinon le domaine. */
-    fun taskName(text: String, pageTitle: String?): String {
+    /** Il n'y a qu'une adresse dans le texte : rien à écrire autour, donc une idée de lien seul. */
+    fun isOnlyAddress(text: String): Boolean = address(text) != null && rest(text).isEmpty()
+
+    /**
+     * Nom de la tâche d'un texte : le titre de la page s'il est connu, sinon le reste du texte, sinon le nom de la page
+     * ([fallbackTitle]) ; le verbe du genre de page s'ajoute. Un texte sans adresse est son propre nom.
+     */
+    fun taskName(text: String, pageTitle: String?, verbs: TaskVerbs): String {
         val url = address(text) ?: return text.trim()
-        return pageTitle?.trim()?.takeIf { it.isNotEmpty() }
-            ?: rest(text).ifEmpty { LinkExtractor.domain(url) ?: url }
+        return capturedName(url, pageTitle?.takeIf { it.isNotBlank() } ?: rest(text).ifEmpty { null }, verbs)
+    }
+
+    /**
+     * Nom d'une page capturée : « Essayer : <titre> », « Lire : … », « Regarder : … » ou le titre seul, d'après le genre
+     * de l'adresse. Sans titre, [fallbackTitle].
+     */
+    fun capturedName(url: String, pageTitle: String?, verbs: TaskVerbs): String {
+        // Un dépôt se nomme par son chemin : les titres de page y sont longs (« GitHub - a/b: … »).
+        val title = repoPath(url)?.let { "${it.owner}/${it.repo}" }
+            ?: pageTitle?.trim()?.takeIf { it.isNotEmpty() } ?: fallbackTitle(url)
+        val template = verbs(classifyKind(url))
+        return template?.let { String.format(it, title) } ?: title
+    }
+
+    /** Le nom d'une page sans titre : son dépôt (`propriétaire/nom`), sinon son domaine, sinon l'adresse. */
+    fun fallbackTitle(url: String): String {
+        repoPath(url)?.let { return "${it.owner}/${it.repo}" }
+        return LinkExtractor.domain(url) ?: url
     }
 
     /** Note de la tâche : l'adresse, puis le reste du texte ; rien pour une idée sans adresse. */

@@ -5734,7 +5734,24 @@
     "editTitle": "Link bewerken",
     "deleteTitle": "Deze link verwijderen?",
     "deleteMessage": "Hij verdwijnt definitief uit je links. Om hem opzij te zetten, archiveer je hem beter.",
-    "deleteError": "De link kon niet worden verwijderd."
+    "deleteError": "De link kon niet worden verwijderd.",
+    "taskVerb": {
+      "try": "Probeer: {{title}}",
+      "read": "Lees: {{title}}",
+      "watch": "Bekijk: {{title}}"
+    },
+    "capture": {
+      "taskName": "Taaknaam",
+      "alreadyIn": "Staat al in « {{name}} »",
+      "more": "+{{count}}",
+      "open": "Openen",
+      "addAnyway": "Toch toevoegen",
+      "toProject": "Project…",
+      "keepInInbox": "Inbox",
+      "taskAdded": "Taak toegevoegd",
+      "taskToSort": "Taak toegevoegd aan « Taken om te sorteren »",
+      "addedToProject": "Toegevoegd aan het project"
+    }
   },
   "dailyBrief": {
     "sectionName": {

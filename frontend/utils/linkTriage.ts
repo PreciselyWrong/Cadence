@@ -60,8 +60,38 @@ export const linkToTask = (link: Link): Promise<Task> =>
 
 export type LinkDraft = Omit<NewLink, 'source_type' | 'source_uid'>;
 
-// The "Links" decision of an inbox item: the link is created from it, then
-// the item leaves the inbox.
+// An address made a task in one gesture (docs/37-links.md, Capture): the
+// address in the note, waiting in « Tâches à classer » for « Quand ? »
+// unless a project is chosen. The idea leaves the inbox.
+export interface CaptureDraft {
+    url: string;
+    name: string;
+    note: string;
+    tags?: string[];
+    project_uid?: string;
+}
+
+export const captureAsTask = async (
+    itemUid: string,
+    draft: CaptureDraft
+): Promise<Task> => {
+    const task = await createTask({
+        name: draft.name,
+        note: draft.note,
+        status: 'not_started',
+        tags: (draft.tags ?? []).map((name) => ({ name })),
+        project_uid: draft.project_uid,
+        needs_when: !draft.project_uid,
+        source: 'link',
+        source_url: draft.url,
+        completed_at: null,
+    } as Task);
+    await processInboxItemWithStore(itemUid, { task_uid: task.uid as string });
+    return task;
+};
+
+// The "Project…" decision of an inbox item: the page goes to the project,
+// then the item leaves the inbox.
 export const keepInLinks = async (
     itemUid: string,
     draft: LinkDraft
