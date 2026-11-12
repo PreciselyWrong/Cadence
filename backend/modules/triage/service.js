@@ -15,6 +15,7 @@ const { applyAction } = require('./actions');
 const { slotItems } = require('./slots');
 const autoClassify = require('../auto-classify/service');
 const linkReviews = require('./linkReviews');
+const mail = require('./mail');
 
 const SETTLED = new Set(['kept', 'applied']);
 const NOTE_PREVIEW = 300;
@@ -107,12 +108,17 @@ async function getQueue(user) {
     );
     const byUid = new Map(input.tasks.map((task) => [task.uid, task]));
     queue.items.push(...(await linkReviews.reviewItems(user.id, input.today)));
+    queue.items.push(...(await mail.queueItems(user.id)));
     for (const item of await autoClassify.queueItems(user)) {
         queue.items.push(item);
         const task = item.task_uid && byUid.get(item.task_uid);
         if (task) queue.tasks[task.uid] = serializeTask(task);
     }
-    return { ...queue, count: queue.items.length };
+    return {
+        ...queue,
+        count: queue.items.length,
+        mail_archive: mail.archiveAvailable(),
+    };
 }
 
 async function findOpenTask(user, taskUid) {

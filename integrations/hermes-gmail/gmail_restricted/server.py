@@ -99,6 +99,8 @@ def main(argv=None):
     parser.add_argument("--bind", default="127.0.0.1", help="HTTP : adresse d'écoute.")
     parser.add_argument("--port", type=int, default=8700, help="HTTP : port d'écoute.")
     parser.add_argument("--token-file", help="HTTP : fichier privé (600) contenant le jeton Bearer attendu.")
+    parser.add_argument("--archive-token-file",
+                        help="HTTP, facultatif : fichier privé (600) d'un second jeton qui n'ouvre que archive_thread.")
     args = parser.parse_args(argv)
     if args.transport == "http" and not args.token_file:
         parser.error("--token-file est obligatoire avec --transport http")
@@ -109,7 +111,7 @@ def main(argv=None):
         from .http_transport import serve
         from .oauth import AuthError
         try:
-            serve(server, args.bind, args.port, args.token_file)
+            serve(server, args.bind, args.port, args.token_file, args.archive_token_file)
         except (AuthError, OSError) as error:
             _log(f"cannot start: {error}")
             sys.exit(1)

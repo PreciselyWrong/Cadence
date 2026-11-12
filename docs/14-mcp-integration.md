@@ -1247,6 +1247,24 @@ Permanently deletes a saved link; its address stays out of the library until the
 
 ---
 
+### Mail Tools (3)
+
+Mail cards in the triage queue (`docs/43-mail-triage.md`). The agent proposes, the user decides in Cadence; no tool decides.
+
+#### `propose_mail`
+
+One card per thread: `account`, `thread_id`, `received_at`, `summary` (at most 200 characters), `gmail_url` (must open `https://mail.google.com/`), optionally `from_name`, `from_address`, `subject`, `suggestion` (`{ kind: task | reply | read, task_name?, due_date?, project_uid? }`), `draft_excerpt` (cut at 280 characters). A newer message updates a waiting card, or reopens a decided one.
+
+#### `resolve_mail`
+
+Closes the waiting card of a thread handled in Gmail. `account`, `thread_id`.
+
+#### `list_mail_cards`
+
+Pending, put-off and recently decided cards (30 days), newest first, with their decision.
+
+---
+
 ### Misc Tools (1)
 
 #### `search`

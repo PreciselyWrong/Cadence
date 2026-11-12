@@ -1,6 +1,6 @@
-# Mail cards in "À trier" (spec, not built)
+# Mail cards in "À trier"
 
-Status: specified on 2026-11-12, nothing implemented yet. Tracked in `TODO.md` › Next.
+Status: server built on 2026-11-12 (`backend/modules/triage/mail.js`, MCP tools, route, Gmail gateway); the web and Android cards are not built yet. Tracked in `TODO.md` › Next.
 
 Mail that asks something of the user shows up as cards in the triage queue (`docs/40-triage.md`), next to the other proposals. The user decides there in one gesture. Cadence is not a mail client: it never shows a full message, never sends, and only touches Gmail to archive a thread when the user asks for it.
 
@@ -16,7 +16,7 @@ Mail that asks something of the user shows up as cards in the triage queue (`doc
 - **Only mail that needs an action.** The agent sends a card for a thread that asks for a reply, a task or a decision. Newsletters, notifications and receipts never become cards.
 - **One card per thread.** Keyed on `(user, account, thread_id)`. A new message on a thread already pending updates its card; a thread already decided gets a new card only if a new message arrives after the decision.
 - **No mail body in Cadence.** A card holds the sender, the subject, the date, a one-line summary written by the agent and, when there is one, the start of the prepared draft. Nothing else is stored.
-- **Untrusted text.** Sender, subject, summary and draft excerpt are shown as plain text: no Markdown, no links. The only link is `gmail_url`, accepted only when it starts with `https://mail.google.com/`.
+- **Untrusted text.** Sender, subject, summary and draft excerpt are shown as plain text: no Markdown, no links. Control characters and the characters that reorder or hide text (bidi controls, zero-width) are dropped when stored. The only link is `gmail_url`, accepted only when it starts with `https://mail.google.com/`.
 - **Gmail writes stay narrow.** The only write Cadence may make in Gmail is archiving a thread, through the restricted Gmail tool's `archive_thread`, and only if that tool is configured (see Gmail gateway). Sending always happens in Gmail, by the user.
 - **Short retention.** A decided card is deleted 30 days after its decision (daily compaction).
 
@@ -44,7 +44,7 @@ Triage item `type: mail`, `source: mail`, `action: decide_mail`, `payload`:
 
 | Decision | Effect |
 |---|---|
-| `task` | Creates a task through the MCP tools: name and date from `payload` (prefilled from `suggestion`), note with the summary and `gmail_url`, source `mail` (the source icon of `TODO.md` › "Icône de la source"). Card done. |
+| `task` | Creates a task through the MCP tools: name and date from `payload` (prefilled from `suggestion`), note with the summary and `gmail_url`, source `gmail` with the Gmail address as `source_url` (the source badge). Card done. |
 | `reply` | The client opens `gmail_url` (the draft when there is one). Card done after the undo window. |
 | `later` | Card hidden until `payload.until` (default tomorrow 08:00, profile time zone). |
 | `dismiss` | Card done. |
@@ -55,21 +55,22 @@ Triage item `type: mail`, `source: mail`, `action: decide_mail`, `payload`:
 
 | Tool | |
 |---|---|
-| `propose_mail` | `account`, `thread_id`, `from_name`, `from_address`, `subject`, `received_at`, `summary`, `suggestion`, `draft_excerpt?`, `gmail_url`. Creates or updates the card of the thread (rules above). Refuses a summary over 200 characters or a `gmail_url` outside Gmail. |
-| `resolve_mail` | `account`, `thread_id`. Removes a pending card when the agent sees the thread handled in Gmail (answered, archived by hand). |
+| `propose_mail` | `account`, `thread_id`, `from_name`, `from_address`, `subject`, `received_at`, `summary`, `suggestion`, `draft_excerpt?`, `gmail_url`. Creates or updates the card of the thread (rules above). Refuses a summary over 200 characters, a `gmail_url` outside Gmail, or an impossible date (`2026-02-31`). |
+| `resolve_mail` | `account`, `thread_id`. Closes a waiting card (pending or put off) when the agent sees the thread handled in Gmail (answered, archived by hand). |
 | `list_mail_cards` | Pending and recently decided cards, so the agent does not propose a thread twice and learns from dismissals. |
 
 The agent's prompt change lives in Hermes, outside this repository.
 
 ## Gmail gateway
 
-Optional. `TUDUDI_GMAIL_MCP_URL` and `TUDUDI_GMAIL_MCP_TOKEN` point Cadence's server at the restricted Gmail tool's HTTP endpoint on the same Docker network. Cadence calls only `archive_thread` and refuses any other tool name in code. Without these variables the archive option is hidden and Cadence never contacts Gmail. Cadence holds no Google OAuth token.
+Optional. `TUDUDI_GMAIL_MCP_URL` and `TUDUDI_GMAIL_MCP_TOKEN` point Cadence's server at the restricted Gmail tool's HTTP endpoint on the same Docker network. The token is the tool's **archive-only token** (`--archive-token-file`, tool 1.3.0), never its full token: the tool itself refuses every other method and tool for it (`403 tool_not_allowed`), and Cadence's code only ever sends `archive_thread`, without following redirects. Without these variables the archive option is hidden and Cadence never contacts Gmail. Cadence holds no Google OAuth token.
 
-## Storage and sync
+## Storage and offline
 
-- Table `mail_items`: `uid`, `user_id`, `account`, `thread_id`, the card fields, `status` (`pending`, `later`, `done`), `later_until`, `decision`, `decided_at`, timestamps. Unique `(user_id, account, thread_id)`. Migration through the `safe*` helpers, checked on SQLite and PostgreSQL.
-- Sync entity `mail_item` (read and decide offline on Android, decision replayed on reconnect); a decision made on both clients keeps the first one, the second gets 409 « Déjà traité ailleurs. ».
-- Setting `ui_settings.mail.maxPending` (default 30): above it the oldest pending cards are shown last and the agent is told through `list_mail_cards`.
+- Table `mail_items`: `uid`, `user_id`, `account`, `thread_id`, the card fields, `status` (`pending`, `later`, `done`), `later_until`, `decision` (`task`, `reply`, `later`, `dismiss`, or `resolved` by the agent), `decided_at`, `decide_key`, `task_uid`, `archived_at`, timestamps. Unique `(user_id, account, thread_id)`. Migration through the `safe*` helpers, checked on SQLite and PostgreSQL.
+- Not a sync entity: like every triage card, the card comes with `GET /triage` (kept for offline reading on Android) and the decision is a REST call with an `idempotency_key`, replayed by the deferred calls. A decision made on both clients keeps the first one: the card is taken (status `deciding`) before the work, so two orders never both run; another decision answers 409 « Déjà traité ailleurs. », the same one is answered as done (`replayed: true`). A failed decision gives the card back and frees its key; a card left `deciding` by a crash is free again after 5 minutes. The last key stays on the card, even when a new message reopens it, so an old order resent later does not settle the new message.
+- Cards are listed newest first, with no cap: the agent only proposes what asks for an action.
+- `GET /triage` carries `mail_archive: true` when the Gmail gateway is set, so the clients show the archive option.
 
 ## Clients
 
@@ -88,3 +89,5 @@ Reading a whole message, sending, attachments, IMAP or other providers, rules or
 - With the gateway set, « Archiver » removes the thread from the Gmail inbox; without it, the option is absent and no request leaves Cadence.
 - A mail summary containing Markdown or a link shows as plain text.
 - Decided card gone after 30 days; offline decision on the phone reaches the server once.
+
+Server side, these are covered by `backend/tests/integration/triage-mail.test.js` (SQLite and PostgreSQL 16).

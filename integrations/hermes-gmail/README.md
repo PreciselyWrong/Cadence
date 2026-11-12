@@ -46,7 +46,7 @@ Transport HTTP « streamable » réduit : un seul point `POST /mcp`, réponses J
 
 ```bash
 # Sur l'hôte Docker, depuis une copie de ce dossier :
-docker build -t gmail-restricted:1.2.0 .
+docker build -t gmail-restricted:1.3.0 .
 
 # Dossiers d'état, au nom d'un uid dédié (exemple : <uid>:<gid>) :
 install -d -m 700 -o <uid> -g <gid> <appdata>/state <appdata>/secrets
@@ -57,7 +57,7 @@ docker run -d --name gmail-restricted --network <réseau-de-hermes> --user <uid>
   --read-only --cap-drop ALL --security-opt no-new-privileges --memory 128m --pids-limit 64 \
   --restart unless-stopped \
   -v <appdata>/state:/state:rw -v <appdata>/secrets:/secrets:ro \
-  gmail-restricted:1.2.0
+  gmail-restricted:1.3.0
 ```
 
 Ne publier aucun port : seul le réseau Docker partagé avec Hermes doit joindre `http://gmail-restricted:8700/mcp`. Le jeton va aussi dans le magasin de secrets du seul profil autorisé (`$HERMES_HOME/profiles/<profil>/.env`, variable `GMAIL_MCP_TOKEN`), par exemple sans l'afficher :
@@ -68,6 +68,17 @@ docker exec -i -u <utilisateur-hermes> -e HERMES_HOME=<home-du-profil> \
   'import sys; from hermes_cli.config import save_env_value; save_env_value("GMAIL_MCP_TOKEN", sys.stdin.read().strip())' \
   < <appdata>/secrets/mcp_token
 ```
+
+**Jeton d'archivage pour Cadence (facultatif).** Les cartes Mail de Cadence (`docs/43-mail-triage.md`) peuvent archiver un fil. Cadence reçoit alors un second jeton, qui n'ouvre que `archive_thread` : la couche HTTP refuse tout le reste (`403 tool_not_allowed`), y compris `tools/list`, avant d'appeler un outil. Il doit différer du jeton complet.
+
+```bash
+(umask 077; openssl rand -hex 32 > <appdata>/secrets/archive_token); chown <uid>:<gid> <appdata>/secrets/archive_token
+# Ajouter à la fin de la commande docker run (après l'image), en reprenant le CMD du Dockerfile :
+#   --transport http --bind 0.0.0.0 --port 8700 --accounts /state/accounts.json --state-dir /state \
+#   --token-file /secrets/mcp_token --archive-token-file /secrets/archive_token
+```
+
+Côté Cadence : `TUDUDI_GMAIL_MCP_URL=http://gmail-restricted:8700/mcp` et `TUDUDI_GMAIL_MCP_TOKEN` = ce jeton d'archivage (jamais le jeton complet), Cadence étant sur le même réseau Docker.
 
 Chemins dans le conteneur : `A` = `/state/accounts.json` (non secret), `S` = `/state` (secret, 700).
 

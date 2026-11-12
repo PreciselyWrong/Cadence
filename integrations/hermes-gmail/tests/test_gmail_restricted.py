@@ -448,6 +448,7 @@ class Protocol(Base):
 
 class Http(Base):
     TOKEN = "t" * 40
+    ARCHIVE_TOKEN = "a" * 40
 
     def setUp(self):
         super().setUp()
@@ -464,7 +465,8 @@ class Http(Base):
                 return tools.call(name, arguments)
 
         token = http_transport.read_token(self.token_file)
-        self.httpd = http_transport.HttpServer(("127.0.0.1", 0), Server(CountingTools()), token, max_body=4096)
+        self.httpd = http_transport.HttpServer(("127.0.0.1", 0), Server(CountingTools()), token, max_body=4096,
+                                                 archive_token=self.ARCHIVE_TOKEN)
         thread = threading.Thread(target=self.httpd.serve_forever, daemon=True)
         thread.start()
         self.addCleanup(self.httpd.server_close)
@@ -524,6 +526,25 @@ class Http(Base):
         _, payload = self.rpc("tools/call", {"name": "send_message", "arguments": {}}, request_id=2)
         self.assertTrue(payload["result"]["isError"])
         self.assertEqual(self.calls, ["archive_thread", "send_message"])
+
+    def test_archive_token_opens_archive_thread_only(self):
+        call = {"name": "archive_thread", "arguments": {"account": "perso", "thread_id": "t1"}}
+        response, payload = self.rpc("tools/call", call, token=self.ARCHIVE_TOKEN)
+        self.assertEqual(response.status, 200)
+        self.assertFalse(payload["result"]["isError"])
+        response, _ = self.rpc("ping", request_id=2, token=self.ARCHIVE_TOKEN)
+        self.assertEqual(response.status, 200)
+        for method, params in (
+            ("tools/call", {"name": "get_thread", "arguments": {"account": "perso", "thread_id": "t1"}}),
+            ("tools/call", {"name": "unarchive_thread", "arguments": {"account": "perso", "thread_id": "t1"}}),
+            ("tools/call", None),
+            ("tools/list", None),
+        ):
+            with self.subTest(method=method, params=params):
+                response, payload = self.rpc(method, params, request_id=3, token=self.ARCHIVE_TOKEN)
+                self.assertEqual(response.status, 403)
+                self.assertEqual(payload, {"error": "tool_not_allowed"})
+        self.assertEqual(self.calls, ["archive_thread"])
 
     def test_oversized_body_is_refused_unread(self):
         big = json.dumps({"jsonrpc": "2.0", "id": 1, "method": "ping", "params": {"pad": "x" * 5000}})

@@ -4,6 +4,7 @@ const express = require('express');
 const triage = require('./service');
 const slots = require('./slots');
 const linkReviews = require('./linkReviews');
+const mail = require('./mail');
 const { logError } = require('../../services/logService');
 const { AppError } = require('../../shared/errors');
 
@@ -47,6 +48,13 @@ router.post(
     '/triage/links/:uid/review',
     handle((req) =>
         linkReviews.decide(req.currentUser, req.params.uid, req.body?.decision)
+    )
+);
+
+router.post(
+    '/triage/mail/:uid/decide',
+    handle((req) =>
+        mail.decide(req.currentUser, req.params.uid, req.body ?? {})
     )
 );
 

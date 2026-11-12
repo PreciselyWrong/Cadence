@@ -39,9 +39,9 @@ A link still to read whose review day (`review_at`) has come is a card `type: li
 
 The MCP tool `propose_link_slot` (`link_uids`, `title`, `reason`, `date`, `start_minute?`, `duration_minutes?`) stores a proposal for related links: the only planning an AI may suggest. It appears in the queue as a `link_slot` item (`action: accept_slot`, details: the links). `POST /triage/slots/:id/accept` creates the task, with the addresses in its note, and places it in that day's plan; `POST /triage/slots/:id/refuse` forgets it. Nothing happens before that tap. A slot whose day has passed is no longer shown.
 
-## Mail cards (planned)
+## Mail cards
 
-Mail that asks for an action, proposed by the mail-sorting agent and decided here: `docs/43-mail-triage.md` (spec, not built).
+Mail that asks for an action, proposed by an agent through the MCP tool `propose_mail`, is a card `type: mail` (`action: decide_mail`, `source: mail`, `payload`: sender, subject, summary, suggestion, draft excerpt, `gmail_url`), decided through `POST /triage/mail/:uid/decide`. Contract: `docs/43-mail-triage.md` (server built, web and Android cards to come).
 
 ## Actions
 
@@ -55,10 +55,11 @@ All under `/api` and `/api/v1`.
 
 | Route | |
 |---|---|
-| `GET /triage` | `{ items, tasks, count }`; each item: `key`, `type`, `source`, `task_uid`, `action`, `payload`, `reason`, `details`, `question` |
+| `GET /triage` | `{ items, tasks, count, mail_archive }`; each item: `key`, `type`, `source`, `task_uid`, `action`, `payload`, `reason`, `details`, `question` |
 | `POST /triage/keep` | `{ task_uid }` |
 | `POST /triage/apply` | `{ task_uid, action, payload?, idempotency_key? }`; the same key does nothing twice |
 | `POST /triage/links/:uid/review` | `{ decision: keep \| archive \| later }` |
+| `POST /triage/mail/:uid/decide` | `{ decision: task \| reply \| later \| dismiss, payload?, archive?, idempotency_key? }` |
 
 ## Clients
 

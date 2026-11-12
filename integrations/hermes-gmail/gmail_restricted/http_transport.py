@@ -1,7 +1,8 @@
 """Streamable HTTP transport (MCP 2025-06-18 subset), standard library only.
 
 One endpoint, POST only, JSON responses (no server-sent events, no session). Every request
-needs `Authorization: Bearer <token>`; the token is read once from a private file. Requests
+needs `Authorization: Bearer <token>`; the token is read once from a private file. An optional
+second token opens only `archive_thread` (for Cadence's mail cards), refused in this layer. Requests
 carrying an Origin header are refused: no browser may talk to this server, so no CORS.
 """
 
@@ -18,6 +19,9 @@ ENDPOINT = "/mcp"
 MAX_BODY_BYTES = 1024 * 1024
 MIN_TOKEN_LENGTH = 32
 SOCKET_TIMEOUT = 30
+# What the archive-only token may ask: the handshake, and one tool.
+ARCHIVE_METHODS = ("initialize", "ping", "notifications/initialized")
+ARCHIVE_TOOL = "archive_thread"
 
 
 def read_token(path):
@@ -58,13 +62,26 @@ class _Handler(BaseHTTPRequestHandler):
         self.close_connection = True  # an unread body must not be parsed as the next request
         self._reply(status, {"error": reason}, [("Connection", "close"), *extra_headers])
 
-    def _authorized(self):
+    def _scope(self):
+        """'full', 'archive', or None when no token matches."""
         header = self.headers.get("Authorization", "")
         scheme, _, presented = header.partition(" ")
-        expected = self.server.token.encode()
-        # Compare even on a wrong scheme so timing does not reveal which part failed.
-        match = hmac.compare_digest(presented.strip().encode(), expected)
-        return match and scheme.lower() == "bearer"
+        presented = presented.strip().encode()
+        # Compare every token, even on a wrong scheme, so timing does not reveal which part failed.
+        full = hmac.compare_digest(presented, self.server.token.encode())
+        archive = self.server.archive_token is not None and hmac.compare_digest(
+            presented, self.server.archive_token.encode())
+        if scheme.lower() != "bearer":
+            return None
+        return "full" if full else "archive" if archive else None
+
+    @staticmethod
+    def _archive_allows(message):
+        method = message.get("method")
+        if method in ARCHIVE_METHODS:
+            return True
+        params = message.get("params")
+        return method == "tools/call" and isinstance(params, dict) and params.get("name") == ARCHIVE_TOOL
 
     def _precheck(self):
         """Common gate for every method; returns True when the request may proceed."""
@@ -74,7 +91,8 @@ class _Handler(BaseHTTPRequestHandler):
         if self.path != ENDPOINT:
             self._refuse(404, "not_found")
             return False
-        if not self._authorized():
+        self.scope = self._scope()
+        if self.scope is None:
             self._refuse(401, "unauthorized", [("WWW-Authenticate", "Bearer")])
             return False
         version = self.headers.get("MCP-Protocol-Version")
@@ -120,6 +138,9 @@ class _Handler(BaseHTTPRequestHandler):
         if "method" not in message:
             self._reply(202)  # a client response to a server request: none are ever made
             return
+        if self.scope == "archive" and not self._archive_allows(message):
+            self._refuse(403, "tool_not_allowed")
+            return
         try:
             with self.server.call_lock:
                 response = self.server.mcp.handle(message)
@@ -136,17 +157,21 @@ class HttpServer(ThreadingHTTPServer):
     daemon_threads = True
     allow_reuse_address = True
 
-    def __init__(self, address, mcp_server, token, max_body=MAX_BODY_BYTES):
+    def __init__(self, address, mcp_server, token, max_body=MAX_BODY_BYTES, archive_token=None):
         super().__init__(address, _Handler)
         self.mcp = mcp_server
         self.token = token
+        self.archive_token = archive_token
         self.max_body = max_body
         self.call_lock = threading.Lock()  # tool calls run one at a time, like the stdio transport
 
 
-def serve(mcp_server, bind, port, token_file):
+def serve(mcp_server, bind, port, token_file, archive_token_file=None):
     token = read_token(token_file)
-    httpd = HttpServer((bind, port), mcp_server, token)
+    archive_token = read_token(archive_token_file) if archive_token_file else None
+    if archive_token is not None and hmac.compare_digest(archive_token.encode(), token.encode()):
+        raise AuthError("le jeton d'archivage doit différer du jeton complet")
+    httpd = HttpServer((bind, port), mcp_server, token, archive_token=archive_token)
     _log(f"listening on {bind}:{httpd.server_address[1]}{ENDPOINT} (pid {os.getpid()})")
     try:
         httpd.serve_forever()
