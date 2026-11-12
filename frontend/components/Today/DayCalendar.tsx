@@ -9,18 +9,12 @@ import { formatMinute, SLOT_MINUTES, sideBySide } from '../DailyPlan/planUtils';
 import { DayLine } from './dayModel';
 import type { HabitMark } from './dayHabits';
 import { Link } from 'react-router-dom';
+import { blockFill } from '../Shared/task/blockFill';
 
 export const PX_PER_HOUR = 56;
 export const PX_PER_MINUTE = PX_PER_HOUR / 60;
 const MIN_BLOCK_PX = 20;
 const DEFAULT_MINUTES = 30;
-
-// A calendar colour as a flat fill: lighter in light mode, deeper in dark
-// mode (--block-mix in tailwind.css), so blocks never turn muddy.
-const blockFill = (color: string | null | undefined): string | undefined =>
-    color && /^#[0-9a-f]{6}$/i.test(color)
-        ? `color-mix(in srgb, ${color} var(--block-mix), transparent)`
-        : undefined;
 
 const snap = (minute: number): number =>
     Math.round(minute / SLOT_MINUTES) * SLOT_MINUTES;
