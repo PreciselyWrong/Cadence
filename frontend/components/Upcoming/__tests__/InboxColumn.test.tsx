@@ -194,7 +194,23 @@ describe('InboxColumn', () => {
             item({ uid: 'a', content: 'From chat', source: 'telegram' }),
         ]);
 
-        expect(screen.getByText('telegram')).toBeInTheDocument();
+        expect(screen.getByText('Telegram')).toBeInTheDocument();
+    });
+
+    it('says nothing for an item typed in Cadence and shows Markdown as text', () => {
+        renderColumn([
+            item({
+                uid: 'a',
+                content: '**Call** [the bank](https://bank.example)',
+                source: 'manual',
+            }),
+        ]);
+
+        const card = screen.getByTestId('inbox-card');
+        expect(card).toHaveTextContent('Call the bank');
+        expect(card).not.toHaveTextContent('manual');
+        expect(card).not.toHaveTextContent('**');
+        expect(card).toHaveClass('rounded-lg', 'border');
     });
 
     it('hides items that are processed, deleted or trashed', () => {

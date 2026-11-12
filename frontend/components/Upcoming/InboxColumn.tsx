@@ -15,6 +15,8 @@ import { InboxItem } from '../../entities/InboxItem';
 import { Task } from '../../entities/Task';
 import { DayLine, lineFromDue } from '../Today/dayModel';
 import TaskCard, { cardId } from './TaskCard';
+import { taskCardClass } from '../Shared/task/TaskCardBody';
+import { plainPreview } from '../Shared/task/plainText';
 
 export interface InboxDragData {
     kind: 'inbox';
@@ -39,10 +41,26 @@ export const openInboxItems = (items: InboxItem[]): InboxItem[] =>
 export const inboxTitle = (item: InboxItem): string =>
     (item.title || item.content || '').trim();
 
+// Where an item came from, in words; nothing for one typed in Cadence
+// itself ('manual', the server default).
+export const inboxSourceLabel = (
+    source: string | null | undefined,
+    t: (key: string, fallback: string) => string
+): string | null => {
+    const key = source?.trim().toLowerCase();
+    if (!key || key === 'manual' || key === 'web') return null;
+    return t(
+        `inbox.sources.${key}`,
+        key.charAt(0).toUpperCase() + key.slice(1)
+    );
+};
+
 const InboxCard: React.FC<{ item: InboxItem; onOpen(): void }> = ({
     item,
     onOpen,
 }) => {
+    const { t } = useTranslation();
+    const source = inboxSourceLabel(item.source, t);
     const data: InboxDragData = {
         kind: 'inbox',
         uid: item.uid as string,
@@ -72,16 +90,14 @@ const InboxCard: React.FC<{ item: InboxItem; onOpen(): void }> = ({
                 }
                 dragKeyDown?.(event);
             }}
-            className={`cursor-default rounded-xl bg-surface p-3 outline-none ring-1 ring-outline-variant/60 focus-visible:ring-2 focus-visible:ring-primary/60 ${
-                isDragging ? 'opacity-60 shadow-lg' : ''
-            }`}
+            className={taskCardClass(false, isDragging)}
         >
-            <p className="whitespace-pre-line break-words text-body font-medium leading-5 text-surface-on line-clamp-4">
-                {data.title}
+            <p className="break-words text-body-m font-medium leading-5 text-surface-on line-clamp-3">
+                {plainPreview(data.title) || data.title}
             </p>
-            {item.source && (
-                <p className="mt-1 truncate text-xs text-surface-on-variant">
-                    {item.source}
+            {source && (
+                <p className="mt-0.5 truncate text-xs text-surface-on-variant">
+                    {source}
                 </p>
             )}
         </div>
