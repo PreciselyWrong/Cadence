@@ -93,6 +93,7 @@ import ch.nicolab.cadence.tasks.model.TaskPriority
 import ch.nicolab.cadence.tasks.model.TaskStatus
 import ch.nicolab.cadence.tasks.model.TaskViews
 import ch.nicolab.cadence.tasks.swipe.FileBackedActions
+import ch.nicolab.cadence.tasks.swipe.FileOwnedField
 import java.time.LocalDate
 import java.time.LocalTime
 import kotlinx.coroutines.delay
@@ -141,10 +142,10 @@ internal fun TaskDetailSheet(
     var note by remember(current.uid) { mutableStateOf(current.note.orEmpty()) }
     val sent = remember(current.uid) { SentText(current.name, current.note.orEmpty()) }
     val latest by rememberUpdatedState(current)
-    // Une tâche de fichier TODO.md ne se modifie pas d'ici : rien n'est écrit, même par la fermeture.
-    val readOnly = !FileBackedActions.canEdit(current)
+    // Titre et note viennent du fichier TODO.md : rien de ce texte n'est écrit, même par la fermeture.
+    val textLocked = FileBackedActions.ownsField(current, FileOwnedField.TEXT)
     val flushText = flush@{
-        if (!FileBackedActions.canEdit(latest)) return@flush
+        if (FileBackedActions.ownsField(latest, FileOwnedField.TEXT)) return@flush
         val baseline = latest.copy(name = sent.name, note = sent.note)
         val change = TaskEdits.text(baseline, title, note)
         if (change != TaskChange()) {
@@ -201,7 +202,7 @@ internal fun TaskDetailSheet(
         ) {
             DetailHeader(
                 title = title,
-                readOnly = readOnly,
+                titleReadOnly = textLocked,
                 closed = current.isClosed,
                 highPriority = current.priority == TaskPriority.HIGH,
                 // Terminer est la case, à côté du titre (comme une ligne) : plus de gros bouton pris pour « Enregistrer ».
@@ -222,11 +223,11 @@ internal fun TaskDetailSheet(
                     .padding(horizontal = Space.gutter),
                 verticalArrangement = Arrangement.spacedBy(Space.md),
             ) {
-                if (readOnly) FileBackedNotice()
+                if (textLocked) FileBackedNotice()
                 AutoClassifyMarkLine(entity = "task", uid = current.uid)
                 DetailBadges(
                     task = current,
-                    enabled = !readOnly,
+                    projectEnabled = !FileBackedActions.ownsField(current, FileOwnedField.PROJECT),
                     today = today,
                     dueTime = dueTime,
                     projectName = projects.firstOrNull { it.uid == current.projectUid }?.name,
@@ -249,12 +250,11 @@ internal fun TaskDetailSheet(
                         task = current,
                         weekStart = weekStart,
                         today = today,
-                        enabled = !readOnly,
                         onToggle = { viewModel.funnel(current, it) },
                         onReviewOn = { viewModel.reviewOn(current, it) },
                     )
                 }
-                if (!readOnly && NextAction.canDesignate(current) && (moreFields || NextAction.isDesignated(current, projects))) {
+                if (NextAction.canDesignate(current) && (moreFields || NextAction.isDesignated(current, projects))) {
                     ChoiceChip(
                         label = stringResource(R.string.next_action_chip),
                         selected = NextAction.isDesignated(current, projects),
@@ -263,12 +263,10 @@ internal fun TaskDetailSheet(
                     )
                 }
                 PostponementLine(taskUid = current.uid, version = current.dueDay)
-                NoteCard(note = note, onNoteChange = { note = it }, readOnly = readOnly)
+                NoteCard(note = note, onNoteChange = { note = it }, readOnly = textLocked)
                 LinkPreviewList("$title\n$note", viewModel.linkPreviews)
-                if (!readOnly) {
-                    AddToLinksRow("$title\n$note", sourceKey = current.uid, onAdd = { viewModel.addLinkFrom(it, "task", current.uid) })
-                }
-                if (!readOnly) SubtasksCard(parentUid = current.uid, viewModel = viewModel, onOpen = { openedSubtask = it.uid })
+                AddToLinksRow("$title\n$note", sourceKey = current.uid, onAdd = { viewModel.addLinkFrom(it, "task", current.uid) })
+                if (!current.fileBacked) SubtasksCard(parentUid = current.uid, viewModel = viewModel, onOpen = { openedSubtask = it.uid })
                 val keyedFields = detailFields(
                         task = current,
                         today = today,
@@ -284,11 +282,12 @@ internal fun TaskDetailSheet(
                         onStatus = { picker = Picker.Status },
                         onTags = { picker = Picker.Tags },
                         onProject = { picker = Picker.Project },
+                        projectEnabled = !FileBackedActions.ownsField(current, FileOwnedField.PROJECT),
                     )
                 val shownFields = keyedFields
                     .filter { DetailFieldRules.visible(it.key, it.filled, it.hasBadge, moreFields) }
                     .map { it.field }
-                if (shownFields.isNotEmpty()) DetailFieldGroup(shownFields, enabled = !readOnly)
+                if (shownFields.isNotEmpty()) DetailFieldGroup(shownFields)
                 val canShowMore = !moreFields && (
                     DetailFieldRules.hasHidden(
                         keyedFields.map { it.key to it.filled },
@@ -297,9 +296,9 @@ internal fun TaskDetailSheet(
                     ) ||
                         TaskExtraRows.visible(current.extras).isNotEmpty() ||
                         (!funnelInUse && !current.isRecurring && current.parentTaskUid == null) ||
-                        (!readOnly && NextAction.canDesignate(current) && !NextAction.isDesignated(current, projects))
+                        (NextAction.canDesignate(current) && !NextAction.isDesignated(current, projects))
                     )
-                if (!readOnly && canShowMore) {
+                if (canShowMore) {
                     TextButton(onClick = { moreFields = true }, modifier = Modifier.heightIn(min = Size.touch)) {
                         Text(stringResource(R.string.tasks_detail_more_fields))
                     }
@@ -307,7 +306,7 @@ internal fun TaskDetailSheet(
                 if (hasReminder && !notifications.allowed) {
                     NotificationsOffNotice()
                 }
-                if (moreFields || readOnly) ReadOnlyDetails(current)
+                if (moreFields) ReadOnlyDetails(current)
                 Spacer(Modifier.height(Space.xl))
             }
         }
@@ -423,7 +422,8 @@ internal fun TaskDetailSheet(
                     picker = null
                     onDismiss()
                 }
-                ActionRow(Icons.Outlined.Delete, stringResource(R.string.tasks_action_delete), palette.error) {
+                // La suppression d'une tâche de fichier se fait dans le fichier : pas de ligne ici.
+                if (!FileBackedActions.ownsField(current, FileOwnedField.DELETE)) ActionRow(Icons.Outlined.Delete, stringResource(R.string.tasks_action_delete), palette.error) {
                     picker = null
                     if (current.isRecurring) {
                         // La portée est demandée à la place de la confirmation ; le texte en attente n'est plus à écrire.
@@ -473,7 +473,7 @@ private fun priorityLabel(priority: Int): Int = when (priority) {
 @Composable
 private fun DetailHeader(
     title: String,
-    readOnly: Boolean,
+    titleReadOnly: Boolean,
     closed: Boolean,
     highPriority: Boolean,
     onToggle: () -> Unit,
@@ -505,13 +505,11 @@ private fun DetailHeader(
                 contentDescription = stringResource(R.string.tasks_focus_open),
                 onClick = onFocusTimer,
             )
-            if (!readOnly) {
-                RoundHeaderButton(
-                    icon = Icons.Outlined.MoreVert,
-                    contentDescription = stringResource(R.string.tasks_detail_more),
-                    onClick = onMore,
-                )
-            }
+            RoundHeaderButton(
+                icon = Icons.Outlined.MoreVert,
+                contentDescription = stringResource(R.string.tasks_detail_more),
+                onClick = onMore,
+            )
         }
         Row(Modifier.fillMaxWidth().padding(horizontal = Space.sm), verticalAlignment = Alignment.Top) {
             TaskCheckbox(
@@ -532,7 +530,7 @@ private fun DetailHeader(
                 LinkedEditableField(
                     value = title,
                     onValueChange = onTitleChange,
-                    readOnly = readOnly,
+                    readOnly = titleReadOnly,
                     style = titleStyle,
                     onDone = { focus.clearFocus() },
                 )
@@ -544,7 +542,7 @@ private fun DetailHeader(
 @Composable
 private fun DetailBadges(
     task: TaskItem,
-    enabled: Boolean,
+    projectEnabled: Boolean,
     today: LocalDate,
     dueTime: LocalTime?,
     projectName: String?,
@@ -566,7 +564,7 @@ private fun DetailBadges(
         task.dueDay?.let { due ->
             val overdue = TaskViews.isOverdue(task, today)
             val text = compactDateTime(due, dueTime, today)
-            TapBadge(onDates, enabled) {
+            TapBadge(onDates) {
                 CadenceBadge(
                     text = if (overdue) stringResource(R.string.tasks_detail_overdue, text) else text,
                     tone = if (overdue) BadgeTone.Neutral else BadgeTone.Primary,
@@ -577,7 +575,7 @@ private fun DetailBadges(
         // Comme projet, statut et étiquettes : un badge seulement pour une valeur posée ; la ligne Priorité
         // plus bas reste là pour en choisir une. Une tâche simple garde une fiche simple.
         task.priority?.let { priority ->
-            TapBadge(onPriority, enabled) {
+            TapBadge(onPriority) {
                 CadenceBadge(
                     text = stringResource(priorityBadge(priority)),
                     tone = when (priority) {
@@ -590,27 +588,27 @@ private fun DetailBadges(
             }
         }
         projectName?.let {
-            TapBadge(onProject, enabled) {
+            TapBadge(onProject, projectEnabled) {
                 CadenceBadge(text = it, tone = BadgeTone.Neutral, color = projectColor, icon = entityIcon(projectIcon))
             }
         }
         if (task.isClosed) {
             CadenceBadge(text = stringResource(R.string.tasks_detail_done), tone = BadgeTone.Success)
         } else if (task.status != TaskStatus.NOT_STARTED) {
-            TapBadge(onStatus, enabled) {
+            TapBadge(onStatus) {
                 CadenceBadge(text = stringResource(statusLabelRes(task.status)), tone = BadgeTone.Primary)
             }
         }
         if (task.isRecurring) {
-            TapBadge(onRepeat, enabled) {
+            TapBadge(onRepeat) {
                 CadenceBadge(text = stringResource(R.string.tasks_recurring), icon = Icons.Outlined.Repeat)
             }
         }
         tagNames.take(MAX_TAG_BADGES).forEach { name ->
-            TapBadge(onTags, enabled) { CadenceBadge(text = "#$name", color = tagColors[name]) }
+            TapBadge(onTags) { CadenceBadge(text = "#$name", color = tagColors[name]) }
         }
         if (tagNames.size > MAX_TAG_BADGES) {
-            TapBadge(onTags, enabled) {
+            TapBadge(onTags) {
                 CadenceBadge(text = stringResource(R.string.tasks_detail_more_tags, tagNames.size - MAX_TAG_BADGES))
             }
         }
@@ -618,7 +616,7 @@ private fun DetailBadges(
 }
 
 @Composable
-private fun TapBadge(onClick: () -> Unit, enabled: Boolean, content: @Composable () -> Unit) {
+private fun TapBadge(onClick: () -> Unit, enabled: Boolean = true, content: @Composable () -> Unit) {
     Box(
         Modifier.clip(Radius.Pill).clickable(enabled = enabled, role = Role.Button, onClick = onClick),
     ) { content() }
@@ -640,6 +638,7 @@ private fun detailFields(
     onStatus: () -> Unit,
     onTags: () -> Unit,
     onProject: () -> Unit,
+    projectEnabled: Boolean,
 ): List<KeyedDetailField> {
     val due = task.dueDay?.let { compactDateTime(it, dueTime, today) }
     val start = task.startDay?.let { compactDateTime(it, startTime, today) }
@@ -728,6 +727,7 @@ private fun detailFields(
                 projectName ?: stringResource(R.string.tasks_no_project),
                 onProject,
                 projectName == null,
+                enabled = projectEnabled,
             ),
         ),
     )

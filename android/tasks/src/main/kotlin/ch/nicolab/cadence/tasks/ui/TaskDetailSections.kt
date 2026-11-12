@@ -80,6 +80,8 @@ internal class DetailField(
     val value: String,
     val onClick: () -> Unit,
     val empty: Boolean = false,
+    /** Faux pour une ligne qu'un fichier possède (le projet d'une tâche TODO.md) : elle se lit sans s'ouvrir. */
+    val enabled: Boolean = true,
 )
 
 internal enum class DetailFieldKey { DATES, REPEAT, ESTIMATE, PRIORITY, STATUS, TAGS, PROJECT }
@@ -104,16 +106,16 @@ internal object DetailFieldRules {
 
 /** Groupe de lignes connectées : coins extérieurs arrondis, jonctions presque droites. */
 @Composable
-internal fun DetailFieldGroup(fields: List<DetailField>, enabled: Boolean = true) {
+internal fun DetailFieldGroup(fields: List<DetailField>) {
     RowGroup(Modifier.fillMaxWidth()) {
         fields.forEachIndexed { index, field ->
-            DetailRow(field, rowGroupShape(index, fields.size), enabled)
+            DetailRow(field, rowGroupShape(index, fields.size))
         }
     }
 }
 
 @Composable
-private fun DetailRow(field: DetailField, shape: Shape, enabled: Boolean) {
+private fun DetailRow(field: DetailField, shape: Shape) {
     val palette = cadence
     val haptic = rememberCadenceHaptic()
     Row(
@@ -121,7 +123,7 @@ private fun DetailRow(field: DetailField, shape: Shape, enabled: Boolean) {
             .fillMaxWidth()
             .clip(shape)
             .background(palette.card)
-            .clickable(enabled = enabled, role = Role.Button) {
+            .clickable(enabled = field.enabled, role = Role.Button) {
                 haptic.tap()
                 field.onClick()
             }
@@ -141,7 +143,7 @@ private fun DetailRow(field: DetailField, shape: Shape, enabled: Boolean) {
                 overflow = TextOverflow.Ellipsis,
             )
         }
-        if (enabled) {
+        if (field.enabled) {
             Icon(
                 Icons.AutoMirrored.Outlined.KeyboardArrowRight,
                 null,
@@ -376,7 +378,7 @@ private fun extraValue(raw: String): String = when (raw) {
 private const val DATE_LENGTH = 10
 private val longDate: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM yyyy", tasksLocale)
 
-/** Bandeau de la fiche d'une tâche de fichier TODO.md : d'où elle vient et pourquoi elle est figée. */
+/** Bandeau de la fiche d'une tâche de fichier TODO.md : d'où elle vient et ce que le fichier fixe. */
 @Composable
 internal fun FileBackedNotice() {
     val palette = cadence

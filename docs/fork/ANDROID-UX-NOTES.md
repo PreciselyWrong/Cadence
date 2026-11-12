@@ -401,3 +401,9 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 - **Problème** : dans l'Agenda, toucher une tâche (bloc horaire, journée entière, liste) ne faisait rien ; seule sa case réagissait.
 - **Décision** : toucher le corps d'une tâche ouvre sa fiche, la même que dans Tâches, par-dessus l'Agenda ; une occurrence à venir ouvre la tâche enregistrée de sa série. La case coche toujours, l'appui long glisse toujours.
 - **Web** : rien à reprendre, le calendrier web ouvre déjà la tâche. Reste : rien d'essayé sur le téléphone.
+
+### 2026-11-12 — Tâche de fichier TODO.md : le reste s'édite
+
+- **Problème** : une tâche qui vient d'un `TODO.md` était figée (seule la case) ; impossible de la dater, la prioriser ou l'étiqueter depuis Cadence.
+- **Décision** : titre, note, projet et suppression restent au fichier (la suppression = retirer la ligne) ; tout le reste s'édite comme une tâche ordinaire, dans la fiche, les balayages et le menu. Le bandeau dit que titre et note viennent du fichier ; le badge « TODO.md » reste. Sous-tâches : toujours pas. Lecture : `swipe/FileBackedActions.kt`.
+- **Web** : déjà pareil (bbcdba68, même règle `FILE_OWNED_TASK_FIELDS` côté serveur). Reste : rien d'essayé sur le téléphone.

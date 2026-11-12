@@ -11,9 +11,9 @@ object NextAction {
         return tasks.firstOrNull { it.uid == uid && it.projectUid == project.uid && !it.isClosed }
     }
 
-    /** Peut-on désigner [task] ? Ouverte, dans un projet, pas une sous-tâche ni un projet-fichier. */
+    /** Peut-on désigner [task] ? Ouverte, dans un projet, pas une sous-tâche. */
     fun canDesignate(task: TaskItem): Boolean =
-        task.projectUid != null && !task.isClosed && task.parentTaskUid == null && !task.fileBacked
+        task.projectUid != null && !task.isClosed && task.parentTaskUid == null
 
     fun isDesignated(task: TaskItem, projects: List<ProjectItem>): Boolean =
         task.projectUid != null && projects.any { it.uid == task.projectUid && it.nextTaskUid == task.uid }

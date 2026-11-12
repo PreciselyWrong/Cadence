@@ -21,27 +21,31 @@ class FileBackedActionsTest {
     }
 
     @Test
-    fun `une tâche ordinaire garde toutes les actions`() {
+    fun `une tâche ordinaire garde toutes les actions et tous ses champs`() {
         SwipeAction.entries.forEach { assertTrue(FileBackedActions.allowsSwipe(ordinary, it)) }
-        assertTrue(FileBackedActions.canEdit(ordinary))
+        FileOwnedField.entries.forEach { assertFalse(FileBackedActions.ownsField(ordinary, it), it.name) }
         assertSame(SwipeConfig.Default, FileBackedActions.swipeConfig(ordinary, SwipeConfig.Default))
     }
 
     @Test
-    fun `une tâche de fichier n'accepte que terminer`() {
-        assertTrue(FileBackedActions.allowsSwipe(fromFile, SwipeAction.COMPLETE))
-        assertTrue(FileBackedActions.allowsSwipe(fromFile, SwipeAction.NONE))
-        SwipeAction.entries.filter { it != SwipeAction.COMPLETE && it != SwipeAction.NONE }
-            .forEach { assertFalse(FileBackedActions.allowsSwipe(fromFile, it), it.name) }
-        assertFalse(FileBackedActions.canEdit(fromFile))
+    fun `une tâche de fichier garde à son fichier titre, note, projet et suppression`() {
+        FileOwnedField.entries.forEach { assertTrue(FileBackedActions.ownsField(fromFile, it), it.name) }
     }
 
     @Test
-    fun `le balayage d'une tâche de fichier ne garde que terminer`() {
+    fun `une tâche de fichier accepte tous les gestes sauf projet et suppression`() {
+        val refused = setOf(SwipeAction.MOVE_PROJECT, SwipeAction.DELETE)
+        SwipeAction.entries.forEach {
+            assertEquals(it !in refused, FileBackedActions.allowsSwipe(fromFile, it), it.name)
+        }
+    }
+
+    @Test
+    fun `le balayage d'une tâche de fichier perd seulement projet et suppression`() {
         val config = FileBackedActions.swipeConfig(fromFile, SwipeConfig.Default)
         assertEquals(SwipeAction.COMPLETE, config.actionFor(SwipeSide.RIGHT, SwipeStage.SHORT))
         assertEquals(SwipeAction.NONE, config.actionFor(SwipeSide.RIGHT, SwipeStage.LONG))
-        assertFalse(config.isEnabled(SwipeSide.LEFT))
-        assertEquals(listOf(SwipeAction.COMPLETE), config.distinctActions())
+        assertEquals(SwipeAction.SCHEDULE, config.actionFor(SwipeSide.LEFT, SwipeStage.SHORT))
+        assertEquals(SwipeAction.NONE, config.actionFor(SwipeSide.LEFT, SwipeStage.LONG))
     }
 }

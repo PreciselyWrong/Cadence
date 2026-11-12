@@ -74,7 +74,6 @@ internal fun FunnelSection(
     task: TaskItem,
     weekStart: LocalDate,
     today: LocalDate,
-    enabled: Boolean,
     onToggle: (FunnelStage) -> Unit,
     onReviewOn: (LocalDate?) -> Unit,
 ) {
@@ -87,7 +86,7 @@ internal fun FunnelSection(
                     label = stringResource(funnelLabel(stage)),
                     selected = Funnel.has(task, stage, weekStart),
                     leadingIcon = funnelIcon(stage),
-                    onClick = { if (enabled) onToggle(stage) },
+                    onClick = { onToggle(stage) },
                 )
             }
         }
@@ -97,7 +96,7 @@ internal fun FunnelSection(
                     Modifier
                         .weight(1f)
                         .heightIn(min = Size.touch)
-                        .clickable(enabled = enabled, role = Role.Button) { picking = true }
+                        .clickable(role = Role.Button) { picking = true }
                         .padding(vertical = Space.xs),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -110,7 +109,7 @@ internal fun FunnelSection(
                         color = palette.onSurfaceVariant,
                     )
                 }
-                if (task.reviewOn != null && enabled) {
+                if (task.reviewOn != null) {
                     // Cible de 48 dp : l'icône seule (20 dp) se ratait au doigt.
                     IconButton(onClick = { onReviewOn(null) }) {
                         Icon(

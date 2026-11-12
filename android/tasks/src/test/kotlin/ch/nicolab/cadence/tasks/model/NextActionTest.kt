@@ -34,7 +34,7 @@ class NextActionTest {
         assertFalse(NextAction.canDesignate(task("t")))
         assertFalse(NextAction.canDesignate(task("t", "p", status = TaskStatus.CANCELLED)))
         assertFalse(NextAction.canDesignate(task("t", "p").copy(parentTaskUid = "x")))
-        assertFalse(NextAction.canDesignate(task("t", "p").copy(fileBacked = true)))
+        assertTrue(NextAction.canDesignate(task("t", "p").copy(fileBacked = true)))
     }
 
     @Test

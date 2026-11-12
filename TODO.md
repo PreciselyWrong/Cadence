@@ -58,7 +58,7 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
 - [x] Planifier, mode Horizons : Cette semaine, Ce mois-ci, Mois prochain, Un jour (façon Akiflow)
 - [ ] Android : reprendre Planifier (Inbox + jours + calendrier), les Horizons et « Masquer les terminées » ; `tasks.month_of` à ajouter dans Room et la synchro
   Raison : desktop d'abord (choix du 2026-11-12) ; le serveur synchronise déjà `month_of`. Vérif : une tâche glissée dans « Ce mois-ci » sur le web apparaît dans le même horizon sur le téléphone, et inversement ; Room migrée sous Robolectric.
-- [ ] Tâches venues d'un TODO.md : se comportent comme de vraies tâches sur le web
+- [x] Tâches venues d'un TODO.md : se comportent comme de vraies tâches, sur le web et sur Android
 - [ ] Style des apps de référence repris sur tout le desktop, pas seulement Aujourd'hui
 - [ ] Cases `- [ ]` écrites dans une note : deviennent des tâches liées à la note
 

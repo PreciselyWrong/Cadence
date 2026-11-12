@@ -63,6 +63,7 @@ import ch.nicolab.cadence.tasks.planning.PlanEntry
 import ch.nicolab.cadence.tasks.planning.ServerPlan
 import ch.nicolab.cadence.tasks.reminder.PlanSlotsStore
 import ch.nicolab.cadence.tasks.swipe.FileBackedActions
+import ch.nicolab.cadence.tasks.swipe.FileOwnedField
 import ch.nicolab.cadence.tasks.swipe.SchedulePreset
 import ch.nicolab.cadence.tasks.swipe.SwipeAction
 import ch.nicolab.cadence.tasks.swipe.UndoChanges
@@ -444,7 +445,10 @@ internal class TasksViewModel(
 
     fun skipOccurrence(task: TaskItem) = launchAction { repository.skipOccurrence(task.uid) }
 
-    fun delete(task: TaskItem) = launchAction { repository.deleteTask(task.uid) }
+    fun delete(task: TaskItem) {
+        if (FileBackedActions.ownsField(task, FileOwnedField.DELETE)) return
+        launchAction { repository.deleteTask(task.uid) }
+    }
 
     fun update(uid: String, change: TaskChange) = launchAction { repository.updateTask(uid, change) }
 
@@ -464,6 +468,7 @@ internal class TasksViewModel(
 
     /** Suppression : une tâche récurrente demande la portée, une tâche simple part avec « Annuler ». */
     fun askDelete(task: TaskItem) {
+        if (FileBackedActions.ownsField(task, FileOwnedField.DELETE)) return
         if (task.isRecurring) _pendingScope.value = PendingScope.Delete(task) else deleteWithUndo(task)
     }
 
@@ -493,7 +498,6 @@ internal class TasksViewModel(
     /** Allume ou éteint une étape de l'entonnoir, avec « Annuler » ; l'échéance n'est jamais touchée. */
     fun funnel(task: TaskItem, stage: FunnelStage) {
         _sheet.value = null
-        if (!FileBackedActions.canEdit(task)) return
         val ctx = DecisionContext(moment.value.today, weekStart.value, moment.value.zone)
         val on = !Funnel.has(task, stage, ctx.weekStart)
         val message = getString(funnelNotice(stage, on), task.name)
@@ -502,14 +506,12 @@ internal class TasksViewModel(
 
     /** « Quand ? » → « Sans date » : la tâche garde son projet ou son domaine et sort de « À classer » ; annulable. */
     fun clearWhen(task: TaskItem) {
-        if (!FileBackedActions.canEdit(task)) return
         val message = getString(R.string.swipe_notice_unscheduled, task.name)
         changeWithUndo(task, TaskChange(needsWhen = false), TaskChange(needsWhen = true), message)
     }
 
     /** Date de réexamen d'une idée mise de côté ; null la retire. Ni rappel ni agenda. */
     fun reviewOn(task: TaskItem, day: LocalDate?) {
-        if (!FileBackedActions.canEdit(task)) return
         update(task.uid, if (day == null) TaskChange(clearReviewOn = true) else TaskChange(reviewOn = day))
     }
 
@@ -534,7 +536,6 @@ internal class TasksViewModel(
     /** Nouvelle échéance ; null retire l'échéance. Une récurrente passe par le déplacement d'occurrence. */
     fun reschedule(task: TaskItem, date: LocalDate?) {
         _sheet.value = null
-        if (!FileBackedActions.canEdit(task)) return
         if (date != null && task.isRecurring) {
             edit(task, TaskChange(dueDate = date))
             return
@@ -547,7 +548,7 @@ internal class TasksViewModel(
 
     fun moveToProject(task: TaskItem, projectUid: String?) {
         _sheet.value = null
-        if (!FileBackedActions.canEdit(task)) return
+        if (FileBackedActions.ownsField(task, FileOwnedField.PROJECT)) return
         if (projectUid == task.projectUid) return
         val change = if (projectUid == null) TaskChange(clearProject = true) else TaskChange(projectUid = projectUid)
         changeWithUndo(task, change, UndoChanges.restoreProject(task), getString(R.string.swipe_notice_moved, task.name))
@@ -555,7 +556,6 @@ internal class TasksViewModel(
 
     fun setPriority(task: TaskItem, priority: Int?) {
         _sheet.value = null
-        if (!FileBackedActions.canEdit(task)) return
         if (priority == task.priority) return
         val change = if (priority == null) TaskChange(clearPriority = true) else TaskChange(priority = priority)
         changeWithUndo(task, change, UndoChanges.restorePriority(task), getString(R.string.swipe_notice_priority, task.name))

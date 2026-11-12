@@ -84,17 +84,7 @@ internal fun TaskMenuSheet(
     val quickDates = listOf(SchedulePreset.TODAY, SchedulePreset.TOMORROW, SchedulePreset.WEEKEND).map { preset ->
         Entry(presetIcon(preset), presetLabel(preset)) { onSchedule(SchedulePreset.dateFor(preset, today, firstDayOfWeek)) }
     }
-    val entries = if (!FileBackedActions.canEdit(task)) {
-        listOf(
-            Entry(
-                swipeActionIcon(SwipeAction.COMPLETE, task.isClosed),
-                swipeActionLabelRes(SwipeAction.COMPLETE, task.isClosed),
-            ) {
-                onAction(SwipeAction.COMPLETE)
-                onDismiss()
-            },
-        )
-    } else listOfNotNull(
+    val entries = listOfNotNull(
         onMoveUp?.let { move ->
             Entry(Icons.Outlined.ArrowUpward, R.string.today_move_up) {
                 move()
@@ -115,8 +105,11 @@ internal fun TaskMenuSheet(
         },
     ) + listOf(
         Entry(swipeActionIcon(SwipeAction.PRIORITY), R.string.swipe_action_priority) { onAction(SwipeAction.PRIORITY) },
-        Entry(swipeActionIcon(SwipeAction.MOVE_PROJECT), R.string.tasks_field_project) { onAction(SwipeAction.MOVE_PROJECT) },
-        Entry(swipeActionIcon(SwipeAction.DELETE), R.string.swipe_action_delete) { onAction(SwipeAction.DELETE) },
+    ) + listOfNotNull(
+        Entry(swipeActionIcon(SwipeAction.MOVE_PROJECT), R.string.tasks_field_project) { onAction(SwipeAction.MOVE_PROJECT) }
+            .takeIf { FileBackedActions.allowsSwipe(task, SwipeAction.MOVE_PROJECT) },
+        Entry(swipeActionIcon(SwipeAction.DELETE), R.string.swipe_action_delete) { onAction(SwipeAction.DELETE) }
+            .takeIf { FileBackedActions.allowsSwipe(task, SwipeAction.DELETE) },
     )
     CadenceSheet(title = stringResource(R.string.swipe_menu_title), subtitle = task.name, dismiss = onDismiss) {
         RowGroup {
