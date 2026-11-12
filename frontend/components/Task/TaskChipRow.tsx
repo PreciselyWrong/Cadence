@@ -37,6 +37,7 @@ import { fromDueParts, toDueParts } from '../../utils/dueDateTime';
 import { resolveTaskArea } from '../../utils/taskArea';
 import { useStore } from '../../store/useStore';
 import EntityIcon from '../Shared/EntityIcon';
+import { CONTROL_HEIGHT } from '../Shared/ui/controlSizes';
 
 // One place for the chip colours, so they can follow the shared tokens.
 const FILLED =
@@ -62,7 +63,7 @@ const Chip = forwardRef<HTMLButtonElement, ChipProps>(
                 type="button"
                 {...rest}
                 disabled={readOnly || rest.disabled}
-                className={`inline-flex h-8 max-w-full items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-default disabled:opacity-60 ${
+                className={`inline-flex ${CONTROL_HEIGHT.sm} max-w-full items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-default disabled:opacity-60 ${
                     filled ? FILLED : EMPTY
                 } ${className}`}
             >

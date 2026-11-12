@@ -21,6 +21,7 @@ import TaskDecisionRow from '../Review/TaskDecisionRow';
 import PostponementHistory from '../Review/PostponementHistory';
 import { useTaskEditor } from './useTaskEditor';
 import { TaskEditorBody, TaskEditorFooter } from './TaskEditorBody';
+import { CONTROL_HEIGHT } from '../Shared/ui/controlSizes';
 
 // The day a task is planned on, from `?task=uid&on=YYYY-MM-DD&at=minute`
 // (the calendar that opened the sheet knows it; the task payload does not).
@@ -219,8 +220,7 @@ const TaskPane: React.FC = () => {
           })
         : null;
     // Jump to the task's project or tag: their pages list the other tasks.
-    const jumpClass =
-        'inline-flex h-7 max-w-[14rem] items-center gap-1.5 rounded-lg bg-surface-high px-2.5 text-body-m text-surface-on hover:bg-surface-highest';
+    const jumpClass = `inline-flex ${CONTROL_HEIGHT.sm} max-w-[14rem] items-center gap-1.5 rounded-lg bg-surface-high px-2.5 text-body-m text-surface-on hover:bg-surface-highest`;
     const iconButton =
         'rounded-lg p-1.5 text-surface-on-variant hover:bg-surface-high hover:text-surface-on';
 

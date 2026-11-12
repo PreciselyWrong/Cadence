@@ -7,6 +7,7 @@ import {
 import ConfirmDialog from './Shared/ConfirmDialog';
 import PageShell from './Shared/ui/PageShell';
 import Segmented from './Shared/ui/Segmented';
+import { CONTROL_HEIGHT } from './Shared/ui/controlSizes';
 import ProjectModal from './Project/ProjectModal';
 import FilterDropdown, { FilterOption } from './Shared/FilterDropdown';
 import {
@@ -1003,12 +1004,13 @@ const Projects: React.FC = () => {
                         value={statusFilter}
                         onChange={handleStatusFilterChange}
                         size="desktop"
+                        height="sm"
                         autoWidth={true}
                         fill
                     />
                     {focusAreaUid ? (
                         <span
-                            className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-blue-50 px-3 text-sm text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
+                            className={`inline-flex ${CONTROL_HEIGHT.sm} items-center gap-1.5 rounded-lg bg-blue-50 px-3 text-sm text-blue-700 dark:bg-blue-900/30 dark:text-blue-300`}
                             title={t(
                                 'focus.locked',
                                 'Set by your Focus. Clear it from the chip in the top bar.'
@@ -1024,6 +1026,7 @@ const Projects: React.FC = () => {
                             value={actualAreaFilter}
                             onChange={handleAreaFilterChange}
                             size="desktop"
+                            height="sm"
                             autoWidth={true}
                             fill
                         />

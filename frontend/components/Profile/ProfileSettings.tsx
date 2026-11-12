@@ -89,6 +89,7 @@ import type {
     ProfileFormData,
 } from './types';
 import { useReverify } from '../Auth/useReverify';
+import Button from '../Shared/ui/Button';
 
 const formatFrequency = (frequency: string): string => {
     if (frequency.endsWith('h')) {
@@ -2092,18 +2093,17 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                                 </SettingsErrorBoundary>
 
                                 <div className="flex justify-end dark:border-gray-700">
-                                    <button
+                                    <Button
                                         type="submit"
-                                        className="px-6 py-3 bg-primary text-primary-on rounded-lg font-medium hover:bg-primary/90 dark:hover:bg-primary/90 transition-colors duration-200 flex items-center space-x-2"
+                                        variant="primary"
+                                        size="lg"
+                                        icon={<CheckIcon className="h-5 w-5" />}
                                     >
-                                        <CheckIcon className="w-5 h-5" />
-                                        <span>
-                                            {t(
-                                                'profile.saveChanges',
-                                                'Save Changes'
-                                            )}
-                                        </span>
-                                    </button>
+                                        {t(
+                                            'profile.saveChanges',
+                                            'Save Changes'
+                                        )}
+                                    </Button>
                                 </div>
                             </form>
                         </div>

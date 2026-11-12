@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronDownIcon, CheckIcon } from '@heroicons/react/24/outline';
+import { CONTROL_HEIGHT, ControlSize } from './ui/controlSizes';
 
 export interface FilterOption {
     value: string;
@@ -22,6 +23,8 @@ interface FilterDropdownProps {
     fullWidth?: boolean;
     // A search box at the top of the menu narrows the options by label
     searchable?: boolean;
+    // A height from the design scale; without it the padding sets it.
+    height?: ControlSize;
     className?: string;
 }
 
@@ -35,6 +38,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
     fill = false,
     fullWidth = false,
     searchable = false,
+    height,
     className = '',
 }) => {
     const { t } = useTranslation();
@@ -114,7 +118,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
             ? 'w-32'
             : 'w-40';
 
-    const buttonClasses = `inline-flex justify-between items-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm ${isMobile ? 'px-3 py-1.5 text-xs' : 'px-4 py-2 text-sm'} bg-white dark:bg-gray-700 font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors ${fill ? 'w-full sm:w-44 gap-1' : widthClass}`;
+    const buttonClasses = `inline-flex justify-between items-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm ${height ? `${CONTROL_HEIGHT[height]} px-3 text-sm` : isMobile ? 'px-3 py-1.5 text-xs' : 'px-4 py-2 text-sm'} bg-white dark:bg-gray-700 font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors ${fill ? 'w-full sm:w-44 gap-1' : widthClass}`;
 
     const iconSize = isMobile ? 'h-3 w-3' : 'h-4 w-4';
 

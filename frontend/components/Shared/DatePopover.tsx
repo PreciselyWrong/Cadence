@@ -15,6 +15,7 @@ import {
     getLocaleFirstDayOfWeek,
 } from '../../utils/profileService';
 import { resolveUserLocale } from '../../utils/localeUtils';
+import { CONTROL_HEIGHT, FIELD_HEIGHT } from './ui/controlSizes';
 
 export interface DateValue {
     date: string | null;
@@ -34,8 +35,7 @@ interface DatePopoverProps {
 
 const PARSE_DELAY_MS = 300;
 
-const itemClass =
-    'flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2 text-left text-sm text-gray-800 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:text-gray-100 dark:hover:bg-gray-700';
+const itemClass = `flex ${CONTROL_HEIGHT.md} w-full items-center justify-between gap-3 rounded-xl px-3 text-left text-sm text-gray-800 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:text-gray-100 dark:hover:bg-gray-700`;
 
 // Quick choices, a typed date ("demain 14h", "vendredi") with a live preview,
 // a month calendar and an optional time. One component for every date chip.
@@ -212,7 +212,7 @@ const DatePanel: React.FC<DatePanelProps> = ({
                         'Type a date: tomorrow 2pm, Friday…'
                     )}
                     aria-label={t('datePopover.typeLabel', 'Date in words')}
-                    className="w-full rounded-xl bg-gray-100 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-900 dark:text-gray-100"
+                    className={`${FIELD_HEIGHT} w-full rounded-xl bg-gray-100 px-3 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-900 dark:text-gray-100`}
                 />
                 {typed.trim() && (
                     <p
@@ -337,7 +337,7 @@ const DatePanel: React.FC<DatePanelProps> = ({
                             type="time"
                             value={value.time ?? ''}
                             onChange={(e) => onTime(e.target.value || null)}
-                            className="rounded-lg bg-gray-100 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-900 dark:text-gray-100"
+                            className={`${CONTROL_HEIGHT.sm} rounded-lg bg-gray-100 px-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-900 dark:text-gray-100`}
                         />
                         {value.time && (
                             <button
