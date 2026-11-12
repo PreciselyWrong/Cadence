@@ -46,6 +46,8 @@ data class TriageQueueDto(
     val items: List<TriageItemDto> = emptyList(),
     val tasks: Map<String, TriageTaskDto> = emptyMap(),
     val count: Int = 0,
+    /** La passerelle Gmail est réglée : une carte Mail peut archiver son fil. */
+    @SerialName("mail_archive") val mailArchive: Boolean = false,
 )
 
 /** Les actions proposées et celles que « Corriger » permet de choisir à la place. */

@@ -1,3 +1,7 @@
+## [1.17.0] — 12 novembre 2026
+
+- « À trier » montre les mails qu'un agent y propose : objet, expéditeur, résumé et début du brouillon ; Tâche (nom et échéance préremplis), Répondre (ouvre le fil dans Gmail), Plus tard, Ignorer, et « Archiver dans Gmail » quand le serveur le permet.
+
 ## [1.16.0] — 12 novembre 2026
 
 - « À venir » devient « Planifier » : l'Inbox à trier, les tâches échues, 14 jours et leur charge, ou les horizons Cette semaine, Ce mois-ci, Mois prochain et Un jour ; un appui long pose une tâche sur un jour ou un horizon sans toucher son échéance.

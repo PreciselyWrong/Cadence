@@ -1,6 +1,6 @@
 # Mail cards in "À trier"
 
-Status: server built on 2026-11-12 (`backend/modules/triage/mail.js`, MCP tools, route, Gmail gateway); web card built the same day (`frontend/components/Triage/MailCard.tsx`); the Android card is not built yet (`TODO.md` › Now). Tracked in `TODO.md` › Next.
+Status: server built on 2026-11-12 (`backend/modules/triage/mail.js`, MCP tools, route, Gmail gateway); web card built the same day (`frontend/components/Triage/MailCard.tsx`); Android card the same day (1.17.0, `android/tasks/.../ui/triage/MailCards.kt`). Tracked in `TODO.md` › Next.
 
 Mail that asks something of the user shows up as cards in the triage queue (`docs/40-triage.md`), next to the other proposals. The user decides there in one gesture. Cadence is not a mail client: it never shows a full message, never sends, and only touches Gmail to archive a thread when the user asks for it.
 
@@ -75,7 +75,7 @@ Optional. `TUDUDI_GMAIL_MCP_URL` and `TUDUDI_GMAIL_MCP_TOKEN` point Cadence's se
 ## Clients
 
 - **Web** (`frontend/components/Triage/MailCard.tsx`): subject as title, sender and date, summary, draft excerpt, all as plain text; buttons **Tâche** (a form with the suggested name and due date, so 2 taps), **Répondre** (a link that opens `gmail_url` in a new tab, only when it is a Gmail address, and settles the card), **Plus tard**, **Ignorer**; the main button is Répondre when the agent suggests a reply, Tâche otherwise. « Archiver dans Gmail » (a check box, off) only when `mail_archive` is true; it is never sent with Plus tard, and « Pas archivé dans Gmail » shows when the archive failed. « À trier (n) » counts the cards.
-- **Android**: the same card in `ui/triage/`, same gestures and undo window; **Répondre** opens Gmail on the thread (same handling as the Gmail links of 1.15.2).
+- **Android** (1.17.0, `triage/MailCard.kt`, `ui/triage/MailCards.kt`): the same card and gestures; Tâche opens a sheet with the name and due date; **Répondre** opens the thread at once through `CadenceUriHandler` (Gmail's mobile site, as for the Gmail links of 1.15.2). Every decision leaves after the 4.5 s undo window through the deferred calls (key `triage-mail:<uid>`, one `idempotency_key` per gesture), so it is replayed offline and refused once (409) if the web decided first.
 
 ## Out of scope
 

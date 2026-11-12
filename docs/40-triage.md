@@ -41,7 +41,7 @@ The MCP tool `propose_link_slot` (`link_uids`, `title`, `reason`, `date`, `start
 
 ## Mail cards
 
-Mail that asks for an action, proposed by an agent through the MCP tool `propose_mail`, is a card `type: mail` (`action: decide_mail`, `source: mail`, `payload`: sender, subject, summary, suggestion, draft excerpt, `gmail_url`), decided through `POST /triage/mail/:uid/decide`. Contract: `docs/43-mail-triage.md` (server and web card built, Android card to come).
+Mail that asks for an action, proposed by an agent through the MCP tool `propose_mail`, is a card `type: mail` (`action: decide_mail`, `source: mail`, `payload`: sender, subject, summary, suggestion, draft excerpt, `gmail_url`), decided through `POST /triage/mail/:uid/decide`. Contract: `docs/43-mail-triage.md` (server, web and Android cards built).
 
 ## Actions
 

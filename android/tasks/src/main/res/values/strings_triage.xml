@@ -37,5 +37,21 @@
     <string name="triage_link_kept">Lien gardé</string>
     <string name="triage_link_archived">Lien archivé</string>
     <string name="triage_link_postponed">Revu dans 30 jours</string>
+    <string name="triage_mail_no_subject">(sans objet)</string>
+    <string name="triage_mail_draft">Brouillon prêt : %1$s</string>
+    <string name="triage_mail_task">Tâche</string>
+    <string name="triage_mail_reply">Répondre</string>
+    <string name="triage_mail_later">Plus tard</string>
+    <string name="triage_mail_dismiss">Ignorer</string>
+    <string name="triage_mail_archive">Archiver dans Gmail</string>
+    <string name="triage_mail_task_name">Nom de la tâche</string>
+    <string name="triage_mail_task_due">Échéance</string>
+    <string name="triage_mail_task_due_on">Échéance : %1$s</string>
+    <string name="triage_mail_task_no_due">Sans échéance</string>
+    <string name="triage_mail_create_task">Créer la tâche</string>
+    <string name="triage_mail_task_created">Tâche créée</string>
+    <string name="triage_mail_replied">Réponse ouverte dans Gmail</string>
+    <string name="triage_mail_postponed">Revient demain</string>
+    <string name="triage_mail_dismissed">Mail ignoré</string>
     <string name="brief_link_themes">Thèmes des liens par l\'IA</string>
 </resources>

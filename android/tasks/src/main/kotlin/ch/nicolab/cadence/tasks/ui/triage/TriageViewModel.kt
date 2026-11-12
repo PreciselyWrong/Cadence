@@ -12,6 +12,9 @@ import ch.nicolab.cadence.tasks.sync.DeferredCall
 import ch.nicolab.cadence.tasks.triage.LinkReviewDecision
 import ch.nicolab.cadence.tasks.triage.LinkReviewPayload
 import ch.nicolab.cadence.tasks.triage.LinkReviewRequests
+import ch.nicolab.cadence.tasks.triage.MailDecision
+import ch.nicolab.cadence.tasks.triage.MailPayload
+import ch.nicolab.cadence.tasks.triage.MailRequests
 import ch.nicolab.cadence.tasks.triage.TriageActions
 import ch.nicolab.cadence.tasks.triage.TriageHolds
 import ch.nicolab.cadence.tasks.triage.TriageItemDto
@@ -33,6 +36,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
 
 /** Annonce d'un geste, avec son annulation tant qu'il n'est pas parti. */
 internal class TriageNotice(val message: String, val undo: () -> Unit)
@@ -112,6 +116,21 @@ internal class TriageViewModel(application: Application) : AndroidViewModel(appl
             },
         )
         hold(item, message, LinkReviewRequests.decide(card.linkUid, decision, string(R.string.triage_title)))
+    }
+
+    /** Décision sur un mail : la carte disparaît, la décision part après la fenêtre d'annulation (hors ligne compris). */
+    fun decideMail(item: TriageItemDto, decision: MailDecision, payload: JsonObject, archive: Boolean) {
+        val card = MailPayload.parse(item.payload) ?: return
+        val message = string(
+            when (decision) {
+                MailDecision.TASK -> R.string.triage_mail_task_created
+                MailDecision.REPLY -> R.string.triage_mail_replied
+                MailDecision.LATER -> R.string.triage_mail_postponed
+                MailDecision.DISMISS -> R.string.triage_mail_dismissed
+            },
+        )
+        val key = UUID.randomUUID().toString()
+        hold(item, message, MailRequests.decide(card.mailUid, decision, payload, archive, key, string(R.string.triage_title)))
     }
 
     /** Réponse à une carte du classement automatique (`choice` : `all`, ou un objet projet/tags/priorité, ou un doublon). */
