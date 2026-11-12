@@ -1,15 +1,12 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { FlagIcon } from '@heroicons/react/24/outline';
 import { Task } from '../../entities/Task';
-import { isTaskDone } from '../../constants/taskStatus';
-import TaskCheckCircle from '../Task/TaskCheckCircle';
 import { formatDuration, formatMinute } from '../DailyPlan/planUtils';
 import { DayLine, lineAt } from '../Today/dayModel';
 import { subtasksWithoutCard } from './groupCards';
-import TaskSourceBadge from '../Shared/TaskSourceBadge';
+import TaskCardBody, { taskCardClass } from '../Shared/task/TaskCardBody';
 
 export const cardId = (date: string, uid: string): string =>
     `card:${date}:${uid}`;
@@ -23,12 +20,6 @@ export interface CardData {
     timed: boolean;
     duration: number;
 }
-
-const Chip: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-    <span className="inline-flex h-5 max-w-[10rem] items-center gap-1 truncate rounded-md bg-surface-high px-1.5 text-xs tabular-nums text-surface-on-variant">
-        {children}
-    </span>
-);
 
 export interface TaskCardProps {
     line: DayLine;
@@ -59,14 +50,9 @@ const TaskCard: React.FC<TaskCardProps> = ({
     onOpen,
     onToggleSubtask,
 }) => {
-    const { t } = useTranslation();
     const { task, uid } = line;
     const subtasks = subtasksWithoutCard(task.subtasks ?? [], ownCardKeys);
-    const parentName = task.parent_task?.name;
     const at = lineAt(line);
-    const project = task.Project;
-    const tag = task.tags?.[0];
-    const note = task.note?.split('\n')[0].trim();
     const data: CardData = {
         kind: 'card',
         uid,
@@ -117,124 +103,41 @@ const TaskCard: React.FC<TaskCardProps> = ({
             {...dragListeners}
             onKeyDown={onKeyDown}
             onClick={() => onOpen(line)}
-            className={`cursor-default rounded-lg border bg-surface p-3 outline-none transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-primary/60 ${
-                selected
-                    ? 'border-primary ring-2 ring-primary'
-                    : 'border-outline-variant/50 hover:border-outline-variant'
-            } ${isDragging ? 'opacity-60 shadow-lg' : ''}`}
+            className={taskCardClass(selected, isDragging)}
         >
-            <div className="flex items-start gap-2.5">
-                <span className="mt-px">
-                    <TaskCheckCircle
-                        task={task}
-                        checked={line.done}
-                        size="card"
-                        delayed={false}
-                        testId="upcoming-check"
-                        onToggle={() => onToggle(line)}
-                    />
-                </span>
-                <span
-                    className={`min-w-0 flex-1 break-words text-body-m font-medium leading-5 ${
-                        line.done
-                            ? 'text-surface-on-variant line-through'
-                            : 'text-surface-on'
-                    }`}
-                >
-                    {task.name}
-                </span>
-                <TaskSourceBadge task={task} className="self-center" />
-            </div>
-
-            {parentName && (
-                <p className="ml-[26px] mt-0.5 truncate text-xs text-surface-on-variant">
-                    {t('upcoming.subtaskOf', '↳ {{parent}}', {
-                        parent: parentName,
-                    })}
-                </p>
-            )}
-
-            {note && (
-                <p className="ml-[26px] mt-0.5 truncate text-xs text-surface-on-variant">
-                    {note}
-                </p>
-            )}
-
-            {subtasks.length > 0 && (
-                <ul
-                    className="ml-[26px] mt-1.5 flex flex-col gap-1"
-                    onClick={(event) => event.stopPropagation()}
-                >
-                    {subtasks.map((sub) => {
-                        const subDone = isTaskDone(sub.status);
-                        return (
-                            <li
-                                key={sub.uid ?? sub.id}
-                                className="flex min-w-0 items-center gap-2"
+            <TaskCardBody
+                task={task}
+                done={line.done}
+                onToggle={() => onToggle(line)}
+                subtasks={subtasks}
+                onToggleSubtask={onToggleSubtask}
+                meta={
+                    <>
+                        {at !== null && (
+                            <span
+                                className={`inline-flex shrink-0 items-center gap-1 text-xs font-semibold tabular-nums ${
+                                    line.start !== null
+                                        ? 'text-primary'
+                                        : 'text-surface-on-variant'
+                                }`}
                             >
-                                <TaskCheckCircle
-                                    task={sub}
-                                    checked={subDone}
-                                    size="subtask"
-                                    delayed={false}
-                                    testId="upcoming-check"
-                                    onToggle={() => onToggleSubtask(sub)}
-                                />
-                                <span
-                                    className={`min-w-0 truncate text-xs ${
-                                        subDone
-                                            ? 'text-surface-on-variant line-through'
-                                            : 'text-surface-on'
-                                    }`}
-                                >
-                                    {sub.name}
-                                </span>
-                            </li>
-                        );
-                    })}
-                </ul>
-            )}
-
-            <div className="ml-[26px] mt-2 flex min-w-0 items-center gap-2">
-                {at !== null && (
-                    <span
-                        className={`inline-flex shrink-0 items-center gap-1 text-xs font-semibold tabular-nums ${
-                            line.start !== null
-                                ? 'text-primary'
-                                : 'text-surface-on-variant'
-                        }`}
-                    >
-                        {line.start === null && (
-                            <FlagIcon aria-hidden="true" className="h-3 w-3" />
+                                {line.start === null && (
+                                    <FlagIcon
+                                        aria-hidden="true"
+                                        className="h-3 w-3"
+                                    />
+                                )}
+                                {formatMinute(at)}
+                            </span>
                         )}
-                        {formatMinute(at)}
-                    </span>
-                )}
-                {line.durationKnown && (
-                    <span className="shrink-0 text-xs tabular-nums text-surface-on-variant">
-                        {formatDuration(line.duration)}
-                    </span>
-                )}
-                <span className="ml-auto flex min-w-0 items-center gap-1.5">
-                    {project?.name && (
-                        <Chip>
-                            {project.color && (
-                                <span
-                                    aria-hidden="true"
-                                    className="h-1.5 w-1.5 shrink-0 rounded-full"
-                                    style={{ backgroundColor: project.color }}
-                                />
-                            )}
-                            <span className="truncate">{project.name}</span>
-                        </Chip>
-                    )}
-                    {tag && (
-                        <Chip>
-                            <span className="truncate">#{tag.name}</span>
-                        </Chip>
-                    )}
-                </span>
-            </div>
+                        {line.durationKnown && (
+                            <span className="shrink-0 text-xs tabular-nums text-surface-on-variant">
+                                {formatDuration(line.duration)}
+                            </span>
+                        )}
+                    </>
+                }
+            />
         </div>
     );
 };

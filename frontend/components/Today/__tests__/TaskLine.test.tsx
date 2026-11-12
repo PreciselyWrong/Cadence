@@ -15,6 +15,25 @@ jest.mock('react-i18next', () => ({
     }),
 }));
 
+// react-markdown is ESM and never runs under Jest: the stand-in renders
+// bold the way the real renderer does, so the wiring is what is checked.
+jest.mock('../../Shared/MarkdownRenderer', () => ({
+    __esModule: true,
+    default: ({ content, summaryMode }: any) => (
+        <div data-testid="markdown" data-summary={String(!!summaryMode)}>
+            {content
+                .split(/(\*\*[^*]+\*\*)/)
+                .map((part: string, i: number) =>
+                    /^\*\*.*\*\*$/.test(part) ? (
+                        <strong key={i}>{part.slice(2, -2)}</strong>
+                    ) : (
+                        part
+                    )
+                )}
+        </div>
+    ),
+}));
+
 const DATE = '2026-11-12';
 
 const task = (fields: Partial<Task> = {}): Task =>
@@ -120,5 +139,44 @@ describe('TaskLine meta', () => {
         renderLine({ start: null, dueMinute: 15 * 60 + 30 });
         // Hour large, minutes raised: read as one label.
         expect(screen.getByLabelText('15:30')).toBeInTheDocument();
+    });
+
+    it('renders the note as Markdown in summary mode, never raw', async () => {
+        const current = line({ task: task({ note: 'Une note **markdown**' }) });
+        render(
+            <TaskLine
+                line={current}
+                dateOfDay={DATE}
+                onToggle={jest.fn()}
+                onOpen={jest.fn()}
+                menu={[]}
+                expanded
+            />
+        );
+        const md = await screen.findByTestId('markdown');
+        expect(md).toHaveAttribute('data-summary', 'true');
+        expect(md.querySelector('strong')).toHaveTextContent('markdown');
+        expect(screen.getByTestId('task-line')).not.toHaveTextContent('**');
+    });
+
+    it('a click on a link in the note does not open the task', async () => {
+        const onOpen = jest.fn();
+        const current = line({ task: task({ note: 'see' }) });
+        render(
+            <TaskLine
+                line={current}
+                dateOfDay={DATE}
+                onToggle={jest.fn()}
+                onOpen={onOpen}
+                menu={[]}
+                expanded
+            />
+        );
+        const md = await screen.findByTestId('markdown');
+        const link = document.createElement('a');
+        link.textContent = 'link';
+        md.appendChild(link);
+        fireEvent.click(link);
+        expect(onOpen).not.toHaveBeenCalled();
     });
 });

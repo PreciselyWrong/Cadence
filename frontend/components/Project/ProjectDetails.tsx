@@ -39,6 +39,7 @@ import {
     deleteTask,
     fetchTaskOrder,
     saveTaskOrder,
+    toggleTaskCompletion,
     updateTask,
 } from '../../utils/tasksService';
 import { mergeUpdatedTaskList } from '../../utils/taskUpdateMerge';
@@ -482,6 +483,20 @@ const ProjectDetails: React.FC = () => {
         if (!taskUid) return;
         await deleteTask(taskUid);
         setTasks(tasks.filter((task) => task.uid !== taskUid));
+    };
+
+    // The check on a board card: saved here, then merged like a row's.
+    const toggleFromCard = async (task: Task) => {
+        if (!task.uid) return;
+        try {
+            handleTaskCompletionToggle(
+                await toggleTaskCompletion(task.uid, task)
+            );
+        } catch {
+            showErrorToast(
+                t('task.statusUpdateError', 'Failed to update status')
+            );
+        }
     };
 
     const handleTaskCompletionToggle = (updatedTask: Task) => {
@@ -1219,6 +1234,7 @@ const ProjectDetails: React.FC = () => {
                                         onOrderColumn={handleColumnOrder}
                                         readOnly={project.access_level === 'ro'}
                                         onOpenTask={openTaskInSheet}
+                                        onToggleTask={toggleFromCard}
                                         t={t}
                                     />
                                 ) : view === 'calendar' ? (

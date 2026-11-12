@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { TFunction } from 'i18next';
+import { useTranslation } from 'react-i18next';
 import {
     ArrowLeftIcon,
     ArrowRightIcon,
@@ -19,6 +20,11 @@ import {
     reorderProjectSections,
 } from '../../../utils/projectSectionsService';
 import ConfirmDialog from '../../Shared/ConfirmDialog';
+import TaskCardBody, { taskCardClass } from '../../Shared/task/TaskCardBody';
+import TaskChip from '../../Shared/task/TaskChip';
+import { dueDayLabel, isDueLate } from '../../Shared/task/dueLabel';
+import { useTaskPane } from '../../../contexts/TaskPaneContext';
+import { getTodayDateString } from '../../../utils/dateUtils';
 import { useToast } from '../../Shared/ToastContext';
 
 interface ProjectBoardProps {
@@ -34,6 +40,8 @@ interface ProjectBoardProps {
         taskUids: string[]
     ) => Promise<void>;
     onOpenTask: (task: Task) => void;
+    // Completes or reopens the task from its card's check.
+    onToggleTask?: (task: Task) => void;
     // Read-only viewers see the board without its write controls.
     readOnly?: boolean;
     t: TFunction;
@@ -62,9 +70,14 @@ const ProjectBoard: React.FC<ProjectBoardProps> = ({
     onMoveTask,
     onOrderColumn,
     onOpenTask,
+    onToggleTask,
     readOnly = false,
     t,
 }) => {
+    const { openTaskUid } = useTaskPane();
+    const today = getTodayDateString();
+    const { i18n } = useTranslation();
+    const language = i18n?.language ?? 'en';
     const { showErrorToast } = useToast();
     const [sections, setSections] = useState<ProjectSection[]>([]);
     const [loading, setLoading] = useState(true);
@@ -315,8 +328,21 @@ const ProjectBoard: React.FC<ProjectBoardProps> = ({
                         setDropBefore(null);
                     }}
                     onClick={() => onOpenTask(task)}
+                    onKeyDown={(e) => {
+                        if (e.target !== e.currentTarget || e.key !== 'Enter')
+                            return;
+                        e.preventDefault();
+                        onOpenTask(task);
+                    }}
+                    role="listitem"
+                    tabIndex={0}
+                    aria-label={task.name}
+                    aria-selected={openTaskUid === task.uid}
                     data-task-row=""
-                    className={`${
+                    className={`${taskCardClass(
+                        openTaskUid === task.uid,
+                        false
+                    )} ${
                         readOnly
                             ? 'cursor-pointer'
                             : 'cursor-grab active:cursor-grabbing'
@@ -324,13 +350,43 @@ const ProjectBoard: React.FC<ProjectBoardProps> = ({
                         dropBefore === task.uid
                             ? 'border-t-2 border-t-primary'
                             : ''
-                    } rounded-lg border border-outline-variant/50 bg-surface px-3 py-2.5 text-body-m font-medium hover:border-outline-variant ${
-                        DONE_STATUSES.has(task.status)
-                            ? 'line-through text-surface-on-variant'
-                            : 'text-surface-on'
                     }`}
                 >
-                    {task.name}
+                    <TaskCardBody
+                        task={task}
+                        done={DONE_STATUSES.has(task.status)}
+                        onToggle={
+                            onToggleTask && !readOnly
+                                ? () => onToggleTask(task)
+                                : undefined
+                        }
+                        hideProject
+                        meta={
+                            task.due_date ? (
+                                <TaskChip
+                                    tone={
+                                        isDueLate(
+                                            task.due_date,
+                                            today,
+                                            DONE_STATUSES.has(task.status)
+                                        )
+                                            ? 'warning'
+                                            : 'neutral'
+                                    }
+                                >
+                                    {dueDayLabel(
+                                        task.due_date,
+                                        today,
+                                        language,
+                                        t as unknown as (
+                                            key: string,
+                                            fallback: string
+                                        ) => string
+                                    )}
+                                </TaskChip>
+                            ) : undefined
+                        }
+                    />
                 </div>
             ))
         );
