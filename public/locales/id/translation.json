@@ -128,6 +128,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(tanpa subjek)",
+      "draft": "Draf siap:",
+      "task": "Tugas",
+      "reply": "Balas",
+      "later": "Nanti",
+      "dismiss": "Abaikan",
+      "archive": "Arsipkan di Gmail",
+      "taskName": "Nama tugas",
+      "taskDue": "Tenggat",
+      "createTask": "Buat tugas",
+      "taskCreated": "Tugas dibuat",
+      "replied": "Balasan dibuka di Gmail",
+      "postponed": "Kembali besok",
+      "dismissed": "Email diabaikan",
+      "notArchived": "Tidak diarsipkan di Gmail"
+    },
     "linkLater": "Dalam 30 hari",
     "linkArchive": "Arsipkan",
     "linkKeep": "Simpan",

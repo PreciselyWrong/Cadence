@@ -128,6 +128,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(제목 없음)",
+      "draft": "초안 준비됨:",
+      "task": "할 일",
+      "reply": "답장",
+      "later": "나중에",
+      "dismiss": "무시",
+      "archive": "Gmail에 보관",
+      "taskName": "할 일 이름",
+      "taskDue": "마감일",
+      "createTask": "할 일 만들기",
+      "taskCreated": "할 일을 만들었습니다",
+      "replied": "Gmail에서 답장을 열었습니다",
+      "postponed": "내일 다시 표시",
+      "dismissed": "메일을 무시했습니다",
+      "notArchived": "Gmail에 보관되지 않음"
+    },
     "linkLater": "30일 후",
     "linkArchive": "보관",
     "linkKeep": "유지",

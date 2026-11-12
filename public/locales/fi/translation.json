@@ -128,6 +128,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(ei aihetta)",
+      "draft": "Luonnos valmiina:",
+      "task": "Tehtävä",
+      "reply": "Vastaa",
+      "later": "Myöhemmin",
+      "dismiss": "Ohita",
+      "archive": "Arkistoi Gmailiin",
+      "taskName": "Tehtävän nimi",
+      "taskDue": "Määräpäivä",
+      "createTask": "Luo tehtävä",
+      "taskCreated": "Tehtävä luotu",
+      "replied": "Vastaus avattu Gmailissa",
+      "postponed": "Palaa huomenna",
+      "dismissed": "Viesti ohitettu",
+      "notArchived": "Ei arkistoitu Gmailiin"
+    },
     "linkLater": "30 päivän päästä",
     "linkArchive": "Arkistoi",
     "linkKeep": "Säilytä",

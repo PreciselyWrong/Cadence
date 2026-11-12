@@ -128,6 +128,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(件名なし)",
+      "draft": "下書きあり:",
+      "task": "タスク",
+      "reply": "返信",
+      "later": "後で",
+      "dismiss": "無視",
+      "archive": "Gmail でアーカイブ",
+      "taskName": "タスク名",
+      "taskDue": "期限",
+      "createTask": "タスクを作成",
+      "taskCreated": "タスクを作成しました",
+      "replied": "Gmail で返信を開きました",
+      "postponed": "明日また表示",
+      "dismissed": "メールを無視しました",
+      "notArchived": "Gmail でアーカイブされていません"
+    },
     "linkLater": "30日後",
     "linkArchive": "アーカイブ",
     "linkKeep": "残す",

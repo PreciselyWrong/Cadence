@@ -128,6 +128,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(без темы)",
+      "draft": "Черновик готов:",
+      "task": "Задача",
+      "reply": "Ответить",
+      "later": "Позже",
+      "dismiss": "Игнорировать",
+      "archive": "Архивировать в Gmail",
+      "taskName": "Название задачи",
+      "taskDue": "Срок",
+      "createTask": "Создать задачу",
+      "taskCreated": "Задача создана",
+      "replied": "Ответ открыт в Gmail",
+      "postponed": "Вернётся завтра",
+      "dismissed": "Письмо пропущено",
+      "notArchived": "Не архивировано в Gmail"
+    },
     "linkLater": "Через 30 дней",
     "linkArchive": "В архив",
     "linkKeep": "Оставить",

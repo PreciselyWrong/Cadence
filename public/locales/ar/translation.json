@@ -128,6 +128,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(بدون موضوع)",
+      "draft": "المسودة جاهزة:",
+      "task": "مهمة",
+      "reply": "رد",
+      "later": "لاحقًا",
+      "dismiss": "تجاهل",
+      "archive": "أرشفة في Gmail",
+      "taskName": "اسم المهمة",
+      "taskDue": "تاريخ الاستحقاق",
+      "createTask": "إنشاء المهمة",
+      "taskCreated": "تم إنشاء المهمة",
+      "replied": "فُتح الرد في Gmail",
+      "postponed": "يعود غدًا",
+      "dismissed": "تم تجاهل الرسالة",
+      "notArchived": "لم تتم الأرشفة في Gmail"
+    },
     "linkLater": "بعد 30 يومًا",
     "linkArchive": "أرشفة",
     "linkKeep": "احتفاظ",

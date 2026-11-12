@@ -128,6 +128,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(sin asunto)",
+      "draft": "Borrador listo:",
+      "task": "Tarea",
+      "reply": "Responder",
+      "later": "Más tarde",
+      "dismiss": "Ignorar",
+      "archive": "Archivar en Gmail",
+      "taskName": "Nombre de la tarea",
+      "taskDue": "Vencimiento",
+      "createTask": "Crear la tarea",
+      "taskCreated": "Tarea creada",
+      "replied": "Respuesta abierta en Gmail",
+      "postponed": "Vuelve mañana",
+      "dismissed": "Correo ignorado",
+      "notArchived": "No archivado en Gmail"
+    },
     "linkLater": "En 30 días",
     "linkArchive": "Archivar",
     "linkKeep": "Conservar",

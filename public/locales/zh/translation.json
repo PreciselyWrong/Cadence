@@ -128,6 +128,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(无主题)",
+      "draft": "草稿已就绪：",
+      "task": "任务",
+      "reply": "回复",
+      "later": "稍后",
+      "dismiss": "忽略",
+      "archive": "在 Gmail 中归档",
+      "taskName": "任务名称",
+      "taskDue": "截止日期",
+      "createTask": "创建任务",
+      "taskCreated": "任务已创建",
+      "replied": "已在 Gmail 中打开回复",
+      "postponed": "明天再显示",
+      "dismissed": "已忽略邮件",
+      "notArchived": "未在 Gmail 中归档"
+    },
     "linkLater": "30 天后",
     "linkArchive": "归档",
     "linkKeep": "保留",

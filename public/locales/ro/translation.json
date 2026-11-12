@@ -128,6 +128,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(fără subiect)",
+      "draft": "Ciornă pregătită:",
+      "task": "Sarcină",
+      "reply": "Răspunde",
+      "later": "Mai târziu",
+      "dismiss": "Ignoră",
+      "archive": "Arhivează în Gmail",
+      "taskName": "Numele sarcinii",
+      "taskDue": "Termen",
+      "createTask": "Creează sarcina",
+      "taskCreated": "Sarcină creată",
+      "replied": "Răspuns deschis în Gmail",
+      "postponed": "Revine mâine",
+      "dismissed": "Mesaj ignorat",
+      "notArchived": "Nearhivat în Gmail"
+    },
     "linkLater": "Peste 30 de zile",
     "linkArchive": "Arhivează",
     "linkKeep": "Păstrează",

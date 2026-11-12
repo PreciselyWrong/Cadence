@@ -128,6 +128,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(intet emne)",
+      "draft": "Kladde klar:",
+      "task": "Opgave",
+      "reply": "Svar",
+      "later": "Senere",
+      "dismiss": "Ignorer",
+      "archive": "Arkivér i Gmail",
+      "taskName": "Opgavens navn",
+      "taskDue": "Forfaldsdato",
+      "createTask": "Opret opgaven",
+      "taskCreated": "Opgave oprettet",
+      "replied": "Svar åbnet i Gmail",
+      "postponed": "Kommer igen i morgen",
+      "dismissed": "Mail ignoreret",
+      "notArchived": "Ikke arkiveret i Gmail"
+    },
     "linkLater": "Om 30 dage",
     "linkArchive": "Arkivér",
     "linkKeep": "Behold",

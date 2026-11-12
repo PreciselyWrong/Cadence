@@ -5,6 +5,9 @@ import { getTodayDateString } from '../../utils/dateUtils';
 import {
     answerSlot,
     applyTriage,
+    decideMail,
+    MailDecision,
+    MailPayload,
     fetchTriageQueue,
     keepTask,
     LinkReviewDecision,
@@ -18,6 +21,7 @@ import { useToast } from '../Shared/ToastContext';
 import { deferDelete } from '../../utils/deferredDelete';
 import ClassifyCard from '../AutoClassify/ClassifyCard';
 import DuplicateCard from '../AutoClassify/DuplicateCard';
+import MailCard from './MailCard';
 import {
     applyClassifySuggestion,
     ClassifyPayload,
@@ -99,6 +103,7 @@ const TriagePage: React.FC = () => {
     // A card of the classifier (modules/auto-classify): a task, note or link.
     const classifier = item?.source === 'classify';
     const linkReview = item?.type === 'link_review';
+    const mail = item?.type === 'mail';
     const entityLabel = (entity: unknown) =>
         entity === 'note'
             ? t('autoClassify.entity.note', 'Note')
@@ -167,6 +172,35 @@ const TriagePage: React.FC = () => {
         settle(
             () => reviewLink(String(item?.payload?.link_uid), decision),
             message
+        );
+
+    const MAIL_DONE: Record<MailDecision, [string, string]> = {
+        task: ['triage.mail.taskCreated', 'Tâche créée'],
+        reply: ['triage.mail.replied', 'Réponse ouverte dans Gmail'],
+        later: ['triage.mail.postponed', 'Revient demain'],
+        dismiss: ['triage.mail.dismissed', 'Mail ignoré'],
+    };
+    // The decision stands even when Gmail did not archive the thread.
+    const decide = (
+        decision: MailDecision,
+        payload: Record<string, unknown>,
+        archive: boolean
+    ) =>
+        settle(
+            async () => {
+                const outcome = await decideMail(
+                    String(item?.payload?.mail_uid),
+                    decision,
+                    payload,
+                    archive
+                );
+                if (archive && outcome?.archived === false) {
+                    showErrorToast(
+                        t('triage.mail.notArchived', 'Pas archivé dans Gmail')
+                    );
+                }
+            },
+            t(MAIL_DONE[decision][0], MAIL_DONE[decision][1])
         );
 
     const applied = t('triage.applied', 'C’est fait');
@@ -317,21 +351,31 @@ const TriagePage: React.FC = () => {
                             </p>
                         </>
                     )}
-                    <p className="mt-2 text-[15px] text-gray-900 dark:text-gray-100">
-                        {item.type === 'classify'
-                            ? t(
-                                  'autoClassify.card.reason',
-                                  'Classement à confirmer'
-                              )
-                            : item.type === 'link_duplicate'
-                              ? t(
-                                    'autoClassify.duplicate.reason',
-                                    'Lien déjà enregistré ?'
-                                )
-                              : linkReview
-                                ? t('triage.linkReview', 'Lien à revoir')
-                                : (item.question?.text ?? item.reason)}
-                    </p>
+                    {mail && (
+                        <MailCard
+                            key={item.key}
+                            payload={item.payload as unknown as MailPayload}
+                            archiveAvailable={queue?.mail_archive === true}
+                            onDecide={decide}
+                        />
+                    )}
+                    {!mail && (
+                        <p className="mt-2 text-[15px] text-gray-900 dark:text-gray-100">
+                            {item.type === 'classify'
+                                ? t(
+                                      'autoClassify.card.reason',
+                                      'Classement à confirmer'
+                                  )
+                                : item.type === 'link_duplicate'
+                                  ? t(
+                                        'autoClassify.duplicate.reason',
+                                        'Lien déjà enregistré ?'
+                                    )
+                                  : linkReview
+                                    ? t('triage.linkReview', 'Lien à revoir')
+                                    : (item.question?.text ?? item.reason)}
+                        </p>
+                    )}
                     {item.details.map((line) => (
                         <p
                             key={line}
@@ -478,7 +522,8 @@ const TriagePage: React.FC = () => {
                     )}
                     {item.action === 'accept_slot' ||
                     classifier ||
-                    linkReview ? null : item.question ? (
+                    linkReview ||
+                    mail ? null : item.question ? (
                         <div className="mt-3 flex flex-wrap gap-2">
                             <button
                                 type="button"

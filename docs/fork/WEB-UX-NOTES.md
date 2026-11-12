@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-12 — Cartes Mail dans « À trier » (web)
+
+- **Problème** : les mails qui demandent une action n'arrivaient que par le bot texte, où il est pénible de décider.
+- **Décision** : une carte par fil dans « À trier » : objet en titre, expéditeur et date, résumé, début du brouillon préparé ; gestes Tâche (nom et échéance préremplis, modifiables, 2 touchers), Répondre (ouvre le fil ou le brouillon dans Gmail), Plus tard (revient demain à 8 h), Ignorer ; case « Archiver dans Gmail » seulement si la passerelle est réglée. Bouton principal : Répondre si l'agent suggère une réponse, sinon Tâche. Tout texte venu du mail est rendu en texte brut, jamais en Markdown ni en lien.
+- **À reprendre sur Android** : même carte et mêmes gestes dans `ui/triage/` (`TODO.md` › Now).
+
 ### 2026-11-12 — Notes et descriptions : barre de mise en forme en bas, mentions @ (web)
 
 - **Problème** : la mise en forme ne passait que par une barre flottante sur sélection (notes) ou la syntaxe tapée à la main ; la description d'une tâche était un simple champ texte, sans `[[`, sans tableau ; aucune façon de citer une personne.

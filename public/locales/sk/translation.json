@@ -128,6 +128,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(bez predmetu)",
+      "draft": "Koncept pripravený:",
+      "task": "Úloha",
+      "reply": "Odpovedať",
+      "later": "Neskôr",
+      "dismiss": "Ignorovať",
+      "archive": "Archivovať v Gmaile",
+      "taskName": "Názov úlohy",
+      "taskDue": "Termín",
+      "createTask": "Vytvoriť úlohu",
+      "taskCreated": "Úloha vytvorená",
+      "replied": "Odpoveď otvorená v Gmaile",
+      "postponed": "Vráti sa zajtra",
+      "dismissed": "Pošta ignorovaná",
+      "notArchived": "Nearchivované v Gmaile"
+    },
     "linkLater": "O 30 dní",
     "linkArchive": "Archivovať",
     "linkKeep": "Ponechať",

@@ -128,6 +128,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(geen onderwerp)",
+      "draft": "Concept klaar:",
+      "task": "Taak",
+      "reply": "Beantwoorden",
+      "later": "Later",
+      "dismiss": "Negeren",
+      "archive": "Archiveren in Gmail",
+      "taskName": "Naam van de taak",
+      "taskDue": "Deadline",
+      "createTask": "Taak aanmaken",
+      "taskCreated": "Taak aangemaakt",
+      "replied": "Antwoord geopend in Gmail",
+      "postponed": "Komt morgen terug",
+      "dismissed": "Mail genegeerd",
+      "notArchived": "Niet gearchiveerd in Gmail"
+    },
     "linkLater": "Over 30 dagen",
     "linkArchive": "Archiveren",
     "linkKeep": "Bewaren",

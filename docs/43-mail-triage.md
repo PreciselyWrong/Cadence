@@ -1,6 +1,6 @@
 # Mail cards in "À trier"
 
-Status: server built on 2026-11-12 (`backend/modules/triage/mail.js`, MCP tools, route, Gmail gateway); the web and Android cards are not built yet. Tracked in `TODO.md` › Next.
+Status: server built on 2026-11-12 (`backend/modules/triage/mail.js`, MCP tools, route, Gmail gateway); web card built the same day (`frontend/components/Triage/MailCard.tsx`); the Android card is not built yet (`TODO.md` › Now). Tracked in `TODO.md` › Next.
 
 Mail that asks something of the user shows up as cards in the triage queue (`docs/40-triage.md`), next to the other proposals. The user decides there in one gesture. Cadence is not a mail client: it never shows a full message, never sends, and only touches Gmail to archive a thread when the user asks for it.
 
@@ -45,7 +45,7 @@ Triage item `type: mail`, `source: mail`, `action: decide_mail`, `payload`:
 | Decision | Effect |
 |---|---|
 | `task` | Creates a task through the MCP tools: name and date from `payload` (prefilled from `suggestion`), note with the summary and `gmail_url`, source `gmail` with the Gmail address as `source_url` (the source badge). Card done. |
-| `reply` | The client opens `gmail_url` (the draft when there is one). Card done after the undo window. |
+| `reply` | The client opens `gmail_url` (the draft when there is one). Card done: sent at once on the web, like the other triage gestures. |
 | `later` | Card hidden until `payload.until` (default tomorrow 08:00, profile time zone). |
 | `dismiss` | Card done. |
 
@@ -74,7 +74,7 @@ Optional. `TUDUDI_GMAIL_MCP_URL` and `TUDUDI_GMAIL_MCP_TOKEN` point Cadence's se
 
 ## Clients
 
-- **Web**: mail cards in `/triage`, same layout as the other cards: sender and subject, summary, draft excerpt, buttons **Tâche**, **Répondre**, **Plus tard**, **Ignorer**, and « Archiver dans Gmail » when the gateway is set. « À trier (n) » counts them.
+- **Web** (`frontend/components/Triage/MailCard.tsx`): subject as title, sender and date, summary, draft excerpt, all as plain text; buttons **Tâche** (a form with the suggested name and due date, so 2 taps), **Répondre** (a link that opens `gmail_url` in a new tab, only when it is a Gmail address, and settles the card), **Plus tard**, **Ignorer**; the main button is Répondre when the agent suggests a reply, Tâche otherwise. « Archiver dans Gmail » (a check box, off) only when `mail_archive` is true; it is never sent with Plus tard, and « Pas archivé dans Gmail » shows when the archive failed. « À trier (n) » counts the cards.
 - **Android**: the same card in `ui/triage/`, same gestures and undo window; **Répondre** opens Gmail on the thread (same handling as the Gmail links of 1.15.2).
 
 ## Out of scope

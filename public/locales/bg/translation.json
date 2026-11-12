@@ -128,6 +128,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(без тема)",
+      "draft": "Черновата е готова:",
+      "task": "Задача",
+      "reply": "Отговори",
+      "later": "По-късно",
+      "dismiss": "Пренебрегни",
+      "archive": "Архивирай в Gmail",
+      "taskName": "Име на задачата",
+      "taskDue": "Краен срок",
+      "createTask": "Създай задачата",
+      "taskCreated": "Задачата е създадена",
+      "replied": "Отговорът е отворен в Gmail",
+      "postponed": "Връща се утре",
+      "dismissed": "Писмото е пренебрегнато",
+      "notArchived": "Не е архивирано в Gmail"
+    },
     "linkLater": "След 30 дни",
     "linkArchive": "Архивирай",
     "linkKeep": "Запази",

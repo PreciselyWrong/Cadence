@@ -128,6 +128,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(konu yok)",
+      "draft": "Taslak hazır:",
+      "task": "Görev",
+      "reply": "Yanıtla",
+      "later": "Sonra",
+      "dismiss": "Yok say",
+      "archive": "Gmail'de arşivle",
+      "taskName": "Görev adı",
+      "taskDue": "Son tarih",
+      "createTask": "Görevi oluştur",
+      "taskCreated": "Görev oluşturuldu",
+      "replied": "Yanıt Gmail'de açıldı",
+      "postponed": "Yarın geri gelir",
+      "dismissed": "E-posta yok sayıldı",
+      "notArchived": "Gmail'de arşivlenmedi"
+    },
     "linkLater": "30 gün sonra",
     "linkArchive": "Arşivle",
     "linkKeep": "Tut",

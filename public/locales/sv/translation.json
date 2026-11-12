@@ -128,6 +128,23 @@
     }
   },
   "triage": {
+    "mail": {
+      "noSubject": "(inget ämne)",
+      "draft": "Utkast klart:",
+      "task": "Uppgift",
+      "reply": "Svara",
+      "later": "Senare",
+      "dismiss": "Ignorera",
+      "archive": "Arkivera i Gmail",
+      "taskName": "Uppgiftens namn",
+      "taskDue": "Förfallodatum",
+      "createTask": "Skapa uppgiften",
+      "taskCreated": "Uppgift skapad",
+      "replied": "Svar öppnat i Gmail",
+      "postponed": "Kommer tillbaka i morgon",
+      "dismissed": "Mejl ignorerat",
+      "notArchived": "Inte arkiverat i Gmail"
+    },
     "linkLater": "Om 30 dagar",
     "linkArchive": "Arkivera",
     "linkKeep": "Behåll",
