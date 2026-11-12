@@ -1,3 +1,5 @@
+import { PAGE_TITLE_CLASS } from './Shared/ui/PageHeader';
+import { PAGE_GUTTER } from './Shared/ui/PageShell';
 import React, {
     useState,
     useEffect,
@@ -716,20 +718,14 @@ const ViewDetail: React.FC = () => {
     }
 
     return (
-        <div className="w-full px-2 sm:px-4 lg:px-6 pt-4 pb-12">
+        <div className={`w-full pb-12 ${PAGE_GUTTER}`}>
             <div className="w-full">
-                {/* View header, same card as the other detail pages */}
+                {/* View header: the shared page title, no tinted card. */}
                 <div className="mb-6 space-y-3">
-                    <div
-                        className="space-y-5 rounded-2xl bg-white p-5 sm:p-6 dark:bg-gray-900"
-                        style={{
-                            backgroundImage:
-                                'linear-gradient(color-mix(in srgb, #6b7280 10%, transparent), color-mix(in srgb, #6b7280 10%, transparent))',
-                        }}
-                    >
+                    <div className="space-y-5 pt-6">
                         <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
-                            <span className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-white text-gray-600 shadow-sm ring-4 ring-white dark:bg-gray-800 dark:text-gray-300 dark:ring-gray-900">
-                                <QueueListIcon className="h-7 w-7" />
+                            <span className="flex flex-shrink-0 items-center pt-1 text-surface-on-variant">
+                                <QueueListIcon className="h-6 w-6" />
                             </span>
                             <div className="min-w-0 flex-1 space-y-2">
                                 <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-gray-600 dark:text-gray-300">
@@ -765,13 +761,13 @@ const ViewDetail: React.FC = () => {
                                             else if (e.key === 'Escape')
                                                 handleCancelEdit();
                                         }}
-                                        className="text-xl font-semibold sm:text-2xl text-gray-900 dark:text-white bg-transparent border-b-2 border-blue-500 w-full"
+                                        className={`w-full border-b-2 border-primary bg-transparent ${PAGE_TITLE_CLASS}`}
                                         autoFocus
                                     />
                                 ) : (
                                     <h1
                                         onClick={handleEditName}
-                                        className="text-xl font-semibold leading-tight sm:text-2xl text-gray-900 dark:text-gray-100 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                                        className={`cursor-pointer transition-colors hover:text-primary ${PAGE_TITLE_CLASS}`}
                                     >
                                         {view.name}
                                     </h1>
