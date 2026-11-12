@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import PersonModal from './PersonModal';
 import PersonRow from './PersonRow';
-import { TASK_SHEET_CLASS } from '../Task/taskSheet';
+import PageHeader from '../Shared/ui/PageHeader';
+import Button from '../Shared/ui/Button';
+import Segmented from '../Shared/ui/Segmented';
 import { Person } from '../../entities/Person';
 import {
     fetchPeople,
@@ -125,116 +127,86 @@ const PeopleList: React.FC = () => {
     });
 
     return (
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-8">
-            <div className="w-full">
-                {/* Header */}
-                <div className="flex items-center justify-between mb-8">
-                    <h2 className="text-2xl font-light">
-                        {t('people.title', 'People')}
-                    </h2>
-                    <div className="flex items-center gap-2">
+        <div className="mx-auto w-full max-w-4xl pb-8">
+            <PageHeader
+                title={t('people.title', 'People')}
+                actions={
+                    <>
                         {canInvite && (
-                            <button
+                            <Button
                                 onClick={() => openMember()}
                                 data-testid="add-member-button"
-                                className="flex items-center gap-1.5 px-4 py-2 border border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400 text-sm rounded-md hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors"
+                                icon={<PlusIcon className="h-4 w-4" />}
                             >
-                                <PlusIcon className="w-4 h-4" />
                                 {t('people.addMember', 'Add member')}
-                            </button>
+                            </Button>
                         )}
                         {canCreatePeople && (
-                            <button
+                            <Button
+                                variant="primary"
                                 onClick={openCreate}
                                 data-testid="add-contact-button"
-                                className="flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-on text-sm rounded-md hover:bg-primary/90 transition-colors"
+                                icon={<PlusIcon className="h-4 w-4" />}
                             >
-                                <PlusIcon className="w-4 h-4" />
                                 {t('people.newContact', 'New contact')}
-                            </button>
+                            </Button>
                         )}
-                    </div>
+                    </>
+                }
+            >
+                <TrialLockNotice feature="members" className="mb-3" />
+                <div data-testid="people-filters">
+                    <Segmented
+                        selected={filter}
+                        onSelect={(id) => setFilter(id as PeopleFilter)}
+                        options={[
+                            {
+                                id: 'all',
+                                label: t('people.filterAll', 'All'),
+                                count: visiblePeople.length,
+                                testId: 'people-filter-all',
+                            },
+                            {
+                                id: 'members',
+                                label: t('people.filterMembers', 'Members'),
+                                count: memberCount,
+                                testId: 'people-filter-members',
+                            },
+                            {
+                                id: 'contacts',
+                                label: t('people.filterContacts', 'Contacts'),
+                                count: contactCount,
+                                testId: 'people-filter-contacts',
+                            },
+                        ]}
+                    />
                 </div>
+            </PageHeader>
 
-                <TrialLockNotice feature="members" className="mb-6" />
-                <div
-                    role="tablist"
-                    className="mb-4 flex items-center min-h-[2.5rem] gap-4 sm:gap-6 pl-2 sm:pl-3"
-                    data-testid="people-filters"
-                >
-                    {(
-                        [
-                            [
-                                'all',
-                                t('people.filterAll', 'All'),
-                                visiblePeople.length,
-                            ],
-                            [
-                                'members',
-                                t('people.filterMembers', 'Members'),
-                                memberCount,
-                            ],
-                            [
-                                'contacts',
-                                t('people.filterContacts', 'Contacts'),
-                                contactCount,
-                            ],
-                        ] as [PeopleFilter, string, number][]
-                    ).map(([id, label, count]) => (
-                        <button
-                            key={id}
-                            role="tab"
-                            aria-selected={filter === id}
-                            data-testid={`people-filter-${id}`}
-                            onClick={() => setFilter(id)}
-                            className={`relative flex items-center self-stretch py-2.5 text-sm font-medium transition-colors ${
-                                filter === id
-                                    ? 'text-gray-900 dark:text-gray-100 after:absolute after:bottom-0 after:left-px after:right-px after:h-0.5 after:rounded-full after:bg-gray-900 dark:after:bg-gray-100'
-                                    : 'text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200'
-                            }`}
-                        >
-                            {label} ({count})
-                        </button>
-                    ))}
-                </div>
-
+            <div className="px-3 max-sm:px-1">
                 {isLoading ? (
-                    <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+                    <div className="px-3 py-6 text-body-m text-surface-on-variant">
                         {t('common.loading', 'Loading...')}
                     </div>
                 ) : displayPeople.length === 0 ? (
-                    <div className="text-center py-16">
-                        <p className="text-gray-600 dark:text-gray-300 text-sm">
+                    <div className="px-3 py-6">
+                        <p className="text-body-m text-surface-on-variant">
                             {t(
                                 'people.empty',
                                 'No people yet. Add family, colleagues, or friends.'
                             )}
                         </p>
-                        <button
-                            onClick={openCreate}
-                            className="mt-4 text-blue-600 dark:text-blue-400 text-sm hover:underline"
-                        >
+                        <Button className="mt-3" onClick={openCreate}>
                             {t('people.addFirst', 'Add your first person')}
-                        </button>
+                        </Button>
                     </div>
                 ) : (
-                    <div className="space-y-8">
-                        {sortedGroupKeys.map((letter) => (
-                            <div key={letter}>
-                                <h3 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-3">
-                                    {letter}
-                                </h3>
-                                <div
-                                    className={`task-list-container overflow-visible ${TASK_SHEET_CLASS} task-sheet-rails`}
-                                >
-                                    {groupedPeople[letter].map((person) => (
-                                        <div key={person.uid}>
-                                            <PersonRow person={person} />
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        ))}
+                    <div role="list">
+                        {sortedGroupKeys.flatMap((letter) =>
+                            groupedPeople[letter].map((person) => (
+                                <PersonRow key={person.uid} person={person} />
+                            ))
+                        )}
                     </div>
                 )}
 

@@ -1,9 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { UserIcon } from '@heroicons/react/24/outline';
 import { Person } from '../../entities/Person';
 import { memberRoleLabel } from './memberRoleLabel';
+import ListRow, { ColorDot } from '../Shared/ui/ListRow';
 
 const RELATIONSHIP_LABELS: Record<string, string> = {
     family: 'Family',
@@ -16,9 +16,8 @@ interface PersonRowProps {
     person: Person;
 }
 
-// One person in a list, the same row as the goal, area and tag lists. Their
-// color shows as a left border. The root is meant to sit inside a task-sheet
-// list.
+// One person in a list, the same row as the area and tag lists: their
+// colour as a dot, the name, then their role, e-mail and state in grey.
 const PersonRow: React.FC<PersonRowProps> = ({ person }) => {
     const { t } = useTranslation();
     const isMember = person.kind === 'member';
@@ -30,42 +29,33 @@ const PersonRow: React.FC<PersonRowProps> = ({ person }) => {
         : RELATIONSHIP_LABELS[person.relationship_type ?? 'other'];
 
     return (
-        <div
-            className="flex items-center gap-4 -ml-1.5 py-2.5 pl-5 pr-2 border-l-4 border-gray-300 dark:border-gray-600"
-            style={{ borderLeftColor: person.color || undefined }}
-        >
-            <Link
-                to={`/person/${person.uid}`}
-                className="flex flex-1 min-w-0 items-center gap-2"
-            >
-                <h4 className="text-[15px] font-normal tracking-tight text-gray-900 dark:text-gray-100 truncate">
-                    {person.name}
-                </h4>
-                {person.linked_user_id != null && (
-                    <UserIcon
-                        className="h-3.5 w-3.5 flex-shrink-0 text-blue-500 dark:text-blue-400"
-                        title={t(
-                            'people.linkedAccount',
-                            'Linked to a user account'
-                        )}
-                    />
-                )}
-                {person.email && (
-                    <span className="text-xs text-gray-600 dark:text-gray-300 truncate">
-                        {person.email}
-                    </span>
-                )}
-                {person.archived && (
-                    <span className="text-[12px] uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                        {t('people.archivedBadge', 'archived')}
-                    </span>
-                )}
-            </Link>
-
-            <div className="hidden md:flex items-center text-xs text-gray-600 dark:text-gray-300 flex-shrink-0">
-                <span>{kindLabel}</span>
-            </div>
-        </div>
+        <ListRow
+            to={`/person/${person.uid}`}
+            testId={`person-row-${person.uid}`}
+            leading={<ColorDot color={person.color} />}
+            muted={!!person.archived}
+            title={
+                <span className="inline-flex max-w-full items-center gap-1.5">
+                    <span className="truncate">{person.name}</span>
+                    {person.linked_user_id != null && (
+                        <UserIcon
+                            className="h-3.5 w-3.5 shrink-0 text-surface-on-variant"
+                            title={t(
+                                'people.linkedAccount',
+                                'Linked to a user account'
+                            )}
+                        />
+                    )}
+                </span>
+            }
+            meta={[
+                kindLabel,
+                person.email,
+                person.archived ? t('people.archivedBadge', 'archived') : null,
+            ]
+                .filter(Boolean)
+                .join(' · ')}
+        />
     );
 };
 
