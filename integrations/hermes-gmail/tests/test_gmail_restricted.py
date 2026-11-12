@@ -26,7 +26,7 @@ from gmail_restricted.tools import TOOL_NAMES, GmailTools  # noqa: E402
 
 CLIENT = {"installed": {"client_id": "cid.apps.googleusercontent.com", "client_secret": "client-secret-VALUE"}}
 EXPECTED_TOOLS = ("search_threads", "get_thread", "list_thread_drafts", "create_reply_draft", "update_draft",
-                  "archive_thread", "unarchive_thread")
+                  "archive_thread", "trash_thread", "unarchive_thread")
 
 
 def _no_network(*args, **kwargs):
@@ -88,6 +88,8 @@ class ExposedSurface(unittest.TestCase):
             r"send|trash|delete|spam|forward|filter|settings|import|insert|watch|batch|labels|attachments|history|"
             r"vacation|delegate|sendas|smime|imap|pop", re.I)
         forbidden_literals = {"DELETE", "PATCH", "SPAM", "TRASH", "gmail.send", "gmail.compose", "mail.google.com"}
+        # Seule exception voulue : la corbeille d'un fil entier (récupérable 30 jours), jamais la suppression.
+        allowed = {'f"/threads/{thread_id}/trash"', 'rf"^/threads/{_ID}/trash$"'}
         sources = sorted((ROOT / "gmail_restricted").glob("*.py")) + [ROOT / "gmail_restricted_mcp.py", ROOT / "setup_oauth.py"]
         offenders = []
         for path in sources:
@@ -98,7 +100,7 @@ class ExposedSurface(unittest.TestCase):
                     text = token.string
                     in_url_or_path = "/" in text and forbidden_words.search(text)
                     literal = any(word in text for word in forbidden_literals)
-                    if in_url_or_path or literal:
+                    if (in_url_or_path or literal) and text not in allowed:
                         offenders.append(f"{path.name}:{token.start[0]}: {text[:80]}")
         self.assertEqual(offenders, [])
 
@@ -106,7 +108,8 @@ class ExposedSurface(unittest.TestCase):
         refused = [
             ("POST", "/messages/send", None, None),
             ("POST", "/drafts/send", None, {"id": "r1"}),
-            ("POST", "/threads/t1/trash", None, None),
+            ("POST", "/threads/t1/trash", None, {}),
+            ("POST", "/threads/t1/trash/x", None, None),
             ("POST", "/threads/t1/untrash", None, None),
             ("DELETE", "/threads/t1", None, None),
             ("DELETE", "/drafts/r1", None, None),
@@ -265,6 +268,14 @@ class Archive(Base):
         self.assertEqual(bodies, [{"removeLabelIds": ["INBOX"]}])
         result, _ = self.call("unarchive_thread", thread_id="t1")
         self.assertTrue(result["in_inbox"])
+
+    def test_trash_moves_whole_thread_to_trash_only(self):
+        check_request("POST", "/threads/t1/trash")
+        result, is_error = self.call("trash_thread", thread_id="t1")
+        self.assertFalse(is_error)
+        self.assertTrue(result["in_trash"])
+        posts = self.google.gmail_calls("POST")
+        self.assertEqual([c[1].split("/users/me")[1] for c in posts], ["/threads/t1/trash"])
 
 
 class Auth(Base):

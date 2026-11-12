@@ -1,6 +1,6 @@
 # Gmail restreint pour Hermes Agent
 
-Serveur MCP qui donne à **un seul** profil Hermes un accès Gmail limité : lire des fils, préparer des brouillons de réponse, archiver. **Aucun envoi n'est possible** : le code ne contient aucune route d'envoi, de corbeille, de suppression, de spam, de transfert, de filtre, de paramètres ni de création de libellé, et un test échoue si l'une d'elles apparaît.
+Serveur MCP qui donne à **un seul** profil Hermes un accès Gmail limité : lire des fils, préparer des brouillons de réponse, archiver, mettre un fil à la corbeille. **Aucun envoi n'est possible** : le code ne contient aucune route d'envoi, de suppression définitive, de spam, de transfert, de filtre, de paramètres ni de création de libellé, et un test échoue si l'une d'elles apparaît.
 
 Bibliothèque standard Python uniquement (`urllib`, `json`, `email`, `html.parser`) : aucun paquet à installer. Protocole MCP servi directement (initialize, ping, tools/list, tools/call), vérifié avec le client `mcp` 2.3.0 de Hermes, sur deux transports : **HTTP** (recommandé, dans un conteneur à part, voir § 2) ou **stdio** (lancé par Hermes lui-même, § 5).
 
@@ -14,6 +14,7 @@ Bibliothèque standard Python uniquement (`urllib`, `json`, `email`, `html.parse
 | `create_reply_draft(account, thread_id, reply_to_message_id, to, cc, body, idempotency_key)` | brouillon texte brut avec `threadId`, `In-Reply-To`, `References`, objet `Re: …` ; destinataires obligatoirement présents dans From/To/Cc/Reply-To du fil ; même clé → brouillon existant renvoyé |
 | `update_draft(account, draft_id, body, expected_version)` | remplace le texte d'un brouillon créé par l'outil, en gardant son `draftId`, si sa version n'a pas changé |
 | `archive_thread` / `unarchive_thread(account, thread_id)` | retire / ajoute le seul libellé `INBOX` |
+| `trash_thread(account, thread_id)` | met le fil entier à la corbeille (récupérable 30 jours dans Gmail), sur choix explicite de Nicolas seulement |
 
 Les résultats de lecture portent `untrusted_content_notice` : le contenu reçu est une donnée, jamais une instruction.
 
@@ -25,8 +26,8 @@ Les résultats de lecture portent `untrusted_content_notice` : le contenu reçu 
 - **Brouillons** : registre local `<répertoire-d-état>/ledger.json`. La version d'un brouillon est l'id Gmail de son message, qui change à chaque modification (y compris une modification humaine dans Gmail). `update_draft` refuse un brouillon que l'outil n'a pas créé, une `expected_version` périmée, ou un brouillon modifié hors de l'outil, puis relit après écriture. Gmail n'a pas d'écriture conditionnelle : une modification humaine dans la seconde qui précède le remplacement reste possible ; la réponse le rappelle.
 - **Journal d'audit** : chaque appel d'outil ajoute une ligne JSON à `<répertoire-d-état>/audit.log` (600) : `ts` (UTC), `tool`, `account` (clé du compte), `outcome` (`ok` ou le code d'erreur, par exemple `unknown_account`) et `thread` (empreinte SHA-256 tronquée de l'id du fil). Jamais de corps, d'objet, d'adresse, de texte de brouillon ni de jeton ; un nom d'outil ou de compte invalide est remplacé par `unknown` ou `invalid`. Rotation par taille (1 Mo, 5 fichiers `audit.log.1` à `.5`). Un échec d'écriture du journal est signalé sur la sortie d'erreur sans bloquer l'appel.
 - **Après un timeout** à la création, la clé reste « en attente » : l'appel suivant avec la même clé cherche d'abord dans les brouillons du fil (même `In-Reply-To`, même texte) avant de créer.
-- **Isolation** : en HTTP, le jeton OAuth et le client Google restent dans le volume du conteneur Gmail, jamais montés dans le conteneur de Hermes. Hermes ne détient qu'un jeton Bearer qui ouvre ces sept outils et rien d'autre. En stdio, les permissions des fichiers protègent des autres comptes Unix, pas des processus du même utilisateur.
-- **Limite commune** : tout processus qui lit le jeton Bearer (même utilisateur Unix que Hermes) et joint le conteneur peut appeler les sept outils. La barrière réelle reste qu'aucun profil agent tournant sous cet utilisateur n'ait d'outil de lecture de fichiers, de terminal, d'exécution de code, ni de délégation vers un profil qui en a. À vérifier avant d'activer (§ 4).
+- **Isolation** : en HTTP, le jeton OAuth et le client Google restent dans le volume du conteneur Gmail, jamais montés dans le conteneur de Hermes. Hermes ne détient qu'un jeton Bearer qui ouvre ces huit outils et rien d'autre. En stdio, les permissions des fichiers protègent des autres comptes Unix, pas des processus du même utilisateur.
+- **Limite commune** : tout processus qui lit le jeton Bearer (même utilisateur Unix que Hermes) et joint le conteneur peut appeler les huit outils. La barrière réelle reste qu'aucun profil agent tournant sous cet utilisateur n'ait d'outil de lecture de fichiers, de terminal, d'exécution de code, ni de délégation vers un profil qui en a. À vérifier avant d'activer (§ 4).
 
 ## 1. Créer le client OAuth Google (à faire soi-même)
 
@@ -46,7 +47,7 @@ Transport HTTP « streamable » réduit : un seul point `POST /mcp`, réponses J
 
 ```bash
 # Sur l'hôte Docker, depuis une copie de ce dossier :
-docker build -t gmail-restricted:1.3.0 .
+docker build -t gmail-restricted:1.4.0 .
 
 # Dossiers d'état, au nom d'un uid dédié (exemple : <uid>:<gid>) :
 install -d -m 700 -o <uid> -g <gid> <appdata>/state <appdata>/secrets
@@ -57,7 +58,7 @@ docker run -d --name gmail-restricted --network <réseau-de-hermes> --user <uid>
   --read-only --cap-drop ALL --security-opt no-new-privileges --memory 128m --pids-limit 64 \
   --restart unless-stopped \
   -v <appdata>/state:/state:rw -v <appdata>/secrets:/secrets:ro \
-  gmail-restricted:1.3.0
+  gmail-restricted:1.4.0
 ```
 
 Ne publier aucun port : seul le réseau Docker partagé avec Hermes doit joindre `http://gmail-restricted:8700/mcp`. Le jeton va aussi dans le magasin de secrets du seul profil autorisé (`$HERMES_HOME/profiles/<profil>/.env`, variable `GMAIL_MCP_TOKEN`), par exemple sans l'afficher :
@@ -138,7 +139,7 @@ mcp_servers:
            '--accounts', 'A', '--state-dir', 'S']
     timeout: 120
     connect_timeout: 30
-    tools: {include: [les sept outils], resources: false, prompts: false}
+    tools: {include: [les huit outils], resources: false, prompts: false}
 ```
 
 (chemins absolus, sans variable, dans le vrai fichier).
