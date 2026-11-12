@@ -5,7 +5,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { FlagIcon } from '@heroicons/react/24/outline';
 import { Task } from '../../entities/Task';
 import { isTaskDone } from '../../constants/taskStatus';
-import { toPriorityLevel } from '../Shared/PriorityBadge';
+import TaskCheckCircle from '../Task/TaskCheckCircle';
 import { formatDuration, formatMinute } from '../DailyPlan/planUtils';
 import { DayLine, lineAt } from '../Today/dayModel';
 import { subtasksWithoutCard } from './groupCards';
@@ -23,65 +23,6 @@ export interface CardData {
     timed: boolean;
     duration: number;
 }
-
-// Todoist-like priority ring: red, orange, blue; grey when unset.
-const RING: Record<'high' | 'medium' | 'low' | 'none', string> = {
-    high: 'border-danger',
-    medium: 'border-orange-500',
-    low: 'border-blue-500',
-    none: 'border-outline',
-};
-
-interface RoundCheckProps {
-    checked: boolean;
-    priority: Task['priority'];
-    label: string;
-    size: 'card' | 'subtask';
-    onToggle(): void;
-}
-
-// Round checkbox: priority colours the ring, a filled disc with a tick when done.
-const RoundCheck: React.FC<RoundCheckProps> = ({
-    checked,
-    priority,
-    label,
-    size,
-    onToggle,
-}) => {
-    const ring = checked
-        ? 'border-primary bg-primary text-primary-on'
-        : `${RING[toPriorityLevel(priority) ?? 'none']} hover:bg-primary/10`;
-    const dimension =
-        size === 'card' ? 'h-[18px] w-[18px]' : 'h-[14px] w-[14px]';
-    return (
-        <button
-            type="button"
-            role="checkbox"
-            aria-checked={checked}
-            aria-label={label}
-            onClick={(event) => {
-                event.stopPropagation();
-                onToggle();
-            }}
-            className="-m-1.5 flex shrink-0 items-center justify-center rounded-full p-1.5 focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-primary"
-            data-testid="upcoming-check"
-        >
-            <span
-                className={`flex items-center justify-center rounded-full border-2 transition-colors duration-150 ${dimension} ${ring}`}
-            >
-                {checked && (
-                    <svg
-                        viewBox="0 0 24 24"
-                        aria-hidden="true"
-                        className="h-[70%] w-[70%] fill-none stroke-current stroke-[3.5] [stroke-linecap:round] [stroke-linejoin:round]"
-                    >
-                        <path d="M5 12.5l4.5 4.5L19 7.5" />
-                    </svg>
-                )}
-            </span>
-        </button>
-    );
-};
 
 const Chip: React.FC<{ children: React.ReactNode }> = ({ children }) => (
     <span className="inline-flex h-5 max-w-[10rem] items-center gap-1 truncate rounded-md bg-surface-high px-1.5 text-xs tabular-nums text-surface-on-variant">
@@ -158,10 +99,6 @@ const TaskCard: React.FC<TaskCardProps> = ({
         dragKeyDown?.(event);
     };
 
-    const checkLabel = line.done
-        ? t('tasks.markAsNotDone', 'Mark as not done')
-        : t('tasks.markAsDone', 'Mark as done');
-
     return (
         <div
             ref={setNodeRef}
@@ -187,13 +124,16 @@ const TaskCard: React.FC<TaskCardProps> = ({
             } ${isDragging ? 'opacity-60 shadow-lg' : ''}`}
         >
             <div className="flex items-start gap-2.5">
-                <RoundCheck
-                    checked={line.done}
-                    priority={task.priority}
-                    label={checkLabel}
-                    size="card"
-                    onToggle={() => onToggle(line)}
-                />
+                <span className="mt-px">
+                    <TaskCheckCircle
+                        task={task}
+                        checked={line.done}
+                        size="card"
+                        delayed={false}
+                        testId="upcoming-check"
+                        onToggle={() => onToggle(line)}
+                    />
+                </span>
                 <span
                     className={`min-w-0 flex-1 break-words text-body-m font-medium leading-5 ${
                         line.done
@@ -232,21 +172,12 @@ const TaskCard: React.FC<TaskCardProps> = ({
                                 key={sub.uid ?? sub.id}
                                 className="flex min-w-0 items-center gap-2"
                             >
-                                <RoundCheck
+                                <TaskCheckCircle
+                                    task={sub}
                                     checked={subDone}
-                                    priority={sub.priority}
-                                    label={
-                                        subDone
-                                            ? t(
-                                                  'tasks.markAsNotDone',
-                                                  'Mark as not done'
-                                              )
-                                            : t(
-                                                  'tasks.markAsDone',
-                                                  'Mark as done'
-                                              )
-                                    }
                                     size="subtask"
+                                    delayed={false}
+                                    testId="upcoming-check"
                                     onToggle={() => onToggleSubtask(sub)}
                                 />
                                 <span
