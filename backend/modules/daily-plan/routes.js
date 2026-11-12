@@ -62,6 +62,7 @@ router.delete(
     dailyPlanController.deleteBriefContext
 );
 router.put('/daily-plan/:date', dailyPlanController.replace);
+router.patch('/daily-plan/:date', dailyPlanController.patch);
 router.post('/daily-plan/:date/carry-over', dailyPlanController.carryOver);
 router.post(
     '/daily-plan/:date/ai/wrap-up',

@@ -37,12 +37,18 @@ const {
     getTodayBoundsInUTC,
 } = require('../../utils/timezone-utils');
 const { ValidationError, NotFoundError } = require('../../shared/errors');
+const {
+    DEFAULT_DURATION,
+    PlanChangedError,
+    planEtag,
+    parseOps,
+    applyOps,
+} = require('./ops');
 
 const MAX_ITEMS = 100;
 const MINUTES_PER_DAY = 24 * 60;
 const MIN_DURATION = 5;
 const MAX_DURATION = 12 * 60;
-const DEFAULT_DURATION = 30;
 const INBOX_LIMIT = 20;
 const DAY_HOURS_STEP = 30;
 
@@ -256,36 +262,144 @@ async function getPlan(user, date, scopeQuery = null) {
     };
 }
 
-async function replaceItems(user, date, items) {
+// Writes the given days in one transaction: `change` gets the lines of each
+// day, read under lock, and returns the lines of the days it changes. With
+// `ifMatch`, the write is refused (and nothing stored) unless the day's
+// visible items still have that etag. Resolves to whether any day changed.
+async function writeDays(user, planDate, dates, { ifMatch = null, change }) {
+    const visibleWhere = await visibleTaskWhere(user.id);
+    try {
+        return await repository.transactPlans(
+            user.id,
+            dates,
+            async (days, transaction) => {
+                if (ifMatch !== null) {
+                    const lines = days.get(planDate).lines;
+                    const visibleIds = await repository.findVisibleTaskIds(
+                        visibleWhere,
+                        lines.map((line) => line.task_id),
+                        transaction
+                    );
+                    const visible = lines.filter((line) =>
+                        visibleIds.has(line.task_id)
+                    );
+                    if (planEtag(visible) !== ifMatch) {
+                        throw new PlanChangedError();
+                    }
+                }
+                return change(days, { visibleWhere, transaction });
+            }
+        );
+    } catch (error) {
+        if (error instanceof PlanChangedError) {
+            error.plan = await getPlan(user, planDate);
+        }
+        throw error;
+    }
+}
+
+async function replaceItems(user, date, items, { ifMatch = null } = {}) {
     const timezone = getSafeTimezone(user.timezone);
     const planDate = resolvePlanDate(date, timezone);
     const normalized = validateItems(items);
 
-    const visibleWhere = await visibleTaskWhere(user.id);
-    const tasks = await repository.findVisibleTasksByUids(
-        visibleWhere,
-        normalized.map((item) => item.task_uid)
-    );
-    const byUid = new Map(tasks.map((task) => [task.uid, task]));
-    const missing = normalized.find((item) => !byUid.has(item.task_uid));
-    if (missing) {
-        throw new NotFoundError(`Task ${missing.task_uid} not found`);
-    }
-
-    const rows = normalized.map((item, index) => {
-        const task = byUid.get(item.task_uid);
-        return {
-            task_id: task.id,
-            position: index,
-            start_minute: item.start_minute,
-            duration_minutes:
-                item.duration_minutes ??
-                task.estimated_minutes ??
-                DEFAULT_DURATION,
-        };
+    await writeDays(user, planDate, [planDate], {
+        ifMatch,
+        change: async (days, { visibleWhere, transaction }) => {
+            const tasks = await repository.findVisibleTasksByUids(
+                visibleWhere,
+                normalized.map((item) => item.task_uid),
+                transaction
+            );
+            const byUid = new Map(tasks.map((task) => [task.uid, task]));
+            const missing = normalized.find(
+                (item) => !byUid.has(item.task_uid)
+            );
+            if (missing) {
+                throw new NotFoundError(`Task ${missing.task_uid} not found`);
+            }
+            return new Map([
+                [
+                    planDate,
+                    normalized.map((item) => {
+                        const task = byUid.get(item.task_uid);
+                        return {
+                            task_id: task.id,
+                            task_uid: task.uid,
+                            start_minute: item.start_minute,
+                            duration_minutes:
+                                item.duration_minutes ??
+                                task.estimated_minutes ??
+                                DEFAULT_DURATION,
+                        };
+                    }),
+                ],
+            ]);
+        },
     });
+    return getPlan(user, planDate);
+}
 
-    await repository.replaceItems(user.id, planDate, rows);
+const lineKey = (line) => [
+    line.task_id,
+    line.start_minute,
+    line.duration_minutes,
+];
+
+const sameLines = (before, after) =>
+    JSON.stringify(before.map(lineKey)) === JSON.stringify(after.map(lineKey));
+
+// Applies the PATCH ops in order, in one transaction. Only a remove may name
+// a task the user cannot see: it takes the line away whatever the sharing,
+// so a revoked task can still be taken off a day.
+async function runPlanOps(user, date, ops, { ifMatch = null } = {}) {
+    const timezone = getSafeTimezone(user.timezone);
+    const planDate = resolvePlanDate(date, timezone);
+    const parsed = parseOps(ops, planDate);
+    const uids = [
+        ...new Set(
+            parsed.filter((op) => op.op !== 'remove').map((op) => op.task_uid)
+        ),
+    ];
+    const moveDates = parsed
+        .filter((op) => op.op === 'move')
+        .map((op) => op.to_date);
+
+    const changed = await writeDays(user, planDate, [planDate, ...moveDates], {
+        ifMatch,
+        change: async (days, { visibleWhere, transaction }) => {
+            const tasks = await repository.findVisibleTasksByUids(
+                visibleWhere,
+                uids,
+                transaction
+            );
+            const byUid = new Map(tasks.map((task) => [task.uid, task]));
+            const missing = uids.find((uid) => !byUid.has(uid));
+            if (missing) {
+                throw new NotFoundError(`Task ${missing} not found`);
+            }
+
+            const linesByDay = new Map(
+                [...days].map(([day, { lines }]) => [day, lines])
+            );
+            const next = applyOps(linesByDay, parsed, {
+                planDate,
+                tasks: byUid,
+            });
+            const writes = new Map();
+            for (const [day, lines] of next) {
+                if (sameLines(days.get(day).lines, lines)) continue;
+                validateItems(lines);
+                writes.set(day, lines);
+            }
+            return writes;
+        },
+    });
+    return { planDate, changed };
+}
+
+async function applyPlanOps(user, date, ops, { ifMatch = null } = {}) {
+    const { planDate } = await runPlanOps(user, date, ops, { ifMatch });
     return getPlan(user, planDate);
 }
 
@@ -307,38 +421,22 @@ async function carryOver(user, date, taskUids) {
     }
     const timezone = getSafeTimezone(user.timezone);
     const planDate = resolvePlanDate(date, timezone);
-    const { plan } = await getPlan(user, planDate);
-    const current = (plan?.items || []).map((item) => ({
-        task_uid: item.task_uid,
-        start_minute: item.start_minute,
-        duration_minutes: item.duration_minutes,
-    }));
-    const already = new Set(current.map((item) => item.task_uid));
-    const added = [...new Set(taskUids)]
-        .filter((uid) => !already.has(uid))
-        .map((uid) => ({ task_uid: uid, start_minute: null }));
-    if (added.length === 0) return getPlan(user, planDate);
-    return replaceItems(user, planDate, [...current, ...added]);
+    if (taskUids.length === 0) return getPlan(user, planDate);
+    return applyPlanOps(
+        user,
+        planDate,
+        taskUids.map((uid) => ({ op: 'add', task_uid: uid }))
+    );
 }
 
 // The `today` flag on the task API: true appends the task to today's plan,
 // false takes it off. Removing from a day with no plan creates nothing.
 async function setTaskOnToday(user, taskUid, onToday) {
     if (onToday) return carryOver(user, 'today', [taskUid]);
-    const { date, plan } = await getPlan(user, 'today');
-    const items = plan?.items || [];
-    if (!items.some((item) => item.task_uid === taskUid)) return null;
-    return replaceItems(
-        user,
-        date,
-        items
-            .filter((item) => item.task_uid !== taskUid)
-            .map((item) => ({
-                task_uid: item.task_uid,
-                start_minute: item.start_minute,
-                duration_minutes: item.duration_minutes,
-            }))
-    );
+    const { planDate, changed } = await runPlanOps(user, 'today', [
+        { op: 'remove', task_uid: taskUid },
+    ]);
+    return changed ? getPlan(user, planDate) : null;
 }
 
 async function clearPlan(user, date) {
@@ -860,6 +958,7 @@ module.exports = {
     validateItems,
     getPlan,
     replaceItems,
+    applyPlanOps,
     startPlan,
     clearPlan,
     carryOver,

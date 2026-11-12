@@ -13,6 +13,7 @@ const { PiperError } = require('./brief/piper');
 const { getSafeTimezone } = require('../../utils/timezone-utils');
 const { UnauthorizedError, ValidationError } = require('../../shared/errors');
 const { getConfig } = require('../../config/config');
+const { PlanChangedError, withEtag } = require('./ops');
 
 function requireUser(req) {
     if (!req.currentUser)
@@ -42,6 +43,27 @@ function sendAudioError(res, error, next) {
     next(error);
 }
 
+// The etag the client read the plan with, as sent in If-Match ("abc" or abc).
+// `*` and a missing header mean no precondition.
+function parseIfMatch(req) {
+    const header = req.get('If-Match');
+    if (header === undefined) return null;
+    const value = header.trim().replace(/^"(.*)"$/, '$1');
+    return value === '*' || value === '' ? null : value;
+}
+
+function sendPlan(res, payload) {
+    const body = withEtag(payload);
+    res.set('ETag', `"${body.etag}"`);
+    res.json(body);
+}
+
+function sendPlanChanged(res, error) {
+    const body = withEtag(error.plan);
+    res.set('ETag', `"${body.etag}"`);
+    res.status(409).json({ error: 'plan_changed', plan: body });
+}
+
 function requireIdempotencyKey(body) {
     if (typeof body?.idempotency_key !== 'string' || !body.idempotency_key) {
         throw new ValidationError('idempotency_key is required');
@@ -52,7 +74,8 @@ const dailyPlanController = {
     async get(req, res, next) {
         try {
             const user = requireUser(req);
-            res.json(
+            sendPlan(
+                res,
                 await dailyPlanService.getPlan(user, req.query.date, req.query)
             );
         } catch (err) {
@@ -365,14 +388,41 @@ const dailyPlanController = {
     async replace(req, res, next) {
         try {
             const user = requireUser(req);
-            res.json(
+            sendPlan(
+                res,
                 await dailyPlanService.replaceItems(
                     user,
                     req.params.date,
-                    req.body?.items
+                    req.body?.items,
+                    { ifMatch: parseIfMatch(req) }
                 )
             );
         } catch (err) {
+            if (err instanceof PlanChangedError) {
+                sendPlanChanged(res, err);
+                return;
+            }
+            next(err);
+        }
+    },
+
+    async patch(req, res, next) {
+        try {
+            const user = requireUser(req);
+            sendPlan(
+                res,
+                await dailyPlanService.applyPlanOps(
+                    user,
+                    req.params.date,
+                    req.body?.ops,
+                    { ifMatch: parseIfMatch(req) }
+                )
+            );
+        } catch (err) {
+            if (err instanceof PlanChangedError) {
+                sendPlanChanged(res, err);
+                return;
+            }
             next(err);
         }
     },

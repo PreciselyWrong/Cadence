@@ -185,7 +185,7 @@ Plans and feeds are not included in backups: plans are short-lived, and feed add
 
 | Method                | Path                                     | Notes                                                                                                                                                                                        |
 | --------------------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| GET                   | `/api/daily-plan?date=`                  | `{ date, day_hours, focus_blocks, focus_exceptions, focus_blocks_of_day, plan }`, the plan or `null`. The date defaults to today in the user's timezone                                    |
+| GET                   | `/api/daily-plan?date=`                  | `{ date, day_hours, focus_blocks, focus_exceptions, focus_blocks_of_day, plan, etag }`, the plan or `null`. The date defaults to today in the user's timezone. `etag` is the plan's fingerprint (see below) |
 | GET                   | `/api/daily-plan/focus-blocks`           | `{ blocks, exceptions }`; exceptions `{ id, start, end, block_ids, label? }` with dates `YYYY-MM-DD`, `block_ids` `null` for every block                                                   |
 | PUT                   | `/api/daily-plan/focus-blocks`           | Body `{ blocks, exceptions? }`; without `exceptions` the saved ones are kept. 400 for an end before the start, a bad date or an unknown block id                                          |
 | GET                   | `/api/daily-plan/candidates`             | `{ tagged_today, overdue, due_today, in_progress, suggested, suggested_total, inbox, inbox_count, ranked }`, each task in one group only; `ranked` lists task uids in the user's order. `?suggested_limit=N` (1 to 1000) sends up to N suggestions instead of the Planning setting; 400 otherwise |
@@ -195,13 +195,30 @@ Plans and feeds are not included in backups: plans are short-lived, and feed add
 | GET                   | `/api/daily-plan/suggestions`            | `{ settings, defaults, options }` for the suggested group (see above)                                                                                                                        |
 | PUT                   | `/api/daily-plan/suggestions`            | Body with any of the settings; unknown keys or values, and projects the user cannot see, give 400                                                                                            |
 | PUT                   | `/api/daily-plan/hours`                  | Body `{ start, end }`, 30-minute steps, start before end, end at most 1440; 400 otherwise                                                                                                    |
-| PUT                   | `/api/daily-plan/:date`                  | Replaces all items: `{ items: [{ task_uid, start_minute, duration_minutes }] }`, in order. Rejects overlaps, slots past midnight, duplicates and tasks the user cannot see                   |
+| PUT                   | `/api/daily-plan/:date`                  | Replaces all items: `{ items: [{ task_uid, start_minute, duration_minutes }] }`, in order. Rejects overlaps, slots past midnight, duplicates and tasks the user cannot see. Same response as GET, with `etag` and the `ETag` header; takes `If-Match` (see below) |
+| PATCH                 | `/api/daily-plan/:date`                  | Applies `{ ops: [...] }` (1 to 100 ops) in order, in one transaction, against the plan as stored at that moment. Same response as PUT. Takes `If-Match` |
 | POST                  | `/api/daily-plan/:date/start`            | Marks the day started                                                                                                                                                                        |
-| POST                  | `/api/daily-plan/:date/carry-over`       | Appends `{ task_uids }` to that day's plan without a time, skipping tasks already there                                                                                                      |
+| POST                  | `/api/daily-plan/:date/carry-over`       | Appends `{ task_uids }` to that day's plan without a time, skipping tasks already there. Runs the same transactional `add` ops as PATCH                                                      |
 | DELETE                | `/api/daily-plan/:date`                  | Clears the plan. `:date` may be `today`                                                                                                                                                      |
 | GET/POST/PATCH/DELETE | `/api/calendar-feeds[/:uid]`             | Manage feeds. POST fetches the feed once and refuses it if it cannot be read. PATCH also takes `show_on_calendar`                                                                            |
 | GET                   | `/api/calendar-feeds/events?date=`       | `{ date, events, errors }` for that day                                                                                                                                                      |
 | GET                   | `/api/calendar-feeds/events?start=&end=` | `{ start, end, events, errors }` for up to 62 days; each event carries its `date`, and a multi-day event appears once per day. Hidden calendars are included, the Calendar page filters them |
+
+**PATCH ops.** Each op takes a `task_uid`; the task must be one the user can see, else 404 and nothing is written (`remove` alone also accepts a task that was shared with the user and is no longer visible, so it can be taken off the day):
+
+- `{ op: 'add', task_uid, start_minute?, duration_minutes?, before_uid? }`: appends the line (or inserts it before `before_uid`); the duration defaults to the task's estimate, else 30. A task already on the day keeps its place and only takes the fields given.
+- `{ op: 'remove', task_uid }`: no-op when absent.
+- `{ op: 'slot', task_uid, start_minute, duration_minutes? }`: sets the time, adding the line when absent.
+- `{ op: 'unslot', task_uid }`: clears the time; the line stays.
+- `{ op: 'resize', task_uid, duration_minutes }`: changes the length only.
+- `{ op: 'reorder', task_uid, before_uid }`: moves the line before another, or to the end when `before_uid` is `null`. Positions become `0..n-1`.
+- `{ op: 'move', task_uid, to_date }`: takes the line off this day and appends it to `to_date` (no time, same duration). If `to_date` already holds the task, its line there is kept.
+
+After all ops, the rules of PUT run on each day the batch changed: ranges, no slot past midnight, no overlap with any timed item already on the day, no duplicates. Any failure answers 400 and nothing is written. Ops never write task fields (no due date, no estimate).
+
+**ETag and If-Match.** `etag` is the first 16 hex characters of the SHA-1 of the ordered visible items `[task_uid, start_minute, duration_minutes]`. It moves whenever the list, a time or a length changes. GET, PUT and PATCH return it in the body and PUT and PATCH also send it as the `ETag` header (quoted). A PUT or PATCH sent with `If-Match: "<etag>"` is checked inside the transaction: when the plan has changed since it was read, the answer is `409 { error: 'plan_changed', plan }`, where `plan` is the current response, and nothing is written. Without `If-Match` (or with `*`), the write applies as before, so older Android builds keep working.
+
+**Concurrency.** Writes to the same day take a per-day lock (PostgreSQL advisory lock; SQLite has a single writer), so two writes that both add to one day keep both lines. `carry-over`, the task API `today` flag, the MCP day tools and the triage slots write through the same transactional path.
 
 `GET /api/daily-plan` and `GET /api/daily-plan/candidates` also take the Focus scope params `area_uid`, `project_uid` and `tags` (see [Focus](25-focus.md)). Candidates are then narrowed to the scope. The plan keeps every item, since `PUT /api/daily-plan/:date` and carry-over replace the whole list from what the client holds, and marks each item `in_focus: true|false` instead; Today and the planner dim the ones outside the Focus.
 

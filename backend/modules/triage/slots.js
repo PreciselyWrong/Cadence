@@ -131,15 +131,9 @@ async function acceptSlot(user, id) {
     const taskUid = created.task?.uid ?? created.uid;
 
     try {
-        const { plan } = await dailyPlanService.getPlan(user, slot.date);
-        const items = (plan?.items ?? []).map((item) => ({
-            task_uid: item.task_uid ?? item.task?.uid,
-            start_minute: item.start_minute,
-            duration_minutes: item.duration_minutes,
-        }));
-        await dailyPlanService.replaceItems(user, slot.date, [
-            ...items,
+        await dailyPlanService.applyPlanOps(user, slot.date, [
             {
+                op: 'slot',
                 task_uid: taskUid,
                 start_minute: slot.start_minute,
                 duration_minutes: slot.duration_minutes,

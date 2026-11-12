@@ -12,6 +12,7 @@ const {
     User,
     sequelize,
 } = require('../../models');
+const { lockNewRow } = require('../../utils/db-dialect');
 const { TASK_INCLUDES } = require('../tasks/utils/constants');
 const {
     getTaskIncludeConfigLight,
@@ -76,32 +77,106 @@ class DailyPlanRepository {
         return projects.map((project) => project.id);
     }
 
-    async findVisibleTasksByUids(visibleWhere, uids) {
+    async findVisibleTasksByUids(visibleWhere, uids, transaction) {
         if (uids.length === 0) return [];
         return Task.findAll({
             where: { [Op.and]: [visibleWhere, { uid: { [Op.in]: uids } }] },
             attributes: ['id', 'uid', 'estimated_minutes'],
+            transaction,
         });
     }
 
-    async replaceItems(userId, planDate, rows) {
+    async findVisibleTaskIds(visibleWhere, ids, transaction) {
+        if (ids.length === 0) return new Set();
+        const rows = await Task.findAll({
+            where: { [Op.and]: [visibleWhere, { id: { [Op.in]: ids } }] },
+            attributes: ['id'],
+            raw: true,
+            transaction,
+        });
+        return new Set(rows.map((row) => row.id));
+    }
+
+    // Reads the plans of the given dates under lock, lets `change` decide
+    // what they should hold, and stores the lines it returns, all in one
+    // transaction. `change(days, transaction)` gets a Map of date to
+    // { plan, lines } (plan is null when the day has none yet; lines carry
+    // task_id and task_uid) and returns a Map of date to the new lines, for
+    // the dates it changed. Locks are taken in date order so two writers
+    // touching the same days cannot deadlock on PostgreSQL.
+    async transactPlans(userId, planDates, change) {
+        const dates = [...new Set(planDates)].sort();
         return sequelize.transaction(async (transaction) => {
-            const plan = await this.findOrCreatePlan(
-                userId,
-                planDate,
-                transaction
-            );
-            await DailyPlanItem.destroy({
-                where: { daily_plan_id: plan.id },
-                transaction,
-            });
-            if (rows.length > 0) {
-                await DailyPlanItem.bulkCreate(
-                    rows.map((row) => ({ ...row, daily_plan_id: plan.id })),
-                    { transaction }
+            const days = new Map();
+            for (const planDate of dates) {
+                await lockNewRow(
+                    sequelize,
+                    transaction,
+                    `daily-plan:${userId}:${planDate}`
                 );
+                const plan = await DailyPlan.findOne({
+                    where: { user_id: userId, plan_date: planDate },
+                    transaction,
+                });
+                const items = plan
+                    ? await DailyPlanItem.findAll({
+                          where: { daily_plan_id: plan.id },
+                          include: [
+                              {
+                                  model: Task,
+                                  as: 'Task',
+                                  attributes: [
+                                      'id',
+                                      'uid',
+                                      'estimated_minutes',
+                                  ],
+                              },
+                          ],
+                          order: [
+                              ['position', 'ASC'],
+                              ['id', 'ASC'],
+                          ],
+                          transaction,
+                      })
+                    : [];
+                days.set(planDate, {
+                    plan,
+                    lines: items.map((item) => ({
+                        task_id: item.task_id,
+                        task_uid: item.Task.uid,
+                        start_minute: item.start_minute,
+                        duration_minutes: item.duration_minutes,
+                    })),
+                });
             }
-            return plan;
+
+            const changed = await change(days, transaction);
+            for (const [planDate, lines] of changed) {
+                const plan =
+                    days.get(planDate).plan ||
+                    (await this.findOrCreatePlan(
+                        userId,
+                        planDate,
+                        transaction
+                    ));
+                await DailyPlanItem.destroy({
+                    where: { daily_plan_id: plan.id },
+                    transaction,
+                });
+                if (lines.length > 0) {
+                    await DailyPlanItem.bulkCreate(
+                        lines.map((line, position) => ({
+                            daily_plan_id: plan.id,
+                            task_id: line.task_id,
+                            position,
+                            start_minute: line.start_minute,
+                            duration_minutes: line.duration_minutes,
+                        })),
+                        { transaction }
+                    );
+                }
+            }
+            return changed.size > 0;
         });
     }
 
