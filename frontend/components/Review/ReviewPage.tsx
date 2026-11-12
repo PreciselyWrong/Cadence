@@ -1,3 +1,5 @@
+import PageShell from '../Shared/ui/PageShell';
+import EmptyState from '../Shared/ui/EmptyState';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -898,7 +900,7 @@ const ReviewPage: React.FC = () => {
     };
 
     return (
-        <div className="mx-auto w-full max-w-3xl pb-10">
+        <PageShell template="list">
             <PageHeader
                 title={t('review.title', 'Review')}
                 meta={
@@ -1005,9 +1007,7 @@ const ReviewPage: React.FC = () => {
                                     </p>
                                 )}
                                 {!loading && rows.length === 0 && (
-                                    <p className="py-10 text-center text-sm text-surface-on-variant">
-                                        {emptyText(step)}
-                                    </p>
+                                    <EmptyState title={emptyText(step)} />
                                 )}
                                 {step === 'later' &&
                                 rows.length > 0 &&
@@ -1161,7 +1161,7 @@ const ReviewPage: React.FC = () => {
                     </>
                 )}
             </div>
-        </div>
+        </PageShell>
     );
 };
 

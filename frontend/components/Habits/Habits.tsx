@@ -20,7 +20,8 @@ import PauseEditor from './PauseEditor';
 import { withEntry } from './habitStatus';
 import Segmented from '../Shared/ui/Segmented';
 import { useToast } from '../Shared/ToastContext';
-import BlankSlate from '../Shared/BlankSlate';
+import EmptyState from '../Shared/ui/EmptyState';
+import PageShell from '../Shared/ui/PageShell';
 import {
     CadenceEntry,
     CadenceGroup,
@@ -248,7 +249,7 @@ const Habits: React.FC = () => {
         'inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-control px-4 text-label focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900 active:scale-[0.97] transition-transform duration-[220ms]';
 
     return (
-        <div className="mx-auto w-full max-w-7xl pb-24">
+        <PageShell template="board" className="pb-24">
             <PageHeader
                 title={t('cadenceHabits.title', 'Habits')}
                 meta={
@@ -337,12 +338,12 @@ const Habits: React.FC = () => {
 
                 {tab === 'archived' ? (
                     archived.length === 0 ? (
-                        <p className="text-body-m text-surface-on-variant">
-                            {t(
+                        <EmptyState
+                            title={t(
                                 'cadenceHabits.noArchived',
                                 'No archived habits.'
                             )}
-                        </p>
+                        />
                     ) : (
                         <ul className="divide-y divide-outline-variant overflow-hidden rounded-card bg-surface-card">
                             {archived.map((habit) => (
@@ -377,22 +378,25 @@ const Habits: React.FC = () => {
                         </ul>
                     )
                 ) : habits.length === 0 && !failed ? (
-                    <BlankSlate
+                    <EmptyState
                         title={t('cadenceHabits.empty.title', 'No habits yet.')}
                         hint={t(
                             'cadenceHabits.empty.hint',
                             'A habit is something you do regularly, like reading or a walk, something you keep under a limit, or something you go without. Note it each time and watch your streak grow.'
                         )}
-                        actions={[
-                            {
-                                label: t(
+                        action={
+                            <Button
+                                size="md"
+                                variant="primary"
+                                icon={<PlusIcon className="h-4 w-4" />}
+                                onClick={() => setEditorOpen(true)}
+                            >
+                                {t(
                                     'cadenceHabits.empty.create',
                                     'Create your first habit'
-                                ),
-                                icon: PlusIcon,
-                                onClick: () => setEditorOpen(true),
-                            },
-                        ]}
+                                )}
+                            </Button>
+                        }
                     />
                 ) : (
                     <>
@@ -469,7 +473,7 @@ const Habits: React.FC = () => {
                     load();
                 }}
             />
-        </div>
+        </PageShell>
     );
 };
 

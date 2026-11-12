@@ -1,3 +1,5 @@
+import PageShell from '../Shared/ui/PageShell';
+import EmptyState from '../Shared/ui/EmptyState';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { answerBriefQuestion } from '../../utils/dailyBriefService';
@@ -261,7 +263,7 @@ const TriagePage: React.FC = () => {
     };
 
     return (
-        <div className="mx-auto w-full max-w-2xl pb-28 sm:pb-8">
+        <PageShell template="list" className="pb-28 sm:pb-12">
             <PageHeader
                 title={t('triage.title', 'À trier')}
                 meta={
@@ -274,20 +276,14 @@ const TriagePage: React.FC = () => {
             />
             <div className="px-6 max-sm:px-4">
                 {queue && !item && (
-                    <div
-                        className="py-10 text-center"
+                    <EmptyState
                         data-testid="triage-empty"
-                    >
-                        <p className="text-body font-semibold text-surface-on">
-                            {t('triage.emptyTitle', 'Rien à trier')}
-                        </p>
-                        <p className="mt-1 text-sm text-surface-on-variant">
-                            {t(
-                                'triage.emptyMessage',
-                                'Une proposition n’apparaît que si elle est utile.'
-                            )}
-                        </p>
-                    </div>
+                        title={t('triage.emptyTitle', 'Rien à trier')}
+                        hint={t(
+                            'triage.emptyMessage',
+                            'Une proposition n’apparaît que si elle est utile.'
+                        )}
+                    />
                 )}
                 {item && (
                     <article
@@ -529,7 +525,7 @@ const TriagePage: React.FC = () => {
                     </article>
                 )}
             </div>
-        </div>
+        </PageShell>
     );
 };
 
