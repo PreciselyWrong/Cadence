@@ -12,6 +12,8 @@ import { intlLocale } from '../DailyPlan/planUtils';
 import { DayLine, lineFromDue } from '../Today/dayModel';
 import TaskCard, { cardId } from './TaskCard';
 import { IconButton } from '../Shared/ui/Button';
+import EmptyState from '../Shared/ui/EmptyState';
+import { FIELD_CLASS } from '../Shared/ui/controlSizes';
 import type { HorizonKey } from './horizons';
 
 export interface HorizonDropData {
@@ -39,6 +41,9 @@ interface HorizonColumnProps {
     onToggle(line: DayLine): void;
     onToggleSubtask(subtask: Task): void;
     onAdd?(name: string): void;
+    // Fills its grid row and scrolls its own cards (horizons side by side);
+    // false: as tall as its cards (wrapped rows).
+    fill?: boolean;
 }
 
 /**
@@ -59,6 +64,7 @@ const HorizonColumn: React.FC<HorizonColumnProps> = ({
     onToggle,
     onToggleSubtask,
     onAdd,
+    fill = true,
 }) => {
     const { t, i18n } = useTranslation();
     const [draft, setDraft] = useState('');
@@ -102,9 +108,9 @@ const HorizonColumn: React.FC<HorizonColumnProps> = ({
             data-testid="horizon-column"
             data-horizon={horizon}
             aria-label={title}
-            className={`flex min-h-0 min-w-0 flex-col gap-2 rounded-2xl p-2 transition-colors duration-150 ${
-                isOver ? 'bg-primary-container/40' : ''
-            }`}
+            className={`flex min-w-0 flex-col gap-2 rounded-2xl p-2 transition-colors duration-150 ${
+                fill ? 'min-h-0' : ''
+            } ${isOver ? 'bg-primary-container/40' : ''}`}
         >
             <header className="px-2.5 py-2">
                 <div className="flex items-baseline gap-2">
@@ -150,13 +156,15 @@ const HorizonColumn: React.FC<HorizonColumnProps> = ({
                         }}
                         placeholder={addLabel}
                         aria-label={addLabel}
-                        className="h-9 w-full rounded-lg bg-surface px-3 text-body-m text-surface-on placeholder:text-surface-on-variant ring-1 ring-inset ring-outline-variant/60 focus:outline-none focus:ring-2 focus:ring-primary/60"
+                        className={FIELD_CLASS}
                     />
                 </form>
             )}
             <div
                 role="list"
-                className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto px-0.5 pb-1"
+                className={`flex flex-col gap-2 px-0.5 pb-1 ${
+                    fill ? 'min-h-0 flex-1 overflow-y-auto' : ''
+                }`}
             >
                 <SortableContext
                     items={lines.map((line) => cardId(date, line.uid))}
@@ -175,15 +183,19 @@ const HorizonColumn: React.FC<HorizonColumnProps> = ({
                     ))}
                 </SortableContext>
                 {nothingElse && (
-                    <p className="px-2.5 pt-1 text-body-m text-surface-on-variant">
-                        {plannedOnDays.length > 0
-                            ? t(
-                                  'upcoming.thisWeekOnlyPlanned',
-                                  'Nothing without a fixed day · {{count}} planned on a day',
-                                  { count: plannedOnDays.length }
-                              )
-                            : t('upcoming.horizonsEmpty', 'Nothing here yet.')}
-                    </p>
+                    <EmptyState
+                        className="py-6"
+                        title={t('upcoming.empty', 'Nothing planned.')}
+                        hint={
+                            plannedOnDays.length > 0
+                                ? t(
+                                      'upcoming.plannedOnDayHint',
+                                      '{{count}} planned on a day',
+                                      { count: plannedOnDays.length }
+                                  )
+                                : undefined
+                        }
+                    />
                 )}
                 {plannedOnDays.length > 0 && (
                     <div className="flex flex-col gap-2 pt-1">

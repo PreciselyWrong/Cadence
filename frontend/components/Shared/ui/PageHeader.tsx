@@ -1,4 +1,5 @@
 import React from 'react';
+import { PAGE_GUTTER } from './PageShell';
 
 export interface PageHeaderProps {
     title: React.ReactNode;
@@ -15,6 +16,10 @@ export interface PageHeaderProps {
     className?: string;
 }
 
+/** The type of every page title, also for titles edited in place. */
+export const PAGE_TITLE_CLASS =
+    'text-headline font-extrabold tracking-tight text-surface-on';
+
 /**
  * The page header of every desktop page, as on Today: an 800-weight title,
  * one action row on the right, an optional summary line. Nothing overlaps:
@@ -29,13 +34,13 @@ const PageHeader: React.FC<PageHeaderProps> = ({
     children,
     className = '',
 }) => (
-    <header className={`px-6 pb-3 pt-6 max-sm:px-4 ${className}`}>
+    <header className={`${PAGE_GUTTER} pb-3 pt-6 ${className}`}>
         <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-2">
             {leading && (
                 <span className="flex shrink-0 items-center">{leading}</span>
             )}
             <h1 className="mr-1 flex min-w-0 max-w-full items-baseline gap-2">
-                <span className="min-w-0 truncate text-headline font-extrabold tracking-tight text-surface-on">
+                <span className={`min-w-0 truncate ${PAGE_TITLE_CLASS}`}>
                     {title}
                 </span>
                 {subtitle && (

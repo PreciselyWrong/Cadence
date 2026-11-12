@@ -1,7 +1,9 @@
 import {
     bucketHorizons,
+    horizonColumns,
     horizonOf,
     horizonPatch,
+    horizonRowsFill,
     monthStartOf,
     plannedThisWeek,
     weekDates,
@@ -326,5 +328,20 @@ describe('plannedThisWeek', () => {
     it('lists the seven days of the week from the first day', () => {
         expect(weekDates(TODAY, 1)[0]).toBe('2026-11-09');
         expect(weekDates(TODAY, 0)[6]).toBe('2026-11-14');
+    });
+});
+
+describe('horizon grid', () => {
+    it('puts the four horizons side by side when they get 200 px each', () => {
+        expect(horizonColumns(0)).toBe(4);
+        expect(horizonColumns(836)).toBe(4);
+        expect(horizonColumns(700)).toBe(2);
+        expect(horizonColumns(300)).toBe(1);
+    });
+
+    it('fills the page height only on one row; wrapped rows follow their cards', () => {
+        expect(horizonRowsFill(4)).toBe(true);
+        expect(horizonRowsFill(2)).toBe(false);
+        expect(horizonRowsFill(1)).toBe(false);
     });
 });

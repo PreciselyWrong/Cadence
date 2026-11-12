@@ -69,7 +69,6 @@ const Layout: React.FC<LayoutProps> = ({
     // task sheet floats over every page, so no page keeps a side column.
     const ownScroll =
         location.pathname === '/today' || location.pathname === '/upcoming';
-    const isUpcomingView = location.pathname === '/upcoming';
     // Notes fill the content area edge to edge.
     const isNotesView = /^\/notes?(\/|$)/.test(location.pathname);
     const [isSidebarOpen, setIsSidebarOpen] = useState(
@@ -510,11 +509,9 @@ const Layout: React.FC<LayoutProps> = ({
                             className={`relative flex-1 flex flex-col py-0 px-0 transition-all duration-300 ${
                                 isNotesView ? 'pt-0' : 'pt-4'
                             } ${
-                                isUpcomingView
-                                    ? 'md:px-6 lg:px-8'
-                                    : isNotesView
-                                      ? ''
-                                      : 'md:px-4'
+                                // Every page, Plan included, gets the same
+                                // gutter (PageShell's PAGE_GUTTER adds the rest).
+                                isNotesView ? '' : 'md:px-4'
                             } overflow-hidden`}
                         >
                             <div

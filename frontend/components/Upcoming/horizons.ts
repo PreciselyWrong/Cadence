@@ -194,3 +194,16 @@ interface PlannedItem {
     position: number;
     occurrence_done?: boolean;
 }
+
+// Horizons side by side when they get 200 px each, else two by two, one
+// under the other on a phone.
+export const horizonColumns = (width: number): number => {
+    if (width === 0 || width >= 4 * 200 + 3 * 12) return 4;
+    return width >= 2 * 200 + 12 ? 2 : 1;
+};
+
+// Side by side, each horizon fills the page height and scrolls its own
+// cards. Once they wrap, a fixed share of the height cut "This week" to one
+// card while room was left below: each row then takes its cards' height and
+// the page scrolls instead.
+export const horizonRowsFill = (columns: number): boolean => columns >= 4;

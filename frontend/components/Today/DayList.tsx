@@ -14,6 +14,9 @@ import {
 } from '@heroicons/react/24/outline';
 import Button, { IconButton } from '../Shared/ui/Button';
 import Menu, { MenuEntry } from '../Shared/ui/Menu';
+import EmptyState from '../Shared/ui/EmptyState';
+import { PAGE_TITLE_CLASS } from '../Shared/ui/PageHeader';
+import { PAGE_GUTTER } from '../Shared/ui/PageShell';
 import TaskLine from './TaskLine';
 import { DayLine, DayLines, visibleLines } from './dayModel';
 
@@ -218,10 +221,12 @@ const DayList: React.FC<DayListProps> = ({
             aria-label={title}
             className="flex h-full min-h-0 flex-col overflow-y-auto bg-surface"
         >
-            <header className="sticky top-0 z-10 bg-surface px-6 pb-3 pt-6 max-sm:px-4">
+            <header
+                className={`sticky top-0 z-10 bg-surface ${PAGE_GUTTER} pb-3 pt-6`}
+            >
                 <div className="flex min-w-0 flex-wrap items-center gap-x-1 gap-y-2">
                     <h1 className="mr-1 flex min-w-0 max-w-full items-baseline gap-2">
-                        <span className="shrink-0 text-headline font-extrabold tracking-tight text-surface-on">
+                        <span className={`shrink-0 ${PAGE_TITLE_CLASS}`}>
                             {title}
                         </span>
                         <span className="min-w-0 truncate text-title font-medium text-surface-on-variant">
@@ -359,11 +364,7 @@ const DayList: React.FC<DayListProps> = ({
                     </SortableContext>
                 </div>
 
-                {!hasOpen && (
-                    <p className="px-6 py-6 text-body-m text-surface-on-variant">
-                        {emptyText}
-                    </p>
-                )}
+                {!hasOpen && <EmptyState title={emptyText} />}
 
                 {suggestions && (
                     <div className="py-1">

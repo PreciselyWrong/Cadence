@@ -1,7 +1,8 @@
 import React from 'react';
+import { CONTROL_HEIGHT, ControlSize } from './controlSizes';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
-export type ButtonSize = 'sm' | 'md';
+export type ButtonSize = ControlSize;
 
 const VARIANTS: Record<ButtonVariant, string> = {
     primary:
@@ -14,8 +15,9 @@ const VARIANTS: Record<ButtonVariant, string> = {
 
 // Touch screens get 44 px targets; pointer screens keep the compact size.
 const SIZES: Record<ButtonSize, string> = {
-    sm: 'h-7 px-2.5 text-body-m max-sm:min-h-[44px]',
-    md: 'h-9 px-3.5 text-body-m max-sm:min-h-[44px]',
+    sm: `${CONTROL_HEIGHT.sm} px-2.5 text-body-m max-sm:min-h-[44px]`,
+    md: `${CONTROL_HEIGHT.md} px-3.5 text-body-m max-sm:min-h-[44px]`,
+    lg: `${CONTROL_HEIGHT.lg} px-4 text-body max-sm:min-h-[44px]`,
 };
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -75,7 +77,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
             type={type}
             aria-label={label}
             title={label}
-            className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-colors duration-150 max-sm:h-11 max-sm:w-11 disabled:pointer-events-none disabled:opacity-40 [&>svg]:h-4 [&>svg]:w-4 ${
+            className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors duration-150 max-sm:h-11 max-sm:w-11 disabled:pointer-events-none disabled:opacity-40 [&>svg]:h-4 [&>svg]:w-4 ${
                 active
                     ? 'bg-primary-container text-primary-on-container'
                     : 'text-surface-on-variant hover:bg-surface-high hover:text-surface-on'
