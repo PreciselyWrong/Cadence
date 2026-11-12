@@ -6159,6 +6159,20 @@
     "addToInboxFailed": "Không thể thêm. Hãy thử lại.",
     "addEmptyName": "Đặt tên cho công việc",
     "addTaskIn": "Thêm công việc vào {{name}}",
-    "thisWeekOnlyPlanned": "Không có việc nào không có ngày cố định · {{count}} việc đã lên lịch trong một ngày"
+    "thisWeekOnlyPlanned": "Không có việc nào không có ngày cố định · {{count}} việc đã lên lịch trong một ngày",
+    "previous": "Ngày trước",
+    "next": "Ngày sau"
+  },
+  "offline": {
+    "offline": "Ngoại tuyến",
+    "offlinePending": "Ngoại tuyến · {{count}} đang chờ",
+    "sending": "Đang gửi thay đổi ({{count}})",
+    "rejected": "Chưa lưu: {{count}}",
+    "conflicts": "Xung đột: {{count}}",
+    "seeConflicts": "Xem xung đột",
+    "explain": "Thay đổi của bạn được giữ trên thiết bị này và sẽ được gửi khi máy chủ hoạt động lại.",
+    "rejectedTitle": "Máy chủ đã từ chối các thay đổi này:",
+    "retry": "Thử lại",
+    "dismiss": "OK"
   }
 }

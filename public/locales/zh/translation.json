@@ -6159,6 +6159,20 @@
     "addToInboxFailed": "添加失败，请重试。",
     "addEmptyName": "请为任务命名",
     "addTaskIn": "为“{{name}}”添加任务",
-    "thisWeekOnlyPlanned": "没有无固定日的任务 · {{count}} 项已安排在某天"
+    "thisWeekOnlyPlanned": "没有无固定日的任务 · {{count}} 项已安排在某天",
+    "previous": "前一天",
+    "next": "后一天"
+  },
+  "offline": {
+    "offline": "离线",
+    "offlinePending": "离线 · {{count}} 项待发送",
+    "sending": "正在发送更改（{{count}}）",
+    "rejected": "未保存：{{count}} 项",
+    "conflicts": "冲突：{{count}} 项",
+    "seeConflicts": "查看冲突",
+    "explain": "你的更改保存在此设备上，服务器恢复后会自动发送。",
+    "rejectedTitle": "服务器拒绝了以下更改：",
+    "retry": "重试",
+    "dismiss": "好"
   }
 }

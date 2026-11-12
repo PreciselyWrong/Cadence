@@ -6159,6 +6159,20 @@
     "addToInboxFailed": "Eklenemedi. Yeniden deneyin.",
     "addEmptyName": "Göreve bir ad verin",
     "addTaskIn": "{{name}} için bir görev ekle",
-    "thisWeekOnlyPlanned": "Sabit günü olmayan yok · Bir günde {{count}} planlanmış"
+    "thisWeekOnlyPlanned": "Sabit günü olmayan yok · Bir günde {{count}} planlanmış",
+    "previous": "Önceki gün",
+    "next": "Sonraki gün"
+  },
+  "offline": {
+    "offline": "Çevrimdışı",
+    "offlinePending": "Çevrimdışı · {{count}} bekliyor",
+    "sending": "Değişiklikler gönderiliyor ({{count}})",
+    "rejected": "Kaydedilmedi: {{count}}",
+    "conflicts": "Çakışmalar: {{count}}",
+    "seeConflicts": "Çakışmaları gör",
+    "explain": "Değişiklikleriniz bu cihazda tutulur ve sunucu geri geldiğinde gönderilir.",
+    "rejectedTitle": "Sunucu bu değişiklikleri reddetti:",
+    "retry": "Tekrar dene",
+    "dismiss": "Tamam"
   }
 }

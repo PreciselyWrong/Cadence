@@ -12,7 +12,9 @@ const KEY_PATTERN = /^[\x21-\x7e]{1,255}$/;
 // another body or path gets 422. Mount after requireAuth.
 function idempotency(req, res, next) {
     const key = req.get(HEADER);
-    if (key === undefined) return next();
+    // Mounted for every write and again on some routes: claimed once.
+    if (key === undefined || req.idempotencyClaimed) return next();
+    req.idempotencyClaimed = true;
 
     if (!KEY_PATTERN.test(key)) {
         return res.status(400).json({
@@ -64,5 +66,12 @@ function idempotency(req, res, next) {
         })
         .catch(next);
 }
+
+const READS = new Set(['GET', 'HEAD', 'OPTIONS']);
+
+// For every write behind requireAuth: the web UI's offline replays
+// (public/sw.js) send a key with each create.
+idempotency.forWrites = (req, res, next) =>
+    READS.has(req.method) ? next() : idempotency(req, res, next);
 
 module.exports = idempotency;

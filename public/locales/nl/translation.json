@@ -6161,6 +6161,20 @@
     "addToInboxFailed": "Toevoegen mislukt. Probeer het opnieuw.",
     "addEmptyName": "Geef de taak een naam",
     "addTaskIn": "Een taak toevoegen aan {{name}}",
-    "thisWeekOnlyPlanned": "Niets zonder vaste dag · {{count}} gepland op een dag"
+    "thisWeekOnlyPlanned": "Niets zonder vaste dag · {{count}} gepland op een dag",
+    "previous": "Vorige dag",
+    "next": "Volgende dag"
+  },
+  "offline": {
+    "offline": "Offline",
+    "offlinePending": "Offline · {{count}} in wachtrij",
+    "sending": "Wijzigingen verzenden ({{count}})",
+    "rejected": "Niet opgeslagen: {{count}}",
+    "conflicts": "Conflicten: {{count}}",
+    "seeConflicts": "Conflicten bekijken",
+    "explain": "Je wijzigingen blijven op dit apparaat en worden verzonden zodra de server terug is.",
+    "rejectedTitle": "De server heeft deze wijzigingen geweigerd:",
+    "retry": "Opnieuw proberen",
+    "dismiss": "OK"
   }
 }

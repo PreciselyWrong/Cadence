@@ -6177,6 +6177,20 @@
     "addToInboxFailed": "Ajout impossible. Réessayer.",
     "addEmptyName": "Donner un nom à la tâche",
     "addTaskIn": "Ajouter une tâche à {{name}}",
-    "thisWeekOnlyPlanned": "Rien sans jour fixe · {{count}} planifiées sur un jour"
+    "thisWeekOnlyPlanned": "Rien sans jour fixe · {{count}} planifiées sur un jour",
+    "previous": "Jour précédent",
+    "next": "Jour suivant"
+  },
+  "offline": {
+    "offline": "Hors ligne",
+    "offlinePending": "Hors ligne · {{count}} en attente",
+    "sending": "Envoi des modifications ({{count}})",
+    "rejected": "Non enregistrées : {{count}}",
+    "conflicts": "Conflits : {{count}}",
+    "seeConflicts": "Voir les conflits",
+    "explain": "Vos modifications restent sur cet appareil et partent dès que le serveur revient.",
+    "rejectedTitle": "Le serveur a refusé ces modifications :",
+    "retry": "Réessayer",
+    "dismiss": "OK"
   }
 }

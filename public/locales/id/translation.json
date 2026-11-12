@@ -6159,6 +6159,20 @@
     "addToInboxFailed": "Gagal menambahkan. Coba lagi.",
     "addEmptyName": "Beri nama tugasnya",
     "addTaskIn": "Tambahkan tugas ke {{name}}",
-    "thisWeekOnlyPlanned": "Tidak ada tanpa hari tetap · {{count}} direncanakan pada suatu hari"
+    "thisWeekOnlyPlanned": "Tidak ada tanpa hari tetap · {{count}} direncanakan pada suatu hari",
+    "previous": "Hari sebelumnya",
+    "next": "Hari berikutnya"
+  },
+  "offline": {
+    "offline": "Offline",
+    "offlinePending": "Offline · {{count}} menunggu",
+    "sending": "Mengirim perubahan ({{count}})",
+    "rejected": "Tidak tersimpan: {{count}}",
+    "conflicts": "Konflik: {{count}}",
+    "seeConflicts": "Lihat konflik",
+    "explain": "Perubahan Anda disimpan di perangkat ini dan dikirim saat server kembali.",
+    "rejectedTitle": "Server menolak perubahan berikut:",
+    "retry": "Coba lagi",
+    "dismiss": "OK"
   }
 }

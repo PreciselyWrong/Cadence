@@ -6221,6 +6221,20 @@
     "addToInboxFailed": "Dodajanje ni uspelo. Poskusi znova.",
     "addEmptyName": "Vnesi ime opravila",
     "addTaskIn": "Dodaj opravilo v {{name}}",
-    "thisWeekOnlyPlanned": "Nič brez fiksnega dneva · {{count}} načrtovanih na dan"
+    "thisWeekOnlyPlanned": "Nič brez fiksnega dneva · {{count}} načrtovanih na dan",
+    "previous": "Prejšnji dan",
+    "next": "Naslednji dan"
+  },
+  "offline": {
+    "offline": "Brez povezave",
+    "offlinePending": "Brez povezave · čaka: {{count}}",
+    "sending": "Pošiljanje sprememb ({{count}})",
+    "rejected": "Ni shranjeno: {{count}}",
+    "conflicts": "Spori: {{count}}",
+    "seeConflicts": "Prikaži spore",
+    "explain": "Spremembe ostanejo v tej napravi in se pošljejo, ko bo strežnik spet dosegljiv.",
+    "rejectedTitle": "Strežnik je zavrnil te spremembe:",
+    "retry": "Poskusi znova",
+    "dismiss": "V redu"
   }
 }

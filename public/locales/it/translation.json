@@ -6176,6 +6176,20 @@
     "addToInboxFailed": "Impossibile aggiungere. Riprova.",
     "addEmptyName": "Dai un nome all'attività",
     "addTaskIn": "Aggiungi un'attività a {{name}}",
-    "thisWeekOnlyPlanned": "Nessuna senza giorno fisso · {{count}} pianificate in un giorno"
+    "thisWeekOnlyPlanned": "Nessuna senza giorno fisso · {{count}} pianificate in un giorno",
+    "previous": "Giorno precedente",
+    "next": "Giorno successivo"
+  },
+  "offline": {
+    "offline": "Offline",
+    "offlinePending": "Offline · {{count}} in attesa",
+    "sending": "Invio delle modifiche ({{count}})",
+    "rejected": "Non salvate: {{count}}",
+    "conflicts": "Conflitti: {{count}}",
+    "seeConflicts": "Vedi i conflitti",
+    "explain": "Le modifiche restano su questo dispositivo e vengono inviate quando il server torna disponibile.",
+    "rejectedTitle": "Il server ha rifiutato queste modifiche:",
+    "retry": "Riprova",
+    "dismiss": "OK"
   }
 }

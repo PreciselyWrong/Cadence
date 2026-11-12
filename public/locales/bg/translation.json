@@ -6161,6 +6161,20 @@
     "addToInboxFailed": "Не може да се добави. Опитай отново.",
     "addEmptyName": "Въведи име за задачата",
     "addTaskIn": "Добави задача в {{name}}",
-    "thisWeekOnlyPlanned": "Нищо без фиксиран ден · {{count}} планирани за ден"
+    "thisWeekOnlyPlanned": "Нищо без фиксиран ден · {{count}} планирани за ден",
+    "previous": "Предишен ден",
+    "next": "Следващ ден"
+  },
+  "offline": {
+    "offline": "Офлайн",
+    "offlinePending": "Офлайн · чакащи: {{count}}",
+    "sending": "Изпращане на промените ({{count}})",
+    "rejected": "Незапазени: {{count}}",
+    "conflicts": "Конфликти: {{count}}",
+    "seeConflicts": "Виж конфликтите",
+    "explain": "Промените остават на това устройство и се изпращат, когато сървърът се върне.",
+    "rejectedTitle": "Сървърът отхвърли тези промени:",
+    "retry": "Опитай отново",
+    "dismiss": "OK"
   }
 }

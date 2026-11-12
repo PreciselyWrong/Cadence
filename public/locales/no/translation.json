@@ -6166,6 +6166,20 @@
     "addToInboxFailed": "Kunne ikke legge til. Prøv igjen.",
     "addEmptyName": "Gi oppgaven et navn",
     "addTaskIn": "Legg til en oppgave i {{name}}",
-    "thisWeekOnlyPlanned": "Ingenting uten fast dag · {{count}} planlagt på en dag"
+    "thisWeekOnlyPlanned": "Ingenting uten fast dag · {{count}} planlagt på en dag",
+    "previous": "Forrige dag",
+    "next": "Neste dag"
+  },
+  "offline": {
+    "offline": "Frakoblet",
+    "offlinePending": "Frakoblet · {{count}} venter",
+    "sending": "Sender endringer ({{count}})",
+    "rejected": "Ikke lagret: {{count}}",
+    "conflicts": "Konflikter: {{count}}",
+    "seeConflicts": "Se konflikter",
+    "explain": "Endringene dine lagres på denne enheten og sendes når serveren er tilbake.",
+    "rejectedTitle": "Serveren avviste disse endringene:",
+    "retry": "Prøv igjen",
+    "dismiss": "OK"
   }
 }

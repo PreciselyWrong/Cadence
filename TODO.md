@@ -20,6 +20,8 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
   - PR à l'amont : ouvrir d'abord les issues de discussion (`docs/fork/upstream-prs/task-ics-feed.md`, `calendar-views.md`), puis envoyer les PR préparées dans `../cadence-upstream-*`.
   - Refonte TickTick, étape 4 (faite le 2026-11-01 sans voir TickTick, accès refusé) : comparer à l'écran avec TickTick 8.0.20 le calendrier de Cadence (ordre des tâches sans heure, Demain / Semaine prochaine dans l'agenda d'Aujourd'hui, dépôt au quart d'heure) et signaler les écarts.
   - Traductions : relecture par des locuteurs natifs des 22 langues hors fr/en/ja/ko (traduites automatiquement le 2026-11-01, pluriels slaves ajoutés).
+- Web et client Linux hors ligne (2026-11-12, branche `claude/web-offline-9292b2`)
+  Parité : Android est déjà hors ligne (Room + `/api/v1/sync`) ; le web le devient par son service worker (`docs/fork/WEB-OFFLINE.md`). Vérifié sous Chromium et WebKitGTK contre un serveur de test. Vérif à faire par toi après fusion et déploiement : dans le client Linux, ouvrir Aujourd'hui et un projet, couper le serveur (ou Tailscale), relancer la fenêtre, créer et renommer une tâche (pastille « Hors ligne · 2 en attente »), rallumer : les deux arrivent sur le serveur et le téléphone, sans doublon.
 - Remise de tâche depuis Proches (Android seul, 2026-11-09)
   Pas de parité web : entrée inter-applications Android (`docs/42-proches-handoff.md`). Vérif : avec Proches signé sur l'émulateur ou le téléphone, accepter une proposition avec échéance ; la tâche apparaît dans Tâches avec son échéance et part à la synchro ; une seconde remise de la même proposition ne crée pas de doublon ; une autre app appelante est refusée.
 - Bilan du soir sur Android (parité du web, 2026-11-04)

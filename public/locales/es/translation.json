@@ -6163,6 +6163,20 @@
     "addToInboxFailed": "No se pudo añadir. Inténtalo de nuevo.",
     "addEmptyName": "Pon un nombre a la tarea",
     "addTaskIn": "Añadir una tarea a {{name}}",
-    "thisWeekOnlyPlanned": "Nada sin día fijo · {{count}} planificadas en un día"
+    "thisWeekOnlyPlanned": "Nada sin día fijo · {{count}} planificadas en un día",
+    "previous": "Día anterior",
+    "next": "Día siguiente"
+  },
+  "offline": {
+    "offline": "Sin conexión",
+    "offlinePending": "Sin conexión · {{count}} pendientes",
+    "sending": "Enviando cambios ({{count}})",
+    "rejected": "No guardados: {{count}}",
+    "conflicts": "Conflictos: {{count}}",
+    "seeConflicts": "Ver conflictos",
+    "explain": "Tus cambios se guardan en este dispositivo y se envían cuando vuelva el servidor.",
+    "rejectedTitle": "El servidor rechazó estos cambios:",
+    "retry": "Reintentar",
+    "dismiss": "OK"
   }
 }

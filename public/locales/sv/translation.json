@@ -6161,6 +6161,20 @@
     "addToInboxFailed": "Det gick inte att lägga till. Försök igen.",
     "addEmptyName": "Ge uppgiften ett namn",
     "addTaskIn": "Lägg till en uppgift i {{name}}",
-    "thisWeekOnlyPlanned": "Inget utan fast dag · {{count}} planerade på en dag"
+    "thisWeekOnlyPlanned": "Inget utan fast dag · {{count}} planerade på en dag",
+    "previous": "Föregående dag",
+    "next": "Nästa dag"
+  },
+  "offline": {
+    "offline": "Offline",
+    "offlinePending": "Offline · {{count}} väntar",
+    "sending": "Skickar ändringar ({{count}})",
+    "rejected": "Inte sparade: {{count}}",
+    "conflicts": "Konflikter: {{count}}",
+    "seeConflicts": "Visa konflikter",
+    "explain": "Dina ändringar sparas på den här enheten och skickas när servern är tillbaka.",
+    "rejectedTitle": "Servern avvisade de här ändringarna:",
+    "retry": "Försök igen",
+    "dismiss": "OK"
   }
 }

@@ -21,6 +21,79 @@ const buildId = (() => {
         return Date.now().toString(36);
     }
 })();
+// The service worker's static cache name must change per build, or returning
+// visitors keep the old shell after a deploy (the API cache name stays stable
+// on purpose). It also precaches this build's shell, so the app opens offline
+// on routes never visited: index.html and the app's own chunks. Vendor chunks
+// (diagrams, maths) are cached the first time they load.
+class ServiceWorkerBuildPlugin {
+    apply(compiler) {
+        compiler.hooks.thisCompilation.tap(
+            'ServiceWorkerBuild',
+            (compilation) => {
+                compilation.hooks.processAssets.tap(
+                    {
+                        name: 'ServiceWorkerBuild',
+                        // Before minification, which would rewrite the lines replaced here.
+                        stage: webpack.Compilation
+                            .PROCESS_ASSETS_STAGE_OPTIMIZE,
+                    },
+                    (assets) => {
+                        const sw = compilation.getAsset('sw.js');
+                        if (!sw) return;
+                        // A chunk holding any module of frontend/ is the
+                        // app's; the others only hold libraries (mermaid,
+                        // katex, …). Chunk names are numbers in production.
+                        const isAppModule = (module) => {
+                            const resource =
+                                module.resource || module.rootModule?.resource;
+                            return (
+                                !!resource &&
+                                resource.includes(
+                                    `${path.sep}frontend${path.sep}`
+                                )
+                            );
+                        };
+                        const files = new Set();
+                        for (const chunk of compilation.chunks) {
+                            const modules = [
+                                ...compilation.chunkGraph.getChunkModulesIterable(
+                                    chunk
+                                ),
+                            ];
+                            if (!modules.some(isAppModule)) continue;
+                            for (const file of chunk.files) {
+                                if (
+                                    /\.(js|css)$/.test(file) &&
+                                    file in assets
+                                ) {
+                                    files.add(file);
+                                }
+                            }
+                        }
+                        const shell = [...files].sort();
+                        const source = sw.source
+                            .source()
+                            .toString()
+                            .replace(
+                                /const CACHE_VERSION = '[^']*';/,
+                                `const CACHE_VERSION = 'tududi-${buildId}';`
+                            )
+                            .replace(
+                                'const BUILD_ASSETS = [];',
+                                `const BUILD_ASSETS = ${JSON.stringify(shell)};`
+                            );
+                        compilation.updateAsset(
+                            'sw.js',
+                            new webpack.sources.RawSource(source)
+                        );
+                    }
+                );
+            }
+        );
+    }
+}
+
 const frontendPort = parseInt(process.env.FRONTEND_PORT || '8080', 10);
 const frontendHost = process.env.FRONTEND_HOST || '0.0.0.0';
 const backendUrl = process.env.BACKEND_URL || 'http://localhost:3002';
@@ -119,21 +192,10 @@ module.exports = {
                     globOptions: {
                         ignore: ['**/index.html'],
                     },
-                    // The service worker's static cache name must change per
-                    // build, or returning visitors keep the old shell after
-                    // a deploy. The API cache name stays stable on purpose.
-                    transform(content, absoluteFrom) {
-                        if (!absoluteFrom.endsWith('sw.js')) return content;
-                        return content
-                            .toString()
-                            .replace(
-                                "const CACHE_VERSION = 'tududi-v1';",
-                                `const CACHE_VERSION = 'tududi-${buildId}';`
-                            );
-                    },
                 },
             ],
         }),
+        new ServiceWorkerBuildPlugin(),
     ].filter(Boolean),
     module: {
         rules: [

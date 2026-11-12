@@ -6131,6 +6131,20 @@
     "addToInboxFailed": "Could not add it. Try again.",
     "addEmptyName": "Add a name for the task",
     "addTaskIn": "Add a task to {{name}}",
-    "thisWeekOnlyPlanned": "Nothing without a fixed day · {{count}} planned on a day"
+    "thisWeekOnlyPlanned": "Nothing without a fixed day · {{count}} planned on a day",
+    "previous": "Previous day",
+    "next": "Next day"
+  },
+  "offline": {
+    "offline": "Offline",
+    "offlinePending": "Offline · {{count}} waiting",
+    "sending": "Sending changes ({{count}})",
+    "rejected": "Not saved: {{count}}",
+    "conflicts": "Conflicts: {{count}}",
+    "seeConflicts": "See conflicts",
+    "explain": "Your changes are kept on this device and sent when the server is back.",
+    "rejectedTitle": "The server refused these changes:",
+    "retry": "Retry",
+    "dismiss": "OK"
   }
 }

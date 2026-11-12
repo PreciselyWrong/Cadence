@@ -6161,6 +6161,20 @@
     "addToInboxFailed": "Lisääminen epäonnistui. Yritä uudelleen.",
     "addEmptyName": "Anna tehtävälle nimi",
     "addTaskIn": "Lisää tehtävä kohteeseen {{name}}",
-    "thisWeekOnlyPlanned": "Ei kiinteää päivää · {{count}} suunniteltu päivälle"
+    "thisWeekOnlyPlanned": "Ei kiinteää päivää · {{count}} suunniteltu päivälle",
+    "previous": "Edellinen päivä",
+    "next": "Seuraava päivä"
+  },
+  "offline": {
+    "offline": "Offline-tilassa",
+    "offlinePending": "Offline-tilassa · {{count}} odottaa",
+    "sending": "Lähetetään muutoksia ({{count}})",
+    "rejected": "Ei tallennettu: {{count}}",
+    "conflicts": "Ristiriidat: {{count}}",
+    "seeConflicts": "Näytä ristiriidat",
+    "explain": "Muutoksesi säilyvät tällä laitteella ja lähetetään, kun palvelin on taas käytettävissä.",
+    "rejectedTitle": "Palvelin hylkäsi nämä muutokset:",
+    "retry": "Yritä uudelleen",
+    "dismiss": "OK"
   }
 }

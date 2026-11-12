@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-12 — Web hors ligne : pastille d'état (web, client Linux)
+
+- **Problème** : sans serveur, le web montrait des pages vides ou des erreurs, et une modification faite hors ligne ne s'affichait pas ; dans le client Linux, rien ne disait que le serveur était injoignable.
+- **Décision** : le web marche hors ligne (`docs/fork/WEB-OFFLINE.md`) ; une modification s'affiche tout de suite ; une petite pastille en bas à droite n'apparaît que s'il y a quelque chose à savoir : « Hors ligne », « Hors ligne · N en attente », « Envoi des modifications (N) », « Non enregistrées : N » (liste et raison, « OK »), « Conflits : N » (ouvre Profil › Synchronisation). Rien quand tout est envoyé.
+- **À reprendre sur Android** : l'app est déjà hors ligne ; vérifier qu'elle dit aussi, sans bandeau permanent, quand des modifications attendent ou ont été refusées.
+
 ### 2026-11-12 — Aujourd'hui refait, barre latérale bleu nuit (web)
 
 - **Problème** : la colonne de gauche ne montrait que les candidates (« Nothing here » avec 8 tâches prévues), cinq représentations du plan, deux navigations de date, un glisser dans le calendrier qui réécrivait l'échéance, des actions qui surgissaient au survol.

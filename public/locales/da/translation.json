@@ -6161,6 +6161,20 @@
     "addToInboxFailed": "Kunne ikke tilføje. Prøv igen.",
     "addEmptyName": "Giv opgaven et navn",
     "addTaskIn": "Tilføj en opgave til {{name}}",
-    "thisWeekOnlyPlanned": "Intet uden fast dag · {{count}} planlagt på en dag"
+    "thisWeekOnlyPlanned": "Intet uden fast dag · {{count}} planlagt på en dag",
+    "previous": "Forrige dag",
+    "next": "Næste dag"
+  },
+  "offline": {
+    "offline": "Offline",
+    "offlinePending": "Offline · {{count}} venter",
+    "sending": "Sender ændringer ({{count}})",
+    "rejected": "Ikke gemt: {{count}}",
+    "conflicts": "Konflikter: {{count}}",
+    "seeConflicts": "Se konflikter",
+    "explain": "Dine ændringer gemmes på denne enhed og sendes, når serveren er tilbage.",
+    "rejectedTitle": "Serveren afviste disse ændringer:",
+    "retry": "Prøv igen",
+    "dismiss": "OK"
   }
 }

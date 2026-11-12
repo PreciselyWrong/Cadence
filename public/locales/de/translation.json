@@ -6170,6 +6170,20 @@
     "addToInboxFailed": "Hinzufügen fehlgeschlagen. Bitte erneut versuchen.",
     "addEmptyName": "Gib der Aufgabe einen Namen",
     "addTaskIn": "Aufgabe zu {{name}} hinzufügen",
-    "thisWeekOnlyPlanned": "Nichts ohne festen Tag · {{count}} an einem Tag geplant"
+    "thisWeekOnlyPlanned": "Nichts ohne festen Tag · {{count}} an einem Tag geplant",
+    "previous": "Vorheriger Tag",
+    "next": "Nächster Tag"
+  },
+  "offline": {
+    "offline": "Offline",
+    "offlinePending": "Offline · {{count}} ausstehend",
+    "sending": "Änderungen werden gesendet ({{count}})",
+    "rejected": "Nicht gespeichert: {{count}}",
+    "conflicts": "Konflikte: {{count}}",
+    "seeConflicts": "Konflikte ansehen",
+    "explain": "Deine Änderungen bleiben auf diesem Gerät und werden gesendet, sobald der Server wieder erreichbar ist.",
+    "rejectedTitle": "Der Server hat diese Änderungen abgelehnt:",
+    "retry": "Erneut versuchen",
+    "dismiss": "OK"
   }
 }

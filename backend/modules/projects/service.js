@@ -29,6 +29,7 @@ const {
     utcToUserTimeString,
 } = require('../../utils/timezone-utils');
 const { uid: generateUid } = require('../../utils/uid');
+const { takeCreateUid } = require('../sync/context');
 const { extractUidFromSlug } = require('../../utils/slug-utils');
 const { logError } = require('../../services/logService');
 const {
@@ -668,7 +669,8 @@ class ProjectsService {
 
         const validatedName = validateName(name);
         const tagsData = tags || Tags;
-        const projectUid = generateUid();
+        // An offline create replayed by the web UI keeps the browser's uid.
+        const projectUid = takeCreateUid('project') || generateUid();
         const parent = data.parent_project_uid
             ? await resolveParent(userId, data.parent_project_uid)
             : null;
