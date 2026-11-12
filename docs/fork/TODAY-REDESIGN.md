@@ -163,3 +163,15 @@ Relecture adversariale (sous-agent Opus) des règles du premier jet. Retenu :
 1. Membre du jour : prévues ce jour + dues ce jour non prévues à un autre jour à partir d'aujourd'hui (règle 2 proposée).
 2. Hook `leaveOnMove` supprimé ; Android « Reporter », « Plus tard » et « Placer » écrivent le plan, dans la même étape, construit et installé sur le téléphone.
 3. Page Calendrier alignée : glisser dans une grille horaire réserve un créneau, l'échéance ne change que par son éditeur (après la page Aujourd'hui).
+
+## État au 2026-11-12 (reprise)
+
+Commits de la refonte : 27638719 (ops du plan + ETag), e770205d (`GET /daily-plan/day`, chevauchements), aac1dd34 (page Aujourd'hui, coque), f970d8c8, 494aa660 (Détails, sous-tâches), aa0809e7 (sous-tâches datées), e33c5f65 (feuille de détail, Demain = Aujourd'hui+1, Inbox en tête), bbcdba68 (tâches TODO.md modifiables, serveur + web), e0d55b8c (feuille : liens projet/étiquettes, clic dehors ; bloc ouvert surligné).
+
+En cours / à faire (liste vivante : `TODO.md` › « Retours en direct ») :
+- Page « Planifier » (`/upcoming`, ex-« 7 prochains jours ») : colonne Inbox à gauche, une colonne par jour en cartes (Sunsama), calendrier à droite, bascule Jours | Horizons ; code dans `frontend/components/Upcoming/` (sous-agent, pas commité au moment d'écrire).
+- Horizons : Cette semaine / Ce mois-ci / Mois prochain / Un jour ; nouvelle colonne « mois visé » sur la tâche (validé), synchronisée, indexée ; Android aussi.
+- Icône de la source (Gmail…) sur les tâches ; cases `- [ ]` d'une note → tâches liées.
+- Android pas commité : `planning/PlanEdits.kt` (plan au lieu de l'échéance), suppression serveur de `leaveOnMove.js`, tâches TODO.md modifiables (`swipe/FileBackedActions.kt`…). Les fichiers Android et le résumé du 9 novembre (`brief/*`, `DailyBrief/*`) portent aussi des changements non commités de l'utilisateur : ne pas les mélanger.
+- `AppLauncherModal.test.tsx` échoue déjà avant la refonte (2 tests).
+- Serveur de vérif : `.claude/launch.json` › `cadence-today-verify-backend` (:3312, `db/verify-today.sqlite3`) + `cadence-mcp-verify-frontend` (:4180) ; compte test@tududi.com / password123. `backend/dist/locales` doit être recopié depuis `public/locales` après un ajout de chaîne.
