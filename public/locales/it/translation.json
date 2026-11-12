@@ -281,7 +281,8 @@
     "undo": "Annulla",
     "copyCode": "Copia codice",
     "copy": "Copia",
-    "copied": "Copiato"
+    "copied": "Copiato",
+    "previewUnavailable": "Anteprima non disponibile"
   },
   "sidebar": {
     "links": "Link",
@@ -558,7 +559,8 @@
     "dueInDays": "Scade tra {{days}} g",
     "startedSuccessfully": "Attività avviata con successo!",
     "deleteConfirmMessage": "Eliminare \"{{name}}\"? Questa azione non può essere annullata.",
-    "withLink": "Con un link"
+    "withLink": "Con un link",
+    "noTasksScheduled": "Nessuna attività pianificata"
   },
   "timeline": {
     "activityTimeline": "Timeline delle Attività",
@@ -2470,7 +2472,11 @@
     "unsaved": "Modifiche non salvate",
     "backgroundColor": "Colore di sfondo",
     "selectProject": "Seleziona progetto",
-    "noMatchingNotes": "Nessuna nota corrispondente"
+    "noMatchingNotes": "Nessuna nota corrispondente",
+    "noPreviewContent": "Nessun contenuto da visualizzare. Passa a Modifica per aggiungerlo.",
+    "mermaidError": "Impossibile visualizzare il diagramma Mermaid",
+    "mermaidRendering": "Visualizzazione del diagramma…",
+    "mermaidLabel": "Diagramma Mermaid"
   },
   "tags": {
     "loading": "Caricamento tag...",
@@ -3506,7 +3512,8 @@
     "moreFilters": "Altri filtri",
     "fewerFilters": "Meno filtri",
     "hint": "Su e Giù per spostarti, Enter per aprire, Esc per chiudere",
-    "searching": "Ricerca in corso..."
+    "searching": "Ricerca in corso...",
+    "viewNow": "Vedi ora"
   },
   "subtasks": {
     "placeholder": "Aggiungi un sottocompito...",
@@ -3960,7 +3967,9 @@
     "areaBalance30": "Equilibrio delle aree, ultimi 30 giorni",
     "completionRateLegend": "% = tasso di completamento",
     "itemsToProcess_one": "{{count}} elemento da elaborare",
-    "overview": "Panoramica"
+    "overview": "Panoramica",
+    "balance": "Equilibrio",
+    "noTaskData": "Nessun dato sulle attività"
   },
   "billing": {
     "title": "Piano e fatturazione",
@@ -4147,7 +4156,8 @@
     "clearAssignment": "Rimuovi assegnazione",
     "nameRequired": "Il nome è obbligatorio",
     "saveError": "Impossibile salvare la persona",
-    "signInLink": "Link di accesso"
+    "signInLink": "Link di accesso",
+    "unassigned": "Non assegnata"
   },
   "members": {
     "addTitle": "Aggiungi membro",

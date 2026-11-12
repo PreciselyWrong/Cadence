@@ -278,7 +278,8 @@
     "undo": "실행 취소",
     "copyCode": "코드 복사",
     "copy": "복사",
-    "copied": "복사됨"
+    "copied": "복사됨",
+    "previewUnavailable": "미리 보기를 사용할 수 없습니다"
   },
   "sidebar": {
     "links": "링크",
@@ -555,7 +556,8 @@
     "dueInDays": "{{days}}일 후 마감",
     "startedSuccessfully": "작업을 시작했습니다!",
     "deleteConfirmMessage": "\"{{name}}\"을(를) 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
-    "withLink": "링크 있음"
+    "withLink": "링크 있음",
+    "noTasksScheduled": "예정된 작업이 없습니다"
   },
   "timeline": {
     "activityTimeline": "활동 타임라인",
@@ -2459,7 +2461,11 @@
     "unsaved": "저장되지 않은 변경 사항",
     "backgroundColor": "배경색",
     "selectProject": "프로젝트 선택",
-    "noMatchingNotes": "일치하는 노트가 없습니다"
+    "noMatchingNotes": "일치하는 노트가 없습니다",
+    "noPreviewContent": "미리 볼 내용이 없습니다. 편집으로 전환해 내용을 추가하세요.",
+    "mermaidError": "Mermaid 다이어그램을 표시할 수 없습니다",
+    "mermaidRendering": "다이어그램을 표시하는 중…",
+    "mermaidLabel": "Mermaid 다이어그램"
   },
   "tags": {
     "loading": "태그 로딩 중...",
@@ -3492,7 +3498,8 @@
     "moreFilters": "필터 더 보기",
     "fewerFilters": "필터 줄이기",
     "hint": "위/아래로 이동, Enter로 열기, Esc로 닫기",
-    "searching": "검색 중..."
+    "searching": "검색 중...",
+    "viewNow": "지금 보기"
   },
   "subtasks": {
     "placeholder": "하위 작업 추가...",
@@ -3946,7 +3953,9 @@
     "areaBalance30": "영역 균형, 최근 30일",
     "completionRateLegend": "% = 완료율",
     "itemsToProcess_one": "처리할 항목 {{count}}개",
-    "overview": "개요"
+    "overview": "개요",
+    "balance": "균형",
+    "noTaskData": "작업 데이터가 없습니다"
   },
   "billing": {
     "title": "요금제 및 결제",
@@ -4133,7 +4142,8 @@
     "clearAssignment": "할당 해제",
     "nameRequired": "이름은 필수입니다",
     "saveError": "사람을 저장하지 못했습니다",
-    "signInLink": "로그인 링크"
+    "signInLink": "로그인 링크",
+    "unassigned": "할당되지 않음"
   },
   "members": {
     "addTitle": "멤버 추가",

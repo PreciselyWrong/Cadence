@@ -288,7 +288,8 @@
     "undo": "Скасувати",
     "copyCode": "Копіювати код",
     "copy": "Копіювати",
-    "copied": "Скопійовано"
+    "copied": "Скопійовано",
+    "previewUnavailable": "Попередній перегляд недоступний"
   },
   "sidebar": {
     "links": "Посилання",
@@ -565,7 +566,8 @@
     "dueInDays": "Термін через {{days}} дн.",
     "startedSuccessfully": "Завдання успішно розпочато!",
     "deleteConfirmMessage": "Ви впевнені, що хочете видалити \"{{name}}\"? Цю дію не можна скасувати.",
-    "withLink": "З посиланням"
+    "withLink": "З посиланням",
+    "noTasksScheduled": "Немає запланованих завдань"
   },
   "timeline": {
     "activityTimeline": "Хронологія Активності",
@@ -1068,7 +1070,11 @@
     "unsaved": "Незбережені зміни",
     "backgroundColor": "Колір тла",
     "selectProject": "Виберіть проєкт",
-    "noMatchingNotes": "Немає відповідних нотаток"
+    "noMatchingNotes": "Немає відповідних нотаток",
+    "noPreviewContent": "Немає що показати. Перейдіть у «Редагування», щоб додати вміст.",
+    "mermaidError": "Не вдалося показати діаграму Mermaid",
+    "mermaidRendering": "Відмальовування діаграми…",
+    "mermaidLabel": "Діаграма Mermaid"
   },
   "recurrence": {
     "none": "Немає",
@@ -3533,7 +3539,8 @@
     "moreFilters": "Більше фільтрів",
     "fewerFilters": "Менше фільтрів",
     "hint": "Стрілки вгору і вниз для переходу, Enter для відкриття, Esc для закриття",
-    "searching": "Пошук..."
+    "searching": "Пошук...",
+    "viewNow": "Відкрити"
   },
   "subtasks": {
     "placeholder": "Додати підзадачу...",
@@ -3991,7 +3998,9 @@
     "itemsToProcess_one": "Потрібно розібрати: {{count}}",
     "itemsToProcess_few": "Потрібно розібрати: {{count}}",
     "itemsToProcess_many": "Потрібно розібрати: {{count}}",
-    "overview": "Огляд"
+    "overview": "Огляд",
+    "balance": "Баланс",
+    "noTaskData": "Немає даних про завдання"
   },
   "billing": {
     "title": "Тариф і оплата",
@@ -4180,7 +4189,8 @@
     "clearAssignment": "Зняти призначення",
     "nameRequired": "Вкажіть ім'я",
     "saveError": "Не вдалося зберегти людину",
-    "signInLink": "Посилання для входу"
+    "signInLink": "Посилання для входу",
+    "unassigned": "Не призначено"
   },
   "members": {
     "addTitle": "Додати учасника",

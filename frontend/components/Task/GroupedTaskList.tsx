@@ -562,8 +562,10 @@ const GroupedTaskListBody: React.FC<GroupedTaskListProps> = ({
                                                     {dayTasks.length === 0 && (
                                                         <div className="text-center py-8 text-gray-500 dark:text-gray-600">
                                                             <p className="text-sm">
-                                                                No tasks
-                                                                scheduled
+                                                                {t(
+                                                                    'tasks.noTasksScheduled',
+                                                                    'No tasks scheduled'
+                                                                )}
                                                             </p>
                                                         </div>
                                                     )}

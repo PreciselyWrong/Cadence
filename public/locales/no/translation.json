@@ -280,7 +280,8 @@
     "undo": "Angre",
     "copyCode": "Kopier kode",
     "copy": "Kopier",
-    "copied": "Kopiert"
+    "copied": "Kopiert",
+    "previewUnavailable": "Forhåndsvisning er ikke tilgjengelig"
   },
   "sidebar": {
     "links": "Lenker",
@@ -558,7 +559,8 @@
     "dueInDays": "Forfaller om {{days}} d",
     "startedSuccessfully": "Oppgaven ble startet!",
     "deleteConfirmMessage": "Er du sikker på at du vil slette «{{name}}»? Denne handlingen kan ikke angres.",
-    "withLink": "Med lenke"
+    "withLink": "Med lenke",
+    "noTasksScheduled": "Ingen planlagte oppgaver"
   },
   "timeline": {
     "activityTimeline": "Aktivitetslinje",
@@ -2469,7 +2471,11 @@
     "unsaved": "Ulagrede endringer",
     "backgroundColor": "Bakgrunnsfarge",
     "selectProject": "Velg prosjekt",
-    "noMatchingNotes": "Ingen samsvarende notater"
+    "noMatchingNotes": "Ingen samsvarende notater",
+    "noPreviewContent": "Ikke noe innhold å forhåndsvise. Bytt til Rediger for å legge til innhold.",
+    "mermaidError": "Kunne ikke vise Mermaid-diagrammet",
+    "mermaidRendering": "Viser diagrammet…",
+    "mermaidLabel": "Mermaid-diagram"
   },
   "tags": {
     "loading": "Laster etiketter...",
@@ -3502,7 +3508,8 @@
     "moreFilters": "Flere filtre",
     "fewerFilters": "Færre filtre",
     "hint": "Opp og ned for å flytte, Enter for å åpne, Esc for å lukke",
-    "searching": "Søker..."
+    "searching": "Søker...",
+    "viewNow": "Vis nå"
   },
   "subtasks": {
     "placeholder": "Legg til en underoppgave...",
@@ -3960,7 +3967,9 @@
     "areaBalance30": "Balanse mellom områder, siste 30 dager",
     "completionRateLegend": "% = fullføringsgrad",
     "itemsToProcess_one": "{{count}} element å behandle",
-    "overview": "Oversikt"
+    "overview": "Oversikt",
+    "balance": "Balanse",
+    "noTaskData": "Ingen oppgavedata"
   },
   "billing": {
     "title": "Abonnement og betaling",
@@ -4147,7 +4156,8 @@
     "clearAssignment": "Fjern tildeling",
     "nameRequired": "Navn er påkrevd",
     "saveError": "Kunne ikke lagre personen",
-    "signInLink": "Innloggingslenke"
+    "signInLink": "Innloggingslenke",
+    "unassigned": "Ikke tildelt"
   },
   "members": {
     "addTitle": "Legg til medlem",

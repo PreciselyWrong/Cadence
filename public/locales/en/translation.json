@@ -280,7 +280,8 @@
     "undo": "Undo",
     "copyCode": "Copy code",
     "copy": "Copy",
-    "copied": "Copied"
+    "copied": "Copied",
+    "previewUnavailable": "Preview not available"
   },
   "sidebar": {
     "links": "Links",
@@ -556,7 +557,8 @@
     "dueInDays": "Due in {{days}}d",
     "startedSuccessfully": "Task started successfully!",
     "deleteConfirmMessage": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.",
-    "withLink": "With a link"
+    "withLink": "With a link",
+    "noTasksScheduled": "No tasks scheduled"
   },
   "comments": {
     "count": "{{count}} comments",
@@ -2503,7 +2505,11 @@
     "unsaved": "Unsaved changes",
     "backgroundColor": "Background color",
     "selectProject": "Select project",
-    "noMatchingNotes": "No matching notes"
+    "noMatchingNotes": "No matching notes",
+    "noPreviewContent": "No content to preview. Switch to Edit to add content.",
+    "mermaidError": "Could not render Mermaid diagram",
+    "mermaidRendering": "Rendering diagram…",
+    "mermaidLabel": "Mermaid diagram"
   },
   "tags": {
     "addTag": "Add Tag",
@@ -3735,7 +3741,8 @@
     "moreFilters": "More filters",
     "fewerFilters": "Fewer filters",
     "hint": "Up and Down to move, Enter to open, Esc to close",
-    "searching": "Searching..."
+    "searching": "Searching...",
+    "viewNow": "View now"
   },
   "backup": {
     "title": "Backup & Restore",
@@ -4025,7 +4032,9 @@
     "areaBalance30": "Area Balance, last 30 days",
     "completionRateLegend": "% = completion rate",
     "itemsToProcess_one": "{{count}} item to process",
-    "itemsToProcess_other": "{{count}} items to process"
+    "itemsToProcess_other": "{{count}} items to process",
+    "balance": "Balance",
+    "noTaskData": "No task data"
   },
   "subscription": {
     "trialBanner": "Free trial, {{count}} days left",
@@ -4148,7 +4157,8 @@
     "clearAssignment": "Clear assignment",
     "nameRequired": "Name is required",
     "saveError": "Failed to save person",
-    "signInLink": "Sign-in link"
+    "signInLink": "Sign-in link",
+    "unassigned": "Unassigned"
   },
   "members": {
     "addTitle": "Add member",

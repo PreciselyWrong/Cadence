@@ -280,7 +280,8 @@
     "undo": "Kumoa",
     "copyCode": "Kopioi koodi",
     "copy": "Kopioi",
-    "copied": "Kopioitu"
+    "copied": "Kopioitu",
+    "previewUnavailable": "Esikatselu ei ole saatavilla"
   },
   "sidebar": {
     "links": "Linkit",
@@ -557,7 +558,8 @@
     "dueInDays": "Erääntyy {{days}} pv:n kuluttua",
     "startedSuccessfully": "Tehtävän aloittaminen onnistui!",
     "deleteConfirmMessage": "Haluatko varmasti poistaa kohteen \"{{name}}\"? Tätä toimintoa ei voi perua.",
-    "withLink": "Linkillinen"
+    "withLink": "Linkillinen",
+    "noTasksScheduled": "Ei ajoitettuja tehtäviä"
   },
   "timeline": {
     "activityTimeline": "Toiminta-aikajana",
@@ -2465,7 +2467,11 @@
     "unsaved": "Tallentamattomia muutoksia",
     "backgroundColor": "Taustaväri",
     "selectProject": "Valitse projekti",
-    "noMatchingNotes": "Ei vastaavia muistiinpanoja"
+    "noMatchingNotes": "Ei vastaavia muistiinpanoja",
+    "noPreviewContent": "Ei esikatseltavaa sisältöä. Lisää sisältöä Muokkaa-välilehdellä.",
+    "mermaidError": "Mermaid-kaaviota ei voitu näyttää",
+    "mermaidRendering": "Kaaviota piirretään…",
+    "mermaidLabel": "Mermaid-kaavio"
   },
   "tags": {
     "loading": "Ladataan tageja...",
@@ -3498,7 +3504,8 @@
     "moreFilters": "Lisää suodattimia",
     "fewerFilters": "Vähemmän suodattimia",
     "hint": "Nuoli ylös ja alas siirtää, Enter avaa, Esc sulkee",
-    "searching": "Haetaan..."
+    "searching": "Haetaan...",
+    "viewNow": "Näytä nyt"
   },
   "subtasks": {
     "placeholder": "Lisää alitehtävä...",
@@ -3952,7 +3959,9 @@
     "areaBalance30": "Alueiden tasapaino, viimeiset 30 päivää",
     "completionRateLegend": "% = valmistumisaste",
     "itemsToProcess_one": "{{count}} käsiteltävä kohde",
-    "overview": "Yleiskatsaus"
+    "overview": "Yleiskatsaus",
+    "balance": "Tasapaino",
+    "noTaskData": "Ei tehtävätietoja"
   },
   "billing": {
     "title": "Tilaus ja laskutus",
@@ -4139,7 +4148,8 @@
     "clearAssignment": "Poista osoitus",
     "nameRequired": "Nimi vaaditaan",
     "saveError": "Henkilön tallennus epäonnistui",
-    "signInLink": "Kirjautumislinkki"
+    "signInLink": "Kirjautumislinkki",
+    "unassigned": "Ei osoitettu"
   },
   "members": {
     "addTitle": "Lisää jäsen",

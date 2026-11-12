@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 type MermaidApi = typeof import('mermaid').default;
 
@@ -70,6 +71,7 @@ interface MermaidDiagramProps {
 }
 
 const MermaidDiagram: React.FC<MermaidDiagramProps> = ({ code }) => {
+    const { t } = useTranslation();
     const isDark = useIsDark();
     const [svg, setSvg] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -119,7 +121,10 @@ const MermaidDiagram: React.FC<MermaidDiagramProps> = ({ code }) => {
                 className="mb-4 rounded-lg border border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20 p-3 text-sm"
             >
                 <p className="font-semibold text-red-700 dark:text-red-300 mb-2">
-                    Could not render Mermaid diagram
+                    {t(
+                        'notes.mermaidError',
+                        'Could not render Mermaid diagram'
+                    )}
                 </p>
                 <pre className="whitespace-pre-wrap text-red-700 dark:text-red-300 mb-2">
                     {error}
@@ -137,7 +142,7 @@ const MermaidDiagram: React.FC<MermaidDiagramProps> = ({ code }) => {
                 className="mb-4 rounded-lg bg-gray-100 dark:bg-gray-800 p-4 text-sm text-gray-600 dark:text-gray-300"
                 aria-busy="true"
             >
-                Rendering diagram...
+                {t('notes.mermaidRendering', 'Rendering diagram…')}
             </div>
         );
     }
@@ -145,7 +150,7 @@ const MermaidDiagram: React.FC<MermaidDiagramProps> = ({ code }) => {
     return (
         <div
             role="img"
-            aria-label="Mermaid diagram"
+            aria-label={t('notes.mermaidLabel', 'Mermaid diagram')}
             className="mermaid-diagram mb-4 flex justify-center overflow-x-auto"
             dangerouslySetInnerHTML={{ __html: svg }}
         />

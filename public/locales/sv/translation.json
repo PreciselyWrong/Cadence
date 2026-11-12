@@ -280,7 +280,8 @@
     "undo": "Ångra",
     "copyCode": "Kopiera kod",
     "copy": "Kopiera",
-    "copied": "Kopierad"
+    "copied": "Kopierad",
+    "previewUnavailable": "Förhandsvisning inte tillgänglig"
   },
   "sidebar": {
     "links": "Länkar",
@@ -557,7 +558,8 @@
     "dueInDays": "Förfaller om {{days}} d",
     "startedSuccessfully": "Uppgiften startades!",
     "deleteConfirmMessage": "Är du säker på att du vill ta bort \"{{name}}\"? Detta kan inte ångras.",
-    "withLink": "Med en länk"
+    "withLink": "Med en länk",
+    "noTasksScheduled": "Inga schemalagda uppgifter"
   },
   "timeline": {
     "activityTimeline": "Aktivitetslinje",
@@ -2468,7 +2470,11 @@
     "unsaved": "Osparade ändringar",
     "backgroundColor": "Bakgrundsfärg",
     "selectProject": "Välj projekt",
-    "noMatchingNotes": "Inga matchande anteckningar"
+    "noMatchingNotes": "Inga matchande anteckningar",
+    "noPreviewContent": "Inget innehåll att förhandsgranska. Växla till Redigera för att lägga till.",
+    "mermaidError": "Det gick inte att visa Mermaid-diagrammet",
+    "mermaidRendering": "Visar diagrammet…",
+    "mermaidLabel": "Mermaid-diagram"
   },
   "tags": {
     "loading": "Laddar taggar...",
@@ -3501,7 +3507,8 @@
     "moreFilters": "Fler filter",
     "fewerFilters": "Färre filter",
     "hint": "Upp och ner för att flytta, Enter för att öppna, Esc för att stänga",
-    "searching": "Söker..."
+    "searching": "Söker...",
+    "viewNow": "Visa nu"
   },
   "subtasks": {
     "placeholder": "Lägg till en deluppgift...",
@@ -3955,7 +3962,9 @@
     "areaBalance30": "Balans mellan områden, senaste 30 dagarna",
     "completionRateLegend": "% = slutförandegrad",
     "itemsToProcess_one": "{{count}} objekt att hantera",
-    "overview": "Översikt"
+    "overview": "Översikt",
+    "balance": "Balans",
+    "noTaskData": "Inga uppgiftsdata"
   },
   "billing": {
     "title": "Prenumeration och betalning",
@@ -4142,7 +4151,8 @@
     "clearAssignment": "Ta bort tilldelning",
     "nameRequired": "Namn krävs",
     "saveError": "Det gick inte att spara personen",
-    "signInLink": "Inloggningslänk"
+    "signInLink": "Inloggningslänk",
+    "unassigned": "Ej tilldelad"
   },
   "members": {
     "addTitle": "Lägg till medlem",

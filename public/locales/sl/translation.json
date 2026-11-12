@@ -288,7 +288,8 @@
     "undo": "Razveljavi",
     "copyCode": "Kopiraj kodo",
     "copy": "Kopiraj",
-    "copied": "Kopirano"
+    "copied": "Kopirano",
+    "previewUnavailable": "Predogled ni na voljo"
   },
   "sidebar": {
     "links": "Povezave",
@@ -565,7 +566,8 @@
     "dueInDays": "Zapade čez {{days}} d",
     "startedSuccessfully": "Naloga je uspešno začeta!",
     "deleteConfirmMessage": "Ali ste prepričani, da želite izbrisati \"{{name}}\"? Tega dejanja ni mogoče razveljaviti.",
-    "withLink": "S povezavo"
+    "withLink": "S povezavo",
+    "noTasksScheduled": "Ni načrtovanih opravil"
   },
   "timeline": {
     "activityTimeline": "Časovnica aktivnosti",
@@ -2491,7 +2493,11 @@
     "unsaved": "Neshranjene spremembe",
     "backgroundColor": "Barva ozadja",
     "selectProject": "Izberi projekt",
-    "noMatchingNotes": "Ni ustreznih opomb"
+    "noMatchingNotes": "Ni ustreznih opomb",
+    "noPreviewContent": "Ni vsebine za predogled. Preklopite na Uredi in dodajte vsebino.",
+    "mermaidError": "Diagrama Mermaid ni bilo mogoče prikazati",
+    "mermaidRendering": "Prikazovanje diagrama…",
+    "mermaidLabel": "Diagram Mermaid"
   },
   "tags": {
     "loading": "Nalagam oznake...",
@@ -3536,7 +3542,8 @@
     "moreFilters": "Več filtrov",
     "fewerFilters": "Manj filtrov",
     "hint": "Puščici gor in dol za premikanje, Enter za odpiranje, Esc za zapiranje",
-    "searching": "Iščem..."
+    "searching": "Iščem...",
+    "viewNow": "Poglej zdaj"
   },
   "subtasks": {
     "placeholder": "Dodaj podnalogo...",
@@ -3994,7 +4001,9 @@
     "itemsToProcess_one": "Za obdelavo: {{count}}",
     "itemsToProcess_two": "Za obdelavo: {{count}}",
     "itemsToProcess_few": "Za obdelavo: {{count}}",
-    "overview": "Pregled"
+    "overview": "Pregled",
+    "balance": "Ravnovesje",
+    "noTaskData": "Ni podatkov o opravilih"
   },
   "billing": {
     "title": "Paket in obračun",
@@ -4183,7 +4192,8 @@
     "clearAssignment": "Odstrani dodelitev",
     "nameRequired": "Ime je obvezno",
     "saveError": "Osebe ni bilo mogoče shraniti",
-    "signInLink": "Povezava za prijavo"
+    "signInLink": "Povezava za prijavo",
+    "unassigned": "Ni dodeljeno"
   },
   "members": {
     "addTitle": "Dodaj člana",

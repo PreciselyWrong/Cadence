@@ -298,7 +298,8 @@
     "undo": "تراجع",
     "copyCode": "نسخ الشيفرة",
     "copy": "نسخ",
-    "copied": "تم النسخ"
+    "copied": "تم النسخ",
+    "previewUnavailable": "المعاينة غير متاحة"
   },
   "sidebar": {
     "links": "الروابط",
@@ -575,7 +576,8 @@
     "dueInDays": "مستحقة خلال {{days}} يوم",
     "startedSuccessfully": "تم بدء المهمة بنجاح!",
     "deleteConfirmMessage": "هل أنت متأكد من حذف \"{{name}}\"؟ لا يمكن التراجع عن هذا الإجراء.",
-    "withLink": "بروابط"
+    "withLink": "بروابط",
+    "noTasksScheduled": "لا مهام مجدولة"
   },
   "timeline": {
     "activityTimeline": "جدول الأنشطة",
@@ -2487,7 +2489,11 @@
     "unsaved": "تغييرات غير محفوظة",
     "backgroundColor": "لون الخلفية",
     "selectProject": "اختر مشروعًا",
-    "noMatchingNotes": "لا توجد ملاحظات مطابقة"
+    "noMatchingNotes": "لا توجد ملاحظات مطابقة",
+    "noPreviewContent": "لا يوجد محتوى للمعاينة. انتقل إلى «تعديل» لإضافة محتوى.",
+    "mermaidError": "تعذّر عرض مخطط Mermaid",
+    "mermaidRendering": "جارٍ عرض المخطط…",
+    "mermaidLabel": "مخطط Mermaid"
   },
   "tags": {
     "loading": "جاري تحميل العلامات...",
@@ -3532,7 +3538,8 @@
     "moreFilters": "مزيد من الفلاتر",
     "fewerFilters": "فلاتر أقل",
     "hint": "لأعلى ولأسفل للتنقل، و Enter للفتح، و Esc للإغلاق",
-    "searching": "جارٍ البحث..."
+    "searching": "جارٍ البحث...",
+    "viewNow": "عرض الآن"
   },
   "subtasks": {
     "placeholder": "أضف مهمة فرعية...",
@@ -3990,7 +3997,9 @@
     "itemsToProcess_two": "{{count}} عناصر للمعالجة",
     "itemsToProcess_few": "{{count}} عناصر للمعالجة",
     "itemsToProcess_many": "{{count}} عناصر للمعالجة",
-    "overview": "نظرة عامة"
+    "overview": "نظرة عامة",
+    "balance": "التوازن",
+    "noTaskData": "لا توجد بيانات مهام"
   },
   "billing": {
     "title": "الخطة والفوترة",
@@ -4177,7 +4186,8 @@
     "clearAssignment": "إزالة الإسناد",
     "nameRequired": "الاسم مطلوب",
     "saveError": "تعذّر حفظ الشخص",
-    "signInLink": "رابط تسجيل الدخول"
+    "signInLink": "رابط تسجيل الدخول",
+    "unassigned": "غير مُسند"
   },
   "members": {
     "addTitle": "إضافة عضو",

@@ -281,7 +281,8 @@
     "undo": "Desfazer",
     "copyCode": "Copiar código",
     "copy": "Copiar",
-    "copied": "Copiado"
+    "copied": "Copiado",
+    "previewUnavailable": "Pré-visualização indisponível"
   },
   "sidebar": {
     "links": "Links",
@@ -558,7 +559,8 @@
     "dueInDays": "Vence em {{days}} d",
     "startedSuccessfully": "Tarefa iniciada com sucesso!",
     "deleteConfirmMessage": "Tem certeza de que deseja excluir “{{name}}”? Esta ação não pode ser desfeita.",
-    "withLink": "Com um link"
+    "withLink": "Com um link",
+    "noTasksScheduled": "Nenhuma tarefa agendada"
   },
   "timeline": {
     "activityTimeline": "Linha do Tempo de Atividades",
@@ -2471,7 +2473,11 @@
     "unsaved": "Alterações não guardadas",
     "backgroundColor": "Cor de fundo",
     "selectProject": "Selecionar projeto",
-    "noMatchingNotes": "Nenhuma nota corresponde"
+    "noMatchingNotes": "Nenhuma nota corresponde",
+    "noPreviewContent": "Sem conteúdo para pré-visualizar. Mude para Editar para adicionar conteúdo.",
+    "mermaidError": "Não foi possível mostrar o diagrama Mermaid",
+    "mermaidRendering": "A mostrar o diagrama…",
+    "mermaidLabel": "Diagrama Mermaid"
   },
   "tags": {
     "loading": "Carregando tags...",
@@ -3507,7 +3513,8 @@
     "moreFilters": "Mais filtros",
     "fewerFilters": "Menos filtros",
     "hint": "Setas para cima e para baixo para mover, Enter para abrir, Esc para fechar",
-    "searching": "Pesquisando..."
+    "searching": "Pesquisando...",
+    "viewNow": "Ver agora"
   },
   "subtasks": {
     "placeholder": "Adicionar uma subtarefa...",
@@ -3961,7 +3968,9 @@
     "areaBalance30": "Equilíbrio das áreas, últimos 30 dias",
     "completionRateLegend": "% = taxa de conclusão",
     "itemsToProcess_one": "{{count}} item para processar",
-    "overview": "Visão geral"
+    "overview": "Visão geral",
+    "balance": "Equilíbrio",
+    "noTaskData": "Sem dados de tarefas"
   },
   "billing": {
     "title": "Plano e faturação",
@@ -4148,7 +4157,8 @@
     "clearAssignment": "Remover atribuição",
     "nameRequired": "O nome é obrigatório",
     "saveError": "Não foi possível guardar a pessoa",
-    "signInLink": "Link de acesso"
+    "signInLink": "Link de acesso",
+    "unassigned": "Sem atribuição"
   },
   "members": {
     "addTitle": "Adicionar membro",

@@ -280,7 +280,8 @@
     "undo": "Fortryd",
     "copyCode": "Kopiér kode",
     "copy": "Kopiér",
-    "copied": "Kopieret"
+    "copied": "Kopieret",
+    "previewUnavailable": "Forhåndsvisning ikke tilgængelig"
   },
   "sidebar": {
     "links": "Links",
@@ -557,7 +558,8 @@
     "dueInDays": "Forfalder om {{days}} dage",
     "startedSuccessfully": "Opgaven blev startet!",
     "deleteConfirmMessage": "Er du sikker på, at du vil slette \"{{name}}\"? Denne handling kan ikke fortrydes.",
-    "withLink": "Med et link"
+    "withLink": "Med et link",
+    "noTasksScheduled": "Ingen planlagte opgaver"
   },
   "timeline": {
     "activityTimeline": "Aktivitets Tidslinje",
@@ -2468,7 +2470,11 @@
     "unsaved": "Ikke gemte ændringer",
     "backgroundColor": "Baggrundsfarve",
     "selectProject": "Vælg projekt",
-    "noMatchingNotes": "Ingen matchende noter"
+    "noMatchingNotes": "Ingen matchende noter",
+    "noPreviewContent": "Intet indhold at forhåndsvise. Skift til Rediger for at tilføje indhold.",
+    "mermaidError": "Mermaid-diagrammet kunne ikke vises",
+    "mermaidRendering": "Viser diagram…",
+    "mermaidLabel": "Mermaid-diagram"
   },
   "tags": {
     "loading": "Indlæser tags...",
@@ -3501,7 +3507,8 @@
     "moreFilters": "Flere filtre",
     "fewerFilters": "Færre filtre",
     "hint": "Op og Ned for at flytte, Enter for at åbne, Esc for at lukke",
-    "searching": "Søger..."
+    "searching": "Søger...",
+    "viewNow": "Vis nu"
   },
   "subtasks": {
     "placeholder": "Tilføj en underopgave...",
@@ -3955,7 +3962,9 @@
     "areaBalance30": "Balance mellem områder, seneste 30 dage",
     "completionRateLegend": "% = fuldførelsesrate",
     "itemsToProcess_one": "{{count}} element at behandle",
-    "overview": "Overblik"
+    "overview": "Overblik",
+    "balance": "Balance",
+    "noTaskData": "Ingen opgavedata"
   },
   "billing": {
     "title": "Abonnement og betaling",
@@ -4142,7 +4151,8 @@
     "clearAssignment": "Fjern tildeling",
     "nameRequired": "Navn er påkrævet",
     "saveError": "Personen kunne ikke gemmes",
-    "signInLink": "Login-link"
+    "signInLink": "Login-link",
+    "unassigned": "Ikke tildelt"
   },
   "members": {
     "addTitle": "Tilføj medlem",

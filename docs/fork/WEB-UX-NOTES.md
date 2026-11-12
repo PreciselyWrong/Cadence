@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-12 — Vocabulaire unique (web)
+
+- **Problème** : un même concept avait plusieurs noms selon l'écran : « domaine » à côté de la page « Zones », priorités « Faible / Élevée » ici et « Basse / Haute » là, textes d'aide de recherche différents d'une liste à l'autre (« Rechercher des tâches... », « Rechercher une tâche… »), « Créer la tâche » sur les cartes Mail contre « Créer une tâche » ailleurs.
+- **Décision** : un terme par concept, dans les 26 langues. Zones : « zone(s) », jamais « domaine(s) ». Priorités : `priority.*` seul, « Basse / Moyenne / Haute », rien d'affiché quand la priorité est vide. Recherche : « Rechercher… » partout. Verbe de décision : « Créer une tâche » (cartes Mail, revue, liens). Pluriels par `count` (fini « 1 tâches »).
+- **À reprendre sur Android** (vérifié dans `android/**/res/values/strings*.xml`, le français y est la langue par défaut) : priorités déjà « Basse / Moyenne / Haute » et recherche déjà « Rechercher… ». À changer : `tasks_lists_area` « Domaine » → « Zone » ; `tasks_projects_no_area` « Sans domaine » → « Sans zone » (et `TaskOverviewsTest`) ; `areas_filter_label` « Filtrer par domaine » → « Filtrer par zone » ; `areas_suggest` « Proposer 5 domaines » → « Suggérer 5 zones » ; `auto_classify_area` « Domaine : %1$s » → « Zone : %1$s » ; les deux « Domaine » de `tasks/model/SyncConflicts.kt` → « Zone » ; `triage_mail_create_task` « Créer la tâche » → « Créer une tâche ».
+
 ### 2026-11-12 — Plugins (web et Android)
 
 - **Problème** : un plugin du serveur (`docs/46-plugins.md`) se gérait seulement depuis Profil › Plugins du web, et sa page n'existait pas sur le téléphone.

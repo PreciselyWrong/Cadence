@@ -5,6 +5,7 @@ import React, {
     useRef,
     useState,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Task } from '../../entities/Task';
 import { getApiPath } from '../../config/paths';
 import { getDefaultHeaders } from '../../utils/authUtils';
@@ -34,6 +35,7 @@ function smoothPath(pts: { x: number; y: number }[]): string {
 }
 
 const BurndownChart: React.FC = () => {
+    const { t } = useTranslation();
     const [allTasks, setAllTasks] = useState<Task[]>([]);
     const [loading, setLoading] = useState(true);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -160,14 +162,14 @@ const BurndownChart: React.FC = () => {
                 {loading && (
                     <div className="flex items-center justify-center h-full">
                         <span className="text-xs text-gray-500 dark:text-gray-400">
-                            Loading…
+                            {t('common.loading', 'Loading…')}
                         </span>
                     </div>
                 )}
                 {!loading && allTasks.length === 0 && (
                     <div className="flex items-center justify-center h-full">
                         <span className="text-xs text-gray-500 dark:text-gray-400">
-                            No task data
+                            {t('reports.noTaskData', 'No task data')}
                         </span>
                     </div>
                 )}

@@ -278,7 +278,8 @@
     "undo": "Hoàn tác",
     "copyCode": "Sao chép mã",
     "copy": "Sao chép",
-    "copied": "Đã sao chép"
+    "copied": "Đã sao chép",
+    "previewUnavailable": "Không có bản xem trước"
   },
   "sidebar": {
     "links": "Liên kết",
@@ -555,7 +556,8 @@
     "dueInDays": "Đến hạn sau {{days}} ngày",
     "startedSuccessfully": "Đã bắt đầu công việc!",
     "deleteConfirmMessage": "Bạn có chắc muốn xóa \"{{name}}\"? Hành động này không thể hoàn tác.",
-    "withLink": "Có liên kết"
+    "withLink": "Có liên kết",
+    "noTasksScheduled": "Không có công việc nào được lên lịch"
   },
   "timeline": {
     "activityTimeline": "Dòng Thời Gian Hoạt Động",
@@ -2459,7 +2461,11 @@
     "unsaved": "Thay đổi chưa lưu",
     "backgroundColor": "Màu nền",
     "selectProject": "Chọn dự án",
-    "noMatchingNotes": "Không có ghi chú phù hợp"
+    "noMatchingNotes": "Không có ghi chú phù hợp",
+    "noPreviewContent": "Không có nội dung để xem trước. Chuyển sang Sửa để thêm nội dung.",
+    "mermaidError": "Không thể hiển thị sơ đồ Mermaid",
+    "mermaidRendering": "Đang hiển thị sơ đồ…",
+    "mermaidLabel": "Sơ đồ Mermaid"
   },
   "tags": {
     "loading": "Đang tải thẻ...",
@@ -3492,7 +3498,8 @@
     "moreFilters": "Thêm bộ lọc",
     "fewerFilters": "Bớt bộ lọc",
     "hint": "Lên và Xuống để di chuyển, Enter để mở, Esc để đóng",
-    "searching": "Đang tìm kiếm..."
+    "searching": "Đang tìm kiếm...",
+    "viewNow": "Xem ngay"
   },
   "subtasks": {
     "placeholder": "Thêm một công việc phụ...",
@@ -3946,7 +3953,9 @@
     "areaBalance30": "Cân bằng khu vực, 30 ngày qua",
     "completionRateLegend": "% = tỷ lệ hoàn thành",
     "itemsToProcess_one": "{{count}} mục cần xử lý",
-    "overview": "Tổng quan"
+    "overview": "Tổng quan",
+    "balance": "Cân bằng",
+    "noTaskData": "Không có dữ liệu công việc"
   },
   "billing": {
     "title": "Gói & Thanh toán",
@@ -4133,7 +4142,8 @@
     "clearAssignment": "Bỏ giao việc",
     "nameRequired": "Cần nhập tên",
     "saveError": "Không thể lưu người này",
-    "signInLink": "Liên kết đăng nhập"
+    "signInLink": "Liên kết đăng nhập",
+    "unassigned": "Chưa giao"
   },
   "members": {
     "addTitle": "Thêm thành viên",

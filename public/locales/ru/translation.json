@@ -288,7 +288,8 @@
     "undo": "Отменить",
     "copyCode": "Копировать код",
     "copy": "Копировать",
-    "copied": "Скопировано"
+    "copied": "Скопировано",
+    "previewUnavailable": "Предпросмотр недоступен"
   },
   "sidebar": {
     "links": "Ссылки",
@@ -565,7 +566,8 @@
     "dueInDays": "Срок через {{days}} дн.",
     "startedSuccessfully": "Задача успешно начата!",
     "deleteConfirmMessage": "Удалить «{{name}}»? Это действие нельзя отменить.",
-    "withLink": "Со ссылкой"
+    "withLink": "Со ссылкой",
+    "noTasksScheduled": "Нет запланированных задач"
   },
   "timeline": {
     "activityTimeline": "Хронология активности",
@@ -2488,7 +2490,11 @@
     "unsaved": "Несохранённые изменения",
     "backgroundColor": "Цвет фона",
     "selectProject": "Выберите проект",
-    "noMatchingNotes": "Нет подходящих заметок"
+    "noMatchingNotes": "Нет подходящих заметок",
+    "noPreviewContent": "Нечего показать. Перейдите в «Правка», чтобы добавить содержимое.",
+    "mermaidError": "Не удалось показать диаграмму Mermaid",
+    "mermaidRendering": "Отрисовка диаграммы…",
+    "mermaidLabel": "Диаграмма Mermaid"
   },
   "tags": {
     "loading": "Загрузка тегов...",
@@ -3533,7 +3539,8 @@
     "moreFilters": "Больше фильтров",
     "fewerFilters": "Меньше фильтров",
     "hint": "Стрелки вверх и вниз для перемещения, Enter для открытия, Esc для закрытия",
-    "searching": "Поиск..."
+    "searching": "Поиск...",
+    "viewNow": "Открыть"
   },
   "subtasks": {
     "placeholder": "Добавить подзадачу...",
@@ -3991,7 +3998,9 @@
     "itemsToProcess_one": "Нужно разобрать: {{count}}",
     "itemsToProcess_few": "Нужно разобрать: {{count}}",
     "itemsToProcess_many": "Нужно разобрать: {{count}}",
-    "overview": "Обзор"
+    "overview": "Обзор",
+    "balance": "Баланс",
+    "noTaskData": "Нет данных о задачах"
   },
   "billing": {
     "title": "Тариф и оплата",
@@ -4180,7 +4189,8 @@
     "clearAssignment": "Снять назначение",
     "nameRequired": "Укажите имя",
     "saveError": "Не удалось сохранить человека",
-    "signInLink": "Ссылка для входа"
+    "signInLink": "Ссылка для входа",
+    "unassigned": "Не назначено"
   },
   "members": {
     "addTitle": "Добавить участника",

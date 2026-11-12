@@ -766,7 +766,8 @@
     "undo": "Späť",
     "copyCode": "Kopírovať kód",
     "copy": "Kopírovať",
-    "copied": "Skopírované"
+    "copied": "Skopírované",
+    "previewUnavailable": "Náhľad nie je k dispozícii"
   },
   "sidebar": {
     "links": "Odkazy",
@@ -1042,7 +1043,8 @@
     "dueInDays": "Termín o {{days}} d",
     "startedSuccessfully": "Úloha bola úspešne spustená!",
     "deleteConfirmMessage": "Naozaj chcete odstrániť „{{name}}“? Túto akciu nie je možné vrátiť späť.",
-    "withLink": "S odkazom"
+    "withLink": "S odkazom",
+    "noTasksScheduled": "Žiadne naplánované úlohy"
   },
   "comments": {
     "count": "Komentáre: {{count}}",
@@ -3002,7 +3004,11 @@
     "unsaved": "Neuložené zmeny",
     "backgroundColor": "Farba pozadia",
     "selectProject": "Vybrať projekt",
-    "noMatchingNotes": "Žiadne zodpovedajúce poznámky"
+    "noMatchingNotes": "Žiadne zodpovedajúce poznámky",
+    "noPreviewContent": "Nie je čo zobraziť. Prepnite na Upraviť a pridajte obsah.",
+    "mermaidError": "Diagram Mermaid sa nepodarilo zobraziť",
+    "mermaidRendering": "Zobrazuje sa diagram…",
+    "mermaidLabel": "Diagram Mermaid"
   },
   "tags": {
     "addTag": "Pridať štítok",
@@ -4099,7 +4105,8 @@
     "moreFilters": "Viac filtrov",
     "fewerFilters": "Menej filtrov",
     "hint": "Šípky nahor a nadol na pohyb, Enter na otvorenie, Esc na zatvorenie",
-    "searching": "Hľadá sa..."
+    "searching": "Hľadá sa...",
+    "viewNow": "Zobraziť teraz"
   },
   "backup": {
     "title": "Záloha a obnovenie",
@@ -4395,7 +4402,9 @@
     "itemsToProcess_few": "{{count}} položky na spracovanie",
     "itemsToProcess_many": "{{count}} položiek na spracovanie",
     "itemsToProcess_other": "{{count}} položiek na spracovanie",
-    "overview": "Prehľad"
+    "overview": "Prehľad",
+    "balance": "Rovnováha",
+    "noTaskData": "Žiadne údaje o úlohách"
   },
   "subscription": {
     "trialBanner_many": "Používate bezplatnú skúšobnú verziu, zostáva {{count}} dní",
@@ -4514,7 +4523,8 @@
     "clearAssignment": "Zrušiť priradenie",
     "nameRequired": "Meno je povinné",
     "saveError": "Osobu sa nepodarilo uložiť",
-    "signInLink": "Prihlasovací odkaz"
+    "signInLink": "Prihlasovací odkaz",
+    "unassigned": "Nepriradené"
   },
   "members": {
     "addTitle": "Pridať člena",

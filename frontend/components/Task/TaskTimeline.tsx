@@ -11,7 +11,11 @@ import {
     ExclamationTriangleIcon,
     SparklesIcon,
 } from '@heroicons/react/24/outline';
-import { getTodayDateString, getTomorrowDateString, getYesterdayDateString } from '../../utils/dateUtils';
+import {
+    getTodayDateString,
+    getTomorrowDateString,
+    getYesterdayDateString,
+} from '../../utils/dateUtils';
 
 interface TaskTimelineProps {
     taskUid: string | undefined;
@@ -235,7 +239,10 @@ const TaskTimeline: React.FC<TaskTimelineProps> = ({ taskUid, refreshKey }) => {
             <div className="flex flex-col items-center justify-center h-32 text-gray-600 dark:text-gray-300">
                 <SparklesIcon className="h-6 w-6 mb-2" />
                 <span className="text-sm text-center">
-                    Timeline will appear after saving
+                    {t(
+                        'timeline.timelineWillAppear',
+                        'Timeline will appear after saving'
+                    )}
                 </span>
             </div>
         );

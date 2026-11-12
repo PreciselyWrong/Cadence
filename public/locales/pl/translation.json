@@ -288,7 +288,8 @@
     "undo": "Cofnij",
     "copyCode": "Kopiuj kod",
     "copy": "Kopiuj",
-    "copied": "Skopiowano"
+    "copied": "Skopiowano",
+    "previewUnavailable": "Podgląd niedostępny"
   },
   "sidebar": {
     "links": "Linki",
@@ -565,7 +566,8 @@
     "dueInDays": "Termin za {{days}} d",
     "startedSuccessfully": "Zadanie zostało rozpoczęte!",
     "deleteConfirmMessage": "Na pewno usunąć „{{name}}”? Tej operacji nie można cofnąć.",
-    "withLink": "Z linkiem"
+    "withLink": "Z linkiem",
+    "noTasksScheduled": "Brak zaplanowanych zadań"
   },
   "timeline": {
     "activityTimeline": "Oś czasu aktywności",
@@ -2488,7 +2490,11 @@
     "unsaved": "Niezapisane zmiany",
     "backgroundColor": "Kolor tła",
     "selectProject": "Wybierz projekt",
-    "noMatchingNotes": "Brak pasujących notatek"
+    "noMatchingNotes": "Brak pasujących notatek",
+    "noPreviewContent": "Brak treści do podglądu. Przejdź do Edycji, aby ją dodać.",
+    "mermaidError": "Nie udało się wyświetlić diagramu Mermaid",
+    "mermaidRendering": "Wyświetlanie diagramu…",
+    "mermaidLabel": "Diagram Mermaid"
   },
   "tags": {
     "loading": "Ładowanie tagów...",
@@ -3533,7 +3539,8 @@
     "moreFilters": "Więcej filtrów",
     "fewerFilters": "Mniej filtrów",
     "hint": "Strzałki w górę i w dół, aby się poruszać, Enter, aby otworzyć, Esc, aby zamknąć",
-    "searching": "Szukam..."
+    "searching": "Szukam...",
+    "viewNow": "Zobacz teraz"
   },
   "subtasks": {
     "placeholder": "Dodaj podzadanie...",
@@ -3991,7 +3998,9 @@
     "itemsToProcess_one": "Do przetworzenia: {{count}}",
     "itemsToProcess_few": "Do przetworzenia: {{count}}",
     "itemsToProcess_many": "Do przetworzenia: {{count}}",
-    "overview": "Przegląd"
+    "overview": "Przegląd",
+    "balance": "Równowaga",
+    "noTaskData": "Brak danych o zadaniach"
   },
   "billing": {
     "title": "Plan i płatności",
@@ -4180,7 +4189,8 @@
     "clearAssignment": "Usuń przypisanie",
     "nameRequired": "Imię jest wymagane",
     "saveError": "Nie udało się zapisać osoby",
-    "signInLink": "Link do logowania"
+    "signInLink": "Link do logowania",
+    "unassigned": "Nieprzypisane"
   },
   "members": {
     "addTitle": "Dodaj członka",

@@ -278,7 +278,8 @@
     "undo": "元に戻す",
     "copyCode": "コードをコピー",
     "copy": "コピー",
-    "copied": "コピーしました"
+    "copied": "コピーしました",
+    "previewUnavailable": "プレビューできません"
   },
   "sidebar": {
     "links": "リンク",
@@ -555,7 +556,8 @@
     "dueInDays": "あと{{days}}日で期限",
     "startedSuccessfully": "タスクを開始しました！",
     "deleteConfirmMessage": "「{{name}}」を削除してもよろしいですか？この操作は取り消せません。",
-    "withLink": "リンクあり"
+    "withLink": "リンクあり",
+    "noTasksScheduled": "予定されたタスクはありません"
   },
   "timeline": {
     "activityTimeline": "アクティビティタイムライン",
@@ -2018,7 +2020,11 @@
     "unsaved": "未保存の変更",
     "backgroundColor": "背景色",
     "selectProject": "プロジェクトを選択",
-    "noMatchingNotes": "一致するノートはありません"
+    "noMatchingNotes": "一致するノートはありません",
+    "noPreviewContent": "プレビューする内容がありません。「編集」に切り替えて追加してください。",
+    "mermaidError": "Mermaid 図を表示できませんでした",
+    "mermaidRendering": "図を表示しています…",
+    "mermaidLabel": "Mermaid 図"
   },
   "tags": {
     "loading": "タグを読み込み中...",
@@ -3492,7 +3498,8 @@
     "moreFilters": "フィルターを増やす",
     "fewerFilters": "フィルターを減らす",
     "hint": "上下キーで移動、Enterで開く、Escで閉じる",
-    "searching": "検索中..."
+    "searching": "検索中...",
+    "viewNow": "今すぐ表示"
   },
   "subtasks": {
     "placeholder": "サブタスクを追加...",
@@ -3946,7 +3953,9 @@
     "areaBalance30": "エリアのバランス、直近30日",
     "completionRateLegend": "% = 完了率",
     "itemsToProcess_one": "処理待ち {{count}} 件",
-    "overview": "概要"
+    "overview": "概要",
+    "balance": "バランス",
+    "noTaskData": "タスクのデータがありません"
   },
   "billing": {
     "title": "プランと請求",
@@ -4133,7 +4142,8 @@
     "clearAssignment": "割り当てを解除",
     "nameRequired": "名前は必須です",
     "saveError": "人物を保存できませんでした",
-    "signInLink": "サインインリンク"
+    "signInLink": "サインインリンク",
+    "unassigned": "未割り当て"
   },
   "members": {
     "addTitle": "メンバーを追加",

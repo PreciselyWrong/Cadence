@@ -283,7 +283,8 @@
     "undo": "Anulează",
     "copyCode": "Copiază codul",
     "copy": "Copiază",
-    "copied": "Copiat"
+    "copied": "Copiat",
+    "previewUnavailable": "Previzualizare indisponibilă"
   },
   "sidebar": {
     "links": "Linkuri",
@@ -560,7 +561,8 @@
     "dueInDays": "Scadent în {{days}} z",
     "startedSuccessfully": "Sarcina a fost pornită cu succes!",
     "deleteConfirmMessage": "Sigur vrei să ștergi „{{name}}”? Acțiunea nu poate fi anulată.",
-    "withLink": "Cu un link"
+    "withLink": "Cu un link",
+    "noTasksScheduled": "Nicio sarcină programată"
   },
   "timeline": {
     "activityTimeline": "Cronologia activităților",
@@ -2475,7 +2477,11 @@
     "unsaved": "Modificări nesalvate",
     "backgroundColor": "Culoare de fundal",
     "selectProject": "Alege proiectul",
-    "noMatchingNotes": "Nicio notiță potrivită"
+    "noMatchingNotes": "Nicio notiță potrivită",
+    "noPreviewContent": "Nu există conținut de previzualizat. Treci la Editare pentru a adăuga.",
+    "mermaidError": "Diagrama Mermaid nu a putut fi afișată",
+    "mermaidRendering": "Se afișează diagrama…",
+    "mermaidLabel": "Diagramă Mermaid"
   },
   "tags": {
     "loading": "Se încarcă etichetele...",
@@ -3511,7 +3517,8 @@
     "moreFilters": "Mai multe filtre",
     "fewerFilters": "Mai puține filtre",
     "hint": "Săgeți sus și jos pentru a naviga, Enter pentru a deschide, Esc pentru a închide",
-    "searching": "Se caută..."
+    "searching": "Se caută...",
+    "viewNow": "Vezi acum"
   },
   "subtasks": {
     "placeholder": "Adaugă o subtask...",
@@ -3966,7 +3973,9 @@
     "completionRateLegend": "% = rata de finalizare",
     "itemsToProcess_one": "{{count}} element de procesat",
     "itemsToProcess_few": "{{count}} elemente de procesat",
-    "overview": "Prezentare generală"
+    "overview": "Prezentare generală",
+    "balance": "Echilibru",
+    "noTaskData": "Nu există date despre sarcini"
   },
   "billing": {
     "title": "Plan și facturare",
@@ -4153,7 +4162,8 @@
     "clearAssignment": "Elimină atribuirea",
     "nameRequired": "Numele este obligatoriu",
     "saveError": "Persoana nu a putut fi salvată",
-    "signInLink": "Link de autentificare"
+    "signInLink": "Link de autentificare",
+    "unassigned": "Neatribuită"
   },
   "members": {
     "addTitle": "Adaugă membru",

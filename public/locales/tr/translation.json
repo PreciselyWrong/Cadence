@@ -278,7 +278,8 @@
     "undo": "Geri al",
     "copyCode": "Kodu kopyala",
     "copy": "Kopyala",
-    "copied": "Kopyalandı"
+    "copied": "Kopyalandı",
+    "previewUnavailable": "Önizleme kullanılamıyor"
   },
   "sidebar": {
     "links": "Bağlantılar",
@@ -555,7 +556,8 @@
     "dueInDays": "{{days}} gün içinde son tarih",
     "startedSuccessfully": "Görev başarıyla başlatıldı!",
     "deleteConfirmMessage": "\"{{name}}\" öğesini silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
-    "withLink": "Bağlantılı"
+    "withLink": "Bağlantılı",
+    "noTasksScheduled": "Planlanmış görev yok"
   },
   "timeline": {
     "activityTimeline": "Etkinlik Zaman Çizelgesi",
@@ -2459,7 +2461,11 @@
     "unsaved": "Kaydedilmemiş değişiklikler",
     "backgroundColor": "Arka plan rengi",
     "selectProject": "Proje seç",
-    "noMatchingNotes": "Eşleşen not yok"
+    "noMatchingNotes": "Eşleşen not yok",
+    "noPreviewContent": "Önizlenecek içerik yok. İçerik eklemek için Düzenle'ye geçin.",
+    "mermaidError": "Mermaid diyagramı gösterilemedi",
+    "mermaidRendering": "Diyagram gösteriliyor…",
+    "mermaidLabel": "Mermaid diyagramı"
   },
   "tags": {
     "loading": "Etiketler yükleniyor...",
@@ -3492,7 +3498,8 @@
     "moreFilters": "Daha fazla filtre",
     "fewerFilters": "Daha az filtre",
     "hint": "Hareket için Yukarı ve Aşağı, açmak için Enter, kapatmak için Esc",
-    "searching": "Aranıyor..."
+    "searching": "Aranıyor...",
+    "viewNow": "Şimdi görüntüle"
   },
   "subtasks": {
     "placeholder": "Bir alt görev ekle...",
@@ -3946,7 +3953,9 @@
     "areaBalance30": "Alan dengesi, son 30 gün",
     "completionRateLegend": "% = tamamlanma oranı",
     "itemsToProcess_one": "İşlenecek {{count}} öğe",
-    "overview": "Genel bakış"
+    "overview": "Genel bakış",
+    "balance": "Denge",
+    "noTaskData": "Görev verisi yok"
   },
   "billing": {
     "title": "Plan ve Faturalandırma",
@@ -4133,7 +4142,8 @@
     "clearAssignment": "Atamayı kaldır",
     "nameRequired": "Ad gerekli",
     "saveError": "Kişi kaydedilemedi",
-    "signInLink": "Oturum açma bağlantısı"
+    "signInLink": "Oturum açma bağlantısı",
+    "unassigned": "Atanmamış"
   },
   "members": {
     "addTitle": "Üye ekle",

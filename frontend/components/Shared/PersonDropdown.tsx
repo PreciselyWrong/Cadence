@@ -41,10 +41,11 @@ const PersonDropdown: React.FC<PersonDropdownProps> = ({
     personUid,
     people,
     onChange,
-    placeholder = 'Unassigned',
+    placeholder: placeholderProp,
     renderTrigger,
 }) => {
     const { t } = useTranslation();
+    const placeholder = placeholderProp ?? t('people.unassigned', 'Unassigned');
     const [isOpen, setIsOpen] = useState(false);
     const [position, setPosition] = useState({ top: 0, left: 0, width: 0 });
     const dropdownRef = useRef<HTMLDivElement>(null);

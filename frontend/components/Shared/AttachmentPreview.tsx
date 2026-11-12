@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FileAttachment } from '../../entities/Attachment';
 import { getAttachmentType } from '../../utils/attachmentsService';
 
@@ -13,6 +14,7 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
     maxHeight = '400px',
     className = '',
 }) => {
+    const { t } = useTranslation();
     const [textContent, setTextContent] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -41,7 +43,7 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
         console.warn('No file URL available for attachment:', attachment);
         return (
             <div className="text-sm text-gray-600 dark:text-gray-300 p-4">
-                Preview not available
+                {t('common.previewUnavailable', 'Preview not available')}
             </div>
         );
     }

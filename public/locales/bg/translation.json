@@ -278,7 +278,8 @@
     "undo": "Отмяна",
     "copyCode": "Копирай кода",
     "copy": "Копиране",
-    "copied": "Копирано"
+    "copied": "Копирано",
+    "previewUnavailable": "Няма наличен преглед"
   },
   "sidebar": {
     "links": "Връзки",
@@ -555,7 +556,8 @@
     "dueInDays": "Срок след {{days}} дн.",
     "startedSuccessfully": "Задачата бе стартирана успешно!",
     "deleteConfirmMessage": "Сигурни ли сте, че искате да изтриете \"{{name}}\"? Това действие не може да бъде отменено.",
-    "withLink": "С връзка"
+    "withLink": "С връзка",
+    "noTasksScheduled": "Няма планирани задачи"
   },
   "timeline": {
     "activityTimeline": "Хронология на активността",
@@ -2466,7 +2468,11 @@
     "unsaved": "Незапазени промени",
     "backgroundColor": "Цвят на фона",
     "selectProject": "Изберете проект",
-    "noMatchingNotes": "Няма съвпадащи бележки"
+    "noMatchingNotes": "Няма съвпадащи бележки",
+    "noPreviewContent": "Няма съдържание за преглед. Отидете в „Редактиране“, за да добавите.",
+    "mermaidError": "Диаграмата Mermaid не може да бъде показана",
+    "mermaidRendering": "Диаграмата се изобразява…",
+    "mermaidLabel": "Диаграма Mermaid"
   },
   "tags": {
     "loading": "Зареждане на тагове...",
@@ -3499,7 +3505,8 @@
     "moreFilters": "Още филтри",
     "fewerFilters": "По-малко филтри",
     "hint": "Стрелки нагоре и надолу за движение, Enter за отваряне, Esc за затваряне",
-    "searching": "Търсене..."
+    "searching": "Търсене...",
+    "viewNow": "Виж сега"
   },
   "subtasks": {
     "placeholder": "Добавете подзадача...",
@@ -3953,7 +3960,9 @@
     "areaBalance30": "Баланс на областите, последните 30 дни",
     "completionRateLegend": "% = процент изпълнение",
     "itemsToProcess_one": "{{count}} елемент за обработка",
-    "overview": "Общ преглед"
+    "overview": "Общ преглед",
+    "balance": "Баланс",
+    "noTaskData": "Няма данни за задачи"
   },
   "billing": {
     "title": "План и плащане",
@@ -4140,7 +4149,8 @@
     "clearAssignment": "Премахни възлагането",
     "nameRequired": "Името е задължително",
     "saveError": "Човекът не можа да бъде запазен",
-    "signInLink": "Връзка за вход"
+    "signInLink": "Връзка за вход",
+    "unassigned": "Без възложител"
   },
   "members": {
     "addTitle": "Добави член",

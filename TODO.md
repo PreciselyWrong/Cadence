@@ -4,6 +4,7 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Now
 
+- Android : vocabulaire unique du web (2026-11-12, `docs/fork/WEB-UX-NOTES.md` › Vocabulaire unique). « Domaine » devient « Zone » dans `tasks_lists_area`, `tasks_projects_no_area`, `areas_filter_label`, `areas_suggest`, `auto_classify_area` et `tasks/model/SyncConflicts.kt` ; `triage_mail_create_task` dit « Créer une tâche ». Vérif : plus aucun « domaine » dans l'app, `TaskOverviewsTest` à jour.
 - Android : aperçus sous la description d'un projet. La description de projet n'est ni dans Room ni dans la synchro (`project`) ; à ajouter (colonne, migration, champ synchronisé) avant d'y montrer les cartes. Vérif : une adresse dans la description d'un projet montre sa carte sur le téléphone, hors ligne compris.
 
 Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `ghcr.io/preciselywrong/cadence:latest`. Vérifié : suites serveur ciblées sur SQLite et PostgreSQL 16, tests web, 1655 tests Android, lint, build. Reste ce qui demande ton téléphone, ton serveur, un compte externe ou ta décision.

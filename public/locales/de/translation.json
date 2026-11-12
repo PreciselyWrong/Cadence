@@ -280,7 +280,8 @@
     "undo": "Rückgängig",
     "copyCode": "Code kopieren",
     "copy": "Kopieren",
-    "copied": "Kopiert"
+    "copied": "Kopiert",
+    "previewUnavailable": "Vorschau nicht verfügbar"
   },
   "sidebar": {
     "links": "Links",
@@ -557,7 +558,8 @@
     "dueInDays": "Fällig in {{days}} Tagen",
     "startedSuccessfully": "Aufgabe erfolgreich gestartet!",
     "deleteConfirmMessage": "Möchtest du \"{{name}}\" wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
-    "withLink": "Mit Link"
+    "withLink": "Mit Link",
+    "noTasksScheduled": "Keine Aufgaben geplant"
   },
   "timeline": {
     "activityTimeline": "Aktivitätsverlauf",
@@ -899,7 +901,11 @@
     "unsaved": "Ungespeicherte Änderungen",
     "backgroundColor": "Hintergrundfarbe",
     "selectProject": "Projekt auswählen",
-    "noMatchingNotes": "Keine passenden Notizen"
+    "noMatchingNotes": "Keine passenden Notizen",
+    "noPreviewContent": "Kein Inhalt für die Vorschau. Wechsle zu Bearbeiten, um Inhalt hinzuzufügen.",
+    "mermaidError": "Mermaid-Diagramm konnte nicht dargestellt werden",
+    "mermaidRendering": "Diagramm wird dargestellt…",
+    "mermaidLabel": "Mermaid-Diagramm"
   },
   "recurrence": {
     "none": "Keine",
@@ -3510,7 +3516,8 @@
     "moreFilters": "Weitere Filter",
     "fewerFilters": "Weniger Filter",
     "hint": "Pfeiltasten auf und ab zum Bewegen, Enter zum Öffnen, Esc zum Schließen",
-    "searching": "Suche läuft..."
+    "searching": "Suche läuft...",
+    "viewNow": "Jetzt ansehen"
   },
   "subtasks": {
     "placeholder": "Fügen Sie eine Unteraufgabe hinzu...",
@@ -3964,7 +3971,9 @@
     "areaBalance30": "Bereiche, letzte 30 Tage",
     "completionRateLegend": "% = Erledigungsquote",
     "itemsToProcess_one": "{{count}} Eintrag zu bearbeiten",
-    "overview": "Überblick"
+    "overview": "Überblick",
+    "balance": "Balance",
+    "noTaskData": "Keine Aufgabendaten"
   },
   "billing": {
     "title": "Tarif & Abrechnung",
@@ -4151,7 +4160,8 @@
     "clearAssignment": "Zuweisung entfernen",
     "nameRequired": "Name ist erforderlich",
     "saveError": "Person konnte nicht gespeichert werden",
-    "signInLink": "Anmeldelink"
+    "signInLink": "Anmeldelink",
+    "unassigned": "Nicht zugewiesen"
   },
   "members": {
     "addTitle": "Mitglied hinzufügen",

@@ -278,7 +278,8 @@
     "undo": "撤销",
     "copyCode": "复制代码",
     "copy": "复制",
-    "copied": "已复制"
+    "copied": "已复制",
+    "previewUnavailable": "无法预览"
   },
   "sidebar": {
     "links": "链接",
@@ -555,7 +556,8 @@
     "dueInDays": "{{days}} 天后到期",
     "startedSuccessfully": "任务已成功开始！",
     "deleteConfirmMessage": "确定要删除\"{{name}}\"吗？此操作无法撤销。",
-    "withLink": "带链接"
+    "withLink": "带链接",
+    "noTasksScheduled": "没有计划的任务"
   },
   "timeline": {
     "activityTimeline": "活动时间线",
@@ -2459,7 +2461,11 @@
     "unsaved": "有未保存的更改",
     "backgroundColor": "背景颜色",
     "selectProject": "选择项目",
-    "noMatchingNotes": "没有匹配的笔记"
+    "noMatchingNotes": "没有匹配的笔记",
+    "noPreviewContent": "没有可预览的内容。切换到“编辑”以添加内容。",
+    "mermaidError": "无法渲染 Mermaid 图表",
+    "mermaidRendering": "正在渲染图表…",
+    "mermaidLabel": "Mermaid 图表"
   },
   "tags": {
     "loading": "加载标签...",
@@ -3492,7 +3498,8 @@
     "moreFilters": "更多筛选",
     "fewerFilters": "收起筛选",
     "hint": "上下键移动，Enter 打开，Esc 关闭",
-    "searching": "搜索中..."
+    "searching": "搜索中...",
+    "viewNow": "立即查看"
   },
   "subtasks": {
     "placeholder": "添加子任务...",
@@ -3946,7 +3953,9 @@
     "areaBalance30": "区域平衡，最近 30 天",
     "completionRateLegend": "% = 完成率",
     "itemsToProcess_one": "{{count}} 项待处理",
-    "overview": "概览"
+    "overview": "概览",
+    "balance": "平衡",
+    "noTaskData": "没有任务数据"
   },
   "billing": {
     "title": "套餐与账单",
@@ -4133,7 +4142,8 @@
     "clearAssignment": "取消分配",
     "nameRequired": "名称为必填项",
     "saveError": "无法保存该人员",
-    "signInLink": "登录链接"
+    "signInLink": "登录链接",
+    "unassigned": "未分配"
   },
   "members": {
     "addTitle": "添加成员",

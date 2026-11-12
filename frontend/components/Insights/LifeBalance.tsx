@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Project } from '../../entities/Project';
 import { Area } from '../../entities/Area';
@@ -65,6 +66,7 @@ function generateConclusion(areas: AreaStats[]): string {
 }
 
 const LifeBalance: React.FC<Props> = ({ projects }) => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [areaMetaMap, setAreaMetaMap] = useState<
         Map<string, { color: string; uid: string }>
@@ -146,7 +148,7 @@ const LifeBalance: React.FC<Props> = ({ projects }) => {
         <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl p-4 shadow-sm h-full">
             <div>
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">
-                    Area Balance
+                    {t('reports.areaBalance', 'Area balance')}
                 </h3>
                 <div className="space-y-2">
                     {areas.map((area) => (

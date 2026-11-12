@@ -552,7 +552,10 @@ const NoteModal: React.FC<NoteModalProps> = ({
                                                             >
                                                                 <PencilIcon className="h-3 w-3" />
                                                                 <span>
-                                                                    Edit
+                                                                    {t(
+                                                                        'common.edit',
+                                                                        'Edit'
+                                                                    )}
                                                                 </span>
                                                             </button>
                                                             <button
@@ -571,7 +574,10 @@ const NoteModal: React.FC<NoteModalProps> = ({
                                                             >
                                                                 <EyeIcon className="h-3 w-3" />
                                                                 <span>
-                                                                    Preview
+                                                                    {t(
+                                                                        'common.preview',
+                                                                        'Preview'
+                                                                    )}
                                                                 </span>
                                                             </button>
                                                         </div>
@@ -646,11 +652,10 @@ const NoteModal: React.FC<NoteModalProps> = ({
                                                                 />
                                                             ) : (
                                                                 <p className="text-gray-600 dark:text-gray-300 italic">
-                                                                    No content
-                                                                    to preview.
-                                                                    Switch to
-                                                                    Edit tab to
-                                                                    add content.
+                                                                    {t(
+                                                                        'notes.noPreviewContent',
+                                                                        'No content to preview. Switch to Edit to add content.'
+                                                                    )}
                                                                 </p>
                                                             )}
                                                         </div>

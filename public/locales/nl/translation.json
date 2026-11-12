@@ -280,7 +280,8 @@
     "undo": "Ongedaan maken",
     "copyCode": "Code kopiëren",
     "copy": "Kopiëren",
-    "copied": "Gekopieerd"
+    "copied": "Gekopieerd",
+    "previewUnavailable": "Voorbeeld niet beschikbaar"
   },
   "sidebar": {
     "links": "Links",
@@ -557,7 +558,8 @@
     "dueInDays": "Verloopt over {{days}} d",
     "startedSuccessfully": "Taak succesvol gestart!",
     "deleteConfirmMessage": "Weet je zeker dat je \"{{name}}\" wilt verwijderen? Dit kan niet ongedaan worden gemaakt.",
-    "withLink": "Met een link"
+    "withLink": "Met een link",
+    "noTasksScheduled": "Geen taken gepland"
   },
   "timeline": {
     "activityTimeline": "Activiteit Tijdlijn",
@@ -2466,7 +2468,11 @@
     "unsaved": "Niet-opgeslagen wijzigingen",
     "backgroundColor": "Achtergrondkleur",
     "selectProject": "Project kiezen",
-    "noMatchingNotes": "Geen overeenkomende notities"
+    "noMatchingNotes": "Geen overeenkomende notities",
+    "noPreviewContent": "Niets om te bekijken. Ga naar Bewerken om inhoud toe te voegen.",
+    "mermaidError": "Mermaid-diagram kon niet worden weergegeven",
+    "mermaidRendering": "Diagram wordt weergegeven…",
+    "mermaidLabel": "Mermaid-diagram"
   },
   "tags": {
     "loading": "Tags laden...",
@@ -3499,7 +3505,8 @@
     "moreFilters": "Meer filters",
     "fewerFilters": "Minder filters",
     "hint": "Omhoog en omlaag om te bewegen, Enter om te openen, Esc om te sluiten",
-    "searching": "Zoeken..."
+    "searching": "Zoeken...",
+    "viewNow": "Nu bekijken"
   },
   "subtasks": {
     "placeholder": "Voeg een subtaak toe...",
@@ -3953,7 +3960,9 @@
     "areaBalance30": "Balans per gebied, laatste 30 dagen",
     "completionRateLegend": "% = afrondingspercentage",
     "itemsToProcess_one": "{{count}} item te verwerken",
-    "overview": "Overzicht"
+    "overview": "Overzicht",
+    "balance": "Balans",
+    "noTaskData": "Geen taakgegevens"
   },
   "billing": {
     "title": "Abonnement en facturering",
@@ -4140,7 +4149,8 @@
     "clearAssignment": "Toewijzing wissen",
     "nameRequired": "Naam is verplicht",
     "saveError": "Persoon opslaan mislukt",
-    "signInLink": "Inloglink"
+    "signInLink": "Inloglink",
+    "unassigned": "Niet toegewezen"
   },
   "members": {
     "addTitle": "Lid toevoegen",

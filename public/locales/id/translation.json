@@ -278,7 +278,8 @@
     "undo": "Batalkan",
     "copyCode": "Salin kode",
     "copy": "Salin",
-    "copied": "Disalin"
+    "copied": "Disalin",
+    "previewUnavailable": "Pratinjau tidak tersedia"
   },
   "sidebar": {
     "links": "Tautan",
@@ -555,7 +556,8 @@
     "dueInDays": "Jatuh tempo dalam {{days}} hari",
     "startedSuccessfully": "Tugas berhasil dimulai!",
     "deleteConfirmMessage": "Yakin ingin menghapus \"{{name}}\"? Tindakan ini tidak dapat dibatalkan.",
-    "withLink": "Dengan tautan"
+    "withLink": "Dengan tautan",
+    "noTasksScheduled": "Tidak ada tugas terjadwal"
   },
   "timeline": {
     "activityTimeline": "Garis Waktu Aktivitas",
@@ -2459,7 +2461,11 @@
     "unsaved": "Perubahan belum disimpan",
     "backgroundColor": "Warna latar",
     "selectProject": "Pilih proyek",
-    "noMatchingNotes": "Tidak ada catatan yang cocok"
+    "noMatchingNotes": "Tidak ada catatan yang cocok",
+    "noPreviewContent": "Tidak ada konten untuk dipratinjau. Beralih ke Edit untuk menambahkan konten.",
+    "mermaidError": "Diagram Mermaid tidak dapat ditampilkan",
+    "mermaidRendering": "Menampilkan diagram…",
+    "mermaidLabel": "Diagram Mermaid"
   },
   "tags": {
     "loading": "Memuat tag...",
@@ -3492,7 +3498,8 @@
     "moreFilters": "Filter lainnya",
     "fewerFilters": "Filter lebih sedikit",
     "hint": "Atas dan Bawah untuk bergerak, Enter untuk membuka, Esc untuk menutup",
-    "searching": "Mencari..."
+    "searching": "Mencari...",
+    "viewNow": "Lihat sekarang"
   },
   "subtasks": {
     "placeholder": "Tambahkan subtugas...",
@@ -3946,7 +3953,9 @@
     "areaBalance30": "Keseimbangan area, 30 hari terakhir",
     "completionRateLegend": "% = tingkat penyelesaian",
     "itemsToProcess_one": "{{count}} item untuk diproses",
-    "overview": "Ikhtisar"
+    "overview": "Ikhtisar",
+    "balance": "Keseimbangan",
+    "noTaskData": "Tidak ada data tugas"
   },
   "billing": {
     "title": "Paket & Penagihan",
@@ -4133,7 +4142,8 @@
     "clearAssignment": "Hapus penugasan",
     "nameRequired": "Nama wajib diisi",
     "saveError": "Gagal menyimpan orang",
-    "signInLink": "Tautan masuk"
+    "signInLink": "Tautan masuk",
+    "unassigned": "Belum ditugaskan"
   },
   "members": {
     "addTitle": "Tambah anggota",

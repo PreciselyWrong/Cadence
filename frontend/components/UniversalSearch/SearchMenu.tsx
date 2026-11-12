@@ -238,7 +238,7 @@ const SearchMenu: React.FC<SearchMenuProps> = ({
                         className="underline font-semibold hover:text-green-100"
                         onClick={onClose}
                     >
-                        View now
+                        {t('search.viewNow', 'View now')}
                     </Link>
                 </div>
             );

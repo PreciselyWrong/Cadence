@@ -281,7 +281,8 @@
     "untitled": "Sans titre",
     "copyCode": "Copier le code",
     "copy": "Copier",
-    "copied": "Copié"
+    "copied": "Copié",
+    "previewUnavailable": "Aperçu indisponible"
   },
   "sidebar": {
     "links": "Liens",
@@ -559,7 +560,8 @@
     "startNow": "Démarrer maintenant",
     "startedSuccessfully": "Tâche démarrée !",
     "todayPlan": "Plan du jour",
-    "withLink": "Avec un lien"
+    "withLink": "Avec un lien",
+    "noTasksScheduled": "Aucune tâche prévue"
   },
   "timeline": {
     "activityTimeline": "Chronologie d'Activité",
@@ -2474,7 +2476,11 @@
     "unsaved": "Modifications non enregistrées",
     "backgroundColor": "Couleur de fond",
     "selectProject": "Choisir un projet",
-    "noMatchingNotes": "Aucune note correspondante"
+    "noMatchingNotes": "Aucune note correspondante",
+    "noPreviewContent": "Rien à prévisualiser. Passez à Modifier pour ajouter du contenu.",
+    "mermaidError": "Impossible d'afficher le diagramme Mermaid",
+    "mermaidRendering": "Affichage du diagramme…",
+    "mermaidLabel": "Diagramme Mermaid"
   },
   "tags": {
     "loading": "Chargement des étiquettes...",
@@ -3510,7 +3516,8 @@
     "moreFilters": "Plus de filtres",
     "fewerFilters": "Moins de filtres",
     "hint": "Haut et Bas pour naviguer, Entrée pour ouvrir, Échap pour fermer",
-    "searching": "Recherche..."
+    "searching": "Recherche...",
+    "viewNow": "Voir maintenant"
   },
   "subtasks": {
     "placeholder": "Ajouter une sous-tâche...",
@@ -3964,7 +3971,9 @@
     "areaBalance30": "Équilibre des zones, 30 derniers jours",
     "completionRateLegend": "% = taux d'achèvement",
     "itemsToProcess_one": "{{count}} élément à traiter",
-    "overview": "Aperçu"
+    "overview": "Aperçu",
+    "balance": "Équilibre",
+    "noTaskData": "Aucune donnée de tâche"
   },
   "billing": {
     "title": "Forfait et facturation",
@@ -4151,7 +4160,8 @@
     "clearAssignment": "Retirer l'assignation",
     "nameRequired": "Le nom est obligatoire",
     "saveError": "Impossible d'enregistrer la personne",
-    "signInLink": "Lien de connexion"
+    "signInLink": "Lien de connexion",
+    "unassigned": "Non assignée"
   },
   "members": {
     "addTitle": "Ajouter un membre",
