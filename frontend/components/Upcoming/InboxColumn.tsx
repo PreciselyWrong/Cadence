@@ -181,7 +181,9 @@ const InboxColumn: React.FC<InboxColumnProps> = ({
         }
     };
 
-    if (collapsed) {
+    // An empty inbox stays collapsed on the board; while the viewer is
+    // typing a new item the column must be open, or the field never shows.
+    if (collapsed && !adding) {
         const empty = open.length === 0;
         return (
             <section

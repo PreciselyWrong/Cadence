@@ -84,6 +84,10 @@ describe('InboxColumn adding', () => {
         fireEvent.click(screen.getByRole('button', { name: 'Add to inbox' }));
 
         expect(onChange).toHaveBeenCalledWith(false);
+        // The board keeps an empty inbox collapsed: the field must still show.
+        expect(
+            screen.getByRole('textbox', { name: 'New inbox item' })
+        ).toHaveFocus();
     });
 
     it('adds the typed text through the inbox service on Enter', async () => {
