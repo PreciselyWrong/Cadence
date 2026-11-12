@@ -596,7 +596,7 @@ describe('Plugins', () => {
                 );
                 fs.writeFileSync(path.join(target, 'index.js'), code);
             });
-        const install = (url = 'https://gitea.lan/me/hello.git') =>
+        const install = (url = 'https://git.example.com/me/hello.git') =>
             adminAgent.post('/api/plugins/install').send({ url });
 
         it('clones a repository into the plugins folder, turned off', async () => {
@@ -605,7 +605,7 @@ describe('Plugins', () => {
             expect(res.status).toBe(200);
             expect(res.body).toMatchObject({ id: 'hello', state: 'disabled' });
             expect(git.clone).toHaveBeenCalledWith(
-                'https://gitea.lan/me/hello.git',
+                'https://git.example.com/me/hello.git',
                 path.join(dir, 'hello')
             );
             expect((await find('hello')).state).toBe('disabled');
@@ -624,7 +624,7 @@ describe('Plugins', () => {
         it('removes the clone when its id is already used', async () => {
             writePlugin('first', manifestOf('hello'));
             fakeClone(manifestOf('hello'));
-            const res = await install('https://gitea.lan/me/second.git');
+            const res = await install('https://git.example.com/me/second.git');
             expect(res.status).toBe(409);
             expect(fs.existsSync(path.join(dir, 'second'))).toBe(false);
         });
@@ -635,7 +635,7 @@ describe('Plugins', () => {
             expect(git.clone).not.toHaveBeenCalled();
             expect((await install('file:///etc')).status).toBe(400);
             git.clone.mockRejectedValue(new Error('fatal: not found'));
-            const res = await install('https://gitea.lan/me/other.git');
+            const res = await install('https://git.example.com/me/other.git');
             expect(res.status).toBe(400);
             expect(fs.existsSync(path.join(dir, 'other'))).toBe(false);
         });
@@ -643,7 +643,7 @@ describe('Plugins', () => {
         it('keeps installs for admins only', async () => {
             const res = await otherAgent
                 .post('/api/plugins/install')
-                .send({ url: 'https://gitea.lan/me/hello.git' });
+                .send({ url: 'https://git.example.com/me/hello.git' });
             expect(res.status).toBe(403);
             expect(git.clone).not.toHaveBeenCalled();
         });

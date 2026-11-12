@@ -6,7 +6,7 @@ const {
 
 const env = (extra) => ({
     TUDUDI_TODO_REPOS: 'cadence, My-Notes ,cadence',
-    TUDUDI_TODO_REPO_CADENCE_URL: 'https://gitea.lan/nico/cadence.git',
+    TUDUDI_TODO_REPO_CADENCE_URL: 'https://git.example.com/nico/cadence.git',
     TUDUDI_TODO_REPO_MY_NOTES_URL: 'git@github.com:nico/notes.git',
     TUDUDI_TODO_REPO_MY_NOTES_BRANCH: 'trunk',
     TUDUDI_TODO_REPO_MY_NOTES_PATH: 'docs/TODO.md',
@@ -22,7 +22,7 @@ describe('TODO.md repository configuration', () => {
                 branch: 'main',
                 path: 'TODO.md',
                 token: null,
-                display: 'gitea.lan/nico/cadence',
+                display: 'git.example.com/nico/cadence',
             }),
             expect.objectContaining({
                 slug: 'my-notes',

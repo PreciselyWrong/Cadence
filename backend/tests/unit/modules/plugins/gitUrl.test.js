@@ -7,9 +7,9 @@ describe('plugin git address', () => {
             'cadence-plugin-hermes',
         ],
         ['https://github.com/acme/hermes/', 'hermes'],
-        ['http://gitea.lan:3000/me/My_Plugin', 'my-plugin'],
-        ['ssh://git@gitea.lan/me/hermes.git', 'hermes'],
-        ['git@gitea.lan:me/hermes.git', 'hermes'],
+        ['http://git.example.com:3000/me/My_Plugin', 'my-plugin'],
+        ['ssh://git@git.example.com/me/hermes.git', 'hermes'],
+        ['git@git.example.com:me/hermes.git', 'hermes'],
     ])('accepts %s', (url, folder) => {
         expect(parseGitUrl(url)).toEqual({ ok: true, url, folder });
     });
