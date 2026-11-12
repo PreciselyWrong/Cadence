@@ -46,12 +46,13 @@ interface TaskAIInsightsProps {
 function safeHref(url: string): string {
     try {
         const parsed = new URL(url);
-        return parsed.protocol === 'http:' || parsed.protocol === 'https:' ? url : '#';
+        return parsed.protocol === 'http:' || parsed.protocol === 'https:'
+            ? url
+            : '#';
     } catch {
         return '#';
     }
 }
-
 
 const InsightCard: React.FC<{
     icon: React.ElementType;
@@ -69,7 +70,9 @@ const InsightCard: React.FC<{
     return (
         <div
             className={`flex items-start gap-3 px-3 py-3 rounded-lg border transition-all duration-500 ${colorClass} ${
-                visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+                visible
+                    ? 'opacity-100 translate-y-0'
+                    : 'opacity-0 translate-y-2'
             }`}
         >
             <Icon className="h-4 w-4 flex-shrink-0 mt-0.5" />
@@ -97,7 +100,9 @@ const LinksCard: React.FC<{
     return (
         <div
             className={`flex items-start gap-3 px-3 py-3 rounded-lg border transition-all duration-500 bg-gray-50 dark:bg-gray-800/40 border-gray-100 dark:border-gray-700/50 ${
-                visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+                visible
+                    ? 'opacity-100 translate-y-0'
+                    : 'opacity-0 translate-y-2'
             }`}
         >
             <LinkIcon className="h-4 w-4 flex-shrink-0 mt-0.5 text-gray-500 dark:text-gray-400" />
@@ -138,7 +143,9 @@ const BreakdownCard: React.FC<{
     return (
         <div
             className={`flex items-start gap-3 px-3 py-3 rounded-lg border transition-all duration-500 bg-green-50 dark:bg-green-900/10 border-green-100 dark:border-green-800/30 text-green-600 dark:text-green-400 ${
-                visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+                visible
+                    ? 'opacity-100 translate-y-0'
+                    : 'opacity-0 translate-y-2'
             }`}
         >
             <ListBulletIcon className="h-4 w-4 flex-shrink-0 mt-0.5" />
@@ -152,7 +159,9 @@ const BreakdownCard: React.FC<{
                             <span className="flex-shrink-0 w-4 h-4 rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 text-[12px] font-bold flex items-center justify-center leading-none mt-0.5">
                                 {i + 1}
                             </span>
-                            <span className="text-sm text-green-900 dark:text-green-100 leading-snug">{step}</span>
+                            <span className="text-sm text-green-900 dark:text-green-100 leading-snug">
+                                {step}
+                            </span>
                         </li>
                     ))}
                 </ol>
@@ -193,12 +202,14 @@ const TaskAIInsights = forwardRef<TaskAIInsightsHandle, TaskAIInsightsProps>(
 
         const dismiss = () => {
             setDismissed(true);
-            if (task.uid) updateTaskInsightsDismissed(task.uid, true).catch(() => {});
+            if (task.uid)
+                updateTaskInsightsDismissed(task.uid, true).catch(() => {});
         };
 
         const show = () => {
             setDismissed(false);
-            if (task.uid) updateTaskInsightsDismissed(task.uid, false).catch(() => {});
+            if (task.uid)
+                updateTaskInsightsDismissed(task.uid, false).catch(() => {});
         };
 
         const generate = async () => {
@@ -239,7 +250,9 @@ const TaskAIInsights = forwardRef<TaskAIInsightsHandle, TaskAIInsightsProps>(
         const prevActiveRef = useRef<boolean | null>(null);
         useEffect(() => {
             if (isInitializing) return;
-            const isActive = !dismissed && (!!insights || isLoading || !!error || lowContext);
+            const isActive =
+                !dismissed &&
+                (!!insights || isLoading || !!error || lowContext);
             if (prevActiveRef.current !== isActive) {
                 prevActiveRef.current = isActive;
                 onActiveChange?.(isActive);
@@ -286,7 +299,11 @@ const TaskAIInsights = forwardRef<TaskAIInsightsHandle, TaskAIInsightsProps>(
         }
 
         // Hide entirely when initializing, dismissed, or nothing to show yet
-        if (isInitializing || (dismissed && !isLoading) || (!insights && !isLoading && !error)) {
+        if (
+            isInitializing ||
+            (dismissed && !isLoading) ||
+            (!insights && !isLoading && !error)
+        ) {
             return null;
         }
 
@@ -302,7 +319,9 @@ const TaskAIInsights = forwardRef<TaskAIInsightsHandle, TaskAIInsightsProps>(
                         </span>
                         {insights && !isLoading && insights.generated_at && (
                             <span className="text-xs text-gray-500 dark:text-gray-400">
-                                {new Date(insights.generated_at).toLocaleTimeString([], {
+                                {new Date(
+                                    insights.generated_at
+                                ).toLocaleTimeString([], {
                                     hour: '2-digit',
                                     minute: '2-digit',
                                 })}
@@ -352,16 +371,25 @@ const TaskAIInsights = forwardRef<TaskAIInsightsHandle, TaskAIInsightsProps>(
                             <InformationCircleIcon className="h-4 w-4 flex-shrink-0 mt-0.5 text-yellow-600 dark:text-yellow-400" />
                             <div>
                                 <p className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
-                                    {t('aiAssistant.lowContextTitle', 'Not enough context for a great suggestion')}
+                                    {t(
+                                        'aiAssistant.lowContextTitle',
+                                        'Not enough context for a great suggestion'
+                                    )}
                                 </p>
                                 <p className="text-xs text-yellow-700 dark:text-yellow-300 mt-0.5">
-                                    {t('aiAssistant.lowContextHint', 'Add a description, notes, tags, or assign a project to get better insights. You can still generate below.')}
+                                    {t(
+                                        'aiAssistant.lowContextHint',
+                                        'Add a description, notes, tags, or assign a project to get better insights. You can still generate below.'
+                                    )}
                                 </p>
                                 <button
                                     onClick={generate}
                                     className="mt-2 text-xs font-medium text-yellow-700 dark:text-yellow-300 underline underline-offset-2 hover:text-yellow-900 dark:hover:text-yellow-100"
                                 >
-                                    {t('aiAssistant.generateAnyway', 'Generate anyway')}
+                                    {t(
+                                        'aiAssistant.generateAnyway',
+                                        'Generate anyway'
+                                    )}
                                 </button>
                             </div>
                         </div>
@@ -390,7 +418,10 @@ const TaskAIInsights = forwardRef<TaskAIInsightsHandle, TaskAIInsightsProps>(
                             {insights.insight && (
                                 <InsightCard
                                     icon={LightBulbIcon}
-                                    label={t('aiAssistant.taskInsight', 'About this task')}
+                                    label={t(
+                                        'aiAssistant.taskInsight',
+                                        'About this task'
+                                    )}
                                     text={insights.insight}
                                     colorClass="bg-primary-container border-primary/20 text-primary [&_p:last-child]:text-primary-on-container"
                                     delay={0}
@@ -399,17 +430,29 @@ const TaskAIInsights = forwardRef<TaskAIInsightsHandle, TaskAIInsightsProps>(
                             {insights.next_step && (
                                 <InsightCard
                                     icon={ArrowRightIcon}
-                                    label={t('aiAssistant.taskNextStep', 'Next step')}
+                                    label={t(
+                                        'aiAssistant.taskNextStep',
+                                        'Next step'
+                                    )}
                                     text={insights.next_step}
                                     colorClass="bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-800/40 text-blue-500 dark:text-blue-400 [&_p:last-child]:text-blue-900 [&_p:last-child]:dark:text-blue-100"
                                     delay={100}
                                 />
                             )}
-                            {insights.breakdown && insights.breakdown.length > 0 && (
-                                <BreakdownCard steps={insights.breakdown} delay={200} t={t} />
-                            )}
+                            {insights.breakdown &&
+                                insights.breakdown.length > 0 && (
+                                    <BreakdownCard
+                                        steps={insights.breakdown}
+                                        delay={200}
+                                        t={t}
+                                    />
+                                )}
                             {insights.links && insights.links.length > 0 && (
-                                <LinksCard links={insights.links} delay={300} t={t} />
+                                <LinksCard
+                                    links={insights.links}
+                                    delay={300}
+                                    t={t}
+                                />
                             )}
                             {insights.watch_out && (
                                 <InsightCard

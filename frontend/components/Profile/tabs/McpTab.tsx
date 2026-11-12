@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CpuChipIcon, DocumentDuplicateIcon } from '@heroicons/react/24/outline';
+import {
+    CpuChipIcon,
+    DocumentDuplicateIcon,
+} from '@heroicons/react/24/outline';
 import { useToast } from '../../Shared/ToastContext';
 import { getApiPath } from '../../../config/paths';
 import RemoteConnectorCard from './RemoteConnectorCard';
@@ -161,7 +164,10 @@ const McpTab: React.FC<McpTabProps> = ({ isActive }) => {
 
                     <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md">
                         <p className="text-xs font-medium text-blue-800 dark:text-blue-300 mb-2">
-                            {t('profile.mcp.step2.locationTitle', 'Claude Desktop config file location:')}
+                            {t(
+                                'profile.mcp.step2.locationTitle',
+                                'Claude Desktop config file location:'
+                            )}
                         </p>
                         <ul className="text-xs text-blue-700 dark:text-blue-400 space-y-1 font-mono">
                             <li>
@@ -174,24 +180,63 @@ const McpTab: React.FC<McpTabProps> = ({ isActive }) => {
                             </li>
                         </ul>
                         <p className="text-xs text-blue-700 dark:text-blue-400 mt-2 italic">
-                            {t('profile.mcp.step2.otherClients', "Other MCP clients may use different configuration methods, check your client's documentation.")}
+                            {t(
+                                'profile.mcp.step2.otherClients',
+                                "Other MCP clients may use different configuration methods, check your client's documentation."
+                            )}
                         </p>
                     </div>
 
                     <div className="mt-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-md border border-green-200 dark:border-green-800">
                         <p className="text-xs font-medium text-green-800 dark:text-green-300 mb-2">
-                            ✓ {t('profile.mcp.remote.title', 'Remote Access Enabled')}
+                            ✓{' '}
+                            {t(
+                                'profile.mcp.remote.title',
+                                'Remote Access Enabled'
+                            )}
                         </p>
                         <p className="text-xs text-green-700 dark:text-green-400">
-                            {t('profile.mcp.remote.usesPrefix', 'This configuration uses')}{' '}
-                            <code className="px-1 py-0.5 bg-green-100 dark:bg-green-900 rounded">mcp-remote</code>{' '}
-                            {t('profile.mcp.remote.usesSuffix', 'to connect via HTTP. This means you can:')}
+                            {t(
+                                'profile.mcp.remote.usesPrefix',
+                                'This configuration uses'
+                            )}{' '}
+                            <code className="px-1 py-0.5 bg-green-100 dark:bg-green-900 rounded">
+                                mcp-remote
+                            </code>{' '}
+                            {t(
+                                'profile.mcp.remote.usesSuffix',
+                                'to connect via HTTP. This means you can:'
+                            )}
                         </p>
                         <ul className="text-xs text-green-700 dark:text-green-400 mt-2 ml-4 space-y-1">
-                            <li>• {t('profile.mcp.remote.local', 'Access local Cadence (localhost)')}</li>
-                            <li>• {t('profile.mcp.remote.cloud', 'Access remote Cadence (cloud servers)')}</li>
-                            <li>• {t('profile.mcp.remote.docker', 'Use from Docker deployments')}</li>
-                            <li>• {t('profile.mcp.remote.tokens', 'Connect securely with API tokens')}</li>
+                            <li>
+                                •{' '}
+                                {t(
+                                    'profile.mcp.remote.local',
+                                    'Access local Cadence (localhost)'
+                                )}
+                            </li>
+                            <li>
+                                •{' '}
+                                {t(
+                                    'profile.mcp.remote.cloud',
+                                    'Access remote Cadence (cloud servers)'
+                                )}
+                            </li>
+                            <li>
+                                •{' '}
+                                {t(
+                                    'profile.mcp.remote.docker',
+                                    'Use from Docker deployments'
+                                )}
+                            </li>
+                            <li>
+                                •{' '}
+                                {t(
+                                    'profile.mcp.remote.tokens',
+                                    'Connect securely with API tokens'
+                                )}
+                            </li>
                         </ul>
                     </div>
                 </section>
@@ -248,39 +293,98 @@ const McpTab: React.FC<McpTabProps> = ({ isActive }) => {
                     </p>
                     <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                         <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            {t('profile.mcp.step4.examplesTitle', 'Example prompts:')}
+                            {t(
+                                'profile.mcp.step4.examplesTitle',
+                                'Example prompts:'
+                            )}
                         </p>
                         <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-2">
                             <li className="italic">
-                                &quot;{t('profile.mcp.example1', 'Show me my tasks for today')}&quot;
+                                &quot;
+                                {t(
+                                    'profile.mcp.example1',
+                                    'Show me my tasks for today'
+                                )}
+                                &quot;
                             </li>
                             <li className="italic">
-                                &quot;{t('profile.mcp.example2', 'Create a task to review the MCP integration')}&quot;
+                                &quot;
+                                {t(
+                                    'profile.mcp.example2',
+                                    'Create a task to review the MCP integration'
+                                )}
+                                &quot;
                             </li>
                             <li className="italic">
-                                &quot;{t('profile.mcp.example3', 'What projects do I have in progress?')}&quot;
+                                &quot;
+                                {t(
+                                    'profile.mcp.example3',
+                                    'What projects do I have in progress?'
+                                )}
+                                &quot;
                             </li>
                             <li className="italic">
-                                &quot;{t('profile.mcp.example4', 'Add a reminder to my inbox to check emails')}&quot;
+                                &quot;
+                                {t(
+                                    'profile.mcp.example4',
+                                    'Add a reminder to my inbox to check emails'
+                                )}
+                                &quot;
                             </li>
                             <li className="italic">
-                                &quot;{t('profile.mcp.example5', 'Search for tasks related to documentation')}&quot;
+                                &quot;
+                                {t(
+                                    'profile.mcp.example5',
+                                    'Search for tasks related to documentation'
+                                )}
+                                &quot;
                             </li>
                         </ul>
                     </div>
 
                     <div className="mt-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-md border border-yellow-200 dark:border-yellow-800">
                         <p className="text-xs font-medium text-yellow-800 dark:text-yellow-300 mb-1">
-                            💡 {t('profile.mcp.troubleshooting.title', 'Troubleshooting')}
+                            💡{' '}
+                            {t(
+                                'profile.mcp.troubleshooting.title',
+                                'Troubleshooting'
+                            )}
                         </p>
                         <p className="text-xs text-yellow-700 dark:text-yellow-400">
-                            {t('profile.mcp.troubleshooting.intro', "If your MCP client can't connect, check that:")}
+                            {t(
+                                'profile.mcp.troubleshooting.intro',
+                                "If your MCP client can't connect, check that:"
+                            )}
                         </p>
                         <ul className="text-xs text-yellow-700 dark:text-yellow-400 mt-2 ml-4 space-y-1">
-                            <li>• {t('profile.mcp.troubleshooting.token', 'Your API token is valid and not expired')}</li>
-                            <li>• {t('profile.mcp.troubleshooting.server', 'The Cadence server is running and accessible')}</li>
-                            <li>• {t('profile.mcp.troubleshooting.restart', "You've restarted your MCP client completely")}</li>
-                            <li>• {t('profile.mcp.troubleshooting.firewall', 'For remote servers, check your firewall settings')}</li>
+                            <li>
+                                •{' '}
+                                {t(
+                                    'profile.mcp.troubleshooting.token',
+                                    'Your API token is valid and not expired'
+                                )}
+                            </li>
+                            <li>
+                                •{' '}
+                                {t(
+                                    'profile.mcp.troubleshooting.server',
+                                    'The Cadence server is running and accessible'
+                                )}
+                            </li>
+                            <li>
+                                •{' '}
+                                {t(
+                                    'profile.mcp.troubleshooting.restart',
+                                    "You've restarted your MCP client completely"
+                                )}
+                            </li>
+                            <li>
+                                •{' '}
+                                {t(
+                                    'profile.mcp.troubleshooting.firewall',
+                                    'For remote servers, check your firewall settings'
+                                )}
+                            </li>
                         </ul>
                     </div>
                 </section>

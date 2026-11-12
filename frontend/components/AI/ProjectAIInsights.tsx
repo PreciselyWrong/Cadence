@@ -79,7 +79,9 @@ const ProjectAIInsights = forwardRef<
         projectGoal: project.Goal?.title || project.goal?.title || undefined,
         projectArea: (project.area as any)?.name || undefined,
         totalTasks: taskStats?.total,
-        openTasks: taskStats ? taskStats.total - taskStats.completed : undefined,
+        openTasks: taskStats
+            ? taskStats.total - taskStats.completed
+            : undefined,
         completedTasks: taskStats?.completed,
         inProgressTasks: taskStats?.inProgress,
         overdueTaskCount: taskStats?.overdue,
@@ -88,12 +90,14 @@ const ProjectAIInsights = forwardRef<
     const dismiss = () => {
         setIsVisible(false);
         setDismissed(true);
-        if (project.uid) updateProjectInsightsDismissed(project.uid, true).catch(() => {});
+        if (project.uid)
+            updateProjectInsightsDismissed(project.uid, true).catch(() => {});
     };
 
     const show = () => {
         setDismissed(false);
-        if (project.uid) updateProjectInsightsDismissed(project.uid, false).catch(() => {});
+        if (project.uid)
+            updateProjectInsightsDismissed(project.uid, false).catch(() => {});
     };
 
     const generate = async () => {
@@ -135,7 +139,8 @@ const ProjectAIInsights = forwardRef<
     const prevActiveRef = useRef<boolean | null>(null);
     useEffect(() => {
         if (isInitializing) return;
-        const isActive = isVisible && !dismissed && (!!insights || isLoading || !!error);
+        const isActive =
+            isVisible && !dismissed && (!!insights || isLoading || !!error);
         if (prevActiveRef.current !== isActive) {
             prevActiveRef.current = isActive;
             onActiveChange?.(isActive);
@@ -156,7 +161,9 @@ const ProjectAIInsights = forwardRef<
         const init = async () => {
             if (project.uid) {
                 try {
-                    const cached = await fetchCachedProjectInsights(project.uid);
+                    const cached = await fetchCachedProjectInsights(
+                        project.uid
+                    );
                     if (cancelled) return;
                     setIsInitializing(false);
                     if (cached) {
@@ -209,7 +216,10 @@ const ProjectAIInsights = forwardRef<
                     <div className="flex items-center gap-2">
                         <SparklesIcon className="h-3.5 w-3.5 text-primary flex-shrink-0" />
                         <span className="text-xs font-semibold uppercase text-gray-600 dark:text-gray-300">
-                            {t('aiAssistant.projectInsightsTitle', 'AI Insights')}
+                            {t(
+                                'aiAssistant.projectInsightsTitle',
+                                'AI Insights'
+                            )}
                         </span>
                     </div>
                     <button
@@ -239,10 +249,13 @@ const ProjectAIInsights = forwardRef<
                     </span>
                     {insights && !isLoading && insights.generated_at && (
                         <span className="text-xs text-gray-500 dark:text-gray-400">
-                            {new Date(insights.generated_at).toLocaleTimeString([], {
-                                hour: '2-digit',
-                                minute: '2-digit',
-                            })}
+                            {new Date(insights.generated_at).toLocaleTimeString(
+                                [],
+                                {
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                }
+                            )}
                         </span>
                     )}
                 </div>
@@ -308,7 +321,10 @@ const ProjectAIInsights = forwardRef<
                         {insights.insight && (
                             <InsightCard
                                 icon={LightBulbIcon}
-                                label={t('aiAssistant.projectInsight', 'About this project')}
+                                label={t(
+                                    'aiAssistant.projectInsight',
+                                    'About this project'
+                                )}
                                 text={insights.insight}
                                 colorClass="bg-primary-container border-primary/20 text-primary [&_p:last-child]:text-primary-on-container"
                                 delay={0}
@@ -317,7 +333,10 @@ const ProjectAIInsights = forwardRef<
                         {insights.next_action && (
                             <InsightCard
                                 icon={ArrowRightIcon}
-                                label={t('aiAssistant.projectNextAction', 'Next action')}
+                                label={t(
+                                    'aiAssistant.projectNextAction',
+                                    'Next action'
+                                )}
                                 text={insights.next_action}
                                 colorClass="bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-800/40 text-blue-500 dark:text-blue-400 [&_p:last-child]:text-blue-900 [&_p:last-child]:dark:text-blue-100"
                                 delay={100}
@@ -326,7 +345,10 @@ const ProjectAIInsights = forwardRef<
                         {insights.health && (
                             <InsightCard
                                 icon={HeartIcon}
-                                label={t('aiAssistant.projectHealth', 'Project health')}
+                                label={t(
+                                    'aiAssistant.projectHealth',
+                                    'Project health'
+                                )}
                                 text={insights.health}
                                 colorClass="bg-green-50 dark:bg-green-900/10 border-green-100 dark:border-green-800/30 text-green-600 dark:text-green-400 [&_p:last-child]:text-green-900 [&_p:last-child]:dark:text-green-100"
                                 delay={200}
@@ -382,7 +404,9 @@ const TaskStatsBar: React.FC<{
             </p>
         </div>
         <div className="px-3 py-3 text-center">
-            <p className={`text-2xl font-bold tabular-nums ${taskStats.overdue > 0 ? 'text-red-500 dark:text-red-400' : 'text-gray-500 dark:text-gray-600'}`}>
+            <p
+                className={`text-2xl font-bold tabular-nums ${taskStats.overdue > 0 ? 'text-red-500 dark:text-red-400' : 'text-gray-500 dark:text-gray-600'}`}
+            >
                 {taskStats.overdue}
             </p>
             <p className="text-[12px] uppercase tracking-wide text-gray-500 dark:text-gray-400 mt-0.5">
@@ -408,7 +432,9 @@ const InsightCard: React.FC<{
     return (
         <div
             className={`flex items-start gap-3 px-3 py-3 rounded-lg border transition-all duration-500 ${colorClass} ${
-                visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+                visible
+                    ? 'opacity-100 translate-y-0'
+                    : 'opacity-0 translate-y-2'
             }`}
         >
             <Icon className="h-4 w-4 flex-shrink-0 mt-0.5" />

@@ -41,7 +41,9 @@ const EXPORT = `<DL><p>
 const upload = () => {
     const file = new File([EXPORT], 'bookmarks.html', { type: 'text/html' });
     // jsdom's File has no text().
-    Object.defineProperty(file, 'text', { value: () => Promise.resolve(EXPORT) });
+    Object.defineProperty(file, 'text', {
+        value: () => Promise.resolve(EXPORT),
+    });
     fireEvent.change(screen.getByLabelText('Bookmarks file'), {
         target: { files: [file] },
     });
