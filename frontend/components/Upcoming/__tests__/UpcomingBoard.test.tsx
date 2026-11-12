@@ -690,7 +690,7 @@ describe('UpcomingBoard', () => {
             'Write report'
         );
         fireEvent.click(
-            screen.getAllByRole('button', { name: 'Add a task' })[0]
+            screen.getAllByRole('button', { name: /^Add a task to / })[0]
         );
         const input = screen.getByLabelText('Add a task');
         fireEvent.change(input, { target: { value: 'Buy milk' } });
@@ -754,7 +754,9 @@ describe('UpcomingBoard', () => {
         renderBoard();
         await settle();
         fireEvent.click(
-            within(column(TODAY)).getByRole('button', { name: 'Add a task' })
+            within(column(TODAY)).getByRole('button', {
+                name: /^Add a task to /,
+            })
         );
         const input = within(column(TODAY)).getByLabelText('Add a task');
         fireEvent.change(input, { target: { value: 'Buy milk' } });
@@ -905,7 +907,9 @@ describe('UpcomingBoard', () => {
         renderBoard();
         await settle();
         fireEvent.click(
-            within(column(TODAY)).getByRole('button', { name: 'Add a task' })
+            within(column(TODAY)).getByRole('button', {
+                name: /^Add a task to /,
+            })
         );
         const input = within(column(TODAY)).getByLabelText('Add a task');
         fireEvent.change(input, { target: { value: 'tomorrow' } });

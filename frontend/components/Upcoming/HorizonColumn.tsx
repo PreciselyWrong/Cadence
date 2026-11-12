@@ -134,6 +134,26 @@ const HorizonColumn: React.FC<HorizonColumnProps> = ({
                     <p className="text-xs text-surface-on-variant">{hint}</p>
                 )}
             </header>
+            {onAdd && adding && (
+                <form onSubmit={submit}>
+                    <input
+                        ref={inputRef}
+                        type="text"
+                        autoFocus
+                        value={draft}
+                        onChange={(event) => setDraft(event.target.value)}
+                        onBlur={() => {
+                            if (!draft.trim()) closeAdd();
+                        }}
+                        onKeyDown={(event) => {
+                            if (event.key === 'Escape') closeAdd();
+                        }}
+                        placeholder={addLabel}
+                        aria-label={addLabel}
+                        className="h-9 w-full rounded-lg bg-surface px-3 text-body-m text-surface-on placeholder:text-surface-on-variant ring-1 ring-inset ring-outline-variant/60 focus:outline-none focus:ring-2 focus:ring-primary/60"
+                    />
+                </form>
+            )}
             <div
                 role="list"
                 className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto px-0.5 pb-1"
@@ -226,41 +246,6 @@ const HorizonColumn: React.FC<HorizonColumnProps> = ({
                     </div>
                 )}
             </div>
-            {onAdd &&
-                (adding ? (
-                    <form onSubmit={submit}>
-                        <input
-                            ref={inputRef}
-                            type="text"
-                            autoFocus
-                            value={draft}
-                            onChange={(event) => setDraft(event.target.value)}
-                            onBlur={() => {
-                                if (!draft.trim()) closeAdd();
-                            }}
-                            onKeyDown={(event) => {
-                                if (event.key === 'Escape') closeAdd();
-                            }}
-                            placeholder={addLabel}
-                            aria-label={addLabel}
-                            className="h-9 w-full rounded-lg bg-surface px-3 text-body-m text-surface-on placeholder:text-surface-on-variant ring-1 ring-inset ring-outline-variant/60 focus:outline-none focus:ring-2 focus:ring-primary/60"
-                        />
-                    </form>
-                ) : (
-                    <button
-                        type="button"
-                        onClick={() => setAdding(true)}
-                        className="flex h-9 w-full shrink-0 items-center gap-1.5 rounded-lg px-2.5 text-left text-body-m text-surface-on-variant hover:bg-surface-high hover:text-primary focus-visible:outline-2 focus-visible:outline-primary"
-                    >
-                        <span
-                            aria-hidden="true"
-                            className="text-base leading-none"
-                        >
-                            +
-                        </span>
-                        {addLabel}
-                    </button>
-                ))}
         </section>
     );
 };

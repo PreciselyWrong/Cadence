@@ -290,7 +290,9 @@ describe('DayColumn', () => {
     it('keeps the add draft when onAdd resolves to false', async () => {
         const onAdd = jest.fn().mockResolvedValue(false);
         renderColumn({ onAdd });
-        fireEvent.click(screen.getByRole('button', { name: 'Add a task' }));
+        fireEvent.click(
+            screen.getByRole('button', { name: /^Add a task to / })
+        );
         const input = screen.getByRole('textbox', { name: 'Add a task' });
 
         fireEvent.change(input, { target: { value: 'Keep me' } });
@@ -304,7 +306,9 @@ describe('DayColumn', () => {
     it('clears the add draft when onAdd resolves to true', async () => {
         const onAdd = jest.fn().mockResolvedValue(true);
         renderColumn({ onAdd });
-        fireEvent.click(screen.getByRole('button', { name: 'Add a task' }));
+        fireEvent.click(
+            screen.getByRole('button', { name: /^Add a task to / })
+        );
         const input = screen.getByRole('textbox', { name: 'Add a task' });
 
         fireEvent.change(input, { target: { value: 'Done' } });
@@ -315,7 +319,9 @@ describe('DayColumn', () => {
 
     it('counts a void onAdd as success and clears the draft', () => {
         renderColumn({ onAdd: jest.fn() });
-        fireEvent.click(screen.getByRole('button', { name: 'Add a task' }));
+        fireEvent.click(
+            screen.getByRole('button', { name: /^Add a task to / })
+        );
         const input = screen.getByRole('textbox', { name: 'Add a task' });
 
         fireEvent.change(input, { target: { value: 'Plain' } });
@@ -358,7 +364,9 @@ describe('DayColumn', () => {
             screen.queryByRole('textbox', { name: 'Add a task' })
         ).not.toBeInTheDocument();
 
-        fireEvent.click(screen.getByRole('button', { name: 'Add a task' }));
+        fireEvent.click(
+            screen.getByRole('button', { name: /^Add a task to / })
+        );
 
         expect(
             screen.getByRole('textbox', { name: 'Add a task' })
@@ -373,20 +381,28 @@ describe('DayColumn', () => {
         expect(screen.getByLabelText('Add a task')).toHaveFocus();
     });
 
-    it('places the add button after the cards', () => {
+    it('opens the add field above the cards, with no second add button', () => {
         renderColumn({ day: dayWith([planItem('a', 1)]) });
 
-        const button = screen.getByRole('button', { name: 'Add a task' });
+        fireEvent.click(
+            screen.getByRole('button', { name: /^Add a task to / })
+        );
+        const input = screen.getByRole('textbox', { name: 'Add a task' });
         const card = screen.getByTestId('upcoming-card');
 
-        expect(card.compareDocumentPosition(button)).toBe(
+        expect(input.compareDocumentPosition(card)).toBe(
             Node.DOCUMENT_POSITION_FOLLOWING
         );
+        expect(
+            screen.queryByRole('button', { name: 'Add a task' })
+        ).not.toBeInTheDocument();
     });
 
     it('adds a task with its trimmed name and clears the field', () => {
         const h = renderColumn();
-        fireEvent.click(screen.getByRole('button', { name: 'Add a task' }));
+        fireEvent.click(
+            screen.getByRole('button', { name: /^Add a task to / })
+        );
         const input = screen.getByRole('textbox', { name: 'Add a task' });
 
         fireEvent.change(input, { target: { value: '  Water the plants  ' } });
@@ -398,7 +414,9 @@ describe('DayColumn', () => {
 
     it('ignores a blank name', () => {
         const h = renderColumn();
-        fireEvent.click(screen.getByRole('button', { name: 'Add a task' }));
+        fireEvent.click(
+            screen.getByRole('button', { name: /^Add a task to / })
+        );
         const input = screen.getByRole('textbox', { name: 'Add a task' });
 
         fireEvent.change(input, { target: { value: '   ' } });
@@ -409,7 +427,9 @@ describe('DayColumn', () => {
 
     it('hides the add field on Escape', () => {
         renderColumn();
-        fireEvent.click(screen.getByRole('button', { name: 'Add a task' }));
+        fireEvent.click(
+            screen.getByRole('button', { name: /^Add a task to / })
+        );
 
         fireEvent.keyDown(screen.getByRole('textbox', { name: 'Add a task' }), {
             key: 'Escape',
