@@ -348,7 +348,9 @@
     "miniMonth": {
       "previous": "Forrige måned",
       "next": "Neste måned"
-    }
+    },
+    "foldProject": "Skjul underprosjekter i {{name}}",
+    "unfoldProject": "Vis underprosjekter i {{name}}"
   },
   "navigation": {
     "home": "Hjem",

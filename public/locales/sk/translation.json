@@ -813,7 +813,9 @@
     "miniMonth": {
       "previous": "Predchádzajúci mesiac",
       "next": "Nasledujúci mesiac"
-    }
+    },
+    "foldProject": "Zbaliť {{name}}",
+    "unfoldProject": "Rozbaliť {{name}}"
   },
   "navigation": {
     "home": "Domov",

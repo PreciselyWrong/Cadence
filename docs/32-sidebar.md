@@ -51,6 +51,7 @@ Projects and notes use `pin_to_sidebar`, tags `pinned`; all are synced.
 ## Lists
 
 - **Projects** and **Tags** stay in the panel under the smart lists. Projects and tags keep their nesting.
+- A project with sub-projects has a chevron on its left: it folds or unfolds them, at any depth. The choice is kept on this device (`sidebarFoldedProjects` in local storage). The open project stays visible even when a parent is folded.
 - **Areas** are folders. Click the arrow to show the projects inside an area; click the name to open the area page.
 - Rows are 34 px tall with 14 px text.
 

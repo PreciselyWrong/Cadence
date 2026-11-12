@@ -349,7 +349,9 @@
     "miniMonth": {
       "previous": "Mois précédent",
       "next": "Mois suivant"
-    }
+    },
+    "foldProject": "Replier {{name}}",
+    "unfoldProject": "Déplier {{name}}"
   },
   "navigation": {
     "home": "Accueil",

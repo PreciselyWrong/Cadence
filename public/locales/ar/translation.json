@@ -366,7 +366,9 @@
     "miniMonth": {
       "previous": "الشهر السابق",
       "next": "الشهر التالي"
-    }
+    },
+    "foldProject": "طي {{name}}",
+    "unfoldProject": "توسيع {{name}}"
   },
   "navigation": {
     "home": "الرئيسية",

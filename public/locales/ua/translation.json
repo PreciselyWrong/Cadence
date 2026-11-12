@@ -356,7 +356,9 @@
     "miniMonth": {
       "previous": "Попередній місяць",
       "next": "Наступний місяць"
-    }
+    },
+    "foldProject": "Згорнути {{name}}",
+    "unfoldProject": "Розгорнути {{name}}"
   },
   "navigation": {
     "home": "Головна",

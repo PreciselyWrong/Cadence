@@ -346,7 +346,9 @@
     "miniMonth": {
       "previous": "Предишен месец",
       "next": "Следващ месец"
-    }
+    },
+    "foldProject": "Свий {{name}}",
+    "unfoldProject": "Разгъни {{name}}"
   },
   "navigation": {
     "home": "Начало",

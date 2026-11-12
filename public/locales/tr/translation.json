@@ -346,7 +346,9 @@
     "miniMonth": {
       "previous": "Önceki ay",
       "next": "Sonraki ay"
-    }
+    },
+    "foldProject": "{{name}} daralt",
+    "unfoldProject": "{{name}} genişlet"
   },
   "navigation": {
     "home": "Ana Sayfa",

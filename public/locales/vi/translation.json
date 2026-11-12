@@ -346,7 +346,9 @@
     "miniMonth": {
       "previous": "Tháng trước",
       "next": "Tháng sau"
-    }
+    },
+    "foldProject": "Thu gọn {{name}}",
+    "unfoldProject": "Mở rộng {{name}}"
   },
   "navigation": {
     "home": "Trang chủ",

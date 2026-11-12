@@ -347,7 +347,9 @@
     "miniMonth": {
       "previous": "Previous month",
       "next": "Next month"
-    }
+    },
+    "foldProject": "Fold {{name}}",
+    "unfoldProject": "Unfold {{name}}"
   },
   "navigation": {
     "home": "Home",

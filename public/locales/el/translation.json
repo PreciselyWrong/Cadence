@@ -346,7 +346,9 @@
     "miniMonth": {
       "previous": "Προηγούμενος μήνας",
       "next": "Επόμενος μήνας"
-    }
+    },
+    "foldProject": "Σύμπτυξη {{name}}",
+    "unfoldProject": "Ανάπτυξη {{name}}"
   },
   "navigation": {
     "home": "Αρχική",

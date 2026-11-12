@@ -356,7 +356,9 @@
     "miniMonth": {
       "previous": "Poprzedni miesiąc",
       "next": "Następny miesiąc"
-    }
+    },
+    "foldProject": "Zwiń {{name}}",
+    "unfoldProject": "Rozwiń {{name}}"
   },
   "navigation": {
     "home": "Strona główna",

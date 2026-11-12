@@ -346,7 +346,9 @@
     "miniMonth": {
       "previous": "前の月",
       "next": "次の月"
-    }
+    },
+    "foldProject": "{{name}} を折りたたむ",
+    "unfoldProject": "{{name}} を展開"
   },
   "navigation": {
     "home": "ホーム",

@@ -12,7 +12,8 @@ import { Project } from '../../entities/Project';
 import { useSidebarSectionExpanded } from '../../hooks/useSidebarSectionExpanded';
 import { useIsMinimal } from '../../hooks/useUiDensity';
 import { useSidebarSectionBadge } from '../../hooks/useSidebarSectionBadge';
-import { flattenProjectTree } from '../../utils/projectTree';
+import { flattenProjectTree, foldProjectTree } from '../../utils/projectTree';
+import { useFoldedProjects } from '../../hooks/useFoldedProjects';
 import {
     DROP_HIGHLIGHT_CLASS,
     dropTargetAttrs,
@@ -61,6 +62,10 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
 
     const activeProjects = projects.filter((p) => isProjectLive(p.status));
     const pinProject = useProjectPin();
+    const [foldedProjects, toggleFold] = useFoldedProjects();
+    const openProjectUid = activeProjects.find(
+        (p) => getProjectPath(p) === location.pathname
+    )?.uid;
 
     useEffect(() => {
         if (
@@ -82,7 +87,7 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
     const { nativeSource } = useSidebarDrop();
 
     const itemClass = (path: string, projectUid?: string) =>
-        `group flex justify-between items-center rounded-[8px] pl-[30px] pr-[10px] ${rowSize} cursor-pointer text-gray-600 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-gray-800 ${
+        `group relative flex justify-between items-center rounded-[8px] pl-[30px] pr-[10px] ${rowSize} cursor-pointer text-gray-600 dark:text-[oklch(82%_0.006_95)] hover:bg-gray-100 dark:hover:bg-gray-800 ${
             isActive(path) ? 'bg-gray-100 dark:bg-gray-800' : ''
         } ${isDropHover('project', projectUid) ? DROP_HIGHLIGHT_CLASS : ''}`;
 
@@ -174,52 +179,87 @@ const SidebarProjects: React.FC<SidebarProjectsProps> = ({
             {isExpanded && (
                 <li className="p-0 list-none">
                     <div className="overflow-x-hidden flex flex-col gap-0.5 mb-1.5">
-                        {flattenProjectTree(activeProjects).map(
-                            ({ project, depth }) => (
-                                <div
-                                    key={project.uid}
-                                    {...dropTargetAttrs(
-                                        'project',
-                                        project.uid as string
-                                    )}
-                                    {...nativeSource({
-                                        kind: 'project',
-                                        project,
-                                    })}
-                                    className={itemClass(
-                                        getProjectPath(project),
-                                        project.uid
-                                    )}
-                                    // A margin on a full-width row pushed
-                                    // nested rows past the list and clipped
-                                    // them; shrink the row by the indent.
-                                    style={
-                                        depth > 0
-                                            ? {
-                                                  marginLeft: depth * 12,
-                                                  width: `calc(100% - ${depth * 12}px)`,
-                                              }
-                                            : undefined
-                                    }
-                                    onClick={() => navigate(project)}
-                                >
-                                    <EntityIcon
-                                        icon={project.icon}
-                                        className="mr-1.5 h-[15px] w-[15px] text-gray-500 dark:text-gray-400"
-                                    />
-                                    <span className="truncate min-w-0 flex-1">
-                                        {project.name}
-                                    </span>
-                                    <SidebarPinButton
-                                        name={project.name}
-                                        pinned={!!project.pin_to_sidebar}
-                                        onToggle={(pinned) =>
-                                            pinProject(project, pinned)
+                        {foldProjectTree(
+                            flattenProjectTree(activeProjects),
+                            foldedProjects,
+                            openProjectUid
+                        ).map(({ project, depth, hasChildren, folded }) => (
+                            <div
+                                key={project.uid}
+                                {...dropTargetAttrs(
+                                    'project',
+                                    project.uid as string
+                                )}
+                                {...nativeSource({
+                                    kind: 'project',
+                                    project,
+                                })}
+                                className={itemClass(
+                                    getProjectPath(project),
+                                    project.uid
+                                )}
+                                // A margin on a full-width row pushed
+                                // nested rows past the list and clipped
+                                // them; shrink the row by the indent.
+                                style={
+                                    depth > 0
+                                        ? {
+                                              marginLeft: depth * 12,
+                                              width: `calc(100% - ${depth * 12}px)`,
+                                          }
+                                        : undefined
+                                }
+                                onClick={() => navigate(project)}
+                            >
+                                {hasChildren && (
+                                    <button
+                                        type="button"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            toggleFold(project.uid as string);
+                                        }}
+                                        aria-expanded={!folded}
+                                        aria-label={
+                                            folded
+                                                ? t(
+                                                      'sidebar.unfoldProject',
+                                                      'Unfold {{name}}',
+                                                      { name: project.name }
+                                                  )
+                                                : t(
+                                                      'sidebar.foldProject',
+                                                      'Fold {{name}}',
+                                                      { name: project.name }
+                                                  )
                                         }
-                                    />
-                                </div>
-                            )
-                        )}
+                                        className="absolute left-[8px] top-1/2 -translate-y-1/2 flex h-5 w-5 items-center justify-center rounded text-gray-500 hover:text-black hover:bg-gray-200 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700"
+                                    >
+                                        <ChevronRightIcon
+                                            className="h-3 w-3 transition-transform duration-150"
+                                            style={{
+                                                transform: folded
+                                                    ? 'none'
+                                                    : 'rotate(90deg)',
+                                            }}
+                                        />
+                                    </button>
+                                )}
+                                <EntityIcon
+                                    icon={project.icon}
+                                    className="mr-1.5 h-[15px] w-[15px] text-gray-500 dark:text-gray-400"
+                                />
+                                <span className="truncate min-w-0 flex-1">
+                                    {project.name}
+                                </span>
+                                <SidebarPinButton
+                                    name={project.name}
+                                    pinned={!!project.pin_to_sidebar}
+                                    onToggle={(pinned) =>
+                                        pinProject(project, pinned)
+                                    }
+                                />
+                            </div>
+                        ))}
                     </div>
                 </li>
             )}

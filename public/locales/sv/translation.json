@@ -348,7 +348,9 @@
     "miniMonth": {
       "previous": "Föregående månad",
       "next": "Nästa månad"
-    }
+    },
+    "foldProject": "Fäll ihop {{name}}",
+    "unfoldProject": "Fäll ut {{name}}"
   },
   "navigation": {
     "home": "Hem",

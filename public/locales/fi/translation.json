@@ -348,7 +348,9 @@
     "miniMonth": {
       "previous": "Edellinen kuukausi",
       "next": "Seuraava kuukausi"
-    }
+    },
+    "foldProject": "Tiivistä {{name}}",
+    "unfoldProject": "Laajenna {{name}}"
   },
   "navigation": {
     "home": "Koti",

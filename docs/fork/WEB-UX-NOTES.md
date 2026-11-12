@@ -801,3 +801,9 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Décision** : retirés du web, d'Android (1.19.0) et du schéma du serveur ; le serveur ignore ces clés si un ancien client les envoie encore.
 - **Android à reprendre** : fait dans la même étape.
 
+### 2026-11-12 — Barre latérale : replier les sous-projets
+
+- **Demande** : dans Projets, replier les sous-projets dans leur projet principal.
+- **Décision** : un chevron à gauche de chaque projet qui a des sous-projets les replie ou les déplie, à toute profondeur ; le choix est gardé sur l'appareil. Un sous-projet ouvert reste visible même si son parent est replié. Règle pure `foldProjectTree` (`frontend/utils/projectTree.ts`), état `hooks/useFoldedProjects.ts`.
+- **Android à reprendre** : rien ; la liste des projets d'Android n'affiche pas d'arbre (les sous-projets sont dans la page du projet parent).
+

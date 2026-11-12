@@ -67,3 +67,44 @@ export function descendantUids(projects: Project[], uid: string): Set<string> {
     }
     return found;
 }
+
+export interface FoldedProjectRow<
+    T extends Project = Project,
+> extends ProjectTreeNode<T> {
+    hasChildren: boolean;
+    folded: boolean;
+}
+
+// Hides the sub-projects of folded projects (the sidebar's per-project fold).
+// A fold on a project without sub-projects is ignored, and the ancestors of
+// the open project stay unfolded so the open project is never hidden.
+export function foldProjectTree<T extends Project>(
+    nodes: ProjectTreeNode<T>[],
+    folded: ReadonlySet<string>,
+    openUid?: string
+): FoldedProjectRow<T>[] {
+    const keepOpen = new Set<string>();
+    if (openUid) {
+        const byUid = new Map(nodes.map((node) => [node.project.uid, node]));
+        let parent = byUid.get(openUid)?.project.parent_project_uid;
+        while (parent && byUid.has(parent) && !keepOpen.has(parent)) {
+            keepOpen.add(parent);
+            parent = byUid.get(parent)?.project.parent_project_uid;
+        }
+    }
+
+    const rows: FoldedProjectRow<T>[] = [];
+    let hiddenBelowDepth: number | null = null;
+    nodes.forEach((node, index) => {
+        if (hiddenBelowDepth !== null) {
+            if (node.depth > hiddenBelowDepth) return;
+            hiddenBelowDepth = null;
+        }
+        const hasChildren = (nodes[index + 1]?.depth ?? -1) > node.depth;
+        const uid = node.project.uid ?? '';
+        const isFolded = hasChildren && folded.has(uid) && !keepOpen.has(uid);
+        rows.push({ ...node, hasChildren, folded: isFolded });
+        if (isFolded) hiddenBelowDepth = node.depth;
+    });
+    return rows;
+}

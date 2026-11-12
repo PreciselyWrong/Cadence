@@ -346,7 +346,9 @@
     "miniMonth": {
       "previous": "Bulan sebelumnya",
       "next": "Bulan berikutnya"
-    }
+    },
+    "foldProject": "Ciutkan {{name}}",
+    "unfoldProject": "Bentangkan {{name}}"
   },
   "navigation": {
     "home": "Beranda",

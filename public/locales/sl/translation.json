@@ -356,7 +356,9 @@
     "miniMonth": {
       "previous": "Prejšnji mesec",
       "next": "Naslednji mesec"
-    }
+    },
+    "foldProject": "Strni {{name}}",
+    "unfoldProject": "Razširi {{name}}"
   },
   "navigation": {
     "home": "Domov",

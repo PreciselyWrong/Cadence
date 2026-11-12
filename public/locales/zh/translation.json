@@ -346,7 +346,9 @@
     "miniMonth": {
       "previous": "上个月",
       "next": "下个月"
-    }
+    },
+    "foldProject": "折叠 {{name}}",
+    "unfoldProject": "展开 {{name}}"
   },
   "navigation": {
     "home": "首页",

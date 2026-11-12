@@ -346,7 +346,9 @@
     "miniMonth": {
       "previous": "이전 달",
       "next": "다음 달"
-    }
+    },
+    "foldProject": "{{name}} 접기",
+    "unfoldProject": "{{name}} 펼치기"
   },
   "navigation": {
     "home": "홈",
