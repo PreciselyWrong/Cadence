@@ -7,6 +7,7 @@ import {
     ExclamationTriangleIcon,
     ExclamationCircleIcon,
     CheckCircleIcon,
+    SparklesIcon,
 } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -19,6 +20,7 @@ import {
 } from '../../utils/sharesService';
 import { useStore } from '../../store/useStore';
 import { openTaskPanel } from '../../store/taskPanelStore';
+import { safeOpenPath } from '../../utils/agentMessagesService';
 
 // Direct share invitations carry a numeric id; ones that came through a group
 // carry a string such as "g12".
@@ -51,9 +53,9 @@ interface NotificationsDropdownProps {
     isDarkMode: boolean;
 }
 
-const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
-    isDarkMode,
-}) => {
+// Colours come from the design tokens (light and dark), so the prop that
+// used to pick them is no longer read.
+const NotificationsDropdown: React.FC<NotificationsDropdownProps> = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const loadProjects = useStore((state) => state.projectsStore.loadProjects);
@@ -242,26 +244,53 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
         }
     };
 
-    const getLevelIcon = (level: string) => {
-        switch (level) {
+    // A message from an agent wears the agents' sparkle; the rest, its level.
+    const getIcon = (notification: Notification) => {
+        const base = 'h-5 w-5 flex-shrink-0';
+        if (notification.data?.pluginId) {
+            return (
+                <SparklesIcon
+                    className={`${base} text-primary`}
+                    aria-hidden="true"
+                />
+            );
+        }
+        switch (notification.level) {
             case 'success':
                 return (
-                    <CheckCircleIcon className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <CheckCircleIcon
+                        className={`${base} text-success`}
+                        aria-hidden="true"
+                    />
                 );
             case 'warning':
                 return (
-                    <ExclamationTriangleIcon className="h-5 w-5 text-yellow-500 flex-shrink-0" />
+                    <ExclamationTriangleIcon
+                        className={`${base} text-warning`}
+                        aria-hidden="true"
+                    />
                 );
             case 'error':
                 return (
-                    <ExclamationCircleIcon className="h-5 w-5 text-red-500 flex-shrink-0" />
+                    <ExclamationCircleIcon
+                        className={`${base} text-danger`}
+                        aria-hidden="true"
+                    />
                 );
             default:
                 return (
-                    <InformationCircleIcon className="h-5 w-5 text-blue-500 flex-shrink-0" />
+                    <InformationCircleIcon
+                        className={`${base} text-primary`}
+                        aria-hidden="true"
+                    />
                 );
         }
     };
+
+    const agentPath = (notification: Notification) =>
+        notification.data?.pluginId
+            ? safeOpenPath(notification.data?.openPath)
+            : null;
 
     const formatTimestamp = (timestamp: string) => {
         const date = new Date(timestamp);
@@ -300,6 +329,12 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
         } else if (notification.data?.projectUid) {
             setIsOpen(false);
             navigate(`/project/${notification.data.projectUid}`);
+        } else {
+            const path = agentPath(notification);
+            if (!path) return;
+            setIsOpen(false);
+            if (!notification.read_at) handleMarkAsRead(notification.uid);
+            navigate(path);
         }
     };
 
@@ -326,37 +361,27 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
         <div className="relative" ref={dropdownRef}>
             <button
                 onClick={handleToggle}
-                className="relative flex h-[44px] w-[44px] items-center justify-center rounded-full hover:bg-gray-200/60 sm:h-10 sm:w-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:hover:bg-gray-800"
+                className="relative flex h-[44px] w-[44px] items-center justify-center rounded-full hover:bg-surface-high sm:h-10 sm:w-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 aria-label={t('profile.notifications')}
             >
-                <BellIcon className="h-6 w-6 text-gray-700 dark:text-gray-300" />
+                <BellIcon className="h-6 w-6 text-surface-on-variant" />
                 {unreadCount > 0 && (
-                    <span className="absolute top-0.5 right-0.5 bg-red-500 text-white text-[12px] rounded-full h-4 min-w-4 px-1 flex items-center justify-center font-medium">
+                    <span className="absolute top-0.5 right-0.5 bg-danger text-danger-on text-[12px] tabular-nums rounded-full h-4 min-w-4 px-1 flex items-center justify-center font-medium">
                         {unreadCount > 99 ? '99+' : unreadCount}
                     </span>
                 )}
             </button>
 
             {isOpen && (
-                <div
-                    className={`absolute right-0 mt-2 w-96 rounded-lg shadow-lg z-50 ${
-                        isDarkMode ? 'bg-gray-800' : 'bg-white'
-                    } border ${
-                        isDarkMode ? 'border-gray-700' : 'border-gray-200'
-                    }`}
-                >
-                    <div
-                        className={`p-4 border-b flex items-center justify-between ${
-                            isDarkMode ? 'border-gray-700' : 'border-gray-200'
-                        }`}
-                    >
-                        <h3 className="text-lg font-semibold">
+                <div className="absolute right-0 z-50 mt-2 w-[min(24rem,calc(100vw-2rem))] overflow-hidden rounded-xl bg-surface-card text-surface-on shadow-lg ring-1 ring-outline-variant">
+                    <div className="flex items-center justify-between border-b border-outline-variant px-4 py-3">
+                        <h3 className="text-title-m">
                             {t('notifications.title', 'Notifications')}
                         </h3>
                         {unreadCount > 0 && (
                             <button
                                 onClick={handleMarkAllAsRead}
-                                className="text-xs text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300"
+                                className="rounded-lg px-2 py-1 text-label-m font-semibold text-primary hover:bg-primary/10 max-sm:min-h-[44px]"
                             >
                                 {t(
                                     'notifications.markAllRead',
@@ -368,13 +393,13 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                     <div className="max-h-96 overflow-y-auto">
                         {loading ? (
                             <div className="p-4 text-center">
-                                <p className="text-sm text-gray-600 dark:text-gray-300">
+                                <p className="text-body-m text-surface-on-variant">
                                     {t('notifications.loading', 'Loading...')}
                                 </p>
                             </div>
                         ) : notifications.length === 0 ? (
                             <div className="p-4 text-center">
-                                <p className="text-sm text-gray-600 dark:text-gray-300">
+                                <p className="text-body-m text-surface-on-variant">
                                     {t(
                                         'notifications.noNotifications',
                                         'No notifications yet'
@@ -385,24 +410,14 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                             notifications.map((notification) => (
                                 <div
                                     key={notification.uid}
-                                    className={`p-4 border-b ${
-                                        isDarkMode
-                                            ? 'border-gray-700'
-                                            : 'border-gray-200'
-                                    } ${
+                                    className={`border-b border-outline-variant px-4 py-3 transition-colors last:border-b-0 hover:bg-surface-high ${
                                         !notification.read_at
-                                            ? isDarkMode
-                                                ? 'bg-gray-700/50'
-                                                : 'bg-blue-50'
+                                            ? 'bg-primary-container/40'
                                             : ''
-                                    } hover:${
-                                        isDarkMode
-                                            ? 'bg-gray-700'
-                                            : 'bg-gray-50'
-                                    } transition-colors`}
+                                    }`}
                                 >
-                                    <div className="flex items-start space-x-3">
-                                        {getLevelIcon(notification.level)}
+                                    <div className="flex items-start gap-3">
+                                        {getIcon(notification)}
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-start justify-between">
                                                 <div
@@ -410,7 +425,8 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                                                         notification.data
                                                             ?.taskUid ||
                                                         notification.data
-                                                            ?.projectUid
+                                                            ?.projectUid ||
+                                                        agentPath(notification)
                                                             ? 'cursor-pointer'
                                                             : ''
                                                     }`}
@@ -420,13 +436,28 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                                                         )
                                                     }
                                                 >
-                                                    <p className="text-sm font-medium">
+                                                    {notification.data
+                                                        ?.pluginId && (
+                                                        <p className="text-label-m font-semibold text-primary">
+                                                            {notification.data
+                                                                .agentLabel ||
+                                                                t(
+                                                                    'agentBanner.agent',
+                                                                    'Agent'
+                                                                )}
+                                                        </p>
+                                                    )}
+                                                    <p className="text-body-m font-semibold">
                                                         {notification.title}
                                                     </p>
-                                                    <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">
-                                                        {notification.message}
-                                                    </p>
-                                                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                                                    {notification.message && (
+                                                        <p className="mt-0.5 text-body-m text-surface-on-variant">
+                                                            {
+                                                                notification.message
+                                                            }
+                                                        </p>
+                                                    )}
+                                                    <p className="mt-1 text-label-m tabular-nums text-surface-on-variant">
                                                         {formatTimestamp(
                                                             notification.created_at
                                                         )}
@@ -434,7 +465,7 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                                                     {isPendingInvitation(
                                                         notification
                                                     ) && (
-                                                        <div className="flex items-center space-x-2 mt-2">
+                                                        <div className="mt-2 flex items-center gap-2">
                                                             <button
                                                                 onClick={(
                                                                     e
@@ -445,7 +476,7 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                                                                         'accept'
                                                                     );
                                                                 }}
-                                                                className="px-2 py-1 text-xs rounded bg-primary text-primary-on hover:bg-primary/90"
+                                                                className="rounded-lg bg-primary px-2.5 py-1 text-label-m font-semibold text-primary-on hover:bg-primary/90 max-sm:min-h-[44px]"
                                                             >
                                                                 {t(
                                                                     'shares.acceptInvitation',
@@ -462,7 +493,7 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                                                                         'decline'
                                                                     );
                                                                 }}
-                                                                className="px-2 py-1 text-xs rounded border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
+                                                                className="rounded-lg px-2.5 py-1 text-label-m ring-1 ring-inset ring-outline-variant hover:bg-surface-high max-sm:min-h-[44px]"
                                                             >
                                                                 {t(
                                                                     'shares.declineInvitation',
@@ -474,7 +505,7 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                                                     {answeredInvitations[
                                                         notification.uid
                                                     ] && (
-                                                        <p className="text-xs text-gray-600 dark:text-gray-300 mt-2">
+                                                        <p className="mt-2 text-label-m text-surface-on-variant">
                                                             {answeredInvitations[
                                                                 notification.uid
                                                             ] === 'accepted'
@@ -489,7 +520,7 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                                                         </p>
                                                     )}
                                                 </div>
-                                                <div className="flex items-center space-x-1 ml-2">
+                                                <div className="ml-2 flex items-center gap-0.5">
                                                     {!notification.read_at && (
                                                         <button
                                                             onClick={(e) => {
@@ -498,13 +529,17 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                                                                     notification.uid
                                                                 );
                                                             }}
-                                                            className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded"
+                                                            className="flex items-center justify-center rounded-lg p-1.5 hover:bg-surface-highest max-sm:min-h-[44px] max-sm:min-w-[44px]"
                                                             title={t(
                                                                 'notifications.markAsRead',
                                                                 'Mark as read'
                                                             )}
+                                                            aria-label={t(
+                                                                'notifications.markAsRead',
+                                                                'Mark as read'
+                                                            )}
                                                         >
-                                                            <CheckIcon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
+                                                            <CheckIcon className="h-4 w-4 text-surface-on-variant" />
                                                         </button>
                                                     )}
                                                     <button
@@ -514,13 +549,17 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                                                                 notification.uid
                                                             );
                                                         }}
-                                                        className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded"
+                                                        className="flex items-center justify-center rounded-lg p-1.5 hover:bg-surface-highest max-sm:min-h-[44px] max-sm:min-w-[44px]"
                                                         title={t(
                                                             'notifications.delete',
                                                             'Delete'
                                                         )}
+                                                        aria-label={t(
+                                                            'notifications.delete',
+                                                            'Delete'
+                                                        )}
                                                     >
-                                                        <XMarkIcon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
+                                                        <XMarkIcon className="h-4 w-4 text-surface-on-variant" />
                                                     </button>
                                                 </div>
                                             </div>

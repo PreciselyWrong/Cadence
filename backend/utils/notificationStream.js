@@ -7,7 +7,10 @@
 
 const LIVE_SOURCES = ['desktop', 'mobile'];
 
-const listeners = new Map(); // userId -> Set<fn>
+const listeners = new Map(); // userId -> Set<{ onNotification, onRead }>
+// Called when the person (not the plugin that sent it) reads, dismisses or
+// marks all read: plugins mark their own copy read (docs/46-plugins.md).
+const readHooks = new Set();
 
 function serialize(notification) {
     return {
@@ -22,7 +25,8 @@ function serialize(notification) {
     };
 }
 
-function subscribe(userId, listener) {
+function subscribe(userId, onNotification, onRead = () => {}) {
+    const listener = { onNotification, onRead };
     if (!listeners.has(userId)) listeners.set(userId, new Set());
     listeners.get(userId).add(listener);
     return () => {
@@ -31,6 +35,34 @@ function subscribe(userId, listener) {
         set.delete(listener);
         if (set.size === 0) listeners.delete(userId);
     };
+}
+
+function onUserRead(hook) {
+    readHooks.add(hook);
+    return () => readHooks.delete(hook);
+}
+
+// Notifications that stopped being unread: live clients take them off the
+// screen; with byUser, the read hooks run too.
+function publishRead(userId, notifications, { byUser = true } = {}) {
+    const list = notifications.filter(Boolean);
+    if (list.length === 0) return;
+    const event = { uids: list.map((n) => n.uid) };
+    for (const listener of [...(listeners.get(userId) || [])]) {
+        try {
+            listener.onRead(event);
+        } catch {
+            // A broken client must not stop the others.
+        }
+    }
+    if (!byUser) return;
+    for (const hook of [...readHooks]) {
+        for (const notification of list) {
+            Promise.resolve()
+                .then(() => hook(notification))
+                .catch(() => {});
+        }
+    }
 }
 
 function publish(notification) {
@@ -42,11 +74,18 @@ function publish(notification) {
     const payload = serialize(notification);
     for (const listener of [...set]) {
         try {
-            listener(payload);
+            listener.onNotification(payload);
         } catch {
             // A broken client must not stop the others.
         }
     }
 }
 
-module.exports = { subscribe, publish, serialize, LIVE_SOURCES };
+module.exports = {
+    subscribe,
+    publish,
+    publishRead,
+    onUserRead,
+    serialize,
+    LIVE_SOURCES,
+};

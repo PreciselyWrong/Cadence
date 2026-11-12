@@ -266,10 +266,22 @@ module.exports = (sequelize) => {
 
     // Delivers the notifications held by quiet hours whose window is over.
     Notification.flushDeferred = async function (now = new Date()) {
+        // Read meanwhile (on another device, or replaced by its sender):
+        // released without ringing.
+        await Notification.update(
+            { deliver_after: null },
+            {
+                where: {
+                    deliver_after: { [Op.not]: null, [Op.lte]: now },
+                    read_at: { [Op.not]: null },
+                },
+            }
+        );
         const held = await Notification.findAll({
             where: {
                 deliver_after: { [Op.not]: null, [Op.lte]: now },
                 dismissed_at: null,
+                read_at: null,
             },
             order: [['deliver_after', 'ASC']],
             limit: 200,
@@ -433,6 +445,7 @@ module.exports = (sequelize) => {
         if (!this.read_at) {
             this.read_at = new Date();
             await this.save();
+            notificationStream.publishRead(this.user_id, [this]);
         }
         return this;
     };
@@ -451,6 +464,9 @@ module.exports = (sequelize) => {
         if (!this.dismissed_at) {
             this.dismissed_at = new Date();
             await this.save();
+            if (!this.read_at) {
+                notificationStream.publishRead(this.user_id, [this]);
+            }
         }
         return this;
     };
@@ -533,16 +549,14 @@ module.exports = (sequelize) => {
     };
 
     Notification.markAllAsRead = async function (userId) {
-        return await Notification.update(
+        const where = { user_id: userId, read_at: null, dismissed_at: null };
+        const unread = await Notification.findAll({ where });
+        const result = await Notification.update(
             { read_at: new Date() },
-            {
-                where: {
-                    user_id: userId,
-                    read_at: null,
-                    dismissed_at: null,
-                },
-            }
+            { where: { ...where, id: unread.map((n) => n.id) } }
         );
+        notificationStream.publishRead(userId, unread);
+        return result;
     };
 
     return Notification;

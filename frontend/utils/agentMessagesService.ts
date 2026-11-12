@@ -9,7 +9,12 @@ export interface AgentNotification {
     title: string;
     message: string | null;
     created_at: string;
-    data: { pluginId?: string; openPath?: string; agent?: string } | null;
+    data: {
+        pluginId?: string;
+        openPath?: string;
+        agent?: string;
+        agentLabel?: string;
+    } | null;
 }
 
 // A path inside Cadence only: never an address or a protocol-relative URL.
@@ -61,6 +66,8 @@ export function watchNotificationStream(onEvent: () => void): () => void {
     const source = new EventSource(getApiPath('notifications/stream'), {
         withCredentials: true,
     });
+    // A new message, or one read elsewhere (phone, bell, plugin page).
     source.addEventListener('notification', onEvent);
+    source.addEventListener('notification_read', onEvent);
     return () => source.close();
 }

@@ -65,6 +65,10 @@ const AgentMessageBanner: React.FC = () => {
                 aria-hidden="true"
             />
             <p className="min-w-0 flex-1 truncate">
+                <span className="text-surface-on-variant">
+                    {latest.data?.agentLabel || t('agentBanner.agent', 'Agent')}
+                    {' · '}
+                </span>
                 <span className="font-semibold">{latest.title}</span>
                 {latest.message && (
                     <span className="text-surface-on-variant max-sm:hidden">

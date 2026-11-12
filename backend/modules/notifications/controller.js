@@ -30,11 +30,19 @@ const notificationsController = {
         res.flushHeaders();
         res.write('retry: 5000\nevent: ready\ndata: {}\n\n');
 
-        const off = notificationStream.subscribe(userId, (payload) => {
-            res.write(
-                `event: notification\nid: ${payload.uid}\ndata: ${JSON.stringify(payload)}\n\n`
-            );
-        });
+        const off = notificationStream.subscribe(
+            userId,
+            (payload) => {
+                res.write(
+                    `event: notification\nid: ${payload.uid}\ndata: ${JSON.stringify(payload)}\n\n`
+                );
+            },
+            (event) => {
+                res.write(
+                    `event: notification_read\ndata: ${JSON.stringify(event)}\n\n`
+                );
+            }
+        );
         const heartbeat = setInterval(
             () => res.write(': ping\n\n'),
             HEARTBEAT_MS

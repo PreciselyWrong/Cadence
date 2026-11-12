@@ -1,5 +1,6 @@
 {
     "agentBanner": {
+        "agent": "Agent",
         "dismiss": "Mark as read",
         "open": "Open"
     },

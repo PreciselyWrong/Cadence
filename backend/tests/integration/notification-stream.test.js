@@ -203,3 +203,73 @@ describe('notification stream', () => {
         });
     });
 });
+
+describe('read events', () => {
+    let user;
+
+    beforeEach(async () => {
+        user = await createTestUser({
+            email: `stream_read_${Date.now()}_${Math.random()}@example.com`,
+        });
+    });
+
+    const live = (title) =>
+        Notification.createNotification({
+            userId: user.id,
+            type: 'system',
+            title,
+            sources: ['desktop', 'mobile'],
+        });
+
+    it('tells live clients which notifications were read, dismissed or all read', async () => {
+        const reads = [];
+        const off = stream.subscribe(
+            user.id,
+            () => {},
+            (event) => reads.push(event.uids)
+        );
+        const a = await live('A');
+        const b = await live('B');
+        const c = await live('C');
+        await a.markAsRead();
+        await a.markAsRead();
+        await b.dismiss();
+        await Notification.markAllAsRead(user.id);
+        off();
+        expect(reads).toEqual([[a.uid], [b.uid], [c.uid]]);
+    });
+
+    it('calls the read hooks only for a read by the person', async () => {
+        const seen = [];
+        const off = stream.onUserRead((n) => seen.push(n.uid));
+        const a = await live('A');
+        await a.markAsRead();
+        const b = await live('B');
+        await Notification.markAllAsRead(user.id);
+        stream.publishRead(user.id, [b], { byUser: false });
+        await new Promise((resolve) => setImmediate(resolve));
+        off();
+        expect(seen).toEqual([a.uid, b.uid]);
+    });
+
+    it('does not deliver a held notification read meanwhile', async () => {
+        await User.update(
+            {
+                timezone: 'UTC',
+                quiet_hours: { enabled: true, start: '00:00', end: '23:59' },
+            },
+            { where: { id: user.id } }
+        );
+        const seen = [];
+        const off = stream.subscribe(user.id, (n) => seen.push(n.title));
+        const held = await live('Held then read');
+        await held.markAsRead();
+        await Notification.flushDeferred(
+            new Date(held.deliver_after.getTime() + 1000)
+        );
+        off();
+        expect(seen).toEqual([]);
+        await held.reload();
+        expect(held.deliver_after).toBeNull();
+    });
+});

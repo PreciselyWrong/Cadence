@@ -1,5 +1,6 @@
 {
     "agentBanner": {
+        "agent": "Agent",
         "dismiss": "Markeren als gelezen",
         "open": "Openen"
     },

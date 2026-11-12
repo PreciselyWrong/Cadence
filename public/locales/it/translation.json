@@ -1,5 +1,6 @@
 {
     "agentBanner": {
+        "agent": "Agent",
         "dismiss": "Segna come letto",
         "open": "Apri"
     },
