@@ -6182,5 +6182,32 @@
     "untitled": "Naamloos",
     "createNote": "Notitie \"{{title}}\" aanmaken",
     "createTask": "Taak \"{{title}}\" aanmaken"
+  },
+  "editorToolbar": {
+    "label": "Opmaak",
+    "bold": "Vet",
+    "italic": "Cursief",
+    "strikethrough": "Doorhalen",
+    "heading": "Kop",
+    "bulletList": "Opsommingslijst",
+    "numberedList": "Genummerde lijst",
+    "checklist": "Checklist",
+    "quote": "Citaat",
+    "code": "Code",
+    "link": "Link",
+    "noteLink": "Naar een notitie linken",
+    "mention": "Iemand vermelden",
+    "table": "Tabel",
+    "insertTable": "Tabel invoegen",
+    "tableSize": "{{rows}} rijen × {{cols}} kolommen",
+    "column": "Kolom {{n}}",
+    "addRow": "Rij toevoegen",
+    "removeRow": "Rij verwijderen",
+    "addColumn": "Kolom toevoegen",
+    "removeColumn": "Kolom verwijderen"
+  },
+  "mentions": {
+    "loading": "Personen laden…",
+    "noMatch": "Geen overeenkomende personen"
   }
 }

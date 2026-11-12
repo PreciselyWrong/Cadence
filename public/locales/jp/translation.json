@@ -6180,5 +6180,32 @@
     "untitled": "無題",
     "createNote": "ノート「{{title}}」を作成",
     "createTask": "タスク「{{title}}」を作成"
+  },
+  "editorToolbar": {
+    "label": "書式",
+    "bold": "太字",
+    "italic": "斜体",
+    "strikethrough": "取り消し線",
+    "heading": "見出し",
+    "bulletList": "箇条書き",
+    "numberedList": "番号付きリスト",
+    "checklist": "チェックリスト",
+    "quote": "引用",
+    "code": "コード",
+    "link": "リンク",
+    "noteLink": "ノートへのリンク",
+    "mention": "人をメンション",
+    "table": "表",
+    "insertTable": "表を挿入",
+    "tableSize": "{{rows}} 行 × {{cols}} 列",
+    "column": "列 {{n}}",
+    "addRow": "行を追加",
+    "removeRow": "行を削除",
+    "addColumn": "列を追加",
+    "removeColumn": "列を削除"
+  },
+  "mentions": {
+    "loading": "人を読み込み中…",
+    "noMatch": "一致する人はいません"
   }
 }

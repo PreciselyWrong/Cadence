@@ -6187,5 +6187,32 @@
     "untitled": "Uten tittel",
     "createNote": "Opprett notatet «{{title}}»",
     "createTask": "Opprett oppgaven «{{title}}»"
+  },
+  "editorToolbar": {
+    "label": "Formatering",
+    "bold": "Fet",
+    "italic": "Kursiv",
+    "strikethrough": "Gjennomstreket",
+    "heading": "Overskrift",
+    "bulletList": "Punktliste",
+    "numberedList": "Nummerert liste",
+    "checklist": "Sjekkliste",
+    "quote": "Sitat",
+    "code": "Kode",
+    "link": "Lenke",
+    "noteLink": "Lenke til et notat",
+    "mention": "Nevn en person",
+    "table": "Tabell",
+    "insertTable": "Sett inn en tabell",
+    "tableSize": "{{rows}} rader × {{cols}} kolonner",
+    "column": "Kolonne {{n}}",
+    "addRow": "Legg til en rad",
+    "removeRow": "Fjern raden",
+    "addColumn": "Legg til en kolonne",
+    "removeColumn": "Fjern kolonnen"
+  },
+  "mentions": {
+    "loading": "Laster inn personer…",
+    "noMatch": "Ingen samsvarende personer"
   }
 }

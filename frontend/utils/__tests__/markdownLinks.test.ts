@@ -1,5 +1,7 @@
 import {
     classifyHref,
+    mentionToken,
+    mentionTrigger,
     preprocessContentLinks,
     taskLinkNames,
 } from '../markdownLinks';
@@ -69,5 +71,18 @@ describe('classifyHref', () => {
             kind: 'mention',
             uid: UID,
         });
+    });
+});
+
+describe('mentions', () => {
+    it('stores a mention as a token with the person uid', () => {
+        expect(mentionToken('Anna [B]', UID)).toBe(`@[Anna  B](person:${UID})`);
+    });
+
+    it('spots an "@name" being typed, not an e-mail address', () => {
+        expect(mentionTrigger('Ask @an')).toEqual({ query: 'an', offset: 4 });
+        expect(mentionTrigger('@')).toEqual({ query: '', offset: 0 });
+        expect(mentionTrigger('mail me@home')).toBeNull();
+        expect(mentionTrigger('@anna is')).toBeNull();
     });
 });

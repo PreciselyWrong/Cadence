@@ -6182,5 +6182,32 @@
     "untitled": "Namnlös",
     "createNote": "Skapa anteckningen \"{{title}}\"",
     "createTask": "Skapa uppgiften \"{{title}}\""
+  },
+  "editorToolbar": {
+    "label": "Formatering",
+    "bold": "Fet",
+    "italic": "Kursiv",
+    "strikethrough": "Genomstruken",
+    "heading": "Rubrik",
+    "bulletList": "Punktlista",
+    "numberedList": "Numrerad lista",
+    "checklist": "Checklista",
+    "quote": "Citat",
+    "code": "Kod",
+    "link": "Länk",
+    "noteLink": "Länka till en anteckning",
+    "mention": "Nämn en person",
+    "table": "Tabell",
+    "insertTable": "Infoga en tabell",
+    "tableSize": "{{rows}} rader × {{cols}} kolumner",
+    "column": "Kolumn {{n}}",
+    "addRow": "Lägg till en rad",
+    "removeRow": "Ta bort raden",
+    "addColumn": "Lägg till en kolumn",
+    "removeColumn": "Ta bort kolumnen"
+  },
+  "mentions": {
+    "loading": "Läser in personer…",
+    "noMatch": "Inga matchande personer"
   }
 }

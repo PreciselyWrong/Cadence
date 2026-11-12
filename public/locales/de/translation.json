@@ -6191,5 +6191,32 @@
     "untitled": "Ohne Titel",
     "createNote": "Notiz \"{{title}}\" erstellen",
     "createTask": "Aufgabe \"{{title}}\" erstellen"
+  },
+  "editorToolbar": {
+    "label": "Formatierung",
+    "bold": "Fett",
+    "italic": "Kursiv",
+    "strikethrough": "Durchgestrichen",
+    "heading": "Überschrift",
+    "bulletList": "Aufzählung",
+    "numberedList": "Nummerierte Liste",
+    "checklist": "Checkliste",
+    "quote": "Zitat",
+    "code": "Code",
+    "link": "Link",
+    "noteLink": "Mit einer Notiz verknüpfen",
+    "mention": "Person erwähnen",
+    "table": "Tabelle",
+    "insertTable": "Tabelle einfügen",
+    "tableSize": "{{rows}} Zeilen × {{cols}} Spalten",
+    "column": "Spalte {{n}}",
+    "addRow": "Zeile hinzufügen",
+    "removeRow": "Zeile entfernen",
+    "addColumn": "Spalte hinzufügen",
+    "removeColumn": "Spalte entfernen"
+  },
+  "mentions": {
+    "loading": "Personen werden geladen…",
+    "noMatch": "Keine passende Person"
   }
 }

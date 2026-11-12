@@ -36,6 +36,15 @@ Le contenu d'une note et la description d'une tâche sont du Markdown complet, r
 - Calcul à la lecture, sans table : une recherche `LIKE` sur l'uid et le `[[titre]]` de la cible (index de candidats, 300 au plus par type), puis le parseur `backend/modules/content-links/core/parse.js` garde les vrais liens (hors code) et fait l'extrait. Un renommage, une modification ou une suppression se reflète donc tout de suite, quel que soit le chemin d'écriture (web, MCP, synchro, TODO.md). Une note qui se cite elle-même n'est pas listée ; les tâches-habitudes sont exclues.
 - Web : section « Rétroliens » en bas de la note, du panneau de tâche et de la fiche d'une personne, seulement s'il y en a ; un clic ouvre la note ou le panneau de la tâche.
 
+## Édition : barre de mise en forme et mentions
+
+Notes et descriptions de tâches s'éditent dans le même éditeur (`frontend/components/Note/MarkdownEditor.tsx`, CodeMirror avec aperçu en direct) : la description d'une tâche s'y ouvre au clic et s'enregistre quand le focus quitte l'éditeur, sa barre et ses menus.
+
+- **Barre en bas de l'éditeur** (collée en bas pendant le défilement) : gras (Ctrl/⌘+B), italique (Ctrl/⌘+I), barré (Ctrl/⌘+Maj+X), titre (cycle H1 → H2 → H3 → texte ; Ctrl/⌘+1/2/3), liste à puces, numérotée, à cases, citation, code (Ctrl/⌘+E : en ligne sur une ligne, bloc ``` ``` sur plusieurs lignes), lien (Ctrl/⌘+K), `[[ ]]` (ouvre le choix de note), `@` (ouvre le choix de personne), tableau (grille lignes × colonnes, flèches et Entrée au clavier). Le curseur dans un tableau ajoute « ajouter / supprimer une ligne, une colonne ». Chaque bouton a son `aria-label` et son raccourci dans l'infobulle ; un clic garde la sélection.
+- Les commandes sont des fonctions pures sur le texte Markdown (`frontend/components/Note/editor/markdownFormat.ts` : texte + sélection → un remplacement + nouvelle sélection) ; elles marchent dans un élément de liste (retrait et puce gardés, tableau et code retirés sous la puce). `textCommands.runEdit` les applique à CodeMirror ; une autre surface (par exemple un éditeur en plan) peut les appliquer avec `applyEdit`.
+- **Mentions** : taper `@` en début de mot ouvre la liste des personnes (`GET /api/people`, lue à la première ouverture ; flèches, Entrée ou Tab, Échap) ; le choix s'enregistre `@[Nom](person:<uid>)`. Un `@` au milieu d'un mot (adresse e-mail) n'ouvre rien. Règles pures : `mentionTrigger`, `mentionToken` dans `frontend/utils/markdownLinks.ts`.
+- `[[task:…]]` n'ouvre pas le choix de note ni la proposition de créer une note ; un Ctrl/⌘-clic sur sa puce dans l'éditeur ouvre la tâche.
+
 ## Android
 
-Le rendu Markdown, les puces de liens et les rétroliens sont à reprendre (`TODO.md`) ; rien à synchroniser : les rétroliens sont calculés par le serveur depuis le texte déjà synchronisé.
+Le rendu Markdown, les puces de liens, les rétroliens, la barre de mise en forme et le choix `@` sont à reprendre (`TODO.md`) ; rien à synchroniser : les rétroliens sont calculés par le serveur depuis le texte déjà synchronisé.

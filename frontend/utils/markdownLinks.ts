@@ -124,3 +124,20 @@ export const classifyHref = (
     if (APP_PATH.test(value)) return { kind: 'internal', path: value };
     return { kind: 'other', href: value };
 };
+
+// The Markdown a mention of a person is stored as.
+export const mentionToken = (name: string, uid: string): string =>
+    `@[${name.replace(/[[\]\n]/g, ' ').trim()}](person:${uid})`;
+
+// An "@name" being typed just before the caret: the search typed so far and
+// where the "@" is. An "@" inside a word (an e-mail address) is not one.
+export const mentionTrigger = (
+    textBeforeCaret: string
+): { query: string; offset: number } | null => {
+    const m = textBeforeCaret.match(/(?:^|[\s(])@([^\s@[\]()]{0,40})$/);
+    if (!m) return null;
+    return {
+        query: m[1],
+        offset: textBeforeCaret.length - m[1].length - 1,
+    };
+};

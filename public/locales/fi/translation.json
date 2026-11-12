@@ -6182,5 +6182,32 @@
     "untitled": "Nimetön",
     "createNote": "Luo muistiinpano \"{{title}}\"",
     "createTask": "Luo tehtävä \"{{title}}\""
+  },
+  "editorToolbar": {
+    "label": "Muotoilu",
+    "bold": "Lihavointi",
+    "italic": "Kursiivi",
+    "strikethrough": "Yliviivaus",
+    "heading": "Otsikko",
+    "bulletList": "Luettelo",
+    "numberedList": "Numeroitu luettelo",
+    "checklist": "Tarkistuslista",
+    "quote": "Lainaus",
+    "code": "Koodi",
+    "link": "Linkki",
+    "noteLink": "Linkitä muistiinpanoon",
+    "mention": "Mainitse henkilö",
+    "table": "Taulukko",
+    "insertTable": "Lisää taulukko",
+    "tableSize": "{{rows}} riviä × {{cols}} saraketta",
+    "column": "Sarake {{n}}",
+    "addRow": "Lisää rivi",
+    "removeRow": "Poista rivi",
+    "addColumn": "Lisää sarake",
+    "removeColumn": "Poista sarake"
+  },
+  "mentions": {
+    "loading": "Ladataan henkilöitä…",
+    "noMatch": "Ei vastaavia henkilöitä"
   }
 }

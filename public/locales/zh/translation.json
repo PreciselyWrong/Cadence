@@ -6180,5 +6180,32 @@
     "untitled": "无标题",
     "createNote": "创建笔记“{{title}}”",
     "createTask": "创建任务“{{title}}”"
+  },
+  "editorToolbar": {
+    "label": "格式",
+    "bold": "粗体",
+    "italic": "斜体",
+    "strikethrough": "删除线",
+    "heading": "标题",
+    "bulletList": "项目符号列表",
+    "numberedList": "编号列表",
+    "checklist": "复选框列表",
+    "quote": "引用",
+    "code": "代码",
+    "link": "链接",
+    "noteLink": "链接到笔记",
+    "mention": "提及某人",
+    "table": "表格",
+    "insertTable": "插入表格",
+    "tableSize": "{{rows}} 行 × {{cols}} 列",
+    "column": "列 {{n}}",
+    "addRow": "添加行",
+    "removeRow": "删除行",
+    "addColumn": "添加列",
+    "removeColumn": "删除列"
+  },
+  "mentions": {
+    "loading": "正在加载联系人…",
+    "noMatch": "没有匹配的联系人"
   }
 }

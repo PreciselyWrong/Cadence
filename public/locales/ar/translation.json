@@ -6254,5 +6254,32 @@
     "untitled": "بلا عنوان",
     "createNote": "إنشاء الملاحظة \"{{title}}\"",
     "createTask": "إنشاء المهمة \"{{title}}\""
+  },
+  "editorToolbar": {
+    "label": "التنسيق",
+    "bold": "غامق",
+    "italic": "مائل",
+    "strikethrough": "يتوسطه خط",
+    "heading": "عنوان",
+    "bulletList": "قائمة نقطية",
+    "numberedList": "قائمة مرقمة",
+    "checklist": "قائمة تحقق",
+    "quote": "اقتباس",
+    "code": "شيفرة",
+    "link": "رابط",
+    "noteLink": "رابط إلى ملاحظة",
+    "mention": "الإشارة إلى شخص",
+    "table": "جدول",
+    "insertTable": "إدراج جدول",
+    "tableSize": "{{rows}} صفوف × {{cols}} أعمدة",
+    "column": "العمود {{n}}",
+    "addRow": "إضافة صف",
+    "removeRow": "إزالة الصف",
+    "addColumn": "إضافة عمود",
+    "removeColumn": "إزالة العمود"
+  },
+  "mentions": {
+    "loading": "جارٍ تحميل الأشخاص…",
+    "noMatch": "لا يوجد أشخاص مطابقون"
   }
 }

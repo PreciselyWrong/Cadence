@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-12 — Notes et descriptions : barre de mise en forme en bas, mentions @ (web)
+
+- **Problème** : la mise en forme ne passait que par une barre flottante sur sélection (notes) ou la syntaxe tapée à la main ; la description d'une tâche était un simple champ texte, sans `[[`, sans tableau ; aucune façon de citer une personne.
+- **Décision** : la description d'une tâche s'édite dans l'éditeur des notes ; une barre fixe en bas de l'éditeur remplace la barre flottante : gras, italique, barré, titre (cycle), listes à puces / numérotée / à cases, citation, code, lien, `[[ ]]`, `@`, tableau (grille lignes × colonnes, puis ajouter / supprimer ligne et colonne quand le curseur y est). `@` ouvre la liste des personnes, le choix s'enregistre `@[Nom](person:uid)` et se lit en puce vers la fiche ; la fiche d'une personne liste les notes et tâches qui la mentionnent. Doc : `docs/43-notes-links.md`.
+- **À reprendre sur Android** : même barre sous l'éditeur des notes et descriptions (mêmes transformations de texte), même choix `@` et même jeton, section Rétroliens de la fiche personne.
+
 ### 2026-11-12 — Notes et descriptions : Markdown complet, liens et rétroliens (web)
 
 - **Problème** : `[[Titre]]` vers une note introuvable n'affichait qu'une puce morte ; aucune façon de lier une tâche ou une personne ; les liens web s'ouvraient dans l'onglet de l'app ; les rétroliens existaient dans l'API (notes seules) sans être affichés.

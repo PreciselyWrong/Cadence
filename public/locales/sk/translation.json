@@ -6218,5 +6218,32 @@
     "untitled": "Bez názvu",
     "createNote": "Vytvoriť poznámku „{{title}}“",
     "createTask": "Vytvoriť úlohu „{{title}}“"
+  },
+  "editorToolbar": {
+    "label": "Formátovanie",
+    "bold": "Tučné",
+    "italic": "Kurzíva",
+    "strikethrough": "Prečiarknuté",
+    "heading": "Nadpis",
+    "bulletList": "Odrážkový zoznam",
+    "numberedList": "Číslovaný zoznam",
+    "checklist": "Kontrolný zoznam",
+    "quote": "Citácia",
+    "code": "Kód",
+    "link": "Odkaz",
+    "noteLink": "Odkaz na poznámku",
+    "mention": "Spomenúť osobu",
+    "table": "Tabuľka",
+    "insertTable": "Vložiť tabuľku",
+    "tableSize": "{{rows}} riadkov × {{cols}} stĺpcov",
+    "column": "Stĺpec {{n}}",
+    "addRow": "Pridať riadok",
+    "removeRow": "Odstrániť riadok",
+    "addColumn": "Pridať stĺpec",
+    "removeColumn": "Odstrániť stĺpec"
+  },
+  "mentions": {
+    "loading": "Načítavajú sa osoby…",
+    "noMatch": "Žiadne zodpovedajúce osoby"
   }
 }

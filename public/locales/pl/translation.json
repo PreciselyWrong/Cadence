@@ -6242,5 +6242,32 @@
     "untitled": "Bez tytułu",
     "createNote": "Utwórz notatkę „{{title}}”",
     "createTask": "Utwórz zadanie „{{title}}”"
+  },
+  "editorToolbar": {
+    "label": "Formatowanie",
+    "bold": "Pogrubienie",
+    "italic": "Kursywa",
+    "strikethrough": "Przekreślenie",
+    "heading": "Nagłówek",
+    "bulletList": "Lista punktowana",
+    "numberedList": "Lista numerowana",
+    "checklist": "Lista kontrolna",
+    "quote": "Cytat",
+    "code": "Kod",
+    "link": "Link",
+    "noteLink": "Link do notatki",
+    "mention": "Wspomnij osobę",
+    "table": "Tabela",
+    "insertTable": "Wstaw tabelę",
+    "tableSize": "{{rows}} wierszy × {{cols}} kolumn",
+    "column": "Kolumna {{n}}",
+    "addRow": "Dodaj wiersz",
+    "removeRow": "Usuń wiersz",
+    "addColumn": "Dodaj kolumnę",
+    "removeColumn": "Usuń kolumnę"
+  },
+  "mentions": {
+    "loading": "Wczytywanie osób…",
+    "noMatch": "Brak pasujących osób"
   }
 }

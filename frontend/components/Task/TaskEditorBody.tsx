@@ -11,6 +11,7 @@ import QuickCaptureInput from '../Inbox/QuickCaptureInput';
 import ConfirmDialog from '../Shared/ConfirmDialog';
 import TodoMdBadge from '../Shared/TodoMdBadge';
 import MarkdownRenderer from '../Shared/MarkdownRenderer';
+import MarkdownEditor from '../Note/MarkdownEditor';
 import { SidePanelSection } from '../SidePanel/SidePanelParts';
 import TaskSubtasksCard from './TaskDetails/TaskSubtasksCard';
 import TaskAttachmentsCard from './TaskDetails/TaskAttachmentsCard';
@@ -239,23 +240,20 @@ export const TaskEditorBody: React.FC<TaskEditorBodyProps> = ({
                         </div>
                     )
                 ) : isEditingNote ? (
-                    <textarea
-                        id="taskNote"
-                        autoFocus
-                        value={note}
-                        onChange={(e) => setNote(e.target.value)}
-                        onBlur={commitNote}
-                        rows={Math.min(
-                            14,
-                            Math.max(4, note.split('\n').length + 1)
-                        )}
-                        aria-label={t('forms.description', 'Description')}
-                        className="block w-full resize-y rounded-xl bg-gray-100 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-900 dark:text-gray-100"
-                        placeholder={t(
-                            'task.contentPlaceholder',
-                            'Add content here... (Markdown supported)'
-                        )}
-                    />
+                    <div className="rounded-xl bg-gray-100 px-3 pt-2 text-sm text-gray-900 focus-within:ring-2 focus-within:ring-indigo-500 dark:bg-gray-900 dark:text-gray-100">
+                        <MarkdownEditor
+                            value={note}
+                            onChange={setNote}
+                            onBlur={commitNote}
+                            autoFocus
+                            minHeight="7rem"
+                            ariaLabel={t('forms.description', 'Description')}
+                            placeholder={t(
+                                'task.contentPlaceholder',
+                                'Add content here... (Markdown supported)'
+                            )}
+                        />
+                    </div>
                 ) : (
                     <div
                         role="button"

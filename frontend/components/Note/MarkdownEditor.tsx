@@ -15,7 +15,8 @@ import {
 import { EditorState, Compartment } from '@codemirror/state';
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
 import { history, defaultKeymap, historyKeymap } from '@codemirror/commands';
-import FormattingToolbar from './FormattingToolbar';
+import MarkdownToolbar, { FormatCommand } from './MarkdownToolbar';
+import MentionMenu, { MentionPerson } from './MentionMenu';
 import SlashCommandMenu, { SlashCommand } from './SlashCommandMenu';
 import WikilinkMenu, { NoteTitle } from './WikilinkMenu';
 import MissingNotePrompt from './MissingNotePrompt';
@@ -26,11 +27,12 @@ import { neutralEditorTheme } from './editor/highlightStyle';
 import { blockUxKeymap } from './editor/keymaps';
 import { isTouchScreen, touchReading } from './editor/touchReading';
 import { blockHandlePlugin, blockHandleTheme } from './editor/blockHandle';
-import {
-    wrapSelection as wrapSelectionCmd,
-    setHeading as setHeadingCmd,
-    insertLink as insertLinkCmd,
-} from './editor/textCommands';
+import { runEdit } from './editor/textCommands';
+import { tableAt } from './editor/markdownFormat';
+import { mentionToken, mentionTrigger } from '../../utils/markdownLinks';
+import { fetchPeople } from '../../utils/peopleService';
+import { resolveTaskLinks } from '../../utils/contentLinksService';
+import { openTaskPanel } from '../../store/taskPanelStore';
 import { useStore } from '../../store/useStore';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '../Shared/ToastContext';
@@ -54,6 +56,11 @@ interface MarkdownEditorProps {
     // The saved note being edited. With it, pasted, dropped or picked files
     // are uploaded to the note and placed in the text.
     noteUid?: string;
+    // Focus left the editor and its toolbar and menus.
+    onBlur?: () => void;
+    // The formatting bar under the text (on by default).
+    toolbar?: boolean;
+    ariaLabel?: string;
 }
 
 const shouldUseLightText = (hexColor: string | undefined): boolean => {
@@ -131,6 +138,26 @@ const CLOSED_SLASH: SlashMenuState = {
     from: 0,
     to: 0,
 };
+interface MentionMenuState {
+    open: boolean;
+    x: number;
+    y: number;
+    filter: string;
+    from: number;
+    to: number;
+}
+
+const CLOSED_MENTION: MentionMenuState = {
+    open: false,
+    x: 0,
+    y: 0,
+    filter: '',
+    from: 0,
+    to: 0,
+};
+
+const TASK_LINK = /^task:\s*/i;
+
 const CLOSED_WIKI: WikilinkMenuState = {
     open: false,
     x: 0,
@@ -189,6 +216,9 @@ function detectWikilinkTrigger(view: EditorView): {
     const m = textToCursor.match(/\[\[([^[\]]*)$/);
     if (!m) return null;
 
+    // [[task:…]] links a task by name: no note to offer.
+    if (TASK_LINK.test(m[1])) return null;
+
     const openBracketRelPos = textToCursor.length - 2 - m[1].length;
     const openBracketAbsPos = line.from + openBracketRelPos;
     const filter = m[1];
@@ -217,7 +247,8 @@ function detectClosedWikilink(update: ViewUpdate): string | null {
     const line = update.state.doc.lineAt(main.from);
     const textToCursor = line.text.slice(0, main.from - line.from);
     const m = textToCursor.match(/\[\[([^[\]\n]+?)\]\]$/);
-    return m ? m[1].trim() || null : null;
+    if (!m || TASK_LINK.test(m[1].trim())) return null;
+    return m[1].trim() || null;
 }
 
 const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
@@ -230,6 +261,9 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
     minHeight = '300px',
     onClick,
     noteUid,
+    onBlur,
+    toolbar = true,
+    ariaLabel,
 }) => {
     const { t } = useTranslation();
     const { showErrorToast } = useToast();
@@ -266,11 +300,12 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
     const navigateRef = useRef(navigate);
     navigateRef.current = navigate;
 
-    const [toolbarState, setToolbarState] = useState<{
-        visible: boolean;
-        x: number;
-        y: number;
-    }>({ visible: false, x: 0, y: 0 });
+    const [inTable, setInTable] = useState(false);
+    const [mentionMenu, setMentionMenu] =
+        useState<MentionMenuState>(CLOSED_MENTION);
+    const mentionMenuRef = useRef(mentionMenu);
+    mentionMenuRef.current = mentionMenu;
+    const [people, setPeople] = useState<MentionPerson[] | null>(null);
 
     const [slashMenu, setSlashMenu] = useState<SlashMenuState>(CLOSED_SLASH);
     const [wikilinkMenu, setWikilinkMenu] =
@@ -437,6 +472,11 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
                 blockHandleTheme,
                 keymap.of([...defaultKeymap, ...historyKeymap]),
                 EditorView.lineWrapping,
+                ariaLabel
+                    ? EditorView.contentAttributes.of({
+                          'aria-label': ariaLabel,
+                      })
+                    : [],
                 cmPlaceholder(placeholder),
                 baseEditorTheme,
                 themeCompartment.of(getThemeExtension()),
@@ -476,6 +516,16 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
                 }),
                 livePreviewExtension({
                     onOpenWikilink: (title, event) => {
+                        if (TASK_LINK.test(title)) {
+                            const name = title.replace(TASK_LINK, '').trim();
+                            void resolveTaskLinks([name])
+                                .then((found) => {
+                                    const uid = found[name.toLowerCase()];
+                                    if (uid) openTaskPanel(uid);
+                                })
+                                .catch(() => undefined);
+                            return;
+                        }
                         const target = findNoteByTitle(title);
                         if (target) {
                             navigateRef.current(`/notes/${target.uid}`);
@@ -525,31 +575,36 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
                         }
                     }
 
-                    // Formatting toolbar (on selection, while editing)
-                    const { main } = update.state.selection;
-                    if (
-                        !main.empty &&
-                        update.state.facet(EditorView.editable)
-                    ) {
-                        const fromCoords = view.coordsAtPos(main.from);
-                        const toCoords = view.coordsAtPos(main.to);
-                        if (fromCoords && toCoords) {
-                            const midX = (fromCoords.left + toCoords.right) / 2;
-                            const topY = Math.min(fromCoords.top, toCoords.top);
-                            setToolbarState((prev) => {
-                                if (
-                                    prev.visible &&
-                                    Math.abs(prev.x - midX) < 1 &&
-                                    Math.abs(prev.y - topY) < 1
-                                )
-                                    return prev;
-                                return { visible: true, x: midX, y: topY };
-                            });
-                        }
-                    } else {
-                        setToolbarState((prev) =>
-                            prev.visible ? { ...prev, visible: false } : prev
+                    // The table buttons show while the caret is in a table.
+                    if (update.docChanged || update.selectionSet) {
+                        const here = !!tableAt(
+                            update.state.doc.toString(),
+                            update.state.selection.main.head
                         );
+                        setInTable((prev) => (prev === here ? prev : here));
+                    }
+
+                    // "@name" being typed opens the people picker.
+                    const { main: caret } = update.state.selection;
+                    const caretLine = update.state.doc.lineAt(caret.head);
+                    const mention =
+                        caret.empty &&
+                        mentionTrigger(
+                            caretLine.text.slice(0, caret.head - caretLine.from)
+                        );
+                    const mentionCoords =
+                        mention && view.coordsAtPos(caret.head);
+                    if (mention && mentionCoords) {
+                        setMentionMenu({
+                            open: true,
+                            x: mentionCoords.left,
+                            y: mentionCoords.top,
+                            filter: mention.query,
+                            from: caretLine.from + mention.offset,
+                            to: caret.head,
+                        });
+                    } else if (mentionMenuRef.current.open) {
+                        setMentionMenu(CLOSED_MENTION);
                     }
 
                     // Slash command trigger detection
@@ -627,23 +682,36 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
         }
     }, [value]);
 
-    const handleBold = useCallback(() => {
-        if (viewRef.current) wrapSelectionCmd(viewRef.current, '**');
+    const runFormat = useCallback((command: FormatCommand) => {
+        if (viewRef.current) runEdit(viewRef.current, command);
     }, []);
-    const handleItalic = useCallback(() => {
-        if (viewRef.current) wrapSelectionCmd(viewRef.current, '_');
-    }, []);
-    const handleStrikethrough = useCallback(() => {
-        if (viewRef.current) wrapSelectionCmd(viewRef.current, '~~');
-    }, []);
-    const handleCode = useCallback(() => {
-        if (viewRef.current) wrapSelectionCmd(viewRef.current, '`');
-    }, []);
-    const handleLink = useCallback(() => {
-        if (viewRef.current) insertLinkCmd(viewRef.current);
-    }, []);
-    const handleHeading = useCallback((level: number) => {
-        if (viewRef.current) setHeadingCmd(viewRef.current, level);
+
+    // People are read when the picker first opens.
+    useEffect(() => {
+        if (!mentionMenu.open || people !== null) return;
+        fetchPeople({ archived: false })
+            .then((list) =>
+                setPeople(
+                    list
+                        .filter((p) => p.uid && p.name)
+                        .map((p) => ({ uid: p.uid as string, name: p.name }))
+                )
+            )
+            .catch(() => setPeople([]));
+    }, [mentionMenu.open, people]);
+
+    const closeMention = useCallback(() => setMentionMenu(CLOSED_MENTION), []);
+    const pickMention = useCallback((person: MentionPerson) => {
+        const { from, to } = mentionMenuRef.current;
+        setMentionMenu(CLOSED_MENTION);
+        const view = viewRef.current;
+        if (!view) return;
+        const token = `${mentionToken(person.name, person.uid)} `;
+        view.dispatch({
+            changes: { from, to, insert: token },
+            selection: { anchor: from + token.length },
+        });
+        view.focus();
     }, []);
 
     const fileCommands: SlashCommand[] = noteUid
@@ -668,11 +736,17 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 
     return (
         <div
-            className={`relative cm-editor-wrapper ${className}`}
+            className={`relative flex flex-col cm-editor-wrapper ${className}`}
             style={{ minHeight }}
             onClick={onClick}
+            onBlur={(e) => {
+                if (!onBlur) return;
+                const next = e.relatedTarget as Node | null;
+                if (next && e.currentTarget.contains(next)) return;
+                onBlur();
+            }}
         >
-            <div ref={containerRef} className="w-full" />
+            <div ref={containerRef} className="w-full flex-1" />
             <input
                 ref={fileInputRef}
                 type="file"
@@ -692,17 +766,23 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
                     pickPositionRef.current = null;
                 }}
             />
-            <FormattingToolbar
-                visible={toolbarState.visible}
-                x={toolbarState.x}
-                y={toolbarState.y}
-                onBold={handleBold}
-                onItalic={handleItalic}
-                onStrikethrough={handleStrikethrough}
-                onCode={handleCode}
-                onLink={handleLink}
-                onHeading={handleHeading}
-            />
+            {toolbar && (
+                <MarkdownToolbar
+                    run={runFormat}
+                    inTable={inTable}
+                    className="sticky bottom-0 z-10 mt-2"
+                />
+            )}
+            {mentionMenu.open && (
+                <MentionMenu
+                    x={mentionMenu.x}
+                    y={mentionMenu.y}
+                    filter={mentionMenu.filter}
+                    people={people}
+                    onPick={pickMention}
+                    onClose={closeMention}
+                />
+            )}
             {slashMenu.open && viewRef.current && (
                 <SlashCommandMenu
                     x={slashMenu.x}

@@ -6202,5 +6202,32 @@
     "untitled": "Fără titlu",
     "createNote": "Creează nota „{{title}}”",
     "createTask": "Creează sarcina „{{title}}”"
+  },
+  "editorToolbar": {
+    "label": "Formatare",
+    "bold": "Aldin",
+    "italic": "Cursiv",
+    "strikethrough": "Tăiat",
+    "heading": "Titlu",
+    "bulletList": "Listă cu marcatori",
+    "numberedList": "Listă numerotată",
+    "checklist": "Listă de verificare",
+    "quote": "Citat",
+    "code": "Cod",
+    "link": "Link",
+    "noteLink": "Legătură către o notă",
+    "mention": "Menționează o persoană",
+    "table": "Tabel",
+    "insertTable": "Inserează un tabel",
+    "tableSize": "{{rows}} rânduri × {{cols}} coloane",
+    "column": "Coloana {{n}}",
+    "addRow": "Adaugă un rând",
+    "removeRow": "Elimină rândul",
+    "addColumn": "Adaugă o coloană",
+    "removeColumn": "Elimină coloana"
+  },
+  "mentions": {
+    "loading": "Se încarcă persoanele…",
+    "noMatch": "Nicio persoană potrivită"
   }
 }

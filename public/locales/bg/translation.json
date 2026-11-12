@@ -6182,5 +6182,32 @@
     "untitled": "Без заглавие",
     "createNote": "Създай бележка „{{title}}“",
     "createTask": "Създай задача „{{title}}“"
+  },
+  "editorToolbar": {
+    "label": "Форматиране",
+    "bold": "Удебелен",
+    "italic": "Курсив",
+    "strikethrough": "Зачертан",
+    "heading": "Заглавие",
+    "bulletList": "Списък с водачи",
+    "numberedList": "Номериран списък",
+    "checklist": "Списък за отметки",
+    "quote": "Цитат",
+    "code": "Код",
+    "link": "Връзка",
+    "noteLink": "Връзка към бележка",
+    "mention": "Споменете човек",
+    "table": "Таблица",
+    "insertTable": "Вмъкване на таблица",
+    "tableSize": "{{rows}} реда × {{cols}} колони",
+    "column": "Колона {{n}}",
+    "addRow": "Добави ред",
+    "removeRow": "Премахни реда",
+    "addColumn": "Добави колона",
+    "removeColumn": "Премахни колоната"
+  },
+  "mentions": {
+    "loading": "Зареждане на хората…",
+    "noMatch": "Няма съвпадащи хора"
   }
 }

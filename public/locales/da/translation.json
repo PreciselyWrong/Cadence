@@ -6182,5 +6182,32 @@
     "untitled": "Uden titel",
     "createNote": "Opret noten \"{{title}}\"",
     "createTask": "Opret opgaven \"{{title}}\""
+  },
+  "editorToolbar": {
+    "label": "Formatering",
+    "bold": "Fed",
+    "italic": "Kursiv",
+    "strikethrough": "Gennemstreget",
+    "heading": "Overskrift",
+    "bulletList": "Punktopstilling",
+    "numberedList": "Nummereret liste",
+    "checklist": "Tjekliste",
+    "quote": "Citat",
+    "code": "Kode",
+    "link": "Link",
+    "noteLink": "Link til en note",
+    "mention": "Nævn en person",
+    "table": "Tabel",
+    "insertTable": "Indsæt en tabel",
+    "tableSize": "{{rows}} rækker × {{cols}} kolonner",
+    "column": "Kolonne {{n}}",
+    "addRow": "Tilføj en række",
+    "removeRow": "Fjern rækken",
+    "addColumn": "Tilføj en kolonne",
+    "removeColumn": "Fjern kolonnen"
+  },
+  "mentions": {
+    "loading": "Indlæser personer…",
+    "noMatch": "Ingen matchende personer"
   }
 }

@@ -6198,5 +6198,32 @@
     "untitled": "Sans titre",
     "createNote": "Créer la note « {{title}} »",
     "createTask": "Créer la tâche « {{title}} »"
+  },
+  "editorToolbar": {
+    "label": "Mise en forme",
+    "bold": "Gras",
+    "italic": "Italique",
+    "strikethrough": "Barré",
+    "heading": "Titre",
+    "bulletList": "Liste à puces",
+    "numberedList": "Liste numérotée",
+    "checklist": "Liste de cases à cocher",
+    "quote": "Citation",
+    "code": "Code",
+    "link": "Lien",
+    "noteLink": "Lien vers une note",
+    "mention": "Mentionner une personne",
+    "table": "Tableau",
+    "insertTable": "Insérer un tableau",
+    "tableSize": "{{rows}} lignes × {{cols}} colonnes",
+    "column": "Colonne {{n}}",
+    "addRow": "Ajouter une ligne",
+    "removeRow": "Supprimer la ligne",
+    "addColumn": "Ajouter une colonne",
+    "removeColumn": "Supprimer la colonne"
+  },
+  "mentions": {
+    "loading": "Chargement des personnes…",
+    "noMatch": "Aucune personne correspondante"
   }
 }

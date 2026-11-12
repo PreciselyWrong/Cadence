@@ -57,6 +57,25 @@ jest.mock('../../Shared/MarkdownRenderer', () => ({
     ),
 }));
 
+// The description is edited in the notes editor (CodeMirror, tested on
+// its own); a textarea stands in for its value/onChange/onBlur contract.
+jest.mock('../../Note/MarkdownEditor', () => ({
+    __esModule: true,
+    default: ({ value, onChange, onBlur, ariaLabel }: any) => (
+        <textarea
+            aria-label={ariaLabel}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            onBlur={onBlur}
+        />
+    ),
+}));
+
+jest.mock('../../Shared/Backlinks', () => ({
+    __esModule: true,
+    default: () => null,
+}));
+
 jest.mock('../../../utils/inboxService', () => ({
     analyzeInboxText: jest.fn(),
 }));

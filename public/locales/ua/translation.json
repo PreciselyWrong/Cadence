@@ -6242,5 +6242,32 @@
     "untitled": "Без назви",
     "createNote": "Створити нотатку «{{title}}»",
     "createTask": "Створити завдання «{{title}}»"
+  },
+  "editorToolbar": {
+    "label": "Форматування",
+    "bold": "Жирний",
+    "italic": "Курсив",
+    "strikethrough": "Закреслений",
+    "heading": "Заголовок",
+    "bulletList": "Маркований список",
+    "numberedList": "Нумерований список",
+    "checklist": "Список із прапорцями",
+    "quote": "Цитата",
+    "code": "Код",
+    "link": "Посилання",
+    "noteLink": "Посилання на нотатку",
+    "mention": "Згадати людину",
+    "table": "Таблиця",
+    "insertTable": "Вставити таблицю",
+    "tableSize": "{{rows}} рядків × {{cols}} стовпців",
+    "column": "Стовпець {{n}}",
+    "addRow": "Додати рядок",
+    "removeRow": "Видалити рядок",
+    "addColumn": "Додати стовпець",
+    "removeColumn": "Видалити стовпець"
+  },
+  "mentions": {
+    "loading": "Завантаження людей…",
+    "noMatch": "Немає відповідних людей"
   }
 }

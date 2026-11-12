@@ -6183,5 +6183,32 @@
     "untitled": "Χωρίς τίτλο",
     "createNote": "Δημιουργία σημείωσης «{{title}}»",
     "createTask": "Δημιουργία εργασίας «{{title}}»"
+  },
+  "editorToolbar": {
+    "label": "Μορφοποίηση",
+    "bold": "Έντονα",
+    "italic": "Πλάγια",
+    "strikethrough": "Διακριτή διαγραφή",
+    "heading": "Επικεφαλίδα",
+    "bulletList": "Λίστα με κουκκίδες",
+    "numberedList": "Αριθμημένη λίστα",
+    "checklist": "Λίστα ελέγχου",
+    "quote": "Παράθεση",
+    "code": "Κώδικας",
+    "link": "Σύνδεσμος",
+    "noteLink": "Σύνδεσμος σε σημείωση",
+    "mention": "Αναφορά σε άτομο",
+    "table": "Πίνακας",
+    "insertTable": "Εισαγωγή πίνακα",
+    "tableSize": "{{rows}} γραμμές × {{cols}} στήλες",
+    "column": "Στήλη {{n}}",
+    "addRow": "Προσθήκη γραμμής",
+    "removeRow": "Αφαίρεση γραμμής",
+    "addColumn": "Προσθήκη στήλης",
+    "removeColumn": "Αφαίρεση στήλης"
+  },
+  "mentions": {
+    "loading": "Φόρτωση ατόμων…",
+    "noMatch": "Δεν βρέθηκαν άτομα"
   }
 }

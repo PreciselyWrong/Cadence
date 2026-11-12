@@ -6242,5 +6242,32 @@
     "untitled": "Без названия",
     "createNote": "Создать заметку «{{title}}»",
     "createTask": "Создать задачу «{{title}}»"
+  },
+  "editorToolbar": {
+    "label": "Форматирование",
+    "bold": "Жирный",
+    "italic": "Курсив",
+    "strikethrough": "Зачёркнутый",
+    "heading": "Заголовок",
+    "bulletList": "Маркированный список",
+    "numberedList": "Нумерованный список",
+    "checklist": "Список с флажками",
+    "quote": "Цитата",
+    "code": "Код",
+    "link": "Ссылка",
+    "noteLink": "Ссылка на заметку",
+    "mention": "Упомянуть человека",
+    "table": "Таблица",
+    "insertTable": "Вставить таблицу",
+    "tableSize": "{{rows}} строк × {{cols}} столбцов",
+    "column": "Столбец {{n}}",
+    "addRow": "Добавить строку",
+    "removeRow": "Удалить строку",
+    "addColumn": "Добавить столбец",
+    "removeColumn": "Удалить столбец"
+  },
+  "mentions": {
+    "loading": "Загрузка людей…",
+    "noMatch": "Нет подходящих людей"
   }
 }

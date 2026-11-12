@@ -6180,5 +6180,32 @@
     "untitled": "제목 없음",
     "createNote": "노트 \"{{title}}\" 만들기",
     "createTask": "작업 \"{{title}}\" 만들기"
+  },
+  "editorToolbar": {
+    "label": "서식",
+    "bold": "굵게",
+    "italic": "기울임꼴",
+    "strikethrough": "취소선",
+    "heading": "제목",
+    "bulletList": "글머리 기호 목록",
+    "numberedList": "번호 매기기 목록",
+    "checklist": "체크리스트",
+    "quote": "인용",
+    "code": "코드",
+    "link": "링크",
+    "noteLink": "노트에 연결",
+    "mention": "사람 언급",
+    "table": "표",
+    "insertTable": "표 삽입",
+    "tableSize": "{{rows}}행 × {{cols}}열",
+    "column": "열 {{n}}",
+    "addRow": "행 추가",
+    "removeRow": "행 제거",
+    "addColumn": "열 추가",
+    "removeColumn": "열 제거"
+  },
+  "mentions": {
+    "loading": "사람을 불러오는 중…",
+    "noMatch": "일치하는 사람이 없습니다"
   }
 }

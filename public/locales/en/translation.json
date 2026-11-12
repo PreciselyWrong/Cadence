@@ -6152,5 +6152,32 @@
     "untitled": "Untitled",
     "createNote": "Create note \"{{title}}\"",
     "createTask": "Create task \"{{title}}\""
+  },
+  "editorToolbar": {
+    "label": "Formatting",
+    "bold": "Bold",
+    "italic": "Italic",
+    "strikethrough": "Strikethrough",
+    "heading": "Heading",
+    "bulletList": "Bulleted list",
+    "numberedList": "Numbered list",
+    "checklist": "Checklist",
+    "quote": "Quote",
+    "code": "Code",
+    "link": "Link",
+    "noteLink": "Link to a note",
+    "mention": "Mention a person",
+    "table": "Table",
+    "insertTable": "Insert a table",
+    "tableSize": "{{rows}} rows × {{cols}} columns",
+    "column": "Column {{n}}",
+    "addRow": "Add a row",
+    "removeRow": "Remove the row",
+    "addColumn": "Add a column",
+    "removeColumn": "Remove the column"
+  },
+  "mentions": {
+    "loading": "Loading people…",
+    "noMatch": "No matching people"
   }
 }

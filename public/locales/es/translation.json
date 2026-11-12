@@ -6184,5 +6184,32 @@
     "untitled": "Sin título",
     "createNote": "Crear la nota «{{title}}»",
     "createTask": "Crear la tarea «{{title}}»"
+  },
+  "editorToolbar": {
+    "label": "Formato",
+    "bold": "Negrita",
+    "italic": "Cursiva",
+    "strikethrough": "Tachado",
+    "heading": "Encabezado",
+    "bulletList": "Lista con viñetas",
+    "numberedList": "Lista numerada",
+    "checklist": "Lista de verificación",
+    "quote": "Cita",
+    "code": "Código",
+    "link": "Enlace",
+    "noteLink": "Enlazar a una nota",
+    "mention": "Mencionar a una persona",
+    "table": "Tabla",
+    "insertTable": "Insertar una tabla",
+    "tableSize": "{{rows}} filas × {{cols}} columnas",
+    "column": "Columna {{n}}",
+    "addRow": "Añadir una fila",
+    "removeRow": "Quitar la fila",
+    "addColumn": "Añadir una columna",
+    "removeColumn": "Quitar la columna"
+  },
+  "mentions": {
+    "loading": "Cargando personas…",
+    "noMatch": "Ninguna persona coincide"
   }
 }

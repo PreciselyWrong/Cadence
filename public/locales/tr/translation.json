@@ -6180,5 +6180,32 @@
     "untitled": "Başlıksız",
     "createNote": "\"{{title}}\" notunu oluştur",
     "createTask": "\"{{title}}\" görevini oluştur"
+  },
+  "editorToolbar": {
+    "label": "Biçimlendirme",
+    "bold": "Kalın",
+    "italic": "İtalik",
+    "strikethrough": "Üstü çizili",
+    "heading": "Başlık",
+    "bulletList": "Madde işaretli liste",
+    "numberedList": "Numaralı liste",
+    "checklist": "Kontrol listesi",
+    "quote": "Alıntı",
+    "code": "Kod",
+    "link": "Bağlantı",
+    "noteLink": "Nota bağlantı",
+    "mention": "Bir kişiden bahset",
+    "table": "Tablo",
+    "insertTable": "Tablo ekle",
+    "tableSize": "{{rows}} satır × {{cols}} sütun",
+    "column": "Sütun {{n}}",
+    "addRow": "Satır ekle",
+    "removeRow": "Satırı kaldır",
+    "addColumn": "Sütun ekle",
+    "removeColumn": "Sütunu kaldır"
+  },
+  "mentions": {
+    "loading": "Kişiler yükleniyor…",
+    "noMatch": "Eşleşen kişi yok"
   }
 }

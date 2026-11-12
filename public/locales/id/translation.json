@@ -6180,5 +6180,32 @@
     "untitled": "Tanpa judul",
     "createNote": "Buat catatan \"{{title}}\"",
     "createTask": "Buat tugas \"{{title}}\""
+  },
+  "editorToolbar": {
+    "label": "Format",
+    "bold": "Tebal",
+    "italic": "Miring",
+    "strikethrough": "Coret",
+    "heading": "Judul",
+    "bulletList": "Daftar berpoin",
+    "numberedList": "Daftar bernomor",
+    "checklist": "Daftar periksa",
+    "quote": "Kutipan",
+    "code": "Kode",
+    "link": "Tautan",
+    "noteLink": "Tautkan ke catatan",
+    "mention": "Sebut seseorang",
+    "table": "Tabel",
+    "insertTable": "Sisipkan tabel",
+    "tableSize": "{{rows}} baris × {{cols}} kolom",
+    "column": "Kolom {{n}}",
+    "addRow": "Tambah baris",
+    "removeRow": "Hapus baris",
+    "addColumn": "Tambah kolom",
+    "removeColumn": "Hapus kolom"
+  },
+  "mentions": {
+    "loading": "Memuat orang…",
+    "noMatch": "Tidak ada orang yang cocok"
   }
 }

@@ -6180,5 +6180,32 @@
     "untitled": "Không có tiêu đề",
     "createNote": "Tạo ghi chú \"{{title}}\"",
     "createTask": "Tạo công việc \"{{title}}\""
+  },
+  "editorToolbar": {
+    "label": "Định dạng",
+    "bold": "In đậm",
+    "italic": "In nghiêng",
+    "strikethrough": "Gạch ngang",
+    "heading": "Tiêu đề",
+    "bulletList": "Danh sách dấu đầu dòng",
+    "numberedList": "Danh sách đánh số",
+    "checklist": "Danh sách kiểm",
+    "quote": "Trích dẫn",
+    "code": "Mã",
+    "link": "Liên kết",
+    "noteLink": "Liên kết tới ghi chú",
+    "mention": "Nhắc đến một người",
+    "table": "Bảng",
+    "insertTable": "Chèn bảng",
+    "tableSize": "{{rows}} hàng × {{cols}} cột",
+    "column": "Cột {{n}}",
+    "addRow": "Thêm hàng",
+    "removeRow": "Xóa hàng",
+    "addColumn": "Thêm cột",
+    "removeColumn": "Xóa cột"
+  },
+  "mentions": {
+    "loading": "Đang tải danh bạ…",
+    "noMatch": "Không có người phù hợp"
   }
 }

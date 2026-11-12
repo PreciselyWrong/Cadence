@@ -6242,5 +6242,32 @@
     "untitled": "Brez naslova",
     "createNote": "Ustvari zapisek »{{title}}«",
     "createTask": "Ustvari opravilo »{{title}}«"
+  },
+  "editorToolbar": {
+    "label": "Oblikovanje",
+    "bold": "Krepko",
+    "italic": "Ležeče",
+    "strikethrough": "Prečrtano",
+    "heading": "Naslov",
+    "bulletList": "Seznam z oznakami",
+    "numberedList": "Oštevilčen seznam",
+    "checklist": "Kontrolni seznam",
+    "quote": "Citat",
+    "code": "Koda",
+    "link": "Povezava",
+    "noteLink": "Povezava do zapiska",
+    "mention": "Omeni osebo",
+    "table": "Tabela",
+    "insertTable": "Vstavi tabelo",
+    "tableSize": "{{rows}} vrstic × {{cols}} stolpcev",
+    "column": "Stolpec {{n}}",
+    "addRow": "Dodaj vrstico",
+    "removeRow": "Odstrani vrstico",
+    "addColumn": "Dodaj stolpec",
+    "removeColumn": "Odstrani stolpec"
+  },
+  "mentions": {
+    "loading": "Nalaganje oseb…",
+    "noMatch": "Ni ujemajočih oseb"
   }
 }
