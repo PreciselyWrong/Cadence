@@ -18,15 +18,15 @@ import {
     useDropHover,
 } from './sidebarDrop';
 
-// A task dropped on Today or Tomorrow becomes due that day.
-const DAY_TARGETS = new Set(['today', 'tomorrow']);
+// A task dropped on Today becomes due that day.
+const DAY_TARGETS = new Set(['today']);
 
 interface SidebarSmartListsProps {
     handleNavClick: (path: string, title: string, icon: JSX.Element) => void;
     location: Location;
 }
 
-// The four lists that open at the top of the minimal sidebar, each with the
+// The three lists that open at the top of the minimal sidebar, each with the
 // number of open tasks it holds.
 const SidebarSmartLists: React.FC<SidebarSmartListsProps> = ({
     handleNavClick,
@@ -64,9 +64,6 @@ const SidebarSmartLists: React.FC<SidebarSmartListsProps> = ({
         };
     }, [location.pathname, location.search, needsCounts]);
 
-    // Today resolves the keyword in the user's timezone.
-    const tomorrowDate = 'tomorrow';
-
     const allRows = [
         {
             id: 'today',
@@ -74,20 +71,7 @@ const SidebarSmartLists: React.FC<SidebarSmartListsProps> = ({
             title: t('sidebar.today', 'Today'),
             icon: <SunIcon className="h-[16px] w-[16px]" />,
             count: counts?.today,
-            isActive:
-                location.pathname.startsWith('/today') &&
-                !location.search.includes(`date=${tomorrowDate}`),
-        },
-        {
-            // Tomorrow is the Today page one day on (same list and calendar).
-            id: 'tomorrow',
-            path: `/today?date=${tomorrowDate}`,
-            title: t('sidebar.tomorrow', 'Tomorrow'),
-            icon: <CalendarDaysIcon className="h-[16px] w-[16px]" />,
-            count: counts?.tomorrow,
-            isActive:
-                location.pathname.startsWith('/today') &&
-                location.search.includes(`date=${tomorrowDate}`),
+            isActive: location.pathname.startsWith('/today'),
         },
         {
             id: 'next7',

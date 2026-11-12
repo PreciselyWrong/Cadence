@@ -175,16 +175,14 @@ describe('Minimal sidebar customization', () => {
         );
 
         expect(screen.queryByTestId('sidebar-smart-today')).toBeNull();
-        expect(
-            screen.getByTestId('sidebar-smart-tomorrow')
-        ).toBeInTheDocument();
+        expect(screen.getByTestId('sidebar-smart-next7')).toBeInTheDocument();
     });
 
     it('hiding a count hides the badge but keeps the row', async () => {
         setUp('minimal', {
             smartLists: [
                 { key: 'today', visible: true, showCount: false },
-                { key: 'tomorrow', visible: true, showCount: true },
+                { key: 'next7', visible: true, showCount: true },
             ],
         });
 
@@ -193,9 +191,9 @@ describe('Minimal sidebar customization', () => {
         );
 
         await waitFor(() => {
-            expect(
-                screen.getByTestId('sidebar-smart-tomorrow')
-            ).toHaveTextContent('5');
+            expect(screen.getByTestId('sidebar-smart-next7')).toHaveTextContent(
+                '9'
+            );
         });
         expect(screen.getByTestId('sidebar-smart-today')).toHaveTextContent(
             'Today'
@@ -209,7 +207,6 @@ describe('Minimal sidebar customization', () => {
         setUp('minimal', {
             smartLists: [
                 { key: 'today', visible: true, showCount: false },
-                { key: 'tomorrow', visible: true, showCount: false },
                 { key: 'next7', visible: true, showCount: false },
             ],
         });
@@ -280,7 +277,6 @@ describe('Minimal sidebar customization', () => {
         expect(smartListOrder()).toEqual([
             'sidebar-smart-next7',
             'sidebar-smart-today',
-            'sidebar-smart-tomorrow',
         ]);
     });
 
@@ -301,7 +297,6 @@ describe('Minimal sidebar customization', () => {
         expect(smartListOrder()).toEqual([
             'sidebar-smart-inbox',
             'sidebar-smart-today',
-            'sidebar-smart-tomorrow',
         ]);
     });
 

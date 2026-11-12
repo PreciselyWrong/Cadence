@@ -3,9 +3,11 @@
 // defaults for anything missing so new items appear for existing users.
 
 // Inbox first: what came in sits above the day (2026-11-12).
-export const SMART_LIST_IDS = ['inbox', 'today', 'tomorrow', 'next7'] as const;
-// The order every account had before; a saved list in that exact order was
-// never rearranged by its owner, so it takes the new default.
+// Tomorrow left the list (2026-11-12): the Plan page covers it.
+export const SMART_LIST_IDS = ['inbox', 'today', 'next7'] as const;
+// The order every account had before, Tomorrow included; a saved list in that
+// exact order was never rearranged by its owner, so it takes the new default.
+// Kept literal: it must still match after Tomorrow leaves SMART_LIST_IDS.
 const PREVIOUS_SMART_ORDER = ['today', 'tomorrow', 'next7', 'inbox'];
 export type SmartListId = (typeof SMART_LIST_IDS)[number];
 

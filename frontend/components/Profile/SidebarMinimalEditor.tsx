@@ -19,7 +19,6 @@ interface SidebarMinimalEditorProps {
 // Labels for the editor only; the sidebar itself reads the same strings.
 const SMART_LIST_LABELS: Record<SmartListId, [string, string]> = {
     today: ['sidebar.today', 'Today'],
-    tomorrow: ['sidebar.tomorrow', 'Tomorrow'],
     next7: ['sidebar.plan', 'Plan'],
     inbox: ['sidebar.inbox', 'Inbox'],
 };

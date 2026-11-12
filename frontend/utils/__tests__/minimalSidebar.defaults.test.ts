@@ -21,10 +21,44 @@ describe('minimal sidebar defaults', () => {
     it('falls back to the calm defaults when nothing is saved', () => {
         const resolved = resolveMinimalSidebar({});
         expect(resolved.sectionBadges.tags).toBe(false);
+        expect(resolved.smartLists.map((item) => item.key)).toEqual([
+            'inbox',
+            'today',
+            'next7',
+        ]);
+    });
+
+    it('drops Tomorrow from a saved list, keeping the rest as saved', () => {
+        const resolved = resolveMinimalSidebar({
+            smartLists: [
+                { key: 'tomorrow', visible: true, showCount: true },
+                { key: 'today', visible: true, showCount: false },
+            ],
+        });
+        expect(resolved.smartLists.map((item) => item.key)).toEqual([
+            'today',
+            'inbox',
+            'next7',
+        ]);
         expect(
-            resolved.smartLists.find((item) => item.key === 'tomorrow')
-                ?.showCount
-        ).toBe(false);
+            resolved.smartLists.find((item) => item.key === 'today')
+        ).toEqual({ key: 'today', visible: true, showCount: false });
+    });
+
+    it('maps the legacy order with Tomorrow to the new default order', () => {
+        const resolved = resolveMinimalSidebar({
+            smartLists: [
+                { key: 'today', visible: true, showCount: true },
+                { key: 'tomorrow', visible: true, showCount: false },
+                { key: 'next7', visible: false, showCount: false },
+                { key: 'inbox', visible: true, showCount: true },
+            ],
+        });
+        expect(resolved.smartLists).toEqual([
+            { key: 'inbox', visible: true, showCount: true },
+            { key: 'today', visible: true, showCount: true },
+            { key: 'next7', visible: false, showCount: false },
+        ]);
     });
 
     it('keeps a count the user turned on', () => {
