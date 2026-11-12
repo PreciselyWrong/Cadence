@@ -64,8 +64,6 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.glance.appwidget)
     implementation(libs.androidx.work.runtime.ktx)
-    implementation(libs.androidx.media3.exoplayer)
-    implementation(libs.androidx.media3.session)
     implementation(libs.commons.compress)
     implementation(libs.play.services.code.scanner)
     implementation(libs.kotlinx.serialization.json)

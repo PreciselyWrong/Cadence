@@ -25,8 +25,6 @@
     <string name="triage_action_note">Convertir en note</string>
     <string name="triage_action_project">Convertir en projet</string>
     <string name="triage_action_habit">Convertir en habitude</string>
-    <string name="brief_triage_enabled">Propositions de l\'IA dans À trier</string>
-    <string name="brief_triage_limit">Tâches regardées par jour</string>
     <string name="triage_slot_accept">Planifier</string>
     <string name="triage_slot_refuse">Refuser</string>
     <string name="triage_slot_refused">Créneau refusé</string>
@@ -46,4 +44,9 @@
     <string name="triage_mail_replied">Réponse ouverte dans Gmail</string>
     <string name="triage_mail_postponed">Revient demain</string>
     <string name="triage_mail_dismissed">Mail ignoré</string>
+    <string name="triage_answer_yes">Oui</string>
+    <string name="triage_answer_no">Non</string>
+    <string name="triage_answer_precise">Préciser</string>
+    <string name="triage_precise_label">Votre réponse</string>
+    <string name="triage_precise_send">Envoyer</string>
 </resources>

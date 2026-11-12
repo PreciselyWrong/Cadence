@@ -21,10 +21,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         SyncMetaEntity::class,
         SyncConflictEntity::class,
         DeferredCallEntity::class,
-        BriefEntity::class,
-        EveningEntity::class,
     ],
-    version = 21,
+    version = 22,
     exportSchema = true,
 )
 abstract class TududiDatabase : RoomDatabase() {
@@ -42,8 +40,6 @@ abstract class TududiDatabase : RoomDatabase() {
     abstract fun syncMetaDao(): SyncMetaDao
     abstract fun syncConflictDao(): SyncConflictDao
     abstract fun deferredCallDao(): DeferredCallDao
-    abstract fun briefDao(): BriefDao
-    abstract fun eveningDao(): EveningDao
 }
 
 /** Ajoute le nom de la ligne rejetée au journal des échecs. */
@@ -285,6 +281,21 @@ internal val MIGRATION_12_13 = object : Migration(12, 13) {
     override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL(
             "CREATE TABLE IF NOT EXISTS `evening` (`date` TEXT NOT NULL, `json` TEXT NOT NULL, `fetchedAtMs` INTEGER NOT NULL, PRIMARY KEY(`date`))",
+        )
+    }
+}
+
+/**
+ * Le résumé du jour et le bilan du soir quittent l'app (Hermes les rédige dans la Boîte des agents) : leurs tables
+ * partent, avec les appels en file qui n'ont plus de sens (vue ouverte, réglages, décisions). Les réponses aux
+ * questions d'« À trier » et les reports à demain restent en file. Le curseur reste : rien de synchronisé ne change.
+ */
+internal val MIGRATION_21_22 = object : Migration(21, 22) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("DROP TABLE IF EXISTS `brief`")
+        db.execSQL("DROP TABLE IF EXISTS `evening`")
+        db.execSQL(
+            "DELETE FROM deferred_calls WHERE `key` LIKE 'brief-seen:%' OR `key` LIKE 'brief-decision:%' OR `key` = 'brief-settings'",
         )
     }
 }

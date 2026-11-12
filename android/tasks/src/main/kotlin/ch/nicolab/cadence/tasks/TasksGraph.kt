@@ -19,19 +19,7 @@ import ch.nicolab.cadence.tasks.data.createSyncStatus
 import ch.nicolab.cadence.tasks.syncstatus.SyncStatusClient
 import ch.nicolab.cadence.tasks.review.ReviewRepository
 import ch.nicolab.cadence.tasks.links.LinkPreviews
-import ch.nicolab.cadence.tasks.brief.BriefActions
-import ch.nicolab.cadence.tasks.brief.BriefAgentsRepository
-import ch.nicolab.cadence.tasks.brief.BriefRepository
-import ch.nicolab.cadence.tasks.brief.BriefSettingsRepository
-import ch.nicolab.cadence.tasks.brief.BriefStore
-import ch.nicolab.cadence.tasks.brief.EveningRepository
-import ch.nicolab.cadence.tasks.data.createEvening
-import ch.nicolab.cadence.tasks.data.createBrief
-import ch.nicolab.cadence.tasks.data.createBriefActions
 import ch.nicolab.cadence.tasks.data.createPlanEdits
-import ch.nicolab.cadence.tasks.data.createBriefAgents
-import ch.nicolab.cadence.tasks.data.createBriefSettings
-import ch.nicolab.cadence.tasks.data.createBriefStore
 
 /** Câblage manuel du module, comme `CadenceApp` pour les habitudes. */
 object TasksGraph {
@@ -81,38 +69,20 @@ object TasksGraph {
     /** Appareils et conflits vus du serveur (en ligne seulement). */
     fun syncStatus(context: Context): SyncStatusClient = createSyncStatus(context.applicationContext)
 
-    /** Brief du jour, lu en ligne et gardé pour le hors ligne. */
-    fun brief(context: Context): BriefRepository = createBrief(context.applicationContext)
-
-    /** Bilan du soir, lu en ligne et gardé pour le hors ligne. */
-    fun evening(context: Context): EveningRepository = createEvening(context.applicationContext)
-
     /** File « À trier », lue en ligne et gardée pour le hors ligne. */
     fun triage(context: Context): ch.nicolab.cadence.tasks.triage.TriageRepository =
         ch.nicolab.cadence.tasks.data.createTriage(context.applicationContext)
-
-    /** Réglages du brief (dernière lecture gardée, écriture différée hors ligne). */
-    fun briefSettings(context: Context): BriefSettingsRepository = createBriefSettings(context.applicationContext)
 
     /** Classement automatique : réglages, marques et annulation (en ligne), réponses aux suggestions (file différée). */
     fun autoClassify(context: Context): ch.nicolab.cadence.tasks.autoclassify.AutoClassifyRepository =
         ch.nicolab.cadence.tasks.autoclassify.autoClassifyRepository(context)
 
     /** Réglages de l'agent (en ligne seulement). */
-    fun briefAgents(context: Context): BriefAgentsRepository = createBriefAgents(context.applicationContext)
-
-    /** Actions du brief : tâche et décision (file d'appels différés), avec annulation. */
-    internal fun briefActions(context: Context): BriefActions = createBriefActions(context.applicationContext)
+    fun agents(context: Context): ch.nicolab.cadence.tasks.agents.AgentsRepository =
+        ch.nicolab.cadence.tasks.data.createAgents(context.applicationContext)
 
     /** Écritures du plan du jour (Reporter, Placer) : plan local d'abord, appels différés ensuite. */
     internal fun planEdits(context: Context): PlanEdits = createPlanEdits(context.applicationContext)
-
-    /** Audio du résumé : voix locale, fichiers rendus, copie du MP3 du serveur. */
-    fun briefAudio(context: Context): ch.nicolab.cadence.tasks.brief.audio.BriefAudio =
-        ch.nicolab.cadence.tasks.data.createBriefAudio(context.applicationContext)
-
-    /** Préférences du brief propres à l'appareil (notification « résumé prêt »). */
-    fun briefStore(context: Context): BriefStore = createBriefStore(context.applicationContext)
 
     fun connection(context: Context): ServerConnection =
         connection ?: synchronized(this) {

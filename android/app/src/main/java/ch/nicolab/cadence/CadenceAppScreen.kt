@@ -8,7 +8,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.fillMaxSize
@@ -47,6 +51,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.health.connect.client.PermissionController
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import ch.nicolab.cadence.tasks.live.AgentInbox
+import ch.nicolab.cadence.tasks.live.AgentMessages
+import ch.nicolab.cadence.tasks.ui.AgentMessageBanner
 import ch.nicolab.cadence.agenda.AgendaScreen
 import ch.nicolab.cadence.bilan.BilanScreen
 import ch.nicolab.cadence.data.local.model.PersistedHabit
@@ -91,7 +98,6 @@ import ch.nicolab.cadence.tasks.ui.LocalEntityIconPicker
 import ch.nicolab.cadence.tasks.ui.LocalEntityIcons
 import ch.nicolab.cadence.tasks.ui.SearchScreen
 import ch.nicolab.cadence.tasks.ui.TasksScreen
-import ch.nicolab.cadence.tasks.ui.brief.BriefScreen
 import ch.nicolab.cadence.tasks.ui.review.ReviewScreen
 import ch.nicolab.cadence.ui.icon.HabitIconPicker
 import ch.nicolab.cadence.ui.icon.HabitIconRegistry
@@ -129,14 +135,13 @@ internal fun CadenceAppScreen(
     var settingsOpen by rememberSaveable { mutableStateOf(false) }
     var searchOpen by rememberSaveable { mutableStateOf(false) }
     var reviewOpen by rememberSaveable { mutableStateOf(false) }
-    var briefOpen by rememberSaveable { mutableStateOf(false) }
     var triageOpen by rememberSaveable { mutableStateOf(false) }
+    val agentMessages by AgentInbox.messages.collectAsStateWithLifecycle()
     var goalsOpen by rememberSaveable { mutableStateOf(false) }
     var projectToShow by rememberSaveable { mutableStateOf<String?>(null) }
     // Tâche à ouvrir (widget ou rappel) ; effacée dès que Tâches l'a ouverte pour ne pas la rouvrir.
     var opening by rememberSaveable(stateSaver = taskOpeningSaver) { mutableStateOf(TaskOpening()) }
     BackHandler(enabled = settingsOpen) { settingsOpen = false }
-    BackHandler(enabled = briefOpen) { briefOpen = false }
     // Une tâche ouverte depuis un widget ou un rappel doit s'afficher dans Tâches, quel que soit l'onglet restauré.
     androidx.compose.runtime.LaunchedEffect(openTaskUid) {
         val next = opening.fromLaunch(openTaskUid)
@@ -248,68 +253,75 @@ internal fun CadenceAppScreen(
             LocalEntityIcons provides { id -> HabitIconRegistry.getIcon(id).imageVector },
             LocalEntityIconPicker provides { selected, onPick -> HabitIconPicker(selected, onPick) },
         ) {
-            Crossfade(
-                targetState = if (settingsOpen) null else tab,
-                modifier = Modifier.fillMaxSize().backdropSource(backdrop),
-                label = "screen",
-            ) { current ->
-                when (current) {
-                    null -> SettingsScreen(settingsDeps, onBack = { settingsOpen = false })
-                    Tab.INBOX -> InboxScreen(onOpenSearch = { searchOpen = true }, onOpenSettings = { settingsOpen = true })
-                    Tab.TASKS -> TasksScreen(
-                        openTaskUid = opening.pending,
-                        onTaskOpened = { opening = opening.consumed() },
-                        onOpenBrief = { briefOpen = true },
-                        showProjectUid = projectToShow,
-                        onProjectShown = { projectToShow = null },
-                        onOpenSearch = { searchOpen = true },
-                        onOpenSettings = { settingsOpen = true },
-                        routineStrip = {
-                            RoutineStrip(
-                                habits = habits,
-                                groups = groups,
-                                quick = { viewModel.clearSaveError(); quickHabitId = it.stored.id },
-                                openHabits = { tab = Tab.HABITS },
-                            )
-                        },
-                    )
-                    Tab.AGENDA -> AgendaScreen(onOpenHabit = { viewModel.clearSaveError(); quickHabitId = it })
-                    Tab.HABITS -> HabitsTab(
-                        habits = habits,
-                        groups = groups,
-                        selectedGroupId = groupFilter,
-                        onSelectGroup = { groupFilter = it },
-                        quick = { viewModel.clearSaveError(); quickHabitId = it.stored.id },
-                        options = { options = it },
-                        create = { choosingCreation = true },
-                        openSettings = { settingsOpen = true },
-                        timers = timers,
-                        busy = busy,
-                        direct = { item -> viewModel.directAction(item) { receipt ->
-                            snackbar.currentSnackbarData?.dismiss()
-                            scope.launch {
-                                val result = snackbar.showSnackbar(
-                                    context.getString(if (receipt.entryId != null) R.string.today_saved else R.string.today_timer_started, item.stored.name),
-                                    actionLabel = context.getString(R.string.today_undo),
-                                    duration = androidx.compose.material3.SnackbarDuration.Short,
+            // Message d'agent non lu : une ligne au-dessus de l'écran, qui prend alors la marge de la barre d'état.
+            val agentBanner = if (settingsOpen) null else AgentMessages.banner(agentMessages)
+            Column(Modifier.fillMaxSize().backdropSource(backdrop)) {
+                agentBanner?.let { AgentMessageBanner(it, Modifier.statusBarsPadding()) }
+                Crossfade(
+                    targetState = if (settingsOpen) null else tab,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .then(if (agentBanner != null) Modifier.consumeWindowInsets(WindowInsets.statusBars) else Modifier),
+                    label = "screen",
+                ) { current ->
+                    when (current) {
+                        null -> SettingsScreen(settingsDeps, onBack = { settingsOpen = false })
+                        Tab.INBOX -> InboxScreen(onOpenSearch = { searchOpen = true }, onOpenSettings = { settingsOpen = true })
+                        Tab.TASKS -> TasksScreen(
+                            openTaskUid = opening.pending,
+                            onTaskOpened = { opening = opening.consumed() },
+                            showProjectUid = projectToShow,
+                            onProjectShown = { projectToShow = null },
+                            onOpenSearch = { searchOpen = true },
+                            onOpenSettings = { settingsOpen = true },
+                            routineStrip = {
+                                RoutineStrip(
+                                    habits = habits,
+                                    groups = groups,
+                                    quick = { viewModel.clearSaveError(); quickHabitId = it.stored.id },
+                                    openHabits = { tab = Tab.HABITS },
                                 )
-                                if (result == androidx.compose.material3.SnackbarResult.ActionPerformed) viewModel.undoDirectAction(receipt)
-                            }
-                        } },
-                        offerReturn = offerReturn,
-                        resume = viewModel::dismissReturn,
-                        edit = { viewModel.clearSaveError(); editorId = it.stored.id },
-                        questions = pendingQuestions,
-                        answer = { answeringHabitId = it.habitId },
-                    )
-                    Tab.BILAN -> BilanScreen(
-                        habits = habits,
-                        quick = { viewModel.clearSaveError(); quickHabitId = it.stored.id },
-                        options = { options = it },
-                        onCorrect = { viewModel.clearSaveError(); correctingId = it.id },
-                        onOpenReview = { reviewOpen = true },
-                        onOpenGoals = { goalsOpen = true },
-                    )
+                            },
+                        )
+                        Tab.AGENDA -> AgendaScreen(onOpenHabit = { viewModel.clearSaveError(); quickHabitId = it })
+                        Tab.HABITS -> HabitsTab(
+                            habits = habits,
+                            groups = groups,
+                            selectedGroupId = groupFilter,
+                            onSelectGroup = { groupFilter = it },
+                            quick = { viewModel.clearSaveError(); quickHabitId = it.stored.id },
+                            options = { options = it },
+                            create = { choosingCreation = true },
+                            openSettings = { settingsOpen = true },
+                            timers = timers,
+                            busy = busy,
+                            direct = { item -> viewModel.directAction(item) { receipt ->
+                                snackbar.currentSnackbarData?.dismiss()
+                                scope.launch {
+                                    val result = snackbar.showSnackbar(
+                                        context.getString(if (receipt.entryId != null) R.string.today_saved else R.string.today_timer_started, item.stored.name),
+                                        actionLabel = context.getString(R.string.today_undo),
+                                        duration = androidx.compose.material3.SnackbarDuration.Short,
+                                    )
+                                    if (result == androidx.compose.material3.SnackbarResult.ActionPerformed) viewModel.undoDirectAction(receipt)
+                                }
+                            } },
+                            offerReturn = offerReturn,
+                            resume = viewModel::dismissReturn,
+                            edit = { viewModel.clearSaveError(); editorId = it.stored.id },
+                            questions = pendingQuestions,
+                            answer = { answeringHabitId = it.habitId },
+                        )
+                        Tab.BILAN -> BilanScreen(
+                            habits = habits,
+                            quick = { viewModel.clearSaveError(); quickHabitId = it.stored.id },
+                            options = { options = it },
+                            onCorrect = { viewModel.clearSaveError(); correctingId = it.id },
+                            onOpenReview = { reviewOpen = true },
+                            onOpenGoals = { goalsOpen = true },
+                        )
+                    }
                 }
             }
             if (searchOpen) SearchScreen(
@@ -337,10 +349,9 @@ internal fun CadenceAppScreen(
                 },
             )
             if (goalsOpen) GoalsScreen(onBack = { goalsOpen = false })
-            if (briefOpen) BriefScreen(onBack = { briefOpen = false })
             if (triageOpen) TriageRoute(onBack = { triageOpen = false })
             NavigationBarScrim()
-            if (!settingsOpen && !searchOpen && !reviewOpen && !goalsOpen && !briefOpen && !triageOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop) { index ->
+            if (!settingsOpen && !searchOpen && !reviewOpen && !goalsOpen && !triageOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop) { index ->
                 tab = Tab.entries[index]
                 opening = opening.consumed()
             }
@@ -348,7 +359,7 @@ internal fun CadenceAppScreen(
                 snackbar,
                 Modifier.align(Alignment.BottomCenter).padding(
                     // Sans barre flottante, la bannière s'arrête quand même au-dessus des boutons du système (3 boutons ou gestes).
-                    bottom = if (settingsOpen || searchOpen || reviewOpen || goalsOpen || briefOpen || triageOpen) {
+                    bottom = if (settingsOpen || searchOpen || reviewOpen || goalsOpen || triageOpen) {
                         WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + Space.lg
                     } else {
                         navigationClearance() + Space.sm

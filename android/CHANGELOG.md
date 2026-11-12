@@ -1,3 +1,9 @@
+## [1.21.0] — 12 novembre 2026
+
+- Le résumé du jour quitte l'app : Hermes le rédige désormais dans la Boîte des agents. « Ma journée », le bilan du soir, la carte d'Aujourd'hui, la lecture à voix haute et leurs réglages disparaissent ; l'APK s'allège du moteur de voix.
+- La carte « Planifier ma journée » d'Aujourd'hui ouvre Planifier.
+- Un bandeau en haut des écrans signale le dernier message non lu d'un agent (« +N » s'il y en a d'autres) : Ouvrir le marque lu et ouvre la page du plugin sur ce message, × le marque lu. Il disparaît hors ligne.
+
 ## [1.20.0] — 12 novembre 2026
 
 - Les messages des agents (plugin Hermes…) arrivent aussitôt en notification : le téléphone garde une connexion ouverte avec le serveur. Toucher le message ouvre la page du plugin sur ce message, ou la tâche concernée.

@@ -37,7 +37,6 @@ import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.triage.MailCardData
 import ch.nicolab.cadence.tasks.triage.MailDecision
 import ch.nicolab.cadence.tasks.ui.TaskDateSheet
-import ch.nicolab.cadence.tasks.ui.brief.BriefFormat
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -162,7 +161,7 @@ private fun MailTaskSheet(card: MailCardData, today: LocalDate, onDismiss: () ->
         )
         Spacer(Modifier.height(Space.sm))
         SecondaryAction(
-            due?.let { stringResource(R.string.triage_mail_task_due_on, BriefFormat.dueChip(it)) }
+            due?.let { stringResource(R.string.triage_mail_task_due_on, TriageFormat.dueChip(it)) }
                 ?: stringResource(R.string.triage_mail_task_no_due),
         ) { pickingDate = true }
         Spacer(Modifier.height(Space.md))

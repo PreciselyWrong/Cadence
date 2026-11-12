@@ -1,9 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import groovy.json.JsonSlurper
-import java.net.URI
-import java.nio.file.Files
-import java.nio.file.StandardCopyOption
-import java.security.MessageDigest
 import java.util.Properties
 
 val releaseVersion = JsonSlurper().parse(rootProject.file("app-release/version.json")) as Map<*, *>
@@ -39,8 +35,6 @@ android {
             useSupportLibrary = true
         }
 
-        // Sherpa-ONNX pèse environ 12 Mo compressés par architecture : seules celles des appareils de Nicolas
-        // (téléphone arm64, émulateur x86_64) sont embarquées.
         ndk {
             // Phones are arm64; x86_64 is only for the emulator. publish.ps1 passes
             // -Pcadence.abis=arm64-v8a so the APK sent to phones skips ~36 MB of native code.
@@ -89,51 +83,7 @@ kotlin {
     }
 }
 
-// Moteur de voix locale (Piper via Sherpa-ONNX, Apache-2.0) : AAR de la release GitHub, vérifié par SHA-256 et gardé
-// dans build/cache/downloads. Il reste dans :app ; :tasks ne voit que l'interface `VoiceSynthesizer`.
-val sherpaAar = layout.buildDirectory.file("dependencies/sherpa-onnx-1.13.8.aar")
-val prepareSherpa by tasks.registering {
-    val target = sherpaAar.get().asFile
-    val cached = rootProject.file("build/cache/downloads/sherpa-onnx-1.13.8.aar")
-    outputs.file(target)
-    doLast {
-        val version = "1.13.8"
-        val expected = "633c24321e06b1fe79feafa03ea16cbc0f8a286641e2da3559bac91bdb13bd96"
-        val expectedBytes = 50129134L
-        fun hash(file: File): String {
-            val digest = MessageDigest.getInstance("SHA-256")
-            file.inputStream().use { input ->
-                val buffer = ByteArray(65536)
-                while (true) {
-                    val n = input.read(buffer)
-                    if (n < 0) break
-                    digest.update(buffer, 0, n)
-                }
-            }
-            return digest.digest().joinToString("") { "%02x".format(it) }
-        }
-        if (!target.isFile || hash(target) != expected) {
-            target.parentFile.mkdirs()
-            val temp = File(target.parentFile, "sherpa.part")
-            try {
-                if (cached.isFile && hash(cached) == expected) {
-                    cached.copyTo(temp, overwrite = true)
-                } else {
-                    URI("https://github.com/k2-fsa/sherpa-onnx/releases/download/v$version/sherpa-onnx-$version.aar")
-                        .toURL().openConnection().apply { connectTimeout = 15000; readTimeout = 60000 }
-                        .getInputStream().use { input -> temp.outputStream().use { input.copyTo(it) } }
-                }
-                check(temp.length() == expectedBytes && hash(temp) == expected) { "Sherpa AAR integrity failure" }
-                Files.move(temp.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING)
-            } finally {
-                temp.delete()
-            }
-        }
-    }
-}
-
 dependencies {
-    implementation(files(sherpaAar).builtBy(prepareSherpa))
     implementation(projects.domain)
     implementation(projects.data)
     implementation(projects.tasks)

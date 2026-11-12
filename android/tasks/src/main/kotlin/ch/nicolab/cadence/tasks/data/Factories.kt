@@ -31,19 +31,6 @@ import ch.nicolab.cadence.tasks.sync.LocalHabits
 import ch.nicolab.cadence.tasks.sync.pendingHabitWrites
 import ch.nicolab.cadence.tasks.sync.SYNCED_ENTITIES
 import ch.nicolab.cadence.tasks.sync.SyncEngine
-import ch.nicolab.cadence.tasks.brief.BriefActions
-import ch.nicolab.cadence.tasks.brief.BriefAgentsRepository
-import ch.nicolab.cadence.tasks.brief.BriefPlanWrites
-import ch.nicolab.cadence.tasks.brief.BriefRequests
-import ch.nicolab.cadence.tasks.brief.BriefRepository
-import ch.nicolab.cadence.tasks.brief.BriefSettingsRepository
-import ch.nicolab.cadence.tasks.brief.BriefStore
-import ch.nicolab.cadence.tasks.brief.BriefView
-import ch.nicolab.cadence.tasks.brief.EveningRepository
-import ch.nicolab.cadence.tasks.brief.DeferredBriefQueue
-import ch.nicolab.cadence.tasks.brief.RepositoryBriefTasks
-import java.time.ZoneId
-import kotlinx.coroutines.flow.first
 
 internal fun createRepository(context: Context): TaskRepository = TasksRuntime.get(context).repository
 
@@ -71,21 +58,9 @@ internal fun createPeople(context: Context): ch.nicolab.cadence.tasks.contentlin
 
 internal fun createSyncStatus(context: Context): SyncStatusClient = TasksRuntime.get(context).syncStatus
 
-internal fun createBrief(context: Context): BriefRepository = TasksRuntime.get(context).brief
-
-internal fun createBriefSettings(context: Context): BriefSettingsRepository = TasksRuntime.get(context).briefSettings
-
-internal fun createBriefAgents(context: Context): BriefAgentsRepository = TasksRuntime.get(context).briefAgents
-
-internal fun createBriefActions(context: Context): BriefActions = TasksRuntime.get(context).briefActions
+internal fun createAgents(context: Context): ch.nicolab.cadence.tasks.agents.AgentsRepository = TasksRuntime.get(context).agents
 
 internal fun createPlanEdits(context: Context): PlanEdits = TasksRuntime.get(context).planEdits
-
-internal fun createBriefAudio(context: Context): ch.nicolab.cadence.tasks.brief.audio.BriefAudio = TasksRuntime.get(context).briefAudio
-
-internal fun createBriefStore(context: Context): BriefStore = TasksRuntime.get(context).briefStore
-
-internal fun createEvening(context: Context): EveningRepository = TasksRuntime.get(context).evening
 
 internal fun createTriage(context: Context): ch.nicolab.cadence.tasks.triage.TriageRepository = TasksRuntime.get(context).triage
 
@@ -96,7 +71,7 @@ internal fun reviewCacheDir(context: Context): File = File(context.cacheDir, "re
 internal class TasksRuntime private constructor(context: Context) {
     private val appContext = context.applicationContext
     private val database: TududiDatabase = Room.databaseBuilder(appContext, TududiDatabase::class.java, "tududi.db")
-        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19, MIGRATION_19_20, MIGRATION_20_21)
+        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19, MIGRATION_19_20, MIGRATION_20_21, MIGRATION_21_22)
         .build()
     private val clockState = ClockStateStore(appContext)
     private val hlc = Hlc(node = clockState.node(), initial = clockState.load())
@@ -134,9 +109,7 @@ internal class TasksRuntime private constructor(context: Context) {
             refreshPlanSlots(PlanSlotsStore(appContext), api::call)
             focus.sync()
             timedReminders.sync()
-            brief.refreshToday()
-            evening.refreshIfDue(briefStore.settings.value)
-            ch.nicolab.cadence.tasks.brief.audio.BriefAudioScheduler.request(appContext)
+            ch.nicolab.cadence.tasks.live.AgentInbox.refresh(appContext)
         },
     )
     private val habitPending: Flow<Int> = habitStorage?.let { storage ->
@@ -179,31 +152,20 @@ internal class TasksRuntime private constructor(context: Context) {
 
     val timedReminders = TimedRemindersRepository(TimedRemindersStore(appContext), api::call)
 
-    val briefStore = BriefStore.of(appContext)
-    private val accountZone: suspend () -> ZoneId = { connection.observe().first()?.accountZone ?: ZoneId.systemDefault() }
-    val brief = BriefRepository(database.briefDao(), api::call, accountZone, onSeen = { briefStore.markSeen(it, BriefView.MORNING) })
-    val evening = EveningRepository(database.eveningDao(), api::call, accountZone, onSeen = { briefStore.markSeen(it, BriefView.EVENING) })
-    val briefAudio = ch.nicolab.cadence.tasks.brief.audio.BriefAudio(appContext, brief, evening, api::download)
-    val briefSettings = BriefSettingsRepository(briefStore, api::call) { call -> repository.defer(call).getOrThrow() }
     val triage = ch.nicolab.cadence.tasks.triage.TriageRepository(
-        store = briefStore,
+        store = ch.nicolab.cadence.tasks.triage.TriageStore.of(appContext),
         call = api::call,
         pendingCalls = { database.deferredCallDao().all().map { it.key }.toSet() },
         defer = { call -> repository.defer(call).getOrThrow() },
     )
-    val briefAgents = BriefAgentsRepository(api::call)
-    val briefActions = BriefActions(
-        tasks = RepositoryBriefTasks(repository),
-        queue = DeferredBriefQueue(
-            defer = { call -> repository.defer(call).getOrThrow() },
-            cancelKey = { key -> database.deferredCallDao().delete(key) > 0 },
-        ),
-        zone = accountZone,
-        plan = BriefPlanWrites { date, uids ->
-            val current = api.call("GET", "/api/v1/daily-plan", mapOf("date" to date.toString()))
-            BriefRequests.planWithout(current, uids)?.let { api.call("PUT", "/api/v1/daily-plan/$date", body = it) }
-        },
-    )
+    val agents = ch.nicolab.cadence.tasks.agents.AgentsRepository(api::call)
+
+    init {
+        // Préférences de l'ancien résumé du jour (retiré en 1.21.0) : plus rien ne les lit.
+        appContext.deleteSharedPreferences("cadence_brief")
+        androidx.work.WorkManager.getInstance(appContext).cancelUniqueWork("brief-audio")
+        appContext.getSystemService(android.app.NotificationManager::class.java).deleteNotificationChannel("brief_audio")
+    }
 
     companion object {
         @Volatile

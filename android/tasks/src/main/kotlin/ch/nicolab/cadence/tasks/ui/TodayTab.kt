@@ -52,10 +52,6 @@ import ch.nicolab.cadence.tasks.planning.DayPlans
 import ch.nicolab.cadence.tasks.planning.DayRhythm
 import ch.nicolab.cadence.tasks.planning.PlanEdit
 import ch.nicolab.cadence.tasks.planning.PlanningChanges
-import ch.nicolab.cadence.tasks.ui.brief.BriefCard
-import ch.nicolab.cadence.tasks.ui.brief.BriefViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LifecycleEventEffect
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
@@ -73,15 +69,12 @@ internal fun TodayTab(
     onOpen: (TaskItem) -> Unit,
     modifier: Modifier = Modifier,
     routineStrip: @Composable () -> Unit = {},
-    onOpenBrief: () -> Unit = {},
+    /** La carte du matin ouvre Planifier, où se trient les échues et se placent les tâches. */
+    onOpenPlan: () -> Unit = {},
     /** « Masquer les terminées » : la section Terminées disparaît (réglage d'Aujourd'hui, gardé sur l'appareil). */
     hideDone: Boolean = false,
 ) {
     val planning: PlanningViewModel = viewModel()
-    val briefViewModel: BriefViewModel = viewModel()
-    val briefCard by briefViewModel.card.collectAsStateWithLifecycle()
-    val hasBrief by briefViewModel.hasBrief.collectAsStateWithLifecycle()
-    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { briefViewModel.refresh() }
     val state by viewModel.today.collectAsStateWithLifecycle()
     val moment by viewModel.moment.collectAsStateWithLifecycle()
     val events by viewModel.todayEvents.collectAsStateWithLifecycle()
@@ -214,9 +207,6 @@ internal fun TodayTab(
     }
 
     LazyColumn(modifier = modifier, state = listState, contentPadding = tasksListPadding()) {
-        briefCard?.let { card ->
-            item(key = "brief") { CardSlot { BriefCard(card = card, onOpen = onOpenBrief) } }
-        }
         if (DayRhythm.capacityVisible(plan.workday, closed, plan.capacity)) {
             item(key = "capacity") { CardSlot { CapacityLine(plan.capacity) } }
         }
@@ -249,13 +239,13 @@ internal fun TodayTab(
                 }
             }
         }
-        if (morningVisible && !hasBrief) {
+        if (morningVisible) {
             item(key = "morning") {
                 CardSlot {
                     MorningCard(
                         toPlaceCount = plan.toPlace.size,
                         suggestionCount = suggestions.size,
-                        onOpen = onOpenBrief,
+                        onOpen = onOpenPlan,
                         onDismiss = { planning.dismissMorning(today) },
                     )
                 }

@@ -1,7 +1,5 @@
 package ch.nicolab.cadence.tasks.triage
 
-import ch.nicolab.cadence.tasks.brief.BriefStore
-import ch.nicolab.cadence.tasks.brief.QuestionDto
 import ch.nicolab.cadence.tasks.sync.DeferredCall
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -121,17 +119,17 @@ internal fun slotAnswerCall(slotId: String, accept: Boolean, label: String) = De
 
 /** File « À trier » : lue en ligne, gardée pour le hors ligne ; les décisions partent par la file d'appels différés. */
 class TriageRepository internal constructor(
-    private val store: BriefStore,
+    private val store: TriageStore,
     private val call: suspend (method: String, path: String, query: Map<String, String>, body: JsonObject?) -> JsonObject,
     private val pendingCalls: suspend () -> Set<String>,
     private val defer: suspend (DeferredCall) -> Unit,
 ) {
-    private val _queue = MutableStateFlow(store.readTriage()?.let(::decode))
+    private val _queue = MutableStateFlow(store.read()?.let(::decode))
     val queue: StateFlow<TriageQueueDto?> = _queue.asStateFlow()
 
     suspend fun refresh(): Result<Unit> = try {
         val body = call("GET", "/api/v1/triage", emptyMap(), null)
-        store.writeTriage(body.toString())
+        store.write(body.toString())
         _queue.value = decode(body.toString())
         Result.success(Unit)
     } catch (error: CancellationException) {

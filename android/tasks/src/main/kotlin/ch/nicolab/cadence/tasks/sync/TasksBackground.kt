@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.os.Bundle
+import ch.nicolab.cadence.tasks.live.AgentInbox
 import ch.nicolab.cadence.tasks.live.LiveStream
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -47,7 +48,11 @@ object TasksBackground {
                 override fun onActivityStarted(activity: Activity) {
                     if (gate.onStart()) SyncScheduler.requestNow(app)
                     // L'app visible peut relancer le service du flux qu'Android aurait arrêté.
-                    scope.launch { LiveStream.ensure(app) }
+                    scope.launch {
+                        LiveStream.ensure(app)
+                        // Bandeau des messages d'agents : relu à chaque retour dans l'app.
+                        AgentInbox.refresh(app)
+                    }
                 }
 
                 override fun onActivityStopped(activity: Activity) = gate.onStop()

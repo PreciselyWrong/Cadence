@@ -81,7 +81,6 @@ fun TasksScreen(
     onOpenSearch: () -> Unit = {},
     onOpenSettings: () -> Unit,
     routineStrip: @Composable () -> Unit = {},
-    onOpenBrief: () -> Unit = {},
 ) {
     val viewModel: TasksViewModel = viewModel()
     val snackbar = rememberAppSnackbarHostState()
@@ -222,7 +221,7 @@ fun TasksScreen(
                             onOpen = { selectedTaskUid = it.uid },
                             modifier = Modifier.fillMaxSize(),
                             routineStrip = routineStrip,
-                            onOpenBrief = onOpenBrief,
+                            onOpenPlan = { tab = TasksTab.UPCOMING },
                             hideDone = hideDoneToday,
                         )
                         tab == TasksTab.UPCOMING -> PlanTab(
@@ -286,10 +285,6 @@ fun TasksScreen(
             onOpenPlugin = { item ->
                 switcherOpen = false
                 PluginPageActivity.start(context, item)
-            },
-            onOpenMyDay = {
-                switcherOpen = false
-                onOpenBrief()
             },
             current = tab,
             todayCount = overdueCount + todayState.today.size + eventCount,

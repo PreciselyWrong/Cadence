@@ -7,9 +7,7 @@ import ch.nicolab.cadence.data.local.LearnedQuestionRepository
 import androidx.glance.appwidget.updateAll
 import ch.nicolab.cadence.reminder.ReminderScheduler
 import ch.nicolab.cadence.data.sync.RoomHabitSyncStorage
-import ch.nicolab.cadence.tasks.brief.audio.BriefVoiceEngine
 import ch.nicolab.cadence.tasks.sync.HabitSyncRegistry
-import ch.nicolab.cadence.voice.SherpaVoiceSynthesizer
 import ch.nicolab.cadence.tasks.sync.TasksBackground
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.widget.TasksWidgetsAndReminders
@@ -55,8 +53,6 @@ class CadenceApp : Application() {
         }.start(applicationScope)
         // Les habitudes se synchronisent avec les tâches : même serveur, même clé, même passage.
         HabitSyncRegistry.storage = RoomHabitSyncStorage(database)
-        // Voix locale du résumé : le moteur natif reste dans :app, :tasks n'en connaît que l'interface.
-        BriefVoiceEngine.factory = { SherpaVoiceSynthesizer() }
         // Tâches Tududi : synchronisation, widgets et rappels suivent leur propre base.
         TasksBackground.start(this)
         TasksWidgetsAndReminders.start(this, applicationScope)

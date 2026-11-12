@@ -27,9 +27,9 @@ import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
-import ch.nicolab.cadence.tasks.brief.AgentProfilesDto
-import ch.nicolab.cadence.tasks.brief.AgentSettingsDto
-import ch.nicolab.cadence.tasks.brief.AgentTestDto
+import ch.nicolab.cadence.tasks.agents.AgentProfilesDto
+import ch.nicolab.cadence.tasks.agents.AgentSettingsDto
+import ch.nicolab.cadence.tasks.agents.AgentTestDto
 import kotlinx.coroutines.launch
 
 private const val DEFAULT_TIMEOUT_SECONDS = 120
@@ -43,7 +43,7 @@ private const val MAX_TIMEOUT_SECONDS = 600
 @Composable
 fun AgentSettingsPage(modifier: Modifier = Modifier) {
     val context = LocalContext.current
-    val repository = remember(context) { TasksGraph.briefAgents(context) }
+    val repository = remember(context) { TasksGraph.agents(context) }
     val scope = rememberCoroutineScope()
     var stored by remember { mutableStateOf<AgentSettingsDto?>(null) }
     var baseUrl by remember { mutableStateOf("") }
@@ -53,9 +53,9 @@ fun AgentSettingsPage(modifier: Modifier = Modifier) {
     var message by remember { mutableStateOf<String?>(null) }
     var test by remember { mutableStateOf<AgentTestDto?>(null) }
     var busy by remember { mutableStateOf(false) }
-    val offline = stringResource(R.string.brief_agents_offline)
-    val saved = stringResource(R.string.brief_agents_saved)
-    val timeoutInvalid = stringResource(R.string.brief_agents_timeout_invalid)
+    val offline = stringResource(R.string.agents_offline)
+    val saved = stringResource(R.string.agents_saved)
+    val timeoutInvalid = stringResource(R.string.agents_timeout_invalid)
 
     fun show(dto: AgentSettingsDto) {
         stored = dto
@@ -88,21 +88,21 @@ fun AgentSettingsPage(modifier: Modifier = Modifier) {
     }
 
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Space.lg)) {
-        Text(stringResource(R.string.brief_agents_intro), style = MaterialTheme.typography.bodyMedium, color = cadence.onSurfaceVariant)
+        Text(stringResource(R.string.agents_intro), style = MaterialTheme.typography.bodyMedium, color = cadence.onSurfaceVariant)
         Panel {
-            CadenceField(value = baseUrl, onValue = { baseUrl = it }, label = stringResource(R.string.brief_agents_base_url), placeholder = "https://")
-            CadenceField(value = timeout, onValue = { timeout = it }, label = stringResource(R.string.brief_agents_timeout), numeric = true, suffix = "s")
-            CadenceField(value = mail, onValue = { mail = it }, label = stringResource(R.string.brief_agents_profile_mail))
+            CadenceField(value = baseUrl, onValue = { baseUrl = it }, label = stringResource(R.string.agents_base_url), placeholder = "https://")
+            CadenceField(value = timeout, onValue = { timeout = it }, label = stringResource(R.string.agents_timeout), numeric = true, suffix = "s")
+            CadenceField(value = mail, onValue = { mail = it }, label = stringResource(R.string.agents_profile_mail))
             CadenceField(
                 value = apiKey,
                 onValue = { apiKey = it },
-                label = stringResource(R.string.brief_agents_key),
+                label = stringResource(R.string.agents_key),
                 support = keySupport(stored),
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
-                PrimaryAction(label = stringResource(R.string.brief_agents_save), enabled = !busy) { save(apiKey.trim().ifEmpty { null }) }
+                PrimaryAction(label = stringResource(R.string.agents_save), enabled = !busy) { save(apiKey.trim().ifEmpty { null }) }
                 Spacer(Modifier.width(Space.sm))
-                SecondaryAction(label = stringResource(R.string.brief_agents_test), enabled = !busy) {
+                SecondaryAction(label = stringResource(R.string.agents_test), enabled = !busy) {
                     busy = true
                     scope.launch {
                         repository.test()
@@ -113,14 +113,14 @@ fun AgentSettingsPage(modifier: Modifier = Modifier) {
                 }
             }
             if (stored?.api_key_set == true) {
-                TertiaryAction(label = stringResource(R.string.brief_agents_clear_key), onClick = { save("") })
+                TertiaryAction(label = stringResource(R.string.agents_clear_key), onClick = { save("") })
             }
         }
         message?.let { Text(it, style = MaterialTheme.typography.bodyMedium, color = cadence.onSurfaceVariant) }
         test?.let { result ->
             Panel {
-                Text(stringResource(R.string.brief_agents_health, stateText(result.health)), style = MaterialTheme.typography.bodyMedium, color = cadence.onSurface)
-                Text(stringResource(R.string.brief_agents_auth, stateText(result.auth)), style = MaterialTheme.typography.bodyMedium, color = cadence.onSurface)
+                Text(stringResource(R.string.agents_health, stateText(result.health)), style = MaterialTheme.typography.bodyMedium, color = cadence.onSurface)
+                Text(stringResource(R.string.agents_auth, stateText(result.auth)), style = MaterialTheme.typography.bodyMedium, color = cadence.onSurface)
                 result.profiles.forEach { (name, state) ->
                     Text("$name : ${stateText(state)}", style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)
                 }
@@ -132,17 +132,17 @@ fun AgentSettingsPage(modifier: Modifier = Modifier) {
 @Composable
 private fun keySupport(stored: AgentSettingsDto?): String = when {
     stored == null -> ""
-    stored.api_key_set && stored.api_key_last4 != null -> stringResource(R.string.brief_agents_key_stored, stored.api_key_last4)
-    stored.api_key_set -> stringResource(R.string.brief_agents_key_stored_unknown)
-    else -> stringResource(R.string.brief_agents_key_missing)
+    stored.api_key_set && stored.api_key_last4 != null -> stringResource(R.string.agents_key_stored, stored.api_key_last4)
+    stored.api_key_set -> stringResource(R.string.agents_key_stored_unknown)
+    else -> stringResource(R.string.agents_key_missing)
 }
 
 @Composable
 private fun stateText(state: String): String = stringResource(
     when (state) {
-        "ok" -> R.string.brief_agents_state_ok
-        "missing" -> R.string.brief_agents_state_missing
-        "unauthorized" -> R.string.brief_agents_state_unauthorized
-        else -> R.string.brief_agents_state_error
+        "ok" -> R.string.agents_state_ok
+        "missing" -> R.string.agents_state_missing
+        "unauthorized" -> R.string.agents_state_unauthorized
+        else -> R.string.agents_state_error
     },
 )

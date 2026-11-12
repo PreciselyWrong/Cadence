@@ -217,6 +217,8 @@ class LiveStreamService : Service() {
                     val line = reader.readLine() ?: break
                     val event = parser.feed(line) ?: continue
                     if (event.event == READY) reached = true
+                    // Bandeau des messages non lus : relu à la connexion et à chaque notification, routée ou non.
+                    if (event.event == READY || event.event == LiveNotification.EVENT) AgentInbox.refresh(this)
                     val notification = LiveNotification.of(event) ?: continue
                     if (notification.forMobile) notifier.show(notification)
                 }
@@ -285,6 +287,18 @@ internal object LiveChannels {
     private const val HIDE_REQUEST = 4_302
 }
 
+/**
+ * Page d'un plugin sur la requête d'une notification ; le fichier vient du menu des plugins (relu en ligne s'il ne
+ * connaît pas encore ce plugin). Null si le plugin n'a pas de page.
+ */
+internal suspend fun pluginPageIntent(context: Context, target: LiveTarget.Plugin): Intent? {
+    val store = PluginsStore.of(context)
+    val item = store.menu().firstOrNull { it.id == target.id }
+        ?: pluginsClient(context).menu().getOrNull()?.also(store::saveMenu)?.firstOrNull { it.id == target.id }
+        ?: return null
+    return PluginPageActivity.intent(context, item, target.query).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+}
+
 /** Une notification Android par message, une seule fois par uid ; titre et texte du serveur, en texte brut. */
 internal class LiveNotifier(private val context: Context, private val store: LiveStreamStore) {
     suspend fun show(notification: LiveNotification) {
@@ -315,18 +329,11 @@ internal class LiveNotifier(private val context: Context, private val store: Liv
         NotificationManagerCompat.from(context).notify(TAG, notification.uid.hashCode(), builder.build())
     }
 
-    /** Page du plugin si le menu la connaît (relu en ligne sinon), la tâche, ou l'app. */
+    /** Page du plugin si le menu la connaît, la tâche, ou l'app. */
     private suspend fun intentFor(target: LiveTarget): Intent? = when (target) {
-        is LiveTarget.Plugin -> pluginItem(target.id)
-            ?.let { PluginPageActivity.intent(context, it, target.query).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) }
-            ?: launchIntent()
+        is LiveTarget.Plugin -> pluginPageIntent(context, target) ?: launchIntent()
         is LiveTarget.Task -> openTaskIntent(context, target.uid)
         LiveTarget.App -> launchIntent()
-    }
-
-    private suspend fun pluginItem(id: String) = PluginsStore.of(context).let { store ->
-        store.menu().firstOrNull { it.id == id }
-            ?: pluginsClient(context).menu().getOrNull()?.also(store::saveMenu)?.firstOrNull { it.id == id }
     }
 
     private fun launchIntent(): Intent? = context.packageManager.getLaunchIntentForPackage(context.packageName)

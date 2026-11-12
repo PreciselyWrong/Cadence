@@ -27,7 +27,6 @@ import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.TaskAlt
-import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -83,7 +82,6 @@ internal fun ListSwitcherSheet(
     onUnpin: (PinnedShortcut) -> Unit,
     onSelectArea: (String?) -> Unit,
     onSelectWithLink: (Boolean) -> Unit,
-    onOpenMyDay: () -> Unit,
     onOpenSettings: () -> Unit,
     onDismiss: () -> Unit,
     plugins: List<PluginMenuItem> = emptyList(),
@@ -138,11 +136,6 @@ internal fun ListSwitcherSheet(
                     onClick = { onSelectWithLink(!withLink) },
                 )
             }
-            SwitcherRow(
-                label = stringResource(R.string.brief_card_title),
-                leading = { Icon(Icons.Outlined.Today, contentDescription = null, tint = palette.onSurfaceVariant) },
-                onClick = onOpenMyDay,
-            )
             if (plugins.isNotEmpty()) {
                 HorizontalDivider(Modifier.padding(vertical = Space.sm), color = palette.outlineVariant)
                 SheetLabel(stringResource(R.string.plugins_title))

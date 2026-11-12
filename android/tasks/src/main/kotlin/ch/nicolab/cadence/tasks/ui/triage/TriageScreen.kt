@@ -55,7 +55,7 @@ import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.autoclassify.AUTO_CLASSIFY_TYPE
 import ch.nicolab.cadence.tasks.autoclassify.AutoClassifyPayload
-import ch.nicolab.cadence.tasks.brief.QuestionDto
+import ch.nicolab.cadence.tasks.triage.QuestionDto
 import ch.nicolab.cadence.tasks.triage.MAIL_TYPE
 import ch.nicolab.cadence.tasks.triage.MailDecision
 import ch.nicolab.cadence.tasks.triage.MailPayload
@@ -66,8 +66,6 @@ import ch.nicolab.cadence.tasks.triage.TriageTaskDto
 import ch.nicolab.cadence.tasks.ui.TaskDateSheet
 import ch.nicolab.cadence.tasks.ui.TaskDetailSheet
 import ch.nicolab.cadence.tasks.ui.TasksViewModel
-import ch.nicolab.cadence.tasks.ui.brief.BriefFormat
-import ch.nicolab.cadence.tasks.ui.brief.PreciseAnswerSheet
 import java.time.LocalDate
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonArray
@@ -129,7 +127,7 @@ internal fun TriageScreen(today: LocalDate, onBack: () -> Unit) {
                 title = stringResource(R.string.triage_title),
                 subtitle = items.size.takeIf { it > 0 }?.let { stringResource(R.string.triage_left, it) },
                 onBack = onBack,
-                backDescription = stringResource(R.string.brief_back),
+                backDescription = stringResource(R.string.tasks_back),
             )
             val item = items.firstOrNull()
             if (item == null) {
@@ -269,9 +267,9 @@ private fun TriageCard(
     }
     if (question != null) {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-            SecondaryAction(stringResource(R.string.brief_answer_yes), onClick = { onAnswer(question, "yes") })
-            SecondaryAction(stringResource(R.string.brief_answer_no), onClick = { onAnswer(question, "no") })
-            TertiaryAction(stringResource(R.string.brief_answer_precise), onClick = { onPrecise(question) })
+            SecondaryAction(stringResource(R.string.triage_answer_yes), onClick = { onAnswer(question, "yes") })
+            SecondaryAction(stringResource(R.string.triage_answer_no), onClick = { onAnswer(question, "no") })
+            TertiaryAction(stringResource(R.string.triage_answer_precise), onClick = { onPrecise(question) })
             TertiaryAction(stringResource(R.string.triage_skip), onClick = onSkip)
         }
         return
@@ -286,7 +284,7 @@ private fun TriageCard(
 
 @Composable
 private fun taskMeta(task: TriageTaskDto): String? = listOfNotNull(
-    task.dueDate?.let { runCatching { LocalDate.parse(it) }.getOrNull() }?.let { BriefFormat.dueChip(it) },
+    task.dueDate?.let { runCatching { LocalDate.parse(it) }.getOrNull() }?.let { TriageFormat.dueChip(it) },
     task.projectName,
     stringResource(R.string.triage_recurring).takeIf { task.recurring },
     task.tags.takeIf { it.isNotEmpty() }?.joinToString(" ") { "#$it" },
@@ -299,7 +297,7 @@ private fun primaryLabel(item: TriageItemDto): String {
     return when {
         item.action == TriageActions.RENAME && name.isNotBlank() -> stringResource(R.string.triage_rename_to, name)
         item.action == TriageActions.SET_DUE && due.isNotBlank() ->
-            stringResource(R.string.triage_due_on, runCatching { BriefFormat.dueChip(LocalDate.parse(due)) }.getOrDefault(due))
+            stringResource(R.string.triage_due_on, runCatching { TriageFormat.dueChip(LocalDate.parse(due)) }.getOrDefault(due))
         else -> stringResource(actionLabel(item.action))
     }
 }

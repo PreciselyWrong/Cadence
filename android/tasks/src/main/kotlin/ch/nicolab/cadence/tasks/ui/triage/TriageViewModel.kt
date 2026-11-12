@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.autoclassify.AutoClassifyRequests
-import ch.nicolab.cadence.tasks.brief.BriefRequests
-import ch.nicolab.cadence.tasks.brief.QuestionDto
+import ch.nicolab.cadence.tasks.triage.QuestionDto
+import ch.nicolab.cadence.tasks.triage.questionAnswerCall
 import ch.nicolab.cadence.tasks.sync.DeferredCall
 import ch.nicolab.cadence.tasks.triage.MailDecision
 import ch.nicolab.cadence.tasks.triage.MailPayload
@@ -98,7 +98,7 @@ internal class TriageViewModel(application: Application) : AndroidViewModel(appl
         hold(
             item,
             string(R.string.triage_answered),
-            BriefRequests.answer(date, key, question.key, question.target.scope, question.target.ref, answer, string(R.string.triage_title)),
+            questionAnswerCall(date, key, question, answer, string(R.string.triage_title)),
         )
     }
 
