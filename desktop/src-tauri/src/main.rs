@@ -67,6 +67,8 @@ struct Paths {
     config_home: PathBuf,
     config: PathBuf,
     queue: PathBuf,
+    /// Images of notifications (project rings), written by the tray process only.
+    icons: PathBuf,
 }
 
 impl Paths {
@@ -79,6 +81,7 @@ impl Paths {
                 .ok_or("config directory has no parent")?,
             config: config_dir.join("config.json"),
             queue: app.path().app_data_dir()?.join("queue"),
+            icons: app.path().app_data_dir()?.join("notify-icons"),
         })
     }
 }
@@ -413,16 +416,49 @@ fn background_loop(app: AppHandle) {
         if last_poll.elapsed() >= Duration::from_secs(config.poll_seconds) {
             last_poll = Instant::now();
             for alert in sync::poll_notifications(&tray.store, &config) {
-                let tray_app = app.clone();
-                let shown = notify::show(alert, move |path| {
-                    tray_app.state::<Tray>().open_at("main", path);
-                });
-                if let Err(e) = shown {
-                    eprintln!("notification not shown: {e}");
+                present(&app, alert);
+            }
+        }
+        for alert in tray.store.take_due(sync::unix_now()) {
+            present(&app, alert);
+        }
+        thread::sleep(TICK);
+    }
+}
+
+/// Shows one alert and acts on the user's choice, all in the tray process: "Terminé" calls
+/// the server with the tray's API key, "+10 min" goes to `state.json`, "Ouvrir" retargets
+/// the main window through its stdin.
+fn present(app: &AppHandle, alert: sync::Alert) {
+    let tray = app.state::<Tray>();
+    let handle = app.clone();
+    let kept = alert.clone();
+    let shown = notify::show(&alert, &tray.paths.icons, move |choice| {
+        let tray = handle.state::<Tray>();
+        match choice {
+            notify::Choice::Open => tray.open_at("main", kept.path.as_deref()),
+            notify::Choice::Snooze => tray
+                .store
+                .snooze(kept, sync::unix_now() + sync::SNOOZE_SECS),
+            notify::Choice::Done => {
+                let Some(uid) = kept.task_uid.clone() else {
+                    return;
+                };
+                if let Err(e) = sync::complete_task(&tray.config(), &uid) {
+                    eprintln!("task not completed: {e}");
+                    let failed = sync::Alert {
+                        title: format!("« {} » n'est pas terminée", kept.title),
+                        body: format!("Cadence n'a pas répondu ({e})."),
+                        path: kept.path.clone(),
+                        ..sync::Alert::default()
+                    };
+                    present(&handle, failed);
                 }
             }
         }
-        thread::sleep(TICK);
+    });
+    if let Err(e) = shown {
+        eprintln!("notification not shown: {e}");
     }
 }
 

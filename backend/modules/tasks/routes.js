@@ -9,6 +9,7 @@ const orderRouter = require('./order/routes');
 
 const { Task, TaskAttachment, Project } = require('../../models');
 const { numericIdParam } = require('../../middleware/numericIdParam');
+const idempotency = require('../../middleware/idempotency');
 const taskRepository = require('./repository');
 const projectSectionsRepository = require('../project-sections/repository');
 const {
@@ -1066,7 +1067,9 @@ async function applyTaskPatch(task, body, req) {
     return taskWithAssociations;
 }
 
-router.patch('/task/:uid', patchGuards, async (req, res) => {
+// A client retrying a lost answer (desktop "Terminé") sends the same
+// Idempotency-Key, so a recurring task advances once.
+router.patch('/task/:uid', patchGuards, idempotency, async (req, res) => {
     try {
         const task = await taskRepository.findByUid(req.params.uid, {
             include: TASK_INCLUDES_WITH_SUBTASKS,

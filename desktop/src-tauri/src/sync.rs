@@ -81,6 +81,24 @@ struct Persisted {
     baseline_done: bool,
     /// Uids of notifications already shown (or present at the baseline), oldest first.
     seen: Vec<String>,
+    /// Alerts put off with "+10 min", shown again once `at` (Unix seconds) has passed.
+    snoozed: Vec<Snoozed>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+struct Snoozed {
+    at: u64,
+    alert: Alert,
+}
+
+/// How long "+10 min" puts an alert off.
+pub const SNOOZE_SECS: u64 = 600;
+
+pub fn unix_now() -> u64 {
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_secs()
 }
 
 impl Store {
@@ -100,6 +118,27 @@ impl Store {
         if let Err(e) = config::write_atomic(&self.path, &json) {
             eprintln!("state not saved: {e}");
         }
+    }
+
+    /// Shows `alert` again at `at` (Unix seconds), even after a restart.
+    pub fn snooze(&self, alert: Alert, at: u64) {
+        let mut state = self.state.lock().unwrap();
+        state.snoozed.push(Snoozed { at, alert });
+        self.save(&state);
+    }
+
+    /// Snoozed alerts whose time has come, removed from the store. One that came due while
+    /// the app was off is shown at the next start.
+    pub fn take_due(&self, now: u64) -> Vec<Alert> {
+        let mut state = self.state.lock().unwrap();
+        if !state.snoozed.iter().any(|s| s.at <= now) {
+            return Vec::new();
+        }
+        let (due, later): (Vec<Snoozed>, Vec<Snoozed>) =
+            state.snoozed.drain(..).partition(|s| s.at <= now);
+        state.snoozed = later;
+        self.save(&state);
+        due.into_iter().map(|s| s.alert).collect()
     }
 }
 
@@ -177,12 +216,135 @@ struct ServerNotification {
     data: Option<serde_json::Value>,
 }
 
-/// What the desktop shows for one server notification.
+/// What the desktop shows for one server notification. Kept in `state.json` while snoozed.
+#[derive(Serialize, Deserialize, Clone, Debug, Default, PartialEq)]
+#[serde(default)]
 pub struct Alert {
     pub title: String,
+    /// Plain text (a short label for reminders, the server's message otherwise).
     pub body: String,
     /// Web UI path of the related task or project, opened when the notification is clicked.
     pub path: Option<String>,
+    /// Task a reminder is about: offers "Terminé", which completes it on the server.
+    pub task_uid: Option<String>,
+    /// Offers "+10 min", which shows the same alert again later.
+    pub snoozable: bool,
+    /// A reminder at a fixed time stays on screen until the user acts on it.
+    pub sticky: bool,
+    /// The task's time, project and note, read from the server when the alert is made.
+    pub details: Option<Details>,
+}
+
+/// What a task reminder adds under its title.
+#[derive(Serialize, Deserialize, Clone, Debug, Default, PartialEq)]
+#[serde(default)]
+pub struct Details {
+    /// `HH:MM` in the user's time zone.
+    pub time: Option<String>,
+    pub project: Option<String>,
+    /// `#rrggbb`, checked before it reaches a file.
+    pub color: Option<String>,
+    pub minutes: Option<u32>,
+    /// First line of the task's note.
+    pub note: Option<String>,
+}
+
+/// Longest note line shown in a notification, in characters.
+const NOTE_CHARS: usize = 120;
+
+/// `#rrggbb` only: the colour is written into an SVG file.
+fn is_hex_color(color: &str) -> bool {
+    color.len() == 7 && color.starts_with('#') && color[1..].chars().all(|c| c.is_ascii_hexdigit())
+}
+
+/// Reads the parts of a `GET /api/task/:uid` answer a notification shows.
+fn details_from(task: &serde_json::Value) -> Details {
+    let text = |value: Option<&serde_json::Value>| {
+        value
+            .and_then(serde_json::Value::as_str)
+            .map(str::trim)
+            .filter(|s| !s.is_empty())
+            .map(str::to_string)
+    };
+    let project = task.get("Project");
+    let note = text(task.get("note")).and_then(|note| {
+        note.lines()
+            .map(str::trim)
+            .find(|line| !line.is_empty())
+            .map(|line| {
+                if line.chars().count() > NOTE_CHARS {
+                    let cut: String = line.chars().take(NOTE_CHARS - 1).collect();
+                    format!("{}…", cut.trim_end())
+                } else {
+                    line.to_string()
+                }
+            })
+    });
+    Details {
+        time: text(task.get("due_time")),
+        project: text(project.and_then(|p| p.get("name"))),
+        color: text(project.and_then(|p| p.get("color"))).filter(|c| is_hex_color(c)),
+        minutes: task
+            .get("estimated_minutes")
+            .and_then(serde_json::Value::as_u64)
+            .filter(|m| *m > 0)
+            .and_then(|m| u32::try_from(m).ok()),
+        note,
+    }
+}
+
+/// The task a reminder is about, or `None` when the server cannot be read (the reminder
+/// is then shown with its label only).
+fn fetch_details(cfg: &Config, uid: &str) -> Option<Details> {
+    if !is_plain_uid(uid) {
+        return None;
+    }
+    let url = format!("{}/api/task/{uid}", cfg.server_url);
+    match agent()
+        .get(&url)
+        .set("Authorization", &bearer(cfg))
+        .call()
+        .map_err(|e| e.to_string())
+        .and_then(|r| {
+            r.into_json::<serde_json::Value>()
+                .map_err(|e| e.to_string())
+        }) {
+        Ok(task) => Some(details_from(&task)),
+        Err(e) => {
+            eprintln!("task details not read: {e}");
+            None
+        }
+    }
+}
+
+/// Marks a task done (`PATCH /api/task/:uid`, status 2, the web app's own call). One key per
+/// click, sent again on the single retry after a lost answer, so a recurring task cannot
+/// advance twice.
+pub fn complete_task(cfg: &Config, uid: &str) -> Result<(), String> {
+    if cfg.api_token.is_empty() {
+        return Err("no API key".into());
+    }
+    if !is_plain_uid(uid) {
+        return Err("invalid task uid".into());
+    }
+    let url = format!("{}/api/task/{uid}", cfg.server_url);
+    let key = uuid::Uuid::new_v4().to_string();
+    let mut last = String::new();
+    for _ in 0..2 {
+        let sent = agent()
+            .request("PATCH", &url)
+            .set("Authorization", &bearer(cfg))
+            .set("Idempotency-Key", &key)
+            .send_json(serde_json::json!({ "status": 2 }));
+        match sent {
+            Ok(_) => return Ok(()),
+            Err(ureq::Error::Status(code, _)) if code < 500 && code != 409 => {
+                return Err(format!("HTTP {code}"));
+            }
+            Err(e) => last = e.to_string(),
+        }
+    }
+    Err(last)
 }
 
 /// A uid is interpolated into a URL path, so only plain identifier characters are accepted.
@@ -219,8 +381,10 @@ impl ServerNotification {
             data.and_then(|d| d.get(key))
                 .and_then(serde_json::Value::as_str)
         };
-        let reminder = match text("reason") {
+        let reason = text("reason");
+        let reminder = match reason {
             Some("task_reminder") => Some(("taskName", "Rappel")),
+            Some("timed_task") => Some(("taskName", "Échéance")),
             Some("habit_reminder") => Some(("habitName", "Habitude")),
             Some("defer_until_reached") => Some(("taskName", "Disponible maintenant")),
             _ => None,
@@ -231,6 +395,8 @@ impl ServerNotification {
                 .filter(|name| !name.is_empty())
                 .map(|name| (name.to_string(), label.to_string()))
         });
+        // Buttons only on a reminder that kept its item name: the others are not actionable.
+        let is_reminder = named.is_some();
         let (title, body) = named.unwrap_or_else(|| {
             let body = self
                 .message
@@ -239,10 +405,19 @@ impl ServerNotification {
                 .unwrap_or_default();
             (self.title.clone(), body)
         });
+        let task_uid = data
+            .and_then(|d| d.get("taskUid"))
+            .and_then(serde_json::Value::as_str)
+            .filter(|uid| is_reminder && reason != Some("habit_reminder") && is_plain_uid(uid))
+            .map(str::to_string);
         Alert {
             title,
             body,
             path: self.target_path(),
+            task_uid,
+            snoozable: is_reminder,
+            sticky: matches!(reason, Some("task_reminder" | "timed_task")) && is_reminder,
+            details: None,
         }
     }
 
@@ -349,6 +524,13 @@ pub fn poll_notifications(store: &Store, cfg: &Config) -> Vec<Alert> {
         state.seen.drain(..excess);
     }
     store.save(&state);
+    drop(state);
+    let mut shown = shown;
+    for alert in &mut shown {
+        if let Some(uid) = alert.task_uid.clone() {
+            alert.details = fetch_details(cfg, &uid);
+        }
+    }
     shown
 }
 
@@ -647,6 +829,152 @@ mod tests {
         assert_eq!(first, second);
         assert_eq!(first.len(), 36, "uuid v4");
         let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    fn token_cfg(url: String) -> Config {
+        Config {
+            server_url: url,
+            api_token: "tt_test".into(),
+            ..Config::default()
+        }
+    }
+
+    #[test]
+    fn done_patches_the_task_and_retries_with_the_same_key() {
+        let (url, server) = serve(vec!["502 Bad Gateway", "200 OK"]);
+        complete_task(&token_cfg(url), "abc-1").expect("completed on the retry");
+        let requests = server.join().unwrap();
+        for request in &requests {
+            assert!(
+                request.starts_with("patch /api/task/abc-1 http/1.1"),
+                "{request}"
+            );
+            assert_eq!(
+                header(request, "authorization").as_deref(),
+                Some("bearer tt_test")
+            );
+            assert!(request.ends_with(r#"{"status":2}"#), "{request}");
+        }
+        let first = header(&requests[0], "idempotency-key").expect("key");
+        assert_eq!(header(&requests[1], "idempotency-key"), Some(first.clone()));
+        assert_eq!(first.len(), 36);
+    }
+
+    #[test]
+    fn done_gives_up_on_a_client_error_without_retrying() {
+        let (url, server) = serve(vec!["404 Not Found"]);
+        assert_eq!(
+            complete_task(&token_cfg(url), "gone"),
+            Err("HTTP 404".into())
+        );
+        assert_eq!(server.join().unwrap().len(), 1);
+    }
+
+    #[test]
+    fn done_refuses_a_uid_that_could_escape_the_route() {
+        let cfg = token_cfg("http://127.0.0.1:9".into());
+        assert!(complete_task(&cfg, "../logout").is_err());
+    }
+
+    #[test]
+    fn task_reminders_offer_done_snooze_and_stay_on_screen() {
+        for reason in ["task_reminder", "timed_task"] {
+            let alert = with_data(
+                "Task reminder",
+                None,
+                serde_json::json!({ "reason": reason, "taskUid": "t1", "taskName": "Pay rent" }),
+            )
+            .alert();
+            assert_eq!(alert.task_uid.as_deref(), Some("t1"), "{reason}");
+            assert!(alert.snoozable && alert.sticky, "{reason}");
+        }
+        let timed = with_data(
+            "Task reminder",
+            None,
+            serde_json::json!({ "reason": "timed_task", "taskUid": "t1", "taskName": "Pay rent" }),
+        )
+        .alert();
+        assert_eq!(
+            (timed.title.as_str(), timed.body.as_str()),
+            ("Pay rent", "Échéance")
+        );
+    }
+
+    #[test]
+    fn habits_snooze_without_done_and_others_get_no_buttons() {
+        let habit = with_data(
+            "Habit reminder",
+            None,
+            serde_json::json!({ "reason": "habit_reminder", "habitName": "Stretch", "taskUid": "x" }),
+        )
+        .alert();
+        assert_eq!(habit.task_uid, None);
+        assert!(habit.snoozable && !habit.sticky);
+
+        let comment = with_data(
+            "New comment",
+            Some("Ana commented"),
+            serde_json::json!({ "reason": "comment", "taskUid": "t1" }),
+        )
+        .alert();
+        assert_eq!(comment.task_uid, None);
+        assert!(!comment.snoozable && !comment.sticky);
+    }
+
+    #[test]
+    fn details_read_time_project_duration_and_the_first_note_line() {
+        let details = details_from(&serde_json::json!({
+            "due_time": "14:30",
+            "estimated_minutes": 25,
+            "note": "\n  Ask for the November statement  \nsecond line",
+            "Project": { "name": "Admin", "color": "#1d4ed8" },
+        }));
+        assert_eq!(
+            details,
+            Details {
+                time: Some("14:30".into()),
+                project: Some("Admin".into()),
+                color: Some("#1d4ed8".into()),
+                minutes: Some(25),
+                note: Some("Ask for the November statement".into()),
+            }
+        );
+        assert_eq!(details_from(&serde_json::json!({})), Details::default());
+    }
+
+    #[test]
+    fn details_drop_odd_colours_and_shorten_long_notes() {
+        let details = details_from(&serde_json::json!({
+            "note": "x".repeat(300),
+            "estimated_minutes": 0,
+            "Project": { "name": "P", "color": "red\"/><script>" },
+        }));
+        assert_eq!(details.color, None);
+        assert_eq!(details.minutes, None);
+        let note = details.note.unwrap();
+        assert_eq!(note.chars().count(), NOTE_CHARS);
+        assert!(note.ends_with('…'));
+    }
+
+    #[test]
+    fn snoozed_alerts_come_back_once_due_even_after_a_restart() {
+        let path = std::env::temp_dir().join(format!("cadence-snooze-{}.json", std::process::id()));
+        let _ = std::fs::remove_file(&path);
+        let alert = Alert {
+            title: "Pay rent".into(),
+            task_uid: Some("t1".into()),
+            snoozable: true,
+            ..Alert::default()
+        };
+        Store::open(path.clone()).snooze(alert.clone(), 1_000);
+        let store = Store::open(path.clone());
+        assert!(store.take_due(999).is_empty());
+        assert_eq!(store.take_due(1_000), vec![alert]);
+        assert!(
+            Store::open(path.clone()).take_due(5_000).is_empty(),
+            "shown once"
+        );
+        let _ = std::fs::remove_file(&path);
     }
 
     #[test]
