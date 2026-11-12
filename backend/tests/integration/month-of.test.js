@@ -1,0 +1,137 @@
+'use strict';
+
+// Horizon month: a task can be committed to a calendar month ("This month",
+// "Next month"). Like week_of, it is not a due date and syncs with the task.
+const request = require('supertest');
+const moment = require('moment-timezone');
+const app = require('../../app');
+const { Task } = require('../../models');
+const { createTestUser } = require('../helpers/testUtils');
+const registry = require('../../modules/sync/registry');
+
+const TZ = 'Europe/Zurich';
+
+describe('month_of', () => {
+    let user;
+    let agent;
+
+    beforeEach(async () => {
+        user = await createTestUser({
+            email: `month_${Date.now()}@test.com`,
+            timezone: TZ,
+        });
+        agent = request.agent(app);
+        await agent
+            .post('/api/login')
+            .send({ email: user.email, password: 'password123' });
+    });
+
+    const monthStart = (offset) =>
+        moment
+            .tz(TZ)
+            .startOf('month')
+            .add(offset, 'months')
+            .format('YYYY-MM-DD');
+
+    const newTask = (name) =>
+        Task.create({ user_id: user.id, name, status: 0 });
+
+    it('commits a task to this month or next month', async () => {
+        const task = await newTask('Ce mois');
+        let res = await agent
+            .patch(`/api/task/${task.uid}`)
+            .send({ month_of: 'this_month' });
+        expect(res.status).toBe(200);
+        expect(res.body.month_of).toBe(monthStart(0));
+
+        res = await agent
+            .patch(`/api/task/${task.uid}`)
+            .send({ month_of: 'next_month' });
+        expect(res.status).toBe(200);
+        expect(res.body.month_of).toBe(monthStart(1));
+    });
+
+    it('normalizes a date to the first day of its month', async () => {
+        const task = await newTask('Date');
+        const res = await agent
+            .patch(`/api/task/${task.uid}`)
+            .send({ month_of: '2030-03-17' });
+        expect(res.status).toBe(200);
+        expect(res.body.month_of).toBe('2030-03-01');
+        expect((await Task.findByPk(task.id)).month_of).toBe('2030-03-01');
+    });
+
+    it('is not a due date', async () => {
+        const task = await newTask('Pas une échéance');
+        await agent
+            .patch(`/api/task/${task.uid}`)
+            .send({ month_of: 'this_month' });
+        await task.reload();
+        expect(task.due_date).toBeNull();
+    });
+
+    it('clears the month on null or an empty value', async () => {
+        const task = await newTask('Retirer');
+        await agent
+            .patch(`/api/task/${task.uid}`)
+            .send({ month_of: '2030-03-01' });
+        for (const value of [null, '']) {
+            const res = await agent
+                .patch(`/api/task/${task.uid}`)
+                .send({ month_of: value });
+            expect(res.status).toBe(200);
+            expect(res.body.month_of).toBeNull();
+        }
+    });
+
+    it('refuses a malformed month with a clear 400', async () => {
+        const task = await newTask('Mauvais');
+        for (const value of ['2030-13-01', 'this_week', 'soon']) {
+            const res = await agent
+                .patch(`/api/task/${task.uid}`)
+                .send({ month_of: value });
+            expect(res.status).toBe(400);
+            expect(res.body.error || res.body.message).toMatch(
+                /month_of must be/
+            );
+        }
+    });
+
+    it('later takes the task out of its month', async () => {
+        const task = await newTask('Plus tard');
+        await agent
+            .patch(`/api/task/${task.uid}`)
+            .send({ month_of: 'this_month' });
+        const res = await agent
+            .patch(`/api/task/${task.uid}`)
+            .send({ later: true });
+        expect(res.status).toBe(200);
+        expect(res.body.month_of).toBeNull();
+    });
+
+    it('brings back a loose task whose month has passed, like « This week »', async () => {
+        const create = (name, month_of) =>
+            Task.create({ user_id: user.id, name, status: 0, month_of });
+        await create('Mois passé', '2020-01-01');
+        await create('Ce mois', monthStart(0));
+        await create('Mois prochain', monthStart(1));
+
+        const res = await agent.get('/api/tasks?type=unsorted');
+        expect(res.status).toBe(200);
+        expect(res.body.tasks.map((task) => task.name).sort()).toEqual([
+            'Mois passé',
+        ]);
+    });
+
+    it('travels through sync', async () => {
+        expect(registry.ENTITIES.task.fields).toContain('month_of');
+
+        const task = await newTask('Synchro');
+        await agent
+            .patch(`/api/task/${task.uid}`)
+            .send({ month_of: 'next_month' });
+        const snap = await agent.get('/api/v1/sync/snapshot?entity=task');
+        const row = (snap.body.rows || []).find((r) => r.uid === task.uid);
+        expect(row.month_of).toBe(monthStart(1));
+    });
+});

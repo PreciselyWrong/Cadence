@@ -311,12 +311,12 @@ async function filterTasksByParams(
             const owner = await User.findByPk(userId, {
                 attributes: ['timezone', 'first_day_of_week'],
             });
-            const currentWeek = weekStart(
-                moment
-                    .tz(getSafeTimezone(owner?.timezone))
-                    .format('YYYY-MM-DD'),
-                owner?.first_day_of_week ?? 1
-            );
+            const today = moment
+                .tz(getSafeTimezone(owner?.timezone))
+                .format('YYYY-MM-DD');
+            const currentWeek = weekStart(today, owner?.first_day_of_week ?? 1);
+            // Likewise a « This month » from a past month.
+            const currentMonth = today.slice(0, 8) + '01';
             whereClause.status = {
                 [Op.notIn]: [
                     Task.STATUS.DONE,
@@ -347,6 +347,12 @@ async function filterTasksByParams(
                     [Op.or]: [
                         { week_of: null },
                         { week_of: { [Op.lt]: currentWeek } },
+                    ],
+                },
+                {
+                    [Op.or]: [
+                        { month_of: null },
+                        { month_of: { [Op.lt]: currentMonth } },
                     ],
                 },
             ];

@@ -912,6 +912,7 @@ async function importOwnData(
                     estimated_minutes: task.estimated_minutes ?? null,
                     in_view_at: task.in_view_at ?? null,
                     week_of: task.week_of ?? null,
+                    month_of: task.month_of ?? null,
                     review_on: task.review_on ?? null,
                     reviewed_at: task.reviewed_at ?? null,
                     priority: toPriority(task.priority),

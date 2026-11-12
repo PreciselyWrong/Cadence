@@ -3,11 +3,12 @@
 // The decision fields a task PATCH accepts besides its own columns:
 //   in_view: boolean        → in_view_at (kept when already in view)
 //   week_of: date | 'this_week' | 'next_week' | null → first day of that week
+//   month_of: date | 'this_month' | 'next_month' | null → first day of that month
 //   review_on: YYYY-MM-DD | null
 //   reviewed: true          → reviewed_at = now
 //   later: boolean          → adds or removes the user's #someday tag; true
-//                             also takes the task out of view, the week
-//                             and today's plan
+//                             also takes the task out of view, the week,
+//                             the month and today's plan
 // None of them touches due_date, so nothing here reaches Google or makes a
 // task overdue.
 const moment = require('moment-timezone');
@@ -54,6 +55,30 @@ function parseWeekOf(value, user) {
     return weekStart(value, first);
 }
 
+function parseMonthOf(value, user) {
+    if (value === null || value === '') return null;
+    const timezone = getSafeTimezone(user.timezone);
+    if (value === 'this_month') {
+        return moment.tz(timezone).startOf('month').format('YYYY-MM-DD');
+    }
+    if (value === 'next_month') {
+        return moment
+            .tz(timezone)
+            .add(1, 'month')
+            .startOf('month')
+            .format('YYYY-MM-DD');
+    }
+    if (!isDay(value)) {
+        throw new ValidationError(
+            'month_of must be a date (YYYY-MM-DD), this_month, next_month or null'
+        );
+    }
+    return moment
+        .utc(value, 'YYYY-MM-DD')
+        .startOf('month')
+        .format('YYYY-MM-DD');
+}
+
 // Adds the column changes to `attrs`. Throws ValidationError on bad input.
 function applyDecisionFields(attrs, body, task, user) {
     if (body.in_view !== undefined) {
@@ -63,6 +88,9 @@ function applyDecisionFields(attrs, body, task, user) {
     }
     if (body.week_of !== undefined) {
         attrs.week_of = parseWeekOf(body.week_of, user);
+    }
+    if (body.month_of !== undefined) {
+        attrs.month_of = parseMonthOf(body.month_of, user);
     }
     if (body.review_on !== undefined) {
         if (body.review_on !== null && body.review_on !== '') {
@@ -86,6 +114,7 @@ function applyDecisionFields(attrs, body, task, user) {
     if (body.later !== undefined && asBoolean(body.later, 'later')) {
         attrs.in_view_at = null;
         attrs.week_of = null;
+        attrs.month_of = null;
         attrs.needs_when = false;
     }
 }
@@ -108,4 +137,10 @@ async function applyLater(task, body, userId) {
     return false;
 }
 
-module.exports = { applyDecisionFields, applyLater, parseWeekOf, weekStart };
+module.exports = {
+    applyDecisionFields,
+    applyLater,
+    parseMonthOf,
+    parseWeekOf,
+    weekStart,
+};

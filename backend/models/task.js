@@ -92,6 +92,12 @@ module.exports = (sequelize) => {
                 type: DataTypes.DATEONLY,
                 allowNull: true,
             },
+            // First day of the calendar month the user committed to doing
+            // the task in ("This month" / "Next month"). Never a due date.
+            month_of: {
+                type: DataTypes.DATEONLY,
+                allowNull: true,
+            },
             // Local day on which the user wants to decide about the task
             // again. Never a due date: nothing becomes overdue from it.
             review_on: {
@@ -422,6 +428,10 @@ module.exports = (sequelize) => {
                     name: 'tasks_parent_task_id_order',
                     fields: ['parent_task_id', 'order'],
                 },
+                {
+                    name: 'tasks_user_id_month_of_idx',
+                    fields: ['user_id', 'month_of'],
+                },
                 // Performance indexes for slow I/O systems (e.g., Synology NAS)
                 {
                     name: 'tasks_status_idx',
@@ -567,6 +577,7 @@ module.exports = (sequelize) => {
         if (
             task.due_date ||
             task.week_of ||
+            task.month_of ||
             task.in_view_at ||
             task.defer_until ||
             CLOSED.includes(Number(task.status))
