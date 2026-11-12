@@ -14,6 +14,7 @@ import {
 } from '../utils/tasksService';
 import { useIsMinimal } from '../hooks/useUiDensity';
 import PageHeader from './Shared/ui/PageHeader';
+import PageShell, { PAGE_GUTTER } from './Shared/ui/PageShell';
 import NewTask from './Task/NewTask';
 import CompletedTasksSection, {
     useCompletedTasks,
@@ -623,12 +624,8 @@ const Tasks: React.FC = () => {
     ];
 
     return (
-        <div className="w-full pt-4 pb-8 px-4 sm:px-6 lg:px-8">
-            <div
-                className={
-                    isUpcomingView ? 'w-full' : 'w-full max-w-7xl mx-auto'
-                }
-            >
+        <PageShell template="board" className={`pt-6 ${PAGE_GUTTER}`}>
+            <div className="w-full">
                 {/* The page header of every page (PageHeader); Upcoming keeps
                     its compact title row. */}
                 {!isUpcomingView ? (
@@ -1671,7 +1668,7 @@ const Tasks: React.FC = () => {
                     </>
                 )}
             </div>
-        </div>
+        </PageShell>
     );
 };
 

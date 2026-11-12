@@ -35,6 +35,7 @@ import NoteFocusMode from './Note/NoteFocusMode';
 import NoteEditorView from './Note/NoteEditorView';
 import NoteRow from './Shared/NoteRow';
 import PageHeader from './Shared/ui/PageHeader';
+import PageShell, { PAGE_GUTTER } from './Shared/ui/PageShell';
 import Button from './Shared/ui/Button';
 import NoteGallery from './Note/NoteGallery';
 import { ViewTypeSwitch } from './Task/TaskViewBody';
@@ -575,7 +576,6 @@ const Notes: React.FC = () => {
 
     const notesHeader = (
         <PageHeader
-            className="!px-0 !pt-0"
             title={t('notes.title', 'Notes')}
             actions={
                 <>
@@ -643,57 +643,67 @@ const Notes: React.FC = () => {
                             // and desktop briefly does too before that
                             // effect runs). Show every note to pick from
                             // instead of a dead-end placeholder (#1527).
-                            <div className="flex-1 overflow-y-auto px-6 pb-6 pt-6 max-sm:px-4">
-                                <div
-                                    className={`mx-auto w-full ${notesGallery ? 'max-w-6xl' : 'max-w-4xl'}`}
+                            <div className="flex-1 overflow-y-auto">
+                                {/* The gallery takes a wider column than the list. */}
+                                <PageShell
+                                    template={notesGallery ? 'board' : 'list'}
+                                    className={
+                                        notesGallery ? 'mx-auto max-w-6xl' : ''
+                                    }
                                 >
                                     {notesHeader}
-                                    {notesGallery ? (
-                                        <NoteGallery notes={sortedNotes} />
-                                    ) : (
-                                        <div role="list" className="-mx-3">
-                                            {sortedNotes.map((note) => (
-                                                <NoteRow
-                                                    key={note.uid}
-                                                    note={note}
-                                                />
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
+                                    <div className={PAGE_GUTTER}>
+                                        {notesGallery ? (
+                                            <NoteGallery notes={sortedNotes} />
+                                        ) : (
+                                            <div role="list" className="-mx-3">
+                                                {sortedNotes.map((note) => (
+                                                    <NoteRow
+                                                        key={note.uid}
+                                                        note={note}
+                                                    />
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                </PageShell>
                             </div>
                         ) : hasLoaded ? (
-                            <div className="flex-1 overflow-y-auto px-6 pb-6 pt-6 max-sm:px-4">
-                                {notesHeader}
-                                <BlankSlate
-                                    title={t(
-                                        'notes.noNotesYet',
-                                        'No notes yet.'
-                                    )}
-                                    hint={t(
-                                        'notes.blankSlateHint',
-                                        'Notes hold what you want to keep, like meeting notes, ideas or reference material. Write in Markdown, link a note to a project and tag it to find it later.'
-                                    )}
-                                    actions={[
-                                        {
-                                            label: t(
-                                                'notes.blankSlateNew',
-                                                'Write your first note'
-                                            ),
-                                            icon: PlusIcon,
-                                            onClick: startNewNote,
-                                        },
-                                        {
-                                            label: t(
-                                                'notes.blankSlateProjects',
-                                                'Go to projects'
-                                            ),
-                                            icon: FolderIcon,
-                                            to: '/projects',
-                                        },
-                                    ]}
-                                />
-                                <FocusEmptyHint className="mx-auto mt-4 max-w-md" />
+                            <div className="flex-1 overflow-y-auto">
+                                <PageShell template="list">
+                                    {notesHeader}
+                                    <div className={PAGE_GUTTER}>
+                                        <BlankSlate
+                                            title={t(
+                                                'notes.noNotesYet',
+                                                'No notes yet.'
+                                            )}
+                                            hint={t(
+                                                'notes.blankSlateHint',
+                                                'Notes hold what you want to keep, like meeting notes, ideas or reference material. Write in Markdown, link a note to a project and tag it to find it later.'
+                                            )}
+                                            actions={[
+                                                {
+                                                    label: t(
+                                                        'notes.blankSlateNew',
+                                                        'Write your first note'
+                                                    ),
+                                                    icon: PlusIcon,
+                                                    onClick: startNewNote,
+                                                },
+                                                {
+                                                    label: t(
+                                                        'notes.blankSlateProjects',
+                                                        'Go to projects'
+                                                    ),
+                                                    icon: FolderIcon,
+                                                    to: '/projects',
+                                                },
+                                            ]}
+                                        />
+                                        <FocusEmptyHint className="mx-auto mt-4 max-w-md" />
+                                    </div>
+                                </PageShell>
                             </div>
                         ) : null}
                     </div>

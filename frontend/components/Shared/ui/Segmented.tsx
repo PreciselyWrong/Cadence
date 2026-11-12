@@ -6,6 +6,10 @@ export interface SegmentedOption {
     /** Shown after the label when it is not zero. */
     count?: number;
     testId?: string;
+    /** A 16 px icon before the label. */
+    icon?: React.ReactNode;
+    /** Shows the icon alone; the label stays the name and the tooltip. */
+    iconOnly?: boolean;
 }
 
 interface SegmentedProps {
@@ -44,14 +48,24 @@ const Segmented: React.FC<SegmentedProps> = ({
                     role="tab"
                     aria-selected={active}
                     data-testid={option.testId}
+                    aria-label={option.iconOnly ? option.label : undefined}
+                    title={option.iconOnly ? option.label : undefined}
                     onClick={() => onSelect(option.id)}
-                    className={`inline-flex h-7 shrink-0 items-center gap-1 whitespace-nowrap rounded-md px-3 text-body-m font-medium transition-colors duration-150 max-sm:h-10 ${
+                    className={`inline-flex h-7 shrink-0 items-center gap-1 whitespace-nowrap rounded-md ${option.iconOnly ? 'px-2 max-sm:px-3' : 'px-3'} text-body-m font-medium transition-colors duration-150 max-sm:h-10 ${
                         active
                             ? 'bg-surface text-surface-on shadow-sm'
                             : 'text-surface-on-variant hover:text-surface-on'
                     }`}
                 >
-                    {option.label}
+                    {option.icon && (
+                        <span
+                            aria-hidden
+                            className="inline-flex [&>svg]:h-4 [&>svg]:w-4"
+                        >
+                            {option.icon}
+                        </span>
+                    )}
+                    {!option.iconOnly && option.label}
                     {!!option.count && (
                         <span className="tabular-nums text-surface-on-variant">
                             {option.count}

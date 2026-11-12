@@ -64,6 +64,7 @@ import {
 } from '../../utils/dateUtils';
 import { isTaskDone } from '../../constants/taskStatus';
 import { isStartAfterDue } from '../../utils/dueDateTime';
+import PageShell, { PAGE_GUTTER } from '../Shared/ui/PageShell';
 
 const TaskDetails: React.FC = () => {
     const { uid } = useParams<{ uid: string }>();
@@ -1818,7 +1819,7 @@ const TaskDetails: React.FC = () => {
     const fileBacked = isTodoMdTask(task);
 
     return (
-        <div className="px-2 sm:px-4 lg:px-6 pt-4">
+        <PageShell template="board" className={`pt-4 ${PAGE_GUTTER}`}>
             <div className="w-full">
                 <TaskDetailsHeader
                     task={task}
@@ -2072,7 +2073,7 @@ const TaskDetails: React.FC = () => {
                     />
                 )}
             </div>
-        </div>
+        </PageShell>
     );
 };
 

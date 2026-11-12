@@ -89,6 +89,7 @@ import {
 import { saveProjectAsTemplate } from '../../utils/templatesService';
 import { useTaskPane } from '../../contexts/TaskPaneContext';
 import Segmented from '../Shared/ui/Segmented';
+import PageShell, { PAGE_GUTTER } from '../Shared/ui/PageShell';
 import { comparePinnedTasks } from '../../utils/taskPin';
 
 type ProjectViewTab = 'tasks' | 'outline' | 'timeline' | 'board' | 'calendar';
@@ -967,7 +968,7 @@ const ProjectDetails: React.FC = () => {
 
     return (
         <NextActionContext.Provider value={nextActionContext}>
-            <div className="w-full px-2 sm:px-4 lg:px-6 pt-4 pb-12">
+            <PageShell template="board">
                 <ProjectHero
                     project={project}
                     nextAction={nextBestAction}
@@ -1039,7 +1040,7 @@ const ProjectDetails: React.FC = () => {
                 {project.SubProjects && project.SubProjects.length > 0 && (
                     <section
                         aria-labelledby="sub-projects-heading"
-                        className="mb-4 pl-2 sm:pl-3"
+                        className={`mb-4 ${PAGE_GUTTER}`}
                     >
                         <h2
                             id="sub-projects-heading"
@@ -1082,7 +1083,7 @@ const ProjectDetails: React.FC = () => {
                     </section>
                 )}
 
-                <div className="w-full">
+                <div className={`w-full ${PAGE_GUTTER}`}>
                     <div className="w-full">
                         <div className="mb-4">
                             {/* On a phone the view tabs scroll sideways
@@ -1528,7 +1529,7 @@ const ProjectDetails: React.FC = () => {
                         {completeDialog}
                     </div>
                 </div>
-            </div>
+            </PageShell>
         </NextActionContext.Provider>
     );
 };

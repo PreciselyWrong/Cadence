@@ -5,6 +5,8 @@ import {
     Squares2X2Icon,
 } from '@heroicons/react/24/outline';
 import ConfirmDialog from './Shared/ConfirmDialog';
+import PageShell from './Shared/ui/PageShell';
+import Segmented from './Shared/ui/Segmented';
 import ProjectModal from './Project/ProjectModal';
 import FilterDropdown, { FilterOption } from './Shared/FilterDropdown';
 import {
@@ -791,12 +793,12 @@ const Projects: React.FC = () => {
 
     if (isLoading) {
         return (
-            <div className="mx-auto w-full max-w-4xl pb-8">
+            <PageShell template="list">
                 <PageHeader title={t('projects.title')} />
                 <div className="px-3">
                     <SkeletonRows rows={7} />
                 </div>
-            </div>
+            </PageShell>
         );
     }
 
@@ -809,10 +811,10 @@ const Projects: React.FC = () => {
     }
 
     return (
-        <div
-            className={`mx-auto w-full pb-8 ${
-                viewMode === 'list' ? 'max-w-4xl' : 'max-w-7xl'
-            }`}
+        // The cards grid takes a wider column than the list.
+        <PageShell
+            template={viewMode === 'list' ? 'list' : 'board'}
+            className={viewMode === 'list' ? '' : 'mx-auto max-w-7xl'}
         >
             <PageHeader
                 title={t('projects.title')}
@@ -854,36 +856,27 @@ const Projects: React.FC = () => {
                         >
                             <MagnifyingGlassIcon />
                         </IconButton>
-                        <div
-                            className="flex items-center gap-0.5"
-                            role="group"
+                        <Segmented
                             aria-label={t('projects.viewAs', 'View')}
-                        >
-                            {(
-                                [
-                                    [
-                                        'list',
-                                        Bars3Icon,
-                                        t('projects.listViewAriaLabel'),
-                                    ],
-                                    [
-                                        'cards',
-                                        Squares2X2Icon,
-                                        t('projects.cardViewAriaLabel'),
-                                    ],
-                                ] as const
-                            ).map(([mode, Icon, label]) => (
-                                <IconButton
-                                    key={mode}
-                                    label={label}
-                                    active={viewMode === mode}
-                                    aria-pressed={viewMode === mode}
-                                    onClick={() => setViewMode(mode)}
-                                >
-                                    <Icon />
-                                </IconButton>
-                            ))}
-                        </div>
+                            selected={viewMode}
+                            onSelect={(id) =>
+                                setViewMode(id as 'cards' | 'list')
+                            }
+                            options={[
+                                {
+                                    id: 'list',
+                                    label: t('projects.listViewAriaLabel'),
+                                    icon: <Bars3Icon />,
+                                    iconOnly: true,
+                                },
+                                {
+                                    id: 'cards',
+                                    label: t('projects.cardViewAriaLabel'),
+                                    icon: <Squares2X2Icon />,
+                                    iconOnly: true,
+                                },
+                            ]}
+                        />
                         <OverflowMenu
                             label={t('common.moreActions', 'More actions')}
                             testId="projects-more-menu"
@@ -1278,7 +1271,7 @@ const Projects: React.FC = () => {
             )}
 
             {completeDialog}
-        </div>
+        </PageShell>
     );
 };
 

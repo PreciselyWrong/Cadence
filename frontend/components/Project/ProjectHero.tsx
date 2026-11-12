@@ -19,6 +19,9 @@ import { getProjectStatusTint } from './projectStatusStyles';
 import TodoMdProjectNote from './TodoMdProjectNote';
 import { isTodoMdProject, todoMdRepoSlug } from '../../utils/todoMd';
 import EntityIcon from '../Shared/EntityIcon';
+import Button, { IconButton } from '../Shared/ui/Button';
+import Menu, { MenuEntry } from '../Shared/ui/Menu';
+import { PAGE_GUTTER } from '../Shared/ui/PageShell';
 
 const PROJECT_STATUSES: ProjectStatus[] = [
     'not_started',
@@ -83,8 +86,6 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
     const fileBacked = isTodoMdProject(project);
     // A repository project takes its name from the slug.
     const nameLocked = Boolean(todoMdRepoSlug(project.source_path));
-    const [menuOpen, setMenuOpen] = useState(false);
-    const menuRef = useRef<HTMLDivElement>(null);
     const [statusOpen, setStatusOpen] = useState(false);
     const statusRef = useRef<HTMLDivElement>(null);
 
@@ -121,12 +122,9 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
     }, [editingDescription]);
 
     useEffect(() => {
-        if (!menuOpen && !statusOpen) return;
+        if (!statusOpen) return;
         const handleClickOutside = (event: MouseEvent) => {
             const target = event.target as Node;
-            if (menuRef.current && !menuRef.current.contains(target)) {
-                setMenuOpen(false);
-            }
             if (statusRef.current && !statusRef.current.contains(target)) {
                 setStatusOpen(false);
             }
@@ -134,7 +132,7 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
         document.addEventListener('mousedown', handleClickOutside);
         return () =>
             document.removeEventListener('mousedown', handleClickOutside);
-    }, [menuOpen, statusOpen]);
+    }, [statusOpen]);
 
     const saveName = async () => {
         const next = nameDraft.trim();
@@ -226,14 +224,106 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                   });
 
     const tint = project.color || '#3b82f6';
-    const menuItemClass =
-        'block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700';
-    const actionClass =
-        'inline-flex h-7 items-center gap-1.5 rounded-lg px-2.5 text-body-m font-medium text-surface-on ring-1 ring-inset ring-outline-variant transition-colors hover:bg-surface-high max-sm:min-h-[44px]';
+    // Pinning and sharing are rare: menu only.
+    const menu: MenuEntry[] = [
+        ...(onTogglePin
+            ? [
+                  {
+                      key: 'pin',
+                      label: project.pin_to_sidebar
+                          ? t('project.pinned', 'Pinned')
+                          : t('project.pin', 'Pin'),
+                      onSelect: onTogglePin,
+                  },
+              ]
+            : []),
+        {
+            key: 'share',
+            label: t('projectItem.share', 'Share'),
+            onSelect: onShareClick,
+        },
+        ...(onEditClick
+            ? [
+                  {
+                      key: 'edit',
+                      label: t('common.edit', 'Edit'),
+                      onSelect: onEditClick,
+                      testId: 'project-edit',
+                  },
+              ]
+            : []),
+        ...(pageActions ?? []).map((action) => ({
+            key: action.key,
+            label: action.label,
+            onSelect: action.onSelect,
+        })),
+        ...(onSaveAsTemplate
+            ? [
+                  {
+                      key: 'template',
+                      label: t(
+                          'projectItem.saveAsTemplate',
+                          'Save as Template'
+                      ),
+                      onSelect: onSaveAsTemplate,
+                  },
+              ]
+            : []),
+        ...(onImportClick
+            ? [
+                  {
+                      key: 'import',
+                      label: t(
+                          'spreadsheet.menu.import',
+                          'Import from spreadsheet…'
+                      ),
+                      onSelect: onImportClick,
+                  },
+              ]
+            : []),
+        ...(onExport
+            ? [
+                  {
+                      key: 'export-xlsx',
+                      label: t(
+                          'spreadsheet.menu.exportExcel',
+                          'Export to Excel'
+                      ),
+                      onSelect: () => onExport('xlsx'),
+                  },
+                  {
+                      key: 'export-csv',
+                      label: t('spreadsheet.menu.exportCsv', 'Export to CSV'),
+                      onSelect: () => onExport('csv'),
+                  },
+              ]
+            : []),
+        ...(onLeaveClick && project.can_leave
+            ? [
+                  {
+                      key: 'leave',
+                      label: t('shares.leave.action', 'Leave'),
+                      danger: true,
+                      onSelect: onLeaveClick,
+                      testId: 'project-leave',
+                  },
+              ]
+            : []),
+        ...(!fileBacked
+            ? [
+                  {
+                      key: 'delete',
+                      label: t('common.delete', 'Delete'),
+                      danger: true,
+                      onSelect: onDeleteClick,
+                  },
+              ]
+            : []),
+    ];
 
     return (
         <div className="mb-6 space-y-3">
-            <div className="space-y-3 px-6 pt-6 max-sm:px-4 sm:space-y-4">
+            <div className={`space-y-3 pt-6 sm:space-y-4 ${PAGE_GUTTER}`}>
                 {project.image_url && (
                     <div
                         className="h-28 overflow-hidden rounded-2xl sm:h-44"
@@ -480,181 +570,45 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
 
                     <div className="flex flex-shrink-0 flex-wrap items-center gap-2">
                         {isDone ? (
-                            <button
-                                type="button"
+                            <Button
+                                size="sm"
+                                variant="secondary"
+                                icon={
+                                    <ArrowUturnLeftIcon className="h-4 w-4" />
+                                }
                                 onClick={() => changeStatus('in_progress')}
-                                className={actionClass}
                                 data-testid="project-reopen"
                             >
-                                <ArrowUturnLeftIcon className="h-4 w-4" />
                                 {t('projects.reopen', 'Reopen')}
-                            </button>
+                            </Button>
                         ) : fileBacked ? null : (
-                            <button
-                                type="button"
+                            <Button
+                                size="sm"
+                                variant="secondary"
+                                icon={
+                                    <CheckCircleIcon className="h-4 w-4 text-green-600 dark:text-green-400" />
+                                }
                                 onClick={() => changeStatus('done')}
-                                className={actionClass}
                                 data-testid="project-mark-complete"
                             >
-                                <CheckCircleIcon className="h-4 w-4 text-green-600 dark:text-green-400" />
                                 {t('project.markComplete', 'Complete')}
-                            </button>
+                            </Button>
                         )}
-                        <div className="relative" ref={menuRef}>
-                            <button
-                                type="button"
-                                onClick={() => setMenuOpen((v) => !v)}
-                                className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-white hover:text-gray-800 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-200"
-                                aria-label={t(
-                                    'project.moreOptions',
-                                    'More options'
-                                )}
-                                aria-expanded={menuOpen}
-                            >
-                                <EllipsisHorizontalIcon className="h-5 w-5" />
-                            </button>
-                            {menuOpen && (
-                                <div className="absolute right-0 top-full z-30 mt-1 w-52 overflow-hidden rounded-md bg-white py-1 shadow-lg dark:bg-gray-800">
-                                    {/* Pinning is rare: menu only. */}
-                                    {onTogglePin && (
-                                        <button
-                                            type="button"
-                                            className={menuItemClass}
-                                            onClick={() => {
-                                                setMenuOpen(false);
-                                                onTogglePin();
-                                            }}
-                                        >
-                                            {project.pin_to_sidebar
-                                                ? t('project.pinned', 'Pinned')
-                                                : t('project.pin', 'Pin')}
-                                        </button>
+                        <Menu
+                            entries={menu}
+                            testId="project-actions-menu"
+                            trigger={(triggerProps) => (
+                                <IconButton
+                                    {...triggerProps}
+                                    label={t(
+                                        'project.moreOptions',
+                                        'More options'
                                     )}
-                                    {/* Sharing is occasional: menu only, like Pin. */}
-                                    <button
-                                        type="button"
-                                        className={menuItemClass}
-                                        onClick={() => {
-                                            setMenuOpen(false);
-                                            onShareClick();
-                                        }}
-                                    >
-                                        {t('projectItem.share', 'Share')}
-                                    </button>
-                                    {onEditClick && (
-                                        <button
-                                            type="button"
-                                            className={menuItemClass}
-                                            onClick={() => {
-                                                setMenuOpen(false);
-                                                onEditClick();
-                                            }}
-                                            data-testid="project-edit"
-                                        >
-                                            {t('common.edit', 'Edit')}
-                                        </button>
-                                    )}
-                                    {pageActions?.map((action) => (
-                                        <button
-                                            key={action.key}
-                                            type="button"
-                                            className={menuItemClass}
-                                            onClick={() => {
-                                                setMenuOpen(false);
-                                                action.onSelect();
-                                            }}
-                                        >
-                                            {action.label}
-                                        </button>
-                                    ))}
-                                    {onSaveAsTemplate && (
-                                        <button
-                                            type="button"
-                                            className={menuItemClass}
-                                            onClick={() => {
-                                                setMenuOpen(false);
-                                                onSaveAsTemplate();
-                                            }}
-                                        >
-                                            {t(
-                                                'projectItem.saveAsTemplate',
-                                                'Save as Template'
-                                            )}
-                                        </button>
-                                    )}
-                                    {onImportClick && (
-                                        <button
-                                            type="button"
-                                            className={menuItemClass}
-                                            onClick={() => {
-                                                setMenuOpen(false);
-                                                onImportClick();
-                                            }}
-                                        >
-                                            {t(
-                                                'spreadsheet.menu.import',
-                                                'Import from spreadsheet…'
-                                            )}
-                                        </button>
-                                    )}
-                                    {onExport && (
-                                        <>
-                                            <button
-                                                type="button"
-                                                className={menuItemClass}
-                                                onClick={() => {
-                                                    setMenuOpen(false);
-                                                    onExport('xlsx');
-                                                }}
-                                            >
-                                                {t(
-                                                    'spreadsheet.menu.exportExcel',
-                                                    'Export to Excel'
-                                                )}
-                                            </button>
-                                            <button
-                                                type="button"
-                                                className={menuItemClass}
-                                                onClick={() => {
-                                                    setMenuOpen(false);
-                                                    onExport('csv');
-                                                }}
-                                            >
-                                                {t(
-                                                    'spreadsheet.menu.exportCsv',
-                                                    'Export to CSV'
-                                                )}
-                                            </button>
-                                        </>
-                                    )}
-                                    {onLeaveClick && project.can_leave && (
-                                        <button
-                                            type="button"
-                                            className="block w-full px-4 py-2 text-left text-sm text-red-500 hover:bg-gray-100 dark:text-red-400 dark:hover:bg-gray-700"
-                                            onClick={() => {
-                                                setMenuOpen(false);
-                                                onLeaveClick();
-                                            }}
-                                            data-testid="project-leave"
-                                        >
-                                            {t('shares.leave.action', 'Leave')}
-                                        </button>
-                                    )}
-                                    {!fileBacked && (
-                                        <button
-                                            type="button"
-                                            className="block w-full px-4 py-2 text-left text-sm text-red-500 hover:bg-gray-100 dark:text-red-400 dark:hover:bg-gray-700"
-                                            onClick={() => {
-                                                setMenuOpen(false);
-                                                onDeleteClick();
-                                            }}
-                                        >
-                                            {t('common.delete', 'Delete')}
-                                        </button>
-                                    )}
-                                </div>
+                                >
+                                    <EllipsisHorizontalIcon />
+                                </IconButton>
                             )}
-                        </div>
+                        />
                     </div>
                 </div>
 

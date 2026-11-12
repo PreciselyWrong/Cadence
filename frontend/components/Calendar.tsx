@@ -4,6 +4,7 @@ import OverflowMenu from './Shared/OverflowMenu';
 import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import PageHeader from './Shared/ui/PageHeader';
+import PageShell, { PAGE_GUTTER } from './Shared/ui/PageShell';
 import Button, { IconButton } from './Shared/ui/Button';
 import Segmented from './Shared/ui/Segmented';
 import { Task } from '../entities/Task';
@@ -953,7 +954,10 @@ const Calendar: React.FC = () => {
 
     return (
         <div className="h-full flex flex-col">
-            <div className="w-full max-w-7xl mx-auto flex-1 flex flex-col min-h-0">
+            <PageShell
+                template="board"
+                className="flex min-h-0 flex-1 flex-col !pb-0"
+            >
                 <PageHeader
                     title={t('sidebar.calendar')}
                     subtitle={format(
@@ -1063,7 +1067,7 @@ const Calendar: React.FC = () => {
                         </div>
                     </div>
                 </PageHeader>
-                <div className="flex-1 flex flex-col min-h-0 px-6 max-sm:px-4">
+                <div className={`flex min-h-0 flex-1 flex-col ${PAGE_GUTTER}`}>
                     {/* Calendars: show or hide each connected calendar */}
                     <div className="flex flex-wrap items-center gap-2 mb-4">
                         {feeds.map((feed) => (
@@ -1403,7 +1407,7 @@ const Calendar: React.FC = () => {
                         />
                     )}
                 </div>
-            </div>
+            </PageShell>
         </div>
     );
 };

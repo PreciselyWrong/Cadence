@@ -21,6 +21,7 @@ import {
     InboxIcon,
 } from '@heroicons/react/24/outline';
 import PageHeader from '../Shared/ui/PageHeader';
+import PageShell, { PAGE_GUTTER } from '../Shared/ui/PageShell';
 import Button from '../Shared/ui/Button';
 import LoadingScreen from '../Shared/LoadingScreen';
 import ProjectModal from '../Project/ProjectModal';
@@ -566,7 +567,7 @@ const InboxItems: React.FC = () => {
 
     if (isTriage) {
         return (
-            <div className="mx-auto w-full max-w-4xl px-6 pb-8 pt-6 max-sm:px-4">
+            <PageShell template="list" className={`pt-6 ${PAGE_GUTTER}`}>
                 <InboxTriage
                     projects={projects}
                     onExit={() => setTriage(false)}
@@ -576,12 +577,12 @@ const InboxItems: React.FC = () => {
                             .catch(() => {});
                     }}
                 />
-            </div>
+            </PageShell>
         );
     }
 
     return (
-        <div className="mx-auto w-full max-w-4xl pb-8">
+        <PageShell template="list">
             <PageHeader
                 title={t('inbox.title')}
                 actions={
@@ -833,7 +834,7 @@ const InboxItems: React.FC = () => {
                     }
                 })()}
             </div>
-        </div>
+        </PageShell>
     );
 };
 

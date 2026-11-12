@@ -78,7 +78,7 @@ describe('ProjectHero declutter', () => {
         expect(screen.queryByRole('button', { name: 'Pin' })).toBeNull();
 
         fireEvent.click(screen.getByRole('button', { name: 'More options' }));
-        fireEvent.click(screen.getByRole('button', { name: 'Pin' }));
+        fireEvent.click(screen.getByRole('menuitem', { name: 'Pin' }));
 
         expect(onTogglePin).toHaveBeenCalled();
     });
@@ -91,7 +91,7 @@ describe('ProjectHero declutter', () => {
             0
         );
         fireEvent.click(screen.getByRole('button', { name: 'More options' }));
-        fireEvent.click(screen.getByRole('button', { name: /Share/ }));
+        fireEvent.click(screen.getByRole('menuitem', { name: /Share/ }));
 
         expect(onShareClick).toHaveBeenCalled();
     });
