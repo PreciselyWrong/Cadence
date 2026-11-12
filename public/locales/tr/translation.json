@@ -554,7 +554,8 @@
     "overdueBy": "{{days}} gün gecikti",
     "dueInDays": "{{days}} gün içinde son tarih",
     "startedSuccessfully": "Görev başarıyla başlatıldı!",
-    "deleteConfirmMessage": "\"{{name}}\" öğesini silmek istediğinizden emin misiniz? Bu işlem geri alınamaz."
+    "deleteConfirmMessage": "\"{{name}}\" öğesini silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+    "withLink": "Bağlantılı"
   },
   "timeline": {
     "activityTimeline": "Etkinlik Zaman Çizelgesi",
@@ -2072,7 +2073,10 @@
     "inHours": "{{count}} saat içinde",
     "pastDue": "Süresi geçmiş",
     "editDetails": "Ayrıntıları düzenle",
-    "noUpcomingOccurrences": "Yaklaşan tekrar yok."
+    "noUpcomingOccurrences": "Yaklaşan tekrar yok.",
+    "turnIntoProject": "Projeye dönüştür",
+    "turnIntoProjectError": "Projeye dönüştürülemedi.",
+    "turnIntoProjectMessage": "« {{name}} » projeye dönüştürülsün mü? Alt görevleri projenin görevleri olur, notundaki adresler de projenin sayfaları olur."
   },
   "projects": {
     "parentProject": "Üst proje",
@@ -2204,6 +2208,11 @@
       "failedTitle": "Proje ayrıntıları yüklenemedi.",
       "failedHint": "Bağlantınızı kontrol edip sayfayı yeniden yükleyin.",
       "backToProjects": "Projelere dön"
+    },
+    "dormant": {
+      "title": "30 gündür dokunulmadı ({{count}})",
+      "daysAgo": "{{count}} gün önce",
+      "keep": "Tut"
     }
   },
   "projectItem": {
@@ -5772,7 +5781,24 @@
     "editTitle": "Bağlantıyı düzenle",
     "deleteTitle": "Bu bağlantı silinsin mi?",
     "deleteMessage": "Bağlantılarınızdan kalıcı olarak çıkar. Kenara koymak için bunun yerine arşivleyin.",
-    "deleteError": "Bağlantı silinemedi."
+    "deleteError": "Bağlantı silinemedi.",
+    "taskVerb": {
+      "try": "Dene: {{title}}",
+      "read": "Oku: {{title}}",
+      "watch": "İzle: {{title}}"
+    },
+    "capture": {
+      "taskName": "Görev adı",
+      "alreadyIn": "« {{name}} » içinde zaten var",
+      "more": "+{{count}}",
+      "open": "Aç",
+      "addAnyway": "Yine de ekle",
+      "toProject": "Proje…",
+      "keepInInbox": "Gelen Kutusu",
+      "taskAdded": "Görev eklendi",
+      "taskToSort": "Görev « Sıralanacak görevler » listesine eklendi",
+      "addedToProject": "Projeye eklendi"
+    }
   },
   "dailyBrief": {
     "sectionName": {
@@ -6255,5 +6281,32 @@
   "mentions": {
     "loading": "Kişiler yükleniyor…",
     "noMatch": "Eşleşen kişi yok"
+  },
+  "projectPages": {
+    "heading": "Sayfalar",
+    "title": "Başlık",
+    "note": "Not",
+    "dead": "Bulunamadı",
+    "createTask": "Görev oluştur",
+    "remove": "Kaldır",
+    "actions": "Sayfa işlemleri",
+    "removeError": "Sayfa kaldırılamadı.",
+    "copied": "Sayfalar Markdown olarak kopyalandı",
+    "deadCount": "{{count}} sayfa bulunamadı",
+    "allAnswer": "Tüm sayfalar yanıt veriyor",
+    "checkError": "Sayfalar denetlenemedi.",
+    "copyMarkdown": "Sayfaları Markdown olarak kopyala",
+    "check": "Sayfaları denetle"
+  },
+  "bookmarksImport": {
+    "title": "Yer imlerini içe aktar",
+    "hint": "Firefox dışa aktarımı (Kitaplık › İçe Aktar ve Yedekle › Dışa Aktar). Bir klasör bir projenin sayfaları olur.",
+    "file": "Yer imi dosyası",
+    "empty": "Bu dosyada yer imi yok.",
+    "folder": "Klasör",
+    "project": "Proje",
+    "newProject": "Yeni proje « {{name}} »",
+    "error": "İçe aktarma başarısız oldu. Yeniden deneyin.",
+    "import": "İçe aktar"
   }
 }

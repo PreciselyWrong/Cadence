@@ -26,7 +26,6 @@ const SMART_LIST_LABELS: Record<SmartListId, [string, string]> = {
 const RAIL_LABELS: Record<RailId, [string, string]> = {
     today: ['sidebar.today', 'Today'],
     inbox: ['sidebar.inbox', 'Inbox'],
-    links: ['sidebar.links', 'Links'],
     calendar: ['sidebar.calendar', 'Calendar'],
     notes: ['sidebar.notes', 'Notes'],
     habits: ['sidebar.habits', 'Habits'],

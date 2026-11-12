@@ -76,12 +76,10 @@ class ReviewBacklogTest {
     }
 
     @Test
-    fun `a task row takes the link the server found in that task, else the same page`() {
-        val own = LinkItem(uid = "l1", url = "https://github.com/pbakaus/impeccable", sourceType = "task", sourceUid = "a")
-        val other = LinkItem(uid = "l2", url = "https://github.com/pbakaus/impeccable/", sourceType = "inbox_item", sourceUid = "i1")
-        assertEquals("l1", ReviewBacklog.linkFor(listOf(other, own), "task", "a", "https://github.com/pbakaus/impeccable")?.uid)
-        assertEquals("l2", ReviewBacklog.linkFor(listOf(other), "task", "a", "https://github.com/pbakaus/impeccable")?.uid)
-        assertNull(ReviewBacklog.linkFor(listOf(own), "task", "a", "Acheter du pain"))
+    fun `a row takes the project page that holds its address, if any`() {
+        val page = LinkItem(uid = "l1", url = "https://github.com/pbakaus/impeccable/", projectUid = "p1")
+        assertEquals("l1", ReviewBacklog.linkFor(listOf(page), "https://github.com/pbakaus/impeccable")?.uid)
+        assertNull(ReviewBacklog.linkFor(listOf(page), "Acheter du pain"))
     }
 
     @Test

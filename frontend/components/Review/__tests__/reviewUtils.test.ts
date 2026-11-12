@@ -1,4 +1,4 @@
-import { groupLater, rowLinkText } from '../reviewUtils';
+import { groupLater } from '../reviewUtils';
 import { TaskReviewItem } from '../../../utils/reviewService';
 import { Task } from '../../../entities/Task';
 
@@ -50,30 +50,14 @@ describe('groupLater', () => {
         expect(house?.items.map((i) => i.task.uid)).toEqual(['a', 'c']);
     });
 
-    it('filters on title, group, tags and link title, ignoring case and accents', () => {
-        const uids = (query: string, titles = {}) =>
-            groupLater(items, query, titles)
+    it('filters on title, group and tags, ignoring case and accents', () => {
+        const uids = (query: string) =>
+            groupLater(items, query)
                 .flatMap((g) => g.items)
                 .map((i) => i.task.uid);
         expect(uids('READING')).toEqual(['c']);
         expect(uids('house')).toEqual(['c', 'a']);
         expect(uids('persônal')).toEqual(['e']);
-        expect(uids('impecc', { b: 'Impeccable' })).toEqual(['b']);
         expect(uids('nothing')).toEqual([]);
-    });
-});
-
-describe('rowLinkText', () => {
-    it('takes the title when it holds an address, else a note that is only a link', () => {
-        expect(rowLinkText('https://github.com/pbakaus/impeccable', null)).toBe(
-            'https://github.com/pbakaus/impeccable'
-        );
-        expect(rowLinkText('Read later', ' https://b.example/y ')).toBe(
-            'https://b.example/y'
-        );
-        expect(
-            rowLinkText('Read later', 'See https://b.example/y and more')
-        ).toBeNull();
-        expect(rowLinkText('Buy bread', undefined)).toBeNull();
     });
 });

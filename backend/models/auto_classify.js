@@ -24,7 +24,7 @@ module.exports = (sequelize) => {
             user_id: userRef,
             entity: { type: DataTypes.STRING(16), allowNull: false },
             item_uid: { type: DataTypes.STRING, allowNull: false },
-            // queued | waiting (link page not read yet) | done | skipped |
+            // queued | waiting (legacy, links) | done | skipped |
             // changed (edited before the write) | failed
             state: { type: DataTypes.STRING(16), allowNull: false },
             attempts: {
@@ -113,7 +113,7 @@ module.exports = (sequelize) => {
             user_id: userRef,
             entity: { type: DataTypes.STRING(16), allowNull: false },
             item_uid: { type: DataTypes.STRING, allowNull: false },
-            // classify | duplicate
+            // classify (legacy duplicate cards of links are expired)
             kind: { type: DataTypes.STRING(16), allowNull: false },
             payload: { type: DataTypes.JSON, allowNull: false },
             // pending | applied | dismissed | expired

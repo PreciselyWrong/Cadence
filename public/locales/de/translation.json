@@ -554,7 +554,8 @@
     "overdueBy": "{{days}} Tage überfällig",
     "dueInDays": "Fällig in {{days}} Tagen",
     "startedSuccessfully": "Aufgabe erfolgreich gestartet!",
-    "deleteConfirmMessage": "Möchtest du \"{{name}}\" wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden."
+    "deleteConfirmMessage": "Möchtest du \"{{name}}\" wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "withLink": "Mit Link"
   },
   "timeline": {
     "activityTimeline": "Aktivitätsverlauf",
@@ -2038,7 +2039,10 @@
     "inHours": "in {{count}} Stunden",
     "pastDue": "Überfällig",
     "editDetails": "Details bearbeiten",
-    "noUpcomingOccurrences": "Keine anstehenden Termine."
+    "noUpcomingOccurrences": "Keine anstehenden Termine.",
+    "turnIntoProject": "In ein Projekt umwandeln",
+    "turnIntoProjectError": "Konnte nicht in ein Projekt umgewandelt werden.",
+    "turnIntoProjectMessage": "„{{name}}“ in ein Projekt umwandeln? Die Unteraufgaben werden zu Aufgaben des Projekts, und die Adressen seiner Notiz werden zu seinen Seiten."
   },
   "calendar": {
     "feed": {
@@ -2487,6 +2491,11 @@
       "failedTitle": "Projektdetails konnten nicht geladen werden.",
       "failedHint": "Prüfe deine Verbindung und lade die Seite neu.",
       "backToProjects": "Zurück zu den Projekten"
+    },
+    "dormant": {
+      "title": "Seit 30 Tagen nicht berührt ({{count}})",
+      "daysAgo": "vor {{count}} Tagen",
+      "keep": "Behalten"
     }
   },
   "projectItem": {
@@ -5781,7 +5790,24 @@
     "editTitle": "Link bearbeiten",
     "deleteTitle": "Diesen Link löschen?",
     "deleteMessage": "Er verschwindet endgültig aus deinen Links. Um ihn nur beiseitezulegen, archiviere ihn stattdessen.",
-    "deleteError": "Der Link konnte nicht gelöscht werden."
+    "deleteError": "Der Link konnte nicht gelöscht werden.",
+    "taskVerb": {
+      "try": "Ausprobieren: {{title}}",
+      "read": "Lesen: {{title}}",
+      "watch": "Ansehen: {{title}}"
+    },
+    "capture": {
+      "taskName": "Aufgabenname",
+      "alreadyIn": "Bereits in « {{name}} »",
+      "more": "+{{count}}",
+      "open": "Öffnen",
+      "addAnyway": "Trotzdem hinzufügen",
+      "toProject": "Projekt…",
+      "keepInInbox": "Posteingang",
+      "taskAdded": "Aufgabe hinzugefügt",
+      "taskToSort": "Aufgabe zu « Zu sortierende Aufgaben » hinzugefügt",
+      "addedToProject": "Zum Projekt hinzugefügt"
+    }
   },
   "dailyBrief": {
     "sectionName": {
@@ -6266,5 +6292,32 @@
   "mentions": {
     "loading": "Personen werden geladen…",
     "noMatch": "Keine passende Person"
+  },
+  "projectPages": {
+    "heading": "Seiten",
+    "title": "Titel",
+    "note": "Notiz",
+    "dead": "Nicht gefunden",
+    "createTask": "Aufgabe erstellen",
+    "remove": "Entfernen",
+    "actions": "Seitenaktionen",
+    "removeError": "Die Seite konnte nicht entfernt werden.",
+    "copied": "Seiten als Markdown kopiert",
+    "deadCount": "{{count}} Seiten nicht gefunden",
+    "allAnswer": "Alle Seiten antworten",
+    "checkError": "Die Seiten konnten nicht geprüft werden.",
+    "copyMarkdown": "Seiten als Markdown kopieren",
+    "check": "Seiten prüfen"
+  },
+  "bookmarksImport": {
+    "title": "Lesezeichen importieren",
+    "hint": "Ein Export aus Firefox (Bibliothek › Importieren und Sichern › Exportieren). Ein Ordner wird zu den Seiten eines Projekts.",
+    "file": "Lesezeichen-Datei",
+    "empty": "Keine Lesezeichen in dieser Datei.",
+    "folder": "Ordner",
+    "project": "Projekt",
+    "newProject": "Neues Projekt « {{name}} »",
+    "error": "Der Import ist fehlgeschlagen. Erneut versuchen.",
+    "import": "Importieren"
   }
 }

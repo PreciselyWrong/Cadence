@@ -4,6 +4,8 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Now
 
+- Android : aperçus sous la description d'un projet. La description de projet n'est ni dans Room ni dans la synchro (`project`) ; à ajouter (colonne, migration, champ synchronisé) avant d'y montrer les cartes. Vérif : une adresse dans la description d'un projet montre sa carte sur le téléphone, hors ligne compris.
+
 Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `ghcr.io/preciselywrong/cadence:latest`. Vérifié : suites serveur ciblées sur SQLite et PostgreSQL 16, tests web, 1655 tests Android, lint, build. Reste ce qui demande ton téléphone, ton serveur, un compte externe ou ta décision.
 
 - **À faire par toi.**
@@ -86,6 +88,8 @@ Branche `fix/note-quickadd-focus-c7e743d5`.
   Rétroliens d'une personne : web seulement (pas de fiche de personne sur Android, `docs/44-notes-links.md`).
 
 ## Next
+
+- Add-on Firefox Cadence signé en non listé (web-ext sign --channel=unlisted, clés AMO dans .env, gecko.id fixe, script publish.ps1 -Sign) pour une installation permanente sans le site de Mozilla.
 
 - Cartes « Mail » dans « À trier » (web et Android)
   Spec : `docs/43-mail-triage.md`. L'agent de tri des mails propose par MCP (`propose_mail`) les fils qui demandent une action ; on décide dans « À trier » : Tâche, Répondre (brouillon dans Gmail), Plus tard, Ignorer, archivage Gmail optionnel par l'outil Gmail restreint. Pas de corps de mail stocké, pas d'envoi. Serveur fait le 2026-11-12 (table `mail_items`, outils MCP, `POST /triage/mail/:uid/decide`, passerelle Gmail `TUDUDI_GMAIL_MCP_*` avec le jeton d'archivage de l'outil Gmail 1.3.0 ; pas d'entité de synchro : file « À trier » + appels différés comme les autres cartes). Web fait le 2026-11-12 (`frontend/components/Triage/MailCard.tsx`). Android fait le 2026-11-12 (1.17.0, `ui/triage/MailCards.kt`). Reste : redéployer l'outil Gmail avec `--archive-token-file`, consigne de l'agent dans Hermes (lire `list_mail_cards`, puis `propose_mail` / `resolve_mail`). Vérif : voir « Checks once built » de la spec.

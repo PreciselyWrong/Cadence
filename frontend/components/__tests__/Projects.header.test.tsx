@@ -64,6 +64,7 @@ jest.mock('../../utils/projectsService', () => ({
     updateProject: jest.fn(),
     deleteProject: jest.fn(),
     reorderProjects: jest.fn(),
+    fetchDormantProjects: jest.fn(() => Promise.resolve([])),
 }));
 jest.mock('../../utils/templatesService', () => ({
     saveProjectAsTemplate: jest.fn(),

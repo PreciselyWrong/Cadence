@@ -195,4 +195,8 @@
     <string name="todo_md_file_failed">Impossible de changer le fichier TODO.md.</string>
     <string name="todo_md_file_hint">Les tâches avec l\'étiquette code sont écrites dans le fichier ; les autres restent dans Cadence.</string>
     <string name="todo_md_file_close">Fermer</string>
+    <!-- Nom d'une tâche née d'une adresse (docs/37-links.md) : le verbe suit le genre de la page. -->
+    <string name="link_task_try">Essayer : %1$s</string>
+    <string name="link_task_read">Lire : %1$s</string>
+    <string name="link_task_watch">Regarder : %1$s</string>
 </resources>

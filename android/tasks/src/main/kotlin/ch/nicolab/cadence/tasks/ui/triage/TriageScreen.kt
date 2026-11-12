@@ -55,11 +55,7 @@ import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.autoclassify.AUTO_CLASSIFY_TYPE
 import ch.nicolab.cadence.tasks.autoclassify.AutoClassifyPayload
-import ch.nicolab.cadence.tasks.autoclassify.LINK_DUPLICATE_TYPE
 import ch.nicolab.cadence.tasks.brief.QuestionDto
-import ch.nicolab.cadence.tasks.triage.LINK_REVIEW_TYPE
-import ch.nicolab.cadence.tasks.triage.LinkReviewDecision
-import ch.nicolab.cadence.tasks.triage.LinkReviewPayload
 import ch.nicolab.cadence.tasks.triage.MAIL_TYPE
 import ch.nicolab.cadence.tasks.triage.MailDecision
 import ch.nicolab.cadence.tasks.triage.MailPayload
@@ -154,7 +150,6 @@ internal fun TriageScreen(today: LocalDate, onBack: () -> Unit) {
                         onAnswer = { choice -> viewModel.answerSuggestion(item, choice) },
                         onDismiss = { viewModel.dismissSuggestion(item) },
                         onSkip = { viewModel.skip(item) },
-                        onLinkDecision = { decision -> viewModel.decideLink(item, decision) },
                         archiveAvailable = queue?.mailArchive == true,
                         today = today,
                         onMailDecision = { decision, payload, archive -> viewModel.decideMail(item, decision, payload, archive) },
@@ -214,7 +209,6 @@ private fun AutoClassifyItem(
     onAnswer: (JsonElement) -> Unit,
     onDismiss: () -> Unit,
     onSkip: () -> Unit,
-    onLinkDecision: (LinkReviewDecision) -> Unit,
     archiveAvailable: Boolean,
     today: LocalDate,
     onMailDecision: (MailDecision, JsonObject, Boolean) -> Unit,
@@ -223,12 +217,6 @@ private fun AutoClassifyItem(
     when (item.type) {
         AUTO_CLASSIFY_TYPE -> AutoClassifyPayload.classify(item.payload)?.let { card ->
             ClassifyCardView(card, projects, onAnswer, onDismiss, onSkip)
-        } ?: fallback()
-        LINK_DUPLICATE_TYPE -> AutoClassifyPayload.duplicate(item.payload)?.let { card ->
-            DuplicateCardView(card, onAnswer, onSkip)
-        } ?: fallback()
-        LINK_REVIEW_TYPE -> LinkReviewPayload.parse(item.payload)?.let { card ->
-            LinkReviewCardView(card, onLinkDecision, onSkip)
         } ?: fallback()
         MAIL_TYPE -> MailPayload.parse(item.payload)?.let { card ->
             MailCardView(card, archiveAvailable, today, onMailDecision, onSkip)

@@ -7,6 +7,10 @@ export interface UrlTitleResult {
     image?: string | null;
     description?: string | null;
     site_name?: string | null;
+    kind?: string | null;
+    github_stars?: number | null;
+    github_language?: string | null;
+    github_last_commit?: string | null;
     found?: boolean;
     error?: string;
 }
@@ -38,6 +42,12 @@ export interface UrlPreview {
     description: string | null;
     image: string | null;
     siteName: string | null;
+    // repo | article | video | tool | other, from the address and og:type.
+    kind?: string | null;
+    // A GitHub repository: stars, main language, last push (ISO).
+    githubStars?: number | null;
+    githubLanguage?: string | null;
+    githubLastCommit?: string | null;
 }
 
 const previews = new Map<string, Promise<UrlPreview>>();
@@ -65,6 +75,10 @@ export const fetchUrlPreview = (url: string): Promise<UrlPreview> => {
             description: result.description?.trim() || null,
             image: result.image || null,
             siteName: result.site_name || null,
+            kind: result.kind || null,
+            githubStars: result.github_stars ?? null,
+            githubLanguage: result.github_language ?? null,
+            githubLastCommit: result.github_last_commit ?? null,
         };
     });
     previews.set(url, preview);

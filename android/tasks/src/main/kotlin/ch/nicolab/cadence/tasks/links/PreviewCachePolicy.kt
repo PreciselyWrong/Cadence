@@ -1,6 +1,9 @@
 package ch.nicolab.cadence.tasks.links
 
-/** Aperçu gardé sur l'appareil. [failed] marque un échec mis en cache pour ne pas réinterroger sans cesse. */
+/**
+ * Aperçu gardé sur l'appareil. [failed] marque un échec mis en cache pour ne pas réinterroger sans cesse.
+ * [kind] : repo, article, video, tool ou other. Les champs GitHub ne concernent que les dépôts.
+ */
 data class CachedPreview(
     val url: String,
     val title: String?,
@@ -8,6 +11,11 @@ data class CachedPreview(
     val imageUrl: String?,
     val fetchedAtMs: Long,
     val failed: Boolean,
+    val siteName: String? = null,
+    val kind: String? = null,
+    val githubStars: Int? = null,
+    val githubLanguage: String? = null,
+    val githubLastCommit: String? = null,
 )
 
 /** Règles de fraîcheur du cache d'aperçus ; sans horloge propre pour rester testable. */
@@ -33,13 +41,29 @@ object PreviewCachePolicy {
         }
 
     /** Réponse de `GET /api/url/title` : champs vides écartés, image http passée en https, autre schéma refusé. */
-    fun fromServer(url: String, title: String?, description: String?, image: String?, nowMs: Long) = CachedPreview(
+    fun fromServer(
+        url: String,
+        title: String?,
+        description: String?,
+        image: String?,
+        nowMs: Long,
+        siteName: String? = null,
+        kind: String? = null,
+        githubStars: Int? = null,
+        githubLanguage: String? = null,
+        githubLastCommit: String? = null,
+    ) = CachedPreview(
         url = url,
         title = title?.trim()?.ifEmpty { null },
         description = description?.trim()?.ifEmpty { null },
         imageUrl = secureImage(image),
         fetchedAtMs = nowMs,
         failed = false,
+        siteName = siteName?.trim()?.ifEmpty { null },
+        kind = kind?.trim()?.ifEmpty { null },
+        githubStars = githubStars,
+        githubLanguage = githubLanguage?.trim()?.ifEmpty { null },
+        githubLastCommit = githubLastCommit?.trim()?.ifEmpty { null },
     )
 
     private fun secureImage(raw: String?): String? {

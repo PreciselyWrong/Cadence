@@ -554,7 +554,8 @@
     "overdueBy": "Terlambat {{days}} hari",
     "dueInDays": "Jatuh tempo dalam {{days}} hari",
     "startedSuccessfully": "Tugas berhasil dimulai!",
-    "deleteConfirmMessage": "Yakin ingin menghapus \"{{name}}\"? Tindakan ini tidak dapat dibatalkan."
+    "deleteConfirmMessage": "Yakin ingin menghapus \"{{name}}\"? Tindakan ini tidak dapat dibatalkan.",
+    "withLink": "Dengan tautan"
   },
   "timeline": {
     "activityTimeline": "Garis Waktu Aktivitas",
@@ -2072,7 +2073,10 @@
     "inHours": "dalam {{count}} jam",
     "pastDue": "Lewat tenggat",
     "editDetails": "Edit detail",
-    "noUpcomingOccurrences": "Tidak ada kejadian mendatang."
+    "noUpcomingOccurrences": "Tidak ada kejadian mendatang.",
+    "turnIntoProject": "Jadikan proyek",
+    "turnIntoProjectError": "Tidak dapat dijadikan proyek.",
+    "turnIntoProjectMessage": "Jadikan « {{name}} » sebagai proyek? Subtugasnya akan menjadi tugas proyek, dan alamat di catatannya menjadi halaman proyek."
   },
   "projects": {
     "parentProject": "Proyek induk",
@@ -2204,6 +2208,11 @@
       "failedTitle": "Gagal memuat detail proyek.",
       "failedHint": "Periksa koneksi Anda dan muat ulang halaman.",
       "backToProjects": "Kembali ke Proyek"
+    },
+    "dormant": {
+      "title": "Tidak disentuh selama 30 hari ({{count}})",
+      "daysAgo": "{{count}} hari yang lalu",
+      "keep": "Simpan"
     }
   },
   "projectItem": {
@@ -5772,7 +5781,24 @@
     "editTitle": "Edit tautan",
     "deleteTitle": "Hapus tautan ini?",
     "deleteMessage": "Tautan ini keluar dari daftar Anda untuk selamanya. Untuk menyisihkannya, arsipkan saja.",
-    "deleteError": "Tautan tidak dapat dihapus."
+    "deleteError": "Tautan tidak dapat dihapus.",
+    "taskVerb": {
+      "try": "Coba: {{title}}",
+      "read": "Baca: {{title}}",
+      "watch": "Tonton: {{title}}"
+    },
+    "capture": {
+      "taskName": "Nama tugas",
+      "alreadyIn": "Sudah ada di « {{name}} »",
+      "more": "+{{count}}",
+      "open": "Buka",
+      "addAnyway": "Tetap tambahkan",
+      "toProject": "Proyek…",
+      "keepInInbox": "Kotak Masuk",
+      "taskAdded": "Tugas ditambahkan",
+      "taskToSort": "Tugas ditambahkan ke « Tugas untuk dipilah »",
+      "addedToProject": "Ditambahkan ke proyek"
+    }
   },
   "dailyBrief": {
     "sectionName": {
@@ -6255,5 +6281,32 @@
   "mentions": {
     "loading": "Memuat orang…",
     "noMatch": "Tidak ada orang yang cocok"
+  },
+  "projectPages": {
+    "heading": "Halaman",
+    "title": "Judul",
+    "note": "Catatan",
+    "dead": "Tidak ditemukan",
+    "createTask": "Buat tugas",
+    "remove": "Hapus",
+    "actions": "Tindakan halaman",
+    "removeError": "Halaman tidak dapat dihapus.",
+    "copied": "Halaman disalin sebagai Markdown",
+    "deadCount": "{{count}} halaman tidak ditemukan",
+    "allAnswer": "Semua halaman merespons",
+    "checkError": "Halaman tidak dapat diperiksa.",
+    "copyMarkdown": "Salin halaman sebagai Markdown",
+    "check": "Periksa halaman"
+  },
+  "bookmarksImport": {
+    "title": "Impor markah",
+    "hint": "Ekspor dari Firefox (Library › Import and Backup › Export). Satu folder menjadi halaman sebuah proyek.",
+    "file": "File markah",
+    "empty": "Tidak ada markah dalam file ini.",
+    "folder": "Folder",
+    "project": "Proyek",
+    "newProject": "Proyek baru « {{name}} »",
+    "error": "Impor gagal. Coba lagi.",
+    "import": "Impor"
   }
 }

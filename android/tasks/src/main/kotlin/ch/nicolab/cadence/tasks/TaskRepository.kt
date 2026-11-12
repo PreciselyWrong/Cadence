@@ -1,5 +1,6 @@
 package ch.nicolab.cadence.tasks
 
+import ch.nicolab.cadence.tasks.model.AddressPlaces
 import ch.nicolab.cadence.tasks.model.AreaItem
 import ch.nicolab.cadence.tasks.model.Delivery
 import ch.nicolab.cadence.tasks.model.RefusedItem
@@ -8,9 +9,7 @@ import ch.nicolab.cadence.tasks.model.GoalBucket
 import ch.nicolab.cadence.tasks.model.GoalChange
 import ch.nicolab.cadence.tasks.model.GoalItem
 import ch.nicolab.cadence.tasks.model.InboxEntry
-import ch.nicolab.cadence.tasks.model.LinkDraft
 import ch.nicolab.cadence.tasks.model.LinkItem
-import ch.nicolab.cadence.tasks.model.LinkStatus
 import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.NoteItem
 import ch.nicolab.cadence.tasks.model.OccurrenceFields
@@ -61,50 +60,31 @@ interface TaskRepository {
      */
     suspend fun createWish(title: String, bucket: GoalBucket): String?
 
-    /** Liens enregistrés, lisibles hors ligne, les plus récents d'abord. */
+    /** Pages de projet, lisibles hors ligne, les plus récentes d'abord. */
     fun observeLinks(): Flow<List<LinkItem>>
 
-    /** Note d'un lien ; vide ou null l'efface. Sans effet si le lien est inconnu. */
+    /** Note d'une page ; vide ou null l'efface. Sans effet si la page est inconnue. */
     suspend fun setLinkNote(uid: String, note: String?)
 
-    /** Statut d'un lien (À voir ou Archivé). Sans effet si le lien est inconnu. */
-    suspend fun setLinkStatus(uid: String, status: LinkStatus)
-
-    /** Étiquettes d'un lien (remplace l'ensemble). Sans effet si le lien est inconnu. */
-    suspend fun setLinkTags(uid: String, tagUids: List<String>)
-
-    /** Titre d'un lien ; vide ou null le rend à celui de la page. */
+    /** Titre d'une page ; vide ou null le rend à celui de la page. */
     suspend fun setLinkTitle(uid: String, title: String?)
 
-    /** Projet d'un lien ; null l'en sort. */
-    suspend fun setLinkProject(uid: String, projectUid: String?)
-
-    /** Nouvelle adresse : le serveur la valide et relit la page, par un appel différé nommé [label] s'il est refusé. */
-    suspend fun setLinkUrl(uid: String, url: String, label: String)
-
-    /**
-     * Met dans les liens, exprès, une adresse écrite dans une tâche ou une note ([sourceType] `task` ou `note`) :
-     * le serveur ne prend plus seul celles des tâches et des notes. Appel différé nommé [label].
-     */
-    suspend fun addLinkFrom(url: String, sourceType: String, sourceUid: String, label: String)
-
-    /**
-     * Enregistre [draft] dans les liens par l'appel différé `POST /api/v1/links` nommé [label] : un appareil ne crée pas
-     * de ligne `link`, elle revient par la synchro une fois le serveur passé.
-     */
-    suspend fun addLink(draft: LinkDraft, label: String)
-
-    /**
-     * Défait [addLink] : retire l'appel s'il attend encore, sinon supprime le lien revenu de la synchro pour la même
-     * source. Rend false quand rien n'a pu être défait (appel parti, lien pas encore revenu).
-     */
-    suspend fun withdrawLink(draft: LinkDraft): Boolean
-
-    /** Supprime le lien pour de bon ; son adresse n'est plus reprise des tâches et des notes. */
+    /** Supprime la page pour de bon (son projet et ses tâches ne bougent pas). */
     suspend fun deleteLink(uid: String)
 
-    /** Jour où revoir un lien mis de côté ; null l'efface. */
-    suspend fun setLinkReviewDate(uid: String, date: java.time.LocalDate?)
+    /**
+     * Uid de la page de [projectUid] pour l'adresse [url] (même adresse normalisée, sans « www. » ni « / » final), ou
+     * null. Lecture locale.
+     */
+    suspend fun projectPageUid(projectUid: String, url: String): String?
+
+    /**
+     * Ajoute [url] comme page du projet [projectUid] (uid choisi par l'appareil) : ligne Room et envoi `upsert` hors
+     * ligne, comme une tâche. Une page déjà là pour cette adresse dans ce projet n'ajoute rien et rend son uid.
+     * [url] doit être une adresse web (`http` ou `https`).
+     */
+    suspend fun addProjectPage(projectUid: String, url: String, title: String?, note: String?): String
+
     fun observeInbox(): Flow<List<InboxEntry>>
 
     /** Notes, épinglées d'abord puis de la plus récente à la plus ancienne. */
@@ -128,6 +108,9 @@ interface TaskRepository {
     /** Retourne l'uid de la tâche créée. */
     suspend fun createTask(draft: TaskDraft): String
 
+    /** Tâches ouvertes qui citent [url] et projets qui l'ont enregistrée : lecture locale, hors ligne. */
+    suspend fun placesOf(url: String): AddressPlaces
+
     /** Copie une tâche (contenu, dates, durée, liens) sous un nouvel uid ; null si elle n'existe plus. */
     suspend fun duplicateTask(uid: String): String?
     suspend fun updateTask(uid: String, change: TaskChange)
@@ -140,6 +123,9 @@ interface TaskRepository {
     suspend fun reopenTask(uid: String)
     suspend fun skipOccurrence(uid: String)
     suspend fun deleteTask(uid: String)
+
+    /** Transforme la tâche en projet côté serveur, par la file d'appels différés : elle reste masquée jusqu'à l'envoi ou le refus. */
+    suspend fun convertToProject(uid: String, name: String)
 
     /**
      * Déplace l'occurrence courante d'une tâche récurrente, sur le serveur (il déplace aussi la règle). Hors

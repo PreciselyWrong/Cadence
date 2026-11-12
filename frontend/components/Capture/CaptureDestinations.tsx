@@ -6,7 +6,7 @@ import { CAPTURE_TARGETS, CaptureTarget } from '../../utils/captureText';
 interface CaptureDestinationsProps {
     value: CaptureTarget;
     onChange: (target: CaptureTarget) => void;
-    // The choices offered; Links replaces Project for a link alone.
+    // The choices offered; a link alone gets no Project.
     targets?: CaptureTarget[];
     // Shows only the chosen target, plus scopeLabel, with no way to switch
     locked?: boolean;
@@ -18,11 +18,10 @@ const LABELS: Record<CaptureTarget, { key: string; fallback: string }> = {
     task: { key: 'capture.task', fallback: 'Task' },
     note: { key: 'capture.note', fallback: 'Note' },
     project: { key: 'capture.project', fallback: 'Project' },
-    link: { key: 'capture.link', fallback: 'Links' },
 };
 
-// "Add to  Inbox | Task | Note | Project" (or "Inbox | Task | Links | Note"
-// for a link alone): what the text becomes is always
+// "Add to  Inbox | Task | Note | Project" (or "Inbox | Task | Note" for a
+// link alone): what the text becomes is always
 // visible next to the button that saves it.
 const CaptureDestinations: React.FC<CaptureDestinationsProps> = ({
     value,

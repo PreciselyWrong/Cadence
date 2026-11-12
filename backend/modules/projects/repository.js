@@ -320,13 +320,13 @@ class ProjectsRepository extends BaseRepository {
     // Removes a project's tasks, attachments and cover image, orphans its
     // notes and finally deletes the project row, inside the given transaction.
     async deleteProjectContents(project, userId, transaction) {
-        // Links outlive their project, one by one so devices learn of it.
-        const links = await Link.findAll({
+        // Its pages go with it, one by one so devices learn of it.
+        const pages = await Link.findAll({
             where: { project_id: project.id },
             transaction,
         });
-        for (const link of links) {
-            await link.update({ project_id: null }, { transaction });
+        for (const page of pages) {
+            await page.destroy({ transaction });
         }
 
         // Find all tasks belonging to this project (parent tasks only)

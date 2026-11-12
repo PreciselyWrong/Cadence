@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { InboxItem } from '../../entities/InboxItem';
 import { useTranslation } from 'react-i18next';
-
+import { Link as RouterLink } from 'react-router-dom';
 import { Task } from '../../entities/Task';
 import { Project } from '../../entities/Project';
 import { Note } from '../../entities/Note';
@@ -19,7 +19,19 @@ const linkHost = (address: string): string => {
 };
 import TagInput from '../Tag/TagInput';
 import { firstUrl } from '../../utils/linkFilters';
-import { LinkDraft, linkTaskDraft, wordsAround } from '../../utils/linkTriage';
+import {
+    CaptureDraft,
+    LinkDraft,
+    linkTaskDraft,
+    wordsAround,
+} from '../../utils/linkTriage';
+import {
+    capturedTask,
+    isOnlyAddress,
+    VERB_FALLBACKS,
+} from '../../utils/linkTaskName';
+import { AddressPlaces, lookupAddress } from '../../utils/linksService';
+import Menu from '../Shared/ui/Menu';
 import { urlPreviewWithin } from '../../utils/urlService';
 import { useUrlPreview } from '../../hooks/useUrlPreview';
 import { useStore } from '../../store/useStore';
@@ -47,8 +59,14 @@ interface InboxItemDetailProps {
     openTaskModal: (task: Task, inboxItemUid?: string) => void;
     openProjectModal: (project: Project | null, inboxItemUid?: string) => void;
     openNoteModal: (note: Note | null, inboxItemUid?: string) => void;
-    // The "Links" decision, offered when the item holds an address.
-    onSaveToLinks?: (inboxItemUid: string, draft: LinkDraft) => Promise<void>;
+    // An idea that is only an address becomes a task in one click.
+    onCaptureTask?: (
+        inboxItemUid: string,
+        draft: CaptureDraft
+    ) => Promise<void>;
+    // "Project…": the page goes to a project, offered when the item holds an
+    // address.
+    onAddToProject?: (inboxItemUid: string, draft: LinkDraft) => Promise<void>;
     projects: Project[];
     isNew?: boolean;
     onEditingChange?: (editing: boolean) => void;
@@ -61,7 +79,8 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
     openTaskModal,
     openProjectModal,
     openNoteModal,
-    onSaveToLinks,
+    onCaptureTask,
+    onAddToProject,
     projects,
     isNew = false,
     onEditingChange,
@@ -80,6 +99,10 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
     // Chosen in the panel, added to what the text says at the decision.
     const [pickedTags, setPickedTags] = useState<string[]>([]);
     const [pickedProject, setPickedProject] = useState('');
+    // The task name of an idea that is only an address, once the user types
+    // one; null keeps the name computed from the page.
+    const [typedName, setTypedName] = useState<string | null>(null);
+    const [places, setPlaces] = useState<AddressPlaces | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const composerRef = useRef<QuickCaptureInputHandle>(null);
 
@@ -119,8 +142,13 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
         if (!isEditing) return;
 
         const handleClickOutside = (event: MouseEvent) => {
+            // A menu of the panel (Project…) is drawn outside it.
+            const inMenu = (event.target as Element | null)?.closest?.(
+                '[role="menu"]'
+            );
             if (
                 containerRef.current &&
+                !inMenu &&
                 !containerRef.current.contains(event.target as Node)
             ) {
                 if (composerRef.current) {
@@ -288,6 +316,47 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
     const url = firstUrl(fullContent);
     const preview = useUrlPreview(url);
     const showText = !url || wordsAround(fullContent, url) !== '';
+    const onlyAddress = isOnlyAddress(fullContent);
+
+    // « Déjà dans … »: where the address already is, read when the panel opens.
+    useEffect(() => {
+        setPlaces(null);
+        setTypedName(null);
+        if (!isEditing || !url || !onlyAddress) return;
+        let cancelled = false;
+        lookupAddress(url)
+            .then((found) => {
+                if (!cancelled) setPlaces(found);
+            })
+            .catch(() => {});
+        return () => {
+            cancelled = true;
+        };
+    }, [isEditing, url, onlyAddress]);
+
+    const verb = (key: string, title: string) =>
+        t(key, VERB_FALLBACKS[key], { title });
+    const computedName = url
+        ? capturedTask(
+              {
+                  url,
+                  title: preview?.url === url ? preview.title : null,
+                  kind: preview?.url === url ? preview.kind : null,
+              },
+              verb
+          ).name
+        : '';
+    const captureName = typedName ?? computedName;
+    const placeCount =
+        (places?.tasks.length ?? 0) + (places?.projects.length ?? 0);
+    const firstPlace = places?.tasks[0]
+        ? { path: `/task/${places.tasks[0].uid}`, name: places.tasks[0].name }
+        : places?.projects[0]
+          ? {
+                path: `/project/${places.projects[0].uid}`,
+                name: places.projects[0].name,
+            }
+          : null;
 
     const extraLineCount =
         displayText.split('\n').filter((l) => l.trim().length > 0).length - 1;
@@ -573,8 +642,39 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
         openProjectModal(newProject, item.uid);
     };
 
-    const handleSaveToLinks = async (context?: InboxComposerFooterContext) => {
-        if (!onSaveToLinks || !item.uid) return;
+    // One click: the task is made with the name shown, the address in its
+    // note; the Focus project is not a reason to file it.
+    const handleCaptureTask = async (context?: InboxComposerFooterContext) => {
+        if (!onCaptureTask || !item.uid) return;
+        const payload = buildConversionPayload(
+            context?.text,
+            context?.hashtags,
+            context?.projectRefs,
+            context?.cleanedText
+        );
+        const address = firstUrl(payload.sourceText);
+        if (!address) return;
+        setLoading(true);
+        try {
+            await onCaptureTask(item.uid, {
+                url: address,
+                name: captureName.trim() || computedName,
+                note: address,
+                tags: payload.hashtagsList,
+                ...(payload.projectChosen && payload.projectUid
+                    ? { project_uid: payload.projectUid }
+                    : {}),
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleAddToProject = async (
+        projectUid: string,
+        context?: InboxComposerFooterContext
+    ) => {
+        if (!onAddToProject || !item.uid) return;
         const payload = buildConversionPayload(
             context?.text,
             context?.hashtags,
@@ -587,17 +687,11 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
         const words = wordsAround(payload.cleanedContent, address);
         setLoading(true);
         try {
-            await onSaveToLinks(item.uid, {
+            await onAddToProject(item.uid, {
                 url: address,
                 ...(title ? { title } : {}),
                 ...(words ? { note: words } : {}),
-                ...(payload.hashtagsList.length > 0
-                    ? { tags: payload.hashtagsList }
-                    : {}),
-                // The Focus project is not a reason to file a link.
-                ...(payload.projectChosen && payload.projectUid
-                    ? { project_uid: payload.projectUid }
-                    : {}),
+                project_uid: projectUid,
             });
         } finally {
             setLoading(false);
@@ -664,6 +758,8 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
 
     const renderComposerFooter = (context: InboxComposerFooterContext) => {
         const address = firstUrl(context.text);
+        // An idea that is only an address: the task is the first choice.
+        const capture = Boolean(onCaptureTask) && isOnlyAddress(context.text);
         return (
             <>
                 {address && (
@@ -677,6 +773,41 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                         }
                         image={preview?.url === address ? preview.image : null}
                         pending={preview?.url !== address}
+                    />
+                )}
+                {capture && firstPlace && (
+                    <p
+                        className="mt-2 flex items-center gap-2 text-[12px] text-amber-700 dark:text-amber-300"
+                        data-testid="inbox-already-in"
+                    >
+                        <span>
+                            {`${t('links.capture.alreadyIn', 'Already in « {{name}} »', { name: firstPlace.name })}${
+                                placeCount > 1
+                                    ? ` ${t('links.capture.more', '+{{count}}', { count: placeCount - 1 })}`
+                                    : ''
+                            }`}
+                        </span>
+                        <RouterLink
+                            to={firstPlace.path}
+                            className="font-medium underline"
+                        >
+                            {t('links.capture.open', 'Open')}
+                        </RouterLink>
+                    </p>
+                )}
+                {capture && (
+                    <input
+                        type="text"
+                        aria-label={t('links.capture.taskName', 'Task name')}
+                        value={captureName}
+                        onChange={(e) => setTypedName(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                e.preventDefault();
+                                void handleCaptureTask(context);
+                            }
+                        }}
+                        className="mt-3 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-[15px] text-gray-900 dark:border-gray-900 dark:bg-gray-900 dark:text-gray-100"
                     />
                 )}
                 {item.uid && item.attachments && (
@@ -722,23 +853,57 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                         <span className="mr-1 text-xs text-surface-on-variant">
                             {t('inbox.saveAs', 'Save as')}
                         </span>
-                        <button
-                            type="button"
-                            disabled={loading}
-                            onClick={() => void handleConvertToTask(context)}
-                            className="h-7 rounded-lg px-2.5 text-body-m font-medium text-surface-on ring-1 ring-inset ring-outline-variant transition-colors hover:bg-surface-high disabled:opacity-50"
-                        >
-                            {t('inbox.createTask', 'Task')}
-                        </button>
-                        {address && onSaveToLinks && (
+                        {capture ? (
                             <button
                                 type="button"
                                 disabled={loading}
-                                onClick={() => void handleSaveToLinks(context)}
+                                onClick={() => void handleCaptureTask(context)}
+                                className="h-7 rounded-lg bg-primary px-2.5 text-body-m font-medium text-primary-on transition-colors hover:bg-primary/90 disabled:opacity-50"
+                            >
+                                {firstPlace
+                                    ? t('links.capture.addAnyway', 'Add anyway')
+                                    : t('inbox.createTask', 'Task')}
+                            </button>
+                        ) : (
+                            <button
+                                type="button"
+                                disabled={loading}
+                                onClick={() =>
+                                    void handleConvertToTask(context)
+                                }
                                 className="h-7 rounded-lg px-2.5 text-body-m font-medium text-surface-on ring-1 ring-inset ring-outline-variant transition-colors hover:bg-surface-high disabled:opacity-50"
                             >
-                                {t('links.title', 'Links')}
+                                {t('inbox.createTask', 'Task')}
                             </button>
+                        )}
+                        {address && onAddToProject && projects.length > 0 && (
+                            <Menu
+                                align="start"
+                                entries={projects
+                                    .filter((project) => project.uid)
+                                    .map((project) => ({
+                                        key: project.uid as string,
+                                        label: project.name,
+                                        onSelect: () =>
+                                            void handleAddToProject(
+                                                project.uid as string,
+                                                context
+                                            ),
+                                    }))}
+                                trigger={(props) => (
+                                    <button
+                                        type="button"
+                                        {...props}
+                                        disabled={loading}
+                                        className="h-7 rounded-lg px-2.5 text-body-m font-medium text-surface-on ring-1 ring-inset ring-outline-variant transition-colors hover:bg-surface-high disabled:opacity-50"
+                                    >
+                                        {t(
+                                            'links.capture.toProject',
+                                            'Project…'
+                                        )}
+                                    </button>
+                                )}
+                            />
                         )}
                         <button
                             type="button"
@@ -756,6 +921,16 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                                 className="h-7 rounded-lg px-2.5 text-body-m font-medium text-surface-on ring-1 ring-inset ring-outline-variant transition-colors hover:bg-surface-high disabled:opacity-50"
                             >
                                 {t('inbox.createProject', 'Project')}
+                            </button>
+                        )}
+                        {capture && (
+                            <button
+                                type="button"
+                                disabled={loading}
+                                onClick={() => setIsEditing(false)}
+                                className="h-7 rounded-lg px-2.5 text-body-m font-medium text-surface-on ring-1 ring-inset ring-outline-variant transition-colors hover:bg-surface-high disabled:opacity-50"
+                            >
+                                {t('links.capture.keepInInbox', 'Inbox')}
                             </button>
                         )}
                     </div>

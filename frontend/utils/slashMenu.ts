@@ -266,18 +266,8 @@ const rootFor = (target: CaptureTarget, labels: SlashLabels): SlashItem[] => {
     const all: Array<
         [Exclude<SlashStage, 'root'>, string, string, CaptureTarget[]]
     > = [
-        [
-            'tag',
-            labels.tag,
-            '#tag',
-            ['inbox', 'task', 'note', 'project', 'link'],
-        ],
-        [
-            'project',
-            labels.project,
-            '+project',
-            ['inbox', 'task', 'note', 'link'],
-        ],
+        ['tag', labels.tag, '#tag', ['inbox', 'task', 'note', 'project']],
+        ['project', labels.project, '+project', ['inbox', 'task', 'note']],
         ['person', labels.person, '@name', ['inbox', 'task']],
         ['area', labels.area, '~area', ['inbox', 'task', 'project']],
         ['date', labels.date, 'tomorrow', ['inbox', 'task', 'project']],
@@ -339,8 +329,8 @@ export const slashItems = (
         case 'person':
             return valueItems('person', '@', ctx.people, query, labels, false);
         case 'area':
-            // Notes and links have no area, so a "~" there is just a character
-            return ctx.target === 'note' || ctx.target === 'link'
+            // Notes have no area, so a "~" there is just a character
+            return ctx.target === 'note'
                 ? []
                 : valueItems('area', '~', ctx.areas, query, labels, false);
         case 'priority':

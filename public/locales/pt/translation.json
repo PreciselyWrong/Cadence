@@ -555,7 +555,8 @@
     "overdueBy": "Atrasada há {{days}} d",
     "dueInDays": "Vence em {{days}} d",
     "startedSuccessfully": "Tarefa iniciada com sucesso!",
-    "deleteConfirmMessage": "Tem certeza de que deseja excluir “{{name}}”? Esta ação não pode ser desfeita."
+    "deleteConfirmMessage": "Tem certeza de que deseja excluir “{{name}}”? Esta ação não pode ser desfeita.",
+    "withLink": "Com um link"
   },
   "timeline": {
     "activityTimeline": "Linha do Tempo de Atividades",
@@ -2074,7 +2075,10 @@
     "inHours": "em {{count}} horas",
     "pastDue": "Atrasada",
     "editDetails": "Editar detalhes",
-    "noUpcomingOccurrences": "Nenhuma ocorrência futura."
+    "noUpcomingOccurrences": "Nenhuma ocorrência futura.",
+    "turnIntoProject": "Transformar em projeto",
+    "turnIntoProjectError": "Não foi possível transformar em projeto.",
+    "turnIntoProjectMessage": "Transformar « {{name}} » em projeto? As subtarefas viram tarefas do projeto, e os endereços da nota viram as páginas dele."
   },
   "projects": {
     "parentProject": "Projeto pai",
@@ -2207,6 +2211,11 @@
       "failedTitle": "Falha ao carregar os detalhes do projeto.",
       "failedHint": "Verifique sua conexão e recarregue a página.",
       "backToProjects": "Voltar aos projetos"
+    },
+    "dormant": {
+      "title": "Sem tocar há 30 dias ({{count}})",
+      "daysAgo": "há {{count}} dias",
+      "keep": "Manter"
     }
   },
   "projectItem": {
@@ -5785,7 +5794,24 @@
     "editTitle": "Editar o link",
     "deleteTitle": "Eliminar este link?",
     "deleteMessage": "Ele sai dos seus links para sempre. Para deixá-lo de lado, arquive-o em vez disso.",
-    "deleteError": "Não foi possível eliminar o link."
+    "deleteError": "Não foi possível eliminar o link.",
+    "taskVerb": {
+      "try": "Experimentar: {{title}}",
+      "read": "Ler: {{title}}",
+      "watch": "Assistir: {{title}}"
+    },
+    "capture": {
+      "taskName": "Nome da tarefa",
+      "alreadyIn": "Já está em « {{name}} »",
+      "more": "+{{count}}",
+      "open": "Abrir",
+      "addAnyway": "Adicionar mesmo assim",
+      "toProject": "Projeto…",
+      "keepInInbox": "Caixa de Entrada",
+      "taskAdded": "Tarefa adicionada",
+      "taskToSort": "Tarefa adicionada a « Tarefas a organizar »",
+      "addedToProject": "Adicionado ao projeto"
+    }
   },
   "dailyBrief": {
     "sectionName": {
@@ -6272,5 +6298,32 @@
   "mentions": {
     "loading": "Carregando pessoas…",
     "noMatch": "Nenhuma pessoa correspondente"
+  },
+  "projectPages": {
+    "heading": "Páginas",
+    "title": "Título",
+    "note": "Nota",
+    "dead": "Não encontrada",
+    "createTask": "Criar tarefa",
+    "remove": "Remover",
+    "actions": "Ações da página",
+    "removeError": "Não foi possível remover a página.",
+    "copied": "Páginas copiadas em Markdown",
+    "deadCount": "{{count}} páginas não encontradas",
+    "allAnswer": "Todas as páginas respondem",
+    "checkError": "Não foi possível verificar as páginas.",
+    "copyMarkdown": "Copiar as páginas em Markdown",
+    "check": "Verificar as páginas"
+  },
+  "bookmarksImport": {
+    "title": "Importar favoritos",
+    "hint": "Uma exportação do Firefox (Biblioteca › Importar e backup › Exportar). Uma pasta torna-se as páginas de um projeto.",
+    "file": "Arquivo de favoritos",
+    "empty": "Não há favoritos neste arquivo.",
+    "folder": "Pasta",
+    "project": "Projeto",
+    "newProject": "Novo projeto « {{name}} »",
+    "error": "A importação falhou. Tente novamente.",
+    "import": "Importar"
   }
 }

@@ -13,6 +13,10 @@ jest.mock('../../../utils/focus', () => ({
     focusScopeParams: () => undefined,
     useFocus: () => null,
 }));
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useNavigate: () => mockNavigate,
+}));
 jest.mock('../../../store/taskPanelStore', () => ({
     openTaskPanel: jest.fn(),
 }));
@@ -23,6 +27,7 @@ jest.mock('react-i18next', () => ({
 }));
 
 const mocked = searchUniversal as jest.Mock;
+const mockNavigate = jest.fn();
 
 const renderResults = (selectedFilters: string[] = []) =>
     render(
@@ -57,12 +62,14 @@ describe('universal search with links', () => {
                     uid: 'l7',
                     name: 'Impeccable',
                     title: 'Impeccable',
-                    url: 'https://github.com/pbakaus/impeccable',
+                    project_uid: 'p9',
+                    project_name: 'Design',
                     description: '',
                 },
             ],
         });
         jest.spyOn(window, 'open').mockImplementation(() => null);
+        mockNavigate.mockClear();
     });
 
     afterEach(() => jest.restoreAllMocks());
@@ -78,16 +85,13 @@ describe('universal search with links', () => {
         );
     });
 
-    it('opens a link result at its address', async () => {
+    it('opens a link result in the project holding its page', async () => {
         renderResults(['Link']);
         fireEvent.click(await screen.findByText('Impeccable'));
 
         await waitFor(() =>
-            expect(window.open).toHaveBeenCalledWith(
-                'https://github.com/pbakaus/impeccable',
-                '_blank',
-                'noopener'
-            )
+            expect(mockNavigate).toHaveBeenCalledWith('/project/p9')
         );
+        expect(window.open).not.toHaveBeenCalled();
     });
 });

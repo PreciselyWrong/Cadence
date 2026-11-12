@@ -115,6 +115,22 @@ class ShareCaptureTest {
     }
 
     @Test
+    fun `a shared repository address becomes a task named Essayer that waits for Quand`() {
+        val controller = Robolectric.buildActivity(TaskQuickAddActivity::class.java, share("https://github.com/acme/rocket")).create().start().resume()
+        val session = controller.get().share
+
+        assertTrue(session.settle(ShareAction.TASK, pageTitle = null))
+        controller.pause().stop()
+
+        awaitUntil { ShadowToast.getTextOfLatestToast() != null }
+        val task = runBlocking { database.taskDao().get(ops().single().uid) }!!
+        assertEquals("Essayer : acme/rocket", task.name)
+        assertTrue(task.needsWhen)
+        assertEquals(listOf("task"), ops().map { it.entity })
+        assertEquals(emptyList<String>(), networkCalls.toList())
+    }
+
+    @Test
     fun `a decision is written once, leaving afterwards adds nothing to the inbox`() {
         val controller = Robolectric.buildActivity(TaskQuickAddActivity::class.java, share("https://github.com/a/b pour les logs")).create().start().resume()
         val session = controller.get().share
@@ -125,7 +141,7 @@ class ShareCaptureTest {
         awaitUntil { ShadowToast.getTextOfLatestToast() != null }
         assertTrue(inbox().isEmpty())
         val task = runBlocking { database.taskDao().get(ops().single().uid) }!!
-        assertEquals("a/b", task.name)
+        assertEquals("Essayer : a/b", task.name)
         assertEquals("https://github.com/a/b\n\npour les logs", task.note)
         assertEquals(listOf("task"), ops().map { it.entity })
         assertEquals("Tâche créée", ShadowToast.getTextOfLatestToast())
@@ -133,17 +149,17 @@ class ShareCaptureTest {
     }
 
     @Test
-    fun `Liens queues one deferred POST and writes no row`() = runBlocking {
+    fun `Projet writes the page into its project, offline, with no deferred call`() = runBlocking {
         val repository = TasksGraph.repository(context)
-        val write = ShareCapture.plan(ShareAction.LINK, "https://a.io/x", "A", listOf("t1"), listOf("dev"), "p1")
+        val write = ShareCapture.plan(ShareAction.LINK, "https://a.io/x", "A", listOf("t1"), "p1", ShareCapture.verbs(context))
 
-        ShareCapture.write(repository, write, "Ajouter aux liens")
+        ShareCapture.write(repository, write)
 
-        val call = database.deferredCallDao().all().single()
-        assertEquals("POST" to "/api/v1/links", call.method to call.path)
-        assertTrue(call.bodyJson!!.contains("\"tags\":[\"dev\"]"))
-        assertTrue(call.bodyJson!!.contains("\"project_uid\":\"p1\""))
-        assertTrue(ops().isEmpty())
+        val page = database.linkDao().inProject("p1").single()
+        assertEquals("https://a.io/x", page.url)
+        assertEquals("A", page.title)
+        assertEquals(listOf("link"), ops().map { it.entity })
+        assertTrue(database.deferredCallDao().all().isEmpty())
         assertTrue(inbox().isEmpty())
         assertEquals(emptyList<String>(), networkCalls.toList())
     }
@@ -152,7 +168,7 @@ class ShareCaptureTest {
     fun `Tâche keeps the chosen tags and project`() = runBlocking {
         val repository = TasksGraph.repository(context)
 
-        ShareCapture.write(repository, ShareCapture.plan(ShareAction.TASK, "Acheter du pain", null, listOf("t1"), listOf("dev"), "p1"), "")
+        ShareCapture.write(repository, ShareCapture.plan(ShareAction.TASK, "Acheter du pain", null, listOf("t1"), "p1", ShareCapture.verbs(context)))
 
         val task = database.taskDao().get(ops().single().uid)!!
         assertEquals("Acheter du pain", task.name)

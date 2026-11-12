@@ -4,7 +4,6 @@
 // a known uid or tag, for a field still empty, above its threshold; between
 // the ask threshold and the write threshold it becomes a question for the
 // user; anything else is dropped. A null answer is normal and means nothing.
-const { cleanSummary } = require('./summary');
 
 const NAME_MIN = 2;
 const PROJECT_NAME_MAX = 100;
@@ -159,10 +158,6 @@ function decide(raw, entry, index, settings) {
     const newTag = slots.tags ? decideTags(raw, index, t, settings, out) : null;
     if (slots.duration) decideDuration(raw, t, out);
     if (slots.priority) decidePriority(raw, t, out);
-    if (slots.summary) {
-        const summary = cleanSummary(raw.summary, settings.summary_max_chars);
-        if (summary) out.apply.summary = summary;
-    }
 
     const asking = Boolean(out.ask.project || out.ask.tags || out.ask.priority);
     if (asking && newTag) {

@@ -554,7 +554,8 @@
     "overdueBy": "已逾期 {{days}} 天",
     "dueInDays": "{{days}} 天后到期",
     "startedSuccessfully": "任务已成功开始！",
-    "deleteConfirmMessage": "确定要删除\"{{name}}\"吗？此操作无法撤销。"
+    "deleteConfirmMessage": "确定要删除\"{{name}}\"吗？此操作无法撤销。",
+    "withLink": "带链接"
   },
   "timeline": {
     "activityTimeline": "活动时间线",
@@ -2072,7 +2073,10 @@
     "inHours": "{{count}} 小时后",
     "pastDue": "已过期",
     "editDetails": "编辑详情",
-    "noUpcomingOccurrences": "没有即将到来的重复实例。"
+    "noUpcomingOccurrences": "没有即将到来的重复实例。",
+    "turnIntoProject": "转为项目",
+    "turnIntoProjectError": "无法转为项目。",
+    "turnIntoProjectMessage": "将「{{name}}」转为项目？其子任务将成为项目的任务，其备注中的地址将成为项目的页面。"
   },
   "projects": {
     "parentProject": "父项目",
@@ -2204,6 +2208,11 @@
       "failedTitle": "无法加载项目详情。",
       "failedHint": "请检查网络连接并重新加载页面。",
       "backToProjects": "返回项目"
+    },
+    "dormant": {
+      "title": "30 天未处理（{{count}}）",
+      "daysAgo": "{{count}} 天前",
+      "keep": "保留"
     }
   },
   "projectItem": {
@@ -5772,7 +5781,24 @@
     "editTitle": "编辑链接",
     "deleteTitle": "删除此链接?",
     "deleteMessage": "它将从你的链接中永久移除。若只想暂时搁置，请改为归档。",
-    "deleteError": "无法删除链接。"
+    "deleteError": "无法删除链接。",
+    "taskVerb": {
+      "try": "尝试：{{title}}",
+      "read": "阅读：{{title}}",
+      "watch": "观看：{{title}}"
+    },
+    "capture": {
+      "taskName": "任务名称",
+      "alreadyIn": "已在「{{name}}」中",
+      "more": "+{{count}}",
+      "open": "打开",
+      "addAnyway": "仍然添加",
+      "toProject": "项目…",
+      "keepInInbox": "收件箱",
+      "taskAdded": "已添加任务",
+      "taskToSort": "已添加到「待整理的任务」",
+      "addedToProject": "已添加到项目"
+    }
   },
   "dailyBrief": {
     "sectionName": {
@@ -6255,5 +6281,32 @@
   "mentions": {
     "loading": "正在加载联系人…",
     "noMatch": "没有匹配的联系人"
+  },
+  "projectPages": {
+    "heading": "页面",
+    "title": "标题",
+    "note": "备注",
+    "dead": "未找到",
+    "createTask": "创建任务",
+    "remove": "移除",
+    "actions": "页面操作",
+    "removeError": "无法移除页面。",
+    "copied": "已将页面复制为 Markdown",
+    "deadCount": "{{count}} 个页面未找到",
+    "allAnswer": "所有页面均可访问",
+    "checkError": "无法检查页面。",
+    "copyMarkdown": "将页面复制为 Markdown",
+    "check": "检查页面"
+  },
+  "bookmarksImport": {
+    "title": "导入书签",
+    "hint": "Firefox 导出的文件（资料库 › 导入和备份 › 导出）。一个文件夹会变成一个项目的页面。",
+    "file": "书签文件",
+    "empty": "此文件中没有书签。",
+    "folder": "文件夹",
+    "project": "项目",
+    "newProject": "新项目「{{name}}」",
+    "error": "导入失败，请重试。",
+    "import": "导入"
   }
 }

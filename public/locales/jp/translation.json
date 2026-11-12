@@ -554,7 +554,8 @@
     "overdueBy": "{{days}}日超過",
     "dueInDays": "あと{{days}}日で期限",
     "startedSuccessfully": "タスクを開始しました！",
-    "deleteConfirmMessage": "「{{name}}」を削除してもよろしいですか？この操作は取り消せません。"
+    "deleteConfirmMessage": "「{{name}}」を削除してもよろしいですか？この操作は取り消せません。",
+    "withLink": "リンクあり"
   },
   "timeline": {
     "activityTimeline": "アクティビティタイムライン",
@@ -1779,6 +1780,11 @@
       "failedTitle": "プロジェクトの詳細を読み込めませんでした。",
       "failedHint": "接続を確認して、ページを再読み込みしてください。",
       "backToProjects": "プロジェクトに戻る"
+    },
+    "dormant": {
+      "title": "30日間触れていません（{{count}} 件）",
+      "daysAgo": "{{count}} 日前",
+      "keep": "残す"
     }
   },
   "projectItem": {
@@ -2411,7 +2417,10 @@
     "inHours": "{{count}} 時間後",
     "pastDue": "期限切れ",
     "editDetails": "詳細を編集",
-    "noUpcomingOccurrences": "今後の予定はありません。"
+    "noUpcomingOccurrences": "今後の予定はありません。",
+    "turnIntoProject": "プロジェクトに変換",
+    "turnIntoProjectError": "プロジェクトに変換できませんでした。",
+    "turnIntoProjectMessage": "「{{name}}」をプロジェクトに変換しますか？ サブタスクはプロジェクトのタスクになり、そのメモのアドレスはプロジェクトのページになります。"
   },
   "calendar": {
     "feed": {
@@ -5772,7 +5781,24 @@
     "editTitle": "リンクを編集",
     "deleteTitle": "このリンクを削除しますか?",
     "deleteMessage": "リンクから完全に削除されます。脇に置いておくだけなら、代わりにアーカイブしてください。",
-    "deleteError": "リンクを削除できませんでした。"
+    "deleteError": "リンクを削除できませんでした。",
+    "taskVerb": {
+      "try": "試す: {{title}}",
+      "read": "読む: {{title}}",
+      "watch": "見る: {{title}}"
+    },
+    "capture": {
+      "taskName": "タスク名",
+      "alreadyIn": "「{{name}}」にすでにあります",
+      "more": "+{{count}}",
+      "open": "開く",
+      "addAnyway": "それでも追加",
+      "toProject": "プロジェクト…",
+      "keepInInbox": "受信箱",
+      "taskAdded": "タスクを追加しました",
+      "taskToSort": "「整理するタスク」にタスクを追加しました",
+      "addedToProject": "プロジェクトに追加しました"
+    }
   },
   "dailyBrief": {
     "sectionName": {
@@ -6255,5 +6281,32 @@
   "mentions": {
     "loading": "人を読み込み中…",
     "noMatch": "一致する人はいません"
+  },
+  "projectPages": {
+    "heading": "ページ",
+    "title": "タイトル",
+    "note": "メモ",
+    "dead": "見つかりません",
+    "createTask": "タスクを作成",
+    "remove": "削除",
+    "actions": "ページの操作",
+    "removeError": "ページを削除できませんでした。",
+    "copied": "ページをMarkdownとしてコピーしました",
+    "deadCount": "見つからないページ: {{count}} 件",
+    "allAnswer": "すべてのページが応答します",
+    "checkError": "ページを確認できませんでした。",
+    "copyMarkdown": "ページをMarkdownとしてコピー",
+    "check": "ページを確認"
+  },
+  "bookmarksImport": {
+    "title": "ブックマークをインポート",
+    "hint": "Firefox からのエクスポート（ライブラリ › インポートとバックアップ › エクスポート）。1 つのフォルダがプロジェクトのページになります。",
+    "file": "ブックマークファイル",
+    "empty": "このファイルにブックマークはありません。",
+    "folder": "フォルダ",
+    "project": "プロジェクト",
+    "newProject": "新しいプロジェクト「{{name}}」",
+    "error": "インポートに失敗しました。もう一度お試しください。",
+    "import": "インポート"
   }
 }

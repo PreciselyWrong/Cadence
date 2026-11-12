@@ -559,7 +559,8 @@
     "overdueBy": "Întârziat cu {{days}} z",
     "dueInDays": "Scadent în {{days}} z",
     "startedSuccessfully": "Sarcina a fost pornită cu succes!",
-    "deleteConfirmMessage": "Sigur vrei să ștergi „{{name}}”? Acțiunea nu poate fi anulată."
+    "deleteConfirmMessage": "Sigur vrei să ștergi „{{name}}”? Acțiunea nu poate fi anulată.",
+    "withLink": "Cu un link"
   },
   "timeline": {
     "activityTimeline": "Cronologia activităților",
@@ -2080,7 +2081,10 @@
     "inHours": "în {{count}} ore",
     "pastDue": "Restante",
     "editDetails": "Editează detaliile",
-    "noUpcomingOccurrences": "Nicio apariție viitoare."
+    "noUpcomingOccurrences": "Nicio apariție viitoare.",
+    "turnIntoProject": "Transformă în proiect",
+    "turnIntoProjectError": "Nu a putut fi transformat în proiect.",
+    "turnIntoProjectMessage": "Transformi „{{name}}” în proiect? Subsarcinile devin sarcinile proiectului, iar adresele din nota sa devin paginile proiectului."
   },
   "projects": {
     "parentProject": "Proiect părinte",
@@ -2213,6 +2217,11 @@
       "failedTitle": "Nu s-au putut încărca detaliile proiectului.",
       "failedHint": "Verifică-ți conexiunea și reîncarcă pagina.",
       "backToProjects": "Înapoi la proiecte"
+    },
+    "dormant": {
+      "title": "Neatins de 30 de zile ({{count}})",
+      "daysAgo": "acum {{count}} zile",
+      "keep": "Păstrează"
     }
   },
   "projectItem": {
@@ -5794,7 +5803,24 @@
     "editTitle": "Editează linkul",
     "deleteTitle": "Ștergi acest link?",
     "deleteMessage": "Iese definitiv din linkurile tale. Ca să-l pui deoparte, arhivează-l în schimb.",
-    "deleteError": "Linkul nu a putut fi șters."
+    "deleteError": "Linkul nu a putut fi șters.",
+    "taskVerb": {
+      "try": "Încearcă: {{title}}",
+      "read": "Citește: {{title}}",
+      "watch": "Urmărește: {{title}}"
+    },
+    "capture": {
+      "taskName": "Numele sarcinii",
+      "alreadyIn": "Există deja în « {{name}} »",
+      "more": "+{{count}}",
+      "open": "Deschide",
+      "addAnyway": "Adaugă oricum",
+      "toProject": "Proiect…",
+      "keepInInbox": "Căsuța de primire",
+      "taskAdded": "Sarcină adăugată",
+      "taskToSort": "Sarcină adăugată la « Sarcini de sortat »",
+      "addedToProject": "Adăugat la proiect"
+    }
   },
   "dailyBrief": {
     "sectionName": {
@@ -6281,5 +6307,32 @@
   "mentions": {
     "loading": "Se încarcă persoanele…",
     "noMatch": "Nicio persoană potrivită"
+  },
+  "projectPages": {
+    "heading": "Pagini",
+    "title": "Titlu",
+    "note": "Notă",
+    "dead": "Nu a fost găsită",
+    "createTask": "Creează o sarcină",
+    "remove": "Elimină",
+    "actions": "Acțiuni pentru pagină",
+    "removeError": "Pagina nu a putut fi eliminată.",
+    "copied": "Paginile au fost copiate ca Markdown",
+    "deadCount": "{{count}} pagini nu au fost găsite",
+    "allAnswer": "Toate paginile răspund",
+    "checkError": "Paginile nu au putut fi verificate.",
+    "copyMarkdown": "Copiază paginile ca Markdown",
+    "check": "Verifică paginile"
+  },
+  "bookmarksImport": {
+    "title": "Importă marcajele",
+    "hint": "Un export din Firefox (Library › Import and Backup › Export). Un dosar devine paginile unui proiect.",
+    "file": "Fișier de marcaje",
+    "empty": "Niciun marcaj în acest fișier.",
+    "folder": "Dosar",
+    "project": "Proiect",
+    "newProject": "Proiect nou « {{name}} »",
+    "error": "Importul a eșuat. Încearcă din nou.",
+    "import": "Importă"
   }
 }

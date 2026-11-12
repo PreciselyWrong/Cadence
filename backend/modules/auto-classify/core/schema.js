@@ -59,7 +59,6 @@ function buildSchema(catalog, itemUids) {
             value: { type: 'integer', enum: [0, 1, 2] },
             confidence,
         }),
-        summary: nullable({ type: 'string' }),
     });
     return object({ items: { type: 'array', items: item } });
 }

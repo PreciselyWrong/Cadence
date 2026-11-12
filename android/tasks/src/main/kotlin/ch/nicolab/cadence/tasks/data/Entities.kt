@@ -119,7 +119,10 @@ data class NoteEntity(
     @ColumnInfo(defaultValue = "0") val pinned: Boolean = false,
 )
 
-/** Aperçu d'un lien (titre, image) rapporté par le serveur, gardé pour fonctionner hors ligne. */
+/**
+ * Aperçu d'un lien (titre, image, nom du site, genre) rapporté par le serveur, gardé pour fonctionner hors ligne.
+ * Les champs GitHub ne sont remplis que pour un dépôt ; `githubLastCommit` est une date ISO.
+ */
 @Entity(tableName = "link_previews")
 data class LinkPreviewEntity(
     @PrimaryKey val url: String,
@@ -128,11 +131,16 @@ data class LinkPreviewEntity(
     val imageUrl: String?,
     val fetchedAtMs: Long,
     val failed: Boolean,
+    val siteName: String?,
+    val kind: String?,
+    val githubStars: Int?,
+    val githubLanguage: String?,
+    val githubLastCommit: String?,
 )
 
 /**
- * Lien trouvé par le serveur dans une idée, une tâche ou une note (entité `link`). Métadonnées en lecture
- * seule ; la note et le statut s'écrivent ici et partent par la file d'envoi.
+ * Page d'un projet (entité `link`). Métadonnées en lecture seule ; le titre et la note s'écrivent ici et partent
+ * par la file d'envoi.
  */
 @Entity(tableName = "links")
 data class LinkEntity(
@@ -148,14 +156,8 @@ data class LinkEntity(
     val githubLastCommitRaw: String?,
     val readmeExcerpt: String?,
     val note: String?,
-    val status: String?,
-    val tagUidsJson: String,
-    val sourceType: String?,
-    val sourceUid: String?,
     val fetchStatus: String?,
     val createdAtRaw: String?,
-    /** Jour de revue d'un lien mis de côté (YYYY-MM-DD), écrit par le serveur ou le téléphone. */
-    val reviewAtRaw: String? = null,
     val projectUid: String? = null,
 )
 

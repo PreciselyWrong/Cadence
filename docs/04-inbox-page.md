@@ -42,7 +42,7 @@ The **Inbox** is Cadence's quick capture system - a temporary holding area where
 
 One box is used everywhere you add something. It is the input at the top of the Inbox page, a popover under the blue **Add** button in the navbar (wide screens), and a sheet opened by the round **Add** button at the bottom of the screen (phones and tablets, hidden on the Inbox page and while editing a task or note). `Alt+Shift+T` and the sidebar's New > Task open it on **Task**. Every other entry point opens it on **Inbox**.
 
-**Add to.** A row of choices next to the Add button decides what the text becomes: Inbox, Task, Note or Project (Inbox, Task, Links or Note for a link alone, below). Nothing is guessed. The selected choice is what gets created, and the box always starts on Inbox when it opens.
+**Add to.** A row of choices next to the Add button decides what the text becomes: Inbox, Task, Note or Project (Inbox, Task or Note for a link alone, below). Nothing is guessed. The selected choice is what gets created, and the box always starts on Inbox when it opens.
 
 | Add to | First line | Other lines | Also read from the first line |
 |--------|-----------|-------------|-------------------------------|
@@ -51,7 +51,7 @@ One box is used everywhere you add something. It is the input at the top of the 
 | Note | title | body | `#tags`, `+Project` (a note has no due date, so date words stay in the title) |
 | Project | name | description | due date, `#tags`, `~Area` |
 
-**A link alone.** When the text is only an address (with at most `#tags`, a `+Project` or an `~Area`, which a link does not keep, on one line, without files), the box is the same quick sheet as the Android share sheet: the page preview under the text, tags and project as usual, and **Add to** offers **Inbox · Task · Links · Note** (no Project for an address). Inbox stays the default, so Enter keeps the idea in the Inbox to sort later. **Task** names the task after the page title (read from the preview, or for 3 seconds at most), else the site, and puts the address in its note. **Links** keeps the page in the library at once (`POST /api/links` with the title, tags and project, no inbox item), « Saved "title" to Links. » with Undo, which deletes the link. As soon as words are written with the address the choices go back to the four usual ones, and a Links choice falls back to Inbox. Logic: `linkOnlyAddress` in `frontend/utils/linkTriage.ts`.
+**A link alone.** When the text is only an address (with at most `#tags`, a `+Project` or an `~Area`, which a link does not keep, on one line, without files), the box is the same quick sheet as the Android share sheet: the page preview under the text, tags and project as usual, and **Add to** offers **Inbox · Task · Note** (no Project for an address). Inbox stays the default, so Enter keeps the idea in the Inbox to sort later. **Task** names the task by the kind of page (« Essayer / Lire / Regarder : titre », [Links](37-links.md)) from the page title (read from the preview, or for 3 seconds at most), puts the address in its note and, without a project, leaves it waiting for « Quand ? ». As soon as words are written with the address the choices go back to the four usual ones. Logic: `linkOnlyAddress` in `frontend/utils/linkTriage.ts`, `capturedTask` in `frontend/utils/linkTaskName.ts`.
 
 Dates, `@person` and `~area` are read from the first line only, so a date mentioned further down a long note never becomes its due date. `#tags` are read anywhere in the text. An unknown `#tag`, `+Project` or `~Area` is created when you add.
 
@@ -93,7 +93,7 @@ Located at the top of the Inbox page:
 
 Share a link or selected text from another app (Android, or desktop Chrome/Edge) and pick Cadence:
 - The app opens on `/inbox` with the shared title, text and URL prefilled in Quick Capture
-- Nothing is saved yet — edit it, then press Enter (Inbox) or pick another choice; a shared link alone gets Inbox / Task / Links / Note (see **A link alone**)
+- Nothing is saved yet — edit it, then press Enter (Inbox) or pick another choice; a shared link alone gets Inbox / Task / Note (see **A link alone**)
 - Smart parsing, URL preview and suggestions behave exactly as if you had typed it
 - If your session expired, you land on login first and the shared content is restored afterwards
 
@@ -417,7 +417,7 @@ Each inbox item can be converted to three types:
 
 **Idea that holds a link:**
 - An idea is never turned into a link on its own: an item that is only an address (or holds one) stays `added` until the user decides, the same as any other idea
-- Decision **Links**: the link is saved first (`POST /api/links` with `source_type: inbox_item` and the item's `uid`), then `PATCH /api/inbox/:uid/process` with `{ link_uid }` marks the item `processed`; the link stays in the library ([Links](37-links.md))
+- Decision **Project…** (an idea holding an address): the page is added to the chosen project (`POST /api/links` with `project_uid`), then `PATCH /api/inbox/:uid/process` with `{ link_uid }` marks the item `processed` ([Links](37-links.md))
 - Decision **Task**: `PATCH /api/inbox/:uid/process` with `{ task_uid }`, as for any idea; the task is named after the page and keeps the address in its note. Under its description the address shows « In links · site » once it is in the library, else « Add to links · site »
 - MCP: `create_link` with `source_type: inbox_item` and the idea's uid, then `process_inbox_item` with `link_uid`
 

@@ -19,7 +19,7 @@ import TaskAttachmentsCard from './TaskDetails/TaskAttachmentsCard';
 import TaskComments from './TaskComments';
 import TaskContexts from './TaskContexts';
 import Backlinks from '../Shared/Backlinks';
-import AddToLinks from '../Links/AddToLinks';
+import LinkPreviews from '../Links/LinkPreviews';
 import TaskChipRow from './TaskChipRow';
 import { SaveState } from './useTaskAutosave';
 import { TaskEditor } from './useTaskEditor';
@@ -321,13 +321,7 @@ export const TaskEditorBody: React.FC<TaskEditorBodyProps> = ({
                 )}
             </div>
 
-            {task.uid && (
-                <AddToLinks
-                    sourceType="task"
-                    sourceUid={task.uid}
-                    texts={[task.name, note]}
-                />
-            )}
+            <LinkPreviews texts={[note]} className="px-1" />
 
             {task.uid && (
                 <>

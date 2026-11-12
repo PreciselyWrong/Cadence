@@ -42,7 +42,6 @@ import ch.nicolab.cadence.designsystem.components.ScreenHeader
 import ch.nicolab.cadence.designsystem.components.navigationClearance
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.tasks.R
-import ch.nicolab.cadence.tasks.model.LinkSourceKind
 import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.PinnedShortcut
 import ch.nicolab.cadence.tasks.model.PinnedShortcuts
@@ -90,7 +89,6 @@ fun TasksScreen(
     var selectedTaskUid by rememberSaveable { mutableStateOf(openTaskUid) }
     var quickAddOpen by rememberSaveable { mutableStateOf(false) }
     var switcherOpen by rememberSaveable { mutableStateOf(false) }
-    var linksOpen by rememberSaveable { mutableStateOf(false) }
     var selectedNoteUid by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedNoteIsNew by rememberSaveable { mutableStateOf(false) }
     val notes by viewModel.notes.collectAsStateWithLifecycle()
@@ -102,6 +100,7 @@ fun TasksScreen(
     val projects by viewModel.projects.collectAsStateWithLifecycle()
     val areas by viewModel.areas.collectAsStateWithLifecycle()
     val areaFilter by viewModel.areaFilter.collectAsStateWithLifecycle()
+    val withLink by viewModel.withLink.collectAsStateWithLifecycle()
 
     LaunchedEffect(openTaskUid) {
         if (openTaskUid != null) {
@@ -277,35 +276,18 @@ fun TasksScreen(
         }
     }
 
-    if (linksOpen) {
-        LinksScreen(
-            tasks = viewModel,
-            onBack = { linksOpen = false },
-            onOpenSource = { source ->
-                linksOpen = false
-                when (source.kind) {
-                    LinkSourceKind.TASK -> selectedTaskUid = source.uid
-                    LinkSourceKind.NOTE -> selectedNoteUid = source.uid
-                    LinkSourceKind.INBOX_ITEM -> Unit
-                }
-            },
-        )
-    }
     if (switcherOpen) {
         ListSwitcherSheet(
             onOpenMyDay = {
                 switcherOpen = false
                 onOpenBrief()
             },
-            onOpenLinks = {
-                switcherOpen = false
-                linksOpen = true
-            },
             current = tab,
             todayCount = overdueCount + todayState.today.size + eventCount,
             pinned = remember(projects, notes) { PinnedShortcuts.of(projects, notes) },
             areas = areas,
             areaFilter = areaFilter,
+            withLink = withLink,
             onSelectTab = {
                 tab = it
                 openTagUid = null
@@ -332,6 +314,7 @@ fun TasksScreen(
                 }
             },
             onSelectArea = viewModel::selectArea,
+            onSelectWithLink = viewModel::setWithLink,
             onOpenSettings = {
                 switcherOpen = false
                 onOpenSettings()

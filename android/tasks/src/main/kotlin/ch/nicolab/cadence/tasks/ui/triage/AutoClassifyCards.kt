@@ -34,7 +34,6 @@ import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.autoclassify.AutoClassifyChoices
 import ch.nicolab.cadence.tasks.autoclassify.ClassifyAnswer
 import ch.nicolab.cadence.tasks.autoclassify.ClassifyCard
-import ch.nicolab.cadence.tasks.autoclassify.DuplicateCard
 import ch.nicolab.cadence.tasks.autoclassify.ProjectAnswer
 import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.ui.ProjectSheet
@@ -157,49 +156,6 @@ internal fun ClassifyCardView(
             onDismiss = { pickingProject = false },
         )
     }
-}
-
-/** Carte de doublon : les deux liens côte à côte, puis les quatre réponses du serveur. */
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-internal fun DuplicateCardView(
-    card: DuplicateCard,
-    onAnswer: (JsonElement) -> Unit,
-    onSkip: () -> Unit,
-) {
-    Panel(modifier = Modifier.fillMaxWidth()) {
-        Column(verticalArrangement = Arrangement.spacedBy(Space.xs)) {
-            Text(stringResource(R.string.auto_classify_duplicate_title), style = MaterialTheme.typography.labelMedium, color = cadence.onSurfaceVariant)
-            Text(card.title.ifBlank { card.url }, style = MaterialTheme.typography.titleMedium, color = cadence.onSurface)
-            Text(stringResource(reasonLabel(card.reason)), style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)
-            Text(
-                stringResource(R.string.auto_classify_new_link) + " · " + card.url,
-                style = MaterialTheme.typography.bodySmall,
-                color = cadence.onSurface,
-            )
-            Text(
-                stringResource(R.string.auto_classify_original_link) + " · " + card.original.title.ifBlank { card.original.url },
-                style = MaterialTheme.typography.bodySmall,
-                color = cadence.onSurface,
-            )
-            Text(card.original.url, style = MaterialTheme.typography.bodySmall, color = cadence.onSurfaceVariant)
-        }
-    }
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-        SecondaryAction(stringResource(R.string.auto_classify_dup_drop)) { onAnswer(AutoClassifyChoices.duplicate("drop_new")) }
-        SecondaryAction(stringResource(R.string.auto_classify_dup_merge)) { onAnswer(AutoClassifyChoices.duplicate("merge")) }
-        SecondaryAction(stringResource(R.string.auto_classify_dup_keep_new)) { onAnswer(AutoClassifyChoices.duplicate("keep_new")) }
-        SecondaryAction(stringResource(R.string.auto_classify_dup_keep_both)) { onAnswer(AutoClassifyChoices.duplicate("keep_both")) }
-        TertiaryAction(stringResource(R.string.triage_skip), onClick = onSkip)
-    }
-}
-
-private fun reasonLabel(reason: String): Int = when (reason) {
-    "address" -> R.string.auto_classify_reason_address
-    "repository" -> R.string.auto_classify_reason_repository
-    "video" -> R.string.auto_classify_reason_video
-    "title" -> R.string.auto_classify_reason_title
-    else -> R.string.auto_classify_reason_other
 }
 
 @Composable

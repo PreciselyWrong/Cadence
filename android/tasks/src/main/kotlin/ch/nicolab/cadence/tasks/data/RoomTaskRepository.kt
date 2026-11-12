@@ -4,6 +4,9 @@ import android.content.Context
 import androidx.room.withTransaction
 import ch.nicolab.cadence.tasks.ServerConnection
 import ch.nicolab.cadence.tasks.TaskRepository
+import ch.nicolab.cadence.tasks.links.LinkExtractor
+import ch.nicolab.cadence.tasks.links.addressKey
+import ch.nicolab.cadence.tasks.model.AddressPlaces
 import ch.nicolab.cadence.tasks.model.AreaItem
 import ch.nicolab.cadence.tasks.model.Delivery
 import ch.nicolab.cadence.tasks.model.RefusedItem
@@ -16,11 +19,10 @@ import ch.nicolab.cadence.tasks.model.GoalItem
 import ch.nicolab.cadence.tasks.model.GoalStatus
 import ch.nicolab.cadence.tasks.model.IconIds
 import ch.nicolab.cadence.tasks.model.InboxEntry
-import ch.nicolab.cadence.tasks.model.LinkDraft
 import ch.nicolab.cadence.tasks.model.LinkItem
-import ch.nicolab.cadence.tasks.model.LinkStatus
 import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.OccurrenceFields
+import ch.nicolab.cadence.tasks.model.PlaceRef
 import ch.nicolab.cadence.tasks.model.NoteItem
 import ch.nicolab.cadence.tasks.model.ProjectHierarchy
 import ch.nicolab.cadence.tasks.model.ProjectItem
@@ -39,6 +41,8 @@ import ch.nicolab.cadence.tasks.model.TaskStatus
 import ch.nicolab.cadence.tasks.sync.AuthError
 import ch.nicolab.cadence.tasks.sync.HttpError
 import ch.nicolab.cadence.tasks.sync.Hlc
+import ch.nicolab.cadence.tasks.project.pendingConversionUids
+import ch.nicolab.cadence.tasks.project.projectConversionCall
 import ch.nicolab.cadence.tasks.sync.DeferredCall
 import ch.nicolab.cadence.tasks.sync.NetworkMonitor
 import ch.nicolab.cadence.tasks.sync.describeFailure
@@ -95,14 +99,18 @@ internal class RoomTaskRepository(
     private val noteDao = database.noteDao()
     private val outbox = database.outboxDao()
 
+    /** Tâches dont la conversion en projet attend l'envoi : elles disparaissent des listes tout de suite. */
+    private fun conversionPending(): Flow<Set<String>> =
+        database.deferredCallDao().observeConversionKeys().map(::pendingConversionUids)
+
     override fun observeTasks(): Flow<List<TaskItem>> =
-        combine(taskDao.observeTopLevel(), accountZone(), deviceZone) { rows, account, device ->
-            rows.map { it.toItem(account, device) }
+        combine(taskDao.observeTopLevel(), accountZone(), deviceZone, conversionPending()) { rows, account, device, pending ->
+            rows.filter { it.task.uid !in pending }.map { it.toItem(account, device) }
         }
 
     override fun observeAllTasks(): Flow<List<TaskItem>> =
-        combine(taskDao.observeEvery(), accountZone(), deviceZone) { rows, account, device ->
-            rows.map { it.toItem(account, device) }
+        combine(taskDao.observeEvery(), accountZone(), deviceZone, conversionPending()) { rows, account, device, pending ->
+            rows.filter { it.task.uid !in pending }.map { it.toItem(account, device) }
         }
 
     override fun observeTask(uid: String): Flow<TaskItem?> =
@@ -196,85 +204,64 @@ internal class RoomTaskRepository(
         writeLink(uid, "note" to jsonString(value)) { it.copy(note = value) }
     }
 
-    override suspend fun setLinkStatus(uid: String, status: LinkStatus) {
-        writeLink(uid, "status" to JsonPrimitive(status.wire)) { it.copy(status = status.wire) }
-    }
-
-    override suspend fun setLinkReviewDate(uid: String, date: java.time.LocalDate?) {
-        val value = date?.toString()
-        writeLink(uid, "review_at" to (value?.let(::JsonPrimitive) ?: JsonNull)) { it.copy(reviewAtRaw = value) }
-    }
-
-    override suspend fun setLinkTags(uid: String, tagUids: List<String>) {
-        val tags = tagUids.distinct()
-        writeLink(uid, "tag_uids" to jsonArray(tags)) { it.copy(tagUidsJson = jsonArray(tags).toString()) }
-    }
-
     override suspend fun setLinkTitle(uid: String, title: String?) {
         val value = title?.trim()?.ifEmpty { null }
         writeLink(uid, "title" to jsonString(value)) { it.copy(title = value) }
-    }
-
-    override suspend fun setLinkProject(uid: String, projectUid: String?) {
-        writeLink(uid, "project_uid" to jsonString(projectUid)) { it.copy(projectUid = projectUid) }
-    }
-
-    override suspend fun setLinkUrl(uid: String, url: String, label: String) {
-        val value = url.trim()
-        val existing = database.linkDao().get(uid) ?: return
-        if (value == existing.url) return
-        database.linkDao().upsert(existing.copy(url = value, fetchStatus = "pending"))
-        defer(
-            DeferredCall(
-                key = linkUrlCallKey(uid),
-                method = "PATCH",
-                path = "/api/v1/links/$uid",
-                body = JsonObject(mapOf("url" to JsonPrimitive(value))),
-                label = label,
-            ),
-        )
-    }
-
-    override suspend fun addLinkFrom(url: String, sourceType: String, sourceUid: String, label: String) =
-        addLink(LinkDraft(url = url.trim(), sourceType = sourceType, sourceUid = sourceUid), label)
-
-    override suspend fun addLink(draft: LinkDraft, label: String) {
-        val value = draft.copy(url = draft.url.trim())
-        val body = buildMap<String, JsonElement> {
-            put("url", JsonPrimitive(value.url))
-            value.title?.let { put("title", JsonPrimitive(it)) }
-            value.note?.let { put("note", JsonPrimitive(it)) }
-            if (value.tagNames.isNotEmpty()) put("tags", jsonArray(value.tagNames))
-            value.projectUid?.let { put("project_uid", JsonPrimitive(it)) }
-            if (value.sourceType != null && value.sourceUid != null) {
-                put("source_type", JsonPrimitive(value.sourceType))
-                put("source_uid", JsonPrimitive(value.sourceUid))
-            }
-        }
-        defer(DeferredCall(key = value.callKey, method = "POST", path = "/api/v1/links", body = JsonObject(body), label = label))
-    }
-
-    override suspend fun withdrawLink(draft: LinkDraft): Boolean {
-        val value = draft.copy(url = draft.url.trim())
-        if (database.deferredCallDao().delete(value.callKey) > 0) return true
-        val type = value.sourceType ?: return false
-        val source = value.sourceUid ?: return false
-        val link = database.linkDao().bySource(type, source) ?: return false
-        deleteLink(link.uid)
-        return true
     }
 
     override suspend fun deleteLink(uid: String) {
         val clock = hlc.now()
         database.withTransaction {
             database.linkDao().delete(uid)
-            database.deferredCallDao().delete(linkUrlCallKey(uid))
             outbox.insert(LocalOps.delete("link", uid, clock, nowMs()))
         }
         afterLocalWrite()
     }
 
-    private fun linkUrlCallKey(uid: String) = "link-url:$uid"
+    override suspend fun projectPageUid(projectUid: String, url: String): String? {
+        val key = addressKey(url) ?: return null
+        return database.linkDao().inProject(projectUid).firstOrNull { addressKey(it.url) == key }?.uid
+    }
+
+    override suspend fun addProjectPage(projectUid: String, url: String, title: String?, note: String?): String {
+        val address = url.trim()
+        require(addressKey(address) != null) { "Adresse web attendue" }
+        projectPageUid(projectUid, address)?.let { return it }
+        val uid = UUID.randomUUID().toString()
+        val cleanTitle = title?.trim()?.ifEmpty { null }
+        val cleanNote = note?.trim()?.ifEmpty { null }
+        val fields = buildMap<String, JsonElement> {
+            put("url", JsonPrimitive(address))
+            put("project_uid", JsonPrimitive(projectUid))
+            cleanTitle?.let { put("title", JsonPrimitive(it)) }
+            cleanNote?.let { put("note", JsonPrimitive(it)) }
+        }
+        val clock = hlc.now()
+        database.withTransaction {
+            database.linkDao().upsert(
+                LinkEntity(
+                    uid = uid,
+                    url = address,
+                    title = cleanTitle,
+                    description = null,
+                    imageUrl = null,
+                    siteName = null,
+                    kind = null,
+                    githubStars = null,
+                    githubLanguage = null,
+                    githubLastCommitRaw = null,
+                    readmeExcerpt = null,
+                    note = cleanNote,
+                    fetchStatus = "pending",
+                    createdAtRaw = Instant.ofEpochMilli(nowMs()).toString(),
+                    projectUid = projectUid,
+                ),
+            )
+            outbox.insert(LocalOps.upsert("link", uid, fields, clock, nowMs()))
+        }
+        afterLocalWrite()
+        return uid
+    }
 
     private suspend fun writeLink(uid: String, field: Pair<String, JsonElement>, change: (LinkEntity) -> LinkEntity) {
         val clock = hlc.now()
@@ -380,9 +367,29 @@ internal class RoomTaskRepository(
             draft.source?.let { put("source", JsonPrimitive(it)) }
             draft.sourceUrl?.let { put("source_url", JsonPrimitive(it)) }
             putAll(dueFields(draft.dueDate, draft.dueTime))
+            // Un lien capturé attend « Quand ? » : le serveur ne reçoit le drapeau que quand il est vrai.
+            if (draft.needsWhen) put("needs_when", JsonPrimitive(true))
         }
         writeFields(uid, fields)
         return uid
+    }
+
+    /**
+     * Les tâches ouvertes qui citent la page et les projets qui l'ont enregistrée. Le LIKE large de Room ne fait que
+     * réduire les lignes : la même adresse normalisée (`addressKey`) décide, donc `rocket-launcher` ne compte pas.
+     */
+    override suspend fun placesOf(url: String): AddressPlaces {
+        val key = addressKey(url) ?: return AddressPlaces(emptyList(), emptyList())
+        val needle = key.substringAfter("://").lowercase()
+        val tasks = taskDao.openMentioning(needle, CLOSED_TASK_STATUSES, PLACES_LIMIT)
+            .filter { row -> listOf(row.name, row.note.orEmpty()).any { text -> LinkExtractor.urls(text).any { addressKey(it) == key } } }
+            .map { PlaceRef(it.uid, it.name) }
+        val projects = database.linkDao().withProjectMentioning(needle)
+            .filter { addressKey(it.url) == key }
+            .mapNotNull { it.projectUid }
+            .distinct()
+            .mapNotNull { uid -> projectDao.get(uid)?.let { PlaceRef(it.uid, it.name) } }
+        return AddressPlaces(tasks, projects)
     }
 
     override suspend fun duplicateTask(uid: String): String? {
@@ -495,6 +502,10 @@ internal class RoomTaskRepository(
     }
 
     override suspend fun skipOccurrence(uid: String) = writeOccurrence(uid, ACTION_SKIP_OCCURRENCE)
+
+    override suspend fun convertToProject(uid: String, name: String) {
+        defer(projectConversionCall(uid, name))
+    }
 
     override suspend fun deleteTask(uid: String) {
         val clock = hlc.now()
@@ -909,6 +920,8 @@ internal class RoomTaskRepository(
         const val ACTION_SKIP_OCCURRENCE = "skip_occurrence"
         const val INBOX_STATUS = "added"
         const val INBOX_SOURCE = "android"
+        private val CLOSED_TASK_STATUSES = listOf(TaskStatus.DONE, TaskStatus.ARCHIVED, TaskStatus.CANCELLED)
+        private const val PLACES_LIMIT = 50
         const val INBOX_PROCESSED = "processed"
         /** Étiquette système de « Plus tard », comme `review/repository.js` du serveur. */
         const val SOMEDAY_TAG = TagPaths.SOMEDAY

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AccountTree
 import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Check
@@ -40,6 +41,7 @@ import ch.nicolab.cadence.tasks.model.Funnel
 import ch.nicolab.cadence.tasks.model.FunnelStage
 import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.model.TaskItem
+import ch.nicolab.cadence.tasks.project.canBecomeProject
 import ch.nicolab.cadence.tasks.model.TaskPriority
 import ch.nicolab.cadence.tasks.swipe.FileBackedActions
 import ch.nicolab.cadence.tasks.swipe.SchedulePreset
@@ -69,12 +71,14 @@ internal fun TaskMenuSheet(
     /** null : la tâche ne peut pas être une prochaine action ; sinon, l'est-elle déjà ? */
     nextAction: Boolean? = null,
     onNextAction: () -> Unit = {},
+    onToProject: () -> Unit = {},
     /** Dans la liste Aujourd'hui : monter ou descendre d'un rang ; null au bord ou hors de cette liste. */
     onMoveUp: (() -> Unit)? = null,
     onMoveDown: (() -> Unit)? = null,
     onDismiss: () -> Unit,
 ) {
     var picking by remember { mutableStateOf(false) }
+    var confirmingProject by remember { mutableStateOf(false) }
     class Entry(val icon: ImageVector, val label: Int, val onClick: () -> Unit)
     // Une série ou une sous-tâche n'entre pas dans l'entonnoir, comme dans la revue du serveur.
     val funnel = if (task.isRecurring || task.parentTaskUid != null) emptyList() else FunnelStage.entries.map { stage ->
@@ -108,6 +112,8 @@ internal fun TaskMenuSheet(
     ) + listOfNotNull(
         Entry(swipeActionIcon(SwipeAction.MOVE_PROJECT), R.string.tasks_field_project) { onAction(SwipeAction.MOVE_PROJECT) }
             .takeIf { FileBackedActions.allowsSwipe(task, SwipeAction.MOVE_PROJECT) },
+        Entry(Icons.Outlined.AccountTree, R.string.tasks_action_to_project) { confirmingProject = true }
+            .takeIf { canBecomeProject(task) },
         Entry(swipeActionIcon(SwipeAction.DELETE), R.string.swipe_action_delete) { onAction(SwipeAction.DELETE) }
             .takeIf { FileBackedActions.allowsSwipe(task, SwipeAction.DELETE) },
     )
@@ -129,6 +135,17 @@ internal fun TaskMenuSheet(
             initial = task.dueDay ?: today,
             onConfirm = { picking = false; onSchedule(it) },
             onDismiss = { picking = false },
+        )
+    }
+    if (confirmingProject) {
+        ConvertToProjectDialog(
+            name = task.name,
+            onConfirm = {
+                confirmingProject = false
+                onToProject()
+                onDismiss()
+            },
+            onDismiss = { confirmingProject = false },
         )
     }
 }

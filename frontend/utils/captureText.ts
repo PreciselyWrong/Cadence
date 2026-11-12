@@ -1,6 +1,6 @@
-// 'link' (straight to the Links) is offered only for an idea that is only
-// a link, where Project is not (docs/04-inbox-page.md).
-export type CaptureTarget = 'inbox' | 'task' | 'note' | 'project' | 'link';
+// For an idea that is only a link, Project is not offered: the link becomes
+// a task or a note (docs/04-inbox-page.md, docs/37-links.md).
+export type CaptureTarget = 'inbox' | 'task' | 'note' | 'project';
 
 export const CAPTURE_TARGETS: CaptureTarget[] = [
     'inbox',
@@ -9,12 +9,7 @@ export const CAPTURE_TARGETS: CaptureTarget[] = [
     'project',
 ];
 
-export const LINK_CAPTURE_TARGETS: CaptureTarget[] = [
-    'inbox',
-    'task',
-    'link',
-    'note',
-];
+export const LINK_CAPTURE_TARGETS: CaptureTarget[] = ['inbox', 'task', 'note'];
 
 export interface CapturedItem {
     target: CaptureTarget;

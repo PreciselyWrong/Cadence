@@ -574,7 +574,8 @@
     "overdueBy": "متأخرة بـ {{days}} يوم",
     "dueInDays": "مستحقة خلال {{days}} يوم",
     "startedSuccessfully": "تم بدء المهمة بنجاح!",
-    "deleteConfirmMessage": "هل أنت متأكد من حذف \"{{name}}\"؟ لا يمكن التراجع عن هذا الإجراء."
+    "deleteConfirmMessage": "هل أنت متأكد من حذف \"{{name}}\"؟ لا يمكن التراجع عن هذا الإجراء.",
+    "withLink": "بروابط"
   },
   "timeline": {
     "activityTimeline": "جدول الأنشطة",
@@ -2096,7 +2097,10 @@
     "inHours": "خلال {{count}} ساعة",
     "pastDue": "متأخرة",
     "editDetails": "تعديل التفاصيل",
-    "noUpcomingOccurrences": "لا توجد مواعيد قادمة."
+    "noUpcomingOccurrences": "لا توجد مواعيد قادمة.",
+    "turnIntoProject": "تحويل إلى مشروع",
+    "turnIntoProjectError": "تعذّر تحويلها إلى مشروع.",
+    "turnIntoProjectMessage": "هل تريد تحويل « {{name}} » إلى مشروع؟ تصبح مهامها الفرعية مهام المشروع، وتصبح عناوين ملاحظتها صفحات المشروع."
   },
   "projects": {
     "parentProject": "المشروع الأب",
@@ -2232,6 +2236,11 @@
       "failedTitle": "تعذر تحميل تفاصيل المشروع.",
       "failedHint": "تحقق من اتصالك وأعد تحميل الصفحة.",
       "backToProjects": "العودة إلى المشاريع"
+    },
+    "dormant": {
+      "title": "لم تُفتح منذ 30 يومًا ({{count}})",
+      "daysAgo": "منذ {{count}} أيام",
+      "keep": "إبقاء"
     }
   },
   "projectItem": {
@@ -5852,7 +5861,24 @@
     "editTitle": "تعديل الرابط",
     "deleteTitle": "هل تريد حذف هذا الرابط؟",
     "deleteMessage": "يغادر روابطك نهائيًا. لتنحيته جانبًا، قم بأرشفته بدلًا من ذلك.",
-    "deleteError": "تعذّر حذف الرابط."
+    "deleteError": "تعذّر حذف الرابط.",
+    "taskVerb": {
+      "try": "جرّب: {{title}}",
+      "read": "اقرأ: {{title}}",
+      "watch": "شاهد: {{title}}"
+    },
+    "capture": {
+      "taskName": "اسم المهمة",
+      "alreadyIn": "موجودة بالفعل في « {{name}} »",
+      "more": "+{{count}}",
+      "open": "فتح",
+      "addAnyway": "إضافتها على أي حال",
+      "toProject": "المشروع…",
+      "keepInInbox": "صندوق الوارد",
+      "taskAdded": "تمت إضافة المهمة",
+      "taskToSort": "تمت إضافة المهمة إلى « مهام للفرز »",
+      "addedToProject": "أُضيفت إلى المشروع"
+    }
   },
   "dailyBrief": {
     "sectionName": {
@@ -6345,5 +6371,32 @@
   "mentions": {
     "loading": "جارٍ تحميل الأشخاص…",
     "noMatch": "لا يوجد أشخاص مطابقون"
+  },
+  "projectPages": {
+    "heading": "الصفحات",
+    "title": "العنوان",
+    "note": "ملاحظة",
+    "dead": "غير موجودة",
+    "createTask": "إنشاء مهمة",
+    "remove": "إزالة",
+    "actions": "إجراءات الصفحة",
+    "removeError": "تعذّرت إزالة الصفحة.",
+    "copied": "نُسخت الصفحات بتنسيق Markdown",
+    "deadCount": "عدد الصفحات غير الموجودة: {{count}}",
+    "allAnswer": "كل الصفحات تستجيب",
+    "checkError": "تعذّر التحقق من الصفحات.",
+    "copyMarkdown": "نسخ الصفحات بتنسيق Markdown",
+    "check": "التحقق من الصفحات"
+  },
+  "bookmarksImport": {
+    "title": "استيراد الإشارات المرجعية",
+    "hint": "تصدير من Firefox (Library › Import and Backup › Export). يصبح المجلد الواحد صفحات مشروع.",
+    "file": "ملف الإشارات المرجعية",
+    "empty": "لا توجد إشارات مرجعية في هذا الملف.",
+    "folder": "مجلد",
+    "project": "مشروع",
+    "newProject": "مشروع جديد « {{name}} »",
+    "error": "فشل الاستيراد. حاول مرة أخرى.",
+    "import": "استيراد"
   }
 }

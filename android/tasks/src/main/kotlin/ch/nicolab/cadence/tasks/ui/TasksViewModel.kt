@@ -20,6 +20,7 @@ import ch.nicolab.cadence.tasks.data.UnsupportedRecurrence
 import ch.nicolab.cadence.tasks.links.LinkExtractor
 import ch.nicolab.cadence.tasks.links.LinkPreviews
 import ch.nicolab.cadence.tasks.model.AreaFilter
+import ch.nicolab.cadence.tasks.model.WithLinkFilter
 import ch.nicolab.cadence.tasks.model.AreaItem
 import ch.nicolab.cadence.tasks.model.AreaSuggestions
 import ch.nicolab.cadence.tasks.model.DecisionContext
@@ -34,6 +35,9 @@ import ch.nicolab.cadence.tasks.model.GoalStatus
 import ch.nicolab.cadence.tasks.model.Goals
 import ch.nicolab.cadence.tasks.model.IdeaNotes
 import ch.nicolab.cadence.tasks.model.IdeaTasks
+import ch.nicolab.cadence.tasks.quickadd.ShareAction
+import ch.nicolab.cadence.tasks.quickadd.ShareCapture
+import ch.nicolab.cadence.tasks.quickadd.ShareWrite
 import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.model.LinkItem
 import ch.nicolab.cadence.tasks.model.NextAction
@@ -53,7 +57,7 @@ import ch.nicolab.cadence.tasks.model.TagItem
 import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskDraft
 import ch.nicolab.cadence.tasks.model.TaskItem
-import ch.nicolab.cadence.tasks.model.LinkDraft
+import ch.nicolab.cadence.tasks.project.canBecomeProject
 import ch.nicolab.cadence.tasks.model.TaskSources
 import ch.nicolab.cadence.tasks.model.TaskViews
 import ch.nicolab.cadence.tasks.notes.Autosaver
@@ -117,6 +121,7 @@ private const val UNDO_WINDOW_MS = 4_500L
 private const val NOTE_SAVE_DELAY_MS = 700L
 private const val FILTER_PREFS = "tududi_tasks_filter"
 private const val KEY_AREA = "area"
+private const val KEY_WITH_LINK = "with_link"
 
 /** Date et instant courants ; rafraîchis chaque minute, ce qui couvre aussi minuit. */
 internal data class Moment(val today: LocalDate, val now: Instant, val zone: ZoneId) {
@@ -223,14 +228,26 @@ internal class TasksViewModel(
     val areaFilter: StateFlow<String?> = _areaFilter
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), chosenArea.value)
 
+    private val chosenWithLink = MutableStateFlow(filterPrefs.getBoolean(KEY_WITH_LINK, false))
+
+    /** Filtre « Avec un lien » des listes de tâches, gardé entre les sessions. */
+    val withLink: StateFlow<Boolean> = chosenWithLink.asStateFlow()
+
     private val tasks: Flow<List<TaskItem>> =
         combine(repository.observeTasks(), hiddenUids) { all, hidden -> all.withoutHidden(hidden) }
 
-    /** Tâches du domaine filtré : Aujourd'hui, À venir et les suggestions ; les projets et le Bilan gardent [tasks]. */
+    /** Tâches du domaine filtré et du filtre « Avec un lien » : Aujourd'hui, À venir et les suggestions ; les projets et le Bilan gardent [tasks]. */
     private val scopedTasks: Flow<List<TaskItem>> = scopedAllTasks()
 
     private fun scopedAllTasks(): Flow<List<TaskItem>> =
-        combine(tasks, _areaFilter, projects) { all, area, projects -> AreaFilter.tasks(all, projects, area) }
+        combine(tasks, _areaFilter, projects, chosenWithLink) { all, area, projects, withLink ->
+            WithLinkFilter.tasks(AreaFilter.tasks(all, projects, area), withLink)
+        }
+
+    fun setWithLink(on: Boolean) {
+        chosenWithLink.value = on
+        filterPrefs.edit().putBoolean(KEY_WITH_LINK, on).apply()
+    }
 
     private val _messages = MutableSharedFlow<String>(extraBufferCapacity = 8)
     val messages: Flow<String> = _messages.asSharedFlow()
@@ -328,54 +345,54 @@ internal class TasksViewModel(
         entries.filterNot { it.uid in gone }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
-    /** Liens enregistrés : l'Inbox y lit le titre d'une page déjà enregistrée. */
+    /** Pages de projet : l'Inbox y lit le titre d'une page déjà rangée, la revue et la recherche aussi. */
     val links: StateFlow<List<LinkItem>> = repository.observeLinks()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
-    fun setLinkNote(uid: String, note: String?) = launchAction { repository.setLinkNote(uid, note) }
-
-    /** Met dans les liens une adresse d'une tâche ou d'une note (`task`, `note`), par un appel différé. */
-    fun addLinkFrom(url: String, sourceType: String, sourceUid: String) = launchAction {
-        repository.addLinkFrom(url, sourceType, sourceUid, getApplication<Application>().getString(R.string.links_add_call))
+    /**
+     * Une idée qui n'est qu'une adresse devient tout de suite une tâche, nommée comme un partage (« Essayer : … », à
+     * classer). « Annuler » fonctionne comme pour toute idée transformée en tâche.
+     */
+    fun saveLinkIdeaAsTask(entry: InboxEntry, pageTitle: String?) = launchAction {
+        val write = ShareCapture.plan(
+            ShareAction.TASK, entry.content, pageTitle, emptyList(), null, ShareCapture.verbs(getApplication()),
+        ) as? ShareWrite.Task ?: return@launchAction
+        saveConversion(entry, write.draft)
     }
 
-    fun setLinkTags(uid: String, tagUids: List<String>) = launchAction { repository.setLinkTags(uid, tagUids) }
-
     /**
-     * Range une idée qui porte une adresse dans les liens, avec les étiquettes et le projet choisis : appel différé
-     * `POST /api/v1/links` (source : l'idée), puis l'idée passe en traitée, tout de suite et hors ligne compris.
-     * « Annuler » retire l'appel (ou le lien revenu de la synchro) et rend l'idée à l'Inbox.
+     * Range une idée qui porte une adresse comme page de [projectUid], puis l'idée passe en traitée, hors ligne compris.
+     * « Annuler » retire la page (si elle vient d'être ajoutée, pas si elle y était déjà) et rend l'idée à l'Inbox.
      */
-    fun saveIdeaToLinks(entry: InboxEntry, pageTitle: String?, tagUids: List<String>, projectUid: String?) = launchAction {
-        val names = IdeaTasks.tagNames(tagUids, tags.value)
-        val draft = IdeaTasks.linkDraft(entry.content, pageTitle, names, projectUid, sourceUid = entry.uid) ?: return@launchAction
-        repository.addLink(draft, getString(R.string.links_add_call))
+    fun saveIdeaToPage(entry: InboxEntry, pageTitle: String?, projectUid: String) = launchAction {
+        val url = IdeaTasks.address(entry.content) ?: return@launchAction
+        val alreadyThere = repository.projectPageUid(projectUid, url) != null
+        val uid = repository.addProjectPage(projectUid, url, pageTitle, IdeaTasks.rest(entry.content).ifEmpty { null })
         repository.processInboxItem(entry.uid)
-        val name = draft.title ?: LinkExtractor.domain(draft.url) ?: draft.url
+        val name = pageTitle ?: LinkExtractor.domain(url) ?: url
         _notices.tryEmit(
-            UndoNotice(getString(R.string.tasks_idea_to_links_notice, name)) {
+            UndoNotice(getString(R.string.tasks_idea_to_page_notice, name)) {
                 launchAction {
-                    if (!repository.withdrawLink(draft)) _messages.tryEmit(getString(R.string.tasks_idea_link_already_sent))
+                    if (!alreadyThere) repository.deleteLink(uid)
                     repository.reopenInboxItem(entry.uid)
                 }
             },
         )
     }
 
-    /**
-     * « Liens » d'un lien seul dans l'ajout rapide (web : la même saisie) : gardé tout de suite par l'appel différé
-     * `POST /api/v1/links` (titre, étiquettes, projet, sans source ni idée) ; « Annuler » le retire.
-     */
-    suspend fun addLinkFromCapture(url: String, pageTitle: String?, tagNames: List<String>, projectUid: String?) {
-        val draft = LinkDraft(url = url, title = pageTitle?.trim()?.takeIf { it.isNotEmpty() }, tagNames = tagNames, projectUid = projectUid)
-        repository.addLink(draft, getString(R.string.links_add_call))
-        val name = draft.title ?: LinkExtractor.domain(url) ?: url
-        _notices.tryEmit(
-            UndoNotice(getString(R.string.tasks_idea_to_links_notice, name)) {
-                launchAction { if (!repository.withdrawLink(draft)) _messages.tryEmit(getString(R.string.tasks_idea_link_already_sent)) }
-            },
-        )
+    /** Ajoute [url] comme page de [projectUid] (« ⋯ » du projet) ; une page déjà là ne fait rien. */
+    fun addProjectPage(projectUid: String, url: String) = launchAction {
+        repository.addProjectPage(projectUid, url, null, null)
     }
+
+    /** Titre et note d'une page, seulement ce qui a changé. */
+    fun editProjectPage(page: LinkItem, title: String, note: String) = launchAction {
+        if (title.trim() != page.title.orEmpty()) repository.setLinkTitle(page.uid, title)
+        if (note.trim() != page.note.orEmpty()) repository.setLinkNote(page.uid, note)
+    }
+
+    /** Retire la page du projet : suppression par la synchro, le projet et les tâches ne bougent pas. */
+    fun removeProjectPage(uid: String) = launchAction { repository.deleteLink(uid) }
 
     val notes: StateFlow<List<NoteItem>> = combine(repository.observeNotes(), hidden) { all, gone ->
         all.filterNot { it.uid in gone }
@@ -487,6 +504,12 @@ internal class TasksViewModel(
     fun delete(task: TaskItem) {
         if (FileBackedActions.ownsField(task, FileOwnedField.DELETE)) return
         launchAction { repository.deleteTask(task.uid) }
+    }
+
+    /** Après confirmation : la tâche disparaît tout de suite ; un refus du serveur la fait revenir (liste des refus). */
+    fun convertToProject(task: TaskItem) {
+        if (!canBecomeProject(task)) return
+        launchAction { repository.convertToProject(task.uid, task.name) }
     }
 
     fun update(uid: String, change: TaskChange) = launchAction { repository.updateTask(uid, change) }
@@ -1000,7 +1023,7 @@ internal class TasksViewModel(
      * tâche et rend l'idée.
      */
     fun planIdea(entry: InboxEntry, day: LocalDate? = null, horizon: Horizon? = null) = launchAction {
-        val draft = TaskDraft(name = IdeaTasks.taskName(entry.content, null), note = IdeaTasks.taskNote(entry.content))
+        val draft = TaskDraft(name = IdeaTasks.taskName(entry.content, null, ShareCapture.verbs(getApplication())), note = IdeaTasks.taskNote(entry.content))
         val uid = repository.createTask(withIdeaOrigin(draft, entry))
         repository.processInboxItem(entry.uid)
         if (day != null) planEdits.apply(listOf(AddTask(day, uid)))

@@ -1,10 +1,10 @@
 // Deterministic suggestion for what an inbox item should become. No AI: it
 // reads the #tag and +project tokens, a bare link, and a few keywords.
-// A bare link goes to Links.
+// A bare link is an idea to make a task of.
 import { normalizeText } from './commandPalette';
 import { splitInboxTokens } from './inboxTokens';
 
-export type TriageKind = 'task' | 'link' | 'note' | 'project';
+export type TriageKind = 'task' | 'note' | 'project';
 export type TriageReason =
     'project' | 'tag' | 'url' | 'keyword' | 'long' | 'default';
 
@@ -100,7 +100,7 @@ export const suggestTriage = (content: string): TriageSuggestion => {
         return { kind: 'task', reason: 'tag', detail: tag };
     }
 
-    if (URL_ONLY.test(text)) return { kind: 'link', reason: 'url' };
+    if (URL_ONLY.test(text)) return { kind: 'task', reason: 'url' };
 
     const word = firstWord(text);
     if (NOTE_WORDS.includes(word)) {

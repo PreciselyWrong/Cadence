@@ -45,7 +45,7 @@ async function askModel(userId, catalog, entries, settings) {
     await entitlements.consumeMonthlyUsage(userId, 'ai_credits');
     const params = {
         model: settings.model || (await ai.getAIModel(userId)),
-        messages: buildMessages(catalog, entries, settings),
+        messages: buildMessages(catalog, entries),
         max_tokens: settings.max_tokens,
         ...ai.getExtraBodyParams(),
         response_format: ai.buildResponseFormat(

@@ -564,7 +564,8 @@
     "overdueBy": "Opóźnione o {{days}} d",
     "dueInDays": "Termin za {{days}} d",
     "startedSuccessfully": "Zadanie zostało rozpoczęte!",
-    "deleteConfirmMessage": "Na pewno usunąć „{{name}}”? Tej operacji nie można cofnąć."
+    "deleteConfirmMessage": "Na pewno usunąć „{{name}}”? Tej operacji nie można cofnąć.",
+    "withLink": "Z linkiem"
   },
   "timeline": {
     "activityTimeline": "Oś czasu aktywności",
@@ -2096,7 +2097,10 @@
     "inHours": "za {{count}} godz.",
     "pastDue": "Po terminie",
     "editDetails": "Edytuj szczegóły",
-    "noUpcomingOccurrences": "Brak nadchodzących wystąpień."
+    "noUpcomingOccurrences": "Brak nadchodzących wystąpień.",
+    "turnIntoProject": "Zamień w projekt",
+    "turnIntoProjectError": "Nie udało się zamienić w projekt.",
+    "turnIntoProjectMessage": "Zamienić „{{name}}” w projekt? Jego podzadania staną się zadaniami projektu, a adresy z jego notatki – stronami projektu."
   },
   "projects": {
     "parentProject": "Projekt nadrzędny",
@@ -2230,6 +2234,11 @@
       "failedTitle": "Nie udało się wczytać szczegółów projektu.",
       "failedHint": "Sprawdź połączenie i odśwież stronę.",
       "backToProjects": "Wróć do projektów"
+    },
+    "dormant": {
+      "title": "Nieruszane od 30 dni ({{count}})",
+      "daysAgo": "{{count}} dni temu",
+      "keep": "Zachowaj"
     }
   },
   "projectItem": {
@@ -5836,7 +5845,24 @@
     "editTitle": "Edytuj link",
     "deleteTitle": "Usunąć ten link?",
     "deleteMessage": "Znika z Twoich linków na dobre. Aby go odłożyć, zarchiwizuj go zamiast tego.",
-    "deleteError": "Nie udało się usunąć linku."
+    "deleteError": "Nie udało się usunąć linku.",
+    "taskVerb": {
+      "try": "Wypróbuj: {{title}}",
+      "read": "Przeczytaj: {{title}}",
+      "watch": "Obejrzyj: {{title}}"
+    },
+    "capture": {
+      "taskName": "Nazwa zadania",
+      "alreadyIn": "Już jest w « {{name}} »",
+      "more": "+{{count}}",
+      "open": "Otwórz",
+      "addAnyway": "Dodaj mimo to",
+      "toProject": "Projekt…",
+      "keepInInbox": "Skrzynka odbiorcza",
+      "taskAdded": "Dodano zadanie",
+      "taskToSort": "Dodano zadanie do « Zadania do uporządkowania »",
+      "addedToProject": "Dodano do projektu"
+    }
   },
   "dailyBrief": {
     "sectionName": {
@@ -6325,5 +6351,32 @@
   "mentions": {
     "loading": "Wczytywanie osób…",
     "noMatch": "Brak pasujących osób"
+  },
+  "projectPages": {
+    "heading": "Strony",
+    "title": "Tytuł",
+    "note": "Notatka",
+    "dead": "Nie znaleziono",
+    "createTask": "Utwórz zadanie",
+    "remove": "Usuń",
+    "actions": "Działania strony",
+    "removeError": "Nie udało się usunąć strony.",
+    "copied": "Skopiowano strony jako Markdown",
+    "deadCount": "Nieznalezionych stron: {{count}}",
+    "allAnswer": "Wszystkie strony odpowiadają",
+    "checkError": "Nie udało się sprawdzić stron.",
+    "copyMarkdown": "Kopiuj strony jako Markdown",
+    "check": "Sprawdź strony"
+  },
+  "bookmarksImport": {
+    "title": "Importuj zakładki",
+    "hint": "Eksport z Firefoksa (Library › Import and Backup › Export). Jeden folder staje się stronami projektu.",
+    "file": "Plik zakładek",
+    "empty": "Ten plik nie zawiera zakładek.",
+    "folder": "Folder",
+    "project": "Projekt",
+    "newProject": "Nowy projekt « {{name}} »",
+    "error": "Import się nie powiódł. Spróbuj ponownie.",
+    "import": "Importuj"
   }
 }

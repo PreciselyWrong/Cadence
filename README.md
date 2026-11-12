@@ -39,7 +39,8 @@ Native Kotlin app (Jetpack Compose, Room, Glance widgets), merged from the forme
 - **Capture and reminders:** share text from any app into the inbox, and get reminders with _Complete_ and _Later_ actions, shifted out of your quiet hours.
 - **Habits:** synced with the server, so they can be seen and edited on the web.
 - **Review, goals, Stash:** the weekly review, the Stash of paused projects, next actions and goals, as on the web.
-- **Links:** every link you capture, with what the page is, GitHub stats, your note and a status (Try, Keep, Later, Drop), readable offline.
+- **Links become tasks:** share or capture an address and it becomes a task named by its kind (« Essayer / Lire / Regarder : … »), the address in its note, with « Déjà dans … » when you already have it.
+- **Project pages:** a project gathers the web pages it works from (preview, GitHub stats, short note), sent from the phone or the Firefox add-on, copied as Markdown, checked for dead pages; any task can become a project.
 - **Links in text:** addresses in task titles, task notes and note titles open on tap; use the edit button beside linked text to change it.
 
 Build and install a debug APK with `cd android && ./dev.sh` (JDK 21). See [android/AGENTS.md](android/AGENTS.md).
@@ -124,7 +125,7 @@ Cadence builds on [chrisvel/tududi](https://github.com/chrisvel/tududi) (last sy
 | Stash | Statuses not started, planned, in progress, waiting, done, cancelled | **En pause** and **archived** statuses; the **Stash** is the paused filter with an "N active · N in the stash" counter, and the same grouping on Android. [Docs](docs/06-projects.md) |
 | Next action | — | Pick **one next action** per project (row menu); shown on the project page and cards, and the only suggestion Today makes for that project. On Android too |
 | Goals | Goals linked to tasks and projects, no key results | **Key results** under a goal (progress = share of done linked tasks and projects), **month and quarter** horizons, a **bucket list** (Have / Be / Do, no date, never in Today); **Suggest 5 domains** on Areas. On Android too |
-| Links | Link previews in the quick-capture field | Every link in an inbox item, task or note is **saved with its page title, description, kind and GitHub stats** (stars, language, last push, README start), fetched in the background; **your note** under it (the text typed next to the link at capture), a status (**Try, Keep, Later, Drop**) and tags; a **Links** page with search and filters, as cards or a picture **gallery** (notes have the same gallery); MCP tools so an assistant can tag them. On Android too |
+| Links | Link previews in the quick-capture field | No links library: a shared or captured address **becomes a task** named by its kind (« Try / Read / Watch: … »), or a **page of a project**; a preview card (picture, title, GitHub stats) for every address of a task, note or project; « Turn into a project » on any task; projects quiet for 30 days listed with « Keep ». On Android too |
 
 ### Tasks, tags and boards
 

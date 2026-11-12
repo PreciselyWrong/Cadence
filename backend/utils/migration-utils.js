@@ -101,6 +101,16 @@ async function safeEnsureIndex(
     }
 }
 
+// Drops an index by name when it exists; a missing table or index is fine.
+async function safeRemoveIndex(queryInterface, tableName, indexName) {
+    const tables = await queryInterface.showAllTables();
+    if (!tables.includes(tableName)) return;
+    const indexes = await queryInterface.showIndex(tableName);
+    if (indexes.some((index) => index.name === indexName)) {
+        await queryInterface.removeIndex(tableName, indexName);
+    }
+}
+
 async function safeRemoveColumn(queryInterface, tableName, columnName) {
     try {
         const tableInfo = await queryInterface.describeTable(tableName);
@@ -391,6 +401,7 @@ module.exports = {
     safeCreateTable,
     safeAddIndex,
     safeEnsureIndex,
+    safeRemoveIndex,
     safeRemoveColumn,
     safeChangeColumn,
 };

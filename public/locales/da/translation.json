@@ -554,7 +554,8 @@
     "overdueBy": "Forfalden med {{days}} dage",
     "dueInDays": "Forfalder om {{days}} dage",
     "startedSuccessfully": "Opgaven blev startet!",
-    "deleteConfirmMessage": "Er du sikker på, at du vil slette \"{{name}}\"? Denne handling kan ikke fortrydes."
+    "deleteConfirmMessage": "Er du sikker på, at du vil slette \"{{name}}\"? Denne handling kan ikke fortrydes.",
+    "withLink": "Med et link"
   },
   "timeline": {
     "activityTimeline": "Aktivitets Tidslinje",
@@ -2072,7 +2073,10 @@
     "inHours": "om {{count}} timer",
     "pastDue": "Forfalden",
     "editDetails": "Rediger detaljer",
-    "noUpcomingOccurrences": "Ingen kommende forekomster."
+    "noUpcomingOccurrences": "Ingen kommende forekomster.",
+    "turnIntoProject": "Lav om til et projekt",
+    "turnIntoProjectError": "Kunne ikke laves om til et projekt.",
+    "turnIntoProjectMessage": "Lave « {{name}} » om til et projekt? Dens underopgaver bliver projektets opgaver, og adresserne i dens note bliver dets sider."
   },
   "projects": {
     "parentProject": "Overordnet projekt",
@@ -2204,6 +2208,11 @@
       "failedTitle": "Projektdetaljerne kunne ikke indlæses.",
       "failedHint": "Tjek din forbindelse, og genindlæs siden.",
       "backToProjects": "Tilbage til projekter"
+    },
+    "dormant": {
+      "title": "Ikke rørt i 30 dage ({{count}})",
+      "daysAgo": "for {{count}} dage siden",
+      "keep": "Behold"
     }
   },
   "projectItem": {
@@ -5772,7 +5781,24 @@
     "editTitle": "Rediger linket",
     "deleteTitle": "Slet dette link?",
     "deleteMessage": "Det forsvinder fra dine links for altid. For at lægge det til side, så arkivér det i stedet.",
-    "deleteError": "Linket kunne ikke slettes."
+    "deleteError": "Linket kunne ikke slettes.",
+    "taskVerb": {
+      "try": "Prøv: {{title}}",
+      "read": "Læs: {{title}}",
+      "watch": "Se: {{title}}"
+    },
+    "capture": {
+      "taskName": "Opgavens navn",
+      "alreadyIn": "Findes allerede i « {{name}} »",
+      "more": "+{{count}}",
+      "open": "Åbn",
+      "addAnyway": "Tilføj alligevel",
+      "toProject": "Projekt…",
+      "keepInInbox": "Indbakke",
+      "taskAdded": "Opgave tilføjet",
+      "taskToSort": "Opgave tilføjet til « Opgaver at sortere »",
+      "addedToProject": "Tilføjet til projektet"
+    }
   },
   "dailyBrief": {
     "sectionName": {
@@ -6257,5 +6283,32 @@
   "mentions": {
     "loading": "Indlæser personer…",
     "noMatch": "Ingen matchende personer"
+  },
+  "projectPages": {
+    "heading": "Sider",
+    "title": "Titel",
+    "note": "Note",
+    "dead": "Ikke fundet",
+    "createTask": "Opret en opgave",
+    "remove": "Fjern",
+    "actions": "Handlinger for siden",
+    "removeError": "Siden kunne ikke fjernes.",
+    "copied": "Sider kopieret som Markdown",
+    "deadCount": "{{count}} sider ikke fundet",
+    "allAnswer": "Alle sider svarer",
+    "checkError": "Siderne kunne ikke kontrolleres.",
+    "copyMarkdown": "Kopiér siderne som Markdown",
+    "check": "Kontrollér siderne"
+  },
+  "bookmarksImport": {
+    "title": "Importér bogmærker",
+    "hint": "En eksport fra Firefox (Bibliotek › Importer og sikkerhedskopiér › Eksportér). Én mappe bliver til sider i et projekt.",
+    "file": "Bogmærkefil",
+    "empty": "Ingen bogmærker i denne fil.",
+    "folder": "Mappe",
+    "project": "Projekt",
+    "newProject": "Nyt projekt « {{name}} »",
+    "error": "Importen mislykkedes. Prøv igen.",
+    "import": "Importér"
   }
 }

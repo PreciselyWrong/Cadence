@@ -1,27 +1,15 @@
 {
   "name": {
-    "message": "Cadence: links"
+    "message": "Cadence"
   },
   "description": {
-    "message": "Saves the page or the link to Cadence, on your own server."
+    "message": "Makes the page or link a Cadence task, on your server."
   },
   "save_page": {
-    "message": "Save to Cadence"
+    "message": "Make a Cadence task"
   },
   "save_link": {
-    "message": "Save this link to Cadence"
-  },
-  "field_title": {
-    "message": "Title"
-  },
-  "field_status": {
-    "message": "Status"
-  },
-  "field_tags": {
-    "message": "Tags, separated by commas"
-  },
-  "field_note": {
-    "message": "Note"
+    "message": "Make a task of this link"
   },
   "field_server": {
     "message": "Cadence server address"
@@ -32,21 +20,6 @@
   "token_help": {
     "message": "Create it in Cadence: Profile › API tokens."
   },
-  "status_new": {
-    "message": "To read"
-  },
-  "status_to_evaluate": {
-    "message": "To evaluate"
-  },
-  "status_tested": {
-    "message": "To try"
-  },
-  "status_kept": {
-    "message": "Kept"
-  },
-  "action_save": {
-    "message": "Save"
-  },
   "action_options": {
     "message": "Settings"
   },
@@ -54,13 +27,7 @@
     "message": "Save settings"
   },
   "result_saved": {
-    "message": "Saved to Cadence."
-  },
-  "result_already": {
-    "message": "Already in Cadence."
-  },
-  "result_already_not_merged": {
-    "message": "Already in Cadence: the note and tags you typed were not added."
+    "message": "Task added to Tasks to sort."
   },
   "result_bad_token": {
     "message": "Token refused: check the settings."
@@ -88,5 +55,51 @@
   },
   "options_saved": {
     "message": "Settings saved."
+  },
+  "field_task_name": {
+    "message": "Task name"
+  },
+  "action_task": {
+    "message": "Create the task"
+  },
+  "action_add_anyway": {
+    "message": "Add anyway"
+  },
+  "action_open": {
+    "message": "Open"
+  },
+  "already_in": {
+    "message": "Already in « $NAME$ »",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "field_project": {
+    "message": "Project"
+  },
+  "action_send_tab": {
+    "message": "Send to project"
+  },
+  "action_send_group": {
+    "message": "Send the group"
+  },
+  "action_open_project": {
+    "message": "Open the project"
+  },
+  "result_pages": {
+    "message": "Pages added: $NEW$ (already there: $OLD$).",
+    "placeholders": {
+      "new": {
+        "content": "$1"
+      },
+      "old": {
+        "content": "$2"
+      }
+    }
+  },
+  "result_no_pages": {
+    "message": "This project has no pages yet."
   }
 }

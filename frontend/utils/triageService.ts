@@ -30,14 +30,7 @@ export interface TriageItem {
     type: string;
     source: string;
     task_uid: string | null;
-    action:
-        | TriageAction
-        | 'question'
-        | 'accept_slot'
-        | 'classify'
-        | 'resolve_duplicate'
-        | 'review_link'
-        | 'decide_mail';
+    action: TriageAction | 'question' | 'classify' | 'decide_mail';
     payload: Record<string, unknown> | null;
     reason: string;
     details: string[];
@@ -89,9 +82,6 @@ export const fetchTriageQueue = async (): Promise<TriageQueue> => {
     return response.json();
 };
 
-export const answerSlot = (slotId: string, accept: boolean): Promise<void> =>
-    post(`triage/slots/${slotId}/${accept ? 'accept' : 'refuse'}`, {});
-
 export const keepTask = (taskUid: string): Promise<void> =>
     post('triage/keep', { task_uid: taskUid });
 
@@ -106,15 +96,6 @@ export const applyTriage = (
         payload,
         idempotency_key: newKey(),
     });
-
-// A link back on its review day: keep it, archive it, or see it in 30 days.
-export type LinkReviewDecision = 'keep' | 'archive' | 'later';
-
-export const reviewLink = (
-    linkUid: string,
-    decision: LinkReviewDecision
-): Promise<void> =>
-    post(`triage/links/${encodeURIComponent(linkUid)}/review`, { decision });
 
 // A mail thread an agent proposed (docs/43-mail-triage.md). Every text field
 // comes from a mail: shown as plain text only.

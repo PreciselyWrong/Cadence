@@ -2,12 +2,12 @@
   "manifest_version": 3,
   "name": "__MSG_name__",
   "description": "__MSG_description__",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "default_locale": "fr",
   "browser_specific_settings": {
     "gecko": {
       "id": "cadence-links@nicolab.ch",
-      "strict_min_version": "128.0",
+      "strict_min_version": "139.0",
       "data_collection_permissions": {
         "required": [
           "none"
@@ -40,10 +40,19 @@
   "permissions": [
     "activeTab",
     "contextMenus",
-    "storage"
+    "storage",
+    "tabGroups"
   ],
   "optional_host_permissions": [
     "http://*/*",
     "https://*/*"
-  ]
+  ],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+K"
+      },
+      "description": "__MSG_save_page__"
+    }
+  }
 }

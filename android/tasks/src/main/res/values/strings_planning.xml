@@ -157,4 +157,11 @@
     <string name="planning_settings_focus_error">Plages non enregistrées : %1$s</string>
     <string name="planning_settings_earlier">%1$s : 30 minutes plus tôt</string>
     <string name="planning_settings_later">%1$s : 30 minutes plus tard</string>
+    <!-- Projets sans activité depuis 30 jours, en bas de la liste des projets -->
+    <string name="projects_dormant_header">Pas touché depuis 30 jours (%1$d)</string>
+    <plurals name="projects_dormant_last_activity">
+        <item quantity="one">Dernière activité il y a %1$d jour</item>
+        <item quantity="other">Dernière activité il y a %1$d jours</item>
+    </plurals>
+    <string name="projects_dormant_keep">Garder</string>
 </resources>

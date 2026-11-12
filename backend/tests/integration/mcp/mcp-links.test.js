@@ -60,85 +60,64 @@ describe('MCP link tools', () => {
         ]);
     });
 
-    it('lists untagged links, then tags one, and filters by tag', async () => {
-        const untagged = json(await call('list_links', { untagged: true }));
-        expect(untagged.total).toBe(2);
-        const repo = untagged.links.find((l) => l.kind === 'repo');
-
-        const updated = json(
-            await call('update_link', {
-                uid: repo.uid,
-                tags: '["dev/cli","rust"]',
-                note: 'JSON CLI',
-                status: 'kept',
-            })
-        );
-        expect(updated.link.tags.map((t) => t.name)).toEqual([
-            'dev/cli',
-            'rust',
-        ]);
-        expect(updated.link.note).toBe('JSON CLI');
-        expect(updated.link.status).toBe('new');
-
-        const byTag = json(await call('list_links', { tag: 'rust' }));
-        expect(byTag.links.map((l) => l.uid)).toEqual([repo.uid]);
-        const rest = json(await call('list_links', { untagged: true }));
-        expect(rest.links.map((l) => l.kind)).toEqual(['article']);
-        const found = json(await call('list_links', { query: 'post' }));
-        expect(found.total).toBe(1);
-    });
-
-    it('gets one link and reports a bad status or a missing link', async () => {
-        const [link] = json(
-            await call('list_links', { kind: 'article' })
-        ).links;
+    it('reads, edits and removes a page, and reports a missing one', async () => {
+        const { Project } = require('../../../models');
+        const project = await Project.create({ name: 'P', user_id: user.id });
+        const link = await Link.findOne({ where: { kind: 'article' } });
+        await link.update({ project_id: project.id });
         expect(json(await call('get_link', { uid: link.uid })).link.title).toBe(
             'A post'
         );
-
-        const dropped = json(
-            await call('update_link', { uid: link.uid, status: 'dropped' })
+        const edited = json(
+            await call('update_link', { uid: link.uid, note: 'à lire' })
         );
-        expect(dropped.link.status).toBe('dropped');
-
-        const bad = await call('update_link', { uid: link.uid, status: 'x' });
-        expect(bad.isError).toBe(true);
-        const missing = await call('get_link', { uid: 'nope' });
-        expect(missing.isError).toBe(true);
+        expect(edited.link.note).toBe('à lire');
+        expect((await call('get_link', { uid: 'nope' })).isError).toBe(true);
+        await call('delete_link', { uid: link.uid });
+        expect(await Link.findByPk(link.id)).toBeNull();
     });
 
-    it('sorts an idea into the links, in a project, with the idea as its source', async () => {
-        const project = await Project.create({
-            user_id: user.id,
-            name: 'Lectures',
-        });
-        const item = await InboxItem.create({
-            user_id: user.id,
-            content: 'https://example.com/idee',
-            status: 'added',
-            source: 'mcp',
+    describe('project pages', () => {
+        it('adds a page to a project and lists its pages', async () => {
+            const { Project } = require('../../../models');
+            const project = await Project.create({
+                name: 'Fusée',
+                user_id: user.id,
+            });
+            const added = json(
+                await call('add_project_page', {
+                    project_uid: project.uid,
+                    url: 'https://example.com/engine/',
+                    title: 'Engine',
+                })
+            );
+            expect(added).toMatchObject({
+                created: true,
+                page: { url: 'https://example.com/engine', title: 'Engine' },
+            });
+            const listed = json(
+                await call('list_project_pages', { project_uid: project.uid })
+            );
+            expect(listed.pages.map((p) => p.url)).toEqual([
+                'https://example.com/engine',
+            ]);
         });
 
-        const created = json(
-            await call('create_link', {
-                url: 'https://example.com/idee',
-                project_uid: project.uid,
-                source_type: 'inbox_item',
-                source_uid: item.uid,
-            })
-        );
-        expect(created.created).toBe(true);
-        expect(created.link.project_uid).toBe(project.uid);
-        expect(created.link.source_type).toBe('inbox_item');
-        expect(created.link.source_uid).toBe(item.uid);
-
-        const processed = json(
-            await call('process_inbox_item', {
-                uid: item.uid,
-                link_uid: created.link.uid,
-            })
-        );
-        expect(processed.item.status).toBe('processed');
+        it('makes a task from an address, named by its kind', async () => {
+            const { Task } = require('../../../models');
+            const result = json(
+                await call('create_task', {
+                    url: 'https://github.com/acme/rocket',
+                })
+            );
+            expect(result.task.name).toBe('Try: acme/rocket');
+            const task = await Task.findOne({
+                where: { uid: result.task.uid },
+            });
+            expect(task.note).toBe('https://github.com/acme/rocket');
+            expect(task.needs_when).toBe(true);
+            expect(task.source).toBe('link');
+        });
     });
 
     it('leaves an idea open when the link it is said to have become is not the user’s', async () => {

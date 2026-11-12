@@ -18,7 +18,7 @@ browser.runtime.onInstalled.addListener(() => {
 });
 
 async function showResult(tabId, result) {
-    const good = result === 'saved' || result === 'already';
+    const good = result === 'saved';
     await browser.action.setBadgeBackgroundColor({
         color: good ? '#2e7d32' : '#c62828',
         tabId,
@@ -39,7 +39,8 @@ browser.contextMenus.onClicked.addListener(async (info, tab) => {
         await browser.runtime.openOptionsPage();
         return;
     }
-    const result = await CadenceCore.save(fetch, settings, {
+    // One click: the server names the task from the kind of page.
+    const result = await CadenceCore.addTask(fetch, settings, {
         url,
         title: isLink ? info.linkText : tab?.title,
     });

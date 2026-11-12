@@ -630,7 +630,8 @@ class SearchService {
                 title: link.title || link.url,
                 url: link.url,
                 description: link.note ? link.note.substring(0, 100) : '',
-                status: link.status,
+                project_uid: link.Project?.uid ?? null,
+                project_name: link.Project?.name ?? null,
             })),
         };
     }

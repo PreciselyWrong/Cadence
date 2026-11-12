@@ -554,7 +554,8 @@
     "overdueBy": "Quá hạn {{days}} ngày",
     "dueInDays": "Đến hạn sau {{days}} ngày",
     "startedSuccessfully": "Đã bắt đầu công việc!",
-    "deleteConfirmMessage": "Bạn có chắc muốn xóa \"{{name}}\"? Hành động này không thể hoàn tác."
+    "deleteConfirmMessage": "Bạn có chắc muốn xóa \"{{name}}\"? Hành động này không thể hoàn tác.",
+    "withLink": "Có liên kết"
   },
   "timeline": {
     "activityTimeline": "Dòng Thời Gian Hoạt Động",
@@ -2072,7 +2073,10 @@
     "inHours": "sau {{count}} giờ",
     "pastDue": "Quá hạn",
     "editDetails": "Sửa chi tiết",
-    "noUpcomingOccurrences": "Không có lần lặp lại sắp tới."
+    "noUpcomingOccurrences": "Không có lần lặp lại sắp tới.",
+    "turnIntoProject": "Chuyển thành dự án",
+    "turnIntoProjectError": "Không thể chuyển thành dự án.",
+    "turnIntoProjectMessage": "Chuyển « {{name}} » thành dự án? Các tác vụ con sẽ thành tác vụ của dự án, còn địa chỉ trong ghi chú sẽ thành trang của dự án."
   },
   "projects": {
     "parentProject": "Dự án cha",
@@ -2204,6 +2208,11 @@
       "failedTitle": "Không thể tải chi tiết dự án.",
       "failedHint": "Kiểm tra kết nối và tải lại trang.",
       "backToProjects": "Quay lại Dự án"
+    },
+    "dormant": {
+      "title": "Không đụng đến trong 30 ngày ({{count}})",
+      "daysAgo": "{{count}} ngày trước",
+      "keep": "Giữ lại"
     }
   },
   "projectItem": {
@@ -5772,7 +5781,24 @@
     "editTitle": "Sửa liên kết",
     "deleteTitle": "Xóa liên kết này?",
     "deleteMessage": "Liên kết sẽ rời khỏi danh sách của bạn vĩnh viễn. Để tạm cất đi, hãy lưu trữ nó thay vào đó.",
-    "deleteError": "Không thể xóa liên kết."
+    "deleteError": "Không thể xóa liên kết.",
+    "taskVerb": {
+      "try": "Thử: {{title}}",
+      "read": "Đọc: {{title}}",
+      "watch": "Xem: {{title}}"
+    },
+    "capture": {
+      "taskName": "Tên việc",
+      "alreadyIn": "Đã có trong « {{name}} »",
+      "more": "+{{count}}",
+      "open": "Mở",
+      "addAnyway": "Vẫn thêm",
+      "toProject": "Dự án…",
+      "keepInInbox": "Hộp thư đến",
+      "taskAdded": "Đã thêm việc",
+      "taskToSort": "Đã thêm việc vào « Việc cần sắp xếp »",
+      "addedToProject": "Đã thêm vào dự án"
+    }
   },
   "dailyBrief": {
     "sectionName": {
@@ -6255,5 +6281,32 @@
   "mentions": {
     "loading": "Đang tải danh bạ…",
     "noMatch": "Không có người phù hợp"
+  },
+  "projectPages": {
+    "heading": "Trang",
+    "title": "Tiêu đề",
+    "note": "Ghi chú",
+    "dead": "Không tìm thấy",
+    "createTask": "Tạo tác vụ",
+    "remove": "Gỡ",
+    "actions": "Thao tác trang",
+    "removeError": "Không thể gỡ trang.",
+    "copied": "Đã sao chép các trang dưới dạng Markdown",
+    "deadCount": "{{count}} trang không tìm thấy",
+    "allAnswer": "Mọi trang đều phản hồi",
+    "checkError": "Không thể kiểm tra các trang.",
+    "copyMarkdown": "Sao chép các trang dưới dạng Markdown",
+    "check": "Kiểm tra các trang"
+  },
+  "bookmarksImport": {
+    "title": "Nhập dấu trang",
+    "hint": "Tệp xuất từ Firefox (Library › Import and Backup › Export). Một thư mục sẽ thành các trang của một dự án.",
+    "file": "Tệp dấu trang",
+    "empty": "Tệp này không có dấu trang nào.",
+    "folder": "Thư mục",
+    "project": "Dự án",
+    "newProject": "Dự án mới « {{name}} »",
+    "error": "Nhập thất bại. Thử lại.",
+    "import": "Nhập"
   }
 }

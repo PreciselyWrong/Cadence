@@ -63,6 +63,13 @@ interface TaskDao {
     @Upsert
     suspend fun upsert(task: TaskEntity)
 
+    /** Tâches dont le nom ou la note contient [needle] (en minuscules, sans schéma) et qui ne sont pas closes. */
+    @Query(
+        """SELECT * FROM tasks WHERE status NOT IN (:closed)
+        AND (instr(lower(name), :needle) > 0 OR instr(lower(COALESCE(note, '')), :needle) > 0) LIMIT :limit""",
+    )
+    suspend fun openMentioning(needle: String, closed: List<Int>, limit: Int): List<TaskEntity>
+
     @Query("DELETE FROM tasks WHERE uid = :uid")
     suspend fun delete(uid: String)
 
@@ -218,9 +225,13 @@ interface LinkDao {
     @Query("SELECT * FROM links WHERE uid = :uid")
     suspend fun get(uid: String): LinkEntity?
 
-    /** Le lien enregistré depuis une idée, une tâche ou une note : « Annuler » le retrouve sans connaître son uid. */
-    @Query("SELECT * FROM links WHERE sourceType = :type AND sourceUid = :uid LIMIT 1")
-    suspend fun bySource(type: String, uid: String): LinkEntity?
+    /** Liens rangés dans un projet dont l'adresse contient [needle] ; le genre exact se vérifie après. */
+    @Query("SELECT * FROM links WHERE projectUid IS NOT NULL AND instr(lower(url), :needle) > 0")
+    suspend fun withProjectMentioning(needle: String): List<LinkEntity>
+
+    /** Les pages d'un projet, toutes adresses confondues : la même adresse normalisée se décide dans le repository. */
+    @Query("SELECT * FROM links WHERE projectUid = :projectUid")
+    suspend fun inProject(projectUid: String): List<LinkEntity>
 
     @Upsert
     suspend fun upsert(link: LinkEntity)
@@ -312,6 +323,9 @@ interface DeferredCallDao {
 
     @Query("SELECT COUNT(*) FROM deferred_calls")
     fun observeCount(): Flow<Int>
+
+    @Query("SELECT `key` FROM deferred_calls WHERE `key` LIKE 'task-to-project:%'")
+    fun observeConversionKeys(): Flow<List<String>>
 
     @Query("SELECT EXISTS(SELECT 1 FROM deferred_calls WHERE `key` = :key)")
     fun observeExists(key: String): Flow<Boolean>

@@ -5,6 +5,11 @@ import React, {
     useRef,
     useState,
 } from 'react';
+import {
+    capturedTask,
+    isOnlyAddress,
+    VERB_FALLBACKS,
+} from '../../utils/linkTaskName';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { InboxIcon } from '@heroicons/react/24/outline';
@@ -34,11 +39,7 @@ import {
 import { isEditableTarget } from '../../utils/shortcutDispatcher';
 import { isAuthError } from '../../utils/authUtils';
 import { firstUrl } from '../../utils/linkFilters';
-import {
-    keepInLinks,
-    linkTaskDraft,
-    wordsAround,
-} from '../../utils/linkTriage';
+import { linkTaskDraft, wordsAround } from '../../utils/linkTriage';
 import { urlPreviewWithin } from '../../utils/urlService';
 import { useUrlPreview } from '../../hooks/useUrlPreview';
 import LinkPreviewCard from '../Links/LinkPreviewCard';
@@ -90,7 +91,7 @@ const reasonText = (t: TFunction, suggestion: TriageSuggestion): string => {
 type TriageAction = TriageKind | 'later' | 'delete';
 
 // Keyboard-first pass over the inbox: one item at a time, one key each, the
-// same decisions as the inbox panel (Links instead of Project for an item
+// same decisions as the inbox panel (a task instead of Project for an item
 // holding an address). "Later" only passes the item for this pass.
 const InboxTriage: React.FC<InboxTriageProps> = ({
     projects,
@@ -117,7 +118,7 @@ const InboxTriage: React.FC<InboxTriageProps> = ({
         const found = suggestTriage(current.content);
         // Project is not offered for an address.
         return url && found.kind === 'project'
-            ? { ...found, kind: 'link' }
+            ? { ...found, kind: 'task' }
             : found;
     }, [current, url]);
     const preview = useUrlPreview(url);
@@ -151,23 +152,19 @@ const InboxTriage: React.FC<InboxTriageProps> = ({
                 ? wordsAround([title, rest].filter(Boolean).join(' '), address)
                 : '';
 
-            if (kind === 'link') {
-                if (!address) return;
-                await keepInLinks(item.uid as string, {
-                    url: address,
-                    ...(pageTitle ? { title: pageTitle } : {}),
-                    ...(words ? { note: words } : {}),
-                    ...(tags.length > 0
-                        ? { tags: tags.map((tag) => tag.name) }
-                        : {}),
-                    ...(project?.uid ? { project_uid: project.uid } : {}),
-                });
-                return;
-            }
-
-            const draft = address
-                ? linkTaskDraft({ url: address, title: pageTitle, text: words })
-                : { name: title, note: rest };
+            // An idea that is only an address: named by its kind of page.
+            const onlyAddress = address && isOnlyAddress(item.content);
+            const draft = onlyAddress
+                ? capturedTask({ url: address, title: pageTitle }, (key, t2) =>
+                      t(key, VERB_FALLBACKS[key], { title: t2 })
+                  )
+                : address
+                  ? linkTaskDraft({
+                        url: address,
+                        title: pageTitle,
+                        text: words,
+                    })
+                  : { name: title, note: rest };
 
             let into: ProcessedInto;
             if (kind === 'task') {
@@ -181,6 +178,13 @@ const InboxTriage: React.FC<InboxTriageProps> = ({
                             tags,
                             project_uid: project?.uid,
                             completed_at: null,
+                            ...(onlyAddress
+                                ? {
+                                      needs_when: !project?.uid,
+                                      source: 'link',
+                                      source_url: address,
+                                  }
+                                : {}),
                         },
                         analysis
                     )
@@ -214,8 +218,7 @@ const InboxTriage: React.FC<InboxTriageProps> = ({
     const act = useCallback(
         async (action: TriageAction) => {
             if (!current?.uid || busy) return;
-            // Links needs an address; Project is not offered with one.
-            if (action === 'link' && !url) return;
+            // Project is not offered for an address.
             if (action === 'project' && url) return;
             const uid = current.uid;
             if (action === 'later') {
@@ -235,7 +238,6 @@ const InboxTriage: React.FC<InboxTriageProps> = ({
                     showSuccessToast(
                         {
                             task: t('inbox.triage.madeTask', 'Task created'),
-                            link: t('inbox.triage.madeLink', 'Added to Links'),
                             project: t(
                                 'inbox.triage.madeProject',
                                 'Project created'
@@ -276,7 +278,6 @@ const InboxTriage: React.FC<InboxTriageProps> = ({
             const key = event.key.toLowerCase();
             const handlers: Record<string, () => void> = {
                 t: () => void act('task'),
-                l: () => void act('link'),
                 p: () => void act('project'),
                 n: () => void act('note'),
                 s: () => void act('later'),
@@ -303,15 +304,6 @@ const InboxTriage: React.FC<InboxTriageProps> = ({
         label: string;
     }> = [
         { key: 'T', action: 'task', label: t('inbox.triage.task', 'Task') },
-        ...(url
-            ? [
-                  {
-                      key: 'L',
-                      action: 'link' as const,
-                      label: t('inbox.triage.link', 'Links'),
-                  },
-              ]
-            : []),
         { key: 'N', action: 'note', label: t('inbox.triage.note', 'Note') },
         ...(url
             ? []

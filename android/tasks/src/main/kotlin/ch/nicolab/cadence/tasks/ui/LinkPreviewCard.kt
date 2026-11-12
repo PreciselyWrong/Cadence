@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
@@ -47,6 +48,7 @@ import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.links.CachedPreview
 import ch.nicolab.cadence.tasks.links.LinkExtractor
 import ch.nicolab.cadence.tasks.links.LinkPreviews
+import ch.nicolab.cadence.tasks.links.PreviewLines
 
 internal enum class PreviewSize { Compact, Large }
 
@@ -74,6 +76,7 @@ internal fun LinkPreviewCard(
     val description = if (title == domain) null else domain
     val openLabel = stringResource(R.string.tasks_link_open, domain)
     val large = size == PreviewSize.Large && shown?.imageUrl != null
+    val stats = shown?.let { PreviewLines.statsLine(it.kind, it.githubStars, it.githubLanguage, it.githubLastCommit) }
 
     Column(
         modifier
@@ -88,7 +91,7 @@ internal fun LinkPreviewCard(
     ) {
         if (large) {
             Thumbnail(shown, domain, Modifier.fillMaxWidth().aspectRatio(LINK_IMAGE_RATIO), RectangleShape)
-            LinkTexts(title, description ?: shown.description, domain, Modifier.padding(Space.md))
+            LinkTexts(title, description ?: shown.description, domain, stats, Modifier.padding(Space.md))
         } else {
             Row(
                 Modifier.padding(Space.sm),
@@ -96,14 +99,14 @@ internal fun LinkPreviewCard(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Thumbnail(shown, domain, Modifier.size(THUMB), Radius.Chip)
-                LinkTexts(title, description, null, Modifier.weight(1f).padding(end = Space.sm))
+                LinkTexts(title, description, null, stats, Modifier.weight(1f).padding(end = Space.sm))
             }
         }
     }
 }
 
 @Composable
-private fun LinkTexts(title: String, subtitle: String?, domain: String?, modifier: Modifier) {
+private fun LinkTexts(title: String, subtitle: String?, domain: String?, stats: String?, modifier: Modifier) {
     val palette = cadence
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Space.groupGap)) {
         Text(
@@ -125,13 +128,15 @@ private fun LinkTexts(title: String, subtitle: String?, domain: String?, modifie
         domain?.let {
             Text(it, style = MaterialTheme.typography.labelSmall, color = palette.outline, maxLines = 1)
         }
+        stats?.let {
+            Text(it, style = MaterialTheme.typography.labelSmall, color = palette.outline, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        }
     }
 }
 
-/** Image du serveur sur une pastille à l'initiale du domaine : elle reste visible si l'image manque. */
+/** Pastille d'un domaine : son initiale sur une teinte stable par domaine ; [overlay] (une image) se pose par-dessus. */
 @Composable
-private fun Thumbnail(preview: CachedPreview?, domain: String, modifier: Modifier, shape: Shape) {
-    val context = LocalContext.current
+internal fun DomainPastille(domain: String, modifier: Modifier, shape: Shape, overlay: @Composable BoxScope.() -> Unit = {}) {
     val tint = remember(domain) { Color(HabitColorChoices[(domain.hashCode() and Int.MAX_VALUE) % HabitColorChoices.size]) }
     Box(modifier.clip(shape).background(tint.copy(alpha = 0.18f)), contentAlignment = Alignment.Center) {
         Text(
@@ -139,6 +144,15 @@ private fun Thumbnail(preview: CachedPreview?, domain: String, modifier: Modifie
             style = MaterialTheme.typography.titleLarge,
             color = readableTintOf(tint, tintedSurface(tint, 0.18f, cadence.containerHigh)),
         )
+        overlay()
+    }
+}
+
+/** Image du serveur sur une pastille à l'initiale du domaine : elle reste visible si l'image manque. */
+@Composable
+private fun Thumbnail(preview: CachedPreview?, domain: String, modifier: Modifier, shape: Shape) {
+    val context = LocalContext.current
+    DomainPastille(domain, modifier, shape) {
         preview?.imageUrl?.let { image ->
             AsyncImage(
                 model = ImageRequest.Builder(context).data(image).crossfade(true).build(),

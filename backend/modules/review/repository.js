@@ -1,12 +1,13 @@
 'use strict';
 
-const { Op } = require('sequelize');
+const { Op, fn, col } = require('sequelize');
 const {
     Task,
     TaskEvent,
     Project,
     Tag,
     InboxItem,
+    Link,
     DailyPlan,
     DailyPlanItem,
     sequelize,
@@ -213,6 +214,48 @@ const reviewRepository = {
             InboxItem.count({ where }),
         ]);
         return { items, count };
+    },
+
+    // Open projects the user may see (not done, cancelled or archived; no
+    // templates).
+    async findOpenProjects(visibleWhere) {
+        return Project.findAll({
+            where: {
+                [Op.and]: [
+                    visibleWhere,
+                    {
+                        status: {
+                            [Op.notIn]: ['done', 'cancelled', 'archived'],
+                        },
+                    },
+                    { is_template: false },
+                ],
+            },
+            attributes: [
+                'id',
+                'uid',
+                'name',
+                'status',
+                'updated_at',
+                'created_at',
+                'reviewed_at',
+            ],
+        });
+    },
+
+    // The last page added to each project.
+    async findLatestPages(projectIds) {
+        if (projectIds.length === 0) return new Map();
+        const rows = await Link.findAll({
+            where: { project_id: { [Op.in]: projectIds } },
+            attributes: [
+                'project_id',
+                [fn('MAX', col('created_at')), 'latest'],
+            ],
+            group: ['project_id'],
+            raw: true,
+        });
+        return new Map(rows.map((row) => [row.project_id, row.latest]));
     },
 
     // Active projects the user may see, with what the stagnation check

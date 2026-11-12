@@ -7,7 +7,6 @@ const app = require('../../app');
 const {
     Task,
     Note,
-    Link,
     Project,
     Area,
     Tag,
@@ -23,14 +22,13 @@ const model = require('../../modules/auto-classify/model');
 const SECOND = 1000;
 const later = (seconds) => new Date(Date.now() + seconds * SECOND);
 
-// One answer per item uid, from `byName` (task name, note title or link url).
+// One answer per item uid, from `byName` (task name or note title).
 function answering(byName) {
     const calls = [];
     const ask = async ({ entries }) => {
         calls.push(entries.map((e) => e.item.uid));
         return entries.map(({ item }) => {
-            const key =
-                item.entity === 'link' ? item.url : (item.name ?? item.title);
+            const key = item.name ?? item.title;
             const fields = byName[key];
             if (typeof fields === 'function') return fields(item);
             return {
@@ -42,7 +40,6 @@ function answering(byName) {
                 new_tag: null,
                 estimated_minutes: { value: null, confidence: 0 },
                 priority: { value: 0, confidence: 0 },
-                summary: null,
                 ...(fields || {}),
             };
         });
@@ -59,7 +56,6 @@ const withDefaults = (uid, fields) => ({
     new_tag: null,
     estimated_minutes: { value: null, confidence: 0 },
     priority: { value: 0, confidence: 0 },
-    summary: null,
     ...fields,
 });
 
@@ -563,83 +559,6 @@ describe('auto-classify', () => {
         expect((await suggestion.reload()).state).toBe('dismissed');
     });
 
-    it('reports a duplicate link without asking the model, and merges on request', async () => {
-        const original = await Link.create({
-            user_id: user.id,
-            url: 'https://github.com/owner/tool',
-            note: 'à tester',
-            fetch_status: 'done',
-        });
-        await worker.runOnce(later(1));
-        const { ask, calls } = answering({});
-        model.configure({ ask });
-        const fresh = await Link.create({
-            user_id: user.id,
-            url: 'https://github.com/owner/tool/issues',
-            note: 'vu sur un blog',
-            fetch_status: 'done',
-        });
-        await fresh.setTags(await Tag.findAll({ where: { name: 'achats' } }));
-        await worker.runOnce(later(200));
-        expect(calls.flat()).not.toContain(fresh.uid);
-        const suggestion = await AutoClassifySuggestion.findOne({
-            where: { item_uid: fresh.uid },
-        });
-        expect(suggestion.kind).toBe('duplicate');
-        expect(suggestion.payload.original.uid).toBe(original.uid);
-        expect(suggestion.payload.reason).toBe('repository');
-
-        const queue = (await agent.get('/api/triage')).body;
-        expect(
-            queue.items.find((i) => i.type === 'link_duplicate').payload
-                .original.uid
-        ).toBe(original.uid);
-
-        const res = await agent
-            .post(`/api/auto-classify/suggestions/${suggestion.uid}/apply`)
-            .send({ choice: { action: 'merge' } });
-        expect(res.status).toBe(200);
-        await original.reload();
-        await fresh.reload();
-        expect(fresh.status).toBe('dropped');
-        expect(original.note).toBe('à tester\n\nvu sur un blog');
-        expect(await tagsOf(Link, original.uid)).toEqual(['achats']);
-    });
-
-    it('waits for the page of a link, then tags and summarizes it', async () => {
-        const link = await Link.create({
-            user_id: user.id,
-            url: 'https://example.org/article',
-            fetch_status: 'pending',
-        });
-        const { ask, calls } = answering({
-            'https://example.org/article': {
-                tags: [{ name: 'achats', confidence: 0.9 }],
-                summary: 'Un guide pour bien acheter. Il compare les offres.',
-            },
-        });
-        model.configure({ ask });
-        await worker.runOnce(later(91));
-        expect(calls).toHaveLength(0);
-        expect(
-            (await AutoClassifyItem.findOne({ where: { item_uid: link.uid } }))
-                .state
-        ).toBe('waiting');
-
-        await link.update({
-            fetch_status: 'done',
-            title: 'Bien acheter',
-            description:
-                'Un guide complet pour comparer les offres et acheter malin.',
-        });
-        await worker.runOnce(later(120));
-        await link.reload();
-        expect(link.note).toBe(
-            'Résumé auto : Un guide pour bien acheter. Il compare les offres.'
-        );
-        expect(await tagsOf(Link, link.uid)).toEqual(['achats']);
-    });
-
     it('undoes a change, and refuses once the item was edited', async () => {
         const first = await Task.create({
             user_id: user.id,
@@ -770,5 +689,56 @@ describe('auto-classify', () => {
         await worker.runOnce(later(91));
         expect(calls).toHaveLength(0);
         expect(await AutoClassifyItem.count()).toBe(0);
+    });
+
+    it('hides a duplicate card left by links, and keeps the queue working', async () => {
+        const task = await Task.create({
+            user_id: user.id,
+            name: 'Lien',
+            status: 0,
+        });
+        await AutoClassifySuggestion.create({
+            user_id: user.id,
+            entity: 'link',
+            item_uid: 'link-retire',
+            kind: 'duplicate',
+            payload: {
+                title: 'Ancien',
+                url: 'https://example.org/a',
+                original: { uid: 'x' },
+            },
+            state: 'pending',
+            run_id: 'run_legacy',
+            expires_at: later(3600),
+        });
+        await AutoClassifySuggestion.create({
+            user_id: user.id,
+            entity: 'task',
+            item_uid: task.uid,
+            kind: 'classify',
+            payload: {
+                title: 'Lien',
+                project: null,
+                tags: { options: ['achats'], new_tag: null },
+                priority: null,
+            },
+            state: 'pending',
+            run_id: 'run_legacy',
+            expires_at: later(3600),
+        });
+        const list = await agent.get('/api/auto-classify/suggestions');
+        expect(list.status).toBe(200);
+        expect(list.body.suggestions.map((s) => s.kind)).toEqual(['classify']);
+        const queue = await agent.get('/api/triage');
+        expect(queue.status).toBe(200);
+        expect(queue.body.items.map((i) => i.type)).not.toContain(
+            'link_duplicate'
+        );
+        await worker.runOnce(later(60 * 60 * 7));
+        expect(
+            await AutoClassifySuggestion.count({
+                where: { kind: 'duplicate', state: 'pending' },
+            })
+        ).toBe(0);
     });
 });

@@ -30,7 +30,7 @@ import ch.nicolab.cadence.tasks.sync.HttpError
 import kotlinx.coroutines.launch
 
 /**
- * « Classé automatiquement · Annuler » sur une tâche, une note ou un lien, quand le classement a posé une marque.
+ * « Classé automatiquement · Annuler » sur une tâche ou une note, quand le classement a posé une marque.
  * En ligne seulement : hors ligne, rien ne s'affiche. Annuler défait la marque, puis relit l'état.
  */
 @Composable

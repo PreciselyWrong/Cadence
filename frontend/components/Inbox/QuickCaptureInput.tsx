@@ -91,13 +91,8 @@ import {
     extractUrlTitle,
     urlPreviewWithin,
 } from '../../utils/urlService';
-import { useLinksStore } from '../../store/linksStore';
-import {
-    domainOf,
-    keepLink,
-    linkOnlyAddress,
-    linkTaskDraft,
-} from '../../utils/linkTriage';
+import { linkOnlyAddress } from '../../utils/linkTriage';
+import { capturedTask, VERB_FALLBACKS } from '../../utils/linkTaskName';
 import InboxSelectedChips from './InboxSelectedChips';
 import SuggestionsDropdown from './SuggestionsDropdown';
 import SlashItemRow from './SlashItemRow';
@@ -497,9 +492,7 @@ const QuickCaptureInput = React.forwardRef<
                 ...(picked.project && destination !== 'project'
                     ? [`+${name(picked.project)}`]
                     : []),
-                ...(picked.area &&
-                destination !== 'note' &&
-                destination !== 'link'
+                ...(picked.area && destination !== 'note'
                     ? [`~${name(picked.area.name)}`]
                     : []),
             ];
@@ -2012,26 +2005,6 @@ const QuickCaptureInput = React.forwardRef<
             }
 
             const linkAddress = linkOnlyAddress(itemText);
-            if (destination === 'link' && linkAddress) {
-                const projectUid = await resolveOrCreateProject(
-                    parseProjectRefs(itemText)[0]
-                );
-                const tagNames = parseHashtags(itemText);
-                const title = await pageTitleOf(linkAddress);
-                const link = await keepLink({
-                    url: linkAddress,
-                    ...(title ? { title } : {}),
-                    ...(tagNames.length > 0 ? { tags: tagNames } : {}),
-                    ...(projectUid ? { project_uid: projectUid } : {}),
-                });
-                return {
-                    target: destination,
-                    uid: link.uid,
-                    title: link.title || title || domainOf(linkAddress),
-                    ...(projectUid ? { projectUid } : {}),
-                };
-            }
-
             // Only tasks and projects have dates (and tasks an assignee), so
             // a note keeps its whole title apart from #tags and +project.
             let analysis: InboxAnalysis | null = null;
@@ -2118,12 +2091,18 @@ const QuickCaptureInput = React.forwardRef<
                 : {};
 
             if (destination === 'task') {
-                // A link alone: named after its page, the address in the note.
+                // A link alone: named by its kind of page (« Essayer : … »),
+                // the address in the note, waiting for « Quand ? » without a
+                // project (docs/37-links.md).
                 const named = linkAddress
-                    ? linkTaskDraft({
-                          url: linkAddress,
-                          title: await pageTitleOf(linkAddress),
-                      })
+                    ? capturedTask(
+                          {
+                              url: linkAddress,
+                              title: await pageTitleOf(linkAddress),
+                          },
+                          (key, pageName) =>
+                              t(key, VERB_FALLBACKS[key], { title: pageName })
+                      )
                     : { name: title, note: rest || undefined };
                 const task = applyAnalysisToTask(
                     {
@@ -2139,6 +2118,13 @@ const QuickCaptureInput = React.forwardRef<
                             useStore.getState().areasStore?.areas ?? []
                         ),
                         ...(defaultGoal ? { goal_id: defaultGoal.id } : {}),
+                        ...(linkAddress
+                            ? {
+                                  needs_when: !projectUid,
+                                  source: 'link',
+                                  source_url: linkAddress,
+                              }
+                            : {}),
                         completed_at: null,
                     },
                     analysis
@@ -2205,12 +2191,6 @@ const QuickCaptureInput = React.forwardRef<
                               'Created {{total}} tasks.',
                               { total }
                           );
-                case 'link':
-                    return t(
-                        'capture.savedLink',
-                        'Saved "{{title}}" to Links.',
-                        { title }
-                    );
                 case 'note':
                     return total === 1
                         ? t(
@@ -2248,8 +2228,6 @@ const QuickCaptureInput = React.forwardRef<
                         await useStore
                             .getState()
                             .tasksStore.deleteTask(item.uid);
-                    } else if (item.target === 'link') {
-                        await useLinksStore.getState().remove(item.uid);
                     } else if (item.target === 'note') {
                         await deleteNote(item.uid);
                         const { notesStore } = useStore.getState();
@@ -2341,9 +2319,6 @@ const QuickCaptureInput = React.forwardRef<
                     return uploadInboxAttachment(uid, file);
                 }
                 if (item.target === 'task') return uploadAttachment(uid, file);
-                if (item.target === 'link') {
-                    throw new Error('A link holds no files');
-                }
                 return ownerAttachmentsApi(item.target, uid).upload(file);
             };
             for (const { file } of toUpload) {
@@ -3007,7 +2982,7 @@ const QuickCaptureInput = React.forwardRef<
 
         // What this text will become, in words, for text with several lines
         const multilineNotice = (() => {
-            if (lineTotal < 2 || destinationNow === 'link') return null;
+            if (lineTotal < 2) return null;
             const words = {
                 inbox: {
                     one: t('capture.nounInbox', 'Inbox item'),

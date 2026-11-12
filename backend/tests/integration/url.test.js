@@ -109,6 +109,22 @@ describe('URL Routes', () => {
             });
         });
 
+        it('says what kind of page it is, from the address and og:type', async () => {
+            serveHtml(
+                '<html><head><title>A post</title><meta property="og:type" content="article"></head></html>'
+            );
+            const article = await agent
+                .get('/api/url/title')
+                .query({ url: 'https://example.com/post' });
+            expect(article.body.kind).toBe('article');
+
+            failRequests('down');
+            const repo = await agent
+                .get('/api/url/title')
+                .query({ url: 'https://github.com/acme/rocket' });
+            expect(repo.body.kind).toBe('repo');
+        });
+
         it('decodes the HTML entities of the title and description', async () => {
             serveHtml(
                 '<html><head><title>Tom&#39;s &#x26; Jerry&apos;s</title><meta property="og:description" content="It&#39;s &quot;fast&quot; &#8212; really &amp; truly"></head></html>'
@@ -152,12 +168,12 @@ describe('URL Routes', () => {
 
             const response = await agent
                 .get('/api/url/title')
-                .query({ url: 'httpbin.org/html' });
+                .query({ url: 'example.org/no-scheme' });
 
             expect(response.status).toBe(200);
             expect(response.body).toHaveProperty('url');
             expect(response.body).toHaveProperty('title');
-            expect(response.body.url).toBe('httpbin.org/html');
+            expect(response.body.url).toBe('example.org/no-scheme');
             expect(response.body.title).toBe('Test Page');
         });
 

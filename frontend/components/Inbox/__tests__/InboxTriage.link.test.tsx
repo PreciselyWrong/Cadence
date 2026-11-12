@@ -2,7 +2,6 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import InboxTriage from '../InboxTriage';
-import { keepInLinks } from '../../../utils/linkTriage';
 import { createTask } from '../../../utils/tasksService';
 
 jest.mock('react-i18next', () => ({
@@ -31,11 +30,6 @@ jest.mock('../../../utils/inboxService', () => ({
     applyAnalysisToTask: (task: unknown) => task,
     processInboxItemWithStore: jest.fn().mockResolvedValue(undefined),
     deleteInboxItemWithStore: jest.fn(),
-}));
-
-jest.mock('../../../utils/linkTriage', () => ({
-    ...jest.requireActual('../../../utils/linkTriage'),
-    keepInLinks: jest.fn().mockResolvedValue({ uid: 'l1' }),
 }));
 
 jest.mock('../../../utils/tasksService', () => ({
@@ -69,28 +63,13 @@ describe('InboxTriage - an item with an address', () => {
         mockItems = [{ uid: 'i1', content: 'https://example.com/rust' }];
     });
 
-    it('offers Links (L) instead of Project, and suggests it', async () => {
+    it('offers no Project and suggests a task, not a link', async () => {
         renderTriage();
 
         expect(await screen.findByText('Rust patterns')).toBeInTheDocument();
-        expect(screen.getByTestId('triage-link')).toHaveTextContent('L');
+        expect(screen.queryByTestId('triage-link')).toBeNull();
         expect(screen.queryByTestId('triage-project')).toBeNull();
-        expect(screen.getByTestId('triage-later')).toHaveTextContent('S');
-        expect(screen.getByTestId('triage-link')).toHaveClass('bg-blue-600');
-    });
-
-    it('keeps it in Links with the page title on L', async () => {
-        renderTriage();
-        await screen.findByText('Rust patterns');
-
-        fireEvent.keyDown(document, { key: 'l' });
-
-        await waitFor(() =>
-            expect(keepInLinks).toHaveBeenCalledWith('i1', {
-                url: 'https://example.com/rust',
-                title: 'Rust patterns',
-            })
-        );
+        expect(screen.getByTestId('triage-task')).toHaveClass('bg-blue-600');
     });
 
     it('makes a task named after the page on T', async () => {
@@ -111,13 +90,14 @@ describe('InboxTriage - an item with an address', () => {
 });
 
 describe('InboxTriage - an idea', () => {
-    it('offers Project, not Links, and L does nothing', () => {
+    it('offers Project, and no Links key', () => {
+        jest.clearAllMocks();
         mockItems = [{ uid: 'i2', content: 'Plan the garden' }];
         renderTriage();
 
         expect(screen.getByTestId('triage-project')).toBeInTheDocument();
         expect(screen.queryByTestId('triage-link')).toBeNull();
         fireEvent.keyDown(document, { key: 'l' });
-        expect(keepInLinks).not.toHaveBeenCalled();
+        expect(createTask).not.toHaveBeenCalled();
     });
 });

@@ -226,10 +226,21 @@ data class TaskDraft(
     val order: Int? = null,
     /** Uid imposé (remise depuis Proches, uid stable) ; null en tire un au hasard. */
     val uid: String? = null,
-    /** Origine (`source`) et sa page (`source_url`, http ou https) : une idée qui n'est qu'une adresse donne `link`. */
+    /** Classée sans « Quand ? » : reste dans « Tâches à classer » (`needs_when`, envoyé seulement s'il est vrai). */
+    val needsWhen: Boolean = false,
+    /** Origine de la tâche (`source`, p. ex. `link`) ; rien quand null. */
     val source: String? = null,
+    /** Adresse d'origine (`source_url`) ; rien quand null. */
     val sourceUrl: String? = null,
 )
+
+/** Une tâche ou un projet : [uid] pour l'ouvrir, [name] pour le dire. */
+data class PlaceRef(val uid: String, val name: String)
+
+/** Où une adresse est déjà : tâches ouvertes qui la citent, projets dont un lien l'a enregistrée. */
+data class AddressPlaces(val tasks: List<PlaceRef>, val projects: List<PlaceRef>) {
+    val isEmpty: Boolean get() = tasks.isEmpty() && projects.isEmpty()
+}
 
 /**
  * Modification partielle : seuls les champs non null changent.

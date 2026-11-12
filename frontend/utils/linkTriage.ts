@@ -1,13 +1,8 @@
-import { Link } from '../entities/Link';
 import { Task } from '../entities/Task';
-import { useLinksStore } from '../store/linksStore';
 import { processInboxItemWithStore } from './inboxService';
 import { firstUrl, residualText } from './linkFilters';
 import { createLink, NewLink } from './linksService';
 import { createTask } from './tasksService';
-
-export const linkTitle = (link: Link): string =>
-    link.title || link.domain || link.url;
 
 // The site of an address, without "www.".
 export const domainOf = (url: string): string => {
@@ -45,7 +40,7 @@ export const linkOnlyAddress = (text: string): string | null => {
 // The task of a link: named after the page when its title is known, else
 // after the words written with the address, else after its site. The note
 // keeps the address, then the words the name did not take. Same rule on
-// Android and from the Links page (the link's note being its words).
+// Android.
 export const linkTaskDraft = ({
     url,
     title,
@@ -61,38 +56,44 @@ export const linkTaskDraft = ({
     return { name, note: [url, rest].filter(Boolean).join('\n\n') };
 };
 
-// "Create a task" from a saved link: the link stays as it is.
-export const linkToTask = (link: Link): Promise<Task> =>
-    createTask(
-        linkTaskDraft({
-            url: link.url,
-            title: link.title,
-            text: link.note,
-        }) as Task
-    );
+// An address made a task in one gesture (docs/37-links.md, Capture): the
+// address in the note, waiting in « Tâches à classer » for « Quand ? »
+// unless a project is chosen. The idea leaves the inbox.
+export interface CaptureDraft {
+    url: string;
+    name: string;
+    note: string;
+    tags?: string[];
+    project_uid?: string;
+}
 
-export type LinkDraft = Omit<NewLink, 'source_type' | 'source_uid'>;
-
-// The "Links" choice of the capture box, for an idea that is only a link:
-// kept at once, with no inbox item behind it.
-export const keepLink = async (draft: LinkDraft): Promise<Link> => {
-    const { link } = await createLink(draft);
-    useLinksStore.getState().add(link);
-    return link;
+export const captureAsTask = async (
+    itemUid: string,
+    draft: CaptureDraft
+): Promise<Task> => {
+    const task = await createTask({
+        name: draft.name,
+        note: draft.note,
+        status: 'not_started',
+        tags: (draft.tags ?? []).map((name) => ({ name })),
+        project_uid: draft.project_uid,
+        needs_when: !draft.project_uid,
+        source: 'link',
+        source_url: draft.url,
+        completed_at: null,
+    } as Task);
+    await processInboxItemWithStore(itemUid, { task_uid: task.uid as string });
+    return task;
 };
 
-// The "Links" decision of an inbox item: the link is created from it, then
-// the item leaves the inbox.
-export const keepInLinks = async (
+export type LinkDraft = NewLink;
+
+// The "Project…" decision of an inbox item: the page goes to the project,
+// then the item leaves the inbox.
+export const addToProject = async (
     itemUid: string,
     draft: LinkDraft
-): Promise<Link> => {
-    const { link } = await createLink({
-        ...draft,
-        source_type: 'inbox_item',
-        source_uid: itemUid,
-    });
-    useLinksStore.getState().add(link);
+): Promise<void> => {
+    const { link } = await createLink(draft);
     await processInboxItemWithStore(itemUid, { link_uid: link.uid });
-    return link;
 };

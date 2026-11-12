@@ -7,7 +7,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.work.Configuration
 import androidx.work.WorkManager
 import ch.nicolab.cadence.tasks.model.Delivery
-import ch.nicolab.cadence.tasks.model.LinkStatus
 import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.ProjectStatus
 import ch.nicolab.cadence.tasks.model.RecurringScope
@@ -86,13 +85,11 @@ class OfflineWritesRepositoryTest {
         val idea = repository.captureInbox("Lire https://a.io")
         repository.processInboxItem(idea)
         repository.setLinkNote("l1", "à tester")
-        repository.setLinkStatus("l1", LinkStatus.DROPPED)
         repository.createArea("Perso")
         repository.deleteTask(task)
 
         val entities = queued().map { it.first }.toSet()
         assertEquals(setOf("task", "project", "note", "inbox_item", "link", "area"), entities)
-        assertEquals("dropped", database.linkDao().get("l1")!!.status)
         assertEquals(null, database.taskDao().get(task))
     }
 

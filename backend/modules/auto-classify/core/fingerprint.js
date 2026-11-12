@@ -19,7 +19,6 @@ const FIELDS = {
         'due_date',
     ],
     note: ['title', 'content', 'project_id'],
-    link: ['url', 'title', 'note', 'status', 'project_id'],
 };
 
 function normalize(value) {

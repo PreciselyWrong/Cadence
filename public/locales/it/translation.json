@@ -555,7 +555,8 @@
     "overdueBy": "In ritardo di {{days}} g",
     "dueInDays": "Scade tra {{days}} g",
     "startedSuccessfully": "Attività avviata con successo!",
-    "deleteConfirmMessage": "Eliminare \"{{name}}\"? Questa azione non può essere annullata."
+    "deleteConfirmMessage": "Eliminare \"{{name}}\"? Questa azione non può essere annullata.",
+    "withLink": "Con un link"
   },
   "timeline": {
     "activityTimeline": "Timeline delle Attività",
@@ -2074,7 +2075,10 @@
     "inHours": "tra {{count}} ore",
     "pastDue": "Scaduta",
     "editDetails": "Modifica dettagli",
-    "noUpcomingOccurrences": "Nessuna occorrenza futura."
+    "noUpcomingOccurrences": "Nessuna occorrenza futura.",
+    "turnIntoProject": "Trasforma in progetto",
+    "turnIntoProjectError": "Impossibile trasformarlo in progetto.",
+    "turnIntoProjectMessage": "Trasformare « {{name}} » in progetto? Le sue sottoattività diventano le attività del progetto e gli indirizzi della sua nota diventano le sue pagine."
   },
   "projects": {
     "parentProject": "Progetto padre",
@@ -2207,6 +2211,11 @@
       "failedTitle": "Impossibile caricare i dettagli del progetto.",
       "failedHint": "Controlla la connessione e ricarica la pagina.",
       "backToProjects": "Torna ai progetti"
+    },
+    "dormant": {
+      "title": "Non toccato da 30 giorni ({{count}})",
+      "daysAgo": "{{count}} giorni fa",
+      "keep": "Mantieni"
     }
   },
   "projectItem": {
@@ -5785,7 +5794,24 @@
     "editTitle": "Modifica il link",
     "deleteTitle": "Eliminare questo link?",
     "deleteMessage": "Lascia i tuoi link per sempre. Per metterlo da parte, archivialo invece.",
-    "deleteError": "Impossibile eliminare il link."
+    "deleteError": "Impossibile eliminare il link.",
+    "taskVerb": {
+      "try": "Prova: {{title}}",
+      "read": "Leggi: {{title}}",
+      "watch": "Guarda: {{title}}"
+    },
+    "capture": {
+      "taskName": "Nome dell'attività",
+      "alreadyIn": "Già in « {{name}} »",
+      "more": "+{{count}}",
+      "open": "Apri",
+      "addAnyway": "Aggiungi comunque",
+      "toProject": "Progetto…",
+      "keepInInbox": "Inbox",
+      "taskAdded": "Attività aggiunta",
+      "taskToSort": "Attività aggiunta a « Attività da ordinare »",
+      "addedToProject": "Aggiunto al progetto"
+    }
   },
   "dailyBrief": {
     "sectionName": {
@@ -6272,5 +6298,32 @@
   "mentions": {
     "loading": "Caricamento delle persone…",
     "noMatch": "Nessuna persona corrispondente"
+  },
+  "projectPages": {
+    "heading": "Pagine",
+    "title": "Titolo",
+    "note": "Nota",
+    "dead": "Non trovata",
+    "createTask": "Crea un'attività",
+    "remove": "Rimuovi",
+    "actions": "Azioni della pagina",
+    "removeError": "Impossibile rimuovere la pagina.",
+    "copied": "Pagine copiate in Markdown",
+    "deadCount": "{{count}} pagine non trovate",
+    "allAnswer": "Tutte le pagine rispondono",
+    "checkError": "Impossibile verificare le pagine.",
+    "copyMarkdown": "Copia le pagine in Markdown",
+    "check": "Verifica le pagine"
+  },
+  "bookmarksImport": {
+    "title": "Importa segnalibri",
+    "hint": "Un'esportazione da Firefox (Libreria › Importa e backup › Esporta). Una cartella diventa le pagine di un progetto.",
+    "file": "File dei segnalibri",
+    "empty": "Nessun segnalibro in questo file.",
+    "folder": "Cartella",
+    "project": "Progetto",
+    "newProject": "Nuovo progetto « {{name}} »",
+    "error": "Importazione non riuscita. Riprova.",
+    "import": "Importa"
   }
 }

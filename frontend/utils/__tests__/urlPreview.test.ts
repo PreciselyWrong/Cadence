@@ -25,6 +25,10 @@ describe('fetchUrlPreview', () => {
             description: 'A guide',
             image: 'https://a.io/i.png',
             siteName: null,
+            kind: null,
+            githubStars: null,
+            githubLanguage: null,
+            githubLastCommit: null,
         });
     });
 

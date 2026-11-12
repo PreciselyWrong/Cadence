@@ -23,7 +23,6 @@ import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.automirrored.outlined.StickyNote2
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Folder
-import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.TaskAlt
@@ -52,6 +51,7 @@ import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import ch.nicolab.cadence.designsystem.components.CadenceSheet
+import ch.nicolab.cadence.designsystem.components.ChoiceChip
 import ch.nicolab.cadence.designsystem.components.ICON_CONTRAST
 import ch.nicolab.cadence.designsystem.components.readableTintOf
 import ch.nicolab.cadence.designsystem.theme.Radius
@@ -74,12 +74,13 @@ internal fun ListSwitcherSheet(
     pinned: List<PinnedShortcut>,
     areas: List<AreaItem>,
     areaFilter: String?,
+    withLink: Boolean,
     onSelectTab: (TasksTab) -> Unit,
     onOpenPinned: (PinnedShortcut) -> Unit,
     onUnpin: (PinnedShortcut) -> Unit,
     onSelectArea: (String?) -> Unit,
+    onSelectWithLink: (Boolean) -> Unit,
     onOpenMyDay: () -> Unit,
-    onOpenLinks: () -> Unit,
     onOpenSettings: () -> Unit,
     onDismiss: () -> Unit,
 ) {
@@ -125,15 +126,17 @@ internal fun ListSwitcherSheet(
                 SheetLabel(stringResource(R.string.tasks_lists_area))
                 AreaFilterRow(areas = areas, selected = areaFilter, onSelect = onSelectArea, contentPadding = PaddingValues())
             }
+            Row(Modifier.padding(vertical = Space.sm)) {
+                ChoiceChip(
+                    label = stringResource(R.string.tasks_filter_with_link),
+                    selected = withLink,
+                    onClick = { onSelectWithLink(!withLink) },
+                )
+            }
             SwitcherRow(
                 label = stringResource(R.string.brief_card_title),
                 leading = { Icon(Icons.Outlined.Today, contentDescription = null, tint = palette.onSurfaceVariant) },
                 onClick = onOpenMyDay,
-            )
-            SwitcherRow(
-                label = stringResource(R.string.links_title),
-                leading = { Icon(Icons.Outlined.Link, contentDescription = null, tint = palette.onSurfaceVariant) },
-                onClick = onOpenLinks,
             )
             HorizontalDivider(Modifier.padding(vertical = Space.sm), color = palette.outlineVariant)
             SwitcherRow(

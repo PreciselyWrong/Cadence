@@ -37,9 +37,9 @@ describe('suggestTriage', () => {
         });
     });
 
-    it('suggests Links for a bare link', () => {
+    it('suggests a task for a bare link', () => {
         expect(suggestTriage('https://example.com/article')).toEqual({
-            kind: 'link',
+            kind: 'task',
             reason: 'url',
         });
     });

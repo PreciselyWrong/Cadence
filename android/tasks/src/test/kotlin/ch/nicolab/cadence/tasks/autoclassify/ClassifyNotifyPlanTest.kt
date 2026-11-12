@@ -18,8 +18,8 @@ class ClassifyNotifyPlanTest {
     private fun at(hour: Int) = ZonedDateTime.of(LocalDateTime.of(2026, 11, 7, hour, 30), zone).toInstant()
 
     private val pending = listOf(
-        PendingSuggestion("s1", "classify", "task", "t1", null),
-        PendingSuggestion("s2", "duplicate", "link", "l2", null),
+        PendingSuggestion("s1", "task", "t1", null),
+        PendingSuggestion("s2", "note", "n2", null),
     )
 
     @Test

@@ -182,3 +182,20 @@ export const fetchProjectBySlug = async (uidSlug: string): Promise<Project> => {
     await handleAuthResponse(response, 'Failed to fetch project.');
     return await response.json();
 };
+
+// Open projects nobody touched for 30 days (docs/37-links.md).
+export interface DormantProject {
+    uid: string;
+    name: string;
+    status: string;
+    last_activity_at: string;
+}
+
+export const fetchDormantProjects = async (): Promise<DormantProject[]> => {
+    const response = await fetch(getApiPath('projects/dormant'), {
+        credentials: 'include',
+        headers: { Accept: 'application/json' },
+    });
+    await handleAuthResponse(response, 'Failed to fetch quiet projects.');
+    return (await response.json()).projects;
+};

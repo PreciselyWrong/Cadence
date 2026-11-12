@@ -1,4 +1,4 @@
-import { inBatches, parseBookmarks } from '../bookmarksImport';
+import { bookmarkFolders, inBatches } from '../bookmarksImport';
 
 const EXPORT = `<!DOCTYPE NETSCAPE-Bookmark-file-1>
 <DL><p>
@@ -15,19 +15,22 @@ const EXPORT = `<!DOCTYPE NETSCAPE-Bookmark-file-1>
     <DT><A HREF="javascript:alert(1)">Marklet</A>
 </DL>`;
 
-describe('parseBookmarks', () => {
-    const bookmarks = parseBookmarks(EXPORT);
+// A folder of bookmarks becomes the pages of a project (docs/37-links.md).
+describe('bookmarkFolders', () => {
+    const folders = bookmarkFolders(EXPORT);
 
-    it('keeps http(s) pages once, with their title', () => {
-        expect(bookmarks.map((b) => [b.url, b.title])).toEqual([
-            ['https://example.com/a', 'Page A'],
-            ['https://example.com/b', 'Page B'],
+    it('groups the http(s) pages by their folder, once each, the browser folders by name too', () => {
+        expect(
+            folders.map((f) => [f.name, f.bookmarks.map((b) => b.url)])
+        ).toEqual([
+            ['Bookmarks Toolbar', ['https://example.com/a']],
+            ['Outils/IA', ['https://example.com/b']],
         ]);
+        expect(folders[1].bookmarks[0].title).toBe('Page B');
     });
 
-    it("keeps the tags, and the folder as a tag unless it is the browser's own", () => {
-        expect(bookmarks[0].tags).toEqual(['dev', 'lecture']);
-        expect(bookmarks[1].tags).toEqual(['Outils IA']);
+    it('gives nothing for a file without bookmarks', () => {
+        expect(bookmarkFolders('<html></html>')).toEqual([]);
     });
 });
 

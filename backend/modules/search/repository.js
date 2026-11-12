@@ -193,8 +193,16 @@ class SearchRepository {
     }
 
     async findLinks(conditions, limit, offset) {
+        // A link is a page of a project: the result opens the project.
         return Link.findAll({
             where: conditions,
+            include: [
+                {
+                    model: Project,
+                    attributes: ['uid', 'name'],
+                    required: false,
+                },
+            ],
             limit,
             offset,
             order: [['updated_at', 'DESC']],

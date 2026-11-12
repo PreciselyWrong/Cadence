@@ -412,7 +412,24 @@
     "editTitle": "Upraviť odkaz",
     "deleteTitle": "Odstrániť tento odkaz?",
     "deleteMessage": "Natrvalo zmizne z vašich odkazov. Ak ho chcete len odložiť, radšej ho archivujte.",
-    "deleteError": "Odkaz sa nepodarilo odstrániť."
+    "deleteError": "Odkaz sa nepodarilo odstrániť.",
+    "taskVerb": {
+      "try": "Vyskúšať: {{title}}",
+      "read": "Prečítať: {{title}}",
+      "watch": "Pozrieť: {{title}}"
+    },
+    "capture": {
+      "taskName": "Názov úlohy",
+      "alreadyIn": "Už je v « {{name}} »",
+      "more": "+{{count}}",
+      "open": "Otvoriť",
+      "addAnyway": "Pridať napriek tomu",
+      "toProject": "Projekt…",
+      "keepInInbox": "Schránka",
+      "taskAdded": "Úloha pridaná",
+      "taskToSort": "Úloha pridaná do « Úlohy na roztriedenie »",
+      "addedToProject": "Pridané do projektu"
+    }
   },
   "dailyBrief": {
     "sectionName": {
@@ -1024,7 +1041,8 @@
     "overdueBy": "Oneskorené o {{days}} d",
     "dueInDays": "Termín o {{days}} d",
     "startedSuccessfully": "Úloha bola úspešne spustená!",
-    "deleteConfirmMessage": "Naozaj chcete odstrániť „{{name}}“? Túto akciu nie je možné vrátiť späť."
+    "deleteConfirmMessage": "Naozaj chcete odstrániť „{{name}}“? Túto akciu nie je možné vrátiť späť.",
+    "withLink": "S odkazom"
   },
   "comments": {
     "count": "Komentáre: {{count}}",
@@ -2584,7 +2602,10 @@
     "inHours": "o {{count}} hod.",
     "pastDue": "Po termíne",
     "editDetails": "Upraviť podrobnosti",
-    "noUpcomingOccurrences": "Žiadne nadchádzajúce výskyty."
+    "noUpcomingOccurrences": "Žiadne nadchádzajúce výskyty.",
+    "turnIntoProject": "Premeniť na projekt",
+    "turnIntoProjectError": "Nepodarilo sa premeniť na projekt.",
+    "turnIntoProjectMessage": "Premeniť „{{name}}“ na projekt? Jeho podúlohy sa stanú úlohami projektu a adresy z jeho poznámky jeho stránkami."
   },
   "subtasks": {
     "placeholder": "Pridajte podúlohu...",
@@ -2708,6 +2729,11 @@
       "failedTitle": "Podrobnosti projektu sa nepodarilo načítať.",
       "failedHint": "Skontrolujte pripojenie a znova načítajte stránku.",
       "backToProjects": "Späť na projekty"
+    },
+    "dormant": {
+      "title": "Nedotknuté 30 dní ({{count}})",
+      "daysAgo": "pred {{count}} dňami",
+      "keep": "Ponechať"
     }
   },
   "projectStatus": {
@@ -6301,5 +6327,32 @@
   "mentions": {
     "loading": "Načítavajú sa osoby…",
     "noMatch": "Žiadne zodpovedajúce osoby"
+  },
+  "projectPages": {
+    "heading": "Stránky",
+    "title": "Názov",
+    "note": "Poznámka",
+    "dead": "Nenájdená",
+    "createTask": "Vytvoriť úlohu",
+    "remove": "Odstrániť",
+    "actions": "Akcie stránky",
+    "removeError": "Stránku sa nepodarilo odstrániť.",
+    "copied": "Stránky skopírované ako Markdown",
+    "deadCount": "Nenájdené stránky: {{count}}",
+    "allAnswer": "Všetky stránky odpovedajú",
+    "checkError": "Stránky sa nepodarilo skontrolovať.",
+    "copyMarkdown": "Kopírovať stránky ako Markdown",
+    "check": "Skontrolovať stránky"
+  },
+  "bookmarksImport": {
+    "title": "Importovať záložky",
+    "hint": "Export z Firefoxu (Library › Import and Backup › Export). Jeden priečinok sa stane stránkami projektu.",
+    "file": "Súbor so záložkami",
+    "empty": "Tento súbor neobsahuje žiadne záložky.",
+    "folder": "Priečinok",
+    "project": "Projekt",
+    "newProject": "Nový projekt « {{name}} »",
+    "error": "Import zlyhal. Skúste to znova.",
+    "import": "Importovať"
   }
 }

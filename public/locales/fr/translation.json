@@ -556,7 +556,8 @@
     "progress": "Avancement",
     "startNow": "Démarrer maintenant",
     "startedSuccessfully": "Tâche démarrée !",
-    "todayPlan": "Plan du jour"
+    "todayPlan": "Plan du jour",
+    "withLink": "Avec un lien"
   },
   "timeline": {
     "activityTimeline": "Chronologie d'Activité",
@@ -2077,7 +2078,10 @@
     "inHours": "dans {{count}} heures",
     "editDetails": "Modifier les détails",
     "noUpcomingOccurrences": "Aucune occurrence à venir.",
-    "pastDue": "En retard"
+    "pastDue": "En retard",
+    "turnIntoProject": "Transformer en projet",
+    "turnIntoProjectError": "Impossible de le transformer en projet.",
+    "turnIntoProjectMessage": "Transformer « {{name}} » en projet ? Ses sous-tâches deviennent les tâches du projet et les adresses de sa note ses pages."
   },
   "projects": {
     "parentProject": "Projet parent",
@@ -2210,6 +2214,11 @@
       "failedTitle": "Impossible de charger les détails du projet.",
       "failedHint": "Vérifiez votre connexion et rechargez la page.",
       "backToProjects": "Retour aux projets"
+    },
+    "dormant": {
+      "title": "Pas touché depuis 30 jours ({{count}})",
+      "daysAgo": "il y a {{count}} jours",
+      "keep": "Garder"
     }
   },
   "projectItem": {
@@ -5788,7 +5797,24 @@
     "editTitle": "Modifier le lien",
     "deleteTitle": "Supprimer ce lien ?",
     "deleteMessage": "Il quitte vos liens pour de bon. Pour le mettre de côté, archivez-le plutôt.",
-    "deleteError": "Le lien n'a pas pu être supprimé."
+    "deleteError": "Le lien n'a pas pu être supprimé.",
+    "taskVerb": {
+      "try": "Essayer : {{title}}",
+      "read": "Lire : {{title}}",
+      "watch": "Regarder : {{title}}"
+    },
+    "capture": {
+      "taskName": "Nom de la tâche",
+      "alreadyIn": "Déjà dans « {{name}} »",
+      "more": "+{{count}}",
+      "open": "Ouvrir",
+      "addAnyway": "Ajouter quand même",
+      "toProject": "Projet…",
+      "keepInInbox": "Inbox",
+      "taskAdded": "Tâche ajoutée",
+      "taskToSort": "Tâche ajoutée à « Tâches à classer »",
+      "addedToProject": "Ajouté au projet"
+    }
   },
   "dailyBrief": {
     "sectionName": {
@@ -6273,5 +6299,32 @@
   "mentions": {
     "loading": "Chargement des personnes…",
     "noMatch": "Aucune personne correspondante"
+  },
+  "projectPages": {
+    "heading": "Pages",
+    "title": "Titre",
+    "note": "Note",
+    "dead": "Introuvable",
+    "createTask": "Créer une tâche",
+    "remove": "Retirer",
+    "actions": "Actions de la page",
+    "removeError": "Impossible de retirer la page.",
+    "copied": "Pages copiées en Markdown",
+    "deadCount": "{{count}} pages introuvables",
+    "allAnswer": "Toutes les pages répondent",
+    "checkError": "Impossible de vérifier les pages.",
+    "copyMarkdown": "Copier les pages en Markdown",
+    "check": "Vérifier les pages"
+  },
+  "bookmarksImport": {
+    "title": "Importer des favoris",
+    "hint": "Un export de Firefox (Bibliothèque › Importation et sauvegarde › Exporter). Un dossier devient les pages d'un projet.",
+    "file": "Fichier de favoris",
+    "empty": "Aucun favori dans ce fichier.",
+    "folder": "Dossier",
+    "project": "Projet",
+    "newProject": "Nouveau projet « {{name}} »",
+    "error": "L'import a échoué. Réessayez.",
+    "import": "Importer"
   }
 }

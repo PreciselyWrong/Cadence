@@ -258,29 +258,15 @@ describe('QuickCaptureInput unified capture', () => {
             });
         };
 
-        it('can go straight to the Links with its tags and project, and be undone', async () => {
+        it('offers Inbox, Task and Note, never Links nor Project', async () => {
             renderBox();
             await typeLink('https://example.com/post #dev +Website');
 
             expect(screen.queryByTestId('capture-target-project')).toBeNull();
-            chooseTarget('link');
-            await clickAdd();
-
-            expect(createLink).toHaveBeenCalledWith({
-                url: 'https://example.com/post',
-                title: 'A post',
-                tags: ['dev'],
-                project_uid: 'proj-uid',
-            });
-            expect(createInboxItemWithStore).not.toHaveBeenCalled();
-            expect(screen.getByTestId('capture-status')).toHaveTextContent(
-                'Saved "A post" to Links.'
-            );
-
-            await act(async () => {
-                fireEvent.click(screen.getByTestId('capture-undo'));
-            });
-            expect(deleteLink).toHaveBeenCalledWith('link-1');
+            expect(screen.queryByTestId('capture-target-link')).toBeNull();
+            expect(
+                screen.getByTestId('capture-target-task')
+            ).toBeInTheDocument();
         });
 
         it('stays in the Inbox by default', async () => {
@@ -300,28 +286,17 @@ describe('QuickCaptureInput unified capture', () => {
             chooseTarget('task');
             await clickAdd();
 
+            // Named by its kind of page (an article: « Lire : … »), waiting
+            // for « Quand ? » (docs/37-links.md).
             expect(createTaskInStore).toHaveBeenCalledWith(
                 expect.objectContaining({
                     name: 'A post',
                     note: 'https://example.com/post',
+                    needs_when: true,
+                    source: 'link',
+                    source_url: 'https://example.com/post',
                 })
             );
-        });
-
-        it('goes back to the Inbox once words are written with the link', async () => {
-            renderBox();
-            await typeLink('https://example.com/post');
-            chooseTarget('link');
-            await typeLink('read https://example.com/post');
-
-            expect(screen.queryByTestId('capture-target-link')).toBeNull();
-            expect(screen.getByTestId('capture-target-inbox')).toHaveAttribute(
-                'aria-checked',
-                'true'
-            );
-            await clickAdd();
-            expect(createLink).not.toHaveBeenCalled();
-            expect(createInboxItemWithStore).toHaveBeenCalled();
         });
     });
 

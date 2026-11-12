@@ -91,6 +91,7 @@ const Tasks: React.FC = () => {
     const navigate = useNavigate();
 
     const query = new URLSearchParams(location.search);
+    const hasLink = query.get('has_link') === 'true';
     const isUpcomingView =
         query.get('type') === 'upcoming' || location.pathname === '/upcoming';
     // Open tasks by default, so a ticked task leaves the list; "All" is opt-in.
@@ -867,6 +868,50 @@ const Tasks: React.FC = () => {
                                                     </button>
                                                 );
                                             })}
+                                            {/* « Avec un lien » (docs/37-links.md) */}
+                                            <button
+                                                type="button"
+                                                data-testid="tasks-with-link"
+                                                onClick={() => {
+                                                    const params =
+                                                        new URLSearchParams(
+                                                            location.search
+                                                        );
+                                                    if (hasLink) {
+                                                        params.delete(
+                                                            'has_link'
+                                                        );
+                                                    } else {
+                                                        params.set(
+                                                            'has_link',
+                                                            'true'
+                                                        );
+                                                    }
+                                                    navigate(
+                                                        {
+                                                            pathname:
+                                                                location.pathname,
+                                                            search: `?${params.toString()}`,
+                                                        },
+                                                        { replace: true }
+                                                    );
+                                                }}
+                                                className={`w-full flex items-center justify-between px-3 py-2 text-sm ${
+                                                    hasLink
+                                                        ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300'
+                                                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                                }`}
+                                            >
+                                                <span>
+                                                    {t(
+                                                        'tasks.withLink',
+                                                        'With a link'
+                                                    )}
+                                                </span>
+                                                {hasLink && (
+                                                    <CheckIcon className="h-4 w-4" />
+                                                )}
+                                            </button>
                                         </div>
                                     </div>
                                     <div>

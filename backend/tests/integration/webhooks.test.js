@@ -14,6 +14,7 @@ const app = require('../../app');
 const {
     Link,
     Notification,
+    Project,
     Task,
     User,
     Webhook,
@@ -274,14 +275,16 @@ describe('Webhooks', () => {
 
         it('sends link.created for a new link', async () => {
             await createWebhook({ events: ['link.created'] });
+            const project = await Project.create({
+                name: 'Outils',
+                user_id: user.id,
+            });
             const link = await Link.create({
                 user_id: user.id,
                 url: 'https://example.com/tool',
                 title: 'A tool',
                 kind: 'tool',
-                status: 'new',
-                source_type: 'inbox_item',
-                source_uid: 'inbox-0001',
+                project_id: project.id,
             });
 
             const [delivery] = await pending();
@@ -294,8 +297,7 @@ describe('Webhooks', () => {
                 uid: link.uid,
                 url: 'https://example.com/tool',
                 title: 'A tool',
-                source_type: 'inbox_item',
-                source_uid: 'inbox-0001',
+                project_uid: project.uid,
             });
         });
 

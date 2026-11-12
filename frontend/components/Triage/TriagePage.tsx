@@ -3,15 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { answerBriefQuestion } from '../../utils/dailyBriefService';
 import { getTodayDateString } from '../../utils/dateUtils';
 import {
-    answerSlot,
     applyTriage,
     decideMail,
     MailDecision,
     MailPayload,
     fetchTriageQueue,
     keepTask,
-    LinkReviewDecision,
-    reviewLink,
     TriageAction,
     TriageItem,
     TriageQueue,
@@ -20,14 +17,12 @@ import {
 import { useToast } from '../Shared/ToastContext';
 import { deferDelete } from '../../utils/deferredDelete';
 import ClassifyCard from '../AutoClassify/ClassifyCard';
-import DuplicateCard from '../AutoClassify/DuplicateCard';
 import MailCard from './MailCard';
 import PageHeader from '../Shared/ui/PageHeader';
 import {
     applyClassifySuggestion,
     ClassifyPayload,
     dismissClassifySuggestion,
-    DuplicatePayload,
 } from '../../utils/autoClassifyService';
 
 const ACTION_LABELS: Record<TriageAction, [string, string]> = {
@@ -103,7 +98,6 @@ const TriagePage: React.FC = () => {
     const task = item?.task_uid ? queue?.tasks[item.task_uid] : undefined;
     // A card of the classifier (modules/auto-classify): a task, note or link.
     const classifier = item?.source === 'classify';
-    const linkReview = item?.type === 'link_review';
     const mail = item?.type === 'mail';
     const entityLabel = (entity: unknown) =>
         entity === 'note'
@@ -168,12 +162,6 @@ const TriagePage: React.FC = () => {
             if (undo()) restore();
         });
     };
-
-    const review = (decision: LinkReviewDecision, message: string) =>
-        settle(
-            () => reviewLink(String(item?.payload?.link_uid), decision),
-            message
-        );
 
     const MAIL_DONE: Record<MailDecision, [string, string]> = {
         task: ['triage.mail.taskCreated', 'Tâche créée'],
@@ -257,11 +245,7 @@ const TriagePage: React.FC = () => {
     };
 
     const primaryLabel = () => {
-        if (
-            !item ||
-            item.action === 'question' ||
-            item.action === 'accept_slot'
-        ) {
+        if (!item || item.action === 'question') {
             return '';
         }
         const name = item.payload?.name;
@@ -310,23 +294,6 @@ const TriagePage: React.FC = () => {
                         className="mt-4 rounded-2xl bg-surface-low p-5 ring-1 ring-inset ring-outline-variant/60"
                         data-testid="triage-card"
                     >
-                        {linkReview && (
-                            <>
-                                <h2 className="text-title-m font-semibold text-surface-on">
-                                    {String(
-                                        item.payload?.title || item.payload?.url
-                                    )}
-                                </h2>
-                                <a
-                                    href={String(item.payload?.url)}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="mt-0.5 block break-all text-body-m text-primary hover:underline"
-                                >
-                                    {String(item.payload?.url)}
-                                </a>
-                            </>
-                        )}
                         {classifier && !task && (
                             <>
                                 <h2 className="text-title-m font-semibold text-surface-on">
@@ -374,17 +341,7 @@ const TriagePage: React.FC = () => {
                                           'autoClassify.card.reason',
                                           'Classement à confirmer'
                                       )
-                                    : item.type === 'link_duplicate'
-                                      ? t(
-                                            'autoClassify.duplicate.reason',
-                                            'Lien déjà enregistré ?'
-                                        )
-                                      : linkReview
-                                        ? t(
-                                              'triage.linkReview',
-                                              'Lien à revoir'
-                                          )
-                                        : (item.question?.text ?? item.reason)}
+                                    : (item.question?.text ?? item.reason)}
                             </p>
                         )}
                         {item.details.map((line) => (
@@ -396,54 +353,6 @@ const TriagePage: React.FC = () => {
                             </p>
                         ))}
 
-                        {item.action === 'accept_slot' && (
-                            <>
-                                <p className="mt-1 text-body-m text-surface-on-variant">
-                                    {String(item.payload?.title)} ·{' '}
-                                    {String(item.payload?.date)}
-                                </p>
-                                <div className="mt-3 flex flex-wrap gap-2">
-                                    <button
-                                        type="button"
-                                        className={primary}
-                                        onClick={() =>
-                                            settle(
-                                                () =>
-                                                    answerSlot(
-                                                        String(
-                                                            item.payload
-                                                                ?.slot_id
-                                                        ),
-                                                        true
-                                                    ),
-                                                applied
-                                            )
-                                        }
-                                    >
-                                        {t('triage.slotAccept', 'Planifier')}
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className={secondary}
-                                        onClick={() =>
-                                            settle(
-                                                () =>
-                                                    answerSlot(
-                                                        String(
-                                                            item.payload
-                                                                ?.slot_id
-                                                        ),
-                                                        false
-                                                    ),
-                                                applied
-                                            )
-                                        }
-                                    >
-                                        {t('triage.slotRefuse', 'Refuser')}
-                                    </button>
-                                </div>
-                            </>
-                        )}
                         {item.type === 'classify' && (
                             <ClassifyCard
                                 key={item.key}
@@ -475,75 +384,7 @@ const TriagePage: React.FC = () => {
                                 }
                             />
                         )}
-                        {item.type === 'link_duplicate' && (
-                            <DuplicateCard
-                                payload={
-                                    item.payload as unknown as DuplicatePayload
-                                }
-                                onChoose={(action) =>
-                                    settle(
-                                        () =>
-                                            applyClassifySuggestion(
-                                                String(
-                                                    item.payload?.suggestion_uid
-                                                ),
-                                                { action }
-                                            ),
-                                        applied
-                                    )
-                                }
-                            />
-                        )}
-                        {linkReview && (
-                            <div className="mt-3 flex flex-wrap gap-2">
-                                <button
-                                    type="button"
-                                    className={primary}
-                                    onClick={() =>
-                                        review(
-                                            'keep',
-                                            t('triage.linkKept', 'Lien gardé')
-                                        )
-                                    }
-                                >
-                                    {t('triage.linkKeep', 'Garder')}
-                                </button>
-                                <button
-                                    type="button"
-                                    className={secondary}
-                                    onClick={() =>
-                                        review(
-                                            'archive',
-                                            t(
-                                                'triage.linkArchived',
-                                                'Lien archivé'
-                                            )
-                                        )
-                                    }
-                                >
-                                    {t('triage.linkArchive', 'Archiver')}
-                                </button>
-                                <button
-                                    type="button"
-                                    className={secondary}
-                                    onClick={() =>
-                                        review(
-                                            'later',
-                                            t(
-                                                'triage.linkPostponed',
-                                                'À revoir dans 30 jours'
-                                            )
-                                        )
-                                    }
-                                >
-                                    {t('triage.linkLater', 'Dans 30 jours')}
-                                </button>
-                            </div>
-                        )}
-                        {item.action === 'accept_slot' ||
-                        classifier ||
-                        linkReview ||
-                        mail ? null : item.question ? (
+                        {classifier || mail ? null : item.question ? (
                             <div className="mt-3 flex flex-wrap gap-2">
                                 <button
                                     type="button"

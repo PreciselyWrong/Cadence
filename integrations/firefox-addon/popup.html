@@ -6,21 +6,22 @@
     </head>
     <body>
         <form id="form" hidden>
-            <label><span data-i18n="field_title"></span><input id="title" /></label>
+            <p id="already" class="already" hidden>
+                <span id="already-text"></span>
+                <a id="already-open" href="#" target="_blank" rel="noopener" data-i18n="action_open"></a>
+            </p>
+            <label><span data-i18n="field_task_name"></span><input id="name" /></label>
             <p id="url" class="muted"></p>
-            <label>
-                <span data-i18n="field_status"></span>
-                <select id="status">
-                    <option value="new" data-i18n="status_new"></option>
-                    <option value="to_evaluate" data-i18n="status_to_evaluate"></option>
-                    <option value="tested" data-i18n="status_tested"></option>
-                    <option value="kept" data-i18n="status_kept"></option>
-                </select>
-            </label>
-            <label><span data-i18n="field_tags"></span><input id="tags" /></label>
-            <label><span data-i18n="field_note"></span><textarea id="note" rows="2"></textarea></label>
-            <button id="save" type="submit" data-i18n="action_save"></button>
+            <button id="save" type="submit" data-i18n="action_task"></button>
         </form>
+        <section id="projects" hidden>
+            <label><span data-i18n="field_project"></span><select id="project"></select></label>
+            <div class="row">
+                <button id="send-tab" type="button" data-i18n="action_send_tab"></button>
+                <button id="send-group" type="button" data-i18n="action_send_group" hidden></button>
+                <button id="open-project" type="button" data-i18n="action_open_project"></button>
+            </div>
+        </section>
         <p id="message" role="status" hidden></p>
         <button id="options" type="button" class="link" data-i18n="action_options"></button>
         <script src="core.js"></script>

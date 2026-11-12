@@ -463,3 +463,20 @@ export const deleteTaskRelation = async (
         otherTaskUid ? [taskUid, otherTaskUid] : [taskUid]
     );
 };
+
+// « Transformer en projet » (docs/37-links.md): the task goes, the project
+// it became is returned.
+export const turnTaskIntoProject = async (
+    uid: string
+): Promise<{ project: { uid: string; name: string } }> => {
+    const response = await fetch(getApiPath(`task/${uid}/to-project`), {
+        method: 'POST',
+        credentials: 'include',
+        headers: await getPostHeadersWithCsrf(),
+    });
+    await handleAuthResponse(
+        response,
+        'Failed to turn the task into a project.'
+    );
+    return response.json();
+};

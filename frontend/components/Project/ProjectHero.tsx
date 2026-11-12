@@ -1,3 +1,4 @@
+import LinkPreviews from '../Links/LinkPreviews';
 import { getCurrentLocale } from '../../utils/dateUtils';
 import React, { useEffect, useRef, useState } from 'react';
 import { TFunction } from 'i18next';
@@ -45,6 +46,8 @@ interface ProjectHeroProps {
     // Offered when the project is shared with the viewer (can_leave)
     onLeaveClick?: () => void;
     onSaveAsTemplate?: () => void;
+    // The pages' actions: Markdown copy and check (docs/37-links.md).
+    pageActions?: { key: string; label: string; onSelect: () => void }[];
     onEditBannerClick?: () => void;
     onEditClick?: () => void;
     onTogglePin?: () => void;
@@ -68,6 +71,7 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
     onShareClick,
     onLeaveClick,
     onSaveAsTemplate,
+    pageActions,
     onEditBannerClick,
     onEditClick,
     onTogglePin,
@@ -466,6 +470,12 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                                     )}
                             </p>
                         )}
+                        {!editingDescription && (
+                            <LinkPreviews
+                                texts={[project.description]}
+                                className="max-w-3xl"
+                            />
+                        )}
                     </div>
 
                     <div className="flex flex-shrink-0 flex-wrap items-center gap-2">
@@ -544,6 +554,19 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                                             {t('common.edit', 'Edit')}
                                         </button>
                                     )}
+                                    {pageActions?.map((action) => (
+                                        <button
+                                            key={action.key}
+                                            type="button"
+                                            className={menuItemClass}
+                                            onClick={() => {
+                                                setMenuOpen(false);
+                                                action.onSelect();
+                                            }}
+                                        >
+                                            {action.label}
+                                        </button>
+                                    ))}
                                     {onSaveAsTemplate && (
                                         <button
                                             type="button"

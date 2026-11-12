@@ -554,7 +554,8 @@
     "overdueBy": "Myöhässä {{days}} pv",
     "dueInDays": "Erääntyy {{days}} pv:n kuluttua",
     "startedSuccessfully": "Tehtävän aloittaminen onnistui!",
-    "deleteConfirmMessage": "Haluatko varmasti poistaa kohteen \"{{name}}\"? Tätä toimintoa ei voi perua."
+    "deleteConfirmMessage": "Haluatko varmasti poistaa kohteen \"{{name}}\"? Tätä toimintoa ei voi perua.",
+    "withLink": "Linkillinen"
   },
   "timeline": {
     "activityTimeline": "Toiminta-aikajana",
@@ -2072,7 +2073,10 @@
     "inHours": "{{count}} tunnin kuluttua",
     "pastDue": "Erääntynyt",
     "editDetails": "Muokkaa tietoja",
-    "noUpcomingOccurrences": "Ei tulevia toistoja."
+    "noUpcomingOccurrences": "Ei tulevia toistoja.",
+    "turnIntoProject": "Muuta projektiksi",
+    "turnIntoProjectError": "Projektiksi muuttaminen ei onnistunut.",
+    "turnIntoProjectMessage": "Muutetaanko « {{name}} » projektiksi? Sen alitehtävistä tulee projektin tehtäviä, ja sen muistiinpanon osoitteista tulee projektin sivut."
   },
   "projects": {
     "parentProject": "Pääprojekti",
@@ -2204,6 +2208,11 @@
       "failedTitle": "Projektin tietojen lataus epäonnistui.",
       "failedHint": "Tarkista yhteytesi ja lataa sivu uudelleen.",
       "backToProjects": "Takaisin projekteihin"
+    },
+    "dormant": {
+      "title": "Ei kosketettu 30 päivään ({{count}})",
+      "daysAgo": "{{count}} päivää sitten",
+      "keep": "Säilytä"
     }
   },
   "projectItem": {
@@ -5772,7 +5781,24 @@
     "editTitle": "Muokkaa linkkiä",
     "deleteTitle": "Poistetaanko tämä linkki?",
     "deleteMessage": "Se poistuu linkeistäsi lopullisesti. Jos haluat vain siirtää sen syrjään, arkistoi se.",
-    "deleteError": "Linkkiä ei voitu poistaa."
+    "deleteError": "Linkkiä ei voitu poistaa.",
+    "taskVerb": {
+      "try": "Kokeile: {{title}}",
+      "read": "Lue: {{title}}",
+      "watch": "Katso: {{title}}"
+    },
+    "capture": {
+      "taskName": "Tehtävän nimi",
+      "alreadyIn": "On jo kohteessa « {{name}} »",
+      "more": "+{{count}}",
+      "open": "Avaa",
+      "addAnyway": "Lisää silti",
+      "toProject": "Projekti…",
+      "keepInInbox": "Saapuneet",
+      "taskAdded": "Tehtävä lisätty",
+      "taskToSort": "Tehtävä lisätty kohtaan « Lajiteltavat tehtävät »",
+      "addedToProject": "Lisätty projektiin"
+    }
   },
   "dailyBrief": {
     "sectionName": {
@@ -6257,5 +6283,32 @@
   "mentions": {
     "loading": "Ladataan henkilöitä…",
     "noMatch": "Ei vastaavia henkilöitä"
+  },
+  "projectPages": {
+    "heading": "Sivut",
+    "title": "Otsikko",
+    "note": "Muistiinpano",
+    "dead": "Ei löytynyt",
+    "createTask": "Luo tehtävä",
+    "remove": "Poista",
+    "actions": "Sivun toiminnot",
+    "removeError": "Sivua ei voitu poistaa.",
+    "copied": "Sivut kopioitu Markdownina",
+    "deadCount": "{{count}} sivua ei löytynyt",
+    "allAnswer": "Kaikki sivut vastaavat",
+    "checkError": "Sivuja ei voitu tarkistaa.",
+    "copyMarkdown": "Kopioi sivut Markdownina",
+    "check": "Tarkista sivut"
+  },
+  "bookmarksImport": {
+    "title": "Tuo kirjanmerkit",
+    "hint": "Firefoxin vienti (Kirjasto › Tuo ja varmuuskopioi › Vie). Yksi kansio muuttuu projektin sivuiksi.",
+    "file": "Kirjanmerkkitiedosto",
+    "empty": "Tässä tiedostossa ei ole kirjanmerkkejä.",
+    "folder": "Kansio",
+    "project": "Projekti",
+    "newProject": "Uusi projekti « {{name}} »",
+    "error": "Tuonti epäonnistui. Yritä uudelleen.",
+    "import": "Tuo"
   }
 }

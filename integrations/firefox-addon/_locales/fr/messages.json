@@ -1,27 +1,15 @@
 {
   "name": {
-    "message": "Cadence : liens"
+    "message": "Cadence"
   },
   "description": {
-    "message": "Enregistre la page ou le lien dans Cadence, sur votre serveur."
+    "message": "Fait de la page ou du lien une tâche Cadence, sur votre serveur."
   },
   "save_page": {
-    "message": "Enregistrer dans Cadence"
+    "message": "Créer une tâche dans Cadence"
   },
   "save_link": {
-    "message": "Enregistrer ce lien dans Cadence"
-  },
-  "field_title": {
-    "message": "Titre"
-  },
-  "field_status": {
-    "message": "Statut"
-  },
-  "field_tags": {
-    "message": "Étiquettes, séparées par des virgules"
-  },
-  "field_note": {
-    "message": "Note"
+    "message": "Créer une tâche de ce lien"
   },
   "field_server": {
     "message": "Adresse du serveur Cadence"
@@ -32,21 +20,6 @@
   "token_help": {
     "message": "À créer dans Cadence : Profil › Jetons d'API."
   },
-  "status_new": {
-    "message": "À lire"
-  },
-  "status_to_evaluate": {
-    "message": "À évaluer"
-  },
-  "status_tested": {
-    "message": "À tester"
-  },
-  "status_kept": {
-    "message": "Gardé"
-  },
-  "action_save": {
-    "message": "Enregistrer"
-  },
   "action_options": {
     "message": "Réglages"
   },
@@ -54,13 +27,7 @@
     "message": "Enregistrer les réglages"
   },
   "result_saved": {
-    "message": "Enregistré dans Cadence."
-  },
-  "result_already": {
-    "message": "Déjà dans Cadence."
-  },
-  "result_already_not_merged": {
-    "message": "Déjà dans Cadence : la note et les étiquettes saisies n'ont pas été ajoutées."
+    "message": "Tâche créée dans « Tâches à classer »."
   },
   "result_bad_token": {
     "message": "Jeton refusé : vérifiez les réglages."
@@ -88,5 +55,51 @@
   },
   "options_saved": {
     "message": "Réglages enregistrés."
+  },
+  "field_task_name": {
+    "message": "Nom de la tâche"
+  },
+  "action_task": {
+    "message": "Créer la tâche"
+  },
+  "action_add_anyway": {
+    "message": "Ajouter quand même"
+  },
+  "action_open": {
+    "message": "Ouvrir"
+  },
+  "already_in": {
+    "message": "Déjà dans « $NAME$ »",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "field_project": {
+    "message": "Projet"
+  },
+  "action_send_tab": {
+    "message": "Envoyer au projet"
+  },
+  "action_send_group": {
+    "message": "Envoyer le groupe"
+  },
+  "action_open_project": {
+    "message": "Ouvrir le projet"
+  },
+  "result_pages": {
+    "message": "Pages ajoutées : $NEW$ (déjà là : $OLD$).",
+    "placeholders": {
+      "new": {
+        "content": "$1"
+      },
+      "old": {
+        "content": "$2"
+      }
+    }
+  },
+  "result_no_pages": {
+    "message": "Ce projet n'a pas encore de pages."
   }
 }

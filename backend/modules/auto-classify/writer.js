@@ -4,10 +4,9 @@
 // the rules of each write (rights, TODO.md tasks, tag creation), and every
 // write reaches the devices through the sync journal like any other.
 const { toolsFor } = require('../triage/actions');
-const { SUMMARY_PREFIX } = require('./core/summary');
 const repository = require('./repository');
 
-const TOOLS = { task: 'update_task', note: 'update_note', link: 'update_link' };
+const TOOLS = { task: 'update_task', note: 'update_note' };
 const idParam = (entity, uid) => (entity === 'task' ? { id: uid } : { uid });
 
 // The tool call for `apply` (from core/validate.js) and the fields it
@@ -20,7 +19,7 @@ function planWrite(item, apply) {
         before[field] = from;
         after[field] = to;
     };
-    if (apply.project_uid && item.entity !== 'link') {
+    if (apply.project_uid) {
         params[item.entity === 'task' ? 'project_id' : 'project_uid'] =
             apply.project_uid;
         set('project_uid', null, apply.project_uid);
@@ -36,10 +35,6 @@ function planWrite(item, apply) {
     if (apply.estimated_minutes && item.entity === 'task') {
         params.estimated_minutes = apply.estimated_minutes;
         set('estimated_minutes', null, apply.estimated_minutes);
-    }
-    if (apply.summary && item.entity === 'link') {
-        params.note = `${SUMMARY_PREFIX}${apply.summary}`;
-        set('note', item.note ?? null, params.note);
     }
     return { tool: TOOLS[item.entity], params, before, after };
 }
@@ -67,7 +62,6 @@ async function undoChange(user, change) {
     if ('area_uid' in before) params.area_uid = null;
     if ('tags' in before) params.tags = before.tags;
     if ('estimated_minutes' in before) params.estimated_minutes = null;
-    if ('note' in before) params.note = before.note;
     await toolsFor(user)(TOOLS[change.entity], params);
     if (change.entity === 'task') {
         await repository.settleWhen(user.id, change.item_uid);

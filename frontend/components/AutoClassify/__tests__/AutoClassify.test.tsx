@@ -18,7 +18,6 @@ jest.mock('../../../utils/triageService', () => ({
     fetchTriageQueue: jest.fn(),
     keepTask: jest.fn(),
     applyTriage: jest.fn(),
-    answerSlot: jest.fn(),
 }));
 jest.mock('../../../utils/autoClassifyService', () => {
     const actual = jest.requireActual('../../../utils/autoClassifyService');
@@ -202,45 +201,6 @@ describe('classifier cards in the triage queue', () => {
             expect(dismissClassifySuggestion).toHaveBeenCalledWith('s1')
         );
         expect(applyClassifySuggestion).not.toHaveBeenCalled();
-    });
-
-    it('offers the four choices for a duplicate link', async () => {
-        (fetchTriageQueue as jest.Mock).mockResolvedValue(
-            queueWith({
-                type: 'link_duplicate',
-                action: 'resolve_duplicate',
-                payload: {
-                    suggestion_uid: 's2',
-                    entity: 'link',
-                    item_uid: 'l2',
-                    title: 'owner/tool issues',
-                    url: 'https://github.com/owner/tool/issues',
-                    reason: 'repository',
-                    original: {
-                        uid: 'l1',
-                        title: 'owner/tool',
-                        url: 'https://github.com/owner/tool',
-                        created_at: '2026-11-01',
-                    },
-                },
-            })
-        );
-        (applyClassifySuggestion as jest.Mock).mockResolvedValue({});
-        render(<TriagePage />);
-        expect(await screen.findByText('Même dépôt')).toBeInTheDocument();
-        for (const label of [
-            'Archiver le nouveau',
-            'Garder le nouveau',
-            'Garder les deux',
-        ]) {
-            expect(screen.getByText(label)).toBeInTheDocument();
-        }
-        fireEvent.click(screen.getByText('Fusionner dans l’ancien'));
-        await waitFor(() =>
-            expect(applyClassifySuggestion).toHaveBeenCalledWith('s2', {
-                action: 'merge',
-            })
-        );
     });
 
     it('builds accept all without a new project or tag', () => {

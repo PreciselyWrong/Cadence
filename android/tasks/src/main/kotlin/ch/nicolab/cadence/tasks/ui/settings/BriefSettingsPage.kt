@@ -137,11 +137,6 @@ private fun TriageAssistantSetting(current: JsonObject, save: (JsonObject) -> Un
         checked = enabled,
         onChecked = { save(BriefSettingsJson.withNested(current, "triage", "enabled", JsonPrimitive(it))) },
     )
-    ToggleRow(
-        label = stringResource(R.string.brief_link_themes),
-        checked = (BriefSettingsJson.group(current, "linkThemes")["enabled"] as? JsonPrimitive)?.content == "true",
-        onChecked = { save(BriefSettingsJson.withNested(current, "linkThemes", "enabled", JsonPrimitive(it))) },
-    )
     if (enabled) {
         IntSetting(stringResource(R.string.brief_triage_limit), BriefSettingsJson.int(triage, "dailyLimit", 20), range = 1..200) {
             save(BriefSettingsJson.withNested(current, "triage", "dailyLimit", JsonPrimitive(it)))

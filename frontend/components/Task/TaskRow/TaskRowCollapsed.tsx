@@ -1,3 +1,4 @@
+import TurnIntoProject from '../TurnIntoProject';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -920,6 +921,12 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                                         ? t('task.unpin', 'Unpin')
                                         : t('task.pin', 'Pin')}
                                 </button>
+                            )}
+                            {onDelete && (
+                                <TurnIntoProject
+                                    task={task}
+                                    onDone={() => setIsActionsMenuOpen(false)}
+                                />
                             )}
                             {onDelete && (
                                 <button

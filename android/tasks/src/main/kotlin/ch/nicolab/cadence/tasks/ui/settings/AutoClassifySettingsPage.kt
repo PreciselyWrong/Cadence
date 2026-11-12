@@ -42,14 +42,12 @@ private data class LimitField(val key: String, val label: Int, val min: Int, val
 private val LIMITS = listOf(
     LimitField("batch_size", R.string.auto_classify_batch_size, 1, 50),
     LimitField("grace_seconds", R.string.auto_classify_grace_seconds, 0, 3600),
-    LimitField("fetch_wait_minutes", R.string.auto_classify_fetch_wait_minutes, 0, 1440),
     LimitField("max_attempts", R.string.auto_classify_max_attempts, 1, 20),
     LimitField("context_cache_minutes", R.string.auto_classify_context_cache_minutes, 0, 1440),
     LimitField("suggestion_ttl_days", R.string.auto_classify_suggestion_ttl_days, 1, 365),
     LimitField("daily_suggestion_limit", R.string.auto_classify_daily_suggestion_limit, 0, 1000),
     LimitField("log_retention_days", R.string.auto_classify_log_retention_days, 1, 3650),
     LimitField("max_tags", R.string.auto_classify_max_tags, 0, 10),
-    LimitField("summary_max_chars", R.string.auto_classify_summary_max_chars, 40, 1000),
     LimitField("max_tokens", R.string.auto_classify_max_tokens, 200, 16000),
 )
 

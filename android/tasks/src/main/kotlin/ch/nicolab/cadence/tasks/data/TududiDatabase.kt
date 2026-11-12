@@ -24,7 +24,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         BriefEntity::class,
         EveningEntity::class,
     ],
-    version = 19,
+    version = 21,
     exportSchema = true,
 )
 abstract class TududiDatabase : RoomDatabase() {
@@ -229,6 +229,47 @@ internal val MIGRATION_18_19 = object : Migration(18, 19) {
     override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL("ALTER TABLE tasks ADD COLUMN source TEXT")
         db.execSQL("ALTER TABLE tasks ADD COLUMN sourceUrl TEXT")
+        db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
+    }
+}
+
+/**
+ * Aperçus enrichis : nom du site, genre, et pour un dépôt GitHub étoiles, langage et dernier commit. Le cache
+ * n'a pas de curseur à retirer : les aperçus existants gardent leur contenu et se complètent au prochain rafraîchissement.
+ */
+internal val MIGRATION_19_20 = object : Migration(19, 20) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE link_previews ADD COLUMN siteName TEXT")
+        db.execSQL("ALTER TABLE link_previews ADD COLUMN kind TEXT")
+        db.execSQL("ALTER TABLE link_previews ADD COLUMN githubStars INTEGER")
+        db.execSQL("ALTER TABLE link_previews ADD COLUMN githubLanguage TEXT")
+        db.execSQL("ALTER TABLE link_previews ADD COLUMN githubLastCommit TEXT")
+    }
+}
+
+/**
+ * Les liens deviennent des pages de projet : la table ne garde que les lignes rangées dans un projet, sans statut,
+ * jour de revue, étiquettes ni origine. Les appels hors protocole des anciens liens (`POST /api/v1/links` sans projet,
+ * `PATCH` d'adresse) ne passent plus : ils sont retirés. Le curseur est retiré : le prochain instantané renvoie les pages.
+ */
+internal val MIGRATION_20_21 = object : Migration(20, 21) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL(
+            "CREATE TABLE IF NOT EXISTS `links_pages` (`uid` TEXT NOT NULL, `url` TEXT NOT NULL, `title` TEXT, `description` TEXT, " +
+                "`imageUrl` TEXT, `siteName` TEXT, `kind` TEXT, `githubStars` INTEGER, `githubLanguage` TEXT, " +
+                "`githubLastCommitRaw` TEXT, `readmeExcerpt` TEXT, `note` TEXT, `fetchStatus` TEXT, `createdAtRaw` TEXT, " +
+                "`projectUid` TEXT, PRIMARY KEY(`uid`))",
+        )
+        db.execSQL(
+            "INSERT INTO `links_pages` (`uid`, `url`, `title`, `description`, `imageUrl`, `siteName`, `kind`, `githubStars`, " +
+                "`githubLanguage`, `githubLastCommitRaw`, `readmeExcerpt`, `note`, `fetchStatus`, `createdAtRaw`, `projectUid`) " +
+                "SELECT `uid`, `url`, `title`, `description`, `imageUrl`, `siteName`, `kind`, `githubStars`, " +
+                "`githubLanguage`, `githubLastCommitRaw`, `readmeExcerpt`, `note`, `fetchStatus`, `createdAtRaw`, `projectUid` " +
+                "FROM `links` WHERE `projectUid` IS NOT NULL",
+        )
+        db.execSQL("DROP TABLE `links`")
+        db.execSQL("ALTER TABLE `links_pages` RENAME TO `links`")
+        db.execSQL("DELETE FROM deferred_calls WHERE `key` LIKE 'link-add:%' OR `key` LIKE 'link-url:%'")
         db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
     }
 }

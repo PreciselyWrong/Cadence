@@ -7,7 +7,6 @@ import ch.nicolab.cadence.tasks.model.GoalItem
 import ch.nicolab.cadence.tasks.model.InboxEntry
 import ch.nicolab.cadence.tasks.model.LinkItem
 import ch.nicolab.cadence.tasks.model.LinkKind
-import ch.nicolab.cadence.tasks.model.LinkStatus
 import ch.nicolab.cadence.tasks.model.NoteItem
 import ch.nicolab.cadence.tasks.model.ProjectItem
 import ch.nicolab.cadence.tasks.model.Repetition
@@ -118,14 +117,9 @@ internal fun LinkRow.toItem() = LinkItem(
     githubLastCommit = parseInstant(link.githubLastCommitRaw),
     readmeExcerpt = link.readmeExcerpt,
     note = link.note,
-    status = LinkStatus.fromWire(link.status),
-    tagUids = WireCodec.decodeTagUids(link.tagUidsJson),
-    sourceType = link.sourceType,
-    sourceUid = link.sourceUid,
     fetching = link.fetchStatus == "pending",
     createdAt = parseInstant(link.createdAtRaw),
     pendingSync = pendingSync,
-    reviewAt = parseDay(link.reviewAtRaw),
     projectUid = link.projectUid,
 )
 

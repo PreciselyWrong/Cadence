@@ -41,4 +41,9 @@
     <string name="tasks_capture_pick_date">Date…</string>
     <string name="tasks_capture_more">Plus d\'options</string>
     <string name="tasks_capture_less">Moins d\'options</string>
+    <!-- Transformer une tâche en projet (fiche et menu d'appui long) -->
+    <string name="tasks_action_to_project">Transformer en projet</string>
+    <string name="tasks_to_project_title">Transformer « %1$s » en projet ?</string>
+    <string name="tasks_to_project_message">Les sous-tâches deviennent ses tâches, les adresses de la note ses pages.</string>
+    <string name="tasks_to_project_confirm">Transformer</string>
 </resources>

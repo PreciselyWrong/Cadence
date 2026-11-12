@@ -469,26 +469,10 @@ class UrlService {
             return { error: 'URL parameter is required' };
         }
 
-        const metadata = await fetchUrlMetadata(url);
-
-        if (metadata && metadata.title) {
-            return {
-                url,
-                title: metadata.title,
-                image: metadata.image ?? null,
-                description: metadata.description ?? null,
-                site_name: metadata.siteName ?? null,
-            };
-        } else {
-            return {
-                url,
-                title: null,
-                image: null,
-                description: null,
-                site_name: null,
-                error: 'Could not extract metadata',
-            };
-        }
+        // Read once per address and kept for every task, note and project
+        // page (modules/links/previews.js): direct read, no reading proxy.
+        const { previewOf, serializePreview } = require('../links/previews');
+        return serializePreview(url, await previewOf(url));
     }
 
     async extractFromText(text) {

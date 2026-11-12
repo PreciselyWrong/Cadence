@@ -10,7 +10,6 @@ import {
     FlagIcon,
     FolderIcon,
     InboxIcon,
-    LinkIcon,
     ListBulletIcon,
     QueueListIcon,
     RectangleGroupIcon,
@@ -316,7 +315,6 @@ const SidebarLayoutEditor: React.FC<SidebarLayoutEditorProps> = ({
 
     const linkRows: Row[] = [
         { id: 'inbox', label: t('sidebar.inbox', 'Inbox'), Icon: InboxIcon },
-        { id: 'links', label: t('sidebar.links', 'Links'), Icon: LinkIcon },
         {
             id: 'today',
             label: t('sidebar.today', 'Today'),

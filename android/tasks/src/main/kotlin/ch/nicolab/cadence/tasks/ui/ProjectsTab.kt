@@ -2,6 +2,7 @@
 
 package ch.nicolab.cadence.tasks.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -43,6 +44,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -62,6 +64,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.Panel
 import ch.nicolab.cadence.designsystem.components.RowGroup
@@ -72,6 +75,7 @@ import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.tasks.model.ProjectNotes
+import ch.nicolab.cadence.tasks.model.ProjectPages
 import ch.nicolab.cadence.tasks.model.NoteItem
 import androidx.compose.foundation.lazy.items
 import ch.nicolab.cadence.designsystem.theme.cadence
@@ -193,6 +197,14 @@ internal fun ProjectsTab(
     }
     var showClosed by rememberSaveable { mutableStateOf(false) }
     var statusFor by remember { mutableStateOf<String?>(null) }
+    val dormantModel: DormantProjectsViewModel = viewModel()
+    val dormant by dormantModel.projects.collectAsStateWithLifecycle()
+    var dormantOpen by rememberSaveable { mutableStateOf(false) }
+    val context = LocalContext.current
+    LaunchedEffect(Unit) { dormantModel.refresh() }
+    LaunchedEffect(dormantModel) {
+        dormantModel.messages.collect { Toast.makeText(context, it, Toast.LENGTH_LONG).show() }
+    }
     val onLongClick = { card: ProjectCard -> statusFor = card.project.uid }
 
     LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
@@ -237,6 +249,15 @@ internal fun ProjectsTab(
             }
             if (showClosed) areaGroups("closed", overview.closed, onOpenProject, onLongClick)
         }
+        dormantProjectItems(
+            projects = dormant,
+            today = moment.today,
+            zone = moment.zone,
+            expanded = dormantOpen,
+            onToggle = { dormantOpen = !dormantOpen },
+            onOpen = onOpenProject,
+            onKeep = dormantModel::keep,
+        )
     }
 
     val editing = allProjects.firstOrNull { it.uid == statusFor }
@@ -343,6 +364,9 @@ internal fun ProjectTasksPane(
     val allNotes by viewModel.notes.collectAsStateWithLifecycle()
     val notes = remember(allNotes, projectUid) { ProjectNotes.of(allNotes, projectUid) }
     val allTasks by viewModel.allTasks.collectAsStateWithLifecycle()
+    val allLinks by viewModel.links.collectAsStateWithLifecycle()
+    val pages = remember(allLinks, projectUid) { ProjectPages.of(allLinks, projectUid) }
+    var pageDialog by remember(projectUid) { mutableStateOf<ProjectPageDialog?>(null) }
     val tasks by remember(projectUid) { viewModel.observeProjectTasks(projectUid) }
         .collectAsStateWithLifecycle(initialValue = emptyList())
     val moment by viewModel.moment.collectAsStateWithLifecycle()
@@ -419,6 +443,30 @@ internal fun ProjectTasksPane(
                                     },
                                 )
                             }
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.project_pages_add)) },
+                                onClick = {
+                                    menuOpen = false
+                                    pageDialog = ProjectPageDialog.Add
+                                },
+                            )
+                            if (pages.isNotEmpty()) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.project_pages_copy_markdown)) },
+                                    onClick = {
+                                        menuOpen = false
+                                        context.copyText(projectName, ProjectPages.markdown(pages))
+                                        Toast.makeText(context, R.string.project_pages_copied, Toast.LENGTH_SHORT).show()
+                                    },
+                                )
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.project_pages_check)) },
+                                    onClick = {
+                                        menuOpen = false
+                                        pageDialog = ProjectPageDialog.Check
+                                    },
+                                )
+                            }
                         }
                     }
                 }
@@ -451,7 +499,7 @@ internal fun ProjectTasksPane(
                 SubProjectRow(sub, rowGroupShape(index, subProjects.size)) { onOpenProject(sub.project.uid) }
             }
         }
-        if (tasks.isEmpty() && subProjects.isEmpty() && notes.isEmpty()) {
+        if (tasks.isEmpty() && subProjects.isEmpty() && notes.isEmpty() && pages.isEmpty()) {
             item { EmptyState(R.string.tasks_project_empty) }
         }
         if (outline) {
@@ -473,6 +521,7 @@ internal fun ProjectTasksPane(
             // L'en-tête porte déjà le projet : les lignes ne répètent pas son nom.
             taskRows(tasks, emptyMap(), projectColors, moment, viewModel, onOpen)
         }
+        projectPageItems(pages, onMenu = { pageDialog = it })
         if (notes.isNotEmpty()) {
             item(key = "notes") { SectionHeader(title = stringResource(R.string.tasks_inbox_segment_notes), count = notes.size) }
             items(notes, key = { "note-${it.uid}" }) { note ->
@@ -483,6 +532,9 @@ internal fun ProjectTasksPane(
 
     if (editingStatus && project != null) {
         ProjectEditSheets(project = project, viewModel = viewModel, onDismiss = { editingStatus = false })
+    }
+    pageDialog?.let { dialog ->
+        ProjectPageDialogs(dialog, projectUid, pages, viewModel, onDismiss = { pageDialog = null })
     }
 }
 

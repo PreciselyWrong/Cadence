@@ -708,3 +708,33 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Problème** : une tâche venue de Gmail, de Telegram ou de Claude ne le montrait nulle part ; le « TODO.md » était le seul badge d'origine.
 - **Décision** : petite marque en lettre (« M » rouge pour Gmail, sans logo) avec le nom, sur la ligne de Aujourd'hui, la carte de Planifier, la ligne de tâche et la fiche. Avec un lien, un clic l'ouvre dans un nouvel onglet sans ouvrir la tâche. Une tâche web n'a pas de badge.
 - **Android à reprendre** : `TODO.md` › Now (badge de source et champs `source` / `source_url` dans Room).
+
+### 2026-11-12 — Une adresse devient une tâche (refonte des liens, étape 1)
+
+- **Problème** : chaque lien utile finissait en tâche « À regarder : … » à la main ; le choix « Tâche ou Liens » à chaque partage nourrissait une bibliothèque que personne ne relisait (`docs/fork/PLAN-links.md`).
+- **Décision** : dans le panneau de l'Inbox, une idée qui n'est qu'une adresse montre l'aperçu, « Déjà dans « … » » avec Ouvrir si l'adresse est déjà dans une tâche ouverte ou un projet, un champ « Nom de la tâche » prérempli par le verbe du genre de page (Essayer, Lire, Regarder) et le bouton « Tâche » (« Ajouter quand même ») qui la crée d'un clic dans « Tâches à classer » avec « Quand ? ». À côté : Projet… (menu des projets), Note, Inbox, Supprimer. « Liens » disparaît des décisions.
+- **Android à reprendre** : fait dans la même étape (fiche de partage, Inbox).
+
+### 2026-11-12 — Aperçu de chaque adresse (refonte des liens, étape 2)
+
+- **Problème** : une adresse dans la note d'une tâche n'était qu'un lien bleu ; seul Android montrait ce qu'était la page.
+- **Décision** : une carte par adresse (image, titre, description, site, et pour un dépôt GitHub « ★ étoiles · langage · dernière mise à jour ») sous la note du panneau de tâche, sous une note et sous la description d'un projet ; lue par le serveur et gardée par adresse.
+- **Android à reprendre** : fait dans la même étape (statistiques GitHub, notes et projets).
+
+### 2026-11-12 — Pages d'un projet (refonte des liens, étape 3)
+
+- **Problème** : 0 lien rangé dans un projet ; les pages d'une recherche vivaient dans Bookmark Tagger, à côté des projets de Cadence.
+- **Décision** : section « Pages » sous les tâches du projet (initiale du site, titre, site, note courte), « ⋯ » par page : Créer une tâche, Modifier, Retirer ; « ⋯ » du projet : Copier les pages en Markdown, Vérifier les pages (« Introuvable » sur la ligne, rien supprimé). Inbox › Projet… y ajoute la page.
+- **Android à reprendre** : fait dans la même étape.
+
+### 2026-11-12 — Transformer en projet, projets dormants (refonte des liens, étape 4)
+
+- **Problème** : une tâche « Essayer : X » qui grandit (sous-tâches, liens) n'avait aucun passage vers un projet ; les projets délaissés restaient au milieu des autres.
+- **Décision** : « Transformer en projet » dans le ⋯ d'une ligne de tâche et de la page de tâche (question, puis le projet s'ouvre) ; en bas de Projets, « Pas touché depuis 30 jours (N) » replié, avec « Garder » par ligne ; rien n'est archivé.
+- **Android à reprendre** : fait dans la même étape.
+
+### 2026-11-12 — Fin de la bibliothèque de liens (refonte des liens, étape 5)
+
+- **Problème** : une bibliothèque à trier, étiqueter et revoir, que personne ne relisait ; cartes « Lien à revoir », thèmes par IA et résumés automatiques en plus.
+- **Décision** : la page Liens, « Ajouter aux liens », les statuts, la revue, les thèmes et le résumé automatique disparaissent ; Tâches › filtre « Avec un lien » ; Projets › ⋯ › « Importer des favoris » (un dossier = les pages d'un projet, nouveau ou choisi) ; une recherche qui trouve une page ouvre son projet.
+- **Android à reprendre** : fait dans la même étape (filtre « Avec un lien » dans le sélecteur de listes).

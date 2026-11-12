@@ -554,7 +554,8 @@
     "overdueBy": "Försenad med {{days}} d",
     "dueInDays": "Förfaller om {{days}} d",
     "startedSuccessfully": "Uppgiften startades!",
-    "deleteConfirmMessage": "Är du säker på att du vill ta bort \"{{name}}\"? Detta kan inte ångras."
+    "deleteConfirmMessage": "Är du säker på att du vill ta bort \"{{name}}\"? Detta kan inte ångras.",
+    "withLink": "Med en länk"
   },
   "timeline": {
     "activityTimeline": "Aktivitetslinje",
@@ -2072,7 +2073,10 @@
     "inHours": "om {{count}} timmar",
     "pastDue": "Försenad",
     "editDetails": "Redigera detaljer",
-    "noUpcomingOccurrences": "Inga kommande förekomster."
+    "noUpcomingOccurrences": "Inga kommande förekomster.",
+    "turnIntoProject": "Gör om till ett projekt",
+    "turnIntoProjectError": "Kunde inte göras om till ett projekt.",
+    "turnIntoProjectMessage": "Gör « {{name}} » till ett projekt? Dess deluppgifter blir projektets uppgifter, och adresserna i dess anteckning blir projektets sidor."
   },
   "projects": {
     "parentProject": "Överordnat projekt",
@@ -2204,6 +2208,11 @@
       "failedTitle": "Det gick inte att läsa in projektdetaljerna.",
       "failedHint": "Kontrollera anslutningen och läs in sidan igen.",
       "backToProjects": "Tillbaka till projekt"
+    },
+    "dormant": {
+      "title": "Inte rört på 30 dagar ({{count}})",
+      "daysAgo": "för {{count}} dagar sedan",
+      "keep": "Behåll"
     }
   },
   "projectItem": {
@@ -5772,7 +5781,24 @@
     "editTitle": "Redigera länken",
     "deleteTitle": "Ta bort den här länken?",
     "deleteMessage": "Den försvinner från dina länkar för gott. För att lägga den åt sidan, arkivera den i stället.",
-    "deleteError": "Länken kunde inte tas bort."
+    "deleteError": "Länken kunde inte tas bort.",
+    "taskVerb": {
+      "try": "Prova: {{title}}",
+      "read": "Läs: {{title}}",
+      "watch": "Titta: {{title}}"
+    },
+    "capture": {
+      "taskName": "Uppgiftens namn",
+      "alreadyIn": "Finns redan i « {{name}} »",
+      "more": "+{{count}}",
+      "open": "Öppna",
+      "addAnyway": "Lägg till ändå",
+      "toProject": "Projekt…",
+      "keepInInbox": "Inkorg",
+      "taskAdded": "Uppgift tillagd",
+      "taskToSort": "Uppgift tillagd i « Uppgifter att sortera »",
+      "addedToProject": "Tillagd i projektet"
+    }
   },
   "dailyBrief": {
     "sectionName": {
@@ -6257,5 +6283,32 @@
   "mentions": {
     "loading": "Läser in personer…",
     "noMatch": "Inga matchande personer"
+  },
+  "projectPages": {
+    "heading": "Sidor",
+    "title": "Titel",
+    "note": "Anteckning",
+    "dead": "Hittades inte",
+    "createTask": "Skapa en uppgift",
+    "remove": "Ta bort",
+    "actions": "Sidåtgärder",
+    "removeError": "Sidan kunde inte tas bort.",
+    "copied": "Sidor kopierade som Markdown",
+    "deadCount": "{{count}} sidor hittades inte",
+    "allAnswer": "Alla sidor svarar",
+    "checkError": "Sidorna kunde inte kontrolleras.",
+    "copyMarkdown": "Kopiera sidorna som Markdown",
+    "check": "Kontrollera sidorna"
+  },
+  "bookmarksImport": {
+    "title": "Importera bokmärken",
+    "hint": "En export från Firefox (Bibliotek › Importera och säkerhetskopiera › Exportera). En mapp blir sidorna i ett projekt.",
+    "file": "Bokmärkesfil",
+    "empty": "Inga bokmärken i den här filen.",
+    "folder": "Mapp",
+    "project": "Projekt",
+    "newProject": "Nytt projekt « {{name}} »",
+    "error": "Importen misslyckades. Försök igen.",
+    "import": "Importera"
   }
 }

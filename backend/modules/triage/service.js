@@ -12,9 +12,7 @@ const repository = require('./repository');
 const { ruleItems } = require('./core/items');
 const { taskFingerprint } = require('./core/fingerprint');
 const { applyAction } = require('./actions');
-const { slotItems } = require('./slots');
 const autoClassify = require('../auto-classify/service');
-const linkReviews = require('./linkReviews');
 const mail = require('./mail');
 
 const SETTLED = new Set(['kept', 'applied']);
@@ -88,8 +86,6 @@ function buildQueue(input, settings, rows) {
         }
     }
 
-    items.push(...slotItems(rows, input.today));
-
     const tasks = {};
     for (const item of items) {
         if (item.task_uid)
@@ -107,7 +103,6 @@ async function getQueue(user) {
         await repository.findAllForUser(user.id)
     );
     const byUid = new Map(input.tasks.map((task) => [task.uid, task]));
-    queue.items.push(...(await linkReviews.reviewItems(user.id, input.today)));
     queue.items.push(...(await mail.queueItems(user.id)));
     for (const item of await autoClassify.queueItems(user)) {
         queue.items.push(item);

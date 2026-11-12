@@ -228,27 +228,22 @@ async function dryRun(user, body = {}) {
 // The cards of the "À trier" queue (docs/40-triage.md).
 async function queueItems(user) {
     const pending = await suggestions.listPending(user.id);
-    return pending.map((suggestion) => {
-        const duplicate = suggestion.kind === 'duplicate';
-        return {
-            key: `classify:${suggestion.uid}`,
-            type: duplicate ? 'link_duplicate' : 'classify',
-            source: 'classify',
-            task_uid: suggestion.entity === 'task' ? suggestion.item_uid : null,
-            action: duplicate ? 'resolve_duplicate' : 'classify',
-            payload: {
-                suggestion_uid: suggestion.uid,
-                entity: suggestion.entity,
-                item_uid: suggestion.item_uid,
-                ...suggestion.payload,
-            },
-            reason: duplicate
-                ? `Doublon possible de « ${suggestion.payload.original?.title || suggestion.payload.original?.url} »`
-                : 'Classement à confirmer',
-            details: [],
-            question: null,
-        };
-    });
+    return pending.map((suggestion) => ({
+        key: `classify:${suggestion.uid}`,
+        type: 'classify',
+        source: 'classify',
+        task_uid: suggestion.entity === 'task' ? suggestion.item_uid : null,
+        action: 'classify',
+        payload: {
+            suggestion_uid: suggestion.uid,
+            entity: suggestion.entity,
+            item_uid: suggestion.item_uid,
+            ...suggestion.payload,
+        },
+        reason: 'Classement à confirmer',
+        details: [],
+        question: null,
+    }));
 }
 
 module.exports = {

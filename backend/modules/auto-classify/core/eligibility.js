@@ -8,9 +8,6 @@
 const CLOSED_TASK_STATUSES = new Set([2, 3, 5]);
 const CLOSED_PROJECT_STATUSES = new Set(['done', 'cancelled', 'archived']);
 
-const isBlank = (value) =>
-    value === null || value === undefined || String(value).trim() === '';
-
 // A project the classifier must leave alone, and every item inside it.
 function isProjectOffLimits(project) {
     if (!project) return false;
@@ -28,7 +25,6 @@ function taskSlots(task) {
         duration: task.estimated_minutes == null,
         // 0 is both the default and "low": only a raise is ever proposed.
         priority: !task.priority,
-        summary: false,
     };
 }
 
@@ -39,23 +35,10 @@ function noteSlots(note) {
         tags: (note.tags || []).length === 0,
         duration: false,
         priority: false,
-        summary: false,
     };
 }
 
-function linkSlots(link) {
-    if (link.status === 'dropped') return null;
-    if (isProjectOffLimits(link.project)) return null;
-    return {
-        project: false,
-        tags: (link.tags || []).length === 0,
-        duration: false,
-        priority: false,
-        summary: isBlank(link.note),
-    };
-}
-
-const SLOTS = { task: taskSlots, note: noteSlots, link: linkSlots };
+const SLOTS = { task: taskSlots, note: noteSlots };
 
 // The empty fields of an item the classifier may fill, or null when the item
 // is off limits or has nothing left to fill.

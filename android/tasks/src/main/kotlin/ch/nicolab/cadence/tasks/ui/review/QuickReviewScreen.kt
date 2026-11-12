@@ -161,7 +161,7 @@ private fun QuickCard(
                         val item = entry.item
                         val link = remember(item, rows) {
                             LinkExtractor.urls(item.text, 1).firstOrNull()?.let {
-                                RowLink(item.text, ReviewBacklog.linkFor(rows.links, "inbox_item", item.uid, item.text))
+                                RowLink(item.text, ReviewBacklog.linkFor(rows.links, item.text))
                             }
                         }
                         Body(item.text, link, previews)

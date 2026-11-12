@@ -54,10 +54,6 @@ jest.mock('../../../utils/profileService', () => ({
     getInboxRecentlyCapturedExpanded: jest.fn().mockResolvedValue(true),
     updateUiSettings: jest.fn(),
 }));
-jest.mock('../../../store/linksStore', () => ({
-    useLinksRefresh: jest.fn(),
-    useLinksStore: (pick: (state: unknown) => unknown) => pick({ links: [] }),
-}));
 jest.mock('../../../utils/shareTargetService', () => ({
     takeSharedText: () => '',
 }));

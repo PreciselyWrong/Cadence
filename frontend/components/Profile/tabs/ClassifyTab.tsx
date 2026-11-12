@@ -26,26 +26,17 @@ interface ClassifyTabProps {
 type NumberKey =
     | 'batch_size'
     | 'grace_seconds'
-    | 'fetch_wait_minutes'
     | 'max_attempts'
     | 'context_cache_minutes'
     | 'suggestion_ttl_days'
     | 'daily_suggestion_limit'
     | 'log_retention_days'
     | 'max_tags'
-    | 'summary_max_chars'
     | 'max_tokens';
 
 // Label, bounds: the same as backend/modules/auto-classify/settings.js.
 const NUMBERS: [NumberKey, string, string, number, number][] = [
     ['grace_seconds', 'grace', 'Délai de grâce (secondes)', 0, 3600],
-    [
-        'fetch_wait_minutes',
-        'fetchWait',
-        'Attente de lecture d’un lien (minutes)',
-        0,
-        1440,
-    ],
     ['max_attempts', 'attempts', 'Essais en cas d’échec', 1, 20],
     ['batch_size', 'batch', 'Éléments par appel', 1, 50],
     ['context_cache_minutes', 'cache', 'Cache du contexte (minutes)', 0, 1440],
@@ -65,13 +56,6 @@ const NUMBERS: [NumberKey, string, string, number, number][] = [
     ],
     ['log_retention_days', 'retention', 'Durée du journal (jours)', 1, 3650],
     ['max_tags', 'maxTags', 'Tags par élément', 0, 10],
-    [
-        'summary_max_chars',
-        'summaryMax',
-        'Longueur d’un résumé (caractères)',
-        40,
-        1000,
-    ],
     ['max_tokens', 'maxTokens', 'Jetons de réponse au plus', 200, 16000],
 ];
 
@@ -88,7 +72,6 @@ const FIELD_LABELS: Record<string, [string, string]> = {
     area_uid: ['autoClassify.field.area', 'domaine'],
     tags: ['autoClassify.field.tags', 'tags'],
     estimated_minutes: ['autoClassify.field.duration', 'durée'],
-    note: ['autoClassify.field.summary', 'résumé'],
 };
 
 const card = 'mb-6 rounded-xl border border-gray-200 p-4 dark:border-gray-700';
