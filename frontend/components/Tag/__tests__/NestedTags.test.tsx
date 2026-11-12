@@ -15,7 +15,11 @@ import {
 jest.mock('react-i18next', () => ({
     useTranslation: () => ({
         t: (key: string, fallback?: any) =>
-            typeof fallback === 'string' ? fallback : key,
+            typeof fallback === 'string'
+                ? fallback
+                : typeof fallback?.count === 'number'
+                  ? `${fallback.count} ${key.split('.').pop()}`
+                  : key,
     }),
 }));
 

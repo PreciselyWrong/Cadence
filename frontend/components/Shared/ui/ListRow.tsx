@@ -172,6 +172,21 @@ export const ListSection: React.FC<{
     </section>
 );
 
+type CountNoun = 'projects' | 'goals' | 'tasks' | 'notes';
+
+/**
+ * "3 projects · 12 tasks": what uses an item, zero counts left out, or
+ * undefined when nothing does (no "0" on a row).
+ */
+export const countsLine = (
+    t: (key: string, options: { count: number }) => string,
+    counts: Partial<Record<CountNoun, number | null | undefined>>
+): string | undefined =>
+    (Object.entries(counts) as [CountNoun, number | null | undefined][])
+        .filter(([, count]) => Number(count) > 0)
+        .map(([noun, count]) => t(`counts.${noun}`, { count: Number(count) }))
+        .join(' · ') || undefined;
+
 /** The colour of a project or tag: a 6 px dot, never a row background. */
 export const ColorDot: React.FC<{ color?: string | null }> = ({ color }) => (
     <span

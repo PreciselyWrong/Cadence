@@ -4,7 +4,7 @@ import { LockClosedIcon } from '@heroicons/react/24/outline';
 import { Tag } from '../../entities/Tag';
 import PushPinIcon from '../Shared/Icons/PushPinIcon';
 import EntityIcon from '../Shared/EntityIcon';
-import ListRow, { ColorDot } from '../Shared/ui/ListRow';
+import ListRow, { ColorDot, countsLine } from '../Shared/ui/ListRow';
 import { MenuEntry } from '../Shared/ui/Menu';
 import { useTagColor } from '../../utils/tagColor';
 
@@ -36,14 +36,11 @@ const TagRow: React.FC<TagRowProps> = ({ tag, label, onEdit, onDelete }) => {
     const isSystem = tag.tag_type === 'system';
     const color = tagColor(tag).value;
 
-    const uses = [
-        [tag.tasks_count, t('tags.stats.tasks', 'tasks')],
-        [tag.notes_count, t('tags.stats.notes', 'notes')],
-        [tag.projects_count, t('tags.stats.projects', 'projects')],
-    ]
-        .filter(([count]) => Number(count) > 0)
-        .map(([count, word]) => `${count} ${word}`)
-        .join(' · ');
+    const uses = countsLine(t, {
+        tasks: tag.tasks_count,
+        notes: tag.notes_count,
+        projects: tag.projects_count,
+    });
 
     const id = tag.uid || tag.id;
     const menu: MenuEntry[] = [
@@ -100,7 +97,7 @@ const TagRow: React.FC<TagRowProps> = ({ tag, label, onEdit, onDelete }) => {
                     )}
                 </span>
             }
-            meta={uses || undefined}
+            meta={uses}
             menu={menu}
             menuTestId={`tag-dropdown-${id}`}
             menuLabel={t('tags.toggleDropdownMenu', 'Toggle dropdown menu')}

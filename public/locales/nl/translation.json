@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}} notities",
+        "notes_one": "{{count}} notitie",
+        "tasks_other": "{{count}} taken",
+        "tasks_one": "{{count}} taak",
+        "goals_other": "{{count}} doelen",
+        "goals_one": "{{count}} doel",
+        "projects_other": "{{count}} projecten",
+        "projects_one": "{{count}} project"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",

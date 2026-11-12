@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}}件のノート",
+        "notes_one": "{{count}}件のノート",
+        "tasks_other": "{{count}}件のタスク",
+        "tasks_one": "{{count}}件のタスク",
+        "goals_other": "{{count}}件の目標",
+        "goals_one": "{{count}}件の目標",
+        "projects_other": "{{count}}件のプロジェクト",
+        "projects_one": "{{count}}件のプロジェクト"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",

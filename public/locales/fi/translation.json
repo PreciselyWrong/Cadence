@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}} muistiinpanoa",
+        "notes_one": "{{count}} muistiinpano",
+        "tasks_other": "{{count}} tehtävää",
+        "tasks_one": "{{count}} tehtävä",
+        "goals_other": "{{count}} tavoitetta",
+        "goals_one": "{{count}} tavoite",
+        "projects_other": "{{count}} projektia",
+        "projects_one": "{{count}} projekti"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",

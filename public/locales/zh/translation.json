@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}}条笔记",
+        "notes_one": "{{count}}条笔记",
+        "tasks_other": "{{count}}个任务",
+        "tasks_one": "{{count}}个任务",
+        "goals_other": "{{count}}个目标",
+        "goals_one": "{{count}}个目标",
+        "projects_other": "{{count}}个项目",
+        "projects_one": "{{count}}个项目"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",

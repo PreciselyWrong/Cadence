@@ -1,4 +1,22 @@
 {
+    "counts": {
+        "notes_many": "{{count}} opomb",
+        "tasks_many": "{{count}} nalog",
+        "goals_many": "{{count}} ciljev",
+        "projects_many": "{{count}} projektov",
+        "notes_few": "{{count}} opombe",
+        "tasks_few": "{{count}} naloge",
+        "goals_few": "{{count}} cilji",
+        "projects_few": "{{count}} projekti",
+        "notes_other": "{{count}} opomb",
+        "notes_one": "{{count}} opomba",
+        "tasks_other": "{{count}} nalog",
+        "tasks_one": "{{count}} naloga",
+        "goals_other": "{{count}} ciljev",
+        "goals_one": "{{count}} cilj",
+        "projects_other": "{{count}} projektov",
+        "projects_one": "{{count}} projekt"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",

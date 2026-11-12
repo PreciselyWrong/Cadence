@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}} catatan",
+        "notes_one": "{{count}} catatan",
+        "tasks_other": "{{count}} tugas",
+        "tasks_one": "{{count}} tugas",
+        "goals_other": "{{count}} tujuan",
+        "goals_one": "{{count}} tujuan",
+        "projects_other": "{{count}} proyek",
+        "projects_one": "{{count}} proyek"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",

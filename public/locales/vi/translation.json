@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}} ghi chú",
+        "notes_one": "{{count}} ghi chú",
+        "tasks_other": "{{count}} công việc",
+        "tasks_one": "{{count}} công việc",
+        "goals_other": "{{count}} mục tiêu",
+        "goals_one": "{{count}} mục tiêu",
+        "projects_other": "{{count}} dự án",
+        "projects_one": "{{count}} dự án"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",

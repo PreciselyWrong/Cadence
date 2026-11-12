@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}} notater",
+        "notes_one": "{{count}} notat",
+        "tasks_other": "{{count}} oppgaver",
+        "tasks_one": "{{count}} oppgave",
+        "goals_other": "{{count}} mål",
+        "goals_one": "{{count}} mål",
+        "projects_other": "{{count}} prosjekter",
+        "projects_one": "{{count}} prosjekt"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",

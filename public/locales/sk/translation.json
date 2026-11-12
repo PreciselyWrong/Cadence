@@ -1,4 +1,22 @@
 {
+    "counts": {
+        "notes_many": "{{count}} poznámok",
+        "tasks_many": "{{count}} úloh",
+        "goals_many": "{{count}} cieľov",
+        "projects_many": "{{count}} projektov",
+        "notes_few": "{{count}} poznámky",
+        "tasks_few": "{{count}} úlohy",
+        "goals_few": "{{count}} ciele",
+        "projects_few": "{{count}} projekty",
+        "notes_other": "{{count}} poznámok",
+        "notes_one": "{{count}} poznámka",
+        "tasks_other": "{{count}} úloh",
+        "tasks_one": "{{count}} úloha",
+        "goals_other": "{{count}} cieľov",
+        "goals_one": "{{count}} cieľ",
+        "projects_other": "{{count}} projektov",
+        "projects_one": "{{count}} projekt"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
