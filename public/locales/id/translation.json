@@ -626,7 +626,8 @@
             "events": "Peristiwa",
             "permission": {
                 "events": "Mendengarkan peristiwa",
-                "routes": "Menyediakan rute sendiri"
+                "routes": "Menyediakan rute sendiri",
+                "brief": "Writes the daily brief"
             },
             "enabled": "Aktif",
             "needsApproval": "Versi ini meminta lebih dari sebelumnya. Aktifkan lagi untuk menyetujui izin dan peristiwanya.",
@@ -658,7 +659,11 @@
             "removeMessage": "Foldernya dan pengaturannya dihapus dari server. Tindakan ini tidak dapat dibatalkan.",
             "page": {
                 "notFound": "Plugin tidak ditemukan atau dimatikan"
-            }
+            },
+            "approveIntro": "This plugin runs inside the server and asks for:",
+            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
+            "approveTitle": "Approve permissions?",
+            "approve": "Approve and enable"
         },
     "showTaskDescription": "Tampilkan deskripsi di bawah judul",
     "sync": {
@@ -1358,7 +1363,6 @@
     },
     "sidebarSmartListsTitle": "Daftar pintar",
     "sidebarRailTitle": "Rel ikon dan Lainnya",
-    "sidebarBadgesTitle": "Lencana jumlah",
     "sidebarShowCount": "Tampilkan jumlah untuk {{name}}",
     "sidebarCountBadge": "Jumlah",
     "sidebarPlace": "Letak {{name}}",
@@ -1382,23 +1386,24 @@
       "priority": "Penanda prioritas",
       "due": "Tanggal jatuh tempo"
     },
-    "contentBackground": "Latar belakang",
-    "contentBackgroundDescription": "Tampilkan foto di belakang area konten utama. Foto berasal dari Unsplash dan dikreditkan kepada fotografernya.",
-    "contentBackgroundNone": "Tidak ada",
     "photoBy": "Foto oleh",
     "photoOn": "di",
     "groups": {
       "account": "Akun",
-      "appearance": "Tampilan",
-      "planning": "Perencanaan",
+            "appearance": "Antarmuka",
+            "planning": "Organisasi",
       "integrations": "Integrasi",
-      "security": "Keamanan",
+            "security": "Akses",
       "advanced": "Lanjutan"
     },
     "optional": "Opsional",
     "accent": "Warna aksen",
     "accentCustom": "Warna kustom (hex)",
-    "pureBlack": "Hitam pekat dalam mode gelap"
+        "pureBlack": "Hitam pekat dalam mode gelap",
+        "sidebarPanelTitle": "Panel",
+        "sidebarPanelHint": "Blok-blok dari sidebar yang terbuka, dari atas ke bawah.",
+        "sidebarPanelPinned": "Disematkan",
+        "sidebarPanelMonth": "Kalender bulan"
   },
   "productivity": {
     "stalledProjects": "Proyek Terhenti",
@@ -3725,6 +3730,10 @@
       "lead": "Kapan",
       "atTime": "Tepat waktu",
       "minutesBefore": "{{count}} mnt sebelumnya"
+        },
+        "desktopApp": {
+            "title": "Notifikasi aplikasi ini",
+            "body": "Cadence untuk Linux menampilkan notifikasi sistem, bahkan saat jendela tertutup, selama ikonnya ada di baki sistem. Pilih mana yang ingin ditampilkan di kolom Komputer di bawah. Perlu kunci API, yang diatur di pengaturan aplikasi (menu baki)."
     }
   },
   "projectStatus": {

@@ -636,7 +636,8 @@
             "events": "Zdarzenia",
             "permission": {
                 "events": "Nasłuchuje zdarzeń",
-                "routes": "Udostępnia własne trasy"
+                "routes": "Udostępnia własne trasy",
+                "brief": "Writes the daily brief"
             },
             "enabled": "Włączona",
             "needsApproval": "Ta wersja wymaga więcej niż poprzednia. Włącz ją ponownie, aby zatwierdzić jej uprawnienia i zdarzenia.",
@@ -668,7 +669,11 @@
             "removeMessage": "Jej folder i ustawienia zostaną usunięte z serwera. Tej operacji nie można cofnąć.",
             "page": {
                 "notFound": "Nie znaleziono wtyczki lub jest wyłączona"
-            }
+            },
+            "approveIntro": "This plugin runs inside the server and asks for:",
+            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
+            "approveTitle": "Approve permissions?",
+            "approve": "Approve and enable"
         },
     "showTaskDescription": "Pokaż opis pod tytułem",
     "sync": {
@@ -1371,7 +1376,6 @@
     },
     "sidebarSmartListsTitle": "Inteligentne listy",
     "sidebarRailTitle": "Pasek ikon i Więcej",
-    "sidebarBadgesTitle": "Odznaki z liczbą",
     "sidebarShowCount": "Pokaż liczbę dla: {{name}}",
     "sidebarCountBadge": "Liczba",
     "sidebarPlace": "Miejsce: {{name}}",
@@ -1395,23 +1399,24 @@
       "priority": "Znacznik priorytetu",
       "due": "Termin"
     },
-    "contentBackground": "Tło",
-    "contentBackgroundDescription": "Pokaż zdjęcie za główną częścią treści. Zdjęcia pochodzą z Unsplash, a autorzy są podawani przy każdym.",
-    "contentBackgroundNone": "Brak",
     "photoBy": "Zdjęcie autorstwa",
     "photoOn": "na",
     "groups": {
       "account": "Konto",
-      "appearance": "Wygląd",
-      "planning": "Planowanie",
+            "appearance": "Interfejs",
+            "planning": "Organizacja",
       "integrations": "Integracje",
-      "security": "Bezpieczeństwo",
+            "security": "Dostęp",
       "advanced": "Zaawansowane"
     },
     "optional": "Opcjonalne",
     "accent": "Kolor akcentu",
     "accentCustom": "Własny kolor (hex)",
-    "pureBlack": "Czysta czerń w trybie ciemnym"
+        "pureBlack": "Czysta czerń w trybie ciemnym",
+        "sidebarPanelTitle": "Panel",
+        "sidebarPanelHint": "Bloki otwartego paska bocznego, od góry do dołu.",
+        "sidebarPanelPinned": "Przypięte",
+        "sidebarPanelMonth": "Kalendarz miesięczny"
   },
   "productivity": {
     "issuesFound_many": "{{count}} problemów z produktywnością wymaga uwagi",
@@ -3768,6 +3773,10 @@
       "lead": "Kiedy",
       "atTime": "O czasie",
       "minutesBefore": "{{count}} min wcześniej"
+        },
+        "desktopApp": {
+            "title": "Powiadomienia tej aplikacji",
+            "body": "Cadence dla Linuksa wyświetla powiadomienia systemowe, nawet przy zamkniętym oknie, dopóki jego ikona jest w zasobniku systemowym. Wybierz, które, w kolumnie Komputer poniżej. Potrzebny jest klucz API, ustawiany w ustawieniach aplikacji (menu z zasobnika)."
     }
   },
   "projectStatus": {

@@ -145,8 +145,6 @@ interface UserSettingsStore {
     setTemplatesEnabled: (enabled: boolean) => void;
     aiAssistantEnabled: boolean;
     setAiAssistantEnabled: (enabled: boolean) => void;
-    contentBackground: string | null;
-    setContentBackground: (background: string | null) => void;
     uiDensity: UiDensity;
     setUiDensity: (density: UiDensity) => void;
     // Chips shown on a minimal task row, in order (see
@@ -987,14 +985,6 @@ export const useStore = create<StoreState>((set: any) => ({
                 userSettingsStore: {
                     ...state.userSettingsStore,
                     aiAssistantEnabled: enabled,
-                },
-            })),
-        contentBackground: null,
-        setContentBackground: (background) =>
-            set((state) => ({
-                userSettingsStore: {
-                    ...state.userSettingsStore,
-                    contentBackground: background,
                 },
             })),
         uiDensity: 'minimal',

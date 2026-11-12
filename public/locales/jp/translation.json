@@ -626,7 +626,8 @@
             "events": "イベント",
             "permission": {
                 "events": "イベントを受け取る",
-                "routes": "独自のルートを提供"
+                "routes": "独自のルートを提供",
+                "brief": "Writes the daily brief"
             },
             "enabled": "有効",
             "needsApproval": "この版は以前より多くを要求しています。権限とイベントを承認するにはもう一度有効にしてください。",
@@ -658,7 +659,11 @@
             "removeMessage": "フォルダと設定がサーバーから削除されます。元に戻せません。",
             "page": {
                 "notFound": "プラグインが見つからないか、オフです"
-            }
+            },
+            "approveIntro": "This plugin runs inside the server and asks for:",
+            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
+            "approveTitle": "Approve permissions?",
+            "approve": "Approve and enable"
         },
     "showTaskDescription": "タイトルの下に説明を表示",
     "sync": {
@@ -1358,7 +1363,6 @@
     },
     "sidebarSmartListsTitle": "スマートリスト",
     "sidebarRailTitle": "アイコンバーと「その他」",
-    "sidebarBadgesTitle": "件数バッジ",
     "sidebarShowCount": "{{name}} の件数を表示",
     "sidebarCountBadge": "件数",
     "sidebarPlace": "{{name}} の場所",
@@ -1382,23 +1386,24 @@
       "priority": "優先度フラグ",
       "due": "期限日"
     },
-    "contentBackground": "背景",
-    "contentBackgroundDescription": "メインのコンテンツ領域の背後に写真を表示します。写真は Unsplash から提供され、撮影者がクレジットされます。",
-    "contentBackgroundNone": "なし",
     "photoBy": "撮影者:",
     "photoOn": "on",
     "groups": {
       "account": "アカウント",
-      "appearance": "外観",
-      "planning": "計画",
+            "appearance": "インターフェース",
+            "planning": "整理",
       "integrations": "連携",
-      "security": "セキュリティ",
+            "security": "アクセス",
       "advanced": "詳細設定"
     },
     "optional": "任意",
     "accent": "アクセントカラー",
     "accentCustom": "カスタムカラー（16進数）",
-    "pureBlack": "ダークモードで純粋な黒を使う"
+        "pureBlack": "ダークモードで純粋な黒を使う",
+        "sidebarPanelTitle": "パネル",
+        "sidebarPanelHint": "開いているサイドバーのブロック（上から下へ）。",
+        "sidebarPanelPinned": "ピン留め",
+        "sidebarPanelMonth": "月間カレンダー"
   },
   "modals": {
     "confirmDelete": "本当に削除してよろしいですか？",
@@ -3725,6 +3730,10 @@
       "lead": "タイミング",
       "atTime": "時刻ちょうど",
       "minutesBefore": "{{count}} 分前"
+        },
+        "desktopApp": {
+            "title": "このアプリの通知",
+            "body": "Linux版 Cadence は、アイコンがシステムトレイにある限り、ウィンドウを閉じていてもシステム通知を表示します。下の「デスクトップ」列で通知を選べます。API キーが必要で、アプリの設定（トレイのメニュー）で入力します。"
     }
   },
   "projectStatus": {

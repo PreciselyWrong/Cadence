@@ -4,6 +4,7 @@ import { useStore } from '../../store/useStore';
 import { saveMinimalSidebarSettings } from '../../utils/sidebarSettingsService';
 import {
     DEFAULT_MINIMAL_SIDEBAR,
+    PanelId,
     RAIL_PLACES,
     RailId,
     RailPlace,
@@ -43,14 +44,21 @@ const RAIL_LABELS: Record<RailId, [string, string]> = {
     access: ['admin.access.title', 'Access'],
 };
 
-const BADGE_LABELS: Record<
-    Exclude<SectionBadgeId, 'favorites'>,
-    [string, string]
-> = {
+const PANEL_LABELS: Record<PanelId, [string, string]> = {
+    favorites: ['profile.sidebarPanelPinned', 'Pinned'],
+    miniMonth: ['profile.sidebarPanelMonth', 'Month calendar'],
+    smartLists: ['profile.sidebarSmartListsTitle', 'Smart lists'],
     projects: ['sidebar.projects', 'Projects'],
     areas: ['sidebar.areas', 'Areas'],
     tags: ['sidebar.tags', 'Tags'],
 };
+
+// Sections whose header can show a count.
+const BADGE_KEYS: Exclude<SectionBadgeId, 'favorites'>[] = [
+    'projects',
+    'areas',
+    'tags',
+];
 
 const PLACE_LABELS: Record<RailPlace, [string, string]> = {
     rail: ['profile.sidebarPlaceRail', 'Icon rail'],
@@ -61,8 +69,9 @@ const PLACE_LABELS: Record<RailPlace, [string, string]> = {
 const buttonClass =
     'rounded px-2 py-0.5 text-xs text-gray-600 hover:bg-gray-200 disabled:opacity-30 dark:text-gray-300 dark:hover:bg-white/10';
 
-// Edits the Minimal sidebar only: smart lists, icon rail placement and the
-// count badges. Every change saves at once, through the profile endpoint.
+// Edits the Minimal sidebar only: the panel blocks with their count badges,
+// the smart lists and the icon rail placement. Every change saves at once,
+// through the profile endpoint.
 const SidebarMinimalEditor: React.FC<SidebarMinimalEditorProps> = ({
     isAdmin,
 }) => {
@@ -106,13 +115,140 @@ const SidebarMinimalEditor: React.FC<SidebarMinimalEditorProps> = ({
         save({ rail: moveItem(settings.rail, index, delta) });
     };
 
-    const badgeKeys = Object.keys(BADGE_LABELS) as Exclude<
-        SectionBadgeId,
-        'favorites'
-    >[];
-
     return (
         <div data-testid="sidebar-minimal-editor" className="space-y-6">
+            <section>
+                <h4 className="mb-1 text-sm font-semibold text-gray-900 dark:text-white">
+                    {t('profile.sidebarPanelTitle', 'Panel')}
+                </h4>
+                <p className="mb-2 text-xs text-gray-600 dark:text-gray-300">
+                    {t(
+                        'profile.sidebarPanelHint',
+                        'The blocks of the open sidebar, top to bottom.'
+                    )}
+                </p>
+                <ul className="space-y-1" data-testid="sidebar-panel-editor">
+                    {settings.panel.map((item, index) => {
+                        const name = label(PANEL_LABELS[item.key]);
+                        const badgeKey = BADGE_KEYS.find(
+                            (key) => key === item.key
+                        );
+                        return (
+                            <li
+                                key={item.key}
+                                className="flex flex-wrap items-center gap-3 text-sm"
+                            >
+                                <label className="flex items-center gap-2">
+                                    <input
+                                        type="checkbox"
+                                        checked={item.visible}
+                                        aria-label={t(
+                                            'profile.sidebarShowItem',
+                                            'Show {{name}}',
+                                            { name }
+                                        )}
+                                        onChange={(event) =>
+                                            save({
+                                                panel: settings.panel.map(
+                                                    (block, i) =>
+                                                        i === index
+                                                            ? {
+                                                                  ...block,
+                                                                  visible:
+                                                                      event
+                                                                          .target
+                                                                          .checked,
+                                                              }
+                                                            : block
+                                                ),
+                                            })
+                                        }
+                                    />
+                                    <span>{name}</span>
+                                </label>
+                                {badgeKey && (
+                                    <label className="flex items-center gap-2 text-gray-600">
+                                        <input
+                                            type="checkbox"
+                                            checked={
+                                                settings.sectionBadges[badgeKey]
+                                            }
+                                            aria-label={t(
+                                                'profile.sidebarShowCount',
+                                                'Show count for {{name}}',
+                                                { name }
+                                            )}
+                                            onChange={(event) =>
+                                                save({
+                                                    sectionBadges: {
+                                                        ...settings.sectionBadges,
+                                                        [badgeKey]:
+                                                            event.target
+                                                                .checked,
+                                                    },
+                                                })
+                                            }
+                                        />
+                                        <span>
+                                            {t(
+                                                'profile.sidebarCountBadge',
+                                                'Count'
+                                            )}
+                                        </span>
+                                    </label>
+                                )}
+                                <span className="ml-auto flex gap-1">
+                                    <button
+                                        type="button"
+                                        className={buttonClass}
+                                        aria-label={t(
+                                            'profile.sidebarMoveUp',
+                                            'Move {{name}} up',
+                                            { name }
+                                        )}
+                                        disabled={index === 0}
+                                        onClick={() =>
+                                            save({
+                                                panel: moveItem(
+                                                    settings.panel,
+                                                    index,
+                                                    -1
+                                                ),
+                                            })
+                                        }
+                                    >
+                                        ↑
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className={buttonClass}
+                                        aria-label={t(
+                                            'profile.sidebarMoveDown',
+                                            'Move {{name}} down',
+                                            { name }
+                                        )}
+                                        disabled={
+                                            index === settings.panel.length - 1
+                                        }
+                                        onClick={() =>
+                                            save({
+                                                panel: moveItem(
+                                                    settings.panel,
+                                                    index,
+                                                    1
+                                                ),
+                                            })
+                                        }
+                                    >
+                                        ↓
+                                    </button>
+                                </span>
+                            </li>
+                        );
+                    })}
+                </ul>
+            </section>
+
             <section>
                 <h4 className="mb-2 text-sm font-semibold text-gray-900 dark:text-white">
                     {t('profile.sidebarSmartListsTitle', 'Smart lists')}
@@ -272,41 +408,6 @@ const SidebarMinimalEditor: React.FC<SidebarMinimalEditorProps> = ({
                 </ul>
             </section>
 
-            <section>
-                <h4 className="mb-2 text-sm font-semibold text-gray-900 dark:text-white">
-                    {t('profile.sidebarBadgesTitle', 'Count badges')}
-                </h4>
-                <ul className="space-y-1">
-                    {badgeKeys.map((key) => {
-                        const name = label(BADGE_LABELS[key]);
-                        return (
-                            <li key={key}>
-                                <label className="flex items-center gap-2 text-sm">
-                                    <input
-                                        type="checkbox"
-                                        checked={settings.sectionBadges[key]}
-                                        aria-label={t(
-                                            'profile.sidebarShowCount',
-                                            'Show count for {{name}}',
-                                            { name }
-                                        )}
-                                        onChange={(event) =>
-                                            save({
-                                                sectionBadges: {
-                                                    ...settings.sectionBadges,
-                                                    [key]: event.target.checked,
-                                                },
-                                            })
-                                        }
-                                    />
-                                    <span>{name}</span>
-                                </label>
-                            </li>
-                        );
-                    })}
-                </ul>
-            </section>
-
             <div>
                 <button
                     type="button"
@@ -316,6 +417,7 @@ const SidebarMinimalEditor: React.FC<SidebarMinimalEditorProps> = ({
                             rail: DEFAULT_MINIMAL_SIDEBAR.rail,
                             sectionBadges:
                                 DEFAULT_MINIMAL_SIDEBAR.sectionBadges,
+                            panel: DEFAULT_MINIMAL_SIDEBAR.panel,
                         })
                     }
                     className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-white/5"

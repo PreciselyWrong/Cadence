@@ -5,7 +5,8 @@ The sidebar has two looks, chosen with `ui_settings.appearance.density`. This pa
 ## Layout
 
 - **Icon rail** on the far left, always visible in Minimal. Collapsed, it is the whole sidebar; open, it sits beside the panel.
-- **Panel** (open): smart lists, then the lists, then the footer.
+- **Panel** (open): its blocks (Pinned, Month calendar, Smart lists, Projects, Areas, Tags) in the order chosen in Profile → Sidebar, each one can be hidden.
+- **Footer** (+, apps, theme) runs under both the rail and the panel, so its top line spans the whole sidebar.
 
 ## Smart lists
 
@@ -26,16 +27,16 @@ Four rows at the top of the panel. By default only Today and Inbox show a count 
 
 Profile → Sidebar has a **Minimal sidebar** section (it shows for Minimal only; Dense keeps its own layout editor above). Every change saves at once.
 
+- **Panel**: show or hide each block of the open panel (Pinned, Month calendar, Smart lists, Projects, Areas, Tags), move it up or down, and switch the count badge of Projects, Areas and Tags (off by default; Pinned has none). A block hidden here does not hide the matching rail item: Today, Inbox and Areas go back on the rail when their block is hidden.
 - **Smart lists**: show or hide each row, switch its count badge on or off, and move it up or down. Hidden rows are not fetched for counts unless another visible row needs one.
 - **Icon rail and More**: each item is on the icon rail, in the More menu, or hidden. Within each place, the order is the order in the editor.
-- **Count badges**: Projects, Areas and Tags can show their item count in the header; off by default, switch it on per section. (Pinned has no count badge.)
-- **Reset to default** puts every smart list, rail item and badge back to the defaults.
+- **Reset to default** puts every panel block, smart list, rail item and badge back to the defaults.
 
 The entry **Customize sidebar** sits once, in the More menu of the icon rail (Escape closes that menu); it opens that Profile section.
 
 The panel is the only scroller: sections (Pinned, Projects, Areas, Tags, Goals, People, Views) grow with their content and fold from their header instead of scrolling inside a fixed-height box.
 
-Stored in `users.sidebar_settings` as `smartLists: [{key, visible, showCount}]`, `rail: [{key, place}]` and `sectionBadges: {favorites, projects, areas, tags}`. Unknown keys are dropped and flags are read as booleans. Items missing from a saved list (for example, a new item added later) take their default and appear at the end.
+Stored in `users.sidebar_settings` as `smartLists: [{key, visible, showCount}]`, `rail: [{key, place}]`, `sectionBadges: {favorites, projects, areas, tags}` and `panel: [{key, visible}]` (keys `favorites`, `miniMonth`, `smartLists`, `projects`, `areas`, `tags`). Unknown keys are dropped and flags are read as booleans. Items missing from a saved list (for example, a new item added later) take their default and appear at the end.
 
 ## Pinned
 

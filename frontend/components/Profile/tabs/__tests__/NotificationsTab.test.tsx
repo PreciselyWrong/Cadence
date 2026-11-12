@@ -14,7 +14,13 @@ jest.mock('react-i18next', () => {
     return { useTranslation: () => value };
 });
 
-jest.mock('../PushDeviceCard', () => () => null);
+jest.mock(
+    '../PushDeviceCard',
+    () =>
+        function PushDeviceCard() {
+            return <div data-testid="push-card" />;
+        }
+);
 jest.mock('../AppriseCard', () => () => null);
 jest.mock('../WebhooksCard', () => () => null);
 jest.mock('../TimedRemindersCard', () => () => null);
@@ -64,6 +70,33 @@ describe('NotificationsTab', () => {
         expect(
             screen.getByRole('columnheader', { name: 'Desktop' })
         ).toBeInTheDocument();
+    });
+
+    describe('in the Linux app', () => {
+        const browserAgent = navigator.userAgent;
+        const setAgent = (value: string) =>
+            Object.defineProperty(window.navigator, 'userAgent', {
+                value,
+                configurable: true,
+            });
+        afterEach(() => setAgent(browserAgent));
+
+        it('describes the app notifications instead of browser push', async () => {
+            setAgent('Mozilla/5.0 AppleWebKit/605.1.15 CadenceDesktop/0.1.0');
+            await renderTab();
+
+            expect(screen.queryByTestId('push-card')).toBeNull();
+            expect(
+                screen.getByText('Notifications of this app')
+            ).toBeInTheDocument();
+        });
+
+        it('keeps the browser push card in a browser', async () => {
+            await renderTab();
+
+            expect(screen.getByTestId('push-card')).toBeInTheDocument();
+            expect(screen.queryByText('Notifications of this app')).toBeNull();
+        });
     });
 
     it('turns the desktop channel off for task reminders', async () => {

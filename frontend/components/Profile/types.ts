@@ -21,7 +21,6 @@ import type { TaskRowField } from '../../constants/taskRowFields';
 
 export interface UiSettingsAppearance {
     theme?: 'light' | 'dark' | 'system';
-    contentBackground?: string | null;
     density?: 'minimal' | 'dense';
     rowFields?: TaskRowField[];
 }
@@ -77,6 +76,7 @@ export interface SidebarSettings {
     smartLists?: { key: string; visible: boolean; showCount: boolean }[];
     rail?: { key: string; place: 'rail' | 'more' | 'hidden' }[];
     sectionBadges?: Record<string, boolean>;
+    panel?: { key: string; visible: boolean }[];
 }
 
 export interface NotificationChannels {

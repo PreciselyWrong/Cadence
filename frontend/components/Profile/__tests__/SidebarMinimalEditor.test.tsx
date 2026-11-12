@@ -128,6 +128,35 @@ describe('SidebarMinimalEditor', () => {
             smartLists: DEFAULT_MINIMAL_SIDEBAR.smartLists,
             rail: DEFAULT_MINIMAL_SIDEBAR.rail,
             sectionBadges: DEFAULT_MINIMAL_SIDEBAR.sectionBadges,
+            panel: DEFAULT_MINIMAL_SIDEBAR.panel,
         });
+    });
+
+    it('hides a panel block, such as the month calendar', () => {
+        renderEditor();
+
+        fireEvent.click(screen.getByLabelText('Show Month calendar'));
+
+        const [patch] = saveMock.mock.calls[0];
+        expect(patch.panel).toEqual(
+            expect.arrayContaining([{ key: 'miniMonth', visible: false }])
+        );
+        expect(patch.panel).toHaveLength(DEFAULT_MINIMAL_SIDEBAR.panel.length);
+    });
+
+    it('moves a panel block up one place', () => {
+        renderEditor();
+
+        fireEvent.click(screen.getByLabelText('Move Projects up'));
+
+        const [patch] = saveMock.mock.calls[0];
+        expect(patch.panel!.map((block) => block.key)).toEqual([
+            'favorites',
+            'miniMonth',
+            'projects',
+            'smartLists',
+            'areas',
+            'tags',
+        ]);
     });
 });

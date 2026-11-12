@@ -43,6 +43,22 @@ export const SECTION_BADGE_IDS = [
 ] as const;
 export type SectionBadgeId = (typeof SECTION_BADGE_IDS)[number];
 
+// The blocks of the open panel, top to bottom; each can be hidden.
+export const PANEL_IDS = [
+    'favorites',
+    'miniMonth',
+    'smartLists',
+    'projects',
+    'areas',
+    'tags',
+] as const;
+export type PanelId = (typeof PANEL_IDS)[number];
+
+export interface PanelSetting {
+    key: PanelId;
+    visible: boolean;
+}
+
 export interface SmartListSetting {
     key: SmartListId;
     visible: boolean;
@@ -58,6 +74,7 @@ export interface MinimalSidebarSettings {
     smartLists: SmartListSetting[];
     rail: RailSetting[];
     sectionBadges: Record<SectionBadgeId, boolean>;
+    panel: PanelSetting[];
 }
 
 // Rail items that open on the icon rail by default; the rest sit in More.
@@ -98,6 +115,7 @@ export const DEFAULT_MINIMAL_SIDEBAR: MinimalSidebarSettings = {
         areas: false,
         tags: false,
     },
+    panel: PANEL_IDS.map((key) => ({ key, visible: true })),
 };
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -181,6 +199,17 @@ export function resolveMinimalSidebar(saved: unknown): MinimalSidebarSettings {
                     : DEFAULT_MINIMAL_SIDEBAR.sectionBadges[id],
             ])
         ) as MinimalSidebarSettings['sectionBadges'],
+        panel: resolveList(
+            source.panel,
+            DEFAULT_MINIMAL_SIDEBAR.panel,
+            (entry, fallback) => ({
+                key: fallback.key,
+                visible:
+                    typeof entry.visible === 'boolean'
+                        ? entry.visible
+                        : fallback.visible,
+            })
+        ),
     };
 }
 

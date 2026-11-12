@@ -626,7 +626,8 @@
             "events": "事件",
             "permission": {
                 "events": "监听事件",
-                "routes": "提供自有路由"
+                "routes": "提供自有路由",
+                "brief": "Writes the daily brief"
             },
             "enabled": "已启用",
             "needsApproval": "此版本请求的权限比以前多。请重新开启以批准其权限和事件。",
@@ -658,7 +659,11 @@
             "removeMessage": "其文件夹和设置将从服务器中删除，且无法撤销。",
             "page": {
                 "notFound": "插件未找到或已关闭"
-            }
+            },
+            "approveIntro": "This plugin runs inside the server and asks for:",
+            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
+            "approveTitle": "Approve permissions?",
+            "approve": "Approve and enable"
         },
     "showTaskDescription": "在标题下方显示描述",
     "sync": {
@@ -1358,7 +1363,6 @@
     },
     "sidebarSmartListsTitle": "智能列表",
     "sidebarRailTitle": "图标栏与更多",
-    "sidebarBadgesTitle": "计数徽章",
     "sidebarShowCount": "显示 {{name}} 的计数",
     "sidebarCountBadge": "计数",
     "sidebarPlace": "{{name}} 的位置",
@@ -1382,23 +1386,24 @@
       "priority": "优先级旗标",
       "due": "截止日期"
     },
-    "contentBackground": "背景",
-    "contentBackgroundDescription": "在主内容区域后显示照片。照片来自 Unsplash，并注明摄影师。",
-    "contentBackgroundNone": "无",
     "photoBy": "摄影：",
     "photoOn": "来自",
     "groups": {
       "account": "账户",
-      "appearance": "外观",
-      "planning": "计划",
+            "appearance": "界面",
+            "planning": "组织",
       "integrations": "集成",
-      "security": "安全",
+            "security": "访问",
       "advanced": "高级"
     },
     "optional": "可选",
     "accent": "强调色",
     "accentCustom": "自定义颜色（十六进制）",
-    "pureBlack": "深色模式使用纯黑"
+        "pureBlack": "深色模式使用纯黑",
+        "sidebarPanelTitle": "面板",
+        "sidebarPanelHint": "已打开侧边栏的模块，从上到下排列。",
+        "sidebarPanelPinned": "已固定",
+        "sidebarPanelMonth": "月历"
   },
   "productivity": {
     "stalledProjects": "停滞项目",
@@ -3725,6 +3730,10 @@
       "lead": "何时",
       "atTime": "准时",
       "minutesBefore": "提前 {{count}} 分钟"
+        },
+        "desktopApp": {
+            "title": "此应用的通知",
+            "body": "Linux 版 Cadence 只要图标留在系统托盘中，即使窗口已关闭，也会显示系统通知。请在下方的「桌面」列中选择要显示哪些。它需要 API 密钥，在应用设置（托盘菜单）中填写。"
     }
   },
   "projectStatus": {

@@ -628,7 +628,8 @@
             "events": "Hændelser",
             "permission": {
                 "events": "Lytter på hændelser",
-                "routes": "Leverer egne ruter"
+                "routes": "Leverer egne ruter",
+                "brief": "Writes the daily brief"
             },
             "enabled": "Aktiveret",
             "needsApproval": "Denne version kræver mere end før. Slå den til igen for at godkende dens tilladelser og hændelser.",
@@ -660,7 +661,11 @@
             "removeMessage": "Dets mappe og indstillinger slettes fra serveren. Det kan ikke fortrydes.",
             "page": {
                 "notFound": "Pluginet blev ikke fundet eller er slået fra"
-            }
+            },
+            "approveIntro": "This plugin runs inside the server and asks for:",
+            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
+            "approveTitle": "Approve permissions?",
+            "approve": "Approve and enable"
         },
     "showTaskDescription": "Vis beskrivelsen under titlen",
     "sync": {
@@ -1361,7 +1366,6 @@
     },
     "sidebarSmartListsTitle": "Smarte lister",
     "sidebarRailTitle": "Ikonlinje og Mere",
-    "sidebarBadgesTitle": "Antalsmærker",
     "sidebarShowCount": "Vis antal for {{name}}",
     "sidebarCountBadge": "Antal",
     "sidebarPlace": "Placering af {{name}}",
@@ -1385,23 +1389,24 @@
       "priority": "Prioritetsflag",
       "due": "Forfaldsdato"
     },
-    "contentBackground": "Baggrund",
-    "contentBackgroundDescription": "Vis et billede bag hovedindholdet. Billederne kommer fra Unsplash, og fotografernes navne vises.",
-    "contentBackgroundNone": "Ingen",
     "photoBy": "Foto af",
     "photoOn": "på",
     "groups": {
       "account": "Konto",
-      "appearance": "Udseende",
-      "planning": "Planlægning",
+            "appearance": "Grænseflade",
+            "planning": "Organisation",
       "integrations": "Integrationer",
-      "security": "Sikkerhed",
+            "security": "Adgang",
       "advanced": "Avanceret"
     },
     "optional": "Valgfrit",
     "accent": "Accentfarve",
     "accentCustom": "Egen farve (hex)",
-    "pureBlack": "Ren sort i mørk tilstand"
+        "pureBlack": "Ren sort i mørk tilstand",
+        "sidebarPanelTitle": "Panel",
+        "sidebarPanelHint": "Blokkene i den åbne sidebjælke, fra top til bund.",
+        "sidebarPanelPinned": "Fastgjort",
+        "sidebarPanelMonth": "Månedskalender"
   },
   "productivity": {
     "stalledProjects": "Stagnerede Projekter",
@@ -3734,6 +3739,10 @@
       "lead": "Hvornår",
       "atTime": "På tidspunktet",
       "minutesBefore": "{{count}} min før"
+        },
+        "desktopApp": {
+            "title": "Notifikationer fra denne app",
+            "body": "Cadence til Linux viser systemnotifikationer, også når vinduet er lukket, så længe ikonet er i systembakken. Vælg hvilke i kolonnen Computer nedenfor. Den kræver en API-nøgle, som indstilles i appens indstillinger (menuen i systembakken)."
     }
   },
   "projectStatus": {

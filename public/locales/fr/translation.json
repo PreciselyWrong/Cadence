@@ -630,7 +630,8 @@
             "events": "Événements",
             "permission": {
                 "events": "Écoute les événements",
-                "routes": "Expose ses propres routes"
+                "routes": "Expose ses propres routes",
+                "brief": "Écrit le résumé du jour"
             },
             "enabled": "Activé",
             "needsApproval": "Cette version demande plus qu'avant. Réactivez-le pour approuver ses permissions et ses événements.",
@@ -662,7 +663,11 @@
             "removeMessage": "Son dossier et ses réglages sont supprimés du serveur. Action irréversible.",
             "page": {
                 "notFound": "Plugin introuvable ou désactivé"
-            }
+            },
+            "approveIntro": "Ce plugin s'exécute dans le serveur et demande :",
+            "approveOutro": "Les permissions limitent ce que Cadence donne au plugin ; ce n'est pas un bac à sable. N'approuvez que du code que vous avez lu.",
+            "approveTitle": "Approuver les permissions ?",
+            "approve": "Approuver et activer"
         },
     "sync": {
       "field": {
@@ -1128,7 +1133,7 @@
       "tieRecent": "Les dernières modifiées d'abord",
       "tieNewest": "Les plus récentes d'abord",
       "tieOldest": "Les plus anciennes d'abord",
-      "staleOff": "Off",
+            "staleOff": "Désactivé",
       "staleMonths": "{{count}} mois",
       "horizonDay": "1 jour",
       "horizonDays": "{{count}} jours",
@@ -1365,7 +1370,6 @@
     },
     "sidebarSmartListsTitle": "Listes intelligentes",
     "sidebarRailTitle": "Barre d’icônes et Plus",
-    "sidebarBadgesTitle": "Pastilles de compteur",
     "sidebarShowCount": "Afficher le compteur de {{name}}",
     "sidebarCountBadge": "Compteur",
     "sidebarPlace": "Emplacement de {{name}}",
@@ -1389,23 +1393,24 @@
       "priority": "Drapeau de priorité",
       "due": "Date d'échéance"
     },
-    "contentBackground": "Arrière-plan",
-    "contentBackgroundDescription": "Afficher une photo derrière la zone de contenu principale. Les photos viennent d'Unsplash et sont créditées à leurs photographes.",
-    "contentBackgroundNone": "Aucun",
     "photoBy": "Photo de",
     "photoOn": "sur",
     "groups": {
       "account": "Compte",
-      "appearance": "Apparence",
-      "planning": "Planification",
+            "appearance": "Interface",
+            "planning": "Organisation",
       "integrations": "Intégrations",
-      "security": "Sécurité",
+            "security": "Accès",
       "advanced": "Avancé"
     },
     "optional": "Optionnel",
     "accent": "Couleur d'accent",
     "accentCustom": "Couleur libre (hex)",
-    "pureBlack": "Noir pur en mode sombre"
+        "pureBlack": "Noir pur en mode sombre",
+        "sidebarPanelTitle": "Panneau",
+        "sidebarPanelHint": "Les blocs de la barre latérale ouverte, de haut en bas.",
+        "sidebarPanelPinned": "Épinglés",
+        "sidebarPanelMonth": "Calendrier du mois"
   },
   "productivity": {
     "stalledProjects": "Projets bloqués",
@@ -3743,6 +3748,10 @@
       "lead": "Quand",
       "atTime": "À l'heure",
       "minutesBefore": "{{count}} min avant"
+        },
+        "desktopApp": {
+            "title": "Notifications de cette app",
+            "body": "Cadence pour Linux affiche des notifications système, même fenêtre fermée, tant que son icône est dans la barre système. Choisissez lesquelles dans la colonne Ordinateur ci-dessous. Il lui faut une clé d'API, saisie dans les réglages de l'app (menu de l'icône)."
     }
   },
   "projectStatus": {

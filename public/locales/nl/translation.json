@@ -628,7 +628,8 @@
             "events": "Gebeurtenissen",
             "permission": {
                 "events": "Luistert naar gebeurtenissen",
-                "routes": "Biedt eigen routes aan"
+                "routes": "Biedt eigen routes aan",
+                "brief": "Writes the daily brief"
             },
             "enabled": "Aan",
             "needsApproval": "Deze versie vraagt meer dan voorheen. Zet hem opnieuw aan om de rechten en gebeurtenissen goed te keuren.",
@@ -660,7 +661,11 @@
             "removeMessage": "De map en de instellingen worden van de server verwijderd. Dit kan niet ongedaan worden gemaakt.",
             "page": {
                 "notFound": "Plugin niet gevonden of uitgeschakeld"
-            }
+            },
+            "approveIntro": "This plugin runs inside the server and asks for:",
+            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
+            "approveTitle": "Approve permissions?",
+            "approve": "Approve and enable"
         },
     "showTaskDescription": "Beschrijving onder de titel tonen",
     "sync": {
@@ -1361,7 +1366,6 @@
     },
     "sidebarSmartListsTitle": "Slimme lijsten",
     "sidebarRailTitle": "Pictogrammenbalk en Meer",
-    "sidebarBadgesTitle": "Tellerlabels",
     "sidebarShowCount": "Aantal tonen voor {{name}}",
     "sidebarCountBadge": "Aantal",
     "sidebarPlace": "Plaats van {{name}}",
@@ -1385,23 +1389,24 @@
       "priority": "Prioriteitsvlag",
       "due": "Vervaldatum"
     },
-    "contentBackground": "Achtergrond",
-    "contentBackgroundDescription": "Toon een foto achter het hoofdgedeelte. Foto's komen van Unsplash en worden gecrediteerd aan de fotografen.",
-    "contentBackgroundNone": "Geen",
     "photoBy": "Foto van",
     "photoOn": "op",
     "groups": {
       "account": "Account",
-      "appearance": "Weergave",
-      "planning": "Planning",
+            "appearance": "Interface",
+            "planning": "Organisatie",
       "integrations": "Integraties",
-      "security": "Beveiliging",
+            "security": "Toegang",
       "advanced": "Geavanceerd"
     },
     "optional": "optioneel",
     "accent": "Accentkleur",
     "accentCustom": "Aangepaste kleur (hex)",
-    "pureBlack": "Puur zwart in donkere modus"
+        "pureBlack": "Puur zwart in donkere modus",
+        "sidebarPanelTitle": "Paneel",
+        "sidebarPanelHint": "De blokken van de geopende zijbalk, van boven naar beneden.",
+        "sidebarPanelPinned": "Vastgezet",
+        "sidebarPanelMonth": "Maandkalender"
   },
   "productivity": {
     "stalledProjects": "Stagnerende Projecten",
@@ -3732,6 +3737,10 @@
       "lead": "Wanneer",
       "atTime": "Op de tijd",
       "minutesBefore": "{{count}} min vooraf"
+        },
+        "desktopApp": {
+            "title": "Meldingen van deze app",
+            "body": "Cadence voor Linux toont systeemmeldingen, ook met het venster gesloten, zolang het pictogram in het systeemvak staat. Kies hieronder in de kolom Bureaublad welke. Er is een API-sleutel nodig, in te stellen in de app-instellingen (menu van het systeemvakpictogram)."
     }
   },
   "projectStatus": {

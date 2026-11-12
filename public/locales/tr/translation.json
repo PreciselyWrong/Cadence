@@ -626,7 +626,8 @@
             "events": "Olaylar",
             "permission": {
                 "events": "Olayları dinler",
-                "routes": "Kendi yollarını sunar"
+                "routes": "Kendi yollarını sunar",
+                "brief": "Writes the daily brief"
             },
             "enabled": "Açık",
             "needsApproval": "Bu sürüm öncekinden daha fazla şey istiyor. İzinlerini ve olaylarını onaylamak için yeniden açın.",
@@ -658,7 +659,11 @@
             "removeMessage": "Klasörü ve ayarları sunucudan silinir. Bu geri alınamaz.",
             "page": {
                 "notFound": "Eklenti bulunamadı veya kapalı"
-            }
+            },
+            "approveIntro": "This plugin runs inside the server and asks for:",
+            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
+            "approveTitle": "Approve permissions?",
+            "approve": "Approve and enable"
         },
     "showTaskDescription": "Açıklamayı başlığın altında göster",
     "sync": {
@@ -1358,7 +1363,6 @@
     },
     "sidebarSmartListsTitle": "Akıllı listeler",
     "sidebarRailTitle": "Simge çubuğu ve Diğer",
-    "sidebarBadgesTitle": "Sayı rozetleri",
     "sidebarShowCount": "{{name}} için sayıyı göster",
     "sidebarCountBadge": "Sayı",
     "sidebarPlace": "{{name}} konumu",
@@ -1382,23 +1386,24 @@
       "priority": "Öncelik bayrağı",
       "due": "Bitiş tarihi"
     },
-    "contentBackground": "Arka plan",
-    "contentBackgroundDescription": "Ana içerik alanının arkasında bir fotoğraf göster. Fotoğraflar Unsplash'ten gelir ve fotoğrafçılarına atfedilir.",
-    "contentBackgroundNone": "Yok",
     "photoBy": "Fotoğraf:",
     "photoOn": "üzerinde",
     "groups": {
       "account": "Hesap",
-      "appearance": "Görünüm",
-      "planning": "Planlama",
+            "appearance": "Arayüz",
+            "planning": "Organizasyon",
       "integrations": "Entegrasyonlar",
-      "security": "Güvenlik",
+            "security": "Erişim",
       "advanced": "Gelişmiş"
     },
     "optional": "İsteğe bağlı",
     "accent": "Vurgu rengi",
     "accentCustom": "Özel renk (hex)",
-    "pureBlack": "Koyu modda saf siyah"
+        "pureBlack": "Koyu modda saf siyah",
+        "sidebarPanelTitle": "Panel",
+        "sidebarPanelHint": "Açık kenar çubuğunun blokları, yukarıdan aşağıya.",
+        "sidebarPanelPinned": "Sabitlenenler",
+        "sidebarPanelMonth": "Aylık takvim"
   },
   "productivity": {
     "stalledProjects": "Duraklayan Projeler",
@@ -3725,6 +3730,10 @@
       "lead": "Ne zaman",
       "atTime": "Saatinde",
       "minutesBefore": "{{count}} dk önce"
+        },
+        "desktopApp": {
+            "title": "Bu uygulamanın bildirimleri",
+            "body": "Linux için Cadence, simgesi sistem tepsisinde olduğu sürece pencere kapalıyken bile sistem bildirimleri gösterir. Aşağıdaki Bilgisayar sütununda hangilerinin gösterileceğini seçin. Uygulama ayarlarında (tepsi menüsü) girilen bir API anahtarı gerekir."
     }
   },
   "projectStatus": {

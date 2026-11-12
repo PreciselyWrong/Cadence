@@ -628,7 +628,8 @@
             "events": "Tapahtumat",
             "permission": {
                 "events": "Kuuntelee tapahtumia",
-                "routes": "Tarjoaa omat reitit"
+                "routes": "Tarjoaa omat reitit",
+                "brief": "Writes the daily brief"
             },
             "enabled": "Käytössä",
             "needsApproval": "Tämä versio vaatii enemmän kuin ennen. Käynnistä se uudelleen hyväksyäksesi sen oikeudet ja tapahtumat.",
@@ -660,7 +661,11 @@
             "removeMessage": "Sen kansio ja asetukset poistetaan palvelimelta. Tätä ei voi peruuttaa.",
             "page": {
                 "notFound": "Liitännäistä ei löydy tai se on pois päältä"
-            }
+            },
+            "approveIntro": "This plugin runs inside the server and asks for:",
+            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
+            "approveTitle": "Approve permissions?",
+            "approve": "Approve and enable"
         },
     "showTaskDescription": "Näytä kuvaus otsikon alla",
     "sync": {
@@ -1361,7 +1366,6 @@
     },
     "sidebarSmartListsTitle": "Älykkäät listat",
     "sidebarRailTitle": "Kuvakepalkki ja Lisää",
-    "sidebarBadgesTitle": "Määrämerkit",
     "sidebarShowCount": "Näytä määrä: {{name}}",
     "sidebarCountBadge": "Määrä",
     "sidebarPlace": "Sijainti: {{name}}",
@@ -1385,23 +1389,24 @@
       "priority": "Prioriteettilippu",
       "due": "Eräpäivä"
     },
-    "contentBackground": "Tausta",
-    "contentBackgroundDescription": "Näytä valokuva pääsisällön alueen takana. Kuvat tulevat Unsplashista, ja ne mainitaan kuvaajan nimellä.",
-    "contentBackgroundNone": "Ei mitään",
     "photoBy": "Kuva:",
     "photoOn": "kohteessa",
     "groups": {
       "account": "Tili",
-      "appearance": "Ulkoasu",
-      "planning": "Suunnittelu",
+            "appearance": "Käyttöliittymä",
+            "planning": "Järjestäminen",
       "integrations": "Integraatiot",
-      "security": "Turvallisuus",
+            "security": "Käyttöoikeudet",
       "advanced": "Lisäasetukset"
     },
     "optional": "valinnainen",
     "accent": "Korostusväri",
     "accentCustom": "Oma väri (hex)",
-    "pureBlack": "Puhdas musta tumma tilassa"
+        "pureBlack": "Puhdas musta tumma tilassa",
+        "sidebarPanelTitle": "Paneeli",
+        "sidebarPanelHint": "Avoimen sivupalkin lohkot ylhäältä alas.",
+        "sidebarPanelPinned": "Kiinnitetyt",
+        "sidebarPanelMonth": "Kuukausikalenteri"
   },
   "productivity": {
     "stalledProjects": "Jumiutuneet projektit",
@@ -3731,6 +3736,10 @@
       "lead": "Milloin",
       "atTime": "Ajallaan",
       "minutesBefore": "{{count}} min ennen"
+        },
+        "desktopApp": {
+            "title": "Tämän sovelluksen ilmoitukset",
+            "body": "Cadence Linuxille näyttää järjestelmäilmoituksia, vaikka ikkuna on suljettu, kunhan sen kuvake on ilmoitusalueella. Valitse alla olevasta sarakkeesta Tietokone mitkä. Se tarvitsee API-avaimen, joka asetetaan sovelluksen asetuksissa (ilmoitusalueen valikko)."
     }
   },
   "projectStatus": {

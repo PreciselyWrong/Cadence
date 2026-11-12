@@ -105,6 +105,7 @@ function validateSidebarSettings(body) {
         smartLists,
         rail,
         sectionBadges,
+        panel,
     } = body;
     const result = {};
 
@@ -178,6 +179,9 @@ function validateSidebarSettings(body) {
     if (sectionBadges !== undefined) {
         result.sectionBadges = sanitizeSectionBadges(sectionBadges);
     }
+    if (panel !== undefined) {
+        result.panel = sanitizePanel(panel);
+    }
 
     return result;
 }
@@ -209,6 +213,15 @@ const MINIMAL_RAIL_KEYS = [
 ];
 const MINIMAL_RAIL_PLACES = ['rail', 'more', 'hidden'];
 const MINIMAL_SECTION_BADGE_KEYS = ['favorites', 'projects', 'areas', 'tags'];
+// The blocks of the open minimal panel, in the order the user chose.
+const MINIMAL_PANEL_KEYS = [
+    'favorites',
+    'miniMonth',
+    'smartLists',
+    'projects',
+    'areas',
+    'tags',
+];
 
 // Missing flags count as on; anything else is read as a boolean the way the
 // feature flags are ('false', '0', 0 and false are off).
@@ -262,6 +275,24 @@ function sanitizeRail(value) {
         if (!MINIMAL_RAIL_PLACES.includes(place)) continue;
         seen.add(key);
         result.push({ key, place });
+    }
+    return result;
+}
+
+function sanitizePanel(value) {
+    if (!Array.isArray(value) || value.length > SIDEBAR_ORDER_MAX_ITEMS) {
+        throw new ValidationError(
+            `panel must be an array of at most ${SIDEBAR_ORDER_MAX_ITEMS} entries`
+        );
+    }
+    const seen = new Set();
+    const result = [];
+    for (const entry of value) {
+        if (!isPlainObject(entry)) continue;
+        const { key } = entry;
+        if (!MINIMAL_PANEL_KEYS.includes(key) || seen.has(key)) continue;
+        seen.add(key);
+        result.push({ key, visible: coerceFlag(entry.visible) });
     }
     return result;
 }

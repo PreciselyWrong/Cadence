@@ -626,7 +626,8 @@
             "events": "Събития",
             "permission": {
                 "events": "Слуша събития",
-                "routes": "Предоставя свои маршрути"
+                "routes": "Предоставя свои маршрути",
+                "brief": "Writes the daily brief"
             },
             "enabled": "Включен",
             "needsApproval": "Тази версия иска повече права от преди. Включете я отново, за да одобрите правата и събитията ѝ.",
@@ -658,7 +659,11 @@
             "removeMessage": "Папката и настройките му се изтриват от сървъра. Това не може да се отмени.",
             "page": {
                 "notFound": "Плъгинът не е намерен или е изключен"
-            }
+            },
+            "approveIntro": "This plugin runs inside the server and asks for:",
+            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
+            "approveTitle": "Approve permissions?",
+            "approve": "Approve and enable"
         },
     "showTaskDescription": "Показване на описанието под заглавието",
     "sync": {
@@ -1359,7 +1364,6 @@
     },
     "sidebarSmartListsTitle": "Умни списъци",
     "sidebarRailTitle": "Икони и меню „Още“",
-    "sidebarBadgesTitle": "Значки с броя",
     "sidebarShowCount": "Показване на броя за {{name}}",
     "sidebarCountBadge": "Брой",
     "sidebarPlace": "Място на {{name}}",
@@ -1383,23 +1387,24 @@
       "priority": "Флаг за приоритет",
       "due": "Краен срок"
     },
-    "contentBackground": "Фон",
-    "contentBackgroundDescription": "Показва снимка зад основната област със съдържание. Снимките идват от Unsplash и са приписани на фотографите.",
-    "contentBackgroundNone": "Няма",
     "photoBy": "Снимка от",
     "photoOn": "в",
     "groups": {
       "account": "Акаунт",
-      "appearance": "Външен вид",
-      "planning": "Планиране",
+            "appearance": "Интерфейс",
+            "planning": "Организация",
       "integrations": "Интеграции",
-      "security": "Сигурност",
+            "security": "Достъп",
       "advanced": "Разширени"
     },
     "optional": "По избор",
     "accent": "Акцентен цвят",
     "accentCustom": "Потребителски цвят (hex)",
-    "pureBlack": "Чисто черно в тъмен режим"
+        "pureBlack": "Чисто черно в тъмен режим",
+        "sidebarPanelTitle": "Панел",
+        "sidebarPanelHint": "Блоковете на отворената странична лента, отгоре надолу.",
+        "sidebarPanelPinned": "Закачени",
+        "sidebarPanelMonth": "Месечен календар"
   },
   "productivity": {
     "stalledProjects": "Забавени проекти",
@@ -3732,6 +3737,10 @@
       "lead": "Кога",
       "atTime": "Навреме",
       "minutesBefore": "{{count}} мин по-рано"
+        },
+        "desktopApp": {
+            "title": "Известия на това приложение",
+            "body": "Cadence за Linux показва системни известия, дори със затворен прозорец, докато иконата му е в системната област. Изберете кои в колоната Компютър по-долу. Нужен е API ключ, зададен в настройките на приложението (меню на иконата)."
     }
   },
   "projectStatus": {

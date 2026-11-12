@@ -9,6 +9,7 @@ import {
     ClockIcon,
     MoonIcon,
     ChatBubbleLeftRightIcon,
+    ComputerDesktopIcon,
 } from '@heroicons/react/24/outline';
 import type {
     NotificationChannels,
@@ -22,6 +23,7 @@ import AppriseCard from './AppriseCard';
 import TimedRemindersCard from './TimedRemindersCard';
 import WebhooksCard from './WebhooksCard';
 import { PushState, countPushDevices } from '../../../utils/pushService';
+import { isDesktopApp } from '../../../utils/desktopApp';
 
 interface NotificationsTabProps {
     isActive: boolean;
@@ -363,7 +365,34 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
                 )}
             </p>
 
-            <PushDeviceCard onStateChange={setPushState} />
+            {isDesktopApp() ? (
+                // The Linux app shows its own system notifications (desktop/
+                // tray process); browser push does not apply to it.
+                <div className="mb-6 p-4 rounded-lg bg-gray-50 dark:bg-gray-800/60">
+                    <div className="flex items-start gap-3">
+                        <ComputerDesktopIcon className="w-5 h-5 mt-0.5 text-gray-600 dark:text-gray-300 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                {t(
+                                    'notifications.desktopApp.title',
+                                    'Notifications of this app'
+                                )}
+                            </div>
+                            <p className="text-xs text-gray-600 dark:text-gray-300 mt-0.5">
+                                {t(
+                                    'notifications.desktopApp.body',
+                                    'Cadence for Linux shows system notifications, even with the window closed, as long as its icon is in the system tray. Pick which ones in the Desktop column below. It needs an API key, set in the app settings (tray menu).'
+                                )}
+                            </p>
+                        </div>
+                        <div className="flex-shrink-0">
+                            {renderTestButton('desktop')}
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                <PushDeviceCard onStateChange={setPushState} />
+            )}
 
             <AppriseCard onStateChange={setAppriseConfigured} />
 

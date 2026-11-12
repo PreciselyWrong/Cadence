@@ -35,7 +35,7 @@ import { useStore } from '../store/useStore';
 import type { SidebarVisibleSections } from './Profile/types';
 import { sidebarPercentToRem } from '../utils/sidebarWidth';
 import type { SidebarSectionId } from '../utils/sidebarLayout';
-import type { RailId } from '../utils/minimalSidebar';
+import type { PanelId, RailId } from '../utils/minimalSidebar';
 
 interface SidebarProps {
     isSidebarOpen: boolean;
@@ -66,10 +66,6 @@ interface SidebarProps {
 // Navy in light mode, charcoal in dark mode: the frame around the content
 // and the sidebar share it (`.sidebar-island` in tailwind.css).
 export const SIDEBAR_CANVAS = 'bg-sidebar';
-
-// Minimal keeps only these lists in the panel; the rest live in the icon rail.
-// Pinned items sit above everything in both layouts.
-const MINIMAL_LIST_SECTIONS: SidebarSectionId[] = ['projects', 'areas', 'tags'];
 
 const Sidebar: React.FC<SidebarProps> = ({
     isSidebarOpen,
@@ -119,24 +115,26 @@ const Sidebar: React.FC<SidebarProps> = ({
     );
     const isSectionVisible = (key: keyof SidebarVisibleSections) =>
         visibleSections[key] !== false;
+    // Minimal: which blocks the open panel shows, in which order.
+    const panel = useStore(
+        (state) => state.userSettingsStore.sidebarMinimal.panel
+    );
+    const panelShows = (key: PanelId) =>
+        panel.some((block) => block.key === key && block.visible);
 
     // With the panel open, the minimal rail skips the entries the panel
     // already lists (smart lists at the top, Areas among the sections).
     const railIdsListedInPanel = (): RailId[] => {
         const ids: RailId[] = [];
-        for (const item of smartLists) {
-            if (!item.visible) continue;
-            if (item.key === 'today' || item.key === 'inbox') {
-                ids.push(item.key);
+        if (panelShows('smartLists')) {
+            for (const item of smartLists) {
+                if (!item.visible) continue;
+                if (item.key === 'today' || item.key === 'inbox') {
+                    ids.push(item.key);
+                }
             }
         }
-        if (
-            sectionOrder.includes('areas') &&
-            MINIMAL_LIST_SECTIONS.includes('areas') &&
-            isSectionVisible('areas')
-        ) {
-            ids.push('areas');
-        }
+        if (panelShows('areas')) ids.push('areas');
         return ids;
     };
 
@@ -242,6 +240,57 @@ const Sidebar: React.FC<SidebarProps> = ({
         ),
     };
 
+    // One block of the open minimal panel (order and visibility in
+    // Profile > Sidebar).
+    const minimalBlock = (key: PanelId): React.ReactNode => {
+        switch (key) {
+            case 'favorites':
+                return (
+                    <div className="mb-2 empty:hidden">
+                        {sectionElements.favorites}
+                    </div>
+                );
+            case 'miniMonth':
+                return (
+                    <div className="mb-3 hidden sm:block">
+                        <SidebarMiniMonth />
+                    </div>
+                );
+            case 'smartLists':
+                return (
+                    <div className="mb-[22px]">
+                        <SidebarSmartLists
+                            handleNavClick={handleNavClick}
+                            location={location}
+                        />
+                    </div>
+                );
+            default:
+                return <div className="mb-[6px]">{sectionElements[key]}</div>;
+        }
+    };
+
+    const footer = (
+        <>
+            <SidebarTrialCard />
+            <SidebarFooter
+                currentUser={currentUser}
+                isDarkMode={isDarkMode}
+                toggleDarkMode={toggleDarkMode}
+                isSidebarOpen={isSidebarOpen}
+                setIsSidebarOpen={setIsSidebarOpen}
+                isDropdownOpen={isDropdownOpen}
+                toggleDropdown={toggleDropdown}
+                openTaskModal={openTaskModal}
+                openProjectModal={openProjectModal}
+                onCreateNote={onCreateNote}
+                openAreaModal={openAreaModal}
+                openTagModal={openTagModal}
+                keyboardShortcuts={keyboardShortcuts}
+            />
+        </>
+    );
+
     return (
         <>
             {isSidebarOpen && (
@@ -278,136 +327,136 @@ const Sidebar: React.FC<SidebarProps> = ({
                     </div>
                 )}
                 {isSidebarOpen && (
-                    <div className={isMinimal ? 'flex h-full' : 'contents'}>
-                        {isMinimal && (
-                            <SidebarRailMinimal
-                                handleNavClick={handleNavClick}
-                                location={location}
-                                canOpenAccess={canOpenAccess(currentUser)}
-                                onCustomize={openSidebarSettings}
-                                hiddenIds={railIdsListedInPanel()}
-                            />
-                        )}
+                    <div
+                        className={
+                            isMinimal ? 'flex flex-col h-full' : 'contents'
+                        }
+                    >
+                        {/* Minimal: rail and panel side by side, the footer
+                            below both so its line runs the full width */}
                         <div
                             className={
-                                isMinimal
-                                    ? 'flex flex-col h-full min-w-0 flex-1'
-                                    : 'flex flex-col h-full'
+                                isMinimal ? 'flex flex-1 min-h-0' : 'contents'
                             }
                         >
-                            <SidebarResizeHandle />
-                            <div className="h-14 mt-2 flex-shrink-0 flex items-center justify-between pl-5 pr-3">
-                                <Link
-                                    to="/"
-                                    className="flex items-center no-underline"
-                                >
-                                    <img
-                                        src={getAssetPath(
-                                            'wide-logo-light.png'
+                            {isMinimal && (
+                                <SidebarRailMinimal
+                                    handleNavClick={handleNavClick}
+                                    location={location}
+                                    canOpenAccess={canOpenAccess(currentUser)}
+                                    onCustomize={openSidebarSettings}
+                                    hiddenIds={railIdsListedInPanel()}
+                                />
+                            )}
+                            <div
+                                className={
+                                    isMinimal
+                                        ? 'flex flex-col h-full min-w-0 flex-1'
+                                        : 'flex flex-col h-full'
+                                }
+                            >
+                                <SidebarResizeHandle />
+                                <div className="h-14 mt-2 flex-shrink-0 flex items-center justify-between pl-5 pr-3">
+                                    <Link
+                                        to="/"
+                                        className="flex items-center no-underline"
+                                    >
+                                        <img
+                                            src={getAssetPath(
+                                                'wide-logo-light.png'
+                                            )}
+                                            alt="Cadence"
+                                            className="h-8 w-auto"
+                                        />
+                                    </Link>
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsSidebarOpen(false)}
+                                        className="p-2 rounded-lg text-gray-600 hover:text-gray-700 hover:bg-gray-300/50 dark:text-gray-300 dark:hover:text-gray-200 dark:hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                                        aria-label={t(
+                                            'navbar.collapseSidebar',
+                                            'Collapse Sidebar'
                                         )}
-                                        alt="Cadence"
-                                        className="h-8 w-auto"
-                                    />
-                                </Link>
-                                <button
-                                    type="button"
-                                    onClick={() => setIsSidebarOpen(false)}
-                                    className="p-2 rounded-lg text-gray-600 hover:text-gray-700 hover:bg-gray-300/50 dark:text-gray-300 dark:hover:text-gray-200 dark:hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-                                    aria-label={t(
-                                        'navbar.collapseSidebar',
-                                        'Collapse Sidebar'
-                                    )}
-                                    data-testid="sidebar-collapse"
-                                >
-                                    <XMarkIcon className="h-6 w-6 sm:hidden" />
-                                    <SidebarPanelIcon className="hidden sm:block h-5 w-5" />
-                                </button>
-                            </div>
-                            <div className="flex-1 min-h-0 overflow-y-auto px-2.5 pt-1 pb-4">
-                                {/* Pinned items at the very top, as tiles (TickTick) */}
-                                {isSectionVisible('favorites') && (
-                                    <div className="mb-2 empty:hidden">
-                                        {sectionElements.favorites}
-                                    </div>
-                                )}
-                                {/* A month to jump to any day of Today (Sorted³, TickTick) */}
-                                {isMinimal && (
-                                    <div className="mb-3 hidden sm:block">
-                                        <SidebarMiniMonth />
-                                    </div>
-                                )}
-                                <div className="mb-[22px]">
+                                        data-testid="sidebar-collapse"
+                                    >
+                                        <XMarkIcon className="h-6 w-6 sm:hidden" />
+                                        <SidebarPanelIcon className="hidden sm:block h-5 w-5" />
+                                    </button>
+                                </div>
+                                <div className="flex-1 min-h-0 overflow-y-auto px-2.5 pt-1 pb-4">
                                     {isMinimal ? (
-                                        <SidebarSmartLists
-                                            handleNavClick={handleNavClick}
-                                            location={location}
-                                        />
+                                        panel
+                                            .filter((block) => block.visible)
+                                            .map((block) => (
+                                                <React.Fragment key={block.key}>
+                                                    {minimalBlock(block.key)}
+                                                </React.Fragment>
+                                            ))
                                     ) : (
-                                        <SidebarNav
-                                            handleNavClick={handleNavClick}
-                                            location={location}
-                                            isDarkMode={isDarkMode}
-                                            openTaskModal={openTaskModal}
-                                        />
+                                        <>
+                                            {/* Pinned items at the very top, as tiles (TickTick) */}
+                                            {isSectionVisible('favorites') && (
+                                                <div className="mb-2 empty:hidden">
+                                                    {sectionElements.favorites}
+                                                </div>
+                                            )}
+                                            <div className="mb-[22px]">
+                                                <SidebarNav
+                                                    handleNavClick={
+                                                        handleNavClick
+                                                    }
+                                                    location={location}
+                                                    isDarkMode={isDarkMode}
+                                                    openTaskModal={
+                                                        openTaskModal
+                                                    }
+                                                />
+                                            </div>
+                                            {sectionOrder.map((id) => {
+                                                if (
+                                                    !isSectionVisible(
+                                                        id as SidebarSectionId
+                                                    )
+                                                ) {
+                                                    return null;
+                                                }
+                                                if (id === 'favorites')
+                                                    return null;
+                                                if (
+                                                    id === 'habits' &&
+                                                    !habitsEnabled
+                                                )
+                                                    return null;
+                                                return (
+                                                    <div
+                                                        key={id}
+                                                        className="mb-[6px]"
+                                                    >
+                                                        {
+                                                            sectionElements[
+                                                                id as SidebarSectionId
+                                                            ]
+                                                        }
+                                                    </div>
+                                                );
+                                            })}
+                                        </>
+                                    )}
+                                    {!isMinimal && (
+                                        <div className="mb-[6px]">
+                                            <SidebarAdmin
+                                                handleNavClick={handleNavClick}
+                                                location={location}
+                                                currentUser={currentUser}
+                                            />
+                                        </div>
                                     )}
                                 </div>
-                                {sectionOrder.map((id) => {
-                                    if (
-                                        !isSectionVisible(
-                                            id as SidebarSectionId
-                                        )
-                                    ) {
-                                        return null;
-                                    }
-                                    if (id === 'favorites') return null;
-                                    if (id === 'habits' && !habitsEnabled)
-                                        return null;
-                                    if (
-                                        isMinimal &&
-                                        !MINIMAL_LIST_SECTIONS.includes(
-                                            id as SidebarSectionId
-                                        )
-                                    ) {
-                                        return null;
-                                    }
-                                    return (
-                                        <div key={id} className="mb-[6px]">
-                                            {
-                                                sectionElements[
-                                                    id as SidebarSectionId
-                                                ]
-                                            }
-                                        </div>
-                                    );
-                                })}
-                                {!isMinimal && (
-                                    <div className="mb-[6px]">
-                                        <SidebarAdmin
-                                            handleNavClick={handleNavClick}
-                                            location={location}
-                                            currentUser={currentUser}
-                                        />
-                                    </div>
-                                )}
-                            </div>
 
-                            <SidebarTrialCard />
-                            <SidebarFooter
-                                currentUser={currentUser}
-                                isDarkMode={isDarkMode}
-                                toggleDarkMode={toggleDarkMode}
-                                isSidebarOpen={isSidebarOpen}
-                                setIsSidebarOpen={setIsSidebarOpen}
-                                isDropdownOpen={isDropdownOpen}
-                                toggleDropdown={toggleDropdown}
-                                openTaskModal={openTaskModal}
-                                openProjectModal={openProjectModal}
-                                onCreateNote={onCreateNote}
-                                openAreaModal={openAreaModal}
-                                openTagModal={openTagModal}
-                                keyboardShortcuts={keyboardShortcuts}
-                            />
+                                {!isMinimal && footer}
+                            </div>
                         </div>
+                        {isMinimal && footer}
                     </div>
                 )}
             </div>

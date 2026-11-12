@@ -72,6 +72,7 @@ import { setCurrentUser as setUserInStorage } from './utils/userUtils';
 import type { StarterResult } from './utils/onboardingService';
 import { getApiPath, getLocalesPath } from './config/paths';
 import { useStore } from './store/useStore';
+import { applyUserFeatures } from './utils/userFeatures';
 import { sanitizeFocus } from './utils/focus';
 import { invalidateProfileCache } from './utils/profileService';
 import { notifySwSession, notifySwClearCache } from './utils/swUtils';
@@ -199,26 +200,7 @@ const App: React.FC = () => {
                 setUserInStorage(data.user);
                 notifySwSession(data.user.id);
                 resyncPush(data.user.uid);
-                useStore
-                    .getState()
-                    .userSettingsStore.setEisenhowerEnabled(
-                        data.user.features?.eisenhower_enabled === true
-                    );
-                useStore
-                    .getState()
-                    .userSettingsStore.setKanbanEnabled(
-                        data.user.features?.kanban_enabled === true
-                    );
-                useStore
-                    .getState()
-                    .userSettingsStore.setHabitsEnabled(
-                        data.user.features?.habits_enabled !== false
-                    );
-                useStore
-                    .getState()
-                    .userSettingsStore.setCalendarEnabled(
-                        data.user.features?.calendar_enabled === true
-                    );
+                applyUserFeatures(data.user.features);
                 useStore
                     .getState()
                     .userSettingsStore.setHasCollaborators(
@@ -236,12 +218,6 @@ const App: React.FC = () => {
                     .getState()
                     .userSettingsStore.setAiAssistantEnabled(
                         data.user.features?.ai_assistant_enabled === true
-                    );
-                useStore
-                    .getState()
-                    .userSettingsStore.setContentBackground(
-                        data.user.ui_settings?.appearance?.contentBackground ??
-                            null
                     );
                 useStore
                     .getState()

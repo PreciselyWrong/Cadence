@@ -191,6 +191,9 @@ describe('Sidebar in minimal mode', () => {
     beforeEach(() => {
         setDensity('minimal');
         mockedCounts.mockResolvedValue({ today: 0, next7: 0 });
+        act(() => {
+            useStore.getState().userSettingsStore.setSidebarMinimal(undefined);
+        });
     });
 
     it('keeps folders and lists in the main panel', () => {
@@ -253,6 +256,57 @@ describe('Sidebar in minimal mode', () => {
 
         expect(screen.getByTestId('sidebar-rail-today')).toBeInTheDocument();
         expect(screen.getByTestId('sidebar-rail-inbox')).toBeInTheDocument();
+        expect(screen.getByTestId('sidebar-rail-areas')).toBeInTheDocument();
+    });
+
+    const setPanel = (panel: { key: string; visible: boolean }[]) =>
+        act(() => {
+            useStore.setState((state: any) => ({
+                userSettingsStore: {
+                    ...state.userSettingsStore,
+                    sidebarMinimal: {
+                        ...state.userSettingsStore.sidebarMinimal,
+                        panel,
+                    },
+                },
+            }));
+        });
+
+    it('lays out the panel blocks in the saved order and leaves out hidden ones', () => {
+        setPanel([
+            { key: 'tags', visible: true },
+            { key: 'smartLists', visible: true },
+            { key: 'favorites', visible: true },
+            { key: 'projects', visible: false },
+            { key: 'areas', visible: true },
+            { key: 'miniMonth', visible: true },
+        ]);
+        renderSidebar(true);
+
+        expect(screen.queryByTestId('projects')).toBeNull();
+        const tags = screen.getByTestId('tags');
+        const today = screen.getByTestId('sidebar-smart-today');
+        const favorites = screen.getByTestId('favorites');
+        expect(
+            tags.compareDocumentPosition(today) &
+                Node.DOCUMENT_POSITION_FOLLOWING
+        ).toBeTruthy();
+        expect(
+            today.compareDocumentPosition(favorites) &
+                Node.DOCUMENT_POSITION_FOLLOWING
+        ).toBeTruthy();
+    });
+
+    it('puts Today and Areas back on the rail when their panel blocks are hidden', () => {
+        setPanel([
+            { key: 'smartLists', visible: false },
+            { key: 'areas', visible: false },
+        ]);
+        renderSidebar(true);
+
+        expect(screen.queryByTestId('sidebar-smart-today')).toBeNull();
+        expect(screen.queryByTestId('areas')).toBeNull();
+        expect(screen.getByTestId('sidebar-rail-today')).toBeInTheDocument();
         expect(screen.getByTestId('sidebar-rail-areas')).toBeInTheDocument();
     });
 

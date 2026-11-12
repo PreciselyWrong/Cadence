@@ -626,7 +626,8 @@
             "events": "Sự kiện",
             "permission": {
                 "events": "Lắng nghe sự kiện",
-                "routes": "Cung cấp đường dẫn riêng"
+                "routes": "Cung cấp đường dẫn riêng",
+                "brief": "Writes the daily brief"
             },
             "enabled": "Đã bật",
             "needsApproval": "Phiên bản này yêu cầu nhiều hơn trước. Bật lại để phê duyệt quyền và sự kiện của nó.",
@@ -658,7 +659,11 @@
             "removeMessage": "Thư mục và cài đặt của plugin sẽ bị xóa khỏi máy chủ. Không thể hoàn tác.",
             "page": {
                 "notFound": "Không tìm thấy plugin hoặc plugin đã tắt"
-            }
+            },
+            "approveIntro": "This plugin runs inside the server and asks for:",
+            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
+            "approveTitle": "Approve permissions?",
+            "approve": "Approve and enable"
         },
     "showTaskDescription": "Hiện mô tả dưới tiêu đề",
     "sync": {
@@ -1358,7 +1363,6 @@
     },
     "sidebarSmartListsTitle": "Danh sách thông minh",
     "sidebarRailTitle": "Thanh biểu tượng và Khác",
-    "sidebarBadgesTitle": "Huy hiệu số đếm",
     "sidebarShowCount": "Hiện số đếm cho {{name}}",
     "sidebarCountBadge": "Số đếm",
     "sidebarPlace": "Vị trí của {{name}}",
@@ -1382,23 +1386,24 @@
       "priority": "Cờ ưu tiên",
       "due": "Ngày đến hạn"
     },
-    "contentBackground": "Nền",
-    "contentBackgroundDescription": "Hiển thị ảnh phía sau khu vực nội dung chính. Ảnh lấy từ Unsplash và ghi công cho nhiếp ảnh gia.",
-    "contentBackgroundNone": "Không có",
     "photoBy": "Ảnh của",
     "photoOn": "trên",
     "groups": {
       "account": "Tài khoản",
       "appearance": "Giao diện",
-      "planning": "Lập kế hoạch",
+            "planning": "Tổ chức",
       "integrations": "Tích hợp",
-      "security": "Bảo mật",
+            "security": "Truy cập",
       "advanced": "Nâng cao"
     },
     "optional": "Tùy chọn",
     "accent": "Màu nhấn",
     "accentCustom": "Màu tùy chỉnh (hex)",
-    "pureBlack": "Đen thuần ở chế độ tối"
+        "pureBlack": "Đen thuần ở chế độ tối",
+        "sidebarPanelTitle": "Bảng",
+        "sidebarPanelHint": "Các khối của thanh bên đang mở, từ trên xuống dưới.",
+        "sidebarPanelPinned": "Đã ghim",
+        "sidebarPanelMonth": "Lịch tháng"
   },
   "productivity": {
     "stalledProjects": "Dự án Đang Tạm Dừng",
@@ -3725,6 +3730,10 @@
       "lead": "Khi nào",
       "atTime": "Đúng giờ",
       "minutesBefore": "Trước {{count}} phút"
+        },
+        "desktopApp": {
+            "title": "Thông báo của ứng dụng này",
+            "body": "Cadence cho Linux hiển thị thông báo hệ thống, kể cả khi cửa sổ đã đóng, miễn là biểu tượng của ứng dụng còn trong khay hệ thống. Chọn thông báo nào trong cột Máy tính bên dưới. Cần khóa API, đặt trong cài đặt ứng dụng (menu khay)."
     }
   },
   "projectStatus": {

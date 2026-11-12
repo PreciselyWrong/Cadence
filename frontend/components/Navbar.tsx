@@ -47,8 +47,6 @@ interface NavbarProps {
     setCurrentUser: React.Dispatch<React.SetStateAction<any>>;
     isSidebarOpen: boolean;
     setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    // Tints the bar instead of hiding the page background photo behind it
-    transparent?: boolean;
 }
 
 const Navbar: React.FC<NavbarProps> = ({
@@ -57,7 +55,6 @@ const Navbar: React.FC<NavbarProps> = ({
     isSidebarOpen,
     setIsSidebarOpen,
     isDarkMode,
-    transparent = false,
 }) => {
     const { t } = useTranslation();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -200,13 +197,7 @@ const Navbar: React.FC<NavbarProps> = ({
     };
 
     return (
-        <nav
-            className={`relative z-30 has-[[data-testid=universal-search][data-state=open]]:z-50 flex-shrink-0 text-gray-900 dark:text-white ${
-                transparent
-                    ? 'bg-gray-100/40 dark:bg-gray-800/40 backdrop-blur-md'
-                    : 'bg-gray-100 dark:bg-gray-800'
-            }`}
-        >
+        <nav className="relative z-30 has-[[data-testid=universal-search][data-state=open]]:z-50 flex-shrink-0 text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800">
             {/* Main bar row */}
             <div className="h-14 flex items-center justify-between">
                 {/* On phones with the sidebar closed, the button that brings

@@ -67,6 +67,32 @@ describe('PUT /api/v1/profile/sidebar-settings (minimal sidebar)', () => {
         ]);
     });
 
+    it('stores the panel blocks in order, known keys only', async () => {
+        const response = await save({
+            panel: [
+                { key: 'projects', visible: true },
+                { key: 'miniMonth', visible: false },
+                { key: 'bogus', visible: true },
+                { key: 'projects', visible: false },
+                { key: 'smartLists', visible: 'false' },
+                { key: 'tags' },
+            ],
+        });
+
+        expect(response.status).toBe(200);
+        expect((await stored()).panel).toEqual([
+            { key: 'projects', visible: true },
+            { key: 'miniMonth', visible: false },
+            { key: 'smartLists', visible: false },
+            { key: 'tags', visible: true },
+        ]);
+    });
+
+    it('rejects a panel that is not an array', async () => {
+        const response = await save({ panel: { projects: true } });
+        expect(response.status).toBe(400);
+    });
+
     it('keeps only known rail keys with a known place', async () => {
         await save({
             rail: [

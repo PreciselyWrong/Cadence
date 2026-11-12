@@ -628,7 +628,8 @@
             "events": "Händelser",
             "permission": {
                 "events": "Lyssnar på händelser",
-                "routes": "Tillhandahåller egna rutter"
+                "routes": "Tillhandahåller egna rutter",
+                "brief": "Writes the daily brief"
             },
             "enabled": "På",
             "needsApproval": "Den här versionen begär mer än tidigare. Slå på den igen för att godkänna dess behörigheter och händelser.",
@@ -660,7 +661,11 @@
             "removeMessage": "Dess mapp och inställningar tas bort från servern. Detta kan inte ångras.",
             "page": {
                 "notFound": "Pluginet hittades inte eller är avstängt"
-            }
+            },
+            "approveIntro": "This plugin runs inside the server and asks for:",
+            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
+            "approveTitle": "Approve permissions?",
+            "approve": "Approve and enable"
         },
     "showTaskDescription": "Visa beskrivningen under rubriken",
     "sync": {
@@ -1361,7 +1366,6 @@
     },
     "sidebarSmartListsTitle": "Smarta listor",
     "sidebarRailTitle": "Ikonlist och Mer",
-    "sidebarBadgesTitle": "Räknarmärken",
     "sidebarShowCount": "Visa antal för {{name}}",
     "sidebarCountBadge": "Antal",
     "sidebarPlace": "Placering av {{name}}",
@@ -1385,23 +1389,24 @@
       "priority": "Prioritetsflagga",
       "due": "Förfallodatum"
     },
-    "contentBackground": "Bakgrund",
-    "contentBackgroundDescription": "Visa ett foto bakom huvudinnehållet. Fotona kommer från Unsplash och krediteras fotograferna.",
-    "contentBackgroundNone": "Ingen",
     "photoBy": "Foto av",
     "photoOn": "på",
     "groups": {
       "account": "Konto",
-      "appearance": "Utseende",
-      "planning": "Planering",
+            "appearance": "Gränssnitt",
+            "planning": "Organisation",
       "integrations": "Integrationer",
-      "security": "Säkerhet",
+            "security": "Åtkomst",
       "advanced": "Avancerat"
     },
     "optional": "Valfritt",
     "accent": "Accentfärg",
     "accentCustom": "Egen färg (hex)",
-    "pureBlack": "Ren svart i mörkt läge"
+        "pureBlack": "Ren svart i mörkt läge",
+        "sidebarPanelTitle": "Panel",
+        "sidebarPanelHint": "Blocken i den öppna sidopanelen, uppifrån och ner.",
+        "sidebarPanelPinned": "Fästa",
+        "sidebarPanelMonth": "Månadskalender"
   },
   "productivity": {
     "stalledProjects": "Stagnerade projekt",
@@ -3734,6 +3739,10 @@
       "lead": "När",
       "atTime": "På tiden",
       "minutesBefore": "{{count}} min före"
+        },
+        "desktopApp": {
+            "title": "Aviseringar från den här appen",
+            "body": "Cadence för Linux visar systemaviseringar, även med fönstret stängt, så länge dess ikon finns i systemfältet. Välj vilka i kolumnen Dator nedan. Det krävs en API-nyckel, som anges i appens inställningar (menyn i systemfältet)."
     }
   },
   "projectStatus": {

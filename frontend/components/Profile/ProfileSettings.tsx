@@ -616,9 +616,6 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                                 data.appearance ??
                                 (isDarkMode ? 'dark' : 'light')) as
                                 'light' | 'dark' | 'system',
-                            contentBackground:
-                                data.ui_settings?.appearance
-                                    ?.contentBackground ?? null,
                             rowFields: data.ui_settings?.appearance?.rowFields,
                             density:
                                 data.ui_settings?.appearance?.density ===
@@ -1358,18 +1355,6 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                     );
             }
 
-            if (
-                updatedProfile.ui_settings?.appearance?.contentBackground !==
-                undefined
-            ) {
-                useStore
-                    .getState()
-                    .userSettingsStore.setContentBackground(
-                        updatedProfile.ui_settings.appearance
-                            .contentBackground ?? null
-                    );
-            }
-
             if (formData.ui_settings?.appearance?.rowFields !== undefined) {
                 useStore
                     .getState()
@@ -1670,26 +1655,6 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                                                         ...(prev.ui_settings
                                                             ?.appearance || {}),
                                                         theme: appearance,
-                                                    },
-                                                },
-                                            }))
-                                        }
-                                        contentBackground={
-                                            formData.ui_settings?.appearance
-                                                ?.contentBackground ?? null
-                                        }
-                                        onContentBackgroundChange={(
-                                            background
-                                        ) =>
-                                            setFormData((prev) => ({
-                                                ...prev,
-                                                ui_settings: {
-                                                    ...(prev.ui_settings || {}),
-                                                    appearance: {
-                                                        ...(prev.ui_settings
-                                                            ?.appearance || {}),
-                                                        contentBackground:
-                                                            background,
                                                     },
                                                 },
                                             }))

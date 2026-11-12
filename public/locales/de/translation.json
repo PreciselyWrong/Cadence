@@ -1170,7 +1170,8 @@
             "events": "Ereignisse",
             "permission": {
                 "events": "Hört auf Ereignisse",
-                "routes": "Stellt eigene Routen bereit"
+                "routes": "Stellt eigene Routen bereit",
+                "brief": "Writes the daily brief"
             },
             "enabled": "Aktiviert",
             "needsApproval": "Diese Version verlangt mehr als zuvor. Schalten Sie sie erneut ein, um Berechtigungen und Ereignisse zu bestätigen.",
@@ -1202,7 +1203,11 @@
             "removeMessage": "Sein Ordner und seine Einstellungen werden vom Server gelöscht. Das lässt sich nicht rückgängig machen.",
             "page": {
                 "notFound": "Plugin nicht gefunden oder ausgeschaltet"
-            }
+            },
+            "approveIntro": "This plugin runs inside the server and asks for:",
+            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
+            "approveTitle": "Approve permissions?",
+            "approve": "Approve and enable"
         },
     "showTaskDescription": "Beschreibung unter dem Titel anzeigen",
     "sync": {
@@ -1903,7 +1908,6 @@
     },
     "sidebarSmartListsTitle": "Intelligente Listen",
     "sidebarRailTitle": "Symbolleiste und Mehr",
-    "sidebarBadgesTitle": "Anzahl-Abzeichen",
     "sidebarShowCount": "Anzahl für {{name}} anzeigen",
     "sidebarCountBadge": "Anzahl",
     "sidebarPlace": "Position von {{name}}",
@@ -1927,23 +1931,24 @@
       "priority": "Prioritätsmarkierung",
       "due": "Fälligkeitsdatum"
     },
-    "contentBackground": "Hintergrund",
-    "contentBackgroundDescription": "Zeigt ein Foto hinter dem Hauptinhalt. Fotos stammen von Unsplash, die Fotografen werden genannt.",
-    "contentBackgroundNone": "Keiner",
     "photoBy": "Foto von",
     "photoOn": "auf",
     "groups": {
       "account": "Konto",
-      "appearance": "Darstellung",
-      "planning": "Planung",
+            "appearance": "Oberfläche",
+            "planning": "Organisation",
       "integrations": "Integrationen",
-      "security": "Sicherheit",
+            "security": "Zugriff",
       "advanced": "Erweitert"
     },
     "optional": "Optional",
     "accent": "Akzentfarbe",
     "accentCustom": "Eigene Farbe (Hex)",
-    "pureBlack": "Reines Schwarz im Dunkelmodus"
+        "pureBlack": "Reines Schwarz im Dunkelmodus",
+        "sidebarPanelTitle": "Panel",
+        "sidebarPanelHint": "Die Blöcke der geöffneten Seitenleiste, von oben nach unten.",
+        "sidebarPanelPinned": "Angeheftet",
+        "sidebarPanelMonth": "Monatskalender"
   },
   "task": {
     "duplicateError": "Aufgabe konnte nicht dupliziert werden.",
@@ -3743,6 +3748,10 @@
       "lead": "Wann",
       "atTime": "Zur Uhrzeit",
       "minutesBefore": "{{count}} Min. vorher"
+        },
+        "desktopApp": {
+            "title": "Benachrichtigungen dieser App",
+            "body": "Cadence für Linux zeigt Systembenachrichtigungen an, auch bei geschlossenem Fenster, solange das Symbol im Infobereich liegt. Wählen Sie unten in der Spalte Desktop aus, welche. Dafür ist ein API-Schlüssel nötig, der in den App-Einstellungen (Menü des Infobereich-Symbols) eingetragen wird."
     }
   },
   "projectStatus": {

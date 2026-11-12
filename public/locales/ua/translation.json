@@ -1349,7 +1349,8 @@
             "events": "Події",
             "permission": {
                 "events": "Слухає події",
-                "routes": "Надає власні маршрути"
+                "routes": "Надає власні маршрути",
+                "brief": "Writes the daily brief"
             },
             "enabled": "Увімкнено",
             "needsApproval": "Ця версія вимагає більше, ніж попередня. Увімкніть її знову, щоб схвалити її дозволи та події.",
@@ -1381,7 +1382,11 @@
             "removeMessage": "Його папку та налаштування буде видалено з сервера. Це не можна скасувати.",
             "page": {
                 "notFound": "Плагін не знайдено або вимкнено"
-            }
+            },
+            "approveIntro": "This plugin runs inside the server and asks for:",
+            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
+            "approveTitle": "Approve permissions?",
+            "approve": "Approve and enable"
         },
     "showTaskDescription": "Показувати опис під заголовком",
     "sync": {
@@ -2084,7 +2089,6 @@
     },
     "sidebarSmartListsTitle": "Розумні списки",
     "sidebarRailTitle": "Панель значків і Ще",
-    "sidebarBadgesTitle": "Лічильники",
     "sidebarShowCount": "Показувати лічильник для «{{name}}»",
     "sidebarCountBadge": "Лічильник",
     "sidebarPlace": "Розташування «{{name}}»",
@@ -2108,23 +2112,24 @@
       "priority": "Прапорець пріоритету",
       "due": "Термін"
     },
-    "contentBackground": "Фон",
-    "contentBackgroundDescription": "Показувати фото за основною областю вмісту. Фото беруться з Unsplash, а їхніх авторів буде вказано.",
-    "contentBackgroundNone": "Немає",
     "photoBy": "Фото:",
     "photoOn": "на",
     "groups": {
       "account": "Обліковий запис",
-      "appearance": "Вигляд",
-      "planning": "Планування",
+            "appearance": "Інтерфейс",
+            "planning": "Організація",
       "integrations": "Інтеграції",
-      "security": "Безпека",
+            "security": "Доступ",
       "advanced": "Додатково"
     },
     "optional": "Необов’язково",
     "accent": "Акцентний колір",
     "accentCustom": "Власний колір (hex)",
-    "pureBlack": "Чорний фон у темній темі"
+        "pureBlack": "Чорний фон у темній темі",
+        "sidebarPanelTitle": "Панель",
+        "sidebarPanelHint": "Блоки відкритої бічної панелі, згори донизу.",
+        "sidebarPanelPinned": "Закріплені",
+        "sidebarPanelMonth": "Календар на місяць"
   },
   "task": {
     "duplicateError": "Не вдалося дублювати задачу.",
@@ -3768,6 +3773,10 @@
       "lead": "Коли",
       "atTime": "Вчасно",
       "minutesBefore": "За {{count}} хв"
+        },
+        "desktopApp": {
+            "title": "Сповіщення цього застосунку",
+            "body": "Cadence для Linux показує системні сповіщення, навіть коли вікно закрите, доки його значок є в системному лотку. Оберіть, які саме, у стовпці «Комп’ютер» нижче. Потрібен ключ API, який задається в налаштуваннях застосунку (меню лотка)."
     }
   },
   "projectStatus": {

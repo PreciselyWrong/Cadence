@@ -650,7 +650,8 @@
             "events": "Events",
             "permission": {
                 "events": "Listens to events",
-                "routes": "Serves its own routes"
+                "routes": "Serves its own routes",
+                "brief": "Writes the daily brief"
             },
             "enabled": "Enabled",
             "needsApproval": "This version asks for more than before. Turn it on again to approve its permissions and events.",
@@ -682,7 +683,11 @@
             "removeMessage": "Its folder and its settings are deleted from the server. This cannot be undone.",
             "page": {
                 "notFound": "Plugin not found or turned off"
-            }
+            },
+            "approveIntro": "This plugin runs inside the server and asks for:",
+            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
+            "approveTitle": "Approve permissions?",
+            "approve": "Approve and enable"
         },
     "sync": {
       "field": {
@@ -1250,9 +1255,6 @@
     "densityMinimal": "Minimal",
     "densityDense": "Dense",
     "densityDescription": "Minimal hides extras for a calm list; Dense shows every control.",
-    "contentBackground": "Background",
-    "contentBackgroundDescription": "Show a photo behind the main content area. Photos come from Unsplash and are credited to their photographers.",
-    "contentBackgroundNone": "None",
     "photoBy": "Photo by",
     "photoOn": "on",
     "connected": {
@@ -1389,7 +1391,6 @@
     },
     "sidebarSmartListsTitle": "Smart lists",
     "sidebarRailTitle": "Icon rail and More",
-    "sidebarBadgesTitle": "Count badges",
     "sidebarShowCount": "Show count for {{name}}",
     "sidebarCountBadge": "Count",
     "sidebarPlace": "Place of {{name}}",
@@ -1415,16 +1416,20 @@
     },
     "groups": {
       "account": "Account",
-      "appearance": "Appearance",
-      "planning": "Planning",
+            "appearance": "Interface",
+            "planning": "Organization",
       "integrations": "Integrations",
-      "security": "Security",
+            "security": "Access",
       "advanced": "Advanced"
     },
     "optional": "Optional",
     "accent": "Accent colour",
     "accentCustom": "Custom colour (hex)",
-    "pureBlack": "Pure black in dark mode"
+        "pureBlack": "Pure black in dark mode",
+        "sidebarPanelTitle": "Panel",
+        "sidebarPanelHint": "The blocks of the open sidebar, top to bottom.",
+        "sidebarPanelPinned": "Pinned",
+        "sidebarPanelMonth": "Month calendar"
   },
   "productivity": {
     "nothingYet": "Nothing to review yet.",
@@ -3962,6 +3967,10 @@
       "lead": "When",
       "atTime": "At the time",
       "minutesBefore": "{{count}} min before"
+        },
+        "desktopApp": {
+            "title": "Notifications of this app",
+            "body": "Cadence for Linux shows system notifications, even with the window closed, as long as its icon is in the system tray. Pick which ones in the Desktop column below. It needs an API key, set in the app settings (tray menu)."
     }
   },
   "aiAssistant": {

@@ -1135,7 +1135,8 @@
             "events": "Udalosti",
             "permission": {
                 "events": "Počúva udalosti",
-                "routes": "Poskytuje vlastné trasy"
+                "routes": "Poskytuje vlastné trasy",
+                "brief": "Writes the daily brief"
             },
             "enabled": "Zapnutý",
             "needsApproval": "Táto verzia žiada viac než predtým. Zapnite ju znova, aby ste schválili jej oprávnenia a udalosti.",
@@ -1167,7 +1168,11 @@
             "removeMessage": "Jeho priečinok a nastavenia sa odstránia zo servera. Nedá sa to vrátiť späť.",
             "page": {
                 "notFound": "Plugin sa nenašiel alebo je vypnutý"
-            }
+            },
+            "approveIntro": "This plugin runs inside the server and asks for:",
+            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
+            "approveTitle": "Approve permissions?",
+            "approve": "Approve and enable"
         },
     "showTaskDescription": "Zobraziť popis pod názvom",
     "sync": {
@@ -1873,7 +1878,6 @@
     },
     "sidebarSmartListsTitle": "Inteligentné zoznamy",
     "sidebarRailTitle": "Lišta ikon a Viac",
-    "sidebarBadgesTitle": "Odznaky s počtom",
     "sidebarShowCount": "Zobraziť počet pre {{name}}",
     "sidebarCountBadge": "Počet",
     "sidebarPlace": "Umiestnenie: {{name}}",
@@ -1897,23 +1901,24 @@
       "priority": "Príznak priority",
       "due": "Termín"
     },
-    "contentBackground": "Pozadie",
-    "contentBackgroundDescription": "Zobrazí fotografiu za hlavnou oblasťou obsahu. Fotografie pochádzajú z Unsplash a sú pripísané ich autorom.",
-    "contentBackgroundNone": "Žiadne",
     "photoBy": "Foto:",
     "photoOn": "na",
     "groups": {
       "account": "Účet",
-      "appearance": "Vzhľad",
-      "planning": "Plánovanie",
+            "appearance": "Rozhranie",
+            "planning": "Organizácia",
       "integrations": "Integrácie",
-      "security": "Zabezpečenie",
+            "security": "Prístup",
       "advanced": "Pokročilé"
     },
     "optional": "Voliteľné",
     "accent": "Farba zvýraznenia",
     "accentCustom": "Vlastná farba (hex)",
-    "pureBlack": "Čistá čierna v tmavom režime"
+        "pureBlack": "Čistá čierna v tmavom režime",
+        "sidebarPanelTitle": "Panel",
+        "sidebarPanelHint": "Bloky otvoreného bočného panela, zhora nadol.",
+        "sidebarPanelPinned": "Pripnuté",
+        "sidebarPanelMonth": "Mesačný kalendár"
   },
   "productivity": {
     "nothingYet": "Zatiaľ nie je čo kontrolovať.",
@@ -4330,6 +4335,10 @@
       "lead": "Kedy",
       "atTime": "V čase",
       "minutesBefore": "{{count}} min vopred"
+        },
+        "desktopApp": {
+            "title": "Upozornenia tejto aplikácie",
+            "body": "Cadence pre Linux zobrazuje systémové upozornenia, aj so zatvoreným oknom, pokiaľ je jeho ikona v systémovej lište. Vyberte, ktoré, v stĺpci Počítač nižšie. Potrebuje kľúč API, ktorý sa nastavuje v nastaveniach aplikácie (ponuka v lište)."
     }
   },
   "aiAssistant": {

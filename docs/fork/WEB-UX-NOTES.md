@@ -783,3 +783,15 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Problème** : les habitudes prévues du jour n'apparaissaient pas sur Aujourd'hui ; seule la page Habitudes les montrait. Android les a déjà dans Ma journée.
 - **Décision** : une section « Habitudes · N » dans la liste du jour. Un toucher coche une habitude oui/non ou ajoute sa première valeur rapide (sinon une unité), avec annulation ; celles qui sont faites se replient et suivent « Masquer les terminées ». Une habitude avec un rappel ce jour-là est une fine marque sur le calendrier, à l'heure du rappel ; un clic ouvre l'habitude.
 - **Android à reprendre** : rien de bloquant (Ma journée a les habitudes) ; vérifier que la frise de Ma journée montre aussi les rappels.
+
+### 2026-11-12 — Réglages : panneau de la barre latérale, fond de page, client Linux
+
+- **Problème** : dans Profil › Barre latérale, on choisissait les listes intelligentes et la barre d'icônes, mais pas les blocs du panneau ouvert (calendrier du mois, Projets, Zones, Étiquettes). La photo de fond rendait l'app illisible avec le nouveau style. Dans le client Linux, Notifications disait « ce navigateur ne prend pas en charge le push ». Le pied de la barre latérale s'arrêtait avant la barre d'icônes. Trois groupes du menu des réglages portaient le nom de leur premier onglet (Apparence › Apparence, Planification › Planification, Sécurité › Sécurité).
+- **Décision** :
+  - section « Panneau » : chaque bloc (Épinglés, Calendrier du mois, Listes intelligentes, Projets, Zones, Étiquettes) se masque et se déplace ; le compteur de Projets, Zones et Étiquettes est sur la même ligne (fin de « Pastilles de compteur ») ;
+  - fond de page retiré (les fonds des notes restent) ;
+  - dans le client Linux, une carte « Notifications de cette app » remplace celle du push du navigateur, avec son bouton Tester ;
+  - pied de la barre latérale sous la barre d'icônes et le panneau ;
+  - groupes renommés Interface, Organisation, Accès.
+- **Android à reprendre** : rien (pas de panneau latéral ni de fond de page sur Android).
+

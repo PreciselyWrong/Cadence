@@ -631,7 +631,8 @@
             "events": "Evenimente",
             "permission": {
                 "events": "Ascultă evenimente",
-                "routes": "Oferă propriile rute"
+                "routes": "Oferă propriile rute",
+                "brief": "Writes the daily brief"
             },
             "enabled": "Activat",
             "needsApproval": "Această versiune cere mai mult decât înainte. Activează-l din nou pentru a aproba permisiunile și evenimentele.",
@@ -663,7 +664,11 @@
             "removeMessage": "Dosarul și setările lui sunt șterse de pe server. Nu se poate anula.",
             "page": {
                 "notFound": "Pluginul nu a fost găsit sau este oprit"
-            }
+            },
+            "approveIntro": "This plugin runs inside the server and asks for:",
+            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
+            "approveTitle": "Approve permissions?",
+            "approve": "Approve and enable"
         },
     "showTaskDescription": "Afișează descrierea sub titlu",
     "sync": {
@@ -1366,7 +1371,6 @@
     },
     "sidebarSmartListsTitle": "Liste inteligente",
     "sidebarRailTitle": "Bară de iconițe și Mai multe",
-    "sidebarBadgesTitle": "Insigne cu numărător",
     "sidebarShowCount": "Afișează numărul pentru {{name}}",
     "sidebarCountBadge": "Număr",
     "sidebarPlace": "Locul pentru {{name}}",
@@ -1390,23 +1394,24 @@
       "priority": "Indicator de prioritate",
       "due": "Data scadentă"
     },
-    "contentBackground": "Fundal",
-    "contentBackgroundDescription": "Afișează o fotografie în spatele zonei de conținut principal. Fotografiile vin de la Unsplash, iar autorii sunt creditați.",
-    "contentBackgroundNone": "Niciunul",
     "photoBy": "Fotografie de",
     "photoOn": "pe",
     "groups": {
       "account": "Cont",
-      "appearance": "Aspect",
-      "planning": "Planificare",
+            "appearance": "Interfață",
+            "planning": "Organizare",
       "integrations": "Integrări",
-      "security": "Securitate",
+            "security": "Acces",
       "advanced": "Avansat"
     },
     "optional": "Opțional",
     "accent": "Culoare de accent",
     "accentCustom": "Culoare personalizată (hex)",
-    "pureBlack": "Negru pur în modul întunecat"
+        "pureBlack": "Negru pur în modul întunecat",
+        "sidebarPanelTitle": "Panou",
+        "sidebarPanelHint": "Blocurile bării laterale deschise, de sus în jos.",
+        "sidebarPanelPinned": "Fixate",
+        "sidebarPanelMonth": "Calendar lunar"
   },
   "productivity": {
     "stalledProjects": "Proiecte Blocate",
@@ -3744,6 +3749,10 @@
       "lead": "Când",
       "atTime": "La oră",
       "minutesBefore": "Cu {{count}} min înainte"
+        },
+        "desktopApp": {
+            "title": "Notificările acestei aplicații",
+            "body": "Cadence pentru Linux afișează notificări de sistem, chiar și cu fereastra închisă, atâta timp cât pictograma sa este în tava de sistem. Alegeți care în coloana Calculator de mai jos. Are nevoie de o cheie API, setată în setările aplicației (meniul din tavă)."
     }
   },
   "projectStatus": {

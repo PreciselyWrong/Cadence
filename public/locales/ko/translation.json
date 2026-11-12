@@ -626,7 +626,8 @@
             "events": "이벤트",
             "permission": {
                 "events": "이벤트 수신",
-                "routes": "자체 경로 제공"
+                "routes": "자체 경로 제공",
+                "brief": "Writes the daily brief"
             },
             "enabled": "사용",
             "needsApproval": "이 버전은 이전보다 더 많은 것을 요청합니다. 권한과 이벤트를 승인하려면 다시 켜세요.",
@@ -658,7 +659,11 @@
             "removeMessage": "폴더와 설정이 서버에서 삭제됩니다. 되돌릴 수 없습니다.",
             "page": {
                 "notFound": "플러그인을 찾을 수 없거나 꺼져 있습니다"
-            }
+            },
+            "approveIntro": "This plugin runs inside the server and asks for:",
+            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
+            "approveTitle": "Approve permissions?",
+            "approve": "Approve and enable"
         },
     "showTaskDescription": "제목 아래에 설명 표시",
     "sync": {
@@ -1358,7 +1363,6 @@
     },
     "sidebarSmartListsTitle": "스마트 목록",
     "sidebarRailTitle": "아이콘 레일과 더보기",
-    "sidebarBadgesTitle": "개수 배지",
     "sidebarShowCount": "{{name}} 개수 표시",
     "sidebarCountBadge": "개수",
     "sidebarPlace": "{{name}} 위치",
@@ -1382,23 +1386,24 @@
       "priority": "우선순위 표시",
       "due": "마감일"
     },
-    "contentBackground": "배경",
-    "contentBackgroundDescription": "본문 영역 뒤에 사진을 표시합니다. 사진은 Unsplash에서 가져오며 사진작가 정보를 표시합니다.",
-    "contentBackgroundNone": "없음",
     "photoBy": "사진:",
     "photoOn": "on",
     "groups": {
       "account": "계정",
-      "appearance": "화면",
-      "planning": "계획",
+            "appearance": "인터페이스",
+            "planning": "정리",
       "integrations": "연동",
-      "security": "보안",
+            "security": "접근",
       "advanced": "고급"
     },
     "optional": "선택 사항",
     "accent": "강조 색상",
     "accentCustom": "사용자 지정 색상 (hex)",
-    "pureBlack": "다크 모드에서 순수 검정"
+        "pureBlack": "다크 모드에서 순수 검정",
+        "sidebarPanelTitle": "패널",
+        "sidebarPanelHint": "열린 사이드바의 블록을 위에서 아래로 보여 줍니다.",
+        "sidebarPanelPinned": "고정됨",
+        "sidebarPanelMonth": "월간 달력"
   },
   "productivity": {
     "stalledProjects": "정체된 프로젝트",
@@ -3725,6 +3730,10 @@
       "lead": "언제",
       "atTime": "정시",
       "minutesBefore": "{{count}}분 전"
+        },
+        "desktopApp": {
+            "title": "이 앱의 알림",
+            "body": "Linux용 Cadence는 아이콘이 시스템 트레이에 있는 한 창을 닫아도 시스템 알림을 보여 줍니다. 아래 데스크톱 열에서 받을 알림을 고르세요. API 키가 필요하며, 앱 설정(트레이 메뉴)에서 입력합니다."
     }
   },
   "projectStatus": {

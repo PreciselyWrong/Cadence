@@ -646,7 +646,8 @@
             "events": "الأحداث",
             "permission": {
                 "events": "تستمع إلى الأحداث",
-                "routes": "تقدّم مساراتها الخاصة"
+                "routes": "تقدّم مساراتها الخاصة",
+                "brief": "Writes the daily brief"
             },
             "enabled": "مفعّلة",
             "needsApproval": "هذا الإصدار يطلب أكثر من قبل. فعّلها مرة أخرى للموافقة على أذوناتها وأحداثها.",
@@ -678,7 +679,11 @@
             "removeMessage": "سيتم حذف مجلدها وإعداداتها من الخادم. لا يمكن التراجع عن ذلك.",
             "page": {
                 "notFound": "الإضافة غير موجودة أو متوقفة"
-            }
+            },
+            "approveIntro": "This plugin runs inside the server and asks for:",
+            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
+            "approveTitle": "Approve permissions?",
+            "approve": "Approve and enable"
         },
     "showTaskDescription": "إظهار الوصف أسفل العنوان",
     "sync": {
@@ -1378,7 +1383,6 @@
     },
     "sidebarSmartListsTitle": "القوائم الذكية",
     "sidebarRailTitle": "شريط الأيقونات والمزيد",
-    "sidebarBadgesTitle": "شارات العدد",
     "sidebarShowCount": "إظهار العدد لـ {{name}}",
     "sidebarCountBadge": "العدد",
     "sidebarPlace": "موضع {{name}}",
@@ -1402,23 +1406,24 @@
       "priority": "علامة الأولوية",
       "due": "تاريخ الاستحقاق"
     },
-    "contentBackground": "الخلفية",
-    "contentBackgroundDescription": "اعرض صورة خلف منطقة المحتوى الرئيسية. الصور من Unsplash، ويُنسب كل منها إلى مصوّره.",
-    "contentBackgroundNone": "بدون",
     "photoBy": "صورة بواسطة",
     "photoOn": "على",
     "groups": {
       "account": "الحساب",
-      "appearance": "المظهر",
-      "planning": "التخطيط",
+            "appearance": "الواجهة",
+            "planning": "التنظيم",
       "integrations": "التكاملات",
-      "security": "الأمان",
+            "security": "الوصول",
       "advanced": "متقدم"
     },
     "optional": "اختياري",
     "accent": "لون التمييز",
     "accentCustom": "لون مخصص (hex)",
-    "pureBlack": "أسود خالص في الوضع الداكن"
+        "pureBlack": "أسود خالص في الوضع الداكن",
+        "sidebarPanelTitle": "اللوحة",
+        "sidebarPanelHint": "كتل الشريط الجانبي المفتوح، من الأعلى إلى الأسفل.",
+        "sidebarPanelPinned": "مثبّت",
+        "sidebarPanelMonth": "تقويم الشهر"
   },
   "productivity": {
     "stalledProjects": "المشاريع المتوقفة",
@@ -3765,6 +3770,10 @@
       "lead": "متى",
       "atTime": "في الوقت",
       "minutesBefore": "قبل {{count}} دقيقة"
+        },
+        "desktopApp": {
+            "title": "إشعارات هذا التطبيق",
+            "body": "تعرض Cadence for Linux إشعارات النظام، حتى مع إغلاق النافذة، ما دام رمزها في منطقة الإشعارات. اختر أيها في عمود الكمبيوتر أدناه. يحتاج إلى مفتاح API يُضبط في إعدادات التطبيق (قائمة الرمز)."
     }
   },
   "projectStatus": {

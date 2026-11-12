@@ -10,6 +10,7 @@ export const saveMinimalSidebarSettings = async (
         smartLists: MinimalSidebarSettings['smartLists'];
         rail: MinimalSidebarSettings['rail'];
         sectionBadges: MinimalSidebarSettings['sectionBadges'];
+        panel: MinimalSidebarSettings['panel'];
     }>
 ): Promise<void> => {
     const response = await fetch(getApiPath('profile/sidebar-settings'), {

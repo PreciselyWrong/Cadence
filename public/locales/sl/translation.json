@@ -636,7 +636,8 @@
             "events": "Dogodki",
             "permission": {
                 "events": "Posluša dogodke",
-                "routes": "Ponuja lastne poti"
+                "routes": "Ponuja lastne poti",
+                "brief": "Writes the daily brief"
             },
             "enabled": "Vklopljen",
             "needsApproval": "Ta različica zahteva več kot prej. Znova ga vklopite, da odobrite njegova dovoljenja in dogodke.",
@@ -668,7 +669,11 @@
             "removeMessage": "Njegova mapa in nastavitve se izbrišejo s strežnika. Tega ni mogoče razveljaviti.",
             "page": {
                 "notFound": "Vtičnik ni najden ali je izklopljen"
-            }
+            },
+            "approveIntro": "This plugin runs inside the server and asks for:",
+            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
+            "approveTitle": "Approve permissions?",
+            "approve": "Approve and enable"
         },
     "showTaskDescription": "Prikaži opis pod naslovom",
     "sync": {
@@ -1371,7 +1376,6 @@
     },
     "sidebarSmartListsTitle": "Pametni seznami",
     "sidebarRailTitle": "Vrstica ikon in Več",
-    "sidebarBadgesTitle": "Značke s števci",
     "sidebarShowCount": "Pokaži število za {{name}}",
     "sidebarCountBadge": "Število",
     "sidebarPlace": "Mesto za {{name}}",
@@ -1395,23 +1399,24 @@
       "priority": "Zastavica prednosti",
       "due": "Rok"
     },
-    "contentBackground": "Ozadje",
-    "contentBackgroundDescription": "Prikaži fotografijo za glavnim območjem vsebine. Fotografije so iz Unsplasha, avtorji fotografij so navedeni.",
-    "contentBackgroundNone": "Brez",
     "photoBy": "Fotografija:",
     "photoOn": "na",
     "groups": {
       "account": "Račun",
-      "appearance": "Videz",
-      "planning": "Načrtovanje",
+            "appearance": "Vmesnik",
+            "planning": "Organizacija",
       "integrations": "Integracije",
-      "security": "Varnost",
+            "security": "Dostop",
       "advanced": "Napredno"
     },
     "optional": "Neobvezno",
     "accent": "Barva poudarka",
     "accentCustom": "Barva po meri (hex)",
-    "pureBlack": "Čista črna v temnem načinu"
+        "pureBlack": "Čista črna v temnem načinu",
+        "sidebarPanelTitle": "Plošča",
+        "sidebarPanelHint": "Bloki odprte stranske vrstice, od zgoraj navzdol.",
+        "sidebarPanelPinned": "Pripeto",
+        "sidebarPanelMonth": "Mesečni koledar"
   },
   "productivity": {
     "issuesFound_few": "{{count}} težave s produktivnostjo potrebujejo pozornost",
@@ -3771,6 +3776,10 @@
       "lead": "Kdaj",
       "atTime": "Ob uri",
       "minutesBefore": "{{count}} min prej"
+        },
+        "desktopApp": {
+            "title": "Obvestila te aplikacije",
+            "body": "Cadence za Linux prikazuje sistemska obvestila, tudi ko je okno zaprto, dokler je njegova ikona v sistemski vrstici. Izberite, katera, v stolpcu Računalnik spodaj. Potrebuje ključ API, ki ga nastavite v nastavitvah aplikacije (meni v sistemski vrstici)."
     }
   },
   "projectStatus": {

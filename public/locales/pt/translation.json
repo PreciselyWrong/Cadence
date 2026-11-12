@@ -629,7 +629,8 @@
             "events": "Eventos",
             "permission": {
                 "events": "Escuta eventos",
-                "routes": "Expõe rotas próprias"
+                "routes": "Expõe rotas próprias",
+                "brief": "Writes the daily brief"
             },
             "enabled": "Ativado",
             "needsApproval": "Esta versão pede mais do que a anterior. Ative-o de novo para aprovar suas permissões e eventos.",
@@ -661,7 +662,11 @@
             "removeMessage": "A pasta e as configurações dele são apagadas do servidor. Não dá para desfazer.",
             "page": {
                 "notFound": "Plugin não encontrado ou desligado"
-            }
+            },
+            "approveIntro": "This plugin runs inside the server and asks for:",
+            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
+            "approveTitle": "Approve permissions?",
+            "approve": "Approve and enable"
         },
     "showTaskDescription": "Mostrar a descrição abaixo do título",
     "sync": {
@@ -1362,7 +1367,6 @@
     },
     "sidebarSmartListsTitle": "Listas inteligentes",
     "sidebarRailTitle": "Barra de ícones e Mais",
-    "sidebarBadgesTitle": "Emblemas de contagem",
     "sidebarShowCount": "Mostrar contagem de {{name}}",
     "sidebarCountBadge": "Contagem",
     "sidebarPlace": "Local de {{name}}",
@@ -1386,23 +1390,24 @@
       "priority": "Bandeira de prioridade",
       "due": "Data de vencimento"
     },
-    "contentBackground": "Plano de fundo",
-    "contentBackgroundDescription": "Mostra uma foto atrás da área de conteúdo principal. As fotos vêm do Unsplash e são creditadas aos seus fotógrafos.",
-    "contentBackgroundNone": "Nenhum",
     "photoBy": "Foto de",
     "photoOn": "em",
     "groups": {
       "account": "Conta",
-      "appearance": "Aparência",
-      "planning": "Planejamento",
+            "appearance": "Interface",
+            "planning": "Organização",
       "integrations": "Integrações",
-      "security": "Segurança",
+            "security": "Acesso",
       "advanced": "Avançado"
     },
     "optional": "Opcional",
     "accent": "Cor de destaque",
     "accentCustom": "Cor personalizada (hex)",
-    "pureBlack": "Preto puro no modo escuro"
+        "pureBlack": "Preto puro no modo escuro",
+        "sidebarPanelTitle": "Painel",
+        "sidebarPanelHint": "Os blocos da barra lateral aberta, de cima para baixo.",
+        "sidebarPanelPinned": "Fixados",
+        "sidebarPanelMonth": "Calendário mensal"
   },
   "productivity": {
     "stalledProjects": "Projetos Parados",
@@ -3740,6 +3745,10 @@
       "lead": "Quando",
       "atTime": "À hora",
       "minutesBefore": "{{count}} min antes"
+        },
+        "desktopApp": {
+            "title": "Notificações deste app",
+            "body": "O Cadence para Linux mostra notificações do sistema, mesmo com a janela fechada, desde que o ícone esteja na bandeja do sistema. Escolha quais na coluna Computador abaixo. Ele precisa de uma chave de API, definida nas configurações do app (menu da bandeja)."
     }
   },
   "projectStatus": {

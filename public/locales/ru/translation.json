@@ -636,7 +636,8 @@
             "events": "События",
             "permission": {
                 "events": "Подписка на события",
-                "routes": "Собственные маршруты"
+                "routes": "Собственные маршруты",
+                "brief": "Writes the daily brief"
             },
             "enabled": "Включён",
             "needsApproval": "Эта версия запрашивает больше, чем прежняя. Включите плагин снова, чтобы подтвердить его разрешения и события.",
@@ -668,7 +669,11 @@
             "removeMessage": "Его папка и настройки будут удалены с сервера. Это нельзя отменить.",
             "page": {
                 "notFound": "Плагин не найден или выключен"
-            }
+            },
+            "approveIntro": "This plugin runs inside the server and asks for:",
+            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
+            "approveTitle": "Approve permissions?",
+            "approve": "Approve and enable"
         },
     "showTaskDescription": "Показывать описание под заголовком",
     "sync": {
@@ -1371,7 +1376,6 @@
     },
     "sidebarSmartListsTitle": "Умные списки",
     "sidebarRailTitle": "Панель значков и Ещё",
-    "sidebarBadgesTitle": "Счётчики",
     "sidebarShowCount": "Показывать счётчик для «{{name}}»",
     "sidebarCountBadge": "Счётчик",
     "sidebarPlace": "Расположение «{{name}}»",
@@ -1395,23 +1399,24 @@
       "priority": "Флажок приоритета",
       "due": "Срок"
     },
-    "contentBackground": "Фон",
-    "contentBackgroundDescription": "Показывать фото за основной областью содержимого. Фото берутся из Unsplash, авторы указаны.",
-    "contentBackgroundNone": "Нет",
     "photoBy": "Фото:",
     "photoOn": "на",
     "groups": {
       "account": "Аккаунт",
-      "appearance": "Внешний вид",
-      "planning": "Планирование",
+            "appearance": "Интерфейс",
+            "planning": "Организация",
       "integrations": "Интеграции",
-      "security": "Безопасность",
+            "security": "Доступ",
       "advanced": "Дополнительно"
     },
     "optional": "Необязательно",
     "accent": "Акцентный цвет",
     "accentCustom": "Свой цвет (hex)",
-    "pureBlack": "Чисто чёрный в тёмной теме"
+        "pureBlack": "Чисто чёрный в тёмной теме",
+        "sidebarPanelTitle": "Панель",
+        "sidebarPanelHint": "Блоки открытой боковой панели, сверху вниз.",
+        "sidebarPanelPinned": "Закреплённые",
+        "sidebarPanelMonth": "Календарь на месяц"
   },
   "productivity": {
     "issuesFound_many": "{{count}} проблем с продуктивностью требуют внимания",
@@ -3768,6 +3773,10 @@
       "lead": "Когда",
       "atTime": "Вовремя",
       "minutesBefore": "За {{count}} мин"
+        },
+        "desktopApp": {
+            "title": "Уведомления этого приложения",
+            "body": "Cadence для Linux показывает системные уведомления, даже когда окно закрыто, пока его значок находится в системном трее. Выберите, какие именно, в колонке «Компьютер» ниже. Нужен ключ API, который задаётся в настройках приложения (меню в трее)."
     }
   },
   "projectStatus": {
