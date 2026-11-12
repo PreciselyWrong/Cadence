@@ -138,15 +138,15 @@ describe('SidebarSmartLists', () => {
     });
 
     // Only what waits for an action keeps a count by default (Today, Inbox).
-    it('shows Today, Tomorrow, Next 7 days and Inbox, counting Today and Inbox', async () => {
+    it('shows Today, Tomorrow and Plan; the Inbox row is off by default, Today counts', async () => {
         render(
             <SidebarSmartLists handleNavClick={jest.fn()} location={location} />
         );
 
         expect(screen.getByText('Today')).toBeInTheDocument();
         expect(screen.getByText('Tomorrow')).toBeInTheDocument();
-        expect(screen.getByText('Next 7 days')).toBeInTheDocument();
-        expect(screen.getByText('Inbox')).toBeInTheDocument();
+        expect(screen.getByText('Plan')).toBeInTheDocument();
+        expect(screen.queryByText('Inbox')).toBeNull();
 
         await waitFor(() => {
             expect(screen.getByTestId('sidebar-smart-today')).toHaveTextContent(
@@ -157,11 +157,9 @@ describe('SidebarSmartLists', () => {
             /^Tomorrow$/
         );
         expect(screen.getByTestId('sidebar-smart-next7')).toHaveTextContent(
-            /^Next 7 days$/
+            /^Plan$/
         );
-        expect(screen.getByTestId('sidebar-smart-inbox')).toHaveTextContent(
-            '2'
-        );
+        expect(screen.queryByTestId('sidebar-smart-inbox')).toBeNull();
     });
 
     it('opens the tomorrow list from its row', async () => {
@@ -259,10 +257,11 @@ describe('Sidebar in minimal mode', () => {
         renderSidebar(true);
 
         expect(screen.getByTestId('sidebar-smart-today')).toBeInTheDocument();
-        expect(screen.getByTestId('sidebar-smart-inbox')).toBeInTheDocument();
+        expect(screen.queryByTestId('sidebar-smart-inbox')).toBeNull();
         expect(screen.getByTestId('areas')).toBeInTheDocument();
         expect(screen.queryByTestId('sidebar-rail-today')).toBeNull();
-        expect(screen.queryByTestId('sidebar-rail-inbox')).toBeNull();
+        // The Inbox row is off by default, so the rail keeps its icon.
+        expect(screen.getByTestId('sidebar-rail-inbox')).toBeInTheDocument();
         expect(screen.queryByTestId('sidebar-rail-areas')).toBeNull();
         // Items the panel does not list stay on the rail.
         expect(screen.getByTestId('sidebar-rail-notes')).toBeInTheDocument();

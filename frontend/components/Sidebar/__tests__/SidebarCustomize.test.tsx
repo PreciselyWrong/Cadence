@@ -280,7 +280,6 @@ describe('Minimal sidebar customization', () => {
         expect(smartListOrder()).toEqual([
             'sidebar-smart-next7',
             'sidebar-smart-today',
-            'sidebar-smart-inbox',
             'sidebar-smart-tomorrow',
         ]);
     });

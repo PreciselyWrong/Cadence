@@ -87,6 +87,7 @@ const BlogApp = lazy(() => import('./components/Blog/BlogApp'));
 const Welcome = lazy(() => import('./components/Onboarding/Welcome'));
 // Lazy load Tasks component to prevent issues with tags loading
 const Tasks = lazy(() => import('./components/Tasks'));
+const UpcomingRoute = lazy(() => import('./components/Upcoming/UpcomingRoute'));
 const ProjectHistory = lazy(
     () => import('./components/Project/ProjectHistory')
 );
@@ -504,7 +505,7 @@ const App: React.FC = () => {
                                             </div>
                                         }
                                     >
-                                        <Tasks />
+                                        <UpcomingRoute />
                                     </Suspense>
                                 }
                             />

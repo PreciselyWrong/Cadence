@@ -37,4 +37,25 @@ describe('minimal sidebar defaults', () => {
         ).toBe(true);
         expect(resolved.sectionBadges.projects).toBe(true);
     });
+
+    it('hides the Inbox row for new accounts', () => {
+        const inbox = DEFAULT_MINIMAL_SIDEBAR.smartLists.find(
+            (item) => item.key === 'inbox'
+        );
+        expect(inbox?.visible).toBe(false);
+        expect(
+            DEFAULT_MINIMAL_SIDEBAR.smartLists.find(
+                (item) => item.key === 'today'
+            )?.visible
+        ).toBe(true);
+    });
+
+    it('keeps an Inbox row the user saved as shown', () => {
+        const resolved = resolveMinimalSidebar({
+            smartLists: [{ key: 'inbox', visible: true, showCount: true }],
+        });
+        expect(
+            resolved.smartLists.find((item) => item.key === 'inbox')?.visible
+        ).toBe(true);
+    });
 });

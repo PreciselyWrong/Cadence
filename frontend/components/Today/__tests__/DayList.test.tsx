@@ -1,5 +1,5 @@
-import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import React, { useState } from 'react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import DayList, { DayListProps } from '../DayList';
 import { DayLine } from '../dayModel';
@@ -39,6 +39,8 @@ const baseProps = (overrides: Partial<DayListProps> = {}): DayListProps => ({
     onNext: jest.fn(),
     onToday: jest.fn(),
     headerMenu: [],
+    hideCompleted: false,
+    onHideCompletedChange: jest.fn(),
     addField: <input aria-label="Quick add" />,
     lines: { timed: [], anytime: [lineOf('a')], done: [] },
     dateOfDay: DATE,
@@ -173,5 +175,49 @@ describe('DayList body', () => {
         render(<DayList {...baseProps({ isToday: false, onToday })} />);
         fireEvent.click(screen.getByRole('button', { name: 'Today' }));
         expect(onToday).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe('DayList hide completed', () => {
+    beforeEach(() => window.localStorage.clear());
+
+    const Harness: React.FC<{ initial: boolean }> = ({ initial }) => {
+        const [hide, setHide] = useState(initial);
+        return (
+            <DayList
+                {...baseProps({
+                    hideCompleted: hide,
+                    onHideCompletedChange: setHide,
+                    lines: {
+                        timed: [],
+                        anytime: [lineOf('a')],
+                        done: [lineOf('d', { done: true })],
+                    },
+                })}
+            />
+        );
+    };
+
+    it('toggles completed lines from the header menu', () => {
+        const { container } = render(<Harness initial={false} />);
+        const header = within(container.querySelector('header') as HTMLElement);
+        fireEvent.click(screen.getByRole('button', { name: /Done · 1/ }));
+        expect(screen.getByText('Task d')).toBeInTheDocument();
+
+        fireEvent.click(header.getByRole('button', { name: 'More actions' }));
+        fireEvent.click(
+            screen.getByRole('menuitem', { name: 'Hide completed' })
+        );
+        expect(screen.queryByText('Task d')).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: /Done · 1/ })).toBeNull();
+        expect(screen.getByText('Task a')).toBeInTheDocument();
+
+        fireEvent.click(header.getByRole('button', { name: 'More actions' }));
+        fireEvent.click(
+            screen.getByRole('menuitem', { name: 'Show completed' })
+        );
+        expect(
+            screen.getByRole('button', { name: /Done · 1/ })
+        ).toBeInTheDocument();
     });
 });

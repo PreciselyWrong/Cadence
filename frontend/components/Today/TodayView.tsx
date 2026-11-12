@@ -61,6 +61,7 @@ import {
     lineAt,
     lineFromDue,
     reflowSlots,
+    visibleLines,
 } from './dayModel';
 import { useDay } from './useDay';
 import DayList from './DayList';
@@ -83,6 +84,23 @@ const readOpen = (): boolean => {
         return localStorage.getItem('today.calendarOpen') !== 'false';
     } catch {
         return true;
+    }
+};
+
+// Completed tasks are shown unless this viewer hid them.
+const readHideCompleted = (): boolean => {
+    try {
+        return localStorage.getItem('today.hideCompleted') === 'true';
+    } catch {
+        return false;
+    }
+};
+
+const writeHideCompleted = (hide: boolean) => {
+    try {
+        localStorage.setItem('today.hideCompleted', String(hide));
+    } catch {
+        // Private mode: the choice lasts until reload.
     }
 };
 
@@ -151,6 +169,11 @@ const NewToday: React.FC = () => {
         (state) => state.userSettingsStore.calendarEnabled
     );
     const [calendarOpen, setCalendarOpen] = useState(readOpen);
+    const [hideCompleted, setHideCompletedState] = useState(readHideCompleted);
+    const setHideCompleted = (hide: boolean) => {
+        setHideCompletedState(hide);
+        writeHideCompleted(hide);
+    };
     const [mobileView, setMobileView] = useState<'list' | 'calendar'>('list');
     const panesRef = useRef<HTMLDivElement>(null);
     const gridRef = useRef<HTMLDivElement>(null);
@@ -254,13 +277,13 @@ const NewToday: React.FC = () => {
         [busy]
     );
     const summary = daySummary(lines, busy, hours, now);
-    const calendarLines = useMemo(
-        () => [
-            ...lines.timed,
-            ...lines.done.filter((line) => lineAt(line) !== null),
-        ],
-        [lines]
-    );
+    const calendarLines = useMemo(() => {
+        const shown = visibleLines(lines, hideCompleted);
+        return [
+            ...shown.timed,
+            ...shown.done.filter((line) => lineAt(line) !== null),
+        ];
+    }, [lines, hideCompleted]);
     const range = useMemo(() => {
         let start = hours.start;
         let end = hours.end;
@@ -360,7 +383,14 @@ const NewToday: React.FC = () => {
                 }
                 const extra = extras[d];
                 const extraLines = extra
-                    ? dayLines(extra.day.plan?.items ?? [], extra.day.due, d)
+                    ? visibleLines(
+                          dayLines(
+                              extra.day.plan?.items ?? [],
+                              extra.day.due,
+                              d
+                          ),
+                          hideCompleted
+                      )
                     : null;
                 return {
                     ...base,
@@ -394,6 +424,7 @@ const NewToday: React.FC = () => {
             events,
             focus,
             extras,
+            hideCompleted,
         ]
     );
 
@@ -971,6 +1002,8 @@ const NewToday: React.FC = () => {
             onNext={() => shift(1)}
             onToday={() => goTo(today)}
             headerMenu={headerMenu}
+            hideCompleted={hideCompleted}
+            onHideCompletedChange={setHideCompleted}
             organize={
                 lines.anytime.length > 0
                     ? {

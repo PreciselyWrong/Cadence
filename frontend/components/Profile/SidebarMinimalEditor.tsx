@@ -20,7 +20,7 @@ interface SidebarMinimalEditorProps {
 const SMART_LIST_LABELS: Record<SmartListId, [string, string]> = {
     today: ['sidebar.today', 'Today'],
     tomorrow: ['sidebar.tomorrow', 'Tomorrow'],
-    next7: ['sidebar.next7Days', 'Next 7 days'],
+    next7: ['sidebar.plan', 'Plan'],
     inbox: ['sidebar.inbox', 'Inbox'],
 };
 

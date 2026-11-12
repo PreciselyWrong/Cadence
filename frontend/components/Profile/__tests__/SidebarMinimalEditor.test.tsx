@@ -55,12 +55,12 @@ describe('SidebarMinimalEditor', () => {
     it('turns a count badge off without hiding the row', () => {
         renderEditor();
 
-        fireEvent.click(screen.getByLabelText('Show count for Inbox'));
+        fireEvent.click(screen.getByLabelText('Show count for Today'));
 
         const [patch] = saveMock.mock.calls[0];
         expect(patch.smartLists).toEqual(
             expect.arrayContaining([
-                { key: 'inbox', visible: true, showCount: false },
+                { key: 'today', visible: true, showCount: false },
             ])
         );
     });
@@ -72,10 +72,10 @@ describe('SidebarMinimalEditor', () => {
 
         const [patch] = saveMock.mock.calls[0];
         expect(patch.smartLists?.map((item) => item.key)).toEqual([
+            'inbox',
             'tomorrow',
             'today',
             'next7',
-            'inbox',
         ]);
     });
 

@@ -91,8 +91,8 @@ const SidebarSmartLists: React.FC<SidebarSmartListsProps> = ({
         },
         {
             id: 'next7',
-            path: '/upcoming?status=active',
-            title: t('sidebar.next7Days', 'Next 7 days'),
+            path: '/upcoming',
+            title: t('sidebar.plan', 'Plan'),
             icon: <CalendarDaysIcon className="h-[16px] w-[16px]" />,
             count: counts?.next7,
             isActive: location.pathname === '/upcoming',

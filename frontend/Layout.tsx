@@ -70,8 +70,10 @@ const Layout: React.FC<LayoutProps> = ({
     const isMinimal = useIsMinimal();
     const showTaskPane =
         isMinimal && canShowTaskPane(location.pathname, location.search);
-    // Today keeps its calendar on the right: the detail opens under it.
-    const paneBelow = location.pathname === '/today';
+    // Today and Plan keep their right side for the calendar: the task opens
+    // as a wide sheet over the page instead of a narrow side panel.
+    const paneBelow =
+        location.pathname === '/today' || location.pathname === '/upcoming';
     const isUpcomingView = location.pathname === '/upcoming';
     // Notes fill the content area edge to edge.
     const isNotesView = /^\/notes?(\/|$)/.test(location.pathname);

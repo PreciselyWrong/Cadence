@@ -4,6 +4,7 @@ import {
     coveredMinutes,
     dayLines,
     daySummary,
+    visibleLines,
 } from '../dayModel';
 import type { DailyPlanItem } from '../../../utils/dailyPlanService';
 import type { Task } from '../../../entities/Task';
@@ -300,5 +301,28 @@ describe('reflowSlots', () => {
             start: 660,
             duration: 30,
         });
+    });
+});
+
+describe('visibleLines', () => {
+    const lines = dayLines(
+        [
+            item('open', 0, 540),
+            item('done-timed', 1, 600, 30, { status: 'done' }),
+            item('done-anytime', 2, null, 30, { status: 'done' }),
+        ],
+        [],
+        DATE
+    );
+
+    it('keeps every line when completed tasks are shown', () => {
+        expect(visibleLines(lines, false)).toBe(lines);
+    });
+
+    it('drops the done lines, timed or not, and keeps the open ones', () => {
+        const shown = visibleLines(lines, true);
+        expect(shown.done).toEqual([]);
+        expect(shown.timed.map((l) => l.uid)).toEqual(['open']);
+        expect(shown.anytime).toEqual([]);
     });
 });

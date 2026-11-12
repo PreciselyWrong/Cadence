@@ -83,10 +83,12 @@ const DEFAULT_RAIL_PLACE: Record<RailId, RailPlace> = {
 
 export const DEFAULT_MINIMAL_SIDEBAR: MinimalSidebarSettings = {
     // Calm by default: counts only where something waits for the user
-    // (Today, Inbox); the rest can be turned on in Profile > Sidebar.
+    // (Today, Inbox); the rest can be turned on in Profile > Sidebar. The
+    // Inbox row is off for new accounts (its items show as a column on Plan);
+    // a saved choice still wins.
     smartLists: SMART_LIST_IDS.map((key) => ({
         key,
-        visible: true,
+        visible: key !== 'inbox',
         showCount: key === 'today' || key === 'inbox',
     })),
     rail: RAIL_IDS.map((key) => ({ key, place: DEFAULT_RAIL_PLACE[key] })),

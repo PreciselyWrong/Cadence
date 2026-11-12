@@ -52,7 +52,10 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
 - [x] Calendrier sur 1, 3 ou 7 jours, flèches ‹ › pour changer de jour
 - [x] Mode sombre retravaillé (anthracite bleuté, blocs nets)
 - [x] Réordonner la liste du jour décale aussi les créneaux du calendrier (Sunsama)
-- [ ] « 7 prochains jours » en tableau : une colonne par jour, cartes, calendrier à droite (Sunsama)
+- [x] « 7 prochains jours » renommé « Planifier » : colonne Inbox, jours en tableau, calendrier à droite réglable (1/3/7 jours)
+- [x] Planifier, mode Horizons : Cette semaine, Ce mois-ci, Mois prochain, Un jour (façon Akiflow)
+- [ ] Android : reprendre Planifier (Inbox + jours + calendrier), les Horizons et « Masquer les terminées » ; `tasks.month_of` à ajouter dans Room et la synchro
+  Raison : desktop d'abord (choix du 2026-11-12) ; le serveur synchronise déjà `month_of`. Vérif : une tâche glissée dans « Ce mois-ci » sur le web apparaît dans le même horizon sur le téléphone, et inversement ; Room migrée sous Robolectric.
 - [ ] Tâches venues d'un TODO.md : se comportent comme de vraies tâches sur le web
 - [ ] Style des apps de référence repris sur tout le desktop, pas seulement Aujourd'hui
 - [ ] Cases `- [ ]` écrites dans une note : deviennent des tâches liées à la note

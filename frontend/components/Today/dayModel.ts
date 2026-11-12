@@ -92,6 +92,13 @@ export const dayLines = (
     };
 };
 
+// The lines the page shows: completed ones are dropped when the viewer hides
+// them (the list and the calendar both use this).
+export const visibleLines = (
+    lines: DayLines,
+    hideCompleted: boolean
+): DayLines => (hideCompleted ? { ...lines, done: [] } : lines);
+
 export const toPlanInput = (items: DailyPlanItem[]): PlanItemInput[] =>
     [...items]
         .sort((a, b) => a.position - b.position)

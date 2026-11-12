@@ -15,7 +15,7 @@ import {
 import Button, { IconButton } from '../Shared/ui/Button';
 import Menu, { MenuEntry } from '../Shared/ui/Menu';
 import TaskLine from './TaskLine';
-import { DayLine, DayLines } from './dayModel';
+import { DayLine, DayLines, visibleLines } from './dayModel';
 
 const SECTIONS_KEY = 'today.sections';
 
@@ -59,6 +59,9 @@ export interface DayListProps {
     onNext(): void;
     onToday(): void;
     headerMenu: MenuEntry[];
+    // Completed lines are hidden from the list and the calendar.
+    hideCompleted: boolean;
+    onHideCompletedChange(hide: boolean): void;
     organize?: { label: string; onClick(): void } | null;
     // Buttons beside Organize (e.g. show the calendar again).
     extraActions?: React.ReactNode;
@@ -145,6 +148,8 @@ const DayList: React.FC<DayListProps> = ({
     onNext,
     onToday,
     headerMenu,
+    hideCompleted,
+    onHideCompletedChange,
     organize,
     extraActions,
     expanded = false,
@@ -152,7 +157,7 @@ const DayList: React.FC<DayListProps> = ({
     showDayNav = true,
     addField,
     slip,
-    lines,
+    lines: allLines,
     dateOfDay,
     currentUid,
     selectedUid,
@@ -164,6 +169,18 @@ const DayList: React.FC<DayListProps> = ({
     emptyText,
 }) => {
     const { t } = useTranslation();
+    const lines = visibleLines(allLines, hideCompleted);
+    const menu: MenuEntry[] = [
+        ...headerMenu,
+        'separator',
+        {
+            key: 'hideCompleted',
+            label: hideCompleted
+                ? t('today.showCompletedTasks', 'Show completed')
+                : t('today.hideCompleted', 'Hide completed'),
+            onSelect: () => onHideCompletedChange(!hideCompleted),
+        },
+    ];
     const [sections, setSections] = useState(readSections);
     const toggle = (key: SectionKey) =>
         setSections((prev) => {
@@ -244,7 +261,7 @@ const DayList: React.FC<DayListProps> = ({
                             </Button>
                         )}
                         <Menu
-                            entries={headerMenu}
+                            entries={menu}
                             trigger={(triggerProps) => (
                                 <IconButton
                                     {...triggerProps}
