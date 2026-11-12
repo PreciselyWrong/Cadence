@@ -83,6 +83,28 @@ class PlanEditsTest {
         )
     }
 
+    @Test
+    fun `ranger une ligne la pose avant une autre, et l'annulation la remet devant sa voisine d'avant`() = runTest {
+        val start = listOf(PlanEntry("a", today, null, 30), PlanEntry("b", today, null, 30), PlanEntry("c", today, null, 30), PlanEntry("z", tomorrow, null, 30))
+        val fake = FakePlan(start)
+        val undo = fake.edits.apply(listOf(ReorderTask(today, "c", "a")))
+        assertEquals(listOf("c", "a", "b", "z"), fake.entries.map { it.uid })
+        assertEquals(json("""{"ops":[{"op":"reorder","task_uid":"c","before_uid":"a"}]}"""), fake.queue.single().body)
+        fake.send()
+
+        undo()
+
+        assertEquals(start, fake.entries)
+        assertEquals(json("""{"ops":[{"op":"reorder","task_uid":"c","before_uid":null}]}"""), fake.queue.single().body)
+    }
+
+    @Test
+    fun `un ajout avant une ligne se place devant elle et part avec before_uid`() {
+        val plan = listOf(PlanEntry("a", today, null, 30), PlanEntry("b", today, null, 30))
+        assertEquals(listOf("a", "n", "b"), plan.applying(AddTask(today, "n", beforeUid = "b")).map { it.uid })
+        assertEquals(json("""{"ops":[{"op":"add","task_uid":"n","before_uid":"b"}]}"""), AddTask(today, "n", "b").call("k").body)
+    }
+
     private class FakePlan(initial: List<PlanEntry>) {
         var entries = initial
         val queue = mutableListOf<DeferredCall>()

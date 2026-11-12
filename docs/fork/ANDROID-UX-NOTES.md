@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-12 — Ranger Aujourd'hui au doigt, frise déplaçable
+
+- **Problème** : ranger demandait Monter / Descendre, un rang à la fois, et l'ordre (`today_order`) n'était pas celui du web (plan du jour) ; la frise de Ma journée était en lecture.
+- **Décision** : une poignée à droite des tâches sans heure ; seul un glisser vertical sur elle range, donc ni le balayage ni l'appui long de la ligne ne se déclenchent. L'ordre écrit est celui du plan du jour. Sur la frise, appui long sur un créneau puis glisser pour le déplacer, depuis son bord droit pour l'étirer, au quart d'heure, avec « Annuler ».
+- **Web** : rien à reprendre ; l'ordre est déjà le même.
+
 ### 2026-11-12 — Planifier sur le téléphone
 
 - **Problème** : « À venir » ne montrait que les échéances des 7 jours ; le web a une page « Planifier » (Inbox, 14 jours, horizons) qui écrit le plan, jamais l'échéance.

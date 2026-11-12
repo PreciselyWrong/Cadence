@@ -54,7 +54,6 @@ import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskDraft
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskViews
-import ch.nicolab.cadence.tasks.model.TodayOrder
 import ch.nicolab.cadence.tasks.notes.Autosaver
 import ch.nicolab.cadence.tasks.notes.NoteEditSession
 import ch.nicolab.cadence.tasks.notes.NoteFields
@@ -67,6 +66,7 @@ import ch.nicolab.cadence.tasks.planning.PlanEdit
 import ch.nicolab.cadence.tasks.planning.PlanDay
 import ch.nicolab.cadence.tasks.planning.PlanEntry
 import ch.nicolab.cadence.tasks.planning.PlanHorizons
+import ch.nicolab.cadence.tasks.planning.TodayReorder
 import ch.nicolab.cadence.tasks.planning.ServerPlan
 import ch.nicolab.cadence.tasks.reminder.PlanSlotsStore
 import ch.nicolab.cadence.tasks.swipe.FileBackedActions
@@ -540,13 +540,26 @@ internal class TasksViewModel(
         _sheet.value = SwipeSheet.Menu(task, todayList)
     }
 
-    /** Monte ou descend la tâche dans la liste Aujourd'hui : l'ordre écrit vaut pour toute la liste, comme sur le web. */
+    /**
+     * Monte ou descend la tâche parmi les tâches sans heure d'Aujourd'hui : l'ordre est celui du plan du jour, comme le
+     * glisser de la poignée et le web.
+     */
     fun moveInToday(task: TaskItem, list: List<TaskItem>, delta: Int) {
-        val byUid = list.associateBy { it.uid }
-        val moved = TodayOrder.moved(list.map { it.uid }, task.uid, delta).mapNotNull { byUid[it] }
-        launchAction {
-            TodayOrder.changes(moved).forEach { (uid, rank) -> repository.updateTask(uid, TaskChange(todayOrder = rank)) }
-        }
+        val untimed = todayUntimed(list)
+        val from = untimed.indexOf(task.uid)
+        if (from != -1) reorderToday(task, untimed, from + delta)
+    }
+
+    /** Pose [task] au rang [toIndex] des tâches sans heure [untimed] (uids dans l'ordre affiché), avec « Annuler ». */
+    fun reorderToday(task: TaskItem, untimed: List<String>, toIndex: Int) {
+        val planned = today.value.plan.mapTo(HashSet()) { it.uid }
+        applyPlan(TodayReorder.writes(moment.value.today, untimed, planned, task.uid, toIndex), getString(R.string.today_reordered_notice, task.name))
+    }
+
+    /** Les tâches d'Aujourd'hui que l'on range à la main : ni à heure (créneau ou échéance horaire) ni occurrence à venir. */
+    fun todayUntimed(list: List<TaskItem>): List<String> {
+        val starts = today.value.planStarts
+        return list.filter { !it.virtual && !it.dueHasTime && it.uid !in starts }.map { it.uid }
     }
 
     fun dismissSheet() {

@@ -29,6 +29,10 @@
         <item quantity="one">%1$d tâche → %2$s</item>
         <item quantity="other">%1$d tâches → %2$s</item>
     </plurals>
+    <string name="today_reordered_notice">« %1$s » rangée</string>
+    <string name="today_drag_handle">Glisser pour ranger</string>
+    <string name="timeline_moved_notice">« %1$s » à %2$s</string>
+    <string name="timeline_resized_notice">« %1$s » : %2$s</string>
     <string name="plan_hide_done">Masquer les terminées</string>
     <string name="plan_show_done">Afficher les terminées</string>
 </resources>

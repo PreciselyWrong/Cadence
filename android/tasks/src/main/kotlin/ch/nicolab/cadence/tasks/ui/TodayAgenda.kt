@@ -23,24 +23,30 @@ sealed interface TodayItem {
 
 /**
  * Mêle les événements et les tâches du jour. Ordre : journées entières (ordre fourni), puis
- * éléments à heure par heure locale, puis tâches sans heure dans leur ordre d'origine. [planStarts] : l'heure où le
- * plan du jour du serveur place une tâche, qui prime sur son échéance.
+ * éléments à heure par heure locale, puis tâches sans heure : celles du plan du jour dans son ordre ([planOrder], le
+ * même ordre que le web), puis celles rangées par `today_order`, puis les autres dans leur ordre d'origine.
+ * [planStarts] : l'heure où le plan du jour du serveur place une tâche, qui prime sur son échéance.
  */
 fun mergeTodayItems(
     tasks: List<TaskItem>,
     events: List<EventWithDone>,
     zone: ZoneId,
     planStarts: Map<String, Instant> = emptyMap(),
+    planOrder: List<String> = emptyList(),
 ): List<TodayItem> {
     fun TaskItem.startMillis(): Long? = planStarts[uid]?.toEpochMilli() ?: dueTimeMillis()
     val allDay = events.filter { it.event.allDay }.map { TodayItem.Event(it) }
+    val rank = planOrder.withIndex().associate { (index, uid) -> uid to index }
+    // Une tâche du plan sans heure (ni créneau ni échéance horaire) suit l'ordre du plan.
+    val (inPlan, notInPlan) = tasks.partition { it.uid in rank && it.startMillis() == null }
     // Une tâche rangée à la main quitte l'horloge : l'ordre choisi prime sur l'heure.
-    val (placed, free) = tasks.partition { TodayOrder.of(it) != null }
+    val (placed, free) = notInPlan.partition { TodayOrder.of(it) != null }
     val timed: List<Pair<TodayItem, Long>> =
         events.filterNot { it.event.allDay }.map { TodayItem.Event(it) to it.event.localStart(zone) } +
             free.mapNotNull { task -> task.startMillis()?.let { TodayItem.Task(task) to it } }
     val untimed = free.filter { it.startMillis() == null }.map { TodayItem.Task(it) }
     return allDay + timed.sortedBy { it.second }.map { it.first } +
+        inPlan.sortedBy { rank.getValue(it.uid) }.map { TodayItem.Task(it) } +
         TodayOrder.apply(placed).map { TodayItem.Task(it) } + untimed
 }
 

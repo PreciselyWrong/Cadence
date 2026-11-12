@@ -1,6 +1,16 @@
 package ch.nicolab.cadence.tasks.ui.brief
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.input.pointer.pointerInput
+import ch.nicolab.cadence.designsystem.components.rememberCadenceHaptic
+import ch.nicolab.cadence.tasks.brief.TimelineSlot
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -56,7 +66,15 @@ private val AXIS_MARKS = (8..22 step 2).map { hour -> hour * 60 to "$hour" }
  * événements sont sous la piste.
  */
 @Composable
-internal fun BriefTimelineSection(days: List<TimelineDayDto>, today: LocalDate, settings: JsonObject?) {
+internal fun BriefTimelineSection(
+    days: List<TimelineDayDto>,
+    today: LocalDate,
+    settings: JsonObject?,
+    /** Créneaux du plan d'aujourd'hui, posés sur la piste du jour. */
+    slots: List<TimelineSlot> = emptyList(),
+    /** Un créneau déplacé ou étiré : nouveau début et nouvelle durée, en minutes. */
+    onSlot: (TimelineSlot, Int, Int) -> Unit = { _, _, _ -> },
+) {
     Column(Modifier.fillMaxWidth()) {
         TimelineLegend()
         BriefAxis()
@@ -68,7 +86,13 @@ internal fun BriefTimelineSection(days: List<TimelineDayDto>, today: LocalDate, 
             Column(Modifier.padding(top = Space.md)) {
                 DayHeader(title = BriefFormat.dayTitle(date, today) ?: stringResource(R.string.brief_today), load = day.load)
                 Spacer(Modifier.height(Space.xs))
-                BriefDayTrack(day = day, evening = evening, partial = note != null)
+                BriefDayTrack(
+                    day = day,
+                    evening = evening,
+                    partial = note != null,
+                    slots = if (date == today) slots else emptyList(),
+                    onSlot = onSlot,
+                )
                 EventsLine(day = day, note = note)
             }
         }
@@ -138,12 +162,65 @@ private fun DayHeader(title: String, load: LoadDto) {
 }
 
 @Composable
-private fun BriefDayTrack(day: TimelineDayDto, evening: BriefEvening?, partial: Boolean) {
+private fun BriefDayTrack(
+    day: TimelineDayDto,
+    evening: BriefEvening?,
+    partial: Boolean,
+    slots: List<TimelineSlot>,
+    onSlot: (TimelineSlot, Int, Int) -> Unit,
+) {
     val palette = cadence
     val colors = TimelineColors.of(palette)
     val measurer = rememberTextMeasurer()
     val titleStyle = MaterialTheme.typography.labelSmall
-    Canvas(Modifier.fillMaxWidth().height(TRACK_HEIGHT).clip(RoundedCornerShape(8.dp))) {
+    val haptic = rememberCadenceHaptic()
+    // Glisser en cours : le créneau tenu, s'il est étiré (bord droit) ou déplacé, et le chemin parcouru en pixels.
+    var held by remember { mutableStateOf<TimelineSlot?>(null) }
+    var resizing by remember { mutableStateOf(false) }
+    var travel by remember { mutableFloatStateOf(0f) }
+    val dragModifier = if (slots.isEmpty()) Modifier else Modifier.pointerInput(slots) {
+        val edge = RESIZE_EDGE.toPx()
+        detectDragGesturesAfterLongPress(
+            onDragStart = { at ->
+                val hit = slots.lastOrNull { slot ->
+                    val (left, width) = BriefTimeline.span(slot.start, slot.start + slot.duration)
+                    at.x in (left * size.width - edge / 2)..((left + width) * size.width + edge / 2)
+                }
+                if (hit != null) {
+                    val (left, width) = BriefTimeline.span(hit.start, hit.start + hit.duration)
+                    resizing = at.x > (left + width) * size.width - edge
+                    held = hit
+                    travel = 0f
+                    haptic.longPress()
+                }
+            },
+            onDrag = { change, amount ->
+                if (held != null) {
+                    change.consume()
+                    travel += amount.x
+                }
+            },
+            onDragEnd = {
+                held?.let { slot ->
+                    val delta = BriefTimeline.minutes(travel / size.width)
+                    if (resizing) {
+                        val duration = BriefTimeline.resized(slot.start, slot.duration, delta)
+                        if (duration != slot.duration) onSlot(slot, slot.start, duration)
+                    } else {
+                        val start = BriefTimeline.moved(slot.start, slot.duration, delta)
+                        if (start != slot.start) onSlot(slot, start, slot.duration)
+                    }
+                }
+                held = null
+                travel = 0f
+            },
+            onDragCancel = {
+                held = null
+                travel = 0f
+            },
+        )
+    }
+    Canvas(Modifier.fillMaxWidth().height(TRACK_HEIGHT).clip(RoundedCornerShape(8.dp)).then(dragModifier)) {
         drawRect(color = colors.track)
         evening?.let { window ->
             val start = BriefFormat.parseMinute(window.start) ?: return@let
@@ -188,10 +265,43 @@ private fun BriefDayTrack(day: TimelineDayDto, evening: BriefEvening?, partial: 
                 drawText(title, topLeft = Offset(origin.x + padding, origin.y + (bar.height - title.size.height) / 2f))
             }
         }
+        val delta = BriefTimeline.minutes(travel / size.width)
+        slots.forEach { slot ->
+            val dragged = held?.uid == slot.uid
+            val start = if (dragged && !resizing) BriefTimeline.moved(slot.start, slot.duration, delta) else slot.start
+            val duration = if (dragged && resizing) BriefTimeline.resized(slot.start, slot.duration, delta) else slot.duration
+            val (left, width) = BriefTimeline.span(start, start + duration)
+            val inset = EVENT_INSET.toPx()
+            val origin = Offset(left * size.width, inset)
+            val bar = Size((width * size.width).coerceAtLeast(MIN_BAR.toPx()), size.height - 2 * inset)
+            drawRoundRect(color = colors.task, topLeft = origin, size = bar, cornerRadius = CornerRadius(4.dp.toPx()))
+            if (dragged) {
+                drawRoundRect(
+                    color = colors.onTask,
+                    topLeft = origin,
+                    size = bar,
+                    cornerRadius = CornerRadius(4.dp.toPx()),
+                    style = Stroke(width = 2.dp.toPx()),
+                )
+            }
+            val padding = 4.dp.toPx()
+            val room = (bar.width - 2 * padding).toInt()
+            if (room >= MIN_TITLE_WIDTH.toPx()) {
+                val title = measurer.measure(
+                    slot.title,
+                    titleStyle.copy(color = colors.onTask),
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
+                    constraints = Constraints(maxWidth = room),
+                )
+                drawText(title, topLeft = Offset(origin.x + padding, origin.y + (bar.height - title.size.height) / 2f))
+            }
+        }
     }
 }
 
 private val TRACK_HEIGHT = 36.dp
+private val RESIZE_EDGE = 16.dp
 private val EVENT_INSET = 4.dp
 private val MIN_BAR = 8.dp
 private val MIN_TITLE_WIDTH = 32.dp

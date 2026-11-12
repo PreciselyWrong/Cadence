@@ -13,6 +13,9 @@ internal data class TimelineColors(
     val onEvent: Color,
     val conflict: Color,
     val onConflict: Color,
+    /** Créneau d'une tâche du plan d'aujourd'hui, déplaçable. */
+    val task: Color,
+    val onTask: Color,
 ) {
     companion object {
         private const val WORK_ALPHA = 0.65f
@@ -27,6 +30,8 @@ internal data class TimelineColors(
             onEvent = palette.onPrimary,
             conflict = palette.error,
             onConflict = palette.onError,
+            task = palette.primaryContainer,
+            onTask = palette.onPrimaryContainer,
         )
     }
 }

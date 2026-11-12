@@ -19,8 +19,8 @@ internal sealed interface PlanEdit {
     val label: String
 }
 
-/** Ajoute la tâche au jour, en fin de liste, sans heure. Sans effet si elle y est déjà. */
-internal data class AddTask(override val day: LocalDate, override val uid: String) : PlanEdit {
+/** Ajoute la tâche au jour, sans heure, avant [beforeUid] (en fin de liste sans lui). Sans effet si elle y est déjà. */
+internal data class AddTask(override val day: LocalDate, override val uid: String, val beforeUid: String? = null) : PlanEdit {
     override val label: String = "Plan du jour : ajout"
 }
 
@@ -44,6 +44,11 @@ internal data class UnslotTask(override val day: LocalDate, override val uid: St
     override val label: String = "Plan du jour : créneau retiré"
 }
 
+/** Range la ligne juste avant [beforeUid] dans le plan du jour, ou en dernier sans lui. */
+internal data class ReorderTask(override val day: LocalDate, override val uid: String, val beforeUid: String?) : PlanEdit {
+    override val label: String = "Plan du jour : ordre"
+}
+
 /** Change la durée de la ligne seulement. */
 internal data class ResizeTask(override val day: LocalDate, override val uid: String, val duration: Int) : PlanEdit {
     override val label: String = "Plan du jour : durée"
@@ -63,7 +68,14 @@ internal fun PlanEdit.call(key: String): DeferredCall = DeferredCall(
 private fun PlanEdit.op(): JsonObject = buildJsonObject {
     put("task_uid", uid)
     when (val edit = this@op) {
-        is AddTask -> put("op", "add")
+        is AddTask -> {
+            put("op", "add")
+            edit.beforeUid?.let { put("before_uid", it) }
+        }
+        is ReorderTask -> {
+            put("op", "reorder")
+            put("before_uid", edit.beforeUid)
+        }
         is RemoveTask -> put("op", "remove")
         is MoveTask -> {
             put("op", "move")
@@ -84,7 +96,8 @@ private fun PlanEdit.op(): JsonObject = buildJsonObject {
 
 /** Le plan local après [edit], comme le serveur l'écrit (les seuls jours gardés sur l'appareil : aujourd'hui, demain). */
 internal fun List<PlanEntry>.applying(edit: PlanEdit): List<PlanEntry> = when (edit) {
-    is AddTask -> if (line(edit.day, edit.uid) != null) this else this + PlanEntry(edit.uid, edit.day, null, null)
+    is AddTask -> if (line(edit.day, edit.uid) != null) this else inserting(PlanEntry(edit.uid, edit.day, null, null), edit.beforeUid)
+    is ReorderTask -> line(edit.day, edit.uid)?.let { moved -> filterNot { it === moved }.inserting(moved, edit.beforeUid) } ?: this
     is RemoveTask -> filterNot { it.matches(edit.day, edit.uid) }
     is MoveTask -> {
         val line = line(edit.day, edit.uid)
@@ -111,7 +124,8 @@ internal fun List<PlanEntry>.applying(edit: PlanEdit): List<PlanEntry> = when (e
 internal fun PlanEdit.inverse(before: List<PlanEntry>): List<PlanEdit> {
     val prior = before.firstOrNull { it.matches(day, uid) }
     return when (this) {
-        is AddTask -> listOf(RemoveTask(day, uid))
+        is AddTask -> if (prior == null) listOf(RemoveTask(day, uid)) else emptyList()
+        is ReorderTask -> if (prior == null) emptyList() else listOf(ReorderTask(day, uid, before.nextOnDay(prior)))
         is RemoveTask -> listOfNotNull(prior?.let { AddTask(day, uid) }, prior?.let { slotOf(it) })
         is MoveTask -> listOfNotNull(MoveTask(to, uid, day), prior?.let { slotOf(it) })
         is SlotTask -> when {
@@ -128,6 +142,17 @@ private fun PlanEdit.slotOf(line: PlanEntry): PlanEdit? =
     line.startMinute?.let { SlotTask(day, uid, it, line.durationMinutes ?: DEFAULT_DURATION_MINUTES) }
 
 private fun PlanEntry.matches(day: LocalDate, uid: String) = this.day == day && this.uid == uid
+
+/** [entry] posée avant la ligne [beforeUid] de son jour, sinon après la dernière ligne de son jour (ou à la fin). */
+private fun List<PlanEntry>.inserting(entry: PlanEntry, beforeUid: String?): List<PlanEntry> {
+    val at = beforeUid?.let { uid -> indexOfFirst { it.matches(entry.day, uid) } }?.takeIf { it >= 0 }
+        ?: (indexOfLast { it.day == entry.day }.takeIf { it >= 0 }?.plus(1) ?: size)
+    return toMutableList().apply { add(at, entry) }
+}
+
+/** La ligne qui suit [line] dans son jour : celle devant laquelle la remettre. */
+private fun List<PlanEntry>.nextOnDay(line: PlanEntry): String? =
+    drop(indexOf(line) + 1).firstOrNull { it.day == line.day }?.uid
 
 private fun List<PlanEntry>.line(day: LocalDate, uid: String): PlanEntry? = firstOrNull { it.matches(day, uid) }
 

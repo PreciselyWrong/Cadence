@@ -99,6 +99,12 @@ import ch.nicolab.cadence.tasks.ui.rememberRowDecor
 import java.time.LocalDate
 import java.time.ZoneId
 import kotlinx.coroutines.launch
+import androidx.compose.runtime.rememberCoroutineScope
+import ch.nicolab.cadence.tasks.brief.BriefSlots
+import ch.nicolab.cadence.tasks.brief.TimelineSlot
+import ch.nicolab.cadence.tasks.planning.ResizeTask
+import ch.nicolab.cadence.tasks.planning.SlotTask
+import ch.nicolab.cadence.tasks.planning.formatMinutes
 import kotlinx.serialization.json.JsonObject
 
 /**
@@ -136,6 +142,28 @@ fun BriefScreen(onBack: () -> Unit) {
     var openedTaskUid by remember { mutableStateOf<String?>(null) }
     var datingTask by remember { mutableStateOf<TaskItem?>(null) }
     var movingTask by remember { mutableStateOf<Pair<TaskItem, MoveDto>?>(null) }
+    val todayState by tasksViewModel.today.collectAsStateWithLifecycle()
+    val slots = remember(todayState) { BriefSlots.of(todayState.plan, todayState.today + todayState.completed) }
+    val scope = rememberCoroutineScope()
+    val genericError = stringResource(R.string.tasks_error_generic)
+    val slotMoved = stringResource(R.string.timeline_moved_notice)
+    val slotResized = stringResource(R.string.timeline_resized_notice)
+
+    /** Frise : un créneau déplacé ou étiré s'écrit dans le plan du jour (local d'abord, puis en file), avec « Annuler ». */
+    fun moveSlot(slot: TimelineSlot, start: Int, duration: Int) {
+        val edit = if (start != slot.start) SlotTask(today, slot.uid, start, duration) else ResizeTask(today, slot.uid, duration)
+        val message = if (start != slot.start) slotMoved.format(slot.title, BriefFormat.clock(start)) else slotResized.format(slot.title, formatMinutes(duration))
+        scope.launch {
+            planning.applyPlan(listOf(edit))
+                .onFailure { snackbar.showSnackbar(it.message ?: genericError) }
+                .onSuccess { undo ->
+                    snackbar.currentSnackbarData?.dismiss()
+                    if (snackbar.showSnackbar(message, undoLabel, duration = SnackbarDuration.Short) == SnackbarResult.ActionPerformed) {
+                        planning.undoPlan(undo).onFailure { snackbar.showSnackbar(it.message ?: genericError) }
+                    }
+                }
+        }
+    }
 
     LaunchedEffect(viewModel) {
         viewModel.opened()
@@ -280,6 +308,8 @@ fun BriefScreen(onBack: () -> Unit) {
                     onPickMoveDate = { task, move -> movingTask = task to move },
                     onFeedback = { card, vote -> viewModel.feedback(date, card, vote) },
                     onReopen = { task -> tasksViewModel.toggle(task, hold = false) },
+                    slots = slots,
+                    onSlot = ::moveSlot,
                 )
                 item(key = "header") {
                     BriefHeader(
@@ -453,6 +483,9 @@ internal class BriefContext(
     val onPickMoveDate: (TaskItem, MoveDto) -> Unit,
     val onFeedback: (AnticipateDto, String) -> Unit,
     val onReopen: (TaskItem) -> Unit,
+    /** Créneaux du plan d'aujourd'hui sur la frise, et leur déplacement ou étirement (plan du jour, jamais l'échéance). */
+    val slots: List<TimelineSlot> = emptyList(),
+    val onSlot: (TimelineSlot, Int, Int) -> Unit = { _, _, _ -> },
 )
 
 private fun LazyListScope.briefSection(id: String, context: BriefContext) {
@@ -460,7 +493,7 @@ private fun LazyListScope.briefSection(id: String, context: BriefContext) {
     when (id) {
         "timeline" -> item(key = id) {
             BriefSection(stringResource(R.string.brief_timeline_title), null) {
-                BriefTimelineSection(brief.timeline, context.today, context.settings)
+                BriefTimelineSection(brief.timeline, context.today, context.settings, context.slots, context.onSlot)
             }
         }
         "tonight" -> item(key = id) {

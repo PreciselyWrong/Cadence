@@ -28,12 +28,12 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
   écran du bilan après `evening.switchTime` (fuseau du profil), `GET /daily-plan/:date/evening`, « Reporter à demain » (annulation par retrait du plan de demain), réglage `Bilan du soir` ; contrat `docs/39-daily-brief.md` § Evening review, écarts web dans `docs/fork/WEB-UX-NOTES.md` (2026-11-04). Vérif : mêmes quatre sections et mêmes compteurs que le web pour une même journée sur le serveur de test, puis passage à 18:00 sur le téléphone.
 - Un lien seul dans l'ajout rapide Android (parité du web, 2026-11-12)
   Web : un texte qui n'est qu'une adresse propose Boîte de réception / Tâche / Liens / Note dans la saisie, et « Dans les liens » s'affiche sous une tâche née d'un lien. Android n'a ces choix qu'à la fiche de partage. Raison : étape web d'abord, Android repris par un autre agent. À faire et vérif : `docs/fork/WEB-UX-NOTES.md` (2026-11-12, points 1 à 4).
-- Aujourd'hui sur Android : glisser-déposer pour ranger
-  Web : glisser une ligne. Android : seulement Monter et Descendre dans le menu, car le glissé entre en conflit avec le balayage des lignes et ne peut pas se vérifier ici (téléphone en `unauthorized` sur ADB, émulateur en panne). Vérif : sur le téléphone, ranger trois tâches au doigt sans déclencher de balayage ; l'ordre se retrouve sur le web.
+- Aujourd'hui sur Android : glisser-déposer pour ranger (livré le 2026-11-12)
+  Poignée à droite des tâches sans heure (glisser vertical, sans conflit avec les balayages) ; l'ordre est celui du plan du jour (`reorder` / `add` avant une ligne), comme le web ; Monter et Descendre aussi. Vérif : sur le téléphone, ranger trois tâches au doigt sans déclencher de balayage ; l'ordre se retrouve sur le web.
 - Android : planifier sans toucher l'échéance (livré le 2026-11-12)
   Reporter, Plus tard, Placer et le tri des échues de Ma journée écrivent le plan (`planning/PlanEdits.kt`, appels différés `PATCH /api/v1/daily-plan/:date`), hook serveur `leaveOnMove` supprimé. Vérif : sur le téléphone, « Reporter » garde l'échéance et la tâche apparaît demain ; « Plus tard » ne vide plus l'échéance.
-- Frise du jour déplaçable sur Android
-  Web : déplacer et étirer les tâches à heure et les événements d'un agenda en deux sens. Android : la frise de Ma journée reste en lecture. Vérif : sur le téléphone, étirer une tâche ; sa durée se retrouve sur le web.
+- Frise du jour déplaçable sur Android (livré le 2026-11-12)
+  Ma journée : les créneaux du plan d'aujourd'hui sont sur la frise ; appui long puis glisser = déplacer, par le bord droit = étirer, au quart d'heure (`slot`, `resize`). Les événements de l'appareil restent en lecture (Android n'écrit jamais dans l'agenda). Vérif : sur le téléphone, étirer une tâche ; sa durée se retrouve sur le web.
 - Revue UX du 2026-11-06, à vérifier par toi
   Ma journée et la frise sur le téléphone en noir pur ; une carte d'habitude à moitié faite ; « À trier » sur tes vraies tâches ; importer ton `bookmarks.html` depuis `/links` ; clic gauche sur l'icône dans le panneau KDE après avoir installé le RPM ; charger `integrations/firefox-addon/` dans `about:debugging`. La signature Mozilla de l'add-on demande tes clés AMO.
 - **Quand le besoin se montre.**
