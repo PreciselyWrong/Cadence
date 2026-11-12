@@ -93,7 +93,7 @@
     <string name="tasks_tab_tags">Étiquettes</string>
     <string name="tasks_tab_goals">Objectifs</string>
     <string name="tasks_tab_done">Terminées</string>
-    <string name="tasks_upcoming_subtitle">7 prochains jours</string>
+    <string name="tasks_upcoming_subtitle">14 prochains jours</string>
     <plurals name="tasks_projects_active">
         <item quantity="one">%d actif</item>
         <item quantity="other">%d actifs</item>
@@ -118,8 +118,6 @@
     <string name="tasks_project_status_cancelled_hint">Décidé de ne pas poursuivre</string>
     <string name="tasks_project_status_archived_hint">Consultable, hors de vue</string>
     <string name="tasks_project_status_change">Changer le statut</string>
-    <string name="tasks_strip_day_empty">Rien de prévu ce jour-là.</string>
-    <string name="tasks_strip_day_description">%1$s : %2$d tâches</string>
     <string name="tasks_strip_show_all">Tous les jours</string>
     <string name="tasks_projects_next">Prochaine : %1$s</string>
     <string name="tasks_projects_done_all">Tout est terminé</string>

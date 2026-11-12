@@ -59,6 +59,9 @@ internal class LayoutStore(context: Context) {
 
         /** Page d'un projet : liste des tâches ou outliner. */
         const val OUTLINE = "project_outline"
+
+        /** Planifier : Horizons au lieu des jours. */
+        const val PLAN_HORIZONS = "plan_horizons"
         private const val PREFS = "cadence_layouts"
     }
 }

@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-12 — Planifier sur le téléphone
+
+- **Problème** : « À venir » ne montrait que les échéances des 7 jours ; le web a une page « Planifier » (Inbox, 14 jours, horizons) qui écrit le plan, jamais l'échéance.
+- **Décision** : même page en une colonne (Jours | Horizons) au lieu de 14 colonnes ; déplacer = appui long puis feuille « Planifier » (un jour, un horizon, retirer du jour) plutôt qu'un glisser à travers 14 sections ; les cartes gardent la ligne de tâche d'Android (case carrée, balayages), pas la carte ronde du web. Le retard s'appelle « Échues », comme ailleurs sur Android.
+- **Web** : rien à reprendre ; la feuille pourrait servir au web mobile (390 px), où glisser entre colonnes est pénible.
+
 ### 2026-11-12 — Planifier écrit le plan, jamais l'échéance
 
 - **Problème** : « Reporter » et « Placer » écrivaient l'échéance (heure comprise) ; « Plus tard » effaçait la vraie échéance. Un créneau ou un report déplaçait donc en silence un rappel ou une échéance.

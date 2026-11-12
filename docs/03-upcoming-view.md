@@ -29,6 +29,10 @@ The fork's « Planifier » board (`/upcoming`) has a **Horizons** mode: This wee
 
 A past week or month, a past due day (overdue: the days layout's « En retard » band) or a plan on an earlier week decides nothing: such a task is in no horizon. Plan lines count for the days the board has loaded. Dropping a card on another horizon writes `week_of`, `month_of` or `#someday` as before; the derived date is left alone.
 
+### Android
+
+The phone's « Planifier » (Tâches › title selector, was « À venir ») shows the same board in one column: Inbox (Tâches à classer, then ideas; « Ajouter » creates a task), Échues (« Tout à aujourd'hui » plans them today), then 14 days with their load, or the four horizons with « Prévues un jour » under This week. A long press opens « Planifier »: a day (plan ops: `move`, `add`, or `slot` + `remove` for a slotted card, never the due date), a horizon (`week_of`, `month_of`, `#someday`), « Retirer de ce jour », or the usual menu; an idea planned this way becomes a task first. Day members and horizons follow the same rules (`planning/PlanBoard.kt`); the plans of the 14 days are read after each sync and kept on the device, so the board works offline and every write is queued.
+
 ## Basic Rules
 
 1. **Time range is 7 days ahead**

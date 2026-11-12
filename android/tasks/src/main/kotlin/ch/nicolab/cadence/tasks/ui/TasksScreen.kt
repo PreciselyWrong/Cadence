@@ -203,9 +203,10 @@ fun TasksScreen(
                             routineStrip = routineStrip,
                             onOpenBrief = onOpenBrief,
                         )
-                        tab == TasksTab.UPCOMING -> UpcomingTab(
+                        tab == TasksTab.UPCOMING -> PlanTab(
                             viewModel = viewModel,
                             onOpen = { selectedTaskUid = it.uid },
+                            hideDone = false,
                             modifier = Modifier.fillMaxSize(),
                         )
                         tab == TasksTab.PROJECTS -> ProjectsTab(
