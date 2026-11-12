@@ -214,7 +214,7 @@ function registerInboxTools(server, context, tools) {
     tools.push({
         name: 'process_inbox_item',
         description:
-            'Mark an inbox item as processed. Say what it became with at most one of task_uid, project_uid, note_uid or link_uid (for a link made with create_link): its files move to that task, project or note.',
+            'Mark an inbox item as processed. Say what it became with at most one of task_uid, project_uid, note_uid or link_uid (a project page added with add_project_page): its files move to that task, project or note.',
         inputSchema: {
             type: 'object',
             properties: {
@@ -227,7 +227,7 @@ function registerInboxTools(server, context, tools) {
                 note_uid: { type: 'string' },
                 link_uid: {
                     type: 'string',
-                    description: 'A link of the user, else an error',
+                    description: 'A project page of the user, else an error',
                 },
             },
             required: ['uid'],

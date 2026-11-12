@@ -29,7 +29,7 @@ This guide explains how to configure and use the Model Context Protocol (MCP) in
     - [Tags Tools (5)](#tags-tools-5)
     - [Habits Tools (9)](#habits-tools-9)
     - [People Tools (5)](#people-tools-5)
-    - [Links Tools (3)](#links-tools-3)
+    - [Links Tools (5)](#links-tools-5)
     - [Misc Tools (1)](#misc-tools-1)
 - [Claude Desktop Setup](#claude-desktop-setup)
 - [Cursor Setup](#cursor-setup)
@@ -1197,15 +1197,15 @@ Permanently delete a person/contact.
 
 ---
 
-### Links Tools (3)
+### Links Tools (5)
 
-Links are made on purpose, never by the server, and carry their page metadata ([37-links.md](37-links.md)). Status is `new` (to read) or `dropped` (archived); "later" is the review day `review_at`. An assistant may write the note, the tags, the status and the review day, never the URL or the metadata.
+A link lives in a task (something to do) or in a project's pages (material for the project); there is no links library ([37-links.md](37-links.md)). To turn an address into a task, use `create_task` with `url`. Pages carry what the page says about itself (title, picture, site, GitHub stats); an assistant writes the title, address, project and note, never the metadata.
 
 #### `get_link`
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `uid` | string | Yes | Link UID |
+| Parameter | Type   | Required | Description     |
+| --------- | ------ | -------- | --------------- |
+| `uid`     | string | Yes      | Page (link) UID |
 
 #### `add_project_page`
 
@@ -1213,21 +1213,23 @@ Adds a web page to a project's pages; the same address twice in a project is one
 
 #### `list_project_pages`
 
-`project_uid`. Returns `{ pages }`: each page has the link fields above plus `project_uid`.
-
-#### `delete_link`
-
-Permanently deletes a saved link; its address stays out of the library until the user saves it again. `uid`. Only when the user asks: to set a link aside, use `update_link` with `status: dropped`.
+`project_uid`. Returns `{ pages }`: address, title, site, the user's note and the page metadata.
 
 #### `update_link`
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `uid` | string | Yes | Link UID |
-| `note` | string or null | No | Free text; `null` or `""` clears it |
-| `tags` | string[] | No | Replaces the whole set; nested tags as paths (`dev/tools`); `[]` removes all |
-| `status` | string | No | `new` or `dropped`; a former status is read as `new`, and `parked` also sets `review_at` to today + 30 days when none is given |
-| `review_at` | string or null | No | Day to look at a link again (`YYYY-MM-DD`, or `null`) |
+Updates a project page; only the fields given change.
+
+| Parameter     | Type           | Required | Description                                                    |
+| ------------- | -------------- | -------- | -------------------------------------------------------------- |
+| `uid`         | string         | Yes      | Page (link) UID                                                |
+| `title`       | string or null | No       | Title kept over the page title                                 |
+| `url`         | string         | No       | New address, read again; refused if the project already has it |
+| `project_uid` | string         | No       | Move the page to another project                               |
+| `note`        | string or null | No       | Short note; `null` or `""` clears it                           |
+
+#### `delete_link`
+
+Removes a page from its project, for good. `uid`. Only when the user asks.
 
 ---
 
