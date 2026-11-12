@@ -17,6 +17,7 @@ import PomodoroTimer from './Shared/PomodoroTimer';
 import UniversalSearch from './UniversalSearch/UniversalSearch';
 import SidebarPanelIcon from './Sidebar/SidebarPanelIcon';
 import NotificationsDropdown from './Notifications/NotificationsDropdown';
+import { isDesktopApp } from '../utils/desktopApp';
 import FocusChip from './Focus/FocusChip';
 import { getApiPath, getAssetPath } from '../config/paths';
 import { getFeatureFlags, FeatureFlags } from '../utils/featureFlags';
@@ -281,7 +282,10 @@ const Navbar: React.FC<NavbarProps> = ({
                     </button>
                     {pomodoroEnabled && <PomodoroTimer />}
 
-                    <NotificationsDropdown isDarkMode={isDarkMode} />
+                    {/* The desktop app shows native notifications instead. */}
+                    {!isDesktopApp() && (
+                        <NotificationsDropdown isDarkMode={isDarkMode} />
+                    )}
 
                     <div className="relative" ref={dropdownRef}>
                         <button
