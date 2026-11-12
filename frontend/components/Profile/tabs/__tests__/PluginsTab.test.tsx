@@ -153,6 +153,8 @@ describe('PluginsTab', () => {
         render(<PluginsTab isActive />);
 
         fireEvent.click(await screen.findByRole('switch', { name: 'Enabled' }));
+        expect(updatePlugin).not.toHaveBeenCalled();
+        fireEvent.click(await screen.findByTestId('confirm-dialog-confirm'));
 
         await waitFor(() =>
             expect(updatePlugin).toHaveBeenCalledWith('hermes', {
@@ -160,6 +162,21 @@ describe('PluginsTab', () => {
             })
         );
         expect(await screen.findByText('Running')).toBeInTheDocument();
+    });
+
+    it('lists what the plugin asks for and enables nothing when cancelled', async () => {
+        (fetchPlugins as jest.Mock).mockResolvedValue(response([plugin()]));
+        render(<PluginsTab isActive />);
+
+        fireEvent.click(await screen.findByRole('switch', { name: 'Enabled' }));
+
+        expect(
+            await screen.findByText(/asks for:/, { exact: false })
+        ).toBeInTheDocument();
+        fireEvent.click(screen.getByTestId('confirm-dialog-cancel'));
+
+        expect(screen.queryByTestId('confirm-dialog-confirm')).toBeNull();
+        expect(updatePlugin).not.toHaveBeenCalled();
     });
 
     it('sends a secret only when one is typed, and null when cleared', async () => {
@@ -208,6 +225,7 @@ describe('PluginsTab', () => {
         render(<PluginsTab isActive />);
 
         fireEvent.click(await screen.findByRole('switch', { name: 'Enabled' }));
+        fireEvent.click(await screen.findByTestId('confirm-dialog-confirm'));
 
         expect(await screen.findByRole('alert')).toHaveTextContent(
             'Fill in: Webhook address'

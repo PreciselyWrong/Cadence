@@ -51,4 +51,9 @@
     <string name="plugins_remove_message">Son dossier et ses réglages sont supprimés du serveur. Action irréversible.</string>
     <string name="plugins_page_not_found">Plugin introuvable ou désactivé</string>
     <string name="plugins_page_offline">Page indisponible hors ligne</string>
+    <string name="plugins_permission_brief">Écrit le résumé du jour</string>
+    <string name="plugins_approve_title">Approuver les permissions ?</string>
+    <string name="plugins_approve_intro">Ce plugin s\'exécute dans le serveur et demande :</string>
+    <string name="plugins_approve_outro">Les permissions limitent ce que Cadence donne au plugin ; ce n\'est pas un bac à sable. N\'approuvez que du code que vous avez lu.</string>
+    <string name="plugins_approve">Approuver et activer</string>
 </resources>

@@ -15,7 +15,7 @@ Feasible and small, because Cadence already has the two things a plugin needs: a
 - Off by default. Nothing loads unless `TUDUDI_PLUGINS_DIR` points to a folder.
 - Never on a hosted instance (`TUDUDI_HOSTED_MODE`): arbitrary code on a shared server is not acceptable.
 - Only an admin sees or changes plugins. A plugin found on disk stays **off** until an admin turns it on.
-- Turning a plugin on records what it asks for (`permissions` and `events`). If an update asks for more, the plugin stays off (`needs_approval`) until an admin turns it on again.
+- Turning a plugin on (web and Android) first shows what it asks for (`permissions` and `events`) and needs an explicit **Approve and enable**. That approval records what it asks for (`permissions` and `events`). If an update asks for more, the plugin stays off (`needs_approval`) until an admin turns it on again.
 - Permissions gate the `ctx` Cadence hands the plugin. They are **not a sandbox**: plugin code can still `require('fs')`. Read a plugin before enabling it.
 - Cadence runs `git` only when an admin asks: **Add** (`git clone --depth 1`) and **Update** (`git pull --ff-only`) in Profile › Plugins, never `npm`, never on its own. Addresses are https, http or ssh (a local Gitea works); no credentials in the address (use the server's SSH key or git credential helper), no `file:` or `ext::`. A fresh clone is always **off**: read what it asks for, then turn it on.
 - You can also still replace the folder by hand (a `git pull`, a cron, a sidecar); Cadence notices the new version on **Reload**.

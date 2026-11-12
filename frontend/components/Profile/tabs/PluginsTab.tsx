@@ -80,6 +80,7 @@ const PluginCard: React.FC<PluginCardProps> = ({
     const [error, setError] = useState<string | null>(null);
     const [notice, setNotice] = useState<string | null>(null);
     const [confirmingRemove, setConfirmingRemove] = useState(false);
+    const [confirmingEnable, setConfirmingEnable] = useState(false);
     const [values, setValues] = useState<Record<string, DraftValue>>({});
     const [secrets, setSecrets] = useState<Record<string, string>>({});
     const [cleared, setCleared] = useState<Record<string, boolean>>({});
@@ -137,7 +138,17 @@ const PluginCard: React.FC<PluginCardProps> = ({
 
     const toggle = () => {
         if (id === null) return;
-        void run(() => updatePlugin(id, { enabled: !checked }));
+        if (!checked) {
+            setConfirmingEnable(true);
+            return;
+        }
+        void run(() => updatePlugin(id, { enabled: false }));
+    };
+
+    const approveAndEnable = () => {
+        if (id === null) return;
+        setConfirmingEnable(false);
+        void run(() => updatePlugin(id, { enabled: true }));
     };
 
     const saveSettings = () => {
@@ -231,8 +242,26 @@ const PluginCard: React.FC<PluginCardProps> = ({
                 'profile.plugins.permission.routes',
                 'Serves its own routes'
             );
+        if (permission === 'brief')
+            return t(
+                'profile.plugins.permission.brief',
+                'Writes the daily brief'
+            );
         return permission;
     };
+
+    const approvalMessage = [
+        t(
+            'profile.plugins.approveIntro',
+            'This plugin runs inside the server and asks for:'
+        ),
+        ...plugin.permissions.map((p) => `• ${permissionLabel(p)}`),
+        ...plugin.events.map((e) => `• ${e}`),
+        t(
+            'profile.plugins.approveOutro',
+            'Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.'
+        ),
+    ].join('\n');
 
     const { update } = plugin;
 
@@ -570,6 +599,21 @@ const PluginCard: React.FC<PluginCardProps> = ({
                     </Button>
                 )}
             </div>
+            {confirmingEnable && (
+                <ConfirmDialog
+                    title={t(
+                        'profile.plugins.approveTitle',
+                        'Approve permissions?'
+                    )}
+                    message={approvalMessage}
+                    confirmButtonText={t(
+                        'profile.plugins.approve',
+                        'Approve and enable'
+                    )}
+                    onConfirm={approveAndEnable}
+                    onCancel={() => setConfirmingEnable(false)}
+                />
+            )}
             {confirmingRemove && (
                 <ConfirmDialog
                     title={t(

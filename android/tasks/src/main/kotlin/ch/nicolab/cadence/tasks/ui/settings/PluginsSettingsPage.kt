@@ -163,6 +163,7 @@ private fun PluginPanel(plugin: Plugin, client: PluginsClient, onChanged: suspen
     var notice by remember(plugin.id) { mutableStateOf<String?>(null) }
     var error by remember(plugin.id) { mutableStateOf<String?>(null) }
     var confirmingRemove by remember { mutableStateOf(false) }
+    var confirmingEnable by remember { mutableStateOf(false) }
     // La saisie repart des valeurs du serveur quand elles changent, et survit à un simple interrupteur.
     var form by remember(plugin.id, plugin.settings) { mutableStateOf(PluginSettingsForm.of(plugin.settings)) }
     val id = plugin.id
@@ -191,7 +192,8 @@ private fun PluginPanel(plugin: Plugin, client: PluginsClient, onChanged: suspen
         }
         if (plugin.canSwitch) {
             ToggleRow(stringResource(R.string.plugins_enabled), plugin.enabled) { value ->
-                if (!busy) act({ client.setEnabled(it, value) })
+                if (busy) return@ToggleRow
+                if (value) confirmingEnable = true else act({ client.setEnabled(it, false) })
             }
         }
         if (plugin.state == Plugin.NEEDS_APPROVAL) {
@@ -252,6 +254,28 @@ private fun PluginPanel(plugin: Plugin, client: PluginsClient, onChanged: suspen
         }
         notice?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = cadence.success) }
         error?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = cadence.error) }
+    }
+
+    if (confirmingEnable) {
+        val asked = plugin.permissions.map { permissionLabel(context, it) } + plugin.events
+        AlertDialog(
+            onDismissRequest = { confirmingEnable = false },
+            title = { Text(stringResource(R.string.plugins_approve_title)) },
+            text = {
+                Text(
+                    stringResource(R.string.plugins_approve_intro) + "\n" +
+                        asked.joinToString("\n") { "• $it" } + "\n\n" +
+                        stringResource(R.string.plugins_approve_outro),
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    confirmingEnable = false
+                    act({ client.setEnabled(it, true) })
+                }) { Text(stringResource(R.string.plugins_approve)) }
+            },
+            dismissButton = { TextButton(onClick = { confirmingEnable = false }) { Text(stringResource(R.string.tasks_cancel)) } },
+        )
     }
 
     if (confirmingRemove) {
@@ -337,6 +361,7 @@ private fun stateLabel(context: Context, state: String): String = context.getStr
 private fun permissionLabel(context: Context, permission: String): String = when (permission) {
     "events" -> context.getString(R.string.plugins_permission_events)
     "routes" -> context.getString(R.string.plugins_permission_routes)
+    "brief" -> context.getString(R.string.plugins_permission_brief)
     else -> permission
 }
 
