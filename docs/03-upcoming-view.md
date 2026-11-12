@@ -19,6 +19,16 @@ The **Upcoming view** is a forward-looking calendar that shows tasks scheduled f
 
 ---
 
+## Plan page: Horizons mode
+
+The fork's « Planifier » board (`/upcoming`) has a **Horizons** mode: This week, This month, Next month, Someday. A task lands in the first horizon that applies (`bucketHorizons` in `frontend/components/Upcoming/horizons.ts`):
+
+1. **Someday**: tagged `#someday`, whatever else it holds.
+2. **Its commitment**, when it still holds: `week_of` = this week → This week; `month_of` = this month → This month; `month_of` = next month → Next month.
+3. **Its date, derived** (nothing is written: `week_of` and `month_of` stay empty): its earliest plan line from the first day of this week on, otherwise its due day from today on. A day of this week → This week; a later day of this month → This month; a day of next month → Next month. A task planned on a day of this week shows in This week under « Planned on a day » rather than among the cards. A recurring task's due date is its next occurrence and derives nothing.
+
+A past week or month, a past due day (overdue: the days layout's « En retard » band) or a plan on an earlier week decides nothing: such a task is in no horizon. Plan lines count for the days the board has loaded. Dropping a card on another horizon writes `week_of`, `month_of` or `#someday` as before; the derived date is left alone.
+
 ## Basic Rules
 
 1. **Time range is 7 days ahead**

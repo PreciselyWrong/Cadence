@@ -18,6 +18,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 - **Décision** : un seul rendu Markdown (GFM complet) pour notes et descriptions ; `[[Titre]]` (note), `[[task:Nom]]` (tâche), `@[Nom](person:uid)` (personne) en puces ; cible inconnue = puce estompée « + » qui crée l'élément ; lien web = nouvel onglet ; lien vers une page de l'app = reste dans l'app. Section « Rétroliens » en bas de la note, du panneau de tâche et de la fiche personne, cachée s'il n'y en a pas (titre, extrait ; clic = ouvrir). Doc : `docs/43-notes-links.md`.
 - **À reprendre sur Android** : même syntaxe et mêmes puces dans le rendu des notes et descriptions, même création d'une cible inconnue, section Rétroliens depuis `GET /api/note|task|people/:uid/backlinks`.
 
+### 2026-11-12 — Horizons déduits de la date ; « Tâches à classer » sans les tâches prévues
+
+- **Problème** : une tâche prévue un jour ou à échéance dans le mois n'apparaissait dans aucun horizon tant qu'on ne l'y glissait pas ; une tâche de « Ce mois-ci » ne revenait jamais se faire planifier ; une tâche prévue aujourd'hui restait dans « Tâches à classer ».
+- **Décision** : sans engagement qui tient (`week_of` de cette semaine, `month_of` de ce mois ou du suivant), une tâche prend l'horizon de sa première ligne de plan à partir du début de la semaine, sinon de son échéance à partir d'aujourd'hui (hors récurrentes) ; rien n'est écrit. Une tâche prévue un jour de cette semaine reste sous « Prévues un jour » de Cette semaine. Règle : `docs/03-upcoming-view.md`. « Tâches à classer » : une ligne de plan aujourd'hui ou plus tard est un quand décidé ; une ligne passée non ; dès le 1er de son mois, une tâche de `month_of` revient à planifier (`docs/41-auto-classify.md`).
+- **À reprendre sur Android** : `TaskViews.unsorted` doit exclure les tâches prévues aujourd'hui ou plus tard et ramener celles de `month_of` dès le 1er du mois (avec `month_of` dans Room) ; mêmes horizons déduits quand Planifier sera repris.
+
 ### 2026-11-12 — Web hors ligne : pastille d'état (web, client Linux)
 
 - **Problème** : sans serveur, le web montrait des pages vides ou des erreurs, et une modification faite hors ligne ne s'affichait pas ; dans le client Linux, rien ne disait que le serveur était injoignable.

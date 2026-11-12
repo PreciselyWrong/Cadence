@@ -519,10 +519,11 @@ const UpcomingBoard: React.FC = () => {
                 ? bucketHorizons(
                       filterTasks(horizon.tasks, options.filters),
                       today,
-                      firstDayOfWeek
+                      firstDayOfWeek,
+                      shownDays
                   )
                 : null,
-        [horizon.tasks, today, firstDayOfWeek, options.filters]
+        [horizon.tasks, today, firstDayOfWeek, options.filters, shownDays]
     );
     const bucketsRef = useRef(buckets);
     bucketsRef.current = buckets;

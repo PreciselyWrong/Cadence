@@ -300,7 +300,8 @@ async function filterTasksByParams(
             break;
         // « Tâches à classer » (docs/41-auto-classify.md): open top-level
         // tasks with no moment decided, either filed nowhere or filed for the
-        // user and still waiting for « Quand ? ». #someday is excluded below.
+        // user and still waiting for « Quand ? ». #someday and tasks planned
+        // on a day from today on are excluded below.
         case 'unsorted': {
             const now = new Date();
             delete whereClause[Op.or];
@@ -315,8 +316,12 @@ async function filterTasksByParams(
                 .tz(getSafeTimezone(owner?.timezone))
                 .format('YYYY-MM-DD');
             const currentWeek = weekStart(today, owner?.first_day_of_week ?? 1);
-            // Likewise a « This month » from a past month.
-            const currentMonth = today.slice(0, 8) + '01';
+            // A month is a horizon, not a day: from its 1st its tasks come
+            // back here to be planned, like a past « This week ».
+            const nextMonth = moment
+                .utc(today.slice(0, 8) + '01', 'YYYY-MM-DD')
+                .add(1, 'month')
+                .format('YYYY-MM-DD');
             whereClause.status = {
                 [Op.notIn]: [
                     Task.STATUS.DONE,
@@ -352,7 +357,7 @@ async function filterTasksByParams(
                 {
                     [Op.or]: [
                         { month_of: null },
-                        { month_of: { [Op.lt]: currentMonth } },
+                        { month_of: { [Op.lt]: nextMonth } },
                     ],
                 },
             ];
@@ -362,10 +367,19 @@ async function filterTasksByParams(
                  WHERE tags.name = 'someday' AND tags.user_id = :userId`,
                 { replacements: { userId }, type: QueryTypes.SELECT }
             );
-            if (parked.length > 0) {
-                whereClause.id = {
-                    [Op.notIn]: parked.map((row) => row.task_id),
-                };
+            // A plan line on today or later is a moment decided; one on a
+            // past day is not, so an undone task planned yesterday is back.
+            const planned = await sequelize.query(
+                `SELECT DISTINCT daily_plan_items.task_id FROM daily_plan_items
+                 JOIN daily_plans
+                   ON daily_plan_items.daily_plan_id = daily_plans.id
+                 WHERE daily_plans.user_id = :userId
+                   AND daily_plans.plan_date >= :today`,
+                { replacements: { userId, today }, type: QueryTypes.SELECT }
+            );
+            const excluded = [...parked, ...planned].map((row) => row.task_id);
+            if (excluded.length > 0) {
+                whereClause.id = { [Op.notIn]: excluded };
             }
             break;
         }

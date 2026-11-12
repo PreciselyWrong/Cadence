@@ -5,7 +5,8 @@
 const request = require('supertest');
 const moment = require('moment-timezone');
 const app = require('../../app');
-const { Task } = require('../../models');
+const { Task, DailyPlan, DailyPlanItem } = require('../../models');
+const { weekStart } = require('../../modules/review/fields');
 const { createTestUser } = require('../helpers/testUtils');
 const registry = require('../../modules/sync/registry');
 
@@ -109,7 +110,7 @@ describe('month_of', () => {
         expect(res.body.month_of).toBeNull();
     });
 
-    it('brings back a loose task whose month has passed, like « This week »', async () => {
+    it('brings back a loose task from the 1st of its month, like a past « This week »', async () => {
         const create = (name, month_of) =>
             Task.create({ user_id: user.id, name, status: 0, month_of });
         await create('Mois passé', '2020-01-01');
@@ -119,7 +120,40 @@ describe('month_of', () => {
         const res = await agent.get('/api/tasks?type=unsorted');
         expect(res.status).toBe(200);
         expect(res.body.tasks.map((task) => task.name).sort()).toEqual([
+            'Ce mois',
             'Mois passé',
+        ]);
+    });
+
+    it('keeps a task of this month out once planned, dated or done', async () => {
+        const create = (name, extra = {}) =>
+            Task.create({
+                user_id: user.id,
+                name,
+                status: 0,
+                month_of: monthStart(0),
+                ...extra,
+            });
+        await create('À planifier');
+        const planned = await create('Planifiée demain');
+        await create('Datée', { due_date: new Date('2030-03-17T10:00:00Z') });
+        await create('Faite', { status: 2 });
+        await create('Cette semaine', {
+            week_of: weekStart(moment.tz(TZ).format('YYYY-MM-DD'), 1),
+        });
+        const tomorrow = moment.tz(TZ).add(1, 'day').format('YYYY-MM-DD');
+        const plan = await DailyPlan.create({
+            user_id: user.id,
+            plan_date: tomorrow,
+        });
+        await DailyPlanItem.create({
+            daily_plan_id: plan.id,
+            task_id: planned.id,
+        });
+
+        const res = await agent.get('/api/tasks?type=unsorted');
+        expect(res.body.tasks.map((task) => task.name)).toEqual([
+            'À planifier',
         ]);
     });
 
