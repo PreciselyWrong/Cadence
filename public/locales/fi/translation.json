@@ -5989,6 +5989,7 @@
     "classic": "Aiempi Tänään-sivu",
     "completed": "”{{name}}” valmis",
     "daysShown": "Näytetyt päivät",
+    "details": "Tiedot",
     "doneCount": "Valmiit · {{n}}",
     "dueAt": "Määräaika",
     "empty": "Ei suunniteltuja tehtäviä. Lisää tehtävä tai valitse ehdotuksista.",
@@ -6037,8 +6038,10 @@
     "toNextWeek": "Siirrä ensi viikkoon",
     "toTomorrow": "Siirrä huomiseen",
     "tomorrow": "Huomenna",
+    "tooNarrow": "Liian kapea {{count}} päivälle: levennä kalenteria tai näytä vähemmän päiviä.",
     "unslot": "Poista kellonaika",
     "unslotted": "Kellonaika poistettu",
+    "widen": "Levennä",
     "yesterday": "Eilen"
   }
 }

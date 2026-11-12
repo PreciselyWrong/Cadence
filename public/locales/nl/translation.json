@@ -5989,6 +5989,7 @@
     "classic": "Vorige pagina Vandaag",
     "completed": "„{{name}}“ klaar",
     "daysShown": "Getoonde dagen",
+    "details": "Details",
     "doneCount": "Klaar · {{n}}",
     "dueAt": "Deadline",
     "empty": "Niets gepland. Voeg een taak toe of kies er een uit de suggesties.",
@@ -6037,8 +6038,10 @@
     "toNextWeek": "Naar volgende week verplaatsen",
     "toTomorrow": "Naar morgen verplaatsen",
     "tomorrow": "Morgen",
+    "tooNarrow": "Te smal voor {{count}} dagen: maak de agenda breder of toon minder dagen.",
     "unslot": "Tijd verwijderen",
     "unslotted": "Tijd verwijderd",
+    "widen": "Verbreden",
     "yesterday": "Gisteren"
   }
 }

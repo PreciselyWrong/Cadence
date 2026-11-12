@@ -6007,6 +6007,7 @@
     "classic": "Pagina Astăzi anterioară",
     "completed": "„{{name}}” finalizată",
     "daysShown": "Zile afișate",
+    "details": "Detalii",
     "doneCount": "Finalizate · {{n}}",
     "dueAt": "Termen",
     "empty": "Nimic planificat. Adaugă o sarcină sau alege una din sugestii.",
@@ -6057,8 +6058,10 @@
     "toNextWeek": "Mută în săptămâna viitoare",
     "toTomorrow": "Mută pe mâine",
     "tomorrow": "Mâine",
+    "tooNarrow": "Prea îngust pentru {{count}} zile: lărgiți calendarul sau afișați mai puține zile.",
     "unslot": "Elimină ora",
     "unslotted": "Oră eliminată",
+    "widen": "Lărgește",
     "yesterday": "Ieri"
   }
 }

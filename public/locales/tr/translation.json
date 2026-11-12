@@ -5989,6 +5989,7 @@
     "classic": "Önceki Bugün sayfası",
     "completed": "“{{name}}” tamamlandı",
     "daysShown": "Gösterilen günler",
+    "details": "Ayrıntılar",
     "doneCount": "Tamamlanan · {{n}}",
     "dueAt": "Son tarih",
     "empty": "Planlanmış bir şey yok. Bir görev ekleyin ya da önerilerden birini seçin.",
@@ -6035,8 +6036,10 @@
     "toNextWeek": "Gelecek haftaya taşı",
     "toTomorrow": "Yarına taşı",
     "tomorrow": "Yarın",
+    "tooNarrow": "{{count}} gün için çok dar: takvimi genişletin veya daha az gün gösterin.",
     "unslot": "Saati kaldır",
     "unslotted": "Saat kaldırıldı",
+    "widen": "Genişlet",
     "yesterday": "Dün"
   }
 }

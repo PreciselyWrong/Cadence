@@ -5994,6 +5994,7 @@
     "classic": "Forrige I dag-side",
     "completed": "«{{name}}» ferdig",
     "daysShown": "Viste dager",
+    "details": "Detaljer",
     "doneCount": "Ferdige · {{n}}",
     "dueAt": "Frist",
     "empty": "Ingenting planlagt. Legg til en oppgave, eller velg en fra forslagene.",
@@ -6042,8 +6043,10 @@
     "toNextWeek": "Flytt til neste uke",
     "toTomorrow": "Flytt til i morgen",
     "tomorrow": "I morgen",
+    "tooNarrow": "For smalt for {{count}} dager: gjør kalenderen bredere eller vis færre dager.",
     "unslot": "Fjern tidspunktet",
     "unslotted": "Tidspunkt fjernet",
+    "widen": "Utvid",
     "yesterday": "I går"
   }
 }

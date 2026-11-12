@@ -13,7 +13,11 @@ const {
     sequelize,
 } = require('../../models');
 const { lockNewRow } = require('../../utils/db-dialect');
-const { TASK_INCLUDES } = require('../tasks/utils/constants');
+// Today shows a task's subtasks under it (Details).
+const {
+    TASK_INCLUDES,
+    TASK_INCLUDES_WITH_SUBTASKS,
+} = require('../tasks/utils/constants');
 const {
     getTaskIncludeConfigLight,
 } = require('../tasks/queries/query-builders');
@@ -48,7 +52,7 @@ class DailyPlanRepository {
         if (ids.length === 0) return [];
         return Task.findAll({
             where: { [Op.and]: [visibleWhere, { id: { [Op.in]: ids } }] },
-            include: TASK_INCLUDES,
+            include: TASK_INCLUDES_WITH_SUBTASKS,
         });
     }
 
@@ -331,7 +335,7 @@ class DailyPlanRepository {
                         : []),
                 ],
             },
-            include: TASK_INCLUDES,
+            include: TASK_INCLUDES_WITH_SUBTASKS,
             order,
         });
     }

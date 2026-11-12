@@ -5989,6 +5989,7 @@
     "classic": "Trang Hôm nay cũ",
     "completed": "Đã xong “{{name}}”",
     "daysShown": "Số ngày hiển thị",
+    "details": "Chi tiết",
     "doneCount": "Xong · {{n}}",
     "dueAt": "Hạn",
     "empty": "Chưa có gì được lên kế hoạch. Thêm công việc hoặc chọn một gợi ý.",
@@ -6035,8 +6036,10 @@
     "toNextWeek": "Chuyển sang tuần sau",
     "toTomorrow": "Chuyển sang ngày mai",
     "tomorrow": "Ngày mai",
+    "tooNarrow": "Quá hẹp cho {{count}} ngày: mở rộng lịch hoặc hiển thị ít ngày hơn.",
     "unslot": "Bỏ giờ",
     "unslotted": "Đã bỏ giờ",
+    "widen": "Mở rộng",
     "yesterday": "Hôm qua"
   }
 }

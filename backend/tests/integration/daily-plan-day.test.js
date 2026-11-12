@@ -236,4 +236,26 @@ describe('GET /api/daily-plan/day', () => {
         const current = await aucklandAgent.get('/api/daily-plan/day');
         expect(current.body.date).toBe(dayOf(0, auckland));
     });
+
+    it('returns the subtasks of planned and due tasks', async () => {
+        const parent = await Task.create({
+            name: 'Review',
+            user_id: user.id,
+            due_date: new Date(),
+            status: 0,
+        });
+        await Task.create({
+            name: 'Read it',
+            user_id: user.id,
+            parent_task_id: parent.id,
+            status: 0,
+        });
+        const res = await agent.get('/api/daily-plan/day');
+        expect(res.status).toBe(200);
+        const found = [
+            ...res.body.due,
+            ...(res.body.plan?.items ?? []).map((item) => item.task),
+        ].find((task) => task.uid === parent.uid);
+        expect(found.subtasks.map((sub) => sub.name)).toEqual(['Read it']);
+    });
 });

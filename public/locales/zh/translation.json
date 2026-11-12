@@ -5989,6 +5989,7 @@
     "classic": "旧版“今天”页面",
     "completed": "“{{name}}”已完成",
     "daysShown": "显示天数",
+    "details": "详情",
     "doneCount": "已完成 · {{n}}",
     "dueAt": "截止",
     "empty": "尚未安排。添加任务，或从建议中选择。",
@@ -6035,8 +6036,10 @@
     "toNextWeek": "移到下周",
     "toTomorrow": "移到明天",
     "tomorrow": "明天",
+    "tooNarrow": "显示 {{count}} 天太窄：请加宽日历或减少显示天数。",
     "unslot": "移除时间",
     "unslotted": "已移除时间",
+    "widen": "加宽",
     "yesterday": "昨天"
   }
 }

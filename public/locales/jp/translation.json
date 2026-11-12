@@ -5989,6 +5989,7 @@
     "classic": "以前の「今日」ページ",
     "completed": "「{{name}}」を完了",
     "daysShown": "表示する日数",
+    "details": "詳細",
     "doneCount": "完了 · {{n}}",
     "dueAt": "期限",
     "empty": "予定はありません。タスクを追加するか、候補から選んでください。",
@@ -6035,8 +6036,10 @@
     "toNextWeek": "来週に移す",
     "toTomorrow": "明日に移す",
     "tomorrow": "明日",
+    "tooNarrow": "{{count}}日分には狭すぎます。カレンダーを広げるか、表示日数を減らしてください。",
     "unslot": "時間を外す",
     "unslotted": "時間を外しました",
+    "widen": "広げる",
     "yesterday": "昨日"
   }
 }

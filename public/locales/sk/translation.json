@@ -6021,6 +6021,7 @@
     "classic": "Predchádzajúca stránka Dnes",
     "completed": "„{{name}}“ hotová",
     "daysShown": "Zobrazené dni",
+    "details": "Podrobnosti",
     "doneCount": "Hotové · {{n}}",
     "dueAt": "Termín",
     "empty": "Nič nie je naplánované. Pridajte úlohu alebo vyberte niečo z návrhov.",
@@ -6073,8 +6074,10 @@
     "toNextWeek": "Presunúť na budúci týždeň",
     "toTomorrow": "Presunúť na zajtra",
     "tomorrow": "Zajtra",
+    "tooNarrow": "Príliš úzke pre {{count}} dní: rozšírte kalendár alebo zobrazte menej dní.",
     "unslot": "Odstrániť čas",
     "unslotted": "Čas odstránený",
+    "widen": "Rozšíriť",
     "yesterday": "Včera"
   }
 }

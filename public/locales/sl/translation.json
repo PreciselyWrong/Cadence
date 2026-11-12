@@ -6045,6 +6045,7 @@
     "classic": "Prejšnja stran Danes",
     "completed": "„{{name}}“ opravljena",
     "daysShown": "Prikazani dnevi",
+    "details": "Podrobnosti",
     "doneCount": "Opravljene · {{n}}",
     "dueAt": "Rok",
     "empty": "Nič ni načrtovano. Dodajte nalogo ali izberite eno od predlogov.",
@@ -6097,8 +6098,10 @@
     "toNextWeek": "Premakni na prihodnji teden",
     "toTomorrow": "Premakni na jutri",
     "tomorrow": "Jutri",
+    "tooNarrow": "Preozko za {{count}} dni: razširite koledar ali prikažite manj dni.",
     "unslot": "Odstrani čas",
     "unslotted": "Čas odstranjen",
+    "widen": "Razširi",
     "yesterday": "Včeraj"
   }
 }

@@ -5959,6 +5959,7 @@
     "classic": "Previous Today page",
     "completed": "“{{name}}” done",
     "daysShown": "Days shown",
+    "details": "Details",
     "doneCount": "Done · {{n}}",
     "dueAt": "Due",
     "empty": "Nothing planned. Add a task or pick one from the suggestions.",
@@ -6007,8 +6008,10 @@
     "toNextWeek": "Move to next week",
     "toTomorrow": "Move to tomorrow",
     "tomorrow": "Tomorrow",
+    "tooNarrow": "Too narrow for {{count}} days: widen the calendar or show fewer days.",
     "unslot": "Remove the time",
     "unslotted": "Time removed",
+    "widen": "Widen",
     "yesterday": "Yesterday"
   }
 }

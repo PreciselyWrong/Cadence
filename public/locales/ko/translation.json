@@ -5989,6 +5989,7 @@
     "classic": "이전 오늘 페이지",
     "completed": "“{{name}}” 완료",
     "daysShown": "표시할 날짜 수",
+    "details": "세부 정보",
     "doneCount": "완료 · {{n}}",
     "dueAt": "마감",
     "empty": "계획된 항목이 없습니다. 작업을 추가하거나 제안에서 고르세요.",
@@ -6035,8 +6036,10 @@
     "toNextWeek": "다음 주로 옮기기",
     "toTomorrow": "내일로 옮기기",
     "tomorrow": "내일",
+    "tooNarrow": "{{count}}일을 표시하기에 너무 좁습니다. 캘린더를 넓히거나 날짜 수를 줄이세요.",
     "unslot": "시간 빼기",
     "unslotted": "시간 뺌",
+    "widen": "넓히기",
     "yesterday": "어제"
   }
 }

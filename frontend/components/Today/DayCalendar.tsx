@@ -91,7 +91,12 @@ export interface DayCalendarProps {
     gridRef?: React.Ref<HTMLDivElement>;
     // A calendar event (not a task) was clicked.
     onOpenEvent?(event: CalendarEvent, date: string): void;
+    // Called from the "too narrow" notice to give the calendar more room.
+    onWiden?(): void;
 }
+
+// Under this width per day, blocks are unreadable: the view says so.
+const MIN_COLUMN_PX = 110;
 
 interface LineBlockProps {
     line: DayLine;
@@ -556,9 +561,24 @@ const DayCalendar: React.FC<DayCalendarProps> = ({
     drop,
     gridRef,
     onOpenEvent,
+    onWiden,
 }) => {
     const { t } = useTranslation();
     const scrollRef = useRef<HTMLDivElement>(null);
+    const [width, setWidth] = useState(0);
+    useEffect(() => {
+        const el = scrollRef.current;
+        if (!el || typeof ResizeObserver === 'undefined') return;
+        const observer = new ResizeObserver(([entry]) =>
+            setWidth(entry.contentRect.width)
+        );
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, []);
+    const tooNarrow =
+        columns.length > 1 &&
+        width > 0 &&
+        (width - 48) / columns.length < MIN_COLUMN_PX;
     const height = (range.end - range.start) * PX_PER_MINUTE;
     const offset = (minute: number) => (minute - range.start) * PX_PER_MINUTE;
     const now = columns.find((column) => column.now !== null)?.now ?? null;
@@ -595,6 +615,30 @@ const DayCalendar: React.FC<DayCalendarProps> = ({
             className="flex h-full min-h-0 flex-col"
         >
             {header && <div className="px-4 pb-1 pt-3">{header}</div>}
+
+            {tooNarrow && (
+                <div
+                    role="status"
+                    className="mx-4 mb-2 flex items-center gap-2 rounded-lg bg-warning-container/60 py-1 pl-3 pr-1 text-body-m text-warning dark:bg-warning/10"
+                >
+                    <span className="min-w-0 flex-1">
+                        {t(
+                            'today.tooNarrow',
+                            'Too narrow for {{count}} days: widen the calendar or show fewer days.',
+                            { count: columns.length }
+                        )}
+                    </span>
+                    {onWiden && (
+                        <button
+                            type="button"
+                            onClick={onWiden}
+                            className="h-7 shrink-0 rounded-md px-2.5 font-medium text-surface-on hover:bg-black/5 dark:hover:bg-white/10"
+                        >
+                            {t('today.widen', 'Widen')}
+                        </button>
+                    )}
+                </div>
+            )}
 
             <div className="flex pr-2">
                 <span className="w-12 shrink-0" />

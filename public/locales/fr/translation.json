@@ -6005,6 +6005,7 @@
     "classic": "Ancienne page Aujourd'hui",
     "completed": "« {{name}} » terminée",
     "daysShown": "Jours affichés",
+    "details": "Détails",
     "doneCount": "Terminées · {{n}}",
     "dueAt": "Échéance",
     "empty": "Rien de prévu. Ajoutez une tâche ou prenez-en une dans les suggestions.",
@@ -6053,8 +6054,10 @@
     "toNextWeek": "Reporter à la semaine prochaine",
     "toTomorrow": "Reporter à demain",
     "tomorrow": "Demain",
+    "tooNarrow": "Trop étroit pour {{count}} jours : élargissez le calendrier ou affichez moins de jours.",
     "unslot": "Retirer l'horaire",
     "unslotted": "Horaire retiré",
+    "widen": "Élargir",
     "yesterday": "Hier"
   }
 }

@@ -1,3 +1,4 @@
+import { Task } from '../../entities/Task';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -61,6 +62,9 @@ export interface DayListProps {
     organize?: { label: string; onClick(): void } | null;
     // Buttons beside Organize (e.g. show the calendar again).
     extraActions?: React.ReactNode;
+    // Rows show their description and subtasks.
+    expanded?: boolean;
+    onToggleSubtask?(subtask: Task): void;
     // The day arrows; the calendar carries them when it is shown.
     showDayNav?: boolean;
     addField: React.ReactNode;
@@ -143,6 +147,8 @@ const DayList: React.FC<DayListProps> = ({
     headerMenu,
     organize,
     extraActions,
+    expanded = false,
+    onToggleSubtask,
     showDayNav = true,
     addField,
     slip,
@@ -185,6 +191,8 @@ const DayList: React.FC<DayListProps> = ({
             onToggle={onToggle}
             onOpen={onOpen}
             menu={lineMenu(line)}
+            expanded={expanded}
+            onToggleSubtask={onToggleSubtask}
         />
     );
 
@@ -196,10 +204,10 @@ const DayList: React.FC<DayListProps> = ({
             <header className="sticky top-0 z-10 bg-surface px-6 pb-3 pt-6 max-sm:px-4">
                 <div className="flex min-w-0 items-center gap-1">
                     <h1 className="mr-1 flex min-w-0 items-baseline gap-2">
-                        <span className="truncate text-headline font-extrabold tracking-tight text-surface-on">
+                        <span className="shrink-0 text-headline font-extrabold tracking-tight text-surface-on">
                             {title}
                         </span>
-                        <span className="shrink-0 text-title font-medium text-surface-on-variant">
+                        <span className="min-w-0 truncate text-title font-medium text-surface-on-variant">
                             {subtitle}
                         </span>
                     </h1>

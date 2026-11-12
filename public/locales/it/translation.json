@@ -6002,6 +6002,7 @@
     "classic": "Pagina Oggi precedente",
     "completed": "«{{name}}» completata",
     "daysShown": "Giorni mostrati",
+    "details": "Dettagli",
     "doneCount": "Fatte · {{n}}",
     "dueAt": "Scadenza",
     "empty": "Niente in programma. Aggiungi un'attività o scegline una tra i suggerimenti.",
@@ -6052,8 +6053,10 @@
     "toNextWeek": "Sposta alla settimana prossima",
     "toTomorrow": "Sposta a domani",
     "tomorrow": "Domani",
+    "tooNarrow": "Troppo stretto per {{count}} giorni: allarga il calendario o mostra meno giorni.",
     "unslot": "Togli l'orario",
     "unslotted": "Orario rimosso",
+    "widen": "Allarga",
     "yesterday": "Ieri"
   }
 }

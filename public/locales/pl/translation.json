@@ -6045,6 +6045,7 @@
     "classic": "Poprzednia strona Dziś",
     "completed": "„{{name}}” zrobione",
     "daysShown": "Wyświetlane dni",
+    "details": "Szczegóły",
     "doneCount": "Zrobione · {{n}}",
     "dueAt": "Termin",
     "empty": "Nic nie zaplanowano. Dodaj zadanie albo wybierz jedno z sugestii.",
@@ -6097,8 +6098,10 @@
     "toNextWeek": "Przenieś na przyszły tydzień",
     "toTomorrow": "Przenieś na jutro",
     "tomorrow": "Jutro",
+    "tooNarrow": "Za wąsko na {{count}} dni: poszerz kalendarz lub pokaż mniej dni.",
     "unslot": "Usuń godzinę",
     "unslotted": "Godzina usunięta",
+    "widen": "Poszerz",
     "yesterday": "Wczoraj"
   }
 }

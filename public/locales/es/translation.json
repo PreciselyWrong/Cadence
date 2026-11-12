@@ -5989,6 +5989,7 @@
     "classic": "Página Hoy anterior",
     "completed": "«{{name}}» hecha",
     "daysShown": "Días mostrados",
+    "details": "Detalles",
     "doneCount": "Hechas · {{n}}",
     "dueAt": "Vence",
     "empty": "Nada planeado. Añade una tarea o elige una de las sugerencias.",
@@ -6039,8 +6040,10 @@
     "toNextWeek": "Mover a la próxima semana",
     "toTomorrow": "Mover a mañana",
     "tomorrow": "Mañana",
+    "tooNarrow": "Demasiado estrecho para {{count}} días: amplía el calendario o muestra menos días.",
     "unslot": "Quitar la hora",
     "unslotted": "Hora quitada",
+    "widen": "Ampliar",
     "yesterday": "Ayer"
   }
 }

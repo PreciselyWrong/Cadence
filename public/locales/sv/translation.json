@@ -5989,6 +5989,7 @@
     "classic": "Tidigare Idag-sida",
     "completed": "”{{name}}” klar",
     "daysShown": "Visade dagar",
+    "details": "Detaljer",
     "doneCount": "Klara · {{n}}",
     "dueAt": "Förfaller",
     "empty": "Inget planerat. Lägg till en uppgift eller välj en från förslagen.",
@@ -6037,8 +6038,10 @@
     "toNextWeek": "Flytta till nästa vecka",
     "toTomorrow": "Flytta till i morgon",
     "tomorrow": "I morgon",
+    "tooNarrow": "För smalt för {{count}} dagar: bredda kalendern eller visa färre dagar.",
     "unslot": "Ta bort tiden",
     "unslotted": "Tiden borttagen",
+    "widen": "Bredda",
     "yesterday": "Igår"
   }
 }

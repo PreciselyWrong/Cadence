@@ -5998,6 +5998,7 @@
     "classic": "Frühere Seite „Heute“",
     "completed": "„{{name}}“ erledigt",
     "daysShown": "Angezeigte Tage",
+    "details": "Details",
     "doneCount": "Erledigt · {{n}}",
     "dueAt": "Fällig",
     "empty": "Nichts geplant. Füge eine Aufgabe hinzu oder wähle einen Vorschlag aus.",
@@ -6046,8 +6047,10 @@
     "toNextWeek": "Auf nächste Woche verschieben",
     "toTomorrow": "Auf morgen verschieben",
     "tomorrow": "Morgen",
+    "tooNarrow": "Zu schmal für {{count}} Tage: Kalender verbreitern oder weniger Tage zeigen.",
     "unslot": "Uhrzeit entfernen",
     "unslotted": "Uhrzeit entfernt",
+    "widen": "Verbreitern",
     "yesterday": "Gestern"
   }
 }

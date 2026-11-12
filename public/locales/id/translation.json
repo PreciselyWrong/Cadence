@@ -5989,6 +5989,7 @@
     "classic": "Halaman Hari Ini sebelumnya",
     "completed": "“{{name}}” selesai",
     "daysShown": "Hari yang ditampilkan",
+    "details": "Detail",
     "doneCount": "Selesai · {{n}}",
     "dueAt": "Tenggat",
     "empty": "Belum ada rencana. Tambahkan tugas atau pilih dari saran.",
@@ -6035,8 +6036,10 @@
     "toNextWeek": "Pindahkan ke minggu depan",
     "toTomorrow": "Pindahkan ke besok",
     "tomorrow": "Besok",
+    "tooNarrow": "Terlalu sempit untuk {{count}} hari: lebarkan kalender atau tampilkan lebih sedikit hari.",
     "unslot": "Hapus waktu",
     "unslotted": "Waktu dihapus",
+    "widen": "Lebarkan",
     "yesterday": "Kemarin"
   }
 }

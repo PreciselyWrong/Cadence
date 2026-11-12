@@ -4,6 +4,8 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { EllipsisHorizontalIcon, FlagIcon } from '@heroicons/react/24/outline';
 import TaskCheckCircle from '../Task/TaskCheckCircle';
+import { Task } from '../../entities/Task';
+import { isTaskDone } from '../../constants/taskStatus';
 import Menu, { MenuEntry, MenuItem } from '../Shared/ui/Menu';
 import { IconButton } from '../Shared/ui/Button';
 import { formatDuration, formatMinute } from '../DailyPlan/planUtils';
@@ -81,6 +83,9 @@ export interface TaskLineProps {
     onOpen(line: DayLine): void;
     menu: MenuEntry[];
     sortable?: boolean;
+    // Show the description and the subtasks under the row.
+    expanded?: boolean;
+    onToggleSubtask?(subtask: Task): void;
 }
 
 /**
@@ -97,11 +102,15 @@ const TaskLine: React.FC<TaskLineProps> = ({
     onOpen,
     menu,
     sortable = true,
+    expanded = false,
+    onToggleSubtask,
 }) => {
     const { t, i18n } = useTranslation();
     const [menuOpen, setMenuOpen] = useState(false);
     const menuTrigger = useRef<HTMLButtonElement | null>(null);
     const { task, uid } = line;
+    const note = task.note?.trim();
+    const subtasks = task.subtasks ?? [];
     const at = lineAt(line);
     const project = task.Project;
     const tags = (task.tags ?? []).slice(0, MAX_TAGS);
@@ -204,6 +213,12 @@ const TaskLine: React.FC<TaskLineProps> = ({
                 {shortDate(dueDay as string, i18n?.language ?? 'en')}
             </Chip>
         ) : null,
+        !expanded && subtasks.length > 0 ? (
+            <Chip key="subs">
+                {subtasks.filter((sub) => isTaskDone(sub.status)).length}/
+                {subtasks.length}
+            </Chip>
+        ) : null,
     ].filter(Boolean);
 
     return (
@@ -267,7 +282,55 @@ const TaskLine: React.FC<TaskLineProps> = ({
                         {chips}
                     </span>
                 )}
+                {expanded && note && (
+                    <span className="mt-1.5 line-clamp-3 whitespace-pre-line text-body-m text-surface-on-variant">
+                        {note}
+                    </span>
+                )}
             </span>
+
+            {/* Subtasks hang from the task's check by a thread line, so
+                they read as part of it (Things 3, Superlist). */}
+            {expanded && subtasks.length > 0 && (
+                <ul
+                    className="relative col-span-2 col-start-2 mt-1.5"
+                    onClick={(event) => event.stopPropagation()}
+                >
+                    <span
+                        aria-hidden="true"
+                        className="absolute bottom-3 left-[9px] top-0 w-px bg-outline-variant"
+                    />
+                    {subtasks.map((sub) => {
+                        const subDone = isTaskDone(sub.status);
+                        return (
+                            <li
+                                key={sub.uid ?? sub.id}
+                                className="relative flex min-h-[28px] items-center gap-2 pl-6"
+                            >
+                                <span
+                                    aria-hidden="true"
+                                    className="absolute left-[9px] top-1/2 h-px w-3 bg-outline-variant"
+                                />
+                                <span className="shrink-0 scale-[0.8]">
+                                    <TaskCheckCircle
+                                        task={sub}
+                                        onToggle={() => onToggleSubtask?.(sub)}
+                                    />
+                                </span>
+                                <span
+                                    className={`min-w-0 truncate text-body-m ${
+                                        subDone
+                                            ? 'text-surface-on-variant line-through'
+                                            : 'text-surface-on'
+                                    }`}
+                                >
+                                    {sub.name}
+                                </span>
+                            </li>
+                        );
+                    })}
+                </ul>
+            )}
 
             {/* Nothing appears on hover: the menu shows on the selected row,
                 and a right click opens it on any row. */}

@@ -31,6 +31,7 @@ import { getUserTimezone } from '../../utils/dateUtils';
 import { useTaskPane } from '../../contexts/TaskPaneContext';
 import { useIsNarrow } from '../../hooks/useIsNarrow';
 import { fetchDay } from '../../utils/dayService';
+import { toggleTaskCompletion } from '../../utils/tasksService';
 import type { DayResponse, PlanOp } from '../../utils/dayService';
 import { fetchCalendarEvents } from '../../utils/calendarFeedsService';
 import { useStore } from '../../store/useStore';
@@ -38,13 +39,17 @@ import type { CalendarEvent } from '../../utils/calendarFeedsService';
 import type { MenuEntry } from '../Shared/ui/Menu';
 import Button, { IconButton } from '../Shared/ui/Button';
 import {
+    Bars3BottomLeftIcon,
     CalendarDaysIcon,
     ChevronDoubleRightIcon,
     ChevronLeftIcon,
     ChevronRightIcon,
 } from '@heroicons/react/24/outline';
 import TodayPage from '../DailyPlan/TodayPage';
-import PaneSplitter, { usePaneWidth } from '../DailyPlan/PaneSplitter';
+import PaneSplitter, {
+    PANE_MIN,
+    usePaneWidth,
+} from '../DailyPlan/PaneSplitter';
 import {
     findFreeSlot,
     formatDuration,
@@ -134,6 +139,7 @@ const NewToday: React.FC = () => {
         now,
         tasks,
         revision,
+        reload,
         run,
         runOn,
         toggle,
@@ -160,6 +166,21 @@ const NewToday: React.FC = () => {
     const [span, setSpanState] = useState<number>(readSpan);
     const [extras, setExtras] = useState<Record<string, ExtraDay>>({});
     const [adding, setAdding] = useState('');
+    const [expanded, setExpanded] = useState(() => {
+        try {
+            return localStorage.getItem('today.expanded') === 'true';
+        } catch {
+            return false;
+        }
+    });
+    const setExpandedStored = (value: boolean) => {
+        setExpanded(value);
+        try {
+            localStorage.setItem('today.expanded', String(value));
+        } catch {
+            // Private mode: lasts until reload.
+        }
+    };
     const [eventDetail, setEventDetail] = useState<FeedEventDetail | null>(
         null
     );
@@ -958,22 +979,38 @@ const NewToday: React.FC = () => {
                     : null
             }
             addField={addField}
+            expanded={expanded}
+            onToggleSubtask={(sub) =>
+                sub.uid &&
+                toggleTaskCompletion(sub.uid, sub).then(reload).catch(reload)
+            }
             showDayNav={!showCalendar || narrow}
             extraActions={
-                !showCalendar ? (
+                <>
                     <Button
                         size="sm"
-                        variant="secondary"
-                        icon={<CalendarDaysIcon className="h-4 w-4" />}
-                        onClick={() =>
-                            narrow
-                                ? setMobileView('calendar')
-                                : setCalendar(true)
-                        }
+                        variant={expanded ? 'primary' : 'secondary'}
+                        aria-pressed={expanded}
+                        icon={<Bars3BottomLeftIcon className="h-4 w-4" />}
+                        onClick={() => setExpandedStored(!expanded)}
                     >
-                        {t('today.calendarButton', 'Calendar')}
+                        {t('today.details', 'Details')}
                     </Button>
-                ) : null
+                    {!showCalendar ? (
+                        <Button
+                            size="sm"
+                            variant="secondary"
+                            icon={<CalendarDaysIcon className="h-4 w-4" />}
+                            onClick={() =>
+                                narrow
+                                    ? setMobileView('calendar')
+                                    : setCalendar(true)
+                            }
+                        >
+                            {t('today.calendarButton', 'Calendar')}
+                        </Button>
+                    ) : null}
+                </>
             }
             slip={
                 slipped
@@ -1148,6 +1185,7 @@ const NewToday: React.FC = () => {
             columns={columns}
             gridRef={gridRef}
             header={calendarHeader}
+            onWiden={() => pane.update(PANE_MIN, true)}
             onToggle={toggleLine}
             onOpen={openLine}
             onResize={(onDate, uid, duration) =>

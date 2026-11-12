@@ -6002,6 +6002,7 @@
     "classic": "Página Hoje anterior",
     "completed": "“{{name}}” concluída",
     "daysShown": "Dias mostrados",
+    "details": "Detalhes",
     "doneCount": "Concluídas · {{n}}",
     "dueAt": "Prazo",
     "empty": "Nada planejado. Adicione uma tarefa ou escolha uma das sugestões.",
@@ -6052,8 +6053,10 @@
     "toNextWeek": "Mover para a próxima semana",
     "toTomorrow": "Mover para amanhã",
     "tomorrow": "Amanhã",
+    "tooNarrow": "Estreito demais para {{count}} dias: alargue o calendário ou mostre menos dias.",
     "unslot": "Remover o horário",
     "unslotted": "Horário removido",
+    "widen": "Alargar",
     "yesterday": "Ontem"
   }
 }
