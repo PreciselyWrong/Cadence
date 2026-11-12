@@ -790,4 +790,38 @@ describe('Plugins', () => {
             });
         });
     });
+
+    describe('daily brief writer', () => {
+        const writerPlugin = (permissions) =>
+            writePlugin(
+                'scribe',
+                manifestOf('scribe', { permissions, events: [] }),
+                `module.exports = { activate(ctx) {
+                    if (ctx.brief) ctx.brief.setWriter(async () => ({ ok: true }));
+                    globalThis.__hasBrief = typeof ctx.brief;
+                } };`
+            );
+
+        it('registers a writer only with the brief permission, and drops it when off', async () => {
+            writerPlugin(['brief']);
+            expect(registry.briefWriter()).toBeNull();
+            await adminAgent
+                .patch('/api/plugins/scribe')
+                .send({ enabled: true });
+            expect(registry.briefWriter()).toMatchObject({ id: 'scribe' });
+            await adminAgent
+                .patch('/api/plugins/scribe')
+                .send({ enabled: false });
+            expect(registry.briefWriter()).toBeNull();
+        });
+
+        it('withholds ctx.brief without the permission', async () => {
+            writerPlugin([]);
+            await adminAgent
+                .patch('/api/plugins/scribe')
+                .send({ enabled: true });
+            expect(globalThis.__hasBrief).toBe('undefined');
+            expect(registry.briefWriter()).toBeNull();
+        });
+    });
 });

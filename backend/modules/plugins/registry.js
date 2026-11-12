@@ -215,6 +215,18 @@ function buildContext(plugin, entry, row) {
             plugin.handlers.get(event).push(handler);
         };
     }
+    if (manifest.permissions.includes('brief')) {
+        // One function that writes the daily brief in place of the built-in
+        // LLM step (docs/46-plugins.md, "Writing the daily brief").
+        ctx.brief = {
+            setWriter: (fn) => {
+                if (typeof fn !== 'function') {
+                    throw new Error('ctx.brief.setWriter needs a function');
+                }
+                plugin.briefWriter = fn;
+            },
+        };
+    }
     if (manifest.permissions.includes('routes')) {
         plugin.router = express.Router();
         ctx.router = plugin.router;
@@ -248,6 +260,7 @@ async function activate(entry, row) {
         mod: null,
         handlers: new Map(),
         router: null,
+        briefWriter: null,
         disposers: [],
         storage: { ...(row?.storage || {}) },
         writes: Promise.resolve(),
@@ -379,6 +392,17 @@ function uiHandler(req, res, next) {
     return plugin.ui(req, res, next);
 }
 
+// The plugin that writes the daily brief, if one running asked to: the
+// first by id when several do. { id, write(context) }.
+function briefWriter() {
+    const ids = [...running.keys()].sort();
+    for (const id of ids) {
+        const plugin = running.get(id);
+        if (plugin.briefWriter) return { id, write: plugin.briefWriter };
+    }
+    return null;
+}
+
 // Sidebar entries of the plugins that run.
 function menuItems() {
     return [...running.values()]
@@ -432,6 +456,7 @@ module.exports = {
     routeHandler,
     uiHandler,
     menuItems,
+    briefWriter,
     refreshSettings,
     isRunning,
     runningVersion,

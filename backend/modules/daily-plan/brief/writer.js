@@ -7,12 +7,15 @@ const ai = require('../../ai-assistant/service');
 const entitlements = require('../../../services/entitlementsService');
 const { logger } = require('../../../services/logService');
 const { llmConfigured } = require('./sources');
+const pluginRegistry = require('../../plugins/registry');
 
 const VERDICT_MAX = 500;
 const SUMMARY_SENTENCES = 3;
 const REASON_MAX = 240;
 const NOTE_MAX = 200;
 const TONE_DEFAULT = 'neutral';
+// A plugin may call an agent that takes its time; the brief waits this long.
+const PLUGIN_TIMEOUT_MS = 45000;
 
 const SYSTEM_PROMPT = [
     'You rewrite the wording of a short daily planning brief. Answer in French.',
@@ -200,10 +203,75 @@ async function askModel(userId, data, settings) {
     }
 }
 
+// A plugin that writes the brief (permission "brief") gets the same data the
+// LLM would, plus the date, tone and style, and answers in the same shape.
+// Its answer goes through the same checks as the LLM's.
+async function writeWithPlugin(
+    writer,
+    { userId, brief, tasksByUid, settings, timeoutMs }
+) {
+    const context = {
+        userId,
+        date: brief.date,
+        timezone: brief.timezone,
+        tone: settings.writing.tone || TONE_DEFAULT,
+        instructions: settings.writing.instructions || '',
+        data: dataFor(brief, tasksByUid),
+    };
+    let timer;
+    const timeout = new Promise((_, reject) => {
+        timer = setTimeout(
+            () => reject(new WriterError('plugin_timeout')),
+            timeoutMs
+        );
+    });
+    try {
+        const answer = await Promise.race([
+            Promise.resolve().then(() => writer.write(context)),
+            timeout,
+        ]);
+        return {
+            brief: applyRewrite(brief, answer),
+            llm: { id: 'llm', status: 'used', detail: `plugin:${writer.id}` },
+        };
+    } catch (error) {
+        const code =
+            error.code === 'plugin_timeout'
+                ? 'plugin_timeout'
+                : error.code === 'bad_output'
+                  ? 'plugin_bad_output'
+                  : 'plugin_failed';
+        logger.error(
+            { code, userId, plugin: writer.id },
+            'Daily brief plugin writer failed'
+        );
+        return { brief, llm: { id: 'llm', status: 'error', detail: code } };
+    } finally {
+        clearTimeout(timer);
+    }
+}
+
 // Returns { brief, llm } where llm is the status of the "llm" source:
 // off (not enabled), used, or error (with the code of the failure, never the
-// text). A brief without the rewrite is still a complete brief.
-async function writeBrief({ userId, brief, tasksByUid, settings }) {
+// text). A brief without the rewrite is still a complete brief. A plugin that
+// writes the brief takes the place of the built-in LLM step.
+async function writeBrief({
+    userId,
+    brief,
+    tasksByUid,
+    settings,
+    pluginTimeoutMs = PLUGIN_TIMEOUT_MS,
+}) {
+    const writer = pluginRegistry.briefWriter();
+    if (writer) {
+        return writeWithPlugin(writer, {
+            userId,
+            brief,
+            tasksByUid,
+            settings,
+            timeoutMs: pluginTimeoutMs,
+        });
+    }
     if (!settings.llm.enabled) {
         return { brief, llm: { id: 'llm', status: 'off', detail: null } };
     }
