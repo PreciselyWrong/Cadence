@@ -673,6 +673,19 @@ A mode that transforms a task into a habit tracker with streak counting, target 
 - Task events: `/backend/modules/tasks/taskEventService.js`
 - Deferred tasks: `/backend/modules/tasks/deferredTaskService.js`
 
+## Origin badge (`source`, `source_url`)
+
+A task records where it came from in `tasks.source` (`gmail`, `telegram`, `mcp`, `android`, `desktop`, `link`, `todo_md`, `web`). When it points to a web page, `tasks.source_url` holds it (http or https only). The web shows the origin as a small badge: a letter mark (Gmail « M », Telegram « T », MCP « C », Android « A », Desktop « D », Link « L ») and its name. With a `source_url`, a click opens that page in a new tab without opening the task. A task mirrored from a TODO.md file keeps its TODO.md badge (it is recognised by `source_key`). A plain web task has no source and no badge.
+
+Who sets the origin:
+- MCP `create_task` sets `mcp` unless `source` is given. `update_task` sets or clears `source` and `source_url`.
+- REST `POST /api/task` and `PATCH /api/task/:uid` accept `source` and `source_url`. An unknown source or a non-web link is a 400 and writes nothing. A PATCH that does not mention them keeps them.
+- Turning an inbox item into a task (`PATCH /api/inbox/:uid/process` with `task_uid`) copies the item's origin when it is a task origin (`telegram`, `desktop`, `mcp`, ...); a free-text origin such as `manual` is not copied. An item that is only a web address also gives its address as `source_url`, with `link` when it had no origin. A task that already has an origin keeps it.
+- The `task` sync entity and backups carry both fields.
+- Nothing creates Gmail tasks by itself: `integrations/hermes-gmail` only reads mail. A caller that makes a task from a message passes `source: "gmail"` and the message link as `source_url`.
+
+Code: `backend/modules/tasks/core/source.js` (values and validation), `frontend/utils/taskSource.ts` (what the badge shows), `frontend/components/Shared/TaskSourceBadge.tsx`.
+
 ---
 
 **Document Version:** 1.1.0

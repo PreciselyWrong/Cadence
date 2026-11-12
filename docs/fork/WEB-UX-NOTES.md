@@ -632,3 +632,9 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Problème** : revue du 2026-11-12 (20 constats) : calendrier qui écrasait les jours, 1 ou 2 jours visibles, retards absents, pas de charge en heures, pas de clavier, sous-tâches en double, annulation qui effaçait les actions suivantes, en-têtes tronqués.
 - **Décision** : 14 jours en colonnes fixes (264 px) qui défilent, une seule barre (Aujourd'hui, semaine ±, choix de date) ; calendrier borné 280–600 px, en tiroir sous 1180 px, qui suit le jour choisi ; bande « En retard » repliable avec « Tout replanifier aujourd'hui » (jamais d'échéance modifiée) ; Inbox en barre fine quand vide ; « + » dans chaque en-tête (jours, horizons, Inbox) ; en-tête de jour sur deux lignes (« Aujourd'hui », « jeu. 12 nov. ») avec la charge « 4 h 45 / 10 h », rouge au-delà ; terminées repliées en bas ; une sous-tâche datée n'apparaît qu'une fois (« ↳ parent ») ; ajout rapide qui lit « demain 14h #Travail 30min » ; filtres projet, étiquette, priorité ; clavier : flèches ou h/j/k/l, Maj+←/→ déplace d'un jour, t / Maj+T, M saisit la carte (indépendant de la disposition du clavier) ; écritures en file, annulation par opérations inverses, l'heure d'un créneau suit la tâche déplacée ; popup de tâche : « Planifiée jeu. 12 nov. · 10:00 ».
 - **Android à reprendre** : `TODO.md` › Now (entrée Planifier).
+
+### 2026-11-12 — Icône de la source sur les tâches
+
+- **Problème** : une tâche venue de Gmail, de Telegram ou de Claude ne le montrait nulle part ; le « TODO.md » était le seul badge d'origine.
+- **Décision** : petite marque en lettre (« M » rouge pour Gmail, sans logo) avec le nom, sur la ligne de Aujourd'hui, la carte de Planifier, la ligne de tâche et la fiche. Avec un lien, un clic l'ouvre dans un nouvel onglet sans ouvrir la tâche. Une tâche web n'a pas de badge.
+- **Android à reprendre** : `TODO.md` › Now (badge de source et champs `source` / `source_url` dans Room).
