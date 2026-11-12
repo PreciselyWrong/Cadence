@@ -58,7 +58,8 @@ object ServerPlan {
     /**
      * Ajoute à Aujourd'hui les tâches ouvertes que le plan du serveur place le jour [day] : une tâche déjà listée garde
      * sa place (jamais deux fois), une tâche en retard quitte le retard, les autres suivent dans l'ordre du plan.
-     * [all] : les tâches où chercher celles du plan (déjà filtrées par domaine). Le reste d'Aujourd'hui ne change pas.
+     * [all] : les tâches où chercher celles du plan (déjà filtrées par domaine). Une tâche planifiée un jour à venir quitte
+     * Aujourd'hui et le retard. Le reste d'Aujourd'hui ne change pas.
      */
     fun apply(
         overdue: List<TaskItem>,
@@ -72,12 +73,16 @@ object ServerPlan {
         val planned = entries.filter { it.day == day }.mapNotNull { entry ->
             byUid[entry.uid]?.takeIf { !it.isClosed }?.let { entry to it }
         }.distinctBy { it.first.uid }
-        if (planned.isEmpty()) return PlannedToday(overdue, today, emptyMap())
         val plannedUids = planned.mapTo(HashSet()) { it.first.uid }
-        val listed = today.mapTo(HashSet()) { it.uid }
+        // Planifiée un jour à venir, une tâche n'est plus de ce jour, même due aujourd'hui ni en retard (le serveur fait pareil).
+        val elsewhere = entries.filter { it.day.isAfter(day) }.mapTo(HashSet()) { it.uid } - plannedUids
+        val kept = today.filterNot { it.uid in elsewhere }
+        val late = overdue.filterNot { it.uid in elsewhere || it.uid in plannedUids }
+        if (planned.isEmpty()) return PlannedToday(late, kept, emptyMap())
+        val listed = kept.mapTo(HashSet()) { it.uid }
         return PlannedToday(
-            overdue = overdue.filterNot { it.uid in plannedUids },
-            today = today + planned.map { it.second }.filterNot { it.uid in listed },
+            overdue = late,
+            today = kept + planned.map { it.second }.filterNot { it.uid in listed },
             starts = planned.mapNotNull { (entry, _) -> entry.startMinute?.let { entry.uid to start(day, it, zone) } }.toMap(),
         )
     }

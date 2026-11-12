@@ -8,6 +8,7 @@ import ch.nicolab.cadence.tasks.data.createFocus
 import ch.nicolab.cadence.tasks.data.createTimedReminders
 import ch.nicolab.cadence.tasks.data.createReview
 import ch.nicolab.cadence.tasks.planning.FocusRepository
+import ch.nicolab.cadence.tasks.planning.PlanEdits
 import ch.nicolab.cadence.tasks.reminder.TimedRemindersRepository
 import ch.nicolab.cadence.tasks.data.createServerConnection
 import ch.nicolab.cadence.tasks.data.createTodoMd
@@ -25,6 +26,7 @@ import ch.nicolab.cadence.tasks.brief.EveningRepository
 import ch.nicolab.cadence.tasks.data.createEvening
 import ch.nicolab.cadence.tasks.data.createBrief
 import ch.nicolab.cadence.tasks.data.createBriefActions
+import ch.nicolab.cadence.tasks.data.createPlanEdits
 import ch.nicolab.cadence.tasks.data.createBriefAgents
 import ch.nicolab.cadence.tasks.data.createBriefSettings
 import ch.nicolab.cadence.tasks.data.createBriefStore
@@ -88,6 +90,9 @@ object TasksGraph {
 
     /** Actions du brief : tâche et décision (file d'appels différés), avec annulation. */
     internal fun briefActions(context: Context): BriefActions = createBriefActions(context.applicationContext)
+
+    /** Écritures du plan du jour (Reporter, Placer) : plan local d'abord, appels différés ensuite. */
+    internal fun planEdits(context: Context): PlanEdits = createPlanEdits(context.applicationContext)
 
     /** Audio du résumé : voix locale, fichiers rendus, copie du MP3 du serveur. */
     fun briefAudio(context: Context): ch.nicolab.cadence.tasks.brief.audio.BriefAudio =

@@ -36,17 +36,18 @@ import ch.nicolab.cadence.designsystem.components.SectionHeader
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.tasks.R
-import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskViews
 import ch.nicolab.cadence.tasks.planning.DayPlans
 import ch.nicolab.cadence.tasks.planning.DayRhythm
+import ch.nicolab.cadence.tasks.planning.PlanEdit
 import ch.nicolab.cadence.tasks.planning.PlanningChanges
 import ch.nicolab.cadence.tasks.ui.brief.BriefCard
 import ch.nicolab.cadence.tasks.ui.brief.BriefViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import java.time.Instant
+import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import kotlinx.coroutines.launch
@@ -105,6 +106,7 @@ internal fun TodayTab(
     val agenda = remember(state.today, state.planStarts, proposedUids, events, zone) {
         mergeTodayItems(state.today.filterNot { it.uid in proposedUids }, events, zone, state.planStarts)
     }
+    val plannedToday = remember(state.plan) { state.plan.mapTo(HashSet()) { it.uid } }
     val triageable = remember(state.overdue) { PlanningChanges.movable(state.overdue) }
     val unfinished = remember(state.today) { PlanningChanges.movable(state.today) }
     val localNow = remember(moment.now, zone) { LocalTime.ofSecondOfDay(moment.now.atZone(zone).toLocalTime().toSecondOfDay().toLong()) }
@@ -124,17 +126,21 @@ internal fun TodayTab(
     }
     var openFolds by rememberSaveable { mutableStateOf(emptyList<String>()) }
 
-    /** Applique [changes] puis propose « Annuler » : tout se défait d'un geste, y compris `afterUndo`. */
-    fun commit(changes: List<Pair<TaskItem, TaskChange>>, message: String, afterUndo: () -> Unit = {}) {
-        if (changes.isEmpty()) return
+    /** Le plan d'aujourd'hui tient déjà [task] : Reporter la déplace, sinon l'ajoute au jour visé. L'échéance ne bouge pas. */
+    fun report(task: TaskItem, day: LocalDate): PlanEdit =
+        PlanningChanges.reportPlan(task, today, day, plannedToday = task.uid in plannedToday)
+
+    /** Applique [edits] au plan puis propose « Annuler » : tout se défait d'un geste, y compris `afterUndo`. */
+    fun commit(edits: List<PlanEdit>, message: String, afterUndo: () -> Unit = {}) {
+        if (edits.isEmpty()) return
         scope.launch {
-            planning.apply(changes)
+            planning.applyPlan(edits)
                 .onFailure { snackbar.showSnackbar(it.message ?: genericError) }
-                .onSuccess { originals ->
+                .onSuccess { undo ->
                     snackbar.currentSnackbarData?.dismiss()
                     val result = snackbar.showSnackbar(message, undoLabel, duration = SnackbarDuration.Long)
                     if (result == SnackbarResult.ActionPerformed) {
-                        planning.restore(originals, zone).onFailure { snackbar.showSnackbar(it.message ?: genericError) }
+                        planning.undoPlan(undo).onFailure { snackbar.showSnackbar(it.message ?: genericError) }
                         afterUndo()
                     }
                 }
@@ -144,9 +150,9 @@ internal fun TodayTab(
     fun acceptProposals() {
         val current = proposals ?: return
         val byUid = state.today.associateBy { it.uid }
-        val changes = current.blocks.mapNotNull { block -> byUid[block.uid]?.let { it to PlanningChanges.place(today, block) } }
+        val edits = current.blocks.filter { block -> block.uid in byUid }.map { PlanningChanges.place(today, it) }
         proposals = null
-        commit(changes, context.resources.getQuantityString(R.plurals.planning_placed_message, changes.size, changes.size))
+        commit(edits, context.resources.getQuantityString(R.plurals.planning_placed_message, edits.size, edits.size))
     }
 
     val placementRequested by planning.placementRequested.collectAsStateWithLifecycle()
@@ -162,12 +168,12 @@ internal fun TodayTab(
     }
 
     fun carryToTomorrow() {
-        val changes = unfinished.map { it to PlanningChanges.moveToDay(it, today.plusDays(1), zone) }
+        val edits = unfinished.map { report(it, today.plusDays(1)) }
         planning.closeDay(today)
-        if (changes.isEmpty()) return
+        if (edits.isEmpty()) return
         commit(
-            changes,
-            context.resources.getQuantityString(R.plurals.planning_moved_tomorrow, changes.size, changes.size),
+            edits,
+            context.resources.getQuantityString(R.plurals.planning_moved_tomorrow, edits.size, edits.size),
             afterUndo = planning::reopenDay,
         )
     }
@@ -190,8 +196,7 @@ internal fun TodayTab(
                     onPostponeUnplaced = {
                         val late = current.unplaced
                         proposals = current.copy(unplaced = emptyList())
-                        val changes = late.map { it to PlanningChanges.moveToDay(it, today.plusDays(1), zone) }
-                        commit(changes, context.resources.getQuantityString(R.plurals.planning_moved_tomorrow, late.size, late.size))
+                        commit(late.map { report(it, today.plusDays(1)) }, context.resources.getQuantityString(R.plurals.planning_moved_tomorrow, late.size, late.size))
                     },
                 )
                 }

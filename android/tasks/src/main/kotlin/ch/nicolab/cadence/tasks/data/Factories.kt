@@ -9,6 +9,7 @@ import ch.nicolab.cadence.tasks.review.ReviewRepository
 import ch.nicolab.cadence.tasks.todomd.TodoMdClient
 import ch.nicolab.cadence.tasks.syncstatus.SyncStatusClient
 import ch.nicolab.cadence.tasks.planning.FocusRepository
+import ch.nicolab.cadence.tasks.planning.PlanEdits
 import ch.nicolab.cadence.tasks.reminder.TimedRemindersRepository
 import ch.nicolab.cadence.tasks.reminder.TimedRemindersStore
 import ch.nicolab.cadence.tasks.planning.PlanningStore
@@ -69,6 +70,8 @@ internal fun createBriefSettings(context: Context): BriefSettingsRepository = Ta
 internal fun createBriefAgents(context: Context): BriefAgentsRepository = TasksRuntime.get(context).briefAgents
 
 internal fun createBriefActions(context: Context): BriefActions = TasksRuntime.get(context).briefActions
+
+internal fun createPlanEdits(context: Context): PlanEdits = TasksRuntime.get(context).planEdits
 
 internal fun createBriefAudio(context: Context): ch.nicolab.cadence.tasks.brief.audio.BriefAudio = TasksRuntime.get(context).briefAudio
 
@@ -152,6 +155,13 @@ internal class TasksRuntime private constructor(context: Context) {
     )
 
     val focus = FocusRepository(PlanningStore.of(appContext), api::call)
+
+    val planEdits = PlanEdits(
+        read = { PlanSlotsStore(appContext).entries() },
+        write = { PlanSlotsStore(appContext).write(it) },
+        defer = { call -> repository.defer(call).getOrThrow() },
+        cancel = { key -> database.deferredCallDao().delete(key) > 0 },
+    )
 
     val timedReminders = TimedRemindersRepository(TimedRemindersStore(appContext), api::call)
 

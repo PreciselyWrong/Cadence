@@ -14,9 +14,21 @@ class PlanningChangesTest {
     private val monday = LocalDate.of(2026, 11, 2)
 
     @Test
-    fun `an accepted block writes the due day and the block start time`() {
-        val change = PlanningChanges.place(friday, ProposedBlock("a", 9 * 60 + 5, 9 * 60 + 35))
-        assertEquals(TaskChange(dueDate = friday, dueTime = "09:05"), change)
+    fun `an accepted block is a slot on the planned day, with its length, and no due date`() {
+        val edit = PlanningChanges.place(friday, ProposedBlock("a", 9 * 60 + 5, 9 * 60 + 35))
+        assertEquals(SlotTask(friday, "a", 9 * 60 + 5, 30), edit)
+    }
+
+    @Test
+    fun `reporting a task planned today moves its line, an unplanned one is added to the day`() {
+        val task = TaskItem(uid = "t", name = "t", dueDay = friday, dueDate = friday.atTime(23, 59).atZone(zone).toInstant())
+        assertEquals(MoveTask(friday, "t", monday), PlanningChanges.reportPlan(task, friday, monday, plannedToday = true))
+        assertEquals(AddTask(monday, "t"), PlanningChanges.reportPlan(task, friday, monday, plannedToday = false))
+    }
+
+    @Test
+    fun `planning a task on a day adds it to that day's plan only`() {
+        assertEquals(AddTask(friday, "t"), PlanningChanges.planOn(TaskItem(uid = "t", name = "t", dueDay = monday), friday))
     }
 
     @Test
@@ -38,7 +50,7 @@ class PlanningChangesTest {
         )
         assertEquals(TaskChange(dueDate = friday, dueTime = "10:00"), PlanningChanges.restore(original, zone))
         assertEquals(TaskChange(clearDue = true), PlanningChanges.restore(TaskItem(uid = "n", name = "n"), zone))
-        assertEquals(TaskChange(clearDue = true), PlanningChanges.later())
+        assertEquals(TaskChange(later = true), PlanningChanges.later())
     }
 
     @Test

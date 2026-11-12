@@ -265,8 +265,14 @@ internal class TasksViewModel(
     val calendarSettings: StateFlow<CalendarGlobalSettings> = calendar.globalSettings
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), CalendarGlobalSettings())
 
-    val upcoming: StateFlow<Map<LocalDate, List<TaskItem>>> = combine(scopedTasks, moment) { all, m ->
-        TaskViews.upcoming(all, m.today, m.now, m.zone)
+    /** À venir par jour ; demain réunit aussi les tâches planifiées demain, même sans échéance demain (« Reporter »). */
+    val upcoming: StateFlow<Map<LocalDate, List<TaskItem>>> = combine(scopedTasks, moment, PlanSlotsStore(application).entryChanges()) { all, m, plan ->
+        val tomorrow = m.today.plusDays(1)
+        val byDay = TaskViews.upcoming(all, m.today, m.now, m.zone)
+        val listed = byDay[tomorrow].orEmpty().mapTo(HashSet()) { it.uid }
+        val planned = plan.filter { it.day == tomorrow }.mapTo(HashSet()) { it.uid }
+        val added = all.filter { it.uid in planned && it.uid !in listed && !it.isClosed && it.parentTaskUid == null }
+        if (added.isEmpty()) byDay else byDay + (tomorrow to byDay[tomorrow].orEmpty() + added)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyMap())
 
     /** Tâches sans échéance ni projet : sans cette liste, elles n'apparaîtraient dans aucun onglet. */

@@ -92,6 +92,16 @@ class ServerPlanTest {
     }
 
     @Test
+    fun `une tâche due aujourd'hui mais prévue un autre jour à venir quitte Aujourd'hui et le retard`() {
+        val dueToday = task("due", dueDay = day)
+        val late = task("late", dueDay = day.minusDays(2))
+        val entries = listOf(PlanEntry("due", day.plusDays(1), null, 30), PlanEntry("late", day.plusDays(1), null, 30))
+        val result = ServerPlan.apply(listOf(late), listOf(dueToday), listOf(dueToday, late), entries, day, zone)
+        assertTrue(result.today.isEmpty())
+        assertTrue(result.overdue.isEmpty())
+    }
+
+    @Test
     fun `les placements à heure servent de repères d'alarme`() {
         assertEquals(listOf("web" to at1630), ServerPlan.timedStarts(ServerPlan.parse(response), zone))
     }

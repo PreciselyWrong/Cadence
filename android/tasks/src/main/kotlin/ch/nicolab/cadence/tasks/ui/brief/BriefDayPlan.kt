@@ -11,10 +11,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ch.nicolab.cadence.tasks.R
-import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.planning.Capacity
 import ch.nicolab.cadence.tasks.planning.DayPlans
+import ch.nicolab.cadence.tasks.planning.PlanEdit
 import ch.nicolab.cadence.tasks.planning.PlanningChanges
 import ch.nicolab.cadence.tasks.ui.PlanningViewModel
 import ch.nicolab.cadence.tasks.ui.TasksViewModel
@@ -64,18 +64,32 @@ internal fun rememberDayPlan(tasksViewModel: TasksViewModel, planning: PlanningV
     }
     val overdue = remember(state.overdue) { PlanningChanges.movable(state.overdue) }
 
-    fun commit(changes: List<Pair<TaskItem, TaskChange>>, message: String) {
-        if (changes.isEmpty()) return
+    val plannedToday = remember(state.plan) { state.plan.mapTo(HashSet()) { it.uid } }
+
+    /** Montre [message] avec « Annuler » ; [undo] défait l'écriture si l'utilisateur le demande. */
+    suspend fun offerUndo(message: String, undo: suspend () -> Result<Unit>) {
+        snackbar.currentSnackbarData?.dismiss()
+        val result = snackbar.showSnackbar(message, undoLabel, duration = SnackbarDuration.Long)
+        if (result == SnackbarResult.ActionPerformed) undo().onFailure { snackbar.showSnackbar(it.message ?: genericError) }
+    }
+
+    /** Aujourd'hui, Demain : le plan du jour change, jamais l'échéance (comme « Reporter » d'Aujourd'hui). */
+    fun commitPlan(edits: List<PlanEdit>, message: String) {
+        if (edits.isEmpty()) return
         scope.launch {
-            planning.apply(changes)
+            planning.applyPlan(edits)
                 .onFailure { snackbar.showSnackbar(it.message ?: genericError) }
-                .onSuccess { originals ->
-                    snackbar.currentSnackbarData?.dismiss()
-                    val result = snackbar.showSnackbar(message, undoLabel, duration = SnackbarDuration.Long)
-                    if (result == SnackbarResult.ActionPerformed) {
-                        planning.restore(originals, zone).onFailure { snackbar.showSnackbar(it.message ?: genericError) }
-                    }
-                }
+                .onSuccess { undo -> offerUndo(message) { planning.undoPlan(undo) } }
+        }
+    }
+
+    /** « Plus tard » : l'étiquette `someday`, l'échéance reste ; annuler la retire de celles qui ne l'avaient pas. */
+    fun commitLater(tasks: List<TaskItem>, message: String) {
+        if (tasks.isEmpty()) return
+        scope.launch {
+            planning.later(tasks)
+                .onFailure { snackbar.showSnackbar(it.message ?: genericError) }
+                .onSuccess { originals -> offerUndo(message) { planning.undoLater(originals) } }
         }
     }
 
@@ -88,23 +102,24 @@ internal fun rememberDayPlan(tasksViewModel: TasksViewModel, planning: PlanningV
         toPlaceCount = plan.toPlace.size,
         workday = plan.workday,
         onTriage = { tasks, target ->
-            val changes = tasks.map { task ->
-                task to when (target) {
-                    TriageTarget.TODAY -> PlanningChanges.moveToDay(task, today, zone)
-                    TriageTarget.TOMORROW -> PlanningChanges.moveToDay(task, today.plusDays(1), zone)
-                    TriageTarget.LATER -> PlanningChanges.later()
-                }
-            }
             val plural = when (target) {
                 TriageTarget.TODAY -> R.plurals.planning_moved_today
                 TriageTarget.TOMORROW -> R.plurals.planning_moved_tomorrow
                 TriageTarget.LATER -> R.plurals.planning_moved_later
             }
-            commit(changes, context.resources.getQuantityString(plural, tasks.size, tasks.size))
+            val message = context.resources.getQuantityString(plural, tasks.size, tasks.size)
+            when (target) {
+                TriageTarget.TODAY -> commitPlan(tasks.map { PlanningChanges.planOn(it, today) }, message)
+                TriageTarget.TOMORROW -> commitPlan(
+                    tasks.map { PlanningChanges.reportPlan(it, today, today.plusDays(1), plannedToday = it.uid in plannedToday) },
+                    message,
+                )
+                TriageTarget.LATER -> commitLater(tasks, message)
+            }
         },
         onAddToday = { task ->
-            commit(
-                listOf(task to PlanningChanges.moveToDay(task, today, zone)),
+            commitPlan(
+                listOf(PlanningChanges.planOn(task, today)),
                 context.resources.getQuantityString(R.plurals.planning_moved_today, 1, 1),
             )
         },

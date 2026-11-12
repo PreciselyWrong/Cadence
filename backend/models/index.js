@@ -776,15 +776,6 @@ require('../modules/sync/journal').install({
 
 require('../modules/projects/nextAction').install({ Task, Project });
 
-// A planned task moved past its planned day leaves that plan on every write
-// path.
-require('../modules/daily-plan/leaveOnMove').install({
-    Task,
-    User,
-    DailyPlan,
-    DailyPlanItem,
-});
-
 module.exports = {
     sequelize,
     User,

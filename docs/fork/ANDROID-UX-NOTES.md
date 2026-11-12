@@ -4,6 +4,13 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-12 — Planifier écrit le plan, jamais l'échéance
+
+- **Problème** : « Reporter » et « Placer » écrivaient l'échéance (heure comprise) ; « Plus tard » effaçait la vraie échéance. Un créneau ou un report déplaçait donc en silence un rappel ou une échéance.
+- **Décision** : « Reporter » déplace la tâche du plan d'aujourd'hui vers le jour choisi, ou l'ajoute à ce jour ; « Placer » pose un créneau (heure et durée du bloc). L'échéance ne bouge pas. Une tâche planifiée demain quitte Aujourd'hui et le retard, et figure dans « Demain ». Hors ligne, ces écritures se mettent en file et « Annuler » les défait (retrait de l'appel s'il n'est pas parti, sinon inverse).
+- **Ma journée** : le tri des échues (Aujourd'hui, Demain) écrit aussi le plan ; « Plus tard » pose `someday` et garde l'échéance. Seules la proposition « À déplacer » du Résumé et « Choisir une date » du bilan changent l'échéance, comme sur le web : c'est leur objet.
+- **Reste** : le serveur ne retire plus une tâche du plan quand son échéance change (`leaveOnMove` supprimé) ; l'ancienne page Aujourd'hui du web (`?classic=1`) garde `movedPastDay`.
+
 ### 2026-11-08 — Liens dans les tâches et les notes
 
 - **Problème** : une adresse dans le titre d’une tâche ou d’une note et dans la note d’une tâche se comportait comme du texte à éditer.

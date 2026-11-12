@@ -7,20 +7,33 @@ import java.time.LocalDate
 import java.time.ZoneId
 
 /**
- * Écritures de la planification, toutes exprimées en [TaskChange] : elles passent par
- * `TaskRepository.updateTask`, donc par la file d'envoi et la synchronisation.
+ * Écritures de la planification. Jour prévu, report et créneau sont des [PlanEdit] (plan du jour, jamais l'échéance) ;
+ * « Plus tard » et l'échéance elle-même sont des [TaskChange], par `TaskRepository.updateTask`.
  */
 object PlanningChanges {
-    /** Reporte au [day] en gardant l'heure d'une échéance à heure fixe. */
+    /**
+     * Change l'échéance pour [day] en gardant l'heure fixe. Seulement là où l'échéance est l'objet du geste : proposition
+     * « À déplacer » du Résumé et « Choisir une date » du bilan du soir (comme le web).
+     */
     fun moveToDay(task: TaskItem, day: LocalDate, zone: ZoneId): TaskChange =
         TaskViews.postponeChange(task, day, zone)
 
-    /** « Plus tard » : la tâche quitte la journée sans date inventée. */
-    fun later(): TaskChange = TaskChange(clearDue = true)
+    /** « Plus tard » : la tâche sort de la vue, son échéance reste. */
+    fun later(): TaskChange = TaskChange(later = true)
 
-    /** Proposition acceptée : la tâche reçoit l'heure de son créneau. */
-    fun place(day: LocalDate, block: ProposedBlock): TaskChange =
-        TaskChange(dueDate = day, dueTime = "%02d:%02d".format(block.start / 60, block.start % 60))
+    /**
+     * « Reporter » : le plan change, l'échéance non. Une tâche déjà au plan d'[today] y est déplacée vers [day] ; une autre
+     * est ajoutée au plan de [day].
+     */
+    internal fun reportPlan(task: TaskItem, today: LocalDate, day: LocalDate, plannedToday: Boolean): PlanEdit =
+        if (plannedToday) MoveTask(today, task.uid, day) else AddTask(day, task.uid)
+
+    /** « Aujourd'hui » (ou un autre jour) : la tâche s'ajoute au plan de [day] ; l'échéance ne bouge pas. */
+    internal fun planOn(task: TaskItem, day: LocalDate): PlanEdit = AddTask(day, task.uid)
+
+    /** Proposition acceptée : un créneau sur le plan de [day], sa durée d'après le bloc ; l'échéance ne bouge pas. */
+    internal fun place(day: LocalDate, block: ProposedBlock): PlanEdit =
+        SlotTask(day, block.uid, block.start, block.end - block.start)
 
     /** Remet l'échéance telle qu'elle était avant une opération groupée. */
     fun restore(original: TaskItem, zone: ZoneId): TaskChange {
