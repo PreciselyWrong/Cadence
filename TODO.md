@@ -69,8 +69,7 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
   Raison : web d'abord ; détail dans `docs/fork/WEB-UX-NOTES.md` (entrée du 2026-11-12, « À reprendre sur Android »). Étiquettes : épinglées puis les plus utilisées ; Projets : statut seulement hors « actif », tâches ouvertes à droite, tri par dernière activité ; Liens : « Ajouter une note » dans le ⋯ ; Inbox : « Tâches à classer » limitée à cinq lignes puis « Tout afficher » ; page projet : avancement en une ligne de texte. Vérif : mêmes listes sur le téléphone que sur le web avec la même base.
 - [x] Cases `- [ ]` écrites dans une note : deviennent des tâches liées à la note
 - [x] Notes et descriptions éditées en plan (outliner) : puces, Tab avec enfants, repli, zoom, puce → tâche liée (web)
-- [ ] Android : notes et descriptions en plan (outliner), repli, zoom, puce → tâche liée, case qui suit la tâche
-  Raison : web d'abord (2026-11-12, `docs/45-outliner.md`, `docs/fork/WEB-UX-NOTES.md`). Vérif : sur le téléphone, Entrée puis Tab dans une note crée une sous-puce écrite `  - ` (lue pareil sur le web) ; « Créer une tâche » sur une puce crée la tâche dans le projet de la note.
+- [x] Android : notes et descriptions en plan (outliner), repli, zoom, puce → tâche liée, case qui suit la tâche
 - [ ] Android : Inbox de Planifier à reprendre avec Planifier : « + » crée une tâche, tâches à classer listées avant les idées et glissables sur un jour
   Raison : web d'abord (2026-11-12). Vérif : une tâche ajoutée par le « + » de l'Inbox apparaît dans « Tâches à classer » sur le téléphone.
 
@@ -83,8 +82,8 @@ Branche `fix/note-quickadd-focus-c7e743d5`.
 - [ ] Vérifier sur le téléphone (aucun appareil, émulateur bloqué le 2026-11-05) : Tâches › + › Note, titre, Valider → la fiche disparaît, le curseur et le clavier sont dans le contenu.
 - [x] Android : Markdown des notes et descriptions (tableaux, cases, code), puces `[[Titre]]`, `[[task:Nom]]`, `@[Nom](person:uid)` et chemins `/note|task/<uid>`, section Rétroliens des notes et des tâches (en ligne)
   Vérif sur le téléphone : une note web avec ces liens se lit pareil, toucher une puce ouvre la note ou la tâche ; une tâche citée dans une note montre la note dans « Rétroliens ».
-- [ ] Android : création d'une cible inconnue depuis sa puce, choix `@` des personnes, barre de mise en forme complète (lien, code, tableau), rétroliens d'une personne
-  Raison : Android n'a ni personnes ni fiche de personne (une mention se lit en puce sans s'ouvrir) ; la barre actuelle n'a que cases, puces, titre, gras. Vérif : taper `@` dans une note propose les personnes du serveur et écrit `@[Nom](person:uid)`.
+- [x] Android : création d'une cible inconnue depuis sa puce, choix `@` des personnes, barre de mise en forme complète (lien, code, tableau), rétroliens d'une personne
+  Rétroliens d'une personne : web seulement (pas de fiche de personne sur Android, `docs/44-notes-links.md`).
 
 ## Next
 

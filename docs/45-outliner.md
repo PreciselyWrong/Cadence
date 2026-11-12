@@ -49,4 +49,10 @@ Ctrl/⌘+Maj+T ou « Créer une tâche » du menu de la puce :
 
 ## Android
 
-À reprendre (`TODO.md`) : même édition en plan sur les notes et descriptions (mêmes règles de texte, même stockage), repli et zoom, puce → tâche liée, case liée à l'état de la tâche.
+Mêmes règles de texte, même stockage : `notes/NoteOutline.kt` porte `outline.ts` avec les mêmes cas de test (`NoteOutlineTest`), `notes/MarkdownFormat.kt` les commandes de `markdownFormat.ts`.
+
+- **Édition** (`ui/OutlineEditor.kt`, notes et descriptions de tâches) : le clavier du téléphone n'envoie que des textes ; `notes/OutlineInput.kt` y reconnaît Entrée (coupe la puce, même avec un mot validé en même temps), le retour arrière au début d'une puce et la frappe sur une ligne vide (puce ajoutée). Barre au-dessus du clavier : sortir du retrait, décaler, monter, descendre, replier / déplier, zoomer, case, créer une tâche, puis la mise en forme. Une puce repliée se lit « … » dans le champ (le texte ne change pas) ; un curseur qui entre dans la partie cachée la déplie. Zoom : le champ montre le sous-arbre, remis à sa place à chaque saisie, fil d'Ariane « Tout › … » au-dessus ; ce qui sort de la puce zoomée quitte la vue.
+- **Repli mémorisé** : par appareil, préférences `cadence_outline_folds`, clés `note:<uid>` / `task:<uid>` et mêmes clés de puce que le web ; partagé par l'éditeur et la lecture, jamais synchronisé.
+- **Lecture** (`ui/MarkdownView.kt`, `outlineScope`) : chevron de repli devant chaque puce repliable, « … » qui déplie, point qui zoome (fil d'Ariane), cases qui écrivent au bon endroit même zoomé.
+- **Puce → tâche liée** : bouton « Créer une tâche » ; le texte devient `[[task:Nom]]` tout de suite, la tâche est créée par la file d'envoi dans le projet de la note ou de la tâche (message si l'écriture échoue).
+- **Case liée** : suit la tâche de ce nom sur l'appareil (Room, une ouverte d'abord, `WikiLinks.findTask`) et la termine ou la rouvre ; sans tâche de ce nom sur l'appareil, c'est une case ordinaire du texte. Pas d'appel à `POST /api/content-links/resolve` : les tâches sont déjà synchronisées.

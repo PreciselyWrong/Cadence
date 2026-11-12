@@ -1,3 +1,10 @@
+## [1.18.0] — 12 novembre 2026
+
+- Notes et descriptions de tâches s'écrivent en plan : Entrée coupe la puce, une barre au-dessus du clavier décale, ressort, monte, descend, replie, zoome sur une puce (fil d'Ariane), coche, et fait d'une puce une tâche liée.
+- En lecture, chevrons de repli (gardés sur le téléphone) et zoom au toucher du point ; la case d'une puce liée à une tâche suit la tâche et la termine ou la rouvre.
+- Barre de mise en forme complète : italique, barré, titres, listes numérotées, citation, code, lien, lien vers une note, mention d'une personne, tableau.
+- Taper « @ » propose les personnes, « [[ » les notes ; une puce vers une note ou une tâche qui n'existe pas encore (« + ») la crée et l'ouvre.
+
 ## [1.17.0] — 12 novembre 2026
 
 - « À trier » montre les mails qu'un agent y propose : objet, expéditeur, résumé et début du brouillon ; Tâche (nom et échéance préremplis), Répondre (ouvre le fil dans Gmail), Plus tard, Ignorer, et « Archiver dans Gmail » quand le serveur le permet.

@@ -30,3 +30,18 @@ object WikiLinks {
         return notes.firstOrNull { it.title.trim().equals(wanted, ignoreCase = true) }
     }
 }
+
+/**
+ * Les notes et tâches de l'appareil, pour lire les liens d'un texte : une cible inconnue se lit en puce « + » qui la
+ * crée (`docs/44-notes-links.md`), une case `[[task:Nom]]` suit la tâche.
+ */
+class ContentTargets(private val notes: List<NoteItem>, private val tasks: List<TaskItem>) {
+    fun task(name: String): TaskItem? = WikiLinks.findTask(name, tasks)
+
+    /** La puce vise une note ou une tâche (par nom) qui n'existe pas sur l'appareil. */
+    fun missing(run: MdRun): Boolean {
+        run.wiki?.let { return WikiLinks.findNote(it, notes) == null }
+        val ref = run.ref as? ContentRef.Task ?: return false
+        return ref.uid == null && ref.name != null && task(ref.name) == null
+    }
+}

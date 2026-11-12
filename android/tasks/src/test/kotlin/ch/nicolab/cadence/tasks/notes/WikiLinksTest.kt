@@ -48,4 +48,12 @@ class WikiLinksTest {
         org.junit.jupiter.api.Assertions.assertEquals("t1", WikiLinks.findTask("acheter du pain", listOf(done))?.uid)
         org.junit.jupiter.api.Assertions.assertNull(WikiLinks.findTask("Lait", listOf(done, open)))
     }
+
+    @Test
+    fun `une cible inconnue de l'appareil se lit comme manquante`() {
+        val targets = ContentTargets(notes, listOf(ch.nicolab.cadence.tasks.model.TaskItem("t1", "Appeler Bob")))
+        val runs = Markdown.inline("[[Projet Alpha]] [[Ailleurs]] [[task:appeler bob]] [[task:Rien]]").filter { it.wiki != null || it.ref != null }
+        assertEquals(listOf(false, true, false, true), runs.map { targets.missing(it) })
+        assertEquals("t1", targets.task("APPELER BOB")?.uid)
+    }
 }

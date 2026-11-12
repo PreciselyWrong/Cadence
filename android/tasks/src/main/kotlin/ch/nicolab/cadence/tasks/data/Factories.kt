@@ -64,6 +64,8 @@ internal fun createTodoMd(context: Context): TodoMdClient = TasksRuntime.get(con
 
 internal fun createBacklinks(context: Context): ch.nicolab.cadence.tasks.contentlinks.BacklinksClient = TasksRuntime.get(context).backlinks
 
+internal fun createPeople(context: Context): ch.nicolab.cadence.tasks.contentlinks.PeopleClient = TasksRuntime.get(context).people
+
 internal fun createSyncStatus(context: Context): SyncStatusClient = TasksRuntime.get(context).syncStatus
 
 internal fun createBrief(context: Context): BriefRepository = TasksRuntime.get(context).brief
@@ -150,6 +152,10 @@ internal class TasksRuntime private constructor(context: Context) {
     )
     val todoMd = TodoMdClient(api::call)
     val backlinks = ch.nicolab.cadence.tasks.contentlinks.BacklinksClient { method, path, query -> api.callJson(method, path, query) }
+    val people = ch.nicolab.cadence.tasks.contentlinks.PeopleClient(
+        { method, path, query -> api.callJson(method, path, query) },
+        appContext.getSharedPreferences("cadence_people", Context.MODE_PRIVATE),
+    )
     val syncStatus = SyncStatusClient(api::call)
 
     val review = ReviewRepository(

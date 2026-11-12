@@ -959,6 +959,25 @@ internal class TasksViewModel(
         changeWithUndo(task, change, UndoChanges.restoreFunnel(task), format(R.string.plan_horizon_notice, task.name, getString(horizonLabel(to))))
     }
 
+    /**
+     * Une puce devenue tâche liée (`docs/45-outliner.md`) : la tâche est créée dans le projet de la note ou de la
+     * tâche décrite ; le texte, lui, est déjà remplacé par `[[task:Nom]]`. Un échec est annoncé.
+     */
+    fun createLinkedTask(name: String, projectUid: String?) {
+        viewModelScope.launch {
+            try {
+                repository.createTask(TaskDraft(name = name, projectUid = projectUid))
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                _messages.tryEmit(format(R.string.note_outline_task_failed, name))
+            }
+        }
+    }
+
+    /** Une puce `[[task:Nom]]` sans tâche : la tâche est créée avec ce nom (sans projet, comme le web) ; son uid revient. */
+    suspend fun createTaskNamed(name: String): String = repository.createTask(TaskDraft(name = name))
+
     /** La tâche d'un lien `[[task:Nom]]`, cherchée parmi toutes les tâches de l'appareil. */
     suspend fun taskNamed(name: String): TaskItem? = WikiLinks.findTask(name, repository.observeTasks().first())
 

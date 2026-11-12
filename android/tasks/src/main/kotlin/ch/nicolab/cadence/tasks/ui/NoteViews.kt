@@ -2,7 +2,6 @@
 
 package ch.nicolab.cadence.tasks.ui
 
-import android.widget.Toast
 import ch.nicolab.cadence.designsystem.components.onColorOf
 import ch.nicolab.cadence.designsystem.components.tintedSurface
 import ch.nicolab.cadence.designsystem.components.readableTintOf
@@ -39,14 +38,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.PushPin
-import androidx.compose.material.icons.outlined.Checklist
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.FormatBold
-import androidx.compose.material.icons.outlined.FormatListBulleted
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.outlined.StickyNote2
-import androidx.compose.material.icons.outlined.Title
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.outlined.Tune
@@ -56,7 +51,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -73,7 +67,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -104,12 +97,10 @@ import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.NoteItem
 import ch.nicolab.cadence.tasks.model.ShareText
 import ch.nicolab.cadence.tasks.notes.Markdown
+import ch.nicolab.cadence.tasks.notes.ContentTargets
 import ch.nicolab.cadence.tasks.notes.MarkdownCheckbox
-import ch.nicolab.cadence.tasks.notes.MarkdownEditing
 import ch.nicolab.cadence.tasks.notes.NoteFields
 import ch.nicolab.cadence.tasks.notes.NoteFocus
-import ch.nicolab.cadence.tasks.notes.TextEdit
-import ch.nicolab.cadence.tasks.notes.WikiLinks
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
@@ -284,7 +275,13 @@ private fun NoteEditor(
     val keyboard = LocalSoftwareKeyboardController.current
     val session = remember(uid) { viewModel.noteSession(uid, NoteFields(note?.title.orEmpty(), note?.content.orEmpty())) }
     var title by remember(uid) { mutableStateOf(TextFieldValue(session.current.title)) }
-    var body by remember(uid) { mutableStateOf(TextFieldValue(session.current.content)) }
+    val outline = rememberOutlineEditorState(uid, session.current.content, "note:$uid") { text ->
+        session.edit(content = text)
+        viewModel.noteEdited(uid)
+    }
+    val everyTask by viewModel.allTasks.collectAsStateWithLifecycle()
+    val targets = remember(allNotes, everyTask) { ContentTargets(allNotes, everyTask) }
+    val openWiki = rememberWikiOpener(viewModel, allNotes, onOpenNote)
     var editing by rememberSaveable(uid) { mutableStateOf(note == null || note.content.isBlank()) }
     var organizing by rememberSaveable(uid) { mutableStateOf(false) }
     val titleFocus = remember { FocusRequester() }
@@ -307,14 +304,9 @@ private fun NoteEditor(
         note ?: return@LaunchedEffect
         val shown = session.merge(NoteFields(note.title, note.content))
         if (shown.title != title.text) title = TextFieldValue(shown.title, TextRange(shown.title.length))
-        if (shown.content != body.text) body = TextFieldValue(shown.content, TextRange(shown.content.length))
+        if (shown.content != outline.doc) outline.replaceDoc(shown.content)
     }
-
-    fun setBody(value: TextFieldValue) {
-        body = value
-        session.edit(content = value.text)
-        viewModel.noteEdited(uid)
-    }
+    LaunchedEffect(editing) { if (editing) outline.reloadFolds() }
 
     Column(Modifier.fillMaxSize().statusBarsPadding().imePadding().navigationBarsPadding()) {
         Row(
@@ -340,13 +332,13 @@ private fun NoteEditor(
                     icon = Icons.Outlined.Share,
                     contentDescription = stringResource(R.string.tasks_action_share),
                     style = HeaderButtonStyle.Plain,
-                    onClick = { context.shareText(ShareText.withNote(title.text, body.text), title.text.trim()) },
+                    onClick = { context.shareText(ShareText.withNote(title.text, outline.doc), title.text.trim()) },
                 )
                 RoundHeaderButton(
                     icon = Icons.Outlined.ContentCopy,
                     contentDescription = stringResource(R.string.tasks_action_copy),
                     style = HeaderButtonStyle.Plain,
-                    onClick = { context.copyText(title.text.trim(), ShareText.withNote(title.text, body.text)) },
+                    onClick = { context.copyText(title.text.trim(), ShareText.withNote(title.text, outline.doc)) },
                 )
                 RoundHeaderButton(
                     icon = Icons.Outlined.Tune,
@@ -391,16 +383,11 @@ private fun NoteEditor(
                 AutoClassifyMarkLine(entity = "note", uid = note.uid)
             }
             if (editing) {
-                PlainField(
-                    value = body,
-                    onValueChange = { next ->
-                        val fixed = MarkdownEditing.continueList(body.toEdit(), next.toEdit())
-                        setBody(fixed?.toValue() ?: next)
-                    },
+                OutlineField(
+                    state = outline,
                     hint = stringResource(R.string.tasks_note_body_hint),
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.heightIn(min = NOTE_BODY_MIN).focusRequester(bodyFocus),
-                    singleLine = false,
                 )
             } else {
                 Box(
@@ -408,11 +395,11 @@ private fun NoteEditor(
                         .fillMaxWidth()
                         .heightIn(min = NOTE_BODY_MIN)
                         .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) {
-                            body = body.copy(selection = TextRange(body.text.length))
+                            outline.caretToEnd()
                             editing = true
                         },
                 ) {
-                    if (body.text.isBlank()) {
+                    if (outline.doc.isBlank()) {
                         Text(
                             stringResource(R.string.tasks_note_empty_content),
                             style = MaterialTheme.typography.bodyLarge,
@@ -420,26 +407,22 @@ private fun NoteEditor(
                         )
                     } else {
                         MarkdownView(
-                            content = body.text,
+                            content = outline.doc,
                             onToggleCheckbox = { line ->
-                                setBody(TextFieldValue(MarkdownCheckbox.toggle(body.text, line)))
+                                outline.edit(MarkdownCheckbox.toggle(outline.doc, line))
                                 viewModel.flushNote(uid)
                             },
-                            onWikiLink = { title ->
-                                val target = WikiLinks.findNote(title, allNotes)
-                                if (target != null) {
-                                    onOpenNote(target.uid)
-                                } else {
-                                    Toast.makeText(context, R.string.tasks_wiki_not_found, Toast.LENGTH_SHORT).show()
-                                }
-                            },
+                            onWikiLink = openWiki,
                             onRef = openRef,
+                            outlineScope = "note:$uid",
+                            targets = targets,
+                            onToggleTask = { viewModel.toggle(it) },
                         )
                     }
                 }
-                LinkPreviewList(body.text, viewModel.linkPreviews, Modifier.padding(bottom = Space.xl), PreviewSize.Large)
+                LinkPreviewList(outline.doc, viewModel.linkPreviews, Modifier.padding(bottom = Space.xl), PreviewSize.Large)
                 if (note != null) {
-                    AddToLinksRow("${note.title}\n${body.text}", sourceKey = uid, onAdd = { viewModel.addLinkFrom(it, "note", uid) }, savedUrls = savedLinks)
+                    AddToLinksRow("${note.title}\n${outline.doc}", sourceKey = uid, onAdd = { viewModel.addLinkFrom(it, "note", uid) }, savedUrls = savedLinks)
                     BacklinksSection(
                         type = "note",
                         uid = uid,
@@ -450,11 +433,10 @@ private fun NoteEditor(
             }
         }
         if (editing) {
-            FormattingBar(
-                onChecklist = { setBody(MarkdownEditing.togglePrefix(body.toEdit(), "- [ ] ").toValue()) },
-                onBullets = { setBody(MarkdownEditing.togglePrefix(body.toEdit(), "- ").toValue()) },
-                onHeading = { setBody(MarkdownEditing.togglePrefix(body.toEdit(), "# ").toValue()) },
-                onBold = { setBody(MarkdownEditing.wrap(body.toEdit(), "**").toValue()) },
+            OutlineToolbar(
+                state = outline,
+                noteTitles = remember(allNotes, uid) { allNotes.filter { it.uid != uid }.map { it.title } },
+                onMakeTask = { name -> viewModel.createLinkedTask(name, note?.projectUid) },
                 onDone = {
                     focus.clearFocus()
                     editing = false
@@ -467,10 +449,6 @@ private fun NoteEditor(
         OrganizeSheet(note = note, viewModel = viewModel, onDismiss = { organizing = false })
     }
 }
-
-private fun TextFieldValue.toEdit() = TextEdit(text, selection.min, selection.max)
-
-private fun TextEdit.toValue() = TextFieldValue(text, TextRange(selStart, selEnd))
 
 /** Champ sans cadre, comme une page : le texte seul, avec un indice quand il est vide. */
 @Composable
@@ -524,34 +502,6 @@ private fun NoteMeta(note: NoteItem, projectName: String?, tagNames: List<String
                 stringResource(R.string.tasks_note_updated, it.atZone(ZoneId.systemDefault()).toLocalDate().format(noteDate)),
             )
         }
-    }
-}
-
-@Composable
-private fun FormattingBar(
-    onChecklist: () -> Unit,
-    onBullets: () -> Unit,
-    onHeading: () -> Unit,
-    onBold: () -> Unit,
-    onDone: () -> Unit,
-) {
-    Row(
-        Modifier.fillMaxWidth().background(cadence.containerHigh).padding(horizontal = Space.sm),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        FormatButton(Icons.Outlined.Checklist, R.string.tasks_note_checklist, onChecklist)
-        FormatButton(Icons.Outlined.FormatListBulleted, R.string.tasks_note_bullets, onBullets)
-        FormatButton(Icons.Outlined.Title, R.string.tasks_note_heading, onHeading)
-        FormatButton(Icons.Outlined.FormatBold, R.string.tasks_note_bold, onBold)
-        Box(Modifier.weight(1f))
-        TextButton(onClick = onDone) { Text(stringResource(R.string.tasks_note_done_editing)) }
-    }
-}
-
-@Composable
-private fun FormatButton(icon: ImageVector, label: Int, onClick: () -> Unit) {
-    IconButton(onClick = onClick, modifier = Modifier.size(Size.touch)) {
-        Icon(icon, contentDescription = stringResource(label), tint = cadence.onSurface)
     }
 }
 

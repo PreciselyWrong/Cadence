@@ -73,7 +73,8 @@ internal fun BacklinksSection(type: String, uid: String, onOpen: (Backlink) -> U
 
 /**
  * Ouvre la cible d'un lien interne : une note par uid, une tâche par uid ou par nom (`[[task:Nom]]`, cherchée sur
- * l'appareil, sinon un message). Une personne n'a pas de fiche sur Android.
+ * l'appareil ; absente, elle est créée avec ce nom puis ouverte, comme la puce « + » du web). Une personne n'a pas
+ * de fiche sur Android.
  */
 @Composable
 internal fun rememberContentRefOpener(
@@ -92,9 +93,31 @@ internal fun rememberContentRefOpener(
                     ref.uid != null -> onOpenTask(ref.uid)
                     ref.name != null -> scope.launch {
                         val task = viewModel.taskNamed(ref.name)
-                        if (task != null) onOpenTask(task.uid)
+                        val uid = task?.uid ?: runCatching { viewModel.createTaskNamed(ref.name) }.getOrNull()
+                        if (uid != null) onOpenTask(uid)
                         else Toast.makeText(context, context.getString(R.string.content_task_not_found, ref.name), Toast.LENGTH_SHORT).show()
                     }
+                }
+            }
+        }
+    }
+}
+
+/** Ouvre la note d'un lien `[[Titre]]` ; absente, elle est créée avec ce titre puis ouverte (puce « + »). */
+@Composable
+internal fun rememberWikiOpener(viewModel: TasksViewModel, notes: List<ch.nicolab.cadence.tasks.model.NoteItem>, onOpenNote: (String) -> Unit): (String) -> Unit {
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    return remember(viewModel, notes, onOpenNote) {
+        { title ->
+            val target = ch.nicolab.cadence.tasks.notes.WikiLinks.findNote(title, notes)
+            if (target != null) {
+                onOpenNote(target.uid)
+            } else {
+                scope.launch {
+                    val uid = runCatching { viewModel.createNote(title.trim()) }.getOrNull()
+                    if (uid != null) onOpenNote(uid)
+                    else Toast.makeText(context, R.string.tasks_wiki_not_found, Toast.LENGTH_SHORT).show()
                 }
             }
         }

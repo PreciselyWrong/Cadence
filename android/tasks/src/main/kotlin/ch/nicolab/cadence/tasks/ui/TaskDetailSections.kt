@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import ch.nicolab.cadence.tasks.notes.ContentTargets
 import ch.nicolab.cadence.tasks.notes.MarkdownCheckbox
 import ch.nicolab.cadence.tasks.notes.ContentRef
 import androidx.compose.ui.focus.onFocusChanged
@@ -194,60 +195,63 @@ internal fun InlineTextField(
     }
 }
 
-/** Note de la tâche : zone libre dans une carte, enregistrée au fil de la saisie par la fiche. */
+/**
+ * Description de la tâche : lue rendue (Markdown, plan, liens, puces, cases) ; le crayon ou un toucher sur une
+ * description vide l'édite en plan ([OutlineField], barre posée par la fiche au-dessus du clavier).
+ */
 @Composable
 internal fun NoteCard(
-    note: String,
-    onNoteChange: (String) -> Unit,
+    state: OutlineEditorState,
+    editing: Boolean,
+    onEditingChange: (Boolean) -> Unit,
+    outlineScope: String,
     readOnly: Boolean = false,
     /** Toucher une puce de tâche ou un lien vers une note dans la description rendue. */
     onRef: ((ContentRef) -> Unit)? = null,
     onWikiLink: (String) -> Unit = {},
+    targets: ContentTargets? = null,
+    onToggleTask: ((TaskItem) -> Unit)? = null,
 ) {
-    // La description se lit rendue (Markdown, liens, puces, cases) ; le crayon ou un toucher sur un blanc l'édite.
-    var editing by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
     var focused by remember { mutableStateOf(false) }
     LaunchedEffect(editing) { if (editing) focusRequester.requestFocus() }
     Panel(Modifier.fillMaxWidth()) {
-        if (note.isNotBlank() && (readOnly || !editing)) {
+        if (state.doc.isNotBlank() && (readOnly || !editing)) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
                 MarkdownView(
-                    content = note,
-                    onToggleCheckbox = { line -> if (!readOnly) onNoteChange(MarkdownCheckbox.toggle(note, line)) },
+                    content = state.doc,
+                    onToggleCheckbox = { line -> if (!readOnly) state.edit(MarkdownCheckbox.toggle(state.doc, line)) },
                     modifier = Modifier.weight(1f),
                     onWikiLink = onWikiLink,
                     onRef = onRef,
+                    outlineScope = outlineScope,
+                    targets = targets,
+                    onToggleTask = onToggleTask,
                 )
                 if (!readOnly) {
-                    IconButton(onClick = { editing = true }) {
+                    IconButton(onClick = {
+                        state.caretToEnd()
+                        onEditingChange(true)
+                    }) {
                         Icon(Icons.Outlined.Edit, contentDescription = stringResource(R.string.tasks_idea_edit))
                     }
                 }
             }
         } else {
-            Box(Modifier.fillMaxWidth().heightIn(min = Size.touch), contentAlignment = Alignment.CenterStart) {
-                if (note.isEmpty()) Text(
-                    stringResource(R.string.tasks_detail_note_hint),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = cadence.outline,
-                )
-                BasicTextField(
-                    value = note,
-                    onValueChange = onNoteChange,
-                    readOnly = readOnly,
-                    textStyle = MaterialTheme.typography.bodyLarge.copy(color = cadence.onSurface),
-                    cursorBrush = SolidColor(cadence.primary),
-                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .focusRequester(focusRequester)
-                        .onFocusChanged { state ->
-                            if (focused && !state.isFocused) editing = false
-                            focused = state.isFocused
-                        },
-                )
-            }
+            OutlineField(
+                state = state,
+                hint = stringResource(R.string.tasks_detail_note_hint),
+                style = MaterialTheme.typography.bodyLarge,
+                readOnly = readOnly,
+                modifier = Modifier
+                    .heightIn(min = Size.touch)
+                    .focusRequester(focusRequester)
+                    .onFocusChanged { focus ->
+                        if (focus.isFocused && !editing && !readOnly) onEditingChange(true)
+                        if (focused && !focus.isFocused) onEditingChange(false)
+                        focused = focus.isFocused
+                    },
+            )
         }
     }
 }

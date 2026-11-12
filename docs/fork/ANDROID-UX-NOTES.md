@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-12 — Plan des notes et descriptions, barre au-dessus du clavier
+
+- **Problème** : un téléphone n'a ni Tab, ni Alt+↑/↓, ni Ctrl ; le clavier n'envoie que des textes successifs ; la barre de mise en forme n'avait que cases, puces, titre et gras ; pas de choix `@`, une puce vers une cible inconnue ne faisait qu'un message.
+- **Décision** : mêmes règles de texte que le web (Entrée et retour arrière reconnus dans la saisie) ; une seule barre défilante au-dessus du clavier, plan d'abord (sortir, décaler, monter, descendre, replier, zoomer, case, tâche liée) puis mise en forme (gras, italique, barré, titre, listes, citation, code, lien, `[[`, `@`, tableau par tailles toutes faites), « Terminé » fixe à droite ; une puce repliée se lit « … » dans le champ, un curseur qui y entre la déplie ; le zoom de l'éditeur montre le seul sous-arbre avec « Tout › … » au-dessus. Les propositions `@` et `[[` s'affichent en pastilles au-dessus de la barre. En lecture, chevron à gauche de chaque puce repliable (place réservée pour l'alignement) et point qui zoome. Une case liée sans tâche connue sur l'appareil se coche dans le texte, comme une case ordinaire.
+- **Web** : rien à reprendre.
+
 ### 2026-11-12 — Un lien seul dans l'ajout rapide, origine des tâches
 
 - **Problème** : une adresse collée dans l'ajout rapide n'avait que Inbox / Tâche / Note (la tâche prenait l'adresse brute pour nom) ; une tâche née d'un lien proposait encore « Ajouter aux liens » ; l'origine d'une tâche (Gmail, MCP…) n'apparaissait pas.

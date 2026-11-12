@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Plan (outliner) des notes et descriptions, ../docs/45-outliner.md -->
+    <string name="note_outline_indent">Retrait</string>
+    <string name="note_outline_outdent">Sortir du retrait</string>
+    <string name="note_outline_move_up">Monter la puce</string>
+    <string name="note_outline_move_down">Descendre la puce</string>
+    <string name="note_outline_fold">Replier</string>
+    <string name="note_outline_unfold">Déplier</string>
+    <string name="note_outline_zoom_in">Zoomer sur la puce</string>
+    <string name="note_outline_checkbox">Case à cocher</string>
+    <string name="note_outline_make_task">Créer une tâche</string>
+    <string name="note_outline_all">Tout</string>
+    <string name="note_outline_task_failed">Tâche « %1$s » non créée</string>
+    <string name="format_italic">Italique</string>
+    <string name="format_strike">Barré</string>
+    <string name="format_numbers">Liste numérotée</string>
+    <string name="format_quote">Citation</string>
+    <string name="format_code">Code</string>
+    <string name="format_link">Lien</string>
+    <string name="format_note_link">Lien vers une note</string>
+    <string name="format_mention">Mentionner une personne</string>
+    <string name="format_table">Tableau</string>
+    <string name="format_table_size">%1$d lignes × %2$d colonnes</string>
+    <string name="format_table_column">Colonne %1$d</string>
+    <string name="mention_none">Aucune personne (liste lue sur le serveur)</string>
+    <string name="note_link_none">Aucune note de ce titre</string>
+    <string name="content_create_note">Créer la note « %1$s »</string>
+    <string name="content_create_task">Créer la tâche « %1$s »</string>
+</resources>

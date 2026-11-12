@@ -59,10 +59,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import ch.nicolab.cadence.tasks.notes.WikiLinks
+import ch.nicolab.cadence.tasks.notes.ContentTargets
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.Dialog
-import android.widget.Toast
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -180,6 +179,13 @@ internal fun TaskDetailSheet(
     val links by viewModel.links.collectAsStateWithLifecycle()
     val savedLinks = remember(links) { links.map { it.url } }
     val openRef = rememberContentRefOpener(viewModel, onOpenNote = { openedNote = it }, onOpenTask = { openedSubtask = it })
+    val openWiki = rememberWikiOpener(viewModel, allNotes, onOpenNote = { openedNote = it })
+    val everyTask by viewModel.allTasks.collectAsStateWithLifecycle()
+    val targets = remember(allNotes, everyTask) { ContentTargets(allNotes, everyTask) }
+    var noteEditing by remember(current.uid) { mutableStateOf(false) }
+    val noteOutline = rememberOutlineEditorState(current.uid, note, "task:${current.uid}") { note = it }
+    LaunchedEffect(noteEditing) { if (noteEditing) noteOutline.reloadFolds() }
+    val focusManager = LocalFocusManager.current
     var moreFields by rememberSaveable(current.uid) { mutableStateOf(false) }
     val notifications = rememberNotificationPermission()
     val hasReminder = current.reminderAt != null
@@ -274,15 +280,15 @@ internal fun TaskDetailSheet(
                 }
                 PostponementLine(taskUid = current.uid, version = current.dueDay)
                 NoteCard(
-                    note = note,
-                    onNoteChange = { note = it },
+                    state = noteOutline,
+                    editing = noteEditing,
+                    onEditingChange = { noteEditing = it },
+                    outlineScope = "task:${current.uid}",
                     readOnly = textLocked,
                     onRef = openRef,
-                    onWikiLink = { title ->
-                        val target = WikiLinks.findNote(title, allNotes)
-                        if (target != null) openedNote = target.uid
-                        else Toast.makeText(context, R.string.tasks_wiki_not_found, Toast.LENGTH_SHORT).show()
-                    },
+                    onWikiLink = openWiki,
+                    targets = targets,
+                    onToggleTask = { viewModel.toggle(it) },
                 )
                 LinkPreviewList("$title\n$note", viewModel.linkPreviews)
                 AddToLinksRow("$title\n$note", sourceKey = current.uid, onAdd = { viewModel.addLinkFrom(it, "task", current.uid) }, savedUrls = savedLinks)
@@ -333,6 +339,17 @@ internal fun TaskDetailSheet(
                 }
                 if (moreFields) ReadOnlyDetails(current)
                 Spacer(Modifier.height(Space.xl))
+            }
+            if (noteEditing && !textLocked) {
+                OutlineToolbar(
+                    state = noteOutline,
+                    noteTitles = remember(allNotes) { allNotes.map { it.title } },
+                    onMakeTask = { name -> viewModel.createLinkedTask(name, current.projectUid) },
+                    onDone = {
+                        focusManager.clearFocus()
+                        noteEditing = false
+                    },
+                )
             }
         }
     }

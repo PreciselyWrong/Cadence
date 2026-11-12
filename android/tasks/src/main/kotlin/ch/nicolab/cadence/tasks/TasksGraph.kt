@@ -69,6 +69,10 @@ object TasksGraph {
     fun backlinks(context: Context): ch.nicolab.cadence.tasks.contentlinks.BacklinksClient =
         ch.nicolab.cadence.tasks.data.createBacklinks(context.applicationContext)
 
+    /** Personnes du choix `@`, lues en ligne et gardées pour le hors ligne. */
+    fun people(context: Context): ch.nicolab.cadence.tasks.contentlinks.PeopleClient =
+        ch.nicolab.cadence.tasks.data.createPeople(context.applicationContext)
+
     /** Appareils et conflits vus du serveur (en ligne seulement). */
     fun syncStatus(context: Context): SyncStatusClient = createSyncStatus(context.applicationContext)
 
