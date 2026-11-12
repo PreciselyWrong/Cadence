@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { TFunction } from 'i18next';
-import { format } from 'date-fns';
 import { Task } from '../../../entities/Task';
 import { Project } from '../../../entities/Project';
 import {
@@ -18,6 +17,7 @@ import {
     weekdayOf,
 } from './timelineLayout';
 import { taskColor } from '../../Calendar/taskEvents';
+import { toIntlLocale } from '../../../utils/intlLocale';
 
 type Zoom = 'days' | 'weeks' | 'months';
 
@@ -64,6 +64,8 @@ interface ProjectTimelineProps {
     ) => Promise<void>;
     onOpenTask: (task: Task) => void;
     t: TFunction;
+    // The app language, for month and day labels.
+    language?: string;
 }
 
 const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
@@ -73,7 +75,18 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
     onDatesChange,
     onOpenTask,
     t,
+    language,
 }) => {
+    const dateLabel = (options: Intl.DateTimeFormatOptions) => {
+        const formatter = new Intl.DateTimeFormat(
+            toIntlLocale(language),
+            options
+        );
+        return (date: Date) => formatter.format(date);
+    };
+    const monthYear = dateLabel({ month: 'short', year: 'numeric' });
+    const month = dateLabel({ month: 'short' });
+    const dayMonth = dateLabel({ day: 'numeric', month: 'short' });
     const scrollRef = useRef<HTMLDivElement>(null);
     const [zoom, setZoom] = useState<Zoom>(() => {
         const saved = readSetting(ZOOM_KEY);
@@ -166,7 +179,7 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
         if (day === first || date.getDate() === 1) {
             months.push({
                 x: x(day),
-                label: format(date, day === first ? 'MMM yyyy' : 'MMM'),
+                label: day === first ? monthYear(date) : month(date),
             });
         }
         const weekday = weekdayOf(day);
@@ -180,7 +193,7 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
         } else if (zoom === 'weeks' && weekday === 1) {
             ticks.push({
                 x: x(day),
-                label: format(date, 'd MMM'),
+                label: dayMonth(date),
                 strong: false,
             });
         }
@@ -286,9 +299,7 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
             : 'text-slate-800 dark:text-white';
 
     const formatDay = (day: number | null, time?: string | null) =>
-        day === null
-            ? ''
-            : `${format(dateOf(day), 'MMM d')}${time ? ` ${time}` : ''}`;
+        day === null ? '' : `${dayMonth(dateOf(day))}${time ? ` ${time}` : ''}`;
 
     const describe = (item: TimelineItem) => {
         const task = item.task;

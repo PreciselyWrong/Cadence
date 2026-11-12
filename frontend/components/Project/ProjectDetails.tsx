@@ -103,7 +103,7 @@ const projectViewTabs = (isMinimal: boolean): ProjectViewTab[] =>
 const ProjectDetails: React.FC = () => {
     const { uidSlug } = useParams<{ uidSlug: string }>();
     const navigate = useNavigate();
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const { showSuccessToast, showErrorToast } = useToast();
     const { areasStore, projectsStore, userSettingsStore } = useStore();
     // The AI button only shows once the user turned the assistant on.
@@ -1307,6 +1307,7 @@ const ProjectDetails: React.FC = () => {
                                         onDatesChange={handleTaskDatesChange}
                                         onOpenTask={openTaskInSheet}
                                         t={t}
+                                        language={i18n.language}
                                     />
                                 ) : (
                                     <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_18rem] xl:grid-cols-[minmax(0,1fr)_20rem] gap-6 items-start">

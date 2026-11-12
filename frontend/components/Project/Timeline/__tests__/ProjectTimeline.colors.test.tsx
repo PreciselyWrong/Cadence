@@ -55,3 +55,38 @@ describe('ProjectTimeline colour by', () => {
         expect(bar().style.backgroundColor).toBe('rgb(185, 28, 28)');
     });
 });
+
+describe('ProjectTimeline dates', () => {
+    it("labels months in the app's language", () => {
+        const due = new Date();
+        due.setDate(due.getDate() + 5);
+        render(
+            <ProjectTimeline
+                project={{ uid: 'p', name: 'P' } as any}
+                tasks={[
+                    {
+                        uid: 'a',
+                        name: 'Due bar',
+                        status: 0,
+                        due_date: due.toISOString().slice(0, 10),
+                    } as any,
+                ]}
+                links={[]}
+                onDatesChange={jest.fn()}
+                onOpenTask={jest.fn()}
+                t={t}
+                language="fr"
+            />
+        );
+
+        const frenchMonth = new Intl.DateTimeFormat('fr', {
+            month: 'short',
+        }).format(due);
+        const englishMonth = new Intl.DateTimeFormat('en', {
+            month: 'short',
+        }).format(due);
+        const text = document.body.textContent ?? '';
+        expect(text).toContain(frenchMonth);
+        expect(text).not.toContain(englishMonth);
+    });
+});

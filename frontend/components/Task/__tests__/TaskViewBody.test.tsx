@@ -13,6 +13,7 @@ jest.mock('react-i18next', () => ({
     useTranslation: () => ({
         t: (key: string, fallback?: unknown) =>
             typeof fallback === 'string' ? fallback : key,
+        i18n: { language: 'en' },
     }),
 }));
 

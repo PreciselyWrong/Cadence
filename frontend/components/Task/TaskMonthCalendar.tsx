@@ -1,8 +1,11 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { addMonths, format, startOfMonth } from 'date-fns';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { Task } from '../../entities/Task';
 import CalendarMonthView from '../Calendar/CalendarMonthView';
+import Button, { IconButton } from '../Shared/ui/Button';
+import { toIntlLocale } from '../../utils/intlLocale';
 import {
     CalendarEvent,
     CalendarTask,
@@ -23,7 +26,11 @@ const TaskMonthCalendar: React.FC<TaskMonthCalendarProps> = ({
     onOpenTask,
     onMoveDue,
 }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+    const monthTitle = new Intl.DateTimeFormat(toIntlLocale(i18n.language), {
+        month: 'long',
+        year: 'numeric',
+    });
     const [currentDate, setCurrentDate] = useState(() =>
         startOfMonth(new Date())
     );
@@ -43,35 +50,33 @@ const TaskMonthCalendar: React.FC<TaskMonthCalendarProps> = ({
 
     return (
         <div data-testid="task-month-calendar" className="space-y-3">
+            {/* The Calendar page's header nav: month, then today and the
+                arrows, in the reader's language. */}
             <div className="flex items-center justify-between gap-2">
-                <button
-                    type="button"
-                    onClick={() => setCurrentDate((d) => addMonths(d, -1))}
-                    aria-label={t('calendar.previousMonth', 'Previous month')}
-                    className="rounded-md px-2 py-1 text-sm text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-                >
-                    {t('common.previous', 'Previous')}
-                </button>
-                <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                        {format(currentDate, 'MMMM yyyy')}
-                    </span>
-                    <button
-                        type="button"
+                <span className="text-body-m font-medium text-surface-on">
+                    {monthTitle.format(currentDate)}
+                </span>
+                <div className="flex items-center gap-1">
+                    <Button
+                        variant="ghost"
+                        size="sm"
                         onClick={() => setCurrentDate(startOfMonth(new Date()))}
-                        className="rounded-md px-2 py-1 text-xs text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                     >
                         {t('calendar.today', 'Today')}
-                    </button>
+                    </Button>
+                    <IconButton
+                        onClick={() => setCurrentDate((d) => addMonths(d, -1))}
+                        label={t('calendar.previousMonth', 'Previous month')}
+                    >
+                        <ChevronLeftIcon />
+                    </IconButton>
+                    <IconButton
+                        onClick={() => setCurrentDate((d) => addMonths(d, 1))}
+                        label={t('calendar.nextMonth', 'Next month')}
+                    >
+                        <ChevronRightIcon />
+                    </IconButton>
                 </div>
-                <button
-                    type="button"
-                    onClick={() => setCurrentDate((d) => addMonths(d, 1))}
-                    aria-label={t('calendar.nextMonth', 'Next month')}
-                    className="rounded-md px-2 py-1 text-sm text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-                >
-                    {t('common.next', 'Next')}
-                </button>
             </div>
             <CalendarMonthView
                 currentDate={currentDate}
