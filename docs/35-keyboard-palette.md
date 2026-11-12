@@ -11,7 +11,7 @@ Fuzzy search (accents ignored, every word must match, keywords count at a lower 
 - entities: tasks, projects, notes, goals and links (existing search API, `filters=Task,Project,Note,Goal,Link`; a goal opens its page, a link opens its address in a new tab), habits (matched by name). The text typed is marked in each row;
 - task commands, when a task is the target: complete or reopen, open, date (today, tomorrow, next week, none), priority, move to a project.
 
-The target task is the row with focus, else the row under the pointer, else the task open in the side panel. Up and Down move, Enter runs, Esc closes. With an empty field the palette lists recent commands and recently opened entities. Each row shows its shortcut.
+The target task is the row with focus, else the row under the pointer, else the task open in the task sheet. Up and Down move, Enter runs, Esc closes. With an empty field the palette lists recent commands and recently opened entities. Each row shows its shortcut.
 
 Code: `frontend/components/CommandPalette/`, ranking in `frontend/utils/commandPalette.ts`.
 
