@@ -34,6 +34,12 @@ The CSS variable holds RGB channels (`94 92 230`) so `bg-primary/90` works.
 | glass                | surfaceVariant at 60 % | surfaceVariant at 35 %           | none                                           | `bg-surface-variant/60 dark:bg-surface-variant/35` |
 | glassBorder          | outline at 35 %        | same                             | none                                           | `border-outline/35`                                |
 
+### Web divergences (2026-11-12, desktop first)
+
+- Dark mode on the web uses a blue-tinted charcoal (surface `#17181E`, card `#1F2129`, high `#262832`, highest `#30333F`) and the gray scale follows it; Android keeps its neutral dark until it is ported (`TODO.md`).
+- The sidebar is a dark island in both modes (`.sidebar-island`, `--sidebar-bg` navy `#1B2333`, charcoal `#101116` in dark) and reads the dark accent roles (`--island-*`, written by `applyAppearance`).
+- Calendar blocks mix the project or calendar colour into transparency (`--block-mix`: 24 % light, 42 % dark).
+
 ### Legacy palettes
 
 Existing `blue-*` and `gray-*` utilities are variable-backed so the whole app follows the accent and the warm surfaces without touching every class.

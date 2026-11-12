@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cadence — Aujourd'hui (maquette)</title>
+<style>
+  :root {
+    --canvas: #f6f5f2; --surface: #fffefc; --sunken: #f0efeb; --hover: #f2f1ed;
+    --line: #e7e5df; --line-strong: #d9d6cf;
+    --ink: #1f1e1b; --ink-2: #5f5d57; --ink-3: #6e6b64;
+    --accent: #3d63dd; --accent-ink: #ffffff; --accent-soft: #e9eefc; --accent-line: #b9c8f5; --accent-text: #2a4bb8;
+    --warn: #9a5b00; --warn-soft: #fbf1df; --danger: #b42318;
+    --event: #ecebe7; --event-ink: #3b3a36; --focus-stripe: #e9e7e1;
+    --radius-s: 6px; --radius-m: 10px; --radius-l: 14px;
+    --row: 36px;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 14px; line-height: 20px; color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+  :root[data-theme="dark"] {
+    --canvas: #141413; --surface: #1b1b19; --sunken: #121211; --hover: #232321;
+    --line: #2b2a27; --line-strong: #383733;
+    --ink: #ecebe6; --ink-2: #a8a59e; --ink-3: #8f8c85;
+    --accent: #7c9bff; --accent-ink: #0d1530; --accent-soft: #1f2843; --accent-line: #34467d; --accent-text: #a9bdff;
+    --warn: #e8b45a; --warn-soft: #2e2516; --danger: #ff8a7a;
+    --event: #262623; --event-ink: #d6d4ce; --focus-stripe: #22221f;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--canvas); }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  .num { font-variant-numeric: tabular-nums; }
+
+  .app { display: grid; grid-template-columns: 232px minmax(360px, 440px) 1px minmax(0, 1fr); height: 100vh; }
+  /* navigation */
+  .nav { background: var(--canvas); padding: 14px 10px; display: flex; flex-direction: column; gap: 2px; border-right: 1px solid var(--line); }
+  .brand { display: flex; align-items: center; gap: 8px; padding: 4px 8px 14px; font-weight: 600; }
+  .brand i { width: 20px; height: 20px; border-radius: 6px; background: var(--accent); display: inline-block; }
+  .nav a { display: flex; align-items: center; gap: 10px; height: 32px; padding: 0 8px; border-radius: var(--radius-s); color: var(--ink-2); text-decoration: none; }
+  .nav a:hover { background: var(--hover); }
+  .nav a.on { background: var(--surface); color: var(--ink); font-weight: 500; box-shadow: 0 0 0 1px var(--line); }
+  .nav a .c { margin-left: auto; font-size: 12px; color: var(--ink-3); }
+  .nav .group { margin: 16px 8px 4px; font-size: 12px; color: var(--ink-3); }
+  .dot { width: 6px; height: 6px; border-radius: 99px; display: inline-block; flex: none; }
+
+  /* list pane */
+  .list { background: var(--surface); overflow: auto; display: flex; flex-direction: column; }
+  .head { padding: 22px 24px 10px; position: sticky; top: 0; background: var(--surface); z-index: 2; }
+  .titlerow { display: flex; align-items: center; gap: 6px; }
+  h1 { font-size: 22px; line-height: 28px; font-weight: 600; letter-spacing: -0.01em; margin: 0; }
+  .navarrows { display: flex; gap: 2px; margin-left: 4px; }
+  .ib { width: 28px; height: 28px; border-radius: var(--radius-s); display: inline-grid; place-items: center; color: var(--ink-3); }
+  .ib:hover { background: var(--hover); color: var(--ink); }
+  .ib svg { width: 16px; height: 16px; }
+  .tools { margin-left: auto; display: flex; gap: 4px; align-items: center; }
+  .btn { height: 28px; padding: 0 10px; border-radius: var(--radius-s); font-size: 13px; font-weight: 500; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line-strong); }
+  .btn:hover { background: var(--hover); }
+  .sub { margin-top: 2px; color: var(--ink-2); font-size: 13px; }
+  .sub .over { color: var(--warn); }
+
+  .add { margin: 8px 16px 6px; display: flex; align-items: center; gap: 10px; height: 38px; padding: 0 10px; border-radius: var(--radius-m); background: var(--sunken); color: var(--ink-3); }
+  .add .plus { width: 18px; height: 18px; display: grid; place-items: center; color: var(--accent); }
+
+  .section { padding: 4px 8px; }
+  .sechead { display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 16px; color: var(--ink-3); font-size: 12px; font-weight: 500; }
+  .sechead .chev { width: 12px; height: 12px; }
+  .sechead .act { margin-left: auto; color: var(--accent-text); font-weight: 500; }
+
+  .row { position: relative; display: grid; grid-template-columns: 44px 22px minmax(0,1fr) auto; align-items: center; gap: 8px; min-height: var(--row); padding: 0 12px 0 4px; border-radius: var(--radius-s); }
+  .row:hover { background: var(--hover); }
+  .row .time { font-size: 12px; color: var(--ink-3); text-align: right; padding-right: 4px; }
+  .check { width: 18px; height: 18px; border-radius: 99px; box-shadow: inset 0 0 0 1.5px var(--line-strong); }
+  .check.p3 { box-shadow: inset 0 0 0 1.5px var(--danger); }
+  .row .title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .row .meta { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--ink-3); white-space: nowrap; }
+  .row .meta .proj { display: inline-flex; align-items: center; gap: 6px; }
+  .row .meta .due { color: var(--ink-2); }
+  .row.now { background: var(--accent-soft); }
+  .row.now .time { color: var(--accent-text); font-weight: 600; }
+  .row.done .title { color: var(--ink-3); text-decoration: line-through; }
+  .row.done .check { background: var(--ink-3); box-shadow: none; }
+  .row .hover-actions { display: none; gap: 2px; }
+  .row:hover .hover-actions { display: flex; }
+  .row:hover .meta { display: none; }
+
+  .divider { height: 1px; background: var(--line); margin: 6px 16px; }
+  .slip { margin: 4px 16px 6px; padding: 8px 10px; border-radius: var(--radius-m); background: var(--warn-soft); color: var(--warn); font-size: 13px; display: flex; gap: 10px; align-items: center; }
+  .slip b { font-weight: 500; color: var(--ink); }
+  .slip .a { margin-left: auto; display: flex; gap: 4px; }
+  .slip .a button { height: 26px; padding: 0 10px; border-radius: var(--radius-s); font-weight: 500; color: var(--ink); }
+  .slip .a button:hover { background: rgba(0,0,0,0.05); }
+
+  .splitter { background: var(--line); cursor: col-resize; }
+
+  /* calendar pane */
+  .cal { background: var(--surface); display: flex; flex-direction: column; min-width: 0; }
+  .calhead { display: flex; align-items: center; gap: 8px; height: 60px; padding: 18px 16px 0 60px; color: var(--ink-2); font-size: 13px; }
+  .calhead .tools { margin-left: auto; }
+  .allday { margin: 6px 16px 0 60px; display: flex; gap: 6px; }
+  .allday .ev { height: 24px; padding: 0 10px; border-radius: var(--radius-s); background: var(--event); color: var(--event-ink); font-size: 12px; display: inline-flex; align-items: center; gap: 6px; }
+  .grid { position: relative; flex: 1; overflow: auto; margin-top: 8px; }
+  .hours { position: relative; height: calc(12 * 56px); margin: 0 16px 24px 0; }
+  .hour { position: absolute; left: 0; right: 0; height: 56px; border-top: 1px solid var(--line); }
+  .hour span { position: absolute; left: 12px; top: -9px; width: 36px; text-align: right; font-size: 12px; color: var(--ink-3); background: var(--surface); padding-right: 4px; }
+  .hour::after { content: ""; position: absolute; left: 60px; right: 0; top: 27px; border-top: 1px dashed transparent; }
+  .lane { position: absolute; left: 60px; right: 0; top: 0; bottom: 0; }
+  .blk { position: absolute; left: 0; right: 0; border-radius: var(--radius-s); padding: 4px 10px; font-size: 12px; line-height: 16px; overflow: hidden; }
+  .blk .t { font-weight: 500; font-size: 13px; }
+  .blk.task { background: var(--accent-soft); color: var(--accent-text); box-shadow: inset 0 0 0 1px var(--accent-line); display: grid; grid-template-columns: 16px 1fr; gap: 8px; }
+  .blk.task .check { width: 14px; height: 14px; margin-top: 2px; box-shadow: inset 0 0 0 1.5px var(--accent); }
+  .blk.task.done { opacity: .55; }
+  .blk.task.done .t { text-decoration: line-through; }
+  .blk.event { background: var(--event); color: var(--event-ink); }
+  .blk.event .cal-dot { margin-right: 6px; }
+  .blk.focus { background: repeating-linear-gradient(-45deg, var(--focus-stripe) 0 6px, transparent 6px 12px); color: var(--ink-3); box-shadow: inset 0 0 0 1px var(--line); }
+  .blk .resize { position: absolute; left: 40%; right: 40%; bottom: 2px; height: 3px; border-radius: 3px; background: var(--accent-line); opacity: 0; }
+  .blk.task:hover .resize { opacity: 1; }
+  .blk.ghost { background: transparent; box-shadow: inset 0 0 0 1.5px var(--accent); border: 0; color: var(--accent-text); }
+  .deadline { position: absolute; right: 0; display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-2); }
+  .deadline::before { content: ""; position: absolute; right: 100%; width: 40px; border-top: 1px dashed var(--line-strong); }
+  .deadline .flag { height: 20px; padding: 0 10px; border-radius: 99px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-strong); display: inline-flex; align-items: center; gap: 4px; }
+  .nowline { position: absolute; left: 52px; right: 0; height: 0; border-top: 1.5px solid var(--accent); }
+  .nowline::before { content: ""; position: absolute; left: -4px; top: -4.5px; width: 7px; height: 7px; border-radius: 99px; background: var(--accent); }
+  .nowtime { position: absolute; left: 6px; width: 40px; text-align: right; font-size: 12px; font-weight: 600; color: var(--accent-text); background: var(--surface); }
+
+  .theme { position: fixed; right: 12px; bottom: 12px; }
+
+  @media (max-width: 1180px) {
+    .app { grid-template-columns: 64px minmax(340px, 420px) 1px minmax(0,1fr); }
+    .nav a span.l, .nav .group, .nav a .c, .brand b { display: none; }
+  }
+  @media (max-width: 760px) {
+    .app { grid-template-columns: 1fr; height: auto; }
+    .nav, .splitter, .cal { display: none; }
+    .head { padding: 16px 16px 8px; }
+    .row { --row: 44px; grid-template-columns: 40px 24px minmax(0,1fr) auto; }
+    .row .meta .proj { display: none; }
+    .tabbar { display: flex !important; }
+  }
+  .tabbar { display: none; position: sticky; bottom: 0; height: 56px; background: var(--surface); border-top: 1px solid var(--line); justify-content: space-around; align-items: center; font-size: 12px; color: var(--ink-3); }
+  .tabbar .on { color: var(--accent-text); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="app">
+  <nav class="nav" aria-label="Navigation">
+    <div class="brand"><i></i><b>Cadence</b></div>
+    <a href="#" class="on"><span>☀</span><span class="l">Aujourd'hui</span><span class="c num">8</span></a>
+    <a href="#"><span>☐</span><span class="l">Inbox</span><span class="c num">3</span></a>
+    <a href="#"><span>◷</span><span class="l">À venir</span></a>
+    <a href="#"><span>▦</span><span class="l">Calendrier</span></a>
+    <a href="#"><span>◎</span><span class="l">Habitudes</span></a>
+    <div class="group">Projets</div>
+    <a href="#"><span class="dot" style="background:#3d8a5a"></span><span class="l">Maison</span></a>
+    <a href="#"><span class="dot" style="background:#c0612b"></span><span class="l">Santé</span></a>
+    <a href="#"><span class="dot" style="background:#3d63dd"></span><span class="l">Travail</span></a>
+  </nav>
+
+  <main class="list" aria-label="Aujourd'hui">
+    <div class="head">
+      <div class="titlerow">
+        <h1>Aujourd'hui</h1>
+        <div class="navarrows">
+          <button class="ib" aria-label="Jour précédent"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 3 5 8l5 5"/></svg></button>
+          <button class="ib" aria-label="Jour suivant"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m6 3 5 5-5 5"/></svg></button>
+        </div>
+        <div class="tools">
+          <button class="btn">Organiser</button>
+          <button class="ib" aria-label="Plus d'actions"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="3.5" cy="8" r="1.3"/><circle cx="8" cy="8" r="1.3"/><circle cx="12.5" cy="8" r="1.3"/></svg></button>
+        </div>
+      </div>
+      <div class="sub num">Jeudi 12 novembre · 8 tâches · <span class="over" title="Temps libre restant : 3 h 50">4 h 40 pour 3 h 50 libres</span></div>
+    </div>
+
+    <div class="add"><span class="plus">＋</span>Ajouter une tâche</div>
+
+    <div class="section">
+      <div class="sechead"><svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m4 2.5 3.5 3.5L4 9.5"/></svg>En retard · 2<span class="act">Reprendre aujourd'hui</span></div>
+    </div>
+
+    <div class="slip"><span><b>Préparer la revue trimestrielle</b> a dépassé son créneau</span><span class="a"><button>Décaler la suite</button><button>Plus tard</button></span></div>
+
+    <div class="section" role="list">
+      <div class="row done" role="listitem"><span class="time num">08:30</span><span class="check"></span><span class="title">Payer la facture d'électricité</span><span class="meta"><span class="num">5 min</span></span></div>
+      <div class="row" role="listitem"><span class="time num">09:00</span><span class="check p3"></span><span class="title">Préparer la revue trimestrielle</span><span class="meta"><span class="proj"><span class="dot" style="background:#3d63dd"></span>Travail</span><span class="num">1 h 30</span></span></div>
+      <div class="row now" role="listitem"><span class="time num">11:00</span><span class="check"></span><span class="title">Répondre aux mails clients</span><span class="meta"><span class="proj"><span class="dot" style="background:#3d63dd"></span>Travail</span><span class="num">30 min</span></span></div>
+      <div class="row" role="listitem"><span class="time num">14:00</span><span class="check"></span><span class="title">Relire la PR de Léa</span><span class="meta"><span class="proj"><span class="dot" style="background:#3d63dd"></span>Travail</span><span class="num">45 min</span></span></div>
+      <div class="row" role="listitem"><span class="time num">18:00</span><span class="check"></span><span class="title">Séance de course à pied</span><span class="meta"><span class="proj"><span class="dot" style="background:#c0612b"></span>Santé</span><span class="num">45 min</span></span></div>
+      <div class="divider"></div>
+      <div class="row" role="listitem"><span class="time"></span><span class="check"></span><span class="title">Appeler le plombier</span><span class="meta"><span class="proj"><span class="dot" style="background:#3d8a5a"></span>Maison</span><span class="num">15 min</span></span></div>
+      <div class="row" role="listitem"><span class="time"></span><span class="check"></span><span class="title">Rendre le dossier de subvention</span><span class="meta"><span class="due num">⚑ 17:00</span><span class="num">1 h</span></span></div>
+      <div class="row" role="listitem"><span class="time"></span><span class="check"></span><span class="title">Courses pour le week-end</span><span class="meta"><span class="proj"><span class="dot" style="background:#3d8a5a"></span>Maison</span><span class="num">40 min</span></span>
+      </div>
+      <div class="row" role="listitem"><span class="time"></span><span class="check"></span><span class="title">Prendre rendez-vous chez le dentiste</span><span class="meta"><span class="due num">⚑ sam. 14</span><span class="num">10 min</span></span>
+        <span class="hover-actions"><button class="ib" title="Planifier (T)">◷</button><button class="ib" title="Reporter (D)">→</button><button class="ib" title="Plus">⋯</button></span></div>
+    </div>
+
+    <div class="section">
+      <div class="sechead"><svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m4 2.5 3.5 3.5L4 9.5"/></svg>Suggestions · 5</div>
+      <div class="sechead"><svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m4 2.5 3.5 3.5L4 9.5"/></svg>Terminées · 1</div>
+    </div>
+    <div class="tabbar"><span>Inbox</span><span class="on">Aujourd'hui</span><span>Calendrier</span><span>Habitudes</span><span>Plus</span></div>
+  </main>
+
+  <div class="splitter" role="separator" aria-orientation="vertical" aria-label="Redimensionner"></div>
+
+  <section class="cal" aria-label="Calendrier du jour">
+    <div class="calhead">
+      <span>Agenda personnel · Travail</span>
+      <div class="tools">
+        <button class="ib" aria-label="Heures visibles"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg></button>
+        <button class="ib" aria-label="Masquer le calendrier"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2.5" y="3" width="11" height="10" rx="2"/><path d="M9.5 3v10"/></svg></button>
+      </div>
+    </div>
+    <div class="allday"><span class="ev"><span class="dot" style="background:#8a7a5c"></span>Anniversaire de Claire</span></div>
+    <div class="grid">
+      <div class="hours">
+        <div class="hour" style="top:0"><span class="num">08:00</span></div>
+        <div class="hour" style="top:56px"><span class="num">09:00</span></div>
+        <div class="hour" style="top:112px"><span class="num">10:00</span></div>
+        <div class="hour" style="top:168px"><span class="num">11:00</span></div>
+        <div class="hour" style="top:224px"><span class="num">12:00</span></div>
+        <div class="hour" style="top:280px"><span class="num">13:00</span></div>
+        <div class="hour" style="top:336px"><span class="num">14:00</span></div>
+        <div class="hour" style="top:392px"><span class="num">15:00</span></div>
+        <div class="hour" style="top:448px"><span class="num">16:00</span></div>
+        <div class="hour" style="top:504px"><span class="num">17:00</span></div>
+        <div class="hour" style="top:560px"><span class="num">18:00</span></div>
+        <div class="hour" style="top:616px"><span class="num">19:00</span></div>
+        <div class="lane">
+          <div class="blk task done" style="top:28px;height:24px"><span class="check"></span><span class="t">Payer la facture d'électricité</span></div>
+          <div class="blk task" style="top:56px;height:83px"><span class="check"></span><span><div class="t">Préparer la revue trimestrielle</div><div class="num">09:00 – 10:30</div></span><span class="resize"></span></div>
+          <div class="blk event" style="top:140px;height:27px;right:0"><span class="dot cal-dot" style="background:#8a7a5c"></span><b>Point équipe</b> <span class="num">10:30</span></div>
+          <div class="blk task" style="top:168px;height:27px"><span class="check"></span><span class="t">Répondre aux mails clients</span></div>
+          <div class="blk event" style="top:224px;height:56px"><span class="dot cal-dot" style="background:#5c7a8a"></span><b>Déjeuner avec Marc</b><div class="num">12:00 – 13:00</div></div>
+          <div class="blk focus" style="top:280px;height:56px">Plage protégée · Concentration</div>
+          <div class="blk task" style="top:336px;height:41px;right:50%"><span class="check"></span><span><div class="t">Relire la PR de Léa</div><div class="num">14:00 – 14:45</div></span></div>
+          <div class="blk event" style="top:336px;height:56px;left:calc(50% + 2px)"><span class="dot cal-dot" style="background:#8a7a5c"></span><b>Appel fournisseur</b><div class="num">14:00 – 15:00</div></div>
+          <div class="blk ghost" style="top:420px;height:14px">15:30 · Appeler le plombier</div>
+          <div class="deadline" style="top:496px"><span class="flag num">⚑ 17:00 Rendre le dossier de subvention</span></div>
+          <div class="blk task" style="top:560px;height:41px"><span class="check"></span><span><div class="t">Séance de course à pied</div><div class="num">18:00 – 18:45</div></span></div>
+          <div class="blk event" style="top:616px;height:40px"><span class="dot cal-dot" style="background:#5c7a8a"></span><b>Cours de guitare</b></div>
+        </div>
+        <div class="nowline" style="top:187px"></div>
+        <div class="nowtime num" style="top:180px">11:20</div>
+      </div>
+    </div>
+  </section>
+</div>
+<button class="btn theme" onclick="const r=document.documentElement;r.dataset.theme=r.dataset.theme==='dark'?'light':'dark'">Thème</button>
+</body>
+</html>

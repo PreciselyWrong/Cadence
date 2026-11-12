@@ -12,6 +12,10 @@ import SidebarSmartLists from '../SidebarSmartLists';
 import { useStore } from '../../../store/useStore';
 import { fetchSmartTaskCounts } from '../../../utils/tasksService';
 
+jest.mock('../SidebarMiniMonth', () => ({
+    __esModule: true,
+    default: () => null,
+}));
 jest.mock('react-i18next', () => ({
     useTranslation: () => ({
         t: (key: string, fallback?: any) =>

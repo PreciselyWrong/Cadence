@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Location } from 'react-router-dom';
 import {
     FolderIcon,
@@ -6,7 +6,6 @@ import {
     TagIcon,
     XMarkIcon,
 } from '@heroicons/react/24/outline';
-import PushPinIcon from '../Shared/Icons/PushPinIcon';
 import EntityIcon from '../Shared/EntityIcon';
 import { useTranslation } from 'react-i18next';
 import { useStore } from '../../store/useStore';
@@ -17,6 +16,8 @@ import { Project } from '../../entities/Project';
 import { Note } from '../../entities/Note';
 import { Tag } from '../../entities/Tag';
 import { useNotePin, useProjectPin, useTagPin } from './sidebarPins';
+import Menu from '../Shared/ui/Menu';
+import { tint } from '../DailyPlan/planUtils';
 
 interface SidebarBookmarksProps {
     handleNavClick: (path: string, title: string, icon: JSX.Element) => void;
@@ -47,46 +48,98 @@ const getTagPath = (tag: Tag) => {
     }
 };
 
-interface PinnedRowProps {
+interface PinnedTileProps {
     name: string;
     active: boolean;
     icon: React.ReactNode;
+    // The entity's colour (#rrggbb): tints the icon tile.
+    color?: string | null;
     onOpen: () => void;
     onUnpin: () => void;
 }
 
-const PinnedRow: React.FC<PinnedRowProps> = ({
+// One pinned item as a tile, a large icon over its name (TickTick's pinned
+// lists). Nothing shows on hover: a right click (or the menu key on the
+// hidden trigger) offers Unpin.
+const PinnedTile: React.FC<PinnedTileProps> = ({
     name,
     active,
     icon,
+    color,
     onOpen,
     onUnpin,
 }) => {
     const { t } = useTranslation();
+    const trigger = useRef<HTMLButtonElement | null>(null);
     const label = t('sidebar.unpinItem', 'Unpin {{name}}', { name });
+    const fill = tint(color, 0.24);
     return (
         <div
-            className={`group flex items-center gap-2 rounded-[8px] px-[10px] py-[6px] text-[14px] font-medium cursor-pointer text-gray-900 dark:text-white hover:bg-white dark:hover:bg-white/10 ${
-                active ? 'bg-white dark:bg-white/10' : ''
-            }`}
-            onClick={onOpen}
+            className="relative min-w-0"
+            onContextMenu={(event) => {
+                event.preventDefault();
+                trigger.current?.click();
+            }}
         >
-            <span className="flex h-4 w-4 flex-shrink-0 items-center justify-center">
-                {icon}
-            </span>
-            <span className="truncate min-w-0 flex-1">{name}</span>
             <button
                 type="button"
-                onClick={(e) => {
-                    e.stopPropagation();
-                    onUnpin();
-                }}
-                className="[@media(hover:hover)]:opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity flex-shrink-0 text-gray-500 hover:text-gray-700 dark:hover:text-gray-200"
-                aria-label={label}
-                title={label}
+                onClick={onOpen}
+                title={name}
+                aria-current={active ? 'page' : undefined}
+                className={`flex w-full min-w-0 flex-col items-center gap-1 rounded-lg px-0.5 pb-1 pt-1.5 ${
+                    active ? 'bg-white/10' : 'hover:bg-white/5'
+                }`}
             >
-                <XMarkIcon className="h-3.5 w-3.5" />
+                <span
+                    aria-hidden="true"
+                    className={`grid h-8 w-8 place-items-center rounded-lg [&>*]:h-[18px] [&>*]:w-[18px] ${
+                        fill ? '' : 'bg-white/10 text-gray-200'
+                    }`}
+                    style={
+                        fill
+                            ? {
+                                  backgroundColor: fill,
+                                  color: color ?? undefined,
+                              }
+                            : undefined
+                    }
+                >
+                    {icon}
+                </span>
+                <span className="w-full truncate text-center text-xs text-gray-200">
+                    {name}
+                </span>
             </button>
+            <Menu
+                entries={[
+                    {
+                        key: 'unpin',
+                        label,
+                        icon: <XMarkIcon />,
+                        onSelect: onUnpin,
+                    },
+                ]}
+                align="start"
+                trigger={(triggerProps) => (
+                    <button
+                        {...triggerProps}
+                        ref={(node) => {
+                            trigger.current = node;
+                            const forward = triggerProps.ref;
+                            if (typeof forward === 'function') forward(node);
+                            else if (forward)
+                                (
+                                    forward as React.MutableRefObject<HTMLButtonElement | null>
+                                ).current = node;
+                        }}
+                        type="button"
+                        aria-label={label}
+                        className="sr-only focus:not-sr-only focus:absolute focus:right-0 focus:top-0 focus:rounded focus:bg-surface-high focus:p-0.5 focus:text-xs"
+                    >
+                        ⋯
+                    </button>
+                )}
+            />
         </div>
     );
 };
@@ -123,30 +176,23 @@ const SidebarBookmarks: React.FC<SidebarBookmarksProps> = ({
     return (
         <section
             aria-label={t('sidebar.pinned', 'Pinned')}
-            className="flex flex-col gap-0.5 rounded-xl bg-gray-100/80 dark:bg-white/5 p-1"
+            className="grid grid-cols-4 gap-0.5 px-1"
         >
-            <span className="flex items-center gap-[6px] px-[10px] pt-[4px] pb-[2px] text-[12px] tracking-[0.01em] font-semibold uppercase text-gray-500 dark:text-gray-400">
-                <PushPinIcon className="h-[13px] w-[13px]" filled />
-                {t('sidebar.pinned', 'Pinned')}
-            </span>
             {pinnedProjects.map((project) => {
                 const path = getProjectPath(project);
                 const color = resolveColor(project.color)?.value;
                 return (
-                    <PinnedRow
+                    <PinnedTile
                         key={project.uid}
                         name={project.name}
                         active={isActive(path)}
+                        color={color}
                         icon={
-                            <span style={color ? { color } : undefined}>
-                                <EntityIcon
-                                    icon={project.icon}
-                                    className="h-4 w-4"
-                                    fallback={
-                                        <FolderIcon className="h-4 w-4" />
-                                    }
-                                />
-                            </span>
+                            <EntityIcon
+                                icon={project.icon}
+                                className="h-[18px] w-[18px]"
+                                fallback={<FolderIcon />}
+                            />
                         }
                         onOpen={() =>
                             handleNavClick(
@@ -162,13 +208,11 @@ const SidebarBookmarks: React.FC<SidebarBookmarksProps> = ({
             {pinnedNotes.map((note) => {
                 const path = getNotePath(note);
                 return (
-                    <PinnedRow
+                    <PinnedTile
                         key={note.uid || note.id}
                         name={note.title}
                         active={isActive(path)}
-                        icon={
-                            <BookOpenIcon className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                        }
+                        icon={<BookOpenIcon />}
                         onOpen={() =>
                             handleNavClick(
                                 path,
@@ -183,20 +227,12 @@ const SidebarBookmarks: React.FC<SidebarBookmarksProps> = ({
             {pinnedTags.map((tag) => {
                 const path = getTagPath(tag);
                 return (
-                    <PinnedRow
+                    <PinnedTile
                         key={tag.uid || tag.id}
                         name={tag.name}
                         active={isActive(path)}
-                        icon={
-                            <span
-                                aria-hidden="true"
-                                className="h-2.5 w-2.5 rounded-full"
-                                style={{
-                                    backgroundColor: resolveTagColor(tag, tags)
-                                        .value,
-                                }}
-                            />
-                        }
+                        color={resolveTagColor(tag, tags).value}
+                        icon={<TagIcon />}
                         onOpen={() =>
                             handleNavClick(
                                 path,

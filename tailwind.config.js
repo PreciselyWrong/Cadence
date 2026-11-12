@@ -63,6 +63,7 @@ module.exports = {
                     variant:
                         'rgb(var(--color-outline-variant) / <alpha-value>)',
                 },
+                sidebar: 'rgb(var(--sidebar-bg) / <alpha-value>)',
                 ink: {
                     DEFAULT: 'rgb(var(--color-on-surface) / <alpha-value>)',
                     muted: 'rgb(var(--color-on-surface-variant) / <alpha-value>)',

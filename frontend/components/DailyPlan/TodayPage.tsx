@@ -129,6 +129,7 @@ import {
 } from '../Calendar/taskEvents';
 import { useAiAllowed, useTrialLock } from '../../hooks/useTrialStatus';
 import { useTaskUpdatedEvent } from '../../hooks/useTaskUpdatedEvent';
+import { useIsNarrow } from '../../hooks/useIsNarrow';
 import {
     DEFAULT_DAY_END,
     DEFAULT_DAY_START,
@@ -291,22 +292,6 @@ const pointerY = (event: Event | null): number | null => {
         return touch ? touch.clientY : null;
     }
     return null;
-};
-
-const useIsNarrow = () => {
-    const query = '(max-width: 767px)';
-    const [narrow, setNarrow] = useState(
-        () =>
-            typeof window !== 'undefined' && window.matchMedia?.(query).matches
-    );
-    useEffect(() => {
-        const media = window.matchMedia?.(query);
-        if (!media) return;
-        const update = () => setNarrow(media.matches);
-        media.addEventListener?.('change', update);
-        return () => media.removeEventListener?.('change', update);
-    }, []);
-    return !!narrow;
 };
 
 // Closes a small menu on a click outside it or on Escape.

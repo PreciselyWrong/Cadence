@@ -21,18 +21,26 @@ import { TaskEditorBody, TaskEditorFooter } from './TaskEditorBody';
 interface TaskPaneBodyProps {
     task: Task;
     onSaved: (task: Task) => void;
+    // Under a wide page the fields keep a readable line length.
+    narrowColumn?: boolean;
 }
 
 // The inline editor in the pane: a chip per field, description in place,
 // subtasks, attachments and comments, saved field by field. Keyed by task
 // uid by its parent, so local draft state resets when another task opens.
-const TaskPaneBody: React.FC<TaskPaneBodyProps> = ({ task, onSaved }) => {
+const TaskPaneBody: React.FC<TaskPaneBodyProps> = ({
+    task,
+    onSaved,
+    narrowColumn = false,
+}) => {
     const ed = useTaskEditor(task, onSaved);
 
     return (
         <>
             <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
-                <div className="space-y-5">
+                <div
+                    className={`space-y-5 ${narrowColumn ? 'mx-auto max-w-3xl' : ''}`}
+                >
                     <TaskEditorBody ed={ed} />
                     {ed.error && (
                         <p
@@ -62,8 +70,13 @@ const TaskPaneBody: React.FC<TaskPaneBodyProps> = ({ task, onSaved }) => {
     );
 };
 
-// Right-hand pane beside the task list (minimal mode). Full width sheet below md.
-const TaskPane: React.FC = () => {
+// The task's detail beside the list (minimal mode), or under the page where
+// the right side is taken (Today's calendar). Full width sheet below md.
+interface TaskPaneProps {
+    placement?: 'side' | 'bottom';
+}
+
+const TaskPane: React.FC<TaskPaneProps> = ({ placement = 'side' }) => {
     const { t } = useTranslation();
     const isMinimal = useIsMinimal();
     const location = useLocation();
@@ -119,7 +132,11 @@ const TaskPane: React.FC = () => {
     return (
         <aside
             aria-label={t('taskPane.label', 'Task details')}
-            className="flex min-h-0 flex-col border-l border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900 md:w-[420px] md:flex-shrink-0 max-md:fixed max-md:inset-0 max-md:z-40"
+            className={`flex min-h-0 flex-col bg-white dark:bg-gray-900 max-md:fixed max-md:inset-0 max-md:z-40 md:flex-shrink-0 ${
+                placement === 'bottom'
+                    ? 'border-t border-gray-200 dark:border-gray-800 md:h-[44%] md:min-h-[280px]'
+                    : 'border-l border-gray-200 dark:border-gray-800 md:w-[420px]'
+            }`}
         >
             <div className="flex flex-shrink-0 items-center justify-between gap-2 border-b border-gray-200 px-4 py-2 dark:border-gray-800">
                 <Link
@@ -144,6 +161,7 @@ const TaskPane: React.FC = () => {
                     key={task.uid}
                     task={task}
                     onSaved={handleSaved}
+                    narrowColumn={placement === 'bottom'}
                 />
             ) : loadFailed ? (
                 <p

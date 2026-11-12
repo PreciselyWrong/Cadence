@@ -26,6 +26,8 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
   écran du bilan après `evening.switchTime` (fuseau du profil), `GET /daily-plan/:date/evening`, « Reporter à demain » (annulation par retrait du plan de demain), réglage `Bilan du soir` ; contrat `docs/39-daily-brief.md` § Evening review, écarts web dans `docs/fork/WEB-UX-NOTES.md` (2026-11-04). Vérif : mêmes quatre sections et mêmes compteurs que le web pour une même journée sur le serveur de test, puis passage à 18:00 sur le téléphone.
 - Aujourd'hui sur Android : glisser-déposer pour ranger
   Web : glisser une ligne. Android : seulement Monter et Descendre dans le menu, car le glissé entre en conflit avec le balayage des lignes et ne peut pas se vérifier ici (téléphone en `unauthorized` sur ADB, émulateur en panne). Vérif : sur le téléphone, ranger trois tâches au doigt sans déclencher de balayage ; l'ordre se retrouve sur le web.
+- Android : planifier sans toucher l'échéance (2026-11-12, mis de côté : priorité au desktop)
+  Code écrit et testé, pas commité : `planning/PlanEdits.kt` (Reporter, Plus tard, Placer écrivent le plan par `PATCH /api/v1/daily-plan/:date`, en appels différés), suppression du hook serveur `leaveOnMove`, `daily-plan-keeps-on-move.test.js`. À faire : relire le diff (il touche `TodayTab.kt` et `Factories.kt`, déjà modifiés par le résumé non commité), basculer le Résumé (`BriefDayPlan.kt`, `BriefActions.kt`) sur `PlanEdits`, commiter serveur et Android ensemble, installer. Vérif : sur le téléphone, « Reporter » garde l'échéance et la tâche apparaît demain ; « Plus tard » ne vide plus l'échéance.
 - Frise du jour déplaçable sur Android
   Web : déplacer et étirer les tâches à heure et les événements d'un agenda en deux sens. Android : la frise de Ma journée reste en lecture. Vérif : sur le téléphone, étirer une tâche ; sa durée se retrouve sur le web.
 - Revue UX du 2026-11-06, à vérifier par toi
@@ -38,6 +40,22 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
   - « Cocher une fois passé » par agenda : Android seulement, car le web n'a pas d'événements cochables. À reprendre si le web en gagne. Vérif : un événement terminé d'un agenda réglé apparaît fait.
 - Hors périmètre volontaire
   limite de projets actifs (compteur seulement). V/E/M/D abandonné le 2026-11-01 : le planificateur Hermès arbitre ; valeurs et grille archivées dans la note Cadence « Archive V/E/M/D » et `~/Documents/cadence-archives/`.
+
+## Retours en direct (refonte desktop, 2026-11-12)
+
+- [x] Notifications Tauri lisibles sur Fedora
+- [x] Rien n'apparaît au survol ; le détail s'ouvre au clic
+- [x] Clic sur un bloc ou un événement du calendrier : ouvre la tâche ou l'événement
+- [x] Détail de tâche dans un panneau sous la page, pas à droite
+- [x] Épinglés en tuiles (icône + nom) au-dessus du mini-calendrier
+- [x] Bouton « Calendrier » visible quand le calendrier est caché
+- [x] Calendrier sur 1, 3 ou 7 jours, flèches ‹ › pour changer de jour
+- [x] Mode sombre retravaillé (anthracite bleuté, blocs nets)
+- [x] Réordonner la liste du jour décale aussi les créneaux du calendrier (Sunsama)
+- [ ] « 7 prochains jours » en tableau : une colonne par jour, cartes, calendrier à droite (Sunsama)
+- [ ] Tâches venues d'un TODO.md : se comportent comme de vraies tâches sur le web
+- [ ] Style des apps de référence repris sur tout le desktop, pas seulement Aujourd'hui
+- [ ] Cases `- [ ]` écrites dans une note : deviennent des tâches liées à la note
 
 ## Note de l'ajout rapide Android : focus et fermeture [cadence:c7e743d5-3c37-4ee1-812c-f2e134017ddc]
 

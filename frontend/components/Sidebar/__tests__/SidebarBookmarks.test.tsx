@@ -61,7 +61,9 @@ describe('SidebarBookmarks', () => {
             <SidebarBookmarks handleNavClick={jest.fn()} location={location} />
         );
 
-        expect(screen.getByText('Pinned')).toBeInTheDocument();
+        expect(
+            screen.getByRole('region', { name: 'Pinned' })
+        ).toBeInTheDocument();
         expect(screen.getByText('Garden')).toBeInTheDocument();
         expect(screen.getByText('Reading')).toBeInTheDocument();
         expect(screen.getByText('errands')).toBeInTheDocument();
@@ -77,7 +79,7 @@ describe('SidebarBookmarks', () => {
         expect(screen.getByText('Garden')).toBeInTheDocument();
     });
 
-    it('opens a pinned project and unpins it from its row', () => {
+    it('opens a pinned project and unpins it from its tile', () => {
         const handleNavClick = jest.fn();
         render(
             <SidebarBookmarks
@@ -93,7 +95,9 @@ describe('SidebarBookmarks', () => {
             expect.anything()
         );
 
-        fireEvent.click(screen.getByRole('button', { name: 'Unpin Garden' }));
+        // Right click on the tile offers Unpin; nothing shows on hover.
+        fireEvent.contextMenu(screen.getByText('Garden'));
+        fireEvent.click(screen.getByRole('menuitem', { name: 'Unpin Garden' }));
         expect(updateProject).toHaveBeenCalledWith('p1', {
             pin_to_sidebar: false,
         });

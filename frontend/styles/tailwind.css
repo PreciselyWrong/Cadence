@@ -59,21 +59,29 @@
     --color-scrim: 14 14 20;
   }
 
+  /* Dark: a blue-tinted charcoal (as in Superlist), not neutral black;
+     the gray scale follows so the dark: utilities match the tokens. */
   .dark {
+    --gray-500: 112 116 132;
+    --gray-600: 74 77 92;
+    --gray-700: 48 51 63;
+    --gray-800: 31 33 41;
+    --gray-900: 23 24 30;
+    --gray-950: 16 17 22;
     --color-primary: 169 166 255;
     --color-on-primary: 27 22 128;
     --color-primary-container: 58 55 143;
     --color-on-primary-container: 228 227 255;
-    --color-surface: 18 18 20;
-    --color-on-surface: 229 225 236;
-    --color-surface-variant: 70 69 79;
-    --color-on-surface-variant: 200 197 208;
-    --color-card: 30 30 33;
-    --color-container-low: 26 26 29;
-    --color-container-high: 40 40 44;
-    --color-container-highest: 52 52 56;
-    --color-outline: 145 143 154;
-    --color-outline-variant: 70 69 79;
+    --color-surface: 23 24 30;
+    --color-on-surface: 236 237 242;
+    --color-surface-variant: 58 61 74;
+    --color-on-surface-variant: 164 168 182;
+    --color-card: 31 33 41;
+    --color-container-low: 27 29 36;
+    --color-container-high: 38 40 50;
+    --color-container-highest: 48 51 63;
+    --color-outline: 140 144 160;
+    --color-outline-variant: 58 61 74;
     --color-error: 255 180 171;
     --color-on-error: 105 0 5;
     --color-error-container: 147 0 10;
@@ -81,7 +89,7 @@
     --color-success: 143 216 138;
     --color-success-container: 31 82 35;
     --color-warning: 245 189 82;
-    --color-warning-container: 93 66 0;
+    --color-warning-container: 72 54 18;
     --color-scrim: 0 0 0;
   }
 
@@ -94,6 +102,70 @@
     --color-container-low: 10 10 14;
     --color-container-high: 28 28 34;
     --color-container-highest: 38 38 44;
+  }
+
+  /* The sidebar is a dark island in both themes, navy in light mode and
+     charcoal in dark mode (after Sorted³ and Superlist). Its subtree carries
+     the `dark` class, so the existing dark: variants apply, and these values
+     remap the gray scale and the semantic roles they read. */
+  :root {
+    --sidebar-bg: 27 35 51;
+    /* Share of a project or calendar colour in a calendar block. */
+    --block-mix: 24%;
+  }
+
+  /* Not on the island itself: it carries `dark` in light mode too. */
+  .dark:not(.sidebar-island) {
+    --sidebar-bg: 16 17 22;
+    --block-mix: 42%;
+  }
+
+  .sidebar-island {
+    --gray-50: 246 248 252;
+    --gray-100: 238 241 247;
+    --gray-200: 222 227 237;
+    --gray-300: 196 204 219;
+    --gray-400: 160 170 191;
+    --gray-500: 133 145 170;
+    --gray-600: 82 95 122;
+    --gray-700: 51 63 88;
+    --gray-800: 39 49 70;
+    --gray-900: 27 35 51;
+    --gray-950: 19 25 38;
+    --color-surface: var(--sidebar-bg);
+    --color-on-surface: 233 237 245;
+    --color-surface-variant: 51 63 88;
+    --color-on-surface-variant: 170 180 200;
+    --color-card: 34 43 62;
+    --color-container-low: 31 40 58;
+    --color-container-high: 42 53 76;
+    --color-container-highest: 51 63 88;
+    --color-outline: 142 153 176;
+    --color-outline-variant: 58 70 96;
+    --color-primary: var(--island-primary, 169 166 255);
+    --color-on-primary: var(--island-on-primary, 27 22 128);
+    --color-primary-container: var(--island-primary-container, 58 55 143);
+    --color-on-primary-container: var(
+      --island-on-primary-container,
+      228 227 255
+    );
+    background-color: rgb(var(--sidebar-bg));
+    color-scheme: dark;
+  }
+
+  .dark .sidebar-island {
+    --gray-500: 136 140 156;
+    --gray-600: 74 77 92;
+    --gray-700: 44 46 58;
+    --gray-800: 32 34 43;
+    --gray-900: 16 17 22;
+    --gray-950: 11 12 16;
+    --color-on-surface-variant: 172 176 190;
+    --color-card: 27 29 36;
+    --color-container-low: 22 23 29;
+    --color-container-high: 34 36 45;
+    --color-container-highest: 44 46 58;
+    --color-outline-variant: 52 55 68;
   }
 
   body {

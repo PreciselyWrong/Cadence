@@ -291,6 +291,19 @@ export function applyAppearance(
     for (const [step, rgb] of Object.entries(scale)) {
         style.setProperty(`--blue-${step}`, channels(rgb));
     }
+    // The sidebar stays dark in both modes (`.sidebar-island`): it reads
+    // the dark roles of the same accent.
+    const island = deriveAccentRoles(seed, true);
+    style.setProperty('--island-primary', channels(island.primary));
+    style.setProperty('--island-on-primary', channels(island.onPrimary));
+    style.setProperty(
+        '--island-primary-container',
+        channels(island.primaryContainer)
+    );
+    style.setProperty(
+        '--island-on-primary-container',
+        channels(island.onPrimaryContainer)
+    );
 }
 
 /** Re-applies the accent when the theme mode flips (roles differ per mode). */

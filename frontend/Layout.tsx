@@ -70,6 +70,8 @@ const Layout: React.FC<LayoutProps> = ({
     const isMinimal = useIsMinimal();
     const showTaskPane =
         isMinimal && canShowTaskPane(location.pathname, location.search);
+    // Today keeps its calendar on the right: the detail opens under it.
+    const paneBelow = location.pathname === '/today';
     const isUpcomingView = location.pathname === '/upcoming';
     // Notes fill the content area edge to edge.
     const isNotesView = /^\/notes?(\/|$)/.test(location.pathname);
@@ -471,7 +473,7 @@ const Layout: React.FC<LayoutProps> = ({
                 <div
                     className={`transition-all duration-300 ease-in-out ${mainContentMarginLeft} h-screen flex flex-col sm:p-2 sm:pl-0`}
                 >
-                    <div className="relative flex flex-col flex-1 min-h-0 overflow-hidden bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 pt-[env(safe-area-inset-top)] sm:rounded-2xl sm:shadow-sm sm:pt-0">
+                    <div className="relative flex flex-col flex-1 min-h-0 overflow-hidden bg-gray-100 dark:bg-surface text-gray-900 dark:text-gray-100 pt-[env(safe-area-inset-top)] sm:rounded-2xl sm:shadow-sm sm:pt-0">
                         {background}
                         <Navbar
                             transparent={!!background}
@@ -510,7 +512,9 @@ const Layout: React.FC<LayoutProps> = ({
                         <div
                             className={
                                 showTaskPane
-                                    ? 'flex min-h-0 flex-1 overflow-hidden'
+                                    ? `flex min-h-0 flex-1 overflow-hidden ${
+                                          paneBelow ? 'flex-col' : ''
+                                      }`
                                     : 'contents'
                             }
                         >
@@ -558,7 +562,9 @@ const Layout: React.FC<LayoutProps> = ({
                                     </TaskRowExpansionProvider>
                                 </div>
                             </div>
-                            <TaskPane />
+                            <TaskPane
+                                placement={paneBelow ? 'bottom' : 'side'}
+                            />
                         </div>
                     </div>,
                     <>

@@ -15,6 +15,10 @@ function mockStub(testId: string) {
     return Stub;
 }
 
+jest.mock('../SidebarMiniMonth', () => ({
+    __esModule: true,
+    default: () => null,
+}));
 jest.mock('../SidebarNav', () => ({
     __esModule: true,
     default: mockStub('nav'),

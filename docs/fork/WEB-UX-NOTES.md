@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-12 — Aujourd'hui refait, barre latérale bleu nuit (web)
+
+- **Problème** : la colonne de gauche ne montrait que les candidates (« Nothing here » avec 8 tâches prévues), cinq représentations du plan, deux navigations de date, un glisser dans le calendrier qui réécrivait l'échéance, des actions qui surgissaient au survol.
+- **Décision** : une liste du jour (prévues + dues ce jour, une fois chacune), lignes à deux niveaux (heure, titre, puces projet / étiquettes / durée → fin / échéance), calendrier 1, 3 ou 7 jours à droite ; glisser = créneau, jamais l'échéance ; réordonner les tâches à heure réordonne la journée ; clic = détail sous la page ; menu au clic droit ; rien au survol. Barre latérale bleu nuit (anthracite en sombre), épinglés en tuiles, mini-mois. Doc : `docs/20-daily-plan.md`, `docs/fork/TODAY-REDESIGN.md`.
+- **À reprendre sur Android** : mêmes membres du jour (`GET /api/daily-plan/day`), écriture du plan par `PATCH` d'opérations, reporter = déplacer la ligne du plan, durée par ligne de plan, réordonner = recaler les créneaux, couleurs de blocs par projet ; le reste (mise en page) adapté au tactile.
+
 ### 2026-11-07 — Inbox : un seul panneau de tri ; Liens : la bibliothèque (web)
 
 - **Problème** : un lien partagé partait tout seul dans Liens ; dans l'Inbox, sa carte proposait cinq décisions de lien (Garder, À tester, Projet, Plus tard, Jeter) à côté du « Enregistrer comme » habituel, plus un mode « Trier les liens » à part : impossible d'y mettre une étiquette, un projet ou d'en faire une tâche simplement.

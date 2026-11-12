@@ -10,6 +10,7 @@ import { Person } from '../entities/Person';
 import SidebarAreas from './Sidebar/SidebarAreas';
 import SidebarFooter from './Sidebar/SidebarFooter';
 import SidebarTrialCard from './Billing/SidebarTrialCard';
+import SidebarMiniMonth from './Sidebar/SidebarMiniMonth';
 import SidebarNav from './Sidebar/SidebarNav';
 import SidebarNotes from './Sidebar/SidebarNotes';
 import SidebarHabits from './Sidebar/SidebarHabits';
@@ -62,7 +63,9 @@ interface SidebarProps {
 }
 
 // The sidebar sits on the app canvas; the page is a panel beside it.
-export const SIDEBAR_CANVAS = 'bg-gray-200 dark:bg-gray-900';
+// Navy in light mode, charcoal in dark mode: the frame around the content
+// and the sidebar share it (`.sidebar-island` in tailwind.css).
+export const SIDEBAR_CANVAS = 'bg-sidebar';
 
 // Minimal keeps only these lists in the panel; the rest live in the icon rail.
 // Pinned items sit above everything in both layouts.
@@ -250,7 +253,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 />
             )}
             <div
-                className={`fixed top-0 left-0 ${isSidebarOpen ? 'w-[85vw] max-w-[22rem] sm:max-w-none sm:w-sidebar' : 'w-0 invisible sm:w-rail sm:visible'} h-screen overflow-hidden ${SIDEBAR_CANVAS} text-gray-900 dark:text-white transition-width duration-300 ease-in-out z-40`}
+                className={`fixed top-0 left-0 ${isSidebarOpen ? 'w-[85vw] max-w-[22rem] sm:max-w-none sm:w-sidebar' : 'w-0 invisible sm:w-rail sm:visible'} h-screen overflow-hidden dark sidebar-island text-surface-on transition-width duration-300 ease-in-out z-40`}
             >
                 {/* Collapsed on tablet and desktop: an icon rail */}
                 {!isSidebarOpen && (
@@ -300,9 +303,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                                 >
                                     <img
                                         src={getAssetPath(
-                                            isDarkMode
-                                                ? 'wide-logo-light.png'
-                                                : 'wide-logo-dark.png'
+                                            'wide-logo-light.png'
                                         )}
                                         alt="Cadence"
                                         className="h-8 w-auto"
@@ -322,11 +323,17 @@ const Sidebar: React.FC<SidebarProps> = ({
                                     <SidebarPanelIcon className="hidden sm:block h-5 w-5" />
                                 </button>
                             </div>
-                            <div className="flex-1 min-h-0 overflow-y-auto px-2.5 pt-3 pb-4">
-                                {/* Pinned items always sit at the very top */}
+                            <div className="flex-1 min-h-0 overflow-y-auto px-2.5 pt-1 pb-4">
+                                {/* Pinned items at the very top, as tiles (TickTick) */}
                                 {isSectionVisible('favorites') && (
-                                    <div className="mb-[14px] empty:hidden">
+                                    <div className="mb-2 empty:hidden">
                                         {sectionElements.favorites}
+                                    </div>
+                                )}
+                                {/* A month to jump to any day of Today (Sorted³, TickTick) */}
+                                {isMinimal && (
+                                    <div className="mb-3 hidden sm:block">
+                                        <SidebarMiniMonth />
                                     </div>
                                 )}
                                 <div className="mb-[22px]">

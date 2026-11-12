@@ -7,19 +7,24 @@ const RIGHT_MIN = 360;
 const KEY_STEP = 24;
 const WIDTH_KEY = 'today.leftWidth';
 
-const readWidth = (): number => {
+export interface PaneWidthOptions {
+    storageKey?: string;
+    initial?: number;
+}
+
+const readWidth = (key: string, initial: number): number => {
     try {
-        const stored = Number(window.localStorage.getItem(WIDTH_KEY));
+        const stored = Number(window.localStorage.getItem(key));
         if (Number.isFinite(stored) && stored >= PANE_MIN) return stored;
     } catch {
         // Fall back to the default width.
     }
-    return PANE_DEFAULT;
+    return initial;
 };
 
-const writeWidth = (width: number) => {
+const writeWidth = (key: string, width: number) => {
     try {
-        window.localStorage.setItem(WIDTH_KEY, String(Math.round(width)));
+        window.localStorage.setItem(key, String(Math.round(width)));
     } catch {
         // The width only lasts for this page view.
     }
@@ -29,8 +34,11 @@ const writeWidth = (width: number) => {
 // right pane its minimum; remembered per browser. `fits` is false when the
 // container is too narrow for both columns (sidebar open on a tablet): the
 // panes then stack instead of squeezing the day into a scrolling sliver.
-export const usePaneWidth = (containerRef: React.RefObject<HTMLElement>) => {
-    const [width, setWidth] = useState(readWidth);
+export const usePaneWidth = (
+    containerRef: React.RefObject<HTMLElement>,
+    { storageKey = WIDTH_KEY, initial = PANE_DEFAULT }: PaneWidthOptions = {}
+) => {
+    const [width, setWidth] = useState(() => readWidth(storageKey, initial));
     const [total, setTotal] = useState(0);
     const observed = useRef<{
         el: HTMLElement;
@@ -65,9 +73,9 @@ export const usePaneWidth = (containerRef: React.RefObject<HTMLElement>) => {
         (value: number, persist = false) => {
             const next = clamp(value);
             setWidth(next);
-            if (persist) writeWidth(next);
+            if (persist) writeWidth(storageKey, next);
         },
-        [clamp]
+        [clamp, storageKey]
     );
     // The stored width can be wider than this window allows.
     const shown = total

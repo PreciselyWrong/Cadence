@@ -45,7 +45,7 @@ const SubscriptionRequired = lazy(
 );
 import { User } from './entities/User';
 import { canOpenAccess } from './entities/Role';
-import TodayPage from './components/DailyPlan/TodayPage';
+import TodayView from './components/Today/TodayView';
 import TaskDetails from './components/Task/TaskDetails';
 import TaskLinkRedirect from './components/Task/TaskLinkRedirect';
 import LoadingScreen from './components/Shared/LoadingScreen';
@@ -462,7 +462,7 @@ const App: React.FC = () => {
                                 index
                                 element={<Navigate to="/today" replace />}
                             />
-                            <Route path="/today" element={<TodayPage />} />
+                            <Route path="/today" element={<TodayView />} />
                             <Route
                                 path="/welcome"
                                 element={
