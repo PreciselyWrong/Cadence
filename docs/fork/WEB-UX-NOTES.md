@@ -656,3 +656,9 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Problème** : le « + » de la colonne Inbox créait une idée, pas une tâche ; les tâches sans moment (« Tâches à classer ») n'apparaissaient pas dans Planifier.
 - **Décision** : le « + » crée une vraie tâche, lue comme l'ajout rapide d'un jour (`#projet`, étiquettes, priorité, durée ; jamais d'échéance). Une date (ou une heure, aujourd'hui) la planifie ce jour-là ; sans date elle reste dans « Tâches à classer » (`needs_when` posé si elle a un projet). La colonne liste d'abord ces tâches (`GET /tasks?type=unsorted`, cartes de tâche à case ronde, clic = fiche), puis les idées ; les deux se glissent sur un jour, le calendrier ou un horizon ; le compteur de la barre repliée et l'état vide comptent les deux. Une tâche planifiée sur un jour affiché quitte la colonne (le serveur la compte encore à classer : un jour du plan n'est pas un moment). Le champ reste ouvert après Entrée et garde le texte en cas d'échec.
 - **Android à reprendre** : `TODO.md` › Retours en direct.
+
+### 2026-11-12 — Icône de la source sur les tâches
+
+- **Problème** : une tâche venue de Gmail, de Telegram ou de Claude ne le montrait nulle part ; le « TODO.md » était le seul badge d'origine.
+- **Décision** : petite marque en lettre (« M » rouge pour Gmail, sans logo) avec le nom, sur la ligne de Aujourd'hui, la carte de Planifier, la ligne de tâche et la fiche. Avec un lien, un clic l'ouvre dans un nouvel onglet sans ouvrir la tâche. Une tâche web n'a pas de badge.
+- **Android à reprendre** : `TODO.md` › Now (badge de source et champs `source` / `source_url` dans Room).

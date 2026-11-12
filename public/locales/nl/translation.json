@@ -1,4 +1,14 @@
 {
+    "taskSource": {
+        "gmail": "Gmail",
+        "telegram": "Telegram",
+        "mcp": "MCP",
+        "android": "Android",
+        "desktop": "Bureaublad",
+        "link": "Link",
+        "openSource": "Bron openen",
+        "fromSource": "Komt van {{source}}"
+    },
   "autoClassify": {
     "health": {
       "retryError": "Opnieuw proberen mislukt",

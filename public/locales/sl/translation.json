@@ -1,4 +1,14 @@
 {
+    "taskSource": {
+        "gmail": "Gmail",
+        "telegram": "Telegram",
+        "mcp": "MCP",
+        "android": "Android",
+        "desktop": "Računalnik",
+        "link": "Povezava",
+        "openSource": "Odpri vir",
+        "fromSource": "Prihaja iz: {{source}}"
+    },
   "autoClassify": {
     "health": {
       "retryError": "Ponovni poskus ni uspel",

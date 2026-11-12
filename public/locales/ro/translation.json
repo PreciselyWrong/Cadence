@@ -1,4 +1,14 @@
 {
+    "taskSource": {
+        "gmail": "Gmail",
+        "telegram": "Telegram",
+        "mcp": "MCP",
+        "android": "Android",
+        "desktop": "Desktop",
+        "link": "Link",
+        "openSource": "Deschide sursa",
+        "fromSource": "Provine din {{source}}"
+    },
   "autoClassify": {
     "health": {
       "retryError": "Reîncercarea a eșuat",

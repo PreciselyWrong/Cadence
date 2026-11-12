@@ -291,6 +291,16 @@ module.exports = (sequelize) => {
                 type: DataTypes.STRING(64),
                 allowNull: true,
             },
+            // Where the task came from (tasks/core/source.js lists the values)
+            // and the page it points to, shown as a badge that opens it.
+            source: {
+                type: DataTypes.STRING(32),
+                allowNull: true,
+            },
+            source_url: {
+                type: DataTypes.TEXT,
+                allowNull: true,
+            },
             completed_at: {
                 type: DataTypes.DATE,
                 allowNull: true,

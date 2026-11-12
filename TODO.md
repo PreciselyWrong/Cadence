@@ -43,6 +43,9 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
 - Hors périmètre volontaire
   limite de projets actifs (compteur seulement). V/E/M/D abandonné le 2026-11-01 : le planificateur Hermès arbitre ; valeurs et grille archivées dans la note Cadence « Archive V/E/M/D » et `~/Documents/cadence-archives/`.
 
+- [x] Icône de la source sur les tâches (M de Gmail, etc.) : web fait (badge sur Aujourd'hui, Planifier, la ligne et la fiche ; un clic ouvre le lien ; champs `source` / `source_url` côté serveur, MCP, Inbox, sync et sauvegarde ; `docs/00-tasks-behavior.md`). Vérif : une tâche créée par MCP avec `source: gmail` et un lien montre le « M » et ouvre le message.
+  - Android : badge de source + champs `source`/`source_url` dans Room (reporté : `android/` tenu par un autre agent ; vérif : une tâche synchronisée avec `source: gmail` affiche le « M » et ouvre le message).
+
 ## Retours en direct (refonte desktop, 2026-11-12)
 
 - [x] Notifications Tauri lisibles sur Fedora

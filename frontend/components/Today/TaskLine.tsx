@@ -10,6 +10,7 @@ import Menu, { MenuEntry, MenuItem } from '../Shared/ui/Menu';
 import { IconButton } from '../Shared/ui/Button';
 import { formatDuration, formatMinute } from '../DailyPlan/planUtils';
 import { DayLine, lineAt } from './dayModel';
+import TaskSourceBadge from '../Shared/TaskSourceBadge';
 
 export const findEntry = (
     entries: MenuEntry[],
@@ -284,6 +285,7 @@ const TaskLine: React.FC<TaskLineProps> = ({
                 >
                     {task.name}
                 </span>
+                <TaskSourceBadge task={task} className="mt-1" />
                 {chips.length > 0 && (
                     <span className="mt-1 flex min-w-0 flex-wrap items-center gap-1.5">
                         {chips}

@@ -10,6 +10,7 @@ import { Task } from '../../entities/Task';
 import QuickCaptureInput from '../Inbox/QuickCaptureInput';
 import ConfirmDialog from '../Shared/ConfirmDialog';
 import TodoMdBadge from '../Shared/TodoMdBadge';
+import TaskSourceBadge from '../Shared/TaskSourceBadge';
 import MarkdownRenderer from '../Shared/MarkdownRenderer';
 import MarkdownEditor from '../Note/MarkdownEditor';
 import { SidePanelSection } from '../SidePanel/SidePanelParts';
@@ -119,6 +120,7 @@ export const TaskEditorBody: React.FC<TaskEditorBodyProps> = ({
                     )}
                 </div>
             )}
+            {!readOnly && <TaskSourceBadge task={task} className="mb-2" />}
             {titleId && (
                 <h2 id={titleId} className="sr-only">
                     {task.name}

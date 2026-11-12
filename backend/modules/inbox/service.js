@@ -13,6 +13,7 @@ const { NotFoundError } = require('../../shared/errors');
 const { processInboxItem, parseAreaRefs } = require('./inboxProcessingService');
 const peopleService = require('../people/service');
 const attachments = require('./operations/attachments');
+const { sourceFromInboxItem } = require('../tasks/core/source');
 
 // Items go out as plain objects with their files under `attachments`.
 async function withAttachments(items) {
@@ -152,6 +153,12 @@ class InboxService {
                 target.uid
             );
             await attachments.moveToTarget(item, target.kind, row);
+            // A task keeps the origin it already has; an item's origin fills
+            // only an empty one.
+            const origin = sourceFromInboxItem(item);
+            if (target.kind === 'task' && !row.source && origin.source) {
+                await row.update(origin);
+            }
         }
 
         await inboxRepository.markProcessed(item);

@@ -5,6 +5,7 @@ const {
     parseStatus,
     parseEstimatedMinutes,
 } = require('./parsers');
+const { parseTaskSource, parseTaskSourceUrl } = require('./source');
 const {
     processDueDateForStorage,
     processDeferUntilForStorage,
@@ -215,6 +216,17 @@ function calculateInitialDueDate(body, timezone = 'UTC') {
     return `${year}-${month}-${day}`;
 }
 
+// The origin fields a request sent (validated); absent keys stay absent so an
+// update never clears a source it did not mention.
+function sourceAttributes(body) {
+    const attrs = {};
+    const source = parseTaskSource(body.source);
+    if (source !== undefined) attrs.source = source;
+    const sourceUrl = parseTaskSourceUrl(body.source_url);
+    if (sourceUrl !== undefined) attrs.source_url = sourceUrl;
+    return attrs;
+}
+
 function buildTaskAttributes(body, userId, timezone, isUpdate = false) {
     const recurrenceType = body.recurrence_type || 'none';
     const isRecurring = recurrenceType && recurrenceType !== 'none';
@@ -229,6 +241,7 @@ function buildTaskAttributes(body, userId, timezone, isUpdate = false) {
     }
 
     const attrs = {
+        ...sourceAttributes(body),
         name: body.name?.trim(),
         priority: parsePriority(body.priority),
         due_date: processDueDateForStorage(dueDate, timezone),
@@ -295,6 +308,7 @@ function buildUpdateAttributes(body, task, timezone) {
     const incomingNote = resolveNote(body);
 
     const attrs = {
+        ...sourceAttributes(body),
         name: body.name !== undefined ? body.name : task.name,
         priority:
             body.priority !== undefined

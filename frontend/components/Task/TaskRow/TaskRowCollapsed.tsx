@@ -27,8 +27,7 @@ import { Task } from '../../../entities/Task';
 import { Project } from '../../../entities/Project';
 import TaskTagChips from './TaskTagChips';
 import EntityIcon from '../../Shared/EntityIcon';
-import TodoMdBadge from '../../Shared/TodoMdBadge';
-import { isTodoMdTask } from '../../../utils/todoMd';
+import TaskSourceBadge from '../../Shared/TaskSourceBadge';
 import { isTaskCompleted } from '../../../constants/taskStatus';
 import { resolveTaskArea } from '../../../utils/taskArea';
 import {
@@ -652,7 +651,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                             </span>
                         </span>
                     )}
-                    {isTodoMdTask(task) && <TodoMdBadge />}
+                    <TaskSourceBadge task={task} className="ml-1" />
                     {!isMinimal && commentBadge}
                     {!isMinimal && subtasksToggle}
                     {!isMinimal && !compact && (

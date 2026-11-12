@@ -9,6 +9,7 @@ import { toPriorityLevel } from '../Shared/PriorityBadge';
 import { formatDuration, formatMinute } from '../DailyPlan/planUtils';
 import { DayLine, lineAt } from '../Today/dayModel';
 import { subtasksWithoutCard } from './groupCards';
+import TaskSourceBadge from '../Shared/TaskSourceBadge';
 
 export const cardId = (date: string, uid: string): string =>
     `card:${date}:${uid}`;
@@ -202,6 +203,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
                 >
                     {task.name}
                 </span>
+                <TaskSourceBadge task={task} className="self-center" />
             </div>
 
             {parentName && (

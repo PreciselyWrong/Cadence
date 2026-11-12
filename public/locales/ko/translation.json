@@ -1,4 +1,14 @@
 {
+    "taskSource": {
+        "gmail": "Gmail",
+        "telegram": "Telegram",
+        "mcp": "MCP",
+        "android": "Android",
+        "desktop": "데스크톱",
+        "link": "링크",
+        "openSource": "원본 열기",
+        "fromSource": "{{source}}에서 가져옴"
+    },
   "autoClassify": {
     "health": {
       "retryError": "다시 시도할 수 없습니다",

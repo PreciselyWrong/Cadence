@@ -62,6 +62,10 @@ export interface Task {
     // in, and its identity there). Such a task is read-only here.
     source_section?: string | null;
     source_key?: string | null;
+    // Where the task came from (gmail, telegram, mcp, ...) and the web page
+    // it points to, shown as a badge that opens it.
+    source?: string | null;
+    source_url?: string | null;
     // On create in a TODO.md project: the "## " section to add the bullet to
     // (Next when omitted).
     todo_section?: string;
