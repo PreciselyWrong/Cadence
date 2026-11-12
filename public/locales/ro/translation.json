@@ -1,4 +1,18 @@
 {
+    "counts": {
+        "notes_few": "{{count}} note",
+        "tasks_few": "{{count}} sarcini",
+        "goals_few": "{{count}} obiective",
+        "projects_few": "{{count}} proiecte",
+        "notes_other": "{{count}} de note",
+        "notes_one": "{{count}} notă",
+        "tasks_other": "{{count}} de sarcini",
+        "tasks_one": "{{count}} sarcină",
+        "goals_other": "{{count}} obiective",
+        "goals_one": "{{count}} obiectiv",
+        "projects_other": "{{count}} proiecte",
+        "projects_one": "{{count}} proiect"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -517,7 +531,7 @@
     "assignedTo": "Atribuit lui",
     "subtasks": "Subtask-uri",
     "openFullPage": "Deschide vizualizarea completă",
-    "openPanel": "Deschide în panoul lateral",
+    "openPanel": "Deschide detaliile",
     "quickEdit": {
       "setPriority": "Setează prioritatea",
       "setDueDate": "Setează data scadentă"

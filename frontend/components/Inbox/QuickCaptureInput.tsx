@@ -3403,8 +3403,10 @@ const QuickCaptureInput = React.forwardRef<
 
         return (
             <div
-                className={`relative w-full bg-white dark:bg-gray-900 rounded-2xl ${
-                    isEditMode ? '' : 'shadow-sm'
+                className={`relative w-full rounded-2xl ${
+                    isEditMode
+                        ? 'bg-surface-low'
+                        : 'bg-surface-low ring-1 ring-inset ring-outline-variant/60'
                 } overflow-hidden ${cardClasses}`}
             >
                 <div className={compact ? 'p-5' : 'p-[30px]'}>

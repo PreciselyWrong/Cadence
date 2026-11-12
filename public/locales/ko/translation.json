@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}}개 노트",
+        "notes_one": "{{count}}개 노트",
+        "tasks_other": "{{count}}개 작업",
+        "tasks_one": "{{count}}개 작업",
+        "goals_other": "{{count}}개 목표",
+        "goals_one": "{{count}}개 목표",
+        "projects_other": "{{count}}개 프로젝트",
+        "projects_one": "{{count}}개 프로젝트"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -516,7 +526,7 @@
     "assignedTo": "할당됨",
     "subtasks": "하위 작업",
     "openFullPage": "전체 보기 열기",
-    "openPanel": "사이드 패널에서 열기",
+    "openPanel": "세부 정보 열기",
     "quickEdit": {
       "setPriority": "우선순위 설정",
       "setDueDate": "마감일 설정"

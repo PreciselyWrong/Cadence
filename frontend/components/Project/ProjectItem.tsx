@@ -1,9 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-import {
-    CheckCircleIcon as CheckCircleSolidIcon,
-    EllipsisVerticalIcon,
-} from '@heroicons/react/24/solid';
+import { EllipsisVerticalIcon } from '@heroicons/react/24/solid';
 import {
     EllipsisHorizontalCircleIcon,
     ClipboardDocumentListIcon,
@@ -21,8 +17,6 @@ import { useToast } from '../Shared/ToastContext';
 import { getCurrentUser } from '../../utils/userUtils';
 import Tooltip from '../Shared/Tooltip';
 import EntityCard from '../Shared/EntityCard';
-import { PROJECT_TABLE_GRID } from './projectTableLayout';
-import { getProjectStatusTint } from './projectStatusStyles';
 
 // The default status is not news on a card: it keeps an icon-only control.
 const DEFAULT_PROJECT_STATUS: ProjectStatus = 'in_progress';
@@ -37,11 +31,12 @@ import {
 } from '../../utils/projectShareCache';
 import { getApiPath } from '../../config/paths';
 import EntityIcon from '../Shared/EntityIcon';
+import ListRow from '../Shared/ui/ListRow';
+import { MenuEntry } from '../Shared/ui/Menu';
 
 interface ProjectItemProps {
     project: Project;
     viewMode: 'cards' | 'list';
-    getCompletionPercentage: () => number;
     activeDropdown: number | null;
     setActiveDropdown: React.Dispatch<React.SetStateAction<number | null>>;
     handleEditProject: (project: Project) => void;
@@ -117,7 +112,6 @@ const getShareInitials = (value?: string | null) => {
 const ProjectItem: React.FC<ProjectItemProps> = ({
     project,
     viewMode,
-    getCompletionPercentage,
     activeDropdown,
     setActiveDropdown,
     handleEditProject,
@@ -527,18 +521,6 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
                 noteTestId={`project-next-action-${project.id}`}
                 testId={`project-card-${project.id}`}
                 actions={actionsMenu}
-                progress={
-                    (taskStatus?.total ?? 0) > 1
-                        ? {
-                              done: taskStatus?.done ?? 0,
-                              total: taskStatus?.total ?? 0,
-                              title: t('projectItem.completionPercentage', {
-                                  percentage: getCompletionPercentage(),
-                              }),
-                              quiet: true,
-                          }
-                        : undefined
-                }
                 details={
                     <>
                         <span className="truncate">{dueText}</span>
@@ -567,130 +549,121 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
         );
     }
 
-    const percent = getCompletionPercentage();
-    const isComplete = percent >= 100 && (taskStatus?.total ?? 0) > 0;
+    // A row, as on Android since the 2026-11-02 pass: the project's colour
+    // on its icon is the only colour; area, status, due date and next action
+    // in grey; open tasks on the right; no progress bar, no members.
+    const openCount = taskStatus
+        ? Math.max(0, taskStatus.total - taskStatus.done)
+        : 0;
+    const meta = [
+        area?.name,
+        // Not started and in progress both just mean active: no word.
+        project.status &&
+        project.status !== DEFAULT_PROJECT_STATUS &&
+        project.status !== 'not_started'
+            ? getStatusLabel(project.status, t)
+            : null,
+        dueText || null,
+    ].filter(Boolean) as string[];
+    const menu: MenuEntry[] = [
+        {
+            key: 'edit',
+            label: t('projectItem.edit'),
+            testId: `project-edit-${project.id}`,
+            onSelect: () => {
+                if (!isOwner) {
+                    showErrorToast(
+                        t('errors.permissionDenied', 'Permission denied')
+                    );
+                    return;
+                }
+                handleEditProject(project);
+            },
+        },
+        ...(isOwner
+            ? [
+                  {
+                      key: 'share',
+                      label: t('projectItem.share', 'Share'),
+                      testId: `project-share-list-${project.id}`,
+                      onSelect: () => onOpenShare(project),
+                  },
+              ]
+            : []),
+        ...(isOwner && onSaveAsTemplate
+            ? [
+                  {
+                      key: 'template',
+                      label: t(
+                          'projectItem.saveAsTemplate',
+                          'Save as Template'
+                      ),
+                      onSelect: () => onSaveAsTemplate(project),
+                  },
+              ]
+            : []),
+        'separator',
+        { heading: t('projectItem.changeStatus', 'Change status') },
+        ...statusOptions.map(({ value, label }) => ({
+            key: `status-${value}`,
+            label,
+            checked: project.status === value,
+            onSelect: () => {
+                if (project.status !== value) onStatusChange(project, value);
+            },
+        })),
+        'separator',
+        {
+            key: 'delete',
+            label: t('projectItem.delete'),
+            danger: true,
+            testId: `project-delete-${project.id}`,
+            onSelect: () => {
+                setProjectToDelete(project);
+                setIsConfirmDialogOpen(true);
+            },
+        },
+    ];
 
     return (
-        <div
-            className={`${PROJECT_TABLE_GRID} group px-4 py-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-colors`}
-            data-testid={`project-row-${project.id}`}
-        >
-            <div className="flex min-w-0 items-center gap-3">
-                <Link
-                    to={projectPath}
-                    className="flex h-9 w-9 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-300"
-                    style={
-                        project.color
-                            ? {
-                                  backgroundColor: `color-mix(in srgb, ${project.color} 18%, transparent)`,
-                                  color: project.color,
-                              }
-                            : undefined
-                    }
-                    tabIndex={-1}
-                    aria-hidden="true"
+        <ListRow
+            to={projectPath}
+            testId={`project-row-${project.id}`}
+            leading={
+                <span
+                    className="flex"
+                    style={project.color ? { color: project.color } : undefined}
                 >
                     <EntityIcon
                         icon={project.icon}
-                        className="h-5 w-5"
-                        fallback={<FolderIcon className="h-5 w-5" />}
+                        className="h-4 w-4"
+                        fallback={<FolderIcon className="h-4 w-4" />}
                     />
-                </Link>
-                <div className="min-w-0">
-                    <Link
-                        to={projectPath}
-                        title={project.name}
-                        className="block truncate text-sm font-medium text-gray-900 hover:underline dark:text-gray-100"
-                    >
-                        {project.name}
-                    </Link>
-                    {area?.name && (
-                        <div className="truncate text-xs text-gray-600 dark:text-gray-300">
-                            {area.name}
-                        </div>
-                    )}
-                </div>
-            </div>
-
-            <div className="flex">
-                {renderStatusPicker(
-                    getStatusLabel(project.status, t),
-                    `rounded-md px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-opacity hover:opacity-80 ${getProjectStatusTint(project.status)}`,
-                    'left-0 top-full mt-1'
-                )}
-            </div>
-
-            <div className="hidden min-w-0 xl:block">
-                {descriptionText ? (
-                    <p
-                        className="line-clamp-2 text-xs leading-relaxed text-gray-600 dark:text-gray-300"
-                        title={descriptionText}
-                    >
-                        {descriptionText}
-                    </p>
-                ) : (
-                    !nextActionLine && (
-                        <span className="text-xs text-gray-500 dark:text-gray-600">
-                            –
-                        </span>
-                    )
-                )}
-                {nextActionLine && (
-                    <p
-                        className="truncate text-xs text-gray-700 dark:text-gray-200"
-                        title={nextActionLine}
-                        data-testid={`project-next-action-${project.id}`}
-                    >
-                        {nextActionLine}
-                    </p>
-                )}
-            </div>
-
-            <div className="hidden min-w-0 lg:flex">
-                {renderMembers(
-                    'h-6 w-6',
-                    'ring-gray-50 dark:ring-gray-900'
-                ) ?? (
-                    <span className="text-xs text-gray-500 dark:text-gray-600">
-                        –
-                    </span>
-                )}
-            </div>
-
-            <div
-                className="hidden truncate text-xs text-gray-600 dark:text-gray-300 md:block"
-                title={dueText || undefined}
-            >
-                {dueText}
-            </div>
-
-            <div
-                className="hidden items-center gap-2 md:flex"
-                title={
-                    taskStatus
-                        ? `${taskStatus.done}/${taskStatus.total}`
-                        : undefined
-                }
-            >
-                <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
-                    <div
-                        className={`h-full rounded-full transition-all duration-300 ${
-                            isComplete ? 'bg-green-500' : 'bg-blue-500'
-                        }`}
-                        style={{ width: `${percent}%` }}
-                    />
-                </div>
-                {isComplete ? (
-                    <CheckCircleSolidIcon className="h-4 w-4 flex-shrink-0 text-green-500" />
-                ) : (
-                    <span className="w-8 text-right text-xs tabular-nums text-gray-600 dark:text-gray-300">
-                        {percent}%
-                    </span>
-                )}
-            </div>
-
-            <div className="flex justify-end">{actionsMenu}</div>
-        </div>
+                </span>
+            }
+            title={project.name}
+            meta={
+                meta.length > 0 || nextActionLine ? (
+                    <>
+                        {meta.join(' · ')}
+                        {nextActionLine && (
+                            <>
+                                {meta.length > 0 && ' · '}
+                                <span
+                                    data-testid={`project-next-action-${project.id}`}
+                                >
+                                    {nextActionLine}
+                                </span>
+                            </>
+                        )}
+                    </>
+                ) : undefined
+            }
+            trailing={openCount > 0 ? openCount : undefined}
+            menu={menu}
+            menuTestId={`project-dropdown-${project.id}`}
+            menuLabel={t('projectItem.toggleDropdownMenu')}
+        />
     );
 };
 

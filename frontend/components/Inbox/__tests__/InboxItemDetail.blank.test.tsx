@@ -51,7 +51,8 @@ describe('InboxItemDetail - blank content', () => {
         const onDelete = jest.fn();
         renderItem({ uid: 'abc123', content: '', title: null }, onDelete);
 
-        fireEvent.click(screen.getByLabelText('Delete'));
+        // No hover-only button: the Delete key on the row.
+        fireEvent.keyDown(screen.getByRole('button'), { key: 'Delete' });
 
         expect(onDelete).toHaveBeenCalledWith('abc123');
     });

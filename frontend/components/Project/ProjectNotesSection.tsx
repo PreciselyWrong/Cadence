@@ -1,8 +1,9 @@
 import React from 'react';
 import { Note } from '../../entities/Note';
-import NoteCard from '../Shared/NoteCard';
+import NoteRow from '../Shared/NoteRow';
+import Button from '../Shared/ui/Button';
 import { TFunction } from 'i18next';
-import { PlusCircleIcon } from '@heroicons/react/24/outline';
+import { PlusIcon } from '@heroicons/react/24/outline';
 import { Project } from '../../entities/Project';
 
 interface ProjectNotesSectionProps {
@@ -23,38 +24,50 @@ const ProjectNotesSection: React.FC<ProjectNotesSectionProps> = ({
     onDeleteNote,
 }) => {
     return (
-        <div className="transition-all duration-300 ease-in-out">
-            <div className="mb-4">
-                <button
-                    type="button"
-                    className="inline-flex items-center gap-2 px-3 py-1.5 text-sm rounded-md bg-gray-200 text-gray-800 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 transition-colors"
+        <div>
+            <div className="mb-2">
+                <Button
+                    icon={<PlusIcon className="h-4 w-4" />}
                     onClick={() => {
                         if (!project?.id || !project.name) return;
                         onCreateNote();
                     }}
                 >
-                    <PlusCircleIcon className="h-5 w-5" />
                     {t('noteCreation', 'Create New Note')}
-                </button>
+                </Button>
             </div>
 
             {notes.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div role="list" className="-mx-3">
                     {notes.map((note) => (
-                        <NoteCard
+                        <NoteRow
                             key={note.uid}
-                            note={note}
-                            onEdit={onEditNote}
-                            onDelete={onDeleteNote}
-                            showActions={true}
-                            showProject={false}
+                            note={{
+                                ...note,
+                                project: undefined,
+                                Project: undefined,
+                            }}
+                            menu={[
+                                {
+                                    key: 'edit',
+                                    label: t('common.edit', 'Edit'),
+                                    onSelect: () => void onEditNote(note),
+                                },
+                                {
+                                    key: 'delete',
+                                    label: t('common.delete', 'Delete'),
+                                    danger: true,
+                                    testId: `note-delete-${note.uid}`,
+                                    onSelect: () => onDeleteNote(note),
+                                },
+                            ]}
                         />
                     ))}
                 </div>
             ) : (
-                <div className="text-gray-600 dark:text-gray-300">
-                    <p>{t('project.noNotes', 'No notes for this project.')}</p>
-                </div>
+                <p className="text-body-m text-surface-on-variant">
+                    {t('project.noNotes', 'No notes for this project.')}
+                </p>
             )}
         </div>
     );

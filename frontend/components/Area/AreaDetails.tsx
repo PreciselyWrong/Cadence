@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import Segmented from '../Shared/ui/Segmented';
 import { useStore } from '../../store/useStore';
 import { Area } from '../../entities/Area';
 import { Goal } from '../../entities/Goal';
@@ -128,10 +129,7 @@ const AreaDetails: React.FC = () => {
         <ProjectItem
             key={project.id}
             project={project}
-            viewMode="cards"
-            getCompletionPercentage={() =>
-                (project as any).completion_percentage || 0
-            }
+            viewMode="list"
             {...cardActions}
         />
     );
@@ -245,21 +243,11 @@ const AreaDetails: React.FC = () => {
         (t) => t.status === 'done' || t.status === 2
     );
 
-    const tabClass = (tab: AreaTab) =>
-        `relative flex items-center self-stretch py-2.5 text-sm font-medium transition-colors ${
-            activeTab === tab
-                ? 'text-gray-900 dark:text-gray-100 after:absolute after:bottom-0 after:left-px after:right-px after:h-0.5 after:rounded-full after:bg-gray-900 dark:after:bg-gray-100'
-                : 'text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200'
-        }`;
-
     return (
-        <div className="w-full px-2 sm:px-4 lg:px-6 pt-4 pb-12">
+        <div className="mx-auto w-full max-w-4xl px-6 pb-12 max-sm:px-4">
             <AreaHero
                 area={area}
                 t={t}
-                projectsCount={areaProjects.length}
-                goalsCount={areaGoals.length}
-                tasksCount={areaTasks.length}
                 doneCount={completedTasks.length}
                 totalCount={areaTasks.length}
                 onShareClick={() => setIsShareModalOpen(true)}
@@ -268,36 +256,27 @@ const AreaDetails: React.FC = () => {
             />
 
             <div className="mb-4">
-                <div className="flex items-center min-h-[2.5rem]">
-                    <div className="flex items-center gap-4 sm:gap-6 self-stretch pl-2 sm:pl-3">
-                        <button
-                            type="button"
-                            onClick={() => setActiveTab('projects')}
-                            className={tabClass('projects')}
-                            aria-pressed={activeTab === 'projects'}
-                        >
-                            {t('projects.title', 'Projects')} (
-                            {areaProjects.length})
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setActiveTab('goals')}
-                            className={tabClass('goals')}
-                            aria-pressed={activeTab === 'goals'}
-                        >
-                            {t('goals.title', 'Goals')} ({areaGoals.length})
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setActiveTab('tasks')}
-                            className={tabClass('tasks')}
-                            aria-pressed={activeTab === 'tasks'}
-                        >
-                            {t('areas.tasksInArea', 'Tasks')} (
-                            {areaTasks.length})
-                        </button>
-                    </div>
-                </div>
+                <Segmented
+                    selected={activeTab}
+                    onSelect={(id) => setActiveTab(id as AreaTab)}
+                    options={[
+                        {
+                            id: 'projects',
+                            label: t('projects.title', 'Projects'),
+                            count: areaProjects.length,
+                        },
+                        {
+                            id: 'goals',
+                            label: t('goals.title', 'Goals'),
+                            count: areaGoals.length,
+                        },
+                        {
+                            id: 'tasks',
+                            label: t('areas.tasksInArea', 'Tasks'),
+                            count: areaTasks.length,
+                        },
+                    ]}
+                />
             </div>
 
             {activeTab === 'projects' &&
@@ -308,7 +287,7 @@ const AreaDetails: React.FC = () => {
                 ) : (
                     <div className="space-y-6">
                         {openProjects.length > 0 && (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div role="list" className="-mx-3">
                                 {openProjects.map(renderProjectCard)}
                             </div>
                         )}
@@ -333,7 +312,7 @@ const AreaDetails: React.FC = () => {
                                     )}
                                 </button>
                                 {showFinished && (
-                                    <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 opacity-80">
+                                    <div role="list" className="-mx-3 mt-2 opacity-80">
                                         {finishedProjects.map(
                                             renderProjectCard
                                         )}

@@ -134,12 +134,13 @@ describe('Calendar page feeds', () => {
     it('offers every view in the switcher', async () => {
         renderCalendar();
         await screen.findByText('Standup');
+        // A segmented switch (tabs); phones get a shorter copy of it.
         ['year', 'month', 'week', 'day', 'agenda'].forEach((name) =>
             expect(
-                screen.getByRole('button', {
+                screen.getAllByRole('tab', {
                     name: new RegExp(`^${name}$`, 'i'),
-                })
-            ).toBeInTheDocument()
+                }).length
+            ).toBeGreaterThan(0)
         );
     });
 

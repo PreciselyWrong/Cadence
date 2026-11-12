@@ -22,6 +22,7 @@ import { deferDelete } from '../../utils/deferredDelete';
 import ClassifyCard from '../AutoClassify/ClassifyCard';
 import DuplicateCard from '../AutoClassify/DuplicateCard';
 import MailCard from './MailCard';
+import PageHeader from '../Shared/ui/PageHeader';
 import {
     applyClassifySuggestion,
     ClassifyPayload,
@@ -62,11 +63,11 @@ const needsValue = (action: TriageAction) =>
     action === 'rename' || action === 'split' || action === 'set_due';
 
 const buttonBase =
-    'min-h-[40px] rounded-lg px-3 text-sm font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500';
-const secondary = `${buttonBase} text-gray-800 hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-800`;
-const primary = `${buttonBase} bg-indigo-600 text-white hover:bg-indigo-700`;
+    'h-9 rounded-lg px-3.5 text-body-m font-medium transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 max-sm:min-h-[44px]';
+const secondary = `${buttonBase} text-surface-on ring-1 ring-inset ring-outline-variant hover:bg-surface-high`;
+const primary = `${buttonBase} bg-primary text-primary-on hover:bg-primary/90`;
 const field =
-    'mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-900';
+    'mt-1 w-full rounded-lg border-0 bg-surface-high/70 px-3 py-2 text-body-m text-surface-on focus:ring-2 focus:ring-primary/40';
 
 // One proposal at a time with its reason: validate, correct, keep or skip.
 const TriagePage: React.FC = () => {
@@ -276,139 +277,312 @@ const TriagePage: React.FC = () => {
     };
 
     return (
-        <div className="mx-auto w-full max-w-2xl px-4 pb-28 pt-4 sm:px-6 sm:pb-8">
-            <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-50">
-                {t('triage.title', 'À trier')}
-            </h1>
-            {items.length > 0 && (
-                <p className="mt-1 text-[13px] text-gray-600 dark:text-gray-300">
-                    {t('triage.left', '{{count}} à voir', {
-                        count: items.length,
-                    })}
-                </p>
-            )}
-            {queue && !item && (
-                <div className="py-10 text-center" data-testid="triage-empty">
-                    <p className="text-[15px] font-semibold text-gray-900 dark:text-gray-100">
-                        {t('triage.emptyTitle', 'Rien à trier')}
-                    </p>
-                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
-                        {t(
-                            'triage.emptyMessage',
-                            'Une proposition n’apparaît que si elle est utile.'
+        <div className="mx-auto w-full max-w-2xl pb-28 sm:pb-8">
+            <PageHeader
+                title={t('triage.title', 'À trier')}
+                meta={
+                    items.length > 0
+                        ? t('triage.left', '{{count}} à voir', {
+                              count: items.length,
+                          })
+                        : undefined
+                }
+            />
+            <div className="px-6 max-sm:px-4">
+                {queue && !item && (
+                    <div
+                        className="py-10 text-center"
+                        data-testid="triage-empty"
+                    >
+                        <p className="text-body font-semibold text-surface-on">
+                            {t('triage.emptyTitle', 'Rien à trier')}
+                        </p>
+                        <p className="mt-1 text-sm text-surface-on-variant">
+                            {t(
+                                'triage.emptyMessage',
+                                'Une proposition n’apparaît que si elle est utile.'
+                            )}
+                        </p>
+                    </div>
+                )}
+                {item && (
+                    <article
+                        className="mt-4 rounded-2xl bg-surface-low p-5 ring-1 ring-inset ring-outline-variant/60"
+                        data-testid="triage-card"
+                    >
+                        {linkReview && (
+                            <>
+                                <h2 className="text-title-m font-semibold text-surface-on">
+                                    {String(
+                                        item.payload?.title || item.payload?.url
+                                    )}
+                                </h2>
+                                <a
+                                    href={String(item.payload?.url)}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="mt-0.5 block break-all text-body-m text-primary hover:underline"
+                                >
+                                    {String(item.payload?.url)}
+                                </a>
+                            </>
                         )}
-                    </p>
-                </div>
-            )}
-            {item && (
-                <article
-                    className="mt-4 rounded-xl border border-gray-200 p-4 dark:border-gray-700"
-                    data-testid="triage-card"
-                >
-                    {linkReview && (
-                        <>
-                            <h2 className="text-[17px] font-semibold text-gray-900 dark:text-gray-50">
-                                {String(
-                                    item.payload?.title || item.payload?.url
-                                )}
-                            </h2>
-                            <a
-                                href={String(item.payload?.url)}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="mt-0.5 block break-all text-[13px] text-indigo-600 hover:underline dark:text-indigo-300"
+                        {classifier && !task && (
+                            <>
+                                <h2 className="text-title-m font-semibold text-surface-on">
+                                    {String(item.payload?.title ?? '')}
+                                </h2>
+                                <p className="mt-0.5 text-body-m text-surface-on-variant">
+                                    {entityLabel(item.payload?.entity)}
+                                </p>
+                            </>
+                        )}
+                        {task && (
+                            <>
+                                <h2 className="text-title-m font-semibold text-surface-on">
+                                    {task.name}
+                                </h2>
+                                <p className="mt-0.5 text-body-m text-surface-on-variant">
+                                    {[
+                                        task.due_date,
+                                        task.project_name,
+                                        task.recurring
+                                            ? t(
+                                                  'triage.recurring',
+                                                  'récurrente'
+                                              )
+                                            : null,
+                                        ...task.tags.map((tag) => `#${tag}`),
+                                    ]
+                                        .filter(Boolean)
+                                        .join(' · ')}
+                                </p>
+                            </>
+                        )}
+                        {mail && (
+                            <MailCard
+                                key={item.key}
+                                payload={item.payload as unknown as MailPayload}
+                                archiveAvailable={queue?.mail_archive === true}
+                                onDecide={decide}
+                            />
+                        )}
+                        {!mail && (
+                            <p className="mt-2 text-body text-surface-on">
+                                {item.type === 'classify'
+                                    ? t(
+                                          'autoClassify.card.reason',
+                                          'Classement à confirmer'
+                                      )
+                                    : item.type === 'link_duplicate'
+                                      ? t(
+                                            'autoClassify.duplicate.reason',
+                                            'Lien déjà enregistré ?'
+                                        )
+                                      : linkReview
+                                        ? t(
+                                              'triage.linkReview',
+                                              'Lien à revoir'
+                                          )
+                                        : (item.question?.text ?? item.reason)}
+                            </p>
+                        )}
+                        {item.details.map((line) => (
+                            <p
+                                key={line}
+                                className="mt-0.5 text-body-m text-surface-on-variant"
                             >
-                                {String(item.payload?.url)}
-                            </a>
-                        </>
-                    )}
-                    {classifier && !task && (
-                        <>
-                            <h2 className="text-[17px] font-semibold text-gray-900 dark:text-gray-50">
-                                {String(item.payload?.title ?? '')}
-                            </h2>
-                            <p className="mt-0.5 text-[13px] text-gray-600 dark:text-gray-300">
-                                {entityLabel(item.payload?.entity)}
+                                {line}
                             </p>
-                        </>
-                    )}
-                    {task && (
-                        <>
-                            <h2 className="text-[17px] font-semibold text-gray-900 dark:text-gray-50">
-                                {task.name}
-                            </h2>
-                            <p className="mt-0.5 text-[13px] text-gray-600 dark:text-gray-300">
-                                {[
-                                    task.due_date,
-                                    task.project_name,
-                                    task.recurring
-                                        ? t('triage.recurring', 'récurrente')
-                                        : null,
-                                    ...task.tags.map((tag) => `#${tag}`),
-                                ]
-                                    .filter(Boolean)
-                                    .join(' · ')}
-                            </p>
-                        </>
-                    )}
-                    {mail && (
-                        <MailCard
-                            key={item.key}
-                            payload={item.payload as unknown as MailPayload}
-                            archiveAvailable={queue?.mail_archive === true}
-                            onDecide={decide}
-                        />
-                    )}
-                    {!mail && (
-                        <p className="mt-2 text-[15px] text-gray-900 dark:text-gray-100">
-                            {item.type === 'classify'
-                                ? t(
-                                      'autoClassify.card.reason',
-                                      'Classement à confirmer'
-                                  )
-                                : item.type === 'link_duplicate'
-                                  ? t(
-                                        'autoClassify.duplicate.reason',
-                                        'Lien déjà enregistré ?'
-                                    )
-                                  : linkReview
-                                    ? t('triage.linkReview', 'Lien à revoir')
-                                    : (item.question?.text ?? item.reason)}
-                        </p>
-                    )}
-                    {item.details.map((line) => (
-                        <p
-                            key={line}
-                            className="mt-0.5 text-[13px] text-gray-600 dark:text-gray-300"
-                        >
-                            {line}
-                        </p>
-                    ))}
+                        ))}
 
-                    {item.action === 'accept_slot' && (
-                        <>
-                            <p className="mt-1 text-[13px] text-gray-600 dark:text-gray-300">
-                                {String(item.payload?.title)} ·{' '}
-                                {String(item.payload?.date)}
-                            </p>
+                        {item.action === 'accept_slot' && (
+                            <>
+                                <p className="mt-1 text-body-m text-surface-on-variant">
+                                    {String(item.payload?.title)} ·{' '}
+                                    {String(item.payload?.date)}
+                                </p>
+                                <div className="mt-3 flex flex-wrap gap-2">
+                                    <button
+                                        type="button"
+                                        className={primary}
+                                        onClick={() =>
+                                            settle(
+                                                () =>
+                                                    answerSlot(
+                                                        String(
+                                                            item.payload
+                                                                ?.slot_id
+                                                        ),
+                                                        true
+                                                    ),
+                                                applied
+                                            )
+                                        }
+                                    >
+                                        {t('triage.slotAccept', 'Planifier')}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className={secondary}
+                                        onClick={() =>
+                                            settle(
+                                                () =>
+                                                    answerSlot(
+                                                        String(
+                                                            item.payload
+                                                                ?.slot_id
+                                                        ),
+                                                        false
+                                                    ),
+                                                applied
+                                            )
+                                        }
+                                    >
+                                        {t('triage.slotRefuse', 'Refuser')}
+                                    </button>
+                                </div>
+                            </>
+                        )}
+                        {item.type === 'classify' && (
+                            <ClassifyCard
+                                key={item.key}
+                                payload={
+                                    item.payload as unknown as ClassifyPayload
+                                }
+                                onApply={(choice) =>
+                                    settle(
+                                        () =>
+                                            applyClassifySuggestion(
+                                                String(
+                                                    item.payload?.suggestion_uid
+                                                ),
+                                                choice
+                                            ),
+                                        applied
+                                    )
+                                }
+                                onDismiss={() =>
+                                    settle(
+                                        () =>
+                                            dismissClassifySuggestion(
+                                                String(
+                                                    item.payload?.suggestion_uid
+                                                )
+                                            ),
+                                        t('triage.kept', 'Gardée telle quelle')
+                                    )
+                                }
+                            />
+                        )}
+                        {item.type === 'link_duplicate' && (
+                            <DuplicateCard
+                                payload={
+                                    item.payload as unknown as DuplicatePayload
+                                }
+                                onChoose={(action) =>
+                                    settle(
+                                        () =>
+                                            applyClassifySuggestion(
+                                                String(
+                                                    item.payload?.suggestion_uid
+                                                ),
+                                                { action }
+                                            ),
+                                        applied
+                                    )
+                                }
+                            />
+                        )}
+                        {linkReview && (
                             <div className="mt-3 flex flex-wrap gap-2">
                                 <button
                                     type="button"
                                     className={primary}
                                     onClick={() =>
-                                        settle(
-                                            () =>
-                                                answerSlot(
-                                                    String(
-                                                        item.payload?.slot_id
-                                                    ),
-                                                    true
-                                                ),
-                                            applied
+                                        review(
+                                            'keep',
+                                            t('triage.linkKept', 'Lien gardé')
                                         )
                                     }
                                 >
-                                    {t('triage.slotAccept', 'Planifier')}
+                                    {t('triage.linkKeep', 'Garder')}
+                                </button>
+                                <button
+                                    type="button"
+                                    className={secondary}
+                                    onClick={() =>
+                                        review(
+                                            'archive',
+                                            t(
+                                                'triage.linkArchived',
+                                                'Lien archivé'
+                                            )
+                                        )
+                                    }
+                                >
+                                    {t('triage.linkArchive', 'Archiver')}
+                                </button>
+                                <button
+                                    type="button"
+                                    className={secondary}
+                                    onClick={() =>
+                                        review(
+                                            'later',
+                                            t(
+                                                'triage.linkPostponed',
+                                                'À revoir dans 30 jours'
+                                            )
+                                        )
+                                    }
+                                >
+                                    {t('triage.linkLater', 'Dans 30 jours')}
+                                </button>
+                            </div>
+                        )}
+                        {item.action === 'accept_slot' ||
+                        classifier ||
+                        linkReview ||
+                        mail ? null : item.question ? (
+                            <div className="mt-3 flex flex-wrap gap-2">
+                                <button
+                                    type="button"
+                                    className={secondary}
+                                    onClick={() => answer('yes')}
+                                >
+                                    {t('dailyBrief.anticipate.yes', 'Oui')}
+                                </button>
+                                <button
+                                    type="button"
+                                    className={secondary}
+                                    onClick={() => answer('no')}
+                                >
+                                    {t('dailyBrief.anticipate.no', 'Non')}
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="mt-3 flex flex-wrap gap-2">
+                                <button
+                                    type="button"
+                                    className={primary}
+                                    onClick={() =>
+                                        apply(
+                                            item.action as TriageAction,
+                                            item.payload
+                                        )
+                                    }
+                                >
+                                    {primaryLabel()}
+                                </button>
+                                <button
+                                    type="button"
+                                    className={secondary}
+                                    aria-expanded={correcting}
+                                    onClick={() =>
+                                        setCorrecting((open) => !open)
+                                    }
+                                >
+                                    {t('triage.correct', 'Corriger')}
                                 </button>
                                 <button
                                     type="button"
@@ -416,246 +590,104 @@ const TriagePage: React.FC = () => {
                                     onClick={() =>
                                         settle(
                                             () =>
-                                                answerSlot(
-                                                    String(
-                                                        item.payload?.slot_id
-                                                    ),
-                                                    false
+                                                keepTask(
+                                                    item.task_uid as string
                                                 ),
-                                            applied
+                                            t(
+                                                'triage.kept',
+                                                'Gardée telle quelle'
+                                            )
                                         )
                                     }
                                 >
-                                    {t('triage.slotRefuse', 'Refuser')}
+                                    {t('triage.keep', 'Garder telle quelle')}
                                 </button>
                             </div>
-                        </>
-                    )}
-                    {item.type === 'classify' && (
-                        <ClassifyCard
-                            key={item.key}
-                            payload={item.payload as unknown as ClassifyPayload}
-                            onApply={(choice) =>
-                                settle(
-                                    () =>
-                                        applyClassifySuggestion(
-                                            String(
-                                                item.payload?.suggestion_uid
-                                            ),
-                                            choice
-                                        ),
-                                    applied
-                                )
-                            }
-                            onDismiss={() =>
-                                settle(
-                                    () =>
-                                        dismissClassifySuggestion(
-                                            String(item.payload?.suggestion_uid)
-                                        ),
-                                    t('triage.kept', 'Gardée telle quelle')
-                                )
-                            }
-                        />
-                    )}
-                    {item.type === 'link_duplicate' && (
-                        <DuplicateCard
-                            payload={
-                                item.payload as unknown as DuplicatePayload
-                            }
-                            onChoose={(action) =>
-                                settle(
-                                    () =>
-                                        applyClassifySuggestion(
-                                            String(
-                                                item.payload?.suggestion_uid
-                                            ),
-                                            { action }
-                                        ),
-                                    applied
-                                )
-                            }
-                        />
-                    )}
-                    {linkReview && (
-                        <div className="mt-3 flex flex-wrap gap-2">
-                            <button
-                                type="button"
-                                className={primary}
-                                onClick={() =>
-                                    review(
-                                        'keep',
-                                        t('triage.linkKept', 'Lien gardé')
-                                    )
-                                }
-                            >
-                                {t('triage.linkKeep', 'Garder')}
-                            </button>
-                            <button
-                                type="button"
-                                className={secondary}
-                                onClick={() =>
-                                    review(
-                                        'archive',
-                                        t('triage.linkArchived', 'Lien archivé')
-                                    )
-                                }
-                            >
-                                {t('triage.linkArchive', 'Archiver')}
-                            </button>
-                            <button
-                                type="button"
-                                className={secondary}
-                                onClick={() =>
-                                    review(
-                                        'later',
-                                        t(
-                                            'triage.linkPostponed',
-                                            'À revoir dans 30 jours'
-                                        )
-                                    )
-                                }
-                            >
-                                {t('triage.linkLater', 'Dans 30 jours')}
-                            </button>
-                        </div>
-                    )}
-                    {item.action === 'accept_slot' ||
-                    classifier ||
-                    linkReview ||
-                    mail ? null : item.question ? (
-                        <div className="mt-3 flex flex-wrap gap-2">
-                            <button
-                                type="button"
-                                className={secondary}
-                                onClick={() => answer('yes')}
-                            >
-                                {t('dailyBrief.anticipate.yes', 'Oui')}
-                            </button>
-                            <button
-                                type="button"
-                                className={secondary}
-                                onClick={() => answer('no')}
-                            >
-                                {t('dailyBrief.anticipate.no', 'Non')}
-                            </button>
-                        </div>
-                    ) : (
-                        <div className="mt-3 flex flex-wrap gap-2">
-                            <button
-                                type="button"
-                                className={primary}
-                                onClick={() =>
-                                    apply(
-                                        item.action as TriageAction,
-                                        item.payload
-                                    )
-                                }
-                            >
-                                {primaryLabel()}
-                            </button>
-                            <button
-                                type="button"
-                                className={secondary}
-                                aria-expanded={correcting}
-                                onClick={() => setCorrecting((open) => !open)}
-                            >
-                                {t('triage.correct', 'Corriger')}
-                            </button>
-                            <button
-                                type="button"
-                                className={secondary}
-                                onClick={() =>
-                                    settle(
-                                        () => keepTask(item.task_uid as string),
-                                        t('triage.kept', 'Gardée telle quelle')
-                                    )
-                                }
-                            >
-                                {t('triage.keep', 'Garder telle quelle')}
-                            </button>
-                        </div>
-                    )}
-                    <button
-                        type="button"
-                        className={`${secondary} mt-2 font-normal`}
-                        onClick={() => {
-                            reset();
-                            setSkipped((prev) => [
-                                ...prev.filter((key) => key !== item.key),
-                                item.key,
-                            ]);
-                        }}
-                    >
-                        {t('triage.skip', 'Passer')}
-                    </button>
+                        )}
+                        <button
+                            type="button"
+                            className={`${secondary} mt-2 font-normal`}
+                            onClick={() => {
+                                reset();
+                                setSkipped((prev) => [
+                                    ...prev.filter((key) => key !== item.key),
+                                    item.key,
+                                ]);
+                            }}
+                        >
+                            {t('triage.skip', 'Passer')}
+                        </button>
 
-                    {correcting && task && !classifier && !editing && (
-                        <div className="mt-3 flex flex-col items-start border-t border-gray-200 pt-2 dark:border-gray-700">
-                            {choicesFor(task).map((action) => (
+                        {correcting && task && !classifier && !editing && (
+                            <div className="mt-3 flex flex-col items-start border-t border-outline-variant/60 pt-2">
+                                {choicesFor(task).map((action) => (
+                                    <button
+                                        key={action}
+                                        type="button"
+                                        className={secondary}
+                                        onClick={() => choose(action)}
+                                    >
+                                        {t(
+                                            ACTION_LABELS[action][0],
+                                            ACTION_LABELS[action][1]
+                                        )}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                        {editing && (
+                            <form
+                                onSubmit={submitEdit}
+                                className="mt-3 border-t border-outline-variant/60 pt-3"
+                            >
+                                <label className="text-sm text-surface-on">
+                                    {editing === 'split'
+                                        ? t(
+                                              'triage.splitLabel',
+                                              'Une sous-tâche par ligne'
+                                          )
+                                        : t(
+                                              ACTION_LABELS[editing][0],
+                                              ACTION_LABELS[editing][1]
+                                          )}
+                                    {editing === 'split' ? (
+                                        <textarea
+                                            rows={4}
+                                            value={value}
+                                            onChange={(event) =>
+                                                setValue(event.target.value)
+                                            }
+                                            className={field}
+                                        />
+                                    ) : (
+                                        <input
+                                            type={
+                                                editing === 'set_due'
+                                                    ? 'date'
+                                                    : 'text'
+                                            }
+                                            value={value}
+                                            onChange={(event) =>
+                                                setValue(event.target.value)
+                                            }
+                                            className={field}
+                                        />
+                                    )}
+                                </label>
                                 <button
-                                    key={action}
-                                    type="button"
-                                    className={secondary}
-                                    onClick={() => choose(action)}
+                                    type="submit"
+                                    className={`${primary} mt-2`}
                                 >
                                     {t(
-                                        ACTION_LABELS[action][0],
-                                        ACTION_LABELS[action][1]
+                                        ACTION_LABELS[editing][0],
+                                        ACTION_LABELS[editing][1]
                                     )}
                                 </button>
-                            ))}
-                        </div>
-                    )}
-                    {editing && (
-                        <form
-                            onSubmit={submitEdit}
-                            className="mt-3 border-t border-gray-200 pt-3 dark:border-gray-700"
-                        >
-                            <label className="text-sm text-gray-700 dark:text-gray-200">
-                                {editing === 'split'
-                                    ? t(
-                                          'triage.splitLabel',
-                                          'Une sous-tâche par ligne'
-                                      )
-                                    : t(
-                                          ACTION_LABELS[editing][0],
-                                          ACTION_LABELS[editing][1]
-                                      )}
-                                {editing === 'split' ? (
-                                    <textarea
-                                        rows={4}
-                                        value={value}
-                                        onChange={(event) =>
-                                            setValue(event.target.value)
-                                        }
-                                        className={field}
-                                    />
-                                ) : (
-                                    <input
-                                        type={
-                                            editing === 'set_due'
-                                                ? 'date'
-                                                : 'text'
-                                        }
-                                        value={value}
-                                        onChange={(event) =>
-                                            setValue(event.target.value)
-                                        }
-                                        className={field}
-                                    />
-                                )}
-                            </label>
-                            <button type="submit" className={`${primary} mt-2`}>
-                                {t(
-                                    ACTION_LABELS[editing][0],
-                                    ACTION_LABELS[editing][1]
-                                )}
-                            </button>
-                        </form>
-                    )}
-                </article>
-            )}
+                            </form>
+                        )}
+                    </article>
+                )}
+            </div>
         </div>
     );
 };

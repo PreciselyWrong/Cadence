@@ -172,9 +172,6 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
         await onUpdate({ status }).catch(() => undefined);
     };
 
-    const percent =
-        totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 0;
-
     // The project's own start, or the day it was created when none is set.
     const startDate = project.start_date
         ? new Date(`${project.start_date}T${project.start_time || '00:00'}:00`)
@@ -228,19 +225,14 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
     const menuItemClass =
         'block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700';
     const actionClass =
-        'inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800';
+        'inline-flex h-7 items-center gap-1.5 rounded-lg px-2.5 text-body-m font-medium text-surface-on ring-1 ring-inset ring-outline-variant transition-colors hover:bg-surface-high max-sm:min-h-[44px]';
 
     return (
         <div className="mb-6 space-y-3">
-            <div
-                className="space-y-3 rounded-2xl bg-white p-3 sm:space-y-5 sm:p-6 dark:bg-gray-900"
-                style={{
-                    backgroundImage: `linear-gradient(color-mix(in srgb, ${tint} 10%, transparent), color-mix(in srgb, ${tint} 10%, transparent))`,
-                }}
-            >
+            <div className="space-y-3 px-6 pt-6 max-sm:px-4 sm:space-y-4">
                 {project.image_url && (
                     <div
-                        className="-mx-3 -mt-3 h-28 overflow-hidden rounded-t-2xl sm:-mx-6 sm:-mt-6 sm:h-44"
+                        className="h-28 overflow-hidden rounded-2xl sm:h-44"
                         data-testid="project-banner"
                     >
                         <img
@@ -381,7 +373,7 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                                         setEditingName(false);
                                     }
                                 }}
-                                className="-mx-1 w-full rounded-md bg-white/70 px-1 text-lg font-semibold leading-tight text-gray-900 outline-none ring-2 ring-blue-500/40 sm:text-2xl dark:bg-gray-800/70 dark:text-gray-100"
+                                className="-mx-1 w-full rounded-md bg-surface-high/70 px-1 text-headline font-extrabold leading-tight tracking-tight text-surface-on outline-none ring-2 ring-primary/40"
                                 aria-label={t('project.name', 'Project Name')}
                                 data-testid="project-name-input"
                             />
@@ -401,7 +393,7 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                                               'Click to edit'
                                           )
                                 }
-                                className="-mx-1 line-clamp-2 cursor-text rounded-md px-1 text-lg font-semibold leading-tight text-gray-900 transition-colors hover:bg-white/60 sm:text-2xl dark:text-gray-100 dark:hover:bg-gray-800/60"
+                                className="-mx-1 line-clamp-2 cursor-text rounded-md px-1 text-headline font-extrabold leading-tight tracking-tight text-surface-on transition-colors hover:bg-surface-high/60"
                                 data-testid="project-name"
                             >
                                 {project.name}
@@ -645,7 +637,7 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
 
                 {nextAction && !isDone && (
                     <p
-                        className="truncate text-sm text-gray-700 dark:text-gray-200"
+                        className="truncate text-body-m text-surface-on"
                         data-testid="project-next-action"
                     >
                         {t('project.nextActionLine', 'Next action: {{name}}', {
@@ -658,7 +650,6 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                     the bar would only say 0 %. */}
                 {(doneCount > 0 || timeUsed !== null) && (
                     <div
-                        className="space-y-2"
                         title={
                             timeUsed !== null
                                 ? t(
@@ -668,43 +659,18 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                                 : undefined
                         }
                     >
-                        <div className="flex items-baseline justify-between gap-3 text-xs text-gray-600 tabular-nums dark:text-gray-300">
-                            <span>
-                                {t(
-                                    'project.progressSummary',
-                                    'Project progress · {{done}} of {{total}} tasks done',
-                                    {
-                                        done: doneCount,
-                                        total: totalCount,
-                                    }
-                                )}
-                                {timeUsed !== null &&
-                                    ` · ${t('project.timeUsed', '{{percent}}% of time used', { percent: timeUsed })}`}
-                            </span>
-                            <span className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-                                {percent}
-                                <span className="ml-0.5 text-xs font-medium text-gray-600 dark:text-gray-300">
-                                    %
-                                </span>
-                            </span>
-                        </div>
-                        <div
-                            className="relative h-1.5 rounded-full"
-                            style={{
-                                backgroundColor: `color-mix(in srgb, ${tint} 20%, transparent)`,
-                            }}
-                        >
-                            <div
-                                className="absolute inset-y-0 left-0 rounded-full bg-blue-500 transition-all duration-300"
-                                style={{ width: `${percent}%` }}
-                            />
-                            {timeUsed !== null && (
-                                <div
-                                    className="absolute -top-1 h-3.5 w-0.5 rounded-full bg-gray-900/50 dark:bg-gray-100/50"
-                                    style={{ left: `${timeUsed}%` }}
-                                />
+                        <p className="text-body-m tabular-nums text-surface-on-variant">
+                            {t(
+                                'project.progressSummary',
+                                'Project progress · {{done}} of {{total}} tasks done',
+                                {
+                                    done: doneCount,
+                                    total: totalCount,
+                                }
                             )}
-                        </div>
+                            {timeUsed !== null &&
+                                ` · ${t('project.timeUsed', '{{percent}}% of time used', { percent: timeUsed })}`}
+                        </p>
                     </div>
                 )}
             </div>

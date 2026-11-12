@@ -15,6 +15,8 @@ interface LinkActionsProps {
     onChange: (changes: LinkChanges) => Promise<unknown>;
     onTask?: () => Promise<unknown>;
     onDelete: () => Promise<unknown>;
+    // Offered only when the link has no note yet.
+    onAddNote?: () => void;
 }
 
 // What can be done with a link, behind "⋯": edit, make a task of it, archive
@@ -26,6 +28,7 @@ const LinkActions: React.FC<LinkActionsProps> = ({
     onChange,
     onTask,
     onDelete,
+    onAddNote,
 }) => {
     const { t } = useTranslation();
     const [editing, setEditing] = useState(false);
@@ -44,6 +47,15 @@ const LinkActions: React.FC<LinkActionsProps> = ({
                         label: t('common.edit', 'Edit'),
                         onClick: () => setEditing(true),
                     },
+                    ...(onAddNote && !link.note
+                        ? [
+                              {
+                                  key: 'note',
+                                  label: t('links.addNote', 'Add a note'),
+                                  onClick: onAddNote,
+                              },
+                          ]
+                        : []),
                     ...(onTask
                         ? [
                               {

@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}} σημειώσεις",
+        "notes_one": "{{count}} σημείωση",
+        "tasks_other": "{{count}} εργασίες",
+        "tasks_one": "{{count}} εργασία",
+        "goals_other": "{{count}} στόχοι",
+        "goals_one": "{{count}} στόχος",
+        "projects_other": "{{count}} έργα",
+        "projects_one": "{{count}} έργο"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -1373,7 +1383,7 @@
     "assignedTo": "Ανατεθειμένο σε",
     "subtasks": "Υποκαθήκοντα",
     "openFullPage": "Άνοιγμα πλήρους προβολής",
-    "openPanel": "Άνοιγμα στο πλαϊνό πάνελ",
+    "openPanel": "Άνοιγμα λεπτομερειών",
     "quickEdit": {
       "setPriority": "Ορισμός προτεραιότητας",
       "setDueDate": "Ορισμός ημερομηνίας λήξης"

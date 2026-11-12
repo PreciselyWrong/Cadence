@@ -30,7 +30,6 @@ const renderCard = (project: Project) =>
             <ProjectItem
                 project={project}
                 viewMode="cards"
-                getCompletionPercentage={() => 0}
                 activeDropdown={null}
                 setActiveDropdown={jest.fn()}
                 handleEditProject={jest.fn()}
@@ -59,7 +58,6 @@ describe('ProjectItem list row', () => {
                         color: '#1d4ed8',
                     }}
                     viewMode="list"
-                    getCompletionPercentage={() => 0}
                     activeDropdown={null}
                     setActiveDropdown={jest.fn()}
                     handleEditProject={jest.fn()}
@@ -73,9 +71,11 @@ describe('ProjectItem list row', () => {
 
         expect(await screen.findByText('With banner')).toBeInTheDocument();
         expect(container.querySelector('img')).toBeNull();
-        const badge = container.querySelector('a[aria-hidden="true"]');
-        expect(badge?.querySelector('svg')).not.toBeNull();
-        expect((badge as HTMLElement).style.color).toBe('rgb(29, 78, 216)');
+        const icon = container.querySelector('a span[style] svg');
+        expect(icon).not.toBeNull();
+        expect((icon?.parentElement as HTMLElement).style.color).toBe(
+            'rgb(29, 78, 216)'
+        );
     });
 });
 

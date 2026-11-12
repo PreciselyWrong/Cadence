@@ -415,10 +415,6 @@ const TagDetails: React.FC = () => {
         );
     };
 
-    const getCompletionPercentage = (project: Project) => {
-        return (project as any).completion_percentage || 0;
-    };
-
     const handleEditProject = (project: Project) => {
         if (project.uid) {
             const slug = project.name
@@ -614,12 +610,6 @@ const TagDetails: React.FC = () => {
                 tasksCount={tasks.length}
                 notesCount={notes.length}
                 projectsCount={projects.length}
-                doneCount={
-                    tasks.filter((task) =>
-                        [2, 3, 'done', 'archived'].includes(task.status as any)
-                    ).length
-                }
-                totalCount={tasks.length}
                 editButtonRef={editButtonRef}
                 onSearchToggle={() => setIsSearchExpanded((v) => !v)}
                 onTogglePin={handleTogglePin}
@@ -1110,9 +1100,6 @@ const TagDetails: React.FC = () => {
                                     key={project.id}
                                     project={project}
                                     viewMode="cards"
-                                    getCompletionPercentage={() =>
-                                        getCompletionPercentage(project)
-                                    }
                                     activeDropdown={activeDropdown}
                                     setActiveDropdown={setActiveDropdown}
                                     handleEditProject={handleEditProject}

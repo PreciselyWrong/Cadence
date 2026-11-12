@@ -15,6 +15,7 @@ import { LinkChanges } from '../../utils/linksService';
 import { Project } from '../../entities/Project';
 import LinkNote from './LinkNote';
 import LinkActions from './LinkActions';
+import { IconButton } from '../Shared/ui/Button';
 
 interface LinkCardProps {
     link: Link;
@@ -46,7 +47,7 @@ const GithubStats: React.FC<{ link: Link }> = ({ link }) => {
           })
         : null;
     return (
-        <span className="inline-flex flex-wrap items-center gap-x-2 text-[12px] text-gray-500 dark:text-gray-400">
+        <span className="inline-flex flex-wrap items-center gap-x-2">
             {link.github_stars !== null && (
                 <span className="inline-flex items-center gap-0.5">
                     <StarIcon className="h-3.5 w-3.5" aria-hidden="true" />
@@ -80,89 +81,108 @@ const LinkCard: React.FC<LinkCardProps> = ({
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const [imageFailed, setImageFailed] = useState(false);
+    const [addingNote, setAddingNote] = useState(false);
     const title = link.title || addressLabel(link.url);
     const description = link.description || link.readme_excerpt;
     const source = sourcePath(link);
 
+    const tagLine = link.tags.map((tag) => `#${tag.name}`).join(' ');
+
+    // A row, as in every list: the page (thumbnail, title, one line of
+    // description), then where it is from and what it is filed under, in
+    // grey; the note only once written; actions behind ⋯.
     return (
         <article
-            className={`flex min-w-0 flex-col gap-2 rounded-xl border border-gray-200/80 bg-white p-4 dark:border-gray-700/70 dark:bg-gray-900 ${
+            className={`group flex min-w-0 items-start gap-3 rounded-xl px-3 py-2.5 hover:bg-surface-high/60 ${
                 link.status === 'dropped' ? 'opacity-60' : ''
             }`}
             data-testid="link-card"
         >
-            <div className="flex min-w-0 items-start gap-3">
+            {link.image_url && !imageFailed ? (
+                <img
+                    src={link.image_url}
+                    alt=""
+                    loading="lazy"
+                    referrerPolicy="no-referrer"
+                    onError={() => setImageFailed(true)}
+                    className="mt-0.5 h-10 w-10 flex-shrink-0 rounded-lg bg-surface-high object-cover"
+                />
+            ) : (
+                <span
+                    aria-hidden="true"
+                    className="mt-0.5 h-10 w-10 flex-shrink-0 rounded-lg bg-surface-high"
+                />
+            )}
+            <div className="min-w-0 flex-1">
                 <a
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="min-w-0 flex-1 group"
+                    className="block min-w-0"
                 >
-                    <h3 className="line-clamp-2 break-words text-[15px] font-medium leading-snug text-gray-900 group-hover:underline dark:text-gray-100">
+                    <h3 className="truncate text-body font-medium leading-6 text-surface-on hover:underline">
                         {title}
                     </h3>
                     {description && (
-                        <p className="mt-1 line-clamp-2 break-words text-[13px] leading-snug text-gray-600 dark:text-gray-300">
+                        <p className="truncate text-body-m text-surface-on-variant">
                             {description}
                         </p>
                     )}
                 </a>
-                {link.image_url && !imageFailed && (
-                    <img
-                        src={link.image_url}
-                        alt=""
-                        loading="lazy"
-                        referrerPolicy="no-referrer"
-                        onError={() => setImageFailed(true)}
-                        className="h-14 w-14 flex-shrink-0 rounded-lg object-cover bg-gray-100 dark:bg-gray-800"
-                    />
-                )}
-            </div>
-
-            <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-[12px] text-gray-500 dark:text-gray-400">
-                <span className="truncate">{link.domain ?? link.url}</span>
-                <GithubStats link={link} />
-                {link.review_at && (
-                    <span>
-                        {t('links.reviewOn', 'Review on {{date}}', {
-                            date: new Date(
-                                `${link.review_at}T12:00:00`
-                            ).toLocaleDateString(toIntlLocale(i18n.language), {
-                                day: 'numeric',
-                                month: 'short',
-                            }),
-                        })}
-                    </span>
-                )}
-                {link.project_name && (
-                    <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[11px] text-gray-700 dark:bg-gray-800 dark:text-gray-300">
-                        {link.project_name}
-                    </span>
-                )}
-                {link.fetch_status === 'pending' && (
-                    <span>{t('links.fetching', 'Reading the page…')}</span>
-                )}
-            </div>
-
-            <LinkNote
-                note={link.note}
-                onSave={(note) => (onNote ?? onChange)({ note })}
-            />
-
-            {link.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1">
-                    {link.tags.map((tag) => (
-                        <span
-                            key={tag.uid}
-                            className="rounded-full bg-gray-100 px-2 py-0.5 text-[11px] text-gray-700 dark:bg-gray-800 dark:text-gray-300"
-                        >
-                            #{tag.name}
+                <div className="mt-0.5 flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-surface-on-variant">
+                    <span className="truncate">{link.domain ?? link.url}</span>
+                    <GithubStats link={link} />
+                    {link.review_at && (
+                        <span>
+                            {t('links.reviewOn', 'Review on {{date}}', {
+                                date: new Date(
+                                    `${link.review_at}T12:00:00`
+                                ).toLocaleDateString(
+                                    toIntlLocale(i18n.language),
+                                    { day: 'numeric', month: 'short' }
+                                ),
+                            })}
                         </span>
-                    ))}
+                    )}
+                    {link.project_name && <span>{link.project_name}</span>}
+                    {tagLine && <span>{tagLine}</span>}
+                    {link.fetch_status === 'pending' && (
+                        <span>{t('links.fetching', 'Reading the page…')}</span>
+                    )}
                 </div>
-            )}
-
-            <div className="mt-auto flex flex-wrap items-center gap-1 pt-1">
+                {(link.note || addingNote) && (
+                    <div className="mt-1">
+                        <LinkNote
+                            note={link.note}
+                            startEditing={addingNote}
+                            onDone={() => setAddingNote(false)}
+                            onSave={(note) => (onNote ?? onChange)({ note })}
+                        />
+                    </div>
+                )}
+            </div>
+            <div className="flex flex-shrink-0 items-center gap-0.5">
+                {source && (
+                    <IconButton
+                        onClick={() => navigate(source)}
+                        label={t(
+                            'links.goToSource',
+                            'Go to where it was saved'
+                        )}
+                    >
+                        <ArrowUturnLeftIcon />
+                    </IconButton>
+                )}
+                <a
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex h-7 w-7 items-center justify-center rounded-lg text-surface-on-variant hover:bg-surface-high hover:text-surface-on max-sm:h-11 max-sm:w-11"
+                    aria-label={t('links.open', 'Open the link')}
+                    title={t('links.open', 'Open the link')}
+                >
+                    <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+                </a>
                 <LinkActions
                     link={link}
                     projects={projects}
@@ -170,36 +190,8 @@ const LinkCard: React.FC<LinkCardProps> = ({
                     onChange={onChange}
                     onTask={onTask}
                     onDelete={onDelete}
+                    onAddNote={() => setAddingNote(true)}
                 />
-                <span className="ml-auto flex items-center">
-                    {source && (
-                        <button
-                            type="button"
-                            onClick={() => navigate(source)}
-                            className="flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
-                            aria-label={t(
-                                'links.goToSource',
-                                'Go to where it was saved'
-                            )}
-                            title={t(
-                                'links.goToSource',
-                                'Go to where it was saved'
-                            )}
-                        >
-                            <ArrowUturnLeftIcon className="h-4 w-4" />
-                        </button>
-                    )}
-                    <a
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
-                        aria-label={t('links.open', 'Open the link')}
-                        title={t('links.open', 'Open the link')}
-                    >
-                        <ArrowTopRightOnSquareIcon className="h-4 w-4" />
-                    </a>
-                </span>
             </div>
         </article>
     );

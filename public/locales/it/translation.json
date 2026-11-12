@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}} note",
+        "notes_one": "{{count}} nota",
+        "tasks_other": "{{count}} attività",
+        "tasks_one": "{{count}} attività",
+        "goals_other": "{{count}} obiettivi",
+        "goals_one": "{{count}} obiettivo",
+        "projects_other": "{{count}} progetti",
+        "projects_one": "{{count}} progetto"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -517,7 +527,7 @@
     "assignedTo": "Assegnato a",
     "subtasks": "Sottoattività",
     "openFullPage": "Apri vista completa",
-    "openPanel": "Apri nel pannello laterale",
+    "openPanel": "Apri dettagli",
     "quickEdit": {
       "setPriority": "Imposta priorità",
       "setDueDate": "Imposta scadenza"

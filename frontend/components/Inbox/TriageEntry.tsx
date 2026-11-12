@@ -25,7 +25,7 @@ const TriageEntry: React.FC = () => {
         <Link
             to="/triage"
             data-testid="inbox-to-sort"
-            className="rounded-lg px-3 py-1.5 text-sm font-medium text-amber-800 bg-amber-50 hover:bg-amber-100 dark:text-amber-200 dark:bg-amber-900/20 dark:hover:bg-amber-900/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+            className="inline-flex h-7 items-center rounded-lg px-2.5 text-body-m font-medium text-surface-on-variant hover:bg-surface-high hover:text-surface-on focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 max-sm:min-h-[44px]"
         >
             {t('inbox.toSort', 'À trier ({{count}})', { count })}
         </Link>

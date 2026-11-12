@@ -4,6 +4,9 @@ import { useTagColor } from '../utils/tagColor';
 import OverflowMenu from './Shared/OverflowMenu';
 import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import PageHeader from './Shared/ui/PageHeader';
+import Button, { IconButton } from './Shared/ui/Button';
+import Segmented from './Shared/ui/Segmented';
 import { Task } from '../entities/Task';
 import { Project } from '../entities/Project';
 import {
@@ -932,24 +935,76 @@ const Calendar: React.FC = () => {
     };
 
     return (
-        <div className="h-full flex flex-col px-4 sm:px-6 lg:px-8 pt-4">
+        <div className="h-full flex flex-col">
             <div className="w-full max-w-7xl mx-auto flex-1 flex flex-col min-h-0">
-                {/* Header */}
-                <div className="flex flex-wrap items-center justify-between gap-2 mb-6">
-                    <div>
-                        <h2 className="text-2xl font-light dark:text-white">
-                            {t('sidebar.calendar')}
-                        </h2>
-                        <span className="text-sm text-gray-500 dark:text-gray-400">
-                            {format(
-                                currentDate,
-                                view === 'year' ? 'yyyy' : 'MMMM yyyy',
-                                { locale }
-                            )}
-                        </span>
-                    </div>
+                <PageHeader
+                    title={t('sidebar.calendar')}
+                    subtitle={format(
+                        currentDate,
+                        view === 'year' ? 'yyyy' : 'MMMM yyyy',
+                        { locale }
+                    )}
+                    actions={
+                        <>
+                            <Segmented
+                                className="max-sm:hidden"
+                                aria-label={t('calendar.view', 'View')}
+                                selected={view}
+                                onSelect={(id) => setView(id as typeof view)}
+                                options={(
+                                    [
+                                        'year',
+                                        'month',
+                                        'week',
+                                        'multi',
+                                        'day',
+                                        'agenda',
+                                    ] as const
+                                ).map((viewType) => ({
+                                    id: viewType,
+                                    label:
+                                        viewType === 'multi'
+                                            ? t('calendar.multiDay', {
+                                                  count: options.multiDayCount,
+                                                  defaultValue:
+                                                      '{{count}} days',
+                                              })
+                                            : t(
+                                                  `calendar.${viewType}`,
+                                                  viewType
+                                              ),
+                                }))}
+                            />
+                            <IconButton
+                                onClick={printCalendar}
+                                label={t('calendar.print', 'Print')}
+                            >
+                                <PrinterIcon />
+                            </IconButton>
+                            <ViewOptions
+                                options={options}
+                                onChange={changeOptions}
+                            />
 
-                    <div className="flex flex-wrap items-center gap-2">
+                            <IconButton
+                                onClick={() => navigateView('prev')}
+                                label={t('common.previous', 'Previous')}
+                            >
+                                <ChevronLeftIcon />
+                            </IconButton>
+                            <Button onClick={goToToday}>
+                                {t('calendar.today')}
+                            </Button>
+                            <IconButton
+                                onClick={() => navigateView('next')}
+                                label={t('common.next', 'Next')}
+                            >
+                                <ChevronRightIcon />
+                            </IconButton>
+                        </>
+                    }
+                >
+                    <div className="sm:hidden">
                         {/* Phones: four segments; year and N days sit in a menu */}
                         <div className="flex w-full items-center gap-2 sm:hidden">
                             <SegmentedTabs
@@ -983,429 +1038,367 @@ const Calendar: React.FC = () => {
                                 ]}
                             />
                         </div>
+                    </div>
+                </PageHeader>
+                <div className="flex-1 flex flex-col min-h-0 px-6 max-sm:px-4">
+                    {/* Calendars: show or hide each connected calendar */}
+                    <div className="flex flex-wrap items-center gap-2 mb-4">
+                        {feeds.map((feed) => (
+                            <button
+                                key={feed.uid}
+                                type="button"
+                                role="switch"
+                                aria-checked={feed.show_on_calendar}
+                                onClick={() => void toggleFeed(feed)}
+                                title={
+                                    feed.show_on_calendar
+                                        ? t(
+                                              'calendar.hideCalendar',
+                                              'Hide {{name}}',
+                                              {
+                                                  name: feed.name,
+                                              }
+                                          )
+                                        : t(
+                                              'calendar.showCalendar',
+                                              'Show {{name}}',
+                                              {
+                                                  name: feed.name,
+                                              }
+                                          )
+                                }
+                                className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm transition-colors ${
+                                    feed.show_on_calendar
+                                        ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-100'
+                                        : 'bg-transparent text-gray-500 line-through hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
+                                }`}
+                            >
+                                <span
+                                    className="h-2.5 w-2.5 rounded-full"
+                                    style={{
+                                        backgroundColor: feed.show_on_calendar
+                                            ? feed.color || '#6b7280'
+                                            : 'transparent',
+                                        boxShadow: `inset 0 0 0 2px ${feed.color || '#6b7280'}`,
+                                    }}
+                                />
+                                {feed.name}
+                            </button>
+                        ))}
+                        {googleCalendars.map((calendar) => (
+                            <button
+                                key={calendar.uid}
+                                type="button"
+                                role="switch"
+                                aria-checked={calendar.show_on_calendar}
+                                onClick={() =>
+                                    void toggleGoogleCalendar(calendar)
+                                }
+                                title={
+                                    calendar.show_on_calendar
+                                        ? t(
+                                              'calendar.hideCalendar',
+                                              'Hide {{name}}',
+                                              {
+                                                  name: calendar.name,
+                                              }
+                                          )
+                                        : t(
+                                              'calendar.showCalendar',
+                                              'Show {{name}}',
+                                              {
+                                                  name: calendar.name,
+                                              }
+                                          )
+                                }
+                                className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm transition-colors ${
+                                    calendar.show_on_calendar
+                                        ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-100'
+                                        : 'bg-transparent text-gray-500 line-through hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
+                                }`}
+                            >
+                                <span
+                                    className="h-2.5 w-2.5 rounded-full"
+                                    style={{
+                                        backgroundColor:
+                                            calendar.show_on_calendar
+                                                ? calendar.color || '#6b7280'
+                                                : 'transparent',
+                                        boxShadow: `inset 0 0 0 2px ${calendar.color || '#6b7280'}`,
+                                    }}
+                                />
+                                {calendar.name}
+                            </button>
+                        ))}
+                        <button
+                            type="button"
+                            onClick={() => setIsArrangeOpen((open) => !open)}
+                            aria-pressed={isArrangeOpen}
+                            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm transition-colors ${
+                                isArrangeOpen
+                                    ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300'
+                                    : 'text-gray-600 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-200'
+                            }`}
+                        >
+                            <ClockIcon className="h-4 w-4" />
+                            {t('calendar.arrange.title', 'Arrange tasks')}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setIsManagerOpen(true)}
+                            className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-200 transition-colors"
+                        >
+                            <Cog6ToothIcon className="h-4 w-4" />
+                            {t('calendar.manageCalendars', 'Calendars')}
+                        </button>
+                        {failedFeedNames.length > 0 && (
+                            <span className="text-xs text-amber-600 dark:text-amber-400">
+                                {t(
+                                    'calendar.feedError',
+                                    'Could not load: {{names}}',
+                                    { names: failedFeedNames.join(', ') }
+                                )}
+                            </span>
+                        )}
+                    </div>
 
-                        {/* View selector */}
-                        <div className="hidden sm:flex rounded-lg bg-gray-100 dark:bg-gray-800 p-0.5 border border-gray-200 dark:border-gray-600">
-                            {(
-                                [
-                                    'year',
-                                    'month',
-                                    'week',
-                                    'multi',
-                                    'day',
-                                    'agenda',
-                                ] as const
-                            ).map((viewType) => (
-                                <button
-                                    key={viewType}
-                                    onClick={() => setView(viewType)}
-                                    className={`px-3 py-1.5 text-sm font-medium capitalize rounded-md transition-all duration-150 ${
-                                        view === viewType
-                                            ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-gray-100 shadow-sm'
-                                            : 'text-gray-600 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200'
-                                    }`}
-                                >
-                                    {viewType === 'multi'
-                                        ? t('calendar.multiDay', {
-                                              count: options.multiDayCount,
-                                              defaultValue: '{{count}} days',
-                                          })
-                                        : t(`calendar.${viewType}`, viewType)}
-                                </button>
-                            ))}
+                    {/* Loading indicator */}
+                    {isLoadingTasks && (
+                        <div className="text-center py-3 px-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800 mb-3">
+                            <span className="text-sm text-blue-600 dark:text-blue-400">
+                                {t('calendar.loadingTasks')}
+                            </span>
+                        </div>
+                    )}
+
+                    {/* Calendar view */}
+                    <div className="flex-1 overflow-hidden min-h-0 flex gap-3">
+                        {options.showMiniCalendar && (
+                            <aside
+                                aria-label={t(
+                                    'calendar.miniCalendar',
+                                    'Mini calendar'
+                                )}
+                                className="hidden lg:block w-56 shrink-0 self-start bg-white dark:bg-gray-700 rounded-xl shadow-sm border border-gray-200 dark:border-gray-600 p-3"
+                            >
+                                <div className="mb-2 flex items-center justify-between">
+                                    <button
+                                        type="button"
+                                        aria-label={t(
+                                            'calendar.previousMonth',
+                                            'Previous month'
+                                        )}
+                                        onClick={() =>
+                                            setMiniMonth((m) =>
+                                                addMonths(m, -1)
+                                            )
+                                        }
+                                        className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-600"
+                                    >
+                                        <ChevronLeftIcon className="h-3.5 w-3.5 text-gray-600" />
+                                    </button>
+                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                                        {format(miniMonth, 'MMMM yyyy', {
+                                            locale,
+                                        })}
+                                    </span>
+                                    <button
+                                        type="button"
+                                        aria-label={t(
+                                            'calendar.nextMonth',
+                                            'Next month'
+                                        )}
+                                        onClick={() =>
+                                            setMiniMonth((m) => addMonths(m, 1))
+                                        }
+                                        className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-600"
+                                    >
+                                        <ChevronRightIcon className="h-3.5 w-3.5 text-gray-600" />
+                                    </button>
+                                </div>
+                                <MonthGrid
+                                    month={miniMonth}
+                                    weekStartsOn={
+                                        firstDayOfWeek as
+                                            0 | 1 | 2 | 3 | 4 | 5 | 6
+                                    }
+                                    selected={currentDate}
+                                    onDayClick={setCurrentDate}
+                                    compact
+                                />
+                            </aside>
+                        )}
+                        <div
+                            className="flex-1 overflow-hidden min-h-0"
+                            data-print-area
+                        >
+                            {view === 'year' && (
+                                <CalendarYearView
+                                    currentDate={currentDate}
+                                    events={events}
+                                    weekStartsOn={
+                                        firstDayOfWeek as
+                                            0 | 1 | 2 | 3 | 4 | 5 | 6
+                                    }
+                                    onDayClick={(day) => {
+                                        setCurrentDate(day);
+                                        setView('day');
+                                    }}
+                                />
+                            )}
+                            {view === 'month' && (
+                                <CalendarMonthView
+                                    currentDate={currentDate}
+                                    events={calendarEvents}
+                                    onDateClick={handleDateClick}
+                                    onEventClick={handleEventClick}
+                                    onEventDrop={handleEventDrop}
+                                    showWeekends={options.showWeekends}
+                                    showWeekNumbers={options.showWeekNumbers}
+                                />
+                            )}
+                            {view === 'week' && (
+                                <CalendarWeekView
+                                    currentDate={currentDate}
+                                    events={calendarEvents}
+                                    onDateClick={handleDateClick}
+                                    onEventClick={handleEventClick}
+                                    onTimeSlotClick={handleTimeSlotClick}
+                                    onEventDrop={handleEventDrop}
+                                    onEventResize={handleEventResize}
+                                    showWeekends={options.showWeekends}
+                                    showWeekNumbers={options.showWeekNumbers}
+                                    visibleHours={options.visibleHours}
+                                />
+                            )}
+                            {view === 'multi' && (
+                                <CalendarWeekView
+                                    currentDate={currentDate}
+                                    events={calendarEvents}
+                                    onEventClick={handleEventClick}
+                                    onTimeSlotClick={handleTimeSlotClick}
+                                    onEventDrop={handleEventDrop}
+                                    onEventResize={handleEventResize}
+                                    showWeekends={options.showWeekends}
+                                    showWeekNumbers={options.showWeekNumbers}
+                                    visibleHours={options.visibleHours}
+                                    dayCount={options.multiDayCount}
+                                />
+                            )}
+                            {view === 'agenda' && (
+                                <CalendarAgendaView
+                                    start={startOfMonth(currentDate)}
+                                    end={endOfMonth(currentDate)}
+                                    events={calendarEvents}
+                                    onEventClick={handleEventClick}
+                                    showWeekends={options.showWeekends}
+                                />
+                            )}
+                            {view === 'day' && (
+                                <CalendarDayView
+                                    currentDate={currentDate}
+                                    events={calendarEvents}
+                                    onEventClick={handleEventClick}
+                                    onTimeSlotClick={handleTimeSlotClick}
+                                    onEventDrop={handleEventDrop}
+                                    onEventResize={handleEventResize}
+                                    visibleHours={options.visibleHours}
+                                />
+                            )}
                         </div>
 
-                        <button
-                            type="button"
-                            onClick={printCalendar}
-                            aria-label={t('calendar.print', 'Print')}
-                            title={t('calendar.print', 'Print')}
-                            className="p-2 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-all"
-                        >
-                            <PrinterIcon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
-                        </button>
+                        {isArrangeOpen && (
+                            <ArrangePanel
+                                tasks={allTasks}
+                                onClose={() => setIsArrangeOpen(false)}
+                            />
+                        )}
+                    </div>
 
-                        <ViewOptions
-                            options={options}
-                            onChange={changeOptions}
+                    {isManagerOpen && (
+                        <CalendarsModal
+                            feeds={feeds}
+                            loading={feedsLoading}
+                            onFeedsChange={(update) => setFeeds(update)}
+                            googleStatus={googleStatus}
+                            onGoogleStatusChange={(status) => {
+                                setGoogleStatus(status);
+                                setFeedsVersion((v) => v + 1);
+                            }}
+                            onClose={() => setIsManagerOpen(false)}
                         />
-
-                        {/* Navigation */}
-                        <button
-                            onClick={() => navigateView('prev')}
-                            className="p-2 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 hover:shadow-sm transition-all"
-                            aria-label={t('common.previous', 'Previous')}
-                            title={t('common.previous', 'Previous')}
-                        >
-                            <ChevronLeftIcon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
-                        </button>
-
-                        <button
-                            onClick={goToToday}
-                            className="px-3 py-1.5 text-sm font-medium bg-primary text-primary-on rounded-lg hover:bg-primary/90 transition-colors"
-                        >
-                            {t('calendar.today')}
-                        </button>
-
-                        <button
-                            onClick={() => navigateView('next')}
-                            className="p-2 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 hover:shadow-sm transition-all"
-                            aria-label={t('common.next', 'Next')}
-                            title={t('common.next', 'Next')}
-                        >
-                            <ChevronRightIcon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
-                        </button>
-                    </div>
-                </div>
-
-                {/* Calendars: show or hide each connected calendar */}
-                <div className="flex flex-wrap items-center gap-2 mb-4">
-                    {feeds.map((feed) => (
-                        <button
-                            key={feed.uid}
-                            type="button"
-                            role="switch"
-                            aria-checked={feed.show_on_calendar}
-                            onClick={() => void toggleFeed(feed)}
-                            title={
-                                feed.show_on_calendar
-                                    ? t(
-                                          'calendar.hideCalendar',
-                                          'Hide {{name}}',
-                                          {
-                                              name: feed.name,
-                                          }
-                                      )
-                                    : t(
-                                          'calendar.showCalendar',
-                                          'Show {{name}}',
-                                          {
-                                              name: feed.name,
-                                          }
-                                      )
-                            }
-                            className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm transition-colors ${
-                                feed.show_on_calendar
-                                    ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-100'
-                                    : 'bg-transparent text-gray-500 line-through hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
-                            }`}
-                        >
-                            <span
-                                className="h-2.5 w-2.5 rounded-full"
-                                style={{
-                                    backgroundColor: feed.show_on_calendar
-                                        ? feed.color || '#6b7280'
-                                        : 'transparent',
-                                    boxShadow: `inset 0 0 0 2px ${feed.color || '#6b7280'}`,
-                                }}
-                            />
-                            {feed.name}
-                        </button>
-                    ))}
-                    {googleCalendars.map((calendar) => (
-                        <button
-                            key={calendar.uid}
-                            type="button"
-                            role="switch"
-                            aria-checked={calendar.show_on_calendar}
-                            onClick={() => void toggleGoogleCalendar(calendar)}
-                            title={
-                                calendar.show_on_calendar
-                                    ? t(
-                                          'calendar.hideCalendar',
-                                          'Hide {{name}}',
-                                          {
-                                              name: calendar.name,
-                                          }
-                                      )
-                                    : t(
-                                          'calendar.showCalendar',
-                                          'Show {{name}}',
-                                          {
-                                              name: calendar.name,
-                                          }
-                                      )
-                            }
-                            className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm transition-colors ${
-                                calendar.show_on_calendar
-                                    ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-100'
-                                    : 'bg-transparent text-gray-500 line-through hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
-                            }`}
-                        >
-                            <span
-                                className="h-2.5 w-2.5 rounded-full"
-                                style={{
-                                    backgroundColor: calendar.show_on_calendar
-                                        ? calendar.color || '#6b7280'
-                                        : 'transparent',
-                                    boxShadow: `inset 0 0 0 2px ${calendar.color || '#6b7280'}`,
-                                }}
-                            />
-                            {calendar.name}
-                        </button>
-                    ))}
-                    <button
-                        type="button"
-                        onClick={() => setIsArrangeOpen((open) => !open)}
-                        aria-pressed={isArrangeOpen}
-                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm transition-colors ${
-                            isArrangeOpen
-                                ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300'
-                                : 'text-gray-600 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-200'
-                        }`}
-                    >
-                        <ClockIcon className="h-4 w-4" />
-                        {t('calendar.arrange.title', 'Arrange tasks')}
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => setIsManagerOpen(true)}
-                        className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-200 transition-colors"
-                    >
-                        <Cog6ToothIcon className="h-4 w-4" />
-                        {t('calendar.manageCalendars', 'Calendars')}
-                    </button>
-                    {failedFeedNames.length > 0 && (
-                        <span className="text-xs text-amber-600 dark:text-amber-400">
-                            {t(
-                                'calendar.feedError',
-                                'Could not load: {{names}}',
-                                { names: failedFeedNames.join(', ') }
-                            )}
-                        </span>
                     )}
-                </div>
 
-                {/* Loading indicator */}
-                {isLoadingTasks && (
-                    <div className="text-center py-3 px-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800 mb-3">
-                        <span className="text-sm text-blue-600 dark:text-blue-400">
-                            {t('calendar.loadingTasks')}
-                        </span>
-                    </div>
-                )}
-
-                {/* Calendar view */}
-                <div className="flex-1 overflow-hidden min-h-0 flex gap-3">
-                    {options.showMiniCalendar && (
-                        <aside
-                            aria-label={t(
-                                'calendar.miniCalendar',
-                                'Mini calendar'
-                            )}
-                            className="hidden lg:block w-56 shrink-0 self-start bg-white dark:bg-gray-700 rounded-xl shadow-sm border border-gray-200 dark:border-gray-600 p-3"
-                        >
-                            <div className="mb-2 flex items-center justify-between">
-                                <button
-                                    type="button"
-                                    aria-label={t(
-                                        'calendar.previousMonth',
-                                        'Previous month'
-                                    )}
-                                    onClick={() =>
-                                        setMiniMonth((m) => addMonths(m, -1))
-                                    }
-                                    className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-600"
-                                >
-                                    <ChevronLeftIcon className="h-3.5 w-3.5 text-gray-600" />
-                                </button>
-                                <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                                    {format(miniMonth, 'MMMM yyyy', { locale })}
-                                </span>
-                                <button
-                                    type="button"
-                                    aria-label={t(
-                                        'calendar.nextMonth',
-                                        'Next month'
-                                    )}
-                                    onClick={() =>
-                                        setMiniMonth((m) => addMonths(m, 1))
-                                    }
-                                    className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-600"
-                                >
-                                    <ChevronRightIcon className="h-3.5 w-3.5 text-gray-600" />
-                                </button>
-                            </div>
-                            <MonthGrid
-                                month={miniMonth}
-                                weekStartsOn={
-                                    firstDayOfWeek as 0 | 1 | 2 | 3 | 4 | 5 | 6
-                                }
-                                selected={currentDate}
-                                onDayClick={setCurrentDate}
-                                compact
-                            />
-                        </aside>
+                    {feedDetail && (
+                        <FeedEventPopover
+                            detail={feedDetail}
+                            onClose={() => setFeedDetail(null)}
+                        />
                     )}
-                    <div
-                        className="flex-1 overflow-hidden min-h-0"
-                        data-print-area
-                    >
-                        {view === 'year' && (
-                            <CalendarYearView
-                                currentDate={currentDate}
-                                events={events}
-                                weekStartsOn={
-                                    firstDayOfWeek as 0 | 1 | 2 | 3 | 4 | 5 | 6
-                                }
-                                onDayClick={(day) => {
-                                    setCurrentDate(day);
-                                    setView('day');
-                                }}
-                            />
-                        )}
-                        {view === 'month' && (
-                            <CalendarMonthView
-                                currentDate={currentDate}
-                                events={calendarEvents}
-                                onDateClick={handleDateClick}
-                                onEventClick={handleEventClick}
-                                onEventDrop={handleEventDrop}
-                                showWeekends={options.showWeekends}
-                                showWeekNumbers={options.showWeekNumbers}
-                            />
-                        )}
-                        {view === 'week' && (
-                            <CalendarWeekView
-                                currentDate={currentDate}
-                                events={calendarEvents}
-                                onDateClick={handleDateClick}
-                                onEventClick={handleEventClick}
-                                onTimeSlotClick={handleTimeSlotClick}
-                                onEventDrop={handleEventDrop}
-                                onEventResize={handleEventResize}
-                                showWeekends={options.showWeekends}
-                                showWeekNumbers={options.showWeekNumbers}
-                                visibleHours={options.visibleHours}
-                            />
-                        )}
-                        {view === 'multi' && (
-                            <CalendarWeekView
-                                currentDate={currentDate}
-                                events={calendarEvents}
-                                onEventClick={handleEventClick}
-                                onTimeSlotClick={handleTimeSlotClick}
-                                onEventDrop={handleEventDrop}
-                                onEventResize={handleEventResize}
-                                showWeekends={options.showWeekends}
-                                showWeekNumbers={options.showWeekNumbers}
-                                visibleHours={options.visibleHours}
-                                dayCount={options.multiDayCount}
-                            />
-                        )}
-                        {view === 'agenda' && (
-                            <CalendarAgendaView
-                                start={startOfMonth(currentDate)}
-                                end={endOfMonth(currentDate)}
-                                events={calendarEvents}
-                                onEventClick={handleEventClick}
-                                showWeekends={options.showWeekends}
-                            />
-                        )}
-                        {view === 'day' && (
-                            <CalendarDayView
-                                currentDate={currentDate}
-                                events={calendarEvents}
-                                onEventClick={handleEventClick}
-                                onTimeSlotClick={handleTimeSlotClick}
-                                onEventDrop={handleEventDrop}
-                                onEventResize={handleEventResize}
-                                visibleHours={options.visibleHours}
-                            />
-                        )}
-                    </div>
 
-                    {isArrangeOpen && (
-                        <ArrangePanel
-                            tasks={allTasks}
-                            onClose={() => setIsArrangeOpen(false)}
+                    {slotStart && (
+                        <SlotChoiceDialog
+                            start={slotStart}
+                            googleAvailable={writableGoogle.length > 0}
+                            onAddTask={(name) => addSlotTask(name, slotStart)}
+                            onGoogleEvent={() => {
+                                const start = slotStart;
+                                setSlotStart(null);
+                                openSlotGoogleDraft(start);
+                            }}
+                            onClose={() => setSlotStart(null)}
+                        />
+                    )}
+
+                    {googleDraft && (
+                        <GoogleEventModal
+                            draft={googleDraft}
+                            calendars={googleCalendars}
+                            onClose={() => setGoogleDraft(null)}
+                            onSave={async (calendarUid, input) => {
+                                if (
+                                    googleDraft.eventId &&
+                                    googleDraft.calendarUid
+                                ) {
+                                    await updateGoogleEvent(
+                                        googleDraft.calendarUid,
+                                        googleDraft.eventId,
+                                        input
+                                    );
+                                } else {
+                                    await createGoogleEvent({
+                                        ...input,
+                                        calendar_uid: calendarUid,
+                                    });
+                                }
+                                setFeedsVersion((v) => v + 1);
+                            }}
+                            onDelete={
+                                googleDraft.eventId && googleDraft.calendarUid
+                                    ? async () => {
+                                          await deleteGoogleEvent(
+                                              googleDraft.calendarUid!,
+                                              googleDraft.eventId!
+                                          );
+                                          setFeedsVersion((v) => v + 1);
+                                      }
+                                    : undefined
+                            }
+                        />
+                    )}
+
+                    {selectedTask && (
+                        <TaskEventModal
+                            isOpen={isEventDetailModalOpen}
+                            onClose={() => {
+                                setIsEventDetailModalOpen(false);
+                                setSelectedTask(null);
+                            }}
+                            task={selectedTask}
+                            onEditTask={handleEditTask}
                         />
                     )}
                 </div>
-
-                {isManagerOpen && (
-                    <CalendarsModal
-                        feeds={feeds}
-                        loading={feedsLoading}
-                        onFeedsChange={(update) => setFeeds(update)}
-                        googleStatus={googleStatus}
-                        onGoogleStatusChange={(status) => {
-                            setGoogleStatus(status);
-                            setFeedsVersion((v) => v + 1);
-                        }}
-                        onClose={() => setIsManagerOpen(false)}
-                    />
-                )}
-
-                {feedDetail && (
-                    <FeedEventPopover
-                        detail={feedDetail}
-                        onClose={() => setFeedDetail(null)}
-                    />
-                )}
-
-                {slotStart && (
-                    <SlotChoiceDialog
-                        start={slotStart}
-                        googleAvailable={writableGoogle.length > 0}
-                        onAddTask={(name) => addSlotTask(name, slotStart)}
-                        onGoogleEvent={() => {
-                            const start = slotStart;
-                            setSlotStart(null);
-                            openSlotGoogleDraft(start);
-                        }}
-                        onClose={() => setSlotStart(null)}
-                    />
-                )}
-
-                {googleDraft && (
-                    <GoogleEventModal
-                        draft={googleDraft}
-                        calendars={googleCalendars}
-                        onClose={() => setGoogleDraft(null)}
-                        onSave={async (calendarUid, input) => {
-                            if (
-                                googleDraft.eventId &&
-                                googleDraft.calendarUid
-                            ) {
-                                await updateGoogleEvent(
-                                    googleDraft.calendarUid,
-                                    googleDraft.eventId,
-                                    input
-                                );
-                            } else {
-                                await createGoogleEvent({
-                                    ...input,
-                                    calendar_uid: calendarUid,
-                                });
-                            }
-                            setFeedsVersion((v) => v + 1);
-                        }}
-                        onDelete={
-                            googleDraft.eventId && googleDraft.calendarUid
-                                ? async () => {
-                                      await deleteGoogleEvent(
-                                          googleDraft.calendarUid!,
-                                          googleDraft.eventId!
-                                      );
-                                      setFeedsVersion((v) => v + 1);
-                                  }
-                                : undefined
-                        }
-                    />
-                )}
-
-                {selectedTask && (
-                    <TaskEventModal
-                        isOpen={isEventDetailModalOpen}
-                        onClose={() => {
-                            setIsEventDetailModalOpen(false);
-                            setSelectedTask(null);
-                        }}
-                        task={selectedTask}
-                        onEditTask={handleEditTask}
-                    />
-                )}
             </div>
         </div>
     );

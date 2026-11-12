@@ -80,10 +80,13 @@ describe('LinkCard', () => {
         ).toBeNull();
     });
 
-    it('writes a note and saves it on Enter', async () => {
+    it('writes a note from the menu and saves it on Enter', async () => {
         const onChange = renderCard();
+        // No empty "Add a note" line on every row: it is in the menu.
+        expect(screen.queryByText('Add a note')).toBeNull();
 
-        fireEvent.click(screen.getByText('Add a note'));
+        fireEvent.click(screen.getByRole('button', { name: 'More actions' }));
+        fireEvent.click(screen.getByRole('menuitem', { name: 'Add a note' }));
         const field = screen.getByLabelText('Your note');
         fireEvent.change(field, { target: { value: '  for invoices ' } });
         fireEvent.keyDown(field, { key: 'Enter' });

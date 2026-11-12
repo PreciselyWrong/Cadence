@@ -295,15 +295,15 @@ const TaskRowToolbar: React.FC<TaskRowToolbarProps> = ({
 
             <div className="flex-1" />
 
-            {/* Open in the side panel */}
+            {/* Open the detail sheet */}
             <button
                 type="button"
                 onClick={(e) => {
                     e.stopPropagation();
                     onOpenPanel();
                 }}
-                title={t('tasks.openPanel', 'Open in side panel')}
-                aria-label={t('tasks.openPanel', 'Open in side panel')}
+                title={t('tasks.openPanel', 'Open details')}
+                aria-label={t('tasks.openPanel', 'Open details')}
                 data-testid="task-row-open-panel"
                 className="inline-flex items-center h-8 px-1.5 rounded-md text-gray-500 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
             >

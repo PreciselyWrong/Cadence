@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}}条笔记",
+        "notes_one": "{{count}}条笔记",
+        "tasks_other": "{{count}}个任务",
+        "tasks_one": "{{count}}个任务",
+        "goals_other": "{{count}}个目标",
+        "goals_one": "{{count}}个目标",
+        "projects_other": "{{count}}个项目",
+        "projects_one": "{{count}}个项目"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -516,7 +526,7 @@
     "assignedTo": "分配给",
     "subtasks": "子任务",
     "openFullPage": "打开完整视图",
-    "openPanel": "在侧边栏中打开",
+    "openPanel": "打开详情",
     "quickEdit": {
       "setPriority": "设置优先级",
       "setDueDate": "设置截止日期"

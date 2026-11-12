@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}} anteckningar",
+        "notes_one": "{{count}} anteckning",
+        "tasks_other": "{{count}} uppgifter",
+        "tasks_one": "{{count}} uppgift",
+        "goals_other": "{{count}} mål",
+        "goals_one": "{{count}} mål",
+        "projects_other": "{{count}} projekt",
+        "projects_one": "{{count}} projekt"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -516,7 +526,7 @@
     "assignedTo": "Tilldelat till",
     "subtasks": "Deluppgifter",
     "openFullPage": "Öppna fullständig vy",
-    "openPanel": "Öppna i sidopanelen",
+    "openPanel": "Öppna detaljer",
     "quickEdit": {
       "setPriority": "Ange prioritet",
       "setDueDate": "Ange förfallodatum"

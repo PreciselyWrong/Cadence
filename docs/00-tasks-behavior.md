@@ -35,13 +35,13 @@ This document explains how tasks work in Cadence from a user behavior perspectiv
 
 ### Opening a Task
 
-- Clicking a task anywhere in the app (lists, Today and the plan, search, notifications, the calendar, the Everyone board, parent links) opens it in the side panel over the current page. Habits still open their own page.
-- A task link, `/task/:uid`, opens all tasks with that task in the side panel. The link icon next to a task's title copies it.
+- Clicking a task anywhere in the app (lists, Today and the plan, search, notifications, the calendar, the Everyone board, parent links) opens it in the task sheet: one wide sheet floating over the lower part of the current page, the same on every page (`?task=<uid>`). **Expand** makes it fill the page; a click outside it, Escape or a second click on the same row closes it. Below 768 px it takes the whole screen. Habits still open their own page; one occurrence of a series edited alone, and a task opened from a task or habit page, keep the dialog.
+- A task link, `/task/:uid`, opens all tasks with that task in the sheet. The link icon next to a task's title copies it.
 - The panel and the Minimal pane share one inline editor, with no Update button. The title is large and editable (it reads #tags, +project, ~area and dates like quick capture). Under it, one chip per field in the Android detail order: due, start, priority, project, area, tags, status, recurrence, estimate, defer until, assignee. A chip opens a popover; each choice saves at once. Empty chips show the field name.
 - Every edit saves on its own (blur, Enter, a choice in a popover) and shows "Saved" in the footer. A failed save puts the value back and shows an error; nothing is kept half-saved. Closing with Escape saves what was typed but not yet blurred.
 - The description is Markdown, edited in place: click it to type, leave it to save. Ticking a task-list box saves too.
 - The due and start chips refuse a start after the due date; the defer chip refuses a date after the due date. A recurring task still asks which occurrences a new due date moves.
-- The footer has "Tomorrow" (moves the due date to tomorrow, keeping the time) and "Complete" / "Reopen".
+- The task is done (or reopened) with the check circle beside its title, as on a row; there is no Complete button. The footer keeps "Tomorrow" (moves the due date to tomorrow, keeping the time) and the save state.
 - Subtasks, attachments and comments save as soon as they change. Relations stay on the full task page, which is at `/task/:uid/details`.
 - With a popover or dropdown open, Escape or a click outside closes it; the panel stays open. Up and Down move inside a list popover, Enter picks.
 
@@ -144,7 +144,7 @@ One shared popover (`frontend/components/Shared/DatePopover.tsx`) for every date
 
 In Minimal mode a click on a task row opens the task in a pane on the right. On phones the pane is a full-screen sheet with a close button.
 
-- Edits happen in place, with no save button, in the same inline editor as the side panel (see Opening a Task): title, a chip per field, description, subtasks, attachments and comments. The decision toggles (In view, This week, Later) and the postponement history stay under the comments.
+- Edits happen in place, with no save button, in the same inline editor as the task sheet (see Opening a Task): title, a chip per field, description, subtasks, attachments and comments. The decision toggles (In view, This week, Later) and the postponement history stay under the comments.
 - The open task is kept in the URL as `?task=<uid>`, so a reload keeps it. Opening or closing replaces the history entry instead of adding one.
 - Escape closes the pane. "Open full page" goes to the task page.
 - A saved change is merged into the Tasks list without another request. Other lists update when they reload.
@@ -161,7 +161,7 @@ In Minimal mode, task rows and their lists take the gestures below. Dense mode h
     - Date: Today, Tomorrow, Next week (the next Monday after today) or Clear date. Setting a date clears any time of day on the task.
     - Move to project: No project, or one of your projects.
     - Pin or Unpin.
-    - Duplicate: a new open task with the name, note, project, area, tags, priority and dates; it opens in the side panel. Not offered for a TODO.md task. Subtasks, recurrence, status and parent task are not copied. The task page's actions menu has the same item and opens the copy on its page.
+    - Duplicate: a new open task with the name, note, project, area, tags, priority and dates; it opens in the task sheet. Not offered for a TODO.md task. Subtasks, recurrence, status and parent task are not copied. The task page's actions menu has the same item and opens the copy on its page.
     - Delete: the task leaves the list at once and an « Undo » toast (5 s) keeps it; after that, or when the page is left, it is deleted. A recurring task asks its scope first instead.
     - A date or project change shows an « Undo » toast that puts the old value back (not for a recurring task, whose scope prompt decides).
     - Each choice saves at once and updates the list. The menu closes after a choice, on Escape or on a press outside it, and stays inside the window.

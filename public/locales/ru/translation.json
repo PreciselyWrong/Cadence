@@ -1,4 +1,22 @@
 {
+    "counts": {
+        "notes_many": "{{count}} заметок",
+        "tasks_many": "{{count}} задач",
+        "goals_many": "{{count}} целей",
+        "projects_many": "{{count}} проектов",
+        "notes_few": "{{count}} заметки",
+        "tasks_few": "{{count}} задачи",
+        "goals_few": "{{count}} цели",
+        "projects_few": "{{count}} проекта",
+        "notes_other": "{{count}} заметок",
+        "notes_one": "{{count}} заметка",
+        "tasks_other": "{{count}} задач",
+        "tasks_one": "{{count}} задача",
+        "goals_other": "{{count}} целей",
+        "goals_one": "{{count}} цель",
+        "projects_other": "{{count}} проектов",
+        "projects_one": "{{count}} проект"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -518,7 +536,7 @@
     "assignedTo": "Назначено",
     "subtasks": "Подзадачи",
     "openFullPage": "Открыть полный вид",
-    "openPanel": "Открыть в боковой панели",
+    "openPanel": "Открыть подробности",
     "quickEdit": {
       "setPriority": "Задать приоритет",
       "setDueDate": "Задать срок"

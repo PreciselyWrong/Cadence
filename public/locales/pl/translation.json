@@ -1,4 +1,22 @@
 {
+    "counts": {
+        "notes_many": "{{count}} notatek",
+        "tasks_many": "{{count}} zadań",
+        "goals_many": "{{count}} celów",
+        "projects_many": "{{count}} projektów",
+        "notes_few": "{{count}} notatki",
+        "tasks_few": "{{count}} zadania",
+        "goals_few": "{{count}} cele",
+        "projects_few": "{{count}} projekty",
+        "notes_other": "{{count}} notatek",
+        "notes_one": "{{count}} notatka",
+        "tasks_other": "{{count}} zadań",
+        "tasks_one": "{{count}} zadanie",
+        "goals_other": "{{count}} celów",
+        "goals_one": "{{count}} cel",
+        "projects_other": "{{count}} projektów",
+        "projects_one": "{{count}} projekt"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -518,7 +536,7 @@
     "assignedTo": "Przypisane do",
     "subtasks": "Podzadania",
     "openFullPage": "Otwórz pełny widok",
-    "openPanel": "Otwórz w panelu bocznym",
+    "openPanel": "Otwórz szczegóły",
     "quickEdit": {
       "setPriority": "Ustaw priorytet",
       "setDueDate": "Ustaw termin"

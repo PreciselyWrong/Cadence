@@ -279,7 +279,7 @@ const ProjectBoard: React.FC<ProjectBoardProps> = ({
 
     const renderCards = (list: Task[], sectionUid: string | null) =>
         list.length === 0 ? (
-            <p className="text-xs py-3 text-center text-gray-500 dark:text-gray-400">
+            <p className="text-xs py-3 text-center text-surface-on-variant">
                 {t('projectBoard.empty', 'No tasks')}
             </p>
         ) : (
@@ -315,18 +315,19 @@ const ProjectBoard: React.FC<ProjectBoardProps> = ({
                         setDropBefore(null);
                     }}
                     onClick={() => onOpenTask(task)}
+                    data-task-row=""
                     className={`${
                         readOnly
                             ? 'cursor-pointer'
                             : 'cursor-grab active:cursor-grabbing'
                     } ${
                         dropBefore === task.uid
-                            ? 'border-t-2 border-t-blue-500'
+                            ? 'border-t-2 border-t-primary'
                             : ''
-                    } rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm shadow-sm hover:border-gray-300 dark:hover:border-gray-600 ${
+                    } rounded-lg border border-outline-variant/50 bg-surface px-3 py-2.5 text-body-m font-medium hover:border-outline-variant ${
                         DONE_STATUSES.has(task.status)
-                            ? 'line-through text-gray-500 dark:text-gray-400'
-                            : 'text-gray-900 dark:text-gray-100'
+                            ? 'line-through text-surface-on-variant'
+                            : 'text-surface-on'
                     }`}
                 >
                     {task.name}
@@ -343,10 +344,10 @@ const ProjectBoard: React.FC<ProjectBoardProps> = ({
         <div
             key={key}
             data-testid={`board-column-${sectionUid || 'none'}`}
-            className={`relative flex flex-col w-72 flex-shrink-0 rounded-xl border bg-gray-50 dark:bg-gray-800/60 ${
+            className={`relative flex flex-col w-72 flex-shrink-0 rounded-2xl border bg-surface-low ${
                 dragOver === key
-                    ? 'border-dashed border-gray-400 dark:border-gray-500'
-                    : 'border-gray-200 dark:border-gray-700'
+                    ? 'border-dashed border-outline'
+                    : 'border-transparent'
             }`}
             onDragOver={(e) => {
                 if (readOnly) return;
@@ -383,7 +384,7 @@ const ProjectBoard: React.FC<ProjectBoardProps> = ({
                 }}
             >
                 {header}
-                <span className="text-xs text-gray-600 dark:text-gray-300">
+                <span className="text-xs text-surface-on-variant">
                     {list.length}
                 </span>
             </div>
@@ -395,14 +396,14 @@ const ProjectBoard: React.FC<ProjectBoardProps> = ({
 
     if (loading) {
         return (
-            <p className="text-sm text-gray-600 dark:text-gray-300">
+            <p className="text-sm text-surface-on-variant">
                 {t('common.loading', 'Loading...')}
             </p>
         );
     }
 
     const menuItem =
-        'flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-40';
+        'flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm text-surface-on hover:bg-surface-high disabled:opacity-40';
 
     return (
         <div
@@ -412,7 +413,7 @@ const ProjectBoard: React.FC<ProjectBoardProps> = ({
             {columnShell(
                 'none',
                 null,
-                <span className="text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">
+                <span className="text-xs font-semibold uppercase tracking-wide text-surface-on-variant">
                     {t('projectBoard.unsectioned', 'Unsectioned')}
                 </span>,
                 columns['']
@@ -438,11 +439,11 @@ const ProjectBoard: React.FC<ProjectBoardProps> = ({
                                         submitRename(section);
                                     if (e.key === 'Escape') setEditingUid(null);
                                 }}
-                                className="flex-1 min-w-0 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-2 py-0.5 text-sm dark:text-white"
+                                className="flex-1 min-w-0 rounded border border-outline-variant bg-surface-low px-2 py-0.5 text-sm dark:text-white"
                             />
                         ) : (
                             <span
-                                className="truncate text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300"
+                                className="truncate text-xs font-semibold uppercase tracking-wide text-surface-on-variant"
                                 onDoubleClick={() => {
                                     if (readOnly) return;
                                     setEditingUid(section.uid);
@@ -468,12 +469,12 @@ const ProjectBoard: React.FC<ProjectBoardProps> = ({
                                                 : section.uid
                                         )
                                     }
-                                    className="p-1 rounded text-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700"
+                                    className="rounded-lg p-1 text-surface-on-variant hover:bg-surface-high hover:text-surface-on"
                                 >
                                     <EllipsisHorizontalIcon className="h-4 w-4" />
                                 </button>
                                 {menuUid === section.uid && (
-                                    <div className="absolute right-0 z-20 mt-1 w-48 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 py-1 shadow-lg">
+                                    <div className="absolute right-0 z-20 mt-1 w-48 rounded-lg border border-outline-variant/60 bg-surface-low py-1 shadow-lg">
                                         <button
                                             type="button"
                                             className={menuItem}
@@ -540,7 +541,7 @@ const ProjectBoard: React.FC<ProjectBoardProps> = ({
                                         </button>
                                         <button
                                             type="button"
-                                            className={`${menuItem} text-red-600 dark:text-red-400`}
+                                            className={`${menuItem} text-danger`}
                                             onClick={() => {
                                                 setMenuUid(null);
                                                 setToDelete(section);
@@ -581,14 +582,14 @@ const ProjectBoard: React.FC<ProjectBoardProps> = ({
                                     setNewName('');
                                 }
                             }}
-                            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-3 py-2 text-sm dark:text-white"
+                            className="w-full rounded-lg border border-outline-variant bg-surface-low px-3 py-2 text-sm dark:text-white"
                         />
                     ) : (
                         <button
                             type="button"
                             data-testid="board-add-column"
                             onClick={() => setAdding(true)}
-                            className="flex w-full items-center gap-2 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 px-3 py-2 text-sm text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200"
+                            className="flex w-full items-center gap-2 rounded-xl border border-dashed border-outline-variant px-3 py-2 text-body-m text-surface-on-variant hover:text-surface-on"
                         >
                             <PlusIcon className="h-4 w-4" />
                             {t('projectBoard.addColumn', 'Add column')}

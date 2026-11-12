@@ -509,7 +509,7 @@ describe('ReviewPage', () => {
         it('goes through one thing at a time, with gentle progress', async () => {
             renderPage();
             fireEvent.click(
-                await screen.findByRole('button', { name: 'Start' })
+                await screen.findByRole('button', { name: 'Quick review' })
             );
             expect(
                 await screen.findByText('Shared shopping list')
@@ -552,14 +552,14 @@ describe('ReviewPage', () => {
                 screen.getByRole('button', { name: 'Back to the review' })
             );
             expect(
-                await screen.findByRole('button', { name: 'Start' })
+                await screen.findByRole('button', { name: 'Quick review' })
             ).toBeInTheDocument();
         });
 
         it('answers the keyboard: a number chooses, S skips, Escape stops', async () => {
             renderPage();
             fireEvent.click(
-                await screen.findByRole('button', { name: 'Start' })
+                await screen.findByRole('button', { name: 'Quick review' })
             );
             await screen.findByText('Shared shopping list');
             fireEvent.keyDown(window, { key: 's' });
@@ -577,7 +577,7 @@ describe('ReviewPage', () => {
             ).toBeInTheDocument();
             fireEvent.keyDown(window, { key: 'Escape' });
             expect(
-                await screen.findByRole('button', { name: 'Start' })
+                await screen.findByRole('button', { name: 'Quick review' })
             ).toBeInTheDocument();
         });
 
@@ -592,7 +592,9 @@ describe('ReviewPage', () => {
             expect(
                 await screen.findByText('All up to date')
             ).toBeInTheDocument();
-            fireEvent.click(screen.getByRole('button', { name: 'Start' }));
+            fireEvent.click(
+                screen.getByRole('button', { name: 'Quick review' })
+            );
             expect(
                 await screen.findByText('Nothing needs a look right now.')
             ).toBeInTheDocument();

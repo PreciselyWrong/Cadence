@@ -3,12 +3,14 @@ import { useTranslation } from 'react-i18next';
 import {
     ChevronRightIcon,
     MagnifyingGlassIcon,
+    PlusIcon,
 } from '@heroicons/react/24/outline';
 import ConfirmDialog from './Shared/ConfirmDialog';
-import NewItemButton from './Shared/NewItemButton';
 import TagModal from './Tag/TagModal';
-import TagRow from './Tag/TagRow';
-import { TASK_SHEET_CLASS } from './Task/taskSheet';
+import TagRow, { tagUseCount } from './Tag/TagRow';
+import PageHeader from './Shared/ui/PageHeader';
+import Button, { IconButton } from './Shared/ui/Button';
+import SearchField from './Shared/ui/SearchField';
 import { Tag } from '../entities/Tag';
 import {
     deleteTag as apiDeleteTag,
@@ -118,19 +120,17 @@ const Tags: React.FC = () => {
 
     const filteredTree = filterTagTree(buildTagTree(tags), matches);
 
-    const groupedTags = filteredTree.reduce(
-        (groups, node) => {
-            const firstLetter = node.tag.name.charAt(0).toUpperCase();
-            if (!groups[firstLetter]) {
-                groups[firstLetter] = [];
-            }
-            groups[firstLetter].push(node);
-            return groups;
-        },
-        {} as Record<string, typeof filteredTree>
+    // Most useful first: pinned, then by how much uses the tag (its whole
+    // subtree), then by name. No letter groups: they sorted by spelling.
+    const subtreeUse = (node: TagTreeNode): number =>
+        tagUseCount(node.tag) +
+        node.children.reduce((sum, child) => sum + subtreeUse(child), 0);
+    const sortedTree = [...filteredTree].sort(
+        (a, b) =>
+            Number(!!b.tag.pinned) - Number(!!a.tag.pinned) ||
+            subtreeUse(b) - subtreeUse(a) ||
+            a.tag.name.localeCompare(b.tag.name)
     );
-
-    const sortedGroupKeys = Object.keys(groupedTags).sort();
 
     const renderNode = (
         { tag, children }: TagTreeNode,
@@ -140,39 +140,53 @@ const Tags: React.FC = () => {
         const isCollapsed = !query && collapsedParents.has(uid);
         return (
             <div key={tag.uid || tag.id}>
-                <div className="relative">
-                    {children.length > 0 && (
-                        <button
-                            type="button"
-                            onClick={() => toggleParent(uid)}
-                            aria-expanded={!isCollapsed}
-                            aria-label={
-                                isCollapsed
-                                    ? t('tags.showChildTags', 'Show child tags')
-                                    : t('tags.hideChildTags', 'Hide child tags')
-                            }
-                            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-0.5 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 "
-                            data-testid={`tag-toggle-${uid}`}
-                        >
-                            <ChevronRightIcon
-                                className="h-3 w-3 transition-transform duration-150"
-                                style={{
-                                    transform: isCollapsed
-                                        ? 'none'
-                                        : 'rotate(90deg)',
-                                }}
-                            />
-                        </button>
-                    )}
-                    <TagRow
-                        tag={tag}
-                        label={depth > 0 ? tagLeafName(tag.name) : tag.name}
-                        onEdit={handleEditTag}
-                        onDelete={openConfirmDialog}
-                    />
+                <div className="flex items-center">
+                    <span className="flex w-5 shrink-0 justify-center">
+                        {children.length > 0 && (
+                            <button
+                                type="button"
+                                onClick={() => toggleParent(uid)}
+                                aria-expanded={!isCollapsed}
+                                aria-label={
+                                    isCollapsed
+                                        ? t(
+                                              'tags.showChildTags',
+                                              'Show child tags'
+                                          )
+                                        : t(
+                                              'tags.hideChildTags',
+                                              'Hide child tags'
+                                          )
+                                }
+                                className="rounded p-0.5 text-surface-on-variant hover:text-surface-on"
+                                data-testid={`tag-toggle-${uid}`}
+                            >
+                                <ChevronRightIcon
+                                    className="h-3 w-3 transition-transform duration-150"
+                                    style={{
+                                        transform: isCollapsed
+                                            ? 'none'
+                                            : 'rotate(90deg)',
+                                    }}
+                                />
+                            </button>
+                        )}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                        <TagRow
+                            tag={tag}
+                            label={depth > 0 ? tagLeafName(tag.name) : tag.name}
+                            onEdit={handleEditTag}
+                            onDelete={openConfirmDialog}
+                        />
+                    </div>
                 </div>
                 {!isCollapsed && children.length > 0 && (
-                    <div className="pl-6" data-testid={`tag-children-${uid}`}>
+                    <div
+                        role="list"
+                        className="pl-5"
+                        data-testid={`tag-children-${uid}`}
+                    >
                         {children.map((child) => renderNode(child, depth + 1))}
                     </div>
                 )}
@@ -182,43 +196,28 @@ const Tags: React.FC = () => {
 
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
-                <div className="text-xl font-semibold text-gray-700 dark:text-gray-200">
-                    {t('tags.loadingTags', 'Loading tags...')}
-                </div>
+            <div className="p-8 text-body-m text-surface-on-variant">
+                {t('tags.loadingTags', 'Loading tags...')}
             </div>
         );
     }
 
     if (isError) {
         return (
-            <div className="text-red-500 p-4">
+            <div className="p-8 text-body-m text-danger">
                 {t('tags.errorLoadingTags', 'Error loading tags.')}
             </div>
         );
     }
 
     return (
-        <div className="w-full px-4 sm:px-6 lg:px-8 pt-4 pb-8">
-            <div className="w-full max-w-7xl mx-auto">
-                {/* Header */}
-                <div className="flex items-center justify-between gap-2 mb-8">
-                    <h2 className="text-2xl font-light">
-                        {t('tags.title', 'Tags')}
-                    </h2>
-                    <div className="flex items-center gap-2">
-                        <button
-                            type="button"
-                            onClick={() =>
-                                setIsSearchExpanded(!isSearchExpanded)
-                            }
-                            className={`flex items-center transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset rounded-lg p-2 ${
-                                isSearchExpanded
-                                    ? 'bg-blue-50/70 dark:bg-blue-900/20'
-                                    : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'
-                            }`}
-                            aria-expanded={isSearchExpanded}
-                            aria-label={
+        <div className="mx-auto w-full max-w-4xl pb-8">
+            <PageHeader
+                title={t('tags.title', 'Tags')}
+                actions={
+                    <>
+                        <IconButton
+                            label={
                                 isSearchExpanded
                                     ? t(
                                           'common.hideSearch',
@@ -229,62 +228,46 @@ const Tags: React.FC = () => {
                                           'Show search input'
                                       )
                             }
+                            active={isSearchExpanded}
+                            aria-expanded={isSearchExpanded}
+                            onClick={() => {
+                                if (isSearchExpanded) setSearchQuery('');
+                                setIsSearchExpanded(!isSearchExpanded);
+                            }}
                         >
-                            <MagnifyingGlassIcon className="h-5 w-5 text-gray-600 dark:text-gray-200" />
-                        </button>
-                        <NewItemButton
-                            label={t('tags.new', 'New Tag')}
+                            <MagnifyingGlassIcon />
+                        </IconButton>
+                        <Button
+                            variant="primary"
+                            icon={<PlusIcon className="h-4 w-4" />}
                             onClick={handleNewTag}
-                            testId="new-tag-button"
-                        />
-                    </div>
-                </div>
+                            data-testid="new-tag-button"
+                        >
+                            {t('tags.new', 'New Tag')}
+                        </Button>
+                    </>
+                }
+            >
+                {isSearchExpanded && (
+                    <SearchField
+                        value={searchQuery}
+                        onChange={setSearchQuery}
+                        placeholder={t(
+                            'tags.searchPlaceholder',
+                            'Search tags...'
+                        )}
+                    />
+                )}
+            </PageHeader>
 
-                {/* Collapsible search */}
-                <div
-                    className={`transition-all duration-300 ease-in-out ${
-                        isSearchExpanded
-                            ? 'max-h-24 opacity-100 mb-4'
-                            : 'max-h-0 opacity-0 mb-0'
-                    } overflow-hidden`}
-                >
-                    <div className="flex items-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm px-4 py-3">
-                        <MagnifyingGlassIcon className="h-5 w-5 text-gray-600 dark:text-gray-300 mr-2" />
-                        <input
-                            type="text"
-                            placeholder={t(
-                                'tags.searchPlaceholder',
-                                'Search tags...'
-                            )}
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full bg-transparent border-none focus:ring-0 focus:outline-none dark:text-white"
-                        />
-                    </div>
-                </div>
-
-                {/* Tags grid, grouped alphabetically */}
-                {filteredTree.length === 0 ? (
-                    <p className="text-gray-700 dark:text-gray-300">
+            <div className="px-3 max-sm:px-1">
+                {sortedTree.length === 0 ? (
+                    <p className="px-3 py-6 text-body-m text-surface-on-variant">
                         {t('tags.noTagsFound', 'No tags found.')}
                     </p>
                 ) : (
-                    <div className="space-y-8">
-                        {sortedGroupKeys.map((letter) => (
-                            <div key={letter}>
-                                <h3 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-3">
-                                    {letter}
-                                </h3>
-
-                                <div
-                                    className={`task-list-container overflow-visible ${TASK_SHEET_CLASS} task-sheet-rails`}
-                                >
-                                    {groupedTags[letter].map((node) =>
-                                        renderNode(node)
-                                    )}
-                                </div>
-                            </div>
-                        ))}
+                    <div role="list">
+                        {sortedTree.map((node) => renderNode(node))}
                     </div>
                 )}
 

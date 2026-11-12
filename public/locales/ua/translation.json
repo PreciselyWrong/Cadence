@@ -1,4 +1,22 @@
 {
+    "counts": {
+        "notes_many": "{{count}} нотаток",
+        "tasks_many": "{{count}} завдань",
+        "goals_many": "{{count}} цілей",
+        "projects_many": "{{count}} проєктів",
+        "notes_few": "{{count}} нотатки",
+        "tasks_few": "{{count}} завдання",
+        "goals_few": "{{count}} цілі",
+        "projects_few": "{{count}} проєкти",
+        "notes_other": "{{count}} нотаток",
+        "notes_one": "{{count}} нотатка",
+        "tasks_other": "{{count}} завдань",
+        "tasks_one": "{{count}} завдання",
+        "goals_other": "{{count}} цілей",
+        "goals_one": "{{count}} ціль",
+        "projects_other": "{{count}} проєктів",
+        "projects_one": "{{count}} проєкт"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -518,7 +536,7 @@
     "assignedTo": "Призначено",
     "subtasks": "Підзадачі",
     "openFullPage": "Відкрити повний перегляд",
-    "openPanel": "Відкрити в бічній панелі",
+    "openPanel": "Відкрити подробиці",
     "quickEdit": {
       "setPriority": "Встановити пріоритет",
       "setDueDate": "Встановити термін"

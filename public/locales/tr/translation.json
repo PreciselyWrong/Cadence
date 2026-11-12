@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}} not",
+        "notes_one": "{{count}} not",
+        "tasks_other": "{{count}} görev",
+        "tasks_one": "{{count}} görev",
+        "goals_other": "{{count}} hedef",
+        "goals_one": "{{count}} hedef",
+        "projects_other": "{{count}} proje",
+        "projects_one": "{{count}} proje"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -516,7 +526,7 @@
     "assignedTo": "Atanan",
     "subtasks": "Alt görevler",
     "openFullPage": "Tam görünümü aç",
-    "openPanel": "Yan panelde aç",
+    "openPanel": "Ayrıntıları aç",
     "quickEdit": {
       "setPriority": "Öncelik ayarla",
       "setDueDate": "Bitiş tarihi ayarla"

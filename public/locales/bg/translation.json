@@ -1,4 +1,14 @@
 {
+    "counts": {
+        "notes_other": "{{count}} бележки",
+        "notes_one": "{{count}} бележка",
+        "tasks_other": "{{count}} задачи",
+        "tasks_one": "{{count}} задача",
+        "goals_other": "{{count}} цели",
+        "goals_one": "{{count}} цел",
+        "projects_other": "{{count}} проекта",
+        "projects_one": "{{count}} проект"
+    },
     "taskSource": {
         "gmail": "Gmail",
         "telegram": "Telegram",
@@ -516,7 +526,7 @@
     "assignedTo": "Назначено на",
     "subtasks": "Подзадачи",
     "openFullPage": "Отвори пълен изглед",
-    "openPanel": "Отвори в страничния панел",
+    "openPanel": "Отвори подробностите",
     "quickEdit": {
       "setPriority": "Задай приоритет",
       "setDueDate": "Задай срок"
