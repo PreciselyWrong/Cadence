@@ -62,6 +62,14 @@ data class LiveNotification(
     val pluginId: String? = null,
     /** Route du plugin qui reçoit une réponse en texte libre (`POST /api<replyPath>`), si l'agent en attend une. */
     val replyPath: String? = null,
+    /** Profil de l'agent (`data.agent`) : les notifications d'un même agent se regroupent. */
+    val agent: String? = null,
+    /** Nom à afficher de l'agent (`data.agentLabel`). */
+    val agentLabel: String? = null,
+    /** `message`, `answer`, `job_failure` ou `agent_error` (`data.kind`). */
+    val kind: String? = null,
+    /** Niveau de la notification : `info`, `success`, `warning` ou `error`. */
+    val level: String? = null,
 ) {
     /** Routée vers le téléphone : le serveur envoie aussi au flux ce qui ne va qu'au bureau. */
     val forMobile: Boolean get() = MOBILE in sources
@@ -85,6 +93,10 @@ data class LiveNotification(
                 taskUid = data?.text("taskUid"),
                 pluginId = data?.text("pluginId"),
                 replyPath = data?.text("replyPath"),
+                agent = data?.text("agent"),
+                agentLabel = data?.text("agentLabel"),
+                kind = data?.text("kind"),
+                level = body.text("level"),
             )
         }
 
@@ -94,6 +106,7 @@ data class LiveNotification(
             put("title", notification.title)
             put("message", notification.message)
             put("sources", buildJsonArray { notification.sources.forEach { add(JsonPrimitive(it)) } })
+            notification.level?.let { put("level", it) }
             put(
                 "data",
                 buildJsonObject {
@@ -101,6 +114,9 @@ data class LiveNotification(
                     notification.taskUid?.let { put("taskUid", it) }
                     notification.pluginId?.let { put("pluginId", it) }
                     notification.replyPath?.let { put("replyPath", it) }
+                    notification.agent?.let { put("agent", it) }
+                    notification.agentLabel?.let { put("agentLabel", it) }
+                    notification.kind?.let { put("kind", it) }
                 },
             )
         }.toString()
@@ -109,6 +125,47 @@ data class LiveNotification(
 
         private fun JsonObject.text(key: String): String? = (this[key] as? JsonPrimitive)?.takeIf { it.isString }?.contentOrNull?.ifBlank { null }
     }
+}
+
+/** Event `notification_read` : notifications marquées lues, rejetées ou supprimées, par n'importe quel client. */
+object LiveRead {
+    const val EVENT = "notification_read"
+
+    /** Uids de `data: {"uids": [...]}` ; vide pour un autre event ou un corps illisible. */
+    fun uids(event: SseEvent): List<String> {
+        if (event.event != EVENT) return emptyList()
+        val body = runCatching { Json.parseToJsonElement(event.data).jsonObject }.getOrNull() ?: return emptyList()
+        return (body["uids"] as? JsonArray).orEmpty()
+            .mapNotNull { (it as? JsonPrimitive)?.takeIf { value -> value.isString }?.contentOrNull?.ifBlank { null } }
+            .distinct()
+    }
+}
+
+/** Les deux canaux des messages d'agents. */
+enum class AgentChannel { DECIDE, INFO }
+
+/** Présentation pure d'une notification d'agent : canal, identité, groupe. */
+object AgentStyle {
+    /** `warning` et `error` demandent une décision (canal HIGH) ; `info`, `success` et le reste informent. */
+    fun channel(level: String?): AgentChannel = if (level == "warning" || level == "error") AgentChannel.DECIDE else AgentChannel.INFO
+
+    /** Nom de l'agent à afficher ; [fallback] (« Agent ») s'il n'est pas donné. */
+    fun label(notification: LiveNotification, fallback: String): String =
+        notification.agentLabel?.trim()?.ifEmpty { null } ?: fallback
+
+    /** Groupe Android : un par agent, sinon un par plugin, sinon un seul. */
+    fun group(notification: LiveNotification): String =
+        "agent:" + (notification.agent ?: notification.pluginId ?: "default")
+
+    /** Une rafale (fin des heures calmes, plusieurs agents qui répondent) ne sonne qu'une fois par [BURST_MS]. */
+    const val BURST_MS = 30_000L
+
+    /** Le résumé du groupe sonne pour un nouveau message, sauf s'il vient de sonner pour la même rafale. */
+    fun alertSummary(lastAlertMs: Long?, nowMs: Long, newMessage: Boolean): Boolean =
+        newMessage && (lastAlertMs == null || nowMs - lastAlertMs >= BURST_MS)
+
+    /** Échec d'une tâche planifiée ou d'un agent : catégorie « erreur » d'Android. */
+    fun isFailure(notification: LiveNotification): Boolean = notification.kind == "job_failure" || notification.kind == "agent_error"
 }
 
 /** Ce qu'ouvre le toucher d'une notification. */

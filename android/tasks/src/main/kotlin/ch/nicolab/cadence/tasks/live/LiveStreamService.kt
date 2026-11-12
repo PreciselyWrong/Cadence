@@ -10,13 +10,17 @@ import android.content.SharedPreferences
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
+import android.service.notification.StatusBarNotification
+import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import androidx.compose.ui.graphics.toArgb
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
+import ch.nicolab.cadence.designsystem.theme.LightPalette
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.data.currentServerSession
@@ -219,7 +223,9 @@ class LiveStreamService : Service() {
                     val event = parser.feed(line) ?: continue
                     if (event.event == READY) reached = true
                     // Bandeau des messages non lus : relu à la connexion et à chaque notification, routée ou non.
-                    if (event.event == READY || event.event == LiveNotification.EVENT) AgentInbox.refresh(this)
+                    if (event.event == READY || event.event == LiveNotification.EVENT || event.event == LiveRead.EVENT) AgentInbox.refresh(this)
+                    // Lue, rejetée ou supprimée ailleurs (autre client, page du plugin) : la notification part.
+                    notifier.cancel(LiveRead.uids(event))
                     val notification = LiveNotification.of(event) ?: continue
                     if (notification.forMobile) notifier.show(notification)
                 }
@@ -247,15 +253,26 @@ class LiveStreamService : Service() {
     }
 }
 
-/** Canaux : « Agents » pour les messages, « Connexion aux agents » (minimal) pour la notification permanente. */
+/**
+ * Canaux : « Agents · à décider » (HIGH, `warning` et `error`), « Agents · infos » (DEFAULT, `info` et `success`), et
+ * « Connexion aux agents » (minimal) pour la notification permanente. L'ancien canal unique « Agents » est retiré.
+ */
 internal object LiveChannels {
-    const val AGENTS = "cadence_agents"
+    const val DECIDE = "cadence_agents_decide"
+    const val INFO = "cadence_agents_info"
     const val CONNECTION = "cadence_agents_connection"
+    private const val LEGACY_AGENTS = "cadence_agents"
+
+    fun id(channel: AgentChannel): String = if (channel == AgentChannel.DECIDE) DECIDE else INFO
 
     fun ensure(context: Context) {
         val manager = context.getSystemService(NotificationManager::class.java)
+        manager.deleteNotificationChannel(LEGACY_AGENTS)
         manager.createNotificationChannel(
-            NotificationChannel(AGENTS, context.getString(R.string.live_channel_agents), NotificationManager.IMPORTANCE_HIGH),
+            NotificationChannel(DECIDE, context.getString(R.string.live_channel_decide), NotificationManager.IMPORTANCE_HIGH),
+        )
+        manager.createNotificationChannel(
+            NotificationChannel(INFO, context.getString(R.string.live_channel_info), NotificationManager.IMPORTANCE_DEFAULT),
         )
         manager.createNotificationChannel(
             NotificationChannel(CONNECTION, context.getString(R.string.live_channel_connection), NotificationManager.IMPORTANCE_MIN).apply {
@@ -272,7 +289,7 @@ internal object LiveChannels {
             .putExtra(Settings.EXTRA_CHANNEL_ID, CONNECTION)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return NotificationCompat.Builder(context, CONNECTION)
-            .setSmallIcon(R.drawable.tasks_ic_notification)
+            .setSmallIcon(R.drawable.tasks_ic_agent)
             .setContentTitle(context.getString(R.string.live_channel_connection))
             .setContentText(context.getString(R.string.live_ongoing_text))
             .setContentIntent(PendingIntent.getActivity(context, HIDE_REQUEST, hide, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE))
@@ -308,14 +325,20 @@ internal sealed interface ReplyState {
 
     data class Waiting(override val text: String, val offline: Boolean) : ReplyState
 
+    /** Reçue par le serveur : l'agent réfléchit ; sa réponse arrivera par le flux comme une nouvelle notification. */
+    data class Sent(override val text: String) : ReplyState
+
     data class NotSent(override val text: String, val reason: ReplyFailure, val code: Int?) : ReplyState
 }
 
 /**
- * Une notification Android par message, une seule fois par uid ; titre et texte du serveur, en texte brut. Un
- * message qui attend une réponse (`data.replyPath`, route du plugin lui-même) porte « Répondre » en texte libre.
+ * Une notification Android par message, une seule fois par uid ; titre et texte du serveur, en texte brut. Groupées
+ * par agent sous un résumé, qui seul sonne (une fois par rafale) ; le nom de l'agent en sous-titre, la couleur du
+ * niveau. Un message qui attend une réponse (`data.replyPath`, route du plugin lui-même) porte « Répondre ».
  */
 internal class LiveNotifier(private val context: Context, private val store: LiveStreamStore) {
+    private val manager = NotificationManagerCompat.from(context)
+
     suspend fun show(notification: LiveNotification) {
         val next = SeenUids.add(store.seen(), notification.uid) ?: return
         store.saveSeen(next)
@@ -327,15 +350,28 @@ internal class LiveNotifier(private val context: Context, private val store: Liv
         // Sans permission rien ne s'affiche ; l'uid reste noté pour ne pas le reposer plus tard.
         if (!TaskReminderScheduler.notificationsAllowed(context)) return
         LiveChannels.ensure(context)
-        val title = notification.title.ifBlank { context.getString(R.string.live_channel_agents) }
-        val builder = NotificationCompat.Builder(context, LiveChannels.AGENTS)
-            .setSmallIcon(R.drawable.tasks_ic_notification)
+        val label = AgentStyle.label(notification, context.getString(R.string.live_agent_fallback))
+        val title = notification.title.ifBlank { label }
+        val channel = AgentStyle.channel(notification.level)
+        val group = AgentStyle.group(notification)
+        val builder = NotificationCompat.Builder(context, LiveChannels.id(channel))
+            .setSmallIcon(R.drawable.tasks_ic_agent)
+            .setColor(levelColor(notification.level))
             .setContentTitle(title)
             .setContentText(notification.message)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(notification.message))
-            .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setStyle(NotificationCompat.BigTextStyle().setBigContentTitle(title).bigText(notification.message))
+            .setSubText(label)
+            .setCategory(if (AgentStyle.isFailure(notification)) NotificationCompat.CATEGORY_ERROR else NotificationCompat.CATEGORY_MESSAGE)
+            .setPriority(if (channel == AgentChannel.DECIDE) NotificationCompat.PRIORITY_HIGH else NotificationCompat.PRIORITY_DEFAULT)
+            .setGroup(group)
+            // Le résumé du groupe porte la sonnerie : une rafale ne sonne qu'une fois, une mise à jour jamais.
+            .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
+            .setOnlyAlertOnce(true)
             .setAutoCancel(true)
+            .addExtras(Bundle().apply {
+                putString(EXTRA_UID, notification.uid)
+                putString(EXTRA_LABEL, label)
+            })
         intentFor(LiveTarget.of(notification.openPath, notification.taskUid))?.let { intent ->
             builder.setContentIntent(
                 PendingIntent.getActivity(
@@ -348,26 +384,95 @@ internal class LiveNotifier(private val context: Context, private val store: Liv
         }
         val canReply = AgentReply.validPath(notification.replyPath, notification.pluginId) != null
         when (reply) {
-            null -> Unit
+            null -> {
+                if (canReply) builder.addAction(replyAction(notification))
+                builder.addAction(0, context.getString(R.string.live_mark_read), markReadIntent(listOf(notification.uid), "read:" + notification.uid))
+            }
             is ReplyState.Sending, is ReplyState.Waiting -> {
+                val state = if (reply is ReplyState.Waiting && reply.offline) R.string.live_reply_waiting else R.string.live_reply_sending
                 builder.setRemoteInputHistory(arrayOf<CharSequence>(reply.text))
-                    .setSubText(context.getString(if (reply is ReplyState.Waiting && reply.offline) R.string.live_reply_waiting else R.string.live_reply_sending))
-                    .setOnlyAlertOnce(true)
+                    .setSubText(context.getString(state, label))
                     .setAutoCancel(false)
+            }
+            is ReplyState.Sent -> {
+                builder.setRemoteInputHistory(arrayOf<CharSequence>(reply.text))
+                    .setSubText(context.getString(R.string.live_reply_sent, label))
+                    .setTimeoutAfter(SENT_TIMEOUT_MS)
+                    .addAction(0, context.getString(R.string.live_mark_read), markReadIntent(listOf(notification.uid), "read:" + notification.uid))
             }
             is ReplyState.NotSent -> {
                 val why = failureText(reply)
                 val yours = context.getString(R.string.live_reply_yours, reply.text)
-                builder.setSubText(context.getString(R.string.live_reply_not_sent))
+                builder.setSubText(context.getString(R.string.live_reply_not_sent, label))
                     .setContentText(why)
-                    .setStyle(NotificationCompat.BigTextStyle().bigText(why + "\n\n" + yours + "\n\n" + notification.message))
+                    .setStyle(NotificationCompat.BigTextStyle().setBigContentTitle(title).bigText(why + "\n\n" + yours + "\n\n" + notification.message))
                     .setAutoCancel(false)
-                    .addAction(0, context.getString(R.string.live_reply_copy), copyIntent(notification.uid, reply.text))
+                if (reply.reason != ReplyFailure.GONE && canReply) builder.addAction(0, context.getString(R.string.live_reply_resend), resendIntent(notification, reply.text))
+                builder.addAction(0, context.getString(R.string.live_reply_copy), copyIntent(notification.uid, reply.text))
             }
         }
-        if (canReply && reply !is ReplyState.Sending && reply !is ReplyState.Waiting) builder.addAction(replyAction(notification))
-        NotificationManagerCompat.from(context).notify(TAG, notification.uid.hashCode(), builder.build())
+        manager.notify(TAG, notification.uid.hashCode(), builder.build())
+        val now = System.currentTimeMillis()
+        val ring = AgentStyle.alertSummary(lastAlert[group], now, newMessage = reply == null)
+        if (ring) lastAlert[group] = now
+        updateSummary(group, ring)
     }
+
+    /** Retire les notifications de [uids] (lues ailleurs, rejetées, supprimées) et met leurs résumés à jour. */
+    fun cancel(uids: Collection<String>) {
+        if (uids.isEmpty()) return
+        val wanted = uids.toSet()
+        val groups = activeChildren().filter { it.notification.extras.getString(EXTRA_UID) in wanted }.mapNotNull { it.notification.group }.toSet()
+        wanted.forEach { manager.cancel(TAG, it.hashCode()) }
+        groups.forEach { updateSummary(it, ring = false) }
+    }
+
+    private fun activeChildren(): List<StatusBarNotification> = runCatching {
+        context.getSystemService(NotificationManager::class.java).activeNotifications
+            .filter { it.tag == TAG && it.notification.flags and android.app.Notification.FLAG_GROUP_SUMMARY == 0 }
+    }.getOrDefault(emptyList())
+
+    /** Résumé du groupe : nom de l'agent, nombre et titres des messages, « Tout marquer comme lu ». Retiré si vide. */
+    private fun updateSummary(group: String, ring: Boolean) {
+        val children = activeChildren().filter { it.notification.group == group }
+        if (children.isEmpty()) {
+            manager.cancel(SUMMARY_TAG, group.hashCode())
+            return
+        }
+        val label = children.firstNotNullOfOrNull { it.notification.extras.getString(EXTRA_LABEL) } ?: context.getString(R.string.live_agent_fallback)
+        val decide = children.any { it.notification.channelId == LiveChannels.DECIDE }
+        val uids = children.mapNotNull { it.notification.extras.getString(EXTRA_UID) }
+        val count = context.resources.getQuantityString(R.plurals.live_summary_count, children.size, children.size)
+        val inbox = NotificationCompat.InboxStyle().setSummaryText(label)
+        children.take(SUMMARY_LINES).forEach { child ->
+            child.notification.extras.getCharSequence(android.app.Notification.EXTRA_TITLE)?.let(inbox::addLine)
+        }
+        val summary = NotificationCompat.Builder(context, LiveChannels.id(if (decide) AgentChannel.DECIDE else AgentChannel.INFO))
+            .setSmallIcon(R.drawable.tasks_ic_agent)
+            .setColor(levelColor(if (decide) "warning" else "info"))
+            .setContentTitle(label)
+            .setContentText(count)
+            .setSubText(label)
+            .setStyle(inbox)
+            .setGroup(group)
+            .setGroupSummary(true)
+            .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
+            .setOnlyAlertOnce(!ring)
+            .setSilent(!ring)
+            .setAutoCancel(true)
+            .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+            .addAction(0, context.getString(R.string.live_mark_all_read), markReadIntent(uids, "read-all:$group"))
+            .build()
+        manager.notify(SUMMARY_TAG, group.hashCode(), summary)
+    }
+
+    /** Couleur d'accent du niveau, prise dans la palette claire du thème. */
+    private fun levelColor(level: String?): Int = when (level) {
+        "error" -> LightPalette.error
+        "warning" -> LightPalette.warning
+        "success" -> LightPalette.success
+        else -> LightPalette.primary
+    }.toArgb()
 
     private fun failureText(reply: ReplyState.NotSent): String = when (reply.reason) {
         ReplyFailure.BUSY -> context.getString(R.string.live_reply_busy)
@@ -396,13 +501,28 @@ internal class LiveNotifier(private val context: Context, private val store: Liv
             .build()
     }
 
-    private fun copyIntent(uid: String, text: String): PendingIntent = PendingIntent.getBroadcast(
+    private fun broadcast(request: String, intent: Intent): PendingIntent = PendingIntent.getBroadcast(
         context,
-        ("copy:$uid").hashCode(),
-        Intent(context, AgentReplyReceiver::class.java)
-            .setAction(AgentReplyReceiver.ACTION_COPY)
-            .putExtra(AgentReplyReceiver.EXTRA_TEXT, text),
+        request.hashCode(),
+        intent.setClass(context, AgentReplyReceiver::class.java),
         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+    )
+
+    private fun markReadIntent(uids: List<String>, request: String) = broadcast(
+        request,
+        Intent(AgentReplyReceiver.ACTION_MARK_READ).putExtra(AgentReplyReceiver.EXTRA_UIDS, uids.toTypedArray()),
+    )
+
+    private fun resendIntent(notification: LiveNotification, text: String) = broadcast(
+        "resend:" + notification.uid,
+        Intent(AgentReplyReceiver.ACTION_RESEND)
+            .putExtra(AgentReplyReceiver.EXTRA_NOTIFICATION, LiveNotification.encode(notification))
+            .putExtra(AgentReplyReceiver.EXTRA_TEXT, text),
+    )
+
+    private fun copyIntent(uid: String, text: String) = broadcast(
+        "copy:$uid",
+        Intent(AgentReplyReceiver.ACTION_COPY).putExtra(AgentReplyReceiver.EXTRA_TEXT, text),
     )
 
     /** Page du plugin si le menu la connaît, la tâche, ou l'app. */
@@ -416,5 +536,15 @@ internal class LiveNotifier(private val context: Context, private val store: Liv
 
     companion object {
         const val TAG = "agents"
+        private const val SUMMARY_TAG = "agents-summary"
+        private const val EXTRA_UID = "cadence_agent_uid"
+        private const val EXTRA_LABEL = "cadence_agent_label"
+        private const val SUMMARY_LINES = 5
+
+        /** « Envoyé · … réfléchit » s'efface seul si la réponse de l'agent tarde. */
+        private const val SENT_TIMEOUT_MS = 2 * 60 * 1000L
+
+        /** Dernière sonnerie par groupe, le temps du processus : une rafale ne sonne qu'une fois. */
+        private val lastAlert = java.util.concurrent.ConcurrentHashMap<String, Long>()
     }
 }

@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.util.Log
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
 import androidx.core.content.edit
 import androidx.work.BackoffPolicy
@@ -122,14 +121,16 @@ internal class PendingReplies private constructor(private val prefs: SharedPrefe
 class AgentReplyReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.action) {
-            ACTION_REPLY -> reply(context, intent)
+            ACTION_REPLY -> reply(context, intent, RemoteInput.getResultsFromIntent(intent)?.getCharSequence(KEY_TEXT)?.toString())
+            ACTION_RESEND -> reply(context, intent, intent.getStringExtra(EXTRA_TEXT))
             ACTION_COPY -> copy(context, intent.getStringExtra(EXTRA_TEXT) ?: return)
+            ACTION_MARK_READ -> markRead(context, intent.getStringArrayExtra(EXTRA_UIDS)?.toList().orEmpty())
         }
     }
 
-    private fun reply(context: Context, intent: Intent) {
+    private fun reply(context: Context, intent: Intent, typed: String?) {
         val notification = LiveNotification.decode(intent.getStringExtra(EXTRA_NOTIFICATION)) ?: return
-        val text = RemoteInput.getResultsFromIntent(intent)?.getCharSequence(KEY_TEXT)?.toString()?.trim().orEmpty()
+        val text = typed?.trim().orEmpty()
         val notifier = LiveNotifier(context, LiveStreamStore.of(context))
         runAsync {
             if (text.isEmpty()) {
@@ -144,6 +145,13 @@ class AgentReplyReceiver : BroadcastReceiver() {
         }
     }
 
+    /** « Marquer comme lu » d'un message, « Tout marquer comme lu » d'un groupe : lu sur le serveur, retiré ici. */
+    private fun markRead(context: Context, uids: List<String>) {
+        if (uids.isEmpty()) return
+        LiveNotifier(context, LiveStreamStore.of(context)).cancel(uids)
+        runAsync { uids.forEach { AgentInbox.markRead(context, it) } }
+    }
+
     private fun copy(context: Context, text: String) {
         context.getSystemService(ClipboardManager::class.java)
             ?.setPrimaryClip(ClipData.newPlainText(context.getString(ch.nicolab.cadence.tasks.R.string.live_reply_copy), text))
@@ -152,6 +160,9 @@ class AgentReplyReceiver : BroadcastReceiver() {
     companion object {
         const val ACTION_REPLY = "ch.nicolab.cadence.tasks.live.REPLY"
         const val ACTION_COPY = "ch.nicolab.cadence.tasks.live.COPY_REPLY"
+        const val ACTION_RESEND = "ch.nicolab.cadence.tasks.live.RESEND_REPLY"
+        const val ACTION_MARK_READ = "ch.nicolab.cadence.tasks.live.MARK_READ"
+        const val EXTRA_UIDS = "agent_uids"
         const val KEY_TEXT = "agent_reply_text"
         const val EXTRA_NOTIFICATION = "agent_notification"
         const val EXTRA_TEXT = "agent_reply"
@@ -174,7 +185,8 @@ class AgentReplyWorker(context: Context, params: WorkerParameters) : CoroutineWo
         return when (step) {
             ReplyStep.Sent -> {
                 replies.remove(id)
-                NotificationManagerCompat.from(applicationContext).cancel(LiveNotifier.TAG, pending.notification.uid.hashCode())
+                // L'agent réfléchit : sa réponse, ou « … n'a pas pu répondre », arrive par le flux.
+                notifier.post(pending.notification, ReplyState.Sent(pending.text))
                 Result.success()
             }
             is ReplyStep.Retry -> {

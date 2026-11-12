@@ -108,3 +108,62 @@ class LiveStreamTest {
         assertEquals(listOf(5_000L, 10_000L, 20_000L, 40_000L, 60_000L, 60_000L), delays)
     }
 }
+
+class AgentStyleTest {
+    private fun agentNotification(level: String?, agent: String? = "mail", label: String? = "Courrier", plugin: String? = "hermes") =
+        LiveNotification("n1", "t", "m", listOf("mobile"), null, null, pluginId = plugin, agent = agent, agentLabel = label, level = level)
+
+    @Test
+    fun warningsAndErrorsAskForADecision() {
+        assertEquals(AgentChannel.DECIDE, AgentStyle.channel("warning"))
+        assertEquals(AgentChannel.DECIDE, AgentStyle.channel("error"))
+        assertEquals(AgentChannel.INFO, AgentStyle.channel("info"))
+        assertEquals(AgentChannel.INFO, AgentStyle.channel("success"))
+        assertEquals(AgentChannel.INFO, AgentStyle.channel(null))
+    }
+
+    @Test
+    fun theAgentLabelFallsBackToAgent() {
+        assertEquals("Courrier", AgentStyle.label(agentNotification("info"), "Agent"))
+        assertEquals("Agent", AgentStyle.label(agentNotification("info", label = null), "Agent"))
+        assertEquals("Agent", AgentStyle.label(agentNotification("info", label = "  "), "Agent"))
+    }
+
+    @Test
+    fun notificationsGroupByAgentThenPlugin() {
+        assertEquals("agent:mail", AgentStyle.group(agentNotification("info")))
+        assertEquals("agent:hermes", AgentStyle.group(agentNotification("info", agent = null)))
+        assertEquals("agent:default", AgentStyle.group(agentNotification("info", agent = null, plugin = null)))
+    }
+
+    @Test
+    fun readsTheNewFieldsAndKeepsThemThroughTheReplyIntent() {
+        val event = SseEvent(
+            "notification",
+            "n1",
+            """{"uid":"n1","title":"t","message":"m","level":"warning","sources":["mobile"],"data":{"pluginId":"hermes","agent":"mail","agentLabel":"Courrier","kind":"job_failure"}}""",
+        )
+        val notification = LiveNotification.of(event)!!
+        assertEquals(listOf("mail", "Courrier", "job_failure", "warning"), listOf(notification.agent, notification.agentLabel, notification.kind, notification.level))
+        assertTrue(AgentStyle.isFailure(notification))
+        assertEquals(notification, LiveNotification.decode(LiveNotification.encode(notification)))
+    }
+
+    @Test
+    fun readsTheUidsOfNotificationRead() {
+        assertEquals(listOf("a", "b"), LiveRead.uids(SseEvent("notification_read", null, """{"uids":["a","b","a",""]}""")))
+        assertEquals(emptyList<String>(), LiveRead.uids(SseEvent("notification", null, """{"uids":["a"]}""")))
+        assertEquals(emptyList<String>(), LiveRead.uids(SseEvent("notification_read", null, "oops")))
+        assertEquals(emptyList<String>(), LiveRead.uids(SseEvent("notification_read", null, """{"uids":[1]}""")))
+    }
+}
+
+class AgentBurstTest {
+    @Test
+    fun aBurstRingsOnce() {
+        assertTrue(AgentStyle.alertSummary(null, 1_000, newMessage = true))
+        assertFalse(AgentStyle.alertSummary(1_000, 1_000 + AgentStyle.BURST_MS - 1, newMessage = true))
+        assertTrue(AgentStyle.alertSummary(1_000, 1_000 + AgentStyle.BURST_MS, newMessage = true))
+        assertFalse(AgentStyle.alertSummary(null, 1_000, newMessage = false))
+    }
+}

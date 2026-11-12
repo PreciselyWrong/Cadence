@@ -1,23 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Notifications instantanées des agents, par le flux du serveur (docs/36-notifications.md, Live stream). -->
+<!-- Notifications instantanées des agents, par le flux du serveur (docs/36-notifications.md, Live stream).
+     Espace fine insécable (U+202F) avant « : ; ? ! ». Vocabulaire : Marquer comme lu, Tout marquer comme lu, Ouvrir,
+     Répondre, Renvoyer, Copier la réponse. -->
 <resources>
-    <string name="live_channel_agents">Agents</string>
+    <string name="live_channel_decide">Agents · à décider</string>
+    <string name="live_channel_info">Agents · infos</string>
+    <string name="live_agent_fallback">Agent</string>
     <string name="live_channel_connection">Connexion aux agents</string>
     <string name="live_channel_connection_description">Notification permanente qui garde le téléphone à l’écoute des agents. Vous pouvez la masquer sans couper les messages.</string>
     <string name="live_ongoing_text">À l’écoute des agents. Toucher pour masquer cette notification.</string>
     <string name="agent_banner_more">+%1$d</string>
     <string name="agent_banner_open">Ouvrir</string>
     <string name="agent_banner_dismiss">Marquer comme lu</string>
+    <string name="live_mark_read">Marquer comme lu</string>
+    <string name="live_mark_all_read">Tout marquer comme lu</string>
+    <plurals name="live_summary_count">
+        <item quantity="one">%1$d message</item>
+        <item quantity="many">%1$d messages</item>
+        <item quantity="other">%1$d messages</item>
+    </plurals>
     <string name="live_reply_action">Répondre</string>
+    <string name="live_reply_resend">Renvoyer</string>
     <string name="live_reply_hint">Votre réponse</string>
-    <string name="live_reply_sending">Envoi…</string>
-    <string name="live_reply_waiting">En attente du réseau</string>
-    <string name="live_reply_not_sent">Pas envoyé</string>
+    <string name="live_reply_sending">%1$s · Envoi…</string>
+    <string name="live_reply_waiting">%1$s · En attente du réseau</string>
+    <string name="live_reply_sent">Envoyé · %1$s réfléchit…</string>
+    <string name="live_reply_not_sent">%1$s · Pas envoyé</string>
     <string name="live_reply_busy">Une réponse est déjà en cours. Réessayez plus tard.</string>
     <string name="live_reply_gone">Ce message a été supprimé.</string>
     <string name="live_reply_not_configured">Hermes n’est pas configuré sur le serveur.</string>
     <string name="live_reply_no_server">Aucun serveur connecté.</string>
     <string name="live_reply_refused">Réponse refusée par le serveur (%1$d).</string>
-    <string name="live_reply_yours">Votre réponse : %1$s</string>
+    <string name="live_reply_yours">Votre réponse : %1$s</string>
     <string name="live_reply_copy">Copier la réponse</string>
 </resources>

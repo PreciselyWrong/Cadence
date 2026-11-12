@@ -1,3 +1,11 @@
+## [1.23.0] — 12 novembre 2026
+
+- Les notifications des agents se rangent par agent, sous son nom, avec une petite étincelle et la couleur de leur niveau ; une rafale (fin des heures calmes) ne sonne qu'une fois.
+- Deux canaux : « Agents · à décider » pour les avertissements et erreurs, « Agents · infos » pour le reste.
+- Un message lu ailleurs (web, bureau, page du plugin) disparaît aussitôt du téléphone et du bandeau.
+- « Marquer comme lu » sur chaque message, « Tout marquer comme lu » sur le groupe.
+- Après « Répondre », la notification affiche « Envoyé · … réfléchit… » jusqu'à la réponse de l'agent ; une réponse refusée propose « Renvoyer ».
+
 ## [1.22.0] — 12 novembre 2026
 
 - « Répondre » sur une notification d'agent : la réponse s'écrit dans la notification et part au plugin ; sans réseau elle attend et repart d'elle-même, refusée elle reste affichée avec « Copier la réponse ».
