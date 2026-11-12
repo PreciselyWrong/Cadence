@@ -34,16 +34,44 @@ class ServiceWorkerBuildPlugin {
                 compilation.hooks.processAssets.tap(
                     {
                         name: 'ServiceWorkerBuild',
-                        stage: webpack.Compilation.PROCESS_ASSETS_STAGE_REPORT,
+                        // Before minification, which would rewrite the lines replaced here.
+                        stage: webpack.Compilation
+                            .PROCESS_ASSETS_STAGE_OPTIMIZE,
                     },
                     (assets) => {
                         const sw = compilation.getAsset('sw.js');
                         if (!sw) return;
-                        const shell = Object.keys(assets)
-                            .filter((name) =>
-                                /^(main|frontend_)[^/]*\.js$|\.css$/.test(name)
-                            )
-                            .sort();
+                        // A chunk holding any module of frontend/ is the
+                        // app's; the others only hold libraries (mermaid,
+                        // katex, …). Chunk names are numbers in production.
+                        const isAppModule = (module) => {
+                            const resource =
+                                module.resource || module.rootModule?.resource;
+                            return (
+                                !!resource &&
+                                resource.includes(
+                                    `${path.sep}frontend${path.sep}`
+                                )
+                            );
+                        };
+                        const files = new Set();
+                        for (const chunk of compilation.chunks) {
+                            const modules = [
+                                ...compilation.chunkGraph.getChunkModulesIterable(
+                                    chunk
+                                ),
+                            ];
+                            if (!modules.some(isAppModule)) continue;
+                            for (const file of chunk.files) {
+                                if (
+                                    /\.(js|css)$/.test(file) &&
+                                    file in assets
+                                ) {
+                                    files.add(file);
+                                }
+                            }
+                        }
+                        const shell = [...files].sort();
                         const source = sw.source
                             .source()
                             .toString()
