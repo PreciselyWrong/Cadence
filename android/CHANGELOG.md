@@ -1,3 +1,14 @@
+## [1.16.0] — 12 novembre 2026
+
+- « À venir » devient « Planifier » : l'Inbox à trier, les tâches échues, 14 jours et leur charge, ou les horizons Cette semaine, Ce mois-ci, Mois prochain et Un jour ; un appui long pose une tâche sur un jour ou un horizon sans toucher son échéance.
+- Reporter, Placer et le tri des échues de Ma journée changent le plan du jour, plus l'échéance ; « Plus tard » garde l'échéance.
+- « Masquer les terminées » dans Aujourd'hui et Planifier (bouton œil, retenu sur le téléphone).
+- Aujourd'hui se range au doigt par la poignée des tâches sans heure, dans le même ordre que le web ; les créneaux de la frise de Ma journée se déplacent et s'étirent.
+- Notes et descriptions de tâches rendues en Markdown (tableaux compris), liens vers des notes, des tâches et des personnes en puces, section « Rétroliens ».
+- Badge d'origine des tâches (Gmail, Telegram, MCP…), qui ouvre la page d'origine.
+- Une adresse seule dans l'ajout rapide propose Inbox, Tâche, Liens ou Note ; « Dans les liens » s'affiche d'emblée pour une adresse déjà gardée.
+- Les tâches d'un fichier TODO.md se datent, se priorisent et s'étiquettent comme les autres (titre, note et projet restent au fichier).
+
 ## [1.15.2] — 10 novembre 2026
 
 - Un lien Gmail ouvre directement le mail (ou la recherche) dans le navigateur, sur la version mobile de Gmail.
