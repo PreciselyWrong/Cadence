@@ -38,7 +38,7 @@ describe('Smart task counts and the tomorrow list', () => {
         });
 
     describe('GET /api/tasks/smart-counts', () => {
-        it('counts open tasks due today, tomorrow and within seven days', async () => {
+        it('counts open tasks due today and within seven days, without a Tomorrow count', async () => {
             await createTask({ name: 'today', due_date: atNoonUtc(0) });
             await createTask({ name: 'tomorrow', due_date: atNoonUtc(1) });
             await createTask({ name: 'day five', due_date: atNoonUtc(5) });
@@ -52,7 +52,7 @@ describe('Smart task counts and the tomorrow list', () => {
             const response = await agent.get('/api/tasks/smart-counts');
 
             expect(response.status).toBe(200);
-            expect(response.body).toEqual({ today: 1, tomorrow: 1, next7: 3 });
+            expect(response.body).toEqual({ today: 1, next7: 3 });
         });
 
         it('does not count subtasks', async () => {
@@ -68,7 +68,7 @@ describe('Smart task counts and the tomorrow list', () => {
 
             const response = await agent.get('/api/tasks/smart-counts');
 
-            expect(response.body.tomorrow).toBe(1);
+            expect(response.body.next7).toBe(1);
         });
 
         it('requires a signed-in user', async () => {

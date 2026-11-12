@@ -7,8 +7,8 @@ const {
 } = require('../../../utils/timezone-utils');
 const { filterTasksByParams } = require('./query-builders');
 
-// Tomorrow and Next 7 days badge the same filter as the list they open, one
-// row per page, so the number matches the list. Today has no list filter of
+// Next 7 days badges the same filter as the list it opens, one row per
+// page, so the number matches the list. Today has no list filter of
 // its own (the Today page mixes plan, progress and due sections), so it counts
 // the open tasks due today.
 async function countDueToday(userId, userTimezone) {
@@ -64,13 +64,13 @@ async function countListed(type, userId, userTimezone) {
     return count;
 }
 
+// No Tomorrow count: no client shows a Tomorrow list any more.
 async function getSmartTaskCounts(userId, userTimezone) {
-    const [today, tomorrow, next7] = await Promise.all([
+    const [today, next7] = await Promise.all([
         countDueToday(userId, userTimezone),
-        countListed('tomorrow', userId, userTimezone),
         countListed('upcoming', userId, userTimezone),
     ]);
-    return { today, tomorrow, next7 };
+    return { today, next7 };
 }
 
 module.exports = { getSmartTaskCounts };

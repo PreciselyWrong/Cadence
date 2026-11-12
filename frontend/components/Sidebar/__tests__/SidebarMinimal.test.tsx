@@ -126,7 +126,7 @@ const setDensity = (uiDensity: 'minimal' | 'dense') =>
 describe('SidebarSmartLists', () => {
     beforeEach(() => {
         setDensity('minimal');
-        mockedCounts.mockResolvedValue({ today: 3, tomorrow: 5, next7: 9 });
+        mockedCounts.mockResolvedValue({ today: 3, next7: 9 });
         act(() => {
             useStore.setState((state: any) => ({
                 inboxStore: {
@@ -190,7 +190,7 @@ describe('Sidebar in minimal mode', () => {
 
     beforeEach(() => {
         setDensity('minimal');
-        mockedCounts.mockResolvedValue({ today: 0, tomorrow: 0, next7: 0 });
+        mockedCounts.mockResolvedValue({ today: 0, next7: 0 });
     });
 
     it('keeps folders and lists in the main panel', () => {

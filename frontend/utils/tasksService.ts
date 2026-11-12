@@ -79,7 +79,6 @@ export const fetchTasks = async (
 
 export interface SmartTaskCounts {
     today: number;
-    tomorrow: number;
     next7: number;
 }
 

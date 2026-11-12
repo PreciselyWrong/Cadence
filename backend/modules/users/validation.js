@@ -185,7 +185,8 @@ function validateSidebarSettings(body) {
 // Minimal sidebar: the smart lists, icon rail placement and section count
 // badges. Unknown keys are dropped; the client fills in defaults for any
 // item missing from the saved list, so a new item still appears.
-const MINIMAL_SMART_LIST_KEYS = ['today', 'tomorrow', 'next7', 'inbox'];
+// 'tomorrow' left the sidebar (8e78a666): a saved entry for it is dropped.
+const MINIMAL_SMART_LIST_KEYS = ['today', 'next7', 'inbox'];
 const MINIMAL_RAIL_KEYS = [
     'today',
     'inbox',

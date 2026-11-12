@@ -153,7 +153,7 @@ const smartListOrder = () =>
 
 describe('Minimal sidebar customization', () => {
     beforeEach(() => {
-        mockedCounts.mockResolvedValue({ today: 3, tomorrow: 5, next7: 9 });
+        mockedCounts.mockResolvedValue({ today: 3, next7: 9 });
         act(() => {
             useStore.setState((state: any) => ({
                 inboxStore: {

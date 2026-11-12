@@ -43,14 +43,27 @@ describe('PUT /api/v1/profile/sidebar-settings (minimal sidebar)', () => {
                 { key: 'bogus', visible: true, showCount: true },
                 { key: 'today', visible: 'false', showCount: 0 },
                 { key: 'today', visible: true, showCount: true },
-                'tomorrow',
-                { key: 'tomorrow', visible: 1 },
+                'next7',
+                { key: 'next7', visible: 1 },
             ],
         });
 
         expect((await stored()).smartLists).toEqual([
             { key: 'today', visible: false, showCount: false },
-            { key: 'tomorrow', visible: true, showCount: true },
+            { key: 'next7', visible: true, showCount: true },
+        ]);
+    });
+
+    it('drops the retired Tomorrow smart list', async () => {
+        await save({
+            smartLists: [
+                { key: 'today', visible: true, showCount: true },
+                { key: 'tomorrow', visible: true, showCount: true },
+            ],
+        });
+
+        expect((await stored()).smartLists).toEqual([
+            { key: 'today', visible: true, showCount: true },
         ]);
     });
 
