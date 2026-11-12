@@ -440,16 +440,29 @@ describe('triage queue', () => {
             expect(twice.status).toBe(200);
         });
 
-        it('leaves no task behind when the slot no longer fits the plan', async () => {
+        // Slots may overlap now, so the plan is made to refuse this one.
+        it('leaves no task behind when the plan refuses the slot', async () => {
+            const dailyPlanService = require('../../modules/daily-plan/service');
+            const refuse = jest
+                .spyOn(dailyPlanService, 'applyPlanOps')
+                .mockRejectedValueOnce(new ValidationError('refused'));
+            const { slot_id: slotId } = await propose();
+            const res = await agent.post(`/api/triage/slots/${slotId}/accept`);
+            refuse.mockRestore();
+            expect(res.status).toBe(400);
+            expect(await Task.count({ where: { user_id: user.id } })).toBe(0);
+            expect(
+                (await queue()).items.filter((i) => i.type === 'link_slot')
+            ).toHaveLength(1);
+        });
+
+        it('accepts two slots at the same time, as on a calendar', async () => {
             const { slot_id: first } = await propose();
             const { slot_id: second } = await propose();
             await agent.post(`/api/triage/slots/${first}/accept`);
             const res = await agent.post(`/api/triage/slots/${second}/accept`);
-            expect(res.status).toBe(400);
-            expect(await Task.count({ where: { user_id: user.id } })).toBe(1);
-            expect(
-                (await queue()).items.filter((i) => i.type === 'link_slot')
-            ).toHaveLength(1);
+            expect(res.status).toBe(200);
+            expect(await Task.count({ where: { user_id: user.id } })).toBe(2);
         });
 
         it('refuses a slot that runs past midnight', async () => {
