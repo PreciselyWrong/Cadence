@@ -199,6 +199,7 @@ private fun SwipeSheets(viewModel: TasksViewModel) {
             onFunnel = { viewModel.funnel(open.task, it) },
             nextAction = if (NextAction.canDesignate(open.task)) NextAction.isDesignated(open.task, projects) else null,
             onNextAction = { viewModel.toggleNextAction(open.task) },
+            onToProject = { viewModel.convertToProject(open.task) },
             onMoveUp = open.todayList.takeIf { it.firstOrNull()?.uid != open.task.uid && it.isNotEmpty() }
                 ?.let { list -> { viewModel.moveInToday(open.task, list, -1) } },
             onMoveDown = open.todayList.takeIf { it.lastOrNull()?.uid != open.task.uid && it.isNotEmpty() }

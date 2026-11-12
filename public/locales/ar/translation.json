@@ -2053,7 +2053,10 @@
     "inHours": "خلال {{count}} ساعة",
     "pastDue": "متأخرة",
     "editDetails": "تعديل التفاصيل",
-    "noUpcomingOccurrences": "لا توجد مواعيد قادمة."
+    "noUpcomingOccurrences": "لا توجد مواعيد قادمة.",
+    "turnIntoProject": "تحويل إلى مشروع",
+    "turnIntoProjectError": "تعذّر تحويلها إلى مشروع.",
+    "turnIntoProjectMessage": "هل تريد تحويل « {{name}} » إلى مشروع؟ تصبح مهامها الفرعية مهام المشروع، وتصبح عناوين ملاحظتها صفحات المشروع."
   },
   "projects": {
     "parentProject": "المشروع الأب",
@@ -2189,6 +2192,11 @@
       "failedTitle": "تعذر تحميل تفاصيل المشروع.",
       "failedHint": "تحقق من اتصالك وأعد تحميل الصفحة.",
       "backToProjects": "العودة إلى المشاريع"
+    },
+    "dormant": {
+      "title": "لم تُفتح منذ 30 يومًا ({{count}})",
+      "daysAgo": "منذ {{count}} أيام",
+      "keep": "إبقاء"
     }
   },
   "projectItem": {
@@ -6308,5 +6316,21 @@
   "mentions": {
     "loading": "جارٍ تحميل الأشخاص…",
     "noMatch": "لا يوجد أشخاص مطابقون"
+  },
+  "projectPages": {
+    "heading": "الصفحات",
+    "title": "العنوان",
+    "note": "ملاحظة",
+    "dead": "غير موجودة",
+    "createTask": "إنشاء مهمة",
+    "remove": "إزالة",
+    "actions": "إجراءات الصفحة",
+    "removeError": "تعذّرت إزالة الصفحة.",
+    "copied": "نُسخت الصفحات بتنسيق Markdown",
+    "deadCount": "عدد الصفحات غير الموجودة: {{count}}",
+    "allAnswer": "كل الصفحات تستجيب",
+    "checkError": "تعذّر التحقق من الصفحات.",
+    "copyMarkdown": "نسخ الصفحات بتنسيق Markdown",
+    "check": "التحقق من الصفحات"
   }
 }

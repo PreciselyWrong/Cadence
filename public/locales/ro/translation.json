@@ -2049,7 +2049,10 @@
     "inHours": "în {{count}} ore",
     "pastDue": "Restante",
     "editDetails": "Editează detaliile",
-    "noUpcomingOccurrences": "Nicio apariție viitoare."
+    "noUpcomingOccurrences": "Nicio apariție viitoare.",
+    "turnIntoProject": "Transformă în proiect",
+    "turnIntoProjectError": "Nu a putut fi transformat în proiect.",
+    "turnIntoProjectMessage": "Transformi „{{name}}” în proiect? Subsarcinile devin sarcinile proiectului, iar adresele din nota sa devin paginile proiectului."
   },
   "projects": {
     "parentProject": "Proiect părinte",
@@ -2182,6 +2185,11 @@
       "failedTitle": "Nu s-au putut încărca detaliile proiectului.",
       "failedHint": "Verifică-ți conexiunea și reîncarcă pagina.",
       "backToProjects": "Înapoi la proiecte"
+    },
+    "dormant": {
+      "title": "Neatins de 30 de zile ({{count}})",
+      "daysAgo": "acum {{count}} zile",
+      "keep": "Păstrează"
     }
   },
   "projectItem": {
@@ -6256,5 +6264,21 @@
   "mentions": {
     "loading": "Se încarcă persoanele…",
     "noMatch": "Nicio persoană potrivită"
+  },
+  "projectPages": {
+    "heading": "Pagini",
+    "title": "Titlu",
+    "note": "Notă",
+    "dead": "Nu a fost găsită",
+    "createTask": "Creează o sarcină",
+    "remove": "Elimină",
+    "actions": "Acțiuni pentru pagină",
+    "removeError": "Pagina nu a putut fi eliminată.",
+    "copied": "Paginile au fost copiate ca Markdown",
+    "deadCount": "{{count}} pagini nu au fost găsite",
+    "allAnswer": "Toate paginile răspund",
+    "checkError": "Paginile nu au putut fi verificate.",
+    "copyMarkdown": "Copiază paginile ca Markdown",
+    "check": "Verifică paginile"
   }
 }

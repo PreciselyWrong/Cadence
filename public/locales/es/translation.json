@@ -1548,6 +1548,11 @@
       "failedTitle": "No se pudieron cargar los detalles del proyecto.",
       "failedHint": "Revisa tu conexión y vuelve a cargar la página.",
       "backToProjects": "Volver a Proyectos"
+    },
+    "dormant": {
+      "title": "Sin tocar desde hace 30 días ({{count}})",
+      "daysAgo": "hace {{count}} días",
+      "keep": "Conservar"
     }
   },
   "projectItem": {
@@ -2027,7 +2032,10 @@
     "inHours": "en {{count}} horas",
     "pastDue": "Vencida",
     "editDetails": "Editar detalles",
-    "noUpcomingOccurrences": "No hay próximas ocurrencias."
+    "noUpcomingOccurrences": "No hay próximas ocurrencias.",
+    "turnIntoProject": "Convertir en proyecto",
+    "turnIntoProjectError": "No se pudo convertir en proyecto.",
+    "turnIntoProjectMessage": "¿Convertir « {{name}} » en proyecto? Sus subtareas pasan a ser las tareas del proyecto y las direcciones de su nota, sus páginas."
   },
   "dateIndicators": {
     "today": "HOY",
@@ -6238,5 +6246,21 @@
   "mentions": {
     "loading": "Cargando personas…",
     "noMatch": "Ninguna persona coincide"
+  },
+  "projectPages": {
+    "heading": "Páginas",
+    "title": "Título",
+    "note": "Nota",
+    "dead": "No encontrada",
+    "createTask": "Crear una tarea",
+    "remove": "Quitar",
+    "actions": "Acciones de la página",
+    "removeError": "No se pudo quitar la página.",
+    "copied": "Páginas copiadas en Markdown",
+    "deadCount": "{{count}} páginas no encontradas",
+    "allAnswer": "Todas las páginas responden",
+    "checkError": "No se pudieron comprobar las páginas.",
+    "copyMarkdown": "Copiar las páginas en Markdown",
+    "check": "Comprobar las páginas"
   }
 }

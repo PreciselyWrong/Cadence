@@ -44,6 +44,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -63,6 +64,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.Panel
 import ch.nicolab.cadence.designsystem.components.RowGroup
@@ -195,6 +197,14 @@ internal fun ProjectsTab(
     }
     var showClosed by rememberSaveable { mutableStateOf(false) }
     var statusFor by remember { mutableStateOf<String?>(null) }
+    val dormantModel: DormantProjectsViewModel = viewModel()
+    val dormant by dormantModel.projects.collectAsStateWithLifecycle()
+    var dormantOpen by rememberSaveable { mutableStateOf(false) }
+    val context = LocalContext.current
+    LaunchedEffect(Unit) { dormantModel.refresh() }
+    LaunchedEffect(dormantModel) {
+        dormantModel.messages.collect { Toast.makeText(context, it, Toast.LENGTH_LONG).show() }
+    }
     val onLongClick = { card: ProjectCard -> statusFor = card.project.uid }
 
     LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
@@ -239,6 +249,15 @@ internal fun ProjectsTab(
             }
             if (showClosed) areaGroups("closed", overview.closed, onOpenProject, onLongClick)
         }
+        dormantProjectItems(
+            projects = dormant,
+            today = moment.today,
+            zone = moment.zone,
+            expanded = dormantOpen,
+            onToggle = { dormantOpen = !dormantOpen },
+            onOpen = onOpenProject,
+            onKeep = dormantModel::keep,
+        )
     }
 
     val editing = allProjects.firstOrNull { it.uid == statusFor }

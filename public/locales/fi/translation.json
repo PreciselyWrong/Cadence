@@ -2045,7 +2045,10 @@
     "inHours": "{{count}} tunnin kuluttua",
     "pastDue": "Erääntynyt",
     "editDetails": "Muokkaa tietoja",
-    "noUpcomingOccurrences": "Ei tulevia toistoja."
+    "noUpcomingOccurrences": "Ei tulevia toistoja.",
+    "turnIntoProject": "Muuta projektiksi",
+    "turnIntoProjectError": "Projektiksi muuttaminen ei onnistunut.",
+    "turnIntoProjectMessage": "Muutetaanko « {{name}} » projektiksi? Sen alitehtävistä tulee projektin tehtäviä, ja sen muistiinpanon osoitteista tulee projektin sivut."
   },
   "projects": {
     "parentProject": "Pääprojekti",
@@ -2177,6 +2180,11 @@
       "failedTitle": "Projektin tietojen lataus epäonnistui.",
       "failedHint": "Tarkista yhteytesi ja lataa sivu uudelleen.",
       "backToProjects": "Takaisin projekteihin"
+    },
+    "dormant": {
+      "title": "Ei kosketettu 30 päivään ({{count}})",
+      "daysAgo": "{{count}} päivää sitten",
+      "keep": "Säilytä"
     }
   },
   "projectItem": {
@@ -6236,5 +6244,21 @@
   "mentions": {
     "loading": "Ladataan henkilöitä…",
     "noMatch": "Ei vastaavia henkilöitä"
+  },
+  "projectPages": {
+    "heading": "Sivut",
+    "title": "Otsikko",
+    "note": "Muistiinpano",
+    "dead": "Ei löytynyt",
+    "createTask": "Luo tehtävä",
+    "remove": "Poista",
+    "actions": "Sivun toiminnot",
+    "removeError": "Sivua ei voitu poistaa.",
+    "copied": "Sivut kopioitu Markdownina",
+    "deadCount": "{{count}} sivua ei löytynyt",
+    "allAnswer": "Kaikki sivut vastaavat",
+    "checkError": "Sivuja ei voitu tarkistaa.",
+    "copyMarkdown": "Kopioi sivut Markdownina",
+    "check": "Tarkista sivut"
   }
 }

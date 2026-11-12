@@ -56,6 +56,7 @@ import ch.nicolab.cadence.tasks.model.TagItem
 import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskDraft
 import ch.nicolab.cadence.tasks.model.TaskItem
+import ch.nicolab.cadence.tasks.project.canBecomeProject
 import ch.nicolab.cadence.tasks.model.TaskViews
 import ch.nicolab.cadence.tasks.model.TodayOrder
 import ch.nicolab.cadence.tasks.notes.Autosaver
@@ -481,6 +482,12 @@ internal class TasksViewModel(
     fun delete(task: TaskItem) {
         if (FileBackedActions.ownsField(task, FileOwnedField.DELETE)) return
         launchAction { repository.deleteTask(task.uid) }
+    }
+
+    /** Après confirmation : la tâche disparaît tout de suite ; un refus du serveur la fait revenir (liste des refus). */
+    fun convertToProject(task: TaskItem) {
+        if (!canBecomeProject(task)) return
+        launchAction { repository.convertToProject(task.uid, task.name) }
     }
 
     fun update(uid: String, change: TaskChange) = launchAction { repository.updateTask(uid, change) }

@@ -101,4 +101,21 @@ class ReviewRepositoryTest {
         val repository = ReviewRepository(FakeServer(online = true, body = """{"exists":true}""")::call, ReviewCache(dir))
         assertEquals(true, repository.weeklyRoutineExists().getOrThrow())
     }
+
+    @Test
+    fun `the dormant projects are read online and the last answer is kept for offline`() = runTest {
+        val body = """{"projects":[{"uid":"p1","name":"Maison","status":"in_progress","last_activity_at":"2026-10-01T10:00:00Z"}]}"""
+        val server = FakeServer(online = true, body = body)
+        val repository = ReviewRepository(server::call, ReviewCache(dir)) { Instant.parse("2026-11-12T08:00:00Z") }
+
+        val first = repository.dormantProjects().getOrThrow()
+        assertFalse(first.fromCache)
+        assertEquals(listOf(DormantProject("p1", "Maison", Instant.parse("2026-10-01T10:00:00Z"))), first.value)
+
+        server.online = false
+        val second = repository.dormantProjects().getOrThrow()
+        assertTrue(second.fromCache)
+        assertEquals(first.value, second.value)
+        assertEquals(listOf("GET /api/v1/projects/dormant", "GET /api/v1/projects/dormant"), server.calls)
+    }
 }

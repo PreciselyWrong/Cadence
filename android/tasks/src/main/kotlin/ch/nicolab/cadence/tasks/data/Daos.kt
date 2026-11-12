@@ -328,6 +328,9 @@ interface DeferredCallDao {
     @Query("SELECT COUNT(*) FROM deferred_calls")
     fun observeCount(): Flow<Int>
 
+    @Query("SELECT `key` FROM deferred_calls WHERE `key` LIKE 'task-to-project:%'")
+    fun observeConversionKeys(): Flow<List<String>>
+
     @Query("SELECT EXISTS(SELECT 1 FROM deferred_calls WHERE `key` = :key)")
     fun observeExists(key: String): Flow<Boolean>
 

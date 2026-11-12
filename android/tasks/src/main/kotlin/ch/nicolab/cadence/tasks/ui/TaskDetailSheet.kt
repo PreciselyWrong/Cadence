@@ -23,6 +23,7 @@ import androidx.compose.foundation.verticalScroll
 import ch.nicolab.cadence.tasks.ui.autoclassify.AutoClassifyMarkLine
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.AccountTree
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Delete
@@ -79,6 +80,7 @@ import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.DetailTitle
+import ch.nicolab.cadence.tasks.project.canBecomeProject
 import ch.nicolab.cadence.tasks.model.EstimateFormat
 import ch.nicolab.cadence.tasks.model.Funnel
 import ch.nicolab.cadence.tasks.model.FunnelStage
@@ -168,6 +170,7 @@ internal fun TaskDetailSheet(
     var picker by remember { mutableStateOf<Picker?>(null) }
     var dateTab by remember { mutableStateOf(DateTab.Due) }
     var confirmDelete by remember { mutableStateOf(false) }
+    var confirmProject by remember { mutableStateOf(false) }
     // Une sous-tâche ouverte s'affiche par-dessus : sa fiche est une fiche de tâche comme une autre.
     var openedSubtask by rememberSaveable(current.uid) { mutableStateOf<String?>(null) }
     var moreFields by rememberSaveable(current.uid) { mutableStateOf(false) }
@@ -422,6 +425,10 @@ internal fun TaskDetailSheet(
                     picker = null
                     onDismiss()
                 }
+                if (canBecomeProject(current)) ActionRow(Icons.Outlined.AccountTree, stringResource(R.string.tasks_action_to_project), palette.primary) {
+                    picker = null
+                    confirmProject = true
+                }
                 // La suppression d'une tâche de fichier se fait dans le fichier : pas de ligne ici.
                 if (!FileBackedActions.ownsField(current, FileOwnedField.DELETE)) ActionRow(Icons.Outlined.Delete, stringResource(R.string.tasks_action_delete), palette.error) {
                     picker = null
@@ -442,6 +449,19 @@ internal fun TaskDetailSheet(
     }
     openedSubtask?.let { uid ->
         TaskDetailSheet(taskUid = uid, viewModel = viewModel, onDismiss = { openedSubtask = null })
+    }
+    if (confirmProject) {
+        ConvertToProjectDialog(
+            name = current.name,
+            onConfirm = {
+                // Le serveur prend le nom et la note tels qu'il les a : le texte en attente part avant la conversion.
+                flushText()
+                viewModel.convertToProject(current)
+                confirmProject = false
+                onDismiss()
+            },
+            onDismiss = { confirmProject = false },
+        )
     }
     if (confirmDelete) {
         AlertDialog(

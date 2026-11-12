@@ -73,6 +73,14 @@ router.get(
     })
 );
 
+// Projects nobody touched for 30 days (« Pas touché depuis 30 jours »).
+router.get(
+    '/projects/dormant',
+    handle(async (req) => ({
+        projects: await review.computeDormantProjects(req.currentUser),
+    }))
+);
+
 // "Keep as it is" for a project in the review.
 router.post(
     '/project/:uid/reviewed',

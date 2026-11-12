@@ -2045,7 +2045,10 @@
     "inHours": "{{count}} saat içinde",
     "pastDue": "Süresi geçmiş",
     "editDetails": "Ayrıntıları düzenle",
-    "noUpcomingOccurrences": "Yaklaşan tekrar yok."
+    "noUpcomingOccurrences": "Yaklaşan tekrar yok.",
+    "turnIntoProject": "Projeye dönüştür",
+    "turnIntoProjectError": "Projeye dönüştürülemedi.",
+    "turnIntoProjectMessage": "« {{name}} » projeye dönüştürülsün mü? Alt görevleri projenin görevleri olur, notundaki adresler de projenin sayfaları olur."
   },
   "projects": {
     "parentProject": "Üst proje",
@@ -2177,6 +2180,11 @@
       "failedTitle": "Proje ayrıntıları yüklenemedi.",
       "failedHint": "Bağlantınızı kontrol edip sayfayı yeniden yükleyin.",
       "backToProjects": "Projelere dön"
+    },
+    "dormant": {
+      "title": "30 gündür dokunulmadı ({{count}})",
+      "daysAgo": "{{count}} gün önce",
+      "keep": "Tut"
     }
   },
   "projectItem": {
@@ -6234,5 +6242,21 @@
   "mentions": {
     "loading": "Kişiler yükleniyor…",
     "noMatch": "Eşleşen kişi yok"
+  },
+  "projectPages": {
+    "heading": "Sayfalar",
+    "title": "Başlık",
+    "note": "Not",
+    "dead": "Bulunamadı",
+    "createTask": "Görev oluştur",
+    "remove": "Kaldır",
+    "actions": "Sayfa işlemleri",
+    "removeError": "Sayfa kaldırılamadı.",
+    "copied": "Sayfalar Markdown olarak kopyalandı",
+    "deadCount": "{{count}} sayfa bulunamadı",
+    "allAnswer": "Tüm sayfalar yanıt veriyor",
+    "checkError": "Sayfalar denetlenemedi.",
+    "copyMarkdown": "Sayfaları Markdown olarak kopyala",
+    "check": "Sayfaları denetle"
   }
 }

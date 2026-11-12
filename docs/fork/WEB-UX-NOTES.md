@@ -680,3 +680,9 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Problème** : 0 lien rangé dans un projet ; les pages d'une recherche vivaient dans Bookmark Tagger, à côté des projets de Cadence.
 - **Décision** : section « Pages » sous les tâches du projet (initiale du site, titre, site, note courte), « ⋯ » par page : Créer une tâche, Modifier, Retirer ; « ⋯ » du projet : Copier les pages en Markdown, Vérifier les pages (« Introuvable » sur la ligne, rien supprimé). Inbox › Projet… y ajoute la page.
 - **Android à reprendre** : fait dans la même étape.
+
+### 2026-11-12 — Transformer en projet, projets dormants (refonte des liens, étape 4)
+
+- **Problème** : une tâche « Essayer : X » qui grandit (sous-tâches, liens) n'avait aucun passage vers un projet ; les projets délaissés restaient au milieu des autres.
+- **Décision** : « Transformer en projet » dans le ⋯ d'une ligne de tâche et de la page de tâche (question, puis le projet s'ouvre) ; en bas de Projets, « Pas touché depuis 30 jours (N) » replié, avec « Garder » par ligne ; rien n'est archivé.
+- **Android à reprendre** : fait dans la même étape.

@@ -42,6 +42,7 @@ import {
     ArrowUpTrayIcon,
 } from '@heroicons/react/24/outline';
 import ProjectItem from './Project/ProjectItem';
+import DormantProjects from './Project/DormantProjects';
 import { PROJECT_TABLE_GRID } from './Project/projectTableLayout';
 import SortableItem from './Shared/SortableItem';
 import { useSidebarDrop } from './Sidebar/sidebarDrop';
@@ -1234,6 +1235,7 @@ const Projects: React.FC = () => {
                         ))}
                     </div>
                 )}
+                <DormantProjects />
             </div>
 
             {modalState.isOpen && (

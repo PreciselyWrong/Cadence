@@ -2045,7 +2045,10 @@
     "inHours": "{{count}}시간 후",
     "pastDue": "기한 지남",
     "editDetails": "세부 정보 편집",
-    "noUpcomingOccurrences": "예정된 반복이 없습니다."
+    "noUpcomingOccurrences": "예정된 반복이 없습니다.",
+    "turnIntoProject": "프로젝트로 전환",
+    "turnIntoProjectError": "프로젝트로 전환할 수 없습니다.",
+    "turnIntoProjectMessage": "« {{name}} »을(를) 프로젝트로 전환할까요? 하위 작업은 프로젝트의 작업이 되고, 메모의 주소는 프로젝트의 페이지가 됩니다."
   },
   "projects": {
     "parentProject": "상위 프로젝트",
@@ -2177,6 +2180,11 @@
       "failedTitle": "프로젝트 세부 정보를 불러오지 못했습니다.",
       "failedHint": "연결을 확인하고 페이지를 새로 고치세요.",
       "backToProjects": "프로젝트로 돌아가기"
+    },
+    "dormant": {
+      "title": "30일 동안 손대지 않음 ({{count}})",
+      "daysAgo": "{{count}}일 전",
+      "keep": "유지"
     }
   },
   "projectItem": {
@@ -6234,5 +6242,21 @@
   "mentions": {
     "loading": "사람을 불러오는 중…",
     "noMatch": "일치하는 사람이 없습니다"
+  },
+  "projectPages": {
+    "heading": "페이지",
+    "title": "제목",
+    "note": "메모",
+    "dead": "찾을 수 없음",
+    "createTask": "작업 만들기",
+    "remove": "제거",
+    "actions": "페이지 작업",
+    "removeError": "페이지를 제거할 수 없습니다.",
+    "copied": "페이지를 Markdown으로 복사했습니다",
+    "deadCount": "찾을 수 없는 페이지 {{count}}개",
+    "allAnswer": "모든 페이지가 응답합니다",
+    "checkError": "페이지를 확인할 수 없습니다.",
+    "copyMarkdown": "페이지를 Markdown으로 복사",
+    "check": "페이지 확인"
   }
 }

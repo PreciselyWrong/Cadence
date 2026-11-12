@@ -43,6 +43,8 @@ import ch.nicolab.cadence.tasks.model.TaskStatus
 import ch.nicolab.cadence.tasks.sync.AuthError
 import ch.nicolab.cadence.tasks.sync.HttpError
 import ch.nicolab.cadence.tasks.sync.Hlc
+import ch.nicolab.cadence.tasks.project.pendingConversionUids
+import ch.nicolab.cadence.tasks.project.projectConversionCall
 import ch.nicolab.cadence.tasks.sync.DeferredCall
 import ch.nicolab.cadence.tasks.sync.NetworkMonitor
 import ch.nicolab.cadence.tasks.sync.describeFailure
@@ -99,14 +101,18 @@ internal class RoomTaskRepository(
     private val noteDao = database.noteDao()
     private val outbox = database.outboxDao()
 
+    /** Tâches dont la conversion en projet attend l'envoi : elles disparaissent des listes tout de suite. */
+    private fun conversionPending(): Flow<Set<String>> =
+        database.deferredCallDao().observeConversionKeys().map(::pendingConversionUids)
+
     override fun observeTasks(): Flow<List<TaskItem>> =
-        combine(taskDao.observeTopLevel(), accountZone(), deviceZone) { rows, account, device ->
-            rows.map { it.toItem(account, device) }
+        combine(taskDao.observeTopLevel(), accountZone(), deviceZone, conversionPending()) { rows, account, device, pending ->
+            rows.filter { it.task.uid !in pending }.map { it.toItem(account, device) }
         }
 
     override fun observeAllTasks(): Flow<List<TaskItem>> =
-        combine(taskDao.observeEvery(), accountZone(), deviceZone) { rows, account, device ->
-            rows.map { it.toItem(account, device) }
+        combine(taskDao.observeEvery(), accountZone(), deviceZone, conversionPending()) { rows, account, device, pending ->
+            rows.filter { it.task.uid !in pending }.map { it.toItem(account, device) }
         }
 
     override fun observeTask(uid: String): Flow<TaskItem?> =
@@ -568,6 +574,10 @@ internal class RoomTaskRepository(
     }
 
     override suspend fun skipOccurrence(uid: String) = writeOccurrence(uid, ACTION_SKIP_OCCURRENCE)
+
+    override suspend fun convertToProject(uid: String, name: String) {
+        defer(projectConversionCall(uid, name))
+    }
 
     override suspend fun deleteTask(uid: String) {
         val clock = hlc.now()

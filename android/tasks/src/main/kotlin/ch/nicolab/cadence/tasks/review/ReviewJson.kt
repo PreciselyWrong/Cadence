@@ -74,6 +74,12 @@ internal object ReviewJson {
         },
     )
 
+    fun dormantProjects(body: JsonObject): List<DormantProject> = body.array("projects").mapNotNull { element ->
+        val item = element as? JsonObject ?: return@mapNotNull null
+        val uid = item.string("uid") ?: return@mapNotNull null
+        DormantProject(uid, item.string("name").orEmpty(), item.instant("last_activity_at"))
+    }
+
     fun week(body: JsonObject): ReviewWeek = ReviewWeek(
         weekStart = body.day("week_start"),
         committed = body.array("committed").mapNotNull { (it as? JsonObject)?.let(::task) },

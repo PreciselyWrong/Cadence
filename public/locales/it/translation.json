@@ -2047,7 +2047,10 @@
     "inHours": "tra {{count}} ore",
     "pastDue": "Scaduta",
     "editDetails": "Modifica dettagli",
-    "noUpcomingOccurrences": "Nessuna occorrenza futura."
+    "noUpcomingOccurrences": "Nessuna occorrenza futura.",
+    "turnIntoProject": "Trasforma in progetto",
+    "turnIntoProjectError": "Impossibile trasformarlo in progetto.",
+    "turnIntoProjectMessage": "Trasformare « {{name}} » in progetto? Le sue sottoattività diventano le attività del progetto e gli indirizzi della sua nota diventano le sue pagine."
   },
   "projects": {
     "parentProject": "Progetto padre",
@@ -2180,6 +2183,11 @@
       "failedTitle": "Impossibile caricare i dettagli del progetto.",
       "failedHint": "Controlla la connessione e ricarica la pagina.",
       "backToProjects": "Torna ai progetti"
+    },
+    "dormant": {
+      "title": "Non toccato da 30 giorni ({{count}})",
+      "daysAgo": "{{count}} giorni fa",
+      "keep": "Mantieni"
     }
   },
   "projectItem": {
@@ -6251,5 +6259,21 @@
   "mentions": {
     "loading": "Caricamento delle persone…",
     "noMatch": "Nessuna persona corrispondente"
+  },
+  "projectPages": {
+    "heading": "Pagine",
+    "title": "Titolo",
+    "note": "Nota",
+    "dead": "Non trovata",
+    "createTask": "Crea un'attività",
+    "remove": "Rimuovi",
+    "actions": "Azioni della pagina",
+    "removeError": "Impossibile rimuovere la pagina.",
+    "copied": "Pagine copiate in Markdown",
+    "deadCount": "{{count}} pagine non trovate",
+    "allAnswer": "Tutte le pagine rispondono",
+    "checkError": "Impossibile verificare le pagine.",
+    "copyMarkdown": "Copia le pagine in Markdown",
+    "check": "Verifica le pagine"
   }
 }

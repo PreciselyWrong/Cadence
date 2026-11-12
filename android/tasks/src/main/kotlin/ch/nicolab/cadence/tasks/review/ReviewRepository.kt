@@ -70,6 +70,10 @@ class ReviewRepository internal constructor(
     suspend fun projects(): Result<Loaded<ReviewPage<ReviewProject>>> =
         read(ReviewStep.PROJECTS.wire, "/api/v1/review/projects", ReviewJson::projects, PAGE)
 
+    /** Projets sans activité depuis 30 jours ; hors ligne, la dernière lecture reste affichée. */
+    suspend fun dormantProjects(): Result<Loaded<List<DormantProject>>> =
+        read("dormant-projects", "/api/v1/projects/dormant", ReviewJson::dormantProjects)
+
     suspend fun week(): Result<Loaded<ReviewWeek>> = read(ReviewStep.WEEK.wire, "/api/v1/review/week", ReviewJson::week)
 
     suspend fun postponements(taskUid: String): Result<Loaded<Postponements>> =

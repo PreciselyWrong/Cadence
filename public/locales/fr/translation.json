@@ -2050,7 +2050,10 @@
     "inHours": "dans {{count}} heures",
     "editDetails": "Modifier les détails",
     "noUpcomingOccurrences": "Aucune occurrence à venir.",
-    "pastDue": "En retard"
+    "pastDue": "En retard",
+    "turnIntoProject": "Transformer en projet",
+    "turnIntoProjectError": "Impossible de le transformer en projet.",
+    "turnIntoProjectMessage": "Transformer « {{name}} » en projet ? Ses sous-tâches deviennent les tâches du projet et les adresses de sa note ses pages."
   },
   "projects": {
     "parentProject": "Projet parent",
@@ -2183,6 +2186,11 @@
       "failedTitle": "Impossible de charger les détails du projet.",
       "failedHint": "Vérifiez votre connexion et rechargez la page.",
       "backToProjects": "Retour aux projets"
+    },
+    "dormant": {
+      "title": "Pas touché depuis 30 jours ({{count}})",
+      "daysAgo": "il y a {{count}} jours",
+      "keep": "Garder"
     }
   },
   "projectItem": {
@@ -6252,5 +6260,21 @@
   "mentions": {
     "loading": "Chargement des personnes…",
     "noMatch": "Aucune personne correspondante"
+  },
+  "projectPages": {
+    "heading": "Pages",
+    "title": "Titre",
+    "note": "Note",
+    "dead": "Introuvable",
+    "createTask": "Créer une tâche",
+    "remove": "Retirer",
+    "actions": "Actions de la page",
+    "removeError": "Impossible de retirer la page.",
+    "copied": "Pages copiées en Markdown",
+    "deadCount": "{{count}} pages introuvables",
+    "allAnswer": "Toutes les pages répondent",
+    "checkError": "Impossible de vérifier les pages.",
+    "copyMarkdown": "Copier les pages en Markdown",
+    "check": "Vérifier les pages"
   }
 }

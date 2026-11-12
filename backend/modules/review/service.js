@@ -496,7 +496,45 @@ async function markProjectReviewed(uid) {
     return { uid: project.uid, reviewed_at: project.reviewed_at };
 }
 
+// Open projects nobody touched for 30 days (docs/37-links.md): no change to
+// the project, its tasks or its pages, and not kept (« Garder » marks it
+// reviewed) since. Listed for the user to decide; nothing is archived.
+async function computeDormantProjects(user, now = new Date()) {
+    const where = await permissionsService.ownershipOrPermissionWhere(
+        'project',
+        user.id
+    );
+    const projects = await repository.findOpenProjects(where);
+    const stats = await repository.findProjectTaskStats(
+        projects.map((p) => p.id),
+        now
+    );
+    const pages = await repository.findLatestPages(projects.map((p) => p.id));
+    const time = (value) => (value ? new Date(value).getTime() : 0);
+    const before = now.getTime() - QUIET_PROJECT_DAYS * DAY_MS;
+    return projects
+        .map((project) => ({
+            project,
+            last: Math.max(
+                time(stats.get(project.id)?.lastChange),
+                time(project.updated_at),
+                time(project.created_at),
+                time(project.reviewed_at),
+                time(pages.get(project.id))
+            ),
+        }))
+        .filter(({ last }) => last < before)
+        .sort((a, b) => a.last - b.last)
+        .map(({ project, last }) => ({
+            uid: project.uid,
+            name: project.name,
+            status: project.status,
+            last_activity_at: new Date(last).toISOString(),
+        }));
+}
+
 module.exports = {
+    computeDormantProjects,
     CATEGORIES,
     computePushed,
     markProjectReviewed,

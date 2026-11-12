@@ -2045,7 +2045,10 @@
     "inHours": "sau {{count}} giờ",
     "pastDue": "Quá hạn",
     "editDetails": "Sửa chi tiết",
-    "noUpcomingOccurrences": "Không có lần lặp lại sắp tới."
+    "noUpcomingOccurrences": "Không có lần lặp lại sắp tới.",
+    "turnIntoProject": "Chuyển thành dự án",
+    "turnIntoProjectError": "Không thể chuyển thành dự án.",
+    "turnIntoProjectMessage": "Chuyển « {{name}} » thành dự án? Các tác vụ con sẽ thành tác vụ của dự án, còn địa chỉ trong ghi chú sẽ thành trang của dự án."
   },
   "projects": {
     "parentProject": "Dự án cha",
@@ -2177,6 +2180,11 @@
       "failedTitle": "Không thể tải chi tiết dự án.",
       "failedHint": "Kiểm tra kết nối và tải lại trang.",
       "backToProjects": "Quay lại Dự án"
+    },
+    "dormant": {
+      "title": "Không đụng đến trong 30 ngày ({{count}})",
+      "daysAgo": "{{count}} ngày trước",
+      "keep": "Giữ lại"
     }
   },
   "projectItem": {
@@ -6234,5 +6242,21 @@
   "mentions": {
     "loading": "Đang tải danh bạ…",
     "noMatch": "Không có người phù hợp"
+  },
+  "projectPages": {
+    "heading": "Trang",
+    "title": "Tiêu đề",
+    "note": "Ghi chú",
+    "dead": "Không tìm thấy",
+    "createTask": "Tạo tác vụ",
+    "remove": "Gỡ",
+    "actions": "Thao tác trang",
+    "removeError": "Không thể gỡ trang.",
+    "copied": "Đã sao chép các trang dưới dạng Markdown",
+    "deadCount": "{{count}} trang không tìm thấy",
+    "allAnswer": "Mọi trang đều phản hồi",
+    "checkError": "Không thể kiểm tra các trang.",
+    "copyMarkdown": "Sao chép các trang dưới dạng Markdown",
+    "check": "Kiểm tra các trang"
   }
 }

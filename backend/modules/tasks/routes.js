@@ -1229,6 +1229,22 @@ router.get('/task/:uid/next-iterations', async (req, res) => {
     }
 });
 
+// « Transformer en projet » (docs/37-links.md).
+router.post('/task/:uid/to-project', async (req, res) => {
+    try {
+        const { taskToProject } = require('./operations/toProject');
+        res.status(201).json(
+            await taskToProject(req.currentUser.id, req.params.uid)
+        );
+    } catch (error) {
+        if (error.statusCode) {
+            return res.status(error.statusCode).json({ error: error.message });
+        }
+        logError('Task to project failed:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 router.post('/task/:uid/skip-occurrence', taskWriteGuards, async (req, res) => {
     try {
         const task = await taskRepository.findByUid(req.params.uid);

@@ -2061,7 +2061,10 @@
     "inHours": "za {{count}} godz.",
     "pastDue": "Po terminie",
     "editDetails": "Edytuj szczegóły",
-    "noUpcomingOccurrences": "Brak nadchodzących wystąpień."
+    "noUpcomingOccurrences": "Brak nadchodzących wystąpień.",
+    "turnIntoProject": "Zamień w projekt",
+    "turnIntoProjectError": "Nie udało się zamienić w projekt.",
+    "turnIntoProjectMessage": "Zamienić „{{name}}” w projekt? Jego podzadania staną się zadaniami projektu, a adresy z jego notatki – stronami projektu."
   },
   "projects": {
     "parentProject": "Projekt nadrzędny",
@@ -2195,6 +2198,11 @@
       "failedTitle": "Nie udało się wczytać szczegółów projektu.",
       "failedHint": "Sprawdź połączenie i odśwież stronę.",
       "backToProjects": "Wróć do projektów"
+    },
+    "dormant": {
+      "title": "Nieruszane od 30 dni ({{count}})",
+      "daysAgo": "{{count}} dni temu",
+      "keep": "Zachowaj"
     }
   },
   "projectItem": {
@@ -6296,5 +6304,21 @@
   "mentions": {
     "loading": "Wczytywanie osób…",
     "noMatch": "Brak pasujących osób"
+  },
+  "projectPages": {
+    "heading": "Strony",
+    "title": "Tytuł",
+    "note": "Notatka",
+    "dead": "Nie znaleziono",
+    "createTask": "Utwórz zadanie",
+    "remove": "Usuń",
+    "actions": "Działania strony",
+    "removeError": "Nie udało się usunąć strony.",
+    "copied": "Skopiowano strony jako Markdown",
+    "deadCount": "Nieznalezionych stron: {{count}}",
+    "allAnswer": "Wszystkie strony odpowiadają",
+    "checkError": "Nie udało się sprawdzić stron.",
+    "copyMarkdown": "Kopiuj strony jako Markdown",
+    "check": "Sprawdź strony"
   }
 }

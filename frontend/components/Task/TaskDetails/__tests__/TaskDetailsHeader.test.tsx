@@ -37,6 +37,12 @@ const task: any = {
     priority: null,
 };
 
+// Its own test covers it; it needs the router and toasts.
+jest.mock('../../TurnIntoProject', () => ({
+    __esModule: true,
+    default: () => null,
+}));
+
 describe('TaskDetailsHeader duplicate', () => {
     it('duplicates the task from the actions menu', () => {
         const onDuplicate = jest.fn();

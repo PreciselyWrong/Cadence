@@ -2002,7 +2002,10 @@
     "inHours": "in {{count}} Stunden",
     "pastDue": "Überfällig",
     "editDetails": "Details bearbeiten",
-    "noUpcomingOccurrences": "Keine anstehenden Termine."
+    "noUpcomingOccurrences": "Keine anstehenden Termine.",
+    "turnIntoProject": "In ein Projekt umwandeln",
+    "turnIntoProjectError": "Konnte nicht in ein Projekt umgewandelt werden.",
+    "turnIntoProjectMessage": "„{{name}}“ in ein Projekt umwandeln? Die Unteraufgaben werden zu Aufgaben des Projekts, und die Adressen seiner Notiz werden zu seinen Seiten."
   },
   "calendar": {
     "feed": {
@@ -2451,6 +2454,11 @@
       "failedTitle": "Projektdetails konnten nicht geladen werden.",
       "failedHint": "Prüfe deine Verbindung und lade die Seite neu.",
       "backToProjects": "Zurück zu den Projekten"
+    },
+    "dormant": {
+      "title": "Seit 30 Tagen nicht berührt ({{count}})",
+      "daysAgo": "vor {{count}} Tagen",
+      "keep": "Behalten"
     }
   },
   "projectItem": {
@@ -6245,5 +6253,21 @@
   "mentions": {
     "loading": "Personen werden geladen…",
     "noMatch": "Keine passende Person"
+  },
+  "projectPages": {
+    "heading": "Seiten",
+    "title": "Titel",
+    "note": "Notiz",
+    "dead": "Nicht gefunden",
+    "createTask": "Aufgabe erstellen",
+    "remove": "Entfernen",
+    "actions": "Seitenaktionen",
+    "removeError": "Die Seite konnte nicht entfernt werden.",
+    "copied": "Seiten als Markdown kopiert",
+    "deadCount": "{{count}} Seiten nicht gefunden",
+    "allAnswer": "Alle Seiten antworten",
+    "checkError": "Die Seiten konnten nicht geprüft werden.",
+    "copyMarkdown": "Seiten als Markdown kopieren",
+    "check": "Seiten prüfen"
   }
 }

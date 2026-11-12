@@ -2045,7 +2045,10 @@
     "inHours": "om {{count}} timmar",
     "pastDue": "Försenad",
     "editDetails": "Redigera detaljer",
-    "noUpcomingOccurrences": "Inga kommande förekomster."
+    "noUpcomingOccurrences": "Inga kommande förekomster.",
+    "turnIntoProject": "Gör om till ett projekt",
+    "turnIntoProjectError": "Kunde inte göras om till ett projekt.",
+    "turnIntoProjectMessage": "Gör « {{name}} » till ett projekt? Dess deluppgifter blir projektets uppgifter, och adresserna i dess anteckning blir projektets sidor."
   },
   "projects": {
     "parentProject": "Överordnat projekt",
@@ -2177,6 +2180,11 @@
       "failedTitle": "Det gick inte att läsa in projektdetaljerna.",
       "failedHint": "Kontrollera anslutningen och läs in sidan igen.",
       "backToProjects": "Tillbaka till projekt"
+    },
+    "dormant": {
+      "title": "Inte rört på 30 dagar ({{count}})",
+      "daysAgo": "för {{count}} dagar sedan",
+      "keep": "Behåll"
     }
   },
   "projectItem": {
@@ -6236,5 +6244,21 @@
   "mentions": {
     "loading": "Läser in personer…",
     "noMatch": "Inga matchande personer"
+  },
+  "projectPages": {
+    "heading": "Sidor",
+    "title": "Titel",
+    "note": "Anteckning",
+    "dead": "Hittades inte",
+    "createTask": "Skapa en uppgift",
+    "remove": "Ta bort",
+    "actions": "Sidåtgärder",
+    "removeError": "Sidan kunde inte tas bort.",
+    "copied": "Sidor kopierade som Markdown",
+    "deadCount": "{{count}} sidor hittades inte",
+    "allAnswer": "Alla sidor svarar",
+    "checkError": "Sidorna kunde inte kontrolleras.",
+    "copyMarkdown": "Kopiera sidorna som Markdown",
+    "check": "Kontrollera sidorna"
   }
 }

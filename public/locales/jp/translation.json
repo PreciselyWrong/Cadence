@@ -1752,6 +1752,11 @@
       "failedTitle": "プロジェクトの詳細を読み込めませんでした。",
       "failedHint": "接続を確認して、ページを再読み込みしてください。",
       "backToProjects": "プロジェクトに戻る"
+    },
+    "dormant": {
+      "title": "30日間触れていません（{{count}} 件）",
+      "daysAgo": "{{count}} 日前",
+      "keep": "残す"
     }
   },
   "projectItem": {
@@ -2375,7 +2380,10 @@
     "inHours": "{{count}} 時間後",
     "pastDue": "期限切れ",
     "editDetails": "詳細を編集",
-    "noUpcomingOccurrences": "今後の予定はありません。"
+    "noUpcomingOccurrences": "今後の予定はありません。",
+    "turnIntoProject": "プロジェクトに変換",
+    "turnIntoProjectError": "プロジェクトに変換できませんでした。",
+    "turnIntoProjectMessage": "「{{name}}」をプロジェクトに変換しますか？ サブタスクはプロジェクトのタスクになり、そのメモのアドレスはプロジェクトのページになります。"
   },
   "calendar": {
     "feed": {
@@ -6234,5 +6242,21 @@
   "mentions": {
     "loading": "人を読み込み中…",
     "noMatch": "一致する人はいません"
+  },
+  "projectPages": {
+    "heading": "ページ",
+    "title": "タイトル",
+    "note": "メモ",
+    "dead": "見つかりません",
+    "createTask": "タスクを作成",
+    "remove": "削除",
+    "actions": "ページの操作",
+    "removeError": "ページを削除できませんでした。",
+    "copied": "ページをMarkdownとしてコピーしました",
+    "deadCount": "見つからないページ: {{count}} 件",
+    "allAnswer": "すべてのページが応答します",
+    "checkError": "ページを確認できませんでした。",
+    "copyMarkdown": "ページをMarkdownとしてコピー",
+    "check": "ページを確認"
   }
 }

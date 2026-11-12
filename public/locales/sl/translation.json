@@ -2061,7 +2061,10 @@
     "inHours": "čez {{count}} ur",
     "pastDue": "Zapadlo",
     "editDetails": "Uredi podrobnosti",
-    "noUpcomingOccurrences": "Ni prihajajočih ponovitev."
+    "noUpcomingOccurrences": "Ni prihajajočih ponovitev.",
+    "turnIntoProject": "Spremeni v projekt",
+    "turnIntoProjectError": "Ni bilo mogoče spremeniti v projekt.",
+    "turnIntoProjectMessage": "Spremeniti »{{name}}« v projekt? Njegova podopravila postanejo opravila projekta, naslovi iz njegove opombe pa strani projekta."
   },
   "projects": {
     "parentProject": "Nadrejeni projekt",
@@ -2195,6 +2198,11 @@
       "failedTitle": "Podrobnosti projekta ni bilo mogoče naložiti.",
       "failedHint": "Preverite povezavo in znova naložite stran.",
       "backToProjects": "Nazaj na projekte"
+    },
+    "dormant": {
+      "title": "Nedotaknjeno 30 dni ({{count}})",
+      "daysAgo": "pred {{count}} dnevi",
+      "keep": "Ohrani"
     }
   },
   "projectItem": {
@@ -6296,5 +6304,21 @@
   "mentions": {
     "loading": "Nalaganje oseb…",
     "noMatch": "Ni ujemajočih oseb"
+  },
+  "projectPages": {
+    "heading": "Strani",
+    "title": "Naslov",
+    "note": "Opomba",
+    "dead": "Ni najdena",
+    "createTask": "Ustvari opravilo",
+    "remove": "Odstrani",
+    "actions": "Dejanja strani",
+    "removeError": "Strani ni bilo mogoče odstraniti.",
+    "copied": "Strani kopirane kot Markdown",
+    "deadCount": "{{count}} strani ni najdenih",
+    "allAnswer": "Vse strani odgovarjajo",
+    "checkError": "Strani ni bilo mogoče preveriti.",
+    "copyMarkdown": "Kopiraj strani kot Markdown",
+    "check": "Preveri strani"
   }
 }

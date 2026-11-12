@@ -2070,7 +2070,10 @@
     "inHours": "in {{count}} hours",
     "pastDue": "Past Due",
     "editDetails": "Edit details",
-    "noUpcomingOccurrences": "No upcoming occurrences."
+    "noUpcomingOccurrences": "No upcoming occurrences.",
+    "turnIntoProject": "Turn into a project",
+    "turnIntoProjectError": "Could not turn it into a project.",
+    "turnIntoProjectMessage": "Turn « {{name}} » into a project? Its subtasks become the project’s tasks and the addresses of its note its pages."
   },
   "subtasks": {
     "placeholder": "Add a subtask...",
@@ -2192,6 +2195,11 @@
       "failedTitle": "Failed to load project details.",
       "failedHint": "Check your connection and reload the page.",
       "backToProjects": "Back to Projects"
+    },
+    "dormant": {
+      "title": "Not touched for 30 days ({{count}})",
+      "daysAgo": "{{count}} days ago",
+      "keep": "Keep"
     }
   },
   "projectStatus": {
@@ -6206,5 +6214,21 @@
   "mentions": {
     "loading": "Loading people…",
     "noMatch": "No matching people"
+  },
+  "projectPages": {
+    "heading": "Pages",
+    "title": "Title",
+    "note": "Note",
+    "dead": "Not found",
+    "createTask": "Create a task",
+    "remove": "Remove",
+    "actions": "Page actions",
+    "removeError": "Could not remove the page.",
+    "copied": "Pages copied as Markdown",
+    "deadCount": "{{count}} pages not found",
+    "allAnswer": "Every page answers",
+    "checkError": "Could not check the pages.",
+    "copyMarkdown": "Copy the pages as Markdown",
+    "check": "Check the pages"
   }
 }

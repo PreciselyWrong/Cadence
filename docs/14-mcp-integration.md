@@ -222,6 +222,10 @@ Get a single task by ID (number) or UID (string).
 
 ---
 
+#### `convert_task_to_project`
+
+`uid`. « Transformer en projet » (`docs/37-links.md`): name, note → description, subtasks → tasks, note addresses → pages, tags and domain follow; the task is removed. Returns `{ project: { uid, name } }`.
+
 #### `create_task`
 
 Create a new task. With `url` (a web address), the name may be left out: the task is named from the kind of page (« Try: owner/repo », « Read: … », « Watch: … », in the user's language), the address goes first in the note, `source` is `link` and, without a project, it waits in Tasks to sort for « Quand ? » (`docs/37-links.md`).

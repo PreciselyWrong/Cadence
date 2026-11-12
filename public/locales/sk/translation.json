@@ -2566,7 +2566,10 @@
     "inHours": "o {{count}} hod.",
     "pastDue": "Po termíne",
     "editDetails": "Upraviť podrobnosti",
-    "noUpcomingOccurrences": "Žiadne nadchádzajúce výskyty."
+    "noUpcomingOccurrences": "Žiadne nadchádzajúce výskyty.",
+    "turnIntoProject": "Premeniť na projekt",
+    "turnIntoProjectError": "Nepodarilo sa premeniť na projekt.",
+    "turnIntoProjectMessage": "Premeniť „{{name}}“ na projekt? Jeho podúlohy sa stanú úlohami projektu a adresy z jeho poznámky jeho stránkami."
   },
   "subtasks": {
     "placeholder": "Pridajte podúlohu...",
@@ -2690,6 +2693,11 @@
       "failedTitle": "Podrobnosti projektu sa nepodarilo načítať.",
       "failedHint": "Skontrolujte pripojenie a znova načítajte stránku.",
       "backToProjects": "Späť na projekty"
+    },
+    "dormant": {
+      "title": "Nedotknuté 30 dní ({{count}})",
+      "daysAgo": "pred {{count}} dňami",
+      "keep": "Ponechať"
     }
   },
   "projectStatus": {
@@ -6272,5 +6280,21 @@
   "mentions": {
     "loading": "Načítavajú sa osoby…",
     "noMatch": "Žiadne zodpovedajúce osoby"
+  },
+  "projectPages": {
+    "heading": "Stránky",
+    "title": "Názov",
+    "note": "Poznámka",
+    "dead": "Nenájdená",
+    "createTask": "Vytvoriť úlohu",
+    "remove": "Odstrániť",
+    "actions": "Akcie stránky",
+    "removeError": "Stránku sa nepodarilo odstrániť.",
+    "copied": "Stránky skopírované ako Markdown",
+    "deadCount": "Nenájdené stránky: {{count}}",
+    "allAnswer": "Všetky stránky odpovedajú",
+    "checkError": "Stránky sa nepodarilo skontrolovať.",
+    "copyMarkdown": "Kopírovať stránky ako Markdown",
+    "check": "Skontrolovať stránky"
   }
 }

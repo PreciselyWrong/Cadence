@@ -91,13 +91,9 @@ const ACTIONS = {
         });
         await run('delete_task', { id: task.uid });
     },
+    // Subtasks, addresses and tags follow (docs/37-links.md).
     to_project: async (run, task) => {
-        await run('create_project', {
-            name: task.name,
-            description: task.note || '',
-            tags: task.tags ?? [],
-        });
-        await run('delete_task', { id: task.uid });
+        await run('convert_task_to_project', { uid: task.uid });
     },
     to_habit: async (run, task) => {
         await run('create_habit', {
@@ -124,6 +120,7 @@ async function assertRemovable(task, action) {
     }
     if (
         CONVERSIONS.has(action) &&
+        action !== 'to_project' &&
         (await repository.countSubtasks(task.uid)) > 0
     ) {
         throw new ValidationError('This task has subtasks');

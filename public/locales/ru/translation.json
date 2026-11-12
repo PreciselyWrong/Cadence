@@ -2061,7 +2061,10 @@
     "inHours": "через {{count}} ч",
     "pastDue": "Просрочено",
     "editDetails": "Изменить детали",
-    "noUpcomingOccurrences": "Нет предстоящих повторений."
+    "noUpcomingOccurrences": "Нет предстоящих повторений.",
+    "turnIntoProject": "Сделать проектом",
+    "turnIntoProjectError": "Не удалось сделать проектом.",
+    "turnIntoProjectMessage": "Сделать «{{name}}» проектом? Его подзадачи станут задачами проекта, а адреса из его заметки — страницами проекта."
   },
   "projects": {
     "parentProject": "Родительский проект",
@@ -2195,6 +2198,11 @@
       "failedTitle": "Не удалось загрузить сведения о проекте.",
       "failedHint": "Проверьте подключение и перезагрузите страницу.",
       "backToProjects": "Назад к проектам"
+    },
+    "dormant": {
+      "title": "Не трогали 30 дней ({{count}})",
+      "daysAgo": "{{count}} дн. назад",
+      "keep": "Оставить"
     }
   },
   "projectItem": {
@@ -6296,5 +6304,21 @@
   "mentions": {
     "loading": "Загрузка людей…",
     "noMatch": "Нет подходящих людей"
+  },
+  "projectPages": {
+    "heading": "Страницы",
+    "title": "Заголовок",
+    "note": "Заметка",
+    "dead": "Не найдена",
+    "createTask": "Создать задачу",
+    "remove": "Убрать",
+    "actions": "Действия со страницей",
+    "removeError": "Не удалось убрать страницу.",
+    "copied": "Страницы скопированы в Markdown",
+    "deadCount": "Не найдено страниц: {{count}}",
+    "allAnswer": "Все страницы отвечают",
+    "checkError": "Не удалось проверить страницы.",
+    "copyMarkdown": "Скопировать страницы в Markdown",
+    "check": "Проверить страницы"
   }
 }

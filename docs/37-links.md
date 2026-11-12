@@ -39,6 +39,14 @@ API (under `/api` and `/api/v1`):
 - Sync `link`: a device adds a page with a new uid, `url` and `project_uid` (else `project_required`; a bad address `invalid_url`); the address of an existing page does not change by sync (`url_readonly`). The server normalizes the address and reads the page.
 - MCP: `add_project_page` (`project_uid`, `url`, `title?`, `note?`), `list_project_pages` (`project_uid`), and `create_task` takes `url` (named by the capture rule when no name is given, the address first in the note, `source: link`, waiting for « Quand ? » without a project).
 
+## Task to project
+
+**Transformer en projet** on any one-off task (web: task row ⋯ and task page ⋯; Android: task sheet ⋯ and row menu; MCP `convert_task_to_project`; the triage action `to_project` uses the same operation): the task's name becomes the project's name, its note the description, its subtasks the project's tasks, the addresses of its note the project's pages, its tags and domain follow; the task is removed. Refused for a recurring task, a subtask, a task that follows a `TODO.md` file (400) and someone else's task (403). `POST /api/task/:uid/to-project` → `201 { project: { uid, name } }` (`backend/modules/tasks/operations/toProject.js`). Android sends it as a deferred call (`task-to-project:<uid>`) and hides the task until the sync brings the project.
+
+## Projects not touched for 30 days
+
+`GET /api/projects/dormant` → `{ projects: [{ uid, name, status, last_activity_at }] }`: open projects (not done, cancelled or archived; no templates) with no change to the project, its tasks or its pages for 30 days, oldest first (`review/service.computeDormantProjects`). Web: folded « Not touched for 30 days (N) » at the bottom of Projects; Android: the same at the bottom of the projects list (last answer kept offline). **Garder** marks the project reviewed (`POST /api/project/:uid/reviewed`, the review's « Keep as it is ») so it leaves the list for 30 days. Nothing is archived or closed.
+
 ## How a link is made
 
 - **Nothing is captured automatically.** Saving an inbox item, a task or a note never creates a link, on any path (web, Android sync, MCP, Telegram, imports). An inbox item that is only an address, or holds one, stays `added` in the Inbox until the user decides.

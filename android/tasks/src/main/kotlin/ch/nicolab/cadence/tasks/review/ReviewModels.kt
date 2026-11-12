@@ -89,6 +89,9 @@ data class ReviewProject(
     val lastActivityAt: Instant?,
 )
 
+/** Projet ouvert sans activité depuis 30 jours (`GET /api/v1/projects/dormant`), rien n'est archivé. */
+data class DormantProject(val uid: String, val name: String, val lastActivityAt: Instant?)
+
 data class ReviewPage<T>(val total: Int, val items: List<T>)
 
 /** `GET /api/review/week` : tâches décidées pour la semaine, tâches en vue, temps prévu et disponible. */

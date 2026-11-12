@@ -2045,7 +2045,10 @@
     "inHours": "dalam {{count}} jam",
     "pastDue": "Lewat tenggat",
     "editDetails": "Edit detail",
-    "noUpcomingOccurrences": "Tidak ada kejadian mendatang."
+    "noUpcomingOccurrences": "Tidak ada kejadian mendatang.",
+    "turnIntoProject": "Jadikan proyek",
+    "turnIntoProjectError": "Tidak dapat dijadikan proyek.",
+    "turnIntoProjectMessage": "Jadikan « {{name}} » sebagai proyek? Subtugasnya akan menjadi tugas proyek, dan alamat di catatannya menjadi halaman proyek."
   },
   "projects": {
     "parentProject": "Proyek induk",
@@ -2177,6 +2180,11 @@
       "failedTitle": "Gagal memuat detail proyek.",
       "failedHint": "Periksa koneksi Anda dan muat ulang halaman.",
       "backToProjects": "Kembali ke Proyek"
+    },
+    "dormant": {
+      "title": "Tidak disentuh selama 30 hari ({{count}})",
+      "daysAgo": "{{count}} hari yang lalu",
+      "keep": "Simpan"
     }
   },
   "projectItem": {
@@ -6234,5 +6242,21 @@
   "mentions": {
     "loading": "Memuat orang…",
     "noMatch": "Tidak ada orang yang cocok"
+  },
+  "projectPages": {
+    "heading": "Halaman",
+    "title": "Judul",
+    "note": "Catatan",
+    "dead": "Tidak ditemukan",
+    "createTask": "Buat tugas",
+    "remove": "Hapus",
+    "actions": "Tindakan halaman",
+    "removeError": "Halaman tidak dapat dihapus.",
+    "copied": "Halaman disalin sebagai Markdown",
+    "deadCount": "{{count}} halaman tidak ditemukan",
+    "allAnswer": "Semua halaman merespons",
+    "checkError": "Halaman tidak dapat diperiksa.",
+    "copyMarkdown": "Salin halaman sebagai Markdown",
+    "check": "Periksa halaman"
   }
 }

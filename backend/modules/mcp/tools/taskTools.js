@@ -1338,6 +1338,29 @@ function registerTaskTools(server, context, tools) {
         },
     });
 
+    // « Transformer en projet » (docs/37-links.md).
+    tools.push({
+        name: 'convert_task_to_project',
+        description:
+            "Turn a task that grew into a project: its name and note become the project's name and description, its subtasks the project's tasks, the web addresses of its note the project's pages, its tags and domain follow; the task is removed. Not for a recurring task, a subtask or a task that follows a TODO.md file.",
+        inputSchema: {
+            type: 'object',
+            properties: { uid: { type: 'string', description: 'Task uid' } },
+            required: ['uid'],
+        },
+        handler: async (params) => {
+            const {
+                taskToProject,
+            } = require('../../tasks/operations/toProject');
+            const result = await taskToProject(context.userId, params.uid);
+            return {
+                content: [
+                    { type: 'text', text: JSON.stringify(result, null, 2) },
+                ],
+            };
+        },
+    });
+
     // 7. delete_task - Delete task (owner only)
     tools.push({
         name: 'delete_task',

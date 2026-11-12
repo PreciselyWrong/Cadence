@@ -158,6 +158,9 @@ interface TaskRepository {
     suspend fun skipOccurrence(uid: String)
     suspend fun deleteTask(uid: String)
 
+    /** Transforme la tâche en projet côté serveur, par la file d'appels différés : elle reste masquée jusqu'à l'envoi ou le refus. */
+    suspend fun convertToProject(uid: String, name: String)
+
     /**
      * Déplace l'occurrence courante d'une tâche récurrente, sur le serveur (il déplace aussi la règle). Hors
      * ligne, l'appel est gardé et part au prochain passage ([Delivery.QUEUED]).

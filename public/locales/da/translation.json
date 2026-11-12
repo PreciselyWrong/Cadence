@@ -2045,7 +2045,10 @@
     "inHours": "om {{count}} timer",
     "pastDue": "Forfalden",
     "editDetails": "Rediger detaljer",
-    "noUpcomingOccurrences": "Ingen kommende forekomster."
+    "noUpcomingOccurrences": "Ingen kommende forekomster.",
+    "turnIntoProject": "Lav om til et projekt",
+    "turnIntoProjectError": "Kunne ikke laves om til et projekt.",
+    "turnIntoProjectMessage": "Lave « {{name}} » om til et projekt? Dens underopgaver bliver projektets opgaver, og adresserne i dens note bliver dets sider."
   },
   "projects": {
     "parentProject": "Overordnet projekt",
@@ -2177,6 +2180,11 @@
       "failedTitle": "Projektdetaljerne kunne ikke indlæses.",
       "failedHint": "Tjek din forbindelse, og genindlæs siden.",
       "backToProjects": "Tilbage til projekter"
+    },
+    "dormant": {
+      "title": "Ikke rørt i 30 dage ({{count}})",
+      "daysAgo": "for {{count}} dage siden",
+      "keep": "Behold"
     }
   },
   "projectItem": {
@@ -6236,5 +6244,21 @@
   "mentions": {
     "loading": "Indlæser personer…",
     "noMatch": "Ingen matchende personer"
+  },
+  "projectPages": {
+    "heading": "Sider",
+    "title": "Titel",
+    "note": "Note",
+    "dead": "Ikke fundet",
+    "createTask": "Opret en opgave",
+    "remove": "Fjern",
+    "actions": "Handlinger for siden",
+    "removeError": "Siden kunne ikke fjernes.",
+    "copied": "Sider kopieret som Markdown",
+    "deadCount": "{{count}} sider ikke fundet",
+    "allAnswer": "Alle sider svarer",
+    "checkError": "Siderne kunne ikke kontrolleres.",
+    "copyMarkdown": "Kopiér siderne som Markdown",
+    "check": "Kontrollér siderne"
   }
 }

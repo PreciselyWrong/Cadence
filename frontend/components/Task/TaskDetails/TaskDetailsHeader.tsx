@@ -1,3 +1,4 @@
+import TurnIntoProject from '../TurnIntoProject';
 import React, { useRef, useState, useEffect, useLayoutEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -896,6 +897,7 @@ const TaskDetailsHeader: React.FC<TaskDetailsHeaderProps> = ({
                                                     )}
                                                 </button>
                                             )}
+                                            <TurnIntoProject task={task} />
                                             {onDuplicate &&
                                                 !isTodoMdTask(task) && (
                                                     <button

@@ -2045,7 +2045,10 @@
     "inHours": "over {{count}} uur",
     "pastDue": "Verlopen",
     "editDetails": "Details bewerken",
-    "noUpcomingOccurrences": "Geen aankomende herhalingen."
+    "noUpcomingOccurrences": "Geen aankomende herhalingen.",
+    "turnIntoProject": "Omzetten naar project",
+    "turnIntoProjectError": "Kon niet naar een project worden omgezet.",
+    "turnIntoProjectMessage": "« {{name}} » omzetten naar een project? De subtaken worden taken van het project en de adressen in de notitie worden de pagina's ervan."
   },
   "projects": {
     "parentProject": "Hoofdproject",
@@ -2177,6 +2180,11 @@
       "failedTitle": "Projectdetails konden niet worden geladen.",
       "failedHint": "Controleer je verbinding en laad de pagina opnieuw.",
       "backToProjects": "Terug naar projecten"
+    },
+    "dormant": {
+      "title": "Al 30 dagen niet aangeraakt ({{count}})",
+      "daysAgo": "{{count}} dagen geleden",
+      "keep": "Behouden"
     }
   },
   "projectItem": {
@@ -6236,5 +6244,21 @@
   "mentions": {
     "loading": "Personen laden…",
     "noMatch": "Geen overeenkomende personen"
+  },
+  "projectPages": {
+    "heading": "Pagina's",
+    "title": "Titel",
+    "note": "Notitie",
+    "dead": "Niet gevonden",
+    "createTask": "Taak maken",
+    "remove": "Verwijderen",
+    "actions": "Acties voor de pagina",
+    "removeError": "De pagina kon niet worden verwijderd.",
+    "copied": "Pagina's gekopieerd als Markdown",
+    "deadCount": "{{count}} pagina's niet gevonden",
+    "allAnswer": "Alle pagina's reageren",
+    "checkError": "De pagina's konden niet worden gecontroleerd.",
+    "copyMarkdown": "Pagina's kopiëren als Markdown",
+    "check": "Pagina's controleren"
   }
 }
