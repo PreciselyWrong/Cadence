@@ -60,6 +60,10 @@ internal class LayoutStore(context: Context) {
         /** Page d'un projet : liste des tâches ou outliner. */
         const val OUTLINE = "project_outline"
 
+        /** « Masquer les terminées », un réglage par écran (Aujourd'hui, Planifier), faux par défaut. */
+        const val HIDE_DONE_TODAY = "hide_done_today"
+        const val HIDE_DONE_PLAN = "hide_done_plan"
+
         /** Planifier : Horizons au lieu des jours. */
         const val PLAN_HORIZONS = "plan_horizons"
         private const val PREFS = "cadence_layouts"

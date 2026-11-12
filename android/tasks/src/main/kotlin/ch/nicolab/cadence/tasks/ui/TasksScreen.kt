@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.Visibility
+import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import ch.nicolab.cadence.designsystem.components.CollapsingHeaderHost
@@ -119,6 +121,8 @@ fun TasksScreen(
     val context = LocalContext.current
     val layouts = remember(context) { LayoutStore(context) }
     var notesGallery by rememberSaveable { mutableStateOf(layouts.isOn(LayoutStore.NOTES)) }
+    var hideDoneToday by rememberSaveable { mutableStateOf(layouts.isOn(LayoutStore.HIDE_DONE_TODAY)) }
+    var hideDonePlan by rememberSaveable { mutableStateOf(layouts.isOn(LayoutStore.HIDE_DONE_PLAN)) }
     val overdueCount = todayState.overdue.size
     val eventCount = todayEvents.size
     val dateLine = remember(moment.today) { formatHeaderDate(moment.today) }
@@ -155,6 +159,22 @@ fun TasksScreen(
                                 onClick = {
                                     notesGallery = !notesGallery
                                     layouts.set(LayoutStore.NOTES, notesGallery)
+                                },
+                            )
+                        }
+                        if ((tab == TasksTab.TODAY || tab == TasksTab.UPCOMING) && openProjectUid == null) {
+                            val hidden = if (tab == TasksTab.TODAY) hideDoneToday else hideDonePlan
+                            RoundHeaderButton(
+                                icon = if (hidden) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility,
+                                contentDescription = stringResource(if (hidden) R.string.plan_show_done else R.string.plan_hide_done),
+                                onClick = {
+                                    if (tab == TasksTab.TODAY) {
+                                        hideDoneToday = !hideDoneToday
+                                        layouts.set(LayoutStore.HIDE_DONE_TODAY, hideDoneToday)
+                                    } else {
+                                        hideDonePlan = !hideDonePlan
+                                        layouts.set(LayoutStore.HIDE_DONE_PLAN, hideDonePlan)
+                                    }
                                 },
                             )
                         }
@@ -202,11 +222,12 @@ fun TasksScreen(
                             modifier = Modifier.fillMaxSize(),
                             routineStrip = routineStrip,
                             onOpenBrief = onOpenBrief,
+                            hideDone = hideDoneToday,
                         )
                         tab == TasksTab.UPCOMING -> PlanTab(
                             viewModel = viewModel,
                             onOpen = { selectedTaskUid = it.uid },
-                            hideDone = false,
+                            hideDone = hideDonePlan,
                             modifier = Modifier.fillMaxSize(),
                         )
                         tab == TasksTab.PROJECTS -> ProjectsTab(

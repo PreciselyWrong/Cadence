@@ -64,6 +64,8 @@ internal fun TodayTab(
     modifier: Modifier = Modifier,
     routineStrip: @Composable () -> Unit = {},
     onOpenBrief: () -> Unit = {},
+    /** « Masquer les terminées » : la section Terminées disparaît (réglage d'Aujourd'hui, gardé sur l'appareil). */
+    hideDone: Boolean = false,
 ) {
     val planning: PlanningViewModel = viewModel()
     val briefViewModel: BriefViewModel = viewModel()
@@ -274,7 +276,7 @@ internal fun TodayTab(
                 taskRows(tasks, projectNames, projectColors, moment, viewModel, onOpen, projectIcons = projectIcons)
             }
         }
-        if (state.completed.isNotEmpty()) {
+        if (!hideDone && state.completed.isNotEmpty()) {
             item(key = "completed-header") {
                 val toggleLabel = stringResource(if (completedExpanded) R.string.tasks_completed_hide else R.string.tasks_completed_show)
                 Row(
