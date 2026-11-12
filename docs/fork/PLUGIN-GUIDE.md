@@ -120,7 +120,7 @@ La page s'exécute dans l'origine de Cadence, connectée comme l'utilisateur. El
 </script>
 ```
 
-Écris-la pour un petit écran (elle s'ouvre aussi dans une WebView Android), sans dépendance externe. Préfère des routes **GET** pour la page ; les écritures (POST) depuis une page demandent le jeton CSRF sur le web et n'ont pas été vérifiées sur Android.
+Écris-la pour un petit écran (elle s'ouvre aussi dans une WebView Android), sans dépendance externe. Charge `<script src="/api/plugins/sdk.js"></script>` : `cadence.json(chemin, options)` appelle l'API de Cadence en ton nom (jeton CSRF sur le web, jeton d'API sur Android, ajoutés pour toi) et `cadence.open('task'|'note'|'project'|'url', ref)` ouvre un élément ou une adresse http(s). Les écritures depuis une page Android ne sont pas encore vérifiées sur un appareil.
 
 ## 5. Bonnes pratiques
 

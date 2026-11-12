@@ -824,4 +824,93 @@ describe('Plugins', () => {
             expect(registry.briefWriter()).toBeNull();
         });
     });
+
+    describe('page sdk', () => {
+        it('serves the client script to signed-in users only', async () => {
+            const res = await otherAgent.get('/api/plugins/sdk.js');
+            expect(res.status).toBe(200);
+            expect(res.headers['content-type']).toMatch(/javascript/);
+            expect(res.text).toContain('window.cadence');
+            expect((await request(app).get('/api/plugins/sdk.js')).status).toBe(
+                401
+            );
+        });
+
+        it('is valid JavaScript and exposes fetch, json and open', () => {
+            // eslint-disable-next-line no-new-func
+            const run = new Function(
+                'window',
+                'fetch',
+                require('../../modules/plugins/sdk')
+            );
+            const fakeWindow = {
+                location: { origin: 'https://cadence.test' },
+                parent: { postMessage: jest.fn() },
+            };
+            run(fakeWindow, jest.fn());
+            expect(Object.keys(fakeWindow.cadence).sort()).toEqual([
+                'android',
+                'fetch',
+                'json',
+                'open',
+            ]);
+            expect(fakeWindow.cadence.open('task', 'abc')).toBe(true);
+            expect(fakeWindow.parent.postMessage).toHaveBeenCalledWith(
+                { cadence: 'open', target: 'task', ref: 'abc' },
+                'https://cadence.test'
+            );
+            expect(fakeWindow.cadence.open('url', 'javascript:alert(1)')).toBe(
+                false
+            );
+            expect(fakeWindow.cadence.open('secret', 'x')).toBe(false);
+        });
+
+        it('sends the CSRF token on writes and the bearer token through the Android bridge', async () => {
+            const calls = [];
+            const fetchMock = jest.fn(async (u, init) => {
+                calls.push([u, init]);
+                return {
+                    ok: true,
+                    text: async () => JSON.stringify({ csrfToken: 'tok' }),
+                    json: async () => ({ csrfToken: 'tok' }),
+                    status: 200,
+                };
+            });
+            // eslint-disable-next-line no-new-func
+            const run = new Function(
+                'window',
+                'fetch',
+                require('../../modules/plugins/sdk')
+            );
+            const web = {
+                location: { origin: 'x' },
+                parent: { postMessage() {} },
+            };
+            run(web, fetchMock);
+            await web.cadence.fetch('tasks', {
+                method: 'POST',
+                body: { a: 1 },
+            });
+            const write = calls.find(([u]) => u === '/api/tasks')[1];
+            expect(write.headers['x-csrf-token']).toBe('tok');
+            expect(write.body).toBe('{"a":1}');
+
+            calls.length = 0;
+            const droid = {
+                location: { origin: 'x' },
+                parent: {},
+                CadenceBridge: { token: () => 'tt_abc', open: jest.fn() },
+            };
+            run(droid, fetchMock);
+            await droid.cadence.fetch('/api/tasks', {
+                method: 'POST',
+                body: {},
+            });
+            expect(calls).toHaveLength(1);
+            expect(calls[0][0]).toBe('/api/tasks');
+            expect(calls[0][1].headers.Authorization).toBe('Bearer tt_abc');
+            droid.cadence.open('note', 'n1');
+            expect(droid.CadenceBridge.open).toHaveBeenCalledWith('note', 'n1');
+        });
+    });
 });

@@ -12,10 +12,20 @@ const handle = (fn) => async (req, res, next) => {
     }
 };
 
+const sdkSource = require('./sdk');
+
+const sdk = (req, res) => {
+    res.set('Content-Type', 'application/javascript; charset=utf-8');
+    res.set('X-Content-Type-Options', 'nosniff');
+    res.set('Cache-Control', 'no-cache');
+    res.send(sdkSource);
+};
+
 const menu = (req, res) => res.json({ items: registry.menuItems() });
 
 module.exports = {
     menu,
+    sdk,
     install: handle((userId, req) => service.install(userId, req.body?.url)),
     remove: handle((userId, req) => service.remove(userId, req.params.id)),
     pull: handle((userId, req) => service.pull(userId, req.params.id)),

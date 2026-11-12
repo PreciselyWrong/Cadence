@@ -18,6 +18,7 @@ router.post('/plugins/:id/check-update', controller.checkUpdate);
 
 // For any signed-in user: sidebar entries, and what a running plugin serves.
 router.get('/plugins/menu', controller.menu);
+router.get('/plugins/sdk.js', controller.sdk);
 router.use('/plugins/:id/ui', registry.uiHandler);
 router.use('/plugins/:id/x', registry.routeHandler);
 
