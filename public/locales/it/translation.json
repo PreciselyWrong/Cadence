@@ -6191,5 +6191,11 @@
     "rejectedTitle": "Il server ha rifiutato queste modifiche:",
     "retry": "Riprova",
     "dismiss": "OK"
+  },
+  "contentLinks": {
+    "backlinks": "Backlink",
+    "untitled": "Senza titolo",
+    "createNote": "Crea la nota \"{{title}}\"",
+    "createTask": "Crea l'attività \"{{title}}\""
   }
 }

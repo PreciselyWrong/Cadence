@@ -6176,5 +6176,11 @@
     "rejectedTitle": "Servern avvisade de här ändringarna:",
     "retry": "Försök igen",
     "dismiss": "OK"
+  },
+  "contentLinks": {
+    "backlinks": "Bakåtlänkar",
+    "untitled": "Namnlös",
+    "createNote": "Skapa anteckningen \"{{title}}\"",
+    "createTask": "Skapa uppgiften \"{{title}}\""
   }
 }

@@ -6176,5 +6176,11 @@
     "rejectedTitle": "Сървърът отхвърли тези промени:",
     "retry": "Опитай отново",
     "dismiss": "OK"
+  },
+  "contentLinks": {
+    "backlinks": "Обратни връзки",
+    "untitled": "Без заглавие",
+    "createNote": "Създай бележка „{{title}}“",
+    "createTask": "Създай задача „{{title}}“"
   }
 }

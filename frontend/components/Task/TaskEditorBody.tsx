@@ -16,6 +16,7 @@ import TaskSubtasksCard from './TaskDetails/TaskSubtasksCard';
 import TaskAttachmentsCard from './TaskDetails/TaskAttachmentsCard';
 import TaskComments from './TaskComments';
 import TaskContexts from './TaskContexts';
+import Backlinks from '../Shared/Backlinks';
 import AddToLinks from '../Links/AddToLinks';
 import TaskChipRow from './TaskChipRow';
 import { SaveState } from './useTaskAutosave';
@@ -262,7 +263,11 @@ export const TaskEditorBody: React.FC<TaskEditorBodyProps> = ({
                         aria-label={t('forms.description', 'Description')}
                         data-testid="task-note-preview"
                         onClick={(e) => {
-                            if ((e.target as HTMLElement).closest('a, input'))
+                            if (
+                                (e.target as HTMLElement).closest(
+                                    'a, input, button'
+                                )
+                            )
                                 return;
                             setIsEditingNote(true);
                         }}
@@ -355,6 +360,8 @@ export const TaskEditorBody: React.FC<TaskEditorBodyProps> = ({
                     )}
 
                     <TaskContexts taskUid={task.uid} />
+
+                    <Backlinks type="task" uid={task.uid} className="-mx-2" />
 
                     <SidePanelSection
                         title={

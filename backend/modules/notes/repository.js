@@ -232,21 +232,6 @@ class NotesRepository extends BaseRepository {
             user_id: userId,
         });
     }
-
-    /**
-     * Find notes that contain [[noteTitle]] in their content (backlinks).
-     */
-    async findBacklinks(userId, noteTitle) {
-        const { ciLike } = require('../../utils/db-dialect');
-        return this.model.findAll({
-            where: {
-                user_id: userId,
-                content: ciLike(`%[[${noteTitle}]]%`),
-            },
-            attributes: ['uid', 'title'],
-            order: [['title', 'ASC']],
-        });
-    }
 }
 
 module.exports = new NotesRepository();

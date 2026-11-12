@@ -6236,5 +6236,11 @@
     "rejectedTitle": "Strežnik je zavrnil te spremembe:",
     "retry": "Poskusi znova",
     "dismiss": "V redu"
+  },
+  "contentLinks": {
+    "backlinks": "Povratne povezave",
+    "untitled": "Brez naslova",
+    "createNote": "Ustvari zapisek »{{title}}«",
+    "createTask": "Ustvari opravilo »{{title}}«"
   }
 }

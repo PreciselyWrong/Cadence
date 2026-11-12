@@ -21,6 +21,7 @@ import { COLORS } from '../Shared/ColorPicker';
 import NoteBackgroundPicker from './NoteBackgroundPicker';
 import AddToLinks from '../Links/AddToLinks';
 import MarkdownEditor from './MarkdownEditor';
+import Backlinks from '../Shared/Backlinks';
 import { FORM } from '../../constants/formClasses';
 
 export const shouldUseLightText = (hexColor: string | undefined): boolean => {
@@ -482,6 +483,13 @@ const NoteEditorView: React.FC<NoteEditorViewProps> = ({
                     minHeight="300px"
                 />
             </div>
+            {note.uid && (
+                <Backlinks
+                    type="note"
+                    uid={note.uid}
+                    className="mx-2 mb-3 flex-shrink-0 md:mx-4"
+                />
+            )}
             {note.uid && (
                 <div className="mx-4 mb-3 flex-shrink-0">
                     <AddToLinks

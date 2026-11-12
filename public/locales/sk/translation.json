@@ -6212,5 +6212,11 @@
     "rejectedTitle": "Server odmietol tieto zmeny:",
     "retry": "Skúsiť znova",
     "dismiss": "OK"
+  },
+  "contentLinks": {
+    "backlinks": "Spätné odkazy",
+    "untitled": "Bez názvu",
+    "createNote": "Vytvoriť poznámku „{{title}}“",
+    "createTask": "Vytvoriť úlohu „{{title}}“"
   }
 }

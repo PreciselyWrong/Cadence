@@ -6176,5 +6176,11 @@
     "rejectedTitle": "Palvelin hylkäsi nämä muutokset:",
     "retry": "Yritä uudelleen",
     "dismiss": "OK"
+  },
+  "contentLinks": {
+    "backlinks": "Takaisinlinkit",
+    "untitled": "Nimetön",
+    "createNote": "Luo muistiinpano \"{{title}}\"",
+    "createTask": "Luo tehtävä \"{{title}}\""
   }
 }

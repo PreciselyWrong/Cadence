@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-12 — Notes et descriptions : Markdown complet, liens et rétroliens (web)
+
+- **Problème** : `[[Titre]]` vers une note introuvable n'affichait qu'une puce morte ; aucune façon de lier une tâche ou une personne ; les liens web s'ouvraient dans l'onglet de l'app ; les rétroliens existaient dans l'API (notes seules) sans être affichés.
+- **Décision** : un seul rendu Markdown (GFM complet) pour notes et descriptions ; `[[Titre]]` (note), `[[task:Nom]]` (tâche), `@[Nom](person:uid)` (personne) en puces ; cible inconnue = puce estompée « + » qui crée l'élément ; lien web = nouvel onglet ; lien vers une page de l'app = reste dans l'app. Section « Rétroliens » en bas de la note, du panneau de tâche et de la fiche personne, cachée s'il n'y en a pas (titre, extrait ; clic = ouvrir). Doc : `docs/43-notes-links.md`.
+- **À reprendre sur Android** : même syntaxe et mêmes puces dans le rendu des notes et descriptions, même création d'une cible inconnue, section Rétroliens depuis `GET /api/note|task|people/:uid/backlinks`.
+
 ### 2026-11-12 — Web hors ligne : pastille d'état (web, client Linux)
 
 - **Problème** : sans serveur, le web montrait des pages vides ou des erreurs, et une modification faite hors ligne ne s'affichait pas ; dans le client Linux, rien ne disait que le serveur était injoignable.

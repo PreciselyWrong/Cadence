@@ -6174,5 +6174,11 @@
     "rejectedTitle": "서버가 다음 변경 사항을 거부했습니다:",
     "retry": "다시 시도",
     "dismiss": "확인"
+  },
+  "contentLinks": {
+    "backlinks": "백링크",
+    "untitled": "제목 없음",
+    "createNote": "노트 \"{{title}}\" 만들기",
+    "createTask": "작업 \"{{title}}\" 만들기"
   }
 }

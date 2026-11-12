@@ -98,23 +98,6 @@ export const deleteNote = async (
     refreshTagCountsIfTagsChanged();
 };
 
-export interface BacklinkNote {
-    uid: string;
-    title: string;
-}
-
-export const fetchNoteBacklinks = async (
-    noteUid: string
-): Promise<BacklinkNote[]> => {
-    const response = await fetch(getApiPath(`note/${noteUid}/backlinks`), {
-        credentials: 'include',
-        headers: getDefaultHeaders(),
-        cache: 'no-store',
-    });
-    await handleAuthResponse(response, 'Failed to fetch backlinks.');
-    return await response.json();
-};
-
 const requestNoteBySlug = (uidSlug: string): Promise<Response> =>
     fetch(getApiPath(`note/${uidSlug}`), {
         credentials: 'include',

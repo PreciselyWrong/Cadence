@@ -6174,5 +6174,11 @@
     "rejectedTitle": "Máy chủ đã từ chối các thay đổi này:",
     "retry": "Thử lại",
     "dismiss": "OK"
+  },
+  "contentLinks": {
+    "backlinks": "Liên kết ngược",
+    "untitled": "Không có tiêu đề",
+    "createNote": "Tạo ghi chú \"{{title}}\"",
+    "createTask": "Tạo công việc \"{{title}}\""
   }
 }

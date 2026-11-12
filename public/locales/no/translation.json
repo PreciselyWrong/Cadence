@@ -6181,5 +6181,11 @@
     "rejectedTitle": "Serveren avviste disse endringene:",
     "retry": "Prøv igjen",
     "dismiss": "OK"
+  },
+  "contentLinks": {
+    "backlinks": "Tilbakekoblinger",
+    "untitled": "Uten tittel",
+    "createNote": "Opprett notatet «{{title}}»",
+    "createTask": "Opprett oppgaven «{{title}}»"
   }
 }

@@ -6176,5 +6176,11 @@
     "rejectedTitle": "Serveren afviste disse ændringer:",
     "retry": "Prøv igen",
     "dismiss": "OK"
+  },
+  "contentLinks": {
+    "backlinks": "Tilbagelinks",
+    "untitled": "Uden titel",
+    "createNote": "Opret noten \"{{title}}\"",
+    "createTask": "Opret opgaven \"{{title}}\""
   }
 }

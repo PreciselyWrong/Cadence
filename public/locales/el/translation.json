@@ -6177,5 +6177,11 @@
     "rejectedTitle": "Ο διακομιστής απέρριψε αυτές τις αλλαγές:",
     "retry": "Δοκιμή ξανά",
     "dismiss": "OK"
+  },
+  "contentLinks": {
+    "backlinks": "Αντίστροφοι σύνδεσμοι",
+    "untitled": "Χωρίς τίτλο",
+    "createNote": "Δημιουργία σημείωσης «{{title}}»",
+    "createTask": "Δημιουργία εργασίας «{{title}}»"
   }
 }

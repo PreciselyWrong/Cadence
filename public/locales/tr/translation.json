@@ -6174,5 +6174,11 @@
     "rejectedTitle": "Sunucu bu değişiklikleri reddetti:",
     "retry": "Tekrar dene",
     "dismiss": "Tamam"
+  },
+  "contentLinks": {
+    "backlinks": "Geri bağlantılar",
+    "untitled": "Başlıksız",
+    "createNote": "\"{{title}}\" notunu oluştur",
+    "createTask": "\"{{title}}\" görevini oluştur"
   }
 }

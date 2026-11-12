@@ -6196,5 +6196,11 @@
     "rejectedTitle": "Serverul a refuzat aceste modificări:",
     "retry": "Reîncearcă",
     "dismiss": "OK"
+  },
+  "contentLinks": {
+    "backlinks": "Legături inverse",
+    "untitled": "Fără titlu",
+    "createNote": "Creează nota „{{title}}”",
+    "createTask": "Creează sarcina „{{title}}”"
   }
 }

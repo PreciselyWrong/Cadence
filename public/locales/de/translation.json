@@ -6185,5 +6185,11 @@
     "rejectedTitle": "Der Server hat diese Änderungen abgelehnt:",
     "retry": "Erneut versuchen",
     "dismiss": "OK"
+  },
+  "contentLinks": {
+    "backlinks": "Rückverweise",
+    "untitled": "Ohne Titel",
+    "createNote": "Notiz \"{{title}}\" erstellen",
+    "createTask": "Aufgabe \"{{title}}\" erstellen"
   }
 }

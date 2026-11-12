@@ -6176,5 +6176,11 @@
     "rejectedTitle": "De server heeft deze wijzigingen geweigerd:",
     "retry": "Opnieuw proberen",
     "dismiss": "OK"
+  },
+  "contentLinks": {
+    "backlinks": "Terugverwijzingen",
+    "untitled": "Naamloos",
+    "createNote": "Notitie \"{{title}}\" aanmaken",
+    "createTask": "Taak \"{{title}}\" aanmaken"
   }
 }

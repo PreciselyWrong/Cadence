@@ -6191,5 +6191,11 @@
     "rejectedTitle": "O servidor recusou estas alterações:",
     "retry": "Tentar novamente",
     "dismiss": "OK"
+  },
+  "contentLinks": {
+    "backlinks": "Backlinks",
+    "untitled": "Sem título",
+    "createNote": "Criar a nota \"{{title}}\"",
+    "createTask": "Criar a tarefa \"{{title}}\""
   }
 }

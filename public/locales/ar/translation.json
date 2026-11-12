@@ -6248,5 +6248,11 @@
     "rejectedTitle": "رفض الخادم هذه التغييرات:",
     "retry": "إعادة المحاولة",
     "dismiss": "حسنًا"
+  },
+  "contentLinks": {
+    "backlinks": "الروابط الواردة",
+    "untitled": "بلا عنوان",
+    "createNote": "إنشاء الملاحظة \"{{title}}\"",
+    "createTask": "إنشاء المهمة \"{{title}}\""
   }
 }

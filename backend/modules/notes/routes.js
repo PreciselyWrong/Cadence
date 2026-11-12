@@ -42,15 +42,6 @@ router.delete(
     notesController.delete
 );
 
-// Get backlinks — notes that reference this note via [[title]]
-router.get(
-    '/note/:uid/backlinks',
-    hasAccess('ro', 'note', (req) => notesController.getNoteUidForAuth(req), {
-        notFoundMessage: 'Note not found.',
-    }),
-    notesController.backlinks
-);
-
 // Public sharing: only the owner can read or change it (checked in the
 // service). Making a link is not part of a Cloud trial; turning one off is
 // always allowed.

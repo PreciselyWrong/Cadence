@@ -6236,5 +6236,11 @@
     "rejectedTitle": "Serwer odrzucił te zmiany:",
     "retry": "Spróbuj ponownie",
     "dismiss": "OK"
+  },
+  "contentLinks": {
+    "backlinks": "Linki zwrotne",
+    "untitled": "Bez tytułu",
+    "createNote": "Utwórz notatkę „{{title}}”",
+    "createTask": "Utwórz zadanie „{{title}}”"
   }
 }

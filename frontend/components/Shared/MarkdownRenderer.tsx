@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState, useMemo } from 'react';
 import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { LockClosedIcon } from '@heroicons/react/24/outline';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
@@ -16,18 +15,21 @@ import {
     remarkContactLinks,
 } from '../../utils/contactLinks';
 import { useStore } from '../../store/useStore';
-
-const WIKILINK_PREFIX = '/__wikilink__/';
+import {
+    classifyHref,
+    preprocessContentLinks,
+    taskLinkNames,
+} from '../../utils/markdownLinks';
+import { resolveTaskLinks } from '../../utils/contentLinksService';
+import {
+    LinkBadge,
+    MentionChip,
+    MissingLinkButton,
+    NoteBadge,
+} from './ContentLinkChips';
 
 // Image syntax that points at a video file renders a player instead.
 const VIDEO_SRC = /\.(mp4|webm)(?:[?#]|$)/i;
-
-function preprocessWikilinks(content: string): string {
-    return content.replace(/\[\[([^\][\n]+?)\]\]/g, (_match, title: string) => {
-        const t = title.trim();
-        return `[${t}](${WIKILINK_PREFIX}${encodeURIComponent(t)})`;
-    });
-}
 
 function slugify(text: string): string {
     return text
@@ -70,24 +72,6 @@ const CodeBlock: React.FC<React.HTMLAttributes<HTMLPreElement>> = ({
         </div>
     );
 };
-
-// The badge sits on the text's baseline: the outer flex row takes its
-// baseline from the title (the label stretches and the lock centers, so
-// neither takes part), which lines it up with the words around it.
-const NoteBadge: React.FC<{ title: string; locked?: boolean }> = ({
-    title,
-    locked = false,
-}) => (
-    <span className="inline-flex items-baseline align-baseline rounded overflow-hidden mx-0.5 leading-snug">
-        <span className="self-stretch flex items-center px-1.5 text-[0.72em] font-bold uppercase tracking-wide text-gray-600 dark:text-gray-300 bg-gray-200/80 dark:bg-gray-700/80">
-            NOTE:
-        </span>
-        <span className="inline-flex items-baseline gap-1 px-1.5 py-px text-[0.9em] text-gray-800 dark:text-gray-200 bg-gray-100 dark:bg-gray-800">
-            {locked && <LockClosedIcon className="h-3 w-3 self-center" />}
-            {title}
-        </span>
-    </span>
-);
 
 // On a public page, a link to a note the owner has not made public: the
 // reader can click it to learn why it does not open. The message is portaled
@@ -196,9 +180,30 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     }, [storeNotes]);
 
     const processedContent = useMemo(
-        () => preprocessWikilinks(content),
+        () => preprocessContentLinks(content),
         [content]
     );
+
+    // [[task:Name]] links open the task of that name, looked up on the
+    // server (the task list is never loaded whole).
+    const taskNames = useMemo(
+        () => (summaryMode || publicNoteLinks ? [] : taskLinkNames(content)),
+        [content, summaryMode, publicNoteLinks]
+    );
+    const taskNamesKey = taskNames.join('\n');
+    const [taskUids, setTaskUids] = useState<Record<string, string> | null>(
+        null
+    );
+    useEffect(() => {
+        if (!taskNamesKey) return;
+        let live = true;
+        resolveTaskLinks(taskNamesKey.split('\n'))
+            .then((found) => live && setTaskUids(found))
+            .catch(() => live && setTaskUids({}));
+        return () => {
+            live = false;
+        };
+    }, [taskNamesKey]);
 
     // Determine text color based on background
     const getTextColor = () => {
@@ -421,24 +426,67 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
                         />
                     ),
 
-                    // Customize link styles — wikilinks get a note-chip style
+                    // Cadence links read as chips; in-app paths stay in the
+                    // app; other web links open in a new tab.
                     a: ({ href, children, ...props }) => {
-                        if (href?.startsWith(WIKILINK_PREFIX)) {
-                            const title = decodeURIComponent(
-                                href.slice(WIKILINK_PREFIX.length)
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars, react/prop-types
+                        const { node, ...anchorProps } = props as any;
+                        const target = classifyHref(href);
+                        if (target.kind === 'mention') {
+                            return (
+                                <MentionChip
+                                    uid={target.uid}
+                                    name={children}
+                                    asLink={!summaryMode && !publicNoteLinks}
+                                />
                             );
+                        }
+                        if (target.kind === 'task-title') {
+                            const { title } = target;
+                            if (summaryMode || publicNoteLinks) {
+                                return <LinkBadge label="TASK" title={title} />;
+                            }
+                            const uid = taskUids?.[title.trim().toLowerCase()];
+                            if (uid) {
+                                return (
+                                    <Link
+                                        to={`/task/${uid}`}
+                                        className="!no-underline hover:!no-underline"
+                                    >
+                                        <LinkBadge label="TASK" title={title} />
+                                    </Link>
+                                );
+                            }
+                            return taskUids ? (
+                                <MissingLinkButton
+                                    type="task"
+                                    title={title}
+                                    onCreated={(created) =>
+                                        setTaskUids((current) => ({
+                                            ...current,
+                                            [title.trim().toLowerCase()]:
+                                                created,
+                                        }))
+                                    }
+                                />
+                            ) : (
+                                <LinkBadge label="TASK" title={title} />
+                            );
+                        }
+                        if (target.kind === 'note-title') {
+                            const { title } = target;
                             // A summary sits inside a card that is itself a
                             // link: no link may nest in it.
                             if (summaryMode) return <NoteBadge title={title} />;
                             if (publicNoteLinks) {
-                                const target = publicNoteLinks.find(
+                                const publicTarget = publicNoteLinks.find(
                                     (n) =>
                                         n.title.toLowerCase() ===
                                         title.toLowerCase()
                                 );
-                                return target ? (
+                                return publicTarget ? (
                                     <Link
-                                        to={publicNoteHref(target)}
+                                        to={publicNoteHref(publicTarget)}
                                         className="!no-underline hover:!no-underline"
                                     >
                                         <NoteBadge title={title} />
@@ -450,24 +498,24 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
                             const slug = noteTitleToSlug.get(
                                 title.trim().toLowerCase()
                             );
-                            const to = slug ? `/note/${slug}` : null;
-                            const badge = <NoteBadge title={title} />;
-                            return to ? (
-                                <Link
-                                    to={to}
-                                    className="!no-underline hover:!no-underline"
-                                >
-                                    {badge}
-                                </Link>
+                            if (slug) {
+                                return (
+                                    <Link
+                                        to={`/note/${slug}`}
+                                        className="!no-underline hover:!no-underline"
+                                    >
+                                        <NoteBadge title={title} />
+                                    </Link>
+                                );
+                            }
+                            return notesLoaded ? (
+                                <MissingLinkButton type="note" title={title} />
                             ) : (
-                                <span
-                                    className="cursor-default"
-                                    title="Note not found"
-                                >
-                                    {badge}
-                                </span>
+                                <NoteBadge title={title} />
                             );
                         }
+                        const linkClass =
+                            'underline underline-offset-2 decoration-gray-400 dark:decoration-gray-500 hover:decoration-current';
                         if (summaryMode) {
                             return (
                                 <span className="underline underline-offset-2 decoration-gray-400 dark:decoration-gray-500">
@@ -475,11 +523,28 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
                                 </span>
                             );
                         }
+                        if (target.kind === 'internal') {
+                            return (
+                                <Link
+                                    className={linkClass}
+                                    to={target.path}
+                                    {...anchorProps}
+                                >
+                                    {children}
+                                </Link>
+                            );
+                        }
                         return (
                             <a
-                                className="underline underline-offset-2 decoration-gray-400 dark:decoration-gray-500 hover:decoration-current"
+                                className={linkClass}
                                 href={href}
-                                {...props}
+                                {...anchorProps}
+                                {...(target.kind === 'external'
+                                    ? {
+                                          target: '_blank',
+                                          rel: 'noopener noreferrer',
+                                      }
+                                    : {})}
                             >
                                 {children}
                             </a>

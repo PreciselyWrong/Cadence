@@ -6174,5 +6174,11 @@
     "rejectedTitle": "Server menolak perubahan berikut:",
     "retry": "Coba lagi",
     "dismiss": "OK"
+  },
+  "contentLinks": {
+    "backlinks": "Tautan balik",
+    "untitled": "Tanpa judul",
+    "createNote": "Buat catatan \"{{title}}\"",
+    "createTask": "Buat tugas \"{{title}}\""
   }
 }

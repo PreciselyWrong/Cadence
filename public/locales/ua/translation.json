@@ -6236,5 +6236,11 @@
     "rejectedTitle": "Сервер відхилив ці зміни:",
     "retry": "Повторити",
     "dismiss": "OK"
+  },
+  "contentLinks": {
+    "backlinks": "Зворотні посилання",
+    "untitled": "Без назви",
+    "createNote": "Створити нотатку «{{title}}»",
+    "createTask": "Створити завдання «{{title}}»"
   }
 }

@@ -6174,5 +6174,11 @@
     "rejectedTitle": "服务器拒绝了以下更改：",
     "retry": "重试",
     "dismiss": "好"
+  },
+  "contentLinks": {
+    "backlinks": "反向链接",
+    "untitled": "无标题",
+    "createNote": "创建笔记“{{title}}”",
+    "createTask": "创建任务“{{title}}”"
   }
 }

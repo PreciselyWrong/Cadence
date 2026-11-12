@@ -6174,5 +6174,11 @@
     "rejectedTitle": "サーバーが次の変更を拒否しました:",
     "retry": "再試行",
     "dismiss": "OK"
+  },
+  "contentLinks": {
+    "backlinks": "バックリンク",
+    "untitled": "無題",
+    "createNote": "ノート「{{title}}」を作成",
+    "createTask": "タスク「{{title}}」を作成"
   }
 }

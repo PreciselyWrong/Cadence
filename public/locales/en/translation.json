@@ -6146,5 +6146,11 @@
     "rejectedTitle": "The server refused these changes:",
     "retry": "Retry",
     "dismiss": "OK"
+  },
+  "contentLinks": {
+    "backlinks": "Backlinks",
+    "untitled": "Untitled",
+    "createNote": "Create note \"{{title}}\"",
+    "createTask": "Create task \"{{title}}\""
   }
 }

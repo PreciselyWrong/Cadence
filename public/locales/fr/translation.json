@@ -6192,5 +6192,11 @@
     "rejectedTitle": "Le serveur a refusé ces modifications :",
     "retry": "Réessayer",
     "dismiss": "OK"
+  },
+  "contentLinks": {
+    "backlinks": "Rétroliens",
+    "untitled": "Sans titre",
+    "createNote": "Créer la note « {{title}} »",
+    "createTask": "Créer la tâche « {{title}} »"
   }
 }

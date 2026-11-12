@@ -6236,5 +6236,11 @@
     "rejectedTitle": "Сервер отклонил эти изменения:",
     "retry": "Повторить",
     "dismiss": "OK"
+  },
+  "contentLinks": {
+    "backlinks": "Обратные ссылки",
+    "untitled": "Без названия",
+    "createNote": "Создать заметку «{{title}}»",
+    "createTask": "Создать задачу «{{title}}»"
   }
 }

@@ -20,6 +20,7 @@ import {
 import { useToast } from '../Shared/ToastContext';
 import PersonModal from './PersonModal';
 import PersonHero from './PersonHero';
+import Backlinks from '../Shared/Backlinks';
 import SignInLinkModal from './SignInLinkModal';
 import MemberEditModal from './MemberEditModal';
 import MemberRemoveDialog from './MemberRemoveDialog';
@@ -356,6 +357,10 @@ const PersonDetails: React.FC = () => {
                     />
                 )}
             </div>
+
+            {person.uid && (
+                <Backlinks type="person" uid={person.uid} className="mt-6" />
+            )}
 
             {modalOpen && (
                 <PersonModal
