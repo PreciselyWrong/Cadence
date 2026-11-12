@@ -42,8 +42,6 @@ import {
     Bars3BottomLeftIcon,
     CalendarDaysIcon,
     ChevronDoubleRightIcon,
-    ChevronLeftIcon,
-    ChevronRightIcon,
 } from '@heroicons/react/24/outline';
 import TodayPage from '../DailyPlan/TodayPage';
 import PaneSplitter, {
@@ -131,7 +129,10 @@ const NewToday: React.FC = () => {
     const navigate = useNavigate();
     const [params, setParams] = useSearchParams();
     const today = todayString();
-    const date = params.get('date') || today;
+    const tomorrowOfToday = format(addDays(parseISO(today), 1), 'yyyy-MM-dd');
+    // `?date=tomorrow` (the sidebar's Tomorrow) means the day after today.
+    const asked = params.get('date');
+    const date = asked === 'tomorrow' ? tomorrowOfToday : asked || today;
     const {
         day,
         events,
@@ -984,7 +985,6 @@ const NewToday: React.FC = () => {
                 sub.uid &&
                 toggleTaskCompletion(sub.uid, sub).then(reload).catch(reload)
             }
-            showDayNav={!showCalendar || narrow}
             extraActions={
                 <>
                     <Button
@@ -1114,25 +1114,9 @@ const NewToday: React.FC = () => {
         }
     };
 
+    // The day arrows live in the list header only: one control per page.
     const calendarHeader = (
         <div className="flex items-center gap-1">
-            <IconButton
-                label={t('today.previousDay', 'Previous day')}
-                onClick={() => shift(-1)}
-            >
-                <ChevronLeftIcon />
-            </IconButton>
-            <IconButton
-                label={t('today.nextDay', 'Next day')}
-                onClick={() => shift(1)}
-            >
-                <ChevronRightIcon />
-            </IconButton>
-            {!isToday && (
-                <Button size="sm" variant="ghost" onClick={() => goTo(today)}>
-                    {t('today.goToToday', 'Today')}
-                </Button>
-            )}
             <span className="ml-auto flex items-center gap-2">
                 {!narrow && (
                     <span

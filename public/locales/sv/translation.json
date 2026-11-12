@@ -4939,7 +4939,9 @@
     "tags": "Taggar",
     "note": "Anteckning",
     "subtasks": "Deluppgifter",
-    "loadError": "Den här uppgiften kunde inte laddas."
+    "loadError": "Den här uppgiften kunde inte laddas.",
+    "expand": "Förstora",
+    "shrink": "Förminska"
   },
   "review": {
     "quick": {

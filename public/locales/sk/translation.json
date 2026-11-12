@@ -5329,7 +5329,9 @@
     "tags": "Štítky",
     "note": "Poznámka",
     "subtasks": "Podúlohy",
-    "loadError": "Túto úlohu sa nepodarilo načítať."
+    "loadError": "Túto úlohu sa nepodarilo načítať.",
+    "expand": "Zväčšiť",
+    "shrink": "Zmenšiť"
   },
   "review": {
     "quick": {

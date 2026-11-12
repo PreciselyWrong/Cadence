@@ -4981,7 +4981,9 @@
     "tags": "Tagi",
     "note": "Notatka",
     "subtasks": "Podzadania",
-    "loadError": "Nie udało się wczytać tego zadania."
+    "loadError": "Nie udało się wczytać tego zadania.",
+    "expand": "Powiększ",
+    "shrink": "Zmniejsz"
   },
   "review": {
     "quick": {

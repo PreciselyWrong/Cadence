@@ -280,8 +280,29 @@ describe('Minimal sidebar customization', () => {
         expect(smartListOrder()).toEqual([
             'sidebar-smart-next7',
             'sidebar-smart-today',
-            'sidebar-smart-tomorrow',
             'sidebar-smart-inbox',
+            'sidebar-smart-tomorrow',
+        ]);
+    });
+
+    it('moves Inbox first for a list saved in the old default order', () => {
+        setUp('minimal', {
+            smartLists: [
+                { key: 'today', visible: true, showCount: true },
+                { key: 'tomorrow', visible: true, showCount: false },
+                { key: 'next7', visible: false, showCount: false },
+                { key: 'inbox', visible: true, showCount: true },
+            ],
+        });
+
+        render(
+            <SidebarSmartLists handleNavClick={jest.fn()} location={location} />
+        );
+
+        expect(smartListOrder()).toEqual([
+            'sidebar-smart-inbox',
+            'sidebar-smart-today',
+            'sidebar-smart-tomorrow',
         ]);
     });
 

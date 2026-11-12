@@ -4939,7 +4939,9 @@
     "tags": "Tags",
     "note": "Note",
     "subtasks": "Underopgaver",
-    "loadError": "Opgaven kunne ikke indlæses."
+    "loadError": "Opgaven kunne ikke indlæses.",
+    "expand": "Udvid",
+    "shrink": "Formindsk"
   },
   "review": {
     "quick": {

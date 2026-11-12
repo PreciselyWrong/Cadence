@@ -4949,7 +4949,9 @@
     "tags": "Étiquettes",
     "note": "Note",
     "subtasks": "Sous-tâches",
-    "loadError": "Impossible de charger cette tâche."
+    "loadError": "Impossible de charger cette tâche.",
+    "expand": "Agrandir",
+    "shrink": "Réduire"
   },
   "review": {
     "quick": {

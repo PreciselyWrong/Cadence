@@ -4939,7 +4939,9 @@
     "tags": "タグ",
     "note": "メモ",
     "subtasks": "サブタスク",
-    "loadError": "このタスクを読み込めませんでした。"
+    "loadError": "このタスクを読み込めませんでした。",
+    "expand": "拡大",
+    "shrink": "縮小"
   },
   "review": {
     "quick": {

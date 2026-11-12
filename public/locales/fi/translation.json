@@ -4939,7 +4939,9 @@
     "tags": "Tunnisteet",
     "note": "Muistiinpano",
     "subtasks": "Alitehtävät",
-    "loadError": "Tehtävää ei voitu ladata."
+    "loadError": "Tehtävää ei voitu ladata.",
+    "expand": "Suurenna",
+    "shrink": "Pienennä"
   },
   "review": {
     "quick": {

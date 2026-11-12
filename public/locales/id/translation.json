@@ -4939,7 +4939,9 @@
     "tags": "Tag",
     "note": "Catatan",
     "subtasks": "Subtugas",
-    "loadError": "Tugas ini tidak dapat dimuat."
+    "loadError": "Tugas ini tidak dapat dimuat.",
+    "expand": "Perbesar",
+    "shrink": "Perkecil"
   },
   "review": {
     "quick": {

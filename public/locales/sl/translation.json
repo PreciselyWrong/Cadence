@@ -4981,7 +4981,9 @@
     "tags": "Oznake",
     "note": "Opomba",
     "subtasks": "Podnaloge",
-    "loadError": "Te naloge ni bilo mogoče naložiti."
+    "loadError": "Te naloge ni bilo mogoče naložiti.",
+    "expand": "Povečaj",
+    "shrink": "Pomanjšaj"
   },
   "review": {
     "quick": {

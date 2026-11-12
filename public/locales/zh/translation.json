@@ -4939,7 +4939,9 @@
     "tags": "标签",
     "note": "备注",
     "subtasks": "子任务",
-    "loadError": "无法加载此任务。"
+    "loadError": "无法加载此任务。",
+    "expand": "放大",
+    "shrink": "缩小"
   },
   "review": {
     "quick": {

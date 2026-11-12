@@ -4939,7 +4939,9 @@
     "tags": "Etiketler",
     "note": "Not",
     "subtasks": "Alt görevler",
-    "loadError": "Bu görev yüklenemedi."
+    "loadError": "Bu görev yüklenemedi.",
+    "expand": "Büyüt",
+    "shrink": "Küçült"
   },
   "review": {
     "quick": {

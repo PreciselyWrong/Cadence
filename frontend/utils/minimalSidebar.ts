@@ -2,7 +2,11 @@
 // Dense layout keys. The backend keeps only known keys; this file fills in
 // defaults for anything missing so new items appear for existing users.
 
-export const SMART_LIST_IDS = ['today', 'tomorrow', 'next7', 'inbox'] as const;
+// Inbox first: what came in sits above the day (2026-11-12).
+export const SMART_LIST_IDS = ['inbox', 'today', 'tomorrow', 'next7'] as const;
+// The order every account had before; a saved list in that exact order was
+// never rearranged by its owner, so it takes the new default.
+const PREVIOUS_SMART_ORDER = ['today', 'tomorrow', 'next7', 'inbox'];
 export type SmartListId = (typeof SMART_LIST_IDS)[number];
 
 export const RAIL_IDS = [
@@ -124,12 +128,26 @@ function resolveList<K extends string, T extends { key: K }>(
     return result;
 }
 
+const keptOldOrder = (saved: unknown): boolean =>
+    Array.isArray(saved) &&
+    saved.map((entry) => (isRecord(entry) ? entry.key : null)).join() ===
+        PREVIOUS_SMART_ORDER.join();
+
+const reorderLike = (saved: unknown[], order: readonly string[]): unknown[] =>
+    order
+        .map((key) =>
+            saved.find((entry) => isRecord(entry) && entry.key === key)
+        )
+        .filter(Boolean);
+
 export function resolveMinimalSidebar(saved: unknown): MinimalSidebarSettings {
     const source = isRecord(saved) ? saved : {};
     const badges = isRecord(source.sectionBadges) ? source.sectionBadges : {};
     return {
         smartLists: resolveList(
-            source.smartLists,
+            keptOldOrder(source.smartLists)
+                ? reorderLike(source.smartLists as unknown[], SMART_LIST_IDS)
+                : source.smartLists,
             DEFAULT_MINIMAL_SIDEBAR.smartLists,
             (entry, fallback) => ({
                 key: fallback.key,

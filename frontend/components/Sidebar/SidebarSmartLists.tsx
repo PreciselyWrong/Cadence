@@ -64,6 +64,9 @@ const SidebarSmartLists: React.FC<SidebarSmartListsProps> = ({
         };
     }, [location.pathname, location.search, needsCounts]);
 
+    // Today resolves the keyword in the user's timezone.
+    const tomorrowDate = 'tomorrow';
+
     const allRows = [
         {
             id: 'today',
@@ -71,17 +74,20 @@ const SidebarSmartLists: React.FC<SidebarSmartListsProps> = ({
             title: t('sidebar.today', 'Today'),
             icon: <SunIcon className="h-[16px] w-[16px]" />,
             count: counts?.today,
-            isActive: location.pathname.startsWith('/today'),
+            isActive:
+                location.pathname.startsWith('/today') &&
+                !location.search.includes(`date=${tomorrowDate}`),
         },
         {
+            // Tomorrow is the Today page one day on (same list and calendar).
             id: 'tomorrow',
-            path: '/tasks?type=tomorrow',
+            path: `/today?date=${tomorrowDate}`,
             title: t('sidebar.tomorrow', 'Tomorrow'),
             icon: <CalendarDaysIcon className="h-[16px] w-[16px]" />,
             count: counts?.tomorrow,
             isActive:
-                location.pathname === '/tasks' &&
-                location.search.includes('type=tomorrow'),
+                location.pathname.startsWith('/today') &&
+                location.search.includes(`date=${tomorrowDate}`),
         },
         {
             id: 'next7',

@@ -4939,7 +4939,9 @@
     "tags": "Thẻ",
     "note": "Ghi chú",
     "subtasks": "Công việc con",
-    "loadError": "Không thể tải công việc này."
+    "loadError": "Không thể tải công việc này.",
+    "expand": "Mở rộng",
+    "shrink": "Thu nhỏ"
   },
   "review": {
     "quick": {

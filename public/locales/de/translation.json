@@ -4948,7 +4948,9 @@
     "tags": "Schlagworte",
     "note": "Notiz",
     "subtasks": "Unteraufgaben",
-    "loadError": "Diese Aufgabe konnte nicht geladen werden."
+    "loadError": "Diese Aufgabe konnte nicht geladen werden.",
+    "expand": "Vergrößern",
+    "shrink": "Verkleinern"
   },
   "review": {
     "quick": {

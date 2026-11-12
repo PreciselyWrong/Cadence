@@ -3,6 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
     ArrowTopRightOnSquareIcon,
+    ArrowsPointingInIcon,
+    ArrowsPointingOutIcon,
     XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { Task } from '../../entities/Task';
@@ -21,26 +23,18 @@ import { TaskEditorBody, TaskEditorFooter } from './TaskEditorBody';
 interface TaskPaneBodyProps {
     task: Task;
     onSaved: (task: Task) => void;
-    // Under a wide page the fields keep a readable line length.
-    narrowColumn?: boolean;
 }
 
 // The inline editor in the pane: a chip per field, description in place,
 // subtasks, attachments and comments, saved field by field. Keyed by task
 // uid by its parent, so local draft state resets when another task opens.
-const TaskPaneBody: React.FC<TaskPaneBodyProps> = ({
-    task,
-    onSaved,
-    narrowColumn = false,
-}) => {
+const TaskPaneBody: React.FC<TaskPaneBodyProps> = ({ task, onSaved }) => {
     const ed = useTaskEditor(task, onSaved);
 
     return (
         <>
             <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
-                <div
-                    className={`space-y-5 ${narrowColumn ? 'mx-auto max-w-3xl' : ''}`}
-                >
+                <div className="space-y-5">
                     <TaskEditorBody ed={ed} />
                     {ed.error && (
                         <p
@@ -83,6 +77,8 @@ const TaskPane: React.FC<TaskPaneProps> = ({ placement = 'side' }) => {
     const { openTaskUid, closeTask } = useTaskPane();
     const [task, setTask] = useState<Task | null>(null);
     const [loadFailed, setLoadFailed] = useState(false);
+    // The floating sheet (placement bottom) can fill the page instead.
+    const [expanded, setExpanded] = useState(false);
 
     useEffect(() => {
         if (!openTaskUid) return;
@@ -128,30 +124,54 @@ const TaskPane: React.FC<TaskPaneProps> = ({ placement = 'side' }) => {
         return null;
 
     const fullPagePath = `/task/${encodeURIComponent(openTaskUid)}`;
+    const floating = placement === 'bottom';
+    const iconButton =
+        'rounded-md p-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100';
 
     return (
         <aside
             aria-label={t('taskPane.label', 'Task details')}
             className={`flex min-h-0 flex-col bg-white dark:bg-gray-900 max-md:fixed max-md:inset-0 max-md:z-40 md:flex-shrink-0 ${
-                placement === 'bottom'
-                    ? 'border-t border-gray-200 dark:border-gray-800 md:h-[44%] md:min-h-[280px]'
+                floating
+                    ? // A sheet over the page: the page shows on the sides and below.
+                      `md:absolute md:inset-x-3 md:bottom-3 md:z-40 md:overflow-hidden md:rounded-2xl md:shadow-2xl md:ring-1 md:ring-black/10 dark:md:ring-white/10 ${
+                          expanded ? 'md:top-3' : 'md:h-[46%] md:min-h-[300px]'
+                      }`
                     : 'border-l border-gray-200 dark:border-gray-800 md:w-[420px]'
             }`}
         >
             <div className="flex flex-shrink-0 items-center justify-between gap-2 border-b border-gray-200 px-4 py-2 dark:border-gray-800">
-                <Link
-                    to={fullPagePath}
-                    className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
-                >
-                    <ArrowTopRightOnSquareIcon className="h-4 w-4" />
-                    {t('taskPane.openFullPage', 'Open full page')}
-                </Link>
+                {floating ? (
+                    <button
+                        type="button"
+                        onClick={() => setExpanded((value) => !value)}
+                        aria-pressed={expanded}
+                        className="inline-flex items-center gap-1.5 rounded-md px-1.5 py-1 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+                    >
+                        {expanded ? (
+                            <ArrowsPointingInIcon className="h-4 w-4" />
+                        ) : (
+                            <ArrowsPointingOutIcon className="h-4 w-4" />
+                        )}
+                        {expanded
+                            ? t('taskPane.shrink', 'Shrink')
+                            : t('taskPane.expand', 'Expand')}
+                    </button>
+                ) : (
+                    <Link
+                        to={fullPagePath}
+                        className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
+                    >
+                        <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+                        {t('taskPane.openFullPage', 'Open full page')}
+                    </Link>
+                )}
                 <button
                     type="button"
                     onClick={closeTask}
                     aria-label={t('taskPane.close', 'Close')}
                     title={t('taskPane.close', 'Close')}
-                    className="rounded-md p-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+                    className={iconButton}
                 >
                     <XMarkIcon className="h-5 w-5" />
                 </button>
@@ -161,7 +181,6 @@ const TaskPane: React.FC<TaskPaneProps> = ({ placement = 'side' }) => {
                     key={task.uid}
                     task={task}
                     onSaved={handleSaved}
-                    narrowColumn={placement === 'bottom'}
                 />
             ) : loadFailed ? (
                 <p

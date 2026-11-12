@@ -4939,7 +4939,9 @@
     "tags": "Tags",
     "note": "Notitie",
     "subtasks": "Subtaken",
-    "loadError": "Deze taak kon niet worden geladen."
+    "loadError": "Deze taak kon niet worden geladen.",
+    "expand": "Vergroten",
+    "shrink": "Verkleinen"
   },
   "review": {
     "quick": {

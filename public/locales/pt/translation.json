@@ -4946,7 +4946,9 @@
     "tags": "Etiquetas",
     "note": "Nota",
     "subtasks": "Subtarefas",
-    "loadError": "Não foi possível carregar esta tarefa."
+    "loadError": "Não foi possível carregar esta tarefa.",
+    "expand": "Ampliar",
+    "shrink": "Reduzir"
   },
   "review": {
     "quick": {

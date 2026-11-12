@@ -176,7 +176,7 @@ describe('SidebarSmartLists', () => {
         fireEvent.click(screen.getByText('Tomorrow'));
 
         expect(handleNavClick).toHaveBeenCalledWith(
-            '/tasks?type=tomorrow',
+            '/today?date=tomorrow',
             'Tomorrow',
             expect.anything()
         );

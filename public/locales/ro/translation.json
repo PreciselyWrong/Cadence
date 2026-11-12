@@ -4950,7 +4950,9 @@
     "tags": "Etichete",
     "note": "Notiță",
     "subtasks": "Subsarcini",
-    "loadError": "Nu s-a putut încărca această sarcină."
+    "loadError": "Nu s-a putut încărca această sarcină.",
+    "expand": "Mărește",
+    "shrink": "Micșorează"
   },
   "review": {
     "quick": {

@@ -4933,7 +4933,9 @@
     "tags": "Etiquetas",
     "note": "Nota",
     "subtasks": "Subtareas",
-    "loadError": "No se pudo cargar esta tarea."
+    "loadError": "No se pudo cargar esta tarea.",
+    "expand": "Ampliar",
+    "shrink": "Reducir"
   },
   "review": {
     "quick": {

@@ -4946,7 +4946,9 @@
     "tags": "Tag",
     "note": "Nota",
     "subtasks": "Sottoattività",
-    "loadError": "Impossibile caricare questa attività."
+    "loadError": "Impossibile caricare questa attività.",
+    "expand": "Ingrandisci",
+    "shrink": "Riduci"
   },
   "review": {
     "quick": {
