@@ -6047,10 +6047,6 @@
       "maxMoves": "Prikazani premiki",
       "maxTonight": "Prikazane prednostne naloge",
       "closedLookback": "Pregledane zaključene naloge (dni)",
-      "optEvening": "Večerni povzetek",
-      "optTelegram": "Pošlji na Telegram",
-      "optSonos": "Predvajaj na Sonosu",
-      "optWeekly": "Tedenski povzetek",
       "title": "Dnevni povzetek",
       "description": "Povzetek vsako jutro: prihajajoči dnevi, kar ostaja za nocoj in kaj se lahko premakne.",
       "status": "Stanje virov",
@@ -6081,7 +6077,6 @@
       "llmEnabled": "Povzetek in razlogi UI",
       "llmProvider": "Ponudnik UI: Profil › Pomočnik UI",
       "tone": "Ton",
-      "signature": "Podpis",
       "instructions": "Navodila",
       "retention": "Hramba",
       "decisionsDays": "Hranjene odločitve (dni)",
@@ -6091,7 +6086,6 @@
       "piperUrl": "Naslov Piper",
       "voiceName": "Glas",
       "speed": "Hitrost",
-      "options": "Možnosti",
       "save": "Shrani",
       "saved": "Nastavitve shranjene",
       "saveError": "Nastavitev ni mogoče shraniti.",
@@ -6230,27 +6224,13 @@
     },
     "timeout": "Časovna omejitev (sekunde)",
     "profiles": {
-      "mail": "Profil pošte",
-      "drafting": "Profil osnutkov"
-    },
-    "triage": {
-      "title": "Pravila razvrščanja",
-      "empty": "Ni pravila.",
-      "from": "Pošiljatelj",
-      "label": "Oznaka",
-      "instruction": "Navodilo",
-      "mode": "Način",
-      "propose": "Predlagaj",
-      "off": "Izklopljeno",
-      "add": "Dodaj pravilo",
-      "remove": "Odstrani pravilo"
+      "mail": "Profil pošte"
     },
     "test": {
       "button": "Preizkusi povezavo",
       "health": "Agent dosegljiv",
       "auth": "Overitev",
-      "mail": "Profil pošte",
-      "drafting": "Profil osnutkov"
+      "mail": "Profil pošte"
     },
     "check": {
       "ok": "V redu",

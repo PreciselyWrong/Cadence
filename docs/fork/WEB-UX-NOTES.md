@@ -795,3 +795,9 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
   - groupes renommés Interface, Organisation, Accès.
 - **Android à reprendre** : rien (pas de panneau latéral ni de fond de page sur Android).
 
+### 2026-11-12 — Réglages sans effet retirés
+
+- **Problème** : Résumé › Options (bilan du soir, Telegram, Sonos, hebdo), la signature de Rédaction, le profil rédaction et les règles de tri de l'agent s'enregistraient mais rien ne les lisait.
+- **Décision** : retirés du web, d'Android (1.19.0) et du schéma du serveur ; le serveur ignore ces clés si un ancien client les envoie encore.
+- **Android à reprendre** : fait dans la même étape.
+

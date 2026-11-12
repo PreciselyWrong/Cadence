@@ -322,7 +322,6 @@ const SCHEMA = field.object({
     }),
     writing: field.object({
         tone: field.text('neutral', 40),
-        signature: field.text('', 200),
         instructions: field.text('', 2000),
     }),
     llm: field.object({
@@ -349,12 +348,6 @@ const SCHEMA = field.object({
         }),
         replyWindowDays: field.number(14, 1, 60, true),
     }),
-    options: field.object({
-        eveningWrapUp: field.bool(false),
-        telegram: field.bool(false),
-        sonos: field.bool(false),
-        weekly: field.bool(false),
-    }),
 });
 
 const DEFAULTS = Object.freeze(defaultOf(SCHEMA));
@@ -380,12 +373,25 @@ function briefSettingsFromUiSettings(value) {
 }
 
 // Throws ValidationError for a patch the UI should not have sent.
+// Retired 2026-11-12, nothing read them (Options: evening wrap-up, Telegram,
+// Sonos, weekly; the writing signature). The Android app before 1.19 can
+// still send them, so an update drops them instead of failing.
+function dropRetiredSettings(patch) {
+    const { options: _options, ...rest } = patch;
+    if (isPlainObject(rest.writing) && 'signature' in rest.writing) {
+        const { signature: _signature, ...writing } = rest.writing;
+        rest.writing = writing;
+    }
+    return rest;
+}
+
 function validateBriefSettingsUpdate(patch) {
     if (!isPlainObject(patch)) {
         throw new ValidationError('Send the brief settings as an object');
     }
-    validateValue(SCHEMA, patch, '');
-    return patch;
+    const kept = dropRetiredSettings(patch);
+    validateValue(SCHEMA, kept, '');
+    return kept;
 }
 
 // Deep merge for objects; arrays and scalars are replaced. A null entry

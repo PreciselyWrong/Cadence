@@ -168,6 +168,7 @@ describe('Hermes agent connector', () => {
         };
     });
 
+    // Sends drafting like the Android app before 1.19: ignored, not refused.
     const configure = (baseUrl = hermes.url) =>
         agent.put('/api/agents/settings').send({
             baseUrl,
@@ -200,10 +201,7 @@ describe('Hermes agent connector', () => {
 
             expect(response.status).toBe(200);
             expect(response.body.api_key_last4).toBe('ABCD');
-            expect(response.body.profiles).toEqual({
-                mail: 'mail',
-                drafting: '',
-            });
+            expect(response.body.profiles).toEqual({ mail: 'mail' });
             expect(JSON.stringify(response.body)).not.toContain(API_KEY);
         });
 
@@ -254,7 +252,7 @@ describe('Hermes agent connector', () => {
             expect(response.body).toEqual({
                 health: 'ok',
                 auth: 'ok',
-                profiles: { mail: 'ok', drafting: 'missing' },
+                profiles: { mail: 'ok' },
             });
         });
 
@@ -412,7 +410,7 @@ describe('Hermes agent connector', () => {
             const settings = {
                 baseUrl: hermes.url,
                 timeoutSeconds: 10,
-                profiles: { mail: 'mail', drafting: '' },
+                profiles: { mail: 'mail' },
             };
 
             await expect(

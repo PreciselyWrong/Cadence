@@ -5976,10 +5976,6 @@
       "maxMoves": "Các lần dời đã hiển thị",
       "maxTonight": "Ưu tiên hiển thị",
       "closedLookback": "Việc đã xong được kiểm tra (ngày)",
-      "optEvening": "Tổng kết buổi tối",
-      "optTelegram": "Gửi qua Telegram",
-      "optSonos": "Phát trên Sonos",
-      "optWeekly": "Tổng kết tuần",
       "title": "Bản tóm tắt hằng ngày",
       "description": "Bản tóm tắt mỗi sáng: những ngày sắp tới, việc còn lại cho tối nay và việc có thể dời.",
       "status": "Trạng thái nguồn",
@@ -6010,7 +6006,6 @@
       "llmEnabled": "Tóm tắt và lý do do AI viết",
       "llmProvider": "Nhà cung cấp AI: Hồ sơ › Trợ lý AI",
       "tone": "Giọng điệu",
-      "signature": "Chữ ký",
       "instructions": "Hướng dẫn",
       "retention": "Lưu giữ",
       "decisionsDays": "Quyết định được giữ (ngày)",
@@ -6020,7 +6015,6 @@
       "piperUrl": "Địa chỉ Piper",
       "voiceName": "Giọng",
       "speed": "Tốc độ",
-      "options": "Tùy chọn",
       "save": "Lưu",
       "saved": "Đã lưu cài đặt",
       "saveError": "Không thể lưu cài đặt.",
@@ -6159,27 +6153,13 @@
     },
     "timeout": "Thời gian chờ (giây)",
     "profiles": {
-      "mail": "Hồ sơ thư",
-      "drafting": "Hồ sơ bản nháp"
-    },
-    "triage": {
-      "title": "Quy tắc phân loại",
-      "empty": "Chưa có quy tắc.",
-      "from": "Người gửi",
-      "label": "Nhãn",
-      "instruction": "Hướng dẫn",
-      "mode": "Chế độ",
-      "propose": "Đề xuất",
-      "off": "Tắt",
-      "add": "Thêm quy tắc",
-      "remove": "Xóa quy tắc"
+      "mail": "Hồ sơ thư"
     },
     "test": {
       "button": "Kiểm tra kết nối",
       "health": "Tác nhân truy cập được",
       "auth": "Xác thực",
-      "mail": "Hồ sơ thư",
-      "drafting": "Hồ sơ bản nháp"
+      "mail": "Hồ sơ thư"
     },
     "check": {
       "ok": "OK",

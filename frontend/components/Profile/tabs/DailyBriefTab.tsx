@@ -857,23 +857,6 @@ const DailyBriefTab: React.FC<DailyBriefTabProps> = ({ isActive }) => {
                     />
                 </label>
                 <label className="flex flex-col gap-1 text-sm text-gray-800 dark:text-gray-200">
-                    {t('dailyBrief.settings.signature', 'Signature')}
-                    <input
-                        type="text"
-                        maxLength={200}
-                        value={draft.writing.signature}
-                        onChange={(event) =>
-                            update({
-                                writing: {
-                                    ...draft.writing,
-                                    signature: event.target.value,
-                                },
-                            })
-                        }
-                        className={FORM.input}
-                    />
-                </label>
-                <label className="flex flex-col gap-1 text-sm text-gray-800 dark:text-gray-200">
                     {t('dailyBrief.settings.instructions', 'Consignes')}
                     <textarea
                         maxLength={2000}
@@ -997,42 +980,6 @@ const DailyBriefTab: React.FC<DailyBriefTabProps> = ({ isActive }) => {
                         className={`${FORM.input} w-24`}
                     />
                 </label>
-            </Card>
-
-            <Card title={t('dailyBrief.settings.options', 'Options')}>
-                {(
-                    [
-                        [
-                            'eveningWrapUp',
-                            'dailyBrief.settings.optEvening',
-                            'Bilan du soir',
-                        ],
-                        [
-                            'telegram',
-                            'dailyBrief.settings.optTelegram',
-                            'Envoyer sur Telegram',
-                        ],
-                        [
-                            'sonos',
-                            'dailyBrief.settings.optSonos',
-                            'Lire sur Sonos',
-                        ],
-                        [
-                            'weekly',
-                            'dailyBrief.settings.optWeekly',
-                            'Résumé hebdomadaire',
-                        ],
-                    ] as const
-                ).map(([key, label, fallback]) => (
-                    <Check
-                        key={key}
-                        label={t(label, fallback)}
-                        checked={draft.options[key]}
-                        onChange={(on) =>
-                            update({ options: { ...draft.options, [key]: on } })
-                        }
-                    />
-                ))}
             </Card>
 
             {saveError && (

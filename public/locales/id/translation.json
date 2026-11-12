@@ -5976,10 +5976,6 @@
       "maxMoves": "Pemindahan yang ditampilkan",
       "maxTonight": "Prioritas yang ditampilkan",
       "closedLookback": "Tugas selesai yang diperiksa (hari)",
-      "optEvening": "Rangkuman malam",
-      "optTelegram": "Kirim ke Telegram",
-      "optSonos": "Putar di Sonos",
-      "optWeekly": "Ringkasan mingguan",
       "title": "Ringkasan harian",
       "description": "Ringkasan setiap pagi: hari-hari mendatang, yang tersisa untuk malam ini, dan yang bisa dipindahkan.",
       "status": "Status sumber",
@@ -6010,7 +6006,6 @@
       "llmEnabled": "Ringkasan dan alasan oleh AI",
       "llmProvider": "Penyedia AI: Profil › Asisten AI",
       "tone": "Nada",
-      "signature": "Tanda tangan",
       "instructions": "Instruksi",
       "retention": "Retensi",
       "decisionsDays": "Keputusan disimpan (hari)",
@@ -6020,7 +6015,6 @@
       "piperUrl": "Alamat Piper",
       "voiceName": "Suara",
       "speed": "Kecepatan",
-      "options": "Opsi",
       "save": "Simpan",
       "saved": "Pengaturan disimpan",
       "saveError": "Pengaturan tidak dapat disimpan.",
@@ -6159,27 +6153,13 @@
     },
     "timeout": "Batas waktu (detik)",
     "profiles": {
-      "mail": "Profil email",
-      "drafting": "Profil draf"
-    },
-    "triage": {
-      "title": "Aturan pemilahan",
-      "empty": "Belum ada aturan.",
-      "from": "Pengirim",
-      "label": "Label",
-      "instruction": "Instruksi",
-      "mode": "Mode",
-      "propose": "Usulkan",
-      "off": "Nonaktif",
-      "add": "Tambah aturan",
-      "remove": "Hapus aturan"
+      "mail": "Profil email"
     },
     "test": {
       "button": "Uji koneksi",
       "health": "Agen dapat dijangkau",
       "auth": "Autentikasi",
-      "mail": "Profil email",
-      "drafting": "Profil draf"
+      "mail": "Profil email"
     },
     "check": {
       "ok": "OK",

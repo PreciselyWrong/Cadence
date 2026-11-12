@@ -6,21 +6,12 @@ const {
     validateAgentSettings,
 } = require('../../../../modules/agents/settings');
 
-const validRule = (overrides = {}) => ({
-    id: 'rule-newsletters',
-    match: { from: 'news@example.test', label: 'Newsletter', type: 'mail' },
-    instruction: 'Propose archiving after reading.',
-    mode: 'propose',
-    ...overrides,
-});
-
 describe('agent settings defaults', () => {
     it('uses the documented defaults when nothing is stored', () => {
         expect(defaultSettings()).toEqual({
             baseUrl: '',
             timeoutSeconds: 120,
-            profiles: { mail: '', drafting: '' },
-            triageRules: [],
+            profiles: { mail: '' },
         });
         expect(normalizeAgentSettings(undefined)).toEqual(defaultSettings());
         expect(normalizeAgentSettings('not an object')).toEqual(
@@ -41,13 +32,23 @@ describe('normalizeAgentSettings (stored values)', () => {
             baseUrl: 'javascript:alert(1)',
             timeoutSeconds: 45,
             profiles: { mail: 'Mail Profile!' },
-            triageRules: 'nope',
         });
 
         expect(normalized.baseUrl).toBe('');
         expect(normalized.timeoutSeconds).toBe(45);
-        expect(normalized.profiles).toEqual({ mail: '', drafting: '' });
-        expect(normalized.triageRules).toEqual([]);
+        expect(normalized.profiles).toEqual({ mail: '' });
+    });
+
+    it('drops the retired drafting profile and triage rules', () => {
+        const normalized = normalizeAgentSettings({
+            profiles: { mail: 'mail', drafting: 'drafts' },
+            triageRules: [{ id: 'r', mode: 'propose' }],
+        });
+
+        expect(normalized).toEqual({
+            ...defaultSettings(),
+            profiles: { mail: 'mail' },
+        });
     });
 });
 
@@ -58,16 +59,25 @@ describe('validateAgentSettings (writes)', () => {
         const validated = validateAgentSettings({
             ...base(),
             baseUrl: ' https://agents.example.test/hermes/ ',
-            profiles: { mail: 'mail-main', drafting: 'drafts_1' },
-            triageRules: [validRule()],
+            profiles: { mail: 'mail-main' },
         });
 
         expect(validated.baseUrl).toBe('https://agents.example.test/hermes');
-        expect(validated.profiles).toEqual({
-            mail: 'mail-main',
-            drafting: 'drafts_1',
+        expect(validated.profiles).toEqual({ mail: 'mail-main' });
+    });
+
+    // The Android app before 1.19 still sends them; they are ignored, not refused.
+    it('ignores the retired drafting profile and triage rules on write', () => {
+        const validated = validateAgentSettings({
+            ...base(),
+            profiles: { mail: 'mail-main', drafting: 'drafts_1' },
+            triageRules: [],
         });
-        expect(validated.triageRules).toHaveLength(1);
+
+        expect(validated).toEqual({
+            ...base(),
+            profiles: { mail: 'mail-main' },
+        });
     });
 
     it('accepts an empty base URL and a loopback or private host', () => {
@@ -136,45 +146,5 @@ describe('validateAgentSettings (writes)', () => {
         expect(() => validateAgentSettings({ ...base(), extra: true })).toThrow(
             /Unknown setting/
         );
-    });
-
-    it('refuses more than 50 triage rules', () => {
-        const triageRules = Array.from({ length: 51 }, (_, index) =>
-            validRule({ id: `rule-${index}` })
-        );
-        expect(() => validateAgentSettings({ ...base(), triageRules })).toThrow(
-            /at most 50/
-        );
-    });
-
-    it('validates each triage rule shape and caps', () => {
-        expect(() =>
-            validateAgentSettings({
-                ...base(),
-                triageRules: [validRule({ mode: 'send' })],
-            })
-        ).toThrow(/mode/);
-        expect(() =>
-            validateAgentSettings({
-                ...base(),
-                triageRules: [validRule({ id: '' })],
-            })
-        ).toThrow(/id/);
-        expect(() =>
-            validateAgentSettings({
-                ...base(),
-                triageRules: [validRule({ instruction: 'x'.repeat(501) })],
-            })
-        ).toThrow(/instruction/);
-        expect(() =>
-            validateAgentSettings({
-                ...base(),
-                triageRules: [
-                    validRule({
-                        match: { from: 'f'.repeat(201), label: '', type: '' },
-                    }),
-                ],
-            })
-        ).toThrow(/match.from/);
     });
 });

@@ -30,8 +30,7 @@ jest.mock('../../../../utils/dailyBriefService', () => ({
 const SETTINGS = {
     baseUrl: 'http://agent.local',
     timeoutSeconds: 120,
-    profiles: { mail: 'mail', drafting: '' },
-    triageRules: [],
+    profiles: { mail: 'mail' },
     api_key_set: true,
     api_key_last4: '9xq2',
 };
@@ -78,7 +77,7 @@ describe('AgentsTab', () => {
         (testAgentConnection as jest.Mock).mockResolvedValue({
             health: 'ok',
             auth: 'unauthorized',
-            profiles: { mail: 'ok', drafting: 'missing' },
+            profiles: { mail: 'missing' },
         });
         render(<AgentsTab isActive />);
         fireEvent.click(
@@ -87,6 +86,18 @@ describe('AgentsTab', () => {
         const result = await screen.findByTestId('agents-test-result');
         expect(result).toHaveTextContent('Clé refusée');
         expect(result).toHaveTextContent('Profil non défini');
+    });
+
+    it('offers no drafting profile and no triage rules: nothing used them', async () => {
+        render(<AgentsTab isActive />);
+        await screen.findByTestId('agents-key-state');
+        expect(screen.queryByText('Profil rédaction')).toBeNull();
+        expect(screen.queryByText('Règles de tri')).toBeNull();
+        fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
+        await waitFor(() => expect(saveAgentSettings).toHaveBeenCalled());
+        const patch = (saveAgentSettings as jest.Mock).mock.calls[0][0];
+        expect(patch.profiles).toEqual({ mail: 'mail' });
+        expect(patch).not.toHaveProperty('triageRules');
     });
 
     it('shows a validation error from the API inline', async () => {

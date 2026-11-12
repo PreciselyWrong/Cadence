@@ -484,7 +484,7 @@ describe('daily brief generation', () => {
             await agentsService.saveSettings(user, {
                 baseUrl: hermes.url,
                 timeoutSeconds: 10,
-                profiles: { mail: 'mail', drafting: '' },
+                profiles: { mail: 'mail' },
                 api_key: API_KEY,
             });
             await briefService.saveBriefSettings(user, {

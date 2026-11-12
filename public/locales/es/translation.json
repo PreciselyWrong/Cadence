@@ -5994,10 +5994,6 @@
       "maxMoves": "Movimientos mostrados",
       "maxTonight": "Prioridades mostradas",
       "closedLookback": "Tareas cerradas revisadas (días)",
-      "optEvening": "Cierre de la noche",
-      "optTelegram": "Enviar por Telegram",
-      "optSonos": "Reproducir en Sonos",
-      "optWeekly": "Resumen semanal",
       "title": "Resumen diario",
       "description": "Un resumen cada mañana: los próximos días, lo que queda para esta noche y lo que se puede mover.",
       "status": "Estado de las fuentes",
@@ -6028,7 +6024,6 @@
       "llmEnabled": "Resumen y motivos escritos por la IA",
       "llmProvider": "Proveedor de IA: Perfil › Asistente de IA",
       "tone": "Tono",
-      "signature": "Firma",
       "instructions": "Instrucciones",
       "retention": "Conservación",
       "decisionsDays": "Decisiones conservadas (días)",
@@ -6038,7 +6033,6 @@
       "piperUrl": "Dirección de Piper",
       "voiceName": "Voz",
       "speed": "Velocidad",
-      "options": "Opciones",
       "save": "Guardar",
       "saved": "Ajustes guardados",
       "saveError": "No se pudieron guardar los ajustes.",
@@ -6177,27 +6171,13 @@
     },
     "timeout": "Tiempo de espera (segundos)",
     "profiles": {
-      "mail": "Perfil de correo",
-      "drafting": "Perfil de redacción"
-    },
-    "triage": {
-      "title": "Reglas de clasificación",
-      "empty": "No hay ninguna regla.",
-      "from": "Remitente",
-      "label": "Etiqueta",
-      "instruction": "Instrucción",
-      "mode": "Modo",
-      "propose": "Proponer",
-      "off": "Desactivado",
-      "add": "Añadir una regla",
-      "remove": "Quitar la regla"
+      "mail": "Perfil de correo"
     },
     "test": {
       "button": "Probar la conexión",
       "health": "Agente accesible",
       "auth": "Autenticación",
-      "mail": "Perfil de correo",
-      "drafting": "Perfil de redacción"
+      "mail": "Perfil de correo"
     },
     "check": {
       "ok": "Correcto",

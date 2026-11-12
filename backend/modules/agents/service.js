@@ -20,7 +20,7 @@ const { AgentError } = client;
 const { getRequestType } = require('./requests');
 
 const MAX_API_KEY_LENGTH = 500;
-const PROFILE_KEYS = ['mail', 'drafting'];
+const PROFILE_KEYS = ['mail'];
 
 function readUiSettings(row) {
     const value = row.ui_settings;
@@ -189,7 +189,7 @@ async function testConnection(user) {
     }
 
     let auth = 'error';
-    const probeProfile = settings.profiles.mail || settings.profiles.drafting;
+    const probeProfile = settings.profiles.mail;
     if (!settings.baseUrl) {
         auth = 'error';
     } else if (!apiKey) {

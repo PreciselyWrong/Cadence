@@ -5966,10 +5966,6 @@
       "maxMoves": "Moves shown",
       "maxTonight": "Priorities shown",
       "closedLookback": "Closed tasks checked (days)",
-      "optEvening": "Evening wrap-up",
-      "optTelegram": "Send on Telegram",
-      "optSonos": "Play on Sonos",
-      "optWeekly": "Weekly summary",
       "title": "Daily brief",
       "description": "A summary every morning: the coming days, what is left for tonight, what can move.",
       "status": "Source status",
@@ -6000,7 +5996,6 @@
       "llmEnabled": "Summary and reasons written by AI",
       "llmProvider": "AI provider: Profile › AI Assistant",
       "tone": "Tone",
-      "signature": "Signature",
       "instructions": "Instructions",
       "retention": "Retention",
       "decisionsDays": "Decisions kept (days)",
@@ -6010,7 +6005,6 @@
       "piperUrl": "Piper address",
       "voiceName": "Voice",
       "speed": "Speed",
-      "options": "Options",
       "save": "Save",
       "saved": "Settings saved",
       "saveError": "Could not save the settings.",
@@ -6149,27 +6143,13 @@
     },
     "timeout": "Timeout (seconds)",
     "profiles": {
-      "mail": "Mail profile",
-      "drafting": "Drafting profile"
-    },
-    "triage": {
-      "title": "Triage rules",
-      "empty": "No rule.",
-      "from": "Sender",
-      "label": "Label",
-      "instruction": "Instruction",
-      "mode": "Mode",
-      "propose": "Propose",
-      "off": "Off",
-      "add": "Add a rule",
-      "remove": "Remove the rule"
+      "mail": "Mail profile"
     },
     "test": {
       "button": "Test the connection",
       "health": "Agent reachable",
       "auth": "Authentication",
-      "mail": "Mail profile",
-      "drafting": "Drafting profile"
+      "mail": "Mail profile"
     },
     "check": {
       "ok": "OK",

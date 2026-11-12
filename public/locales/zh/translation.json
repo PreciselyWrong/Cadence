@@ -5976,10 +5976,6 @@
       "maxMoves": "显示的移动",
       "maxTonight": "显示的优先事项",
       "closedLookback": "检查的已关闭任务（天）",
-      "optEvening": "晚间收尾",
-      "optTelegram": "发送到 Telegram",
-      "optSonos": "在 Sonos 上播放",
-      "optWeekly": "每周摘要",
       "title": "每日简报",
       "description": "每天早上的摘要：即将到来的日子、今晚剩下的事项，以及可以移动的事项。",
       "status": "来源状态",
@@ -6010,7 +6006,6 @@
       "llmEnabled": "由 AI 撰写摘要和理由",
       "llmProvider": "AI 提供方：个人资料 › AI 助手",
       "tone": "语气",
-      "signature": "签名",
       "instructions": "指令",
       "retention": "保留",
       "decisionsDays": "保留的决定（天）",
@@ -6020,7 +6015,6 @@
       "piperUrl": "Piper 地址",
       "voiceName": "声音",
       "speed": "语速",
-      "options": "选项",
       "save": "保存",
       "saved": "设置已保存",
       "saveError": "无法保存设置。",
@@ -6159,27 +6153,13 @@
     },
     "timeout": "超时（秒）",
     "profiles": {
-      "mail": "邮件配置",
-      "drafting": "草稿配置"
-    },
-    "triage": {
-      "title": "分类规则",
-      "empty": "没有规则。",
-      "from": "发件人",
-      "label": "标签",
-      "instruction": "指令",
-      "mode": "模式",
-      "propose": "建议",
-      "off": "关闭",
-      "add": "添加规则",
-      "remove": "移除规则"
+      "mail": "邮件配置"
     },
     "test": {
       "button": "测试连接",
       "health": "助手可访问",
       "auth": "身份验证",
-      "mail": "邮件配置",
-      "drafting": "草稿配置"
+      "mail": "邮件配置"
     },
     "check": {
       "ok": "正常",

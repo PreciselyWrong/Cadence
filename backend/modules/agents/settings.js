@@ -11,14 +11,15 @@
 const { ValidationError } = require('../../shared/errors');
 const { isLinkLocalIp } = require('../url/ssrfGuard');
 
-const PROFILE_KEYS = ['mail', 'drafting'];
+const PROFILE_KEYS = ['mail'];
+// Retired 2026-11-12, nothing read them; the Android app before 1.19 still
+// sends them, so a write ignores them instead of failing.
+const RETIRED_PROFILE_KEYS = ['drafting'];
+const RETIRED_SETTINGS = ['triageRules'];
 const PROFILE_NAME = /^[a-z0-9][a-z0-9_-]{0,39}$/;
-const RULE_ID = /^[A-Za-z0-9_-]{1,64}$/;
-const RULE_MODES = ['propose', 'off'];
 const MAX_BASE_URL_LENGTH = 300;
 const MIN_TIMEOUT_SECONDS = 10;
 const MAX_TIMEOUT_SECONDS = 600;
-const MAX_TRIAGE_RULES = 50;
 const METADATA_HOSTNAMES = new Set([
     'metadata',
     'metadata.google.internal',
@@ -36,8 +37,7 @@ function defaultSettings() {
     return {
         baseUrl: '',
         timeoutSeconds: DEFAULT_TIMEOUT_SECONDS,
-        profiles: { mail: '', drafting: '' },
-        triageRules: [],
+        profiles: { mail: '' },
     };
 }
 
@@ -113,7 +113,8 @@ function validateProfiles(value) {
     if (!isPlainObject(value)) throw invalid('profiles must be an object');
 
     const unknown = Object.keys(value).filter(
-        (key) => !PROFILE_KEYS.includes(key)
+        (key) =>
+            !PROFILE_KEYS.includes(key) && !RETIRED_PROFILE_KEYS.includes(key)
     );
     if (unknown.length > 0) {
         throw invalid(`Unknown profile key: ${unknown[0]}`);
@@ -134,48 +135,10 @@ function validateProfiles(value) {
     return profiles;
 }
 
-function validateTriageRule(raw, index) {
-    if (!isPlainObject(raw)) {
-        throw invalid(`triageRules[${index}] must be an object`);
-    }
-    if (typeof raw.id !== 'string' || !RULE_ID.test(raw.id)) {
-        throw invalid(`triageRules[${index}].id is required`);
-    }
-    if (!RULE_MODES.includes(raw.mode)) {
-        throw invalid(`triageRules[${index}].mode must be propose or off`);
-    }
-    const match = raw.match === undefined ? {} : raw.match;
-    if (!isPlainObject(match)) {
-        throw invalid(`triageRules[${index}].match must be an object`);
-    }
-    return {
-        id: raw.id,
-        match: {
-            from: cleanString(match.from, 200, 'match.from'),
-            label: cleanString(match.label, 100, 'match.label'),
-            type: cleanString(match.type, 40, 'match.type'),
-        },
-        instruction: cleanString(raw.instruction, 500, 'instruction'),
-        mode: raw.mode,
-    };
-}
-
-function validateTriageRules(value) {
-    if (value === undefined) return [];
-    if (!Array.isArray(value)) throw invalid('triageRules must be an array');
-    if (value.length > MAX_TRIAGE_RULES) {
-        throw invalid(
-            `triageRules must have at most ${MAX_TRIAGE_RULES} items`
-        );
-    }
-    return value.map(validateTriageRule);
-}
-
 const FIELD_VALIDATORS = {
     baseUrl: validateBaseUrl,
     timeoutSeconds: validateTimeoutSeconds,
     profiles: validateProfiles,
-    triageRules: validateTriageRules,
 };
 
 // Stored values: each field is validated alone and falls back to its default.
@@ -197,7 +160,7 @@ function normalizeAgentSettings(raw) {
 function validateAgentSettings(input) {
     if (!isPlainObject(input)) throw invalid('Settings must be an object');
     const unknown = Object.keys(input).filter(
-        (key) => !(key in FIELD_VALIDATORS)
+        (key) => !(key in FIELD_VALIDATORS) && !RETIRED_SETTINGS.includes(key)
     );
     if (unknown.length > 0) {
         throw invalid(`Unknown setting: ${unknown[0]}`);
@@ -212,11 +175,9 @@ function validateAgentSettings(input) {
 module.exports = {
     DEFAULT_TIMEOUT_SECONDS,
     isLinkLocalOrMetadataHost,
-    MAX_TRIAGE_RULES,
     defaultSettings,
     normalizeAgentSettings,
     validateAgentSettings,
     validateBaseUrl,
     validateProfiles,
-    validateTriageRules,
 };

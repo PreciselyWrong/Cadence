@@ -48,7 +48,7 @@ describe('normalizeBriefSettings', () => {
             capacity: { evening: {}, dayNotes: {} },
             retention: { decisionsDays: 90, audioDays: 7 },
             alerts: { disabled: [], noise: { minVotes: 3, ratio: 0.7 } },
-            writing: { tone: 'neutral', signature: '', instructions: '' },
+            writing: { tone: 'neutral', instructions: '' },
             llm: { enabled: false },
             voice: {
                 enabled: false,
@@ -62,12 +62,6 @@ describe('normalizeBriefSettings', () => {
                 accounts: [],
                 excludedAccounts: [],
                 replyWindowDays: 14,
-            },
-            options: {
-                eveningWrapUp: false,
-                telegram: false,
-                sonos: false,
-                weekly: false,
             },
         });
     });
@@ -144,13 +138,11 @@ describe('normalizeBriefSettings', () => {
         const result = normalizeBriefSettings({
             writing: {
                 tone: `  ${'t'.repeat(60)}  `,
-                signature: 'sig',
                 instructions: 'i'.repeat(2500),
             },
         });
 
         expect(result.writing.tone).toHaveLength(40);
-        expect(result.writing.signature).toBe('sig');
         expect(result.writing.instructions).toHaveLength(2000);
     });
 
@@ -262,6 +254,26 @@ describe('normalizeBriefSettings', () => {
 });
 
 describe('validateBriefSettingsUpdate', () => {
+    // The Android app before 1.19 can still send them; they are dropped, not refused.
+    it('drops the retired options and signature from an update', () => {
+        const patch = validateBriefSettingsUpdate({
+            writing: { tone: 'warm', signature: 'N.' },
+            options: { sonos: true },
+        });
+
+        expect(patch).toEqual({ writing: { tone: 'warm' } });
+    });
+
+    it('leaves the retired settings out of the stored ones', () => {
+        const result = normalizeBriefSettings({
+            writing: { signature: 'N.' },
+            options: { weekly: true },
+        });
+
+        expect(result.options).toBeUndefined();
+        expect(result.writing.signature).toBeUndefined();
+    });
+
     it('accepts a valid partial update', () => {
         expect(() =>
             validateBriefSettingsUpdate({

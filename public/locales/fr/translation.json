@@ -6012,10 +6012,6 @@
       "maxMoves": "Déplacements proposés",
       "maxTonight": "Priorités affichées",
       "closedLookback": "Tâches fermées vérifiées (jours)",
-      "optEvening": "Bilan du soir",
-      "optTelegram": "Envoyer sur Telegram",
-      "optSonos": "Lire sur Sonos",
-      "optWeekly": "Résumé hebdomadaire",
       "title": "Résumé du jour",
       "description": "Un résumé chaque matin : la semaine à venir, ce qui attend ce soir, ce qui peut bouger.",
       "status": "État des sources",
@@ -6046,7 +6042,6 @@
       "llmEnabled": "Résumé et motifs écrits par l'IA",
       "llmProvider": "Fournisseur IA : Profil › Assistant IA",
       "tone": "Ton",
-      "signature": "Signature",
       "instructions": "Consignes",
       "retention": "Conservation",
       "decisionsDays": "Décisions gardées (jours)",
@@ -6056,7 +6051,6 @@
       "piperUrl": "Adresse Piper",
       "voiceName": "Voix",
       "speed": "Vitesse",
-      "options": "Options",
       "save": "Enregistrer",
       "saved": "Réglages enregistrés",
       "saveError": "Impossible d'enregistrer les réglages.",
@@ -6195,27 +6189,13 @@
     },
     "timeout": "Délai (secondes)",
     "profiles": {
-      "mail": "Profil courrier",
-      "drafting": "Profil rédaction"
-    },
-    "triage": {
-      "title": "Règles de tri",
-      "empty": "Aucune règle.",
-      "from": "Expéditeur",
-      "label": "Libellé",
-      "instruction": "Consigne",
-      "mode": "Mode",
-      "propose": "Proposer",
-      "off": "Désactivée",
-      "add": "Ajouter une règle",
-      "remove": "Supprimer la règle"
+      "mail": "Profil courrier"
     },
     "test": {
       "button": "Tester la connexion",
       "health": "Agent joignable",
       "auth": "Authentification",
-      "mail": "Profil courrier",
-      "drafting": "Profil rédaction"
+      "mail": "Profil courrier"
     },
     "check": {
       "ok": "OK",

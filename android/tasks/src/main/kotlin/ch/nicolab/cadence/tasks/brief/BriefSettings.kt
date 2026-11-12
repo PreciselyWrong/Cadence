@@ -135,7 +135,7 @@ data class AgentSettingsDto(
 )
 
 @Serializable
-data class AgentProfilesDto(val mail: String = "", val drafting: String = "")
+data class AgentProfilesDto(val mail: String = "")
 
 /** Résultat de `POST /agents/test` : chaque valeur est `ok`, `error`, `unauthorized` ou `missing`. */
 @Serializable
@@ -162,7 +162,6 @@ class BriefAgentsRepository internal constructor(
                 put("timeoutSeconds", timeoutSeconds)
                 put("profiles", buildJsonObject {
                     put("mail", profiles.mail)
-                    put("drafting", profiles.drafting)
                 })
                 apiKey?.let { put("api_key", if (it.isEmpty()) JsonNull else JsonPrimitive(it)) }
             }

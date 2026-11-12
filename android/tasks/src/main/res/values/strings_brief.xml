@@ -129,7 +129,6 @@
     <string name="brief_alert_event_in_work_hours">Événement pendant les heures de travail</string>
     <string name="brief_section_writing">Rédaction</string>
     <string name="brief_writing_tone">Ton</string>
-    <string name="brief_writing_signature">Signature</string>
     <string name="brief_writing_instructions">Consignes</string>
     <string name="brief_section_voice">Voix</string>
     <string name="brief_voice_enabled">Lire le résumé à voix haute</string>
@@ -157,7 +156,6 @@
     <string name="brief_agents_base_url">Adresse</string>
     <string name="brief_agents_timeout">Délai de réponse</string>
     <string name="brief_agents_profile_mail">Profil messagerie</string>
-    <string name="brief_agents_profile_drafting">Profil brouillons</string>
     <string name="brief_agents_key">Nouvelle clé API</string>
     <string name="brief_agents_key_stored">clé enregistrée ••••%1$s</string>
     <string name="brief_agents_key_stored_unknown">clé enregistrée</string>

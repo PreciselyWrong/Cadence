@@ -103,6 +103,14 @@ describe('DailyBriefTab', () => {
         ).toBeInTheDocument();
     });
 
+    it('offers no Options card and no signature: nothing used them', async () => {
+        renderTab();
+        await screen.findByLabelText('Générer chaque matin');
+        expect(screen.queryByText('Lire sur Sonos')).toBeNull();
+        expect(screen.queryByText('Envoyer sur Telegram')).toBeNull();
+        expect(screen.queryByText('Signature')).toBeNull();
+    });
+
     it('saves the generation switch through the service', async () => {
         renderTab();
         fireEvent.click(await screen.findByLabelText('Générer chaque matin'));

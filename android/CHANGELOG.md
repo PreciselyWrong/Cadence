@@ -1,3 +1,7 @@
+## [1.19.0] — 12 novembre 2026
+
+- Réglages › Résumé et Agents : la signature et le profil brouillons disparaissent, rien ne s'en servait.
+
 ## [1.18.0] — 12 novembre 2026
 
 - Notes et descriptions de tâches s'écrivent en plan : Entrée coupe la puce, une barre au-dessus du clavier décale, ressort, monte, descend, replie, zoome sur une puce (fil d'Ariane), coche, et fait d'une puce une tâche liée.

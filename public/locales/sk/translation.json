@@ -470,10 +470,6 @@
       "maxMoves": "Zobrazené presuny",
       "maxTonight": "Zobrazené priority",
       "closedLookback": "Kontrolované uzavreté úlohy (dni)",
-      "optEvening": "Večerné zhrnutie",
-      "optTelegram": "Odoslať cez Telegram",
-      "optSonos": "Prehrať na Sonos",
-      "optWeekly": "Týždenný prehľad",
       "title": "Denný prehľad",
       "description": "Prehľad každé ráno: nadchádzajúce dni, čo zostáva na dnes večer a čo sa dá presunúť.",
       "status": "Stav zdrojov",
@@ -504,7 +500,6 @@
       "llmEnabled": "Zhrnutie a dôvody od AI",
       "llmProvider": "Poskytovateľ AI: Profil › Asistent AI",
       "tone": "Tón",
-      "signature": "Podpis",
       "instructions": "Pokyny",
       "retention": "Uchovávanie",
       "decisionsDays": "Uchovávané rozhodnutia (dni)",
@@ -514,7 +509,6 @@
       "piperUrl": "Adresa Piper",
       "voiceName": "Hlas",
       "speed": "Rýchlosť",
-      "options": "Možnosti",
       "save": "Uložiť",
       "saved": "Nastavenia uložené",
       "saveError": "Nastavenia sa nepodarilo uložiť.",
@@ -653,27 +647,13 @@
     },
     "timeout": "Časový limit (sekundy)",
     "profiles": {
-      "mail": "Profil pošty",
-      "drafting": "Profil konceptov"
-    },
-    "triage": {
-      "title": "Pravidlá triedenia",
-      "empty": "Žiadne pravidlo.",
-      "from": "Odosielateľ",
-      "label": "Štítok",
-      "instruction": "Pokyn",
-      "mode": "Režim",
-      "propose": "Navrhovať",
-      "off": "Vypnuté",
-      "add": "Pridať pravidlo",
-      "remove": "Odstrániť pravidlo"
+      "mail": "Profil pošty"
     },
     "test": {
       "button": "Otestovať pripojenie",
       "health": "Agent je dostupný",
       "auth": "Overenie",
-      "mail": "Profil pošty",
-      "drafting": "Profil konceptov"
+      "mail": "Profil pošty"
     },
     "check": {
       "ok": "OK",

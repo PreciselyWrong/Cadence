@@ -6006,10 +6006,6 @@
       "maxMoves": "Spostamenti mostrati",
       "maxTonight": "Priorità mostrate",
       "closedLookback": "Attività chiuse controllate (giorni)",
-      "optEvening": "Riepilogo serale",
-      "optTelegram": "Invia su Telegram",
-      "optSonos": "Riproduci su Sonos",
-      "optWeekly": "Riepilogo settimanale",
       "title": "Briefing giornaliero",
       "description": "Un riepilogo ogni mattina: i prossimi giorni, cosa resta per stasera e cosa si può spostare.",
       "status": "Stato delle fonti",
@@ -6040,7 +6036,6 @@
       "llmEnabled": "Riepilogo e motivi scritti dall'IA",
       "llmProvider": "Provider IA: Profilo › Assistente IA",
       "tone": "Tono",
-      "signature": "Firma",
       "instructions": "Istruzioni",
       "retention": "Conservazione",
       "decisionsDays": "Decisioni conservate (giorni)",
@@ -6050,7 +6045,6 @@
       "piperUrl": "Indirizzo Piper",
       "voiceName": "Voce",
       "speed": "Velocità",
-      "options": "Opzioni",
       "save": "Salva",
       "saved": "Impostazioni salvate",
       "saveError": "Impossibile salvare le impostazioni.",
@@ -6189,27 +6183,13 @@
     },
     "timeout": "Timeout (secondi)",
     "profiles": {
-      "mail": "Profilo posta",
-      "drafting": "Profilo bozze"
-    },
-    "triage": {
-      "title": "Regole di smistamento",
-      "empty": "Nessuna regola.",
-      "from": "Mittente",
-      "label": "Etichetta",
-      "instruction": "Istruzione",
-      "mode": "Modalità",
-      "propose": "Proponi",
-      "off": "Disattivata",
-      "add": "Aggiungi una regola",
-      "remove": "Rimuovi la regola"
+      "mail": "Profilo posta"
     },
     "test": {
       "button": "Testa la connessione",
       "health": "Agente raggiungibile",
       "auth": "Autenticazione",
-      "mail": "Profilo posta",
-      "drafting": "Profilo bozze"
+      "mail": "Profilo posta"
     },
     "check": {
       "ok": "OK",

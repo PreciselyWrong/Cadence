@@ -347,9 +347,6 @@ private fun WritingPanel(current: JsonObject, save: (JsonObject) -> Unit) {
         TextSetting(stringResource(R.string.brief_writing_tone), BriefSettingsJson.string(writing, "tone"), valid = { true }) {
             save(BriefSettingsJson.withNested(current, "writing", "tone", JsonPrimitive(it)))
         }
-        TextSetting(stringResource(R.string.brief_writing_signature), BriefSettingsJson.string(writing, "signature"), valid = { it.length <= 200 }) {
-            save(BriefSettingsJson.withNested(current, "writing", "signature", JsonPrimitive(it)))
-        }
         TextSetting(stringResource(R.string.brief_writing_instructions), BriefSettingsJson.string(writing, "instructions"), valid = { it.length <= 2000 }) {
             save(BriefSettingsJson.withNested(current, "writing", "instructions", JsonPrimitive(it)))
         }

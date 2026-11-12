@@ -87,14 +87,13 @@ Normalized by `backend/modules/daily-plan/brief/settings.js`; unknown or invalid
 | `capacity.dayNotes`     | `{}`                                                                                                | per weekday: short text shown on the timeline (e.g. partial remote day)                                   |
 | `retention`             | `{ decisionsDays: 90, audioDays: 7 }`                                                               |                                                                                                           |
 | `alerts`                | `{ disabled: [], noise: { minVotes: 3, ratio: 0.7 } }`                                              | alert types switched off by hand; noise rule below                                                        |
-| `writing`               | `{ tone: "neutral", signature: "", instructions: "" }`                                              | used by the optional LLM only                                                                             |
+| `writing`               | `{ tone: "neutral", instructions: "" }`                                                             | used by the optional LLM only                                                                             |
 | `llm`                   | `{ enabled: false }`                                                                                | summary and reasons by the model; provider = Profile › AI Assistant                                       |
 | `triage`                | `{ enabled: false, dailyLimit: 20 }`                                                                | assistant proposals of the triage queue (`docs/40-triage.md`)                                             |
 | `voice`                 | `{ enabled: false, piperUrl: "", voice: "", speed: 1, dictionary: [] }`                             | dictionary: `[{ from, to }]`                                                                              |
 | `mail`                  | `{ enabled: false, accounts: [], excludedAccounts: [], replyWindowDays: 14 }`                       | read through the mail agent only                                                                          |
-| `options`               | `{ eveningWrapUp: false, telegram: false, sonos: false, weekly: false }`                            | Android "brief ready" notification is an Android setting                                                  |
 
-Agent settings (`ui_settings.agents`, secret in `users.agent_api_key`, encrypted with `secretCipher`, shown as last 4 characters): `baseUrl`, `timeoutSeconds` (120), `profiles` `{ mail: "", drafting: "" }`, `triageRules` `[{ id, match: { from, label, type }, instruction, mode: "propose" | "off" }]`.
+Agent settings (`ui_settings.agents`, secret in `users.agent_api_key`, encrypted with `secretCipher`, shown as last 4 characters): `baseUrl`, `timeoutSeconds` (120), `profiles` `{ mail: "" }`. Retired on 2026-11-12 because nothing read them: brief `options` (evening wrap-up, Telegram, Sonos, weekly), `writing.signature`, agent `profiles.drafting` and `triageRules`; stored values are dropped on the next read, and a write that still sends them (Android before 1.19) ignores them.
 
 ## API
 

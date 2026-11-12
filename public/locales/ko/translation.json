@@ -5976,10 +5976,6 @@
       "maxMoves": "표시된 이동 제안",
       "maxTonight": "표시할 우선순위",
       "closedLookback": "확인한 완료 작업 (일)",
-      "optEvening": "저녁 마무리",
-      "optTelegram": "Telegram으로 보내기",
-      "optSonos": "Sonos에서 재생",
-      "optWeekly": "주간 요약",
       "title": "일일 브리핑",
       "description": "매일 아침 요약: 다가오는 날, 오늘 밤 남은 일, 옮길 수 있는 일.",
       "status": "소스 상태",
@@ -6010,7 +6006,6 @@
       "llmEnabled": "AI가 작성한 요약과 이유",
       "llmProvider": "AI 제공자: 프로필 › AI 어시스턴트",
       "tone": "어조",
-      "signature": "서명",
       "instructions": "지침",
       "retention": "보관",
       "decisionsDays": "보관할 결정 (일)",
@@ -6020,7 +6015,6 @@
       "piperUrl": "Piper 주소",
       "voiceName": "음성",
       "speed": "속도",
-      "options": "옵션",
       "save": "저장",
       "saved": "설정이 저장됨",
       "saveError": "설정을 저장할 수 없습니다.",
@@ -6159,27 +6153,13 @@
     },
     "timeout": "시간 초과 (초)",
     "profiles": {
-      "mail": "메일 프로필",
-      "drafting": "초안 프로필"
-    },
-    "triage": {
-      "title": "분류 규칙",
-      "empty": "규칙이 없습니다.",
-      "from": "보낸 사람",
-      "label": "라벨",
-      "instruction": "지침",
-      "mode": "모드",
-      "propose": "제안",
-      "off": "끔",
-      "add": "규칙 추가",
-      "remove": "규칙 제거"
+      "mail": "메일 프로필"
     },
     "test": {
       "button": "연결 테스트",
       "health": "에이전트에 연결 가능",
       "auth": "인증",
-      "mail": "메일 프로필",
-      "drafting": "초안 프로필"
+      "mail": "메일 프로필"
     },
     "check": {
       "ok": "확인",

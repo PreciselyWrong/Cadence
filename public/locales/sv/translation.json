@@ -5994,10 +5994,6 @@
       "maxMoves": "Visade flyttar",
       "maxTonight": "Visade prioriteringar",
       "closedLookback": "Kontrollerade avslutade uppgifter (dagar)",
-      "optEvening": "Kvällsavslut",
-      "optTelegram": "Skicka via Telegram",
-      "optSonos": "Spela upp på Sonos",
-      "optWeekly": "Veckosammanfattning",
       "title": "Daglig sammanfattning",
       "description": "En sammanfattning varje morgon: de kommande dagarna, vad som återstår ikväll och vad som kan flyttas.",
       "status": "Källstatus",
@@ -6028,7 +6024,6 @@
       "llmEnabled": "Sammanfattning och skäl av AI",
       "llmProvider": "AI-leverantör: Profil › AI-assistent",
       "tone": "Ton",
-      "signature": "Signatur",
       "instructions": "Instruktioner",
       "retention": "Lagringstid",
       "decisionsDays": "Beslut som sparas (dagar)",
@@ -6038,7 +6033,6 @@
       "piperUrl": "Piper-adress",
       "voiceName": "Röst",
       "speed": "Hastighet",
-      "options": "Alternativ",
       "save": "Spara",
       "saved": "Inställningarna sparades",
       "saveError": "Inställningarna kunde inte sparas.",
@@ -6177,27 +6171,13 @@
     },
     "timeout": "Tidsgräns (sekunder)",
     "profiles": {
-      "mail": "E-postprofil",
-      "drafting": "Utkastprofil"
-    },
-    "triage": {
-      "title": "Sorteringsregler",
-      "empty": "Ingen regel.",
-      "from": "Avsändare",
-      "label": "Etikett",
-      "instruction": "Instruktion",
-      "mode": "Läge",
-      "propose": "Föreslå",
-      "off": "Av",
-      "add": "Lägg till en regel",
-      "remove": "Ta bort regeln"
+      "mail": "E-postprofil"
     },
     "test": {
       "button": "Testa anslutningen",
       "health": "Agenten nås",
       "auth": "Autentisering",
-      "mail": "E-postprofil",
-      "drafting": "Utkastprofil"
+      "mail": "E-postprofil"
     },
     "check": {
       "ok": "OK",

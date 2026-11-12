@@ -222,14 +222,14 @@ Tout est vide ou désactivé par défaut. Les secrets sont masqués, chiffrés p
 | Seuils : reports, similarité des doublons, nombre de propositions            | Profil › Résumé › Arbitrage                | Réglages › Résumé                        | 3, 0,8, 3                                |
 | Durées : journal, audio, contexte                                            | Profil › Résumé › Conservation             | Réglages › Résumé                        | 90 j, 7 j, fin de vie de la cible        |
 | Types d'alerte et règles de bruit                                            | Profil › Résumé › Alertes                  | Réglages › Résumé                        | tous actifs, aucune règle                |
-| Ton, signature, instructions permanentes                                     | Profil › Résumé › Rédaction                | Réglages › Résumé                        | neutre, vide, vide                       |
+| Ton, instructions permanentes (signature retirée le 2026-11-12)             | Profil › Résumé › Rédaction                | Réglages › Résumé                        | neutre, vide, vide                       |
 | LLM et fournisseur                                                           | Profil › Assistant IA (existant)           | Réglages › Résumé                        | désactivé                                |
 | Adresse de Piper, voix, vitesse, extrait                                     | Profil › Résumé › Voix                     | Réglages › Résumé › Voix                 | vide, aucune, 1,0                        |
 | Dictionnaire de prononciation                                                | Profil › Résumé › Voix                     | Réglages › Résumé › Voix                 | vide                                     |
 | Hermes : adresse, jeton (secret), délai, test                                | Profil › Agents                            | Réglages › Agents                        | vide, 120 s                              |
 | Agents : profil par type de demande                                          | Profil › Agents                            | Réglages › Agents                        | aucun                                    |
 | Règles de tri (expéditeur, libellé, type, instruction ; `proposer` ou `off`) | Profil › Agents › Tri                      | Réglages › Agents › Tri                  | aucune                                   |
-| Options : bilan du soir, Telegram, Sonos, hebdo                              | Profil › Résumé › Options                  | Réglages › Résumé › Options              | toutes désactivées                       |
+| Options : bilan du soir, Telegram, Sonos, hebdo (retirées le 2026-11-12, jamais branchées) | — | — | — |
 | Notification « résumé prêt »                                                 | —                                          | Réglages › Notifications (existant)      | non                                      |
 | Lecture : téléchargement hors ligne                                          | —                                          | Réglages › Résumé › Voix                 | oui                                      |
 

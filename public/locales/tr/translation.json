@@ -5976,10 +5976,6 @@
       "maxMoves": "Gösterilen taşımalar",
       "maxTonight": "Gösterilen öncelikler",
       "closedLookback": "Kontrol edilen kapalı görevler (gün)",
-      "optEvening": "Akşam özeti",
-      "optTelegram": "Telegram'a gönder",
-      "optSonos": "Sonos'ta çal",
-      "optWeekly": "Haftalık özet",
       "title": "Günlük özet",
       "description": "Her sabah bir özet: yaklaşan günler, bu akşam kalanlar ve taşınabilecekler.",
       "status": "Kaynak durumu",
@@ -6010,7 +6006,6 @@
       "llmEnabled": "Yapay zekâ özeti ve gerekçeleri",
       "llmProvider": "Yapay zekâ sağlayıcısı: Profil › Yapay zekâ asistanı",
       "tone": "Ton",
-      "signature": "İmza",
       "instructions": "Talimatlar",
       "retention": "Saklama",
       "decisionsDays": "Saklanan kararlar (gün)",
@@ -6020,7 +6015,6 @@
       "piperUrl": "Piper adresi",
       "voiceName": "Ses",
       "speed": "Hız",
-      "options": "Seçenekler",
       "save": "Kaydet",
       "saved": "Ayarlar kaydedildi",
       "saveError": "Ayarlar kaydedilemedi.",
@@ -6159,27 +6153,13 @@
     },
     "timeout": "Zaman aşımı (saniye)",
     "profiles": {
-      "mail": "E-posta profili",
-      "drafting": "Taslak profili"
-    },
-    "triage": {
-      "title": "Ayıklama kuralları",
-      "empty": "Kural yok.",
-      "from": "Gönderen",
-      "label": "Etiket",
-      "instruction": "Talimat",
-      "mode": "Mod",
-      "propose": "Öner",
-      "off": "Kapalı",
-      "add": "Kural ekle",
-      "remove": "Kuralı kaldır"
+      "mail": "E-posta profili"
     },
     "test": {
       "button": "Bağlantıyı test et",
       "health": "Ajana erişilebiliyor",
       "auth": "Kimlik doğrulama",
-      "mail": "E-posta profili",
-      "drafting": "Taslak profili"
+      "mail": "E-posta profili"
     },
     "check": {
       "ok": "Tamam",

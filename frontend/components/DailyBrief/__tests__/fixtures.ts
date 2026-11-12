@@ -41,7 +41,7 @@ export const SETTINGS: BriefSettings = {
     },
     retention: { decisionsDays: 90, audioDays: 7 },
     alerts: { disabled: [], noise: { minVotes: 3, ratio: 0.7 } },
-    writing: { tone: 'neutral', signature: '', instructions: '' },
+    writing: { tone: 'neutral', instructions: '' },
     llm: { enabled: false },
     triage: { enabled: false, dailyLimit: 20 },
     voice: {
@@ -56,12 +56,6 @@ export const SETTINGS: BriefSettings = {
         accounts: [],
         excludedAccounts: [],
         replyWindowDays: 14,
-    },
-    options: {
-        eveningWrapUp: false,
-        telegram: false,
-        sonos: false,
-        weekly: false,
     },
 };
 

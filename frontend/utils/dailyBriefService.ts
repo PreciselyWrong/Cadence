@@ -232,7 +232,7 @@ export interface BriefSettings {
         disabled: string[];
         noise: { minVotes: number; ratio: number };
     };
-    writing: { tone: string; signature: string; instructions: string };
+    writing: { tone: string; instructions: string };
     llm: { enabled: boolean };
     triage: { enabled: boolean; dailyLimit: number };
     voice: {
@@ -247,12 +247,6 @@ export interface BriefSettings {
         accounts: string[];
         excludedAccounts: string[];
         replyWindowDays: number;
-    };
-    options: {
-        eveningWrapUp: boolean;
-        telegram: boolean;
-        sonos: boolean;
-        weekly: boolean;
     };
 }
 
@@ -308,18 +302,10 @@ export interface BriefContextsQuery {
     target_ref?: string;
 }
 
-export interface AgentTriageRule {
-    id: string;
-    match: { from?: string; label?: string; type?: string };
-    instruction: string;
-    mode: 'propose' | 'off';
-}
-
 export interface AgentSettings {
     baseUrl: string;
     timeoutSeconds: number;
-    profiles: { mail: string; drafting: string };
-    triageRules: AgentTriageRule[];
+    profiles: { mail: string };
     api_key_set: boolean;
     api_key_last4: string | null;
 }
@@ -335,7 +321,7 @@ export type AgentCheck = 'ok' | 'error' | 'unauthorized' | 'missing';
 export interface AgentTestResult {
     health: 'ok' | 'error';
     auth: 'ok' | 'error' | 'unauthorized';
-    profiles: { mail: AgentCheck; drafting: AgentCheck };
+    profiles: { mail: AgentCheck };
 }
 
 const jsonRequest = async (

@@ -6,7 +6,6 @@ import {
     AgentSettings,
     AgentSettingsPatch,
     AgentTestResult,
-    AgentTriageRule,
     fetchAgentSettings,
     saveAgentSettings,
     testAgentConnection,
@@ -24,8 +23,6 @@ const AgentsTab: React.FC<AgentsTabProps> = ({ isActive }) => {
     const [baseUrl, setBaseUrl] = useState('');
     const [timeoutSeconds, setTimeoutSeconds] = useState(120);
     const [mailProfile, setMailProfile] = useState('');
-    const [draftingProfile, setDraftingProfile] = useState('');
-    const [rules, setRules] = useState<AgentTriageRule[]>([]);
     const [newKey, setNewKey] = useState('');
     const [clearKey, setClearKey] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -38,8 +35,6 @@ const AgentsTab: React.FC<AgentsTabProps> = ({ isActive }) => {
         setBaseUrl(settings.baseUrl);
         setTimeoutSeconds(settings.timeoutSeconds);
         setMailProfile(settings.profiles.mail);
-        setDraftingProfile(settings.profiles.drafting);
-        setRules(settings.triageRules);
         setNewKey('');
         setClearKey(false);
     };
@@ -72,8 +67,7 @@ const AgentsTab: React.FC<AgentsTabProps> = ({ isActive }) => {
         const patch: AgentSettingsPatch = {
             baseUrl,
             timeoutSeconds,
-            profiles: { mail: mailProfile, drafting: draftingProfile },
-            triageRules: rules,
+            profiles: { mail: mailProfile },
         };
         if (clearKey) patch.api_key = null;
         else if (newKey.trim() !== '') patch.api_key = newKey.trim();
@@ -122,22 +116,6 @@ const AgentsTab: React.FC<AgentsTabProps> = ({ isActive }) => {
                 return t('agents.check.error', 'Erreur');
         }
     };
-
-    const updateRule = (index: number, patch: Partial<AgentTriageRule>) =>
-        setRules(
-            rules.map((rule, i) => (i === index ? { ...rule, ...patch } : rule))
-        );
-
-    const addRule = () =>
-        setRules([
-            ...rules,
-            {
-                id: `rule-${Date.now().toString(36)}`,
-                match: {},
-                instruction: '',
-                mode: 'propose',
-            },
-        ]);
 
     if (!saved) {
         return (
@@ -249,128 +227,6 @@ const AgentsTab: React.FC<AgentsTabProps> = ({ isActive }) => {
                         className={FORM.input}
                     />
                 </label>
-                <label className="flex flex-col gap-1 text-sm text-gray-800 dark:text-gray-200">
-                    {t('agents.profiles.drafting', 'Profil rédaction')}
-                    <input
-                        type="text"
-                        value={draftingProfile}
-                        onChange={(event) =>
-                            setDraftingProfile(event.target.value)
-                        }
-                        className={FORM.input}
-                    />
-                </label>
-            </section>
-
-            <section className="mb-6 space-y-3 rounded-xl bg-gray-50 p-5 dark:bg-gray-800/60">
-                <h4 className="text-sm font-semibold text-gray-900 dark:text-white">
-                    {t('agents.triage.title', 'Règles de tri')}
-                </h4>
-                {rules.length === 0 && (
-                    <p className="text-sm text-gray-600 dark:text-gray-300">
-                        {t('agents.triage.empty', 'Aucune règle.')}
-                    </p>
-                )}
-                {rules.map((rule, index) => (
-                    <div
-                        key={rule.id}
-                        className="space-y-2 rounded-lg bg-white p-3 dark:bg-gray-900/60"
-                    >
-                        <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-                            <input
-                                type="text"
-                                aria-label={t(
-                                    'agents.triage.from',
-                                    'Expéditeur'
-                                )}
-                                placeholder={t(
-                                    'agents.triage.from',
-                                    'Expéditeur'
-                                )}
-                                value={rule.match.from ?? ''}
-                                onChange={(event) =>
-                                    updateRule(index, {
-                                        match: {
-                                            ...rule.match,
-                                            from: event.target.value,
-                                        },
-                                    })
-                                }
-                                className={FORM.input}
-                            />
-                            <input
-                                type="text"
-                                aria-label={t('agents.triage.label', 'Libellé')}
-                                placeholder={t(
-                                    'agents.triage.label',
-                                    'Libellé'
-                                )}
-                                value={rule.match.label ?? ''}
-                                onChange={(event) =>
-                                    updateRule(index, {
-                                        match: {
-                                            ...rule.match,
-                                            label: event.target.value,
-                                        },
-                                    })
-                                }
-                                className={FORM.input}
-                            />
-                            <select
-                                aria-label={t('agents.triage.mode', 'Mode')}
-                                value={rule.mode}
-                                onChange={(event) =>
-                                    updateRule(index, {
-                                        mode: event.target
-                                            .value as AgentTriageRule['mode'],
-                                    })
-                                }
-                                className={FORM.input}
-                            >
-                                <option value="propose">
-                                    {t('agents.triage.propose', 'Proposer')}
-                                </option>
-                                <option value="off">
-                                    {t('agents.triage.off', 'Désactivée')}
-                                </option>
-                            </select>
-                        </div>
-                        <input
-                            type="text"
-                            aria-label={t(
-                                'agents.triage.instruction',
-                                'Consigne'
-                            )}
-                            placeholder={t(
-                                'agents.triage.instruction',
-                                'Consigne'
-                            )}
-                            value={rule.instruction}
-                            onChange={(event) =>
-                                updateRule(index, {
-                                    instruction: event.target.value,
-                                })
-                            }
-                            className={`${FORM.input} w-full`}
-                        />
-                        <button
-                            type="button"
-                            onClick={() =>
-                                setRules(rules.filter((_, i) => i !== index))
-                            }
-                            className="h-9 rounded-lg px-3 text-sm text-gray-700 hover:bg-gray-200 dark:text-gray-200 dark:hover:bg-gray-700"
-                        >
-                            {t('agents.triage.remove', 'Supprimer la règle')}
-                        </button>
-                    </div>
-                ))}
-                <button
-                    type="button"
-                    onClick={addRule}
-                    className="h-10 rounded-lg px-3 text-sm font-semibold text-primary hover:bg-primary/10"
-                >
-                    {t('agents.triage.add', 'Ajouter une règle')}
-                </button>
             </section>
 
             {testResult && (
@@ -389,10 +245,6 @@ const AgentsTab: React.FC<AgentsTabProps> = ({ isActive }) => {
                     <li>
                         {t('agents.test.mail', 'Profil courrier')} :{' '}
                         {checkLabel(testResult.profiles.mail)}
-                    </li>
-                    <li>
-                        {t('agents.test.drafting', 'Profil rédaction')} :{' '}
-                        {checkLabel(testResult.profiles.drafting)}
                     </li>
                 </ul>
             )}

@@ -6044,10 +6044,6 @@
       "maxMoves": "Wyświetlane przeniesienia",
       "maxTonight": "Wyświetlane priorytety",
       "closedLookback": "Sprawdzane zamknięte zadania (dni)",
-      "optEvening": "Podsumowanie wieczorne",
-      "optTelegram": "Wyślij na Telegram",
-      "optSonos": "Odtwórz na Sonos",
-      "optWeekly": "Podsumowanie tygodnia",
       "title": "Dzienne podsumowanie",
       "description": "Podsumowanie każdego ranka: nadchodzące dni, co zostało na wieczór i co można przesunąć.",
       "status": "Stan źródeł",
@@ -6078,7 +6074,6 @@
       "llmEnabled": "Podsumowanie i powody pisane przez AI",
       "llmProvider": "Dostawca AI: Profil › Asystent AI",
       "tone": "Ton",
-      "signature": "Podpis",
       "instructions": "Instrukcje",
       "retention": "Przechowywanie",
       "decisionsDays": "Zachowywane decyzje (dni)",
@@ -6088,7 +6083,6 @@
       "piperUrl": "Adres Piper",
       "voiceName": "Głos",
       "speed": "Szybkość",
-      "options": "Opcje",
       "save": "Zapisz",
       "saved": "Ustawienia zapisano",
       "saveError": "Nie udało się zapisać ustawień.",
@@ -6227,27 +6221,13 @@
     },
     "timeout": "Limit czasu (sekundy)",
     "profiles": {
-      "mail": "Profil poczty",
-      "drafting": "Profil szkiców"
-    },
-    "triage": {
-      "title": "Reguły segregowania",
-      "empty": "Brak reguł.",
-      "from": "Nadawca",
-      "label": "Etykieta",
-      "instruction": "Instrukcja",
-      "mode": "Tryb",
-      "propose": "Proponuj",
-      "off": "Wyłączone",
-      "add": "Dodaj regułę",
-      "remove": "Usuń regułę"
+      "mail": "Profil poczty"
     },
     "test": {
       "button": "Przetestuj połączenie",
       "health": "Agent osiągalny",
       "auth": "Uwierzytelnianie",
-      "mail": "Profil poczty",
-      "drafting": "Profil szkiców"
+      "mail": "Profil poczty"
     },
     "check": {
       "ok": "OK",

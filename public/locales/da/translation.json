@@ -5994,10 +5994,6 @@
       "maxMoves": "Viste flytninger",
       "maxTonight": "Viste prioriteter",
       "closedLookback": "Gennemgåede afsluttede opgaver (dage)",
-      "optEvening": "Aftenopsamling",
-      "optTelegram": "Send på Telegram",
-      "optSonos": "Afspil på Sonos",
-      "optWeekly": "Ugentlig oversigt",
       "title": "Dagligt overblik",
       "description": "Et resumé hver morgen: de kommende dage, det der er tilbage i aften, og hvad der kan flyttes.",
       "status": "Kildestatus",
@@ -6028,7 +6024,6 @@
       "llmEnabled": "Resumé og begrundelser af AI",
       "llmProvider": "AI-udbyder: Profil › AI-assistent",
       "tone": "Tone",
-      "signature": "Signatur",
       "instructions": "Instruktioner",
       "retention": "Opbevaring",
       "decisionsDays": "Beslutninger gemt (dage)",
@@ -6038,7 +6033,6 @@
       "piperUrl": "Piper-adresse",
       "voiceName": "Stemme",
       "speed": "Hastighed",
-      "options": "Valgmuligheder",
       "save": "Gem",
       "saved": "Indstillinger gemt",
       "saveError": "Indstillingerne kunne ikke gemmes.",
@@ -6177,27 +6171,13 @@
     },
     "timeout": "Timeout (sekunder)",
     "profiles": {
-      "mail": "Mailprofil",
-      "drafting": "Udkastsprofil"
-    },
-    "triage": {
-      "title": "Sorteringsregler",
-      "empty": "Ingen regel.",
-      "from": "Afsender",
-      "label": "Etiket",
-      "instruction": "Instruktion",
-      "mode": "Tilstand",
-      "propose": "Foreslå",
-      "off": "Fra",
-      "add": "Tilføj en regel",
-      "remove": "Fjern reglen"
+      "mail": "Mailprofil"
     },
     "test": {
       "button": "Test forbindelsen",
       "health": "Agent kan nås",
       "auth": "Godkendelse",
-      "mail": "Mailprofil",
-      "drafting": "Udkastsprofil"
+      "mail": "Mailprofil"
     },
     "check": {
       "ok": "OK",

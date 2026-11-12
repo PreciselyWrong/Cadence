@@ -6007,10 +6007,6 @@
       "maxMoves": "Movimentos exibidos",
       "maxTonight": "Prioridades exibidas",
       "closedLookback": "Tarefas concluídas verificadas (dias)",
-      "optEvening": "Fechamento da noite",
-      "optTelegram": "Enviar pelo Telegram",
-      "optSonos": "Tocar no Sonos",
-      "optWeekly": "Resumo semanal",
       "title": "Resumo diário",
       "description": "Um resumo toda manhã: os próximos dias, o que resta para esta noite e o que pode ser movido.",
       "status": "Estado das fontes",
@@ -6041,7 +6037,6 @@
       "llmEnabled": "Resumo e motivos escritos pela IA",
       "llmProvider": "Provedor de IA: Perfil › Assistente de IA",
       "tone": "Tom",
-      "signature": "Assinatura",
       "instructions": "Instruções",
       "retention": "Retenção",
       "decisionsDays": "Decisões mantidas (dias)",
@@ -6051,7 +6046,6 @@
       "piperUrl": "Endereço do Piper",
       "voiceName": "Voz",
       "speed": "Velocidade",
-      "options": "Opções",
       "save": "Salvar",
       "saved": "Configurações salvas",
       "saveError": "Não foi possível salvar as configurações.",
@@ -6190,27 +6184,13 @@
     },
     "timeout": "Tempo limite (segundos)",
     "profiles": {
-      "mail": "Perfil de e-mail",
-      "drafting": "Perfil de rascunhos"
-    },
-    "triage": {
-      "title": "Regras de triagem",
-      "empty": "Nenhuma regra.",
-      "from": "Remetente",
-      "label": "Rótulo",
-      "instruction": "Instrução",
-      "mode": "Modo",
-      "propose": "Propor",
-      "off": "Desativado",
-      "add": "Adicionar uma regra",
-      "remove": "Remover a regra"
+      "mail": "Perfil de e-mail"
     },
     "test": {
       "button": "Testar a conexão",
       "health": "Agente acessível",
       "auth": "Autenticação",
-      "mail": "Perfil de e-mail",
-      "drafting": "Perfil de rascunhos"
+      "mail": "Perfil de e-mail"
     },
     "check": {
       "ok": "OK",

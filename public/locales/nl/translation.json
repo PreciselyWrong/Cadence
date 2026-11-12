@@ -5992,10 +5992,6 @@
       "maxMoves": "Getoonde verplaatsingen",
       "maxTonight": "Getoonde prioriteiten",
       "closedLookback": "Gecontroleerde afgeronde taken (dagen)",
-      "optEvening": "Avondafsluiting",
-      "optTelegram": "Versturen via Telegram",
-      "optSonos": "Afspelen op Sonos",
-      "optWeekly": "Wekelijkse samenvatting",
       "title": "Dagelijkse briefing",
       "description": "Elke ochtend een samenvatting: de komende dagen, wat er voor vanavond overblijft en wat kan verschuiven.",
       "status": "Bronstatus",
@@ -6026,7 +6022,6 @@
       "llmEnabled": "Samenvatting en redenen door AI",
       "llmProvider": "AI-aanbieder: Profiel › AI-assistent",
       "tone": "Toon",
-      "signature": "Handtekening",
       "instructions": "Instructies",
       "retention": "Bewaartermijn",
       "decisionsDays": "Bewaarde beslissingen (dagen)",
@@ -6036,7 +6031,6 @@
       "piperUrl": "Piper-adres",
       "voiceName": "Stem",
       "speed": "Snelheid",
-      "options": "Opties",
       "save": "Opslaan",
       "saved": "Instellingen opgeslagen",
       "saveError": "Instellingen konden niet worden opgeslagen.",
@@ -6175,27 +6169,13 @@
     },
     "timeout": "Time-out (seconden)",
     "profiles": {
-      "mail": "Mailprofiel",
-      "drafting": "Conceptprofiel"
-    },
-    "triage": {
-      "title": "Sorteerregels",
-      "empty": "Geen regel.",
-      "from": "Afzender",
-      "label": "Label",
-      "instruction": "Instructie",
-      "mode": "Modus",
-      "propose": "Voorstellen",
-      "off": "Uit",
-      "add": "Regel toevoegen",
-      "remove": "Regel verwijderen"
+      "mail": "Mailprofiel"
     },
     "test": {
       "button": "De verbinding testen",
       "health": "Agent bereikbaar",
       "auth": "Authenticatie",
-      "mail": "Mailprofiel",
-      "drafting": "Conceptprofiel"
+      "mail": "Mailprofiel"
     },
     "check": {
       "ok": "OK",

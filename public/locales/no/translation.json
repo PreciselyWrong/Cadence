@@ -5999,10 +5999,6 @@
       "maxMoves": "Viste flyttinger",
       "maxTonight": "Viste prioriteringer",
       "closedLookback": "Sjekkede fullførte oppgaver (dager)",
-      "optEvening": "Kveldsoppsummering",
-      "optTelegram": "Send på Telegram",
-      "optSonos": "Spill av på Sonos",
-      "optWeekly": "Ukesoppsummering",
       "title": "Daglig oversikt",
       "description": "En oppsummering hver morgen: de kommende dagene, det som gjenstår i kveld, og det som kan flyttes.",
       "status": "Kildestatus",
@@ -6033,7 +6029,6 @@
       "llmEnabled": "Sammendrag og begrunnelser av KI",
       "llmProvider": "KI-leverandør: Profil › KI-assistent",
       "tone": "Tone",
-      "signature": "Signatur",
       "instructions": "Instruksjoner",
       "retention": "Oppbevaring",
       "decisionsDays": "Beslutninger lagret (dager)",
@@ -6043,7 +6038,6 @@
       "piperUrl": "Piper-adresse",
       "voiceName": "Stemme",
       "speed": "Hastighet",
-      "options": "Alternativer",
       "save": "Lagre",
       "saved": "Innstillinger lagret",
       "saveError": "Kunne ikke lagre innstillingene.",
@@ -6182,27 +6176,13 @@
     },
     "timeout": "Tidsavbrudd (sekunder)",
     "profiles": {
-      "mail": "E-postprofil",
-      "drafting": "Utkastprofil"
-    },
-    "triage": {
-      "title": "Sorteringsregler",
-      "empty": "Ingen regel.",
-      "from": "Avsender",
-      "label": "Etikett",
-      "instruction": "Instruksjon",
-      "mode": "Modus",
-      "propose": "Foreslå",
-      "off": "Av",
-      "add": "Legg til en regel",
-      "remove": "Fjern regelen"
+      "mail": "E-postprofil"
     },
     "test": {
       "button": "Test tilkoblingen",
       "health": "Agenten kan nås",
       "auth": "Autentisering",
-      "mail": "E-postprofil",
-      "drafting": "Utkastprofil"
+      "mail": "E-postprofil"
     },
     "check": {
       "ok": "OK",

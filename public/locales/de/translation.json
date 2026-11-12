@@ -6003,10 +6003,6 @@
       "maxMoves": "Angezeigte Verschiebungen",
       "maxTonight": "Angezeigte Prioritäten",
       "closedLookback": "Geprüfte erledigte Aufgaben (Tage)",
-      "optEvening": "Abendabschluss",
-      "optTelegram": "Auf Telegram senden",
-      "optSonos": "Auf Sonos abspielen",
-      "optWeekly": "Wochenzusammenfassung",
       "title": "Tagesbriefing",
       "description": "Jeden Morgen eine Zusammenfassung: die kommenden Tage, was heute Abend noch ansteht und was verschoben werden kann.",
       "status": "Quellenstatus",
@@ -6037,7 +6033,6 @@
       "llmEnabled": "Zusammenfassung und Gründe von der KI",
       "llmProvider": "KI-Anbieter: Profil › KI-Assistent",
       "tone": "Ton",
-      "signature": "Signatur",
       "instructions": "Anweisungen",
       "retention": "Aufbewahrung",
       "decisionsDays": "Aufbewahrte Entscheidungen (Tage)",
@@ -6047,7 +6042,6 @@
       "piperUrl": "Piper-Adresse",
       "voiceName": "Stimme",
       "speed": "Geschwindigkeit",
-      "options": "Optionen",
       "save": "Speichern",
       "saved": "Einstellungen gespeichert",
       "saveError": "Einstellungen konnten nicht gespeichert werden.",
@@ -6186,27 +6180,13 @@
     },
     "timeout": "Zeitlimit (Sekunden)",
     "profiles": {
-      "mail": "Mail-Profil",
-      "drafting": "Entwurfsprofil"
-    },
-    "triage": {
-      "title": "Triage-Regeln",
-      "empty": "Keine Regel.",
-      "from": "Absender",
-      "label": "Label",
-      "instruction": "Anweisung",
-      "mode": "Modus",
-      "propose": "Vorschlagen",
-      "off": "Aus",
-      "add": "Regel hinzufügen",
-      "remove": "Regel entfernen"
+      "mail": "Mail-Profil"
     },
     "test": {
       "button": "Verbindung testen",
       "health": "Agent erreichbar",
       "auth": "Authentifizierung",
-      "mail": "Mail-Profil",
-      "drafting": "Entwurfsprofil"
+      "mail": "Mail-Profil"
     },
     "check": {
       "ok": "OK",

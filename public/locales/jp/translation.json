@@ -5976,10 +5976,6 @@
       "maxMoves": "表示された移動",
       "maxTonight": "表示する優先事項",
       "closedLookback": "確認済みの完了タスク（日）",
-      "optEvening": "夜のまとめ",
-      "optTelegram": "Telegram に送信",
-      "optSonos": "Sonos で再生",
-      "optWeekly": "週間サマリー",
       "title": "デイリーブリーフ",
       "description": "毎朝のまとめ：今後の日程、今夜に残っていること、動かせるもの。",
       "status": "ソースの状態",
@@ -6010,7 +6006,6 @@
       "llmEnabled": "AI による要約と理由",
       "llmProvider": "AI プロバイダー: プロフィール › AI アシスタント",
       "tone": "トーン",
-      "signature": "署名",
       "instructions": "指示",
       "retention": "保持",
       "decisionsDays": "保持する決定（日）",
@@ -6020,7 +6015,6 @@
       "piperUrl": "Piper のアドレス",
       "voiceName": "声",
       "speed": "速度",
-      "options": "オプション",
       "save": "保存",
       "saved": "設定を保存しました",
       "saveError": "設定を保存できませんでした。",
@@ -6159,27 +6153,13 @@
     },
     "timeout": "タイムアウト（秒）",
     "profiles": {
-      "mail": "メールプロフィール",
-      "drafting": "下書きプロフィール"
-    },
-    "triage": {
-      "title": "振り分けルール",
-      "empty": "ルールはありません。",
-      "from": "送信者",
-      "label": "ラベル",
-      "instruction": "指示",
-      "mode": "モード",
-      "propose": "提案",
-      "off": "オフ",
-      "add": "ルールを追加",
-      "remove": "ルールを削除"
+      "mail": "メールプロフィール"
     },
     "test": {
       "button": "接続をテスト",
       "health": "エージェントに接続できます",
       "auth": "認証",
-      "mail": "メールプロフィール",
-      "drafting": "下書きプロフィール"
+      "mail": "メールプロフィール"
     },
     "check": {
       "ok": "OK",

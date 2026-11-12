@@ -49,7 +49,6 @@ fun AgentSettingsPage(modifier: Modifier = Modifier) {
     var baseUrl by remember { mutableStateOf("") }
     var timeout by remember { mutableStateOf(DEFAULT_TIMEOUT_SECONDS.toString()) }
     var mail by remember { mutableStateOf("") }
-    var drafting by remember { mutableStateOf("") }
     var apiKey by remember { mutableStateOf("") }
     var message by remember { mutableStateOf<String?>(null) }
     var test by remember { mutableStateOf<AgentTestDto?>(null) }
@@ -63,7 +62,6 @@ fun AgentSettingsPage(modifier: Modifier = Modifier) {
         baseUrl = dto.baseUrl
         timeout = dto.timeoutSeconds.toString()
         mail = dto.profiles.mail
-        drafting = dto.profiles.drafting
         apiKey = ""
     }
 
@@ -79,7 +77,7 @@ fun AgentSettingsPage(modifier: Modifier = Modifier) {
         }
         busy = true
         scope.launch {
-            repository.save(baseUrl.trim(), seconds, AgentProfilesDto(mail.trim(), drafting.trim()), key)
+            repository.save(baseUrl.trim(), seconds, AgentProfilesDto(mail.trim()), key)
                 .onSuccess {
                     show(it)
                     message = saved
@@ -95,7 +93,6 @@ fun AgentSettingsPage(modifier: Modifier = Modifier) {
             CadenceField(value = baseUrl, onValue = { baseUrl = it }, label = stringResource(R.string.brief_agents_base_url), placeholder = "https://")
             CadenceField(value = timeout, onValue = { timeout = it }, label = stringResource(R.string.brief_agents_timeout), numeric = true, suffix = "s")
             CadenceField(value = mail, onValue = { mail = it }, label = stringResource(R.string.brief_agents_profile_mail))
-            CadenceField(value = drafting, onValue = { drafting = it }, label = stringResource(R.string.brief_agents_profile_drafting))
             CadenceField(
                 value = apiKey,
                 onValue = { apiKey = it },

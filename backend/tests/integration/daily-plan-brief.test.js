@@ -48,17 +48,17 @@ describe('Daily plan brief routes', () => {
             const later = await agent
                 .put('/api/daily-plan/brief/settings')
                 .send({
-                    writing: { signature: 'Camille' },
+                    writing: { tone: 'warm' },
                 });
             expect(later.body.enabled).toBe(true);
-            expect(later.body.writing.signature).toBe('Camille');
+            expect(later.body.writing.tone).toBe('warm');
 
             const get = await agent.get('/api/daily-plan/brief/settings');
             expect(get.body).toMatchObject({
                 enabled: true,
                 time: '06:30',
                 thresholds: { maxMoves: 1 },
-                writing: { signature: 'Camille' },
+                writing: { tone: 'warm' },
             });
         });
 
