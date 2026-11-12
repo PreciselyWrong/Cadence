@@ -4,6 +4,7 @@ import {
     getPostHeadersWithCsrf,
 } from './authUtils';
 import { getApiPath } from '../config/paths';
+import { requestOfflineState } from './offlineService';
 
 export interface SyncDevice {
     id: number;
@@ -61,42 +62,7 @@ export const resolveSyncConflict = async (
 };
 
 // Changes made in this browser while offline wait in the service worker's
-// queue (public/sw.js) until the network returns. Null when the browser
-// cannot tell.
-export const countPendingWebChanges = (): Promise<number | null> =>
-    new Promise((resolve) => {
-        if (typeof indexedDB === 'undefined') return resolve(null);
-        let request: IDBOpenDBRequest;
-        try {
-            request = indexedDB.open('tududi-offline', 1);
-        } catch {
-            return resolve(null);
-        }
-        request.onupgradeneeded = () => {
-            request.result.createObjectStore('tududi-sync-queue', {
-                keyPath: 'id',
-                autoIncrement: true,
-            });
-        };
-        request.onerror = () => resolve(null);
-        request.onsuccess = () => {
-            const db = request.result;
-            try {
-                const count = db
-                    .transaction('tududi-sync-queue', 'readonly')
-                    .objectStore('tududi-sync-queue')
-                    .count();
-                count.onsuccess = () => {
-                    db.close();
-                    resolve(count.result);
-                };
-                count.onerror = () => {
-                    db.close();
-                    resolve(null);
-                };
-            } catch {
-                db.close();
-                resolve(null);
-            }
-        };
-    });
+// outbox (public/sw.js) until the server is reachable again. Null when the
+// browser cannot tell (no service worker).
+export const countPendingWebChanges = async (): Promise<number | null> =>
+    (await requestOfflineState())?.pending ?? null;

@@ -21,6 +21,51 @@ const buildId = (() => {
         return Date.now().toString(36);
     }
 })();
+// The service worker's static cache name must change per build, or returning
+// visitors keep the old shell after a deploy (the API cache name stays stable
+// on purpose). It also precaches this build's shell, so the app opens offline
+// on routes never visited: index.html and the app's own chunks. Vendor chunks
+// (diagrams, maths) are cached the first time they load.
+class ServiceWorkerBuildPlugin {
+    apply(compiler) {
+        compiler.hooks.thisCompilation.tap(
+            'ServiceWorkerBuild',
+            (compilation) => {
+                compilation.hooks.processAssets.tap(
+                    {
+                        name: 'ServiceWorkerBuild',
+                        stage: webpack.Compilation.PROCESS_ASSETS_STAGE_REPORT,
+                    },
+                    (assets) => {
+                        const sw = compilation.getAsset('sw.js');
+                        if (!sw) return;
+                        const shell = Object.keys(assets)
+                            .filter((name) =>
+                                /^(main|frontend_)[^/]*\.js$|\.css$/.test(name)
+                            )
+                            .sort();
+                        const source = sw.source
+                            .source()
+                            .toString()
+                            .replace(
+                                /const CACHE_VERSION = '[^']*';/,
+                                `const CACHE_VERSION = 'tududi-${buildId}';`
+                            )
+                            .replace(
+                                'const BUILD_ASSETS = [];',
+                                `const BUILD_ASSETS = ${JSON.stringify(shell)};`
+                            );
+                        compilation.updateAsset(
+                            'sw.js',
+                            new webpack.sources.RawSource(source)
+                        );
+                    }
+                );
+            }
+        );
+    }
+}
+
 const frontendPort = parseInt(process.env.FRONTEND_PORT || '8080', 10);
 const frontendHost = process.env.FRONTEND_HOST || '0.0.0.0';
 const backendUrl = process.env.BACKEND_URL || 'http://localhost:3002';
@@ -119,21 +164,10 @@ module.exports = {
                     globOptions: {
                         ignore: ['**/index.html'],
                     },
-                    // The service worker's static cache name must change per
-                    // build, or returning visitors keep the old shell after
-                    // a deploy. The API cache name stays stable on purpose.
-                    transform(content, absoluteFrom) {
-                        if (!absoluteFrom.endsWith('sw.js')) return content;
-                        return content
-                            .toString()
-                            .replace(
-                                "const CACHE_VERSION = 'tududi-v1';",
-                                `const CACHE_VERSION = 'tududi-${buildId}';`
-                            );
-                    },
                 },
             ],
         }),
+        new ServiceWorkerBuildPlugin(),
     ].filter(Boolean),
     module: {
         rules: [

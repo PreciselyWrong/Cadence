@@ -1,4 +1,4 @@
-function postToSw(message: object): void {
+export function postToSw(message: object): void {
     if (!('serviceWorker' in navigator)) return;
     const sw = navigator.serviceWorker.controller;
     if (sw) {
