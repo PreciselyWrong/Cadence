@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import PageHeader from '../Shared/ui/PageHeader';
+import SearchField from '../Shared/ui/SearchField';
 import { useStore } from '../../store/useStore';
 import { useLinksRefresh, useLinksStore } from '../../store/linksStore';
 import {
@@ -39,7 +40,7 @@ const readFilter = (): LinkFilter => {
 };
 
 const SELECT =
-    'min-h-[36px] max-w-full rounded-lg border border-gray-200 bg-white pl-2 pr-8 text-[13px] text-gray-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200';
+    'h-9 max-w-full rounded-lg border-0 bg-surface-high/70 pl-2.5 pr-8 text-body-m text-surface-on focus:ring-2 focus:ring-primary/40 max-sm:h-11';
 
 // Every kept link in one place: search, tag, project, the archive.
 const LinksPage: React.FC = () => {
@@ -142,62 +143,51 @@ const LinksPage: React.FC = () => {
         });
 
     return (
-        <div className="mx-auto w-full max-w-6xl px-4 pb-10 pt-4 sm:px-6">
-            <header className="mb-4 flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                    <h2 className="text-2xl font-light text-gray-900 dark:text-gray-100">
-                        {t('links.title', 'Links')}
-                    </h2>
-                    {loaded && links.length > 0 && (
-                        <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
-                            {t('links.count', '{{count}} links', {
-                                count: links.length,
-                            })}
-                        </p>
-                    )}
-                </div>
-                <div className="flex items-center gap-2">
-                    <label className="cursor-pointer whitespace-nowrap text-[13px] text-gray-600 underline underline-offset-2 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
-                        {t('links.import.button', 'Import bookmarks')}
-                        <input
-                            type="file"
-                            accept=".html,text/html"
-                            className="sr-only"
-                            onChange={(event) => {
-                                const file = event.target.files?.[0];
-                                event.target.value = '';
-                                if (file) void importFile(file);
-                            }}
-                        />
-                    </label>
-                    {links.length > 0 && (
-                        <ViewTypeSwitch
-                            value={gallery ? 'gallery' : 'list'}
-                            onChange={setViewType}
-                            keys={['list', 'gallery']}
-                        />
-                    )}
-                </div>
-            </header>
-
-            <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
-                <label className="relative min-w-0 flex-1 sm:min-w-[220px]">
-                    <span className="sr-only">
-                        {t('links.search', 'Search links')}
-                    </span>
-                    <MagnifyingGlassIcon
-                        className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
-                        aria-hidden="true"
-                    />
-                    <input
-                        type="search"
-                        value={filter.query}
-                        onChange={(e) => setFilter({ query: e.target.value })}
-                        placeholder={t('links.search', 'Search links')}
-                        className={`${SELECT} w-full pl-8`}
-                    />
-                </label>
+        <div
+            className={`mx-auto w-full pb-10 ${gallery ? 'max-w-6xl' : 'max-w-4xl'}`}
+        >
+            <PageHeader
+                title={t('links.title', 'Links')}
+                meta={
+                    loaded && links.length > 0
+                        ? t('links.count', '{{count}} links', {
+                              count: links.length,
+                          })
+                        : undefined
+                }
+                actions={
+                    <>
+                        <label className="inline-flex h-7 cursor-pointer items-center whitespace-nowrap rounded-lg px-2.5 text-body-m font-medium text-surface-on-variant hover:bg-surface-high hover:text-surface-on focus-within:ring-2 focus-within:ring-primary/60">
+                            {t('links.import.button', 'Import bookmarks')}
+                            <input
+                                type="file"
+                                accept=".html,text/html"
+                                className="sr-only"
+                                onChange={(event) => {
+                                    const file = event.target.files?.[0];
+                                    event.target.value = '';
+                                    if (file) void importFile(file);
+                                }}
+                            />
+                        </label>
+                        {links.length > 0 && (
+                            <ViewTypeSwitch
+                                value={gallery ? 'gallery' : 'list'}
+                                onChange={setViewType}
+                                keys={['list', 'gallery']}
+                            />
+                        )}
+                    </>
+                }
+            >
                 <div className="flex flex-wrap items-center gap-2">
+                    <SearchField
+                        className="min-w-[12rem] flex-1"
+                        autoFocus={false}
+                        value={filter.query}
+                        onChange={(query) => setFilter({ query })}
+                        placeholder={t('links.search', 'Search links')}
+                    />
                     {tags.length > 0 && (
                         <select
                             aria-label={t('links.filter.tag', 'Tag')}
@@ -240,99 +230,103 @@ const LinksPage: React.FC = () => {
                         onClick={() =>
                             setFilter({ archived: !filter.archived })
                         }
-                        className={`min-h-[36px] rounded-lg border px-3 text-[13px] ${
+                        className={`h-9 rounded-lg px-3 text-body-m font-medium max-sm:h-11 ${
                             filter.archived
-                                ? 'border-gray-900 bg-gray-900 text-white dark:border-gray-100 dark:bg-gray-100 dark:text-gray-900'
-                                : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800'
+                                ? 'bg-primary-container text-primary-on-container'
+                                : 'text-surface-on-variant hover:bg-surface-high hover:text-surface-on'
                         }`}
                     >
                         {t('links.filter.archived', 'Archived')}
                     </button>
                 </div>
+            </PageHeader>
+
+            <div className="px-3 max-sm:px-1">
+                {loaded && loadError && links.length === 0 && (
+                    <p className="px-3 py-6 text-body-m text-surface-on-variant">
+                        {t('links.loadError', 'Could not load the links.')}
+                    </p>
+                )}
+                {loaded && !loadError && links.length === 0 && (
+                    <p className="px-3 py-6 text-body-m text-surface-on-variant">
+                        {t(
+                            'links.empty',
+                            'Links you keep from the inbox show up here, with what the page says about itself.'
+                        )}
+                    </p>
+                )}
+                {links.length > 0 && shown.length === 0 && (
+                    <p className="px-3 py-6 text-body-m text-surface-on-variant">
+                        {t('links.noMatch', 'No link matches these filters.')}
+                    </p>
+                )}
+
+                {gallery ? (
+                    <div className="space-y-6">
+                        {themes.map((theme) => (
+                            <section key={theme.name ?? ''}>
+                                {themes.length > 1 && (
+                                    <h2 className="flex h-8 items-center px-1 text-xs font-medium text-surface-on-variant">
+                                        {theme.name ??
+                                            t('links.noTheme', 'No theme')}
+                                    </h2>
+                                )}
+                                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
+                                    {theme.links.map((link) => (
+                                        <GalleryCard
+                                            key={link.uid}
+                                            title={
+                                                link.title ||
+                                                link.domain ||
+                                                link.url
+                                            }
+                                            image={link.image_url}
+                                            meta={[
+                                                link.site_name || link.domain,
+                                                link.project_name,
+                                            ]
+                                                .filter(Boolean)
+                                                .join(' · ')}
+                                            tags={link.tags}
+                                            href={link.url}
+                                            dimmed={link.status === 'dropped'}
+                                            footer={
+                                                <LinkActions
+                                                    link={link}
+                                                    projects={
+                                                        projectsStore.projects
+                                                    }
+                                                    availableTags={
+                                                        tagsStore.tags
+                                                    }
+                                                    onChange={edit(link.uid)}
+                                                    onTask={toTask(link)}
+                                                    onDelete={remove(link.uid)}
+                                                />
+                                            }
+                                        />
+                                    ))}
+                                </div>
+                            </section>
+                        ))}
+                    </div>
+                ) : (
+                    <div role="list">
+                        {shown.map((link) => (
+                            <LinkCard
+                                key={link.uid}
+                                link={link}
+                                onChange={edit(link.uid)}
+                                onNote={change(link.uid)}
+                                availableTags={tagsStore.tags}
+                                projects={projectsStore.projects}
+                                onTask={toTask(link)}
+                                onDelete={remove(link.uid)}
+                            />
+                        ))}
+                    </div>
+                )}
             </div>
-
-            {loaded && loadError && links.length === 0 && (
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                    {t('links.loadError', 'Could not load the links.')}
-                </p>
-            )}
-            {loaded && !loadError && links.length === 0 && (
-                <p className="max-w-md text-sm text-gray-600 dark:text-gray-300">
-                    {t(
-                        'links.empty',
-                        'Links you keep from the inbox show up here, with what the page says about itself.'
-                    )}
-                </p>
-            )}
-            {links.length > 0 && shown.length === 0 && (
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                    {t('links.noMatch', 'No link matches these filters.')}
-                </p>
-            )}
-
-            {gallery ? (
-                <div className="space-y-6">
-                    {themes.map((theme) => (
-                        <section key={theme.name ?? ''}>
-                            {themes.length > 1 && (
-                                <h2 className="mb-2 text-sm font-semibold text-gray-900 dark:text-gray-100">
-                                    {theme.name ??
-                                        t('links.noTheme', 'No theme')}
-                                </h2>
-                            )}
-                            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
-                                {theme.links.map((link) => (
-                                    <GalleryCard
-                                        key={link.uid}
-                                        title={
-                                            link.title ||
-                                            link.domain ||
-                                            link.url
-                                        }
-                                        image={link.image_url}
-                                        meta={[
-                                            link.site_name || link.domain,
-                                            link.project_name,
-                                        ]
-                                            .filter(Boolean)
-                                            .join(' · ')}
-                                        tags={link.tags}
-                                        href={link.url}
-                                        dimmed={link.status === 'dropped'}
-                                        footer={
-                                            <LinkActions
-                                                link={link}
-                                                projects={
-                                                    projectsStore.projects
-                                                }
-                                                availableTags={tagsStore.tags}
-                                                onChange={edit(link.uid)}
-                                                onTask={toTask(link)}
-                                                onDelete={remove(link.uid)}
-                                            />
-                                        }
-                                    />
-                                ))}
-                            </div>
-                        </section>
-                    ))}
-                </div>
-            ) : (
-                <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-                    {shown.map((link) => (
-                        <LinkCard
-                            key={link.uid}
-                            link={link}
-                            onChange={edit(link.uid)}
-                            onNote={change(link.uid)}
-                            availableTags={tagsStore.tags}
-                            projects={projectsStore.projects}
-                            onTask={toTask(link)}
-                            onDelete={remove(link.uid)}
-                        />
-                    ))}
-                </div>
-            )}
         </div>
     );
 };
