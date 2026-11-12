@@ -2,7 +2,8 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import AddToLinks, { addressesIn } from '../AddToLinks';
-import { addLinkFrom } from '../../../utils/linksService';
+import { addLinkFrom, fetchLinks } from '../../../utils/linksService';
+import { useLinksStore } from '../../../store/linksStore';
 
 jest.mock('react-i18next', () => ({
     useTranslation: () => ({
@@ -12,12 +13,17 @@ jest.mock('react-i18next', () => ({
 
 jest.mock('../../../utils/linksService', () => ({
     addLinkFrom: jest.fn(),
+    fetchLinks: jest.fn(),
 }));
 
 const mockedAdd = addLinkFrom as jest.MockedFunction<typeof addLinkFrom>;
 
 describe('AddToLinks', () => {
-    beforeEach(() => mockedAdd.mockReset());
+    beforeEach(() => {
+        mockedAdd.mockReset();
+        (fetchLinks as jest.Mock).mockReset().mockResolvedValue([]);
+        useLinksStore.setState({ links: [], loaded: false, error: false });
+    });
 
     it('finds each address once, without the closing punctuation', () => {
         expect(
@@ -75,5 +81,24 @@ describe('AddToLinks', () => {
         expect(await screen.findByRole('alert')).toHaveTextContent(
             'Could not save the link.'
         );
+    });
+
+    it('shows an address already in the links as kept, as for a task made from a link', async () => {
+        (fetchLinks as jest.Mock).mockResolvedValue([
+            { uid: 'l1', url: 'https://example.com/guide', title: 'Guide' },
+        ]);
+        render(
+            <AddToLinks
+                sourceType="task"
+                sourceUid="t1"
+                texts={['https://example.com/guide/']}
+            />
+        );
+
+        expect(
+            await screen.findByText(/In links · example.com/)
+        ).toBeInTheDocument();
+        expect(screen.queryByRole('button')).toBeNull();
+        expect(mockedAdd).not.toHaveBeenCalled();
     });
 });

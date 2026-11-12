@@ -12,6 +12,16 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-12 — Un lien seul dans la saisie : la fiche du partage (web)
+
+- **Problème** : sur le web, une adresse collée seule (ou partagée vers la PWA) n'avait que Boîte de réception / Tâche / Note / Projet : « Tâche » prenait l'adresse brute pour nom, « Liens » n'existait pas (il fallait passer par l'Inbox puis ouvrir l'idée), « Projet » n'a pas de sens pour une adresse. Une tâche née d'un lien proposait encore « + Ajouter aux liens » sous sa description, comme si le lien n'existait pas.
+- **Décision** : quand le texte n'est qu'une adresse (au plus des `#étiquettes` et un `+projet`, une ligne, sans fichier), « Ajouter à » propose **Boîte de réception · Tâche · Liens · Note** ; Boîte de réception reste le choix par défaut (Entrée = l'idée attend dans l'Inbox). Aperçu de la page sous le texte, étiquettes et projet comme d'habitude. **Tâche** : nom = titre de la page (aperçu déjà lu, sinon 3 s d'attente au plus), sinon le domaine ; note = l'adresse. **Liens** : le lien est gardé tout de suite (titre, étiquettes, projet, sans source ni idée), ligne « « titre » enregistré dans les liens. » avec Annuler (supprime le lien). Dès qu'un mot s'ajoute à l'adresse, les quatre choix habituels reviennent et un choix Liens retombe sur Boîte de réception. Sous la description d'une tâche ou d'une note, une adresse déjà dans les liens s'affiche « ✓ Dans les liens · domaine » d'emblée.
+- **À reprendre sur Android** :
+  1. Ajout rapide (`QuickAddSheet`, « + » des widgets) : pour un texte qui n'est qu'une adresse (même règle : `#`, `+` permis, une ligne, sans pièce jointe), proposer les choix de la fiche de partage (Inbox par défaut, Tâche, Liens, Note ; pas de Projet). Tâche : même règle de nom (`IdeaTasks`), adresse en note. Liens : `POST /api/links` en appel différé avec titre, étiquettes et projet, sans `source_type` ; Annuler supprime le lien. Vérif : coller `https://exemple.org/page #lecture`, choisir Liens : le lien apparaît dans Liens avec l'étiquette, rien dans l'Inbox ; ajouter un mot : le choix Liens disparaît.
+  2. `AddToLinksRow` (`ui/AddToLinks.kt`) : afficher « Dans les liens · domaine » pour une adresse déjà dans la table Room `links` (comparaison : hôte en minuscules, chemin sans `/` final, sans fragment), pas seulement après un toucher. Vérif : « Créer une tâche » depuis un lien, ouvrir la tâche : la ligne dit « Dans les liens ».
+  3. Retirer les chaînes mortes des anciennes décisions (`links_action_to_evaluate`, `links_action_tested`, …, `strings_links.xml`) si plus rien ne les lit.
+  4. Revérifier sur le téléphone l'étape 5 de la revue du 2026-11-07 (décision écrite tout de suite, annulation réelle ; livrée en 1.13.0) : tuer l'app pendant le toast d'annulation, la décision reste.
+
 ### 2026-11-12 — Web hors ligne : pastille d'état (web, client Linux)
 
 - **Problème** : sans serveur, le web montrait des pages vides ou des erreurs, et une modification faite hors ligne ne s'affichait pas ; dans le client Linux, rien ne disait que le serveur était injoignable.

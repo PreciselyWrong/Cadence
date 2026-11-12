@@ -1,4 +1,30 @@
-import { domainOf, linkTaskDraft, wordsAround } from '../linkTriage';
+import {
+    domainOf,
+    linkOnlyAddress,
+    linkTaskDraft,
+    wordsAround,
+} from '../linkTriage';
+
+describe('linkOnlyAddress', () => {
+    it('finds the address of an idea that is only a link, tags and project allowed', () => {
+        expect(linkOnlyAddress(' https://example.com/post ')).toBe(
+            'https://example.com/post'
+        );
+        expect(
+            linkOnlyAddress(
+                'https://example.com/post #dev +"Side project" ~Home'
+            )
+        ).toBe('https://example.com/post');
+    });
+
+    it('is nothing for words written with the address, several lines or no address', () => {
+        expect(linkOnlyAddress('read https://example.com/post')).toBeNull();
+        expect(
+            linkOnlyAddress('https://example.com/post\nsecond line')
+        ).toBeNull();
+        expect(linkOnlyAddress('call Sam #phone')).toBeNull();
+    });
+});
 
 describe('linkTaskDraft', () => {
     const url = 'https://www.example.com/post';

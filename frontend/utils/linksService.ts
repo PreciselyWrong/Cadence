@@ -71,12 +71,12 @@ export interface NewLink {
     note?: string;
     tags?: string[];
     project_uid?: string;
-    source_type: 'inbox_item' | 'task' | 'note';
-    source_uid: string;
+    source_type?: 'inbox_item' | 'task' | 'note';
+    source_uid?: string;
 }
 
 // Puts a page into the library, on purpose: the server keeps the inbox
-// item, task or note as its source. The same page twice is one link
+// item, task or note as its source, if there is one. The same page twice is one link
 // (`created` false).
 export const createLink = async (
     input: NewLink
