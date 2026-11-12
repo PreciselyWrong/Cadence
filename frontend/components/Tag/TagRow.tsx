@@ -1,16 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-    CheckCircleIcon,
-    DocumentTextIcon,
-    EllipsisVerticalIcon,
-    FolderIcon,
-    LockClosedIcon,
-} from '@heroicons/react/24/outline';
+import { LockClosedIcon } from '@heroicons/react/24/outline';
 import { Tag } from '../../entities/Tag';
 import PushPinIcon from '../Shared/Icons/PushPinIcon';
 import EntityIcon from '../Shared/EntityIcon';
+import ListRow, { ColorDot } from '../Shared/ui/ListRow';
+import { MenuEntry } from '../Shared/ui/Menu';
 import { useTagColor } from '../../utils/tagColor';
 
 interface TagRowProps {
@@ -21,154 +16,95 @@ interface TagRowProps {
     onDelete: (tag: Tag) => void;
 }
 
-// One tag in a list. Its color shows as a left border, the same row as the
-// goal and area lists. The root is meant to sit inside a task-sheet list.
-const TagRow: React.FC<TagRowProps> = ({ tag, label, onEdit, onDelete }) => {
-    const { t } = useTranslation();
-    const tagColor = useTagColor();
-    const [menuOpen, setMenuOpen] = useState(false);
-    const menuRef = useRef<HTMLDivElement>(null);
-    const isSystem = tag.tag_type === 'system';
-    const tagPath = tag.uid
+export const tagPath = (tag: Tag): string =>
+    tag.uid
         ? `/tag/${tag.uid}-${tag.name
               .toLowerCase()
               .replace(/[^a-z0-9]+/g, '-')
               .replace(/^-|-$/g, '')}`
         : `/tag/${encodeURIComponent(tag.name)}`;
 
-    useEffect(() => {
-        if (!menuOpen) return;
-        const handleClickOutside = (e: MouseEvent) => {
-            if (
-                menuRef.current &&
-                !menuRef.current.contains(e.target as Node)
-            ) {
-                setMenuOpen(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () =>
-            document.removeEventListener('mousedown', handleClickOutside);
-    }, [menuOpen]);
+/** Tasks, notes and projects that carry the tag. */
+export const tagUseCount = (tag: Tag): number =>
+    (tag.tasks_count ?? 0) + (tag.notes_count ?? 0) + (tag.projects_count ?? 0);
 
-    const menuItemClass =
-        'block px-4 py-2 text-sm w-full text-left hover:bg-gray-100 dark:hover:bg-gray-600';
+// One tag in the list: its colour as the leading mark (the only colour on
+// the row), the name, then what uses it, with zero counts left out.
+const TagRow: React.FC<TagRowProps> = ({ tag, label, onEdit, onDelete }) => {
+    const { t } = useTranslation();
+    const tagColor = useTagColor();
+    const isSystem = tag.tag_type === 'system';
+    const color = tagColor(tag).value;
 
-    const stats = [
+    const uses = [
+        [tag.tasks_count, t('tags.stats.tasks', 'tasks')],
+        [tag.notes_count, t('tags.stats.notes', 'notes')],
+        [tag.projects_count, t('tags.stats.projects', 'projects')],
+    ]
+        .filter(([count]) => Number(count) > 0)
+        .map(([count, word]) => `${count} ${word}`)
+        .join(' · ');
+
+    const id = tag.uid || tag.id;
+    const menu: MenuEntry[] = [
         {
-            icon: <CheckCircleIcon className="h-3.5 w-3.5" />,
-            count: tag.tasks_count ?? 0,
-            label: t('tags.stats.tasks', 'tasks'),
+            key: 'edit',
+            label: isSystem
+                ? t('tags.customize', 'Customize')
+                : t('tags.edit', 'Edit'),
+            onSelect: () => onEdit(tag),
+            testId: `tag-edit-${id}`,
         },
-        {
-            icon: <DocumentTextIcon className="h-3.5 w-3.5" />,
-            count: tag.notes_count ?? 0,
-            label: t('tags.stats.notes', 'notes'),
-        },
-        {
-            icon: <FolderIcon className="h-3.5 w-3.5" />,
-            count: tag.projects_count ?? 0,
-            label: t('tags.stats.projects', 'projects'),
-        },
+        ...(isSystem
+            ? []
+            : [
+                  {
+                      key: 'delete',
+                      label: t('tags.delete', 'Delete'),
+                      danger: true,
+                      onSelect: () => onDelete(tag),
+                      testId: `tag-delete-${id}`,
+                  },
+              ]),
     ];
 
     return (
-        <div
-            className={`relative flex items-center gap-4 -ml-1.5 py-2.5 pl-5 pr-2 border-l-4 border-gray-300 dark:border-gray-600 group ${
-                menuOpen ? 'z-50' : ''
-            }`}
-            style={{ borderLeftColor: tagColor(tag).value }}
-        >
-            <Link
-                to={tagPath}
-                className="flex flex-1 min-w-0 items-center gap-2"
-            >
-                <EntityIcon
-                    icon={tag.icon}
-                    className="h-4 w-4 text-gray-500 dark:text-gray-400"
-                />
-                <h4
-                    className="text-[15px] font-normal tracking-tight text-gray-900 dark:text-gray-100 truncate"
-                    title={tag.name}
-                >
-                    {label ?? tag.name}
-                </h4>
-                {tag.pinned && !isSystem && (
-                    <PushPinIcon
-                        filled
-                        className="h-3.5 w-3.5 flex-shrink-0 text-red-500 dark:text-red-400"
-                    />
-                )}
-                {isSystem && (
-                    <LockClosedIcon
-                        className="h-3.5 w-3.5 flex-shrink-0 text-gray-500 dark:text-gray-400"
-                        title={t('tags.systemTag', 'System tag')}
-                    />
-                )}
-            </Link>
-
-            <div className="hidden md:flex items-center gap-3 text-xs text-gray-600 dark:text-gray-300 flex-shrink-0 justify-end">
-                {stats.map(({ icon, count, label }) => (
-                    <span key={label} className="flex items-center gap-1">
-                        {icon}
-                        {count} {label}
+        <ListRow
+            to={tagPath(tag)}
+            testId={`tag-row-${id}`}
+            leading={
+                tag.icon ? (
+                    <span style={{ color }} className="flex">
+                        <EntityIcon icon={tag.icon} className="h-4 w-4" />
                     </span>
-                ))}
-            </div>
-
-            <div className="relative flex-shrink-0" ref={menuRef}>
-                <button
-                    type="button"
-                    onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setMenuOpen((open) => !open);
-                    }}
-                    className="[@media(hover:hover)]:opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity duration-200 p-1 rounded text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
-                    aria-label={t(
-                        'tags.toggleDropdownMenu',
-                        'Toggle dropdown menu'
+                ) : (
+                    <ColorDot color={color} />
+                )
+            }
+            title={
+                <span className="inline-flex max-w-full items-center gap-1.5">
+                    <span className="truncate" title={tag.name}>
+                        {label ?? tag.name}
+                    </span>
+                    {tag.pinned && !isSystem && (
+                        <PushPinIcon
+                            filled
+                            className="h-3.5 w-3.5 shrink-0 text-surface-on-variant"
+                        />
                     )}
-                    data-testid={`tag-dropdown-${tag.uid || tag.id}`}
-                >
-                    <EllipsisVerticalIcon className="h-4 w-4" />
-                </button>
-                {menuOpen && (
-                    <div className="absolute right-0 top-full mt-1 w-28 bg-white dark:bg-gray-700 shadow-lg rounded-md z-[60] overflow-hidden">
-                        <button
-                            type="button"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                setMenuOpen(false);
-                                onEdit(tag);
-                            }}
-                            className={`${menuItemClass} text-gray-700 dark:text-gray-300`}
-                            data-testid={`tag-edit-${tag.uid || tag.id}`}
-                        >
-                            {isSystem
-                                ? t('tags.customize', 'Customize')
-                                : t('tags.edit', 'Edit')}
-                        </button>
-                        {!isSystem && (
-                            <button
-                                type="button"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    setMenuOpen(false);
-                                    onDelete(tag);
-                                }}
-                                className={`${menuItemClass} text-red-500 dark:text-red-300`}
-                                data-testid={`tag-delete-${tag.uid || tag.id}`}
-                            >
-                                {t('tags.delete', 'Delete')}
-                            </button>
-                        )}
-                    </div>
-                )}
-            </div>
-        </div>
+                    {isSystem && (
+                        <LockClosedIcon
+                            className="h-3.5 w-3.5 shrink-0 text-surface-on-variant"
+                            title={t('tags.systemTag', 'System tag')}
+                        />
+                    )}
+                </span>
+            }
+            meta={uses || undefined}
+            menu={menu}
+            menuTestId={`tag-dropdown-${id}`}
+            menuLabel={t('tags.toggleDropdownMenu', 'Toggle dropdown menu')}
+        />
     );
 };
 

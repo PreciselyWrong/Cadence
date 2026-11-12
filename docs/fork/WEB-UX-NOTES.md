@@ -12,6 +12,13 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-12 — Style d'Aujourd'hui sur tout le bureau, passe de soustraction (web)
+
+- **Problème** : seules Aujourd'hui et Planifier suivaient la refonte ; les autres pages gardaient un fond gris, un titre maigre (`text-2xl font-light`), des contrôles refaits à la main, des lignes à liseré coloré et des compteurs « 0 tasks · 0 notes · 0 projects ».
+- **Socle** : surface neutre unique derrière toutes les pages (`bg-surface`, plus de gris autour du contenu) ; en-tête commun `Shared/ui/PageHeader.tsx` (titre 800, une seule rangée d'actions à droite qui passe à la ligne sans chevaucher, ligne de résumé facultative, filtres dessous) ; ligne commune `Shared/ui/ListRow.tsx` (deux niveaux comme une ligne de tâche : titre, puis le contexte en gris ; clic = ouvrir ; ⋯ au survol ou au focus, au clic droit, toujours visible au toucher, et chaque action existe aussi sur la page de l'élément) ; champ de filtre `Shared/ui/SearchField.tsx`.
+- **Étiquettes** : lignes simples ; la couleur de l'étiquette est le seul signal (point de 6 px, ou son icône teintée) ; usages sans les zéros (« 5 tâches · 2 notes », rien si inutilisée) ; tri par utilité : épinglées, puis les plus utilisées (sous-arbre compris), puis le nom ; plus de groupes par lettre.
+- **À reprendre sur Android** : Étiquettes triées pareil (épinglées, puis usage décroissant) ; le reste (lignes simples, pas de « 0 ») est déjà fait par la passe du 2026-11-02.
+
 ### 2026-11-12 — Notes et descriptions : barre de mise en forme en bas, mentions @ (web)
 
 - **Problème** : la mise en forme ne passait que par une barre flottante sur sélection (notes) ou la syntaxe tapée à la main ; la description d'une tâche était un simple champ texte, sans `[[`, sans tableau ; aucune façon de citer une personne.
