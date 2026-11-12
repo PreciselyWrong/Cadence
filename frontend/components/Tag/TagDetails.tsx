@@ -45,6 +45,10 @@ import { SortOption } from '../Shared/SortFilterButton';
 import { mergeUpdatedTaskList } from '../../utils/taskUpdateMerge';
 import { useTaskUpdatedEvent } from '../../hooks/useTaskUpdatedEvent';
 import IconSortDropdown from '../Shared/IconSortDropdown';
+import PageShell, { PAGE_GUTTER } from '../Shared/ui/PageShell';
+import Segmented from '../Shared/ui/Segmented';
+import EmptyState from '../Shared/ui/EmptyState';
+import { FIELD_CLASS } from '../Shared/ui/controlSizes';
 import { isProjectClosed } from '../../utils/projectStatus';
 
 const TagDetails: React.FC = () => {
@@ -602,8 +606,7 @@ const TagDetails: React.FC = () => {
     }
 
     return (
-        <div className="w-full px-2 sm:px-4 lg:px-6 pt-4 pb-12">
-            {/* Tag header, same card as goal and area details */}
+        <PageShell template="board">
             <TagHero
                 tag={tag}
                 t={t}
@@ -622,10 +625,10 @@ const TagDetails: React.FC = () => {
                     isSearchExpanded
                         ? 'max-h-24 opacity-100 mb-4'
                         : 'max-h-0 opacity-0 mb-0'
-                } overflow-hidden`}
+                } overflow-hidden ${PAGE_GUTTER}`}
             >
-                <div className="flex items-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm px-4 py-3">
-                    <MagnifyingGlassIcon className="h-5 w-5 text-gray-600 dark:text-gray-300 mr-2" />
+                <label className="relative block">
+                    <MagnifyingGlassIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-surface-on-variant" />
                     <input
                         type="text"
                         placeholder={t(
@@ -634,56 +637,41 @@ const TagDetails: React.FC = () => {
                         )}
                         value={taskSearchQuery}
                         onChange={(e) => setTaskSearchQuery(e.target.value)}
-                        className="w-full bg-transparent border-none focus:ring-0 focus:outline-none dark:text-white"
+                        className={`${FIELD_CLASS} pl-9`}
                     />
-                </div>
+                </label>
             </div>
 
-            {/* Tabs */}
-            <div className="mb-4">
-                <div className="flex items-center min-h-[2.5rem]">
-                    <div className="flex items-center gap-4 sm:gap-6 self-stretch pl-2 sm:pl-3">
-                        {(
-                            [
-                                [
-                                    'tasks',
-                                    t('tasks.title', 'Tasks'),
-                                    displayTasks.length,
-                                ],
-                                [
-                                    'notes',
-                                    t('notes.title', 'Notes'),
-                                    notes.length,
-                                ],
-                                [
-                                    'projects',
-                                    t('projects.title', 'Projects'),
-                                    projects.length,
-                                ],
-                            ] as const
-                        ).map(([tab, label, count]) => (
-                            <button
-                                key={tab}
-                                type="button"
-                                onClick={() => setActiveTab(tab)}
-                                className={`relative flex items-center self-stretch py-2.5 text-sm font-medium transition-colors ${
-                                    activeTab === tab
-                                        ? 'text-gray-900 dark:text-gray-100 after:absolute after:bottom-0 after:left-px after:right-px after:h-0.5 after:rounded-full after:bg-gray-900 dark:after:bg-gray-100'
-                                        : 'text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200'
-                                }`}
-                                aria-pressed={activeTab === tab}
-                            >
-                                {label} ({count})
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            </div>
-
-            {/* Tasks Section */}
-            {activeTab === 'tasks' && (
-                <div className="mb-8">
-                    <div className="flex items-center justify-end mb-4">
+            {/* One row: what to show, then how to sort it. */}
+            <div
+                className={`mb-4 flex flex-wrap items-center gap-2 ${PAGE_GUTTER}`}
+            >
+                <Segmented
+                    aria-label={t('tasks.show', 'Show')}
+                    selected={activeTab}
+                    onSelect={(tab) =>
+                        setActiveTab(tab as 'tasks' | 'notes' | 'projects')
+                    }
+                    options={[
+                        {
+                            id: 'tasks',
+                            label: t('tasks.title', 'Tasks'),
+                            count: displayTasks.length,
+                        },
+                        {
+                            id: 'notes',
+                            label: t('notes.title', 'Notes'),
+                            count: notes.length,
+                        },
+                        {
+                            id: 'projects',
+                            label: t('projects.title', 'Projects'),
+                            count: projects.length,
+                        },
+                    ]}
+                />
+                {activeTab === 'tasks' && (
+                    <div className="ml-auto">
                         <IconSortDropdown
                             options={sortOptions}
                             value={orderBy}
@@ -849,6 +837,12 @@ const TagDetails: React.FC = () => {
                             }
                         />
                     </div>
+                )}
+            </div>
+
+            {/* Tasks Section */}
+            {activeTab === 'tasks' && (
+                <div className={`mb-8 ${PAGE_GUTTER}`}>
                     {isMinimal && (
                         <div className="mb-3">
                             <NewTask
@@ -901,12 +895,12 @@ const TagDetails: React.FC = () => {
                                 />
                             )
                         ) : (
-                            <p className="text-sm text-gray-600 dark:text-gray-300">
-                                {t(
+                            <EmptyState
+                                title={t(
                                     'tasks.noTasksAvailable',
                                     'No tasks available.'
                                 )}
-                            </p>
+                            />
                         )}
                     </TaskViewBody>
                     {isMinimal && taskStatusFilter === 'active' && (
@@ -939,7 +933,7 @@ const TagDetails: React.FC = () => {
 
             {/* Notes Section */}
             {activeTab === 'notes' && notes.length > 0 && (
-                <div className="mb-8">
+                <div className={`mb-8 ${PAGE_GUTTER}`}>
                     <ul className="space-y-1">
                         {notes.map((note) => {
                             const noteTags = note.tags || note.Tags || [];
@@ -1092,7 +1086,7 @@ const TagDetails: React.FC = () => {
 
             {/* Projects Section */}
             {activeTab === 'projects' && projects.length > 0 && (
-                <div className="mb-8">
+                <div className={`mb-8 ${PAGE_GUTTER}`}>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         {projects.map((project: Project) => {
                             return (
@@ -1125,20 +1119,19 @@ const TagDetails: React.FC = () => {
             {displayTasks.length === 0 &&
                 notes.length === 0 &&
                 projects.length === 0 && (
-                    <div className="text-center py-8">
-                        <TagIcon className="h-16 w-16 text-gray-500 mx-auto mb-4" />
-                        <p className="text-gray-600 dark:text-gray-300 text-lg">
-                            {taskSearchQuery.trim()
+                    <EmptyState
+                        title={
+                            taskSearchQuery.trim()
                                 ? t(
                                       'tasks.noTasksAvailable',
                                       'No tasks available.'
                                   )
                                 : t(
                                       'tags.noItemsWithTag',
-                                      `No items found with the tag "${tag.name}"`
-                                  )}
-                        </p>
-                    </div>
+                                      'No items found with this tag'
+                                  )
+                        }
+                    />
                 )}
 
             {/* Tag Modal */}
@@ -1192,7 +1185,7 @@ const TagDetails: React.FC = () => {
                     }}
                 />
             )}
-        </div>
+        </PageShell>
     );
 };
 

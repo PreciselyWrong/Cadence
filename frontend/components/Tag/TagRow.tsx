@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { LockClosedIcon } from '@heroicons/react/24/outline';
 import { Tag } from '../../entities/Tag';
 import PushPinIcon from '../Shared/Icons/PushPinIcon';
-import EntityIcon from '../Shared/EntityIcon';
-import ListRow, { ColorDot, countsLine } from '../Shared/ui/ListRow';
+import EntityMark from '../Shared/ui/EntityMark';
+import ListRow, { countsLine } from '../Shared/ui/ListRow';
 import { MenuEntry } from '../Shared/ui/Menu';
 import { useTagColor } from '../../utils/tagColor';
 
@@ -28,7 +28,7 @@ export const tagPath = (tag: Tag): string =>
 export const tagUseCount = (tag: Tag): number =>
     (tag.tasks_count ?? 0) + (tag.notes_count ?? 0) + (tag.projects_count ?? 0);
 
-// One tag in the list: its colour as the leading mark (the only colour on
+// One tag in the list: the tag icon in its colour as the leading mark (the only colour on
 // the row), the name, then what uses it, with zero counts left out.
 const TagRow: React.FC<TagRowProps> = ({ tag, label, onEdit, onDelete }) => {
     const { t } = useTranslation();
@@ -69,15 +69,7 @@ const TagRow: React.FC<TagRowProps> = ({ tag, label, onEdit, onDelete }) => {
         <ListRow
             to={tagPath(tag)}
             testId={`tag-row-${id}`}
-            leading={
-                tag.icon ? (
-                    <span style={{ color }} className="flex">
-                        <EntityIcon icon={tag.icon} className="h-4 w-4" />
-                    </span>
-                ) : (
-                    <ColorDot color={color} />
-                )
-            }
+            leading={<EntityMark kind="tag" icon={tag.icon} color={color} />}
             title={
                 <span className="inline-flex max-w-full items-center gap-1.5">
                     <span className="truncate" title={tag.name}>

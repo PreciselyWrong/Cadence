@@ -15,7 +15,8 @@ import ConfirmDialog from './Shared/ConfirmDialog';
 import AreaModal from './Area/AreaModal';
 import PageHeader from './Shared/ui/PageHeader';
 import Button from './Shared/ui/Button';
-import ListRow, { ColorDot, countsLine } from './Shared/ui/ListRow';
+import ListRow, { countsLine } from './Shared/ui/ListRow';
+import EntityMark from './Shared/ui/EntityMark';
 import BlankSlate from './Shared/BlankSlate';
 import IconSortDropdown from './Shared/IconSortDropdown';
 import { SortOption } from './Shared/SortFilterButton';
@@ -460,7 +461,8 @@ const Areas: React.FC = () => {
                                                 to={areaPath(area)}
                                                 testId={`area-row-${area.uid}`}
                                                 leading={
-                                                    <ColorDot
+                                                    <EntityMark
+                                                        kind="area"
                                                         color={area.color}
                                                     />
                                                 }
