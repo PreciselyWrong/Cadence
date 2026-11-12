@@ -47,4 +47,9 @@ Notes et descriptions de tâches s'éditent dans le même éditeur (`frontend/co
 
 ## Android
 
-Le rendu Markdown, les puces de liens, les rétroliens, la barre de mise en forme et le choix `@` sont à reprendre (`TODO.md`) ; rien à synchroniser : les rétroliens sont calculés par le serveur depuis le texte déjà synchronisé.
+Rien à synchroniser : les rétroliens sont calculés par le serveur depuis le texte déjà synchronisé.
+
+- Rendu (`notes/Markdown.kt`, pur et testé, `ui/MarkdownView.kt`) : titres, listes et cases (cocher réécrit le texte), citations, code (rien n'y est un lien), filets, tableaux GFM, gras, italique, barré, liens et adresses nues ; la description d'une tâche se lit rendue dans sa fiche, le crayon l'édite (texte brut).
+- Puces : `[[Titre]]` ouvre la note (sinon un message), `[[task:Nom]]` la tâche de ce nom sur l'appareil (une ouverte d'abord, `WikiLinks.findTask`), `[texte](/note|task/<uid>)` l'élément ; `@[Nom](person:uid)` et `/person/<uid>` se lisent en puce sans s'ouvrir (pas de personnes sur Android).
+- Rétroliens : section « Rétroliens » en bas d'une note et d'une fiche de tâche, lue en ligne à l'ouverture (`contentlinks/BacklinksClient`), absente hors ligne ou sans lien ; toucher ouvre la note ou la tâche.
+- Pas encore : création d'une cible inconnue, choix `@`, barre complète, rétroliens d'une personne (`TODO.md`).

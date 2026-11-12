@@ -41,6 +41,7 @@ import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
+import ch.nicolab.cadence.tasks.notes.ContentRef
 import ch.nicolab.cadence.tasks.notes.Markdown
 import ch.nicolab.cadence.tasks.notes.MdBlock
 import ch.nicolab.cadence.tasks.notes.MdRun
@@ -50,6 +51,9 @@ private val QUOTE_BAR = 3.dp
 
 /** Ouvre la note dont le titre est [title] (lien `[[titre]]`) ; absente, c'est à l'appelant de le dire. */
 private val LocalWikiLinkHandler = compositionLocalOf<(String) -> Unit> { {} }
+
+/** Ouvre la cible d'un lien interne (tâche, note par uid) ; null : la puce se lit sans s'ouvrir. */
+private val LocalRefHandler = compositionLocalOf<((ContentRef) -> Unit)?> { null }
 
 /**
  * Rend un contenu markdown ; cocher une case appelle [onToggleCheckbox] avec l'index de sa ligne source,
@@ -61,9 +65,11 @@ internal fun MarkdownView(
     onToggleCheckbox: (line: Int) -> Unit,
     modifier: Modifier = Modifier,
     onWikiLink: (title: String) -> Unit = {},
+    /** Toucher une puce de tâche ou un lien vers une note par uid ; une personne n'a pas de fiche sur Android. */
+    onRef: ((ContentRef) -> Unit)? = null,
 ) {
     val blocks = remember(content) { Markdown.parse(content) }
-    CompositionLocalProvider(LocalWikiLinkHandler provides onWikiLink) {
+    CompositionLocalProvider(LocalWikiLinkHandler provides onWikiLink, LocalRefHandler provides onRef) {
         Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
             blocks.forEach { block ->
                 when (block) {
@@ -73,6 +79,7 @@ internal fun MarkdownView(
                     is MdBlock.Quote -> QuoteRow(block.text)
                     is MdBlock.Code -> CodeBlock(block.text)
                     is MdBlock.Rule -> Hairline(Modifier.padding(vertical = Space.sm))
+                    is MdBlock.Table -> TableBlock(block)
                 }
             }
         }
@@ -93,8 +100,9 @@ private fun InlineText(text: String, style: TextStyle, modifier: Modifier = Modi
     val chipStyle = TextLinkStyles(SpanStyle(color = palette.onPrimaryContainer, background = palette.primaryContainer, fontWeight = FontWeight.Medium))
     val codeBackground = palette.containerHigh
     val onWikiLink = LocalWikiLinkHandler.current
-    val annotated = remember(text, linkStyle, chipStyle, codeBackground, onWikiLink) {
-        annotate(Markdown.inline(text), linkStyle, chipStyle, codeBackground, onWikiLink)
+    val onRef = LocalRefHandler.current
+    val annotated = remember(text, linkStyle, chipStyle, codeBackground, onWikiLink, onRef) {
+        annotate(Markdown.inline(text), linkStyle, chipStyle, codeBackground, onWikiLink, onRef)
     }
     Text(
         text = annotated,
@@ -115,6 +123,7 @@ private fun annotate(
     chipStyle: TextLinkStyles,
     codeBackground: androidx.compose.ui.graphics.Color,
     onWikiLink: (String) -> Unit,
+    onRef: ((ContentRef) -> Unit)?,
 ): AnnotatedString =
     buildAnnotatedString {
         runs.forEach { run ->
@@ -126,7 +135,18 @@ private fun annotate(
                 textDecoration = if (run.strike) TextDecoration.LineThrough else null,
             )
             val wiki = run.wiki
-            if (wiki != null) {
+            val ref = run.ref
+            if (ref != null) {
+                // Une personne n'a pas de fiche sur l'appareil : sa puce se lit sans s'ouvrir.
+                if (onRef != null && ref !is ContentRef.Person) {
+                    val listener = LinkInteractionListener { onRef(ref) }
+                    withLink(LinkAnnotation.Clickable(tag = run.text, styles = chipStyle, linkInteractionListener = listener)) {
+                        withStyle(style) { append(run.text) }
+                    }
+                } else {
+                    withStyle(chipStyle.style ?: SpanStyle()) { withStyle(style) { append(run.text) } }
+                }
+            } else if (wiki != null) {
                 val listener = LinkInteractionListener { onWikiLink(wiki) }
                 withLink(LinkAnnotation.Clickable(tag = wiki, styles = chipStyle, linkInteractionListener = listener)) {
                     withStyle(style) { append(run.text) }
@@ -188,4 +208,24 @@ private fun CodeBlock(text: String) {
         color = cadence.onSurface,
         modifier = Modifier.fillMaxWidth().clip(Radius.Chip).background(cadence.containerHigh).padding(Space.md),
     )
+}
+
+/** Tableau : l'en-tête en gras, une ligne par rangée, colonnes de même largeur, filets entre les rangées. */
+@Composable
+private fun TableBlock(table: MdBlock.Table) {
+    val palette = cadence
+    Column(Modifier.fillMaxWidth().clip(Radius.Chip).background(palette.containerLow)) {
+        TableRow(table.header, bold = true)
+        table.rows.forEach { row ->
+            Hairline()
+            TableRow(row, bold = false)
+        }
+    }
+}
+
+@Composable
+private fun TableRow(cells: List<String>, bold: Boolean) {
+    Row(Modifier.fillMaxWidth().padding(horizontal = Space.sm, vertical = Space.xs), horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+        cells.forEach { cell -> InlineText(cell, MaterialTheme.typography.bodyMedium, Modifier.weight(1f), bold = bold) }
+    }
 }

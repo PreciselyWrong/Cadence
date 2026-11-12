@@ -76,8 +76,10 @@ Branche `fix/note-quickadd-focus-c7e743d5`.
 - [x] La fiche d'ajout se retire (animation `sheetState.hide()`) avant l'ouverture de l'éditeur de note.
 - [x] L'éditeur place le clavier dans le contenu quand la note a déjà un titre (`NoteFocus`, test `NoteFocusTest`), puis ouvre le clavier.
 - [ ] Vérifier sur le téléphone (aucun appareil, émulateur bloqué le 2026-11-05) : Tâches › + › Note, titre, Valider → la fiche disparaît, le curseur et le clavier sont dans le contenu.
-- [ ] Android : Markdown complet des notes et descriptions (tableaux, cases, code), puces `[[Titre]]`, `[[task:Nom]]`, `@[Nom](person:uid)` avec création d'une cible inconnue, section Rétroliens des notes, tâches et personnes (`GET /api/note|task|people/:uid/backlinks`), barre de mise en forme sous l'éditeur et choix `@` des personnes
-  Raison : web d'abord (2026-11-12) ; rien à synchroniser, les rétroliens sont calculés par le serveur depuis le texte déjà synchronisé (`docs/44-notes-links.md`). Vérif : une note web avec ces liens se lit pareil sur le téléphone, un clic ouvre la note, la tâche ou la personne ; la fiche d'une personne mentionnée liste la note.
+- [x] Android : Markdown des notes et descriptions (tableaux, cases, code), puces `[[Titre]]`, `[[task:Nom]]`, `@[Nom](person:uid)` et chemins `/note|task/<uid>`, section Rétroliens des notes et des tâches (en ligne)
+  Vérif sur le téléphone : une note web avec ces liens se lit pareil, toucher une puce ouvre la note ou la tâche ; une tâche citée dans une note montre la note dans « Rétroliens ».
+- [ ] Android : création d'une cible inconnue depuis sa puce, choix `@` des personnes, barre de mise en forme complète (lien, code, tableau), rétroliens d'une personne
+  Raison : Android n'a ni personnes ni fiche de personne (une mention se lit en puce sans s'ouvrir) ; la barre actuelle n'a que cases, puces, titre, gras. Vérif : taper `@` dans une note propose les personnes du serveur et écrit `@[Nom](person:uid)`.
 
 ## Next
 

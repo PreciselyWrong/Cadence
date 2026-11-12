@@ -123,4 +123,29 @@ class MarkdownTest {
         assertEquals("  * [x] sous\r\nfin", MarkdownCheckbox.toggle("  * [ ] sous\r\nfin", 0))
         assertEquals("  * [ ] sous\r\nfin", MarkdownCheckbox.toggle("  * [X] sous\r\nfin", 0))
     }
+
+    private val uid = "abcdefghij12345"
+
+    @Test
+    fun `un tableau GFM devient un bloc avec son en-tête et ses lignes complétées`() {
+        val blocks = Markdown.parse("Avant\n| Nom | Prix |\n|---|:-:|\n| Pain | 3 |\n| Lait |\n\nAprès")
+        assertEquals(MdBlock.Paragraph(0, "Avant"), blocks[0])
+        assertEquals(MdBlock.Table(1, listOf("Nom", "Prix"), listOf(listOf("Pain", "3"), listOf("Lait", ""))), blocks[1])
+        assertEquals(MdBlock.Paragraph(6, "Après"), blocks[2])
+    }
+
+    @Test
+    fun `une tâche, une mention et un chemin de l'app deviennent des liens internes`() {
+        val runs = Markdown.inline("Voir [[task:Acheter du pain]] avec @[Léa](person:$uid) et [la note](/note/$uid-voyage)")
+        assertEquals(MdRun("Acheter du pain", ref = ContentRef.Task("Acheter du pain", null)), runs[1])
+        assertEquals(MdRun("@Léa", ref = ContentRef.Person(uid)), runs[3])
+        assertEquals(MdRun("la note", ref = ContentRef.Note(uid)), runs[5])
+        assertEquals(MdRun("Note", wiki = "Note"), Markdown.inline("[[Note]]").single())
+    }
+
+    @Test
+    fun `rien n'est un lien dans le code, ni une adresse e-mail`() {
+        assertEquals(listOf(MdRun("[[task:x]]", code = true)), Markdown.inline("`[[task:x]]`"))
+        assertEquals(null, Markdown.inline("moi@[x](person:$uid)").firstOrNull { it.ref != null })
+    }
 }

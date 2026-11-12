@@ -62,6 +62,8 @@ internal fun createTimedReminders(context: Context): TimedRemindersRepository = 
 
 internal fun createTodoMd(context: Context): TodoMdClient = TasksRuntime.get(context).todoMd
 
+internal fun createBacklinks(context: Context): ch.nicolab.cadence.tasks.contentlinks.BacklinksClient = TasksRuntime.get(context).backlinks
+
 internal fun createSyncStatus(context: Context): SyncStatusClient = TasksRuntime.get(context).syncStatus
 
 internal fun createBrief(context: Context): BriefRepository = TasksRuntime.get(context).brief
@@ -147,6 +149,7 @@ internal class TasksRuntime private constructor(context: Context) {
         habitPending = habitPending,
     )
     val todoMd = TodoMdClient(api::call)
+    val backlinks = ch.nicolab.cadence.tasks.contentlinks.BacklinksClient { method, path, query -> api.callJson(method, path, query) }
     val syncStatus = SyncStatusClient(api::call)
 
     val review = ReviewRepository(

@@ -13,7 +13,21 @@ data class MdRun(
     val link: String? = null,
     /** Titre de la note visée par un lien `[[titre]]` ; le texte est alors ce titre. */
     val wiki: String? = null,
+    /** Lien interne vers une tâche, une personne ou une note par son uid (`docs/44-notes-links.md`). */
+    val ref: ContentRef? = null,
 )
+
+/** Cible d'un lien interne autre que `[[titre]]` de note. */
+sealed interface ContentRef {
+    /** `[[task:Nom]]` (par nom) ou `/task/<uid>`. */
+    data class Task(val name: String?, val uid: String?) : ContentRef
+
+    /** `@[Nom](person:<uid>)` ou `/person/<uid>`. */
+    data class Person(val uid: String) : ContentRef
+
+    /** `/note/<uid>` ou `/notes/<uid>`. */
+    data class Note(val uid: String) : ContentRef
+}
 
 /** Bloc markdown ; [line] est l'index (base 0) de sa première ligne dans le contenu source. */
 sealed interface MdBlock {
@@ -33,6 +47,9 @@ sealed interface MdBlock {
     data class Quote(override val line: Int, val text: String) : MdBlock
     data class Code(override val line: Int, val text: String) : MdBlock
     data class Rule(override val line: Int) : MdBlock
+
+    /** Tableau GFM : cellules en texte en ligne, l'en-tête à part. */
+    data class Table(override val line: Int, val header: List<String>, val rows: List<List<String>>) : MdBlock
 }
 
 /**
@@ -47,7 +64,11 @@ object Markdown {
     private val ordered = Regex("""^(\s*)(\d{1,9})[.)]\s+(.*)$""")
     private val quote = Regex("""^>\s?(.*)$""")
     private val rule = Regex("""^\s*([-*_])(\s*\1){2,}\s*$""")
-    private val fence = Regex("""^\s*```""")
+    private val fence = Regex("""^\s*(```|~~~)""")
+    private val tableDelimiter = Regex("""^\s*\|?\s*:?-{1,}:?\s*(\|\s*:?-{1,}:?\s*)*\|?\s*$""")
+    private val mention = Regex("""^@\[([^\]\n]*)\]\(person:([0-9a-z]{15})\)""")
+    private val appPath = Regex("""^\((?:https?://[^\s/()]+)?/(note|notes|task|person)/([0-9a-z]{15})[0-9a-z-]*\)""")
+    private const val TASK_PREFIX = "task:"
 
     fun parse(source: String): List<MdBlock> {
         val lines = source.split("\n").map { it.trimEnd('\r') }
@@ -71,6 +92,19 @@ object Markdown {
                     endParagraph()
                     blocks += code
                     index = end + 1
+                    continue
+                }
+                line.contains('|') && lines.getOrNull(index + 1)?.let { tableDelimiter.matches(it) && it.contains('-') } == true -> {
+                    val header = cells(line)
+                    var end = index + 2
+                    val rows = mutableListOf<List<String>>()
+                    while (end < lines.size && lines[end].contains('|') && lines[end].isNotBlank()) {
+                        rows += cells(lines[end]).let { row -> List(header.size) { row.getOrElse(it) { "" } } }
+                        end++
+                    }
+                    endParagraph()
+                    blocks += MdBlock.Table(index, header, rows)
+                    index = end
                     continue
                 }
                 rule.matches(line) -> MdBlock.Rule(index)
@@ -111,7 +145,7 @@ object Markdown {
         scan(text, MdRun(""), out)
         return out.fold(mutableListOf()) { merged, run ->
             val last = merged.lastOrNull()
-            if (last != null && last.copy(text = "") == run.copy(text = "") && run.link == null && run.wiki == null) {
+            if (last != null && last.copy(text = "") == run.copy(text = "") && run.link == null && run.wiki == null && run.ref == null) {
                 merged[merged.lastIndex] = last.copy(text = last.text + run.text)
             } else {
                 merged += run
@@ -137,8 +171,15 @@ object Markdown {
             is MdBlock.Quote -> plain(block.text)
             is MdBlock.Code -> block.text.lineSequence().firstOrNull()
             is MdBlock.Rule -> null
+            is MdBlock.Table -> block.header.joinToString(" · ") { plain(it) }
         }?.takeIf { it.isNotBlank() }
     }.take(maxLines).joinToString("\n")
+
+    /** Cellules d'une ligne de tableau, sans les `|` des bords ; `\|` reste un caractère. */
+    private fun cells(line: String): List<String> {
+        val trimmed = line.trim().removePrefix("|").let { if (it.endsWith("|") && !it.endsWith("\\|")) it.dropLast(1) else it }
+        return trimmed.split(Regex("""(?<!\\)\|""")).map { it.trim().replace("\\|", "|") }
+    }
 
     private fun plain(text: String): String = inline(text).joinToString("") { it.text }
 
@@ -174,6 +215,8 @@ object Markdown {
                 (c == '*' || c == '_') && canOpenEmphasis(source, i) ->
                     pair(source, i, c.toString(), style.copy(italic = true), out, ::flush)
                 source.startsWith("[[", i) && WikiLinks.at(source, i) != null -> wikiLink(source, i, style, out, ::flush)
+                c == '@' && (i == 0 || !source[i - 1].isLetterOrDigit()) && mention.find(source.substring(i)) != null ->
+                    mentionLink(source, i, style, out, ::flush)
                 c == '[' -> markdownLink(source, i, style, out, ::flush)
                 (c.isLetterOrDigit() || c == '+') && (i == 0 || !source[i - 1].isLetterOrDigit()) ->
                     bareLink(source, i, style, out, ::flush)
@@ -215,6 +258,19 @@ object Markdown {
     private fun markdownLink(source: String, start: Int, style: MdRun, out: MutableList<MdRun>, flush: () -> Unit): Int {
         val close = source.indexOf("](", start + 1)
         if (close < 0) return -1
+        appPath.find(source.substring(close + 1))?.let { path ->
+            val label = source.substring(start + 1, close)
+            if (label.isEmpty()) return -1
+            val uid = path.groupValues[2]
+            val ref = when (path.groupValues[1]) {
+                "task" -> ContentRef.Task(null, uid)
+                "person" -> ContentRef.Person(uid)
+                else -> ContentRef.Note(uid)
+            }
+            flush()
+            out += style.copy(text = label, ref = ref)
+            return close + 1 + path.value.length
+        }
         val match = LinkExtractor.matches(source.substring(close + 2)).firstOrNull()
         if (match == null || match.range.first != 0) return -1
         val label = source.substring(start + 1, close)
@@ -230,8 +286,21 @@ object Markdown {
     private fun wikiLink(source: String, start: Int, style: MdRun, out: MutableList<MdRun>, flush: () -> Unit): Int {
         val link = WikiLinks.at(source, start) ?: return -1
         flush()
-        out += style.copy(text = link.title, wiki = link.title)
+        if (link.title.startsWith(TASK_PREFIX, ignoreCase = true)) {
+            val name = link.title.substring(TASK_PREFIX.length).trim()
+            if (name.isEmpty()) return -1
+            out += style.copy(text = name, ref = ContentRef.Task(name, null))
+        } else {
+            out += style.copy(text = link.title, wiki = link.title)
+        }
         return link.end
+    }
+
+    private fun mentionLink(source: String, start: Int, style: MdRun, out: MutableList<MdRun>, flush: () -> Unit): Int {
+        val match = mention.find(source.substring(start)) ?: return -1
+        flush()
+        out += style.copy(text = "@" + match.groupValues[1], ref = ContentRef.Person(match.groupValues[2]))
+        return start + match.value.length
     }
 
     private fun bareLink(source: String, start: Int, style: MdRun, out: MutableList<MdRun>, flush: () -> Unit): Int {

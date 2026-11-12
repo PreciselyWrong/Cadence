@@ -59,6 +59,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import ch.nicolab.cadence.tasks.notes.WikiLinks
+import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.window.Dialog
+import android.widget.Toast
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -170,6 +174,9 @@ internal fun TaskDetailSheet(
     var confirmDelete by remember { mutableStateOf(false) }
     // Une sous-tâche ouverte s'affiche par-dessus : sa fiche est une fiche de tâche comme une autre.
     var openedSubtask by rememberSaveable(current.uid) { mutableStateOf<String?>(null) }
+    var openedNote by rememberSaveable(current.uid) { mutableStateOf<String?>(null) }
+    val allNotes by viewModel.notes.collectAsStateWithLifecycle()
+    val openRef = rememberContentRefOpener(viewModel, onOpenNote = { openedNote = it }, onOpenTask = { openedSubtask = it })
     var moreFields by rememberSaveable(current.uid) { mutableStateOf(false) }
     val notifications = rememberNotificationPermission()
     val hasReminder = current.reminderAt != null
@@ -263,10 +270,25 @@ internal fun TaskDetailSheet(
                     )
                 }
                 PostponementLine(taskUid = current.uid, version = current.dueDay)
-                NoteCard(note = note, onNoteChange = { note = it }, readOnly = textLocked)
+                NoteCard(
+                    note = note,
+                    onNoteChange = { note = it },
+                    readOnly = textLocked,
+                    onRef = openRef,
+                    onWikiLink = { title ->
+                        val target = WikiLinks.findNote(title, allNotes)
+                        if (target != null) openedNote = target.uid
+                        else Toast.makeText(context, R.string.tasks_wiki_not_found, Toast.LENGTH_SHORT).show()
+                    },
+                )
                 LinkPreviewList("$title\n$note", viewModel.linkPreviews)
                 AddToLinksRow("$title\n$note", sourceKey = current.uid, onAdd = { viewModel.addLinkFrom(it, "task", current.uid) })
                 if (!current.fileBacked) SubtasksCard(parentUid = current.uid, viewModel = viewModel, onOpen = { openedSubtask = it.uid })
+                BacklinksSection(
+                    type = "task",
+                    uid = current.uid,
+                    onOpen = { link -> if (link.type == "note") openedNote = link.uid else openedSubtask = link.uid },
+                )
                 val keyedFields = detailFields(
                         task = current,
                         today = today,
@@ -442,6 +464,19 @@ internal fun TaskDetailSheet(
     }
     openedSubtask?.let { uid ->
         TaskDetailSheet(taskUid = uid, viewModel = viewModel, onDismiss = { openedSubtask = null })
+    }
+    openedNote?.let { noteUid ->
+        // Une note liée depuis la description s'ouvre en plein écran par-dessus la fiche.
+        Dialog(onDismissRequest = { openedNote = null }, properties = DialogProperties(usePlatformDefaultWidth = false)) {
+            NoteScreen(
+                viewModel = viewModel,
+                noteUid = noteUid,
+                isNew = false,
+                onBack = { openedNote = null },
+                onOpenNote = { openedNote = it },
+                onOpenTask = { openedSubtask = it },
+            )
+        }
     }
     if (confirmDelete) {
         AlertDialog(

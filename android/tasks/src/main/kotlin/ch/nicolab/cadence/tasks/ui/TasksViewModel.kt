@@ -59,6 +59,8 @@ import ch.nicolab.cadence.tasks.notes.NoteEditSession
 import ch.nicolab.cadence.tasks.notes.NoteFields
 import ch.nicolab.cadence.tasks.notes.NotePatch
 import ch.nicolab.cadence.tasks.planning.AddTask
+import kotlinx.coroutines.flow.first
+import ch.nicolab.cadence.tasks.notes.WikiLinks
 import ch.nicolab.cadence.tasks.planning.Horizon
 import ch.nicolab.cadence.tasks.planning.PlanBoard
 import ch.nicolab.cadence.tasks.planning.PlanCard
@@ -939,6 +941,9 @@ internal class TasksViewModel(
         val change = PlanBoard.horizonChange(task, from, to, m.today, weekStart.value) ?: return
         changeWithUndo(task, change, UndoChanges.restoreFunnel(task), format(R.string.plan_horizon_notice, task.name, getString(horizonLabel(to))))
     }
+
+    /** La tâche d'un lien `[[task:Nom]]`, cherchée parmi toutes les tâches de l'appareil. */
+    suspend fun taskNamed(name: String): TaskItem? = WikiLinks.findTask(name, repository.observeTasks().first())
 
     /** « + » d'un jour : la tâche est créée sans échéance puis prévue ce jour. */
     suspend fun addToDay(draft: TaskDraft, day: LocalDate) {

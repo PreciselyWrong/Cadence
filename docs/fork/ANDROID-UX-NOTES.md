@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-12 — Markdown, puces de liens et rétroliens
+
+- **Problème** : une description de tâche s'affichait en texte brut ; `[[task:…]]`, les mentions et les tableaux du web n'étaient pas rendus ; aucun rétrolien.
+- **Décision** : la description d'une tâche se lit rendue comme une note (crayon pour éditer le texte brut) ; puces pour les notes, tâches et personnes (une personne ne s'ouvre pas : pas de fiche sur Android) ; « Rétroliens » en bas des notes et des fiches, seulement s'il y en a et en ligne.
+- **Web** : rien à reprendre.
+
 ### 2026-11-12 — Ranger Aujourd'hui au doigt, frise déplaçable
 
 - **Problème** : ranger demandait Monter / Descendre, un rang à la fois, et l'ordre (`today_order`) n'était pas celui du web (plan du jour) ; la frise de Ma journée était en lecture.

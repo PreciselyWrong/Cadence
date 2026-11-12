@@ -244,20 +244,38 @@ internal fun NoteListRow(note: NoteItem, onClick: () -> Unit, modifier: Modifier
 
 /** Note en plein écran. [isNew] : la note n'existe pas encore, elle est créée à la première saisie. */
 @Composable
-internal fun NoteScreen(viewModel: TasksViewModel, noteUid: String, isNew: Boolean, onBack: () -> Unit, onOpenNote: (String) -> Unit) {
+internal fun NoteScreen(
+    viewModel: TasksViewModel,
+    noteUid: String,
+    isNew: Boolean,
+    onBack: () -> Unit,
+    onOpenNote: (String) -> Unit,
+    /** Une puce de tâche ou un rétrolien de tâche touché ; sans hôte de fiche, la tâche s'ouvre dans une feuille ici. */
+    onOpenTask: ((String) -> Unit)? = null,
+) {
     BackHandler(onBack = onBack)
     val flow = remember(noteUid) { viewModel.observeNote(noteUid) }
     val note by flow.collectAsStateWithLifecycle(initialValue = null)
+    var openedTask by remember(noteUid) { mutableStateOf<String?>(null) }
     Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         if (note != null || isNew) {
-            NoteEditor(viewModel, noteUid, note, onBack, onOpenNote)
+            NoteEditor(viewModel, noteUid, note, onBack, onOpenNote, onOpenTask ?: { openedTask = it })
         }
     }
+    openedTask?.let { taskUid -> TaskDetailSheet(taskUid = taskUid, viewModel = viewModel, onDismiss = { openedTask = null }) }
 }
 
 @Composable
-private fun NoteEditor(viewModel: TasksViewModel, uid: String, note: NoteItem?, onBack: () -> Unit, onOpenNote: (String) -> Unit) {
+private fun NoteEditor(
+    viewModel: TasksViewModel,
+    uid: String,
+    note: NoteItem?,
+    onBack: () -> Unit,
+    onOpenNote: (String) -> Unit,
+    onOpenTask: (String) -> Unit,
+) {
     val palette = cadence
+    val openRef = rememberContentRefOpener(viewModel, onOpenNote, onOpenTask)
     val context = LocalContext.current
     val allNotes by viewModel.notes.collectAsStateWithLifecycle()
     val focus = LocalFocusManager.current
@@ -413,12 +431,19 @@ private fun NoteEditor(viewModel: TasksViewModel, uid: String, note: NoteItem?, 
                                     Toast.makeText(context, R.string.tasks_wiki_not_found, Toast.LENGTH_SHORT).show()
                                 }
                             },
+                            onRef = openRef,
                         )
                     }
                 }
                 LinkPreviewList(body.text, viewModel.linkPreviews, Modifier.padding(bottom = Space.xl), PreviewSize.Large)
                 if (note != null) {
                     AddToLinksRow("${note.title}\n${body.text}", sourceKey = uid, onAdd = { viewModel.addLinkFrom(it, "note", uid) })
+                    BacklinksSection(
+                        type = "note",
+                        uid = uid,
+                        onOpen = { link -> if (link.type == "note") onOpenNote(link.uid) else onOpenTask(link.uid) },
+                        modifier = Modifier.padding(bottom = Space.xl),
+                    )
                 }
             }
         }

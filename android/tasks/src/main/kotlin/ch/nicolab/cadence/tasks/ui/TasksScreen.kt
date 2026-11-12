@@ -357,7 +357,7 @@ fun TasksScreen(
         )
     }
     selectedNoteUid?.let { uid ->
-        NoteScreen(viewModel, uid, isNew = selectedNoteIsNew, onBack = { selectedNoteUid = null }, onOpenNote = { selectedNoteUid = it })
+        NoteScreen(viewModel, uid, isNew = selectedNoteIsNew, onBack = { selectedNoteUid = null }, onOpenNote = { selectedNoteUid = it }, onOpenTask = { selectedTaskUid = it })
     }
 }
 
