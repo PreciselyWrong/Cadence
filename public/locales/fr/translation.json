@@ -6129,5 +6129,17 @@
     "showDayInCalendar": "Afficher dans le calendrier",
     "hideCompleted": "Masquer les terminées",
     "showCompletedTasks": "Afficher les terminées"
+  },
+  "offline": {
+    "offline": "Hors ligne",
+    "offlinePending": "Hors ligne · {{count}} en attente",
+    "sending": "Envoi des modifications ({{count}})",
+    "rejected": "Non enregistrées : {{count}}",
+    "conflicts": "Conflits : {{count}}",
+    "seeConflicts": "Voir les conflits",
+    "explain": "Vos modifications restent sur cet appareil et partent dès que le serveur revient.",
+    "rejectedTitle": "Le serveur a refusé ces modifications :",
+    "retry": "Réessayer",
+    "dismiss": "OK"
   }
 }

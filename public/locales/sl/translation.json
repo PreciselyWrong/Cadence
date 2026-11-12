@@ -6173,5 +6173,17 @@
     "showDayInCalendar": "Prikaži v koledarju",
     "hideCompleted": "Skrij opravljene",
     "showCompletedTasks": "Prikaži opravljene"
+  },
+  "offline": {
+    "offline": "Brez povezave",
+    "offlinePending": "Brez povezave · čaka: {{count}}",
+    "sending": "Pošiljanje sprememb ({{count}})",
+    "rejected": "Ni shranjeno: {{count}}",
+    "conflicts": "Spori: {{count}}",
+    "seeConflicts": "Prikaži spore",
+    "explain": "Spremembe ostanejo v tej napravi in se pošljejo, ko bo strežnik spet dosegljiv.",
+    "rejectedTitle": "Strežnik je zavrnil te spremembe:",
+    "retry": "Poskusi znova",
+    "dismiss": "V redu"
   }
 }

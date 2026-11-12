@@ -6149,5 +6149,17 @@
     "showDayInCalendar": "Zobraziť v kalendári",
     "hideCompleted": "Skryť dokončené",
     "showCompletedTasks": "Zobraziť dokončené"
+  },
+  "offline": {
+    "offline": "Offline",
+    "offlinePending": "Offline · čaká: {{count}}",
+    "sending": "Odosielajú sa zmeny ({{count}})",
+    "rejected": "Neuložené: {{count}}",
+    "conflicts": "Konflikty: {{count}}",
+    "seeConflicts": "Zobraziť konflikty",
+    "explain": "Zmeny zostávajú v tomto zariadení a odošlú sa, keď bude server opäť dostupný.",
+    "rejectedTitle": "Server odmietol tieto zmeny:",
+    "retry": "Skúsiť znova",
+    "dismiss": "OK"
   }
 }

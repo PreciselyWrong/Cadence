@@ -614,4 +614,30 @@ describe('service worker replay', () => {
         expect(sw.caches.stores.has(API_CACHE)).toBe(false);
         expect(sw.outbox()).toHaveLength(1);
     });
+
+    it('refreshes the cached lists on WARM and forgets those now refused', async () => {
+        const sw = loadWorker(() => json({}));
+        sw.seed('/api/tasks?type=today', {
+            tasks: [{ uid: 't1', name: 'Old' }],
+        });
+        sw.seed('/api/project/gone', { uid: 'gone' });
+        sw.seed('/api/projects', { projects: [] });
+        sw.setServer((req) => {
+            if (req.url.endsWith('/api/projects')) return json({}, 404);
+            return json({ tasks: [{ uid: 't1', name: 'Fresh' }] });
+        });
+        await sw.message({ type: 'WARM' });
+
+        const cache = sw.caches.stores.get(API_CACHE)!;
+        expect(
+            JSON.parse(cache.get(`${ORIGIN}/api/tasks?type=today`)!.body)
+        ).toEqual({
+            tasks: [{ uid: 't1', name: 'Fresh' }],
+        });
+        expect(cache.has(`${ORIGIN}/api/projects`)).toBe(false);
+        // A row read on its own is refreshed when it is opened, not here.
+        expect(sw.seen.some((r) => r.url.endsWith('/api/project/gone'))).toBe(
+            false
+        );
+    });
 });

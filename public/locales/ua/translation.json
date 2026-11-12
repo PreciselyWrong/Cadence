@@ -6173,5 +6173,17 @@
     "showDayInCalendar": "Показувати в календарі",
     "hideCompleted": "Приховати виконані",
     "showCompletedTasks": "Показати виконані"
+  },
+  "offline": {
+    "offline": "Немає зв’язку",
+    "offlinePending": "Немає зв’язку · очікують: {{count}}",
+    "sending": "Надсилання змін ({{count}})",
+    "rejected": "Не збережено: {{count}}",
+    "conflicts": "Конфлікти: {{count}}",
+    "seeConflicts": "Переглянути конфлікти",
+    "explain": "Зміни зберігаються на цьому пристрої й будуть надіслані, коли сервер знову стане доступним.",
+    "rejectedTitle": "Сервер відхилив ці зміни:",
+    "retry": "Повторити",
+    "dismiss": "OK"
   }
 }

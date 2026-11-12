@@ -6111,5 +6111,17 @@
     "showDayInCalendar": "カレンダーに表示",
     "hideCompleted": "完了を非表示",
     "showCompletedTasks": "完了を表示"
+  },
+  "offline": {
+    "offline": "オフライン",
+    "offlinePending": "オフライン · 待機中 {{count}} 件",
+    "sending": "変更を送信中 ({{count}})",
+    "rejected": "未保存: {{count}} 件",
+    "conflicts": "競合: {{count}} 件",
+    "seeConflicts": "競合を表示",
+    "explain": "変更はこの端末に保存され、サーバーが復旧すると送信されます。",
+    "rejectedTitle": "サーバーが次の変更を拒否しました:",
+    "retry": "再試行",
+    "dismiss": "OK"
   }
 }

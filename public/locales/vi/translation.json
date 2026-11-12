@@ -6111,5 +6111,17 @@
     "showDayInCalendar": "Hiện trên lịch",
     "hideCompleted": "Ẩn việc đã xong",
     "showCompletedTasks": "Hiện việc đã xong"
+  },
+  "offline": {
+    "offline": "Ngoại tuyến",
+    "offlinePending": "Ngoại tuyến · {{count}} đang chờ",
+    "sending": "Đang gửi thay đổi ({{count}})",
+    "rejected": "Chưa lưu: {{count}}",
+    "conflicts": "Xung đột: {{count}}",
+    "seeConflicts": "Xem xung đột",
+    "explain": "Thay đổi của bạn được giữ trên thiết bị này và sẽ được gửi khi máy chủ hoạt động lại.",
+    "rejectedTitle": "Máy chủ đã từ chối các thay đổi này:",
+    "retry": "Thử lại",
+    "dismiss": "OK"
   }
 }

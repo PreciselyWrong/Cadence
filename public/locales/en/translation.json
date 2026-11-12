@@ -6083,5 +6083,17 @@
     "showDayInCalendar": "Show in calendar",
     "hideCompleted": "Hide completed",
     "showCompletedTasks": "Show completed"
+  },
+  "offline": {
+    "offline": "Offline",
+    "offlinePending": "Offline · {{count}} waiting",
+    "sending": "Sending changes ({{count}})",
+    "rejected": "Not saved: {{count}}",
+    "conflicts": "Conflicts: {{count}}",
+    "seeConflicts": "See conflicts",
+    "explain": "Your changes are kept on this device and sent when the server is back.",
+    "rejectedTitle": "The server refused these changes:",
+    "retry": "Retry",
+    "dismiss": "OK"
   }
 }

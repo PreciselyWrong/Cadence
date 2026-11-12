@@ -14,6 +14,7 @@ import { getBasePath } from './config/paths';
 import { prefetchNoteFromPath } from './utils/notesService';
 import { captureSharedPayload } from './utils/shareTargetService';
 import BlogApp from './components/Blog/BlogApp';
+import OfflineStatus from './components/Offline/OfflineStatus';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -134,6 +135,7 @@ if (container) {
                     <ToastProvider>
                         <TelegramStatusProvider>
                             <App />
+                            {!isDevelopment && <OfflineStatus />}
                         </TelegramStatusProvider>
                     </ToastProvider>
                 )}

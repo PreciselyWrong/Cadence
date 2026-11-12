@@ -6113,5 +6113,17 @@
     "showDayInCalendar": "Näytä kalenterissa",
     "hideCompleted": "Piilota valmiit",
     "showCompletedTasks": "Näytä valmiit"
+  },
+  "offline": {
+    "offline": "Offline-tilassa",
+    "offlinePending": "Offline-tilassa · {{count}} odottaa",
+    "sending": "Lähetetään muutoksia ({{count}})",
+    "rejected": "Ei tallennettu: {{count}}",
+    "conflicts": "Ristiriidat: {{count}}",
+    "seeConflicts": "Näytä ristiriidat",
+    "explain": "Muutoksesi säilyvät tällä laitteella ja lähetetään, kun palvelin on taas käytettävissä.",
+    "rejectedTitle": "Palvelin hylkäsi nämä muutokset:",
+    "retry": "Yritä uudelleen",
+    "dismiss": "OK"
   }
 }

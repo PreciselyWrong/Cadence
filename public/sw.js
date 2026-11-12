@@ -162,6 +162,10 @@ self.addEventListener('message', (event) => {
     }
     if (type === 'DISMISS_REJECTED') {
         reply(idbClear(REJECTED));
+        return;
+    }
+    if (type === 'WARM') {
+        event.waitUntil(warmCache());
     }
 });
 
@@ -701,6 +705,49 @@ async function runReplay() {
         client.postMessage(state);
     });
     return result;
+}
+
+// Refreshes the lists already cached, so the next outage shows today's data
+// even for views not opened since. Rows read on their own are refreshed
+// when opened.
+const WARM_LIMIT = 60;
+
+async function warmCache() {
+    if (offline) return;
+    const cache = await caches.open(API_CACHE);
+    const urls = (await cache.keys())
+        .map((request) => request.url)
+        .filter((url) => !core.detailUid(url))
+        .slice(-WARM_LIMIT);
+    for (const url of urls) {
+        let response;
+        try {
+            response = await fetchWithTimeout(
+                new Request(url, {
+                    credentials: 'include',
+                    headers: {
+                        Accept: 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                }),
+                READ_TIMEOUT_MS
+            );
+        } catch {
+            response = null;
+        }
+        if (!response || core.isUnreachableStatus(response.status)) {
+            markOffline();
+            return;
+        }
+        if (response.status === 401) {
+            await clearUserData();
+            return;
+        }
+        if (response.ok) await cache.put(url, response);
+        else if (response.status === 403 || response.status === 404) {
+            await cache.delete(url);
+        }
+    }
 }
 
 // ─── State shown by the page ─────────────────────────────────────────────────

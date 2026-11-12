@@ -6111,5 +6111,17 @@
     "showDayInCalendar": "Tampilkan di kalender",
     "hideCompleted": "Sembunyikan yang selesai",
     "showCompletedTasks": "Tampilkan yang selesai"
+  },
+  "offline": {
+    "offline": "Offline",
+    "offlinePending": "Offline · {{count}} menunggu",
+    "sending": "Mengirim perubahan ({{count}})",
+    "rejected": "Tidak tersimpan: {{count}}",
+    "conflicts": "Konflik: {{count}}",
+    "seeConflicts": "Lihat konflik",
+    "explain": "Perubahan Anda disimpan di perangkat ini dan dikirim saat server kembali.",
+    "rejectedTitle": "Server menolak perubahan berikut:",
+    "retry": "Coba lagi",
+    "dismiss": "OK"
   }
 }

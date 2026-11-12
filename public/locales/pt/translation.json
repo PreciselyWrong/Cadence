@@ -6128,5 +6128,17 @@
     "showDayInCalendar": "Mostrar no calendário",
     "hideCompleted": "Ocultar concluídas",
     "showCompletedTasks": "Mostrar concluídas"
+  },
+  "offline": {
+    "offline": "Offline",
+    "offlinePending": "Offline · {{count}} pendentes",
+    "sending": "Enviando alterações ({{count}})",
+    "rejected": "Não salvas: {{count}}",
+    "conflicts": "Conflitos: {{count}}",
+    "seeConflicts": "Ver conflitos",
+    "explain": "Suas alterações ficam neste dispositivo e são enviadas quando o servidor voltar.",
+    "rejectedTitle": "O servidor recusou estas alterações:",
+    "retry": "Tentar novamente",
+    "dismiss": "OK"
   }
 }

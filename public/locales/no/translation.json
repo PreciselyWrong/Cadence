@@ -6118,5 +6118,17 @@
     "showDayInCalendar": "Vis i kalender",
     "hideCompleted": "Skjul fullførte",
     "showCompletedTasks": "Vis fullførte"
+  },
+  "offline": {
+    "offline": "Frakoblet",
+    "offlinePending": "Frakoblet · {{count}} venter",
+    "sending": "Sender endringer ({{count}})",
+    "rejected": "Ikke lagret: {{count}}",
+    "conflicts": "Konflikter: {{count}}",
+    "seeConflicts": "Se konflikter",
+    "explain": "Endringene dine lagres på denne enheten og sendes når serveren er tilbake.",
+    "rejectedTitle": "Serveren avviste disse endringene:",
+    "retry": "Prøv igjen",
+    "dismiss": "OK"
   }
 }

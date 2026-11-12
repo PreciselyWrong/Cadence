@@ -6111,5 +6111,17 @@
     "showDayInCalendar": "캘린더에 표시",
     "hideCompleted": "완료 항목 숨기기",
     "showCompletedTasks": "완료 항목 표시"
+  },
+  "offline": {
+    "offline": "오프라인",
+    "offlinePending": "오프라인 · 대기 중 {{count}}개",
+    "sending": "변경 사항 전송 중 ({{count}})",
+    "rejected": "저장되지 않음: {{count}}개",
+    "conflicts": "충돌: {{count}}개",
+    "seeConflicts": "충돌 보기",
+    "explain": "변경 사항은 이 기기에 보관되며 서버가 돌아오면 전송됩니다.",
+    "rejectedTitle": "서버가 다음 변경 사항을 거부했습니다:",
+    "retry": "다시 시도",
+    "dismiss": "확인"
   }
 }

@@ -6113,5 +6113,17 @@
     "showDayInCalendar": "Vis i kalender",
     "hideCompleted": "Skjul udførte",
     "showCompletedTasks": "Vis udførte"
+  },
+  "offline": {
+    "offline": "Offline",
+    "offlinePending": "Offline · {{count}} venter",
+    "sending": "Sender ændringer ({{count}})",
+    "rejected": "Ikke gemt: {{count}}",
+    "conflicts": "Konflikter: {{count}}",
+    "seeConflicts": "Se konflikter",
+    "explain": "Dine ændringer gemmes på denne enhed og sendes, når serveren er tilbage.",
+    "rejectedTitle": "Serveren afviste disse ændringer:",
+    "retry": "Prøv igen",
+    "dismiss": "OK"
   }
 }

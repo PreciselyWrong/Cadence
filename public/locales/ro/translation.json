@@ -6133,5 +6133,17 @@
     "showDayInCalendar": "Afișează în calendar",
     "hideCompleted": "Ascunde finalizate",
     "showCompletedTasks": "Afișează finalizate"
+  },
+  "offline": {
+    "offline": "Offline",
+    "offlinePending": "Offline · {{count}} în așteptare",
+    "sending": "Se trimit modificările ({{count}})",
+    "rejected": "Nesalvate: {{count}}",
+    "conflicts": "Conflicte: {{count}}",
+    "seeConflicts": "Vezi conflictele",
+    "explain": "Modificările rămân pe acest dispozitiv și sunt trimise când serverul revine.",
+    "rejectedTitle": "Serverul a refuzat aceste modificări:",
+    "retry": "Reîncearcă",
+    "dismiss": "OK"
   }
 }

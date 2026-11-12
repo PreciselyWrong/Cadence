@@ -6111,5 +6111,17 @@
     "showDayInCalendar": "Takvimde göster",
     "hideCompleted": "Tamamlananları gizle",
     "showCompletedTasks": "Tamamlananları göster"
+  },
+  "offline": {
+    "offline": "Çevrimdışı",
+    "offlinePending": "Çevrimdışı · {{count}} bekliyor",
+    "sending": "Değişiklikler gönderiliyor ({{count}})",
+    "rejected": "Kaydedilmedi: {{count}}",
+    "conflicts": "Çakışmalar: {{count}}",
+    "seeConflicts": "Çakışmaları gör",
+    "explain": "Değişiklikleriniz bu cihazda tutulur ve sunucu geri geldiğinde gönderilir.",
+    "rejectedTitle": "Sunucu bu değişiklikleri reddetti:",
+    "retry": "Tekrar dene",
+    "dismiss": "Tamam"
   }
 }

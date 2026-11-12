@@ -6115,5 +6115,17 @@
     "showDayInCalendar": "Mostrar en el calendario",
     "hideCompleted": "Ocultar completadas",
     "showCompletedTasks": "Mostrar completadas"
+  },
+  "offline": {
+    "offline": "Sin conexión",
+    "offlinePending": "Sin conexión · {{count}} pendientes",
+    "sending": "Enviando cambios ({{count}})",
+    "rejected": "No guardados: {{count}}",
+    "conflicts": "Conflictos: {{count}}",
+    "seeConflicts": "Ver conflictos",
+    "explain": "Tus cambios se guardan en este dispositivo y se envían cuando vuelva el servidor.",
+    "rejectedTitle": "El servidor rechazó estos cambios:",
+    "retry": "Reintentar",
+    "dismiss": "OK"
   }
 }

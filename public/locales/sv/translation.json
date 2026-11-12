@@ -6113,5 +6113,17 @@
     "showDayInCalendar": "Visa i kalendern",
     "hideCompleted": "Dölj slutförda",
     "showCompletedTasks": "Visa slutförda"
+  },
+  "offline": {
+    "offline": "Offline",
+    "offlinePending": "Offline · {{count}} väntar",
+    "sending": "Skickar ändringar ({{count}})",
+    "rejected": "Inte sparade: {{count}}",
+    "conflicts": "Konflikter: {{count}}",
+    "seeConflicts": "Visa konflikter",
+    "explain": "Dina ändringar sparas på den här enheten och skickas när servern är tillbaka.",
+    "rejectedTitle": "Servern avvisade de här ändringarna:",
+    "retry": "Försök igen",
+    "dismiss": "OK"
   }
 }

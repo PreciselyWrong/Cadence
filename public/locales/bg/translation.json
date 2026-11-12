@@ -6113,5 +6113,17 @@
     "showDayInCalendar": "Показвай в календара",
     "hideCompleted": "Скрий завършените",
     "showCompletedTasks": "Покажи завършените"
+  },
+  "offline": {
+    "offline": "Офлайн",
+    "offlinePending": "Офлайн · чакащи: {{count}}",
+    "sending": "Изпращане на промените ({{count}})",
+    "rejected": "Незапазени: {{count}}",
+    "conflicts": "Конфликти: {{count}}",
+    "seeConflicts": "Виж конфликтите",
+    "explain": "Промените остават на това устройство и се изпращат, когато сървърът се върне.",
+    "rejectedTitle": "Сървърът отхвърли тези промени:",
+    "retry": "Опитай отново",
+    "dismiss": "OK"
   }
 }

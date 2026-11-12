@@ -6113,5 +6113,17 @@
     "showDayInCalendar": "Tonen in agenda",
     "hideCompleted": "Voltooide verbergen",
     "showCompletedTasks": "Voltooide tonen"
+  },
+  "offline": {
+    "offline": "Offline",
+    "offlinePending": "Offline · {{count}} in wachtrij",
+    "sending": "Wijzigingen verzenden ({{count}})",
+    "rejected": "Niet opgeslagen: {{count}}",
+    "conflicts": "Conflicten: {{count}}",
+    "seeConflicts": "Conflicten bekijken",
+    "explain": "Je wijzigingen blijven op dit apparaat en worden verzonden zodra de server terug is.",
+    "rejectedTitle": "De server heeft deze wijzigingen geweigerd:",
+    "retry": "Opnieuw proberen",
+    "dismiss": "OK"
   }
 }

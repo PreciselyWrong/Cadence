@@ -6185,5 +6185,17 @@
     "showDayInCalendar": "إظهار في التقويم",
     "hideCompleted": "إخفاء المكتملة",
     "showCompletedTasks": "إظهار المكتملة"
+  },
+  "offline": {
+    "offline": "غير متصل",
+    "offlinePending": "غير متصل · قيد الانتظار: {{count}}",
+    "sending": "جارٍ إرسال التغييرات ({{count}})",
+    "rejected": "لم يُحفظ: {{count}}",
+    "conflicts": "التعارضات: {{count}}",
+    "seeConflicts": "عرض التعارضات",
+    "explain": "تبقى تغييراتك على هذا الجهاز وتُرسل عند عودة الخادم.",
+    "rejectedTitle": "رفض الخادم هذه التغييرات:",
+    "retry": "إعادة المحاولة",
+    "dismiss": "حسنًا"
   }
 }

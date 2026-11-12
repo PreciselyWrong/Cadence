@@ -29,6 +29,9 @@ export interface SyncResult {
 // While offline (or with writes waiting) the page asks the worker to try
 // the server again this often.
 const PROBE_INTERVAL_MS = 15000;
+// Cached lists are refreshed a little after the app opens, out of the way
+// of the first screen's own requests.
+const WARM_DELAY_MS = 10000;
 
 let current: OfflineState | null = null;
 const stateListeners = new Set<(state: OfflineState) => void>();
@@ -54,7 +57,12 @@ function onMessage(event: MessageEvent) {
             stopped: data.stopped ?? null,
         };
         syncListeners.forEach((listener) => listener(result));
+        if (result.applied > 0) warmOfflineCache();
     }
+}
+
+export function warmOfflineCache(): void {
+    postToSw({ type: 'WARM' });
 }
 
 const needsProbe = () => !!current && (current.offline || current.pending > 0);
@@ -84,6 +92,7 @@ export function startOfflineSync(): void {
     window.setInterval(() => {
         if (needsProbe()) retryOfflineNow();
     }, PROBE_INTERVAL_MS);
+    window.setTimeout(warmOfflineCache, WARM_DELAY_MS);
 }
 
 export function subscribeOfflineState(
