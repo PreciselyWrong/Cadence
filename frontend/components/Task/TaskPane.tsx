@@ -127,6 +127,13 @@ const TaskPane: React.FC = () => {
     const [loadFailed, setLoadFailed] = useState(false);
     // The sheet can fill the page instead.
     const [expanded, setExpanded] = useState(false);
+    // "Expand" holds for the task it was pressed on: closing the sheet or
+    // leaving the page brings back the floating sheet, so an expanded sheet
+    // never covers the rows of the next page.
+    const isOpen = openTaskUid !== null;
+    useEffect(() => {
+        setExpanded(false);
+    }, [location.pathname, isOpen]);
 
     useEffect(() => {
         if (!openTaskUid) return;

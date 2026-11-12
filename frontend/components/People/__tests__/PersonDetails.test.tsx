@@ -31,6 +31,12 @@ jest.mock('../../../utils/membersService', () => ({
     revokeSignInLink: jest.fn(),
 }));
 
+// Archive, Delete and the member actions live in the header's ⋯ menu.
+const openMenu = () =>
+    fireEvent.click(screen.getByRole('button', { name: 'More options' }));
+const noMenu = () =>
+    expect(screen.queryByRole('button', { name: 'More options' })).toBeNull();
+
 const renderDetails = (person: any) => {
     (fetchPersonByUid as jest.Mock).mockResolvedValue(person);
     return render(
@@ -60,8 +66,11 @@ describe('Person details', () => {
         });
 
         expect(await screen.findByTitle('Edit person')).toBeVisible();
-        expect(screen.getByTitle('Archive')).toBeVisible();
-        expect(screen.getByTitle('Delete person')).toBeVisible();
+        openMenu();
+        expect(screen.getByTestId('person-archive')).toHaveTextContent(
+            'Archive'
+        );
+        expect(screen.getByTestId('person-delete')).toBeVisible();
     });
 
     it('shows another member without any way to change them', async () => {
@@ -74,8 +83,7 @@ describe('Person details', () => {
 
         expect(await screen.findByText('Kid')).toBeVisible();
         expect(screen.queryByTitle('Edit person')).toBeNull();
-        expect(screen.queryByTitle('Archive')).toBeNull();
-        expect(screen.queryByTitle('Delete person')).toBeNull();
+        noMenu();
     });
 
     it('lets you edit the person of your own account but not archive or delete it', async () => {
@@ -88,15 +96,15 @@ describe('Person details', () => {
         });
 
         expect(await screen.findByTitle('Edit person')).toBeVisible();
-        expect(screen.queryByTitle('Archive')).toBeNull();
-        expect(screen.queryByTitle('Delete person')).toBeNull();
+        noMenu();
     });
 
     it('keeps working for an entry from before people were marked', async () => {
         renderDetails({ uid: 'abc', name: 'Old contact' });
 
         expect(await screen.findByTitle('Edit person')).toBeVisible();
-        expect(screen.getByTitle('Delete person')).toBeVisible();
+        openMenu();
+        expect(screen.getByTestId('person-delete')).toBeVisible();
     });
 
     it('offers a sign-in link for a member you may make one for, even though you cannot edit them', async () => {
@@ -149,5 +157,16 @@ describe('Person details', () => {
 
         expect(await screen.findByTitle('Edit person')).toBeVisible();
         expect(screen.queryByTestId('person-sign-in-link')).toBeNull();
+        noMenu();
+    });
+
+    it('has no tinted card and says so in the page language when nothing is assigned', async () => {
+        renderDetails({ uid: 'abc', name: 'Plumber', kind: 'contact' });
+
+        expect(
+            await screen.findByRole('heading', { level: 1, name: 'Plumber' })
+        ).toBeVisible();
+        expect(await screen.findByText(/No tasks assigned to/)).toBeVisible();
+        expect(document.querySelector('[style*="linear-gradient"]')).toBeNull();
     });
 });

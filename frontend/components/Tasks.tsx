@@ -1005,7 +1005,10 @@ const Tasks: React.FC = () => {
                     <div className="mb-3">
                         <NewTask
                             onTaskCreate={handleInlineCreate}
-                            placeholder={t('tasks.addTaskInline', '+ Add task')}
+                            placeholder={t(
+                                'today.addPlaceholder',
+                                'Add a task'
+                            )}
                         />
                     </div>
                 )}

@@ -68,15 +68,21 @@ describe('SidebarMinimalEditor', () => {
     it('moves a smart list up one place', () => {
         renderEditor();
 
-        fireEvent.click(screen.getByLabelText('Move Tomorrow up'));
+        fireEvent.click(screen.getByLabelText('Move Plan up'));
 
         const [patch] = saveMock.mock.calls[0];
         expect(patch.smartLists?.map((item) => item.key)).toEqual([
             'inbox',
-            'tomorrow',
-            'today',
             'next7',
+            'today',
         ]);
+    });
+
+    it('lists no Tomorrow smart list', () => {
+        renderEditor();
+
+        expect(screen.queryByLabelText('Show Tomorrow')).toBeNull();
+        expect(screen.queryByText('Tomorrow')).toBeNull();
     });
 
     it('moves a rail item to More', () => {

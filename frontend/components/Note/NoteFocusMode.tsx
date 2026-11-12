@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import MarkdownRenderer from '../Shared/MarkdownRenderer';
+import { PAGE_TITLE_CLASS } from '../Shared/ui/PageHeader';
 import MarkdownEditor from './MarkdownEditor';
 import PhotoCredit from '../Shared/PhotoCredit';
 import { Note } from '../../entities/Note';
@@ -173,15 +174,10 @@ const NoteFocusMode: React.FC<NoteFocusModeProps> = ({
                                     onNoteChange({ title: e.target.value })
                                 }
                                 placeholder={t('notes.titlePlaceholder')}
-                                className="w-full bg-transparent text-gray-900 dark:text-gray-100 border-none focus:outline-none focus:ring-0 mb-6"
-                                style={{
-                                    ...(textColor ? { color: textColor } : {}),
-                                    fontSize: '2.25rem',
-                                    lineHeight: '2.5rem',
-                                    fontWeight: 500,
-                                    paddingLeft: 0,
-                                    paddingRight: 0,
-                                }}
+                                className={`mb-6 w-full border-none bg-transparent px-0 focus:outline-none focus:ring-0 ${PAGE_TITLE_CLASS}`}
+                                style={
+                                    textColor ? { color: textColor } : undefined
+                                }
                             />
                             {/* Pull the editor's 24px block handle gutter
                                 into the margin so its text lines up with
@@ -217,13 +213,10 @@ const NoteFocusMode: React.FC<NoteFocusModeProps> = ({
                         <>
                             <h1
                                 onClick={onEditNote}
-                                className="cursor-pointer text-gray-900 dark:text-gray-100 mb-6"
-                                style={{
-                                    ...(textColor ? { color: textColor } : {}),
-                                    fontSize: '2.25rem',
-                                    lineHeight: '2.5rem',
-                                    fontWeight: 500,
-                                }}
+                                className={`mb-6 cursor-pointer ${PAGE_TITLE_CLASS}`}
+                                style={
+                                    textColor ? { color: textColor } : undefined
+                                }
                                 title={t('notes.clickToEdit')}
                             >
                                 {note.title || 'Untitled Note'}

@@ -88,7 +88,6 @@ const mockState = {
         sidebarMinimal: {
             smartLists: [
                 { key: 'today', visible: true, showCount: false },
-                { key: 'tomorrow', visible: true, showCount: false },
                 { key: 'next7', visible: true, showCount: false },
             ],
         },
@@ -222,16 +221,12 @@ describe.each([
 describe('day targets', () => {
     afterEach(() => hover(null));
 
-    it('Minimal: Today and Tomorrow take a drop, Next 7 days does not', () => {
+    it('Minimal: Today takes a drop, Plan does not', () => {
         render(
             <SidebarSmartLists handleNavClick={jest.fn()} location={location} />
         );
         const today = screen.getByTestId('sidebar-smart-today');
         expect(today).toHaveAttribute('data-sidebar-drop', 'day:today');
-        expect(screen.getByTestId('sidebar-smart-tomorrow')).toHaveAttribute(
-            'data-sidebar-drop',
-            'day:tomorrow'
-        );
         expect(screen.getByTestId('sidebar-smart-next7')).not.toHaveAttribute(
             'data-sidebar-drop'
         );

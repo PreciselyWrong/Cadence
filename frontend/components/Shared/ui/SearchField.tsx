@@ -1,4 +1,5 @@
 import React from 'react';
+import { FIELD_HEIGHT } from './controlSizes';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 interface SearchFieldProps {
@@ -20,7 +21,7 @@ const SearchField: React.FC<SearchFieldProps> = ({
     testId,
 }) => (
     <label
-        className={`flex h-9 items-center gap-2 rounded-lg bg-surface-high/70 px-3 text-body-m focus-within:ring-2 focus-within:ring-primary/40 max-sm:h-11 ${className}`}
+        className={`flex ${FIELD_HEIGHT} items-center gap-2 rounded-lg bg-surface-high/70 px-3 text-body-m focus-within:ring-2 focus-within:ring-primary/40 max-sm:h-11 ${className}`}
     >
         <MagnifyingGlassIcon
             aria-hidden="true"

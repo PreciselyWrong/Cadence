@@ -23,6 +23,8 @@ import LinkPreviews from '../Links/LinkPreviews';
 import MarkdownEditor from './MarkdownEditor';
 import Backlinks from '../Shared/Backlinks';
 import { FORM } from '../../constants/formClasses';
+import { PAGE_TITLE_CLASS } from '../Shared/ui/PageHeader';
+import { PAGE_GUTTER } from '../Shared/ui/PageShell';
 
 export const shouldUseLightText = (hexColor: string | undefined): boolean => {
     if (!hexColor) return false;
@@ -121,9 +123,22 @@ const NoteEditorView: React.FC<NoteEditorViewProps> = ({
         setShowProjectPicker(false);
     };
 
+    // Text on a coloured note follows the colour, not the theme.
+    const lightInk = noteColor ? shouldUseLightText(noteColor) : null;
+    const titleInk =
+        lightInk === null ? '' : lightInk ? 'text-white' : 'text-black/80';
+    const mutedInk =
+        lightInk === null
+            ? 'text-surface-on-variant'
+            : lightInk
+              ? 'text-white/80'
+              : 'text-black/70';
+
     return (
         <div className="flex-1 flex flex-col overflow-hidden">
-            <div className="flex items-start justify-between mb-3 flex-shrink-0 px-6 md:px-8 pt-5">
+            <div
+                className={`mb-3 flex flex-shrink-0 items-start justify-between pt-5 ${PAGE_GUTTER}`}
+            >
                 <div className="flex-1">
                     <input
                         type="text"
@@ -135,30 +150,12 @@ const NoteEditorView: React.FC<NoteEditorViewProps> = ({
                         }
                         onClick={(e) => e.stopPropagation()}
                         placeholder={t('notes.titlePlaceholder')}
-                        className="w-full bg-transparent text-gray-900 dark:text-gray-100 border-none focus:outline-none focus:ring-0 pt-5 mb-4 block"
-                        style={{
-                            color: noteColor
-                                ? shouldUseLightText(noteColor)
-                                    ? '#ffffff'
-                                    : '#333333'
-                                : undefined,
-                            fontSize: '2rem',
-                            lineHeight: '2rem',
-                            fontWeight: 500,
-                            paddingLeft: 0,
-                            paddingRight: 0,
-                        }}
+                        // The page title type of every page, still editable.
+                        className={`mb-4 block w-full border-none bg-transparent px-0 pt-5 focus:outline-none focus:ring-0 ${PAGE_TITLE_CLASS} ${titleInk}`}
                         autoFocus={!note.uid}
                     />
                     <div
-                        className="flex flex-col text-xs text-gray-600 dark:text-gray-300 space-y-1 mb-2"
-                        style={{
-                            color: noteColor
-                                ? shouldUseLightText(noteColor)
-                                    ? '#e0e0e0'
-                                    : '#333333'
-                                : undefined,
-                        }}
+                        className={`mb-2 flex flex-col space-y-1 text-xs ${mutedInk}`}
                     >
                         <div className="flex flex-wrap items-center gap-3">
                             <div className="flex items-center">
@@ -247,14 +244,7 @@ const NoteEditorView: React.FC<NoteEditorViewProps> = ({
                 <div className="flex items-center">
                     <button
                         onClick={onOpenFocusMode}
-                        className="p-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                        style={{
-                            color: noteColor
-                                ? shouldUseLightText(noteColor)
-                                    ? '#e0e0e0'
-                                    : '#333333'
-                                : undefined,
-                        }}
+                        className={`p-2 transition-colors hover:text-primary ${mutedInk}`}
                         aria-label={t('notes.focusMode')}
                         title={t('notes.focusMode')}
                     >
@@ -265,17 +255,9 @@ const NoteEditorView: React.FC<NoteEditorViewProps> = ({
                             onClick={() => onShare()}
                             className={`p-2 transition ${
                                 note.is_public
-                                    ? 'text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300'
-                                    : 'text-gray-500 dark:text-gray-400 opacity-60 hover:opacity-100'
+                                    ? 'text-success'
+                                    : `opacity-60 hover:opacity-100 ${mutedInk}`
                             }`}
-                            style={{
-                                color:
-                                    noteColor && !note.is_public
-                                        ? shouldUseLightText(noteColor)
-                                            ? '#e0e0e0'
-                                            : '#333333'
-                                        : undefined,
-                            }}
                             aria-label={t(
                                 'notes.publicShare.open',
                                 'Share note'
@@ -296,14 +278,7 @@ const NoteEditorView: React.FC<NoteEditorViewProps> = ({
                     <div className="relative" ref={optionsRef}>
                         <button
                             onClick={() => setShowOptions(!showOptions)}
-                            className="p-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                            style={{
-                                color: noteColor
-                                    ? shouldUseLightText(noteColor)
-                                        ? '#e0e0e0'
-                                        : '#333333'
-                                    : undefined,
-                            }}
+                            className={`p-2 transition-colors hover:text-primary ${mutedInk}`}
                             aria-label={t('notes.noteOptions')}
                         >
                             <EllipsisVerticalIcon className="h-5 w-5" />
@@ -472,8 +447,11 @@ const NoteEditorView: React.FC<NoteEditorViewProps> = ({
 
             {/* The editor keeps a 24px gutter for the block
                 handle, so its text lines up with the title. */}
-            <div className="flex-1 overflow-y-auto pl-0 pr-6 md:pl-2 md:pr-8 py-4">
+            {/* A flex column: the editor fills it, so its toolbar sits on the
+                bottom edge instead of under a short note. */}
+            <div className="flex flex-1 flex-col overflow-y-auto py-4 pl-0 pr-6">
                 <MarkdownEditor
+                    className="flex-1"
                     noteUid={note.uid}
                     outlineKey={note.uid ? `note:${note.uid}` : undefined}
                     taskProjectId={

@@ -129,7 +129,7 @@ describe('TaskRowCollapsed in minimal mode', () => {
         const link = screen.getByText('Work Project').closest('a')!;
         expect(link.querySelector('svg path')).toBeInTheDocument();
         expect(
-            screen.getByText('#velo').closest('span')!.querySelector('svg')
+            screen.getByText('#velo').parentElement!.querySelector('svg')
         ).toBeInTheDocument();
     });
 
@@ -144,33 +144,52 @@ describe('TaskRowCollapsed in minimal mode', () => {
         expect(screen.getByText('#perso')).toBeInTheDocument();
     });
 
-    it('colours today blue and leaves a past date grey, never red', () => {
+    it('names today in sentence case on a neutral chip, a past day in the warning tone, never red', () => {
         const { unmount } = renderRow(
             baseTask({ due_date: getTodayDateString() })
         );
-        expect(screen.getByText(/today/i)).toHaveClass(
-            'text-blue-600',
-            'dark:text-blue-400'
-        );
+        const today = screen.getByText('Today');
+        expect(today).toHaveClass('bg-surface-high');
+        expect(today.className).not.toMatch(/blue|uppercase/);
         unmount();
 
         renderRow(baseTask({ due_date: '2000-01-01' }));
         const past = screen.getByText(/2000/);
-        expect(past).toHaveClass('text-gray-600', 'dark:text-gray-300');
+        expect(past).toHaveClass('bg-warning-container/70', 'text-warning');
         expect(past.className).not.toMatch(/red/);
     });
 
-    it('leaves the date of a completed task grey', () => {
-        renderRow(baseTask({ due_date: getTodayDateString(), status: 'done' }));
-        expect(screen.getByText(/today/i)).not.toHaveClass('text-blue-600');
+    it('leaves the date of a completed task neutral', () => {
+        renderRow(baseTask({ due_date: '2000-01-01', status: 'done' }));
+        expect(screen.getByText(/2000/)).not.toHaveClass('text-warning');
     });
 
-    it('keeps the project name on the same line as the title', () => {
+    it('puts the details under the title, as on Today', () => {
         renderRow(baseTask());
 
-        const line = screen.getByTestId('task-row-minimal-line');
-        expect(line).toContainElement(screen.getByText('Write report'));
-        expect(line).toContainElement(screen.getByText('Work Project'));
+        const meta = screen.getByTestId('task-row-meta');
+        expect(meta).toContainElement(screen.getByText('Work Project'));
+        expect(meta).not.toContainElement(screen.getByText('Write report'));
+    });
+
+    it('shows its menu only on the selected row, never on hover alone', () => {
+        const { rerender } = renderRow(baseTask(), { onEdit: jest.fn() });
+        const menu = screen.getByTestId('task-actions-menu-button');
+        expect(menu).toHaveClass('invisible');
+        expect(menu.className).not.toMatch(/group-hover/);
+        rerender(
+            <TaskRowCollapsed
+                task={baseTask()}
+                project={project}
+                onActivate={jest.fn()}
+                onToggleCompletion={jest.fn()}
+                onEdit={jest.fn()}
+                selected
+            />
+        );
+        expect(screen.getByTestId('task-actions-menu-button')).not.toHaveClass(
+            'invisible'
+        );
     });
 
     it('keeps the subtasks toggle working with its title', () => {

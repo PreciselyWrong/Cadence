@@ -61,7 +61,10 @@ const ProjectTasksSection: React.FC<ProjectTasksSectionProps> = ({
                     <div className="min-w-0 flex-1">
                         <NewTask
                             onTaskCreate={onInlineCreate}
-                            placeholder={t('tasks.addTaskInline', '+ Add task')}
+                            placeholder={t(
+                                'today.addPlaceholder',
+                                'Add a task'
+                            )}
                         />
                     </div>
                     {todoSection !== undefined && onTodoSectionChange && (

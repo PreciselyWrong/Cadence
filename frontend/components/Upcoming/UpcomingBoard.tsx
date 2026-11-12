@@ -104,6 +104,8 @@ import type { CardData } from './TaskCard';
 import ViewMenu from './ViewMenu';
 import JumpToDate from './JumpToDate';
 import HorizonColumn, { horizonFromCardDate } from './HorizonColumn';
+import HorizonStrip from './HorizonStrip';
+import Menu, { MenuEntry } from '../Shared/ui/Menu';
 import type { HorizonDropData } from './HorizonColumn';
 import {
     HORIZON_KEYS,
@@ -113,7 +115,9 @@ import {
     horizonOf,
     horizonPatch,
     horizonRowsFill,
+    leaveDayWrites,
     plannedThisWeek,
+    STRIP_KEYS,
     weekDates,
 } from './horizons';
 import { applyFilters } from './filters';
@@ -221,6 +225,8 @@ class LetterKeyboardSensor extends KeyboardSensor {
                 const native = event.nativeEvent;
                 if (
                     native.key?.toLowerCase() !== 'm' ||
+                    // Shift+M sends the card to This month instead.
+                    native.shiftKey ||
                     native.ctrlKey ||
                     native.metaKey ||
                     native.altKey
@@ -453,7 +459,8 @@ const UpcomingBoard: React.FC = () => {
     const calendarWidth = clampCalendarWidth(storedWidth, panesWidth, minBoard);
     const calendarMax = calendarMaxWidth(panesWidth, minBoard);
 
-    const horizon = useHorizonTasks(horizonsMode);
+    // Loaded in both layouts: the Days strip shows the horizons' counts.
+    const horizon = useHorizonTasks(true);
     const firstDayOfWeek = horizon.firstDayOfWeek;
     const dates = useMemo(
         () =>
@@ -1165,6 +1172,7 @@ const UpcomingBoard: React.FC = () => {
 
     const horizonTitles: Record<HorizonKey, string> = {
         week: t('upcoming.thisWeek', 'This week'),
+        next_week: t('upcoming.nextWeek', 'Next week'),
         this_month: t('upcoming.thisMonth', 'This month'),
         next_month: t('upcoming.nextMonth', 'Next month'),
         someday: t('upcoming.someday', 'Someday'),
@@ -1174,6 +1182,10 @@ const UpcomingBoard: React.FC = () => {
             'upcoming.thisWeekHint',
             'Committed to this week, no fixed day'
         ),
+        next_week: t(
+            'upcoming.nextWeekHint',
+            'Committed to next week, no fixed day'
+        ),
         this_month: t(
             'upcoming.thisMonthHint',
             'Sometime this month, no fixed day'
@@ -1181,6 +1193,104 @@ const UpcomingBoard: React.FC = () => {
         next_month: t('upcoming.nextMonthHint', 'Lined up for next month'),
         someday: t('upcoming.somedayHint', 'Maybe later, out of the way'),
     };
+
+    /**
+     * A card of the Days layout sent to a horizon (strip, Shift+W/M, its
+     * menu): its line leaves the day plan through the write queue, the task
+     * is committed to the horizon (due date untouched), one undo takes both
+     * back.
+     */
+    const sendToHorizon = async (card: CardData, to: HorizonKey) => {
+        const current = bucketsRef.current;
+        const from = current ? horizonOf(current, card.uid) : null;
+        const patch = horizonPatch(from, to);
+        const writes = leaveDayWrites(card);
+        if (!patch && writes.length === 0) return;
+        const undoWrites =
+            writes.length > 0
+                ? inverseWrites(daysRef.current, writes, today)
+                : null;
+        try {
+            if (patch) await updateTask(card.uid, patch as Partial<Task>);
+        } catch (err) {
+            fail(err);
+            return;
+        }
+        const left = await commit(writes, undefined, sourceDays(card));
+        await reloadHorizons();
+        if (!left) return;
+        const back = from
+            ? horizonPatch(to, from)
+            : {
+                  week_of: null,
+                  month_of: null,
+                  ...(to === 'someday' ? { later: false } : {}),
+              };
+        showUndoToast(
+            t('upcoming.sentToHorizon', 'Sent to {{name}}', {
+                name: horizonTitles[to],
+            }),
+            () => {
+                if (undoWrites) {
+                    void commit(
+                        withoutMissingAnchors(daysRef.current, undoWrites),
+                        undefined,
+                        sourceDays(card)
+                    );
+                }
+                if (patch && back) {
+                    updateTask(card.uid, back as Partial<Task>)
+                        .then(() => reloadHorizons())
+                        .catch(fail);
+                }
+            }
+        );
+    };
+
+    // A strip target clicked: Horizons, scrolled to that column.
+    const [revealHorizon, setRevealHorizon] = useState<HorizonKey | null>(null);
+    const openHorizon = (key: HorizonKey) => {
+        setRevealHorizon(key);
+        patchOptions({ mode: 'horizons' });
+    };
+    useEffect(() => {
+        if (!horizonsMode || !revealHorizon) return;
+        const column = boardRef.current?.querySelector<HTMLElement>(
+            `[data-testid="horizon-column"][data-horizon="${revealHorizon}"]`
+        );
+        if (!column) return;
+        column.scrollIntoView?.({ block: 'nearest', inline: 'start' });
+        setRevealHorizon(null);
+    }, [horizonsMode, revealHorizon, buckets]);
+
+    // The card menu of the Days layout (right click, or a long press that
+    // does not start a drag): send the card to a horizon.
+    const [cardMenu, setCardMenu] = useState<{
+        card: CardData;
+        x: number;
+        y: number;
+    } | null>(null);
+    useEffect(() => {
+        if (!cardMenu) return;
+        document.querySelector<HTMLElement>('[data-card-menu-anchor]')?.click();
+    }, [cardMenu]);
+    const cardMenuEntries: MenuEntry[] = cardMenu
+        ? [
+              { heading: t('upcoming.stripLabel', 'Send to a horizon') },
+              ...STRIP_KEYS.map((key) => ({
+                  key,
+                  label: horizonTitles[key],
+                  hint:
+                      key === 'next_week'
+                          ? '⇧W'
+                          : key === 'this_month'
+                            ? '⇧M'
+                            : undefined,
+                  testId: `card-send-${key}`,
+                  onSelect: () => void sendToHorizon(cardMenu.card, key),
+              })),
+          ]
+        : [];
 
     // Where a drop target is, in words, for screen readers.
     const placeOf = (over: OverData | undefined): string | null => {
@@ -1383,7 +1493,9 @@ const UpcomingBoard: React.FC = () => {
             return;
         }
         if (toHorizon) {
-            if (data.kind === 'card') void moveToHorizon(data.uid, toHorizon);
+            if (data.kind !== 'card') return;
+            if (horizonsMode) void moveToHorizon(data.uid, toHorizon);
+            else void sendToHorizon(data, toHorizon);
             return;
         }
         if (over.kind === 'horizon') return;
@@ -1519,6 +1631,12 @@ const UpcomingBoard: React.FC = () => {
             handled = vertical(1);
         } else if (key === 'ArrowUp' || key === 'k') {
             handled = vertical(-1);
+        } else if (!horizonsMode && event.shiftKey && key === 'W') {
+            void sendToHorizon(card, 'next_week');
+            handled = true;
+        } else if (!horizonsMode && event.shiftKey && key === 'M') {
+            void sendToHorizon(card, 'this_month');
+            handled = true;
         } else if (key === 't') {
             planCardOn(card, today);
             handled = true;
@@ -1859,6 +1977,20 @@ const UpcomingBoard: React.FC = () => {
                     <div
                         className="flex min-h-0 min-w-0 flex-1 flex-col gap-2 pb-3 pl-5 pr-2 pt-1"
                         onKeyDown={onBoardKeyDown}
+                        onContextMenu={(event) => {
+                            if (horizonsMode) return;
+                            const el = (event.target as HTMLElement).closest?.(
+                                CARD
+                            ) as HTMLElement | null;
+                            const card = el ? cardAt(el) : null;
+                            if (!card) return;
+                            event.preventDefault();
+                            setCardMenu({
+                                card,
+                                x: event.clientX,
+                                y: event.clientY,
+                            });
+                        }}
                     >
                         {overdueCards.length > 0 && (
                             <section
@@ -2066,6 +2198,23 @@ const UpcomingBoard: React.FC = () => {
                                       })}
                             </div>
                         </div>
+                        {!horizonsMode && (
+                            <HorizonStrip
+                                titles={horizonTitles}
+                                counts={
+                                    buckets
+                                        ? Object.fromEntries(
+                                              STRIP_KEYS.map((key) => [
+                                                  key,
+                                                  buckets[key].length,
+                                              ])
+                                          )
+                                        : null
+                                }
+                                dragging={!!dragging}
+                                onOpen={openHorizon}
+                            />
+                        )}
                     </div>
 
                     {calendarVisible && placement === 'split' && (
@@ -2103,6 +2252,33 @@ const UpcomingBoard: React.FC = () => {
                     )}
                 </div>
             </div>
+            {cardMenu && (
+                <div
+                    className="fixed"
+                    style={{ left: cardMenu.x, top: cardMenu.y }}
+                >
+                    <Menu
+                        entries={cardMenuEntries}
+                        align="start"
+                        testId="card-horizon-menu"
+                        onOpenChange={(open) => {
+                            if (!open) setCardMenu(null);
+                        }}
+                        trigger={(triggerProps) => (
+                            <button
+                                {...triggerProps}
+                                type="button"
+                                data-card-menu-anchor=""
+                                aria-label={t(
+                                    'upcoming.stripLabel',
+                                    'Send to a horizon'
+                                )}
+                                className="block h-0 w-0 overflow-hidden opacity-0"
+                            />
+                        )}
+                    />
+                </div>
+            )}
             {eventDetail && (
                 <FeedEventPopover
                     detail={eventDetail}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MemoryRouter, useLocation } from 'react-router-dom';
+import { MemoryRouter, useLocation, useNavigate } from 'react-router-dom';
 import {
     render,
     screen,
@@ -445,11 +445,26 @@ describe('TaskPane as a floating sheet', () => {
         );
     };
 
+    // Goes to another page with the same task open, as a sidebar link
+    // keeping ?task= would.
+    const Elsewhere = () => {
+        const navigate = useNavigate();
+        return (
+            <button
+                type="button"
+                onClick={() => navigate('/project/p1?task=uid-1')}
+            >
+                Go elsewhere
+            </button>
+        );
+    };
+
     const renderSheet = (path: string) =>
         render(
             <MemoryRouter initialEntries={[path]}>
                 <TaskPaneProvider>
                     <Opener />
+                    <Elsewhere />
                     <TaskPane />
                     <LocationProbe />
                 </TaskPaneProvider>
@@ -508,6 +523,40 @@ describe('TaskPane as a floating sheet', () => {
             expect(screen.getByTestId('location-search')).toHaveTextContent(
                 /^$/
             )
+        );
+    });
+
+    const expandButton = () =>
+        within(screen.getByRole('dialog')).getByRole('button', {
+            name: /Expand|Shrink/,
+        });
+
+    it('floats again on the next open after an expanded sheet closes', async () => {
+        renderSheet('/today');
+        fireEvent.click(screen.getByRole('button', { name: 'Open task' }));
+        await screen.findByRole('dialog', { name: 'Write report' });
+        fireEvent.click(expandButton());
+        expect(expandButton()).toHaveAttribute('aria-pressed', 'true');
+
+        fireEvent.keyDown(document, { key: 'Escape' });
+        await waitFor(() =>
+            expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+        );
+        fireEvent.click(screen.getByRole('button', { name: 'Open task' }));
+        await screen.findByRole('dialog', { name: 'Write report' });
+        expect(expandButton()).toHaveAttribute('aria-pressed', 'false');
+    });
+
+    it('goes back to the floating sheet on another page', async () => {
+        renderSheet('/today?task=uid-1');
+        await screen.findByRole('dialog', { name: 'Write report' });
+        fireEvent.click(expandButton());
+        expect(expandButton()).toHaveAttribute('aria-pressed', 'true');
+
+        fireEvent.click(screen.getByRole('button', { name: 'Go elsewhere' }));
+
+        await waitFor(() =>
+            expect(expandButton()).toHaveAttribute('aria-pressed', 'false')
         );
     });
 });

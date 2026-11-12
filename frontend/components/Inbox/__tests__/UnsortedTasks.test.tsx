@@ -2,7 +2,7 @@ import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import UnsortedTasks from '../UnsortedTasks';
-import { fetchTasks } from '../../../utils/tasksService';
+import { fetchTasks, toggleTaskCompletion } from '../../../utils/tasksService';
 import { decideTask } from '../../../utils/reviewService';
 
 jest.mock('react-i18next', () => ({
@@ -20,6 +20,7 @@ jest.mock('../../../store/taskPanelStore', () => ({
 }));
 jest.mock('../../../utils/tasksService', () => ({
     fetchTasks: jest.fn(),
+    toggleTaskCompletion: jest.fn(),
 }));
 jest.mock('../../../utils/reviewService', () => ({
     decideTask: jest.fn(),
@@ -88,5 +89,30 @@ describe('UnsortedTasks', () => {
         const { container } = render(<UnsortedTasks />);
         await waitFor(() => expect(fetchTasks).toHaveBeenCalled());
         expect(container).toBeEmptyDOMElement();
+    });
+
+    it('completes a task from its round check like any task row', async () => {
+        window.matchMedia = jest.fn().mockReturnValue({
+            matches: true,
+            addEventListener: jest.fn(),
+            removeEventListener: jest.fn(),
+        }) as unknown as typeof window.matchMedia;
+        (toggleTaskCompletion as jest.Mock).mockResolvedValue({});
+        render(<UnsortedTasks />);
+        await screen.findByText('Rappeler le garage');
+
+        const checks = screen.getAllByRole('checkbox');
+        expect(checks).toHaveLength(2);
+        fireEvent.click(checks[1]);
+
+        await waitFor(() =>
+            expect(
+                screen.queryByText('Rappeler le garage')
+            ).not.toBeInTheDocument()
+        );
+        expect(toggleTaskCompletion).toHaveBeenCalledWith(
+            't-loose',
+            expect.objectContaining({ uid: 't-loose' })
+        );
     });
 });

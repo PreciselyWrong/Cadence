@@ -327,4 +327,39 @@ describe('ProjectBoard', () => {
         });
         expect(onOrderColumn).not.toHaveBeenCalled();
     });
+
+    it('shows a card like Plan: round check, due chip, toggles from the check', async () => {
+        const onToggleTask = jest.fn();
+        const now = new Date();
+        const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+        render(
+            <ProjectBoard
+                project={{ uid: 'p1', name: 'P' } as any}
+                tasks={[
+                    {
+                        uid: 'c',
+                        name: 'Card task',
+                        status: 0,
+                        priority: 'high',
+                        due_date: today,
+                    } as any,
+                ]}
+                onMoveTask={jest.fn()}
+                onOpenTask={jest.fn()}
+                onToggleTask={onToggleTask}
+                t={t}
+            />
+        );
+        const card = await screen.findByTestId('board-card-c');
+        expect(within(card).getByText('Today')).toBeInTheDocument();
+        const check = within(card).getByRole('checkbox');
+        expect(check.firstElementChild).toHaveClass(
+            'rounded-full',
+            'border-danger'
+        );
+        fireEvent.click(check);
+        expect(onToggleTask).toHaveBeenCalledWith(
+            expect.objectContaining({ uid: 'c' })
+        );
+    });
 });

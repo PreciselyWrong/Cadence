@@ -20,6 +20,9 @@ import useProjectCardActions from '../Project/useProjectCardActions';
 import { useStore } from '../../store/useStore';
 import { useToast } from '../Shared/ToastContext';
 import GoalModal from './GoalModal';
+import PageShell, { PAGE_GUTTER } from '../Shared/ui/PageShell';
+import Segmented from '../Shared/ui/Segmented';
+import EmptyState from '../Shared/ui/EmptyState';
 import GoalHero from './GoalHero';
 
 const TASK_STATUS_DONE = [2, 3, 'done', 'archived'];
@@ -203,15 +206,8 @@ const GoalDetails: React.FC = () => {
     // One level only: a key result has none, and neither has a bucket-list goal.
     const canHaveKeyResults = !goal.parent_goal_uid && !goal.bucket;
 
-    const tabClass = (tab: GoalTab) =>
-        `relative flex items-center self-stretch py-2.5 text-sm font-medium transition-colors ${
-            activeTab === tab
-                ? 'text-gray-900 dark:text-gray-100 after:absolute after:bottom-0 after:left-px after:right-px after:h-0.5 after:rounded-full after:bg-gray-900 dark:after:bg-gray-100'
-                : 'text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200'
-        }`;
-
     return (
-        <div className="w-full px-2 sm:px-4 lg:px-6 pt-4 pb-12">
+        <PageShell template="board">
             <GoalHero
                 goal={goal}
                 t={t}
@@ -224,7 +220,9 @@ const GoalDetails: React.FC = () => {
             />
 
             {goal.parent_goal && (
-                <p className="mb-3 px-2 text-sm text-gray-600 dark:text-gray-300">
+                <p
+                    className={`mb-3 text-body-m text-surface-on-variant ${PAGE_GUTTER}`}
+                >
                     {t('forms.goalParent', 'Key result of')}{' '}
                     <Link
                         to={createGoalUrl(goal.parent_goal)}
@@ -237,7 +235,7 @@ const GoalDetails: React.FC = () => {
 
             {(keyResults.length > 0 || canHaveKeyResults) && (
                 <section
-                    className="mb-6 px-2"
+                    className={`mb-6 ${PAGE_GUTTER}`}
                     data-testid={
                         keyResults.length > 0 ? 'key-results' : undefined
                     }
@@ -332,78 +330,83 @@ const GoalDetails: React.FC = () => {
                 </section>
             )}
 
-            <div className="mb-4">
-                <div className="flex items-center min-h-[2.5rem]">
-                    <div className="flex items-center gap-4 sm:gap-6 self-stretch pl-2 sm:pl-3">
-                        <button
-                            type="button"
-                            onClick={() => setActiveTab('tasks')}
-                            className={tabClass('tasks')}
-                            aria-pressed={activeTab === 'tasks'}
-                        >
-                            {t('tasks.title', 'Tasks')} ({tasks.length})
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setActiveTab('projects')}
-                            className={tabClass('projects')}
-                            aria-pressed={activeTab === 'projects'}
-                        >
-                            {t('projects.title', 'Projects')} (
-                            {goalProjects.length})
-                        </button>
-                    </div>
-                </div>
+            <div className={`mb-4 ${PAGE_GUTTER}`}>
+                <Segmented
+                    selected={activeTab}
+                    onSelect={(id) => setActiveTab(id as GoalTab)}
+                    options={[
+                        {
+                            id: 'tasks',
+                            label: t('tasks.title', 'Tasks'),
+                            count: tasks.length,
+                        },
+                        {
+                            id: 'projects',
+                            label: t('projects.title', 'Projects'),
+                            count: goalProjects.length,
+                        },
+                    ]}
+                />
             </div>
 
-            {activeTab === 'tasks' ? (
-                tasks.length === 0 ? (
-                    <p className="text-sm text-gray-600 dark:text-gray-300 px-2">
-                        {t('goals.noTasks', 'No tasks assigned to this goal.')}
-                    </p>
-                ) : (
-                    <div className="space-y-6">
-                        {activeTasks.length > 0 && (
-                            <TaskList
-                                tasks={activeTasks}
-                                projects={projects}
-                                onTaskUpdate={handleTaskUpdate}
-                                onTaskDelete={handleTaskDelete}
-                            />
-                        )}
-                        {completedTasks.length > 0 && (
-                            <div>
-                                <h4 className="px-2 text-sm font-medium text-gray-600 dark:text-gray-300 mb-3">
-                                    {t('tasks.completed', 'Completed')} (
-                                    {completedTasks.length})
-                                </h4>
+            <div className={PAGE_GUTTER}>
+                {activeTab === 'tasks' ? (
+                    tasks.length === 0 ? (
+                        <EmptyState
+                            title={t(
+                                'goals.noTasks',
+                                'No tasks assigned to this goal.'
+                            )}
+                        />
+                    ) : (
+                        <div className="space-y-6">
+                            {activeTasks.length > 0 && (
                                 <TaskList
-                                    tasks={completedTasks}
+                                    tasks={activeTasks}
                                     projects={projects}
                                     onTaskUpdate={handleTaskUpdate}
                                     onTaskDelete={handleTaskDelete}
-                                    showCompletedTasks={true}
                                 />
-                            </div>
+                            )}
+                            {completedTasks.length > 0 && (
+                                <div>
+                                    <h4 className="mb-3 px-2 text-body-m font-medium text-surface-on-variant">
+                                        {t('tasks.completed', 'Completed')}
+                                        <span className="ml-2 tabular-nums">
+                                            {completedTasks.length}
+                                        </span>
+                                    </h4>
+                                    <TaskList
+                                        tasks={completedTasks}
+                                        projects={projects}
+                                        onTaskUpdate={handleTaskUpdate}
+                                        onTaskDelete={handleTaskDelete}
+                                        showCompletedTasks={true}
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    )
+                ) : goalProjects.length === 0 ? (
+                    <EmptyState
+                        title={t(
+                            'goals.noProjects',
+                            'No projects linked to this goal.'
                         )}
+                    />
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {goalProjectCards.map((project) => (
+                            <ProjectItem
+                                key={project.id}
+                                project={project}
+                                viewMode="cards"
+                                {...cardActions}
+                            />
+                        ))}
                     </div>
-                )
-            ) : goalProjects.length === 0 ? (
-                <p className="text-sm text-gray-600 dark:text-gray-300 px-2">
-                    {t('goals.noProjects', 'No projects linked to this goal.')}
-                </p>
-            ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {goalProjectCards.map((project) => (
-                        <ProjectItem
-                            key={project.id}
-                            project={project}
-                            viewMode="cards"
-                            {...cardActions}
-                        />
-                    ))}
-                </div>
-            )}
+                )}
+            </div>
 
             <GoalModal
                 isOpen={isEditing}
@@ -430,7 +433,7 @@ const GoalDetails: React.FC = () => {
                 resourceUid={goal.uid || null}
                 resourceName={goal.title}
             />
-        </div>
+        </PageShell>
     );
 };
 

@@ -11,6 +11,10 @@ import { IconButton } from '../Shared/ui/Button';
 import { formatDuration, formatMinute } from '../DailyPlan/planUtils';
 import { DayLine, lineAt } from './dayModel';
 import TaskSourceBadge from '../Shared/TaskSourceBadge';
+import Chip from '../Shared/task/TaskChip';
+import TaskNotePreview from '../Shared/task/TaskNotePreview';
+import { shortDayLabel } from '../Shared/task/dueLabel';
+import { ROW_GROUP, rowMenuClass } from '../Shared/task/rowMenu';
 
 export const findEntry = (
     entries: MenuEntry[],
@@ -20,15 +24,6 @@ export const findEntry = (
         (entry): entry is MenuItem =>
             typeof entry === 'object' && 'key' in entry && entry.key === key
     );
-
-const shortDate = (date: string, language: string): string => {
-    const [y, m, d] = date.slice(0, 10).split('-').map(Number);
-    return new Intl.DateTimeFormat(language, {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-    }).format(new Date(y, m - 1, d));
-};
 
 const MAX_TAGS = 2;
 
@@ -56,23 +51,6 @@ const BigTime: React.FC<{ minute: number; strong: boolean }> = ({
         </span>
     );
 };
-
-const Chip: React.FC<{
-    children: React.ReactNode;
-    tone?: 'neutral' | 'warning';
-    title?: string;
-}> = ({ children, tone = 'neutral', title }) => (
-    <span
-        title={title}
-        className={`inline-flex h-5 max-w-[12rem] items-center gap-1 truncate rounded-md px-1.5 text-xs tabular-nums ${
-            tone === 'warning'
-                ? 'bg-warning-container/70 text-warning'
-                : 'bg-surface-high text-surface-on-variant'
-        }`}
-    >
-        {children}
-    </span>
-);
 
 export interface TaskLineProps {
     line: DayLine;
@@ -218,7 +196,7 @@ const TaskLine: React.FC<TaskLineProps> = ({
                 title={t('today.dueAt', 'Due')}
             >
                 <FlagIcon aria-hidden="true" className="h-3 w-3" />
-                {shortDate(dueDay as string, i18n?.language ?? 'en')}
+                {shortDayLabel(dueDay as string, i18n?.language ?? 'en')}
             </Chip>
         ) : null,
         !expanded && subtasks.length > 0 ? (
@@ -234,7 +212,7 @@ const TaskLine: React.FC<TaskLineProps> = ({
             ref={setNodeRef}
             data-task-row
             data-testid="task-line"
-            className={`relative grid cursor-default grid-cols-[52px_auto_minmax(0,1fr)] items-start gap-x-3 rounded-xl px-2 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary/60 max-sm:py-2.5 ${
+            className={`${ROW_GROUP} relative grid cursor-default grid-cols-[52px_auto_minmax(0,1fr)] items-start gap-x-3 rounded-xl px-2 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary/60 max-sm:py-2.5 ${
                 selected
                     ? 'bg-surface-highest'
                     : current
@@ -292,9 +270,7 @@ const TaskLine: React.FC<TaskLineProps> = ({
                     </span>
                 )}
                 {expanded && note && (
-                    <span className="mt-1.5 line-clamp-3 whitespace-pre-line text-body-m text-surface-on-variant">
-                        {note}
-                    </span>
+                    <TaskNotePreview note={note} className="mt-1.5" />
                 )}
             </span>
 
@@ -341,12 +317,12 @@ const TaskLine: React.FC<TaskLineProps> = ({
                 </ul>
             )}
 
-            {/* Nothing appears on hover: the menu shows on the selected row,
-                and a right click opens it on any row. */}
+            {/* Nothing appears on hover: the menu shows on the selected or
+                focused row, and a right click opens it on any row. */}
             <span
-                className={`absolute right-2 top-2 ${
-                    selected || menuOpen ? '' : 'invisible'
-                }`}
+                className={`absolute right-2 top-2 ${rowMenuClass(
+                    selected || menuOpen
+                )}`}
                 onClick={(event) => event.stopPropagation()}
             >
                 <Menu

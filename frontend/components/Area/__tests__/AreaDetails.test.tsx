@@ -158,6 +158,8 @@ describe('AreaDetails leaving a shared area', () => {
     it('offers Leave only when the area is shared with the viewer', async () => {
         renderPage();
         await screen.findByText('Project one');
+        fireEvent.click(screen.getByRole('button', { name: 'More options' }));
+        expect(screen.getByTestId('area-share')).toBeInTheDocument();
         expect(screen.queryByTestId('area-leave')).not.toBeInTheDocument();
     });
 
@@ -165,6 +167,9 @@ describe('AreaDetails leaving a shared area', () => {
         area.can_leave = true;
         renderPage();
 
+        fireEvent.click(
+            await screen.findByRole('button', { name: 'More options' })
+        );
         fireEvent.click(await screen.findByTestId('area-leave'));
         expect(screen.getByText('Leave area')).toBeInTheDocument();
         fireEvent.click(screen.getByTestId('confirm-dialog-confirm'));

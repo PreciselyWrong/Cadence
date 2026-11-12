@@ -146,6 +146,15 @@ describe('InboxItemDetail - a shared link', () => {
         });
     });
 
+    it('lists a lone link as a row with a link icon, not a bordered card', async () => {
+        renderItem('https://example.com/rust');
+
+        const line = await screen.findByTestId('inbox-link-line');
+        expect(line).toHaveTextContent('Rust patterns');
+        expect(line.querySelector('svg')).toBeInTheDocument();
+        expect(screen.queryByTestId('link-preview')).toBeNull();
+    });
+
     it('offers the task first, then Project…, Note, Inbox and Delete', async () => {
         renderItem('https://example.com/rust');
         await open();

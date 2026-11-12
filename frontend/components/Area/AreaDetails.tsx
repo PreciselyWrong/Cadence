@@ -3,6 +3,8 @@ import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Segmented from '../Shared/ui/Segmented';
+import PageShell, { PAGE_GUTTER } from '../Shared/ui/PageShell';
+import EmptyState from '../Shared/ui/EmptyState';
 import { useStore } from '../../store/useStore';
 import { Area } from '../../entities/Area';
 import { Goal } from '../../entities/Goal';
@@ -225,11 +227,7 @@ const AreaDetails: React.FC = () => {
     }
 
     if (isError || !area) {
-        return (
-            <div className="flex items-center justify-center h-64 text-red-500">
-                {t('areas.notFound', 'Area not found')}
-            </div>
-        );
+        return <EmptyState title={t('areas.notFound', 'Area not found')} />;
     }
 
     const activeTasks = areaTasks.filter(
@@ -244,7 +242,7 @@ const AreaDetails: React.FC = () => {
     );
 
     return (
-        <div className="mx-auto w-full max-w-4xl px-6 pb-12 max-sm:px-4">
+        <PageShell template="board">
             <AreaHero
                 area={area}
                 t={t}
@@ -255,7 +253,7 @@ const AreaDetails: React.FC = () => {
                 onLeaveClick={() => setIsLeaveConfirmOpen(true)}
             />
 
-            <div className="mb-4">
+            <div className={`mb-4 ${PAGE_GUTTER}`}>
                 <Segmented
                     selected={activeTab}
                     onSelect={(id) => setActiveTab(id as AreaTab)}
@@ -281,11 +279,14 @@ const AreaDetails: React.FC = () => {
 
             {activeTab === 'projects' &&
                 (areaProjects.length === 0 ? (
-                    <p className="text-sm text-gray-600 dark:text-gray-300 px-2">
-                        {t('areas.noProjects', 'No projects in this area.')}
-                    </p>
+                    <EmptyState
+                        title={t(
+                            'areas.noProjects',
+                            'No projects in this area.'
+                        )}
+                    />
                 ) : (
-                    <div className="space-y-6">
+                    <div className={`space-y-6 ${PAGE_GUTTER}`}>
                         {openProjects.length > 0 && (
                             <div role="list" className="-mx-3">
                                 {openProjects.map(renderProjectCard)}
@@ -312,7 +313,10 @@ const AreaDetails: React.FC = () => {
                                     )}
                                 </button>
                                 {showFinished && (
-                                    <div role="list" className="-mx-3 mt-2 opacity-80">
+                                    <div
+                                        role="list"
+                                        className="-mx-3 mt-2 opacity-80"
+                                    >
                                         {finishedProjects.map(
                                             renderProjectCard
                                         )}
@@ -325,15 +329,15 @@ const AreaDetails: React.FC = () => {
 
             {activeTab === 'goals' &&
                 (areaGoals.length === 0 ? (
-                    <p className="text-sm text-gray-600 dark:text-gray-300 px-2">
-                        {t(
+                    <EmptyState
+                        title={t(
                             'goals.noGoalsInArea',
                             'No goals linked to this area.'
                         )}
-                    </p>
+                    />
                 ) : (
                     <div
-                        className={`task-list-container overflow-visible ${TASK_SHEET_CLASS} task-sheet-rails`}
+                        className={`task-list-container overflow-visible ${TASK_SHEET_CLASS} task-sheet-rails ${PAGE_GUTTER}`}
                     >
                         {areaGoals.map((goal) => (
                             <div key={goal.uid}>
@@ -348,15 +352,20 @@ const AreaDetails: React.FC = () => {
 
             {activeTab === 'tasks' &&
                 (loadingTasks ? (
-                    <div className="px-2 text-sm text-gray-500 dark:text-gray-400">
+                    <div
+                        className={`${PAGE_GUTTER} text-body-m text-surface-on-variant`}
+                    >
                         {t('loading.tasks', 'Loading tasks…')}
                     </div>
                 ) : activeTasks.length === 0 && completedTasks.length === 0 ? (
-                    <p className="text-sm text-gray-500 dark:text-gray-400 px-2">
-                        {t('areas.noTasks', 'No tasks directly in this area')}
-                    </p>
+                    <EmptyState
+                        title={t(
+                            'areas.noTasks',
+                            'No tasks directly in this area'
+                        )}
+                    />
                 ) : (
-                    <div className="space-y-6">
+                    <div className={`space-y-6 ${PAGE_GUTTER}`}>
                         {activeTasks.length > 0 && (
                             <TaskList
                                 tasks={activeTasks}
@@ -368,9 +377,11 @@ const AreaDetails: React.FC = () => {
                         )}
                         {completedTasks.length > 0 && (
                             <div>
-                                <h3 className="px-2 text-sm font-medium text-gray-600 dark:text-gray-300 mb-3">
-                                    {t('tasks.completed', 'Completed')} (
-                                    {completedTasks.length})
+                                <h3 className="mb-3 px-2 text-body-m font-medium text-surface-on-variant">
+                                    {t('tasks.completed', 'Completed')}
+                                    <span className="ml-2 tabular-nums">
+                                        {completedTasks.length}
+                                    </span>
                                 </h3>
                                 <TaskList
                                     tasks={completedTasks}
@@ -417,7 +428,7 @@ const AreaDetails: React.FC = () => {
                     confirmButtonText={t('shares.leave.action', 'Leave')}
                 />
             )}
-        </div>
+        </PageShell>
     );
 };
 

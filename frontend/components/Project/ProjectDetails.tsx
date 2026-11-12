@@ -39,6 +39,7 @@ import {
     deleteTask,
     fetchTaskOrder,
     saveTaskOrder,
+    toggleTaskCompletion,
     updateTask,
 } from '../../utils/tasksService';
 import { mergeUpdatedTaskList } from '../../utils/taskUpdateMerge';
@@ -86,7 +87,7 @@ import {
     TaskStatusFilter,
 } from '../../constants/taskStatus';
 import { saveProjectAsTemplate } from '../../utils/templatesService';
-import TaskModal from '../Task/TaskModal';
+import { useTaskPane } from '../../contexts/TaskPaneContext';
 import { comparePinnedTasks } from '../../utils/taskPin';
 
 type ProjectViewTab = 'tasks' | 'outline' | 'timeline' | 'board' | 'calendar';
@@ -110,7 +111,18 @@ const ProjectDetails: React.FC = () => {
     const [allProjects, setAllProjects] = useState<Project[]>([]);
     const [project, setProject] = useState<Project | null>(null);
     const [tasks, setTasks] = useState<Task[]>([]);
-    const [panelTask, setPanelTask] = useState<Task | null>(null);
+    // Board, Calendar and Timeline open the task in the common floating
+    // sheet, like the list; a second click on the open task closes it.
+    const {
+        openTask: openTaskSheet,
+        closeTask: closeTaskSheet,
+        openTaskUid,
+    } = useTaskPane();
+    const openTaskInSheet = (task: Task) => {
+        if (!task.uid) return;
+        if (openTaskUid === task.uid) closeTaskSheet();
+        else openTaskSheet(task.uid);
+    };
     const [notes, setNotes] = useState<Note[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<ProjectLoadError | null>(null);
@@ -476,6 +488,20 @@ const ProjectDetails: React.FC = () => {
         if (!taskUid) return;
         await deleteTask(taskUid);
         setTasks(tasks.filter((task) => task.uid !== taskUid));
+    };
+
+    // The check on a board card: saved here, then merged like a row's.
+    const toggleFromCard = async (task: Task) => {
+        if (!task.uid) return;
+        try {
+            handleTaskCompletionToggle(
+                await toggleTaskCompletion(task.uid, task)
+            );
+        } catch {
+            showErrorToast(
+                t('task.statusUpdateError', 'Failed to update status')
+            );
+        }
     };
 
     const handleTaskCompletionToggle = (updatedTask: Task) => {
@@ -1235,13 +1261,14 @@ const ProjectDetails: React.FC = () => {
                                         onMoveTask={handleTaskSectionChange}
                                         onOrderColumn={handleColumnOrder}
                                         readOnly={project.access_level === 'ro'}
-                                        onOpenTask={setPanelTask}
+                                        onOpenTask={openTaskInSheet}
+                                        onToggleTask={toggleFromCard}
                                         t={t}
                                     />
                                 ) : view === 'calendar' ? (
                                     <TaskMonthCalendar
                                         tasks={displayTasks}
-                                        onOpenTask={setPanelTask}
+                                        onOpenTask={openTaskInSheet}
                                         onMoveDue={(task, dueDate) =>
                                             handleTaskUpdate({
                                                 ...task,
@@ -1268,7 +1295,7 @@ const ProjectDetails: React.FC = () => {
                                         tasks={displayTasks}
                                         links={project.task_links || []}
                                         onDatesChange={handleTaskDatesChange}
-                                        onOpenTask={setPanelTask}
+                                        onOpenTask={openTaskInSheet}
                                         t={t}
                                     />
                                 ) : (
@@ -1356,23 +1383,6 @@ const ProjectDetails: React.FC = () => {
                                 )}
                             </>
                         }
-
-                        {panelTask && (
-                            <TaskModal
-                                isOpen
-                                onClose={() => setPanelTask(null)}
-                                task={panelTask}
-                                onSaved={(fresh) =>
-                                    setTasks((prev) =>
-                                        prev.map((item) =>
-                                            item.uid === fresh.uid
-                                                ? { ...item, ...fresh }
-                                                : item
-                                        )
-                                    )
-                                }
-                            />
-                        )}
 
                         {previewNote && (
                             <NoteSidePanel

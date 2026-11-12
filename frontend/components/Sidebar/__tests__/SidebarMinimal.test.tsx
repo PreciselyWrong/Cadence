@@ -138,14 +138,14 @@ describe('SidebarSmartLists', () => {
     });
 
     // Only what waits for an action keeps a count by default (Today, Inbox).
-    it('shows Today, Tomorrow and Plan; the Inbox row is off by default, Today counts', async () => {
+    it('shows Today and Plan; the Inbox row is off by default, Today counts', async () => {
         render(
             <SidebarSmartLists handleNavClick={jest.fn()} location={location} />
         );
 
         expect(screen.getByText('Today')).toBeInTheDocument();
-        expect(screen.getByText('Tomorrow')).toBeInTheDocument();
         expect(screen.getByText('Plan')).toBeInTheDocument();
+        expect(screen.queryByText('Tomorrow')).toBeNull();
         expect(screen.queryByText('Inbox')).toBeNull();
 
         await waitFor(() => {
@@ -153,31 +153,10 @@ describe('SidebarSmartLists', () => {
                 '3'
             );
         });
-        expect(screen.getByTestId('sidebar-smart-tomorrow')).toHaveTextContent(
-            /^Tomorrow$/
-        );
         expect(screen.getByTestId('sidebar-smart-next7')).toHaveTextContent(
             /^Plan$/
         );
         expect(screen.queryByTestId('sidebar-smart-inbox')).toBeNull();
-    });
-
-    it('opens the tomorrow list from its row', async () => {
-        const handleNavClick = jest.fn();
-        render(
-            <SidebarSmartLists
-                handleNavClick={handleNavClick}
-                location={location}
-            />
-        );
-
-        fireEvent.click(screen.getByText('Tomorrow'));
-
-        expect(handleNavClick).toHaveBeenCalledWith(
-            '/today?date=tomorrow',
-            'Tomorrow',
-            expect.anything()
-        );
     });
 });
 

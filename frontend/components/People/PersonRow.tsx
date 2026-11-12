@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { UserIcon } from '@heroicons/react/24/outline';
 import { Person } from '../../entities/Person';
 import { memberRoleLabel } from './memberRoleLabel';
-import ListRow, { ColorDot } from '../Shared/ui/ListRow';
+import ListRow from '../Shared/ui/ListRow';
+import EntityMark from '../Shared/ui/EntityMark';
 
 const RELATIONSHIP_LABELS: Record<string, string> = {
     family: 'Family',
@@ -32,7 +33,7 @@ const PersonRow: React.FC<PersonRowProps> = ({ person }) => {
         <ListRow
             to={`/person/${person.uid}`}
             testId={`person-row-${person.uid}`}
-            leading={<ColorDot color={person.color} />}
+            leading={<EntityMark kind="person" color={person.color} />}
             muted={!!person.archived}
             title={
                 <span className="inline-flex max-w-full items-center gap-1.5">
