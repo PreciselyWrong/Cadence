@@ -18,7 +18,6 @@ import ch.nicolab.cadence.tasks.triage.TriageItemDto
 import ch.nicolab.cadence.tasks.triage.TriageQueueDto
 import ch.nicolab.cadence.tasks.triage.TriageRequests
 import ch.nicolab.cadence.tasks.triage.slotAnswerCall
-import java.time.LocalDate
 import java.util.UUID
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -93,12 +92,12 @@ internal class TriageViewModel(application: Application) : AndroidViewModel(appl
         )
     }
 
-    fun answer(item: TriageItemDto, question: QuestionDto, answer: String, date: LocalDate) {
+    fun answer(item: TriageItemDto, question: QuestionDto, answer: String) {
         val key = UUID.randomUUID().toString()
         hold(
             item,
             string(R.string.triage_answered),
-            questionAnswerCall(date, key, question, answer, string(R.string.triage_title)),
+            questionAnswerCall(key, question, answer, string(R.string.triage_title)),
         )
     }
 

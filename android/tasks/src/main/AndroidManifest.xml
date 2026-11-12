@@ -141,6 +141,10 @@
         </service>
 
         <receiver
+            android:name=".live.AgentReplyReceiver"
+            android:exported="false" />
+
+        <receiver
             android:name=".autoclassify.AutoClassifyReceiver"
             android:exported="false" />
 

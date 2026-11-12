@@ -77,10 +77,6 @@ object TasksGraph {
     fun autoClassify(context: Context): ch.nicolab.cadence.tasks.autoclassify.AutoClassifyRepository =
         ch.nicolab.cadence.tasks.autoclassify.autoClassifyRepository(context)
 
-    /** Réglages de l'agent (en ligne seulement). */
-    fun agents(context: Context): ch.nicolab.cadence.tasks.agents.AgentsRepository =
-        ch.nicolab.cadence.tasks.data.createAgents(context.applicationContext)
-
     /** Écritures du plan du jour (Reporter, Placer) : plan local d'abord, appels différés ensuite. */
     internal fun planEdits(context: Context): PlanEdits = createPlanEdits(context.applicationContext)
 

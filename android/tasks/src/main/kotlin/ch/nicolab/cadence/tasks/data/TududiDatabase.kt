@@ -22,7 +22,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         SyncConflictEntity::class,
         DeferredCallEntity::class,
     ],
-    version = 22,
+    version = 23,
     exportSchema = true,
 )
 abstract class TududiDatabase : RoomDatabase() {
@@ -297,5 +297,15 @@ internal val MIGRATION_21_22 = object : Migration(21, 22) {
         db.execSQL(
             "DELETE FROM deferred_calls WHERE `key` LIKE 'brief-seen:%' OR `key` LIKE 'brief-decision:%' OR `key` = 'brief-settings'",
         )
+    }
+}
+
+/**
+ * Les réponses aux questions d'« À trier » passent de `/daily-plan/:date/brief/answers` à `/triage/answers` (même
+ * corps, jour local pris par le serveur) : celles encore en file sont réécrites plutôt que perdues.
+ */
+internal val MIGRATION_22_23 = object : Migration(22, 23) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("UPDATE deferred_calls SET path = '/api/v1/triage/answers' WHERE path LIKE '/api/v1/daily-plan/%/brief/answers'")
     }
 }

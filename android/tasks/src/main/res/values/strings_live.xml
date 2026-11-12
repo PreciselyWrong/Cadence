@@ -8,4 +8,16 @@
     <string name="agent_banner_more">+%1$d</string>
     <string name="agent_banner_open">Ouvrir</string>
     <string name="agent_banner_dismiss">Marquer comme lu</string>
+    <string name="live_reply_action">Répondre</string>
+    <string name="live_reply_hint">Votre réponse</string>
+    <string name="live_reply_sending">Envoi…</string>
+    <string name="live_reply_waiting">En attente du réseau</string>
+    <string name="live_reply_not_sent">Pas envoyé</string>
+    <string name="live_reply_busy">Une réponse est déjà en cours. Réessayez plus tard.</string>
+    <string name="live_reply_gone">Ce message a été supprimé.</string>
+    <string name="live_reply_not_configured">Hermes n’est pas configuré sur le serveur.</string>
+    <string name="live_reply_no_server">Aucun serveur connecté.</string>
+    <string name="live_reply_refused">Réponse refusée par le serveur (%1$d).</string>
+    <string name="live_reply_yours">Votre réponse : %1$s</string>
+    <string name="live_reply_copy">Copier la réponse</string>
 </resources>

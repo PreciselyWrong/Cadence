@@ -1,3 +1,9 @@
+## [1.22.0] — 12 novembre 2026
+
+- « Répondre » sur une notification d'agent : la réponse s'écrit dans la notification et part au plugin ; sans réseau elle attend et repart d'elle-même, refusée elle reste affichée avec « Copier la réponse ».
+- Les réponses aux questions d'« À trier » vont à la nouvelle adresse du serveur ; celles déjà en attente suivent.
+- Réglages › Agents disparaît : Hermes se règle dans son plugin.
+
 ## [1.21.0] — 12 novembre 2026
 
 - Le résumé du jour quitte l'app : Hermes le rédige désormais dans la Boîte des agents. « Ma journée », le bilan du soir, la carte d'Aujourd'hui, la lecture à voix haute et leurs réglages disparaissent ; l'APK s'allège du moteur de voix.

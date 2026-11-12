@@ -14,6 +14,7 @@ import android.provider.Settings
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.app.RemoteInput
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import ch.nicolab.cadence.tasks.R
@@ -299,11 +300,30 @@ internal suspend fun pluginPageIntent(context: Context, target: LiveTarget.Plugi
     return PluginPageActivity.intent(context, item, target.query).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 }
 
-/** Une notification Android par message, une seule fois par uid ; titre et texte du serveur, en texte brut. */
+/** Où en est une réponse saisie depuis la notification ; le texte y reste visible tant qu'il n'est pas parti. */
+internal sealed interface ReplyState {
+    val text: String
+
+    data class Sending(override val text: String) : ReplyState
+
+    data class Waiting(override val text: String, val offline: Boolean) : ReplyState
+
+    data class NotSent(override val text: String, val reason: ReplyFailure, val code: Int?) : ReplyState
+}
+
+/**
+ * Une notification Android par message, une seule fois par uid ; titre et texte du serveur, en texte brut. Un
+ * message qui attend une réponse (`data.replyPath`, route du plugin lui-même) porte « Répondre » en texte libre.
+ */
 internal class LiveNotifier(private val context: Context, private val store: LiveStreamStore) {
     suspend fun show(notification: LiveNotification) {
         val next = SeenUids.add(store.seen(), notification.uid) ?: return
         store.saveSeen(next)
+        post(notification)
+    }
+
+    /** Pose ou remplace la notification de [notification] ; [reply] : l'état d'une réponse saisie. */
+    suspend fun post(notification: LiveNotification, reply: ReplyState? = null) {
         // Sans permission rien ne s'affiche ; l'uid reste noté pour ne pas le reposer plus tard.
         if (!TaskReminderScheduler.notificationsAllowed(context)) return
         LiveChannels.ensure(context)
@@ -326,8 +346,64 @@ internal class LiveNotifier(private val context: Context, private val store: Liv
                 ),
             )
         }
+        val canReply = AgentReply.validPath(notification.replyPath, notification.pluginId) != null
+        when (reply) {
+            null -> Unit
+            is ReplyState.Sending, is ReplyState.Waiting -> {
+                builder.setRemoteInputHistory(arrayOf<CharSequence>(reply.text))
+                    .setSubText(context.getString(if (reply is ReplyState.Waiting && reply.offline) R.string.live_reply_waiting else R.string.live_reply_sending))
+                    .setOnlyAlertOnce(true)
+                    .setAutoCancel(false)
+            }
+            is ReplyState.NotSent -> {
+                val why = failureText(reply)
+                val yours = context.getString(R.string.live_reply_yours, reply.text)
+                builder.setSubText(context.getString(R.string.live_reply_not_sent))
+                    .setContentText(why)
+                    .setStyle(NotificationCompat.BigTextStyle().bigText(why + "\n\n" + yours + "\n\n" + notification.message))
+                    .setAutoCancel(false)
+                    .addAction(0, context.getString(R.string.live_reply_copy), copyIntent(notification.uid, reply.text))
+            }
+        }
+        if (canReply && reply !is ReplyState.Sending && reply !is ReplyState.Waiting) builder.addAction(replyAction(notification))
         NotificationManagerCompat.from(context).notify(TAG, notification.uid.hashCode(), builder.build())
     }
+
+    private fun failureText(reply: ReplyState.NotSent): String = when (reply.reason) {
+        ReplyFailure.BUSY -> context.getString(R.string.live_reply_busy)
+        ReplyFailure.GONE -> context.getString(R.string.live_reply_gone)
+        ReplyFailure.NOT_CONFIGURED -> context.getString(R.string.live_reply_not_configured)
+        ReplyFailure.NO_SERVER -> context.getString(R.string.live_reply_no_server)
+        ReplyFailure.REFUSED -> context.getString(R.string.live_reply_refused, reply.code ?: 0)
+    }
+
+    /** « Répondre » : saisie libre dans la notification, reçue par [AgentReplyReceiver] (intent modifiable exigé). */
+    private fun replyAction(notification: LiveNotification): NotificationCompat.Action {
+        val intent = Intent(context, AgentReplyReceiver::class.java)
+            .setAction(AgentReplyReceiver.ACTION_REPLY)
+            .putExtra(AgentReplyReceiver.EXTRA_NOTIFICATION, LiveNotification.encode(notification))
+        val flags = PendingIntent.FLAG_UPDATE_CURRENT or
+            (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) PendingIntent.FLAG_MUTABLE else 0)
+        val pending = PendingIntent.getBroadcast(context, ("reply:" + notification.uid).hashCode(), intent, flags)
+        val input = RemoteInput.Builder(AgentReplyReceiver.KEY_TEXT)
+            .setLabel(context.getString(R.string.live_reply_hint))
+            .build()
+        return NotificationCompat.Action.Builder(0, context.getString(R.string.live_reply_action), pending)
+            .addRemoteInput(input)
+            .setAllowGeneratedReplies(false)
+            .setSemanticAction(NotificationCompat.Action.SEMANTIC_ACTION_REPLY)
+            .setShowsUserInterface(false)
+            .build()
+    }
+
+    private fun copyIntent(uid: String, text: String): PendingIntent = PendingIntent.getBroadcast(
+        context,
+        ("copy:$uid").hashCode(),
+        Intent(context, AgentReplyReceiver::class.java)
+            .setAction(AgentReplyReceiver.ACTION_COPY)
+            .putExtra(AgentReplyReceiver.EXTRA_TEXT, text),
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+    )
 
     /** Page du plugin si le menu la connaît, la tâche, ou l'app. */
     private suspend fun intentFor(target: LiveTarget): Intent? = when (target) {
@@ -338,7 +414,7 @@ internal class LiveNotifier(private val context: Context, private val store: Liv
 
     private fun launchIntent(): Intent? = context.packageManager.getLaunchIntentForPackage(context.packageName)
 
-    private companion object {
+    companion object {
         const val TAG = "agents"
     }
 }

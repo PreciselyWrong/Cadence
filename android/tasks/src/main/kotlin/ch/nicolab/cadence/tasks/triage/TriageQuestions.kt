@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import ch.nicolab.cadence.tasks.sync.DeferredCall
-import java.time.LocalDate
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
@@ -16,9 +15,11 @@ data class QuestionDto(val key: String = "", val text: String = "", val target: 
 @Serializable
 data class TargetDto(val scope: String = "", val ref: String = "")
 
-/** Réponse à une question (Oui, Non ou texte libre), mise en file avec sa clé d'idempotence. */
+/**
+ * Réponse à une question (Oui, Non ou texte libre), mise en file avec sa clé d'idempotence. Le serveur prend le jour
+ * local du compte : l'adresse ne porte pas de date.
+ */
 internal fun questionAnswerCall(
-    date: LocalDate,
     idempotencyKey: String,
     question: QuestionDto,
     answer: String,
@@ -26,7 +27,7 @@ internal fun questionAnswerCall(
 ) = DeferredCall(
     key = "triage-answer:$idempotencyKey",
     method = "POST",
-    path = "/api/v1/daily-plan/$date/brief/answers",
+    path = ANSWERS_PATH,
     body = buildJsonObject {
         put("question_key", question.key)
         put("target", buildJsonObject {
@@ -38,6 +39,8 @@ internal fun questionAnswerCall(
     },
     label = label,
 )
+
+internal const val ANSWERS_PATH = "/api/v1/triage/answers"
 
 /** Dernière file « À trier » lue, pour la lecture hors ligne. */
 class TriageStore private constructor(private val prefs: SharedPreferences) {

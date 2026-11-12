@@ -160,7 +160,7 @@ internal fun TriageScreen(today: LocalDate, onBack: () -> Unit) {
                             onCorrect = { correcting = item },
                             onKeep = { viewModel.keep(item) },
                             onSkip = { viewModel.skip(item) },
-                            onAnswer = { question, answer -> viewModel.answer(item, question, answer, today) },
+                            onAnswer = { question, answer -> viewModel.answer(item, question, answer) },
                             onPrecise = { question -> precise = item to question },
                             onSlot = { accept ->
                                 viewModel.answerSlot(item, TriageActions.field(item.payload, "slot_id"), accept)
@@ -190,7 +190,7 @@ internal fun TriageScreen(today: LocalDate, onBack: () -> Unit) {
         PreciseAnswerSheet(
             question = question,
             onSend = { text ->
-                viewModel.answer(item, question, text, today)
+                viewModel.answer(item, question, text)
                 precise = null
             },
             onDismiss = { precise = null },

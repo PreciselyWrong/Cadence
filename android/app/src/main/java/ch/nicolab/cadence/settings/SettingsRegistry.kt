@@ -18,7 +18,6 @@ import androidx.compose.material.icons.outlined.Flight
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Schedule
-import androidx.compose.material.icons.outlined.SmartToy
 import androidx.compose.material.icons.outlined.Swipe
 import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material.icons.outlined.Widgets
@@ -135,14 +134,6 @@ internal fun settingsPages(deps: SettingsDeps): List<SettingsPage> = listOfNotNu
         title = ch.nicolab.cadence.tasks.R.string.auto_classify_settings_title,
         subtitle = { null },
         content = { ch.nicolab.cadence.tasks.ui.settings.AutoClassifySettingsPage() },
-    ),
-    SettingsPage(
-        id = "agents",
-        section = SettingsSection.ORGANISATION,
-        icon = Icons.Outlined.SmartToy,
-        title = ch.nicolab.cadence.tasks.R.string.agents_title,
-        subtitle = { null },
-        content = { ch.nicolab.cadence.tasks.ui.settings.AgentSettingsPage() },
     ),
     SettingsPage(
         id = "gestures",

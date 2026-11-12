@@ -4,8 +4,11 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.put
 
 /** Un événement du flux SSE : son nom (`message` par défaut), son `id` et ses lignes `data` jointes par `\n`. */
 data class SseEvent(val event: String, val id: String?, val data: String)
@@ -56,6 +59,9 @@ data class LiveNotification(
     val sources: List<String>,
     val openPath: String?,
     val taskUid: String?,
+    val pluginId: String? = null,
+    /** Route du plugin qui reçoit une réponse en texte libre (`POST /api<replyPath>`), si l'agent en attend une. */
+    val replyPath: String? = null,
 ) {
     /** Routée vers le téléphone : le serveur envoie aussi au flux ce qui ne va qu'au bureau. */
     val forMobile: Boolean get() = MOBILE in sources
@@ -77,8 +83,29 @@ data class LiveNotification(
                 sources = (body["sources"] as? JsonArray).orEmpty().mapNotNull { (it as? JsonPrimitive)?.contentOrNull },
                 openPath = data?.text("openPath"),
                 taskUid = data?.text("taskUid"),
+                pluginId = data?.text("pluginId"),
+                replyPath = data?.text("replyPath"),
             )
         }
+
+        /** Forme gardée dans l'intent de « Répondre » et dans la réponse en attente, relue par [decode]. */
+        fun encode(notification: LiveNotification): String = buildJsonObject {
+            put("uid", notification.uid)
+            put("title", notification.title)
+            put("message", notification.message)
+            put("sources", buildJsonArray { notification.sources.forEach { add(JsonPrimitive(it)) } })
+            put(
+                "data",
+                buildJsonObject {
+                    notification.openPath?.let { put("openPath", it) }
+                    notification.taskUid?.let { put("taskUid", it) }
+                    notification.pluginId?.let { put("pluginId", it) }
+                    notification.replyPath?.let { put("replyPath", it) }
+                },
+            )
+        }.toString()
+
+        fun decode(raw: String?): LiveNotification? = raw?.let { of(SseEvent(EVENT, null, it)) }
 
         private fun JsonObject.text(key: String): String? = (this[key] as? JsonPrimitive)?.takeIf { it.isString }?.contentOrNull?.ifBlank { null }
     }
