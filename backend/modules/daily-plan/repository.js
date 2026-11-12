@@ -288,6 +288,105 @@ class DailyPlanRepository {
         });
     }
 
+    // Plan lines of the user on `date` or on any day from `from` on, as
+    // { plan_date, task_id }: the only plans that place a task on a day.
+    async findPlanLinesFrom(userId, from, date) {
+        const plans = await DailyPlan.findAll({
+            where: {
+                user_id: userId,
+                [Op.or]: [
+                    { plan_date: { [Op.gte]: from } },
+                    { plan_date: date },
+                ],
+            },
+            attributes: ['plan_date'],
+            include: [
+                { model: DailyPlanItem, as: 'Items', attributes: ['task_id'] },
+            ],
+        });
+        return plans.flatMap((plan) =>
+            plan.Items.map((item) => ({
+                plan_date: plan.plan_date,
+                task_id: item.task_id,
+            }))
+        );
+    }
+
+    // Open top-level tasks of a day's due list or overdue list (not habits,
+    // not recurring occurrences), minus the excluded ids.
+    findOpenDayTasks(visibleWhere, condition, excludedIds, order) {
+        return Task.findAll({
+            where: {
+                [Op.and]: [
+                    visibleWhere,
+                    {
+                        status: { [Op.notIn]: OPEN_STATUSES_EXCLUDED },
+                        parent_task_id: null,
+                        habit_mode: false,
+                        recurring_parent_id: null,
+                    },
+                    condition,
+                    ...(excludedIds.length
+                        ? [{ id: { [Op.notIn]: excludedIds } }]
+                        : []),
+                ],
+            },
+            include: TASK_INCLUDES,
+            order,
+        });
+    }
+
+    findDueBetween(visibleWhere, start, end, excludedIds) {
+        return this.findOpenDayTasks(
+            visibleWhere,
+            { due_date: { [Op.between]: [start, end] } },
+            excludedIds,
+            [
+                ['due_date', 'ASC'],
+                ['id', 'ASC'],
+            ]
+        );
+    }
+
+    findOverdueBefore(visibleWhere, start, excludedIds) {
+        return this.findOpenDayTasks(
+            visibleWhere,
+            { due_date: { [Op.lt]: start } },
+            excludedIds,
+            [
+                ['due_date', 'ASC'],
+                ['id', 'ASC'],
+            ]
+        );
+    }
+
+    // Tasks done between two instants, most recent first, minus the excluded ids.
+    findCompletedBetween(visibleWhere, start, end, excludedIds, limit) {
+        return Task.findAll({
+            where: {
+                [Op.and]: [
+                    visibleWhere,
+                    {
+                        status: Task.STATUS.DONE,
+                        parent_task_id: null,
+                        habit_mode: false,
+                        recurring_parent_id: null,
+                        completed_at: { [Op.between]: [start, end] },
+                    },
+                    ...(excludedIds.length
+                        ? [{ id: { [Op.notIn]: excludedIds } }]
+                        : []),
+                ],
+            },
+            include: TASK_INCLUDES,
+            order: [
+                ['completed_at', 'DESC'],
+                ['id', 'DESC'],
+            ],
+            limit,
+        });
+    }
+
     findOwnTasksByUids(userId, uids) {
         return Task.findAll({ where: { user_id: userId, uid: uids } });
     }

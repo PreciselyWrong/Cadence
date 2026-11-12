@@ -79,7 +79,9 @@ describe('Daily plan routes', () => {
         expect(await DailyPlanItem.count()).toBe(1);
     });
 
-    it('rejects overlapping time slots', async () => {
+    // Like a calendar, a day can hold two tasks at the same time: the page
+    // draws them side by side (decision of 2026-11-12).
+    it('keeps overlapping time slots', async () => {
         const a = await makeTask();
         const b = await makeTask();
 
@@ -90,8 +92,8 @@ describe('Daily plan routes', () => {
             ],
         });
 
-        expect(res.status).toBe(400);
-        expect(await DailyPlanItem.count()).toBe(0);
+        expect(res.status).toBe(200);
+        expect(await DailyPlanItem.count()).toBe(2);
     });
 
     it('rejects a slot that runs past midnight', async () => {

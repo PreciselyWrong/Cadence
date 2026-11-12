@@ -83,6 +83,18 @@ const dailyPlanController = {
         }
     },
 
+    async day(req, res, next) {
+        try {
+            const user = requireUser(req);
+            sendPlan(
+                res,
+                await dailyPlanService.getDay(user, req.query.date, req.query)
+            );
+        } catch (err) {
+            next(err);
+        }
+    },
+
     async saveTodayOrder(req, res, next) {
         try {
             res.json(

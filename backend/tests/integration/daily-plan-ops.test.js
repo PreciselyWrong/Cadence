@@ -343,7 +343,7 @@ describe('Daily plan operations (PATCH, ETag, If-Match)', () => {
     });
 
     describe('validation and atomicity', () => {
-        it('rejects an overlap with an existing timed item and writes nothing', async () => {
+        it('lets a slot overlap an existing timed item', async () => {
             const a = await makeTask();
             const b = await makeTask();
             await patchOps(today, [
@@ -364,13 +364,19 @@ describe('Daily plan operations (PATCH, ETag, If-Match)', () => {
                 },
             ]);
 
-            expect(res.status).toBe(400);
+            expect(res.status).toBe(200);
             expect(itemsOf(await getPlan())).toEqual([
                 {
                     task_uid: a.uid,
                     position: 0,
                     start_minute: 540,
                     duration_minutes: 60,
+                },
+                {
+                    task_uid: b.uid,
+                    position: 1,
+                    start_minute: 570,
+                    duration_minutes: 30,
                 },
             ]);
         });

@@ -6,6 +6,7 @@ const { Op } = require('sequelize');
 const { Task } = require('../../models');
 const repository = require('./repository');
 const slots = require('./slots');
+const { planIdsOn, blockingTaskIds, buildSuggestions } = require('./day');
 const permissionsService = require('../../services/permissionsService');
 const scopeService = require('../../services/scopeService');
 const { serializeTasks } = require('../tasks/core/serializers');
@@ -74,7 +75,8 @@ function isWholeNumberInRange(value, min, max) {
     return Number.isInteger(value) && value >= min && value <= max;
 }
 
-// Checks the shape of each item and that no two time slots overlap.
+// Checks the shape of each item. Slots may overlap, as on a calendar: the
+// page draws them side by side.
 // Positions come from array order, so the client only has to send the list.
 function validateItems(items) {
     if (!Array.isArray(items)) {
@@ -135,20 +137,6 @@ function validateItems(items) {
             duration_minutes: duration,
         };
     });
-
-    const scheduled = normalized
-        .filter((item) => item.start_minute !== null)
-        .map((item) => ({
-            start: item.start_minute,
-            end:
-                item.start_minute + (item.duration_minutes ?? DEFAULT_DURATION),
-        }))
-        .sort((a, b) => a.start - b.start);
-    for (let i = 1; i < scheduled.length; i++) {
-        if (scheduled[i].start < scheduled[i - 1].end) {
-            throw new ValidationError('Planned time slots cannot overlap');
-        }
-    }
 
     return normalized;
 }
@@ -259,6 +247,82 @@ async function getPlan(user, date, scopeQuery = null) {
             timezone,
             await scopeService.taskScopeWhere(scope)
         ),
+    };
+}
+
+const DAY_COMPLETED_LIMIT = 50;
+
+// The Today page for one day (GET /daily-plan/day): the plan, the tasks due
+// that day that are not planned on a day from today on, the overdue tasks
+// and the suggestions (today only), and the tasks done that day that are not
+// in its plan. Membership rules are in day.js.
+async function getDay(user, date, scopeQuery = null) {
+    const timezone = getSafeTimezone(user.timezone);
+    const today = getCurrentDateInTimezone(timezone);
+    const planView = await getPlan(user, date, scopeQuery);
+    const planDate = planView.date;
+    const isToday = planDate === today;
+    const dayBounds = getDayBoundsInUTC(planDate, timezone);
+    const visibleWhere = await visibleTaskWhere(user.id);
+    const lines = await repository.findPlanLinesFrom(user.id, today, planDate);
+    const blocked = [...blockingTaskIds(lines, { date: planDate, today })];
+    const plannedOnDay = [...planIdsOn(lines, planDate)];
+
+    const serialize = (tasks) =>
+        serializeTasks(tasks, timezone, { preserveOriginalName: true });
+    const [dueTasks, overdueTasks, completedTasks] = await Promise.all([
+        repository.findDueBetween(
+            visibleWhere,
+            dayBounds.start,
+            dayBounds.end,
+            blocked
+        ),
+        isToday
+            ? repository.findOverdueBefore(
+                  visibleWhere,
+                  getTodayBoundsInUTC(timezone).start,
+                  blocked
+              )
+            : [],
+        repository.findCompletedBetween(
+            visibleWhere,
+            dayBounds.start,
+            dayBounds.end,
+            plannedOnDay,
+            DAY_COMPLETED_LIMIT
+        ),
+    ]);
+    const [due, overdue, completed] = await Promise.all([
+        serialize(dueTasks),
+        serialize(overdueTasks),
+        serialize(completedTasks),
+    ]);
+
+    let suggestions = null;
+    if (isToday) {
+        const candidates = await getCandidates(user, { scopeQuery });
+        const excludeUids = new Set([
+            ...(planView.plan?.items || []).map((item) => item.task_uid),
+            ...due.map((task) => task.uid),
+            ...overdue.map((task) => task.uid),
+        ]);
+        suggestions = buildSuggestions(candidates, {
+            weekStart: weekStartOf(today, user.first_day_of_week ?? 1),
+            excludeUids,
+        });
+    }
+
+    return {
+        date: planDate,
+        is_today: isToday,
+        day_hours: planView.day_hours,
+        focus_blocks_of_day: planView.focus_blocks_of_day,
+        plan: planView.plan,
+        etag: planEtag(planView.plan?.items || []),
+        due,
+        overdue,
+        suggestions,
+        completed,
     };
 }
 
@@ -948,6 +1012,7 @@ async function saveFocusBlocks(user, body) {
 }
 
 module.exports = {
+    getDay,
     saveTodayOrder,
     readFocus,
     getFocusBlocks,
