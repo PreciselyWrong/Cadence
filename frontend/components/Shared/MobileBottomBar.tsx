@@ -62,25 +62,26 @@ const MobileBottomBar: React.FC = () => {
     const fab = fabTarget(pathname);
     const iconClass = 'h-6 w-6';
 
+    // Each tab reads its page's own title.
     const destinations: Destination[] = [
         {
             id: 'inbox',
             to: '/inbox',
-            label: t('mobileNav.inbox', 'Inbox'),
+            label: t('inbox.title', 'Inbox'),
             icon: <InboxIcon className={iconClass} />,
             selectedIcon: <InboxSolid className={iconClass} />,
         },
         {
             id: 'tasks',
             to: '/today',
-            label: t('mobileNav.tasks', 'Tasks'),
+            label: t('today.title', 'Today'),
             icon: <CheckCircleIcon className={iconClass} />,
             selectedIcon: <CheckCircleSolid className={iconClass} />,
         },
         {
             id: 'agenda',
             to: '/calendar',
-            label: t('mobileNav.agenda', 'Agenda'),
+            label: t('sidebar.calendar', 'Calendar'),
             icon: <CalendarDaysIcon className={iconClass} />,
             selectedIcon: <CalendarDaysSolid className={iconClass} />,
         },
@@ -89,7 +90,7 @@ const MobileBottomBar: React.FC = () => {
                   {
                       id: 'habits' as const,
                       to: '/habits',
-                      label: t('mobileNav.habits', 'Habits'),
+                      label: t('cadenceHabits.title', 'Habits'),
                       icon: <HexagonIcon className={iconClass} />,
                       selectedIcon: (
                           <HexagonIcon className={iconClass} filled />
@@ -100,7 +101,7 @@ const MobileBottomBar: React.FC = () => {
         {
             id: 'review',
             to: '/review',
-            label: t('mobileNav.review', 'Review'),
+            label: t('review.title', 'Review'),
             icon: <ChartBarIcon className={iconClass} />,
             selectedIcon: <ChartBarSolid className={iconClass} />,
         },

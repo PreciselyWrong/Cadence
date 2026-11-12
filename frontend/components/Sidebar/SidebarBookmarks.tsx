@@ -72,7 +72,10 @@ const PinnedTile: React.FC<PinnedTileProps> = ({
     const { t } = useTranslation();
     const trigger = useRef<HTMLButtonElement | null>(null);
     const label = t('sidebar.unpinItem', 'Unpin {{name}}', { name });
-    const fill = tint(color, 0.24);
+    // On the dark island a 24% tint of a dark colour vanished: the tile is
+    // lighter there, and the icon takes a lightened tint of the colour.
+    const fill = tint(color, 0.32);
+    const ink = color ? `color-mix(in srgb, ${color} 55%, white)` : undefined;
     return (
         <div
             className="relative min-w-0"
@@ -93,20 +96,20 @@ const PinnedTile: React.FC<PinnedTileProps> = ({
                 <span
                     aria-hidden="true"
                     className={`grid h-8 w-8 place-items-center rounded-lg [&>*]:h-[18px] [&>*]:w-[18px] ${
-                        fill ? '' : 'bg-white/10 text-gray-200'
+                        fill ? '' : 'bg-surface-high text-surface-on'
                     }`}
                     style={
                         fill
                             ? {
                                   backgroundColor: fill,
-                                  color: color ?? undefined,
+                                  color: ink,
                               }
                             : undefined
                     }
                 >
                     {icon}
                 </span>
-                <span className="w-full truncate text-center text-xs text-gray-200">
+                <span className="w-full truncate text-center text-xs text-surface-on">
                     {name}
                 </span>
             </button>

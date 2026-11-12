@@ -38,7 +38,7 @@ describe('mobile bottom bar', () => {
     it('marks the active tab and shows the add button on Tâches', () => {
         mockPath = '/today';
         render(<MobileBottomBar />);
-        expect(screen.getByText('Tasks').closest('a')).toHaveAttribute(
+        expect(screen.getByText('Today').closest('a')).toHaveAttribute(
             'aria-current',
             'page'
         );
