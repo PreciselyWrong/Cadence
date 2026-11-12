@@ -64,7 +64,9 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
 - [x] Android : Planifier (Inbox, Échues, 14 jours, Horizons), « Masquer les terminées » (Aujourd'hui, Planifier) et `tasks.month_of` (Room v18, synchro)
   Une colonne au lieu du tableau, feuille « Planifier » à l'appui long, pas de calendrier à droite. Vérif sur le téléphone : une tâche mise dans « Ce mois-ci » sur le web apparaît dans le même horizon, et inversement ; « Ajouter » d'un jour la prévoit ce jour sans échéance.
 - [x] Tâches venues d'un TODO.md : se comportent comme de vraies tâches, sur le web et sur Android
-- [ ] Style des apps de référence repris sur tout le desktop, pas seulement Aujourd'hui
+- [x] Style des apps de référence repris sur tout le desktop, pas seulement Aujourd'hui
+- [ ] Android : reprendre les décisions du style bureau (2026-11-12)
+  Raison : web d'abord ; détail dans `docs/fork/WEB-UX-NOTES.md` (entrée du 2026-11-12, « À reprendre sur Android »). Étiquettes : épinglées puis les plus utilisées ; Projets : statut seulement hors « actif », tâches ouvertes à droite, tri par dernière activité ; Liens : « Ajouter une note » dans le ⋯ ; Inbox : « Tâches à classer » limitée à cinq lignes puis « Tout afficher » ; page projet : avancement en une ligne de texte. Vérif : mêmes listes sur le téléphone que sur le web avec la même base.
 - [ ] Cases `- [ ]` écrites dans une note : deviennent des tâches liées à la note
 - [ ] Android : Inbox de Planifier à reprendre avec Planifier : « + » crée une tâche, tâches à classer listées avant les idées et glissables sur un jour
   Raison : web d'abord (2026-11-12). Vérif : une tâche ajoutée par le « + » de l'Inbox apparaît dans « Tâches à classer » sur le téléphone.
@@ -90,8 +92,8 @@ Branche `fix/note-quickadd-focus-c7e743d5`.
   - [x] 3. Statuts `new` (À voir) et `dropped` (Archivé), « Plus tard » = `review_at` (migration `20261107120000-links-two-statuses`) ; synchro et MCP (`create_link` avec projet et source, `process_inbox_item` avec `link_uid`).
   - [x] 4. Page Liens web : liste par défaut, recherche / étiquette / projet / Archivés, ⋯ Modifier / Créer une tâche / Archiver / Supprimer.
   - [ ] Android : `Now` › « Un lien seul dans l'ajout rapide Android ». Vérif sur le téléphone : partager une adresse, lui mettre une étiquette et un projet, en faire une tâche en moins de 4 touchers.
-- Web : reprendre la passe de soustraction Android du 2026-11-02 (`docs/fork/ANDROID-UX-NOTES.md`)
-  Aujourd'hui sans bannière ni jauge sauf journée pleine, fin de journée en ligne après les tâches, un seul signal couleur par ligne, deux gestes par idée dans la Boîte, fiche terminée par sa case, Projets et Étiquettes en lignes sans « 0 », surfaces neutres. Vérif : captures avant/après à 390 px et en bureau.
+- [x] Web : reprendre la passe de soustraction Android du 2026-11-02 (`docs/fork/ANDROID-UX-NOTES.md`)
+  Bureau livré le 2026-11-12 (`docs/fork/WEB-UX-NOTES.md`) ; reste à vérifier à 390 px.
 - Résumé matinal
   plan validé le 2026-11-04 (`docs/resume-matinal-plan.md`), phases 1 à 6 à suivre ; l'outil Gmail restreint d'Hermes (`integrations/hermes-gmail/`) est le prérequis de la phase 5.
 - Résumé du jour, retours du 2026-11-04 sur le téléphone (1.10.1) :
