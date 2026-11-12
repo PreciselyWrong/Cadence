@@ -23,6 +23,14 @@ Items that existed before the classifier was installed are never classified: the
 
 The classifier files, it never decides when. A task it gives a project or a domain (written directly or through **Apply** on a card) gets `tasks.needs_when = true`, unless it is a subtask, recurring or `#someday`. Such a task stays in Inbox › **Tâches à classer** (web and Android, `GET /tasks?type=unsorted`) with a **Quand ?** row: **Cette semaine**, **Une date**, **Plus tard**, **Sans date**. Any moment settles it, on whatever path it is written (a `beforeSave` hook on `Task`): a due date, `week_of`, `in_view_at`, `defer_until`, `later`, or closing the task; **Sans date** sends `needs_when: false` and keeps the task where it was filed. Undoing the classification clears it. `needs_when` is a synced task field. The migration flags the tasks already filed without a moment.
 
+**Who is in « Tâches à classer »** (`case 'unsorted'` in `backend/modules/tasks/queries/query-builders.js`): open top-level tasks, not recurring, not `#someday`, not deferred past now, with no due date and not in view, either filed nowhere (no project, no domain) or waiting for **Quand ?**, and with no moment that still holds:
+
+- `week_of` of this week or a later one keeps a task out; a past week decides nothing, so the task comes back.
+- `month_of` of next month or later keeps it out. A month is a horizon, not a day: from the 1st of its month a task of that month comes back to be planned, and stays until it gets a day (plan line or due date), a week, is parked or is done. A past month brings it back likewise.
+- A daily-plan line of the user on today or a later day is a moment decided: the task stays out. A line on a past day is not: a task planned yesterday and not done comes back.
+
+Android (`TaskViews.unsorted`) does not yet apply the `month_of` and plan-line rules (`TODO.md`).
+
 ## Duplicate links
 
 Found by code, without the model (`core/duplicates.js`): the same address under another spelling (scheme, `www.`, tracking parameters, trailing slash), the same GitHub, GitLab, Codeberg or Bitbucket repository, the same YouTube video, or the same title (8 characters at least) on the same site. Only an **older** link counts as the original. The new link gets a card, nothing is dropped automatically, and the model is not asked about it.

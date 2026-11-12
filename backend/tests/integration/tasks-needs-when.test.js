@@ -3,8 +3,15 @@
 // « Quand ? » : a task filed for the user (project or domain) without any
 // moment stays in « Tâches à classer » until the user decides when.
 const request = require('supertest');
+const moment = require('moment-timezone');
 const app = require('../../app');
-const { Task, Area, Project } = require('../../models');
+const {
+    Task,
+    Area,
+    Project,
+    DailyPlan,
+    DailyPlanItem,
+} = require('../../models');
 const { createTestUser } = require('../helpers/testUtils');
 
 describe('needs_when', () => {
@@ -95,6 +102,29 @@ describe('needs_when', () => {
             week_of: '2099-01-05',
         });
         expect(await unsortedNames()).toEqual(['Semaine passée']);
+    });
+
+    it('leaves out a task planned on today or a later day, not on a past day', async () => {
+        const day = (offset) =>
+            moment.tz('UTC').add(offset, 'days').format('YYYY-MM-DD');
+        const planOn = async (task, offset) => {
+            const [plan] = await DailyPlan.findOrCreate({
+                where: { user_id: user.id, plan_date: day(offset) },
+            });
+            await DailyPlanItem.create({
+                daily_plan_id: plan.id,
+                task_id: task.id,
+            });
+        };
+        const loose = (name) =>
+            Task.create({ user_id: user.id, name, status: 0 });
+        await planOn(await loose('Prévue aujourd’hui'), 0);
+        await planOn(await loose('Prévue dans 3 jours'), 3);
+        await planOn(await loose('Prévue hier'), -1);
+        await planOn(await pending('Classée, prévue demain'), 1);
+        await loose('Libre');
+
+        expect(await unsortedNames()).toEqual(['Libre', 'Prévue hier']);
     });
 
     it('is settled by any moment chosen, or by keeping it without one', async () => {
