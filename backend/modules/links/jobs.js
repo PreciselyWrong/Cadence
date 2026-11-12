@@ -130,7 +130,6 @@ async function initialize() {
         raw: true,
     });
     pending.forEach((l) => enqueueFetch(l.id));
-    await require('./prune').pruneContextLinks();
     scheduleRefresh();
 }
 
@@ -141,7 +140,6 @@ async function refreshStale(now = new Date()) {
     const { Link } = require('../../models');
     const stale = await Link.findAll({
         where: {
-            status: { [Op.ne]: 'dropped' },
             [Op.or]: [
                 {
                     fetch_status: 'done',

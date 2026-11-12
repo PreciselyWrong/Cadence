@@ -1,56 +1,45 @@
 // Reads a Firefox bookmarks export (bookmarks.html) in the browser. Deterministic:
-// the same file always gives the same list (docs/37-links.md).
+// the same file always gives the same folders. A folder becomes the pages of a
+// project, chosen or new (docs/37-links.md, Project pages).
 
 export interface ImportedBookmark {
     url: string;
     title: string;
-    tags: string[];
 }
 
-// The browser's own folders say nothing about the bookmarks inside them.
-const BROWSER_FOLDERS = new Set([
-    'bookmarks menu',
-    'bookmarks toolbar',
-    'other bookmarks',
-    'mobile bookmarks',
-    'menu des marque-pages',
-    'barre personnelle',
-    'autres marque-pages',
-    'marque-pages sur mobile',
-]);
+export interface BookmarkFolder {
+    name: string;
+    bookmarks: ImportedBookmark[];
+}
 
-const tagFromFolder = (folder: string): string | null => {
-    const name = folder.trim();
-    if (!name || BROWSER_FOLDERS.has(name.toLowerCase())) return null;
-    // A tag name cannot hold what a folder name can.
-    return name.replace(/[#/\\,]+/g, ' ').trim() || null;
-};
-
-export function parseBookmarks(html: string): ImportedBookmark[] {
+// The http(s) pages grouped by the folder they sit in, in file order; a page
+// saved twice counts once, in its first folder.
+export function bookmarkFolders(html: string): BookmarkFolder[] {
     const document = new DOMParser().parseFromString(html, 'text/html');
-    const found = new Map<string, ImportedBookmark>();
+    const seen = new Set<string>();
+    const folders = new Map<string, ImportedBookmark[]>();
     document.querySelectorAll('a[href]').forEach((anchor) => {
         const url = anchor.getAttribute('href') ?? '';
-        if (!/^https?:\/\//i.test(url) || found.has(url)) return;
-        const tags = (anchor.getAttribute('tags') ?? '')
-            .split(',')
-            .map((tag) => tag.trim())
-            .filter(Boolean);
-        const folder = anchor
-            .closest('dl')
-            ?.parentElement?.querySelector(':scope > h3')?.textContent;
-        const fromFolder = folder ? tagFromFolder(folder) : null;
-        if (fromFolder && !tags.includes(fromFolder)) tags.push(fromFolder);
-        found.set(url, {
-            url,
-            title: anchor.textContent?.trim() ?? '',
-            tags,
-        });
+        if (!/^https?:\/\//i.test(url) || seen.has(url)) return;
+        seen.add(url);
+        const name =
+            anchor
+                .closest('dl')
+                ?.parentElement?.querySelector(':scope > h3')
+                ?.textContent?.trim() || 'Bookmarks';
+        folders.set(name, [
+            ...(folders.get(name) ?? []),
+            { url, title: anchor.textContent?.trim() ?? '' },
+        ]);
     });
-    return [...found.values()];
+    return [...folders.entries()].map(([name, bookmarks]) => ({
+        name,
+        bookmarks,
+    }));
 }
 
-export const IMPORT_BATCH = 200;
+// The server takes at most 100 pages per call.
+export const IMPORT_BATCH = 100;
 
 export function inBatches<T>(items: T[], size = IMPORT_BATCH): T[][] {
     const batches: T[][] = [];

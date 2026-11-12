@@ -69,8 +69,6 @@ data class DryRunResult(val considered: Int, val wouldChange: Int, val error: St
 internal object AutoClassifyRequests {
     const val ACTION_ACCEPT_ALL = "ch.nicolab.cadence.tasks.autoclassify.ACCEPT_ALL"
     const val ACTION_DISMISS = "ch.nicolab.cadence.tasks.autoclassify.DISMISS"
-    const val ACTION_DROP_NEW = "ch.nicolab.cadence.tasks.autoclassify.DROP_NEW"
-    const val ACTION_MERGE = "ch.nicolab.cadence.tasks.autoclassify.MERGE"
 
     /** Une réponse remplace la précédente pour la même suggestion : seule la dernière part. */
     fun key(suggestionUid: String) = "auto-classify:$suggestionUid"
@@ -95,8 +93,6 @@ internal object AutoClassifyRequests {
     fun forNotificationAction(action: String?, suggestionUid: String, label: String): DeferredCall? = when (action) {
         ACTION_ACCEPT_ALL -> apply(suggestionUid, AutoClassifyChoices.ACCEPT_ALL, label)
         ACTION_DISMISS -> dismiss(suggestionUid, label)
-        ACTION_DROP_NEW -> apply(suggestionUid, AutoClassifyChoices.duplicate("drop_new"), label)
-        ACTION_MERGE -> apply(suggestionUid, AutoClassifyChoices.duplicate("merge"), label)
         else -> null
     }
 }

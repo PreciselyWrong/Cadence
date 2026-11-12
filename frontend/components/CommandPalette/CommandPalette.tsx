@@ -199,18 +199,21 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
                                     title: name,
                                     group,
                                     prematched: true,
-                                    run: () =>
-                                        result.type === 'Link' && result.url
-                                            ? window.open(
-                                                  result.url,
-                                                  '_blank',
-                                                  'noopener'
-                                              )
-                                            : openEntity(
-                                                  result.type,
-                                                  result.uid as string,
-                                                  name
-                                              ),
+                                    run: () => {
+                                        if (result.type === 'Link') {
+                                            if (result.project_uid) {
+                                                navigate(
+                                                    `/project/${result.project_uid}`
+                                                );
+                                            }
+                                            return;
+                                        }
+                                        openEntity(
+                                            result.type,
+                                            result.uid as string,
+                                            name
+                                        );
+                                    },
                                 } as PaletteItem;
                             })
                     );

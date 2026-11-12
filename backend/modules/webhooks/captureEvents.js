@@ -24,13 +24,16 @@ async function notePayload(note) {
     };
 }
 
-function linkPayload(link) {
+// A link is a page of a project (docs/37-links.md).
+async function linkPayload(link) {
+    const project = link.project_id
+        ? await Project.findByPk(link.project_id, { attributes: ['uid'] })
+        : null;
     return {
         uid: link.uid,
         url: link.url,
         title: link.title || null,
-        source_type: link.source_type || null,
-        source_uid: link.source_uid || null,
+        project_uid: project?.uid ?? null,
     };
 }
 
@@ -43,7 +46,7 @@ const EVENTS = {
     link: {
         event: 'link.created',
         text: (link) => `New link: ${link.title || link.url}`,
-        data: async (link) => ({ link: linkPayload(link) }),
+        data: async (link) => ({ link: await linkPayload(link) }),
     },
 };
 

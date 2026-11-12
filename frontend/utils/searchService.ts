@@ -23,8 +23,9 @@ interface SearchResult {
     uid?: string;
     name: string;
     title?: string;
-    // Set on a Link: the address it opens at.
-    url?: string;
+    // Set on a Link: the project whose pages hold it.
+    project_uid?: string | null;
+    project_name?: string | null;
     description?: string;
     priority?: string;
     status?: string;

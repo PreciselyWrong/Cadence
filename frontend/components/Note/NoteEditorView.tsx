@@ -19,7 +19,6 @@ import { Note } from '../../entities/Note';
 import { useStore } from '../../store/useStore';
 import { COLORS } from '../Shared/ColorPicker';
 import NoteBackgroundPicker from './NoteBackgroundPicker';
-import AddToLinks from '../Links/AddToLinks';
 import LinkPreviews from '../Links/LinkPreviews';
 import MarkdownEditor from './MarkdownEditor';
 import Backlinks from '../Shared/Backlinks';
@@ -494,11 +493,6 @@ const NoteEditorView: React.FC<NoteEditorViewProps> = ({
             {note.uid && (
                 <div className="mx-4 mb-3 flex-shrink-0">
                     <LinkPreviews texts={[note.content]} />
-                    <AddToLinks
-                        sourceType="note"
-                        sourceUid={note.uid}
-                        texts={[note.title, note.content]}
-                    />
                 </div>
             )}
         </div>

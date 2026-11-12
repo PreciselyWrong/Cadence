@@ -284,26 +284,17 @@ const ENTITIES = {
             ) {
                 return 'url_readonly';
             }
-            const { normalizeLinkStatus } = require('../links/core/constants');
-            if (normalizeLinkStatus(values).invalid) return 'invalid_status';
-            const { isDay } = require('../links/core/reviewDate');
-            if (
-                'review_at' in values &&
-                values.review_at !== null &&
-                !isDay(values.review_at)
-            ) {
-                return 'invalid_review_at';
-            }
             return null;
         },
-        // A former status is read as new, and a parked one gets its review day.
+        // A page has no status nor review day any more: what a former client
+        // still sends is accepted and dropped, so its pushes are not refused.
         prepareValues: (row, values) => {
-            const { normalizeLinkStatus } = require('../links/core/constants');
             const {
                 normalizeUrl,
                 classifyKind,
             } = require('../links/core/urls');
-            Object.assign(values, normalizeLinkStatus(values).fields);
+            delete values.status;
+            delete values.review_at;
             if (row) {
                 delete values.url;
             } else {
@@ -328,8 +319,6 @@ const ENTITIES = {
             'github_language',
             'github_last_commit',
             'readme_excerpt',
-            'source_type',
-            'source_uid',
             'fetch_status',
             'fetched_at',
         ],

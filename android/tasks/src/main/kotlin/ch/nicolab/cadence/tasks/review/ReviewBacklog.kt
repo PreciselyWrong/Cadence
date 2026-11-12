@@ -71,9 +71,8 @@ object ReviewBacklog {
         else -> null
     }
 
-    /** Le lien enregistré d'une ligne : celui que le serveur a trouvé dans cette source, sinon la même page. */
-    fun linkFor(links: List<LinkItem>, sourceType: String, uid: String, text: String): LinkItem? =
-        LinkLists.forEntry(links, uid, text, sourceType)
+    /** La page de projet qui porte l'adresse de la ligne, s'il y en a une. */
+    fun linkFor(links: List<LinkItem>, text: String): LinkItem? = LinkLists.forEntry(links, text)
 
     /** Ce que « Annuler » remet : seulement ce que la décision a changé (une date remise à l'identique compterait comme un déplacement). */
     fun undo(decision: Decision, task: TaskItem, zone: ZoneId): TaskChange = when (decision) {

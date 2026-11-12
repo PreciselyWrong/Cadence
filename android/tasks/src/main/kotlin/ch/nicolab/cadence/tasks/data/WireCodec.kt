@@ -166,13 +166,8 @@ internal object WireCodec {
         githubLastCommitRaw = wire.string("github_last_commit"),
         readmeExcerpt = wire.string("readme_excerpt"),
         note = wire.string("note"),
-        status = wire.string("status"),
-        tagUidsJson = (wire["tag_uids"] as? JsonArray ?: JsonArray(emptyList())).toString(),
-        sourceType = wire.string("source_type"),
-        sourceUid = wire.string("source_uid"),
         fetchStatus = wire.string("fetch_status"),
         createdAtRaw = wire.string("created_at"),
-        reviewAtRaw = wire.string("review_at"),
         projectUid = wire.string("project_uid"),
     )
 

@@ -29,15 +29,7 @@ The `triage_assistant` job (daily, 03:50 UTC) sends the open tasks the rules lef
 
 ## Cards of the classifier
 
-The automatic classifier (`docs/41-auto-classify.md`) adds its own cards to the queue, at most one per task, note or link: `type: classify` (action `classify`: project, tags and priority it was unsure about) and `type: link_duplicate` (action `resolve_duplicate`). They carry `source: classify`, `task_uid` when the item is a task, and their options in `payload` (`suggestion_uid`, `entity`, `item_uid`, `title`, …). They are answered through `POST /auto-classify/suggestions/:uid/apply` or `/dismiss`, not `/triage/apply`. While the classifier is enabled the assistant no longer proposes `reclass`.
-
-## Links to review
-
-A link still to read whose review day (`review_at`) has come is a card `type: link_review` (`action: review_link`, `source: links`, `payload: { link_uid, title, url, review_at }`), until the user decides: `POST /triage/links/:uid/review` with `{ decision: keep | archive | later }` (keep clears the day, archive sets `dropped`, later sets today + 30 days).
-
-## Slots proposed by agents
-
-The MCP tool `propose_link_slot` (`link_uids`, `title`, `reason`, `date`, `start_minute?`, `duration_minutes?`) stores a proposal for related links: the only planning an AI may suggest. It appears in the queue as a `link_slot` item (`action: accept_slot`, details: the links). `POST /triage/slots/:id/accept` creates the task, with the addresses in its note, and places it in that day's plan; `POST /triage/slots/:id/refuse` forgets it. Nothing happens before that tap. A slot whose day has passed is no longer shown.
+The automatic classifier (`docs/41-auto-classify.md`) adds its own cards to the queue, at most one per task or note: `type: classify` (action `classify`: project, tags and priority it was unsure about). They carry `source: classify`, `task_uid` when the item is a task, and their options in `payload` (`suggestion_uid`, `entity`, `item_uid`, `title`, …). They are answered through `POST /auto-classify/suggestions/:uid/apply` or `/dismiss`, not `/triage/apply`. While the classifier is enabled the assistant no longer proposes `reclass`.
 
 ## Mail cards (planned)
 
@@ -58,7 +50,6 @@ All under `/api` and `/api/v1`.
 | `GET /triage` | `{ items, tasks, count }`; each item: `key`, `type`, `source`, `task_uid`, `action`, `payload`, `reason`, `details`, `question` |
 | `POST /triage/keep` | `{ task_uid }` |
 | `POST /triage/apply` | `{ task_uid, action, payload?, idempotency_key? }`; the same key does nothing twice |
-| `POST /triage/links/:uid/review` | `{ decision: keep \| archive \| later }` |
 
 ## Clients
 

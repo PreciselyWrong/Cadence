@@ -527,7 +527,8 @@
     "overdueBy": "已逾期 {{days}} 天",
     "dueInDays": "{{days}} 天后到期",
     "startedSuccessfully": "任务已成功开始！",
-    "deleteConfirmMessage": "确定要删除\"{{name}}\"吗？此操作无法撤销。"
+    "deleteConfirmMessage": "确定要删除\"{{name}}\"吗？此操作无法撤销。",
+    "withLink": "带链接"
   },
   "timeline": {
     "activityTimeline": "活动时间线",
@@ -6258,5 +6259,16 @@
     "checkError": "无法检查页面。",
     "copyMarkdown": "将页面复制为 Markdown",
     "check": "检查页面"
+  },
+  "bookmarksImport": {
+    "title": "导入书签",
+    "hint": "Firefox 导出的文件（资料库 › 导入和备份 › 导出）。一个文件夹会变成一个项目的页面。",
+    "file": "书签文件",
+    "empty": "此文件中没有书签。",
+    "folder": "文件夹",
+    "project": "项目",
+    "newProject": "新项目「{{name}}」",
+    "error": "导入失败，请重试。",
+    "import": "导入"
   }
 }

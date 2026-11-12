@@ -528,7 +528,8 @@
     "overdueBy": "Întârziat cu {{days}} z",
     "dueInDays": "Scadent în {{days}} z",
     "startedSuccessfully": "Sarcina a fost pornită cu succes!",
-    "deleteConfirmMessage": "Sigur vrei să ștergi „{{name}}”? Acțiunea nu poate fi anulată."
+    "deleteConfirmMessage": "Sigur vrei să ștergi „{{name}}”? Acțiunea nu poate fi anulată.",
+    "withLink": "Cu un link"
   },
   "timeline": {
     "activityTimeline": "Cronologia activităților",
@@ -6280,5 +6281,16 @@
     "checkError": "Paginile nu au putut fi verificate.",
     "copyMarkdown": "Copiază paginile ca Markdown",
     "check": "Verifică paginile"
+  },
+  "bookmarksImport": {
+    "title": "Importă marcajele",
+    "hint": "Un export din Firefox (Library › Import and Backup › Export). Un dosar devine paginile unui proiect.",
+    "file": "Fișier de marcaje",
+    "empty": "Niciun marcaj în acest fișier.",
+    "folder": "Dosar",
+    "project": "Proiect",
+    "newProject": "Proiect nou « {{name}} »",
+    "error": "Importul a eșuat. Încearcă din nou.",
+    "import": "Importă"
   }
 }

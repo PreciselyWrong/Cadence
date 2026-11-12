@@ -7,7 +7,7 @@ import { getApiPath } from '../config/paths';
 
 // Client of automatic classification (docs/41-auto-classify.md).
 
-export type ClassifyEntity = 'task' | 'note' | 'link';
+export type ClassifyEntity = 'task' | 'note';
 
 export interface ProjectOption {
     uid: string;
@@ -34,21 +34,6 @@ export interface ClassifyPayload {
     priority: { value: 1 | 2; confidence: number } | null;
 }
 
-export interface DuplicatePayload {
-    suggestion_uid: string;
-    entity: 'link';
-    item_uid: string;
-    title: string | null;
-    url: string;
-    reason: 'address' | 'repository' | 'video' | 'title';
-    original: {
-        uid: string;
-        title: string | null;
-        url: string;
-        created_at: string;
-    };
-}
-
 export type ProjectChoice =
     | { type: 'project'; uid: string }
     | { type: 'area'; uid: string }
@@ -61,8 +46,6 @@ export interface ClassifyChoice {
     new_tag: string | null;
     priority: 1 | 2 | null;
 }
-
-export type DuplicateAction = 'drop_new' | 'merge' | 'keep_new' | 'keep_both';
 
 export interface ClassifyThresholds {
     project: number;
@@ -80,14 +63,12 @@ export interface ClassifySettings {
     reasoning_effort: '' | 'minimal' | 'low' | 'medium' | 'high';
     batch_size: number;
     grace_seconds: number;
-    fetch_wait_minutes: number;
     max_attempts: number;
     context_cache_minutes: number;
     suggestion_ttl_days: number;
     daily_suggestion_limit: number;
     log_retention_days: number;
     max_tags: number;
-    summary_max_chars: number;
     max_tokens: number;
     thresholds: ClassifyThresholds;
     excluded_tags: string[];
@@ -213,7 +194,7 @@ export const fetchClassifyMarks = (entity: ClassifyEntity, uid: string) =>
 
 export const applyClassifySuggestion = (
     uid: string,
-    choice: ClassifyChoice | 'all' | { action: DuplicateAction }
+    choice: ClassifyChoice | 'all'
 ) =>
     request<unknown>(
         'POST',

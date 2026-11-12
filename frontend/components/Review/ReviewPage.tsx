@@ -41,12 +41,7 @@ import {
     groupLater,
     LaterGroup,
     QuickEntry,
-    rowLinkText,
 } from './reviewUtils';
-import { Link as SavedLink } from '../../entities/Link';
-import { useLinksStore } from '../../store/linksStore';
-import { firstUrl, linkForItem, residualText } from '../../utils/linkFilters';
-import LinkPreviewCard from '../Links/LinkPreviewCard';
 
 type Step = ReviewCategory | 'week';
 
@@ -231,18 +226,12 @@ const ReviewPage: React.FC = () => {
     // The Friday routine is offered only while none exists.
     const [routineMissing, setRoutineMissing] = useState(false);
     const locale = i18n.language;
-    const links = useLinksStore((state) => state.links);
-    const loadLinks = useLinksStore((state) => state.load);
     const [laterQuery, setLaterQuery] = useState('');
     const [openGroups, setOpenGroups] = useState<Set<string> | null>(null);
     // "Sort one by one" on Later: the rows passed over, in the order passed.
     const [sorting, setSorting] = useState(false);
     const [skipped, setSkipped] = useState<string[]>([]);
     const [quick, setQuick] = useState<QuickState | null>(null);
-
-    useEffect(() => {
-        void loadLinks();
-    }, [loadLinks]);
 
     useEffect(() => {
         let active = true;
@@ -799,28 +788,8 @@ const ReviewPage: React.FC = () => {
               ? inboxOptions(row, row.item)
               : taskOptions(row, row.item.task, inQuick);
 
-    // The saved link of a row whose title (or Inbox text) is an address, so
-    // the row shows the page instead of a raw URL.
-    const linkOf = (row: Row): { link: SavedLink; text: string } | null => {
-        if (row.kind === 'project') return null;
-        if (row.kind === 'inbox') {
-            const link = linkForItem(links, row.item.uid, row.item.content);
-            return link ? { link, text: row.item.content } : null;
-        }
-        const task = row.item.task;
-        const text = rowLinkText(task.original_name || task.name, task.note);
-        const link = text ? linkForItem(links, task.uid, text, 'task') : null;
-        return link && text ? { link, text } : null;
-    };
-
     const renderRow = (row: Row, grouped = false) => {
         const key = rowKey(row);
-        const found = linkOf(row);
-        const around = found
-            ? residualText(found.text, firstUrl(found.text) ?? '')
-            : '';
-        const showTitle =
-            !found || (around !== '' && around !== (found.link.note ?? ''));
         return (
             <li key={key} className="py-2.5">
                 <div className="flex items-start gap-3">
@@ -829,11 +798,9 @@ const ReviewPage: React.FC = () => {
                         onClick={() => openRow(row)}
                         className="min-w-0 flex-1 text-left"
                     >
-                        {showTitle && (
-                            <span className="block truncate text-sm text-gray-900 dark:text-gray-100">
-                                {title(row)}
-                            </span>
-                        )}
+                        <span className="block truncate text-sm text-gray-900 dark:text-gray-100">
+                            {title(row)}
+                        </span>
                         <span className="block truncate text-xs text-gray-600 dark:text-gray-300">
                             {meta(row, grouped)}
                         </span>
@@ -842,17 +809,6 @@ const ReviewPage: React.FC = () => {
                 <div className="mt-2">
                     <DecisionChips options={options(row)} />
                 </div>
-                {found && (
-                    <LinkPreviewCard
-                        url={found.link.url}
-                        title={found.link.title}
-                        description={
-                            found.link.description || found.link.readme_excerpt
-                        }
-                        image={found.link.image_url}
-                        pending={found.link.fetch_status === 'pending'}
-                    />
-                )}
                 {nextTaskInput(row)}
             </li>
         );
@@ -890,17 +846,8 @@ const ReviewPage: React.FC = () => {
     const laterItems = rows.flatMap((row) =>
         row.kind === 'task' ? [row.item] : []
     );
-    const linkTitles: Record<string, string> = {};
-    rows.forEach((row) => {
-        if (row.kind !== 'task' || !row.item.task.uid) return;
-        const found = linkOf(row);
-        if (found) {
-            linkTitles[row.item.task.uid] =
-                found.link.title || found.link.domain || found.link.url;
-        }
-    });
     const laterGroups: LaterGroup[] =
-        step === 'later' ? groupLater(laterItems, laterQuery, linkTitles) : [];
+        step === 'later' ? groupLater(laterItems, laterQuery) : [];
     const opened =
         openGroups ??
         new Set(
@@ -933,38 +880,19 @@ const ReviewPage: React.FC = () => {
         );
 
     const quickCard = (row: Row) => {
-        const found = linkOf(row);
-        const around = found
-            ? residualText(found.text, firstUrl(found.text) ?? '')
-            : '';
-        const showTitle =
-            !found || (around !== '' && around !== (found.link.note ?? ''));
         return (
             <>
-                {showTitle && (
-                    <button
-                        type="button"
-                        onClick={() => openRow(row)}
-                        className="block w-full text-left text-lg font-medium text-gray-900 hover:underline dark:text-gray-100"
-                    >
-                        {title(row)}
-                    </button>
-                )}
+                <button
+                    type="button"
+                    onClick={() => openRow(row)}
+                    className="block w-full text-left text-lg font-medium text-gray-900 hover:underline dark:text-gray-100"
+                >
+                    {title(row)}
+                </button>
                 {meta(row) && (
                     <span className="block text-sm text-gray-600 dark:text-gray-300">
                         {meta(row)}
                     </span>
-                )}
-                {found && (
-                    <LinkPreviewCard
-                        url={found.link.url}
-                        title={found.link.title}
-                        description={
-                            found.link.description || found.link.readme_excerpt
-                        }
-                        image={found.link.image_url}
-                        pending={found.link.fetch_status === 'pending'}
-                    />
                 )}
                 {nextTaskInput(row)}
             </>

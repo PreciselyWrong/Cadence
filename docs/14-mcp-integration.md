@@ -1200,22 +1200,6 @@ Permanently delete a person/contact.
 
 Links are made on purpose, never by the server, and carry their page metadata ([37-links.md](37-links.md)). Status is `new` (to read) or `dropped` (archived); "later" is the review day `review_at`. An assistant may write the note, the tags, the status and the review day, never the URL or the metadata.
 
-#### `list_links`
-
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `status` | string | No | — | Comma list of `new`, `dropped` |
-| `kind` | string | No | — | Comma list of `repo`, `article`, `video`, `tool`, `other` |
-| `tag` | string | No | — | Exact tag name |
-| `untagged` | boolean | No | `false` | Only links without any tag (to tag them) |
-| `domain` | string | No | — | Domain without `www.` |
-| `query` | string | No | — | Searched in title, description, url, note and README excerpt |
-| `source_type` | string | No | — | `inbox_item`, `task` or `note` |
-| `sort` | string | No | `newest` | `newest` or `oldest` |
-| `limit`, `offset` | number | No | 100, 0 | Max 1000 |
-
-**Returns:** `{ count, total, links }`; each link has `uid`, `url`, `domain`, `title`, `description`, `image_url`, `site_name`, `kind`, `github_stars`, `github_language`, `github_last_commit`, `readme_excerpt`, `note`, `status`, `tags`, `source_type`, `source_uid`, `fetch_status`.
-
 #### `get_link`
 
 | Parameter | Type | Required | Description |
@@ -1229,18 +1213,6 @@ Adds a web page to a project's pages; the same address twice in a project is one
 #### `list_project_pages`
 
 `project_uid`. Returns `{ pages }`: each page has the link fields above plus `project_uid`.
-
-#### `create_link`
-
-Saves a web page as a link; the same page twice is one link. `url`, and optionally `title`, `note`, `status` (`new` or `dropped`), `tags`. The former statuses (`to_evaluate`, `tested`, `kept`, `parked`) are read as `new`.
-
-#### `group_links`
-
-Puts related links in one theme: adds the tag `theme` to each of `uids`, keeping their other tags.
-
-#### `propose_link_slot`
-
-Proposes a slot in the agenda for related links. It only waits in the triage queue until the user accepts or refuses it. `link_uids`, `title`, `reason`, `date`, optionally `start_minute`, `duration_minutes`.
 
 #### `delete_link`
 

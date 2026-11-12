@@ -59,12 +59,6 @@ const PAGES: Array<{
         shortcut: 'go-inbox',
     },
     {
-        id: 'links',
-        path: '/links',
-        labelKey: 'sidebar.links',
-        fallback: 'Links',
-    },
-    {
         id: 'upcoming',
         path: '/upcoming',
         labelKey: 'sidebar.upcoming',

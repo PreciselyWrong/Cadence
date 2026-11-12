@@ -19,9 +19,7 @@ import ch.nicolab.cadence.tasks.model.GoalItem
 import ch.nicolab.cadence.tasks.model.GoalStatus
 import ch.nicolab.cadence.tasks.model.IconIds
 import ch.nicolab.cadence.tasks.model.InboxEntry
-import ch.nicolab.cadence.tasks.model.LinkDraft
 import ch.nicolab.cadence.tasks.model.LinkItem
-import ch.nicolab.cadence.tasks.model.LinkStatus
 import ch.nicolab.cadence.tasks.model.NoteChange
 import ch.nicolab.cadence.tasks.model.OccurrenceFields
 import ch.nicolab.cadence.tasks.model.PlaceRef
@@ -206,79 +204,15 @@ internal class RoomTaskRepository(
         writeLink(uid, "note" to jsonString(value)) { it.copy(note = value) }
     }
 
-    override suspend fun setLinkStatus(uid: String, status: LinkStatus) {
-        writeLink(uid, "status" to JsonPrimitive(status.wire)) { it.copy(status = status.wire) }
-    }
-
-    override suspend fun setLinkReviewDate(uid: String, date: java.time.LocalDate?) {
-        val value = date?.toString()
-        writeLink(uid, "review_at" to (value?.let(::JsonPrimitive) ?: JsonNull)) { it.copy(reviewAtRaw = value) }
-    }
-
-    override suspend fun setLinkTags(uid: String, tagUids: List<String>) {
-        val tags = tagUids.distinct()
-        writeLink(uid, "tag_uids" to jsonArray(tags)) { it.copy(tagUidsJson = jsonArray(tags).toString()) }
-    }
-
     override suspend fun setLinkTitle(uid: String, title: String?) {
         val value = title?.trim()?.ifEmpty { null }
         writeLink(uid, "title" to jsonString(value)) { it.copy(title = value) }
-    }
-
-    override suspend fun setLinkProject(uid: String, projectUid: String?) {
-        writeLink(uid, "project_uid" to jsonString(projectUid)) { it.copy(projectUid = projectUid) }
-    }
-
-    override suspend fun setLinkUrl(uid: String, url: String, label: String) {
-        val value = url.trim()
-        val existing = database.linkDao().get(uid) ?: return
-        if (value == existing.url) return
-        database.linkDao().upsert(existing.copy(url = value, fetchStatus = "pending"))
-        defer(
-            DeferredCall(
-                key = linkUrlCallKey(uid),
-                method = "PATCH",
-                path = "/api/v1/links/$uid",
-                body = JsonObject(mapOf("url" to JsonPrimitive(value))),
-                label = label,
-            ),
-        )
-    }
-
-    override suspend fun addLinkFrom(url: String, sourceType: String, sourceUid: String, label: String) =
-        addLink(LinkDraft(url = url.trim(), sourceType = sourceType, sourceUid = sourceUid), label)
-
-    override suspend fun addLink(draft: LinkDraft, label: String) {
-        val value = draft.copy(url = draft.url.trim())
-        val body = buildMap<String, JsonElement> {
-            put("url", JsonPrimitive(value.url))
-            value.title?.let { put("title", JsonPrimitive(it)) }
-            value.note?.let { put("note", JsonPrimitive(it)) }
-            if (value.tagNames.isNotEmpty()) put("tags", jsonArray(value.tagNames))
-            value.projectUid?.let { put("project_uid", JsonPrimitive(it)) }
-            if (value.sourceType != null && value.sourceUid != null) {
-                put("source_type", JsonPrimitive(value.sourceType))
-                put("source_uid", JsonPrimitive(value.sourceUid))
-            }
-        }
-        defer(DeferredCall(key = value.callKey, method = "POST", path = "/api/v1/links", body = JsonObject(body), label = label))
-    }
-
-    override suspend fun withdrawLink(draft: LinkDraft): Boolean {
-        val value = draft.copy(url = draft.url.trim())
-        if (database.deferredCallDao().delete(value.callKey) > 0) return true
-        val type = value.sourceType ?: return false
-        val source = value.sourceUid ?: return false
-        val link = database.linkDao().bySource(type, source) ?: return false
-        deleteLink(link.uid)
-        return true
     }
 
     override suspend fun deleteLink(uid: String) {
         val clock = hlc.now()
         database.withTransaction {
             database.linkDao().delete(uid)
-            database.deferredCallDao().delete(linkUrlCallKey(uid))
             outbox.insert(LocalOps.delete("link", uid, clock, nowMs()))
         }
         afterLocalWrite()
@@ -318,10 +252,6 @@ internal class RoomTaskRepository(
                     githubLastCommitRaw = null,
                     readmeExcerpt = null,
                     note = cleanNote,
-                    status = LinkStatus.NEW.wire,
-                    tagUidsJson = "[]",
-                    sourceType = null,
-                    sourceUid = null,
                     fetchStatus = "pending",
                     createdAtRaw = Instant.ofEpochMilli(nowMs()).toString(),
                     projectUid = projectUid,
@@ -332,8 +262,6 @@ internal class RoomTaskRepository(
         afterLocalWrite()
         return uid
     }
-
-    private fun linkUrlCallKey(uid: String) = "link-url:$uid"
 
     private suspend fun writeLink(uid: String, field: Pair<String, JsonElement>, change: (LinkEntity) -> LinkEntity) {
         val clock = hlc.now()

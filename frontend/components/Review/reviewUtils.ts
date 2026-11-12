@@ -32,7 +32,6 @@ export interface LaterGroup {
 }
 
 const SOMEDAY = 'someday';
-const URL_PATTERN = /https?:\/\/[^\s<>"'`]+/i;
 
 const fold = (text: string) =>
     text
@@ -65,11 +64,10 @@ const placeOf = (task: Task) => {
 
 // Later read as a backlog: grouped by project, then area, then no project
 // last; groups by their most recently touched task, due reviews first in a
-// group. The filter matches title, group, tags and the saved link's title.
+// group. The filter matches title, group and tags.
 export const groupLater = (
     items: TaskReviewItem[],
-    query = '',
-    linkTitles: Record<string, string> = {}
+    query = ''
 ): LaterGroup[] => {
     const words = fold(query).split(/\s+/).filter(Boolean);
     const groups = new Map<string, LaterGroup>();
@@ -80,7 +78,6 @@ export const groupLater = (
                 [
                     item.task.original_name || item.task.name,
                     place.name,
-                    linkTitles[item.task.uid ?? ''],
                     ...(item.task.tags || [])
                         .map((tag) => tag.name)
                         .filter((name) => name !== SOMEDAY),
@@ -111,18 +108,6 @@ export const groupLater = (
                 latest(b) - latest(a) ||
                 (a.name ?? '').localeCompare(b.name ?? '')
         );
-};
-
-// The text that carries a row's link: the title when it holds an address,
-// else a note that is nothing but a link.
-export const rowLinkText = (
-    title: string,
-    note: string | null | undefined
-): string | null => {
-    if (URL_PATTERN.test(title)) return title;
-    const trimmed = (note ?? '').trim();
-    const match = trimmed.match(URL_PATTERN);
-    return match && match[0] === trimmed ? trimmed : null;
 };
 
 export interface QuickLists {

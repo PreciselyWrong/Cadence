@@ -1385,7 +1385,8 @@
     "overdueBy": "Vencida hace {{days}} d",
     "dueInDays": "Vence en {{days}} d",
     "startedSuccessfully": "¡Tarea iniciada correctamente!",
-    "deleteConfirmMessage": "¿Seguro que quieres eliminar \"{{name}}\"? Esta acción no se puede deshacer."
+    "deleteConfirmMessage": "¿Seguro que quieres eliminar \"{{name}}\"? Esta acción no se puede deshacer.",
+    "withLink": "Con un enlace"
   },
   "timeline": {
     "activityTimeline": "Línea de Tiempo de Actividad",
@@ -6262,5 +6263,16 @@
     "checkError": "No se pudieron comprobar las páginas.",
     "copyMarkdown": "Copiar las páginas en Markdown",
     "check": "Comprobar las páginas"
+  },
+  "bookmarksImport": {
+    "title": "Importar marcadores",
+    "hint": "Una exportación de Firefox (Biblioteca › Importar y copia de seguridad › Exportar). Una carpeta se convierte en las páginas de un proyecto.",
+    "file": "Archivo de marcadores",
+    "empty": "No hay marcadores en este archivo.",
+    "folder": "Carpeta",
+    "project": "Proyecto",
+    "newProject": "Nuevo proyecto « {{name}} »",
+    "error": "La importación falló. Inténtalo de nuevo.",
+    "import": "Importar"
   }
 }

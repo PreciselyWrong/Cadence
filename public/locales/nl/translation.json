@@ -527,7 +527,8 @@
     "overdueBy": "{{days}} d te laat",
     "dueInDays": "Verloopt over {{days}} d",
     "startedSuccessfully": "Taak succesvol gestart!",
-    "deleteConfirmMessage": "Weet je zeker dat je \"{{name}}\" wilt verwijderen? Dit kan niet ongedaan worden gemaakt."
+    "deleteConfirmMessage": "Weet je zeker dat je \"{{name}}\" wilt verwijderen? Dit kan niet ongedaan worden gemaakt.",
+    "withLink": "Met een link"
   },
   "timeline": {
     "activityTimeline": "Activiteit Tijdlijn",
@@ -6260,5 +6261,16 @@
     "checkError": "De pagina's konden niet worden gecontroleerd.",
     "copyMarkdown": "Pagina's kopiëren als Markdown",
     "check": "Pagina's controleren"
+  },
+  "bookmarksImport": {
+    "title": "Bladwijzers importeren",
+    "hint": "Een export uit Firefox (Library › Import and Backup › Export). Eén map wordt de pagina's van een project.",
+    "file": "Bladwijzerbestand",
+    "empty": "Geen bladwijzers in dit bestand.",
+    "folder": "Map",
+    "project": "Project",
+    "newProject": "Nieuw project « {{name}} »",
+    "error": "De import is mislukt. Probeer het opnieuw.",
+    "import": "Importeren"
   }
 }

@@ -30,13 +30,7 @@ export interface TriageItem {
     type: string;
     source: string;
     task_uid: string | null;
-    action:
-        | TriageAction
-        | 'question'
-        | 'accept_slot'
-        | 'classify'
-        | 'resolve_duplicate'
-        | 'review_link';
+    action: TriageAction | 'question' | 'classify';
     payload: Record<string, unknown> | null;
     reason: string;
     details: string[];
@@ -81,9 +75,6 @@ export const fetchTriageQueue = async (): Promise<TriageQueue> => {
     return response.json();
 };
 
-export const answerSlot = (slotId: string, accept: boolean): Promise<void> =>
-    post(`triage/slots/${slotId}/${accept ? 'accept' : 'refuse'}`, {});
-
 export const keepTask = (taskUid: string): Promise<void> =>
     post('triage/keep', { task_uid: taskUid });
 
@@ -98,12 +89,3 @@ export const applyTriage = (
         payload,
         idempotency_key: newKey(),
     });
-
-// A link back on its review day: keep it, archive it, or see it in 30 days.
-export type LinkReviewDecision = 'keep' | 'archive' | 'later';
-
-export const reviewLink = (
-    linkUid: string,
-    decision: LinkReviewDecision
-): Promise<void> =>
-    post(`triage/links/${encodeURIComponent(linkUid)}/review`, { decision });

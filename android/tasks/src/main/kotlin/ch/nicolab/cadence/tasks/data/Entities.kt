@@ -136,8 +136,8 @@ data class LinkPreviewEntity(
 )
 
 /**
- * Lien trouvé par le serveur dans une idée, une tâche ou une note (entité `link`). Métadonnées en lecture
- * seule ; la note et le statut s'écrivent ici et partent par la file d'envoi.
+ * Page d'un projet (entité `link`). Métadonnées en lecture seule ; le titre et la note s'écrivent ici et partent
+ * par la file d'envoi.
  */
 @Entity(tableName = "links")
 data class LinkEntity(
@@ -153,14 +153,8 @@ data class LinkEntity(
     val githubLastCommitRaw: String?,
     val readmeExcerpt: String?,
     val note: String?,
-    val status: String?,
-    val tagUidsJson: String,
-    val sourceType: String?,
-    val sourceUid: String?,
     val fetchStatus: String?,
     val createdAtRaw: String?,
-    /** Jour de revue d'un lien mis de côté (YYYY-MM-DD), écrit par le serveur ou le téléphone. */
-    val reviewAtRaw: String? = null,
     val projectUid: String? = null,
 )
 

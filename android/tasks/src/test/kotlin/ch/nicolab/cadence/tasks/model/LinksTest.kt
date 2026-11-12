@@ -1,6 +1,5 @@
 package ch.nicolab.cadence.tasks.model
 
-import java.time.Instant
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
@@ -8,68 +7,13 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class LinksTest {
-    private val repo = LinkItem(
-        uid = "repo", url = "https://github.com/a/b", title = "a/b", kind = LinkKind.REPO,
-        readmeExcerpt = "Fast JSON CLI", tagUids = listOf("t1"), createdAt = Instant.parse("2026-10-03T00:00:00Z"),
-    )
-    private val post = LinkItem(
-        uid = "post", url = "https://blog.example.com/p", kind = LinkKind.ARTICLE, note = "Idée pour le café",
-        createdAt = Instant.parse("2026-10-02T00:00:00Z"),
-    )
-    private val gone = LinkItem(
-        uid = "gone", url = "https://github.com/c/d", status = LinkStatus.DROPPED,
-        createdAt = Instant.parse("2026-10-01T00:00:00Z"),
-    )
-    private val links = listOf(gone, post, repo)
-
-    private fun uids(filter: LinkFilter) = LinkLists.filter(links, filter, mapOf("t1" to "dev")).map { it.uid }
-
     @Test
-    fun `par défaut les liens jetés sont cachés, les plus récents d'abord`() {
-        assertEquals(listOf("repo", "post"), uids(LinkFilter()))
-    }
-
-    @Test
-    fun `la recherche lit titre, note, README et étiquettes sans accents ni casse`() {
-        assertEquals(listOf("repo"), uids(LinkFilter(query = "json cli")))
-        assertEquals(listOf("post"), uids(LinkFilter(query = "IDEE cafe")))
-        assertEquals(listOf("repo"), uids(LinkFilter(query = "dev")))
-    }
-
-    @Test
-    fun `« Archivés » ne montre que les liens archivés, et le filtre par site reste`() {
-        assertEquals(listOf("gone"), uids(LinkFilter(archived = true)))
-        assertEquals(listOf("repo"), uids(LinkFilter(domain = "github.com")))
-        assertEquals(listOf("github.com", "blog.example.com"), LinkLists.domains(links))
-    }
-
-    @Test
-    fun `deux statuts, les anciennes valeurs et l'inconnu se lisent À voir`() {
-        listOf("new", "to_evaluate", "tested", "kept", "parked", "archived", "", null).forEach {
-            assertEquals(LinkStatus.NEW, LinkStatus.fromWire(it), "$it")
-        }
-        assertEquals(LinkStatus.DROPPED, LinkStatus.fromWire("dropped"))
-        assertEquals(listOf("new", "dropped"), LinkStatus.entries.map { it.wire })
-    }
-
-    @Test
-    fun `le filtre par projet garde les liens du projet`() {
-        val filed = repo.copy(uid = "filed", projectUid = "p1")
-        assertEquals(listOf("filed"), LinkLists.filter(listOf(filed, post), LinkFilter(projectUid = "p1")).map { it.uid })
-    }
-
-    @Test
-    fun `le filtre par étiquette garde les liens qui la portent`() {
-        assertEquals(listOf("repo"), uids(LinkFilter(tagUid = "t1")))
-        assertEquals(emptyList<String>(), uids(LinkFilter(tagUid = "t2")))
-    }
-
-    @Test
-    fun `une idée retrouve son lien, sinon la même page`() {
-        val own = LinkItem(uid = "own", url = "https://a.io/x", sourceType = "inbox_item", sourceUid = "i1")
-        assertEquals("own", LinkLists.forEntry(listOf(own), "i1", "https://a.io/x")?.uid)
-        assertEquals("own", LinkLists.forEntry(listOf(own), "i2", "voir https://A.io/x/")?.uid)
-        assertNull(LinkLists.forEntry(listOf(own), "i3", "pas de lien"))
+    fun `une idée retrouve la page qui porte la même adresse, sans casse ni barre finale`() {
+        val page = LinkItem(uid = "page", url = "https://a.io/x", projectUid = "p1")
+        assertEquals("page", LinkLists.forEntry(listOf(page), "https://a.io/x")?.uid)
+        assertEquals("page", LinkLists.forEntry(listOf(page), "voir https://A.io/x/")?.uid)
+        assertNull(LinkLists.forEntry(listOf(page), "pas de lien"))
+        assertNull(LinkLists.forEntry(listOf(page), "https://a.io/autre"))
     }
 
     @Test
@@ -84,19 +28,9 @@ class LinksTest {
     }
 
     @Test
-    fun `statut et type inconnus retombent sur les valeurs neutres`() {
-        assertEquals(LinkStatus.NEW, LinkStatus.fromWire("archived"))
+    fun `type inconnu retombe sur autre, et le titre sur le site`() {
         assertEquals(LinkKind.OTHER, LinkKind.fromWire(null))
+        assertEquals(LinkKind.OTHER, LinkKind.fromWire("archive"))
         assertEquals("a.io", LinkItem(uid = "x", url = "https://www.a.io/").displayTitle)
-    }
-
-    @Test
-    fun `le lien garde sa source, la note, la fiche ou l'idée d'origine`() {
-        assertEquals(LinkSource(LinkSourceKind.NOTE, "n1"), post.copy(sourceType = "note", sourceUid = "n1").source)
-        assertEquals(LinkSource(LinkSourceKind.TASK, "t9"), post.copy(sourceType = "task", sourceUid = "t9").source)
-        assertEquals(LinkSource(LinkSourceKind.INBOX_ITEM, "i1"), post.copy(sourceType = "inbox_item", sourceUid = "i1").source)
-        assertNull(post.copy(sourceType = "task", sourceUid = null).source)
-        assertNull(post.copy(sourceType = "archive", sourceUid = "x").source)
-        assertNull(post.source)
     }
 }

@@ -529,7 +529,8 @@
     "overdueBy": "Zamuda {{days}} d",
     "dueInDays": "Zapade čez {{days}} d",
     "startedSuccessfully": "Naloga je uspešno začeta!",
-    "deleteConfirmMessage": "Ali ste prepričani, da želite izbrisati \"{{name}}\"? Tega dejanja ni mogoče razveljaviti."
+    "deleteConfirmMessage": "Ali ste prepričani, da želite izbrisati \"{{name}}\"? Tega dejanja ni mogoče razveljaviti.",
+    "withLink": "S povezavo"
   },
   "timeline": {
     "activityTimeline": "Časovnica aktivnosti",
@@ -6320,5 +6321,16 @@
     "checkError": "Strani ni bilo mogoče preveriti.",
     "copyMarkdown": "Kopiraj strani kot Markdown",
     "check": "Preveri strani"
+  },
+  "bookmarksImport": {
+    "title": "Uvozi zaznamke",
+    "hint": "Izvoz iz Firefoxa (Library › Import and Backup › Export). Ena mapa postane strani projekta.",
+    "file": "Datoteka z zaznamki",
+    "empty": "V tej datoteki ni zaznamkov.",
+    "folder": "Mapa",
+    "project": "Projekt",
+    "newProject": "Nov projekt « {{name}} »",
+    "error": "Uvoz ni uspel. Poskusite znova.",
+    "import": "Uvozi"
   }
 }

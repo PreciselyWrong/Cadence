@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import LinkPreviews from '../LinkPreviews';
+import LinkPreviews, { addressesIn } from '../LinkPreviews';
 
 jest.mock('react-i18next', () => ({
     useTranslation: () => ({
@@ -67,5 +67,16 @@ describe('LinkPreviews', () => {
     it('shows nothing without an address', () => {
         const { container } = render(<LinkPreviews texts={['plain words']} />);
         expect(container).toBeEmptyDOMElement();
+    });
+});
+
+describe('addressesIn', () => {
+    it('finds each address once, without the closing punctuation', () => {
+        expect(
+            addressesIn([
+                'Try https://github.com/a/tool.',
+                'see (https://example.com/x) and https://github.com/a/tool',
+            ])
+        ).toEqual(['https://github.com/a/tool', 'https://example.com/x']);
     });
 });

@@ -1,7 +1,7 @@
 'use strict';
 
 // What the classifier puts to the user when it is unsure (a project, tags or
-// a priority raise) or finds a duplicate link: one card per item, in the
+// a priority raise): one card per item, in the
 // "À trier" queue on the web and Android, answered in a tap. Nothing changes
 // before that tap (docs/41-auto-classify.md).
 const { Op } = require('sequelize');
@@ -17,7 +17,6 @@ const { forgetCatalog } = require('./model');
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const NAME_MAX = 100;
-const DUPLICATE_ACTIONS = ['drop_new', 'merge', 'keep_new', 'keep_both'];
 
 function startOfDay(now) {
     const day = new Date(now);
@@ -67,12 +66,12 @@ function classifyPayload(title, ask, catalog) {
 }
 
 // One card per item, ever: a second one for the same item is never made.
-async function create(user, item, kind, payload, runId, settings, now) {
+async function create(user, item, payload, runId, settings, now) {
     if (!(await underDailyLimit(user.id, settings, now))) return null;
     const [suggestion, created] = await repository.Suggestion.findOrCreate({
         where: { user_id: user.id, entity: item.entity, item_uid: item.uid },
         defaults: {
-            kind,
+            kind: 'classify',
             payload,
             run_id: runId,
             expires_at: new Date(
@@ -85,28 +84,22 @@ async function create(user, item, kind, payload, runId, settings, now) {
 
 function createClassify(user, item, ask, catalog, runId, settings, now) {
     const payload = classifyPayload(repository.itemTitle(item), ask, catalog);
-    return create(user, item, 'classify', payload, runId, settings, now);
-}
-
-function createDuplicate(user, link, found, runId, settings, now) {
-    const payload = {
-        title: repository.itemTitle(link),
-        url: link.url,
-        reason: found.reason,
-        original: {
-            uid: found.original.uid,
-            title: found.original.title || null,
-            url: found.original.url,
-            created_at: found.original.created_at,
-        },
-    };
-    return create(user, link, 'duplicate', payload, runId, settings, now);
+    return create(user, item, payload, runId, settings, now);
 }
 
 async function expire(now = new Date()) {
+    // Cards of the retired link duplicates expire with the others.
     await repository.Suggestion.update(
         { state: 'expired', decided_at: now },
-        { where: { state: 'pending', expires_at: { [Op.lte]: now } } }
+        {
+            where: {
+                state: 'pending',
+                [Op.or]: [
+                    { expires_at: { [Op.lte]: now } },
+                    { kind: 'duplicate' },
+                ],
+            },
+        }
     );
 }
 
@@ -122,23 +115,10 @@ function serialize(suggestion) {
     };
 }
 
-// A card retires when its item is gone, closed, or filed by hand meanwhile;
-// a duplicate card when either link is gone or already archived.
+// A card retires when its item is gone, closed, or filed by hand meanwhile.
 async function stillAsks(userId, row) {
     const item = await repository.loadItem(userId, row.entity, row.item_uid);
     if (!item) return false;
-    if (row.kind === 'duplicate') {
-        const original = await repository.loadItem(
-            userId,
-            'link',
-            row.payload?.original?.uid
-        );
-        return (
-            Boolean(original) &&
-            item.status !== 'dropped' &&
-            original.status !== 'dropped'
-        );
-    }
     return cardStillAsks(item, row.payload);
 }
 
@@ -146,7 +126,7 @@ async function stillAsks(userId, row) {
 async function listPending(userId, now = new Date()) {
     await expire(now);
     const rows = await repository.Suggestion.findAll({
-        where: { user_id: userId, state: 'pending' },
+        where: { user_id: userId, state: 'pending', kind: 'classify' },
         order: [['created_at', 'DESC']],
     });
     const alive = [];
@@ -162,7 +142,7 @@ async function listPending(userId, now = new Date()) {
 
 async function findPending(userId, uid) {
     const suggestion = await repository.Suggestion.findOne({
-        where: { uid, user_id: userId },
+        where: { uid, user_id: userId, kind: 'classify' },
     });
     if (!suggestion) throw new NotFoundError('Suggestion not found');
     if (suggestion.state !== 'pending') {
@@ -262,7 +242,6 @@ async function applyClassify(user, suggestion, choice) {
         const tool = {
             task: 'update_task',
             note: 'update_note',
-            link: 'update_link',
         };
         await run(tool[item.entity], params);
     }
@@ -272,53 +251,9 @@ async function applyClassify(user, suggestion, choice) {
     if (newTag) forgetCatalog(user.id);
 }
 
-async function applyDuplicate(user, suggestion, action) {
-    if (!DUPLICATE_ACTIONS.includes(action)) {
-        throw new ValidationError(`Unknown duplicate action: ${action}`);
-    }
-    const run = toolsFor(user);
-    const fresh = await repository.loadItem(
-        user.id,
-        'link',
-        suggestion.item_uid
-    );
-    const original = await repository.loadItem(
-        user.id,
-        'link',
-        suggestion.payload.original.uid
-    );
-    if (!fresh || !original) throw new NotFoundError('Link not found');
-    const drop = (link) =>
-        run('update_link', { uid: link.uid, status: 'dropped' });
-    if (action === 'drop_new') await drop(fresh);
-    if (action === 'keep_new') await drop(original);
-    if (action === 'merge') {
-        const notes = [original.note, fresh.note]
-            .map((note) => (note || '').trim())
-            .filter(Boolean);
-        await run('update_link', {
-            uid: original.uid,
-            tags: [...new Set([...original.tags, ...fresh.tags])],
-            note: [...new Set(notes)].join('\n\n') || null,
-        });
-        await drop(fresh);
-    }
-}
-
-// `choice`: 'all', 'none', or { project, tags, new_tag, priority } for a
-// classification card; { action } for a duplicate.
+// `choice`: 'all', 'none', or { project, tags, new_tag, priority }.
 async function apply(user, uid, choice, now = new Date()) {
     const suggestion = await findPending(user.id, uid);
-    if (suggestion.kind === 'duplicate') {
-        const action = typeof choice === 'string' ? choice : choice?.action;
-        await applyDuplicate(user, suggestion, action);
-        await suggestion.update({
-            state: 'applied',
-            choice: { action },
-            decided_at: now,
-        });
-        return serialize(suggestion);
-    }
     if (choice === 'none') return dismiss(user, uid, now);
     const resolved = choice === 'all' ? acceptAll(suggestion.payload) : choice;
     if (!resolved || typeof resolved !== 'object') {
@@ -341,11 +276,9 @@ async function dismiss(user, uid, now = new Date()) {
 
 module.exports = {
     createClassify,
-    createDuplicate,
     listPending,
     apply,
     dismiss,
     expire,
     acceptAll,
-    DUPLICATE_ACTIONS,
 };

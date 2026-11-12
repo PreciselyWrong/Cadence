@@ -44,7 +44,6 @@ export const SETTINGS: BriefSettings = {
     writing: { tone: 'neutral', signature: '', instructions: '' },
     llm: { enabled: false },
     triage: { enabled: false, dailyLimit: 20 },
-    linkThemes: { enabled: false },
     voice: {
         enabled: false,
         piperUrl: '',

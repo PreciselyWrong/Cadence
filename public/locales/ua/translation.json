@@ -529,7 +529,8 @@
     "overdueBy": "Прострочено на {{days}} дн.",
     "dueInDays": "Термін через {{days}} дн.",
     "startedSuccessfully": "Завдання успішно розпочато!",
-    "deleteConfirmMessage": "Ви впевнені, що хочете видалити \"{{name}}\"? Цю дію не можна скасувати."
+    "deleteConfirmMessage": "Ви впевнені, що хочете видалити \"{{name}}\"? Цю дію не можна скасувати.",
+    "withLink": "З посиланням"
   },
   "timeline": {
     "activityTimeline": "Хронологія Активності",
@@ -6320,5 +6321,16 @@
     "checkError": "Не вдалося перевірити сторінки.",
     "copyMarkdown": "Копіювати сторінки як Markdown",
     "check": "Перевірити сторінки"
+  },
+  "bookmarksImport": {
+    "title": "Імпорт закладок",
+    "hint": "Експорт з Firefox (Library › Import and Backup › Export). Одна папка стає сторінками проєкту.",
+    "file": "Файл закладок",
+    "empty": "У цьому файлі немає закладок.",
+    "folder": "Папка",
+    "project": "Проєкт",
+    "newProject": "Новий проєкт « {{name}} »",
+    "error": "Імпорт не вдався. Спробуйте ще раз.",
+    "import": "Імпортувати"
   }
 }

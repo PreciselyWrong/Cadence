@@ -54,7 +54,7 @@ class AutoClassifyPayloadTest {
     @Test
     fun anUnknownPriorityValueIsIgnored() {
         val card = AutoClassifyPayload.classify(
-            payload("""{"suggestion_uid":"s3","entity":"link","item_uid":"l1","title":"x","priority":{"value":5,"confidence":0.9}}"""),
+            payload("""{"suggestion_uid":"s3","entity":"note","item_uid":"l1","title":"x","priority":{"value":5,"confidence":0.9}}"""),
         )!!
 
         assertNull(card.priority)
@@ -67,28 +67,6 @@ class AutoClassifyPayloadTest {
     }
 
     @Test
-    fun aDuplicateCardReadsBothLinks() {
-        val card = AutoClassifyPayload.duplicate(
-            payload(
-                """
-                {"suggestion_uid":"d1","entity":"link","item_uid":"l2","title":"Nouveau","url":"https://a.example/x",
-                 "reason":"address","original":{"uid":"l1","title":"Ancien","url":"https://a.example/x?utm=1"}}
-                """,
-            ),
-        )!!
-
-        assertEquals("address", card.reason)
-        assertEquals("https://a.example/x", card.url)
-        assertEquals("l1", card.original.uid)
-        assertEquals("Ancien", card.original.title)
-    }
-
-    @Test
-    fun aDuplicateWithoutOriginalIsRefused() {
-        assertNull(AutoClassifyPayload.duplicate(payload("""{"suggestion_uid":"d2","item_uid":"l3","url":"u","reason":"title"}""")))
-    }
-
-    @Test
     fun aSuggestionListEntryIsParsedAndAnEmptyOneIsSkipped() {
         val entry = json.parseToJsonElement(
             """{"uid":"s9","kind":"classify","entity":"task","item_uid":"t9","payload":{"title":"Payer"},"created_at":"x","expires_at":"y"}""",
@@ -96,7 +74,6 @@ class AutoClassifyPayloadTest {
         val parsed = PendingSuggestion.parse(entry)!!
 
         assertEquals("Payer", parsed.headline)
-        assertEquals(false, parsed.isDuplicate)
         assertNull(PendingSuggestion.parse(json.parseToJsonElement("""{"kind":"classify"}""")))
     }
 

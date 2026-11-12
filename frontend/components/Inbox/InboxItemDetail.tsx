@@ -57,10 +57,7 @@ interface InboxItemDetailProps {
     ) => Promise<void>;
     // "Project…": the page goes to a project, offered when the item holds an
     // address.
-    onAddToProject?: (
-        inboxItemUid: string,
-        draft: LinkDraft & { project_uid: string }
-    ) => Promise<void>;
+    onAddToProject?: (inboxItemUid: string, draft: LinkDraft) => Promise<void>;
     projects: Project[];
     isNew?: boolean;
     onEditingChange?: (editing: boolean) => void;
@@ -685,9 +682,6 @@ const InboxItemDetail: React.FC<InboxItemDetailProps> = ({
                 url: address,
                 ...(title ? { title } : {}),
                 ...(words ? { note: words } : {}),
-                ...(payload.hashtagsList.length > 0
-                    ? { tags: payload.hashtagsList }
-                    : {}),
                 project_uid: projectUid,
             });
         } finally {

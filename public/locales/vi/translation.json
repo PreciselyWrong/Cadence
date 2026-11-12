@@ -527,7 +527,8 @@
     "overdueBy": "Quá hạn {{days}} ngày",
     "dueInDays": "Đến hạn sau {{days}} ngày",
     "startedSuccessfully": "Đã bắt đầu công việc!",
-    "deleteConfirmMessage": "Bạn có chắc muốn xóa \"{{name}}\"? Hành động này không thể hoàn tác."
+    "deleteConfirmMessage": "Bạn có chắc muốn xóa \"{{name}}\"? Hành động này không thể hoàn tác.",
+    "withLink": "Có liên kết"
   },
   "timeline": {
     "activityTimeline": "Dòng Thời Gian Hoạt Động",
@@ -6258,5 +6259,16 @@
     "checkError": "Không thể kiểm tra các trang.",
     "copyMarkdown": "Sao chép các trang dưới dạng Markdown",
     "check": "Kiểm tra các trang"
+  },
+  "bookmarksImport": {
+    "title": "Nhập dấu trang",
+    "hint": "Tệp xuất từ Firefox (Library › Import and Backup › Export). Một thư mục sẽ thành các trang của một dự án.",
+    "file": "Tệp dấu trang",
+    "empty": "Tệp này không có dấu trang nào.",
+    "folder": "Thư mục",
+    "project": "Dự án",
+    "newProject": "Dự án mới « {{name}} »",
+    "error": "Nhập thất bại. Thử lại.",
+    "import": "Nhập"
   }
 }

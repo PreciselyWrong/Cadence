@@ -7,32 +7,26 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.work.Configuration
 import androidx.work.WorkManager
 import ch.nicolab.cadence.tasks.ServerConnection
-import ch.nicolab.cadence.tasks.model.LinkDraft
-import ch.nicolab.cadence.tasks.model.LinkStatus
 import ch.nicolab.cadence.tasks.sync.Hlc
 import ch.nicolab.cadence.tasks.sync.SyncApi
 import ch.nicolab.cadence.tasks.sync.SyncState
 import java.lang.reflect.Proxy
-import java.time.LocalDate
 import java.time.ZoneId
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/** Liens et décisions de l'Inbox : ligne Room, file d'envoi et appels différés, sur une base en mémoire. */
+/** Pages de projet et décisions de l'Inbox : ligne Room, file d'envoi et appels différés, sur une base en mémoire. */
 @RunWith(AndroidJUnit4::class)
 class LinkRepositoryTest {
     private lateinit var database: TududiDatabase
@@ -64,8 +58,22 @@ class LinkRepositoryTest {
         error("hors ligne : ${method.name}")
     } as T
 
-    private fun link(uid: String) = LinkEntity(
-        uid, "https://a.io/x", "A", null, null, null, "tool", null, null, null, null, null, "new", "[]", "inbox_item", "e1", "done", null,
+    private fun link(uid: String, projectUid: String? = "p1") = LinkEntity(
+        uid = uid,
+        url = "https://a.io/x",
+        title = "A",
+        description = null,
+        imageUrl = null,
+        siteName = null,
+        kind = "tool",
+        githubStars = null,
+        githubLanguage = null,
+        githubLastCommitRaw = null,
+        readmeExcerpt = null,
+        note = null,
+        fetchStatus = "done",
+        createdAtRaw = null,
+        projectUid = projectUid,
     )
 
     private fun pending() = runBlocking { database.outboxDao().pending(100) }.map { op ->
@@ -74,83 +82,30 @@ class LinkRepositoryTest {
     }
 
     @Test
-    fun `setting link tags writes the row and one tag_uids upsert, without duplicates`() = runBlocking {
-        database.linkDao().upsert(link("l1"))
-
-        repository.setLinkTags("l1", listOf("t1", "t2", "t1"))
-
-        assertEquals("""["t1","t2"]""", database.linkDao().get("l1")?.tagUidsJson)
-        val op = pending().single()
-        assertEquals("link", op.first)
-        assertEquals("l1", op.second)
-        assertEquals(setOf("tag_uids"), op.third.keys)
-        assertEquals(listOf("t1", "t2"), op.third.getValue("tag_uids").jsonArray.map { it.jsonPrimitive.content })
-    }
-
-    @Test
-    fun `a new title and project are written and queued, an empty title goes back to the page`() = runBlocking {
+    fun `a new title and note are written and queued, an empty title goes back to the page`() = runBlocking {
         database.linkDao().upsert(link("l1"))
 
         repository.setLinkTitle("l1", "  Mon nom ")
-        repository.setLinkProject("l1", "p1")
+        repository.setLinkNote("l1", "  à relire ")
 
         assertEquals("Mon nom", database.linkDao().get("l1")?.title)
-        assertEquals("p1", database.linkDao().get("l1")?.projectUid)
-        assertEquals(listOf(setOf("title"), setOf("project_uid")), pending().map { it.third.keys })
+        assertEquals("à relire", database.linkDao().get("l1")?.note)
+        assertEquals(listOf(setOf("title"), setOf("note")), pending().map { it.third.keys })
 
         repository.setLinkTitle("l1", "  ")
         assertEquals(null, database.linkDao().get("l1")?.title)
     }
 
     @Test
-    fun `a new address goes through a deferred call, the same one changes nothing`() = runBlocking {
+    fun `deleting removes the row and queues the delete`() = runBlocking {
         database.linkDao().upsert(link("l1"))
-
-        repository.setLinkUrl("l1", "https://a.io/x", "Adresse")
-        assertTrue(database.deferredCallDao().all().isEmpty())
-
-        repository.setLinkUrl("l1", " https://b.io/y ", "Adresse")
-        assertEquals("https://b.io/y", database.linkDao().get("l1")?.url)
-        val call = database.deferredCallDao().all().single()
-        assertEquals("PATCH", call.method)
-        assertEquals("/api/v1/links/l1", call.path)
-        assertTrue(pending().isEmpty())
-    }
-
-    @Test
-    fun `adding an address of a task queues one call with the task as source`() = runBlocking {
-        repository.addLinkFrom(" https://github.com/a/tool ", "task", "t1", "Ajouter aux liens")
-        repository.addLinkFrom("https://github.com/a/tool", "task", "t1", "Ajouter aux liens")
-
-        val call = database.deferredCallDao().all().single()
-        assertEquals("POST", call.method)
-        assertEquals("/api/v1/links", call.path)
-        val body = Json.parseToJsonElement(call.bodyJson!!).jsonObject
-        assertEquals("https://github.com/a/tool", body["url"]?.jsonPrimitive?.content)
-        assertEquals("task", body["source_type"]?.jsonPrimitive?.content)
-        assertEquals("t1", body["source_uid"]?.jsonPrimitive?.content)
-        assertTrue(pending().isEmpty())
-    }
-
-    @Test
-    fun `deleting removes the row, queues the delete and drops a waiting address`() = runBlocking {
-        database.linkDao().upsert(link("l1"))
-        repository.setLinkUrl("l1", "https://b.io/y", "Adresse")
 
         repository.deleteLink("l1")
 
         assertEquals(null, database.linkDao().get("l1"))
-        assertTrue(database.deferredCallDao().all().isEmpty())
         val op = database.outboxDao().pending(100).single()
         assertEquals("link", op.entity)
         assertEquals("l1", op.uid)
-    }
-
-    @Test
-    fun `tags of an unknown link write nothing`() = runBlocking {
-        repository.setLinkTags("ghost", listOf("t1"))
-
-        assertTrue(pending().isEmpty())
     }
 
     @Test
@@ -169,77 +124,11 @@ class LinkRepositoryTest {
     }
 
     @Test
-    fun `a link keeps its status when its idea is processed`() = runBlocking {
-        database.linkDao().upsert(link("l1"))
-        val uid = repository.captureInbox("https://a.io/x")
-
-        repository.setLinkStatus("l1", LinkStatus.DROPPED)
-        repository.processInboxItem(uid)
-
-        assertEquals("dropped", database.linkDao().get("l1")?.status)
-        assertEquals(listOf("inbox_item", "link", "inbox_item"), pending().map { it.first })
-    }
-
-    @Test
-    fun `a review day is kept on the link and sent to the server`() = runBlocking {
-        database.linkDao().upsert(link("l1"))
-
-        repository.setLinkReviewDate("l1", LocalDate.of(2027, 1, 2))
-
-        assertEquals("2027-01-02", database.linkDao().get("l1")?.reviewAtRaw)
-        assertEquals(
-            listOf(Triple("link", "l1", mapOf("review_at" to JsonPrimitive("2027-01-02")))),
-            pending(),
-        )
-    }
-
-    @Test
-    fun `clearing the review day sends null`() = runBlocking {
-        database.linkDao().upsert(link("l1").copy(reviewAtRaw = "2027-01-02"))
-
-        repository.setLinkReviewDate("l1", null)
-
-        assertNull(database.linkDao().get("l1")?.reviewAtRaw)
-        assertEquals(listOf(Triple("link", "l1", mapOf("review_at" to JsonNull))), pending())
-    }
-
-    @Test
     fun `processing an unknown idea writes nothing`() = runBlocking {
         repository.processInboxItem("ghost")
         repository.reopenInboxItem("ghost")
 
         assertTrue(pending().isEmpty())
-    }
-
-    private fun body(call: DeferredCallEntity) = Json.parseToJsonElement(call.bodyJson!!).jsonObject
-
-    @Test
-    fun `saving an idea to the links queues one POST with title, note, tag names, project and the idea as source`() = runBlocking {
-        val draft = LinkDraft(" https://a.io/x ", "A", "pour les factures", listOf("dev", "perso/sport"), "p1", "inbox_item", "e1")
-
-        repository.addLink(draft, "Ajouter aux liens")
-        repository.addLink(draft, "Ajouter aux liens")
-
-        val call = database.deferredCallDao().all().single()
-        assertEquals("POST", call.method)
-        assertEquals("/api/v1/links", call.path)
-        assertEquals("link-add:inbox_item:e1:https://a.io/x", call.key)
-        val sent = body(call)
-        assertEquals("https://a.io/x", sent["url"]?.jsonPrimitive?.content)
-        assertEquals("A", sent["title"]?.jsonPrimitive?.content)
-        assertEquals("pour les factures", sent["note"]?.jsonPrimitive?.content)
-        assertEquals(listOf("dev", "perso/sport"), sent["tags"]?.jsonArray?.map { it.jsonPrimitive.content })
-        assertEquals("p1", sent["project_uid"]?.jsonPrimitive?.content)
-        assertEquals("inbox_item", sent["source_type"]?.jsonPrimitive?.content)
-        assertEquals("e1", sent["source_uid"]?.jsonPrimitive?.content)
-        assertTrue("aucune ligne link avant la synchro", database.linkDao().get("e1") == null && pending().isEmpty())
-    }
-
-    @Test
-    fun `a bare shared link sends only its address`() = runBlocking {
-        repository.addLink(LinkDraft("https://a.io/x"), "Ajouter aux liens")
-
-        assertEquals(setOf("url"), body(database.deferredCallDao().all().single()).keys)
     }
 
     @Test
@@ -275,34 +164,6 @@ class LinkRepositoryTest {
 
         assertTrue(first != other)
         assertEquals("p2", database.linkDao().get(other)?.projectUid)
-    }
-
-    @Test
-    fun `withdrawing a link still queued drops the call`() = runBlocking {
-        val draft = LinkDraft("https://a.io/x", sourceType = "inbox_item", sourceUid = "e1")
-        repository.addLink(draft, "Ajouter aux liens")
-
-        assertTrue(repository.withdrawLink(draft))
-
-        assertTrue(database.deferredCallDao().all().isEmpty())
-        assertTrue(pending().isEmpty())
-    }
-
-    @Test
-    fun `withdrawing a link already back from the server deletes it by its source`() = runBlocking {
-        database.linkDao().upsert(link("l1"))
-
-        assertTrue(repository.withdrawLink(LinkDraft("https://a.io/x", sourceType = "inbox_item", sourceUid = "e1")))
-
-        assertNull(database.linkDao().get("l1"))
-        assertEquals(listOf("link" to "l1"), database.outboxDao().pending(100).map { it.entity to it.uid })
-    }
-
-    @Test
-    fun `withdrawing a link that is neither queued nor back changes nothing`() = runBlocking {
-        assertTrue(!repository.withdrawLink(LinkDraft("https://a.io/x", sourceType = "inbox_item", sourceUid = "e9")))
-        assertTrue(!repository.withdrawLink(LinkDraft("https://a.io/x")))
-        assertTrue(pending().isEmpty())
     }
 
     @Test

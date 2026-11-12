@@ -18,9 +18,6 @@ import kotlinx.serialization.json.put
 /** Type d'un élément de la file « À trier » venu du classement automatique. */
 const val AUTO_CLASSIFY_TYPE = "classify"
 
-/** Type d'un doublon de lien proposé par le classement automatique. */
-const val LINK_DUPLICATE_TYPE = "link_duplicate"
-
 data class ProjectOption(val uid: String, val name: String, val areaName: String?)
 
 data class AreaOffer(val uid: String, val name: String?)
@@ -44,18 +41,6 @@ data class ClassifyCard(
     val priority: Int?,
 )
 
-data class DuplicateOriginal(val uid: String, val title: String, val url: String)
-
-/** Carte de doublon : le nouveau lien, l'ancien, et la raison (`address`, `repository`, `video`, `title`). */
-data class DuplicateCard(
-    val suggestionUid: String,
-    val itemUid: String,
-    val title: String,
-    val url: String,
-    val reason: String,
-    val original: DuplicateOriginal,
-)
-
 /** Lecture tolérante des charges utiles : une forme inconnue donne null, jamais une exception. */
 object AutoClassifyPayload {
     fun classify(payload: JsonObject?): ClassifyCard? {
@@ -68,23 +53,6 @@ object AutoClassifyPayload {
             project = obj(payload, "project")?.let(::projectOffer),
             tags = obj(payload, "tags")?.let(::tagOffer),
             priority = obj(payload, "priority")?.let { int(it, "value") }?.takeIf { it == 1 || it == 2 },
-        )
-    }
-
-    fun duplicate(payload: JsonObject?): DuplicateCard? {
-        payload ?: return null
-        val original = obj(payload, "original") ?: return null
-        return DuplicateCard(
-            suggestionUid = text(payload, "suggestion_uid") ?: return null,
-            itemUid = text(payload, "item_uid") ?: return null,
-            title = text(payload, "title").orEmpty(),
-            url = text(payload, "url").orEmpty(),
-            reason = text(payload, "reason").orEmpty(),
-            original = DuplicateOriginal(
-                uid = text(original, "uid") ?: return null,
-                title = text(original, "title").orEmpty(),
-                url = text(original, "url").orEmpty(),
-            ),
         )
     }
 
@@ -146,9 +114,6 @@ object AutoClassifyChoices {
         put("priority", answer.priority?.let(::JsonPrimitive) ?: JsonNull)
     }
 
-    /** Doublon : `drop_new`, `merge`, `keep_new` ou `keep_both`. */
-    fun duplicate(action: String): JsonObject = buildJsonObject { put("action", action) }
-
     /** Réglage initial d'une carte : identique à « Tout accepter » côté serveur, pour que « Appliquer » sans toucher le confirme. */
     fun defaultAnswer(card: ClassifyCard): ClassifyAnswer = ClassifyAnswer(
         project = card.project?.let(::defaultProject) ?: ProjectAnswer.None,
@@ -186,14 +151,11 @@ object AutoClassifyChoices {
 /** Suggestion en attente, telle que `GET /auto-classify/suggestions` la décrit. */
 data class PendingSuggestion(
     val uid: String,
-    val kind: String,
     val entity: String,
     val itemUid: String,
     val payload: JsonObject?,
 ) {
-    val isDuplicate: Boolean get() = kind == "duplicate"
-
-    /** Titre de l'élément classé (le nouveau lien pour un doublon). */
+    /** Titre de l'élément classé. */
     val headline: String get() = (payload?.get("title") as? JsonPrimitive)?.contentOrNull.orEmpty()
 
     companion object {
@@ -202,7 +164,6 @@ data class PendingSuggestion(
             val uid = (raw["uid"] as? JsonPrimitive)?.contentOrNull?.takeIf(String::isNotBlank) ?: return null
             return PendingSuggestion(
                 uid = uid,
-                kind = (raw["kind"] as? JsonPrimitive)?.contentOrNull.orEmpty(),
                 entity = (raw["entity"] as? JsonPrimitive)?.contentOrNull.orEmpty(),
                 itemUid = (raw["item_uid"] as? JsonPrimitive)?.contentOrNull.orEmpty(),
                 payload = raw["payload"] as? JsonObject,

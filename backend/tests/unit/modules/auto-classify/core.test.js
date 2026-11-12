@@ -8,14 +8,6 @@ const {
     indexCatalog,
 } = require('../../../../modules/auto-classify/core/validate');
 const {
-    findDuplicate,
-    youtubeId,
-} = require('../../../../modules/auto-classify/core/duplicates');
-const {
-    isSummarizable,
-    cleanSummary,
-} = require('../../../../modules/auto-classify/core/summary');
-const {
     buildSchema,
 } = require('../../../../modules/auto-classify/core/schema');
 const {
@@ -66,7 +58,6 @@ const answer = (fields = {}) => ({
     new_tag: null,
     estimated_minutes: { value: null, confidence: 0 },
     priority: { value: 0, confidence: 0 },
-    summary: null,
     ...fields,
 });
 
@@ -119,15 +110,7 @@ describe('eligibility', () => {
             tags: true,
             duration: true,
             priority: true,
-            summary: false,
         });
-    });
-
-    it('summarizes a link only when its note is empty, never a dropped link', () => {
-        const link = { entity: 'link', uid: 'l', tags: ['x'], note: '  ' };
-        expect(slotsOf(link).summary).toBe(true);
-        expect(slotsOf({ ...link, note: 'mine' })).toBeNull();
-        expect(slotsOf({ ...link, status: 'dropped' })).toBeNull();
     });
 });
 
@@ -356,113 +339,6 @@ describe('decide', () => {
             ask: null,
             confidences: {},
         });
-    });
-});
-
-describe('summary', () => {
-    const page = {
-        url: 'https://example.org/post',
-        fetch_status: 'done',
-        title: 'A good article',
-        description: 'A long enough description of what this page is about.',
-    };
-
-    it('needs a read page with text, not an error or sign-in page', () => {
-        expect(isSummarizable(page)).toBe(true);
-        expect(isSummarizable({ ...page, fetch_status: 'pending' })).toBe(
-            false
-        );
-        expect(isSummarizable({ ...page, fetch_status: 'failed' })).toBe(false);
-        expect(isSummarizable({ ...page, description: '' })).toBe(false);
-        expect(isSummarizable({ ...page, title: 'Sign in to continue' })).toBe(
-            false
-        );
-        expect(isSummarizable({ ...page, title: '404 Not Found' })).toBe(false);
-        expect(
-            isSummarizable({ ...page, url: 'https://x.org/login?next=/' })
-        ).toBe(false);
-    });
-
-    it('keeps whole sentences within the limit', () => {
-        expect(cleanSummary('  Un outil.  Très utile. ', 220)).toBe(
-            'Un outil. Très utile.'
-        );
-        expect(
-            cleanSummary('Première phrase. Deuxième phrase trop longue', 30)
-        ).toBe('Première phrase.');
-        expect(cleanSummary('x'.repeat(300), 220)).toBeNull();
-    });
-});
-
-describe('duplicates', () => {
-    const link = (id, url, extra = {}) => ({
-        id,
-        uid: `l${id}`,
-        url,
-        created_at: new Date(2026, 10, id),
-        status: 'new',
-        ...extra,
-    });
-
-    it('finds the same page under another address spelling', () => {
-        const found = findDuplicate(link(3, 'http://www.example.org/a'), [
-            link(1, 'https://example.org/a'),
-            link(2, 'https://example.org/b'),
-        ]);
-        expect(found.original.uid).toBe('l1');
-        expect(found.reason).toBe('address');
-    });
-
-    it('finds the same repository and the same video', () => {
-        expect(
-            findDuplicate(link(5, 'https://github.com/Owner/Repo/issues'), [
-                link(4, 'https://github.com/owner/repo'),
-            ]).reason
-        ).toBe('repository');
-        expect(
-            findDuplicate(link(5, 'https://youtu.be/abc123'), [
-                link(4, 'https://www.youtube.com/watch?v=abc123&t=5'),
-            ]).reason
-        ).toBe('video');
-        expect(youtubeId('https://www.youtube.com/shorts/xyz')).toBe('xyz');
-    });
-
-    it('finds the same title on the same site, not a short or other-site title', () => {
-        const titled = (id, url, title) => link(id, url, { title });
-        expect(
-            findDuplicate(
-                titled(3, 'https://blog.dev/p?id=2', 'How we built it'),
-                [titled(1, 'https://blog.dev/p?id=1', 'How We Built It!')]
-            ).reason
-        ).toBe('title');
-        expect(
-            findDuplicate(titled(3, 'https://a.dev/2', 'Home'), [
-                titled(1, 'https://a.dev/1', 'Home'),
-            ])
-        ).toBeNull();
-        expect(
-            findDuplicate(titled(3, 'https://a.dev/2', 'How we built it'), [
-                titled(1, 'https://b.dev/1', 'How we built it'),
-            ])
-        ).toBeNull();
-    });
-
-    it('never reports a link as a duplicate of a newer one', () => {
-        expect(
-            findDuplicate(link(1, 'https://example.org/a'), [
-                link(2, 'https://www.example.org/a'),
-            ])
-        ).toBeNull();
-    });
-
-    it('reports the oldest, never a dropped one or itself', () => {
-        const found = findDuplicate(link(9, 'https://example.org/a'), [
-            link(9, 'https://example.org/a'),
-            link(7, 'https://example.org/a', { status: 'dropped' }),
-            link(8, 'https://example.org/a#x'),
-            link(6, 'https://example.org/a?utm_source=x'),
-        ]);
-        expect(found.original.uid).toBe('l6');
     });
 });
 

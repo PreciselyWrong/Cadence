@@ -51,23 +51,6 @@ jest.mock('../hooks/useViewType', () => ({
     useViewType: jest.fn(),
 }));
 
-const mockLoadLinks = jest.fn();
-jest.mock('../store/linksStore', () => ({
-    useLinksStore: (selector: (s: unknown) => unknown) =>
-        selector({
-            links: [
-                {
-                    uid: 'l1',
-                    url: 'https://site.test/post',
-                    image_url: 'https://site.test/og.png',
-                    source_type: 'note',
-                    source_uid: 'note-b',
-                },
-            ],
-            load: mockLoadLinks,
-        }),
-}));
-
 const noteA = {
     uid: 'note-a',
     title: 'Trip ideas',
@@ -145,7 +128,7 @@ describe('Notes gallery', () => {
         expect(mockViewType).toHaveBeenCalledWith('notes');
     });
 
-    it("shows a note's own image, else its link's preview, else its words", async () => {
+    it("shows a note's own image, else its words", async () => {
         mockViewType.mockReturnValue({
             viewType: 'gallery',
             setViewType: jest.fn(),
@@ -158,14 +141,13 @@ describe('Notes gallery', () => {
         const imageOf = (card: HTMLElement) =>
             card.querySelector('img')?.getAttribute('src');
         expect(imageOf(cards[0])).toBe('https://img.test/lake.jpg');
-        expect(imageOf(cards[1])).toBe('https://site.test/og.png');
+        expect(imageOf(cards[1])).toBeUndefined();
         expect(cards[2]).toHaveTextContent('Heading Just text here.');
         expect(cards[0]).toHaveTextContent('travel');
         expect(cards[0].querySelector('a')).toHaveAttribute(
             'href',
             '/notes/note-a'
         );
-        expect(mockLoadLinks).toHaveBeenCalled();
     });
 
     it('switches between list and gallery from the overview', async () => {

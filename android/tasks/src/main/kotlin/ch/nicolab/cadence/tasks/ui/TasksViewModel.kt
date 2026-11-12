@@ -20,6 +20,7 @@ import ch.nicolab.cadence.tasks.data.UnsupportedRecurrence
 import ch.nicolab.cadence.tasks.links.LinkExtractor
 import ch.nicolab.cadence.tasks.links.LinkPreviews
 import ch.nicolab.cadence.tasks.model.AreaFilter
+import ch.nicolab.cadence.tasks.model.WithLinkFilter
 import ch.nicolab.cadence.tasks.model.AreaItem
 import ch.nicolab.cadence.tasks.model.AreaSuggestions
 import ch.nicolab.cadence.tasks.model.DecisionContext
@@ -110,6 +111,7 @@ private const val UNDO_WINDOW_MS = 4_500L
 private const val NOTE_SAVE_DELAY_MS = 700L
 private const val FILTER_PREFS = "tududi_tasks_filter"
 private const val KEY_AREA = "area"
+private const val KEY_WITH_LINK = "with_link"
 
 /** Date et instant courants ; rafraîchis chaque minute, ce qui couvre aussi minuit. */
 internal data class Moment(val today: LocalDate, val now: Instant, val zone: ZoneId) {
@@ -209,14 +211,26 @@ internal class TasksViewModel(
     val areaFilter: StateFlow<String?> = _areaFilter
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), chosenArea.value)
 
+    private val chosenWithLink = MutableStateFlow(filterPrefs.getBoolean(KEY_WITH_LINK, false))
+
+    /** Filtre « Avec un lien » des listes de tâches, gardé entre les sessions. */
+    val withLink: StateFlow<Boolean> = chosenWithLink.asStateFlow()
+
     private val tasks: Flow<List<TaskItem>> =
         combine(repository.observeTasks(), hiddenUids) { all, hidden -> all.withoutHidden(hidden) }
 
-    /** Tâches du domaine filtré : Aujourd'hui, À venir et les suggestions ; les projets et le Bilan gardent [tasks]. */
+    /** Tâches du domaine filtré et du filtre « Avec un lien » : Aujourd'hui, À venir et les suggestions ; les projets et le Bilan gardent [tasks]. */
     private val scopedTasks: Flow<List<TaskItem>> = scopedAllTasks()
 
     private fun scopedAllTasks(): Flow<List<TaskItem>> =
-        combine(tasks, _areaFilter, projects) { all, area, projects -> AreaFilter.tasks(all, projects, area) }
+        combine(tasks, _areaFilter, projects, chosenWithLink) { all, area, projects, withLink ->
+            WithLinkFilter.tasks(AreaFilter.tasks(all, projects, area), withLink)
+        }
+
+    fun setWithLink(on: Boolean) {
+        chosenWithLink.value = on
+        filterPrefs.edit().putBoolean(KEY_WITH_LINK, on).apply()
+    }
 
     private val _messages = MutableSharedFlow<String>(extraBufferCapacity = 8)
     val messages: Flow<String> = _messages.asSharedFlow()
@@ -314,18 +328,9 @@ internal class TasksViewModel(
         entries.filterNot { it.uid in gone }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
-    /** Liens enregistrés : l'Inbox y lit le titre d'une page déjà enregistrée. */
+    /** Pages de projet : l'Inbox y lit le titre d'une page déjà rangée, la revue et la recherche aussi. */
     val links: StateFlow<List<LinkItem>> = repository.observeLinks()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
-
-    fun setLinkNote(uid: String, note: String?) = launchAction { repository.setLinkNote(uid, note) }
-
-    /** Met dans les liens une adresse d'une tâche ou d'une note (`task`, `note`), par un appel différé. */
-    fun addLinkFrom(url: String, sourceType: String, sourceUid: String) = launchAction {
-        repository.addLinkFrom(url, sourceType, sourceUid, getApplication<Application>().getString(R.string.links_add_call))
-    }
-
-    fun setLinkTags(uid: String, tagUids: List<String>) = launchAction { repository.setLinkTags(uid, tagUids) }
 
     /**
      * Une idée qui n'est qu'une adresse devient tout de suite une tâche, nommée comme un partage (« Essayer : … », à

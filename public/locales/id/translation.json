@@ -527,7 +527,8 @@
     "overdueBy": "Terlambat {{days}} hari",
     "dueInDays": "Jatuh tempo dalam {{days}} hari",
     "startedSuccessfully": "Tugas berhasil dimulai!",
-    "deleteConfirmMessage": "Yakin ingin menghapus \"{{name}}\"? Tindakan ini tidak dapat dibatalkan."
+    "deleteConfirmMessage": "Yakin ingin menghapus \"{{name}}\"? Tindakan ini tidak dapat dibatalkan.",
+    "withLink": "Dengan tautan"
   },
   "timeline": {
     "activityTimeline": "Garis Waktu Aktivitas",
@@ -6258,5 +6259,16 @@
     "checkError": "Halaman tidak dapat diperiksa.",
     "copyMarkdown": "Salin halaman sebagai Markdown",
     "check": "Periksa halaman"
+  },
+  "bookmarksImport": {
+    "title": "Impor markah",
+    "hint": "Ekspor dari Firefox (Library › Import and Backup › Export). Satu folder menjadi halaman sebuah proyek.",
+    "file": "File markah",
+    "empty": "Tidak ada markah dalam file ini.",
+    "folder": "Folder",
+    "project": "Proyek",
+    "newProject": "Proyek baru « {{name}} »",
+    "error": "Impor gagal. Coba lagi.",
+    "import": "Impor"
   }
 }

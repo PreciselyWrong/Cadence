@@ -528,7 +528,8 @@
     "overdueBy": "In ritardo di {{days}} g",
     "dueInDays": "Scade tra {{days}} g",
     "startedSuccessfully": "Attività avviata con successo!",
-    "deleteConfirmMessage": "Eliminare \"{{name}}\"? Questa azione non può essere annullata."
+    "deleteConfirmMessage": "Eliminare \"{{name}}\"? Questa azione non può essere annullata.",
+    "withLink": "Con un link"
   },
   "timeline": {
     "activityTimeline": "Timeline delle Attività",
@@ -6275,5 +6276,16 @@
     "checkError": "Impossibile verificare le pagine.",
     "copyMarkdown": "Copia le pagine in Markdown",
     "check": "Verifica le pagine"
+  },
+  "bookmarksImport": {
+    "title": "Importa segnalibri",
+    "hint": "Un'esportazione da Firefox (Libreria › Importa e backup › Esporta). Una cartella diventa le pagine di un progetto.",
+    "file": "File dei segnalibri",
+    "empty": "Nessun segnalibro in questo file.",
+    "folder": "Cartella",
+    "project": "Progetto",
+    "newProject": "Nuovo progetto « {{name}} »",
+    "error": "Importazione non riuscita. Riprova.",
+    "import": "Importa"
   }
 }

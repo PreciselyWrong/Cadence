@@ -1006,7 +1006,8 @@
     "overdueBy": "Oneskorené o {{days}} d",
     "dueInDays": "Termín o {{days}} d",
     "startedSuccessfully": "Úloha bola úspešne spustená!",
-    "deleteConfirmMessage": "Naozaj chcete odstrániť „{{name}}“? Túto akciu nie je možné vrátiť späť."
+    "deleteConfirmMessage": "Naozaj chcete odstrániť „{{name}}“? Túto akciu nie je možné vrátiť späť.",
+    "withLink": "S odkazom"
   },
   "comments": {
     "count": "Komentáre: {{count}}",
@@ -6296,5 +6297,16 @@
     "checkError": "Stránky sa nepodarilo skontrolovať.",
     "copyMarkdown": "Kopírovať stránky ako Markdown",
     "check": "Skontrolovať stránky"
+  },
+  "bookmarksImport": {
+    "title": "Importovať záložky",
+    "hint": "Export z Firefoxu (Library › Import and Backup › Export). Jeden priečinok sa stane stránkami projektu.",
+    "file": "Súbor so záložkami",
+    "empty": "Tento súbor neobsahuje žiadne záložky.",
+    "folder": "Priečinok",
+    "project": "Projekt",
+    "newProject": "Nový projekt « {{name}} »",
+    "error": "Import zlyhal. Skúste to znova.",
+    "import": "Importovať"
   }
 }

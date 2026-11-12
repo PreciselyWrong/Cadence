@@ -30,12 +30,4 @@
     <string name="triage_slot_accept">Planifier</string>
     <string name="triage_slot_refuse">Refuser</string>
     <string name="triage_slot_refused">Créneau refusé</string>
-    <string name="triage_link_review_title">Lien à revoir</string>
-    <string name="triage_link_keep">Garder</string>
-    <string name="triage_link_archive">Archiver</string>
-    <string name="triage_link_later">Dans 30 jours</string>
-    <string name="triage_link_kept">Lien gardé</string>
-    <string name="triage_link_archived">Lien archivé</string>
-    <string name="triage_link_postponed">Revu dans 30 jours</string>
-    <string name="brief_link_themes">Thèmes des liens par l\'IA</string>
 </resources>

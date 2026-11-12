@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../../app');
-const { InboxItem } = require('../../models');
+const { InboxItem, Project } = require('../../models');
 const { createTestUser } = require('../helpers/testUtils');
 
 const signIn = async (email) => {
@@ -10,6 +10,7 @@ const signIn = async (email) => {
     return { user, agent };
 };
 
+// « Projet… » of an idea: the page goes to a project, the idea is processed.
 describe('PATCH /api/inbox/:uid/process with link_uid', () => {
     let agent;
     let user;
@@ -18,7 +19,8 @@ describe('PATCH /api/inbox/:uid/process with link_uid', () => {
         ({ user, agent } = await signIn('inbox-link@example.com'));
     });
 
-    it('marks the idea processed and keeps the link made from it', async () => {
+    it('marks the idea processed and keeps the page made from it', async () => {
+        const project = await Project.create({ name: 'P', user_id: user.id });
         const item = (
             await agent
                 .post('/api/inbox')
@@ -27,8 +29,7 @@ describe('PATCH /api/inbox/:uid/process with link_uid', () => {
         const link = (
             await agent.post('/api/links').send({
                 url: 'https://example.com/idee',
-                source_type: 'inbox_item',
-                source_uid: item.uid,
+                project_uid: project.uid,
             })
         ).body.link;
 
@@ -44,10 +45,15 @@ describe('PATCH /api/inbox/:uid/process with link_uid', () => {
 
     it('answers 404 for a link of someone else, and leaves the idea open', async () => {
         const other = await signIn('inbox-link-other@example.com');
+        const theirs = await Project.create({
+            name: 'Theirs',
+            user_id: other.user.id,
+        });
         const foreign = (
-            await other.agent
-                .post('/api/links')
-                .send({ url: 'https://example.com/autre' })
+            await other.agent.post('/api/links').send({
+                url: 'https://example.com/autre',
+                project_uid: theirs.uid,
+            })
         ).body.link;
         const item = await InboxItem.create({
             user_id: user.id,

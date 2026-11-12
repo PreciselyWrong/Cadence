@@ -16,15 +16,15 @@ class LayoutStoreTest {
     @Test
     fun `sans choix, chaque écran garde sa disposition par défaut`() {
         assertTrue(store.isOn(LayoutStore.NOTES))
-        assertFalse(store.isOn(LayoutStore.LINKS))
+        assertFalse(store.isOn(LayoutStore.OUTLINE))
     }
 
     @Test
     fun `le choix d'un écran est retenu sans toucher à l'autre`() {
         store.set(LayoutStore.NOTES, false)
-        store.set(LayoutStore.LINKS, true)
+        store.set(LayoutStore.OUTLINE, true)
 
         assertFalse(store.isOn(LayoutStore.NOTES))
-        assertTrue(store.isOn(LayoutStore.LINKS))
+        assertTrue(store.isOn(LayoutStore.OUTLINE))
     }
 }

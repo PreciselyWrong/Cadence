@@ -328,9 +328,6 @@ const SCHEMA = field.object({
     llm: field.object({
         enabled: field.bool(false),
     }),
-    linkThemes: field.object({
-        enabled: field.bool(false),
-    }),
     triage: field.object({
         enabled: field.bool(false),
         dailyLimit: field.number(20, 1, 200, true),

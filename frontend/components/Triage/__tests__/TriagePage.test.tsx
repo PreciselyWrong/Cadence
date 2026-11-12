@@ -6,16 +6,12 @@ import {
     applyTriage,
     fetchTriageQueue,
     keepTask,
-    answerSlot,
-    reviewLink,
 } from '../../../utils/triageService';
 
 jest.mock('../../../utils/triageService', () => ({
     fetchTriageQueue: jest.fn(),
     keepTask: jest.fn(),
     applyTriage: jest.fn(),
-    answerSlot: jest.fn(),
-    reviewLink: jest.fn(),
 }));
 jest.mock('../../../utils/dateUtils', () => ({
     getTodayDateString: () => '2026-11-06',
@@ -157,36 +153,6 @@ describe('TriagePage', () => {
         await waitFor(() => expect(keepTask).toHaveBeenCalledWith('a'));
     });
 
-    it('plans an agent slot only when accepted', async () => {
-        (answerSlot as jest.Mock).mockResolvedValue(undefined);
-        (fetchTriageQueue as jest.Mock).mockResolvedValue({
-            count: 1,
-            tasks: {},
-            items: [
-                {
-                    key: 'slot:1',
-                    type: 'link_slot',
-                    source: 'agent',
-                    task_uid: null,
-                    action: 'accept_slot',
-                    payload: {
-                        slot_id: '1',
-                        title: 'Tester les outils',
-                        date: '2026-11-08',
-                    },
-                    reason: 'Trois outils sur le même sujet.',
-                    details: ['Outil fictif'],
-                    question: null,
-                },
-            ],
-        });
-        render(<TriagePage />);
-        fireEvent.click(
-            await screen.findByRole('button', { name: 'Planifier' })
-        );
-        await waitFor(() => expect(answerSlot).toHaveBeenCalledWith('1', true));
-    });
-
     it('says when there is nothing to sort', async () => {
         (fetchTriageQueue as jest.Mock).mockResolvedValue({
             items: [],
@@ -194,42 +160,6 @@ describe('TriagePage', () => {
             count: 0,
         });
         render(<TriagePage />);
-        expect(await screen.findByTestId('triage-empty')).toBeInTheDocument();
-    });
-
-    it('brings back a link on its review day', async () => {
-        (fetchTriageQueue as jest.Mock).mockResolvedValue({
-            count: 1,
-            tasks: {},
-            items: [
-                {
-                    key: 'link_review:l1',
-                    type: 'link_review',
-                    source: 'links',
-                    task_uid: null,
-                    action: 'review_link',
-                    payload: {
-                        link_uid: 'l1',
-                        title: 'Un article',
-                        url: 'https://example.com/a',
-                        review_at: '2026-11-01',
-                    },
-                    reason: 'Lien à revoir',
-                    details: [],
-                    question: null,
-                },
-            ],
-        });
-        (reviewLink as jest.Mock).mockResolvedValue(undefined);
-        render(<TriagePage />);
-        expect(await screen.findByText('Un article')).toBeInTheDocument();
-        expect(
-            screen.queryByRole('button', { name: 'Corriger' })
-        ).not.toBeInTheDocument();
-        fireEvent.click(screen.getByRole('button', { name: 'Archiver' }));
-        await waitFor(() =>
-            expect(reviewLink).toHaveBeenCalledWith('l1', 'archive')
-        );
         expect(await screen.findByTestId('triage-empty')).toBeInTheDocument();
     });
 

@@ -1,11 +1,10 @@
 'use strict';
 
-// Background classification of new items (docs/41-auto-classify.md). New
-// tasks, notes and links are found in the offline sync journal, which every
-// write path feeds (web, Android, MCP, Telegram, imports): no polling of the
-// item tables. Each one waits for its grace period, a link also for its page
-// to be read, then the empty fields are filled in batches. A failed call is
-// tried again later, up to `max_attempts`.
+// Background classification of new tasks and notes (docs/41-auto-classify.md).
+// They are found in the offline sync journal, which every write path feeds
+// (web, Android, MCP, Telegram, imports): no polling of the item tables. Each
+// one waits for its grace period, then the empty fields are filled in batches.
+// A failed call is tried again later, up to `max_attempts`.
 const crypto = require('crypto');
 const { Op } = require('sequelize');
 const { logger } = require('../../services/logService');
@@ -16,8 +15,6 @@ const writer = require('./writer');
 const { resolveSettings } = require('./settings');
 const { slotsOf } = require('./core/eligibility');
 const { decide, indexCatalog } = require('./core/validate');
-const { findDuplicate } = require('./core/duplicates');
-const { isSummarizable } = require('./core/summary');
 const { itemFingerprint } = require('./core/fingerprint');
 
 const CURSOR_KEY = 'auto_classify_journal_cursor';
@@ -114,13 +111,7 @@ async function considerJournalRow(row, now, since, settingsOf) {
     const existing = await repository.Item.findOne({
         where: { user_id: row.user_id, entity: row.entity, item_uid: row.uid },
     });
-    if (existing) {
-        // A link whose page was just read: no need to wait any longer.
-        if (existing.state === 'waiting') {
-            await existing.update({ state: 'queued', next_attempt_at: now });
-        }
-        return;
-    }
+    if (existing) return;
     const owner = await settingsOf(row.user_id);
     if (!owner || !owner.settings.enabled) return;
     const createdAt = await repository.createdAtOf(
@@ -258,63 +249,13 @@ async function settle(user, entry, raw, context) {
 
 // Prepares an item: null when there is nothing to ask the model (the queue
 // row is settled here), or { row, item, slots, fingerprint }.
-async function prepare(user, row, item, context) {
-    const { settings, runId, now, dry } = context;
+async function prepare(row, item, context) {
+    const { runId } = context;
     if (!item) {
         if (row) await row.update({ state: 'skipped', run_id: runId });
         return null;
     }
-    if (item.entity === 'link') {
-        const waitUntil =
-            new Date(item.created_at).getTime() +
-            settings.fetch_wait_minutes * MINUTE_MS;
-        if (
-            row &&
-            item.fetch_status === 'pending' &&
-            now.getTime() < waitUntil
-        ) {
-            await row.update({
-                state: 'waiting',
-                next_attempt_at: new Date(waitUntil),
-            });
-            return null;
-        }
-        const found = findDuplicate(
-            item,
-            await repository.linksOfUser(user.id)
-        );
-        if (found) {
-            if (dry) {
-                await repository.Change.create({
-                    user_id: user.id,
-                    run_id: runId,
-                    entity: 'link',
-                    item_uid: item.uid,
-                    item_title: repository.itemTitle(item),
-                    before: {},
-                    after: {},
-                    asked: {
-                        duplicate_of: found.original.uid,
-                        reason: found.reason,
-                    },
-                    dry_run: true,
-                });
-            } else {
-                await suggestions.createDuplicate(
-                    user,
-                    item,
-                    found,
-                    runId,
-                    settings,
-                    now
-                );
-            }
-            if (row) await row.update({ state: 'done', run_id: runId });
-            return null;
-        }
-    }
     const slots = slotsOf(item);
-    if (slots?.summary && !isSummarizable(item)) slots.summary = false;
     if (!slots || !Object.values(slots).some(Boolean)) {
         if (row) await row.update({ state: 'skipped', run_id: runId });
         return null;
@@ -395,7 +336,7 @@ async function processUser(userId, rows, now) {
             row.entity,
             row.item_uid
         );
-        const entry = await prepare(user, row, item, { ...context, settings });
+        const entry = await prepare(row, item, { ...context, settings });
         if (entry) entries.push(entry);
     }
     if (entries.length > 0 && !(await model.isConfigured(userId))) {
@@ -482,7 +423,7 @@ async function dryRun(user, { days = 7, limit = 48, now = new Date() } = {}) {
     const entries = [];
     for (const ref of refs) {
         const item = await repository.loadItem(user.id, ref.entity, ref.uid);
-        const entry = await prepare(user, null, item, { ...context, settings });
+        const entry = await prepare(null, item, { ...context, settings });
         if (entry) entries.push(entry);
     }
     if (entries.length > 0 && !(await model.isConfigured(user.id))) {

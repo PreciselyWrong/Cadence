@@ -686,3 +686,9 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Problème** : une tâche « Essayer : X » qui grandit (sous-tâches, liens) n'avait aucun passage vers un projet ; les projets délaissés restaient au milieu des autres.
 - **Décision** : « Transformer en projet » dans le ⋯ d'une ligne de tâche et de la page de tâche (question, puis le projet s'ouvre) ; en bas de Projets, « Pas touché depuis 30 jours (N) » replié, avec « Garder » par ligne ; rien n'est archivé.
 - **Android à reprendre** : fait dans la même étape.
+
+### 2026-11-12 — Fin de la bibliothèque de liens (refonte des liens, étape 5)
+
+- **Problème** : une bibliothèque à trier, étiqueter et revoir, que personne ne relisait ; cartes « Lien à revoir », thèmes par IA et résumés automatiques en plus.
+- **Décision** : la page Liens, « Ajouter aux liens », les statuts, la revue, les thèmes et le résumé automatique disparaissent ; Tâches › filtre « Avec un lien » ; Projets › ⋯ › « Importer des favoris » (un dossier = les pages d'un projet, nouveau ou choisi) ; une recherche qui trouve une page ouvre son projet.
+- **Android à reprendre** : fait dans la même étape (filtre « Avec un lien » dans le sélecteur de listes).

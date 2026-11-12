@@ -7,7 +7,6 @@ const {
     sequelize,
     Task,
     Note,
-    Link,
     Project,
     Area,
     Tag,
@@ -21,7 +20,7 @@ const {
 const { SOURCE_TYPE } = require('../todo-md/service');
 const { CLOSED_PROJECT_STATUSES } = require('./core/eligibility');
 
-const ENTITIES = ['task', 'note', 'link'];
+const ENTITIES = ['task', 'note'];
 const OPEN_TASK_STATUSES = [0, 1, 4, 6];
 const EXAMPLES_PER_PROJECT = 4;
 const tagInclude = {
@@ -88,35 +87,14 @@ function noteShape(note) {
     };
 }
 
-function linkShape(link) {
-    return {
-        entity: 'link',
-        id: link.id,
-        uid: link.uid,
-        user_id: link.user_id,
-        url: link.url,
-        title: link.title,
-        description: link.description,
-        readme_excerpt: link.readme_excerpt,
-        site_name: link.site_name,
-        note: link.note,
-        status: link.status,
-        fetch_status: link.fetch_status,
-        project_id: link.project_id,
-        tags: tagNamesOf(link),
-        project: projectShape(link.Project),
-        created_at: link.created_at,
-    };
-}
-
 const LOADERS = {
     task: [Task, taskShape],
     note: [Note, noteShape],
-    link: [Link, linkShape],
 };
 
 // The item as the rules see it, or null when it no longer exists.
 async function loadItem(userId, entity, uid) {
+    if (!LOADERS[entity]) return null;
     const [Model, shape] = LOADERS[entity];
     const row = await Model.findOne({
         where: { uid, user_id: userId },
@@ -129,18 +107,8 @@ function itemTitle(item) {
     const title =
         item.entity === 'task'
             ? item.name
-            : item.entity === 'note'
-              ? item.title || (item.content || '').slice(0, 80)
-              : item.title || item.url;
+            : item.title || (item.content || '').slice(0, 80);
     return title ? String(title).slice(0, 255) : null;
-}
-
-async function linksOfUser(userId) {
-    return Link.findAll({
-        where: { user_id: userId },
-        attributes: ['id', 'uid', 'url', 'title', 'status', 'created_at'],
-        raw: true,
-    });
 }
 
 async function createdAtOf(userId, entity, uid) {
@@ -233,7 +201,7 @@ async function openTaskExamples(projectIds) {
 async function tagUses(tagIds) {
     const uses = new Map();
     if (tagIds.length === 0) return uses;
-    for (const table of ['tasks_tags', 'notes_tags', 'links_tags']) {
+    for (const table of ['tasks_tags', 'notes_tags']) {
         const rows = await sequelize.query(
             `SELECT tag_id, COUNT(*) AS n FROM ${table} WHERE tag_id IN (:ids) GROUP BY tag_id`,
             { replacements: { ids: tagIds }, type: sequelize.QueryTypes.SELECT }
@@ -273,7 +241,7 @@ async function findUser(userId) {
     return User.findByPk(userId);
 }
 
-// The user's tasks, notes and links created since `from`, newest first.
+// The user's tasks and notes created since `from`, newest first.
 async function recentItems(userId, from, limit) {
     const lists = await Promise.all(
         Object.entries(LOADERS).map(async ([entity, [Model]]) =>
@@ -414,7 +382,6 @@ module.exports = {
     requeueFailed,
     loadItem,
     itemTitle,
-    linksOfUser,
     createdAtOf,
     readCatalog,
     settingValue,

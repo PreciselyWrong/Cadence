@@ -24,14 +24,12 @@ object ClassifySettingsForm {
     val NUMBER_KEYS = listOf(
         "batch_size",
         "grace_seconds",
-        "fetch_wait_minutes",
         "max_attempts",
         "context_cache_minutes",
         "suggestion_ttl_days",
         "daily_suggestion_limit",
         "log_retention_days",
         "max_tags",
-        "summary_max_chars",
         "max_tokens",
     )
     val THRESHOLD_KEYS = listOf("project", "tags", "duration", "priority", "ask")

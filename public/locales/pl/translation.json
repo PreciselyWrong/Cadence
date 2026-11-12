@@ -529,7 +529,8 @@
     "overdueBy": "Opóźnione o {{days}} d",
     "dueInDays": "Termin za {{days}} d",
     "startedSuccessfully": "Zadanie zostało rozpoczęte!",
-    "deleteConfirmMessage": "Na pewno usunąć „{{name}}”? Tej operacji nie można cofnąć."
+    "deleteConfirmMessage": "Na pewno usunąć „{{name}}”? Tej operacji nie można cofnąć.",
+    "withLink": "Z linkiem"
   },
   "timeline": {
     "activityTimeline": "Oś czasu aktywności",
@@ -6320,5 +6321,16 @@
     "checkError": "Nie udało się sprawdzić stron.",
     "copyMarkdown": "Kopiuj strony jako Markdown",
     "check": "Sprawdź strony"
+  },
+  "bookmarksImport": {
+    "title": "Importuj zakładki",
+    "hint": "Eksport z Firefoksa (Library › Import and Backup › Export). Jeden folder staje się stronami projektu.",
+    "file": "Plik zakładek",
+    "empty": "Ten plik nie zawiera zakładek.",
+    "folder": "Folder",
+    "project": "Projekt",
+    "newProject": "Nowy projekt « {{name}} »",
+    "error": "Import się nie powiódł. Spróbuj ponownie.",
+    "import": "Importuj"
   }
 }

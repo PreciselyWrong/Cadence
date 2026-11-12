@@ -527,7 +527,8 @@
     "overdueBy": "Myöhässä {{days}} pv",
     "dueInDays": "Erääntyy {{days}} pv:n kuluttua",
     "startedSuccessfully": "Tehtävän aloittaminen onnistui!",
-    "deleteConfirmMessage": "Haluatko varmasti poistaa kohteen \"{{name}}\"? Tätä toimintoa ei voi perua."
+    "deleteConfirmMessage": "Haluatko varmasti poistaa kohteen \"{{name}}\"? Tätä toimintoa ei voi perua.",
+    "withLink": "Linkillinen"
   },
   "timeline": {
     "activityTimeline": "Toiminta-aikajana",
@@ -6260,5 +6261,16 @@
     "checkError": "Sivuja ei voitu tarkistaa.",
     "copyMarkdown": "Kopioi sivut Markdownina",
     "check": "Tarkista sivut"
+  },
+  "bookmarksImport": {
+    "title": "Tuo kirjanmerkit",
+    "hint": "Firefoxin vienti (Kirjasto › Tuo ja varmuuskopioi › Vie). Yksi kansio muuttuu projektin sivuiksi.",
+    "file": "Kirjanmerkkitiedosto",
+    "empty": "Tässä tiedostossa ei ole kirjanmerkkejä.",
+    "folder": "Kansio",
+    "project": "Projekti",
+    "newProject": "Uusi projekti « {{name}} »",
+    "error": "Tuonti epäonnistui. Yritä uudelleen.",
+    "import": "Tuo"
   }
 }

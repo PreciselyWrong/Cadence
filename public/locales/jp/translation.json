@@ -527,7 +527,8 @@
     "overdueBy": "{{days}}日超過",
     "dueInDays": "あと{{days}}日で期限",
     "startedSuccessfully": "タスクを開始しました！",
-    "deleteConfirmMessage": "「{{name}}」を削除してもよろしいですか？この操作は取り消せません。"
+    "deleteConfirmMessage": "「{{name}}」を削除してもよろしいですか？この操作は取り消せません。",
+    "withLink": "リンクあり"
   },
   "timeline": {
     "activityTimeline": "アクティビティタイムライン",
@@ -6258,5 +6259,16 @@
     "checkError": "ページを確認できませんでした。",
     "copyMarkdown": "ページをMarkdownとしてコピー",
     "check": "ページを確認"
+  },
+  "bookmarksImport": {
+    "title": "ブックマークをインポート",
+    "hint": "Firefox からのエクスポート（ライブラリ › インポートとバックアップ › エクスポート）。1 つのフォルダがプロジェクトのページになります。",
+    "file": "ブックマークファイル",
+    "empty": "このファイルにブックマークはありません。",
+    "folder": "フォルダ",
+    "project": "プロジェクト",
+    "newProject": "新しいプロジェクト「{{name}}」",
+    "error": "インポートに失敗しました。もう一度お試しください。",
+    "import": "インポート"
   }
 }

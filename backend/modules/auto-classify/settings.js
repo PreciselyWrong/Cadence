@@ -19,7 +19,6 @@ const STATE_TAGS = [
 const NUMBERS = {
     batch_size: { default: 12, min: 1, max: 50, integer: true },
     grace_seconds: { default: 90, min: 0, max: 3600, integer: true },
-    fetch_wait_minutes: { default: 60, min: 0, max: 1440, integer: true },
     max_attempts: { default: 5, min: 1, max: 20, integer: true },
     context_cache_minutes: { default: 30, min: 0, max: 1440, integer: true },
     suggestion_ttl_days: { default: 7, min: 1, max: 365, integer: true },
@@ -27,7 +26,6 @@ const NUMBERS = {
     daily_suggestion_limit: { default: 0, min: 0, max: 1000, integer: true },
     log_retention_days: { default: 180, min: 1, max: 3650, integer: true },
     max_tags: { default: 3, min: 0, max: 10, integer: true },
-    summary_max_chars: { default: 220, min: 40, max: 1000, integer: true },
     max_tokens: { default: 2000, min: 200, max: 16000, integer: true },
 };
 

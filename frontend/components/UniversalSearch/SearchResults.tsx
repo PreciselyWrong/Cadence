@@ -156,11 +156,6 @@ const SearchResults: React.FC<SearchResultsProps> = ({
             window.dispatchEvent(new CustomEvent('closeMobileSearch'));
         }
 
-        if (result.type === 'Link' && result.url) {
-            window.open(result.url, '_blank', 'noopener');
-            return;
-        }
-
         const destination = searchDestination(result);
         if (destination?.kind === 'task') openTaskPanel(destination.uid);
         else if (destination?.kind === 'path') navigate(destination.path);

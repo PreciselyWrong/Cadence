@@ -1,10 +1,24 @@
 import React, { useMemo } from 'react';
 import LinkPreviewCard from './LinkPreviewCard';
-import { addressesIn } from './AddToLinks';
 import { useUrlPreview } from '../../hooks/useUrlPreview';
 import { UrlPreview } from '../../utils/urlService';
 
 const MAX_SHOWN = 5;
+
+const CANDIDATE = /https?:\/\/[^\s<>"'`]+/gi;
+const TRAILING = /[.,;:!?'"»…*_)\]]+$/;
+
+// The addresses written in `texts`, once each, in order.
+export function addressesIn(texts: (string | null | undefined)[]): string[] {
+    const found: string[] = [];
+    for (const text of texts) {
+        for (const match of (text || '').matchAll(CANDIDATE)) {
+            const url = match[0].replace(TRAILING, '');
+            if (!found.includes(url)) found.push(url);
+        }
+    }
+    return found;
+}
 
 // « ★ 1.2k · Rust · 2026-11-01 » for a GitHub repository, else nothing.
 export const githubLine = (preview: UrlPreview | null): string | null => {

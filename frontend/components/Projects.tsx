@@ -33,7 +33,7 @@ import { useTranslation } from 'react-i18next';
 import { SortOption } from './Shared/SortFilterButton';
 
 import { Project, ProjectStatus } from '../entities/Project';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
     FunnelIcon,
     PlusIcon,
@@ -43,6 +43,7 @@ import {
 } from '@heroicons/react/24/outline';
 import ProjectItem from './Project/ProjectItem';
 import DormantProjects from './Project/DormantProjects';
+import BookmarksImportDialog from './Project/BookmarksImportDialog';
 import { PROJECT_TABLE_GRID } from './Project/projectTableLayout';
 import SortableItem from './Shared/SortableItem';
 import { useSidebarDrop } from './Sidebar/sidebarDrop';
@@ -193,6 +194,7 @@ const Projects: React.FC = () => {
     const [isTemplateConfirmOpen, setIsTemplateConfirmOpen] =
         useState<boolean>(false);
     const [isImportOpen, setIsImportOpen] = useState(false);
+    const [isBookmarksOpen, setIsBookmarksOpen] = useState(false);
     const [shareModal, setShareModal] = useState<{
         isOpen: boolean;
         project: Project | null;
@@ -210,6 +212,7 @@ const Projects: React.FC = () => {
     });
 
     const [searchParams, setSearchParams] = useSearchParams();
+    const navigate = useNavigate();
     const statusFilter = searchParams.get('status') || 'not_completed';
     const [listFilters, setListFilters] = useState<ProjectsListFilters>(
         readCachedListFilters
@@ -1029,6 +1032,18 @@ const Projects: React.FC = () => {
                                                   setIsImportOpen(true),
                                               testId: 'projects-import-button',
                                           },
+                                          {
+                                              key: 'import-bookmarks',
+                                              label: t(
+                                                  'bookmarksImport.title',
+                                                  'Import bookmarks'
+                                              ),
+                                              icon: (
+                                                  <ArrowUpTrayIcon className="h-4 w-4" />
+                                              ),
+                                              onClick: () =>
+                                                  setIsBookmarksOpen(true),
+                                          },
                                       ]
                                     : []),
                             ]}
@@ -1238,6 +1253,16 @@ const Projects: React.FC = () => {
                 <DormantProjects />
             </div>
 
+            {isBookmarksOpen && (
+                <BookmarksImportDialog
+                    projects={projects}
+                    onClose={() => setIsBookmarksOpen(false)}
+                    onDone={(projectUid) => {
+                        setIsBookmarksOpen(false);
+                        navigate(`/project/${projectUid}`);
+                    }}
+                />
+            )}
             {modalState.isOpen && (
                 <ProjectModal
                     isOpen={modalState.isOpen}

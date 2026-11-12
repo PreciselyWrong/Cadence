@@ -104,8 +104,7 @@ class TaskCaptureRepositoryTest {
             LinkEntity(
                 uid = "l1", url = "https://www.github.com/acme/rocket/#readme", title = null, description = null, imageUrl = null,
                 siteName = null, kind = "repo", githubStars = null, githubLanguage = null, githubLastCommitRaw = null,
-                readmeExcerpt = null, note = null, status = "new", tagUidsJson = "[]", sourceType = null, sourceUid = null,
-                fetchStatus = null, createdAtRaw = null, projectUid = "p1",
+                readmeExcerpt = null, note = null, fetchStatus = null, createdAtRaw = null, projectUid = "p1",
             ),
         )
 

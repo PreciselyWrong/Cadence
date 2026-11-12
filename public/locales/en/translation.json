@@ -526,7 +526,8 @@
     "overdueBy": "Overdue by {{days}}d",
     "dueInDays": "Due in {{days}}d",
     "startedSuccessfully": "Task started successfully!",
-    "deleteConfirmMessage": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone."
+    "deleteConfirmMessage": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.",
+    "withLink": "With a link"
   },
   "comments": {
     "count": "{{count}} comments",
@@ -6230,5 +6231,16 @@
     "checkError": "Could not check the pages.",
     "copyMarkdown": "Copy the pages as Markdown",
     "check": "Check the pages"
+  },
+  "bookmarksImport": {
+    "title": "Import bookmarks",
+    "hint": "A Firefox export (Library › Import and Backup › Export). One folder becomes the pages of a project.",
+    "file": "Bookmarks file",
+    "empty": "No bookmarks in this file.",
+    "folder": "Folder",
+    "project": "Project",
+    "newProject": "New project « {{name}} »",
+    "error": "The import failed. Try again.",
+    "import": "Import"
   }
 }

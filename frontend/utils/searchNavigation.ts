@@ -13,6 +13,8 @@ export interface SearchTarget {
     uid?: string;
     name: string;
     title?: string;
+    // A Link leads to the project whose pages hold it.
+    project_uid?: string | null;
 }
 
 export type SearchDestination =
@@ -62,6 +64,10 @@ export const searchDestination = (result: SearchTarget): SearchDestination => {
         }
         case 'Habit':
             return { kind: 'path', path: `/habit/${result.uid}` };
+        case 'Link':
+            return result.project_uid
+                ? { kind: 'path', path: `/project/${result.project_uid}` }
+                : null;
         default:
             return null;
     }

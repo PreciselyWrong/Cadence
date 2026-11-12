@@ -1,9 +1,9 @@
 const { DataTypes } = require('sequelize');
 const { uid } = require('../utils/uid');
 
-// A link found in an inbox item, a task or a note (modules/links). The
-// metadata is fetched by the server; the user owns the title once given, the
-// address, the note, the status, the project and the tags.
+// A page of a project (modules/links, docs/37-links.md). The metadata is
+// read by the server; the user owns the title once given, the address, the
+// short note and the project.
 module.exports = (sequelize) => {
     const Link = sequelize.define(
         'Link',
@@ -51,21 +51,14 @@ module.exports = (sequelize) => {
             github_last_commit: { type: DataTypes.DATE, allowNull: true },
             readme_excerpt: { type: DataTypes.TEXT, allowNull: true },
             note: { type: DataTypes.TEXT, allowNull: true },
-            // new (to read) | dropped (archived); see core/constants.js
-            status: {
-                type: DataTypes.STRING,
-                allowNull: false,
-                defaultValue: 'new',
-            },
+            // Required by every write path (REST, sync, MCP); the column
+            // stays nullable for rows older than the takeover migration.
             project_id: {
                 type: DataTypes.INTEGER,
                 allowNull: true,
                 references: { model: 'projects', key: 'id' },
-                onDelete: 'SET NULL',
+                onDelete: 'CASCADE',
             },
-            // Where the link was found: inbox_item | task | note, by uid.
-            source_type: { type: DataTypes.STRING, allowNull: true },
-            source_uid: { type: DataTypes.STRING, allowNull: true },
             // pending | done | failed
             fetch_status: {
                 type: DataTypes.STRING,
@@ -73,8 +66,17 @@ module.exports = (sequelize) => {
                 defaultValue: 'pending',
             },
             fetched_at: { type: DataTypes.DATE, allowNull: true },
-            // Local day to look at a parked link again; never a due date.
+            // The former library's columns: no longer read or written, kept
+            // because published migrations (links-two-statuses, the takeover)
+            // run on databases made from these models (docs/37-links.md).
+            status: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                defaultValue: 'new',
+            },
             review_at: { type: DataTypes.DATEONLY, allowNull: true },
+            source_type: { type: DataTypes.STRING, allowNull: true },
+            source_uid: { type: DataTypes.STRING, allowNull: true },
         },
         {
             tableName: 'links',

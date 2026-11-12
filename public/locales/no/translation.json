@@ -528,7 +528,8 @@
     "overdueBy": "Forfalt for {{days}} d siden",
     "dueInDays": "Forfaller om {{days}} d",
     "startedSuccessfully": "Oppgaven ble startet!",
-    "deleteConfirmMessage": "Er du sikker på at du vil slette «{{name}}»? Denne handlingen kan ikke angres."
+    "deleteConfirmMessage": "Er du sikker på at du vil slette «{{name}}»? Denne handlingen kan ikke angres.",
+    "withLink": "Med lenke"
   },
   "timeline": {
     "activityTimeline": "Aktivitetslinje",
@@ -6265,5 +6266,16 @@
     "checkError": "Kunne ikke sjekke sidene.",
     "copyMarkdown": "Kopier sidene som Markdown",
     "check": "Sjekk sidene"
+  },
+  "bookmarksImport": {
+    "title": "Importer bokmerker",
+    "hint": "En eksport fra Firefox (Bibliotek › Importer og sikkerhetskopier › Eksporter). Én mappe blir sidene i et prosjekt.",
+    "file": "Bokmerkefil",
+    "empty": "Ingen bokmerker i denne filen.",
+    "folder": "Mappe",
+    "project": "Prosjekt",
+    "newProject": "Nytt prosjekt « {{name}} »",
+    "error": "Importen mislyktes. Prøv igjen.",
+    "import": "Importer"
   }
 }

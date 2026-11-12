@@ -18,10 +18,6 @@ const handle = (action) => async (req, res) => {
     }
 };
 
-router.get(
-    '/links',
-    handle((req) => links.list(req.currentUser.id, req.query))
-);
 router.post(
     '/links',
     handle((req) => links.create(req.currentUser.id, req.body))
@@ -67,10 +63,6 @@ router.post('/links/task', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-router.post(
-    '/links/import',
-    handle((req) => links.importLinks(req.currentUser.id, req.body?.items))
-);
 router.get(
     '/links/:uid',
     handle(async (req) => ({

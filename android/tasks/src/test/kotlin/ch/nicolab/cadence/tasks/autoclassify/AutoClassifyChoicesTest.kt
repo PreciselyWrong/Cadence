@@ -2,8 +2,6 @@ package ch.nicolab.cadence.tasks.autoclassify
 
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNull
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -87,11 +85,6 @@ class AutoClassifyChoicesTest {
     }
 
     @Test
-    fun aDuplicateChoiceCarriesOnlyItsAction() {
-        assertEquals(JsonObject(mapOf("action" to JsonPrimitive("merge"))), AutoClassifyChoices.duplicate("merge"))
-    }
-
-    @Test
     fun answersToOneSuggestionShareOneKeySoOnlyTheLastOneIsSent() {
         val apply = AutoClassifyRequests.apply("s1", AutoClassifyChoices.ACCEPT_ALL, "Classement")
         val dismiss = AutoClassifyRequests.dismiss("s1", "Classement")
@@ -105,12 +98,8 @@ class AutoClassifyChoicesTest {
     @Test
     fun aNotificationActionMapsToItsChoice() {
         val accept = AutoClassifyRequests.forNotificationAction(AutoClassifyRequests.ACTION_ACCEPT_ALL, "s1", "C")
-        val drop = AutoClassifyRequests.forNotificationAction(AutoClassifyRequests.ACTION_DROP_NEW, "s2", "C")
-        val merge = AutoClassifyRequests.forNotificationAction(AutoClassifyRequests.ACTION_MERGE, "s2", "C")
 
         assertEquals("all", accept!!.body!!["choice"]!!.jsonPrimitive.content)
-        assertEquals("drop_new", drop!!.body!!["choice"]!!.jsonObject["action"]!!.jsonPrimitive.content)
-        assertEquals("merge", merge!!.body!!["choice"]!!.jsonObject["action"]!!.jsonPrimitive.content)
         assertNull(AutoClassifyRequests.forNotificationAction("unknown", "s1", "C"))
     }
 }

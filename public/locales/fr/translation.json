@@ -529,7 +529,8 @@
     "progress": "Avancement",
     "startNow": "Démarrer maintenant",
     "startedSuccessfully": "Tâche démarrée !",
-    "todayPlan": "Plan du jour"
+    "todayPlan": "Plan du jour",
+    "withLink": "Avec un lien"
   },
   "timeline": {
     "activityTimeline": "Chronologie d'Activité",
@@ -6276,5 +6277,16 @@
     "checkError": "Impossible de vérifier les pages.",
     "copyMarkdown": "Copier les pages en Markdown",
     "check": "Vérifier les pages"
+  },
+  "bookmarksImport": {
+    "title": "Importer des favoris",
+    "hint": "Un export de Firefox (Bibliothèque › Importation et sauvegarde › Exporter). Un dossier devient les pages d'un projet.",
+    "file": "Fichier de favoris",
+    "empty": "Aucun favori dans ce fichier.",
+    "folder": "Dossier",
+    "project": "Projet",
+    "newProject": "Nouveau projet « {{name}} »",
+    "error": "L'import a échoué. Réessayez.",
+    "import": "Importer"
   }
 }

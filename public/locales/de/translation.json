@@ -527,7 +527,8 @@
     "overdueBy": "{{days}} Tage überfällig",
     "dueInDays": "Fällig in {{days}} Tagen",
     "startedSuccessfully": "Aufgabe erfolgreich gestartet!",
-    "deleteConfirmMessage": "Möchtest du \"{{name}}\" wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden."
+    "deleteConfirmMessage": "Möchtest du \"{{name}}\" wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "withLink": "Mit Link"
   },
   "timeline": {
     "activityTimeline": "Aktivitätsverlauf",
@@ -6269,5 +6270,16 @@
     "checkError": "Die Seiten konnten nicht geprüft werden.",
     "copyMarkdown": "Seiten als Markdown kopieren",
     "check": "Seiten prüfen"
+  },
+  "bookmarksImport": {
+    "title": "Lesezeichen importieren",
+    "hint": "Ein Export aus Firefox (Bibliothek › Importieren und Sichern › Exportieren). Ein Ordner wird zu den Seiten eines Projekts.",
+    "file": "Lesezeichen-Datei",
+    "empty": "Keine Lesezeichen in dieser Datei.",
+    "folder": "Ordner",
+    "project": "Projekt",
+    "newProject": "Neues Projekt « {{name}} »",
+    "error": "Der Import ist fehlgeschlagen. Erneut versuchen.",
+    "import": "Importieren"
   }
 }

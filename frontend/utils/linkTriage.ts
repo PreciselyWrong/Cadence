@@ -1,13 +1,8 @@
-import { Link } from '../entities/Link';
 import { Task } from '../entities/Task';
-import { useLinksStore } from '../store/linksStore';
 import { processInboxItemWithStore } from './inboxService';
 import { firstUrl, residualText } from './linkFilters';
 import { createLink, NewLink } from './linksService';
 import { createTask } from './tasksService';
-
-export const linkTitle = (link: Link): string =>
-    link.title || link.domain || link.url;
 
 // The site of an address, without "www.".
 export const domainOf = (url: string): string => {
@@ -32,7 +27,7 @@ export const wordsAround = (text: string, url: string): string =>
 // The task of a link: named after the page when its title is known, else
 // after the words written with the address, else after its site. The note
 // keeps the address, then the words the name did not take. Same rule on
-// Android and from the Links page (the link's note being its words).
+// Android.
 export const linkTaskDraft = ({
     url,
     title,
@@ -47,18 +42,6 @@ export const linkTaskDraft = ({
     const rest = name === words ? '' : words;
     return { name, note: [url, rest].filter(Boolean).join('\n\n') };
 };
-
-// "Create a task" from a saved link: the link stays as it is.
-export const linkToTask = (link: Link): Promise<Task> =>
-    createTask(
-        linkTaskDraft({
-            url: link.url,
-            title: link.title,
-            text: link.note,
-        }) as Task
-    );
-
-export type LinkDraft = Omit<NewLink, 'source_type' | 'source_uid'>;
 
 // An address made a task in one gesture (docs/37-links.md, Capture): the
 // address in the note, waiting in « Tâches à classer » for « Quand ? »
@@ -90,18 +73,14 @@ export const captureAsTask = async (
     return task;
 };
 
+export type LinkDraft = NewLink;
+
 // The "Project…" decision of an inbox item: the page goes to the project,
 // then the item leaves the inbox.
-export const keepInLinks = async (
+export const addToProject = async (
     itemUid: string,
     draft: LinkDraft
-): Promise<Link> => {
-    const { link } = await createLink({
-        ...draft,
-        source_type: 'inbox_item',
-        source_uid: itemUid,
-    });
-    useLinksStore.getState().add(link);
+): Promise<void> => {
+    const { link } = await createLink(draft);
     await processInboxItemWithStore(itemUid, { link_uid: link.uid });
-    return link;
 };

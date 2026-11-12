@@ -525,6 +525,21 @@ async function filterTasksByParams(
         ];
     }
 
+    // « Avec un lien »: a web address in the name or the note
+    // (docs/37-links.md).
+    if (params.has_link === true || params.has_link === 'true') {
+        const hasAddress = (column) => ({
+            [Op.or]: [
+                { [column]: { [Op.like]: '%http://%' } },
+                { [column]: { [Op.like]: '%https://%' } },
+            ],
+        });
+        whereClause[Op.and] = [
+            ...(Array.isArray(whereClause[Op.and]) ? whereClause[Op.and] : []),
+            { [Op.or]: [hasAddress('name'), hasAddress('note')] },
+        ];
+    }
+
     // area_uid / project_uid / tags narrow the list to a scope (see
     // scopeService): an area includes the tasks of its projects, a project
     // must sit in the area, tags must all be present. The numeric id params

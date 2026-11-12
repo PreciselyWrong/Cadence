@@ -527,7 +527,8 @@
     "overdueBy": "Försenad med {{days}} d",
     "dueInDays": "Förfaller om {{days}} d",
     "startedSuccessfully": "Uppgiften startades!",
-    "deleteConfirmMessage": "Är du säker på att du vill ta bort \"{{name}}\"? Detta kan inte ångras."
+    "deleteConfirmMessage": "Är du säker på att du vill ta bort \"{{name}}\"? Detta kan inte ångras.",
+    "withLink": "Med en länk"
   },
   "timeline": {
     "activityTimeline": "Aktivitetslinje",
@@ -6260,5 +6261,16 @@
     "checkError": "Sidorna kunde inte kontrolleras.",
     "copyMarkdown": "Kopiera sidorna som Markdown",
     "check": "Kontrollera sidorna"
+  },
+  "bookmarksImport": {
+    "title": "Importera bokmärken",
+    "hint": "En export från Firefox (Bibliotek › Importera och säkerhetskopiera › Exportera). En mapp blir sidorna i ett projekt.",
+    "file": "Bokmärkesfil",
+    "empty": "Inga bokmärken i den här filen.",
+    "folder": "Mapp",
+    "project": "Projekt",
+    "newProject": "Nytt projekt « {{name}} »",
+    "error": "Importen misslyckades. Försök igen.",
+    "import": "Importera"
   }
 }

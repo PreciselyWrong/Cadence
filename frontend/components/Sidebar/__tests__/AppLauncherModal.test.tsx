@@ -139,7 +139,6 @@ describe('AppLauncherModal', () => {
 
             expect(idsIn('links')).toEqual([
                 'inbox',
-                'links',
                 'today',
                 'upcoming',
                 'calendar',

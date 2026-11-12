@@ -35,29 +35,6 @@ jest.mock('../../../utils/dailyPlanService', () => ({
 jest.mock('../../../utils/projectsService', () => ({
     updateProject: jest.fn(),
 }));
-const mockLinks = {
-    links: [
-        {
-            uid: 'l1',
-            url: 'https://github.com/pbakaus/impeccable',
-            domain: 'github.com',
-            title: 'Impeccable',
-            description: 'Design skills for AI agents',
-            kind: 'repo',
-            github_stars: 1200,
-            github_language: null,
-            image_url: null,
-            note: null,
-            source_type: 'task',
-            source_uid: 'l-task',
-        },
-    ],
-    load: jest.fn(),
-    save: jest.fn(),
-};
-jest.mock('../../../store/linksStore', () => ({
-    useLinksStore: (pick: (s: unknown) => unknown) => pick(mockLinks),
-}));
 const mockToast = {
     showSuccessToast: jest.fn(),
     showErrorToast: jest.fn(),
@@ -406,7 +383,7 @@ describe('ReviewPage', () => {
             } as any);
         });
 
-        it('groups parked tasks by project and shows a link as its page, not its address', async () => {
+        it('groups parked tasks by project', async () => {
             renderPage();
             expect(
                 await screen.findByRole('button', { name: /House\s*2/ })
@@ -414,10 +391,9 @@ describe('ReviewPage', () => {
             expect(
                 screen.getByRole('button', { name: /No project\s*1/ })
             ).toBeInTheDocument();
-            expect(screen.getByText('Impeccable')).toBeInTheDocument();
             expect(
-                screen.queryByText('https://github.com/pbakaus/impeccable')
-            ).not.toBeInTheDocument();
+                screen.getByText('https://github.com/pbakaus/impeccable')
+            ).toBeInTheDocument();
             expect(mocked.fetchReviewCategory).toHaveBeenCalledWith(
                 'later',
                 0,

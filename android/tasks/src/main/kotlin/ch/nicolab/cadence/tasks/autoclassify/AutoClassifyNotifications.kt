@@ -130,17 +130,13 @@ class AutoClassifyNotifier(
         // Sans permission, rien ne s'affiche ; la suggestion est tout de même notée pour ne pas la reposer plus tard.
         if (!TaskReminderScheduler.notificationsAllowed(context)) return
         ensureChannel()
-        val text = if (suggestion.isDuplicate) {
-            context.getString(R.string.auto_classify_notif_duplicate)
-        } else {
-            AutoClassifyPayload.classify(suggestion.payload)?.let { card ->
-                AcceptAllText.summary(
-                    card,
-                    projectLabel = { context.getString(R.string.auto_classify_notif_project, it) },
-                    priorityLabel = { context.getString(if (it == 2) R.string.auto_classify_notif_priority_high else R.string.auto_classify_notif_priority_medium) },
-                )
-            } ?: context.getString(R.string.auto_classify_notif_classify)
-        }
+        val text = AutoClassifyPayload.classify(suggestion.payload)?.let { card ->
+            AcceptAllText.summary(
+                card,
+                projectLabel = { context.getString(R.string.auto_classify_notif_project, it) },
+                priorityLabel = { context.getString(if (it == 2) R.string.auto_classify_notif_priority_high else R.string.auto_classify_notif_priority_medium) },
+            )
+        } ?: context.getString(R.string.auto_classify_notif_classify)
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.tasks_ic_notification)
             .setContentTitle(suggestion.headline.ifBlank { context.getString(R.string.auto_classify_title) })
@@ -149,7 +145,7 @@ class AutoClassifyNotifier(
             .setAutoCancel(true)
         val open = openTriagePendingIntent(context)
         open?.let(builder::setContentIntent)
-        actionsOf(suggestion).forEach { (label, action) ->
+        actionsOf().forEach { (label, action) ->
             builder.addAction(0, context.getString(label), actionPendingIntent(context, action, suggestion.uid))
         }
         // Troisième bouton : la carte dans « À trier », pour un autre choix que les deux proposés.
@@ -173,18 +169,11 @@ class AutoClassifyNotifier(
     }
 }
 
-/** Libellés et actions d'une notification selon le type de suggestion. */
-internal fun actionsOf(suggestion: PendingSuggestion): List<Pair<Int, String>> = if (suggestion.isDuplicate) {
-    listOf(
-        R.string.auto_classify_action_drop to AutoClassifyRequests.ACTION_DROP_NEW,
-        R.string.auto_classify_action_merge to AutoClassifyRequests.ACTION_MERGE,
-    )
-} else {
-    listOf(
-        R.string.auto_classify_action_accept_all to AutoClassifyRequests.ACTION_ACCEPT_ALL,
-        R.string.auto_classify_action_dismiss to AutoClassifyRequests.ACTION_DISMISS,
-    )
-}
+/** Libellés et actions d'une notification de classement. */
+internal fun actionsOf(): List<Pair<Int, String>> = listOf(
+    R.string.auto_classify_action_accept_all to AutoClassifyRequests.ACTION_ACCEPT_ALL,
+    R.string.auto_classify_action_dismiss to AutoClassifyRequests.ACTION_DISMISS,
+)
 
 /** Reçoit une action de notification : la réponse part à la file, la notification s'efface. */
 class AutoClassifyReceiver : BroadcastReceiver() {

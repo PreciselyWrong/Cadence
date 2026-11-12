@@ -11,8 +11,9 @@ jest.mock('react-i18next', () => ({
     }),
 }));
 
+const mockNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
-    useNavigate: () => jest.fn(),
+    useNavigate: () => mockNavigate,
 }));
 
 jest.mock('../../../utils/searchService', () => ({
@@ -44,7 +45,7 @@ describe('CommandPalette search', () => {
         window.open = jest.fn();
     });
 
-    it('includes links in the search and opens one at its address', async () => {
+    it('includes links in the search and opens the project holding one', async () => {
         (searchUniversal as jest.Mock).mockResolvedValue({
             results: [
                 {
@@ -53,7 +54,8 @@ describe('CommandPalette search', () => {
                     uid: 'l1',
                     name: 'Marathon plan',
                     title: 'Marathon plan',
-                    url: 'https://example.com/marathon-plan',
+                    project_uid: 'p1',
+                    project_name: 'Running',
                 },
             ],
         });
@@ -73,11 +75,8 @@ describe('CommandPalette search', () => {
         expect(screen.getByText('Links')).toBeInTheDocument();
 
         fireEvent.click(row);
-        expect(window.open).toHaveBeenCalledWith(
-            'https://example.com/marathon-plan',
-            '_blank',
-            'noopener'
-        );
+        expect(mockNavigate).toHaveBeenCalledWith('/project/p1');
+        expect(window.open).not.toHaveBeenCalled();
     });
 
     it('marks the typed text inside each result', async () => {

@@ -139,7 +139,7 @@ internal fun InboxTab(
         }
         items(entries, key = { it.uid }) { entry ->
             // Une page déjà enregistrée dans les liens donne son titre ; sinon celui de l'aperçu lu par le serveur.
-            val saved = remember(links, entry) { LinkLists.forEntry(links, entry.uid, entry.content)?.title }
+            val saved = remember(links, entry) { LinkLists.forEntry(links, entry.content)?.title }
             IdeaRow(
                 modifier = Modifier.padding(bottom = Space.sm),
                 entry = entry,

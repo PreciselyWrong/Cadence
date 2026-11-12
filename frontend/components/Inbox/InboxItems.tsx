@@ -29,9 +29,9 @@ import { createNote } from '../../utils/notesService';
 import { OfflineQueuedError } from '../../utils/authUtils';
 import { isUrl } from '../../utils/urlService';
 import {
+    addToProject,
     captureAsTask,
     CaptureDraft,
-    keepInLinks,
     LinkDraft,
 } from '../../utils/linkTriage';
 import { takeSharedText } from '../../utils/shareTargetService';
@@ -386,7 +386,7 @@ const InboxItems: React.FC = () => {
         draft: LinkDraft
     ): Promise<void> => {
         try {
-            await keepInLinks(inboxItemUid, draft);
+            await addToProject(inboxItemUid, draft);
             showSuccessToast(
                 t('links.capture.addedToProject', 'Added to the project')
             );

@@ -528,7 +528,8 @@
     "overdueBy": "Atrasada há {{days}} d",
     "dueInDays": "Vence em {{days}} d",
     "startedSuccessfully": "Tarefa iniciada com sucesso!",
-    "deleteConfirmMessage": "Tem certeza de que deseja excluir “{{name}}”? Esta ação não pode ser desfeita."
+    "deleteConfirmMessage": "Tem certeza de que deseja excluir “{{name}}”? Esta ação não pode ser desfeita.",
+    "withLink": "Com um link"
   },
   "timeline": {
     "activityTimeline": "Linha do Tempo de Atividades",
@@ -6275,5 +6276,16 @@
     "checkError": "Não foi possível verificar as páginas.",
     "copyMarkdown": "Copiar as páginas em Markdown",
     "check": "Verificar as páginas"
+  },
+  "bookmarksImport": {
+    "title": "Importar favoritos",
+    "hint": "Uma exportação do Firefox (Biblioteca › Importar e backup › Exportar). Uma pasta torna-se as páginas de um projeto.",
+    "file": "Arquivo de favoritos",
+    "empty": "Não há favoritos neste arquivo.",
+    "folder": "Pasta",
+    "project": "Projeto",
+    "newProject": "Novo projeto « {{name}} »",
+    "error": "A importação falhou. Tente novamente.",
+    "import": "Importar"
   }
 }

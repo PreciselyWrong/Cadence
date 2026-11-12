@@ -119,7 +119,7 @@ internal class RowContext(
     fun link(item: ReviewTask): RowLink? {
         val task = local[item.uid]
         val text = ReviewBacklog.linkText(item.name, task?.note) ?: return null
-        return RowLink(text, ReviewBacklog.linkFor(links, "task", item.uid, text))
+        return RowLink(text, ReviewBacklog.linkFor(links, text))
     }
 
     fun tags(item: ReviewTask): List<String> {
@@ -285,7 +285,7 @@ fun ReviewScreen(onBack: () -> Unit, onOpenProject: (String) -> Unit) {
                         items(current.page.items, key = { it.uid }) { item ->
                             val link = remember(item, links) {
                                 ch.nicolab.cadence.tasks.links.LinkExtractor.urls(item.text, 1).firstOrNull()?.let {
-                                    RowLink(item.text, ReviewBacklog.linkFor(links, "inbox_item", item.uid, item.text))
+                                    RowLink(item.text, ReviewBacklog.linkFor(links, item.text))
                                 }
                             }
                             ReviewCard(

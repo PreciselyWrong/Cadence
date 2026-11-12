@@ -6,12 +6,9 @@
     <string name="auto_classify_notif_project">Projet : %1$s</string>
     <string name="auto_classify_notif_priority_high">Priorité haute</string>
     <string name="auto_classify_notif_priority_medium">Priorité moyenne</string>
-    <string name="auto_classify_notif_duplicate">Ce lien ressemble à un lien déjà enregistré</string>
     <string name="auto_classify_action_open">Ouvrir</string>
     <string name="auto_classify_action_accept_all">Tout accepter</string>
     <string name="auto_classify_action_dismiss">Ignorer</string>
-    <string name="auto_classify_action_drop">Archiver le nouveau</string>
-    <string name="auto_classify_action_merge">Fusionner</string>
 
     <string name="auto_classify_apply">Appliquer</string>
     <string name="auto_classify_accept_all">Tout accepter</string>
@@ -30,18 +27,6 @@
     <string name="auto_classify_priority_medium">Moyenne</string>
     <string name="auto_classify_priority_high">Haute</string>
 
-    <string name="auto_classify_duplicate_title">Doublon possible</string>
-    <string name="auto_classify_new_link">Nouveau lien</string>
-    <string name="auto_classify_original_link">Déjà enregistré</string>
-    <string name="auto_classify_reason_address">Même adresse</string>
-    <string name="auto_classify_reason_repository">Même dépôt</string>
-    <string name="auto_classify_reason_video">Même vidéo</string>
-    <string name="auto_classify_reason_title">Même titre</string>
-    <string name="auto_classify_reason_other">Lien proche</string>
-    <string name="auto_classify_dup_drop">Archiver le nouveau</string>
-    <string name="auto_classify_dup_merge">Fusionner dans l\'ancien</string>
-    <string name="auto_classify_dup_keep_new">Garder le nouveau</string>
-    <string name="auto_classify_dup_keep_both">Garder les deux</string>
 
     <string name="auto_classify_marked">Classé automatiquement</string>
     <string name="auto_classify_undo">Annuler</string>
@@ -71,14 +56,12 @@
     <string name="auto_classify_limits">Limites</string>
     <string name="auto_classify_batch_size">Éléments par lot</string>
     <string name="auto_classify_grace_seconds">Délai avant classement (secondes)</string>
-    <string name="auto_classify_fetch_wait_minutes">Attente avant lecture (minutes)</string>
     <string name="auto_classify_max_attempts">Essais maximum</string>
     <string name="auto_classify_context_cache_minutes">Cache du contexte (minutes)</string>
     <string name="auto_classify_suggestion_ttl_days">Durée de vie des propositions (jours)</string>
     <string name="auto_classify_daily_suggestion_limit">Propositions par jour (0 : sans limite)</string>
     <string name="auto_classify_log_retention_days">Conservation du journal (jours)</string>
     <string name="auto_classify_max_tags">Tags maximum</string>
-    <string name="auto_classify_summary_max_chars">Résumé (caractères)</string>
     <string name="auto_classify_max_tokens">Jetons maximum</string>
     <string name="auto_classify_hint">Défaut %1$s · de %2$s à %3$s</string>
     <string name="auto_classify_excluded_tags">Tags exclus (séparés par des virgules)</string>

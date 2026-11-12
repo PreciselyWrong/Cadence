@@ -531,7 +531,8 @@
     "overdueBy": "متأخرة بـ {{days}} يوم",
     "dueInDays": "مستحقة خلال {{days}} يوم",
     "startedSuccessfully": "تم بدء المهمة بنجاح!",
-    "deleteConfirmMessage": "هل أنت متأكد من حذف \"{{name}}\"؟ لا يمكن التراجع عن هذا الإجراء."
+    "deleteConfirmMessage": "هل أنت متأكد من حذف \"{{name}}\"؟ لا يمكن التراجع عن هذا الإجراء.",
+    "withLink": "بروابط"
   },
   "timeline": {
     "activityTimeline": "جدول الأنشطة",
@@ -6332,5 +6333,16 @@
     "checkError": "تعذّر التحقق من الصفحات.",
     "copyMarkdown": "نسخ الصفحات بتنسيق Markdown",
     "check": "التحقق من الصفحات"
+  },
+  "bookmarksImport": {
+    "title": "استيراد الإشارات المرجعية",
+    "hint": "تصدير من Firefox (Library › Import and Backup › Export). يصبح المجلد الواحد صفحات مشروع.",
+    "file": "ملف الإشارات المرجعية",
+    "empty": "لا توجد إشارات مرجعية في هذا الملف.",
+    "folder": "مجلد",
+    "project": "مشروع",
+    "newProject": "مشروع جديد « {{name}} »",
+    "error": "فشل الاستيراد. حاول مرة أخرى.",
+    "import": "استيراد"
   }
 }

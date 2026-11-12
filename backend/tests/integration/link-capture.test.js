@@ -167,4 +167,25 @@ describe('Link capture', () => {
         const task = await Task.findOne({ where: { uid: res.body.uid } });
         expect(task.needs_when).toBe(true);
     });
+
+    it('lists the tasks with a link (« Avec un lien »)', async () => {
+        const withLink = await Task.create({
+            name: 'Lire : X',
+            note: 'https://example.com/x',
+            user_id: user.id,
+        });
+        await Task.create({
+            name: 'Voir https://example.com/y',
+            user_id: user.id,
+        });
+        await Task.create({
+            name: 'Sans lien',
+            note: 'rien',
+            user_id: user.id,
+        });
+        const res = await agent.get('/api/tasks?has_link=true');
+        const names = res.body.tasks.map((t) => t.name).sort();
+        expect(names).toEqual(['Lire : X', 'Voir https://example.com/y']);
+        expect(res.body.tasks.map((t) => t.uid)).toContain(withLink.uid);
+    });
 });

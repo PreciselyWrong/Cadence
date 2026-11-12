@@ -527,7 +527,8 @@
     "overdueBy": "{{days}} gün gecikti",
     "dueInDays": "{{days}} gün içinde son tarih",
     "startedSuccessfully": "Görev başarıyla başlatıldı!",
-    "deleteConfirmMessage": "\"{{name}}\" öğesini silmek istediğinizden emin misiniz? Bu işlem geri alınamaz."
+    "deleteConfirmMessage": "\"{{name}}\" öğesini silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+    "withLink": "Bağlantılı"
   },
   "timeline": {
     "activityTimeline": "Etkinlik Zaman Çizelgesi",
@@ -6258,5 +6259,16 @@
     "checkError": "Sayfalar denetlenemedi.",
     "copyMarkdown": "Sayfaları Markdown olarak kopyala",
     "check": "Sayfaları denetle"
+  },
+  "bookmarksImport": {
+    "title": "Yer imlerini içe aktar",
+    "hint": "Firefox dışa aktarımı (Kitaplık › İçe Aktar ve Yedekle › Dışa Aktar). Bir klasör bir projenin sayfaları olur.",
+    "file": "Yer imi dosyası",
+    "empty": "Bu dosyada yer imi yok.",
+    "folder": "Klasör",
+    "project": "Proje",
+    "newProject": "Yeni proje « {{name}} »",
+    "error": "İçe aktarma başarısız oldu. Yeniden deneyin.",
+    "import": "İçe aktar"
   }
 }

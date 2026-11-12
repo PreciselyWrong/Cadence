@@ -268,7 +268,6 @@ internal fun TaskDetailSheet(
                 PostponementLine(taskUid = current.uid, version = current.dueDay)
                 NoteCard(note = note, onNoteChange = { note = it }, readOnly = textLocked)
                 LinkPreviewList("$title\n$note", viewModel.linkPreviews)
-                AddToLinksRow("$title\n$note", sourceKey = current.uid, onAdd = { viewModel.addLinkFrom(it, "task", current.uid) })
                 if (!current.fileBacked) SubtasksCard(parentUid = current.uid, viewModel = viewModel, onOpen = { openedSubtask = it.uid })
                 val keyedFields = detailFields(
                         task = current,

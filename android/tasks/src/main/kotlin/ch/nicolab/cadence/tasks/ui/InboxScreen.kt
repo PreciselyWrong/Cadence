@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Scaffold
@@ -30,7 +29,6 @@ import androidx.compose.ui.Modifier
 import android.content.Context
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
-import ch.nicolab.cadence.tasks.model.LinkSourceKind
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -59,7 +57,6 @@ fun InboxScreen(modifier: Modifier = Modifier, onOpenSearch: () -> Unit = {}, on
     var selectedTaskUid by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedNoteUid by rememberSaveable { mutableStateOf<String?>(null) }
     var captureOpen by rememberSaveable { mutableStateOf(false) }
-    var linksOpen by rememberSaveable { mutableStateOf(false) }
     val ideas by viewModel.inbox.collectAsStateWithLifecycle()
     val syncStatus by viewModel.syncStatus.collectAsStateWithLifecycle()
     val triage: TriageViewModel = viewModel()
@@ -81,11 +78,6 @@ fun InboxScreen(modifier: Modifier = Modifier, onOpenSearch: () -> Unit = {}, on
                     subtitle = ideas.size.takeIf { it > 0 }?.let { pluralStringResource(R.plurals.tasks_inbox_subtitle, it, it) },
                     modifier = Modifier.statusBarsPadding().padding(horizontal = Space.gutter),
                     actions = {
-                        RoundHeaderButton(
-                            icon = Icons.Outlined.Link,
-                            contentDescription = stringResource(R.string.links_open_screen),
-                            onClick = { linksOpen = true },
-                        )
                         RoundHeaderButton(
                             icon = Icons.Outlined.Search,
                             contentDescription = stringResource(R.string.tasks_search_open),
@@ -146,21 +138,6 @@ fun InboxScreen(modifier: Modifier = Modifier, onOpenSearch: () -> Unit = {}, on
     }
     selectedNoteUid?.let { uid ->
         NoteScreen(viewModel, uid, isNew = false, onBack = { selectedNoteUid = null }, onOpenNote = { selectedNoteUid = it })
-    }
-    if (linksOpen) {
-        LinksScreen(
-            tasks = viewModel,
-            onBack = { linksOpen = false },
-            onOpenSource = { source ->
-                linksOpen = false
-                when (source.kind) {
-                    LinkSourceKind.TASK -> selectedTaskUid = source.uid
-                    LinkSourceKind.NOTE -> selectedNoteUid = source.uid
-                    // L'idée reste dans la liste de l'Inbox, que l'écran des liens laisse voir.
-                    LinkSourceKind.INBOX_ITEM -> Unit
-                }
-            },
-        )
     }
 }
 

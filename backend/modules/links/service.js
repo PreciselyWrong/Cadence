@@ -1,8 +1,6 @@
 'use strict';
 
-const { Tag } = require('../../models');
 const linksRepository = require('./repository');
-const { LINK_STATUSES, normalizeLinkStatus } = require('./core/constants');
 const {
     addressKey,
     classifyKind,
@@ -13,8 +11,6 @@ const { taskNameFor, urlsIn } = require('./core/taskName');
 const { translate } = require('../spreadsheets/core/locales');
 const taskRepository = require('../tasks/repository');
 const entitlements = require('../../services/entitlementsService');
-const { isDay } = require('./core/reviewDate');
-const { validateTagName } = require('../tags/tagsService');
 const { validateProjectAccess } = require('../tasks/utils/validation');
 const permissionsService = require('../../services/permissionsService');
 const {
@@ -31,9 +27,6 @@ function iso(value) {
 }
 
 function serializeLink(link) {
-    const tags = (link.Tags || [])
-        .map((t) => ({ uid: t.uid, name: t.name, color: t.color ?? null }))
-        .sort((a, b) => a.name.localeCompare(b.name));
     return {
         uid: link.uid,
         url: link.url,
@@ -48,23 +41,13 @@ function serializeLink(link) {
         github_last_commit: iso(link.github_last_commit),
         readme_excerpt: link.readme_excerpt,
         note: link.note,
-        status: link.status,
         project_uid: link.Project?.uid ?? null,
         project_name: link.Project?.name ?? null,
-        review_at: link.review_at ?? null,
-        tags,
-        source_type: link.source_type,
-        source_uid: link.source_uid,
         fetch_status: link.fetch_status,
         fetched_at: iso(link.fetched_at),
         created_at: iso(link.created_at),
         updated_at: iso(link.updated_at),
     };
-}
-
-async function list(userId, filters) {
-    const { rows, total } = await linksRepository.list(userId, filters);
-    return { links: rows.map(serializeLink), total };
 }
 
 async function get(userId, uid) {
@@ -73,98 +56,37 @@ async function get(userId, uid) {
     return serializeLink(link);
 }
 
-async function resolveTags(names, userId) {
-    if (!Array.isArray(names)) {
-        throw new ValidationError('tags must be an array of tag names');
-    }
-    const valid = [];
-    for (const name of names) {
-        const raw = typeof name === 'object' && name ? name.name : name;
-        const check = validateTagName(typeof raw === 'string' ? raw : '');
-        if (!check.valid) {
-            throw new ValidationError(
-                `Invalid tag name "${raw}": ${check.error}`
-            );
-        }
-        if (!valid.includes(check.name)) valid.push(check.name);
-    }
-    // One at a time: a path creates its missing ancestors.
-    const tags = [];
-    for (const name of valid) {
-        const [tag] = await Tag.findOrCreate({
-            where: { name, user_id: userId },
-            defaults: { name, user_id: userId },
-        });
-        tags.push(tag);
-    }
-    return tags;
-}
-
 const MAX_TITLE = 500;
-const IMPORT_MAX = 500;
-const SOURCE_TYPES = ['inbox_item', 'task', 'note'];
 
-// The idea, task or note a link is added from on purpose: one of the user's own.
-async function sourceOf(userId, item) {
-    if (item.source_type === undefined && item.source_uid === undefined) {
-        return {};
-    }
-    if (
-        !SOURCE_TYPES.includes(item.source_type) ||
-        typeof item.source_uid !== 'string' ||
-        !item.source_uid
-    ) {
-        throw new ValidationError(
-            `source_type must be one of ${SOURCE_TYPES.join(', ')}, with a source_uid`
-        );
-    }
-    const found = await linksRepository.sourceExists(
-        userId,
-        item.source_type,
-        item.source_uid
-    );
-    if (!found) throw new NotFoundError('Source not found');
-    return { source_type: item.source_type, source_uid: item.source_uid };
-}
-
-// A link given directly, without a text to find it in (import, add-on, agents,
-// or a task or note on purpose). The same page twice is one link: what it
-// already holds stays.
+// A page added to a project (Projet… of a capture, the add-on, agents).
+// The same address twice in a project is one page: what it holds stays.
 async function addOne(userId, item = {}) {
     const url = typeof item.url === 'string' ? normalizeUrl(item.url) : null;
     if (!url) throw new ValidationError('url must be an http(s) address');
-    const source = await sourceOf(userId, item);
     const projectId = await projectChange(userId, item.project_uid);
+    if (!projectId) {
+        throw new ValidationError(
+            'project_uid is required: a link is a page of a project'
+        );
+    }
     const existing = await linksRepository.findByUrl(userId, url, projectId);
     if (existing) return { link: existing, created: false };
     await linksRepository.lift(userId, url);
-    const { fields: state, invalid } = normalizeLinkStatus({
-        status: item.status ?? 'new',
-    });
-    if (invalid) {
-        throw new ValidationError(
-            `status must be one of ${LINK_STATUSES.join(', ')}`
-        );
-    }
     const title =
         typeof item.title === 'string'
             ? item.title.trim().slice(0, MAX_TITLE)
             : '';
     const note = typeof item.note === 'string' ? item.note.trim() : '';
-    const tags = item.tags?.length ? await resolveTags(item.tags, userId) : [];
-    let link;
     try {
-        link = await linksRepository.create({
+        const link = await linksRepository.create({
             user_id: userId,
             url,
             kind: classifyKind(url),
             title: title || null,
             note: note.slice(0, MAX_NOTE) || null,
-            status: state.status,
-            review_at: state.review_at ?? null,
             project_id: projectId,
-            ...source,
         });
+        return { link, created: true };
     } catch (error) {
         if (error.name !== 'SequelizeUniqueConstraintError') throw error;
         // Saved meanwhile by another request.
@@ -173,8 +95,6 @@ async function addOne(userId, item = {}) {
             created: false,
         };
     }
-    if (tags.length) await linksRepository.setTags(link, tags);
-    return { link, created: true };
 }
 
 async function create(userId, body) {
@@ -182,27 +102,6 @@ async function create(userId, body) {
     if (created) require('./jobs').enqueueFetch(link.id);
     const saved = await linksRepository.findByUid(userId, link.uid);
     return { link: serializeLink(saved), created };
-}
-
-// Bookmarks read by the client, by batches. One bad entry never stops the rest.
-async function importLinks(userId, items) {
-    if (!Array.isArray(items) || items.length > IMPORT_MAX) {
-        throw new ValidationError(
-            `items must be a list of at most ${IMPORT_MAX} bookmarks`
-        );
-    }
-    const result = { created: 0, existing: 0, invalid: 0 };
-    for (const item of items) {
-        try {
-            const { link, created } = await addOne(userId, item);
-            result[created ? 'created' : 'existing'] += 1;
-            if (created) require('./jobs').enqueueFetch(link.id);
-        } catch (error) {
-            if (!(error instanceof ValidationError)) throw error;
-            result.invalid += 1;
-        }
-    }
-    return result;
 }
 
 // What moving a link to another page resets: the reading was of the old one.
@@ -244,20 +143,16 @@ async function projectChange(userId, uid) {
     }
 }
 
-// The user's part of a link: title, address, note, status, project and tags.
-async function update(userId, uid, input = {}) {
+// The user's part of a page: title, address, note and project.
+async function update(userId, uid, body = {}) {
     const link = await linksRepository.findByUid(userId, uid);
     if (!link) throw new NotFoundError('Link not found');
-    const { fields: body, invalid } = normalizeLinkStatus(input);
-    if (invalid) {
-        throw new ValidationError(
-            `status must be one of ${LINK_STATUSES.join(', ')}`
-        );
-    }
     const changes = {};
     if ('title' in body) changes.title = titleChange(body.title);
     if ('project_uid' in body) {
-        changes.project_id = await projectChange(userId, body.project_uid);
+        const projectId = await projectChange(userId, body.project_uid);
+        if (!projectId) throw new ValidationError('project_uid is required');
+        changes.project_id = projectId;
     }
     if ('url' in body)
         Object.assign(changes, await addressChanges(link, body.url));
@@ -268,28 +163,10 @@ async function update(userId, uid, input = {}) {
         const note = body.note ? body.note.trim().slice(0, MAX_NOTE) : '';
         changes.note = note || null;
     }
-    if ('status' in body) {
-        changes.status = body.status;
-    }
-    if ('review_at' in body) {
-        if (
-            body.review_at !== null &&
-            body.review_at !== '' &&
-            !isDay(body.review_at)
-        ) {
-            throw new ValidationError(
-                'review_at must be a date (YYYY-MM-DD) or null'
-            );
-        }
-        changes.review_at = body.review_at || null;
-    }
-    const tags =
-        'tags' in body ? await resolveTags(body.tags, userId) : undefined;
     const previousUrl = link.url;
     if (Object.keys(changes).length) await link.update(changes);
-    if (tags) await link.setTags(tags);
     if (changes.url) {
-        // The old address may still be in the text the link came from.
+        // The old address may still be in a text.
         await linksRepository.exclude(userId, previousUrl);
         await linksRepository.lift(userId, changes.url);
         require('./jobs').enqueueFetch(link.id);
@@ -467,10 +344,8 @@ module.exports = {
     lookup,
     captureTask,
     taskName,
-    list,
     get,
     create,
-    importLinks,
     update,
     remove,
     serializeLink,

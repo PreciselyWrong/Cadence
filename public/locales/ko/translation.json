@@ -527,7 +527,8 @@
     "overdueBy": "{{days}}일 지남",
     "dueInDays": "{{days}}일 후 마감",
     "startedSuccessfully": "작업을 시작했습니다!",
-    "deleteConfirmMessage": "\"{{name}}\"을(를) 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+    "deleteConfirmMessage": "\"{{name}}\"을(를) 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+    "withLink": "링크 있음"
   },
   "timeline": {
     "activityTimeline": "활동 타임라인",
@@ -6258,5 +6259,16 @@
     "checkError": "페이지를 확인할 수 없습니다.",
     "copyMarkdown": "페이지를 Markdown으로 복사",
     "check": "페이지 확인"
+  },
+  "bookmarksImport": {
+    "title": "북마크 가져오기",
+    "hint": "Firefox 내보내기 파일(보관함 › 가져오기 및 백업 › 내보내기). 폴더 하나가 프로젝트의 페이지가 됩니다.",
+    "file": "북마크 파일",
+    "empty": "이 파일에 북마크가 없습니다.",
+    "folder": "폴더",
+    "project": "프로젝트",
+    "newProject": "새 프로젝트 « {{name}} »",
+    "error": "가져오기에 실패했습니다. 다시 시도하세요.",
+    "import": "가져오기"
   }
 }
