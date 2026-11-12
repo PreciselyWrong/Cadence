@@ -2,7 +2,7 @@
 
 Thin Linux shell around the Cadence web UI. Read `docs/fork/DESKTOP.md` first (decisions, limits).
 
-- `src-tauri/src/main.rs`: tray process and UI process (`--ui`); `sync.rs`: capture queue, inbox flush, notification polling; `config.rs`: config file; `shortcut.rs`: Wayland global shortcut through the XDG portal; `autostart.rs`: XDG autostart entry. `ui/`: local setup and quick-add pages.
+- `src-tauri/src/main.rs`: tray process and UI process (`--ui`); `sync.rs`: capture queue, inbox flush, notification polling and wording; `notify.rs`: native notifications over D-Bus (`notify-rust`, desktop-entry hint, "Ouvrir" button); `config.rs`: config file; `shortcut.rs`: Wayland global shortcut through the XDG portal; `autostart.rs`: XDG autostart entry. `ui/`: local setup and quick-add pages.
 - Build: `npm install && npm run build` (set `CARGO_BUILD_JOBS=6` on a busy machine).
 
 ## ⛔ Interdits

@@ -210,6 +210,42 @@ impl ServerNotification {
         }
     }
 
+    /// What the desktop shows. The three reminder kinds show the item's name with a short
+    /// French label; anything else keeps the server's text. A body that only repeats the
+    /// title is dropped.
+    fn alert(&self) -> Alert {
+        let data = self.data.as_ref();
+        let text = |key: &str| {
+            data.and_then(|d| d.get(key))
+                .and_then(serde_json::Value::as_str)
+        };
+        let reminder = match text("reason") {
+            Some("task_reminder") => Some(("taskName", "Rappel")),
+            Some("habit_reminder") => Some(("habitName", "Habitude")),
+            Some("defer_until_reached") => Some(("taskName", "Disponible maintenant")),
+            _ => None,
+        };
+        let named = reminder.and_then(|(name_key, label)| {
+            text(name_key)
+                .map(str::trim)
+                .filter(|name| !name.is_empty())
+                .map(|name| (name.to_string(), label.to_string()))
+        });
+        let (title, body) = named.unwrap_or_else(|| {
+            let body = self
+                .message
+                .clone()
+                .filter(|message| message.trim() != self.title.trim())
+                .unwrap_or_default();
+            (self.title.clone(), body)
+        });
+        Alert {
+            title,
+            body,
+            path: self.target_path(),
+        }
+    }
+
     /// Quiet hours are over for this notification (ISO 8601 UTC strings sort as text).
     fn released(&self, now_iso: &str) -> bool {
         self.deliver_after
@@ -293,14 +329,7 @@ pub fn poll_notifications(store: &Store, cfg: &Config) -> Vec<Alert> {
     let shown: Vec<Alert>;
     if state.baseline_done {
         let fresh = pick_fresh(&list.notifications, &state.seen, &now);
-        shown = fresh
-            .iter()
-            .map(|n| Alert {
-                title: n.title.clone(),
-                body: n.message.clone().unwrap_or_default(),
-                path: n.target_path(),
-            })
-            .collect();
+        shown = fresh.iter().map(|n| n.alert()).collect();
         let uids: Vec<String> = fresh.iter().map(|n| n.uid.clone()).collect();
         state.seen.extend(uids);
     } else {
@@ -434,6 +463,109 @@ mod tests {
             None
         );
         assert_eq!(notification("a", &[], None).target_path(), None);
+    }
+
+    fn with_data(
+        title: &str,
+        message: Option<&str>,
+        data: serde_json::Value,
+    ) -> ServerNotification {
+        ServerNotification {
+            title: title.to_string(),
+            message: message.map(str::to_string),
+            data: Some(data),
+            ..notification("a", &["desktop"], None)
+        }
+    }
+
+    #[test]
+    fn task_reminder_shows_the_task_name_and_a_short_label() {
+        let alert = with_data(
+            "Task reminder",
+            Some("Reminder: \"Buy bread\""),
+            serde_json::json!({ "reason": "task_reminder", "taskUid": "abc", "taskName": "Buy bread" }),
+        )
+        .alert();
+        assert_eq!(alert.title, "Buy bread");
+        assert_eq!(alert.body, "Rappel");
+        assert_eq!(alert.path.as_deref(), Some("/task/abc"));
+    }
+
+    #[test]
+    fn habit_reminder_shows_the_habit_name_and_a_short_label() {
+        let alert = with_data(
+            "Habit reminder",
+            Some("Time for your habit"),
+            serde_json::json!({ "reason": "habit_reminder", "habitUid": "h1", "habitName": "Stretch", "date": "2026-11-12" }),
+        )
+        .alert();
+        assert_eq!(alert.title, "Stretch");
+        assert_eq!(alert.body, "Habitude");
+    }
+
+    #[test]
+    fn deferred_task_shows_its_name_and_availability() {
+        let alert = with_data(
+            "Task available",
+            Some("Deferred task is now available"),
+            serde_json::json!({ "reason": "defer_until_reached", "taskUid": "t9", "taskName": "Call the bank", "deferUntil": "2026-11-12" }),
+        )
+        .alert();
+        assert_eq!(alert.title, "Call the bank");
+        assert_eq!(alert.body, "Disponible maintenant");
+        assert_eq!(alert.path.as_deref(), Some("/task/t9"));
+    }
+
+    #[test]
+    fn names_are_trimmed() {
+        let alert = with_data(
+            "Task reminder",
+            None,
+            serde_json::json!({ "reason": "task_reminder", "taskName": "  Buy bread \n" }),
+        )
+        .alert();
+        assert_eq!(alert.title, "Buy bread");
+    }
+
+    #[test]
+    fn a_blank_or_missing_name_keeps_the_server_text() {
+        let blank = with_data(
+            "Task reminder",
+            Some("Reminder: \"\""),
+            serde_json::json!({ "reason": "task_reminder", "taskName": "   " }),
+        )
+        .alert();
+        assert_eq!(blank.title, "Task reminder");
+        assert_eq!(blank.body, "Reminder: \"\"");
+
+        let missing = with_data(
+            "Task reminder",
+            Some("Reminder: \"x\""),
+            serde_json::json!({ "reason": "task_reminder" }),
+        )
+        .alert();
+        assert_eq!(missing.title, "Task reminder");
+        assert_eq!(missing.body, "Reminder: \"x\"");
+    }
+
+    #[test]
+    fn other_notifications_keep_the_server_title_and_message() {
+        let alert = with_data(
+            "New comment",
+            Some("Ana commented on your task"),
+            serde_json::json!({ "reason": "comment", "taskUid": "t1", "taskName": "Ignored" }),
+        )
+        .alert();
+        assert_eq!(alert.title, "New comment");
+        assert_eq!(alert.body, "Ana commented on your task");
+        assert_eq!(alert.path.as_deref(), Some("/task/t1"));
+    }
+
+    #[test]
+    fn a_body_repeating_the_title_is_dropped() {
+        let alert = with_data("Welcome", Some("Welcome"), serde_json::json!({})).alert();
+        assert_eq!(alert.title, "Welcome");
+        assert_eq!(alert.body, "");
     }
 
     #[test]

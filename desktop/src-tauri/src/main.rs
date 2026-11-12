@@ -11,6 +11,7 @@
 
 mod autostart;
 mod config;
+mod notify;
 mod shortcut;
 mod sync;
 
@@ -31,7 +32,6 @@ use tauri::{
     AppHandle, Manager, RunEvent, State, WebviewUrl, WebviewWindowBuilder,
 };
 use tauri_plugin_global_shortcut::{GlobalShortcutExt, ShortcutState};
-use tauri_plugin_notification::NotificationExt;
 
 const QUICK_FLAG: &str = "--quick";
 /// Start in the tray with no window (for autostart).
@@ -57,8 +57,6 @@ fn is_left_click(event: &TrayIconEvent) -> bool {
     )
 }
 
-/// Extra carried by a notification: the web UI route opened when it is clicked.
-const CLICK_PATH_KEY: &str = "path";
 /// Quick-add window (logical px): one input row, 12 px of margin around it.
 const QUICK_SIZE: (f64, f64) = (560.0, 76.0);
 const TICK: Duration = Duration::from_secs(2);
@@ -415,14 +413,11 @@ fn background_loop(app: AppHandle) {
         if last_poll.elapsed() >= Duration::from_secs(config.poll_seconds) {
             last_poll = Instant::now();
             for alert in sync::poll_notifications(&tray.store, &config) {
-                let mut notification = app.notification().builder().title(alert.title);
-                if !alert.body.is_empty() {
-                    notification = notification.body(alert.body);
-                }
-                if let Some(path) = alert.path {
-                    notification = notification.extra(CLICK_PATH_KEY, path);
-                }
-                if let Err(e) = notification.show() {
+                let tray_app = app.clone();
+                let shown = notify::show(alert, move |path| {
+                    tray_app.state::<Tray>().open_at("main", path);
+                });
+                if let Err(e) = shown {
                     eprintln!("notification not shown: {e}");
                 }
             }
@@ -502,7 +497,6 @@ fn run_tray(args: &[String]) {
                 tray.open("main");
             }
         }))
-        .plugin(tauri_plugin_notification::init())
         .plugin(
             tauri_plugin_global_shortcut::Builder::new()
                 .with_handler(|app, _shortcut, event| {
@@ -534,15 +528,6 @@ fn run_tray(args: &[String]) {
                 let retry = handle.clone();
                 thread::spawn(move || retry_tray(retry));
             }
-            // A click on a notification (the `default` action) opens the related item.
-            let on_click = handle.clone();
-            handle.notification().on_action(move |performed| {
-                let path = performed
-                    .notification()
-                    .and_then(|n| n.extra().get(CLICK_PATH_KEY))
-                    .and_then(|v| v.as_str());
-                on_click.state::<Tray>().open_at("main", path);
-            })?;
             start_shortcut(&handle, &shortcut);
             let tray = app.state::<Tray>();
             if quick_at_start {

@@ -17,7 +17,7 @@ Tauri 2 shell around the user's own Cadence server. It adds what a browser tab c
 | Quick add | `Ctrl+Alt+Space` (config `shortcut`) opens a small always-on-top field (560 x 76 px); Enter stores the capture and closes. On X11 the key is grabbed by the global-shortcut plugin; under Wayland it is bound through the XDG GlobalShortcuts portal (see below). |
 | Offline captures | The tray process posts the queue to `POST /api/inbox` (`Authorization: Bearer tt_...`, `source: "desktop"`) as soon as it can, then every 60 s while the server is unreachable. Each capture carries an `Idempotency-Key` (a uuid stored in its queue file), the same on every retry, so the server stores it once. |
 | Autostart | Settings checkbox, off by default. On writes `~/.config/autostart/cadence-desktop.desktop` (`Exec=... --background`, the AppImage file when run from one); off removes it. The file is the source of truth. |
-| Notifications | Every `poll_seconds` (60) `GET /api/notifications?includeRead=false&limit=20`; each unread notification whose `sources` contain `desktop` and whose `deliver_after` (quiet hours) has passed becomes a native notification once, deduplicated by notification `uid` (the last 500 are kept in `state.json`), window or not. Clicking it opens the main window on the related item (`data.taskUid` to `/task/<uid>`, `data.projectUid` to `/project/<uid>`, else the home page); an already open main window is retargeted and raised. The first poll only records a baseline. See [36-notifications.md](../36-notifications.md). |
+| Notifications | Every `poll_seconds` (60) `GET /api/notifications?includeRead=false&limit=20`; each unread notification whose `sources` contain `desktop` and whose `deliver_after` (quiet hours) has passed becomes a native notification once, deduplicated by notification `uid` (the last 500 are kept in `state.json`), window or not. Shown with `notify-rust` over D-Bus (`src-tauri/src/notify.rs`), not the Tauri plugin: app name `Cadence`, icon `cadence-desktop`, `desktop-entry` hint `ch.nicolab.cadence.desktop` so the shell links it to the installed app. Text by `data.reason`: `task_reminder` shows the task name and "Rappel", `habit_reminder` the habit name and "Habitude", `defer_until_reached` the task name and "Disponible maintenant"; any other notification keeps the server's title and message (the body is dropped when it repeats the title). A click on the body, or on the "Ouvrir" button shown when the notification has a related item, opens the main window on it (`data.taskUid` to `/task/<uid>`, `data.projectUid` to `/project/<uid>`, else the home page); an already open main window is retargeted and raised. The first poll only records a baseline. See [36-notifications.md](../36-notifications.md). |
 
 ## Configuration
 
@@ -56,6 +56,12 @@ The tray process drives its window processes over their stdin (`focus`, `goto /r
 ## Verification (2026-11-06, tray icon)
 
 On a private session bus with a mock `StatusNotifierWatcher` (the real KDE panel was not used, so a click on the panel itself remains to be seen): the item registers with `ItemIsMenu` false and a `Menu`; calling `Activate` starts `--ui main --path /today`; the `clicked` event of the menu's Réglages opens the settings. With no watcher at start, the app stays up and the icon registers as soon as one appears (the 5 s retry): KSNI fails where libappindicator waited, and without this the app would crash when it starts before the panel.
+
+## Verification (2026-11-12, Fedora 44, KDE Plasma 6 Wayland)
+
+- Notification look: a sample sent by `notify.rs` (ignored test `shows_a_sample_notification`) showed on the real Plasma as "Cadence" with the app icon, the task name as title, "Rappel" below and an "Ouvrir" button. Plasma drops the buttons once the sender leaves the bus, so the test stays up 20 s; the tray process is always up.
+- Click: against a mock `org.freedesktop.Notifications` on a private bus, `ActionInvoked` with `default` and with `open` both called back with `/task/abc`.
+- Not seen yet: a real server reminder through the installed RPM, and whether Plasma closes a notification kept in its history (each shown notification keeps one thread waiting for its click until it closes).
 
 ## Verification (2026-11-01, Fedora 44, KDE Plasma 6.7 Wayland)
 
