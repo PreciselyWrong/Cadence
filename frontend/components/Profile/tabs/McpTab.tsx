@@ -90,7 +90,7 @@ const McpTab: React.FC<McpTabProps> = ({ isActive }) => {
     return (
         <div>
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
-                <CpuChipIcon className="w-6 h-6 mr-3 text-indigo-500" />
+                <CpuChipIcon className="w-6 h-6 mr-3 text-primary" />
                 {t('profile.mcp.title', 'MCP Integration')}
             </h3>
 
@@ -105,7 +105,7 @@ const McpTab: React.FC<McpTabProps> = ({ isActive }) => {
                 <RemoteConnectorCard />
 
                 {/* Step 1: API Token */}
-                <section className="border-l-4 border-indigo-500 pl-4">
+                <section className="border-l-4 border-primary pl-4">
                     <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
                         {t('profile.mcp.step1.title', '1. Generate API Token')}
                     </h4>
@@ -117,14 +117,14 @@ const McpTab: React.FC<McpTabProps> = ({ isActive }) => {
                     </p>
                     <a
                         href="/profile?section=api-keys"
-                        className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        className="inline-flex items-center px-4 py-2 text-sm font-medium text-primary-on bg-primary rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                     >
                         {t('profile.mcp.step1.button', 'Go to API Keys →')}
                     </a>
                 </section>
 
                 {/* Step 2: Configuration */}
-                <section className="border-l-4 border-indigo-500 pl-4">
+                <section className="border-l-4 border-primary pl-4">
                     <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
                         {t(
                             'profile.mcp.step2.title',
@@ -146,7 +146,7 @@ const McpTab: React.FC<McpTabProps> = ({ isActive }) => {
                             <button
                                 onClick={copyConfig}
                                 disabled={loading}
-                                className="inline-flex items-center px-3 py-1 text-xs font-medium text-white bg-indigo-600 rounded hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                                className="inline-flex items-center px-3 py-1 text-xs font-medium text-primary-on bg-primary rounded hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50"
                             >
                                 <DocumentDuplicateIcon className="w-4 h-4 mr-1" />
                                 {t('profile.mcp.step2.copy', 'Copy')}
@@ -197,7 +197,7 @@ const McpTab: React.FC<McpTabProps> = ({ isActive }) => {
                 </section>
 
                 {/* Step 3: Available Tools */}
-                <section className="border-l-4 border-indigo-500 pl-4">
+                <section className="border-l-4 border-primary pl-4">
                     <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
                         {t(
                             'profile.mcp.step3.title',
@@ -236,7 +236,7 @@ const McpTab: React.FC<McpTabProps> = ({ isActive }) => {
                 </section>
 
                 {/* Step 4: Usage */}
-                <section className="border-l-4 border-indigo-500 pl-4">
+                <section className="border-l-4 border-primary pl-4">
                     <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
                         {t('profile.mcp.step4.title', '4. Start Using')}
                     </h4>

@@ -35,7 +35,7 @@ interface DatePopoverProps {
 const PARSE_DELAY_MS = 300;
 
 const itemClass =
-    'flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2 text-left text-sm text-gray-800 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:text-gray-100 dark:hover:bg-gray-700';
+    'flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2 text-left text-sm text-gray-800 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:text-gray-100 dark:hover:bg-gray-700';
 
 // Quick choices, a typed date ("demain 14h", "vendredi") with a live preview,
 // a month calendar and an optional time. One component for every date chip.
@@ -212,7 +212,7 @@ const DatePanel: React.FC<DatePanelProps> = ({
                         'Type a date: tomorrow 2pm, Friday…'
                     )}
                     aria-label={t('datePopover.typeLabel', 'Date in words')}
-                    className="w-full rounded-xl bg-gray-100 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-900 dark:text-gray-100"
+                    className="w-full rounded-xl bg-gray-100 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-900 dark:text-gray-100"
                 />
                 {typed.trim() && (
                     <p
@@ -306,11 +306,11 @@ const DatePanel: React.FC<DatePanelProps> = ({
                                 onClick={() =>
                                     onPick({ date: cell.date, time: keepTime })
                                 }
-                                className={`mx-auto h-8 w-8 rounded-full text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+                                className={`mx-auto h-8 w-8 rounded-full text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                                     selected
-                                        ? 'bg-indigo-600 font-medium text-white'
+                                        ? 'bg-primary font-medium text-primary-on'
                                         : isToday
-                                          ? 'font-semibold text-indigo-600 hover:bg-gray-200 dark:text-indigo-300 dark:hover:bg-gray-700'
+                                          ? 'font-semibold text-primary hover:bg-gray-200 dark:hover:bg-gray-700'
                                           : cell.inMonth
                                             ? 'text-gray-800 hover:bg-gray-200 dark:text-gray-100 dark:hover:bg-gray-700'
                                             : 'text-gray-400 hover:bg-gray-200 dark:text-gray-600 dark:hover:bg-gray-700'
@@ -337,13 +337,13 @@ const DatePanel: React.FC<DatePanelProps> = ({
                             type="time"
                             value={value.time ?? ''}
                             onChange={(e) => onTime(e.target.value || null)}
-                            className="rounded-lg bg-gray-100 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-900 dark:text-gray-100"
+                            className="rounded-lg bg-gray-100 px-2 py-1 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-900 dark:text-gray-100"
                         />
                         {value.time && (
                             <button
                                 type="button"
                                 onClick={() => onTime(null)}
-                                className="text-xs text-indigo-600 hover:underline dark:text-indigo-300"
+                                className="text-xs text-primary hover:underline"
                             >
                                 {t('datePopover.clearTime', 'Sans heure')}
                             </button>

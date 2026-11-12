@@ -709,10 +709,10 @@ const TaskDetailsHeader: React.FC<TaskDetailsHeaderProps> = ({
                         {onAiInsightsClick && (
                             <button
                                 onClick={onAiInsightsClick}
-                                className={`flex items-center h-7 flex-shrink-0 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg px-1.5 ${
+                                className={`flex items-center h-7 flex-shrink-0 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg px-1.5 ${
                                     aiInsightsActive
-                                        ? 'bg-indigo-100 dark:bg-indigo-900/40'
-                                        : 'bg-gray-100 dark:bg-gray-800 hover:bg-indigo-50 dark:hover:bg-indigo-900/30'
+                                        ? 'bg-primary-container'
+                                        : 'bg-gray-100 dark:bg-gray-800 hover:bg-primary/10'
                                 }`}
                                 aria-pressed={aiInsightsActive}
                                 aria-label={t(
@@ -727,7 +727,7 @@ const TaskDetailsHeader: React.FC<TaskDetailsHeaderProps> = ({
                                 <SparklesIcon
                                     className={`h-4 w-4 ${
                                         aiInsightsActive
-                                            ? 'text-indigo-600 dark:text-indigo-300'
+                                            ? 'text-primary'
                                             : 'text-gray-600 dark:text-gray-200'
                                     }`}
                                 />

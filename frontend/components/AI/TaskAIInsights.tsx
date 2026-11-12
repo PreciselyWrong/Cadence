@@ -112,7 +112,7 @@ const LinksCard: React.FC<{
                             href={safeHref(link.url)}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-indigo-300 dark:hover:border-indigo-500 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors"
+                            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-primary/50 hover:text-primary transition-colors"
                         >
                             {link.label}
                             <ArrowTopRightOnSquareIcon className="h-3 w-3 flex-shrink-0" />
@@ -296,7 +296,7 @@ const TaskAIInsights = forwardRef<TaskAIInsightsHandle, TaskAIInsightsProps>(
                 {/* Header */}
                 <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 dark:border-gray-800">
                     <div className="flex items-center gap-2">
-                        <SparklesIcon className="h-3.5 w-3.5 text-indigo-500 flex-shrink-0" />
+                        <SparklesIcon className="h-3.5 w-3.5 text-primary flex-shrink-0" />
                         <span className="text-xs font-semibold uppercase text-gray-600 dark:text-gray-300">
                             {t('aiAssistant.taskInsightsTitle', 'AI Insights')}
                         </span>
@@ -313,7 +313,7 @@ const TaskAIInsights = forwardRef<TaskAIInsightsHandle, TaskAIInsightsProps>(
                         <button
                             onClick={generate}
                             disabled={isLoading}
-                            className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded bg-primary-container text-primary hover:bg-primary/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {isLoading ? (
                                 <>
@@ -392,7 +392,7 @@ const TaskAIInsights = forwardRef<TaskAIInsightsHandle, TaskAIInsightsProps>(
                                     icon={LightBulbIcon}
                                     label={t('aiAssistant.taskInsight', 'About this task')}
                                     text={insights.insight}
-                                    colorClass="bg-indigo-50 dark:bg-indigo-900/20 border-indigo-100 dark:border-indigo-800/40 text-indigo-500 dark:text-indigo-400 [&_p:last-child]:text-indigo-900 [&_p:last-child]:dark:text-indigo-100"
+                                    colorClass="bg-primary-container border-primary/20 text-primary [&_p:last-child]:text-primary-on-container"
                                     delay={0}
                                 />
                             )}

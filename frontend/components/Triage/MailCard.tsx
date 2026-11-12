@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MailDecision, MailPayload } from '../../utils/triageService';
+import Button from '../Shared/ui/Button';
 
-const buttonBase =
-    'inline-flex min-h-[40px] items-center rounded-lg px-3 text-sm font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500';
-const secondary = `${buttonBase} text-gray-800 hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-800`;
-const primary = `${buttonBase} bg-indigo-600 text-white hover:bg-indigo-700`;
+// The reply link is an anchor, which Button cannot render: it keeps Button's look.
+const linkBase =
+    'inline-flex h-9 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg px-3.5 text-body-m font-medium transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary max-sm:min-h-[44px]';
+const linkPrimary = `${linkBase} bg-primary text-primary-on hover:bg-primary/90`;
+const linkSecondary = `${linkBase} text-surface-on ring-1 ring-inset ring-outline-variant hover:bg-surface-high`;
 const field =
     'mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-900';
 
@@ -79,19 +81,19 @@ const MailCard: React.FC<MailCardProps> = ({
 
     return (
         <div data-testid="mail-card">
-            <h2 className="text-[17px] font-semibold text-gray-900 dark:text-gray-50">
+            <h2 className="text-body font-semibold text-gray-900 dark:text-gray-50">
                 {payload.subject || t('triage.mail.noSubject', '(sans objet)')}
             </h2>
             {meta && (
-                <p className="mt-0.5 text-[13px] text-gray-600 dark:text-gray-300">
+                <p className="mt-0.5 text-body-m text-gray-600 dark:text-gray-300">
                     {meta}
                 </p>
             )}
-            <p className="mt-2 text-[15px] text-gray-900 dark:text-gray-100">
+            <p className="mt-2 text-body-m text-gray-900 dark:text-gray-100">
                 {payload.summary}
             </p>
             {payload.draft_excerpt && (
-                <p className="mt-2 whitespace-pre-line border-l-2 border-gray-200 pl-3 text-[13px] text-gray-600 dark:border-gray-700 dark:text-gray-300">
+                <p className="mt-2 whitespace-pre-line border-l-2 border-gray-200 pl-3 text-body-m text-gray-600 dark:border-gray-700 dark:text-gray-300">
                     <span className="font-semibold">
                         {t('triage.mail.draft', 'Brouillon prêt :')}
                     </span>{' '}
@@ -100,41 +102,41 @@ const MailCard: React.FC<MailCardProps> = ({
             )}
 
             <div className="mt-3 flex flex-wrap gap-2">
-                <button
-                    type="button"
-                    className={taskFirst ? primary : secondary}
+                <Button
+                    variant={taskFirst ? 'primary' : 'secondary'}
+                    size="md"
                     aria-expanded={taskForm}
                     onClick={() =>
                         taskForm ? setTaskForm(false) : openTaskForm()
                     }
                 >
                     {t('triage.mail.task', 'Tâche')}
-                </button>
+                </Button>
                 {replyUrl && (
                     <a
                         href={replyUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={taskFirst ? secondary : primary}
+                        className={taskFirst ? linkSecondary : linkPrimary}
                         onClick={() => decide('reply')}
                     >
                         {t('triage.mail.reply', 'Répondre')}
                     </a>
                 )}
-                <button
-                    type="button"
-                    className={secondary}
+                <Button
+                    variant="secondary"
+                    size="md"
                     onClick={() => decide('later')}
                 >
                     {t('triage.mail.later', 'Plus tard')}
-                </button>
-                <button
-                    type="button"
-                    className={secondary}
+                </Button>
+                <Button
+                    variant="secondary"
+                    size="md"
                     onClick={() => decide('dismiss')}
                 >
                     {t('triage.mail.dismiss', 'Ignorer')}
-                </button>
+                </Button>
             </div>
             {archiveAvailable && (
                 <label className="mt-2 flex min-h-[40px] items-center gap-2 text-sm text-gray-700 dark:text-gray-200">
@@ -172,9 +174,14 @@ const MailCard: React.FC<MailCardProps> = ({
                             className={field}
                         />
                     </label>
-                    <button type="submit" className={`${primary} mt-2`}>
+                    <Button
+                        type="submit"
+                        variant="primary"
+                        size="md"
+                        className="mt-2"
+                    >
                         {t('triage.mail.createTask', 'Créer la tâche')}
-                    </button>
+                    </Button>
                 </form>
             )}
         </div>

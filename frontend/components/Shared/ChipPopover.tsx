@@ -185,9 +185,9 @@ export function OptionList<V extends string | number | null>({
                         role="option"
                         aria-selected={selected}
                         onClick={() => onSelect(option.value)}
-                        className={`flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-left text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+                        className={`flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-left text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                             selected
-                                ? 'bg-indigo-50 font-medium text-indigo-900 dark:bg-indigo-500/15 dark:text-indigo-100'
+                                ? 'bg-primary-container font-medium text-primary-on-container'
                                 : 'text-gray-800 hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-700'
                         }`}
                     >

@@ -255,7 +255,7 @@ export const TaskEditorBody: React.FC<TaskEditorBodyProps> = ({
                         </div>
                     )
                 ) : isEditingNote ? (
-                    <div className="rounded-xl bg-gray-100 px-3 pt-2 text-sm text-gray-900 focus-within:ring-2 focus-within:ring-indigo-500 dark:bg-gray-900 dark:text-gray-100">
+                    <div className="rounded-xl bg-gray-100 px-3 pt-2 text-sm text-gray-900 focus-within:ring-2 focus-within:ring-primary dark:bg-gray-900 dark:text-gray-100">
                         <MarkdownEditor
                             value={note}
                             outlineKey={
@@ -295,7 +295,7 @@ export const TaskEditorBody: React.FC<TaskEditorBodyProps> = ({
                             )
                                 setIsEditingNote(true);
                         }}
-                        className="min-h-[3rem] cursor-text rounded-xl px-3 py-2 text-sm transition-colors hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:hover:bg-gray-900/50"
+                        className="min-h-[3rem] cursor-text rounded-xl px-3 py-2 text-sm transition-colors hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:hover:bg-gray-900/50"
                     >
                         {note.trim() ? (
                             <MarkdownRenderer
@@ -372,7 +372,7 @@ export const TaskEditorBody: React.FC<TaskEditorBodyProps> = ({
                         <button
                             type="button"
                             onClick={() => setAttachOpen(true)}
-                            className="inline-flex min-h-[40px] items-center gap-1.5 self-start rounded-lg px-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+                            className="inline-flex min-h-[40px] items-center gap-1.5 self-start rounded-lg px-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100"
                         >
                             <PaperClipIcon className="h-4 w-4" />
                             {t('capture.attach', 'Attach files')}

@@ -49,7 +49,7 @@ const MOD = isMac ? '⌘' : 'Ctrl+';
 const SHIFT = isMac ? '⇧' : 'Shift+';
 
 const buttonClass =
-    'inline-flex h-8 min-w-[2rem] flex-shrink-0 items-center justify-center rounded-md px-1.5 text-gray-600 hover:bg-gray-200 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white';
+    'inline-flex h-8 min-w-[2rem] flex-shrink-0 items-center justify-center rounded-md px-1.5 text-gray-600 hover:bg-gray-200 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white';
 
 const ToolButton: React.FC<{
     label: string;
@@ -159,7 +159,7 @@ const TablePicker: React.FC<{
                                 )}
                                 className={`h-5 w-5 rounded-sm border focus:outline-none ${
                                     lit
-                                        ? 'border-indigo-400 bg-indigo-100 dark:border-indigo-400 dark:bg-indigo-900/60'
+                                        ? 'border-primary bg-primary-container'
                                         : 'border-gray-300 bg-gray-50 dark:border-gray-600 dark:bg-gray-700'
                                 }`}
                                 onMouseDown={(e) => e.preventDefault()}

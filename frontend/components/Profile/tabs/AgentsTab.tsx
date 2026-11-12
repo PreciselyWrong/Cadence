@@ -367,7 +367,7 @@ const AgentsTab: React.FC<AgentsTabProps> = ({ isActive }) => {
                 <button
                     type="button"
                     onClick={addRule}
-                    className="h-10 rounded-lg px-3 text-sm font-semibold text-indigo-700 hover:bg-indigo-50 dark:text-indigo-300 dark:hover:bg-indigo-900/30"
+                    className="h-10 rounded-lg px-3 text-sm font-semibold text-primary hover:bg-primary/10"
                 >
                     {t('agents.triage.add', 'Ajouter une règle')}
                 </button>
@@ -417,7 +417,7 @@ const AgentsTab: React.FC<AgentsTabProps> = ({ isActive }) => {
                     type="button"
                     onClick={test}
                     disabled={busy}
-                    className="h-10 rounded-full px-5 text-sm font-semibold text-indigo-700 hover:bg-indigo-50 disabled:opacity-50 dark:text-indigo-300 dark:hover:bg-indigo-900/30"
+                    className="h-10 rounded-full px-5 text-sm font-semibold text-primary hover:bg-primary/10 disabled:opacity-50"
                 >
                     {t('agents.test.button', 'Tester la connexion')}
                 </button>
@@ -425,7 +425,7 @@ const AgentsTab: React.FC<AgentsTabProps> = ({ isActive }) => {
                     type="button"
                     onClick={save}
                     disabled={busy}
-                    className="h-10 rounded-full bg-indigo-600 px-5 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50"
+                    className="h-10 rounded-full bg-primary px-5 text-sm font-semibold text-primary-on hover:bg-primary/90 disabled:opacity-50"
                 >
                     {t('agents.save', 'Enregistrer')}
                 </button>
