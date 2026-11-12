@@ -13,6 +13,7 @@ import {
     saveTaskOrder,
 } from '../utils/tasksService';
 import { useIsMinimal } from '../hooks/useUiDensity';
+import PageHeader from './Shared/ui/PageHeader';
 import NewTask from './Task/NewTask';
 import CompletedTasksSection, {
     useCompletedTasks,
@@ -628,353 +629,763 @@ const Tasks: React.FC = () => {
                     isUpcomingView ? 'w-full' : 'w-full max-w-7xl mx-auto'
                 }
             >
-                {/* Title row with info button and filters dropdown on the right */}
-                <div
-                    className={`flex items-center justify-between gap-2 min-w-0 ${
-                        isUpcomingView ? 'mb-4 sm:mb-6' : 'mb-8'
-                    }`}
-                >
-                    <div className="flex items-center flex-1 min-w-0 gap-2">
-                        <h2
-                            className={`${isUpcomingView ? 'text-lg sm:text-xl' : 'text-2xl'} font-light truncate`}
-                        >
-                            {title}
-                        </h2>
-                        {tag && (
-                            <div className="ml-4 flex items-center space-x-2">
-                                <button
-                                    className="flex items-center space-x-1 px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600"
-                                    onClick={handleRemoveTag}
-                                >
-                                    <TagIcon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
-                                    <span className="text-xs text-gray-700 dark:text-gray-300">
-                                        {capitalize(tag)}
-                                    </span>
-                                    <XMarkIcon className="h-4 w-4 text-gray-600 dark:text-gray-300 hover:text-red-500" />
-                                </button>
-                            </div>
-                        )}
-                    </div>
-                    {/* Search button, show completed toggle, and sort dropdown */}
-                    <div
-                        className={`flex items-center gap-2 flex-shrink-0 ${
-                            isUpcomingView
-                                ? 'md:fixed md:right-4 md:top-20 md:px-3 md:py-2 md:z-20'
-                                : ''
-                        }`}
-                    >
-                        {!isUpcomingView && (
-                            <button
-                                onClick={() => setIsSearchExpanded((v) => !v)}
-                                className={`flex items-center transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset rounded-lg p-2 ${
-                                    isSearchExpanded
-                                        ? 'bg-blue-50/70 dark:bg-blue-900/20'
-                                        : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'
-                                }`}
-                                aria-expanded={isSearchExpanded}
-                                aria-label={
-                                    isSearchExpanded
-                                        ? t(
-                                              'common.hideSearch',
-                                              'Collapse search panel'
-                                          )
-                                        : t(
-                                              'common.showSearch',
-                                              'Show search input'
-                                          )
-                                }
-                                title={
-                                    isSearchExpanded
-                                        ? 'Hide search'
-                                        : 'Search Tasks'
-                                }
-                            >
-                                <MagnifyingGlassIcon className="h-5 w-5 text-gray-600 dark:text-gray-200" />
-                                <span className="sr-only">
-                                    {isSearchExpanded
-                                        ? 'Hide search'
-                                        : 'Search Tasks'}
-                                </span>
-                            </button>
-                        )}
-                        <IconSortDropdown
-                            options={sortOptions}
-                            value={orderBy}
-                            onChange={handleSortChange}
-                            ariaLabel={t('tasks.sortTasks', 'Sort tasks')}
-                            title={t('tasks.sortTasks', 'Sort tasks')}
-                            dropdownLabel={t('tasks.sortBy', 'Sort by')}
-                            align="right"
-                            footerContent={
-                                <div className="space-y-3">
-                                    {!isUpcomingView && (
-                                        <div>
-                                            <div className="px-3 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
-                                                {t('tasks.groupBy', 'Group by')}
-                                            </div>
-                                            <div className="py-1">
-                                                {(
-                                                    ['none', 'project'] as const
-                                                ).map((val) => (
+                {/* The page header of every page (PageHeader); Upcoming keeps
+                    its compact title row. */}
+                {!isUpcomingView ? (
+                    <PageHeader
+                        className="!px-0 !pt-0 mb-4"
+                        title={title}
+                        actions={
+                            <>
+                                {tag && (
+                                    <div className="ml-4 flex items-center space-x-2">
+                                        <button
+                                            className="flex items-center space-x-1 px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600"
+                                            onClick={handleRemoveTag}
+                                        >
+                                            <TagIcon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
+                                            <span className="text-xs text-gray-700 dark:text-gray-300">
+                                                {capitalize(tag)}
+                                            </span>
+                                            <XMarkIcon className="h-4 w-4 text-gray-600 dark:text-gray-300 hover:text-red-500" />
+                                        </button>
+                                    </div>
+                                )}
+                                {!isUpcomingView && (
+                                    <button
+                                        onClick={() =>
+                                            setIsSearchExpanded((v) => !v)
+                                        }
+                                        className={`flex items-center transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset rounded-lg p-2 ${
+                                            isSearchExpanded
+                                                ? 'bg-blue-50/70 dark:bg-blue-900/20'
+                                                : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'
+                                        }`}
+                                        aria-expanded={isSearchExpanded}
+                                        aria-label={
+                                            isSearchExpanded
+                                                ? t(
+                                                      'common.hideSearch',
+                                                      'Collapse search panel'
+                                                  )
+                                                : t(
+                                                      'common.showSearch',
+                                                      'Show search input'
+                                                  )
+                                        }
+                                        title={
+                                            isSearchExpanded
+                                                ? t(
+                                                      'common.hideSearch',
+                                                      'Hide search'
+                                                  )
+                                                : t(
+                                                      'ariaLabels.searchTasks',
+                                                      'Search tasks'
+                                                  )
+                                        }
+                                    >
+                                        <MagnifyingGlassIcon className="h-5 w-5 text-gray-600 dark:text-gray-200" />
+                                        <span className="sr-only">
+                                            {isSearchExpanded
+                                                ? t(
+                                                      'common.hideSearch',
+                                                      'Hide search'
+                                                  )
+                                                : t(
+                                                      'ariaLabels.searchTasks',
+                                                      'Search tasks'
+                                                  )}
+                                        </span>
+                                    </button>
+                                )}
+                                <IconSortDropdown
+                                    options={sortOptions}
+                                    value={orderBy}
+                                    onChange={handleSortChange}
+                                    ariaLabel={t(
+                                        'tasks.sortTasks',
+                                        'Sort tasks'
+                                    )}
+                                    title={t('tasks.sortTasks', 'Sort tasks')}
+                                    dropdownLabel={t('tasks.sortBy', 'Sort by')}
+                                    align="right"
+                                    footerContent={
+                                        <div className="space-y-3">
+                                            {!isUpcomingView && (
+                                                <div>
+                                                    <div className="px-3 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
+                                                        {t(
+                                                            'tasks.groupBy',
+                                                            'Group by'
+                                                        )}
+                                                    </div>
+                                                    <div className="py-1">
+                                                        {(
+                                                            [
+                                                                'none',
+                                                                'project',
+                                                            ] as const
+                                                        ).map((val) => (
+                                                            <button
+                                                                key={val}
+                                                                onClick={() => {
+                                                                    setGroupBy(
+                                                                        val
+                                                                    );
+                                                                    localStorage.setItem(
+                                                                        'tasks_group_by',
+                                                                        val
+                                                                    );
+                                                                }}
+                                                                className={`w-full text-left px-3 py-2 text-sm transition-colors flex items-center justify-between ${
+                                                                    groupBy ===
+                                                                    val
+                                                                        ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
+                                                                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                                                }`}
+                                                            >
+                                                                <span>
+                                                                    {val ===
+                                                                    'project'
+                                                                        ? t(
+                                                                              'tasks.groupByProject',
+                                                                              'Project'
+                                                                          )
+                                                                        : t(
+                                                                              'tasks.grouping.none',
+                                                                              'None'
+                                                                          )}
+                                                                </span>
+                                                                {groupBy ===
+                                                                    val && (
+                                                                    <CheckIcon className="h-4 w-4" />
+                                                                )}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+                                            <div>
+                                                <div className="px-3 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 border-t border-b border-gray-200 dark:border-gray-700">
+                                                    {t('tasks.show', 'Show')}
+                                                </div>
+                                                <div className="py-1 space-y-1">
+                                                    {[
+                                                        {
+                                                            key: 'active',
+                                                            label: t(
+                                                                'tasks.open',
+                                                                'Open'
+                                                            ),
+                                                        },
+                                                        {
+                                                            key: 'all',
+                                                            label: t(
+                                                                'tasks.all',
+                                                                'All'
+                                                            ),
+                                                        },
+                                                        {
+                                                            key: 'completed',
+                                                            label: t(
+                                                                'tasks.completed',
+                                                                'Completed'
+                                                            ),
+                                                        },
+                                                    ].map((opt) => {
+                                                        const isActive =
+                                                            (opt.key ===
+                                                                'all' &&
+                                                                status ===
+                                                                    null) ||
+                                                            (opt.key ===
+                                                                'completed' &&
+                                                                status ===
+                                                                    'completed') ||
+                                                            (opt.key ===
+                                                                'active' &&
+                                                                status ===
+                                                                    'active');
+                                                        return (
+                                                            <button
+                                                                key={opt.key}
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    if (
+                                                                        opt.key ===
+                                                                        'completed'
+                                                                    ) {
+                                                                        const params =
+                                                                            new URLSearchParams(
+                                                                                location.search
+                                                                            );
+                                                                        params.set(
+                                                                            'status',
+                                                                            'completed'
+                                                                        );
+                                                                        navigate(
+                                                                            {
+                                                                                pathname:
+                                                                                    location.pathname,
+                                                                                search: `?${params.toString()}`,
+                                                                            },
+                                                                            {
+                                                                                replace: true,
+                                                                            }
+                                                                        );
+                                                                    } else if (
+                                                                        opt.key ===
+                                                                        'all'
+                                                                    ) {
+                                                                        const params =
+                                                                            new URLSearchParams(
+                                                                                location.search
+                                                                            );
+                                                                        params.set(
+                                                                            'status',
+                                                                            'all'
+                                                                        );
+                                                                        navigate(
+                                                                            {
+                                                                                pathname:
+                                                                                    location.pathname,
+                                                                                search: `?${params.toString()}`,
+                                                                            },
+                                                                            {
+                                                                                replace: true,
+                                                                            }
+                                                                        );
+                                                                    } else {
+                                                                        const params =
+                                                                            new URLSearchParams(
+                                                                                location.search
+                                                                            );
+                                                                        params.delete(
+                                                                            'status'
+                                                                        );
+                                                                        navigate(
+                                                                            {
+                                                                                pathname:
+                                                                                    location.pathname,
+                                                                                search: `?${params.toString()}`,
+                                                                            },
+                                                                            {
+                                                                                replace: true,
+                                                                            }
+                                                                        );
+                                                                    }
+                                                                }}
+                                                                className={`w-full text-left px-3 py-2 text-sm transition-colors flex items-center justify-between ${
+                                                                    isActive
+                                                                        ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
+                                                                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                                                }`}
+                                                            >
+                                                                <span>
+                                                                    {opt.label}
+                                                                </span>
+                                                                {isActive && (
+                                                                    <CheckIcon className="h-4 w-4" />
+                                                                )}
+                                                            </button>
+                                                        );
+                                                    })}
+                                                    {/* « Avec un lien » (docs/37-links.md) */}
                                                     <button
-                                                        key={val}
+                                                        type="button"
+                                                        data-testid="tasks-with-link"
                                                         onClick={() => {
-                                                            setGroupBy(val);
-                                                            localStorage.setItem(
-                                                                'tasks_group_by',
-                                                                val
+                                                            const params =
+                                                                new URLSearchParams(
+                                                                    location.search
+                                                                );
+                                                            if (hasLink) {
+                                                                params.delete(
+                                                                    'has_link'
+                                                                );
+                                                            } else {
+                                                                params.set(
+                                                                    'has_link',
+                                                                    'true'
+                                                                );
+                                                            }
+                                                            navigate(
+                                                                {
+                                                                    pathname:
+                                                                        location.pathname,
+                                                                    search: `?${params.toString()}`,
+                                                                },
+                                                                {
+                                                                    replace: true,
+                                                                }
                                                             );
                                                         }}
-                                                        className={`w-full text-left px-3 py-2 text-sm transition-colors flex items-center justify-between ${
-                                                            groupBy === val
-                                                                ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
+                                                        className={`w-full flex items-center justify-between px-3 py-2 text-sm ${
+                                                            hasLink
+                                                                ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300'
                                                                 : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                                                         }`}
                                                     >
                                                         <span>
-                                                            {val === 'project'
-                                                                ? t(
-                                                                      'tasks.groupByProject',
-                                                                      'Project'
-                                                                  )
-                                                                : t(
-                                                                      'tasks.grouping.none',
-                                                                      'None'
-                                                                  )}
+                                                            {t(
+                                                                'tasks.withLink',
+                                                                'With a link'
+                                                            )}
                                                         </span>
-                                                        {groupBy === val && (
+                                                        {hasLink && (
                                                             <CheckIcon className="h-4 w-4" />
                                                         )}
                                                     </button>
-                                                ))}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div className="px-3 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 border-t border-b border-gray-200 dark:border-gray-700">
+                                                    {t(
+                                                        'tasks.direction',
+                                                        'Direction'
+                                                    )}
+                                                </div>
+                                                <div className="py-1">
+                                                    {[
+                                                        {
+                                                            key: 'asc',
+                                                            label: t(
+                                                                'tasks.ascending',
+                                                                'Ascending'
+                                                            ),
+                                                        },
+                                                        {
+                                                            key: 'desc',
+                                                            label: t(
+                                                                'tasks.descending',
+                                                                'Descending'
+                                                            ),
+                                                        },
+                                                    ].map((dir) => {
+                                                        const currentDirection =
+                                                            orderBy.split(
+                                                                ':'
+                                                            )[1] || 'asc';
+                                                        const isActive =
+                                                            currentDirection ===
+                                                            dir.key;
+                                                        return (
+                                                            <button
+                                                                key={dir.key}
+                                                                onClick={() => {
+                                                                    const [
+                                                                        field,
+                                                                    ] =
+                                                                        orderBy.split(
+                                                                            ':'
+                                                                        );
+                                                                    const newOrderBy = `${field}:${dir.key}`;
+                                                                    handleSortChange(
+                                                                        newOrderBy
+                                                                    );
+                                                                }}
+                                                                className={`w-full text-left px-3 py-2 text-sm transition-colors flex items-center justify-between ${
+                                                                    isActive
+                                                                        ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
+                                                                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                                                }`}
+                                                            >
+                                                                <span>
+                                                                    {dir.label}
+                                                                </span>
+                                                                {isActive && (
+                                                                    <CheckIcon className="h-4 w-4" />
+                                                                )}
+                                                            </button>
+                                                        );
+                                                    })}
+                                                </div>
                                             </div>
                                         </div>
-                                    )}
-                                    <div>
-                                        <div className="px-3 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 border-t border-b border-gray-200 dark:border-gray-700">
-                                            {t('tasks.show', 'Show')}
-                                        </div>
-                                        <div className="py-1 space-y-1">
-                                            {[
-                                                {
-                                                    key: 'active',
-                                                    label: t(
-                                                        'tasks.open',
-                                                        'Open'
-                                                    ),
-                                                },
-                                                {
-                                                    key: 'all',
-                                                    label: t(
-                                                        'tasks.all',
-                                                        'All'
-                                                    ),
-                                                },
-                                                {
-                                                    key: 'completed',
-                                                    label: t(
-                                                        'tasks.completed',
-                                                        'Completed'
-                                                    ),
-                                                },
-                                            ].map((opt) => {
-                                                const isActive =
-                                                    (opt.key === 'all' &&
-                                                        status === null) ||
-                                                    (opt.key === 'completed' &&
-                                                        status ===
-                                                            'completed') ||
-                                                    (opt.key === 'active' &&
-                                                        status === 'active');
-                                                return (
-                                                    <button
-                                                        key={opt.key}
-                                                        type="button"
-                                                        onClick={() => {
-                                                            if (
-                                                                opt.key ===
-                                                                'completed'
-                                                            ) {
-                                                                const params =
-                                                                    new URLSearchParams(
-                                                                        location.search
-                                                                    );
-                                                                params.set(
-                                                                    'status',
-                                                                    'completed'
-                                                                );
-                                                                navigate(
-                                                                    {
-                                                                        pathname:
-                                                                            location.pathname,
-                                                                        search: `?${params.toString()}`,
-                                                                    },
-                                                                    {
-                                                                        replace: true,
-                                                                    }
-                                                                );
-                                                            } else if (
-                                                                opt.key ===
-                                                                'all'
-                                                            ) {
-                                                                const params =
-                                                                    new URLSearchParams(
-                                                                        location.search
-                                                                    );
-                                                                params.set(
-                                                                    'status',
-                                                                    'all'
-                                                                );
-                                                                navigate(
-                                                                    {
-                                                                        pathname:
-                                                                            location.pathname,
-                                                                        search: `?${params.toString()}`,
-                                                                    },
-                                                                    {
-                                                                        replace: true,
-                                                                    }
-                                                                );
-                                                            } else {
-                                                                const params =
-                                                                    new URLSearchParams(
-                                                                        location.search
-                                                                    );
-                                                                params.delete(
-                                                                    'status'
-                                                                );
-                                                                navigate(
-                                                                    {
-                                                                        pathname:
-                                                                            location.pathname,
-                                                                        search: `?${params.toString()}`,
-                                                                    },
-                                                                    {
-                                                                        replace: true,
-                                                                    }
-                                                                );
-                                                            }
-                                                        }}
-                                                        className={`w-full text-left px-3 py-2 text-sm transition-colors flex items-center justify-between ${
-                                                            isActive
-                                                                ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                                                                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                                                        }`}
-                                                    >
-                                                        <span>{opt.label}</span>
-                                                        {isActive && (
-                                                            <CheckIcon className="h-4 w-4" />
-                                                        )}
-                                                    </button>
-                                                );
-                                            })}
-                                            {/* « Avec un lien » (docs/37-links.md) */}
-                                            <button
-                                                type="button"
-                                                data-testid="tasks-with-link"
-                                                onClick={() => {
-                                                    const params =
-                                                        new URLSearchParams(
-                                                            location.search
-                                                        );
-                                                    if (hasLink) {
-                                                        params.delete(
-                                                            'has_link'
-                                                        );
-                                                    } else {
-                                                        params.set(
-                                                            'has_link',
-                                                            'true'
-                                                        );
-                                                    }
-                                                    navigate(
-                                                        {
-                                                            pathname:
-                                                                location.pathname,
-                                                            search: `?${params.toString()}`,
-                                                        },
-                                                        { replace: true }
-                                                    );
-                                                }}
-                                                className={`w-full flex items-center justify-between px-3 py-2 text-sm ${
-                                                    hasLink
-                                                        ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300'
-                                                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                                                }`}
-                                            >
-                                                <span>
-                                                    {t(
-                                                        'tasks.withLink',
-                                                        'With a link'
-                                                    )}
-                                                </span>
-                                                {hasLink && (
-                                                    <CheckIcon className="h-4 w-4" />
-                                                )}
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div className="px-3 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 border-t border-b border-gray-200 dark:border-gray-700">
-                                            {t('tasks.direction', 'Direction')}
-                                        </div>
-                                        <div className="py-1">
-                                            {[
-                                                {
-                                                    key: 'asc',
-                                                    label: t(
-                                                        'tasks.ascending',
-                                                        'Ascending'
-                                                    ),
-                                                },
-                                                {
-                                                    key: 'desc',
-                                                    label: t(
-                                                        'tasks.descending',
-                                                        'Descending'
-                                                    ),
-                                                },
-                                            ].map((dir) => {
-                                                const currentDirection =
-                                                    orderBy.split(':')[1] ||
-                                                    'asc';
-                                                const isActive =
-                                                    currentDirection ===
-                                                    dir.key;
-                                                return (
-                                                    <button
-                                                        key={dir.key}
-                                                        onClick={() => {
-                                                            const [field] =
-                                                                orderBy.split(
-                                                                    ':'
-                                                                );
-                                                            const newOrderBy = `${field}:${dir.key}`;
-                                                            handleSortChange(
-                                                                newOrderBy
-                                                            );
-                                                        }}
-                                                        className={`w-full text-left px-3 py-2 text-sm transition-colors flex items-center justify-between ${
-                                                            isActive
-                                                                ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                                                                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                                                        }`}
-                                                    >
-                                                        <span>{dir.label}</span>
-                                                        {isActive && (
-                                                            <CheckIcon className="h-4 w-4" />
-                                                        )}
-                                                    </button>
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
+                                    }
+                                />
+                            </>
+                        }
+                    />
+                ) : (
+                    <div
+                        className={`flex items-center justify-between gap-2 min-w-0 ${
+                            isUpcomingView ? 'mb-4 sm:mb-6' : 'mb-8'
+                        }`}
+                    >
+                        <div className="flex items-center flex-1 min-w-0 gap-2">
+                            <h2
+                                className={`${isUpcomingView ? 'text-lg sm:text-xl' : 'text-2xl'} font-light truncate`}
+                            >
+                                {title}
+                            </h2>
+                            {tag && (
+                                <div className="ml-4 flex items-center space-x-2">
+                                    <button
+                                        className="flex items-center space-x-1 px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600"
+                                        onClick={handleRemoveTag}
+                                    >
+                                        <TagIcon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
+                                        <span className="text-xs text-gray-700 dark:text-gray-300">
+                                            {capitalize(tag)}
+                                        </span>
+                                        <XMarkIcon className="h-4 w-4 text-gray-600 dark:text-gray-300 hover:text-red-500" />
+                                    </button>
                                 </div>
-                            }
-                        />
+                            )}
+                        </div>
+                        {/* Search button, show completed toggle, and sort dropdown */}
+                        <div
+                            className={`flex items-center gap-2 flex-shrink-0 ${
+                                isUpcomingView
+                                    ? 'md:fixed md:right-4 md:top-20 md:px-3 md:py-2 md:z-20'
+                                    : ''
+                            }`}
+                        >
+                            {!isUpcomingView && (
+                                <button
+                                    onClick={() =>
+                                        setIsSearchExpanded((v) => !v)
+                                    }
+                                    className={`flex items-center transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset rounded-lg p-2 ${
+                                        isSearchExpanded
+                                            ? 'bg-blue-50/70 dark:bg-blue-900/20'
+                                            : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'
+                                    }`}
+                                    aria-expanded={isSearchExpanded}
+                                    aria-label={
+                                        isSearchExpanded
+                                            ? t(
+                                                  'common.hideSearch',
+                                                  'Collapse search panel'
+                                              )
+                                            : t(
+                                                  'common.showSearch',
+                                                  'Show search input'
+                                              )
+                                    }
+                                    title={
+                                        isSearchExpanded
+                                            ? t(
+                                                  'common.hideSearch',
+                                                  'Hide search'
+                                              )
+                                            : t(
+                                                  'ariaLabels.searchTasks',
+                                                  'Search tasks'
+                                              )
+                                    }
+                                >
+                                    <MagnifyingGlassIcon className="h-5 w-5 text-gray-600 dark:text-gray-200" />
+                                    <span className="sr-only">
+                                        {isSearchExpanded
+                                            ? t(
+                                                  'common.hideSearch',
+                                                  'Hide search'
+                                              )
+                                            : t(
+                                                  'ariaLabels.searchTasks',
+                                                  'Search tasks'
+                                              )}
+                                    </span>
+                                </button>
+                            )}
+                            <IconSortDropdown
+                                options={sortOptions}
+                                value={orderBy}
+                                onChange={handleSortChange}
+                                ariaLabel={t('tasks.sortTasks', 'Sort tasks')}
+                                title={t('tasks.sortTasks', 'Sort tasks')}
+                                dropdownLabel={t('tasks.sortBy', 'Sort by')}
+                                align="right"
+                                footerContent={
+                                    <div className="space-y-3">
+                                        {!isUpcomingView && (
+                                            <div>
+                                                <div className="px-3 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
+                                                    {t(
+                                                        'tasks.groupBy',
+                                                        'Group by'
+                                                    )}
+                                                </div>
+                                                <div className="py-1">
+                                                    {(
+                                                        [
+                                                            'none',
+                                                            'project',
+                                                        ] as const
+                                                    ).map((val) => (
+                                                        <button
+                                                            key={val}
+                                                            onClick={() => {
+                                                                setGroupBy(val);
+                                                                localStorage.setItem(
+                                                                    'tasks_group_by',
+                                                                    val
+                                                                );
+                                                            }}
+                                                            className={`w-full text-left px-3 py-2 text-sm transition-colors flex items-center justify-between ${
+                                                                groupBy === val
+                                                                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
+                                                                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                                            }`}
+                                                        >
+                                                            <span>
+                                                                {val ===
+                                                                'project'
+                                                                    ? t(
+                                                                          'tasks.groupByProject',
+                                                                          'Project'
+                                                                      )
+                                                                    : t(
+                                                                          'tasks.grouping.none',
+                                                                          'None'
+                                                                      )}
+                                                            </span>
+                                                            {groupBy ===
+                                                                val && (
+                                                                <CheckIcon className="h-4 w-4" />
+                                                            )}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                        <div>
+                                            <div className="px-3 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 border-t border-b border-gray-200 dark:border-gray-700">
+                                                {t('tasks.show', 'Show')}
+                                            </div>
+                                            <div className="py-1 space-y-1">
+                                                {[
+                                                    {
+                                                        key: 'active',
+                                                        label: t(
+                                                            'tasks.open',
+                                                            'Open'
+                                                        ),
+                                                    },
+                                                    {
+                                                        key: 'all',
+                                                        label: t(
+                                                            'tasks.all',
+                                                            'All'
+                                                        ),
+                                                    },
+                                                    {
+                                                        key: 'completed',
+                                                        label: t(
+                                                            'tasks.completed',
+                                                            'Completed'
+                                                        ),
+                                                    },
+                                                ].map((opt) => {
+                                                    const isActive =
+                                                        (opt.key === 'all' &&
+                                                            status === null) ||
+                                                        (opt.key ===
+                                                            'completed' &&
+                                                            status ===
+                                                                'completed') ||
+                                                        (opt.key === 'active' &&
+                                                            status ===
+                                                                'active');
+                                                    return (
+                                                        <button
+                                                            key={opt.key}
+                                                            type="button"
+                                                            onClick={() => {
+                                                                if (
+                                                                    opt.key ===
+                                                                    'completed'
+                                                                ) {
+                                                                    const params =
+                                                                        new URLSearchParams(
+                                                                            location.search
+                                                                        );
+                                                                    params.set(
+                                                                        'status',
+                                                                        'completed'
+                                                                    );
+                                                                    navigate(
+                                                                        {
+                                                                            pathname:
+                                                                                location.pathname,
+                                                                            search: `?${params.toString()}`,
+                                                                        },
+                                                                        {
+                                                                            replace: true,
+                                                                        }
+                                                                    );
+                                                                } else if (
+                                                                    opt.key ===
+                                                                    'all'
+                                                                ) {
+                                                                    const params =
+                                                                        new URLSearchParams(
+                                                                            location.search
+                                                                        );
+                                                                    params.set(
+                                                                        'status',
+                                                                        'all'
+                                                                    );
+                                                                    navigate(
+                                                                        {
+                                                                            pathname:
+                                                                                location.pathname,
+                                                                            search: `?${params.toString()}`,
+                                                                        },
+                                                                        {
+                                                                            replace: true,
+                                                                        }
+                                                                    );
+                                                                } else {
+                                                                    const params =
+                                                                        new URLSearchParams(
+                                                                            location.search
+                                                                        );
+                                                                    params.delete(
+                                                                        'status'
+                                                                    );
+                                                                    navigate(
+                                                                        {
+                                                                            pathname:
+                                                                                location.pathname,
+                                                                            search: `?${params.toString()}`,
+                                                                        },
+                                                                        {
+                                                                            replace: true,
+                                                                        }
+                                                                    );
+                                                                }
+                                                            }}
+                                                            className={`w-full text-left px-3 py-2 text-sm transition-colors flex items-center justify-between ${
+                                                                isActive
+                                                                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
+                                                                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                                            }`}
+                                                        >
+                                                            <span>
+                                                                {opt.label}
+                                                            </span>
+                                                            {isActive && (
+                                                                <CheckIcon className="h-4 w-4" />
+                                                            )}
+                                                        </button>
+                                                    );
+                                                })}
+                                                {/* « Avec un lien » (docs/37-links.md) */}
+                                                <button
+                                                    type="button"
+                                                    data-testid="tasks-with-link"
+                                                    onClick={() => {
+                                                        const params =
+                                                            new URLSearchParams(
+                                                                location.search
+                                                            );
+                                                        if (hasLink) {
+                                                            params.delete(
+                                                                'has_link'
+                                                            );
+                                                        } else {
+                                                            params.set(
+                                                                'has_link',
+                                                                'true'
+                                                            );
+                                                        }
+                                                        navigate(
+                                                            {
+                                                                pathname:
+                                                                    location.pathname,
+                                                                search: `?${params.toString()}`,
+                                                            },
+                                                            { replace: true }
+                                                        );
+                                                    }}
+                                                    className={`w-full flex items-center justify-between px-3 py-2 text-sm ${
+                                                        hasLink
+                                                            ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300'
+                                                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                                    }`}
+                                                >
+                                                    <span>
+                                                        {t(
+                                                            'tasks.withLink',
+                                                            'With a link'
+                                                        )}
+                                                    </span>
+                                                    {hasLink && (
+                                                        <CheckIcon className="h-4 w-4" />
+                                                    )}
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div className="px-3 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 border-t border-b border-gray-200 dark:border-gray-700">
+                                                {t(
+                                                    'tasks.direction',
+                                                    'Direction'
+                                                )}
+                                            </div>
+                                            <div className="py-1">
+                                                {[
+                                                    {
+                                                        key: 'asc',
+                                                        label: t(
+                                                            'tasks.ascending',
+                                                            'Ascending'
+                                                        ),
+                                                    },
+                                                    {
+                                                        key: 'desc',
+                                                        label: t(
+                                                            'tasks.descending',
+                                                            'Descending'
+                                                        ),
+                                                    },
+                                                ].map((dir) => {
+                                                    const currentDirection =
+                                                        orderBy.split(':')[1] ||
+                                                        'asc';
+                                                    const isActive =
+                                                        currentDirection ===
+                                                        dir.key;
+                                                    return (
+                                                        <button
+                                                            key={dir.key}
+                                                            onClick={() => {
+                                                                const [field] =
+                                                                    orderBy.split(
+                                                                        ':'
+                                                                    );
+                                                                const newOrderBy = `${field}:${dir.key}`;
+                                                                handleSortChange(
+                                                                    newOrderBy
+                                                                );
+                                                            }}
+                                                            className={`w-full text-left px-3 py-2 text-sm transition-colors flex items-center justify-between ${
+                                                                isActive
+                                                                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
+                                                                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                                            }`}
+                                                        >
+                                                            <span>
+                                                                {dir.label}
+                                                            </span>
+                                                            {isActive && (
+                                                                <CheckIcon className="h-4 w-4" />
+                                                            )}
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            />
+                        </div>
                     </div>
-                </div>
-
+                )}
                 {/* Search input section, collapsible - hidden in upcoming view */}
                 {!isUpcomingView && (
                     <div

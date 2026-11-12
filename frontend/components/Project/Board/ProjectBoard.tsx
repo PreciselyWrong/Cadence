@@ -22,9 +22,8 @@ import {
 import ConfirmDialog from '../../Shared/ConfirmDialog';
 import TaskCardBody, { taskCardClass } from '../../Shared/task/TaskCardBody';
 import TaskChip from '../../Shared/task/TaskChip';
-import { dueDayLabel, isDueLate } from '../../Shared/task/dueLabel';
+import { dueDayLabel, isDueLate, localToday } from '../../Shared/task/dueLabel';
 import { useTaskPane } from '../../../contexts/TaskPaneContext';
-import { getTodayDateString } from '../../../utils/dateUtils';
 import { useToast } from '../../Shared/ToastContext';
 
 interface ProjectBoardProps {
@@ -75,7 +74,7 @@ const ProjectBoard: React.FC<ProjectBoardProps> = ({
     t,
 }) => {
     const { openTaskUid } = useTaskPane();
-    const today = getTodayDateString();
+    const today = localToday();
     const { i18n } = useTranslation();
     const language = i18n?.language ?? 'en';
     const { showErrorToast } = useToast();

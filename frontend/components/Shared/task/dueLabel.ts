@@ -47,3 +47,10 @@ export const isDueLate = (
     today: string,
     done: boolean
 ): boolean => !done && !!dueDay && dueDay.slice(0, 10) < today;
+
+// Today's YYYY-MM-DD in local time.
+export const localToday = (now: Date = new Date()): string => {
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    return `${now.getFullYear()}-${mm}-${dd}`;
+};

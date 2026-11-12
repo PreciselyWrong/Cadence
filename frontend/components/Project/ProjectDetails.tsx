@@ -88,6 +88,7 @@ import {
 } from '../../constants/taskStatus';
 import { saveProjectAsTemplate } from '../../utils/templatesService';
 import { useTaskPane } from '../../contexts/TaskPaneContext';
+import Segmented from '../Shared/ui/Segmented';
 import { comparePinnedTasks } from '../../utils/taskPin';
 
 type ProjectViewTab = 'tasks' | 'outline' | 'timeline' | 'board' | 'calendar';
@@ -164,6 +165,10 @@ const ProjectDetails: React.FC = () => {
             saveProjectView(next === 'tasks' ? 'list' : next);
         }
     };
+    // "Tasks 4" on the view switch: the open tasks of the project.
+    const openTaskCount = tasks.filter(
+        (task) => !isTaskCompleted(task.status)
+    ).length;
     useEffect(() => {
         if (!isMinimal || !projectViewLoaded) return;
         // `gallery` belongs to the Links and Notes pages, never a project.
@@ -1084,44 +1089,48 @@ const ProjectDetails: React.FC = () => {
                                 inside their row, so the actions never push
                                 the page wider than the screen. */}
                             <div className="flex items-center justify-between gap-2 min-h-[2.5rem]">
-                                <div className="flex min-w-0 items-center gap-4 sm:gap-6 self-stretch overflow-x-auto scrollbar-hide pl-2 sm:pl-3">
-                                    {projectViewTabs(isMinimal).map((tab) => (
-                                        <button
-                                            key={tab}
-                                            type="button"
-                                            aria-pressed={view === tab}
-                                            data-testid={`project-view-${tab}`}
-                                            onClick={() => changeView(tab)}
-                                            className={`relative flex items-center self-stretch py-2.5 text-sm font-medium ${
-                                                view === tab
-                                                    ? 'text-gray-900 dark:text-gray-100 after:absolute after:bottom-0 after:left-px after:right-px after:h-0.5 after:rounded-full after:bg-gray-900 dark:after:bg-gray-100'
-                                                    : 'text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200'
-                                            }`}
-                                        >
-                                            {tab === 'tasks'
-                                                ? t('tasks.title', 'Tasks')
-                                                : tab === 'outline'
-                                                  ? t(
-                                                        'outline.title',
-                                                        'Outline'
-                                                    )
-                                                  : tab === 'board'
-                                                    ? t(
-                                                          'projectBoard.title',
-                                                          'Board'
-                                                      )
-                                                    : tab === 'calendar'
+                                <Segmented
+                                    aria-label={t(
+                                        'project.views',
+                                        'Project views'
+                                    )}
+                                    selected={view}
+                                    onSelect={(id) =>
+                                        changeView(id as ProjectViewTab)
+                                    }
+                                    options={projectViewTabs(isMinimal).map(
+                                        (tab) => ({
+                                            id: tab,
+                                            testId: `project-view-${tab}`,
+                                            label:
+                                                tab === 'tasks'
+                                                    ? t('tasks.title', 'Tasks')
+                                                    : tab === 'outline'
                                                       ? t(
-                                                            'viewType.calendar',
-                                                            'Calendar'
+                                                            'outline.title',
+                                                            'Outline'
                                                         )
-                                                      : t(
-                                                            'projectTimeline.title',
-                                                            'Timeline'
-                                                        )}
-                                        </button>
-                                    ))}
-                                </div>
+                                                      : tab === 'board'
+                                                        ? t(
+                                                              'projectBoard.title',
+                                                              'Board'
+                                                          )
+                                                        : tab === 'calendar'
+                                                          ? t(
+                                                                'viewType.calendar',
+                                                                'Calendar'
+                                                            )
+                                                          : t(
+                                                                'projectTimeline.title',
+                                                                'Timeline'
+                                                            ),
+                                            count:
+                                                tab === 'tasks'
+                                                    ? openTaskCount
+                                                    : undefined,
+                                        })
+                                    )}
+                                />
 
                                 {
                                     <div className="flex shrink-0 items-center justify-end gap-2 sm:gap-4">
