@@ -7,6 +7,10 @@
     <!-- Lecture du résumé en arrière-plan : service média au premier plan (type mediaPlayback). -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <!-- Notifications instantanées des agents : flux du serveur gardé ouvert (type specialUse, LiveStreamService). -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <!-- Réglages › Notifications : demander l'exclusion de l'optimisation de batterie pour garder le flux en veille. -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!-- Rappels à l'heure près ; sans cette permission accordée, les alarmes gardent une fenêtre de ±1 minute. -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
@@ -136,6 +140,15 @@
             <intent-filter>
                 <action android:name="androidx.media3.session.MediaSessionService" />
             </intent-filter>
+        </service>
+
+        <service
+            android:name=".live.LiveStreamService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Keeps a server-sent events connection open to the user's own self-hosted Cadence server so messages from their agents appear at once, without a third-party push service." />
         </service>
 
         <receiver

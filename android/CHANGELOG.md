@@ -1,3 +1,8 @@
+## [1.20.0] — 12 novembre 2026
+
+- Les messages des agents (plugin Hermes…) arrivent aussitôt en notification : le téléphone garde une connexion ouverte avec le serveur. Toucher le message ouvre la page du plugin sur ce message, ou la tâche concernée.
+- Réglages › Notifications › Agents : interrupteur « Notifications instantanées des agents » et lien pour exclure Cadence de l'optimisation de batterie ; la notification permanente « Connexion aux agents » peut être masquée.
+
 ## [1.19.0] — 12 novembre 2026
 
 - Réglages › Résumé et Agents : la signature et le profil brouillons disparaissent, rien ne s'en servait.

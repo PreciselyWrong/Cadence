@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.os.Bundle
+import ch.nicolab.cadence.tasks.live.LiveStream
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -23,6 +24,8 @@ object TasksBackground {
         SyncScheduler.schedulePeriodic(context)
         SyncScheduler.requestNow(context, restart = true)
         NetworkMonitor.start(context)
+        // Notifications instantanées des agents : le service suit la connexion et son réglage.
+        LiveStream.watch(context)
         (context.applicationContext as? Application)?.let(::watchForeground)
         val habits = HabitSyncRegistry.storage ?: return
         // Une saisie d'habitude (écran, widget, rappel) laisse une écriture en attente : on demande un passage.
@@ -43,6 +46,8 @@ object TasksBackground {
             object : Application.ActivityLifecycleCallbacks {
                 override fun onActivityStarted(activity: Activity) {
                     if (gate.onStart()) SyncScheduler.requestNow(app)
+                    // L'app visible peut relancer le service du flux qu'Android aurait arrêté.
+                    scope.launch { LiveStream.ensure(app) }
                 }
 
                 override fun onActivityStopped(activity: Activity) = gate.onStop()

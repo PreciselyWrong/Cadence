@@ -10,6 +10,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.glance.appwidget.updateAll
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
+import ch.nicolab.cadence.tasks.live.LiveStream
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.reminder.TaskReminderScheduler.EXTRA_REMINDER_AT
 import ch.nicolab.cadence.tasks.reminder.TaskReminderScheduler.EXTRA_TASK_UID
@@ -102,6 +103,8 @@ class TaskReminderReceiver : BroadcastReceiver() {
 class TaskReminderBootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         runAsync {
+            // Démarrage du téléphone ou mise à jour de l'app : Android y permet de lancer le service du flux.
+            LiveStream.ensure(context)
             TaskReminderScheduler.resync(context)
             TasksWidgetUpdater.scheduleMidnight(context)
         }

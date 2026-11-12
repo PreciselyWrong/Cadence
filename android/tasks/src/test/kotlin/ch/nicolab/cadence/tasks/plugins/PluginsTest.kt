@@ -148,6 +148,7 @@ class PluginsTest {
         val item = PluginMenuItem("hello", "Hello", "/plugins/hello", "index page.html")
         assertEquals("https://cadence.example/api/plugins/hello/ui/index%20page.html", PluginUrls.page("https://cadence.example/", item))
         assertEquals("http://10.0.0.2:3002/api/plugins/hello/ui/index%20page.html", PluginUrls.page("http://10.0.0.2:3002", item))
+        assertEquals("https://cadence.example/api/plugins/hello/ui/index%20page.html?msg=m1", PluginUrls.page("https://cadence.example", item, "?msg=m1"))
     }
 
     @Test

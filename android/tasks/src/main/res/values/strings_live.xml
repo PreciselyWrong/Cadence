@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Notifications instantanées des agents, par le flux du serveur (docs/36-notifications.md, Live stream). -->
+<resources>
+    <string name="live_channel_agents">Agents</string>
+    <string name="live_channel_connection">Connexion aux agents</string>
+    <string name="live_channel_connection_description">Notification permanente qui garde le téléphone à l’écoute des agents. Vous pouvez la masquer sans couper les messages.</string>
+    <string name="live_ongoing_text">À l’écoute des agents. Toucher pour masquer cette notification.</string>
+</resources>

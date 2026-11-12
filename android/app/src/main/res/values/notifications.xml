@@ -25,6 +25,11 @@
     <string name="notifications_tasks_title">Rappeler les tâches à heure fixe</string>
     <string name="notifications_tasks_subtitle">Une tâche qui a une heure sonne à cette heure, sans rappel à poser. Un rappel que vous avez choisi passe avant.</string>
 
+    <string name="notifications_agents_header">Agents</string>
+    <string name="notifications_agents_title">Notifications instantanées des agents</string>
+    <string name="notifications_agents_subtitle">Le téléphone reste connecté au serveur pour afficher aussitôt les messages des agents. Une notification permanente l’indique ; vous pouvez la masquer.</string>
+    <string name="notifications_agents_battery_title">Ne pas optimiser la batterie</string>
+    <string name="notifications_agents_battery_subtitle">Sans cette exception, Android coupe la connexion en veille et les messages arrivent au réveil.</string>
     <string name="notifications_events_header">Événements d’agenda</string>
     <string name="notifications_events_title">Rappeler les événements</string>
     <string name="notifications_events_subtitle">Les événements de vos agendas sonnent avant leur début. Les journées entières ne sonnent pas.</string>

@@ -3,6 +3,7 @@ package ch.nicolab.cadence.settings
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.os.PowerManager
 import android.provider.Settings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,8 +15,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccessTime
+import androidx.compose.material.icons.outlined.BatterySaver
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Checklist
+import androidx.compose.material.icons.outlined.Forum
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.material.icons.rounded.Check
@@ -52,6 +55,7 @@ import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.domain.QuietHours
 import ch.nicolab.cadence.domain.ReminderLead
 import ch.nicolab.cadence.tasks.TasksGraph
+import ch.nicolab.cadence.tasks.live.LiveStreamStore
 import ch.nicolab.cadence.tasks.reminder.ReminderAlarms
 import ch.nicolab.cadence.tasks.reminder.TimedReminders
 import ch.nicolab.cadence.tasks.reminder.TimedRemindersStore
@@ -83,6 +87,11 @@ internal fun NotificationsPage() {
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { refresh++ }
     val notificationsAllowed = remember(refresh) { NotificationManagerCompat.from(context).areNotificationsEnabled() }
     val exactAllowed = remember(refresh) { ReminderAlarms.canScheduleExact(context) }
+    val liveStore = remember(context) { LiveStreamStore.of(context) }
+    val liveEnabled by remember(liveStore) { liveStore.changes() }.collectAsStateWithLifecycle(initialValue = liveStore.enabled())
+    val batteryFree = remember(refresh) {
+        context.getSystemService(PowerManager::class.java).isIgnoringBatteryOptimizations(context.packageName)
+    }
 
     Column(verticalArrangement = Arrangement.spacedBy(Space.md)) {
         Text(stringResource(R.string.notifications_intro), style = MaterialTheme.typography.bodyMedium, color = cadence.onSurfaceVariant)
@@ -144,6 +153,30 @@ internal fun NotificationsPage() {
             )
         }
 
+        if (quiet != null) {
+            SectionHeader(stringResource(R.string.notifications_agents_header))
+            val showBattery = liveEnabled && !batteryFree
+            RowGroup {
+                SettingToggleRow(
+                    title = stringResource(R.string.notifications_agents_title),
+                    subtitle = stringResource(R.string.notifications_agents_subtitle),
+                    checked = liveEnabled,
+                    onCheckedChange = liveStore::setEnabled,
+                    icon = Icons.Outlined.Forum,
+                    shape = rowGroupShape(0, if (showBattery) 2 else 1),
+                )
+                if (showBattery) {
+                    SettingRow(
+                        title = stringResource(R.string.notifications_agents_battery_title),
+                        subtitle = stringResource(R.string.notifications_agents_battery_subtitle),
+                        icon = Icons.Outlined.BatterySaver,
+                        shape = rowGroupShape(1, 2),
+                        onClick = { openBatteryExemption(context) },
+                    )
+                }
+            }
+        }
+
         if (!exactAllowed && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             RowGroup {
                 SettingRow(
@@ -165,6 +198,13 @@ internal fun NotificationsPage() {
         SectionHeader(stringResource(R.string.notifications_quiet_header))
         QuietHoursSummary(quiet?.quietHours)
     }
+}
+
+/** Demande directe d'exclusion ; la liste des applications si l'appareil ne propose pas la demande. */
+private fun openBatteryExemption(context: android.content.Context) {
+    val direct = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, Uri.parse("package:${context.packageName}"))
+    runCatching { context.startActivity(direct) }
+        .recoverCatching { context.startActivity(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)) }
 }
 
 /** Les cinq avances possibles, communes aux tâches et aux événements. */

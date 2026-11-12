@@ -69,9 +69,10 @@ class PluginPageActivity : ComponentActivity() {
             path = "",
             file = intent.getStringExtra(EXTRA_FILE) ?: return finish(),
         )
+        val query = intent.getStringExtra(EXTRA_QUERY).orEmpty()
         setContent {
             CadenceTheme {
-                ProvideCadenceUriHandler { PluginPage(item, onClose = ::finish) }
+                ProvideCadenceUriHandler { PluginPage(item, query, onClose = ::finish) }
             }
         }
     }
@@ -80,15 +81,19 @@ class PluginPageActivity : ComponentActivity() {
         private const val EXTRA_ID = "plugin_id"
         private const val EXTRA_LABEL = "plugin_label"
         private const val EXTRA_FILE = "plugin_file"
+        private const val EXTRA_QUERY = "plugin_query"
 
         fun start(context: Context, item: PluginMenuItem) {
-            context.startActivity(
-                Intent(context, PluginPageActivity::class.java)
-                    .putExtra(EXTRA_ID, item.id)
-                    .putExtra(EXTRA_LABEL, item.label)
-                    .putExtra(EXTRA_FILE, item.file),
-            )
+            context.startActivity(intent(context, item))
         }
+
+        /** [query] : `?…` d'une notification, vérifié par `LiveTarget` avant d'arriver ici. */
+        fun intent(context: Context, item: PluginMenuItem, query: String = ""): Intent =
+            Intent(context, PluginPageActivity::class.java)
+                .putExtra(EXTRA_ID, item.id)
+                .putExtra(EXTRA_LABEL, item.label)
+                .putExtra(EXTRA_FILE, item.file)
+                .putExtra(EXTRA_QUERY, query)
     }
 }
 
@@ -96,7 +101,7 @@ private enum class PageProblem { NOT_FOUND, OFFLINE }
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-private fun PluginPage(item: PluginMenuItem, onClose: () -> Unit) {
+private fun PluginPage(item: PluginMenuItem, query: String, onClose: () -> Unit) {
     val uriHandler = LocalUriHandler.current
     var session by remember { mutableStateOf<ServerSession?>(null) }
     var problem by remember { mutableStateOf<PageProblem?>(null) }
@@ -146,7 +151,7 @@ private fun PluginPage(item: PluginMenuItem, onClose: () -> Unit) {
                             }
                             // Avant le chargement : le SDK lit `window.CadenceBridge` dès son exécution.
                             addJavascriptInterface(bridge, "CadenceBridge")
-                            loadUrl(PluginUrls.page(server.baseUrl, item), authorization(server))
+                            loadUrl(PluginUrls.page(server.baseUrl, item, query), authorization(server))
                             webView = this
                         }
                     },

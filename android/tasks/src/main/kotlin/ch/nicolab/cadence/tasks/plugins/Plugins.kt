@@ -234,8 +234,12 @@ data class PluginSettingsForm(
 
 /** Adresses des pages de plugins et règle de même origine pour l'en-tête `Authorization`. */
 object PluginUrls {
-    fun page(baseUrl: String, item: PluginMenuItem): String =
-        baseUrl.trimEnd('/') + "/api/plugins/" + segment(item.id) + "/ui/" + segment(item.file)
+    /**
+     * [query] : celle de `/plugins/<id>?…` d'une notification (avec son `?`), déjà vérifiée par `LiveTarget` ; la page
+     * la lit dans sa propre adresse.
+     */
+    fun page(baseUrl: String, item: PluginMenuItem, query: String = ""): String =
+        baseUrl.trimEnd('/') + "/api/plugins/" + segment(item.id) + "/ui/" + segment(item.file) + query
 
     /** Même schéma, hôte et port que le serveur : seule une telle requête reçoit le jeton. */
     fun sameOrigin(baseUrl: String, url: String): Boolean {
