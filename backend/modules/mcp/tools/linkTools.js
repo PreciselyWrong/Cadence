@@ -101,6 +101,17 @@ function registerLinkTools(server, context, tools) {
                 note: { type: 'string' },
                 status: { type: 'string', enum: LINK_STATUS_INPUTS },
                 tags: { type: 'array', items: { type: 'string' } },
+                project_uid: {
+                    type: 'string',
+                    description: 'A project the user can write to',
+                },
+                source_type: {
+                    type: 'string',
+                    enum: ['inbox_item', 'task', 'note'],
+                    description:
+                        'Where the link was made; with an inbox_item, then call process_inbox_item with link_uid',
+                },
+                source_uid: { type: 'string' },
             },
             required: ['url'],
         },

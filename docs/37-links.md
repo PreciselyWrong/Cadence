@@ -97,7 +97,7 @@ Entity `link` (schema 4): fields `note`, `status`, `review_at`; server fields li
 
 ## MCP
 
-`create_link` (same as `POST /api/links`), `group_links` (`uids`, `theme`: adds one tag to each, keeping the others), `propose_link_slot` (a slot in the agenda, waiting for the user in the triage queue, `docs/40-triage.md`), `list_links` (same filters, `query` for the text search, `untagged` to find links still to tag), `get_link`, `update_link` (`note`, `tags`, `status`, `review_at`). They never change the URL or the metadata.
+`create_link` (same as `POST /api/links`, with `project_uid`, `source_type` and `source_uid`; an idea sorted into the links is then marked done with `process_inbox_item` and `link_uid`), `group_links` (`uids`, `theme`: adds one tag to each, keeping the others), `propose_link_slot` (a slot in the agenda, waiting for the user in the triage queue, `docs/40-triage.md`), `list_links` (same filters, `query` for the text search, `untagged` to find links still to tag), `get_link`, `update_link` (`note`, `tags`, `status`, `review_at`). They never change the URL or the metadata.
 
 ## Clients
 

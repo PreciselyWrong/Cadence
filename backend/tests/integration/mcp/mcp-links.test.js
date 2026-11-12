@@ -2,7 +2,7 @@
 
 const request = require('supertest');
 const app = require('../../../app');
-const { Link } = require('../../../models');
+const { InboxItem, Link, Project } = require('../../../models');
 const { createTestUser } = require('../../helpers/testUtils');
 const {
     createApiToken: createApiTokenFromService,
@@ -105,5 +105,61 @@ describe('MCP link tools', () => {
         expect(bad.isError).toBe(true);
         const missing = await call('get_link', { uid: 'nope' });
         expect(missing.isError).toBe(true);
+    });
+
+    it('sorts an idea into the links, in a project, with the idea as its source', async () => {
+        const project = await Project.create({
+            user_id: user.id,
+            name: 'Lectures',
+        });
+        const item = await InboxItem.create({
+            user_id: user.id,
+            content: 'https://example.com/idee',
+            status: 'added',
+            source: 'mcp',
+        });
+
+        const created = json(
+            await call('create_link', {
+                url: 'https://example.com/idee',
+                project_uid: project.uid,
+                source_type: 'inbox_item',
+                source_uid: item.uid,
+            })
+        );
+        expect(created.created).toBe(true);
+        expect(created.link.project_uid).toBe(project.uid);
+        expect(created.link.source_type).toBe('inbox_item');
+        expect(created.link.source_uid).toBe(item.uid);
+
+        const processed = json(
+            await call('process_inbox_item', {
+                uid: item.uid,
+                link_uid: created.link.uid,
+            })
+        );
+        expect(processed.item.status).toBe('processed');
+    });
+
+    it('leaves an idea open when the link it is said to have become is not the user’s', async () => {
+        const item = await InboxItem.create({
+            user_id: user.id,
+            content: 'https://example.com/autre',
+            status: 'added',
+            source: 'mcp',
+        });
+        const other = await createTestUser({ email: 'mcp-other@example.com' });
+        const foreign = await Link.create({
+            user_id: other.id,
+            url: 'https://example.com/autre',
+        });
+
+        const refused = await call('process_inbox_item', {
+            uid: item.uid,
+            link_uid: foreign.uid,
+        });
+        expect(refused.isError).toBe(true);
+        await item.reload();
+        expect(item.status).toBe('added');
     });
 });

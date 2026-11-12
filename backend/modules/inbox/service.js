@@ -130,6 +130,16 @@ class InboxService {
 
     // With the uid of the task, project or note the item became, its files
     // move there.
+    // The one thing the item became, if the client says: { task_uid } or
+    // { project_uid } or { note_uid } or { link_uid } (REST and MCP).
+    processTarget(body = {}) {
+        for (const kind of ['task', 'project', 'note', 'link']) {
+            const uid = body?.[`${kind}_uid`];
+            if (uid) return { kind, uid };
+        }
+        return null;
+    }
+
     async process(userId, uid, { target } = {}) {
         validateUid(uid);
 
