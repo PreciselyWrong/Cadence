@@ -6094,6 +6094,7 @@
     "slipPassed": "تجاوزت وقتها المحدد",
     "slotMoved": "تمت جدولة «{{name}}»",
     "spanDays": "{{count}} ي",
+    "subtaskOf": "مهمة فرعية من",
     "suggestionsCount": "اقتراحات · {{n}}",
     "summaryDetail": "{{needed}} مطلوبة · {{free}} متاحة",
     "summaryOver": "{{needed}} مخططة لـ {{free}} متاحة",

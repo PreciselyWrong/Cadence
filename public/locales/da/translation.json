@@ -6026,6 +6026,7 @@
     "slipPassed": "er gået over sit tidspunkt",
     "slotMoved": "»{{name}}« planlagt",
     "spanDays": "{{count}} d",
+    "subtaskOf": "Underopgave af",
     "suggestionsCount": "Forslag · {{n}}",
     "summaryDetail": "{{needed}} nødvendige · {{free}} ledige",
     "summaryOver": "{{needed}} planlagt til {{free}} ledige",

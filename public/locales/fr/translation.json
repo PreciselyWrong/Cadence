@@ -6042,6 +6042,7 @@
     "slipPassed": "a dépassé son créneau",
     "slotMoved": "« {{name}} » planifiée",
     "spanDays": "{{count}} j",
+    "subtaskOf": "Sous-tâche de",
     "suggestionsCount": "Suggestions · {{n}}",
     "summaryDetail": "{{needed}} nécessaires · {{free}} libres",
     "summaryOver": "{{needed}} prévues pour {{free}} libres",

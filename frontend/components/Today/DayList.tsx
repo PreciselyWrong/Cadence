@@ -202,8 +202,8 @@ const DayList: React.FC<DayListProps> = ({
             className="flex h-full min-h-0 flex-col overflow-y-auto bg-surface"
         >
             <header className="sticky top-0 z-10 bg-surface px-6 pb-3 pt-6 max-sm:px-4">
-                <div className="flex min-w-0 items-center gap-1">
-                    <h1 className="mr-1 flex min-w-0 items-baseline gap-2">
+                <div className="flex min-w-0 flex-wrap items-center gap-x-1 gap-y-2">
+                    <h1 className="mr-1 flex min-w-0 max-w-full items-baseline gap-2">
                         <span className="shrink-0 text-headline font-extrabold tracking-tight text-surface-on">
                             {title}
                         </span>

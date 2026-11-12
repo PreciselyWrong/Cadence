@@ -6027,6 +6027,7 @@
     "slipPassed": "ha pasado su hueco",
     "slotMoved": "«{{name}}» planeada",
     "spanDays": "{{count}} d",
+    "subtaskOf": "Subtarea de",
     "suggestionsCount": "Sugerencias · {{n}}",
     "summaryDetail": "{{needed}} necesarias · {{free}} libres",
     "summaryOver": "{{needed}} planeadas para {{free}} libres",

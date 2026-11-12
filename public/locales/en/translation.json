@@ -5996,6 +5996,7 @@
     "slipPassed": "has passed its slot",
     "slotMoved": "“{{name}}” planned",
     "spanDays": "{{count}} d",
+    "subtaskOf": "Subtask of",
     "suggestionsCount": "Suggestions · {{n}}",
     "summaryDetail": "{{needed}} needed · {{free}} free",
     "summaryOver": "{{needed}} planned for {{free}} free",

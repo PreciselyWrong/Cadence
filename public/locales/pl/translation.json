@@ -6084,6 +6084,7 @@
     "slipPassed": "minął swój termin",
     "slotMoved": "„{{name}}” zaplanowane",
     "spanDays": "{{count}} d",
+    "subtaskOf": "Podzadanie zadania",
     "suggestionsCount": "Sugestie · {{n}}",
     "summaryDetail": "{{needed}} potrzeba · {{free}} wolne",
     "summaryOver": "{{needed}} zaplanowane na {{free}} wolne",

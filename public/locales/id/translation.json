@@ -6025,6 +6025,7 @@
     "slipPassed": "sudah lewat dari jadwalnya",
     "slotMoved": "“{{name}}” dijadwalkan",
     "spanDays": "{{count}} h",
+    "subtaskOf": "Subtugas dari",
     "suggestionsCount": "Saran · {{n}}",
     "summaryDetail": "{{needed}} dibutuhkan · {{free}} kosong",
     "summaryOver": "{{needed}} dijadwalkan untuk {{free}} kosong",

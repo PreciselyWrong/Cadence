@@ -6084,6 +6084,7 @@
     "slipPassed": "минув його час",
     "slotMoved": "«{{name}}» заплановано",
     "spanDays": "{{count}} д",
+    "subtaskOf": "Підзавдання завдання",
     "suggestionsCount": "Пропозиції · {{n}}",
     "summaryDetail": "{{needed}} потрібно · {{free}} вільно",
     "summaryOver": "{{needed}} заплановано на {{free}} вільних",

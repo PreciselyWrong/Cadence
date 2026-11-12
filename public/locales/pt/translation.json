@@ -6040,6 +6040,7 @@
     "slipPassed": "passou do seu horário",
     "slotMoved": "“{{name}}” planejada",
     "spanDays": "{{count}} d",
+    "subtaskOf": "Subtarefa de",
     "suggestionsCount": "Sugestões · {{n}}",
     "summaryDetail": "{{needed}} necessários · {{free}} livres",
     "summaryOver": "{{needed}} planejados para {{free}} livres",

@@ -6045,6 +6045,7 @@
     "slipPassed": "și-a depășit intervalul",
     "slotMoved": "„{{name}}” planificată",
     "spanDays": "{{count}} z",
+    "subtaskOf": "Subsarcină a",
     "suggestionsCount": "Sugestii · {{n}}",
     "summaryDetail": "{{needed}} necesare · {{free}} libere",
     "summaryOver": "{{needed}} planificate pentru {{free}} libere",

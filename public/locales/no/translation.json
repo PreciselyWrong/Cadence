@@ -6031,6 +6031,7 @@
     "slipPassed": "har passert tidspunktet sitt",
     "slotMoved": "«{{name}}» planlagt",
     "spanDays": "{{count}} d",
+    "subtaskOf": "Deloppgave av",
     "suggestionsCount": "Forslag · {{n}}",
     "summaryDetail": "{{needed}} nødvendig · {{free}} ledig",
     "summaryOver": "{{needed}} planlagt for {{free}} ledig",

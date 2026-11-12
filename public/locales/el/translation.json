@@ -6027,6 +6027,7 @@
     "slipPassed": "πέρασε την ώρα του",
     "slotMoved": "«{{name}}» προγραμματίστηκε",
     "spanDays": "{{count}} ημ",
+    "subtaskOf": "Υποεργασία της",
     "suggestionsCount": "Προτάσεις · {{n}}",
     "summaryDetail": "{{needed}} απαιτούνται · {{free}} ελεύθερες",
     "summaryOver": "{{needed}} προγραμματισμένες για {{free}} ελεύθερες",

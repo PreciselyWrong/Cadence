@@ -6025,6 +6025,7 @@
     "slipPassed": "planlanan saatini geçti",
     "slotMoved": "“{{name}}” planlandı",
     "spanDays": "{{count}} g",
+    "subtaskOf": "Alt görevi:",
     "suggestionsCount": "Öneriler · {{n}}",
     "summaryDetail": "{{needed}} gerekli · {{free}} boş",
     "summaryOver": "{{needed}} planlandı, {{free}} boş",

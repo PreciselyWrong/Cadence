@@ -6025,6 +6025,7 @@
     "slipPassed": "予定時刻を過ぎています",
     "slotMoved": "「{{name}}」を予定に入れました",
     "spanDays": "{{count}}日",
+    "subtaskOf": "サブタスク：",
     "suggestionsCount": "候補 · {{n}}",
     "summaryDetail": "必要 {{needed}} · 空き {{free}}",
     "summaryOver": "{{needed}} を {{free}} の空きに予定",

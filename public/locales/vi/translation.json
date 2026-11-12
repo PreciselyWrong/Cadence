@@ -6025,6 +6025,7 @@
     "slipPassed": "đã qua khung giờ",
     "slotMoved": "Đã lên lịch “{{name}}”",
     "spanDays": "{{count}} ng",
+    "subtaskOf": "Việc con của",
     "suggestionsCount": "Gợi ý · {{n}}",
     "summaryDetail": "Cần {{needed}} · còn trống {{free}}",
     "summaryOver": "{{needed}} đã lên lịch, còn trống {{free}}",

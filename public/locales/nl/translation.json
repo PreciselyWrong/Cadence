@@ -6026,6 +6026,7 @@
     "slipPassed": "is over zijn tijdslot heen",
     "slotMoved": "„{{name}}“ gepland",
     "spanDays": "{{count}} d",
+    "subtaskOf": "Subtaak van",
     "suggestionsCount": "Suggesties · {{n}}",
     "summaryDetail": "{{needed}} nodig · {{free}} vrij",
     "summaryOver": "{{needed}} gepland voor {{free}} vrij",

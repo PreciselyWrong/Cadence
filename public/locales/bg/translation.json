@@ -6026,6 +6026,7 @@
     "slipPassed": "е минал своя час",
     "slotMoved": "„{{name}}“ е планирана",
     "spanDays": "{{count}} д",
+    "subtaskOf": "Подзадача на",
     "suggestionsCount": "Предложения · {{n}}",
     "summaryDetail": "{{needed}} нужни · {{free}} свободни",
     "summaryOver": "{{needed}} планирани за {{free}} свободни",

@@ -6084,6 +6084,7 @@
     "slipPassed": "прошло его время",
     "slotMoved": "«{{name}}» запланировано",
     "spanDays": "{{count}} д",
+    "subtaskOf": "Подзадача задачи",
     "suggestionsCount": "Предложения · {{n}}",
     "summaryDetail": "{{needed}} нужно · {{free}} свободно",
     "summaryOver": "{{needed}} запланировано на {{free}} свободных",

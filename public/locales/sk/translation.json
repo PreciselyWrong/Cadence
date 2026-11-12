@@ -6060,6 +6060,7 @@
     "slipPassed": "uplynul jeho čas",
     "slotMoved": "„{{name}}“ naplánovaná",
     "spanDays": "{{count}} d",
+    "subtaskOf": "Podúloha úlohy",
     "suggestionsCount": "Návrhy · {{n}}",
     "summaryDetail": "{{needed}} treba · {{free}} voľné",
     "summaryOver": "{{needed}} naplánované na {{free}} voľné",

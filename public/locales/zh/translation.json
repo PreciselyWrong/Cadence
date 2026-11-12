@@ -6025,6 +6025,7 @@
     "slipPassed": "已超过安排的时间",
     "slotMoved": "已安排“{{name}}”",
     "spanDays": "{{count}} 天",
+    "subtaskOf": "子任务：",
     "suggestionsCount": "建议 · {{n}}",
     "summaryDetail": "需要 {{needed}} · 空闲 {{free}}",
     "summaryOver": "已安排 {{needed}}，空闲 {{free}}",

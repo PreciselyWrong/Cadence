@@ -258,4 +258,23 @@ describe('GET /api/daily-plan/day', () => {
         ].find((task) => task.uid === parent.uid);
         expect(found.subtasks.map((sub) => sub.name)).toEqual(['Read it']);
     });
+
+    it('lists a subtask due that day, with its parent', async () => {
+        const parent = await Task.create({
+            name: 'Review the PR',
+            user_id: user.id,
+            status: 0,
+        });
+        const sub = await Task.create({
+            name: 'Read the description',
+            user_id: user.id,
+            parent_task_id: parent.id,
+            due_date: new Date(),
+            status: 0,
+        });
+        const res = await agent.get('/api/daily-plan/day');
+        const found = res.body.due.find((task) => task.uid === sub.uid);
+        expect(found).toBeDefined();
+        expect(found.parent_task.name).toBe('Review the PR');
+    });
 });

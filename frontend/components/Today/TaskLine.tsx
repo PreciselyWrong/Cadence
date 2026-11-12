@@ -177,6 +177,13 @@ const TaskLine: React.FC<TaskLineProps> = ({
             <Chip>{formatDuration(line.duration)}</Chip>
         ) : null;
     const chips = [
+        // A subtask shows the task it belongs to.
+        task.parent_task?.name ? (
+            <Chip key="parent" title={t('today.subtaskOf', 'Subtask of')}>
+                <span aria-hidden="true">↳</span>
+                <span className="truncate">{task.parent_task.name}</span>
+            </Chip>
+        ) : null,
         project?.name ? (
             <Chip key="project">
                 {project.color && (

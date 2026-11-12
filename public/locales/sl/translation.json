@@ -6084,6 +6084,7 @@
     "slipPassed": "je zamudil svoj čas",
     "slotMoved": "„{{name}}“ načrtovana",
     "spanDays": "{{count}} d",
+    "subtaskOf": "Podnaloga naloge",
     "suggestionsCount": "Predlogi · {{n}}",
     "summaryDetail": "{{needed}} potrebno · {{free}} prosto",
     "summaryOver": "{{needed}} načrtovano za {{free}} prostih",

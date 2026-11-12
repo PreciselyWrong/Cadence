@@ -316,8 +316,9 @@ class DailyPlanRepository {
         );
     }
 
-    // Open top-level tasks of a day's due list or overdue list (not habits,
-    // not recurring occurrences), minus the excluded ids.
+    // Open tasks of a day's due list or overdue list, subtasks included (a
+    // subtask with its own date is a task of that day), not habits nor
+    // recurring occurrences, minus the excluded ids.
     findOpenDayTasks(visibleWhere, condition, excludedIds, order) {
         return Task.findAll({
             where: {
@@ -325,7 +326,6 @@ class DailyPlanRepository {
                     visibleWhere,
                     {
                         status: { [Op.notIn]: OPEN_STATUSES_EXCLUDED },
-                        parent_task_id: null,
                         habit_mode: false,
                         recurring_parent_id: null,
                     },

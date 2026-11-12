@@ -6026,6 +6026,7 @@
     "slipPassed": "on mennyt ohi aikavälistään",
     "slotMoved": "”{{name}}” suunniteltu",
     "spanDays": "{{count}} pv",
+    "subtaskOf": "Alitehtävä kohteelle",
     "suggestionsCount": "Ehdotukset · {{n}}",
     "summaryDetail": "{{needed}} tarvitaan · {{free}} vapaana",
     "summaryOver": "{{needed}} suunniteltu {{free}} vapaalle ajalle",

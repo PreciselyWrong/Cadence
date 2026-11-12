@@ -6025,6 +6025,7 @@
     "slipPassed": "예약 시간이 지났습니다",
     "slotMoved": "“{{name}}” 예약됨",
     "spanDays": "{{count}}일",
+    "subtaskOf": "하위 작업:",
     "suggestionsCount": "제안 · {{n}}",
     "summaryDetail": "필요 {{needed}} · 여유 {{free}}",
     "summaryOver": "{{needed}} 예약, 여유 {{free}}",

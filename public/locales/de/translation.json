@@ -6035,6 +6035,7 @@
     "slipPassed": "hat seinen Zeitraum überschritten",
     "slotMoved": "„{{name}}“ geplant",
     "spanDays": "{{count}} T",
+    "subtaskOf": "Unteraufgabe von",
     "suggestionsCount": "Vorschläge · {{n}}",
     "summaryDetail": "{{needed}} benötigt · {{free}} frei",
     "summaryOver": "{{needed}} für {{free}} frei geplant",
