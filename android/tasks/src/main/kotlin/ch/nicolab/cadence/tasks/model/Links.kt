@@ -179,3 +179,17 @@ object LinkLists {
     private fun fold(text: String): String =
         Normalizer.normalize(text, Normalizer.Form.NFD).replace(Regex("\\p{M}+"), "").lowercase()
 }
+
+/** Clé de comparaison d'adresses (web : la même règle) : hôte en minuscules, chemin sans `/` final, sans fragment. */
+object LinkKeys {
+    fun of(url: String): String {
+        val noFragment = url.trim().substringBefore('#')
+        val scheme = noFragment.substringBefore("://", "")
+        val rest = if (scheme.isEmpty()) noFragment else noFragment.substringAfter("://")
+        val host = rest.substringBefore('/').substringBefore('?').lowercase()
+        val tail = rest.substring(host.length)
+        val path = tail.substringBefore('?').trimEnd('/')
+        val query = tail.substringAfter('?', "").let { if (it.isEmpty()) "" else "?$it" }
+        return "${scheme.lowercase()}://$host$path$query"
+    }
+}

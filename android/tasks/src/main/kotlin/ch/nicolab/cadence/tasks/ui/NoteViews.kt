@@ -276,6 +276,8 @@ private fun NoteEditor(
 ) {
     val palette = cadence
     val openRef = rememberContentRefOpener(viewModel, onOpenNote, onOpenTask)
+    val links by viewModel.links.collectAsStateWithLifecycle()
+    val savedLinks = remember(links) { links.map { it.url } }
     val context = LocalContext.current
     val allNotes by viewModel.notes.collectAsStateWithLifecycle()
     val focus = LocalFocusManager.current
@@ -437,7 +439,7 @@ private fun NoteEditor(
                 }
                 LinkPreviewList(body.text, viewModel.linkPreviews, Modifier.padding(bottom = Space.xl), PreviewSize.Large)
                 if (note != null) {
-                    AddToLinksRow("${note.title}\n${body.text}", sourceKey = uid, onAdd = { viewModel.addLinkFrom(it, "note", uid) })
+                    AddToLinksRow("${note.title}\n${body.text}", sourceKey = uid, onAdd = { viewModel.addLinkFrom(it, "note", uid) }, savedUrls = savedLinks)
                     BacklinksSection(
                         type = "note",
                         uid = uid,

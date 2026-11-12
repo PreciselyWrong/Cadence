@@ -177,6 +177,8 @@ internal fun TaskDetailSheet(
     var openedSubtask by rememberSaveable(current.uid) { mutableStateOf<String?>(null) }
     var openedNote by rememberSaveable(current.uid) { mutableStateOf<String?>(null) }
     val allNotes by viewModel.notes.collectAsStateWithLifecycle()
+    val links by viewModel.links.collectAsStateWithLifecycle()
+    val savedLinks = remember(links) { links.map { it.url } }
     val openRef = rememberContentRefOpener(viewModel, onOpenNote = { openedNote = it }, onOpenTask = { openedSubtask = it })
     var moreFields by rememberSaveable(current.uid) { mutableStateOf(false) }
     val notifications = rememberNotificationPermission()
@@ -283,7 +285,7 @@ internal fun TaskDetailSheet(
                     },
                 )
                 LinkPreviewList("$title\n$note", viewModel.linkPreviews)
-                AddToLinksRow("$title\n$note", sourceKey = current.uid, onAdd = { viewModel.addLinkFrom(it, "task", current.uid) })
+                AddToLinksRow("$title\n$note", sourceKey = current.uid, onAdd = { viewModel.addLinkFrom(it, "task", current.uid) }, savedUrls = savedLinks)
                 if (!current.fileBacked) SubtasksCard(parentUid = current.uid, viewModel = viewModel, onOpen = { openedSubtask = it.uid })
                 BacklinksSection(
                     type = "task",

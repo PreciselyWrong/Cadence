@@ -53,6 +53,7 @@ import ch.nicolab.cadence.tasks.model.TagItem
 import ch.nicolab.cadence.tasks.model.TaskChange
 import ch.nicolab.cadence.tasks.model.TaskDraft
 import ch.nicolab.cadence.tasks.model.TaskItem
+import ch.nicolab.cadence.tasks.model.LinkDraft
 import ch.nicolab.cadence.tasks.model.TaskSources
 import ch.nicolab.cadence.tasks.model.TaskViews
 import ch.nicolab.cadence.tasks.notes.Autosaver
@@ -357,6 +358,21 @@ internal class TasksViewModel(
                     if (!repository.withdrawLink(draft)) _messages.tryEmit(getString(R.string.tasks_idea_link_already_sent))
                     repository.reopenInboxItem(entry.uid)
                 }
+            },
+        )
+    }
+
+    /**
+     * « Liens » d'un lien seul dans l'ajout rapide (web : la même saisie) : gardé tout de suite par l'appel différé
+     * `POST /api/v1/links` (titre, étiquettes, projet, sans source ni idée) ; « Annuler » le retire.
+     */
+    suspend fun addLinkFromCapture(url: String, pageTitle: String?, tagNames: List<String>, projectUid: String?) {
+        val draft = LinkDraft(url = url, title = pageTitle?.trim()?.takeIf { it.isNotEmpty() }, tagNames = tagNames, projectUid = projectUid)
+        repository.addLink(draft, getString(R.string.links_add_call))
+        val name = draft.title ?: LinkExtractor.domain(url) ?: url
+        _notices.tryEmit(
+            UndoNotice(getString(R.string.tasks_idea_to_links_notice, name)) {
+                launchAction { if (!repository.withdrawLink(draft)) _messages.tryEmit(getString(R.string.tasks_idea_link_already_sent)) }
             },
         )
     }

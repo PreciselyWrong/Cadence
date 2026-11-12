@@ -94,6 +94,8 @@ import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.designsystem.theme.cadence
 import ch.nicolab.cadence.tasks.R
+import ch.nicolab.cadence.tasks.model.IdeaTasks
+import kotlinx.coroutines.flow.flowOf
 import ch.nicolab.cadence.tasks.model.TaskDraft
 import ch.nicolab.cadence.tasks.model.TaskPriority
 import ch.nicolab.cadence.tasks.quickadd.NamedRef
@@ -108,7 +110,8 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 /** Destination d'une saisie : l'Inbox (à trier), une tâche, ou une note. */
-enum class CaptureTarget { INBOX, TASK, NOTE }
+/** Destination d'une saisie ; [LINKS] n'est proposé que pour une saisie qui n'est qu'une adresse. */
+enum class CaptureTarget { INBOX, TASK, NOTE, LINKS }
 
 private class ParsedChip(val icon: ImageVector, val label: String, val tint: Color? = null, val onRemove: () -> Unit)
 
@@ -154,7 +157,25 @@ fun QuickAddSheet(
     }
     val text = field.text
     var target by rememberSaveable { mutableStateOf(targets.firstOrNull() ?: CaptureTarget.TASK) }
+    // Un lien seul (web : `linkOnlyAddress`) propose les choix de la fiche de partage, Inbox d'office ; un mot de plus
+    // les retire et un choix Liens retombe sur l'Inbox.
+    val linkOnly = remember(field.text) { IdeaTasks.linkOnly(field.text) }
+    val shownTargets = if (linkOnly != null && CaptureTarget.INBOX in targets) {
+        listOf(CaptureTarget.INBOX, CaptureTarget.TASK, CaptureTarget.LINKS, CaptureTarget.NOTE).filter { it == CaptureTarget.LINKS || it in targets }
+    } else {
+        targets
+    }
+    var targetChosen by rememberSaveable { mutableStateOf(false) }
+    // Titre de la page du lien seul, lu par le serveur (jamais l'appareil vers le site) : nom de la tâche ou du lien.
+    val pageTitle by remember(linkOnly) { linkOnly?.let { viewModel.linkPreviews.observe(it) } ?: flowOf(null) }
+        .collectAsStateWithLifecycle(null)
+    LaunchedEffect(linkOnly) { linkOnly?.let { viewModel.linkPreviews.ensure(it) } }
+    LaunchedEffect(linkOnly != null) {
+        if (linkOnly != null && !targetChosen && CaptureTarget.INBOX in targets) target = CaptureTarget.INBOX
+        if (linkOnly == null && target == CaptureTarget.LINKS) target = CaptureTarget.INBOX
+    }
     val isTask = target == CaptureTarget.TASK
+    val readsTokens = isTask || target == CaptureTarget.LINKS
     var ignored by rememberSaveable { mutableStateOf(emptyList<String>()) }
     var moreOptions by rememberSaveable { mutableStateOf(expanded) }
     val initialSlot = initialDate?.let { it to initialTime }
@@ -179,10 +200,10 @@ fun QuickAddSheet(
     val tagRefs = remember(tags) { tags.map { NamedRef(it.uid, it.name) } }
     val areaRefs = remember(areas) { areas.map { NamedRef(it.uid, it.name) } }
     val tagColors = remember(tags) { tagBadgeColors(tags) }
-    val parsed = remember(text, ignored, projectRefs, tagRefs, areaRefs, clock, isTask) {
+    val parsed = remember(text, ignored, projectRefs, tagRefs, areaRefs, clock, readsTokens) {
         val result = QuickAddParser.parse(text, clock, projectRefs, tagRefs, ignored.toSet(), areaRefs)
-        // Une idée ou une note garde le texte tel quel : rien n'y est reconnu.
-        if (isTask) result else result.copy(title = text.trim(), tokens = emptyList())
+        // Une idée ou une note garde le texte tel quel : rien n'y est reconnu (un lien garde ses étiquettes et son projet).
+        if (readsTokens) result else result.copy(title = text.trim(), tokens = emptyList())
     }
     val date = dateOverride?.first ?: parsed.date
     val time = if (dateOverride != null) dateOverride?.second else parsed.time
@@ -247,11 +268,20 @@ fun QuickAddSheet(
                 onNoteCreated(uid)
                 onDismiss()
             }
+            CaptureTarget.LINKS -> {
+                val url = linkOnly ?: return
+                val tagNames = tags.filter { it.uid in tagUids }.map { it.name }
+                return launchSave { viewModel.addLinkFromCapture(url, pageTitle?.title, tagNames, projectUid) }
+            }
             CaptureTarget.TASK -> Unit
         }
+        // Un lien seul devient une tâche nommée d'après la page (sinon le domaine), l'adresse en note et en origine.
+        val fromLink = linkOnly?.takeIf { initialNote == null }
         val draft = TaskDraft(
-            name = title,
-            note = initialNote,
+            name = fromLink?.let { IdeaTasks.taskName(it, pageTitle?.title) } ?: title,
+            note = fromLink ?: initialNote,
+            source = fromLink?.let { "link" },
+            sourceUrl = fromLink,
             dueDate = date,
             dueTime = time?.let(::wireTime),
             priority = priority,
@@ -286,7 +316,7 @@ fun QuickAddSheet(
 
     val priorityBadgeText = priority?.let { stringResource(priorityBadge(it)) }
     val dateText = date?.let { compactDateTime(it, time, today) }
-    val chips = if (!isTask) emptyList() else buildList {
+    val chips = if (!readsTokens) emptyList() else buildList {
         projects.firstOrNull { it.uid == projectUid }?.let { project ->
             add(ParsedChip(Icons.Outlined.Folder, project.name) {
                 projectOverride = null
@@ -321,6 +351,7 @@ fun QuickAddSheet(
         title = stringResource(
             when (target) {
                 CaptureTarget.INBOX -> R.string.tasks_capture_inbox_title
+                CaptureTarget.LINKS -> R.string.tasks_capture_links_title
                 CaptureTarget.TASK -> R.string.tasks_quick_title
                 CaptureTarget.NOTE -> R.string.tasks_note_new
             },
@@ -328,6 +359,7 @@ fun QuickAddSheet(
         subtitle = stringResource(
             when (target) {
                 CaptureTarget.INBOX -> R.string.tasks_capture_inbox_subtitle
+                CaptureTarget.LINKS -> R.string.tasks_capture_links_subtitle
                 CaptureTarget.TASK -> R.string.tasks_capture_subtitle
                 CaptureTarget.NOTE -> R.string.tasks_capture_note_subtitle
             },
@@ -352,11 +384,14 @@ fun QuickAddSheet(
             Modifier.fillMaxWidth().imePadding(),
             verticalArrangement = Arrangement.spacedBy(Space.md),
         ) {
-            if (targets.size > 1) {
+            if (shownTargets.size > 1) {
                 SegmentedTabs(
-                    labels = targets.map { stringResource(it.label) },
-                    selected = targets.indexOf(target),
-                    onSelect = { target = targets[it] },
+                    labels = shownTargets.map { stringResource(it.label) },
+                    selected = shownTargets.indexOf(target),
+                    onSelect = {
+                        target = shownTargets[it]
+                        targetChosen = true
+                    },
                 )
             }
             CaptureBox(
@@ -372,7 +407,7 @@ fun QuickAddSheet(
                 onDone = ::save,
                 placeholder = stringResource(
                     when (target) {
-                        CaptureTarget.INBOX -> R.string.tasks_inbox_capture_hint
+                        CaptureTarget.INBOX, CaptureTarget.LINKS -> R.string.tasks_inbox_capture_hint
                         CaptureTarget.TASK -> R.string.tasks_capture_placeholder
                         CaptureTarget.NOTE -> R.string.tasks_capture_note_placeholder
                     },
@@ -703,6 +738,7 @@ internal fun ProjectAndTagFields(
 private val CaptureTarget.label: Int
     get() = when (this) {
         CaptureTarget.INBOX -> R.string.tasks_capture_target_inbox
+        CaptureTarget.LINKS -> R.string.tasks_capture_target_links
         CaptureTarget.TASK -> R.string.tasks_capture_target_task
         CaptureTarget.NOTE -> R.string.tasks_capture_target_note
     }

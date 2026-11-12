@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-12 — Un lien seul dans l'ajout rapide, origine des tâches
+
+- **Problème** : une adresse collée dans l'ajout rapide n'avait que Inbox / Tâche / Note (la tâche prenait l'adresse brute pour nom) ; une tâche née d'un lien proposait encore « Ajouter aux liens » ; l'origine d'une tâche (Gmail, MCP…) n'apparaissait pas.
+- **Décision** : comme le web, une adresse seule propose Inbox · Tâche · Liens · Note ; « Dans les liens » d'emblée quand l'adresse est déjà gardée ; badge d'origine neutre (lettre et nom) sur la ligne et la fiche, sans couleur de marque (aucune couleur littérale sur Android).
+- **Web** : rien à reprendre ; la marque colorée du web reste un écart volontaire.
+
 ### 2026-11-12 — Markdown, puces de liens et rétroliens
 
 - **Problème** : une description de tâche s'affichait en texte brut ; `[[task:…]]`, les mentions et les tableaux du web n'étaient pas rendus ; aucun rétrolien.

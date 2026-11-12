@@ -82,6 +82,9 @@
     <string name="tasks_tab_notes">Notes</string>
     <string name="tasks_capture_open">Ajouter</string>
     <string name="tasks_capture_target_inbox">Inbox</string>
+    <string name="tasks_capture_target_links">Liens</string>
+    <string name="tasks_capture_links_title">Ajouter aux liens</string>
+    <string name="tasks_capture_links_subtitle">Le lien est gardé dans la bibliothèque</string>
     <string name="tasks_capture_target_task">Tâche</string>
     <string name="tasks_capture_target_note">Note</string>
     <string name="tasks_capture_inbox_title">Capturer dans l\'Inbox</string>

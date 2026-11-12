@@ -23,20 +23,29 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.links.LinkExtractor
+import ch.nicolab.cadence.tasks.model.LinkKeys
 
 /**
  * Une adresse écrite dans une tâche ou une note reste son contexte : elle n'entre dans les liens
  * que par ce bouton (`docs/37-links.md`). Rien n'est montré sans adresse.
  */
 @Composable
-internal fun AddToLinksRow(text: String, sourceKey: String, onAdd: (String) -> Unit, limit: Int = 3) {
+internal fun AddToLinksRow(
+    text: String,
+    sourceKey: String,
+    onAdd: (String) -> Unit,
+    limit: Int = 3,
+    /** Adresses déjà dans les liens (table Room `links`) : montrées « Dans les liens » d'emblée. */
+    savedUrls: List<String> = emptyList(),
+) {
     val urls = remember(text, limit) { LinkExtractor.urls(text, limit) }
     if (urls.isEmpty()) return
     var added by remember(sourceKey) { mutableStateOf(emptySet<String>()) }
+    val saved = remember(savedUrls) { savedUrls.mapTo(HashSet(), LinkKeys::of) }
     Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
         urls.forEach { url ->
             val domain = LinkExtractor.domain(url) ?: url
-            val done = url in added
+            val done = url in added || LinkKeys.of(url) in saved
             TextButton(
                 onClick = {
                     onAdd(url)

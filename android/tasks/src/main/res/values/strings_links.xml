@@ -20,9 +20,7 @@
     <string name="links_kind_other">Autre</string>
     <string name="links_status_dropped">Archivé</string>
     <string name="links_show_dropped">Archivés</string>
-    <string name="links_action_to_evaluate">À évaluer</string>
     <string name="links_no_theme">Sans thème</string>
-    <string name="links_action_tested">À tester</string>
     <string name="links_last_commit">mis à jour %1$s</string>
     <string name="links_fetching">Lecture de la page…</string>
     <string name="links_note">Votre note</string>
