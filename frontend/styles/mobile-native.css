@@ -1,32 +1,23 @@
 /*
  * Phone chrome that mirrors the Android app (android/designsystem: Navigation.kt,
- * Fab.kt, Facet.kt, SettingRow.kt, RowGroup.kt). Values are copied from the
- * Android tokens (theme/Color.kt, theme/Tokens.kt); the `.dark` class sits on
- * the app shell, so the dark palette applies to everything inside it.
+ * Fab.kt, Facet.kt, SettingRow.kt, RowGroup.kt). Colours come from the semantic
+ * tokens in tailwind.css (which mirror theme/Color.kt), so the runtime accent and
+ * the dark palette apply here too.
  */
 :root {
-    --cdm-primary: #5e5ce6;
-    --cdm-on-primary: #ffffff;
-    --cdm-primary-container: #e4e3ff;
-    --cdm-on-primary-container: #16136b;
-    --cdm-bg: #fdfcff;
-    --cdm-on-surface: #1b1b21;
-    --cdm-on-surface-variant: #46464f;
-    --cdm-card: #f3f1fc;
-    --cdm-outline: #66656f;
+    --cdm-primary: rgb(var(--color-primary));
+    --cdm-on-primary: rgb(var(--color-on-primary));
+    --cdm-primary-container: rgb(var(--color-primary-container));
+    --cdm-on-primary-container: rgb(var(--color-on-primary-container));
+    --cdm-bg: rgb(var(--color-surface));
+    --cdm-on-surface: rgb(var(--color-on-surface));
+    --cdm-on-surface-variant: rgb(var(--color-on-surface-variant));
+    --cdm-card: rgb(var(--color-card));
+    --cdm-outline: rgb(var(--color-outline));
     --cdm-bar-alpha: 60%;
 }
 
 .dark {
-    --cdm-primary: #a9a6ff;
-    --cdm-on-primary: #1b1680;
-    --cdm-primary-container: #3a378f;
-    --cdm-on-primary-container: #e4e3ff;
-    --cdm-bg: #121218;
-    --cdm-on-surface: #e5e1ec;
-    --cdm-on-surface-variant: #c8c5d0;
-    --cdm-card: #1f1e2a;
-    --cdm-outline: #918f9a;
     --cdm-bar-alpha: 72%;
 }
 

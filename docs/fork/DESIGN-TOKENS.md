@@ -14,14 +14,14 @@ The CSS variable holds RGB channels (`94 92 230`) so `bg-primary/90` works.
 | onPrimary            | `#FFFFFF`              | `#1B1680`                        | `--color-on-primary`                           | `text-primary-on`                                  |
 | primaryContainer     | `#E4E3FF`              | `#3A378F`                        | `--color-primary-container`                    | `bg-primary-container`                             |
 | onPrimaryContainer   | `#16136B`              | `#E4E3FF`                        | `--color-on-primary-container`                 | `text-primary-on-container`                        |
-| background = surface | `#FDFCFF`              | `#121218` (pure black `#000000`) | `--color-surface`                              | `bg-surface`                                       |
+| background = surface | `#FCFCFD`              | `#121214` (pure black `#000000`) | `--color-surface`                              | `bg-surface`                                       |
 | onSurface            | `#1B1B21`              | `#E5E1EC`                        | `--color-on-surface`                           | `text-ink`, `text-surface-on`                      |
 | surfaceVariant       | `#E4E1EC`              | `#46454F`                        | `--color-surface-variant`                      | `bg-surface-variant`                               |
 | onSurfaceVariant     | `#46464F`              | `#C8C5D0`                        | `--color-on-surface-variant`                   | `text-ink-muted`, `text-surface-on-variant`        |
-| card                 | `#F3F1FC`              | `#1F1E2A` (pure black `#121216`) | `--color-card`                                 | `bg-surface-card`                                  |
-| containerLow         | `#F5F3FA`              | `#1B1B21` (`#0A0A0E`)            | `--color-container-low`                        | `bg-surface-low`                                   |
-| containerHigh        | `#E9E7F0`              | `#2A2930` (`#1C1C22`)            | `--color-container-high`                       | `bg-surface-high`                                  |
-| containerHighest     | `#E3E1EA`              | `#35343B` (`#26262C`)            | `--color-container-highest`                    | `bg-surface-highest`                               |
+| card                 | `#F4F4F6`              | `#1E1E21` (pure black `#121216`) | `--color-card`                                 | `bg-surface-card`                                  |
+| containerLow         | `#F6F6F8`              | `#1A1A1D` (`#0A0A0E`)            | `--color-container-low`                        | `bg-surface-low`                                   |
+| containerHigh        | `#EBEBEE`              | `#28282C` (`#1C1C22`)            | `--color-container-high`                       | `bg-surface-high`                                  |
+| containerHighest     | `#E4E4E8`              | `#343438` (`#26262C`)            | `--color-container-highest`                    | `bg-surface-highest`                               |
 | outline              | `#66656F`              | `#918F9A`                        | `--color-outline`                              | `border-outline`                                   |
 | outlineVariant       | `#C7C5D0`              | `#46454F`                        | `--color-outline-variant`                      | `border-outline-variant`                           |
 | error                | `#BA1A1A`              | `#FFB4AB`                        | `--color-error`                                | `text-danger`, `bg-danger`                         |
@@ -42,12 +42,12 @@ Existing `blue-*` and `gray-*` utilities are variable-backed so the whole app fo
 | ----------------- | ----------------------------------------------------------- | -------------------------------------- |
 | `blue-500`        | the accent seed (`#5E5CE6` by default)                      | `--blue-500`                           |
 | `blue-50 ... 950` | tonal scale, same hue and saturation as the seed            | `accentScale()` in `appearance.ts`     |
-| `gray-900`        | dark background `#121218`                                   | `--gray-900` (`#000000` in pure black) |
-| `gray-800`        | dark card `#1F1E2A`                                         | `--gray-800` (`#121216`)               |
-| `gray-700`        | dark container high `#2F2E38`                               | `--gray-700`                           |
+| `gray-900`        | dark background `#121214`                                   | `--gray-900` (`#000000` in pure black) |
+| `gray-800`        | dark card `#1E1E21`                                         | `--gray-800` (`#121216`)               |
+| `gray-700`        | dark container highest `#343438`                            | `--gray-700`                           |
 | `gray-600 / 500`  | secondary text, AA on every surface (`#46464F` / `#67666F`) | `--gray-600`, `--gray-500`             |
-| `gray-300 / 400`  | dark secondary text `#C8C5D0` / outlines `#918F9A`          | `--gray-300`, `--gray-400`             |
-| `gray-50 ... 200` | light surfaces `#F8F7FB`, `#F3F1FC` (card), `#E6E4ED`       | `--gray-50` to `--gray-200`            |
+| `gray-300 / 400`  | dark secondary text `#C8C7CE` / outlines `#919098`          | `--gray-300`, `--gray-400`             |
+| `gray-50 ... 200` | light surfaces `#F8F8FA`, `#F4F4F6` (card), `#EBEBEE`       | `--gray-50` to `--gray-200`            |
 
 ## Accent (Réglages › Apparence)
 
