@@ -21,13 +21,17 @@ The **Upcoming view** is a forward-looking calendar that shows tasks scheduled f
 
 ## Plan page: Horizons mode
 
-The fork's « Planifier » board (`/upcoming`) has a **Horizons** mode: This week, This month, Next month, Someday. A task lands in the first horizon that applies (`bucketHorizons` in `frontend/components/Upcoming/horizons.ts`):
+The fork's « Planifier » board (`/upcoming`) has a **Horizons** mode: This week, Next week, This month, Next month, Someday. A task lands in the first horizon that applies (`bucketHorizons` in `frontend/components/Upcoming/horizons.ts`):
 
 1. **Someday**: tagged `#someday`, whatever else it holds.
-2. **Its commitment**, when it still holds: `week_of` = this week → This week; `month_of` = this month → This month; `month_of` = next month → Next month.
+2. **Its commitment**, when it still holds: `week_of` = this week → This week; `week_of` = next week → Next week; `month_of` = this month → This month; `month_of` = next month → Next month.
 3. **Its date, derived** (nothing is written: `week_of` and `month_of` stay empty): its earliest plan line from the first day of this week on, otherwise its due day from today on. A day of this week → This week; a later day of this month → This month; a day of next month → Next month. A task planned on a day of this week shows in This week under « Planned on a day » rather than among the cards. A recurring task's due date is its next occurrence and derives nothing.
 
-A past week or month, a past due day (overdue: the days layout's « En retard » band) or a plan on an earlier week decides nothing: such a task is in no horizon. Plan lines count for the days the board has loaded. Dropping a card on another horizon writes `week_of`, `month_of` or `#someday` as before; the derived date is left alone.
+A past week or month, a past due day (overdue: the days layout's « En retard » band) or a plan on an earlier week decides nothing: such a task is in no horizon. Plan lines count for the days the board has loaded. Dropping a card on another horizon writes `week_of`, `month_of` or `#someday` as before; the derived date is left alone. Next week is only ever a commitment (`week_of = next week`): a derived date never lands there.
+
+### Day strip
+
+In the days layout, a slim strip under the day columns (Semaine prochaine, Ce mois-ci, Mois prochain, Un jour, with counts) takes dropped cards. A drop takes the card off its day's plan and writes the horizon (`week_of = next week`, `month_of`, `#someday`); the due date is kept. One undo restores both. Shift+W sends the focused card to Semaine prochaine, Shift+M to Ce mois-ci, and the right-click menu offers the same targets. Clicking a target opens Horizons on that column.
 
 ### Android
 

@@ -738,3 +738,31 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Problème** : une bibliothèque à trier, étiqueter et revoir, que personne ne relisait ; cartes « Lien à revoir », thèmes par IA et résumés automatiques en plus.
 - **Décision** : la page Liens, « Ajouter aux liens », les statuts, la revue, les thèmes et le résumé automatique disparaissent ; Tâches › filtre « Avec un lien » ; Projets › ⋯ › « Importer des favoris » (un dossier = les pages d'un projet, nouveau ou choisi) ; une recherche qui trouve une page ouvre son projet.
 - **Android à reprendre** : fait dans la même étape (filtre « Avec un lien » dans le sélecteur de listes).
+
+### 2026-11-12 — Cohérence du bureau après l'audit
+
+- **Problème** : chaque page redessinait sa ligne de tâche, sa carte, son en-tête, son état vide et ses boutons. Une même tâche changeait d'aspect d'une page à l'autre : case carrée ou colorée, bord rouge pour toute priorité, échéance en bleu capitales, ⋯ visible au survol seulement, Markdown brut dans les notes.
+- **Décision** :
+  - une ligne de tâche (Aujourd'hui, listes, projets, étiquettes) et une carte (Planifier, tableaux de projet), partagées dans `frontend/components/Shared/task/` : case ronde, bord rouge pour la priorité haute seulement, échéance en pastille « Aujourd'hui / Demain / date » (ton d'alerte si elle est dépassée), note en Markdown compact sur la ligne, texte brut sur la carte ;
+  - ⋯ visible sur la ligne sélectionnée ou au focus, clic droit pour le même menu, jamais au survol seul ;
+  - « Agrandir » se remet à zéro à la fermeture et au changement de page ; le calendrier ouvre la fiche de tâche directement, avec des blocs en teintes pastel de la palette et la date du jour pour naviguer ;
+  - une adresse seule dans l'Inbox est une ligne simple avec son icône de lien ;
+  - les onglets d'un projet sont un contrôle segmenté avec compteurs ;
+  - deux gabarits de page (`Shared/ui/PageShell`, plateau ou liste centrée), un `PageHeader` avec une action principale et ⋯ (étiquette, personne, domaine, objectif), un seul `EmptyState`, tailles de bouton sm / md / lg, icônes d'entité = icônes de la barre latérale ;
+  - couleurs sémantiques (`primary`, `primary-container`) au lieu d'indigo en dur ;
+  - calendrier d'Aujourd'hui en tiroir sous 1180 px, comme Planifier ;
+  - barre du bas sur téléphone : libellés = titres des pages ;
+  - « Demain » retiré de la barre latérale, Planifier le couvre.
+- **Android à reprendre** : `TODO.md` › Now, ligne « reprendre les décisions du style bureau ».
+
+### 2026-11-12 — Planifier : envoyer vers un horizon depuis Jours
+
+- **Problème** : pour mettre une carte de la semaine prochaine ou du mois suivant, il fallait passer par Horizons ; la vue Jours ne le permettait pas.
+- **Décision** : une bande fine sous les colonnes de jours (Semaine prochaine, Ce mois-ci, Mois prochain, Un jour, avec compteurs) reçoit les cartes déposées. La carte quitte son jour, la tâche prend l'horizon, son échéance ne bouge pas, une annulation rétablit les deux. Maj+W envoie la carte à Semaine prochaine, Maj+M à Ce mois-ci ; clic droit, mêmes cibles. Horizons gagne une colonne « Semaine prochaine » (`week_of = next_week`) ; cliquer une cible ouvre Horizons sur sa colonne.
+- **Android à reprendre** : `TODO.md` › Now, horizon « Semaine prochaine » et envoi depuis Planifier.
+
+### 2026-11-12 — Aujourd'hui : habitudes du jour
+
+- **Problème** : les habitudes prévues du jour n'apparaissaient pas sur Aujourd'hui ; seule la page Habitudes les montrait. Android les a déjà dans Ma journée.
+- **Décision** : une section « Habitudes · N » dans la liste du jour. Un toucher coche une habitude oui/non ou ajoute sa première valeur rapide (sinon une unité), avec annulation ; celles qui sont faites se replient et suivent « Masquer les terminées ». Une habitude avec un rappel ce jour-là est une fine marque sur le calendrier, à l'heure du rappel ; un clic ouvre l'habitude.
+- **Android à reprendre** : rien de bloquant (Ma journée a les habitudes) ; vérifier que la frise de Ma journée montre aussi les rappels.

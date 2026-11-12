@@ -364,7 +364,13 @@ Each section can be collapsed or expanded:
 
 ### Habits
 
-Habits are Cadence habits, not tasks: they have their own page and appear in no Today section. Tasks stored as habits before the Cadence habits (`habit_mode`) are skipped by every Today query. See [Habits](21-habits.md).
+Habits are Cadence habits, not tasks: they have their own page. The day's goal habits also appear in a « Habits · N » section of Today (below), never as tasks. Tasks stored as habits before the Cadence habits (`habit_mode`) are skipped by every Today query. See [Habits](21-habits.md).
+
+The day's goal habits planned for that day appear in a « Habits · N » section of the day list: one tap checks a yes/no habit or adds its first quick value (else one unit), with an undo. Done ones fold and follow « Masquer les terminées ». A habit with a reminder that day is a slim marker on the day calendar at its reminder time; a click opens the habit. They never enter the other sections.
+
+### Calendar drawer
+
+Under 1180 px the day calendar is a drawer opened from the header, as on Plan (`DRAWER_BELOW` in `frontend/components/Upcoming/boardDates.ts`).
 
 ### When a Focus is active
 
