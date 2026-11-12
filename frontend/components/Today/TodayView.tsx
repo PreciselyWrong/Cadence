@@ -510,7 +510,10 @@ const NewToday: React.FC = () => {
 
     // The detail opens in the layout's side pane (`?task=`), as in TickTick.
     const { openTaskUid, openTask } = useTaskPane();
-    const openLine = (line: DayLine) => openTask(line.uid);
+    // A second click on the open task closes its detail.
+    const { closeTask } = useTaskPane();
+    const openLine = (line: DayLine) =>
+        openTaskUid === line.uid ? closeTask() : openTask(line.uid);
 
     // A recurring task done for this day has already moved on to its next
     // date: toggling it here would complete that next occurrence.

@@ -533,7 +533,9 @@ const Layout: React.FC<LayoutProps> = ({
                                     className={`w-full h-full max-md:pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] ${
                                         isNotesView
                                             ? 'flex flex-col overflow-hidden'
-                                            : 'overflow-auto pb-24 lg:pb-0'
+                                            : paneBelow
+                                              ? 'overflow-hidden max-md:overflow-auto'
+                                              : 'overflow-auto pb-24 lg:pb-0'
                                     }`}
                                 >
                                     {isError && (
