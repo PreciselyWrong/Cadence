@@ -92,7 +92,7 @@ describe('TaskViewBody', () => {
 
             expect(screen.getByText('LIST CONTENT')).toBeInTheDocument();
             expect(screen.getByTestId('view-type-list')).toHaveAttribute(
-                'aria-pressed',
+                'aria-selected',
                 'true'
             );
             await waitFor(() => expect(mockFetchProfile).toHaveBeenCalled());
@@ -135,7 +135,7 @@ describe('TaskViewBody', () => {
             await waitFor(() =>
                 expect(
                     screen.getByTestId('view-type-calendar')
-                ).toHaveAttribute('aria-pressed', 'true')
+                ).toHaveAttribute('aria-selected', 'true')
             );
             expect(
                 screen.getByTestId('task-month-calendar')
@@ -148,7 +148,7 @@ describe('TaskViewBody', () => {
 
             await waitFor(() => expect(mockFetchProfile).toHaveBeenCalled());
             expect(screen.getByTestId('view-type-list')).toHaveAttribute(
-                'aria-pressed',
+                'aria-selected',
                 'true'
             );
         });

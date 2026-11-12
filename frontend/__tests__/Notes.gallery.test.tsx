@@ -160,7 +160,7 @@ describe('Notes gallery', () => {
 
         renderAt('/notes');
 
-        fireEvent.click(await screen.findByRole('button', { name: 'List' }));
+        fireEvent.click(await screen.findByRole('tab', { name: 'List' }));
         expect(setViewType).toHaveBeenCalledWith('list');
     });
 
@@ -183,7 +183,7 @@ describe('Notes gallery', () => {
 
         await waitFor(() =>
             expect(
-                screen.getByRole('button', { name: 'Gallery' })
+                screen.getByRole('tab', { name: 'Gallery' })
             ).toBeInTheDocument()
         );
         expect(screen.queryByDisplayValue('Trip ideas')).toBeNull();

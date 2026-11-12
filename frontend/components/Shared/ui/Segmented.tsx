@@ -14,6 +14,7 @@ interface SegmentedProps {
     onSelect: (id: string) => void;
     'aria-label'?: string;
     className?: string;
+    'data-testid'?: string;
 }
 
 /**
@@ -26,10 +27,12 @@ const Segmented: React.FC<SegmentedProps> = ({
     onSelect,
     'aria-label': ariaLabel,
     className = '',
+    'data-testid': testId,
 }) => (
     <div
         role="tablist"
         aria-label={ariaLabel}
+        data-testid={testId}
         className={`inline-flex max-w-full overflow-x-auto rounded-lg bg-surface-high p-0.5 scrollbar-hide ${className}`}
     >
         {options.map((option) => {

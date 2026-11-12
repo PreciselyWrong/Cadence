@@ -13,6 +13,7 @@ import {
 } from '../../utils/recurringScope';
 import TaskPriorityBoard, { BoardPriority } from './TaskPriorityBoard';
 import TaskMonthCalendar from './TaskMonthCalendar';
+import Segmented from '../Shared/ui/Segmented';
 
 interface ViewTypeSwitchProps {
     value: ViewType;
@@ -21,7 +22,8 @@ interface ViewTypeSwitchProps {
     keys?: ViewType[];
 }
 
-// Small segmented control: List / Board / Calendar, or the given choices.
+// The view switch of a page (List / Board / Calendar, or the given choices),
+// on the shared Segmented control.
 export const ViewTypeSwitch: React.FC<ViewTypeSwitchProps> = ({
     value,
     onChange,
@@ -35,31 +37,18 @@ export const ViewTypeSwitch: React.FC<ViewTypeSwitchProps> = ({
         outline: t('outline.title', 'Outline'),
         gallery: t('viewType.gallery', 'Gallery'),
     };
-    const options = keys.map((key) => ({ key, label: labels[key] }));
     return (
-        <div
-            role="group"
+        <Segmented
             aria-label={t('viewType.label', 'View')}
             data-testid="view-type-switch"
-            className="inline-flex rounded-md bg-gray-100 p-0.5 dark:bg-gray-800"
-        >
-            {options.map((option) => (
-                <button
-                    key={option.key}
-                    type="button"
-                    aria-pressed={value === option.key}
-                    data-testid={`view-type-${option.key}`}
-                    onClick={() => onChange(option.key)}
-                    className={`rounded px-3 py-1 text-xs font-medium transition-colors ${
-                        value === option.key
-                            ? 'bg-white text-gray-900 shadow-sm dark:bg-gray-700 dark:text-gray-100'
-                            : 'text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-200'
-                    }`}
-                >
-                    {option.label}
-                </button>
-            ))}
-        </div>
+            options={keys.map((key) => ({
+                id: key,
+                label: labels[key],
+                testId: `view-type-${key}`,
+            }))}
+            selected={value}
+            onSelect={(id) => onChange(id as ViewType)}
+        />
     );
 };
 
