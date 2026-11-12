@@ -76,7 +76,7 @@ const Segmented = <T extends string | number>({
 );
 
 const selectClass =
-    'h-8 w-full rounded-lg bg-surface-high px-2 text-body-m text-surface-on ring-1 ring-inset ring-outline-variant focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary';
+    'h-9 w-full rounded-lg bg-surface-high py-0 pl-2 pr-8 text-body-m leading-normal text-surface-on ring-1 ring-inset ring-outline-variant focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary';
 
 const rowClass = 'flex flex-col gap-1.5';
 
