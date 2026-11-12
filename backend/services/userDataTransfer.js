@@ -913,6 +913,8 @@ async function importOwnData(
                     in_view_at: task.in_view_at ?? null,
                     week_of: task.week_of ?? null,
                     month_of: task.month_of ?? null,
+                    source: task.source ?? null,
+                    source_url: task.source_url ?? null,
                     review_on: task.review_on ?? null,
                     reviewed_at: task.reviewed_at ?? null,
                     priority: toPriority(task.priority),

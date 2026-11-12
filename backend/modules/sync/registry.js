@@ -60,6 +60,8 @@ const ENTITIES = {
             'order',
             'today_order',
             'completed_at',
+            'source',
+            'source_url',
         ],
         // Set when the server (or any device) has already notified the
         // reminder; a device must not ring one that was sent after it.

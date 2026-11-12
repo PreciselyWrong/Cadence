@@ -238,6 +238,8 @@ Create a new task.
 | `project_id` | number | No | Assign to a project |
 | `area_id` | number | No | Assign directly to an area (tasks in a project take the project's area) |
 | `area_uid` | string | No | Area UID, alternative to `area_id` |
+| `source` | string | No | Where the task came from (`gmail`, `telegram`, `mcp`, `android`, `desktop`, `link`, `web`); defaults to `mcp`. Shown as a badge |
+| `source_url` | string | No | http or https page the badge opens (e.g. a Gmail message link) |
 | `assigned_to` | string | No | Person UID to assign the task to (from `list_people`) |
 | `tags` | string[] | No | Array of tag names to apply |
 | `recurrence_type` | string | No | `none`, `daily`, `weekly`, `monthly`, `monthly_weekday`, or `monthly_last_day` |

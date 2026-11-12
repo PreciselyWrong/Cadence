@@ -14,6 +14,11 @@ const {
 } = require('../../tasks/core/builders');
 const { parseEstimatedMinutes } = require('../../tasks/core/parsers');
 const {
+    TASK_SOURCES,
+    parseTaskSource,
+    parseTaskSourceUrl,
+} = require('../../tasks/core/source');
+const {
     handleRecurrenceUpdate,
     skipRecurringOccurrence,
     planOccurrenceAdvance,
@@ -458,6 +463,17 @@ function registerTaskTools(server, context, tools) {
                     items: { type: 'string' },
                     description: 'Array of tag names',
                 },
+                source: {
+                    type: ['string', 'null'],
+                    enum: [...TASK_SOURCES, null],
+                    description:
+                        'Where the task came from, shown as a badge. Defaults to "mcp" here; pass "gmail" for a task made from a Gmail message.',
+                },
+                source_url: {
+                    type: ['string', 'null'],
+                    description:
+                        'Page the task points to (http or https), opened from its source badge.',
+                },
                 ...recurrenceInputSchemaProperties,
             },
             required: ['name'],
@@ -556,6 +572,11 @@ function registerTaskTools(server, context, tools) {
                         ? params.recurrence_week_of_month
                         : null,
                 completion_based: params.completion_based || false,
+                source:
+                    params.source === undefined
+                        ? 'mcp'
+                        : parseTaskSource(params.source),
+                source_url: parseTaskSourceUrl(params.source_url) ?? null,
             };
 
             if (params.estimated_minutes !== undefined) {
@@ -731,6 +752,17 @@ function registerTaskTools(server, context, tools) {
             description:
                 'Commit the task to a week: a date in that week (YYYY-MM-DD), "this_week" or "next_week"; null removes it. Not a due date. Weeks start on the user\'s first day of week; "this_week" is the week containing today even on its last day, so use "next_week" to plan the coming week.',
         },
+        source: {
+            type: ['string', 'null'],
+            enum: [...TASK_SOURCES, null],
+            description:
+                'Where the task came from (badge). null clears it. Plain web tasks have none.',
+        },
+        source_url: {
+            type: ['string', 'null'],
+            description:
+                'Page the task points to (http or https); null clears it.',
+        },
         month_of: {
             type: ['string', 'null'],
             description:
@@ -793,6 +825,12 @@ function registerTaskTools(server, context, tools) {
             if (incomingNote !== undefined) updates.note = incomingNote;
             if (params.priority) {
                 updates.priority = PRIORITY_MAP[params.priority];
+            }
+            if (params.source !== undefined) {
+                updates.source = parseTaskSource(params.source);
+            }
+            if (params.source_url !== undefined) {
+                updates.source_url = parseTaskSourceUrl(params.source_url);
             }
             if (params.estimated_minutes !== undefined) {
                 updates.estimated_minutes = parseEstimatedMinutes(
