@@ -2,7 +2,7 @@
 
 Le contenu d'une note et la description d'une tâche sont du Markdown complet, rendu par un seul composant web (`frontend/components/Shared/MarkdownRenderer.tsx`, react-markdown + remark-gfm) : titres, gras, italique, barré, listes, cases à cocher (cliquables), tableaux, code (coloré), citations et encadrés `> [!NOTE]`, images et vidéos, liens et adresses nues (autoliens GFM), numéros de téléphone et e-mails.
 
-**Liens :** [Notes](05-notes-system.md), [Liens](37-links.md), [Personnes](19-people-and-roles.md)
+**Liens :** [Notes](05-notes-system.md), [Liens](37-links.md), [Personnes](19-people-and-roles.md), [Plan (outliner)](45-outliner.md)
 
 ## Sécurité
 
@@ -38,7 +38,7 @@ Le contenu d'une note et la description d'une tâche sont du Markdown complet, r
 
 ## Édition : barre de mise en forme et mentions
 
-Notes et descriptions de tâches s'éditent dans le même éditeur (`frontend/components/Note/MarkdownEditor.tsx`, CodeMirror avec aperçu en direct) : la description d'une tâche s'y ouvre au clic et s'enregistre quand le focus quitte l'éditeur, sa barre et ses menus.
+Notes et descriptions de tâches s'éditent dans le même éditeur (`frontend/components/Note/MarkdownEditor.tsx`, CodeMirror avec aperçu en direct), en plan par défaut (`docs/45-outliner.md`) : la description d'une tâche s'y ouvre au clic et s'enregistre quand le focus quitte l'éditeur, sa barre et ses menus.
 
 - **Barre en bas de l'éditeur** (collée en bas pendant le défilement) : gras (Ctrl/⌘+B), italique (Ctrl/⌘+I), barré (Ctrl/⌘+Maj+X), titre (cycle H1 → H2 → H3 → texte ; Ctrl/⌘+1/2/3), liste à puces, numérotée, à cases, citation, code (Ctrl/⌘+E : en ligne sur une ligne, bloc ``` ``` sur plusieurs lignes), lien (Ctrl/⌘+K), `[[ ]]` (ouvre le choix de note), `@` (ouvre le choix de personne), tableau (grille lignes × colonnes, flèches et Entrée au clavier). Le curseur dans un tableau ajoute « ajouter / supprimer une ligne, une colonne ». Chaque bouton a son `aria-label` et son raccourci dans l'infobulle ; un clic garde la sélection.
 - Les commandes sont des fonctions pures sur le texte Markdown (`frontend/components/Note/editor/markdownFormat.ts` : texte + sélection → un remplacement + nouvelle sélection) ; elles marchent dans un élément de liste (retrait et puce gardés, tableau et code retirés sous la puce). `textCommands.runEdit` les applique à CodeMirror ; une autre surface (par exemple un éditeur en plan) peut les appliquer avec `applyEdit`.

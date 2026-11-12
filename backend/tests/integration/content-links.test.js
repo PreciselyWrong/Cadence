@@ -176,7 +176,23 @@ describe('Backlinks', () => {
             .post('/api/content-links/resolve')
             .send({ tasks: ['renew PASSPORT', 'Secret', 'Missing'] });
         expect(res.status).toBe(200);
-        expect(res.body).toEqual({ tasks: { 'renew passport': open.uid } });
+        expect(res.body).toEqual({
+            tasks: { 'renew passport': open.uid },
+            done: [],
+        });
+
+        const finished = await Task.create({
+            name: 'File taxes',
+            status: 2,
+            user_id: user.id,
+        });
+        const done = await agent
+            .post('/api/content-links/resolve')
+            .send({ tasks: ['file taxes'] });
+        expect(done.body).toEqual({
+            tasks: { 'file taxes': finished.uid },
+            done: ['file taxes'],
+        });
 
         const bad = await agent
             .post('/api/content-links/resolve')

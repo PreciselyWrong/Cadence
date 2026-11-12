@@ -189,6 +189,16 @@ const NoteFocusMode: React.FC<NoteFocusModeProps> = ({
                             <div className="-ml-6">
                                 <MarkdownEditor
                                     noteUid={note.uid}
+                                    outlineKey={
+                                        note.uid
+                                            ? `note:${note.uid}`
+                                            : undefined
+                                    }
+                                    taskProjectId={
+                                        note.project?.id ??
+                                        note.Project?.id ??
+                                        note.project_id
+                                    }
                                     value={note.content || ''}
                                     onChange={(val) =>
                                         onNoteChange({ content: val })
@@ -228,6 +238,11 @@ const NoteFocusMode: React.FC<NoteFocusModeProps> = ({
                             >
                                 <MarkdownRenderer
                                     content={note.content}
+                                    outlineKey={
+                                        note.uid
+                                            ? `note:${note.uid}`
+                                            : undefined
+                                    }
                                     noteColor={noteColor}
                                     onContentChange={onContentChange}
                                 />

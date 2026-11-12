@@ -34,10 +34,16 @@ export const fetchBacklinks = async (
     return response.json();
 };
 
-// The task each [[task:Name]] opens, keyed by lowercased name.
-export const resolveTaskLinks = async (
+export interface TaskLinkStatus {
+    // The task each name opens, keyed by lowercased name.
+    uids: Record<string, string>;
+    // The lowercased names whose task is done.
+    done: string[];
+}
+
+export const resolveTaskLinkStatus = async (
     names: string[]
-): Promise<Record<string, string>> => {
+): Promise<TaskLinkStatus> => {
     const response = await fetch(getApiPath('content-links/resolve'), {
         method: 'POST',
         credentials: 'include',
@@ -46,5 +52,10 @@ export const resolveTaskLinks = async (
     });
     await handleAuthResponse(response, 'Failed to resolve task links.');
     const body = await response.json();
-    return body.tasks ?? {};
+    return { uids: body.tasks ?? {}, done: body.done ?? [] };
 };
+
+// The task each [[task:Name]] opens, keyed by lowercased name.
+export const resolveTaskLinks = async (
+    names: string[]
+): Promise<Record<string, string>> => (await resolveTaskLinkStatus(names)).uids;

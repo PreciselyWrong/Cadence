@@ -65,6 +65,8 @@ export class CheckboxWidget extends WidgetType {
         wrap.append(input);
         wrap.addEventListener('mousedown', (event) => {
             event.preventDefault();
+            // Only a main-button click ticks; a right-click opens menus.
+            if (event.button !== 0) return;
             // Ticking stays possible while a note is open for reading; only
             // a read-only note blocks it.
             if (view.state.readOnly) return;
@@ -202,6 +204,8 @@ export class ImageWidget extends WidgetType {
         wrap.append(img);
         wrap.addEventListener('mousedown', (event) => {
             event.preventDefault();
+            // Only a main-button click ticks; a right-click opens menus.
+            if (event.button !== 0) return;
             view.dispatch({
                 selection: { anchor: view.posAtDOM(wrap) },
             });

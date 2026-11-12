@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-12 — Notes et descriptions en plan (outliner) (web)
+
+- **Problème** : une note ou une description se rédigeait comme un document ; réorganiser des idées imbriquées demandait de couper-coller des lignes et de compter les espaces ; impossible de replier une branche ou de se concentrer sur une seule ; une case écrite dans une note ne devenait jamais une vraie tâche.
+- **Décision** : plan par défaut partout, sans réglage par note (`docs/45-outliner.md`). Chaque ligne nouvelle est une puce ; Entrée coupe la puce, Tab / Maj+Tab déplacent la puce avec ses enfants (sortie façon Workflowy : juste après le parent), Retour arrière en début de puce vide la supprime, Alt+↑/↓ échange avec la sœur, Ctrl+↑/↓ replie (chevron à gauche, « … »), clic sur le point ou Ctrl+. zoome (fil d'Ariane « Tout › … »), Ctrl+Entrée case, Maj+Entrée ligne de suite. Même chevron et même zoom en lecture. Repli mémorisé par lecteur sur l'appareil. Clic droit sur le point : Zoomer, Replier, Créer une tâche ; Ctrl+Maj+T fait de la puce une tâche du projet de la note et remplace son texte par `[[task:Nom]]` ; la case d'une puce liée suit l'état de la tâche et la termine au clic. Stockage inchangé : listes Markdown `- `, retrait de 2 espaces.
+- **À reprendre sur Android** : éditeur des notes et descriptions en plan avec les mêmes règles de texte (couper, retrait avec enfants, sortie après le parent, fusion, échange, case), repli (mémorisé sur l'appareil) et zoom, appui long sur la puce : Zoomer / Replier / Créer une tâche (même nom sans Markdown, projet de la note, texte remplacé par `[[task:Nom]]`), case liée qui suit `done` de `POST /api/content-links/resolve`.
+
 ### 2026-11-12 — Cartes Mail dans « À trier » (web)
 
 - **Problème** : les mails qui demandent une action n'arrivaient que par le bot texte, où il est pénible de décider.

@@ -580,12 +580,40 @@ const NoteModal: React.FC<NoteModalProps> = ({
                                                     {activeTab === 'edit' ? (
                                                         <div className="block w-full min-h-[200px] sm:border sm:border-gray-300 sm:dark:border-gray-600 sm:rounded-md shadow-sm py-2 sm:py-3 px-3 text-sm bg-white dark:bg-gray-900">
                                                             <MarkdownEditor
-                                                                noteUid={formData.uid}
-                                                                value={formData.content || ''}
-                                                                onChange={(val) =>
-                                                                    setFormData((prev) => ({ ...prev, content: val }))
+                                                                noteUid={
+                                                                    formData.uid
                                                                 }
-                                                                placeholder={t('notes.contentPlaceholderMarkdown')}
+                                                                outlineKey={
+                                                                    formData.uid
+                                                                        ? `note:${formData.uid}`
+                                                                        : undefined
+                                                                }
+                                                                taskProjectId={
+                                                                    formData
+                                                                        .project
+                                                                        ?.id ??
+                                                                    formData.project_id
+                                                                }
+                                                                value={
+                                                                    formData.content ||
+                                                                    ''
+                                                                }
+                                                                onChange={(
+                                                                    val
+                                                                ) =>
+                                                                    setFormData(
+                                                                        (
+                                                                            prev
+                                                                        ) => ({
+                                                                            ...prev,
+                                                                            content:
+                                                                                val,
+                                                                        })
+                                                                    )
+                                                                }
+                                                                placeholder={t(
+                                                                    'notes.contentPlaceholderMarkdown'
+                                                                )}
                                                                 minHeight="200px"
                                                                 data-testid="note-content-textarea"
                                                             />
@@ -596,6 +624,11 @@ const NoteModal: React.FC<NoteModalProps> = ({
                                                                 <MarkdownRenderer
                                                                     content={
                                                                         formData.content
+                                                                    }
+                                                                    outlineKey={
+                                                                        formData.uid
+                                                                            ? `note:${formData.uid}`
+                                                                            : undefined
                                                                     }
                                                                     onContentChange={(
                                                                         newContent

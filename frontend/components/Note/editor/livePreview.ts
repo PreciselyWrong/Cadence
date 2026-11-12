@@ -17,6 +17,7 @@ import {
     selectionTouches,
     setPointerDown,
 } from './blockWidgets';
+import { outlineMode } from './outlineMode';
 import {
     BulletWidget,
     CalloutTitleWidget,
@@ -61,6 +62,7 @@ export function buildLivePreview(
     const codeRanges: TextRange[] = [];
     const seenLines = new Set<string>();
     const doc = state.doc;
+    const outline = state.facet(outlineMode);
 
     const touches = (from: number, to: number) =>
         selectionTouches(state, from, to);
@@ -243,7 +245,11 @@ export function buildLivePreview(
                     const isTask = !!ref.node.getChild('Task');
                     const isBullet = ref.node.parent?.name === 'BulletList';
 
-                    if (lineTouched(mark.from)) {
+                    // In the outliner a bullet stays a dot under the caret.
+                    if (
+                        lineTouched(mark.from) &&
+                        !(outline && (isBullet || isTask))
+                    ) {
                         addMark(mark.from, mark.to, 'cm-md-marker');
                         return;
                     }

@@ -67,7 +67,10 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
   Une colonne au lieu du tableau, feuille « Planifier » à l'appui long, pas de calendrier à droite. Vérif sur le téléphone : une tâche mise dans « Ce mois-ci » sur le web apparaît dans le même horizon, et inversement ; « Ajouter » d'un jour la prévoit ce jour sans échéance.
 - [x] Tâches venues d'un TODO.md : se comportent comme de vraies tâches, sur le web et sur Android
 - [ ] Style des apps de référence repris sur tout le desktop, pas seulement Aujourd'hui
-- [ ] Cases `- [ ]` écrites dans une note : deviennent des tâches liées à la note
+- [x] Cases `- [ ]` écrites dans une note : deviennent des tâches liées à la note
+- [x] Notes et descriptions éditées en plan (outliner) : puces, Tab avec enfants, repli, zoom, puce → tâche liée (web)
+- [ ] Android : notes et descriptions en plan (outliner), repli, zoom, puce → tâche liée, case qui suit la tâche
+  Raison : web d'abord (2026-11-12, `docs/45-outliner.md`, `docs/fork/WEB-UX-NOTES.md`). Vérif : sur le téléphone, Entrée puis Tab dans une note crée une sous-puce écrite `  - ` (lue pareil sur le web) ; « Créer une tâche » sur une puce crée la tâche dans le projet de la note.
 - [ ] Android : Inbox de Planifier à reprendre avec Planifier : « + » crée une tâche, tâches à classer listées avant les idées et glissables sur un jour
   Raison : web d'abord (2026-11-12). Vérif : une tâche ajoutée par le « + » de l'Inbox apparaît dans « Tâches à classer » sur le téléphone.
 

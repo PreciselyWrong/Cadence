@@ -245,6 +245,10 @@ export const TaskEditorBody: React.FC<TaskEditorBodyProps> = ({
                     <div className="rounded-xl bg-gray-100 px-3 pt-2 text-sm text-gray-900 focus-within:ring-2 focus-within:ring-indigo-500 dark:bg-gray-900 dark:text-gray-100">
                         <MarkdownEditor
                             value={note}
+                            outlineKey={
+                                task.uid ? `task:${task.uid}` : undefined
+                            }
+                            taskProjectId={task.project_id}
                             onChange={setNote}
                             onBlur={commitNote}
                             autoFocus
@@ -283,6 +287,9 @@ export const TaskEditorBody: React.FC<TaskEditorBodyProps> = ({
                         {note.trim() ? (
                             <MarkdownRenderer
                                 content={note}
+                                outlineKey={
+                                    task.uid ? `task:${task.uid}` : undefined
+                                }
                                 className="prose prose-sm dark:prose-invert max-w-none"
                                 onContentChange={(next) => {
                                     setNote(next);

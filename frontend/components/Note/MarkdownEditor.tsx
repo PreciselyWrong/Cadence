@@ -29,6 +29,20 @@ import { isTouchScreen, touchReading } from './editor/touchReading';
 import { blockHandlePlugin, blockHandleTheme } from './editor/blockHandle';
 import { runEdit } from './editor/textCommands';
 import { tableAt } from './editor/markdownFormat';
+import { foldRange, taskFromItem } from './editor/outline';
+import {
+    ZoomCrumb,
+    externalSync,
+    isFolded,
+    outlineConfig,
+    outlineExtension,
+    restoreFolds,
+    toggleFoldAt,
+    zoomTo,
+} from './editor/outlineEditor';
+import OutlineBulletMenu, { OutlineMenuAction } from './OutlineBulletMenu';
+import { createTask } from '../../utils/tasksService';
+import { Task } from '../../entities/Task';
 import { mentionToken, mentionTrigger } from '../../utils/markdownLinks';
 import { fetchPeople } from '../../utils/peopleService';
 import { resolveTaskLinks } from '../../utils/contentLinksService';
@@ -61,6 +75,17 @@ interface MarkdownEditorProps {
     // The formatting bar under the text (on by default).
     toolbar?: boolean;
     ariaLabel?: string;
+    // Where this viewer's folded outline items are remembered
+    // ("note:<uid>", "task:<uid>").
+    outlineKey?: string;
+    // Tasks made from a bullet land in this project.
+    taskProjectId?: number | null;
+}
+
+interface BulletMenuState {
+    line: number;
+    x: number;
+    y: number;
 }
 
 const shouldUseLightText = (hexColor: string | undefined): boolean => {
@@ -264,9 +289,11 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
     onBlur,
     toolbar = true,
     ariaLabel,
+    outlineKey,
+    taskProjectId,
 }) => {
     const { t } = useTranslation();
-    const { showErrorToast } = useToast();
+    const { showErrorToast, showSuccessToast } = useToast();
     const containerRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const pickPositionRef = useRef<number | null>(null);
@@ -319,6 +346,55 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
         useState<MissingNoteState>(CLOSED_MISSING);
     const missingNoteRef = useRef(missingNote);
     missingNoteRef.current = missingNote;
+
+    const [zoomCrumbs, setZoomCrumbs] = useState<ZoomCrumb[] | null>(null);
+    const [bulletMenu, setBulletMenu] = useState<BulletMenuState | null>(null);
+    const outlineCompartmentRef = useRef(new Compartment());
+    const taskProjectIdRef = useRef(taskProjectId);
+    taskProjectIdRef.current = taskProjectId;
+
+    // A bullet becomes a task of its name; the bullet keeps a link to it.
+    const makeTaskAt = async (view: EditorView, pos: number) => {
+        const made = taskFromItem({
+            doc: view.state.doc.toString(),
+            from: pos,
+            to: pos,
+        });
+        if (!made) return;
+        const { edit, name } = made;
+        view.dispatch({
+            changes: { from: edit.from, to: edit.to, insert: edit.insert },
+            selection: { anchor: edit.anchor },
+            userEvent: 'input',
+        });
+        view.focus();
+        try {
+            const projectId = taskProjectIdRef.current;
+            await createTask({
+                name,
+                ...(projectId ? { project_id: projectId } : {}),
+            } as Task);
+            showSuccessToast(
+                t('notes.outlineTaskCreated', 'Task created: {{name}}', {
+                    name,
+                })
+            );
+        } catch {
+            showErrorToast(
+                t('notes.outlineTaskFailed', 'Could not create the task.')
+            );
+        }
+    };
+    const makeTaskRef = useRef(makeTaskAt);
+    makeTaskRef.current = makeTaskAt;
+
+    const outlineSettings = (key: string | undefined) =>
+        outlineConfig.of({
+            storageKey: key,
+            onMakeTask: (view, pos) => void makeTaskRef.current(view, pos),
+            onBulletMenu: (_view, line, x, y) => setBulletMenu({ line, x, y }),
+            onZoomChange: setZoomCrumbs,
+        });
 
     const lightText = shouldUseLightText(noteColor);
     const textColor = noteColor
@@ -467,6 +543,8 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
                 // line box; the native caret rides the font box and appears
                 // to hang below the placeholder text.
                 drawSelection(),
+                outlineExtension(),
+                outlineCompartmentRef.current.of(outlineSettings(outlineKey)),
                 keymap.of(blockUxKeymap),
                 blockHandlePlugin,
                 blockHandleTheme,
@@ -646,6 +724,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 
         const view = new EditorView({ state, parent: containerRef.current });
         viewRef.current = view;
+        restoreFolds(view);
 
         if (autoFocus) {
             setTimeout(() => view.focus(), 50);
@@ -679,9 +758,69 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
                     to: view.state.doc.length,
                     insert: value ?? '',
                 },
+                annotations: externalSync,
             });
+            restoreFolds(view);
         }
     }, [value]);
+
+    // Another note or task: its own remembered folds.
+    const firstOutlineKey = useRef(true);
+    useEffect(() => {
+        if (firstOutlineKey.current) {
+            firstOutlineKey.current = false;
+            return;
+        }
+        const view = viewRef.current;
+        if (!view) return;
+        view.dispatch({
+            effects: outlineCompartmentRef.current.reconfigure(
+                outlineSettings(outlineKey)
+            ),
+        });
+        restoreFolds(view);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [outlineKey]);
+
+    const closeBulletMenu = useCallback(() => {
+        setBulletMenu(null);
+        viewRef.current?.focus();
+    }, []);
+
+    const bulletActions = (line: number): OutlineMenuAction[] => {
+        const view = viewRef.current;
+        if (!view || line >= view.state.doc.lines) return [];
+        const doc = view.state.doc.toString();
+        const lineFrom = view.state.doc.line(line + 1).from;
+        const actions: OutlineMenuAction[] = [
+            {
+                key: 'zoom',
+                label: t('notes.outlineZoomIn', 'Zoom in'),
+                hint: 'Ctrl+.',
+                onSelect: () => zoomTo(view, line),
+            },
+        ];
+        if (foldRange(doc, line)) {
+            const folded = isFolded(view.state, line);
+            actions.push({
+                key: 'fold',
+                label: folded
+                    ? t('notes.outlineExpand', 'Expand')
+                    : t('notes.outlineCollapse', 'Collapse'),
+                hint: folded ? 'Ctrl+↓' : 'Ctrl+↑',
+                onSelect: () => toggleFoldAt(view, line),
+            });
+        }
+        if (taskFromItem({ doc, from: lineFrom, to: lineFrom })) {
+            actions.push({
+                key: 'task',
+                label: t('notes.outlineMakeTask', 'Make a task'),
+                hint: 'Ctrl+Shift+T',
+                onSelect: () => void makeTaskAt(view, lineFrom),
+            });
+        }
+        return actions;
+    };
 
     const runFormat = useCallback((command: FormatCommand) => {
         if (viewRef.current) runEdit(viewRef.current, command);
@@ -747,6 +886,38 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
                 onBlur();
             }}
         >
+            {zoomCrumbs && (
+                <nav
+                    aria-label={t('notes.outlinePath', 'Outline path')}
+                    data-testid="outline-breadcrumb"
+                    className="mb-2 flex flex-wrap items-center gap-1 text-sm text-gray-500 dark:text-gray-400"
+                >
+                    <button
+                        type="button"
+                        className="rounded px-1 hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+                        onClick={() =>
+                            viewRef.current && zoomTo(viewRef.current, null)
+                        }
+                    >
+                        {t('notes.outlineAll', 'All')}
+                    </button>
+                    {zoomCrumbs.slice(0, -1).map((crumb) => (
+                        <React.Fragment key={crumb.line}>
+                            <span aria-hidden="true">›</span>
+                            <button
+                                type="button"
+                                className="max-w-[12rem] truncate rounded px-1 hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+                                onClick={() =>
+                                    viewRef.current &&
+                                    zoomTo(viewRef.current, crumb.line)
+                                }
+                            >
+                                {crumb.text.trim() || '•'}
+                            </button>
+                        </React.Fragment>
+                    ))}
+                </nav>
+            )}
             <div ref={containerRef} className="w-full flex-1" />
             <input
                 ref={fileInputRef}
@@ -772,6 +943,15 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
                     run={runFormat}
                     inTable={inTable}
                     className="sticky bottom-0 z-10 mt-2"
+                />
+            )}
+            {bulletMenu && (
+                <OutlineBulletMenu
+                    x={bulletMenu.x}
+                    y={bulletMenu.y}
+                    label={t('notes.outlineBulletMenu', 'Bullet')}
+                    actions={bulletActions(bulletMenu.line)}
+                    onClose={closeBulletMenu}
                 />
             )}
             {mentionMenu.open && (
