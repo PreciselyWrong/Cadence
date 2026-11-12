@@ -1,7 +1,9 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CheckIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { addLinkFrom } from '../../utils/linksService';
+import { isKept } from '../../utils/linkFilters';
+import { useLinksStore } from '../../store/linksStore';
 
 const CANDIDATE = /https?:\/\/[^\s<>"'`]+/gi;
 const TRAILING = /[.,;:!?'"»…*_)\]]+$/;
@@ -34,7 +36,8 @@ interface AddToLinksProps {
 }
 
 // An address in a task or a note is its context and stays out of the
-// library (docs/37-links.md); this row adds one on purpose.
+// library (docs/37-links.md); this row adds one on purpose. An address
+// already kept (a task made from a link) shows as "In links".
 const AddToLinks: React.FC<AddToLinksProps> = ({
     sourceType,
     sourceUid,
@@ -48,6 +51,12 @@ const AddToLinks: React.FC<AddToLinksProps> = ({
     );
     const [saved, setSaved] = useState<Record<string, boolean>>({});
     const [failed, setFailed] = useState(false);
+    const links = useLinksStore((s) => s.links);
+    const loadLinks = useLinksStore((s) => s.load);
+
+    useEffect(() => {
+        if (urls.length > 0) void loadLinks();
+    }, [urls.length, loadLinks]);
 
     if (urls.length === 0) return null;
 
@@ -67,7 +76,7 @@ const AddToLinks: React.FC<AddToLinksProps> = ({
             data-testid="add-to-links"
         >
             {urls.map((url) =>
-                saved[url] ? (
+                saved[url] || isKept(links, url) ? (
                     <span
                         key={url}
                         className="inline-flex min-h-[32px] items-center gap-1 rounded-lg px-2 text-xs text-gray-500 dark:text-gray-400"

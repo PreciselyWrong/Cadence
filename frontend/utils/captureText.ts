@@ -1,10 +1,19 @@
-export type CaptureTarget = 'inbox' | 'task' | 'note' | 'project';
+// 'link' (straight to the Links) is offered only for an idea that is only
+// a link, where Project is not (docs/04-inbox-page.md).
+export type CaptureTarget = 'inbox' | 'task' | 'note' | 'project' | 'link';
 
 export const CAPTURE_TARGETS: CaptureTarget[] = [
     'inbox',
     'task',
     'note',
     'project',
+];
+
+export const LINK_CAPTURE_TARGETS: CaptureTarget[] = [
+    'inbox',
+    'task',
+    'link',
+    'note',
 ];
 
 export interface CapturedItem {

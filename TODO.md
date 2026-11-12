@@ -26,6 +26,8 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
   Pas de parité web : entrée inter-applications Android (`docs/42-proches-handoff.md`). Vérif : avec Proches signé sur l'émulateur ou le téléphone, accepter une proposition avec échéance ; la tâche apparaît dans Tâches avec son échéance et part à la synchro ; une seconde remise de la même proposition ne crée pas de doublon ; une autre app appelante est refusée.
 - Bilan du soir sur Android (parité du web, 2026-11-04)
   écran du bilan après `evening.switchTime` (fuseau du profil), `GET /daily-plan/:date/evening`, « Reporter à demain » (annulation par retrait du plan de demain), réglage `Bilan du soir` ; contrat `docs/39-daily-brief.md` § Evening review, écarts web dans `docs/fork/WEB-UX-NOTES.md` (2026-11-04). Vérif : mêmes quatre sections et mêmes compteurs que le web pour une même journée sur le serveur de test, puis passage à 18:00 sur le téléphone.
+- Un lien seul dans l'ajout rapide Android (parité du web, 2026-11-12)
+  Web : un texte qui n'est qu'une adresse propose Boîte de réception / Tâche / Liens / Note dans la saisie, et « Dans les liens » s'affiche sous une tâche née d'un lien. Android n'a ces choix qu'à la fiche de partage. Raison : étape web d'abord, Android repris par un autre agent. À faire et vérif : `docs/fork/WEB-UX-NOTES.md` (2026-11-12, points 1 à 4).
 - Aujourd'hui sur Android : glisser-déposer pour ranger
   Web : glisser une ligne. Android : seulement Monter et Descendre dans le menu, car le glissé entre en conflit avec le balayage des lignes et ne peut pas se vérifier ici (téléphone en `unauthorized` sur ADB, émulateur en panne). Vérif : sur le téléphone, ranger trois tâches au doigt sans déclencher de balayage ; l'ordre se retrouve sur le web.
 - Android : planifier sans toucher l'échéance (livré le 2026-11-12)
@@ -81,6 +83,13 @@ Branche `fix/note-quickadd-focus-c7e743d5`.
 
 - Cartes « Mail » dans « À trier » (web et Android)
   Spec : `docs/43-mail-triage.md`. L'agent de tri des mails propose par MCP (`propose_mail`) les fils qui demandent une action ; on décide dans « À trier » : Tâche, Répondre (brouillon dans Gmail), Plus tard, Ignorer, archivage Gmail optionnel par l'outil Gmail restreint. Pas de corps de mail stocké, pas d'envoi. Étapes : serveur (table `mail_items`, entité de synchro, outils MCP, route), carte web, carte Android + Room, consigne de l'agent dans Hermes. Vérif : voir « Checks once built » de la spec.
+- Refonte Inbox + Liens (revue du 2026-11-07, web et Android)
+  Principe : l'Inbox est le seul endroit où l'on trie ; un lien est une idée avec un aperçu ; la page Liens est la bibliothèque de ce qu'on a gardé.
+  - [x] 1. Plus d'enregistrement silencieux dans Liens (`settleInboxItem` retiré le 2026-11-07 ; l'add-on Firefox reste un « Ajouter aux liens » explicite) ; web : la saisie d'un lien seul propose Boîte de réception / Tâche / Liens / Note (2026-11-12).
+  - [x] 2. Un seul panneau de tri web pour toute idée (aperçu, étiquettes, projet, Tâche / Liens / Note / Supprimer) ; tâche née d'un lien : adresse en note, « Dans les liens » sous sa description ; `LinkTriageActions`, `LinkSorter` et les décisions Garder / À tester / Rattacher / Plus tard retirés.
+  - [x] 3. Statuts `new` (À voir) et `dropped` (Archivé), « Plus tard » = `review_at` (migration `20261107120000-links-two-statuses`) ; synchro et MCP (`create_link` avec projet et source, `process_inbox_item` avec `link_uid`).
+  - [x] 4. Page Liens web : liste par défaut, recherche / étiquette / projet / Archivés, ⋯ Modifier / Créer une tâche / Archiver / Supprimer.
+  - [ ] Android : `Now` › « Un lien seul dans l'ajout rapide Android ». Vérif sur le téléphone : partager une adresse, lui mettre une étiquette et un projet, en faire une tâche en moins de 4 touchers.
 - Web : reprendre la passe de soustraction Android du 2026-11-02 (`docs/fork/ANDROID-UX-NOTES.md`)
   Aujourd'hui sans bannière ni jauge sauf journée pleine, fin de journée en ligne après les tâches, un seul signal couleur par ligne, deux gestes par idée dans la Boîte, fiche terminée par sa case, Projets et Étiquettes en lignes sans « 0 », surfaces neutres. Vérif : captures avant/après à 390 px et en bureau.
 - Résumé matinal
@@ -99,7 +108,7 @@ Branche `fix/note-quickadd-focus-c7e743d5`.
 - Parité web → Android (inventaire du 2026-11-04 ; absent du code Android)
   (1) « Nouvelle note » depuis la page projet ; (2) commentaires de tâche ; (3) pièces jointes tâche et projet ; (4) relations entre tâches ; (5) personne assignée ; (6) vues enregistrées ; (7) Kanban, chronologie, calendrier de projet ; (8) modèles de projet ; (9) partage public de note ; (10) agendas ICS/CalDAV abonnés. Chaque point porte des données : passer par `backend/modules/sync/`. Vérif par point : créé sur le web, visible et modifiable hors ligne sur Android, retour sur le web.
 - Parité Android → web
-  triage des liens (Tester, Rattacher, Reporter, Jeter) sur la carte de l'Inbox, recherche des liens, revue rapide une idée à la fois. Vérif : mêmes gestes sur le web à 390 px et en bureau. Sans équivalent web (par nature) : widgets, Health Connect, agendas de l'appareil.
+  revue rapide une idée à la fois (le tri des liens est commun depuis la refonte Inbox + Liens). Vérif : mêmes gestes sur le web à 390 px et en bureau. Sans équivalent web (par nature) : widgets, Health Connect, agendas de l'appareil.
 - `docs/fork/CADENCE-PARITY.md`
   aucune case cochée sur 64 ; le remettre à jour ou le remplacer par ces deux entrées.
 

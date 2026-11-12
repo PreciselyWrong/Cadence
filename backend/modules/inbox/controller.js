@@ -13,16 +13,6 @@ function requireUserId(req) {
     return userId;
 }
 
-// The one thing the item became, if the client says: { task_uid } or
-// { project_uid } or { note_uid } or { link_uid }.
-function processTarget(body = {}) {
-    for (const kind of ['task', 'project', 'note', 'link']) {
-        const uid = body?.[`${kind}_uid`];
-        if (uid) return { kind, uid };
-    }
-    return null;
-}
-
 const inboxController = {
     async list(req, res, next) {
         try {
@@ -88,7 +78,7 @@ const inboxController = {
             const userId = requireUserId(req);
             const { uid } = req.params;
             const item = await inboxService.process(userId, uid, {
-                target: processTarget(req.body),
+                target: inboxService.processTarget(req.body),
             });
             res.json(item);
         } catch (error) {

@@ -30,8 +30,10 @@ import { noteLinksFor } from '../../utils/noteAttachmentLinks';
 import { withCarried } from '../../utils/carriedTokens';
 import { createNote, deleteNote, updateNote } from '../../utils/notesService';
 import {
+    CAPTURE_TARGETS,
     CaptureTarget,
     CapturedItem,
+    LINK_CAPTURE_TARGETS,
     nonEmptyLines,
     splitCaptureText,
     splitFirstLine,
@@ -84,7 +86,18 @@ import {
     XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { useStore } from '../../store/useStore';
-import { isUrl, extractUrlTitle } from '../../utils/urlService';
+import {
+    isUrl,
+    extractUrlTitle,
+    urlPreviewWithin,
+} from '../../utils/urlService';
+import { useLinksStore } from '../../store/linksStore';
+import {
+    domainOf,
+    keepLink,
+    linkOnlyAddress,
+    linkTaskDraft,
+} from '../../utils/linkTriage';
 import InboxSelectedChips from './InboxSelectedChips';
 import SuggestionsDropdown from './SuggestionsDropdown';
 import SlashItemRow from './SlashItemRow';
@@ -484,7 +497,9 @@ const QuickCaptureInput = React.forwardRef<
                 ...(picked.project && destination !== 'project'
                     ? [`+${name(picked.project)}`]
                     : []),
-                ...(picked.area && destination !== 'note'
+                ...(picked.area &&
+                destination !== 'note' &&
+                destination !== 'link'
                     ? [`~${name(picked.area.name)}`]
                     : []),
             ];
@@ -1964,6 +1979,22 @@ const QuickCaptureInput = React.forwardRef<
             return cleaned || line.trim();
         };
 
+        // The page title of a link, from the preview already shown or, if it
+        // has not come yet, read for a few seconds at most.
+        const pageTitleOf = async (url: string): Promise<string | null> => {
+            if (
+                urlPreview?.url === normalizeUrl(url) &&
+                !urlPreview.isLoading
+            ) {
+                return urlPreview.title;
+            }
+            try {
+                return (await urlPreviewWithin(url))?.title ?? null;
+            } catch {
+                return null;
+            }
+        };
+
         // Create one item of the chosen kind from one raw text. The first
         // line is the title (dates, @people, #tags and +projects are read
         // from it) and the other lines are its notes or body.
@@ -1978,6 +2009,27 @@ const QuickCaptureInput = React.forwardRef<
                 await createMissingProjects(itemText);
                 const item = await createInboxItemWithStore(itemText);
                 return { target: destination, uid: item.uid, title: first };
+            }
+
+            const linkAddress = linkOnlyAddress(itemText);
+            if (destination === 'link' && linkAddress) {
+                const projectUid = await resolveOrCreateProject(
+                    parseProjectRefs(itemText)[0]
+                );
+                const tagNames = parseHashtags(itemText);
+                const title = await pageTitleOf(linkAddress);
+                const link = await keepLink({
+                    url: linkAddress,
+                    ...(title ? { title } : {}),
+                    ...(tagNames.length > 0 ? { tags: tagNames } : {}),
+                    ...(projectUid ? { project_uid: projectUid } : {}),
+                });
+                return {
+                    target: destination,
+                    uid: link.uid,
+                    title: link.title || title || domainOf(linkAddress),
+                    ...(projectUid ? { projectUid } : {}),
+                };
             }
 
             // Only tasks and projects have dates (and tasks an assignee), so
@@ -2066,10 +2118,17 @@ const QuickCaptureInput = React.forwardRef<
                 : {};
 
             if (destination === 'task') {
+                // A link alone: named after its page, the address in the note.
+                const named = linkAddress
+                    ? linkTaskDraft({
+                          url: linkAddress,
+                          title: await pageTitleOf(linkAddress),
+                      })
+                    : { name: title, note: rest || undefined };
                 const task = applyAnalysisToTask(
                     {
-                        name: title,
-                        note: rest || undefined,
+                        name: named.name,
+                        note: named.note,
                         priority: priorityFromText(first) ?? 'low',
                         status: 'not_started',
                         tags: tagObjects,
@@ -2090,7 +2149,7 @@ const QuickCaptureInput = React.forwardRef<
                 return {
                     target: destination,
                     uid: created.uid,
-                    title,
+                    title: named.name,
                     ...chosenProject,
                 };
             }
@@ -2146,6 +2205,12 @@ const QuickCaptureInput = React.forwardRef<
                               'Created {{total}} tasks.',
                               { total }
                           );
+                case 'link':
+                    return t(
+                        'capture.savedLink',
+                        'Saved "{{title}}" to Links.',
+                        { title }
+                    );
                 case 'note':
                     return total === 1
                         ? t(
@@ -2183,6 +2248,8 @@ const QuickCaptureInput = React.forwardRef<
                         await useStore
                             .getState()
                             .tasksStore.deleteTask(item.uid);
+                    } else if (item.target === 'link') {
+                        await useLinksStore.getState().remove(item.uid);
                     } else if (item.target === 'note') {
                         await deleteNote(item.uid);
                         const { notesStore } = useStore.getState();
@@ -2274,6 +2341,9 @@ const QuickCaptureInput = React.forwardRef<
                     return uploadInboxAttachment(uid, file);
                 }
                 if (item.target === 'task') return uploadAttachment(uid, file);
+                if (item.target === 'link') {
+                    throw new Error('A link holds no files');
+                }
                 return ownerAttachmentsApi(item.target, uid).upload(file);
             };
             for (const { file } of toUpload) {
@@ -2328,6 +2398,18 @@ const QuickCaptureInput = React.forwardRef<
             return toUpload.length - failed.length;
         };
 
+        // An idea that is only a link can go straight to the Links; Project
+        // is not offered for an address. A choice the text no longer allows
+        // falls back to the Inbox (docs/04-inbox-page.md).
+        const linkOnly =
+            unified &&
+            !lockTarget &&
+            files.length === 0 &&
+            linkOnlyAddress(inputText) !== null;
+        const shownTargets = linkOnly ? LINK_CAPTURE_TARGETS : CAPTURE_TARGETS;
+        const destinationNow: CaptureTarget =
+            lockTarget || shownTargets.includes(target) ? target : 'inbox';
+
         const handleUnifiedSubmit = async () => {
             const withFiles = files.length > 0;
             // A pasted screenshot on its own is enough; the file name
@@ -2339,7 +2421,7 @@ const QuickCaptureInput = React.forwardRef<
 
             const texts = splitCaptureText(raw, captureSettings.oneItemPerLine);
             const captured: CapturedItem[] = [];
-            const destination = target;
+            const destination = destinationNow;
 
             const finish = (
                 items: CapturedItem[],
@@ -2493,7 +2575,7 @@ const QuickCaptureInput = React.forwardRef<
         const slashItemsNow =
             slash && slashQueryNow !== null
                 ? slashItems(slash.stage, slashQueryNow, {
-                      target,
+                      target: destinationNow,
                       labels: slashLabels,
                       tags: tags.map((tag) => ({
                           name: tag.name,
@@ -2925,7 +3007,7 @@ const QuickCaptureInput = React.forwardRef<
 
         // What this text will become, in words, for text with several lines
         const multilineNotice = (() => {
-            if (lineTotal < 2) return null;
+            if (lineTotal < 2 || destinationNow === 'link') return null;
             const words = {
                 inbox: {
                     one: t('capture.nounInbox', 'Inbox item'),
@@ -2951,7 +3033,7 @@ const QuickCaptureInput = React.forwardRef<
                     first: t('capture.wordName', 'name'),
                     rest: t('capture.wordDescription', 'description'),
                 },
-            }[target];
+            }[destinationNow];
             if (captureSettings.oneItemPerLine) {
                 return {
                     text: t(
@@ -2966,7 +3048,7 @@ const QuickCaptureInput = React.forwardRef<
             }
             return {
                 text:
-                    target === 'inbox'
+                    destinationNow === 'inbox'
                         ? t(
                               'capture.multiInbox',
                               'This will be 1 Inbox item. All {{lines}} lines are kept as typed.',
@@ -3021,12 +3103,13 @@ const QuickCaptureInput = React.forwardRef<
                 <div className="flex flex-wrap items-center gap-2">
                     <div className="w-full sm:w-auto sm:flex-1 min-w-0">
                         <CaptureDestinations
-                            value={target}
+                            value={destinationNow}
+                            targets={shownTargets}
                             onChange={setTarget}
                             locked={lockTarget}
                             scopeLabel={scopeLabel}
                         />
-                        {defaultGoal && target === 'task' && (
+                        {defaultGoal && destinationNow === 'task' && (
                             <p
                                 className="mt-1.5 text-[13px] text-gray-600 dark:text-gray-300 truncate"
                                 data-testid="capture-goal"

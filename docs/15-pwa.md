@@ -92,7 +92,7 @@ Once installed, Cadence appears in the OS share sheet. Sharing a link or text fr
 
    The claim has to survive remounts: `Layout` swaps the routed page out for a full-screen spinner while its stores run their **first** fetch, so `InboxItems` mounts, unmounts and mounts again on every cold start — which is exactly what a launch from the share sheet is. A read that emptied `sessionStorage` on the first, discarded mount left the surviving composer blank every time.
 
-The shared content is **prefilled, not auto-saved** — the user can edit it and still choose Task / Note / Project, and the existing smart parsing (URL preview, `#tag`, `+Project`, task/note suggestion) applies as if they had typed it.
+The shared content is **prefilled, not auto-saved** — the user can edit it and still choose where it goes (a shared link alone gets Inbox / Task / Links / Note, `docs/04-inbox-page.md`), and the existing smart parsing (URL preview, `#tag`, `+Project`, task/note suggestion) applies as if they had typed it.
 
 ### Why sessionStorage instead of reading the URL directly
 

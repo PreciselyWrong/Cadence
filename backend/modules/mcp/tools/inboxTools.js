@@ -213,7 +213,8 @@ function registerInboxTools(server, context, tools) {
     // 5. process_inbox_item - Mark an inbox item as processed
     tools.push({
         name: 'process_inbox_item',
-        description: 'Mark an inbox item as processed',
+        description:
+            'Mark an inbox item as processed. Say what it became with at most one of task_uid, project_uid, note_uid or link_uid (for a link made with create_link): its files move to that task, project or note.',
         inputSchema: {
             type: 'object',
             properties: {
@@ -221,11 +222,24 @@ function registerInboxTools(server, context, tools) {
                     type: 'string',
                     description: 'Inbox item UID',
                 },
+                task_uid: { type: 'string' },
+                project_uid: { type: 'string' },
+                note_uid: { type: 'string' },
+                link_uid: {
+                    type: 'string',
+                    description: 'A link of the user, else an error',
+                },
             },
             required: ['uid'],
         },
         handler: async (params) => {
-            const item = await inboxService.process(context.userId, params.uid);
+            const item = await inboxService.process(
+                context.userId,
+                params.uid,
+                {
+                    target: inboxService.processTarget(params),
+                }
+            );
 
             return {
                 content: [

@@ -11,6 +11,8 @@ Finding links, reading page metadata and classifying their kind is plain code. A
   - **Task**: creates the task (name = the page title if known, else the idea's text without the address, else the domain; note = the address and the rest of the text; labels and project chosen), then `PATCH /api/inbox/:uid/process { task_uid }`.
   - **Links**: `POST /api/links { url, title?, note?, tags?, project_uid?, source_type: 'inbox_item', source_uid }`, then `PATCH /api/inbox/:uid/process { link_uid }`.
   - **Note** and **Delete**: as for any idea.
+- **A link alone in the Add box** (web): the box offers Inbox (the default) · Task · Links · Note. **Links** keeps the page at once with its title, tags and project and no source; **Task** is named as above with the address in its note (`docs/04-inbox-page.md`, « A link alone »). Android's share sheet offers the same Inbox / Tâche / Liens.
+- **A task made from a link** (Task decision, or « Create a task » on a card) keeps the address in its note; under its description the address reads « In links · site » while the page is in the library, so the task shows the link it came from.
 - **Other ways in**: `POST /api/links` on purpose (Firefox add-on, import, MCP `create_link`, a task or note's **Add to links** with `source_type` `task` or `note`), `POST /api/links/import`, and the sync `link` entity never creates one (a device only edits or deletes).
 - **Context addresses are never proposed as links** (`core/urls.isContextUrl`): IP addresses and private names (`.lan`, `.local`, `.localhost`, `.localdomain`, `.internal`, `.intranet`, `.home.arpa`, `.ts.net`), personal apps (Gmail, Google Calendar and Meet, Gemini, ChatGPT, Claude, Outlook, WhatsApp Web), searches (`google.*/search`), the LinkedIn feed, messages and notifications, and CI runs (`github.com/<owner>/<repo>/actions…`, GitLab `/-/pipelines`, `/-/jobs`). The server's own sites go in `TUDUDI_LINKS_IGNORE_HOSTS` (comma separated, each host with its subdomains): they are private, so they are not in the code. The clean-up below uses this list; saving one on purpose still works.
 - **Clean-up, once per server**: at the first start with this rule, links that came from a task or a note, or whose address is context, and that the user never touched (status To read, no note, tags, project or review day) are deleted like a delete from the Links page: devices receive the deletion and the address goes into `link_exclusions`. The `links_context_pruned` setting marks it done.
@@ -34,7 +36,7 @@ Finding links, reading page metadata and classifying their kind is plain code. A
 
 `DELETE /api/links/:uid` deletes for good. The address goes into `link_exclusions`, as does the old address after a move, so a later save of the text it came from does not bring the link back by itself. Saving the page on purpose (`POST /api/links`, import, the add-on) lifts the exclusion. Devices write the title and the project through `link` sync fields and delete with a sync `delete`; a new address goes through `PATCH`, as a deferred call. MCP: `update_link`, `delete_link`.
 
-Clients show the same controls on a card: one status control (archive or unarchive) and **⋯** (Edit, Create a task, Delete). "Archived" only sets the link aside; a project filter joins the others.
+Clients show the same controls on a card: the title opens the page, then tags, project and **⋯** (Edit, Create a task, Archive or Unarchive, Delete, with a confirmation). The same words everywhere: one « Archive », one « Delete ». "Archived" only sets the link aside.
 
 ## Adding a link directly
 
@@ -64,7 +66,7 @@ A background queue (`backend/modules/links/jobs.js`) fetches each new link once,
 
 ## Themes
 
-A theme is the first segment of a tag (`dev/tools` is in `dev`). The gallery groups links by the theme of their first tag, with the others under "No theme" at the end; it is the default view on both clients. A link in the gallery or list becomes a task in one tap: the task is named after the link and keeps its address (and note) as its note; the link stays where it is.
+A theme is the first segment of a tag (`dev/tools` is in `dev`). The gallery (picture cards, chosen with the List / Gallery switch; the list is the default) groups links by the theme of their first tag, with the others under "No theme" at the end. « Create a task » in ⋯ names the task after the link and keeps its address (and note) as its note; the link stays where it is.
 
 **Themes by AI** are optional, off by default: Profile › Daily brief (web), Réglages › Résumé (Android), `ui_settings.brief.linkThemes.enabled`. After the triage job each night, up to 40 links without a tag get one theme, a plain tag (`modules/links/themes.js`). A tagged link is never touched, and a tag is removed like any other.
 
@@ -97,10 +99,10 @@ Entity `link` (schema 4): fields `note`, `status`, `review_at`; server fields li
 
 ## MCP
 
-`create_link` (same as `POST /api/links`), `group_links` (`uids`, `theme`: adds one tag to each, keeping the others), `propose_link_slot` (a slot in the agenda, waiting for the user in the triage queue, `docs/40-triage.md`), `list_links` (same filters, `query` for the text search, `untagged` to find links still to tag), `get_link`, `update_link` (`note`, `tags`, `status`, `review_at`). They never change the URL or the metadata.
+`create_link` (same as `POST /api/links`, with `project_uid`, `source_type` and `source_uid`; an idea sorted into the links is then marked done with `process_inbox_item` and `link_uid`), `group_links` (`uids`, `theme`: adds one tag to each, keeping the others), `propose_link_slot` (a slot in the agenda, waiting for the user in the triage queue, `docs/40-triage.md`), `list_links` (same filters, `query` for the text search, `untagged` to find links still to tag), `get_link`, `update_link` (`note`, `tags`, `status`, `review_at`). They never change the URL or the metadata.
 
 ## Clients
 
-- **Web**: `/links` (`frontend/components/Links/`): list by default; filters for search, status (`dropped` under "Archived"), tag, project and site; cards with title, description, domain, kind, GitHub stats, note, tags, project and the status and ⋯ menus. A List / Gallery switch turns the page into picture cards.
+- **Web**: `/links` (`frontend/components/Links/`): list by default; four filters: search, tag, project and an « Archived » button (shows only the archive); cards with title (opens the page), description, domain, GitHub stats, note, tags, project and ⋯. A List / Gallery switch turns the page into picture cards.
 - **Android**: Links screen from Listes or the Inbox header (search, kind, status and "Archivés" chips, same cards, note in a small dialog, tag picker).
 - The Inbox decisions and the cards' controls are described in the clients' own notes (`docs/fork/WEB-UX-NOTES.md`, `docs/fork/ANDROID-UX-NOTES.md`) and in `frontend/components/Links/`, `android/`.

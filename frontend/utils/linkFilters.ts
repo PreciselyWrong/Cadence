@@ -121,6 +121,12 @@ const comparable = (url: string): string => {
     }
 };
 
+// Whether a page is already among the saved links.
+export const isKept = (links: Link[], url: string): boolean => {
+    const key = comparable(url);
+    return links.some((l) => comparable(l.url) === key);
+};
+
 // The saved link of an item (an inbox item, a task): the one taken from it,
 // else the same page.
 export const linkForItem = (

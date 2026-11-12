@@ -628,13 +628,14 @@ Update an existing inbox item.
 
 #### `process_inbox_item`
 
-Convert an inbox item into a task, note, or project.
+Marks an inbox item as processed, once what it became exists (same as `PATCH /api/inbox/:uid/process`). Its files move to the task, project or note given.
 
 **Parameters:**
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `id` | number | Yes | Inbox item ID |
-| `type` | string | Yes | `task`, `note`, or `project` |
+| `uid` | string | Yes | Inbox item UID |
+| `task_uid`, `project_uid`, `note_uid` | string | No | What the item became (one of them); must be the user's |
+| `link_uid` | string | No | The link made from it with `create_link`; a link of someone else is an error and the item stays open |
 
 ---
 
@@ -1220,7 +1221,7 @@ Links are made on purpose, never by the server, and carry their page metadata ([
 
 #### `create_link`
 
-Saves a web page as a link; the same page twice is one link. `url`, and optionally `title`, `note`, `status` (`new` or `dropped`), `tags`. The former statuses (`to_evaluate`, `tested`, `kept`, `parked`) are read as `new`.
+Saves a web page as a link on purpose; the same page twice is one link. `url`, and optionally `title`, `note`, `status` (`new` or `dropped`), `tags`, `project_uid` (a project the user can write to), `source_type` (`inbox_item`, `task` or `note`) and `source_uid`. The former statuses (`to_evaluate`, `tested`, `kept`, `parked`) are read as `new`. To sort an inbox idea into the links: `create_link` with `source_type: inbox_item` and the idea's uid, then `process_inbox_item` with `link_uid`.
 
 #### `group_links`
 
