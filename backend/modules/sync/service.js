@@ -299,11 +299,13 @@ async function applyUpsert(userId, op) {
     const refused = await refuseUpsert(userId, op, row);
     if (refused) return refused;
 
-    // Rows mirrored from a TODO.md file answer to the file, not to the merge.
-    // The file write happens outside any transaction, so before the row
-    // lock: inside it, its own write to the row would wait on that lock.
+    // Rows mirrored from a TODO.md file answer to the file for their file-owned
+    // fields, and merge the others. The file write happens outside any
+    // transaction, so before the row lock: inside it, its own write to the row
+    // would wait on that lock.
     const fromFile = await todoMdSync.intercept(userId, op, row);
-    if (fromFile) return fromFile;
+    if (fromFile?.continueWith) op = fromFile.continueWith;
+    else if (fromFile) return fromFile;
 
     // A create that lost the race to another process is merged again, onto
     // the row that process made.

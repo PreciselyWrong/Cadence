@@ -352,6 +352,7 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
         } else if (
             !editable &&
             e.key === 'Delete' &&
+            onDelete &&
             task.uid &&
             !task.is_virtual_occurrence
         ) {

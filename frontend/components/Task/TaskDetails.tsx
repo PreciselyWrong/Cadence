@@ -1264,7 +1264,6 @@ const TaskDetails: React.FC = () => {
     };
 
     const handleSkipOccurrence = async () => {
-        if (isTodoMdTask(task)) return;
         if (!task?.uid) {
             return;
         }
@@ -1423,7 +1422,15 @@ const TaskDetails: React.FC = () => {
     };
 
     const handleTitleUpdate = async (newTitle: string) => {
-        if (isTodoMdTask(task)) return;
+        if (isTodoMdTask(task)) {
+            showErrorToast(
+                t(
+                    'todoMd.readOnly',
+                    'This comes from a TODO.md file. Edit the file instead.'
+                )
+            );
+            return;
+        }
         if (!task?.uid || !newTitle.trim()) {
             return;
         }
@@ -1741,7 +1748,6 @@ const TaskDetails: React.FC = () => {
     };
 
     const handlePriorityUpdate = async (priority: any) => {
-        if (isTodoMdTask(task)) return;
         if (!task?.uid) return;
 
         try {
@@ -1766,7 +1772,6 @@ const TaskDetails: React.FC = () => {
     };
 
     const handleTogglePin = async () => {
-        if (isTodoMdTask(task)) return;
         if (!task?.uid) return;
         try {
             taskModifiedRef.current = true;
@@ -1820,7 +1825,7 @@ const TaskDetails: React.FC = () => {
                     onTitleUpdate={handleTitleUpdate}
                     onStatusUpdate={handleStatusUpdate}
                     onPriorityUpdate={handlePriorityUpdate}
-                    onDelete={handleDeleteClick}
+                    onDelete={fileBacked ? undefined : handleDeleteClick}
                     onDuplicate={handleDuplicate}
                     onSkipOccurrence={
                         canSkipOccurrence ? handleSkipOccurrence : undefined
@@ -1842,9 +1847,7 @@ const TaskDetails: React.FC = () => {
                     commentCount={commentCount}
                     autoEditTitle={isNewTask}
                     ancestorChain={ancestorChain}
-                    onEdit={() => {
-                        if (!fileBacked) setIsTaskPanelOpen(true);
-                    }}
+                    onEdit={() => setIsTaskPanelOpen(true)}
                     onTogglePin={handleTogglePin}
                 />
                 <AutoClassifiedMark entity="task" uid={task.uid} />
@@ -1874,20 +1877,14 @@ const TaskDetails: React.FC = () => {
                     </p>
                 )}
 
-                <div
-                    className={`mb-6 mt-6 ${
-                        fileBacked && activePill === 'overview'
-                            ? 'pointer-events-none select-text opacity-60'
-                            : ''
-                    }`}
-                    aria-disabled={fileBacked}
-                >
+                <div className="mb-6 mt-6">
                     {activePill === 'overview' && (
                         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                             <div className="lg:col-span-3 space-y-8">
                                 <TaskContentCard
                                     content={task.note || ''}
                                     onUpdate={handleContentUpdate}
+                                    readOnly={fileBacked}
                                 />
                                 <TaskSubtasksCard
                                     subtasks={subtasks}

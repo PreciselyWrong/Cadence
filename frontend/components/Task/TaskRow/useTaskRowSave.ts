@@ -10,7 +10,11 @@ import { useToast } from '../../Shared/ToastContext';
 import { useStore } from '../../../store/useStore';
 import { resolveTaskTokens, tokenChanges } from '../../../utils/taskTokens';
 import { isStartAfterDue } from '../../../utils/dueDateTime';
-import { isTodoMdTask } from '../../../utils/todoMd';
+import {
+    isTodoMdReadOnlyError,
+    touchesTodoMdLockedField,
+    isTodoMdTask,
+} from '../../../utils/todoMd';
 
 type RecurrencePayload = Partial<
     Pick<
@@ -54,22 +58,23 @@ export const useTaskRowSave = (
     const { t } = useTranslation();
     const { showErrorToast } = useToast();
 
+    const readOnlyMessage = t(
+        'todoMd.readOnly',
+        'This comes from a TODO.md file. Edit the file instead.'
+    );
+
+    // `fields` are the ones the request sets: a task mirrored from a TODO.md
+    // file refuses the locked ones (name, note, project) and takes the rest.
     const saveWith = useCallback(
         async (
             request: () => Promise<Task>,
             errorKey: string,
-            fallback: string
+            fallback: string,
+            fields: readonly string[] = []
         ) => {
             if (!task.uid) return;
-            // The file is the source of truth: nothing but the check mark
-            // is edited from here.
-            if (isTodoMdTask(task)) {
-                showErrorToast(
-                    t(
-                        'todoMd.readOnly',
-                        'This comes from a TODO.md file. Edit the file instead.'
-                    )
-                );
+            if (isTodoMdTask(task) && touchesTodoMdLockedField(fields)) {
+                showErrorToast(readOnlyMessage);
                 return;
             }
             try {
@@ -85,16 +90,25 @@ export const useTaskRowSave = (
                 // nothing was saved and the saved task still shows.
                 if (isRecurringScopeCancelled(error)) return;
                 console.error('TaskRow save failed:', error);
-                showErrorToast(t(errorKey, fallback));
+                showErrorToast(
+                    isTodoMdReadOnlyError(error)
+                        ? readOnlyMessage
+                        : t(errorKey, fallback)
+                );
                 throw error;
             }
         },
-        [task, onTaskUpdate, showErrorToast, t]
+        [task, onTaskUpdate, showErrorToast, t, readOnlyMessage]
     );
 
     const save = useCallback(
         (partial: Partial<Task>, errorKey: string, fallback: string) =>
-            saveWith(() => saveTaskEdit(task, partial), errorKey, fallback),
+            saveWith(
+                () => saveTaskEdit(task, partial),
+                errorKey,
+                fallback,
+                Object.keys(partial)
+            ),
         [task, saveWith]
     );
 

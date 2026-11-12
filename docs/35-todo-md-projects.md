@@ -44,7 +44,7 @@ A file feeds nothing until a project follows it: Cadence creates no project by i
 - Tasks read from the file carry the tag **`code`**, added to their other tags and put back if removed. The section (`Now`, `Next`, ...) is kept on the task (`source_section`), not as a tag.
 - A task without `code` stays in Cadence: nothing reaches the file and it is edited as usual.
 - A task that gets `code`, by any route (web, device, MCP), is written to `## Next` by the next pass, at most 30 seconds later, and then follows the file. Closed and recurring tasks are not written. Its note moves to the file with it.
-- A task from the file is read-only here, whichever client or MCP asks; only its check box can change. The lock is per task, on the server, the web and Android.
+- The file owns four things of a task from it: its **name**, its **note** (the indented lines), its **check box** (done / not done) and its **project**. Everything else on the task is Cadence-side and editable on the web, Android, the API, MCP and sync: priority, due date and time, start, defer, reminder, tags, area, goal, estimate, pin and today order, the plan of the day, assignee, review and later fields. The policy is one list, `FILE_OWNED_TASK_FIELDS` in `backend/modules/todo-md/policy.js`; the same rule guards PATCH, MCP `update_task` and sync pushes. A field sent with the value it already has is not a change.
 - A linked project can be renamed. It cannot be deleted or completed with its tasks: unlink it first.
 - The outline view of a linked project stays read-only for all its tasks; the list view edits Cadence tasks normally.
 
@@ -137,6 +137,8 @@ A task is matched to its bullet by section + normalised first line + occurrence 
 - a task whose bullet is gone from the file is **removed** from Cadence (with its Cadence-side links);
 - a bullet with the same name as an open or closed task tagged `code` and not yet in the file adopts that task.
 
+A read overwrites only the name, the note and the done box of a task from the file; its Cadence-side fields are kept.
+
 Nothing is deleted because a file is unreachable: if the root is missing or a file cannot be read, that pass is skipped and reported.
 
 ## When it is read
@@ -153,10 +155,13 @@ Nothing is deleted because a file is unreachable: if the root is missing or a fi
 | Add a task tagged `code` (web, Android)  | Appended as a `- ` bullet at the end of `## Next` (section created when missing). The web "+ Add task" field has an **Add to** menu (Cadence only / Now / Next / Ideas); the API takes `todo_section`. A note is written as indented lines. |
 | Add a task without `code`                | Stays in Cadence.                                                                                                                                                                                                           |
 | Check a task off                         | Writes `[x]` on the bullet (adds `[x] ` when it had no box). Unchecking writes `[ ]`. A task in `## Done` or `## Dropped` cannot be reopened from Cadence: move it in the file.                                             |
-| Anything else on a task                  | Refused (`403`, `todo_md_read_only`; sync ops are rejected as `read_only`). The web hides edit controls and shows a **TODO.md** badge.                                                                                      |
+| Change its name, note or project         | Refused (`403`, `todo_md_read_only`; sync ops are rejected as `read_only`, MCP `update_task` returns an error). The web shows the **TODO.md** badge and the read-only title and note, with a toast if a save is refused. |
+| Priority, dates, tags, area, goal, estimate, pin, today, assignee, status other than done | Saved in Cadence as on any task. A status other than done writes the box as not done, then the response shows what the file holds. |
+| Delete the task (or one occurrence)      | Refused (`403`, `todo_md_read_only`). A line removed from the file still deletes its task on the next read. The web hides Delete. |
+| Subtasks                                 | Unchanged: the web does not offer them on a file task, and the server does not refuse them.                                                                                                                                  |
 | Project: delete, complete                | Refused while it follows a file. Rename is allowed, except for a repository project. Area, colour, pin and tags stay editable.                                                                                              |
 
-Today-plan membership, comments, relations and attachments are Cadence-side data and are not blocked.
+Today-plan membership, comments, relations and attachments are Cadence-side data and are not blocked. Tags: the `code` tag is put back by the next read (it is what ties the task to the file); the other tags are free.
 
 ### How a write is made
 
@@ -172,7 +177,7 @@ The file is re-read just before writing, the new content goes to a temp file in 
 
 These are ordinary projects and tasks, so they reach devices through `/api/v1/sync`. The project carries a server-written field `source_type` (listed under `server_fields` in `/sync/meta`; a push that names it is rejected as `unknown_field`).
 
-A task created on a device with the `code` tag inside a TODO.md project goes through the same server path: the bullet is written to the file and the row keeps the uid the device chose. Without the tag it is an ordinary task. Other edits and deletes of mirrored rows (and deleting the project, or renaming a repository project) are rejected as `read_only`; checking a task is accepted and written to the file.
+A task created on a device with the `code` tag inside a TODO.md project goes through the same server path: the bullet is written to the file and the row keeps the uid the device chose. Without the tag it is an ordinary task. An edit of a mirrored row's name, note or project (and deleting the project, or renaming a repository project) is rejected as `read_only`, and so is a delete. A change to the done box is written to the file, and the same push's other fields (priority, dates, tags...) are merged as usual. The Android client still shows these rows with its former lock, so it does not send those fields yet: the server accepts them (follow-up on Android).
 
 Tasks carry a server-written `source_key` (Room `tasks.sourceKey`, base v14): a task with one shows a **TODO.md** badge, its detail sheet is read-only, and swipe, long-press menu and the check box only offer done / reopen. The project's menu has **Fichier TODO.md** while the server offers files to the account (`ui/TodoMdFileDialog.kt`, read online).
 

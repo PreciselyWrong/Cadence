@@ -10,11 +10,14 @@ import MarkdownRenderer from '../../Shared/MarkdownRenderer';
 interface TaskContentCardProps {
     content: string;
     onUpdate: (newContent: string) => Promise<void>;
+    // Shows the note without offering to edit it.
+    readOnly?: boolean;
 }
 
 const TaskContentCard: React.FC<TaskContentCardProps> = ({
     content,
     onUpdate,
+    readOnly = false,
 }) => {
     const { t } = useTranslation();
     const [isEditing, setIsEditing] = useState(false);
@@ -55,6 +58,17 @@ const TaskContentCard: React.FC<TaskContentCardProps> = ({
             handleCancel();
         }
     };
+
+    if (readOnly) {
+        return content ? (
+            <div className="rounded-lg shadow-sm bg-white dark:bg-gray-900 border-2 border-gray-50 dark:border-gray-800 p-6">
+                <MarkdownRenderer
+                    content={content}
+                    className="prose dark:prose-invert max-w-none"
+                />
+            </div>
+        ) : null;
+    }
 
     return (
         <div className="space-y-2">

@@ -324,9 +324,140 @@ describe('TODO.md projects', () => {
         expect(pin.status).toBe(200);
     });
 
+    describe('fields the file does not own', () => {
+        beforeEach(async () => {
+            await agent.post('/api/todo-md/rescan');
+        });
+
+        it('takes priority, due date and tags on a mirrored task, and leaves the file alone', async () => {
+            const [, docs] = await tasksOf('alpha');
+            const before = fs.readFileSync(alpha(), 'utf8');
+
+            const res = await agent.patch(`/api/task/${docs.uid}`).send({
+                priority: 2,
+                due_date: '2026-11-20',
+                tags: ['perso', 'code'],
+            });
+
+            expect(res.status).toBe(200);
+            await docs.reload();
+            expect(docs.priority).toBe(2);
+            expect(docs.due_date).not.toBeNull();
+            const tagged = await Task.findByPk(docs.id, { include: [Tag] });
+            expect(tagged.Tags.map((t) => t.name).sort()).toEqual([
+                'code',
+                'perso',
+            ]);
+            expect(fs.readFileSync(alpha(), 'utf8')).toBe(before);
+        });
+
+        it('refuses a changed name, note or project with todo_md_read_only', async () => {
+            const [, docs] = await tasksOf('alpha');
+            const other = await Project.create({
+                name: 'Other',
+                user_id: user.id,
+            });
+            const before = fs.readFileSync(alpha(), 'utf8');
+
+            for (const body of [
+                { name: 'Renamed' },
+                { note: 'a new note' },
+                { project_uid: other.uid },
+            ]) {
+                const res = await agent
+                    .patch(`/api/task/${docs.uid}`)
+                    .send(body);
+                expect(res.status).toBe(403);
+                expect(res.body.code).toBe('todo_md_read_only');
+            }
+            expect(fs.readFileSync(alpha(), 'utf8')).toBe(before);
+            await docs.reload();
+            expect(docs.name).toBe('Write docs');
+            const alphaProject = await Project.findOne({
+                where: { name: 'alpha' },
+            });
+            expect(docs.project_id).toBe(alphaProject.id);
+        });
+
+        it('accepts a name or note sent with the value it already has', async () => {
+            const [, docs] = await tasksOf('alpha');
+
+            const res = await agent
+                .patch(`/api/task/${docs.uid}`)
+                .send({ name: 'Write docs', note: null, priority: 1 });
+
+            expect(res.status).toBe(200);
+            await docs.reload();
+            expect(docs.priority).toBe(1);
+        });
+
+        it('writes the check box and applies the other fields of the same PATCH', async () => {
+            const [, docs] = await tasksOf('alpha');
+
+            const res = await agent
+                .patch(`/api/task/${docs.uid}`)
+                .send({ status: 2, priority: 2 });
+
+            expect(res.status).toBe(200);
+            expect(fs.readFileSync(alpha(), 'utf8')).toContain(
+                '- [x] Write docs\n'
+            );
+            await docs.reload();
+            expect(docs.status).toBe(2);
+            expect(docs.priority).toBe(2);
+        });
+
+        it('refuses occurrence edits that change the name, and deleting an occurrence', async () => {
+            const [, docs] = await tasksOf('alpha');
+
+            const edit = await agent
+                .post(`/api/task/${docs.uid}/edit-occurrence`)
+                .send({
+                    scope: 'this',
+                    occurrence_date: '2026-11-20',
+                    changes: { name: 'Renamed' },
+                });
+            expect(edit.status).toBe(403);
+            expect(edit.body.code).toBe('todo_md_read_only');
+
+            const removed = await agent
+                .post(`/api/task/${docs.uid}/delete-occurrence`)
+                .send({ scope: 'this', occurrence_date: '2026-11-20' });
+            expect(removed.status).toBe(403);
+            expect(await Task.findByPk(docs.id)).not.toBeNull();
+        });
+
+        it('keeps Cadence-side fields when the file is read again, and takes the file note and box', async () => {
+            const [, docs] = await tasksOf('alpha');
+            await agent
+                .patch(`/api/task/${docs.uid}`)
+                .send({ priority: 2, tags: ['perso', 'code'] });
+
+            const text = fs.readFileSync(alpha(), 'utf8');
+            fs.writeFileSync(
+                alpha(),
+                text.replace(
+                    '- [ ] Write docs\n',
+                    '- [x] Write docs\n  a note from the file\n'
+                )
+            );
+            await agent.post('/api/todo-md/rescan');
+
+            await docs.reload();
+            expect(docs.note).toBe('a note from the file');
+            expect(docs.status).toBe(2);
+            expect(docs.priority).toBe(2);
+            const tagged = await Task.findByPk(docs.id, { include: [Tag] });
+            expect(tagged.Tags.map((t) => t.name).sort()).toEqual([
+                'code',
+                'perso',
+            ]);
+        });
+    });
+
     describe('offline sync', () => {
         const push = (ops) => agent.post('/api/v1/sync/push').send({ ops });
-        const upsert = (opId, entity, uid, fields) => ({
+        const upsert = (opId, entity, uid, fields, at = 5000) => ({
             op_id: opId,
             entity,
             uid,
@@ -334,7 +465,7 @@ describe('TODO.md projects', () => {
             fields: Object.fromEntries(
                 Object.entries(fields).map(([k, v]) => [
                     k,
-                    { value: v, hlc: hlc(5000) },
+                    { value: v, hlc: hlc(at) },
                 ])
             ),
         });
@@ -395,6 +526,48 @@ describe('TODO.md projects', () => {
             );
             expect(mine.length).toBeGreaterThan(0);
             expect(mine.every((c) => c.op_id === null)).toBe(true);
+        });
+
+        it('takes a device edit of a Cadence-side field, refuses a name, and writes the box with the rest', async () => {
+            await agent.post('/api/todo-md/rescan');
+            const [, docs] = await tasksOf('alpha');
+
+            const res = await push([
+                upsert('app-1', 'task', docs.uid, { priority: 2 }, Date.now()),
+                upsert(
+                    'app-2',
+                    'task',
+                    docs.uid,
+                    { name: 'Renamed' },
+                    Date.now()
+                ),
+                upsert(
+                    'app-3',
+                    'task',
+                    docs.uid,
+                    {
+                        status: 2,
+                        estimated_minutes: 30,
+                        completed_at: '2026-10-30T10:00:00.000Z',
+                    },
+                    Date.now()
+                ),
+            ]);
+
+            expect(res.body.results.map((r) => r.status)).toEqual([
+                'applied',
+                'rejected',
+                'applied',
+            ]);
+            expect(res.body.results[1].reason).toBe('read_only');
+            expect(fs.readFileSync(alpha(), 'utf8')).toContain(
+                '- [x] Write docs\n'
+            );
+            await docs.reload();
+            expect(docs.name).toBe('Write docs');
+            expect(docs.priority).toBe(2);
+            expect(docs.estimated_minutes).toBe(30);
+            expect(docs.status).toBe(2);
         });
 
         it('refuses device edits and deletes of mirrored rows but takes a check mark', async () => {

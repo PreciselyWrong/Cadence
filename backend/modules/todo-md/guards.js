@@ -1,26 +1,12 @@
 'use strict';
 
 const service = require('./service');
+const policy = require('./policy');
 
-// What a client may still do to a task or project that mirrors a TODO.md
-// file. Everything else is refused: the file is the source of truth, and a
-// change made here would be overwritten by the next read.
-
-const STATUS_NAMES = { not_started: 0, in_progress: 1, done: 2 };
-const TOGGLE_FIELDS = new Set(['status', 'completed_at']);
-
-// true / false when the change is only "mark done" / "mark not done",
-// null for any other change.
-function doneToggle(fields) {
-    const keys = Object.keys(fields || {});
-    if (!keys.includes('status') || !keys.every((k) => TOGGLE_FIELDS.has(k))) {
-        return null;
-    }
-    const raw = fields.status;
-    const status = typeof raw === 'string' ? STATUS_NAMES[raw] : raw;
-    if (![0, 1, 2].includes(status)) return null;
-    return status === 2;
-}
+// A task mirrored from a TODO.md file keeps its name, its note, its done box
+// and its project in the file (policy.js). Its other fields are Cadence-side
+// and editable everywhere. The file-owned ones are refused: the next read
+// would overwrite them.
 
 const READ_ONLY = {
     error: 'This comes from a TODO.md file: edit the file instead.',
@@ -33,34 +19,91 @@ const sendError = (res, error) =>
         code: error.code,
     });
 
-// Express middleware for the task routes that write (after the access check).
-// `onToggle(req, res, task, done)` answers an allowed check/uncheck.
-function taskGuard(onToggle) {
+async function loadFileTask(uid) {
+    const { Task, Project } = require('../../models');
+    const task = await Task.findOne({
+        where: { uid },
+        attributes: [
+            'id',
+            'uid',
+            'name',
+            'note',
+            'status',
+            'completed_at',
+            'source_key',
+            'project_id',
+        ],
+    });
+    if (!task || !service.isFileBackedTask(task)) return null;
+    const project = await Project.findByPk(task.project_id);
+    return { task, project };
+}
+
+// Guards a route that sets `valuesOf(req)` on a file-backed task.
+// `box` says whether the request may change the done box: when it does, the
+// box is written to the file before the route runs, and the file-owned fields
+// are dropped from `req.body` (`withBody` gives the body to keep).
+function fileTaskGuard({ valuesOf, box, withBody }) {
     return async (req, res, next) => {
         try {
-            const { Task } = require('../../models');
-            const task = await Task.findOne({
-                where: { uid: req.params.uid },
-                attributes: ['id', 'uid', 'source_key', 'project_id'],
-            });
-            if (!task || !service.isFileBackedTask(task)) return next();
+            const found = await loadFileTask(req.params.uid);
+            if (!found) return next();
+            const { task, project } = found;
 
-            const done = req.method === 'PATCH' ? doneToggle(req.body) : null;
-            if (done === null) return res.status(403).json(READ_ONLY);
-
-            try {
-                await onToggle(req, res, task, done);
-            } catch (error) {
-                if (error instanceof service.TodoMdError) {
-                    return sendError(res, error);
-                }
-                throw error;
+            const values = valuesOf(req);
+            if (values === null) return res.status(403).json(READ_ONLY);
+            const changes = policy.fileOwnedChanges(task, project, values);
+            if (
+                changes.refused.length > 0 ||
+                (changes.status !== null && !box)
+            ) {
+                return res.status(403).json(READ_ONLY);
             }
+
+            if (changes.status !== null) {
+                await service.setTaskDone(
+                    task,
+                    project,
+                    changes.status === policy.DONE
+                );
+            }
+            withBody(req, policy.withoutFileOwned(values));
+            return next();
         } catch (error) {
-            next(error);
+            if (error instanceof service.TodoMdError) {
+                return sendError(res, error);
+            }
+            return next(error);
         }
     };
 }
+
+// PATCH /task/:uid: the box is written to the file, the rest is applied.
+const patchTaskGuard = fileTaskGuard({
+    valuesOf: (req) => req.body || {},
+    box: true,
+    withBody: (req, rest) => {
+        req.body = rest;
+    },
+});
+
+// Edit of one occurrence: its changes go through the same rules; the box is
+// not written from here.
+const occurrenceEditGuard = fileTaskGuard({
+    valuesOf: (req) => req.body?.changes || {},
+    box: false,
+    withBody: (req, rest) => {
+        req.body = { ...req.body, changes: rest };
+    },
+});
+
+// Deleting is refused: a line removed from the file deletes its task, and a
+// delete in Cadence would be undone by the next read.
+const refuseFileTask = fileTaskGuard({
+    valuesOf: () => null,
+    box: false,
+    withBody: () => {},
+});
 
 // A file-backed project cannot be deleted or completed with its tasks: unlink
 // it first. Only a repository project keeps its name (the slug's).
@@ -88,4 +131,11 @@ async function projectGuard(req, res, next) {
     }
 }
 
-module.exports = { doneToggle, taskGuard, projectGuard, READ_ONLY, sendError };
+module.exports = {
+    patchTaskGuard,
+    occurrenceEditGuard,
+    refuseFileTask,
+    projectGuard,
+    READ_ONLY,
+    sendError,
+};

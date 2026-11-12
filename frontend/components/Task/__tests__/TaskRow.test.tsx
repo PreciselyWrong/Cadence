@@ -428,6 +428,62 @@ describe('TaskRow', () => {
         expect(screen.queryByDisplayValue('Task A')).not.toBeInTheDocument();
     });
 
+    describe('a task mirrored from a TODO.md file', () => {
+        const toggleMock = tasksService.toggleTaskCompletion as jest.Mock;
+        const fileTask = baseTask({
+            source_key: 'now-buy',
+            source_section: 'Now',
+        } as Partial<Task>);
+        beforeEach(() => {
+            toggleMock.mockReset();
+            (tasksService.updateTask as jest.Mock).mockClear();
+        });
+
+        it('keeps the round check, which writes the box and nothing else', async () => {
+            toggleMock.mockResolvedValue({ ...fileTask, status: 'done' });
+            const onTaskCompletionToggle = jest.fn();
+            renderRow(fileTask, { onTaskCompletionToggle });
+
+            fireEvent.click(
+                screen.getByRole('checkbox', { name: 'Mark as done' })
+            );
+
+            await waitFor(() =>
+                expect(onTaskCompletionToggle).toHaveBeenCalledWith(
+                    expect.objectContaining({ status: 'done' })
+                )
+            );
+            expect(toggleMock).toHaveBeenCalledWith(
+                'task-1',
+                expect.objectContaining({ uid: 'task-1' })
+            );
+            expect(tasksService.updateTask).not.toHaveBeenCalled();
+        });
+
+        it('shows its title as text when expanded, not as an input', () => {
+            renderRow(fileTask);
+
+            fireEvent.click(screen.getByText('Buy tickets'));
+
+            expect(screen.getByText('Buy tickets')).toBeInTheDocument();
+            expect(
+                screen.queryByDisplayValue('Buy tickets')
+            ).not.toBeInTheDocument();
+        });
+
+        it('offers no delete, and still offers the priority control when expanded', () => {
+            renderRow(fileTask);
+            fireEvent.click(screen.getByText('Buy tickets'));
+
+            expect(
+                screen.queryByRole('button', { name: 'Delete' })
+            ).not.toBeInTheDocument();
+            expect(
+                screen.getByRole('button', { name: 'Priority' })
+            ).toBeInTheDocument();
+        });
+    });
+
     describe('virtual occurrences of a recurring task', () => {
         const occurrence = (index: number) =>
             baseTask({

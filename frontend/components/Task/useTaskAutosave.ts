@@ -12,7 +12,11 @@ import {
     TASK_PANEL_SAVED_EVENT,
     TaskPanelSavedDetail,
 } from '../../store/taskPanelStore';
-import { isTodoMdTask } from '../../utils/todoMd';
+import {
+    isTodoMdReadOnlyError,
+    isTodoMdTask,
+    touchesTodoMdLockedField,
+} from '../../utils/todoMd';
 import useTaskRowSave, { TaskRowSetters } from './TaskRow/useTaskRowSave';
 
 export type SaveState = 'idle' | 'saving' | 'saved' | 'error';
@@ -25,14 +29,13 @@ export interface TaskAutosave {
     state: SaveState;
     // Runs one save. `optimistic` shows at once and is rolled back if the
     // save fails or is cancelled. A task mirrored from a TODO.md file refuses
-    // every save but the ones flagged `allowReadOnly` (the done toggle).
+    // a save of its name, note or project; its box and the other fields save.
     run: (
         optimistic: Partial<Task>,
         op: (
             setters: TaskRowSetters,
             commit: (next?: Task) => Promise<void>
-        ) => Promise<void>,
-        options?: { allowReadOnly?: boolean }
+        ) => Promise<void>
     ) => Promise<boolean>;
     // Saves plain fields (status, area, estimate) with the same rollback
     runFields: (
@@ -114,15 +117,17 @@ export const useTaskAutosave = (
     const execute = useCallback(
         (
             optimistic: Partial<Task>,
-            op: () => Promise<void>,
-            allowReadOnly = false
+            op: () => Promise<void>
         ): Promise<boolean> => {
-            // The file is the source of truth: nothing is sent, nothing shown
-            if (!allowReadOnly && isTodoMdTask(savedRef.current)) {
+            const keys = Object.keys(optimistic) as (keyof Task)[];
+            // The file keeps the name, note and project: nothing is sent, nothing shown
+            if (
+                isTodoMdTask(savedRef.current) &&
+                touchesTodoMdLockedField(keys)
+            ) {
                 refuseRef.current();
                 return Promise.resolve(false);
             }
-            const keys = Object.keys(optimistic) as (keyof Task)[];
             setOverrides((current) => ({ ...current, ...optimistic }));
             inFlight.current += 1;
             window.clearTimeout(idleTimer.current);
@@ -166,11 +171,9 @@ export const useTaskAutosave = (
     );
 
     const run = useCallback<TaskAutosave['run']>(
-        (optimistic, op, options) =>
-            execute(
-                optimistic,
-                () => op(settersRef.current, commitRef.current),
-                options?.allowReadOnly
+        (optimistic, op) =>
+            execute(optimistic, () =>
+                op(settersRef.current, commitRef.current)
             ),
         [execute]
     );
@@ -186,7 +189,9 @@ export const useTaskAutosave = (
                     );
                     await commitRef.current(edited);
                 } catch (error) {
-                    if (!isRecurringScopeCancelled(error)) {
+                    if (isTodoMdReadOnlyError(error)) {
+                        refuseRef.current();
+                    } else if (!isRecurringScopeCancelled(error)) {
                         showErrorToast(t(errorKey, fallback));
                     }
                     throw error;

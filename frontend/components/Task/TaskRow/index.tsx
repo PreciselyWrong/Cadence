@@ -33,7 +33,7 @@ import {
     TASK_RELATIONS_CHANGED_EVENT,
     TaskRelationsChangedDetail,
 } from '../../../utils/tasksService';
-import { isTodoMdTask } from '../../../utils/todoMd';
+import { isTodoMdReadOnlyError, isTodoMdTask } from '../../../utils/todoMd';
 import {
     deleteTaskWithScope,
     isRecurringScopeCancelled,
@@ -206,10 +206,10 @@ const TaskRow: React.FC<TaskRowProps> = ({
         [task, panelSaved, blockedOverride]
     );
 
-    // A task mirrored from a TODO.md file only offers its check mark.
+    // A task mirrored from a TODO.md file keeps its name, note and project in
+    // the file: its title, note and delete are not offered (see below).
     const fileBacked = isTodoMdTask(task);
-    const canExpand =
-        !disableExpand && !task.habit_mode && !!task.uid && !fileBacked;
+    const canExpand = !disableExpand && !task.habit_mode && !!task.uid;
     const isMinimal = useIsMinimal();
     const { openTask: openPane, openTaskUid } = useTaskPane();
     const isPaneOpen = isMinimal && !!task.uid && openTaskUid === task.uid;
@@ -423,7 +423,12 @@ const TaskRow: React.FC<TaskRowProps> = ({
             if (isRecurringScopeCancelled(error)) return;
             console.error('Task status update failed:', error);
             showErrorToast(
-                t('task.statusUpdateError', 'Failed to update status')
+                isTodoMdReadOnlyError(error)
+                    ? t(
+                          'todoMd.readOnly',
+                          'This comes from a TODO.md file. Edit the file instead.'
+                      )
+                    : t('task.statusUpdateError', 'Failed to update status')
             );
         }
     };
@@ -515,6 +520,14 @@ const TaskRow: React.FC<TaskRowProps> = ({
         } catch (error) {
             console.error('Error toggling task completion:', error);
             setIsAnimatingOut(false);
+            if (isTodoMdReadOnlyError(error)) {
+                showErrorToast(
+                    t(
+                        'todoMd.readOnly',
+                        'This comes from a TODO.md file. Edit the file instead.'
+                    )
+                );
+            }
         }
     };
 
@@ -581,14 +594,14 @@ const TaskRow: React.FC<TaskRowProps> = ({
                     project={project}
                     hideProjectName={hideProjectName}
                     hideAreaName={hideAreaName}
-                    hideStatusControl={hideStatusControl || fileBacked}
+                    hideStatusControl={hideStatusControl}
                     condenseStatusControl={isUpcomingView}
                     hideDueDate={isUpcomingView}
                     compact={compact}
                     onActivate={handleActivate}
                     onToggleCompletion={handleToggleCompletion}
                     onTaskUpdate={handleStatusUpdate}
-                    onFieldUpdate={fileBacked ? undefined : onTaskUpdate}
+                    onFieldUpdate={onTaskUpdate}
                     onMenuOpenChange={setIsStatusMenuOpen}
                     hasSubtasks={shouldShowSubtasksIcon}
                     showSubtasks={showSubtasks}
@@ -599,14 +612,14 @@ const TaskRow: React.FC<TaskRowProps> = ({
                     }
                     commentCount={commentCount}
                     editable={isExpanded}
-                    onSaveTitle={setters.setTitle}
+                    onSaveTitle={fileBacked ? undefined : setters.setTitle}
                     onEscape={collapse}
                     onEdit={task.uid ? openTask : undefined}
                     onDelete={
                         task.uid && !fileBacked ? handleDeleteClick : undefined
                     }
                     onTogglePin={
-                        task.uid && !fileBacked
+                        task.uid
                             ? () => {
                                   setters
                                       .setPinned(!task.pinned)
@@ -616,9 +629,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
                     }
                     onActionsMenuOpenChange={setIsActionsMenuOpen}
                     onContextMenu={
-                        isMinimal && task.uid && !fileBacked
-                            ? openContextMenu
-                            : undefined
+                        isMinimal && task.uid ? openContextMenu : undefined
                     }
                 />
 
@@ -629,7 +640,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
                         setters={setters}
                         open={isExpanded}
                         onExited={handlePanelExited}
-                        onDelete={handleDeleteClick}
+                        onDelete={fileBacked ? undefined : handleDeleteClick}
                         onOpenPanel={() => {
                             collapse();
                             openTask();
@@ -748,7 +759,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
                     task={displayTask}
                     projects={projectList}
                     onTaskUpdate={onTaskUpdate}
-                    onDelete={askToDelete}
+                    onDelete={fileBacked ? undefined : askToDelete}
                     onClose={() => setContextMenuAt(null)}
                 />
             )}

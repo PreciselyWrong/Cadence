@@ -1,7 +1,7 @@
 'use strict';
 
 const service = require('./service');
-const { doneToggle } = require('./guards');
+const policy = require('./policy');
 const { runWithOp } = require('../sync/context');
 
 const rejected = (reason) => ({ status: 'rejected', reason });
@@ -13,11 +13,14 @@ const plainFields = (fields) =>
     );
 
 // Sync pushes that touch TODO.md-backed rows. Returns the op's result when
-// it is handled here, or null when the op is none of this module's business.
+// it is handled here, `{ continueWith: op }` when the merge still has to apply
+// the op's Cadence-side fields, or null when the op is none of this module's
+// business.
 //   - a task created with the code tag in a file-backed project is written
 //     to the file (without it, the task stays in Cadence);
-//   - checking or unchecking a mirrored task is written to the file;
-//   - any other edit or delete of a mirrored task or project is refused.
+//   - a mirrored task's box is written to the file, and its Cadence-side
+//     fields are merged as usual;
+//   - a change to any other file-owned field, or any delete, is refused.
 async function intercept(userId, op, row) {
     const { Project, Tag } = models();
 
@@ -33,18 +36,27 @@ async function intercept(userId, op, row) {
     if (row) {
         if (!service.isFileBackedTask(row)) return null;
         if (op.action !== 'upsert') return rejected('read_only');
-        const done = doneToggle(plainFields(op.fields));
-        if (done === null) return rejected('read_only');
         const project = await Project.findByPk(row.project_id);
+        const values = plainFields(op.fields);
+        const changes = policy.fileOwnedChanges(row, project, values);
+        if (changes.refused.length > 0) return rejected('read_only');
         try {
-            await service.setTaskDone(row, project, done);
-            return { status: 'applied' };
+            if (changes.status !== null) {
+                await service.setTaskDone(
+                    row,
+                    project,
+                    changes.status === policy.DONE
+                );
+            }
         } catch (error) {
             if (error instanceof service.TodoMdError) {
                 return rejected(error.code);
             }
             throw error;
         }
+        const rest = policy.withoutFileOwned(op.fields);
+        if (Object.keys(rest).length === 0) return { status: 'applied' };
+        return { continueWith: { ...op, fields: rest } };
     }
 
     if (op.action !== 'upsert') return null;

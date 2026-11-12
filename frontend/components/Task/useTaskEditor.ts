@@ -112,7 +112,8 @@ export const useTaskEditor = (
             ? [...people, task.AssignedTo]
             : people;
 
-    // Mirrored from a TODO.md file: only the done toggle edits it
+    // Mirrored from a TODO.md file: its name and note are read-only here, and
+    // so are its subtasks; the other fields and the done box are edited.
     const readOnly = isTodoMdTask(task);
 
     const commitTitle = async (text = draftName.current) => {
@@ -235,14 +236,10 @@ export const useTaskEditor = (
     const toggleCompletion = () => {
         if (!task.uid) return;
         const uid = task.uid;
-        void run(
-            {},
-            async (_setters, commit) => {
-                await toggleTaskCompletion(uid, task);
-                await commit();
-            },
-            { allowReadOnly: true }
-        ).then((ok) => {
+        void run({}, async (_setters, commit) => {
+            await toggleTaskCompletion(uid, task);
+            await commit();
+        }).then((ok) => {
             if (!ok) {
                 showErrorToast(
                     t('task.statusUpdateError', 'Failed to update status')

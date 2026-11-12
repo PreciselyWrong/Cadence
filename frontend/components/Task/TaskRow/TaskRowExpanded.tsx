@@ -38,7 +38,8 @@ interface TaskRowExpandedProps {
     subtasksOpen: boolean;
     onToggleSubtasks: () => void;
     onAddSubtask: (name: string) => void;
-    onDelete: (e: React.MouseEvent) => void;
+    // Absent when the task cannot be deleted here.
+    onDelete?: (e: React.MouseEvent) => void;
     onOpenPanel: () => void;
     commentCount: number;
     onCommentCountChange: (count: number) => void;

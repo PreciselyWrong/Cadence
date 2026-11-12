@@ -468,24 +468,12 @@ router.get('/tasks/smart-counts', async (req, res) => {
     }
 });
 
-// Tasks mirrored from a TODO.md file are read-only here, except for
-// checking them off, which is written back to the file.
-const todoMdTaskGuard = todoMd.guards.taskGuard(
-    async (req, res, task, done) => {
-        const project = await Project.findByPk(task.project_id);
-        await todoMd.service.setTaskDone(task, project, done);
-        const reloaded = await taskRepository.findById(task.id, {
-            include: TASK_INCLUDES_WITH_SUBTASKS,
-        });
-        res.json(
-            await serializeTask(reloaded, req.currentUser.timezone, {
-                skipDisplayNameTransform: true,
-            })
-        );
-    }
-);
-
-const taskWriteGuards = [requireTaskWriteAccess, todoMdTaskGuard];
+// Tasks mirrored from a TODO.md file keep their name, note, done box and
+// project in the file (todo-md/policy.js); the rest is edited here as usual.
+const patchGuards = [requireTaskWriteAccess, todoMd.guards.patchTaskGuard];
+const deleteTaskGuards = [requireTaskWriteAccess, todoMd.guards.refuseFileTask];
+const taskWriteGuards = [requireTaskWriteAccess];
+const editGuards = [requireTaskWriteAccess, todoMd.guards.occurrenceEditGuard];
 
 router.post(
     '/task',
@@ -1078,7 +1066,7 @@ async function applyTaskPatch(task, body, req) {
     return taskWithAssociations;
 }
 
-router.patch('/task/:uid', taskWriteGuards, async (req, res) => {
+router.patch('/task/:uid', patchGuards, async (req, res) => {
     try {
         const task = await taskRepository.findByUid(req.params.uid, {
             include: TASK_INCLUDES_WITH_SUBTASKS,
@@ -1152,7 +1140,7 @@ async function deleteTaskAndInstances(task) {
     await destroyTaskRows(task);
 }
 
-router.delete('/task/:uid', taskWriteGuards, async (req, res) => {
+router.delete('/task/:uid', deleteTaskGuards, async (req, res) => {
     try {
         const task = await taskRepository.findByUid(req.params.uid, {
             include: [{ model: TaskAttachment, as: 'Attachments' }],
@@ -1337,7 +1325,7 @@ router.post('/task/:uid/move-occurrence', taskWriteGuards, async (req, res) => {
 // (moveOccurrence, to its new day if `changes.due_date` names one), then the
 // changes go through the same rules as PATCH /task/:uid, on the task that
 // now holds it.
-router.post('/task/:uid/edit-occurrence', taskWriteGuards, async (req, res) => {
+router.post('/task/:uid/edit-occurrence', editGuards, async (req, res) => {
     try {
         const task = await taskRepository.findByUid(req.params.uid);
 
@@ -1409,7 +1397,7 @@ router.post('/task/:uid/edit-occurrence', taskWriteGuards, async (req, res) => {
 // ends the day before), or the whole series.
 router.post(
     '/task/:uid/delete-occurrence',
-    taskWriteGuards,
+    deleteTaskGuards,
     async (req, res) => {
         try {
             const task = await taskRepository.findByUid(req.params.uid, {

@@ -29,7 +29,8 @@ interface TaskDetailsHeaderProps {
     onTitleUpdate: (newTitle: string) => Promise<void>;
     onStatusUpdate: (newStatus: number) => Promise<void>;
     onPriorityUpdate: (newPriority: PriorityType) => Promise<void>;
-    onDelete: () => void;
+    // Absent for a task that cannot be deleted here (a TODO.md task).
+    onDelete?: () => void;
     onDuplicate?: () => void;
     onSkipOccurrence?: () => void;
     getProjectLink?: (project: any) => string;
@@ -914,17 +915,24 @@ const TaskDetailsHeader: React.FC<TaskDetailsHeaderProps> = ({
                                                         )}
                                                     </button>
                                                 )}
-                                            <button
-                                                className="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    e.stopPropagation();
-                                                    setActionsMenuOpen(false);
-                                                    onDelete();
-                                                }}
-                                            >
-                                                {t('common.delete', 'Delete')}
-                                            </button>
+                                            {onDelete && (
+                                                <button
+                                                    className="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
+                                                        setActionsMenuOpen(
+                                                            false
+                                                        );
+                                                        onDelete();
+                                                    }}
+                                                >
+                                                    {t(
+                                                        'common.delete',
+                                                        'Delete'
+                                                    )}
+                                                </button>
+                                            )}
                                         </div>
                                     )}
                                 </div>

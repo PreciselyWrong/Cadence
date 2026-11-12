@@ -24,9 +24,12 @@ const { handleCompletionStatus } = require('../../tasks/operations/completion');
 const { Op } = require('sequelize');
 const { sequelize, Task, Project, Tag, Area } = require('../../../models');
 const todoMd = require('../../todo-md/service');
+const todoMdPolicy = require('../../todo-md/policy');
 
-const FROM_TODO_MD =
-    'This task comes from a TODO.md file: edit the file instead. Only complete_task is allowed.';
+const FROM_TODO_MD_FILE_FIELDS =
+    'This task comes from a TODO.md file: its name, note, done box and project are edited in the file.';
+const FROM_TODO_MD_DELETE =
+    'This task comes from a TODO.md file: remove its line from the file to delete it.';
 const {
     validateProjectAccess,
     validateDeferUntilAndDueDate,
@@ -778,10 +781,6 @@ function registerTaskTools(server, context, tools) {
                 throw new Error('Access denied');
             }
 
-            if (task.source_key) {
-                throw new Error(FROM_TODO_MD);
-            }
-
             const previousAssignedTo = task.assigned_to;
             const updates = {};
             if (params.name !== undefined) updates.name = params.name;
@@ -812,7 +811,9 @@ function registerTaskTools(server, context, tools) {
                     planned: 6,
                 };
                 updates.status = statusMap[params.status];
-                await handleCompletionStatus(updates, updates.status, task);
+                if (!task.source_key) {
+                    await handleCompletionStatus(updates, updates.status, task);
+                }
             }
             if (params.due_date !== undefined) {
                 // Normalize to end-of-day in the user's timezone, matching
@@ -952,6 +953,29 @@ function registerTaskTools(server, context, tools) {
             await handleRecurrenceUpdate(task, RECURRENCE_FIELDS, params);
 
             // recurring tasks advance in place, same as PATCH /api/task/:uid
+            if (task.source_key) {
+                const project = await Project.findByPk(task.project_id);
+                const changes = todoMdPolicy.fileOwnedChanges(task, project, {
+                    name: params.name,
+                    note: params.note ?? params.description,
+                    status: params.status,
+                    project_id: params.project_id,
+                });
+                if (changes.refused.length > 0) {
+                    throw new Error(FROM_TODO_MD_FILE_FIELDS);
+                }
+                if (changes.status !== null) {
+                    await todoMd.setTaskDone(
+                        task,
+                        project,
+                        changes.status === todoMdPolicy.DONE
+                    );
+                }
+                for (const field of todoMdPolicy.FILE_OWNED_TASK_FIELDS) {
+                    delete updates[field];
+                }
+            }
+
             const recurringOccurrence =
                 updates.status === Task.STATUS.DONE
                     ? planOccurrenceAdvance(task, {
@@ -1267,7 +1291,7 @@ function registerTaskTools(server, context, tools) {
             }
 
             if (task.source_key) {
-                throw new Error(FROM_TODO_MD);
+                throw new Error(FROM_TODO_MD_DELETE);
             }
 
             await task.destroy();

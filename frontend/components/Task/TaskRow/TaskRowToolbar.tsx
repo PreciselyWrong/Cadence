@@ -47,7 +47,7 @@ interface TaskRowToolbarProps {
     setters: TaskRowSetters;
     openSection: TaskRowSection | null;
     onToggleSection: (section: TaskRowSection) => void;
-    onDelete: (e: React.MouseEvent) => void;
+    onDelete?: (e: React.MouseEvent) => void;
     onOpenPanel: () => void;
     commentCount?: number;
     relationCount?: number;
@@ -310,13 +310,14 @@ const TaskRowToolbar: React.FC<TaskRowToolbarProps> = ({
                 <ArrowTopRightOnSquareIcon className="h-4 w-4" />
             </button>
 
-            {/* Delete */}
-            <ToolbarButton
-                onClick={onDelete}
-                tone="danger"
-                label={t('common.delete', 'Delete')}
-                icon={<TrashIcon className="h-4 w-4" />}
-            />
+            {onDelete && (
+                <ToolbarButton
+                    onClick={onDelete}
+                    tone="danger"
+                    label={t('common.delete', 'Delete')}
+                    icon={<TrashIcon className="h-4 w-4" />}
+                />
+            )}
         </div>
     );
 };

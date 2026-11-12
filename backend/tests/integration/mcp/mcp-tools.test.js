@@ -1796,6 +1796,28 @@ describe('MCP Tools Integration', () => {
                 );
             });
 
+            it('takes priority and the box through update_task, but not the name', async () => {
+                const before = fs.readFileSync(file, 'utf8');
+
+                const app = await callMcpTool(apiTokenValue, 'update_task', {
+                    id: task.uid,
+                    priority: 'high',
+                });
+                expect(getToolContent(app).isError).toBeFalsy();
+                await task.reload();
+                expect(task.priority).toBe(2);
+                expect(fs.readFileSync(file, 'utf8')).toBe(before);
+
+                const box = await callMcpTool(apiTokenValue, 'update_task', {
+                    id: task.uid,
+                    status: 'done',
+                });
+                expect(getToolContent(box).isError).toBeFalsy();
+                expect(fs.readFileSync(file, 'utf8')).toContain(
+                    '- [x] Ship it\n'
+                );
+            });
+
             it('refuses to edit or delete it', async () => {
                 const before = fs.readFileSync(file, 'utf8');
                 for (const [tool, args] of [

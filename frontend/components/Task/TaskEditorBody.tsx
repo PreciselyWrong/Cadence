@@ -139,7 +139,6 @@ export const TaskEditorBody: React.FC<{ ed: TaskEditor }> = ({ ed }) => {
             {!readOnly && <AutoClassifiedMark entity="task" uid={task.uid} />}
 
             <TaskChipRow
-                readOnly={readOnly}
                 task={task}
                 people={assignablePeople}
                 onDue={changeDue}
@@ -272,7 +271,7 @@ export const TaskEditorBody: React.FC<{ ed: TaskEditor }> = ({ ed }) => {
                 )}
             </div>
 
-            {task.uid && !readOnly && (
+            {task.uid && (
                 <AddToLinks
                     sourceType="task"
                     sourceUid={task.uid}
@@ -319,7 +318,7 @@ export const TaskEditorBody: React.FC<{ ed: TaskEditor }> = ({ ed }) => {
                             />
                         </SidePanelSection>
                     </div>
-                    {!showAttachments && !readOnly && (
+                    {!showAttachments && (
                         <button
                             type="button"
                             onClick={() => setAttachOpen(true)}
@@ -330,7 +329,7 @@ export const TaskEditorBody: React.FC<{ ed: TaskEditor }> = ({ ed }) => {
                         </button>
                     )}
 
-                    <TaskContexts taskUid={task.uid} readOnly={readOnly} />
+                    <TaskContexts taskUid={task.uid} />
 
                     <SidePanelSection
                         title={
@@ -378,14 +377,14 @@ export const TaskEditorFooter: React.FC<{
     ed: TaskEditor;
     withStatus?: boolean;
 }> = ({ ed, withStatus = false }) => {
-    const { t, done, readOnly, postponeToTomorrow, handleComplete } = ed;
+    const { t, done, postponeToTomorrow, handleComplete } = ed;
     return (
         <footer className="flex flex-shrink-0 items-center justify-end gap-3 bg-gray-50 px-5 py-3 dark:bg-gray-900/40">
             {withStatus && <SaveIndicator state={ed.state} />}
             <button
                 type="button"
                 onClick={postponeToTomorrow}
-                disabled={done || readOnly}
+                disabled={done}
                 data-testid="task-postpone-button"
                 className="rounded-full bg-gray-200/70 px-5 py-2 text-sm font-medium text-gray-800 transition-colors hover:bg-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:opacity-50 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600"
             >

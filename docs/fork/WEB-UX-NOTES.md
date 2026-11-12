@@ -608,3 +608,9 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Problème** : des éléments sortaient sans bruit de tout ce que l'on regarde : cartes du classement cachées derrière Ma journée, liens « à revoir » jamais revus, « Supprimer » d'« À trier » immédiat, erreurs génériques, libellés ambigus (« Aucun » deux fois, « Jeter » qui archive).
 - **Décision** : « À trier (n) » dans l'en-tête de l'Inbox ; carte « Lien à revoir » (Garder, Archiver, Dans 30 jours) ; suppression avec fenêtre d'annulation ; « Déjà traité ailleurs. » retire la carte ; « Ignorer » pour écarter une carte, « Archiver le nouveau » pour un doublon.
 - **Android à reprendre** : livré dans la même étape (plus : notifications périmées retirées, texte de notification qui dit ce que « Tout accepter » pose, état vide de l'Inbox).
+
+### 2026-11-12 — TODO.md : une tâche du fichier reste une vraie tâche
+
+- **Problème** : une tâche venue d'un `TODO.md` était verrouillée entièrement (chips, date, priorité, épingle, menu, supprimer, sous-tâches, panneau désactivé à 60 % d'opacité) ; seule la case passait.
+- **Décision** : le fichier garde le nom, la note, la case et le projet ; le reste est à Cadence (priorité, dates, étiquettes, domaine, objectif, estimation, épingle, « Aujourd'hui », responsable). Ligne : case ronde, titre et menu ouverts, épingle et options disponibles, pas de Supprimer. Panneau : titre et note en lecture seule avec le badge TODO.md et le bandeau, le reste s'édite ; la note et les sous-tâches restent verrouillées comme avant. Un enregistrement refusé (`todo_md_read_only`) affiche le bandeau TODO.md au lieu d'un échec générique.
+- **Android à reprendre** : le serveur accepte désormais les champs Cadence d'une tâche du fichier (web, API, MCP, synchro) ; l'écran Android garde son verrou complet tant qu'il n'est pas repris (fiche, glissement, menu, case).

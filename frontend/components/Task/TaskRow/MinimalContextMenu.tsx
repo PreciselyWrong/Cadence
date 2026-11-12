@@ -52,8 +52,8 @@ interface MinimalContextMenuProps {
     projects: Project[];
     // Saves the change and tells the list; the row passes its own handler.
     onTaskUpdate: (task: Task) => Promise<void>;
-    // Opens the row's delete confirmation.
-    onDelete: () => void;
+    // Opens the row's delete confirmation. Absent when the task cannot be deleted.
+    onDelete?: () => void;
     onClose: () => void;
 }
 
@@ -427,18 +427,20 @@ const MinimalContextMenu: React.FC<MinimalContextMenuProps> = ({
                     {t('task.duplicate', 'Duplicate')}
                 </button>
             )}
-            <button
-                type="button"
-                role="menuitem"
-                onClick={() => {
-                    onClose();
-                    onDelete();
-                }}
-                className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 transition-colors"
-            >
-                <TrashIcon className="h-4 w-4" aria-hidden="true" />
-                {t('common.delete', 'Delete')}
-            </button>
+            {onDelete && (
+                <button
+                    type="button"
+                    role="menuitem"
+                    onClick={() => {
+                        onClose();
+                        onDelete();
+                    }}
+                    className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 transition-colors"
+                >
+                    <TrashIcon className="h-4 w-4" aria-hidden="true" />
+                    {t('common.delete', 'Delete')}
+                </button>
+            )}
         </div>,
         document.body
     );

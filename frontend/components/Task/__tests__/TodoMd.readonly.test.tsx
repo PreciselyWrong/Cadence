@@ -136,15 +136,15 @@ describe('Task editor on a task mirrored from a TODO.md file', () => {
         expect(screen.queryByTestId('task-subtasks')).not.toBeInTheDocument();
     });
 
-    it('disables every field chip and the postpone button', () => {
+    it('keeps every Cadence-side control working: chips and postpone', () => {
         render(<TaskModal isOpen onClose={jest.fn()} task={task} />);
 
         const chips = screen
             .getByTestId('task-chip-row')
             .querySelectorAll('button');
         expect(chips.length).toBeGreaterThan(0);
-        chips.forEach((chip) => expect(chip).toBeDisabled());
-        expect(screen.getByTestId('task-postpone-button')).toBeDisabled();
+        chips.forEach((chip) => expect(chip).not.toBeDisabled());
+        expect(screen.getByTestId('task-postpone-button')).not.toBeDisabled();
     });
 
     it('still lets the done toggle through and never sends another edit', async () => {
@@ -170,7 +170,7 @@ describe('Task editor on a task mirrored from a TODO.md file', () => {
 describe('useTaskAutosave on a task mirrored from a TODO.md file', () => {
     const task = { id: 1, uid: 't1', name: 'A', source_key: 'abc' } as Task;
 
-    it('refuses a save without running it, and runs an allowed one', async () => {
+    it('refuses a save of its name, note or project without running it', async () => {
         const { result } = renderHook(() => useTaskAutosave(task));
         const op = jest.fn().mockResolvedValue(undefined);
 
@@ -184,15 +184,24 @@ describe('useTaskAutosave on a task mirrored from a TODO.md file', () => {
         expect(showErrorToast).toHaveBeenCalledWith(
             'This comes from a TODO.md file. Edit the file instead.'
         );
+    });
 
-        let allowed = false;
+    it('runs the saves of the fields the file does not own, and the box', async () => {
+        const { result } = renderHook(() => useTaskAutosave(task));
+        const op = jest.fn().mockResolvedValue(undefined);
+
+        let saved = false;
         await act(async () => {
-            allowed = await result.current.run({}, op, {
-                allowReadOnly: true,
-            });
+            saved = await result.current.run({ priority: 2 }, op);
         });
-        expect(allowed).toBe(true);
-        expect(op).toHaveBeenCalledTimes(1);
+        expect(saved).toBe(true);
+
+        let boxed = false;
+        await act(async () => {
+            boxed = await result.current.run({ status: 2 }, op);
+        });
+        expect(boxed).toBe(true);
+        expect(op).toHaveBeenCalledTimes(2);
     });
 });
 
