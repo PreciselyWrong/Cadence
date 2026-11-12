@@ -668,3 +668,9 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 - **Problème** : chaque lien utile finissait en tâche « À regarder : … » à la main ; le choix « Tâche ou Liens » à chaque partage nourrissait une bibliothèque que personne ne relisait (`docs/fork/PLAN-links.md`).
 - **Décision** : dans le panneau de l'Inbox, une idée qui n'est qu'une adresse montre l'aperçu, « Déjà dans « … » » avec Ouvrir si l'adresse est déjà dans une tâche ouverte ou un projet, un champ « Nom de la tâche » prérempli par le verbe du genre de page (Essayer, Lire, Regarder) et le bouton « Tâche » (« Ajouter quand même ») qui la crée d'un clic dans « Tâches à classer » avec « Quand ? ». À côté : Projet… (menu des projets), Note, Inbox, Supprimer. « Liens » disparaît des décisions.
 - **Android à reprendre** : fait dans la même étape (fiche de partage, Inbox).
+
+### 2026-11-12 — Aperçu de chaque adresse (refonte des liens, étape 2)
+
+- **Problème** : une adresse dans la note d'une tâche n'était qu'un lien bleu ; seul Android montrait ce qu'était la page.
+- **Décision** : une carte par adresse (image, titre, description, site, et pour un dépôt GitHub « ★ étoiles · langage · dernière mise à jour ») sous la note du panneau de tâche, sous une note et sous la description d'un projet ; lue par le serveur et gardée par adresse.
+- **Android à reprendre** : fait dans la même étape (statistiques GitHub, notes et projets).

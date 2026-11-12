@@ -47,6 +47,7 @@ import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.links.CachedPreview
 import ch.nicolab.cadence.tasks.links.LinkExtractor
 import ch.nicolab.cadence.tasks.links.LinkPreviews
+import ch.nicolab.cadence.tasks.links.PreviewLines
 
 internal enum class PreviewSize { Compact, Large }
 
@@ -74,6 +75,7 @@ internal fun LinkPreviewCard(
     val description = if (title == domain) null else domain
     val openLabel = stringResource(R.string.tasks_link_open, domain)
     val large = size == PreviewSize.Large && shown?.imageUrl != null
+    val stats = shown?.let { PreviewLines.statsLine(it.kind, it.githubStars, it.githubLanguage, it.githubLastCommit) }
 
     Column(
         modifier
@@ -88,7 +90,7 @@ internal fun LinkPreviewCard(
     ) {
         if (large) {
             Thumbnail(shown, domain, Modifier.fillMaxWidth().aspectRatio(LINK_IMAGE_RATIO), RectangleShape)
-            LinkTexts(title, description ?: shown.description, domain, Modifier.padding(Space.md))
+            LinkTexts(title, description ?: shown.description, domain, stats, Modifier.padding(Space.md))
         } else {
             Row(
                 Modifier.padding(Space.sm),
@@ -96,14 +98,14 @@ internal fun LinkPreviewCard(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Thumbnail(shown, domain, Modifier.size(THUMB), Radius.Chip)
-                LinkTexts(title, description, null, Modifier.weight(1f).padding(end = Space.sm))
+                LinkTexts(title, description, null, stats, Modifier.weight(1f).padding(end = Space.sm))
             }
         }
     }
 }
 
 @Composable
-private fun LinkTexts(title: String, subtitle: String?, domain: String?, modifier: Modifier) {
+private fun LinkTexts(title: String, subtitle: String?, domain: String?, stats: String?, modifier: Modifier) {
     val palette = cadence
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Space.groupGap)) {
         Text(
@@ -124,6 +126,9 @@ private fun LinkTexts(title: String, subtitle: String?, domain: String?, modifie
         }
         domain?.let {
             Text(it, style = MaterialTheme.typography.labelSmall, color = palette.outline, maxLines = 1)
+        }
+        stats?.let {
+            Text(it, style = MaterialTheme.typography.labelSmall, color = palette.outline, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
     }
 }

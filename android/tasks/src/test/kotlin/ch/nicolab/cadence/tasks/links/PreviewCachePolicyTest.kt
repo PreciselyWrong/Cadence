@@ -57,4 +57,17 @@ class PreviewCachePolicyTest {
         val entry = PreviewCachePolicy.fromServer("https://a.example/x", "T", null, "data:image/png;base64,AAAA", now)
         assertNull(entry.imageUrl)
     }
+
+    @Test
+    fun `les champs GitHub et le nom du site d'une reponse serveur sont gardes`() {
+        val entry = PreviewCachePolicy.fromServer(
+            "https://github.com/a/b", "b", null, null, now,
+            siteName = "GitHub", kind = "repo", githubStars = 1234, githubLanguage = "Rust", githubLastCommit = "2026-11-01T10:00:00Z",
+        )
+        assertEquals("GitHub", entry.siteName)
+        assertEquals("repo", entry.kind)
+        assertEquals(1234, entry.githubStars)
+        assertEquals("Rust", entry.githubLanguage)
+        assertEquals("2026-11-01T10:00:00Z", entry.githubLastCommit)
+    }
 }

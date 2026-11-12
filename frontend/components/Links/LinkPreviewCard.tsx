@@ -9,6 +9,8 @@ interface LinkPreviewCardProps {
     image?: string | null;
     // Still reading the page.
     pending?: boolean;
+    // One line under the site, e.g. GitHub stars, language, last push.
+    stats?: string | null;
 }
 
 // What a page is: title, one line of description, site, picture. Opens the
@@ -19,6 +21,7 @@ const LinkPreviewCard: React.FC<LinkPreviewCardProps> = ({
     description,
     image,
     pending = false,
+    stats = null,
 }) => {
     const { t } = useTranslation();
     const [imageFailed, setImageFailed] = useState(false);
@@ -50,6 +53,11 @@ const LinkPreviewCard: React.FC<LinkPreviewCardProps> = ({
                         {pending
                             ? t('links.fetching', 'Reading the page…')
                             : domain}
+                    </span>
+                )}
+                {stats && (
+                    <span className="mt-0.5 block truncate text-[12px] text-gray-500 dark:text-gray-400">
+                        {stats}
                     </span>
                 )}
             </span>

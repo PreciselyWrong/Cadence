@@ -168,12 +168,12 @@ describe('URL Routes', () => {
 
             const response = await agent
                 .get('/api/url/title')
-                .query({ url: 'httpbin.org/html' });
+                .query({ url: 'example.org/no-scheme' });
 
             expect(response.status).toBe(200);
             expect(response.body).toHaveProperty('url');
             expect(response.body).toHaveProperty('title');
-            expect(response.body.url).toBe('httpbin.org/html');
+            expect(response.body.url).toBe('example.org/no-scheme');
             expect(response.body.title).toBe('Test Page');
         });
 

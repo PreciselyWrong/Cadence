@@ -14,6 +14,13 @@ A link lives in a task (something to do) or in a project's pages (material for a
 - **« Déjà dans … »**: `GET /api/links/lookup?url=&title=` answers `{ url, kind, task_name, tasks, projects }`: the open tasks whose name or note holds the same address (normalized, `www.` ignored, `core/urls.addressKey`) and the projects that hold it. Shown above the name with **Ouvrir**; the main button becomes **Ajouter quand même**. Android reads the same from Room, offline (`TaskRepository.placesOf`).
 - `POST /api/links/task { url, title?, name?, note?, project_uid? }` makes the task in one call (add-on, agents): `201 { task: { uid, name, note } }`, `400` for an address that is not a web page.
 
+## Previews
+
+Every address written in a task note, a note or a project description shows a card: picture, title, one line of description, site, and for a GitHub repository « ★ stars · language · last push ». Web: `frontend/components/Links/LinkPreviews.tsx` (at most 5 addresses, once each) in the task panel, the note editor and under the project description; Android: the same cards from the Room cache `link_previews` (offline).
+
+- **Server cache by address** (`modules/links/previews.js`, table `link_previews`, one row per normalized address without `www.`, shared by all users: public page metadata only). `GET /api/url/title?url=` reads the row, or reads the page once (same reader as links: SSRF guard, direct request only, no reading proxy; GitHub API for a repository) and stores it. A page is read again after 30 days, a failed read after an hour; a new read never erases what an earlier one found. Concurrent asks for one address share one read. Context addresses (IP, `.lan`, …) are never read.
+- Answer: `url`, `title`, `description`, `image`, `site_name`, `kind`, `github_stars`, `github_language`, `github_last_commit`, and `error` when nothing could be read.
+
 ## How a link is made
 
 - **Nothing is captured automatically.** Saving an inbox item, a task or a note never creates a link, on any path (web, Android sync, MCP, Telegram, imports). An inbox item that is only an address, or holds one, stays `added` in the Inbox until the user decides.

@@ -5,7 +5,6 @@ const http = require('http');
 const { URL } = require('url');
 const { logError } = require('../../services/logService');
 const { assertSafeUrl, publicOnlyLookup } = require('./ssrfGuard');
-const { classifyKind } = require('../links/core/urls');
 
 const MAX_REDIRECTS = 5;
 
@@ -470,30 +469,10 @@ class UrlService {
             return { error: 'URL parameter is required' };
         }
 
-        const metadata = await fetchUrlMetadata(url);
-        // The kind names the task an address becomes (docs/37-links.md).
-        const kind = classifyKind(url, metadata?.type);
-
-        if (metadata && metadata.title) {
-            return {
-                url,
-                title: metadata.title,
-                image: metadata.image ?? null,
-                description: metadata.description ?? null,
-                site_name: metadata.siteName ?? null,
-                kind,
-            };
-        } else {
-            return {
-                url,
-                title: null,
-                image: null,
-                description: null,
-                site_name: null,
-                kind,
-                error: 'Could not extract metadata',
-            };
-        }
+        // Read once per address and kept for every task, note and project
+        // page (modules/links/previews.js): direct read, no reading proxy.
+        const { previewOf, serializePreview } = require('../links/previews');
+        return serializePreview(url, await previewOf(url));
     }
 
     async extractFromText(text) {

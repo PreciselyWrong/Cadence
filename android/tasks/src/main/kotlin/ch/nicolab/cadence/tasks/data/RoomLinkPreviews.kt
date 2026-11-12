@@ -17,6 +17,7 @@ import kotlinx.coroutines.sync.withPermit
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.intOrNull
 
 /**
  * Aperçus de liens servis depuis Room et rafraîchis par le serveur (`GET /api/url/title`, protégé
@@ -48,10 +49,28 @@ internal class RoomLinkPreviews(
         }
     }
 
-    /** Null quand rien ne doit être écrit : hors ligne ou serveur non configuré, on réessaiera plus tard. */
+    /**
+     * Null quand rien ne doit être écrit : hors ligne ou serveur non configuré, on réessaiera plus tard.
+     * Une réponse `error` (rien n'a pu être lu) compte comme un échec.
+     */
     private suspend fun load(url: String, previous: CachedPreview?): CachedPreview? = try {
         val answer = fetch(url)
-        PreviewCachePolicy.fromServer(url, answer.text("title"), answer.text("description"), answer.text("image"), nowMs())
+        if (answer.text("error") != null) {
+            PreviewCachePolicy.afterFailedRefresh(previous, nowMs(), url)
+        } else {
+            PreviewCachePolicy.fromServer(
+                url,
+                answer.text("title"),
+                answer.text("description"),
+                answer.text("image"),
+                nowMs(),
+                siteName = answer.text("site_name"),
+                kind = answer.text("kind"),
+                githubStars = answer.int("github_stars"),
+                githubLanguage = answer.text("github_language"),
+                githubLastCommit = answer.text("github_last_commit"),
+            )
+        }
     } catch (error: CancellationException) {
         throw error
     } catch (error: AuthError) {
@@ -71,6 +90,8 @@ internal class RoomLinkPreviews(
 
     private fun JsonObject.text(key: String): String? = (this[key] as? JsonPrimitive)?.contentOrNull
 
+    private fun JsonObject.int(key: String): Int? = (this[key] as? JsonPrimitive)?.intOrNull
+
     private companion object {
         const val MAX_PARALLEL = 3
         const val TRANSIENT_RETRY_MS = 60_000L
@@ -78,6 +99,12 @@ internal class RoomLinkPreviews(
     }
 }
 
-private fun LinkPreviewEntity.toCached() = CachedPreview(url, title, description, imageUrl, fetchedAtMs, failed)
+private fun LinkPreviewEntity.toCached() = CachedPreview(
+    url, title, description, imageUrl, fetchedAtMs, failed,
+    siteName, kind, githubStars, githubLanguage, githubLastCommit,
+)
 
-private fun CachedPreview.toEntity() = LinkPreviewEntity(url, title, description, imageUrl, fetchedAtMs, failed)
+private fun CachedPreview.toEntity() = LinkPreviewEntity(
+    url, title, description, imageUrl, fetchedAtMs, failed,
+    siteName, kind, githubStars, githubLanguage, githubLastCommit,
+)

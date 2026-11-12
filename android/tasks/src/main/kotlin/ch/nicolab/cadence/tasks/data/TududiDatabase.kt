@@ -24,7 +24,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         BriefEntity::class,
         EveningEntity::class,
     ],
-    version = 18,
+    version = 19,
     exportSchema = true,
 )
 abstract class TududiDatabase : RoomDatabase() {
@@ -221,6 +221,20 @@ internal val MIGRATION_17_18 = object : Migration(17, 18) {
     override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL("ALTER TABLE tasks ADD COLUMN monthOf TEXT")
         db.execSQL("DELETE FROM sync_meta WHERE `key` = 'cursor'")
+    }
+}
+
+/**
+ * Aperçus enrichis : nom du site, genre, et pour un dépôt GitHub étoiles, langage et dernier commit. Le cache
+ * n'a pas de curseur à retirer : les aperçus existants gardent leur contenu et se complètent au prochain rafraîchissement.
+ */
+internal val MIGRATION_18_19 = object : Migration(18, 19) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE link_previews ADD COLUMN siteName TEXT")
+        db.execSQL("ALTER TABLE link_previews ADD COLUMN kind TEXT")
+        db.execSQL("ALTER TABLE link_previews ADD COLUMN githubStars INTEGER")
+        db.execSQL("ALTER TABLE link_previews ADD COLUMN githubLanguage TEXT")
+        db.execSQL("ALTER TABLE link_previews ADD COLUMN githubLastCommit TEXT")
     }
 }
 

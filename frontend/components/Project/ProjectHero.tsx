@@ -1,3 +1,4 @@
+import LinkPreviews from '../Links/LinkPreviews';
 import { getCurrentLocale } from '../../utils/dateUtils';
 import React, { useEffect, useRef, useState } from 'react';
 import { TFunction } from 'i18next';
@@ -473,6 +474,12 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                                         'Add a description'
                                     )}
                             </p>
+                        )}
+                        {!editingDescription && (
+                            <LinkPreviews
+                                texts={[project.description]}
+                                className="max-w-3xl"
+                            />
                         )}
                     </div>
 

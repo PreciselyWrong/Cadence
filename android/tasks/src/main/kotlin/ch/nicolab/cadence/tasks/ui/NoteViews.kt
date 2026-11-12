@@ -416,7 +416,7 @@ private fun NoteEditor(viewModel: TasksViewModel, uid: String, note: NoteItem?, 
                         )
                     }
                 }
-                LinkPreviewList(body.text, viewModel.linkPreviews, Modifier.padding(bottom = Space.xl), PreviewSize.Large)
+                LinkPreviewList(body.text, viewModel.linkPreviews, Modifier.padding(bottom = Space.xl), PreviewSize.Large, limit = 5)
                 if (note != null) {
                     AddToLinksRow("${note.title}\n${body.text}", sourceKey = uid, onAdd = { viewModel.addLinkFrom(it, "note", uid) })
                 }

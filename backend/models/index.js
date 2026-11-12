@@ -107,6 +107,7 @@ const DailyPlanItem = require('./daily_plan_item')(sequelize);
 const Goal = require('./goal')(sequelize);
 const Link = require('./link')(sequelize);
 const LinkExclusion = require('./link_exclusion')(sequelize);
+const LinkPreview = require('./link_preview')(sequelize);
 const BriefProposal = require('./brief_proposal')(sequelize);
 const TaskTriage = require('./task_triage')(sequelize);
 const { AutoClassifyItem, AutoClassifyChange, AutoClassifySuggestion } =
@@ -789,6 +790,7 @@ module.exports = {
     AutoClassifySuggestion,
     LinkedContext,
     LinkExclusion,
+    LinkPreview,
     TodoMdRepo,
     Project,
     Task,
