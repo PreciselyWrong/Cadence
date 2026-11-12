@@ -8,7 +8,11 @@ const {
 } = require('./registry');
 const { serializeRow } = require('./serialize');
 const hlc = require('./hlc');
-const { currentOpId } = require('./context');
+const {
+    currentOpId,
+    currentOfflineWrite,
+    takeCreateUid,
+} = require('./context');
 const { withJournalOrder } = require('../../utils/db-dialect');
 
 // Every journal row goes through here, so ids reach readers in commit order
@@ -54,6 +58,98 @@ function stampClocks(entity, instance, options) {
         clocks[field] = stamp;
     }
     instance.set('field_clocks', clocks);
+}
+
+const fieldOf = (entity, key) =>
+    Object.entries(ENTITIES[entity].refs).find(
+        ([, ref]) => ref.column === key
+    )?.[0] ?? key;
+
+// A write the web UI made offline and replays now (middleware/offlineReplay.js)
+// merges like a device push: each field it changes is stamped with the time
+// it was made, and keeps its stored value when that value is newer.
+function stampOfflineWrite(entity, instance, offline) {
+    const { clock } = offline;
+    if (instance.isNewRecord) {
+        const chosen = takeCreateUid(entity);
+        if (chosen) instance.set('uid', chosen);
+    }
+    if (!clock) {
+        stampClocks(entity, instance, {});
+        return;
+    }
+    const creating = instance.isNewRecord;
+    const keys = creating
+        ? syncedKeys(entity).filter((k) => instance.get(k) != null)
+        : syncedKeys(entity).filter((k) => instance.changed(k));
+    const clocks = { ...(instance.get('field_clocks') || {}) };
+    hlc.observe(clock);
+    const lost = [];
+    for (const key of keys) {
+        const field = fieldOf(entity, key);
+        const stored = clocks[field];
+        if (!creating && stored && stored > clock) {
+            lost.push({
+                key,
+                field,
+                value: instance.get(key),
+                winning: stored,
+            });
+            instance.set(key, instance.previous(key));
+            instance.changed(key, false);
+        } else {
+            clocks[field] = clock;
+        }
+    }
+    instance._syncChanged = creating || keys.length > lost.length;
+    if (instance._syncChanged) instance.set('field_clocks', clocks);
+    if (lost.length > 0) instance._offlineLost = { clock, lost };
+}
+
+// The losing values are recorded here rather than after the save: a save
+// left with no changed field skips its after hooks.
+async function stamp(entity, instance, options) {
+    const offline = !(options && options.syncApplied) && currentOfflineWrite();
+    if (!offline) {
+        stampClocks(entity, instance, options);
+        return;
+    }
+    stampOfflineWrite(entity, instance, offline);
+    await recordOfflineLosses(entity, instance, options);
+}
+
+// The losing value as the sync API shows it: a reference by uid.
+async function wireValue(entity, { key, field, value }, transaction) {
+    if (value instanceof Date) return value.toISOString();
+    const ref = ENTITIES[entity].refs[field];
+    if (!ref || key === field || value == null) return value ?? null;
+    const models = require('../../models');
+    const target = await models[ENTITIES[ref.entity].model].findByPk(value, {
+        attributes: ['uid'],
+        transaction,
+    });
+    return target ? target.uid : null;
+}
+
+async function recordOfflineLosses(entity, instance, options) {
+    const losses = instance._offlineLost;
+    if (!losses) return;
+    instance._offlineLost = null;
+    const rows = [];
+    for (const loss of losses.lost) {
+        rows.push({
+            user_id: instance.user_id,
+            entity,
+            uid: instance.uid,
+            field: loss.field,
+            losing_value: await wireValue(entity, loss, options.transaction),
+            losing_hlc: losses.clock,
+            winning_hlc: loss.winning,
+            op_id: currentOpId(),
+        });
+    }
+    const { SyncConflict } = require('../../models');
+    await SyncConflict.bulkCreate(rows, { transaction: options.transaction });
 }
 
 function parentIds(value) {
@@ -140,12 +236,12 @@ function install(models) {
             options.individualHooks = true;
         });
 
-        Model.addHook('beforeCreate', (instance, options) => {
-            stampClocks(entity, instance, options);
-        });
-        Model.addHook('beforeUpdate', (instance, options) => {
-            stampClocks(entity, instance, options);
-        });
+        Model.addHook('beforeCreate', (instance, options) =>
+            stamp(entity, instance, options)
+        );
+        Model.addHook('beforeUpdate', (instance, options) =>
+            stamp(entity, instance, options)
+        );
 
         const record = async (instance, options) => {
             if (instance._syncChanged === false && !options.syncApplied) {

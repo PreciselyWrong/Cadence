@@ -297,6 +297,24 @@ describe('rewriteTempIds', () => {
         });
     });
 
+    it('swaps a uid the server replaced in the url and uid fields', () => {
+        const entry = {
+            url: `${ORIGIN}/api/task/clientuid000001`,
+            body: JSON.stringify({
+                parent_task_uid: 'clientuid000001',
+                name: 'clientuid000001',
+            }),
+        };
+        const out = core.rewriteTempIds(entry, {
+            clientuid000001: 'serveruid000001',
+        });
+        expect(out.url).toBe(`${ORIGIN}/api/task/serveruid000001`);
+        expect(JSON.parse(out.body)).toEqual({
+            parent_task_uid: 'serveruid000001',
+            name: 'clientuid000001',
+        });
+    });
+
     it('leaves an entry without temporary ids as it is', () => {
         const entry = { url: `${ORIGIN}/api/task/abc`, body: 'not json' };
         expect(core.rewriteTempIds(entry, { '-1': 2 })).toBe(entry);

@@ -361,6 +361,8 @@ if (serveFromDist) {
 
 // Authentication middleware
 const { requireAuth, requireConnectorToken } = require('./middleware/auth');
+const offlineReplay = require('./middleware/offlineReplay');
+const idempotency = require('./middleware/idempotency');
 const { requireSubscription } = require('./middleware/entitlements');
 const { uploadsAccessControl } = require('./middleware/uploadsAccess');
 const { INLINE_SAFE_EXTENSIONS } = require('./utils/attachment-utils');
@@ -562,6 +564,9 @@ const registerApiRoutes = (basePath) => {
     app.use(basePath, taskFeedModule.publicRoutes);
 
     app.use(basePath, requireAuth);
+    // Writes the web UI made offline and replays now (docs/fork/WEB-OFFLINE.md).
+    app.use(basePath, offlineReplay);
+    app.use(basePath, idempotency.forWrites);
     // Instances that sell access close everything past this point until the
     // account has a subscription; billing, the profile and data export stay
     // open. A no-op unless TUDUDI_REQUIRE_SUBSCRIPTION is set.

@@ -238,19 +238,28 @@
     }
 
     const ID_KEY = /(^|_)id$/;
+    const UID_KEY = /(^|_)uid$/;
 
-    // Writes made after an offline create may name its temporary id; once
-    // the create has reached the server they must name the real one.
+    // Writes made after an offline create may name its temporary id (or the
+    // uid the browser chose, when the server kept its own); once the create
+    // has reached the server they must name the real ones. `idMap` maps
+    // temporary ids (as strings) and replaced uids to the server's.
     function rewriteTempIds(entry, idMap) {
-        const known = (value) =>
-            typeof value === 'number' && value < 0 && String(value) in idMap;
+        const known = (key, value) =>
+            (ID_KEY.test(key) && typeof value === 'number' && value < 0) ||
+            (UID_KEY.test(key) && typeof value === 'string');
         let changed = false;
 
-        const url = entry.url.replace(/\/(-\d+)(?=\/|\?|$)/g, (match, id) => {
-            if (!(id in idMap)) return match;
-            changed = true;
-            return `/${idMap[id]}`;
-        });
+        const url = entry.url.replace(
+            /\/([^/?#]+)(?=\/|\?|#|$)/g,
+            (match, segment) => {
+                if (!Object.prototype.hasOwnProperty.call(idMap, segment)) {
+                    return match;
+                }
+                changed = true;
+                return `/${idMap[segment]}`;
+            }
+        );
 
         let body = entry.body;
         try {
@@ -258,7 +267,13 @@
             walk(parsed, (node) => {
                 if (!isObject(node)) return;
                 for (const [key, value] of Object.entries(node)) {
-                    if (ID_KEY.test(key) && known(value)) {
+                    if (
+                        known(key, value) &&
+                        Object.prototype.hasOwnProperty.call(
+                            idMap,
+                            String(value)
+                        )
+                    ) {
                         node[key] = idMap[String(value)];
                         changed = true;
                     }

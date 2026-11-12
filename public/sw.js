@@ -662,8 +662,12 @@ async function runReplay() {
                     const made = await readJson(response);
                     if (made && made.id !== undefined) {
                         idMap[String(entry.op.tempId)] = made.id;
-                        await metaSet('idMap', idMap);
                     }
+                    // A first try that reached the server kept its own uid.
+                    if (made && made.uid && made.uid !== entry.op.uid) {
+                        idMap[entry.op.uid] = made.uid;
+                    }
+                    await metaSet('idMap', idMap);
                 }
                 await idbDelete(OUTBOX, stored.id);
                 result.applied += 1;
