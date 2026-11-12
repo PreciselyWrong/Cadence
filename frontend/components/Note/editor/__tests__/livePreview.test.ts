@@ -138,6 +138,19 @@ describe('live preview decorations', () => {
         ).toHaveLength(1);
     });
 
+    it('shows a [[task:Name]] link as a TASK chip without its prefix', () => {
+        const items = inline('[[task: Call bank]]\ntail');
+        expect(
+            has(
+                items,
+                'mark:cm-md-wikilink cm-md-wikilink-chip cm-md-wikilink-task',
+                8,
+                17
+            )
+        ).toBe(true);
+        expect(has(items, 'hide', 2, 8)).toBe(true);
+    });
+
     it('shows a wikilink as plain editable text while the caret is on it', () => {
         const items = inline('[[Note]] and more', 4);
         expect(has(items, 'mark:cm-md-wikilink', 2, 6)).toBe(true);

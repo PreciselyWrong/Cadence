@@ -358,12 +358,18 @@ export function buildLivePreview(
             const show = touches(from, to);
             marker(from, from + 2, show);
             marker(to - 2, to, show);
+            // [[task:Name]] reads as a TASK chip without its prefix.
+            const taskPrefix = /^\s*task:\s*/i.exec(match[1]);
+            const textFrom = from + 2 + (taskPrefix ? taskPrefix[0].length : 0);
+            if (taskPrefix) marker(from + 2, textFrom, show);
             // Away from the caret the link reads as a chip and opens on a
             // plain click; with the caret on it, it is ordinary editable text.
             addMark(
-                from + 2,
+                textFrom,
                 to - 2,
-                show ? 'cm-md-wikilink' : 'cm-md-wikilink cm-md-wikilink-chip',
+                show
+                    ? 'cm-md-wikilink'
+                    : `cm-md-wikilink cm-md-wikilink-chip${taskPrefix ? ' cm-md-wikilink-task' : ''}`,
                 { 'data-wikilink': match[1].trim() }
             );
         }

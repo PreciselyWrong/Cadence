@@ -65,11 +65,14 @@ describe('content link parser', () => {
         ).toBeNull();
     });
 
-    it('makes a plain-text snippet around the link', () => {
+    it('makes a plain-text snippet around the link, never cutting a link', () => {
         const text = `**Call** @[Anna](person:${UID}) about [[Trip]]`;
         expect(snippetAround(text, 9)).toBe('Call @Anna about Trip');
-        expect(snippetAround('x'.repeat(200) + ' [[A]]', 201, 10)).toBe(
-            '… xxxxxxxxx A'
+        const long = `${'word '.repeat(30)}[[A]] and @[Anna Keller](person:${UID}) ${'tail '.repeat(30)}`;
+        const snippet = snippetAround(long, long.indexOf('[[A]]'), 30);
+        expect(snippet).toMatch(
+            /^… (word )+A and @Anna Keller (tail )*tail …$/
         );
+        expect(snippet).not.toContain('person:');
     });
 });

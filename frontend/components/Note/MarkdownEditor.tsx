@@ -515,6 +515,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
                     startEditing: autoFocus || !value.trim(),
                 }),
                 livePreviewExtension({
+                    onOpenPath: (path) => navigateRef.current(path),
                     onOpenWikilink: (title, event) => {
                         if (TASK_LINK.test(title)) {
                             const name = title.replace(TASK_LINK, '').trim();

@@ -89,19 +89,32 @@ function findLinkTo(text, target) {
     );
 }
 
-// About `radius` characters of plain text around a link.
-function snippetAround(text, index, radius = 60) {
-    const start = Math.max(0, index - radius);
-    const end = Math.min(text.length, index + radius);
-    const plain = text
-        .slice(start, end)
+// Markdown read as plain text: links keep their label, marks go.
+const plainText = (text) =>
+    text
         .replace(/@\[([^\]\n]*)\]\(person:[0-9a-z]+\)/g, '@$1')
         .replace(/\[\[(?:task:\s*)?([^[\]\n]+?)\]\]/gi, '$1')
         .replace(/!?\[([^\]\n]*)\]\([^)\s]*\)/g, '$1')
         .replace(/[#>*_`~|]+/g, ' ')
-        .replace(/\s+/g, ' ')
-        .trim();
-    return `${start > 0 ? '… ' : ''}${plain}${end < text.length ? ' …' : ''}`;
+        .replace(/\s+/g, ' ');
+
+// About `radius` characters of plain text on each side of the link at
+// `index`, cut at word boundaries.
+function snippetAround(text, index, radius = 60) {
+    const plain = plainText(text);
+    const at = plainText(text.slice(0, index)).length;
+    let start = Math.max(0, at - radius);
+    let end = Math.min(plain.length, at + radius);
+    if (start > 0) {
+        const space = plain.indexOf(' ', start);
+        if (space !== -1 && space < at) start = space + 1;
+    }
+    if (end < plain.length) {
+        const space = plain.lastIndexOf(' ', end);
+        if (space > at) end = space;
+    }
+    const body = plain.slice(start, end).trim();
+    return `${start > 0 ? '… ' : ''}${body}${end < plain.length ? ' …' : ''}`;
 }
 
 module.exports = { parseLinks, findLinkTo, snippetAround, normalizeTitle };

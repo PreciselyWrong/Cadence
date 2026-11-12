@@ -126,6 +126,20 @@ describe('MarkdownEditor toolbar and mentions', () => {
         expect(screen.queryByTestId('mention-menu')).toBeNull();
     });
 
+    it('keeps Enter out of the text while people are loading', () => {
+        (fetchPeople as jest.Mock).mockReturnValue(new Promise(() => {}));
+        const { view } = renderEditor('');
+        typeText(view, '@a');
+        expect(screen.getByText('Loading people…')).toBeInTheDocument();
+
+        const enter = new KeyboardEvent('keydown', {
+            key: 'Enter',
+            cancelable: true,
+        });
+        window.dispatchEvent(enter);
+        expect(enter.defaultPrevented).toBe(true);
+    });
+
     it('reports a blur only when focus leaves the editor and its bar', () => {
         const onBlur = jest.fn();
         const { content } = renderEditor('text', onBlur);

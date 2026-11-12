@@ -47,7 +47,7 @@ Fichiers propres au fork : `AGENTS.md`, `TODO.md`, `README.md`, `docs/fork/`, `a
 | File « À trier » | `docs/40-triage.md`, `backend/modules/triage/` |
 | Classement automatique (nouvelles tâches, notes, liens) | `docs/41-auto-classify.md`, `backend/modules/auto-classify/` |
 | Inbox, partage et liens (tri, métadonnées, page Liens) | `docs/37-links.md`, `backend/modules/links/` |
-| Markdown des notes et descriptions, liens `[[…]]`, mentions, rétroliens | `docs/43-notes-links.md`, `backend/modules/content-links/` |
+| Markdown des notes et descriptions, liens `[[…]]`, mentions, rétroliens | `docs/44-notes-links.md`, `backend/modules/content-links/` |
 | Projets depuis des `TODO.md` | `docs/35-todo-md-projects.md`, `backend/modules/todo-md/` |
 | MCP | `docs/14-mcp-integration.md` |
 | MCP distant (connecteur claude.ai, OAuth, Cloudflare) | `docs/38-remote-mcp.md`, `backend/modules/oauth/` |
