@@ -47,6 +47,7 @@ Fichiers propres au fork : `AGENTS.md`, `TODO.md`, `README.md`, `docs/fork/`, `a
 | File « À trier » | `docs/40-triage.md`, `backend/modules/triage/` |
 | Cartes Mail de « À trier » | `docs/43-mail-triage.md`, `backend/modules/triage/mail.js` |
 | Propositions d'agent (« Planifier ma semaine », « Préparer ma revue ») | `docs/47-proposals.md`, `backend/modules/proposals/` |
+| Tout appel à un agent Hermes (coût, contrat JSON, fenêtre native, jobs cron) | `.agents/skills/hermes-calls/SKILL.md` |
 | Classement automatique (nouvelles tâches et notes) | `docs/41-auto-classify.md`, `backend/modules/auto-classify/` |
 | Liens : capture en tâche, aperçus, pages de projet, Transformer en projet | `docs/37-links.md`, `backend/modules/links/` |
 | Markdown des notes et descriptions, liens `[[…]]`, mentions, rétroliens | `docs/44-notes-links.md`, `backend/modules/content-links/` |
