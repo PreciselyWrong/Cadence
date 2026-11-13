@@ -320,7 +320,11 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = () => {
 
     const handleNotificationClick = (notification: Notification) => {
         const proposalUid = notification.data?.proposal_uid;
-        if (notification.type === 'proposal' && proposalUid) {
+        if (notification.type === 'mail_ready') {
+            setIsOpen(false);
+            if (!notification.read_at) handleMarkAsRead(notification.uid);
+            navigate('/triage?deck=mail');
+        } else if (notification.type === 'proposal' && proposalUid) {
             setIsOpen(false);
             if (!notification.read_at) handleMarkAsRead(notification.uid);
             // A week opens its sheet over the page; a review is worked in the

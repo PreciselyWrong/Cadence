@@ -1,5 +1,6 @@
 import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
 import TriagePage from '../TriagePage';
 import {
@@ -88,6 +89,13 @@ const QUEUE = {
     },
 };
 
+const renderPage = (path = '/triage') =>
+    render(
+        <MemoryRouter initialEntries={[path]}>
+            <TriagePage />
+        </MemoryRouter>
+    );
+
 describe('TriagePage', () => {
     beforeEach(() => {
         jest.clearAllMocks();
@@ -122,7 +130,7 @@ describe('TriagePage', () => {
             tasks: {},
         });
         (answerQuestion as jest.Mock).mockResolvedValue({});
-        render(<TriagePage />);
+        renderPage();
         fireEvent.click(await screen.findByRole('button', { name: 'Non' }));
         await waitFor(() =>
             expect(answerQuestion).toHaveBeenCalledWith(
@@ -133,7 +141,7 @@ describe('TriagePage', () => {
     });
 
     it('shows one proposal with its reason and what tells tasks apart', async () => {
-        render(<TriagePage />);
+        renderPage();
         expect(await screen.findByText('Payer')).toBeInTheDocument();
         expect(
             screen.getByText('Celle-ci : projet Maison')
@@ -142,7 +150,7 @@ describe('TriagePage', () => {
     });
 
     it('validates the proposal, then shows the next one', async () => {
-        render(<TriagePage />);
+        renderPage();
         fireEvent.click(
             await screen.findByRole('button', { name: 'Annuler la tâche' })
         );
@@ -153,7 +161,7 @@ describe('TriagePage', () => {
     });
 
     it('corrects with a rename', async () => {
-        render(<TriagePage />);
+        renderPage();
         fireEvent.click(
             await screen.findByRole('button', { name: 'Corriger' })
         );
@@ -170,7 +178,7 @@ describe('TriagePage', () => {
     });
 
     it('offers no conversion on a recurring task', async () => {
-        render(<TriagePage />);
+        renderPage();
         fireEvent.click(await screen.findByRole('button', { name: 'Passer' }));
         expect(await screen.findByText('Dossier')).toBeInTheDocument();
         fireEvent.click(screen.getByRole('button', { name: 'Corriger' }));
@@ -180,7 +188,7 @@ describe('TriagePage', () => {
     });
 
     it('keeps a task as it is', async () => {
-        render(<TriagePage />);
+        renderPage();
         fireEvent.click(
             await screen.findByRole('button', { name: 'Garder telle quelle' })
         );
@@ -193,7 +201,7 @@ describe('TriagePage', () => {
             tasks: {},
             count: 0,
         });
-        render(<TriagePage />);
+        renderPage();
         expect(await screen.findByTestId('triage-empty')).toBeInTheDocument();
     });
 
@@ -230,7 +238,7 @@ describe('TriagePage', () => {
     it('decides a mail card and moves on', async () => {
         (fetchTriageQueue as jest.Mock).mockResolvedValue(MAIL_QUEUE);
         (decideMail as jest.Mock).mockResolvedValue(undefined);
-        render(<TriagePage />);
+        renderPage();
         expect(
             await screen.findByText('Demande de valider le devis')
         ).toBeInTheDocument();
@@ -247,7 +255,7 @@ describe('TriagePage', () => {
     it('opens the mail deck, and reads the queue again once it is closed', async () => {
         (fetchTriageQueue as jest.Mock).mockResolvedValue(MAIL_QUEUE);
         (decideMail as jest.Mock).mockResolvedValue({});
-        render(<TriagePage />);
+        renderPage();
         fireEvent.click(
             await screen.findByRole('button', { name: 'Trier mes mails (1)' })
         );
@@ -263,13 +271,19 @@ describe('TriagePage', () => {
         expect(screen.queryByTestId('mail-deck')).not.toBeInTheDocument();
     });
 
+    it('opens the mail deck at once from a « mails à trier » notification', async () => {
+        (fetchTriageQueue as jest.Mock).mockResolvedValue(MAIL_QUEUE);
+        renderPage('/triage?deck=mail');
+        expect(await screen.findByTestId('mail-deck')).toBeInTheDocument();
+    });
+
     it('says so when the mail was not archived in Gmail', async () => {
         (fetchTriageQueue as jest.Mock).mockResolvedValue({
             ...MAIL_QUEUE,
             mail_archive: true,
         });
         (decideMail as jest.Mock).mockResolvedValue({ archived: false });
-        render(<TriagePage />);
+        renderPage();
         fireEvent.click(await screen.findByLabelText('Archiver dans Gmail'));
         fireEvent.click(screen.getByRole('button', { name: 'Ignorer' }));
         await waitFor(() =>
@@ -283,7 +297,7 @@ describe('TriagePage', () => {
         (applyTriage as jest.Mock).mockRejectedValue(
             Object.assign(new Error('Conflict'), { status: 409 })
         );
-        render(<TriagePage />);
+        renderPage();
         fireEvent.click(
             await screen.findByRole('button', { name: 'Annuler la tâche' })
         );
@@ -299,7 +313,7 @@ describe('TriagePage', () => {
             ...QUEUE,
             items: [{ ...QUEUE.items[0], action: 'delete' }],
         });
-        render(<TriagePage />);
+        renderPage();
         fireEvent.click(
             await screen.findByRole('button', { name: 'Supprimer' })
         );

@@ -23,6 +23,7 @@ const {
     actionCode,
 } = require('./core/mail');
 const gateway = require('./mailGateway');
+const { scheduleMailReady } = require('./mailReady');
 const dispatcher = require('../webhooks/dispatcher');
 const { logError } = require('../../services/logService');
 
@@ -109,6 +110,7 @@ async function proposeMail(user, input) {
                 ...pick(card),
                 status: 'pending',
             });
+            scheduleMailReady(user.id);
             return { mail_uid: created.uid, status: created.status };
         } catch (error) {
             if (error.name !== 'SequelizeUniqueConstraintError') throw error;
@@ -116,16 +118,21 @@ async function proposeMail(user, input) {
         }
     }
     const newer = card.received_at > row.received_at;
+    let reopened = false;
     if (row.status === 'pending' && card.received_at >= row.received_at) {
         await row.update(pick(card));
     } else if (row.status === 'later' && newer) {
         await row.update({ ...pick(card), ...REOPEN });
+        reopened = true;
     } else if (row.status === 'done' && card.received_at > row.decided_at) {
         await row.update({ ...pick(card), ...reopen(row) });
+        reopened = true;
     } else if (row.status === 'reviewing') {
         // The agent's second pass answers the user's note.
         await row.update({ ...pick(card), ...reopen(row) });
+        reopened = true;
     }
+    if (reopened) scheduleMailReady(user.id);
     return { mail_uid: row.uid, status: row.status };
 }
 

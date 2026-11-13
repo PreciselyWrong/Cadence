@@ -149,6 +149,10 @@ Table `mail_items`, migration `20261113170000` (`safe*` helpers, SQLite and Post
 
 The « Trier mes mails » decks of the web and Android show the choices, the excerpt, the draft, the note field and the action error (see « Trier mes mails » deck). The cards of the « À trier » list (web `MailCard.tsx`, Android `MailCards.kt`) still show the earlier buttons and ignore the new fields; a card with `options` works there with those buttons.
 
+## Notification « N mails à trier »
+
+When an agent creates or reopens a mail card (`propose_mail`), a per-user timer starts (2 minutes, `MAIL_READY_DELAY_MS`, `backend/modules/triage/mailReady.js`); each further card in the burst restarts it. When it fires, the cards with status `pending` are counted: none, and nothing is sent; otherwise the user's unread `mail_ready` notifications are dismissed and one is created: type `mail_ready`, title « 1 mail à trier » or « N mails à trier » (French, server-side, like the proposals' titles), level `info`, `sources` `desktop` and `mobile`, `data` `{ kind: 'mail_ready', count: N }`. A failure is logged (« Mail ready notification failed ») and never fails `propose_mail`. The web notification opens `/triage?deck=mail`, which opens the deck at once when mail cards wait, then drops the parameter.
+
 ## Out of scope
 
 Reading a whole message, sending, attachments, IMAP or other providers, rules or filters, labels other than the inbox.

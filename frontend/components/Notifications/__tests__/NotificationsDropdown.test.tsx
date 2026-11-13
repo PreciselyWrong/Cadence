@@ -1,7 +1,7 @@
 import React from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import NotificationsDropdown from '../NotificationsDropdown';
 
 jest.mock('react-i18next', () => ({
@@ -70,6 +70,56 @@ describe('NotificationsDropdown', () => {
             );
         });
     };
+
+    it('opens the mail deck for a « mails à trier » notification', async () => {
+        const mailReady = {
+            id: 2,
+            uid: 'n-mail',
+            type: 'mail_ready',
+            title: '2 mails à trier',
+            message: '',
+            level: 'info',
+            source: 'system',
+            read_at: null,
+            created_at: new Date().toISOString(),
+            data: { kind: 'mail_ready', count: 2 },
+        };
+        (global as any).fetch = jest.fn((url: string) =>
+            Promise.resolve({
+                ok: true,
+                json: () =>
+                    Promise.resolve(
+                        String(url).includes('unread-count')
+                            ? { count: 1 }
+                            : { notifications: [mailReady] }
+                    ),
+            })
+        );
+        const Location = () => {
+            const location = useLocation();
+            return <p>{location.pathname + location.search}</p>;
+        };
+        await act(async () => {
+            render(
+                <MemoryRouter initialEntries={['/today']}>
+                    <NotificationsDropdown isDarkMode={false} />
+                    <Routes>
+                        <Route path="/today" element={<p>today</p>} />
+                        <Route path="/triage" element={<Location />} />
+                    </Routes>
+                </MemoryRouter>
+            );
+        });
+        await act(async () => {
+            fireEvent.click(
+                screen.getByRole('button', { name: 'profile.notifications' })
+            );
+        });
+        await act(async () => {
+            fireEvent.click(screen.getByText('2 mails à trier'));
+        });
+        expect(screen.getByText('/triage?deck=mail')).toBeInTheDocument();
+    });
 
     it('names the agent and opens its message, marking it read', async () => {
         await open();

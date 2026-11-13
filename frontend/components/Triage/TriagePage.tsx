@@ -2,6 +2,7 @@ import PageShell from '../Shared/ui/PageShell';
 import EmptyState from '../Shared/ui/EmptyState';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 import {
     answerQuestion,
     applyTriage,
@@ -79,6 +80,7 @@ const TriagePage: React.FC = () => {
     const [editing, setEditing] = useState<TriageAction | null>(null);
     const [value, setValue] = useState('');
     const [deckOpen, setDeckOpen] = useState(false);
+    const [searchParams, setSearchParams] = useSearchParams();
 
     const load = useCallback(
         () =>
@@ -94,6 +96,16 @@ const TriagePage: React.FC = () => {
     useEffect(() => {
         load();
     }, [load]);
+
+    // A « N mails à trier » notification opens the deck straight away; the
+    // parameter is taken off, so closing the deck stays closed.
+    useEffect(() => {
+        if (!queue || searchParams.get('deck') !== 'mail') return;
+        if (queue.items.some((entry) => entry.type === 'mail')) {
+            setDeckOpen(true);
+        }
+        setSearchParams({}, { replace: true });
+    }, [queue, searchParams, setSearchParams]);
 
     const items = useMemo(
         () =>

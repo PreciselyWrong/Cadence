@@ -16,6 +16,7 @@ Code: `backend/models/notification.js` (create and deliver), `backend/utils/noti
 | Habit reminders (`habitReminders`) | A `habit_reminder` time is reached in the user's timezone | Once per reminder per local day, see [Habit reminders](#habit-reminders). |
 | Defer until (`deferUntil`) | A deferred task becomes active | Once per task per `defer_until`, and only if that date passed within the last day. |
 | Task assigned, comments and mentions | Someone else acts | Immediately. |
+| Mail cards waiting (`mail_ready`, no preference key) | An agent's proposed mail cards have been quiet for 2 minutes and some still wait for a decision | Once per burst, see [43-mail-triage](43-mail-triage.md). Only one unread stays. |
 
 **Overdue is not announced.** The server no longer creates `task_overdue` or `project_overdue` notifications and sends no overdue Telegram message. The `overdueTasks` and `overdueProjects` preference keys stay in the stored preferences (nothing is renamed or migrated) but the Notifications tab hides them. Overdue notifications created before the change stay readable; the `task.overdue` and `project.overdue` webhook events are no longer produced. The daily-summary webhook and Telegram digests say **Still open** with the date the work was due, never "overdue".
 
