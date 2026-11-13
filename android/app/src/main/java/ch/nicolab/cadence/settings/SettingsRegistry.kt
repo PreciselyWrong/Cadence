@@ -64,6 +64,9 @@ class SettingsPage(
 )
 
 /** Données et actions que Réglages reçoit de l'écran principal. */
+/** Rubrique Agendas, ouverte directement depuis la feuille « Affichage » de l'Agenda. */
+internal const val CALENDARS_SETTINGS_PAGE = "calendars"
+
 internal class SettingsDeps(
     val groups: List<HabitGroup>,
     val habitCountByGroup: Map<String, Int>,
@@ -104,7 +107,7 @@ internal fun settingsPages(deps: SettingsDeps): List<SettingsPage> = listOfNotNu
         content = { WidgetsSettings() },
     ),
     SettingsPage(
-        id = "calendars",
+        id = CALENDARS_SETTINGS_PAGE,
         section = SettingsSection.ORGANISATION,
         icon = Icons.Outlined.CalendarMonth,
         title = R.string.settings_page_calendars,

@@ -14,6 +14,4 @@
     <string name="agenda_resize_handle">Ajuster la durée</string>
     <string name="agenda_week_expand">Afficher la semaine</string>
     <string name="agenda_permission_inline">Événements de l’appareil masqués</string>
-    <string name="agenda_calendar_access">Autoriser l’accès au calendrier</string>
-    <string name="agenda_calendar_access_hint">Cadence lit vos agendas en lecture seule pour afficher leurs événements.</string>
 </resources>

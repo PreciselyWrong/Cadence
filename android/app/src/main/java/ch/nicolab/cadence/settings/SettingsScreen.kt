@@ -20,18 +20,20 @@ import ch.nicolab.cadence.ui.ScreenList
 
 /**
  * Réglages : liste de rubriques groupées par thème. Une rubrique ouverte remplace la liste ;
- * le retour ferme la rubrique avant de quitter l'écran.
+ * le retour ferme la rubrique avant de quitter l'écran. Ouverts sur [initialPage] (depuis un autre
+ * écran), le retour de cette rubrique ramène directement à cet écran.
  */
 @Composable
-internal fun SettingsScreen(deps: SettingsDeps, onBack: () -> Unit) {
+internal fun SettingsScreen(deps: SettingsDeps, onBack: () -> Unit, initialPage: String? = null) {
     val pages = settingsPages(deps)
-    var openPageId by rememberSaveable { mutableStateOf<String?>(null) }
+    var openPageId by rememberSaveable { mutableStateOf(initialPage) }
     val openPage = pages.firstOrNull { it.id == openPageId }
     val back = stringResource(R.string.action_back)
-    BackHandler(enabled = openPage != null) { openPageId = null }
+    val closePage = { if (openPageId == initialPage) onBack() else { openPageId = null } }
+    BackHandler(enabled = openPage != null) { closePage() }
     if (openPage != null) {
         ScreenList(header = {
-            ScreenHeader(title = stringResource(openPage.title), onBack = { openPageId = null }, backDescription = back)
+            ScreenHeader(title = stringResource(openPage.title), onBack = closePage, backDescription = back)
         }) {
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(Space.md)) { openPage.content() }

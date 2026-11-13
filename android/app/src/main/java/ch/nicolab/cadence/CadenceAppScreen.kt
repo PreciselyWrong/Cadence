@@ -86,6 +86,7 @@ import ch.nicolab.cadence.habits.habitTint
 import ch.nicolab.cadence.health.HealthConnectGateway
 import ch.nicolab.cadence.health.HealthConnectRulesSheet
 import ch.nicolab.cadence.settings.SettingsDeps
+import ch.nicolab.cadence.settings.CALENDARS_SETTINGS_PAGE
 import ch.nicolab.cadence.settings.SettingsScreen
 import ch.nicolab.cadence.tasks.search.SearchEntry
 import ch.nicolab.cadence.tasks.search.SearchKind
@@ -140,6 +141,12 @@ internal fun CadenceAppScreen(
     // Clé propre : l'ancienne valeur sérialisée (enum) n'est jamais relue.
     var tab by rememberSaveable(key = "main-tab", stateSaver = tabSaver) { mutableStateOf(Tab.TASKS) }
     var settingsOpen by rememberSaveable { mutableStateOf(false) }
+    // Rubrique sur laquelle les Réglages s'ouvrent ; null : la liste des rubriques.
+    var settingsPage by rememberSaveable { mutableStateOf<String?>(null) }
+    val openSettings: (String?) -> Unit = { page ->
+        settingsPage = page
+        settingsOpen = true
+    }
     var searchOpen by rememberSaveable { mutableStateOf(false) }
     var reviewOpen by rememberSaveable { mutableStateOf(false) }
     var triageOpen by rememberSaveable { mutableStateOf(false) }
@@ -273,14 +280,14 @@ internal fun CadenceAppScreen(
                     label = "screen",
                 ) { current ->
                     when (current) {
-                        null -> SettingsScreen(settingsDeps, onBack = { settingsOpen = false })
+                        null -> SettingsScreen(settingsDeps, onBack = { settingsOpen = false }, initialPage = settingsPage)
                         Tab.TASKS -> TasksScreen(
                             openTaskUid = opening.pending,
                             onTaskOpened = { opening = opening.consumed() },
                             showProjectUid = projectToShow,
                             onProjectShown = { projectToShow = null },
                             onOpenSearch = { searchOpen = true },
-                            onOpenSettings = { settingsOpen = true },
+                            onOpenSettings = { openSettings(null) },
                             routineStrip = {
                                 RoutineStrip(
                                     habits = habits,
@@ -290,7 +297,11 @@ internal fun CadenceAppScreen(
                                 )
                             },
                         )
-                        Tab.AGENDA -> AgendaScreen(onOpenHabit = { viewModel.clearSaveError(); quickHabitId = it })
+                        Tab.AGENDA -> AgendaScreen(
+                            onOpenHabit = { viewModel.clearSaveError(); quickHabitId = it },
+                            onOpenSettings = { openSettings(null) },
+                            onOpenCalendarSettings = { openSettings(CALENDARS_SETTINGS_PAGE) },
+                        )
                         Tab.HABITS -> HabitsTab(
                             habits = habits,
                             groups = groups,
@@ -299,7 +310,7 @@ internal fun CadenceAppScreen(
                             quick = { viewModel.clearSaveError(); quickHabitId = it.stored.id },
                             options = { options = it },
                             create = { choosingCreation = true },
-                            openSettings = { settingsOpen = true },
+                            openSettings = { openSettings(null) },
                             timers = timers,
                             busy = busy,
                             direct = { item -> viewModel.directAction(item) { receipt ->
@@ -326,6 +337,7 @@ internal fun CadenceAppScreen(
                             onCorrect = { viewModel.clearSaveError(); correctingId = it.id },
                             onOpenReview = { reviewOpen = true },
                             onOpenGoals = { goalsOpen = true },
+                            onOpenSettings = { openSettings(null) },
                         )
                     }
                 }

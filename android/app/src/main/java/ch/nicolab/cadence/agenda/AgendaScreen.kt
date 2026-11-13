@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +21,7 @@ import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.ChevronLeft
 import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.material.icons.outlined.Today
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -39,6 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
@@ -82,6 +85,8 @@ import kotlinx.coroutines.launch
 private const val MINUTE_MS = 60_000L
 private val DAY_LABEL: DateTimeFormatter = DateTimeFormatter.ofPattern("EEEE d MMMM", Locale.FRENCH)
 private val MONTH_LABEL: DateTimeFormatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.FRENCH)
+private val COMPACT_DAY_LABEL: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE d MMM", Locale.FRENCH)
+private val COMPACT_MONTH_LABEL: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM yyyy", Locale.FRENCH)
 private val SHORT_DAY: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM", Locale.FRENCH)
 private val SNACKBAR_TIME: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 private val CAPSULE_CELL_WIDTH = 44.dp
@@ -91,10 +96,14 @@ private val CAPSULE_CELL_WIDTH = 44.dp
  * La permission des agendas de l'appareil est proposée ici ; sans elle, les tâches restent visibles.
  */
 @Composable
-fun AgendaScreen(modifier: Modifier = Modifier, onOpenHabit: (String) -> Unit = {}) {
+fun AgendaScreen(
+    modifier: Modifier = Modifier,
+    onOpenHabit: (String) -> Unit = {},
+    onOpenSettings: () -> Unit = {},
+    onOpenCalendarSettings: () -> Unit = {},
+) {
     val viewModel: AgendaViewModel = viewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val calendars by viewModel.calendars.collectAsStateWithLifecycle()
     var displayOpen by rememberSaveable { mutableStateOf(false) }
     var calendar by remember { mutableStateOf(CalendarPanel()) }
     val drag = remember { TrayDragState() }
@@ -170,11 +179,12 @@ fun AgendaScreen(modifier: Modifier = Modifier, onOpenHabit: (String) -> Unit = 
     Box(modifier.fillMaxSize().onGloballyPositioned { boxOrigin = it.positionInRoot() }) {
         Column(Modifier.fillMaxSize().statusBarsPadding().padding(horizontal = Space.gutter)) {
             AgendaHeader(
-                subtitle = agendaSubtitle(state),
+                titles = agendaTitles(state),
                 onPrevious = { viewModel.swipe(-1) },
                 onNext = { viewModel.swipe(1) },
                 onToday = viewModel::goToToday,
                 onDisplay = { displayOpen = true },
+                onSettings = onOpenSettings,
                 calendarOpen = calendar.open && state.mode != AgendaMode.MONTH,
                 onCalendar = if (state.mode == AgendaMode.MONTH) null else ({ calendar = calendar.toggled(state.selected) }),
             )
@@ -256,14 +266,11 @@ fun AgendaScreen(modifier: Modifier = Modifier, onOpenHabit: (String) -> Unit = 
     if (displayOpen) {
         AgendaOptionsSheet(
             options = state.options,
-            calendars = calendars,
-            permissionMissing = state.permissionMissing,
-            onRequestPermission = requestCalendar,
             onOptionsChange = viewModel::updateOptions,
-            onCalendarShown = viewModel::setCalendarShown,
-            onCalendarTasksShown = viewModel::setCalendarTasks,
-            onCalendarHidden = viewModel::setCalendarHidden,
-            onCalendarNotify = viewModel::setCalendarNotify,
+            onOpenCalendarSettings = {
+                displayOpen = false
+                onOpenCalendarSettings()
+            },
             onDismiss = { displayOpen = false },
         )
     }
@@ -271,15 +278,16 @@ fun AgendaScreen(modifier: Modifier = Modifier, onOpenHabit: (String) -> Unit = 
 
 /**
  * En-tête sur une seule ligne : le contexte (jour, plage, mois) tient lieu de titre — la barre du bas
- * nomme déjà l'Agenda —, puis précédent · aujourd'hui · suivant et l'affichage. La grille garde la hauteur.
+ * nomme déjà l'Agenda —, puis précédent · aujourd'hui · suivant, l'affichage et les Réglages. La grille garde la hauteur.
  */
 @Composable
 private fun AgendaHeader(
-    subtitle: String,
+    titles: List<String>,
     onPrevious: () -> Unit,
     onNext: () -> Unit,
     onToday: () -> Unit,
     onDisplay: () -> Unit,
+    onSettings: () -> Unit,
     calendarOpen: Boolean,
     onCalendar: (() -> Unit)?,
 ) {
@@ -288,14 +296,21 @@ private fun AgendaHeader(
         Modifier.fillMaxWidth().padding(top = Space.sm),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(
-            text = subtitle,
-            style = MaterialTheme.typography.titleMedium,
-            color = palette.onSurface,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.weight(1f).semantics { heading() },
-        )
+        // Le titre long (« Vendredi 13 novembre ») cède la place au court (« Ven. 13 nov. ») s'il ne tient pas.
+        BoxWithConstraints(Modifier.weight(1f)) {
+            val style = MaterialTheme.typography.titleMedium
+            val measurer = rememberTextMeasurer()
+            val widthPx = constraints.maxWidth
+            val title = titles.firstOrNull { measurer.measure(it, style, maxLines = 1).size.width <= widthPx } ?: titles.last()
+            Text(
+                text = title,
+                style = style,
+                color = palette.onSurface,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.semantics { heading() },
+            )
+        }
         Row(
             Modifier
                 .height(Size.headerButton)
@@ -323,6 +338,8 @@ private fun AgendaHeader(
             contentDescription = stringResource(R.string.agenda_display),
             onClick = onDisplay,
         )
+        Spacer(Modifier.width(Space.sm))
+        RoundHeaderButton(Icons.Outlined.Settings, stringResource(R.string.tab_settings), onClick = onSettings)
     }
 }
 
@@ -351,22 +368,37 @@ private fun AgendaMode.labelRes(): Int = when (this) {
     AgendaMode.LIST -> R.string.agenda_mode_list
 }
 
+/** Titres de l'en-tête, du plus long au plus court : le premier qui tient est affiché. */
 @Composable
-private fun agendaSubtitle(state: AgendaUiState): String {
+private fun agendaTitles(state: AgendaUiState): List<String> {
+    val full = agendaSubtitle(state, ::dayLabel, ::monthLabel, state.options.weekNumbers)
+    val compact = agendaSubtitle(state, ::compactDayLabel, ::compactMonthLabel, state.options.weekNumbers)
+    // En dernier recours, le numéro de semaine s'efface avant le jour.
+    val bare = agendaSubtitle(state, ::compactDayLabel, ::compactMonthLabel, weekNumbers = false)
+    return listOf(full, compact, bare).distinct()
+}
+
+@Composable
+private fun agendaSubtitle(
+    state: AgendaUiState,
+    day: (LocalDate) -> String,
+    month: (LocalDate) -> String,
+    weekNumbers: Boolean,
+): String {
     val selected = state.selected
     val base = when (state.mode) {
-        AgendaMode.DAY -> dayLabel(selected)
+        AgendaMode.DAY -> day(selected)
         AgendaMode.THREE_DAYS -> threeDays(selected, state.options.weekends).let { days ->
             stringResource(R.string.agenda_range, days.first().format(SHORT_DAY), days.last().format(SHORT_DAY))
         }
-        AgendaMode.MONTH -> selected.format(MONTH_LABEL).replaceFirstChar { it.titlecase(Locale.FRENCH) }
+        AgendaMode.MONTH -> month(selected)
         AgendaMode.LIST -> if (selected == state.today) {
             stringResource(R.string.agenda_list_subtitle, AGENDA_LIST_DAYS)
         } else {
             stringResource(R.string.agenda_range, selected.format(SHORT_DAY), selected.plusDays(AGENDA_LIST_DAYS - 1L).format(SHORT_DAY))
         }
     }
-    if (!state.options.weekNumbers || state.mode == AgendaMode.LIST) return base
+    if (!weekNumbers || state.mode == AgendaMode.LIST) return base
     val week = selected.get(WeekFields.ISO.weekOfWeekBasedYear())
     return stringResource(R.string.agenda_week_subtitle, base, week)
 }
@@ -406,3 +438,14 @@ private fun CalendarPermissionBanner(onAllow: () -> Unit) {
 
 internal fun dayLabel(date: LocalDate): String =
     date.format(DAY_LABEL).replaceFirstChar { it.titlecase(Locale.FRENCH) }
+
+internal fun monthLabel(date: LocalDate): String =
+    date.format(MONTH_LABEL).replaceFirstChar { it.titlecase(Locale.FRENCH) }
+
+/** Forme courte du jour (« Ven. 13 nov. »), quand [dayLabel] ne tient pas dans l'en-tête. */
+internal fun compactDayLabel(date: LocalDate): String =
+    date.format(COMPACT_DAY_LABEL).replaceFirstChar { it.titlecase(Locale.FRENCH) }
+
+/** Forme courte du mois (« Nov. 2026 »). */
+internal fun compactMonthLabel(date: LocalDate): String =
+    date.format(COMPACT_MONTH_LABEL).replaceFirstChar { it.titlecase(Locale.FRENCH) }

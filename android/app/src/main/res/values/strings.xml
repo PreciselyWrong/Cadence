@@ -535,7 +535,8 @@
     <string name="agenda_option_weekends">Week-ends</string>
     <string name="agenda_option_week_numbers">Numéros de semaine</string>
     <string name="agenda_calendars">Agendas</string>
-    <string name="agenda_calendars_empty">Aucun agenda de l’appareil à afficher.</string>
+    <string name="agenda_all_calendar_settings">Tous les réglages des agendas</string>
+    <string name="agenda_all_calendar_settings_hint">Cocher les événements, événements masqués</string>
     <string name="habits_segment_today">Aujourd’hui</string>
     <string name="habits_segment_all">Toutes</string>
     <string name="bilan_title">Bilan</string>
@@ -602,7 +603,6 @@
     <string name="calendars_intro">Pour chaque agenda, choisissez où ses événements apparaissent.</string>
     <string name="calendars_source_google">Google</string>
     <string name="calendars_surface_agenda">Agenda</string>
-    <string name="calendars_hide_everywhere">Masquer partout</string>
     <string name="calendars_surface_tasks">Liste Tâches</string>
     <string name="calendars_auto_done_past">Cocher une fois passé</string>
     <string name="calendars_check_title">Cocher un événement</string>
@@ -617,7 +617,7 @@
     <string name="calendars_permission_action">Autoriser l’accès aux agendas</string>
     <string name="calendars_empty">Aucun agenda sur cet appareil</string>
     <string name="calendars_use">Utiliser dans Cadence</string>
-    <string name="calendars_use_hint">Les agendas non utilisés ou masqués partout n’apparaissent nulle part dans Cadence. Un même événement présent sur plusieurs agendas n’est montré qu’une fois.</string>
+    <string name="calendars_use_hint">Les agendas non utilisés n’apparaissent nulle part dans Cadence. Un même événement présent sur plusieurs agendas n’est montré qu’une fois.</string>
     <string name="calendars_unused_header">Non utilisés (%1$d)</string>
     <string name="routine_title">Routine · %1$s %2$d/%3$d</string>
     <string name="routine_open_habits">Ouvrir les habitudes</string>

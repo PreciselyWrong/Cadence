@@ -4,6 +4,12 @@ Journal des décisions d'interface prises sur l'app Android, pour que le web les
 
 ## Journal
 
+### 2026-11-13 — Une seule liste des agendas, Réglages depuis chaque onglet
+
+- **Problème** : la feuille « Affichage » de l'Agenda et Réglages › Agendas réglaient les mêmes agendas autrement (puces « Masquer partout » d'un côté, « Utiliser dans Cadence » et agendas inutilisés de l'autre) ; les Réglages ne s'ouvraient que depuis Habitudes et le sélecteur de listes de Tâches.
+- **Décision** : une seule liste des agendas, la même dans les deux écrans (par compte, utilisés puis non utilisés, puces Agenda · Liste Tâches · Notifications · Cocher une fois passé) ; la feuille garde au-dessus ses interrupteurs d'affichage propres à la vue et finit par « Tous les réglages des agendas », qui ouvre directement Réglages › Agendas (retour = Agenda). L'engrenage des Réglages est en dernier à droite de l'en-tête de Tâches, Agenda, Habitudes et Bilan.
+- **Web** : rien à reprendre ; le web ne lit pas les agendas de l'appareil et ouvre le Profil depuis la barre latérale, présente partout.
+
 ### 2026-11-12 — Plan des notes et descriptions, barre au-dessus du clavier
 
 - **Problème** : un téléphone n'a ni Tab, ni Alt+↑/↓, ni Ctrl ; le clavier n'envoie que des textes successifs ; la barre de mise en forme n'avait que cases, puces, titre et gras ; pas de choix `@`, une puce vers une cible inconnue ne faisait qu'un message.

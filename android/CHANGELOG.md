@@ -1,3 +1,10 @@
+## [1.27.1] — 13 novembre 2026
+
+- Les agendas se règlent au même endroit : la feuille « Affichage » de l'Agenda montre la même liste que Réglages › Agendas (par compte, agendas non utilisés compris, puces Agenda, Liste Tâches, Notifications, Cocher une fois passé) ; un changement fait d'un côté se voit de l'autre.
+- La feuille de l'Agenda se termine par « Tous les réglages des agendas », qui ouvre directement Réglages › Agendas (événements masqués, cocher un événement, masquer les terminés).
+- Le bouton Réglages (engrenage) est en haut à droite de chaque onglet : Tâches, Agenda, Habitudes et Bilan.
+- Agenda : quand le titre ne tient pas à côté des boutons, il passe à sa forme courte (« Ven. 13 nov. »), puis sans numéro de semaine.
+
 ## [1.27.0] — 13 novembre 2026
 
 - Planifier : une carte d'un jour envoyée vers un horizon (appui long › Horizon) quitte son jour et garde son échéance ; « Annuler » rend les deux.

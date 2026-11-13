@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -205,6 +206,11 @@ fun TasksScreen(
                             icon = Icons.Outlined.Search,
                             contentDescription = stringResource(R.string.tasks_search_open),
                             onClick = onOpenSearch,
+                        )
+                        RoundHeaderButton(
+                            icon = Icons.Outlined.Settings,
+                            contentDescription = stringResource(R.string.tasks_open_settings),
+                            onClick = onOpenSettings,
                         )
                     },
                 )

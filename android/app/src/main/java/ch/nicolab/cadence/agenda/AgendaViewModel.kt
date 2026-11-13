@@ -8,12 +8,9 @@ import ch.nicolab.cadence.CadenceApp
 import ch.nicolab.cadence.calendar.CalendarGraph
 import ch.nicolab.cadence.calendar.CalendarRepository
 import ch.nicolab.cadence.calendar.CalendarSurface
-import ch.nicolab.cadence.calendar.CalendarWithDisplay
 import ch.nicolab.cadence.calendar.EventInstanceKey
 import ch.nicolab.cadence.calendar.HiddenEvent
 import ch.nicolab.cadence.calendar.TimeRange
-import ch.nicolab.cadence.calendar.hiddenEverywhere
-import ch.nicolab.cadence.calendar.isUsed
 import ch.nicolab.cadence.calendar.ofDays
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.TaskRepository
@@ -103,11 +100,6 @@ internal class AgendaViewModel(application: Application) : AndroidViewModel(appl
     private val _mode = MutableStateFlow(AgendaMode.DAY)
     private val _selected = MutableStateFlow(LocalDate.now(zone))
     private val _options = MutableStateFlow(readOptions())
-
-    val calendars: StateFlow<List<CalendarWithDisplay>> = calendar.calendars()
-        // Un agenda masqué partout par choix reste listé pour pouvoir le rendre ; un agenda jamais choisi et non synchronisé, non.
-        .map { items -> items.filter { it.display.isUsed(it.calendar) || it.display.used == false } }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), emptyList())
 
     private val window: Flow<AgendaWindow> = combine(_mode, _selected) { mode, selected ->
         windowFor(mode, selected)
@@ -248,25 +240,6 @@ internal class AgendaViewModel(application: Application) : AndroidViewModel(appl
             .putBoolean(KEY_WEEKENDS, next.weekends)
             .putBoolean(KEY_WEEK_NUMBERS, next.weekNumbers)
             .apply()
-    }
-
-    fun setCalendarShown(item: CalendarWithDisplay, shown: Boolean) = viewModelScope.launch {
-        // Choisir Agenda sur un agenda masqué le rend : le choix vaut « afficher ici ».
-        calendar.setDisplay(item.calendar.id, item.display.copy(agenda = shown, used = if (shown) true else item.display.used))
-    }
-
-    /** « Masquer partout » : l'agenda disparaît de toutes les surfaces ; le rendre garde ses choix Agenda et Tâches. */
-    fun setCalendarHidden(item: CalendarWithDisplay, hidden: Boolean) = viewModelScope.launch {
-        calendar.setDisplay(item.calendar.id, item.display.hiddenEverywhere(hidden))
-    }
-
-    fun setCalendarTasks(item: CalendarWithDisplay, shown: Boolean) = viewModelScope.launch {
-        calendar.setDisplay(item.calendar.id, item.display.copy(tasks = shown, used = if (shown) true else item.display.used))
-    }
-
-    /** « Notifications » d'un agenda : activer sur un agenda masqué le rend, comme les autres choix. */
-    fun setCalendarNotify(item: CalendarWithDisplay, notify: Boolean) = viewModelScope.launch {
-        calendar.setDisplay(item.calendar.id, item.display.copy(notify = notify, used = if (notify) true else item.display.used))
     }
 
     fun toggleEvent(key: EventInstanceKey) = viewModelScope.launch {

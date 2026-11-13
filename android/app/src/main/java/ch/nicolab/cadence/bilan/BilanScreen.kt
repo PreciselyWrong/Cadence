@@ -1,5 +1,7 @@
 package ch.nicolab.cadence.bilan
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -11,6 +13,7 @@ import ch.nicolab.cadence.AlcoholStatisticsSheet
 import ch.nicolab.cadence.HabitCardState
 import ch.nicolab.cadence.R
 import ch.nicolab.cadence.data.local.model.IdentifiedPause
+import ch.nicolab.cadence.designsystem.components.RoundHeaderButton
 import ch.nicolab.cadence.designsystem.components.ScreenHeader
 import ch.nicolab.cadence.domain.AbstinenceProfile
 import ch.nicolab.cadence.domain.HabitEntry
@@ -37,6 +40,7 @@ internal fun BilanScreen(
     onCorrect: (HabitEntry) -> Unit,
     onOpenReview: () -> Unit,
     onOpenGoals: () -> Unit,
+    onOpenSettings: () -> Unit,
 ) {
     val byId = habits.associateBy { it.stored.id }
     val outlook = remember(habits) {
@@ -64,7 +68,13 @@ internal fun BilanScreen(
     }
 
     ScreenList(header = {
-        ScreenHeader(title = stringResource(R.string.bilan_title), subtitle = weekSubtitle)
+        ScreenHeader(
+            title = stringResource(R.string.bilan_title),
+            subtitle = weekSubtitle,
+            actions = {
+                RoundHeaderButton(Icons.Outlined.Settings, stringResource(R.string.tab_settings), onClick = onOpenSettings)
+            },
+        )
     }) {
         item(key = "task-kpis") { TaskKpiPanel(habits) }
         item(key = "review-entry") { ReviewEntryPanel(onOpenReview) }
