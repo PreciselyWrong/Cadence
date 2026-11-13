@@ -1,6 +1,7 @@
 package ch.nicolab.cadence.tasks.planning
 
 import ch.nicolab.cadence.tasks.model.TaskChange
+import ch.nicolab.cadence.tasks.model.TaskDraft
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskStatus
 import java.time.LocalDate
@@ -114,5 +115,63 @@ class PlanBoardTest {
         )
         assertEquals(TaskChange(later = true), PlanBoard.horizonChange(t, Horizon.THIS_MONTH, Horizon.SOMEDAY, today, weekStart))
         assertEquals(false, PlanBoard.horizonChange(t.copy(needsWhen = true), null, Horizon.THIS_MONTH, today, weekStart)?.needsWhen)
+    }
+
+    @Test
+    fun `une carte prévue envoyée vers un horizon quitte son jour et garde son échéance`() {
+        val t = task("a", due = today.plusDays(2))
+        val card = PlanCard(t, tomorrow, PlanEntry("a", tomorrow, null, null))
+        val writes = PlanBoard.sendToHorizon(card, null, Horizon.NEXT_WEEK, today, weekStart)!!
+        assertEquals(listOf(RemoveTask(tomorrow, "a")), writes.plan)
+        assertEquals(weekStart.plusDays(7), writes.change.weekOf)
+        assertEquals(false, writes.change.clearDue)
+        assertNull(writes.change.dueDate)
+    }
+
+    @Test
+    fun `une carte seulement due envoyée vers un horizon n'a aucune ligne à retirer`() {
+        val card = PlanCard(task("a", due = tomorrow), tomorrow, null)
+        val writes = PlanBoard.sendToHorizon(card, null, Horizon.THIS_MONTH, today, weekStart)!!
+        assertTrue(writes.plan.isEmpty())
+        assertEquals(today.withDayOfMonth(1), writes.change.monthOf)
+        assertNull(PlanBoard.sendToHorizon(card, Horizon.THIS_MONTH, Horizon.THIS_MONTH, today, weekStart))
+    }
+
+    @Test
+    fun `le plus de l'Inbox crée une tâche sans échéance, prévue le jour qu'elle nomme`() {
+        val dated = PlanBoard.planAdd(TaskDraft(name = "a", dueDate = tomorrow), column = null, today = today)
+        assertNull(dated.draft.dueDate)
+        assertEquals(listOf(AddTask(tomorrow, "u")), dated.edits("u"))
+        val timed = PlanBoard.planAdd(TaskDraft(name = "b", dueTime = "14:30"), column = null, today = today)
+        assertNull(timed.draft.dueTime)
+        assertEquals(listOf(SlotTask(today, "u", 14 * 60 + 30, 30)), timed.edits("u"))
+    }
+
+    @Test
+    fun `le plus de l'Inbox sans date laisse la tâche à classer, avec « Quand ? » si elle est rangée`() {
+        val bare = PlanBoard.planAdd(TaskDraft(name = "a"), column = null, today = today)
+        assertTrue(bare.edits("u").isEmpty())
+        assertEquals(false, bare.draft.needsWhen)
+        assertEquals(true, PlanBoard.planAdd(TaskDraft(name = "b", projectUid = "p"), column = null, today = today).draft.needsWhen)
+    }
+
+    @Test
+    fun `le plus d'un jour prévoit ce jour, ou celui que la saisie nomme, sans échéance`() {
+        val day = today.plusDays(4)
+        assertEquals(listOf(AddTask(day, "u")), PlanBoard.planAdd(TaskDraft(name = "a"), column = day, today = today).edits("u"))
+        val named = PlanBoard.planAdd(TaskDraft(name = "a", dueDate = tomorrow, projectUid = "p"), column = day, today = today)
+        assertEquals(listOf(AddTask(tomorrow, "u")), named.edits("u"))
+        assertNull(named.draft.dueDate)
+        assertEquals(false, named.draft.needsWhen)
+    }
+
+    @Test
+    fun `étaler prend les cartes ouvertes des sept jours et laisse les occurrences virtuelles`() {
+        val plan = listOf(PlanEntry("lourde", today, null, null))
+        val tasks = listOf(task("lourde", minutes = 120))
+        val days = PlanBoard.days(tasks, plan, today, emptyList(), emptyMap(), zone)
+        val late = task("retard", due = today.minusDays(3))
+        val ghost = late.copy(uid = "serie", virtual = true)
+        assertEquals(listOf(AddTask(tomorrow, "retard")), PlanBoard.spreadWrites(listOf(late, ghost), days, today))
     }
 }

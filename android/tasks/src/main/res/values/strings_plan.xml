@@ -6,7 +6,13 @@
     <string name="plan_inbox">Inbox</string>
     <string name="plan_inbox_empty">Rien à planifier.</string>
     <string name="plan_overdue">Échues</string>
-    <string name="plan_overdue_to_today">Tout à aujourd\'hui</string>
+    <string name="plan_overdue_reschedule">Replanifier</string>
+    <string name="plan_overdue_spread">Étaler sur 7 jours</string>
+    <plurals name="plan_spread_notice">
+        <item quantity="one">%1$d tâche étalée sur 7 jours</item>
+        <item quantity="other">%1$d tâches étalées sur 7 jours</item>
+    </plurals>
+    <string name="plan_strip_title">Plus tard</string>
     <string name="plan_add">Ajouter</string>
     <string name="plan_day_empty">Rien de prévu.</string>
     <string name="plan_done_count">Terminées (%d)</string>

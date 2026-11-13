@@ -1,3 +1,10 @@
+## [1.27.0] — 13 novembre 2026
+
+- Planifier : une carte d'un jour envoyée vers un horizon (appui long › Horizon) quitte son jour et garde son échéance ; « Annuler » rend les deux.
+- Sous les 14 jours, une bande « Plus tard » montre Semaine prochaine, Ce mois-ci, Mois prochain et Un jour avec leur compte ; un appui ouvre Horizons sur la colonne.
+- « Ajouter » de l'Inbox crée une tâche sans échéance : une date ou une heure tapées la prévoient ce jour-là, sinon elle attend dans « Tâches à classer » (avec « Quand ? » si elle a un projet). « Ajouter » d'un jour ne pose plus d'échéance non plus.
+- Échues : « Replanifier ▾ » remplace « Tout à aujourd'hui » : Aujourd'hui, Demain, Étaler sur 7 jours (chaque tâche au jour le moins chargé, la plus prioritaire d'abord, même règle que le web), Choisir une date. Les boutons des plugins (« Proposer un plan » d'Hermes) s'affichent à côté.
+
 ## [1.26.1] — 13 novembre 2026
 
 - « À replanifier » ne reprend plus une tâche déjà dans « Échues » ou dans « Tâches à classer » de l'Inbox : chaque tâche n'apparaît qu'à un endroit.

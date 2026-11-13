@@ -83,7 +83,7 @@ data class PluginList(val configured: Boolean, val plugins: List<Plugin>)
 /** Entrée de menu d'un plugin actif (`GET /api/plugins/menu`) ; sa page est servie à `/api/plugins/<id>/ui/<file>`. */
 data class PluginMenuItem(val id: String, val label: String, val path: String, val file: String)
 
-/** Bouton qu'un plugin ajoute en haut d'un écran ; [places] parmi plan, today, inbox, project, triage. */
+/** Bouton qu'un plugin ajoute en haut d'un écran ; [places] parmi plan, today, inbox, project, triage, overdue. */
 data class PluginAction(val plugin: String, val id: String, val label: String, val places: List<String>)
 
 /** Réponse de `GET /api/plugins/menu` : les pages des plugins actifs et leurs boutons d'action. */

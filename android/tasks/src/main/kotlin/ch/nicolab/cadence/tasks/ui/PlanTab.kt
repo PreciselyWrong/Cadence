@@ -5,6 +5,7 @@ package ch.nicolab.cadence.tasks.ui
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -20,6 +21,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -52,6 +56,7 @@ import ch.nicolab.cadence.tasks.planning.PlanBoard
 import ch.nicolab.cadence.tasks.planning.PlanCard
 import ch.nicolab.cadence.tasks.planning.PlanDay
 import ch.nicolab.cadence.tasks.planning.formatMinutes
+import ch.nicolab.cadence.tasks.plugins.PluginActionButtons
 import ch.nicolab.cadence.tasks.ui.triage.TriageEntry
 import ch.nicolab.cadence.tasks.ui.triage.TriageScreen
 import ch.nicolab.cadence.tasks.ui.triage.TriageViewModel
@@ -118,6 +123,11 @@ internal fun PlanTab(
     var adding by remember { mutableStateOf<AddTarget?>(null) }
     // « Ce mois-ci » d'« À planifier » est replié par défaut ; son compte reste visible.
     var monthOpen by rememberSaveable { mutableStateOf(false) }
+    // « Choisir une date » du menu « Replanifier » des échues.
+    var pickingOverdue by remember { mutableStateOf(false) }
+    // Horizon à montrer après un appui sur la bande « Plus tard » de Jours.
+    var focusHorizon by remember { mutableStateOf<Horizon?>(null) }
+    val listState = rememberLazyListState()
     // « À trier (N) » au-dessus de l'Inbox : seulement en ligne, comme l'ancien écran Inbox.
     val triage: TriageViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
     val triageItems by triage.items.collectAsStateWithLifecycle()
@@ -150,7 +160,13 @@ internal fun PlanTab(
         )
     }
 
-    LazyColumn(modifier = modifier, contentPadding = tasksListPadding()) {
+    LaunchedEffect(horizons, focusHorizon) {
+        val target = focusHorizon ?: return@LaunchedEffect
+        if (horizons) listState.scrollToItem(horizonHeaderIndex(board, target))
+        focusHorizon = null
+    }
+
+    LazyColumn(modifier = modifier, state = listState, contentPadding = tasksListPadding()) {
         item(key = "mode") {
             SegmentedTabs(
                 labels = listOf(stringResource(R.string.plan_mode_days), stringResource(R.string.plan_mode_horizons)),
@@ -220,12 +236,12 @@ internal fun PlanTab(
             }
             if (board.overdue.isNotEmpty()) {
                 item(key = "overdue-header") {
-                    SectionHeader(
-                        title = stringResource(R.string.plan_overdue),
+                    OverdueHeader(
                         count = board.overdue.size,
-                        tone = SectionTone.Error,
-                        actionLabel = stringResource(R.string.plan_overdue_to_today),
-                        onAction = { viewModel.planOn(board.overdue, today) },
+                        today = today,
+                        onDay = { viewModel.planOn(board.overdue, it) },
+                        onSpread = { viewModel.spreadOverdue() },
+                        onPick = { pickingOverdue = true },
                     )
                 }
                 items(board.overdue, key = { "overdue-${it.rowKey}" }) { task ->
@@ -235,6 +251,13 @@ internal fun PlanTab(
             board.days.forEach { day -> planDay(day, today, hideDone, onAdd = { adding = AddTarget.Day(day.date) }) { card ->
                 Row(card.task, card) { if (card.task.virtual) onOpen(card.task) else planning = PlanTarget.Card(card) }
             } }
+            item(key = "horizon-strip") {
+                HorizonStrip(board) { horizon ->
+                    horizons = true
+                    layouts.set(LayoutStore.PLAN_HORIZONS, true)
+                    focusHorizon = horizon
+                }
+            }
         } else {
             Horizon.entries.forEach { horizon ->
                 val tasks = board.horizons.buckets[horizon].orEmpty()
@@ -293,7 +316,7 @@ internal fun PlanTab(
             },
             onHorizon = { horizon ->
                 when (target) {
-                    is PlanTarget.Card -> viewModel.moveToHorizon(target.card.task, horizon)
+                    is PlanTarget.Card -> viewModel.sendToHorizon(target.card, horizon)
                     is PlanTarget.Task -> viewModel.moveToHorizon(target.task, horizon)
                     is PlanTarget.Idea -> viewModel.planIdea(target.entry, horizon = horizon)
                 }
@@ -329,6 +352,17 @@ internal fun PlanTab(
         )
     }
 
+    if (pickingOverdue) {
+        TaskDatePickerDialog(
+            initial = today,
+            onConfirm = { date ->
+                pickingOverdue = false
+                viewModel.planOn(board.overdue, date)
+            },
+            onDismiss = { pickingOverdue = false },
+        )
+    }
+
     if (triageOpen) TriageScreen(today = LocalDate.now(), onBack = { triageOpen = false })
 
     adding?.let { target ->
@@ -336,12 +370,83 @@ internal fun PlanTab(
             onDismiss = { adding = null },
             onSave = { draft ->
                 when (target) {
-                    AddTarget.Inbox -> viewModel.saveNewTask(draft)
-                    is AddTarget.Day -> viewModel.addToDay(draft, target.date)
+                    AddTarget.Inbox -> viewModel.addToPlan(draft, null)
+                    is AddTarget.Day -> viewModel.addToPlan(draft, target.date)
                     is AddTarget.InHorizon -> viewModel.addToHorizon(draft, target.horizon)
                 }
             },
         )
+    }
+}
+
+/** Les horizons après cette semaine, dans la bande « Plus tard » de Jours (web : `STRIP_KEYS`). */
+private val STRIP = listOf(Horizon.NEXT_WEEK, Horizon.THIS_MONTH, Horizon.NEXT_MONTH, Horizon.SOMEDAY)
+
+/** Position de l'en-tête de [horizon] dans la liste du mode Horizons (même ordre que [PlanTab]). */
+private fun horizonHeaderIndex(board: PlanBoardState, horizon: Horizon): Int {
+    var index = 1
+    for (key in Horizon.entries) {
+        if (key == horizon) return index
+        val tasks = board.horizons.buckets[key].orEmpty().size
+        val planned = if (key == Horizon.WEEK) board.horizons.plannedThisWeek.size else 0
+        index += 1 + tasks + (if (planned > 0) 1 + planned else 0) + (if (tasks == 0 && planned == 0) 1 else 0)
+    }
+    return 0
+}
+
+/**
+ * En-tête des échues : titre, boutons des plugins du lieu `overdue` (web : « Proposer un plan »), puis
+ * « Replanifier » : Aujourd'hui, Demain, Étaler sur 7 jours, Choisir une date. Rien n'y touche l'échéance.
+ */
+@Composable
+private fun OverdueHeader(
+    count: Int,
+    today: LocalDate,
+    onDay: (LocalDate) -> Unit,
+    onSpread: () -> Unit,
+    onPick: () -> Unit,
+) {
+    var open by remember { mutableStateOf(false) }
+    androidx.compose.foundation.layout.Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.Bottom) {
+        SectionHeader(
+            title = stringResource(R.string.plan_overdue),
+            count = count,
+            tone = SectionTone.Error,
+            modifier = Modifier.weight(1f),
+        )
+        androidx.compose.foundation.layout.Row(verticalAlignment = Alignment.CenterVertically) {
+            PluginActionButtons(place = "overdue", context = mapOf("date" to today.toString()))
+            Box {
+                TextButton(onClick = { open = true }, modifier = Modifier.heightIn(min = Size.touch)) {
+                    Text(stringResource(R.string.plan_overdue_reschedule), style = MaterialTheme.typography.labelLarge)
+                    Icon(Icons.Outlined.KeyboardArrowDown, contentDescription = null, modifier = Modifier.size(Size.icon))
+                }
+                DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
+                    DropdownMenuItem(text = { Text(stringResource(R.string.tasks_day_today)) }, onClick = { open = false; onDay(today) })
+                    DropdownMenuItem(text = { Text(stringResource(R.string.tasks_day_tomorrow)) }, onClick = { open = false; onDay(today.plusDays(1)) })
+                    DropdownMenuItem(text = { Text(stringResource(R.string.plan_overdue_spread)) }, onClick = { open = false; onSpread() })
+                    DropdownMenuItem(text = { Text(stringResource(R.string.tasks_chip_custom_date)) }, onClick = { open = false; onPick() })
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Bande « Plus tard » sous les jours (web : `HorizonStrip`) : les horizons après cette semaine avec leur compte ; un
+ * appui ouvre Horizons sur la colonne. On y envoie une carte par son appui long (« Planifier » › Horizon).
+ */
+@Composable
+private fun HorizonStrip(board: PlanBoardState, onOpen: (Horizon) -> Unit) {
+    Column(Modifier.fillMaxWidth().padding(top = Space.lg), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+        Text(stringResource(R.string.plan_strip_title), style = MaterialTheme.typography.titleSmall, color = cadence.onSurfaceVariant)
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.sm), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+            STRIP.forEach { horizon ->
+                val count = board.horizons.buckets[horizon].orEmpty().size
+                val label = stringResource(horizonLabel(horizon))
+                ChoiceChip(label = if (count > 0) "$label · $count" else label, selected = false, onClick = { onOpen(horizon) })
+            }
+        }
     }
 }
 

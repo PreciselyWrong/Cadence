@@ -1,6 +1,7 @@
 package ch.nicolab.cadence.tasks.planning
 
 import ch.nicolab.cadence.tasks.model.TaskChange
+import ch.nicolab.cadence.tasks.model.TaskDraft
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskViews
 import java.time.Instant
@@ -53,6 +54,19 @@ internal data class ToSchedule(
 
 /** Écritures d'un horizon choisi depuis le choix de date : le changement de la tâche et les lignes du plan à retirer. */
 internal data class HorizonWrites(val change: TaskChange, val plan: List<PlanEdit>)
+
+/**
+ * Une tâche créée par le « + » de Planifier (Inbox ou jour) : [draft] sans échéance, prévue [day] (à [startMinute]
+ * si la saisie nomme une heure), ou à classer quand [day] est null.
+ */
+internal data class PlanAdd(val draft: TaskDraft, val day: LocalDate?, val startMinute: Int?) {
+    /** Les écritures du plan pour la tâche créée [uid]. */
+    fun edits(uid: String): List<PlanEdit> = when {
+        day == null -> emptyList()
+        startMinute != null -> listOf(SlotTask(day, uid, startMinute, PlanBoard.DEFAULT_MINUTES))
+        else -> listOf(AddTask(day, uid))
+    }
+}
 
 /** Horizons remplis ; [plannedThisWeek] : tâches prévues un jour de cette semaine, listées à part sous « Cette semaine ». */
 internal data class PlanHorizons(
@@ -138,6 +152,69 @@ internal object PlanBoard {
             else -> listOf(AddTask(to, card.task.uid))
         }
     }
+
+    /**
+     * Une carte de Jours envoyée vers un horizon (web : `sendToHorizon`) : la tâche prend l'horizon ([horizonChange],
+     * échéance jamais touchée) et sa ligne quitte le jour ([removeWrites] ; une carte seulement due n'en a pas). Null
+     * quand il n'y a rien à écrire.
+     */
+    fun sendToHorizon(card: PlanCard, from: Horizon?, to: Horizon, today: LocalDate, weekStart: LocalDate): HorizonWrites? {
+        val change = horizonChange(card.task, from, to, today, weekStart)
+        val plan = removeWrites(card)
+        if (change == null && plan.isEmpty()) return null
+        return HorizonWrites(change ?: TaskChange(), plan)
+    }
+
+    /**
+     * « + » de Planifier (web : `addToInbox`, `addTask`) : la saisie ne pose jamais d'échéance. Le jour qu'elle nomme,
+     * sinon une heure seule (aujourd'hui), sinon [column] (le jour du « + », null pour l'Inbox) prévoit la tâche ;
+     * sans jour elle reste dans « Tâches à classer », avec « Quand ? » si un projet ou une zone la range déjà.
+     */
+    fun planAdd(draft: TaskDraft, column: LocalDate?, today: LocalDate): PlanAdd {
+        val start = draft.dueTime?.let { time ->
+            runCatching { java.time.LocalTime.parse(time) }.getOrNull()?.let { it.hour * 60 + it.minute }
+        }
+        val day = draft.dueDate ?: (if (start != null) today else null) ?: column
+        val filed = draft.projectUid != null || draft.areaUid != null
+        return PlanAdd(
+            draft = draft.copy(dueDate = null, dueTime = null, needsWhen = draft.needsWhen || (day == null && filed)),
+            day = day,
+            startMinute = start,
+        )
+    }
+
+    /**
+     * « Étaler sur 7 jours » (web : `spreadOverdue`, cas partagés `fixtures/plan/spread-overdue.json`). Tri : priorité
+     * haute, moyenne, basse, aucune ; puis l'échéance la plus ancienne ; puis l'uid. Chaque tâche va au jour, de
+     * [today] à [today] + 6, dont la charge est la plus faible (somme des durées estimées de [planned], 30 min sans
+     * estimation positive), le plus tôt à égalité ; la charge du jour choisi grandit de la durée de la tâche. Rend les
+     * paires (uid, jour) dans l'ordre de placement.
+     */
+    fun spread(overdue: List<TaskItem>, planned: Map<LocalDate, List<Int?>>, today: LocalDate): List<Pair<String, LocalDate>> {
+        val days = (0 until SPREAD_DAYS).map { today.plusDays(it.toLong()) }
+        val load = days.mapTo(ArrayList()) { day -> planned[day].orEmpty().sumOf(::spreadMinutes) }
+        val rank = { task: TaskItem -> when (task.priority) { 2 -> 0; 1 -> 1; 0 -> 2; else -> 3 } }
+        return overdue
+            .sortedWith(compareBy<TaskItem>(rank).thenBy { it.dueDay ?: LocalDate.MAX }.thenBy { it.uid })
+            .map { task ->
+                val best = load.indices.minBy { load[it] }
+                load[best] += spreadMinutes(task.estimatedMinutes)
+                task.uid to days[best]
+            }
+    }
+
+    /**
+     * Écritures d'« Étaler sur 7 jours » sur la page : la charge d'un jour vient de ses cartes ouvertes telles que
+     * Planifier les montre (prévues et seulement dues), avec la durée estimée de la tâche. Les occurrences virtuelles
+     * d'une série ne se prévoient pas ; une tâche n'est posée qu'une fois.
+     */
+    fun spreadWrites(overdue: List<TaskItem>, days: List<PlanDay>, today: LocalDate): List<PlanEdit> {
+        val planned = days.associate { day -> day.date to day.open.map { it.task.estimatedMinutes } }
+        val tasks = overdue.filterNot { it.virtual }.distinctBy { it.uid }
+        return spread(tasks, planned, today).map { (uid, day) -> AddTask(day, uid) }
+    }
+
+    private fun spreadMinutes(minutes: Int?): Int = minutes?.takeIf { it > 0 } ?: DEFAULT_MINUTES
 
     /** Retirer [card] de son jour : sa ligne quitte le plan ; une carte seulement due n'a rien à retirer. */
     fun removeWrites(card: PlanCard): List<PlanEdit> =
@@ -288,5 +365,6 @@ internal object PlanBoard {
         later = if (task.someday) false else change.later,
     )
 
-    private const val DEFAULT_MINUTES = 30
+    const val DEFAULT_MINUTES = 30
+    const val SPREAD_DAYS = 7
 }

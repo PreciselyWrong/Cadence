@@ -987,6 +987,35 @@ internal class TasksViewModel(
         changeWithUndo(task, change, UndoChanges.restoreFunnel(task), format(R.string.plan_horizon_notice, task.name, getString(horizonLabel(to))))
     }
 
+    /**
+     * Une carte de Jours envoyée vers l'horizon [to] : l'horizon est posé, sa ligne quitte le jour, l'échéance ne
+     * bouge pas ; « Annuler » rend les deux.
+     */
+    fun sendToHorizon(card: PlanCard, to: Horizon) = launchAction {
+        val task = card.task
+        val from = planBoard.value.horizons.of(task.uid)
+        val writes = PlanBoard.sendToHorizon(card, from, to, moment.value.today, weekStart.value) ?: return@launchAction
+        val restore = UndoChanges.restoreFunnel(task)
+        if (writes.change != TaskChange()) repository.updateTask(task.uid, writes.change)
+        val undoPlan = if (writes.plan.isEmpty()) null else planEdits.apply(writes.plan)
+        _notices.tryEmit(
+            UndoNotice(format(R.string.plan_horizon_notice, task.name, getString(horizonLabel(to)))) {
+                launchAction {
+                    if (writes.change != TaskChange()) repository.updateTask(task.uid, restore)
+                    undoPlan?.invoke()
+                }
+            },
+        )
+    }
+
+    /** « Étaler sur 7 jours » des échues : chacune au jour le moins chargé d'aujourd'hui à J+6, avec « Annuler ». */
+    fun spreadOverdue() {
+        val board = planBoard.value
+        val edits = PlanBoard.spreadWrites(board.overdue, board.days, moment.value.today)
+        val message = getApplication<Application>().resources.getQuantityString(R.plurals.plan_spread_notice, edits.size, edits.size)
+        applyPlan(edits, message)
+    }
+
     /** « Retirer l'engagement » d'« À planifier » : semaine et mois effacés, avec « Annuler ». */
     fun dropCommitment(task: TaskItem) {
         val change = PlanBoard.dropCommitment(task) ?: return
@@ -1038,10 +1067,14 @@ internal class TasksViewModel(
     /** La tâche d'un lien `[[task:Nom]]`, cherchée parmi toutes les tâches de l'appareil. */
     suspend fun taskNamed(name: String): TaskItem? = WikiLinks.findTask(name, repository.observeTasks().first())
 
-    /** « + » d'un jour : la tâche est créée sans échéance puis prévue ce jour. */
-    suspend fun addToDay(draft: TaskDraft, day: LocalDate) {
-        val uid = repository.createTask(draft)
-        planEdits.apply(listOf(AddTask(day, uid)))
+    /**
+     * « + » d'un jour ([day]) ou de l'Inbox (null) de Planifier : la tâche est créée sans échéance, puis prévue le jour
+     * que la saisie nomme, sinon [day] ; sans jour elle reste dans « Tâches à classer » (`PlanBoard.planAdd`).
+     */
+    suspend fun addToPlan(draft: TaskDraft, day: LocalDate?) {
+        val add = PlanBoard.planAdd(draft, day, moment.value.today)
+        val uid = repository.createTask(add.draft)
+        add.edits(uid).takeIf { it.isNotEmpty() }?.let { planEdits.apply(it) }
     }
 
     /** « + » d'un horizon : la tâche est créée puis engagée dans l'horizon. */

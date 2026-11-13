@@ -53,6 +53,8 @@ The phone's « Planifier » (Tâches › title selector, was « À venir ») sho
 
 Android also has the Next week horizon, the « À planifier » section under the Inbox and the « Plus tard » row of the task date sheet, with the same rules (1.25.0, tests `PlanCommitmentsTest`).
 
+Android 1.27.0 catches up with the web: a day card sent to a horizon from its « Planifier » sheet leaves its day (its plan line is removed, the due date stays, one undo: `PlanBoard.sendToHorizon`, like `leaveDayWrites`); a « Plus tard » strip under the 14 days lists Semaine prochaine, Ce mois-ci, Mois prochain and Un jour with their counts and opens Horizons on one. The Inbox « Ajouter » and a day's « Ajouter » never set a due date (`PlanBoard.planAdd`, like `addToInbox` / `addTask`): a named date, or a time alone (today), plans the task that day (slotted at the time); otherwise a day's « Ajouter » plans it on that day and the Inbox one leaves it in « Tâches à classer », with `needs_when` when a project or area files it. Échues has « Replanifier ▾ » (Aujourd'hui, Demain, Étaler sur 7 jours, Choisir une date; plan writes only) and the plugin buttons of the `overdue` place. « Étaler sur 7 jours » is `PlanBoard.spread`, replaying `fixtures/plan/spread-overdue.json`; a day's load is its open cards as the board shows them (planned and due-only), each counted by its estimated minutes (30 without a positive estimate). Unsorted tasks are planned on a day by the long press sheet, not by dragging: one column has no room for drop targets.
+
 ## Basic Rules
 
 1. **Time range is 7 days ahead**
