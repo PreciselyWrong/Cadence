@@ -113,7 +113,7 @@ async function notifyOutcome(row) {
         title: TITLES[row.kind][ready ? 'ready' : 'failed'],
         level: ready ? 'success' : 'error',
         data: { proposal_uid: row.uid, kind: row.kind, status: row.status },
-        sources: [],
+        sources: ['desktop', 'mobile'],
     });
 }
 

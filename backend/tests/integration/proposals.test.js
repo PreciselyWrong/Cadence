@@ -149,6 +149,10 @@ describe('proposals', () => {
             title: 'Your week is ready',
             data: { proposal_uid: created.uid, kind: 'week' },
         });
+        // The phone and the desktop stream only publish these sources.
+        expect(notes[0].sources).toEqual(
+            expect.arrayContaining(['mobile', 'desktop'])
+        );
 
         const ready = await agent.get('/api/proposals?status=ready');
         expect(ready.body.proposals.map((p) => p.uid)).toEqual([created.uid]);
