@@ -2,28 +2,47 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { BugAntIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { useToast } from '../Shared/ToastContext';
-import { submitFeedback } from '../../utils/feedbackService';
 
 const MAX_LENGTH = 5000;
+const TITLE_MAX = 80;
+// Cadence's public repository: a report becomes an issue there.
+const NEW_ISSUE = 'https://github.com/PreciselyWrong/Cadence/issues/new';
+
+/** The new-issue page, filled with the report, the page and the version. */
+export function issueUrl(
+    message: string,
+    page: string,
+    appVersion?: string
+): string {
+    const firstLine = message.split('\n')[0].trim();
+    const title =
+        firstLine.length > TITLE_MAX
+            ? `${firstLine.slice(0, TITLE_MAX - 1)}\u2026`
+            : firstLine;
+    const context = [`Page: ${page}`];
+    if (appVersion) context.push(`Version: ${appVersion}`);
+    const query = new URLSearchParams({
+        title,
+        body: `${message}\n\n---\n${context.join('\n')}`,
+    });
+    return `${NEW_ISSUE}?${query}`;
+}
 
 interface FeedbackModalProps {
     onClose: () => void;
     appVersion?: string;
 }
 
-// A plain text box that lands in the admin's Feedback page. The page the
-// sender is on and the app version go along with it, since "it doesn't
-// work" is a lot easier to act on when you know where.
+// A plain text box that opens a GitHub issue on Cadence's repository,
+// filled in; the person reviews and submits it there. The page and the app
+// version go along, since "it doesn't work" is easier to act on with them.
 const FeedbackModal: React.FC<FeedbackModalProps> = ({
     onClose,
     appVersion,
 }) => {
     const { t } = useTranslation();
     const location = useLocation();
-    const { showSuccessToast, showErrorToast } = useToast();
     const [message, setMessage] = useState('');
-    const [sending, setSending] = useState(false);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
@@ -40,28 +59,19 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({
 
     const trimmed = message.trim();
 
-    const send = async () => {
-        if (!trimmed || sending) return;
-        setSending(true);
-        try {
-            await submitFeedback({
-                message: trimmed,
-                page_url: `${location.pathname}${location.search}`,
-                app_version: appVersion,
-            });
-            setMessage('');
-            showSuccessToast(
-                t('feedback.sent', 'Thanks! Your feedback was sent.')
-            );
-            onClose();
-        } catch (err: any) {
-            showErrorToast(
-                err.message ||
-                    t('feedback.failed', 'Could not send your feedback')
-            );
-        } finally {
-            setSending(false);
-        }
+    const send = () => {
+        if (!trimmed) return;
+        window.open(
+            issueUrl(
+                trimmed,
+                `${location.pathname}${location.search}`,
+                appVersion
+            ),
+            '_blank',
+            'noopener,noreferrer'
+        );
+        setMessage('');
+        onClose();
     };
 
     return (
@@ -134,8 +144,8 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({
                     />
                     <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
                         {t(
-                            'feedback.contextNote',
-                            'The page you are on and the app version are sent along with your message.'
+                            'feedback.issueNote',
+                            'Opens a new issue on GitHub, with the page you are on and the app version. Nothing is sent before you submit it there.'
                         )}
                     </p>
                     <div className="mt-5 flex justify-end gap-2">
@@ -148,13 +158,11 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({
                         </button>
                         <button
                             type="submit"
-                            disabled={!trimmed || sending}
+                            disabled={!trimmed}
                             className="px-4 py-2 rounded-lg text-sm text-primary-on bg-primary hover:bg-primary/90 disabled:opacity-50"
                             data-testid="feedback-submit"
                         >
-                            {sending
-                                ? t('feedback.sending', 'Sending...')
-                                : t('feedback.send', 'Send')}
+                            {t('feedback.openIssue', 'Open on GitHub')}
                         </button>
                     </div>
                 </form>

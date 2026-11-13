@@ -5397,11 +5397,8 @@
     "title": "Enviar feedback",
     "subtitle": "Encontrou um erro ou tem uma ideia? Conte para nós.",
     "placeholder": "O que aconteceu, ou o que deixaria o Cadence melhor?",
-    "contextNote": "A página em que você está e a versão do app são enviadas junto com sua mensagem.",
-    "send": "Enviar",
-    "sending": "Enviando...",
-    "sent": "Obrigado! Seu feedback foi enviado.",
-    "failed": "Não foi possível enviar seu feedback"
+    "openIssue": "Abrir no GitHub",
+    "issueNote": "Abre uma nova issue no GitHub com a página atual e a versão da app. Nada é enviado antes de a publicar lá."
   },
   "onboarding": {
     "starter": {

@@ -4801,11 +4801,8 @@
     "title": "Send feedback",
     "subtitle": "Found a bug or have an idea? Let us know.",
     "placeholder": "What happened, or what would make Cadence better?",
-    "contextNote": "The page you are on and the app version are sent along with your message.",
-    "send": "Send",
-    "sending": "Sending...",
-    "sent": "Thanks! Your feedback was sent.",
-    "failed": "Could not send your feedback"
+    "openIssue": "Open on GitHub",
+    "issueNote": "Opens a new issue on GitHub, with the page you are on and the app version. Nothing is sent before you submit it there."
   },
   "blog": {
     "nav": "Blog",

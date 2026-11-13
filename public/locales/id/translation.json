@@ -5372,11 +5372,8 @@
     "title": "Kirim masukan",
     "subtitle": "Menemukan bug atau punya ide? Beri tahu kami.",
     "placeholder": "Apa yang terjadi, atau apa yang bisa membuat Cadence lebih baik?",
-    "contextNote": "Halaman yang Anda buka dan versi aplikasi dikirim bersama pesan Anda.",
-    "send": "Kirim",
-    "sending": "Mengirim...",
-    "sent": "Terima kasih! Masukan Anda telah terkirim.",
-    "failed": "Tidak dapat mengirim masukan Anda"
+    "openIssue": "Buka di GitHub",
+    "issueNote": "Membuka issue baru di GitHub dengan halaman saat ini dan versi aplikasi. Tidak ada yang dikirim sebelum Anda mengirimkannya di sana."
   },
   "onboarding": {
     "starter": {

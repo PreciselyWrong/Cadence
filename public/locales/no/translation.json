@@ -5395,11 +5395,8 @@
     "title": "Send tilbakemelding",
     "subtitle": "Fant du en feil, eller har du en idé? Si fra.",
     "placeholder": "Hva skjedde, eller hva ville gjort Cadence bedre?",
-    "contextNote": "Siden du er på og versjonen av appen sendes med meldingen din.",
-    "send": "Send",
-    "sending": "Sender…",
-    "sent": "Takk! Tilbakemeldingen din er sendt.",
-    "failed": "Kunne ikke sende tilbakemeldingen"
+    "openIssue": "Åpne på GitHub",
+    "issueNote": "Åpner en ny sak på GitHub med gjeldende side og appens versjon. Ingenting sendes før du sender den inn der."
   },
   "onboarding": {
     "starter": {

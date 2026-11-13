@@ -5372,11 +5372,8 @@
     "title": "Gửi phản hồi",
     "subtitle": "Tìm thấy lỗi hoặc có ý tưởng? Hãy cho chúng tôi biết.",
     "placeholder": "Chuyện gì đã xảy ra, hoặc điều gì sẽ giúp Cadence tốt hơn?",
-    "contextNote": "Trang bạn đang xem và phiên bản ứng dụng sẽ được gửi kèm tin nhắn.",
-    "send": "Gửi",
-    "sending": "Đang gửi...",
-    "sent": "Cảm ơn! Phản hồi của bạn đã được gửi.",
-    "failed": "Không thể gửi phản hồi"
+    "openIssue": "Mở trên GitHub",
+    "issueNote": "Mở một issue mới trên GitHub kèm trang hiện tại và phiên bản ứng dụng. Không có gì được gửi trước khi bạn gửi nó ở đó."
   },
   "onboarding": {
     "starter": {

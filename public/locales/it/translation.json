@@ -5396,11 +5396,8 @@
     "title": "Invia feedback",
     "subtitle": "Hai trovato un bug o un'idea? Fatecelo sapere.",
     "placeholder": "Cosa è successo, o cosa renderebbe Cadence migliore?",
-    "contextNote": "La pagina in cui sei e la versione dell'app vengono inviate insieme al messaggio.",
-    "send": "Invia",
-    "sending": "Invio in corso...",
-    "sent": "Grazie! Il tuo feedback è stato inviato.",
-    "failed": "Impossibile inviare il feedback"
+    "openIssue": "Apri su GitHub",
+    "issueNote": "Apre una nuova issue su GitHub con la pagina attuale e la versione dell'app. Nulla viene inviato finché non la pubblichi lì."
   },
   "onboarding": {
     "starter": {

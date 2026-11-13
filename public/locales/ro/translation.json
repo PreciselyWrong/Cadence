@@ -5403,11 +5403,8 @@
     "title": "Trimite feedback",
     "subtitle": "Ai găsit o eroare sau ai o idee? Spune-ne.",
     "placeholder": "Ce s-a întâmplat sau ce ar face Cadence mai bun?",
-    "contextNote": "Pagina pe care te afli și versiunea aplicației sunt trimise împreună cu mesajul tău.",
-    "send": "Trimite",
-    "sending": "Se trimite...",
-    "sent": "Mulțumim! Feedbackul tău a fost trimis.",
-    "failed": "Feedbackul nu a putut fi trimis"
+    "openIssue": "Deschide pe GitHub",
+    "issueNote": "Deschide un issue nou pe GitHub, cu pagina curentă și versiunea aplicației. Nimic nu este trimis până nu îl publici acolo."
   },
   "onboarding": {
     "starter": {

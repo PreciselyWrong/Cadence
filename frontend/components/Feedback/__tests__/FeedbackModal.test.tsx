@@ -1,7 +1,7 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import FeedbackModal from '../FeedbackModal';
+import FeedbackModal, { issueUrl } from '../FeedbackModal';
 
 jest.mock('react-router-dom', () => ({
     useLocation: () => ({ pathname: '/projects/abc', search: '?tab=notes' }),
@@ -14,23 +14,8 @@ jest.mock('react-i18next', () => ({
     }),
 }));
 
-const showSuccessToast = jest.fn();
-const showErrorToast = jest.fn();
-jest.mock('../../Shared/ToastContext', () => ({
-    useToast: () => ({ showSuccessToast, showErrorToast }),
-}));
-
-const submitFeedback = jest.fn();
-jest.mock('../../../utils/feedbackService', () => ({
-    submitFeedback: (...args: any[]) => submitFeedback(...args),
-}));
-
 describe('FeedbackModal', () => {
-    beforeEach(() => {
-        submitFeedback.mockReset();
-        showSuccessToast.mockReset();
-        showErrorToast.mockReset();
-    });
+    beforeEach(() => {});
 
     it('keeps Send disabled until something is typed', () => {
         render(<FeedbackModal onClose={jest.fn()} />);
@@ -48,40 +33,36 @@ describe('FeedbackModal', () => {
         expect(send).toBeEnabled();
     });
 
-    it('sends the message with the current page and version, then closes', async () => {
-        submitFeedback.mockResolvedValue(undefined);
+    it('opens a GitHub issue with the message, the page and the version, then closes', () => {
+        const open = jest.spyOn(window, 'open').mockReturnValue(null);
         const onClose = jest.fn();
         render(<FeedbackModal onClose={onClose} appVersion="v1.6.4" />);
 
         fireEvent.change(screen.getByTestId('feedback-message'), {
-            target: { value: '  The board does not scroll  ' },
+            target: { value: '  The board does not scroll\nOn Plan  ' },
         });
         fireEvent.click(screen.getByTestId('feedback-submit'));
 
-        await waitFor(() => expect(onClose).toHaveBeenCalled());
-        expect(submitFeedback).toHaveBeenCalledWith({
-            message: 'The board does not scroll',
-            page_url: '/projects/abc?tab=notes',
-            app_version: 'v1.6.4',
-        });
-        expect(showSuccessToast).toHaveBeenCalled();
+        expect(open).toHaveBeenCalledTimes(1);
+        const [address, target, features] = open.mock.calls[0];
+        const url = new URL(String(address));
+        expect(url.origin + url.pathname).toBe(
+            'https://github.com/PreciselyWrong/Cadence/issues/new'
+        );
+        expect(url.searchParams.get('title')).toBe('The board does not scroll');
+        expect(url.searchParams.get('body')).toBe(
+            'The board does not scroll\nOn Plan\n\n---\nPage: /projects/abc?tab=notes\nVersion: v1.6.4'
+        );
+        expect(target).toBe('_blank');
+        expect(features).toContain('noopener');
+        expect(onClose).toHaveBeenCalled();
+        open.mockRestore();
     });
 
-    it('stays open and shows the error when sending fails', async () => {
-        submitFeedback.mockRejectedValue(new Error('Rate limit exceeded'));
-        const onClose = jest.fn();
-        render(<FeedbackModal onClose={onClose} />);
-
-        fireEvent.change(screen.getByTestId('feedback-message'), {
-            target: { value: 'Hello' },
-        });
-        fireEvent.click(screen.getByTestId('feedback-submit'));
-
-        await waitFor(() =>
-            expect(showErrorToast).toHaveBeenCalledWith('Rate limit exceeded')
+    it('cuts a long first line to make the title', () => {
+        expect(issueUrl('x'.repeat(200), '/', undefined)).toContain(
+            `title=${'x'.repeat(79)}%E2%80%A6`
         );
-        expect(onClose).not.toHaveBeenCalled();
-        expect(screen.getByTestId('feedback-message')).toHaveValue('Hello');
     });
 
     it('closes on Escape', () => {

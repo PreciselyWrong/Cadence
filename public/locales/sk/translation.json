@@ -4947,11 +4947,8 @@
     "title": "Odoslať spätnú väzbu",
     "subtitle": "Našli ste chybu alebo máte nápad? Dajte nám vedieť.",
     "placeholder": "Čo sa stalo alebo čo by Cadence zlepšilo?",
-    "contextNote": "Spolu so správou sa odošle stránka, na ktorej ste, a verzia aplikácie.",
-    "send": "Odoslať",
-    "sending": "Odosiela sa...",
-    "sent": "Ďakujeme! Vaša spätná väzba bola odoslaná.",
-    "failed": "Spätnú väzbu sa nepodarilo odoslať"
+    "openIssue": "Otvoriť na GitHube",
+    "issueNote": "Otvorí nové hlásenie na GitHube s aktuálnou stránkou a verziou aplikácie. Nič sa neodošle, kým ho tam neodošlete."
   },
   "focus": {
     "chip": "Fokus",

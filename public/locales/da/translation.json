@@ -5390,11 +5390,8 @@
     "title": "Send feedback",
     "subtitle": "Har du fundet en fejl eller en idé? Lad os vide det.",
     "placeholder": "Hvad skete der, eller hvad ville gøre Cadence bedre?",
-    "contextNote": "Siden du er på, og appversionen, sendes med din besked.",
-    "send": "Send",
-    "sending": "Sender...",
-    "sent": "Tak! Din feedback er sendt.",
-    "failed": "Din feedback kunne ikke sendes"
+    "openIssue": "Åbn på GitHub",
+    "issueNote": "Åbner et nyt issue på GitHub med den aktuelle side og appens version. Intet sendes, før du indsender det der."
   },
   "onboarding": {
     "starter": {

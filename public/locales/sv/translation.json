@@ -5390,11 +5390,8 @@
     "title": "Skicka synpunkter",
     "subtitle": "Hittade du ett fel eller har en idé? Berätta för oss.",
     "placeholder": "Vad hände, eller vad skulle göra Cadence bättre?",
-    "contextNote": "Sidan du är på och appens version skickas med ditt meddelande.",
-    "send": "Skicka",
-    "sending": "Skickar...",
-    "sent": "Tack! Dina synpunkter skickades.",
-    "failed": "Det gick inte att skicka dina synpunkter"
+    "openIssue": "Öppna på GitHub",
+    "issueNote": "Öppnar ett nytt ärende på GitHub med aktuell sida och appens version. Inget skickas förrän du skickar in det där."
   },
   "onboarding": {
     "starter": {

@@ -853,3 +853,9 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Décision** : couleur par valeur (`frontend/components/Task/chipTones.ts`) : échéance dépassée `danger`, du jour `success`, horizon violet doux (PALETTE `purple`), « À replanifier » `danger` ; priorité haute `danger`, moyenne `warning`, basse bleu doux ; projet et étiquette leur couleur PALETTE ; autres : neutre rempli ; vide : gris discret. Ligne « Plus tard » dans le choix de date (horizon courant en `bg-primary`). Boîte « À planifier » sous l'Inbox de Plan, « À replanifier » encadré `danger` comme « En retard », absente quand tout est planifié.
 - **Android à reprendre** : fait dans la même étape (1.25.0).
 
+
+### 2026-11-13 — « Envoyer un retour » ouvre une issue GitHub
+
+- **Problème** : le retour s'enregistrait dans la base du serveur (Admin › Retours, hérité de l'amont) ; sur une instance personnelle, il ne partait chez personne.
+- **Décision** : le bouton du pied de la barre latérale ouvre une nouvelle issue sur le dépôt public de Cadence, déjà remplie (titre = première ligne, corps = message, page affichée et version) ; rien n'est envoyé avant que la personne la publie sur GitHub. Le client Linux l'ouvre dans le navigateur (`desktop/src-tauri/src/links.rs`). La page Admin › Retours reste pour les anciens retours.
+- **Android à reprendre** : rien, Android n'a pas de bouton de retour.

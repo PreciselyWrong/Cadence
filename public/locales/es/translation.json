@@ -5384,11 +5384,8 @@
     "title": "Enviar comentarios",
     "subtitle": "¿Encontraste un error o tienes una idea? Cuéntanos.",
     "placeholder": "¿Qué pasó, o qué haría Cadence mejor?",
-    "contextNote": "Se envían con tu mensaje la página en la que estás y la versión de la app.",
-    "send": "Enviar",
-    "sending": "Enviando...",
-    "sent": "¡Gracias! Tus comentarios se enviaron.",
-    "failed": "No se pudieron enviar tus comentarios"
+    "openIssue": "Abrir en GitHub",
+    "issueNote": "Abre una nueva incidencia en GitHub con la página actual y la versión de la app. No se envía nada hasta que la publiques allí."
   },
   "onboarding": {
     "starter": {

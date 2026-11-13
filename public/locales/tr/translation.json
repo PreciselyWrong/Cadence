@@ -5372,11 +5372,8 @@
     "title": "Geri bildirim gönder",
     "subtitle": "Bir hata mı buldunuz veya bir fikriniz mi var? Bize bildirin.",
     "placeholder": "Ne oldu veya Cadence'i neyin daha iyi yapacağını yazın.",
-    "contextNote": "Bulunduğunuz sayfa ve uygulama sürümü mesajınızla birlikte gönderilir.",
-    "send": "Gönder",
-    "sending": "Gönderiliyor...",
-    "sent": "Teşekkürler! Geri bildiriminiz gönderildi.",
-    "failed": "Geri bildiriminiz gönderilemedi"
+    "openIssue": "GitHub'da aç",
+    "issueNote": "GitHub'da geçerli sayfa ve uygulama sürümüyle yeni bir issue açar. Orada gönderene kadar hiçbir şey gönderilmez."
   },
   "onboarding": {
     "starter": {

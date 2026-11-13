@@ -5372,11 +5372,8 @@
     "title": "发送反馈",
     "subtitle": "发现了 bug 或有想法？告诉我们。",
     "placeholder": "发生了什么，或者什么能让 Cadence 更好？",
-    "contextNote": "你所在的页面和应用版本会随消息一起发送。",
-    "send": "发送",
-    "sending": "正在发送…",
-    "sent": "谢谢！你的反馈已发送。",
-    "failed": "无法发送反馈"
+    "openIssue": "在 GitHub 上打开",
+    "issueNote": "在 GitHub 上新建一个 issue，附带当前页面和应用版本。在那里提交之前不会发送任何内容。"
   },
   "onboarding": {
     "starter": {

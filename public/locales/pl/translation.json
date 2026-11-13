@@ -5426,11 +5426,8 @@
     "title": "Wyślij opinię",
     "subtitle": "Znalazłeś błąd albo masz pomysł? Daj nam znać.",
     "placeholder": "Co się stało albo co mogłoby ulepszyć Cadence?",
-    "contextNote": "Wraz z wiadomością wysyłamy stronę, na której jesteś, i wersję aplikacji.",
-    "send": "Wyślij",
-    "sending": "Wysyłanie...",
-    "sent": "Dzięki! Twoja opinia została wysłana.",
-    "failed": "Nie udało się wysłać opinii"
+    "openIssue": "Otwórz w GitHubie",
+    "issueNote": "Otwiera nowe zgłoszenie w GitHubie z bieżącą stroną i wersją aplikacji. Nic nie zostanie wysłane, dopóki go tam nie zatwierdzisz."
   },
   "onboarding": {
     "starter": {

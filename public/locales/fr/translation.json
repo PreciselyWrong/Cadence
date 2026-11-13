@@ -5401,11 +5401,8 @@
     "title": "Envoyer un retour",
     "subtitle": "Bug trouvé ou idée ? Faites-le-nous savoir.",
     "placeholder": "Qu'est-il arrivé, ou qu'est-ce qui rendrait Cadence meilleure ?",
-    "contextNote": "La page affichée et la version de l'app sont envoyées avec le message.",
-    "send": "Envoyer",
-    "sending": "Envoi…",
-    "sent": "Merci ! Le retour a été envoyé.",
-    "failed": "Impossible d'envoyer le retour"
+    "openIssue": "Ouvrir sur GitHub",
+    "issueNote": "Ouvre une nouvelle issue sur GitHub, avec la page affichée et la version de l'app. Rien n'est envoyé avant que vous la publiiez là-bas."
   },
   "onboarding": {
     "starter": {

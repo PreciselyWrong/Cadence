@@ -5429,11 +5429,8 @@
     "title": "Pošlji povratne informacije",
     "subtitle": "Ste našli napako ali imate idejo? Sporočite nam.",
     "placeholder": "Kaj se je zgodilo ali kaj bi Cadence naredilo boljši?",
-    "contextNote": "Skupaj s sporočilom pošljemo stran, na kateri ste, in različico aplikacije.",
-    "send": "Pošlji",
-    "sending": "Pošiljam...",
-    "sent": "Hvala! Vaše povratne informacije so poslane.",
-    "failed": "Povratnih informacij ni bilo mogoče poslati"
+    "openIssue": "Odpri na GitHubu",
+    "issueNote": "Odpre novo zadevo na GitHubu s trenutno stranjo in različico aplikacije. Nič ni poslano, dokler je tam ne oddate."
   },
   "onboarding": {
     "starter": {

@@ -5388,11 +5388,8 @@
     "title": "Feedback versturen",
     "subtitle": "Een bug gevonden of een idee? Laat het ons weten.",
     "placeholder": "Wat is er gebeurd, of wat zou Cadence beter maken?",
-    "contextNote": "De pagina waarop je bent en de appversie worden meegestuurd met je bericht.",
-    "send": "Verzenden",
-    "sending": "Verzenden...",
-    "sent": "Bedankt! Je feedback is verzonden.",
-    "failed": "Je feedback kon niet worden verzonden"
+    "openIssue": "Openen op GitHub",
+    "issueNote": "Opent een nieuw issue op GitHub met de huidige pagina en de app-versie. Er wordt niets verzonden voordat je het daar indient."
   },
   "onboarding": {
     "starter": {

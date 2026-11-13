@@ -5387,11 +5387,8 @@
     "title": "Lähetä palautetta",
     "subtitle": "Löysitkö virheen tai onko sinulla idea? Kerro meille.",
     "placeholder": "Mitä tapahtui, tai mikä tekisi Cadencesta paremman?",
-    "contextNote": "Sivu, jolla olet, ja sovelluksen versio lähetetään viestisi mukana.",
-    "send": "Lähetä",
-    "sending": "Lähetetään...",
-    "sent": "Kiitos! Palautteesi lähetettiin.",
-    "failed": "Palautetta ei voitu lähettää"
+    "openIssue": "Avaa GitHubissa",
+    "issueNote": "Avaa uuden issuen GitHubissa nykyisen sivun ja sovelluksen version kanssa. Mitään ei lähetetä ennen kuin lähetät sen siellä."
   },
   "onboarding": {
     "starter": {
