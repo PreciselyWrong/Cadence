@@ -1,8 +1,8 @@
 {
     "agentBanner": {
         "agent": "Agent",
-        "dismiss": "Mark as read",
-        "open": "Open"
+        "dismiss": "Oznacz jako przeczytane",
+        "open": "Otwórz"
     },
     "counts": {
         "notes_many": "{{count}} notatek",
@@ -34,6 +34,12 @@
     },
   "autoClassify": {
     "health": {
+            "requeued_many": "Ponownie w kolejce: {{count}}",
+            "requeued_few": "Ponownie w kolejce: {{count}}",
+            "requeued_one": "Ponownie w kolejce: {{count}}",
+            "failed_many": "Nieudanych elementów: {{count}}",
+            "failed_few": "Nieudane elementy: {{count}}",
+            "failed_one": "Nieudany element: {{count}}",
       "retryError": "Nie udało się ponowić",
       "requeued": "Ponownie w kolejce: {{count}}",
       "retry": "Ponów",
@@ -243,7 +249,7 @@
       "title": "Posortuj moją pocztę",
       "close": "Zamknij",
       "done": "Wszystko posortowane",
-      "back": "Wróć do „Do posortowania”",
+      "back": "Wróć do „Do uporządkowania”",
       "createTask": "Utwórz zadanie: {{name}}",
       "replyInGmail": "Odpowiedz w Gmailu",
       "readInGmail": "Przeczytaj w Gmailu",
@@ -256,11 +262,11 @@
     }
   },
   "outline": {
-    "saveError": "Could not save that change",
-    "hintLocked": "Enter: new line",
-    "hint": "Enter: new line · Tab / Shift+Tab: indent · Alt+↑ / Alt+↓: move",
-    "newLine": "New task",
-    "title": "Outline"
+    "saveError": "Nie udało się zapisać tej zmiany",
+    "hintLocked": "Enter: nowa linia",
+    "hint": "Enter: nowa linia · Tab / Shift+Tab: wcięcie · Alt+↑ / Alt+↓: przesuń",
+    "newLine": "Nowe zadanie",
+    "title": "Konspekt"
   },
   "focusStats": {
     "title": "Skupienie",
@@ -724,10 +730,10 @@
             "page": {
                 "notFound": "Nie znaleziono wtyczki lub jest wyłączona"
             },
-            "approveIntro": "This plugin runs inside the server and asks for:",
-            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
-            "approveTitle": "Approve permissions?",
-            "approve": "Approve and enable"
+            "approveIntro": "Ta wtyczka działa w serwerze i prosi o:",
+            "approveOutro": "Uprawnienia ograniczają to, co Cadence przekazuje wtyczce; to nie jest piaskownica. Zatwierdzaj tylko kod, który przeczytałeś.",
+            "approveTitle": "Zatwierdzić uprawnienia?",
+            "approve": "Zatwierdź i włącz"
         },
     "showTaskDescription": "Pokaż opis pod tytułem",
     "sync": {
@@ -909,6 +915,7 @@
     "nextTaskSuggestion": "Sugestia Następnego Zadania",
     "enableNextTaskSuggestion": "Włącz sugestie następnych zadań",
     "tabs": {
+            "agents": "Agenci",
             "plugins": "Wtyczki",
       "classify": "Klasyfikacja",
       "sync": "Synchronizacja",
@@ -1146,6 +1153,8 @@
       "toggleError": "Nie udało się zaktualizować tego kalendarza"
     },
     "planning": {
+            "maxOption_many": "{{count}} zadań",
+            "maxOption_few": "{{count}} zadania",
       "title": "Planowanie",
       "description": "Jak „Co możesz dziś zrobić?” porządkuje twoje zadania, gdy planujesz dzień. Przeciągnij wiersze w wybranej kolejności; te same zadania zawsze pojawiają się w tej samej kolejności.",
       "orderTitle": "Kolejność (przeciągnij, aby zmienić)",
@@ -1580,7 +1589,7 @@
         "recurrenceEndDate": "Data zakończenia (opcjonalnie)",
         "completionBased": "Powtórz po zakończeniu",
         "repeatOn": "Powtarzaj w",
-        "recurrence": "Powtarzaj",
+        "recurrence": "Powtarzanie",
         "attachments": "Załączniki"
       },
       "projectSearchPlaceholder": "Szukaj lub utwórz projekt...",
@@ -1738,8 +1747,8 @@
     "waiting": "Oczekiwanie"
   },
   "project": {
-    "hideEmptyDetails": "Hide empty fields",
-    "addDetail": "Add a detail",
+    "hideEmptyDetails": "Ukryj puste pola",
+    "addDetail": "Dodaj szczegół",
     "noteCount_many": "{{count}} notatek",
     "noteCount_few": "{{count}} notatki",
     "memberCount_many": "{{count}} członków",
@@ -1974,7 +1983,7 @@
       "error": "Nie udało się przetworzyć tego elementu. Nadal jest w skrzynce odbiorczej.",
       "reasonProject": "Dotyczy projektu +{{detail}}",
       "reasonTag": "Ma tag #{{detail}}",
-      "reasonUrl": "To link",
+      "reasonUrl": "To jest link",
       "reasonKeyword": "Zaczyna się od „{{detail}}”",
       "reasonLong": "Jest długi, jak notatka",
       "reasonDefault": "Krótki tekst, najczęściej zadanie"
@@ -2054,6 +2063,22 @@
     "createError": "Nie udało się utworzyć notatki"
   },
   "task": {
+        "minutesAgo_many": "{{count}} min temu",
+        "minutesAgo_few": "{{count}} min temu",
+        "minutesAgo_one": "{{count}} minutę temu",
+        "inMinutes_many": "za {{count}} min",
+        "inMinutes_few": "za {{count}} min",
+        "inMinutes_one": "za {{count}} minutę",
+        "inHours_many": "za {{count}} godz.",
+        "inHours_few": "za {{count}} godz.",
+        "inHours_one": "za {{count}} godzinę",
+        "inDays_many": "za {{count}} dni",
+        "inDays_few": "za {{count}} dni",
+        "hoursAgo_many": "{{count}} godz. temu",
+        "hoursAgo_few": "{{count}} godz. temu",
+        "hoursAgo_one": "{{count}} godzinę temu",
+        "daysAgo_many": "{{count}} dni temu",
+        "daysAgo_few": "{{count}} dni temu",
     "duplicateError": "Nie udało się zduplikować zadania.",
     "duplicated": "Zadanie zduplikowane",
     "duplicate": "Duplikuj",
@@ -2461,7 +2486,7 @@
     "toggleDropdownMenu": "Przełącz menu rozwijane"
   },
   "notes": {
-    "allNotes": "All notes",
+    "allNotes": "Wszystkie notatki",
     "emptyPreview": "Pusta notatka",
     "loading": "Ładowanie notatek...",
     "error": "Błąd podczas ładowania notatek",
@@ -2912,7 +2937,7 @@
   },
   "telegram": {
     "welcomeMessage": "🎉 Witaj w Cadence!\n\nTwój osobisty bot do zarządzania zadaniami jest teraz połączony i gotowy do pomocy!\n\n📝 Po prostu wyślij mi dowolną wiadomość, a dodam ją do Twojej skrzynki odbiorczej Cadence jako element.\n\n✨ Komendy:\n• /help - Pokaż informacje pomocnicze\n• /start - Pokaż wiadomość powitalną\n• Po prostu wpisz dowolny tekst - Dodaj go jako element w skrzynce odbiorczej\n\nZorganizujmy się! 🚀",
-    "helpMessage": "📋 Pomoc Bota Cadence\n\nWyślij mi dowolną wiadomość tekstową, a dodam ją do Twojej skrzynki odbiorczej Cadence jako element.\n\nKomendy:\n/start - Wiadomość powitalna\n/help - Pokaż tę wiadomość pomocniczą\n\nPo prostu wpisz swój element, a ja zajmę się resztą!",
+    "helpMessage": "📋 Pomoc bota Cadence\n\nWyślij mi dowolną wiadomość tekstową, a dodam ją do Twojej skrzynki odbiorczej Cadence jako element.\n\nKomendy:\n/start - Wiadomość powitalna\n/help - Pokaż tę wiadomość pomocniczą\n\nPo prostu wpisz swój element, a ja zajmę się resztą!",
     "commandProcessed": "Polecenie przetworzone pomyślnie",
     "messageProcessed": "Wiadomość przetworzona pomyślnie",
     "failedToAddToInbox": "❌ Nie udało się dodać do skrzynki odbiorczej: {{error}}"
@@ -3035,7 +3060,7 @@
       "activationHint": "{{n}} z {{total}} rejestracji",
       "weeklyUsers": "Użytkownicy tygodniowo",
       "weeklyUsersHint": "utworzył coś",
-      "selfHostedUsers": "self-hosted · {{n}} nowych dziś"
+      "selfHostedUsers": "na własnym serwerze · {{n}} nowych dziś"
     },
     "waitlist": {
       "title": "Lista oczekujących",
@@ -3345,7 +3370,7 @@
       "newUsersGroup": "Rejestracje w tym tygodniu",
       "appUsers": "Użytkownicy aplikacji",
       "appUsersMonthHint": "{{month}} w 30 dni",
-      "creators": "Utworzył coś",
+      "creators": "Utworzyli coś",
       "creatorsHint": "użytkowników, dowolny element",
       "canceled": "Anulowane",
       "failed": "Nieudane płatności",
@@ -3467,7 +3492,7 @@
     }
   },
   "viewType": {
-    "gallery": "Gallery",
+    "gallery": "Galeria",
     "label": "Widok",
     "list": "Lista",
     "board": "Tablica",
@@ -4317,6 +4342,12 @@
     "invalidHint": "Mógł zostać już użyty lub wygasnąć. Poproś osobę, która go wysłała, o nowy."
   },
   "dailyPlan": {
+        "placeAllHint_many": "{{count}} zadań trafi do najbliższych wolnych okienek, według priorytetu.",
+        "placeAllHint_few": "{{count}} zadania trafią do najbliższych wolnych okienek, według priorytetu.",
+        "placeAllHint_one": "{{count}} zadanie trafi do najbliższego wolnego okienka.",
+        "placeAllDone_many": "Zaplanowano zadań: {{count}}.",
+        "placeAllDone_few": "Zaplanowano zadania: {{count}}.",
+        "placeAllDone_one": "Zaplanowano {{count}} zadanie.",
     "inProgress": "W toku",
     "overdue": "Zaległe",
     "dueToday": "Na dziś",
@@ -4387,6 +4418,8 @@
     "beta": "Beta",
     "betaHint": "Strona Dziś z planem jest nowa. Klasyczna strona jest nadal dostępna na dole tej strony.",
     "ai": {
+            "carried_many": "Dodano {{count}} zadań do jutra",
+            "carried_few": "Dodano {{count}} zadania do jutra",
       "suggested": "Zasugerowane przez AI",
       "estimateGuess": "Szacunek AI",
       "nothingToAdd": "Nic do dodania: brak wolnego czasu albo zadań do zaplanowania.",
@@ -4420,7 +4453,7 @@
       "missed_many": "Minęło {{count}} zaplanowanych bloków",
       "missed_few": "Minęły {{count}} zaplanowane bloki",
       "title": "Wskazówki do planowania",
-      "missed": "{{count}} zaplanowane bloki już minęły",
+      "missed": "{{count}} z zaplanowanych bloków już minęło",
       "moveMissed": "Przenieś do najbliższych wolnych miejsc",
       "overbooked": "Zaplanowano {{planned}}, wolne tylko {{free}}: {{over}} za dużo",
       "gapFit": "{{gap}} wolnego o {{time}} wystarczy na {{name}} ({{duration}})",
@@ -4499,7 +4532,7 @@
     "guidedLeftovers": "Zaległości z wczoraj",
     "guidedNoLeftovers": "Nic nie zostało z wczoraj.",
     "guidedCarry": "Przenieś na dziś",
-    "guidedDrop": "Usuń",
+    "guidedDrop": "Porzuć",
     "guidedPick": "Wybierz, co robisz dziś",
     "guidedNoPicks": "Nie ma już nic do wyboru.",
     "guidedAdd": "Dodaj",
@@ -4637,27 +4670,27 @@
   },
   "goals": {
     "overview": {
-      "addWishTo": "Add a wish to {{group}}",
-      "addWish": "Add a wish…",
-      "createTaskFor": "Create a task for “{{title}}”",
-      "markDone": "Mark “{{title}}” fulfilled",
-      "wishFulfilled": "Fulfilled",
-      "wishDropped": "Dropped",
-      "allDone": "All done",
-      "addStep": "Add a next step",
-      "nextStepInline": "Next step: {{name}}",
-      "nextStep": "Next step",
-      "completeStep": "Finish “{{name}}”",
-      "nothingLinked": "Nothing linked",
-      "target": "By {{date}}",
-      "error": "Could not save, try again",
-      "wishDone": "“{{title}}” fulfilled",
-      "stepDone": "“{{name}}” done",
-      "doneWishes": "Fulfilled",
-      "other": "Paused, achieved or dropped",
-      "noMatch": "Nothing matches.",
-      "clearSearch": "Clear the search",
-      "search": "Search a goal or a wish"
+      "addWishTo": "Dodaj marzenie: {{group}}",
+      "addWish": "Dodaj marzenie…",
+      "createTaskFor": "Utwórz zadanie dla „{{title}}”",
+      "markDone": "Oznacz „{{title}}” jako zrealizowane",
+      "wishFulfilled": "Zrealizowane",
+      "wishDropped": "Porzucone",
+      "allDone": "Wszystko gotowe",
+      "addStep": "Dodaj następny krok",
+      "nextStepInline": "Następny krok: {{name}}",
+      "nextStep": "Następny krok",
+      "completeStep": "Zakończ „{{name}}”",
+      "nothingLinked": "Nic nie jest powiązane",
+      "target": "Do {{date}}",
+      "error": "Nie udało się zapisać, spróbuj ponownie",
+      "wishDone": "Zrealizowano: „{{title}}”",
+      "stepDone": "Zakończono: „{{name}}”",
+      "doneWishes": "Zrealizowane",
+      "other": "Wstrzymane, osiągnięte lub porzucone",
+      "noMatch": "Nic nie pasuje.",
+      "clearSearch": "Wyczyść wyszukiwanie",
+      "search": "Szukaj celu lub marzenia"
     },
     "newGoal": "Nowy cel",
     "noGoalsYet": "Nie ma jeszcze celów.",
@@ -4988,6 +5021,27 @@
       "instructionsOther": "Każdą inną kolumnę można zachować w notatce zadania, więc nic z arkusza nie przepadnie."
     },
     "import": {
+            "undoneKept_many": "Import został cofnięty. Zachowano zadań zmienionych od tego czasu: {{count}}.",
+            "undoneKept_few": "Import został cofnięty. Zachowano zadania zmienione od tego czasu: {{count}}.",
+            "undoneKept_one": "Import cofnięto. {{count}} zadanie zmienione od tego czasu zostało zachowane.",
+            "rowCount_many": "Wierszy: {{count}}",
+            "rowCount_few": "Wiersze: {{count}}",
+            "rowCount_one": "{{count}} wiersz",
+            "doneTitle_many": "Zaimportowano zadań: {{count}}",
+            "doneTitle_few": "Zaimportowano zadania: {{count}}",
+            "doneTitle_one": "Zaimportowano {{count}} zadanie",
+            "countTags_many": "Nowych tagów: {{count}}",
+            "countTags_few": "Nowe tagi: {{count}}",
+            "countTags_one": "{{count}} nowy tag",
+            "countProjects_many": "Nowych projektów: {{count}}",
+            "countProjects_few": "Nowe projekty: {{count}}",
+            "countProjects_one": "{{count}} nowy projekt",
+            "countCreate_many": "Nowych zadań: {{count}}",
+            "countCreate_few": "Nowe zadania: {{count}}",
+            "countCreate_one": "{{count}} nowe zadanie",
+            "countAreas_many": "Nowych obszarów: {{count}}",
+            "countAreas_few": "Nowe obszary: {{count}}",
+            "countAreas_one": "{{count}} nowy obszar",
       "fieldParent": "Zadanie nadrzędne",
       "fieldWbs": "WBS / numer w konspekcie",
       "fieldEstimate": "Szacunek",
@@ -5233,23 +5287,25 @@
     "planned": "Zaplanowane {{when}}"
   },
   "review": {
+        "calm_many": "{{count}} rzeczy do przejrzenia, we własnym tempie",
+        "calm_few": "{{count}} rzeczy do przejrzenia, we własnym tempie",
     "quick": {
-      "keys": "1–9 choose · S skip · O open · Esc stop",
-      "nothing": "Nothing needs a look right now.",
-      "back": "Back to the review",
-      "again": "Another round",
-      "saved": "Every decision is saved. What you skipped comes back next time.",
-      "done": "That's it for now.",
-      "position": "{{position}} of {{total}}",
+      "keys": "1–9 wybierz · S pomiń · O otwórz · Esc zatrzymaj",
+      "nothing": "Nic nie wymaga teraz uwagi.",
+      "back": "Wróć do przeglądu",
+      "again": "Kolejna runda",
+      "saved": "Każda decyzja jest zapisana. To, co pominięto, wróci następnym razem.",
+      "done": "To wszystko na teraz.",
+      "position": "{{position}} z {{total}}",
       "stop": "Stop",
       "start": "Start",
-      "pitch": "About 5 minutes, one thing at a time. Stop whenever you like.",
-      "title": "Quick review"
+      "pitch": "Około 5 minut, jedna rzecz naraz. Zatrzymaj się, kiedy chcesz.",
+      "title": "Szybki przegląd"
     },
-    "loading": "Loading…",
-    "calmClear": "All up to date",
-    "calm_other": "{{count}} things to look at, at your own pace",
-    "calm_one": "{{count}} thing to look at, at your own pace",
+    "loading": "Ładowanie…",
+    "calmClear": "Wszystko na bieżąco",
+    "calm_other": "{{count}} rzeczy do przejrzenia, we własnym tempie",
+    "calm_one": "{{count}} rzecz do przejrzenia, we własnym tempie",
     "cancelDate": "Anuluj",
     "choices": "Wybory",
     "more": "Więcej…",
@@ -5277,7 +5333,7 @@
     "lastPlanned": "ostatnio zaplanowane {{date}}",
     "reviewDue": "czas na przegląd",
     "reviewOn": "przegląd {{date}}",
-    "reviewOnLabel": "Przejrzyj dnia",
+    "reviewOnLabel": "Przegląd w dniu",
     "lastActivity": "bez zmian od {{date}}",
     "nextTaskPlaceholder": "Następne zadanie…",
     "tabs": {
@@ -5306,7 +5362,7 @@
       "thisWeek": "Ten tydzień",
       "inView": "Na widoku",
       "reviewIn30": "Przejrzyj za 30 dni",
-      "reviewOn": "Przejrzyj dnia…",
+      "reviewOn": "Przejrzyj w dniu…",
       "keepLater": "Zostaw odłożone",
       "toTask": "Utwórz zadanie",
       "toLater": "Odłóż na później",
@@ -5364,6 +5420,9 @@
     "close": "Zamknij"
   },
   "comments": {
+        "count_many": "Komentarzy: {{count}}",
+        "count_few": "Komentarze: {{count}}",
+        "count_one": "Komentarz: {{count}}",
     "count": "Komentarze: {{count}}",
     "loading": "Wczytywanie komentarzy...",
     "failedToLoad": "Nie udało się wczytać komentarzy",
@@ -5524,7 +5583,7 @@
       "goCalendar": "Przejdź do Kalendarza",
       "goProjects": "Przejdź do Projektów",
       "taskNav": "Przechodź między zadaniami",
-      "taskComplete": "Ukończ lub otwórz ponownie zadanie (lub Space)",
+      "taskComplete": "Ukończ lub otwórz ponownie zadanie (lub spacja)",
       "taskEdit": "Otwórz zadanie do edycji (lub Enter)",
       "taskDate": "Ustaw termin",
       "taskPriority": "Ustaw priorytet",
@@ -6095,7 +6154,7 @@
     "add": "Dodaj",
     "addPlaceholder": "Dodaj zadanie",
     "added": "„{{name}}” dodane do dnia",
-    "appointmentLabel": "{{title}}, {{range}}",
+    "appointmentLabel": "{{title}}, termin {{range}}",
     "backToList": "Lista",
     "blockLabel": "{{title}}, {{range}}",
     "calendar": "Kalendarz dnia",
@@ -6219,7 +6278,7 @@
       "project": "Projekt"
     },
     "showCompleted": "Ukończone zadania",
-    "showInbox": "Kolumna Skrzynka",
+    "showInbox": "Kolumna Skrzynka odbiorcza",
     "calendarSpan": "Dni kalendarza",
     "reset": "Resetuj",
     "noProject": "Brak projektu",
@@ -6356,7 +6415,7 @@
   },
   "bookmarksImport": {
     "title": "Importuj zakładki",
-    "hint": "Eksport z Firefoksa (Library › Import and Backup › Export). Jeden folder staje się stronami projektu.",
+    "hint": "Eksport z Firefoksa (Biblioteka › Import i kopia zapasowa › Eksportuj). Jeden folder staje się stronami projektu.",
     "file": "Plik zakładek",
     "empty": "Ten plik nie zawiera zakładek.",
     "folder": "Folder",

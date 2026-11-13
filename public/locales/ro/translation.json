@@ -1,8 +1,8 @@
 {
     "agentBanner": {
         "agent": "Agent",
-        "dismiss": "Mark as read",
-        "open": "Open"
+        "dismiss": "Marchează ca citit",
+        "open": "Deschide"
     },
     "counts": {
         "notes_few": "{{count}} note",
@@ -30,6 +30,8 @@
     },
   "autoClassify": {
     "health": {
+            "requeued_one": "Din nou în coadă: {{count}}",
+            "failed_one": "Element eșuat: {{count}}",
       "retryError": "Reîncercarea a eșuat",
       "requeued": "Din nou în coadă: {{count}}",
       "retry": "Reîncearcă",
@@ -202,7 +204,7 @@
     "linkKept": "Link păstrat",
     "linkReview": "Link de revăzut",
     "deleted": "Sarcină ștearsă",
-    "actionError": "Nu s-a putut, încercați din nou.",
+    "actionError": "Nu s-a putut, încearcă din nou.",
     "alreadySettled": "Deja rezolvat în altă parte.",
     "slotRefuse": "Refuză",
     "slotAccept": "Planifică",
@@ -252,11 +254,11 @@
     }
   },
   "outline": {
-    "saveError": "Could not save that change",
-    "hintLocked": "Enter: new line",
-    "hint": "Enter: new line · Tab / Shift+Tab: indent · Alt+↑ / Alt+↓: move",
-    "newLine": "New task",
-    "title": "Outline"
+    "saveError": "Nu s-a putut salva această modificare",
+    "hintLocked": "Enter: linie nouă",
+    "hint": "Enter: linie nouă · Tab / Shift+Tab: indentare · Alt+↑ / Alt+↓: mutare",
+    "newLine": "Sarcină nouă",
+    "title": "Schiță"
   },
   "focusStats": {
     "title": "Concentrare",
@@ -719,10 +721,10 @@
             "page": {
                 "notFound": "Pluginul nu a fost găsit sau este oprit"
             },
-            "approveIntro": "This plugin runs inside the server and asks for:",
-            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
-            "approveTitle": "Approve permissions?",
-            "approve": "Approve and enable"
+            "approveIntro": "Acest plugin rulează în server și cere:",
+            "approveOutro": "Permisiunile limitează ce oferă Cadence pluginului; ele nu sunt un mediu izolat. Aprobă doar cod pe care l-ai citit.",
+            "approveTitle": "Aprobi permisiunile?",
+            "approve": "Aprobă și activează"
         },
     "showTaskDescription": "Afișează descrierea sub titlu",
     "sync": {
@@ -843,7 +845,7 @@
     "telegramSetupSuccess": "Botul Telegram \"{{botName}}\" a fost configurat cu succes!",
     "telegramSetupFailed": "Configurarea botului Telegram a eșuat.",
     "invalidTelegramToken": "Format invalid pentru tokenul botului Telegram.",
-    "telegramInstructions": "Accesați https://t.me/{{botUsername}} și începeți să discutați cu botul dvs. pentru a-l conecta la contul dvs. Cadence.",
+    "telegramInstructions": "Accesează https://t.me/{{botUsername}} și începe să discuți cu botul tău pentru a-l conecta la contul tău Cadence.",
     "botConfigured": "Bot configurat cu succes!",
     "botUsername": "Numele de utilizator al botului:",
     "pollingStatus": "Starea polling-ului:",
@@ -894,6 +896,7 @@
     "nextTaskSuggestion": "Sugestie pentru Următoarea Sarcină",
     "enableNextTaskSuggestion": "Activează Sugestiile pentru Următoarea Sarcină",
     "tabs": {
+            "agents": "Agenți",
             "plugins": "Pluginuri",
       "classify": "Clasificare",
       "sync": "Sincronizare",
@@ -1437,7 +1440,7 @@
     "sidebarMinimalTitle": "Bară laterală minimală",
     "sidebarMinimalHint": "Aceste setări modifică doar bara laterală minimală. Dense își păstrează propriul aspect.",
     "taskRowDetails": "Detalii pentru rândul de sarcină",
-    "taskRowDetailsDescription": "Alegeți ce detalii apar în dreapta unui rând de sarcină minimal și în ce ordine.",
+    "taskRowDetailsDescription": "Alege ce detalii apar în dreapta unui rând de sarcină minimal și în ce ordine.",
     "taskRowMoveUp": "Mută sus",
     "taskRowMoveDown": "Mută jos",
     "taskRowFields": {
@@ -1731,8 +1734,8 @@
     "waiting": "În așteptare"
   },
   "project": {
-    "hideEmptyDetails": "Hide empty fields",
-    "addDetail": "Add a detail",
+    "hideEmptyDetails": "Ascunde câmpurile goale",
+    "addDetail": "Adaugă un detaliu",
     "name": "Numele Proiectului",
     "projectImage": "Imaginea Proiectului",
     "uploadImageHint": "Încărcați o imagine pentru proiectul dvs. (max 10MB)",
@@ -2230,7 +2233,7 @@
     "parentProject": "Proiect părinte",
     "noParent": "Fără proiect părinte",
     "subProjects": "Subproiecte",
-    "areaFollowsParent": "Aria urmează proiectul părinte",
+    "areaFollowsParent": "Zona urmează proiectul părinte",
     "loading": "Se încarcă proiectele...",
     "error": "Eroare la încărcarea proiectelor",
     "searchPlaceholder": "Caută…",
@@ -2417,7 +2420,7 @@
     "presetWork": "Muncă",
     "presetHealth": "Sănătate",
     "presetFamily": "Familie",
-    "suggestDomains": "Sugerează 5 arii",
+    "suggestDomains": "Sugerează 5 zone",
     "domains": {
       "business": "Afaceri și bani",
       "tech": "Tehnologie și sisteme",
@@ -2448,7 +2451,7 @@
     "toggleDropdownMenu": "Comutare meniu derulant"
   },
   "notes": {
-    "allNotes": "All notes",
+    "allNotes": "Toate notițele",
     "emptyPreview": "Notă goală",
     "loading": "Se încarcă notițele...",
     "error": "Eroare la încărcarea notițelor",
@@ -3018,7 +3021,7 @@
       "activationHint": "{{n}} din {{total}} înregistrări",
       "weeklyUsers": "Utilizatori săptămânali",
       "weeklyUsersHint": "a creat ceva",
-      "selfHostedUsers": "self-hosted · {{n}} noi astăzi"
+      "selfHostedUsers": "auto-găzduiți · {{n}} noi astăzi"
     },
     "waitlist": {
       "title": "Listă de așteptare",
@@ -3330,7 +3333,7 @@
       "today": "Azi",
       "thisWeek": "Săptămâna aceasta",
       "lastWeek": "Săptămâna trecută",
-      "change": "Modificare",
+      "change": "Evoluție",
       "fortnight": "14 zile"
     },
     "visits": {
@@ -3445,7 +3448,7 @@
     }
   },
   "viewType": {
-    "gallery": "Gallery",
+    "gallery": "Galerie",
     "label": "Vizualizare",
     "list": "Listă",
     "board": "Panou",
@@ -3645,7 +3648,7 @@
       "email": "E-mail",
       "push": "Push",
       "telegram": "Telegram",
-      "desktop": "Calculator",
+      "desktop": "Computer",
       "apprise": "Apprise"
     },
     "types": {
@@ -3668,7 +3671,7 @@
       "taskAssigned": "O sarcină a fost atribuită de altcineva",
       "habitReminders": "Telefonul te anunță deja; activează Push doar dacă vrei ca serverul să sune și el.",
       "comments": "Răspunsuri, comentarii la sarcinile tale și mențiuni cu @",
-      "taskReminders": "Ora stabilită pe o sarcină. Sună telefonul; adaugă Calculator dacă vrei să sune și computerul"
+      "taskReminders": "Ora stabilită pe o sarcină. Sună telefonul; adaugă Computer dacă vrei să sune și computerul"
     },
     "telegram": {
       "notConfigured": {
@@ -3691,7 +3694,7 @@
     "info": {
       "title": "Notă:",
       "message": "Notificările prin Email și Push vor fi disponibile în curând. Notificările în aplicație și pe Telegram sunt disponibile în prezent.",
-      "phoneRings": "Mementourile pentru sarcini sună pe telefon. Calculatorul sună doar dacă activezi Calculator pe acest rând."
+      "phoneRings": "Mementourile pentru sarcini sună pe telefon. Computerul sună doar dacă activezi Computer pe acest rând."
     },
     "webhooks": {
       "events": {
@@ -3808,7 +3811,7 @@
         },
         "desktopApp": {
             "title": "Notificările acestei aplicații",
-            "body": "Cadence pentru Linux afișează notificări de sistem, chiar și cu fereastra închisă, atâta timp cât pictograma sa este în tava de sistem. Alegeți care în coloana Calculator de mai jos. Are nevoie de o cheie API, setată în setările aplicației (meniul din tavă)."
+            "body": "Cadence pentru Linux afișează notificări de sistem, chiar și cu fereastra închisă, atâta timp cât pictograma sa este în tava de sistem. Alege care în coloana Computer de mai jos. Are nevoie de o cheie API, setată în setările aplicației (meniul din tavă)."
     }
   },
   "projectStatus": {
@@ -3823,7 +3826,7 @@
     "done": "Finalizat",
     "done_desc": "Terminată și finalizată",
     "cancelled": "Anulat",
-    "cancelled_desc": "Nu va fi finalizat",
+    "cancelled_desc": "decis să nu continuăm",
     "idea": "Idee",
     "paused": "În pauză",
     "paused_desc": "pus deoparte intenționat, de reluat mai târziu",
@@ -4114,7 +4117,7 @@
   },
   "subscription": {
     "title": "Abonament",
-    "chooseForCloud": "Alegeți un plan pentru Cadence Cloud",
+    "chooseForCloud": "Alege un plan pentru Cadence Cloud",
     "noActive": "Nicio subscriere activă",
     "chooseToContinue": "Alege un plan pentru a continua să folosești Cadence Cloud.",
     "monthly": "Lunar",
@@ -4290,6 +4293,7 @@
     "invalidHint": "Poate a fost deja folosit sau a expirat. Cere unul nou persoanei care ți l-a trimis."
   },
   "dailyPlan": {
+        "placeAllHint_one": "{{count}} sarcină va ocupa următorul interval liber.",
     "inProgress": "În lucru",
     "overdue": "Întârziate",
     "dueToday": "Scadente azi",
@@ -4577,9 +4581,9 @@
     "syntaxHint": "#tag  +project  !1 până la !3 prioritate  mâine la 15:00 pentru o dată",
     "chainCount": "Adăugate la {{project}}: {{total}}",
     "slash": {
-      "priorityHigh": "Ridicat",
+      "priorityHigh": "Ridicată",
       "priorityMedium": "Medie",
-      "priorityLow": "Scăzut",
+      "priorityLow": "Scăzută",
       "tag": "Etichetă",
       "project": "Proiect",
       "person": "Persoană",
@@ -4608,27 +4612,27 @@
   },
   "goals": {
     "overview": {
-      "addWishTo": "Add a wish to {{group}}",
-      "addWish": "Add a wish…",
-      "createTaskFor": "Create a task for “{{title}}”",
-      "markDone": "Mark “{{title}}” fulfilled",
-      "wishFulfilled": "Fulfilled",
-      "wishDropped": "Dropped",
-      "allDone": "All done",
-      "addStep": "Add a next step",
-      "nextStepInline": "Next step: {{name}}",
-      "nextStep": "Next step",
-      "completeStep": "Finish “{{name}}”",
-      "nothingLinked": "Nothing linked",
-      "target": "By {{date}}",
-      "error": "Could not save, try again",
-      "wishDone": "“{{title}}” fulfilled",
-      "stepDone": "“{{name}}” done",
-      "doneWishes": "Fulfilled",
-      "other": "Paused, achieved or dropped",
-      "noMatch": "Nothing matches.",
-      "clearSearch": "Clear the search",
-      "search": "Search a goal or a wish"
+      "addWishTo": "Adaugă o dorință la {{group}}",
+      "addWish": "Adaugă o dorință…",
+      "createTaskFor": "Creează o sarcină pentru „{{title}}”",
+      "markDone": "Marchează „{{title}}” ca realizată",
+      "wishFulfilled": "Realizată",
+      "wishDropped": "Abandonată",
+      "allDone": "Totul este gata",
+      "addStep": "Adaugă un pas următor",
+      "nextStepInline": "Pasul următor: {{name}}",
+      "nextStep": "Pasul următor",
+      "completeStep": "Finalizează „{{name}}”",
+      "nothingLinked": "Nimic legat",
+      "target": "Până la {{date}}",
+      "error": "Salvarea nu a reușit, încearcă din nou",
+      "wishDone": "„{{title}}” realizată",
+      "stepDone": "„{{name}}” finalizat",
+      "doneWishes": "Realizate",
+      "other": "În pauză, atinse sau abandonate",
+      "noMatch": "Nimic nu corespunde.",
+      "clearSearch": "Șterge căutarea",
+      "search": "Caută un obiectiv sau o dorință"
     },
     "newGoal": "Obiectiv nou",
     "noGoalsYet": "Încă nu există obiective.",
@@ -4959,6 +4963,7 @@
       "instructionsOther": "Orice altă coloană poate fi păstrată în nota sarcinii, ca să nu se piardă nimic din foaie."
     },
     "import": {
+            "undoneKept_one": "Importul a fost anulat. {{count}} sarcină modificată de atunci a fost păstrată.",
       "fieldParent": "Sarcină părinte",
       "fieldWbs": "WBS / număr de structură",
       "fieldEstimate": "Estimare",
@@ -5210,22 +5215,22 @@
   },
   "review": {
     "quick": {
-      "keys": "1–9 choose · S skip · O open · Esc stop",
-      "nothing": "Nothing needs a look right now.",
-      "back": "Back to the review",
-      "again": "Another round",
-      "saved": "Every decision is saved. What you skipped comes back next time.",
-      "done": "That's it for now.",
-      "position": "{{position}} of {{total}}",
-      "stop": "Stop",
-      "start": "Start",
-      "pitch": "About 5 minutes, one thing at a time. Stop whenever you like.",
-      "title": "Quick review"
+      "keys": "1–9 alege · S omite · O deschide · Esc oprește",
+      "nothing": "Nimic nu necesită atenție chiar acum.",
+      "back": "Înapoi la revizuire",
+      "again": "Încă o rundă",
+      "saved": "Fiecare decizie este salvată. Ce ai omis revine data viitoare.",
+      "done": "Atât pentru moment.",
+      "position": "{{position}} din {{total}}",
+      "stop": "Oprește",
+      "start": "Începe",
+      "pitch": "Cam 5 minute, câte un lucru pe rând. Oprește-te oricând vrei.",
+      "title": "Revizuire rapidă"
     },
-    "loading": "Loading…",
-    "calmClear": "All up to date",
-    "calm_other": "{{count}} things to look at, at your own pace",
-    "calm_one": "{{count}} thing to look at, at your own pace",
+    "loading": "Se încarcă…",
+    "calmClear": "Totul este la zi",
+    "calm_other": "{{count}} de lucruri de examinat, în ritmul tău",
+    "calm_one": "{{count}} lucru de examinat, în ritmul tău",
     "cancelDate": "Anulează",
     "choices": "Opțiuni",
     "more": "Mai multe…",
@@ -5660,7 +5665,7 @@
       "applyFix": "Corectează versiunea curentă",
       "applyFixHint": "Rescrie versiunea în vigoare, inclusiv zilele trecute. Folosește-o pentru a corecta o greșeală.",
       "applyFrom": "Se aplică din",
-      "applyNew": "Dintr-o dată (versiune nouă)",
+      "applyNew": "De la o dată (versiune nouă)",
       "applyNewHint": "Zilele anterioare păstrează obiectivul cu care au fost trăite.",
       "applyTitle": "Aplică modificarea",
       "color": "Culoare",
@@ -5698,7 +5703,7 @@
     },
     "empty": {
       "create": "Creează primul tău obicei",
-      "hint": "Un obicei este ceva ce faci regulat, precum lectura sau o plimbare, ceva ce ții sub o limită sau ceva fără ce treci. Notează-l de fiecare dată și urmărește cum crește seria.",
+      "hint": "Un obicei este ceva ce faci regulat, precum lectura sau o plimbare, ceva ce ții sub o limită sau ceva fără care poți trăi. Notează-l de fiecare dată și urmărește cum crește seria.",
       "title": "Încă nu ai obiceiuri."
     },
     "entry": {
@@ -6021,7 +6026,7 @@
       "open": "Deschide",
       "addAnyway": "Adaugă oricum",
       "toProject": "Proiect…",
-      "keepInInbox": "Căsuța de primire",
+      "keepInInbox": "Inbox",
       "taskAdded": "Sarcină adăugată",
       "taskToSort": "Sarcină adăugată la « Sarcini de sortat »",
       "addedToProject": "Adăugat la proiect"
@@ -6065,7 +6070,7 @@
     "add": "Adaugă",
     "addPlaceholder": "Adaugă o sarcină",
     "added": "„{{name}}” adăugată la zi",
-    "appointmentLabel": "{{title}}, {{range}}",
+    "appointmentLabel": "{{title}}, termen {{range}}",
     "backToList": "Listă",
     "blockLabel": "{{title}}, {{range}}",
     "calendar": "Calendarul zilei",
@@ -6217,7 +6222,7 @@
     "a11yCancelled": "Mutarea „{{name}}” a fost anulată",
     "closeCalendar": "Închide calendarul",
     "overdueReplanned": "Sarcinile întârziate au fost replanificate",
-    "a11yInstructions": "Pentru a muta o sarcină, apasă M, mut-o cu tastele săgeți, apoi apasă Enter sau Spațiu pentru a o lăsa, sau Escape pentru a anula. Pe o sarcină selectată: săgețile sau H, J, K, L trec între sarcini și zile; Shift cu Stânga sau Dreapta mută sarcina o zi; T o programează pentru azi, Shift+T pentru mâine; Enter o deschide.",
+    "a11yInstructions": "Pentru a muta o sarcină, apasă M, mută-o cu tastele săgeți, apoi apasă Enter sau Spațiu pentru a o lăsa, sau Escape pentru a anula. Pe o sarcină selectată: săgețile sau H, J, K, L trec între sarcini și zile; Shift cu Stânga sau Dreapta mută sarcina o zi; T o programează pentru azi, Shift+T pentru mâine; Enter o deschide.",
     "dateNav": "Date",
     "previousWeek": "Săptămâna anterioară",
     "nextWeek": "Săptămâna următoare",

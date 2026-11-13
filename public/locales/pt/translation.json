@@ -1,6 +1,6 @@
 {
     "agentBanner": {
-        "agent": "Agent",
+        "agent": "Agente",
         "dismiss": "Marcar como lido",
         "open": "Abrir"
     },
@@ -38,7 +38,7 @@
       "maxTokens": "Tokens máximos de resposta",
       "summaryMax": "Tamanho de um resumo (caracteres)",
       "maxTags": "Etiquetas por item",
-      "retention": "Retenção do registo (dias)",
+      "retention": "Retenção do registro (dias)",
       "dailyLimit": "Sugestões por dia (0 = sem limite)",
       "ttl": "Validade de uma sugestão (dias)",
       "cache": "Cache de contexto (minutos)",
@@ -81,7 +81,7 @@
       "error": "Teste não concluído"
     },
     "settings": {
-      "save": "Guardar",
+      "save": "Salvar",
       "excluded": "Etiquetas nunca atribuídas (separadas por vírgulas)",
       "limits": "Atrasos e limites",
       "default": "Predefinição: {{value}}",
@@ -97,11 +97,11 @@
       "mode": "Modo",
       "enabled": "Ativado",
       "state": "Estado",
-      "noAi": "Sem fornecedor de IA: configure Perfil › Assistente de IA para ativar a classificação.",
-      "description": "Preenche os campos vazios de novas tarefas, notas e links: projeto ou área, etiquetas, duração, resumo do link. Em caso de dúvida, um cartão aparece em «Para organizar».",
+      "noAi": "Sem provedor de IA: configure Perfil › Assistente de IA para ativar a classificação.",
+      "description": "Preenche os campos vazios de novas tarefas, notas e links: projeto ou área, etiquetas, duração, resumo do link. Em caso de dúvida, um cartão aparece em «Por organizar».",
       "title": "Classificação automática",
-      "saveError": "Não foi possível guardar",
-      "saved": "Configurações guardadas",
+      "saveError": "Não foi possível salvar",
+      "saved": "Configurações salvas",
       "loadError": "Configurações ilegíveis"
     },
     "mark": {
@@ -120,7 +120,7 @@
       "video": "Mesmo vídeo",
       "repository": "Mesmo repositório",
       "address": "Mesma página",
-      "reason": "Link já guardado?",
+      "reason": "Link já salvo?",
       "original": "Já mantido:",
       "new": "Novo:"
     },
@@ -157,7 +157,7 @@
       "save": "Salvar",
       "saved": "Configurações salvas",
       "saveError": "Não foi possível salvar as configurações.",
-      "loadError": "Não foi possível carregar as definições.",
+      "loadError": "Não foi possível carregar as configurações.",
       "alertType": {
         "conflict": "Eventos em conflito",
         "event_in_work_hours": "Evento em horário de trabalho",
@@ -199,17 +199,17 @@
     "linkArchived": "Link arquivado",
     "linkKept": "Link mantido",
     "linkReview": "Link para rever",
-    "deleted": "Tarefa eliminada",
+    "deleted": "Tarefa excluída",
     "actionError": "Não foi possível, tente novamente.",
     "alreadySettled": "Já resolvido noutro lugar.",
     "slotRefuse": "Recusar",
-    "slotAccept": "Planear",
+    "slotAccept": "Planejar",
     "action": {
       "habit": "Converter em hábito",
       "project": "Converter em projeto",
       "note": "Converter em nota",
       "reclass": "Classificar",
-      "delete": "Eliminar",
+      "delete": "Excluir",
       "cancel": "Cancelar a tarefa",
       "done": "Marcar como feita",
       "due": "Alterar o prazo",
@@ -224,7 +224,7 @@
     "answered": "Resposta guardada",
     "kept": "Mantida como está",
     "applied": "Feito",
-    "skip": "Saltar",
+    "skip": "Pular",
     "keep": "Manter como está",
     "correct": "Corrigir",
     "emptyMessage": "Uma proposta só aparece quando é útil.",
@@ -250,11 +250,11 @@
     }
   },
   "outline": {
-    "saveError": "Could not save that change",
-    "hintLocked": "Enter: new line",
-    "hint": "Enter: new line · Tab / Shift+Tab: indent · Alt+↑ / Alt+↓: move",
-    "newLine": "New task",
-    "title": "Outline"
+    "saveError": "Não foi possível salvar esta alteração",
+    "hintLocked": "Enter: nova linha",
+    "hint": "Enter: nova linha · Tab / Shift+Tab: recuar · Alt+↑ / Alt+↓: mover",
+    "newLine": "Nova tarefa",
+    "title": "Esquema"
   },
   "focusStats": {
     "title": "Foco",
@@ -717,10 +717,10 @@
             "page": {
                 "notFound": "Plugin não encontrado ou desligado"
             },
-            "approveIntro": "This plugin runs inside the server and asks for:",
-            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
-            "approveTitle": "Approve permissions?",
-            "approve": "Approve and enable"
+            "approveIntro": "Este plugin roda dentro do servidor e pede:",
+            "approveOutro": "As permissões limitam o que o Cadence entrega ao plugin; elas não são um ambiente isolado. Aprove apenas código que você leu.",
+            "approveTitle": "Aprovar permissões?",
+            "approve": "Aprovar e ativar"
         },
     "showTaskDescription": "Mostrar a descrição abaixo do título",
     "sync": {
@@ -892,6 +892,7 @@
     "nextTaskSuggestion": "Sugestão da Próxima Tarefa",
     "enableNextTaskSuggestion": "Ativar Sugestões de Próxima Tarefa",
     "tabs": {
+            "agents": "Agentes",
             "plugins": "Plugins",
       "classify": "Classificação",
       "sync": "Sincronização",
@@ -1124,7 +1125,7 @@
       "name": "Nome",
       "namePlaceholder": "Trabalho, Família…",
       "url": "Endereço iCal secreto",
-      "googleHelp": "No Google Calendar: Definições → o seu calendário → Integrar calendário → «Endereço secreto no formato iCal». O Apple Calendar e o Outlook têm links semelhantes. Qualquer pessoa com este endereço pode ler o calendário, por isso o Cadence guarda-o encriptado.",
+      "googleHelp": "No Google Agenda: Configurações → o seu calendário → Integrar agenda → «Endereço secreto no formato iCal». O Apple Calendário e o Outlook têm links semelhantes. Qualquer pessoa com este endereço pode ler o calendário, por isso o Cadence o salva criptografado.",
       "color": "Cor",
       "checking": "A verificar o calendário…",
       "add": "Ligar",
@@ -1727,8 +1728,8 @@
     "waiting": "Aguardando"
   },
   "project": {
-    "hideEmptyDetails": "Hide empty fields",
-    "addDetail": "Add a detail",
+    "hideEmptyDetails": "Ocultar campos vazios",
+    "addDetail": "Adicionar um detalhe",
     "name": "Nome do Projeto",
     "projectImage": "Imagem do Projeto",
     "uploadImageHint": "Carregue uma imagem para o seu projeto (máx 10MB)",
@@ -1953,7 +1954,7 @@
       "madeNote": "Nota criada",
       "error": "Não foi possível processar este item. Ele continua na caixa de entrada.",
       "reasonProject": "Menciona o projeto +{{detail}}",
-      "reasonTag": "Tem a tag #{{detail}}",
+      "reasonTag": "Tem a etiqueta #{{detail}}",
       "reasonUrl": "É um link",
       "reasonKeyword": "Começa com “{{detail}}”",
       "reasonLong": "É longo, como uma nota",
@@ -1968,7 +1969,7 @@
       "email": "E-mail",
       "mail": "Correio",
       "desktop": "Computador",
-      "link": "Ligação",
+      "link": "Link",
       "share": "Partilha"
     }
   },
@@ -2444,7 +2445,7 @@
     "toggleDropdownMenu": "Alternar menu suspenso"
   },
   "notes": {
-    "allNotes": "All notes",
+    "allNotes": "Todas as notas",
     "emptyPreview": "Nota vazia",
     "loading": "Carregando notas...",
     "error": "Erro ao carregar notas",
@@ -2529,8 +2530,8 @@
     "slashFile": "Imagem ou arquivo",
     "slashFileHint": "Envie e coloque aqui",
     "toggleDropdownMenu": "Alternar menu suspenso",
-    "saved": "Guardado",
-    "unsaved": "Alterações não guardadas",
+    "saved": "Salvo",
+    "unsaved": "Alterações não salvas",
     "backgroundColor": "Cor de fundo",
     "selectProject": "Selecionar projeto",
     "noMatchingNotes": "Nenhuma nota corresponde",
@@ -2592,7 +2593,7 @@
     "noParent": "Nenhuma (nível superior)",
     "showChildTags": "Mostrar etiquetas filhas",
     "hideChildTags": "Ocultar etiquetas filhas",
-    "progressSummary": "Progresso da tag · {{done}} de {{total}} tarefas concluídas"
+    "progressSummary": "Progresso da etiqueta · {{done}} de {{total}} tarefas concluídas"
   },
   "recurrence": {
     "none": "Nenhum",
@@ -3014,7 +3015,7 @@
       "activationHint": "{{n}} de {{total}} cadastros",
       "weeklyUsers": "Usuários semanais",
       "weeklyUsersHint": "criou algo",
-      "selfHostedUsers": "self-hosted · {{n}} novos hoje"
+      "selfHostedUsers": "auto-hospedados · {{n}} novos hoje"
     },
     "waitlist": {
       "title": "Lista de espera",
@@ -3441,8 +3442,8 @@
     }
   },
   "viewType": {
-    "gallery": "Gallery",
-    "label": "Vista",
+    "gallery": "Galeria",
+    "label": "Visualização",
     "list": "Lista",
     "board": "Quadro",
     "calendar": "Calendário"
@@ -3454,7 +3455,7 @@
     "tag": "Etiqueta",
     "priority": "Prioridade",
     "due": "Prazo",
-    "status": "Estado",
+    "status": "Status",
     "any": "Todas",
     "dueToday": "Hoje",
     "dueNext7Days": "Próximos 7 dias",
@@ -3499,7 +3500,7 @@
     "noViewsMatch": "Nenhuma visão encontrada",
     "blankSlateFilteredHint": "Tente outra pesquisa.",
     "blankSlateClearSearch": "Limpar pesquisa",
-    "view": "Visualizar",
+    "view": "Visualização",
     "progressSummary": "Progresso da visualização · {{done}} de {{total}} tarefas concluídas",
     "sortTasks": "Ordenar tarefas",
     "filters": "filtros"
@@ -3662,9 +3663,9 @@
       "dueProjects": "Projetos que vencem em 24 horas",
       "overdueProjects": "Projetos que passaram da data de vencimento",
       "taskAssigned": "Uma tarefa foi atribuída a você por outra pessoa",
-      "habitReminders": "O telemóvel já os lembra; ative o Push só se quiser que o servidor também toque.",
+      "habitReminders": "O celular já os lembra; ative o Push só se quiser que o servidor também toque.",
       "comments": "Respostas, comentários nas suas tarefas e @menções",
-      "taskReminders": "A hora que define numa tarefa. O telemóvel toca; adicione Computador se quiser que o computador também toque"
+      "taskReminders": "A hora que define numa tarefa. O celular toca; adicione Computador se quiser que o computador também toque"
     },
     "telegram": {
       "notConfigured": {
@@ -3675,7 +3676,7 @@
     "test": {
       "title": "Testar Notificações",
       "description": "Envie uma notificação de teste para ver como ela aparece no aplicativo e nos canais habilitados (Telegram, etc.)",
-      "send": "Enviar Teste",
+      "send": "Enviar teste",
       "sending": "Enviando...",
       "rowLabel": "Enviar uma notificação de teste",
       "button": "Testar",
@@ -3687,7 +3688,7 @@
     "info": {
       "title": "Nota:",
       "message": "Notificações por Email e Push estarão disponíveis em breve. Notificações no aplicativo e no Telegram estão atualmente disponíveis.",
-      "phoneRings": "Os lembretes de tarefas tocam no telemóvel. O computador só toca se ativar Computador nesta linha."
+      "phoneRings": "Os lembretes de tarefas tocam no celular. O computador só toca se ativar Computador nesta linha."
     },
     "webhooks": {
       "events": {
@@ -3707,7 +3708,7 @@
         "taskCompleted": "Tarefa concluída",
         "taskDeleted": "Tarefa excluída",
         "noteCreated": "Nota criada",
-        "linkCreated": "Link guardado",
+        "linkCreated": "Link salvo",
         "dailySummary": "Resumo diário",
         "test": "Teste",
         "mailDecided": "Cartão de e-mail decidido"
@@ -3819,7 +3820,7 @@
     "done": "Concluído",
     "done_desc": "Finalizado e concluído",
     "cancelled": "Cancelado",
-    "cancelled_desc": "Não será concluído",
+    "cancelled_desc": "decidido não prosseguir",
     "idea": "Ideia",
     "paused": "Pausado",
     "paused_desc": "posto de lado de propósito, para retomar depois",
@@ -4215,13 +4216,13 @@
     "relationships": {
       "family": "Família",
       "work": "Trabalho",
-      "friend": "Amizade",
+      "friend": "Amigo",
       "other": "Outro"
     },
     "noPeopleYet": "Ainda não há pessoas",
     "clearAssignment": "Remover atribuição",
     "nameRequired": "O nome é obrigatório",
-    "saveError": "Não foi possível guardar a pessoa",
+    "saveError": "Não foi possível salvar a pessoa",
     "signInLink": "Link de acesso",
     "unassigned": "Sem atribuição"
   },
@@ -4248,7 +4249,7 @@
     "failedToUpdate": "Não foi possível atualizar o membro",
     "addEmailHint": "Adicionar um email envia-lhe um convite para definir uma palavra-passe. Não pode ser alterado depois.",
     "remove": "Remover membro",
-    "removeConfirm": "Remover {{name}}? A conta e tudo o que contém são eliminados, e isto não pode ser desfeito. No Cadence Cloud o lugar fica livre para outra pessoa.",
+    "removeConfirm": "Remover {{name}}? A conta e tudo o que contém são excluídos, e isto não pode ser desfeito. No Cadence Cloud o lugar fica livre para outra pessoa.",
     "removed": "Membro removido",
     "updated": "Membro atualizado",
     "invitationSent": "Convite enviado",
@@ -4285,6 +4286,7 @@
     "invalidHint": "Pode já ter sido usado ou ter expirado. Peça um novo a quem o enviou."
   },
   "dailyPlan": {
+        "placeAllHint_one": "{{count}} tarefa vai para o próximo horário livre.",
     "inProgress": "Em curso",
     "overdue": "Em atraso",
     "dueToday": "Para hoje",
@@ -4386,7 +4388,7 @@
     "movedOffPlan": "'{{name}}' já não vence hoje, por isso saiu do plano de hoje.",
     "tips": {
       "title": "Dicas de planeamento",
-      "missed": "{{count}} blocos planeados já passaram",
+      "missed": "{{count}} blocos planejados já passaram",
       "moveMissed": "Mover para os próximos espaços livres",
       "overbooked": "{{planned}} planeadas, só {{free}} livres: {{over}} a mais",
       "gapFit": "{{gap}} livres às {{time}} dão para {{name}} ({{duration}})",
@@ -4427,7 +4429,7 @@
     "hideCalendar": "Ocultar calendário",
     "previousDay": "Dia anterior",
     "nextDay": "Próximo dia",
-    "planning": "Planeamento",
+    "planning": "Planejamento",
     "completed": "«{{name}}» concluída.",
     "panelMode": "Painel direito",
     "dayView": "Dia",
@@ -4494,7 +4496,7 @@
     "focusExceptionAdd": "Adicionar uma exceção",
     "showQuote": "Mostrar a citação do dia",
     "hideQuote": "Ocultar a citação do dia",
-    "orderError": "Não foi possível guardar a ordem.",
+    "orderError": "Não foi possível salvar a ordem.",
     "eventReadOnly": "Só de leitura: coloque este calendário em sincronização bidirecional no perfil para o mover daqui.",
     "placeAllDone_one": "{{count}} tarefa agendada."
   },
@@ -4602,27 +4604,27 @@
   },
   "goals": {
     "overview": {
-      "addWishTo": "Add a wish to {{group}}",
-      "addWish": "Add a wish…",
-      "createTaskFor": "Create a task for “{{title}}”",
-      "markDone": "Mark “{{title}}” fulfilled",
-      "wishFulfilled": "Fulfilled",
-      "wishDropped": "Dropped",
-      "allDone": "All done",
-      "addStep": "Add a next step",
-      "nextStepInline": "Next step: {{name}}",
-      "nextStep": "Next step",
-      "completeStep": "Finish “{{name}}”",
-      "nothingLinked": "Nothing linked",
-      "target": "By {{date}}",
-      "error": "Could not save, try again",
-      "wishDone": "“{{title}}” fulfilled",
-      "stepDone": "“{{name}}” done",
-      "doneWishes": "Fulfilled",
-      "other": "Paused, achieved or dropped",
-      "noMatch": "Nothing matches.",
-      "clearSearch": "Clear the search",
-      "search": "Search a goal or a wish"
+      "addWishTo": "Adicionar um desejo a {{group}}",
+      "addWish": "Adicionar um desejo…",
+      "createTaskFor": "Criar uma tarefa para “{{title}}”",
+      "markDone": "Marcar “{{title}}” como realizado",
+      "wishFulfilled": "Realizado",
+      "wishDropped": "Abandonado",
+      "allDone": "Tudo concluído",
+      "addStep": "Adicionar um próximo passo",
+      "nextStepInline": "Próximo passo: {{name}}",
+      "nextStep": "Próximo passo",
+      "completeStep": "Concluir “{{name}}”",
+      "nothingLinked": "Nada vinculado",
+      "target": "Para {{date}}",
+      "error": "Não foi possível salvar, tente novamente",
+      "wishDone": "“{{title}}” realizado",
+      "stepDone": "“{{name}}” concluído",
+      "doneWishes": "Realizados",
+      "other": "Em pausa, alcançados ou abandonados",
+      "noMatch": "Nada corresponde.",
+      "clearSearch": "Limpar a pesquisa",
+      "search": "Pesquisar uma meta ou um desejo"
     },
     "newGoal": "Nova meta",
     "noGoalsYet": "Ainda não há metas.",
@@ -4694,7 +4696,7 @@
     "progressHint": "Barra: tarefas e projetos concluídos. Linha: tempo decorrido entre a criação e a data-alvo.",
     "removeFromArea": "Remover da área",
     "createTask": "Criar uma tarefa",
-    "noGoal": "Sem objetivo"
+    "noGoal": "Sem meta"
   },
   "templates": {
     "new": "Novo modelo",
@@ -4823,7 +4825,7 @@
   },
   "projectTimeline": {
     "colorBy": "Cor por",
-    "colorByStatus": "Cor: estado",
+    "colorByStatus": "Cor: status",
     "colorByPriority": "Cor: prioridade",
     "colorByTag": "Cor: etiqueta",
     "title": "Linha do tempo",
@@ -4941,7 +4943,7 @@
       "exampleTag": "obra",
       "exampleNote": "Qualquer texto mais longo vai aqui.",
       "instructionsSheet": "Como preencher",
-      "instructionsTitle": "Como preencher esta folha para o Cadence",
+      "instructionsTitle": "Como preencher esta planilha para o Cadence",
       "instructionsName": "Nome é a única coluna obrigatória. Cada linha é uma tarefa.",
       "instructionsProject": "Projeto: as tarefas com o mesmo nome de projeto ficam juntas. Os projetos que ainda não existem são criados ao importar.",
       "instructionsParent": "Tarefa principal: escreva o nome de outra tarefa da folha para tornar esta linha uma subtarefa dela. Uma coluna WBS (1, 1.1, 1.2) ou linhas com avanço também funcionam.",
@@ -4953,6 +4955,7 @@
       "instructionsOther": "Qualquer outra coluna pode ser guardada na nota da tarefa, para que nada da folha se perca."
     },
     "import": {
+            "undoneKept_one": "A importação foi desfeita. {{count}} tarefa alterada desde então foi mantida.",
       "fieldParent": "Tarefa principal",
       "fieldWbs": "WBS / número de estrutura",
       "fieldEstimate": "Estimativa",
@@ -5204,22 +5207,22 @@
   },
   "review": {
     "quick": {
-      "keys": "1–9 choose · S skip · O open · Esc stop",
-      "nothing": "Nothing needs a look right now.",
-      "back": "Back to the review",
-      "again": "Another round",
-      "saved": "Every decision is saved. What you skipped comes back next time.",
-      "done": "That's it for now.",
-      "position": "{{position}} of {{total}}",
-      "stop": "Stop",
-      "start": "Start",
-      "pitch": "About 5 minutes, one thing at a time. Stop whenever you like.",
-      "title": "Quick review"
+      "keys": "1–9 escolher · S pular · O abrir · Esc parar",
+      "nothing": "Nada pede sua atenção no momento.",
+      "back": "Voltar à revisão",
+      "again": "Mais uma rodada",
+      "saved": "Cada decisão fica salva. O que você pulou volta na próxima vez.",
+      "done": "Por enquanto é só.",
+      "position": "{{position}} de {{total}}",
+      "stop": "Parar",
+      "start": "Começar",
+      "pitch": "Cerca de 5 minutos, uma coisa de cada vez. Pare quando quiser.",
+      "title": "Revisão rápida"
     },
-    "loading": "Loading…",
-    "calmClear": "All up to date",
-    "calm_other": "{{count}} things to look at, at your own pace",
-    "calm_one": "{{count}} thing to look at, at your own pace",
+    "loading": "Carregando…",
+    "calmClear": "Tudo em dia",
+    "calm_other": "{{count}} coisas para ver, no seu ritmo",
+    "calm_one": "{{count}} coisa para ver, no seu ritmo",
     "cancelDate": "Cancelar",
     "choices": "Opções",
     "more": "Mais…",
@@ -5241,7 +5244,7 @@
     "loadError": "Não foi possível carregar a revisão.",
     "saveError": "Não foi possível guardar a decisão.",
     "loadMore": "Mostrar mais",
-    "next": "Seguinte: {{name}}",
+    "next": "Próxima: {{name}}",
     "addedToday": "Adicionada a hoje",
     "movedCount": "movida {{count}} vezes",
     "lastPlanned": "última data prevista {{date}}",
@@ -5328,7 +5331,7 @@
   "thisOrThat": {
     "title": "Qual agora?",
     "skipBoth": "Nenhuma",
-    "done": "A sua próxima ação",
+    "done": "Sua próxima ação",
     "none": "Nada mais para comparar.",
     "addToday": "Adicionar a hoje",
     "close": "Fechar"
@@ -5491,19 +5494,19 @@
       "help": "Mostrar atalhos de teclado",
       "goToday": "Ir para Hoje",
       "goInbox": "Ir para Caixa de entrada",
-      "goUpcoming": "Ir para Próximas",
+      "goUpcoming": "Ir para Planejar",
       "goCalendar": "Ir para Calendário",
       "goProjects": "Ir para Projetos",
       "taskNav": "Mover entre tarefas",
-      "taskComplete": "Concluir ou reabrir a tarefa (ou Space)",
+      "taskComplete": "Concluir ou reabrir a tarefa (ou Espaço)",
       "taskEdit": "Abrir a tarefa para editar (ou Enter)",
       "taskDate": "Definir a data",
       "taskPriority": "Definir a prioridade",
       "taskProject": "Mover para um projeto",
       "taskDelete": "Excluir a tarefa (com desfazer)",
-      "createAlt": "Criar item da caixa de entrada, tarefa, projeto, nota, área ou tag (com Alt+Shift)",
+      "createAlt": "Criar item da caixa de entrada, tarefa, projeto, nota, área ou etiqueta (com Alt+Shift)",
       "triageTask": "Triar: transformar em tarefa",
-      "triageLink": "Triar: guardar o endereço em Links",
+      "triageLink": "Triar: salvar o endereço em Links",
       "triageProject": "Triar: transformar em projeto",
       "triageNote": "Triar: transformar em nota",
       "triageLater": "Triar: depois (manter na caixa de entrada)",
@@ -5566,17 +5569,17 @@
     "badge": "TODO.md",
     "badgeTitle": "De um arquivo TODO.md. Somente leitura aqui: edite o arquivo.",
     "readOnly": "Isto vem de um arquivo TODO.md. Edite o arquivo.",
-    "projectInfo": "Segue {{path}}. As tarefas com a etiqueta code são escritas no ficheiro; as outras ficam no Cadence.",
+    "projectInfo": "Segue {{path}}. As tarefas com a etiqueta code são escritas no arquivo; as outras ficam no Cadence.",
     "reread": "Recarregar arquivos",
     "rereading": "Recarregando...",
     "rereadDone": "Arquivos TODO.md recarregados.",
     "rereadFailed": "Não foi possível recarregar os arquivos TODO.md.",
     "addTo": "Adicionar a",
     "addFailed": "Não foi possível gravar no arquivo TODO.md.",
-    "fileLabel": "Ficheiro TODO.md",
+    "fileLabel": "Arquivo TODO.md",
     "fileNone": "Nenhum",
     "addToCadence": "Apenas Cadence",
-    "linkFailed": "Não foi possível alterar o ficheiro TODO.md."
+    "linkFailed": "Não foi possível alterar o arquivo TODO.md."
   },
   "cadenceHabits": {
     "copyName": "{{name}} (cópia)",
@@ -5810,7 +5813,7 @@
       "PORNOGRAPHY": "Pornografia",
       "SMOKING": "Tabagismo",
       "SOCIAL_MEDIA": "Redes sociais",
-      "VAPING": "Vaping"
+      "VAPING": "Vape"
     },
     "quick": {
       "add": "Adicionar",
@@ -5947,7 +5950,7 @@
     "deep": "profundo"
   },
   "tag": {
-    "viewTag": "Ir para a tag"
+    "viewTag": "Ir para a etiqueta"
   },
   "links": {
     "addToLinks": "Adicionar aos links",
@@ -5983,7 +5986,7 @@
     "addNote": "Adicionar nota",
     "saveError": "Não foi possível salvar o link.",
     "loadError": "Não foi possível carregar os links.",
-    "empty": "Os links que você guarda da caixa de entrada aparecem aqui, com o que a página diz sobre si mesma.",
+    "empty": "Os links que você salva da caixa de entrada aparecem aqui, com o que a página diz sobre si mesma.",
     "noMatch": "Nenhum link corresponde a estes filtros.",
     "noTheme": "Sem tema",
     "taskCreated": "Tarefa criada: {{name}}",
@@ -5999,9 +6002,9 @@
       "tags": "Etiquetas"
     },
     "editTitle": "Editar o link",
-    "deleteTitle": "Eliminar este link?",
+    "deleteTitle": "Excluir este link?",
     "deleteMessage": "Ele sai dos seus links para sempre. Para deixá-lo de lado, arquive-o em vez disso.",
-    "deleteError": "Não foi possível eliminar o link.",
+    "deleteError": "Não foi possível excluir o link.",
     "taskVerb": {
       "try": "Experimentar: {{title}}",
       "read": "Ler: {{title}}",
@@ -6014,7 +6017,7 @@
       "open": "Abrir",
       "addAnyway": "Adicionar mesmo assim",
       "toProject": "Projeto…",
-      "keepInInbox": "Caixa de Entrada",
+      "keepInInbox": "Caixa de entrada",
       "taskAdded": "Tarefa adicionada",
       "taskToSort": "Tarefa adicionada a « Tarefas a organizar »",
       "addedToProject": "Adicionado ao projeto"
@@ -6058,7 +6061,7 @@
     "add": "Adicionar",
     "addPlaceholder": "Adicione uma tarefa",
     "added": "“{{name}}” adicionada ao dia",
-    "appointmentLabel": "{{title}}, {{range}}",
+    "appointmentLabel": "{{title}}, prazo {{range}}",
     "backToList": "Lista",
     "blockLabel": "{{title}}, {{range}}",
     "calendar": "Calendário do dia",
@@ -6131,12 +6134,12 @@
     "habitsCount": "Hábitos · {{n}}",
     "habitsDone": "Feitos · {{n}}",
     "habitAt": "{{name}} às {{time}}",
-    "habitLogFailed": "Não foi possível registar o hábito."
+    "habitLogFailed": "Não foi possível registrar o hábito."
   },
   "upcoming": {
-    "replan": "A replanear",
-    "toPlan": "A planear",
-    "expandToPlan": "Mostrar a planear ({{count}})",
+    "replan": "A replanejar",
+    "toPlan": "A planejar",
+    "expandToPlan": "Mostrar a planejar ({{count}})",
     "commitTo": "Comprometer para",
     "removeCommitment": "Remover o compromisso",
     "commitmentRemoved": "Compromisso removido",
@@ -6227,7 +6230,7 @@
     "expandInbox": "Mostrar a caixa de entrada ({{count}})",
     "filter": "Filtrar",
     "filterProjects": "Projetos",
-    "filterTags": "Tags",
+    "filterTags": "Etiquetas",
     "filterPriority": "Prioridade",
     "filterHigh": "Alta",
     "filterMedium": "Média",
@@ -6247,8 +6250,8 @@
     "stripLabel": "Enviar para um horizonte",
     "stripOpen": "Abrir {{name}} em Horizontes",
     "sentToHorizon": "Enviada para {{name}}",
-    "plannedOnDayHint_one": "{{count}} planeada num dia",
-    "plannedOnDayHint_other": "{{count}} planeadas num dia"
+    "plannedOnDayHint_one": "{{count}} planejada em um dia",
+    "plannedOnDayHint_other": "{{count}} planejadas em um dia"
   },
   "offline": {
     "offline": "Offline",

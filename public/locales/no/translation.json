@@ -1,8 +1,8 @@
 {
     "agentBanner": {
         "agent": "Agent",
-        "dismiss": "Mark as read",
-        "open": "Open"
+        "dismiss": "Merk som lest",
+        "open": "Åpne"
     },
     "counts": {
         "notes_other": "{{count}} notater",
@@ -237,7 +237,7 @@
       "title": "Sorter e-posten min",
       "close": "Lukk",
       "done": "Alt er sortert",
-      "back": "Tilbake til «Til sortering»",
+      "back": "Tilbake til «Å sortere»",
       "createTask": "Opprett oppgave: {{name}}",
       "replyInGmail": "Svar i Gmail",
       "readInGmail": "Les i Gmail",
@@ -250,11 +250,11 @@
     }
   },
   "outline": {
-    "saveError": "Could not save that change",
-    "hintLocked": "Enter: new line",
-    "hint": "Enter: new line · Tab / Shift+Tab: indent · Alt+↑ / Alt+↓: move",
-    "newLine": "New task",
-    "title": "Outline"
+    "saveError": "Kunne ikke lagre denne endringen",
+    "hintLocked": "Enter: ny linje",
+    "hint": "Enter: ny linje · Tab / Shift+Tab: rykk inn · Alt+↑ / Alt+↓: flytt",
+    "newLine": "Ny oppgave",
+    "title": "Disposisjon"
   },
   "focusStats": {
     "title": "Fokus",
@@ -553,7 +553,7 @@
         "due": "Forfallsdato",
         "dueType": {
           "any": "Alle",
-          "overdue": "Forsinket",
+          "overdue": "Forfalt",
           "today": "I dag",
           "within": "Innen N dager",
           "none": "Ingen dato"
@@ -717,10 +717,10 @@
             "page": {
                 "notFound": "Pluginen ble ikke funnet eller er slått av"
             },
-            "approveIntro": "This plugin runs inside the server and asks for:",
-            "approveOutro": "Permissions limit what Cadence hands the plugin; they are not a sandbox. Only approve code you have read.",
-            "approveTitle": "Approve permissions?",
-            "approve": "Approve and enable"
+            "approveIntro": "Dette tillegget kjøres i serveren og ber om:",
+            "approveOutro": "Tillatelser begrenser hva Cadence gir tillegget; de er ingen sandkasse. Godkjenn bare kode du har lest.",
+            "approveTitle": "Godkjenne tillatelsene?",
+            "approve": "Godkjenn og slå på"
         },
     "showTaskDescription": "Vis beskrivelsen under tittelen",
     "sync": {
@@ -900,6 +900,7 @@
     "nextTaskSuggestion": "Neste oppgaveforslag",
     "enableNextTaskSuggestion": "Aktiver forslag til neste oppgave",
     "tabs": {
+            "agents": "Agenter",
             "plugins": "Tillegg",
       "classify": "Sortering",
       "sync": "Synk",
@@ -1621,7 +1622,7 @@
     "goalArea": "Område",
     "noArea": "Ikke noe område",
     "startDate": "Start",
-    "goalBucket": "Bucket list-gruppe",
+    "goalBucket": "Ønskelistegruppe",
     "goalParent": "Nøkkelresultat for",
     "noParentGoal": "Ingen (frittstående)",
     "name": "Navn",
@@ -1727,8 +1728,8 @@
     "waiting": "Venter"
   },
   "project": {
-    "hideEmptyDetails": "Hide empty fields",
-    "addDetail": "Add a detail",
+    "hideEmptyDetails": "Skjul tomme felt",
+    "addDetail": "Legg til en detalj",
     "name": "Prosjektnavn",
     "projectImage": "Prosjektbilde",
     "uploadImageHint": "Last opp et bilde for prosjektet ditt (maks 10MB)",
@@ -2215,7 +2216,7 @@
     "turnIntoProjectError": "Kunne ikke gjøres om til et prosjekt.",
     "turnIntoProjectMessage": "Gjøre « {{name}} » om til et prosjekt? Deloppgavene blir prosjektets oppgaver, og adressene i notatet blir prosjektets sider.",
     "inDays_one": "om {{count}} dag",
-    "daysAgo_one": "{{count}} dag siden",
+    "daysAgo_one": "for {{count}} dag siden",
     "hoursAgo_one": "for {{count}} time siden",
     "minutesAgo_one": "for {{count}} minutt siden",
     "inMinutes_one": "om {{count}} minutt",
@@ -2442,8 +2443,8 @@
     "toggleDropdownMenu": "Veksle rullegardinmeny"
   },
   "notes": {
-    "allNotes": "All notes",
-    "emptyPreview": "Tom notat",
+    "allNotes": "Alle notater",
+    "emptyPreview": "Tomt notat",
     "loading": "Laster notater...",
     "error": "Feil ved lasting av notater",
     "searchPlaceholder": "Søk…",
@@ -2713,7 +2714,7 @@
       "filterPriority": "Prioritet",
       "emptyNoDate": "Ingen oppgaver uten dato å planlegge",
       "emptyOverdue": "Ingen forsinkede oppgaver å planlegge",
-      "noProject": "Ingen prosjekt"
+      "noProject": "Uten prosjekt"
     },
     "resizeTask": "Endre når oppgaven slutter",
     "month": "Måned",
@@ -3271,7 +3272,7 @@
       "activity": "Aktivitet",
       "created": "Opprettet noe",
       "nothingCreated": "Ikke opprettet noe ennå",
-      "plan": "Plan",
+      "plan": "Abonnement",
       "trial": "På prøve",
       "trialEnded": "Prøve avsluttet",
       "paid": "Betaler",
@@ -3436,7 +3437,7 @@
     }
   },
   "viewType": {
-    "gallery": "Gallery",
+    "gallery": "Galleri",
     "label": "Visning",
     "list": "Liste",
     "board": "Tavle",
@@ -3456,7 +3457,7 @@
     "dueOverdue": "Forfalt",
     "dueNoDate": "Ingen frist",
     "statusOpen": "Åpne",
-    "statusDone": "Fullført",
+    "statusDone": "Fullførte",
     "create": "Opprett visning",
     "createError": "Visningen kunne ikke opprettes"
   },
@@ -3573,7 +3574,7 @@
   },
   "subtasks": {
     "placeholder": "Legg til en underoppgave...",
-    "title": "Delesoppgaver"
+    "title": "Deloppgaver"
   },
   "backup": {
     "title": "Sikkerhetskopiering og gjenoppretting",
@@ -3814,7 +3815,7 @@
     "done": "Fullført",
     "done_desc": "Ferdig og avsluttet",
     "cancelled": "Avbrutt",
-    "cancelled_desc": "Vil ikke bli fullført",
+    "cancelled_desc": "besluttet å ikke fortsette",
     "idea": "Idé",
     "paused": "Pauset",
     "paused_desc": "satt til side med vilje, for å gjenoppta senere",
@@ -4284,6 +4285,7 @@
     "invalidHint": "Den kan allerede være brukt eller utløpt. Be personen som sendte den om en ny."
   },
   "dailyPlan": {
+        "placeAllHint_one": "{{count}} oppgave legges i neste ledige tidsluke.",
     "inProgress": "Pågår",
     "overdue": "Forfalt",
     "dueToday": "Forfaller i dag",
@@ -4571,7 +4573,7 @@
     "chainCount": "Lagt til i {{project}}: {{total}}",
     "slash": {
       "priorityHigh": "Høy",
-      "priorityMedium": "Moderat",
+      "priorityMedium": "Middels",
       "priorityLow": "Lav",
       "tag": "Etikett",
       "project": "Prosjekt",
@@ -4601,27 +4603,27 @@
   },
   "goals": {
     "overview": {
-      "addWishTo": "Add a wish to {{group}}",
-      "addWish": "Add a wish…",
-      "createTaskFor": "Create a task for “{{title}}”",
-      "markDone": "Mark “{{title}}” fulfilled",
-      "wishFulfilled": "Fulfilled",
-      "wishDropped": "Dropped",
-      "allDone": "All done",
-      "addStep": "Add a next step",
-      "nextStepInline": "Next step: {{name}}",
-      "nextStep": "Next step",
-      "completeStep": "Finish “{{name}}”",
-      "nothingLinked": "Nothing linked",
-      "target": "By {{date}}",
-      "error": "Could not save, try again",
-      "wishDone": "“{{title}}” fulfilled",
-      "stepDone": "“{{name}}” done",
-      "doneWishes": "Fulfilled",
-      "other": "Paused, achieved or dropped",
-      "noMatch": "Nothing matches.",
-      "clearSearch": "Clear the search",
-      "search": "Search a goal or a wish"
+      "addWishTo": "Legg til et ønske i {{group}}",
+      "addWish": "Legg til et ønske…",
+      "createTaskFor": "Opprett en oppgave for “{{title}}”",
+      "markDone": "Merk “{{title}}” som oppfylt",
+      "wishFulfilled": "Oppfylt",
+      "wishDropped": "Forkastet",
+      "allDone": "Alt er gjort",
+      "addStep": "Legg til et neste steg",
+      "nextStepInline": "Neste steg: {{name}}",
+      "nextStep": "Neste steg",
+      "completeStep": "Fullfør “{{name}}”",
+      "nothingLinked": "Ingenting koblet",
+      "target": "Innen {{date}}",
+      "error": "Kunne ikke lagre, prøv igjen",
+      "wishDone": "“{{title}}” oppfylt",
+      "stepDone": "“{{name}}” fullført",
+      "doneWishes": "Oppfylte",
+      "other": "På pause, oppnådd eller forkastet",
+      "noMatch": "Ingenting samsvarer.",
+      "clearSearch": "Tøm søket",
+      "search": "Søk etter et mål eller et ønske"
     },
     "newGoal": "Nytt mål",
     "noGoalsYet": "Ingen mål ennå.",
@@ -4664,7 +4666,7 @@
       "be": "Være",
       "do": "Gjøre",
       "add": "+ Legg til",
-      "none": "Ikke på bucket list",
+      "none": "Ikke på ønskelisten",
       "linkedTasks": "Koblede oppgaver: {{count}}"
     },
     "keyResults": {
@@ -4952,6 +4954,7 @@
       "instructionsOther": "Alle andre kolonner kan beholdes i oppgavens notat, så ingenting i arket går tapt."
     },
     "import": {
+            "undoneKept_one": "Importen ble angret. {{count}} oppgave som er endret siden da, ble beholdt.",
       "fieldParent": "Overordnet oppgave",
       "fieldWbs": "WBS / disposisjonsnummer",
       "fieldEstimate": "Estimat",
@@ -5193,7 +5196,7 @@
     "noProject": "Ingen prosjekt",
     "tags": "Etiketter",
     "note": "Notat",
-    "subtasks": "Underoppgaver",
+    "subtasks": "Deloppgaver",
     "loadError": "Kunne ikke laste denne oppgaven.",
     "expand": "Utvid",
     "shrink": "Forminsk",
@@ -5202,22 +5205,22 @@
   },
   "review": {
     "quick": {
-      "keys": "1–9 choose · S skip · O open · Esc stop",
-      "nothing": "Nothing needs a look right now.",
-      "back": "Back to the review",
-      "again": "Another round",
-      "saved": "Every decision is saved. What you skipped comes back next time.",
-      "done": "That's it for now.",
-      "position": "{{position}} of {{total}}",
-      "stop": "Stop",
+      "keys": "1–9 velg · S hopp over · O åpne · Esc stopp",
+      "nothing": "Ingenting trenger oppmerksomhet akkurat nå.",
+      "back": "Tilbake til gjennomgangen",
+      "again": "En runde til",
+      "saved": "Hver beslutning er lagret. Det du hoppet over, kommer tilbake neste gang.",
+      "done": "Det var alt for nå.",
+      "position": "{{position}} av {{total}}",
+      "stop": "Stopp",
       "start": "Start",
-      "pitch": "About 5 minutes, one thing at a time. Stop whenever you like.",
-      "title": "Quick review"
+      "pitch": "Omtrent 5 minutter, én ting om gangen. Stopp når du vil.",
+      "title": "Hurtiggjennomgang"
     },
-    "loading": "Loading…",
-    "calmClear": "All up to date",
-    "calm_other": "{{count}} things to look at, at your own pace",
-    "calm_one": "{{count}} thing to look at, at your own pace",
+    "loading": "Laster…",
+    "calmClear": "Alt er oppdatert",
+    "calm_other": "{{count}} ting å se på, i ditt eget tempo",
+    "calm_one": "{{count}} ting å se på, i ditt eget tempo",
     "cancelDate": "Avbryt",
     "choices": "Valg",
     "more": "Mer…",
@@ -5439,7 +5442,7 @@
     "placeholder": "Skriv en kommando eller søk...",
     "empty": "Ingen resultater",
     "hintNav": "Opp og ned for å flytte, Enter for å kjøre, Esc for å lukke",
-    "pickProject": "Flytte til hvilket prosjekt?",
+    "pickProject": "Flytt til hvilket prosjekt?",
     "actionError": "Oppgaven kunne ikke oppdateres",
     "deleteError": "Oppgaven kunne ikke slettes",
     "taskDeleted": "Slettet “{{name}}”",
@@ -5487,7 +5490,7 @@
       "capture": "Hurtigfangst",
       "search": "Søk",
       "help": "Vis hurtigtaster",
-      "goToday": "Gå til I dag",
+      "goToday": "Gå til i dag",
       "goInbox": "Gå til Innboks",
       "goUpcoming": "Gå til Kommende",
       "goCalendar": "Gå til Kalender",
@@ -5548,7 +5551,7 @@
     "blue": "Blå",
     "teal": "Turkis",
     "green": "Grønn",
-    "amber": "Bernstein",
+    "amber": "Rav",
     "coral": "Korall",
     "rose": "Rosa"
   },
@@ -5691,7 +5694,7 @@
       "title": "Ingen vaner ennå."
     },
     "entry": {
-      "undoFailed": "Kunne ikke angre innføringen.",
+      "undoFailed": "Kunne ikke angre oppføringen.",
       "logged": "{{name}} registrert",
       "add": "Legg til en oppføring",
       "date": "Dato",
@@ -6050,7 +6053,7 @@
     "add": "Legg til",
     "addPlaceholder": "Legg til en oppgave",
     "added": "«{{name}}» lagt til i dagen",
-    "appointmentLabel": "{{title}}, {{range}}",
+    "appointmentLabel": "{{title}}, frist {{range}}",
     "backToList": "Liste",
     "blockLabel": "{{title}}, {{range}}",
     "calendar": "Dagskalender",
@@ -6077,7 +6080,7 @@
     "organize": "Organiser",
     "organized_one": "{{count}} oppgave plassert",
     "organized_other": "{{count}} oppgaver plassert",
-    "overdueCount": "Forsinket · {{n}}",
+    "overdueCount": "Forfalt · {{n}}",
     "planAction": "Planlegg",
     "planChanged": "Planen ble endret på en annen enhet. Den er lastet inn på nytt.",
     "planIt": "Planlegg på neste ledige tidspunkt",
@@ -6102,7 +6105,7 @@
     "summaryOver": "{{needed}} planlagt for {{free}} ledig",
     "takeAll": "Gjør alle i dag",
     "takeToday": "Gjør i dag",
-    "takenAll": "Forsinkede oppgaver lagt til dagen",
+    "takenAll": "Forfalte oppgaver lagt til dagen",
     "taskCount_one": "{{count}} oppgave",
     "taskCount_other": "{{count}} oppgaver",
     "title": "I dag",
