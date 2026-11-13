@@ -8,7 +8,8 @@ Notable changes to tududi. Versions match the git tags and the
 ### Changed
 
 - The Linux desktop window uses Cadence controls for minimizing, maximizing,
-  restoring, and closing instead of the system title bar.
+  restoring, and closing instead of the system title bar. The compact bar now
+  follows the web navigation's light and dark backgrounds.
 
 ## 1.6.0
 

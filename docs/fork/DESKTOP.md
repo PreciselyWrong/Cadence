@@ -13,7 +13,7 @@ Tauri 2 shell around the user's own Cadence server. It adds what a browser tab c
 
 | Feature | How |
 |---|---|
-| Main window controls | A local GTK header bar (`src-tauri/src/titlebar.rs`) replaces the system title bar with Cadence colours and Minimize, Maximize/Restore and Close buttons. GTK handles dragging; the buttons call the Tauri window from Rust. The server page keeps no Tauri capability. |
+| Main window controls | A compact local GTK header bar (`src-tauri/src/titlebar.rs`) replaces the system title bar with Minimize, Maximize/Restore and Close buttons. It uses the web navbar's light or dark background, read from the page without granting it a Tauri capability. GTK handles dragging; the buttons call the Tauri window from Rust. |
 | Tray icon | Left click: the tasks of the day (`/today`). Right click: the menu, Ouvrir, Ajout rapide, Réglages, Quitter. Closing the window leaves the tray running. The icon uses the KSNI backend of `tray-icon`, added as a direct dependency: Tauri's default libappindicator never reports a click on Linux. |
 | Quick add | `Ctrl+Alt+Space` (config `shortcut`) opens a small always-on-top field (560 x 76 px); Enter stores the capture and closes. On X11 the key is grabbed by the global-shortcut plugin; under Wayland it is bound through the XDG GlobalShortcuts portal (see below). |
 | Offline captures | The tray process posts the queue to `POST /api/inbox` (`Authorization: Bearer tt_...`, `source: "desktop"`) as soon as it can, then every 60 s while the server is unreachable. Each capture carries an `Idempotency-Key` (a uuid stored in its queue file), the same on every retry, so the server stores it once. |

@@ -1,34 +1,37 @@
 use gtk::prelude::*;
+use javascriptcore::ValueExt;
+use std::time::Duration;
+use webkit2gtk::WebViewExt;
 
 const STYLE: &str = r#"
 #cadence-titlebar {
-  background: #1b2333;
+  background: #f4f4f6;
   border: 0;
-  border-bottom: 1px solid #334058;
   border-radius: 0;
   box-shadow: none;
-  min-height: 42px;
-  padding: 0 8px 0 16px;
-}
-#cadence-titlebar label {
-  color: #e9edf5;
-  font-size: 13px;
-  font-weight: 600;
+  min-height: 32px;
+  padding: 0 7px;
 }
 #cadence-titlebar button {
   background: transparent;
   border: 0;
-  border-radius: 7px;
+  border-radius: 6px;
   box-shadow: none;
-  color: #e9edf5;
-  min-height: 30px;
-  min-width: 30px;
+  color: #46464f;
+  min-height: 28px;
+  min-width: 32px;
   padding: 0;
 }
-#cadence-titlebar button:hover { background: #334058; }
-#cadence-titlebar button:active { background: #455574; }
-#cadence-titlebar button:focus { outline: 2px solid #a9a6ff; outline-offset: -2px; }
-#cadence-titlebar #cadence-close:hover { background: #a73745; }
+#cadence-titlebar button:hover { background: #e4e4e8; }
+#cadence-titlebar button:active { background: #d9d9df; }
+#cadence-titlebar button:focus { outline: 2px solid #5e5ce6; outline-offset: -2px; }
+#cadence-titlebar #cadence-close:hover { background: #f9dfe1; color: #a72f3c; }
+#cadence-titlebar.cadence-dark { background: #1f2129; }
+#cadence-titlebar.cadence-dark button { color: #ececf2; }
+#cadence-titlebar.cadence-dark button:hover { background: #30333f; }
+#cadence-titlebar.cadence-dark button:active { background: #414453; }
+#cadence-titlebar.cadence-dark button:focus { outline-color: #a9a6ff; }
+#cadence-titlebar.cadence-dark #cadence-close:hover { background: #653039; color: #fff; }
 "#;
 
 pub fn attach(window: &tauri::WebviewWindow) -> Result<(), Box<dyn std::error::Error>> {
@@ -36,7 +39,6 @@ pub fn attach(window: &tauri::WebviewWindow) -> Result<(), Box<dyn std::error::E
     let header = gtk::HeaderBar::new();
     header.set_widget_name("cadence-titlebar");
     header.set_show_close_button(false);
-    header.set_title(Some("Cadence"));
 
     let minimize = button("window-minimize-symbolic", "Réduire");
     let maximize = button("window-maximize-symbolic", "Agrandir ou restaurer");
@@ -79,6 +81,50 @@ pub fn attach(window: &tauri::WebviewWindow) -> Result<(), Box<dyn std::error::E
         return Err("failed to attach the Cadence titlebar".into());
     }
     header.show_all();
+    sync_theme(window)?;
+    Ok(())
+}
+
+fn sync_theme(window: &tauri::WebviewWindow) -> tauri::Result<()> {
+    let window_for_webview = window.clone();
+    window.with_webview(move |platform| {
+        let Ok(gtk_window) = window_for_webview.gtk_window() else {
+            return;
+        };
+        let Some(header) = gtk_window
+            .titlebar()
+            .and_then(|widget| widget.downcast::<gtk::HeaderBar>().ok())
+        else {
+            return;
+        };
+        let webview = platform.inner();
+        let weak = webview.downgrade();
+        gtk::glib::timeout_add_local(Duration::from_secs(1), move || {
+            let Some(webview) = weak.upgrade() else {
+                return gtk::glib::ControlFlow::Break;
+            };
+            let header = header.clone();
+            webview.evaluate_javascript(
+                "document.documentElement.classList.contains('dark')",
+                None,
+                None,
+                None::<&webkit2gtk::gio::Cancellable>,
+                move |result| {
+                    if let Ok(value) = result {
+                        if value.is_boolean() {
+                            let context = header.style_context();
+                            if value.to_boolean() {
+                                context.add_class("cadence-dark");
+                            } else {
+                                context.remove_class("cadence-dark");
+                            }
+                        }
+                    }
+                },
+            );
+            gtk::glib::ControlFlow::Continue
+        });
+    })?;
     Ok(())
 }
 

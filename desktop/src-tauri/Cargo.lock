@@ -384,6 +384,7 @@ dependencies = [
  "ashpd",
  "futures-lite",
  "gtk",
+ "javascriptcore-rs",
  "notify-rust",
  "serde",
  "serde_json",
