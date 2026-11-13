@@ -4,6 +4,8 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Now
 
+- Web : sections d'Aujourd'hui par horizons (2026-11-13)
+  Raison : Android range ce qui suit sous la liste du jour en Demain, Cette semaine, Semaine prochaine, Ce mois-ci, Mois prochain, Un jour puis Suggérées (`PlanBoard.todayLater`, 1.27.0) ; la page Aujourd'hui du web n'a que « Suggestions ». Vérif : mêmes sections, mêmes tâches, sans doublon avec la liste du jour, sur le web et le téléphone avec la même base.
 - Android : écran Réglages › À trier (parité de Profil › À trier, 2026-11-12)
   Raison : Android 1.21.0 a retiré Réglages › Résumé, qui portait aussi les réglages d'« À trier » ; le web les a dans Profil › À trier (`GET`/`PUT /api/v1/triage/settings`, `docs/40-triage.md` › Settings). Vérif : cocher un calendrier et couper les propositions de l'IA sur le téléphone ; le web montre les mêmes réglages, et inversement.
 - Retirer l'alias `POST /daily-plan/:date/brief/answers` (2026-11-12)
