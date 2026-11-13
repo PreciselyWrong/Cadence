@@ -204,14 +204,20 @@ internal object PlanBoard {
     }
 
     /**
-     * Écritures d'« Étaler sur 7 jours » sur la page : la charge d'un jour vient de ses lignes du plan (cartes prévues,
-     * terminées comprises ; pas les seulement dues), avec la durée estimée de la tâche, comme le web. Les occurrences virtuelles
-     * d'une série ne se prévoient pas ; une tâche n'est posée qu'une fois.
+     * Écritures d'« Étaler sur 7 jours » (web : `docs/03-upcoming-view.md` › « En retard ») : la charge d'un jour est
+     * chacune de ses lignes de [plan], quels que soient les filtres de l'écran, terminées comprises, comptée à la durée
+     * estimée de sa tâche dans [tasks] (toutes les tâches de l'appareil ; 30 min sans estimation ou tâche inconnue).
+     * Une tâche seulement due ce jour ne compte pas. Les occurrences virtuelles ne se prévoient pas ; une tâche n'est
+     * posée qu'une fois.
      */
-    fun spreadWrites(overdue: List<TaskItem>, days: List<PlanDay>, today: LocalDate): List<PlanEdit> {
-        val planned = days.associate { day -> day.date to (day.open + day.done).filter { it.planned }.map { it.task.estimatedMinutes } }
-        val tasks = overdue.filterNot { it.virtual }.distinctBy { it.uid }
-        return spread(tasks, planned, today).map { (uid, day) -> AddTask(day, uid) }
+    fun spreadWrites(overdue: List<TaskItem>, plan: List<PlanEntry>, tasks: List<TaskItem>, today: LocalDate): List<PlanEdit> {
+        val minutes = tasks.associate { it.uid to it.estimatedMinutes }
+        val last = today.plusDays(SPREAD_DAYS - 1L)
+        val planned = plan.filter { !it.day.isBefore(today) && !it.day.isAfter(last) }
+            .distinctBy { it.day to it.uid }
+            .groupBy({ it.day }, { minutes[it.uid] })
+        val late = overdue.filterNot { it.virtual }.distinctBy { it.uid }
+        return spread(late, planned, today).map { (uid, day) -> AddTask(day, uid) }
     }
 
     private fun spreadMinutes(minutes: Int?): Int = minutes?.takeIf { it > 0 } ?: DEFAULT_MINUTES

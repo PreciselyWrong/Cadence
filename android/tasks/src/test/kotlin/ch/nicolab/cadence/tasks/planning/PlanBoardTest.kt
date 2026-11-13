@@ -166,13 +166,17 @@ class PlanBoardTest {
     }
 
     @Test
-    fun `étaler compte les lignes du plan, pas les tâches seulement dues, et laisse les occurrences virtuelles`() {
-        val plan = listOf(PlanEntry("lourde", today, null, null))
-        val dueOnly = task("due", due = tomorrow, minutes = 300)
-        val tasks = listOf(task("lourde", minutes = 120), dueOnly)
-        val days = PlanBoard.days(tasks, plan, today, emptyList(), mapOf(tomorrow to listOf(dueOnly)), zone)
-        val late = task("retard", due = today.minusDays(3))
+    fun `étaler compte chaque ligne du plan, faites et inconnues comprises, et laisse les occurrences virtuelles`() {
+        // Aujourd'hui : une ligne faite de 120 min ; demain : une ligne d'une tâche absente de l'appareil (30 min) ;
+        // une tâche seulement due après-demain ne compte pas.
+        val plan = listOf(PlanEntry("faite", today, null, 15), PlanEntry("absente", tomorrow, null, null))
+        val tasks = listOf(task("faite", minutes = 120).copy(status = TaskStatus.DONE), task("due", due = today.plusDays(2), minutes = 300))
+        val late = task("retard", due = today.minusDays(3), minutes = 60)
+        val other = task("autre", due = today.minusDays(2))
         val ghost = late.copy(uid = "serie", virtual = true)
-        assertEquals(listOf(AddTask(tomorrow, "retard")), PlanBoard.spreadWrites(listOf(late, ghost), days, today))
+        assertEquals(
+            listOf(AddTask(today.plusDays(2), "retard"), AddTask(today.plusDays(3), "autre")),
+            PlanBoard.spreadWrites(listOf(late, other, ghost), plan, tasks, today),
+        )
     }
 }

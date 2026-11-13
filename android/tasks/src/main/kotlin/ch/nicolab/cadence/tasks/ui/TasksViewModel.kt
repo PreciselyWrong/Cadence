@@ -1009,11 +1009,12 @@ internal class TasksViewModel(
     }
 
     /** « Étaler sur 7 jours » des échues : chacune au jour le moins chargé d'aujourd'hui à J+6, avec « Annuler ». */
-    fun spreadOverdue() {
-        val board = planBoard.value
-        val edits = PlanBoard.spreadWrites(board.overdue, board.days, moment.value.today)
+    fun spreadOverdue() = launchAction {
+        val edits = PlanBoard.spreadWrites(planBoard.value.overdue, planSlots.entries(), repository.observeTasks().first(), moment.value.today)
+        if (edits.isEmpty()) return@launchAction
+        val undo = planEdits.apply(edits)
         val message = getApplication<Application>().resources.getQuantityString(R.plurals.plan_spread_notice, edits.size, edits.size)
-        applyPlan(edits, message)
+        _notices.tryEmit(UndoNotice(message) { launchAction { undo() } })
     }
 
     /** « Retirer l'engagement » d'« À planifier » : semaine et mois effacés, avec « Annuler ». */
