@@ -39,6 +39,13 @@ jest.mock('react-router-dom', () => ({
     useNavigate: () => mockNavigate,
 }));
 
+jest.mock('../../Roadmap/RoadmapChart', () => ({
+    __esModule: true,
+    default: ({ areaUid }: { areaUid: string }) => (
+        <div>roadmap chart for {areaUid}</div>
+    ),
+}));
+
 jest.mock('../../Shared/ShareModal', () => ({
     __esModule: true,
     default: () => null,
@@ -132,6 +139,20 @@ describe('AreaDetails counts', () => {
             screen.getByRole('tab', { name: /Goals\s*2/ })
         ).toBeInTheDocument();
         expect(screen.queryByText('3 tasks')).toBeNull();
+    });
+});
+
+describe('AreaDetails timeline', () => {
+    it('shows the chart for this area on its tab', async () => {
+        renderPage();
+        await screen.findByText('Project one');
+
+        fireEvent.click(screen.getByRole('tab', { name: 'Timeline' }));
+
+        expect(
+            screen.getByText('roadmap chart for areauid1')
+        ).toBeInTheDocument();
+        expect(screen.queryByText('Project one')).not.toBeInTheDocument();
     });
 });
 

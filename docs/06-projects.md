@@ -420,6 +420,7 @@ The project page has four tabs above the tasks: **Tasks** (the list), **Outline*
 - **Highlight the path** marks the chain of blocking tasks that sets the finish (from the linked task that ends last, back through the blocker that ends latest) and shows spare days on open tasks off that chain: days until what they block starts, or until the project's due date.
 - **Colour:** status (default), priority (red, amber, blue) or the first tag's colour. Done tasks, overdue ones and the highlighted path keep their own colours. The choice is remembered per browser.
 - **Scale:** Days, Weeks or Months. A line marks today, dashed lines mark the project's start and due date, and open tasks past their due date are orange.
+- A summary row on top runs from the earliest start to the latest finish of the tasks on the chart, with a diamond on the target date of the project's goal.
 - The chart follows the page's status filter and search.
 
 ## Outline View
@@ -461,6 +462,8 @@ The **Board** tab shows the project's tasks in columns the project defines itsel
 The two `order` calls take the column's cards in order: each listed task gets `section_position` 0, 1, 2... and moves into that column if it was elsewhere, so one call both moves and places a card. Every uid must be a task of the project, listed once (400 otherwise). Cards of the column that are not listed (for example hidden by a filter) keep their position.
 
 Move a task with `PATCH /api/task/:uid` and `{ "section_uid": "<uid>" }`, or `null` for Unsectioned; a section of another project is refused with 400. A task that changes column this way loses its `section_position` and goes to the end of the column.
+
+For every project at once over a quarter, with summary bars and goals, see the [Roadmap](31-roadmap.md).
 
 ## Tasks and Notes in Projects
 

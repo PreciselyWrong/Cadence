@@ -2,6 +2,7 @@ import React from 'react';
 import { Location } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
+    Bars3BottomLeftIcon,
     CalendarDaysIcon,
     ListBulletIcon,
     ClockIcon,
@@ -104,6 +105,12 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
             title: t('sidebar.everyone', 'Everyone'),
             icon: <UsersIcon className="h-[15px] w-[15px]" />,
         },
+        {
+            id: 'roadmap',
+            path: '/roadmap',
+            title: t('sidebar.roadmap', 'Roadmap'),
+            icon: <Bars3BottomLeftIcon className="h-[15px] w-[15px]" />,
+        },
     ];
 
     // Running plugins add an entry each; their page is /plugins/<id>.
@@ -132,7 +139,11 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
         if (path === '/today') {
             return location.pathname.startsWith('/today');
         }
-        if (path === '/calendar' || path === '/everyone') {
+        if (
+            path === '/calendar' ||
+            path === '/everyone' ||
+            path === '/roadmap'
+        ) {
             return location.pathname === path;
         }
         if (path.startsWith('/plugins/')) {

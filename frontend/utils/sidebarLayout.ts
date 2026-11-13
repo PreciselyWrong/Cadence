@@ -5,6 +5,7 @@ export const DEFAULT_LINK_ORDER = [
     'allTasks',
     'assignedToMe',
     'everyone',
+    'roadmap',
 ] as const;
 
 export const DEFAULT_SECTION_ORDER = [

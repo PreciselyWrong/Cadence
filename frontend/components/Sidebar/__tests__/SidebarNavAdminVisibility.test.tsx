@@ -108,6 +108,7 @@ describe('SidebarNav link order and visibility', () => {
             'sidebar-nav-tasks',
             'sidebar-nav-tasks',
             'sidebar-nav-everyone',
+            'sidebar-nav-roadmap',
         ]);
     });
 

@@ -101,6 +101,7 @@ describe('SidebarLayoutEditor', () => {
                 'allTasks',
                 'assignedToMe',
                 'everyone',
+                'roadmap',
             ],
             sectionOrder: [
                 'notes',
@@ -113,7 +114,7 @@ describe('SidebarLayoutEditor', () => {
 
         const ids = renderedIds();
         expect(ids.slice(0, 3)).toEqual(['favorites', 'calendar', 'today']);
-        expect(ids.slice(7, 9)).toEqual(['notes', 'projects']);
+        expect(ids.slice(8, 10)).toEqual(['notes', 'projects']);
     });
 
     it('has a switch on every row that reflects what is visible', () => {
@@ -128,7 +129,7 @@ describe('SidebarLayoutEditor', () => {
         expect(
             screen.getByRole('switch', { name: 'Show Notes' })
         ).toHaveAttribute('aria-checked', 'true');
-        expect(screen.getAllByRole('switch')).toHaveLength(18);
+        expect(screen.getAllByRole('switch')).toHaveLength(19);
     });
 
     it('reports the item when a switch is clicked', () => {
@@ -246,6 +247,7 @@ describe('SidebarLayoutEditor', () => {
                 'allTasks',
                 'assignedToMe',
                 'everyone',
+                'roadmap',
             ]);
         });
 
@@ -309,7 +311,7 @@ describe('SidebarLayoutEditor', () => {
         it('lists each running plugin after the built-in links', () => {
             renderEditor();
 
-            expect(renderedIds().slice(0, 8)).toEqual([
+            expect(renderedIds().slice(0, 9)).toEqual([
                 'favorites',
                 ...DEFAULT_LINK_ORDER,
                 'plugin:hermes',
@@ -346,6 +348,7 @@ describe('SidebarLayoutEditor', () => {
                 'allTasks',
                 'assignedToMe',
                 'everyone',
+                'roadmap',
             ]);
         });
 
@@ -369,6 +372,7 @@ describe('SidebarLayoutEditor', () => {
                 'allTasks',
                 'assignedToMe',
                 'everyone',
+                'roadmap',
                 'plugin:hermes',
             ]);
         });

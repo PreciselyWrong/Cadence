@@ -4,6 +4,8 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Now
 
+- Android : feuille de route trimestrielle (Roadmap) et onglet Chronologie des zones (2026-11-13)
+  Raison : repris de l'amont v2.1.0, web seul : page `/roadmap` (zones, projets, tâches sur un trimestre, objectifs en losange, `GET /api/roadmap`, `docs/31-roadmap.md`) et onglet Chronologie d'une zone. Android n'a ni l'un ni l'autre. Vérif : mêmes barres de résumé et mêmes objectifs sur le web et le téléphone avec le même compte ; textes de l'interface seulement en anglais (clés `roadmap.*`, `sidebar.roadmap` à traduire dans les 25 autres langues).
 - Android : liens « bloque » entre tâches et Chronologie de projet (2026-11-13)
   Raison : le web crée et retire les liens depuis la fiche et la Chronologie (barres hachurées des semaines et mois, `docs/06-projects.md` › Timeline View) ; le serveur pousse les tâches bloquées plus tard pour tous les clients (`docs/00-tasks-behavior.md`), mais Android ne synchronise pas `task_relations` et n'affiche ni « Bloquée » ni les liens. Vérif : lier deux tâches sur le téléphone, la seconde se décale quand la première glisse, et le web montre le même lien.
 - Android : Agenda aux heures visibles, heures de travail en bande (2026-11-13)

@@ -12,6 +12,11 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-13 — Feuille de route trimestrielle (web, reprise de l'amont v2.1.0)
+
+- **Ajout** : page `/roadmap` (entrée « Roadmap » de la barre latérale, réglable dans Profil › Barre latérale) et onglet Chronologie d'une zone : zones, projets et tâches sur un trimestre, objectifs en losange à leur date cible, barres de résumé du premier début au dernier terme.
+- **Android** : à reprendre, voir `TODO.md` › Now. Textes seulement en anglais pour l'instant.
+
 ### 2026-11-13 — Propositions : « Planifier ma semaine » et « Préparer ma revue » (web)
 
 - **Problème** : le bouton ouvrait un chat avec l'agent ; l'attente était incertaine et l'agent se voyait.

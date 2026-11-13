@@ -2,7 +2,7 @@
 
 Moved verbatim from the "This Fork" section of `CLAUDE.md`. Since the rename to Cadence, `CLAUDE.md` is the adapter `@AGENTS.md` and the upstream guide lives in `UPSTREAM-GUIDE.md`; on an upstream merge, keep ours for `CLAUDE.md`, `README.md` and brand strings.
 
-This repository is a fork of [chrisvel/tududi](https://github.com/chrisvel/tududi), branched at `99ef695` and last synced with upstream `eda9aa60` (v1.14.0). It brings the calendar and planning views closer to TickTick while staying mergeable with upstream.
+This repository is a fork of [chrisvel/tududi](https://github.com/chrisvel/tududi), branched at `99ef695` and last synced with upstream `eda9aa60` (v1.14.0), plus a selective pick of v1.15.1 to v2.1.0 on 2026-11-13: security and bug fixes, the Roadmap page (v2.1.0); not taken: the PostgreSQL-only switch of v2.0.0 (Cadence keeps SQLite), the landing site, feedback e-mails, locale updates. It brings the calendar and planning views closer to TickTick while staying mergeable with upstream.
 
 ## What the fork adds
 

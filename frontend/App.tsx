@@ -67,6 +67,7 @@ import TriagePage from './components/Triage/TriagePage';
 import PeopleList from './components/People/PeopleList';
 import PersonDetails from './components/People/PersonDetails';
 import EveryoneDashboard from './components/Everyone/EveryoneDashboard';
+import Roadmap from './components/Roadmap/Roadmap';
 import GroupPage from './components/Groups/GroupPage';
 import Templates from './components/Templates/Templates';
 import { setCurrentUser as setUserInStorage } from './utils/userUtils';
@@ -729,6 +730,7 @@ const App: React.FC = () => {
                                 path="/everyone"
                                 element={<EveryoneDashboard />}
                             />
+                            <Route path="/roadmap" element={<Roadmap />} />
                             <Route
                                 path="/groups/:uid"
                                 element={<GroupPage />}
