@@ -8,6 +8,7 @@ const {
     requireTaskWriteAccess,
 } = require('../middleware/access');
 const service = require('./service');
+const { trackPushes, visiblePushes } = require('../dependencies/push');
 
 const router = express.Router();
 
@@ -53,13 +54,21 @@ router.post(
         try {
             const task = await loadTask(req, res);
             if (!task) return;
-            const relation = await service.createRelation({
-                task,
-                targetUid: req.body?.target_uid,
-                type: req.body?.type,
-                userId: getAuthenticatedUserId(req),
+            const { value: relation, pushed } = await trackPushes(() =>
+                service.createRelation({
+                    task,
+                    targetUid: req.body?.target_uid,
+                    type: req.body?.type,
+                    userId: getAuthenticatedUserId(req),
+                })
+            );
+            res.status(201).json({
+                ...relation,
+                pushed_tasks: await visiblePushes(
+                    pushed,
+                    getAuthenticatedUserId(req)
+                ),
             });
-            res.status(201).json(relation);
         } catch (error) {
             handleError(res, error, 'Error creating task relation:');
         }

@@ -4,12 +4,15 @@ import { Task } from '../../../entities/Task';
 import { Project } from '../../../entities/Project';
 import {
     TaskLink,
+    TimelineDates,
     TimelineItem,
     buildItems,
     buildRange,
     dateOf,
     findPath,
     fromDay,
+    lastDayOfMonth,
+    linkTarget,
     monthLabelFits,
     shiftDates,
     spareDays,
@@ -27,6 +30,9 @@ const ROW_HEIGHT = 40;
 const BAR_HEIGHT = 20;
 const HEADER_HEIGHT = 48;
 const ZOOM_KEY = 'project_timeline_zoom';
+// Hatching marks a bar that stands for a week or a month, not exact dates.
+const HORIZON_HATCH =
+    'repeating-linear-gradient(135deg, rgba(255,255,255,0.45) 0 5px, transparent 5px 10px)';
 const PATH_KEY = 'project_timeline_path';
 const COLOR_KEY = 'project_timeline_color';
 
@@ -55,15 +61,27 @@ interface DragState {
     delta: number;
 }
 
+// A "blocks" link being drawn from a bar's handle, in body coordinates.
+interface LinkDraft {
+    fromUid: string;
+    x0: number;
+    y0: number;
+    x: number;
+    y: number;
+}
+
 interface ProjectTimelineProps {
     project: Project;
     tasks: Task[];
     links: TaskLink[];
-    onDatesChange: (
-        task: Task,
-        dates: { start_date?: string; due_date?: string }
-    ) => Promise<void>;
+    onDatesChange: (task: Task, dates: TimelineDates) => Promise<void>;
     onOpenTask: (task: Task) => void;
+    // Drawing from a bar's handle to another bar: `from` blocks `to`.
+    onLink?: (from: Task, to: Task) => Promise<void>;
+    onUnlink?: (link: TaskLink) => Promise<void>;
+    readOnly?: boolean;
+    // 0 (Sunday) to 6: where a week bar starts.
+    firstDayOfWeek?: number;
     t: TFunction;
     // The app language, for month and day labels.
     language?: string;
@@ -75,6 +93,10 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
     links,
     onDatesChange,
     onOpenTask,
+    onLink,
+    onUnlink,
+    readOnly = false,
+    firstDayOfWeek = 1,
     t,
     language,
 }) => {
@@ -102,6 +124,26 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
     });
     const [drag, setDrag] = useState<DragState | null>(null);
     const [dropDay, setDropDay] = useState<number | null>(null);
+    const bodyRef = useRef<HTMLDivElement>(null);
+    const [linkDraft, setLinkDraft] = useState<LinkDraft | null>(null);
+    const [pickedLink, setPickedLink] = useState<{
+        link: TaskLink;
+        x: number;
+        y: number;
+    } | null>(null);
+    const canLink = !readOnly && !!onLink;
+
+    // Escape drops a link being drawn or the open link menu
+    useEffect(() => {
+        if (!linkDraft && !pickedLink) return;
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key !== 'Escape') return;
+            setLinkDraft(null);
+            setPickedLink(null);
+        };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+    }, [linkDraft, pickedLink]);
 
     const dayW = DAY_WIDTH[zoom];
     const today = todayDay();
@@ -204,7 +246,15 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
         if (!drag || drag.uid !== item.task.uid || drag.delta === 0) {
             return { from: item.from, to: item.to };
         }
-        const next = shiftDates(item, drag.delta, drag.edge);
+        const next = shiftDates(item, drag.delta, drag.edge, firstDayOfWeek);
+        if (item.kind === 'week') {
+            const from = toDay(next.week_of) as number;
+            return { from, to: from + 6 };
+        }
+        if (item.kind === 'month') {
+            const from = toDay(next.month_of) as number;
+            return { from, to: lastDayOfMonth(from) };
+        }
         const start = toDay(next.start_date ?? fromDay(item.start ?? 0));
         const due = toDay(next.due_date ?? fromDay(item.due ?? 0));
         if (item.kind === 'due') return { from: due!, to: due! };
@@ -240,7 +290,48 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
             if (edge === 'move') onOpenTask(item.task);
             return;
         }
-        await onDatesChange(item.task, shiftDates(item, delta, edge));
+        await onDatesChange(
+            item.task,
+            shiftDates(item, delta, edge, firstDayOfWeek)
+        );
+    };
+
+    const bodyPoint = (e: React.PointerEvent) => {
+        const rect = bodyRef.current?.getBoundingClientRect();
+        return rect
+            ? { x: e.clientX - rect.left, y: e.clientY - rect.top }
+            : { x: 0, y: 0 };
+    };
+
+    const startLink = (e: React.PointerEvent, item: TimelineItem) => {
+        if (e.button !== 0 || !item.task.uid) return;
+        e.stopPropagation();
+        (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+        const at = bodyPoint(e);
+        setPickedLink(null);
+        setLinkDraft({ fromUid: item.task.uid, x0: at.x, y0: at.y, ...at });
+    };
+
+    const moveLink = (e: React.PointerEvent) => {
+        if (!linkDraft) return;
+        setLinkDraft({ ...linkDraft, ...bodyPoint(e) });
+    };
+
+    const linkDropTarget = linkDraft
+        ? linkTarget(
+              items,
+              linkDraft.fromUid,
+              Math.floor(linkDraft.y / ROW_HEIGHT)
+          )
+        : null;
+
+    const endLink = async () => {
+        const draft = linkDraft;
+        const target = linkDropTarget;
+        setLinkDraft(null);
+        if (!draft || !target || !onLink) return;
+        const from = items.find((item) => item.task.uid === draft.fromUid);
+        if (from) await onLink(from.task, target.task);
     };
 
     const dayAt = (clientX: number) => {
@@ -310,6 +401,11 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
             return t('projectTimeline.dueOn', 'Due {{date}}', {
                 date: formatDay(item.due),
             });
+        if (item.kind === 'week')
+            return t('projectTimeline.weekOf', 'Week of {{date}}', {
+                date: formatDay(item.from),
+            });
+        if (item.kind === 'month') return monthYear(dateOf(item.from));
         return t('projectTimeline.startsOn', 'Starts {{date}}', {
             date: formatDay(item.start),
         });
@@ -341,9 +437,20 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
                 key: `${link.from_uid}-${link.to_uid}`,
                 d,
                 onPath,
+                link,
             };
         })
-        .filter((a): a is { key: string; d: string; onPath: boolean } => !!a);
+        .filter(
+            (
+                a
+            ): a is {
+                key: string;
+                d: string;
+                onPath: boolean;
+                link: TaskLink;
+            } => !!a
+        );
+    const canUnlink = !readOnly && !!onUnlink;
 
     const bodyHeight = Math.max(items.length, 1) * ROW_HEIGHT;
 
@@ -533,9 +640,13 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
                         </div>
 
                         <div
-                            className="relative"
+                            ref={bodyRef}
+                            className="group/chart relative"
                             style={{ height: bodyHeight }}
-                            onPointerMove={handlePointerMove}
+                            onPointerMove={(e) => {
+                                handlePointerMove(e);
+                                moveLink(e);
+                            }}
                         >
                             {items.map((item, i) => (
                                 <div
@@ -660,6 +771,41 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
                                         />
                                     </marker>
                                 </defs>
+                                {canUnlink &&
+                                    arrows.map((arrow) => (
+                                        <path
+                                            key={`hit-${arrow.key}`}
+                                            data-testid="timeline-link"
+                                            d={arrow.d}
+                                            fill="none"
+                                            stroke="transparent"
+                                            strokeWidth={10}
+                                            className="cursor-pointer"
+                                            style={{ pointerEvents: 'stroke' }}
+                                            onClick={(e) => {
+                                                const rect =
+                                                    bodyRef.current?.getBoundingClientRect();
+                                                if (!rect) return;
+                                                setPickedLink({
+                                                    link: arrow.link,
+                                                    x: e.clientX - rect.left,
+                                                    y: e.clientY - rect.top,
+                                                });
+                                            }}
+                                        />
+                                    ))}
+                                {linkDraft && (
+                                    <line
+                                        x1={linkDraft.x0}
+                                        y1={linkDraft.y0}
+                                        x2={linkDraft.x}
+                                        y2={linkDraft.y}
+                                        stroke="#2563eb"
+                                        strokeWidth={1.5}
+                                        strokeDasharray="4 3"
+                                        markerEnd="url(#timeline-arrow-path)"
+                                    />
+                                )}
                                 {arrows.map((arrow) => (
                                     <path
                                         key={arrow.key}
@@ -702,7 +848,7 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
                                             onPointerUp={() =>
                                                 handlePointerUp(item)
                                             }
-                                            className={`absolute h-3.5 w-3.5 rotate-45 cursor-grab touch-none rounded-sm ${barColors(item)} ${dragging ? 'cursor-grabbing ring-2 ring-blue-300' : ''}`}
+                                            className={`absolute h-3.5 w-3.5 rotate-45 cursor-grab touch-none rounded-sm ${barColors(item)} ${dragging ? 'cursor-grabbing ring-2 ring-blue-300' : ''} ${linkDropTarget?.task.uid === item.task.uid ? 'ring-2 ring-blue-600' : ''}`}
                                             style={{
                                                 backgroundColor:
                                                     customColor(item),
@@ -719,9 +865,20 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
                                             item.kind === 'start'
                                                 ? 'opacity-70'
                                                 : ''
-                                        } ${dragging ? 'ring-2 ring-blue-300' : ''}`}
+                                        } ${dragging ? 'ring-2 ring-blue-300' : ''} ${
+                                            linkDropTarget?.task.uid ===
+                                            item.task.uid
+                                                ? 'ring-2 ring-blue-600'
+                                                : ''
+                                        }`}
+                                        data-kind={item.kind}
                                         style={{
                                             backgroundColor: customColor(item),
+                                            backgroundImage:
+                                                item.kind === 'week' ||
+                                                item.kind === 'month'
+                                                    ? HORIZON_HATCH
+                                                    : undefined,
                                             left: x(from) + 2,
                                             width: Math.max(
                                                 (to - from + 1) * dayW - 4,
@@ -790,6 +947,79 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
                                     </div>
                                 );
                             })}
+
+                            {canLink &&
+                                items.map((item, i) => {
+                                    if (!item.task.uid) return null;
+                                    const { from, to } = previewDates(item);
+                                    const left =
+                                        item.kind === 'due'
+                                            ? x(from) + dayW / 2 + 6
+                                            : x(to + 1) + 1;
+                                    return (
+                                        <span
+                                            key={`l-${item.task.uid}`}
+                                            data-testid="timeline-link-handle"
+                                            title={t(
+                                                'projectTimeline.linkHandle',
+                                                'Drag onto the task that must wait for this one'
+                                            )}
+                                            onPointerDown={(e) =>
+                                                startLink(e, item)
+                                            }
+                                            onPointerUp={endLink}
+                                            onPointerCancel={() =>
+                                                setLinkDraft(null)
+                                            }
+                                            className={`absolute z-10 h-3 w-3 cursor-crosshair touch-none rounded-full border-2 border-blue-600 bg-white transition-opacity dark:bg-gray-900 ${
+                                                linkDraft?.fromUid ===
+                                                item.task.uid
+                                                    ? 'opacity-100'
+                                                    : 'opacity-0 group-hover/chart:opacity-100 [@media(hover:none)]:opacity-100'
+                                            }`}
+                                            style={{
+                                                left,
+                                                top:
+                                                    i * ROW_HEIGHT +
+                                                    ROW_HEIGHT / 2 -
+                                                    6,
+                                            }}
+                                        />
+                                    );
+                                })}
+
+                            {pickedLink && (
+                                <>
+                                    <div
+                                        className="fixed inset-0 z-20"
+                                        onClick={() => setPickedLink(null)}
+                                    />
+                                    <div
+                                        className="absolute z-30 rounded-lg bg-white p-1 shadow-lg ring-1 ring-black/5 dark:bg-gray-800 dark:ring-white/10"
+                                        style={{
+                                            left: pickedLink.x,
+                                            top: pickedLink.y + 6,
+                                        }}
+                                    >
+                                        <button
+                                            type="button"
+                                            autoFocus
+                                            onClick={async () => {
+                                                const { link } = pickedLink;
+                                                setPickedLink(null);
+                                                if (onUnlink)
+                                                    await onUnlink(link);
+                                            }}
+                                            className="whitespace-nowrap rounded-md px-3 py-1.5 text-sm text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/30"
+                                        >
+                                            {t(
+                                                'projectTimeline.removeLink',
+                                                'Remove the link'
+                                            )}
+                                        </button>
+                                    </div>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -838,6 +1068,13 @@ const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
                     <span className="flex items-center gap-1.5">
                         <span className="h-2.5 w-2.5 rotate-45 rounded-sm bg-blue-300 dark:bg-blue-700" />
                         {t('projectTimeline.legendDue', 'Due date only')}
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                        <span
+                            className="h-2.5 w-6 rounded bg-blue-300 dark:bg-blue-700"
+                            style={{ backgroundImage: HORIZON_HATCH }}
+                        />
+                        {t('projectTimeline.legendHorizon', 'Week or month')}
                     </span>
                     <span className="flex items-center gap-1.5">
                         <span className="h-0.5 w-6 bg-slate-400" />

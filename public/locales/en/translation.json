@@ -4883,7 +4883,16 @@
       "nextWeek": "Next week"
     }
   },
+  "dependencies": {
+    "pushed": "Following tasks moved later: {{names}}"
+  },
   "projectTimeline": {
+    "weekOf": "Week of {{date}}",
+    "linkHandle": "Drag onto the task that must wait for this one",
+    "removeLink": "Remove the link",
+    "legendHorizon": "Week or month",
+    "linkError": "Could not link these tasks (already linked, or it would make a loop)",
+    "unlinkError": "Could not remove the link",
     "colorBy": "Colour by",
     "colorByStatus": "Colour: status",
     "colorByPriority": "Colour: priority",

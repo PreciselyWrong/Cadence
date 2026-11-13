@@ -4821,7 +4821,16 @@
       "nextWeek": "Ensi viikko"
     }
   },
+  "dependencies": {
+    "pushed": "Seuraavat tehtävät siirretty: {{names}}"
+  },
   "projectTimeline": {
+    "weekOf": "Viikko {{date}}",
+    "linkHandle": "Vedä tehtävään, jonka on odotettava tätä",
+    "removeLink": "Poista linkki",
+    "legendHorizon": "Viikko tai kuukausi",
+    "linkError": "Tehtäviä ei voitu linkittää (jo linkitetty tai syntyisi silmukka)",
+    "unlinkError": "Linkkiä ei voitu poistaa",
     "colorBy": "Väri",
     "colorByStatus": "Väri: tila",
     "colorByPriority": "Väri: prioriteetti",

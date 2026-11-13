@@ -4827,7 +4827,16 @@
       "nextWeek": "Prossima settimana"
     }
   },
+  "dependencies": {
+    "pushed": "Attività successive posticipate: {{names}}"
+  },
   "projectTimeline": {
+    "weekOf": "Settimana del {{date}}",
+    "linkHandle": "Trascina sull'attività che deve aspettare questa",
+    "removeLink": "Rimuovi il collegamento",
+    "legendHorizon": "Settimana o mese",
+    "linkError": "Impossibile collegare queste attività (già collegate o si creerebbe un ciclo)",
+    "unlinkError": "Impossibile rimuovere il collegamento",
     "colorBy": "Colore per",
     "colorByStatus": "Colore: stato",
     "colorByPriority": "Colore: priorità",

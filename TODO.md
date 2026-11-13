@@ -4,6 +4,8 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Now
 
+- Android : liens « bloque » entre tâches et Chronologie de projet (2026-11-13)
+  Raison : le web crée et retire les liens depuis la fiche et la Chronologie (barres hachurées des semaines et mois, `docs/06-projects.md` › Timeline View) ; le serveur pousse les tâches bloquées plus tard pour tous les clients (`docs/00-tasks-behavior.md`), mais Android ne synchronise pas `task_relations` et n'affiche ni « Bloquée » ni les liens. Vérif : lier deux tâches sur le téléphone, la seconde se décale quand la première glisse, et le web montre le même lien.
 - Android : Agenda aux heures visibles, heures de travail en bande (2026-11-13)
   Raison : le calendrier d'Aujourd'hui du web suit `ui_settings.calendar.visibleHours` (journée entière par défaut) et grise ce qui sort des heures de travail (`planning.dayHours`) ; l'Agenda Android (`agenda/AgendaTimeViews.kt`) dessine toujours 0-24 sans bande. Vérif : mêmes heures et même bande sur le web et le téléphone avec le même compte.
 - Android : panneaux Notes, Objectifs et Habitudes (2026-11-13)

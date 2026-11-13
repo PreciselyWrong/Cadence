@@ -4828,7 +4828,16 @@
       "nextWeek": "Semaine prochaine"
     }
   },
+  "dependencies": {
+    "pushed": "Tâches suivantes décalées : {{names}}"
+  },
   "projectTimeline": {
+    "weekOf": "Semaine du {{date}}",
+    "linkHandle": "Glisser sur la tâche qui doit attendre celle-ci",
+    "removeLink": "Retirer le lien",
+    "legendHorizon": "Semaine ou mois",
+    "linkError": "Impossible de lier ces tâches (déjà liées, ou cela ferait une boucle)",
+    "unlinkError": "Impossible de retirer le lien",
     "colorBy": "Couleur selon",
     "colorByStatus": "Couleur : statut",
     "colorByPriority": "Couleur : priorité",

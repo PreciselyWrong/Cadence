@@ -105,6 +105,8 @@ export interface Task {
     attachments?: Attachment[];
     comments_count?: number;
     is_blocked?: boolean;
+    // Tasks this one blocks that a save pushed later (PATCH response only).
+    pushed_tasks?: { uid: string; name: string }[];
     blocked_by_count?: number;
     habit_mode?: boolean;
     habit_target_count?: number;

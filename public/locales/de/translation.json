@@ -4830,7 +4830,16 @@
       "nextWeek": "Nächste Woche"
     }
   },
+  "dependencies": {
+    "pushed": "Nachfolgende Aufgaben verschoben: {{names}}"
+  },
   "projectTimeline": {
+    "weekOf": "Woche vom {{date}}",
+    "linkHandle": "Auf die Aufgabe ziehen, die auf diese warten muss",
+    "removeLink": "Verknüpfung entfernen",
+    "legendHorizon": "Woche oder Monat",
+    "linkError": "Diese Aufgaben konnten nicht verknüpft werden (schon verknüpft oder es entstünde eine Schleife)",
+    "unlinkError": "Verknüpfung konnte nicht entfernt werden",
     "colorBy": "Färben nach",
     "colorByStatus": "Farbe: Status",
     "colorByPriority": "Farbe: Priorität",

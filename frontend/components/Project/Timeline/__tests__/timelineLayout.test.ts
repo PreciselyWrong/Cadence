@@ -3,6 +3,7 @@ import {
     buildRange,
     findPath,
     fromDay,
+    linkTarget,
     monthLabelFits,
     shiftDates,
     spareDays,
@@ -101,5 +102,56 @@ describe('monthLabelFits', () => {
 
     it('leaves out a label that would run past the right edge', () => {
         expect(monthLabelFits(180, 'déc. 2026', 200)).toBe(false);
+    });
+
+    it('draws a week or a month as a bar over the whole period', () => {
+        const { items, undated } = buildItems([
+            task('week', { week_of: '2026-11-16' }),
+            task('month', { month_of: '2026-12-01' } as Partial<Task>),
+            task('dated', { due_date: '2026-11-18', week_of: '2026-11-30' }),
+        ]);
+        expect(undated).toEqual([]);
+        const byUid = Object.fromEntries(items.map((i) => [i.task.uid, i]));
+        expect(byUid.week).toMatchObject({
+            kind: 'week',
+            from: toDay('2026-11-16'),
+            to: toDay('2026-11-22'),
+        });
+        expect(byUid.month).toMatchObject({
+            kind: 'month',
+            from: toDay('2026-12-01'),
+            to: toDay('2026-12-31'),
+        });
+        // Exact dates win over the week
+        expect(byUid.dated.kind).toBe('due');
+    });
+
+    it('moves a week or a month bar by whole periods', () => {
+        const { items } = buildItems([
+            task('week', { week_of: '2026-11-16' }),
+            task('month', { month_of: '2026-12-01' } as Partial<Task>),
+        ]);
+        const [week, month] = items;
+        // Monday-first weeks: 9 days later lands in the week of the 23rd
+        expect(shiftDates(week, 9, 'move', 1)).toEqual({
+            week_of: '2026-11-23',
+        });
+        expect(shiftDates(week, 2, 'move', 1)).toEqual({
+            week_of: '2026-11-16',
+        });
+        expect(shiftDates(month, 31, 'move', 1)).toEqual({
+            month_of: '2027-01-01',
+        });
+    });
+
+    it('finds the bar a link is dropped on, never the one it starts from', () => {
+        const { items } = buildItems([
+            task('a', { due_date: '2026-11-02' }),
+            task('b', { due_date: '2026-11-03' }),
+        ]);
+        expect(linkTarget(items, 'a', 1)?.task.uid).toBe('b');
+        expect(linkTarget(items, 'a', 0)).toBeNull();
+        expect(linkTarget(items, 'a', 5)).toBeNull();
+        expect(linkTarget(items, 'a', -1)).toBeNull();
     });
 });

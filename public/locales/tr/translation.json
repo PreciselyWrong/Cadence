@@ -4821,7 +4821,16 @@
       "nextWeek": "Gelecek hafta"
     }
   },
+  "dependencies": {
+    "pushed": "Sonraki görevler ertelendi: {{names}}"
+  },
   "projectTimeline": {
+    "weekOf": "{{date}} haftası",
+    "linkHandle": "Bunu beklemesi gereken görevin üzerine sürükleyin",
+    "removeLink": "Bağlantıyı kaldır",
+    "legendHorizon": "Hafta veya ay",
+    "linkError": "Görevler bağlanamadı (zaten bağlı ya da döngü oluşur)",
+    "unlinkError": "Bağlantı kaldırılamadı",
     "colorBy": "Renklendirme",
     "colorByStatus": "Renk: durum",
     "colorByPriority": "Renk: öncelik",

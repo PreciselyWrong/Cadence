@@ -5,6 +5,7 @@ const router = express.Router();
 const attachmentsRouter = require('./attachments');
 const eventsRouter = require('./events');
 const relationsRouter = require('./relations/routes');
+const { trackPushes, visiblePushes } = require('./dependencies/push');
 const orderRouter = require('./order/routes');
 
 const { Task, TaskAttachment, Project } = require('../../models');
@@ -1082,7 +1083,10 @@ router.patch('/task/:uid', patchGuards, idempotency, async (req, res) => {
             return res.status(404).json({ error: 'Task not found.' });
         }
 
-        const taskWithAssociations = await applyTaskPatch(task, req.body, req);
+        // Tasks this one blocks may be pushed later (tasks/dependencies).
+        const { value: taskWithAssociations, pushed } = await trackPushes(() =>
+            applyTaskPatch(task, req.body, req)
+        );
 
         const serializedTask = await serializeTask(
             taskWithAssociations,
@@ -1090,7 +1094,10 @@ router.patch('/task/:uid', patchGuards, idempotency, async (req, res) => {
             { skipDisplayNameTransform: true }
         );
 
-        res.json(serializedTask);
+        res.json({
+            ...serializedTask,
+            pushed_tasks: await visiblePushes(pushed, req.currentUser.id),
+        });
     } catch (error) {
         if (error instanceof PatchRefused) {
             return res.status(error.status).json({ error: error.message });

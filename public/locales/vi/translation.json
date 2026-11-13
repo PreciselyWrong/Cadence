@@ -4821,7 +4821,16 @@
       "nextWeek": "Tuần sau"
     }
   },
+  "dependencies": {
+    "pushed": "Các công việc tiếp theo đã được dời: {{names}}"
+  },
   "projectTimeline": {
+    "weekOf": "Tuần {{date}}",
+    "linkHandle": "Kéo vào công việc phải chờ công việc này",
+    "removeLink": "Gỡ liên kết",
+    "legendHorizon": "Tuần hoặc tháng",
+    "linkError": "Không thể liên kết các công việc này (đã liên kết hoặc sẽ tạo vòng lặp)",
+    "unlinkError": "Không thể gỡ liên kết",
     "colorBy": "Tô màu theo",
     "colorByStatus": "Màu: trạng thái",
     "colorByPriority": "Màu: ưu tiên",

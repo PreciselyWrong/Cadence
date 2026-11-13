@@ -4821,7 +4821,16 @@
       "nextWeek": "Minggu depan"
     }
   },
+  "dependencies": {
+    "pushed": "Tugas berikutnya diundur: {{names}}"
+  },
   "projectTimeline": {
+    "weekOf": "Minggu {{date}}",
+    "linkHandle": "Seret ke tugas yang harus menunggu tugas ini",
+    "removeLink": "Hapus tautan",
+    "legendHorizon": "Minggu atau bulan",
+    "linkError": "Tidak dapat menautkan tugas ini (sudah tertaut atau akan membentuk putaran)",
+    "unlinkError": "Tidak dapat menghapus tautan",
     "colorBy": "Warna berdasarkan",
     "colorByStatus": "Warna: status",
     "colorByPriority": "Warna: prioritas",

@@ -192,7 +192,11 @@ describe('Start date and time', () => {
 
             const fetched = await agent.get(`/api/project/${project.body.uid}`);
             expect(fetched.body.task_links).toEqual([
-                { from_uid: lease.body.uid, to_uid: movers.body.uid },
+                {
+                    uid: linked.body.uid,
+                    from_uid: lease.body.uid,
+                    to_uid: movers.body.uid,
+                },
             ]);
         });
 

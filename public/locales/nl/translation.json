@@ -4821,7 +4821,16 @@
       "nextWeek": "Volgende week"
     }
   },
+  "dependencies": {
+    "pushed": "Volgende taken verschoven: {{names}}"
+  },
   "projectTimeline": {
+    "weekOf": "Week van {{date}}",
+    "linkHandle": "Sleep naar de taak die op deze moet wachten",
+    "removeLink": "Koppeling verwijderen",
+    "legendHorizon": "Week of maand",
+    "linkError": "Kon deze taken niet koppelen (al gekoppeld, of het zou een lus maken)",
+    "unlinkError": "Kon de koppeling niet verwijderen",
     "colorBy": "Kleuren op",
     "colorByStatus": "Kleur: status",
     "colorByPriority": "Kleur: prioriteit",

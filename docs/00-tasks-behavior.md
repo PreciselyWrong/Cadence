@@ -254,6 +254,16 @@ Any task can be linked to another task, in a different project or none, from the
 - Blocked state never hides a task: Today, Upcoming, Next and Inbox are unchanged
 - To list them, open `/tasks?type=all&blocked=true`, or `blocked=false` for tasks with no open blocker. The API (`GET /api/tasks?blocked=true`) and the MCP `list_tasks` tool accept the same filter
 
+### Blocked Tasks Follow Their Blocker
+
+A blocked task is scheduled after what blocks it (finish to start). When a task's dates, week or month change, or when a "blocks" link is made, every open task it blocks that no longer follows it is **pushed later**, and the tasks those block in turn. Nothing is ever pulled earlier: moving a blocker sooner leaves the gap.
+
+- A task's period is its exact dates (start to due, or the one it has), else the week of `week_of`, else the month of `month_of`. Tasks with none of them, done, archived or cancelled tasks and recurring tasks neither push nor get pushed, and the push stops there.
+- Two dated tasks: the blocked one must start the day after the blocker's last day; it moves by that many days and keeps its length and times of day. A dated task that also has a week or a month moves them with its dates.
+- When either side is a week or a month, they are compared at that coarser grain: the blocked task must sit in the week (or month) in which the blocker ends, or later. Sharing a week or a month is fine. A dated task moves by whole weeks (or by the months crossed); a week task goes to the blocker's week (or the first week starting in its month); a month task goes to the blocker's month. Weeks start on the owner's first day of the week.
+- It runs on the server for every write (web, MCP, Android through the sync), and the pushed tasks reach the devices like any other change, the device that moved the blocker included. A device's batch is applied whole before anything is pushed, so a date the same batch gives the blocked task is not lost to the push. A task is pushed even if the person moving its blocker cannot edit it: the link was made by someone who could edit both. A chain never visits a task twice.
+- `PATCH /api/task/:uid` and `POST /api/task/:uid/relations` return `pushed_tasks: [{ uid, name }]`, only the tasks the caller can read; the web says which tasks moved in a toast and refreshes them on the open page. Rule: `backend/modules/tasks/dependencies/core/schedule.js`, hook: `dependencies/push.js`.
+
 ### API
 
 - `GET /api/task/:uid/relations`

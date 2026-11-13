@@ -4869,7 +4869,16 @@
       "nextWeek": "الأسبوع القادم"
     }
   },
+  "dependencies": {
+    "pushed": "تم تأجيل المهام التالية: {{names}}"
+  },
   "projectTimeline": {
+    "weekOf": "أسبوع {{date}}",
+    "linkHandle": "اسحب إلى المهمة التي يجب أن تنتظر هذه",
+    "removeLink": "إزالة الرابط",
+    "legendHorizon": "أسبوع أو شهر",
+    "linkError": "تعذّر ربط هذه المهام (مرتبطة بالفعل أو سينتج عن ذلك حلقة)",
+    "unlinkError": "تعذّرت إزالة الرابط",
     "colorBy": "التلوين حسب",
     "colorByStatus": "اللون: الحالة",
     "colorByPriority": "اللون: الأولوية",

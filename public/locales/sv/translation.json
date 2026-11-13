@@ -4821,7 +4821,16 @@
       "nextWeek": "Nästa vecka"
     }
   },
+  "dependencies": {
+    "pushed": "Efterföljande uppgifter flyttade: {{names}}"
+  },
   "projectTimeline": {
+    "weekOf": "Vecka från {{date}}",
+    "linkHandle": "Dra till uppgiften som måste vänta på den här",
+    "removeLink": "Ta bort länken",
+    "legendHorizon": "Vecka eller månad",
+    "linkError": "Kunde inte länka uppgifterna (redan länkade, eller det skulle bli en slinga)",
+    "unlinkError": "Kunde inte ta bort länken",
     "colorBy": "Färg efter",
     "colorByStatus": "Färg: status",
     "colorByPriority": "Färg: prioritet",

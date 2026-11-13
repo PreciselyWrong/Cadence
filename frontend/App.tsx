@@ -16,6 +16,7 @@ const NoteRedirect: React.FC = () => {
 };
 import { useTranslation } from 'react-i18next';
 import { useToast } from './components/Shared/ToastContext';
+import TasksPushedToast from './components/Task/TasksPushedToast';
 import Login from './components/Login';
 import Register from './components/Register';
 import ForgotPassword from './components/Auth/ForgotPassword';
@@ -449,6 +450,7 @@ const App: React.FC = () => {
     return (
         <Suspense fallback={<LoadingComponent />}>
             <RecurringScopeDialogHost />
+            <TasksPushedToast />
             <Routes>
                 {/* Reachable signed in or out: a browser that already has a
                     session can still open a member's link. */}

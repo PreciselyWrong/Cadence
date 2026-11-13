@@ -4893,7 +4893,16 @@
       "nextWeek": "Następny tydzień"
     }
   },
+  "dependencies": {
+    "pushed": "Kolejne zadania przesunięte: {{names}}"
+  },
   "projectTimeline": {
+    "weekOf": "Tydzień od {{date}}",
+    "linkHandle": "Przeciągnij na zadanie, które musi poczekać na to",
+    "removeLink": "Usuń powiązanie",
+    "legendHorizon": "Tydzień lub miesiąc",
+    "linkError": "Nie można powiązać tych zadań (już powiązane lub powstałaby pętla)",
+    "unlinkError": "Nie można usunąć powiązania",
     "colorBy": "Kolor według",
     "colorByStatus": "Kolor: status",
     "colorByPriority": "Kolor: priorytet",

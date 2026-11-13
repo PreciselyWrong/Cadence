@@ -4821,7 +4821,16 @@
       "nextWeek": "다음 주"
     }
   },
+  "dependencies": {
+    "pushed": "다음 작업이 미뤄졌습니다: {{names}}"
+  },
   "projectTimeline": {
+    "weekOf": "{{date}} 주",
+    "linkHandle": "이 작업을 기다려야 하는 작업 위로 끌어 놓으세요",
+    "removeLink": "링크 제거",
+    "legendHorizon": "주 또는 월",
+    "linkError": "작업을 연결할 수 없습니다(이미 연결되었거나 순환이 생깁니다)",
+    "unlinkError": "링크를 제거할 수 없습니다",
     "colorBy": "색상 기준",
     "colorByStatus": "색상: 상태",
     "colorByPriority": "색상: 우선순위",

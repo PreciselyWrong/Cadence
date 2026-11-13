@@ -41,7 +41,11 @@ import {
     saveTaskOrder,
     toggleTaskCompletion,
     updateTask,
+    createTaskRelation,
+    deleteTaskRelation,
 } from '../../utils/tasksService';
+import { getFirstDayOfWeek } from '../../utils/profileService';
+import type { TaskLink, TimelineDates } from './Timeline/timelineLayout';
 import { mergeUpdatedTaskList } from '../../utils/taskUpdateMerge';
 import { rescanTodoMd } from '../../utils/todoMdService';
 import { isTodoMdProject } from '../../utils/todoMd';
@@ -313,14 +317,52 @@ const ProjectDetails: React.FC = () => {
         loadProjectData();
     }, [uidSlug, reloadKey]);
 
+    // Where a week bar of the timeline starts (Profile > first day).
+    const [firstDayOfWeek, setFirstDayOfWeek] = useState(1);
+    useEffect(() => {
+        getFirstDayOfWeek()
+            .then(setFirstDayOfWeek)
+            .catch(() => undefined);
+    }, []);
+
+    // Linking two bars of the timeline: `from` blocks `to`. The server may
+    // push `to` (and what follows it) later, so the chart is read again.
+    const handleTaskLink = async (from: Task, to: Task) => {
+        if (!from.uid || !to.uid) return;
+        try {
+            await createTaskRelation(from.uid, to.uid, 'blocks');
+        } catch {
+            showErrorToast(
+                t(
+                    'projectTimeline.linkError',
+                    'Could not link these tasks (already linked, or it would make a loop)'
+                )
+            );
+            return;
+        }
+        await reloadProject();
+    };
+
+    const handleTaskUnlink = async (link: TaskLink) => {
+        if (!link.uid) return;
+        try {
+            await deleteTaskRelation(link.from_uid, link.uid, link.to_uid);
+        } catch {
+            showErrorToast(
+                t('projectTimeline.unlinkError', 'Could not remove the link')
+            );
+            return;
+        }
+        await reloadProject();
+    };
+
     // Moving a bar on the timeline. Times of day are kept: sending a date
     // alone would turn a timed start or due into a whole-day one.
-    const handleTaskDatesChange = async (
-        task: Task,
-        dates: { start_date?: string; due_date?: string }
-    ) => {
+    const handleTaskDatesChange = async (task: Task, dates: TimelineDates) => {
         if (!task.uid) return;
-        const payload: Partial<Task> = { ...dates };
+        const payload: Partial<Task> & {
+            month_of?: string;
+        } = { ...dates };
         if (dates.start_date && task.start_time)
             payload.start_time = task.start_time;
         if (dates.due_date && task.due_has_time && task.due_time)
@@ -337,10 +379,15 @@ const ProjectDetails: React.FC = () => {
                               due_date: saved.due_date,
                               due_time: saved.due_time ?? null,
                               due_has_time: saved.due_has_time,
+                              week_of: saved.week_of ?? null,
+                              month_of:
+                                  (saved as Task & { month_of?: string | null })
+                                      .month_of ?? null,
                           }
                         : item
                 )
             );
+            if (saved.pushed_tasks?.length) await reloadProject();
         } catch {
             showErrorToast(
                 t('projectTimeline.saveError', 'Could not move the task')
@@ -1306,6 +1353,10 @@ const ProjectDetails: React.FC = () => {
                                         links={project.task_links || []}
                                         onDatesChange={handleTaskDatesChange}
                                         onOpenTask={openTaskInSheet}
+                                        onLink={handleTaskLink}
+                                        onUnlink={handleTaskUnlink}
+                                        readOnly={project.access_level === 'ro'}
+                                        firstDayOfWeek={firstDayOfWeek}
                                         t={t}
                                         language={i18n.language}
                                     />

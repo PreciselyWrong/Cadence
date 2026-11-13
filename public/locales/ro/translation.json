@@ -4835,7 +4835,16 @@
       "nextWeek": "Săptămâna viitoare"
     }
   },
+  "dependencies": {
+    "pushed": "Sarcinile următoare au fost amânate: {{names}}"
+  },
   "projectTimeline": {
+    "weekOf": "Săptămâna din {{date}}",
+    "linkHandle": "Trage pe sarcina care trebuie să o aștepte pe aceasta",
+    "removeLink": "Elimină legătura",
+    "legendHorizon": "Săptămână sau lună",
+    "linkError": "Sarcinile nu au putut fi legate (deja legate sau s-ar crea o buclă)",
+    "unlinkError": "Legătura nu a putut fi eliminată",
     "colorBy": "Culoare după",
     "colorByStatus": "Culoare: stare",
     "colorByPriority": "Culoare: prioritate",

@@ -4827,7 +4827,16 @@
       "nextWeek": "Próxima semana"
     }
   },
+  "dependencies": {
+    "pushed": "Tarefas seguintes adiadas: {{names}}"
+  },
   "projectTimeline": {
+    "weekOf": "Semana de {{date}}",
+    "linkHandle": "Arraste para a tarefa que deve esperar por esta",
+    "removeLink": "Remover a ligação",
+    "legendHorizon": "Semana ou mês",
+    "linkError": "Não foi possível ligar estas tarefas (já ligadas ou criaria um ciclo)",
+    "unlinkError": "Não foi possível remover a ligação",
     "colorBy": "Cor por",
     "colorByStatus": "Cor: status",
     "colorByPriority": "Cor: prioridade",

@@ -62,7 +62,7 @@ export interface Project {
     start_date?: string | null;
     start_time?: string | null;
     // "blocks" links between this project's tasks, for the timeline
-    task_links?: { from_uid: string; to_uid: string }[];
+    task_links?: { uid?: string; from_uid: string; to_uid: string }[];
     image_url?: string;
     color?: string;
     // Id from the icon set shared with Android (constants/entityIcons.ts).

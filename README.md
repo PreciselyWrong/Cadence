@@ -120,7 +120,7 @@ Cadence builds on [chrisvel/tududi](https://github.com/chrisvel/tududi) (last sy
 
 |              | Upstream                | This fork                                                                                                                       |
 | ------------ | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| Timeline     | Bars coloured by status | Also **colour by priority or tag**                                                                                              |
+| Timeline     | Bars coloured by status | Also **colour by priority or tag**; **links drawn between bars**, week and month bars; a blocked task is **pushed later** when its blocker slips (day, week or month) |
 | Sub-projects | Flat list of projects   | **Sub-projects**, any depth; a sub-project takes its parent's area; listed on the parent page, indented in the list and sidebar |
 | Stash | Statuses not started, planned, in progress, waiting, done, cancelled | **En pause** and **archived** statuses; the **Stash** is the paused filter with an "N active · N in the stash" counter, and the same grouping on Android. [Docs](docs/06-projects.md) |
 | Next action | — | Pick **one next action** per project (row menu); shown on the project page and cards, and the only suggestion Today makes for that project. On Android too |

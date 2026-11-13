@@ -10,6 +10,7 @@ const {
 const { serializeRow } = require('./serialize');
 const hlc = require('./hlc');
 const { runWithOp } = require('./context');
+const { deferPushes } = require('../tasks/dependencies/push');
 const { applyOccurrence } = require('./occurrences');
 const { runExclusive } = require('./rowMutex');
 const { purgedThrough } = require('./compaction');
@@ -490,6 +491,10 @@ async function applyOp(userId, op) {
 // one bad op is answered as rejected without stopping the batch. Ops on the
 // same row from parallel pushes wait for each other.
 async function push(userId, ops) {
+    return deferPushes(() => pushBatch(userId, ops), models().Task);
+}
+
+async function pushBatch(userId, ops) {
     const results = [];
     for (const op of ops) {
         const opId = op && op.op_id;

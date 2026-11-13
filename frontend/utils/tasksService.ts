@@ -147,6 +147,7 @@ export const updateTask = async (
     await handleAuthResponse(response, 'Failed to update task.');
     const updated = await response.json();
     refreshTagCountsIfTagsChanged(taskData);
+    notifyTasksPushed(updated.pushed_tasks);
     return updated;
 };
 
@@ -387,6 +388,22 @@ export const fetchTaskNextIterations = async (
     return result.iterations || [];
 };
 
+// Moving a task, or linking it, can push the tasks it blocks later
+// (backend tasks/dependencies); the app tells the user which ones moved.
+export const TASKS_PUSHED_EVENT = 'cadence:tasks-pushed';
+
+export interface PushedTask {
+    uid: string;
+    name: string;
+}
+
+const notifyTasksPushed = (pushed: PushedTask[] | undefined) => {
+    if (!pushed || pushed.length === 0) return;
+    window.dispatchEvent(
+        new CustomEvent<PushedTask[]>(TASKS_PUSHED_EVENT, { detail: pushed })
+    );
+};
+
 // A relation changes the blocked state of both tasks, so task rows listen for
 // this to refresh their badge without a page reload.
 export const TASK_RELATIONS_CHANGED_EVENT = 'taskRelationsChanged';
@@ -438,6 +455,7 @@ export const createTaskRelation = async (
     await handleAuthResponse(response, 'Failed to add relation.');
     const relation = await response.json();
     notifyTaskRelationsChanged([taskUid, targetUid]);
+    notifyTasksPushed(relation.pushed_tasks);
     return relation;
 };
 

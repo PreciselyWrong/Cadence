@@ -2,6 +2,8 @@ import { Task } from '../../../entities/Task';
 import { isTaskDone } from '../../../constants/taskStatus';
 
 export interface TaskLink {
+    // The relation's own uid, to remove it
+    uid?: string;
     from_uid: string;
     to_uid: string;
 }
@@ -14,8 +16,18 @@ export interface TimelineItem {
     // First and last day the bar covers
     from: number;
     to: number;
-    kind: 'range' | 'due' | 'start';
+    // A week or a month is a horizon (week_of, month_of): the bar covers
+    // the whole period and moves by whole weeks or months.
+    kind: 'range' | 'due' | 'start' | 'week' | 'month';
     done: boolean;
+}
+
+// What a moved bar sends back: exact dates, or a week or month start.
+export interface TimelineDates {
+    start_date?: string;
+    due_date?: string;
+    week_of?: string;
+    month_of?: string;
 }
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -54,8 +66,27 @@ export const dateOf = (day: number): Date => {
     );
 };
 
-// Splits tasks into ones with a start or due date (sorted by when they
-// begin) and ones without any date.
+export const lastDayOfMonth = (day: number): number => {
+    const date = new Date(day * DAY_MS);
+    return (
+        Math.round(
+            Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + 1, 1) / DAY_MS
+        ) - 1
+    );
+};
+
+const firstDayOfMonth = (day: number): number => {
+    const date = new Date(day * DAY_MS);
+    return Math.round(
+        Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1) / DAY_MS
+    );
+};
+
+const weekStartDay = (day: number, firstDayOfWeek: number): number =>
+    day - ((weekdayOf(day) - firstDayOfWeek + 7) % 7);
+
+// Splits tasks into ones with a start or due date, a week or a month
+// (sorted by when they begin) and ones with none of them.
 export const buildItems = (
     tasks: Task[]
 ): { items: TimelineItem[]; undated: Task[] } => {
@@ -67,7 +98,34 @@ export const buildItems = (
         const due = toDay(task.due_date);
         const done = isTaskDone(task.status);
         if (start === null && due === null) {
-            undated.push(task);
+            const week = toDay(task.week_of);
+            const month = toDay(
+                (task as Task & { month_of?: string | null }).month_of
+            );
+            if (week !== null) {
+                items.push({
+                    task,
+                    start,
+                    due,
+                    from: week,
+                    to: week + 6,
+                    kind: 'week',
+                    done,
+                });
+            } else if (month !== null) {
+                const from = firstDayOfMonth(month);
+                items.push({
+                    task,
+                    start,
+                    due,
+                    from,
+                    to: lastDayOfMonth(from),
+                    kind: 'month',
+                    done,
+                });
+            } else {
+                undated.push(task);
+            }
             return;
         }
         if (start !== null && due !== null) {
@@ -211,12 +269,22 @@ export const spareDays = (
 };
 
 // New start/due after dragging a bar by `delta` days. `edge` picks which
-// end moves; a plain move shifts both.
+// end moves; a plain move shifts both. A week or a month lands on the
+// period holding the day it was dragged to.
 export const shiftDates = (
     item: TimelineItem,
     delta: number,
-    edge: 'move' | 'start' | 'end'
-): { start_date?: string; due_date?: string } => {
+    edge: 'move' | 'start' | 'end',
+    firstDayOfWeek = 1
+): TimelineDates => {
+    if (item.kind === 'week') {
+        return {
+            week_of: fromDay(weekStartDay(item.from + delta, firstDayOfWeek)),
+        };
+    }
+    if (item.kind === 'month') {
+        return { month_of: fromDay(firstDayOfMonth(item.from + delta)) };
+    }
     if (item.kind === 'due') {
         return { due_date: fromDay((item.due as number) + delta) };
     }
@@ -235,6 +303,16 @@ export const shiftDates = (
         start_date: fromDay(start + delta),
         due_date: fromDay(due + delta),
     };
+};
+
+// The bar a link drawn from `fromUid` is dropped on, by row, or null.
+export const linkTarget = (
+    items: TimelineItem[],
+    fromUid: string,
+    row: number
+): TimelineItem | null => {
+    const item = Number.isInteger(row) ? items[row] : undefined;
+    return item && item.task.uid && item.task.uid !== fromUid ? item : null;
 };
 
 // A month label fits when its text ends inside the chart. The label at the

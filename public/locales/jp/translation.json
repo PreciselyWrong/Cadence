@@ -4821,7 +4821,16 @@
       "nextWeek": "来週"
     }
   },
+  "dependencies": {
+    "pushed": "後続のタスクを延期しました: {{names}}"
+  },
   "projectTimeline": {
+    "weekOf": "{{date}} の週",
+    "linkHandle": "このタスクを待つ必要があるタスクにドラッグ",
+    "removeLink": "リンクを削除",
+    "legendHorizon": "週または月",
+    "linkError": "タスクをリンクできませんでした（既にリンク済み、またはループになります）",
+    "unlinkError": "リンクを削除できませんでした",
     "colorBy": "色分け",
     "colorByStatus": "色: ステータス",
     "colorByPriority": "色: 優先度",

@@ -4821,7 +4821,16 @@
       "nextWeek": "下周"
     }
   },
+  "dependencies": {
+    "pushed": "后续任务已顺延：{{names}}"
+  },
   "projectTimeline": {
+    "weekOf": "{{date}} 那一周",
+    "linkHandle": "拖到必须等待此任务的任务上",
+    "removeLink": "移除链接",
+    "legendHorizon": "周或月",
+    "linkError": "无法链接这些任务（已链接，或会形成循环）",
+    "unlinkError": "无法移除链接",
     "colorBy": "颜色依据",
     "colorByStatus": "颜色：状态",
     "colorByPriority": "颜色：优先级",

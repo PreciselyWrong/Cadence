@@ -4897,7 +4897,16 @@
       "nextWeek": "Naslednji teden"
     }
   },
+  "dependencies": {
+    "pushed": "Naslednja opravila prestavljena: {{names}}"
+  },
   "projectTimeline": {
+    "weekOf": "Teden od {{date}}",
+    "linkHandle": "Povlecite na opravilo, ki mora počakati na to",
+    "removeLink": "Odstrani povezavo",
+    "legendHorizon": "Teden ali mesec",
+    "linkError": "Opravil ni bilo mogoče povezati (že povezana ali bi nastala zanka)",
+    "unlinkError": "Povezave ni bilo mogoče odstraniti",
     "colorBy": "Barva po",
     "colorByStatus": "Barva: stanje",
     "colorByPriority": "Barva: prioriteta",

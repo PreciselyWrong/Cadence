@@ -3,6 +3,7 @@ const { Task, TaskRelation, sequelize } = require('../../../models');
 const permissionsService = require('../../../services/permissionsService');
 const { logEvent } = require('../taskEventService');
 const { logError } = require('../../../services/logService');
+const { pushAfter } = require('../dependencies/push');
 
 const { ACCESS } = permissionsService;
 
@@ -75,8 +76,8 @@ async function getBlockedCountMap(taskIds) {
     return counts;
 }
 
-// "blocks" links where both tasks are in the given set, as uid pairs. The
-// project timeline draws these as arrows.
+// "blocks" links where both tasks are in the given set, as uid pairs with
+// the link's own uid. The project timeline draws these as arrows.
 async function getBlockLinks(tasks) {
     const uidById = new Map((tasks || []).map((task) => [task.id, task.uid]));
     if (uidById.size === 0) return [];
@@ -88,10 +89,11 @@ async function getBlockLinks(tasks) {
             source_task_id: { [Op.in]: ids },
             target_task_id: { [Op.in]: ids },
         },
-        attributes: ['source_task_id', 'target_task_id'],
+        attributes: ['uid', 'source_task_id', 'target_task_id'],
         raw: true,
     });
     return rows.map((row) => ({
+        uid: row.uid,
         from_uid: uidById.get(row.source_task_id),
         to_uid: uidById.get(row.target_task_id),
     }));
@@ -311,6 +313,7 @@ async function createRelation({ task, targetUid, type, userId }) {
         relation_type: storedType,
         created_by_user_id: userId,
     });
+    if (storedType === 'blocks') await pushAfter(source, target);
 
     await logRelationEvent('relation_added', userId, [
         { task, relationType: type, otherUid: targetTask.uid },

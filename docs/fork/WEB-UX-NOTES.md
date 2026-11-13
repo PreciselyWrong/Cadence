@@ -18,6 +18,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 - **Décision** : le bouton lance la demande en fond et affiche son état (« En préparation… », puis « Ta semaine est prête »). La fenêtre est native : une phrase de synthèse, les questions en puces, les changements par jour avec une case chacun (cochée par défaut), puis « Appliquer (N) », « Répondre », « Plus tard », « Ignorer ». Rien ne change avant « Appliquer ». La revue rapide s'ouvre avec le choix de l'agent présélectionné et sa raison ; une touche valide.
 - **Android à reprendre** : vérifier que la feuille Android a les mêmes libellés, le même ordre des groupes (jours, « Cette semaine », « Plus tard », « À abandonner ») et la même touche Entrée (applique) que le web.
 
+### 2026-11-13 — Chronologie de projet : liens et décalage en cascade (web)
+
+- **Problème** : la Chronologie (Gantt) dessinait les liens « bloque » sans permettre d'en créer, ignorait les tâches planifiées à la semaine ou au mois, et déplacer une tâche ne déplaçait pas celles qui l'attendent.
+- **Décision** : glisser le point au bout d'une barre sur une autre tâche crée le lien (la première bloque la seconde) ; cliquer une flèche propose « Retirer le lien ». Une tâche à la semaine ou au mois sans dates est une barre hachurée sur toute la période, déplacée par semaines ou mois entiers. Le serveur pousse plus tard toute tâche bloquée qui ne suit plus son bloqueur (au jour, à la semaine ou au mois, `docs/00-tasks-behavior.md`), jamais plus tôt ; un toast nomme les tâches décalées, sur toutes les pages. Terminer une tâche bloquée reste possible après confirmation.
+- **Android à reprendre** : le décalage arrive déjà par la synchro. L'app n'a ni les liens entre tâches ni la Chronologie : `TODO.md` › Now.
+
 ### 2026-11-13 — Aujourd'hui : la grille suit les heures visibles (web)
 
 - **Problème** : le calendrier d'Aujourd'hui ne dessinait que la journée de travail (`day_hours`, 08:00-18:00 par défaut) : impossible de voir ou de déposer une tâche avant ou après, et le réglage « Heures visibles » du calendrier ne s'appliquait pas ici.

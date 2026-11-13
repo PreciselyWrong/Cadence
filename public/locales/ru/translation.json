@@ -4893,7 +4893,16 @@
       "nextWeek": "Следующая неделя"
     }
   },
+  "dependencies": {
+    "pushed": "Следующие задачи перенесены: {{names}}"
+  },
   "projectTimeline": {
+    "weekOf": "Неделя с {{date}}",
+    "linkHandle": "Перетащите на задачу, которая должна ждать эту",
+    "removeLink": "Удалить связь",
+    "legendHorizon": "Неделя или месяц",
+    "linkError": "Не удалось связать задачи (уже связаны или получится цикл)",
+    "unlinkError": "Не удалось удалить связь",
     "colorBy": "Цвет по",
     "colorByStatus": "Цвет: статус",
     "colorByPriority": "Цвет: приоритет",

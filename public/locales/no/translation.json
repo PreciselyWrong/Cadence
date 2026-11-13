@@ -4826,7 +4826,16 @@
       "nextWeek": "Neste uke"
     }
   },
+  "dependencies": {
+    "pushed": "Etterfølgende oppgaver flyttet: {{names}}"
+  },
   "projectTimeline": {
+    "weekOf": "Uke fra {{date}}",
+    "linkHandle": "Dra til oppgaven som må vente på denne",
+    "removeLink": "Fjern koblingen",
+    "legendHorizon": "Uke eller måned",
+    "linkError": "Kunne ikke koble oppgavene (allerede koblet, eller det ville gi en løkke)",
+    "unlinkError": "Kunne ikke fjerne koblingen",
     "colorBy": "Farge etter",
     "colorByStatus": "Farge: status",
     "colorByPriority": "Farge: prioritet",

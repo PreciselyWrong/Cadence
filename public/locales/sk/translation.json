@@ -5021,7 +5021,16 @@
       "nextWeek": "Budúci týždeň"
     }
   },
+  "dependencies": {
+    "pushed": "Nasledujúce úlohy posunuté: {{names}}"
+  },
   "projectTimeline": {
+    "weekOf": "Týždeň od {{date}}",
+    "linkHandle": "Presuňte na úlohu, ktorá musí počkať na túto",
+    "removeLink": "Odstrániť prepojenie",
+    "legendHorizon": "Týždeň alebo mesiac",
+    "linkError": "Úlohy sa nepodarilo prepojiť (už prepojené alebo by vznikla slučka)",
+    "unlinkError": "Prepojenie sa nepodarilo odstrániť",
     "colorBy": "Farba podľa",
     "colorByStatus": "Farba: stav",
     "colorByPriority": "Farba: priorita",

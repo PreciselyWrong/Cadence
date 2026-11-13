@@ -780,6 +780,12 @@ require('../modules/sync/journal').install({
 
 require('../modules/projects/nextAction').install({ Task, Project });
 
+require('../modules/tasks/dependencies/push').install({
+    Task,
+    TaskRelation,
+    User,
+});
+
 module.exports = {
     sequelize,
     User,
