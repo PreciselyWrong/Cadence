@@ -78,6 +78,20 @@ class PlanCommitmentsTest {
     }
 
     @Test
+    fun `tout planifié - la section est vide, dès la dernière tâche posée`() {
+        val tasks = listOf(
+            task("passee").copy(weekOf = weekStart.minusDays(7)),
+            task("semaine").copy(weekOf = weekStart),
+            task("mois").copy(monthOf = november),
+        )
+        val partly = listOf(PlanEntry("semaine", today, null, null), PlanEntry("mois", today.plusDays(1), null, null))
+        assertFalse(schedule(tasks, partly).isEmpty)
+        val all = partly + PlanEntry("passee", today.plusDays(2), null, null)
+        assertTrue(schedule(tasks, all).isEmpty)
+        assertTrue(schedule(emptyList()).isEmpty)
+    }
+
+    @Test
     fun `retirer l'engagement efface la semaine et le mois posés`() {
         assertEquals(TaskChange(clearWeek = true), PlanBoard.dropCommitment(task("t").copy(weekOf = weekStart)))
         assertEquals(
