@@ -28,6 +28,44 @@ interface ChipPopoverProps {
 const FOCUSABLE =
     'input, button:not([disabled]), select, textarea, [tabindex]:not([tabindex="-1"])';
 
+const VIEWPORT_MARGIN = 8;
+const ANCHOR_GAP = 6;
+
+export interface PopoverPlacement {
+    top: number;
+    left: number;
+    // Set when the popover does not fit on either side: it scrolls instead
+    maxHeight?: number;
+}
+
+// Places a popover next to its anchor, inside the viewport: below by default,
+// above when only the top side has room, and capped to the room left (it
+// scrolls) when neither side fits. Pure, so the rule can be tested alone.
+export function placePopover(
+    anchor: { top: number; bottom: number; left: number },
+    size: { width: number; height: number },
+    viewport: { width: number; height: number }
+): PopoverPlacement {
+    const spaceBelow =
+        viewport.height - anchor.bottom - ANCHOR_GAP - VIEWPORT_MARGIN;
+    const spaceAbove = anchor.top - ANCHOR_GAP - VIEWPORT_MARGIN;
+    const openUpward = size.height > spaceBelow && spaceAbove > spaceBelow;
+    const room = Math.max(0, openUpward ? spaceAbove : spaceBelow);
+    const height = Math.min(size.height, room);
+    const width = Math.min(size.width, viewport.width - 2 * VIEWPORT_MARGIN);
+    const rawTop = openUpward
+        ? anchor.top - ANCHOR_GAP - height
+        : anchor.bottom + ANCHOR_GAP;
+    return {
+        top: Math.max(VIEWPORT_MARGIN, rawTop),
+        left: Math.min(
+            Math.max(VIEWPORT_MARGIN, anchor.left),
+            viewport.width - width - VIEWPORT_MARGIN
+        ),
+        maxHeight: room < size.height ? room : undefined,
+    };
+}
+
 // A small popover anchored to a chip. It portals to the body above the task
 // panel (z-[60]) and carries data-portal-menu, so the panel knows a menu is
 // open: Escape and an outside click then close the popover, not the panel.
@@ -39,7 +77,10 @@ const ChipPopover: React.FC<ChipPopoverProps> = ({
     widthClass = 'w-72',
 }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [position, setPosition] = useState({ top: 0, left: 0 });
+    const [position, setPosition] = useState<PopoverPlacement>({
+        top: 0,
+        left: 0,
+    });
     const triggerRef = useRef<HTMLButtonElement>(null);
     const popoverRef = useRef<HTMLDivElement>(null);
     const wasOpen = useRef(false);
@@ -49,23 +90,19 @@ const ChipPopover: React.FC<ChipPopoverProps> = ({
     const close = useCallback(() => setIsOpen(false), []);
 
     useLayoutEffect(() => {
-        if (!isOpen || !triggerRef.current) return;
-        const rect = triggerRef.current.getBoundingClientRect();
-        const height = popoverRef.current?.offsetHeight ?? 320;
-        const width = popoverRef.current?.offsetWidth ?? 288;
-        const openUpward =
-            window.innerHeight - rect.bottom < height + 8 &&
-            rect.top > height + 8;
-        setPosition({
-            top: Math.max(
-                8,
-                openUpward ? rect.top - height - 6 : rect.bottom + 6
-            ),
-            left: Math.max(
-                8,
-                Math.min(rect.left, window.innerWidth - width - 8)
-            ),
-        });
+        const popover = popoverRef.current;
+        if (!isOpen || !triggerRef.current || !popover) return;
+        setPosition(
+            placePopover(
+                triggerRef.current.getBoundingClientRect(),
+                {
+                    width: popover.offsetWidth,
+                    // Natural height: the popover is not capped yet on open
+                    height: popover.scrollHeight,
+                },
+                { width: window.innerWidth, height: window.innerHeight }
+            )
+        );
     }, [isOpen]);
 
     useEffect(() => {
@@ -121,8 +158,12 @@ const ChipPopover: React.FC<ChipPopoverProps> = ({
                         aria-label={label}
                         data-portal-menu
                         onKeyDown={onKeyDown}
-                        style={{ top: position.top, left: position.left }}
-                        className={`fixed z-[10050] max-w-[calc(100vw-1rem)] rounded-2xl bg-white p-2 shadow-xl ring-1 ring-black/5 dark:bg-gray-800 dark:ring-white/10 ${widthClass}`}
+                        style={{
+                            top: position.top,
+                            left: position.left,
+                            maxHeight: position.maxHeight,
+                        }}
+                        className={`fixed z-[10050] max-w-[calc(100vw-1rem)] overflow-y-auto overscroll-contain rounded-2xl bg-white p-2 shadow-xl ring-1 ring-black/5 dark:bg-gray-800 dark:ring-white/10 ${widthClass}`}
                     >
                         {children(close)}
                     </div>,
