@@ -129,6 +129,7 @@ A plugin adds buttons to the header of some Cadence pages, on the web and on And
 | `inbox`   | Inbox                                                      | none                                                    |
 | `project` | A project's page                                           | `project` (its uid)                                     |
 | `triage`  | À trier                                                    | none                                                    |
+| `overdue` | Plan's « En retard » band (web), « Échues » (Android)      | `date` (today, `YYYY-MM-DD`)                            |
 
 - `GET /api/plugins/menu` returns `{ items, actions }`; an action shows only while its plugin runs. Rules in `backend/modules/plugins/core/actions.js`; web `frontend/components/Plugins/PluginActions.tsx`; Android `tasks/plugins/PluginActionButtons.kt`.
 - A new place is added to `ACTION_PLACES` and drawn by both clients in the same change.

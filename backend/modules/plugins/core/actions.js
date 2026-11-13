@@ -5,7 +5,14 @@
 // and what the page shows in the query, so the plugin needs a `menu` page.
 // Each place is drawn by the web and Android clients; a new place is added
 // here and on both clients in the same change.
-const ACTION_PLACES = ['plan', 'today', 'inbox', 'project', 'triage'];
+const ACTION_PLACES = [
+    'plan',
+    'today',
+    'inbox',
+    'project',
+    'triage',
+    'overdue',
+];
 const ACTION_ID = /^[a-z][a-z0-9-]{0,31}$/;
 const MAX_ACTIONS = 10;
 const MAX_LABEL = 30;

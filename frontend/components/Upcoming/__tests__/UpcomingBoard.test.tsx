@@ -11,6 +11,7 @@ import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import UpcomingBoard from '../UpcomingBoard';
 import { useStore } from '../../../store/useStore';
+import { usePluginMenuStore } from '../../../store/pluginMenuStore';
 import {
     PlanChangedError,
     applyPlanOps,
@@ -263,6 +264,26 @@ const shift = (n: number) => {
 };
 const TOMORROW = shift(1);
 
+// The overdue strip's « Reschedule ▾ » menu, then one of its choices.
+const replanOverdue = (strip: HTMLElement, choice: string) => {
+    fireEvent.click(within(strip).getByRole('button', { name: 'Reschedule' }));
+    fireEvent.click(
+        within(screen.getByTestId('overdue-replan-menu')).getByRole(
+            'menuitem',
+            { name: choice }
+        )
+    );
+};
+
+// Today's answer lists `late` as overdue.
+const withOverdue = (late: Task[]) => {
+    const base = mockFetchDay.getMockImplementation() as typeof fetchDay;
+    mockFetchDay.mockImplementation(async (date?: string) => {
+        const day = await base(date);
+        return date === TODAY ? { ...day, overdue: late } : day;
+    });
+};
+
 const column = (date: string) =>
     screen
         .getAllByTestId('upcoming-column')
@@ -489,11 +510,7 @@ describe('UpcomingBoard', () => {
         expect(within(strip).getByText('Overdue (1)')).toBeInTheDocument();
         expect(within(strip).getByText('Renew passport')).toBeInTheDocument();
 
-        fireEvent.click(
-            within(strip).getByRole('button', {
-                name: 'Reschedule all to today',
-            })
-        );
+        replanOverdue(strip, 'Today');
         // At once: the strip empties, the task is on today.
         expect(
             screen.queryByTestId('upcoming-overdue')
@@ -874,6 +891,137 @@ describe('UpcomingBoard', () => {
         }
     );
 
+    it('plans the overdue tasks tomorrow and drops them from the strip', async () => {
+        withOverdue([
+            task('late', 'Renew passport', {
+                due_date: shift(-3),
+            } as Partial<Task>),
+        ]);
+        renderBoard();
+        const strip = await screen.findByTestId('upcoming-overdue');
+        await settle();
+        const todayLoads = () =>
+            mockFetchDay.mock.calls.filter(([date]) => date === TODAY).length;
+        const loadsBefore = todayLoads();
+        replanOverdue(strip, 'Tomorrow');
+        // At once: the strip empties, the task is on tomorrow.
+        expect(
+            screen.queryByTestId('upcoming-overdue')
+        ).not.toBeInTheDocument();
+        expect(
+            within(column(TOMORROW)).getByText('Renew passport')
+        ).toBeInTheDocument();
+        await waitFor(() =>
+            expect(mockApply).toHaveBeenCalledWith(
+                TOMORROW,
+                [{ op: 'add', task_uid: 'late' }],
+                'etag-1'
+            )
+        );
+        await waitFor(() =>
+            expect(mockShowUndoToast).toHaveBeenCalledWith(
+                'Overdue tasks replanned',
+                expect.any(Function)
+            )
+        );
+        // Today is reloaded: its answer no longer lists the task.
+        expect(todayLoads()).toBeGreaterThan(loadsBefore);
+    });
+
+    it('spreads the overdue tasks over the lightest of the next 7 days', async () => {
+        // Today holds « Write report » (30 min): the others are empty.
+        withOverdue([
+            task('minor', 'Sort photos', {
+                due_date: shift(-9),
+                priority: 'low',
+            } as Partial<Task>),
+            task('urgent', 'Renew passport', {
+                due_date: shift(-2),
+                priority: 'high',
+            } as Partial<Task>),
+        ]);
+        renderBoard();
+        const strip = await screen.findByTestId('upcoming-overdue');
+        await settle();
+        replanOverdue(strip, 'Spread over 7 days');
+        await waitFor(() => expect(mockApply).toHaveBeenCalledTimes(2));
+        expect(mockApply).toHaveBeenCalledWith(
+            TOMORROW,
+            [{ op: 'add', task_uid: 'urgent' }],
+            'etag-1'
+        );
+        expect(mockApply).toHaveBeenCalledWith(
+            shift(2),
+            [{ op: 'add', task_uid: 'minor' }],
+            'etag-1'
+        );
+    });
+
+    it('plans the overdue tasks on a picked day, not before today', async () => {
+        withOverdue([
+            task('late', 'Renew passport', {
+                due_date: shift(-3),
+            } as Partial<Task>),
+        ]);
+        renderBoard();
+        const strip = await screen.findByTestId('upcoming-overdue');
+        replanOverdue(strip, 'Pick a date…');
+        const month = await screen.findByTestId('overdue-replan-date');
+        const yesterday = month.querySelector(
+            `[data-date="${shift(-1)}"]`
+        ) as HTMLButtonElement | null;
+        if (yesterday) expect(yesterday).toBeDisabled();
+        fireEvent.click(
+            month.querySelector(`[data-date="${TODAY}"]`) as HTMLElement
+        );
+        await waitFor(() =>
+            expect(mockApply).toHaveBeenCalledWith(
+                TODAY,
+                [{ op: 'add', task_uid: 'late' }],
+                'etag-1'
+            )
+        );
+        expect(
+            screen.queryByTestId('overdue-replan-date')
+        ).not.toBeInTheDocument();
+    });
+
+    it('shows the plugin buttons of the overdue place in the strip', async () => {
+        usePluginMenuStore.setState({
+            loaded: true,
+            items: [
+                {
+                    id: 'hermes',
+                    label: 'Agents',
+                    path: '/plugins/hermes',
+                    file: 'index.html',
+                },
+            ],
+            actions: [
+                {
+                    plugin: 'hermes',
+                    id: 'plan-overdue',
+                    label: 'Proposer un plan',
+                    places: ['overdue'],
+                },
+            ],
+        });
+        withOverdue([
+            task('late', 'Renew passport', {
+                due_date: shift(-3),
+            } as Partial<Task>),
+        ]);
+        try {
+            renderBoard();
+            const strip = await screen.findByTestId('upcoming-overdue');
+            expect(
+                within(strip).getByRole('button', { name: 'Proposer un plan' })
+            ).toBeInTheDocument();
+        } finally {
+            usePluginMenuStore.setState({ items: [], actions: [] });
+        }
+    });
+
     it('reschedules only the overdue tasks the filters show', async () => {
         localStorage.setItem(
             'upcoming.viewOptions',
@@ -897,11 +1045,7 @@ describe('UpcomingBoard', () => {
         renderBoard();
         const strip = await screen.findByTestId('upcoming-overdue');
         expect(within(strip).getByText('Overdue (1)')).toBeInTheDocument();
-        fireEvent.click(
-            within(strip).getByRole('button', {
-                name: 'Reschedule all to today',
-            })
-        );
+        replanOverdue(strip, 'Today');
         await waitFor(() =>
             expect(mockApply).toHaveBeenCalledWith(
                 TODAY,

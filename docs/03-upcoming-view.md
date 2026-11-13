@@ -43,6 +43,14 @@ Under the inbox column, a box « À planifier » (`ToPlanBox.tsx`, rule `toPlan`
 
 Plan lines count for the days the board has loaded. Cards drag onto a day (planned like an inbox card; the commitment stays). Right click (Android: long press, « Planifier » sheet): « Engager pour » Cette semaine, Semaine prochaine, Ce mois-ci, Mois prochain, Un jour, and « Retirer l'engagement » (clears `week_of` and `month_of`); Undo writes back the week and month held before. Shift+W / Shift+M and the strip work on its cards too. When all three groups are empty the box renders nothing at all (no header, border or bar). Collapsible on the web (`upcoming.toPlanCollapsed`): under a collapsed inbox it is a 44 px bar with its count. On the phone it is a section under the Inbox (placement chosen over a top banner or a list filter: one long press per task, no stacked sheet).
 
+### « En retard » band (Days layout)
+
+Above the days, the band lists the open tasks due before today with no plan line today or later (the filters apply). Its header has « Replanifier ▾ » and the plugin buttons of the `overdue` place (`docs/46-plugins.md`, Hermes « Proposer un plan »). Every choice writes plan lines only (`add`), never the due date; today is reloaded so the band empties, and one Undo takes the lines back:
+
+- **Aujourd'hui**, **Demain**: every task of the band on that day.
+- **Choisir une date…**: a month, days before today disabled.
+- **Étaler sur 7 jours** (`spreadOverdue.ts`; Android `PlanBoard.spread`, both replay `fixtures/plan/spread-overdue.json`): the tasks are sorted by priority (high, medium, low, none), then oldest due date (its first 10 characters; none last), then uid; each goes to the day, from today to today + 6, with the smallest load, the earliest on a tie, and that day's load grows by the task's minutes. A day's load is its plan lines (due-only cards do not count; done ones do), each counted by its task's estimated minutes, 30 without a positive estimate; every plan line counts, whatever the filters. Days the board has not loaded are fetched first.
+
 ### Due chip of the task sheet
 
 The date picker of the task sheet's due date has a « Plus tard » row: Cette semaine · Semaine prochaine · Ce mois-ci · Mois prochain · Un jour; its « Semaine prochaine » quick choice (next Monday) is gone there (other date pickers keep it). A horizon is one write: `horizonPatch` semantics (the other commitment null, `later` for Un jour, `later:false` when leaving #someday), due date and time cleared, and the task leaves every plan from today on (`PATCH /task` `unplan: true`, `daily-plan/service.js` `takeTaskOffPlansFrom`; Android through its plan write queue, offline included). A precise day clears `week_of`, `month_of` and #someday. Without a date the chip shows the commitment (violet) or « À replanifier » (red) when its only week or month has passed.

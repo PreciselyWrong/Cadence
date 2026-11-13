@@ -82,6 +82,30 @@ describe('plugin page actions', () => {
             'inbox',
             'project',
             'triage',
+            'overdue',
         ]);
+    });
+
+    it('reads a button for the overdue band of Plan', () => {
+        expect(
+            parseActions(
+                [
+                    {
+                        id: 'plan-overdue',
+                        label: 'Proposer un plan',
+                        places: ['overdue'],
+                    },
+                ],
+                true
+            )
+        ).toEqual({
+            actions: [
+                {
+                    id: 'plan-overdue',
+                    label: 'Proposer un plan',
+                    places: ['overdue'],
+                },
+            ],
+        });
     });
 });

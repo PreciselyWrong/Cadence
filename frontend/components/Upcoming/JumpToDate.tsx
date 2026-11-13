@@ -27,6 +27,17 @@ interface JumpToDateProps {
     // 0 (Sunday) to 6.
     weekStartsOn: number;
     onPick(date: string): void;
+    // Opened from elsewhere (a menu item): no button of its own, the month
+    // drops under the right edge of its parent and `onClose` gets the focus
+    // back to the opener.
+    controlled?: {
+        open: boolean;
+        label: string;
+        testId: string;
+        // Days before it cannot be picked.
+        min?: string;
+        onClose(): void;
+    };
 }
 
 /**
@@ -39,10 +50,16 @@ const JumpToDate: React.FC<JumpToDateProps> = ({
     today,
     weekStartsOn,
     onPick,
+    controlled,
 }) => {
     const { t, i18n } = useTranslation();
     const locale = intlLocale(i18n.language);
-    const [open, setOpen] = useState(false);
+    const [ownOpen, setOwnOpen] = useState(false);
+    const open = controlled ? controlled.open : ownOpen;
+    const setOpen = (next: boolean) =>
+        controlled ? !next && controlled.onClose() : setOwnOpen(next);
+    const setOpenRef = useRef(setOpen);
+    setOpenRef.current = setOpen;
     const [month, setMonth] = useState(() => monthStart(value));
     const [focus, setFocus] = useState(value);
     const rootRef = useRef<HTMLDivElement>(null);
@@ -71,7 +88,7 @@ const JumpToDate: React.FC<JumpToDateProps> = ({
         if (!open) return;
         const close = (event: MouseEvent) => {
             if (!rootRef.current?.contains(event.target as Node)) {
-                setOpen(false);
+                setOpenRef.current(false);
             }
         };
         document.addEventListener('mousedown', close);
@@ -94,7 +111,7 @@ const JumpToDate: React.FC<JumpToDateProps> = ({
 
     const close = () => {
         setOpen(false);
-        buttonRef.current?.focus();
+        if (!controlled) buttonRef.current?.focus();
     };
     const pick = (date: string) => {
         onPick(date);
@@ -115,12 +132,12 @@ const JumpToDate: React.FC<JumpToDateProps> = ({
         }
     };
 
-    const label = t('upcoming.goToDate', 'Go to date');
+    const label = controlled?.label ?? t('upcoming.goToDate', 'Go to date');
 
     return (
         <div
             ref={rootRef}
-            className="relative"
+            className={controlled ? 'absolute right-0 top-full' : 'relative'}
             onKeyDown={(event) => {
                 if (event.key === 'Escape' && open) {
                     event.stopPropagation();
@@ -128,22 +145,26 @@ const JumpToDate: React.FC<JumpToDateProps> = ({
                 }
             }}
         >
-            <IconButton
-                ref={buttonRef}
-                label={label}
-                active={open}
-                aria-haspopup="dialog"
-                aria-expanded={open}
-                onClick={() => setOpen(!open)}
-            >
-                <CalendarIcon />
-            </IconButton>
+            {!controlled && (
+                <IconButton
+                    ref={buttonRef}
+                    label={label}
+                    active={open}
+                    aria-haspopup="dialog"
+                    aria-expanded={open}
+                    onClick={() => setOpen(!open)}
+                >
+                    <CalendarIcon />
+                </IconButton>
+            )}
             {open && (
                 <div
                     role="dialog"
                     aria-label={label}
-                    data-testid="upcoming-jump"
-                    className="absolute left-0 top-full z-40 mt-1 w-64 rounded-xl bg-surface p-3 shadow-lg ring-1 ring-outline-variant"
+                    data-testid={controlled?.testId ?? 'upcoming-jump'}
+                    className={`absolute top-full z-40 mt-1 ${
+                        controlled ? 'right-0' : 'left-0'
+                    } w-64 rounded-xl bg-surface p-3 shadow-lg ring-1 ring-outline-variant`}
                 >
                     <div className="flex h-7 items-center justify-between">
                         <span className="text-body-m font-semibold capitalize text-surface-on">
@@ -200,6 +221,10 @@ const JumpToDate: React.FC<JumpToDateProps> = ({
                                     aria-current={isToday ? 'date' : undefined}
                                     aria-pressed={picked}
                                     tabIndex={date === focus ? 0 : -1}
+                                    disabled={
+                                        !!controlled?.min &&
+                                        date < controlled.min
+                                    }
                                     onClick={() => pick(date)}
                                     onKeyDown={(event) =>
                                         onKeyDown(event, date)
@@ -210,7 +235,7 @@ const JumpToDate: React.FC<JumpToDateProps> = ({
                                             : 'text-surface-on hover:bg-surface-high'
                                     } ${isToday ? 'font-semibold' : ''} ${
                                         isToday && !picked ? 'text-primary' : ''
-                                    } ${outside ? 'opacity-40' : ''}`}
+                                    } ${outside ? 'opacity-40' : ''} disabled:pointer-events-none disabled:opacity-25`}
                                 >
                                     {Number(date.slice(8))}
                                 </button>

@@ -68,7 +68,7 @@ export interface PluginMenuItem {
 
 // Where a plugin can add a button to the page header (backend/modules/plugins/core/actions.js)
 export type PluginActionPlace =
-    'plan' | 'today' | 'inbox' | 'project' | 'triage';
+    'plan' | 'today' | 'inbox' | 'project' | 'triage' | 'overdue';
 
 // A button a running plugin adds to some page headers; a click opens its page
 export interface PluginPageAction {
