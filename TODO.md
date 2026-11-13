@@ -79,12 +79,12 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
 - [x] Style des apps de référence repris sur tout le desktop, pas seulement Aujourd'hui
 - [ ] Android : reprendre les décisions du style bureau (2026-11-12)
   Raison : web d'abord ; détail dans `docs/fork/WEB-UX-NOTES.md` (entrée du 2026-11-12, « À reprendre sur Android »). Étiquettes : épinglées puis les plus utilisées ; Projets : statut seulement hors « actif », tâches ouvertes à droite, tri par dernière activité ; Liens : « Ajouter une note » dans le ⋯ ; Inbox : « Tâches à classer » limitée à cinq lignes puis « Tout afficher » ; page projet : avancement en une ligne de texte ; ligne et carte de tâche uniques (case ronde, rouge seulement pour la haute priorité, échéance en pastille « Aujourd'hui / Demain / date », ⋯ au clic droit ou sur la ligne sélectionnée), en-têtes et états vides des pages comme le web. Vérif : mêmes listes sur le téléphone que sur le web avec la même base.
-- [ ] Android : horizon « Semaine prochaine » et envoi vers un horizon depuis Jours (2026-11-12)
+- [x] Android : horizon « Semaine prochaine » et envoi vers un horizon depuis Jours (2026-11-12)
   Raison : web d'abord ; détail dans `docs/fork/WEB-UX-NOTES.md` (entrée « Planifier : envoyer vers un horizon depuis Jours »). Vérif : une tâche mise dans « Semaine prochaine » sur le web apparaît dans le même horizon sur le téléphone, et inversement ; une carte envoyée depuis un jour garde son échéance et se retire du jour.
 - [x] Cases `- [ ]` écrites dans une note : deviennent des tâches liées à la note
 - [x] Notes et descriptions éditées en plan (outliner) : puces, Tab avec enfants, repli, zoom, puce → tâche liée (web)
 - [x] Android : notes et descriptions en plan (outliner), repli, zoom, puce → tâche liée, case qui suit la tâche
-- [ ] Android : Inbox de Planifier à reprendre avec Planifier : « + » crée une tâche, tâches à classer listées avant les idées et glissables sur un jour
+- [x] Android : Inbox de Planifier à reprendre avec Planifier : « + » crée une tâche, tâches à classer listées avant les idées et glissables sur un jour
   Raison : web d'abord (2026-11-12). Vérif : une tâche ajoutée par le « + » de l'Inbox apparaît dans « Tâches à classer » sur le téléphone.
 
 ## Note de l'ajout rapide Android : focus et fermeture [cadence:c7e743d5-3c37-4ee1-812c-f2e134017ddc]
