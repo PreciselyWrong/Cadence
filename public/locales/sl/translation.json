@@ -5294,6 +5294,60 @@
     "goTo": "Pojdi na",
     "planned": "Načrtovano {{when}}"
   },
+  "proposals": {
+    "week": {
+      "button": "Načrtuj moj teden",
+      "ready": "Tvoj teden je pripravljen",
+      "preparing": "Pripravljam…"
+    },
+    "review": {
+      "button": "Pripravi moj pregled",
+      "ready": "Tvoj pregled je pripravljen",
+      "validate": "Uporabi: {{choice}}"
+    },
+    "failed": "Priprava ni uspela.",
+    "retry": "Poskusi znova",
+    "startError": "Zahteve ni bilo mogoče začeti.",
+    "sheet": {
+      "preparing": "Tvoj teden se pripravlja…",
+      "failed": "Tvojega tedna ni bilo mogoče pripraviti.",
+      "title": "Tvoj teden",
+      "close": "Zapri",
+      "preparingHint": "Lahko zapreš to okno: počakalo te bo.",
+      "loadError": "Tega predloga ni bilo mogoče odpreti.",
+      "empty": "Ta teden ni ničesar za spremeniti.",
+      "alreadyApplied": "Že uporabljeno.",
+      "replyPlaceholder": "Povej, kaj se spreminja…",
+      "reply": "Odgovori",
+      "send": "Pošlji",
+      "ignore": "Prezri",
+      "later": "Pozneje",
+      "apply": "Uporabi ({{count}})",
+      "appliedCount": "{{count}} od {{total}} uporabljenih"
+    },
+    "apply": {
+      "error": "Sprememb ni bilo mogoče uporabiti.",
+      "failedOne": "Ni uporabljeno"
+    },
+    "reply": {
+      "error": "Odgovor ni bil poslan."
+    },
+    "dismiss": {
+      "error": "Predloga ni bilo mogoče prezreti."
+    },
+    "ops": {
+      "planDay": "V današnjem načrtu",
+      "due": "Rok {{date}}",
+      "thisWeek": "Ta teden",
+      "later": "Pozneje",
+      "drop": "Opusti"
+    },
+    "groups": {
+      "thisWeek": "Ta teden",
+      "later": "Pozneje",
+      "drop": "Za opustitev"
+    }
+  },
   "review": {
         "calm_few": "{{count}} stvari za pregled, v vašem tempu",
         "calm_two": "{{count}} stvari za pregled, v vašem tempu",

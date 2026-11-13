@@ -5264,6 +5264,60 @@
     "goTo": "Go to",
     "planned": "Planned {{when}}"
   },
+  "proposals": {
+    "week": {
+      "button": "Plan my week",
+      "ready": "Your week is ready",
+      "preparing": "Preparing…"
+    },
+    "review": {
+      "button": "Prepare my review",
+      "ready": "Your review is ready",
+      "validate": "Validate: {{choice}}"
+    },
+    "failed": "The preparation failed.",
+    "retry": "Try again",
+    "startError": "Could not start the request.",
+    "sheet": {
+      "preparing": "Your week is being prepared…",
+      "failed": "Your week could not be prepared.",
+      "title": "Your week",
+      "close": "Close",
+      "preparingHint": "You can close this window: it will wait for you.",
+      "loadError": "Could not open this proposal.",
+      "empty": "Nothing to change this week.",
+      "alreadyApplied": "Already applied.",
+      "replyPlaceholder": "Tell me what changes…",
+      "reply": "Reply",
+      "send": "Send",
+      "ignore": "Ignore",
+      "later": "Later",
+      "apply": "Apply ({{count}})",
+      "appliedCount": "{{count}} of {{total}} applied"
+    },
+    "apply": {
+      "error": "The changes could not be applied.",
+      "failedOne": "Not applied"
+    },
+    "reply": {
+      "error": "Your reply was not sent."
+    },
+    "dismiss": {
+      "error": "Could not ignore the proposal."
+    },
+    "ops": {
+      "planDay": "On today’s plan",
+      "due": "Due {{date}}",
+      "thisWeek": "This week",
+      "later": "Later",
+      "drop": "Drop"
+    },
+    "groups": {
+      "thisWeek": "This week",
+      "later": "Later",
+      "drop": "To drop"
+    }
+  },
   "review": {
     "quick": {
       "keys": "1–9 choose · S skip · O open · Esc stop",

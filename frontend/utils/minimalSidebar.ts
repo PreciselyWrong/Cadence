@@ -114,7 +114,7 @@ const DEFAULT_RAIL_PLACE: Record<RailId, RailPlace> = {
     goals: 'rail',
     people: 'rail',
     insights: 'rail',
-    review: 'more',
+    review: 'rail',
     allTasks: 'more',
     assignedToMe: 'more',
     everyone: 'more',

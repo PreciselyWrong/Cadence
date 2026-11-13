@@ -5209,6 +5209,60 @@
     "goTo": "Ir para",
     "planned": "Planejada {{when}}"
   },
+  "proposals": {
+    "week": {
+      "button": "Planejar minha semana",
+      "ready": "Sua semana está pronta",
+      "preparing": "Preparando…"
+    },
+    "review": {
+      "button": "Preparar minha revisão",
+      "ready": "Sua revisão está pronta",
+      "validate": "Validar: {{choice}}"
+    },
+    "failed": "A preparação falhou.",
+    "retry": "Tentar de novo",
+    "startError": "Não foi possível iniciar o pedido.",
+    "sheet": {
+      "preparing": "Sua semana está sendo preparada…",
+      "failed": "Não foi possível preparar sua semana.",
+      "title": "Sua semana",
+      "close": "Fechar",
+      "preparingHint": "Você pode fechar esta janela: ela vai esperar por você.",
+      "loadError": "Não foi possível abrir esta proposta.",
+      "empty": "Nada a mudar nesta semana.",
+      "alreadyApplied": "Já aplicada.",
+      "replyPlaceholder": "Diga o que muda…",
+      "reply": "Responder",
+      "send": "Enviar",
+      "ignore": "Ignorar",
+      "later": "Depois",
+      "apply": "Aplicar ({{count}})",
+      "appliedCount": "{{count}} de {{total}} aplicados"
+    },
+    "apply": {
+      "error": "Não foi possível aplicar as mudanças.",
+      "failedOne": "Não aplicado"
+    },
+    "reply": {
+      "error": "Sua resposta não foi enviada."
+    },
+    "dismiss": {
+      "error": "Não foi possível ignorar a proposta."
+    },
+    "ops": {
+      "planDay": "No plano de hoje",
+      "due": "Vence em {{date}}",
+      "thisWeek": "Esta semana",
+      "later": "Depois",
+      "drop": "Descartar"
+    },
+    "groups": {
+      "thisWeek": "Esta semana",
+      "later": "Depois",
+      "drop": "Para descartar"
+    }
+  },
   "review": {
     "quick": {
       "keys": "1–9 escolher · S pular · O abrir · Esc parar",

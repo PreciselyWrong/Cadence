@@ -5202,6 +5202,60 @@
     "goTo": "이동",
     "planned": "{{when}} 계획됨"
   },
+  "proposals": {
+    "week": {
+      "button": "이번 주 계획하기",
+      "ready": "이번 주 계획이 준비됐어요",
+      "preparing": "준비 중…"
+    },
+    "review": {
+      "button": "리뷰 준비하기",
+      "ready": "리뷰가 준비됐어요",
+      "validate": "{{choice}} 적용"
+    },
+    "failed": "준비에 실패했어요.",
+    "retry": "다시 시도",
+    "startError": "요청을 시작하지 못했어요.",
+    "sheet": {
+      "preparing": "이번 주를 준비하는 중…",
+      "failed": "이번 주를 준비하지 못했어요.",
+      "title": "이번 주",
+      "close": "닫기",
+      "preparingHint": "이 창은 닫아도 돼요. 기다리고 있을게요.",
+      "loadError": "이 제안을 열 수 없어요.",
+      "empty": "이번 주에 바꿀 것이 없어요.",
+      "alreadyApplied": "이미 적용됨.",
+      "replyPlaceholder": "무엇이 바뀌는지 알려 주세요…",
+      "reply": "답장",
+      "send": "보내기",
+      "ignore": "무시",
+      "later": "나중에",
+      "apply": "적용 ({{count}})",
+      "appliedCount": "{{total}}개 중 {{count}}개 적용됨"
+    },
+    "apply": {
+      "error": "변경 사항을 적용할 수 없어요.",
+      "failedOne": "적용되지 않음"
+    },
+    "reply": {
+      "error": "답장을 보내지 못했어요."
+    },
+    "dismiss": {
+      "error": "제안을 무시할 수 없어요."
+    },
+    "ops": {
+      "planDay": "오늘 계획에",
+      "due": "{{date}} 마감",
+      "thisWeek": "이번 주",
+      "later": "나중에",
+      "drop": "삭제"
+    },
+    "groups": {
+      "thisWeek": "이번 주",
+      "later": "나중에",
+      "drop": "삭제할 항목"
+    }
+  },
   "review": {
     "quick": {
       "keys": "1–9 선택 · S 건너뛰기 · O 열기 · Esc 중지",

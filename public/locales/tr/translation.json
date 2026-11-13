@@ -5202,6 +5202,60 @@
     "goTo": "Git",
     "planned": "{{when}} planlandı"
   },
+  "proposals": {
+    "week": {
+      "button": "Haftamı planla",
+      "ready": "Haftan hazır",
+      "preparing": "Hazırlanıyor…"
+    },
+    "review": {
+      "button": "Gözden geçirmemi hazırla",
+      "ready": "Gözden geçirmen hazır",
+      "validate": "Uygula: {{choice}}"
+    },
+    "failed": "Hazırlama başarısız oldu.",
+    "retry": "Yeniden dene",
+    "startError": "İstek başlatılamadı.",
+    "sheet": {
+      "preparing": "Haftan hazırlanıyor…",
+      "failed": "Haftan hazırlanamadı.",
+      "title": "Haftan",
+      "close": "Kapat",
+      "preparingHint": "Bu pencereyi kapatabilirsin: seni bekleyecek.",
+      "loadError": "Bu öneri açılamadı.",
+      "empty": "Bu hafta değiştirecek bir şey yok.",
+      "alreadyApplied": "Zaten uygulandı.",
+      "replyPlaceholder": "Neyin değiştiğini söyle…",
+      "reply": "Yanıtla",
+      "send": "Gönder",
+      "ignore": "Yoksay",
+      "later": "Daha sonra",
+      "apply": "Uygula ({{count}})",
+      "appliedCount": "{{count}} / {{total}} uygulandı"
+    },
+    "apply": {
+      "error": "Değişiklikler uygulanamadı.",
+      "failedOne": "Uygulanmadı"
+    },
+    "reply": {
+      "error": "Yanıtın gönderilemedi."
+    },
+    "dismiss": {
+      "error": "Öneri yoksayılamadı."
+    },
+    "ops": {
+      "planDay": "Bugünkü plana",
+      "due": "Son tarih {{date}}",
+      "thisWeek": "Bu hafta",
+      "later": "Daha sonra",
+      "drop": "Bırak"
+    },
+    "groups": {
+      "thisWeek": "Bu hafta",
+      "later": "Daha sonra",
+      "drop": "Bırakılacaklar"
+    }
+  },
   "review": {
     "quick": {
       "keys": "1–9 seç · S atla · O aç · Esc durdur",

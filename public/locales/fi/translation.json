@@ -5202,6 +5202,60 @@
     "goTo": "Siirry",
     "planned": "Suunniteltu {{when}}"
   },
+  "proposals": {
+    "week": {
+      "button": "Suunnittele viikkoni",
+      "ready": "Viikkosi on valmis",
+      "preparing": "Valmistellaan…"
+    },
+    "review": {
+      "button": "Valmistele katselmukseni",
+      "ready": "Katselmuksesi on valmis",
+      "validate": "Hyväksy: {{choice}}"
+    },
+    "failed": "Valmistelu epäonnistui.",
+    "retry": "Yritä uudelleen",
+    "startError": "Pyyntöä ei voitu aloittaa.",
+    "sheet": {
+      "preparing": "Viikkoasi valmistellaan…",
+      "failed": "Viikkoasi ei voitu valmistella.",
+      "title": "Viikkosi",
+      "close": "Sulje",
+      "preparingHint": "Voit sulkea tämän ikkunan: se odottaa sinua.",
+      "loadError": "Tätä ehdotusta ei voitu avata.",
+      "empty": "Ei muutettavaa tällä viikolla.",
+      "alreadyApplied": "Jo käytetty.",
+      "replyPlaceholder": "Kerro, mitä muuttuu…",
+      "reply": "Vastaa",
+      "send": "Lähetä",
+      "ignore": "Ohita",
+      "later": "Myöhemmin",
+      "apply": "Käytä ({{count}})",
+      "appliedCount": "{{count}} / {{total}} käytetty"
+    },
+    "apply": {
+      "error": "Muutoksia ei voitu käyttää.",
+      "failedOne": "Ei käytetty"
+    },
+    "reply": {
+      "error": "Vastaustasi ei lähetetty."
+    },
+    "dismiss": {
+      "error": "Ehdotusta ei voitu ohittaa."
+    },
+    "ops": {
+      "planDay": "Tämän päivän suunnitelmassa",
+      "due": "Eräpäivä {{date}}",
+      "thisWeek": "Tämä viikko",
+      "later": "Myöhemmin",
+      "drop": "Hylkää"
+    },
+    "groups": {
+      "thisWeek": "Tämä viikko",
+      "later": "Myöhemmin",
+      "drop": "Hylättävät"
+    }
+  },
   "review": {
     "quick": {
       "keys": "1–9 valitse · S ohita · O avaa · Esc lopeta",

@@ -5202,6 +5202,60 @@
     "goTo": "移動",
     "planned": "{{when}}に予定"
   },
+  "proposals": {
+    "week": {
+      "button": "今週を計画",
+      "ready": "今週の計画ができました",
+      "preparing": "準備中…"
+    },
+    "review": {
+      "button": "レビューを準備",
+      "ready": "レビューの準備ができました",
+      "validate": "{{choice}} を適用"
+    },
+    "failed": "準備に失敗しました。",
+    "retry": "再試行",
+    "startError": "リクエストを開始できませんでした。",
+    "sheet": {
+      "preparing": "今週を準備しています…",
+      "failed": "今週の準備ができませんでした。",
+      "title": "今週",
+      "close": "閉じる",
+      "preparingHint": "このウィンドウは閉じても大丈夫です。準備ができたらお知らせします。",
+      "loadError": "この提案を開けませんでした。",
+      "empty": "今週は変更がありません。",
+      "alreadyApplied": "適用済みです。",
+      "replyPlaceholder": "変更内容を教えてください…",
+      "reply": "返信",
+      "send": "送信",
+      "ignore": "無視",
+      "later": "あとで",
+      "apply": "適用 ({{count}})",
+      "appliedCount": "{{count}} / {{total}} 件を適用"
+    },
+    "apply": {
+      "error": "変更を適用できませんでした。",
+      "failedOne": "未適用"
+    },
+    "reply": {
+      "error": "返信を送信できませんでした。"
+    },
+    "dismiss": {
+      "error": "提案を無視できませんでした。"
+    },
+    "ops": {
+      "planDay": "今日のプランに",
+      "due": "{{date}} が期限",
+      "thisWeek": "今週",
+      "later": "あとで",
+      "drop": "取りやめ"
+    },
+    "groups": {
+      "thisWeek": "今週",
+      "later": "あとで",
+      "drop": "取りやめ候補"
+    }
+  },
   "review": {
     "quick": {
       "keys": "1–9 選ぶ · S スキップ · O 開く · Esc 停止",

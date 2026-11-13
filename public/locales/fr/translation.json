@@ -5210,6 +5210,60 @@
     "goTo": "Aller à",
     "planned": "Planifiée {{when}}"
   },
+  "proposals": {
+    "week": {
+      "button": "Planifier ma semaine",
+      "ready": "Ta semaine est prête",
+      "preparing": "En préparation…"
+    },
+    "review": {
+      "button": "Préparer ma revue",
+      "ready": "Ta revue est prête",
+      "validate": "Valider : {{choice}}"
+    },
+    "failed": "La préparation a échoué.",
+    "retry": "Réessayer",
+    "startError": "Impossible de lancer la demande.",
+    "sheet": {
+      "preparing": "Ta semaine se prépare…",
+      "failed": "Ta semaine n’a pas pu être préparée.",
+      "title": "Ta semaine",
+      "close": "Fermer",
+      "preparingHint": "Tu peux fermer cette fenêtre : elle t’attendra.",
+      "loadError": "Impossible d’ouvrir cette proposition.",
+      "empty": "Rien à changer cette semaine.",
+      "alreadyApplied": "Déjà appliquée.",
+      "replyPlaceholder": "Dis-moi ce qui change…",
+      "reply": "Répondre",
+      "send": "Envoyer",
+      "ignore": "Ignorer",
+      "later": "Plus tard",
+      "apply": "Appliquer ({{count}})",
+      "appliedCount": "{{count}} sur {{total}} appliqués"
+    },
+    "apply": {
+      "error": "Les changements n’ont pas pu être appliqués.",
+      "failedOne": "Pas appliqué"
+    },
+    "reply": {
+      "error": "Ta réponse n’a pas été envoyée."
+    },
+    "dismiss": {
+      "error": "Impossible d’ignorer la proposition."
+    },
+    "ops": {
+      "planDay": "Au plan du jour",
+      "due": "Échéance le {{date}}",
+      "thisWeek": "Cette semaine",
+      "later": "Plus tard",
+      "drop": "Abandonner"
+    },
+    "groups": {
+      "thisWeek": "Cette semaine",
+      "later": "Plus tard",
+      "drop": "À abandonner"
+    }
+  },
   "review": {
     "quick": {
       "keys": "1–9 choisir · S passer · O ouvrir · Échap arrêter",

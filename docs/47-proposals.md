@@ -1,6 +1,6 @@
 # Agent proposals: a week to plan, a review to do
 
-Status: server built on 2026-11-13 (`backend/modules/proposals/`, table `proposals`, migration `20261113160000`). Web and Android windows, the Hermes side and the Hermes plugin transport are not built yet (plan: `docs/fork/PLAN-propositions.md`).
+Status: server built on 2026-11-13 (`backend/modules/proposals/`, table `proposals`, migration `20261113160000`). Android window built on 2026-11-13 (1.30.0, section Clients › Android). Web window built on 2026-11-13 (section Clients › Web). The Hermes side and the Hermes plugin transport are not built yet (plan: `docs/fork/PLAN-propositions.md`).
 
 A proposal is a request the user starts from a button (« Planifier ma semaine », « Préparer ma revue »). Cadence computes the facts with code, an agent judges them, Cadence validates the answer and the user applies the checked parts. The agent never writes to Cadence: every change goes through the existing write paths of the tasks and of the day plan.
 
@@ -121,8 +121,29 @@ When the answer is accepted or refused, one in-app notification of type `proposa
 
 Table `proposals`: `uid`, `user_id`, `kind`, `status` (`pending`, `ready`, `failed`, `applied`, `dismissed`), `period_start`, `period_end` (day, week only), `facts` (JSON, with `stamps`), `answer` (JSON), `error` (short code), `reply_text`, timestamps. Index `(user_id, kind)`. Not a sync entity: proposals are read online. Model `backend/models/proposal.js`.
 
+## Clients › Web
+
+Online only, like the Android client: nothing is kept offline. `frontend/utils/proposalsService.ts` (the routes above), `frontend/components/Proposals/`: `ProposalButton.tsx` (header button), `useProposal.ts` (the latest proposal of a kind, polled every 5 s only while pending), `ProposalSheet.tsx` (the week's sheet; `groupChanges` is pure), `ProposalHost.tsx` (mounted in `Layout.tsx`, opens `?proposal=<uid>` like `?task=`), `proposalLinks.ts` (the param and `PROPOSAL_CHANGED_EVENT`).
+
+- **Button**: « Planifier ma semaine » in the header of Aujourd'hui and of Planifier (`UpcomingBoard.tsx`). Idle, then « En préparation… » (disabled, spinner), then « Ta semaine est prête », which opens the sheet by `?proposal=`. A failure seen on the page shows a toast with « Réessayer » (`showUndoToast`, with its own label). « Préparer ma revue » sits in the Review header; when ready, its button starts the quick review.
+- **Notification**: the bell routes a `proposal` notification (`data.proposal_uid`) to the sheet; a review one goes to `/review`.
+- **Sheet**: a dialog (bottom sheet under 640 px, centred card above), enter and leave motion off under `prefers-reduced-motion`. Summary as the title; questions as chips (a choice sends `reply` with `Q: … R: …`, then waits again); changes grouped by day, then « Cette semaine », « Plus tard », « À abandonner », each row a checkbox (checked by default), the task name from `facts.tasks`, the operation and the reason on one line. Enter applies, Escape closes, Space toggles the focused row, Ctrl+Enter sends a reply being written. « Appliquer (N) » shows the per-task results and closes when all went through; « Plus tard » closes and keeps the proposal ready; « Ignorer » dismisses it.
+- **Refresh**: after an apply or a dismissal, `PROPOSAL_CHANGED_EVENT` makes Aujourd'hui and Planifier re-read their day and plan, and every proposal button re-read its state.
+- **Review**: the quick review reads the judgements of a ready (or partly applied) review. Each judged task shows the agent's choice as a primary button « Valider : … » with its reason under the card; Enter validates it. The choice maps to the option of the row (`OPTION_KEYS` in `ReviewPage.tsx`; `keep` is « Keep parked » in Later); the other options stay. The validation calls `POST …/apply` with `decisions`. Without a ready review, the quick review is unchanged.
+- **Rail**: Review is on the default minimal rail (`minimalSidebar.ts`); a saved layout keeps its place.
+
+## Clients › Android
+
+Online only, like the mail deck: nothing is kept in Room. `tasks/.../proposals/` (`ProposalsClient` for the routes above, `ProposalRepository` for the last proposal of each kind, the open sheet and the tab a notification asks for, `ProposalModel.kt` for the pure rules). Offline, the actions say « Hors ligne » and keep nothing.
+
+- **Button**: « Planifier ma semaine » at the top of Planifier and Aujourd'hui; « Préparer ma revue » in the quick review card. Idle, then « En préparation… » (reads `GET /api/proposals` every 5 s while it is shown), then « … est prête ». A failed proposal goes back to idle.
+- **Notification**: a `proposal` notification from the stream (`data.proposal_uid`, `data.status`) is posted on the calm channel « Agents · infos » with Android's own wording (the agent is not named). Ready week: tap opens the sheet. Failed week: tap opens Planifier. Review: tap opens Bilan.
+- **Sheet** (`ui/proposals/ProposalSheet.kt`, a bottom sheet over any tab): summary, questions as chips (a choice sends `POST …/reply` with the question and the choice), changes grouped by day with a checkbox each (checked by default; unchecked ones are left out of `POST …/apply`), then « Appliquer (N) », « Répondre », « Plus tard » (closes, the proposal stays ready), « Ignorer » (`POST …/dismiss`).
+- **Review**: once the review is ready, each judged task shows the agent's choice first, filled, with its reason under the title; one tap on it applies that single decision (`POST …/apply` with `decisions`), then the quick review moves on.
+
 ## Not done yet
 
 - No database constraint on one pending proposal per kind: two requests at the same instant can both create one (the second check runs before the write).
 - No MCP tools for proposals; the answer is the HTTP route.
 - Questions in a week answer are shown, not answered: a reply is a new round.
+- Android notifications: `notifyOutcome` sends `sources: []`, and the notification stream only publishes `desktop` or `mobile` sources (`backend/utils/notificationStream.js`), so the phone never receives « Ta semaine est prête ». It needs `sources: ['mobile', 'desktop']` in `notifyOutcome`; not changed in the Android work.

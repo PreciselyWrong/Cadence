@@ -5254,6 +5254,60 @@
     "goTo": "انتقل إلى",
     "planned": "مجدولة {{when}}"
   },
+  "proposals": {
+    "week": {
+      "button": "لخطّط أسبوعي",
+      "ready": "أسبوعك جاهز",
+      "preparing": "جارٍ التحضير…"
+    },
+    "review": {
+      "button": "حضّر مراجعتي",
+      "ready": "مراجعتك جاهزة",
+      "validate": "تطبيق: {{choice}}"
+    },
+    "failed": "فشل التحضير.",
+    "retry": "أعد المحاولة",
+    "startError": "تعذّر بدء الطلب.",
+    "sheet": {
+      "preparing": "جارٍ تحضير أسبوعك…",
+      "failed": "تعذّر تحضير أسبوعك.",
+      "title": "أسبوعك",
+      "close": "إغلاق",
+      "preparingHint": "يمكنك إغلاق هذه النافذة: ستنتظرك.",
+      "loadError": "تعذّر فتح هذا الاقتراح.",
+      "empty": "لا شيء يتغيّر هذا الأسبوع.",
+      "alreadyApplied": "طُبّق من قبل.",
+      "replyPlaceholder": "أخبرني بما يتغيّر…",
+      "reply": "رد",
+      "send": "إرسال",
+      "ignore": "تجاهل",
+      "later": "لاحقًا",
+      "apply": "تطبيق ({{count}})",
+      "appliedCount": "تم تطبيق {{count}} من {{total}}"
+    },
+    "apply": {
+      "error": "تعذّر تطبيق التغييرات.",
+      "failedOne": "لم يُطبَّق"
+    },
+    "reply": {
+      "error": "لم يُرسل ردّك."
+    },
+    "dismiss": {
+      "error": "تعذّر تجاهل الاقتراح."
+    },
+    "ops": {
+      "planDay": "في خطة اليوم",
+      "due": "موعده {{date}}",
+      "thisWeek": "هذا الأسبوع",
+      "later": "لاحقًا",
+      "drop": "إسقاط"
+    },
+    "groups": {
+      "thisWeek": "هذا الأسبوع",
+      "later": "لاحقًا",
+      "drop": "للإسقاط"
+    }
+  },
   "review": {
     "quick": {
       "keys": "1–9 للاختيار · S للتخطي · O للفتح · Esc للإيقاف",

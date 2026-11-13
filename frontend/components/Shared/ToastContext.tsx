@@ -10,6 +10,7 @@ interface Toast {
     message: string | React.ReactNode;
     type: 'success' | 'error';
     onUndo?: () => void;
+    undoLabel?: string;
 }
 
 interface ToastContextProps {
@@ -17,7 +18,9 @@ interface ToastContextProps {
     showErrorToast: (message: string | React.ReactNode) => void;
     showUndoToast: (
         message: string | React.ReactNode,
-        onUndo: () => void
+        onUndo: () => void,
+        // The button's text; "Undo" when left out.
+        undoLabel?: string
     ) => void;
 }
 
@@ -53,9 +56,19 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
     );
 
     const showUndoToast = useCallback(
-        (message: string | React.ReactNode, onUndo: () => void) => {
+        (
+            message: string | React.ReactNode,
+            onUndo: () => void,
+            undoLabel?: string
+        ) => {
             const id = Date.now() + Math.random();
-            const newToast: Toast = { id, message, type: 'success', onUndo };
+            const newToast: Toast = {
+                id,
+                message,
+                type: 'success',
+                onUndo,
+                undoLabel,
+            };
             setToasts((prev) => [...prev, newToast]);
             setTimeout(() => removeToast(id), 6000);
         },
@@ -82,6 +95,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
                                   }
                                 : undefined
                         }
+                        undoLabel={toast.undoLabel}
                         style={{ transform: `translateY(${index * 4}px)` }}
                     />
                 ))}
@@ -108,8 +122,9 @@ const ToastComponent: React.FC<{
     type: 'success' | 'error';
     onClose: () => void;
     onUndo?: () => void;
+    undoLabel?: string;
     style?: React.CSSProperties;
-}> = ({ message, type, onClose, onUndo, style }) => {
+}> = ({ message, type, onClose, onUndo, undoLabel, style }) => {
     const { t } = useTranslation();
     return (
         <div
@@ -138,7 +153,7 @@ const ToastComponent: React.FC<{
                         onClick={onUndo}
                         className="flex-shrink-0 rounded px-1 text-sm font-semibold underline underline-offset-2 hover:opacity-80 transition-opacity focus-visible:outline focus-visible:outline-2"
                     >
-                        {t('common.undo', 'Undo')}
+                        {undoLabel ?? t('common.undo', 'Undo')}
                     </button>
                 )}
                 <button

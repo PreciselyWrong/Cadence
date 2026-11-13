@@ -37,6 +37,17 @@ import DecisionChips, { DecisionOption } from './DecisionChips';
 import WeekStep from './WeekStep';
 import QuickReview from './QuickReview';
 import { useDecisionKeys } from './useDecisionKeys';
+import ProposalButton from '../Proposals/ProposalButton';
+import { PROPOSAL_CHANGED_EVENT } from '../Proposals/proposalLinks';
+import { useProposal } from '../Proposals/useProposal';
+import { useProposalChanged } from '../Proposals/useProposalChanged';
+import {
+    applyProposal,
+    getProposal,
+    ReviewAnswer,
+    ReviewChoice,
+    ReviewJudgement,
+} from '../../utils/proposalsService';
 import {
     addDaysToToday,
     buildQuickReview,
@@ -104,6 +115,18 @@ const toRows = (step: ReviewCategory, items: unknown[]): Row[] =>
                       category: step === 'later' ? 'later' : 'stale',
                   }
     );
+
+// The review proposal's choice, as the option keys a task row offers, in the
+// order to try them (« Keep as is » is « Keep parked » in the Later list).
+const OPTION_KEYS: Record<ReviewChoice, string[]> = {
+    do_today: ['today'],
+    this_week: ['week'],
+    in_view: ['inView'],
+    later: ['later'],
+    done: ['done'],
+    drop: ['drop'],
+    keep: ['keepLater', 'keep'],
+};
 
 const entryRow = (entry: QuickEntry): Row =>
     entry.category === 'undecided'
@@ -234,6 +257,12 @@ const ReviewPage: React.FC = () => {
     const [sorting, setSorting] = useState(false);
     const [skipped, setSkipped] = useState<string[]>([]);
     const [quick, setQuick] = useState<QuickState | null>(null);
+    // The review proposal, when one is ready: each task's judgement by uid.
+    const reviewProposal = useProposal('review');
+    const [judged, setJudged] = useState<Map<string, ReviewJudgement>>(
+        () => new Map()
+    );
+    useProposalChanged(() => void reviewProposal.refresh());
 
     useEffect(() => {
         let active = true;
@@ -637,9 +666,28 @@ const ReviewPage: React.FC = () => {
 
     // Reads every list once and builds a short queue; `exclude` keeps what
     // was skipped this visit out of another round.
+    // The judgements of a ready (or partly applied) review; none otherwise.
+    const judgementsOf = async (): Promise<Map<string, ReviewJudgement>> => {
+        const { uid, status } = reviewProposal;
+        if (!uid || (status !== 'ready' && status !== 'applied')) {
+            return new Map();
+        }
+        try {
+            const detail = await getProposal(uid);
+            const answer = detail.answer as ReviewAnswer | null;
+            return new Map(
+                (answer?.items ?? []).map((item) => [item.task_uid, item])
+            );
+        } catch {
+            return new Map();
+        }
+    };
+
     const startQuick = async (exclude: string[] = []) => {
         setQuick({ loading: true, queue: [], total: 0, skipped: exclude });
         try {
+            const judgements = await judgementsOf();
+            setJudged(judgements);
             const [undecided, pushedPage, projects, later, stale] =
                 await Promise.all([
                     fetchReviewCategory<InboxReviewItem>('undecided', 0, PAGE),
@@ -676,6 +724,44 @@ const ReviewPage: React.FC = () => {
         setNextTaskFor(null);
         refreshSummary();
         void load(0);
+    };
+
+    // One tap validates the agent's choice for this item; the others stay.
+    const validateJudged = (row: Row, choice: ReviewChoice) => {
+        const reviewUid = reviewProposal.uid;
+        const taskUid =
+            row.kind === 'task' || row.kind === 'pushed'
+                ? (row.item.task.uid as string)
+                : '';
+        if (!reviewUid || !taskUid) return;
+        void decide(row, async () => {
+            const outcome = await applyProposal(reviewUid, {
+                decisions: [{ task_uid: taskUid, choice }],
+            });
+            window.dispatchEvent(new Event(PROPOSAL_CHANGED_EVENT));
+            const result = outcome.results.find((r) => r.task_uid === taskUid);
+            if (result?.state !== 'applied') {
+                throw new Error(result?.error ?? 'not applied');
+            }
+        });
+    };
+
+    // The agent's choice for a row, as one of its options; none when the row
+    // was not judged or the choice is not offered for it.
+    const suggestionFor = (row: Row, opts: DecisionOption[]) => {
+        if (row.kind !== 'task' && row.kind !== 'pushed') return null;
+        const judgement = judged.get(row.item.task.uid as string);
+        if (!judgement) return null;
+        const key = OPTION_KEYS[judgement.choice]?.find((candidate) =>
+            opts.some((option) => option.key === candidate)
+        );
+        const option = opts.find((candidate) => candidate.key === key);
+        if (!option) return null;
+        return {
+            choice: option.label,
+            reason: judgement.reason || null,
+            run: () => validateJudged(row, judgement.choice),
+        };
     };
 
     const skipQuick = () =>
@@ -866,6 +952,7 @@ const ReviewPage: React.FC = () => {
     const nextStep = STEPS[stepIndex + 1];
 
     const quickCurrent = quick && !quick.loading ? quick.queue[0] : undefined;
+    const quickOptions = quickCurrent ? options(quickCurrent, true) : [];
 
     // What a quick-review item is, named like the list it comes from.
     const kindOf = (row: Row) =>
@@ -939,16 +1026,22 @@ const ReviewPage: React.FC = () => {
                 }
                 actions={
                     quick ? undefined : (
-                        <Button
-                            variant="primary"
-                            onClick={() => void startQuick()}
-                            title={t(
-                                'review.quick.pitch',
-                                'About 5 minutes, one thing at a time. Stop whenever you like.'
-                            )}
-                        >
-                            {t('review.quick.title', 'Quick review')}
-                        </Button>
+                        <>
+                            <ProposalButton
+                                kind="review"
+                                onReady={() => void startQuick()}
+                            />
+                            <Button
+                                variant="primary"
+                                onClick={() => void startQuick()}
+                                title={t(
+                                    'review.quick.pitch',
+                                    'About 5 minutes, one thing at a time. Stop whenever you like.'
+                                )}
+                            >
+                                {t('review.quick.title', 'Quick review')}
+                            </Button>
+                        </>
                     )
                 }
             >
@@ -972,8 +1065,11 @@ const ReviewPage: React.FC = () => {
                         kind={quickCurrent ? kindOf(quickCurrent) : null}
                         card={quickCurrent ? quickCard(quickCurrent) : null}
                         itemKey={quickCurrent ? rowKey(quickCurrent) : null}
-                        options={
-                            quickCurrent ? options(quickCurrent, true) : []
+                        options={quickOptions}
+                        suggestion={
+                            quickCurrent
+                                ? suggestionFor(quickCurrent, quickOptions)
+                                : null
                         }
                         position={quick.total - quick.queue.length + 1}
                         total={quick.total}

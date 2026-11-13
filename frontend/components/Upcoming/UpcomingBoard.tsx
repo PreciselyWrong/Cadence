@@ -167,6 +167,8 @@ import {
     shiftWeek,
 } from './boardDates';
 import PluginActions from '../Plugins/PluginActions';
+import ProposalButton from '../Proposals/ProposalButton';
+import { useProposalChanged } from '../Proposals/useProposalChanged';
 import { SPREAD_DAYS, spreadOverdue } from './spreadOverdue';
 
 const SLOT = 15;
@@ -609,6 +611,8 @@ const UpcomingBoard: React.FC = () => {
         },
         [reloadDays, reloadHorizonTasks, reloadUnsorted, horizonsMode]
     );
+    // A proposal applied elsewhere moves tasks across the plan.
+    useProposalChanged(() => void reload());
 
     const fail = useCallback(
         (err: unknown, dates?: string[]) => {
@@ -2111,6 +2115,7 @@ const UpcomingBoard: React.FC = () => {
                         </nav>
                     )}
                     <div className="ml-auto flex items-center gap-1">
+                        <ProposalButton kind="week" />
                         <PluginActions
                             place="plan"
                             context={{

@@ -84,6 +84,8 @@ import DayCalendar, {
     minuteFromOffset,
 } from './DayCalendar';
 import PluginActions from '../Plugins/PluginActions';
+import ProposalButton from '../Proposals/ProposalButton';
+import { useProposalChanged } from '../Proposals/useProposalChanged';
 
 const todayString = () =>
     new Intl.DateTimeFormat('en-CA', { timeZone: getUserTimezone() }).format(
@@ -174,6 +176,8 @@ const NewToday: React.FC = () => {
         toggle,
         create,
     } = useDay(date);
+    // A proposal applied elsewhere changes this day's plan.
+    useProposalChanged(() => void reload());
     const narrow = useIsNarrow();
     const calendarEnabled = useStore(
         (state) => state.userSettingsStore.calendarEnabled
@@ -1088,6 +1092,7 @@ const NewToday: React.FC = () => {
             }
             extraActions={
                 <>
+                    <ProposalButton kind="week" />
                     <PluginActions place="today" context={{ date }} />
                     <Button
                         size="sm"

@@ -5290,6 +5290,60 @@
     "goTo": "Przejdź do",
     "planned": "Zaplanowane {{when}}"
   },
+  "proposals": {
+    "week": {
+      "button": "Zaplanuj mój tydzień",
+      "ready": "Twój tydzień jest gotowy",
+      "preparing": "Przygotowywanie…"
+    },
+    "review": {
+      "button": "Przygotuj mój przegląd",
+      "ready": "Twój przegląd jest gotowy",
+      "validate": "Zastosuj: {{choice}}"
+    },
+    "failed": "Przygotowanie się nie powiodło.",
+    "retry": "Spróbuj ponownie",
+    "startError": "Nie udało się rozpocząć żądania.",
+    "sheet": {
+      "preparing": "Twój tydzień jest przygotowywany…",
+      "failed": "Nie udało się przygotować tygodnia.",
+      "title": "Twój tydzień",
+      "close": "Zamknij",
+      "preparingHint": "Możesz zamknąć to okno: poczeka na ciebie.",
+      "loadError": "Nie udało się otworzyć tej propozycji.",
+      "empty": "Nic do zmiany w tym tygodniu.",
+      "alreadyApplied": "Już zastosowano.",
+      "replyPlaceholder": "Napisz, co się zmienia…",
+      "reply": "Odpowiedz",
+      "send": "Wyślij",
+      "ignore": "Ignoruj",
+      "later": "Później",
+      "apply": "Zastosuj ({{count}})",
+      "appliedCount": "Zastosowano {{count}} z {{total}}"
+    },
+    "apply": {
+      "error": "Nie udało się zastosować zmian.",
+      "failedOne": "Nie zastosowano"
+    },
+    "reply": {
+      "error": "Odpowiedź nie została wysłana."
+    },
+    "dismiss": {
+      "error": "Nie udało się zignorować propozycji."
+    },
+    "ops": {
+      "planDay": "W dzisiejszym planie",
+      "due": "Termin {{date}}",
+      "thisWeek": "Ten tydzień",
+      "later": "Później",
+      "drop": "Porzuć"
+    },
+    "groups": {
+      "thisWeek": "Ten tydzień",
+      "later": "Później",
+      "drop": "Do porzucenia"
+    }
+  },
   "review": {
         "calm_many": "{{count}} rzeczy do przejrzenia, we własnym tempie",
         "calm_few": "{{count}} rzeczy do przejrzenia, we własnym tempie",

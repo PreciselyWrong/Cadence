@@ -5202,6 +5202,60 @@
     "goTo": "Gå til",
     "planned": "Planlagt {{when}}"
   },
+  "proposals": {
+    "week": {
+      "button": "Planlæg min uge",
+      "ready": "Din uge er klar",
+      "preparing": "Forbereder…"
+    },
+    "review": {
+      "button": "Forbered min gennemgang",
+      "ready": "Din gennemgang er klar",
+      "validate": "Anvend: {{choice}}"
+    },
+    "failed": "Forberedelsen mislykkedes.",
+    "retry": "Prøv igen",
+    "startError": "Anmodningen kunne ikke startes.",
+    "sheet": {
+      "preparing": "Din uge forberedes…",
+      "failed": "Din uge kunne ikke forberedes.",
+      "title": "Din uge",
+      "close": "Luk",
+      "preparingHint": "Du kan lukke vinduet: det venter på dig.",
+      "loadError": "Forslaget kunne ikke åbnes.",
+      "empty": "Intet at ændre denne uge.",
+      "alreadyApplied": "Allerede brugt.",
+      "replyPlaceholder": "Fortæl hvad der ændrer sig…",
+      "reply": "Svar",
+      "send": "Send",
+      "ignore": "Ignorer",
+      "later": "Senere",
+      "apply": "Anvend ({{count}})",
+      "appliedCount": "{{count}} af {{total}} anvendt"
+    },
+    "apply": {
+      "error": "Ændringerne kunne ikke anvendes.",
+      "failedOne": "Ikke anvendt"
+    },
+    "reply": {
+      "error": "Dit svar blev ikke sendt."
+    },
+    "dismiss": {
+      "error": "Forslaget kunne ikke ignoreres."
+    },
+    "ops": {
+      "planDay": "På dagens plan",
+      "due": "Forfalder {{date}}",
+      "thisWeek": "Denne uge",
+      "later": "Senere",
+      "drop": "Opgiv"
+    },
+    "groups": {
+      "thisWeek": "Denne uge",
+      "later": "Senere",
+      "drop": "Skal opgives"
+    }
+  },
   "review": {
     "quick": {
       "keys": "1–9 vælg · S spring over · O åbn · Esc stop",

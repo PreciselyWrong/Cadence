@@ -1,7 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import DecisionChips, { DecisionOption } from './DecisionChips';
 import { useDecisionKeys } from './useDecisionKeys';
+import Button from '../Shared/ui/Button';
+
+// The agent's choice for the current item (docs/47-proposals.md): preselected,
+// with its reason; one tap validates it, the other choices stay.
+export interface Suggestion {
+    // The option's label, as the chips show it.
+    choice: string;
+    reason: string | null;
+    run: () => void;
+}
 
 interface QuickReviewProps {
     loading: boolean;
@@ -12,6 +22,7 @@ interface QuickReviewProps {
     // Resets "More…" when the next item comes.
     itemKey: string | null;
     options: DecisionOption[];
+    suggestion?: Suggestion | null;
     position: number;
     total: number;
     onSkip: () => void;
@@ -28,6 +39,7 @@ const QuickReview: React.FC<QuickReviewProps> = ({
     card,
     itemKey,
     options,
+    suggestion = null,
     position,
     total,
     onSkip,
@@ -43,6 +55,21 @@ const QuickReview: React.FC<QuickReviewProps> = ({
         onOpen: active ? onOpen : undefined,
         onStop,
     });
+    // Enter validates the suggestion, unless a control has the focus (it keeps
+    // its own Enter) or a field is being typed in.
+    useEffect(() => {
+        if (!active || !suggestion) return;
+        const onKey = (event: KeyboardEvent) => {
+            if (event.key !== 'Enter' || event.altKey || event.ctrlKey) return;
+            if (event.metaKey || event.shiftKey) return;
+            const target = event.target as HTMLElement | null;
+            if (target?.closest?.('button, a, input, textarea, select')) return;
+            event.preventDefault();
+            suggestion.run();
+        };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+    }, [active, suggestion]);
 
     const header = (
         <div className="flex items-center justify-between gap-3">
@@ -144,6 +171,22 @@ const QuickReview: React.FC<QuickReviewProps> = ({
                 )}
                 {card}
             </div>
+            {suggestion && (
+                <div className="space-y-3 rounded-lg bg-primary-container/40 p-3">
+                    {suggestion.reason && (
+                        <p className="text-sm text-surface-on">
+                            {suggestion.reason}
+                        </p>
+                    )}
+                    <Button variant="primary" onClick={suggestion.run}>
+                        {t(
+                            'proposals.review.validate',
+                            'Valider : {{choice}}',
+                            { choice: suggestion.choice }
+                        )}
+                    </Button>
+                </div>
+            )}
             <DecisionChips key={itemKey ?? ''} options={options} numbered />
             <div className="flex items-center justify-between">
                 <button

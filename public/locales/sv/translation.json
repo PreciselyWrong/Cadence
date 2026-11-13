@@ -5202,6 +5202,60 @@
     "goTo": "Gå till",
     "planned": "Planerad {{when}}"
   },
+  "proposals": {
+    "week": {
+      "button": "Planera min vecka",
+      "ready": "Din vecka är klar",
+      "preparing": "Förbereder…"
+    },
+    "review": {
+      "button": "Förbered min genomgång",
+      "ready": "Din genomgång är klar",
+      "validate": "Tillämpa: {{choice}}"
+    },
+    "failed": "Förberedelsen misslyckades.",
+    "retry": "Försök igen",
+    "startError": "Begäran kunde inte startas.",
+    "sheet": {
+      "preparing": "Din vecka förbereds…",
+      "failed": "Din vecka kunde inte förberedas.",
+      "title": "Din vecka",
+      "close": "Stäng",
+      "preparingHint": "Du kan stänga fönstret: det väntar på dig.",
+      "loadError": "Förslaget kunde inte öppnas.",
+      "empty": "Inget att ändra denna vecka.",
+      "alreadyApplied": "Redan tillämpad.",
+      "replyPlaceholder": "Berätta vad som ändras…",
+      "reply": "Svara",
+      "send": "Skicka",
+      "ignore": "Ignorera",
+      "later": "Senare",
+      "apply": "Tillämpa ({{count}})",
+      "appliedCount": "{{count}} av {{total}} tillämpade"
+    },
+    "apply": {
+      "error": "Ändringarna kunde inte tillämpas.",
+      "failedOne": "Inte tillämpad"
+    },
+    "reply": {
+      "error": "Ditt svar skickades inte."
+    },
+    "dismiss": {
+      "error": "Förslaget kunde inte ignoreras."
+    },
+    "ops": {
+      "planDay": "I dagens plan",
+      "due": "Förfaller {{date}}",
+      "thisWeek": "Denna vecka",
+      "later": "Senare",
+      "drop": "Släpp"
+    },
+    "groups": {
+      "thisWeek": "Denna vecka",
+      "later": "Senare",
+      "drop": "Att släppa"
+    }
+  },
   "review": {
     "quick": {
       "keys": "1–9 välj · S hoppa över · O öppna · Esc stoppa",

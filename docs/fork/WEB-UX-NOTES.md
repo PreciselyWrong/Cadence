@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-13 — Propositions : « Planifier ma semaine » et « Préparer ma revue » (web)
+
+- **Problème** : le bouton ouvrait un chat avec l'agent ; l'attente était incertaine et l'agent se voyait.
+- **Décision** : le bouton lance la demande en fond et affiche son état (« En préparation… », puis « Ta semaine est prête »). La fenêtre est native : une phrase de synthèse, les questions en puces, les changements par jour avec une case chacun (cochée par défaut), puis « Appliquer (N) », « Répondre », « Plus tard », « Ignorer ». Rien ne change avant « Appliquer ». La revue rapide s'ouvre avec le choix de l'agent présélectionné et sa raison ; une touche valide.
+- **Android à reprendre** : vérifier que la feuille Android a les mêmes libellés, le même ordre des groupes (jours, « Cette semaine », « Plus tard », « À abandonner ») et la même touche Entrée (applique) que le web.
+
 ### 2026-11-13 — Aujourd'hui : la grille suit les heures visibles (web)
 
 - **Problème** : le calendrier d'Aujourd'hui ne dessinait que la journée de travail (`day_hours`, 08:00-18:00 par défaut) : impossible de voir ou de déposer une tâche avant ou après, et le réglage « Heures visibles » du calendrier ne s'appliquait pas ici.

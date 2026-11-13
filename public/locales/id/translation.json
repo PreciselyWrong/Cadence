@@ -5202,6 +5202,60 @@
     "goTo": "Buka",
     "planned": "Dijadwalkan {{when}}"
   },
+  "proposals": {
+    "week": {
+      "button": "Rencanakan minggu saya",
+      "ready": "Minggu Anda sudah siap",
+      "preparing": "Sedang disiapkan…"
+    },
+    "review": {
+      "button": "Siapkan tinjauan saya",
+      "ready": "Tinjauan Anda sudah siap",
+      "validate": "Terapkan: {{choice}}"
+    },
+    "failed": "Persiapan gagal.",
+    "retry": "Coba lagi",
+    "startError": "Permintaan tidak dapat dimulai.",
+    "sheet": {
+      "preparing": "Minggu Anda sedang disiapkan…",
+      "failed": "Minggu Anda tidak dapat disiapkan.",
+      "title": "Minggu Anda",
+      "close": "Tutup",
+      "preparingHint": "Anda dapat menutup jendela ini: akan menunggu Anda.",
+      "loadError": "Usulan ini tidak dapat dibuka.",
+      "empty": "Tidak ada yang perlu diubah minggu ini.",
+      "alreadyApplied": "Sudah diterapkan.",
+      "replyPlaceholder": "Beri tahu saya apa yang berubah…",
+      "reply": "Balas",
+      "send": "Kirim",
+      "ignore": "Abaikan",
+      "later": "Nanti",
+      "apply": "Terapkan ({{count}})",
+      "appliedCount": "{{count}} dari {{total}} diterapkan"
+    },
+    "apply": {
+      "error": "Perubahan tidak dapat diterapkan.",
+      "failedOne": "Tidak diterapkan"
+    },
+    "reply": {
+      "error": "Balasan Anda tidak terkirim."
+    },
+    "dismiss": {
+      "error": "Usulan tidak dapat diabaikan."
+    },
+    "ops": {
+      "planDay": "Di rencana hari ini",
+      "due": "Jatuh tempo {{date}}",
+      "thisWeek": "Minggu ini",
+      "later": "Nanti",
+      "drop": "Buang"
+    },
+    "groups": {
+      "thisWeek": "Minggu ini",
+      "later": "Nanti",
+      "drop": "Akan dibuang"
+    }
+  },
   "review": {
     "quick": {
       "keys": "1–9 pilih · S lewati · O buka · Esc berhenti",

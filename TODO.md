@@ -4,8 +4,6 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Now
 
-- Web et Android : propositions d'agent (« Planifier ma semaine », « Préparer ma revue ») (2026-11-13)
-  Raison : le serveur est livré (`docs/47-proposals.md`, `/api/proposals`) ; il manque le bouton, la notification et la fenêtre native des deux clients, et la revue rapide présélectionnée. Vérif : clic sur le web, notification sur le web et le téléphone, cases décochées non appliquées.
 - Android : Agenda aux heures visibles, heures de travail en bande (2026-11-13)
   Raison : le calendrier d'Aujourd'hui du web suit `ui_settings.calendar.visibleHours` (journée entière par défaut) et grise ce qui sort des heures de travail (`planning.dayHours`) ; l'Agenda Android (`agenda/AgendaTimeViews.kt`) dessine toujours 0-24 sans bande. Vérif : mêmes heures et même bande sur le web et le téléphone avec le même compte.
 - Android : panneaux Notes, Objectifs et Habitudes (2026-11-13)

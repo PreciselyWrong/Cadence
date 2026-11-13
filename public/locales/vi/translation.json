@@ -5202,6 +5202,60 @@
     "goTo": "Đi tới",
     "planned": "Đã lên kế hoạch {{when}}"
   },
+  "proposals": {
+    "week": {
+      "button": "Lên kế hoạch tuần của tôi",
+      "ready": "Tuần của bạn đã sẵn sàng",
+      "preparing": "Đang chuẩn bị…"
+    },
+    "review": {
+      "button": "Chuẩn bị đánh giá của tôi",
+      "ready": "Bản đánh giá của bạn đã sẵn sàng",
+      "validate": "Áp dụng: {{choice}}"
+    },
+    "failed": "Chuẩn bị không thành công.",
+    "retry": "Thử lại",
+    "startError": "Không thể bắt đầu yêu cầu.",
+    "sheet": {
+      "preparing": "Tuần của bạn đang được chuẩn bị…",
+      "failed": "Không thể chuẩn bị tuần của bạn.",
+      "title": "Tuần của bạn",
+      "close": "Đóng",
+      "preparingHint": "Bạn có thể đóng cửa sổ này: nó sẽ đợi bạn.",
+      "loadError": "Không thể mở đề xuất này.",
+      "empty": "Tuần này không có gì cần thay đổi.",
+      "alreadyApplied": "Đã áp dụng.",
+      "replyPlaceholder": "Hãy cho tôi biết điều gì thay đổi…",
+      "reply": "Trả lời",
+      "send": "Gửi",
+      "ignore": "Bỏ qua",
+      "later": "Để sau",
+      "apply": "Áp dụng ({{count}})",
+      "appliedCount": "Đã áp dụng {{count}} trên {{total}}"
+    },
+    "apply": {
+      "error": "Không thể áp dụng các thay đổi.",
+      "failedOne": "Chưa áp dụng"
+    },
+    "reply": {
+      "error": "Câu trả lời chưa được gửi."
+    },
+    "dismiss": {
+      "error": "Không thể bỏ qua đề xuất."
+    },
+    "ops": {
+      "planDay": "Trong kế hoạch hôm nay",
+      "due": "Hạn {{date}}",
+      "thisWeek": "Tuần này",
+      "later": "Để sau",
+      "drop": "Bỏ"
+    },
+    "groups": {
+      "thisWeek": "Tuần này",
+      "later": "Để sau",
+      "drop": "Cần bỏ"
+    }
+  },
   "review": {
     "quick": {
       "keys": "1–9 chọn · S bỏ qua · O mở · Esc dừng",

@@ -10,7 +10,7 @@ import {
     SparklesIcon,
 } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { getApiPath } from '../../config/paths';
 import { fetchWithCsrf } from '../../utils/csrfService';
 import {
@@ -21,6 +21,7 @@ import {
 import { useStore } from '../../store/useStore';
 import { openTaskPanel } from '../../store/taskPanelStore';
 import { safeOpenPath } from '../../utils/agentMessagesService';
+import { setProposalParam } from '../Proposals/proposalLinks';
 
 // Direct share invitations carry a numeric id; ones that came through a group
 // carry a string such as "g12".
@@ -58,6 +59,7 @@ interface NotificationsDropdownProps {
 const NotificationsDropdown: React.FC<NotificationsDropdownProps> = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const location = useLocation();
     const loadProjects = useStore((state) => state.projectsStore.loadProjects);
     const [isOpen, setIsOpen] = useState(false);
     const [unreadCount, setUnreadCount] = useState(0);
@@ -317,7 +319,18 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = () => {
     };
 
     const handleNotificationClick = (notification: Notification) => {
-        if (
+        const proposalUid = notification.data?.proposal_uid;
+        if (notification.type === 'proposal' && proposalUid) {
+            setIsOpen(false);
+            if (!notification.read_at) handleMarkAsRead(notification.uid);
+            // A week opens its sheet over the page; a review is worked in the
+            // Review page's quick review.
+            if (notification.data?.kind === 'review') {
+                navigate('/review');
+            } else {
+                setProposalParam(navigate, location, proposalUid);
+            }
+        } else if (
             notification.type === 'task_assigned' &&
             (notification.data?.count ?? 1) > 1
         ) {

@@ -5202,6 +5202,60 @@
     "goTo": "Ga naar",
     "planned": "Gepland {{when}}"
   },
+  "proposals": {
+    "week": {
+      "button": "Mijn week plannen",
+      "ready": "Je week is klaar",
+      "preparing": "Voorbereiden…"
+    },
+    "review": {
+      "button": "Mijn review voorbereiden",
+      "ready": "Je review is klaar",
+      "validate": "Toepassen: {{choice}}"
+    },
+    "failed": "Het voorbereiden is mislukt.",
+    "retry": "Opnieuw proberen",
+    "startError": "Het verzoek kon niet worden gestart.",
+    "sheet": {
+      "preparing": "Je week wordt voorbereid…",
+      "failed": "Je week kon niet worden voorbereid.",
+      "title": "Je week",
+      "close": "Sluiten",
+      "preparingHint": "Je kunt dit venster sluiten: het wacht op je.",
+      "loadError": "Dit voorstel kon niet worden geopend.",
+      "empty": "Niets te wijzigen deze week.",
+      "alreadyApplied": "Al toegepast.",
+      "replyPlaceholder": "Vertel me wat er verandert…",
+      "reply": "Antwoorden",
+      "send": "Verzenden",
+      "ignore": "Negeren",
+      "later": "Later",
+      "apply": "Toepassen ({{count}})",
+      "appliedCount": "{{count}} van {{total}} toegepast"
+    },
+    "apply": {
+      "error": "De wijzigingen konden niet worden toegepast.",
+      "failedOne": "Niet toegepast"
+    },
+    "reply": {
+      "error": "Je antwoord is niet verzonden."
+    },
+    "dismiss": {
+      "error": "Het voorstel kon niet worden genegeerd."
+    },
+    "ops": {
+      "planDay": "Op het plan van vandaag",
+      "due": "Vervalt {{date}}",
+      "thisWeek": "Deze week",
+      "later": "Later",
+      "drop": "Laten vallen"
+    },
+    "groups": {
+      "thisWeek": "Deze week",
+      "later": "Later",
+      "drop": "Te laten vallen"
+    }
+  },
   "review": {
     "quick": {
       "keys": "1–9 kiezen · S overslaan · O openen · Esc stoppen",

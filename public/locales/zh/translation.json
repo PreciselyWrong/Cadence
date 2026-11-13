@@ -5202,6 +5202,60 @@
     "goTo": "前往",
     "planned": "计划于{{when}}"
   },
+  "proposals": {
+    "week": {
+      "button": "规划我的一周",
+      "ready": "你的一周已准备好",
+      "preparing": "准备中…"
+    },
+    "review": {
+      "button": "准备我的回顾",
+      "ready": "你的回顾已准备好",
+      "validate": "应用：{{choice}}"
+    },
+    "failed": "准备失败。",
+    "retry": "重试",
+    "startError": "无法开始请求。",
+    "sheet": {
+      "preparing": "正在准备你的一周…",
+      "failed": "你的一周无法准备。",
+      "title": "你的一周",
+      "close": "关闭",
+      "preparingHint": "你可以关闭此窗口，它会等你。",
+      "loadError": "无法打开此建议。",
+      "empty": "本周无需更改。",
+      "alreadyApplied": "已应用。",
+      "replyPlaceholder": "告诉我有什么变化…",
+      "reply": "回复",
+      "send": "发送",
+      "ignore": "忽略",
+      "later": "稍后",
+      "apply": "应用（{{count}}）",
+      "appliedCount": "已应用 {{count}} / {{total}}"
+    },
+    "apply": {
+      "error": "无法应用这些更改。",
+      "failedOne": "未应用"
+    },
+    "reply": {
+      "error": "你的回复未能发送。"
+    },
+    "dismiss": {
+      "error": "无法忽略此建议。"
+    },
+    "ops": {
+      "planDay": "在今日计划中",
+      "due": "截止 {{date}}",
+      "thisWeek": "本周",
+      "later": "稍后",
+      "drop": "放弃"
+    },
+    "groups": {
+      "thisWeek": "本周",
+      "later": "稍后",
+      "drop": "待放弃"
+    }
+  },
   "review": {
     "quick": {
       "keys": "1–9 选择 · S 跳过 · O 打开 · Esc 停止",

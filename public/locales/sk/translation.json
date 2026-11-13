@@ -5411,6 +5411,60 @@
     "goTo": "Prejsť na",
     "planned": "Naplánované {{when}}"
   },
+  "proposals": {
+    "week": {
+      "button": "Naplánuj môj týždeň",
+      "ready": "Tvoja týždeň je pripravený",
+      "preparing": "Pripravuje sa…"
+    },
+    "review": {
+      "button": "Priprav moju revíziu",
+      "ready": "Tvoja revízia je pripravená",
+      "validate": "Použiť: {{choice}}"
+    },
+    "failed": "Príprava zlyhala.",
+    "retry": "Skúsiť znova",
+    "startError": "Žiadosť sa nepodarilo spustiť.",
+    "sheet": {
+      "preparing": "Tvoj týždeň sa pripravuje…",
+      "failed": "Tvoj týždeň sa nepodarilo pripraviť.",
+      "title": "Tvoj týždeň",
+      "close": "Zavrieť",
+      "preparingHint": "Môžeš zavrieť toto okno: počká na teba.",
+      "loadError": "Tento návrh sa nepodarilo otvoriť.",
+      "empty": "Tento týždeň nič nemeniť.",
+      "alreadyApplied": "Už použité.",
+      "replyPlaceholder": "Povedz, čo sa mení…",
+      "reply": "Odpovedať",
+      "send": "Odoslať",
+      "ignore": "Ignorovať",
+      "later": "Neskôr",
+      "apply": "Použiť ({{count}})",
+      "appliedCount": "{{count}} z {{total}} použitých"
+    },
+    "apply": {
+      "error": "Zmeny sa nepodarilo použiť.",
+      "failedOne": "Nepoužité"
+    },
+    "reply": {
+      "error": "Tvoja odpoveď sa neodoslala."
+    },
+    "dismiss": {
+      "error": "Návrh sa nepodarilo ignorovať."
+    },
+    "ops": {
+      "planDay": "V dnešnom pláne",
+      "due": "Termín {{date}}",
+      "thisWeek": "Tento týždeň",
+      "later": "Neskôr",
+      "drop": "Zahodiť"
+    },
+    "groups": {
+      "thisWeek": "Tento týždeň",
+      "later": "Neskôr",
+      "drop": "Na zahodenie"
+    }
+  },
   "review": {
         "calm_few": "{{count}} veci na pozretie, vo vlastnom tempe",
     "quick": {

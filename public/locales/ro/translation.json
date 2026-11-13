@@ -5217,6 +5217,60 @@
     "goTo": "Mergi la",
     "planned": "Programată {{when}}"
   },
+  "proposals": {
+    "week": {
+      "button": "Planifică-mi săptămâna",
+      "ready": "Săptămâna ta este gata",
+      "preparing": "Se pregătește…"
+    },
+    "review": {
+      "button": "Pregătește-mi recenzia",
+      "ready": "Recenzia ta este gata",
+      "validate": "Aplică: {{choice}}"
+    },
+    "failed": "Pregătirea a eșuat.",
+    "retry": "Încearcă din nou",
+    "startError": "Cererea nu a putut fi pornită.",
+    "sheet": {
+      "preparing": "Săptămâna ta se pregătește…",
+      "failed": "Săptămâna ta nu a putut fi pregătită.",
+      "title": "Săptămâna ta",
+      "close": "Închide",
+      "preparingHint": "Poți închide fereastra: te va aștepta.",
+      "loadError": "Nu s-a putut deschide această propunere.",
+      "empty": "Nimic de schimbat în această săptămână.",
+      "alreadyApplied": "Deja aplicată.",
+      "replyPlaceholder": "Spune-mi ce se schimbă…",
+      "reply": "Răspunde",
+      "send": "Trimite",
+      "ignore": "Ignoră",
+      "later": "Mai târziu",
+      "apply": "Aplică ({{count}})",
+      "appliedCount": "{{count}} din {{total}} aplicate"
+    },
+    "apply": {
+      "error": "Modificările nu au putut fi aplicate.",
+      "failedOne": "Neaplicat"
+    },
+    "reply": {
+      "error": "Răspunsul tău nu a fost trimis."
+    },
+    "dismiss": {
+      "error": "Propunerea nu a putut fi ignorată."
+    },
+    "ops": {
+      "planDay": "În planul de azi",
+      "due": "Scadent {{date}}",
+      "thisWeek": "Săptămâna aceasta",
+      "later": "Mai târziu",
+      "drop": "Renunță"
+    },
+    "groups": {
+      "thisWeek": "Săptămâna aceasta",
+      "later": "Mai târziu",
+      "drop": "De renunțat"
+    }
+  },
   "review": {
     "quick": {
       "keys": "1–9 alege · S omite · O deschide · Esc oprește",

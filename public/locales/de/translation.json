@@ -5211,6 +5211,60 @@
     "goTo": "Gehe zu",
     "planned": "Geplant {{when}}"
   },
+  "proposals": {
+    "week": {
+      "button": "Woche planen",
+      "ready": "Deine Woche ist fertig",
+      "preparing": "Wird vorbereitet…"
+    },
+    "review": {
+      "button": "Review vorbereiten",
+      "ready": "Dein Review ist fertig",
+      "validate": "Übernehmen: {{choice}}"
+    },
+    "failed": "Die Vorbereitung ist fehlgeschlagen.",
+    "retry": "Erneut versuchen",
+    "startError": "Die Anfrage konnte nicht gestartet werden.",
+    "sheet": {
+      "preparing": "Deine Woche wird vorbereitet…",
+      "failed": "Deine Woche konnte nicht vorbereitet werden.",
+      "title": "Deine Woche",
+      "close": "Schließen",
+      "preparingHint": "Du kannst dieses Fenster schließen: Es wartet auf dich.",
+      "loadError": "Dieser Vorschlag konnte nicht geöffnet werden.",
+      "empty": "Diese Woche gibt es nichts zu ändern.",
+      "alreadyApplied": "Bereits angewendet.",
+      "replyPlaceholder": "Sag mir, was sich ändert…",
+      "reply": "Antworten",
+      "send": "Senden",
+      "ignore": "Ignorieren",
+      "later": "Später",
+      "apply": "Anwenden ({{count}})",
+      "appliedCount": "{{count}} von {{total}} angewendet"
+    },
+    "apply": {
+      "error": "Die Änderungen konnten nicht angewendet werden.",
+      "failedOne": "Nicht angewendet"
+    },
+    "reply": {
+      "error": "Deine Antwort wurde nicht gesendet."
+    },
+    "dismiss": {
+      "error": "Der Vorschlag konnte nicht ignoriert werden."
+    },
+    "ops": {
+      "planDay": "Im Tagesplan",
+      "due": "Fällig am {{date}}",
+      "thisWeek": "Diese Woche",
+      "later": "Später",
+      "drop": "Verwerfen"
+    },
+    "groups": {
+      "thisWeek": "Diese Woche",
+      "later": "Später",
+      "drop": "Zu verwerfen"
+    }
+  },
   "review": {
     "quick": {
       "keys": "1–9 wählen · S überspringen · O öffnen · Esc beenden",

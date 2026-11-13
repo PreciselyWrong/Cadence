@@ -1,0 +1,193 @@
+import {
+    getDefaultHeaders,
+    getPostHeadersWithCsrf,
+    handleAuthResponse,
+} from './authUtils';
+import { getApiPath } from '../config/paths';
+
+// Client of the agent proposals (docs/47-proposals.md). The server computes
+// the facts; the answer is only ever applied by the user, one change at a time.
+
+export type ProposalKind = 'week' | 'review';
+export type ProposalStatus =
+    'pending' | 'ready' | 'failed' | 'applied' | 'dismissed';
+
+export type WeekOp = 'plan_day' | 'this_week' | 'later' | 'due' | 'drop';
+
+export interface WeekChange {
+    task_uid: string;
+    op: WeekOp;
+    date?: string;
+    reason: string;
+}
+
+export interface WeekQuestion {
+    id: string;
+    text: string;
+    choices: string[];
+}
+
+export interface WeekAnswer {
+    summary: string;
+    questions: WeekQuestion[];
+    changes: WeekChange[];
+}
+
+export type ReviewChoice =
+    'do_today' | 'this_week' | 'in_view' | 'later' | 'done' | 'drop' | 'keep';
+
+export interface ReviewJudgement {
+    task_uid: string;
+    choice: ReviewChoice;
+    reason: string;
+    cached?: boolean;
+}
+
+export interface ReviewAnswer {
+    summary: string;
+    items: ReviewJudgement[];
+}
+
+export interface WeekTaskFact {
+    uid: string;
+    name: string;
+    due?: string;
+    project?: string;
+    priority?: string;
+    estimate_min?: number;
+    overdue?: boolean;
+    week_of?: string;
+    someday?: boolean;
+}
+
+export interface WeekFacts {
+    period: { start: string; end: string };
+    today: string;
+    days: {
+        date: string;
+        events: { title: string; start: string; end: string | null }[];
+        planned: string[];
+        load_minutes: number;
+    }[];
+    tasks: WeekTaskFact[];
+}
+
+export interface ProposalSummary {
+    uid: string;
+    kind: ProposalKind;
+    status: ProposalStatus;
+    period_start: string | null;
+    period_end: string | null;
+    answer: WeekAnswer | ReviewAnswer | null;
+    error: string | null;
+    reply_text: string | null;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface ProposalDetail extends ProposalSummary {
+    facts: WeekFacts | Record<string, unknown>;
+}
+
+export interface ApplyResult {
+    task_uid: string;
+    state: 'applied' | 'failed';
+    error?: string;
+}
+
+export interface ApplyOutcome {
+    uid: string;
+    status: ProposalStatus;
+    results: ApplyResult[];
+}
+
+export interface ReviewDecision {
+    task_uid: string;
+    choice: ReviewChoice;
+}
+
+async function request(
+    path: string,
+    method: 'GET' | 'POST',
+    body: unknown,
+    errorMessage: string
+): Promise<Response> {
+    const response = await fetch(getApiPath(path), {
+        method,
+        credentials: 'include',
+        headers:
+            method === 'GET'
+                ? getDefaultHeaders()
+                : await getPostHeadersWithCsrf(),
+        body: body === undefined ? undefined : JSON.stringify(body),
+    });
+    await handleAuthResponse(response, errorMessage);
+    return response;
+}
+
+// A pending proposal of this kind is returned as it is (200), not doubled.
+export const createProposal = (
+    kind: ProposalKind,
+    period?: { start?: string; end?: string }
+): Promise<{ uid: string; status: ProposalStatus }> =>
+    request(
+        'proposals',
+        'POST',
+        { kind, ...period },
+        'Failed to start the proposal.'
+    ).then((response) => response.json());
+
+export const getProposal = (uid: string): Promise<ProposalDetail> =>
+    request(
+        `proposals/${encodeURIComponent(uid)}`,
+        'GET',
+        undefined,
+        'Failed to load the proposal.'
+    ).then((response) => response.json());
+
+// The latest proposal of each kind; `status` narrows it to one status.
+export const listProposals = (
+    status?: ProposalStatus
+): Promise<ProposalSummary[]> =>
+    request(
+        status ? `proposals?status=${status}` : 'proposals',
+        'GET',
+        undefined,
+        'Failed to load the proposals.'
+    )
+        .then((response) => response.json())
+        .then((body: { proposals: ProposalSummary[] }) => body.proposals);
+
+// Week: the task uids to apply. Review: the decisions taken on one item each.
+export const applyProposal = (
+    uid: string,
+    body: { task_uids: string[] } | { decisions: ReviewDecision[] }
+): Promise<ApplyOutcome> =>
+    request(
+        `proposals/${encodeURIComponent(uid)}/apply`,
+        'POST',
+        body,
+        'Failed to apply the proposal.'
+    ).then((response) => response.json());
+
+// Asks again with the user's words; the proposal goes back to pending.
+export const replyProposal = (
+    uid: string,
+    text: string
+): Promise<ProposalSummary> =>
+    request(
+        `proposals/${encodeURIComponent(uid)}/reply`,
+        'POST',
+        { text },
+        'Failed to send the reply.'
+    ).then((response) => response.json());
+
+export const dismissProposal = (
+    uid: string
+): Promise<{ uid: string; status: ProposalStatus }> =>
+    request(
+        `proposals/${encodeURIComponent(uid)}/dismiss`,
+        'POST',
+        undefined,
+        'Failed to dismiss the proposal.'
+    ).then((response) => response.json());
