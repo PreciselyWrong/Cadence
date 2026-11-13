@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.ViewGroup
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
@@ -139,6 +140,8 @@ private fun PluginPage(item: PluginMenuItem, query: String, onClose: () -> Unit)
                 AndroidView(
                     factory = { viewContext ->
                         WebView(viewContext).apply {
+                            // Sans cela le WebView garde la hauteur mesurée avant le chargement : la page est coupée.
+                            layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                             settings.javaScriptEnabled = true
                             settings.domStorageEnabled = true
                             settings.allowFileAccess = false

@@ -1,3 +1,8 @@
+## [1.28.1] — 13 novembre 2026
+
+- Tâches : les boutons des plugins (« Planifier ma semaine » d'Hermes) passent sous l'en-tête ; le titre de la liste ouverte n'est plus tronqué.
+- Page d'un plugin : elle occupe tout l'écran au lieu d'être coupée après quelques lignes.
+
 ## [1.28.0] — 13 novembre 2026
 
 - Style du bureau repris : cases de tâche rondes (rouges seulement pour une priorité haute), étiquettes rangées par usage puis par nom, « Tâches à classer » de Planifier limitée à cinq lignes puis « Tout afficher ».

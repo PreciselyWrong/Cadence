@@ -3,6 +3,10 @@
 package ch.nicolab.cadence.tasks.ui
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -173,9 +177,6 @@ fun TasksScreen(
                     onTitleClick = { switcherOpen = true },
                     titleClickLabel = stringResource(R.string.tasks_lists_open),
                     actions = {
-                        pluginPlace?.let { place ->
-                            PluginActionButtons(place = place, context = pluginContext, menu = pluginMenu)
-                        }
                         if (tab == TasksTab.NOTES && openProjectUid == null) {
                             RoundHeaderButton(
                                 icon = if (notesGallery) Icons.AutoMirrored.Outlined.ViewList else Icons.Outlined.GridView,
@@ -214,6 +215,15 @@ fun TasksScreen(
                         )
                     },
                 )
+                // Sous l'en-tête, pas dans ses actions : un libellé de plugin y mangeait la place du titre.
+                pluginPlace?.let { place ->
+                    Row(
+                        Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = Space.gutter - Space.sm),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        PluginActionButtons(place = place, context = pluginContext, menu = pluginMenu)
+                    }
+                }
                 SyncStatusLine(
                     status = syncStatus,
                     modifier = Modifier.padding(horizontal = Space.gutter, vertical = Space.xs),
