@@ -41,14 +41,6 @@ describe('AI Assistant - missing LLM configuration', () => {
         expect(response.body.api_key_set).toBe(false);
     });
 
-    it('returns 503 AI_NOT_CONFIGURED for the daily brief', async () => {
-        const response = await agent.post('/api/ai-assistant/daily-brief');
-
-        expect(response.status).toBe(503);
-        expect(response.body.code).toBe('AI_NOT_CONFIGURED');
-        expect(response.body.error).toMatch(/LLM_API_KEY/);
-    });
-
     it('returns 503 AI_NOT_CONFIGURED for task insights', async () => {
         const response = await agent
             .post('/api/ai-assistant/task-insights')
@@ -74,8 +66,9 @@ describe('AI Assistant - missing LLM configuration', () => {
             // CSRF protection is only enforced outside the test environment
             const { body } = await agent.get('/api/csrf-token');
             const response = await agent
-                .post('/api/ai-assistant/daily-brief')
-                .set('x-csrf-token', body.csrfToken);
+                .post('/api/ai-assistant/project-insights')
+                .set('x-csrf-token', body.csrfToken)
+                .send({ projectName: 'Website redesign' });
 
             expect(response.status).toBe(503);
             expect(response.body.code).toBe('AI_NOT_CONFIGURED');

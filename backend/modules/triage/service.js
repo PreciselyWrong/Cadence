@@ -6,8 +6,8 @@
 const moment = require('moment-timezone');
 const { getSafeTimezone } = require('../../utils/timezone-utils');
 const { NotFoundError, ValidationError } = require('../../shared/errors');
-const briefService = require('../daily-plan/brief/service');
-const { collectInput } = require('../daily-plan/brief/collect');
+const { getTriageSettings } = require('./settings');
+const { collectInput } = require('./collect');
 const repository = require('./repository');
 const { ruleItems } = require('./core/items');
 const { taskFingerprint } = require('./core/fingerprint');
@@ -20,16 +20,12 @@ const NOTE_PREVIEW = 300;
 const KEY_MAX = 150;
 
 async function readInput(user) {
-    const settings = await briefService.getBriefSettings(user);
+    const settings = await getTriageSettings(user);
     const now = new Date();
     const today = moment
         .tz(now, getSafeTimezone(user.timezone))
         .format('YYYY-MM-DD');
-    const input = await collectInput(user, settings, {
-        today,
-        now,
-        allOpen: true,
-    });
+    const input = await collectInput(user, settings, { today, now });
     return { input, settings };
 }
 

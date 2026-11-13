@@ -59,6 +59,18 @@ Read shared access through `permissionSources`, never `Permission` alone: group 
 | **RateLimit** | `rate_limit.js` | Shared rate-limit store |
 | **Setting**, **Action** | `setting.js`, `action.js` | Instance key-value settings; audit trail of share actions (actor, verb, resource, target) |
 
+### Kept but unused
+
+Left in the schema when a feature was retired, so migrated and new databases stay alike and nothing is lost; no code reads or writes them. A later migration may drop them once every install has moved on.
+
+| Where | Since | |
+|-------|-------|---|
+| `daily_plans.brief`, `brief_version`, `brief_status`, `brief_generated_at` | 2026-11-12 | The retired daily brief (`docs/39-daily-brief.md`) |
+| `brief_proposals` (model `BriefProposal`) | 2026-11-12 | Its decisions and feedback |
+| `users.ai_daily_brief`, `users.ai_daily_brief_date` | 2026-11-12 | The upstream AI daily brief cache |
+
+`linked_contexts` is still used, by the triage queue (`docs/40-triage.md`). The triage settings live in `users.ui_settings.brief`, the old key.
+
 ---
 
 ## Model Relationships

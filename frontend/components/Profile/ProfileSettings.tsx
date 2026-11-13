@@ -21,7 +21,7 @@ import {
     CommandLineIcon,
     ChatBubbleLeftRightIcon,
     CpuChipIcon,
-    NewspaperIcon,
+    InboxStackIcon,
     TagIcon,
     CalendarIcon,
     CalendarDaysIcon,
@@ -75,7 +75,7 @@ import CalendarFeedsTab from './tabs/CalendarFeedsTab';
 import AIAssistantTab from './tabs/AIAssistantTab';
 import BillingTab from './tabs/BillingTab';
 import PlanningTab from './tabs/PlanningTab';
-import DailyBriefTab from './tabs/DailyBriefTab';
+import TriageTab from './tabs/TriageTab';
 import ClassifyTab from './tabs/ClassifyTab';
 import AgentsTab from './tabs/AgentsTab';
 import PluginsTab from './tabs/PluginsTab';
@@ -137,7 +137,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
             'sync',
             'calendars',
             'planning',
-            'daily-brief',
+            'triage',
             'classify',
             'agents',
             'plugins',
@@ -1479,10 +1479,10 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
             icon: <QueueListIcon className="w-5 h-5" />,
         },
         {
-            id: 'daily-brief',
+            id: 'triage',
             group: 'planning',
-            name: t('profile.tabs.dailyBrief', 'Résumé'),
-            icon: <NewspaperIcon className="w-5 h-5" />,
+            name: t('triage.title', 'À trier'),
+            icon: <InboxStackIcon className="w-5 h-5" />,
         },
         {
             id: 'classify',
@@ -2050,8 +2050,8 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
                                         isActive={activeTab === 'planning'}
                                     />
 
-                                    <DailyBriefTab
-                                        isActive={activeTab === 'daily-brief'}
+                                    <TriageTab
+                                        isActive={activeTab === 'triage'}
                                     />
 
                                     <ClassifyTab

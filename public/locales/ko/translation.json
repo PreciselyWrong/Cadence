@@ -141,6 +141,37 @@
     }
   },
   "triage": {
+    "settings": {
+      "calendars": "읽는 캘린더",
+      "noCalendars": "캘린더가 없습니다. 프로필 › 캘린더에서 추가하세요.",
+      "lookahead": "미리 볼 일 수",
+      "alerts": "알림",
+      "postponements": "카드 전 미루기 횟수",
+      "closedLookback": "확인한 완료 작업 (일)",
+      "assistant": "AI 어시스턴트",
+      "assistantEnabled": "정리할 항목의 AI 제안",
+      "assistantLimit": "하루에 살펴볼 작업 수",
+      "llmProvider": "AI 제공자: 프로필 › AI 어시스턴트",
+      "save": "저장",
+      "saved": "설정이 저장됨",
+      "saveError": "설정을 저장할 수 없습니다.",
+      "loadError": "설정을 불러올 수 없습니다.",
+      "alertType": {
+        "conflict": "겹치는 일정",
+        "event_in_work_hours": "근무 시간 중 일정",
+        "duplicate": "중복 가능성",
+        "deadline_in_note": "메모에서 찾은 마감",
+        "postponed": "자주 미뤄짐"
+      }
+    },
+    "yes": "예",
+    "no": "아니요",
+    "context": {
+      "title": "맥락",
+      "edit": "맥락 편집",
+      "save": "저장",
+      "delete": "삭제"
+    },
     "mail": {
       "noSubject": "(제목 없음)",
       "draft": "초안 준비됨:",
@@ -633,8 +664,7 @@
             "events": "이벤트",
             "permission": {
                 "events": "이벤트 수신",
-                "routes": "자체 경로 제공",
-                "brief": "Writes the daily brief"
+                "routes": "자체 경로 제공"
             },
             "enabled": "사용",
             "needsApproval": "이 버전은 이전보다 더 많은 것을 요청합니다. 권한과 이벤트를 승인하려면 다시 켜세요.",
@@ -5942,210 +5972,6 @@
       "addedToProject": "프로젝트에 추가했습니다"
     }
   },
-  "dailyBrief": {
-    "sectionName": {
-      "verdict": "판정",
-      "timeline": "다가오는 날",
-      "tonight": "오늘의 우선순위",
-      "moves": "옮길 일",
-      "anticipate": "미리 챙길 일",
-      "replies": "예상되는 답장",
-      "inbox": "받은편지함",
-      "resolved": "완료"
-    },
-    "priority": {
-      "consequence": "영향",
-      "blocking": "다른 일을 막음",
-      "money_deadline": "돈 또는 마감",
-      "planned_load": "계획된 작업량"
-    },
-    "alertType": {
-      "conflict": "겹치는 일정",
-      "overload": "과부하",
-      "duplicate": "중복 가능성",
-      "deadline_in_note": "메모에서 찾은 마감",
-      "postponed": "자주 미뤄짐",
-      "dependency": "의존성",
-      "event_in_work_hours": "근무 시간 중 일정"
-    },
-    "source": {
-      "calendar": "캘린더",
-      "mail": "메일 에이전트",
-      "llm": "AI 다시 쓰기",
-      "voice": "음성",
-      "agent": "에이전트"
-    },
-    "settings": {
-      "linkThemes": "AI 링크 주제",
-      "triageLimit": "하루에 살펴볼 작업 수",
-      "triageEnabled": "정리할 항목의 AI 제안",
-      "postponements": "카드 전 미루기 횟수",
-      "maxMoves": "표시된 이동 제안",
-      "maxTonight": "표시할 우선순위",
-      "closedLookback": "확인한 완료 작업 (일)",
-      "title": "일일 브리핑",
-      "description": "매일 아침 요약: 다가오는 날, 오늘 밤 남은 일, 옮길 수 있는 일.",
-      "status": "소스 상태",
-      "timezoneWarning": "시간대가 설정되지 않아 브리핑 시간이 틀릴 수 있습니다.",
-      "showOnToday": "오늘 화면에 브리핑 표시",
-      "generation": "생성",
-      "enabled": "매일 아침 생성",
-      "time": "시간",
-      "days": "요일",
-      "sections": "섹션",
-      "sectionsHint": "선택하지 않은 섹션은 숨겨지며, 순서는 목록 순서를 따릅니다.",
-      "moveUp": "{{name}} 위로 이동",
-      "moveDown": "{{name}} 아래로 이동",
-      "sources": "읽는 캘린더",
-      "noCalendars": "캘린더가 없습니다. 프로필 › 캘린더에서 추가하세요.",
-      "lookahead": "미리 볼 일 수",
-      "evening": "저녁과 작업량",
-      "eveningHint": "근무 시간은 오늘 화면(집중 블록)에서 설정합니다.",
-      "openToday": "오늘 열기",
-      "eveningStart": "시작",
-      "eveningEnd": "종료",
-      "eveningMinutes": "분",
-      "dayNote": "날짜 메모",
-      "arbitrage": "순위",
-      "priorities": "우선순위 순서",
-      "alerts": "알림",
-      "writing": "작성",
-      "llmEnabled": "AI가 작성한 요약과 이유",
-      "llmProvider": "AI 제공자: 프로필 › AI 어시스턴트",
-      "tone": "어조",
-      "instructions": "지침",
-      "retention": "보관",
-      "decisionsDays": "보관할 결정 (일)",
-      "audioDays": "보관할 오디오 (일)",
-      "voice": "음성",
-      "voiceEnabled": "브리핑 소리 내어 읽기",
-      "piperUrl": "Piper 주소",
-      "voiceName": "음성",
-      "speed": "속도",
-      "save": "저장",
-      "saved": "설정이 저장됨",
-      "saveError": "설정을 저장할 수 없습니다.",
-      "loadError": "브리핑 설정을 불러올 수 없습니다.",
-      "eveningRemove": "제거",
-      "review": {
-        "title": "저녁 점검",
-        "enabled": "전환 시간 이후 저녁 점검 표시",
-        "switchTime": "저녁 점검으로 전환하는 시간"
-      }
-    },
-    "hours": "{{hours}}시간",
-    "hoursMinutes": "{{hours}}시간 {{rest}}",
-    "minutes": "{{count}}분",
-    "task": {
-      "complete": "완료",
-      "done": "“{{name}}” 완료됨",
-      "reopened": "“{{name}}” 다시 열림",
-      "error": "작업을 업데이트할 수 없습니다."
-    },
-    "decision": {
-      "error": "선택을 저장할 수 없습니다."
-    },
-    "loadError": "브리핑을 불러올 수 없습니다.",
-    "generateError": "생성에 실패했습니다.",
-    "generateNow": "지금 생성",
-    "generating": "생성 중…",
-    "regenerate": "다시 생성",
-    "empty": "오늘 브리핑이 아직 없습니다.",
-    "failed": "마지막 생성에 실패했습니다. 이전 브리핑은 유지됩니다.",
-    "settingsLink": "브리핑 설정",
-    "counters": {
-      "overdue": "기한 지남",
-      "today": "오늘"
-    },
-    "timeline": {
-      "today": "오늘",
-      "planned": "{{minutes}}분",
-      "ofCapacity": "작업 {{planned}}, 여유 시간 {{capacity}}",
-      "over": "과부하: 작업 {{planned}}, 여유 시간 {{capacity}}",
-      "duringWork": "근무 중",
-      "legendWork": "근무",
-      "legendEvening": "저녁",
-      "legendEvent": "일정",
-      "legendConflict": "충돌"
-    },
-    "tonight": {
-      "ofCapacity": "{{planned}} / {{capacity}}"
-    },
-    "moves": {
-      "acceptAria": "{{date}}(으)로 이동",
-      "moved": "“{{name}}” 이동됨",
-      "otherDate": "다른 날짜"
-    },
-    "anticipate": {
-      "yes": "예",
-      "no": "아니요",
-      "precise": "구체화",
-      "preciseLabel": "세부 사항",
-      "save": "저장",
-      "answered": "답변 저장됨",
-      "less": "이런 항목 줄이기",
-      "options": "알림 옵션"
-    },
-    "feedback": {
-      "useful": "유용함",
-      "noise": "도움 안 됨",
-      "fewer": "이런 종류의 알림이 줄어듭니다",
-      "question": "이 화면이 도움이 되었나요?"
-    },
-    "status": {
-      "configured": "설정됨",
-      "missing": "설정 안 됨",
-      "failing": "실패"
-    },
-    "card": {
-      "title": "나의 하루",
-      "open": "브리핑 보기",
-      "error": "브리핑을 사용할 수 없습니다."
-    },
-    "context": {
-      "title": "맥락",
-      "edit": "맥락 편집",
-      "save": "저장",
-      "delete": "삭제"
-    },
-    "evening": {
-      "switchToMorning": "아침 요약 보기",
-      "switchToEvening": "저녁 점검 보기",
-      "counters": {
-        "done": "완료",
-        "tonight": "오늘 밤",
-        "slipped": "밀린"
-      },
-      "sections": {
-        "done": "오늘 완료",
-        "slipped": "밀린 일",
-        "tomorrow": "내일"
-      },
-      "carryDone": "« {{name}} » 내일로 넘김",
-      "carryError": "작업을 넘기지 못했습니다.",
-      "emptyTonight": "오늘 밤에 할 일이 없습니다.",
-      "emptyDone": "오늘 완료한 항목이 없습니다.",
-      "emptySlipped": "밀린 항목이 없습니다.",
-      "loadError": "저녁 점검을 불러오지 못했습니다.",
-      "actions": {
-        "menu": "“{{name}}” 작업",
-        "tomorrow": "내일",
-        "dueDate": "날짜 선택",
-        "dueLabel": "마감일",
-        "later": "나중에",
-        "cancel": "포기"
-      },
-      "state": {
-        "due": "마감: {{date}}",
-        "cancelled": "포기함"
-      },
-      "dueDone": "“{{name}}” 마감 {{date}}",
-      "laterDone": "“{{name}}” 나중으로 미룸",
-      "cancelDone": "“{{name}}” 포기함",
-      "tonightTitle": "오늘 밤"
-    },
-    "preparedAt": "{{time}}에 준비됨"
-  },
   "agents": {
     "title": "에이전트",
     "description": "에이전트가 메일을 읽고 초안을 작성합니다. Cadence는 메일 자격 증명을 저장하지 않습니다.",
@@ -6187,7 +6013,6 @@
     "appointmentLabel": "{{title}}, {{range}}",
     "backToList": "목록",
     "blockLabel": "{{title}}, {{range}}",
-    "brief": "일일 요약",
     "calendar": "하루 캘린더",
     "calendarButton": "캘린더",
     "calendarLabel": "하루 캘린더",

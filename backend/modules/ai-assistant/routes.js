@@ -6,12 +6,6 @@ const controller = require('./controller');
 const { requireFeature } = require('../../middleware/entitlements');
 
 router.get('/ai-assistant/config', controller.getConfig);
-router.get('/ai-assistant/daily-brief', controller.getCachedBrief);
-router.post(
-    '/ai-assistant/daily-brief',
-    requireFeature('ai'),
-    controller.getDailyBrief
-);
 router.get(
     '/ai-assistant/task-insights/:taskUid',
     controller.getCachedTaskInsights

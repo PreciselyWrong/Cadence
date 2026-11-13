@@ -225,7 +225,7 @@ After all ops, the rules of PUT run on each day the batch changed: ranges, no sl
 
 ## AI help
 
-Everything in this section appears only while the **AI assistant** is switched on for the user (Profile → Features), the same switch as the Daily Brief. With it off the planner and Today look exactly as described above, and the AI endpoints return `403`.
+Everything in this section appears only while the **AI assistant** is switched on for the user (Profile → Features). With it off the planner and Today look exactly as described above, and the AI endpoints return `403`.
 
 - **Planning tips** (planner and Today): worked out locally, no model call, at most three at a time.
     - Missed blocks: offers **Move to next free slots**.

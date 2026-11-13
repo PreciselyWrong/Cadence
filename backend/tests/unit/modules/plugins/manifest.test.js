@@ -18,6 +18,21 @@ const valid = (overrides = {}) => ({
 });
 
 describe('plugin manifest', () => {
+    it('ignores the retired brief permission with a warning', () => {
+        const result = parseManifest(
+            valid({ permissions: ['events', 'brief', 'routes'] })
+        );
+        expect(result.ok).toBe(true);
+        expect(result.manifest.permissions).toEqual(['events', 'routes']);
+        expect(result.manifest.warnings).toEqual([
+            'The "brief" permission is retired and ignored',
+        ]);
+    });
+
+    it('has no warnings for a current manifest', () => {
+        expect(parseManifest(valid()).manifest.warnings).toEqual([]);
+    });
+
     it('accepts a complete manifest and fills defaults', () => {
         const result = parseManifest(
             valid({ permissions: undefined, events: undefined })

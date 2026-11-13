@@ -143,6 +143,37 @@
     }
   },
   "triage": {
+    "settings": {
+      "calendars": "Luetut kalenterit",
+      "noCalendars": "Ei kalenteria. Lisää kalenteri kohdassa Profiili › Kalenterit.",
+      "lookahead": "Päivää eteenpäin",
+      "alerts": "Hälytykset",
+      "postponements": "Lykkäykset ennen korttia",
+      "closedLookback": "Tarkistetut suljetut tehtävät (päivää)",
+      "assistant": "AI-avustaja",
+      "assistantEnabled": "Tekoälyn ehdotukset lajiteltaviin",
+      "assistantLimit": "Tarkastettuja tehtäviä päivässä",
+      "llmProvider": "Tekoälypalveluntarjoaja: Profiili › Tekoälyavustaja",
+      "save": "Tallenna",
+      "saved": "Asetukset tallennettu",
+      "saveError": "Asetuksia ei voitu tallentaa.",
+      "loadError": "Asetuksia ei voitu ladata.",
+      "alertType": {
+        "conflict": "Päällekkäiset tapahtumat",
+        "event_in_work_hours": "Tapahtuma työaikana",
+        "duplicate": "Mahdollinen kaksoiskappale",
+        "deadline_in_note": "Eräpäivä löytyi muistiinpanosta",
+        "postponed": "Usein lykätty"
+      }
+    },
+    "yes": "Kyllä",
+    "no": "Ei",
+    "context": {
+      "title": "Konteksti",
+      "edit": "Muokkaa kontekstia",
+      "save": "Tallenna",
+      "delete": "Poista"
+    },
     "mail": {
       "noSubject": "(ei aihetta)",
       "draft": "Luonnos valmiina:",
@@ -635,8 +666,7 @@
             "events": "Tapahtumat",
             "permission": {
                 "events": "Kuuntelee tapahtumia",
-                "routes": "Tarjoaa omat reitit",
-                "brief": "Writes the daily brief"
+                "routes": "Tarjoaa omat reitit"
             },
             "enabled": "Käytössä",
             "needsApproval": "Tämä versio vaatii enemmän kuin ennen. Käynnistä se uudelleen hyväksyäksesi sen oikeudet ja tapahtumat.",
@@ -5957,210 +5987,6 @@
       "addedToProject": "Lisätty projektiin"
     }
   },
-  "dailyBrief": {
-    "sectionName": {
-      "verdict": "Arvio",
-      "timeline": "Tulevat päivät",
-      "tonight": "Päivän prioriteetit",
-      "moves": "Siirrettävät",
-      "anticipate": "Ennakoitavat",
-      "replies": "Odotetut vastaukset",
-      "inbox": "Saapuneet",
-      "resolved": "Valmis"
-    },
-    "priority": {
-      "consequence": "Seuraus",
-      "blocking": "Estää muita",
-      "money_deadline": "Raha tai eräpäivä",
-      "planned_load": "Suunniteltu kuormitus"
-    },
-    "alertType": {
-      "conflict": "Päällekkäiset tapahtumat",
-      "overload": "Ylikuormitus",
-      "duplicate": "Mahdollinen kaksoiskappale",
-      "deadline_in_note": "Eräpäivä löytyi muistiinpanosta",
-      "postponed": "Usein lykätty",
-      "dependency": "Riippuvuus",
-      "event_in_work_hours": "Tapahtuma työaikana"
-    },
-    "source": {
-      "calendar": "Kalenterit",
-      "mail": "Sähköpostiagentti",
-      "llm": "Tekoälyn uudelleenkirjoitus",
-      "voice": "Ääni",
-      "agent": "Agentti"
-    },
-    "settings": {
-      "linkThemes": "Linkkien teemat tekoälyllä",
-      "triageLimit": "Tarkastettuja tehtäviä päivässä",
-      "triageEnabled": "Tekoälyn ehdotukset lajiteltaviin",
-      "postponements": "Lykkäykset ennen korttia",
-      "maxMoves": "Näytetyt siirrot",
-      "maxTonight": "Näytettävät prioriteetit",
-      "closedLookback": "Tarkistetut suljetut tehtävät (päivää)",
-      "title": "Päivän yhteenveto",
-      "description": "Yhteenveto joka aamu: tulevat päivät, tänä iltana jäljellä oleva ja se, mitä voi siirtää.",
-      "status": "Lähteiden tila",
-      "timezoneWarning": "Aikavyöhykettä ei ole asetettu: yhteenvedon ajat voivat olla väärin.",
-      "showOnToday": "Näytä yhteenveto Tänään-sivulla",
-      "generation": "Luonti",
-      "enabled": "Luo joka aamu",
-      "time": "Aika",
-      "days": "Päivät",
-      "sections": "Osiot",
-      "sectionsHint": "Ruksaamaton osio piilotetaan; järjestys on listan järjestys.",
-      "moveUp": "Siirrä {{name}} ylös",
-      "moveDown": "Siirrä {{name}} alas",
-      "sources": "Luetut kalenterit",
-      "noCalendars": "Ei kalenteria. Lisää kalenteri kohdassa Profiili › Kalenterit.",
-      "lookahead": "Päivää eteenpäin",
-      "evening": "Ilta ja kuormitus",
-      "eveningHint": "Työajat asetetaan Tänään-sivulla (keskittymislohkot).",
-      "openToday": "Avaa Tänään",
-      "eveningStart": "Alku",
-      "eveningEnd": "Loppu",
-      "eveningMinutes": "Minuuttia",
-      "dayNote": "Päivän muistiinpano",
-      "arbitrage": "Järjestys",
-      "priorities": "Prioriteettijärjestys",
-      "alerts": "Hälytykset",
-      "writing": "Kirjoittaminen",
-      "llmEnabled": "Tekoälyn kirjoittama yhteenveto ja perustelut",
-      "llmProvider": "Tekoälypalveluntarjoaja: Profiili › Tekoälyavustaja",
-      "tone": "Sävy",
-      "instructions": "Ohjeet",
-      "retention": "Säilytys",
-      "decisionsDays": "Säilytettävät päätökset (päivää)",
-      "audioDays": "Säilytettävä ääni (päivää)",
-      "voice": "Ääni",
-      "voiceEnabled": "Lue yhteenveto ääneen",
-      "piperUrl": "Piper-osoite",
-      "voiceName": "Ääni",
-      "speed": "Nopeus",
-      "save": "Tallenna",
-      "saved": "Asetukset tallennettu",
-      "saveError": "Asetuksia ei voitu tallentaa.",
-      "loadError": "Yhteenvedon asetuksia ei voitu ladata.",
-      "eveningRemove": "Poista",
-      "review": {
-        "title": "Illan katsaus",
-        "enabled": "Näytä illan katsaus vaihtoajan jälkeen",
-        "switchTime": "Illan katsauksen vaihtoaika"
-      }
-    },
-    "hours": "{{hours}} h",
-    "hoursMinutes": "{{hours}} h {{rest}}",
-    "minutes": "{{count}} min",
-    "task": {
-      "complete": "Valmis",
-      "done": "”{{name}}” valmis",
-      "reopened": "”{{name}}” avattu uudelleen",
-      "error": "Tehtävää ei voitu päivittää."
-    },
-    "decision": {
-      "error": "Valintaasi ei voitu tallentaa."
-    },
-    "loadError": "Yhteenvetoa ei voitu ladata.",
-    "generateError": "Luonti epäonnistui.",
-    "generateNow": "Luo nyt",
-    "generating": "Luodaan…",
-    "regenerate": "Luo uudelleen",
-    "empty": "Tälle päivälle ei ole vielä yhteenvetoa.",
-    "failed": "Viimeisin luonti epäonnistui. Edellinen yhteenveto säilytetään.",
-    "settingsLink": "Yhteenvedon asetukset",
-    "counters": {
-      "overdue": "myöhässä",
-      "today": "tänään"
-    },
-    "timeline": {
-      "today": "Tänään",
-      "planned": "{{minutes}} min",
-      "ofCapacity": "Tehtäviä {{planned}}, vapaata {{capacity}}",
-      "over": "Ylikuormitus: tehtäviä {{planned}}, vapaata {{capacity}}",
-      "duringWork": "työaikana",
-      "legendWork": "Työ",
-      "legendEvening": "Ilta",
-      "legendEvent": "Tapahtuma",
-      "legendConflict": "Ristiriita"
-    },
-    "tonight": {
-      "ofCapacity": "{{planned}} / {{capacity}}"
-    },
-    "moves": {
-      "acceptAria": "Siirrä {{date}}",
-      "moved": "”{{name}}” siirretty",
-      "otherDate": "Muu päivä"
-    },
-    "anticipate": {
-      "yes": "Kyllä",
-      "no": "Ei",
-      "precise": "Tarkenna",
-      "preciseLabel": "Tarkenne",
-      "save": "Tallenna",
-      "answered": "Vastaus tallennettu",
-      "less": "Vähemmän tällaisia",
-      "options": "Hälytyksen asetukset"
-    },
-    "feedback": {
-      "useful": "Hyödyllinen",
-      "noise": "Ei hyödyllinen",
-      "fewer": "Näet vähemmän tämäntyyppisiä ilmoituksia",
-      "question": "Auttoiko tämä näkymä?"
-    },
-    "status": {
-      "configured": "Määritetty",
-      "missing": "Ei määritetty",
-      "failing": "Epäonnistuu"
-    },
-    "card": {
-      "title": "Minun päiväni",
-      "open": "Näytä yhteenveto",
-      "error": "Yhteenveto ei ole saatavilla."
-    },
-    "context": {
-      "title": "Konteksti",
-      "edit": "Muokkaa kontekstia",
-      "save": "Tallenna",
-      "delete": "Poista"
-    },
-    "evening": {
-      "switchToMorning": "Näytä aamun yhteenveto",
-      "switchToEvening": "Näytä illan katsaus",
-      "counters": {
-        "done": "tehty",
-        "tonight": "tänä iltana",
-        "slipped": "siirtyi"
-      },
-      "sections": {
-        "done": "Tehty tänään",
-        "slipped": "Siirtyy",
-        "tomorrow": "Huomenna"
-      },
-      "carryDone": "« {{name}} » siirretty huomiseen",
-      "carryError": "Tehtävää ei voitu siirtää.",
-      "emptyTonight": "Tänä iltana ei ole enää tehtävää.",
-      "emptyDone": "Tänään ei ole valmistunut mitään.",
-      "emptySlipped": "Mitään ei siirry.",
-      "loadError": "Illan katsausta ei voitu ladata.",
-      "actions": {
-        "menu": "Toiminnot: {{name}}",
-        "tomorrow": "Huomenna",
-        "dueDate": "Valitse päivä",
-        "dueLabel": "Eräpäivä",
-        "later": "Myöhemmin",
-        "cancel": "Hylkää"
-      },
-      "state": {
-        "due": "Eräpäivä: {{date}}",
-        "cancelled": "Hylätty"
-      },
-      "dueDone": "“{{name}}” eräpäivä {{date}}",
-      "laterDone": "“{{name}}” siirretty myöhemmäksi",
-      "cancelDone": "“{{name}}” hylätty",
-      "tonightTitle": "Tänä iltana"
-    },
-    "preparedAt": "valmisteltu klo {{time}}"
-  },
   "agents": {
     "title": "Agentit",
     "description": "Agentti lukee sähköpostia ja luo luonnoksia. Cadence ei tallenna sähköpostitunnuksia.",
@@ -6202,7 +6028,6 @@
     "appointmentLabel": "{{title}}, {{range}}",
     "backToList": "Lista",
     "blockLabel": "{{title}}, {{range}}",
-    "brief": "Päivän yhteenveto",
     "calendar": "Päiväkalenteri",
     "calendarButton": "Kalenteri",
     "calendarLabel": "Päiväkalenteri",

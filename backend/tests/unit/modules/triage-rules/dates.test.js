@@ -2,11 +2,9 @@
 
 const {
     addDays,
-    weekday,
-    timelineDates,
     localDay,
     isWithinLookback,
-} = require('../../../../modules/daily-plan/brief/rules/dates');
+} = require('../../../../modules/triage/core/rules/dates');
 
 describe('dates', () => {
     it('adds days across month, year and leap days', () => {
@@ -14,19 +12,6 @@ describe('dates', () => {
         expect(addDays('2026-12-31', 1)).toBe('2027-01-01');
         expect(addDays('2028-02-28', 1)).toBe('2028-02-29');
         expect(addDays('2026-11-04', -7)).toBe('2026-10-28');
-    });
-
-    it('gives the weekday with Sunday as 0', () => {
-        expect(weekday('2026-11-04')).toBe(3);
-        expect(weekday('2026-11-01')).toBe(0);
-    });
-
-    it('lists the timeline from today', () => {
-        expect(timelineDates('2026-12-30', 3)).toEqual([
-            '2026-12-30',
-            '2026-12-31',
-            '2027-01-01',
-        ]);
     });
 
     it('takes the local day of an instant in the user timezone', () => {

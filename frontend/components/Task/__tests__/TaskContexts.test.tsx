@@ -3,20 +3,20 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TaskContexts from '../TaskContexts';
 import {
-    deleteBriefContext,
-    fetchBriefContexts,
-    updateBriefContext,
-} from '../../../utils/dailyBriefService';
+    deleteContext,
+    fetchContexts,
+    updateContext,
+} from '../../../utils/triageService';
 
 jest.mock('react-i18next', () => {
     const t = (key: string, fallback?: unknown) =>
         typeof fallback === 'string' ? fallback : key;
     return { useTranslation: () => ({ t, i18n: { language: 'fr' } }) };
 });
-jest.mock('../../../utils/dailyBriefService', () => ({
-    fetchBriefContexts: jest.fn(),
-    updateBriefContext: jest.fn(),
-    deleteBriefContext: jest.fn(),
+jest.mock('../../../utils/triageService', () => ({
+    fetchContexts: jest.fn(),
+    updateContext: jest.fn(),
+    deleteContext: jest.fn(),
 }));
 
 const CONTEXT = {
@@ -30,30 +30,30 @@ describe('TaskContexts', () => {
     beforeEach(() => jest.clearAllMocks());
 
     it('renders nothing when the task has no context', async () => {
-        (fetchBriefContexts as jest.Mock).mockResolvedValue([]);
+        (fetchContexts as jest.Mock).mockResolvedValue([]);
         const { container } = render(<TaskContexts taskUid="t1" />);
-        await waitFor(() => expect(fetchBriefContexts).toHaveBeenCalled());
+        await waitFor(() => expect(fetchContexts).toHaveBeenCalled());
         expect(container).toBeEmptyDOMElement();
     });
 
     it('lists the contexts of the task and deletes one', async () => {
-        (fetchBriefContexts as jest.Mock).mockResolvedValue([CONTEXT]);
-        (deleteBriefContext as jest.Mock).mockResolvedValue(undefined);
+        (fetchContexts as jest.Mock).mockResolvedValue([CONTEXT]);
+        (deleteContext as jest.Mock).mockResolvedValue(undefined);
         render(<TaskContexts taskUid="t1" />);
         expect(await screen.findByText('Pas avant jeudi')).toBeInTheDocument();
-        expect(fetchBriefContexts).toHaveBeenCalledWith({
+        expect(fetchContexts).toHaveBeenCalledWith({
             scope: 'task',
             target_ref: 't1',
         });
         fireEvent.click(screen.getByRole('button', { name: 'Supprimer' }));
         await waitFor(() =>
-            expect(deleteBriefContext).toHaveBeenCalledWith('ctx-1')
+            expect(deleteContext).toHaveBeenCalledWith('ctx-1')
         );
     });
 
     it('edits a context text', async () => {
-        (fetchBriefContexts as jest.Mock).mockResolvedValue([CONTEXT]);
-        (updateBriefContext as jest.Mock).mockResolvedValue({
+        (fetchContexts as jest.Mock).mockResolvedValue([CONTEXT]);
+        (updateContext as jest.Mock).mockResolvedValue({
             ...CONTEXT,
             text: 'Pas avant vendredi',
         });
@@ -65,7 +65,7 @@ describe('TaskContexts', () => {
         fireEvent.change(input, { target: { value: 'Pas avant vendredi' } });
         fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
         await waitFor(() =>
-            expect(updateBriefContext).toHaveBeenCalledWith(
+            expect(updateContext).toHaveBeenCalledWith(
                 'ctx-1',
                 'Pas avant vendredi'
             )

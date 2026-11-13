@@ -136,7 +136,7 @@ tududi/                      # Repository root
 │   ├── telegram/         # Telegram bot integration
 │   ├── caldav/           # CalDAV server and remote calendar sync
 │   ├── mcp/              # Model Context Protocol server and tools
-│   ├── ai-assistant/     # Daily Brief, task and project insights
+│   ├── ai-assistant/     # Task and project insights
 │   ├── inbox/            # Inbox items
 │   ├── habits/           # Cadence habits (routes, rule engine, import of the old ones)
 │   ├── notifications/    # Notification system
@@ -361,10 +361,10 @@ tududi/                      # Repository root
 │   ├── Everyone/       # Everyone board
 │   ├── People/         # People page (members and contacts)
 │   ├── Templates/      # Project templates and marketplace
-│   ├── Insights/       # Daily Brief, Productivity and Reports pages
+│   ├── Insights/       # Productivity and Reports pages
 │   ├── Metrics/        # Productivity metrics
 │   ├── Productivity/   # Analytics dashboard
-│   ├── AI/             # Daily Brief and insights
+│   ├── AI/             # Task and project insights
 │   ├── CalDAV/         # CalDAV setup
 │   ├── Billing/        # Billing (hosted mode)
 │   ├── Notifications/  # Notification system

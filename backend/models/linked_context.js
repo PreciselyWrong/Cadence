@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const { uid } = require('../utils/uid');
 
 // What the user said about a task, an event or a recurring series. Lifetimes
-// are applied when the brief reads them (modules/daily-plan/brief/contexts.js).
+// are applied when the triage queue reads them (modules/triage/contexts.js).
 module.exports = (sequelize) => {
     const LinkedContext = sequelize.define(
         'LinkedContext',

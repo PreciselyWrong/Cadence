@@ -810,3 +810,9 @@ TickTick 8.0.20 n'a pas pu être observé en direct (accès refusé) : écarts r
 ### 2026-11-12 — Bandeau des messages d'agents non lus
 
 Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (notification d'un plugin, `data.pluginId`) n'est pas lu : icône, titre en gras, début du message (masqué sur mobile), « +N » s'il y en a d'autres, **Ouvrir** (marque lu et ouvre `data.openPath`, la page du message dans le plugin) et **×** (marque lu). Rafraîchi par le flux live, au retour sur l'onglet et chaque minute. Code : `frontend/components/Notifications/AgentMessageBanner.tsx`, `frontend/utils/agentMessagesService.ts`. À reprendre sur Android : même bandeau en tête des écrans principaux.
+
+### 2026-11-12 — Résumé du jour retiré, réglages d'« À trier »
+
+- **Problème** : le résumé du matin et le bilan du soir passent aux agents Hermes (messages de la Boîte des agents) ; la page `/insights/daily-brief`, la carte d'Aujourd'hui, l'entrée « Résumé » du menu d'Aujourd'hui et Profil › Résumé n'avaient plus lieu d'être, mais ce dernier portait aussi les réglages d'« À trier ».
+- **Décision** : tout le résumé quitte le web. Un onglet Profil › À trier (groupe Organisation) garde ce qui sert la file : calendriers lus et jours regardés, types d'alertes, reports avant une carte, jours de tâches terminées regardés, propositions de l'IA et leur limite par jour. Les questions d'agenda d'« À trier » et le panneau Contexte des tâches passent par `/triage/answers` et `/triage/contexts`.
+- **Android à reprendre** : le résumé est déjà retiré (1.21.0) ; il reste un écran Réglages › À trier pour ces réglages (`TODO.md` › Now).

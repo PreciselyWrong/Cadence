@@ -89,7 +89,6 @@ import {
 import PlanTips from './PlanTips';
 import NowCard from './NowCard';
 import WrapUpCard from './WrapUpCard';
-import BriefCard from '../DailyBrief/BriefCard';
 import CapacityMeter from './CapacityMeter';
 import PlaceAllDialog from './PlaceAllDialog';
 import StartOfDay from './StartOfDay';
@@ -369,8 +368,6 @@ const TodayPage: React.FC = () => {
     // on an earlier / later bar. Session state, not saved.
     const [showAllHours, setShowAllHours] = useState(false);
 
-    const [showBrief, setShowBrief] = useState(false);
-
     useEffect(() => {
         fetchProfile()
             .then((profile) => {
@@ -379,7 +376,6 @@ const TodayPage: React.FC = () => {
                         profile.ui_settings?.calendar?.visibleHours
                     )
                 );
-                setShowBrief(profile.today_settings?.showDailyBrief === true);
             })
             .catch(() => {});
     }, []);
@@ -2308,8 +2304,6 @@ const TodayPage: React.FC = () => {
                         onClose={closeGuide}
                     />
                 )}
-
-                {showBrief && <BriefCard />}
 
                 {showWrapUp && date && (
                     <WrapUpCard

@@ -3,6 +3,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TriagePage from '../TriagePage';
 import {
+    answerQuestion,
     applyTriage,
     fetchTriageQueue,
     keepTask,
@@ -10,16 +11,11 @@ import {
 } from '../../../utils/triageService';
 
 jest.mock('../../../utils/triageService', () => ({
+    answerQuestion: jest.fn(),
     fetchTriageQueue: jest.fn(),
     keepTask: jest.fn(),
     applyTriage: jest.fn(),
     decideMail: jest.fn(),
-}));
-jest.mock('../../../utils/dateUtils', () => ({
-    getTodayDateString: () => '2026-11-06',
-}));
-jest.mock('../../../utils/dailyBriefService', () => ({
-    answerBriefQuestion: jest.fn(),
 }));
 const mockToasts = {
     showErrorToast: jest.fn(),
@@ -98,6 +94,42 @@ describe('TriagePage', () => {
         (fetchTriageQueue as jest.Mock).mockResolvedValue(QUEUE);
         (applyTriage as jest.Mock).mockResolvedValue(undefined);
         (keepTask as jest.Mock).mockResolvedValue(undefined);
+    });
+
+    it('answers a calendar question with its target', async () => {
+        (fetchTriageQueue as jest.Mock).mockResolvedValue({
+            count: 1,
+            items: [
+                {
+                    key: 'conflict:e1:e2',
+                    type: 'conflict',
+                    source: 'rules',
+                    task_uid: null,
+                    action: 'question',
+                    payload: null,
+                    reason: '« Réunion » et « Point » se chevauchent.',
+                    details: [],
+                    question: {
+                        key: 'q-1',
+                        text: '« Réunion » doit-il être déplacé ?',
+                        target: {
+                            scope: 'event',
+                            ref: 'event:f:e1:2026-11-12',
+                        },
+                    },
+                },
+            ],
+            tasks: {},
+        });
+        (answerQuestion as jest.Mock).mockResolvedValue({});
+        render(<TriagePage />);
+        fireEvent.click(await screen.findByRole('button', { name: 'Non' }));
+        await waitFor(() =>
+            expect(answerQuestion).toHaveBeenCalledWith(
+                { scope: 'event', ref: 'event:f:e1:2026-11-12' },
+                'no'
+            )
+        );
     });
 
     it('shows one proposal with its reason and what tells tasks apart', async () => {

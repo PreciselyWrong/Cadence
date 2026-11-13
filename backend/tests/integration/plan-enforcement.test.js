@@ -130,7 +130,9 @@ describe('Plan enforcement over HTTP (hosted mode on)', () => {
         });
         expect(profile.status).toBe(402);
 
-        const ai = await agent.post('/api/ai-assistant/daily-brief').send({});
+        const ai = await agent
+            .post('/api/ai-assistant/project-insights')
+            .send({ projectName: 'Website redesign' });
         expect(ai.status).toBe(402);
 
         const restore = await agent.post('/api/backup/nope/restore');

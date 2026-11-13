@@ -37,7 +37,7 @@ module.exports = (sequelize) => {
                 type: DataTypes.JSON,
                 allowNull: true,
             },
-            // The day's brief JSON; kept on the day so a past day shows its own brief.
+            // The retired daily brief (2026-11-12): unused, kept in the schema.
             brief: {
                 type: DataTypes.JSON,
                 allowNull: true,

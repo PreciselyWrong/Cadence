@@ -242,11 +242,6 @@ const PluginCard: React.FC<PluginCardProps> = ({
                 'profile.plugins.permission.routes',
                 'Serves its own routes'
             );
-        if (permission === 'brief')
-            return t(
-                'profile.plugins.permission.brief',
-                'Writes the daily brief'
-            );
         return permission;
     };
 

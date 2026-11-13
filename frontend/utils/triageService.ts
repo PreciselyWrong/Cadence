@@ -58,29 +58,41 @@ export interface TriageQueue {
 const newKey = () =>
     `triage:${Date.now()}:${Math.random().toString(36).slice(2, 10)}`;
 
-async function send(path: string, body: unknown): Promise<Response> {
+async function request(
+    path: string,
+    method: 'GET' | 'PUT' | 'POST' | 'PATCH' | 'DELETE',
+    body: unknown,
+    errorMessage: string
+): Promise<Response> {
     const response = await fetch(getApiPath(path), {
-        method: 'POST',
+        method,
         credentials: 'include',
-        headers: await getPostHeadersWithCsrf(),
-        body: JSON.stringify(body),
+        headers:
+            method === 'GET'
+                ? getDefaultHeaders()
+                : await getPostHeadersWithCsrf(),
+        body: body === undefined ? undefined : JSON.stringify(body),
     });
-    await handleAuthResponse(response, 'Failed to update the triage queue.');
+    await handleAuthResponse(response, errorMessage);
     return response;
 }
+
+const send = (path: string, body: unknown): Promise<Response> =>
+    request(path, 'POST', body, 'Failed to update the triage queue.');
 
 async function post(path: string, body: unknown): Promise<void> {
     await send(path, body);
 }
 
-export const fetchTriageQueue = async (): Promise<TriageQueue> => {
-    const response = await fetch(getApiPath('triage'), {
-        credentials: 'include',
-        headers: getDefaultHeaders(),
-    });
-    await handleAuthResponse(response, 'Failed to load the triage queue.');
-    return response.json();
-};
+export const fetchTriageQueue = async (): Promise<TriageQueue> =>
+    (
+        await request(
+            'triage',
+            'GET',
+            undefined,
+            'Failed to load the triage queue.'
+        )
+    ).json();
 
 export const keepTask = (taskUid: string): Promise<void> =>
     post('triage/keep', { task_uid: taskUid });
@@ -135,3 +147,109 @@ export const decideMail = async (
     );
     return response.json();
 };
+
+// The answer to a question of the queue becomes the linked context of its
+// target, so the question is not asked again.
+export type ContextScope = 'task' | 'event' | 'series';
+
+export interface LinkedContext {
+    uid: string;
+    scope: ContextScope;
+    target_ref: string;
+    text: string;
+}
+
+export const answerQuestion = async (
+    target: { scope: string; ref: string },
+    answer: 'yes' | 'no' | string
+): Promise<LinkedContext> => {
+    const response = await request(
+        'triage/answers',
+        'POST',
+        { target, answer },
+        'Failed to save the answer.'
+    );
+    return (await response.json()).context;
+};
+
+export const fetchContexts = async (query: {
+    scope?: ContextScope;
+    target_ref?: string;
+}): Promise<LinkedContext[]> => {
+    const search = new URLSearchParams();
+    if (query.scope) search.set('scope', query.scope);
+    if (query.target_ref) search.set('target_ref', query.target_ref);
+    const qs = search.toString();
+    const response = await request(
+        `triage/contexts${qs ? `?${qs}` : ''}`,
+        'GET',
+        undefined,
+        'Failed to load the contexts.'
+    );
+    return (await response.json()).contexts;
+};
+
+export const updateContext = async (
+    uid: string,
+    text: string
+): Promise<LinkedContext> =>
+    (
+        await request(
+            `triage/contexts/${encodeURIComponent(uid)}`,
+            'PATCH',
+            { text },
+            'Failed to update the context.'
+        )
+    ).json();
+
+export const deleteContext = async (uid: string): Promise<void> => {
+    await request(
+        `triage/contexts/${encodeURIComponent(uid)}`,
+        'DELETE',
+        undefined,
+        'Failed to delete the context.'
+    );
+};
+
+// The card types of the rules; each one can be turned off.
+export const TRIAGE_ALERT_TYPES = [
+    'conflict',
+    'event_in_work_hours',
+    'duplicate',
+    'deadline_in_note',
+    'postponed',
+] as const;
+
+export interface TriageSettings {
+    calendarFeedUids: string[];
+    calendarLookaheadDays: number;
+    thresholds: {
+        postponements: number;
+        duplicateSimilarity: number;
+        closedLookbackDays: number;
+    };
+    alerts: { disabled: string[] };
+    triage: { enabled: boolean; dailyLimit: number };
+}
+
+export const fetchTriageSettings = async (): Promise<TriageSettings> =>
+    (
+        await request(
+            'triage/settings',
+            'GET',
+            undefined,
+            'Failed to load the triage settings.'
+        )
+    ).json();
+
+export const saveTriageSettings = async (
+    patch: Partial<TriageSettings>
+): Promise<TriageSettings> =>
+    (
+        await request(
+            'triage/settings',
+            'PUT',
+            patch,
+            'Failed to save the triage settings.'
+        )
+    ).json();

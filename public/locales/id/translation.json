@@ -141,6 +141,37 @@
     }
   },
   "triage": {
+    "settings": {
+      "calendars": "Kalender yang dibaca",
+      "noCalendars": "Belum ada kalender. Tambahkan di Profil › Kalender.",
+      "lookahead": "Hari ke depan",
+      "alerts": "Peringatan",
+      "postponements": "Penundaan sebelum kartu",
+      "closedLookback": "Tugas selesai yang diperiksa (hari)",
+      "assistant": "Asisten AI",
+      "assistantEnabled": "Usulan AI di Untuk dipilah",
+      "assistantLimit": "Tugas yang ditinjau per hari",
+      "llmProvider": "Penyedia AI: Profil › Asisten AI",
+      "save": "Simpan",
+      "saved": "Pengaturan disimpan",
+      "saveError": "Pengaturan tidak dapat disimpan.",
+      "loadError": "Tidak dapat memuat pengaturan.",
+      "alertType": {
+        "conflict": "Acara yang bentrok",
+        "event_in_work_hours": "Acara di jam kerja",
+        "duplicate": "Kemungkinan duplikat",
+        "deadline_in_note": "Tenggat ditemukan di catatan",
+        "postponed": "Sering ditunda"
+      }
+    },
+    "yes": "Ya",
+    "no": "Tidak",
+    "context": {
+      "title": "Konteks",
+      "edit": "Ubah konteks",
+      "save": "Simpan",
+      "delete": "Hapus"
+    },
     "mail": {
       "noSubject": "(tanpa subjek)",
       "draft": "Draf siap:",
@@ -633,8 +664,7 @@
             "events": "Peristiwa",
             "permission": {
                 "events": "Mendengarkan peristiwa",
-                "routes": "Menyediakan rute sendiri",
-                "brief": "Writes the daily brief"
+                "routes": "Menyediakan rute sendiri"
             },
             "enabled": "Aktif",
             "needsApproval": "Versi ini meminta lebih dari sebelumnya. Aktifkan lagi untuk menyetujui izin dan peristiwanya.",
@@ -5942,210 +5972,6 @@
       "addedToProject": "Ditambahkan ke proyek"
     }
   },
-  "dailyBrief": {
-    "sectionName": {
-      "verdict": "Ringkasan",
-      "timeline": "Hari-hari mendatang",
-      "tonight": "Prioritas hari ini",
-      "moves": "Perlu dipindahkan",
-      "anticipate": "Perlu diantisipasi",
-      "replies": "Balasan yang diharapkan",
-      "inbox": "Kotak masuk",
-      "resolved": "Selesai"
-    },
-    "priority": {
-      "consequence": "Dampak",
-      "blocking": "Menghalangi yang lain",
-      "money_deadline": "Uang atau tenggat",
-      "planned_load": "Beban terjadwal"
-    },
-    "alertType": {
-      "conflict": "Acara yang bentrok",
-      "overload": "Kelebihan beban",
-      "duplicate": "Kemungkinan duplikat",
-      "deadline_in_note": "Tenggat ditemukan di catatan",
-      "postponed": "Sering ditunda",
-      "dependency": "Ketergantungan",
-      "event_in_work_hours": "Acara di jam kerja"
-    },
-    "source": {
-      "calendar": "Kalender",
-      "mail": "Agen email",
-      "llm": "Tulis ulang dengan AI",
-      "voice": "Suara",
-      "agent": "Agen"
-    },
-    "settings": {
-      "linkThemes": "Tema tautan oleh AI",
-      "triageLimit": "Tugas yang ditinjau per hari",
-      "triageEnabled": "Usulan AI di Untuk dipilah",
-      "postponements": "Penundaan sebelum kartu",
-      "maxMoves": "Pemindahan yang ditampilkan",
-      "maxTonight": "Prioritas yang ditampilkan",
-      "closedLookback": "Tugas selesai yang diperiksa (hari)",
-      "title": "Ringkasan harian",
-      "description": "Ringkasan setiap pagi: hari-hari mendatang, yang tersisa untuk malam ini, dan yang bisa dipindahkan.",
-      "status": "Status sumber",
-      "timezoneWarning": "Zona waktu belum diatur: waktu di ringkasan mungkin keliru.",
-      "showOnToday": "Tampilkan ringkasan di Hari ini",
-      "generation": "Pembuatan",
-      "enabled": "Buat setiap pagi",
-      "time": "Waktu",
-      "days": "Hari",
-      "sections": "Bagian",
-      "sectionsHint": "Bagian yang tidak dicentang akan disembunyikan; urutannya mengikuti urutan daftar.",
-      "moveUp": "Naikkan {{name}}",
-      "moveDown": "Turunkan {{name}}",
-      "sources": "Kalender yang dibaca",
-      "noCalendars": "Belum ada kalender. Tambahkan di Profil › Kalender.",
-      "lookahead": "Hari ke depan",
-      "evening": "Malam dan beban",
-      "eveningHint": "Jam kerja diatur di Hari ini (blok fokus).",
-      "openToday": "Buka Hari ini",
-      "eveningStart": "Mulai",
-      "eveningEnd": "Selesai",
-      "eveningMinutes": "Menit",
-      "dayNote": "Catatan hari",
-      "arbitrage": "Peringkat",
-      "priorities": "Urutan prioritas",
-      "alerts": "Peringatan",
-      "writing": "Penulisan",
-      "llmEnabled": "Ringkasan dan alasan oleh AI",
-      "llmProvider": "Penyedia AI: Profil › Asisten AI",
-      "tone": "Nada",
-      "instructions": "Instruksi",
-      "retention": "Retensi",
-      "decisionsDays": "Keputusan disimpan (hari)",
-      "audioDays": "Audio disimpan (hari)",
-      "voice": "Suara",
-      "voiceEnabled": "Bacakan ringkasan",
-      "piperUrl": "Alamat Piper",
-      "voiceName": "Suara",
-      "speed": "Kecepatan",
-      "save": "Simpan",
-      "saved": "Pengaturan disimpan",
-      "saveError": "Pengaturan tidak dapat disimpan.",
-      "loadError": "Pengaturan ringkasan tidak dapat dimuat.",
-      "eveningRemove": "Hapus",
-      "review": {
-        "title": "Tinjauan malam",
-        "enabled": "Tampilkan tinjauan malam setelah waktu pergantian",
-        "switchTime": "Waktu pergantian ke tinjauan malam"
-      }
-    },
-    "hours": "{{hours}} j",
-    "hoursMinutes": "{{hours}} j {{rest}}",
-    "minutes": "{{count}} mnt",
-    "task": {
-      "complete": "Selesai",
-      "done": "“{{name}}” selesai",
-      "reopened": "“{{name}}” dibuka kembali",
-      "error": "Tugas tidak dapat diperbarui."
-    },
-    "decision": {
-      "error": "Pilihan Anda tidak dapat disimpan."
-    },
-    "loadError": "Ringkasan tidak dapat dimuat.",
-    "generateError": "Pembuatan gagal.",
-    "generateNow": "Buat sekarang",
-    "generating": "Membuat…",
-    "regenerate": "Buat ulang",
-    "empty": "Belum ada ringkasan untuk hari ini.",
-    "failed": "Pembuatan terakhir gagal. Ringkasan sebelumnya tetap disimpan.",
-    "settingsLink": "Pengaturan ringkasan",
-    "counters": {
-      "overdue": "terlambat",
-      "today": "hari ini"
-    },
-    "timeline": {
-      "today": "Hari ini",
-      "planned": "{{minutes}} mnt",
-      "ofCapacity": "{{planned}} tugas untuk {{capacity}} waktu luang",
-      "over": "Kelebihan beban: {{planned}} tugas untuk {{capacity}} waktu luang",
-      "duringWork": "selama jam kerja",
-      "legendWork": "Kerja",
-      "legendEvening": "Malam",
-      "legendEvent": "Acara",
-      "legendConflict": "Konflik"
-    },
-    "tonight": {
-      "ofCapacity": "{{planned}} / {{capacity}}"
-    },
-    "moves": {
-      "acceptAria": "Pindahkan ke {{date}}",
-      "moved": "“{{name}}” dipindahkan",
-      "otherDate": "Tanggal lain"
-    },
-    "anticipate": {
-      "yes": "Ya",
-      "no": "Tidak",
-      "precise": "Tentukan",
-      "preciseLabel": "Detail",
-      "save": "Simpan",
-      "answered": "Jawaban disimpan",
-      "less": "Lebih sedikit seperti ini",
-      "options": "Opsi peringatan"
-    },
-    "feedback": {
-      "useful": "Berguna",
-      "noise": "Tidak berguna",
-      "fewer": "Anda akan melihat lebih sedikit peringatan jenis ini",
-      "question": "Apakah layar ini membantu?"
-    },
-    "status": {
-      "configured": "Sudah dikonfigurasi",
-      "missing": "Belum dikonfigurasi",
-      "failing": "Gagal"
-    },
-    "card": {
-      "title": "Hari saya",
-      "open": "Lihat ringkasan",
-      "error": "Ringkasan tidak tersedia."
-    },
-    "context": {
-      "title": "Konteks",
-      "edit": "Ubah konteks",
-      "save": "Simpan",
-      "delete": "Hapus"
-    },
-    "evening": {
-      "switchToMorning": "Lihat ringkasan pagi",
-      "switchToEvening": "Lihat tinjauan malam",
-      "counters": {
-        "done": "selesai",
-        "tonight": "malam ini",
-        "slipped": "tertunda"
-      },
-      "sections": {
-        "done": "Selesai hari ini",
-        "slipped": "Tergeser",
-        "tomorrow": "Besok"
-      },
-      "carryDone": "« {{name}} » dipindahkan ke besok",
-      "carryError": "Tugas tidak dapat dipindahkan.",
-      "emptyTonight": "Tidak ada lagi yang harus dikerjakan malam ini.",
-      "emptyDone": "Belum ada yang selesai hari ini.",
-      "emptySlipped": "Tidak ada yang tergeser.",
-      "loadError": "Tinjauan malam tidak dapat dimuat.",
-      "actions": {
-        "menu": "Tindakan untuk “{{name}}”",
-        "tomorrow": "Besok",
-        "dueDate": "Pilih tanggal",
-        "dueLabel": "Tenggat",
-        "later": "Nanti",
-        "cancel": "Batalkan"
-      },
-      "state": {
-        "due": "Tenggat: {{date}}",
-        "cancelled": "Dibatalkan"
-      },
-      "dueDone": "“{{name}}” tenggat {{date}}",
-      "laterDone": "“{{name}}” ditunda",
-      "cancelDone": "“{{name}}” dibatalkan",
-      "tonightTitle": "Malam ini"
-    },
-    "preparedAt": "disiapkan pukul {{time}}"
-  },
   "agents": {
     "title": "Agen",
     "description": "Agen membaca email dan menyiapkan draf. Cadence tidak menyimpan kredensial email.",
@@ -6187,7 +6013,6 @@
     "appointmentLabel": "{{title}}, {{range}}",
     "backToList": "Daftar",
     "blockLabel": "{{title}}, {{range}}",
-    "brief": "Ringkasan harian",
     "calendar": "Kalender hari ini",
     "calendarButton": "Kalender",
     "calendarLabel": "Kalender hari ini",

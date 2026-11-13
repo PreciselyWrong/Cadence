@@ -143,6 +143,37 @@
     }
   },
   "triage": {
+    "settings": {
+      "calendars": "Calendarios leídos",
+      "noCalendars": "No hay calendario. Añade uno en Perfil › Calendarios.",
+      "lookahead": "Días a revisar hacia adelante",
+      "alerts": "Alertas",
+      "postponements": "Aplazamientos antes de una tarjeta",
+      "closedLookback": "Tareas cerradas revisadas (días)",
+      "assistant": "Asistente de IA",
+      "assistantEnabled": "Propuestas de la IA en Por ordenar",
+      "assistantLimit": "Tareas revisadas por día",
+      "llmProvider": "Proveedor de IA: Perfil › Asistente de IA",
+      "save": "Guardar",
+      "saved": "Ajustes guardados",
+      "saveError": "No se pudieron guardar los ajustes.",
+      "loadError": "No se pudieron cargar los ajustes.",
+      "alertType": {
+        "conflict": "Eventos en conflicto",
+        "event_in_work_hours": "Evento en horario laboral",
+        "duplicate": "Posible duplicado",
+        "deadline_in_note": "Fecha límite en una nota",
+        "postponed": "Pospuesto con frecuencia"
+      }
+    },
+    "yes": "Sí",
+    "no": "No",
+    "context": {
+      "title": "Contexto",
+      "edit": "Editar contexto",
+      "save": "Guardar",
+      "delete": "Eliminar"
+    },
     "mail": {
       "noSubject": "(sin asunto)",
       "draft": "Borrador listo:",
@@ -496,8 +527,7 @@
             "events": "Eventos",
             "permission": {
                 "events": "Escucha eventos",
-                "routes": "Sirve sus propias rutas",
-                "brief": "Writes the daily brief"
+                "routes": "Sirve sus propias rutas"
             },
             "enabled": "Activado",
             "needsApproval": "Esta versión pide más que la anterior. Vuelve a activarlo para aprobar sus permisos y eventos.",
@@ -5960,210 +5990,6 @@
       "addedToProject": "Añadido al proyecto"
     }
   },
-  "dailyBrief": {
-    "sectionName": {
-      "verdict": "Veredicto",
-      "timeline": "Próximos días",
-      "tonight": "Prioridades del día",
-      "moves": "Por mover",
-      "anticipate": "Por anticipar",
-      "replies": "Respuestas esperadas",
-      "inbox": "Bandeja de entrada",
-      "resolved": "Hecho"
-    },
-    "priority": {
-      "consequence": "Consecuencia",
-      "blocking": "Bloquea a otros",
-      "money_deadline": "Dinero o fecha límite",
-      "planned_load": "Carga planificada"
-    },
-    "alertType": {
-      "conflict": "Eventos en conflicto",
-      "overload": "Sobrecarga",
-      "duplicate": "Posible duplicado",
-      "deadline_in_note": "Fecha límite en una nota",
-      "postponed": "Pospuesto con frecuencia",
-      "dependency": "Dependencia",
-      "event_in_work_hours": "Evento en horario laboral"
-    },
-    "source": {
-      "calendar": "Calendarios",
-      "mail": "Agente de correo",
-      "llm": "Reescritura con IA",
-      "voice": "Voz",
-      "agent": "Agente"
-    },
-    "settings": {
-      "linkThemes": "Temas de enlaces por IA",
-      "triageLimit": "Tareas revisadas por día",
-      "triageEnabled": "Propuestas de la IA en Por ordenar",
-      "postponements": "Aplazamientos antes de una tarjeta",
-      "maxMoves": "Movimientos mostrados",
-      "maxTonight": "Prioridades mostradas",
-      "closedLookback": "Tareas cerradas revisadas (días)",
-      "title": "Resumen diario",
-      "description": "Un resumen cada mañana: los próximos días, lo que queda para esta noche y lo que se puede mover.",
-      "status": "Estado de las fuentes",
-      "timezoneWarning": "La zona horaria no está configurada: las horas del resumen podrían ser incorrectas.",
-      "showOnToday": "Mostrar el resumen en Hoy",
-      "generation": "Generación",
-      "enabled": "Generar cada mañana",
-      "time": "Hora",
-      "days": "Días",
-      "sections": "Secciones",
-      "sectionsHint": "Una sección desmarcada se oculta; el orden es el de la lista.",
-      "moveUp": "Subir {{name}}",
-      "moveDown": "Bajar {{name}}",
-      "sources": "Calendarios leídos",
-      "noCalendars": "No hay calendario. Añade uno en Perfil › Calendarios.",
-      "lookahead": "Días a revisar hacia adelante",
-      "evening": "Tarde y carga",
-      "eveningHint": "Las horas de trabajo se configuran en Hoy (bloques de concentración).",
-      "openToday": "Abrir Hoy",
-      "eveningStart": "Inicio",
-      "eveningEnd": "Fin",
-      "eveningMinutes": "Minutos",
-      "dayNote": "Nota del día",
-      "arbitrage": "Clasificación",
-      "priorities": "Orden de prioridad",
-      "alerts": "Alertas",
-      "writing": "Redacción",
-      "llmEnabled": "Resumen y motivos escritos por la IA",
-      "llmProvider": "Proveedor de IA: Perfil › Asistente de IA",
-      "tone": "Tono",
-      "instructions": "Instrucciones",
-      "retention": "Conservación",
-      "decisionsDays": "Decisiones conservadas (días)",
-      "audioDays": "Audio conservado (días)",
-      "voice": "Voz",
-      "voiceEnabled": "Leer el resumen en voz alta",
-      "piperUrl": "Dirección de Piper",
-      "voiceName": "Voz",
-      "speed": "Velocidad",
-      "save": "Guardar",
-      "saved": "Ajustes guardados",
-      "saveError": "No se pudieron guardar los ajustes.",
-      "loadError": "No se pudo cargar la configuración del resumen.",
-      "eveningRemove": "Quitar",
-      "review": {
-        "title": "Balance de la noche",
-        "enabled": "Mostrar el balance de la noche tras la hora de cambio",
-        "switchTime": "Hora de cambio al balance"
-      }
-    },
-    "hours": "{{hours}} h",
-    "hoursMinutes": "{{hours}} h {{rest}}",
-    "minutes": "{{count}} min",
-    "task": {
-      "complete": "Hecho",
-      "done": "«{{name}}» hecha",
-      "reopened": "«{{name}}» reabierta",
-      "error": "No se pudo actualizar la tarea."
-    },
-    "decision": {
-      "error": "No se pudo guardar tu elección."
-    },
-    "loadError": "No se pudo cargar el resumen.",
-    "generateError": "La generación ha fallado.",
-    "generateNow": "Generar ahora",
-    "generating": "Generando…",
-    "regenerate": "Regenerar",
-    "empty": "Aún no hay resumen para hoy.",
-    "failed": "La última generación falló. Se conserva el resumen anterior.",
-    "settingsLink": "Ajustes del resumen",
-    "counters": {
-      "overdue": "vencidas",
-      "today": "hoy"
-    },
-    "timeline": {
-      "today": "Hoy",
-      "planned": "{{minutes}} min",
-      "ofCapacity": "{{planned}} de tareas para {{capacity}} libres",
-      "over": "Sobrecarga: {{planned}} de tareas para {{capacity}} libres",
-      "duringWork": "durante el trabajo",
-      "legendWork": "Trabajo",
-      "legendEvening": "Tarde",
-      "legendEvent": "Evento",
-      "legendConflict": "Conflicto"
-    },
-    "tonight": {
-      "ofCapacity": "{{planned}} / {{capacity}}"
-    },
-    "moves": {
-      "acceptAria": "Mover a {{date}}",
-      "moved": "«{{name}}» movida",
-      "otherDate": "Otra fecha"
-    },
-    "anticipate": {
-      "yes": "Sí",
-      "no": "No",
-      "precise": "Precisar",
-      "preciseLabel": "Detalle",
-      "save": "Guardar",
-      "answered": "Respuesta guardada",
-      "less": "Menos de este tipo",
-      "options": "Opciones de la alerta"
-    },
-    "feedback": {
-      "useful": "Útil",
-      "noise": "No útil",
-      "fewer": "Verás menos alertas de este tipo",
-      "question": "¿Te ayudó esta pantalla?"
-    },
-    "status": {
-      "configured": "Configurado",
-      "missing": "No configurado",
-      "failing": "Con errores"
-    },
-    "card": {
-      "title": "Mi día",
-      "open": "Ver el resumen",
-      "error": "El resumen no está disponible."
-    },
-    "context": {
-      "title": "Contexto",
-      "edit": "Editar contexto",
-      "save": "Guardar",
-      "delete": "Eliminar"
-    },
-    "evening": {
-      "switchToMorning": "Ver el resumen de la mañana",
-      "switchToEvening": "Ver el balance de la noche",
-      "counters": {
-        "done": "hechas",
-        "tonight": "esta noche",
-        "slipped": "aplazadas"
-      },
-      "sections": {
-        "done": "Hecho hoy",
-        "slipped": "Se aplaza",
-        "tomorrow": "Mañana"
-      },
-      "carryDone": "« {{name}} » pasada a mañana",
-      "carryError": "No se pudo pasar la tarea.",
-      "emptyTonight": "Nada más que hacer esta noche.",
-      "emptyDone": "Nada terminado hoy.",
-      "emptySlipped": "Nada se aplaza.",
-      "loadError": "No se pudo cargar el balance de la noche.",
-      "actions": {
-        "menu": "Acciones para «{{name}}»",
-        "tomorrow": "Mañana",
-        "dueDate": "Elegir fecha",
-        "dueLabel": "Vencimiento",
-        "later": "Más tarde",
-        "cancel": "Descartar"
-      },
-      "state": {
-        "due": "Vence: {{date}}",
-        "cancelled": "Descartada"
-      },
-      "dueDone": "«{{name}}» vence {{date}}",
-      "laterDone": "«{{name}}» aplazada",
-      "cancelDone": "«{{name}}» descartada",
-      "tonightTitle": "Esta noche"
-    },
-    "preparedAt": "preparado a las {{time}}"
-  },
   "agents": {
     "title": "Agentes",
     "description": "El agente lee el correo y redacta borradores. Cadence no guarda credenciales de correo.",
@@ -6205,7 +6031,6 @@
     "appointmentLabel": "{{title}}, {{range}}",
     "backToList": "Lista",
     "blockLabel": "{{title}}, {{range}}",
-    "brief": "Resumen del día",
     "calendar": "Calendario del día",
     "calendarButton": "Calendario",
     "calendarLabel": "Calendario del día",

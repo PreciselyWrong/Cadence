@@ -15,6 +15,7 @@ import {
 } from '../../../utils/autoClassifyService';
 
 jest.mock('../../../utils/triageService', () => ({
+    answerQuestion: jest.fn(),
     fetchTriageQueue: jest.fn(),
     keepTask: jest.fn(),
     applyTriage: jest.fn(),
@@ -33,12 +34,6 @@ jest.mock('../../../utils/projectsService', () => ({
     fetchProjects: jest
         .fn()
         .mockResolvedValue([{ uid: 'p-other', name: 'Bureau' }]),
-}));
-jest.mock('../../../utils/dateUtils', () => ({
-    getTodayDateString: () => '2026-11-07',
-}));
-jest.mock('../../../utils/dailyBriefService', () => ({
-    answerBriefQuestion: jest.fn(),
 }));
 const mockToasts = { showErrorToast: jest.fn(), showSuccessToast: jest.fn() };
 jest.mock('../../Shared/ToastContext', () => ({

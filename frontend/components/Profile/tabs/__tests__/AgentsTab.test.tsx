@@ -6,7 +6,7 @@ import {
     fetchAgentSettings,
     saveAgentSettings,
     testAgentConnection,
-} from '../../../../utils/dailyBriefService';
+} from '../../../../utils/agentsService';
 
 jest.mock('react-i18next', () => {
     const t = (
@@ -21,7 +21,7 @@ jest.mock('react-i18next', () => {
     };
     return { useTranslation: () => ({ t, i18n: { language: 'fr' } }) };
 });
-jest.mock('../../../../utils/dailyBriefService', () => ({
+jest.mock('../../../../utils/agentsService', () => ({
     fetchAgentSettings: jest.fn(),
     saveAgentSettings: jest.fn(),
     testAgentConnection: jest.fn(),

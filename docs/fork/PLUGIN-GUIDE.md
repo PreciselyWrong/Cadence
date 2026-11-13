@@ -79,20 +79,6 @@ module.exports = {
 
 Événements disponibles : ceux des webhooks (`task.created`, `task.completed`, `task.updated`, `note.created`, `link.created`, `daily_summary`, rappels…, voir `docs/27-webhooks.md`). Déclarer dans le manifeste ce que `ctx.on` demande : un événement non déclaré fait échouer l'activation.
 
-## Écrire le brief du jour (permission `brief`)
-
-Ajoute `"brief"` aux permissions puis, dans `activate` :
-
-```js
-ctx.brief.setWriter(async ({ date, tone, instructions, data }) => ({
-    verdict: 'Deux ou trois phrases.',
-    tonight: data.tonight.map((i) => ({ index: i.index, reason: '…' })),
-    moves: data.moves.map((i) => ({ index: i.index, reason: '…' })),
-}));
-```
-
-Cadence construit le brief avec ses règles ; le plugin n'écrit que les mots (résumé et raisons, un par entrée, mêmes `index`). 45 s au plus ; en cas d'échec Cadence garde le texte des règles. Détails : `docs/46-plugins.md`.
-
 ## 3. Réglages
 
 Types : `string`, `secret`, `boolean`, `number`, `select` (avec `options`). Le formulaire est généré dans Profil › Plugins (web et Android). Un `secret` est chiffré en base, jamais renvoyé au navigateur ; `required: true` empêche d'allumer tant qu'il est vide. Lis toujours via `ctx.settings`, pas via une copie au démarrage.

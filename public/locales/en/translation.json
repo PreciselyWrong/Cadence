@@ -143,6 +143,37 @@
     }
   },
   "triage": {
+    "settings": {
+      "calendars": "Calendars read",
+      "noCalendars": "No calendar. Add one in Profile › Calendars.",
+      "lookahead": "Days to look ahead",
+      "alerts": "Alerts",
+      "postponements": "Postponements before a card",
+      "closedLookback": "Closed tasks checked (days)",
+      "assistant": "AI Assistant",
+      "assistantEnabled": "Assistant proposals in To sort",
+      "assistantLimit": "Tasks looked at per day",
+      "llmProvider": "AI provider: Profile › AI Assistant",
+      "save": "Save",
+      "saved": "Settings saved",
+      "saveError": "Could not save the settings.",
+      "loadError": "Could not load the settings.",
+      "alertType": {
+        "conflict": "Conflicting events",
+        "event_in_work_hours": "Event during work hours",
+        "duplicate": "Possible duplicate",
+        "deadline_in_note": "Deadline found in a note",
+        "postponed": "Often postponed"
+      }
+    },
+    "yes": "Yes",
+    "no": "No",
+    "context": {
+      "title": "Context",
+      "edit": "Edit context",
+      "save": "Save",
+      "delete": "Delete"
+    },
     "mail": {
       "noSubject": "(no subject)",
       "draft": "Draft ready:",
@@ -657,8 +688,7 @@
             "events": "Events",
             "permission": {
                 "events": "Listens to events",
-                "routes": "Serves its own routes",
-                "brief": "Writes the daily brief"
+                "routes": "Serves its own routes"
             },
             "enabled": "Enabled",
             "needsApproval": "This version asks for more than before. Turn it on again to approve its permissions and events.",
@@ -929,7 +959,6 @@
       "aiAssistant": "AI Assistant",
       "features": "Features & Add-ons",
       "sidebar": "Sidebar",
-      "dailyBrief": "Brief",
       "agents": "Agents"
     },
     "caldav": {
@@ -5932,210 +5961,6 @@
       "addedToProject": "Added to the project"
     }
   },
-  "dailyBrief": {
-    "sectionName": {
-      "verdict": "Verdict",
-      "timeline": "Upcoming days",
-      "tonight": "Today's priorities",
-      "moves": "To move",
-      "anticipate": "To anticipate",
-      "replies": "Replies expected",
-      "inbox": "Inbox",
-      "resolved": "Done"
-    },
-    "priority": {
-      "consequence": "Consequence",
-      "blocking": "Blocks others",
-      "money_deadline": "Money or deadline",
-      "planned_load": "Planned load"
-    },
-    "alertType": {
-      "conflict": "Conflicting events",
-      "overload": "Overload",
-      "duplicate": "Possible duplicate",
-      "deadline_in_note": "Deadline found in a note",
-      "postponed": "Often postponed",
-      "dependency": "Dependency",
-      "event_in_work_hours": "Event during work hours"
-    },
-    "source": {
-      "calendar": "Calendars",
-      "mail": "Mail agent",
-      "llm": "AI rewrite",
-      "voice": "Voice",
-      "agent": "Agent"
-    },
-    "settings": {
-      "linkThemes": "Link themes by AI",
-      "triageLimit": "Tasks looked at per day",
-      "triageEnabled": "Assistant proposals in To sort",
-      "postponements": "Postponements before a card",
-      "maxMoves": "Moves shown",
-      "maxTonight": "Priorities shown",
-      "closedLookback": "Closed tasks checked (days)",
-      "title": "Daily brief",
-      "description": "A summary every morning: the coming days, what is left for tonight, what can move.",
-      "status": "Source status",
-      "timezoneWarning": "The time zone is not set: the brief times may be wrong.",
-      "showOnToday": "Show the brief on Today",
-      "generation": "Generation",
-      "enabled": "Generate every morning",
-      "time": "Time",
-      "days": "Days",
-      "sections": "Sections",
-      "sectionsHint": "An unchecked section is hidden; the order is the list order.",
-      "moveUp": "Move {{name}} up",
-      "moveDown": "Move {{name}} down",
-      "sources": "Calendars read",
-      "noCalendars": "No calendar. Add one in Profile › Calendars.",
-      "lookahead": "Days to look ahead",
-      "evening": "Evening and load",
-      "eveningHint": "Work hours are set in Today (focus blocks).",
-      "openToday": "Open Today",
-      "eveningStart": "Start",
-      "eveningEnd": "End",
-      "eveningMinutes": "Minutes",
-      "dayNote": "Day note",
-      "arbitrage": "Ranking",
-      "priorities": "Priority order",
-      "alerts": "Alerts",
-      "writing": "Writing",
-      "llmEnabled": "Summary and reasons written by AI",
-      "llmProvider": "AI provider: Profile › AI Assistant",
-      "tone": "Tone",
-      "instructions": "Instructions",
-      "retention": "Retention",
-      "decisionsDays": "Decisions kept (days)",
-      "audioDays": "Audio kept (days)",
-      "voice": "Voice",
-      "voiceEnabled": "Read the brief aloud",
-      "piperUrl": "Piper address",
-      "voiceName": "Voice",
-      "speed": "Speed",
-      "save": "Save",
-      "saved": "Settings saved",
-      "saveError": "Could not save the settings.",
-      "loadError": "Could not load the brief settings.",
-      "eveningRemove": "Remove",
-      "review": {
-        "title": "Evening review",
-        "enabled": "Show the evening review after the switch time",
-        "switchTime": "Switch to the evening review at"
-      }
-    },
-    "hours": "{{hours}} h",
-    "hoursMinutes": "{{hours}} h {{rest}}",
-    "minutes": "{{count}} min",
-    "task": {
-      "complete": "Done",
-      "done": "“{{name}}” done",
-      "reopened": "“{{name}}” reopened",
-      "error": "Could not update the task."
-    },
-    "decision": {
-      "error": "Could not save your choice."
-    },
-    "loadError": "Could not load the brief.",
-    "generateError": "Generation failed.",
-    "generateNow": "Generate now",
-    "generating": "Generating…",
-    "regenerate": "Regenerate",
-    "empty": "No brief for today yet.",
-    "failed": "The last generation failed. The previous brief is kept.",
-    "settingsLink": "Brief settings",
-    "counters": {
-      "overdue": "overdue",
-      "today": "today"
-    },
-    "timeline": {
-      "today": "Today",
-      "planned": "{{minutes}} min",
-      "ofCapacity": "{{planned}} of tasks for {{capacity}} free",
-      "over": "Overload: {{planned}} of tasks for {{capacity}} free",
-      "duringWork": "during work",
-      "legendWork": "Work",
-      "legendEvening": "Evening",
-      "legendEvent": "Event",
-      "legendConflict": "Conflict"
-    },
-    "tonight": {
-      "ofCapacity": "{{planned}} / {{capacity}}"
-    },
-    "moves": {
-      "acceptAria": "Move to {{date}}",
-      "moved": "“{{name}}” moved",
-      "otherDate": "Other date"
-    },
-    "anticipate": {
-      "yes": "Yes",
-      "no": "No",
-      "precise": "Specify",
-      "preciseLabel": "Detail",
-      "save": "Save",
-      "answered": "Answer saved",
-      "less": "Fewer like this",
-      "options": "Alert options"
-    },
-    "feedback": {
-      "useful": "Useful",
-      "noise": "Not useful",
-      "fewer": "You'll see fewer alerts of this kind",
-      "question": "Did this screen help?"
-    },
-    "status": {
-      "configured": "Configured",
-      "missing": "Not configured",
-      "failing": "Failing"
-    },
-    "card": {
-      "title": "My day",
-      "open": "See the brief",
-      "error": "The brief is unavailable."
-    },
-    "context": {
-      "title": "Context",
-      "edit": "Edit context",
-      "save": "Save",
-      "delete": "Delete"
-    },
-    "evening": {
-      "switchToMorning": "See the morning brief",
-      "switchToEvening": "See the evening review",
-      "counters": {
-        "done": "done",
-        "tonight": "tonight",
-        "slipped": "slipped"
-      },
-      "sections": {
-        "done": "Done today",
-        "slipped": "Slipped",
-        "tomorrow": "Tomorrow"
-      },
-      "carryDone": "« {{name}} » moved to tomorrow",
-      "carryError": "Could not move the task.",
-      "emptyTonight": "Nothing left to do tonight.",
-      "emptyDone": "Nothing finished today.",
-      "emptySlipped": "Nothing slipped.",
-      "loadError": "Could not load the evening review.",
-      "actions": {
-        "menu": "Actions for “{{name}}”",
-        "tomorrow": "Tomorrow",
-        "dueDate": "Pick a date",
-        "dueLabel": "Due date",
-        "later": "Later",
-        "cancel": "Abandon"
-      },
-      "state": {
-        "due": "Due: {{date}}",
-        "cancelled": "Abandoned"
-      },
-      "dueDone": "“{{name}}” due {{date}}",
-      "laterDone": "“{{name}}” set aside",
-      "cancelDone": "“{{name}}” abandoned",
-      "tonightTitle": "Tonight"
-    },
-    "preparedAt": "prepared at {{time}}"
-  },
   "agents": {
     "title": "Agents",
     "description": "The agent reads mail and drafts. Cadence keeps no mail credentials.",
@@ -6177,7 +6002,6 @@
     "appointmentLabel": "{{title}}, due {{range}}",
     "backToList": "List",
     "blockLabel": "{{title}}, {{range}}",
-    "brief": "Daily brief",
     "calendar": "Day calendar",
     "calendarButton": "Calendar",
     "calendarLabel": "Day calendar",

@@ -313,7 +313,6 @@ describe('triage queue', () => {
         const ai = require('../../modules/ai-assistant/service');
         const entitlements = require('../../services/entitlementsService');
         const assistant = require('../../modules/triage/assistant');
-        const sources = require('../../modules/daily-plan/brief/sources');
         const open = await task({ name: 'trucs', status: 0 });
         const calm = await task({ name: 'Appeler Paul', status: 0 });
         await user.update({
@@ -321,7 +320,7 @@ describe('triage queue', () => {
                 brief: { triage: { enabled: true, dailyLimit: 5 } },
             },
         });
-        jest.spyOn(sources, 'llmConfigured').mockResolvedValue(true);
+        jest.spyOn(ai, 'isAIConfigured').mockResolvedValue(true);
         jest.spyOn(ai, 'getOpenAIClient').mockResolvedValue({});
         jest.spyOn(ai, 'getAIModel').mockResolvedValue('fictif');
         jest.spyOn(entitlements, 'consumeUsage').mockResolvedValue();

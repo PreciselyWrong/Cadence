@@ -1,8 +1,95 @@
 'use strict';
 
-const { Task, TaskTriage } = require('../../models');
+const { Op } = require('sequelize');
+const { Project, Tag, Task, TaskTriage, User } = require('../../models');
+
+const CLOSED_STATUSES = [
+    Task.STATUS.DONE,
+    Task.STATUS.ARCHIVED,
+    Task.STATUS.CANCELLED,
+];
+
+// Each include names a value the rules read: project and parent names, the
+// recurring series, the tags. Only the columns the rules use are loaded.
+const relatedIncludes = () => [
+    { model: Project, attributes: ['name'], required: false },
+    {
+        model: Tag,
+        attributes: ['name'],
+        through: { attributes: [] },
+        required: false,
+    },
+    { model: Task, as: 'ParentTask', attributes: ['uid'], required: false },
+    {
+        model: Task,
+        as: 'RecurringParent',
+        attributes: ['uid'],
+        required: false,
+    },
+];
 
 module.exports = {
+    // Every open task the user can see. Habits are never listed here.
+    findOpenTasks: (visibleWhere) =>
+        Task.findAll({
+            where: {
+                [Op.and]: [
+                    visibleWhere,
+                    {
+                        habit_mode: false,
+                        status: { [Op.notIn]: CLOSED_STATUSES },
+                    },
+                ],
+            },
+            attributes: [
+                'id',
+                'uid',
+                'user_id',
+                'name',
+                'note',
+                'status',
+                'due_date',
+                'project_id',
+                'parent_task_id',
+                'recurrence_type',
+                'recurring_parent_id',
+                'source_key',
+            ],
+            include: relatedIncludes(),
+        }),
+
+    // Tasks completed since `since` (an instant), most recent first.
+    findClosedTasks: (visibleWhere, since) =>
+        Task.findAll({
+            where: {
+                [Op.and]: [
+                    visibleWhere,
+                    {
+                        habit_mode: false,
+                        status: Task.STATUS.DONE,
+                        completed_at: { [Op.gte]: since },
+                    },
+                ],
+            },
+            attributes: [
+                'uid',
+                'name',
+                'note',
+                'completed_at',
+                'due_date',
+                'recurrence_type',
+                'recurring_parent_id',
+            ],
+            include: relatedIncludes(),
+            order: [['completed_at', 'DESC']],
+            limit: 200,
+        }),
+
+    // Every user row with its settings, for the daily jobs. They filter in
+    // code: ui_settings is JSON and its shape differs per database.
+    findAllUsersForJobs: () =>
+        User.findAll({ attributes: ['id', 'uid', 'timezone', 'ui_settings'] }),
+
     findAllForUser: (userId) =>
         TaskTriage.findAll({ where: { user_id: userId } }),
 

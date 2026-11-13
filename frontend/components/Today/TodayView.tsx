@@ -6,7 +6,7 @@ import React, {
     useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import {
     DndContext,
     DragEndEvent,
@@ -150,7 +150,6 @@ const TodayView: React.FC = () => {
 
 const NewToday: React.FC = () => {
     const { t, i18n } = useTranslation();
-    const navigate = useNavigate();
     const [params, setParams] = useSearchParams();
     const today = todayString();
     const tomorrowOfToday = format(addDays(parseISO(today), 1), 'yyyy-MM-dd');
@@ -925,11 +924,6 @@ const NewToday: React.FC = () => {
                   },
               ]
             : []),
-        {
-            key: 'brief',
-            label: t('today.brief', 'Daily brief'),
-            onSelect: () => navigate('/insights/daily-brief'),
-        },
         'separator',
         {
             key: 'classic',

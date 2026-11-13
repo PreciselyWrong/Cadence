@@ -10,7 +10,6 @@ describe('AI Assistant - configurable max_tokens', () => {
     const savedEnv = {};
     const ENV_KEYS = [
         'LLM_API_KEY',
-        'LLM_MAX_TOKENS_DAILY_BRIEF',
         'LLM_MAX_TOKENS_TASK_INSIGHTS',
         'LLM_MAX_TOKENS_PROJECT_INSIGHTS',
         'LLM_DISABLE_THINKING',
@@ -101,27 +100,6 @@ describe('AI Assistant - configurable max_tokens', () => {
 
         expect(mockCreate).toHaveBeenCalledWith(
             expect.objectContaining({ max_tokens: 600 })
-        );
-    });
-
-    it('defaults the daily brief to 1500 max_tokens when unset', async () => {
-        const user = await createTestUser({ email: 'ai-tokens@example.com' });
-
-        await aiAssistantService.generateDailyBrief(user.id);
-
-        expect(mockCreate).toHaveBeenCalledWith(
-            expect.objectContaining({ max_tokens: 1500 })
-        );
-    });
-
-    it('uses LLM_MAX_TOKENS_DAILY_BRIEF when set', async () => {
-        process.env.LLM_MAX_TOKENS_DAILY_BRIEF = '250';
-        const user = await createTestUser({ email: 'ai-tokens-2@example.com' });
-
-        await aiAssistantService.generateDailyBrief(user.id);
-
-        expect(mockCreate).toHaveBeenCalledWith(
-            expect.objectContaining({ max_tokens: 250 })
         );
     });
 
@@ -220,7 +198,7 @@ describe('AI Assistant - configurable max_tokens', () => {
         expect(result.insight).toBe('from content field');
     });
 
-    it('does not leak non-JSON chain-of-thought from reasoning_content into the daily brief', async () => {
+    it('does not leak non-JSON chain-of-thought from reasoning_content into project insights', async () => {
         mockCreate.mockResolvedValue({
             choices: [
                 {
@@ -234,17 +212,16 @@ describe('AI Assistant - configurable max_tokens', () => {
             model: 'test-model',
             usage: { prompt_tokens: 10, completion_tokens: 1500 },
         });
-        const user = await createTestUser({
-            email: 'ai-tokens-leak-1@example.com',
-        });
+        const result = await aiAssistantService.generateProjectInsights(
+            { projectName: 'Website redesign' },
+            null
+        );
 
-        const result = await aiAssistantService.generateDailyBrief(user.id);
-
-        expect(result.focus).toBe('');
-        expect(result.priority_actions).toEqual([]);
+        expect(result.insight).toBe('');
+        expect(result.next_action).toBe('');
     });
 
-    it('does not leak non-JSON chain-of-thought from reasoning into the daily brief', async () => {
+    it('does not leak non-JSON chain-of-thought from reasoning into project insights', async () => {
         mockCreate.mockResolvedValue({
             choices: [
                 {
@@ -258,13 +235,12 @@ describe('AI Assistant - configurable max_tokens', () => {
             model: 'test-model',
             usage: { prompt_tokens: 10, completion_tokens: 1500 },
         });
-        const user = await createTestUser({
-            email: 'ai-tokens-leak-2@example.com',
-        });
+        const result = await aiAssistantService.generateProjectInsights(
+            { projectName: 'Website redesign' },
+            null
+        );
 
-        const result = await aiAssistantService.generateDailyBrief(user.id);
-
-        expect(result.focus).toBe('');
-        expect(result.priority_actions).toEqual([]);
+        expect(result.insight).toBe('');
+        expect(result.next_action).toBe('');
     });
 });

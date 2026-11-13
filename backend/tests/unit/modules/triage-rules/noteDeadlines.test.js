@@ -3,7 +3,7 @@
 const {
     datesInNote,
     deadlineCards,
-} = require('../../../../modules/daily-plan/brief/rules/noteDeadlines');
+} = require('../../../../modules/triage/core/rules/noteDeadlines');
 const { TODAY, task, input } = require('./fixtures');
 
 describe('datesInNote', () => {

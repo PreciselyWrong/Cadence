@@ -149,6 +149,37 @@
     }
   },
   "triage": {
+    "settings": {
+      "calendars": "Prebrani koledarji",
+      "noCalendars": "Ni koledarja. Dodajte ga v Profil › Koledarji.",
+      "lookahead": "Dni vnaprej",
+      "alerts": "Opozorila",
+      "postponements": "Odlogi pred kartico",
+      "closedLookback": "Pregledane zaključene naloge (dni)",
+      "assistant": "AI pomočnik",
+      "assistantEnabled": "Predlogi UI za razvrstitev",
+      "assistantLimit": "Pregledane naloge na dan",
+      "llmProvider": "Ponudnik UI: Profil › Pomočnik UI",
+      "save": "Shrani",
+      "saved": "Nastavitve shranjene",
+      "saveError": "Nastavitev ni mogoče shraniti.",
+      "loadError": "Nastavitev ni bilo mogoče naložiti.",
+      "alertType": {
+        "conflict": "Dogodki, ki se prekrivajo",
+        "event_in_work_hours": "Dogodek med delovnim časom",
+        "duplicate": "Morebitni podvojeni vnos",
+        "deadline_in_note": "Rok najden v zapisku",
+        "postponed": "Pogosto odloženo"
+      }
+    },
+    "yes": "Da",
+    "no": "Ne",
+    "context": {
+      "title": "Kontekst",
+      "edit": "Uredi kontekst",
+      "save": "Shrani",
+      "delete": "Izbriši"
+    },
     "mail": {
       "noSubject": "(brez zadeve)",
       "draft": "Osnutek pripravljen:",
@@ -643,8 +674,7 @@
             "events": "Dogodki",
             "permission": {
                 "events": "Posluša dogodke",
-                "routes": "Ponuja lastne poti",
-                "brief": "Writes the daily brief"
+                "routes": "Ponuja lastne poti"
             },
             "enabled": "Vklopljen",
             "needsApproval": "Ta različica zahteva več kot prej. Znova ga vklopite, da odobrite njegova dovoljenja in dogodke.",
@@ -6013,210 +6043,6 @@
       "addedToProject": "Dodano v projekt"
     }
   },
-  "dailyBrief": {
-    "sectionName": {
-      "verdict": "Presoja",
-      "timeline": "Prihajajoči dnevi",
-      "tonight": "Prednostne naloge dneva",
-      "moves": "Za premik",
-      "anticipate": "Za predvidevanje",
-      "replies": "Pričakovani odgovori",
-      "inbox": "Prejeto",
-      "resolved": "Opravljeno"
-    },
-    "priority": {
-      "consequence": "Posledica",
-      "blocking": "Blokira druge",
-      "money_deadline": "Denar ali rok",
-      "planned_load": "Načrtovana obremenitev"
-    },
-    "alertType": {
-      "conflict": "Dogodki, ki se prekrivajo",
-      "overload": "Preobremenitev",
-      "duplicate": "Morebitni podvojeni vnos",
-      "deadline_in_note": "Rok najden v zapisku",
-      "postponed": "Pogosto odloženo",
-      "dependency": "Odvisnost",
-      "event_in_work_hours": "Dogodek med delovnim časom"
-    },
-    "source": {
-      "calendar": "Koledarji",
-      "mail": "Poštni agent",
-      "llm": "Prepis z UI",
-      "voice": "Glas",
-      "agent": "Agent"
-    },
-    "settings": {
-      "linkThemes": "Teme povezav z UI",
-      "triageLimit": "Pregledane naloge na dan",
-      "triageEnabled": "Predlogi UI za razvrstitev",
-      "postponements": "Odlogi pred kartico",
-      "maxMoves": "Prikazani premiki",
-      "maxTonight": "Prikazane prednostne naloge",
-      "closedLookback": "Pregledane zaključene naloge (dni)",
-      "title": "Dnevni povzetek",
-      "description": "Povzetek vsako jutro: prihajajoči dnevi, kar ostaja za nocoj in kaj se lahko premakne.",
-      "status": "Stanje virov",
-      "timezoneWarning": "Časovni pas ni nastavljen: časi v povzetku so lahko napačni.",
-      "showOnToday": "Prikaži povzetek na strani Danes",
-      "generation": "Ustvarjanje",
-      "enabled": "Ustvari vsako jutro",
-      "time": "Čas",
-      "days": "Dnevi",
-      "sections": "Razdelki",
-      "sectionsHint": "Neizbran razdelek je skrit; vrstni red je vrstni red seznama.",
-      "moveUp": "Premakni {{name}} gor",
-      "moveDown": "Premakni {{name}} dol",
-      "sources": "Prebrani koledarji",
-      "noCalendars": "Ni koledarja. Dodajte ga v Profil › Koledarji.",
-      "lookahead": "Dni vnaprej",
-      "evening": "Večer in obremenitev",
-      "eveningHint": "Delovni čas nastavite na strani Danes (bloki za osredotočenost).",
-      "openToday": "Odpri Danes",
-      "eveningStart": "Začetek",
-      "eveningEnd": "Konec",
-      "eveningMinutes": "Minut",
-      "dayNote": "Dnevni zapisek",
-      "arbitrage": "Razvrščanje",
-      "priorities": "Vrstni red prednosti",
-      "alerts": "Opozorila",
-      "writing": "Pisanje",
-      "llmEnabled": "Povzetek in razlogi UI",
-      "llmProvider": "Ponudnik UI: Profil › Pomočnik UI",
-      "tone": "Ton",
-      "instructions": "Navodila",
-      "retention": "Hramba",
-      "decisionsDays": "Hranjene odločitve (dni)",
-      "audioDays": "Hranjen zvok (dni)",
-      "voice": "Glas",
-      "voiceEnabled": "Glasno preberi povzetek",
-      "piperUrl": "Naslov Piper",
-      "voiceName": "Glas",
-      "speed": "Hitrost",
-      "save": "Shrani",
-      "saved": "Nastavitve shranjene",
-      "saveError": "Nastavitev ni mogoče shraniti.",
-      "loadError": "Nastavitev povzetka ni mogoče naložiti.",
-      "eveningRemove": "Odstrani",
-      "review": {
-        "title": "Večerni pregled",
-        "enabled": "Pokaži večerni pregled po času preklopa",
-        "switchTime": "Čas preklopa na večerni pregled"
-      }
-    },
-    "hours": "{{hours}} h",
-    "hoursMinutes": "{{hours}} h {{rest}}",
-    "minutes": "{{count}} min",
-    "task": {
-      "complete": "Opravljeno",
-      "done": "»{{name}}« opravljeno",
-      "reopened": "»{{name}}« ponovno odprto",
-      "error": "Naloge ni mogoče posodobiti."
-    },
-    "decision": {
-      "error": "Vaše izbire ni mogoče shraniti."
-    },
-    "loadError": "Povzetka ni mogoče naložiti.",
-    "generateError": "Ustvarjanje ni uspelo.",
-    "generateNow": "Ustvari zdaj",
-    "generating": "Ustvarjanje…",
-    "regenerate": "Ustvari znova",
-    "empty": "Za danes še ni povzetka.",
-    "failed": "Zadnje ustvarjanje ni uspelo. Prejšnji povzetek je ohranjen.",
-    "settingsLink": "Nastavitve povzetka",
-    "counters": {
-      "overdue": "zamujeno",
-      "today": "danes"
-    },
-    "timeline": {
-      "today": "Danes",
-      "planned": "{{minutes}} min",
-      "ofCapacity": "Naloge za {{planned}}, prosto {{capacity}}",
-      "over": "Preobremenitev: naloge za {{planned}}, prosto {{capacity}}",
-      "duringWork": "med delom",
-      "legendWork": "Delo",
-      "legendEvening": "Večer",
-      "legendEvent": "Dogodek",
-      "legendConflict": "Konflikt"
-    },
-    "tonight": {
-      "ofCapacity": "{{planned}} / {{capacity}}"
-    },
-    "moves": {
-      "acceptAria": "Premakni na {{date}}",
-      "moved": "»{{name}}« premaknjeno",
-      "otherDate": "Drug datum"
-    },
-    "anticipate": {
-      "yes": "Da",
-      "no": "Ne",
-      "precise": "Natančneje",
-      "preciseLabel": "Podrobnost",
-      "save": "Shrani",
-      "answered": "Odgovor shranjen",
-      "less": "Manj takih",
-      "options": "Možnosti opozorila"
-    },
-    "feedback": {
-      "useful": "Uporabno",
-      "noise": "Ni uporabno",
-      "fewer": "Videli boste manj opozoril te vrste",
-      "question": "Vam je ta zaslon pomagal?"
-    },
-    "status": {
-      "configured": "Nastavljeno",
-      "missing": "Ni nastavljeno",
-      "failing": "Ne deluje"
-    },
-    "card": {
-      "title": "Moj dan",
-      "open": "Poglej povzetek",
-      "error": "Povzetek ni na voljo."
-    },
-    "context": {
-      "title": "Kontekst",
-      "edit": "Uredi kontekst",
-      "save": "Shrani",
-      "delete": "Izbriši"
-    },
-    "evening": {
-      "switchToMorning": "Poglej jutranji povzetek",
-      "switchToEvening": "Poglej večerni pregled",
-      "counters": {
-        "done": "opravljeno",
-        "tonight": "nocoj",
-        "slipped": "prestavljeno"
-      },
-      "sections": {
-        "done": "Opravljeno danes",
-        "slipped": "Zdrsne",
-        "tomorrow": "Jutri"
-      },
-      "carryDone": "« {{name}} » prestavljeno na jutri",
-      "carryError": "Opravila ni bilo mogoče prestaviti.",
-      "emptyTonight": "Nocoj ni nič več za narediti.",
-      "emptyDone": "Danes ni nič opravljenega.",
-      "emptySlipped": "Nič ne zdrsne.",
-      "loadError": "Večernega pregleda ni bilo mogoče naložiti.",
-      "actions": {
-        "menu": "Dejanja za »{{name}}«",
-        "tomorrow": "Jutri",
-        "dueDate": "Izberi datum",
-        "dueLabel": "Rok",
-        "later": "Kasneje",
-        "cancel": "Opusti"
-      },
-      "state": {
-        "due": "Rok: {{date}}",
-        "cancelled": "Opuščeno"
-      },
-      "dueDone": "»{{name}}« rok {{date}}",
-      "laterDone": "»{{name}}« odloženo",
-      "cancelDone": "»{{name}}« opuščeno",
-      "tonightTitle": "Nocoj"
-    },
-    "preparedAt": "pripravljeno ob {{time}}"
-  },
   "agents": {
     "title": "Agenti",
     "description": "Agent bere pošto in pripravlja osnutke. Cadence ne hrani poverilnic za pošto.",
@@ -6258,7 +6084,6 @@
     "appointmentLabel": "{{title}}, {{range}}",
     "backToList": "Seznam",
     "blockLabel": "{{title}}, {{range}}",
-    "brief": "Dnevni povzetek",
     "calendar": "Dnevni koledar",
     "calendarButton": "Koledar",
     "calendarLabel": "Dnevni koledar",

@@ -258,10 +258,10 @@ See [docs/architecture.md](docs/architecture.md) for full diagrams; the essentia
     - API endpoints and database schema
 
 22. **[AI Assistant](docs/13-ai-assistant.md)**
-    - Daily Brief, Task Insights, and Project Insights features
+    - Task Insights and Project Insights features
     - Provider-agnostic LLM integration (LLM_API_KEY, LLM_BASE_URL, LLM_MODEL)
     - OpenAI, Ollama, Groq, and any OpenAI-compatible provider supported
-    - User "About You" profile context for personalised briefs
+    - User "About You" profile context
     - Caching strategy and API endpoints
     - Adding new AI features
 

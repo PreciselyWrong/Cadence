@@ -6,11 +6,7 @@ const {
     systemPrompt,
 } = require('../../../modules/triage/assistant');
 const { taskFingerprint } = require('../../../modules/triage/core/fingerprint');
-const {
-    input,
-    settingsWith,
-    task,
-} = require('./daily-plan-brief-rules/fixtures');
+const { input, settingsWith, task } = require('./triage-rules/fixtures');
 
 const catalog = {
     projects: new Map([['Maison', 7]]),

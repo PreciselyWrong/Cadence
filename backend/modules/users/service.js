@@ -966,7 +966,6 @@ class UsersService {
         const {
             showMetrics,
             projectShowMetrics,
-            showDailyBrief,
             showAreaBalance,
             showActiveProjects,
             showSuggestions,
@@ -992,10 +991,6 @@ class UsersService {
                 showActiveProjects !== undefined
                     ? showActiveProjects
                     : (user.today_settings?.showActiveProjects ?? true),
-            showDailyBrief:
-                showDailyBrief !== undefined
-                    ? showDailyBrief
-                    : user.today_settings?.showDailyBrief || false,
             showSuggestions:
                 showSuggestions !== undefined
                     ? showSuggestions

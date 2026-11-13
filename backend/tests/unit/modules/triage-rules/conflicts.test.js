@@ -4,7 +4,7 @@ const {
     workHourConflicts,
     overlappingEvents,
     conflictCards,
-} = require('../../../../modules/daily-plan/brief/rules/conflicts');
+} = require('../../../../modules/triage/core/rules/conflicts');
 const { TODAY, event, input } = require('./fixtures');
 
 const WORK = { [TODAY]: [{ start: 540, end: 1020, label: 'Focus' }] };

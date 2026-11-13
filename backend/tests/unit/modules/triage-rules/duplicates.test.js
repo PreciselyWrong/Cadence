@@ -5,7 +5,7 @@ const {
     jaccard,
     findDuplicates,
     duplicateCards,
-} = require('../../../../modules/daily-plan/brief/rules/duplicates');
+} = require('../../../../modules/triage/core/rules/duplicates');
 const { settingsWith, task, input } = require('./fixtures');
 
 const closed = (overrides = {}) => ({

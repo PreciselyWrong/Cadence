@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-    BriefContext,
-    deleteBriefContext,
-    fetchBriefContexts,
-    updateBriefContext,
-} from '../../utils/dailyBriefService';
+    LinkedContext,
+    deleteContext,
+    fetchContexts,
+    updateContext,
+} from '../../utils/triageService';
 import { SidePanelSection } from '../SidePanel/SidePanelParts';
 
 interface TaskContextsProps {
@@ -13,14 +13,14 @@ interface TaskContextsProps {
     readOnly?: boolean;
 }
 
-// Contexts the user gave the daily brief about this task ("the car is in
+// Contexts the user gave in "À trier" about this task ("the car is in
 // the garage on Thursday"). Nothing is shown when there are none.
 const TaskContexts: React.FC<TaskContextsProps> = ({
     taskUid,
     readOnly = false,
 }) => {
     const { t } = useTranslation();
-    const [contexts, setContexts] = useState<BriefContext[]>([]);
+    const [contexts, setContexts] = useState<LinkedContext[]>([]);
     const [editing, setEditing] = useState<{
         uid: string;
         text: string;
@@ -29,7 +29,7 @@ const TaskContexts: React.FC<TaskContextsProps> = ({
 
     useEffect(() => {
         let cancelled = false;
-        fetchBriefContexts({ scope: 'task', target_ref: taskUid })
+        fetchContexts({ scope: 'task', target_ref: taskUid })
             .then((list) => {
                 if (!cancelled) setContexts(list);
             })
@@ -48,7 +48,7 @@ const TaskContexts: React.FC<TaskContextsProps> = ({
         const text = editing.text.trim();
         if (text === '') return;
         try {
-            const updated = await updateBriefContext(editing.uid, text);
+            const updated = await updateContext(editing.uid, text);
             setContexts((list) =>
                 list.map((item) => (item.uid === updated.uid ? updated : item))
             );
@@ -61,7 +61,7 @@ const TaskContexts: React.FC<TaskContextsProps> = ({
 
     const remove = async (uid: string) => {
         try {
-            await deleteBriefContext(uid);
+            await deleteContext(uid);
             setContexts((list) => list.filter((item) => item.uid !== uid));
             setError(null);
         } catch (err) {
@@ -70,7 +70,7 @@ const TaskContexts: React.FC<TaskContextsProps> = ({
     };
 
     return (
-        <SidePanelSection title={t('dailyBrief.context.title', 'Contexte')}>
+        <SidePanelSection title={t('triage.context.title', 'Contexte')}>
             <ul className="space-y-2">
                 {contexts.map((context) => (
                     <li
@@ -89,7 +89,7 @@ const TaskContexts: React.FC<TaskContextsProps> = ({
                                     value={editing.text}
                                     maxLength={500}
                                     aria-label={t(
-                                        'dailyBrief.context.edit',
+                                        'triage.context.edit',
                                         'Modifier le contexte'
                                     )}
                                     onChange={(event) =>
@@ -104,10 +104,7 @@ const TaskContexts: React.FC<TaskContextsProps> = ({
                                     type="submit"
                                     className="h-10 px-2 font-semibold text-indigo-700 dark:text-indigo-300"
                                 >
-                                    {t(
-                                        'dailyBrief.context.save',
-                                        'Enregistrer'
-                                    )}
+                                    {t('triage.context.save', 'Enregistrer')}
                                 </button>
                             </form>
                         ) : (
@@ -126,7 +123,7 @@ const TaskContexts: React.FC<TaskContextsProps> = ({
                                             className="h-8 rounded-md px-2 text-xs text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                                         >
                                             {t(
-                                                'dailyBrief.context.edit',
+                                                'triage.context.edit',
                                                 'Modifier le contexte'
                                             )}
                                         </button>
@@ -136,7 +133,7 @@ const TaskContexts: React.FC<TaskContextsProps> = ({
                                             className="h-8 rounded-md px-2 text-xs text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                                         >
                                             {t(
-                                                'dailyBrief.context.delete',
+                                                'triage.context.delete',
                                                 'Supprimer'
                                             )}
                                         </button>

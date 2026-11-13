@@ -311,10 +311,10 @@ async function eventsForRangeOfDays(
     return { start, end, ...result };
 }
 
-// The events the daily brief reads: only the calendars the user selected
-// for it, each one shaped as the brief's event (docs/39-daily-brief.md).
-// Errors come back per calendar and never throw.
-async function eventsForBrief(user, startDate, endDate, feedUids) {
+// The events of the given calendars only, each with its series id, as the
+// triage rules read them (docs/40-triage.md). Errors come back per calendar
+// and never throw.
+async function eventsInRange(user, startDate, endDate, feedUids) {
     if (!feedUids || feedUids.length === 0) {
         return { events: [], errors: [] };
     }
@@ -345,6 +345,6 @@ module.exports = {
     remove,
     eventsForDay,
     eventsForRangeOfDays,
-    eventsForBrief,
+    eventsInRange,
     clearCache,
 };

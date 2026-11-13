@@ -19,9 +19,9 @@ The Today page is divided into **four main sections** that organize your tasks:
 
 Each section follows specific rules to show the right tasks without duplication.
 
-**Only your own work.** Every section and its count, the Today and Upcoming lists, the planner's suggestions and the AI brief take tasks assigned to you (whoever created them) and tasks you own that are not assigned to another member. A task you assign to another member counts for them only, so setting up work for others does not fill your own Overdue. A task assigned to a contact without an account (a child, a plumber) is only a label and stays yours. Tasks you can see only because a project or area is shared with you stay on that project or area page, the Tasks page and search, so a shared area does not fill everyone's day with each other's tasks. Assign a task to yourself to bring it into your Today.
+**Only your own work.** Every section and its count, the Today and Upcoming lists, the planner's suggestions take tasks assigned to you (whoever created them) and tasks you own that are not assigned to another member. A task you assign to another member counts for them only, so setting up work for others does not fill your own Overdue. A task assigned to a contact without an account (a child, a plumber) is only a label and stays yours. Tasks you can see only because a project or area is shared with you stay on that project or area page, the Tasks page and search, so a shared area does not fill everyone's day with each other's tasks. Assign a task to yourself to bring it into your Today.
 
-Around these sections the page can also show panels that do not own tasks: the AI Daily Brief, the daily quote, metrics, Area Balance, Active Projects and a **today** list of open tasks carrying the `today` system tag (see [Other Panels](#other-panels)).
+Around these sections the page can also show panels that do not own tasks: the daily quote, metrics, Area Balance, Active Projects and a **today** list of open tasks carrying the `today` system tag (see [Other Panels](#other-panels)).
 
 ---
 
@@ -298,7 +298,6 @@ You can customize what appears on your Today page:
 
 | Setting | Default | Effect |
 |---------|---------|--------|
-| Show AI Daily Brief | On | Shows/hides the AI Daily Brief panel (needs the AI assistant configured) |
 | Show Daily Quote | On | Shows/hides daily motivational quote |
 | Show Metrics | Off | Shows/hides task metrics widget |
 | Show Area Balance | On | Shows/hides the Area Balance panel |
@@ -308,7 +307,7 @@ You can customize what appears on your Today page:
 | Show Due Today Tasks | On | Shows/hides Overdue and Due Today tasks |
 | Show Completed Tasks | On | Shows/hides Completed section |
 
-The progress bar is always shown and has no toggle. Settings missing from an account created before a toggle existed default to On for AI Daily Brief, Area Balance, Active Projects and Tagged Today.
+The progress bar is always shown and has no toggle. Settings missing from an account created before a toggle existed default to On for Area Balance, Active Projects and Tagged Today.
 
 ### Where to Change Settings
 
@@ -320,7 +319,6 @@ The progress bar is always shown and has no toggle. Settings missing from an acc
 
 - **Tagged today**: open tasks (not done, archived or cancelled, not habits) carrying the `today` system tag, sorted by priority, then due date, then project. Tagging is a way to pin a task to today without changing its status or due date. The list is hidden when empty.
 - **Area Balance** and **Active Projects**: overview panels of how your open work spreads across areas and which projects are in progress.
-- **AI Daily Brief**: see [AI Assistant](13-ai-assistant.md).
 
 ### Collapsible Sections
 

@@ -1,6 +1,6 @@
 'use strict';
 
-// Calendar conflicts on the brief's days. Both are questions for the user:
+// Calendar conflicts in the days read for triage. Both are questions for the user:
 // the engine cannot know whether a meeting can move.
 const { texts, titleOf } = require('./texts');
 

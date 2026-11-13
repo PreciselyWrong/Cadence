@@ -143,6 +143,37 @@
     }
   },
   "triage": {
+    "settings": {
+      "calendars": "Lästa kalendrar",
+      "noCalendars": "Ingen kalender. Lägg till en under Profil › Kalendrar.",
+      "lookahead": "Dagar framåt",
+      "alerts": "Varningar",
+      "postponements": "Uppskjutningar före ett kort",
+      "closedLookback": "Kontrollerade avslutade uppgifter (dagar)",
+      "assistant": "AI-assistent",
+      "assistantEnabled": "AI-förslag i Att sortera",
+      "assistantLimit": "Granskade uppgifter per dag",
+      "llmProvider": "AI-leverantör: Profil › AI-assistent",
+      "save": "Spara",
+      "saved": "Inställningarna sparades",
+      "saveError": "Inställningarna kunde inte sparas.",
+      "loadError": "Inställningarna kunde inte laddas.",
+      "alertType": {
+        "conflict": "Krockande händelser",
+        "event_in_work_hours": "Händelse under arbetstid",
+        "duplicate": "Möjlig dubblett",
+        "deadline_in_note": "Deadline hittad i en anteckning",
+        "postponed": "Ofta uppskjuten"
+      }
+    },
+    "yes": "Ja",
+    "no": "Nej",
+    "context": {
+      "title": "Kontext",
+      "edit": "Redigera kontext",
+      "save": "Spara",
+      "delete": "Ta bort"
+    },
     "mail": {
       "noSubject": "(inget ämne)",
       "draft": "Utkast klart:",
@@ -635,8 +666,7 @@
             "events": "Händelser",
             "permission": {
                 "events": "Lyssnar på händelser",
-                "routes": "Tillhandahåller egna rutter",
-                "brief": "Writes the daily brief"
+                "routes": "Tillhandahåller egna rutter"
             },
             "enabled": "På",
             "needsApproval": "Den här versionen begär mer än tidigare. Slå på den igen för att godkänna dess behörigheter och händelser.",
@@ -5960,210 +5990,6 @@
       "addedToProject": "Tillagd i projektet"
     }
   },
-  "dailyBrief": {
-    "sectionName": {
-      "verdict": "Bedömning",
-      "timeline": "Kommande dagar",
-      "tonight": "Dagens prioriteringar",
-      "moves": "Att flytta",
-      "anticipate": "Att förutse",
-      "replies": "Väntade svar",
-      "inbox": "Inkorg",
-      "resolved": "Klart"
-    },
-    "priority": {
-      "consequence": "Konsekvens",
-      "blocking": "Blockerar andra",
-      "money_deadline": "Pengar eller deadline",
-      "planned_load": "Planerad belastning"
-    },
-    "alertType": {
-      "conflict": "Krockande händelser",
-      "overload": "Överbelastning",
-      "duplicate": "Möjlig dubblett",
-      "deadline_in_note": "Deadline hittad i en anteckning",
-      "postponed": "Ofta uppskjuten",
-      "dependency": "Beroende",
-      "event_in_work_hours": "Händelse under arbetstid"
-    },
-    "source": {
-      "calendar": "Kalendrar",
-      "mail": "E-postagent",
-      "llm": "AI-omskrivning",
-      "voice": "Röst",
-      "agent": "Agent"
-    },
-    "settings": {
-      "linkThemes": "Länkteman med AI",
-      "triageLimit": "Granskade uppgifter per dag",
-      "triageEnabled": "AI-förslag i Att sortera",
-      "postponements": "Uppskjutningar före ett kort",
-      "maxMoves": "Visade flyttar",
-      "maxTonight": "Visade prioriteringar",
-      "closedLookback": "Kontrollerade avslutade uppgifter (dagar)",
-      "title": "Daglig sammanfattning",
-      "description": "En sammanfattning varje morgon: de kommande dagarna, vad som återstår ikväll och vad som kan flyttas.",
-      "status": "Källstatus",
-      "timezoneWarning": "Tidszonen är inte inställd: tiderna i sammanfattningen kan vara felaktiga.",
-      "showOnToday": "Visa sammanfattningen under Idag",
-      "generation": "Generering",
-      "enabled": "Generera varje morgon",
-      "time": "Tid",
-      "days": "Dagar",
-      "sections": "Avsnitt",
-      "sectionsHint": "Ett avmarkerat avsnitt döljs; ordningen är listans ordning.",
-      "moveUp": "Flytta {{name}} uppåt",
-      "moveDown": "Flytta {{name}} nedåt",
-      "sources": "Lästa kalendrar",
-      "noCalendars": "Ingen kalender. Lägg till en under Profil › Kalendrar.",
-      "lookahead": "Dagar framåt",
-      "evening": "Kväll och belastning",
-      "eveningHint": "Arbetstiden ställs in under Idag (fokusblock).",
-      "openToday": "Öppna Idag",
-      "eveningStart": "Start",
-      "eveningEnd": "Slut",
-      "eveningMinutes": "Minuter",
-      "dayNote": "Dagsanteckning",
-      "arbitrage": "Rangordning",
-      "priorities": "Prioritetsordning",
-      "alerts": "Varningar",
-      "writing": "Skrivande",
-      "llmEnabled": "Sammanfattning och skäl av AI",
-      "llmProvider": "AI-leverantör: Profil › AI-assistent",
-      "tone": "Ton",
-      "instructions": "Instruktioner",
-      "retention": "Lagringstid",
-      "decisionsDays": "Beslut som sparas (dagar)",
-      "audioDays": "Ljud som sparas (dagar)",
-      "voice": "Röst",
-      "voiceEnabled": "Läs upp sammanfattningen",
-      "piperUrl": "Piper-adress",
-      "voiceName": "Röst",
-      "speed": "Hastighet",
-      "save": "Spara",
-      "saved": "Inställningarna sparades",
-      "saveError": "Inställningarna kunde inte sparas.",
-      "loadError": "Sammanfattningsinställningarna kunde inte läsas in.",
-      "eveningRemove": "Ta bort",
-      "review": {
-        "title": "Kvällsgenomgång",
-        "enabled": "Visa kvällsgenomgången efter växlingstiden",
-        "switchTime": "Växlingstid till kvällsgenomgången"
-      }
-    },
-    "hours": "{{hours}} t",
-    "hoursMinutes": "{{hours}} t {{rest}}",
-    "minutes": "{{count}} min",
-    "task": {
-      "complete": "Klar",
-      "done": "”{{name}}” klar",
-      "reopened": "”{{name}}” öppnad igen",
-      "error": "Uppgiften kunde inte uppdateras."
-    },
-    "decision": {
-      "error": "Ditt val kunde inte sparas."
-    },
-    "loadError": "Sammanfattningen kunde inte läsas in.",
-    "generateError": "Genereringen misslyckades.",
-    "generateNow": "Generera nu",
-    "generating": "Genererar…",
-    "regenerate": "Generera igen",
-    "empty": "Ingen sammanfattning för idag ännu.",
-    "failed": "Senaste genereringen misslyckades. Den föregående sammanfattningen behålls.",
-    "settingsLink": "Sammanfattningsinställningar",
-    "counters": {
-      "overdue": "försenad",
-      "today": "idag"
-    },
-    "timeline": {
-      "today": "Idag",
-      "planned": "{{minutes}} min",
-      "ofCapacity": "{{planned}} uppgifter på {{capacity}} ledig tid",
-      "over": "Överbelastning: {{planned}} uppgifter på {{capacity}} ledig tid",
-      "duringWork": "under arbetstid",
-      "legendWork": "Arbete",
-      "legendEvening": "Kväll",
-      "legendEvent": "Händelse",
-      "legendConflict": "Konflikt"
-    },
-    "tonight": {
-      "ofCapacity": "{{planned}} / {{capacity}}"
-    },
-    "moves": {
-      "acceptAria": "Flytta till {{date}}",
-      "moved": "”{{name}}” flyttad",
-      "otherDate": "Annat datum"
-    },
-    "anticipate": {
-      "yes": "Ja",
-      "no": "Nej",
-      "precise": "Ange",
-      "preciseLabel": "Detalj",
-      "save": "Spara",
-      "answered": "Svar sparat",
-      "less": "Färre av denna typ",
-      "options": "Varningsalternativ"
-    },
-    "feedback": {
-      "useful": "Användbart",
-      "noise": "Inte användbart",
-      "fewer": "Du ser färre varningar av den här typen",
-      "question": "Hjälpte den här skärmen?"
-    },
-    "status": {
-      "configured": "Konfigurerad",
-      "missing": "Inte konfigurerad",
-      "failing": "Misslyckas"
-    },
-    "card": {
-      "title": "Min dag",
-      "open": "Visa sammanfattningen",
-      "error": "Sammanfattningen är inte tillgänglig."
-    },
-    "context": {
-      "title": "Kontext",
-      "edit": "Redigera kontext",
-      "save": "Spara",
-      "delete": "Ta bort"
-    },
-    "evening": {
-      "switchToMorning": "Visa morgonsammanfattningen",
-      "switchToEvening": "Visa kvällsgenomgången",
-      "counters": {
-        "done": "klara",
-        "tonight": "ikväll",
-        "slipped": "flyttade"
-      },
-      "sections": {
-        "done": "Klart idag",
-        "slipped": "Glider",
-        "tomorrow": "Imorgon"
-      },
-      "carryDone": "« {{name}} » flyttad till imorgon",
-      "carryError": "Kunde inte flytta uppgiften.",
-      "emptyTonight": "Inget mer att göra ikväll.",
-      "emptyDone": "Inget klart idag.",
-      "emptySlipped": "Inget glider.",
-      "loadError": "Kunde inte ladda kvällsgenomgången.",
-      "actions": {
-        "menu": "Åtgärder för “{{name}}”",
-        "tomorrow": "Imorgon",
-        "dueDate": "Välj datum",
-        "dueLabel": "Förfallodatum",
-        "later": "Senare",
-        "cancel": "Avbryt"
-      },
-      "state": {
-        "due": "Förfaller: {{date}}",
-        "cancelled": "Avbruten"
-      },
-      "dueDone": "“{{name}}” förfaller {{date}}",
-      "laterDone": "“{{name}}” lagd till senare",
-      "cancelDone": "“{{name}}” avbruten",
-      "tonightTitle": "Ikväll"
-    },
-    "preparedAt": "förberett kl. {{time}}"
-  },
   "agents": {
     "title": "Agenter",
     "description": "Agenten läser e-post och skriver utkast. Cadence sparar inga e-postuppgifter.",
@@ -6205,7 +6031,6 @@
     "appointmentLabel": "{{title}}, {{range}}",
     "backToList": "Lista",
     "blockLabel": "{{title}}, {{range}}",
-    "brief": "Dagens överblick",
     "calendar": "Dagskalender",
     "calendarButton": "Kalender",
     "calendarLabel": "Dagskalender",

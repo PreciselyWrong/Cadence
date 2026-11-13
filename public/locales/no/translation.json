@@ -143,6 +143,37 @@
     }
   },
   "triage": {
+    "settings": {
+      "calendars": "Leste kalendere",
+      "noCalendars": "Ingen kalender. Legg til en under Profil › Kalendere.",
+      "lookahead": "Dager fremover",
+      "alerts": "Varsler",
+      "postponements": "Utsettelser før et kort",
+      "closedLookback": "Sjekkede fullførte oppgaver (dager)",
+      "assistant": "AI-assistent",
+      "assistantEnabled": "KI-forslag i Å sortere",
+      "assistantLimit": "Gjennomgåtte oppgaver per dag",
+      "llmProvider": "KI-leverandør: Profil › KI-assistent",
+      "save": "Lagre",
+      "saved": "Innstillinger lagret",
+      "saveError": "Kunne ikke lagre innstillingene.",
+      "loadError": "Kunne ikke laste inn innstillingene.",
+      "alertType": {
+        "conflict": "Kolliderende hendelser",
+        "event_in_work_hours": "Hendelse i arbeidstid",
+        "duplicate": "Mulig duplikat",
+        "deadline_in_note": "Frist funnet i et notat",
+        "postponed": "Ofte utsatt"
+      }
+    },
+    "yes": "Ja",
+    "no": "Nei",
+    "context": {
+      "title": "Kontekst",
+      "edit": "Rediger kontekst",
+      "save": "Lagre",
+      "delete": "Slett"
+    },
     "mail": {
       "noSubject": "(uten emne)",
       "draft": "Utkast klart:",
@@ -636,8 +667,7 @@
             "events": "Hendelser",
             "permission": {
                 "events": "Lytter etter hendelser",
-                "routes": "Tilbyr egne ruter",
-                "brief": "Writes the daily brief"
+                "routes": "Tilbyr egne ruter"
             },
             "enabled": "På",
             "needsApproval": "Denne versjonen ber om mer enn før. Slå den på igjen for å godkjenne tillatelsene og hendelsene.",
@@ -5965,210 +5995,6 @@
       "addedToProject": "Lagt til i prosjektet"
     }
   },
-  "dailyBrief": {
-    "sectionName": {
-      "verdict": "Vurdering",
-      "timeline": "Kommende dager",
-      "tonight": "Dagens prioriteringer",
-      "moves": "Å flytte",
-      "anticipate": "Å forutse",
-      "replies": "Forventede svar",
-      "inbox": "Innboks",
-      "resolved": "Ferdig"
-    },
-    "priority": {
-      "consequence": "Konsekvens",
-      "blocking": "Blokkerer andre",
-      "money_deadline": "Penger eller frist",
-      "planned_load": "Planlagt belastning"
-    },
-    "alertType": {
-      "conflict": "Kolliderende hendelser",
-      "overload": "Overbelastning",
-      "duplicate": "Mulig duplikat",
-      "deadline_in_note": "Frist funnet i et notat",
-      "postponed": "Ofte utsatt",
-      "dependency": "Avhengighet",
-      "event_in_work_hours": "Hendelse i arbeidstid"
-    },
-    "source": {
-      "calendar": "Kalendere",
-      "mail": "E-postagent",
-      "llm": "KI-omskriving",
-      "voice": "Stemme",
-      "agent": "Agent"
-    },
-    "settings": {
-      "linkThemes": "Lenketemaer med KI",
-      "triageLimit": "Gjennomgåtte oppgaver per dag",
-      "triageEnabled": "KI-forslag i Å sortere",
-      "postponements": "Utsettelser før et kort",
-      "maxMoves": "Viste flyttinger",
-      "maxTonight": "Viste prioriteringer",
-      "closedLookback": "Sjekkede fullførte oppgaver (dager)",
-      "title": "Daglig oversikt",
-      "description": "En oppsummering hver morgen: de kommende dagene, det som gjenstår i kveld, og det som kan flyttes.",
-      "status": "Kildestatus",
-      "timezoneWarning": "Tidssonen er ikke satt: klokkeslettene i oversikten kan være feil.",
-      "showOnToday": "Vis oversikten på I dag",
-      "generation": "Generering",
-      "enabled": "Generer hver morgen",
-      "time": "Klokkeslett",
-      "days": "Dager",
-      "sections": "Seksjoner",
-      "sectionsHint": "En avkrysset seksjon skjules; rekkefølgen er listens rekkefølge.",
-      "moveUp": "Flytt {{name}} opp",
-      "moveDown": "Flytt {{name}} ned",
-      "sources": "Leste kalendere",
-      "noCalendars": "Ingen kalender. Legg til en under Profil › Kalendere.",
-      "lookahead": "Dager fremover",
-      "evening": "Kveld og belastning",
-      "eveningHint": "Arbeidstid settes under I dag (fokusblokker).",
-      "openToday": "Åpne I dag",
-      "eveningStart": "Start",
-      "eveningEnd": "Slutt",
-      "eveningMinutes": "Minutter",
-      "dayNote": "Dagsnotat",
-      "arbitrage": "Rangering",
-      "priorities": "Prioritetsrekkefølge",
-      "alerts": "Varsler",
-      "writing": "Skriving",
-      "llmEnabled": "Sammendrag og begrunnelser av KI",
-      "llmProvider": "KI-leverandør: Profil › KI-assistent",
-      "tone": "Tone",
-      "instructions": "Instruksjoner",
-      "retention": "Oppbevaring",
-      "decisionsDays": "Beslutninger lagret (dager)",
-      "audioDays": "Lyd lagret (dager)",
-      "voice": "Stemme",
-      "voiceEnabled": "Les oversikten høyt",
-      "piperUrl": "Piper-adresse",
-      "voiceName": "Stemme",
-      "speed": "Hastighet",
-      "save": "Lagre",
-      "saved": "Innstillinger lagret",
-      "saveError": "Kunne ikke lagre innstillingene.",
-      "loadError": "Kunne ikke laste oversiktsinnstillingene.",
-      "eveningRemove": "Fjern",
-      "review": {
-        "title": "Kveldsoppsummering",
-        "enabled": "Vis kveldsoppsummeringen etter byttetidspunktet",
-        "switchTime": "Byttetidspunkt til kveldsoppsummeringen"
-      }
-    },
-    "hours": "{{hours}} t",
-    "hoursMinutes": "{{hours}} t {{rest}}",
-    "minutes": "{{count}} min",
-    "task": {
-      "complete": "Ferdig",
-      "done": "«{{name}}» ferdig",
-      "reopened": "«{{name}}» gjenåpnet",
-      "error": "Kunne ikke oppdatere oppgaven."
-    },
-    "decision": {
-      "error": "Kunne ikke lagre valget ditt."
-    },
-    "loadError": "Kunne ikke laste oversikten.",
-    "generateError": "Generering mislyktes.",
-    "generateNow": "Generer nå",
-    "generating": "Genererer…",
-    "regenerate": "Generer på nytt",
-    "empty": "Ingen oversikt for i dag ennå.",
-    "failed": "Siste generering mislyktes. Den forrige oversikten beholdes.",
-    "settingsLink": "Oversiktsinnstillinger",
-    "counters": {
-      "overdue": "forfalt",
-      "today": "i dag"
-    },
-    "timeline": {
-      "today": "I dag",
-      "planned": "{{minutes}} min",
-      "ofCapacity": "{{planned}} oppgaver på {{capacity}} ledig tid",
-      "over": "Overbelastning: {{planned}} oppgaver på {{capacity}} ledig tid",
-      "duringWork": "i arbeidstiden",
-      "legendWork": "Arbeid",
-      "legendEvening": "Kveld",
-      "legendEvent": "Hendelse",
-      "legendConflict": "Konflikt"
-    },
-    "tonight": {
-      "ofCapacity": "{{planned}} / {{capacity}}"
-    },
-    "moves": {
-      "acceptAria": "Flytt til {{date}}",
-      "moved": "«{{name}}» flyttet",
-      "otherDate": "Annen dato"
-    },
-    "anticipate": {
-      "yes": "Ja",
-      "no": "Nei",
-      "precise": "Spesifiser",
-      "preciseLabel": "Detalj",
-      "save": "Lagre",
-      "answered": "Svar lagret",
-      "less": "Færre av denne typen",
-      "options": "Varselvalg"
-    },
-    "feedback": {
-      "useful": "Nyttig",
-      "noise": "Ikke nyttig",
-      "fewer": "Du ser færre varsler av denne typen",
-      "question": "Hjalp denne skjermen?"
-    },
-    "status": {
-      "configured": "Konfigurert",
-      "missing": "Ikke konfigurert",
-      "failing": "Feiler"
-    },
-    "card": {
-      "title": "Min dag",
-      "open": "Se oversikten",
-      "error": "Oversikten er ikke tilgjengelig."
-    },
-    "context": {
-      "title": "Kontekst",
-      "edit": "Rediger kontekst",
-      "save": "Lagre",
-      "delete": "Slett"
-    },
-    "evening": {
-      "switchToMorning": "Vis morgenoppsummeringen",
-      "switchToEvening": "Vis kveldsoppsummeringen",
-      "counters": {
-        "done": "gjort",
-        "tonight": "i kveld",
-        "slipped": "utsatt"
-      },
-      "sections": {
-        "done": "Gjort i dag",
-        "slipped": "Glipper",
-        "tomorrow": "I morgen"
-      },
-      "carryDone": "« {{name}} » flyttet til i morgen",
-      "carryError": "Kunne ikke flytte oppgaven.",
-      "emptyTonight": "Ingenting mer å gjøre i kveld.",
-      "emptyDone": "Ingenting fullført i dag.",
-      "emptySlipped": "Ingenting glipper.",
-      "loadError": "Kunne ikke laste kveldsoppsummeringen.",
-      "actions": {
-        "menu": "Handlinger for «{{name}}»",
-        "tomorrow": "I morgen",
-        "dueDate": "Velg dato",
-        "dueLabel": "Forfallsdato",
-        "later": "Senere",
-        "cancel": "Avbryt"
-      },
-      "state": {
-        "due": "Forfaller: {{date}}",
-        "cancelled": "Avbrutt"
-      },
-      "dueDone": "«{{name}}» forfaller {{date}}",
-      "laterDone": "«{{name}}» satt på vent",
-      "cancelDone": "«{{name}}» avbrutt",
-      "tonightTitle": "I kveld"
-    },
-    "preparedAt": "klargjort kl. {{time}}"
-  },
   "agents": {
     "title": "Agenter",
     "description": "Agenten leser e-post og lager utkast. Cadence lagrer ingen e-postlegitimasjon.",
@@ -6210,7 +6036,6 @@
     "appointmentLabel": "{{title}}, {{range}}",
     "backToList": "Liste",
     "blockLabel": "{{title}}, {{range}}",
-    "brief": "Dagsoversikt",
     "calendar": "Dagskalender",
     "calendarButton": "Kalender",
     "calendarLabel": "Dagskalender",

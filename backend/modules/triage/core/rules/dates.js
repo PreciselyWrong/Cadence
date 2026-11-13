@@ -10,13 +10,6 @@ const DAY_FORMAT = 'YYYY-MM-DD';
 const addDays = (day, days) =>
     moment.utc(day, DAY_FORMAT).add(days, 'days').format(DAY_FORMAT);
 
-// 0 = Sunday ... 6, the keys of settings.capacity.evening.
-const weekday = (day) => moment.utc(day, DAY_FORMAT).day();
-
-// Today first, then the following days: the brief timeline.
-const timelineDates = (today, days) =>
-    Array.from({ length: days }, (_, i) => addDays(today, i));
-
 // Local day of an ISO instant in the user's timezone.
 function localDay(iso, timezone) {
     if (!iso) return null;
@@ -33,8 +26,6 @@ function isWithinLookback(iso, { timezone, today, days }) {
 module.exports = {
     DAY_FORMAT,
     addDays,
-    weekday,
-    timelineDates,
     localDay,
     isWithinLookback,
 };

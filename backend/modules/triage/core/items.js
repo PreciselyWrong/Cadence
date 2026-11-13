@@ -1,13 +1,13 @@
 'use strict';
 
-// What can be deduced without a model: pure functions of the same input as the
-// daily brief, with every open task in it. A rule proposes at most one thing
+// What can be deduced without a model: pure functions of the input that
+// collect.js reads, with every open task in it. A rule proposes at most one thing
 // per task, and only asks when it cannot decide (docs/40-triage.md).
-const { duplicateCards } = require('../../daily-plan/brief/rules/duplicates');
-const { deadlineCards } = require('../../daily-plan/brief/rules/noteDeadlines');
-const { postponedCards } = require('../../daily-plan/brief/rules/postponed');
-const { conflictCards } = require('../../daily-plan/brief/rules/conflicts');
-const { isSilenced } = require('../../daily-plan/brief/rules/contexts');
+const { duplicateCards } = require('./rules/duplicates');
+const { deadlineCards } = require('./rules/noteDeadlines');
+const { postponedCards } = require('./rules/postponed');
+const { conflictCards } = require('./rules/conflicts');
+const { isSilenced } = require('./rules/contexts');
 
 const ACTION_OF = {
     duplicate: (card) => ({ action: 'cancel', payload: card.payload }),

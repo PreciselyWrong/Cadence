@@ -2,7 +2,7 @@
 
 const {
     postponedCards,
-} = require('../../../../modules/daily-plan/brief/rules/postponed');
+} = require('../../../../modules/triage/core/rules/postponed');
 const { settingsWith, task, input } = require('./fixtures');
 
 describe('postponedCards', () => {

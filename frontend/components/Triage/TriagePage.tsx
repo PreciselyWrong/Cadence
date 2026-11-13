@@ -2,9 +2,8 @@ import PageShell from '../Shared/ui/PageShell';
 import EmptyState from '../Shared/ui/EmptyState';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { answerBriefQuestion } from '../../utils/dailyBriefService';
-import { getTodayDateString } from '../../utils/dateUtils';
 import {
+    answerQuestion,
     applyTriage,
     decideMail,
     MailDecision,
@@ -209,15 +208,10 @@ const TriagePage: React.FC = () => {
     const answer = (text: string) =>
         settle(
             () =>
-                answerBriefQuestion(getTodayDateString(), {
-                    question_key: item?.question?.key as string,
-                    target: item?.question?.target as {
-                        scope: string;
-                        ref: string;
-                    },
-                    answer: text,
-                    idempotency_key: `triage-answer:${item?.key}`,
-                } as Parameters<typeof answerBriefQuestion>[1]),
+                answerQuestion(
+                    item?.question?.target as { scope: string; ref: string },
+                    text
+                ),
             t('triage.answered', 'Réponse enregistrée')
         );
 
@@ -387,14 +381,14 @@ const TriagePage: React.FC = () => {
                                     className={secondary}
                                     onClick={() => answer('yes')}
                                 >
-                                    {t('dailyBrief.anticipate.yes', 'Oui')}
+                                    {t('triage.yes', 'Oui')}
                                 </button>
                                 <button
                                     type="button"
                                     className={secondary}
                                     onClick={() => answer('no')}
                                 >
-                                    {t('dailyBrief.anticipate.no', 'Non')}
+                                    {t('triage.no', 'Non')}
                                 </button>
                             </div>
                         ) : (

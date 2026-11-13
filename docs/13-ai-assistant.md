@@ -6,13 +6,14 @@
 
 ## Overview
 
-The AI Assistant adds three context-aware intelligence features to Cadence:
+The AI Assistant adds two context-aware intelligence features to Cadence:
 
-1. **Daily Brief**: a morning summary with a focus task, top priority actions, and risk flags
-2. **Task Insights**: domain-level analysis, next steps, and useful links for a specific task
-3. **Project Insights**: health assessment, next action, and risk flags for a specific project
+1. **Task Insights**: domain-level analysis, next steps, and useful links for a specific task
+2. **Project Insights**: health assessment, next action, and risk flags for a specific project
 
-All three features call an OpenAI-compatible API and cache results in the database. Results persist until the user explicitly regenerates them.
+The upstream AI Daily Brief was removed on 2026-11-12 (`docs/39-daily-brief.md`); its cache columns stay unused.
+
+Both features call an OpenAI-compatible API and cache results in the database. Results persist until the user explicitly regenerates them.
 
 ---
 
@@ -34,7 +35,7 @@ A per-user base URL must resolve to a public address (the same guard `modules/ur
 
 When `TUDUDI_HOSTED_MODE=true`, `resolveAIConfig()` (`backend/modules/ai-assistant/service.js`) never applies a per-user override — every subscriber uses the operator's own `.env` provider (below), and **`LLM_API_KEY` is required** for AI features to work at all. Profile → AI Assistant shows no provider fields for a hosted account; instead it shows an **AI Credits** balance for the current calendar month.
 
-One credit is consumed per daily brief, task insight, or project insight generated — enforced pre-flight via `entitlements.consumeMonthlyUsage(userId, 'ai_credits')` (`backend/services/entitlementsService.js`), which throws the same `PlanLimitError` (`402`, `PLAN_LIMIT_REACHED`) used by every other plan limit once a plan's `ai_credits_per_month` (`backend/config/plans.js`) is exhausted. The balance resets on the 1st of each month (calendar-month, not anchored to the subscription's billing cycle).
+One credit is consumed per task insight or project insight generated — enforced pre-flight via `entitlements.consumeMonthlyUsage(userId, 'ai_credits')` (`backend/services/entitlementsService.js`), which throws the same `PlanLimitError` (`402`, `PLAN_LIMIT_REACHED`) used by every other plan limit once a plan's `ai_credits_per_month` (`backend/config/plans.js`) is exhausted. The balance resets on the 1st of each month (calendar-month, not anchored to the subscription's billing cycle).
 
 An admin can see every subscriber's credit usage, plus the combined total across all accounts, at **/admin/ai-usage** (`GET /api/admin/ai-usage`).
 
@@ -62,14 +63,13 @@ Without a key (from either the DB or `.env`), the generation endpoints return HT
 
 On a hosted instance, `base_url`/`model` sourced from `.env` are never returned to a caller who isn't the operator (they describe the operator's own infra); a value the caller configured themselves in Profile → AI Assistant is always returned to them.
 
-> **Note on reasoning models:** reasoning models (e.g. DeepSeek-R1, o1-mini) consume hidden tokens before producing output. The daily brief allows up to 1500 completion tokens to accommodate this; task and project insights allow 1000 and 600 respectively. If a reasoning model still exhausts its budget before writing the final answer (cached result comes back with empty fields and `usage.completion_tokens` pinned at the cap), raise the relevant limit below rather than switching models.
+> **Note on reasoning models:** reasoning models (e.g. DeepSeek-R1, o1-mini) consume hidden tokens before producing output. Task and project insights allow 1000 and 600 completion tokens respectively. If a reasoning model still exhausts its budget before writing the final answer (cached result comes back with empty fields and `usage.completion_tokens` pinned at the cap), raise the relevant limit below rather than switching models.
 
 ### Optional: per-feature token limits
 
 Each feature's `max_tokens` cap can be overridden independently. Unset falls back to the defaults noted above:
 
 ```bash
-LLM_MAX_TOKENS_DAILY_BRIEF=1500       # default 1500
 LLM_MAX_TOKENS_TASK_INSIGHTS=1000     # default 1000
 LLM_MAX_TOKENS_PROJECT_INSIGHTS=600   # default 600
 LLM_MAX_TOKENS_DAY_PLAN=6000          # default 6000 (Draft with AI)
@@ -110,7 +110,6 @@ The `max_tokens` -> `max_completion_tokens` retry and the `response_format` drop
 ```
 frontend/
   components/AI/
-    DailyAssistant.tsx         # Daily brief widget on Today page
     TaskAIInsights.tsx         # Insights panel on task detail view
     ProjectAIInsights.tsx      # Insights panel on project detail view
   utils/aiAssistantService.ts  # Typed API client for all AI endpoints
@@ -124,36 +123,6 @@ backend/modules/ai-assistant/
 ---
 
 ## Features
-
-### Daily Brief
-
-Appears on the Today page inside the `DailyAssistant` component. Generates once and caches the result for that day.
-
-**What it returns:**
-
-```json
-{
-  "focus": "Short phrase naming the single most important task today",
-  "priority_actions": [
-    {
-      "action": "Exact task name",
-      "project": "Project name or null",
-      "reason": "Why this matters now (≤6 words)",
-      "suggestion": "Specific motivating next step (≤12 words)"
-    }
-  ],
-  "watch_out": ["At-risk task or project name"],
-  "generated_at": "ISO timestamp",
-  "model": "model name echoed from API response",
-  "usage": { "prompt_tokens": 0, "completion_tokens": 0 }
-}
-```
-
-**Context sent to the model:** active goals, active projects, today's task breakdown (overdue, in-progress, planned, suggested), weekly completion trend, and the user's "About You" profile text (if set).
-
-**Caching:** stored in `users.ai_daily_brief` and `users.ai_daily_brief_date`. `GET /api/ai-assistant/daily-brief` returns the cache; `POST` regenerates it.
-
----
 
 ### Task Insights
 
@@ -214,8 +183,6 @@ Help in the planner and on Today (see [Daily Plan](20-daily-plan.md#ai-help)): *
 
 | Method | Path | Description |
 |--------|------|-------------|
-| `GET` | `/api/ai-assistant/daily-brief` | Return cached daily brief (or null) |
-| `POST` | `/api/ai-assistant/daily-brief` | Generate and cache a new daily brief |
 | `GET` | `/api/ai-assistant/task-insights/:taskUid` | Return cached task insights (or null) |
 | `POST` | `/api/ai-assistant/task-insights` | Generate task insights (body: `TaskInsightsRequest`) |
 | `PATCH` | `/api/ai-assistant/task-insights/:taskUid/dismissed` | Set `dismissed` flag on task insights |
@@ -241,7 +208,6 @@ Resolution order for every setting below is: the user's own Profile → AI Assis
 | API key | `LLM_API_KEY` | `OPENAI_API_KEY` | (required) |
 | Base URL | `LLM_BASE_URL` | `OPENAI_BASE_URL` | OpenAI (`https://api.openai.com/v1`) |
 | Model | `LLM_MODEL` | `TUDUDI_AI_MODEL` | `gpt-4o-mini` |
-| Daily Brief max tokens | `LLM_MAX_TOKENS_DAILY_BRIEF` | — | `1500` |
 | Task Insights max tokens | `LLM_MAX_TOKENS_TASK_INSIGHTS` | — | `1000` |
 | Project Insights max tokens | `LLM_MAX_TOKENS_PROJECT_INSIGHTS` | — | `600` |
 
@@ -249,13 +215,13 @@ Max-token limits are operator-only `.env` settings; they have no per-user overri
 
 The per-user/env resolution happens in `service.js:resolveAIConfig()`, and the client is initialized in `service.js:getOpenAIClient()`. Any provider that speaks the OpenAI chat completions protocol works: set the base URL to the provider's endpoint and the model to the name that provider expects.
 
-All three LLM calls request `response_format: { type: 'json_object' }` for structured output. If your backend does not support this parameter, the response parser will still attempt to extract JSON from raw text (including code-fenced output).
+Both LLM calls request `response_format: { type: 'json_object' }` for structured output. If your backend does not support this parameter, the response parser will still attempt to extract JSON from raw text (including code-fenced output).
 
 ---
 
 ## User Profile Context
 
-Users can set an "About You" text in **Profile → AI Assistant → About You**. This text is injected into the daily brief prompt as an `## About This User` section, allowing the AI to tailor its language and framing to the user's actual domain (e.g. academic research, healthcare, design) rather than defaulting to software development metaphors.
+Users can set an "About You" text in **Profile → AI Assistant → About You**. This text is added to the day plan prompts (Draft with AI, wrap-up), allowing the AI to tailor its language and framing to the user's actual domain (e.g. academic research, healthcare, design) rather than defaulting to software development metaphors.
 
 The field is stored in `users.ai_profile` (TEXT, max 500 chars in the UI).
 
@@ -265,7 +231,6 @@ The field is stored in `users.ai_profile` (TEXT, max 500 chars in the UI).
 
 | Feature | Storage column | Cache key |
 |---------|----------------|-----------|
-| Daily Brief | `users.ai_daily_brief`, `users.ai_daily_brief_date` | User ID (one brief per user per day) |
 | Task Insights | `tasks.ai_insights` | Task UID |
 | Project Insights | `projects.ai_insights` | Project UID |
 

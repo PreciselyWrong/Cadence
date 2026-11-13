@@ -6,7 +6,11 @@ const { ALL_EVENTS } = require('../../webhooks/events');
 // asks for a higher one needs a newer Cadence.
 const PLUGIN_API_VERSION = 1;
 
-const PERMISSIONS = ['events', 'routes', 'brief', 'notify'];
+const PERMISSIONS = ['events', 'routes', 'notify'];
+// Permissions Cadence no longer grants: a manifest that still asks for one
+// loads without it, with a warning (`brief`: the daily brief, retired on
+// 2026-11-12).
+const RETIRED_PERMISSIONS = ['brief'];
 const SETTING_TYPES = ['string', 'secret', 'boolean', 'number', 'select'];
 const ID_PATTERN = /^[a-z][a-z0-9-]{1,31}$/;
 const VERSION_PATTERN = /^\d+\.\d+\.\d+$/;
@@ -129,13 +133,19 @@ function parseManifest(raw) {
     if (!isInnerPath(main))
         return fail('main must be a path inside the plugin folder');
 
-    const permissions = raw.permissions ?? [];
+    const asked = raw.permissions ?? [];
     if (
-        !Array.isArray(permissions) ||
-        permissions.some((p) => !PERMISSIONS.includes(p))
+        !Array.isArray(asked) ||
+        asked.some(
+            (p) => !PERMISSIONS.includes(p) && !RETIRED_PERMISSIONS.includes(p)
+        )
     ) {
         return fail(`permissions can only be: ${PERMISSIONS.join(', ')}`);
     }
+    const permissions = asked.filter((p) => PERMISSIONS.includes(p));
+    const warnings = RETIRED_PERMISSIONS.filter((p) => asked.includes(p)).map(
+        (p) => `The "${p}" permission is retired and ignored`
+    );
     const events = raw.events ?? [];
     if (!Array.isArray(events)) return fail('events must be a list');
     const unknown = events.filter((e) => !ALL_EVENTS.includes(e));
@@ -173,6 +183,7 @@ function parseManifest(raw) {
             settings,
             update,
             menu,
+            warnings,
         },
     };
 }

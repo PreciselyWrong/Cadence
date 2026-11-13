@@ -143,6 +143,37 @@
     }
   },
   "triage": {
+    "settings": {
+      "calendars": "Gelesene Kalender",
+      "noCalendars": "Kein Kalender. Füge einen unter Profil › Kalender hinzu.",
+      "lookahead": "Vorausschau in Tagen",
+      "alerts": "Warnungen",
+      "postponements": "Verschiebungen vor einer Karte",
+      "closedLookback": "Geprüfte erledigte Aufgaben (Tage)",
+      "assistant": "KI-Assistent",
+      "assistantEnabled": "KI-Vorschläge in „Zu sortieren“",
+      "assistantLimit": "Geprüfte Aufgaben pro Tag",
+      "llmProvider": "KI-Anbieter: Profil › KI-Assistent",
+      "save": "Speichern",
+      "saved": "Einstellungen gespeichert",
+      "saveError": "Einstellungen konnten nicht gespeichert werden.",
+      "loadError": "Die Einstellungen konnten nicht geladen werden.",
+      "alertType": {
+        "conflict": "Sich überschneidende Termine",
+        "event_in_work_hours": "Termin während der Arbeitszeit",
+        "duplicate": "Mögliches Duplikat",
+        "deadline_in_note": "Frist in einer Notiz gefunden",
+        "postponed": "Oft verschoben"
+      }
+    },
+    "yes": "Ja",
+    "no": "Nein",
+    "context": {
+      "title": "Kontext",
+      "edit": "Kontext bearbeiten",
+      "save": "Speichern",
+      "delete": "Löschen"
+    },
     "mail": {
       "noSubject": "(kein Betreff)",
       "draft": "Entwurf bereit:",
@@ -1177,8 +1208,7 @@
             "events": "Ereignisse",
             "permission": {
                 "events": "Hört auf Ereignisse",
-                "routes": "Stellt eigene Routen bereit",
-                "brief": "Writes the daily brief"
+                "routes": "Stellt eigene Routen bereit"
             },
             "enabled": "Aktiviert",
             "needsApproval": "Diese Version verlangt mehr als zuvor. Schalten Sie sie erneut ein, um Berechtigungen und Ereignisse zu bestätigen.",
@@ -5969,210 +5999,6 @@
       "addedToProject": "Zum Projekt hinzugefügt"
     }
   },
-  "dailyBrief": {
-    "sectionName": {
-      "verdict": "Ergebnis",
-      "timeline": "Kommende Tage",
-      "tonight": "Prioritäten des Tages",
-      "moves": "Zu verschieben",
-      "anticipate": "Vorausschauen",
-      "replies": "Erwartete Antworten",
-      "inbox": "Posteingang",
-      "resolved": "Erledigt"
-    },
-    "priority": {
-      "consequence": "Auswirkung",
-      "blocking": "Blockiert andere",
-      "money_deadline": "Geld oder Frist",
-      "planned_load": "Geplante Auslastung"
-    },
-    "alertType": {
-      "conflict": "Sich überschneidende Termine",
-      "overload": "Überlastung",
-      "duplicate": "Mögliches Duplikat",
-      "deadline_in_note": "Frist in einer Notiz gefunden",
-      "postponed": "Oft verschoben",
-      "dependency": "Abhängigkeit",
-      "event_in_work_hours": "Termin während der Arbeitszeit"
-    },
-    "source": {
-      "calendar": "Kalender",
-      "mail": "E-Mail-Agent",
-      "llm": "KI-Umformulierung",
-      "voice": "Sprache",
-      "agent": "Agent"
-    },
-    "settings": {
-      "linkThemes": "Linkthemen durch KI",
-      "triageLimit": "Geprüfte Aufgaben pro Tag",
-      "triageEnabled": "KI-Vorschläge in „Zu sortieren“",
-      "postponements": "Verschiebungen vor einer Karte",
-      "maxMoves": "Angezeigte Verschiebungen",
-      "maxTonight": "Angezeigte Prioritäten",
-      "closedLookback": "Geprüfte erledigte Aufgaben (Tage)",
-      "title": "Tagesbriefing",
-      "description": "Jeden Morgen eine Zusammenfassung: die kommenden Tage, was heute Abend noch ansteht und was verschoben werden kann.",
-      "status": "Quellenstatus",
-      "timezoneWarning": "Die Zeitzone ist nicht eingestellt: Die Uhrzeiten des Briefings könnten falsch sein.",
-      "showOnToday": "Briefing auf Heute anzeigen",
-      "generation": "Erstellung",
-      "enabled": "Jeden Morgen erstellen",
-      "time": "Uhrzeit",
-      "days": "Tage",
-      "sections": "Abschnitte",
-      "sectionsHint": "Ein nicht angekreuzter Abschnitt wird ausgeblendet. Die Reihenfolge entspricht der Listenreihenfolge.",
-      "moveUp": "{{name}} nach oben verschieben",
-      "moveDown": "{{name}} nach unten verschieben",
-      "sources": "Gelesene Kalender",
-      "noCalendars": "Kein Kalender. Füge einen unter Profil › Kalender hinzu.",
-      "lookahead": "Vorausschau in Tagen",
-      "evening": "Abend und Auslastung",
-      "eveningHint": "Arbeitszeiten werden in Heute festgelegt (Fokusblöcke).",
-      "openToday": "„Heute“ öffnen",
-      "eveningStart": "Beginn",
-      "eveningEnd": "Ende",
-      "eveningMinutes": "Minuten",
-      "dayNote": "Tagesnotiz",
-      "arbitrage": "Rangfolge",
-      "priorities": "Prioritätsreihenfolge",
-      "alerts": "Warnungen",
-      "writing": "Verfassen",
-      "llmEnabled": "Zusammenfassung und Gründe von der KI",
-      "llmProvider": "KI-Anbieter: Profil › KI-Assistent",
-      "tone": "Ton",
-      "instructions": "Anweisungen",
-      "retention": "Aufbewahrung",
-      "decisionsDays": "Aufbewahrte Entscheidungen (Tage)",
-      "audioDays": "Aufbewahrtes Audio (Tage)",
-      "voice": "Stimme",
-      "voiceEnabled": "Briefing vorlesen",
-      "piperUrl": "Piper-Adresse",
-      "voiceName": "Stimme",
-      "speed": "Geschwindigkeit",
-      "save": "Speichern",
-      "saved": "Einstellungen gespeichert",
-      "saveError": "Einstellungen konnten nicht gespeichert werden.",
-      "loadError": "Briefing-Einstellungen konnten nicht geladen werden.",
-      "eveningRemove": "Entfernen",
-      "review": {
-        "title": "Abendrückblick",
-        "enabled": "Abendrückblick nach der Umschaltzeit anzeigen",
-        "switchTime": "Umschaltzeit auf den Abendrückblick"
-      }
-    },
-    "hours": "{{hours}} Std.",
-    "hoursMinutes": "{{hours}} Std. {{rest}}",
-    "minutes": "{{count}} Min.",
-    "task": {
-      "complete": "Erledigt",
-      "done": "„{{name}}“ erledigt",
-      "reopened": "„{{name}}“ wieder geöffnet",
-      "error": "Die Aufgabe konnte nicht aktualisiert werden."
-    },
-    "decision": {
-      "error": "Deine Auswahl konnte nicht gespeichert werden."
-    },
-    "loadError": "Das Briefing konnte nicht geladen werden.",
-    "generateError": "Erstellung fehlgeschlagen.",
-    "generateNow": "Jetzt erstellen",
-    "generating": "Wird erstellt…",
-    "regenerate": "Neu erstellen",
-    "empty": "Noch kein Briefing für heute.",
-    "failed": "Die letzte Erstellung ist fehlgeschlagen. Das vorherige Briefing bleibt erhalten.",
-    "settingsLink": "Briefing-Einstellungen",
-    "counters": {
-      "overdue": "überfällig",
-      "today": "heute"
-    },
-    "timeline": {
-      "today": "Heute",
-      "planned": "{{minutes}} Min.",
-      "ofCapacity": "{{planned}} Aufgaben bei {{capacity}} freier Zeit",
-      "over": "Überlastet: {{planned}} Aufgaben bei {{capacity}} freier Zeit",
-      "duringWork": "während der Arbeit",
-      "legendWork": "Arbeit",
-      "legendEvening": "Abend",
-      "legendEvent": "Termin",
-      "legendConflict": "Konflikt"
-    },
-    "tonight": {
-      "ofCapacity": "{{planned}} / {{capacity}}"
-    },
-    "moves": {
-      "acceptAria": "Verschieben auf {{date}}",
-      "moved": "„{{name}}“ verschoben",
-      "otherDate": "Anderes Datum"
-    },
-    "anticipate": {
-      "yes": "Ja",
-      "no": "Nein",
-      "precise": "Präzisieren",
-      "preciseLabel": "Details",
-      "save": "Speichern",
-      "answered": "Antwort gespeichert",
-      "less": "Weniger davon",
-      "options": "Hinweisoptionen"
-    },
-    "feedback": {
-      "useful": "Hilfreich",
-      "noise": "Nicht hilfreich",
-      "fewer": "Du siehst weniger Hinweise dieser Art",
-      "question": "War diese Ansicht hilfreich?"
-    },
-    "status": {
-      "configured": "Konfiguriert",
-      "missing": "Nicht konfiguriert",
-      "failing": "Fehlerhaft"
-    },
-    "card": {
-      "title": "Mein Tag",
-      "open": "Briefing ansehen",
-      "error": "Das Briefing ist nicht verfügbar."
-    },
-    "context": {
-      "title": "Kontext",
-      "edit": "Kontext bearbeiten",
-      "save": "Speichern",
-      "delete": "Löschen"
-    },
-    "evening": {
-      "switchToMorning": "Zum Morgenüberblick",
-      "switchToEvening": "Zum Abendrückblick",
-      "counters": {
-        "done": "erledigt",
-        "tonight": "heute Abend",
-        "slipped": "verschoben"
-      },
-      "sections": {
-        "done": "Heute erledigt",
-        "slipped": "Rutscht",
-        "tomorrow": "Morgen"
-      },
-      "carryDone": "« {{name}} » auf morgen verschoben",
-      "carryError": "Die Aufgabe konnte nicht verschoben werden.",
-      "emptyTonight": "Heute Abend ist nichts mehr zu tun.",
-      "emptyDone": "Heute nichts erledigt.",
-      "emptySlipped": "Nichts ist verschoben.",
-      "loadError": "Der Abendrückblick konnte nicht geladen werden.",
-      "actions": {
-        "menu": "Aktionen für „{{name}}“",
-        "tomorrow": "Morgen",
-        "dueDate": "Datum wählen",
-        "dueLabel": "Fälligkeit",
-        "later": "Später",
-        "cancel": "Verwerfen"
-      },
-      "state": {
-        "due": "Fällig: {{date}}",
-        "cancelled": "Verworfen"
-      },
-      "dueDone": "„{{name}}“ fällig {{date}}",
-      "laterDone": "„{{name}}“ auf später gelegt",
-      "cancelDone": "„{{name}}“ verworfen",
-      "tonightTitle": "Heute Abend"
-    },
-    "preparedAt": "erstellt um {{time}}"
-  },
   "agents": {
     "title": "Agenten",
     "description": "Der Agent liest E-Mails und erstellt Entwürfe. Cadence speichert keine E-Mail-Zugangsdaten.",
@@ -6214,7 +6040,6 @@
     "appointmentLabel": "{{title}}, fällig {{range}}",
     "backToList": "Liste",
     "blockLabel": "{{title}}, {{range}}",
-    "brief": "Tagesübersicht",
     "calendar": "Tageskalender",
     "calendarButton": "Kalender",
     "calendarLabel": "Tageskalender",

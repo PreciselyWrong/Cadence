@@ -141,6 +141,37 @@
     }
   },
   "triage": {
+    "settings": {
+      "calendars": "読み取るカレンダー",
+      "noCalendars": "カレンダーがありません。プロフィール › カレンダーで追加してください。",
+      "lookahead": "先読みする日数",
+      "alerts": "アラート",
+      "postponements": "カードの前の延期",
+      "closedLookback": "確認済みの完了タスク（日）",
+      "assistant": "AIアシスタント",
+      "assistantEnabled": "整理待ちの AI 提案",
+      "assistantLimit": "1日に確認するタスク数",
+      "llmProvider": "AI プロバイダー: プロフィール › AI アシスタント",
+      "save": "保存",
+      "saved": "設定を保存しました",
+      "saveError": "設定を保存できませんでした。",
+      "loadError": "設定を読み込めませんでした。",
+      "alertType": {
+        "conflict": "競合する予定",
+        "event_in_work_hours": "勤務時間内の予定",
+        "duplicate": "重複の可能性",
+        "deadline_in_note": "メモで見つかった期限",
+        "postponed": "よく先送りされる"
+      }
+    },
+    "yes": "はい",
+    "no": "いいえ",
+    "context": {
+      "title": "コンテキスト",
+      "edit": "コンテキストを編集",
+      "save": "保存",
+      "delete": "削除"
+    },
     "mail": {
       "noSubject": "(件名なし)",
       "draft": "下書きあり:",
@@ -633,8 +664,7 @@
             "events": "イベント",
             "permission": {
                 "events": "イベントを受け取る",
-                "routes": "独自のルートを提供",
-                "brief": "Writes the daily brief"
+                "routes": "独自のルートを提供"
             },
             "enabled": "有効",
             "needsApproval": "この版は以前より多くを要求しています。権限とイベントを承認するにはもう一度有効にしてください。",
@@ -5942,210 +5972,6 @@
       "addedToProject": "プロジェクトに追加しました"
     }
   },
-  "dailyBrief": {
-    "sectionName": {
-      "verdict": "判定",
-      "timeline": "今後の日程",
-      "tonight": "今日の優先事項",
-      "moves": "移動するもの",
-      "anticipate": "先回りするもの",
-      "replies": "想定される返信",
-      "inbox": "受信箱",
-      "resolved": "完了"
-    },
-    "priority": {
-      "consequence": "影響",
-      "blocking": "他をブロック",
-      "money_deadline": "お金または期限",
-      "planned_load": "予定の負荷"
-    },
-    "alertType": {
-      "conflict": "競合する予定",
-      "overload": "過負荷",
-      "duplicate": "重複の可能性",
-      "deadline_in_note": "メモで見つかった期限",
-      "postponed": "よく先送りされる",
-      "dependency": "依存関係",
-      "event_in_work_hours": "勤務時間内の予定"
-    },
-    "source": {
-      "calendar": "カレンダー",
-      "mail": "メールエージェント",
-      "llm": "AI で書き直し",
-      "voice": "音声",
-      "agent": "エージェント"
-    },
-    "settings": {
-      "linkThemes": "AI によるリンクのテーマ",
-      "triageLimit": "1日に確認するタスク数",
-      "triageEnabled": "整理待ちの AI 提案",
-      "postponements": "カードの前の延期",
-      "maxMoves": "表示された移動",
-      "maxTonight": "表示する優先事項",
-      "closedLookback": "確認済みの完了タスク（日）",
-      "title": "デイリーブリーフ",
-      "description": "毎朝のまとめ：今後の日程、今夜に残っていること、動かせるもの。",
-      "status": "ソースの状態",
-      "timezoneWarning": "タイムゾーンが未設定のため、ブリーフの時刻が正しくない可能性があります。",
-      "showOnToday": "今日にブリーフを表示",
-      "generation": "生成",
-      "enabled": "毎朝生成する",
-      "time": "時刻",
-      "days": "曜日",
-      "sections": "セクション",
-      "sectionsHint": "チェックを外したセクションは非表示になり、順序はリストの順です。",
-      "moveUp": "{{name}} を上へ",
-      "moveDown": "{{name}} を下へ",
-      "sources": "読み取るカレンダー",
-      "noCalendars": "カレンダーがありません。プロフィール › カレンダーで追加してください。",
-      "lookahead": "先読みする日数",
-      "evening": "夜と負荷",
-      "eveningHint": "勤務時間は「今日」（集中ブロック）で設定します。",
-      "openToday": "今日を開く",
-      "eveningStart": "開始",
-      "eveningEnd": "終了",
-      "eveningMinutes": "分",
-      "dayNote": "日のメモ",
-      "arbitrage": "ランキング",
-      "priorities": "優先順位",
-      "alerts": "アラート",
-      "writing": "文章作成",
-      "llmEnabled": "AI による要約と理由",
-      "llmProvider": "AI プロバイダー: プロフィール › AI アシスタント",
-      "tone": "トーン",
-      "instructions": "指示",
-      "retention": "保持",
-      "decisionsDays": "保持する決定（日）",
-      "audioDays": "保持する音声（日）",
-      "voice": "音声",
-      "voiceEnabled": "ブリーフを読み上げる",
-      "piperUrl": "Piper のアドレス",
-      "voiceName": "声",
-      "speed": "速度",
-      "save": "保存",
-      "saved": "設定を保存しました",
-      "saveError": "設定を保存できませんでした。",
-      "loadError": "ブリーフの設定を読み込めませんでした。",
-      "eveningRemove": "削除",
-      "review": {
-        "title": "夜の振り返り",
-        "enabled": "切り替え時刻の後に夜の振り返りを表示",
-        "switchTime": "夜の振り返りへの切り替え時刻"
-      }
-    },
-    "hours": "{{hours}} 時間",
-    "hoursMinutes": "{{hours}} 時間 {{rest}}",
-    "minutes": "{{count}} 分",
-    "task": {
-      "complete": "完了",
-      "done": "「{{name}}」を完了しました",
-      "reopened": "「{{name}}」を再開しました",
-      "error": "タスクを更新できませんでした。"
-    },
-    "decision": {
-      "error": "選択を保存できませんでした。"
-    },
-    "loadError": "ブリーフを読み込めませんでした。",
-    "generateError": "生成に失敗しました。",
-    "generateNow": "今すぐ生成",
-    "generating": "生成中…",
-    "regenerate": "再生成",
-    "empty": "今日のブリーフはまだありません。",
-    "failed": "前回の生成に失敗しました。前のブリーフは保持されています。",
-    "settingsLink": "ブリーフの設定",
-    "counters": {
-      "overdue": "期限切れ",
-      "today": "今日"
-    },
-    "timeline": {
-      "today": "今日",
-      "planned": "{{minutes}} 分",
-      "ofCapacity": "タスク {{planned}} に対し空き時間 {{capacity}}",
-      "over": "過負荷: タスク {{planned}} に対し空き時間 {{capacity}}",
-      "duringWork": "勤務時間中",
-      "legendWork": "勤務",
-      "legendEvening": "夜",
-      "legendEvent": "予定",
-      "legendConflict": "競合"
-    },
-    "tonight": {
-      "ofCapacity": "{{planned}} / {{capacity}}"
-    },
-    "moves": {
-      "acceptAria": "{{date}} に移動",
-      "moved": "「{{name}}」を移動しました",
-      "otherDate": "別の日付"
-    },
-    "anticipate": {
-      "yes": "はい",
-      "no": "いいえ",
-      "precise": "指定する",
-      "preciseLabel": "詳細",
-      "save": "保存",
-      "answered": "回答を保存しました",
-      "less": "この種類を減らす",
-      "options": "アラートのオプション"
-    },
-    "feedback": {
-      "useful": "役に立つ",
-      "noise": "役に立たない",
-      "fewer": "この種類の通知は表示が減ります",
-      "question": "この画面は役に立ちましたか？"
-    },
-    "status": {
-      "configured": "設定済み",
-      "missing": "未設定",
-      "failing": "失敗"
-    },
-    "card": {
-      "title": "私の一日",
-      "open": "ブリーフを見る",
-      "error": "ブリーフは利用できません。"
-    },
-    "context": {
-      "title": "コンテキスト",
-      "edit": "コンテキストを編集",
-      "save": "保存",
-      "delete": "削除"
-    },
-    "evening": {
-      "switchToMorning": "朝の要約を見る",
-      "switchToEvening": "夜の振り返りを見る",
-      "counters": {
-        "done": "完了",
-        "tonight": "今夜",
-        "slipped": "延期"
-      },
-      "sections": {
-        "done": "今日完了",
-        "slipped": "ずれ込み",
-        "tomorrow": "明日"
-      },
-      "carryDone": "「{{name}}」を明日に回しました",
-      "carryError": "タスクを回せませんでした。",
-      "emptyTonight": "今夜やることはありません。",
-      "emptyDone": "今日完了したものはありません。",
-      "emptySlipped": "ずれ込みはありません。",
-      "loadError": "夜の振り返りを読み込めませんでした。",
-      "actions": {
-        "menu": "「{{name}}」の操作",
-        "tomorrow": "明日",
-        "dueDate": "日付を選ぶ",
-        "dueLabel": "期限",
-        "later": "あとで",
-        "cancel": "中止"
-      },
-      "state": {
-        "due": "期限: {{date}}",
-        "cancelled": "中止済み"
-      },
-      "dueDone": "「{{name}}」期限 {{date}}",
-      "laterDone": "「{{name}}」をあとで",
-      "cancelDone": "「{{name}}」を中止",
-      "tonightTitle": "今夜"
-    },
-    "preparedAt": "{{time}} に作成"
-  },
   "agents": {
     "title": "エージェント",
     "description": "エージェントがメールを読み、下書きを作成します。Cadence はメールの認証情報を保存しません。",
@@ -6187,7 +6013,6 @@
     "appointmentLabel": "{{title}}、{{range}}",
     "backToList": "リスト",
     "blockLabel": "{{title}}、{{range}}",
-    "brief": "今日のまとめ",
     "calendar": "日のカレンダー",
     "calendarButton": "カレンダー",
     "calendarLabel": "日のカレンダー",

@@ -141,6 +141,37 @@
     }
   },
   "triage": {
+    "settings": {
+      "calendars": "读取的日历",
+      "noCalendars": "没有日历。请在“个人资料 › 日历”中添加。",
+      "lookahead": "向前查看的天数",
+      "alerts": "提醒",
+      "postponements": "卡片前的推迟次数",
+      "closedLookback": "检查的已关闭任务（天）",
+      "assistant": "AI 助手",
+      "assistantEnabled": "待整理中的 AI 建议",
+      "assistantLimit": "每天查看的任务数",
+      "llmProvider": "AI 提供方：个人资料 › AI 助手",
+      "save": "保存",
+      "saved": "设置已保存",
+      "saveError": "无法保存设置。",
+      "loadError": "无法加载设置。",
+      "alertType": {
+        "conflict": "冲突的事件",
+        "event_in_work_hours": "工作时间内的事件",
+        "duplicate": "可能重复",
+        "deadline_in_note": "笔记中发现的截止日期",
+        "postponed": "经常被推迟"
+      }
+    },
+    "yes": "是",
+    "no": "否",
+    "context": {
+      "title": "上下文",
+      "edit": "编辑上下文",
+      "save": "保存",
+      "delete": "删除"
+    },
     "mail": {
       "noSubject": "(无主题)",
       "draft": "草稿已就绪：",
@@ -633,8 +664,7 @@
             "events": "事件",
             "permission": {
                 "events": "监听事件",
-                "routes": "提供自有路由",
-                "brief": "Writes the daily brief"
+                "routes": "提供自有路由"
             },
             "enabled": "已启用",
             "needsApproval": "此版本请求的权限比以前多。请重新开启以批准其权限和事件。",
@@ -5942,210 +5972,6 @@
       "addedToProject": "已添加到项目"
     }
   },
-  "dailyBrief": {
-    "sectionName": {
-      "verdict": "结论",
-      "timeline": "即将到来的日子",
-      "tonight": "今日优先事项",
-      "moves": "待移动",
-      "anticipate": "待预判",
-      "replies": "预期回复",
-      "inbox": "收件箱",
-      "resolved": "已完成"
-    },
-    "priority": {
-      "consequence": "后果",
-      "blocking": "阻塞其他事项",
-      "money_deadline": "金钱或截止日期",
-      "planned_load": "计划负载"
-    },
-    "alertType": {
-      "conflict": "冲突的事件",
-      "overload": "超负荷",
-      "duplicate": "可能重复",
-      "deadline_in_note": "笔记中发现的截止日期",
-      "postponed": "经常被推迟",
-      "dependency": "依赖关系",
-      "event_in_work_hours": "工作时间内的事件"
-    },
-    "source": {
-      "calendar": "日历",
-      "mail": "邮件助手",
-      "llm": "AI 改写",
-      "voice": "语音",
-      "agent": "助手"
-    },
-    "settings": {
-      "linkThemes": "由 AI 归类链接主题",
-      "triageLimit": "每天查看的任务数",
-      "triageEnabled": "待整理中的 AI 建议",
-      "postponements": "卡片前的推迟次数",
-      "maxMoves": "显示的移动",
-      "maxTonight": "显示的优先事项",
-      "closedLookback": "检查的已关闭任务（天）",
-      "title": "每日简报",
-      "description": "每天早上的摘要：即将到来的日子、今晚剩下的事项，以及可以移动的事项。",
-      "status": "来源状态",
-      "timezoneWarning": "未设置时区：简报时间可能不准确。",
-      "showOnToday": "在“今天”显示简报",
-      "generation": "生成",
-      "enabled": "每天早上生成",
-      "time": "时间",
-      "days": "天数",
-      "sections": "板块",
-      "sectionsHint": "未勾选的板块将隐藏；顺序即列表顺序。",
-      "moveUp": "将 {{name}} 上移",
-      "moveDown": "将 {{name}} 下移",
-      "sources": "读取的日历",
-      "noCalendars": "没有日历。请在“个人资料 › 日历”中添加。",
-      "lookahead": "向前查看的天数",
-      "evening": "晚间与负荷",
-      "eveningHint": "工作时间在“今天”中设置（专注时段）。",
-      "openToday": "打开“今天”",
-      "eveningStart": "开始",
-      "eveningEnd": "结束",
-      "eveningMinutes": "分钟",
-      "dayNote": "当日备注",
-      "arbitrage": "排序",
-      "priorities": "优先级顺序",
-      "alerts": "提醒",
-      "writing": "写作",
-      "llmEnabled": "由 AI 撰写摘要和理由",
-      "llmProvider": "AI 提供方：个人资料 › AI 助手",
-      "tone": "语气",
-      "instructions": "指令",
-      "retention": "保留",
-      "decisionsDays": "保留的决定（天）",
-      "audioDays": "保留的音频（天）",
-      "voice": "语音",
-      "voiceEnabled": "朗读简报",
-      "piperUrl": "Piper 地址",
-      "voiceName": "声音",
-      "speed": "语速",
-      "save": "保存",
-      "saved": "设置已保存",
-      "saveError": "无法保存设置。",
-      "loadError": "无法加载简报设置。",
-      "eveningRemove": "移除",
-      "review": {
-        "title": "晚间回顾",
-        "enabled": "切换时间后显示晚间回顾",
-        "switchTime": "切换到晚间回顾的时间"
-      }
-    },
-    "hours": "{{hours}} 小时",
-    "hoursMinutes": "{{hours}} 小时 {{rest}}",
-    "minutes": "{{count}} 分钟",
-    "task": {
-      "complete": "完成",
-      "done": "“{{name}}”已完成",
-      "reopened": "“{{name}}”已重新打开",
-      "error": "无法更新任务。"
-    },
-    "decision": {
-      "error": "无法保存您的选择。"
-    },
-    "loadError": "无法加载简报。",
-    "generateError": "生成失败。",
-    "generateNow": "立即生成",
-    "generating": "正在生成…",
-    "regenerate": "重新生成",
-    "empty": "今天还没有简报。",
-    "failed": "上次生成失败，已保留之前的简报。",
-    "settingsLink": "简报设置",
-    "counters": {
-      "overdue": "已逾期",
-      "today": "今天"
-    },
-    "timeline": {
-      "today": "今天",
-      "planned": "{{minutes}} 分钟",
-      "ofCapacity": "任务 {{planned}}，空闲 {{capacity}}",
-      "over": "超负荷：任务 {{planned}}，空闲 {{capacity}}",
-      "duringWork": "工作时间内",
-      "legendWork": "工作",
-      "legendEvening": "晚上",
-      "legendEvent": "事件",
-      "legendConflict": "冲突"
-    },
-    "tonight": {
-      "ofCapacity": "{{planned}} / {{capacity}}"
-    },
-    "moves": {
-      "acceptAria": "移动到 {{date}}",
-      "moved": "“{{name}}”已移动",
-      "otherDate": "其他日期"
-    },
-    "anticipate": {
-      "yes": "是",
-      "no": "否",
-      "precise": "指定",
-      "preciseLabel": "详情",
-      "save": "保存",
-      "answered": "回复已保存",
-      "less": "减少此类",
-      "options": "提醒选项"
-    },
-    "feedback": {
-      "useful": "有用",
-      "noise": "没用",
-      "fewer": "你会减少看到这类提醒",
-      "question": "这个页面有帮助吗？"
-    },
-    "status": {
-      "configured": "已配置",
-      "missing": "未配置",
-      "failing": "失败"
-    },
-    "card": {
-      "title": "我的一天",
-      "open": "查看简报",
-      "error": "简报不可用。"
-    },
-    "context": {
-      "title": "上下文",
-      "edit": "编辑上下文",
-      "save": "保存",
-      "delete": "删除"
-    },
-    "evening": {
-      "switchToMorning": "查看晨间简报",
-      "switchToEvening": "查看晚间回顾",
-      "counters": {
-        "done": "已完成",
-        "tonight": "今晚",
-        "slipped": "已顺延"
-      },
-      "sections": {
-        "done": "今天已完成",
-        "slipped": "顺延",
-        "tomorrow": "明天"
-      },
-      "carryDone": "「{{name}}」已顺延到明天",
-      "carryError": "无法顺延该任务。",
-      "emptyTonight": "今晚没有其他事项。",
-      "emptyDone": "今天没有完成的事项。",
-      "emptySlipped": "没有顺延的事项。",
-      "loadError": "无法加载晚间回顾。",
-      "actions": {
-        "menu": "“{{name}}”的操作",
-        "tomorrow": "明天",
-        "dueDate": "选择日期",
-        "dueLabel": "截止日期",
-        "later": "稍后",
-        "cancel": "放弃"
-      },
-      "state": {
-        "due": "截止：{{date}}",
-        "cancelled": "已放弃"
-      },
-      "dueDone": "“{{name}}” 截止 {{date}}",
-      "laterDone": "“{{name}}” 已稍后处理",
-      "cancelDone": "“{{name}}” 已放弃",
-      "tonightTitle": "今晚"
-    },
-    "preparedAt": "准备于 {{time}}"
-  },
   "agents": {
     "title": "助手",
     "description": "助手读取邮件并起草回复。Cadence 不保存邮件凭据。",
@@ -6187,7 +6013,6 @@
     "appointmentLabel": "{{title}}，{{range}}",
     "backToList": "列表",
     "blockLabel": "{{title}}，{{range}}",
-    "brief": "每日简报",
     "calendar": "当日日历",
     "calendarButton": "日历",
     "calendarLabel": "当日日历",

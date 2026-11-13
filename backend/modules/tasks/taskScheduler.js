@@ -39,8 +39,7 @@ const getCronExpression = (frequency) => {
         webhook_deliveries: '* * * * *',
         webhook_summaries: '*/5 * * * *',
         held_notifications: '* * * * *',
-        daily_brief: '*/5 * * * *',
-        brief_purge: '30 2 * * *',
+        context_purge: '30 2 * * *',
         triage_assistant: '50 3 * * *',
     };
     return expressions[frequency];
@@ -81,15 +80,12 @@ const runJob = async (frequency) => {
     } else if (frequency === 'webhook_summaries') {
         const { sendDueSummaries } = require('../webhooks/summary');
         await sendDueSummaries();
-    } else if (frequency === 'daily_brief') {
-        const { generateDueBriefs } = require('../daily-plan/brief/job');
-        await generateDueBriefs();
     } else if (frequency === 'triage_assistant') {
         const { runTriageAssistant } = require('../triage/assistant');
         await runTriageAssistant();
-    } else if (frequency === 'brief_purge') {
-        const { purgeBriefMemory } = require('../daily-plan/brief/job');
-        await purgeBriefMemory();
+    } else if (frequency === 'context_purge') {
+        const { purgeContexts } = require('../triage/contexts');
+        await purgeContexts();
     } else {
         await processSummariesForFrequency(frequency);
     }
@@ -122,8 +118,7 @@ const createJobEntries = () => {
         'webhook_deliveries',
         'webhook_summaries',
         'held_notifications',
-        'daily_brief',
-        'brief_purge',
+        'context_purge',
         'triage_assistant',
     ];
 

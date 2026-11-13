@@ -9,7 +9,7 @@ import {
     fetchAgentSettings,
     saveAgentSettings,
     testAgentConnection,
-} from '../../../utils/dailyBriefService';
+} from '../../../utils/agentsService';
 
 interface AgentsTabProps {
     isActive: boolean;

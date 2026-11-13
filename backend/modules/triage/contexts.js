@@ -4,19 +4,18 @@
 // series ("the room is shared, this is not a conflict"). While a context is
 // alive, the question about its target is not asked again (rules/contexts.js).
 // Lifetimes are applied on read by liveContexts and on purge (purgeContexts)
-// (docs/39-daily-brief.md, Memory).
+// (docs/40-triage.md, Linked contexts).
 const moment = require('moment-timezone');
 const { Op } = require('sequelize');
-const { LinkedContext, Task } = require('../../../models');
-const { NotFoundError, ValidationError } = require('../../../shared/errors');
-const permissionsService = require('../../../services/permissionsService');
-const { logger } = require('../../../services/logService');
-const { getSafeTimezone } = require('../../../utils/timezone-utils');
-const calendarFeedsService = require('../../calendar-feeds/service');
-const dailyPlanRepository = require('../repository');
-const briefRepository = require('./repository');
-const { addDays } = require('./rules/dates');
-const { normalizeBriefSettings } = require('./settings');
+const { LinkedContext, Task } = require('../../models');
+const { NotFoundError, ValidationError } = require('../../shared/errors');
+const permissionsService = require('../../services/permissionsService');
+const { logger } = require('../../services/logService');
+const { getSafeTimezone } = require('../../utils/timezone-utils');
+const calendarFeedsService = require('../calendar-feeds/service');
+const repository = require('./repository');
+const { addDays } = require('./core/rules/dates');
+const { triageSettingsFromUiSettings } = require('./settings');
 
 const SCOPES = ['task', 'event', 'series'];
 const TEXT_MAX = 500;
@@ -235,7 +234,7 @@ async function deadUids(user, rows, { now, timezone, today, lookaheadDays }) {
     const from = addDays(today, -SERIES_LOOKBACK_DAYS);
     const to = addDays(today, lookaheadDays);
     for (const [feed, seriesRows] of bySeriesFeed) {
-        const { events, errors } = await calendarFeedsService.eventsForBrief(
+        const { events, errors } = await calendarFeedsService.eventsInRange(
             user,
             from,
             to,
@@ -268,7 +267,7 @@ async function evaluateContexts(user, options) {
     };
 }
 
-// The engine's view (rules/contexts.js): only the contexts still alive.
+// The rules' view (core/rules/contexts.js): only the contexts still alive.
 async function liveContexts(user, options) {
     return (await evaluateContexts(user, options)).live;
 }
@@ -276,7 +275,7 @@ async function liveContexts(user, options) {
 // Daily purge: deletes the contexts whose lifetime is over, for every user.
 // One user's failure is logged without content and does not stop the others.
 async function purgeContexts(now = new Date()) {
-    const users = await briefRepository.findAllUsersForBriefJob();
+    const users = await repository.findAllUsersForJobs();
     let deleted = 0;
     for (const user of users) {
         try {
@@ -285,9 +284,7 @@ async function purgeContexts(now = new Date()) {
             });
             if (count === 0) continue;
             const timezone = getSafeTimezone(user.timezone);
-            const settings = normalizeBriefSettings(
-                (await dailyPlanRepository.findUiSettings(user.id)).brief
-            );
+            const settings = triageSettingsFromUiSettings(user.ui_settings);
             const { dead } = await evaluateContexts(user, {
                 now,
                 timezone,
@@ -302,16 +299,33 @@ async function purgeContexts(now = new Date()) {
         } catch (error) {
             logger.error(
                 { code: error.code || error.name, userId: user.id },
-                'Daily brief context purge failed for a user'
+                'Linked context purge failed for a user'
             );
         }
     }
     return { deleted };
 }
 
+// The answer to a question of the queue: the context of its target, which
+// keeps the question from being asked again. Answering twice replaces the
+// text, so a resent answer changes nothing.
+async function answerQuestion(user, body = {}) {
+    const { target } = body;
+    if (target === null || typeof target !== 'object') {
+        throw new ValidationError('target is required');
+    }
+    const context = await createContext(user, {
+        scope: target.scope,
+        target_ref: target.ref,
+        text: answerText(body.answer),
+    });
+    return { context };
+}
+
 module.exports = {
     SCOPES,
     answerText,
+    answerQuestion,
     createContext,
     updateContext,
     deleteContext,

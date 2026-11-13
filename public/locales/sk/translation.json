@@ -149,6 +149,37 @@
     }
   },
   "triage": {
+    "settings": {
+      "calendars": "Čítané kalendáre",
+      "noCalendars": "Žiadny kalendár. Pridajte ho v Profil › Kalendáre.",
+      "lookahead": "Dni dopredu",
+      "alerts": "Upozornenia",
+      "postponements": "Odklady pred kartou",
+      "closedLookback": "Kontrolované uzavreté úlohy (dni)",
+      "assistant": "AI asistent",
+      "assistantEnabled": "Návrhy AI na roztriedenie",
+      "assistantLimit": "Prezreté úlohy za deň",
+      "llmProvider": "Poskytovateľ AI: Profil › Asistent AI",
+      "save": "Uložiť",
+      "saved": "Nastavenia uložené",
+      "saveError": "Nastavenia sa nepodarilo uložiť.",
+      "loadError": "Nastavenia sa nepodarilo načítať.",
+      "alertType": {
+        "conflict": "Kolidujúce udalosti",
+        "event_in_work_hours": "Udalosť v pracovnej dobe",
+        "duplicate": "Možný duplikát",
+        "deadline_in_note": "Termín nájdený v poznámke",
+        "postponed": "Často odkladané"
+      }
+    },
+    "yes": "Áno",
+    "no": "Nie",
+    "context": {
+      "title": "Kontext",
+      "edit": "Upraviť kontext",
+      "save": "Uložiť",
+      "delete": "Odstrániť"
+    },
     "mail": {
       "noSubject": "(bez predmetu)",
       "draft": "Koncept pripravený:",
@@ -433,210 +464,6 @@
       "taskToSort": "Úloha pridaná do « Úlohy na roztriedenie »",
       "addedToProject": "Pridané do projektu"
     }
-  },
-  "dailyBrief": {
-    "sectionName": {
-      "verdict": "Verdikt",
-      "timeline": "Nadchádzajúce dni",
-      "tonight": "Priority dňa",
-      "moves": "Na presun",
-      "anticipate": "Na predvídanie",
-      "replies": "Očakávané odpovede",
-      "inbox": "Doručené",
-      "resolved": "Hotovo"
-    },
-    "priority": {
-      "consequence": "Dôsledok",
-      "blocking": "Blokuje ostatných",
-      "money_deadline": "Peniaze alebo termín",
-      "planned_load": "Plánované zaťaženie"
-    },
-    "alertType": {
-      "conflict": "Kolidujúce udalosti",
-      "overload": "Preťaženie",
-      "duplicate": "Možný duplikát",
-      "deadline_in_note": "Termín nájdený v poznámke",
-      "postponed": "Často odkladané",
-      "dependency": "Závislosť",
-      "event_in_work_hours": "Udalosť v pracovnej dobe"
-    },
-    "source": {
-      "calendar": "Kalendáre",
-      "mail": "Poštový agent",
-      "llm": "Prepísanie pomocou AI",
-      "voice": "Hlas",
-      "agent": "Agent"
-    },
-    "settings": {
-      "linkThemes": "Témy odkazov cez AI",
-      "triageLimit": "Prezreté úlohy za deň",
-      "triageEnabled": "Návrhy AI na roztriedenie",
-      "postponements": "Odklady pred kartou",
-      "maxMoves": "Zobrazené presuny",
-      "maxTonight": "Zobrazené priority",
-      "closedLookback": "Kontrolované uzavreté úlohy (dni)",
-      "title": "Denný prehľad",
-      "description": "Prehľad každé ráno: nadchádzajúce dni, čo zostáva na dnes večer a čo sa dá presunúť.",
-      "status": "Stav zdrojov",
-      "timezoneWarning": "Časové pásmo nie je nastavené: časy v prehľade môžu byť nesprávne.",
-      "showOnToday": "Zobraziť prehľad v Dnes",
-      "generation": "Generovanie",
-      "enabled": "Generovať každé ráno",
-      "time": "Čas",
-      "days": "Dni",
-      "sections": "Sekcie",
-      "sectionsHint": "Nezaškrtnutá sekcia sa skryje; poradie je poradie zoznamu.",
-      "moveUp": "Posunúť {{name}} nahor",
-      "moveDown": "Posunúť {{name}} nadol",
-      "sources": "Čítané kalendáre",
-      "noCalendars": "Žiadny kalendár. Pridajte ho v Profil › Kalendáre.",
-      "lookahead": "Dni dopredu",
-      "evening": "Večer a zaťaženie",
-      "eveningHint": "Pracovná doba sa nastavuje v Dnes (bloky sústredenia).",
-      "openToday": "Otvoriť Dnes",
-      "eveningStart": "Začiatok",
-      "eveningEnd": "Koniec",
-      "eveningMinutes": "Minúty",
-      "dayNote": "Poznámka ku dňu",
-      "arbitrage": "Poradie",
-      "priorities": "Poradie priorít",
-      "alerts": "Upozornenia",
-      "writing": "Písanie",
-      "llmEnabled": "Zhrnutie a dôvody od AI",
-      "llmProvider": "Poskytovateľ AI: Profil › Asistent AI",
-      "tone": "Tón",
-      "instructions": "Pokyny",
-      "retention": "Uchovávanie",
-      "decisionsDays": "Uchovávané rozhodnutia (dni)",
-      "audioDays": "Uchovávané audio (dni)",
-      "voice": "Hlas",
-      "voiceEnabled": "Prečítať prehľad nahlas",
-      "piperUrl": "Adresa Piper",
-      "voiceName": "Hlas",
-      "speed": "Rýchlosť",
-      "save": "Uložiť",
-      "saved": "Nastavenia uložené",
-      "saveError": "Nastavenia sa nepodarilo uložiť.",
-      "loadError": "Nastavenia prehľadu sa nepodarilo načítať.",
-      "eveningRemove": "Odstrániť",
-      "review": {
-        "title": "Večerný prehľad",
-        "enabled": "Zobraziť večerný prehľad po čase prepnutia",
-        "switchTime": "Čas prepnutia na večerný prehľad"
-      }
-    },
-    "hours": "{{hours}} h",
-    "hoursMinutes": "{{hours}} h {{rest}}",
-    "minutes": "{{count}} min",
-    "task": {
-      "complete": "Hotovo",
-      "done": "„{{name}}“ hotová",
-      "reopened": "„{{name}}“ znovu otvorená",
-      "error": "Úlohu sa nepodarilo aktualizovať."
-    },
-    "decision": {
-      "error": "Vašu voľbu sa nepodarilo uložiť."
-    },
-    "loadError": "Prehľad sa nepodarilo načítať.",
-    "generateError": "Generovanie zlyhalo.",
-    "generateNow": "Generovať teraz",
-    "generating": "Generuje sa…",
-    "regenerate": "Vygenerovať znova",
-    "empty": "Na dnes zatiaľ nie je prehľad.",
-    "failed": "Posledné generovanie zlyhalo. Predchádzajúci prehľad sa zachoval.",
-    "settingsLink": "Nastavenia prehľadu",
-    "counters": {
-      "overdue": "po termíne",
-      "today": "dnes"
-    },
-    "timeline": {
-      "today": "Dnes",
-      "planned": "{{minutes}} min",
-      "ofCapacity": "Úlohy na {{planned}}, voľno {{capacity}}",
-      "over": "Preťaženie: úlohy na {{planned}}, voľno {{capacity}}",
-      "duringWork": "počas práce",
-      "legendWork": "Práca",
-      "legendEvening": "Večer",
-      "legendEvent": "Udalosť",
-      "legendConflict": "Konflikt"
-    },
-    "tonight": {
-      "ofCapacity": "{{planned}} / {{capacity}}"
-    },
-    "moves": {
-      "acceptAria": "Presunúť na {{date}}",
-      "moved": "„{{name}}“ presunutá",
-      "otherDate": "Iný dátum"
-    },
-    "anticipate": {
-      "yes": "Áno",
-      "no": "Nie",
-      "precise": "Upresniť",
-      "preciseLabel": "Podrobnosti",
-      "save": "Uložiť",
-      "answered": "Odpoveď uložená",
-      "less": "Menej takýchto",
-      "options": "Možnosti upozornenia"
-    },
-    "feedback": {
-      "useful": "Užitočné",
-      "noise": "Nie je užitočné",
-      "fewer": "Uvidíš menej upozornení tohto typu",
-      "question": "Pomohla táto obrazovka?"
-    },
-    "status": {
-      "configured": "Nakonfigurované",
-      "missing": "Nenakonfigurované",
-      "failing": "Zlyháva"
-    },
-    "card": {
-      "title": "Môj deň",
-      "open": "Zobraziť prehľad",
-      "error": "Prehľad nie je k dispozícii."
-    },
-    "context": {
-      "title": "Kontext",
-      "edit": "Upraviť kontext",
-      "save": "Uložiť",
-      "delete": "Odstrániť"
-    },
-    "evening": {
-      "switchToMorning": "Zobraziť ranný prehľad",
-      "switchToEvening": "Zobraziť večerný prehľad",
-      "counters": {
-        "done": "hotové",
-        "tonight": "dnes večer",
-        "slipped": "odsunuté"
-      },
-      "sections": {
-        "done": "Hotové dnes",
-        "slipped": "Posúva sa",
-        "tomorrow": "Zajtra"
-      },
-      "carryDone": "« {{name}} » presunuté na zajtra",
-      "carryError": "Úlohu sa nepodarilo presunúť.",
-      "emptyTonight": "Dnes večer nie je nič ďalšie.",
-      "emptyDone": "Dnes nič dokončené.",
-      "emptySlipped": "Nič sa neposúva.",
-      "loadError": "Večerný prehľad sa nepodarilo načítať.",
-      "actions": {
-        "menu": "Akcie pre „{{name}}“",
-        "tomorrow": "Zajtra",
-        "dueDate": "Vybrať dátum",
-        "dueLabel": "Termín",
-        "later": "Neskôr",
-        "cancel": "Zrušiť"
-      },
-      "state": {
-        "due": "Termín: {{date}}",
-        "cancelled": "Zrušená"
-      },
-      "dueDone": "„{{name}}“ termín {{date}}",
-      "laterDone": "„{{name}}“ odložená",
-      "cancelDone": "„{{name}}“ zrušená",
-      "tonightTitle": "Dnes večer"
-    },
-    "preparedAt": "pripravené o {{time}}"
   },
   "agents": {
     "title": "Agenti",
@@ -1122,8 +949,7 @@
             "events": "Udalosti",
             "permission": {
                 "events": "Počúva udalosti",
-                "routes": "Poskytuje vlastné trasy",
-                "brief": "Writes the daily brief"
+                "routes": "Poskytuje vlastné trasy"
             },
             "enabled": "Zapnutý",
             "needsApproval": "Táto verzia žiada viac než predtým. Zapnite ju znova, aby ste schválili jej oprávnenia a udalosti.",
@@ -6230,7 +6056,6 @@
     "appointmentLabel": "{{title}}, {{range}}",
     "backToList": "Zoznam",
     "blockLabel": "{{title}}, {{range}}",
-    "brief": "Denný prehľad",
     "calendar": "Denný kalendár",
     "calendarButton": "Kalendár",
     "calendarLabel": "Denný kalendár",

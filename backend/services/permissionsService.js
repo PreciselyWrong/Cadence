@@ -88,7 +88,7 @@ async function looseAreaAccess(userId, areaId) {
 
 // The tasks that are the user's own work: ones assigned to them, and ones they
 // own that are not assigned to someone else's account. Personal views (Today,
-// Upcoming, the plan and its suggestions, the brief) AND this with the
+// Upcoming, the plan and its suggestions, triage) AND this with the
 // visible-tasks where, so everything else in a shared project or area stays on
 // its own page instead of filling everyone's day. A task the user assigned to
 // another member counts for that member only; one assigned to a contact

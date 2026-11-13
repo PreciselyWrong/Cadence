@@ -61,7 +61,6 @@ import ProductivityPage from './components/Insights/ProductivityPage';
 import ReportsPage from './components/Insights/ReportsPage';
 import SummaryPage from './components/Insights/SummaryPage';
 import ReviewPage from './components/Review/ReviewPage';
-import BriefPage from './components/DailyBrief/BriefPage';
 import TriagePage from './components/Triage/TriagePage';
 import PeopleList from './components/People/PeopleList';
 import PersonDetails from './components/People/PersonDetails';
@@ -613,10 +612,6 @@ const App: React.FC = () => {
                             <Route
                                 path="/boards/kanban"
                                 element={<KanbanBoard />}
-                            />
-                            <Route
-                                path="/insights/daily-brief"
-                                element={<BriefPage />}
                             />
                             <Route path="/triage" element={<TriagePage />} />
                             <Route

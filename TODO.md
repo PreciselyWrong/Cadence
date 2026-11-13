@@ -4,6 +4,11 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Now
 
+- Android : écran Réglages › À trier (parité de Profil › À trier, 2026-11-12)
+  Raison : Android 1.21.0 a retiré Réglages › Résumé, qui portait aussi les réglages d'« À trier » ; le web les a dans Profil › À trier (`GET`/`PUT /api/v1/triage/settings`, `docs/40-triage.md` › Settings). Vérif : cocher un calendrier et couper les propositions de l'IA sur le téléphone ; le web montre les mêmes réglages, et inversement.
+- Retirer l'alias `POST /daily-plan/:date/brief/answers` (2026-11-12)
+  Raison : gardé pour les APK 1.20 et avant (Android 1.21.0 envoie `/triage/answers` et migre ses appels en file). Vérif : plus aucun appel à ce chemin dans les journaux du serveur, puis supprimer la route de `backend/modules/triage/routes.js` et son test.
+
 - Android : vocabulaire unique du web (2026-11-12, `docs/fork/WEB-UX-NOTES.md` › Vocabulaire unique). « Domaine » devient « Zone » dans `tasks_lists_area`, `tasks_projects_no_area`, `areas_filter_label`, `areas_suggest`, `auto_classify_area` et `tasks/model/SyncConflicts.kt` ; `triage_mail_create_task` dit « Créer une tâche ». Vérif : plus aucun « domaine » dans l'app, `TaskOverviewsTest` à jour.
 - Android : aperçus sous la description d'un projet. La description de projet n'est ni dans Room ni dans la synchro (`project`) ; à ajouter (colonne, migration, champ synchronisé) avant d'y montrer les cartes. Vérif : une adresse dans la description d'un projet montre sa carte sur le téléphone, hors ligne compris.
 
@@ -31,8 +36,6 @@ Tout le code prévu est livré dans `main` (2026-11-01) : APK 1.7.0 et image `gh
   Plugins hors de l'app dans `TUDUDI_PLUGINS_DIR` (`docs/46-plugins.md`, guide `docs/fork/PLUGIN-GUIDE.md`), gérés depuis Profil › Plugins et Réglages › Plugins (Android) : ajout par adresse Git, mise à jour, suppression, réglages, entrée de barre latérale avec page. Plugin Hermes dans le dépôt séparé `cadence-plugin-hermes`. Vérif par toi : `TUDUDI_PLUGINS_DIR` sur Unraid, ajouter le plugin Hermes par son adresse Git, l'allumer avec l'adresse et le secret du webhook Hermes, créer une tâche : Hermes la reçoit ; l'entrée de menu d'un plugin de test s'ouvre sur le web et sur le téléphone ; PostgreSQL : `db:migrate` de `20261112190000-add-plugins`. Limites connues : pas d'entrée de plugin dans le mode minimal de la barre latérale web ; les POST d'une page de plugin n'ont pas de jeton dans la WebView Android ; hauteur de l'iframe web non vue dans un navigateur ; écran Android jamais lancé sur un appareil.
 - Remise de tâche depuis Proches (Android seul, 2026-11-09)
   Pas de parité web : entrée inter-applications Android (`docs/42-proches-handoff.md`). Vérif : avec Proches signé sur l'émulateur ou le téléphone, accepter une proposition avec échéance ; la tâche apparaît dans Tâches avec son échéance et part à la synchro ; une seconde remise de la même proposition ne crée pas de doublon ; une autre app appelante est refusée.
-- Bilan du soir sur Android (parité du web, 2026-11-04)
-  écran du bilan après `evening.switchTime` (fuseau du profil), `GET /daily-plan/:date/evening`, « Reporter à demain » (annulation par retrait du plan de demain), réglage `Bilan du soir` ; contrat `docs/39-daily-brief.md` § Evening review, écarts web dans `docs/fork/WEB-UX-NOTES.md` (2026-11-04). Vérif : mêmes quatre sections et mêmes compteurs que le web pour une même journée sur le serveur de test, puis passage à 18:00 sur le téléphone.
 - Un lien seul dans l'ajout rapide Android (livré le 2026-11-12)
   Une adresse seule (avec `#étiquettes`, `+projet`) propose Inbox (d'office) · Tâche · Liens · Note ; Tâche prend le titre de la page, l'adresse en note et en origine ; Liens la garde tout de suite avec « Annuler » ; « Dans les liens » d'emblée sous une tâche ou une note dont l'adresse est déjà gardée ; chaînes mortes retirées. Vérif sur le téléphone : coller `https://exemple.org/page #lecture`, choisir Liens : le lien apparaît dans Liens avec l'étiquette, rien dans l'Inbox ; ajouter un mot : Liens disparaît ; tuer l'app pendant l'« Annuler » d'une décision de l'Inbox : la décision reste.
 - Aujourd'hui sur Android : glisser-déposer pour ranger (livré le 2026-11-12)
@@ -118,13 +121,6 @@ Branche `feat/habit-stats-bdad4581`.
   - [x] Android : `Now` › « Un lien seul dans l'ajout rapide Android » (2026-11-12). Vérif sur le téléphone : partager une adresse, lui mettre une étiquette et un projet, en faire une tâche en moins de 4 touchers.
 - [x] Web : reprendre la passe de soustraction Android du 2026-11-02 (`docs/fork/ANDROID-UX-NOTES.md`)
   Bureau livré le 2026-11-12 (`docs/fork/WEB-UX-NOTES.md`) ; reste à vérifier à 390 px.
-- Résumé matinal
-  plan validé le 2026-11-04 (`docs/resume-matinal-plan.md`), phases 1 à 6 à suivre ; l'outil Gmail restreint d'Hermes (`integrations/hermes-gmail/`) est le prérequis de la phase 5.
-- Résumé du jour, retours du 2026-11-04 sur le téléphone (1.10.1) :
-  - Voix : la lecture de secours (`TextToSpeech` du système) doit pouvoir être Piper : proposer de télécharger une voix Piper à la demande depuis le bouton « Écouter », au lieu de lire avec la voix du téléphone. Vérif : sans voix installée, « Écouter » propose Siwis ou Tom, la télécharge, puis lit le résumé avec elle.
-  - Retour au toucher : un bouton touché (cercle « C'est fait », pastille de date, Oui / Non / Préciser, Utile / Bruit) ne change rien à l'écran ; la ligne reste identique. Il faut un retour immédiat : état pressé, ligne cochée ou barrée, carte qui se replie, snackbar d'annulation. Vérif : chaque geste change visiblement la ligne en moins de 100 ms.
-  - Notification de lecture : la barre du lecteur s'affiche sous les boutons de navigation Android. La placer au-dessus (insets de navigation, `WindowInsets.navigationBars`). Vérif : avec la navigation à 3 boutons et par gestes, la barre reste entièrement visible.
-  - Le soir : le résumé du matin reste affiché toute la journée, alors qu'il arbitre la matinée. Le soir, montrer un autre résumé, le bilan du soir de la phase 6 (`ai_wrap_up` existant, `WrapUpCard`) : ce qui a été fait, ce qui glisse à demain, la soirée restante. À définir : l'heure de bascule (réglage), et si le bilan se génère lui aussi par le moteur sans IA. Vérif : après l'heure de bascule, la carte d'Aujourd'hui et l'écran ouvrent le bilan du soir ; le résumé du matin reste consultable.
 - Sécurité : `users.telegram_bot_token` est stocké en clair et renvoyé en entier au navigateur
   (`backend/models/user.js`, `PROFILE_UPDATE_ATTRIBUTES` de `users/repository.js`). Le chiffrer avec `secretCipher` (migration des valeurs existantes) et ne renvoyer que les 4 derniers caractères, comme `ai_api_key`. Vérif : la colonne commence par `enc:v1:`, `GET /api/profile` ne contient plus le jeton, le bot Telegram répond toujours.
 - PostgreSQL : `npm run db:migrate` après `db-prepare.js` voit 204 migrations en attente
@@ -139,3 +135,12 @@ Branche `feat/habit-stats-bdad4581`.
   aucune case cochée sur 64 ; le remettre à jour ou le remplacer par ces deux entrées.
 
 ## Ideas
+
+## Dropped
+
+- Bilan du soir sur Android (parité du web, 2026-11-04)
+  Résumé du jour retiré le 2026-11-12 (serveur, web, Android 1.21.0) : les agents Hermes écrivent le résumé et le bilan dans la Boîte des agents (`docs/39-daily-brief.md`).
+- Résumé matinal
+  Résumé du jour retiré le 2026-11-12 (serveur, web, Android 1.21.0) : les agents Hermes écrivent le résumé et le bilan dans la Boîte des agents (`docs/39-daily-brief.md`).
+- Résumé du jour, retours du 2026-11-04 sur le téléphone (1.10.1) :
+  Résumé du jour retiré le 2026-11-12 (serveur, web, Android 1.21.0) : les agents Hermes écrivent le résumé et le bilan dans la Boîte des agents (`docs/39-daily-brief.md`).

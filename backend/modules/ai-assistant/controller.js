@@ -34,20 +34,6 @@ const controller = {
         }
     },
 
-    async getCachedBrief(req, res, next) {
-        try {
-            const userId = getAuthenticatedUserId(req);
-            if (!userId) {
-                return res.status(401).json({ error: 'Unauthorized' });
-            }
-
-            const brief = await aiAssistantService.getCachedBrief(userId);
-            res.json(brief || null);
-        } catch (error) {
-            next(error);
-        }
-    },
-
     async getCachedTaskInsights(req, res, next) {
         try {
             const userId = getAuthenticatedUserId(req);
@@ -161,22 +147,6 @@ const controller = {
                     .json({ error: 'No insights found for this project' });
             }
             res.json(updated);
-        } catch (error) {
-            next(error);
-        }
-    },
-
-    async getDailyBrief(req, res, next) {
-        console.log('[AI Assistant] getDailyBrief called');
-        try {
-            const userId = getAuthenticatedUserId(req);
-            console.log('[AI Assistant] userId:', userId);
-            if (!userId) {
-                return res.status(401).json({ error: 'Unauthorized' });
-            }
-
-            const brief = await aiAssistantService.generateDailyBrief(userId);
-            res.json(brief);
         } catch (error) {
             next(error);
         }

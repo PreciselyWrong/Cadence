@@ -143,6 +143,37 @@
     }
   },
   "triage": {
+    "settings": {
+      "calendars": "Læste kalendere",
+      "noCalendars": "Ingen kalender. Tilføj en under Profil › Kalendere.",
+      "lookahead": "Dage at kigge frem",
+      "alerts": "Advarsler",
+      "postponements": "Udskydelser før et kort",
+      "closedLookback": "Gennemgåede afsluttede opgaver (dage)",
+      "assistant": "AI-assistent",
+      "assistantEnabled": "AI-forslag i At sortere",
+      "assistantLimit": "Gennemgåede opgaver pr. dag",
+      "llmProvider": "AI-udbyder: Profil › AI-assistent",
+      "save": "Gem",
+      "saved": "Indstillinger gemt",
+      "saveError": "Indstillingerne kunne ikke gemmes.",
+      "loadError": "Indstillingerne kunne ikke indlæses.",
+      "alertType": {
+        "conflict": "Modstridende begivenheder",
+        "event_in_work_hours": "Begivenhed i arbejdstid",
+        "duplicate": "Mulig dublet",
+        "deadline_in_note": "Frist fundet i en note",
+        "postponed": "Ofte udskudt"
+      }
+    },
+    "yes": "Ja",
+    "no": "Nej",
+    "context": {
+      "title": "Kontekst",
+      "edit": "Rediger kontekst",
+      "save": "Gem",
+      "delete": "Slet"
+    },
     "mail": {
       "noSubject": "(intet emne)",
       "draft": "Kladde klar:",
@@ -635,8 +666,7 @@
             "events": "Hændelser",
             "permission": {
                 "events": "Lytter på hændelser",
-                "routes": "Leverer egne ruter",
-                "brief": "Writes the daily brief"
+                "routes": "Leverer egne ruter"
             },
             "enabled": "Aktiveret",
             "needsApproval": "Denne version kræver mere end før. Slå den til igen for at godkende dens tilladelser og hændelser.",
@@ -5960,210 +5990,6 @@
       "addedToProject": "Tilføjet til projektet"
     }
   },
-  "dailyBrief": {
-    "sectionName": {
-      "verdict": "Vurdering",
-      "timeline": "Kommende dage",
-      "tonight": "Dagens prioriteter",
-      "moves": "Skal flyttes",
-      "anticipate": "At forudse",
-      "replies": "Forventede svar",
-      "inbox": "Indbakke",
-      "resolved": "Udført"
-    },
-    "priority": {
-      "consequence": "Konsekvens",
-      "blocking": "Blokerer andre",
-      "money_deadline": "Penge eller frist",
-      "planned_load": "Planlagt belastning"
-    },
-    "alertType": {
-      "conflict": "Modstridende begivenheder",
-      "overload": "Overbelastning",
-      "duplicate": "Mulig dublet",
-      "deadline_in_note": "Frist fundet i en note",
-      "postponed": "Ofte udskudt",
-      "dependency": "Afhængighed",
-      "event_in_work_hours": "Begivenhed i arbejdstid"
-    },
-    "source": {
-      "calendar": "Kalendere",
-      "mail": "Mailagent",
-      "llm": "AI-omskrivning",
-      "voice": "Stemme",
-      "agent": "Agent"
-    },
-    "settings": {
-      "linkThemes": "Linktemaer med AI",
-      "triageLimit": "Gennemgåede opgaver pr. dag",
-      "triageEnabled": "AI-forslag i At sortere",
-      "postponements": "Udskydelser før et kort",
-      "maxMoves": "Viste flytninger",
-      "maxTonight": "Viste prioriteter",
-      "closedLookback": "Gennemgåede afsluttede opgaver (dage)",
-      "title": "Dagligt overblik",
-      "description": "Et resumé hver morgen: de kommende dage, det der er tilbage i aften, og hvad der kan flyttes.",
-      "status": "Kildestatus",
-      "timezoneWarning": "Tidszonen er ikke angivet: tidspunkterne i overblikket kan være forkerte.",
-      "showOnToday": "Vis overblikket under I dag",
-      "generation": "Generering",
-      "enabled": "Generer hver morgen",
-      "time": "Tidspunkt",
-      "days": "Dage",
-      "sections": "Sektioner",
-      "sectionsHint": "En afkrydset sektion vises ikke; rækkefølgen er listens rækkefølge.",
-      "moveUp": "Flyt {{name}} op",
-      "moveDown": "Flyt {{name}} ned",
-      "sources": "Læste kalendere",
-      "noCalendars": "Ingen kalender. Tilføj en under Profil › Kalendere.",
-      "lookahead": "Dage at kigge frem",
-      "evening": "Aften og belastning",
-      "eveningHint": "Arbejdstid angives under I dag (fokusblokke).",
-      "openToday": "Åbn I dag",
-      "eveningStart": "Start",
-      "eveningEnd": "Slut",
-      "eveningMinutes": "Minutter",
-      "dayNote": "Dagsnote",
-      "arbitrage": "Rangering",
-      "priorities": "Prioritetsrækkefølge",
-      "alerts": "Advarsler",
-      "writing": "Skrivning",
-      "llmEnabled": "Resumé og begrundelser af AI",
-      "llmProvider": "AI-udbyder: Profil › AI-assistent",
-      "tone": "Tone",
-      "instructions": "Instruktioner",
-      "retention": "Opbevaring",
-      "decisionsDays": "Beslutninger gemt (dage)",
-      "audioDays": "Lyd gemt (dage)",
-      "voice": "Stemme",
-      "voiceEnabled": "Læs overblikket højt",
-      "piperUrl": "Piper-adresse",
-      "voiceName": "Stemme",
-      "speed": "Hastighed",
-      "save": "Gem",
-      "saved": "Indstillinger gemt",
-      "saveError": "Indstillingerne kunne ikke gemmes.",
-      "loadError": "Overblikindstillingerne kunne ikke indlæses.",
-      "eveningRemove": "Fjern",
-      "review": {
-        "title": "Aftenbillede",
-        "enabled": "Vis aftenbilledet efter skiftetidspunktet",
-        "switchTime": "Skiftetidspunkt til aftenbilledet"
-      }
-    },
-    "hours": "{{hours}} t",
-    "hoursMinutes": "{{hours}} t {{rest}}",
-    "minutes": "{{count}} min",
-    "task": {
-      "complete": "Udført",
-      "done": "“{{name}}” udført",
-      "reopened": "“{{name}}” genåbnet",
-      "error": "Opgaven kunne ikke opdateres."
-    },
-    "decision": {
-      "error": "Dit valg kunne ikke gemmes."
-    },
-    "loadError": "Overblikket kunne ikke indlæses.",
-    "generateError": "Generering mislykkedes.",
-    "generateNow": "Generer nu",
-    "generating": "Genererer…",
-    "regenerate": "Generer igen",
-    "empty": "Intet overblik for i dag endnu.",
-    "failed": "Seneste generering mislykkedes. Det forrige overblik gemmes.",
-    "settingsLink": "Overblikindstillinger",
-    "counters": {
-      "overdue": "forfalden",
-      "today": "i dag"
-    },
-    "timeline": {
-      "today": "I dag",
-      "planned": "{{minutes}} min",
-      "ofCapacity": "{{planned}} opgaver til {{capacity}} ledig tid",
-      "over": "Overbelastning: {{planned}} opgaver til {{capacity}} ledig tid",
-      "duringWork": "i arbejdstiden",
-      "legendWork": "Arbejde",
-      "legendEvening": "Aften",
-      "legendEvent": "Begivenhed",
-      "legendConflict": "Konflikt"
-    },
-    "tonight": {
-      "ofCapacity": "{{planned}} / {{capacity}}"
-    },
-    "moves": {
-      "acceptAria": "Flyt til {{date}}",
-      "moved": "“{{name}}” flyttet",
-      "otherDate": "Anden dato"
-    },
-    "anticipate": {
-      "yes": "Ja",
-      "no": "Nej",
-      "precise": "Angiv",
-      "preciseLabel": "Detalje",
-      "save": "Gem",
-      "answered": "Svar gemt",
-      "less": "Færre af denne slags",
-      "options": "Indstillinger for advarsel"
-    },
-    "feedback": {
-      "useful": "Nyttig",
-      "noise": "Ikke nyttig",
-      "fewer": "Du ser færre advarsler af denne type",
-      "question": "Hjalp denne skærm?"
-    },
-    "status": {
-      "configured": "Konfigureret",
-      "missing": "Ikke konfigureret",
-      "failing": "Fejler"
-    },
-    "card": {
-      "title": "Min dag",
-      "open": "Se overblikket",
-      "error": "Overblikket er ikke tilgængeligt."
-    },
-    "context": {
-      "title": "Kontekst",
-      "edit": "Rediger kontekst",
-      "save": "Gem",
-      "delete": "Slet"
-    },
-    "evening": {
-      "switchToMorning": "Se morgenoversigten",
-      "switchToEvening": "Se aftenbilledet",
-      "counters": {
-        "done": "udført",
-        "tonight": "i aften",
-        "slipped": "udskudt"
-      },
-      "sections": {
-        "done": "Udført i dag",
-        "slipped": "Glider",
-        "tomorrow": "I morgen"
-      },
-      "carryDone": "« {{name}} » flyttet til i morgen",
-      "carryError": "Opgaven kunne ikke flyttes.",
-      "emptyTonight": "Intet mere at gøre i aften.",
-      "emptyDone": "Intet afsluttet i dag.",
-      "emptySlipped": "Intet glider.",
-      "loadError": "Aftenbilledet kunne ikke indlæses.",
-      "actions": {
-        "menu": "Handlinger for “{{name}}”",
-        "tomorrow": "I morgen",
-        "dueDate": "Vælg dato",
-        "dueLabel": "Forfaldsdato",
-        "later": "Senere",
-        "cancel": "Opgiv"
-      },
-      "state": {
-        "due": "Forfalder: {{date}}",
-        "cancelled": "Opgivet"
-      },
-      "dueDone": "“{{name}}” forfalder {{date}}",
-      "laterDone": "“{{name}}” lagt til senere",
-      "cancelDone": "“{{name}}” opgivet",
-      "tonightTitle": "I aften"
-    },
-    "preparedAt": "klargjort kl. {{time}}"
-  },
   "agents": {
     "title": "Agenter",
     "description": "Agenten læser mail og laver udkast. Cadence gemmer ingen mailoplysninger.",
@@ -6205,7 +6031,6 @@
     "appointmentLabel": "{{title}}, {{range}}",
     "backToList": "Liste",
     "blockLabel": "{{title}}, {{range}}",
-    "brief": "Dagens overblik",
     "calendar": "Dagskalender",
     "calendarButton": "Kalender",
     "calendarLabel": "Dagskalender",

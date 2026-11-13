@@ -145,6 +145,37 @@
     }
   },
   "triage": {
+    "settings": {
+      "calendars": "Calendare citite",
+      "noCalendars": "Niciun calendar. Adaugă unul în Profil › Calendare.",
+      "lookahead": "Zile de urmărit înainte",
+      "alerts": "Alerte",
+      "postponements": "Amânări înainte de un card",
+      "closedLookback": "Sarcini închise verificate (zile)",
+      "assistant": "Asistent AI",
+      "assistantEnabled": "Propuneri AI în De sortat",
+      "assistantLimit": "Sarcini verificate pe zi",
+      "llmProvider": "Furnizor AI: Profil › Asistent AI",
+      "save": "Salvează",
+      "saved": "Setări salvate",
+      "saveError": "Setările nu au putut fi salvate.",
+      "loadError": "Setările nu au putut fi încărcate.",
+      "alertType": {
+        "conflict": "Evenimente în conflict",
+        "event_in_work_hours": "Eveniment în timpul programului de lucru",
+        "duplicate": "Posibil duplicat",
+        "deadline_in_note": "Termen limită găsit într-o notiță",
+        "postponed": "Amânat des"
+      }
+    },
+    "yes": "Da",
+    "no": "Nu",
+    "context": {
+      "title": "Context",
+      "edit": "Modifică contextul",
+      "save": "Salvează",
+      "delete": "Șterge"
+    },
     "mail": {
       "noSubject": "(fără subiect)",
       "draft": "Ciornă pregătită:",
@@ -638,8 +669,7 @@
             "events": "Evenimente",
             "permission": {
                 "events": "Ascultă evenimente",
-                "routes": "Oferă propriile rute",
-                "brief": "Writes the daily brief"
+                "routes": "Oferă propriile rute"
             },
             "enabled": "Activat",
             "needsApproval": "Această versiune cere mai mult decât înainte. Activează-l din nou pentru a aproba permisiunile și evenimentele.",
@@ -5980,210 +6010,6 @@
       "addedToProject": "Adăugat la proiect"
     }
   },
-  "dailyBrief": {
-    "sectionName": {
-      "verdict": "Verdict",
-      "timeline": "Zilele următoare",
-      "tonight": "Prioritățile zilei",
-      "moves": "De mutat",
-      "anticipate": "De anticipat",
-      "replies": "Răspunsuri așteptate",
-      "inbox": "Inbox",
-      "resolved": "Gata"
-    },
-    "priority": {
-      "consequence": "Consecință",
-      "blocking": "Blochează alte sarcini",
-      "money_deadline": "Bani sau termen limită",
-      "planned_load": "Încărcare planificată"
-    },
-    "alertType": {
-      "conflict": "Evenimente în conflict",
-      "overload": "Supraîncărcare",
-      "duplicate": "Posibil duplicat",
-      "deadline_in_note": "Termen limită găsit într-o notiță",
-      "postponed": "Amânat des",
-      "dependency": "Dependență",
-      "event_in_work_hours": "Eveniment în timpul programului de lucru"
-    },
-    "source": {
-      "calendar": "Calendare",
-      "mail": "Agent de e-mail",
-      "llm": "Rescriere cu AI",
-      "voice": "Voce",
-      "agent": "Agent"
-    },
-    "settings": {
-      "linkThemes": "Teme de linkuri prin AI",
-      "triageLimit": "Sarcini verificate pe zi",
-      "triageEnabled": "Propuneri AI în De sortat",
-      "postponements": "Amânări înainte de un card",
-      "maxMoves": "Mutări afișate",
-      "maxTonight": "Priorități afișate",
-      "closedLookback": "Sarcini închise verificate (zile)",
-      "title": "Rezumat zilnic",
-      "description": "Un rezumat în fiecare dimineață: zilele următoare, ce mai rămâne pentru diseară și ce poate fi mutat.",
-      "status": "Starea surselor",
-      "timezoneWarning": "Fusul orar nu este setat: orele din rezumat pot fi greșite.",
-      "showOnToday": "Afișează rezumatul în Azi",
-      "generation": "Generare",
-      "enabled": "Generează în fiecare dimineață",
-      "time": "Ora",
-      "days": "Zile",
-      "sections": "Secțiuni",
-      "sectionsHint": "O secțiune debifată este ascunsă; ordinea este ordinea din listă.",
-      "moveUp": "Mută {{name}} în sus",
-      "moveDown": "Mută {{name}} în jos",
-      "sources": "Calendare citite",
-      "noCalendars": "Niciun calendar. Adaugă unul în Profil › Calendare.",
-      "lookahead": "Zile de urmărit înainte",
-      "evening": "Seara și încărcarea",
-      "eveningHint": "Orele de lucru se setează în Azi (blocuri de concentrare).",
-      "openToday": "Deschide Azi",
-      "eveningStart": "Început",
-      "eveningEnd": "Sfârșit",
-      "eveningMinutes": "Minute",
-      "dayNote": "Notița zilei",
-      "arbitrage": "Clasament",
-      "priorities": "Ordinea priorităților",
-      "alerts": "Alerte",
-      "writing": "Scriere",
-      "llmEnabled": "Rezumat și motive scrise de AI",
-      "llmProvider": "Furnizor AI: Profil › Asistent AI",
-      "tone": "Ton",
-      "instructions": "Instrucțiuni",
-      "retention": "Păstrare",
-      "decisionsDays": "Decizii păstrate (zile)",
-      "audioDays": "Audio păstrat (zile)",
-      "voice": "Voce",
-      "voiceEnabled": "Citește rezumatul cu voce tare",
-      "piperUrl": "Adresa Piper",
-      "voiceName": "Voce",
-      "speed": "Viteză",
-      "save": "Salvează",
-      "saved": "Setări salvate",
-      "saveError": "Setările nu au putut fi salvate.",
-      "loadError": "Setările rezumatului nu au putut fi încărcate.",
-      "eveningRemove": "Elimină",
-      "review": {
-        "title": "Bilanț de seară",
-        "enabled": "Arată bilanțul de seară după ora de trecere",
-        "switchTime": "Ora de trecere la bilanț"
-      }
-    },
-    "hours": "{{hours}} h",
-    "hoursMinutes": "{{hours}} h {{rest}}",
-    "minutes": "{{count}} min",
-    "task": {
-      "complete": "Gata",
-      "done": "„{{name}}” finalizată",
-      "reopened": "„{{name}}” redeschisă",
-      "error": "Sarcina nu a putut fi actualizată."
-    },
-    "decision": {
-      "error": "Alegerea ta nu a putut fi salvată."
-    },
-    "loadError": "Rezumatul nu a putut fi încărcat.",
-    "generateError": "Generarea a eșuat.",
-    "generateNow": "Generează acum",
-    "generating": "Se generează…",
-    "regenerate": "Regenerează",
-    "empty": "Încă nu există rezumat pentru azi.",
-    "failed": "Ultima generare a eșuat. Rezumatul anterior este păstrat.",
-    "settingsLink": "Setări rezumat",
-    "counters": {
-      "overdue": "restante",
-      "today": "azi"
-    },
-    "timeline": {
-      "today": "Azi",
-      "planned": "{{minutes}} min",
-      "ofCapacity": "{{planned}} de sarcini pentru {{capacity}} libere",
-      "over": "Supraîncărcare: {{planned}} de sarcini pentru {{capacity}} libere",
-      "duringWork": "în timpul programului de lucru",
-      "legendWork": "Lucru",
-      "legendEvening": "Seară",
-      "legendEvent": "Eveniment",
-      "legendConflict": "Conflict"
-    },
-    "tonight": {
-      "ofCapacity": "{{planned}} / {{capacity}}"
-    },
-    "moves": {
-      "acceptAria": "Mută pe {{date}}",
-      "moved": "„{{name}}” mutată",
-      "otherDate": "Altă dată"
-    },
-    "anticipate": {
-      "yes": "Da",
-      "no": "Nu",
-      "precise": "Precizează",
-      "preciseLabel": "Detaliu",
-      "save": "Salvează",
-      "answered": "Răspuns salvat",
-      "less": "Mai puține de acest fel",
-      "options": "Opțiuni alertă"
-    },
-    "feedback": {
-      "useful": "Util",
-      "noise": "Nu e utilă",
-      "fewer": "Vei vedea mai puține alerte de acest fel",
-      "question": "Te-a ajutat acest ecran?"
-    },
-    "status": {
-      "configured": "Configurat",
-      "missing": "Neconfigurat",
-      "failing": "Eșuează"
-    },
-    "card": {
-      "title": "Ziua mea",
-      "open": "Vezi rezumatul",
-      "error": "Rezumatul nu este disponibil."
-    },
-    "context": {
-      "title": "Context",
-      "edit": "Modifică contextul",
-      "save": "Salvează",
-      "delete": "Șterge"
-    },
-    "evening": {
-      "switchToMorning": "Vezi rezumatul de dimineață",
-      "switchToEvening": "Vezi bilanțul de seară",
-      "counters": {
-        "done": "făcute",
-        "tonight": "în seara aceasta",
-        "slipped": "amânate"
-      },
-      "sections": {
-        "done": "Făcut azi",
-        "slipped": "Alunecă",
-        "tomorrow": "Mâine"
-      },
-      "carryDone": "« {{name}} » mutată pe mâine",
-      "carryError": "Nu s-a putut muta sarcina.",
-      "emptyTonight": "Nimic de făcut în seara aceasta.",
-      "emptyDone": "Nimic terminat azi.",
-      "emptySlipped": "Nimic nu alunecă.",
-      "loadError": "Bilanțul de seară nu a putut fi încărcat.",
-      "actions": {
-        "menu": "Acțiuni pentru „{{name}}”",
-        "tomorrow": "Mâine",
-        "dueDate": "Alege o dată",
-        "dueLabel": "Termen",
-        "later": "Mai târziu",
-        "cancel": "Renunță"
-      },
-      "state": {
-        "due": "Termen: {{date}}",
-        "cancelled": "Renunțată"
-      },
-      "dueDone": "„{{name}}” termen {{date}}",
-      "laterDone": "„{{name}}” amânată",
-      "cancelDone": "„{{name}}” abandonată",
-      "tonightTitle": "Diseară"
-    },
-    "preparedAt": "pregătit la {{time}}"
-  },
   "agents": {
     "title": "Agenți",
     "description": "Agentul citește e-mailurile și pregătește ciorne. Cadence nu păstrează credențiale de e-mail.",
@@ -6225,7 +6051,6 @@
     "appointmentLabel": "{{title}}, {{range}}",
     "backToList": "Listă",
     "blockLabel": "{{title}}, {{range}}",
-    "brief": "Rezumatul zilei",
     "calendar": "Calendarul zilei",
     "calendarButton": "Calendar",
     "calendarLabel": "Calendarul zilei",

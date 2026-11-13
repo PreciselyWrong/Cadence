@@ -8,10 +8,8 @@ const ai = require('../ai-assistant/service');
 const entitlements = require('../../services/entitlementsService');
 const { logger } = require('../../services/logService');
 const { getSafeTimezone } = require('../../utils/timezone-utils');
-const sources = require('../daily-plan/brief/sources');
-const { collectInput } = require('../daily-plan/brief/collect');
-const { briefSettingsFromUiSettings } = require('../daily-plan/brief/settings');
-const briefRepository = require('../daily-plan/brief/repository');
+const { collectInput } = require('./collect');
+const { triageSettingsFromUiSettings } = require('./settings');
 const { Project, Tag } = require('../../models');
 const repository = require('./repository');
 const { ruleItems } = require('./core/items');
@@ -206,18 +204,14 @@ async function readCatalog(userId) {
 // is stored even with nothing to say, so it is not paid for again until it
 // changes. A failure keeps the queue as it is.
 async function reviewForUser(user, now = new Date()) {
-    const settings = briefSettingsFromUiSettings(user.ui_settings);
-    if (!settings.triage.enabled || !(await sources.llmConfigured(user.id)))
+    const settings = triageSettingsFromUiSettings(user.ui_settings);
+    if (!settings.triage.enabled || !(await ai.isAIConfigured(user.id)))
         return 0;
 
     const today = moment
         .tz(now, getSafeTimezone(user.timezone))
         .format('YYYY-MM-DD');
-    const input = await collectInput(user, settings, {
-        today,
-        now,
-        allOpen: true,
-    });
+    const input = await collectInput(user, settings, { today, now });
     const rows = await repository.findAllForUser(user.id);
     const tasks = candidates(input, settings, rows, settings.triage.dailyLimit);
     if (tasks.length === 0) return 0;
@@ -250,7 +244,7 @@ async function reviewForUser(user, now = new Date()) {
 }
 
 async function runTriageAssistant({ now = new Date() } = {}) {
-    const users = await briefRepository.findAllUsersForBriefJob();
+    const users = await repository.findAllUsersForJobs();
     let reviewed = 0;
     for (const user of users) {
         try {

@@ -143,6 +143,37 @@
     }
   },
   "triage": {
+    "settings": {
+      "calendars": "Gelezen agenda's",
+      "noCalendars": "Geen agenda. Voeg er een toe via Profiel › Agenda's.",
+      "lookahead": "Dagen vooruit kijken",
+      "alerts": "Meldingen",
+      "postponements": "Uitstellen voor een kaart",
+      "closedLookback": "Gecontroleerde afgeronde taken (dagen)",
+      "assistant": "AI-assistent",
+      "assistantEnabled": "AI-voorstellen in Te sorteren",
+      "assistantLimit": "Bekeken taken per dag",
+      "llmProvider": "AI-aanbieder: Profiel › AI-assistent",
+      "save": "Opslaan",
+      "saved": "Instellingen opgeslagen",
+      "saveError": "Instellingen konden niet worden opgeslagen.",
+      "loadError": "De instellingen konden niet worden geladen.",
+      "alertType": {
+        "conflict": "Conflicterende afspraken",
+        "event_in_work_hours": "Afspraak tijdens werkuren",
+        "duplicate": "Mogelijk duplicaat",
+        "deadline_in_note": "Deadline gevonden in een notitie",
+        "postponed": "Vaak uitgesteld"
+      }
+    },
+    "yes": "Ja",
+    "no": "Nee",
+    "context": {
+      "title": "Context",
+      "edit": "Context bewerken",
+      "save": "Opslaan",
+      "delete": "Verwijderen"
+    },
     "mail": {
       "noSubject": "(geen onderwerp)",
       "draft": "Concept klaar:",
@@ -635,8 +666,7 @@
             "events": "Gebeurtenissen",
             "permission": {
                 "events": "Luistert naar gebeurtenissen",
-                "routes": "Biedt eigen routes aan",
-                "brief": "Writes the daily brief"
+                "routes": "Biedt eigen routes aan"
             },
             "enabled": "Aan",
             "needsApproval": "Deze versie vraagt meer dan voorheen. Zet hem opnieuw aan om de rechten en gebeurtenissen goed te keuren.",
@@ -5958,210 +5988,6 @@
       "addedToProject": "Toegevoegd aan het project"
     }
   },
-  "dailyBrief": {
-    "sectionName": {
-      "verdict": "Oordeel",
-      "timeline": "Komende dagen",
-      "tonight": "Prioriteiten van vandaag",
-      "moves": "Te verplaatsen",
-      "anticipate": "Vooruit te denken",
-      "replies": "Verwachte antwoorden",
-      "inbox": "Inbox",
-      "resolved": "Klaar"
-    },
-    "priority": {
-      "consequence": "Gevolg",
-      "blocking": "Blokkeert anderen",
-      "money_deadline": "Geld of deadline",
-      "planned_load": "Geplande belasting"
-    },
-    "alertType": {
-      "conflict": "Conflicterende afspraken",
-      "overload": "Overbelasting",
-      "duplicate": "Mogelijk duplicaat",
-      "deadline_in_note": "Deadline gevonden in een notitie",
-      "postponed": "Vaak uitgesteld",
-      "dependency": "Afhankelijkheid",
-      "event_in_work_hours": "Afspraak tijdens werkuren"
-    },
-    "source": {
-      "calendar": "Agenda's",
-      "mail": "Mailagent",
-      "llm": "AI-herschrijving",
-      "voice": "Stem",
-      "agent": "Agent"
-    },
-    "settings": {
-      "linkThemes": "Linkthema's door AI",
-      "triageLimit": "Bekeken taken per dag",
-      "triageEnabled": "AI-voorstellen in Te sorteren",
-      "postponements": "Uitstellen voor een kaart",
-      "maxMoves": "Getoonde verplaatsingen",
-      "maxTonight": "Getoonde prioriteiten",
-      "closedLookback": "Gecontroleerde afgeronde taken (dagen)",
-      "title": "Dagelijkse briefing",
-      "description": "Elke ochtend een samenvatting: de komende dagen, wat er voor vanavond overblijft en wat kan verschuiven.",
-      "status": "Bronstatus",
-      "timezoneWarning": "De tijdzone is niet ingesteld: de tijden van de briefing kunnen onjuist zijn.",
-      "showOnToday": "Briefing tonen bij Vandaag",
-      "generation": "Generatie",
-      "enabled": "Elke ochtend genereren",
-      "time": "Tijd",
-      "days": "Dagen",
-      "sections": "Secties",
-      "sectionsHint": "Een niet-aangevinkte sectie wordt verborgen; de volgorde is die van de lijst.",
-      "moveUp": "{{name}} omhoog verplaatsen",
-      "moveDown": "{{name}} omlaag verplaatsen",
-      "sources": "Gelezen agenda's",
-      "noCalendars": "Geen agenda. Voeg er een toe via Profiel › Agenda's.",
-      "lookahead": "Dagen vooruit kijken",
-      "evening": "Avond en belasting",
-      "eveningHint": "Werkuren stel je in bij Vandaag (focusblokken).",
-      "openToday": "Vandaag openen",
-      "eveningStart": "Begin",
-      "eveningEnd": "Einde",
-      "eveningMinutes": "Minuten",
-      "dayNote": "Dagnotitie",
-      "arbitrage": "Rangschikking",
-      "priorities": "Prioriteitsvolgorde",
-      "alerts": "Meldingen",
-      "writing": "Opstellen",
-      "llmEnabled": "Samenvatting en redenen door AI",
-      "llmProvider": "AI-aanbieder: Profiel › AI-assistent",
-      "tone": "Toon",
-      "instructions": "Instructies",
-      "retention": "Bewaartermijn",
-      "decisionsDays": "Bewaarde beslissingen (dagen)",
-      "audioDays": "Bewaard audio (dagen)",
-      "voice": "Stem",
-      "voiceEnabled": "Briefing hardop voorlezen",
-      "piperUrl": "Piper-adres",
-      "voiceName": "Stem",
-      "speed": "Snelheid",
-      "save": "Opslaan",
-      "saved": "Instellingen opgeslagen",
-      "saveError": "Instellingen konden niet worden opgeslagen.",
-      "loadError": "Briefinginstellingen konden niet worden geladen.",
-      "eveningRemove": "Verwijderen",
-      "review": {
-        "title": "Avondevaluatie",
-        "enabled": "Avondevaluatie tonen na het overschakelmoment",
-        "switchTime": "Overschakelmoment naar de avondevaluatie"
-      }
-    },
-    "hours": "{{hours}} u",
-    "hoursMinutes": "{{hours}} u {{rest}}",
-    "minutes": "{{count}} min",
-    "task": {
-      "complete": "Klaar",
-      "done": "«{{name}}» klaar",
-      "reopened": "«{{name}}» heropend",
-      "error": "De taak kon niet worden bijgewerkt."
-    },
-    "decision": {
-      "error": "Je keuze kon niet worden opgeslagen."
-    },
-    "loadError": "De briefing kon niet worden geladen.",
-    "generateError": "Genereren mislukt.",
-    "generateNow": "Nu genereren",
-    "generating": "Bezig met genereren…",
-    "regenerate": "Opnieuw genereren",
-    "empty": "Nog geen briefing voor vandaag.",
-    "failed": "De laatste generatie is mislukt. De vorige briefing blijft bewaard.",
-    "settingsLink": "Briefinginstellingen",
-    "counters": {
-      "overdue": "te laat",
-      "today": "vandaag"
-    },
-    "timeline": {
-      "today": "Vandaag",
-      "planned": "{{minutes}} min",
-      "ofCapacity": "{{planned}} aan taken voor {{capacity}} vrije tijd",
-      "over": "Overbelast: {{planned}} aan taken voor {{capacity}} vrije tijd",
-      "duringWork": "tijdens werk",
-      "legendWork": "Werk",
-      "legendEvening": "Avond",
-      "legendEvent": "Afspraak",
-      "legendConflict": "Conflict"
-    },
-    "tonight": {
-      "ofCapacity": "{{planned}} / {{capacity}}"
-    },
-    "moves": {
-      "acceptAria": "Verplaatsen naar {{date}}",
-      "moved": "«{{name}}» verplaatst",
-      "otherDate": "Andere datum"
-    },
-    "anticipate": {
-      "yes": "Ja",
-      "no": "Nee",
-      "precise": "Specificeren",
-      "preciseLabel": "Details",
-      "save": "Opslaan",
-      "answered": "Antwoord opgeslagen",
-      "less": "Minder van dit soort",
-      "options": "Meldingsopties"
-    },
-    "feedback": {
-      "useful": "Nuttig",
-      "noise": "Niet nuttig",
-      "fewer": "Je ziet minder meldingen van dit type",
-      "question": "Had je hier iets aan?"
-    },
-    "status": {
-      "configured": "Ingesteld",
-      "missing": "Niet ingesteld",
-      "failing": "Mislukt"
-    },
-    "card": {
-      "title": "Mijn dag",
-      "open": "Bekijk de briefing",
-      "error": "De briefing is niet beschikbaar."
-    },
-    "context": {
-      "title": "Context",
-      "edit": "Context bewerken",
-      "save": "Opslaan",
-      "delete": "Verwijderen"
-    },
-    "evening": {
-      "switchToMorning": "Bekijk het ochtendoverzicht",
-      "switchToEvening": "Bekijk de avondevaluatie",
-      "counters": {
-        "done": "klaar",
-        "tonight": "vanavond",
-        "slipped": "uitgesteld"
-      },
-      "sections": {
-        "done": "Vandaag klaar",
-        "slipped": "Schuift op",
-        "tomorrow": "Morgen"
-      },
-      "carryDone": "« {{name}} » verplaatst naar morgen",
-      "carryError": "Kon de taak niet verplaatsen.",
-      "emptyTonight": "Vanavond is er niets meer te doen.",
-      "emptyDone": "Vandaag niets afgerond.",
-      "emptySlipped": "Niets schuift op.",
-      "loadError": "Kon de avondevaluatie niet laden.",
-      "actions": {
-        "menu": "Acties voor “{{name}}”",
-        "tomorrow": "Morgen",
-        "dueDate": "Datum kiezen",
-        "dueLabel": "Vervaldatum",
-        "later": "Later",
-        "cancel": "Laten vallen"
-      },
-      "state": {
-        "due": "Vervalt: {{date}}",
-        "cancelled": "Gestopt"
-      },
-      "dueDone": "“{{name}}” vervalt {{date}}",
-      "laterDone": "“{{name}}” voor later gezet",
-      "cancelDone": "“{{name}}” gestopt",
-      "tonightTitle": "Vanavond"
-    },
-    "preparedAt": "voorbereid om {{time}}"
-  },
   "agents": {
     "title": "Agents",
     "description": "De agent leest mail en maakt concepten. Cadence bewaart geen mailgegevens.",
@@ -6203,7 +6029,6 @@
     "appointmentLabel": "{{title}}, {{range}}",
     "backToList": "Lijst",
     "blockLabel": "{{title}}, {{range}}",
-    "brief": "Dagoverzicht",
     "calendar": "Dagkalender",
     "calendarButton": "Agenda",
     "calendarLabel": "Dagkalender",

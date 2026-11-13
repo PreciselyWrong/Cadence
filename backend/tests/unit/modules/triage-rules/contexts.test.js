@@ -2,7 +2,7 @@
 
 const {
     isSilenced,
-} = require('../../../../modules/daily-plan/brief/rules/contexts');
+} = require('../../../../modules/triage/core/rules/contexts');
 
 describe('isSilenced', () => {
     const contexts = [

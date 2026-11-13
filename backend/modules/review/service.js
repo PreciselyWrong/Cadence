@@ -88,7 +88,7 @@ const PUSH_RULE_COLUMNS = [
 // Frequently pushed open tasks, with their push summary, most pushed first.
 // Reads only the last 30 days of the user's own due changes and plans.
 // `all` keeps every task that was pushed at all, whatever the frequency
-// threshold: the daily brief compares the count with its own threshold.
+// threshold: triage compares the count with its own threshold.
 async function computePushed(user, timezone, today, { all = false } = {}) {
     const sinceDay = addDays(today, -WINDOW_DAYS - 1);
     const since = moment.tz(sinceDay, timezone).toDate();

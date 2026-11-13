@@ -1,8 +1,9 @@
 const { DataTypes } = require('sequelize');
 const { uid } = require('../utils/uid');
 
-// A proposal the daily brief showed, or an answer or feedback the user gave
-// (modules/daily-plan/brief/decisions.js). Never a mail body.
+// A proposal the daily brief showed, or an answer or feedback the user gave.
+// Unused since the brief was retired on 2026-11-12: the table stays so the
+// schema of migrated and new databases still match (docs/database.md).
 module.exports = (sequelize) => {
     const BriefProposal = sequelize.define(
         'BriefProposal',

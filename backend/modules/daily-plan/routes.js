@@ -23,14 +23,6 @@ router.get('/daily-plan/hours', dailyPlanController.getDayHours);
 router.put('/daily-plan/hours', dailyPlanController.saveDayHours);
 router.get('/daily-plan/focus-blocks', dailyPlanController.getFocusBlocks);
 router.put('/daily-plan/focus-blocks', dailyPlanController.saveFocusBlocks);
-router.get('/daily-plan/brief/settings', dailyPlanController.getBriefSettings);
-router.put('/daily-plan/brief/settings', dailyPlanController.saveBriefSettings);
-router.get('/daily-plan/brief/status', dailyPlanController.getBriefStatus);
-router.get('/daily-plan/brief/voices', dailyPlanController.getBriefVoices);
-router.post(
-    '/daily-plan/brief/voice-preview',
-    dailyPlanController.previewBriefVoice
-);
 router.post(
     '/daily-plan/ai/draft',
     requireFeature('ai'),
@@ -40,27 +32,6 @@ router.post(
     '/daily-plan/ai/estimates',
     requireFeature('ai'),
     dailyPlanController.aiEstimates
-);
-router.get('/daily-plan/:date/brief', dailyPlanController.getBrief);
-router.post('/daily-plan/:date/brief', dailyPlanController.regenerateBrief);
-router.get('/daily-plan/:date/brief/audio', dailyPlanController.getBriefAudio);
-router.get('/daily-plan/:date/evening', dailyPlanController.getEvening);
-router.post(
-    '/daily-plan/:date/brief/decisions',
-    dailyPlanController.recordBriefDecision
-);
-router.post(
-    '/daily-plan/:date/brief/answers',
-    dailyPlanController.answerBriefQuestion
-);
-router.get('/daily-plan/brief/contexts', dailyPlanController.listBriefContexts);
-router.patch(
-    '/daily-plan/brief/contexts/:uid',
-    dailyPlanController.updateBriefContext
-);
-router.delete(
-    '/daily-plan/brief/contexts/:uid',
-    dailyPlanController.deleteBriefContext
 );
 router.put('/daily-plan/:date', dailyPlanController.replace);
 router.patch('/daily-plan/:date', dailyPlanController.patch);
