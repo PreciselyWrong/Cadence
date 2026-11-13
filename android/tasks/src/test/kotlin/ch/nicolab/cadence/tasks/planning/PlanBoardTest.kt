@@ -166,10 +166,11 @@ class PlanBoardTest {
     }
 
     @Test
-    fun `étaler prend les cartes ouvertes des sept jours et laisse les occurrences virtuelles`() {
+    fun `étaler compte les lignes du plan, pas les tâches seulement dues, et laisse les occurrences virtuelles`() {
         val plan = listOf(PlanEntry("lourde", today, null, null))
-        val tasks = listOf(task("lourde", minutes = 120))
-        val days = PlanBoard.days(tasks, plan, today, emptyList(), emptyMap(), zone)
+        val dueOnly = task("due", due = tomorrow, minutes = 300)
+        val tasks = listOf(task("lourde", minutes = 120), dueOnly)
+        val days = PlanBoard.days(tasks, plan, today, emptyList(), mapOf(tomorrow to listOf(dueOnly)), zone)
         val late = task("retard", due = today.minusDays(3))
         val ghost = late.copy(uid = "serie", virtual = true)
         assertEquals(listOf(AddTask(tomorrow, "retard")), PlanBoard.spreadWrites(listOf(late, ghost), days, today))

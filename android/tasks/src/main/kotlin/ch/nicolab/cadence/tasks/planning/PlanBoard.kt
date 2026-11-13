@@ -204,12 +204,12 @@ internal object PlanBoard {
     }
 
     /**
-     * Écritures d'« Étaler sur 7 jours » sur la page : la charge d'un jour vient de ses cartes ouvertes telles que
-     * Planifier les montre (prévues et seulement dues), avec la durée estimée de la tâche. Les occurrences virtuelles
+     * Écritures d'« Étaler sur 7 jours » sur la page : la charge d'un jour vient de ses lignes du plan (cartes prévues,
+     * terminées comprises ; pas les seulement dues), avec la durée estimée de la tâche, comme le web. Les occurrences virtuelles
      * d'une série ne se prévoient pas ; une tâche n'est posée qu'une fois.
      */
     fun spreadWrites(overdue: List<TaskItem>, days: List<PlanDay>, today: LocalDate): List<PlanEdit> {
-        val planned = days.associate { day -> day.date to day.open.map { it.task.estimatedMinutes } }
+        val planned = days.associate { day -> day.date to (day.open + day.done).filter { it.planned }.map { it.task.estimatedMinutes } }
         val tasks = overdue.filterNot { it.virtual }.distinctBy { it.uid }
         return spread(tasks, planned, today).map { (uid, day) -> AddTask(day, uid) }
     }
