@@ -47,7 +47,14 @@ interface Destination {
     selectedIcon: React.ReactNode;
 }
 
-const MobileBottomBar: React.FC = () => {
+interface MobileBottomBarProps {
+    // The open sidebar sits over the bar's left end at tablet widths.
+    sidebarOpen?: boolean;
+}
+
+const MobileBottomBar: React.FC<MobileBottomBarProps> = ({
+    sidebarOpen = false,
+}) => {
     const { t } = useTranslation();
     const { pathname } = useLocation();
     const navigate = useNavigate();
@@ -110,7 +117,7 @@ const MobileBottomBar: React.FC = () => {
                 </button>
             )}
             <nav
-                className="cdm-bar"
+                className={`cdm-bar${sidebarOpen ? ' cdm-bar--sidebar-open' : ''}`}
                 aria-label={t('mobileNav.label', 'Main navigation')}
                 data-testid="mobile-bottom-bar"
             >

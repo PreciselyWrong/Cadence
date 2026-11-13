@@ -22,6 +22,7 @@ import { Area } from '../../entities/Area';
 import { useTelegramStatus } from '../../contexts/TelegramStatusContext';
 import { getApiPath } from '../../config/paths';
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts';
+import { isSidebarDrawer } from '../../utils/sidebarWidth';
 import {
     KeyboardShortcutsConfig,
     ShortcutAction,
@@ -121,7 +122,7 @@ const SidebarFooter: React.FC<SidebarFooterProps> = ({
         switch (type) {
             case 'Inbox':
                 navigate('/upcoming');
-                if (window.innerWidth < 1024) {
+                if (isSidebarDrawer()) {
                     setIsSidebarOpen(false);
                 }
                 break;
@@ -149,7 +150,7 @@ const SidebarFooter: React.FC<SidebarFooterProps> = ({
     const handleLauncherSelect = (path: string, title: string) => {
         navigate(path, { state: { title } });
         setIsLauncherOpen(false);
-        if (window.innerWidth < 1024) {
+        if (isSidebarDrawer()) {
             setIsSidebarOpen(false);
         }
     };

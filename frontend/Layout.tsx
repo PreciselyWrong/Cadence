@@ -42,6 +42,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { TaskRowExpansionProvider } from './components/Task/TaskRow/TaskRowExpansionContext';
 import { getApiPath } from './config/paths';
 import { KeyboardShortcutsConfig } from './utils/keyboardShortcutsService';
+import { isSidebarDrawer } from './utils/sidebarWidth';
 
 interface LayoutProps {
     currentUser: User;
@@ -195,7 +196,7 @@ const Layout: React.FC<LayoutProps> = ({
         // Create notes in the Notes page editor instead of a modal: navigate
         // with a flag that Notes.tsx consumes to open a blank inline editor.
         navigate('/notes', { state: { newNote: Date.now() } });
-        if (window.innerWidth < 1024) {
+        if (isSidebarDrawer()) {
             setIsSidebarOpen(false);
         }
     };
@@ -456,7 +457,7 @@ const Layout: React.FC<LayoutProps> = ({
                     </div>
                 </div>
             </div>
-            <MobileBottomBar />
+            <MobileBottomBar sidebarOpen={isSidebarOpen} />
             {overlays}
         </div>
     );

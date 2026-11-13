@@ -45,6 +45,19 @@
     box-shadow: 0 10px 24px rgb(0 0 0 / 0.16);
 }
 
+/* From `sm` the sidebar is a rail or a pushed panel on the left, so the bar
+   starts past it instead of sliding under it (until `md`, where the bar
+   hides). */
+@media (min-width: 640px) and (max-width: 767px) {
+    .cdm-bar {
+        left: calc(3.5rem + 16px);
+    }
+
+    .cdm-bar.cdm-bar--sidebar-open {
+        left: calc(var(--sidebar-width, 22rem) + 16px);
+    }
+}
+
 @supports not (backdrop-filter: blur(1px)) {
     .cdm-bar {
         background: color-mix(in srgb, var(--cdm-bg) 92%, transparent);

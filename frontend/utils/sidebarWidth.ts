@@ -18,3 +18,10 @@ export const sidebarPercentToRem = (percent: number): number =>
 
 export const sidebarPxToPercent = (px: number, rootFontSizePx: number) =>
     clampSidebarPercent((px / (SIDEBAR_DEFAULT_REM * rootFontSizePx)) * 100);
+
+// Below `sm` the open sidebar is a drawer over the page; from `sm` it pushes
+// the page (Layout's margin, Sidebar's width), so it stays open on navigation.
+export const SIDEBAR_DRAWER_MAX_WIDTH = 640;
+
+export const isSidebarDrawer = (): boolean =>
+    window.innerWidth < SIDEBAR_DRAWER_MAX_WIDTH;

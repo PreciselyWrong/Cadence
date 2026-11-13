@@ -37,7 +37,7 @@ import { canOpenAccess } from '../entities/Role';
 import { KeyboardShortcutsConfig } from '../utils/keyboardShortcutsService';
 import { useStore } from '../store/useStore';
 import type { SidebarVisibleSections } from './Profile/types';
-import { sidebarPercentToRem } from '../utils/sidebarWidth';
+import { isSidebarDrawer, sidebarPercentToRem } from '../utils/sidebarWidth';
 import type { SidebarSectionId } from '../utils/sidebarLayout';
 import {
     RAIL_PANEL_KIND,
@@ -162,7 +162,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
     const handleNavClick = (path: string, title: string) => {
         navigate(path, { state: { title } });
-        if (window.innerWidth < 1024) {
+        if (isSidebarDrawer()) {
             setIsSidebarOpen(false);
         }
     };

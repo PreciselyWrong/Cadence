@@ -959,3 +959,9 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Décision** : la notification (ou `?proposal=<uid>`) ouvre la feuille « Week-end » (`frontend/components/Weekend/WeekendSheet.tsx`, règles pures `weekendModel.ts`) : titre et phrase de l'agent, deux tuiles de jour (icône, `min° · max°`), un bloc par créneau dans l'ordre (« Samedi matin », météo à droite), trois puces « Mettre à l’agenda », « Autre idée », « Ignorer » plus « Remarque » ; la recommandation de l'agent est présélectionnée ; un créneau occupé n'a pas de puce ; « Plus beau ailleurs » seulement s'il y a des lieux. Les choix restent locaux jusqu'à « Valider », qui envoie un seul appel. Pied : compte des choix et « Valider ».
 - **Icônes** : Heroicons n'a pas de pictogrammes pluie ou neige ; ils sont approchés (averse → nuage avec flèche, neige → étincelles, brouillard → lignes) et le mot de la météo reste affiché.
 - **Android à reprendre** : même feuille, mêmes libellés d'état (« Ajout en cours », « Ajouté à l’agenda », « Pas ajouté »), même présélection, puce « Mettre à l’agenda » seule pleine quand elle est choisie.
+
+### 2026-11-13 — Barre du bas et panneau de la barre latérale sur tablette et téléphone
+
+- **Problème** : entre 640 et 767 px, la barre du bas (fixe, à 16 px du bord) passait sous le rail de la barre latérale ; et sous 1024 px, changer de page refermait le panneau ouvert (Notes, Objectifs, Habitudes).
+- **Décision** : la barre commence après le rail (ou après le panneau ouvert, `cdm-bar--sidebar-open`) jusqu'à `md` ; la fermeture au changement de page ne vaut qu'en tiroir (sous 640 px, `isSidebarDrawer()` dans `frontend/utils/sidebarWidth.ts`), à partir de 640 px le panneau reste ouvert.
+- **Android à reprendre** : rien (la barre Android ne partage pas l'écran avec un rail).

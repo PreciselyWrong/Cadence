@@ -77,3 +77,21 @@ describe('settings menu groups', () => {
         expect(groups[0].tabs.map((x) => x.id)).toEqual(['general', 'billing']);
     });
 });
+
+describe('mobile bottom bar beside the sidebar', () => {
+    it('is marked when the sidebar is open so it clears the panel', () => {
+        mockPath = '/today';
+        render(<MobileBottomBar sidebarOpen />);
+        expect(screen.getByTestId('mobile-bottom-bar')).toHaveClass(
+            'cdm-bar--sidebar-open'
+        );
+    });
+
+    it('is not marked while the sidebar is collapsed to its rail', () => {
+        mockPath = '/today';
+        render(<MobileBottomBar />);
+        expect(screen.getByTestId('mobile-bottom-bar')).not.toHaveClass(
+            'cdm-bar--sidebar-open'
+        );
+    });
+});
