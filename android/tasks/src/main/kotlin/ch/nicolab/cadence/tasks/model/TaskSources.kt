@@ -2,8 +2,11 @@ package ch.nicolab.cadence.tasks.model
 
 import ch.nicolab.cadence.tasks.links.LinkExtractor
 
-/** Badge d'origine d'une tâche : une lettre, un nom, et la page à ouvrir s'il y en a une (web : `taskSource.ts`). */
-data class TaskSourceBadge(val letter: String, val label: String, val url: String?)
+/**
+ * Badge d'origine d'une tâche : une lettre, un nom, la page à ouvrir s'il y en a une, et le chemin serveur de l'icône
+ * de son site (`/api/links/favicon`, lu par le serveur ; web : `taskSource.ts`, `linksService.faviconUrl`).
+ */
+data class TaskSourceBadge(val letter: String, val label: String, val url: String?, val faviconPath: String? = null)
 
 /** Origine d'une tâche (`docs/00-tasks-behavior.md`, « Origin badge »), sans Android. */
 object TaskSources {
@@ -23,7 +26,14 @@ object TaskSources {
     fun of(task: TaskItem): TaskSourceBadge? {
         if (task.fileBacked) return null
         val (letter, label) = badges[task.source] ?: return null
-        return TaskSourceBadge(letter, label, task.sourceUrl?.trim()?.takeIf(::isWeb))
+        val url = task.sourceUrl?.trim()?.takeIf(::isWeb)
+        return TaskSourceBadge(letter, label, url, url?.let(::faviconPath))
+    }
+
+    /** Chemin serveur de l'icône du site de [url] (`/api/links/favicon?host=`), ou null sans hôte. */
+    fun faviconPath(url: String): String? {
+        val host = runCatching { java.net.URI(url).host }.getOrNull()?.lowercase()?.takeIf { it.isNotBlank() } ?: return null
+        return "/api/links/favicon?host=" + java.net.URLEncoder.encode(host, Charsets.UTF_8)
     }
 
     /** Origine d'une tâche née d'une idée : une idée qui n'est qu'une adresse donne `link` et cette adresse. */

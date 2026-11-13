@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Task } from '../../entities/Task';
 import { taskSource, TaskSourceKind } from '../../utils/taskSource';
+import { faviconUrl } from '../../utils/linksService';
 import TodoMdBadge from './TodoMdBadge';
 
-// A letter mark per origin. Plain letters on a flat colour, never a logo.
+// With a web address, the site's own icon (read by the server); otherwise,
+// or when it does not load, a letter on a flat colour per origin.
 const MARKS: Record<
     Exclude<TaskSourceKind, 'todo_md'>,
     { letter: string; className: string }
@@ -24,20 +26,32 @@ const TaskSourceBadge: React.FC<{ task: Task; className?: string }> = ({
     className = '',
 }) => {
     const { t } = useTranslation();
+    const [iconFailed, setIconFailed] = useState(false);
     const source = taskSource(task);
     if (!source) return null;
     if (source.kind === 'todo_md') return <TodoMdBadge />;
 
     const mark = MARKS[source.kind];
+    const icon = source.url && !iconFailed ? faviconUrl(source.url) : null;
     const classes = `inline-flex h-5 max-w-[10rem] flex-shrink-0 items-center gap-1 rounded-full bg-gray-100 px-1.5 text-gray-600 dark:bg-gray-800 dark:text-gray-300 ${className}`;
     const content = (
         <>
-            <span
-                aria-hidden="true"
-                className={`flex h-3.5 w-3.5 flex-shrink-0 items-center justify-center rounded-[4px] text-[9px] font-bold leading-none text-white ${mark.className}`}
-            >
-                {mark.letter}
-            </span>
+            {icon ? (
+                <img
+                    src={icon}
+                    alt=""
+                    loading="lazy"
+                    onError={() => setIconFailed(true)}
+                    className="h-3.5 w-3.5 flex-shrink-0 rounded-[3px] object-contain"
+                />
+            ) : (
+                <span
+                    aria-hidden="true"
+                    className={`flex h-3.5 w-3.5 flex-shrink-0 items-center justify-center rounded-[4px] text-[9px] font-bold leading-none text-white ${mark.className}`}
+                >
+                    {mark.letter}
+                </span>
+            )}
             <span className="truncate text-[11px] font-medium">
                 {t(`taskSource.${source.kind}`, source.label)}
             </span>

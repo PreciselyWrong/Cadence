@@ -34,10 +34,35 @@ describe('TaskSourceBadge', () => {
         expect(link).toHaveAttribute('target', '_blank');
         expect(link).toHaveAttribute('rel', 'noopener noreferrer');
         expect(link).toHaveTextContent('Gmail');
-        expect(link.querySelector('span')).toHaveTextContent('M');
+        expect(link.querySelector('img')?.getAttribute('src')).toContain(
+            'host=mail.google.com'
+        );
 
         fireEvent.click(link);
         expect(onRowClick).not.toHaveBeenCalled();
+    });
+
+    it("shows the site's favicon, and the letter when it cannot load", () => {
+        render(
+            <TaskSourceBadge
+                task={task({
+                    source: 'link',
+                    source_url: 'https://Blog.Example.com/post/1',
+                })}
+            />
+        );
+        const badge = screen.getByTestId('task-source-badge');
+        const img = badge.querySelector('img') as HTMLImageElement;
+        expect(img).not.toBeNull();
+        expect(img.getAttribute('src')).toContain(
+            'links/favicon?host=blog.example.com'
+        );
+        expect(img).toHaveAttribute('alt', '');
+        expect(badge.querySelector('span[aria-hidden]')).toBeNull();
+
+        fireEvent.error(img);
+        expect(badge.querySelector('img')).toBeNull();
+        expect(badge.querySelector('span[aria-hidden]')).toHaveTextContent('L');
     });
 
     it('shows an origin without a link as a plain label', () => {

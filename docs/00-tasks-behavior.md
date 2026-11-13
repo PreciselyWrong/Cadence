@@ -675,7 +675,7 @@ A mode that transforms a task into a habit tracker with streak counting, target 
 
 ## Origin badge (`source`, `source_url`)
 
-A task records where it came from in `tasks.source` (`gmail`, `telegram`, `mcp`, `android`, `desktop`, `link`, `todo_md`, `web`). When it points to a web page, `tasks.source_url` holds it (http or https only). The web shows the origin as a small badge: a letter mark (Gmail « M », Telegram « T », MCP « C », Android « A », Desktop « D », Link « L ») and its name. With a `source_url`, a click opens that page in a new tab without opening the task. A task mirrored from a TODO.md file keeps its TODO.md badge (it is recognised by `source_key`). A plain web task has no source and no badge.
+A task records where it came from in `tasks.source` (`gmail`, `telegram`, `mcp`, `android`, `desktop`, `link`, `todo_md`, `web`). When it points to a web page, `tasks.source_url` holds it (http or https only). The web and Android show the origin as a small badge: an icon and its name. With a `source_url`, the icon is the site's own favicon; without one, or while the favicon is missing or fails to load, it is a letter mark (Gmail « M », Telegram « T », MCP « C », Android « A », Desktop « D », Link « L »). With a `source_url`, a click opens that page in a new tab without opening the task. A task mirrored from a TODO.md file keeps its TODO.md badge (it is recognised by `source_key`). A plain web task has no source and no badge.
 
 Who sets the origin:
 - MCP `create_task` sets `mcp` unless `source` is given. `update_task` sets or clears `source` and `source_url`.
@@ -683,6 +683,8 @@ Who sets the origin:
 - Turning an inbox item into a task (`PATCH /api/inbox/:uid/process` with `task_uid`) copies the item's origin when it is a task origin (`telegram`, `desktop`, `mcp`, ...); a free-text origin such as `manual` is not copied. An item that is only a web address also gives its address as `source_url`, with `link` when it had no origin. A task that already has an origin keeps it.
 - The `task` sync entity and backups carry both fields.
 - Nothing creates Gmail tasks by itself: `integrations/hermes-gmail` only reads mail. A caller that makes a task from a message passes `source: "gmail"` and the message link as `source_url`.
+
+Favicons: `GET /api/links/favicon?host=<host>` (signed in) answers the icon of a public host, read by the server only, so the site never sees who looks at the task. It tries `https://<host>/favicon.ico`, then the icon the home page names (`<link rel="icon">`, `shortcut icon`, `apple-touch-icon`), with the SSRF guard on every hop, 100 KB at most, PNG, ICO, GIF, JPEG or WebP (SVG refused: served from Cadence it could run script). Icons are kept in memory by host, a found one for a week and a missing one for an hour; the answer carries `Cache-Control: private, max-age=604800`, `nosniff` and a sandbox CSP. 400 for anything that is not a dotted host name, 404 when the site has no icon. Code: `backend/modules/links/favicons.js`.
 
 Code: `backend/modules/tasks/core/source.js` (values and validation), `frontend/utils/taskSource.ts` (what the badge shows), `frontend/components/Shared/TaskSourceBadge.tsx`.
 

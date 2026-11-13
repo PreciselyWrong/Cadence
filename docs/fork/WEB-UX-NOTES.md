@@ -822,3 +822,9 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Demande** : lancer depuis la page Plan (et plus tard d'autres pages) une action d'un agent, comme « Planifier ma semaine » avec Hermes.
 - **Décision** : un plugin déclare des `actions` dans son manifeste ; Cadence dessine un bouton secondaire dans l'en-tête des pages choisies (Plan à gauche d'Affichage, Aujourd'hui, Inbox, page de projet, À trier). Un clic ouvre la page du plugin avec l'action et ce que la page montre (`docs/46-plugins.md`, « Page actions »). Rien n'apparaît sans plugin actif.
 - **Android à reprendre** : fait dans la même étape (Planifier, Aujourd'hui, Inbox, projet, À trier).
+
+### 2026-11-13 — Vrais favicons sur la pastille d'origine
+
+- **Demande** : voir le vrai favicon (Gmail, le site d'un lien) sur la pastille d'origine d'une tâche, pas une lettre.
+- **Décision** : avec une adresse d'origine, la pastille montre l'icône du site, lue par le serveur (`/api/links/favicon`, le site ne voit pas qui regarde) ; la lettre reste sans adresse ou si l'icône manque.
+- **Android à reprendre** : fait dans la même étape (lignes de tâches et fiche, par Coil avec la clé).

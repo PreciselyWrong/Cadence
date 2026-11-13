@@ -2,6 +2,7 @@
 
 const express = require('express');
 const links = require('./service');
+const favicons = require('./favicons');
 const { logError } = require('../../services/logService');
 
 const router = express.Router();
@@ -61,6 +62,24 @@ router.post('/links/task', async (req, res) => {
         }
         logError({ error }, 'Link task capture failed');
         res.status(500).json({ error: 'Internal server error' });
+    }
+});
+router.get('/links/favicon', async (req, res) => {
+    const host = favicons.hostOf(req.query.host);
+    if (!host) return res.status(400).json({ error: 'Invalid host' });
+    try {
+        const icon = await favicons.faviconOf(host);
+        if (!icon) return res.status(404).end();
+        res.set({
+            'Content-Type': icon.type,
+            'Cache-Control': `private, max-age=${favicons.FOUND_FOR_MS / 1000}`,
+            'X-Content-Type-Options': 'nosniff',
+            'Content-Security-Policy': "default-src 'none'; sandbox",
+        });
+        res.send(icon.body);
+    } catch (error) {
+        logError({ error, host }, 'Favicon request failed');
+        res.status(500).end();
     }
 });
 router.get(

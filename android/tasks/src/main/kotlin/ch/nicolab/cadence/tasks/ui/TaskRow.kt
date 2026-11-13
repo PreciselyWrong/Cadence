@@ -396,12 +396,15 @@ internal fun SourceMark(badge: TaskSourceBadge, modifier: Modifier = Modifier) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(3.dp),
     ) {
-        Box(
-            Modifier.size(14.dp).clip(RoundedCornerShape(3.dp)).background(palette.containerHigh),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(badge.letter, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = palette.onSurfaceVariant, maxLines = 1)
+        SiteIcon(badge.faviconPath) {
+            Box(
+                Modifier.size(14.dp).clip(RoundedCornerShape(3.dp)).background(palette.containerHigh),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(badge.letter, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = palette.onSurfaceVariant, maxLines = 1)
+            }
         }
         Text(badge.label, style = MaterialTheme.typography.labelMedium, color = palette.onSurfaceVariant, maxLines = 1)
     }
 }
+

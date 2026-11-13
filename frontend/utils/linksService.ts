@@ -113,3 +113,18 @@ export const checkProjectPages = async (
     await handleAuthResponse(response, 'Failed to check the pages.');
     return (await response.json()).results;
 };
+
+// The server's copy of a site's icon, for the origin badge of a task; the
+// browser never asks the site itself.
+export const faviconUrl = (pageUrl: string): string | null => {
+    try {
+        const { hostname } = new URL(pageUrl);
+        return hostname
+            ? getApiPath(
+                  `links/favicon?host=${encodeURIComponent(hostname.toLowerCase())}`
+              )
+            : null;
+    } catch {
+        return null;
+    }
+};

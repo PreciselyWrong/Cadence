@@ -10,8 +10,17 @@ class TaskSourcesTest {
 
     @Test
     fun `une origine connue donne sa lettre et son nom, sa page seulement en http ou https`() {
-        assertEquals(TaskSourceBadge("M", "Gmail", "https://mail.google.com/x"), TaskSources.of(task("gmail", "https://mail.google.com/x")))
+        assertEquals(
+            TaskSourceBadge("M", "Gmail", "https://mail.google.com/x", "/api/links/favicon?host=mail.google.com"),
+            TaskSources.of(task("gmail", "https://mail.google.com/x")),
+        )
         assertEquals(TaskSourceBadge("C", "MCP", null), TaskSources.of(task("mcp", "javascript:alert(1)")))
+    }
+
+    @Test
+    fun `l'icône du site passe par le serveur, sans icône hors adresse web`() {
+        assertEquals("/api/links/favicon?host=blog.exemple.org", TaskSources.of(task("link", "https://Blog.Exemple.org/a?b=1"))?.faviconPath)
+        assertNull(TaskSources.of(task("telegram"))?.faviconPath)
     }
 
     @Test
