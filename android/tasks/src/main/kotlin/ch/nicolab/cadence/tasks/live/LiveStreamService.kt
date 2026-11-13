@@ -311,8 +311,8 @@ internal object LiveChannels {
  */
 internal suspend fun pluginPageIntent(context: Context, target: LiveTarget.Plugin): Intent? {
     val store = PluginsStore.of(context)
-    val item = store.menu().firstOrNull { it.id == target.id }
-        ?: pluginsClient(context).menu().getOrNull()?.also(store::saveMenu)?.firstOrNull { it.id == target.id }
+    val item = store.menu().items.firstOrNull { it.id == target.id }
+        ?: pluginsClient(context).menu().getOrNull()?.also(store::saveMenu)?.items?.firstOrNull { it.id == target.id }
         ?: return null
     return PluginPageActivity.intent(context, item, target.query).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 }

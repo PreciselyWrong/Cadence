@@ -51,6 +51,7 @@ import {
 import { useStore } from '../../store/useStore';
 import { TASK_SHEET_CLASS } from '../Task/taskSheet';
 import { openTaskPanel } from '../../store/taskPanelStore';
+import PluginActions from '../Plugins/PluginActions';
 const InboxItems: React.FC = () => {
     const { t } = useTranslation();
     const { showSuccessToast, showErrorToast, showUndoToast } = useToast();
@@ -587,6 +588,7 @@ const InboxItems: React.FC = () => {
                 title={t('inbox.title')}
                 actions={
                     <>
+                        <PluginActions place="inbox" />
                         <TriageEntry />
                         {inboxItems.length > 0 && (
                             <Button

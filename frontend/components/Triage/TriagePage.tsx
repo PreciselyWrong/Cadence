@@ -25,6 +25,7 @@ import {
     ClassifyPayload,
     dismissClassifySuggestion,
 } from '../../utils/autoClassifyService';
+import PluginActions from '../Plugins/PluginActions';
 
 const ACTION_LABELS: Record<TriageAction, [string, string]> = {
     rename: ['triage.action.rename', 'Renommer'],
@@ -260,6 +261,7 @@ const TriagePage: React.FC = () => {
         <PageShell template="list" className="pb-28 sm:pb-12">
             <PageHeader
                 title={t('triage.title', 'À trier')}
+                actions={<PluginActions place="triage" />}
                 meta={
                     items.length > 0
                         ? t('triage.left', '{{count}} à voir', {

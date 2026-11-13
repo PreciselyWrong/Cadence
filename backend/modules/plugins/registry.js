@@ -1,5 +1,6 @@
 'use strict';
 
+const notificationStream = require('../../utils/notificationStream');
 // Finds plugins on disk and runs the enabled ones inside the server process
 // (docs/46-plugins.md). Cadence never installs or updates a plugin: it reads
 // the folder as it is, and a reload reads it again.
@@ -185,6 +186,19 @@ async function notifyUser(pluginId, input = {}) {
             throw new Error('openPath must be a path inside Cadence');
         }
     }
+    if (data.replyPath !== undefined) {
+        // A text reply from the phone or the desktop is POSTed to this path
+        // under /api: only the plugin's own routes, no dot segments.
+        const path = String(data.replyPath);
+        const prefix = `/plugins/${pluginId}/x/`;
+        if (
+            !path.startsWith(prefix) ||
+            !/^[A-Za-z0-9\-_/]+$/.test(path) ||
+            path.split('/').some((part) => part === '.' || part === '..')
+        ) {
+            throw new Error('replyPath must be a route of this plugin');
+        }
+    }
     const { Notification } = require('../../models');
     return Notification.createNotification({
         userId,
@@ -208,9 +222,31 @@ async function readPluginNotification(pluginId, { userId, uid } = {}) {
         where: { uid, user_id: userId },
     });
     if (!row || row.data?.pluginId !== pluginId) return false;
-    if (!row.read_at) await row.update({ read_at: new Date() });
+    if (!row.read_at) {
+        await row.update({ read_at: new Date() });
+        notificationStream.publishRead(userId, [row], { byUser: false });
+    }
     return true;
 }
+
+// The person read a plugin's notification in Cadence (bell, banner, phone):
+// the plugin's ctx.notify.onRead handlers hear it, so its own copy follows.
+notificationStream.onUserRead((notification) => {
+    const plugin = running.get(notification.data?.pluginId);
+    if (!plugin?.readHandlers) return;
+    for (const handler of plugin.readHandlers) {
+        Promise.resolve()
+            .then(() =>
+                handler({ userId: notification.user_id, uid: notification.uid })
+            )
+            .catch((error) =>
+                logger.warn(
+                    { plugin: plugin.manifest.id, error: error.message },
+                    'Plugin read handler failed'
+                )
+            );
+    }
+});
 
 function buildContext(plugin, entry, row) {
     const { manifest } = entry;
@@ -277,6 +313,13 @@ function buildContext(plugin, entry, row) {
         // Marks read a notification this plugin created, once the person has
         // seen the item in the plugin's own page. Resolves false otherwise.
         ctx.notify.read = (input) => readPluginNotification(manifest.id, input);
+        plugin.readHandlers = [];
+        ctx.notify.onRead = (fn) => {
+            if (typeof fn !== 'function') {
+                throw new Error('ctx.notify.onRead needs a function');
+            }
+            plugin.readHandlers.push(fn);
+        };
     }
     if (manifest.permissions.includes('routes')) {
         plugin.router = express.Router();
@@ -302,6 +345,12 @@ async function runDisposers(plugin) {
 // throws and never leaves a half-started plugin behind.
 async function activate(entry, row) {
     const { manifest } = entry;
+    for (const warning of manifest.warnings) {
+        logger.warn(
+            { plugin: manifest.id, warning },
+            'Plugin manifest warning'
+        );
+    }
     ensureSubscribed();
     await deactivate(manifest.id);
 
@@ -344,12 +393,6 @@ async function activate(entry, row) {
         plugin.mod = require(entry.mainPath);
         if (typeof plugin.mod?.activate !== 'function') {
             throw new Error('The entry point must export activate(ctx)');
-    for (const warning of manifest.warnings) {
-        logger.warn(
-            { plugin: manifest.id, warning },
-            'Plugin manifest warning'
-        );
-    }
         }
         const ctx = buildContext(plugin, entry, row);
         await withTimeout(
@@ -461,6 +504,18 @@ function menuItems() {
         }));
 }
 
+// Header buttons of the plugins that run and have a page to open them in.
+function pageActions() {
+    return [...running.values()]
+        .filter((plugin) => plugin.manifest.menu)
+        .flatMap((plugin) =>
+            (plugin.manifest.actions || []).map((action) => ({
+                plugin: plugin.manifest.id,
+                ...action,
+            }))
+        );
+}
+
 // Starts what was left on at the last shutdown. Called once at boot, and by
 // tests to simulate a restart.
 async function start() {
@@ -501,6 +556,7 @@ module.exports = {
     routeHandler,
     uiHandler,
     menuItems,
+    pageActions,
     refreshSettings,
     isRunning,
     runningVersion,

@@ -1,6 +1,7 @@
 'use strict';
 
 const { ALL_EVENTS } = require('../../webhooks/events');
+const { parseActions } = require('./actions');
 
 // The plugin API this server speaks (docs/46-plugins.md). A manifest that
 // asks for a higher one needs a newer Cadence.
@@ -160,6 +161,11 @@ function parseManifest(raw) {
 
     const { menu, error: menuError } = parseMenu(raw.menu);
     if (menuError) return fail(menuError);
+    const { actions, error: actionsError } = parseActions(
+        raw.actions,
+        Boolean(menu)
+    );
+    if (actionsError) return fail(actionsError);
 
     let update = null;
     if (raw.update !== undefined && raw.update !== null) {
@@ -183,6 +189,7 @@ function parseManifest(raw) {
             settings,
             update,
             menu,
+            actions,
             warnings,
         },
     };

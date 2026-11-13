@@ -83,6 +83,37 @@ data class PluginList(val configured: Boolean, val plugins: List<Plugin>)
 /** Entrée de menu d'un plugin actif (`GET /api/plugins/menu`) ; sa page est servie à `/api/plugins/<id>/ui/<file>`. */
 data class PluginMenuItem(val id: String, val label: String, val path: String, val file: String)
 
+/** Bouton qu'un plugin ajoute en haut d'un écran ; [places] parmi plan, today, inbox, project, triage. */
+data class PluginAction(val plugin: String, val id: String, val label: String, val places: List<String>)
+
+/** Réponse de `GET /api/plugins/menu` : les pages des plugins actifs et leurs boutons d'action. */
+data class PluginMenu(val items: List<PluginMenuItem>, val actions: List<PluginAction>) {
+    companion object {
+        val EMPTY = PluginMenu(items = emptyList(), actions = emptyList())
+    }
+}
+
+/**
+ * Règles des boutons d'action (docs/46-plugins.md, « Actions de page ») : même comportement que le web
+ * (`frontend/components/Plugins/PluginActions.tsx`).
+ */
+object PluginActions {
+    /** `?action=…&place=…`, puis les valeurs non vides de [context] dans son ordre, encodées. */
+    fun query(actionId: String, place: String, context: Map<String, String?>): String = buildString {
+        append("?action=").append(encode(actionId))
+        append("&place=").append(encode(place))
+        context.forEach { (key, value) ->
+            if (!value.isNullOrEmpty()) append('&').append(encode(key)).append('=').append(encode(value))
+        }
+    }
+
+    /** Les actions de [place] dont le plugin a une page dans le menu : sans page, rien à ouvrir. */
+    fun forPlace(menu: PluginMenu, place: String): List<PluginAction> =
+        menu.actions.filter { action -> place in action.places && menu.items.any { it.id == action.plugin } }
+
+    private fun encode(value: String): String = URLEncoder.encode(value, "UTF-8")
+}
+
 /** Lecture des réponses du serveur : un champ absent ou mal formé prend sa valeur neutre, jamais une exception. */
 object PluginJson {
     fun list(body: JsonObject): PluginList = PluginList(
@@ -128,26 +159,53 @@ object PluginJson {
         )
     }
 
-    fun menu(body: JsonObject): List<PluginMenuItem> =
-        (body["items"] as? JsonArray).orEmpty().mapNotNull { element ->
+    fun menu(body: JsonObject): PluginMenu = PluginMenu(
+        items = (body["items"] as? JsonArray).orEmpty().mapNotNull { element ->
             val item = element as? JsonObject ?: return@mapNotNull null
             val id = item.text("id") ?: return@mapNotNull null
             val file = item.text("file") ?: return@mapNotNull null
             PluginMenuItem(id, item.text("label") ?: id, item.text("path") ?: "/plugins/$id", file)
-        }
+        },
+        actions = (body["actions"] as? JsonArray).orEmpty().mapNotNull { (it as? JsonObject)?.let(::action) },
+    )
+
+    private fun action(body: JsonObject): PluginAction? {
+        val plugin = body.text("plugin") ?: return null
+        val id = body.text("id") ?: return null
+        val label = body.text("label")?.takeIf { it.isNotBlank() } ?: return null
+        return PluginAction(plugin, id, label, body.texts("places"))
+    }
 
     /** Forme gardée en préférences, relue par [menu]. */
-    fun menuBody(items: List<PluginMenuItem>): JsonObject = buildJsonObject {
+    fun menuBody(menu: PluginMenu): JsonObject = buildJsonObject {
         put(
             "items",
             buildJsonArray {
-                items.forEach { item ->
+                menu.items.forEach { item ->
                     add(
                         buildJsonObject {
                             put("id", item.id)
                             put("label", item.label)
                             put("path", item.path)
                             put("file", item.file)
+                        },
+                    )
+                }
+            },
+        )
+        put(
+            "actions",
+            buildJsonArray {
+                menu.actions.forEach { action ->
+                    add(
+                        buildJsonObject {
+                            put("plugin", action.plugin)
+                            put("id", action.id)
+                            put("label", action.label)
+                            put(
+                                "places",
+                                buildJsonArray { action.places.forEach { add(JsonPrimitive(it)) } },
+                            )
                         },
                     )
                 }

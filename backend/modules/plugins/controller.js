@@ -21,7 +21,8 @@ const sdk = (req, res) => {
     res.send(sdkSource);
 };
 
-const menu = (req, res) => res.json({ items: registry.menuItems() });
+const menu = (req, res) =>
+    res.json({ items: registry.menuItems(), actions: registry.pageActions() });
 
 module.exports = {
     menu,

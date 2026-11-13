@@ -22,6 +22,7 @@ import EntityIcon from '../Shared/EntityIcon';
 import Button, { IconButton } from '../Shared/ui/Button';
 import Menu, { MenuEntry } from '../Shared/ui/Menu';
 import { PAGE_GUTTER } from '../Shared/ui/PageShell';
+import PluginActions from '../Plugins/PluginActions';
 
 const PROJECT_STATUSES: ProjectStatus[] = [
     'not_started',
@@ -569,6 +570,10 @@ const ProjectHero: React.FC<ProjectHeroProps> = ({
                     </div>
 
                     <div className="flex flex-shrink-0 flex-wrap items-center gap-2">
+                        <PluginActions
+                            place="project"
+                            context={{ project: project.uid }}
+                        />
                         {isDone ? (
                             <Button
                                 size="sm"

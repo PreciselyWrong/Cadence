@@ -79,6 +79,7 @@ import DayCalendar, {
     PX_PER_MINUTE,
     minuteFromOffset,
 } from './DayCalendar';
+import PluginActions from '../Plugins/PluginActions';
 
 const todayString = () =>
     new Intl.DateTimeFormat('en-CA', { timeZone: getUserTimezone() }).format(
@@ -1057,6 +1058,7 @@ const NewToday: React.FC = () => {
             }
             extraActions={
                 <>
+                    <PluginActions place="today" context={{ date }} />
                     <Button
                         size="sm"
                         variant={expanded ? 'primary' : 'secondary'}

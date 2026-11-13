@@ -66,6 +66,18 @@ export interface PluginMenuItem {
     file: string;
 }
 
+// Where a plugin can add a button to the page header (backend/modules/plugins/core/actions.js)
+export type PluginActionPlace =
+    'plan' | 'today' | 'inbox' | 'project' | 'triage';
+
+// A button a running plugin adds to some page headers; a click opens its page
+export interface PluginPageAction {
+    plugin: string;
+    id: string;
+    label: string;
+    places: PluginActionPlace[];
+}
+
 export interface PluginsResponse {
     configured: boolean;
     plugins: PluginInfo[];
@@ -155,7 +167,7 @@ export const removePlugin = (id: string) =>
     );
 
 export const fetchPluginMenu = () =>
-    send<{ items: PluginMenuItem[] }>(
+    send<{ items: PluginMenuItem[]; actions?: PluginPageAction[] }>(
         'plugins/menu',
         'GET',
         'Could not load the plugin menu'

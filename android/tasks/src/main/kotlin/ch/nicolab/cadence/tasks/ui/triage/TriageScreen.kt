@@ -60,6 +60,7 @@ import ch.nicolab.cadence.tasks.triage.MAIL_TYPE
 import ch.nicolab.cadence.tasks.triage.MailDecision
 import ch.nicolab.cadence.tasks.triage.MailPayload
 import ch.nicolab.cadence.tasks.model.ProjectItem
+import ch.nicolab.cadence.tasks.plugins.PluginActionButtons
 import ch.nicolab.cadence.tasks.triage.TriageActions
 import ch.nicolab.cadence.tasks.triage.TriageItemDto
 import ch.nicolab.cadence.tasks.triage.TriageTaskDto
@@ -128,6 +129,7 @@ internal fun TriageScreen(today: LocalDate, onBack: () -> Unit) {
                 subtitle = items.size.takeIf { it > 0 }?.let { stringResource(R.string.triage_left, it) },
                 onBack = onBack,
                 backDescription = stringResource(R.string.tasks_back),
+                actions = { PluginActionButtons(place = "triage", context = emptyMap()) },
             )
             val item = items.firstOrNull()
             if (item == null) {

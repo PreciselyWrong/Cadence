@@ -40,6 +40,7 @@ import ch.nicolab.cadence.designsystem.components.navigationClearance
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.model.SyncStatus
+import ch.nicolab.cadence.tasks.plugins.PluginActionButtons
 import ch.nicolab.cadence.tasks.ui.triage.TriageScreen
 import ch.nicolab.cadence.tasks.ui.triage.TriageViewModel
 import java.time.LocalDate
@@ -78,6 +79,7 @@ fun InboxScreen(modifier: Modifier = Modifier, onOpenSearch: () -> Unit = {}, on
                     subtitle = ideas.size.takeIf { it > 0 }?.let { pluralStringResource(R.plurals.tasks_inbox_subtitle, it, it) },
                     modifier = Modifier.statusBarsPadding().padding(horizontal = Space.gutter),
                     actions = {
+                        PluginActionButtons(place = "inbox", context = emptyMap())
                         RoundHeaderButton(
                             icon = Icons.Outlined.Search,
                             contentDescription = stringResource(R.string.tasks_search_open),

@@ -86,12 +86,83 @@ class PluginsTest {
 
     @Test
     fun readsTheMenuAndRoundTripsTheStoredCopy() {
-        val items = PluginJson.menu(
+        val menu = PluginJson.menu(
             obj("""{"items": [{"id": "hello", "label": "Hello", "path": "/plugins/hello", "file": "index.html"}, {"label": "no id"}]}"""),
         )
-        assertEquals(listOf(PluginMenuItem("hello", "Hello", "/plugins/hello", "index.html")), items)
-        assertEquals(items, PluginJson.menu(PluginJson.menuBody(items)))
-        assertTrue(PluginJson.menu(obj("{}")).isEmpty())
+        assertEquals(listOf(PluginMenuItem("hello", "Hello", "/plugins/hello", "index.html")), menu.items)
+        assertEquals(menu, PluginJson.menu(PluginJson.menuBody(menu)))
+        assertEquals(PluginMenu.EMPTY, PluginJson.menu(obj("{}")))
+    }
+
+    @Test
+    fun readsTheMenuActionsAndIgnoresMalformedOnes() {
+        val menu = PluginJson.menu(
+            obj(
+                """
+                {"items": [], "actions": [
+                  {"plugin": "hermes", "id": "plan-week", "label": "Planifier ma semaine", "places": ["plan", "today"]},
+                  {"plugin": "hermes", "id": "no-label", "places": ["inbox"]},
+                  {"plugin": "hermes", "label": "no id", "places": ["inbox"]},
+                  {"id": "no-plugin", "label": "x", "places": ["inbox"]},
+                  "not an object",
+                  {"plugin": "hermes", "id": "bad-places", "label": "Places", "places": "plan"}
+                ]}
+                """,
+            ),
+        )
+        assertEquals(
+            listOf(
+                PluginAction("hermes", "plan-week", "Planifier ma semaine", listOf("plan", "today")),
+                PluginAction("hermes", "bad-places", "Places", emptyList()),
+            ),
+            menu.actions,
+        )
+    }
+
+    @Test
+    fun aMenuWithoutActionsFieldHasNoActions() {
+        assertTrue(PluginJson.menu(obj("""{"items": []}""")).actions.isEmpty())
+    }
+
+    @Test
+    fun theStoredMenuKeepsItsActions() {
+        val menu = PluginMenu(
+            items = listOf(PluginMenuItem("hermes", "Hermes", "/plugins/hermes", "ui/index.html")),
+            actions = listOf(PluginAction("hermes", "plan-week", "Planifier", listOf("plan"))),
+        )
+        assertEquals(menu, PluginJson.menu(PluginJson.menuBody(menu)))
+    }
+
+    @Test
+    fun theActionQueryHoldsTheActionPlaceAndNonEmptyContextInOrder() {
+        val query = PluginActions.query(
+            "plan-week",
+            "plan",
+            linkedMapOf("start" to "2026-11-13", "end" to null, "project" to "", "note" to "a b&c/é"),
+        )
+        assertEquals("?action=plan-week&place=plan&start=2026-11-13&note=a+b%26c%2F%C3%A9", query)
+    }
+
+    @Test
+    fun theActionQueryWithoutContextIsOnlyTheActionAndPlace() {
+        assertEquals("?action=x&place=inbox", PluginActions.query("x", "inbox", emptyMap()))
+    }
+
+    @Test
+    fun anActionShowsOnlyWhereItsPlaceIsAndWherePluginHasAPage() {
+        val menu = PluginMenu(
+            items = listOf(PluginMenuItem("hermes", "Hermes", "/plugins/hermes", "ui/index.html")),
+            actions = listOf(
+                PluginAction("hermes", "plan-week", "Planifier", listOf("plan", "today")),
+                PluginAction("hermes", "triage-help", "Trier", listOf("triage")),
+                PluginAction("nopage", "ghost", "Fantôme", listOf("plan")),
+            ),
+        )
+        assertEquals(listOf("plan-week"), PluginActions.forPlace(menu, "plan").map { it.id })
+        assertEquals(listOf("plan-week"), PluginActions.forPlace(menu, "today").map { it.id })
+        assertEquals(listOf("triage-help"), PluginActions.forPlace(menu, "triage").map { it.id })
+        assertTrue(PluginActions.forPlace(menu, "project").isEmpty())
+        assertTrue(PluginActions.forPlace(PluginMenu.EMPTY, "plan").isEmpty())
     }
 
     @Test

@@ -13,22 +13,22 @@ import androidx.compose.ui.platform.LocalContext
  * changement de [refreshKey] (ouverture du sélecteur de listes). Sans serveur, la liste se vide.
  */
 @Composable
-internal fun rememberPluginMenu(refreshKey: Any?): List<PluginMenuItem> {
+internal fun rememberPluginMenu(refreshKey: Any?): PluginMenu {
     val context = LocalContext.current
     val store = remember(context) { PluginsStore.of(context) }
-    var items by remember { mutableStateOf(store.menu()) }
+    var menu by remember { mutableStateOf(store.menu()) }
     LaunchedEffect(refreshKey) {
         pluginsClient(context).menu()
             .onSuccess {
-                items = it
+                menu = it
                 store.saveMenu(it)
             }
             .onFailure {
                 if (it is NotConnected) {
-                    items = emptyList()
-                    store.saveMenu(emptyList())
+                    menu = PluginMenu.EMPTY
+                    store.saveMenu(PluginMenu.EMPTY)
                 }
             }
     }
-    return items
+    return menu
 }

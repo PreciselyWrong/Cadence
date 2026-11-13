@@ -63,16 +63,18 @@ Cadence does not install dependencies. Bundle them (a single-file build, or a co
 }
 ```
 
-| Field         | Rule                                                                                                                                                                                          |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `id`          | `^[a-z][a-z0-9-]{1,31}$`, unique. Becomes the URL segment and the storage key; never change it.                                                                                               |
-| `version`     | `x.y.z`. Compared numerically to show updates.                                                                                                                                                |
-| `apiVersion`  | Integer. Cadence's plugin API is `1`. A higher value is `incompatible`.                                                                                                                       |
-| `main`        | Relative path inside the folder (no `..`).                                                                                                                                                    |
-| `permissions` | Any of `events` (use `ctx.on`), `routes` (use `ctx.router`) and `notify` (use `ctx.notify`, see Notifications). `brief`, retired with the daily brief on 2026-11-12, is ignored with a warning in the log: the plugin still loads, without it. `ctx.settings`, `ctx.storage` and `ctx.logger` need none.                                          |
-| `events`      | Event names from [Webhooks](27-webhooks.md) the plugin may subscribe to. Required with `events`.                                                                                              |
-| `settings`    | Fields of the form in Profile › Plugins. Types: `string`, `secret`, `boolean`, `number`, `select` (with `options`). `secret` values are encrypted at rest and never sent back to the browser. |
-| `update.url`  | Optional. A public JSON file with at least `{ "version": "x.y.z" }`. Fetched only when you press **Check for updates**.                                                                       |
+| Field         | Rule                                                                                                                                                                                                                                                                                                     |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`          | `^[a-z][a-z0-9-]{1,31}$`, unique. Becomes the URL segment and the storage key; never change it.                                                                                                                                                                                                          |
+| `version`     | `x.y.z`. Compared numerically to show updates.                                                                                                                                                                                                                                                           |
+| `apiVersion`  | Integer. Cadence's plugin API is `1`. A higher value is `incompatible`.                                                                                                                                                                                                                                  |
+| `main`        | Relative path inside the folder (no `..`).                                                                                                                                                                                                                                                               |
+| `permissions` | Any of `events` (use `ctx.on`), `routes` (use `ctx.router`) and `notify` (use `ctx.notify`, see Notifications). `brief`, retired with the daily brief on 2026-11-12, is ignored with a warning in the log: the plugin still loads, without it. `ctx.settings`, `ctx.storage` and `ctx.logger` need none. |
+| `events`      | Event names from [Webhooks](27-webhooks.md) the plugin may subscribe to. Required with `events`.                                                                                                                                                                                                         |
+| `settings`    | Fields of the form in Profile › Plugins. Types: `string`, `secret`, `boolean`, `number`, `select` (with `options`). `secret` values are encrypted at rest and never sent back to the browser.                                                                                                            |
+| `menu`        | Optional. `{ "label": "Agents", "page": "ui/index.html" }`: a sidebar entry (label of 40 characters at most) that opens the plugin's page, served from that subfolder at `/api/plugins/<id>/ui/<file>`.                                                                                                  |
+| `actions`     | Optional, needs `menu`. At most 10 header buttons, see Page actions.                                                                                                                                                                                                                                     |
+| `update.url`  | Optional. A public JSON file with at least `{ "version": "x.y.z" }`. Fetched only when you press **Check for updates**.                                                                                                                                                                                  |
 
 ## Entry point
 
@@ -106,6 +108,30 @@ module.exports = {
 | `ctx.onDispose(fn)`                                        |          | Runs on deactivation or reload (clear timers, close sockets).                                                                                                                                       |
 
 A plugin that reaches Cadence's data does so through the API with an API key, like any other client.
+
+## Page actions
+
+A plugin adds buttons to the header of some Cadence pages, on the web and on Android:
+
+```json
+"actions": [
+    { "id": "plan-week", "label": "Planifier ma semaine", "places": ["plan", "today"] }
+]
+```
+
+- `id`: `^[a-z][a-z0-9-]{0,31}$`, unique in the manifest; `label`: 30 characters at most, shown as is (the plugin writes it in the user's language).
+- `places`: where the button shows. A click opens the plugin's page with `?action=<id>&place=<place>` and what the page shows:
+
+| Place     | Page                                                       | Context in the query                                    |
+| --------- | ---------------------------------------------------------- | ------------------------------------------------------- |
+| `plan`    | Plan (web `/upcoming`, Android Planifier), left of Display | `start`, `end` (first and last day shown, `YYYY-MM-DD`) |
+| `today`   | Today                                                      | `date`                                                  |
+| `inbox`   | Inbox                                                      | none                                                    |
+| `project` | A project's page                                           | `project` (its uid)                                     |
+| `triage`  | À trier                                                    | none                                                    |
+
+- `GET /api/plugins/menu` returns `{ items, actions }`; an action shows only while its plugin runs. Rules in `backend/modules/plugins/core/actions.js`; web `frontend/components/Plugins/PluginActions.tsx`; Android `tasks/plugins/PluginActionButtons.kt`.
+- A new place is added to `ACTION_PLACES` and drawn by both clients in the same change.
 
 ## Notifications
 

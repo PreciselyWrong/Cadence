@@ -24,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.material.icons.automirrored.outlined.ViewList
 import androidx.compose.material.icons.outlined.GridView
 import androidx.compose.ui.platform.LocalContext
+import ch.nicolab.cadence.tasks.plugins.PluginActionButtons
 import ch.nicolab.cadence.tasks.plugins.PluginPageActivity
 import ch.nicolab.cadence.tasks.plugins.rememberPluginMenu
 import androidx.compose.runtime.getValue
@@ -102,6 +103,7 @@ fun TasksScreen(
     val areas by viewModel.areas.collectAsStateWithLifecycle()
     val areaFilter by viewModel.areaFilter.collectAsStateWithLifecycle()
     val withLink by viewModel.withLink.collectAsStateWithLifecycle()
+    val planBoard by viewModel.planBoard.collectAsStateWithLifecycle()
 
     LaunchedEffect(openTaskUid) {
         if (openTaskUid != null) {
@@ -126,6 +128,24 @@ fun TasksScreen(
     val overdueCount = todayState.overdue.size
     val eventCount = todayEvents.size
     val dateLine = remember(moment.today) { formatHeaderDate(moment.today) }
+    // Menu des plugins : relu à chaque ouverture du sélecteur, et pour les boutons d'action de l'en-tête.
+    val pluginMenu = rememberPluginMenu(switcherOpen)
+    // Lieu et contexte des boutons d'action (docs/46-plugins.md) : projet ouvert, Aujourd'hui, Planifier.
+    val pluginPlace = when {
+        openProjectUid != null -> "project"
+        tab == TasksTab.TODAY -> "today"
+        tab == TasksTab.UPCOMING -> "plan"
+        else -> null
+    }
+    val pluginContext: Map<String, String?> = when {
+        openProjectUid != null -> mapOf("project" to openProjectUid)
+        tab == TasksTab.TODAY -> mapOf("date" to moment.today.toString())
+        tab == TasksTab.UPCOMING -> mapOf(
+            "start" to planBoard.days.minOfOrNull { it.date }?.toString(),
+            "end" to planBoard.days.maxOfOrNull { it.date }?.toString(),
+        )
+        else -> emptyMap()
+    }
     val subtitle = when {
         tab == TasksTab.UPCOMING -> stringResource(R.string.tasks_upcoming_subtitle)
         tab == TasksTab.PROJECTS -> projectCounterLine(projects)
@@ -152,6 +172,9 @@ fun TasksScreen(
                     onTitleClick = { switcherOpen = true },
                     titleClickLabel = stringResource(R.string.tasks_lists_open),
                     actions = {
+                        pluginPlace?.let { place ->
+                            PluginActionButtons(place = place, context = pluginContext, menu = pluginMenu)
+                        }
                         if (tab == TasksTab.NOTES && openProjectUid == null) {
                             RoundHeaderButton(
                                 icon = if (notesGallery) Icons.AutoMirrored.Outlined.ViewList else Icons.Outlined.GridView,
@@ -277,11 +300,10 @@ fun TasksScreen(
         }
     }
 
-    val pluginMenu = rememberPluginMenu(switcherOpen)
     if (switcherOpen) {
         val context = LocalContext.current
         ListSwitcherSheet(
-            plugins = pluginMenu,
+            plugins = pluginMenu.items,
             onOpenPlugin = { item ->
                 switcherOpen = false
                 PluginPageActivity.start(context, item)

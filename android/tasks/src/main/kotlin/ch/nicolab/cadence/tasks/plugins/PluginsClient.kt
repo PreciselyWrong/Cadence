@@ -37,7 +37,7 @@ class PluginsClient(private val session: suspend () -> ServerSession?) {
 
     suspend fun list(): Result<PluginList> = attempt { PluginJson.list(request("GET", "/api/plugins")) }
 
-    suspend fun menu(): Result<List<PluginMenuItem>> = attempt { PluginJson.menu(request("GET", "/api/plugins/menu")) }
+    suspend fun menu(): Result<PluginMenu> = attempt { PluginJson.menu(request("GET", "/api/plugins/menu")) }
 
     suspend fun setEnabled(id: String, enabled: Boolean): Result<Unit> =
         unit { request("PATCH", plugin(id), buildJsonObject { put("enabled", enabled) }) }
@@ -111,12 +111,12 @@ class PluginsClient(private val session: suspend () -> ServerSession?) {
  * plugins, pour ne pas faire clignoter la rubrique de Réglages à chaque ouverture.
  */
 class PluginsStore private constructor(private val prefs: SharedPreferences) {
-    fun menu(): List<PluginMenuItem> = prefs.getString(KEY_MENU, null)
+    fun menu(): PluginMenu = prefs.getString(KEY_MENU, null)
         ?.let { runCatching { PluginJson.menu(Json.parseToJsonElement(it).jsonObject) }.getOrNull() }
-        .orEmpty()
+        ?: PluginMenu.EMPTY
 
-    fun saveMenu(items: List<PluginMenuItem>) {
-        prefs.edit { putString(KEY_MENU, PluginJson.menuBody(items).toString()) }
+    fun saveMenu(menu: PluginMenu) {
+        prefs.edit { putString(KEY_MENU, PluginJson.menuBody(menu).toString()) }
     }
 
     fun admin(): Boolean = prefs.getBoolean(KEY_ADMIN, false)

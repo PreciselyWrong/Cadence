@@ -159,6 +159,7 @@ import {
     neighbourDate,
     shiftWeek,
 } from './boardDates';
+import PluginActions from '../Plugins/PluginActions';
 
 const SLOT = 15;
 const DEFAULT_HOURS = { start: 480, end: 1080 };
@@ -1926,6 +1927,13 @@ const UpcomingBoard: React.FC = () => {
                         </nav>
                     )}
                     <div className="ml-auto flex items-center gap-1">
+                        <PluginActions
+                            place="plan"
+                            context={{
+                                start: dates[0],
+                                end: dates[dates.length - 1],
+                            }}
+                        />
                         <ViewMenu
                             options={options}
                             onChange={setOptions}

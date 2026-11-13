@@ -816,3 +816,9 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Problème** : le résumé du matin et le bilan du soir passent aux agents Hermes (messages de la Boîte des agents) ; la page `/insights/daily-brief`, la carte d'Aujourd'hui, l'entrée « Résumé » du menu d'Aujourd'hui et Profil › Résumé n'avaient plus lieu d'être, mais ce dernier portait aussi les réglages d'« À trier ».
 - **Décision** : tout le résumé quitte le web. Un onglet Profil › À trier (groupe Organisation) garde ce qui sert la file : calendriers lus et jours regardés, types d'alertes, reports avant une carte, jours de tâches terminées regardés, propositions de l'IA et leur limite par jour. Les questions d'agenda d'« À trier » et le panneau Contexte des tâches passent par `/triage/answers` et `/triage/contexts`.
 - **Android à reprendre** : le résumé est déjà retiré (1.21.0) ; il reste un écran Réglages › À trier pour ces réglages (`TODO.md` › Now).
+
+### 2026-11-13 — Boutons des plugins dans les en-têtes
+
+- **Demande** : lancer depuis la page Plan (et plus tard d'autres pages) une action d'un agent, comme « Planifier ma semaine » avec Hermes.
+- **Décision** : un plugin déclare des `actions` dans son manifeste ; Cadence dessine un bouton secondaire dans l'en-tête des pages choisies (Plan à gauche d'Affichage, Aujourd'hui, Inbox, page de projet, À trier). Un clic ouvre la page du plugin avec l'action et ce que la page montre (`docs/46-plugins.md`, « Page actions »). Rien n'apparaît sans plugin actif.
+- **Android à reprendre** : fait dans la même étape (Planifier, Aujourd'hui, Inbox, projet, À trier).

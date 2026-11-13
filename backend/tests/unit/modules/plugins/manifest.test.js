@@ -47,7 +47,20 @@ describe('plugin manifest', () => {
             settings: [],
             update: null,
             menu: null,
+            actions: [],
         });
+    });
+
+    it('reads header buttons of a plugin with a page', () => {
+        const result = parseManifest(
+            valid({
+                menu: { label: 'Hermes' },
+                actions: [{ id: 'plan-week', label: 'Plan', places: ['plan'] }],
+            })
+        );
+        expect(result.manifest.actions).toEqual([
+            { id: 'plan-week', label: 'Plan', places: ['plan'] },
+        ]);
     });
 
     it('reads a sidebar entry, with ui/index.html as the default page', () => {
@@ -96,6 +109,10 @@ describe('plugin manifest', () => {
         [
             'menu page that climbs out',
             { menu: { label: 'A', page: '../x.html' } },
+        ],
+        [
+            'header buttons without a page',
+            { actions: [{ id: 'a', label: 'A', places: ['plan'] }] },
         ],
         ['update url that is not http(s)', { update: { url: 'file:///x' } }],
     ])('rejects %s', (_label, overrides) => {

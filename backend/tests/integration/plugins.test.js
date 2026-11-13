@@ -730,6 +730,7 @@ describe('Plugins', () => {
             writeUi();
             expect((await otherAgent.get('/api/plugins/menu')).body).toEqual({
                 items: [],
+                actions: [],
             });
             await adminAgent
                 .patch('/api/plugins/hello')
@@ -746,6 +747,40 @@ describe('Plugins', () => {
             expect((await request(app).get('/api/plugins/menu')).status).toBe(
                 401
             );
+        });
+
+        it('lists the header buttons of active plugins', async () => {
+            writePlugin(
+                'hello',
+                withMenu({
+                    actions: [
+                        {
+                            id: 'plan-week',
+                            label: 'Plan my week',
+                            places: ['today', 'plan'],
+                        },
+                    ],
+                })
+            );
+            writeUi();
+            await adminAgent
+                .patch('/api/plugins/hello')
+                .send({ enabled: true });
+            const res = await otherAgent.get('/api/plugins/menu');
+            expect(res.body.actions).toEqual([
+                {
+                    plugin: 'hello',
+                    id: 'plan-week',
+                    label: 'Plan my week',
+                    places: ['plan', 'today'],
+                },
+            ]);
+            await adminAgent
+                .patch('/api/plugins/hello')
+                .send({ enabled: false });
+            expect(
+                (await otherAgent.get('/api/plugins/menu')).body.actions
+            ).toEqual([]);
         });
 
         it('serves the page files of an active plugin only', async () => {
@@ -873,6 +908,69 @@ describe('Plugins', () => {
                 pluginId: 'herald',
                 openPath: '/p/herald?agent=weekend',
             });
+        });
+
+        it('accepts a replyPath under its own routes only', async () => {
+            notifier(['routes', 'notify']);
+            await adminAgent
+                .patch('/api/plugins/herald')
+                .send({ enabled: true });
+            const post = (replyPath) =>
+                adminAgent
+                    .post('/api/plugins/herald/x/ping')
+                    .send({ title: 't', data: { replyPath } });
+            const ok = await post('/plugins/herald/x/inbox/m1/reply');
+            expect(ok.status).toBe(200);
+            const row = await Notification.findOne({
+                where: { uid: ok.body.uid },
+            });
+            expect(row.data.replyPath).toBe('/plugins/herald/x/inbox/m1/reply');
+            for (const bad of [
+                '/plugins/other/x/inbox/m1/reply',
+                '/plugins/herald/x/../../users',
+                '/api/plugins/herald/x/a',
+                'https://evil.example/x',
+                '/plugins/herald/x/a b',
+            ]) {
+                expect((await post(bad)).status).toBe(400);
+            }
+        });
+
+        it('tells the plugin when the person reads its notification, not when it reads it itself', async () => {
+            writePlugin(
+                'herald',
+                manifestOf('herald', {
+                    permissions: ['routes', 'notify'],
+                    events: [],
+                }),
+                `module.exports = { activate(ctx) {
+                    globalThis.__pluginReads = [];
+                    ctx.notify.onRead((e) => globalThis.__pluginReads.push(e));
+                    ctx.router.post('/ping', async (req, res) => {
+                        const n = await ctx.notify({ userId: req.currentUser.id, title: 'T' });
+                        res.json({ uid: n.uid });
+                    });
+                    ctx.router.post('/read', async (req, res) => {
+                        res.json({ read: await ctx.notify.read({ userId: req.currentUser.id, uid: req.body.uid }) });
+                    });
+                } };`
+            );
+            await adminAgent
+                .patch('/api/plugins/herald')
+                .send({ enabled: true });
+            const ping = async () =>
+                (await adminAgent.post('/api/plugins/herald/x/ping').send({}))
+                    .body.uid;
+            const first = await ping();
+            await adminAgent.post(`/api/notifications/${first}/read`);
+            const second = await ping();
+            await adminAgent
+                .post('/api/plugins/herald/x/read')
+                .send({ uid: second });
+            await new Promise((resolve) => setTimeout(resolve, 20));
+            expect(globalThis.__pluginReads).toEqual([
+                { userId: admin.id, uid: first },
+            ]);
         });
 
         it('marks read only its own notifications', async () => {
