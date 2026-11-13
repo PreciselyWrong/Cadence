@@ -6,7 +6,14 @@
 const request = require('supertest');
 const moment = require('moment-timezone');
 const app = require('../../app');
-const { Notification, Proposal, Task } = require('../../models');
+const {
+    Area,
+    Goal,
+    Notification,
+    Project,
+    Proposal,
+    Task,
+} = require('../../models');
 const dispatcher = require('../../modules/webhooks/dispatcher');
 const dailyPlan = require('../../modules/daily-plan/service');
 const { toolsFor } = require('../../modules/triage/actions');
@@ -125,7 +132,8 @@ describe('proposals', () => {
 
         const answered = await answerAs(created.uid, {
             answer: {
-                summary: 'Mardi est libre.',
+                headline: 'Mardi est libre',
+                subtitle: 'Deux retards replacés.',
                 changes: [
                     {
                         task_uid: taskUid(dueSoon),
@@ -139,6 +147,10 @@ describe('proposals', () => {
         });
         expect(answered.status).toBe(200);
         expect(answered.body).toMatchObject({ status: 'ready', error: null });
+        expect(answered.body.answer).toMatchObject({
+            headline: 'Mardi est libre',
+            subtitle: 'Deux retards replacés.',
+        });
         expect(answered.body.answer.changes).toHaveLength(1);
 
         const notes = await Notification.findAll({
@@ -146,7 +158,8 @@ describe('proposals', () => {
         });
         expect(notes).toHaveLength(1);
         expect(notes[0]).toMatchObject({
-            title: 'Your week is ready',
+            title: 'Ta semaine est prête',
+            message: 'Mardi est libre',
             data: { proposal_uid: created.uid, kind: 'week' },
         });
         // The phone and the desktop stream only publish these sources.
@@ -168,6 +181,30 @@ describe('proposals', () => {
             error: 'bad_answer',
         });
 
+        const headless = await agent
+            .post('/api/proposals')
+            .send({ kind: 'week', start: today, end: day(6) });
+        const noHeadline = await answerAs(headless.body.uid, {
+            answer: {
+                changes: [
+                    { task_uid: taskUid(dueSoon), op: 'later', reason: 'r' },
+                ],
+            },
+        });
+        expect(noHeadline.body).toMatchObject({
+            status: 'failed',
+            error: 'bad_answer',
+        });
+        const failedNote = await Notification.findOne({
+            where: {
+                user_id: user.id,
+                type: 'proposal',
+                title: 'Ta semaine n’a pas pu être préparée',
+            },
+        });
+        expect(failedNote).not.toBeNull();
+        expect(failedNote.message).toBeNull();
+
         const explicit = await agent
             .post('/api/proposals')
             .send({ kind: 'week', start: today, end: day(6) });
@@ -187,6 +224,7 @@ describe('proposals', () => {
             .send({ kind: 'week', start: today, end: day(6) });
         await answerAs(created.uid, {
             answer: {
+                headline: 'Deux tâches',
                 changes: [
                     {
                         task_uid: taskUid(dueSoon),
@@ -236,7 +274,7 @@ describe('proposals', () => {
             .post('/api/proposals')
             .send({ kind: 'week', start: today, end: day(6) });
         await answerAs(created.uid, {
-            answer: { summary: 'Première version.' },
+            answer: { headline: 'Première version.' },
         });
 
         const replied = await agent
@@ -250,7 +288,7 @@ describe('proposals', () => {
         expect(last).toMatchObject({
             uid: created.uid,
             reply: 'Je ne travaille pas mardi.',
-            previous_answer: { summary: 'Première version.' },
+            previous_answer: { headline: 'Première version.' },
         });
         expect(last.facts.stamps).toBeUndefined();
     });
@@ -342,7 +380,7 @@ describe('proposals', () => {
             await backdate(created.uid, 11);
 
             const late = await answerAs(created.uid, {
-                answer: { summary: 'Trop tard.' },
+                answer: { headline: 'Trop tard.' },
             });
             expect(late.status).toBe(409);
             const res = await agent.get(`/api/proposals/${created.uid}`);
@@ -378,7 +416,8 @@ describe('proposals', () => {
 
         const answered = await answerAs(first.body.uid, {
             answer: {
-                summary: 'Un élément.',
+                headline: 'Un élément',
+                subtitle: 'À garder en vue.',
                 items: [
                     {
                         task_uid: taskUid(planned),
@@ -417,5 +456,324 @@ describe('proposals', () => {
         ]);
         const row = await Task.findOne({ where: { uid: taskUid(planned) } });
         expect(row.in_view_at).not.toBeNull();
+    });
+    it('lets the user decide any listed task, and keep does nothing', async () => {
+        const { body: created } = await agent
+            .post('/api/proposals')
+            .send({ kind: 'week', start: today, end: day(6) });
+        await answerAs(created.uid, { answer: { headline: 'Rien à changer' } });
+
+        const kept = await agent
+            .post(`/api/proposals/${created.uid}/apply`)
+            .send({ decisions: [{ task_uid: taskUid(dueSoon), op: 'keep' }] });
+        expect(kept.status).toBe(200);
+        expect(kept.body.results).toEqual([]);
+
+        const applied = await agent
+            .post(`/api/proposals/${created.uid}/apply`)
+            .send({
+                decisions: [
+                    {
+                        task_uid: taskUid(dueSoon),
+                        op: 'plan_day',
+                        date: day(1),
+                    },
+                ],
+            });
+        expect(applied.status).toBe(200);
+        expect(applied.body.results).toEqual([
+            { task_uid: taskUid(dueSoon), state: 'applied' },
+        ]);
+        const plan = await dailyPlan.getPlan(user, day(1));
+        expect(plan.plan.items.map((item) => item.task_uid)).toContain(
+            taskUid(dueSoon)
+        );
+    });
+
+    it('refuses a decision on a task that is not in the facts, or a date out of the window', async () => {
+        const { body: created } = await agent
+            .post('/api/proposals')
+            .send({ kind: 'week', start: today, end: day(6) });
+        await answerAs(created.uid, { answer: { headline: 'Rien' } });
+
+        const notListed = await agent
+            .post(`/api/proposals/${created.uid}/apply`)
+            .send({
+                decisions: [{ task_uid: taskUid(planned), op: 'later' }],
+            });
+        expect(notListed.status).toBe(400);
+
+        const tooLate = await agent
+            .post(`/api/proposals/${created.uid}/apply`)
+            .send({
+                decisions: [
+                    { task_uid: taskUid(dueSoon), op: 'due', date: day(37) },
+                ],
+            });
+        expect(tooLate.status).toBe(400);
+
+        const row = await Task.findOne({ where: { uid: taskUid(dueSoon) } });
+        expect(row.due_date).not.toBeNull();
+    });
+
+    it('sends the goals, areas and projects as facts', async () => {
+        const area = await Area.create({ user_id: user.id, name: 'Santé' });
+        const goal = await Goal.create({
+            user_id: user.id,
+            title: 'Courir un semi',
+            status: 'active',
+            horizon: 'season',
+            target_date: day(40),
+            area_id: area.id,
+        });
+        await Project.create({
+            user_id: user.id,
+            name: 'Cuisine rénovée',
+            status: 'in_progress',
+            area_id: area.id,
+        });
+        await Task.update(
+            { goal_id: goal.id },
+            { where: { uid: taskUid(dueSoon) } }
+        );
+        await agent
+            .post('/api/proposals')
+            .send({ kind: 'week', start: today, end: day(6) });
+        const { facts } = requested().at(-1)[2].data;
+        expect(facts).not.toHaveProperty('about');
+        expect(facts.areas).toEqual(['Santé']);
+        expect(facts.goals).toEqual([
+            {
+                uid: goal.uid,
+                title: 'Courir un semi',
+                due: day(40),
+                progress: 0,
+            },
+        ]);
+        expect(facts.projects).toEqual([
+            { name: 'Cuisine rénovée', area: 'Santé' },
+        ]);
+        expect(
+            facts.tasks.find((t) => t.uid === taskUid(dueSoon))
+        ).toMatchObject({
+            goal: 'Courir un semi',
+            area: 'Santé',
+        });
+    });
+
+    describe('send with notes', () => {
+        let second;
+
+        beforeEach(async () => {
+            second = JSON.parse(
+                (
+                    await run('create_task', {
+                        name: 'Relire le contrat',
+                        due_date: day(3),
+                    })
+                ).content[0].text
+            );
+        });
+
+        const sendAs = (uid, body) =>
+            agent.post(`/api/proposals/${uid}/send`).send(body);
+
+        const weekWithAnswer = async (changes) => {
+            const { body: created } = await agent
+                .post('/api/proposals')
+                .send({ kind: 'week', start: today, end: day(6) });
+            await answerAs(created.uid, {
+                answer: { headline: 'Deux tâches', changes },
+            });
+            return created.uid;
+        };
+
+        it('applies the decisions only when no task has a note', async () => {
+            const uid = await weekWithAnswer([
+                {
+                    task_uid: taskUid(dueSoon),
+                    op: 'plan_day',
+                    date: day(1),
+                    reason: 'libre',
+                },
+            ]);
+            const sent = await sendAs(uid, {
+                decisions: [
+                    {
+                        task_uid: taskUid(dueSoon),
+                        op: 'plan_day',
+                        date: day(1),
+                    },
+                    { task_uid: taskUid(second), op: 'keep' },
+                ],
+                notes: [],
+            });
+            expect(sent.status).toBe(200);
+            expect(sent.body).toEqual({
+                uid,
+                status: 'applied',
+                results: [{ task_uid: taskUid(dueSoon), state: 'applied' }],
+            });
+            const plan = await dailyPlan.getPlan(user, day(1));
+            expect(plan.plan.items.map((item) => item.task_uid)).toContain(
+                taskUid(dueSoon)
+            );
+            expect(requested()).toHaveLength(1);
+        });
+
+        it('applies the other decisions now and sends only the noted tasks back for a second pass', async () => {
+            const uid = await weekWithAnswer([
+                {
+                    task_uid: taskUid(dueSoon),
+                    op: 'plan_day',
+                    date: day(1),
+                    reason: 'libre',
+                },
+                {
+                    task_uid: taskUid(second),
+                    op: 'later',
+                    reason: 'pas urgent',
+                },
+            ]);
+            const sent = await sendAs(uid, {
+                decisions: [{ task_uid: taskUid(second), op: 'later' }],
+                notes: [
+                    {
+                        task_uid: taskUid(dueSoon),
+                        text: '  Seulement après le devis  ',
+                    },
+                ],
+            });
+            expect(sent.status).toBe(200);
+            expect(sent.body).toMatchObject({
+                uid,
+                status: 'pending',
+                round: 2,
+                results: [{ task_uid: taskUid(second), state: 'applied' }],
+            });
+
+            const dueRow = await Task.findOne({
+                where: { uid: taskUid(dueSoon) },
+            });
+            expect(dueRow.week_of).toBeNull();
+
+            const last = requested().at(-1)[2].data;
+            expect(last).toMatchObject({
+                uid,
+                kind: 'week',
+                round: 2,
+                notes: [
+                    {
+                        task_uid: taskUid(dueSoon),
+                        text: 'Seulement après le devis',
+                    },
+                ],
+                previous_answer: {
+                    changes: [
+                        {
+                            task_uid: taskUid(dueSoon),
+                            op: 'plan_day',
+                            date: day(1),
+                            reason: 'libre',
+                        },
+                    ],
+                },
+            });
+            expect(last.facts.tasks.map((task) => task.uid)).toEqual([
+                taskUid(dueSoon),
+            ]);
+            expect(last.facts.period).toEqual({ start: today, end: day(6) });
+            expect(last.facts.days).toHaveLength(7);
+            expect(last.facts.stamps).toBeUndefined();
+            expect(last.facts.round).toBeUndefined();
+        });
+
+        it('refuses a task that is both decided and noted, and a send with nothing in it', async () => {
+            const uid = await weekWithAnswer([
+                {
+                    task_uid: taskUid(dueSoon),
+                    op: 'later',
+                    reason: 'r',
+                },
+            ]);
+            const overlap = await sendAs(uid, {
+                decisions: [
+                    {
+                        task_uid: taskUid(dueSoon),
+                        op: 'plan_day',
+                        date: day(1),
+                    },
+                ],
+                notes: [{ task_uid: taskUid(dueSoon), text: 'x' }],
+            });
+            expect(overlap.status).toBe(400);
+            const empty = await sendAs(uid, { decisions: [], notes: [] });
+            expect(empty.status).toBe(400);
+            const plan = await dailyPlan.getPlan(user, day(1));
+            expect(plan?.plan?.items ?? []).toEqual([]);
+            expect(requested()).toHaveLength(1);
+        });
+
+        it('keeps a round-two answer to the noted tasks, then applies it with /send', async () => {
+            const uid = await weekWithAnswer([
+                {
+                    task_uid: taskUid(dueSoon),
+                    op: 'plan_day',
+                    date: day(1),
+                    reason: 'libre',
+                },
+            ]);
+            await sendAs(uid, {
+                notes: [{ task_uid: taskUid(dueSoon), text: 'Mardi non' }],
+            });
+            const answered = await answerAs(uid, {
+                answer: {
+                    headline: 'Mercredi',
+                    changes: [
+                        {
+                            task_uid: taskUid(second),
+                            op: 'drop',
+                            reason: 'hors sujet',
+                        },
+                        {
+                            task_uid: taskUid(dueSoon),
+                            op: 'plan_day',
+                            date: day(2),
+                            reason: 'mercredi',
+                        },
+                    ],
+                },
+            });
+            expect(answered.body).toMatchObject({ status: 'ready', round: 2 });
+            expect(answered.body.answer.changes).toEqual([
+                {
+                    task_uid: taskUid(dueSoon),
+                    op: 'plan_day',
+                    date: day(2),
+                    reason: 'mercredi',
+                },
+            ]);
+
+            const otherTask = await sendAs(uid, {
+                decisions: [{ task_uid: taskUid(second), op: 'drop' }],
+            });
+            expect(otherTask.status).toBe(400);
+
+            const applied = await sendAs(uid, {
+                decisions: [
+                    {
+                        task_uid: taskUid(dueSoon),
+                        op: 'plan_day',
+                        date: day(2),
+                    },
+                ],
+            });
+            expect(applied.status).toBe(200);
+            expect(applied.body).toMatchObject({ status: 'applied' });
+            const plan = await dailyPlan.getPlan(user, day(2));
+            expect(plan.plan.items.map((item) => item.task_uid)).toContain(
+                taskUid(dueSoon)
+            );
+        });
     });
 });

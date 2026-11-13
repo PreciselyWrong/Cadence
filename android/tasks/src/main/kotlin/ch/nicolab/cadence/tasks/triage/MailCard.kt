@@ -2,6 +2,7 @@ package ch.nicolab.cadence.tasks.triage
 
 import ch.nicolab.cadence.tasks.sync.DeferredCall
 import ch.nicolab.cadence.tasks.sync.encodePath
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
@@ -13,13 +14,36 @@ import kotlinx.serialization.json.put
 const val MAIL_TYPE = "mail"
 
 /** Décision sur un mail, telle que `POST /api/v1/triage/mail/:uid/decide` la reçoit. */
-enum class MailDecision(val wire: String) {
-    TASK("task"),
-    REPLY("reply"),
-    EVENT("event"),
+enum class MailDecision(val wire: String, val canArchive: Boolean = false) {
+    TASK("task", canArchive = true),
+    REPLY("reply", canArchive = true),
+    EVENT("event", canArchive = true),
     LATER("later"),
-    DISMISS("dismiss"),
+    DISMISS("dismiss", canArchive = true),
+    DRAFT("draft"),
+    ARCHIVE("archive"),
+    NOTE("note"),
 }
+
+/** Une des actions que le serveur propose sur une carte du paquet ; l'ordre de la carte est gardé. */
+enum class MailOption(val wire: String, val decision: MailDecision) {
+    DRAFT("draft", MailDecision.DRAFT),
+    /** Offerte par les cartes dérivées de l'ancien conseil ; elle ouvre le fil dans Gmail, donc seulement avec une adresse Gmail. */
+    REPLY("reply", MailDecision.REPLY),
+    TASK("task", MailDecision.TASK),
+    EVENT("event", MailDecision.EVENT),
+    LATER("later", MailDecision.LATER),
+    ARCHIVE("archive", MailDecision.ARCHIVE),
+    DISMISS("dismiss", MailDecision.DISMISS),
+    ;
+
+    companion object {
+        fun of(wire: String?): MailOption? = entries.firstOrNull { it.wire == wire }
+    }
+}
+
+/** Action faite par le serveur sur une carte (`action` : type et état), lue telle quelle. */
+data class MailActionData(val type: String, val state: String)
 
 /**
  * Carte Mail. Tout texte vient du mail : il s'affiche tel quel, jamais en lien. [gmailUrl] n'existe que pour une
@@ -42,6 +66,18 @@ data class MailCardData(
     val kind: String? = null,
     /** Rendez-vous que fixe le mail (`kind` = `event`), à créer dans l'agenda par l'agent. */
     val event: MailEventData? = null,
+    /** Actions proposées (2 à 5, ordre gardé) ; vide pour une carte d'avant le paquet v2, qui garde ses boutons d'avant. */
+    val options: List<MailOption> = emptyList(),
+    /** Action que l'agent recommande, parmi [options] ; elle est en surbrillance et répond au glissement droit. */
+    val recommended: MailOption? = null,
+    /** Début du brouillon préparé par l'agent, en texte brut. */
+    val draftBody: String? = null,
+    /** Extrait du mail, en texte brut, rogné à [MailPayload.EXCERPT_MAX_LENGTH]. */
+    val excerpt: String? = null,
+    /** Action de la carte (archivage, brouillon, agenda) et son état, lus tels quels. */
+    val action: MailActionData? = null,
+    /** Erreur de la dernière action, affichée en haut de la carte. */
+    val actionError: String? = null,
 )
 
 /** Rendez-vous d'une carte Mail : [start] est un jour (journée entière) ou une heure ISO 8601 avec son décalage. */
@@ -50,6 +86,9 @@ data class MailEventData(val title: String?, val start: String, val end: String?
 /** Lecture tolérante de la charge utile : une forme inconnue donne null, jamais une exception. */
 object MailPayload {
     private const val GMAIL = "https://mail.google.com/"
+    const val EXCERPT_MAX_LENGTH = 1500
+    private const val OPTIONS_MIN = 2
+    private const val OPTIONS_MAX = 5
 
     fun parse(payload: JsonObject?): MailCardData? {
         payload ?: return null
@@ -57,6 +96,8 @@ object MailPayload {
         val summary = text(payload, "summary") ?: return null
         val subject = text(payload, "subject")
         val suggestion = payload["suggestion"] as? JsonObject
+        val gmailUrl = text(payload, "gmail_url")?.takeIf { it.startsWith(GMAIL) }
+        val options = options(payload["options"] as? JsonArray, hasGmail = gmailUrl != null)
         return MailCardData(
             mailUid = mailUid,
             sender = text(payload, "from_name") ?: text(payload, "from_address"),
@@ -64,13 +105,35 @@ object MailPayload {
             receivedAt = text(payload, "received_at"),
             summary = summary,
             draftExcerpt = text(payload, "draft_excerpt"),
-            gmailUrl = text(payload, "gmail_url")?.takeIf { it.startsWith(GMAIL) },
+            gmailUrl = gmailUrl,
             replyFirst = suggestion?.let { text(it, "kind") } == "reply",
             taskName = suggestion?.let { text(it, "task_name") } ?: subject ?: summary,
             dueDate = suggestion?.let { text(it, "due_date") },
             kind = suggestion?.let { text(it, "kind") },
             event = (suggestion?.get("event") as? JsonObject)?.let(::event),
+            options = options,
+            recommended = text(payload, "recommended")?.let(MailOption::of)?.takeIf { it in options },
+            draftBody = (payload["draft"] as? JsonObject)?.let { text(it, "body") },
+            excerpt = text(payload, "excerpt")?.take(EXCERPT_MAX_LENGTH),
+            action = (payload["action"] as? JsonObject)?.let { action ->
+                val type = text(action, "type") ?: return@let null
+                val state = text(action, "state") ?: return@let null
+                MailActionData(type, state)
+            },
+            actionError = text(payload, "action_error"),
         )
+    }
+
+    /**
+     * Options inconnues écartées, doublons gardés une fois, Répondre écartée sans adresse Gmail ; hors de 2 à 5, la carte
+     * n'a pas d'options.
+     */
+    private fun options(raw: JsonArray?, hasGmail: Boolean): List<MailOption> {
+        val known = raw.orEmpty()
+            .mapNotNull { (it as? JsonPrimitive)?.contentOrNull?.let(MailOption::of) }
+            .filter { it != MailOption.REPLY || hasGmail }
+            .distinct()
+        return known.takeIf { it.size in OPTIONS_MIN..OPTIONS_MAX }.orEmpty()
     }
 
     private fun event(source: JsonObject): MailEventData? {
@@ -97,8 +160,8 @@ internal object MailRequests {
         body = buildJsonObject {
             put("decision", decision.wire)
             put("payload", payload)
-            // Un mail remis à plus tard reste dans la boîte de réception.
-            put("archive", archive && decision != MailDecision.LATER)
+            // Seules certaines décisions archivent le fil ; « Plus tard » le garde dans la boîte de réception.
+            put("archive", archive && decision.canArchive)
             put("idempotency_key", key)
         },
         label = label,

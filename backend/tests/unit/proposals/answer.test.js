@@ -21,22 +21,66 @@ describe('validateAnswer', () => {
         });
     });
 
-    it('refuses an object with nothing usable left', () => {
+    it('refuses an answer without a headline, even with changes', () => {
         expect(
             validateAnswer('week', facts, {
-                changes: [{ task_uid: 'x', op: 'drop' }],
+                changes: [{ task_uid: 'a', op: 'drop' }],
+            })
+        ).toEqual({ error: 'bad_answer' });
+        expect(
+            validateAnswer('week', facts, { headline: '   ', summary: '' })
+        ).toEqual({ error: 'bad_answer' });
+    });
+
+    it('keeps the headline and the subtitle, and no longer a summary', () => {
+        expect(
+            validateAnswer('week', facts, {
+                headline: 'Mardi libre',
+                subtitle: 'Deux retards replacés.',
             })
         ).toEqual({
-            error: 'bad_answer',
+            answer: {
+                headline: 'Mardi libre',
+                subtitle: 'Deux retards replacés.',
+                questions: [],
+                changes: [],
+            },
         });
     });
 
-    it('accepts a summary without changes', () => {
+    it('accepts a headline without subtitle', () => {
+        expect(
+            validateAnswer('week', facts, { headline: 'Rien à changer' })
+        ).toEqual({
+            answer: {
+                headline: 'Rien à changer',
+                subtitle: null,
+                questions: [],
+                changes: [],
+            },
+        });
+    });
+
+    it('maps a legacy summary to the subtitle and a default headline', () => {
         expect(
             validateAnswer('week', facts, { summary: 'Rien à changer.' })
         ).toEqual({
-            answer: { summary: 'Rien à changer.', questions: [], changes: [] },
+            answer: {
+                headline: 'Ta semaine',
+                subtitle: 'Rien à changer.',
+                questions: [],
+                changes: [],
+            },
         });
+    });
+
+    it('caps the headline at 60 characters and the subtitle at 160', () => {
+        const { answer } = validateAnswer('week', facts, {
+            headline: 'h'.repeat(90),
+            subtitle: 's'.repeat(300),
+        });
+        expect(answer.headline).toHaveLength(60);
+        expect(answer.subtitle).toHaveLength(160);
     });
 
     it('checks review answers against the items it asked for', () => {
@@ -58,19 +102,40 @@ describe('validateAnswer', () => {
         });
         expect(
             validateAnswer('review', review, {
+                headline: 'Revue',
                 items: [{ task_uid: 'p', choice: 'nope' }],
             })
         ).toEqual({
-            error: 'bad_answer',
+            answer: { headline: 'Revue', subtitle: null, items: [] },
         });
         expect(
             validateAnswer('review', review, {
+                headline: 'Une tâche',
                 items: [{ task_uid: 'p', choice: 'later', reason: 'r' }],
             })
         ).toEqual({
             answer: {
-                summary: '',
+                headline: 'Une tâche',
+                subtitle: null,
                 items: [{ task_uid: 'p', choice: 'later', reason: 'r' }],
+            },
+        });
+    });
+
+    it('maps a legacy review summary to the subtitle of the review', () => {
+        const { facts: review } = reviewFacts({
+            lists: { pushed: [], later: [], stale: [] },
+        });
+        expect(
+            validateAnswer('review', review, {
+                summary: 'Deux choses.',
+                items: [],
+            })
+        ).toEqual({
+            answer: {
+                headline: 'Ta revue',
+                subtitle: 'Deux choses.',
+                items: [],
             },
         });
     });

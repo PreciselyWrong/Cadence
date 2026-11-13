@@ -1,4 +1,46 @@
 {
+    "career": {
+        "title": "Кариера",
+        "updatedAt": "обновено в {{time}}",
+        "empty": "Нищо ново днес",
+        "emptyHint": "Агентът минава всяка сутрин: напомняния, обяви и задачи ще се появят тук.",
+        "allDecided": "Всичко е решено за днес",
+        "loadError": "Страницата „Кариера“ не можа да се зареди.",
+        "retry": "Опитай пак",
+        "applyError": "Решението не беше запазено.",
+        "later": "По-късно",
+        "skip": "Пропусни",
+        "followups": {
+            "title": "Напомняния",
+            "appliedAgo": "кандидатствано {{when}}",
+            "openDraft": "Отвори черновата",
+            "createTask": "Създай задача",
+            "done": "Готово"
+        },
+        "offers": {
+            "title": "Обяви за решаване",
+            "apply": "Кандидатствай",
+            "note": "Бележка",
+            "notePlaceholder": "Бележка за агента…",
+            "open": "Виж обявата",
+            "expires": "изтича {{when}}",
+            "expired": "изтекла"
+        },
+        "tasks": {
+            "title": "Предложени задачи",
+            "add": "Добави"
+        },
+        "decided": "Решено ({{count}})",
+        "state": {
+            "applied": "Кандидатствано",
+            "skipped": "Пропусната",
+            "later": "По-късно",
+            "done": "Готово",
+            "taskCreated": "Задачата е създадена",
+            "added": "Добавена",
+            "dismissed": "Отхвърлена"
+        }
+    },
     "agentBanner": {
         "agent": "Agent",
         "dismiss": "Маркирай като прочетено",
@@ -175,6 +217,9 @@
       "delete": "Изтрий"
     },
     "mail": {
+      "draftRequested": "Черновата се подготвя в Gmail",
+      "archiveRequested": "Поискано архивиране",
+      "noteSent": "Върнато на Trieur",
       "noSubject": "(без тема)",
       "draft": "Черновата е готова:",
       "task": "Задача",
@@ -233,6 +278,23 @@
     "entry": "За подреждане ({{count}})",
     "title": "За подреждане",
     "deck": {
+      "progressLabel": "Писмо {{position}} от {{total}}",
+      "option": {
+        "draft": "Чернова",
+        "read": "Прочети",
+        "event": "Календар",
+        "archive": "Архивирай"
+      },
+      "openInGmail": "Отвори в Gmail",
+      "readMail": "Прочети писмото",
+      "collapseMail": "Свий",
+      "noteOpen": "Отговори с една дума",
+      "notePlaceholder": "Дума за Trieur",
+      "noteSend": "Изпрати",
+      "recommended": "Препоръчано",
+      "actionFailed": "Последното действие не бе изпълнено",
+      "actionFailedDraft": "Черновата не можа да бъде подготвена",
+      "actionFailedArchive": "Архивирането не бе изпълнено",
       "open": "Сортирай пощата ми ({{count}})",
       "title": "Сортирай пощата ми",
       "close": "Затвори",
@@ -246,7 +308,7 @@
       "openMail": "Отвори писмото",
       "chat": "Обсъди",
       "undo": "Отмени",
-      "keys": "Enter или →: съвет · ←: по-късно · ↓: пропусни · Ctrl+Z: отмени · Esc: затвори"
+      "keys": "Enter или →: съвет · 1–5: избор · ←: по-късно · ↓: пропусни · Ctrl+Z: отмени · Esc: затвори"
     }
   },
   "outline": {
@@ -5212,6 +5274,23 @@
     "planned": "Планирана {{when}}"
   },
   "proposals": {
+    "decide": {
+      "today": "Днес",
+      "planOn": "Планирай за ден",
+      "keep": "Остави както е",
+      "kept": "Без промяна",
+      "otherDate": "Друга дата…",
+      "dueOn": "Срок {{date}}",
+      "ok": "OK",
+      "menu": "Избери",
+      "changed": "Променено",
+      "undo": "Обратно към предложението: {{decision}}",
+      "trigger": "{{decision}}, {{task}}",
+      "goal": "Цел",
+      "area": "Област",
+      "groupToday": "Днес",
+      "groupKeep": "Без промяна"
+    },
     "week": {
       "button": "Планиране на седмицата ми",
       "ready": "Седмицата ти е готова",
@@ -5240,6 +5319,16 @@
       "ignore": "Игнорирай",
       "later": "По-късно",
       "apply": "Приложи ({{count}})",
+      "note": "Бележка",
+      "noteFor": "Бележка за {{task}}",
+      "notePlaceholder": "Какво трябва да се промени…",
+      "toReview": "За преглед",
+      "noteDecision": "За преглед с твоята бележка",
+      "sendError": "Бележките не можаха да бъдат изпратени.",
+      "sendCaption_one": "{{count}} приложени · {{sent}} върнати",
+      "sendCaption_other": "{{count}} приложени · {{sent}} върнати",
+      "notesSent_one": "{{count}} задача върната, ще ти кажа, когато е готова",
+      "notesSent_other": "{{count}} задачи върнати, ще ти кажа, когато са готови",
       "appliedCount": "Приложени: {{count}} от {{total}}"
     },
     "apply": {

@@ -1,4 +1,46 @@
 {
+    "career": {
+        "title": "Kariéra",
+        "updatedAt": "aktualizované o {{time}}",
+        "empty": "Dnes nič nové",
+        "emptyHint": "Agent sa zastaví každé ráno: pripomienky, ponuky a úlohy sa zobrazia tu.",
+        "allDecided": "Na dnes je všetko rozhodnuté",
+        "loadError": "Stránku Kariéra sa nepodarilo načítať.",
+        "retry": "Skúsiť znova",
+        "applyError": "Rozhodnutie sa neuložilo.",
+        "later": "Neskôr",
+        "skip": "Preskočiť",
+        "followups": {
+            "title": "Pripomienky",
+            "appliedAgo": "prihlásené {{when}}",
+            "openDraft": "Otvoriť koncept",
+            "createTask": "Vytvoriť úlohu",
+            "done": "Hotovo"
+        },
+        "offers": {
+            "title": "Ponuky na rozhodnutie",
+            "apply": "Prihlásiť sa",
+            "note": "Poznámka",
+            "notePlaceholder": "Poznámka pre agenta…",
+            "open": "Zobraziť ponuku",
+            "expires": "vyprší {{when}}",
+            "expired": "vypršala"
+        },
+        "tasks": {
+            "title": "Navrhované úlohy",
+            "add": "Pridať"
+        },
+        "decided": "Rozhodnuté ({{count}})",
+        "state": {
+            "applied": "Prihlásené",
+            "skipped": "Preskočená",
+            "later": "Neskôr",
+            "done": "Hotovo",
+            "taskCreated": "Úloha vytvorená",
+            "added": "Pridaná",
+            "dismissed": "Zamietnutá"
+        }
+    },
     "agentBanner": {
         "agent": "Agent",
         "dismiss": "Označiť ako prečítané",
@@ -185,6 +227,9 @@
       "delete": "Odstrániť"
     },
     "mail": {
+      "draftRequested": "Koncept sa pripravuje v Gmaile",
+      "archiveRequested": "Archivácia vyžiadaná",
+      "noteSent": "Vrátené Trieurovi",
       "noSubject": "(bez predmetu)",
       "draft": "Koncept pripravený:",
       "task": "Úloha",
@@ -243,6 +288,23 @@
     "entry": "Na roztriedenie ({{count}})",
     "title": "Na roztriedenie",
     "deck": {
+      "progressLabel": "E-mail {{position}} z {{total}}",
+      "option": {
+        "draft": "Koncept",
+        "read": "Prečítať",
+        "event": "Kalendár",
+        "archive": "Archivovať"
+      },
+      "openInGmail": "Otvoriť v Gmaile",
+      "readMail": "Prečítať e-mail",
+      "collapseMail": "Zbaliť",
+      "noteOpen": "Odpovedať jedným slovom",
+      "notePlaceholder": "Slovo pre Trieura",
+      "noteSend": "Odoslať",
+      "recommended": "Odporúčané",
+      "actionFailed": "Posledná akcia sa nepodarila",
+      "actionFailedDraft": "Koncept sa nepodarilo pripraviť",
+      "actionFailedArchive": "Archivácia sa nepodarila",
       "open": "Roztriediť moju poštu ({{count}})",
       "title": "Roztriediť moju poštu",
       "close": "Zavrieť",
@@ -256,7 +318,7 @@
       "openMail": "Otvoriť e-mail",
       "chat": "Diskutovať",
       "undo": "Späť",
-      "keys": "Enter alebo →: rada · ←: neskôr · ↓: preskočiť · Ctrl+Z: späť · Esc: zavrieť"
+      "keys": "Enter alebo →: rada · 1–5: vybrať · ←: neskôr · ↓: preskočiť · Ctrl+Z: späť · Esc: zavrieť"
     }
   },
   "outline": {
@@ -5421,6 +5483,23 @@
     "planned": "Naplánované {{when}}"
   },
   "proposals": {
+    "decide": {
+      "today": "Dnes",
+      "planOn": "Naplánovať na deň",
+      "keep": "Nechať tak",
+      "kept": "Bez zmeny",
+      "otherDate": "Iný dátum…",
+      "dueOn": "Termín {{date}}",
+      "ok": "OK",
+      "menu": "Vybrať",
+      "changed": "Zmenené",
+      "undo": "Späť na návrh: {{decision}}",
+      "trigger": "{{decision}}, {{task}}",
+      "goal": "Cieľ",
+      "area": "Oblasť",
+      "groupToday": "Dnes",
+      "groupKeep": "Bez zmeny"
+    },
     "week": {
       "button": "Naplánuj môj týždeň",
       "ready": "Tvoja týždeň je pripravený",
@@ -5449,6 +5528,20 @@
       "ignore": "Ignorovať",
       "later": "Neskôr",
       "apply": "Použiť ({{count}})",
+      "note": "Poznámka",
+      "noteFor": "Poznámka k: {{task}}",
+      "notePlaceholder": "Čo sa má zmeniť…",
+      "toReview": "Na prehodnotenie",
+      "noteDecision": "Na prehodnotenie s tvojou poznámkou",
+      "sendError": "Poznámky sa nepodarilo odoslať.",
+      "sendCaption_one": "{{count}} použitá · {{sent}} vrátené",
+      "sendCaption_few": "{{count}} použité · {{sent}} vrátené",
+      "sendCaption_many": "{{count}} použitých · {{sent}} vrátené",
+      "sendCaption_other": "{{count}} použitých · {{sent}} vrátené",
+      "notesSent_one": "{{count}} úloha vrátená, dám vedieť, keď bude hotová",
+      "notesSent_few": "{{count}} úlohy vrátené, dám vedieť, keď budú hotové",
+      "notesSent_many": "{{count}} úloh vrátených, dám vedieť, keď budú hotové",
+      "notesSent_other": "{{count}} úloh vrátených, dám vedieť, keď budú hotové",
       "appliedCount": "{{count}} z {{total}} použitých"
     },
     "apply": {

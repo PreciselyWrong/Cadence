@@ -11,11 +11,18 @@ const MAX_TASKS = 40;
 const MAX_EVENTS_PER_DAY = 20;
 const MAX_PERIOD_DAYS = 14;
 const DEFAULT_PERIOD_DAYS = 7;
-const SUMMARY_MAX = 300;
-const REASON_MAX = 140;
+const REASON_MAX = 100;
 const QUESTIONS_MAX = 3;
 const OPS = ['plan_day', 'this_week', 'later', 'due', 'drop'];
+// The user may pick any of these per task; keep does nothing.
+const DECISION_OPS = [...OPS, 'keep'];
 const OPS_WITH_DATE = new Set(['plan_day', 'due']);
+// A date the user can apply: inside the period, or up to this many days after
+// its end.
+const APPLY_AFTER_END_DAYS = 30;
+// A note is the user's words on one task, sent back to the agent for a second
+// pass (docs/47-proposals.md, Send with notes).
+const NOTE_MAX = 500;
 
 // Period from the request: a start (default today) and an end (default six
 // days later), at most 14 days.
@@ -80,13 +87,24 @@ function selectTasks(tasks, context) {
         if (rank === RANK.overdue) out.overdue = true;
         if (task.week_of) out.week_of = task.week_of;
         if (task.someday) out.someday = true;
+        if (task.goal) out.goal = task.goal;
+        if (task.area) out.area = task.area;
         return out;
     });
 }
 
 // `plans`: day -> [{ task_uid, duration_minutes }]; `events`: [{ title, date,
-// start, end }] from the user's calendars (Google and ICS feeds).
-function weekFacts({ today, period, weekStart, tasks, plans, events }) {
+// start, end }] from the user's calendars (Google and ICS feeds); `context`:
+// the user's goals, areas, projects and about (core/context.js).
+function weekFacts({
+    today,
+    period,
+    weekStart,
+    tasks,
+    plans,
+    events,
+    context = {},
+}) {
     const plannedUids = new Set();
     for (const items of plans.values()) {
         for (const item of items) plannedUids.add(item.task_uid);
@@ -129,6 +147,7 @@ function weekFacts({ today, period, weekStart, tasks, plans, events }) {
         today,
         days,
         tasks: selected,
+        ...context,
     };
 }
 
@@ -149,7 +168,8 @@ function cleanQuestion(raw) {
 
 // Keeps what is valid in the agent's answer and drops the rest. A change
 // names a task of the facts, an operation of the list, and a date inside the
-// period when the operation needs one. One change per task.
+// period when the operation needs one. One change per task. The headline and
+// subtitle are read by answer.js.
 function validateWeekAnswer(facts, raw) {
     const known = new Set(facts.tasks.map((task) => task.uid));
     const inPeriod = (date) =>
@@ -173,7 +193,6 @@ function validateWeekAnswer(facts, raw) {
         changes.push(change);
     }
     return {
-        summary: cleanText(raw.summary, SUMMARY_MAX),
         questions: takeList(raw.questions, QUESTIONS_MAX)
             .map(cleanQuestion)
             .filter(Boolean),
@@ -181,11 +200,125 @@ function validateWeekAnswer(facts, raw) {
     };
 }
 
+const applyLastDay = (period) => addDays(period.end, APPLY_AFTER_END_DAYS);
+
+// The decisions the user sends to apply: one per task of the facts, an
+// operation of DECISION_OPS, and a date in the apply window when the
+// operation takes one. Throws ValidationError on anything else.
+function checkWeekDecisions(facts, decisions) {
+    const known = new Set(facts.tasks.map((task) => task.uid));
+    const first = facts.period.start;
+    const last = applyLastDay(facts.period);
+    const seen = new Set();
+    return decisions.map((decision) => {
+        if (!decision || typeof decision !== 'object') {
+            throw new ValidationError('Each decision must be an object');
+        }
+        const { task_uid: uid, op } = decision;
+        if (!known.has(uid)) {
+            throw new ValidationError(`Task ${uid} is not in this proposal`);
+        }
+        if (seen.has(uid)) {
+            throw new ValidationError(`Task ${uid} is decided twice`);
+        }
+        if (!DECISION_OPS.includes(op)) {
+            throw new ValidationError(`Unknown operation ${op}`);
+        }
+        seen.add(uid);
+        if (!OPS_WITH_DATE.has(op)) return { task_uid: uid, op };
+        const { date } = decision;
+        if (!isDay(date) || date < first || date > last) {
+            throw new ValidationError(
+                `date must be a day between ${first} and ${last}`
+            );
+        }
+        return { task_uid: uid, op, date };
+    });
+}
+
+// The notes of a send: one per task of the facts, never on a task that also
+// has a decision, text trimmed and 1 to NOTE_MAX characters.
+function checkWeekNotes(facts, notes, decided) {
+    if (!Array.isArray(notes)) {
+        throw new ValidationError('notes must be a list');
+    }
+    const known = new Set(facts.tasks.map((task) => task.uid));
+    const seen = new Set();
+    return notes.map((note) => {
+        if (!note || typeof note !== 'object') {
+            throw new ValidationError('Each note must be an object');
+        }
+        const uid = note.task_uid;
+        if (!known.has(uid)) {
+            throw new ValidationError(`Task ${uid} is not in this proposal`);
+        }
+        if (decided.has(uid)) {
+            throw new ValidationError(`Task ${uid} is both decided and noted`);
+        }
+        if (seen.has(uid)) {
+            throw new ValidationError(`Task ${uid} has two notes`);
+        }
+        const text = typeof note.text === 'string' ? note.text.trim() : '';
+        if (text.length < 1 || text.length > NOTE_MAX) {
+            throw new ValidationError(
+                `note text must be 1 to ${NOTE_MAX} characters`
+            );
+        }
+        seen.add(uid);
+        return { task_uid: uid, text };
+    });
+}
+
+// The facts of a second pass: the same period, days and context, but only the
+// noted tasks, and the days' plan lines of those tasks.
+function restrictWeekFacts(facts, uids) {
+    const keep = new Set(uids);
+    return {
+        ...facts,
+        tasks: facts.tasks.filter((task) => keep.has(task.uid)),
+        days: facts.days.map((day) => ({
+            ...day,
+            planned: day.planned.filter((uid) => keep.has(uid)),
+        })),
+    };
+}
+
+// The decisions of an apply request. `decisions` is the user's own list; the
+// legacy `task_uids` stand for the agent's operations on those tasks.
+function weekDecisionsOf(facts, answer, body) {
+    if (Array.isArray(body.decisions)) {
+        return checkWeekDecisions(facts, body.decisions);
+    }
+    const wanted = body.task_uids;
+    if (
+        !Array.isArray(wanted) ||
+        wanted.some((uid) => typeof uid !== 'string')
+    ) {
+        throw new ValidationError('decisions must be a list');
+    }
+    const changes = answer?.changes ?? [];
+    return wanted.map((uid) => {
+        const change = changes.find((c) => c.task_uid === uid);
+        if (!change) {
+            throw new ValidationError(`Task ${uid} is not proposed`);
+        }
+        return change.date
+            ? { task_uid: uid, op: change.op, date: change.date }
+            : { task_uid: uid, op: change.op };
+    });
+}
+
 module.exports = {
     MAX_TASKS,
     OPS,
+    DECISION_OPS,
     resolvePeriod,
     selectTasks,
     weekFacts,
     validateWeekAnswer,
+    checkWeekDecisions,
+    checkWeekNotes,
+    restrictWeekFacts,
+    weekDecisionsOf,
+    NOTE_MAX,
 };

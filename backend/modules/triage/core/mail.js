@@ -8,6 +8,23 @@ const { ValidationError } = require('../../../shared/errors');
 
 const SUMMARY_MAX = 200;
 const EXCERPT_MAX = 280;
+// The start of the mail, read in the card (contract v2).
+const MAIL_EXCERPT_MAX = 1500;
+const DRAFT_MAX = 4000;
+const NOTE_MAX = 500;
+const CODE = /^[a-z][a-z_]{0,39}$/;
+// The decisions an agent may offer (contract v2). `reply` is not offered: it
+// only comes from a card proposed with the old suggestion.
+const OPTIONS = new Set([
+    'draft',
+    'task',
+    'event',
+    'later',
+    'archive',
+    'dismiss',
+]);
+const MAX_OPTIONS = 5;
+const MIN_OPTIONS = 2;
 const KINDS = new Set(['task', 'reply', 'read', 'event']);
 const ACCOUNT = /^[A-Za-z0-9_.-]{1,64}$/;
 const THREAD = /^[A-Za-z0-9_-]{1,128}$/;
@@ -31,14 +48,17 @@ function clean(value, max, { lines = false } = {}) {
     return max ? text.slice(0, max) : text;
 }
 
-function gmailUrl(value) {
+function gmailUrl(value, field = 'gmail_url') {
+    const refused = () =>
+        new ValidationError(`${field} must open mail.google.com`);
     let url;
     try {
         url = new URL(value);
     } catch {
-        throw new ValidationError('gmail_url must open mail.google.com');
+        throw refused();
     }
     if (
+        typeof value !== 'string' ||
         url.protocol !== 'https:' ||
         url.hostname !== 'mail.google.com' ||
         url.username ||
@@ -46,7 +66,7 @@ function gmailUrl(value) {
         url.port ||
         value.length > 2048
     ) {
-        throw new ValidationError('gmail_url must open mail.google.com');
+        throw refused();
     }
     return url.toString();
 }
@@ -73,6 +93,98 @@ function suggestion(value) {
         result.event = eventFields(value.event ?? {}, 'suggestion.event');
     }
     return result;
+}
+
+// The decisions the card offers, in the order the agent gave them.
+function optionList(value) {
+    if (
+        !Array.isArray(value) ||
+        value.length < MIN_OPTIONS ||
+        value.length > MAX_OPTIONS
+    ) {
+        throw new ValidationError(
+            `options must list ${MIN_OPTIONS} to ${MAX_OPTIONS} decisions`
+        );
+    }
+    const seen = new Set();
+    for (const option of value) {
+        if (!OPTIONS.has(option)) {
+            throw new ValidationError(
+                `options must be among ${[...OPTIONS].join(', ')}`
+            );
+        }
+        if (seen.has(option)) {
+            throw new ValidationError(`option ${option} is listed twice`);
+        }
+        seen.add(option);
+    }
+    return [...value];
+}
+
+// Without options, the card offers what its old suggestion called for.
+function legacyChoice(suggested) {
+    const kind = suggested?.kind;
+    if (kind === 'reply') {
+        return {
+            options: ['reply', 'task', 'later', 'dismiss'],
+            recommended: 'reply',
+        };
+    }
+    if (kind === 'event') {
+        return {
+            options: ['event', 'task', 'later', 'dismiss'],
+            recommended: 'event',
+        };
+    }
+    if (kind === 'read') {
+        return {
+            options: ['dismiss', 'task', 'later'],
+            recommended: 'dismiss',
+        };
+    }
+    return { options: ['task', 'later', 'dismiss'], recommended: 'task' };
+}
+
+function choice(input, suggested) {
+    const given = input.options !== undefined && input.options !== null;
+    const { options, recommended: fallback } = given
+        ? { options: optionList(input.options), recommended: null }
+        : legacyChoice(suggested);
+    const recommended = input.recommended ?? fallback;
+    if (recommended !== null && !options.includes(recommended)) {
+        throw new ValidationError('recommended must be one of the options');
+    }
+    return { options, recommended };
+}
+
+// The prepared Gmail draft, only with the draft option: its body is the
+// agent's own text, kept for the agent that creates the draft.
+function draftFields(value, options) {
+    const offered = options.includes('draft');
+    if (!offered) {
+        if (value === undefined || value === null) return null;
+        throw new ValidationError('draft needs the draft option');
+    }
+    if (
+        value === null ||
+        typeof value !== 'object' ||
+        typeof value.body !== 'string'
+    ) {
+        throw new ValidationError(
+            'draft.body is required with the draft option'
+        );
+    }
+    if (value.body.length > DRAFT_MAX) {
+        throw new ValidationError(
+            `draft.body is at most ${DRAFT_MAX} characters`
+        );
+    }
+    const body = clean(value.body, null, { lines: true });
+    if (!body)
+        throw new ValidationError(
+            'draft.body is required with the draft option'
+        );
+    return { body };
 }
 
 // A start is a day (all-day event) or an ISO 8601 time with its offset.
@@ -135,6 +247,30 @@ function threadKey(input = {}) {
     return { account: input.account, thread_id: input.thread_id };
 }
 
+// The text of the user's note to the agent, one to 500 characters.
+function noteText(value) {
+    const text =
+        typeof value === 'string' && value.length <= NOTE_MAX
+            ? clean(value, null, { lines: true })
+            : null;
+    if (!text) {
+        throw new ValidationError(
+            `payload.text is 1 to ${NOTE_MAX} characters`
+        );
+    }
+    return text;
+}
+
+// The error code of a failed Gmail action: a short lowercase code, not text.
+function actionCode(value) {
+    if (typeof value !== 'string' || !CODE.test(value)) {
+        throw new ValidationError(
+            'error must be a short code: lowercase letters and underscores'
+        );
+    }
+    return value;
+}
+
 // The card fields of a proposal, or a ValidationError naming the bad field.
 function normalizeProposal(input = {}) {
     const key = threadKey(input);
@@ -155,6 +291,8 @@ function normalizeProposal(input = {}) {
     if (typeof input.gmail_url !== 'string') {
         throw new ValidationError('gmail_url must open mail.google.com');
     }
+    const card = suggestion(input.suggestion);
+    const { options, recommended } = choice(input, card);
     return {
         ...key,
         from_name: clean(input.from_name, 255),
@@ -162,10 +300,33 @@ function normalizeProposal(input = {}) {
         subject: clean(input.subject, 500),
         received_at: receivedAt,
         summary,
-        suggestion: suggestion(input.suggestion),
+        suggestion: card,
         draft_excerpt: clean(input.draft_excerpt, EXCERPT_MAX, { lines: true }),
         gmail_url: gmailUrl(input.gmail_url),
+        options,
+        recommended,
+        draft: draftFields(input.draft, options),
+        excerpt: excerptFields(input.excerpt),
     };
 }
 
-module.exports = { normalizeProposal, threadKey, clean, isDay, eventFields };
+function excerptFields(value) {
+    if (value === undefined || value === null) return null;
+    if (typeof value !== 'string' || value.length > MAIL_EXCERPT_MAX) {
+        throw new ValidationError(
+            `excerpt is at most ${MAIL_EXCERPT_MAX} characters`
+        );
+    }
+    return clean(value, null, { lines: true });
+}
+
+module.exports = {
+    normalizeProposal,
+    threadKey,
+    clean,
+    isDay,
+    eventFields,
+    gmailUrl,
+    noteText,
+    actionCode,
+};

@@ -1,4 +1,46 @@
 {
+    "career": {
+        "title": "Carieră",
+        "updatedAt": "actualizat la {{time}}",
+        "empty": "Nimic nou azi",
+        "emptyHint": "Agentul trece în fiecare dimineață: revenirile, ofertele și sarcinile vor apărea aici.",
+        "allDecided": "Totul e decis pentru azi",
+        "loadError": "Pagina Carieră nu a putut fi încărcată.",
+        "retry": "Reîncearcă",
+        "applyError": "Decizia nu a fost salvată.",
+        "later": "Mai târziu",
+        "skip": "Omite",
+        "followups": {
+            "title": "Reveniri",
+            "appliedAgo": "aplicat {{when}}",
+            "openDraft": "Deschide ciorna",
+            "createTask": "Creează sarcina",
+            "done": "Gata"
+        },
+        "offers": {
+            "title": "Oferte de decis",
+            "apply": "Aplică",
+            "note": "Notă",
+            "notePlaceholder": "O notă pentru agent…",
+            "open": "Vezi oferta",
+            "expires": "expiră {{when}}",
+            "expired": "expirată"
+        },
+        "tasks": {
+            "title": "Sarcini propuse",
+            "add": "Adaugă"
+        },
+        "decided": "Decis ({{count}})",
+        "state": {
+            "applied": "Aplicat",
+            "skipped": "Omisă",
+            "later": "Mai târziu",
+            "done": "Gata",
+            "taskCreated": "Sarcină creată",
+            "added": "Adăugată",
+            "dismissed": "Respinsă"
+        }
+    },
     "agentBanner": {
         "agent": "Agent",
         "dismiss": "Marchează ca citit",
@@ -179,6 +221,9 @@
       "delete": "Șterge"
     },
     "mail": {
+      "draftRequested": "Ciornă în pregătire în Gmail",
+      "archiveRequested": "Arhivare solicitată",
+      "noteSent": "Trimis înapoi la Trieur",
       "noSubject": "(fără subiect)",
       "draft": "Ciornă pregătită:",
       "task": "Sarcină",
@@ -237,6 +282,23 @@
     "entry": "De sortat ({{count}})",
     "title": "De sortat",
     "deck": {
+      "progressLabel": "E-mail {{position}} din {{total}}",
+      "option": {
+        "draft": "Ciornă",
+        "read": "Citește",
+        "event": "Calendar",
+        "archive": "Arhivează"
+      },
+      "openInGmail": "Deschide în Gmail",
+      "readMail": "Citește e-mailul",
+      "collapseMail": "Restrânge",
+      "noteOpen": "Răspunde printr-un cuvânt",
+      "notePlaceholder": "Un cuvânt pentru Trieur",
+      "noteSend": "Trimite",
+      "recommended": "Recomandat",
+      "actionFailed": "Ultima acțiune nu a reușit",
+      "actionFailedDraft": "Ciorna nu a putut fi pregătită",
+      "actionFailedArchive": "Arhivarea nu a reușit",
       "open": "Sortează-mi e-mailurile ({{count}})",
       "title": "Sortează-mi e-mailurile",
       "close": "Închide",
@@ -250,7 +312,7 @@
       "openMail": "Deschide e-mailul",
       "chat": "Discută",
       "undo": "Anulează",
-      "keys": "Enter sau →: sfat · ←: mai târziu · ↓: sari · Ctrl+Z: anulează · Esc: închide"
+      "keys": "Enter sau →: sfat · 1–5: alege · ←: mai târziu · ↓: sari · Ctrl+Z: anulează · Esc: închide"
     }
   },
   "outline": {
@@ -5227,6 +5289,23 @@
     "planned": "Programată {{when}}"
   },
   "proposals": {
+    "decide": {
+      "today": "Azi",
+      "planOn": "Planifică într-o zi",
+      "keep": "Lasă așa",
+      "kept": "Neschimbat",
+      "otherDate": "Altă dată…",
+      "dueOn": "Termen {{date}}",
+      "ok": "OK",
+      "menu": "Alege",
+      "changed": "Modificat",
+      "undo": "Înapoi la sugestie: {{decision}}",
+      "trigger": "{{decision}}, {{task}}",
+      "goal": "Obiectiv",
+      "area": "Domeniu",
+      "groupToday": "Azi",
+      "groupKeep": "Neschimbat"
+    },
     "week": {
       "button": "Planifică-mi săptămâna",
       "ready": "Săptămâna ta este gata",
@@ -5255,6 +5334,18 @@
       "ignore": "Ignoră",
       "later": "Mai târziu",
       "apply": "Aplică ({{count}})",
+      "note": "Notă",
+      "noteFor": "Notă pentru: {{task}}",
+      "notePlaceholder": "Ce trebuie schimbat…",
+      "toReview": "De revizuit",
+      "noteDecision": "De revizuit cu nota ta",
+      "sendError": "Notele n-au putut fi trimise.",
+      "sendCaption_one": "{{count}} aplicată · {{sent}} trimise înapoi",
+      "sendCaption_few": "{{count}} aplicate · {{sent}} trimise înapoi",
+      "sendCaption_other": "{{count}} de aplicate · {{sent}} trimise înapoi",
+      "notesSent_one": "{{count}} sarcină trimisă înapoi, te anunț când e gata",
+      "notesSent_few": "{{count}} sarcini trimise înapoi, te anunț când sunt gata",
+      "notesSent_other": "{{count}} de sarcini trimise înapoi, te anunț când sunt gata",
       "appliedCount": "{{count}} din {{total}} aplicate"
     },
     "apply": {

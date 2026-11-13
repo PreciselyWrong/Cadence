@@ -71,6 +71,13 @@ router.post(
 );
 
 router.post(
+    '/proposals/:uid/send',
+    handle((req) =>
+        service.sendProposal(req.currentUser, req.params.uid, req.body ?? {})
+    )
+);
+
+router.post(
     '/proposals/:uid/dismiss',
     handle((req) => service.dismissProposal(req.currentUser, req.params.uid))
 );

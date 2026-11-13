@@ -109,6 +109,9 @@ class MailCardTest {
                 MailDecision.EVENT to "event",
                 MailDecision.LATER to "later",
                 MailDecision.DISMISS to "dismiss",
+                MailDecision.DRAFT to "draft",
+                MailDecision.ARCHIVE to "archive",
+                MailDecision.NOTE to "note",
             ),
             MailDecision.entries.associateWith { it.wire },
         )

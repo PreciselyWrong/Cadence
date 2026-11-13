@@ -14,6 +14,7 @@ const { registerPeopleTools } = require('./tools/peopleTools');
 const { registerGoalTools } = require('./tools/goalTools');
 const { registerLinkTools } = require('./tools/linkTools');
 const { registerMailTools } = require('./tools/mailTools');
+const { registerCareerTools } = require('./tools/careerTools');
 
 function registerAllTools(server, context, tools) {
     registerTaskTools(server, context, tools);
@@ -30,6 +31,7 @@ function registerAllTools(server, context, tools) {
     registerGoalTools(server, context, tools);
     registerLinkTools(server, context, tools);
     registerMailTools(server, context, tools);
+    registerCareerTools(server, context, tools);
 }
 
 module.exports = { registerAllTools };

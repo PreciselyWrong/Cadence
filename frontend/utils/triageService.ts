@@ -129,7 +129,20 @@ export interface MailPayload {
     } | null;
     draft_excerpt: string | null;
     gmail_url: string;
+    // Deck v2 cards (absent on older ones): the agent's 2 to 5 choices in
+    // its order, the one it advises, the prepared draft and the mail's text.
+    options?: MailOption[] | null;
+    recommended?: MailOption | null;
+    draft?: { body: string } | null;
+    excerpt?: string | null;
+    // What the last decision asked of the agent, and why it failed if it did
+    action?: { type: string; state: string } | null;
+    action_error?: string | null;
 }
+
+// `reply` only comes from the server's reading of an older card.
+export type MailOption =
+    'draft' | 'reply' | 'task' | 'event' | 'later' | 'archive' | 'dismiss';
 
 // An appointment for the agent to put in the calendar: start is a day
 // (all day) or an ISO 8601 time with its offset.
@@ -141,7 +154,16 @@ export interface MailEvent {
     location?: string;
 }
 
-export type MailDecision = 'task' | 'reply' | 'event' | 'later' | 'dismiss';
+export type MailDecision =
+    | 'task'
+    | 'reply'
+    | 'draft'
+    | 'event'
+    | 'later'
+    | 'archive'
+    | 'dismiss'
+    // payload { text }: a word back to the agent, which takes the mail again
+    | 'note';
 
 export interface MailOutcome {
     archived?: boolean;

@@ -31,12 +31,18 @@ class ProposalsClient(private val session: suspend () -> ServerSession?) {
 
     suspend fun get(uid: String): JsonObject = request("GET", path(uid))
 
+    /** Propositions de carrière prêtes (`GET /api/proposals?kind=career&status=ready`). */
+    suspend fun listCareer(): JsonObject = request("GET", "/api/proposals?kind=career&status=ready")
+
     suspend fun reply(uid: String, text: String): JsonObject =
         request("POST", path(uid) + "/reply", buildJsonObject { put("text", text) })
 
     suspend fun apply(uid: String, body: JsonObject): JsonObject = request("POST", path(uid) + "/apply", body)
 
     suspend fun dismiss(uid: String): JsonObject = request("POST", path(uid) + "/dismiss", EMPTY)
+
+    /** Appliquer les décisions sans remarque et renvoyer les tâches remarquées à l'agent. */
+    suspend fun send(uid: String, body: JsonObject): JsonObject = request("POST", path(uid) + "/send", body)
 
     private fun path(uid: String) = "/api/proposals/" + URLEncoder.encode(uid, "UTF-8")
 

@@ -1,4 +1,46 @@
 {
+    "career": {
+        "title": "Carriera",
+        "updatedAt": "aggiornato alle {{time}}",
+        "empty": "Niente di nuovo oggi",
+        "emptyHint": "L’agente passa ogni mattina: i suoi solleciti, offerte e attività compariranno qui.",
+        "allDecided": "Tutto deciso per oggi",
+        "loadError": "Impossibile caricare la pagina Carriera.",
+        "retry": "Riprova",
+        "applyError": "La decisione non è stata salvata.",
+        "later": "Più tardi",
+        "skip": "Salta",
+        "followups": {
+            "title": "Solleciti",
+            "appliedAgo": "candidato {{when}}",
+            "openDraft": "Apri la bozza",
+            "createTask": "Crea attività",
+            "done": "Fatto"
+        },
+        "offers": {
+            "title": "Offerte da decidere",
+            "apply": "Candidati",
+            "note": "Nota",
+            "notePlaceholder": "Una nota per l’agente…",
+            "open": "Vedi l’offerta",
+            "expires": "scade {{when}}",
+            "expired": "scaduta"
+        },
+        "tasks": {
+            "title": "Attività proposte",
+            "add": "Aggiungi"
+        },
+        "decided": "Deciso ({{count}})",
+        "state": {
+            "applied": "Candidato",
+            "skipped": "Saltata",
+            "later": "Più tardi",
+            "done": "Fatto",
+            "taskCreated": "Attività creata",
+            "added": "Aggiunta",
+            "dismissed": "Scartata"
+        }
+    },
     "agentBanner": {
         "agent": "Agente",
         "dismiss": "Segna come letto",
@@ -175,6 +217,9 @@
       "delete": "Elimina"
     },
     "mail": {
+      "draftRequested": "Bozza in preparazione in Gmail",
+      "archiveRequested": "Archiviazione richiesta",
+      "noteSent": "Rimandato al Trieur",
       "noSubject": "(nessun oggetto)",
       "draft": "Bozza pronta:",
       "task": "Attività",
@@ -233,6 +278,23 @@
     "entry": "Da ordinare ({{count}})",
     "title": "Da ordinare",
     "deck": {
+      "progressLabel": "Mail {{position}} di {{total}}",
+      "option": {
+        "draft": "Bozza",
+        "read": "Leggi",
+        "event": "Calendario",
+        "archive": "Archivia"
+      },
+      "openInGmail": "Apri in Gmail",
+      "readMail": "Leggi la mail",
+      "collapseMail": "Riduci",
+      "noteOpen": "Rispondi con una parola",
+      "notePlaceholder": "Una parola per il Trieur",
+      "noteSend": "Invia",
+      "recommended": "Consigliato",
+      "actionFailed": "L’ultima azione non è andata a buon fine",
+      "actionFailedDraft": "Impossibile preparare la bozza",
+      "actionFailedArchive": "L’archiviazione non è andata a buon fine",
       "open": "Smista la mia posta ({{count}})",
       "title": "Smista la mia posta",
       "close": "Chiudi",
@@ -246,7 +308,7 @@
       "openMail": "Apri la mail",
       "chat": "Discuti",
       "undo": "Annulla",
-      "keys": "Invio o →: consiglio · ←: più tardi · ↓: salta · Ctrl+Z: annulla · Esc: chiudi"
+      "keys": "Invio o →: consiglio · 1–5: scegli · ←: più tardi · ↓: salta · Ctrl+Z: annulla · Esc: chiudi"
     }
   },
   "outline": {
@@ -5219,6 +5281,23 @@
     "planned": "Pianificata {{when}}"
   },
   "proposals": {
+    "decide": {
+      "today": "Oggi",
+      "planOn": "Pianifica in un giorno",
+      "keep": "Lascia così",
+      "kept": "Invariato",
+      "otherDate": "Altra data…",
+      "dueOn": "Scade {{date}}",
+      "ok": "OK",
+      "menu": "Scegli",
+      "changed": "Modificato",
+      "undo": "Torna al suggerimento: {{decision}}",
+      "trigger": "{{decision}}, {{task}}",
+      "goal": "Obiettivo",
+      "area": "Area",
+      "groupToday": "Oggi",
+      "groupKeep": "Invariato"
+    },
     "week": {
       "button": "Pianifica la mia settimana",
       "ready": "La tua settimana è pronta",
@@ -5247,6 +5326,16 @@
       "ignore": "Ignora",
       "later": "Più tardi",
       "apply": "Applica ({{count}})",
+      "note": "Nota",
+      "noteFor": "Nota per {{task}}",
+      "notePlaceholder": "Cosa deve cambiare…",
+      "toReview": "Da rivedere",
+      "noteDecision": "Da rivedere con la tua nota",
+      "sendError": "Impossibile inviare le note.",
+      "sendCaption_one": "{{count}} applicata · {{sent}} rimandate",
+      "sendCaption_other": "{{count}} applicate · {{sent}} rimandate",
+      "notesSent_one": "{{count}} attività rimandata, ti avviso quando è pronta",
+      "notesSent_other": "{{count}} attività rimandate, ti avviso quando sono pronte",
       "appliedCount": "{{count}} su {{total}} applicati"
     },
     "apply": {

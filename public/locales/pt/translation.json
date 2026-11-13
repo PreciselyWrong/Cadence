@@ -1,4 +1,46 @@
 {
+    "career": {
+        "title": "Carreira",
+        "updatedAt": "atualizado às {{time}}",
+        "empty": "Nada de novo hoje",
+        "emptyHint": "O agente passa toda manhã: os acompanhamentos, ofertas e tarefas aparecerão aqui.",
+        "allDecided": "Tudo decidido por hoje",
+        "loadError": "Não foi possível carregar a página Carreira.",
+        "retry": "Tentar novamente",
+        "applyError": "A decisão não foi salva.",
+        "later": "Mais tarde",
+        "skip": "Pular",
+        "followups": {
+            "title": "Acompanhamentos",
+            "appliedAgo": "candidatou-se {{when}}",
+            "openDraft": "Abrir rascunho",
+            "createTask": "Criar tarefa",
+            "done": "Feito"
+        },
+        "offers": {
+            "title": "Ofertas a decidir",
+            "apply": "Candidatar-se",
+            "note": "Observação",
+            "notePlaceholder": "Uma observação para o agente…",
+            "open": "Ver a oferta",
+            "expires": "expira {{when}}",
+            "expired": "expirada"
+        },
+        "tasks": {
+            "title": "Tarefas sugeridas",
+            "add": "Adicionar"
+        },
+        "decided": "Decidido ({{count}})",
+        "state": {
+            "applied": "Candidatado",
+            "skipped": "Pulada",
+            "later": "Mais tarde",
+            "done": "Feito",
+            "taskCreated": "Tarefa criada",
+            "added": "Adicionada",
+            "dismissed": "Descartada"
+        }
+    },
     "agentBanner": {
         "agent": "Agente",
         "dismiss": "Marcar como lido",
@@ -175,6 +217,9 @@
       "delete": "Excluir"
     },
     "mail": {
+      "draftRequested": "Rascunho em preparação no Gmail",
+      "archiveRequested": "Arquivamento solicitado",
+      "noteSent": "Devolvido ao Trieur",
       "noSubject": "(sem assunto)",
       "draft": "Rascunho pronto:",
       "task": "Tarefa",
@@ -233,6 +278,23 @@
     "entry": "Por organizar ({{count}})",
     "title": "Por organizar",
     "deck": {
+      "progressLabel": "E-mail {{position}} de {{total}}",
+      "option": {
+        "draft": "Rascunho",
+        "read": "Ler",
+        "event": "Agenda",
+        "archive": "Arquivar"
+      },
+      "openInGmail": "Abrir no Gmail",
+      "readMail": "Ler o e-mail",
+      "collapseMail": "Recolher",
+      "noteOpen": "Responder com uma palavra",
+      "notePlaceholder": "Uma palavra para o Trieur",
+      "noteSend": "Enviar",
+      "recommended": "Recomendado",
+      "actionFailed": "A última ação não foi concluída",
+      "actionFailedDraft": "Não foi possível preparar o rascunho",
+      "actionFailedArchive": "O arquivamento não foi concluído",
       "open": "Organizar meus e-mails ({{count}})",
       "title": "Organizar meus e-mails",
       "close": "Fechar",
@@ -246,7 +308,7 @@
       "openMail": "Abrir e-mail",
       "chat": "Conversar",
       "undo": "Desfazer",
-      "keys": "Enter ou →: conselho · ←: depois · ↓: pular · Ctrl+Z: desfazer · Esc: fechar"
+      "keys": "Enter ou →: conselho · 1–5: escolher · ←: mais tarde · ↓: pular · Ctrl+Z: desfazer · Esc: fechar"
     }
   },
   "outline": {
@@ -5219,6 +5281,23 @@
     "planned": "Planejada {{when}}"
   },
   "proposals": {
+    "decide": {
+      "today": "Hoje",
+      "planOn": "Planear num dia",
+      "keep": "Manter como está",
+      "kept": "Sem alteração",
+      "otherDate": "Outra data…",
+      "dueOn": "Prazo {{date}}",
+      "ok": "OK",
+      "menu": "Escolher",
+      "changed": "Alterado",
+      "undo": "Voltar à sugestão: {{decision}}",
+      "trigger": "{{decision}}, {{task}}",
+      "goal": "Objetivo",
+      "area": "Área",
+      "groupToday": "Hoje",
+      "groupKeep": "Sem alteração"
+    },
     "week": {
       "button": "Planejar minha semana",
       "ready": "Sua semana está pronta",
@@ -5247,6 +5326,16 @@
       "ignore": "Ignorar",
       "later": "Depois",
       "apply": "Aplicar ({{count}})",
+      "note": "Nota",
+      "noteFor": "Nota sobre {{task}}",
+      "notePlaceholder": "O que deve mudar…",
+      "toReview": "Para rever",
+      "noteDecision": "Para rever com a tua nota",
+      "sendError": "Não foi possível enviar as notas.",
+      "sendCaption_one": "{{count}} aplicada · {{sent}} devolvidas",
+      "sendCaption_other": "{{count}} aplicadas · {{sent}} devolvidas",
+      "notesSent_one": "{{count}} tarefa devolvida, aviso quando estiver pronta",
+      "notesSent_other": "{{count}} tarefas devolvidas, aviso quando estiverem prontas",
       "appliedCount": "{{count}} de {{total}} aplicados"
     },
     "apply": {

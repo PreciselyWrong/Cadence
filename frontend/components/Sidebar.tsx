@@ -17,6 +17,8 @@ import SidebarHabits from './Sidebar/SidebarHabits';
 import SidebarProjects from './Sidebar/SidebarProjects';
 import SidebarTags from './Sidebar/SidebarTags';
 import SidebarGoals from './Sidebar/SidebarGoals';
+import SidebarGoalsPanel from './Sidebar/SidebarGoalsPanel';
+import SidebarHabitsPanel from './Sidebar/SidebarHabitsPanel';
 import SidebarViews from './Sidebar/SidebarViews';
 import SidebarPeople from './Sidebar/SidebarPeople';
 import SidebarBoards from './Sidebar/SidebarBoards';
@@ -254,6 +256,26 @@ const Sidebar: React.FC<SidebarProps> = ({
         ),
     };
 
+    // The Goals and Habits panels list their items in full (open by default);
+    // the Dense sections above stay compact.
+    const sectionPanelElements: Record<string, JSX.Element> = {
+        ...sectionElements,
+        goals: (
+            <SidebarGoalsPanel
+                handleNavClick={handleNavClick}
+                location={location}
+                openGoalModal={openGoalModal}
+            />
+        ),
+        habits: (
+            <SidebarHabitsPanel
+                handleNavClick={handleNavClick}
+                location={location}
+                openNewHabit={openNewHabit}
+            />
+        ),
+    };
+
     // One block of the open minimal panel (order and visibility in
     // Profile > Sidebar).
     const minimalBlock = (key: PanelId): React.ReactNode => {
@@ -413,8 +435,8 @@ const Sidebar: React.FC<SidebarProps> = ({
                                                     ) : (
                                                         <div className="mb-[6px]">
                                                             {
-                                                                sectionElements[
-                                                                    block.key as SidebarSectionId
+                                                                sectionPanelElements[
+                                                                    block.key
                                                                 ]
                                                             }
                                                         </div>

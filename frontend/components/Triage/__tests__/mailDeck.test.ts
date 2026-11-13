@@ -1,5 +1,7 @@
 import {
+    deckButtons,
     deckCards,
+    deckProgress,
     deckReducer,
     initialDeck,
     recommendation,
@@ -234,5 +236,166 @@ describe('mail deck › recommendation', () => {
                 })
             ).decision
         ).toBe('task');
+    });
+});
+
+describe('mail deck › buttons', () => {
+    const shown = (mail: MailPayload) =>
+        deckButtons(mail).map((button) => [button.choice, button.recommended]);
+
+    it('keeps the agent options in their order with its advice', () => {
+        expect(
+            shown(
+                payload({
+                    options: ['task', 'draft', 'dismiss'],
+                    recommended: 'draft',
+                })
+            )
+        ).toEqual([
+            ['task', false],
+            ['draft', true],
+            ['dismiss', false],
+        ]);
+    });
+
+    it('highlights nothing without a known advice', () => {
+        expect(
+            shown(
+                payload({
+                    options: ['later', 'archive'],
+                    recommended: 'task',
+                })
+            )
+        ).toEqual([
+            ['later', false],
+            ['archive', false],
+        ]);
+    });
+
+    it('drops unknown, repeated and impossible options, and stops at five', () => {
+        const mail = payload({
+            options: [
+                'draft',
+                'draft',
+                'bogus',
+                'event',
+                'task',
+                'later',
+                'archive',
+                'dismiss',
+            ] as unknown as MailPayload['options'],
+        });
+        expect(deckButtons(mail).map((button) => button.choice)).toEqual([
+            'draft',
+            'task',
+            'later',
+            'archive',
+            'dismiss',
+        ]);
+    });
+
+    it('prefills the task and sends the other options without payload', () => {
+        const [task, draft] = deckButtons(
+            payload({
+                options: ['task', 'draft'],
+                suggestion: { kind: 'task', task_name: 'Valider' },
+            })
+        );
+        expect(task).toMatchObject({
+            decision: 'task',
+            payload: { name: 'Valider' },
+            opensMail: false,
+        });
+        expect(draft).toMatchObject({
+            decision: 'draft',
+            payload: {},
+            opensMail: false,
+        });
+    });
+
+    it('opens Gmail for the options the server reads from an older card', () => {
+        const reply = deckButtons(
+            payload({
+                options: ['reply', 'task', 'later', 'dismiss'],
+                recommended: 'reply',
+                suggestion: { kind: 'reply' },
+            })
+        )[0];
+        expect(reply).toMatchObject({
+            choice: 'reply',
+            decision: 'reply',
+            opensMail: true,
+            recommended: true,
+        });
+        const read = deckButtons(
+            payload({
+                options: ['dismiss', 'task', 'later'],
+                recommended: 'dismiss',
+                suggestion: { kind: 'read' },
+            })
+        )[0];
+        expect(read).toMatchObject({
+            choice: 'read',
+            decision: 'dismiss',
+            opensMail: true,
+        });
+        // Never an address outside Gmail.
+        expect(
+            deckButtons(
+                payload({
+                    options: ['reply', 'task'],
+                    gmail_url: 'https://evil.example/',
+                })
+            ).map((button) => button.choice)
+        ).toEqual(['task']);
+    });
+
+    it('derives today’s buttons on a card without options', () => {
+        expect(shown(payload({ suggestion: { kind: 'read' } }))).toEqual([
+            ['read', true],
+            ['task', false],
+            ['reply', false],
+            ['later', false],
+            ['dismiss', false],
+        ]);
+        expect(
+            deckButtons(payload({ suggestion: { kind: 'read' } }))[0]
+        ).toMatchObject({ decision: 'dismiss', opensMail: true });
+        expect(shown(payload({ gmail_url: 'https://evil.example/' }))).toEqual([
+            ['task', true],
+            ['later', false],
+            ['dismiss', false],
+        ]);
+    });
+});
+
+describe('mail deck › progress', () => {
+    it('counts the card shown among all the mail cards', () => {
+        const items = [mailItem('a'), taskItem, mailItem('b'), mailItem('c')];
+        expect(deckProgress(items, initialDeck)).toEqual({
+            position: 1,
+            total: 3,
+            done: 0,
+        });
+        const state = deckReducer(initialDeck, {
+            type: 'decide',
+            held: {
+                key: 'mail:a',
+                mailUid: 'a',
+                decision: 'dismiss',
+                payload: {},
+                archive: false,
+            },
+        }).state;
+        expect(deckProgress(items, state)).toEqual({
+            position: 2,
+            total: 3,
+            done: 1,
+        });
+        const skipped = deckReducer(state, {
+            type: 'skip',
+            key: 'mail:b',
+        }).state;
+        expect(deckProgress(items, skipped).position).toBe(2);
     });
 });

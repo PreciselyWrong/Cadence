@@ -11,10 +11,11 @@ import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
-/** Les deux propositions de l'app (`docs/47-proposals.md`). */
+/** Les propositions de l'app (`docs/47-proposals.md`) ; la carrière est lue, pas demandée depuis l'app. */
 enum class ProposalKind(val wire: String) {
     WEEK("week"),
-    REVIEW("review");
+    REVIEW("review"),
+    CAREER("career");
 
     companion object {
         fun of(wire: String?): ProposalKind? = entries.firstOrNull { it.wire == wire }
@@ -50,6 +51,9 @@ internal data class ProposalListDto(val proposals: List<ProposalDto> = emptyList
 
 @Serializable
 data class ProposalAnswerDto(
+    val headline: String? = null,
+    val subtitle: String? = null,
+    /** Contrat v1 : remplacé par [subtitle], gardé pour lire les réponses d'avant. */
     val summary: String = "",
     val questions: List<QuestionDto> = emptyList(),
     val changes: List<ChangeDto> = emptyList(),
@@ -75,7 +79,13 @@ data class ReviewItemDto(
 )
 
 @Serializable
-internal data class FactTaskDto(val uid: String = "", val name: String = "", val project: String? = null)
+internal data class FactTaskDto(
+    val uid: String = "",
+    val name: String = "",
+    val project: String? = null,
+    val goal: String? = null,
+    val area: String? = null,
+)
 
 @Serializable
 internal data class FactsDto(val tasks: List<FactTaskDto> = emptyList())
@@ -112,7 +122,8 @@ enum class ProposalOp(val wire: String) {
     THIS_WEEK("this_week"),
     LATER("later"),
     DUE("due"),
-    DROP("drop");
+    DROP("drop"),
+    KEEP("keep");
 
     companion object {
         fun of(wire: String?): ProposalOp? = entries.firstOrNull { it.wire == wire }
@@ -122,46 +133,160 @@ enum class ProposalOp(val wire: String) {
 /** Un changement de la semaine, tel que le serveur l'a validé ; [date] n'existe que pour `plan_day` et `due`. */
 data class WeekChange(val taskUid: String, val op: ProposalOp, val date: LocalDate?, val reason: String)
 
-/** Changements d'un même jour ; [date] nul regroupe ceux qui n'ont pas de jour (cette semaine, plus tard, abandonner). */
-data class ChangeGroup(val date: LocalDate?, val changes: List<WeekChange>)
+data class FactTask(val uid: String, val name: String, val project: String?, val goal: String?, val area: String?)
 
-data class FactTask(val uid: String, val name: String, val project: String?)
+/** Ce qu'on fait d'une tâche de la semaine : une opération, et sa date pour `plan_day` et `due`. */
+data class WeekDecision(val op: ProposalOp, val date: LocalDate? = null)
+
+/**
+ * Section de la feuille : les tâches dont la décision courante est [group]. L'ordre des sections est celui de
+ * [Proposals.sections] : les jours d'abord, puis cette semaine, plus tard, les échéances, abandonner, garder.
+ */
+data class DecisionSection(val group: DecisionGroup, val changes: List<WeekChange>)
+
+sealed interface DecisionGroup {
+    data class Day(val date: LocalDate) : DecisionGroup
+
+    data object ThisWeek : DecisionGroup
+
+    data object Later : DecisionGroup
+
+    data class Due(val date: LocalDate) : DecisionGroup
+
+    data object Drop : DecisionGroup
+
+    data object Keep : DecisionGroup
+}
 
 data class ReviewJudgement(val taskUid: String, val choice: String, val reason: String)
 
 data class ApplyOutcome(val applied: Int, val failed: Int)
 
-/** Règles pures des propositions : regroupement, coches, corps des requêtes, lecture des réponses. */
+/** Ce que « Envoyer » fait : décisions appliquées et tâches renvoyées avec une remarque. */
+data class SendCounts(val applied: Int, val returned: Int)
+
+/** Règles pures des propositions : décisions de la semaine, regroupement, corps des requêtes, lecture des réponses. */
 object Proposals {
+    /** Longueur maximale d'une remarque envoyée à l'agent. */
+    const val NOTE_MAX_LENGTH = 500
+
+    /** Changements de l'agent. Une date manquante pour `plan_day` ou `due` ôte le changement. */
     fun weekChanges(answer: ProposalAnswerDto?): List<WeekChange> =
         answer?.changes.orEmpty().mapNotNull { change ->
             val op = ProposalOp.of(change.op) ?: return@mapNotNull null
             if (change.taskUid.isBlank()) return@mapNotNull null
-            WeekChange(change.taskUid, op, change.date?.let(::dateOrNull), change.reason)
+            val date = change.date?.let(::dateOrNull)
+            if ((op == ProposalOp.PLAN_DAY || op == ProposalOp.DUE) && date == null) return@mapNotNull null
+            WeekChange(change.taskUid, op, date, change.reason)
         }
 
-    /** Ordre : les changements sans jour d'abord, puis chaque jour dans l'ordre du calendrier. */
-    fun groupByDay(changes: List<WeekChange>): List<ChangeGroup> {
-        val undated = changes.filter { it.date == null }
-        val dated = changes.mapNotNull { change -> change.date?.let { day -> day to change } }
-            .groupBy({ it.first }, { it.second })
-            .toSortedMap()
-        return buildList {
-            if (undated.isNotEmpty()) add(ChangeGroup(null, undated))
-            dated.forEach { (day, list) -> add(ChangeGroup(day, list)) }
-        }
+    /** Titre de la feuille : la phrase de la réponse ; null pour une réponse d'avant, la feuille met « Ta semaine ». */
+    fun headlineOf(answer: ProposalAnswerDto?): String? = answer?.headline?.trim()?.takeIf { it.isNotEmpty() }
+
+    /** Sous-titre : le `subtitle` du contrat, ou le `summary` d'avant. */
+    fun subtitleOf(answer: ProposalAnswerDto?): String? =
+        (answer?.subtitle ?: answer?.summary)?.trim()?.takeIf { it.isNotEmpty() }
+
+    /** Décision courante d'une tâche : celle que l'utilisateur a choisie, sinon celle de l'agent. */
+    fun decision(change: WeekChange, chosen: Map<String, WeekDecision>): WeekDecision =
+        chosen[change.taskUid] ?: suggested(change)
+
+    fun isModified(change: WeekChange, chosen: Map<String, WeekDecision>): Boolean = chosen.containsKey(change.taskUid)
+
+    /** Choisit [decision] pour la tâche. Revenir à la suggestion de l'agent retire le choix : la ligne n'est plus « modifiée ». */
+    fun choose(chosen: Map<String, WeekDecision>, change: WeekChange, decision: WeekDecision): Map<String, WeekDecision> =
+        if (decision == suggested(change)) chosen - change.taskUid else chosen + (change.taskUid to decision)
+
+    fun restore(chosen: Map<String, WeekDecision>, taskUid: String): Map<String, WeekDecision> = chosen - taskUid
+
+    /** Sections par décision courante, vides exclues. */
+    fun sections(changes: List<WeekChange>, chosen: Map<String, WeekDecision>): List<DecisionSection> {
+        val byGroup = changes.groupBy { groupOf(decision(it, chosen)) }
+        return byGroup.keys.sortedWith(GROUP_ORDER).map { DecisionSection(it, byGroup.getValue(it)) }
     }
 
-    /** Les changements gardés : tous, sauf ceux dont la case est décochée. */
-    fun checked(changes: List<WeekChange>, unchecked: Set<String>): List<WeekChange> =
-        changes.filter { it.taskUid !in unchecked }
+    /** Options du menu d'une tâche : chaque jour de la période, puis cette semaine, plus tard, garder et abandonner. */
+    fun menuOptions(start: LocalDate?, end: LocalDate?): List<WeekDecision> {
+        val days = if (start != null && end != null && !end.isBefore(start)) {
+            generateSequence(start) { it.plusDays(1) }.takeWhile { !it.isAfter(end) }.take(MAX_MENU_DAYS)
+                .map { WeekDecision(ProposalOp.PLAN_DAY, it) }.toList()
+        } else {
+            emptyList()
+        }
+        return days + listOf(
+            WeekDecision(ProposalOp.THIS_WEEK),
+            WeekDecision(ProposalOp.LATER),
+            WeekDecision(ProposalOp.KEEP),
+            WeekDecision(ProposalOp.DROP),
+        )
+    }
 
-    fun toggle(unchecked: Set<String>, taskUid: String): Set<String> =
-        if (taskUid in unchecked) unchecked - taskUid else unchecked + taskUid
+    /** Nombre de décisions qui changent quelque chose : « Appliquer (N) ». */
+    fun pendingCount(changes: List<WeekChange>, chosen: Map<String, WeekDecision>): Int =
+        changes.count { decision(it, chosen).op != ProposalOp.KEEP }
 
-    fun weekApplyBody(changes: List<WeekChange>, unchecked: Set<String>): JsonObject {
-        val uids = checked(changes, unchecked).map { it.taskUid }.distinct()
-        return buildJsonObject { put("task_uids", JsonArray(uids.map(::JsonPrimitive))) }
+    /** Texte d'une remarque, sans espaces autour ; un texte vide n'est pas une remarque. */
+    fun noteOf(raw: String?): String? = raw?.trim()?.takeIf { it.isNotEmpty() }
+
+    fun hasNote(change: WeekChange, notes: Map<String, String>): Boolean = noteOf(notes[change.taskUid]) != null
+
+    /**
+     * Ce que « Envoyer » fait : [SendCounts.applied] décisions appliquées (ni gardées, ni remarquées) et
+     * [SendCounts.returned] tâches renvoyées à l'agent avec leur remarque.
+     */
+    fun sendCounts(changes: List<WeekChange>, chosen: Map<String, WeekDecision>, notes: Map<String, String>): SendCounts =
+        SendCounts(
+            applied = changes.count { !hasNote(it, notes) && decision(it, chosen).op != ProposalOp.KEEP },
+            returned = changes.count { hasNote(it, notes) },
+        )
+
+    /**
+     * Corps de `POST …/send` : les décisions sans remarque et sans `keep`, puis les remarques de la réponse
+     * (une par tâche, texte rogné). Une remarque sur une tâche absente de la réponse n'est pas envoyée.
+     */
+    fun sendBody(changes: List<WeekChange>, chosen: Map<String, WeekDecision>, notes: Map<String, String>): JsonObject = buildJsonObject {
+        put(
+            "decisions",
+            buildJsonArray {
+                changes.forEach { change ->
+                    val decision = decision(change, chosen)
+                    if (hasNote(change, notes) || decision.op == ProposalOp.KEEP) return@forEach
+                    add(decisionObject(change, decision))
+                }
+            },
+        )
+        put(
+            "notes",
+            buildJsonArray {
+                changes.forEach { change ->
+                    val text = noteOf(notes[change.taskUid]) ?: return@forEach
+                    add(buildJsonObject {
+                        put("task_uid", change.taskUid)
+                        put("text", text)
+                    })
+                }
+            },
+        )
+    }
+
+    /** Corps de `POST …/apply` : une décision par tâche qui change, `keep` n'est pas envoyé. */
+    fun weekApplyBody(changes: List<WeekChange>, chosen: Map<String, WeekDecision>): JsonObject = buildJsonObject {
+        put(
+            "decisions",
+            buildJsonArray {
+                changes.forEach { change ->
+                    val decision = decision(change, chosen)
+                    if (decision.op == ProposalOp.KEEP) return@forEach
+                    add(decisionObject(change, decision))
+                }
+            },
+        )
+    }
+
+    private fun decisionObject(change: WeekChange, decision: WeekDecision): JsonObject = buildJsonObject {
+        put("task_uid", change.taskUid)
+        put("op", decision.op.wire)
+        decision.date?.let { put("date", it.toString()) }
     }
 
     /** Le choix de chaque tâche jugée par l'agent ; une entrée vide ou répétée n'en fait qu'une. */
@@ -197,7 +322,8 @@ object Proposals {
     fun factTasks(facts: JsonObject?): Map<String, FactTask> {
         if (facts == null) return emptyMap()
         val parsed = runCatching { ProposalJson.decodeFromJsonElement(FactsDto.serializer(), facts) }.getOrNull() ?: return emptyMap()
-        return parsed.tasks.filter { it.uid.isNotBlank() }.associate { it.uid to FactTask(it.uid, it.name, it.project) }
+        return parsed.tasks.filter { it.uid.isNotBlank() }
+            .associate { it.uid to FactTask(it.uid, it.name, it.project, it.goal?.takeIf(String::isNotBlank), it.area?.takeIf(String::isNotBlank)) }
     }
 
     /** Lit `{ results: [{ state }] }` de la réponse d'un apply : combien de changements sont passés. */
@@ -206,6 +332,37 @@ object Proposals {
             .map { it.content }
         return ApplyOutcome(applied = states.count { it == "applied" }, failed = states.count { it != "applied" })
     }
+
+    private fun suggested(change: WeekChange) = WeekDecision(change.op, change.date)
+
+    private fun groupOf(decision: WeekDecision): DecisionGroup = when (decision.op) {
+        ProposalOp.PLAN_DAY -> DecisionGroup.Day(requireNotNull(decision.date))
+        ProposalOp.THIS_WEEK -> DecisionGroup.ThisWeek
+        ProposalOp.LATER -> DecisionGroup.Later
+        ProposalOp.DUE -> DecisionGroup.Due(requireNotNull(decision.date))
+        ProposalOp.DROP -> DecisionGroup.Drop
+        ProposalOp.KEEP -> DecisionGroup.Keep
+    }
+
+    /** Jours, puis cette semaine, plus tard, échéances, abandonner, garder ; dans une même catégorie, par date. */
+    private val GROUP_ORDER: Comparator<DecisionGroup> = compareBy({ categoryOf(it) }, { dateOf(it) })
+
+    private fun categoryOf(group: DecisionGroup): Int = when (group) {
+        is DecisionGroup.Day -> 0
+        DecisionGroup.ThisWeek -> 1
+        DecisionGroup.Later -> 2
+        is DecisionGroup.Due -> 3
+        DecisionGroup.Drop -> 4
+        DecisionGroup.Keep -> 5
+    }
+
+    private fun dateOf(group: DecisionGroup): LocalDate? = when (group) {
+        is DecisionGroup.Day -> group.date
+        is DecisionGroup.Due -> group.date
+        else -> null
+    }
+
+    private const val MAX_MENU_DAYS = 14
 
     private fun dateOrNull(value: String): LocalDate? = runCatching { LocalDate.parse(value.take(10)) }.getOrNull()
 }

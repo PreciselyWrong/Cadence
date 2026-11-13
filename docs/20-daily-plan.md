@@ -235,7 +235,7 @@ Everything in this section appears only while the **AI assistant** is switched o
     - Today shows only the missed-block and gap tips.
 - **Draft with AI** (planner header):
     - On an empty plan it drafts straight away; otherwise it offers **Fill free time** (keeps what is planned) or **Start over**.
-    - The server gives the model the candidates (up to 60), busy meetings, free gaps, the current time and the user's "About you".
+    - The server gives the model the candidates (up to 60), busy meetings, free gaps and the current time.
     - The server then cleans up the answer (`sanitizeDraft` in `backend/modules/daily-plan/ai.js`): only known tasks, 15-minute grid, never in the past or on top of a meeting or another block. A clash moves to the next free slot, or loses its time.
     - The draft is applied locally, so it autosaves like any edit. **Undo** restores the previous plan. Drafted blocks show a sparkle, with the AI's reason as a tooltip.
 - **Length guesses:** when the planner opens, one request estimates up to 40 candidates without an estimate. The guess is pre-selected on the card's chips (marked with a dot) and saved as the task's estimate only when the task is added. Guesses are cached per server process for 24 hours.

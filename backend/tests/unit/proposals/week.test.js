@@ -5,7 +5,12 @@ const {
     resolvePeriod,
     weekFacts,
 } = require('../../../modules/proposals/core/week');
-const { validateWeekAnswer } = require('../../../modules/proposals/core/week');
+const {
+    validateWeekAnswer,
+    weekDecisionsOf,
+    checkWeekDecisions,
+} = require('../../../modules/proposals/core/week');
+const { ValidationError } = require('../../../shared/errors');
 const { validateAnswer } = require('../../../modules/proposals/core/answer');
 
 const TODAY = '2026-11-16';
@@ -175,7 +180,7 @@ describe('validateWeekAnswer', () => {
 
     it('keeps valid changes and drops the rest', () => {
         const { answer } = validateAnswer('week', base, {
-            summary: 'Mardi libre.',
+            headline: 'Mardi libre',
             questions: [{ id: 'q1', text: 'Mardi ?', choices: ['Oui', 'Non'] }],
             changes: [
                 {
@@ -211,9 +216,8 @@ describe('validateWeekAnswer', () => {
         ]);
     });
 
-    it('caps the summary, reasons, questions and drops ill-formed questions', () => {
+    it('caps reasons at 100 characters, questions at three and drops ill-formed ones', () => {
         const raw = validateWeekAnswer(base, {
-            summary: 'x'.repeat(400),
             questions: [
                 { id: 'q1', text: 'one' },
                 { id: 'q2', text: 'two' },
@@ -223,16 +227,285 @@ describe('validateWeekAnswer', () => {
             ],
             changes: [{ task_uid: 'a', op: 'later', reason: 'r'.repeat(300) }],
         });
-        expect(raw.summary).toHaveLength(300);
         expect(raw.questions.map((q) => q.id)).toEqual(['q1', 'q2', 'q3']);
-        expect(raw.changes[0].reason).toHaveLength(140);
+        expect(raw.changes[0].reason).toHaveLength(100);
     });
 
     it('strips control and invisible characters from text', () => {
-        const { summary } = validateWeekAnswer(base, {
-            summary: 'ok‮evil\u0007​ done',
+        const { answer } = validateAnswer('week', base, {
+            headline: 'ok‮evil\u0007​ done',
             changes: [],
         });
-        expect(summary).toBe('okevil done');
+        expect(answer.headline).toBe('okevil done');
+    });
+});
+
+describe('task goal and area', () => {
+    it('carries the goal and the area of a task when they are linked', () => {
+        const { tasks } = weekFacts({
+            today: TODAY,
+            period: PERIOD,
+            weekStart: WEEK,
+            tasks: [
+                task('g', {
+                    due: '2026-11-17',
+                    goal: 'Courir un semi',
+                    area: 'Santé',
+                }),
+                task('n', { due: '2026-11-17', goal: null, area: null }),
+            ],
+            plans: new Map(),
+            events: [],
+        });
+        expect(tasks[0]).toMatchObject({
+            goal: 'Courir un semi',
+            area: 'Santé',
+        });
+        expect(tasks[1]).not.toHaveProperty('goal');
+        expect(tasks[1]).not.toHaveProperty('area');
+    });
+});
+
+describe('checkWeekDecisions', () => {
+    const decisionFacts = weekFacts({
+        today: TODAY,
+        period: PERIOD,
+        weekStart: WEEK,
+        tasks: [
+            task('a', { due: '2026-11-17' }),
+            task('b', { due: '2026-11-18' }),
+        ],
+        plans: new Map(),
+        events: [],
+    });
+    // The window is the period and the 30 days after its end.
+    const LAST_DAY = '2026-12-22';
+
+    it('takes the operation the user chose, even one the agent did not propose', () => {
+        expect(
+            checkWeekDecisions(decisionFacts, [
+                { task_uid: 'a', op: 'later' },
+                { task_uid: 'b', op: 'plan_day', date: '2026-11-20' },
+            ])
+        ).toEqual([
+            { task_uid: 'a', op: 'later' },
+            { task_uid: 'b', op: 'plan_day', date: '2026-11-20' },
+        ]);
+    });
+
+    it('accepts keep, and a due date up to 30 days after the period', () => {
+        expect(
+            checkWeekDecisions(decisionFacts, [
+                { task_uid: 'a', op: 'keep' },
+                { task_uid: 'b', op: 'due', date: LAST_DAY },
+            ])
+        ).toEqual([
+            { task_uid: 'a', op: 'keep' },
+            { task_uid: 'b', op: 'due', date: LAST_DAY },
+        ]);
+    });
+
+    it('drops the date of an operation that takes none', () => {
+        expect(
+            checkWeekDecisions(decisionFacts, [
+                { task_uid: 'a', op: 'drop', date: '2026-11-20' },
+            ])
+        ).toEqual([{ task_uid: 'a', op: 'drop' }]);
+    });
+
+    it.each([
+        ['a task outside the facts', [{ task_uid: 'zz', op: 'later' }]],
+        ['an unknown operation', [{ task_uid: 'a', op: 'explode' }]],
+        [
+            'the same task twice',
+            [
+                { task_uid: 'a', op: 'later' },
+                { task_uid: 'a', op: 'drop' },
+            ],
+        ],
+        ['plan_day without a date', [{ task_uid: 'a', op: 'plan_day' }]],
+        [
+            'a date after the window',
+            [{ task_uid: 'a', op: 'due', date: '2026-12-23' }],
+        ],
+        [
+            'a date before the period',
+            [{ task_uid: 'a', op: 'plan_day', date: '2026-11-15' }],
+        ],
+        [
+            'a date that is not a day',
+            [{ task_uid: 'a', op: 'due', date: '2026-02-30' }],
+        ],
+        ['a decision that is not an object', ['a']],
+    ])('refuses %s', (_label, decisions) => {
+        expect(() => checkWeekDecisions(decisionFacts, decisions)).toThrow(
+            ValidationError
+        );
+    });
+});
+
+describe('weekDecisionsOf', () => {
+    const decisionFacts = weekFacts({
+        today: TODAY,
+        period: PERIOD,
+        weekStart: WEEK,
+        tasks: [task('a', { due: '2026-11-17' })],
+        plans: new Map(),
+        events: [],
+    });
+    const answer = {
+        changes: [
+            { task_uid: 'a', op: 'plan_day', date: '2026-11-17', reason: 'r' },
+        ],
+    };
+
+    it('keeps the decisions list when one is sent', () => {
+        expect(
+            weekDecisionsOf(decisionFacts, answer, {
+                decisions: [{ task_uid: 'a', op: 'later' }],
+            })
+        ).toEqual([{ task_uid: 'a', op: 'later' }]);
+    });
+
+    it('turns the legacy task_uids into the agent operations', () => {
+        expect(
+            weekDecisionsOf(decisionFacts, answer, { task_uids: ['a'] })
+        ).toEqual([{ task_uid: 'a', op: 'plan_day', date: '2026-11-17' }]);
+    });
+
+    it('refuses a legacy uid the agent did not propose, and a body with neither list', () => {
+        expect(() =>
+            weekDecisionsOf(decisionFacts, answer, { task_uids: ['b'] })
+        ).toThrow(ValidationError);
+        expect(() => weekDecisionsOf(decisionFacts, answer, {})).toThrow(
+            ValidationError
+        );
+    });
+});
+
+describe('checkWeekNotes', () => {
+    const noteFacts = { tasks: [{ uid: 'a' }, { uid: 'b' }, { uid: 'c' }] };
+    const { checkWeekNotes } = require('../../../modules/proposals/core/week');
+
+    it('trims each note and keeps the task uid and text', () => {
+        expect(
+            checkWeekNotes(
+                noteFacts,
+                [{ task_uid: 'a', text: '  seconde passe  ' }],
+                new Set()
+            )
+        ).toEqual([{ task_uid: 'a', text: 'seconde passe' }]);
+    });
+
+    it('refuses a note on a task that is not in the facts', () => {
+        expect(() =>
+            checkWeekNotes(noteFacts, [{ task_uid: 'z', text: 'x' }], new Set())
+        ).toThrow('not in this proposal');
+    });
+
+    it('refuses a task decided and noted at once, and two notes on one task', () => {
+        expect(() =>
+            checkWeekNotes(
+                noteFacts,
+                [{ task_uid: 'a', text: 'x' }],
+                new Set(['a'])
+            )
+        ).toThrow('both decided and noted');
+        expect(() =>
+            checkWeekNotes(
+                noteFacts,
+                [
+                    { task_uid: 'a', text: 'x' },
+                    { task_uid: 'a', text: 'y' },
+                ],
+                new Set()
+            )
+        ).toThrow('two notes');
+    });
+
+    it('refuses an empty note and one over 500 characters', () => {
+        expect(() =>
+            checkWeekNotes(
+                noteFacts,
+                [{ task_uid: 'a', text: '   ' }],
+                new Set()
+            )
+        ).toThrow('1 to 500 characters');
+        expect(() =>
+            checkWeekNotes(
+                noteFacts,
+                [{ task_uid: 'a', text: 'x'.repeat(501) }],
+                new Set()
+            )
+        ).toThrow('1 to 500 characters');
+        expect(
+            checkWeekNotes(
+                noteFacts,
+                [{ task_uid: 'a', text: 'x'.repeat(500) }],
+                new Set()
+            )
+        ).toHaveLength(1);
+    });
+
+    it('refuses a notes value that is not a list', () => {
+        expect(() => checkWeekNotes(noteFacts, 'x', new Set())).toThrow(
+            'notes must be a list'
+        );
+    });
+});
+
+describe('restrictWeekFacts', () => {
+    const {
+        restrictWeekFacts,
+    } = require('../../../modules/proposals/core/week');
+
+    it('keeps the period, days and context, and only the noted tasks', () => {
+        const restricted = restrictWeekFacts(
+            {
+                period: PERIOD,
+                today: TODAY,
+                days: [
+                    {
+                        date: '2026-11-17',
+                        events: [{ title: 'Rdv' }],
+                        planned: ['a', 'b'],
+                        load_minutes: 45,
+                    },
+                ],
+                tasks: [{ uid: 'a' }, { uid: 'b' }],
+                goals: [{ uid: 'g1' }],
+            },
+            ['b']
+        );
+        expect(restricted.tasks).toEqual([{ uid: 'b' }]);
+        expect(restricted.days[0]).toEqual({
+            date: '2026-11-17',
+            events: [{ title: 'Rdv' }],
+            planned: ['b'],
+            load_minutes: 45,
+        });
+        expect(restricted.period).toEqual(PERIOD);
+        expect(restricted.goals).toEqual([{ uid: 'g1' }]);
+    });
+
+    it('lets a round-two answer change only the restricted tasks', () => {
+        const restricted = restrictWeekFacts(
+            {
+                period: PERIOD,
+                days: [],
+                tasks: [{ uid: 'a' }, { uid: 'b' }],
+            },
+            ['b']
+        );
+        const answer = {
+            headline: 'Deux',
+            changes: [
+                { task_uid: 'a', op: 'later', reason: 'autre' },
+                { task_uid: 'b', op: 'later', reason: 'noté' },
+            ],
+        };
+        expect(validateWeekAnswer(restricted, answer).changes).toEqual([
+            { task_uid: 'b', op: 'later', reason: 'noté' },
+        ]);
     });
 });

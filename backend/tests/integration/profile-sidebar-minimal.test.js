@@ -100,12 +100,14 @@ describe('PUT /api/v1/profile/sidebar-settings (minimal sidebar)', () => {
                 { key: 'calendar', place: 'nowhere' },
                 { key: 'nope', place: 'rail' },
                 { key: 'inbox', place: 'hidden' },
+                { key: 'career', place: 'more' },
             ],
         });
 
         expect((await stored()).rail).toEqual([
             { key: 'templates', place: 'more' },
             { key: 'inbox', place: 'hidden' },
+            { key: 'career', place: 'more' },
         ]);
     });
 

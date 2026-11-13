@@ -7,6 +7,7 @@ import {
     CalendarDaysIcon,
     AdjustmentsHorizontalIcon,
     ArrowPathRoundedSquareIcon,
+    BriefcaseIcon,
     ChartBarIcon,
     EllipsisHorizontalIcon,
     FireIcon,
@@ -43,6 +44,7 @@ type RailItemId =
     | 'people'
     | 'insights'
     | 'review'
+    | 'career'
     | 'allTasks'
     | 'assignedToMe'
     | 'everyone'
@@ -139,6 +141,14 @@ const RAIL_ITEMS: Record<RailItemId, RailItem> = {
         titleKey: 'review.title',
         title: 'Review',
         Icon: ArrowPathRoundedSquareIcon,
+    },
+    career: {
+        id: 'career',
+        path: '/career',
+        match: /^\/career(\/|$)/,
+        titleKey: 'career.title',
+        title: 'Career',
+        Icon: BriefcaseIcon,
     },
     allTasks: {
         id: 'allTasks',

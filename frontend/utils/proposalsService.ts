@@ -12,7 +12,8 @@ export type ProposalKind = 'week' | 'review';
 export type ProposalStatus =
     'pending' | 'ready' | 'failed' | 'applied' | 'dismissed';
 
-export type WeekOp = 'plan_day' | 'this_week' | 'later' | 'due' | 'drop';
+export type WeekOp =
+    'plan_day' | 'this_week' | 'later' | 'due' | 'drop' | 'keep';
 
 export interface WeekChange {
     task_uid: string;
@@ -27,8 +28,12 @@ export interface WeekQuestion {
     choices: string[];
 }
 
+// `headline` and `subtitle` since contract v2; `summary` is the older
+// one-paragraph answer, still read for proposals answered before.
 export interface WeekAnswer {
-    summary: string;
+    headline?: string;
+    subtitle?: string;
+    summary?: string;
     questions: WeekQuestion[];
     changes: WeekChange[];
 }
@@ -48,9 +53,15 @@ export interface ReviewAnswer {
     items: ReviewJudgement[];
 }
 
+// A goal, an area or a project as the facts name it: a name, or an object
+// carrying one.
+export type FactRef = string | { uid?: string; name: string };
+
 export interface WeekTaskFact {
     uid: string;
     name: string;
+    goal?: FactRef;
+    area?: FactRef;
     due?: string;
     project?: string;
     priority?: string;
@@ -70,6 +81,9 @@ export interface WeekFacts {
         load_minutes: number;
     }[];
     tasks: WeekTaskFact[];
+    goals?: FactRef[];
+    areas?: FactRef[];
+    projects?: FactRef[];
 }
 
 export interface ProposalSummary {
@@ -99,6 +113,14 @@ export interface ApplyOutcome {
     uid: string;
     status: ProposalStatus;
     results: ApplyResult[];
+}
+
+// One week decision: any op for a task of the answer, `date` for `plan_day`
+// and `due`.
+export interface WeekDecision {
+    task_uid: string;
+    op: WeekOp;
+    date?: string;
 }
 
 export interface ReviewDecision {
@@ -158,10 +180,11 @@ export const listProposals = (
         .then((response) => response.json())
         .then((body: { proposals: ProposalSummary[] }) => body.proposals);
 
-// Week: the task uids to apply. Review: the decisions taken on one item each.
+// Week: the decision taken for each task (`op`). Review: the decisions taken
+// on one item each (`choice`).
 export const applyProposal = (
     uid: string,
-    body: { task_uids: string[] } | { decisions: ReviewDecision[] }
+    body: { decisions: WeekDecision[] } | { decisions: ReviewDecision[] }
 ): Promise<ApplyOutcome> =>
     request(
         `proposals/${encodeURIComponent(uid)}/apply`,
@@ -169,6 +192,24 @@ export const applyProposal = (
         body,
         'Failed to apply the proposal.'
     ).then((response) => response.json());
+
+// Sends the decisions that are not noted, and a remark per noted task: the
+// agent asks again for those tasks; the proposal goes back to pending.
+export interface ProposalNote {
+    task_uid: string;
+    text: string;
+}
+
+export const sendProposal = (
+    uid: string,
+    body: { decisions: WeekDecision[]; notes: ProposalNote[] }
+): Promise<void> =>
+    request(
+        `proposals/${encodeURIComponent(uid)}/send`,
+        'POST',
+        body,
+        'Failed to send the proposal.'
+    ).then(() => undefined);
 
 // Asks again with the user's words; the proposal goes back to pending.
 export const replyProposal = (
@@ -191,3 +232,103 @@ export const dismissProposal = (
         undefined,
         'Failed to dismiss the proposal.'
     ).then((response) => response.json());
+
+// Career (« Carrière »): the agent's morning page of follow-ups, offers and
+// tasks. Each decision is applied on its own, as soon as it is taken; the
+// server keeps the decisions already applied (`decisions`).
+export interface CareerStat {
+    label: string;
+    value: string | number;
+}
+
+export interface CareerFollowup {
+    id: string;
+    title: string;
+    company?: string;
+    applied_at?: string;
+    note?: string;
+    draft_url?: string;
+    source_url?: string;
+}
+
+export interface CareerOffer {
+    id: string;
+    title: string;
+    company: string;
+    location?: string;
+    rate?: string;
+    url: string;
+    expires?: string;
+    fit: string;
+    source?: string;
+}
+
+export interface CareerTask {
+    id: string;
+    name: string;
+    note?: string;
+    due_date?: string;
+}
+
+export interface CareerAnswer {
+    headline: string;
+    subtitle?: string;
+    stats?: CareerStat[];
+    followups: CareerFollowup[];
+    offers: CareerOffer[];
+    tasks: CareerTask[];
+}
+
+export type CareerDecision =
+    | {
+          kind: 'offer';
+          id: string;
+          op: 'apply' | 'skip' | 'later';
+          note?: string;
+      }
+    | { kind: 'followup'; id: string; op: 'done' | 'later' | 'task' }
+    | { kind: 'task'; id: string; op: 'create' | 'skip'; due_date?: string };
+
+export interface CareerProposal {
+    uid: string;
+    kind: 'career';
+    status: ProposalStatus;
+    created_at: string;
+    updated_at?: string;
+    answer: CareerAnswer | null;
+    decisions?: CareerDecision[];
+}
+
+export interface CareerApplyOutcome {
+    uid?: string;
+    status?: ProposalStatus;
+    results?: { kind?: string; id?: string; state?: string; error?: string }[];
+}
+
+export const listCareerProposals = (): Promise<CareerProposal[]> =>
+    request(
+        'proposals?kind=career&status=ready',
+        'GET',
+        undefined,
+        'Failed to load the career page.'
+    )
+        .then((response) => response.json())
+        .then((body: { proposals?: CareerProposal[] }) => body.proposals ?? []);
+
+// Partial apply: one decision at a time is fine. A result marked `failed`
+// for that decision is an error for the caller.
+export const applyCareerDecisions = async (
+    uid: string,
+    decisions: CareerDecision[]
+): Promise<CareerApplyOutcome> => {
+    const outcome: CareerApplyOutcome = await request(
+        `proposals/${encodeURIComponent(uid)}/apply`,
+        'POST',
+        { decisions },
+        'Failed to apply the decision.'
+    ).then((response) => response.json());
+    const failed = outcome?.results?.find((r) => r.state === 'failed');
+    if (failed)
+        throw new Error(failed.error || 'Failed to apply the decision.');
+    return outcome;
+};

@@ -334,6 +334,15 @@ async function read<T>(path: string): Promise<T> {
     return response.json();
 }
 
+// Every successful write announces itself, so the habits page, a habit's
+// page and the sidebar panel stay in step whichever of them made the change.
+const HABITS_CHANGED_EVENT = 'cadenceHabitsChanged';
+
+export const onHabitsChanged = (listener: () => void): (() => void) => {
+    window.addEventListener(HABITS_CHANGED_EVENT, listener);
+    return () => window.removeEventListener(HABITS_CHANGED_EVENT, listener);
+};
+
 async function write<T>(
     path: string,
     method: 'POST' | 'PATCH' | 'PUT' | 'DELETE',
@@ -351,7 +360,9 @@ async function write<T>(
         body: body === undefined ? undefined : JSON.stringify(body),
     });
     if (!response.ok) throw await failure(response);
-    return response.json();
+    const data = await response.json();
+    window.dispatchEvent(new Event(HABITS_CHANGED_EVENT));
+    return data;
 }
 
 const query = (params: Record<string, string | boolean | undefined>) => {

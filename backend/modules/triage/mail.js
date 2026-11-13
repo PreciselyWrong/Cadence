@@ -18,12 +18,25 @@ const {
     clean,
     isDay,
     eventFields,
+    gmailUrl,
+    noteText,
+    actionCode,
 } = require('./core/mail');
 const gateway = require('./mailGateway');
 const dispatcher = require('../webhooks/dispatcher');
 const { logError } = require('../../services/logService');
 
-const DECISIONS = new Set(['task', 'reply', 'event', 'later', 'dismiss']);
+const DECISIONS = new Set([
+    'task',
+    'reply',
+    'event',
+    'later',
+    'dismiss',
+    'draft',
+    'archive',
+    'note',
+]);
+const ACTION_TYPES = new Set(['draft', 'archive']);
 const EVENT_STATES = new Set(['created', 'failed']);
 const RETENTION_MS = 30 * 24 * 60 * 60 * 1000;
 const KEY_MAX = 150;
@@ -41,6 +54,10 @@ const CARD_FIELDS = [
     'suggestion',
     'draft_excerpt',
     'gmail_url',
+    'options',
+    'recommended',
+    'draft',
+    'excerpt',
 ];
 const REOPEN = {
     status: 'pending',
@@ -50,10 +67,20 @@ const REOPEN = {
     task_uid: null,
     archived_at: null,
     event: null,
+    note: null,
 };
 
 const pick = (card) =>
     Object.fromEntries(CARD_FIELDS.map((field) => [field, card[field]]));
+
+// A card reopened keeps a Gmail action the agent has not reported yet, so the
+// report still finds it; any other earlier action is over.
+const reopen = (row) => ({
+    ...REOPEN,
+    ...(row.action?.state === 'requested'
+        ? {}
+        : { action: null, action_error: null }),
+});
 
 const findThread = (userId, key) =>
     MailItem.findOne({ where: { user_id: userId, ...key } });
@@ -94,7 +121,10 @@ async function proposeMail(user, input) {
     } else if (row.status === 'later' && newer) {
         await row.update({ ...pick(card), ...REOPEN });
     } else if (row.status === 'done' && card.received_at > row.decided_at) {
-        await row.update({ ...pick(card), ...REOPEN });
+        await row.update({ ...pick(card), ...reopen(row) });
+    } else if (row.status === 'reviewing') {
+        // The agent's second pass answers the user's note.
+        await row.update({ ...pick(card), ...reopen(row) });
     }
     return { mail_uid: row.uid, status: row.status };
 }
@@ -133,6 +163,13 @@ async function listCards(user) {
             decision: row.decision,
             decided_at: row.decided_at,
             event: row.event ?? null,
+            options: row.options ?? null,
+            recommended: row.recommended ?? null,
+            draft: row.draft ?? null,
+            excerpt: row.excerpt ?? null,
+            action: row.action ?? null,
+            action_error: row.action_error ?? null,
+            note: row.note ?? null,
         })),
     };
 }
@@ -159,6 +196,8 @@ async function queueItems(userId, now = new Date()) {
             mail_uid: row.uid,
             account: row.account,
             ...pick(row),
+            action: row.action ?? null,
+            action_error: row.action_error ?? null,
         },
         reason: row.summary,
         details: [],
@@ -248,6 +287,8 @@ async function announce(userId, row) {
                     task_uid: row.task_uid ?? null,
                     event: row.event ?? null,
                     later_until: row.later_until ?? null,
+                    action: row.action ?? null,
+                    note: row.note ?? null,
                 },
             },
         });
@@ -262,6 +303,7 @@ const outcome = (row, extra = {}) => ({
     decision: row.decision,
     task_uid: row.task_uid ?? null,
     event: row.event ?? null,
+    action: row.action ?? null,
     ...extra,
 });
 
@@ -277,6 +319,9 @@ function settledAnswer(row, decision, key) {
     }
     if (row.status === 'done') {
         throw new ConflictError(`Mail card already settled: ${row.decision}`);
+    }
+    if (row.status === 'reviewing') {
+        throw new ConflictError('Mail card waits for the agent');
     }
     throw new ConflictError('Mail card is being decided elsewhere');
 }
@@ -310,6 +355,9 @@ async function decide(
     }
     if (archive && decision === 'later') {
         throw new ValidationError('a card put off is not archived');
+    }
+    if (archive && (decision === 'archive' || decision === 'note')) {
+        throw new ValidationError('archive does not apply to this decision');
     }
     if (archive && !gateway.configured()) {
         throw new ValidationError('Gmail archiving is not set up');
@@ -353,6 +401,11 @@ async function decide(
         if (decision === 'later') {
             changes.status = 'later';
             changes.later_until = laterUntil(user, payload.until);
+        } else if (decision === 'note') {
+            changes.status = 'reviewing';
+            changes.note = { text: noteText(payload.text) };
+            changes.decided_at = new Date();
+            changes.later_until = null;
         } else {
             if (decision === 'task') {
                 changes.task_uid = await createTask(user, row, payload);
@@ -360,6 +413,8 @@ async function decide(
             if (decision === 'event') {
                 changes.event = requestedEvent(row, payload);
             }
+            changes.action = requestedAction(decision, row);
+            changes.action_error = null;
             changes.status = 'done';
             changes.decided_at = new Date();
             changes.later_until = null;
@@ -378,6 +433,19 @@ async function decide(
     const archived = await gateway.archiveThread(row.account, row.thread_id);
     if (archived) await row.update({ archived_at: new Date() });
     return outcome(row, { archived });
+}
+
+// The Gmail action Hermes carries out for a draft or an archive decision;
+// Cadence never calls Gmail for it. Other decisions ask for none.
+function requestedAction(decision, row) {
+    if (decision === 'draft') {
+        if (!row.draft?.body) {
+            throw new ValidationError('this card has no draft');
+        }
+        return { type: 'draft', state: 'requested' };
+    }
+    if (decision === 'archive') return { type: 'archive', state: 'requested' };
+    return null;
 }
 
 const CALENDAR_HOSTS = new Set(['calendar.google.com', 'www.google.com']);
@@ -427,8 +495,81 @@ async function reportEvent(user, input = {}) {
     return { mail_uid: row.uid, event };
 }
 
+const reported = (row) => ({
+    mail_uid: row.uid,
+    state: row.status,
+    action: row.action ?? null,
+    action_error: row.action_error ?? null,
+});
+
+// Hermes reports what came of a draft or an archive it was asked for. A
+// failed one reopens the card, with the code shown to the user.
+async function reportAction(user, input = {}) {
+    const row = await findThread(user.id, threadKey(input));
+    if (!row) throw new NotFoundError('Mail card not found');
+    const { type, ok } = input;
+    if (!ACTION_TYPES.has(type)) {
+        throw new ValidationError('type must be draft or archive');
+    }
+    if (typeof ok !== 'boolean') {
+        throw new ValidationError('ok must be true or false');
+    }
+    const given = (value) => value !== undefined && value !== null;
+    if (ok && given(input.error)) {
+        throw new ValidationError('error is only for a failed action');
+    }
+    if (!ok && given(input.draft_url)) {
+        throw new ValidationError('draft_url is only for a successful draft');
+    }
+    if (given(input.draft_url) && type !== 'draft') {
+        throw new ValidationError('draft_url is only for a draft');
+    }
+    const draftUrl = given(input.draft_url)
+        ? gmailUrl(input.draft_url, 'draft_url')
+        : null;
+    const code = ok ? null : actionCode(input.error);
+
+    const action = row.action;
+    if (!action || action.type !== type) {
+        throw new ConflictError(`no ${type} was requested on this card`);
+    }
+    if (ok) {
+        if (action.state === 'done') return reported(row);
+        if (action.state !== 'requested') {
+            throw new ConflictError(`Action already reported: ${action.state}`);
+        }
+        const changes = {
+            action: {
+                type,
+                state: 'done',
+                ...(draftUrl ? { draft_url: draftUrl } : {}),
+            },
+            action_error: null,
+        };
+        if (type === 'archive') changes.archived_at = new Date();
+        await row.update(changes);
+    } else {
+        if (action.state === 'failed' && row.action_error === code) {
+            return reported(row);
+        }
+        if (action.state !== 'requested') {
+            throw new ConflictError(`Action already reported: ${action.state}`);
+        }
+        await row.update({
+            status: 'pending',
+            decision: null,
+            decided_at: null,
+            later_until: null,
+            action: { type, state: 'failed' },
+            action_error: code,
+        });
+    }
+    return reported(row);
+}
+
 module.exports = {
     proposeMail,
+    reportAction,
     reportEvent,
     resolveMail,
     listCards,

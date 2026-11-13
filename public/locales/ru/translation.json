@@ -1,4 +1,46 @@
 {
+    "career": {
+        "title": "Карьера",
+        "updatedAt": "обновлено в {{time}}",
+        "empty": "Сегодня ничего нового",
+        "emptyHint": "Агент заходит каждое утро: напоминания, вакансии и задачи появятся здесь.",
+        "allDecided": "На сегодня всё решено",
+        "loadError": "Не удалось загрузить страницу «Карьера».",
+        "retry": "Повторить",
+        "applyError": "Решение не сохранено.",
+        "later": "Позже",
+        "skip": "Пропустить",
+        "followups": {
+            "title": "Напоминания",
+            "appliedAgo": "отклик {{when}}",
+            "openDraft": "Открыть черновик",
+            "createTask": "Создать задачу",
+            "done": "Готово"
+        },
+        "offers": {
+            "title": "Вакансии для решения",
+            "apply": "Откликнуться",
+            "note": "Заметка",
+            "notePlaceholder": "Заметка для агента…",
+            "open": "Открыть вакансию",
+            "expires": "истекает {{when}}",
+            "expired": "истекла"
+        },
+        "tasks": {
+            "title": "Предложенные задачи",
+            "add": "Добавить"
+        },
+        "decided": "Решено ({{count}})",
+        "state": {
+            "applied": "Отклик отправлен",
+            "skipped": "Пропущена",
+            "later": "Позже",
+            "done": "Готово",
+            "taskCreated": "Задача создана",
+            "added": "Добавлена",
+            "dismissed": "Отклонена"
+        }
+    },
     "agentBanner": {
         "agent": "Agent",
         "dismiss": "Отметить как прочитанное",
@@ -187,6 +229,9 @@
       "delete": "Удалить"
     },
     "mail": {
+      "draftRequested": "Черновик готовится в Gmail",
+      "archiveRequested": "Архивирование запрошено",
+      "noteSent": "Возвращено Trieur",
       "noSubject": "(без темы)",
       "draft": "Черновик готов:",
       "task": "Задача",
@@ -245,6 +290,23 @@
     "entry": "На разбор ({{count}})",
     "title": "На разбор",
     "deck": {
+      "progressLabel": "Письмо {{position}} из {{total}}",
+      "option": {
+        "draft": "Черновик",
+        "read": "Прочитать",
+        "event": "Календарь",
+        "archive": "В архив"
+      },
+      "openInGmail": "Открыть в Gmail",
+      "readMail": "Прочитать письмо",
+      "collapseMail": "Свернуть",
+      "noteOpen": "Ответить словом",
+      "notePlaceholder": "Слово для Trieur",
+      "noteSend": "Отправить",
+      "recommended": "Рекомендуется",
+      "actionFailed": "Последнее действие не выполнено",
+      "actionFailedDraft": "Не удалось подготовить черновик",
+      "actionFailedArchive": "Архивирование не выполнено",
       "open": "Разобрать почту ({{count}})",
       "title": "Разобрать почту",
       "close": "Закрыть",
@@ -258,7 +320,7 @@
       "openMail": "Открыть письмо",
       "chat": "Обсудить",
       "undo": "Отменить",
-      "keys": "Enter или →: совет · ←: позже · ↓: пропустить · Ctrl+Z: отменить · Esc: закрыть"
+      "keys": "Enter или →: совет · 1–5: выбрать · ←: позже · ↓: пропустить · Ctrl+Z: отменить · Esc: закрыть"
     }
   },
   "outline": {
@@ -5300,6 +5362,23 @@
     "planned": "Запланировано {{when}}"
   },
   "proposals": {
+    "decide": {
+      "today": "Сегодня",
+      "planOn": "Запланировать на день",
+      "keep": "Оставить как есть",
+      "kept": "Без изменений",
+      "otherDate": "Другая дата…",
+      "dueOn": "Срок {{date}}",
+      "ok": "ОК",
+      "menu": "Выбрать",
+      "changed": "Изменено",
+      "undo": "Вернуть предложение: {{decision}}",
+      "trigger": "{{decision}}, {{task}}",
+      "goal": "Цель",
+      "area": "Область",
+      "groupToday": "Сегодня",
+      "groupKeep": "Без изменений"
+    },
     "week": {
       "button": "Спланировать неделю",
       "ready": "Твоя неделя готова",
@@ -5328,6 +5407,20 @@
       "ignore": "Игнорировать",
       "later": "Позже",
       "apply": "Применить ({{count}})",
+      "note": "Заметка",
+      "noteFor": "Заметка: {{task}}",
+      "notePlaceholder": "Что нужно изменить…",
+      "toReview": "Пересмотреть",
+      "noteDecision": "Пересмотреть с твоей заметкой",
+      "sendError": "Не удалось отправить заметки.",
+      "sendCaption_one": "{{count}} применена · {{sent}} возвращено",
+      "sendCaption_few": "{{count}} применены · {{sent}} возвращено",
+      "sendCaption_many": "{{count}} применено · {{sent}} возвращено",
+      "sendCaption_other": "{{count}} применено · {{sent}} возвращено",
+      "notesSent_one": "{{count}} задача возвращена, сообщу, когда будет готово",
+      "notesSent_few": "{{count}} задачи возвращены, сообщу, когда будут готовы",
+      "notesSent_many": "{{count}} задач возвращено, сообщу, когда будут готовы",
+      "notesSent_other": "{{count}} задач возвращено, сообщу, когда будут готовы",
       "appliedCount": "Применено: {{count}} из {{total}}"
     },
     "apply": {

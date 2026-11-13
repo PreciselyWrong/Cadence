@@ -19,14 +19,26 @@ const { logError } = require('../../services/logService');
 const reviewService = require('../review/service');
 const dailyPlan = require('../daily-plan/service');
 const calendarFeeds = require('../calendar-feeds/service');
+const goalsService = require('../goals/service');
 const repository = require('./repository');
 const { cleanText } = require('./core/text');
 const { listDays } = require('./core/day');
-const { resolvePeriod, weekFacts } = require('./core/week');
+const { contextFacts } = require('./core/context');
+const {
+    resolvePeriod,
+    weekFacts,
+    weekDecisionsOf,
+    checkWeekDecisions,
+    checkWeekNotes,
+    restrictWeekFacts,
+} = require('./core/week');
 const { reviewFacts, choicesFor } = require('./core/review');
-const { validateAnswer } = require('./core/answer');
+const { validateAnswer, DEFAULT_HEADLINE } = require('./core/answer');
+const { withDecisions } = require('./core/career');
+const { applyCareer } = require('./career');
 
 const KINDS = new Set(['week', 'review']);
+const LIST_KINDS = new Set(['week', 'review', 'career']);
 const STATUS_FILTERS = new Set([
     'pending',
     'ready',
@@ -44,18 +56,36 @@ const PRIORITY_SHOWN = { 1: 'medium', 2: 'high' };
 const ERROR_CODE = /^[a-z_]{1,64}$/;
 
 const TITLES = {
-    week: { ready: 'Your week is ready', failed: 'Your week was not prepared' },
+    week: {
+        ready: 'Ta semaine est prête',
+        failed: 'Ta semaine n’a pas pu être préparée',
+    },
     review: {
-        ready: 'Your review is ready',
-        failed: 'Your review was not prepared',
+        ready: 'Ta revue est prête',
+        failed: 'Ta revue n’a pas pu être préparée',
     },
 };
 
 const todayIn = (timezone) => moment.tz(timezone).format('YYYY-MM-DD');
 
 // What the agent receives: the facts without the bookkeeping that decides
-// reuse (`stamps`).
-const agentFacts = ({ stamps: _stamps, ...facts }) => facts;
+// reuse (`stamps`) or the second pass (`round`, `notes`, sent in the event).
+const agentFacts = ({
+    stamps: _stamps,
+    round: _round,
+    notes: _notes,
+    ...facts
+}) => facts;
+
+// Week proposals keep their pass number and the notes of the last send.
+const roundOf = (row) => row.facts?.round ?? 1;
+const notesOf = (row) => row.facts?.notes ?? [];
+
+// A career answer shows the decision taken on each item.
+const answerOf = (row) =>
+    row.kind === 'career' && row.answer
+        ? withDecisions(row.answer, row.facts?.decisions ?? [])
+        : (row.answer ?? null);
 
 function serialize(row, { withFacts = false } = {}) {
     const out = {
@@ -64,12 +94,15 @@ function serialize(row, { withFacts = false } = {}) {
         status: row.status,
         period_start: row.period_start ?? null,
         period_end: row.period_end ?? null,
-        answer: row.answer ?? null,
+        answer: answerOf(row),
         error: row.error ?? null,
         reply_text: row.reply_text ?? null,
+        round: roundOf(row),
+        notes: notesOf(row),
         created_at: row.created_at,
         updated_at: row.updated_at,
     };
+    if (row.kind === 'career') out.decisions = row.facts?.decisions ?? [];
     if (withFacts) out.facts = agentFacts(row.facts);
     return out;
 }
@@ -97,6 +130,8 @@ async function requestAgent(row, extra = {}) {
                 uid: row.uid,
                 kind: row.kind,
                 facts: agentFacts(row.facts),
+                round: roundOf(row),
+                notes: notesOf(row),
                 ...extra,
             },
         });
@@ -105,12 +140,14 @@ async function requestAgent(row, extra = {}) {
     }
 }
 
+// The message of a ready proposal is its headline; a failed one has none.
 async function notifyOutcome(row) {
     const ready = row.status === 'ready';
     await repository.notify({
         userId: row.user_id,
         type: 'proposal',
         title: TITLES[row.kind][ready ? 'ready' : 'failed'],
+        message: ready ? row.answer?.headline : undefined,
         level: ready ? 'success' : 'error',
         data: { proposal_uid: row.uid, kind: row.kind, status: row.status },
         sources: ['desktop', 'mobile'],
@@ -144,6 +181,43 @@ async function periodEvents(user, period) {
     }
 }
 
+// The user's context for the facts: goals with their progress, area names,
+// active projects.
+async function userContext(user) {
+    const [goals, areas, projects] = await Promise.all([
+        goalsService.getAll(user.id),
+        repository.findAreaNames(user.id),
+        repository.findActiveProjects(user.id),
+    ]);
+    return contextFacts({
+        goals: goals.map((goal) => ({
+            uid: goal.uid,
+            title: goal.title,
+            status: goal.status,
+            due: dayOf(goal.target_date),
+            percent: goal.progress?.percent ?? null,
+        })),
+        areas,
+        projects: projects.map((project) => ({
+            name: project.name,
+            area: project.Area?.name ?? null,
+        })),
+    });
+}
+
+// The goal and the area a task is linked to. The area is the task's own, else
+// its goal's, else its project's.
+function linkOf(task) {
+    return {
+        goal: task.Goal?.title ?? null,
+        area:
+            task.Area?.name ??
+            task.Goal?.Area?.name ??
+            task.Project?.Area?.name ??
+            null,
+    };
+}
+
 async function computeWeek(user, { start, end }, timezone, today) {
     const period = resolvePeriod({ today, start, end });
     const weekStart = reviewService.weekStartOf(
@@ -175,6 +249,7 @@ async function computeWeek(user, { start, end }, timezone, today) {
     const serialized = await serializeTasks(candidates, timezone, {
         preserveOriginalName: true,
     });
+    const links = new Map(candidates.map((task) => [task.uid, linkOf(task)]));
     const tasks = serialized.map((task) => ({
         uid: task.uid,
         name: cleanText(task.name, 255),
@@ -187,6 +262,8 @@ async function computeWeek(user, { start, end }, timezone, today) {
         someday: (task.tags ?? []).some((tag) => tag.name === 'someday'),
         recurring: isRecurring(task),
         subtask: Boolean(task.parent_task_id),
+        goal: cleanText(links.get(task.uid)?.goal, 200) || null,
+        area: cleanText(links.get(task.uid)?.area, 100) || null,
     }));
     return {
         period,
@@ -197,6 +274,7 @@ async function computeWeek(user, { start, end }, timezone, today) {
             tasks,
             plans,
             events,
+            context: await userContext(user),
         }),
     };
 }
@@ -219,7 +297,7 @@ async function computeReview(user) {
         review_due: Boolean(item.review_due),
         pushed_times: item.push?.recent_count ?? 0,
     });
-    return reviewFacts({
+    const { facts } = reviewFacts({
         lists: {
             pushed: pushed.items.map(normalize),
             later: later.items.map(normalize),
@@ -227,6 +305,7 @@ async function computeReview(user) {
         },
         previous: await previousJudgements(user.id),
     });
+    return { facts: { ...facts, ...(await userContext(user)) } };
 }
 
 // The latest judgement of each task, from the newest review answer that
@@ -248,10 +327,11 @@ async function previousJudgements(userId) {
     return judged;
 }
 
-// The review answer kept on the proposal: the judged items, then the reused
-// ones, so the answer alone tells what to apply.
-const reviewAnswer = (summary, judgedItems, cached) => ({
-    summary,
+// The review answer kept on the proposal: the headline and subtitle, the
+// judged items, then the reused ones, so the answer alone tells what to apply.
+const reviewAnswer = ({ headline, subtitle }, judgedItems, cached) => ({
+    headline,
+    subtitle: subtitle ?? null,
     items: [
         ...judgedItems,
         ...cached.map((item) => ({
@@ -289,7 +369,7 @@ async function createProposal(user, { kind, start, end } = {}) {
             ...base,
             period_start: period.start,
             period_end: period.end,
-            facts,
+            facts: { ...facts, round: 1, notes: [] },
         });
         await requestAgent(row);
         return { row, created: true };
@@ -300,7 +380,11 @@ async function createProposal(user, { kind, start, end } = {}) {
     if (facts.items.length === 0) {
         await row.update({
             status: 'ready',
-            answer: reviewAnswer('', [], facts.cached),
+            answer: reviewAnswer(
+                { headline: DEFAULT_HEADLINE.review, subtitle: null },
+                [],
+                facts.cached
+            ),
         });
         return { row, created: true };
     }
@@ -314,16 +398,22 @@ async function getProposal(user, uid) {
     return serialize(await expireIfStale(row), { withFacts: true });
 }
 
-async function listProposals(user, { status } = {}) {
+async function listProposals(user, { status, kind } = {}) {
     if (status !== undefined && !STATUS_FILTERS.has(status)) {
         throw new ValidationError(
             `status must be one of ${[...STATUS_FILTERS].join(', ')}`
+        );
+    }
+    if (kind !== undefined && !LIST_KINDS.has(kind)) {
+        throw new ValidationError(
+            `kind must be one of ${[...LIST_KINDS].join(', ')}`
         );
     }
     const rows = await repository.findLatestPerKind(user.id, status ?? null);
     const current = await Promise.all(rows.map(expireIfStale));
     return current
         .filter((row) => !status || row.status === status)
+        .filter((row) => !kind || row.kind === kind)
         .map((row) => serialize(row));
 }
 
@@ -345,7 +435,7 @@ async function answerProposal(user, uid, body = {}) {
             failure = checked.error;
         } else if (row.kind === 'review') {
             answer = reviewAnswer(
-                checked.answer.summary,
+                checked.answer,
                 checked.answer.items,
                 row.facts.cached ?? []
             );
@@ -368,6 +458,9 @@ async function answerProposal(user, uid, body = {}) {
 async function replyProposal(user, uid, body = {}) {
     const row = await repository.findByUid(user.id, uid);
     if (!row) throw new NotFoundError('Proposal not found');
+    if (row.kind === 'career') {
+        throw new ValidationError('career proposals take no reply');
+    }
     ensureOpen(row, ['ready'], 'Proposal has no answer to reply to');
     const text = cleanText(body.text, 1000);
     if (!text) throw new ValidationError('text is required');
@@ -453,36 +546,30 @@ async function attempt(taskUid, action) {
     }
 }
 
+// Applies the week decisions one by one; `keep` does nothing.
+async function applyWeekDecisions(user, decisions) {
+    const results = [];
+    for (const decision of decisions) {
+        if (decision.op === 'keep') continue;
+        results.push(
+            await attempt(decision.task_uid, () =>
+                applyWeekChange(user, decision)
+            )
+        );
+    }
+    return results;
+}
+
 async function applyProposal(user, uid, body = {}) {
     const row = await repository.findByUid(user.id, uid);
     if (!row) throw new NotFoundError('Proposal not found');
+    if (row.kind === 'career') return applyCareer(user, row, body);
     ensureOpen(row, ['ready', 'applied'], 'Proposal has no answer to apply');
     let results;
 
     if (row.kind === 'week') {
-        const wanted = body.task_uids;
-        if (
-            !Array.isArray(wanted) ||
-            wanted.some((u) => typeof u !== 'string')
-        ) {
-            throw new ValidationError('task_uids must be a list of task uids');
-        }
-        const changes = row.answer?.changes ?? [];
-        const chosen = wanted.map((taskUid) => {
-            const change = changes.find((c) => c.task_uid === taskUid);
-            if (!change) {
-                throw new ValidationError(`Task ${taskUid} is not proposed`);
-            }
-            return change;
-        });
-        results = [];
-        for (const change of chosen) {
-            results.push(
-                await attempt(change.task_uid, () =>
-                    applyWeekChange(user, change)
-                )
-            );
-        }
+        const decisions = weekDecisionsOf(row.facts, row.answer, body);
+        results = await applyWeekDecisions(user, decisions);
     } else {
         const decisions = body.decisions;
         if (!Array.isArray(decisions)) {
@@ -516,6 +603,54 @@ async function applyProposal(user, uid, body = {}) {
     return { uid: row.uid, status: row.status, results };
 }
 
+// The user's send of a week sheet. Tasks with a decision are applied now, by
+// the same path as /apply. Tasks with a note go back to the agent for a second
+// pass, which only sees those tasks (docs/47-proposals.md, Send with notes).
+async function sendProposal(user, uid, body = {}) {
+    const row = await repository.findByUid(user.id, uid);
+    if (!row) throw new NotFoundError('Proposal not found');
+    if (row.kind !== 'week') {
+        throw new ValidationError('send is for week proposals');
+    }
+    ensureOpen(row, ['ready'], 'Proposal has no answer to apply');
+    if (body.decisions !== undefined && !Array.isArray(body.decisions)) {
+        throw new ValidationError('decisions must be a list');
+    }
+    const decisions = checkWeekDecisions(row.facts, body.decisions ?? []);
+    const notes = checkWeekNotes(
+        row.facts,
+        body.notes ?? [],
+        new Set(decisions.map((decision) => decision.task_uid))
+    );
+    if (decisions.length === 0 && notes.length === 0) {
+        throw new ValidationError('decisions or notes must not be empty');
+    }
+    if (notes.length === 0) {
+        return applyProposal(user, uid, { decisions });
+    }
+
+    const results = await applyWeekDecisions(user, decisions);
+    const noted = new Set(notes.map((note) => note.task_uid));
+    const previous = {
+        changes: (row.answer?.changes ?? []).filter((change) =>
+            noted.has(change.task_uid)
+        ),
+    };
+    await row.update({
+        status: 'pending',
+        error: null,
+        reply_text: null,
+        answer: null,
+        facts: {
+            ...restrictWeekFacts(row.facts, [...noted]),
+            round: roundOf(row) + 1,
+            notes,
+        },
+    });
+    await requestAgent(row, { previous_answer: previous });
+    return { uid: row.uid, status: row.status, round: roundOf(row), results };
+}
+
 async function dismissProposal(user, uid) {
     const row = await repository.findByUid(user.id, uid);
     if (!row) throw new NotFoundError('Proposal not found');
@@ -535,6 +670,7 @@ module.exports = {
     answerProposal,
     replyProposal,
     applyProposal,
+    sendProposal,
     dismissProposal,
     agentFacts,
 };

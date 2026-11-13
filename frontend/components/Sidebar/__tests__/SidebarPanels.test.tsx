@@ -76,6 +76,14 @@ jest.mock('../SidebarHabits', () => ({
     __esModule: true,
     default: mockStub('habits'),
 }));
+jest.mock('../SidebarGoalsPanel', () => ({
+    __esModule: true,
+    default: mockStub('goals'),
+}));
+jest.mock('../SidebarHabitsPanel', () => ({
+    __esModule: true,
+    default: mockStub('habits'),
+}));
 
 const renderSidebar = () =>
     render(

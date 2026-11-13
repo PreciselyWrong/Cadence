@@ -98,6 +98,7 @@ import ch.nicolab.cadence.tasks.ui.SearchScreen
 import ch.nicolab.cadence.tasks.ui.TasksScreen
 import ch.nicolab.cadence.tasks.proposals.ProposalRepository
 import ch.nicolab.cadence.tasks.proposals.ProposalTab
+import ch.nicolab.cadence.tasks.ui.proposals.CareerScreen
 import ch.nicolab.cadence.tasks.ui.proposals.ProposalSheet
 import ch.nicolab.cadence.tasks.ui.review.ReviewScreen
 import ch.nicolab.cadence.ui.icon.HabitIconPicker
@@ -152,6 +153,7 @@ internal fun CadenceAppScreen(
     }
     var searchOpen by rememberSaveable { mutableStateOf(false) }
     var reviewOpen by rememberSaveable { mutableStateOf(false) }
+    var careerOpen by rememberSaveable { mutableStateOf(false) }
     var triageOpen by rememberSaveable { mutableStateOf(false) }
     val agentMessages by AgentInbox.messages.collectAsStateWithLifecycle()
     var goalsOpen by rememberSaveable { mutableStateOf(false) }
@@ -197,6 +199,12 @@ internal fun CadenceAppScreen(
                 tab = Tab.BILAN
                 settingsOpen = false
                 reviewOpen = true
+                proposals.consumeTab()
+            }
+            ProposalTab.CAREER -> {
+                tab = Tab.BILAN
+                settingsOpen = false
+                careerOpen = true
                 proposals.consumeTab()
             }
             null -> Unit
@@ -361,6 +369,7 @@ internal fun CadenceAppScreen(
                             options = { options = it },
                             onCorrect = { viewModel.clearSaveError(); correctingId = it.id },
                             onOpenReview = { reviewOpen = true },
+                            onOpenCareer = { careerOpen = true },
                             onOpenGoals = { goalsOpen = true },
                             onOpenSettings = { openSettings(null) },
                         )
@@ -391,11 +400,12 @@ internal fun CadenceAppScreen(
                     projectToShow = uid
                 },
             )
+            if (careerOpen) CareerScreen(onBack = { careerOpen = false })
             if (goalsOpen) GoalsScreen(onBack = { goalsOpen = false })
             if (triageOpen) TriageRoute(onBack = { triageOpen = false })
             proposalSheet?.let { uid -> ProposalSheet(uid, onClose = proposals::closeSheet) }
             NavigationBarScrim()
-            if (!settingsOpen && !searchOpen && !reviewOpen && !goalsOpen && !triageOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop) { index ->
+            if (!settingsOpen && !searchOpen && !reviewOpen && !careerOpen && !goalsOpen && !triageOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop) { index ->
                 tab = Tab.entries[index]
                 opening = opening.consumed()
             }
@@ -403,7 +413,7 @@ internal fun CadenceAppScreen(
                 snackbar,
                 Modifier.align(Alignment.BottomCenter).padding(
                     // Sans barre flottante, la bannière s'arrête quand même au-dessus des boutons du système (3 boutons ou gestes).
-                    bottom = if (settingsOpen || searchOpen || reviewOpen || goalsOpen || triageOpen) {
+                    bottom = if (settingsOpen || searchOpen || reviewOpen || careerOpen || goalsOpen || triageOpen) {
                         WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + Space.lg
                     } else {
                         navigationClearance() + Space.sm

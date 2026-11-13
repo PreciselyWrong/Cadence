@@ -1,3 +1,15 @@
+## [1.31.0] — 13 novembre 2026
+
+- La feuille « Ta semaine » a un titre court, un sous-titre et la période ; chaque tâche garde sa raison et son objectif ou domaine.
+- Un toucher sur la décision d'une tâche ouvre le menu : chaque jour de la période, « Cette semaine », « Plus tard », « Garder tel quel », « Abandonner », « Autre date ». Une ligne modifiée affiche « modifié » et « Rétablir ».
+- Les tâches sont regroupées par décision courante ; les déplacements sont animés. « Appliquer (N) » compte les changements, « Répondre » et « Ignorer » restent.
+- Remarque par tâche : le bouton « Remarque » ouvre un champ sous la ligne (500 caractères) ; la ligne passe « À revoir », sans être appliquée. « Envoyer » renvoie les remarques à l'agent et applique le reste.
+- Bilan › Carrière : relances, offres à décider et tâches proposées par l'agent, en ligne seulement. Chaque offre s'ouvre par son lien ; « Postuler », « Passer », « Plus tard » et « Remarque » décident une offre ; « Ajouter » ou « Ignorer » une tâche proposée ; « Décidé (N) » garde le détail replié. Une notification « Ta carrière a du neuf » ouvre l'écran.
+
+- « Trier mes mails » : chaque carte montre ses actions en une rangée de grands boutons, celle que l'agent recommande est encadrée ; glisser à droite la suit, à gauche remet à plus tard. « Répondre par un mot » renvoie une remarque au Trieur, « Annuler » rattrape la dernière décision.
+- Une carte du paquet affiche le mail (« Lire le mail »), le brouillon de l'agent cité et l'erreur d'une action en haut ; « Brouillon » et « Archiver » disent qu'elles sont demandées.
+- Bilan › Carrière : « Plus tard » garde une offre, une relance ou une tâche ouverte ; seules les décisions finales la rangent dans « Décidé (N) ».
+
 ## [1.30.0] — 13 novembre 2026
 
 - Planifier et Aujourd'hui : « Planifier ma semaine » prépare la semaine en fond ; « En préparation… » se met à jour seul, puis « Ta semaine est prête ».

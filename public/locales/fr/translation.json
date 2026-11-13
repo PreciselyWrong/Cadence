@@ -1,4 +1,46 @@
 {
+    "career": {
+        "title": "Carrière",
+        "updatedAt": "mis à jour à {{time}}",
+        "empty": "Rien de neuf aujourd’hui",
+        "emptyHint": "L’agent passe chaque matin : ses relances, offres et tâches apparaîtront ici.",
+        "allDecided": "Tout est décidé pour aujourd’hui",
+        "loadError": "Impossible de charger la page Carrière.",
+        "retry": "Réessayer",
+        "applyError": "La décision n’a pas été enregistrée.",
+        "later": "Plus tard",
+        "skip": "Passer",
+        "followups": {
+            "title": "Relances",
+            "appliedAgo": "postulé {{when}}",
+            "openDraft": "Ouvrir le brouillon",
+            "createTask": "Créer la tâche",
+            "done": "Fait"
+        },
+        "offers": {
+            "title": "Offres à décider",
+            "apply": "Postuler",
+            "note": "Remarque",
+            "notePlaceholder": "Une remarque pour l’agent…",
+            "open": "Voir l’offre",
+            "expires": "expire {{when}}",
+            "expired": "expirée"
+        },
+        "tasks": {
+            "title": "Tâches proposées",
+            "add": "Ajouter"
+        },
+        "decided": "Décidé ({{count}})",
+        "state": {
+            "applied": "Postulé",
+            "skipped": "Passée",
+            "later": "Plus tard",
+            "done": "Faite",
+            "taskCreated": "Tâche créée",
+            "added": "Ajoutée",
+            "dismissed": "Écartée"
+        }
+    },
     "agentBanner": {
         "agent": "Agent",
         "dismiss": "Marquer comme lu",
@@ -175,6 +217,9 @@
       "delete": "Supprimer"
     },
     "mail": {
+      "draftRequested": "Brouillon en préparation dans Gmail",
+      "archiveRequested": "Archivage demandé",
+      "noteSent": "Renvoyé au Trieur",
       "noSubject": "(sans objet)",
       "draft": "Brouillon prêt :",
       "task": "Tâche",
@@ -233,6 +278,23 @@
     "entry": "À trier ({{count}})",
     "title": "À trier",
     "deck": {
+      "progressLabel": "Mail {{position}} sur {{total}}",
+      "option": {
+        "draft": "Brouillon",
+        "read": "Lire",
+        "event": "Agenda",
+        "archive": "Archiver"
+      },
+      "openInGmail": "Ouvrir dans Gmail",
+      "readMail": "Lire le mail",
+      "collapseMail": "Réduire",
+      "noteOpen": "Répondre par un mot",
+      "notePlaceholder": "Un mot pour le Trieur",
+      "noteSend": "Envoyer",
+      "recommended": "Conseillé",
+      "actionFailed": "La dernière action n’a pas abouti",
+      "actionFailedDraft": "Le brouillon n’a pas pu être préparé",
+      "actionFailedArchive": "L’archivage n’a pas abouti",
       "open": "Trier mes mails ({{count}})",
       "title": "Trier mes mails",
       "close": "Fermer",
@@ -246,7 +308,7 @@
       "openMail": "Ouvrir le mail",
       "chat": "Discuter",
       "undo": "Annuler",
-      "keys": "Entrée ou → : conseil · ← : plus tard · ↓ : passer · Ctrl+Z : annuler · Échap : fermer"
+      "keys": "Entrée ou → : conseil · 1–5 : choisir · ← : plus tard · ↓ : passer · Ctrl+Z : annuler · Échap : fermer"
     }
   },
   "outline": {
@@ -5220,6 +5282,23 @@
     "planned": "Planifiée {{when}}"
   },
   "proposals": {
+    "decide": {
+      "today": "Auj.",
+      "planOn": "Planifier un jour",
+      "keep": "Garder tel quel",
+      "kept": "Tel quel",
+      "otherDate": "Autre date…",
+      "dueOn": "Échéance {{date}}",
+      "ok": "OK",
+      "menu": "Choisir",
+      "changed": "Modifié",
+      "undo": "Revenir à la suggestion : {{decision}}",
+      "trigger": "{{decision}}, {{task}}",
+      "goal": "Objectif",
+      "area": "Domaine",
+      "groupToday": "Aujourd’hui",
+      "groupKeep": "Tel quel"
+    },
     "week": {
       "button": "Planifier ma semaine",
       "ready": "Ta semaine est prête",
@@ -5248,6 +5327,16 @@
       "ignore": "Ignorer",
       "later": "Plus tard",
       "apply": "Appliquer ({{count}})",
+      "note": "Remarque",
+      "noteFor": "Remarque pour {{task}}",
+      "notePlaceholder": "Ce qui doit changer…",
+      "toReview": "À revoir",
+      "noteDecision": "À revoir avec ta remarque",
+      "sendError": "Les remarques n’ont pas pu être envoyées.",
+      "sendCaption_one": "{{count}} appliquée · {{sent}} renvoyées",
+      "sendCaption_other": "{{count}} appliquées · {{sent}} renvoyées",
+      "notesSent_one": "{{count}} tâche renvoyée, je te préviens quand c’est prêt",
+      "notesSent_other": "{{count}} tâches renvoyées, je te préviens quand c’est prêt",
       "appliedCount": "{{count}} sur {{total}} appliqués"
     },
     "apply": {

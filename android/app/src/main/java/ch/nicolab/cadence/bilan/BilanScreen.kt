@@ -19,6 +19,7 @@ import ch.nicolab.cadence.domain.AbstinenceProfile
 import ch.nicolab.cadence.domain.HabitEntry
 import ch.nicolab.cadence.domain.WeekOutlook
 import ch.nicolab.cadence.tasks.ui.GoalsEntryPanel
+import ch.nicolab.cadence.tasks.ui.proposals.CareerEntryPanel
 import ch.nicolab.cadence.tasks.ui.review.ReviewEntryPanel
 import ch.nicolab.cadence.ui.ScreenList
 import java.time.DayOfWeek
@@ -39,6 +40,7 @@ internal fun BilanScreen(
     options: (HabitCardState) -> Unit,
     onCorrect: (HabitEntry) -> Unit,
     onOpenReview: () -> Unit,
+    onOpenCareer: () -> Unit,
     onOpenGoals: () -> Unit,
     onOpenSettings: () -> Unit,
 ) {
@@ -78,6 +80,7 @@ internal fun BilanScreen(
     }) {
         item(key = "task-kpis") { TaskKpiPanel(habits) }
         item(key = "review-entry") { ReviewEntryPanel(onOpenReview) }
+        item(key = "career-entry") { CareerEntryPanel(onOpenCareer) }
         item(key = "goals-entry") { GoalsEntryPanel(onOpenGoals) }
         item(key = "task-review") { TaskReviewPanel() }
         weekItems(habits, outlook, quick, options)

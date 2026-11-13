@@ -1,4 +1,46 @@
 {
+    "career": {
+        "title": "Kariera",
+        "updatedAt": "zaktualizowano o {{time}}",
+        "empty": "Dziś nic nowego",
+        "emptyHint": "Agent zagląda każdego ranka: przypomnienia, oferty i zadania pojawią się tutaj.",
+        "allDecided": "Na dziś wszystko postanowione",
+        "loadError": "Nie udało się wczytać strony Kariera.",
+        "retry": "Spróbuj ponownie",
+        "applyError": "Decyzja nie została zapisana.",
+        "later": "Później",
+        "skip": "Pomiń",
+        "followups": {
+            "title": "Przypomnienia",
+            "appliedAgo": "aplikowano {{when}}",
+            "openDraft": "Otwórz szkic",
+            "createTask": "Utwórz zadanie",
+            "done": "Zrobione"
+        },
+        "offers": {
+            "title": "Oferty do decyzji",
+            "apply": "Aplikuj",
+            "note": "Uwaga",
+            "notePlaceholder": "Uwaga dla agenta…",
+            "open": "Zobacz ofertę",
+            "expires": "wygasa {{when}}",
+            "expired": "wygasła"
+        },
+        "tasks": {
+            "title": "Proponowane zadania",
+            "add": "Dodaj"
+        },
+        "decided": "Zdecydowane ({{count}})",
+        "state": {
+            "applied": "Aplikowano",
+            "skipped": "Pominięta",
+            "later": "Później",
+            "done": "Zrobione",
+            "taskCreated": "Zadanie utworzone",
+            "added": "Dodane",
+            "dismissed": "Odrzucone"
+        }
+    },
     "agentBanner": {
         "agent": "Agent",
         "dismiss": "Oznacz jako przeczytane",
@@ -187,6 +229,9 @@
       "delete": "Usuń"
     },
     "mail": {
+      "draftRequested": "Szkic przygotowywany w Gmailu",
+      "archiveRequested": "Zlecono archiwizację",
+      "noteSent": "Odesłano do Trieura",
       "noSubject": "(bez tematu)",
       "draft": "Szkic gotowy:",
       "task": "Zadanie",
@@ -245,6 +290,23 @@
     "entry": "Do uporządkowania ({{count}})",
     "title": "Do uporządkowania",
     "deck": {
+      "progressLabel": "Mail {{position}} z {{total}}",
+      "option": {
+        "draft": "Szkic",
+        "read": "Przeczytaj",
+        "event": "Kalendarz",
+        "archive": "Archiwizuj"
+      },
+      "openInGmail": "Otwórz w Gmailu",
+      "readMail": "Przeczytaj maila",
+      "collapseMail": "Zwiń",
+      "noteOpen": "Odpowiedz jednym słowem",
+      "notePlaceholder": "Słowo dla Trieura",
+      "noteSend": "Wyślij",
+      "recommended": "Zalecane",
+      "actionFailed": "Ostatnia akcja się nie powiodła",
+      "actionFailedDraft": "Nie udało się przygotować szkicu",
+      "actionFailedArchive": "Archiwizacja się nie powiodła",
       "open": "Posortuj moją pocztę ({{count}})",
       "title": "Posortuj moją pocztę",
       "close": "Zamknij",
@@ -258,7 +320,7 @@
       "openMail": "Otwórz wiadomość",
       "chat": "Porozmawiaj",
       "undo": "Cofnij",
-      "keys": "Enter lub →: porada · ←: później · ↓: pomiń · Ctrl+Z: cofnij · Esc: zamknij"
+      "keys": "Enter lub →: rada · 1–5: wybierz · ←: później · ↓: pomiń · Ctrl+Z: cofnij · Esc: zamknij"
     }
   },
   "outline": {
@@ -5300,6 +5362,23 @@
     "planned": "Zaplanowane {{when}}"
   },
   "proposals": {
+    "decide": {
+      "today": "Dziś",
+      "planOn": "Zaplanuj na dzień",
+      "keep": "Zostaw bez zmian",
+      "kept": "Bez zmian",
+      "otherDate": "Inna data…",
+      "dueOn": "Termin {{date}}",
+      "ok": "OK",
+      "menu": "Wybierz",
+      "changed": "Zmienione",
+      "undo": "Wróć do sugestii: {{decision}}",
+      "trigger": "{{decision}}, {{task}}",
+      "goal": "Cel",
+      "area": "Obszar",
+      "groupToday": "Dziś",
+      "groupKeep": "Bez zmian"
+    },
     "week": {
       "button": "Zaplanuj mój tydzień",
       "ready": "Twój tydzień jest gotowy",
@@ -5328,6 +5407,20 @@
       "ignore": "Ignoruj",
       "later": "Później",
       "apply": "Zastosuj ({{count}})",
+      "note": "Uwaga",
+      "noteFor": "Uwaga do: {{task}}",
+      "notePlaceholder": "Co ma się zmienić…",
+      "toReview": "Do sprawdzenia",
+      "noteDecision": "Do sprawdzenia z twoją uwagą",
+      "sendError": "Nie udało się wysłać uwag.",
+      "sendCaption_one": "{{count}} zastosowana · {{sent}} odesłane",
+      "sendCaption_few": "{{count}} zastosowane · {{sent}} odesłane",
+      "sendCaption_many": "{{count}} zastosowanych · {{sent}} odesłane",
+      "sendCaption_other": "{{count}} zastosowanych · {{sent}} odesłane",
+      "notesSent_one": "{{count}} zadanie odesłane, dam znać, gdy będzie gotowe",
+      "notesSent_few": "{{count}} zadania odesłane, dam znać, gdy będą gotowe",
+      "notesSent_many": "{{count}} zadań odesłanych, dam znać, gdy będą gotowe",
+      "notesSent_other": "{{count}} zadań odesłanych, dam znać, gdy będą gotowe",
       "appliedCount": "Zastosowano {{count}} z {{total}}"
     },
     "apply": {

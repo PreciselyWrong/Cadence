@@ -5,6 +5,7 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test
 class ProposalModelTest {
     private val monday = LocalDate.of(2026, 11, 16)
     private val tuesday = monday.plusDays(1)
+    private val wednesday = monday.plusDays(2)
 
     private fun change(uid: String, op: ProposalOp, date: LocalDate? = null) = WeekChange(uid, op, date, reason = "raison $uid")
 
@@ -51,59 +53,192 @@ class ProposalModelTest {
     }
 
     @Test
-    fun `changes without a day are grouped first then days in calendar order`() {
+    fun `sections follow the current decision, days first then this week later due drop keep`() {
         val changes = listOf(
-            change("a", ProposalOp.PLAN_DAY, tuesday),
-            change("b", ProposalOp.LATER),
-            change("c", ProposalOp.PLAN_DAY, monday),
-            change("d", ProposalOp.THIS_WEEK),
-            change("e", ProposalOp.PLAN_DAY, tuesday),
+            change("a", ProposalOp.DROP),
+            change("b", ProposalOp.KEEP),
+            change("c", ProposalOp.PLAN_DAY, tuesday),
+            change("d", ProposalOp.LATER),
+            change("e", ProposalOp.THIS_WEEK),
+            change("f", ProposalOp.PLAN_DAY, monday),
+            change("g", ProposalOp.DUE, wednesday),
         )
 
-        val groups = Proposals.groupByDay(changes)
+        val sections = Proposals.sections(changes, emptyMap())
 
-        assertEquals(listOf(null, monday, tuesday), groups.map { it.date })
-        assertEquals(listOf("b", "d"), groups[0].changes.map { it.taskUid })
-        assertEquals(listOf("c"), groups[1].changes.map { it.taskUid })
-        assertEquals(listOf("a", "e"), groups[2].changes.map { it.taskUid })
+        assertEquals(
+            listOf<DecisionGroup>(
+                DecisionGroup.Day(monday),
+                DecisionGroup.Day(tuesday),
+                DecisionGroup.ThisWeek,
+                DecisionGroup.Later,
+                DecisionGroup.Due(wednesday),
+                DecisionGroup.Drop,
+                DecisionGroup.Keep,
+            ),
+            sections.map { it.group },
+        )
+        assertEquals(listOf("f"), sections[0].changes.map { it.taskUid })
     }
 
     @Test
-    fun `no undated group when every change has a day`() {
-        val groups = Proposals.groupByDay(listOf(change("a", ProposalOp.DUE, monday)))
+    fun `a chosen decision moves the row to its new group and the agent's stays in the answer`() {
+        val changes = listOf(change("a", ProposalOp.LATER), change("b", ProposalOp.THIS_WEEK))
+        val chosen = Proposals.choose(emptyMap(), changes[0], WeekDecision(ProposalOp.PLAN_DAY, tuesday))
 
-        assertEquals(listOf<LocalDate?>(monday), groups.map { it.date })
+        val sections = Proposals.sections(changes, chosen)
+
+        assertEquals(listOf<DecisionGroup>(DecisionGroup.Day(tuesday), DecisionGroup.ThisWeek), sections.map { it.group })
+        assertEquals(WeekDecision(ProposalOp.LATER), Proposals.decision(changes[0], emptyMap()))
     }
 
     @Test
-    fun `unchecked changes are left out of the apply payload`() {
-        val changes = listOf(change("a", ProposalOp.LATER), change("b", ProposalOp.DROP), change("c", ProposalOp.THIS_WEEK))
-        val unchecked = Proposals.toggle(emptySet(), "b")
+    fun `a choice is modified until it equals the agent's suggestion, then restore gives it back`() {
+        val change = change("a", ProposalOp.PLAN_DAY, monday)
 
-        val body = Proposals.weekApplyBody(changes, unchecked)
+        val other = Proposals.choose(emptyMap(), change, WeekDecision(ProposalOp.DROP))
+        assertTrue(Proposals.isModified(change, other))
+        assertEquals(WeekDecision(ProposalOp.DROP), Proposals.decision(change, other))
 
-        assertEquals(listOf("a", "c"), body["task_uids"]!!.jsonArray.map { it.jsonPrimitive.content })
+        val back = Proposals.choose(other, change, WeekDecision(ProposalOp.PLAN_DAY, monday))
+        assertFalse(Proposals.isModified(change, back))
+        assertTrue(back.isEmpty())
+
+        assertEquals(WeekDecision(ProposalOp.PLAN_DAY, monday), Proposals.decision(change, Proposals.restore(other, "a")))
     }
 
     @Test
-    fun `everything is checked by default and toggling twice restores it`() {
-        val changes = listOf(change("a", ProposalOp.LATER), change("b", ProposalOp.DROP))
+    fun `apply body sends each decision with its op and date and leaves out keep`() {
+        val changes = listOf(
+            change("a", ProposalOp.PLAN_DAY, monday),
+            change("b", ProposalOp.KEEP),
+            change("c", ProposalOp.THIS_WEEK),
+            change("d", ProposalOp.DUE, tuesday),
+        )
+        val chosen = Proposals.choose(emptyMap(), changes[2], WeekDecision(ProposalOp.KEEP))
 
-        assertEquals(2, Proposals.checked(changes, emptySet()).size)
-        assertEquals(emptySet<String>(), Proposals.toggle(Proposals.toggle(emptySet(), "a"), "a"))
+        val decisions = Proposals.weekApplyBody(changes, chosen)["decisions"]!!.jsonArray.map { it.jsonObject }
+
+        assertEquals(listOf("a", "d"), decisions.map { it["task_uid"]!!.jsonPrimitive.content })
+        assertEquals("plan_day", decisions[0]["op"]!!.jsonPrimitive.content)
+        assertEquals("2026-11-16", decisions[0]["date"]!!.jsonPrimitive.content)
+        assertEquals("due", decisions[1]["op"]!!.jsonPrimitive.content)
+        assertEquals(2, Proposals.pendingCount(changes, chosen))
     }
 
     @Test
-    fun `an unknown operation or a blank task is dropped from the changes`() {
+    fun `send body leaves out noted rows and keep, and carries the trimmed notes`() {
+        val changes = listOf(
+            change("a", ProposalOp.PLAN_DAY, monday),
+            change("b", ProposalOp.LATER),
+            change("c", ProposalOp.KEEP),
+            change("d", ProposalOp.DUE, tuesday),
+        )
+        val notes = mapOf("b" to "  Trop tard pour ça  ", "d" to "Plutôt jeudi")
+
+        val body = Proposals.sendBody(changes, emptyMap(), notes)
+        val decisions = body["decisions"]!!.jsonArray.map { it.jsonObject }
+        val sentNotes = body["notes"]!!.jsonArray.map { it.jsonObject }
+
+        assertEquals(listOf("a"), decisions.map { it["task_uid"]!!.jsonPrimitive.content })
+        assertEquals(listOf("b", "d"), sentNotes.map { it["task_uid"]!!.jsonPrimitive.content })
+        assertEquals("Trop tard pour ça", sentNotes[0]["text"]!!.jsonPrimitive.content)
+        assertEquals("Plutôt jeudi", sentNotes[1]["text"]!!.jsonPrimitive.content)
+    }
+
+    @Test
+    fun `a blank note is no note, so its row keeps its decision and is applied`() {
+        val changes = listOf(change("a", ProposalOp.THIS_WEEK))
+        val notes = mapOf("a" to "   ")
+
+        assertFalse(Proposals.hasNote(changes[0], notes))
+        assertEquals(listOf("a"), Proposals.sendBody(changes, emptyMap(), notes)["decisions"]!!.jsonArray.map {
+            it.jsonObject["task_uid"]!!.jsonPrimitive.content
+        })
+        assertEquals(0, Proposals.sendBody(changes, emptyMap(), notes)["notes"]!!.jsonArray.size)
+    }
+
+    @Test
+    fun `notes of tasks that are not in the answer are not sent`() {
+        val changes = listOf(change("a", ProposalOp.LATER))
+
+        val body = Proposals.sendBody(changes, emptyMap(), mapOf("zzz" to "Hors réponse"))
+
+        assertEquals(0, body["notes"]!!.jsonArray.size)
+        assertEquals(1, body["decisions"]!!.jsonArray.size)
+    }
+
+    @Test
+    fun `send counts give the applied and returned rows, keep rows are neither`() {
+        val changes = listOf(
+            change("a", ProposalOp.LATER),
+            change("b", ProposalOp.DROP),
+            change("c", ProposalOp.KEEP),
+            change("d", ProposalOp.THIS_WEEK),
+        )
+        val notes = mapOf("b" to "Non, garde-la")
+
+        assertEquals(SendCounts(applied = 2, returned = 1), Proposals.sendCounts(changes, emptyMap(), notes))
+        assertEquals(SendCounts(applied = 3, returned = 0), Proposals.sendCounts(changes, emptyMap(), emptyMap()))
+    }
+
+    @Test
+    fun `the apply button counts the decisions that are not keep`() {
+        val changes = listOf(change("a", ProposalOp.LATER), change("b", ProposalOp.KEEP))
+
+        assertEquals(1, Proposals.pendingCount(changes, emptyMap()))
+        assertEquals(0, Proposals.pendingCount(changes, Proposals.choose(emptyMap(), changes[0], WeekDecision(ProposalOp.KEEP))))
+    }
+
+    @Test
+    fun `the menu offers each day of the period, then this week, later, keep and drop`() {
+        val options = Proposals.menuOptions(monday, monday.plusDays(6))
+
+        assertEquals((0..6).map { WeekDecision(ProposalOp.PLAN_DAY, monday.plusDays(it.toLong())) }, options.take(7))
+        assertEquals(
+            listOf(WeekDecision(ProposalOp.THIS_WEEK), WeekDecision(ProposalOp.LATER), WeekDecision(ProposalOp.KEEP), WeekDecision(ProposalOp.DROP)),
+            options.drop(7),
+        )
+        assertEquals(4, Proposals.menuOptions(null, null).size)
+        assertEquals(4, Proposals.menuOptions(tuesday, monday).size)
+    }
+
+    @Test
+    fun `the headline is the answer's headline, and a legacy summary becomes the subtitle`() {
+        val v2 = ProposalAnswerDto(headline = "Mardi est libre", subtitle = "Deux retards replacés.", summary = "ancien")
+        val legacy = ProposalAnswerDto(summary = "Mardi est libre ; deux retards replacés.")
+
+        assertEquals("Mardi est libre", Proposals.headlineOf(v2))
+        assertEquals("Deux retards replacés.", Proposals.subtitleOf(v2))
+        assertNull(Proposals.headlineOf(legacy))
+        assertEquals("Mardi est libre ; deux retards replacés.", Proposals.subtitleOf(legacy))
+        assertNull(Proposals.subtitleOf(ProposalAnswerDto(headline = "Seul")))
+    }
+
+    @Test
+    fun `a week answer without a date is dropped when its operation needs one`() {
         val answer = ProposalAnswerDto(
             changes = listOf(
-                ChangeDto(taskUid = "a", op = "delete_everything"),
-                ChangeDto(taskUid = "", op = "later"),
-                ChangeDto(taskUid = "b", op = "later"),
+                ChangeDto(taskUid = "a", op = "plan_day"),
+                ChangeDto(taskUid = "b", op = "due", date = "2026-11-18"),
+                ChangeDto(taskUid = "c", op = "keep", reason = "Déjà bien"),
             ),
         )
 
-        assertEquals(listOf("b"), Proposals.weekChanges(answer).map { it.taskUid })
+        assertEquals(listOf("b", "c"), Proposals.weekChanges(answer).map { it.taskUid })
+    }
+
+    @Test
+    fun `task facts keep their goal and area`() {
+        val facts = ProposalJson.parseToJsonElement(
+            """{"tasks":[{"uid":"a","name":"Valider","goal":"Cuisine rénovée","area":"Maison"},{"uid":"b","name":"Lire"}]}""",
+        ).jsonObject
+
+        val tasks = Proposals.factTasks(facts)
+
+        assertEquals("Cuisine rénovée", tasks["a"]?.goal)
+        assertEquals("Maison", tasks["a"]?.area)
+        assertNull(tasks["b"]?.goal)
     }
 
     @Test

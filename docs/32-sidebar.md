@@ -73,13 +73,19 @@ Drag a task, a note or a project onto a sidebar row to file it there, in Minimal
 
 ## Icon rail and More
 
-By default the primary icons are Today, Inbox, Calendar, Notes, Habits, Views, Areas, Goals, People, Insights; the rest sit in **More**: All tasks, Assigned to me, Everyone, Boards, Templates, Access. Each item can be moved between the rail, More and hidden (see [Customising](#customising)). Calendar, Habits, Templates, Everyone and Access still follow their feature and visibility settings.
+By default the primary icons are Today, Calendar, Notes, Habits, Views, Areas, Goals, People, Insights, Review, Career (`/career`, briefcase); the rest sit in **More**: All tasks, Assigned to me, Everyone, Boards, Templates, Access. Each item can be moved between the rail, More and hidden (see [Customising](#customising)). Calendar, Habits, Templates, Everyone and Access still follow their feature and visibility settings.
 
 Every item here still has its own route. Hiding an item in the sidebar settings hides it in the rail too.
 
 ## Panel per rail icon
 
 The open panel follows the route: Notes (`/notes`), Goals (`/goals`) and Habits (`/habits`) show their own blocks, every other route shows the tasks panel (the blocks above). Each panel's blocks are shown, hidden and ordered in Profile > Sidebar, saved in `sidebar_settings.panels` (`notes`: favorites, notes; `goals`: goals; `habits`: habits). Defaults keep the tasks panel as it was. Code: `frontend/utils/minimalSidebar.ts` (`SECTION_PANEL_BLOCKS`, `RAIL_PANEL_KIND`), `Sidebar/SidebarRailMinimal.tsx` (`panelRailIdFor`).
+
+The Goals and Habits panels read like the tasks panel: a title row (the name opens the overview page, **+** creates), group headers in small capitals with their count, 34 px rows with hover, selection (the open goal or habit) and a keyboard focus ring.
+
+- **Goals** (`/goals`, a goal's page): the groups of the Goals page. **Active** is open by default and lists each objective with its key results indented under it; **Paused, achieved or dropped** and the three bucket-list groups (Have, Be, Do) are folded. Each row shows a 6 px colour dot, the title over a thin progress bar (share of linked tasks and projects done; wishes have no bar) and the target date on the right, in the warning colour once passed while the goal is active. Each fold is kept on this device (`sidebarSectionExpanded:goalsPanel:*`). Fulfilled wishes stay on the Goals page. No goals: "No goals yet." and **New Goal**. Code: `Sidebar/SidebarGoalsPanel.tsx`, order from `utils/goalsOverview.ts`.
+- **Habits** (`/habits`, a habit's page): today's habits from `GET /api/cadence/habits`, in the groups of the habits page (`groupHabits`, time range after the group name), with "N of M done for now" under the title. Each row shows the habit's facet gauge in its colour (filled with today's progress), its name, then the amount ("1 / 3", "12 min / 30 min"), the streak (flame and count) or a pause mark. A yes/no habit not yet done has a round check that logs today (one entry, an Undo toast); a done habit shows a green check. A habit paused or not planned today is greyed. The panel reloads after any habit write (`onHabitsChanged` in `utils/cadenceHabitsService.ts`), so a check in the panel also updates the habits page and the habit's page. No habits: "No habits yet." and **New habit**. Code: `Sidebar/SidebarHabitsPanel.tsx`.
+- Shared parts (title row, group, empty state, row class): `Sidebar/sidebarPanelParts.tsx`. Dense keeps its compact Goals and Habits sections (`SidebarGoals.tsx`, `SidebarHabits.tsx`).
 
 ## Dense
 

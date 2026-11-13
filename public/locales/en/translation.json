@@ -1,4 +1,46 @@
 {
+    "career": {
+        "title": "Career",
+        "updatedAt": "updated at {{time}}",
+        "empty": "Nothing new today",
+        "emptyHint": "The agent checks in every morning: its follow-ups, offers and tasks will show up here.",
+        "allDecided": "Everything is decided for today",
+        "loadError": "Couldn't load the Career page.",
+        "retry": "Try again",
+        "applyError": "The decision wasn't saved.",
+        "later": "Later",
+        "skip": "Skip",
+        "followups": {
+            "title": "Follow-ups",
+            "appliedAgo": "applied {{when}}",
+            "openDraft": "Open draft",
+            "createTask": "Create task",
+            "done": "Done"
+        },
+        "offers": {
+            "title": "Offers to decide",
+            "apply": "Apply",
+            "note": "Note",
+            "notePlaceholder": "A note for the agent…",
+            "open": "View offer",
+            "expires": "expires {{when}}",
+            "expired": "expired"
+        },
+        "tasks": {
+            "title": "Suggested tasks",
+            "add": "Add"
+        },
+        "decided": "Decided ({{count}})",
+        "state": {
+            "applied": "Applied",
+            "skipped": "Skipped",
+            "later": "Later",
+            "done": "Done",
+            "taskCreated": "Task created",
+            "added": "Added",
+            "dismissed": "Dismissed"
+        }
+    },
     "agentBanner": {
         "agent": "Agent",
         "dismiss": "Mark as read",
@@ -175,6 +217,9 @@
       "delete": "Delete"
     },
     "mail": {
+      "draftRequested": "Draft being prepared in Gmail",
+      "archiveRequested": "Archiving requested",
+      "noteSent": "Sent back to the Trieur",
       "noSubject": "(no subject)",
       "draft": "Draft ready:",
       "task": "Task",
@@ -233,6 +278,23 @@
     "entry": "To sort ({{count}})",
     "title": "To sort",
     "deck": {
+      "progressLabel": "Mail {{position}} of {{total}}",
+      "option": {
+        "draft": "Draft",
+        "read": "Read",
+        "event": "Calendar",
+        "archive": "Archive"
+      },
+      "openInGmail": "Open in Gmail",
+      "readMail": "Read the mail",
+      "collapseMail": "Collapse",
+      "noteOpen": "Answer in a word",
+      "notePlaceholder": "A word for the Trieur",
+      "noteSend": "Send",
+      "recommended": "Advised",
+      "actionFailed": "The last action did not go through",
+      "actionFailedDraft": "The draft could not be prepared",
+      "actionFailedArchive": "Archiving did not go through",
       "open": "Sort my mail ({{count}})",
       "title": "Sort my mail",
       "close": "Close",
@@ -246,7 +308,7 @@
       "openMail": "Open mail",
       "chat": "Chat",
       "undo": "Undo",
-      "keys": "Enter or →: advice · ←: later · ↓: skip · Ctrl+Z: undo · Esc: close"
+      "keys": "Enter or →: advice · 1–5: choose · ←: later · ↓: skip · Ctrl+Z: undo · Esc: close"
     }
   },
   "outline": {
@@ -5274,6 +5336,23 @@
     "planned": "Planned {{when}}"
   },
   "proposals": {
+    "decide": {
+      "today": "Today",
+      "planOn": "Plan on a day",
+      "keep": "Keep as is",
+      "kept": "As is",
+      "otherDate": "Other date…",
+      "dueOn": "Due {{date}}",
+      "ok": "OK",
+      "menu": "Choose",
+      "changed": "Changed",
+      "undo": "Back to the suggestion: {{decision}}",
+      "trigger": "{{decision}}, {{task}}",
+      "goal": "Goal",
+      "area": "Area",
+      "groupToday": "Today",
+      "groupKeep": "As is"
+    },
     "week": {
       "button": "Plan my week",
       "ready": "Your week is ready",
@@ -5302,6 +5381,16 @@
       "ignore": "Ignore",
       "later": "Later",
       "apply": "Apply ({{count}})",
+      "note": "Note",
+      "noteFor": "Note on {{task}}",
+      "notePlaceholder": "What should change…",
+      "toReview": "To review",
+      "noteDecision": "To review with your note",
+      "sendError": "The notes could not be sent.",
+      "sendCaption_one": "{{count}} applied · {{sent}} sent back",
+      "sendCaption_other": "{{count}} applied · {{sent}} sent back",
+      "notesSent_one": "{{count}} task sent back, I’ll tell you when it’s ready",
+      "notesSent_other": "{{count}} tasks sent back, I’ll tell you when it’s ready",
       "appliedCount": "{{count}} of {{total}} applied"
     },
     "apply": {

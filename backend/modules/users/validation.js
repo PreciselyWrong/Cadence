@@ -208,6 +208,7 @@ const MINIMAL_RAIL_KEYS = [
     'people',
     'insights',
     'review',
+    'career',
     'allTasks',
     'assignedToMe',
     'everyone',

@@ -1,4 +1,46 @@
 {
+    "career": {
+        "title": "커리어",
+        "updatedAt": "{{time}}에 업데이트됨",
+        "empty": "오늘은 새로운 소식이 없습니다",
+        "emptyHint": "에이전트가 매일 아침 확인합니다. 후속 연락, 채용 공고, 할 일이 여기에 표시됩니다.",
+        "allDecided": "오늘 결정할 것은 모두 끝났습니다",
+        "loadError": "커리어 페이지를 불러오지 못했습니다.",
+        "retry": "다시 시도",
+        "applyError": "결정이 저장되지 않았습니다.",
+        "later": "나중에",
+        "skip": "건너뛰기",
+        "followups": {
+            "title": "후속 연락",
+            "appliedAgo": "지원 {{when}}",
+            "openDraft": "초안 열기",
+            "createTask": "할 일 만들기",
+            "done": "완료"
+        },
+        "offers": {
+            "title": "결정할 채용 공고",
+            "apply": "지원하기",
+            "note": "메모",
+            "notePlaceholder": "에이전트에게 남길 메모…",
+            "open": "공고 보기",
+            "expires": "마감 {{when}}",
+            "expired": "마감됨"
+        },
+        "tasks": {
+            "title": "제안된 할 일",
+            "add": "추가"
+        },
+        "decided": "결정됨 ({{count}})",
+        "state": {
+            "applied": "지원함",
+            "skipped": "건너뜀",
+            "later": "나중에",
+            "done": "완료",
+            "taskCreated": "할 일 생성됨",
+            "added": "추가됨",
+            "dismissed": "거절됨"
+        }
+    },
     "agentBanner": {
         "agent": "Agent",
         "dismiss": "읽음으로 표시",
@@ -175,6 +217,9 @@
       "delete": "삭제"
     },
     "mail": {
+      "draftRequested": "Gmail에서 초안 준비 중",
+      "archiveRequested": "보관 요청됨",
+      "noteSent": "Trieur에게 돌려보냄",
       "noSubject": "(제목 없음)",
       "draft": "초안 준비됨:",
       "task": "작업",
@@ -233,6 +278,23 @@
     "entry": "정리할 항목 ({{count}})",
     "title": "정리할 항목",
     "deck": {
+      "progressLabel": "메일 {{position}} / {{total}}",
+      "option": {
+        "draft": "초안",
+        "read": "읽기",
+        "event": "캘린더",
+        "archive": "보관"
+      },
+      "openInGmail": "Gmail에서 열기",
+      "readMail": "메일 읽기",
+      "collapseMail": "접기",
+      "noteOpen": "한마디로 답하기",
+      "notePlaceholder": "Trieur에게 한마디",
+      "noteSend": "보내기",
+      "recommended": "추천",
+      "actionFailed": "마지막 작업이 완료되지 않았습니다",
+      "actionFailedDraft": "초안을 준비하지 못했습니다",
+      "actionFailedArchive": "보관이 완료되지 않았습니다",
       "open": "내 메일 정리 ({{count}})",
       "title": "내 메일 정리",
       "close": "닫기",
@@ -246,7 +308,7 @@
       "openMail": "메일 열기",
       "chat": "대화하기",
       "undo": "실행 취소",
-      "keys": "Enter 또는 →: 제안 · ←: 나중에 · ↓: 건너뛰기 · Ctrl+Z: 실행 취소 · Esc: 닫기"
+      "keys": "Enter 또는 →: 추천 · 1–5: 선택 · ←: 나중에 · ↓: 건너뛰기 · Ctrl+Z: 실행 취소 · Esc: 닫기"
     }
   },
   "outline": {
@@ -5212,6 +5274,23 @@
     "planned": "{{when}} 계획됨"
   },
   "proposals": {
+    "decide": {
+      "today": "오늘",
+      "planOn": "날짜에 계획",
+      "keep": "그대로 두기",
+      "kept": "그대로",
+      "otherDate": "다른 날짜…",
+      "dueOn": "마감 {{date}}",
+      "ok": "확인",
+      "menu": "선택",
+      "changed": "변경됨",
+      "undo": "제안으로 되돌리기: {{decision}}",
+      "trigger": "{{decision}}, {{task}}",
+      "goal": "목표",
+      "area": "영역",
+      "groupToday": "오늘",
+      "groupKeep": "그대로"
+    },
     "week": {
       "button": "이번 주 계획하기",
       "ready": "이번 주 계획이 준비됐어요",
@@ -5240,6 +5319,16 @@
       "ignore": "무시",
       "later": "나중에",
       "apply": "적용 ({{count}})",
+      "note": "메모",
+      "noteFor": "{{task}} 메모",
+      "notePlaceholder": "무엇을 바꿔야 할까요…",
+      "toReview": "검토 필요",
+      "noteDecision": "메모와 함께 검토 필요",
+      "sendError": "메모를 보내지 못했어요.",
+      "sendCaption_one": "{{count}}개 적용 · {{sent}}개 다시 보냄",
+      "sendCaption_other": "{{count}}개 적용 · {{sent}}개 다시 보냄",
+      "notesSent_one": "작업 {{count}}개를 다시 보냈어요. 준비되면 알려 드릴게요",
+      "notesSent_other": "작업 {{count}}개를 다시 보냈어요. 준비되면 알려 드릴게요",
       "appliedCount": "{{total}}개 중 {{count}}개 적용됨"
     },
     "apply": {

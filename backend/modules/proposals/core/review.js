@@ -8,7 +8,6 @@ const { cleanText } = require('./text');
 
 const QUEUE_SIZE = 10;
 const PARKED_PLACES = 3;
-const SUMMARY_MAX = 300;
 const REASON_MAX = 140;
 
 // The choices of each list, by id. `keep` writes nothing.
@@ -107,7 +106,8 @@ function reviewFacts({ lists, previous = new Map(), size = QUEUE_SIZE }) {
 }
 
 // Keeps the valid judgements: a task of the facts that needs one, a choice of
-// its list, one per task. The answer is `{ summary, items }`.
+// its list, one per task. The answer is `{ items }`; answer.js adds the
+// headline and subtitle.
 function validateReviewAnswer(facts, raw) {
     const asked = new Map(facts.items.map((item) => [item.uid, item]));
     const seen = new Set();
@@ -126,10 +126,7 @@ function validateReviewAnswer(facts, raw) {
             reason: cleanText(item.reason, REASON_MAX),
         });
     }
-    return {
-        summary: cleanText(raw.summary, SUMMARY_MAX),
-        items,
-    };
+    return { items };
 }
 
 module.exports = {

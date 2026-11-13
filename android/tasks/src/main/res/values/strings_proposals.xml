@@ -17,12 +17,16 @@
     <string name="proposal_closed">Cette proposition n\'est plus disponible.</string>
     <string name="proposal_nothing">Rien à changer cette semaine.</string>
     <string name="proposal_unknown_task">Tâche</string>
-    <string name="proposal_group_week">Cette semaine</string>
-    <string name="proposal_op_plan_day">Planifier ce jour</string>
     <string name="proposal_op_this_week">Cette semaine</string>
     <string name="proposal_op_later">Plus tard</string>
     <string name="proposal_op_due">Échéance le %1$s</string>
     <string name="proposal_op_drop">Abandonner</string>
+    <string name="proposal_op_keep">Garder tel quel</string>
+    <string name="proposal_op_other_date">Autre date</string>
+    <string name="proposal_chip_keep">Garder</string>
+    <string name="proposal_chip_due">Échéance %1$s</string>
+    <string name="proposal_modified">modifié</string>
+    <string name="proposal_restore">Rétablir</string>
     <string name="proposal_apply">Appliquer (%1$d)</string>
     <string name="proposal_reply">Répondre</string>
     <string name="proposal_reply_hint">Ta réponse à l\'agent</string>
@@ -33,6 +37,14 @@
         <item quantity="one">%1$d changement appliqué</item>
         <item quantity="other">%1$d changements appliqués</item>
     </plurals>
+    <string name="proposal_note">Remarque</string>
+    <string name="proposal_note_hint">Ce qu\'il faut revoir</string>
+    <string name="proposal_to_review">À revoir</string>
+    <string name="proposal_send_counts">%1$d appliquées · %2$d renvoyées</string>
+    <plurals name="proposal_returned">
+        <item quantity="one">%1$d tâche renvoyée</item>
+        <item quantity="other">%1$d tâches renvoyées</item>
+    </plurals>
     <string name="proposal_applied_partial">%1$d appliqué(s), %2$d non appliqué(s)</string>
     <string name="proposal_advice">Conseil</string>
     <string name="proposal_choice_do_today">Aujourd\'hui</string>
@@ -42,4 +54,32 @@
     <string name="proposal_choice_this_week">Cette semaine</string>
     <string name="proposal_choice_in_view">En vue</string>
     <string name="proposal_choice_done">Terminer</string>
+    <string name="proposal_career_ready">Ta carrière a du neuf</string>
+    <string name="proposal_career_ready_text">Relances et offres à décider.</string>
+    <string name="proposal_career_failed">Ta carrière n\'a pas pu être préparée</string>
+    <string name="career_title">Carrière</string>
+    <string name="career_entry_text">Relances et offres à décider</string>
+    <string name="career_back">Retour</string>
+    <string name="career_nothing">Rien de neuf aujourd\'hui</string>
+    <string name="career_followups">Relances</string>
+    <string name="career_offers">Offres à décider</string>
+    <string name="career_tasks">Tâches proposées</string>
+    <string name="career_decided">Décidé (%1$d)</string>
+    <string name="career_open_draft">Ouvrir le brouillon</string>
+    <string name="career_create_task">Créer la tâche</string>
+    <string name="career_done">Fait</string>
+    <string name="career_apply">Postuler</string>
+    <string name="career_skip">Passer</string>
+    <string name="career_note">Remarque</string>
+    <string name="career_note_hint">Ce qu\'il faut retenir</string>
+    <string name="career_add">Ajouter</string>
+    <string name="career_applied_on">Postulé le %1$s</string>
+    <string name="career_expires">expire le %1$s</string>
+    <string name="career_due">Pour le %1$s</string>
+    <string name="career_op_applied">Postulé</string>
+    <string name="career_op_passed">Passée</string>
+    <string name="career_op_done">Fait</string>
+    <string name="career_op_task_created">Tâche créée</string>
+    <string name="career_op_task_added">Tâche ajoutée</string>
+    <string name="career_op_ignored">Ignorée</string>
 </resources>

@@ -21,7 +21,9 @@ import ch.nicolab.cadence.tasks.triage.slotAnswerCall
 import java.util.UUID
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -47,6 +49,13 @@ internal class TriageViewModel(application: Application) : AndroidViewModel(appl
     private val skipped = MutableStateFlow<List<String>>(emptyList())
     private val _notices = MutableSharedFlow<TriageNotice>(extraBufferCapacity = 1)
     val notices: SharedFlow<TriageNotice> = _notices
+
+    private var lastUndo: (() -> Unit)? = null
+    private var undoWindow: Job? = null
+    private val _undoable = MutableStateFlow(false)
+
+    /** Vrai tant que la dernière décision est encore dans sa fenêtre d'annulation. */
+    val undoable: StateFlow<Boolean> = _undoable.asStateFlow()
 
     /** Les propositions à traiter ; celles passées reviennent en fin de file. */
     val items: StateFlow<List<TriageItemDto>> = combine(repository.queue, holds.hidden, skipped) { queue, gone, later ->
@@ -111,10 +120,25 @@ internal class TriageViewModel(application: Application) : AndroidViewModel(appl
                 MailDecision.EVENT -> R.string.triage_mail_event_requested
                 MailDecision.LATER -> R.string.triage_mail_postponed
                 MailDecision.DISMISS -> R.string.triage_mail_dismissed
+                MailDecision.DRAFT -> R.string.triage_mail_drafting
+                MailDecision.ARCHIVE -> R.string.triage_mail_archiving
+                MailDecision.NOTE -> R.string.triage_mail_noted
             },
         )
         val key = UUID.randomUUID().toString()
         hold(item, message, MailRequests.decide(card.mailUid, decision, payload, archive, key, string(R.string.triage_title)))
+    }
+
+    /** « Annuler » du paquet : rend la dernière décision encore dans sa fenêtre, sa carte revient en tête. */
+    fun undoLast() {
+        lastUndo?.invoke()
+        clearUndo()
+    }
+
+    private fun clearUndo() {
+        lastUndo = null
+        undoWindow?.cancel()
+        _undoable.value = false
     }
 
     /** Réponse à une carte du classement automatique (`choice` : `all`, ou un objet projet/tags/priorité, ou un doublon). */
@@ -133,7 +157,16 @@ internal class TriageViewModel(application: Application) : AndroidViewModel(appl
         TriageActions.field(item.payload, "suggestion_uid").takeIf { it.isNotBlank() }
 
     private fun hold(item: TriageItemDto, message: String, call: DeferredCall) {
-        _notices.tryEmit(TriageNotice(message, holds.hold(item.key, call)))
+        val undo = holds.hold(item.key, call)
+        _notices.tryEmit(TriageNotice(message, undo))
+        lastUndo = undo
+        undoWindow?.cancel()
+        _undoable.value = true
+        undoWindow = viewModelScope.launch {
+            delay(UNDO_WINDOW_MS)
+            lastUndo = null
+            _undoable.value = false
+        }
     }
 
     /** Quitter l'écran n'annule pas un geste validé : la fenêtre d'annulation s'arrête là et l'appel part. */

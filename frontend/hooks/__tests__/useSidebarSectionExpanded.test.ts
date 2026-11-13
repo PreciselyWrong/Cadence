@@ -24,6 +24,20 @@ describe('useSidebarSectionExpanded', () => {
         expect(other.result.current[0]).toBe(false);
     });
 
+    it('starts open when asked to, until the user folds it', () => {
+        const first = renderHook(() =>
+            useSidebarSectionExpanded('goalsPanel:active', true)
+        );
+        expect(first.result.current[0]).toBe(true);
+        act(() => first.result.current[1](false));
+        first.unmount();
+
+        const again = renderHook(() =>
+            useSidebarSectionExpanded('goalsPanel:active', true)
+        );
+        expect(again.result.current[0]).toBe(false);
+    });
+
     it('still works when storage is unavailable', () => {
         const setItem = jest
             .spyOn(Storage.prototype, 'setItem')

@@ -1,4 +1,46 @@
 {
+    "career": {
+        "title": "职业",
+        "updatedAt": "更新于 {{time}}",
+        "empty": "今天没有新内容",
+        "emptyHint": "代理每天早上都会查看：跟进、职位和任务会显示在这里。",
+        "allDecided": "今天的事项都已决定",
+        "loadError": "无法加载职业页面。",
+        "retry": "重试",
+        "applyError": "决定未保存。",
+        "later": "稍后",
+        "skip": "跳过",
+        "followups": {
+            "title": "跟进",
+            "appliedAgo": "申请于{{when}}",
+            "openDraft": "打开草稿",
+            "createTask": "创建任务",
+            "done": "完成"
+        },
+        "offers": {
+            "title": "待决定的职位",
+            "apply": "申请",
+            "note": "备注",
+            "notePlaceholder": "给代理的备注…",
+            "open": "查看职位",
+            "expires": "{{when}}截止",
+            "expired": "已截止"
+        },
+        "tasks": {
+            "title": "建议的任务",
+            "add": "添加"
+        },
+        "decided": "已决定（{{count}}）",
+        "state": {
+            "applied": "已申请",
+            "skipped": "已跳过",
+            "later": "稍后",
+            "done": "完成",
+            "taskCreated": "已创建任务",
+            "added": "已添加",
+            "dismissed": "已忽略"
+        }
+    },
     "agentBanner": {
         "agent": "助手",
         "dismiss": "标为已读",
@@ -175,6 +217,9 @@
       "delete": "删除"
     },
     "mail": {
+      "draftRequested": "正在 Gmail 中准备草稿",
+      "archiveRequested": "已请求归档",
+      "noteSent": "已退回给 Trieur",
       "noSubject": "(无主题)",
       "draft": "草稿已就绪：",
       "task": "任务",
@@ -233,6 +278,23 @@
     "entry": "待整理（{{count}}）",
     "title": "待整理",
     "deck": {
+      "progressLabel": "第 {{position}} / {{total}} 封邮件",
+      "option": {
+        "draft": "草稿",
+        "read": "阅读",
+        "event": "日历",
+        "archive": "归档"
+      },
+      "openInGmail": "在 Gmail 中打开",
+      "readMail": "阅读邮件",
+      "collapseMail": "收起",
+      "noteOpen": "一句话回复",
+      "notePlaceholder": "给 Trieur 的一句话",
+      "noteSend": "发送",
+      "recommended": "推荐",
+      "actionFailed": "上一个操作未完成",
+      "actionFailedDraft": "无法准备草稿",
+      "actionFailedArchive": "归档未完成",
       "open": "整理我的邮件（{{count}}）",
       "title": "整理我的邮件",
       "close": "关闭",
@@ -246,7 +308,7 @@
       "openMail": "打开邮件",
       "chat": "讨论",
       "undo": "撤销",
-      "keys": "Enter 或 →：建议 · ←：稍后 · ↓：跳过 · Ctrl+Z：撤销 · Esc：关闭"
+      "keys": "Enter 或 →：建议 · 1–5：选择 · ←：稍后 · ↓：跳过 · Ctrl+Z：撤销 · Esc：关闭"
     }
   },
   "outline": {
@@ -5212,6 +5274,23 @@
     "planned": "计划于{{when}}"
   },
   "proposals": {
+    "decide": {
+      "today": "今天",
+      "planOn": "安排到某天",
+      "keep": "保持不变",
+      "kept": "不变",
+      "otherDate": "其他日期…",
+      "dueOn": "截止 {{date}}",
+      "ok": "确定",
+      "menu": "选择",
+      "changed": "已修改",
+      "undo": "恢复建议：{{decision}}",
+      "trigger": "{{decision}}，{{task}}",
+      "goal": "目标",
+      "area": "领域",
+      "groupToday": "今天",
+      "groupKeep": "不变"
+    },
     "week": {
       "button": "规划我的一周",
       "ready": "你的一周已准备好",
@@ -5240,6 +5319,16 @@
       "ignore": "忽略",
       "later": "稍后",
       "apply": "应用（{{count}}）",
+      "note": "备注",
+      "noteFor": "{{task}} 的备注",
+      "notePlaceholder": "需要改什么…",
+      "toReview": "待复查",
+      "noteDecision": "带着备注待复查",
+      "sendError": "备注无法发送。",
+      "sendCaption_one": "已应用 {{count}} 项 · 已退回 {{sent}} 项",
+      "sendCaption_other": "已应用 {{count}} 项 · 已退回 {{sent}} 项",
+      "notesSent_one": "已退回 {{count}} 项任务，准备好后我会告诉你",
+      "notesSent_other": "已退回 {{count}} 项任务，准备好后我会告诉你",
       "appliedCount": "已应用 {{count}} / {{total}}"
     },
     "apply": {

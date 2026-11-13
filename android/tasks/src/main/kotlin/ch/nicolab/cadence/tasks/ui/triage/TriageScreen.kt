@@ -105,6 +105,7 @@ internal fun TriageScreen(today: LocalDate, onBack: () -> Unit) {
     val projects by tasksViewModel.projects.collectAsStateWithLifecycle()
     val items by viewModel.items.collectAsStateWithLifecycle()
     val queue by viewModel.queue.collectAsStateWithLifecycle()
+    val undoable by viewModel.undoable.collectAsStateWithLifecycle()
     val snackbar = rememberAppSnackbarHostState()
     val undoLabel = stringResource(R.string.tasks_undo)
     var correcting by remember { mutableStateOf<TriageItemDto?>(null) }
@@ -128,8 +129,10 @@ internal fun TriageScreen(today: LocalDate, onBack: () -> Unit) {
             items = items,
             archiveAvailable = queue?.mailArchive == true,
             today = today,
+            undoable = undoable,
             onDecide = { item, decision, payload, archive -> viewModel.decideMail(item, decision, payload, archive) },
             onSkip = { item -> viewModel.skip(item) },
+            onUndo = viewModel::undoLast,
             onClose = { deckOpen = false },
         )
         return

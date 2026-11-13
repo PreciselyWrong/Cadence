@@ -1,12 +1,13 @@
 import {
     MailDecision,
+    MailOption,
     MailPayload,
     TriageItem,
 } from '../../utils/triageService';
 
 // Rules of the « Trier mes mails » deck (docs/43-mail-triage.md): one mail
-// card at a time, the agent's advice as the main button, the last decision
-// held a moment so it can be undone.
+// card at a time, one row of the agent's choices with its advice
+// highlighted, the last decision held a moment so it can be undone.
 
 // The server only keeps Gmail addresses; checked again before one is opened.
 export const GMAIL = 'https://mail.google.com/';
@@ -115,6 +116,17 @@ export function deckReducer(state: DeckState, action: DeckAction): DeckStep {
     }
 }
 
+// « 4 / 17 »: the card shown among all the mail cards of the deck.
+export function deckProgress(
+    items: TriageItem[],
+    state: DeckState
+): { position: number; total: number; done: number } {
+    const total = items.filter((item) => item.type === 'mail').length;
+    const done = Math.min(deckCards(items, state).length, total);
+    const decided = total - done;
+    return { position: Math.min(decided + 1, total), total, done: decided };
+}
+
 // The mail cards still to decide: the queue's order, a card brought back
 // first, skipped ones last.
 export function deckCards(items: TriageItem[], state: DeckState): TriageItem[] {
@@ -159,4 +171,109 @@ export function recommendation(mail: MailPayload): Recommendation {
         payload: due ? { name, due_date: due } : { name },
         opensMail: false,
     };
+}
+
+// A button of the deck: the agent's options; `reply` and `read` open the
+// thread in Gmail.
+export type DeckChoice = MailOption | 'read';
+
+export interface DeckButton {
+    choice: DeckChoice;
+    decision: MailDecision;
+    payload: Record<string, unknown>;
+    opensMail: boolean;
+    recommended: boolean;
+}
+
+const OPTIONS: readonly MailOption[] = [
+    'draft',
+    'reply',
+    'task',
+    'event',
+    'later',
+    'archive',
+    'dismiss',
+];
+const MAX_BUTTONS = 5;
+
+const taskPayload = (mail: MailPayload) => {
+    const name = mail.suggestion?.task_name ?? mail.subject ?? mail.summary;
+    const due = mail.suggestion?.due_date;
+    return due ? { name, due_date: due } : { name };
+};
+
+const optionButton = (
+    option: MailOption,
+    mail: MailPayload
+): Omit<DeckButton, 'recommended'> => {
+    // A mail to read without its text in the card still opens in Gmail.
+    const read =
+        option === 'dismiss' &&
+        mail.suggestion?.kind === 'read' &&
+        !mail.excerpt &&
+        mail.gmail_url.startsWith(GMAIL);
+    return {
+        choice: read ? 'read' : option,
+        decision: option,
+        payload: option === 'task' ? taskPayload(mail) : {},
+        opensMail: option === 'reply' || read,
+    };
+};
+
+// The agent's known options, without repeats; empty on a card proposed
+// before the deck v2.
+const cardOptions = (mail: MailPayload): MailOption[] => {
+    const hasEvent = Boolean(mail.suggestion?.event?.start);
+    const gmail = mail.gmail_url.startsWith(GMAIL);
+    return (mail.options ?? []).filter(
+        (option, index, list) =>
+            OPTIONS.includes(option) &&
+            list.indexOf(option) === index &&
+            // An appointment without a start would be refused, and an
+            // address outside Gmail is never opened.
+            (option !== 'event' || hasEvent) &&
+            (option !== 'reply' || gmail)
+    );
+};
+
+// The buttons of a card, in the agent's order, its advice highlighted (none
+// without one). A card without options (kept from before the deck v2) gets
+// today's advice first, then the task, the reply in Gmail, later, dismiss.
+export function deckButtons(mail: MailPayload): DeckButton[] {
+    const options = cardOptions(mail).slice(0, MAX_BUTTONS);
+    if (options.length > 0) {
+        return options.map((option) => ({
+            ...optionButton(option, mail),
+            recommended: option === mail.recommended,
+        }));
+    }
+
+    const advice = recommendation(mail);
+    const first: DeckChoice =
+        advice.decision === 'dismiss'
+            ? 'read'
+            : (advice.decision as DeckChoice);
+    const buttons: DeckButton[] = [
+        {
+            choice: first,
+            decision: advice.decision,
+            payload: advice.payload,
+            opensMail: advice.opensMail,
+            recommended: true,
+        },
+    ];
+    const add = (button: Omit<DeckButton, 'recommended'>) => {
+        if (!buttons.some((entry) => entry.choice === button.choice)) {
+            buttons.push({ ...button, recommended: false });
+        }
+    };
+    add(optionButton('task', mail));
+    if (mail.gmail_url.startsWith(GMAIL)) add(optionButton('reply', mail));
+    add(optionButton('later', mail));
+    add({
+        ...optionButton('dismiss', mail),
+        choice: 'dismiss',
+        opensMail: false,
+    });
+    return buttons.slice(0, MAX_BUTTONS);
 }

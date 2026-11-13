@@ -1,6 +1,6 @@
 # Mail cards in "À trier"
 
-Status: server built on 2026-11-12 (`backend/modules/triage/mail.js`, MCP tools, route, Gmail gateway); web card built the same day (`frontend/components/Triage/MailCard.tsx`); Android card the same day (1.17.0, `android/tasks/.../ui/triage/MailCards.kt`). « Trier mes mails » deck and the appointment decision (`event`) on 2026-11-13, server, web and Android; the Hermes side was built the same day (see Hermes contract), not yet deployed. Tracked in `TODO.md` › Next.
+Status: contract v2 (choices, draft, archive, note, action report) built on the server on 2026-11-13, then in the web and Android decks the same day; see « Contract v2 » and « Trier mes mails » deck. Server built on 2026-11-12 (`backend/modules/triage/mail.js`, MCP tools, route, Gmail gateway); web card built the same day (`frontend/components/Triage/MailCard.tsx`); Android card the same day (1.17.0, `android/tasks/.../ui/triage/MailCards.kt`). « Trier mes mails » deck and the appointment decision (`event`) on 2026-11-13, server, web and Android; the Hermes side was built the same day (see Hermes contract), not yet deployed. Tracked in `TODO.md` › Next.
 
 Mail that asks something of the user shows up as cards in the triage queue (`docs/40-triage.md`), next to the other proposals. The user decides there in one gesture. Cadence is not a mail client: it never shows a full message, never sends, and only touches Gmail to archive a thread when the user asks for it.
 
@@ -15,9 +15,9 @@ Mail that asks something of the user shows up as cards in the triage queue (`doc
 - **The agent proposes, the user decides.** A card changes nothing until the user taps it, like every triage card.
 - **Only mail that needs an action.** The agent sends a card for a thread that asks for a reply, a task or a decision. Newsletters, notifications and receipts never become cards.
 - **One card per thread.** Keyed on `(user, account, thread_id)`. A new message on a thread already pending updates its card; a thread already decided gets a new card only if a new message arrives after the decision.
-- **No mail body in Cadence.** A card holds the sender, the subject, the date, a one-line summary written by the agent and, when there is one, the start of the prepared draft. Nothing else is stored.
+- **No mail body in Cadence.** A card holds the sender, the subject, the date, a one-line summary written by the agent, the start of the mail (v2 `excerpt`) and, when there is one, the start of the prepared draft and the draft the agent asks Cadence to keep for Gmail (v2 `draft`, the agent's own text). Never the body of a message.
 - **Untrusted text.** Sender, subject, summary and draft excerpt are shown as plain text: no Markdown, no links. Control characters and the characters that reorder or hide text (bidi controls, zero-width) are dropped when stored. The only link is `gmail_url`, accepted only when it starts with `https://mail.google.com/`.
-- **Gmail writes stay narrow.** The only write Cadence may make in Gmail is archiving a thread, through the restricted Gmail tool's `archive_thread`, and only if that tool is configured (see Gmail gateway). Sending always happens in Gmail, by the user.
+- **Gmail writes stay narrow.** Cadence makes no Gmail write itself on a card decision. The legacy `archive` flag archives a thread through the restricted Gmail tool's `archive_thread`, only if that tool is configured (see Gmail gateway). The v2 draft and archive decisions only record a request: Hermes carries it out through its own Gmail gateway and reports back (`report_mail_action`). Sending always happens in Gmail, by the user.
 - **Short retention.** A decided card is deleted 30 days after its decision (daily compaction).
 
 ## Card
@@ -56,10 +56,11 @@ Triage item `type: mail`, `source: mail`, `action: decide_mail`, `payload`:
 
 | Tool | |
 |---|---|
-| `propose_mail` | `account`, `thread_id`, `from_name`, `from_address`, `subject`, `received_at`, `summary`, `suggestion`, `draft_excerpt?`, `gmail_url`. Creates or updates the card of the thread (rules above). Refuses a summary over 200 characters, a `gmail_url` outside Gmail, or an impossible date (`2026-02-31`). |
+| `propose_mail` | `account`, `thread_id`, `from_name`, `from_address`, `subject`, `received_at`, `summary`, `suggestion`, `draft_excerpt?`, `gmail_url`, and in v2 `options?`, `recommended?`, `draft?`, `excerpt?` (see « Contract v2 »). Creates or updates the card of the thread (rules above). Refuses a summary over 200 characters, a `gmail_url` outside Gmail, or an impossible date (`2026-02-31`). |
 | `resolve_mail` | `account`, `thread_id`. Closes a waiting card (pending or put off) when the agent sees the thread handled in Gmail (answered, archived by hand). |
 | `list_mail_cards` | Pending and recently decided cards, with their `decision` and `event`, so the agent does not propose a thread twice, learns from dismissals and finds the appointments still `requested`. |
 | `report_mail_event` | `account`, `thread_id`, `state: created \| failed`, `url?` (only `https://calendar.google.com/…` or `https://www.google.com/calendar/…`), `error?` (200 characters). Records what came of an accepted appointment on its card. Refused on a card not decided as `event`. |
+| `report_mail_action` | `account`, `thread_id`, `type: draft \| archive`, `ok`, `draft_url?`, `error?` (a code). Records what came of a requested draft or archive (v2, see « Contract v2 »). |
 
 Every decision (not a replay of the same order) is also sent as the webhook and plugin event `mail.decided` (`docs/27-webhooks.md`), `data.mail`: `mail_uid`, `account`, `thread_id`, `subject`, `decision`, `task_uid`, `event`, `later_until`.
 
@@ -93,7 +94,60 @@ A button « Trier mes mails (n) » at the top of « À trier » (only when there
 - **After each decision** the card leaves with a short animation (none with reduced motion) and the next comes in; the last decision waits before it is sent, so « Annuler » brings that card back first. Web: held until the next decision, 5 s, or closing the deck; Android: the triage undo window (4.5 s, deferred calls, works offline). A decision that fails puts its card back; one settled elsewhere (409) is dropped with « Déjà traité ailleurs. ».
 - **End**: « Tout est trié » and a button back to « À trier ».
 - **Web keys**: Entrée or → follows the advice, ← puts off, ↓ skips, Ctrl/⌘+Z undoes, Échap closes (or closes the task form); keys are ignored while typing in the form. The deck is a modal dialog; the page under it is not rendered.
+- **Web deck v2** (2026-11-13, `frontend/components/Triage/MailDeck.tsx`, rules `deckButtons` and `deckProgress` in `mailDeck.ts`): progress « 4 / 17 » with a thin bar (cards decided since the deck opened). The card shows `action_error` on top (« Le brouillon n’a pas pu être préparé (code) »), sender · date, subject, summary, the excerpt as plain text (folded after 420 characters or 7 lines under « Lire le mail »), « Ouvrir dans Gmail », then the draft body quoted. One row of 2 to 5 big buttons from `options` in their order (Brouillon, Répondre, Tâche, Agenda, Plus tard, Archiver, Ignorer, with their icons; Tâche shows the task name, Agenda the time); `recommended` is framed and tinted, with no advice sentence, and none is highlighted without it. Répondre (`reply`, only from an older card) opens Gmail, as does Ignorer on a `read` card without excerpt (shown as « Lire »); a `reply` option outside Gmail and an `event` without start are dropped. Below, quiet: « Répondre par un mot » (a field, Entrée or « Envoyer » sends `note`, the card leaves with « Renvoyé au Trieur »), « Discuter » (Hermes plugin), « Passer », « Annuler ». Footer status: « Brouillon en préparation dans Gmail », « Archivage demandé », and the earlier ones. Keys: Entrée or → = `recommended` (nothing without it), 1–5 = that button, ← = `later`, ↓ = pass, Ctrl/⌘+Z = undo, Échap closes the note field, then the deck. « Archiver dans Gmail » (the `archive` flag) shows only on a card without an Archiver choice, and is sent only with `task`, `reply`, `event` and `dismiss`. A card without `options` (kept from before) gets today's advice first, then Tâche, Répondre, Plus tard, Ignorer. The task form (« Modifier la tâche ») is gone from the deck; it stays on the « À trier » card.
 - **Android gestures**: swipe right follows the advice, left puts off (TalkBack has both as custom actions); back closes the deck.
+- **Android deck v2** (1.31.0, `ui/triage/MailDeckScreen.kt`, rules in `triage/MailDeck.kt`, tests `MailDeckTest`): a card with `options` shows them in one row of 2 to 5 big buttons (Brouillon, Répondre, Tâche, Agenda, Plus tard, Archiver, Ignorer); `recommended` is framed and tinted and answers the right swipe. Only Répondre opens Gmail; draft and archive send their decision and say so in a snackbar. The excerpt is readable on the card (« Lire le mail »), the draft body is quoted, `action_error` shows on top. « Répondre par un mot » sends `note` (1 to 500 characters, the card leaves); « Annuler » undoes the last decision while its 4.5 s window is open. Progress « n / N » counts the cards decided since the deck opened. A card without `options` keeps the 1.17 buttons. The `archive` flag is sent only with `task`, `reply`, `event` and `dismiss` (the server refuses it elsewhere). The web deck v2 is built (above).
+
+## Contract v2
+
+Built on the server on 2026-11-13 (`backend/modules/triage/mail.js`, `core/mail.js`, MCP `mailTools.js`, migration `20261113170000`); web and Android still to build, see « Clients ». Everything is additive: a card proposed without the new fields and the existing decisions behave as before.
+
+**The user swipes through the whole inbox.** Per mail the agent offers 2 to 5 decisions, recommends one, and the user picks: the recommended one is highlighted, archiving happens only when the user presses Archive, a draft is created in the background, and a free-text answer goes back to the agent.
+
+### Choices (`propose_mail`)
+
+| Field | |
+|---|---|
+| `options` | 2 to 5 of `draft \| task \| event \| later \| archive \| dismiss`, distinct, in display order. `reply` is not offered. |
+| `recommended` | One of `options`. Optional (no highlight without it). |
+| `draft` | `{ body }`, 1 to 4000 characters of plain text. Required with the `draft` option, refused without it. |
+| `excerpt` | Start of the mail, plain text, at most 1500 characters (refused above). Shown on the card so the user reads it without leaving Cadence. |
+
+Without `options`, the choices come from the old `suggestion` and are stored the same way: `task` → `task, later, dismiss` (recommended `task`); `reply` → `reply, task, later, dismiss` (recommended `reply`); `read` → `dismiss, task, later` (recommended `dismiss`); `event` → `event, task, later, dismiss` (recommended `event`); no suggestion → `task, later, dismiss`. The `reply` value comes only from this derivation, never from input.
+
+Text is cleaned as before (control and invisible characters dropped). The draft body keeps its line breaks.
+
+### Decisions (`POST /triage/mail/:uid/decide`)
+
+| Decision | Effect |
+|---|---|
+| `draft` | Card done, `action: { type: draft, state: requested }`. Refused (400) when the card has no draft body. Cadence does not call Gmail: Hermes creates the draft from `draft.body`. |
+| `archive` | Card done, `action: { type: archive, state: requested }`. Cadence does not call Gmail: Hermes archives the thread. Refused with the `archive` flag (400). |
+| `note` | `payload.text`, 1 to 500 characters (400 otherwise). Card state `reviewing`: hidden from the deck, `note: { text }` kept on the card, `mail.decided` emitted with the note in `data.mail.note`. A decision on a card waiting for the agent answers 409. |
+
+The existing decisions are unchanged, and the legacy `archive: true` flag is still accepted. Every new decision keeps the rules of the other decisions: one order at a time, `idempotency_key`, 409 when settled elsewhere, the event in `mail.decided`. A decision that settles the card (any but `later` and `note`) clears a failed action left on it; `draft` and `archive` set their own.
+
+### Reporting the action (`report_mail_action`, MCP)
+
+`account`, `thread_id`, `type` (`draft` or `archive`), `ok` (boolean), `draft_url?` (`https://mail.google.com/…`, `draft` with `ok: true` only), `error?` (a code: lowercase letters and underscores, at most 40 characters, `ok: false` only).
+
+- `ok: true` → `action: { type, state: done, draft_url? }`; an archive also sets `archived_at`.
+- `ok: false` → the card is reopened: `status: pending`, `decision` cleared, `action: { type, state: failed }`, `action_error: <code>`. The user sees the error and can press the action again.
+- The same report again is answered as it is (not an error). A report that contradicts the recorded result is refused (409), as is a report for an action never requested on the card (409).
+
+### Listing and the agent's second pass
+
+- `list_mail_cards` returns, besides the earlier fields: `options`, `recommended`, `draft` (the body, for Hermes to create the draft), `excerpt`, `action`, `action_error`, `note`. Hermes sees each requested draft and archive there, and each note.
+- `GET /triage` returns `options`, `recommended`, `draft`, `excerpt`, `action` and `action_error` in each mail item's `payload`.
+- A new `propose_mail` for a thread in `reviewing` replaces the card: open again, new choices and text, the note cleared. A `requested` action still waiting for its report survives the reopen, so the report still finds it.
+
+### Storage
+
+Table `mail_items`, migration `20261113170000` (`safe*` helpers, SQLite and PostgreSQL): `options` (JSON), `recommended` (string 16), `draft` (JSON `{ body }`), `excerpt` (text), `note` (JSON `{ text }`), `action` (JSON), `action_error` (string 64). `status` gains `reviewing`, `decision` gains `draft`, `archive` and `note`. Retention is unchanged: a card done is deleted 30 days after its decision.
+
+### Clients
+
+The « Trier mes mails » decks of the web and Android show the choices, the excerpt, the draft, the note field and the action error (see « Trier mes mails » deck). The cards of the « À trier » list (web `MailCard.tsx`, Android `MailCards.kt`) still show the earlier buttons and ignore the new fields; a card with `options` works there with those buttons.
 
 ## Out of scope
 

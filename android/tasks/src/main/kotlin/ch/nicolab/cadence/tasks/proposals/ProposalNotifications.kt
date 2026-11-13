@@ -24,6 +24,7 @@ internal object ProposalNotifications {
     const val ROUTE_SHOW = "show"
     const val ROUTE_PLAN = "plan"
     const val ROUTE_REVIEW = "review"
+    const val ROUTE_CAREER = "career"
 
     /** Route et texte d'une notification de proposition, ou null si le statut n'en demande aucun. */
     fun present(kind: String?, status: String?): Presentation? {
@@ -35,6 +36,8 @@ internal object ProposalNotifications {
             else Presentation(R.string.proposal_week_failed, R.string.proposal_failed_text, ROUTE_PLAN)
             ProposalKind.REVIEW -> if (ready) Presentation(R.string.proposal_review_ready, R.string.proposal_review_ready_text, ROUTE_REVIEW)
             else Presentation(R.string.proposal_review_failed, R.string.proposal_failed_text, ROUTE_REVIEW)
+            ProposalKind.CAREER -> if (ready) Presentation(R.string.proposal_career_ready, R.string.proposal_career_ready_text, ROUTE_CAREER)
+            else Presentation(R.string.proposal_career_failed, R.string.proposal_failed_text, ROUTE_CAREER)
             null -> null
         }
     }

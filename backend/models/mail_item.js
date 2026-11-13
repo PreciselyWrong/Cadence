@@ -34,10 +34,11 @@ module.exports = (sequelize) => {
             suggestion: { type: DataTypes.JSON, allowNull: true },
             draft_excerpt: { type: DataTypes.STRING(280), allowNull: true },
             gmail_url: { type: DataTypes.STRING(2048), allowNull: false },
-            // pending | later | done
+            // pending | later | done | reviewing (a note waits for the agent)
             status: { type: DataTypes.STRING(16), allowNull: false },
             later_until: { type: DataTypes.DATE, allowNull: true },
-            // task | reply | event | later | dismiss | resolved (by the agent)
+            // task | reply | event | later | dismiss | draft | archive | note
+            // | resolved (by the agent)
             decision: { type: DataTypes.STRING(16), allowNull: true },
             decided_at: { type: DataTypes.DATE, allowNull: true },
             decide_key: { type: DataTypes.STRING(150), allowNull: true },
@@ -47,6 +48,20 @@ module.exports = (sequelize) => {
             // the calendar: title, start, end, all_day, location, state
             // (requested | created | failed), url or error.
             event: { type: DataTypes.JSON, allowNull: true },
+            // The decisions offered on the card, in order, and the one the
+            // agent recommends (contract v2).
+            options: { type: DataTypes.JSON, allowNull: true },
+            recommended: { type: DataTypes.STRING(16), allowNull: true },
+            // { body }: the prepared Gmail draft, for the agent to create.
+            draft: { type: DataTypes.JSON, allowNull: true },
+            // The start of the mail, as plain text, for the card.
+            excerpt: { type: DataTypes.TEXT, allowNull: true },
+            // { text }: the user's answer to the agent.
+            note: { type: DataTypes.JSON, allowNull: true },
+            // { type: draft | archive, state: requested | done | failed,
+            //   draft_url? }: the Gmail action asked for, reported by the agent.
+            action: { type: DataTypes.JSON, allowNull: true },
+            action_error: { type: DataTypes.STRING(64), allowNull: true },
         },
         {
             tableName: 'mail_items',

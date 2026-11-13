@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -39,6 +45,7 @@ import {
     fetchCadenceGroups,
     fetchCadenceHabit,
     fetchEntries,
+    onHabitsChanged,
     updateCadenceHabit,
     updateRow,
     deleteRow,
@@ -113,6 +120,14 @@ const HabitDetails: React.FC = () => {
             }
         },
         [uid, entryRange]
+    );
+
+    // A change made elsewhere (the sidebar's check) reloads the shown month.
+    const monthRef = useRef(month);
+    monthRef.current = month;
+    useEffect(
+        () => onHabitsChanged(() => load(monthRef.current || undefined)),
+        [load]
     );
 
     useEffect(() => {

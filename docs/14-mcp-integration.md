@@ -1233,13 +1233,13 @@ Removes a page from its project, for good. `uid`. Only when the user asks.
 
 ---
 
-### Mail Tools (3)
+### Mail Tools (5)
 
 Mail cards in the triage queue (`docs/43-mail-triage.md`). The agent proposes, the user decides in Cadence; no tool decides.
 
 #### `propose_mail`
 
-One card per thread: `account`, `thread_id`, `received_at`, `summary` (at most 200 characters), `gmail_url` (must open `https://mail.google.com/`), optionally `from_name`, `from_address`, `subject`, `suggestion` (`{ kind: task | reply | read, task_name?, due_date?, project_uid? }`), `draft_excerpt` (cut at 280 characters). A newer message updates a waiting card, or reopens a decided one.
+One card per thread: `account`, `thread_id`, `received_at`, `summary` (at most 200 characters), `gmail_url` (must open `https://mail.google.com/`), optionally `from_name`, `from_address`, `subject`, `suggestion` (`{ kind: task | reply | read, task_name?, due_date?, project_uid? }`), `draft_excerpt` (cut at 280 characters). Contract v2, all optional: `options` (2 to 5 of `draft \| task \| event \| later \| archive \| dismiss`, in display order), `recommended` (one of them), `draft: { body }` (up to 4000 characters, required with `draft`), `excerpt` (start of the mail, up to 1500 characters). Without `options`, the choices come from `suggestion`. A newer message updates a waiting card, or reopens a decided one; a card the user answered with a note is replaced.
 
 #### `resolve_mail`
 
@@ -1247,11 +1247,15 @@ Closes the waiting card of a thread handled in Gmail. `account`, `thread_id`.
 
 #### `list_mail_cards`
 
-Pending, put-off and recently decided cards (30 days), newest first, with their decision and, for an accepted appointment, `event` (`state`: `requested`, `created`, `failed`).
+Pending, put-off, waiting-for-you (`reviewing`, with the user's `note`) and recently decided cards (30 days), newest first, with their decision, `options`, `recommended`, `draft` (body to create as a Gmail draft), `action` (`requested`, `done`, `failed`) and `action_error`, and, for an accepted appointment, `event` (`state`: `requested`, `created`, `failed`).
 
 #### `report_mail_event`
 
 After the user accepted an appointment on a mail card (decision `event`), records whether the agent created the calendar event. `account`, `thread_id`, `state` (`created` or `failed`), `url?` (Google Calendar link), `error?`. See [Mail cards](43-mail-triage.md).
+
+#### `report_mail_action`
+
+Reports what came of a Gmail action the user asked for (`action.type` `draft` or `archive`, state `requested`): `account`, `thread_id`, `type` (`draft` or `archive`), `ok` (boolean), `draft_url?` (`https://mail.google.com/` link, draft only), `error?` (short code, lowercase with underscores, when `ok` is false). A failure reopens the card for the user with the code. See [Mail cards](43-mail-triage.md).
 
 ---
 

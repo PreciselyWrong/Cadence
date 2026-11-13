@@ -155,7 +155,6 @@ describe('validateReviewAnswer', () => {
 
     it('keeps one valid choice per asked task', () => {
         const { items } = validateReviewAnswer(facts, {
-            summary: 'Deux choses.',
             items: [
                 { task_uid: 'p', choice: 'do_today', reason: 'urgent' },
                 { task_uid: 'p', choice: 'drop', reason: 'again' },

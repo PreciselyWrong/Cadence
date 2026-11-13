@@ -1,4 +1,46 @@
 {
+    "career": {
+        "title": "Karriere",
+        "updatedAt": "aktualisiert um {{time}}",
+        "empty": "Heute nichts Neues",
+        "emptyHint": "Der Agent schaut jeden Morgen vorbei: Nachfassaktionen, Angebote und Aufgaben erscheinen hier.",
+        "allDecided": "Für heute ist alles entschieden",
+        "loadError": "Die Karriere-Seite konnte nicht geladen werden.",
+        "retry": "Erneut versuchen",
+        "applyError": "Die Entscheidung wurde nicht gespeichert.",
+        "later": "Später",
+        "skip": "Überspringen",
+        "followups": {
+            "title": "Nachfassen",
+            "appliedAgo": "beworben {{when}}",
+            "openDraft": "Entwurf öffnen",
+            "createTask": "Aufgabe erstellen",
+            "done": "Erledigt"
+        },
+        "offers": {
+            "title": "Angebote zu entscheiden",
+            "apply": "Bewerben",
+            "note": "Anmerkung",
+            "notePlaceholder": "Eine Anmerkung für den Agenten…",
+            "open": "Angebot ansehen",
+            "expires": "läuft {{when}} ab",
+            "expired": "abgelaufen"
+        },
+        "tasks": {
+            "title": "Vorgeschlagene Aufgaben",
+            "add": "Hinzufügen"
+        },
+        "decided": "Entschieden ({{count}})",
+        "state": {
+            "applied": "Beworben",
+            "skipped": "Übersprungen",
+            "later": "Später",
+            "done": "Erledigt",
+            "taskCreated": "Aufgabe erstellt",
+            "added": "Hinzugefügt",
+            "dismissed": "Verworfen"
+        }
+    },
     "agentBanner": {
         "agent": "Agent",
         "dismiss": "Als gelesen markieren",
@@ -175,6 +217,9 @@
       "delete": "Löschen"
     },
     "mail": {
+      "draftRequested": "Entwurf wird in Gmail vorbereitet",
+      "archiveRequested": "Archivieren angefordert",
+      "noteSent": "An den Trieur zurückgeschickt",
       "noSubject": "(kein Betreff)",
       "draft": "Entwurf bereit:",
       "task": "Aufgabe",
@@ -233,6 +278,23 @@
     "entry": "Zu sortieren ({{count}})",
     "title": "Zu sortieren",
     "deck": {
+      "progressLabel": "Mail {{position}} von {{total}}",
+      "option": {
+        "draft": "Entwurf",
+        "read": "Lesen",
+        "event": "Kalender",
+        "archive": "Archivieren"
+      },
+      "openInGmail": "In Gmail öffnen",
+      "readMail": "Mail lesen",
+      "collapseMail": "Einklappen",
+      "noteOpen": "Mit einem Wort antworten",
+      "notePlaceholder": "Ein Wort für den Trieur",
+      "noteSend": "Senden",
+      "recommended": "Empfohlen",
+      "actionFailed": "Die letzte Aktion ist fehlgeschlagen",
+      "actionFailedDraft": "Der Entwurf konnte nicht vorbereitet werden",
+      "actionFailedArchive": "Das Archivieren ist fehlgeschlagen",
       "open": "Meine Mails sortieren ({{count}})",
       "title": "Meine Mails sortieren",
       "close": "Schließen",
@@ -246,7 +308,7 @@
       "openMail": "Mail öffnen",
       "chat": "Besprechen",
       "undo": "Rückgängig",
-      "keys": "Enter oder →: Vorschlag · ←: später · ↓: überspringen · Strg+Z: rückgängig · Esc: schließen"
+      "keys": "Enter oder →: Vorschlag · 1–5: wählen · ←: später · ↓: überspringen · Strg+Z: rückgängig · Esc: schließen"
     }
   },
   "outline": {
@@ -5221,6 +5283,23 @@
     "planned": "Geplant {{when}}"
   },
   "proposals": {
+    "decide": {
+      "today": "Heute",
+      "planOn": "An einem Tag planen",
+      "keep": "So lassen",
+      "kept": "Unverändert",
+      "otherDate": "Anderes Datum…",
+      "dueOn": "Fällig {{date}}",
+      "ok": "OK",
+      "menu": "Wählen",
+      "changed": "Geändert",
+      "undo": "Zurück zum Vorschlag: {{decision}}",
+      "trigger": "{{decision}}, {{task}}",
+      "goal": "Ziel",
+      "area": "Bereich",
+      "groupToday": "Heute",
+      "groupKeep": "Unverändert"
+    },
     "week": {
       "button": "Woche planen",
       "ready": "Deine Woche ist fertig",
@@ -5249,6 +5328,16 @@
       "ignore": "Ignorieren",
       "later": "Später",
       "apply": "Anwenden ({{count}})",
+      "note": "Notiz",
+      "noteFor": "Notiz zu {{task}}",
+      "notePlaceholder": "Was soll sich ändern…",
+      "toReview": "Zu prüfen",
+      "noteDecision": "Zu prüfen mit deiner Notiz",
+      "sendError": "Die Notizen konnten nicht gesendet werden.",
+      "sendCaption_one": "{{count}} übernommen · {{sent}} zurückgeschickt",
+      "sendCaption_other": "{{count}} übernommen · {{sent}} zurückgeschickt",
+      "notesSent_one": "{{count}} Aufgabe zurückgeschickt, ich melde mich, wenn sie fertig ist",
+      "notesSent_other": "{{count}} Aufgaben zurückgeschickt, ich melde mich, wenn sie fertig sind",
       "appliedCount": "{{count}} von {{total}} angewendet"
     },
     "apply": {

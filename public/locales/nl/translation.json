@@ -1,4 +1,46 @@
 {
+    "career": {
+        "title": "Carrière",
+        "updatedAt": "bijgewerkt om {{time}}",
+        "empty": "Vandaag niets nieuws",
+        "emptyHint": "De agent kijkt elke ochtend: opvolgingen, vacatures en taken verschijnen hier.",
+        "allDecided": "Alles is beslist voor vandaag",
+        "loadError": "De Carrière-pagina kon niet worden geladen.",
+        "retry": "Opnieuw proberen",
+        "applyError": "De beslissing is niet opgeslagen.",
+        "later": "Later",
+        "skip": "Overslaan",
+        "followups": {
+            "title": "Opvolgen",
+            "appliedAgo": "gesolliciteerd {{when}}",
+            "openDraft": "Concept openen",
+            "createTask": "Taak maken",
+            "done": "Gedaan"
+        },
+        "offers": {
+            "title": "Vacatures om te beslissen",
+            "apply": "Solliciteren",
+            "note": "Opmerking",
+            "notePlaceholder": "Een opmerking voor de agent…",
+            "open": "Vacature bekijken",
+            "expires": "verloopt {{when}}",
+            "expired": "verlopen"
+        },
+        "tasks": {
+            "title": "Voorgestelde taken",
+            "add": "Toevoegen"
+        },
+        "decided": "Beslist ({{count}})",
+        "state": {
+            "applied": "Gesolliciteerd",
+            "skipped": "Overgeslagen",
+            "later": "Later",
+            "done": "Gedaan",
+            "taskCreated": "Taak gemaakt",
+            "added": "Toegevoegd",
+            "dismissed": "Afgewezen"
+        }
+    },
     "agentBanner": {
         "agent": "Agent",
         "dismiss": "Markeren als gelezen",
@@ -175,6 +217,9 @@
       "delete": "Verwijderen"
     },
     "mail": {
+      "draftRequested": "Concept wordt voorbereid in Gmail",
+      "archiveRequested": "Archiveren aangevraagd",
+      "noteSent": "Teruggestuurd naar de Trieur",
       "noSubject": "(geen onderwerp)",
       "draft": "Concept klaar:",
       "task": "Taak",
@@ -233,6 +278,23 @@
     "entry": "Te sorteren ({{count}})",
     "title": "Te sorteren",
     "deck": {
+      "progressLabel": "Mail {{position}} van {{total}}",
+      "option": {
+        "draft": "Concept",
+        "read": "Lezen",
+        "event": "Agenda",
+        "archive": "Archiveren"
+      },
+      "openInGmail": "Openen in Gmail",
+      "readMail": "Mail lezen",
+      "collapseMail": "Inklappen",
+      "noteOpen": "Met één woord antwoorden",
+      "notePlaceholder": "Een woord voor de Trieur",
+      "noteSend": "Versturen",
+      "recommended": "Aangeraden",
+      "actionFailed": "De laatste actie is niet gelukt",
+      "actionFailedDraft": "Het concept kon niet worden voorbereid",
+      "actionFailedArchive": "Archiveren is niet gelukt",
       "open": "Mijn mail sorteren ({{count}})",
       "title": "Mijn mail sorteren",
       "close": "Sluiten",
@@ -246,7 +308,7 @@
       "openMail": "Mail openen",
       "chat": "Bespreken",
       "undo": "Ongedaan maken",
-      "keys": "Enter of →: advies · ←: later · ↓: overslaan · Ctrl+Z: ongedaan maken · Esc: sluiten"
+      "keys": "Enter of →: advies · 1–5: kiezen · ←: later · ↓: overslaan · Ctrl+Z: ongedaan maken · Esc: sluiten"
     }
   },
   "outline": {
@@ -5212,6 +5274,23 @@
     "planned": "Gepland {{when}}"
   },
   "proposals": {
+    "decide": {
+      "today": "Vandaag",
+      "planOn": "Op een dag plannen",
+      "keep": "Zo laten",
+      "kept": "Ongewijzigd",
+      "otherDate": "Andere datum…",
+      "dueOn": "Vervalt {{date}}",
+      "ok": "OK",
+      "menu": "Kiezen",
+      "changed": "Gewijzigd",
+      "undo": "Terug naar de suggestie: {{decision}}",
+      "trigger": "{{decision}}, {{task}}",
+      "goal": "Doel",
+      "area": "Gebied",
+      "groupToday": "Vandaag",
+      "groupKeep": "Ongewijzigd"
+    },
     "week": {
       "button": "Mijn week plannen",
       "ready": "Je week is klaar",
@@ -5240,6 +5319,16 @@
       "ignore": "Negeren",
       "later": "Later",
       "apply": "Toepassen ({{count}})",
+      "note": "Opmerking",
+      "noteFor": "Opmerking bij {{task}}",
+      "notePlaceholder": "Wat moet er veranderen…",
+      "toReview": "Nog bekijken",
+      "noteDecision": "Nog bekijken met je opmerking",
+      "sendError": "De opmerkingen konden niet worden verstuurd.",
+      "sendCaption_one": "{{count}} toegepast · {{sent}} teruggestuurd",
+      "sendCaption_other": "{{count}} toegepast · {{sent}} teruggestuurd",
+      "notesSent_one": "{{count}} taak teruggestuurd, ik laat je weten wanneer ze klaar is",
+      "notesSent_other": "{{count}} taken teruggestuurd, ik laat je weten wanneer ze klaar zijn",
       "appliedCount": "{{count}} van {{total}} toegepast"
     },
     "apply": {

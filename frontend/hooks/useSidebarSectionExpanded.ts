@@ -2,11 +2,12 @@ import { useCallback, useState } from 'react';
 
 const storageKey = (section: string) => `sidebarSectionExpanded:${section}`;
 
-const readStored = (section: string): boolean => {
+const readStored = (section: string, fallback: boolean): boolean => {
     try {
-        return localStorage.getItem(storageKey(section)) === 'true';
+        const stored = localStorage.getItem(storageKey(section));
+        return stored === null ? fallback : stored === 'true';
     } catch {
-        return false;
+        return fallback;
     }
 };
 
@@ -14,10 +15,14 @@ const readStored = (section: string): boolean => {
 // The choice is remembered, so a section opened once stays open: on a phone
 // tapping the section title navigates and closes the drawer, and the list
 // should still be there the next time the drawer opens (#1666).
+// `defaultExpanded` applies until the user folds or unfolds it once.
 export const useSidebarSectionExpanded = (
-    section: string
+    section: string,
+    defaultExpanded = false
 ): [boolean, (next: boolean | ((current: boolean) => boolean)) => void] => {
-    const [expanded, setExpandedState] = useState(() => readStored(section));
+    const [expanded, setExpandedState] = useState(() =>
+        readStored(section, defaultExpanded)
+    );
 
     const setExpanded = useCallback(
         (next: boolean | ((current: boolean) => boolean)) => {

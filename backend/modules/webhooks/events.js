@@ -34,7 +34,7 @@ const MAIL_EVENTS = ['mail.decided'];
 
 // A week or a review asked for (docs/47-proposals.md): the agent answers
 // through POST /api/proposals/:uid/answer.
-const PROPOSAL_EVENTS = ['proposal.requested'];
+const PROPOSAL_EVENTS = ['proposal.requested', 'proposal.decided'];
 
 const ALL_EVENTS = [
     ...NOTIFICATION_EVENTS,

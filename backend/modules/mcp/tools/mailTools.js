@@ -21,7 +21,7 @@ function registerMailTools(server, context, tools) {
     tools.push({
         name: 'propose_mail',
         description:
-            'Propose a mail thread that asks the user for an action (a reply, a task, a decision) as a card in the triage queue. One card per thread: proposing it again with a newer message updates the card, or reopens it if the user already decided. Never propose newsletters, notifications or receipts. Text from the mail is shown as plain text.',
+            'Propose a mail thread that asks the user for an action (a reply, a task, a decision) as a card in the triage queue. One card per thread: proposing it again with a newer message updates the card, or reopens it if the user already decided; a card the user answered with a note is replaced by the new proposal. Never propose newsletters, notifications or receipts. Text from the mail is shown as plain text. Give options (2 to 5 decisions, in display order) and recommended (one of them) to choose what the user can do; draft (body, required with the draft option) is the reply Cadence asks you to create in Gmail; excerpt is the start of the mail, as plain text.',
         inputSchema: {
             type: 'object',
             properties: {
@@ -67,6 +67,44 @@ function registerMailTools(server, context, tools) {
                     type: 'string',
                     description: 'Start of the prepared reply draft, if any',
                 },
+                options: {
+                    type: 'array',
+                    minItems: 2,
+                    maxItems: 5,
+                    description:
+                        'Decisions offered on the card, in display order: draft (create a Gmail draft from draft.body), task, event, later, archive (archive the thread in Gmail), dismiss',
+                    items: {
+                        type: 'string',
+                        enum: [
+                            'draft',
+                            'task',
+                            'event',
+                            'later',
+                            'archive',
+                            'dismiss',
+                        ],
+                    },
+                },
+                recommended: {
+                    type: 'string',
+                    description:
+                        'The option the card highlights, one of options',
+                },
+                draft: {
+                    type: 'object',
+                    description:
+                        'The reply to create as a Gmail draft; required with the draft option',
+                    properties: {
+                        body: { type: 'string', maxLength: 4000 },
+                    },
+                    required: ['body'],
+                },
+                excerpt: {
+                    type: 'string',
+                    maxLength: 1500,
+                    description:
+                        'Start of the mail, plain text, so the user reads it without leaving Cadence',
+                },
                 gmail_url: {
                     type: 'string',
                     description:
@@ -101,7 +139,7 @@ function registerMailTools(server, context, tools) {
     tools.push({
         name: 'list_mail_cards',
         description:
-            'List the mail cards, newest first: pending, put off, and those decided in the last 30 days with the decision (task, reply, event, later, dismiss, resolved). Read it before proposing, so a thread is not proposed twice. A card decided as event with event.state requested waits for you to create the calendar event, then call report_mail_event.',
+            'List the mail cards, newest first: pending, put off, waiting for you after a note (reviewing, with the user note), and those decided in the last 30 days with the decision (task, reply, event, later, dismiss, draft, archive, resolved). Read it before proposing, so a thread is not proposed twice. A card decided as event with event.state requested waits for you to create the calendar event, then call report_mail_event. A card with action requested (draft: create the Gmail draft from draft.body; archive: archive the thread) waits for report_mail_action. action_error is the code of the last failed action.',
         inputSchema: { type: 'object', properties: {} },
         handler: async () => text(await mail().listCards(context.user)),
     });
@@ -129,6 +167,33 @@ function registerMailTools(server, context, tools) {
         },
         handler: async (params) =>
             text(await mail().reportEvent(context.user, params)),
+    });
+
+    tools.push({
+        name: 'report_mail_action',
+        description:
+            'After a card asked for a Gmail action (action.type draft or archive, state requested), say what came of it: ok true (draft with its mail.google.com draft link, optional) or ok false with a short error code (the card is reopened for the user). Report once per action.',
+        inputSchema: {
+            type: 'object',
+            properties: {
+                ...THREAD_PROPERTIES,
+                type: { type: 'string', enum: ['draft', 'archive'] },
+                ok: { type: 'boolean' },
+                draft_url: {
+                    type: 'string',
+                    description:
+                        'https://mail.google.com/ link of the draft (draft only, ok true)',
+                },
+                error: {
+                    type: 'string',
+                    description:
+                        'Short code of the failure, lowercase with underscores (ok false), e.g. gmail_unavailable',
+                },
+            },
+            required: ['account', 'thread_id', 'type', 'ok'],
+        },
+        handler: async (params) =>
+            text(await mail().reportAction(context.user, params)),
     });
 }
 

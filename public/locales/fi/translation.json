@@ -1,4 +1,46 @@
 {
+    "career": {
+        "title": "Ura",
+        "updatedAt": "päivitetty klo {{time}}",
+        "empty": "Ei mitään uutta tänään",
+        "emptyHint": "Agentti käy joka aamu: seurannat, työpaikat ja tehtävät näkyvät täällä.",
+        "allDecided": "Kaikki on päätetty tältä päivältä",
+        "loadError": "Ura-sivua ei voitu ladata.",
+        "retry": "Yritä uudelleen",
+        "applyError": "Päätöstä ei tallennettu.",
+        "later": "Myöhemmin",
+        "skip": "Ohita",
+        "followups": {
+            "title": "Seurannat",
+            "appliedAgo": "haettu {{when}}",
+            "openDraft": "Avaa luonnos",
+            "createTask": "Luo tehtävä",
+            "done": "Tehty"
+        },
+        "offers": {
+            "title": "Päätettävät työpaikat",
+            "apply": "Hae",
+            "note": "Huomautus",
+            "notePlaceholder": "Huomautus agentille…",
+            "open": "Näytä työpaikka",
+            "expires": "umpeutuu {{when}}",
+            "expired": "umpeutunut"
+        },
+        "tasks": {
+            "title": "Ehdotetut tehtävät",
+            "add": "Lisää"
+        },
+        "decided": "Päätetty ({{count}})",
+        "state": {
+            "applied": "Haettu",
+            "skipped": "Ohitettu",
+            "later": "Myöhemmin",
+            "done": "Tehty",
+            "taskCreated": "Tehtävä luotu",
+            "added": "Lisätty",
+            "dismissed": "Hylätty"
+        }
+    },
     "agentBanner": {
         "agent": "Agent",
         "dismiss": "Merkitse luetuksi",
@@ -175,6 +217,9 @@
       "delete": "Poista"
     },
     "mail": {
+      "draftRequested": "Luonnosta valmistellaan Gmailissa",
+      "archiveRequested": "Arkistointia pyydetty",
+      "noteSent": "Palautettu Trieurille",
       "noSubject": "(ei aihetta)",
       "draft": "Luonnos valmiina:",
       "task": "Tehtävä",
@@ -233,6 +278,23 @@
     "entry": "Lajiteltavat ({{count}})",
     "title": "Lajiteltavat",
     "deck": {
+      "progressLabel": "Viesti {{position}}/{{total}}",
+      "option": {
+        "draft": "Luonnos",
+        "read": "Lue",
+        "event": "Kalenteri",
+        "archive": "Arkistoi"
+      },
+      "openInGmail": "Avaa Gmailissa",
+      "readMail": "Lue viesti",
+      "collapseMail": "Pienennä",
+      "noteOpen": "Vastaa sanalla",
+      "notePlaceholder": "Sana Trieurille",
+      "noteSend": "Lähetä",
+      "recommended": "Suositeltu",
+      "actionFailed": "Viimeisin toiminto epäonnistui",
+      "actionFailedDraft": "Luonnosta ei voitu valmistella",
+      "actionFailedArchive": "Arkistointi epäonnistui",
       "open": "Lajittele postini ({{count}})",
       "title": "Lajittele postini",
       "close": "Sulje",
@@ -246,7 +308,7 @@
       "openMail": "Avaa viesti",
       "chat": "Keskustele",
       "undo": "Kumoa",
-      "keys": "Enter tai →: ehdotus · ←: myöhemmin · ↓: ohita · Ctrl+Z: kumoa · Esc: sulje"
+      "keys": "Enter tai →: neuvo · 1–5: valitse · ←: myöhemmin · ↓: ohita · Ctrl+Z: kumoa · Esc: sulje"
     }
   },
   "outline": {
@@ -5212,6 +5274,23 @@
     "planned": "Suunniteltu {{when}}"
   },
   "proposals": {
+    "decide": {
+      "today": "Tänään",
+      "planOn": "Suunnittele päivälle",
+      "keep": "Pidä ennallaan",
+      "kept": "Ennallaan",
+      "otherDate": "Muu päivä…",
+      "dueOn": "Erääntyy {{date}}",
+      "ok": "OK",
+      "menu": "Valitse",
+      "changed": "Muutettu",
+      "undo": "Takaisin ehdotukseen: {{decision}}",
+      "trigger": "{{decision}}, {{task}}",
+      "goal": "Tavoite",
+      "area": "Alue",
+      "groupToday": "Tänään",
+      "groupKeep": "Ennallaan"
+    },
     "week": {
       "button": "Suunnittele viikkoni",
       "ready": "Viikkosi on valmis",
@@ -5240,6 +5319,16 @@
       "ignore": "Ohita",
       "later": "Myöhemmin",
       "apply": "Käytä ({{count}})",
+      "note": "Huomautus",
+      "noteFor": "Huomautus kohteesta {{task}}",
+      "notePlaceholder": "Mitä pitää muuttaa…",
+      "toReview": "Tarkistettava",
+      "noteDecision": "Tarkistettava huomautuksesi kanssa",
+      "sendError": "Huomautuksia ei voitu lähettää.",
+      "sendCaption_one": "{{count}} käytetty · {{sent}} palautettu",
+      "sendCaption_other": "{{count}} käytetty · {{sent}} palautettu",
+      "notesSent_one": "{{count}} tehtävä palautettu, kerron kun se on valmis",
+      "notesSent_other": "{{count}} tehtävä palautettu, kerron kun se on valmis",
       "appliedCount": "{{count}} / {{total}} käytetty"
     },
     "apply": {

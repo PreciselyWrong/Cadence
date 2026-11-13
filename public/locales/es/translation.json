@@ -1,4 +1,46 @@
 {
+    "career": {
+        "title": "Carrera",
+        "updatedAt": "actualizado a las {{time}}",
+        "empty": "Nada nuevo hoy",
+        "emptyHint": "El agente pasa cada mañana: sus seguimientos, ofertas y tareas aparecerán aquí.",
+        "allDecided": "Todo está decidido por hoy",
+        "loadError": "No se pudo cargar la página Carrera.",
+        "retry": "Reintentar",
+        "applyError": "La decisión no se guardó.",
+        "later": "Más tarde",
+        "skip": "Omitir",
+        "followups": {
+            "title": "Seguimientos",
+            "appliedAgo": "postulado {{when}}",
+            "openDraft": "Abrir borrador",
+            "createTask": "Crear tarea",
+            "done": "Hecho"
+        },
+        "offers": {
+            "title": "Ofertas por decidir",
+            "apply": "Postular",
+            "note": "Nota",
+            "notePlaceholder": "Una nota para el agente…",
+            "open": "Ver la oferta",
+            "expires": "vence {{when}}",
+            "expired": "vencida"
+        },
+        "tasks": {
+            "title": "Tareas propuestas",
+            "add": "Añadir"
+        },
+        "decided": "Decidido ({{count}})",
+        "state": {
+            "applied": "Postulado",
+            "skipped": "Omitida",
+            "later": "Más tarde",
+            "done": "Hecho",
+            "taskCreated": "Tarea creada",
+            "added": "Añadida",
+            "dismissed": "Descartada"
+        }
+    },
     "agentBanner": {
         "agent": "Agent",
         "dismiss": "Marcar como leído",
@@ -175,6 +217,9 @@
       "delete": "Eliminar"
     },
     "mail": {
+      "draftRequested": "Borrador en preparación en Gmail",
+      "archiveRequested": "Archivado solicitado",
+      "noteSent": "Devuelto al Trieur",
       "noSubject": "(sin asunto)",
       "draft": "Borrador listo:",
       "task": "Tarea",
@@ -233,6 +278,23 @@
     "entry": "Por ordenar ({{count}})",
     "title": "Por ordenar",
     "deck": {
+      "progressLabel": "Correo {{position}} de {{total}}",
+      "option": {
+        "draft": "Borrador",
+        "read": "Leer",
+        "event": "Calendario",
+        "archive": "Archivar"
+      },
+      "openInGmail": "Abrir en Gmail",
+      "readMail": "Leer el correo",
+      "collapseMail": "Contraer",
+      "noteOpen": "Responder con una palabra",
+      "notePlaceholder": "Una palabra para el Trieur",
+      "noteSend": "Enviar",
+      "recommended": "Recomendado",
+      "actionFailed": "La última acción no se completó",
+      "actionFailedDraft": "No se pudo preparar el borrador",
+      "actionFailedArchive": "El archivado no se completó",
       "open": "Ordenar mi correo ({{count}})",
       "title": "Ordenar mi correo",
       "close": "Cerrar",
@@ -246,7 +308,7 @@
       "openMail": "Abrir correo",
       "chat": "Conversar",
       "undo": "Deshacer",
-      "keys": "Intro o →: consejo · ←: más tarde · ↓: saltar · Ctrl+Z: deshacer · Esc: cerrar"
+      "keys": "Intro o →: consejo · 1–5: elegir · ←: más tarde · ↓: omitir · Ctrl+Z: deshacer · Esc: cerrar"
     }
   },
   "outline": {
@@ -5206,6 +5268,23 @@
     "planned": "Planificada {{when}}"
   },
   "proposals": {
+    "decide": {
+      "today": "Hoy",
+      "planOn": "Planificar un día",
+      "keep": "Dejar como está",
+      "kept": "Sin cambios",
+      "otherDate": "Otra fecha…",
+      "dueOn": "Vence {{date}}",
+      "ok": "OK",
+      "menu": "Elegir",
+      "changed": "Modificado",
+      "undo": "Volver a la sugerencia: {{decision}}",
+      "trigger": "{{decision}}, {{task}}",
+      "goal": "Objetivo",
+      "area": "Área",
+      "groupToday": "Hoy",
+      "groupKeep": "Sin cambios"
+    },
     "week": {
       "button": "Planificar mi semana",
       "ready": "Tu semana está lista",
@@ -5234,6 +5313,16 @@
       "ignore": "Ignorar",
       "later": "Más tarde",
       "apply": "Aplicar ({{count}})",
+      "note": "Nota",
+      "noteFor": "Nota sobre {{task}}",
+      "notePlaceholder": "Qué debe cambiar…",
+      "toReview": "Por revisar",
+      "noteDecision": "Por revisar con tu nota",
+      "sendError": "No se pudieron enviar las notas.",
+      "sendCaption_one": "{{count}} aplicada · {{sent}} devueltas",
+      "sendCaption_other": "{{count}} aplicada · {{sent}} devueltas",
+      "notesSent_one": "{{count}} tarea devuelta, te aviso cuando esté lista",
+      "notesSent_other": "{{count}} tareas devueltas, te aviso cuando estén listas",
       "appliedCount": "{{count}} de {{total}} aplicados"
     },
     "apply": {

@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.decodeFromJsonElement
 
-/** Onglet à montrer après un tap sur une notification de proposition : Planifier ou la revue. */
-enum class ProposalTab { PLAN, REVIEW }
+/** Onglet à montrer après un tap sur une notification de proposition : Planifier, la revue ou la carrière. */
+enum class ProposalTab { PLAN, REVIEW, CAREER }
 
 /**
  * État des propositions de ce processus : la dernière de chaque sorte (lue en ligne), la feuille de la semaine
@@ -62,6 +62,23 @@ class ProposalRepository internal constructor(private val client: ProposalsClien
         outcome
     }
 
+    /** « Envoyer » avec des remarques : les décisions sans remarque partent, les tâches remarquées reviennent à l'agent. */
+    suspend fun send(uid: String, body: JsonObject): Result<Unit> = attempt {
+        client.send(uid, body)
+        refresh().getOrThrow()
+    }
+
+    /** La carrière prête la plus récente, lue en ligne ; null s'il n'y en a pas. */
+    suspend fun career(): Result<CareerProposalDto?> = attempt {
+        CareerModel.newestReady(CareerModel.parseList(client.listCareer()))
+    }
+
+    /** Une décision de carrière ; la liste se relit ensuite par [career]. */
+    suspend fun decideCareer(uid: String, decision: CareerDecision): Result<Unit> = attempt {
+        client.apply(uid, CareerModel.applyBody(decision))
+        Unit
+    }
+
     suspend fun dismiss(uid: String): Result<Unit> = attempt {
         client.dismiss(uid)
         refresh().getOrThrow()
@@ -85,6 +102,7 @@ class ProposalRepository internal constructor(private val client: ProposalsClien
             ProposalNotifications.ROUTE_SHOW -> intent.getStringExtra(ProposalNotifications.EXTRA_UID)?.let(::show)
             ProposalNotifications.ROUTE_PLAN -> _tab.value = ProposalTab.PLAN
             ProposalNotifications.ROUTE_REVIEW -> _tab.value = ProposalTab.REVIEW
+            ProposalNotifications.ROUTE_CAREER -> _tab.value = ProposalTab.CAREER
         }
     }
 

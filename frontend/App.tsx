@@ -62,6 +62,7 @@ import ProductivityPage from './components/Insights/ProductivityPage';
 import ReportsPage from './components/Insights/ReportsPage';
 import SummaryPage from './components/Insights/SummaryPage';
 import ReviewPage from './components/Review/ReviewPage';
+import CareerPage from './components/Career/CareerPage';
 import TriagePage from './components/Triage/TriagePage';
 import PeopleList from './components/People/PeopleList';
 import PersonDetails from './components/People/PersonDetails';
@@ -623,6 +624,7 @@ const App: React.FC = () => {
                                 element={<SummaryPage />}
                             />
                             <Route path="/review" element={<ReviewPage />} />
+                            <Route path="/career" element={<CareerPage />} />
                             <Route path="/inbox" element={<InboxRoute />} />
                             <Route path="/habits" element={<Habits />} />
                             <Route

@@ -1,4 +1,46 @@
 {
+    "career": {
+        "title": "Karriere",
+        "updatedAt": "oppdatert kl. {{time}}",
+        "empty": "Ingenting nytt i dag",
+        "emptyHint": "Agenten ser innom hver morgen: oppfølginger, stillinger og oppgaver vises her.",
+        "allDecided": "Alt er bestemt for i dag",
+        "loadError": "Kunne ikke laste Karriere-siden.",
+        "retry": "Prøv igjen",
+        "applyError": "Beslutningen ble ikke lagret.",
+        "later": "Senere",
+        "skip": "Hopp over",
+        "followups": {
+            "title": "Oppfølginger",
+            "appliedAgo": "søkt {{when}}",
+            "openDraft": "Åpne utkast",
+            "createTask": "Opprett oppgave",
+            "done": "Ferdig"
+        },
+        "offers": {
+            "title": "Stillinger å avgjøre",
+            "apply": "Søk",
+            "note": "Merknad",
+            "notePlaceholder": "En merknad til agenten…",
+            "open": "Se stillingen",
+            "expires": "utløper {{when}}",
+            "expired": "utløpt"
+        },
+        "tasks": {
+            "title": "Foreslåtte oppgaver",
+            "add": "Legg til"
+        },
+        "decided": "Bestemt ({{count}})",
+        "state": {
+            "applied": "Søkt",
+            "skipped": "Hoppet over",
+            "later": "Senere",
+            "done": "Ferdig",
+            "taskCreated": "Oppgave opprettet",
+            "added": "Lagt til",
+            "dismissed": "Avvist"
+        }
+    },
     "agentBanner": {
         "agent": "Agent",
         "dismiss": "Merk som lest",
@@ -175,6 +217,9 @@
       "delete": "Slett"
     },
     "mail": {
+      "draftRequested": "Utkast forberedes i Gmail",
+      "archiveRequested": "Arkivering forespurt",
+      "noteSent": "Sendt tilbake til Trieur",
       "noSubject": "(uten emne)",
       "draft": "Utkast klart:",
       "task": "Oppgave",
@@ -233,6 +278,23 @@
     "entry": "Å sortere ({{count}})",
     "title": "Å sortere",
     "deck": {
+      "progressLabel": "E-post {{position}} av {{total}}",
+      "option": {
+        "draft": "Utkast",
+        "read": "Les",
+        "event": "Kalender",
+        "archive": "Arkiver"
+      },
+      "openInGmail": "Åpne i Gmail",
+      "readMail": "Les e-posten",
+      "collapseMail": "Skjul",
+      "noteOpen": "Svar med et ord",
+      "notePlaceholder": "Et ord til Trieur",
+      "noteSend": "Send",
+      "recommended": "Anbefalt",
+      "actionFailed": "Den siste handlingen gikk ikke gjennom",
+      "actionFailedDraft": "Utkastet kunne ikke forberedes",
+      "actionFailedArchive": "Arkiveringen gikk ikke gjennom",
       "open": "Sorter e-posten min ({{count}})",
       "title": "Sorter e-posten min",
       "close": "Lukk",
@@ -246,7 +308,7 @@
       "openMail": "Åpne e-post",
       "chat": "Diskuter",
       "undo": "Angre",
-      "keys": "Enter eller →: råd · ←: senere · ↓: hopp over · Ctrl+Z: angre · Esc: lukk"
+      "keys": "Enter eller →: råd · 1–5: velg · ←: senere · ↓: hopp over · Ctrl+Z: angre · Esc: lukk"
     }
   },
   "outline": {
@@ -5217,6 +5279,23 @@
     "planned": "Planlagt {{when}}"
   },
   "proposals": {
+    "decide": {
+      "today": "I dag",
+      "planOn": "Planlegg på en dag",
+      "keep": "Behold som det er",
+      "kept": "Uendret",
+      "otherDate": "Annen dato…",
+      "dueOn": "Frist {{date}}",
+      "ok": "OK",
+      "menu": "Velg",
+      "changed": "Endret",
+      "undo": "Tilbake til forslaget: {{decision}}",
+      "trigger": "{{decision}}, {{task}}",
+      "goal": "Mål",
+      "area": "Område",
+      "groupToday": "I dag",
+      "groupKeep": "Uendret"
+    },
     "week": {
       "button": "Planlegg uken min",
       "ready": "Uken din er klar",
@@ -5245,6 +5324,16 @@
       "ignore": "Ignorer",
       "later": "Senere",
       "apply": "Bruk ({{count}})",
+      "note": "Notat",
+      "noteFor": "Notat om {{task}}",
+      "notePlaceholder": "Hva skal endres…",
+      "toReview": "Å se på",
+      "noteDecision": "Å se på med notatet ditt",
+      "sendError": "Notatene kunne ikke sendes.",
+      "sendCaption_one": "{{count}} brukt · {{sent}} sendt tilbake",
+      "sendCaption_other": "{{count}} brukt · {{sent}} sendt tilbake",
+      "notesSent_one": "{{count}} oppgave sendt tilbake, jeg gir beskjed når den er klar",
+      "notesSent_other": "{{count}} oppgaver sendt tilbake, jeg gir beskjed når de er klare",
       "appliedCount": "{{count}} av {{total}} brukt"
     },
     "apply": {

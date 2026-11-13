@@ -1,4 +1,46 @@
 {
+    "career": {
+        "title": "キャリア",
+        "updatedAt": "{{time}} に更新",
+        "empty": "今日は新しいことはありません",
+        "emptyHint": "エージェントは毎朝確認します。フォローアップ、求人、タスクがここに表示されます。",
+        "allDecided": "今日の判断はすべて完了しました",
+        "loadError": "キャリアページを読み込めませんでした。",
+        "retry": "再試行",
+        "applyError": "判断を保存できませんでした。",
+        "later": "後で",
+        "skip": "スキップ",
+        "followups": {
+            "title": "フォローアップ",
+            "appliedAgo": "応募 {{when}}",
+            "openDraft": "下書きを開く",
+            "createTask": "タスクを作成",
+            "done": "完了"
+        },
+        "offers": {
+            "title": "判断が必要な求人",
+            "apply": "応募する",
+            "note": "メモ",
+            "notePlaceholder": "エージェントへのメモ…",
+            "open": "求人を見る",
+            "expires": "締切 {{when}}",
+            "expired": "締切済み"
+        },
+        "tasks": {
+            "title": "提案されたタスク",
+            "add": "追加"
+        },
+        "decided": "判断済み ({{count}})",
+        "state": {
+            "applied": "応募済み",
+            "skipped": "スキップ済み",
+            "later": "後で",
+            "done": "完了",
+            "taskCreated": "タスクを作成済み",
+            "added": "追加済み",
+            "dismissed": "却下"
+        }
+    },
     "agentBanner": {
         "agent": "Agent",
         "dismiss": "既読にする",
@@ -175,6 +217,9 @@
       "delete": "削除"
     },
     "mail": {
+      "draftRequested": "Gmail で下書きを準備中",
+      "archiveRequested": "アーカイブを依頼しました",
+      "noteSent": "Trieur に戻しました",
       "noSubject": "(件名なし)",
       "draft": "下書きあり:",
       "task": "タスク",
@@ -233,6 +278,23 @@
     "entry": "整理待ち（{{count}}）",
     "title": "整理待ち",
     "deck": {
+      "progressLabel": "メール {{position}} / {{total}}",
+      "option": {
+        "draft": "下書き",
+        "read": "読む",
+        "event": "カレンダー",
+        "archive": "アーカイブ"
+      },
+      "openInGmail": "Gmail で開く",
+      "readMail": "メールを読む",
+      "collapseMail": "折りたたむ",
+      "noteOpen": "ひとことで返す",
+      "notePlaceholder": "Trieur へのひとこと",
+      "noteSend": "送信",
+      "recommended": "おすすめ",
+      "actionFailed": "前回の操作は完了しませんでした",
+      "actionFailedDraft": "下書きを準備できませんでした",
+      "actionFailedArchive": "アーカイブは完了しませんでした",
       "open": "メールを仕分ける（{{count}}）",
       "title": "メールを仕分ける",
       "close": "閉じる",
@@ -246,7 +308,7 @@
       "openMail": "メールを開く",
       "chat": "相談する",
       "undo": "元に戻す",
-      "keys": "Enter または →：提案 · ←：後で · ↓：スキップ · Ctrl+Z：元に戻す · Esc：閉じる"
+      "keys": "Enter または →：おすすめ · 1–5：選択 · ←：後で · ↓：スキップ · Ctrl+Z：元に戻す · Esc：閉じる"
     }
   },
   "outline": {
@@ -5212,6 +5274,23 @@
     "planned": "{{when}}に予定"
   },
   "proposals": {
+    "decide": {
+      "today": "今日",
+      "planOn": "日を指定して計画",
+      "keep": "そのままにする",
+      "kept": "そのまま",
+      "otherDate": "別の日付…",
+      "dueOn": "期限 {{date}}",
+      "ok": "OK",
+      "menu": "選択",
+      "changed": "変更済み",
+      "undo": "提案に戻す：{{decision}}",
+      "trigger": "{{decision}}、{{task}}",
+      "goal": "目標",
+      "area": "領域",
+      "groupToday": "今日",
+      "groupKeep": "そのまま"
+    },
     "week": {
       "button": "今週を計画",
       "ready": "今週の計画ができました",
@@ -5240,6 +5319,16 @@
       "ignore": "無視",
       "later": "あとで",
       "apply": "適用 ({{count}})",
+      "note": "メモ",
+      "noteFor": "{{task}} へのメモ",
+      "notePlaceholder": "何を変えるべきか…",
+      "toReview": "要確認",
+      "noteDecision": "メモを添えて要確認",
+      "sendError": "メモを送信できませんでした。",
+      "sendCaption_one": "{{count}}件適用 · {{sent}}件差し戻し",
+      "sendCaption_other": "{{count}}件適用 · {{sent}}件差し戻し",
+      "notesSent_one": "{{count}}件のタスクを差し戻しました。準備ができたらお知らせします",
+      "notesSent_other": "{{count}}件のタスクを差し戻しました。準備ができたらお知らせします",
       "appliedCount": "{{count}} / {{total}} 件を適用"
     },
     "apply": {

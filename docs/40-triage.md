@@ -81,7 +81,7 @@ All under `/api` and `/api/v1`.
 | `POST /triage/answers` | `{ target: { scope, ref }, answer: yes \| no \| text }` → `{ context }`. `POST /daily-plan/:date/brief/answers` takes the same body for the Android app up to 1.20 |
 | `GET /triage/contexts` | `?scope=&target_ref=` → `{ contexts }` (200 at most) |
 | `PATCH /triage/contexts/:uid`, `DELETE /triage/contexts/:uid` | `{ text }`; 404 for a context of someone else |
-| `POST /triage/mail/:uid/decide` | `{ decision: task \| reply \| event \| later \| dismiss, payload?, archive?, idempotency_key? }` |
+| `POST /triage/mail/:uid/decide` | `{ decision: task \| reply \| event \| later \| dismiss \| draft \| archive \| note, payload?, archive?, idempotency_key? }` |
 
 ## Clients
 

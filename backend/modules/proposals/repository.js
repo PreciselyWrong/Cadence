@@ -3,7 +3,15 @@
 // Data access for proposals: the only place that touches their models.
 const moment = require('moment-timezone');
 const { Op } = require('sequelize');
-const { Notification, Proposal, Project, Tag, Task } = require('../../models');
+const {
+    Area,
+    Goal,
+    Notification,
+    Proposal,
+    Project,
+    Tag,
+    Task,
+} = require('../../models');
 const permissionsService = require('../../services/permissionsService');
 
 // Done, archived and cancelled tasks are closed.
@@ -20,7 +28,24 @@ const visibleWhere = async (userId) => ({
     ],
 });
 
+// Projects the context reads: the ones still in hand, not paused or closed.
+const ACTIVE_PROJECT_STATUSES = [
+    'not_started',
+    'in_progress',
+    'planned',
+    'waiting',
+];
+const CONTEXT_PROJECTS = 15;
+const CONTEXT_AREAS = 10;
+
 const create = (attributes) => Proposal.create(attributes);
+
+// Ready proposals of one kind are closed when a newer one replaces them.
+const dismissReady = (userId, kind) =>
+    Proposal.update(
+        { status: 'dismissed' },
+        { where: { user_id: userId, kind, status: 'ready' } }
+    );
 
 const findByUid = (userId, uid) =>
     Proposal.findOne({ where: { user_id: userId, uid } });
@@ -63,6 +88,43 @@ const findJudgedReviews = (userId, limit) =>
         limit,
     });
 
+// Names of the areas the user can see, the context of the facts.
+async function findAreaNames(userId) {
+    const areas = await Area.findAll({
+        where: await permissionsService.ownershipOrPermissionWhere(
+            'area',
+            userId
+        ),
+        attributes: ['name'],
+        order: [['name', 'ASC']],
+        limit: CONTEXT_AREAS,
+    });
+    return areas.map((area) => area.name);
+}
+
+// Active projects the user can see, most recently touched first, with the
+// name of their area.
+async function findActiveProjects(userId) {
+    return Project.findAll({
+        where: {
+            [Op.and]: [
+                { status: { [Op.in]: ACTIVE_PROJECT_STATUSES } },
+                await permissionsService.ownershipOrPermissionWhere(
+                    'project',
+                    userId
+                ),
+            ],
+        },
+        include: [{ model: Area, attributes: ['name'], required: false }],
+        attributes: ['name'],
+        order: [
+            ['updated_at', 'DESC'],
+            ['id', 'DESC'],
+        ],
+        limit: CONTEXT_PROJECTS,
+    });
+}
+
 // Open tasks that could appear in a week: overdue, due before the period
 // ends, planned in it, decided for the week, or in view. Recurring
 // occurrences and subtasks are left out here; the rules keep the rest.
@@ -101,7 +163,24 @@ async function findWeekCandidates(
     return Task.findAll({
         where,
         include: [
-            { model: Project, attributes: ['uid', 'name'], required: false },
+            {
+                model: Project,
+                attributes: ['uid', 'name'],
+                required: false,
+                include: [
+                    { model: Area, attributes: ['name'], required: false },
+                ],
+            },
+            {
+                model: Goal,
+                as: 'Goal',
+                attributes: ['title'],
+                required: false,
+                include: [
+                    { model: Area, attributes: ['name'], required: false },
+                ],
+            },
+            { model: Area, attributes: ['name'], required: false },
             {
                 model: Tag,
                 attributes: ['name'],
@@ -117,10 +196,13 @@ const notify = (attributes) => Notification.createNotification(attributes);
 
 module.exports = {
     create,
+    dismissReady,
     findByUid,
     findPending,
     findLatestPerKind,
     findJudgedReviews,
+    findAreaNames,
+    findActiveProjects,
     findWeekCandidates,
     notify,
 };

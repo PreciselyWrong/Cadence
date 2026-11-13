@@ -1,4 +1,46 @@
 {
+    "career": {
+        "title": "المسار المهني",
+        "updatedAt": "حُدّث في {{time}}",
+        "empty": "لا جديد اليوم",
+        "emptyHint": "يمرّ الوكيل كل صباح: ستظهر هنا المتابعات والعروض والمهام.",
+        "allDecided": "تم حسم كل شيء لهذا اليوم",
+        "loadError": "تعذّر تحميل صفحة المسار المهني.",
+        "retry": "أعد المحاولة",
+        "applyError": "لم يُحفظ القرار.",
+        "later": "لاحقًا",
+        "skip": "تخطٍّ",
+        "followups": {
+            "title": "المتابعات",
+            "appliedAgo": "تم التقديم {{when}}",
+            "openDraft": "افتح المسودة",
+            "createTask": "أنشئ مهمة",
+            "done": "تم"
+        },
+        "offers": {
+            "title": "عروض بانتظار القرار",
+            "apply": "تقدّم",
+            "note": "ملاحظة",
+            "notePlaceholder": "ملاحظة للوكيل…",
+            "open": "اعرض العرض",
+            "expires": "ينتهي {{when}}",
+            "expired": "منتهٍ"
+        },
+        "tasks": {
+            "title": "مهام مقترحة",
+            "add": "أضف"
+        },
+        "decided": "تم الحسم ({{count}})",
+        "state": {
+            "applied": "تم التقديم",
+            "skipped": "تم التخطي",
+            "later": "لاحقًا",
+            "done": "تم",
+            "taskCreated": "أُنشئت المهمة",
+            "added": "أُضيفت",
+            "dismissed": "مرفوضة"
+        }
+    },
     "agentBanner": {
         "agent": "الوكيل",
         "dismiss": "تحديد كمقروء",
@@ -191,6 +233,9 @@
       "delete": "حذف"
     },
     "mail": {
+      "draftRequested": "يجري تحضير المسودة في Gmail",
+      "archiveRequested": "طُلبت الأرشفة",
+      "noteSent": "أُعيد إلى Trieur",
       "noSubject": "(بدون موضوع)",
       "draft": "المسودة جاهزة:",
       "task": "مهمة",
@@ -249,6 +294,23 @@
     "entry": "للفرز ({{count}})",
     "title": "للفرز",
     "deck": {
+      "progressLabel": "البريد {{position}} من {{total}}",
+      "option": {
+        "draft": "مسودة",
+        "read": "قراءة",
+        "event": "التقويم",
+        "archive": "أرشفة"
+      },
+      "openInGmail": "فتح في Gmail",
+      "readMail": "قراءة البريد",
+      "collapseMail": "طي",
+      "noteOpen": "الرد بكلمة",
+      "notePlaceholder": "كلمة إلى Trieur",
+      "noteSend": "إرسال",
+      "recommended": "موصى به",
+      "actionFailed": "لم يكتمل الإجراء الأخير",
+      "actionFailedDraft": "تعذّر تحضير المسودة",
+      "actionFailedArchive": "لم تكتمل الأرشفة",
       "open": "فرز بريدي ({{count}})",
       "title": "فرز بريدي",
       "close": "إغلاق",
@@ -262,7 +324,7 @@
       "openMail": "فتح الرسالة",
       "chat": "مناقشة",
       "undo": "تراجع",
-      "keys": "Enter أو →: النصيحة · ←: لاحقًا · ↓: تخطٍّ · Ctrl+Z: تراجع · Esc: إغلاق"
+      "keys": "Enter أو →: النصيحة · 1–5: اختيار · ←: لاحقًا · ↓: تخطٍّ · Ctrl+Z: تراجع · Esc: إغلاق"
     }
   },
   "outline": {
@@ -5264,6 +5326,23 @@
     "planned": "مجدولة {{when}}"
   },
   "proposals": {
+    "decide": {
+      "today": "اليوم",
+      "planOn": "التخطيط ليوم",
+      "keep": "إبقاء كما هو",
+      "kept": "كما هو",
+      "otherDate": "تاريخ آخر…",
+      "dueOn": "الاستحقاق {{date}}",
+      "ok": "حسنًا",
+      "menu": "اختيار",
+      "changed": "معدَّل",
+      "undo": "العودة إلى الاقتراح: {{decision}}",
+      "trigger": "{{decision}}، {{task}}",
+      "goal": "هدف",
+      "area": "مجال",
+      "groupToday": "اليوم",
+      "groupKeep": "كما هو"
+    },
     "week": {
       "button": "لخطّط أسبوعي",
       "ready": "أسبوعك جاهز",
@@ -5292,6 +5371,22 @@
       "ignore": "تجاهل",
       "later": "لاحقًا",
       "apply": "تطبيق ({{count}})",
+      "note": "ملاحظة",
+      "noteFor": "ملاحظة عن {{task}}",
+      "notePlaceholder": "ما الذي يجب أن يتغيّر…",
+      "toReview": "للمراجعة",
+      "noteDecision": "للمراجعة مع ملاحظتك",
+      "sendError": "تعذّر إرسال الملاحظات.",
+      "sendCaption_one": "{{count}} مطبّقة · {{sent}} مُعادة",
+      "sendCaption_two": "{{count}} مطبّقتان · {{sent}} مُعادة",
+      "sendCaption_few": "{{count}} مطبّقات · {{sent}} مُعادة",
+      "sendCaption_many": "{{count}} مطبّقة · {{sent}} مُعادة",
+      "sendCaption_other": "{{count}} مطبّقة · {{sent}} مُعادة",
+      "notesSent_one": "أُعيدت مهمة واحدة، سأخبرك حين تصبح جاهزة",
+      "notesSent_two": "أُعيدت مهمتان، سأخبرك حين تصبحان جاهزتين",
+      "notesSent_few": "أُعيدت {{count}} مهام، سأخبرك حين تصبح جاهزة",
+      "notesSent_many": "أُعيدت {{count}} مهمة، سأخبرك حين تصبح جاهزة",
+      "notesSent_other": "أُعيدت {{count}} مهمة، سأخبرك حين تصبح جاهزة",
       "appliedCount": "تم تطبيق {{count}} من {{total}}"
     },
     "apply": {

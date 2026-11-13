@@ -1,4 +1,46 @@
 {
+    "career": {
+        "title": "Karier",
+        "updatedAt": "diperbarui pukul {{time}}",
+        "empty": "Tidak ada yang baru hari ini",
+        "emptyHint": "Agen mampir setiap pagi: tindak lanjut, lowongan, dan tugas akan muncul di sini.",
+        "allDecided": "Semua sudah diputuskan untuk hari ini",
+        "loadError": "Halaman Karier tidak dapat dimuat.",
+        "retry": "Coba lagi",
+        "applyError": "Keputusan tidak tersimpan.",
+        "later": "Nanti",
+        "skip": "Lewati",
+        "followups": {
+            "title": "Tindak lanjut",
+            "appliedAgo": "melamar {{when}}",
+            "openDraft": "Buka draf",
+            "createTask": "Buat tugas",
+            "done": "Selesai"
+        },
+        "offers": {
+            "title": "Lowongan untuk diputuskan",
+            "apply": "Lamar",
+            "note": "Catatan",
+            "notePlaceholder": "Catatan untuk agen…",
+            "open": "Lihat lowongan",
+            "expires": "berakhir {{when}}",
+            "expired": "berakhir"
+        },
+        "tasks": {
+            "title": "Tugas yang diusulkan",
+            "add": "Tambah"
+        },
+        "decided": "Diputuskan ({{count}})",
+        "state": {
+            "applied": "Dilamar",
+            "skipped": "Dilewati",
+            "later": "Nanti",
+            "done": "Selesai",
+            "taskCreated": "Tugas dibuat",
+            "added": "Ditambahkan",
+            "dismissed": "Ditolak"
+        }
+    },
     "agentBanner": {
         "agent": "Agen",
         "dismiss": "Tandai sudah dibaca",
@@ -175,6 +217,9 @@
       "delete": "Hapus"
     },
     "mail": {
+      "draftRequested": "Draf sedang disiapkan di Gmail",
+      "archiveRequested": "Pengarsipan diminta",
+      "noteSent": "Dikembalikan ke Trieur",
       "noSubject": "(tanpa subjek)",
       "draft": "Draf siap:",
       "task": "Tugas",
@@ -233,6 +278,23 @@
     "entry": "Untuk dipilah ({{count}})",
     "title": "Untuk dipilah",
     "deck": {
+      "progressLabel": "Email {{position}} dari {{total}}",
+      "option": {
+        "draft": "Draf",
+        "read": "Baca",
+        "event": "Kalender",
+        "archive": "Arsipkan"
+      },
+      "openInGmail": "Buka di Gmail",
+      "readMail": "Baca email",
+      "collapseMail": "Ciutkan",
+      "noteOpen": "Jawab dengan satu kata",
+      "notePlaceholder": "Satu kata untuk Trieur",
+      "noteSend": "Kirim",
+      "recommended": "Disarankan",
+      "actionFailed": "Tindakan terakhir tidak berhasil",
+      "actionFailedDraft": "Draf tidak dapat disiapkan",
+      "actionFailedArchive": "Pengarsipan tidak berhasil",
       "open": "Pilah surel saya ({{count}})",
       "title": "Pilah surel saya",
       "close": "Tutup",
@@ -246,7 +308,7 @@
       "openMail": "Buka surel",
       "chat": "Diskusikan",
       "undo": "Urungkan",
-      "keys": "Enter atau →: saran · ←: nanti · ↓: lewati · Ctrl+Z: urungkan · Esc: tutup"
+      "keys": "Enter atau →: saran · 1–5: pilih · ←: nanti · ↓: lewati · Ctrl+Z: urungkan · Esc: tutup"
     }
   },
   "outline": {
@@ -5212,6 +5274,23 @@
     "planned": "Dijadwalkan {{when}}"
   },
   "proposals": {
+    "decide": {
+      "today": "Hari ini",
+      "planOn": "Rencanakan pada hari",
+      "keep": "Biarkan apa adanya",
+      "kept": "Tetap",
+      "otherDate": "Tanggal lain…",
+      "dueOn": "Tenggat {{date}}",
+      "ok": "OK",
+      "menu": "Pilih",
+      "changed": "Diubah",
+      "undo": "Kembali ke saran: {{decision}}",
+      "trigger": "{{decision}}, {{task}}",
+      "goal": "Sasaran",
+      "area": "Area",
+      "groupToday": "Hari ini",
+      "groupKeep": "Tetap"
+    },
     "week": {
       "button": "Rencanakan minggu saya",
       "ready": "Minggu Anda sudah siap",
@@ -5240,6 +5319,16 @@
       "ignore": "Abaikan",
       "later": "Nanti",
       "apply": "Terapkan ({{count}})",
+      "note": "Catatan",
+      "noteFor": "Catatan untuk {{task}}",
+      "notePlaceholder": "Apa yang perlu diubah…",
+      "toReview": "Perlu ditinjau",
+      "noteDecision": "Perlu ditinjau dengan catatanmu",
+      "sendError": "Catatan tidak dapat dikirim.",
+      "sendCaption_one": "{{count}} diterapkan · {{sent}} dikirim ulang",
+      "sendCaption_other": "{{count}} diterapkan · {{sent}} dikirim ulang",
+      "notesSent_one": "{{count}} tugas dikirim ulang, aku kabari saat sudah siap",
+      "notesSent_other": "{{count}} tugas dikirim ulang, aku kabari saat sudah siap",
       "appliedCount": "{{count}} dari {{total}} diterapkan"
     },
     "apply": {

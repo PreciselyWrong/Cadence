@@ -1,4 +1,46 @@
 {
+    "career": {
+        "title": "Sự nghiệp",
+        "updatedAt": "cập nhật lúc {{time}}",
+        "empty": "Hôm nay không có gì mới",
+        "emptyHint": "Trợ lý ghé qua mỗi sáng: các lần nhắc lại, tin tuyển dụng và việc cần làm sẽ hiện ở đây.",
+        "allDecided": "Hôm nay đã quyết định xong",
+        "loadError": "Không thể tải trang Sự nghiệp.",
+        "retry": "Thử lại",
+        "applyError": "Quyết định chưa được lưu.",
+        "later": "Để sau",
+        "skip": "Bỏ qua",
+        "followups": {
+            "title": "Nhắc lại",
+            "appliedAgo": "đã ứng tuyển {{when}}",
+            "openDraft": "Mở bản nháp",
+            "createTask": "Tạo việc",
+            "done": "Xong"
+        },
+        "offers": {
+            "title": "Tin tuyển dụng cần quyết định",
+            "apply": "Ứng tuyển",
+            "note": "Ghi chú",
+            "notePlaceholder": "Ghi chú cho trợ lý…",
+            "open": "Xem tin tuyển dụng",
+            "expires": "hết hạn {{when}}",
+            "expired": "đã hết hạn"
+        },
+        "tasks": {
+            "title": "Việc được đề xuất",
+            "add": "Thêm"
+        },
+        "decided": "Đã quyết định ({{count}})",
+        "state": {
+            "applied": "Đã ứng tuyển",
+            "skipped": "Đã bỏ qua",
+            "later": "Để sau",
+            "done": "Xong",
+            "taskCreated": "Đã tạo việc",
+            "added": "Đã thêm",
+            "dismissed": "Đã loại"
+        }
+    },
     "agentBanner": {
         "agent": "Tác nhân",
         "dismiss": "Đánh dấu đã đọc",
@@ -175,6 +217,9 @@
       "delete": "Xóa"
     },
     "mail": {
+      "draftRequested": "Đang chuẩn bị bản nháp trong Gmail",
+      "archiveRequested": "Đã yêu cầu lưu trữ",
+      "noteSent": "Đã gửi lại cho Trieur",
       "noSubject": "(không có tiêu đề)",
       "draft": "Bản nháp đã sẵn sàng:",
       "task": "Công việc",
@@ -233,6 +278,23 @@
     "entry": "Cần phân loại ({{count}})",
     "title": "Cần phân loại",
     "deck": {
+      "progressLabel": "Thư {{position}} / {{total}}",
+      "option": {
+        "draft": "Bản nháp",
+        "read": "Đọc",
+        "event": "Lịch",
+        "archive": "Lưu trữ"
+      },
+      "openInGmail": "Mở trong Gmail",
+      "readMail": "Đọc thư",
+      "collapseMail": "Thu gọn",
+      "noteOpen": "Trả lời bằng một từ",
+      "notePlaceholder": "Một lời cho Trieur",
+      "noteSend": "Gửi",
+      "recommended": "Được đề xuất",
+      "actionFailed": "Thao tác gần nhất không thành công",
+      "actionFailedDraft": "Không thể chuẩn bị bản nháp",
+      "actionFailedArchive": "Lưu trữ không thành công",
       "open": "Phân loại thư của tôi ({{count}})",
       "title": "Phân loại thư của tôi",
       "close": "Đóng",
@@ -246,7 +308,7 @@
       "openMail": "Mở thư",
       "chat": "Trao đổi",
       "undo": "Hoàn tác",
-      "keys": "Enter hoặc →: gợi ý · ←: để sau · ↓: bỏ qua · Ctrl+Z: hoàn tác · Esc: đóng"
+      "keys": "Enter hoặc →: gợi ý · 1–5: chọn · ←: để sau · ↓: bỏ qua · Ctrl+Z: hoàn tác · Esc: đóng"
     }
   },
   "outline": {
@@ -5212,6 +5274,23 @@
     "planned": "Đã lên kế hoạch {{when}}"
   },
   "proposals": {
+    "decide": {
+      "today": "Hôm nay",
+      "planOn": "Lên kế hoạch vào ngày",
+      "keep": "Giữ nguyên",
+      "kept": "Giữ nguyên",
+      "otherDate": "Ngày khác…",
+      "dueOn": "Hạn {{date}}",
+      "ok": "OK",
+      "menu": "Chọn",
+      "changed": "Đã đổi",
+      "undo": "Quay lại gợi ý: {{decision}}",
+      "trigger": "{{decision}}, {{task}}",
+      "goal": "Mục tiêu",
+      "area": "Lĩnh vực",
+      "groupToday": "Hôm nay",
+      "groupKeep": "Giữ nguyên"
+    },
     "week": {
       "button": "Lên kế hoạch tuần của tôi",
       "ready": "Tuần của bạn đã sẵn sàng",
@@ -5240,6 +5319,16 @@
       "ignore": "Bỏ qua",
       "later": "Để sau",
       "apply": "Áp dụng ({{count}})",
+      "note": "Ghi chú",
+      "noteFor": "Ghi chú cho {{task}}",
+      "notePlaceholder": "Cần thay đổi điều gì…",
+      "toReview": "Cần xem lại",
+      "noteDecision": "Cần xem lại với ghi chú của bạn",
+      "sendError": "Không gửi được ghi chú.",
+      "sendCaption_one": "{{count}} đã áp dụng · {{sent}} đã gửi lại",
+      "sendCaption_other": "{{count}} đã áp dụng · {{sent}} đã gửi lại",
+      "notesSent_one": "Đã gửi lại {{count}} việc, mình sẽ báo khi xong",
+      "notesSent_other": "Đã gửi lại {{count}} việc, mình sẽ báo khi xong",
       "appliedCount": "Đã áp dụng {{count}} trên {{total}}"
     },
     "apply": {

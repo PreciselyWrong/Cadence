@@ -1,4 +1,46 @@
 {
+    "career": {
+        "title": "Karriär",
+        "updatedAt": "uppdaterad kl. {{time}}",
+        "empty": "Inget nytt i dag",
+        "emptyHint": "Agenten tittar in varje morgon: uppföljningar, tjänster och uppgifter visas här.",
+        "allDecided": "Allt är bestämt för i dag",
+        "loadError": "Det gick inte att läsa in Karriär-sidan.",
+        "retry": "Försök igen",
+        "applyError": "Beslutet sparades inte.",
+        "later": "Senare",
+        "skip": "Hoppa över",
+        "followups": {
+            "title": "Uppföljningar",
+            "appliedAgo": "sökt {{when}}",
+            "openDraft": "Öppna utkast",
+            "createTask": "Skapa uppgift",
+            "done": "Klar"
+        },
+        "offers": {
+            "title": "Tjänster att besluta om",
+            "apply": "Sök",
+            "note": "Anteckning",
+            "notePlaceholder": "En anteckning till agenten…",
+            "open": "Visa tjänsten",
+            "expires": "går ut {{when}}",
+            "expired": "utgången"
+        },
+        "tasks": {
+            "title": "Föreslagna uppgifter",
+            "add": "Lägg till"
+        },
+        "decided": "Beslutat ({{count}})",
+        "state": {
+            "applied": "Sökt",
+            "skipped": "Överhoppad",
+            "later": "Senare",
+            "done": "Klar",
+            "taskCreated": "Uppgift skapad",
+            "added": "Tillagd",
+            "dismissed": "Avfärdad"
+        }
+    },
     "agentBanner": {
         "agent": "Agent",
         "dismiss": "Markera som läst",
@@ -175,6 +217,9 @@
       "delete": "Ta bort"
     },
     "mail": {
+      "draftRequested": "Utkast förbereds i Gmail",
+      "archiveRequested": "Arkivering begärd",
+      "noteSent": "Skickat tillbaka till Trieur",
       "noSubject": "(inget ämne)",
       "draft": "Utkast klart:",
       "task": "Uppgift",
@@ -233,6 +278,23 @@
     "entry": "Att sortera ({{count}})",
     "title": "Att sortera",
     "deck": {
+      "progressLabel": "Mejl {{position}} av {{total}}",
+      "option": {
+        "draft": "Utkast",
+        "read": "Läs",
+        "event": "Kalender",
+        "archive": "Arkivera"
+      },
+      "openInGmail": "Öppna i Gmail",
+      "readMail": "Läs mejlet",
+      "collapseMail": "Fäll ihop",
+      "noteOpen": "Svara med ett ord",
+      "notePlaceholder": "Ett ord till Trieur",
+      "noteSend": "Skicka",
+      "recommended": "Rekommenderat",
+      "actionFailed": "Den senaste åtgärden gick inte igenom",
+      "actionFailedDraft": "Utkastet kunde inte förberedas",
+      "actionFailedArchive": "Arkiveringen gick inte igenom",
       "open": "Sortera min e-post ({{count}})",
       "title": "Sortera min e-post",
       "close": "Stäng",
@@ -246,7 +308,7 @@
       "openMail": "Öppna e-post",
       "chat": "Diskutera",
       "undo": "Ångra",
-      "keys": "Enter eller →: råd · ←: senare · ↓: hoppa över · Ctrl+Z: ångra · Esc: stäng"
+      "keys": "Enter eller →: råd · 1–5: välj · ←: senare · ↓: hoppa över · Ctrl+Z: ångra · Esc: stäng"
     }
   },
   "outline": {
@@ -5212,6 +5274,23 @@
     "planned": "Planerad {{when}}"
   },
   "proposals": {
+    "decide": {
+      "today": "I dag",
+      "planOn": "Planera en dag",
+      "keep": "Behåll som det är",
+      "kept": "Oförändrad",
+      "otherDate": "Annat datum…",
+      "dueOn": "Förfaller {{date}}",
+      "ok": "OK",
+      "menu": "Välj",
+      "changed": "Ändrad",
+      "undo": "Tillbaka till förslaget: {{decision}}",
+      "trigger": "{{decision}}, {{task}}",
+      "goal": "Mål",
+      "area": "Område",
+      "groupToday": "I dag",
+      "groupKeep": "Oförändrad"
+    },
     "week": {
       "button": "Planera min vecka",
       "ready": "Din vecka är klar",
@@ -5240,6 +5319,16 @@
       "ignore": "Ignorera",
       "later": "Senare",
       "apply": "Tillämpa ({{count}})",
+      "note": "Anteckning",
+      "noteFor": "Anteckning om {{task}}",
+      "notePlaceholder": "Vad ska ändras…",
+      "toReview": "Att se över",
+      "noteDecision": "Att se över med din anteckning",
+      "sendError": "Anteckningarna kunde inte skickas.",
+      "sendCaption_one": "{{count}} tillämpade · {{sent}} skickade tillbaka",
+      "sendCaption_other": "{{count}} tillämpade · {{sent}} skickade tillbaka",
+      "notesSent_one": "{{count}} uppgift skickad tillbaka, jag säger till när den är klar",
+      "notesSent_other": "{{count}} uppgifter skickade tillbaka, jag säger till när de är klara",
       "appliedCount": "{{count}} av {{total}} tillämpade"
     },
     "apply": {

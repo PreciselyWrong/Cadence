@@ -908,3 +908,35 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Décision** : comme la barre d'activité de VS Code, le panneau suit la section ouverte. Notes (`/notes`) : épinglés et arbre des notes avec recherche et « + » ; Objectifs (`/goals`) : la liste des objectifs ; Habitudes (`/habits`) : le lien vers les habitudes. Les autres entrées du rail gardent le panneau Tâches. Chaque panneau se règle dans Profil › Sidebar (blocs affichés, ordre), `sidebarMinimal.panels` (défauts = panneau Tâches actuel).
 - **Logo** : dans l'en-tête du panneau, le logo et le mot Cadence sont centrés ; le bouton de repli reste à droite.
 - **Android à reprendre** : Android n'a pas de barre latérale. L'équivalent serait la liste de l'onglet ouvert (Notes : arbre des dossiers, Objectifs : liste, Habitudes : liste) en tête de l'écran, réglable dans les réglages de l'écran d'accueil.
+
+### 2026-11-13 — Feuille « Ta semaine » : une décision par ligne
+
+- **Problème** : chaque ligne ne se cochait ou se décochait (accepter ou refuser) ; impossible de proposer autre chose que l'agent. Le titre était le résumé entier de l'agent, un paragraphe.
+- **Décision** : en-tête calme : période en petite pastille, titre court (`headline`), sous-titre gris (`subtitle`). Chaque ligne porte à droite une puce de décision (celle de l'agent par défaut, « Lun. 16 ») ; un clic ouvre un menu compact : jours de la période en puces (« Auj. », « Sam. 14 »), « Cette semaine », « Plus tard », « Garder tel quel », « Abandonner », « Autre date… ». Une ligne changée teinte sa puce, dit « Modifié » et offre un retour à la suggestion. Les lignes se regroupent sous leur décision du moment, en glissant (aucun mouvement en mouvement réduit). Pied : « Ignorer » discret, « Répondre », « Appliquer (N) » (N = décisions autres que « Garder tel quel »). Clavier : flèches entre lignes, Entrée ouvre le menu, chiffres = jour. Nom de l'objectif (sinon du domaine) en petite étiquette, raison de l'agent en petit gris.
+- **Android** : livré dans la même étape par un autre agent (section Clients › Android de `docs/47-proposals.md`) ; mêmes groupes et même corps d'`apply`. Écart à vérifier : ordre des groupes (web : jours, semaine, plus tard, abandon, tel quel).
+
+### 2026-11-13 — Remarques par tâche dans « Ta semaine »
+
+- **Décision** : une remarque d'une ligne (500 caractères) se rédige sous la ligne, depuis un bouton « Remarque ». La ligne est alors mise de côté (« À revoir », sans décision appliquée) et le pied devient « Envoyer » avec « N appliquées · M renvoyées » : l'agent reprend ces tâches. Vérif Android à faire (même geste, même libellé).
+
+### 2026-11-13 — Menus de date et de puce de la fiche : tenir dans l'écran
+
+- **Problème** : quand la puce de la fiche était basse, le menu de date (écrire une date, Aujourd'hui… Plus tard) ne montait pas et ses dernières lignes sortaient de l'écran. **Décision** : tous les menus de puce (`ChipPopover`) se placent à l'intérieur de la fenêtre, en bas ou en haut selon la place, défilent quand la place manque des deux côtés, et restent à 8 px du bord. Android : rien à reprendre (menus natifs).
+
+### 2026-11-13 — Panneaux Objectifs et Habitudes de la barre latérale
+
+- **Problème** : le panneau Habitudes ne montrait qu'un lien alors que des habitudes existaient ; le panneau Objectifs s'ouvrait replié ; tous deux paraissaient pauvres à côté du panneau Tâches.
+- **Décision** : même facture que le panneau Tâches (lignes de 34 px, en-têtes de groupe en petites capitales avec leur nombre, survol, sélection, anneau de focus). Objectifs : groupes de la page (« Actif » ouvert par défaut, résultats clés en retrait sous leur objectif ; « En pause, atteints ou abandonnés » et les trois groupes de la liste de vie repliés), chaque ligne avec une fine barre de progression et la date cible à droite (couleur d'avertissement une fois passée). Habitudes : les habitudes du jour dans les groupes de la page (plage horaire après le nom), « N sur M faits pour l'instant » sous le titre, jauge à facettes à la couleur de l'habitude, quantité (« 1 / 3 »), série (flamme) ; une habitude oui/non a une case ronde qui note aujourd'hui (Annuler dans le toast). Le titre ouvre la page, « + » crée ; état vide avec « Nouvelle habitude » / « Nouvel objectif ». Une case cochée dans le panneau met aussi à jour la page des habitudes et celle de l'habitude.
+- **Android à reprendre** : pas de barre latérale ; si l'onglet Habitudes ou Objectifs gagne une liste compacte, reprendre les mêmes groupes, l'ordre (Actifs ouverts, le reste replié) et la case qui note aujourd'hui pour une habitude oui/non.
+
+### 2026-11-13 — Page « Carrière » (web)
+
+- **Problème** : les relances, offres et tâches que l'agent prépare chaque matin n'avaient pas de page sur le web.
+- **Décision** : une page `/career` (icône mallette sur le rail) : « Carrière » et « mis à jour à 9 h 15 », la phrase de l'agent, 3 ou 4 tuiles de chiffres, puis « Relances » (« Ouvrir le brouillon », « Créer la tâche », « Fait », « Plus tard »), « Offres à décider » en cartes (« Postuler » seul bouton plein, « Passer », « Plus tard », « Remarque » sur une ligne envoyée avec la décision) et « Tâches proposées » (« Ajouter », « Passer »). Chaque toucher applique sa décision tout de suite ; l'élément rejoint « Décidé (N) », replié, avec un libellé d'état et sans annulation. Vide : « Rien de neuf aujourd'hui ». La notification d'une proposition carrière ouvre la page.
+- **Android à reprendre** : l'écran Carrière de Bilan a déjà les mêmes sections ; vérifier les mêmes libellés d'état dans « Décidé », la remarque envoyée avec la décision suivante de la carte, et « Postuler » comme seul bouton plein.
+
+### 2026-11-13 — « Trier mes mails » v2 : une rangée de choix, le mail lisible
+
+- **Problème** : le paquet ne proposait qu'un gros bouton de conseil et une rangée de boutons secondaires toujours identiques ; pour décider il fallait souvent ouvrir Gmail, et on ne pouvait ni demander un brouillon, ni archiver seul, ni répondre à l'agent.
+- **Décision** : progression « 4 / 17 » avec une barre fine ; carte : expéditeur · date, objet, résumé, extrait du mail lisible sur la carte (replié sous « Lire le mail » s'il est long), « Ouvrir dans Gmail », puis le brouillon cité. Une seule rangée de 2 à 5 grands boutons dans l'ordre des `options` de l'agent (icônes : envoi, case, agenda, horloge, archive, croix ; chiffre 1–5 en coin), le conseil encadré et teinté, sans phrase « Conseil : … ». En dessous, discrets : « Répondre par un mot » (champ sur place, décision `note`, « Renvoyé au Trieur »), « Discuter », « Passer », « Annuler ». Erreur de la dernière action en tête de carte. Clavier : Entrée/→ conseil, 1–5 choisir, ← plus tard, ↓ passer, Ctrl/⌘+Z annuler (`frontend/components/Triage/MailDeck.tsx`, règles `deckButtons` dans `mailDeck.ts`, `docs/43-mail-triage.md`).
+- **Android** : livré dans la même journée par une autre session (1.31.0, `docs/43-mail-triage.md` › Android deck v2) ; à comparer : sans `recommended`, le web n'encadre aucun bouton et Entrée ne fait rien.

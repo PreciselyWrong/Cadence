@@ -1,4 +1,46 @@
 {
+    "career": {
+        "title": "Kariera",
+        "updatedAt": "posodobljeno ob {{time}}",
+        "empty": "Danes nič novega",
+        "emptyHint": "Agent se oglasi vsako jutro: opomniki, ponudbe in naloge se bodo prikazali tukaj.",
+        "allDecided": "Za danes je vse odločeno",
+        "loadError": "Strani Kariera ni bilo mogoče naložiti.",
+        "retry": "Poskusi znova",
+        "applyError": "Odločitev ni bila shranjena.",
+        "later": "Pozneje",
+        "skip": "Preskoči",
+        "followups": {
+            "title": "Opomniki",
+            "appliedAgo": "prijava {{when}}",
+            "openDraft": "Odpri osnutek",
+            "createTask": "Ustvari nalogo",
+            "done": "Opravljeno"
+        },
+        "offers": {
+            "title": "Ponudbe za odločitev",
+            "apply": "Prijavi se",
+            "note": "Opomba",
+            "notePlaceholder": "Opomba za agenta…",
+            "open": "Poglej ponudbo",
+            "expires": "poteče {{when}}",
+            "expired": "potekla"
+        },
+        "tasks": {
+            "title": "Predlagane naloge",
+            "add": "Dodaj"
+        },
+        "decided": "Odločeno ({{count}})",
+        "state": {
+            "applied": "Prijavljeno",
+            "skipped": "Preskočena",
+            "later": "Pozneje",
+            "done": "Opravljeno",
+            "taskCreated": "Naloga ustvarjena",
+            "added": "Dodana",
+            "dismissed": "Zavrnjena"
+        }
+    },
     "agentBanner": {
         "agent": "Agent",
         "dismiss": "Označi kot prebrano",
@@ -191,6 +233,9 @@
       "delete": "Izbriši"
     },
     "mail": {
+      "draftRequested": "Osnutek se pripravlja v Gmailu",
+      "archiveRequested": "Arhiviranje zahtevano",
+      "noteSent": "Vrnjeno Trieurju",
       "noSubject": "(brez zadeve)",
       "draft": "Osnutek pripravljen:",
       "task": "Opravilo",
@@ -249,6 +294,23 @@
     "entry": "Za razvrstitev ({{count}})",
     "title": "Za razvrstitev",
     "deck": {
+      "progressLabel": "Sporočilo {{position}} od {{total}}",
+      "option": {
+        "draft": "Osnutek",
+        "read": "Preberi",
+        "event": "Koledar",
+        "archive": "Arhiviraj"
+      },
+      "openInGmail": "Odpri v Gmailu",
+      "readMail": "Preberi sporočilo",
+      "collapseMail": "Strni",
+      "noteOpen": "Odgovori z besedo",
+      "notePlaceholder": "Beseda za Trieurja",
+      "noteSend": "Pošlji",
+      "recommended": "Priporočeno",
+      "actionFailed": "Zadnje dejanje ni uspelo",
+      "actionFailedDraft": "Osnutka ni bilo mogoče pripraviti",
+      "actionFailedArchive": "Arhiviranje ni uspelo",
       "open": "Razvrsti mojo pošto ({{count}})",
       "title": "Razvrsti mojo pošto",
       "close": "Zapri",
@@ -262,7 +324,7 @@
       "openMail": "Odpri sporočilo",
       "chat": "Pogovor",
       "undo": "Razveljavi",
-      "keys": "Enter ali →: nasvet · ←: pozneje · ↓: preskoči · Ctrl+Z: razveljavi · Esc: zapri"
+      "keys": "Enter ali →: nasvet · 1–5: izberi · ←: pozneje · ↓: preskoči · Ctrl+Z: razveljavi · Esc: zapri"
     }
   },
   "outline": {
@@ -5304,6 +5366,23 @@
     "planned": "Načrtovano {{when}}"
   },
   "proposals": {
+    "decide": {
+      "today": "Danes",
+      "planOn": "Načrtuj na dan",
+      "keep": "Pusti, kot je",
+      "kept": "Brez spremembe",
+      "otherDate": "Drug datum…",
+      "dueOn": "Rok {{date}}",
+      "ok": "V redu",
+      "menu": "Izberi",
+      "changed": "Spremenjeno",
+      "undo": "Nazaj na predlog: {{decision}}",
+      "trigger": "{{decision}}, {{task}}",
+      "goal": "Cilj",
+      "area": "Področje",
+      "groupToday": "Danes",
+      "groupKeep": "Brez spremembe"
+    },
     "week": {
       "button": "Načrtuj moj teden",
       "ready": "Tvoj teden je pripravljen",
@@ -5332,6 +5411,20 @@
       "ignore": "Prezri",
       "later": "Pozneje",
       "apply": "Uporabi ({{count}})",
+      "note": "Opomba",
+      "noteFor": "Opomba k: {{task}}",
+      "notePlaceholder": "Kaj naj se spremeni…",
+      "toReview": "Za pregled",
+      "noteDecision": "Za pregled z opombo",
+      "sendError": "Opomb ni bilo mogoče poslati.",
+      "sendCaption_one": "{{count}} uporabljena · {{sent}} vrnjene",
+      "sendCaption_two": "{{count}} uporabljeni · {{sent}} vrnjene",
+      "sendCaption_few": "{{count}} uporabljene · {{sent}} vrnjene",
+      "sendCaption_other": "{{count}} uporabljenih · {{sent}} vrnjene",
+      "notesSent_one": "{{count}} naloga vrnjena, sporočim, ko bo pripravljena",
+      "notesSent_two": "{{count}} nalogi vrnjeni, sporočim, ko bosta pripravljeni",
+      "notesSent_few": "{{count}} naloge vrnjene, sporočim, ko bodo pripravljene",
+      "notesSent_other": "{{count}} nalog vrnjenih, sporočim, ko bodo pripravljene",
       "appliedCount": "{{count}} od {{total}} uporabljenih"
     },
     "apply": {

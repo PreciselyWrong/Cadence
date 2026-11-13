@@ -32,6 +32,7 @@ import {
     fetchCadenceGroups,
     fetchCadenceHabits,
     fetchRows,
+    onHabitsChanged,
     updateCadenceHabit,
 } from '../../utils/cadenceHabitsService';
 import { groupHabits, kindOf } from '../../utils/cadenceHabitUtils';
@@ -108,6 +109,9 @@ const Habits: React.FC = () => {
     useEffect(() => {
         load();
     }, [load]);
+
+    // A habit logged elsewhere (the sidebar's check) shows here too.
+    useEffect(() => onHabitsChanged(load), [load]);
 
     const log = async (
         habit: CadenceHabit,

@@ -180,6 +180,12 @@ const TriagePage: React.FC = () => {
         later: ['triage.mail.postponed', 'Revient demain'],
         event: ['triage.mail.eventRequested', 'Rendez-vous demandé à l’agent'],
         dismiss: ['triage.mail.dismissed', 'Mail ignoré'],
+        draft: [
+            'triage.mail.draftRequested',
+            'Brouillon en préparation dans Gmail',
+        ],
+        archive: ['triage.mail.archiveRequested', 'Archivage demandé'],
+        note: ['triage.mail.noteSent', 'Renvoyé au Trieur'],
     };
     // The decision stands even when Gmail did not archive the thread.
     const decide = (

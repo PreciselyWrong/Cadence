@@ -304,6 +304,470 @@ describe('triage › mail cards', () => {
         expect(await MailItem.count({ where: { uid } })).toBe(0);
     });
 
+    describe('v2: choices, draft, archive, note, action report', () => {
+        const DRAFT_BODY = 'Bonjour Alice,\n\nJe valide le devis.';
+        const draftChoice = {
+            options: ['draft', 'task', 'later', 'dismiss'],
+            recommended: 'draft',
+            draft: { body: DRAFT_BODY },
+            excerpt: 'Bonjour Alice,\nMerci pour le devis.',
+        };
+        const card = (fields = {}) => propose({ ...draftChoice, ...fields });
+        const report = (fields) =>
+            run('report_mail_action', {
+                account: 'perso',
+                thread_id: THREAD,
+                ...fields,
+            });
+        const listed = async () =>
+            JSON.parse((await run('list_mail_cards', {})).content[0].text)
+                .cards;
+
+        describe('contract of propose_mail', () => {
+            it('returns options, recommended, draft and excerpt on the card', async () => {
+                await card();
+                const [item] = await mailItems();
+                expect(item.payload).toMatchObject({
+                    options: ['draft', 'task', 'later', 'dismiss'],
+                    recommended: 'draft',
+                    draft: { body: DRAFT_BODY },
+                    excerpt: 'Bonjour Alice,\nMerci pour le devis.',
+                });
+            });
+
+            it('derives the choices from the old suggestion when none are sent', async () => {
+                await propose();
+                const [item] = await mailItems();
+                expect(item.payload).toMatchObject({
+                    options: ['task', 'later', 'dismiss'],
+                    recommended: 'task',
+                    draft: null,
+                    excerpt: null,
+                });
+            });
+
+            it('keeps the options in the order given', async () => {
+                await propose({
+                    options: ['dismiss', 'later', 'task'],
+                    recommended: 'later',
+                });
+                const [item] = await mailItems();
+                expect(item.payload.options).toEqual([
+                    'dismiss',
+                    'later',
+                    'task',
+                ]);
+            });
+
+            it.each([
+                ['one option', { options: ['task'], recommended: 'task' }],
+                [
+                    'six options',
+                    {
+                        options: [
+                            'draft',
+                            'task',
+                            'event',
+                            'later',
+                            'archive',
+                            'dismiss',
+                        ],
+                        recommended: 'task',
+                        draft: { body: DRAFT_BODY },
+                    },
+                ],
+                [
+                    'an unknown option',
+                    { options: ['task', 'reply'], recommended: 'task' },
+                ],
+                [
+                    'a repeated option',
+                    { options: ['task', 'task'], recommended: 'task' },
+                ],
+                [
+                    'a recommendation outside the options',
+                    { options: ['task', 'later'], recommended: 'dismiss' },
+                ],
+                [
+                    'draft option without a draft body',
+                    { options: ['draft', 'task'], recommended: 'draft' },
+                ],
+                [
+                    'a draft body over 4000 characters',
+                    {
+                        options: ['draft', 'task'],
+                        recommended: 'draft',
+                        draft: { body: 'x'.repeat(4001) },
+                    },
+                ],
+                [
+                    'an empty draft body',
+                    {
+                        options: ['draft', 'task'],
+                        recommended: 'draft',
+                        draft: { body: '   ' },
+                    },
+                ],
+                [
+                    'a draft without the draft option',
+                    {
+                        options: ['task', 'later'],
+                        recommended: 'task',
+                        draft: { body: DRAFT_BODY },
+                    },
+                ],
+                [
+                    'an excerpt over 1500 characters',
+                    { ...draftChoice, excerpt: 'x'.repeat(1501) },
+                ],
+            ])('refuses %s', async (_label, fields) => {
+                await expect(propose(fields)).rejects.toThrow();
+                expect(await MailItem.count()).toBe(0);
+            });
+
+            it('refuses a draft body over 4000 characters with the field named', async () => {
+                await expect(
+                    card({ draft: { body: 'x'.repeat(4001) } })
+                ).rejects.toThrow(/draft/);
+            });
+
+            it('lists the cards for the agent with action, note and draft', async () => {
+                const { mail_uid: uid } = await card();
+                await decide(uid, { decision: 'draft' });
+                const [entry] = await listed();
+                expect(entry).toMatchObject({
+                    mail_uid: uid,
+                    status: 'done',
+                    decision: 'draft',
+                    options: ['draft', 'task', 'later', 'dismiss'],
+                    recommended: 'draft',
+                    draft: { body: DRAFT_BODY },
+                    action: { type: 'draft', state: 'requested' },
+                    note: null,
+                });
+            });
+        });
+
+        describe('draft decision', () => {
+            it('settles the card and asks for a Gmail draft, without touching Gmail', async () => {
+                const { mail_uid: uid } = await card();
+                const fetchSpy = jest.spyOn(global, 'fetch');
+                const response = await decide(uid, { decision: 'draft' });
+                expect(response.status).toBe(200);
+                expect(response.body).toMatchObject({
+                    state: 'done',
+                    decision: 'draft',
+                    action: { type: 'draft', state: 'requested' },
+                });
+                expect(fetchSpy).not.toHaveBeenCalled();
+                expect(await mailItems()).toEqual([]);
+                expect(await Task.count({ where: { user_id: user.id } })).toBe(
+                    0
+                );
+            });
+
+            it('refuses a draft on a card that has no draft', async () => {
+                const { mail_uid: uid } = await propose();
+                const response = await decide(uid, { decision: 'draft' });
+                expect(response.status).toBe(400);
+                expect(await mailItems()).toHaveLength(1);
+            });
+
+            it('runs the same draft order once', async () => {
+                const { mail_uid: uid } = await card();
+                const body = { decision: 'draft', idempotency_key: 'd1' };
+                expect((await decide(uid, body)).status).toBe(200);
+                const again = await decide(uid, body);
+                expect(again.status).toBe(200);
+                expect(again.body.replayed).toBe(true);
+            });
+        });
+
+        describe('archive decision', () => {
+            it('settles the card and asks for the archive, with no gateway set', async () => {
+                const { mail_uid: uid } = await card();
+                const fetchSpy = jest.spyOn(global, 'fetch');
+                const response = await decide(uid, { decision: 'archive' });
+                expect(response.status).toBe(200);
+                expect(response.body).toMatchObject({
+                    state: 'done',
+                    decision: 'archive',
+                    action: { type: 'archive', state: 'requested' },
+                });
+                expect(fetchSpy).not.toHaveBeenCalled();
+                expect(await mailItems()).toEqual([]);
+            });
+
+            it('refuses the archive flag on an archive decision', async () => {
+                const { mail_uid: uid } = await card();
+                const response = await decide(uid, {
+                    decision: 'archive',
+                    archive: true,
+                });
+                expect(response.status).toBe(400);
+                expect(await mailItems()).toHaveLength(1);
+            });
+        });
+
+        describe('note decision', () => {
+            it('sends the card to review, hidden from the deck, and tells plugins', async () => {
+                const pluginEvents = require('../../modules/plugins/eventBus');
+                const heard = [];
+                const stop = pluginEvents.subscribe((event) =>
+                    heard.push(event)
+                );
+                let response;
+                try {
+                    const { mail_uid: uid } = await card();
+                    response = await decide(uid, {
+                        decision: 'note',
+                        payload: { text: 'Plutôt vendredi matin' },
+                    });
+                } finally {
+                    stop();
+                }
+                expect(response.status).toBe(200);
+                expect(response.body).toMatchObject({
+                    state: 'reviewing',
+                    decision: 'note',
+                });
+                expect(await mailItems()).toEqual([]);
+                const decided = heard.filter((e) => e.name === 'mail.decided');
+                expect(decided).toHaveLength(1);
+                expect(decided[0].data.mail).toMatchObject({
+                    decision: 'note',
+                    note: { text: 'Plutôt vendredi matin' },
+                });
+                const [entry] = await listed();
+                expect(entry).toMatchObject({
+                    status: 'reviewing',
+                    note: { text: 'Plutôt vendredi matin' },
+                });
+            });
+
+            it.each([
+                ['missing', {}],
+                ['empty', { text: '  ' }],
+                ['over 500 characters', { text: 'x'.repeat(501) }],
+            ])(
+                'refuses a note that is %s, and keeps the card',
+                async (_l, payload) => {
+                    const { mail_uid: uid } = await card();
+                    const response = await decide(uid, {
+                        decision: 'note',
+                        payload,
+                    });
+                    expect(response.status).toBe(400);
+                    expect(await mailItems()).toHaveLength(1);
+                }
+            );
+
+            it('answers 409 to a decision on a card waiting for the agent', async () => {
+                const { mail_uid: uid } = await card();
+                await decide(uid, {
+                    decision: 'note',
+                    payload: { text: 'Non' },
+                });
+                expect(
+                    (await decide(uid, { decision: 'dismiss' })).status
+                ).toBe(409);
+            });
+
+            it('replaces the card when the agent proposes the thread again', async () => {
+                const { mail_uid: uid } = await card();
+                await decide(uid, {
+                    decision: 'note',
+                    payload: { text: 'Plutôt vendredi' },
+                });
+                const second = await card({
+                    options: ['task', 'dismiss'],
+                    recommended: 'task',
+                    draft: undefined,
+                    excerpt: null,
+                    summary: 'Nouvelle proposition après la note',
+                });
+                expect(second.mail_uid).toBe(uid);
+                expect(second.status).toBe('pending');
+                const items = await mailItems();
+                expect(items).toHaveLength(1);
+                expect(items[0].payload).toMatchObject({
+                    options: ['task', 'dismiss'],
+                    recommended: 'task',
+                    draft: null,
+                });
+                expect(items[0].reason).toBe(
+                    'Nouvelle proposition après la note'
+                );
+                const [entry] = await listed();
+                expect(entry).toMatchObject({ note: null, status: 'pending' });
+            });
+
+            it('refuses a note on a card settled already', async () => {
+                const { mail_uid: uid } = await card();
+                await decide(uid, { decision: 'dismiss' });
+                expect(
+                    (
+                        await decide(uid, {
+                            decision: 'note',
+                            payload: { text: 'Trop tard' },
+                        })
+                    ).status
+                ).toBe(409);
+            });
+        });
+
+        describe('report_mail_action', () => {
+            it('marks a requested draft done with its Gmail link', async () => {
+                const { mail_uid: uid } = await card();
+                await decide(uid, { decision: 'draft' });
+                await report({
+                    type: 'draft',
+                    ok: true,
+                    draft_url: 'https://mail.google.com/mail/u/0/#drafts/abc',
+                });
+                const row = await MailItem.findOne({ where: { uid } });
+                expect(row.status).toBe('done');
+                expect(row.action).toEqual({
+                    type: 'draft',
+                    state: 'done',
+                    draft_url: 'https://mail.google.com/mail/u/0/#drafts/abc',
+                });
+                expect(row.action_error).toBeNull();
+            });
+
+            it('accepts a draft reported without a link', async () => {
+                const { mail_uid: uid } = await card();
+                await decide(uid, { decision: 'draft' });
+                await report({ type: 'draft', ok: true });
+                const row = await MailItem.findOne({ where: { uid } });
+                expect(row.action).toEqual({ type: 'draft', state: 'done' });
+            });
+
+            it('refuses a draft link outside Gmail', async () => {
+                const { mail_uid: uid } = await card();
+                await decide(uid, { decision: 'draft' });
+                await expect(
+                    report({
+                        type: 'draft',
+                        ok: true,
+                        draft_url: 'https://evil.example.com/mail.google.com',
+                    })
+                ).rejects.toThrow(/draft_url/);
+                const row = await MailItem.findOne({ where: { uid } });
+                expect(row.action.state).toBe('requested');
+            });
+
+            it('reopens the card with the error when a draft fails', async () => {
+                const { mail_uid: uid } = await card();
+                await decide(uid, { decision: 'draft' });
+                await report({ type: 'draft', ok: false, error: 'gmail_down' });
+                const row = await MailItem.findOne({ where: { uid } });
+                expect(row).toMatchObject({
+                    status: 'pending',
+                    decision: null,
+                    action_error: 'gmail_down',
+                });
+                expect(row.action).toEqual({ type: 'draft', state: 'failed' });
+                const [item] = await mailItems();
+                expect(item.payload.action_error).toBe('gmail_down');
+                expect(item.payload.action).toEqual({
+                    type: 'draft',
+                    state: 'failed',
+                });
+            });
+
+            it('runs the draft again after a failure, clearing the error', async () => {
+                const { mail_uid: uid } = await card();
+                await decide(uid, { decision: 'draft' });
+                await report({ type: 'draft', ok: false, error: 'gmail_down' });
+                expect((await decide(uid, { decision: 'draft' })).status).toBe(
+                    200
+                );
+                const row = await MailItem.findOne({ where: { uid } });
+                expect(row.action).toEqual({
+                    type: 'draft',
+                    state: 'requested',
+                });
+                expect(row.action_error).toBeNull();
+            });
+
+            it('marks a requested archive done and dates it', async () => {
+                const { mail_uid: uid } = await card();
+                await decide(uid, { decision: 'archive' });
+                await report({ type: 'archive', ok: true });
+                const row = await MailItem.findOne({ where: { uid } });
+                expect(row.action).toEqual({ type: 'archive', state: 'done' });
+                expect(row.archived_at).toBeInstanceOf(Date);
+            });
+
+            it('reopens the card when an archive fails', async () => {
+                const { mail_uid: uid } = await card();
+                await decide(uid, { decision: 'archive' });
+                await report({
+                    type: 'archive',
+                    ok: false,
+                    error: 'unknown_account',
+                });
+                const row = await MailItem.findOne({ where: { uid } });
+                expect(row).toMatchObject({
+                    status: 'pending',
+                    action_error: 'unknown_account',
+                });
+                expect(row.archived_at).toBeNull();
+            });
+
+            it('answers the same report again as done, and refuses a contrary one', async () => {
+                const { mail_uid: uid } = await card();
+                await decide(uid, { decision: 'archive' });
+                await report({ type: 'archive', ok: true });
+                await expect(
+                    report({ type: 'archive', ok: true })
+                ).resolves.toBeDefined();
+                await expect(
+                    report({ type: 'archive', ok: false, error: 'x_y' })
+                ).rejects.toThrow(/already/);
+            });
+
+            it('refuses a report for an action never requested on the card', async () => {
+                const { mail_uid: uid } = await card();
+                await decide(uid, { decision: 'dismiss' });
+                await expect(
+                    report({ type: 'draft', ok: true })
+                ).rejects.toThrow(/requested/);
+                const row = await MailItem.findOne({ where: { uid } });
+                expect(row.action).toBeNull();
+            });
+
+            it.each([
+                ['an unknown type', { type: 'send', ok: true }],
+                ['a missing ok', { type: 'draft' }],
+                ['a failure without a code', { type: 'draft', ok: false }],
+                [
+                    'a code that is not a code',
+                    { type: 'draft', ok: false, error: 'Gmail is down!' },
+                ],
+                [
+                    'an error on a success',
+                    { type: 'draft', ok: true, error: 'gmail_down' },
+                ],
+                [
+                    'a draft link on an archive',
+                    {
+                        type: 'archive',
+                        ok: true,
+                        draft_url: 'https://mail.google.com/x',
+                    },
+                ],
+            ])('refuses %s', async (_label, fields) => {
+                const { mail_uid: uid } = await card();
+                await decide(uid, { decision: 'draft' });
+                await expect(report(fields)).rejects.toThrow();
+                const row = await MailItem.findOne({ where: { uid } });
+                expect(row.action.state).toBe('requested');
+            });
+        });
+    });
+
     describe('appointment (event decision)', () => {
         const meeting = {
             kind: 'event',

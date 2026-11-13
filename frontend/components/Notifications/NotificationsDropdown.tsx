@@ -324,9 +324,11 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = () => {
             setIsOpen(false);
             if (!notification.read_at) handleMarkAsRead(notification.uid);
             // A week opens its sheet over the page; a review is worked in the
-            // Review page's quick review.
+            // Review page's quick review; a career proposal is its own page.
             if (notification.data?.kind === 'review') {
                 navigate('/review');
+            } else if (notification.data?.kind === 'career') {
+                navigate('/career');
             } else {
                 setProposalParam(navigate, location, proposalUid);
             }

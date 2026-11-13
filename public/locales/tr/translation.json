@@ -1,4 +1,46 @@
 {
+    "career": {
+        "title": "Kariyer",
+        "updatedAt": "{{time}} itibarıyla güncellendi",
+        "empty": "Bugün yeni bir şey yok",
+        "emptyHint": "Ajan her sabah uğrar: takipler, ilanlar ve görevler burada görünür.",
+        "allDecided": "Bugün için her şey kararlaştırıldı",
+        "loadError": "Kariyer sayfası yüklenemedi.",
+        "retry": "Tekrar dene",
+        "applyError": "Karar kaydedilmedi.",
+        "later": "Sonra",
+        "skip": "Geç",
+        "followups": {
+            "title": "Takipler",
+            "appliedAgo": "başvuruldu: {{when}}",
+            "openDraft": "Taslağı aç",
+            "createTask": "Görev oluştur",
+            "done": "Tamam"
+        },
+        "offers": {
+            "title": "Karar bekleyen ilanlar",
+            "apply": "Başvur",
+            "note": "Not",
+            "notePlaceholder": "Ajan için bir not…",
+            "open": "İlanı gör",
+            "expires": "bitiş: {{when}}",
+            "expired": "süresi doldu"
+        },
+        "tasks": {
+            "title": "Önerilen görevler",
+            "add": "Ekle"
+        },
+        "decided": "Karar verilenler ({{count}})",
+        "state": {
+            "applied": "Başvuruldu",
+            "skipped": "Geçildi",
+            "later": "Sonra",
+            "done": "Tamam",
+            "taskCreated": "Görev oluşturuldu",
+            "added": "Eklendi",
+            "dismissed": "Reddedildi"
+        }
+    },
     "agentBanner": {
         "agent": "Ajan",
         "dismiss": "Okundu olarak işaretle",
@@ -175,6 +217,9 @@
       "delete": "Sil"
     },
     "mail": {
+      "draftRequested": "Taslak Gmail’de hazırlanıyor",
+      "archiveRequested": "Arşivleme istendi",
+      "noteSent": "Trieur’a geri gönderildi",
       "noSubject": "(konu yok)",
       "draft": "Taslak hazır:",
       "task": "Görev",
@@ -233,6 +278,23 @@
     "entry": "Ayıklanacak ({{count}})",
     "title": "Ayıklanacak",
     "deck": {
+      "progressLabel": "E-posta {{position}} / {{total}}",
+      "option": {
+        "draft": "Taslak",
+        "read": "Oku",
+        "event": "Takvim",
+        "archive": "Arşivle"
+      },
+      "openInGmail": "Gmail’de aç",
+      "readMail": "E-postayı oku",
+      "collapseMail": "Daralt",
+      "noteOpen": "Tek kelimeyle yanıtla",
+      "notePlaceholder": "Trieur için bir kelime",
+      "noteSend": "Gönder",
+      "recommended": "Önerilen",
+      "actionFailed": "Son işlem tamamlanamadı",
+      "actionFailedDraft": "Taslak hazırlanamadı",
+      "actionFailedArchive": "Arşivleme tamamlanamadı",
       "open": "Postalarımı ayıkla ({{count}})",
       "title": "Postalarımı ayıkla",
       "close": "Kapat",
@@ -246,7 +308,7 @@
       "openMail": "Postayı aç",
       "chat": "Konuş",
       "undo": "Geri al",
-      "keys": "Enter veya →: öneri · ←: sonra · ↓: atla · Ctrl+Z: geri al · Esc: kapat"
+      "keys": "Enter veya →: öneri · 1–5: seç · ←: sonra · ↓: atla · Ctrl+Z: geri al · Esc: kapat"
     }
   },
   "outline": {
@@ -5212,6 +5274,23 @@
     "planned": "{{when}} planlandı"
   },
   "proposals": {
+    "decide": {
+      "today": "Bugün",
+      "planOn": "Bir güne planla",
+      "keep": "Olduğu gibi bırak",
+      "kept": "Değişmedi",
+      "otherDate": "Başka tarih…",
+      "dueOn": "Son tarih {{date}}",
+      "ok": "Tamam",
+      "menu": "Seç",
+      "changed": "Değiştirildi",
+      "undo": "Öneriye dön: {{decision}}",
+      "trigger": "{{decision}}, {{task}}",
+      "goal": "Hedef",
+      "area": "Alan",
+      "groupToday": "Bugün",
+      "groupKeep": "Değişmedi"
+    },
     "week": {
       "button": "Haftamı planla",
       "ready": "Haftan hazır",
@@ -5240,6 +5319,16 @@
       "ignore": "Yoksay",
       "later": "Daha sonra",
       "apply": "Uygula ({{count}})",
+      "note": "Not",
+      "noteFor": "{{task}} için not",
+      "notePlaceholder": "Neyin değişmesi gerekiyor…",
+      "toReview": "Gözden geçirilecek",
+      "noteDecision": "Notunla birlikte gözden geçirilecek",
+      "sendError": "Notlar gönderilemedi.",
+      "sendCaption_one": "{{count}} uygulanan · {{sent}} geri gönderilen",
+      "sendCaption_other": "{{count}} uygulanan · {{sent}} geri gönderilen",
+      "notesSent_one": "{{count}} görev geri gönderildi, hazır olunca haber vereceğim",
+      "notesSent_other": "{{count}} görev geri gönderildi, hazır olunca haber vereceğim",
       "appliedCount": "{{count}} / {{total}} uygulandı"
     },
     "apply": {
