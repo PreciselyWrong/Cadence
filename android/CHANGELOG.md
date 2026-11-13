@@ -4,6 +4,7 @@
 - Sous les 14 jours, une bande « Plus tard » montre Semaine prochaine, Ce mois-ci, Mois prochain et Un jour avec leur compte ; un appui ouvre Horizons sur la colonne.
 - « Ajouter » de l'Inbox crée une tâche sans échéance : une date ou une heure tapées la prévoient ce jour-là, sinon elle attend dans « Tâches à classer » (avec « Quand ? » si elle a un projet). « Ajouter » d'un jour ne pose plus d'échéance non plus.
 - Échues : « Replanifier ▾ » remplace « Tout à aujourd'hui » : Aujourd'hui, Demain, Étaler sur 7 jours (chaque tâche au jour le moins chargé, la plus prioritaire d'abord, même règle que le web), Choisir une date. Les boutons des plugins (« Proposer un plan » d'Hermes) s'affichent à côté.
+- Aujourd'hui : sous la liste du jour, les sections repliées suivent les horizons de Planifier : Demain, Cette semaine, Semaine prochaine, Ce mois-ci, Mois prochain, Un jour, puis Suggérées. « En vue » disparaît (ses tâches passent dans Suggérées).
 - À trier : « Trier mes mails (n) » ouvre les cartes Mail en plein écran, une à la fois. Le conseil de l'agent est le gros bouton (tâche, réponse ou lecture dans Gmail, rendez-vous), les autres décisions en dessous, avec Ouvrir le mail, Discuter (page d'Hermes) et Passer. Glisser à droite suit le conseil, à gauche remet à plus tard ; la dernière décision attend un instant pour « Annuler » ; « Tout est trié » à la fin.
 
 ## [1.26.1] — 13 novembre 2026

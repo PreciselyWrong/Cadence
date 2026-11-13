@@ -46,6 +46,7 @@ import ch.nicolab.cadence.designsystem.components.SectionHeader
 import ch.nicolab.cadence.designsystem.theme.Size
 import ch.nicolab.cadence.designsystem.theme.Space
 import ch.nicolab.cadence.tasks.R
+import ch.nicolab.cadence.tasks.planning.PlanBoard
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskViews
 import ch.nicolab.cadence.tasks.planning.DayPlans
@@ -149,8 +150,9 @@ internal fun TodayTab(
     val shownUids = remember(state.overdue, agenda) {
         state.overdue.mapTo(HashSet()) { it.uid } + agenda.filterIsInstance<TodayItem.Task>().map { it.task.uid }
     }
-    val later = remember(suggestions, tomorrowTasks, weekStart, shownUids) {
-        TaskViews.laterSections(suggestions, tomorrowTasks, weekStart, shownUids)
+    val planBoard by viewModel.planBoard.collectAsStateWithLifecycle()
+    val later = remember(suggestions, tomorrowTasks, planBoard.horizons, today, shownUids) {
+        PlanBoard.todayLater(tomorrowTasks, planBoard.horizons, today, suggestions, shownUids)
     }
     var openFolds by rememberSaveable { mutableStateOf(emptyList<String>()) }
 
@@ -299,8 +301,11 @@ internal fun TodayTab(
         // Aujourd'hui sert à faire : ce qui pourrait suivre attend replié, à dérouler une fois le jour fini.
         listOf(
             Triple("tomorrow", R.string.planning_closed_tomorrow, later.tomorrow),
-            Triple("week", R.string.funnel_this_week, later.thisWeek),
-            Triple("view", R.string.funnel_in_view, later.inView),
+            Triple("week", R.string.plan_horizon_week, later.week),
+            Triple("next-week", R.string.plan_horizon_next_week, later.nextWeek),
+            Triple("month", R.string.plan_horizon_this_month, later.thisMonth),
+            Triple("next-month", R.string.plan_horizon_next_month, later.nextMonth),
+            Triple("someday", R.string.plan_horizon_someday, later.someday),
             Triple("suggested", R.string.today_fold_suggested, later.suggested),
         ).filter { (_, _, tasks) -> tasks.isNotEmpty() }.forEach { (key, label, tasks) ->
             val open = key in openFolds

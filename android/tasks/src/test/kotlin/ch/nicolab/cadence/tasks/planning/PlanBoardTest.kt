@@ -179,4 +179,38 @@ class PlanBoardTest {
             PlanBoard.spreadWrites(listOf(late, other, ghost), plan, tasks, today),
         )
     }
+
+    @Test
+    fun `aujourd'hui range ce qui suit par horizons, chaque tâche une fois et jamais une tâche déjà montrée`() {
+        val montree = task("montree")
+        val demain = task("demain")
+        val semaine = task("semaine")
+        val prevueSamedi = task("samedi")
+        val prochaine = task("prochaine").copy(weekOf = weekStart.plusDays(7))
+        val mois = task("mois").copy(monthOf = today.withDayOfMonth(1))
+        val moisSuivant = task("suivant").copy(monthOf = today.withDayOfMonth(1).plusMonths(1))
+        val unJour = task("unjour").copy(someday = true)
+        val suggeree = task("sugg")
+        val horizons = PlanHorizons(
+            buckets = mapOf(
+                Horizon.WEEK to listOf(semaine, demain, montree),
+                Horizon.NEXT_WEEK to listOf(prochaine),
+                Horizon.THIS_MONTH to listOf(mois),
+                Horizon.NEXT_MONTH to listOf(moisSuivant),
+                Horizon.SOMEDAY to listOf(unJour),
+            ),
+            plannedThisWeek = listOf(montree to today, demain to tomorrow, prevueSamedi to today.plusDays(2)),
+        )
+        val later = PlanBoard.todayLater(
+            tomorrow = listOf(demain), horizons = horizons, today = today,
+            suggestions = listOf(semaine, suggeree, montree), shown = setOf("montree"),
+        )
+        assertEquals(listOf("demain"), later.tomorrow.map { it.uid })
+        assertEquals(listOf("samedi", "semaine"), later.week.map { it.uid })
+        assertEquals(listOf("prochaine"), later.nextWeek.map { it.uid })
+        assertEquals(listOf("mois"), later.thisMonth.map { it.uid })
+        assertEquals(listOf("suivant"), later.nextMonth.map { it.uid })
+        assertEquals(listOf("unjour"), later.someday.map { it.uid })
+        assertEquals(listOf("sugg"), later.suggested.map { it.uid })
+    }
 }
