@@ -3,6 +3,7 @@ package ch.nicolab.cadence.tasks.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,6 +39,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import ch.nicolab.cadence.designsystem.components.CadenceSheet
 import ch.nicolab.cadence.designsystem.components.SectionHeader
 import ch.nicolab.cadence.designsystem.theme.Radius
@@ -51,6 +53,7 @@ import ch.nicolab.cadence.tasks.links.PageChecks
 import ch.nicolab.cadence.tasks.model.IdeaTasks
 import ch.nicolab.cadence.tasks.model.LinkItem
 import ch.nicolab.cadence.tasks.model.ProjectPages
+import ch.nicolab.cadence.tasks.model.TaskSources
 import ch.nicolab.cadence.tasks.links.LinkExtractor
 import ch.nicolab.cadence.tasks.quickadd.ShareCapture
 
@@ -90,7 +93,12 @@ private fun ProjectPageRow(page: LinkItem, onMenu: (ProjectPageDialog) -> Unit, 
             .padding(start = Space.sm, top = Space.sm, bottom = Space.sm),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        DomainPastille(page.domain, Modifier.size(Size.badge), Radius.Chip)
+        // L'icône du site ; la pastille à l'initiale quand il n'en a pas ou hors ligne.
+        Box(Modifier.size(Size.badge), contentAlignment = Alignment.Center) {
+            SiteIcon(TaskSources.faviconPath(page.url), size = 20.dp) {
+                DomainPastille(page.domain, Modifier.size(Size.badge), Radius.Chip)
+            }
+        }
         Column(Modifier.weight(1f).padding(horizontal = Space.md), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
             Text(
                 page.displayTitle,
@@ -106,6 +114,7 @@ private fun ProjectPageRow(page: LinkItem, onMenu: (ProjectPageDialog) -> Unit, 
                 Text(it, style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
         }
+        LinkThumb(page.imageUrl)
         ProjectPageMenu(page, onMenu)
     }
 }

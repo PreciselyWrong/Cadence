@@ -834,3 +834,9 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Demande** : le logo de la barre latérale était pixelisé (PNG de 1558 px réduit à 32 px), son texte manquait de finition, et les épinglés étaient calés à gauche.
 - **Décision** : logo vectoriel tiré de la charte (`public/wordmark-dark.svg`, recadré depuis `docs/brand/wordmark-dark.svg`, Plus Jakarta Sans Bold en tracés) ; épinglés en tuiles d'un quart de largeur, centrés.
 - **Android à reprendre** : rien, l'app n'a ni ce logo ni cette grille.
+
+### 2026-11-13 — Liens visuels sur les lignes
+
+- **Demande** : une tâche-lien n'était qu'un texte avec l'adresse brute dans les listes ; repères visuels voulus (favicon, image de la page), sans perdre l'épure.
+- **Décision** : sous le titre, l'icône et le nom du site remplacent l'adresse (l'icône n'est pas répétée si la pastille d'origine la montre) ; l'image de la page au format 1,91:1 : petite en fin de ligne (listes, Aujourd'hui), en couverture en haut des cartes (Plan, colonne Inbox, tableau de projet) ; rien sans image. Pages de projet : icône du site à la place de l'initiale, image si la page en a une. Une vidéo YouTube prend l'image servie par YouTube.
+- **Android à reprendre** : fait dans la même étape (`TaskRow`, donc toutes les listes, Aujourd'hui et Planifier ; pages de projet), sans couverture : la ligne Android garde la petite image en fin de ligne.

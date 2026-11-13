@@ -182,8 +182,35 @@ function isContextUrl(url, extraHosts = []) {
     );
 }
 
+const YOUTUBE_ID = /^[A-Za-z0-9_-]{11}$/;
+
+// The picture YouTube serves for a video, from its address alone: its page
+// often names none within what the server reads of it. Null for any other
+// address.
+function youtubeThumbnail(url) {
+    const parsed = parse(url);
+    if (!parsed) return null;
+    const domain = parsed.hostname.toLowerCase();
+    let id = null;
+    if (domain === 'youtu.be') {
+        id = parsed.pathname.slice(1).split('/')[0];
+    } else if (underHost(domain, 'youtube.com')) {
+        const [, first, second] = parsed.pathname.split('/');
+        id =
+            first === 'watch'
+                ? parsed.searchParams.get('v')
+                : ['shorts', 'embed', 'live'].includes(first)
+                  ? second
+                  : null;
+    }
+    return id && YOUTUBE_ID.test(id)
+        ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg`
+        : null;
+}
+
 module.exports = {
     addressKey,
+    youtubeThumbnail,
     normalizeUrl,
     domainOf,
     repoPath,

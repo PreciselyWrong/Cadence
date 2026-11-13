@@ -4,6 +4,7 @@ import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 import Menu from '../Shared/ui/Menu';
 import { Link } from '../../entities/Link';
 import { addressLabel } from '../../utils/linkTriage';
+import { LinkThumb, SiteIcon } from '../Links/LinkMarks';
 
 export type PageCheck = 'ok' | 'dead' | 'unknown';
 
@@ -68,11 +69,16 @@ const PageRow: React.FC<{
 
     return (
         <li className="group flex items-center gap-3 px-3 py-2">
+            {/* The site's icon; its initial while there is none. */}
             <span
                 aria-hidden
-                className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-md bg-gray-100 text-[12px] font-semibold uppercase text-gray-600 dark:bg-gray-800 dark:text-gray-300"
+                className="relative flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-md bg-gray-100 text-[12px] font-semibold uppercase text-gray-600 dark:bg-gray-800 dark:text-gray-300"
             >
                 {(page.domain || '?').charAt(0)}
+                <SiteIcon
+                    url={page.url}
+                    className="absolute inset-1 h-5 w-5 bg-gray-100 dark:bg-gray-800"
+                />
             </span>
             <a
                 href={page.url}
@@ -93,6 +99,7 @@ const PageRow: React.FC<{
                     )}
                 </span>
             </a>
+            <LinkThumb image={page.image_url} />
             {check === 'dead' && (
                 <span className="rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-medium text-red-700 dark:bg-red-900/30 dark:text-red-300">
                     {t('projectPages.dead', 'Not found')}

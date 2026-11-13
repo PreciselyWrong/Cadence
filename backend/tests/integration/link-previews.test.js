@@ -66,6 +66,25 @@ describe('Link previews', () => {
         expect(await LinkPreview.count()).toBe(1);
     });
 
+    it('gives a video read without its picture the one YouTube serves', async () => {
+        await LinkPreview.create({
+            url: previews.addressOf(
+                'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+            ),
+            kind: 'video',
+            title: 'A song',
+            fetch_status: 'done',
+            fetched_at: new Date(),
+        });
+        const answer = await preview(
+            'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+        );
+        expect(answer.body.image).toBe(
+            'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg'
+        );
+        expect(fetched).toEqual([]);
+    });
+
     it('keeps a failed read for a while, then tries again', async () => {
         const failed = await preview('https://broken.example.com/x');
         expect(failed.body).toMatchObject({

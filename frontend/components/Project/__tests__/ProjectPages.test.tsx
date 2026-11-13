@@ -25,6 +25,7 @@ const pages = [
         domain: 'github.com',
         title: 'acme/rocket',
         note: 'the engine',
+        image_url: 'https://img.example.com/rocket.png',
     },
     {
         uid: 'l2',
@@ -57,6 +58,23 @@ describe('ProjectPages', () => {
         expect(screen.getByText('the engine')).toBeInTheDocument();
         expect(screen.getByText('example.com/gone')).toBeInTheDocument();
         expect(screen.getByText('Not found')).toBeInTheDocument();
+    });
+
+    it('marks each page with its site icon, and its picture when it has one', () => {
+        renderPages();
+        const icons = screen.getAllByTestId('site-icon');
+        expect(icons[0].getAttribute('src')).toContain(
+            'links/favicon?host=github.com'
+        );
+        expect(icons[1].getAttribute('src')).toContain(
+            'links/favicon?host=example.com'
+        );
+        const thumbs = screen.getAllByTestId('link-thumb');
+        expect(thumbs).toHaveLength(1);
+        expect(thumbs[0]).toHaveAttribute(
+            'src',
+            'https://img.example.com/rocket.png'
+        );
     });
 
     it('offers Create a task, Edit and Remove for a page', async () => {

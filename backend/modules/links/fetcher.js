@@ -2,7 +2,12 @@
 
 const { fetchPageMetadata } = require('../url/service');
 const { fetchRepo, GithubRateLimited } = require('./core/github');
-const { classifyKind, repoPath, domainOf } = require('./core/urls');
+const {
+    classifyKind,
+    repoPath,
+    domainOf,
+    youtubeThumbnail,
+} = require('./core/urls');
 
 const MAX_TEXT = 500;
 
@@ -33,7 +38,7 @@ async function fetchLinkMetadata(url, deps = {}) {
     return {
         title: clip(github?.name ?? pageTitle ?? meta?.title, 300),
         description: clip(github?.description ?? meta?.description),
-        image_url: clip(meta?.image, 2000),
+        image_url: clip(meta?.image ?? youtubeThumbnail(url), 2000),
         site_name: clip(meta?.siteName, 200),
         kind: classifyKind(url, meta?.type),
         github_stars: github?.stars ?? null,

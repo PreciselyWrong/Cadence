@@ -57,6 +57,7 @@ import ch.nicolab.cadence.designsystem.components.rememberCadenceHaptic
 import ch.nicolab.cadence.designsystem.theme.Motion
 import ch.nicolab.cadence.designsystem.theme.Radius
 import ch.nicolab.cadence.tasks.R
+import ch.nicolab.cadence.tasks.links.TaskLinks
 import ch.nicolab.cadence.tasks.model.TaskItem
 import ch.nicolab.cadence.tasks.model.TaskPriority
 import ch.nicolab.cadence.tasks.model.TaskStatus
@@ -117,6 +118,9 @@ internal fun TaskRow(
         }
     }
     val showClosed = task.isClosed || completing || forceClosed
+    // Une adresse dans la note se lit par son site et l'image de sa page, pas par l'adresse brute.
+    val link = remember(task.note, task.source, task.sourceUrl) { TaskLinks.of(task) }
+    val preview = rememberLinkPreview(link?.url)
 
     val swipeConfig = rememberSwipeConfig()
     SwipeActionContainer(
@@ -176,6 +180,7 @@ internal fun TaskRow(
             Column(Modifier.weight(1f).padding(vertical = 6.dp)) {
                 StrikingTitle(task.name, struck = showClosed)
                 TaskMeta(task, projectName, projectIcon, projectColor, today, zone, sectionDay, decor, plannedAt)
+                link?.let { SiteLine(it, preview?.siteName, Modifier.padding(top = 2.dp)) }
                 subtitle?.let {
                     Text(
                         text = it,
@@ -187,9 +192,9 @@ internal fun TaskRow(
                     )
                 }
                 if (decor.showDescription) {
-                    TaskRowMeta.notePreview(task.note)?.let { preview ->
+                    TaskRowMeta.notePreview(link?.noteRest ?: task.note)?.let { notePreview ->
                         Text(
-                            text = preview,
+                            text = notePreview,
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             maxLines = TaskRowMeta.DESCRIPTION_LINES,
@@ -198,6 +203,10 @@ internal fun TaskRow(
                         )
                     }
                 }
+            }
+            preview?.imageUrl?.let {
+                Spacer(Modifier.width(8.dp))
+                LinkThumb(it)
             }
             trailing?.let {
                 Spacer(Modifier.width(8.dp))

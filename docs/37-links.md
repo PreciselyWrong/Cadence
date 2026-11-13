@@ -20,6 +20,15 @@ Every address written in a task note, a note or a project description shows a ca
 
 - **Server cache by address** (`modules/links/previews.js`, table `link_previews`, one row per normalized address without `www.`, shared by all users: public page metadata only). `GET /api/url/title?url=` reads the row, or reads the page once (same reader as links: SSRF guard, direct request only, no reading proxy; GitHub API for a repository) and stores it. A page is read again after 30 days, a failed read after an hour; a new read never erases what an earlier one found. Concurrent asks for one address share one read. Context addresses (IP, `.lan`, …) are never read.
 - Answer: `url`, `title`, `description`, `image`, `site_name`, `kind`, `github_stars`, `github_language`, `github_last_commit`, and `error` when nothing could be read.
+- A YouTube video gets the picture YouTube serves for it (`i.ytimg.com/vi/<id>/hqdefault.jpg`, from the address alone, `core/urls.youtubeThumbnail`) when its page names none, also for rows read before.
+
+## Rows
+
+A task whose note holds an address shows the page on its row instead of the raw address: the site's icon and name (`site_name` of the preview, else the host without `www.`) under the title, and the page's picture at the 1.91:1 of shared pictures, nothing when it has none (no screenshot). The rest of the note keeps its preview line. The icon is the one of the origin badge (`GET /api/links/favicon?host=`, read by the server: the site never sees who looks), left out of the site line when the badge already shows it.
+
+- Web: rule `frontend/components/Links/taskLink.ts`, marks `Links/LinkMarks.tsx`; task lists (`TaskRowCollapsed`, small picture at the end of the row), Today (`Today/TaskLine.tsx`, same), cards of Plan, the inbox column and the project board (`Shared/task/TaskCardBody.tsx`, picture as a cover on top).
+- Android: rule `links/TaskLinks.kt`, marks `ui/LinkMarks.kt`, in `TaskRow` (every list, Today, Plan); picture and site name from the Room cache `link_previews`, offline; icon through `ui/SiteIcon.kt`.
+- Project pages show the site's icon instead of the initial (the initial when the site has none), and the page's picture when it has one, on the web and Android.
 
 ## Project pages
 

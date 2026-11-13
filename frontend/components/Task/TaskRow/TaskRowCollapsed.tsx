@@ -68,6 +68,7 @@ import { openTaskPanel } from '../../../store/taskPanelStore';
 import { ACCENT, accentVars } from '../../../constants/colorPalette';
 import { useTagColor } from '../../../utils/tagColor';
 import TaskChip from '../../Shared/task/TaskChip';
+import { LinkThumb, SiteLine, useTaskLink } from '../../Links/LinkMarks';
 import TaskNotePreview from '../../Shared/task/TaskNotePreview';
 import { dueDayLabel, isDueLate } from '../../Shared/task/dueLabel';
 import { ROW_GROUP, rowMenuClass } from '../../Shared/task/rowMenu';
@@ -196,8 +197,11 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
     const tagColor = useTagColor();
     const isMinimal = useIsMinimal();
     const showDescription = useShowTaskDescription();
+    const { link, preview } = useTaskLink(task);
+    // A link's address reads as its site; the rest of the note stays.
+    const noteShown = link ? link.noteRest : task.note;
     const descriptionText = showDescription
-        ? descriptionPreview(task.note)
+        ? descriptionPreview(noteShown)
         : null;
     const currentName = task.original_name || task.name;
     const titleInputRef = useRef<QuickCaptureInputHandle>(null);
@@ -728,9 +732,13 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                     )}
                 </div>
 
-                {isMinimal && descriptionText && task.note && (
+                {link && (
+                    <SiteLine link={link} preview={preview} className="mt-1" />
+                )}
+
+                {isMinimal && descriptionText && noteShown && (
                     <span data-testid="task-row-description">
-                        <TaskNotePreview note={task.note} className="mt-1" />
+                        <TaskNotePreview note={noteShown} className="mt-1" />
                     </span>
                 )}
 
@@ -857,6 +865,11 @@ const TaskRowCollapsed: React.FC<TaskRowCollapsedProps> = ({
                     </div>
                 )}
             </div>
+
+            <LinkThumb
+                image={preview?.image}
+                className="h-10 w-10 self-center"
+            />
 
             {!editable && (onEdit || onDelete || onTogglePin) && (
                 <div

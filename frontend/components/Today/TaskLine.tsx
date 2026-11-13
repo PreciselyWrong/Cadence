@@ -12,6 +12,7 @@ import { formatDuration, formatMinute } from '../DailyPlan/planUtils';
 import { DayLine, lineAt } from './dayModel';
 import TaskSourceBadge from '../Shared/TaskSourceBadge';
 import Chip from '../Shared/task/TaskChip';
+import { LinkThumb, SiteLine, useTaskLink } from '../Links/LinkMarks';
 import TaskNotePreview from '../Shared/task/TaskNotePreview';
 import { shortDayLabel } from '../Shared/task/dueLabel';
 import { ROW_GROUP, rowMenuClass } from '../Shared/task/rowMenu';
@@ -88,7 +89,9 @@ const TaskLine: React.FC<TaskLineProps> = ({
     const [menuOpen, setMenuOpen] = useState(false);
     const menuTrigger = useRef<HTMLButtonElement | null>(null);
     const { task, uid } = line;
-    const note = task.note?.trim();
+    const { link, preview } = useTaskLink(task);
+    // A link's address reads as its site; the rest of the note stays.
+    const note = (link ? link.noteRest : task.note)?.trim();
     const subtasks = task.subtasks ?? [];
     const at = lineAt(line);
     const project = task.Project;
@@ -253,25 +256,35 @@ const TaskLine: React.FC<TaskLineProps> = ({
                 <TaskCheckCircle task={task} onToggle={() => onToggle(line)} />
             </span>
 
-            <span className="min-w-0 pr-8">
-                <span
-                    className={`block max-w-full truncate text-body font-medium leading-6 ${
-                        line.done
-                            ? 'text-surface-on-variant line-through'
-                            : 'text-surface-on'
-                    }`}
-                >
-                    {task.name}
-                </span>
-                <TaskSourceBadge task={task} className="mt-1" />
-                {chips.length > 0 && (
-                    <span className="mt-1 flex min-w-0 flex-wrap items-center gap-1.5">
-                        {chips}
+            <span className="flex min-w-0 items-start gap-3 pr-8">
+                <span className="min-w-0 flex-1">
+                    <span
+                        className={`block max-w-full truncate text-body font-medium leading-6 ${
+                            line.done
+                                ? 'text-surface-on-variant line-through'
+                                : 'text-surface-on'
+                        }`}
+                    >
+                        {task.name}
                     </span>
-                )}
-                {expanded && note && (
-                    <TaskNotePreview note={note} className="mt-1.5" />
-                )}
+                    <TaskSourceBadge task={task} className="mt-1" />
+                    {chips.length > 0 && (
+                        <span className="mt-1 flex min-w-0 flex-wrap items-center gap-1.5">
+                            {chips}
+                        </span>
+                    )}
+                    {link && (
+                        <SiteLine
+                            link={link}
+                            preview={preview}
+                            className="mt-1"
+                        />
+                    )}
+                    {expanded && note && (
+                        <TaskNotePreview note={note} className="mt-1.5" />
+                    )}
+                </span>
+                <LinkThumb image={preview?.image} />
             </span>
 
             {/* Subtasks hang from the task's check by a thread line, so

@@ -8,7 +8,12 @@
 
 const { logError } = require('../../services/logService');
 const { GithubRateLimited } = require('./core/github');
-const { addressKey, classifyKind, isContextUrl } = require('./core/urls');
+const {
+    addressKey,
+    classifyKind,
+    isContextUrl,
+    youtubeThumbnail,
+} = require('./core/urls');
 
 const HOUR_MS = 60 * 60 * 1000;
 const REFRESH_AFTER_MS = 30 * 24 * HOUR_MS;
@@ -105,7 +110,8 @@ function serializePreview(input, row) {
     const answer = {
         url: input,
         title: row?.title ?? null,
-        image: row?.image_url ?? null,
+        // A video read before its picture was derived gets it too.
+        image: row?.image_url ?? youtubeThumbnail(addressOf(input) ?? ''),
         description: row?.description ?? null,
         site_name: row?.site_name ?? null,
         kind,

@@ -6,6 +6,7 @@ import TaskCheckCircle from '../../Task/TaskCheckCircle';
 import TaskSourceBadge from '../TaskSourceBadge';
 import TaskChip from './TaskChip';
 import { plainPreview } from './plainText';
+import { LinkThumb, SiteLine, useTaskLink } from '../../Links/LinkMarks';
 
 // The one task card frame (Plan days and inbox, project board): a quiet
 // border, the selected card ringed in the accent.
@@ -47,12 +48,18 @@ const TaskCardBody: React.FC<TaskCardBodyProps> = ({
     const parentName = task.parent_task?.name;
     const project = hideProject ? undefined : task.Project;
     const tag = task.tags?.[0];
-    const note = plainPreview(task.note);
+    const { link, preview } = useTaskLink(task);
+    // A link's address reads as its site; the rest of the note stays.
+    const note = plainPreview(link ? link.noteRest : task.note);
     const indent = onToggle ? 'ml-[26px]' : '';
     const hasMeta = !!meta || !!project?.name || !!tag;
 
     return (
         <>
+            <LinkThumb
+                image={preview?.image}
+                className="mb-2.5 aspect-[1.91] max-h-28 w-full"
+            />
             <div className="flex items-start gap-2.5">
                 {onToggle && (
                     <span className="mt-px">
@@ -86,6 +93,14 @@ const TaskCardBody: React.FC<TaskCardBodyProps> = ({
                         parent: parentName,
                     })}
                 </p>
+            )}
+
+            {link && (
+                <SiteLine
+                    link={link}
+                    preview={preview}
+                    className={`${indent} mt-0.5`}
+                />
             )}
 
             {note && (
