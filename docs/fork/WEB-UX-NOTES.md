@@ -12,6 +12,12 @@ Interface directe, très claire, sans encombrement. Références de comportement
 
 ## Journal
 
+### 2026-11-13 — Aujourd'hui : la grille suit les heures visibles (web)
+
+- **Problème** : le calendrier d'Aujourd'hui ne dessinait que la journée de travail (`day_hours`, 08:00-18:00 par défaut) : impossible de voir ou de déposer une tâche avant ou après, et le réglage « Heures visibles » du calendrier ne s'appliquait pas ici.
+- **Décision** : la grille couvre les heures visibles du calendrier (`ui_settings.calendar.visibleHours`, journée entière par défaut), élargie autour des tâches planifiées et des événements. Les heures de travail restent utilisées pour la capacité, « Tout placer » et les créneaux libres ; sur la grille, le temps hors de la journée de travail est légèrement grisé, et la grille s'ouvre au début de la journée de travail quand rien n'est planifié. Même règle pour les vues sur 3 et 7 jours. Pas de barres « N plus tôt / N plus tard » sur Aujourd'hui : la grille s'élargit à la place.
+- **Android à reprendre** : l'application ne lit pas `ui_settings.calendar.visibleHours`. Sa grille horaire (`app/.../agenda/AgendaTimeViews.kt`) dessine toujours 0-24 h et démarre à 08:00 ou une heure avant maintenant. Aujourd'hui (`tasks/ui/TodayTab.kt`) n'a pas de grille horaire. À faire : lire le réglage dans l'Agenda et griser les heures hors journée de travail (`planning` de l'app), comme le web.
+
 ### 2026-11-13 — Notes : /notes ouvre toujours la vue d'ensemble (web)
 
 - **Problème** : sur grand écran, `/notes` ouvrait tout de suite la note la plus récente ; l'utilisateur veut arriver sur la liste de ses notes, pas dans une note. Une adresse de note introuvable tombait aussi sur la première note.

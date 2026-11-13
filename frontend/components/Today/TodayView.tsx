@@ -31,6 +31,9 @@ import { getUserTimezone } from '../../utils/dateUtils';
 import { useTaskPane } from '../../contexts/TaskPaneContext';
 import { useIsNarrow } from '../../hooks/useIsNarrow';
 import { fetchDay } from '../../utils/dayService';
+import { fetchProfile } from '../../utils/profileService';
+import { readVisibleHours, WHOLE_DAY } from '../Calendar/visibleHours';
+import type { VisibleHours } from '../Calendar/visibleHours';
 import { toggleTaskCompletion } from '../../utils/tasksService';
 import type { DayResponse, PlanOp } from '../../utils/dayService';
 import { fetchCalendarEvents } from '../../utils/calendarFeedsService';
@@ -226,6 +229,20 @@ const NewToday: React.FC = () => {
         [items, day, date]
     );
     const hours = day?.day_hours ?? { start: 480, end: 1080 };
+    // The grid shows the Calendar's visible hours (whole day by default);
+    // working hours stay a band on it, and placement keeps using them.
+    const [visibleHours, setVisibleHours] = useState<VisibleHours>(WHOLE_DAY);
+    useEffect(() => {
+        fetchProfile()
+            .then((profile) =>
+                setVisibleHours(
+                    readVisibleHours(
+                        profile.ui_settings?.calendar?.visibleHours
+                    )
+                )
+            )
+            .catch(() => {});
+    }, []);
     const timedEvents = useMemo(
         () =>
             events.filter(
@@ -295,8 +312,8 @@ const NewToday: React.FC = () => {
         ];
     }, [lines, hideCompleted]);
     const range = useMemo(() => {
-        let start = hours.start;
-        let end = hours.end;
+        let start = visibleHours.start * 60;
+        let end = visibleHours.end * 60;
         const widen = (s: number, e: number) => {
             start = Math.min(start, s);
             end = Math.max(end, e);
@@ -328,7 +345,7 @@ const NewToday: React.FC = () => {
             start: Math.floor(start / 60) * 60,
             end: Math.min(1440, Math.ceil(end / 60) * 60),
         };
-    }, [hours, calendarLines, timedEvents, now, extras]);
+    }, [visibleHours, calendarLines, timedEvents, now, extras]);
 
     // The other days of a 3- or 7-day view, read after every load of the
     // main day so a write anywhere shows everywhere.
@@ -1310,6 +1327,7 @@ const NewToday: React.FC = () => {
     const calendar = (
         <DayCalendar
             range={range}
+            workHours={hours}
             columns={columns}
             gridRef={gridRef}
             header={calendarHeader}

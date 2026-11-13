@@ -4,6 +4,10 @@ Décisions, références et pièges du fork : [docs/fork/DECISIONS.md](docs/fork
 
 ## Now
 
+- Android : Agenda aux heures visibles, heures de travail en bande (2026-11-13)
+  Raison : le calendrier d'Aujourd'hui du web suit `ui_settings.calendar.visibleHours` (journée entière par défaut) et grise ce qui sort des heures de travail (`planning.dayHours`) ; l'Agenda Android (`agenda/AgendaTimeViews.kt`) dessine toujours 0-24 sans bande. Vérif : mêmes heures et même bande sur le web et le téléphone avec le même compte.
+- Android : panneaux Notes, Objectifs et Habitudes (2026-11-13)
+  Raison : la barre latérale du web suit l'icône du rail (`sidebarMinimal.panels`, `docs/32-sidebar.md`) ; Android n'a pas de barre latérale, l'équivalent est la liste de l'onglet ouvert. Vérif : mêmes sections, dans le même ordre, sur le web et le téléphone.
 - Web : sections d'Aujourd'hui par horizons (2026-11-13)
   Raison : Android range ce qui suit sous la liste du jour en Demain, Cette semaine, Semaine prochaine, Ce mois-ci, Mois prochain, Un jour puis Suggérées (`PlanBoard.todayLater`, 1.27.0) ; la page Aujourd'hui du web n'a que « Suggestions ». Vérif : mêmes sections, mêmes tâches, sans doublon avec la liste du jour, sur le web et le téléphone avec la même base.
 - Android : écran Réglages › À trier (parité de Profil › À trier, 2026-11-12)

@@ -124,8 +124,27 @@ export const dropWarnings = (
     };
 };
 
+/**
+ * The parts of the grid outside the working hours, dimmed so the work day
+ * stands out. Empty when the working hours cover the whole grid.
+ */
+export const offWorkHours = (
+    range: { start: number; end: number },
+    workHours: { start: number; end: number }
+): { start: number; end: number }[] => {
+    const from = Math.min(range.end, Math.max(range.start, workHours.start));
+    const to = Math.max(range.start, Math.min(range.end, workHours.end));
+    return [
+        { start: range.start, end: from },
+        { start: to, end: range.end },
+    ].filter((segment) => segment.end > segment.start);
+};
+
 export interface DayCalendarProps {
     range: { start: number; end: number };
+    // Working hours (day_hours): dimmed outside, and the first hour the grid
+    // scrolls to when nothing is planned yet.
+    workHours?: { start: number; end: number };
     columns: DayColumnData[];
     header?: React.ReactNode;
     onToggle(line: DayLine): void;
@@ -378,6 +397,7 @@ const LineBlock: React.FC<LineBlockProps> = ({
 interface DayColumnProps {
     column: DayColumnData;
     range: { start: number; end: number };
+    workHours?: { start: number; end: number };
     first: boolean;
     gridRef?: React.Ref<HTMLDivElement>;
     drop?: DropPreview | null;
@@ -394,6 +414,7 @@ interface DayColumnProps {
 const DayColumn: React.FC<DayColumnProps> = ({
     column,
     range,
+    workHours,
     first,
     gridRef,
     drop,
@@ -494,6 +515,21 @@ const DayColumn: React.FC<DayColumnProps> = ({
                 isOver ? 'bg-primary/[0.03]' : ''
             }`}
         >
+            {workHours &&
+                offWorkHours(range, workHours).map((segment) => (
+                    <div
+                        key={`off-${segment.start}`}
+                        aria-hidden="true"
+                        data-testid="calendar-off-hours"
+                        className="pointer-events-none absolute inset-x-0 bg-surface-variant/40"
+                        style={{
+                            top: offset(segment.start),
+                            height:
+                                (segment.end - segment.start) * PX_PER_MINUTE,
+                        }}
+                    />
+                ))}
+
             {focusBlocks.map(({ key, block, start, end }) => (
                 <div
                     key={key}
@@ -678,6 +714,7 @@ const DayColumn: React.FC<DayColumnProps> = ({
  */
 const DayCalendar: React.FC<DayCalendarProps> = ({
     range,
+    workHours,
     columns,
     header,
     onToggle,
@@ -720,10 +757,24 @@ const DayCalendar: React.FC<DayCalendarProps> = ({
         null
     );
 
+    // The grid's first minute can change after mount (visible hours load,
+    // an item widens it): the minute at the top of the view stays the same.
+    const startRef = useRef(range.start);
+    useEffect(() => {
+        const el = scrollRef.current;
+        const previous = startRef.current;
+        startRef.current = range.start;
+        if (!el || previous === range.start) return;
+        el.scrollTop = Math.max(
+            0,
+            el.scrollTop + (previous - range.start) * PX_PER_MINUTE
+        );
+    }, [range.start]);
+
     useEffect(() => {
         const el = scrollRef.current;
         if (!el) return;
-        const target = now ?? firstSlot ?? range.start;
+        const target = now ?? firstSlot ?? workHours?.start ?? range.start;
         el.scrollTop = Math.max(0, offset(target) - el.clientHeight / 3);
         // Only on mount: later renders must not move the user's scroll.
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -870,6 +921,7 @@ const DayCalendar: React.FC<DayCalendarProps> = ({
                                 key={column.date}
                                 column={column}
                                 range={range}
+                                workHours={workHours}
                                 first={index === 0}
                                 gridRef={gridRef}
                                 drop={drop}

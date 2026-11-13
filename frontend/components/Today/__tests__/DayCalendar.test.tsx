@@ -10,6 +10,7 @@ import DayCalendar, {
     PX_PER_MINUTE,
 } from '../DayCalendar';
 import { DayLine } from '../dayModel';
+import { offWorkHours } from '../DayCalendar';
 import { Task } from '../../../entities/Task';
 import { CalendarEvent } from '../../../utils/calendarFeedsService';
 
@@ -406,5 +407,65 @@ describe('DayCalendar habits', () => {
         expect(marks[0]).toHaveTextContent('Stretch');
         expect(marks[0]).toHaveAttribute('href', '/habit/h1');
         expect(marks[0].style.top).toBe(`${60 * PX_PER_MINUTE}px`);
+    });
+});
+
+describe('offWorkHours', () => {
+    it('dims the grid before and after the working hours', () => {
+        expect(
+            offWorkHours({ start: 0, end: 1440 }, { start: 480, end: 1020 })
+        ).toEqual([
+            { start: 0, end: 480 },
+            { start: 1020, end: 1440 },
+        ]);
+    });
+
+    it('dims nothing when the working hours cover the grid', () => {
+        expect(
+            offWorkHours({ start: 480, end: 1020 }, { start: 240, end: 1200 })
+        ).toEqual([]);
+    });
+
+    it('dims the whole grid when it lies outside the working hours', () => {
+        expect(
+            offWorkHours({ start: 0, end: 300 }, { start: 480, end: 1020 })
+        ).toEqual([{ start: 0, end: 300 }]);
+    });
+});
+
+describe('DayCalendar scroll on a range change', () => {
+    it('keeps the same minute at the top when the grid starts earlier later', () => {
+        const column = {
+            date: DAY,
+            weekday: 'Thu',
+            dayNumber: 12,
+            isToday: false,
+            now: null,
+            lines: [],
+            events: [],
+            focus: [],
+        };
+        const renderWith = (range: { start: number; end: number }) => (
+            <MemoryRouter>
+                <DayCalendar
+                    range={range}
+                    workHours={{ start: 480, end: 1020 }}
+                    columns={[column]}
+                    {...handlers()}
+                />
+            </MemoryRouter>
+        );
+        // The whole day first, as before the Calendar's visible hours load.
+        const { rerender } = render(renderWith({ start: 0, end: 1440 }));
+        const scroller = screen
+            .getByTestId('calendar-grid')
+            .closest('.overflow-y-auto') as HTMLElement;
+        // Opens at 08:00, the working day's start.
+        const before = scroller.scrollTop;
+
+        // Visible hours arrive after mount: the grid now starts at 07:00.
+        rerender(renderWith({ start: 420, end: 1440 }));
+
+        expect(scroller.scrollTop).toBe(before - 420 * PX_PER_MINUTE);
     });
 });
