@@ -162,7 +162,7 @@ describe('proposals › weekend', () => {
             const mid = await readBack(uid);
             expect(mid.answer.slots[0]).toEqual(
                 expect.objectContaining({
-                    decision: 'calendar',
+                    decision: expect.objectContaining({ op: 'calendar' }),
                     event: { state: 'requested' },
                 })
             );
@@ -180,7 +180,9 @@ describe('proposals › weekend', () => {
             expect(res.body.status).toBe('ready');
             const body = await readBack(uid);
             expect(body.answer.slots[1]).toEqual(
-                expect.objectContaining({ decision: 'other' })
+                expect.objectContaining({
+                    decision: expect.objectContaining({ op: 'other' }),
+                })
             );
         });
 
@@ -342,7 +344,7 @@ describe('proposals › weekend', () => {
             expect(body.status).toBe('ready');
             expect(body.answer.slots.find((s) => s.id === 'sat-am')).toEqual(
                 expect.objectContaining({
-                    decision: 'calendar',
+                    decision: expect.objectContaining({ op: 'calendar' }),
                     event: { state: 'requested' },
                 })
             );

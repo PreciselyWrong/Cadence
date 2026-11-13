@@ -259,7 +259,12 @@ function withSlotDecisions(answer, decisions) {
             const decision = bySlot.get(slot.id);
             return {
                 ...slot,
-                decision: decision?.op ?? null,
+                decision: decision
+                    ? {
+                          op: decision.op,
+                          ...(decision.note ? { note: decision.note } : {}),
+                      }
+                    : null,
                 event: decision?.event ?? null,
             };
         }),

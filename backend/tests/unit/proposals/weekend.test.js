@@ -444,7 +444,7 @@ describe('withSlotDecisions', () => {
         ]);
         expect(shown.slots[0]).toEqual(
             expect.objectContaining({
-                decision: 'calendar',
+                decision: expect.objectContaining({ op: 'calendar' }),
                 event: { state: 'requested' },
             })
         );
