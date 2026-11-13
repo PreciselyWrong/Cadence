@@ -24,7 +24,7 @@ module.exports = (sequelize) => {
                 references: { model: 'users', key: 'id' },
                 onDelete: 'CASCADE',
             },
-            // week | review
+            // week | review | career | weekend
             kind: { type: DataTypes.STRING(16), allowNull: false },
             // pending | ready | failed | applied | dismissed
             status: { type: DataTypes.STRING(16), allowNull: false },

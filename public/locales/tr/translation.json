@@ -1,4 +1,51 @@
 {
+    "weekend": {
+        "title": "Hafta sonu",
+        "loadError": "Hafta sonu açılamadı.",
+        "empty": "Bu hafta sonu için öneri yok.",
+        "applied": "Uygulanan kararlar: {{count}}",
+        "applyError": "Karar kaydedilemedi.",
+        "validate": "Onayla",
+        "calendar": "Takvime ekle",
+        "other": "Başka bir fikir",
+        "skip": "Atla",
+        "note": "Not",
+        "noteLabel": "Asistan için not",
+        "notePlaceholder": "Asistanın bilmesi gerekenler",
+        "busy": "Meşgul: {{busy}}",
+        "feels": "hissedilen {{temp}}°",
+        "otherAsked": "Başka fikir istendi",
+        "decided": {
+            "calendar": "Takvimde",
+            "skip": "Atlandı"
+        },
+        "event": {
+            "requested": "Ekleniyor",
+            "created": "Takvime eklendi",
+            "failed": "Eklenmedi",
+            "open": "Takvimde aç"
+        },
+        "countCalendar": "Takvimde: {{count}}",
+        "countOther": "Başka fikir istendi: {{count}}",
+        "countNone": "Seçim yok",
+        "part": {
+            "morning": "sabah",
+            "afternoon": "öğleden sonra",
+            "day": "gün"
+        },
+        "weather": {
+            "sun": "güneşli",
+            "partly": "parçalı bulutlu",
+            "cloud": "bulutlu",
+            "rain": "yağmur",
+            "snow": "kar",
+            "storm": "fırtına",
+            "fog": "sis"
+        },
+        "days": "İki gün",
+        "elsewhere": "Başka yerde daha güzel",
+        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    },
     "career": {
         "choice": "seçildi: {{label}}",
         "validate": "Onayla ({{count}})",

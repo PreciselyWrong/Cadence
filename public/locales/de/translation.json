@@ -1,4 +1,51 @@
 {
+    "weekend": {
+        "title": "Wochenende",
+        "loadError": "Das Wochenende lässt sich nicht öffnen.",
+        "empty": "Nichts vorzuschlagen an diesem Wochenende.",
+        "applied": "Entscheidungen übernommen: {{count}}",
+        "applyError": "Die Entscheidung wurde nicht gespeichert.",
+        "validate": "Bestätigen",
+        "calendar": "In den Kalender",
+        "other": "Andere Idee",
+        "skip": "Überspringen",
+        "note": "Notiz",
+        "noteLabel": "Notiz für den Agenten",
+        "notePlaceholder": "Was der Agent wissen sollte",
+        "busy": "Belegt: {{busy}}",
+        "feels": "gefühlt {{temp}}°",
+        "otherAsked": "Andere Idee angefragt",
+        "decided": {
+            "calendar": "Im Kalender",
+            "skip": "Übersprungen"
+        },
+        "event": {
+            "requested": "Wird eingetragen",
+            "created": "Im Kalender eingetragen",
+            "failed": "Nicht eingetragen",
+            "open": "Im Kalender öffnen"
+        },
+        "countCalendar": "Im Kalender: {{count}}",
+        "countOther": "Andere Idee angefragt: {{count}}",
+        "countNone": "Nichts ausgewählt",
+        "part": {
+            "morning": "Morgen",
+            "afternoon": "Nachmittag",
+            "day": "Tag"
+        },
+        "weather": {
+            "sun": "sonnig",
+            "partly": "auflockernd",
+            "cloud": "bewölkt",
+            "rain": "Regen",
+            "snow": "Schnee",
+            "storm": "Gewitter",
+            "fog": "Nebel"
+        },
+        "days": "Beide Tage",
+        "elsewhere": "Woanders schöner",
+        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    },
     "career": {
         "choice": "gewählt: {{label}}",
         "validate": "Bestätigen ({{count}})",

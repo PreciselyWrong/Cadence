@@ -1,4 +1,51 @@
 {
+    "weekend": {
+        "title": "Week-end",
+        "loadError": "Impossible d’ouvrir le week-end.",
+        "empty": "Rien à proposer ce week-end.",
+        "applied": "Décisions appliquées : {{count}}",
+        "applyError": "La décision n’a pas été enregistrée.",
+        "validate": "Valider",
+        "calendar": "Mettre à l’agenda",
+        "other": "Autre idée",
+        "skip": "Ignorer",
+        "note": "Remarque",
+        "noteLabel": "Remarque pour l’agent",
+        "notePlaceholder": "Ce que l’agent doit savoir",
+        "busy": "Occupé : {{busy}}",
+        "feels": "ressenti {{temp}}°",
+        "otherAsked": "Autre idée demandée",
+        "decided": {
+            "calendar": "À l’agenda",
+            "skip": "Ignorée"
+        },
+        "event": {
+            "requested": "Ajout en cours",
+            "created": "Ajouté à l’agenda",
+            "failed": "Pas ajouté",
+            "open": "Ouvrir dans l’agenda"
+        },
+        "countCalendar": "À l’agenda : {{count}}",
+        "countOther": "Autre idée demandée : {{count}}",
+        "countNone": "Rien de choisi",
+        "part": {
+            "morning": "matin",
+            "afternoon": "après-midi",
+            "day": "journée"
+        },
+        "weather": {
+            "sun": "ensoleillé",
+            "partly": "éclaircies",
+            "cloud": "nuageux",
+            "rain": "pluie",
+            "snow": "neige",
+            "storm": "orage",
+            "fog": "brouillard"
+        },
+        "days": "Les deux jours",
+        "elsewhere": "Plus beau ailleurs",
+        "elsewhereLine": "{{place}}, {{day}} : {{weather}}, {{temp}}°"
+    },
     "career": {
         "choice": "choisi : {{label}}",
         "validate": "Valider ({{count}})",

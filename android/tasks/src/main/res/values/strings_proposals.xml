@@ -94,4 +94,47 @@
     <string name="career_discard_confirm">Abandonner</string>
     <string name="career_stay">Rester</string>
     <string name="proposal_sent">Envoyé</string>
+    <string name="weekend_title">Week-end</string>
+    <string name="weekend_entry_text">Sorties et météo du week-end</string>
+    <string name="weekend_nothing">Pas de week-end proposé pour l\'instant</string>
+    <string name="weekend_part_morning">matin</string>
+    <string name="weekend_part_afternoon">après-midi</string>
+    <string name="weekend_part_day">journée</string>
+    <string name="weekend_slot_title">%1$s %2$s</string>
+    <string name="weekend_busy">Occupé&#8239;: %1$s</string>
+    <string name="weekend_degrees">%1$d°</string>
+    <string name="weekend_range">%1$d° · %2$d°</string>
+    <string name="weekend_feels">ressenti %1$d°</string>
+    <string name="weekend_choice_calendar">Mettre à l\'agenda</string>
+    <string name="weekend_choice_other">Autre idée</string>
+    <string name="weekend_choice_skip">Ignorer</string>
+    <string name="weekend_note">Remarque</string>
+    <string name="weekend_note_hint">Ce qui compte pour toi</string>
+    <string name="weekend_decided_calendar">Mise à l\'agenda demandée</string>
+    <string name="weekend_decided_skip">Ignorée</string>
+    <string name="weekend_decided_other">Autre idée demandée</string>
+    <string name="weekend_event_requested">Ajout à l\'agenda en cours…</string>
+    <string name="weekend_event_created">Ajouté à l\'agenda</string>
+    <string name="weekend_event_open">Ouvrir dans l\'agenda</string>
+    <string name="weekend_event_failed">Pas ajouté</string>
+    <string name="weekend_elsewhere">Plus beau ailleurs</string>
+    <string name="weekend_elsewhere_line">%1$s&#8239;: %2$s</string>
+    <plurals name="weekend_count_calendar">
+        <item quantity="one">%d sortie à l\'agenda</item>
+        <item quantity="other">%d sorties à l\'agenda</item>
+    </plurals>
+    <plurals name="weekend_count_other">
+        <item quantity="one">%d autre idée demandée</item>
+        <item quantity="other">%d autres idées demandées</item>
+    </plurals>
+    <string name="weekend_count_none">Rien de choisi</string>
+    <string name="weekend_validate">Valider</string>
+    <string name="weekend_saved">Choix enregistrés</string>
+    <string name="weekend_weather_sun">ensoleillé</string>
+    <string name="weekend_weather_partly">éclaircies</string>
+    <string name="weekend_weather_cloud">nuageux</string>
+    <string name="weekend_weather_rain">pluie</string>
+    <string name="weekend_weather_snow">neige</string>
+    <string name="weekend_weather_storm">orage</string>
+    <string name="weekend_weather_fog">brouillard</string>
 </resources>

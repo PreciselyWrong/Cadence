@@ -36,10 +36,16 @@ const {
 const { reviewFacts, choicesFor } = require('./core/review');
 const { validateAnswer, DEFAULT_HEADLINE } = require('./core/answer');
 const { withDecisions } = require('./core/career');
+const { withSlotDecisions } = require('./core/weekend');
 const { applyCareer } = require('./career');
+const {
+    proposeWeekend,
+    applyWeekend,
+    reportWeekendEvent,
+} = require('./weekend');
 
 const KINDS = new Set(['week', 'review']);
-const LIST_KINDS = new Set(['week', 'review', 'career']);
+const LIST_KINDS = new Set(['week', 'review', 'career', 'weekend']);
 const STATUS_FILTERS = new Set([
     'pending',
     'ready',
@@ -82,11 +88,17 @@ const agentFacts = ({
 const roundOf = (row) => row.facts?.round ?? 1;
 const notesOf = (row) => row.facts?.notes ?? [];
 
-// A career answer shows the decision taken on each item.
-const answerOf = (row) =>
-    row.kind === 'career' && row.answer
-        ? withDecisions(row.answer, row.facts?.decisions ?? [])
-        : (row.answer ?? null);
+// A career answer shows the decision taken on each item; a weekend answer the
+// decision and the event of each slot.
+const answerOf = (row) => {
+    if (row.kind === 'career' && row.answer) {
+        return withDecisions(row.answer, row.facts?.decisions ?? []);
+    }
+    if (row.kind === 'weekend' && row.answer) {
+        return withSlotDecisions(row.answer, row.facts?.decisions ?? []);
+    }
+    return row.answer ?? null;
+};
 
 function serialize(row, { withFacts = false } = {}) {
     const out = {
@@ -459,8 +471,8 @@ async function answerProposal(user, uid, body = {}) {
 async function replyProposal(user, uid, body = {}) {
     const row = await repository.findByUid(user.id, uid);
     if (!row) throw new NotFoundError('Proposal not found');
-    if (row.kind === 'career') {
-        throw new ValidationError('career proposals take no reply');
+    if (row.kind === 'career' || row.kind === 'weekend') {
+        throw new ValidationError(`${row.kind} proposals take no reply`);
     }
     ensureOpen(row, ['ready'], 'Proposal has no answer to reply to');
     const text = cleanText(body.text, 1000);
@@ -594,6 +606,7 @@ async function applyProposal(user, uid, body = {}) {
     const row = await repository.findByUid(user.id, uid);
     if (!row) throw new NotFoundError('Proposal not found');
     if (row.kind === 'career') return applyCareer(user, row, body);
+    if (row.kind === 'weekend') return applyWeekend(user, row, body);
     ensureOpen(row, ['ready', 'applied'], 'Proposal has no answer to apply');
     let results;
 
@@ -691,6 +704,17 @@ async function sendProposal(user, uid, body = {}) {
     return { uid: row.uid, status: row.status, round: roundOf(row), results };
 }
 
+// The agent's report of a weekend event, by capgw (docs/48-weekend.md).
+async function reportProposalEvent(user, uid, body = {}) {
+    const row = await repository.findByUid(user.id, uid);
+    if (!row) throw new NotFoundError('Proposal not found');
+    if (row.kind !== 'weekend') {
+        throw new ValidationError('events are for weekend proposals');
+    }
+    await reportWeekendEvent(row, body);
+    return serialize(row);
+}
+
 async function dismissProposal(user, uid) {
     const row = await repository.findByUid(user.id, uid);
     if (!row) throw new NotFoundError('Proposal not found');
@@ -713,4 +737,6 @@ module.exports = {
     sendProposal,
     dismissProposal,
     agentFacts,
+    proposeWeekend,
+    reportProposalEvent,
 };

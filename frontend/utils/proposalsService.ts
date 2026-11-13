@@ -8,7 +8,7 @@ import { getApiPath } from '../config/paths';
 // Client of the agent proposals (docs/47-proposals.md). The server computes
 // the facts; the answer is only ever applied by the user, one change at a time.
 
-export type ProposalKind = 'week' | 'review';
+export type ProposalKind = 'week' | 'review' | 'weekend';
 export type ProposalStatus =
     'pending' | 'ready' | 'failed' | 'applied' | 'dismissed';
 
@@ -349,5 +349,120 @@ export const applyCareerDecisions = async (
     const failed = outcome?.results?.find((r) => r.state === 'failed');
     if (failed)
         throw new Error(failed.error || 'Failed to apply the decision.');
+    return outcome;
+};
+
+// Week-end (docs/48-weekend.md): one outing per free slot of the weekend. The
+// user picks per slot, then « Valider » sends every pick in one call.
+export type WeekendWeather =
+    'sun' | 'partly' | 'cloud' | 'rain' | 'snow' | 'storm' | 'fog';
+export type WeekendPart = 'morning' | 'afternoon' | 'day';
+export type WeekendOp = 'calendar' | 'skip' | 'other';
+
+export interface WeekendDay {
+    date: string;
+    weather: WeekendWeather;
+    min: number;
+    max: number;
+}
+
+export interface WeekendActivity {
+    title: string;
+    url?: string;
+    note?: string;
+    travel?: string;
+    start?: string;
+    end?: string;
+    after?: string;
+}
+
+export interface WeekendDecision {
+    op: WeekendOp;
+    note?: string;
+}
+
+export interface WeekendEvent {
+    state: 'requested' | 'created' | 'failed';
+    link?: string;
+    error?: string;
+}
+
+export interface WeekendSlot {
+    id: string;
+    date: string;
+    part: WeekendPart;
+    weather?: WeekendWeather;
+    temp?: number;
+    feels?: number;
+    busy?: string;
+    after?: string;
+    activity?: WeekendActivity;
+    recommended?: boolean;
+    decision?: WeekendDecision;
+    event?: WeekendEvent;
+}
+
+export interface WeekendElsewhere {
+    place: string;
+    date: string;
+    weather: WeekendWeather;
+    temp: number;
+    travel?: string;
+}
+
+export interface WeekendAnswer {
+    headline: string;
+    subtitle?: string;
+    days: WeekendDay[];
+    slots: WeekendSlot[];
+    elsewhere?: WeekendElsewhere[];
+}
+
+export interface WeekendProposal {
+    uid: string;
+    kind: 'weekend';
+    status: ProposalStatus;
+    created_at: string;
+    updated_at?: string;
+    answer: WeekendAnswer | null;
+}
+
+export interface WeekendDecisionInput {
+    slot_id: string;
+    op: WeekendOp;
+    note?: string;
+}
+
+export interface WeekendApplyOutcome {
+    uid?: string;
+    status?: ProposalStatus;
+    results?: { slot_id?: string; state?: string; error?: string }[];
+}
+
+export const getWeekendProposal = (uid: string): Promise<WeekendProposal> =>
+    request(
+        `proposals/${encodeURIComponent(uid)}`,
+        'GET',
+        undefined,
+        'Failed to load the weekend proposal.'
+    ).then((response) => response.json());
+
+// Like the career decisions: an answer the server refuses for one slot fails
+// the whole call, so the caller sees it as an error.
+export const applyWeekendDecisions = async (
+    uid: string,
+    decisions: WeekendDecisionInput[]
+): Promise<WeekendApplyOutcome> => {
+    const outcome: WeekendApplyOutcome = await request(
+        `proposals/${encodeURIComponent(uid)}/apply`,
+        'POST',
+        { decisions },
+        'Failed to apply the weekend proposal.'
+    ).then((response) => response.json());
+    const failed = outcome?.results?.find((r) => r.state === 'failed');
+    if (failed)
+        throw new Error(
+            failed.error || 'Failed to apply the weekend proposal.'
+        );
     return outcome;
 };

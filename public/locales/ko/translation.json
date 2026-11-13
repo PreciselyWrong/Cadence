@@ -1,4 +1,51 @@
 {
+    "weekend": {
+        "title": "주말",
+        "loadError": "주말 계획을 열 수 없습니다.",
+        "empty": "이번 주말에 제안할 것이 없습니다.",
+        "applied": "적용된 결정: {{count}}",
+        "applyError": "결정을 저장하지 못했습니다.",
+        "validate": "확인",
+        "calendar": "캘린더에 추가",
+        "other": "다른 아이디어",
+        "skip": "건너뛰기",
+        "note": "메모",
+        "noteLabel": "에이전트에게 남길 메모",
+        "notePlaceholder": "에이전트가 알아야 할 내용",
+        "busy": "일정 있음: {{busy}}",
+        "feels": "체감 {{temp}}°",
+        "otherAsked": "다른 아이디어 요청됨",
+        "decided": {
+            "calendar": "캘린더에 있음",
+            "skip": "건너뜀"
+        },
+        "event": {
+            "requested": "추가 중",
+            "created": "캘린더에 추가됨",
+            "failed": "추가되지 않음",
+            "open": "캘린더에서 열기"
+        },
+        "countCalendar": "캘린더: {{count}}",
+        "countOther": "다른 아이디어 요청: {{count}}",
+        "countNone": "선택 없음",
+        "part": {
+            "morning": "오전",
+            "afternoon": "오후",
+            "day": "하루"
+        },
+        "weather": {
+            "sun": "맑음",
+            "partly": "구름 조금",
+            "cloud": "흐림",
+            "rain": "비",
+            "snow": "눈",
+            "storm": "폭풍",
+            "fog": "안개"
+        },
+        "days": "이틀 모두",
+        "elsewhere": "다른 곳이 더 좋음",
+        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    },
     "career": {
         "choice": "선택: {{label}}",
         "validate": "확인 ({{count}})",

@@ -1,4 +1,51 @@
 {
+    "weekend": {
+        "title": "عطلة نهاية الأسبوع",
+        "loadError": "تعذّر فتح عطلة نهاية الأسبوع.",
+        "empty": "لا شيء يُقترح لهذه العطلة.",
+        "applied": "القرارات المطبّقة: {{count}}",
+        "applyError": "لم يُحفظ القرار.",
+        "validate": "تأكيد",
+        "calendar": "أضِف إلى التقويم",
+        "other": "فكرة أخرى",
+        "skip": "تخطَّ",
+        "note": "ملاحظة",
+        "noteLabel": "ملاحظة للوكيل",
+        "notePlaceholder": "ما ينبغي للوكيل أن يعرفه",
+        "busy": "مشغول: {{busy}}",
+        "feels": "الإحساس {{temp}}°",
+        "otherAsked": "طُلبت فكرة أخرى",
+        "decided": {
+            "calendar": "في التقويم",
+            "skip": "تم التخطي"
+        },
+        "event": {
+            "requested": "جارٍ الإضافة",
+            "created": "أُضيف إلى التقويم",
+            "failed": "لم تُضَف",
+            "open": "فتح في التقويم"
+        },
+        "countCalendar": "في التقويم: {{count}}",
+        "countOther": "طُلبت فكرة أخرى: {{count}}",
+        "countNone": "لم يُختر شيء",
+        "part": {
+            "morning": "صباحاً",
+            "afternoon": "بعد الظهر",
+            "day": "اليوم"
+        },
+        "weather": {
+            "sun": "مشمس",
+            "partly": "غائم جزئياً",
+            "cloud": "غائم",
+            "rain": "ممطر",
+            "snow": "ثلوج",
+            "storm": "عاصفة",
+            "fog": "ضباب"
+        },
+        "days": "اليومان",
+        "elsewhere": "أجمل في مكان آخر",
+        "elsewhereLine": "{{place}}، {{day}}: {{weather}}، {{temp}}°"
+    },
     "career": {
         "choice": "المختار: {{label}}",
         "validate": "تأكيد ({{count}})",

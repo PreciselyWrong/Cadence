@@ -50,6 +50,16 @@ const dismissReady = (userId, kind) =>
 const findByUid = (userId, uid) =>
     Proposal.findOne({ where: { user_id: userId, uid } });
 
+// The ready proposal of one kind, if any: the one a new one replaces.
+const findReady = (userId, kind) =>
+    Proposal.findOne({
+        where: { user_id: userId, kind, status: 'ready' },
+        order: [
+            ['created_at', 'DESC'],
+            ['id', 'DESC'],
+        ],
+    });
+
 const findPending = (userId, kind) =>
     Proposal.findOne({
         where: { user_id: userId, kind, status: 'pending' },
@@ -198,6 +208,7 @@ module.exports = {
     create,
     dismissReady,
     findByUid,
+    findReady,
     findPending,
     findLatestPerKind,
     findJudgedReviews,

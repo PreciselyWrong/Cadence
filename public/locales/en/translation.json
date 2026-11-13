@@ -1,4 +1,51 @@
 {
+    "weekend": {
+        "title": "Week-end",
+        "loadError": "Couldn’t open the weekend.",
+        "empty": "Nothing to suggest this weekend.",
+        "applied": "Decisions applied: {{count}}",
+        "applyError": "The decision was not saved.",
+        "validate": "Confirm",
+        "calendar": "Add to calendar",
+        "other": "Another idea",
+        "skip": "Skip",
+        "note": "Note",
+        "noteLabel": "Note for the agent",
+        "notePlaceholder": "What the agent should know",
+        "busy": "Busy: {{busy}}",
+        "feels": "feels like {{temp}}°",
+        "otherAsked": "Another idea asked",
+        "decided": {
+            "calendar": "On the calendar",
+            "skip": "Skipped"
+        },
+        "event": {
+            "requested": "Adding to calendar",
+            "created": "Added to calendar",
+            "failed": "Not added",
+            "open": "Open in calendar"
+        },
+        "countCalendar": "On the calendar: {{count}}",
+        "countOther": "Another idea asked: {{count}}",
+        "countNone": "Nothing picked",
+        "part": {
+            "morning": "morning",
+            "afternoon": "afternoon",
+            "day": "day"
+        },
+        "weather": {
+            "sun": "sunny",
+            "partly": "partly sunny",
+            "cloud": "cloudy",
+            "rain": "rain",
+            "snow": "snow",
+            "storm": "storm",
+            "fog": "fog"
+        },
+        "days": "Both days",
+        "elsewhere": "Nicer elsewhere",
+        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    },
     "career": {
         "choice": "chosen: {{label}}",
         "validate": "Confirm ({{count}})",

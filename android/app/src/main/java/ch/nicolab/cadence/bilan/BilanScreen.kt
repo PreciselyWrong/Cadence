@@ -21,6 +21,7 @@ import ch.nicolab.cadence.domain.WeekOutlook
 import ch.nicolab.cadence.tasks.ui.GoalsEntryPanel
 import ch.nicolab.cadence.tasks.ui.notifications.NotificationsBellButton
 import ch.nicolab.cadence.tasks.ui.proposals.CareerEntryPanel
+import ch.nicolab.cadence.tasks.ui.proposals.WeekendEntryPanel
 import ch.nicolab.cadence.tasks.ui.review.ReviewEntryPanel
 import ch.nicolab.cadence.ui.ScreenList
 import java.time.DayOfWeek
@@ -42,6 +43,7 @@ internal fun BilanScreen(
     onCorrect: (HabitEntry) -> Unit,
     onOpenReview: () -> Unit,
     onOpenCareer: () -> Unit,
+    onOpenWeekend: () -> Unit = {},
     onOpenGoals: () -> Unit,
     onOpenSettings: () -> Unit,
     onOpenNotifications: () -> Unit = {},
@@ -84,6 +86,7 @@ internal fun BilanScreen(
         item(key = "task-kpis") { TaskKpiPanel(habits) }
         item(key = "review-entry") { ReviewEntryPanel(onOpenReview) }
         item(key = "career-entry") { CareerEntryPanel(onOpenCareer) }
+        item(key = "weekend-entry") { WeekendEntryPanel(onOpenWeekend) }
         item(key = "goals-entry") { GoalsEntryPanel(onOpenGoals) }
         item(key = "task-review") { TaskReviewPanel() }
         weekItems(habits, outlook, quick, options)

@@ -3,7 +3,7 @@
 const express = require('express');
 const service = require('./service');
 const { logError } = require('../../services/logService');
-const { AppError } = require('../../shared/errors');
+const { AppError, ForbiddenError } = require('../../shared/errors');
 
 const router = express.Router();
 
@@ -75,6 +75,21 @@ router.post(
     handle((req) =>
         service.sendProposal(req.currentUser, req.params.uid, req.body ?? {})
     )
+);
+
+// Only the agent's API key reports events (capgw). A session is refused.
+router.post(
+    '/proposals/:uid/events',
+    handle((req) => {
+        if (!req.authToken) {
+            throw new ForbiddenError('Events are reported with the agent key');
+        }
+        return service.reportProposalEvent(
+            req.currentUser,
+            req.params.uid,
+            req.body ?? {}
+        );
+    })
 );
 
 router.post(

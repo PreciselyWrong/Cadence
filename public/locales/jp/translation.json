@@ -1,4 +1,51 @@
 {
+    "weekend": {
+        "title": "週末",
+        "loadError": "週末の提案を開けませんでした。",
+        "empty": "今週末は提案がありません。",
+        "applied": "適用した決定: {{count}}",
+        "applyError": "決定を保存できませんでした。",
+        "validate": "確定",
+        "calendar": "予定に追加",
+        "other": "別の案",
+        "skip": "スキップ",
+        "note": "メモ",
+        "noteLabel": "エージェントへのメモ",
+        "notePlaceholder": "エージェントに伝えたいこと",
+        "busy": "予定あり: {{busy}}",
+        "feels": "体感 {{temp}}°",
+        "otherAsked": "別の案を依頼済み",
+        "decided": {
+            "calendar": "予定に追加済み",
+            "skip": "スキップ済み"
+        },
+        "event": {
+            "requested": "追加中",
+            "created": "カレンダーに追加済み",
+            "failed": "追加できず",
+            "open": "カレンダーで開く"
+        },
+        "countCalendar": "カレンダーに追加: {{count}}",
+        "countOther": "別の案を依頼: {{count}}",
+        "countNone": "未選択",
+        "part": {
+            "morning": "午前",
+            "afternoon": "午後",
+            "day": "終日"
+        },
+        "weather": {
+            "sun": "晴れ",
+            "partly": "薄曇り",
+            "cloud": "曇り",
+            "rain": "雨",
+            "snow": "雪",
+            "storm": "嵐",
+            "fog": "霧"
+        },
+        "days": "両日",
+        "elsewhere": "他の場所がより良い",
+        "elsewhereLine": "{{place}}、{{day}}: {{weather}}、{{temp}}°"
+    },
     "career": {
         "choice": "選択: {{label}}",
         "validate": "確定 ({{count}})",

@@ -1,3 +1,7 @@
+## [1.35.0] — 13 novembre 2026
+
+- Week-end : la sortie de chaque créneau se choisit (« Mettre à l'agenda », « Autre idée », « Ignorer », remarque) puis « Valider » envoie tout d'un coup ; rien n'est ajouté à l'agenda avant. Une notification ou le Bilan › Week-end ouvre la feuille ; l'état de l'ajout à l'agenda s'y affiche.
+
 ## [1.34.0] — 13 novembre 2026
 
 - « Ta semaine » : le menu d'une tâche propose « Semaine prochaine », « Ce mois-ci » et « Le mois prochain », après « Cette semaine » ; l'agent peut les proposer aussi, et elles se rangent dans leur section.

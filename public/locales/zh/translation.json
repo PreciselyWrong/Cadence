@@ -1,4 +1,51 @@
 {
+    "weekend": {
+        "title": "周末",
+        "loadError": "无法打开周末安排。",
+        "empty": "这个周末没有可推荐的安排。",
+        "applied": "已应用决定：{{count}}",
+        "applyError": "决定未能保存。",
+        "validate": "确认",
+        "calendar": "加入日历",
+        "other": "换个想法",
+        "skip": "跳过",
+        "note": "备注",
+        "noteLabel": "给助手的备注",
+        "notePlaceholder": "助手需要知道的内容",
+        "busy": "已有安排：{{busy}}",
+        "feels": "体感 {{temp}}°",
+        "otherAsked": "已请求另一个想法",
+        "decided": {
+            "calendar": "已在日历中",
+            "skip": "已跳过"
+        },
+        "event": {
+            "requested": "正在添加",
+            "created": "已加入日历",
+            "failed": "未能添加",
+            "open": "在日历中打开"
+        },
+        "countCalendar": "加入日历：{{count}}",
+        "countOther": "请求另一个想法：{{count}}",
+        "countNone": "未选择",
+        "part": {
+            "morning": "上午",
+            "afternoon": "下午",
+            "day": "全天"
+        },
+        "weather": {
+            "sun": "晴",
+            "partly": "局部晴",
+            "cloud": "多云",
+            "rain": "雨",
+            "snow": "雪",
+            "storm": "暴风雨",
+            "fog": "雾"
+        },
+        "days": "两天",
+        "elsewhere": "别处更好",
+        "elsewhereLine": "{{place}}，{{day}}：{{weather}}，{{temp}}°"
+    },
     "career": {
         "choice": "已选：{{label}}",
         "validate": "确认（{{count}}）",

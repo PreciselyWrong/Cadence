@@ -1,4 +1,51 @@
 {
+    "weekend": {
+        "title": "Weekend",
+        "loadError": "Nie udało się otworzyć weekendu.",
+        "empty": "Brak propozycji na ten weekend.",
+        "applied": "Zastosowane decyzje: {{count}}",
+        "applyError": "Decyzja nie została zapisana.",
+        "validate": "Potwierdź",
+        "calendar": "Dodaj do kalendarza",
+        "other": "Inny pomysł",
+        "skip": "Pomiń",
+        "note": "Notatka",
+        "noteLabel": "Notatka dla agenta",
+        "notePlaceholder": "Co agent powinien wiedzieć",
+        "busy": "Zajęte: {{busy}}",
+        "feels": "odczuwalna {{temp}}°",
+        "otherAsked": "Poproszono o inny pomysł",
+        "decided": {
+            "calendar": "W kalendarzu",
+            "skip": "Pominięte"
+        },
+        "event": {
+            "requested": "Dodawanie",
+            "created": "Dodano do kalendarza",
+            "failed": "Nie dodano",
+            "open": "Otwórz w kalendarzu"
+        },
+        "countCalendar": "W kalendarzu: {{count}}",
+        "countOther": "Poproszono o inny pomysł: {{count}}",
+        "countNone": "Nic nie wybrano",
+        "part": {
+            "morning": "rano",
+            "afternoon": "popołudnie",
+            "day": "cały dzień"
+        },
+        "weather": {
+            "sun": "słonecznie",
+            "partly": "przejaśnienia",
+            "cloud": "pochmurno",
+            "rain": "deszcz",
+            "snow": "śnieg",
+            "storm": "burza",
+            "fog": "mgła"
+        },
+        "days": "Oba dni",
+        "elsewhere": "Ładniej gdzie indziej",
+        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    },
     "career": {
         "choice": "wybrano: {{label}}",
         "validate": "Zatwierdź ({{count}})",

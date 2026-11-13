@@ -1,4 +1,51 @@
 {
+    "weekend": {
+        "title": "Akhir pekan",
+        "loadError": "Akhir pekan tidak dapat dibuka.",
+        "empty": "Tidak ada saran untuk akhir pekan ini.",
+        "applied": "Keputusan diterapkan: {{count}}",
+        "applyError": "Keputusan tidak tersimpan.",
+        "validate": "Konfirmasi",
+        "calendar": "Tambahkan ke kalender",
+        "other": "Ide lain",
+        "skip": "Lewati",
+        "note": "Catatan",
+        "noteLabel": "Catatan untuk agen",
+        "notePlaceholder": "Yang perlu diketahui agen",
+        "busy": "Sibuk: {{busy}}",
+        "feels": "terasa {{temp}}°",
+        "otherAsked": "Ide lain diminta",
+        "decided": {
+            "calendar": "Ada di kalender",
+            "skip": "Dilewati"
+        },
+        "event": {
+            "requested": "Sedang ditambahkan",
+            "created": "Ditambahkan ke kalender",
+            "failed": "Tidak ditambahkan",
+            "open": "Buka di kalender"
+        },
+        "countCalendar": "Di kalender: {{count}}",
+        "countOther": "Ide lain diminta: {{count}}",
+        "countNone": "Belum ada yang dipilih",
+        "part": {
+            "morning": "pagi",
+            "afternoon": "siang",
+            "day": "seharian"
+        },
+        "weather": {
+            "sun": "cerah",
+            "partly": "cerah berawan",
+            "cloud": "berawan",
+            "rain": "hujan",
+            "snow": "salju",
+            "storm": "badai",
+            "fog": "kabut"
+        },
+        "days": "Kedua hari",
+        "elsewhere": "Lebih bagus di tempat lain",
+        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    },
     "career": {
         "choice": "dipilih: {{label}}",
         "validate": "Terapkan ({{count}})",

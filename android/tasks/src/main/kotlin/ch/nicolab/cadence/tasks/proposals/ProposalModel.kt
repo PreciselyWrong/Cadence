@@ -11,11 +11,12 @@ import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
-/** Les propositions de l'app (`docs/47-proposals.md`) ; la carrière est lue, pas demandée depuis l'app. */
+/** Les propositions de l'app (`docs/47-proposals.md`) ; la carrière et le week-end sont lus, pas demandés depuis l'app. */
 enum class ProposalKind(val wire: String) {
     WEEK("week"),
     REVIEW("review"),
-    CAREER("career");
+    CAREER("career"),
+    WEEKEND("weekend");
 
     companion object {
         fun of(wire: String?): ProposalKind? = entries.firstOrNull { it.wire == wire }

@@ -1,4 +1,51 @@
 {
+    "weekend": {
+        "title": "Cuối tuần",
+        "loadError": "Không mở được đề xuất cuối tuần.",
+        "empty": "Không có gì để đề xuất cuối tuần này.",
+        "applied": "Đã áp dụng quyết định: {{count}}",
+        "applyError": "Chưa lưu được quyết định.",
+        "validate": "Xác nhận",
+        "calendar": "Thêm vào lịch",
+        "other": "Ý tưởng khác",
+        "skip": "Bỏ qua",
+        "note": "Ghi chú",
+        "noteLabel": "Ghi chú cho trợ lý",
+        "notePlaceholder": "Trợ lý cần biết điều gì",
+        "busy": "Bận: {{busy}}",
+        "feels": "cảm giác {{temp}}°",
+        "otherAsked": "Đã yêu cầu ý tưởng khác",
+        "decided": {
+            "calendar": "Đã có trong lịch",
+            "skip": "Đã bỏ qua"
+        },
+        "event": {
+            "requested": "Đang thêm",
+            "created": "Đã thêm vào lịch",
+            "failed": "Chưa thêm",
+            "open": "Mở trong lịch"
+        },
+        "countCalendar": "Trong lịch: {{count}}",
+        "countOther": "Yêu cầu ý tưởng khác: {{count}}",
+        "countNone": "Chưa chọn",
+        "part": {
+            "morning": "sáng",
+            "afternoon": "chiều",
+            "day": "cả ngày"
+        },
+        "weather": {
+            "sun": "nắng",
+            "partly": "nắng có mây",
+            "cloud": "nhiều mây",
+            "rain": "mưa",
+            "snow": "tuyết",
+            "storm": "giông",
+            "fog": "sương mù"
+        },
+        "days": "Cả hai ngày",
+        "elsewhere": "Đẹp hơn ở nơi khác",
+        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    },
     "career": {
         "choice": "đã chọn: {{label}}",
         "validate": "Xác nhận ({{count}})",

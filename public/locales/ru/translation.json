@@ -1,4 +1,51 @@
 {
+    "weekend": {
+        "title": "Выходные",
+        "loadError": "Не удалось открыть выходные.",
+        "empty": "На эти выходные нечего предложить.",
+        "applied": "Применено решений: {{count}}",
+        "applyError": "Решение не сохранено.",
+        "validate": "Подтвердить",
+        "calendar": "В календарь",
+        "other": "Другая идея",
+        "skip": "Пропустить",
+        "note": "Заметка",
+        "noteLabel": "Заметка для агента",
+        "notePlaceholder": "Что должен знать агент",
+        "busy": "Занято: {{busy}}",
+        "feels": "ощущается как {{temp}}°",
+        "otherAsked": "Запрошена другая идея",
+        "decided": {
+            "calendar": "В календаре",
+            "skip": "Пропущено"
+        },
+        "event": {
+            "requested": "Добавляется",
+            "created": "Добавлено в календарь",
+            "failed": "Не добавлено",
+            "open": "Открыть в календаре"
+        },
+        "countCalendar": "В календаре: {{count}}",
+        "countOther": "Запрошена другая идея: {{count}}",
+        "countNone": "Ничего не выбрано",
+        "part": {
+            "morning": "утро",
+            "afternoon": "днём",
+            "day": "день"
+        },
+        "weather": {
+            "sun": "солнечно",
+            "partly": "местами солнечно",
+            "cloud": "облачно",
+            "rain": "дождь",
+            "snow": "снег",
+            "storm": "гроза",
+            "fog": "туман"
+        },
+        "days": "Оба дня",
+        "elsewhere": "Лучше в другом месте",
+        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    },
     "career": {
         "choice": "выбрано: {{label}}",
         "validate": "Подтвердить ({{count}})",

@@ -1,4 +1,51 @@
 {
+    "weekend": {
+        "title": "Fin de semana",
+        "loadError": "No se pudo abrir el fin de semana.",
+        "empty": "Nada que proponer este fin de semana.",
+        "applied": "Decisiones aplicadas: {{count}}",
+        "applyError": "La decisión no se guardó.",
+        "validate": "Confirmar",
+        "calendar": "Añadir al calendario",
+        "other": "Otra idea",
+        "skip": "Omitir",
+        "note": "Nota",
+        "noteLabel": "Nota para el agente",
+        "notePlaceholder": "Lo que el agente debe saber",
+        "busy": "Ocupado: {{busy}}",
+        "feels": "sensación {{temp}}°",
+        "otherAsked": "Otra idea pedida",
+        "decided": {
+            "calendar": "En el calendario",
+            "skip": "Omitida"
+        },
+        "event": {
+            "requested": "Añadiendo al calendario",
+            "created": "Añadido al calendario",
+            "failed": "No añadido",
+            "open": "Abrir en el calendario"
+        },
+        "countCalendar": "En el calendario: {{count}}",
+        "countOther": "Otra idea pedida: {{count}}",
+        "countNone": "Nada elegido",
+        "part": {
+            "morning": "mañana",
+            "afternoon": "tarde",
+            "day": "día"
+        },
+        "weather": {
+            "sun": "soleado",
+            "partly": "claros",
+            "cloud": "nublado",
+            "rain": "lluvia",
+            "snow": "nieve",
+            "storm": "tormenta",
+            "fog": "niebla"
+        },
+        "days": "Los dos días",
+        "elsewhere": "Mejor en otro sitio",
+        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    },
     "career": {
         "choice": "elegido: {{label}}",
         "validate": "Confirmar ({{count}})",

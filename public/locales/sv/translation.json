@@ -1,4 +1,51 @@
 {
+    "weekend": {
+        "title": "Helgen",
+        "loadError": "Det gick inte att öppna helgen.",
+        "empty": "Inget att föreslå den här helgen.",
+        "applied": "Beslut tillämpade: {{count}}",
+        "applyError": "Beslutet sparades inte.",
+        "validate": "Bekräfta",
+        "calendar": "Lägg i kalendern",
+        "other": "En annan idé",
+        "skip": "Hoppa över",
+        "note": "Anteckning",
+        "noteLabel": "Anteckning till agenten",
+        "notePlaceholder": "Vad agenten bör veta",
+        "busy": "Upptagen: {{busy}}",
+        "feels": "känns som {{temp}}°",
+        "otherAsked": "En annan idé efterfrågad",
+        "decided": {
+            "calendar": "I kalendern",
+            "skip": "Hoppades över"
+        },
+        "event": {
+            "requested": "Läggs till",
+            "created": "Tillagd i kalendern",
+            "failed": "Inte tillagd",
+            "open": "Öppna i kalendern"
+        },
+        "countCalendar": "I kalendern: {{count}}",
+        "countOther": "En annan idé efterfrågad: {{count}}",
+        "countNone": "Inget valt",
+        "part": {
+            "morning": "förmiddag",
+            "afternoon": "eftermiddag",
+            "day": "dag"
+        },
+        "weather": {
+            "sun": "soligt",
+            "partly": "växlande molnighet",
+            "cloud": "molnigt",
+            "rain": "regn",
+            "snow": "snö",
+            "storm": "åska",
+            "fog": "dimma"
+        },
+        "days": "Båda dagarna",
+        "elsewhere": "Finare någon annanstans",
+        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    },
     "career": {
         "choice": "valt: {{label}}",
         "validate": "Bekräfta ({{count}})",

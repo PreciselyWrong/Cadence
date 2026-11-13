@@ -34,6 +34,9 @@ class ProposalsClient(private val session: suspend () -> ServerSession?) {
     /** Propositions de carrière prêtes (`GET /api/proposals?kind=career&status=ready`). */
     suspend fun listCareer(): JsonObject = request("GET", "/api/proposals?kind=career&status=ready")
 
+    /** Semaines de week-end, la plus récente d'abord (`GET /api/proposals?kind=weekend`). */
+    suspend fun listWeekend(): JsonObject = request("GET", "/api/proposals?kind=weekend")
+
     suspend fun reply(uid: String, text: String): JsonObject =
         request("POST", path(uid) + "/reply", buildJsonObject { put("text", text) })
 

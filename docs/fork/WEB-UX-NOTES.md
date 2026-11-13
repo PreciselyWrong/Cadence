@@ -952,3 +952,10 @@ Une ligne discrète en haut de toutes les pages tant qu'un message d'agent (noti
 - **Problème** : cliquer un choix de question relançait toute la proposition par l'IA, avant même qu'on ait fini de décider.
 - **Décision** : un choix ne fait que se sélectionner (changeable, un second clic le retire) ; le pied compte les réponses et « Envoyer » les porte avec les décisions et remarques (`answers` de `POST …/send`, `docs/47-proposals.md` › Send with answers). « Répondre » en texte libre reste la seule relance par l'IA.
 - **Android** : déjà aligné (1.32.0) ; vérif sur le téléphone à faire.
+
+### 2026-11-13 — Week-end (proposition d'agent, web)
+
+- **Problème** : la météo du week-end et les sorties proposées par l'agent famille n'avaient pas de feuille sur le web ; une sortie ne pouvait pas être mise à l'agenda depuis Cadence.
+- **Décision** : la notification (ou `?proposal=<uid>`) ouvre la feuille « Week-end » (`frontend/components/Weekend/WeekendSheet.tsx`, règles pures `weekendModel.ts`) : titre et phrase de l'agent, deux tuiles de jour (icône, `min° · max°`), un bloc par créneau dans l'ordre (« Samedi matin », météo à droite), trois puces « Mettre à l’agenda », « Autre idée », « Ignorer » plus « Remarque » ; la recommandation de l'agent est présélectionnée ; un créneau occupé n'a pas de puce ; « Plus beau ailleurs » seulement s'il y a des lieux. Les choix restent locaux jusqu'à « Valider », qui envoie un seul appel. Pied : compte des choix et « Valider ».
+- **Icônes** : Heroicons n'a pas de pictogrammes pluie ou neige ; ils sont approchés (averse → nuage avec flèche, neige → étincelles, brouillard → lignes) et le mot de la météo reste affiché.
+- **Android à reprendre** : même feuille, mêmes libellés d'état (« Ajout en cours », « Ajouté à l’agenda », « Pas ajouté »), même présélection, puce « Mettre à l’agenda » seule pleine quand elle est choisie.

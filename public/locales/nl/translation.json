@@ -1,4 +1,51 @@
 {
+    "weekend": {
+        "title": "Weekend",
+        "loadError": "Het weekend kon niet worden geopend.",
+        "empty": "Niets voor te stellen dit weekend.",
+        "applied": "Beslissingen toegepast: {{count}}",
+        "applyError": "De beslissing is niet opgeslagen.",
+        "validate": "Bevestigen",
+        "calendar": "In agenda zetten",
+        "other": "Ander idee",
+        "skip": "Overslaan",
+        "note": "Notitie",
+        "noteLabel": "Notitie voor de agent",
+        "notePlaceholder": "Wat de agent moet weten",
+        "busy": "Bezet: {{busy}}",
+        "feels": "voelt als {{temp}}°",
+        "otherAsked": "Ander idee gevraagd",
+        "decided": {
+            "calendar": "In de agenda",
+            "skip": "Overgeslagen"
+        },
+        "event": {
+            "requested": "Wordt toegevoegd",
+            "created": "Toegevoegd aan agenda",
+            "failed": "Niet toegevoegd",
+            "open": "Openen in agenda"
+        },
+        "countCalendar": "In de agenda: {{count}}",
+        "countOther": "Ander idee gevraagd: {{count}}",
+        "countNone": "Niets gekozen",
+        "part": {
+            "morning": "ochtend",
+            "afternoon": "middag",
+            "day": "dag"
+        },
+        "weather": {
+            "sun": "zonnig",
+            "partly": "wisselend zonnig",
+            "cloud": "bewolkt",
+            "rain": "regen",
+            "snow": "sneeuw",
+            "storm": "onweer",
+            "fog": "mist"
+        },
+        "days": "Beide dagen",
+        "elsewhere": "Elders mooier",
+        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    },
     "career": {
         "choice": "gekozen: {{label}}",
         "validate": "Bevestigen ({{count}})",

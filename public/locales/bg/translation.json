@@ -1,4 +1,51 @@
 {
+    "weekend": {
+        "title": "Уикенд",
+        "loadError": "Уикендът не можа да се отвори.",
+        "empty": "Нищо за предлагане този уикенд.",
+        "applied": "Приложени решения: {{count}}",
+        "applyError": "Решението не беше запазено.",
+        "validate": "Потвърди",
+        "calendar": "Добави в календара",
+        "other": "Друга идея",
+        "skip": "Пропусни",
+        "note": "Бележка",
+        "noteLabel": "Бележка за агента",
+        "notePlaceholder": "Какво трябва да знае агентът",
+        "busy": "Зает: {{busy}}",
+        "feels": "усеща се като {{temp}}°",
+        "otherAsked": "Поискана друга идея",
+        "decided": {
+            "calendar": "В календара",
+            "skip": "Пропуснато"
+        },
+        "event": {
+            "requested": "Добавя се",
+            "created": "Добавено в календара",
+            "failed": "Не е добавено",
+            "open": "Отвори в календара"
+        },
+        "countCalendar": "В календара: {{count}}",
+        "countOther": "Поискана друга идея: {{count}}",
+        "countNone": "Нищо избрано",
+        "part": {
+            "morning": "сутрин",
+            "afternoon": "следобед",
+            "day": "ден"
+        },
+        "weather": {
+            "sun": "слънчево",
+            "partly": "частично слънчево",
+            "cloud": "облачно",
+            "rain": "дъжд",
+            "snow": "сняг",
+            "storm": "буря",
+            "fog": "мъгла"
+        },
+        "days": "И двата дни",
+        "elsewhere": "По-хубаво другаде",
+        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    },
     "career": {
         "choice": "избрано: {{label}}",
         "validate": "Потвърди ({{count}})",

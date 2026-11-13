@@ -1,4 +1,51 @@
 {
+    "weekend": {
+        "title": "Konec tedna",
+        "loadError": "Konca tedna ni bilo mogoče odpreti.",
+        "empty": "Ta konec tedna ni predlogov.",
+        "applied": "Uveljavljene odločitve: {{count}}",
+        "applyError": "Odločitev ni bila shranjena.",
+        "validate": "Potrdi",
+        "calendar": "V koledar",
+        "other": "Druga ideja",
+        "skip": "Preskoči",
+        "note": "Opomba",
+        "noteLabel": "Opomba za agenta",
+        "notePlaceholder": "Kaj naj agent ve",
+        "busy": "Zasedeno: {{busy}}",
+        "feels": "občutek {{temp}}°",
+        "otherAsked": "Zahtevana druga ideja",
+        "decided": {
+            "calendar": "V koledarju",
+            "skip": "Preskočeno"
+        },
+        "event": {
+            "requested": "Dodajanje",
+            "created": "Dodano v koledar",
+            "failed": "Ni dodano",
+            "open": "Odpri v koledarju"
+        },
+        "countCalendar": "V koledarju: {{count}}",
+        "countOther": "Zahtevana druga ideja: {{count}}",
+        "countNone": "Nič izbrano",
+        "part": {
+            "morning": "zjutraj",
+            "afternoon": "popoldne",
+            "day": "dan"
+        },
+        "weather": {
+            "sun": "sončno",
+            "partly": "delno oblačno",
+            "cloud": "oblačno",
+            "rain": "dež",
+            "snow": "sneg",
+            "storm": "nevihta",
+            "fog": "megla"
+        },
+        "days": "Oba dneva",
+        "elsewhere": "Lepše drugje",
+        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    },
     "career": {
         "choice": "izbrano: {{label}}",
         "validate": "Potrdi ({{count}})",

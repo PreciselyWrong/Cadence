@@ -1,4 +1,51 @@
 {
+    "weekend": {
+        "title": "Helg",
+        "loadError": "Helgen kunne ikke åpnes.",
+        "empty": "Ingenting å foreslå denne helgen.",
+        "applied": "Beslutninger brukt: {{count}}",
+        "applyError": "Beslutningen ble ikke lagret.",
+        "validate": "Bekreft",
+        "calendar": "Legg i kalenderen",
+        "other": "En annen idé",
+        "skip": "Hopp over",
+        "note": "Notat",
+        "noteLabel": "Notat til agenten",
+        "notePlaceholder": "Det agenten bør vite",
+        "busy": "Opptatt: {{busy}}",
+        "feels": "føles som {{temp}}°",
+        "otherAsked": "Annen idé bedt om",
+        "decided": {
+            "calendar": "I kalenderen",
+            "skip": "Hoppet over"
+        },
+        "event": {
+            "requested": "Legges til",
+            "created": "Lagt til i kalenderen",
+            "failed": "Ikke lagt til",
+            "open": "Åpne i kalenderen"
+        },
+        "countCalendar": "I kalenderen: {{count}}",
+        "countOther": "Annen idé bedt om: {{count}}",
+        "countNone": "Ingenting valgt",
+        "part": {
+            "morning": "formiddag",
+            "afternoon": "ettermiddag",
+            "day": "dag"
+        },
+        "weather": {
+            "sun": "solskinn",
+            "partly": "delvis solskinn",
+            "cloud": "skyet",
+            "rain": "regn",
+            "snow": "snø",
+            "storm": "storm",
+            "fog": "tåke"
+        },
+        "days": "Begge dagene",
+        "elsewhere": "Penere andre steder",
+        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    },
     "career": {
         "choice": "valgt: {{label}}",
         "validate": "Bekreft ({{count}})",

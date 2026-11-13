@@ -1,4 +1,51 @@
 {
+    "weekend": {
+        "title": "Víkend",
+        "loadError": "Víkend sa nepodarilo otvoriť.",
+        "empty": "Tento víkend nemáme čo navrhnúť.",
+        "applied": "Použité rozhodnutia: {{count}}",
+        "applyError": "Rozhodnutie sa neuložilo.",
+        "validate": "Potvrdiť",
+        "calendar": "Pridať do kalendára",
+        "other": "Iný nápad",
+        "skip": "Preskočiť",
+        "note": "Poznámka",
+        "noteLabel": "Poznámka pre agenta",
+        "notePlaceholder": "Čo má agent vedieť",
+        "busy": "Obsadené: {{busy}}",
+        "feels": "pocitovo {{temp}}°",
+        "otherAsked": "Iný nápad vyžiadaný",
+        "decided": {
+            "calendar": "V kalendári",
+            "skip": "Preskočené"
+        },
+        "event": {
+            "requested": "Pridáva sa",
+            "created": "Pridané do kalendára",
+            "failed": "Nepridané",
+            "open": "Otvoriť v kalendári"
+        },
+        "countCalendar": "V kalendári: {{count}}",
+        "countOther": "Iný nápad vyžiadaný: {{count}}",
+        "countNone": "Nič nevybrané",
+        "part": {
+            "morning": "ráno",
+            "afternoon": "popoludnie",
+            "day": "deň"
+        },
+        "weather": {
+            "sun": "slnečno",
+            "partly": "polojasno",
+            "cloud": "oblačno",
+            "rain": "dážď",
+            "snow": "sneh",
+            "storm": "búrka",
+            "fog": "hmla"
+        },
+        "days": "Oba dni",
+        "elsewhere": "Inde krajšie",
+        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    },
     "career": {
         "choice": "vybrané: {{label}}",
         "validate": "Potvrdiť ({{count}})",

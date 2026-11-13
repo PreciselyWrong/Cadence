@@ -25,6 +25,7 @@ import ch.nicolab.cadence.tasks.R
 import ch.nicolab.cadence.tasks.TasksGraph
 import ch.nicolab.cadence.tasks.data.currentServerSession
 import ch.nicolab.cadence.tasks.plugins.PluginPageActivity
+import ch.nicolab.cadence.tasks.proposals.ProposalKind
 import ch.nicolab.cadence.tasks.proposals.ProposalNotifications
 import ch.nicolab.cadence.tasks.plugins.PluginsStore
 import ch.nicolab.cadence.tasks.plugins.pluginsClient
@@ -342,7 +343,8 @@ internal class LiveNotifier(private val context: Context, private val store: Liv
     suspend fun show(notification: LiveNotification) {
         val next = SeenUids.add(store.seen(), notification.uid) ?: return
         store.saveSeen(next)
-        val proposal = notification.proposalUid
+        // Le week-end passe par le titre et le texte du serveur, comme les autres notifications : sa cible ouvre la feuille.
+        val proposal = notification.proposalUid?.takeUnless { ProposalKind.of(notification.kind) == ProposalKind.WEEKEND }
         if (proposal != null) {
             ProposalNotifications.post(context, notification, proposal)
             return

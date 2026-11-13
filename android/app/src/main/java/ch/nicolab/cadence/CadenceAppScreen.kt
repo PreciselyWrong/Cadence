@@ -103,6 +103,7 @@ import ch.nicolab.cadence.tasks.proposals.ProposalRepository
 import ch.nicolab.cadence.tasks.ui.notifications.NotificationsScreen
 import ch.nicolab.cadence.tasks.proposals.ProposalTab
 import ch.nicolab.cadence.tasks.ui.proposals.CareerScreen
+import ch.nicolab.cadence.tasks.ui.proposals.WeekendSheet
 import ch.nicolab.cadence.tasks.ui.proposals.ProposalSheet
 import ch.nicolab.cadence.tasks.ui.review.ReviewScreen
 import ch.nicolab.cadence.ui.icon.HabitIconPicker
@@ -158,6 +159,9 @@ internal fun CadenceAppScreen(
     var searchOpen by rememberSaveable { mutableStateOf(false) }
     var reviewOpen by rememberSaveable { mutableStateOf(false) }
     var careerOpen by rememberSaveable { mutableStateOf(false) }
+    // Week-end : uid de la semaine d'une notification, ou null pour la plus récente (Bilan).
+    var weekendOpen by rememberSaveable { mutableStateOf(false) }
+    var weekendUid by rememberSaveable { mutableStateOf<String?>(null) }
     var triageOpen by rememberSaveable { mutableStateOf(false) }
     // « Trier mes mails » directement (notification mail_ready) : la liste de « À trier » s'ouvre sur le paquet.
     var triageDeck by rememberSaveable { mutableStateOf(false) }
@@ -292,6 +296,10 @@ internal fun CadenceAppScreen(
                 tab = Tab.BILAN
                 careerOpen = true
             }
+            is NotificationTarget.Weekend -> {
+                weekendUid = target.uid
+                weekendOpen = true
+            }
             NotificationTarget.MailDeck -> {
                 triageDeck = true
                 triageOpen = true
@@ -417,6 +425,7 @@ internal fun CadenceAppScreen(
                             onCorrect = { viewModel.clearSaveError(); correctingId = it.id },
                             onOpenReview = { reviewOpen = true },
                             onOpenCareer = { careerOpen = true },
+                            onOpenWeekend = { weekendUid = null; weekendOpen = true },
                             onOpenGoals = { goalsOpen = true },
                             onOpenSettings = { openSettings(null) },
                             onOpenNotifications = { notificationsOpen = true },
@@ -456,6 +465,7 @@ internal fun CadenceAppScreen(
             }, openDeck = triageDeck)
             if (notificationsOpen) NotificationsScreen(onBack = { notificationsOpen = false }, onOpen = openTarget)
             proposalSheet?.let { uid -> ProposalSheet(uid, onClose = proposals::closeSheet) }
+            if (weekendOpen) WeekendSheet(weekendUid, onClose = { weekendOpen = false })
             NavigationBarScrim()
             if (!settingsOpen && !searchOpen && !reviewOpen && !careerOpen && !goalsOpen && !triageOpen && !notificationsOpen) CadenceNavigation(destinations, tab.ordinal, Modifier.align(Alignment.BottomCenter), backdrop = backdrop) { index ->
                 tab = Tab.entries[index]

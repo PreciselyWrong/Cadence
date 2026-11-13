@@ -28,6 +28,7 @@ class NotificationTargetsTest {
         assertEquals(NotificationTarget.ProposalSheet("p1"), of(kind = "week", proposalUid = "p1"))
         assertEquals(NotificationTarget.Review, of(kind = "review", proposalUid = "p1"))
         assertEquals(NotificationTarget.Career, of(kind = "career", proposalUid = "p1"))
+        assertEquals(NotificationTarget.Weekend("p1"), of(kind = "weekend", proposalUid = "p1"))
         assertEquals(NotificationTarget.ProposalSheet("p1"), of(kind = null, proposalUid = "p1"))
     }
 
@@ -57,6 +58,7 @@ class NotificationTargetsTest {
             NotificationTarget.ProposalSheet("p1"),
             NotificationTarget.Review,
             NotificationTarget.Career,
+            NotificationTarget.Weekend("w-1"),
             NotificationTarget.MailDeck,
             NotificationTarget.Plugin(LiveTarget.Plugin("hermes", "?msg=m1&x=a:b")),
             NotificationTarget.Task("t-1"),
@@ -75,6 +77,7 @@ class NotificationTargetsTest {
         assertNull(NotificationTargets.decode("task:bad uid"))
         assertNull(NotificationTargets.decode("plugin:Hermes"))
         assertNull(NotificationTargets.decode("proposal:"))
+        assertNull(NotificationTargets.decode("weekend:bad uid"))
     }
 
     @Test

@@ -38,7 +38,8 @@ internal object ProposalNotifications {
             else Presentation(R.string.proposal_review_failed, R.string.proposal_failed_text, ROUTE_REVIEW)
             ProposalKind.CAREER -> if (ready) Presentation(R.string.proposal_career_ready, R.string.proposal_career_ready_text, ROUTE_CAREER)
             else Presentation(R.string.proposal_career_failed, R.string.proposal_failed_text, ROUTE_CAREER)
-            null -> null
+            // Le week-end est posté par LiveNotifier avec le titre et le texte du serveur (la feuille est ouverte par sa cible).
+            ProposalKind.WEEKEND, null -> null
         }
     }
 

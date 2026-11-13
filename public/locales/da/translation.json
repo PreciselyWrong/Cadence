@@ -1,4 +1,51 @@
 {
+    "weekend": {
+        "title": "Weekend",
+        "loadError": "Weekenden kunne ikke åbnes.",
+        "empty": "Intet at foreslå i weekenden.",
+        "applied": "Beslutninger anvendt: {{count}}",
+        "applyError": "Beslutningen blev ikke gemt.",
+        "validate": "Bekræft",
+        "calendar": "Læg i kalender",
+        "other": "En anden idé",
+        "skip": "Spring over",
+        "note": "Note",
+        "noteLabel": "Note til agenten",
+        "notePlaceholder": "Hvad agenten skal vide",
+        "busy": "Optaget: {{busy}}",
+        "feels": "føles som {{temp}}°",
+        "otherAsked": "Anden idé bedt om",
+        "decided": {
+            "calendar": "I kalenderen",
+            "skip": "Sprunget over"
+        },
+        "event": {
+            "requested": "Tilføjes",
+            "created": "Tilføjet til kalenderen",
+            "failed": "Ikke tilføjet",
+            "open": "Åbn i kalenderen"
+        },
+        "countCalendar": "I kalenderen: {{count}}",
+        "countOther": "Anden idé bedt om: {{count}}",
+        "countNone": "Intet valgt",
+        "part": {
+            "morning": "formiddag",
+            "afternoon": "eftermiddag",
+            "day": "dag"
+        },
+        "weather": {
+            "sun": "solrigt",
+            "partly": "let skyet",
+            "cloud": "skyet",
+            "rain": "regn",
+            "snow": "sne",
+            "storm": "storm",
+            "fog": "tåge"
+        },
+        "days": "Begge dage",
+        "elsewhere": "Pænere andetsteds",
+        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    },
     "career": {
         "choice": "valgt: {{label}}",
         "validate": "Bekræft ({{count}})",

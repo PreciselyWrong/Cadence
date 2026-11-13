@@ -17,6 +17,8 @@ A proposal is a request the user starts from a button (« Planifier ma semaine �
 
 ## Kinds
 
+Kind `weekend` (« Week-end ») : voir `docs/48-weekend.md`.
+
 ### `week` (« Planifier ma semaine »)
 
 `POST /api/proposals { "kind": "week", "start"?, "end"? }`. The period defaults to today and six days after; it is at most 14 days, `end` not before `start`.

@@ -1,4 +1,51 @@
 {
+    "weekend": {
+        "title": "Week-end",
+        "loadError": "Week-endul nu a putut fi deschis.",
+        "empty": "Nimic de propus în acest week-end.",
+        "applied": "Decizii aplicate: {{count}}",
+        "applyError": "Decizia nu a fost salvată.",
+        "validate": "Confirmă",
+        "calendar": "Adaugă în calendar",
+        "other": "Altă idee",
+        "skip": "Ignoră",
+        "note": "Notă",
+        "noteLabel": "Notă pentru agent",
+        "notePlaceholder": "Ce ar trebui să știe agentul",
+        "busy": "Ocupat: {{busy}}",
+        "feels": "se simte ca {{temp}}°",
+        "otherAsked": "Altă idee cerută",
+        "decided": {
+            "calendar": "În calendar",
+            "skip": "Ignorată"
+        },
+        "event": {
+            "requested": "Se adaugă",
+            "created": "Adăugată în calendar",
+            "failed": "Neadăugată",
+            "open": "Deschide în calendar"
+        },
+        "countCalendar": "În calendar: {{count}}",
+        "countOther": "Altă idee cerută: {{count}}",
+        "countNone": "Nimic ales",
+        "part": {
+            "morning": "dimineață",
+            "afternoon": "după-amiază",
+            "day": "zi"
+        },
+        "weather": {
+            "sun": "însorit",
+            "partly": "parțial noros",
+            "cloud": "noros",
+            "rain": "ploaie",
+            "snow": "ninsoare",
+            "storm": "furtună",
+            "fog": "ceață"
+        },
+        "days": "Ambele zile",
+        "elsewhere": "Mai frumos în altă parte",
+        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    },
     "career": {
         "choice": "ales: {{label}}",
         "validate": "Validează ({{count}})",

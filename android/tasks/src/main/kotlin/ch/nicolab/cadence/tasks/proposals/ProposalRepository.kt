@@ -78,6 +78,20 @@ class ProposalRepository internal constructor(private val client: ProposalsClien
         CareerModel.settledKeys(client.apply(uid, CareerModel.applyBody(decisions)))
     }
 
+    /** La semaine de week-end prête la plus récente, lue en ligne ; null s'il n'y en a pas. */
+    suspend fun weekendLatest(): Result<WeekendProposal?> = attempt {
+        WeekendModel.newestReady(WeekendModel.parseList(client.listWeekend()))
+    }
+
+    /** Une semaine de week-end précise (depuis sa notification), lue en ligne. */
+    suspend fun weekend(uid: String): Result<WeekendProposal?> = attempt { WeekendModel.parseProposal(client.get(uid)) }
+
+    /** « Valider » : toutes les sorties choisies partent en un appel ; la semaine est relue ensuite par l'écran. */
+    suspend fun decideWeekend(uid: String, draft: WeekendDraft): Result<Unit> = attempt {
+        client.apply(uid, WeekendModel.applyBody(draft))
+        Unit
+    }
+
     suspend fun dismiss(uid: String): Result<Unit> = attempt {
         client.dismiss(uid)
         refresh().getOrThrow()

@@ -1,4 +1,51 @@
 {
+    "weekend": {
+        "title": "Viikonloppu",
+        "loadError": "Viikonloppua ei voitu avata.",
+        "empty": "Ei ehdotettavaa tälle viikonlopulle.",
+        "applied": "Päätöksiä sovellettu: {{count}}",
+        "applyError": "Päätöstä ei tallennettu.",
+        "validate": "Vahvista",
+        "calendar": "Kalenteriin",
+        "other": "Toinen idea",
+        "skip": "Ohita",
+        "note": "Muistiinpano",
+        "noteLabel": "Muistiinpano agentille",
+        "notePlaceholder": "Mitä agentin pitää tietää",
+        "busy": "Varattu: {{busy}}",
+        "feels": "tuntuu {{temp}}°",
+        "otherAsked": "Toista ideaa pyydetty",
+        "decided": {
+            "calendar": "Kalenterissa",
+            "skip": "Ohitettu"
+        },
+        "event": {
+            "requested": "Lisätään",
+            "created": "Lisätty kalenteriin",
+            "failed": "Ei lisätty",
+            "open": "Avaa kalenterissa"
+        },
+        "countCalendar": "Kalenterissa: {{count}}",
+        "countOther": "Toista ideaa pyydetty: {{count}}",
+        "countNone": "Ei valintoja",
+        "part": {
+            "morning": "aamu",
+            "afternoon": "iltapäivä",
+            "day": "päivä"
+        },
+        "weather": {
+            "sun": "aurinkoista",
+            "partly": "selkeneviä",
+            "cloud": "pilvistä",
+            "rain": "sadetta",
+            "snow": "lunta",
+            "storm": "ukkosta",
+            "fog": "sumua"
+        },
+        "days": "Molemmat päivät",
+        "elsewhere": "Kauniimpaa muualla",
+        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    },
     "career": {
         "choice": "valittu: {{label}}",
         "validate": "Vahvista ({{count}})",

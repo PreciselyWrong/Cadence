@@ -1,4 +1,51 @@
 {
+    "weekend": {
+        "title": "Вихідні",
+        "loadError": "Не вдалося відкрити вихідні.",
+        "empty": "Нічого запропонувати на ці вихідні.",
+        "applied": "Застосовано рішень: {{count}}",
+        "applyError": "Рішення не збережено.",
+        "validate": "Підтвердити",
+        "calendar": "До календаря",
+        "other": "Інша ідея",
+        "skip": "Пропустити",
+        "note": "Нотатка",
+        "noteLabel": "Нотатка для агента",
+        "notePlaceholder": "Що має знати агент",
+        "busy": "Зайнято: {{busy}}",
+        "feels": "відчувається як {{temp}}°",
+        "otherAsked": "Запитано іншу ідею",
+        "decided": {
+            "calendar": "У календарі",
+            "skip": "Пропущено"
+        },
+        "event": {
+            "requested": "Додається",
+            "created": "Додано до календаря",
+            "failed": "Не додано",
+            "open": "Відкрити в календарі"
+        },
+        "countCalendar": "У календарі: {{count}}",
+        "countOther": "Запитано іншу ідею: {{count}}",
+        "countNone": "Нічого не вибрано",
+        "part": {
+            "morning": "ранок",
+            "afternoon": "після обіду",
+            "day": "день"
+        },
+        "weather": {
+            "sun": "сонячно",
+            "partly": "мінлива хмарність",
+            "cloud": "хмарно",
+            "rain": "дощ",
+            "snow": "сніг",
+            "storm": "гроза",
+            "fog": "туман"
+        },
+        "days": "Обидва дні",
+        "elsewhere": "Краще деінде",
+        "elsewhereLine": "{{place}}, {{day}}: {{weather}}, {{temp}}°"
+    },
     "career": {
         "choice": "обрано: {{label}}",
         "validate": "Підтвердити ({{count}})",

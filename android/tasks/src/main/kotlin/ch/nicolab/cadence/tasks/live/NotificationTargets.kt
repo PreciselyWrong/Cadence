@@ -18,6 +18,9 @@ sealed interface NotificationTarget {
     /** Carrière : son écran (Bilan). */
     data object Career : NotificationTarget
 
+    /** Semaine de week-end prête : sa feuille. */
+    data class Weekend(val uid: String) : NotificationTarget
+
     /** « Trier mes mails » (`mail_ready`). */
     data object MailDeck : NotificationTarget
 
@@ -49,6 +52,7 @@ object NotificationTargets {
     private const val CENTER = "center"
     private const val REVIEW = "review"
     private const val CAREER = "career"
+    private const val WEEKEND = "weekend"
     private val UID = Regex("""^[A-Za-z0-9_-]{1,64}$""")
 
     fun of(payload: NotificationPayload): NotificationTarget {
@@ -57,6 +61,7 @@ object NotificationTargets {
             return when (ProposalKind.of(payload.kind)) {
                 ProposalKind.REVIEW -> NotificationTarget.Review
                 ProposalKind.CAREER -> NotificationTarget.Career
+                ProposalKind.WEEKEND -> NotificationTarget.Weekend(uid)
                 ProposalKind.WEEK, null -> NotificationTarget.ProposalSheet(uid)
             }
         }
@@ -73,6 +78,7 @@ object NotificationTargets {
         is NotificationTarget.ProposalSheet -> "proposal:${target.uid}"
         NotificationTarget.Review -> REVIEW
         NotificationTarget.Career -> CAREER
+        is NotificationTarget.Weekend -> "weekend:${target.uid}"
         NotificationTarget.MailDeck -> MAIL
         is NotificationTarget.Plugin -> "plugin:${target.page.id}${target.page.query}"
         is NotificationTarget.Task -> "task:${target.uid}"
@@ -88,6 +94,7 @@ object NotificationTargets {
         raw == MAIL -> NotificationTarget.MailDeck
         raw == CENTER -> NotificationTarget.Center
         raw.startsWith("proposal:") -> raw.removePrefix("proposal:").takeIf(UID::matches)?.let(NotificationTarget::ProposalSheet)
+        raw.startsWith("weekend:") -> raw.removePrefix("weekend:").takeIf(UID::matches)?.let(NotificationTarget::Weekend)
         raw.startsWith("task:") -> raw.removePrefix("task:").takeIf(UID::matches)?.let(NotificationTarget::Task)
         raw.startsWith("project:") -> raw.removePrefix("project:").takeIf(UID::matches)?.let(NotificationTarget::Project)
         raw.startsWith("plugin:") -> (LiveTarget.of("/plugins/" + raw.removePrefix("plugin:"), null) as? LiveTarget.Plugin)?.let(NotificationTarget::Plugin)
